@@ -1,333 +1,222 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31A212FF89
-	for <linux-hardening@vger.kernel.org>; Wed, 31 Jan 2024 17:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706723444; cv=none; b=F1cruIlXXkrVARpfM3Gnl7HxyCcZksCqgTZxCcFcvrLW7+4zJDmte+3SEkp5bBqZqm3qnCJaQ+It9VDRHXT5XUdAe9QErWDzSZLoHHdcyAuI3HLzk2JTD5bfk1LpjmT9kz5F9e3qu41UJUnOrcVC0lW0ZXwEfxiUDeqANhrbyVs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706723444; c=relaxed/simple;
-	bh=1l2eyJahT6/THhsGFQlwh1IGeaNT9b5VEW1CK/GnyDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TfiG17SwCES6XJDIZzE4Fr/oUz5WwKW26Ub0lnuyS8BpMxlUy1ZshHJ/Ljy+UNJzRDjaZ46JGHdo/dAieaQ9Z189boEPfCRNxnbZwWRkZkVztYegxPSoCBnqz6Jl7zmULKKW1zBZY3pPthSNV499vnH/n9/AEmJYaTUC8rbzliU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FCa7+/v6; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE673E48F;
+	Wed, 31 Jan 2024 19:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706729680; cv=fail; b=HjvqQDNYaauFwCTJ9ghW/7wy69cUhHhhVOnlpNCGi+DGAMl95RHCUBl6Oi6YDgEqP0WuLPIw2MAjVMeg6v3zJKez6LKmYOdMuGhjaoriuiplZVLhC30LbF0d+OGCcOg/Hq9Kux0tg+fdqp+Xg0wt6j0YPoRZEtXUwhufijd5Gmw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706729680; c=relaxed/simple;
+	bh=j4D/qPlc3WFhUpcbge3C/5u4+l6WncckW4LHFjNfPyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hdpHIjjZrMfoxHYhxDyB/ILDXq2cN+DCSFK5FnhCSjNSszoH2PKcvoSNOO07IshHPBAmSP8yGfgDRFVnV6k4mNp/Ud87i8QnIlxYya3VjGO5lKAkj2oygQLmKw1qcpurtraOFQRTde9DtNwf8v/qqtkmrTgWNo5AXRwR6a/KSyQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XxhFInHp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=TCH2vt1I; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FCa7+/v6"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so76640a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Jan 2024 09:50:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XxhFInHp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="TCH2vt1I"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40VHBctD029326;
+	Wed, 31 Jan 2024 19:34:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=sYhh7NVjaRXYGNtay/rgRmuuqXVriI9ilrlmJgjDI9s=;
+ b=XxhFInHpULKt/qxYCv928wWn7MRjnUIZk2ELV6EJJgYs8RBh4VcnRyqAeWIHPDVIouF9
+ dMbw/Rn0xWvV+5Q0AxWcSKQB61x3qGwoNW/Kq7ud3jPDw72jgIxRuaOqjPcjXrDtVSza
+ nCMAyVlX8y3SXIU1skQa6gXWnDvg3K+RxXDwAf/PBDdSfmSgj09+63A3KS0VmUSwjCGU
+ QCfJhs/urYXL4sSYZmjqS4fiqEFTzOhONLGhBHTRwrWy+zan3nWOm5rELcMc/lNifaQa
+ pc6iNYINL6qmA0V88dlayv3gMVg61nUIAn8/M6pHM/TRJf9rHiH2C/KfJulGOru0debZ zg== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvsvdtrte-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 31 Jan 2024 19:34:17 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40VIJA2x016269;
+	Wed, 31 Jan 2024 19:34:17 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr9fjj7f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 31 Jan 2024 19:34:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e7zc+pQ2KSijhbZvhucgfVMC310qZaTmwwp8LZQip2PZdB8JwVr0aK9UMLkYrvM7UDcDvUQ9mU0l0okfBt5XBJvR3W7UQXvJ0YcIUPvM0vIj1R7o1oMepItR1o8WWQn0Nj/dqgis63q6qG+d96ngZPt8Ic6DJQmEjTJsR/k5e1N/Q21cbqhg6NZXDCX7FReFDBon4sWRzsT1HQDTFCtIAXX16VM9uZAzlFVvmNKi/Q5yAzIxnm82oIGqQyqclDeqt9XvgrJB3U+idLbJeVq9W2KzFgDjb91bHcTC3BYBo90qV7jgDjJ01jOQ1zD3q04mN3CkDv9Yi9smwYXt7oI7PA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sYhh7NVjaRXYGNtay/rgRmuuqXVriI9ilrlmJgjDI9s=;
+ b=JBkBpYUiPQ5gzM3I0dJk8aPqPmh/refICA5g5IJgF0g5h9fqQN/KhPl7sNGFYQdrN2p+qV2UYpWbiveyb+6TplZBcYopX6UuDHj1m+yNOfrKoYwS5JFNkzMWsLXELGcqx2dWPGl2x0LKuzJTPlAqfZRCZ/NlcpI38Pos4Ntktwhs8xhvu2QQLh+srnWbDhLbROvbBPYwh17BY3pVAf9/GYul41xTbaQ7TK7jC41p+rHur8yBpVdFRnpIf6IoXFqO2sNzp8zsGEOLjJTn3+3hMkXmtMSCEwd1ZZHqHS5gz5BQ1m2DushR+3kl5l3DmpuOPtrn6s9lkjVD6LtRtfTh5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706723442; x=1707328242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GPGI4dhOjsvjKsvP8oCKck8QX/3kjezSrJszAxYQUFA=;
-        b=FCa7+/v6WDADNHMGmPQDKONNiTN1UnOp4lMzCcXIPiTfwnrYPRl6bXDo0/+L4G18hN
-         FDtZgMyUduxGx6MNy/BCBRDneUSgXBvbCzCCgw2F97ai1iXyTTE65e9UCV/UAcET6lhr
-         sdbPpvTdPAyRowF521Sli8jVjj4Lw7fSMyIik=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706723442; x=1707328242;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GPGI4dhOjsvjKsvP8oCKck8QX/3kjezSrJszAxYQUFA=;
-        b=OvOs0smoGEvY8MmikV5eqDJWPxWWe9JpPXWPg1BbPMq8mFi/sjKCX4yfIB8OOK6yHa
-         0r/XZHxlmWG0nYjJmN/3uxjpxBjzTvJ42Zed3TrBFPaJc12da+JrTVeHdHOMR/Ulc5Cj
-         ndM0uwbbtKPL/XeZaHkXEkjW9lv66e/9N0ayLDbAgRJJ+/xshA5DjAvsD8w73r9Fkxrh
-         NEo94eK4N3kDBUrpD0pPzLAyuIXvzLo8byH6MijkgScPexrkX3z/OwmNiP6V+YJ4cR0G
-         VMX9K6qHv/WBD8IoKj7WDkvUPP0B54jrv7apZcmTEQDOChK1eweQfGUoucOx/WxkLfhn
-         LgNg==
-X-Gm-Message-State: AOJu0YyTwylwFIAZULKzV52GGDXRLi+5S3zrBnDjeNhtRodVdB0bAplP
-	ySlIWEpnJXtFTJdx0mVarwQAk5QMujzJ+UAuuzVGHpsc0nAl5oeNFGbN5ZRbYA==
-X-Google-Smtp-Source: AGHT+IErS/Qe51+MwT203LmMmKX79RYaK08wm/6Fh0mULIDWu6/Ls4MRxnfdABmWbLbYiZSldSyxAg==
-X-Received: by 2002:a05:6a20:2a26:b0:19c:8ed9:7b94 with SMTP id e38-20020a056a202a2600b0019c8ed97b94mr2072030pzh.51.1706723441835;
-        Wed, 31 Jan 2024 09:50:41 -0800 (PST)
-Received: from localhost (56.72.82.34.bc.googleusercontent.com. [34.82.72.56])
-        by smtp.gmail.com with UTF8SMTPSA id fa20-20020a056a002d1400b006d70b0d4639sm10172924pfb.107.2024.01.31.09.50.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 09:50:41 -0800 (PST)
-From: jeffxu@chromium.org
-To: akpm@linux-foundation.org,
-	keescook@chromium.org,
-	jannh@google.com,
-	sroettger@google.com,
-	willy@infradead.org,
-	gregkh@linuxfoundation.org,
-	torvalds@linux-foundation.org,
-	usama.anjum@collabora.com,
-	rdunlap@infradead.org
-Cc: jeffxu@google.com,
-	jorgelo@chromium.org,
-	groeck@chromium.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	pedro.falcato@gmail.com,
-	dave.hansen@intel.com,
-	linux-hardening@vger.kernel.org,
-	deraadt@openbsd.org,
-	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v8 4/4] mseal:add documentation
-Date: Wed, 31 Jan 2024 17:50:26 +0000
-Message-ID: <20240131175027.3287009-5-jeffxu@chromium.org>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-In-Reply-To: <20240131175027.3287009-1-jeffxu@chromium.org>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sYhh7NVjaRXYGNtay/rgRmuuqXVriI9ilrlmJgjDI9s=;
+ b=TCH2vt1I2Dd9HFaJ2Q3/e+lybodrneCc+Mw22IB1OKMLTa+dKv99o6uQx4mVKmgeQgu6fErU2eeMxWxxfgepLgOo+npNFSf+1sB637Y5hI1DPUk2nr3bmcLScZFXhecg5QczZYUNoTsanJ0JRpoJmsJA7ue42XfVB3pauIV8cqI=
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
+ by SJ2PR10MB6963.namprd10.prod.outlook.com (2603:10b6:a03:4cb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Wed, 31 Jan
+ 2024 19:34:14 +0000
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::20c8:7efa:f9a8:7606]) by DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::20c8:7efa:f9a8:7606%4]) with mapi id 15.20.7249.017; Wed, 31 Jan 2024
+ 19:34:14 +0000
+Date: Wed, 31 Jan 2024 14:34:11 -0500
+From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+To: jeffxu@chromium.org, Jonathan Corbet <corbet@lwn.net>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+        sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
+        torvalds@linux-foundation.org, usama.anjum@collabora.com,
+        rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        pedro.falcato@gmail.com, dave.hansen@intel.com,
+        linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+Message-ID: <20240131193411.opisg5yoyxkwoyil@revolver>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+	jeffxu@chromium.org, Jonathan Corbet <corbet@lwn.net>,
+	akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+	sroettger@google.com, willy@infradead.org,
+	gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
+	usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com,
+	jorgelo@chromium.org, groeck@chromium.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
 References: <20240131175027.3287009-1-jeffxu@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131175027.3287009-1-jeffxu@chromium.org>
+User-Agent: NeoMutt/20220429
+X-ClientProxiedBy: YT1PR01CA0045.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2e::14) To DS0PR10MB7933.namprd10.prod.outlook.com
+ (2603:10b6:8:1b8::15)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|SJ2PR10MB6963:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6130f7b7-5c07-4e7b-b383-08dc22939b3f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	aqGr9QcGs+WbATOB2JbSgChza0T0ZNeck0Kc77eW3nwSiOvamWoOhcSILJZ+xg++AFh0TpAsKyPcfx1kcOwgNkBVGNWHiki229mw7aC8DSyOFFqbcVP+8sRKLMxHArTEosX/ESMdF7vNxLpVpnRggu+pmJShD/99rcn08Z9aUC3srUlr+a/1Xf5mCqpFMtgqGM4TdTX8tk/bXptPxlU4+J61ZBJdmsR7ZSWG/L18iXuoUxy+QVkQjvqBbViiRFNM61NBjATKX8Ec62Yb2ufKahhqy67/y+xT24pTSOMHhOWruSMO1VClrN1/r5pUq40gWXB33fVLTWV02qTugZ8e9uIqZwe+O0vijIP7Kr91ECLTtJjoFj40cZzAT1zmXj2ngW2KdXNpzt25c846hXlQkFDXYbBEhIdxxDnIakJzfQtuDox6CbPCM8Uf3OahlX4cKbmhfJMoEPi5qKx4+aHHq+gzvmnnWLTXBhGFrFHzGXxsord4L2YQSkJ9xbAgndaJNWknAiI7pob76Qo4beAyPPf1Kg8MCML5cwpcbYZN21iZGAGbPftzd3ZPsZnXvM2QBqjhSv8OX+Ajcwj8BK48qQ==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(346002)(396003)(136003)(376002)(39860400002)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(41300700001)(83380400001)(86362001)(33716001)(6512007)(6506007)(1076003)(26005)(38100700002)(9686003)(6666004)(478600001)(2906002)(66946007)(6486002)(966005)(6916009)(316002)(66556008)(66476007)(5660300002)(8676002)(7416002)(4326008)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?p67a1Q8mt99+mjgTPMKOxVHgIZz78nMmk5T5QA9hLFBPS2EHqgsbM5VH4X/h?=
+ =?us-ascii?Q?+Zo6uWfdp1DhtesJsDKYDCEInpfWbHRtDwv9zw188IprXhPH4VMzIr0jEmy0?=
+ =?us-ascii?Q?Iv+fvux6yzVAV/gVPeDdQVxj0PYMfzHDdgMxrSf88qbGNJE6bc/K7N4v6Kqm?=
+ =?us-ascii?Q?+cIs+wmS9NldjzNgmqG2BXJKOVFkblaB0C+YsXD0BVXTSY/yNwxJHdiCU/on?=
+ =?us-ascii?Q?YxNSHz+4HaJ1PAoH2JJHSy67NpOEXR98E2XzKyjTjhfU5hm8qO6s1J5QjnZf?=
+ =?us-ascii?Q?eL89CAlbsPugw91PIiYcpAfHvG4fY8m6b77g9qZ3pZbYKeASu/86G57Fpc1k?=
+ =?us-ascii?Q?ep7eYu1UcoU4Ggs3N2Ttf0z2AWRrSVMMSHtoiOvV50h1HCVHpYXAyR+gxSDi?=
+ =?us-ascii?Q?sk5egzZxMSud3HtK6sSaLiiDJobtr5MuTaCPu5M6Tc4dO02fDVW/7tCE9/u7?=
+ =?us-ascii?Q?wCqUVUNQLpZiYFEeabyQmLLn3YV3c3Sq1NdViy9I+z3xo12JRGZrXK8dBXRJ?=
+ =?us-ascii?Q?EiAsQKWPSxMhDpFDokcJY2dqx/fLkkcF1yYzhofTD0rMPkDeF0lfXimZULl7?=
+ =?us-ascii?Q?vDs073ookl7epTlLHG3w9rxYp5hRcqzA5+vF1y4BIQVThmOpvTEEmYEWVh+B?=
+ =?us-ascii?Q?vOLXlu5/zBZ9xvTris+KQMSf0RGlQpCVUbwn/Xj1Mj1UqukyW5sarGvVg0Nl?=
+ =?us-ascii?Q?0USFM6HeOPDnuimwtOC2hNhqfTIKnUBWLvaPUTZ1l0Sd9Ti/5hzi/bQj/q2E?=
+ =?us-ascii?Q?zegi2DsWev4fHyCYVdrNHIXhTBHHWU9ZXhmev+Yb5gOdEUVHhXC/uW8E4LuE?=
+ =?us-ascii?Q?aMHUekuYCWdeQ8sGLpAlfxZ+HG41gCbe4tLtvGMJmTfbZL1ehwUDh2QIrAJL?=
+ =?us-ascii?Q?9SEuz+XdFn6n4tshRWf3kxdgQHoFlBKqkPYgfpHfe3eeeghRLl4M/6lUAPIl?=
+ =?us-ascii?Q?8sUnC1QoZunwDLUzvSz9H4ZXumKYOzzhwUxyUcMjVhpsKMvOJd5dyQuiofNn?=
+ =?us-ascii?Q?J6nIr3MEmBhoefZppTkVBLyledom+wPuj3MxnEt0zatvMwp5pK5SN2+3xEBR?=
+ =?us-ascii?Q?wAlyT8+Lv2HWbQjIIUCpeBNSyqNumzYKVAQX8mQyk1P9aljym0Pw7slLvWJe?=
+ =?us-ascii?Q?XPbcTyIrDGqBPsodU0L6zE2uZbTylqojmfVcJ37FcfPaX6WgjG9s1GKkBlun?=
+ =?us-ascii?Q?y8jHlRuTrIkXJ/y+RJBzm4J4Gs5c6W6F4ig5SWKY7Datcn3kUkVqNio1GpJo?=
+ =?us-ascii?Q?lbjPD7UVeJXGS3B6WX6TW+EfVODL23urgCGqCD9/2pnXqptNx1tkb4YVM2mO?=
+ =?us-ascii?Q?OPI+420B4r2po4GdNjq13+Aa/lNx8weqMMIqRMxxq3gztYPyKYTFMx2jfclT?=
+ =?us-ascii?Q?YlA0Ba4ECPLkKTjeyJ0y33ZNWTysUCtUalmGJkqKaOKj48PWP4iPfcgt7pLZ?=
+ =?us-ascii?Q?L3/m0GRRYK24SUo7pUGKhlJwWq9N75AtBDB06vrqcvYze/lpfaJUwbBLBIFd?=
+ =?us-ascii?Q?mok3+xRJ6RrlyVysgar7/PJyYe81Wm+zRCt9eDNRplt3x+1JtzPR4luyPJea?=
+ =?us-ascii?Q?lYdAjFbtPicKnrbt9oR/aBb/cUP5YdYWbsm0MlsG?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	75eHMY5VgBiTEzlb/DGd/X4AS4bGLhKc+e7VXPSuOOlBSd66GVk6+LwhyQH4DYfW9fbM5fW+JUEMY04JvfrRhzwhKVa+NzYF8w9aIyMDgw29CR25yzzjXAFPAZ6tfJE7ClDpp5iRIQSnWOwfwVDtCsvWKkIGkeyohG8J3e7qxEz2/KFCQweztG3EQ3PIumscsTwxckan/o381joF8mSUEIBlaMvw/oeDB05bK8PPyU/ybVYQ45WUKSCevYNsxatbIWYyLJ3sHuyHM2ZzqYpZlR+NEY8rxG0z5xyAo67k692uInd4KOlyOUvnoEXMqEdEYxt/FH+r4H+AmLLLnHjVWF6cAxWwMa+beu8eFX49KlC1mEvCSRaTxaApwZ3EAZCm4RBWAiDrSTFlsAmhmaY1q50ZfdHPDbZyLQsYYcnRoT2haWmDBjCzbuEpCFrCldtrw79mzF4STbMriomA7ltvBMpSpHELgz2w8NEJaZJGP7SkL+9tGL9rgO1JweeHSac09Ruk2ZDit+wCv8at7eJCtvsUvLSN01unkgnqHj9CeCykb70JvDm6a7qEsLRoJSTD4E6kEJXEKaOdTZNinDDKaR86gbAhvlL1YtbgzE6uiVw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6130f7b7-5c07-4e7b-b383-08dc22939b3f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 19:34:14.1140
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yHSj346ZKaVf+Vb45YgdJovnCRb2beXFAwZjRIozhQ+d8EEahkKU4D4JCz0kgcvrcfvt4zAkbMLW4YfaEfimqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR10MB6963
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-31_10,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 suspectscore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401310152
+X-Proofpoint-ORIG-GUID: vx0WQ03b81jOxykXoCZJAie_FubG6TUL
+X-Proofpoint-GUID: vx0WQ03b81jOxykXoCZJAie_FubG6TUL
 
-From: Jeff Xu <jeffxu@chromium.org>
+Please add me to the Cc list of these patches.
 
-Add documentation for mseal().
+* jeffxu@chromium.org <jeffxu@chromium.org> [240131 12:50]:
+> From: Jeff Xu <jeffxu@chromium.org>
+> 
+> This patchset proposes a new mseal() syscall for the Linux kernel.
+> 
+> In a nutshell, mseal() protects the VMAs of a given virtual memory
+> range against modifications, such as changes to their permission bits.
+> 
+> Modern CPUs support memory permissions, such as the read/write (RW)
+> and no-execute (NX) bits. Linux has supported NX since the release of
+> kernel version 2.6.8 in August 2004 [1]. The memory permission feature
+> improves the security stance on memory corruption bugs, as an attacker
+> cannot simply write to arbitrary memory and point the code to it. The
+> memory must be marked with the X bit, or else an exception will occur.
+> Internally, the kernel maintains the memory permissions in a data
+> structure called VMA (vm_area_struct). mseal() additionally protects
+> the VMA itself against modifications of the selected seal type.
 
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
----
- Documentation/userspace-api/index.rst |   1 +
- Documentation/userspace-api/mseal.rst | 215 ++++++++++++++++++++++++++
- 2 files changed, 216 insertions(+)
- create mode 100644 Documentation/userspace-api/mseal.rst
+... The v8 cut Jonathan's email discussion [1] off and instead of
+replying there, I'm going to add my question here.
 
-diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
-index 09f61bd2ac2e..178f6a1d79cb 100644
---- a/Documentation/userspace-api/index.rst
-+++ b/Documentation/userspace-api/index.rst
-@@ -26,6 +26,7 @@ place where this information is gathered.
-    iommu
-    iommufd
-    media/index
-+   mseal
-    netlink/index
-    sysfs-platform_profile
-    vduse
-diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
-new file mode 100644
-index 000000000000..6bfac0622178
---- /dev/null
-+++ b/Documentation/userspace-api/mseal.rst
-@@ -0,0 +1,215 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
-+Introduction of mseal
-+=====================
-+
-+:Author: Jeff Xu <jeffxu@chromium.org>
-+
-+Modern CPUs support memory permissions such as RW and NX bits. The memory
-+permission feature improves security stance on memory corruption bugs, i.e.
-+the attacker can’t just write to arbitrary memory and point the code to it,
-+the memory has to be marked with X bit, or else an exception will happen.
-+
-+Memory sealing additionally protects the mapping itself against
-+modifications. This is useful to mitigate memory corruption issues where a
-+corrupted pointer is passed to a memory management system. For example,
-+such an attacker primitive can break control-flow integrity guarantees
-+since read-only memory that is supposed to be trusted can become writable
-+or .text pages can get remapped. Memory sealing can automatically be
-+applied by the runtime loader to seal .text and .rodata pages and
-+applications can additionally seal security critical data at runtime.
-+
-+A similar feature already exists in the XNU kernel with the
-+VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall [2].
-+
-+User API
-+========
-+Two system calls are involved in virtual memory sealing, mseal() and mmap().
-+
-+mseal()
-+-----------
-+The mseal() syscall has the following signature:
-+
-+``int mseal(void addr, size_t len, unsigned long flags)``
-+
-+**addr/len**: virtual memory address range.
-+
-+The address range set by ``addr``/``len`` must meet:
-+   - The start address must be in an allocated VMA.
-+   - The start address must be page aligned.
-+   - The end address (``addr`` + ``len``) must be in an allocated VMA.
-+   - no gap (unallocated memory) between start and end address.
-+
-+The ``len`` will be paged aligned implicitly by the kernel.
-+
-+**flags**: reserved for future use.
-+
-+**return values**:
-+
-+- ``0``: Success.
-+
-+- ``-EINVAL``:
-+    - Invalid input ``flags``.
-+    - The start address (``addr``) is not page aligned.
-+    - Address range (``addr`` + ``len``) overflow.
-+
-+- ``-ENOMEM``:
-+    - The start address (``addr``) is not allocated.
-+    - The end address (``addr`` + ``len``) is not allocated.
-+    - A gap (unallocated memory) between start and end address.
-+
-+- ``-EACCES``:
-+    - ``MAP_SEALABLE`` is not set during mmap().
-+
-+- ``-EPERM``:
-+    - sealing is supported only on 64-bit CPUs, 32-bit is not supported.
-+
-+- For above error cases, users can expect the given memory range is
-+  unmodified, i.e. no partial update.
-+
-+- There might be other internal errors/cases not listed here, e.g.
-+  error during merging/splitting VMAs, or the process reaching the max
-+  number of supported VMAs. In those cases, partial updates to the given
-+  memory range could happen. However, those cases should be rare.
-+
-+**Blocked operations after sealing**:
-+    Unmapping, moving to another location, and shrinking the size,
-+    via munmap() and mremap(), can leave an empty space, therefore
-+    can be replaced with a VMA with a new set of attributes.
-+
-+    Moving or expanding a different VMA into the current location,
-+    via mremap().
-+
-+    Modifying a VMA via mmap(MAP_FIXED).
-+
-+    Size expansion, via mremap(), does not appear to pose any
-+    specific risks to sealed VMAs. It is included anyway because
-+    the use case is unclear. In any case, users can rely on
-+    merging to expand a sealed VMA.
-+
-+    mprotect() and pkey_mprotect().
-+
-+    Some destructive madvice() behaviors (e.g. MADV_DONTNEED)
-+    for anonymous memory, when users don't have write permission to the
-+    memory. Those behaviors can alter region contents by discarding pages,
-+    effectively a memset(0) for anonymous memory.
-+
-+    Kernel will return -EPERM for blocked operations.
-+
-+**Note**:
-+
-+- mseal() only works on 64-bit CPUs, not 32-bit CPU.
-+
-+- users can call mseal() multiple times, mseal() on an already sealed memory
-+  is a no-action (not error).
-+
-+- munseal() is not supported.
-+
-+mmap()
-+----------
-+``void *mmap(void* addr, size_t length, int prot, int flags, int fd,
-+off_t offset);``
-+
-+We add two changes in ``prot`` and ``flags`` of  mmap() related to
-+memory sealing.
-+
-+**prot**
-+
-+The ``PROT_SEAL`` bit in ``prot`` field of mmap().
-+
-+When present, it marks the memory is sealed since creation.
-+
-+This is useful as optimization because it avoids having to make two
-+system calls: one for mmap() and one for mseal().
-+
-+It's worth noting that even though the sealing is set via the
-+``prot`` field in mmap(), it can't be set in the ``prot``
-+field in later mprotect(). This is unlike the ``PROT_READ``,
-+``PROT_WRITE``, ``PROT_EXEC`` bits, e.g. if ``PROT_WRITE`` is not set in
-+mprotect(), it means that the region is not writable.
-+
-+Setting ``PROT_SEAL`` implies setting ``MAP_SEALABLE`` below.
-+
-+**flags**
-+
-+The ``MAP_SEALABLE`` bit in the ``flags`` field of mmap().
-+
-+When present, it marks the map as sealable. A map created
-+without ``MAP_SEALABLE`` will not support sealing. In other words,
-+mseal() will fail for such a map.
-+
-+Applications that don't care about sealing will expect their
-+behavior unchanged. For those that need sealing support, opt in
-+by adding ``MAP_SEALABLE`` in mmap().
-+
-+Use Case:
-+=========
-+- glibc:
-+  The dynamic linker, during loading ELF executables, can apply sealing to
-+  non-writable memory segments.
-+
-+- Chrome browser: protect some security sensitive data-structures.
-+
-+Notes On MAP_SEALABLE
-+=====================
-+With the MAP_SEALABLE flag in mmap(), the memory must be mmap() with
-+MAP_SEALABLE, otherwise mseal() will fail. This raises the bar of
-+which memory can be sealed.
-+
-+Today, in linux, sealing have known side effects if applied in below
-+two cases:
-+
-+- aio/shm
-+
-+  aio/shm can mmap/munmap on behalf of userspace, e.g. ksys_shmdt() in shm.c. The lifetime of those mapping are not tied to the lifetime of the process. If those memories are sealed from userspace, then unmap will fail, causing leaks in VMA address space during the lifetime of the process.
-+
-+- Brk (heap/stack)
-+
-+  Currently, userspace applications can seal parts of the heap by calling malloc() and mseal().
-+  let's assume following calls from user space:
-+
-+  - ptr = malloc(size);
-+  - mprotect(ptr, size, RO);
-+  - mseal(ptr, size);
-+  - free(ptr);
-+
-+  Technically, before mseal() is added, the user can change the protection of the heap by calling mprotect(RO). As long as the user changes the protection back to RW before free(), the memory can be reused.
-+
-+  Adding mseal() into the picture, however, the heap is then sealed partially, the user can still free it, but the memory remains to be RO. In addition, the result of brk-shrink is nondeterministic, depending on if munmap() will try to free the sealed memory.(brk uses munmap to shrink the heap).
-+
-+  Given the heap is not marked with MAP_SEALABLE (at the time of this document's writing), this might discourage the inadvertent sealing on the heap.
-+
-+  It is noteworthy, nonetheless, for mappings that were created without the MAP_SEALABLE flag, a knowledgeable developer who wants to assume ownership of the memory range still has the option of mmap(MAP_FIXED|MAP_SEALABLE), which is equivalent to invoking munmap() and then mmap(MAP_FIXED). Indeed, a "not-allow-sealing" feature is not possible without some level of baseline sealing support and is out-of-scope currently.
-+
-+  In summary, the considerations for having MAP_SEALABLE are as follows:
-+
-+- Grants software owners the ability to incrementally incorporate sealing support for their designated memory ranges, such as brk.
-+- Raises the bar for which memory can be sealed, and discourages inadvertent sealing.
-+- Such a decision is reversible. In other words, a sysctl could be implemented to render all memory sealable in the future. However, if all memory were allowed to be sealable from the beginning, reversing that decision would be problematic.
-+
-+Additional notes:
-+=================
-+As Jann Horn pointed out in [3], there are still a few ways to write
-+to RO memory, which is, in a way, by design. Those cases are not covered
-+by mseal(). If applications want to block such cases, sandbox tools (such as
-+seccomp, LSM, etc) might be considered.
-+
-+Those cases are:
-+
-+- Write to read-only memory through /proc/self/mem interface.
-+- Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
-+- userfaultfd.
-+
-+The idea that inspired this patch comes from Stephen Röttger’s work in V8
-+CFI [4]. Chrome browser in ChromeOS will be the first user of this API.
-+
-+Reference:
-+==========
-+[1] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
-+
-+[2] https://man.openbsd.org/mimmutable.2
-+
-+[3] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gmail.com
-+
-+[4] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvxQMyXgeaRHo/edit#heading=h.bvaojj9fu6hc
--- 
-2.43.0.429.g432eaa2c6b-goog
+The best plan to ensure it is a general safety measure for all of linux
+is to work with the community before it lands upstream.  It's much
+harder to change functionality provided to users after it is upstream.
+I'm happy to hear google is super excited about sharing this, but so
+far, the community isn't as excited.
 
+It seems Theo has a lot of experience trying to add a feature very close
+to what you are doing and has real data on how this went [2].  Can we
+see if there is a solution that is, at least, different enough from what
+he tried to do for a shot of success?  Do we have anyone in the
+toolchain groups that sees this working well?  If this means Stephen
+needs to do something, can we get that to happen please?
+
+I mean, you specifically state that this is a 'very specific
+requirement' in your cover letter.  Does this mean even other browsers
+have no use for it?
+
+I am very concerned this feature will land and have to be maintained by
+the core mm people for the one user it was specifically targeting.
+
+Can we also get some benchmarking on the impact of this feature?  I
+believe my answer in v7 removed the worst offender, but since there is
+no benchmarking we really are guessing (educated or not, hard data would
+help).  We still have an extra loop in madvise, mprotect_pkey, mremap_to
+(and mreamp syscall?).
+
+You also did not clean up the loop you copied from mlock, which I
+pointed out [3].  Stating that your copy/paste is easier to review is
+not sufficient to keep unneeded assignments around.
+
+[1]. https://lore.kernel.org/linux-mm/87a5ong41h.fsf@meer.lwn.net/
+[2]. https://lore.kernel.org/linux-mm/86181.1705962897@cvs.openbsd.org/
+[3]. https://lore.kernel.org/linux-mm/20240124200628.ti327diy7arb7byb@revolver/
