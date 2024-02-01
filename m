@@ -1,96 +1,189 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC8031A61;
-	Wed, 31 Jan 2024 20:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CF7442A
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 01:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706734308; cv=none; b=jcqbGf5iHempM6tv05m9O3HoUUZ21sb8ZV1FwznWE4R0/c1gJuecNURMSNwCQzessPXS2peAdJn61u6IRO5z0wtjMax6BA2bYszQMouoNY1B++ow6FC0R5suvero537XklBqatb/Ph0NsNjL4ZqodWXmAcBeHXssbWSZ9vrWjwk=
+	t=1706750845; cv=none; b=CPG0T4a99hGtiYZfHfASges3I0BJ3LtJDKL3B7ElkjuxljZGtpVOuo6HOOubQk1fCWZaaIQFpidU5fNy3Gp9h/CbmxW7BlTtd2o6hdBgX/3sZbrztbVMqciZY8CsZdVrvyfdOiZa+4Hf05VwTXcDxKRwyF78tgSAAslqiIHwWYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706734308; c=relaxed/simple;
-	bh=vybbYYq9hxEE/rnqs38OpgiASw61KAQjmuklQgJTdi4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jfkFxSOnWzmZtfUTV2SdQ4bbrCBnzROYZYal+M9knMC09Gz15RfISnelwBoklW2+zacgoNeTX4Z1TN7daZTUjFlujU+B96k4+1KG3hyZGR4UI6czA7JIvK91FOIFCvs2mB16XYgozq9spYNwkudCb6xqNoLckA6CcaxZklD4RFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=XtKDfsAJ; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1706750845; c=relaxed/simple;
+	bh=BQfrkfnAjRHW3tpPJSA0bCjLjUMIPrCPNnB/AXFgCO0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=pWl+4PgUMJL8QTbjZbtTqxX3+VM5Uxp2qAOxVSCVXxI0Zib6KwLH4QhdcE+LEj+czyPcXljyZcOnDW5+ouCtrwTvjpIzpKvvb0iSHwsVoIIPrrPNSdjAytbSPhqvALJlL2nnU+vM4FnF4rnyB3NbZKrAWfW0N5/GaYuyAAU7lz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mjg46Iif; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="XtKDfsAJ"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3C92247A94
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1706734303; bh=8074FH1QslNr+keTLp0xQItj4SG0X91J96NvtdBhqvs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=XtKDfsAJjEO4xLQz8MDxx5apYR7PQdBYvZPl1xN7hNAPvrciKLwN8XM8IRQ5a6j8B
-	 ZyGPuTViZj0wLUeCJoflQTen8at7cZNKLlBy6/bbiVEvXrsUTRLN5ZpbLsjDTgAILS
-	 GIE1CrP4Xd/fT2N9tv6RXZh4H210n+qpBzbOZHZ6CuJB8y/BDdJsyN6uQxofzQow4r
-	 ZCxE9hVyZitmqzfyNgGngA1KuNfAG5b9b6hCyjASEjGJQYcwtQSOr2+bjWBnuXdry5
-	 58wh4c8E6sAQQofeFSENZHWDv7NfgAcLQHq03KjQDQ6BxhtlRHMgGpBORXzGpKCf7x
-	 Sc3nVD8auGIjA==
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 3C92247A94;
-	Wed, 31 Jan 2024 20:51:43 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
- sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com,
- rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
- groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Subject: Re: [PATCH v7 0/4] Introduce mseal()
-In-Reply-To: <CABi2SkV4Q9CY+vb+t_+7RN_EtFB+FUi4ObHaZWo_+KMt7u4yDA@mail.gmail.com>
-References: <20240122152905.2220849-1-jeffxu@chromium.org>
- <87a5ong41h.fsf@meer.lwn.net>
- <CABi2SkV4Q9CY+vb+t_+7RN_EtFB+FUi4ObHaZWo_+KMt7u4yDA@mail.gmail.com>
-Date: Wed, 31 Jan 2024 13:51:42 -0700
-Message-ID: <87le854469.fsf@meer.lwn.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mjg46Iif"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-214410e969cso729187fac.0
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Jan 2024 17:27:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706750843; x=1707355643; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sDzJ7JgQvwxL4RB0XYtG8kPAD5jbJ2pvE+FQi7xvQPU=;
+        b=mjg46Iifo7aTLzPS5SP/EHQpyYgBjzADJcvv2oA8/jHWI0nJ0NmnJ51XFM/7rNTuso
+         YKQlmabt8guNijLJpUkNalvermaVyTKU3530A4aBTG5b+Apyx34EeAdAzAtOlCM6yEYv
+         lXhW2oZkcpjKFayh2gNph3nv6XYbg4K7UmGho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706750843; x=1707355643;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sDzJ7JgQvwxL4RB0XYtG8kPAD5jbJ2pvE+FQi7xvQPU=;
+        b=YsG0alEnlsQIGKMDYLdjlM2k1WX0Dx5CLeqeDJl7vXIdSWWo1hKG1fGMiGRWMmO+5E
+         BSlmAKiQ+MdWTbODG8XenkeZyb4mqqGer4T2YRF9X+NOnSuf/uIVM2yYFD50sot3TBm6
+         Gbmb+0Gkg7ddbVp4cBUTkwUstQJ5QFtG/+MxYXvLgYuZqY4ehQmpTFxa6UYgTfGaSDN1
+         MwzOI+H3aw4ph0r+T2lQNWWr2KB0QgVXnYeSZUEK0YhLOKVOLAH0yO5GomRWhaJvEnk/
+         az1fp4FbrAAqkZrH/sr7l2IsvAx2p8E5bG20yfeIryJjmg09VKRlPYI8AfJ3H12xGz+j
+         gGIg==
+X-Gm-Message-State: AOJu0YzB93dGo1wTAwHX4s7YGlSsNSYX2sRUVQa7DdY9mM+42LA1I34O
+	HrnurEMMBFUdUWaL1IndDTuqorYxZTTg38bplIrYlOuipkOd17TfA5pCgHxWfLkl2LSAEEILF30
+	IUiOTPP+l5lU8B5iRh/Wb/wd4WEy1X2+OntAJ
+X-Google-Smtp-Source: AGHT+IE9K01TCTZhsWGjePujNgbATRhQaKALuXvW0OHXOMwQOD3gFk7KgtXrb7TM6FbH4tdFNU0N+tvMZqAhTTCe8YA=
+X-Received: by 2002:a05:6871:a417:b0:210:dcdc:be39 with SMTP id
+ vz23-20020a056871a41700b00210dcdcbe39mr1311243oab.20.1706750843175; Wed, 31
+ Jan 2024 17:27:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
+In-Reply-To: <20240131193411.opisg5yoyxkwoyil@revolver>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 31 Jan 2024 17:27:11 -0800
+Message-ID: <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, 
+	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
+	usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Jeff Xu <jeffxu@chromium.org> writes:
+On Wed, Jan 31, 2024 at 11:34=E2=80=AFAM Liam R. Howlett
+<Liam.Howlett@oracle.com> wrote:
+>
+> Please add me to the Cc list of these patches.
+Ok.
+>
+> * jeffxu@chromium.org <jeffxu@chromium.org> [240131 12:50]:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > This patchset proposes a new mseal() syscall for the Linux kernel.
+> >
+> > In a nutshell, mseal() protects the VMAs of a given virtual memory
+> > range against modifications, such as changes to their permission bits.
+> >
+> > Modern CPUs support memory permissions, such as the read/write (RW)
+> > and no-execute (NX) bits. Linux has supported NX since the release of
+> > kernel version 2.6.8 in August 2004 [1]. The memory permission feature
+> > improves the security stance on memory corruption bugs, as an attacker
+> > cannot simply write to arbitrary memory and point the code to it. The
+> > memory must be marked with the X bit, or else an exception will occur.
+> > Internally, the kernel maintains the memory permissions in a data
+> > structure called VMA (vm_area_struct). mseal() additionally protects
+> > the VMA itself is against modifications of the selected seal type.
+>
+> ... The v8 cut Jonathan's email discussion [1] off and
+> instead of
+> replying there, I'm going to add my question here.
+>
+> The best plan to ensure it is a general safety measure for all of linux
+> is to work with the community before it lands upstream.  It's much
+> harder to change functionality provided to users after it is upstream.
+> I'm happy to hear google is super excited about sharing this, but so
+> far, the community isn't as excited.
+>
+> It seems Theo has a lot of experience trying to add a feature very close
+> to what you are doing and has real data on how this went [2].  Can we
+> see if there is a solution that is, at least, different enough from what
+> he tried to do for a shot of success?  Do we have anyone in the
+> toolchain groups that sees this working well?  If this means Stephen
+> needs to do something, can we get that to happen please?
+>
+For Theo's input from OpenBSD's perspective;
+IIUC: as today, the mseal-Linux and mimmutable-OpenBSD has the same
+scope on what operations to seal, e.g. considering the progress made
+on both sides since the beginning of the RFC:
+- mseal(Linux): dropped "multiple-bit" approach.
+- mimmutable(OpenBSD): Dropped "downgradable"; Added madvise(DONOTNEED).
 
-> On Mon, Jan 29, 2024 at 2:37=E2=80=AFPM Jonathan Corbet <corbet@lwn.net> =
-wrote:
->>
->> jeffxu@chromium.org writes:
->>
->> > Although the initial version of this patch series is targeting the
->> > Chrome browser as its first user, it became evident during upstream
->> > discussions that we would also want to ensure that the patch set
->> > eventually is a complete solution for memory sealing and compatible
->> > with other use cases. The specific scenario currently in mind is
->> > glibc's use case of loading and sealing ELF executables. To this end,
->> > Stephen is working on a change to glibc to add sealing support to the
->> > dynamic linker, which will seal all non-writable segments at startup.
->> > Once this work is completed, all applications will be able to
->> > automatically benefit from these new protections.
->>
->> Is this work posted somewhere?  Having a second - and more generally
->> useful - user for this API would do a lot to show that the design is, in
->> fact, right and useful beyond the Chrome browser.
->>
-> Stephen conducted a PoC last year, it will be published once it is comple=
-te.
-> We're super excited about introducing this as a general safety measure
-> for all of Linux!
+The difference is in mmap(), i.e.
+- mseal(Linux): support of PROT_SEAL in mmap().
+- mseal(Linux): use of MAP_SEALABLE in mmap().
 
-We're excited too, something like mseal() seems like a good thing to
-have.  My point, though, is that it would be good to see this second
-(and more general) user of the API *before* merging it.  As others have
-noted, once mseal() is in a released kernel, it will be difficult to
-change if adjustments turn out to be necessary.
+I considered Theo's inputs from OpenBSD's perspective regarding the
+difference, and I wasn't convinced that Linux should remove these. In
+my view, those are two different kernels code, and the difference in
+Linux is not added without reasons (for MAP_SEALABLE, there is a note
+in the documentation section with details).
 
-Thanks,
+I would love to hear more from Linux developers on this.
 
-jon
+> I mean, you specifically state that this is a 'very specific
+> requirement' in your cover letter.  Does this mean even other browsers
+> have no use for it?
+>
+No, I don=E2=80=99t mean =E2=80=9Cother browsers have no use for it=E2=80=
+=9D.
+
+About specific requirements from Chrome, that refers to "The lifetime
+of those mappings are not tied to the lifetime of the process, which
+is not the case of libc" as in the cover letter. This addition to the
+cover letter was made in V3, thus, it might be beneficial to provide
+additional context to help answer the question.
+
+This patch series begins with multiple-bit approaches (v1,v2,v3), the
+rationale for this is that I am uncertain if Chrome's specific needs
+are common enough for other use cases.  Consequently, I am unable to
+make this decision myself without input from the community. To
+accommodate this, multiple bits are selected initially due to their
+adaptability.
+
+Since V1, after hearing from the community, Chrome has changed its
+design (no longer relying on separating out mprotect), and Linus
+acknowledged the defect of madvise(DONOTNEED) [1]. With those inputs,
+today mseal() has a simple design that:
+ - meet Chrome's specific needs.
+ - meet Libc's needs.
+ - Chrome's specific need doesn't interfere with Libc's.
+
+[1] https://lore.kernel.org/all/CAHk-=3DwiVhHmnXviy1xqStLRozC4ziSugTk=3D1JO=
+c8ORWd2_0h7g@mail.gmail.com/
+
+> I am very concerned this feature will land and have to be maintained by
+> the core mm people for the one user it was specifically targeting.
+>
+See above. This feature is not specifically targeting Chrome.
+
+> Can we also get some benchmarking on the impact of this feature?  I
+> believe my answer in v7 removed the worst offender, but since there is
+> no benchmarking we really are guessing (educated or not, hard data would
+> help).  We still have an extra loop in madvise, mprotect_pkey, mremap_to
+> (and mreamp syscall?).
+>
+Yes. There is an extra loop in mmap(FIXED), munmap(),
+madvise(DONOTNEED), mremap(), to emulate the VMAs for the given
+address range. I suspect the impact would be low, but having some hard
+data would be good. I will see what I can find to assist the perf
+testing. If you have a specific test suite in mind, I can also try it.
+
+> You also did not clean up the loop you copied from mlock, which I
+> pointed out [3].  Stating that your copy/paste is easier to review is
+> not sufficient to keep unneeded assignments around.
+>
+OK.
+
+> [1]. https://lore.kernel.org/linux-mm/87a5ong41h.fsf@meer.lwn.net/
+> [2]. https://lore.kernel.org/linux-mm/86181.1705962897@cvs.openbsd.org/
+> [3]. https://lore.kernel.org/linux-mm/20240124200628.ti327diy7arb7byb@rev=
+olver/
