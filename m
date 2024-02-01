@@ -1,59 +1,59 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB6A15AAA0
-	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 08:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA4D15AAB5
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 08:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706777361; cv=none; b=T0g/Vaf2chTTbSu+Ft0JzgDuUwbD24bgRpT6o+GKk1mAEOYOZ5KxpRYeSVfcSDLqgS+eVGvygpIar6CjsCGLjSUn2cVAU8adZZTXDlrLkgLjlGdS5B/PJvByHCb81Ae8Nq0kgr5cr+MptzOMwkIUb6Qe+CkoGBQI8EtMEBIczG8=
+	t=1706777417; cv=none; b=EVfOZFbcy03tulQJ0Fm+dl5OkSQPktvQk0z2QdRa+GZGX5bg9c0lZvgzRI2q5BKx3qD5ShDoEJ7hTPtDp2gJpNlN33cW0yTf91dOeNh0MNFYYTT3WJOhJ6sVMX9lgOqi8U/qahuJY48dTqABlBbs9r9BIAR8uvCkfGaPAG453VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706777361; c=relaxed/simple;
-	bh=FCOuo3whRBAH9fCCbmAfnat5ywEjsHLaGIcxJbOHtIo=;
+	s=arc-20240116; t=1706777417; c=relaxed/simple;
+	bh=DuXCuFYNJhHBLcY4f1qpPGoAd7Af5FzK4+eYGfoq3m0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OqOlBTsz6oXTHCVQN8LFVpbX35iedmBMIzAKYD6vTtaPo2dnLyVnZ1N/VRzubqE2qjtlkpOXhngWtWNU8+cR/Vy8PivxAnJou5uK0lF/pIVFeOlG7ZVTcMYwIjSUa5+sYMxyGM8/ioWeSixYQzjLaoVZ7Zv7jdhRPgHzj0DP9wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BrQzeCp+; arc=none smtp.client-ip=209.85.208.169
+	 In-Reply-To:Content-Type; b=GYgHWP7HMa/iqjiqvaML4i+1JT+52GDIq4QaaL/BKd0yV0kKhJWN7QPlDeVDI8aqouj0tITnzngObUslyJJPlSq9GhIVx7MENmfzjRgIfXcwnf4WoJMU7iVYSKbbhnSsPDkMt4ymJ06JzBQOyVbGw8Tc4YrrDH6YK9y2Tri2vL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=esb9YC4y; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BrQzeCp+"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cf588c4dbcso8904851fa.1
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Feb 2024 00:49:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="esb9YC4y"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55a9008c185so1106459a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Feb 2024 00:50:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706777358; x=1707382158; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706777414; x=1707382214; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHRSyujypVnylYvtGCOuwW4Y0R5uEJFGjZjMEzXEob0=;
-        b=BrQzeCp+/CuxJuMXkoddZWZH8d4NtK9MU/TvpCVd5Wd/fzE/jHCEyBQhQ6Pan5j87J
-         cmMoVHL9UYK7D/QYY7sjMZ1Iiig4DGByPqzfFk6X3pXCQGY46s18qdfJ+APYRXPP4km2
-         YzYsHbFTv8MHdouGXS5vhs2OkDJ7Sh6VfYkOpgAvUBYKhbhs+To8QqoHng/KlwajdjQm
-         znD9SxjLvhHfipL8phOuAgINkQhU973hBZfj0a6xzgvAfEyIoau9l2wK/Mh9W+hQK5o1
-         0EHNuTV/gcUSPde0WaGDj6LNuyzibTt8VWhWaF/mHjmvVDumAQ8zFWEJbHdLhdR0LzHP
-         X19A==
+        bh=w+0W1coADRrc6NCCK1wAOqt+R3gqvTK2Vff6DnM2AMQ=;
+        b=esb9YC4ymMAMTIhu+k1ubaLKBg8l1F4e8YCFYOmX2zwwKqIXOrbhv81JUXHDfzwT64
+         9KdrPuojxEtXRK3CJt2IvIH15v7fZDR1fpa+RI9WvfJVdXvC+XUPTw6CsIBeq1HcB8sZ
+         XjQWT4U9eI1pPXRV78cgml3WHITt2Reh8qf3OE6hsJDzuGDZctPtLP9NKAXoRkdgZxiX
+         icxLMq/VjkTjPNHYLQkX9sVWjImtrrL/h/htgztEOQ+XuTrQgJVL4l0bw4i9JC3iXS00
+         YZyRNkkjSM6nhjunMX/yepYHptkze8h7Gwa4xODoiLImKTOT9RdFeOAc17cZ33u5Gg1J
+         DQww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706777358; x=1707382158;
+        d=1e100.net; s=20230601; t=1706777414; x=1707382214;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHRSyujypVnylYvtGCOuwW4Y0R5uEJFGjZjMEzXEob0=;
-        b=hGSxPNxrNsPT1uwdTs4rc9YGA+iQ2lfrFFRjAVUcQgUq5JlBBbQDYe6AaC1oU7x8qc
-         27Z31bD1yDGZNIF9ftpKJVI1YFO9R+dZPHzcaF4ihkqtj5vBTc9jpUHYxm/38Z2fRAoH
-         A5lUFWd8mgWozycKRLgGj2w1XGDMjWhkp3yjiYB371dKHzRZjfznFyZtLHIAVfT0Be0t
-         9eb9U+dsggN6EOEXadsOnAb3Q8UGoo5RwHuTAQMI/f0cJceGgViz1WGGVN531Y9+rZY4
-         nFbSB55ofwtKus2KxEBRgx/pMPtv2Yh1BdW9S5hwVZwM0fWCs+fpweDUsTS2S01UMti/
-         YJbw==
-X-Gm-Message-State: AOJu0Yw3rHiBpSIxCz1zSAhQ0DB7EePvZDLNoRz/IJr4RVYQ3ee4Np2l
-	8bwfnG5DuSIzRwuWPyiIEYW+L9svoBM/N/FHh3XR172fz/YfuAAleE8Y+p5Uzds=
-X-Google-Smtp-Source: AGHT+IFT83pDiAtotK+SGsdHL6ockZWWFrbukVH+04w2+HmSL1mSIJgxdDpeNxKXm7FDBl9k22CYkw==
-X-Received: by 2002:a2e:bb90:0:b0:2d0:5fa6:5f04 with SMTP id y16-20020a2ebb90000000b002d05fa65f04mr2404704lje.0.1706777357912;
-        Thu, 01 Feb 2024 00:49:17 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXbXjqGGXd0HSp2QJ3mJF6gY9TBIJb5bohlPEDqH9tRr67ry95lzPbAn8JygS7q2Je31rqiVOpYbbdCWs60K6sCNfU1IIRC9DyXZNXmvTs378i961wClLHJ9H8jt6qikaYN6LXRHeDAq0t0S/vWwvScEj/adTAmj7iLKFq7BVnIF1MOpMtD4i3UasUKxImdU4dZL7xxFwlpGnHtwRzipcpO1BxEpEWVKUXXhR5D/eZf6taz1CgRm5lmnROIvLpDQrSx7Sr/0RAUMC5urrIDUiwR2U0QtEGOiWMeHzko9pgQ1ar8qAlhM9UF4FoDPYNtnl4oExm87yv0jl1uZq0/i6zARUPHEYLRAgutU8suJ1dwXOEdsUIC7nn2usUUVRzecVMleSW3R85gy6VTNHT7EJ3+lJKs/+3Z
+        bh=w+0W1coADRrc6NCCK1wAOqt+R3gqvTK2Vff6DnM2AMQ=;
+        b=RZ2fM5JfIVHqfMqHqbtvOvOailZKdVipQ3HhmDU8UScBEgdZQ9obo/RF9MWq5Nnowe
+         G7qGvAJxFXSMxDLM81n6W0dFtCxYcWuQb9BQrcP+fKRiujEfTYWJqGIJFv9cv5YQRYYC
+         csrSxeA42WBMLJZxBkaDRLueAd72qc5PAmCVBcHlf4ylHOUnbGyAi1Z4VzPhtRFwTuLB
+         ZBDLaHkc2/inbKA73MpkeoMiQW7ibMSgZUQv2Y8gbAuRlbd9h5tvFJ/zlUSdAKePVNSa
+         3IVccwEVlDK5x4JJb4F/rc2SlcvT0U36hrksr6XLNN0wqgRK0yAEub/LxeiHRWUYFIcS
+         wyAg==
+X-Gm-Message-State: AOJu0Yya/VpxNaBAFA2nIy6HU/nBdjvOmFEWsFumXV0UKYmokhu3xPPg
+	j3C6Vf6W2F5HXUrG3A598KX7hb0bbZYF/piRe73/YQv1OzU9RWmdks2ESCj3yo0=
+X-Google-Smtp-Source: AGHT+IGmufUBvXu7yjtJQA/VoqO6xdB6gQShGIN28deYeT3cjtGburCBhBDouEH/AREOpJ2czLYyEw==
+X-Received: by 2002:aa7:d987:0:b0:55f:c25:c2fc with SMTP id u7-20020aa7d987000000b0055f0c25c2fcmr6665313eds.11.1706777414153;
+        Thu, 01 Feb 2024 00:50:14 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXvUXOB+uQvxdvzMH2buPm9d28wUK4rt5Fje4cjH9cNA3uVo+lKuMD5pMbsQMiueFjhatQ1/hKnxy+Y+OD6QwNOinRzMoU7aaQCVlFKeNtz+AiR7eIGIUp4Swi1ETxWhgjfnirK1kMUXLeAvnQ9PYF/5CYT/DnSNy1peoxX4lAuK9fxv0icyamEt8PiFi+Mg/aPWpEixmv5qZUmVkk0Y9tSi2aIeYk2swtbSIj+dWsIN7z7ONsw6AJOtPYpXwuMHzTHwcSj/mWn95YXG/vNsUOuIeT8gp/4utomcoSowpovxPplnWmIqzYCnK2aE/KUlhmpzqk1JDwkuGOTO5FlbXQSW6xtHawy6fV3d4r7Gy61XLlthIeVSB+UoWFj6ovK4IZt+gUmHYl/eC2jBg7oh/+8SdX2Ofy5
 Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id fe1-20020a056402390100b005598e3d6d23sm6551798edb.16.2024.02.01.00.49.16
+        by smtp.gmail.com with ESMTPSA id fe1-20020a056402390100b005598e3d6d23sm6551798edb.16.2024.02.01.00.50.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 00:49:17 -0800 (PST)
-Message-ID: <3a352f75-ee92-497f-a988-a7636e84a176@linaro.org>
-Date: Thu, 1 Feb 2024 09:49:16 +0100
+        Thu, 01 Feb 2024 00:50:13 -0800 (PST)
+Message-ID: <059cd10e-0fa3-4edd-bb2b-521236e1a686@linaro.org>
+Date: Thu, 1 Feb 2024 09:50:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,8 +61,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/4] dt-bindings: arm: tegra: Add LG Optimus Vu P895
- and Optimus 4X P880
+Subject: Re: [PATCH v1 3/4] ARM: tegra: Add device-tree for LG Optimus Vu
+ (P895)
 Content-Language: en-US
 To: Svyatoslav Ryhel <clamor95@gmail.com>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -72,7 +72,7 @@ To: Svyatoslav Ryhel <clamor95@gmail.com>, Rob Herring <robh+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20240131105153.8070-1-clamor95@gmail.com>
- <20240131105153.8070-3-clamor95@gmail.com>
+ <20240131105153.8070-4-clamor95@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -118,33 +118,53 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240131105153.8070-3-clamor95@gmail.com>
+In-Reply-To: <20240131105153.8070-4-clamor95@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 31/01/2024 11:51, Svyatoslav Ryhel wrote:
-> From: Maxim Schwalm <maxim.schwalm@gmail.com>
+> Add device-tree for LG Optimus Vu P895, which is a NVIDIA
+> Tegra30-based smartphone, orignally running Android.
 > 
-> Add a compatible for the LG Optimus Vu P895 and Optimus 4X P880.
-> 
-> Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/tegra.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm/boot/dts/nvidia/Makefile            |    1 +
+>  arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts |  496 +++++
+>  arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi  | 1821 ++++++++++++++++++
+>  3 files changed, 2318 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-> index fcf956406168..9b3c565b21c4 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra.yaml
-> +++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-> @@ -64,6 +64,14 @@ properties:
->        - items:
->            - const: asus,tf700t
->            - const: nvidia,tegra30
-> +      - description: LG Optimus 4X P880
-> +        items:
-> +          - const: lge,p880
+> diff --git a/arch/arm/boot/dts/nvidia/Makefile b/arch/arm/boot/dts/nvidia/Makefile
+> index 60091bf7e48b..f66337e5d188 100644
+> --- a/arch/arm/boot/dts/nvidia/Makefile
+> +++ b/arch/arm/boot/dts/nvidia/Makefile
+> @@ -39,5 +39,6 @@ dtb-$(CONFIG_ARCH_TEGRA_3x_SOC) += \
+>  	tegra30-cardhu-a02.dtb \
+>  	tegra30-cardhu-a04.dtb \
+>  	tegra30-colibri-eval-v3.dtb \
+> +	tegra30-lg-p895.dtb \
+>  	tegra30-ouya.dtb \
+>  	tegra30-pegatron-chagall.dtb
+> diff --git a/arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts b/arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
+> new file mode 100644
+> index 000000000000..7e7cfaabe56e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
+> @@ -0,0 +1,496 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/dts-v1/;
+> +
+> +#include "tegra30-lg-x3.dtsi"
+> +
+> +/ {
+> +	model = "LG Optimus Vu P895";
+> +	compatible = "lge,p895", "nvidia,tegra30";
 
-NAK, it is not lge, but lg.
+This is lg, not lge.
+
+Also, all over the file you have underscores in node names. They are not
+allowed. Please consult DTS coding style document.
 
 Best regards,
 Krzysztof
