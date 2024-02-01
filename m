@@ -1,84 +1,137 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEEBCA42;
-	Thu,  1 Feb 2024 01:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9F115A49F
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 08:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706752551; cv=none; b=DyvNUG4dx4eCxNPvs+NLm9KvoRcKFLXAeuk8hibsNFx6cT5Q0MqYHt9ZI8F5u+bdQOH9IIYoCD3A/EwPks0dVuF0Y0tv8LwqwyswxIe+J2CLc/VYelm0l9eXMZKRAxyq0ZQurW4FrjDNiTf1RTjV78wG3sgrvXVlohgCh7xX+qs=
+	t=1706777297; cv=none; b=UCWRb4G6HRtg8R4rHMIotHfrw4xunmnL8UqQTnPBAzUInvgOkX4Gpupxd1fz3KTj5dkbRz24LOPywLkzWE6iZWadvhr99eF4eeKX+V/rLYOIMwJAFG1cguqdUSXGfHwaW/+CySRnjcz8EazoICVKtFC2QU5VcM/3nR+khwXeTWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706752551; c=relaxed/simple;
-	bh=FAb1xu7N0mD7fB4oPNkaXK9r+LVVO3hmEBonp6dyuIM=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=POJe9a4CRdLaSvh22dWpnkaw1FUOYWwf2aVsSWKrJJuTOkcnS1KC407wBs1OA9kcu7b2sfeFib64yixPxwkQAa5sc+IaPC9vA/x3GXtM7/wX1R5ZHvAPp2N2DUGIbgbH5/CPZcuDRCY8vxGN6/Cu4mqDdbDQe7E6+s7bF6xca8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=chRM3vKP; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1706777297; c=relaxed/simple;
+	bh=f4F6MTAQJd8Vgi1aKRgKDRrsgMlKqr4rj25u4Yl9LK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b1Q48+mVqSkffxTF8Da1E9MmzLLJtgcUx/6yP+Y+lrXVpPfjgCKc8LZtEdEkM3EHur5g3TVhDPhkxZCm3mNWdC4gvq2VzgI9C+dmDH1bUk2TMd6q41GN32SLHRRZdGeeDe+qSRaCUIIs6l/9+ZCd5CXipL60OfPDlI4PgFlyP+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CFWOTFpj; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="chRM3vKP"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=FAb1xu7N0m
-	D7fB4oPNkaXK9r+LVVO3hmEBonp6dyuIM=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=chRM3vKPnLKjxR1g/l1bvuZA5Er+nt+s5
-	2B8DcLvp2JUGv7M17p4P31I3B5oOkWjH0yVjdqbyM4OKo2EQAYAzgIGS6KsuxrvaCC3mmR
-	iF/VFrsZeU2KoyOfJwB156nIKcI8UudZTA3/Zhjk2cN65GWKn1hj68PjdKHOWM0kgyA8MZ
-	8JX7WksOgv8/az9KcBUQxYFHILw/hCwrO82C6GLGaO/b/wALOVh210+AjKpSyE8yct9zD7
-	2i5pgl6NJsrcv+NAS6r1ugU0dh/+4t0PX5i+X07FzxRdQHZ9z+Qocd6q8N8AWUFH5VDKuu
-	8HmwCLCvTip5rA41MiXEhwk61X/VA==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 4380a574;
-	Wed, 31 Jan 2024 18:55:48 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Jeff Xu <jeffxu@chromium.org>
-cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-    Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    willy@infradead.org, gregkh@linuxfoundation.org,
-    torvalds@linux-foundation.org, usama.anjum@collabora.com,
-    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-In-reply-to: <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
-Comments: In-reply-to Jeff Xu <jeffxu@chromium.org>
-   message dated "Wed, 31 Jan 2024 17:27:11 -0800."
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFWOTFpj"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55783b7b47aso852506a12.0
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Feb 2024 00:48:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706777294; x=1707382094; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=REG2Wu+YiLPlR/Fe2U5NdazLcF36rkDjg0fYhPH6wbI=;
+        b=CFWOTFpjPsxmGmpdD+iC2D2HCLMlx5Hav0TgeOKeVhliTy1ji4jsTglDLtOaiHTtqn
+         hji6OvYDgrGwMJAFewgL+9U5CO6dKSHFJn7uX8nVtO7CpduH/FaVY7LAr3gQbTOws5fa
+         WomyQYz7qvdHhaBDGb06FFwLP5csRF7UjNTmc9zHOqwVK+Sg8C1PoHNlo1xE+KNqwZCX
+         +dZPdtTYAGij8aJId+Y5XGBb1FC70FJn8fQJGCMjawkl2iGPIT34wm821rql2yVzqD6A
+         92McQRbqnL+JwS/ieYwtLhUnmHxTXKEf3FvAKs96txWQO15clJse2oDmLSPAryOzuHNp
+         N+yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706777294; x=1707382094;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=REG2Wu+YiLPlR/Fe2U5NdazLcF36rkDjg0fYhPH6wbI=;
+        b=RRVAOmaXi8elB/t8qeBcFzZR7Ltu6QBLI7Ll58qDq0kKjl14t7tygMQjhSjs4wzRFq
+         KGaz/1gxy0DgNL8srD3A//7/+Q1WqAMouB7oulwNeejkUKB9HDJD1cSstx7nqCZDhWmr
+         rjyM+HK/Wyt/NOWmWJZgYr+xmgO56nfrg0AC5lWdPbNyixH2QwBNepyuN15FdwWzpf81
+         P2Tzwxa8RIABb1pwSFVMomDv+aPuDqr31J4wLIRQwnXEMef/Nw8dbt3o2hTlsZu6itI9
+         EsB4mrU3+LRmG+JrrWE5vjxzqK4hRkCZxcFkMiPixJ2vobDBneG3FiUhaC9X/ATmHhkA
+         yGbg==
+X-Gm-Message-State: AOJu0YyB+KImalF21AkaJxpzsc44JIH6lvxGRAWbU/bnf5Mq/AHP1efV
+	SsuxbV/Btjd5Hkuz8IAtseV3JQG86OXeAfcIZP8FCo0f/eP2AmfrW7awrgj7bPI=
+X-Google-Smtp-Source: AGHT+IGHunBHztBsV9QJNV3FWxYRHsZHhP0aQWw0z5liuRt7YtYvFOh6Hq+hC2UtzPwBm55TJiI0Hg==
+X-Received: by 2002:a05:6402:1d29:b0:55f:8031:501c with SMTP id dh9-20020a0564021d2900b0055f8031501cmr2996238edb.30.1706777294353;
+        Thu, 01 Feb 2024 00:48:14 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVwnUU+x75+3B5JQF3koWoxHWtzzDU3y27nNIlAoyLpCtSwmwWY0H2ukZT0HttjEzwawljhs888ZL4XrracYOuJ951kwOl1QsbhDclujTHRgw+wwVojSC8j0TGTQcb7J/A/+t7aBAOjZXJlZfmnWMtqEE5Kygrcrv6uFj+IdABTLu10mynWA9IMaHnk57rJqKLlJYiZSgtLV9sVnj1M6LEPINyHwNiQsIb5eKY+cia596x4HEIpYJUihY6LZHPVySIPyB0dfZ0R0FEx9ZrlAsoUikF00w0BUQRzwk5CCck2WRNleUITaRg2jUG1cqHxTKA4QiFp4cEWa2wWCZpm2NnWlW3836Ir93es2XqAFZWCjao+70u6vABS5BfisnFNnLOcg47X66qAVaF8ELSesmrmtRY3HtCV
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id fe1-20020a056402390100b005598e3d6d23sm6551798edb.16.2024.02.01.00.48.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Feb 2024 00:48:13 -0800 (PST)
+Message-ID: <a021d3a7-93eb-4fdd-b109-76443c955a82@linaro.org>
+Date: Thu, 1 Feb 2024 09:48:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <22279.1706752548.1@cvs.openbsd.org>
-Date: Wed, 31 Jan 2024 18:55:48 -0700
-Message-ID: <44005.1706752548@cvs.openbsd.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/4] dt-bindings: vendor-prefixes: add LG Electronics,
+ Inc. prefix
+Content-Language: en-US
+To: Svyatoslav Ryhel <clamor95@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Kees Cook <keescook@chromium.org>, Maxim Schwalm <maxim.schwalm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240131105153.8070-1-clamor95@gmail.com>
+ <20240131105153.8070-2-clamor95@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240131105153.8070-2-clamor95@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-I'd like to propose a new flag to the Linux open() system call.
+On 31/01/2024 11:51, Svyatoslav Ryhel wrote:
+> Add missing LG Electronics, Inc. prefix used by some older devices.
+> 
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> ---
 
-It is
+NAK, same reasons as before:
 
-   O_DUPABLE
+https://lore.kernel.org/all/9942f964-442e-e782-3926-6d7d1123418a@canonical.com/
 
-You mix it with other O_* flags to the open call, everyone is familiar
-with this, it is very easy to use.
+Best regards,
+Krzysztof
 
-If the O_DUPABLE flag is set, the file descriptor may be cloned with
-dup(), dup2() or similar call.  If not set, those calls will return with
--1 EPERM.
-
-I know it goes strongly against the grain of ancient assumptions that
-file descriptors (just like memory) are fully mutable, and therefore
-managed with care.  But in these trying times, we need protection against
-file descriptor desecration.
-
-It protects programmers from accidentally making clones of file
-descriptors and leaking them out of programs, like I dunno, runc.
-OK, besides this one very specific place that could (maybe) use
-it today, there is other code which can use this but the margin is too narrow to contain.
-
-The documentation can describe the behaviour as similar to MAP_SEALABLE,
-so that noone is shocked.
-
-/sarc
