@@ -1,144 +1,76 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CFC40BE2;
-	Thu,  1 Feb 2024 22:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925E9405F4
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 22:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706826283; cv=none; b=n4rDELgtjXQkrXrtiQXOxssTgT2ZZDCIVnUczZWB2dYJlAcVFngxv3U3yHkXDOSY4aTi1l71KVXBQbot9Cq+JzvI1nUBokhsrD49nh74HgVoOv4m5oYcHxQAOUb1Xrw5EKzNvF4x5RsT6wmM2IJSnSJmxNYcDtYJdr94miVcLRo=
+	t=1706826607; cv=none; b=tFAxmvP8xFCaLqvGutV9KEBD5IGwH2+K4269A8dBpPfjBzH4OlBWA/tU53H0HbVKu6GknXOwFKKCHp2nGjNqZTdfT/54TrHq3TvvKD2/NprnjzCoCeAE9BS1CTOq586XVaFTyuLudMZOwUgr76xQQulllXOYUhU56vCMrfw2Efk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706826283; c=relaxed/simple;
-	bh=V+pgcDkLptPWj1ZsXMjO/YpMP2pXDVV5rTLspffLxF0=;
-	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
-	 Date:Message-ID; b=BBqLUnv2qEk+lxcqSYUo7A0QkvdUipaldpE6XHlFCAFDHA1r4hAfufZ9XGfhCBj1PM1uIBN9MYL/T+F5vlqx/N1r9kZ80PSRE6ezkC4oBEeQpJw6rC/7jUP3Rtnu3YNZl0avB06G8sCLiAmEn0FSlcyiPdJcG2JGRUJnffAEspM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=mQtvNz/2; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="mQtvNz/2"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=V+pgcDkLpt
-	PWj1ZsXMjO/YpMP2pXDVV5rTLspffLxF0=; h=date:references:in-reply-to:
-	subject:to:from; d=openbsd.org; b=mQtvNz/2l4bObNXPQCEXRYkfvH+3kuXrFbmQ
-	5ccm3cu6lDooMGrgLBn1n2RoQ/QYXvQOUNcLRqrZ1kWyTib3gOGK7YIOBFvIxj+aEJ2Can
-	NzFcAvwgTKE5s2p15GrjKIZSJ5E83Qw4JU2rm21yzOxjmlYmkAW7Vw82dIzpUc8IJ2Mn+N
-	zNbdkKOgBXPLJirZSmKXDwXvoKqt5rpDUHQQ7Q9PX8zVxzrTKL1QzXP4xl2DC0D5KuGUke
-	IwafprPJe305G7qvBX7SCXPSP2/jXehf8l2taZ6+A2C7tIOAj8YjRxhVXYXwUELwobIUL6
-	AbgXvaGSEL3HyNiF7p9jTivZtg==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 90ae0d7d;
-	Thu, 1 Feb 2024 15:24:40 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-    Jeff Xu <jeffxu@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
-    akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-    sroettger@google.com, willy@infradead.org,
-    gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
-    usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com,
-    jorgelo@chromium.org, groeck@chromium.org,
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-                  Jeff Xu <jeffxu@chromium.org>,
-                  Jonathan Corbet <corbet@lwn.net>,
-                  akpm@linux-foundation.org, keescook@chromium.org,
-                  jannh@google.com, sroettger@google.com,
-                  willy@infradead.org, gregkh@linuxfoundation.org,
-                  torvalds@linux-foundation.org,
-                  usama.anjum@collabora.com, rdunlap@infradead.org,
-                  jeffxu@google.com, jorgelo@chromium.org,
-                  groeck@chromium.org, linux-kernel@vger.kernel.org,
-                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-                  pedro.falcato@gmail.com, dave.hansen@intel.com,
-                  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-In-reply-to: <20240201204512.ht3e33yj77kkxi4q@revolver>
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver>
-Comments: In-reply-to "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-   message dated "Thu, 01 Feb 2024 15:45:12 -0500."
+	s=arc-20240116; t=1706826607; c=relaxed/simple;
+	bh=+FEiqruD2PhiHiOREenoir18YObY1XMyZp7vO4EV3A4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=DQ/f5SF3cojBYHczX8sNDbffS3at6IYkNC/08bezSiG+eyMuOQePEdDJHhBPZfluZVTry4ZvZ0KYyVlnDbrgNTuydEOwiK14lMnbAcdqPKovtfqpy8+5LpvxxpehETeHAPNwZ5DXAhTO8gBkxd4lKCmdDaEzhHWFVZ0ILo1j+Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-92-6SPxv_cpN_qKS1Gtzru5yA-1; Thu, 01 Feb 2024 22:29:54 +0000
+X-MC-Unique: 6SPxv_cpN_qKS1Gtzru5yA-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 1 Feb
+ 2024 22:29:37 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 1 Feb 2024 22:29:37 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Kees Cook' <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+CC: "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC] string: Allow 2-argument strscpy()
+Thread-Topic: [RFC] string: Allow 2-argument strscpy()
+Thread-Index: AQHaUvHLFgl6ZJLHe0apLw7TCgOYwbD2FRpA
+Date: Thu, 1 Feb 2024 22:29:37 +0000
+Message-ID: <9dae4c62fc164abeaa7915f9e53fdb28@AcuMS.aculab.com>
+References: <20240129202901.work.282-kees@kernel.org>
+In-Reply-To: <20240129202901.work.282-kees@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <85538.1706826280.1@cvs.openbsd.org>
-Date: Thu, 01 Feb 2024 15:24:40 -0700
-Message-ID: <60731.1706826280@cvs.openbsd.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-There is another problem with adding PROT_SEAL to the mprotect()
-call.
+From: Kees Cook
+> Sent: 29 January 2024 20:29
+>=20
+> Using sizeof(dst) is the overwhelmingly common case for strscpy().
+> Instead of requiring this everywhere, allow a 2-argument version to be
+> used that will use the sizeof() internally.
 
-What are the precise semantics?
+You may want to (try to) add a check that the first argument is
+actually an array rather than just a pointer.
 
-If one reviews how mprotect() behaves, it is quickly clear that
-it is very sloppy specification.  We spent quite a bit of effort
-making our manual page as clear as possible to the most it gaurantees,
-in the standard, and in all the various Unix:
+But the cpp output bloat can get silly and slow the build down.
+I guess no one would do:
+=09x =3D min(strscpy(a, b), strscpy(c, d));
+but you can never tell :-)
 
-     Not all implementations will guarantee protection on a page basis; the
-     granularity of protection changes may be as large as an entire region.
-     Nor will all implementations guarantee to give exactly the requested
-     permissions; more permissions may be granted than requested by prot.
-     However, if PROT_WRITE was not specified then the page will not be
-     writable.
+=09David
 
-Anything else is different.
-
-That is the specification in case of PROT_READ, PROT_WRITE, and PROT_EXEC.
-
-What happens if you add additional PROT_* flags?
-
-Does mprotect still behave just as sloppy (as specified)?
-
-Or it now return an error partway through an operation?
-
-When it returns the error, does it skip doing the work on the remaining
-region?
-
-Or does it skip doing any protection operation at all? (That means the code
-has to do two passes over the region; first one checks if it may proceed,
-second pass performs the change.  I think I've reat PROT_SEAL was supposed
-to try to do things as one pass; is that actually possible without requiring
-a second pass in the kernel?
-
-To wit, do these two sequences have _exactly_ the same behaviour in
-all cases that we can think of
-    - unmapped sub-regions
-    - sealed sub-regions
-    - and who knows what else mprotect() may encounter
-
-a)
-
-    mprotect(addr, len, PROT_READ);
-    mseal(addr, len, 0);
-
-b)
-
-    mprotect(addr, len, PROT_READ | PROT_SEAL);
-
-Are they the same, or are they different?
-
-Here's what I think: mprotect() behaves quite differently if you add
-the PROT_SEAL flag, but I can't quite tell precisely what happens because
-I don't understand the linux vm system enough.
-
-
-(As an outsider, I have glanced at the new PROT_MTE flag changes; that
-one seem to just "set a flag where possible", rather than performing
-an action which could result in an error, and seems to not have this
-problem).
-
-
-As an outsider, Linux development is really strange:
-
-Two sub-features are being pushed very hard, and the primary developer
-doesn't have code which uses either of them.  And once it goes in, it
-cannot be changed.
-
-It's very different from my world, where the absolutely minimal
-interface was written to apply to a whole operating system plus 10,000+
-applications, and then took months of testing before it was approved for
-inclusion.  And if it was subtly wrong, we would be able to change it.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
