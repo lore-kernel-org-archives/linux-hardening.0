@@ -1,74 +1,68 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B4B12D169
-	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 18:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D86A12FB02
+	for <linux-hardening@vger.kernel.org>; Thu,  1 Feb 2024 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706810839; cv=none; b=nDlODXdoSWAXDnb4tFXqJYruhUS+mroct3DN73g64nT/vMRmWPKcHDy2UueQ5uClTUNT/yJyEKUxg26GLP/ZM7pkIicNBDlCYlpDP4xTaQGqepG3G/LAI7PWXOddYk0edji8fPNqtuoy1e1HO/tvWzoxK6tUc7KW+HMSw+PNiJ0=
+	t=1706811065; cv=none; b=kzDsXAJLB5I5UgxmfEMGo90JnrymvVjmlg76qkO494R1qHzgvSGM2xk31EvbRHfupb9VhyEiOhmKTZ157PouKMN/G83/vurzazHJhUefNNYuyq+sV3LZqT+IJ927EZc++IdKI1Ihzr9jeF6wZ3lABT6p/26uJCFYA8AW7z/kY+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706810839; c=relaxed/simple;
-	bh=T86R8HpV7zXDhFND8oowyz9LtpNq2PuQYU95ptdb7h4=;
+	s=arc-20240116; t=1706811065; c=relaxed/simple;
+	bh=r200j0k5z6M8FPk7ea3dtycPDKu5zgqHntQsz9dmHCM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B1nE9vuxLOn+49IDWXm1wuTxehX1Pe2xWW76xQDnTBbV88IMarJ7FwEXPr0GZhq1rJjJUgrDGYjx+5Gh9cxScTf7kezHCwBNZ+92+zckCOjJlGPKnZYLJupbV5AUfvNSIZZFQoVNpUtfN89u6ZrhFGKwsAXOfP5J/UF2PFbu48I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dhrGiisU; arc=none smtp.client-ip=209.85.215.176
+	 MIME-Version:Content-Type; b=u8comshStCuM+Ur92uRvW5XvZ5Gauc72SiAlMNeExB5PFhzuczXg1mryeB98tD8Ibd2tsyDqeyWrJoD3cpsGfpCZjv7GwxrIgY9EmtBMu7j/iuYd0g9Du5pFzPlasjhH1wer5+qIi7fiKrpvqvXzwap/yS+k0QQzOAn4wId4TCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WdRRDQiY; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhrGiisU"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so1139878a12.0
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Feb 2024 10:07:17 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WdRRDQiY"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso1067106a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Feb 2024 10:11:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706810837; x=1707415637; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1706811064; x=1707415864; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0M7HdB/Ln7k5cmlXcTGUtiNuQylG7V6KZfKoZDxv6bw=;
-        b=dhrGiisUhwadhWWe/IhUv+PQnT3WwpPe5xs2bK/x89Omzjn422liXPn41lYGp73EhX
-         qSYfNEUcNBNYaeCXMFdwQ1ymt5pvhWAe4KJ5gDK/Jy7azgbxIj095YKUGn5EKyAvANmO
-         Qw/UyjuK/OEjVyG/Mth5L0ECmDUbgto4MZqQY=
+        bh=GToPV7msCPjuhO1dWFLWs/ihnArgx8snuOE7VU2ptxg=;
+        b=WdRRDQiY1y1r8t39ffQ14BjgrJexJXOgBqWyYctncm2e9e1LPwDTBUgI+e4T9tZtkF
+         4fGUNfMdPZjnTJDAYZY0HtUQk2C4ZENP8sYc83w/Y37Kx8H6FuFpfSl0esJBf5W8whdq
+         M+ZtIw+CYYUUkIiGxXeuUkQ7GJjsFXk/4lLm8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706810837; x=1707415637;
+        d=1e100.net; s=20230601; t=1706811064; x=1707415864;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0M7HdB/Ln7k5cmlXcTGUtiNuQylG7V6KZfKoZDxv6bw=;
-        b=dn/cJjxSyR0Ywft5SgZ44ZETaH39LeO8BNsYwnk4FocO2mhZ+u4gwahraRYkRmdSe8
-         XfKl074GMb2eA5pgvXzzWVR4CA2pUAFubVeJedOm1qJhli8f+LbU/DXaUJ5hVNao8OSE
-         XG1dd+GQNKOP9Hn3ZWTg6TfX6I1kKhHUgR8rsFvADtDEVrVCpSBvgU4YMMfDLpvbbott
-         1g7/ANtSl551BSZ4pf6Py99tar66m+9mREeNVa/JeNV6Zy/vWl87Xbr59fTcbgGEfPyH
-         ExMnba3pxEIa+reLIj7xAYYlgbEeuf3wZedeAWX88bWxIggayq2+Fm+L1vSxm74zkrAx
-         7X9Q==
-X-Gm-Message-State: AOJu0Yy+15P6COms8UB3LEOKv0svJhV+Y9kkpILHpam3qtvmsuVL+x/0
-	wiOYX6wZiJ7xeMhqhcaIllzrcZX98gbPGjzQrNDM+8K0D0vMP57eXqRTA2TTIQ==
-X-Google-Smtp-Source: AGHT+IGZ50YBlnxuzelc5pTz/pz1j+uj9w9e5PyOrID+cIqF/msxn7RtpGU9s8Ie47wWQ+JqRWi2qw==
-X-Received: by 2002:a05:6a20:2a0f:b0:19e:30b0:6ad4 with SMTP id e15-20020a056a202a0f00b0019e30b06ad4mr2993716pzh.55.1706810837327;
-        Thu, 01 Feb 2024 10:07:17 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVJbAZjXQp86ijsd6GO7kukUS8GlA8+ilpBR2ZFQjKnYO3qfd2ORGJpiLlI8DkOGs/iziWlI+OtxFUCZlrTelSfulEVpQKRDvnjBwu+cF/gsrZ7/xb6/oMzs5Ei9sjltpWK5JrmhSUQ0E0uiDJBNdjJOl7XDYxRriY0u8IhE7lcH/YqgMtJN03est7wBrz8WozfgujI00xFJTdYE+ADgdnL5dRk2V3dyapAO4iJEhbc8d4JUJl4sUThfD6fua+p0pi0pIA89QEjah1n1fX2dMm1jGzkmYWIE8CyY4E/pMoV1xGUagwITwL3Jyj24wnMSUg4OytQXgtd2wAoIg7S3Bu5toJ81NcgHY1czpWerYDbrsossXSKtSQFdTxkk1YBiLOJ0mwJEmcNz+ezCpGlUH5FBuTVfQ==
+        bh=GToPV7msCPjuhO1dWFLWs/ihnArgx8snuOE7VU2ptxg=;
+        b=E8BjLanlWrRlpx/RGGSWohWTI4lP12Q1NnLSAkdrKuAW8g/mCc3LUFKOZwc0nfllGo
+         28XeIsxS1/SKqOiefREMMDChs1V8ztLW39xMLCTw8eSO8/nTnu5u7GPkYBQ/1C5DzMqj
+         jRI0STE6Uj/FW1kQefjk/Y/Y1yJcJxblXV3iqT1IKkAqdQQW2sysjL8XyVTCIGkPVZxa
+         bMogkmrd7/pCB7ncRPI0JSe/LHKv1+b1t8Ghr7n6oG2f6GUJq2izzAvWqiNohWk12vGO
+         QSgZAswOcS4Uz4bG9mb8ol562vKAeaqJ2Tdov6Ms5VdCitiSJJbbIVfd8b9pzHDGoWdz
+         VwBQ==
+X-Gm-Message-State: AOJu0YyN8D72SL4ztc+d2mWKpsgViMNi9NdA0SrcjljOIBG1Xb1i0Xg7
+	q8+EsP8TPlKhd6bV5TkzrE61hfgM6NBN0XTq2jP2l4FwYxu/tNB6NtO5MbvvEu0kAG01fg6nTAM
+	=
+X-Google-Smtp-Source: AGHT+IGodb1PW97G5oqNVegqQeih+mtW7nbxs8urpujVz6AoXW3kMeSj7E3l5CmXi+tWihRK8nSLLg==
+X-Received: by 2002:a17:90a:bb93:b0:296:2057:28c with SMTP id v19-20020a17090abb9300b002962057028cmr1860044pjr.31.1706811063830;
+        Thu, 01 Feb 2024 10:11:03 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW2krWTMKExdhHWt6TyQjL1Rm7yRFYGUHQLWTf7/hqr1tPiDR9vLa5HYLg2BT6axZpvzUHe1a4RkKIU2cVjAPjFY7+u9f8gUSExtTZUFYdXRlLVh/dASAxqvvGt+AEOCDtKyRGq3ZT7wMKv3FDiXcAH23xD2EnLrrRCRHcyHJ2+OMIZfloJn1XE7zlo3TwFcMS5LrGZmeY=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d11-20020a63d64b000000b005c661a432d7sm94693pgj.75.2024.02.01.10.07.16
+        by smtp.gmail.com with ESMTPSA id su14-20020a17090b534e00b00290a6b587fbsm112120pjb.48.2024.02.01.10.11.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 10:07:16 -0800 (PST)
+        Thu, 01 Feb 2024 10:11:03 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: linux-hardening@vger.kernel.org,
-	error27@gmail.com,
-	gustavoars@kernel.org,
-	Bryan Tan <bryantan@vmware.com>,
-	Vishnu Dasa <vdasa@vmware.com>,
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	Kunwu Chan <chentao@kylinos.cn>
 Cc: Kees Cook <keescook@chromium.org>,
-	vegard.nossum@oracle.com,
-	darren.kenny@oracle.com
-Subject: Re: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
-Date: Thu,  1 Feb 2024 10:06:58 -0800
-Message-Id: <170681081625.3764000.6431595387488802492.b4-ty@chromium.org>
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pstore/zone: Add a null pointer check to the psz_kmsg_read
+Date: Thu,  1 Feb 2024 10:10:59 -0800
+Message-Id: <170681105755.3764329.93715039657741016.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+In-Reply-To: <20240118100206.213928-1-chentao@kylinos.cn>
+References: <20240118100206.213928-1-chentao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,17 +72,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 05 Jan 2024 08:39:59 -0800, Harshit Mogalapalli wrote:
-> Use struct_size() instead of open coding.
+On Thu, 18 Jan 2024 18:02:06 +0800, Kunwu Chan wrote:
+> kasprintf() returns a pointer to dynamically allocated memory
+> which can be NULL upon failure. Ensure the allocation was successful
+> by checking the pointer validity.
 > 
 > 
 
-Applied to for-next/hardening, thanks!
+Applied to for-next/pstore, thanks!
 
-[1/2] VMCI: Use struct_size() in kmalloc()
-      https://git.kernel.org/kees/c/e03d4910e6e4
-[2/2] VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
-      https://git.kernel.org/kees/c/19b070fefd0d
+[1/1] pstore/zone: Add a null pointer check to the psz_kmsg_read
+      https://git.kernel.org/kees/c/69f381e67d6f
 
 Take care,
 
