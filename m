@@ -1,32 +1,32 @@
 Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F4740BE9;
-	Thu,  1 Feb 2024 23:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39914EC5;
+	Fri,  2 Feb 2024 00:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706831004; cv=none; b=XSGiGb+8ySPhRp3R3YGLE/N0OmRk31VT6Y9TD+tiG06vOakvrlT0VAp1xJ9a64Jzaf3HLM3oSWQBn0QXFNLginDjQdGyogTyIIr86ncjdEXVtP500lJmMmzJiw4oKu5TSCxaymGa0ZeD/iAbE54GCsrHnIM0vUaNyqdqwfyLln4=
+	t=1706833588; cv=none; b=tc6CnBIfoRN6W8cqfvHsINmO6kgjy5vUyU+ZD8u0ZIGQQO0M96SBYbPyViQsAHZl9tldDSvXqYdv7CMIrAA8RS5tiFGpxePI+V5IFcv8lKs3dmaLEluu6QmGYJM0qPbRaR6p1SIEAigDIxy5UgjF9v+KrtsTG3PhJED9xGB1GvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706831004; c=relaxed/simple;
-	bh=E/EuFP/XXcsHH/ajGIWHXjQc4oFNk7hnv3UOw4l6RiM=;
+	s=arc-20240116; t=1706833588; c=relaxed/simple;
+	bh=b4nuzlN7OXSDkEKK1U2oo8Q0qvyu895tOHZwmXJZYZY=;
 	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=TTz3KhCj1endBdzpmkH0IzbSBADmqpFZAMXTflZtvEmLKsI9/DQLDAChBmuSxajIGjI18T+T2KTpduI98RZlTFNSeXN9ScrCG95GAx731/tg1xfG0a0xyUdKO0J6KysGRZejpL44EPQOT9GP3se3hlnKCjoWWoqevllXytWxHhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=UuduZe5F; arc=none smtp.client-ip=199.185.137.3
+	 Content-Type:Date:Message-ID; b=s6B0ltCoSGxCRrJm8/GcJch2tcLQHKUWcqgmUpY4H7tI70WTtILGSwq4s0lekpOrDTE32Iewlph795xiIMuL5vO5khrtPJgtGaFsEH4yOVX70qAiSmofIXrvlCMyRAF1itWcblgB/wwVkb+xsW2mvmO3N2Z7rWr269UmEb+ImAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=VpaNj6/i; arc=none smtp.client-ip=199.185.137.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="UuduZe5F"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=E/EuFP/XXc
-	sHH/ajGIWHXjQc4oFNk7hnv3UOw4l6RiM=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=UuduZe5F+g7Sb4UNMNnMGju7lX3vLVV9T
-	SdhKcs9Z/5wsx6/8QjyATQ+zVRTEVWJdStFfTfsrBtP22IuF2hsOYAkbttWo1zYJaeNa1H
-	D6naShPls+8kar87xWt9d2fOkPnqBF9AQAfKZKSKOhcIkilznr1jlnH+w7fzS+LIl8dttt
-	ICJwHJZKyMe1dWiKrFy9s+/IUyd3XP9rmMF8omt2kROOv8mAhY0AF0p+Qk7RPRU0g5NO2n
-	ts2xcmrrw7aFcNqsRZqx/onC9hdZPIjly+rXOfiy2Tih5vNNAS5kJzBJMGFXUNwcM51f4O
-	rg13pwCVW7Q5S/Y4H7M5PTgjN7Cxw==
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="VpaNj6/i"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=b4nuzlN7OX
+	SDkEKK1U2oo8Q0qvyu895tOHZwmXJZYZY=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=VpaNj6/iRziFx+GU2tpihBVG7l1JHFd8a
+	A7GD2CdvaEXIouZOIYmu0HkU7Yjro1oIcecAG+ryKntLWNqbB91QFrgRsVyh2DreI/KG0m
+	BZYC8k786h0blH7dnoSQRuOZEsAfQtUl8+laLj8lX6X7GqGJYhR62VVjydW6zOWbPtl4RC
+	wzPNQdbU6ZUjJ6BFlwKspHNooi8k7EbWpFCzTMNqPnkNqGmbj3mU3Gk8EMW9QiBH/F4Wcj
+	TvHiEjL8XJZm3ChSiB6KS0njSQG9uZqD4vdBDZOgwq69zsLHW6+ioFjQrr29Yrhpx8MJ/X
+	j4IjI2I3Ntjm2p8fN6H7i4JoipVtg==
 Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id fb45d291;
-	Thu, 1 Feb 2024 16:43:17 -0700 (MST)
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 5744bf5f;
+	Thu, 1 Feb 2024 17:26:25 -0700 (MST)
 From: "Theo de Raadt" <deraadt@openbsd.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 cc: Jeff Xu <jeffxu@chromium.org>,
@@ -51,71 +51,61 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <25907.1706830997.1@cvs.openbsd.org>
-Date: Thu, 01 Feb 2024 16:43:17 -0700
-Message-ID: <99920.1706830997@cvs.openbsd.org>
+Content-ID: <31812.1706833585.1@cvs.openbsd.org>
+Date: Thu, 01 Feb 2024 17:26:25 -0700
+Message-ID: <7481.1706833585@cvs.openbsd.org>
 
 Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> So yes, to my mind
-> 
->     mprotect(addr, len, PROT_READ);
->     mseal(addr, len, 0);
-> 
-> should basically give identical results to
-> 
->     mprotect(addr, len, PROT_READ | PROT_SEAL);
-> 
 > and using PROT_SEAL at mmap() time is similarly the same obvious
 > notion of "map this, and then seal that mapping".
 
-I think that isn't easy to do.  Let's expand it to show error checking.
+The usual way is:
 
-    if (mprotect(addr, len, PROT_READ) == -1)
-       react to the errno value
-    if (mseal(addr, len, 0) == -1)
-       react to the errno value
+    ptr = mmap(NULL, len PROT_READ|PROT_WRITE, ...)
 
-and
+    initialize region between ptr, ptr+len
 
-    if (mprotect(addr, len, PROT_READ | PROT_SEAL) == -1)
-       react to the errno value
-
-For current mprotect(), the errno values are mostly related to range
-issues with the parameters.
-
-After sealing a region, mprotect() also has the new errno EPERM.
-
-But what is the return value supposed to be from "PROT_READ | PROT_SEAL"
-over various sub-region types?
-
-Say I have a region 3 pages long.  One page is unmapped, one page is
-regular, and one page is sealed.  Re-arrange those 3 pages in all 6
-permutations.  Try them all.
-
-Does the returned errno change, based upon the order?
-Does it do part of the operation, or all of the operation?
-
-If the sealed page is first, the regular page is second, and the unmapped
-page is 3rd, does it return an error or return 0?  Does it change the
-permission on the 3rd page?  If it returns an error, has it changed any
-permissions?
-
-I don't think the diff follows the principle of
-
-if an error is returned --> we know nothing was changed.
-if success is returned --> we know all the requests were satisfied
-
-> The reason for having "mseal()" as a separate call at all from the
-> PROT_SEAL bit is that it does allow possible future expansion (while
-> PROT_SEAL is just a single bit, and it won't change semantics) but
-> also so that you can do whatever prep-work in stages if you want to,
-> and then just go "now we seal it all".
+    mprotect(ptr, len, PROT_READ)
+    mseal(ptr, len, 0);
 
 
+Our source tree contains one place where a locking happens very close
+to a mmap().
 
+It is the shared-library-linker 'hints file', this is a file that gets
+mapped PROT_READ and then we lock it.
 
-How about you add basic mseal() that is maximum compatible with mimmutable(),
-and then we can all talk about whether PROT_SEAL makes sense once there
-are applications that demand it, and can prove they need it?
+It feels like that could be one operation?  It can't be.
 
+        addr = (void *)mmap(0, hsize, PROT_READ, MAP_PRIVATE, hfd, 0);
+        if (_dl_mmap_error(addr))
+                goto bad_hints;
+
+        hheader = (struct hints_header *)addr;
+        if (HH_BADMAG(*hheader) || hheader->hh_ehints > hsize)
+                goto bad_hints;
+
+	/* couple more error checks */
+
+	mimmutable(addr, hsize);
+	close(hfd);
+	return (0);
+bad_hints:
+	munmap(addr, hsize);
+	...
+
+See the problem?  It unmaps it if the contents are broken.  So even that
+case cannot use something like "PROT_SEAL".
+
+These are not hypotheticals.  I'm grepping an entire Unix kernel and
+userland source tree, and I know what 100,000+ applications do.  I found
+piece of code that could almost use it, but upon inspection it can't,
+and it is obvious why: it is best idiom to allow a programmer to insert
+an inspection operation between two disctinct operations, and especially
+critical if the 2nd operation cannot be reversed.
+
+Noone needs PROT_SEAL as a shortcut operation in mmap() or mprotect().
+
+Throwing around ideas without proving their use in practice is very
+unscientific.
