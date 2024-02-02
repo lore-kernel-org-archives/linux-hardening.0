@@ -1,191 +1,96 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6F180635
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 21:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A43839E1
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 21:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706908842; cv=none; b=VNDVfh8VYVsjRdyvYeMSlp8UDz+6sSF4IQHRhXORBbNUoTFS32Kd3icl2v9rmEdxelTP04v1JTFDPJ+RBH1U0X7K8BHy2EgoYpXzeK2PFBNaX3WluF6ODZRB0+36dKWmzQcDHGJVS6lCZORN5jpKq68k9EsE4/eBUSj1V11pkoI=
+	t=1706909889; cv=none; b=X2EE3xiz/lyHGw7q/CiKnboihOaUwPJNx9mmIneob5JFnUY6ehp+WReTdGd2r7vwP26m0Iwcrour+I4ttMtBf8AQNq/s7LHiV6KQlt7+LvjhJX73QqU1+kK52p+cBj7kVxyrx3W2+/tun/kb4UaVktkJ9dOckO94ymXQ6FMt6/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706908842; c=relaxed/simple;
-	bh=jUs3FOiHURQSbndNpw9eAyjunPGYP6jiGaFCC4A3PYw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oeuAjPueSbpH/+JJUrdrhaDuCjZ6azjAPTJMY5WouppqfYDDdykNdBUqGnrnFS+I6af2ZHx39pRP25CHRhKgmFAXbgL72Cg2cr+BxmVxGMwrtoWrPjwB0w2jDZaL7sA31oHNSHSZfNwPsEF6r5fXOTDXSpKm9WpVRwyMnKzYVqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gs399+XR; arc=none smtp.client-ip=209.85.160.44
+	s=arc-20240116; t=1706909889; c=relaxed/simple;
+	bh=l4yBEaPM2iN7eZW+V6z8vwxu+0SiHLYw7zSuWZAIaaI=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ebV5ur6DnnSM4/xHcQUzLowC8ThQf+E2HWMTqk83vNBXHDztlpsy9Q0mzG1cPWbroC+w2NPlL/4YkXndEpgRGaqOLAOL7MREEXU65zmmVfaQhREGC4Z10Ok7Lcln4BA5JEZ/9aFTLeY4/XvMOdOlukTaUqLEYDegZm3ZX81wXSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D5Eod6TE; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gs399+XR"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2191dc7079aso516614fac.0
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 13:20:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D5Eod6TE"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d09a8dcb44so629561fa.0
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 13:38:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706908839; x=1707513639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=92wvK0QB22DZGV3tUKA8OrcYGB+w2iD/0d4E9vYXy90=;
-        b=gs399+XRn/XEHp3VeqU9F0bZepjNpgScajG42mi9KKlHfLQYJHWJbw9bQF8gZCyPgu
-         uar9/rjfPaaX6rFIBJISVFSUXQAghjut/sFem3P8J1chBk9dea7cKYTQ1vP9zAIRFk6V
-         Bf7YzZlQLTA1UCLMhvrREH+4k6Wc5OQsd1UyM=
+        d=chromium.org; s=google; t=1706909885; x=1707514685; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lsomBTujcXZwChvimQjgCPTIq5/QQDBQdY15Zdim2x8=;
+        b=D5Eod6TEnTLnHEbeHR1CVGWug9eWQ8M4ky7UFCv6pwEc89UPTHNvInOnWPTELoxO69
+         pPpxHsyCZlLx76F/Ok0jyLevnSb0Z49u36zjDeUA3qMYkjYxT55pdCs2NoBOkvms9LWk
+         zQGLnwS+2nFOfOxsZiKhEURrpmG65c6XOop/g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706908839; x=1707513639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=92wvK0QB22DZGV3tUKA8OrcYGB+w2iD/0d4E9vYXy90=;
-        b=vVerwWsljWVO5YGnxqk5uXgbWy3yq6ZKDiWdxz7ciC77VYPx37sespuaVdIWmS9pve
-         WYgGmPfifdw0scPoijzZH8ggy+8F/7+G5Q/TPhwJu7pPmuTGt1L7tjD+NM8xuwO9sbKL
-         G+ghsnkXwEoQU3czSmqeuc0fOJ67OSIzkaKhioHuhH6xUST/8/XVe97qTegKqtYaN6qV
-         sou20COIGkCgo970hj1H2qRDIknD2qWnjkM1trIh3AUDs6aqGKFCBdoz4fiGF+O1+6AM
-         Cy4J9CmIL1agrEzPDEM71FzxgeDpUDW8m9rk9qLLlD5KrUeWPhOChgN/c3JrMoMrWauM
-         66tg==
-X-Gm-Message-State: AOJu0Yxh30xCBfV1iaJYoiHvYOPIJUbBemwnkmX5hWSebNO4CZZXYqOt
-	reOVnwDB2wAZyrL0T5Yf3n6a+P3xnEVtxlPiIfVhMtUxYBch3N/sW8fNC1gz8BSDLzfpHluwACF
-	A1dwMUuJ6ySJixW1w//HNT0PwENW08/rgSouq
-X-Google-Smtp-Source: AGHT+IEHFQyrtYpxn0tuAlfC9rwX/+nRhQdpjBGjKESQj1UnpUByy5Y6kofBq7OGl00pybgPooaYvuinpoC8QXzQhJg=
-X-Received: by 2002:a05:6870:7024:b0:214:9ecd:56e8 with SMTP id
- u36-20020a056870702400b002149ecd56e8mr932493oae.33.1706908839487; Fri, 02 Feb
- 2024 13:20:39 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706909885; x=1707514685;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lsomBTujcXZwChvimQjgCPTIq5/QQDBQdY15Zdim2x8=;
+        b=Ovj5/rjK2DxpfFd2yE2FupmizEYZ5vDFvmqu4iSXXv6LUIVKMkUNCgt+V2+FD6jjGt
+         IhqsL0dLK0EOK9wiOqswFDTyfzWfrVfdOvzcVD72KkfTZ2jjl0LCGJdlNV3d/H3+6hGB
+         LxbMDUkoPxO2DpKUAgL5iHLWdeA+uwbMvg61mv6zfe6HFaGOPhdUwpZt2/jmTYjFh8oZ
+         j1KShFJbDhYo2ZyJRzUjVEAqff1TH5ou+3/x8z7+WKgRZQCIXnef2ea6Ts1bZeEnmeuJ
+         996UousMp5/JT2xFim7rNFEmcq+9YwjDtlE7NqpOnoM6LD5RqSd4UDN6bOv5U0NpfOTY
+         GMQw==
+X-Gm-Message-State: AOJu0YyN1D5Qcb5KxFHzgowrMEYRz3p8PnXCRtC0lXOxW06t/8rncoIR
+	jP8b+X4qSXXUHWLBckOA7eoQqbU64/wLU5HVBaFT99LhrHs5vStOOG0PGMQqe7bcvXuywPeqq+8
+	KlrTWTtO5poddKFbFgnYMxJtvoUrLEENhMdR2
+X-Google-Smtp-Source: AGHT+IHvfYyFfJ/R52vEVZbSRZ98QLR/0em/JjYcMxxy+2ZV0LfLeExVSgtkZoBvsF1omKzPLquVoYXeVi2DYmFj9yw=
+X-Received: by 2002:a05:651c:b22:b0:2d0:9a74:5e4a with SMTP id
+ b34-20020a05651c0b2200b002d09a745e4amr41079ljr.5.1706909884612; Fri, 02 Feb
+ 2024 13:38:04 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 2 Feb 2024 15:38:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver> <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com>
- <58408.1706828083@cvs.openbsd.org> <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
- <CALmYWFtqcixi3p3Ab44wENJr+n2k2SNaCJEofNm_awnNdJZnDQ@mail.gmail.com>
- <8744.1706846710@cvs.openbsd.org> <CABi2SkWSt=UMFWe9n916ZH16wCzaipKXmEJ5VasQHMr1AxerxQ@mail.gmail.com>
- <29248.1706850035@cvs.openbsd.org> <CABi2SkXPNPKgqheuFuQ9iZApQkJm8o6bypNn0B-QDz_W9b0JBQ@mail.gmail.com>
- <CAKbZUD1EsAVupRotYV-ed4PQ3sL5wM4M=f4n-6rF+QNp7C1m4g@mail.gmail.com>
-In-Reply-To: <CAKbZUD1EsAVupRotYV-ed4PQ3sL5wM4M=f4n-6rF+QNp7C1m4g@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 2 Feb 2024 13:20:27 -0800
-Message-ID: <CABi2SkXB8A-k6ZxgL79irHQDAxMXvVKnUzu3xpH7SJsmhBCfQQ@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Theo de Raadt <deraadt@openbsd.org>, Jeff Xu <jeffxu@google.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, usama.anjum@collabora.com, rdunlap@infradead.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, dave.hansen@intel.com, 
+In-Reply-To: <20240201-strncpy-drivers-iio-proximity-sx9324-c-v5-1-78dde23553bc@google.com>
+References: <20240201-strncpy-drivers-iio-proximity-sx9324-c-v5-1-78dde23553bc@google.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Fri, 2 Feb 2024 15:38:03 -0600
+Message-ID: <CAE-0n5031k-5Gv+jFuWJekgPfHDw8yjUobqZr6+=UzgOEqOO4w@mail.gmail.com>
+Subject: Re: [PATCH v5] iio: sx9324: avoid copying property strings
+To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 2, 2024 at 10:52=E2=80=AFAM Pedro Falcato <pedro.falcato@gmail.=
-com> wrote:
+Quoting Justin Stitt (2024-02-01 10:55:03)
+> We're doing some needless string copies when trying to assign the proper
+> `prop` string. We can make `prop` a const char* and simply assign to
+> string literals.
 >
-> On Fri, Feb 2, 2024 at 5:59=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wrot=
-e:
-> >
-> > On Thu, Feb 1, 2024 at 9:00=E2=80=AFPM Theo de Raadt <deraadt@openbsd.o=
-rg> wrote:
-> > >
-> > > Jeff Xu <jeffxu@chromium.org> wrote:
-> > >
-> > > > Even without free.
-> > > > I personally do not like the heap getting sealed like that.
-> > > >
-> > > > Component A.
-> > > > p=3Dmalloc(4096);
-> > > > writing something to p.
-> > > >
-> > > > Compohave nent B:
-> > > > mprotect(p,4096, RO)
-> > > > mseal(p,4096)
-> > > >
-> > > > This will split the heap VMA, and prevent the heap from shrinking, =
-if
-> > > > this is in a frequent code path, then it might hurt the process's
-> > > > memory usage.
-> > > >
-> > > > The existing code is more likely to use malloc than mmap(), so it i=
-s
-> > > > easier for dev to seal a piece of data belonging to another compone=
-nt.
-> > > > I hope this pattern is not wide-spreading.
-> > > >
-> > > > The ideal way will be just changing the library A to use mmap.
-> > >
-> > > I think you are lacking some test programs to see how it actually
-> > > behaves; the effect is worse than you think, and the impact is immedi=
-ately
-> > > visible to the programmer, and the lesson is clear:
-> > >
-> > >         you can only seal objects which you gaurantee never get recyc=
-led.
-> > >
-> > >         Pushing a sealed object back into reuse is a disasterous bug.
-> > >
-> > >         Noone should call this interface, unless they understand that=
-.
-> > >
-> > > I'll say again, you don't have a test program for various allocators =
-to
-> > > understand how it behaves.  The failure modes described in your docue=
-mnts
-> > > are not correct.
-> > >
-> > I understand what you mean: I will add that part to the document:
-> > Try to recycle a sealed memory is disastrous, e.g.
-> > p=3Dmalloc(4096);
-> > mprotect(p,4096,RO)
-> > mseal(p,4096)
-> > free(p);
-> >
-> > My point is:
-> > I think sealing an object from the heap is a bad pattern in general,
-> > even dev doesn't free it. That was one of the reasons for the sealable
-> > flag, I hope saying this doesn't be perceived as looking for excuses.
+> For the case where a format string is used, let's extract the parsing
+> logic out into sx9324_parse_phase_prop(). We no longer need to create
+> copies or allocate new memory.
 >
-> The point you're missing is that adding MAP_SEALABLE reduces
-> composability. With MAP_SEALABLE, everything that mmaps some part of
-> the address space that may ever be sealed will need to be modified to
-> know about MAP_SEALABLE.
+> sx9324_parse_phase_prop() will simply return the default def value if it
+> fails.
 >
-> Say you did the same thing for mprotect. MAP_PROTECT would control the
-> mprotectability of the map. You'd stop:
+> This also cleans up some deprecated strncpy() uses [1].
 >
-> p =3D malloc(4096);
-> mprotect(p, 4096, PROT_READ);
-> free(p);
+> Furthermore, let's clean up this code further by removing some unused
+> defines:
+> |  #define SX9324_PIN_DEF "semtech,ph0-pin"
+> |  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+> |  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
 >
-> ! But you'd need to change every spot that mmap()'s something to know
-> about and use MAP_PROTECT: all "producers" of mmap memory would need
-> to know about the consumers doing mprotect(). So now either all mmap()
-> callers mindlessly add MAP_PROTECT out of fear the consumers do
-> mprotect (and you gain nothing from MAP_PROTECT), or the mmap()
-> callers need to know the consumers call mprotect(), and thus you
-> introduce a huge layering violation (and you actually lose from having
-> MAP_PROTECT).
->
-> Hopefully you can map the above to MAP_SEALABLE. Or to any other m*()
-> operation. For example, if chrome runs on an older glibc that does not
-> know about MAP_SEALABLE, it will not be able to mseal() its own shared
-> libraries' .text (even if, yes, that should ideally be left to ld.so).
->
-I think I have heard enough complaints about MAP_SEALABLE from Linux
-developers and Linus in the last two days to convince myself that it
-is a bad idea :)
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
 
-For the last time, I was trying to limit the scope of mseal() limited
-to two known cases. And MAP_SEALABLE is a reversible decision, a
-system ctrl can turn it off, or we can obsolete it in future. (this
-was mentioned in the document of V8).
-
-I will rest my case. Obviously from the feedback,  it is loud and
-clear that we want to be able to seal all the memory.
-
-> IMO, UNIX API design has historically mostly been "play stupid games,
-> win stupid prizes", which is e.g: why things like close(STDOUT_FILENO)
-> work. If you close stdout (and don't dup/reopen something to stdout)
-> and printf(), things will break, and you get to keep both pieces.
-> There's no O_CLOSEABLE, just as there's no O_DUPABLE.
->
-> --
-> Pedro
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
