@@ -1,96 +1,99 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A43839E1
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 21:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F64250E5
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 23:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706909889; cv=none; b=X2EE3xiz/lyHGw7q/CiKnboihOaUwPJNx9mmIneob5JFnUY6ehp+WReTdGd2r7vwP26m0Iwcrour+I4ttMtBf8AQNq/s7LHiV6KQlt7+LvjhJX73QqU1+kK52p+cBj7kVxyrx3W2+/tun/kb4UaVktkJ9dOckO94ymXQ6FMt6/0=
+	t=1706917021; cv=none; b=hoRWQSKgod/QN7hYrelQmmjkll6Fn6V8h3xXHGtbLZCI9o20p4vrX7kbA5Ixi+xYxGQvfDApM8wUYqNlXbok2fVgcty/sRpOfH1tbghw/GyiLF1rfzVjGBT0A9D8k3LKajTqBbwAjunRCwGHN/9p9m26RoDz7B9OztPtUQvUAh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706909889; c=relaxed/simple;
-	bh=l4yBEaPM2iN7eZW+V6z8vwxu+0SiHLYw7zSuWZAIaaI=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ebV5ur6DnnSM4/xHcQUzLowC8ThQf+E2HWMTqk83vNBXHDztlpsy9Q0mzG1cPWbroC+w2NPlL/4YkXndEpgRGaqOLAOL7MREEXU65zmmVfaQhREGC4Z10Ok7Lcln4BA5JEZ/9aFTLeY4/XvMOdOlukTaUqLEYDegZm3ZX81wXSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D5Eod6TE; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706917021; c=relaxed/simple;
+	bh=V9SNWHDZPQxXdnt+QLityMKsnJ5V5efabUBxNJBV1ss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=NUcNStPpz+KbNLVeZnCn0WIRdyWOxkSWyfPaiTHieaUmsA9IpR9a+mAefTeV7lgEfAlniUZ2m4+KwdAKxdpy9YSUyPdw/rRzHECT3neJ/Tt1b5RxZo7E4g0Ef0YgJDJn3Uqy6g8kp/cR4Ip/j+bfg1sRCaKzLGUfP73lU7JjrtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=by29GLM7; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D5Eod6TE"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d09a8dcb44so629561fa.0
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 13:38:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="by29GLM7"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d0512f6e32so31953361fa.1
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 15:36:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706909885; x=1707514685; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lsomBTujcXZwChvimQjgCPTIq5/QQDBQdY15Zdim2x8=;
-        b=D5Eod6TEnTLnHEbeHR1CVGWug9eWQ8M4ky7UFCv6pwEc89UPTHNvInOnWPTELoxO69
-         pPpxHsyCZlLx76F/Ok0jyLevnSb0Z49u36zjDeUA3qMYkjYxT55pdCs2NoBOkvms9LWk
-         zQGLnwS+2nFOfOxsZiKhEURrpmG65c6XOop/g=
+        d=linux-foundation.org; s=google; t=1706917018; x=1707521818; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2SRMNOsCcbrOqX9adwJsQYa/MyESMyF05yAtCSmgC7c=;
+        b=by29GLM7tvnpKNC7qdRZJpmGqjE0/cEzrbl291+xFRtQcN0b+rpWsfnQDYD0wTMOUB
+         /QblPDr93AO05VbW7/hMgUWOvdrqn2IaHFv2cQ1VfLNa16sl35dqy4b32qxzjq5w146F
+         dZkamgTX45HQqf4bZxUjd6bZ+sWnN9t300Jd8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706909885; x=1707514685;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lsomBTujcXZwChvimQjgCPTIq5/QQDBQdY15Zdim2x8=;
-        b=Ovj5/rjK2DxpfFd2yE2FupmizEYZ5vDFvmqu4iSXXv6LUIVKMkUNCgt+V2+FD6jjGt
-         IhqsL0dLK0EOK9wiOqswFDTyfzWfrVfdOvzcVD72KkfTZ2jjl0LCGJdlNV3d/H3+6hGB
-         LxbMDUkoPxO2DpKUAgL5iHLWdeA+uwbMvg61mv6zfe6HFaGOPhdUwpZt2/jmTYjFh8oZ
-         j1KShFJbDhYo2ZyJRzUjVEAqff1TH5ou+3/x8z7+WKgRZQCIXnef2ea6Ts1bZeEnmeuJ
-         996UousMp5/JT2xFim7rNFEmcq+9YwjDtlE7NqpOnoM6LD5RqSd4UDN6bOv5U0NpfOTY
-         GMQw==
-X-Gm-Message-State: AOJu0YyN1D5Qcb5KxFHzgowrMEYRz3p8PnXCRtC0lXOxW06t/8rncoIR
-	jP8b+X4qSXXUHWLBckOA7eoQqbU64/wLU5HVBaFT99LhrHs5vStOOG0PGMQqe7bcvXuywPeqq+8
-	KlrTWTtO5poddKFbFgnYMxJtvoUrLEENhMdR2
-X-Google-Smtp-Source: AGHT+IHvfYyFfJ/R52vEVZbSRZ98QLR/0em/JjYcMxxy+2ZV0LfLeExVSgtkZoBvsF1omKzPLquVoYXeVi2DYmFj9yw=
-X-Received: by 2002:a05:651c:b22:b0:2d0:9a74:5e4a with SMTP id
- b34-20020a05651c0b2200b002d09a745e4amr41079ljr.5.1706909884612; Fri, 02 Feb
- 2024 13:38:04 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 2 Feb 2024 15:38:03 -0600
+        d=1e100.net; s=20230601; t=1706917018; x=1707521818;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2SRMNOsCcbrOqX9adwJsQYa/MyESMyF05yAtCSmgC7c=;
+        b=gNmf3pmL3vUlJL71vKae2iZuqMc+zbUye1/Gqp3LZVDvi2lMfmNnwRvWcja2Wan2aS
+         n4g4lJki2YNplRpksbhcwmpwvaDpo4xEfH7nez1IFf9iyi0qAaTKpDK2LFwFPtgBMZio
+         HONvkz6mLtHboQ5/yU6qJ4Nx8m29zOLX6cFjSxhaW1l+7ALtI98NeQ0kAuyCi2MwOAsK
+         NRROe62eLCF8ob3XsqfzMRZFFhRw35pGiQWhWBkBkAhm43a06UZGD1I7Y7USPuGQb0RC
+         5Ca25Jg668kcZRXAx7S1Yq9JQm/boPbWHeiEgP58DLOvrdanCNoY1sqAayoeTohwNcfo
+         5HMQ==
+X-Gm-Message-State: AOJu0Yys1DfbOa2r8YLvxpGkxaEa2tRxRPWPzE5ZRuI4ER2RiIG1c+/P
+	13X53TXd9whsaTWiTCMejRyNpXo0HW06rtu23wsySZqB6g+nj/Mgzwz4dQgEKvpWmaCXAF0XGd1
+	veML2BQ==
+X-Google-Smtp-Source: AGHT+IGmUESxpO9FiBCgMOWfPvle7G6jbeKkObbeecJ84Q/VDWg4pOhDiCy3jIc0Qsk0gIIoVtSSNA==
+X-Received: by 2002:a05:651c:1a2c:b0:2d0:511e:741f with SMTP id by44-20020a05651c1a2c00b002d0511e741fmr4930456ljb.48.1706917017921;
+        Fri, 02 Feb 2024 15:36:57 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUa2zRPHF1p5DCorNTH5CQeKmBSghoo72QmjgmUBvnkJiBiVyHpHVDzgGnYaHHdbH4Hd/rY9oBZ3B9OXthdFxEcovzZilF3cDZTkEb9YmhP
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id x15-20020a2e9c8f000000b002cf47595e13sm394378lji.120.2024.02.02.15.36.57
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 15:36:57 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cf595d5b4aso32587571fa.0
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 15:36:57 -0800 (PST)
+X-Received: by 2002:a2e:8902:0:b0:2cf:5247:23cb with SMTP id
+ d2-20020a2e8902000000b002cf524723cbmr4207675lji.39.1706916996415; Fri, 02 Feb
+ 2024 15:36:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240201-strncpy-drivers-iio-proximity-sx9324-c-v5-1-78dde23553bc@google.com>
-References: <20240201-strncpy-drivers-iio-proximity-sx9324-c-v5-1-78dde23553bc@google.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Fri, 2 Feb 2024 15:38:03 -0600
-Message-ID: <CAE-0n5031k-5Gv+jFuWJekgPfHDw8yjUobqZr6+=UzgOEqOO4w@mail.gmail.com>
-Subject: Re: [PATCH v5] iio: sx9324: avoid copying property strings
-To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
+ <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
+ <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
+ <20240202151345.kj4nhb5uog4aknsp@revolver> <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
+ <20240202192137.6lupguvhtdt72rbr@revolver> <85714.1706902336@cvs.openbsd.org>
+ <CAHk-=wjNXcqDVxDBJW8hEVpHHAE0odJEf63+oigabtpU6GoCBg@mail.gmail.com> <20240202211807.6sca4ppezma7cyev@revolver>
+In-Reply-To: <20240202211807.6sca4ppezma7cyev@revolver>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 2 Feb 2024 15:36:17 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whhmasHcmaS0MZkBe2NohjF7Wb3F3pdW4vqyaSbSzQ75g@mail.gmail.com>
+Message-ID: <CAHk-=whhmasHcmaS0MZkBe2NohjF7Wb3F3pdW4vqyaSbSzQ75g@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Jeff Xu <jeffxu@chromium.org>, Jeff Xu <jeffxu@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, usama.anjum@collabora.com, rdunlap@infradead.org, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Quoting Justin Stitt (2024-02-01 10:55:03)
-> We're doing some needless string copies when trying to assign the proper
-> `prop` string. We can make `prop` a const char* and simply assign to
-> string literals.
+On Fri, 2 Feb 2024 at 13:18, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
 >
-> For the case where a format string is used, let's extract the parsing
-> logic out into sx9324_parse_phase_prop(). We no longer need to create
-> copies or allocate new memory.
->
-> sx9324_parse_phase_prop() will simply return the default def value if it
-> fails.
->
-> This also cleans up some deprecated strncpy() uses [1].
->
-> Furthermore, let's clean up this code further by removing some unused
-> defines:
-> |  #define SX9324_PIN_DEF "semtech,ph0-pin"
-> |  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
-> |  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
+> There will be a larger performance cost to checking up front without
+> allowing the partial completion.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+I suspect that for mseal(), the only half-way common case will be
+sealing an area that is entirely contained within one vma.
+
+So the cost will be the vma splitting (if it's not the whole vma), and
+very unlikely to be any kind of "walk the vma's to check that they can
+all be sealed" loop up-front.
+
+We'll see, but that's my gut feel, at least.
+
+               Linus
