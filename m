@@ -1,148 +1,162 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0893CF41;
-	Fri,  2 Feb 2024 11:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713AE140779
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 12:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706872003; cv=none; b=LEv6FhqHmiGcR+P8aTCT0Qk09WdKTedL3AZwnztEUC928nyRliCJDdFZVUS964S4QBTlfUplJxlkHserI5oTGSeVPcvzwWUftfv37WXd7R0ejDMc+ZLTpm3Z6BmrRfy6aZ8nKSckwXwNEanFEkVPuAPnWLZ9YE+bZUcJ9dgLDAI=
+	t=1706876226; cv=none; b=IPicg/fZRUqGoYzGIH+D5XrD8CXzUjyqJHGYqeZDxuIHhr3OUvRZkyW5wZjgyympdHfPqux81G+A+o4D0aFzv4NUKfoiU6hqo8V80Sc6ZWGum2qnO4RUtsQj3WDn496fb/Jt3AIwmBltWgTf4COWrCX5NKeWGv0rwAG9j29Mb7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706872003; c=relaxed/simple;
-	bh=CWY1KewRrcDzL4IL+GfzSLoZDzO1t9oWLwAOkVeq6RQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qiEI6EqnA8UsYE1DRoRhi0tCnukBluuuxZEBq+K8fF5Uk11BEDKXJu5apm78jP6vGQw9HOybVo4qJc4cRORCiL4T+okGGaRWONzLD8t05w2bsy1SKL716HflJXfH+5MuZ3SHCFYDx+Suk+P3LhvXA4t0Cpl8s+Lm4ZWnmal+Sc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1rVrNK-0000000365V-2lNu; Fri, 02 Feb 2024 12:06:26 +0100
-Received: from ip-185-104-138-54.ptr.icomera.net ([185.104.138.54] helo=[172.18.187.1])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1rVrNK-00000001k1T-1DEY; Fri, 02 Feb 2024 12:06:26 +0100
-Message-ID: <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, kernel test robot
-	 <lkp@intel.com>, Rich Felker <dalias@libc.org>, Masahiro Yamada
-	 <masahiroy@kernel.org>, Nicolas Schier <n.schier@avm.de>, 
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Date: Fri, 02 Feb 2024 12:06:22 +0100
-In-Reply-To: <202402020228.BBEF7DAC@keescook>
-References: <20240130232717.work.088-kees@kernel.org>
-	 <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
-	 <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
-	 <202402020228.BBEF7DAC@keescook>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1706876226; c=relaxed/simple;
+	bh=6WMlixFsMD3YXZFA7X0TiodSA2ARpqznFCPL+NJ64J0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tI2sahJu98sKqdUWUXcSbmQGMCrGjFdlyEL/0trwl4/LWGCLF0PbTuVfk90bw7GVHOyegp/rC3FIVY2NFDsAeuvVs45gHm2Ba2s2YAgLcrPb0A3U2D2zazpk8Hvh74OjYb3igiwiVGnq/KJEsphivyV73LrJoXfrtVENTTCgwKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LpzTI4ob; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LpzTI4ob"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-28bec6ae0ffso1493881a91.3
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 04:17:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706876224; x=1707481024; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UQ0esveh//cg9XCkiI/7xWePudzmiIjItwxrOruHVwk=;
+        b=LpzTI4obYAxHG+Gkig1OmPJWjP1D7uCoxw6UBg4vbSrdCkGBoxM0DmUc7l0biBlLHO
+         5WmQINucpkAfAX0/VONbedxa2YvfDqR8UPCIidaEWy5PTELhJMPbvyRbk1UctJFjqf5N
+         KWD9EtZB5AjPgIhMX1zUwQFe8JOb42Vh8WwsM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706876224; x=1707481024;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UQ0esveh//cg9XCkiI/7xWePudzmiIjItwxrOruHVwk=;
+        b=ZwHunjtEzPUZWTVit/dFcf/7N/Zwyv4kWxxBHh8UStJIBMC4m0yRJqE+i/qxZFQtd9
+         nfa+wyzuJv7x6Via1ZDCi2tDafYDPNW8ua83bVdn12mdJIa8p6/4T0UwR/njCvGWbkZS
+         fm2brTCedD2dbwsx2h80XgMN4hLYQ4UmcNPFaWhRjAl/cTJ0Ho+nSG4n3hTgXKoga1rd
+         rxJi1glH+dqEJt6/GDTFYJ3NiAVbHqKX8lt2Sbe8inJZIppXeSYbwbBrubKT6h5lkUgh
+         TRkAQXBlGJTILzQR9qch0op5zWA9kM6jlLrv4KLkVpLpWifnT/ntZFPFvMynrrBBhmwA
+         t43w==
+X-Gm-Message-State: AOJu0YzDC4lZzYb1XIF6vyGIuZ5Wyc3GiASUqx7NFzl89p8Z7iHvPHZR
+	gnpjB11JxTv/l9puKX1Rk2KjrV4skODBIrqgBOHUiiHi9mIVY1VrrAMI3EsHAA==
+X-Google-Smtp-Source: AGHT+IGg88zNLC34obB5/fOW4+rC0GoCG14stcT3rLU6L9HZrzANdbP1B4KMEzwmTO1dY9t5epZ2BQ==
+X-Received: by 2002:a17:90b:1298:b0:296:1dcf:c296 with SMTP id fw24-20020a17090b129800b002961dcfc296mr1876188pjb.18.1706876223734;
+        Fri, 02 Feb 2024 04:17:03 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUGVn+0c2h4HxapCQwK+CBO5gK3KOvlzIatkL3Eg+0hshg2pC4xRmXdAPGwrPO866Nj9YF+U6s6nJkm+zEO0B/JBsHbpfqLIrHUgGxhmDm7PR7dJOIlSKekZQeCfpS4kk6gdUCRy8AKy1koQcYXJUoBqPtoXthgUI8I+/eaEfrPbo4kflZwbchOOzcwU5swL0S6WdMTIJa+mw55to+6uV3nDPQwGmi8fzDIZ1/ceDsJxByCfPOeO0l/S81b9BgnbLDHSPgD7FlGPHvtp8Z/FomG1NkHrVilLrlukHP1pAw9wYKJnI22iJxJmSjYHmQniMGlZYsc/cdM58fBdkhFMawZoGvAvkTYiXvNll9VJlnJ8j/FX+IAuDXHo43itnq+OGQQdsBiGyQPYcczK3z4vcpWYVXqya3O7moVN8gWmQjkhvZgr8SZOqWDhbrhJgPiVmYM7CkU25sPa9I0PqKXD5aa7cvoHKmNkLXZ4/epetFyeC0sd5jBRU3IEcz8/3lo1E3SteGrn+6+Y/KEkJjGEjE/TlV+t7ZzrhslvL+T17oohFYN0g54YBk1TJzsBIkJwnqakFKkOfMS15bofbWnqaCKkx+rJlTObTtkF5AePTEEUWmqLLwa3jLiNLz4lnivpuzOGcGhWnPJl5a421rYycnirgqxJHh/cGTKPA8EmcYWycgZa67VxpoBN5oGlmkdby+KZtTF2BuWlV1VWF5HfxIzOVdG8qZz4Q257WM=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id su13-20020a17090b534d00b002927a36b7a0sm1671429pjb.23.2024.02.02.04.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 04:17:03 -0800 (PST)
+Date: Fri, 2 Feb 2024 04:17:02 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Fangrui Song <maskray@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Bill Wendling <morbo@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] ubsan: Reintroduce signed and unsigned overflow
+ sanitizers
+Message-ID: <202402020405.7E0B5B3784@keescook>
+References: <20240202101311.it.893-kees@kernel.org>
+ <20240202101642.156588-2-keescook@chromium.org>
+ <CANpmjNPPbTNPJfM5MNE6tW-jCse+u_RB8bqGLT3cTxgCsL+x-A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPPbTNPJfM5MNE6tW-jCse+u_RB8bqGLT3cTxgCsL+x-A@mail.gmail.com>
 
-Hi Kees,
+On Fri, Feb 02, 2024 at 12:01:55PM +0100, Marco Elver wrote:
+> On Fri, 2 Feb 2024 at 11:16, Kees Cook <keescook@chromium.org> wrote:
+> > [...]
+> > +config UBSAN_UNSIGNED_WRAP
+> > +       bool "Perform checking for unsigned arithmetic wrap-around"
+> > +       depends on $(cc-option,-fsanitize=unsigned-integer-overflow)
+> > +       depends on !X86_32 # avoid excessive stack usage on x86-32/clang
+> > +       depends on !COMPILE_TEST
+> > +       help
+> > +         This option enables -fsanitize=unsigned-integer-overflow which checks
+> > +         for wrap-around of any arithmetic operations with unsigned integers. This
+> > +         currently causes x86 to fail to boot.
+> 
+> My hypothesis is that these options will quickly be enabled by various
+> test and fuzzing setups, to the detriment of kernel developers. While
+> the commit message states that these are for experimentation, I do not
+> think it is at all clear from the Kconfig options.
 
-On Fri, 2024-02-02 at 02:32 -0800, Kees Cook wrote:
-> On Wed, Jan 31, 2024 at 12:19:22PM +0100, John Paul Adrian Glaubitz wrote=
-:
-> > Hi Kees,
-> >=20
-> > On Wed, 2024-01-31 at 12:03 +0100, John Paul Adrian Glaubitz wrote:
-> > > Hi Kees,
-> > >=20
-> > > On Tue, 2024-01-30 at 15:27 -0800, Kees Cook wrote:
-> > > > The early boot stub for sh had UBSan instrumentation present where =
-it is
-> > > > not supported. Disable it for this part of the build.
-> > > >=20
-> > > >   sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `zlib_i=
-nflate_table':
-> > > >   misc.c:(.text+0x670): undefined reference to `__ubsan_handle_shif=
-t_out_of_bounds'
-> > > >=20
-> > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > Closes: https://lore.kernel.org/oe-kbuild-all/202401310416.s8HLiLnC=
--lkp@intel.com/
-> > > > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> > > > Cc: Rich Felker <dalias@libc.org>
-> > > > Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > > > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > > > Cc: Nicolas Schier <n.schier@avm.de>
-> > > > Cc: linux-sh@vger.kernel.org
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > ---
-> > > >  arch/sh/boot/compressed/Makefile | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >=20
-> > > > diff --git a/arch/sh/boot/compressed/Makefile b/arch/sh/boot/compre=
-ssed/Makefile
-> > > > index b5e29f99c02c..6c6c791a1d06 100644
-> > > > --- a/arch/sh/boot/compressed/Makefile
-> > > > +++ b/arch/sh/boot/compressed/Makefile
-> > > > @@ -12,6 +12,7 @@ targets :=3D vmlinux vmlinux.bin vmlinux.bin.gz v=
-mlinux.bin.bz2 \
-> > > >             vmlinux.bin.lzma vmlinux.bin.xz vmlinux.bin.lzo $(OBJEC=
-TS)
-> > > > =20
-> > > >  GCOV_PROFILE :=3D n
-> > > > +UBSAN_SANITIZE :=3D n
-> > > > =20
-> > > >  #
-> > > >  # IMAGE_OFFSET is the load offset of the compression loader
-> > >=20
-> > > Thanks for the patch. I'm looking into this now and will provide the =
-review later.
-> >=20
-> > I tried to reproduce the error using your tree and the branch devel/ove=
-rflow/ubsan-only
-> > minus the above patch and using the provided config but I'm unable to r=
-eproduce the
-> > error above.
-> >=20
-> > Am I missing anything?
->=20
-> When I use GCC 13.2 (I'm specifically on Ubuntu 23.10) and the randconfig
-> linked from the report:
-> https://download.01.org/0day-ci/archive/20240131/202401310416.s8HLiLnC-lk=
-p@intel.com/config
-> (which is notably enabling CONFIG_UBSAN=3Dy and CONFIG_UBSAN_SHIFT=3Dy) t=
-hen I
-> see at the final link stage:
->=20
-> /usr/bin/sh4-linux-gnu-ld: arch/sh/boot/compressed/misc.o: in function `z=
-lib_inflate_table':
-> misc.c:(.text+0x650): undefined reference to `__ubsan_handle_shift_out_of=
-_bounds'
-> ...
->=20
-> After the patch, it's solved.
+I can certainly rephrase it more strongly. I would hope that anyone
+enabling the unsigned sanitizer would quickly realize how extremely
+noisy it is.
 
-OK, let me test with gcc 13.x. My build host is currently running openSUSE =
-Leap 15.5.
+> Unsigned integer wrap-around is relatively common (it is _not_ UB
+> after all). While I can appreciate that in some cases wrap around is a
+> genuine semantic bug, and that's what we want to find with these
+> changes, ultimately marking all semantically valid wrap arounds to
+> catch the unmarked ones. Given these patterns are so common, and C
+> programmers are used to them, it will take a lot of effort to mark all
+> the intentional cases. But I fear that even if we get to that place,
+> _unmarked_  but semantically valid unsigned wrap around will keep
+> popping up again and again.
 
-Adrian
+I agree -- it's going to be quite a challenge. My short-term goal is to
+see how far the sanitizer itself can get with identifying intentional
+uses. For example, I found two more extremely common code patterns that
+trip it now:
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+	unsigned int i = ...;
+	...
+	while (i--) { ... }
+
+This trips the sanitizer at loop exit. :P It seems like churn to
+refactor all of these into "for (; i; i--)". The compiler should be able
+to identify this by looking for later uses of "i", etc.
+
+The other is negative constants: -1UL, -3ULL, etc. These are all over
+the place and very very obviously intentional and should be ignored by
+the compiler.
+
+> What is the long-term vision to minimize the additional churn this may
+> introduce?
+
+My hope is that we can evolve the coverage over time. Solving it all at
+once won't be possible, but I think we can get pretty far with the
+signed overflow sanitizer, which runs relatively cleanly already.
+
+If we can't make meaningful progress in unsigned annotations, I think
+we'll have to work on gaining type-based operator overloading so we can
+grow type-aware arithmetic. That will serve as a much cleaner
+annotation. E.g. introduce jiffie_t, which wraps.
+
+> I think the problem reminds me a little of the data race problem,
+> although I suspect unsigned integer wraparound is much more common
+> than data races (which unlike unsigned wrap around is actually UB) -
+> so chasing all intentional unsigned integer wrap arounds and marking
+> will take even more effort than marking all intentional data races
+> (which we're still slowly, but steadily, making progress towards).
+> 
+> At the very least, these options should 'depends on EXPERT' or even
+> 'depends on BROKEN' while the story is still being worked out.
+
+Perhaps I should hold off on bringing the unsigned sanitizer back? I was
+hoping to work in parallel with the signed sanitizer, but maybe this
+isn't the right approach?
+
+-- 
+Kees Cook
