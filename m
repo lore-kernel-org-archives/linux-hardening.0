@@ -1,93 +1,166 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26A21420B3;
-	Fri,  2 Feb 2024 17:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41D114AD2C
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 17:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706893547; cv=none; b=mriKGij5w24zX+l2n5jjpDFp4H93Pq5OhX0GjFdQI5DbYRGHe4t35Egd31+pLE7++3TagzCHPBaAPSp3gNi6hZRH7t94qsVEbZwewe2lnJDC/Sux4hG3qcTHxTHfq/30VmTuhGKK7X0kpjjM5f9y6wIN+/2ZllrLH4JCaLzIfLs=
+	t=1706894673; cv=none; b=jxUr92mC5HRIqfuYd/a9xH8Vr3l1rP3zcoHxhbvXCRz8j0YYfm+/p0jS35pY+nDoKiXr5arCUovCyHw0UzbujTF+3vOYWeVZa78lymG/yaIIXEXtjeuKvTMEJ9M0mZLchEX5Y0xu74xz3sno+OXrN1i2BYWLmA04xslW+J3zWLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706893547; c=relaxed/simple;
-	bh=BAwvHs1egQiGyh3Tep3tXQoRaot7EO9KKStazGkphj8=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=uRzfieG6tTHAlX5GpfEM/1EsQ+a2fi7MLGxQbMElnxQVEZRJ9B1MujCN5+gkWzZ3s4xY3I8sKdjrus6UIoIJE/T6MZdkCVU1iidH9EPYYfox5OQgIlF7PkVQO+uUQTcYkiRrv+26IpAouJc+QsdRDVsR6PYmmSCogmb9qfEm33k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=3zgv7TD/; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1706894673; c=relaxed/simple;
+	bh=nAy2e/D2iJVgHXwJF6yNdb54Y1630LnSzKiRJLCWPWU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=NM85QudwZgupJB2jSm6ZuJCVTXCLOoSatRDPuGRNRw9PLLOcZt6HzUfMMOjUpQEEaMBayPdei6WWxemwCFymiayrj8KRNd0hwE9I5EQ7oyCuGSI0l7C6tHlWaaF9hrvvqmWhWsj46RpNSPktLs/o1cV4kx6h53qjE/r1woQG5mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=INDx6Ldv; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="3zgv7TD/"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=BAwvHs1egQ
-	iGyh3Tep3tXQoRaot7EO9KKStazGkphj8=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=3zgv7TD/ZhY+aUl0O7cUsE/W4VVRIWxeD
-	MKVJaQwalupXyQ9cd/mhDSVOFEJmr7qpl+Dj4k1x8hh61Ao1qVQdaBTm2vFYSCo+nd0cdN
-	jgIAK6z+F94bc6MtyRqcZN9tRbz6V5BzwE4RYcZapApJhS0SQeTS4tTXp9ZDsZkdd1Qwcz
-	3K+WKRIiTh/kD/gPXvdQd5CyGmHAjZvja4JxoKYC1Zc7gMu6ztpnhCj1b+gZQ/86FWI2vR
-	SKNXSYcY1E0uG8XGN3T8ayov7q1ihEb3QY9kh5GfwMsAP3mS1BQMy4G6bZLcUFNz5mCAM5
-	3i29NM/koL7kJT9x3vSOva+ioeorg==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id e09d1d9f;
-	Fri, 2 Feb 2024 10:05:43 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Jeff Xu <jeffxu@chromium.org>,
-    "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-    Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    willy@infradead.org, gregkh@linuxfoundation.org,
-    usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com,
-    jorgelo@chromium.org, groeck@chromium.org,
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-In-reply-to: <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver> <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com> <58408.1706828083@cvs.openbsd.org> <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
-Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
-   message dated "Thu, 01 Feb 2024 15:15:27 -0800."
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="INDx6Ldv"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2185739b64cso1405270fac.0
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 09:24:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706894666; x=1707499466; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q6UPWR6ndOUYDUMRqQVrkQUUePvtAQ0pg58MMEcJMl8=;
+        b=INDx6LdvntKdUHzRcErb3HcFuugGJGUt4xFBSv2A4JXsvyETCmibL3MyHRrLlHXcqA
+         +tr39CljSBrhdGosLlq9BmaAZufIouoT2LmQGIBNQEtjQAYAxMnYTWkM89reRjRiTap2
+         qT6LCoZRBZW/n8P0bNd9KvA1fveQxW63XEOPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706894666; x=1707499466;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q6UPWR6ndOUYDUMRqQVrkQUUePvtAQ0pg58MMEcJMl8=;
+        b=Vza8kG3LIUz6A20FvxfFtVFzOnPvIZAlhIlG08EazSzUyMvRX2TUTaKmTWxO11zFc7
+         R3pQPmSn9lScURDgeEXdwE7+rykqF0Exyt5Dg2vuimsg/eB0Bk7RdaEGS2dMKe2nbVY6
+         Ka7ABMGtP6ajG4kwJX4WFu95bj7OIipj4AMCn7Bwr5g2UqOP/7aCQcEaxnsZqVi8Gqzf
+         XUA4no9sPieudlV89+H0QWylAzz0Y8LodpO+jTxX4tqjlO6r28Syj4B3+/HA8WtCY4xN
+         IzOXtkB3tDOLq9xXmqsYpAja+pJXv5zLIaldERkfGXoOCMd5eVS5OZjFX0KFbuBFeghg
+         1c3Q==
+X-Gm-Message-State: AOJu0Yyg9enOh/QDs1mJ/j+BexelBPGF8ewG/tw+7u9W6T/vTO5Mnfn7
+	IdnHY/y+rrqRC7SyAyw0Hg7ZCBCiWWALE9kzNCbns3esECRi855+bwqefX1LunxJH4eZGCZrynA
+	TXeyYzoLw6h+A6R/2YXMpuJiOMkBe55ByevYO
+X-Google-Smtp-Source: AGHT+IFcpltYRj5g1jySgZ/6GoPjgsQ0yDI/CttpZ6v/mpIaX0DPVPHCVu9NXF6WDXyu3zKUp5cLGz4fA9D1UNwgF/M=
+X-Received: by 2002:a05:6871:68b:b0:210:a495:ba1f with SMTP id
+ l11-20020a056871068b00b00210a495ba1fmr395060oao.15.1706894665224; Fri, 02 Feb
+ 2024 09:24:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <95708.1706893543.1@cvs.openbsd.org>
-Date: Fri, 02 Feb 2024 10:05:43 -0700
-Message-ID: <66496.1706893543@cvs.openbsd.org>
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
+ <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
+ <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
+ <20240202151345.kj4nhb5uog4aknsp@revolver>
+In-Reply-To: <20240202151345.kj4nhb5uog4aknsp@revolver>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 2 Feb 2024 09:24:13 -0800
+Message-ID: <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@google.com>, 
+	Jeff Xu <jeffxu@chromium.org>, Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
+	willy@infradead.org, gregkh@linuxfoundation.org, 
+	torvalds@linux-foundation.org, usama.anjum@collabora.com, 
+	rdunlap@infradead.org, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Another interaction to consider is sigaltstack().
+On Fri, Feb 2, 2024 at 7:13=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracle=
+.com> wrote:
+>
+> * Jeff Xu <jeffxu@google.com> [240201 22:15]:
+> > On Thu, Feb 1, 2024 at 12:45=E2=80=AFPM Liam R. Howlett <Liam.Howlett@o=
+racle.com> wrote:
+> > >
+> > > * Jeff Xu <jeffxu@chromium.org> [240131 20:27]:
+> > > > On Wed, Jan 31, 2024 at 11:34=E2=80=AFAM Liam R. Howlett
+> > > > <Liam.Howlett@oracle.com> wrote:
+> > > > >
+> > >
+> > > Having to opt-in to allowing mseal will probably not work well.
+> > I'm leaving the opt-in discussion in Linus's thread.
+> >
+> > > Initial library mappings happen in one huge chunk then it's cut up in=
+to
+> > > smaller VMAs, at least that's what I see with my maple tree tracing. =
+ If
+> > > you opt-in, then the entire library will have to opt-in and so the
+> > > 'discourage inadvertent sealing' argument is not very strong.
+> > >
+> > Regarding "The initial library mappings happen in one huge chunk then
+> > it is cut up into smaller VMAS", this is not a problem.
+> >
+> > As example of elf loading (fs/binfmt_elf.c), there is just a few
+> > places to pass in what type of memory to be allocated, e.g.
+> > MAP_PRIVATE, MAP_FIXED_NOREPLACE, we can  add MAP_SEALABLE at those
+> > places.
+> > If glic does additional splitting on the memory range, by using
+> > mprotect(), then the MAP_SEALABLE is automatically applied after
+> > splitting.
+> > If glic uses mmap(MAP_FIXED), then it should use mmap(MAP_FIXED|MAP_SEA=
+LABLE).
+>
+> You are adding a flag that requires a new glibc.  When I try to point
+> out how this is unnecessary and excessive, you tell me it's fine and
+> probably not a whole lot of work.
+>
+> This isn't working with developers, you are dismissing the developers
+> who are trying to help you.
+>
+> Can you please:
+>
+> Provide code that uses this feature.
+>
+> Provide benchmark results where you apply mseal to 1, 2, 4, 8, 16, and
+> 32 VMAs.
+>
+I will prepare for the benchmark tests.
 
-In OpenBSD, sigaltstack() forces MAP_STACK onto the specified
-(pre-allocated) region, because on kernel-entry we require the "sp"
-register to point to a MAP_STACK region (this severely damages ROP pivot
-methods).  Linux does not have MAP_STACK enforcement (yet), but one day
-someone may try to do that work.
+> Provide code that tests and checks the failure paths.  Failures at the
+> start, middle, and end of the modifications.
+>
+Regarding, "Failures at the start, middle, and end of the modifications."
 
-This interacted poorly with mimmutable() because some applications
-allocate the memory being provided poorly.  I won't get into the details
-unless pushed, because what we found makes me upset.  Over the years,
-we've upstreamed diffs to applications to resolve all the nasty
-allocation patterns.  I think the software ecosystem is now mostly
-clean.
+With the current implementation, e.g. it checks if the sealing is
+applied before actual modification of VMAs, so partial modifications
+are avoided in mprotect, mremap, munmap.
 
-I suggest someone in Linux look into whether sigaltstack() is a mseal()
-bypass, perhaps somewhat similar to madvise MADV_FREE, and consider the
-correct strategy.
+There are test cases in the selftests to cover the failure path,
+including the beginning, middle and end of VMAs.
+test_seal_unmapped_start
+test_seal_unmapped_middle
+test_seal_unmapped_end
+test_seal_invalid_input
+test_seal_start_mprotect
+test_seal_end_mprotect
+etc.
 
-This is our documented strategy:
+Are those what you are looking for ?
 
-     On OpenBSD some additional restrictions prevent dangerous address space
-     modifications.  The proposed space at ss_sp is verified to be
-     contiguously mapped for read-write permissions (no execute) and incapable
-     of syscall entry (see msyscall(2)).  If those conditions are met, a page-
-     aligned inner region will be freshly mapped (all zero) with MAP_STACK
-     (see mmap(2)), destroying the pre-existing data in the region.  Once the
-     sigaltstack is disabled, the MAP_STACK attribute remains on the memory,
-     so it is best to deallocate the memory via a method that results in
-     munmap(2).
+> Document what happens in those failure paths.
+>
+> And, most importantly: keep an open mind and allow your opinion to
+> change when presented with new information.
+>
+> All of these things are to help you.  We need to know what needs fixing
+> so you can be successful.
+>
+Thanks for those feedbacks.
 
-OK, I better provide the details of what people were doing.
-sigaltstacks() in .data, in .bss, using malloc(), on a buffer on the
-stack, we even found one creating a sigaltstack inside a buffer on a
-pthread stack.  We told everyone to use mmap() and munmap(), with MAP_STACK
-if #ifdef MAP_STACK finds a definition.
+I sincerely wish for more of those help so this syscall can be useful.
+
+Thanks.
+Best Regards,
+-Jeff
+
+>
+> Thanks,
+> Liam
