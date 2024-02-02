@@ -1,214 +1,148 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403097FBBA
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 11:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0893CF41;
+	Fri,  2 Feb 2024 11:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706871757; cv=none; b=kORUj3JxXY00J6+t3yzFD22gkXw4NpEQW84KAM06DSgpk6rthPmC6lr//ZYRBRmKEeNuuryxOwejSyMOW5FjtL4kRmG0XsJOwm7CRUtkeNKBXpRDGxr7mhjc36ynTfRrbpngySJNB8f5BmhE5JInVZs1ZJIF1OyUROi4T2RTp7E=
+	t=1706872003; cv=none; b=LEv6FhqHmiGcR+P8aTCT0Qk09WdKTedL3AZwnztEUC928nyRliCJDdFZVUS964S4QBTlfUplJxlkHserI5oTGSeVPcvzwWUftfv37WXd7R0ejDMc+ZLTpm3Z6BmrRfy6aZ8nKSckwXwNEanFEkVPuAPnWLZ9YE+bZUcJ9dgLDAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706871757; c=relaxed/simple;
-	bh=D74xUy1ymoMyy6G89fvtRm0D45tUlhGfHmdtylAdP74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kwIeo4y/6Iu6wag5/MggeUTNFrZyJhpaHxgzmN6uBKnY/IAtdsZW/hCithNCZdVRDpeFozrg7rhPLVximcjFAQCxCLvtbOVyQqcx5wM7u4kW4ptYNeqjgfyEUDvWzvF3Ex7om8pWjC/VI9qsMP0cHsuNNJK8uT/I+fMbxZps5mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mRLrVqNU; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mRLrVqNU"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3beab443a63so1389578b6e.3
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 03:02:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706871754; x=1707476554; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AKvTOkMfs92gzE0M+TFiSJEhkCKRpJTzmpH7agAwUHE=;
-        b=mRLrVqNUC0+K74GLOl3vqaKFfnZylYJ9FexXfOF7UWpR79qSkQVkNE7M3Dd3TeVLhb
-         PhrYT0Eam/JvsohsUplCZo2sC80k7JA38WiRwJR/Tiyzu/netZn4T1zXO+n3szutFE73
-         AYobjBPAq6heSsJap54Cc/4cOZ8dsmtVBSb6YNXMp+K+Jr4A2Z1ZH9RdF9OcyE2iAv6G
-         Nvgx8OhKbCbIVM0OPBdwcEm0cU9+gsvREElE+bIRwnrDrW9OsJ3y2hB0935KlI0qV1vb
-         EmXVwTpkOERbd8aEchG0ttIRworAU5vnn5ah8i+faa84zzD9AT9VD008Sx+sdyvHnbPE
-         OCtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706871754; x=1707476554;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AKvTOkMfs92gzE0M+TFiSJEhkCKRpJTzmpH7agAwUHE=;
-        b=nXDee/QzyqBRBGPwpCfufLGuDSfGyPwhbe2KZiWz/0fyAxRH/gYZt+6EbCSMtVN2Yb
-         Fsxb+8j5IIpbP/KGd4l1M4BdFGIMPA+Iveq8/BCDHc2HUqwQqrpKKslVxDWpyD+CuNg8
-         ULgcTN6qRgC5UgPkchQ2yJTigfMtav2nHuHiS6eRWe1Ql3I/PtIod9VHY1c9p29CiZdG
-         Nv1F9GPUXcgRKAwPaeR50Jh3MSJWlQjkNEdKjFMHQRljZkwbyCLVXWM0GOG/w1nRR7/I
-         a2A98+PJQko6QhLuMzo6qiBZdzKj7llC/l/m1R9B93GEHhnFcoNisfZNOhJpaNsHkAWG
-         ZEpw==
-X-Gm-Message-State: AOJu0YwDcayu7OOG8aDv4NLYGmoXScxJh2Xiu/lMw4wbyL5Kdl0eVYxh
-	kyozerMLid1X/GBOqvfdZqCB6UmEM+hE47+dOQxxSS/byQBsr4OqTNJ6kUP40mIS4mapljkk8FU
-	vN4pZE2JQ9wbNHe/Kw+8dPRttTaZ88WFBYem3
-X-Google-Smtp-Source: AGHT+IFRpqtiZKVAmnfyGxbOhfn+Xv95kz9Cj0dh1dh0pmbX0ph2z2DTZnuR3soBcYzNT173zBRShjkf603kulKsELQ=
-X-Received: by 2002:a05:6808:10c3:b0:3bf:80de:9831 with SMTP id
- s3-20020a05680810c300b003bf80de9831mr1988318ois.10.1706871754161; Fri, 02 Feb
- 2024 03:02:34 -0800 (PST)
+	s=arc-20240116; t=1706872003; c=relaxed/simple;
+	bh=CWY1KewRrcDzL4IL+GfzSLoZDzO1t9oWLwAOkVeq6RQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qiEI6EqnA8UsYE1DRoRhi0tCnukBluuuxZEBq+K8fF5Uk11BEDKXJu5apm78jP6vGQw9HOybVo4qJc4cRORCiL4T+okGGaRWONzLD8t05w2bsy1SKL716HflJXfH+5MuZ3SHCFYDx+Suk+P3LhvXA4t0Cpl8s+Lm4ZWnmal+Sc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1rVrNK-0000000365V-2lNu; Fri, 02 Feb 2024 12:06:26 +0100
+Received: from ip-185-104-138-54.ptr.icomera.net ([185.104.138.54] helo=[172.18.187.1])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1rVrNK-00000001k1T-1DEY; Fri, 02 Feb 2024 12:06:26 +0100
+Message-ID: <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, kernel test robot
+	 <lkp@intel.com>, Rich Felker <dalias@libc.org>, Masahiro Yamada
+	 <masahiroy@kernel.org>, Nicolas Schier <n.schier@avm.de>, 
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Fri, 02 Feb 2024 12:06:22 +0100
+In-Reply-To: <202402020228.BBEF7DAC@keescook>
+References: <20240130232717.work.088-kees@kernel.org>
+	 <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
+	 <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
+	 <202402020228.BBEF7DAC@keescook>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202101311.it.893-kees@kernel.org> <20240202101642.156588-2-keescook@chromium.org>
-In-Reply-To: <20240202101642.156588-2-keescook@chromium.org>
-From: Marco Elver <elver@google.com>
-Date: Fri, 2 Feb 2024 12:01:55 +0100
-Message-ID: <CANpmjNPPbTNPJfM5MNE6tW-jCse+u_RB8bqGLT3cTxgCsL+x-A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] ubsan: Reintroduce signed and unsigned overflow sanitizers
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Hao Luo <haoluo@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	Fangrui Song <maskray@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Bill Wendling <morbo@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Fri, 2 Feb 2024 at 11:16, Kees Cook <keescook@chromium.org> wrote:
->
-> Effectively revert commit 6aaa31aeb9cf ("ubsan: remove overflow
-> checks"), to allow the kernel to be built with the "overflow"
-> sanitizers again. This gives developers a chance to experiment[1][2][3]
-> with the instrumentation again, while compilers adjust their sanitizers
-> to deal with the impact of -fno-strict-oveflow (i.e. moving from
-> "overflow" checking to "wrap-around" checking).
->
-> Notably, the naming of the options is adjusted to use the name "WRAP"
-> instead of "OVERFLOW". In the strictest sense, arithmetic "overflow"
-> happens when a result exceeds the storage of the type, and is considered
-> by the C standard and compilers to be undefined behavior for signed
-> and pointer types (without -fno-strict-overflow). Unsigned arithmetic
-> overflow is defined as always wrapping around.
->
-> Because the kernel is built with -fno-strict-overflow, signed and pointer
-> arithmetic is defined to always wrap around instead of "overflowing"
-> (which could either be elided due to being undefined behavior or would
-> wrap around, which led to very weird bugs in the kernel).
->
-> So, the config options are added back as CONFIG_UBSAN_SIGNED_WRAP and
-> CONFIG_UBSAN_UNSIGNED_WRAP. Since the kernel has several places that
-> explicitly depend on wrap-around behavior (e.g. counters, atomics, crypto,
-> etc), also introduce the __signed_wrap and __unsigned_wrap function
-> attributes for annotating functions where wrapping is expected and should
-> not be instrumented. This will allow us to distinguish in the kernel
-> between intentional and unintentional cases of arithmetic wrap-around.
->
-> Additionally keep these disabled under CONFIG_COMPILE_TEST for now.
->
-> Link: https://github.com/KSPP/linux/issues/26 [1]
-> Link: https://github.com/KSPP/linux/issues/27 [2]
-> Link: https://github.com/KSPP/linux/issues/344 [3]
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/compiler_types.h | 14 ++++++-
->  lib/Kconfig.ubsan              | 19 ++++++++++
->  lib/test_ubsan.c               | 49 ++++++++++++++++++++++++
->  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
->  lib/ubsan.h                    |  4 ++
->  scripts/Makefile.ubsan         |  2 +
->  6 files changed, 155 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 6f1ca49306d2..e585614f3152 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -282,11 +282,23 @@ struct ftrace_likely_data {
->  #define __no_sanitize_or_inline __always_inline
->  #endif
->
-> +/* Allow wrapping arithmetic within an annotated function. */
-> +#ifdef CONFIG_UBSAN_SIGNED_WRAP
-> +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
-> +#else
-> +# define __signed_wrap
-> +#endif
-> +#ifdef CONFIG_UBSAN_UNSIGNED_WRAP
-> +# define __unsigned_wrap __attribute__((no_sanitize("unsigned-integer-overflow")))
-> +#else
-> +# define __unsigned_wrap
-> +#endif
-> +
->  /* Section for code which can't be instrumented at all */
->  #define __noinstr_section(section)                                     \
->         noinline notrace __attribute((__section__(section)))            \
->         __no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
-> -       __no_sanitize_memory
-> +       __no_sanitize_memory __signed_wrap __unsigned_wrap
->
->  #define noinstr __noinstr_section(".noinstr.text")
->
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 59e21bfec188..a7003e5bd2a1 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -116,6 +116,25 @@ config UBSAN_UNREACHABLE
->           This option enables -fsanitize=unreachable which checks for control
->           flow reaching an expected-to-be-unreachable position.
->
-> +config UBSAN_SIGNED_WRAP
-> +       bool "Perform checking for signed arithmetic wrap-around"
-> +       default UBSAN
-> +       depends on !COMPILE_TEST
-> +       depends on $(cc-option,-fsanitize=signed-integer-overflow)
-> +       help
-> +         This option enables -fsanitize=signed-integer-overflow which checks
-> +         for wrap-around of any arithmetic operations with signed integers.
-> +
-> +config UBSAN_UNSIGNED_WRAP
-> +       bool "Perform checking for unsigned arithmetic wrap-around"
-> +       depends on $(cc-option,-fsanitize=unsigned-integer-overflow)
-> +       depends on !X86_32 # avoid excessive stack usage on x86-32/clang
-> +       depends on !COMPILE_TEST
-> +       help
-> +         This option enables -fsanitize=unsigned-integer-overflow which checks
-> +         for wrap-around of any arithmetic operations with unsigned integers. This
-> +         currently causes x86 to fail to boot.
+Hi Kees,
 
-My hypothesis is that these options will quickly be enabled by various
-test and fuzzing setups, to the detriment of kernel developers. While
-the commit message states that these are for experimentation, I do not
-think it is at all clear from the Kconfig options.
+On Fri, 2024-02-02 at 02:32 -0800, Kees Cook wrote:
+> On Wed, Jan 31, 2024 at 12:19:22PM +0100, John Paul Adrian Glaubitz wrote=
+:
+> > Hi Kees,
+> >=20
+> > On Wed, 2024-01-31 at 12:03 +0100, John Paul Adrian Glaubitz wrote:
+> > > Hi Kees,
+> > >=20
+> > > On Tue, 2024-01-30 at 15:27 -0800, Kees Cook wrote:
+> > > > The early boot stub for sh had UBSan instrumentation present where =
+it is
+> > > > not supported. Disable it for this part of the build.
+> > > >=20
+> > > >   sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `zlib_i=
+nflate_table':
+> > > >   misc.c:(.text+0x670): undefined reference to `__ubsan_handle_shif=
+t_out_of_bounds'
+> > > >=20
+> > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > Closes: https://lore.kernel.org/oe-kbuild-all/202401310416.s8HLiLnC=
+-lkp@intel.com/
+> > > > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > > > Cc: Rich Felker <dalias@libc.org>
+> > > > Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > > > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > > > Cc: Nicolas Schier <n.schier@avm.de>
+> > > > Cc: linux-sh@vger.kernel.org
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > >  arch/sh/boot/compressed/Makefile | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >=20
+> > > > diff --git a/arch/sh/boot/compressed/Makefile b/arch/sh/boot/compre=
+ssed/Makefile
+> > > > index b5e29f99c02c..6c6c791a1d06 100644
+> > > > --- a/arch/sh/boot/compressed/Makefile
+> > > > +++ b/arch/sh/boot/compressed/Makefile
+> > > > @@ -12,6 +12,7 @@ targets :=3D vmlinux vmlinux.bin vmlinux.bin.gz v=
+mlinux.bin.bz2 \
+> > > >             vmlinux.bin.lzma vmlinux.bin.xz vmlinux.bin.lzo $(OBJEC=
+TS)
+> > > > =20
+> > > >  GCOV_PROFILE :=3D n
+> > > > +UBSAN_SANITIZE :=3D n
+> > > > =20
+> > > >  #
+> > > >  # IMAGE_OFFSET is the load offset of the compression loader
+> > >=20
+> > > Thanks for the patch. I'm looking into this now and will provide the =
+review later.
+> >=20
+> > I tried to reproduce the error using your tree and the branch devel/ove=
+rflow/ubsan-only
+> > minus the above patch and using the provided config but I'm unable to r=
+eproduce the
+> > error above.
+> >=20
+> > Am I missing anything?
+>=20
+> When I use GCC 13.2 (I'm specifically on Ubuntu 23.10) and the randconfig
+> linked from the report:
+> https://download.01.org/0day-ci/archive/20240131/202401310416.s8HLiLnC-lk=
+p@intel.com/config
+> (which is notably enabling CONFIG_UBSAN=3Dy and CONFIG_UBSAN_SHIFT=3Dy) t=
+hen I
+> see at the final link stage:
+>=20
+> /usr/bin/sh4-linux-gnu-ld: arch/sh/boot/compressed/misc.o: in function `z=
+lib_inflate_table':
+> misc.c:(.text+0x650): undefined reference to `__ubsan_handle_shift_out_of=
+_bounds'
+> ...
+>=20
+> After the patch, it's solved.
 
-Unsigned integer wrap-around is relatively common (it is _not_ UB
-after all). While I can appreciate that in some cases wrap around is a
-genuine semantic bug, and that's what we want to find with these
-changes, ultimately marking all semantically valid wrap arounds to
-catch the unmarked ones. Given these patterns are so common, and C
-programmers are used to them, it will take a lot of effort to mark all
-the intentional cases. But I fear that even if we get to that place,
-_unmarked_  but semantically valid unsigned wrap around will keep
-popping up again and again.
+OK, let me test with gcc 13.x. My build host is currently running openSUSE =
+Leap 15.5.
 
-What is the long-term vision to minimize the additional churn this may
-introduce?
+Adrian
 
-I think the problem reminds me a little of the data race problem,
-although I suspect unsigned integer wraparound is much more common
-than data races (which unlike unsigned wrap around is actually UB) -
-so chasing all intentional unsigned integer wrap arounds and marking
-will take even more effort than marking all intentional data races
-(which we're still slowly, but steadily, making progress towards).
-
-At the very least, these options should 'depends on EXPERT' or even
-'depends on BROKEN' while the story is still being worked out.
-
-Thanks,
--- Marco
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
