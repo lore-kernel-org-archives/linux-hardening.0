@@ -1,100 +1,99 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB281474A0;
-	Fri,  2 Feb 2024 16:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD991148314;
+	Fri,  2 Feb 2024 16:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706890142; cv=none; b=smyy5SyUPmls1IIplr5ikKksAZ0scmx7pc1CJ4sr2VjoODOc1UCOs4oRsdE997MPu921b6gcXBRoPfCtdD28v2fSLaKBg1lZSbPOG0jtsKAD4k/8T11MpxvQTbFvrJz5moTQr8YBdAojHQMMjOEtpniGxo5jftMXIGDzU/HXDEw=
+	t=1706892348; cv=none; b=i66mOe4rKoLOJYpbVhurdAcUnmV/F0aEtUrk4WBEsc5EuiIjFPLzd4kzZ92E3llA4hvqJkf5uWzyhviLa24hyGWbHP2Y4xYoGOTs5HFkx55IOknGCJ7zJ/VC7OT7OKzukjrdvrqsC+2lU5pq6/Fw+sxZgSZEAoUrGpj+QHfX9+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706890142; c=relaxed/simple;
-	bh=ObobwIusGY63NE/2MOWR+NbMWvgKu/d9ZjBL9g2lKRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EOpYeOqPh6GQVZ3zgCPgFQwWaqB5Rtj39VqE78tyv4nsq9z8fJ6KfGPuezpDdCB/Pmy8LKKhcBoeK6kYFiFn0NgobP9njxaa+xcfaQIMnYx0d+SXbJCYR/11ACLJ2NY/dwkeuJjzExu3FQXK9y7u/HSU0Jycx7HFl9nJHV80lRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4aG5jaD; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706892348; c=relaxed/simple;
+	bh=gCXtpaaFuGj/Sfv2J/qgI4C+ehnvqwEiWJQgGM4NB5E=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=Bhst7Re+cg5dwwwf/6ElmOeXdPp0gfzQbMYTawcl1gZa8gsHZDRx4DlSPk0U3FYrnYNkWDkauzDqBx/RuOLwVTjEQdUusl3hsdyD1S5m/SAPD1CWctYEA4pSk0BrxRRokEU3q4MCgjvDnR9RccMQEX9Mfuf5IvJfNLHjcoQEqP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lF8+cc/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4aG5jaD"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6041779e75eso24009227b3.3;
-        Fri, 02 Feb 2024 08:09:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706890139; x=1707494939; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ObobwIusGY63NE/2MOWR+NbMWvgKu/d9ZjBL9g2lKRM=;
-        b=P4aG5jaDyDYRpT+eVdAhqKTboEYgxtCcSFqFddMsR/tA4OfDmGLY5vqhusq0s5DLC9
-         Cg+jgJKUN25AAgBN9xRQp7uvSQiPR4dj1RGfaxL5Qybhh9g9+VEHl8E/9ZijgqZ60wF5
-         I+kWnwOqW9S3X62MeKqXQgJkY25bnnDCTfPUAYT0W/JFkZ1RDLUuq2UZWGtLckdZIT9a
-         gwB+ps0VwjoclkuWq6lGjjH0ghpUsNG9EGQ8YPFVIfk89OzuX1QnFWcUJkHYCVE6+RGU
-         FmdUggw8Ygjmdij6T/amKgnTpH+uoBGKKw2Usx05xbOhEgXHgG1kJZuojuNKtI86i7mU
-         1W3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706890139; x=1707494939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ObobwIusGY63NE/2MOWR+NbMWvgKu/d9ZjBL9g2lKRM=;
-        b=qbD9G/Gt6DkkCUln5hyv8yKoKL++fXlOOf/djTNWE6YBWO+myS2Go1VoSLWhmC0Xm4
-         ZQbHxHm7mKk0E58FGrfPpkPJaaCj1z2FzxClNFc2G0uFhI6fy011GE1nXmCrQO0i0ONr
-         3TSCKjtQmX69r9GxQ/kvFkhUSvVPGXxhWlrK9Otyg/JMefzdy/yssnvYEAeb5R3QpOQz
-         L2oCBsmylfFtzA5hkv7iOMcEFqUpodvUCuHwMUzCWWTL9jVlRLXGF62R5aUlzK3BEoEY
-         JMucZ2SD73t43dhC0sgmC5j1dPZ2i9cfq6mevdCG6VIfs6ujIJWSyo/IXq61bLTbmY9W
-         T5OA==
-X-Gm-Message-State: AOJu0Yw7nq4Lbg++wqBtxDKPgsQDyU6QGLU+7LmL7WEiiyKK2ehtIMjj
-	Ibd4NOKJCXWOcNbkyVaKw4y5bAhEmlToN/2eeSkO3K/zAKKZvgSEsXWmvDFfBbOT6Lk6EFFmU1A
-	1ggu1a3P23H/fYtclu/VkU+8YtRc=
-X-Google-Smtp-Source: AGHT+IGMWWJJIsEQaIGhd3HotQ+QkJuC6kkshmtHK3UG+EVQsNgMHpDuOqo3DccHZuJCzl1gJq/ilLs/vZ/Z4MzkmfU=
-X-Received: by 2002:a81:441c:0:b0:5e8:92f9:46e8 with SMTP id
- r28-20020a81441c000000b005e892f946e8mr2730296ywa.30.1706890139331; Fri, 02
- Feb 2024 08:08:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lF8+cc/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 691F3C433F1;
+	Fri,  2 Feb 2024 16:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706892348;
+	bh=gCXtpaaFuGj/Sfv2J/qgI4C+ehnvqwEiWJQgGM4NB5E=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=lF8+cc/3GjCeNb/K2Y2/jTpo6vZYOAxO4wsHdUXD731NoAlK5/WtgIHIDumR6KnTf
+	 CmJwcmBUkmP6BwcfHG8RxV2C0kzpVwirz4iTukokWbuasbdPt51Er5Q1gZ4w82E/7D
+	 5iYiZwhCoh9iwgWLzOhW5ki5siBeQzxVvX7dxev+zvOXdpGnrLPAVvye2FmeuWEm3Q
+	 9VzxEn+u561Z8heuvD0IwmWe2mi+r0FKED1GxpXx6BRRtasDbC8e7AGizIVvPEra8y
+	 rk0D98GTJm6RD0K1FFjPFzJPLFFAbNwOSlGeSZBJ1hQt0XmC0sLgyFnx5BOzbIccio
+	 i67hwtIH6pSAg==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202101311.it.893-kees@kernel.org> <20240202101642.156588-2-keescook@chromium.org>
- <CANpmjNPPbTNPJfM5MNE6tW-jCse+u_RB8bqGLT3cTxgCsL+x-A@mail.gmail.com> <202402020405.7E0B5B3784@keescook>
-In-Reply-To: <202402020405.7E0B5B3784@keescook>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 2 Feb 2024 17:08:48 +0100
-Message-ID: <CANiq72ku9wsHtnPAh5G71Y_pbsftrPPyV5wmDCcZRM+WB6KVjA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] ubsan: Reintroduce signed and unsigned overflow sanitizers
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240126223150.work.548-kees@kernel.org>
+References: <20240126223150.work.548-kees@kernel.org>
 To: Kees Cook <keescook@chromium.org>
-Cc: Marco Elver <elver@google.com>, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Fangrui Song <maskray@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Bill Wendling <morbo@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, linux-doc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: Arend van Spriel <aspriel@gmail.com>, Kees Cook <keescook@chromium.org>,
+ Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>,
+ Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
+ linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Hans de Goede <hdegoede@redhat.com>,
+ Aloka Dixit <quic_alokad@quicinc.com>, John Keeping <john@keeping.me.uk>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170689233342.3493863.10294472294618285046.kvalo@kernel.org>
+Date: Fri,  2 Feb 2024 16:45:37 +0000 (UTC)
 
-On Fri, Feb 2, 2024 at 1:17=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> Perhaps I should hold off on bringing the unsigned sanitizer back? I was
-> hoping to work in parallel with the signed sanitizer, but maybe this
-> isn't the right approach?
+Kees Cook <keescook@chromium.org> wrote:
 
-If you can do anything to keep it in-tree, I think it would be nice so
-that others can easily use it to test the tooling and to start to
-clean up cases. A per-subsystem opt-in like Marco says could be a way,
-and you could perhaps do one very small subsystem or similar to see
-how it would look like.
+> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+> cfg80211_scan_request with __counted_by"), the compiler may enforce
+> dynamic array indexing of req->channels to stay below n_channels. As a
+> result, n_channels needs to be increased _before_ accessing the newly
+> added array index. Increment it first, then use "i" for the prior index.
+> Solves this warning in the coming GCC that has __counted_by support:
+> 
+> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
+> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
+> n_channels' may be undefined [-Wsequence-point]
+>  3783 |                 req->channels[req->n_channels++] = chan;
+>       |                               ~~~~~~~~~~~~~~~^~
+> 
+> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+> Cc: Arend van Spriel <aspriel@gmail.com>
+> Cc: Franky Lin <franky.lin@broadcom.com>
+> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
+> Cc: Ian Lin <ian.lin@infineon.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Wright Feng <wright.feng@cypress.com>
+> Cc: Hector Martin <marcan@marcan.st>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: brcm80211-dev-list.pdl@broadcom.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Something that could also help would be to split the cases even
-further (say, only overflows and not underflows), but is that a
-possibility with the current tooling?
+Patch applied to wireless.git, thanks.
 
-Thanks for working on this, Kees!
+5bdda0048c8d wifi: brcmfmac: Adjust n_channels usage for __counted_by
 
-Cheers,
-Miguel
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240126223150.work.548-kees@kernel.org/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
