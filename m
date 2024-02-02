@@ -1,132 +1,145 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5F514AD1B
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 17:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F51D149012;
+	Fri,  2 Feb 2024 18:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706896747; cv=none; b=ub9dTU5zSe9nulUWeTfHylWyvKw9c27Xn1EsHNQ7fWDb7J6/xYCVQQunCAp1OS1h4qV1RAn/FwHntOGDW5Gw4LujjKiLgn/W4LtFHXnTMtDuIXm3RGrOblFef4h9jEyRaSLxSC5nFAcWAJQcgsxeVHRy9on4xsPJChXr6iZXesQ=
+	t=1706897332; cv=none; b=XpsdlpCBXMGkP/bdybTwscIKZ/uJHK5LGz0FsQEA3SZh2q/4SLxR0qmVjzOOzYBaYxYRHh0XH2dEcSKzAW9ru5kVqOw8UNxUyaes2rC23lZpBCcfpChcF2t7U1QwkaYz3NfRtMX94gwPlzWnO7zbW4Id27I4VNXTXglbtjlM5Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706896747; c=relaxed/simple;
-	bh=b0UK3I6qBl5XLXZ/ULBInBz/ydG+gAjVS2eKkSAUwuc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eu53vZEb5fSGSRfjw0VAngVBcVJVudV/S9+FBooUKidJ7/VfCkJ9/CgCCfA4W5fbvaNFqRLTNFP6oTjhnRs+AdMrxzSr7PkDgQlBmbj3AIOE5Yqkb06YVpPbXe9YeTO7HnG0gDxO1+aBQx05WwluOwMvUN4tbj5m8eQ6lo7YL90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LtKFdmnu; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706897332; c=relaxed/simple;
+	bh=QDFPSRUTTIxcUcZpwGxYxehEIqReHy4CI55yrtFRzQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R3VSnzauB7+EajVq0rr25Pi3rnV0e+UPegQy3A4yQXcxOXmnWz5NTrV3zJZ9pW/VppYR7aQVeciOpyAPOMcMmuC+QP+2BHyZPzqp4Rg3Vgp0rYCneL0QTumDUzOybC8gauXNDUMkogE4FU/w4Ud7MwYUGgD7h7XTWvbyRGi1zCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HuvLGtRz; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LtKFdmnu"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-219108b8e9cso646453fac.2
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 09:59:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuvLGtRz"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a271a28aeb4so353527966b.2;
+        Fri, 02 Feb 2024 10:08:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706896745; x=1707501545; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V3MyFHdGuJXKIHAocH1cP+k+k6xBW4irfqW7F3umGsY=;
-        b=LtKFdmnuA9zRYggzAzNUaUaUmyKVOrU3o7RbDHpumwWHWdIWt3HRxK05zC1yAXd5Ic
-         d0zcKrDc9vE0iPxnps/sWZLyewDKkhPCIJxhubQl3OmkdoxfE+xI0CB13/ZZIanxtW+k
-         Z6muAVLps3zZZncPOFwtUaVHPzeXiGn7dKyZQ=
+        d=gmail.com; s=20230601; t=1706897328; x=1707502128; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G6k6f7aElP7VLNFd5TSd36D2rwgbRDtNHJQ2BO+8c1Y=;
+        b=HuvLGtRz2w13j6OTHfutKvCWVC89LjFa//WG2hynen1EMN20yhwGv3peUtPUbkT50l
+         T6CiQyiIug2foCBsJ+MY0ltfGErFc+smI9f3ysjJhWdDFOGolKNY7PHZ4N/KOCDB4cBf
+         MGYORdta0vVwauk8qFMUF0sZavFmrPg4/RLfOznmfZ22bGBmlZvSTfevLOJy+B5+wBTz
+         klBwecwWXB8cgCxfudmK7RrkA+jgfpn2/jqKVFCahI9DUDD6efQu7Ugreyifdz34dWtR
+         UG5S+WxrW+A+9j+un6/DGXjPZF27FNUD/atw+nihnCjvllzOcH2mVL372EXUnEWUD4pV
+         SQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706896745; x=1707501545;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V3MyFHdGuJXKIHAocH1cP+k+k6xBW4irfqW7F3umGsY=;
-        b=sLEm9IoAMAIGCN1FbRwfHiiHlmY74MYq4UEAXA42F2l69rK+z499PMOdfqVrYc5YiI
-         yPcOBdG6GYB8xeC+3giwUgYcUynNeRIwILdFzzdXoahpzDJ9DsmQlKQfpUw+BGTqcfkC
-         ZTfIpGOgIKY+YaxT8fkGAxFBTZVApyJchEb3ghNwa2xDmPn88PVw2XPrVtPFnf+py/pI
-         emq7qRm9Cy/XRTh/ySI603dQFf584UVwRcuD6lNisZp1B/ALBdcdx8nZNOSDoIPO+tSA
-         iGXyamXIiNrqYk5mevScVBOuxr6PYja59XL8eB2UMgAY5qqH5jwa/lrkuF0LhH2dlBl7
-         0gMg==
-X-Gm-Message-State: AOJu0YyZUCjf3A5WtM2TFaPm0lCWVy9ki9PANQ4jpgpbm4UePMJfDx8y
-	ad83aT8EPpi5LJ2vSEcY3PbxUc8WAt4pFYTKam9ovT+jlP7cL3C53pZPUts/9iqsQAJbxJHqliy
-	VFTG1GrM/q7gh2u7qj3sx/3ZNGGDucYWvC4nN
-X-Google-Smtp-Source: AGHT+IGpU/xeyR4Cac3EmRCRvgJs1LUHcLu+M+2J4+z8SyoU1mY+7pncKYINef4x09GNaY4SUrFEJxNBeJFX0e+aASY=
-X-Received: by 2002:a05:6870:200b:b0:218:eff8:3161 with SMTP id
- o11-20020a056870200b00b00218eff83161mr487923oab.39.1706896745307; Fri, 02 Feb
- 2024 09:59:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706897328; x=1707502128;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G6k6f7aElP7VLNFd5TSd36D2rwgbRDtNHJQ2BO+8c1Y=;
+        b=OEemnNF+NJ/qheUXgedPrZgqhstrmChWWFhg5pcedIEgYtd8ye3On+/CpjXKbi1Nph
+         EinFJ2nWcR4HeGHdg/3ZxniDEt8cuRmAGGgqE1nHxf2htZG5XgOPAKSviZBHugtx783Y
+         3933tDRVW2vkVudCpJ4RP3dkmRavlBVRbbvFrsZV1/dQKElx5im0ssCExEGXRrBHFSOg
+         1HzP1JLKhpUPjHFalf/hFKh6EbIFlXcOhAR8U4g46rdvEj1AEreXhBnAdXuLcnSI2oJS
+         INyLu4/bpSpqNAwCUioemQfTsO/djFcgYp+fF+Wl+WKG9PfwvRKmigxRAYPP9dFsRV2j
+         Yfrw==
+X-Gm-Message-State: AOJu0YxFGr1ewcw7r9TsQq6gO0FluTxybMiGbOKF6OQw4LrUJ1AmkoYS
+	2nV99muVWJ6CzrCqi0koW9ExRwH9M0exngNZBRMR9JzzeMFiakqjSkNX6CLlFfsTNSJ5
+X-Google-Smtp-Source: AGHT+IE0UxXVvWC/7IgNu90xj6SLY7jPWaNIyYv7/BDsvh+924m/IfR2Deg730aOeeaF+74WWyIS7w==
+X-Received: by 2002:a17:906:258f:b0:a32:b376:489d with SMTP id m15-20020a170906258f00b00a32b376489dmr1963359ejb.21.1706897328170;
+        Fri, 02 Feb 2024 10:08:48 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWaLAI5Nm8BH0Rzod9H0hrG29E6FsNst7vpQBztE5rDa7BDm5XUmBrBZkyo2NbtACO/IHlAEk+ux5b/aQbm4FAr7+0lhnTwpNBZKDnyMNtHoFsaIvpWKIKaWm2dYks6ALOm4xyzEf1dCDnc9ebWSqSgmYOvtHtUlaxx8u3PXfWIjyWvXBUYtyPV/zLueKhLjNh4cAcop+fOkRd3b1Fc/cLqDU5URos9FMlOAkg4LHGYqUXXdnUBPmapHoP9PpU6CtEUDL1J3urfx+DMcJ5Vrb3fXWJREZdZAEdqKy6zI0/UZbOTn/JZ8ikQtR7Ly5elOdDCpPZ8F1NENw8ZLpaE7IyQJeLaJh1sc0VQPgCAESf93ffOZ/psBKylSNSO+luIsNJZxKKSVwSi4Newey4i9+m2aWGkj43hu6Yo+pXv+xb5J05cE3stMOaeGDowt30OdvnM98Ivvav+Jfp1OqjRT6jdwIgzJ/KgUvMRl0Oqu0SQva1FOmAZem6QT/hfoCON2Zrp2DlrgSgwwbk30GLR7qGl9PJBPsuEt5AZDhswGFmQTVz58M26Q7mbCh30NOrcuoO87evxmmRBNR1Q+HfpT2X5N0OMDVrKl1ITZ3LCCQ8BIz3wuf4HI1uYBTpfo4BstwRsohafUJsk4p5fhIGz7psagTZ9BaeEt98jzloTRZrGcigGdoy1
+Received: from [192.168.178.138] (f215227.upc-f.chello.nl. [80.56.215.227])
+        by smtp.gmail.com with ESMTPSA id g21-20020a170906595500b00a3109a492d4sm1093613ejr.20.2024.02.02.10.08.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 10:08:47 -0800 (PST)
+Message-ID: <6f92d882-f0c3-4345-878a-bc09b2f24fae@gmail.com>
+Date: Fri, 2 Feb 2024 19:08:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver> <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com>
- <58408.1706828083@cvs.openbsd.org> <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
- <CALmYWFtqcixi3p3Ab44wENJr+n2k2SNaCJEofNm_awnNdJZnDQ@mail.gmail.com>
- <8744.1706846710@cvs.openbsd.org> <CABi2SkWSt=UMFWe9n916ZH16wCzaipKXmEJ5VasQHMr1AxerxQ@mail.gmail.com>
- <29248.1706850035@cvs.openbsd.org>
-In-Reply-To: <29248.1706850035@cvs.openbsd.org>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 2 Feb 2024 09:58:53 -0800
-Message-ID: <CABi2SkXPNPKgqheuFuQ9iZApQkJm8o6bypNn0B-QDz_W9b0JBQ@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Jeff Xu <jeffxu@google.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
-	willy@infradead.org, gregkh@linuxfoundation.org, usama.anjum@collabora.com, 
-	rdunlap@infradead.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+Content-Language: en-US
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>,
+ Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
+ linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Hans de Goede <hdegoede@redhat.com>,
+ Aloka Dixit <quic_alokad@quicinc.com>, John Keeping <john@keeping.me.uk>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240126223150.work.548-kees@kernel.org>
+ <170678189299.2736043.11616312910656558919.kvalo@kernel.org>
+ <a91c6a28-6762-41cf-bb85-09e79f3d29d4@gmail.com>
+ <d4855223-4323-43f1-9a29-e279e2cb128c@gmail.com> <87v877tar5.fsf@kernel.org>
+From: Arend Van Spriel <aspriel@gmail.com>
+In-Reply-To: <87v877tar5.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 1, 2024 at 9:00=E2=80=AFPM Theo de Raadt <deraadt@openbsd.org> =
-wrote:
->
-> Jeff Xu <jeffxu@chromium.org> wrote:
->
-> > Even without free.
-> > I personally do not like the heap getting sealed like that.
-> >
-> > Component A.
-> > p=3Dmalloc(4096);
-> > writing something to p.
-> >
-> > Component B:
-> > mprotect(p,4096, RO)
-> > mseal(p,4096)
-> >
-> > This will split the heap VMA, and prevent the heap from shrinking, if
-> > this is in a frequent code path, then it might hurt the process's
-> > memory usage.
-> >
-> > The existing code is more likely to use malloc than mmap(), so it is
-> > easier for dev to seal a piece of data belonging to another component.
-> > I hope this pattern is not wide-spreading.
-> >
-> > The ideal way will be just changing the library A to use mmap.
->
-> I think you are lacking some test programs to see how it actually
-> behaves; the effect is worse than you think, and the impact is immediatel=
-y
-> visible to the programmer, and the lesson is clear:
->
->         you can only seal objects which you gaurantee never get recycled.
->
->         Pushing a sealed object back into reuse is a disasterous bug.
->
->         Noone should call this interface, unless they understand that.
->
-> I'll say again, you don't have a test program for various allocators to
-> understand how it behaves.  The failure modes described in your docuemnts
-> are not correct.
->
-I understand what you mean: I will add that part to the document:
-Try to recycle a sealed memory is disastrous, e.g.
-p=3Dmalloc(4096);
-mprotect(p,4096,RO)
-mseal(p,4096)
-free(p);
+On 2/2/2024 11:34 AM, Kalle Valo wrote:
+> Arend Van Spriel <aspriel@gmail.com> writes:
+> 
+>> On 2/2/2024 10:58 AM, Arend Van Spriel wrote:
+>>
+>>> On 2/1/2024 11:04 AM, Kalle Valo wrote:
+>>>> Kees Cook <keescook@chromium.org> wrote:
+>>>>
+>>>>> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+>>>>> cfg80211_scan_request with __counted_by"), the compiler may enforce
+>>>>> dynamic array indexing of req->channels to stay below n_channels. As a
+>>>>> result, n_channels needs to be increased _before_ accessing the newly
+>>>>> added array index. Increment it first, then use "i" for the prior index.
+>>>>> Solves this warning in the coming GCC that has __counted_by support:
+>>>>>
+>>>>> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In
+>>>>> function 'brcmf_internal_escan_add_info':
+>>>>> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
+>>>>> n_channels' may be undefined [-Wsequence-point]
+>>>>>    3783 |                 req->channels[req->n_channels++] = chan;
+>>>>>         |                               ~~~~~~~~~~~~~~~^~
+>>>>>
+>>>>> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+>>>>> cfg80211_scan_request with __counted_by")
+>>>>> Cc: Arend van Spriel <aspriel@gmail.com>
+>>>>> Cc: Franky Lin <franky.lin@broadcom.com>
+>>>>> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+>>>>> Cc: Kalle Valo <kvalo@kernel.org>
+>>>>> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
+>>>>> Cc: Ian Lin <ian.lin@infineon.com>
+>>>>> Cc: Johannes Berg <johannes.berg@intel.com>
+>>>>> Cc: Wright Feng <wright.feng@cypress.com>
+>>>>> Cc: Hector Martin <marcan@marcan.st>
+>>>>> Cc: linux-wireless@vger.kernel.org
+>>>>> Cc: brcm80211-dev-list.pdl@broadcom.com
+>>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>>
+>>>> I'm planning to queue this for wireless tree. Arend, ack?
+>>> This slipped past my broadcom email. As the Fixes commit is in 6.7 I
+>>> would say ACK.
+> 
+> Thanks.
+> 
+>> Cc: to stable?
+> 
+> Is commit e3eac9f32ec0 in stable releases? (I don't follow stable and
+> don't know what commits they take.) I propose that as we have Fixes tag
+> let's not add cc but instead let stable maintainers to decide.
 
-My point is:
-I think sealing an object from the heap is a bad pattern in general,
-even dev doesn't free it. That was one of the reasons for the sealable
-flag, I hope saying this doesn't be perceived as looking for excuses.
+I confirmed the commit was in 6.7 and the latest released kernel is 
+always handled by stable kernel team. kernel.org main page always shows 
+the active stable/longterm releases. That said I have no problem with 
+your proposal.
 
->
+Gr. AvS
