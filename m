@@ -1,106 +1,124 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6904061682
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 09:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EA95FEF8;
+	Fri,  2 Feb 2024 09:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706867869; cv=none; b=OQIBtBEUKUaKlLHsV+b8VwmV8c3282T/fraE0IaZqyobjfVSfp97kmxO4K9A2iB1UsfM5TuUqwgT1VJ559rjztz8cYHPjD8sTAhDqEnZqpuYaAP4GQdk6Oaxaui0ae8W2pIkEfhvCf/NcaGcnAFtCK57o4+usMY07HETPgLWNgc=
+	t=1706867935; cv=none; b=YMDeHHdY+mOxJyo53bsH34R3yLSfDDH01Q9gkeSNzGCaVrr1abScrtWCG7P8rLAq92cIFOIyPTG7HgTf7zp1RNi01Oeu36UobyAFVvmzuRUfhaTeu8liJ2trCqtREWkd141HTd12YOai9HdCmRrkVLvCpJ6lzBoHSQvpInDxuNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706867869; c=relaxed/simple;
-	bh=RRNstcIluuEvvN5q92z4aRkcZ8MPGT3aLb5LKkuQEjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JDAWw2OvSxzLEV3VtvmzivTnzjWxW8JWpWFiiThfc7BZ/TImhX1VXRMVDgv1Y/PIVvmMbKbe2Swy+2rEHKiSuot64bpnVma6NO2Z/REmY2wNAva6iZKwPxgHRjfhZD+yGbxk749E346xZlewOqc+dh+Pax9Q1aH8AM2oAyfUBjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2WeNtsJI; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706867935; c=relaxed/simple;
+	bh=DkbWTuDazMKJWZUiAxryy/903EaX7q6q9RefI6eZyfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qpFT9m1VK7oRlgN36zt3GaGaAswVKoBNU+r3PA2HAwcJ8TtTBpZ85HTTxb9TY0DwXD8QL3vmZCzUEGGfLmfidG/kK90+6zmFyGFp59raDdmRAMq+NmuO6YR+HFdPYQATJeu0E4PDnLYm65u14ehhNgR0s50jKX3/e/9d9l3cqzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbkQ76vF; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2WeNtsJI"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4bd45397c17so693162e0c.2
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 01:57:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbkQ76vF"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-783da8920e5so124096185a.1;
+        Fri, 02 Feb 2024 01:58:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706867867; x=1707472667; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQu4+TF2VOv8ovQWnIde7uGbT9lKBnDwIcv4xTfRr/U=;
-        b=2WeNtsJIOyhyRtf5xVM1M67GxVS4hIF2B5bi8WITGqbL5zCPMBaz4PPLe2VOuSWuad
-         Zxme6GUUjTB5ke3gmdDQrMIO/VuV/GUoZmoBKwebSa0TNxxyjJe1aTIct4JYlFArFuzb
-         aT1hI2VMFqIkoajjRXKAtwlJiNiUlXaYu+Bf2rpdBS2+NIQDWIuxRTlGqJncevPCilpQ
-         wb/E6pJLDX4KbuEuxoeZBnmSIR9na4WMKzicEuys7JZPBVJBFCxKKjht6LwW95SNqF0G
-         w+Io3CQ8tip6NpschL4AU59L2TQcYjF++d/RwgsWZUCreDo94ZxixhUIulsz7s+dSf+S
-         d5cA==
+        d=gmail.com; s=20230601; t=1706867931; x=1707472731; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T6fyBxEnYt0Yb8BWzW2Dkq1yl3Yvo5z3oSE+nBfPAD8=;
+        b=lbkQ76vFaOi0PYTlhC66bXWbRwcRapttgdgVG0kWp0hfoRMxLTdP8W9FjslJ0ykGdU
+         IoD0oTNOfaZvH2XCjMIWURTV2QfHJYHvHzj0qlz5vVINk8B7eHbCuiheOB1Aa2Pp1T/z
+         pmTUptwEP22gxAez8Aya3ynxsxsRibeMicNAJlMu3U4PFZhacgVJODVaDQEg9J4L3I6x
+         1fl7t+7Qgw5Qaak5Z4YjK08TzXCgik6CabDsUH1KZ/HM+nXyK9SzAZOLf/d0q8cDHL51
+         v6h2hiCheLdereUeB8G1WNIYGP2J6QPmKuw4B3viYt/ZQA+7XvZm9E3DrmdjwrAzJUG1
+         q0Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706867867; x=1707472667;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IQu4+TF2VOv8ovQWnIde7uGbT9lKBnDwIcv4xTfRr/U=;
-        b=dIAJpAjwt8m9E7z6R5m+AkS3M5d/0Wdi+xyybIQWJG6EYkGkoSe0NIhz34uLccCivx
-         3bDl0ncE2vxgL5o4KEIpXqF2A+nLXyWZqvEP2QNMAwB/0jFKs96uU9anqR1pyyptB7jz
-         UOIVDUTdf5+pBS4By5/dE1RsaBeRuncMGxcq5D9+LccP6RFmExVdgRJWwwvptLkYU43o
-         TTtnHjBcw8/C1iLWSJBOSffYPAou+6SXU0qrucz4FsmVT4wa0r3XDMeIOWpUJp+cBopG
-         /8rWHil06LhwmD4tF4cW9u7AfuinO6DJhoKXc6E85Sje4Hk7qnnFh1Y8FVDQB1sSYxUF
-         xQmA==
-X-Gm-Message-State: AOJu0YwSMEGGaXr2w9ukPlbkFhPl4YLu2z0m0x38Lf9n757QZWbx5FMc
-	qsf0PpyrvZci9UBiQqXWcqtymEF3F2Qr+mUWn+73vUSZZxAp3DSrnAOIroXDbhSlpTj7uUu9KG8
-	d5ec0B2amqs+NlxS6Rku4f147OgRvTgAfK48z
-X-Google-Smtp-Source: AGHT+IHTiJLAxvje2qeRnYi2ylfwu0CGEMli5/Oc9gFFUCxF9OtJiu3BECSx1oy2M3xdLanJWbD1dRTko3CfBgGQbcE=
-X-Received: by 2002:a1f:f4c9:0:b0:4b6:bdba:8460 with SMTP id
- s192-20020a1ff4c9000000b004b6bdba8460mr1408577vkh.9.1706867867177; Fri, 02
- Feb 2024 01:57:47 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706867931; x=1707472731;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T6fyBxEnYt0Yb8BWzW2Dkq1yl3Yvo5z3oSE+nBfPAD8=;
+        b=UyBoKMLcHrbLncLEQ4HnGTOFhANRG8IwJyuO3bB/2aTGmvBgzCR76sZ+ovk0mDxG1U
+         KMVxYTdkYHv8CSeHVx9h2E48FYP6J6FrKIDLymPTkuxOZ7g8czTDd24FV40Lz+CJf+Wn
+         dv7q4pi+A73dH46VKQzNCtU/5Hl4H+5jfr70iCCa/M7WVq+/Vp9d0rgiO7FNd0ODZ5Gw
+         bhuzLPKih8HlfYtbTui3/G/bpwkBcqzyNIfJR8bfeTvy533GtaFMoJzmwfHu599NKl61
+         bwQo7wHBfLLeRYypEXom82+9IRo81+BtVz+rU1aAEeTU8rHdiBEi3X0L7GW5Ia9KWH12
+         E+tA==
+X-Gm-Message-State: AOJu0Yz3upWzapqjhYSyzeIPHGMg/iBPvZ4aINxMwSoHj+/UxSYK+qSy
+	Bm8h4uDhbAGX8LBm08xKv2Ufqg/0WvDzHqtkae9NlbFkArHQQXCH
+X-Google-Smtp-Source: AGHT+IGi9xNvoo0qkunPvcWTLEC1MipJ3N1phvvIyme5M65V1UqM8X/fWswldrRtYf3mmuEu4dItkA==
+X-Received: by 2002:ad4:5ce3:0:b0:68c:5e33:dc9 with SMTP id iv3-20020ad45ce3000000b0068c5e330dc9mr1944927qvb.34.1706867931016;
+        Fri, 02 Feb 2024 01:58:51 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV2moWMTAK/wWuRjR7mNQbLtk63x3NEIn+rA95YoOusIf2NgWE2rM56Zxl224DYusrrt5d0lu7FMoPJrbI3XZ2XdOZ3jxwnxQ+Aru74zeR5LYM3W9T+RHjebO66iN2WUHL0VamvvWBlltriJa7rLW6yNeS93nsV7pZ+1vL0HJDnSsQ1oLjrrSvQ8FtTUhf0qQ99BQVCEMoVzhkSqRSHHVDcd9134BBkEV2AAhk4AYwRzwaNSrDNv9rq+Hbpnw41Ue1uJCEgOP49Pu3013c/5IyRxa1yvtBUczdmYuUWi4Ky9RezECguyAM/NBASLCAqK0CWw3jjzVNZ5lD2RvCPGrEfCo8a9czOk1c5bIlgvq3kiBrxzH1queUExT6OLn/LOlyMJOcS7+ab4lhjnfyrE+SKjPbcjOjPstmLz+/RUA1pkLGIjL/LjQ3pNp2reOU34PZTVlf9P5sGJm3NWjrb+w8MNTDCvm5DNM/pjPLSEbKVvQIVfpZaEOJrU9qw+keQh4fDqg57REuOg2YnjiPvBFBWvYXnLdaSUHsUQErK8KWB1rD9oA1U25u94i9Vst1P9j/9UbNOihJvBVlLjcXrf0BnNRocrFZEvig6/sPt5mcoXml4M7JRoCagxGXmWsYqvejwazwbyMWJnq38tUb+AgCfdk4ZiTCeNGYhaLuK6p8pS0sOeA==
+Received: from [192.168.178.55] (f215227.upc-f.chello.nl. [80.56.215.227])
+        by smtp.gmail.com with ESMTPSA id t2-20020a0cea22000000b0068c4f1da09csm659978qvp.120.2024.02.02.01.58.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Feb 2024 01:58:50 -0800 (PST)
+Message-ID: <a91c6a28-6762-41cf-bb85-09e79f3d29d4@gmail.com>
+Date: Fri, 2 Feb 2024 10:58:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202094550.work.205-kees@kernel.org>
-In-Reply-To: <20240202094550.work.205-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Fri, 2 Feb 2024 10:57:11 +0100
-Message-ID: <CANpmjNMCBvdM7Ni+vWCQwtJbbVskOdjSA+gjhgh6R3dKRqjXnA@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: Silence W=1 warnings in self-test
-To: Kees Cook <keescook@chromium.org>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+To: Kalle Valo <kvalo@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc: Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>,
+ Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
+ linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Hans de Goede <hdegoede@redhat.com>,
+ Aloka Dixit <quic_alokad@quicinc.com>, John Keeping <john@keeping.me.uk>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240126223150.work.548-kees@kernel.org>
+ <170678189299.2736043.11616312910656558919.kvalo@kernel.org>
+Content-Language: en-US
+From: Arend Van Spriel <aspriel@gmail.com>
+In-Reply-To: <170678189299.2736043.11616312910656558919.kvalo@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2 Feb 2024 at 10:46, Kees Cook <keescook@chromium.org> wrote:
->
-> Silence a handful of W=1 warnings in the UBSan selftest, which set
-> variables without using them. For example:
->
->    lib/test_ubsan.c:101:6: warning: variable 'val1' set but not used [-Wunused-but-set-variable]
->      101 |         int val1 = 10;
->          |             ^
+On 2/1/2024 11:04 AM, Kalle Valo wrote:
+> Kees Cook <keescook@chromium.org> wrote:
+> 
+>> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+>> cfg80211_scan_request with __counted_by"), the compiler may enforce
+>> dynamic array indexing of req->channels to stay below n_channels. As a
+>> result, n_channels needs to be increased _before_ accessing the newly
+>> added array index. Increment it first, then use "i" for the prior index.
+>> Solves this warning in the coming GCC that has __counted_by support:
+>>
+>> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
+>> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
+>> n_channels' may be undefined [-Wsequence-point]
+>>   3783 |                 req->channels[req->n_channels++] = chan;
+>>        |                               ~~~~~~~~~~~~~~~^~
+>>
+>> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+>> Cc: Arend van Spriel <aspriel@gmail.com>
+>> Cc: Franky Lin <franky.lin@broadcom.com>
+>> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+>> Cc: Kalle Valo <kvalo@kernel.org>
+>> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
+>> Cc: Ian Lin <ian.lin@infineon.com>
+>> Cc: Johannes Berg <johannes.berg@intel.com>
+>> Cc: Wright Feng <wright.feng@cypress.com>
+>> Cc: Hector Martin <marcan@marcan.st>
+>> Cc: linux-wireless@vger.kernel.org
+>> Cc: brcm80211-dev-list.pdl@broadcom.com
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> I'm planning to queue this for wireless tree. Arend, ack?
 
-This is the shift_out_of_bounds test? It looks like the neg and wrap
-variables are volatile but the written-to variables aren't.
-Technically the compiler just has to emit the reads to neg and wrap,
-and can entirely omit the writes to val1 and val2.
+This slipped past my broadcom email. As the Fixes commit is in 6.7 I 
+would say ACK.
 
-Does making it volatile fix the warning?
-
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401310423.XpCIk6KO-lkp@intel.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  lib/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 6b09731d8e61..bc36a5c167db 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
->  obj-$(CONFIG_TEST_IDA) += test_ida.o
->  obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
->  CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-> +CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
->  UBSAN_SANITIZE_test_ubsan.o := y
->  obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
->  obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
-> --
-> 2.34.1
->
+Gr. AvS
