@@ -1,111 +1,124 @@
 Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1708779F1
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 09:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323EB60BAC
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 09:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706867160; cv=none; b=loYbpk+unfNNhsHS5tTBlIm/er+0gYFJXXMNIUd0F+pE/vWJSwbWOvVLUU0KZNaVI9qiqrXj5ZJ3VkBcD0lsP0jQCI5KYE7zKmwuk7UFN0NWRHMthddJxNX/cSAaulcHdBTAp2D6s8yhyGx/e2zZrA8FKUT+R4TNjhMFd+zlkq4=
+	t=1706867757; cv=none; b=mBo4mj/3+0Xno4y2UhpOuxdp+KCVpH9Afk5fKhYmOl1G0vuwT4G+oHWOuVdNv/S3/2CWaw4hFQSzrpgm4KN53zRFhBZ7WrJgkA1hnAsOyvFbUFf7aCayZQMaVeTUKhW1Wv8MqpYLeYb5kFINkbV1cAq9JhdrqkuoBQVEY6A6dJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706867160; c=relaxed/simple;
-	bh=LHaeZi49H8+c8GUjIT1hBKOFneGMYEW1V17K53sBiZs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TyEisANj7wdKDcXChlOz6Ey6nn1HNzd+qQcJDYztije5WZKrfku4mO/n/jeRJMvbVGXcN4740UG6jVD6zDgRYO8D+KG9INGXlJ6TCTFmmYvC8qZN1zrCsbWkOu4/fokYol8v/C25rPX7ZIVZowmvd/2+EH+l4AVZH5wrjMHbiEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=J8pwgki4; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1706867757; c=relaxed/simple;
+	bh=O59W1rZXfNPZaBmcOLZqEilXjtgGOVSoG3S3sJTmryU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iUTSLwBvomE7doH56jXsOTuIdWo+hZMDiuJ0oaBr6QltkZpvYn9Zy6dL9nwAkLsCLiVn7qFXeGx2JIP0VSWc+0URD4msivHJS4Inpn2kKJkqf7ukLphWoLVpwpngw0IdvFQgytCJCfFdVDr1D8q1Y85z4kCu0ZLL2KP8HXPIShA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FCb8hUly; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J8pwgki4"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6dfebe2ed0bso435881b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 01:45:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FCb8hUly"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6dfefb490f9so845946b3a.1
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 01:55:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706867158; x=1707471958; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6Mh0KgYXz1dfRa9WvoxBlQAZ2AaMDjAGTo7uoUxXAI=;
-        b=J8pwgki4ICyCdHiWdApI8VX/lsuZRAeV5Z9SzB+YdGR3ZvOTPSrMp2qC/0q7UFuKog
-         ywbm2dDuRrv3L9IUCvqnKWQZbB1IbpziMcU4Kq8G+aS1a1wqq9a2XffWtC+rWSi189oc
-         abgnZ0UtQWVic6GwYMVdYMR6Ew3jGm3wx0gU8=
+        d=chromium.org; s=google; t=1706867755; x=1707472555; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RTZzqpSJXHe92TulTjdlacz0Q6VJoPoOCFnR5kE1oUA=;
+        b=FCb8hUly/7Hn5k0AmkiM4TfRWo+WCZDdjKj27PEaFdeitQ1sLkIu1sizSHu0B4AXMp
+         FtUzP3HrhQdpWvZKwhTaqmuEel7bp6D5kk1DdLGrWO86FPIzXFsL3kHlyptvjduO62v1
+         6WUssa27+0sxIdg6MHDA0POjD1KGSwtl9N6gk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706867158; x=1707471958;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z6Mh0KgYXz1dfRa9WvoxBlQAZ2AaMDjAGTo7uoUxXAI=;
-        b=pyjJPeNsrynVlKl0/3p3pfmit77QTJj3dwUktYbQb+ailBy50kcA/LGv9RnVyspnMY
-         P5lIHmALmrpWBlO6xHoCEzy1Qkpc7ih+PN2m80KeRC2LbTr0VmDSTPWjZkprW6z1fWX7
-         rI9d/QskCKfRQayPJXKGMOOtLWSbtIts6cEYLdTbjbFjCwvDn0jV6zojcCFE5/m5yZtW
-         2UA06bmcDthHtTPcmlz91AuXj5egvQWVq4Wdmm1N+Va+Fxv6FfKRA+0oB24NSSkl5ZjR
-         B6AWeYVgcLmcRZc9x7KSt5qagrFqNLsSBt+UpWyWT7cQxriwkiZLzwT4WJvFkmrJUyxg
-         cUZA==
-X-Gm-Message-State: AOJu0YzyHcFyDLxg7rqyA5LZbLbLREdhtmkRV2JkNqfR6042TA14dTrr
-	84HjosrrjspahLnulH1a9FMzCMtCghqbPuxRN7Q+Y33mUifOxFeExgzUbl5jug==
-X-Google-Smtp-Source: AGHT+IG+CATR3cbNaVfXbuWt+rSwjJxbCafqQL5dAfB1tLVD4SIHCp1MzZNb2H6JcVigGXhySs6mfA==
-X-Received: by 2002:a05:6a00:21d2:b0:6d9:a074:659f with SMTP id t18-20020a056a0021d200b006d9a074659fmr2429702pfj.13.1706867158001;
-        Fri, 02 Feb 2024 01:45:58 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXKcgtLHB+AwS0CybkSAPWSSH8KbGA+dQUGzv1pahiZEgIEA7Zogbqh0xKPbMqKIOvRRPJRmPHx7ec8yWLhe0BrhK48z6qwpUfCi6BZ/5tBrQ7z6AG1kpwU7mids1sJrih8eSKmA05SdLpydUtvcp+Obu6dno+nFqz/fFAO
+        d=1e100.net; s=20230601; t=1706867755; x=1707472555;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RTZzqpSJXHe92TulTjdlacz0Q6VJoPoOCFnR5kE1oUA=;
+        b=BEwVXoOyvzgzkFLaH3I/CxERxVI0ijL2BDpsPpuuTkPzjEcj+L8NPPqgdjsZ0MX47G
+         UQDStXq3WiBj8l5v1bToIr2gxG0Ecd/BOsbljQLaPyJZ8QUNYR0vitUs4ee0n68sOUyp
+         Qfkx+cxDkmiMBTwNlqItajCE+f0x50Qmq7/vQypaNzD13LKuoy2uQPeqCTM1i70RT6pk
+         zBx+TeXh/m5rdwJ0NRL65PWIsRr4QVp4dlIwULBWLCOWnS8CGGG5VBhG3VTmxXvVOZZo
+         HUgXUwXX/k/S504KoZ63QuecBYw+XCE9ikAo1/108whOwkMahnyirtpBbECqztdyI6mI
+         6gPQ==
+X-Gm-Message-State: AOJu0YxnxXsGeSBNEneHng509+bI3FqrMRAS7q6aOhpy9bdSNQn5KQi+
+	FiWwBEOiVH9b7d1sdrFgLj75yOb0F7JFi93HtmLdJt+jwVmaqJ3E4bXxvZidBA==
+X-Google-Smtp-Source: AGHT+IEzrY7FgpWZMJKnhp9KT2M9Lln/mb6GoYcRN70mwCqCp7SYfRGWQ+O4K6aa+SlbaPBZgBZjYw==
+X-Received: by 2002:a62:d446:0:b0:6db:de89:d0f1 with SMTP id u6-20020a62d446000000b006dbde89d0f1mr1530767pfl.28.1706867755416;
+        Fri, 02 Feb 2024 01:55:55 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUgwrw9CUQ6dYwjUU9bFmzxC3WSdwTLnKZ0VH/J0HM4XsNGZA8h/pYSnva3X7xrpG8FgYTkwtw+BXCgv0j+1JGbRDYLBD4n8L6kF6O3+1QdxQUBTxzeQ8v8FK9Md9h6S6XPPewYvaLH3Z6X5oiWTS6tNy4kKNJKPg==
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i63-20020a62c142000000b006dff2eb3a59sm1226975pfg.126.2024.02.02.01.45.57
+        by smtp.gmail.com with ESMTPSA id t40-20020a056a0013a800b006dbda9a4e6bsm1197936pfg.44.2024.02.02.01.55.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 01:45:57 -0800 (PST)
+        Fri, 02 Feb 2024 01:55:54 -0800 (PST)
+Date: Fri, 2 Feb 2024 01:55:54 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Marco Elver <elver@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] ubsan: Silence W=1 warnings in self-test
-Date: Fri,  2 Feb 2024 01:45:53 -0800
-Message-Id: <20240202094550.work.205-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add UBSAN section
+Message-ID: <202402020154.0266109CBF@keescook>
+References: <20240130234634.work.003-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1067; i=keescook@chromium.org;
- h=from:subject:message-id; bh=LHaeZi49H8+c8GUjIT1hBKOFneGMYEW1V17K53sBiZs=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlvLnRQt2lu0i5tjqpOkba/8mR9VJb/odFYtu03
- FdvbjACtROJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZby50QAKCRCJcvTf3G3A
- Juo+D/43EhPw/7h9hbGja5DHnoBaUE5+CK9V+boNO4S9I066D6BYWc+kIHS0Glpa7Cb2ZP9pm/H
- AE4hSmtV/8QMDGFOwVN9SEA9tImP0BqaCEWIS7HjmY9jqCF6wzYbm1nQYpgMl4FW0+LL0P4UFvG
- 6qLt8t2eWQxlmux3vCc/rGOVhetPp8FM71AzeWTiHeK0buf8XIxMb7L0+bfw/2PIOARu+pu9gLz
- Qgm9ImTC7u4KMSQCPGMNOTQQbq2sg9jelI2wTMiFwCadLlwCk1XAKJ4m303sWsqy4zf6rljNhcJ
- gD/FC09zLpUcN9F9b9NuzzM8US1Ki8MOaDIGZOogdlEnSOQDvyyNJWSFCEM8uKJWd4qpGvv9xdu
- fstZjgyp9o9NHe4QsWs22MIUn75xyczgjGuC0FWaNGkfqjwrbHFqVIgjxR0OLWi0j6aAZ9E6+DW
- BMFScZUoZHLYdXzICbilErcD0STSMSI4Fvlk31WIrVxZUyyxg04WRiwVhEHNJBZFjTxqvNB+MtV
- WorewOjshIM1u9ZtROceI7yFKgHDiWomqVsoWiKKEpvh9m9A4D0+z9yXCVe0X6ESO6skBRuSKV0
- ONKG9nFFSSd6FXOy/iGSlWmvPy4tnueiNeGU/R48NSHZLD8L5Pc1SR+EEfSVV/6EklNqmH/Ghqt
- Gr6eJgg 43Fjdluw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130234634.work.003-kees@kernel.org>
 
-Silence a handful of W=1 warnings in the UBSan selftest, which set
-variables without using them. For example:
+On Tue, Jan 30, 2024 at 03:46:38PM -0800, Kees Cook wrote:
+> The kernel hardening efforts have continued to depend more and more
+> heavily on UBSAN, so make an actual MAINTAINERS entry for it.
+> 
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
 
-   lib/test_ubsan.c:101:6: warning: variable 'val1' set but not used [-Wunused-but-set-variable]
-     101 |         int val1 = 10;
-         |             ^
+I don't see Andrey on lkml in almost a year, so I'll drop the entry for
+now. Andrey, if you want to be added, just say the word! :)
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401310423.XpCIk6KO-lkp@intel.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+-Kees
 
-diff --git a/lib/Makefile b/lib/Makefile
-index 6b09731d8e61..bc36a5c167db 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
- obj-$(CONFIG_TEST_IDA) += test_ida.o
- obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
- CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-+CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
- UBSAN_SANITIZE_test_ubsan.o := y
- obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
- obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Hi! I figured since I've been carrying UBSAN changes more and more lately,
+> I would just make an actual entry in MAINTAINERS. Are you all interested
+> in being listed as reviewers? Or would you want to be M: instead?
+> ---
+>  MAINTAINERS | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8d1052fa6a69..19b8802b2f12 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22471,6 +22471,22 @@ F:	Documentation/block/ublk.rst
+>  F:	drivers/block/ublk_drv.c
+>  F:	include/uapi/linux/ublk_cmd.h
+>  
+> +UBSAN
+> +M:	Kees Cook <keescook@chromium.org>
+> +R:	Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> +R:	Marco Elver <elver@google.com>
+> +R:	Andrey Konovalov <andreyknvl@gmail.com>
+> +L:	linux-hardening@vger.kernel.org
+> +S:	Supported
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+> +F:	Documentation/dev-tools/ubsan.rst
+> +F:	include/linux/ubsan.h
+> +F:	lib/Kconfig.ubsan
+> +F:	lib/test_ubsan.c
+> +F:	lib/ubsan.c
+> +F:	scripts/Makefile.ubsan
+> +K:	\bARCH_HAS_UBSAN\b
+> +
+>  UCLINUX (M68KNOMMU AND COLDFIRE)
+>  M:	Greg Ungerer <gerg@linux-m68k.org>
+>  L:	linux-m68k@lists.linux-m68k.org
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.34.1
-
+Kees Cook
