@@ -1,124 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A4A82896;
-	Fri,  2 Feb 2024 10:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAC583CCF
+	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 10:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706870101; cv=none; b=RKAbu7cNGbtTaKpZiP0ItLd4KUETUoSJ8f8uId8/sncjuAjWsYPy6/FqyeMHMbJtUU3eL34mTYVlfm+kqnh/OkjtCraXQzDqBDhFit27VeIVTkbb3vbGfoh8WX1sYJl3PCj5qIeAr5hpKbRwo+fivmjj2UmeqTIII3GsTvKq0xs=
+	t=1706870519; cv=none; b=f9D074wk1xNzLwiZGCZy7QRqOSSM6Ri/i8SxHjH7NX+jan9ke9GnuZBUK2PIphgbWUFgwGJbFv2hK0xVU/kFmHxkbGUfWZ53iFB/YEhEJ5KaTn+4/6PrcLlcukdBSjHyrwN9w6C/W0TBwgrhspBvQSIfOsRGQzaEGIFlFy1OiH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706870101; c=relaxed/simple;
-	bh=uD/sPc7FMJ/uY13jycAiw319CMk1mhe2FbFR5UM4LCo=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=BM3R6+GG9XFfT8yDPv4rBlAdl1qf6z1+FCeKxmzyxKwDIRKupMmHB/5Zb9vL0gVpTAJYzYE2TujwPZxfUwK6VNouO9xn3bF2NHlYrVVTF6MQA+6hP+TnACVh62sD1pxYvHZ2XvZLdZAU66HhHnPPdIjypKgmG/BnkSshv7IhBH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrx9tZLd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706870519; c=relaxed/simple;
+	bh=yMB99VXpUpL4JIlzPigdgZ92go77Y6AQyL1YrMA2+mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pK410lGvKRQtofmYHp62geGkSdwfaN5n5cLmS9Kc2lLNdA9ykkkHzCaECIKoqgqDbtfBkz6CrrzNyDDqS6DUQdjiqtKWFOWtRjVj/2h5m1lPEGqu5u9nqB19bTHiYngVTfe/24oGUmr0fQ/Tae0MN3XvyLmYS3TOB2M9+vkeVog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LePJTtpr; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrx9tZLd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E41DC433C7;
-	Fri,  2 Feb 2024 10:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706870101;
-	bh=uD/sPc7FMJ/uY13jycAiw319CMk1mhe2FbFR5UM4LCo=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=Rrx9tZLdm0GUAzf3hhCrj99t2K7tE2YFipabCOhmLwfTwbP05vhk0npEfIycZWRQY
-	 LDXyp9K5JgESqlVT3Si1xDf0UlR+CePpjDYRZtQmonq5efdbNuyrMe7dvvOpRSIgkF
-	 AAu1NVzwj65B+bCxC+Pgf3ahfp96h7ZP4MV1O4iQ1WjhhROuzLY1RzlwYa+SEtHEfy
-	 +6EputEp7XjMrfLzfOPCsifhzBNQeyU/3xL9pB++tf0nhs1YWkSSp2luaoUDpPmSk0
-	 GQKUdjXcG8C6/LbXJdaqrs2W53Jl5C2wvDoCz6Q/gATd3c+APGY8keSSAAUWR79m1D
-	 bvBJChBiCeB6g==
-From: Kalle Valo <kvalo@kernel.org>
-To: Arend Van Spriel <aspriel@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>,  Franky Lin
- <franky.lin@broadcom.com>,  Hante Meuleman <hante.meuleman@broadcom.com>,
-  Chi-hsien Lin <chi-hsien.lin@infineon.com>,  Ian Lin
- <ian.lin@infineon.com>,  Johannes Berg <johannes.berg@intel.com>,  Wright
- Feng <wright.feng@cypress.com>,  Hector Martin <marcan@marcan.st>,
-  linux-wireless@vger.kernel.org,  brcm80211-dev-list.pdl@broadcom.com,
-  "Gustavo A. R. Silva" <gustavoars@kernel.org>,  Linus Walleij
- <linus.walleij@linaro.org>,  Jisoo Jang <jisoo.jang@yonsei.ac.kr>,  Hans
- de Goede <hdegoede@redhat.com>,  Aloka Dixit <quic_alokad@quicinc.com>,
-  John Keeping <john@keeping.me.uk>,  Jeff Johnson
- <quic_jjohnson@quicinc.com>,  linux-kernel@vger.kernel.org,
-  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
-References: <20240126223150.work.548-kees@kernel.org>
-	<170678189299.2736043.11616312910656558919.kvalo@kernel.org>
-	<a91c6a28-6762-41cf-bb85-09e79f3d29d4@gmail.com>
-	<d4855223-4323-43f1-9a29-e279e2cb128c@gmail.com>
-Date: Fri, 02 Feb 2024 12:34:54 +0200
-In-Reply-To: <d4855223-4323-43f1-9a29-e279e2cb128c@gmail.com> (Arend Van
-	Spriel's message of "Fri, 2 Feb 2024 11:00:51 +0100")
-Message-ID: <87v877tar5.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LePJTtpr"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e14b858785so1131348a34.0
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 02:41:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706870516; x=1707475316; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GtKF1JcH99Kg94k7kIgM/vz1+rYKyXQvL//a4MKJWpg=;
+        b=LePJTtpr4uE4GJtSc5A2Z/5x3NTx6UORojPCCP8NfW4oznML7RqeSVbCMA665GnQbU
+         LvMkqc+NT8HqzqpILX/OMje7ZGoQP+CrOvZZDv0IROqej5rx/ZOBH56pH27xeRjwrDpi
+         tUlTWDCbyQiUq8vhMSNSSRmDeRa04XJDeDg9I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706870516; x=1707475316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GtKF1JcH99Kg94k7kIgM/vz1+rYKyXQvL//a4MKJWpg=;
+        b=uARBVmqB4MU6RcRQHLGnXNHuLzkqKNCGiJVhRuZVpwbPhOflbnhxfZbeQsteQ5P2yE
+         OYmoFyR4k5vO/btSpjo/Q3I8c80kbkpYEsACLD6sf4T9g084jY9KWw0w/Xn9fUzEXUss
+         nCXQUQlAGC3llARdg5GjTCUNiG1Fao5hRmoeHs4rwWZpMjlT9xTzAMabEkAkxkraL6lv
+         ugvk72InP0hEbPfbvyZp3jCw0k+z7YdcV3/jac/7bdqAU9nESnX8XiNQP2eax3q0Us95
+         x7mA3M2fsFy9lMZ9clgMAOQk0jTmhKdIERC8fYG1VUxzUK2Cb65XPkUYl86CmZj3ifDw
+         oolg==
+X-Gm-Message-State: AOJu0YznK68rrwZ7jszf1jJmf2G8AtWwyVAnpgjJbdSnMDpd0pRh2oMS
+	fUejDIpFBTxNV4d6x7t5Px5IJU1G3s7R+VU9z9X4ygUYSZ9Sg2ZlBzc9D/26Tg==
+X-Google-Smtp-Source: AGHT+IHdnQT+y2UI8yIqSfiqP3w+VuqFutmV/hoZqs/esycYc5feNeSSMgGvTOQiAv7kPqdQTHg5+w==
+X-Received: by 2002:a05:6358:782:b0:178:8d3e:950c with SMTP id n2-20020a056358078200b001788d3e950cmr5729785rwj.20.1706870516692;
+        Fri, 02 Feb 2024 02:41:56 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUcGzIJg5LfmBudAHVKOlEckAQwPprdhCb3x0x5pnqeElCi7g0hV2Xt8z3l2kIywkULVbS4iSwzv+f1S+E2lULk9bqHDWsF/CPkNjo19YVn6waxdyf/alJtULRme+Z1WChLH3WoOCKGPOldKETc
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id it20-20020a056a00459400b006dddc5e3433sm1326606pfb.147.2024.02.02.02.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 02:41:56 -0800 (PST)
+Date: Fri, 2 Feb 2024 02:41:55 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ubsan: Silence W=1 warnings in self-test
+Message-ID: <202402020239.1EEA467@keescook>
+References: <20240202094550.work.205-kees@kernel.org>
+ <CANpmjNMCBvdM7Ni+vWCQwtJbbVskOdjSA+gjhgh6R3dKRqjXnA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMCBvdM7Ni+vWCQwtJbbVskOdjSA+gjhgh6R3dKRqjXnA@mail.gmail.com>
 
-Arend Van Spriel <aspriel@gmail.com> writes:
+On Fri, Feb 02, 2024 at 10:57:11AM +0100, Marco Elver wrote:
+> On Fri, 2 Feb 2024 at 10:46, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Silence a handful of W=1 warnings in the UBSan selftest, which set
+> > variables without using them. For example:
+> >
+> >    lib/test_ubsan.c:101:6: warning: variable 'val1' set but not used [-Wunused-but-set-variable]
+> >      101 |         int val1 = 10;
+> >          |             ^
+> 
+> This is the shift_out_of_bounds test? It looks like the neg and wrap
+> variables are volatile but the written-to variables aren't.
+> Technically the compiler just has to emit the reads to neg and wrap,
+> and can entirely omit the writes to val1 and val2.
+> 
+> Does making it volatile fix the warning?
 
-> On 2/2/2024 10:58 AM, Arend Van Spriel wrote:
->
->> On 2/1/2024 11:04 AM, Kalle Valo wrote:
->>> Kees Cook <keescook@chromium.org> wrote:
->>>
->>>> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
->>>> cfg80211_scan_request with __counted_by"), the compiler may enforce
->>>> dynamic array indexing of req->channels to stay below n_channels. As a
->>>> result, n_channels needs to be increased _before_ accessing the newly
->>>> added array index. Increment it first, then use "i" for the prior inde=
-x.
->>>> Solves this warning in the coming GCC that has __counted_by support:
->>>>
->>>> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In
->>>> function 'brcmf_internal_escan_add_info':
->>>> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46=
-: warning: operation on 'req->
->>>> n_channels' may be undefined [-Wsequence-point]
->>>> =C2=A0 3783 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 req->channels[req->n_channels++] =
-=3D chan;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ~~~~~~~~~~~~~~~^~
->>>>
->>>> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
->>>> cfg80211_scan_request with __counted_by")
->>>> Cc: Arend van Spriel <aspriel@gmail.com>
->>>> Cc: Franky Lin <franky.lin@broadcom.com>
->>>> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
->>>> Cc: Kalle Valo <kvalo@kernel.org>
->>>> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
->>>> Cc: Ian Lin <ian.lin@infineon.com>
->>>> Cc: Johannes Berg <johannes.berg@intel.com>
->>>> Cc: Wright Feng <wright.feng@cypress.com>
->>>> Cc: Hector Martin <marcan@marcan.st>
->>>> Cc: linux-wireless@vger.kernel.org
->>>> Cc: brcm80211-dev-list.pdl@broadcom.com
->>>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>
->>> I'm planning to queue this for wireless tree. Arend, ack?
->> This slipped past my broadcom email. As the Fixes commit is in 6.7 I
->> would say ACK.
+It does for some, but not all:
 
-Thanks.
+../lib/test_ubsan.c: In function 'test_ubsan_out_of_bounds':
+../lib/test_ubsan.c:115:22: warning: variable 'arr' set but not used [-Wunused-but-set-variable]
+  115 |         volatile int arr[4];
+      |                      ^~~
+../lib/test_ubsan.c:114:23: warning: variable 'above' set but not used [-Wunused-but-set-variable]
+  114 |         volatile char above[4] = { }; /* Protect surrounding memory. */
+      |                       ^~~~~
+../lib/test_ubsan.c: In function 'test_ubsan_load_invalid_value':
+../lib/test_ubsan.c:137:44: warning: variable 'eptr' set but not used [-Wunused-but-set-variable]
+  137 |         enum ubsan_test_enum eval, eval2, *eptr;
+      |                                            ^~~~
+../lib/test_ubsan.c:136:26: warning: variable 'ptr' set but not used [-Wunused-but-set-variable]
+  136 |         bool val, val2, *ptr;
+      |                          ^~~
 
-> Cc: to stable?
 
-Is commit e3eac9f32ec0 in stable releases? (I don't follow stable and
-don't know what commits they take.) I propose that as we have Fixes tag
-let's not add cc but instead let stable maintainers to decide.
-
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+-- 
+Kees Cook
