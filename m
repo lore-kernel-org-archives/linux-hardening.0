@@ -1,166 +1,112 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41D114AD2C
-	for <linux-hardening@vger.kernel.org>; Fri,  2 Feb 2024 17:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46474168B9;
+	Fri,  2 Feb 2024 17:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706894673; cv=none; b=jxUr92mC5HRIqfuYd/a9xH8Vr3l1rP3zcoHxhbvXCRz8j0YYfm+/p0jS35pY+nDoKiXr5arCUovCyHw0UzbujTF+3vOYWeVZa78lymG/yaIIXEXtjeuKvTMEJ9M0mZLchEX5Y0xu74xz3sno+OXrN1i2BYWLmA04xslW+J3zWLA=
+	t=1706896121; cv=none; b=nqWiYXpmHw3AxSmhVvBbJK6vhc4uAxZ5m3vDMZSY3sB0rzau1uHS21gEddhilgkwIHieRGs3O+U9pYudCpklM5yTB9BqJhGgUclBp8fs66/WW6TGAF0wfZniGPPkM6h7bBA5XKSP6tcCwaHd/RoE6BnLVqbqYzrTXUSqFMELA3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706894673; c=relaxed/simple;
-	bh=nAy2e/D2iJVgHXwJF6yNdb54Y1630LnSzKiRJLCWPWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=NM85QudwZgupJB2jSm6ZuJCVTXCLOoSatRDPuGRNRw9PLLOcZt6HzUfMMOjUpQEEaMBayPdei6WWxemwCFymiayrj8KRNd0hwE9I5EQ7oyCuGSI0l7C6tHlWaaF9hrvvqmWhWsj46RpNSPktLs/o1cV4kx6h53qjE/r1woQG5mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=INDx6Ldv; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706896121; c=relaxed/simple;
+	bh=fRArofEFyV+mEzuCwxl1rFk1RSKjZ9nhZus4D76DbVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A90irFKYX4PbUTBqW5zPEBHSnLQdqCsNhNXiItp+t1wMaXBDgqpMzcfGN/6ejbXQB2DXq+L3zx2zJ9ox4HjN8Q/uX0VobfQPcCs50T7nBeimC46Yyd0a0Ok9h/FqUk9VZhtAoQ/BF7NNzsx9PRjCOJ35WqloCv7oCXnj7A+6II8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=JSdtw7GO; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="INDx6Ldv"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2185739b64cso1405270fac.0
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Feb 2024 09:24:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706894666; x=1707499466; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q6UPWR6ndOUYDUMRqQVrkQUUePvtAQ0pg58MMEcJMl8=;
-        b=INDx6LdvntKdUHzRcErb3HcFuugGJGUt4xFBSv2A4JXsvyETCmibL3MyHRrLlHXcqA
-         +tr39CljSBrhdGosLlq9BmaAZufIouoT2LmQGIBNQEtjQAYAxMnYTWkM89reRjRiTap2
-         qT6LCoZRBZW/n8P0bNd9KvA1fveQxW63XEOPk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706894666; x=1707499466;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q6UPWR6ndOUYDUMRqQVrkQUUePvtAQ0pg58MMEcJMl8=;
-        b=Vza8kG3LIUz6A20FvxfFtVFzOnPvIZAlhIlG08EazSzUyMvRX2TUTaKmTWxO11zFc7
-         R3pQPmSn9lScURDgeEXdwE7+rykqF0Exyt5Dg2vuimsg/eB0Bk7RdaEGS2dMKe2nbVY6
-         Ka7ABMGtP6ajG4kwJX4WFu95bj7OIipj4AMCn7Bwr5g2UqOP/7aCQcEaxnsZqVi8Gqzf
-         XUA4no9sPieudlV89+H0QWylAzz0Y8LodpO+jTxX4tqjlO6r28Syj4B3+/HA8WtCY4xN
-         IzOXtkB3tDOLq9xXmqsYpAja+pJXv5zLIaldERkfGXoOCMd5eVS5OZjFX0KFbuBFeghg
-         1c3Q==
-X-Gm-Message-State: AOJu0Yyg9enOh/QDs1mJ/j+BexelBPGF8ewG/tw+7u9W6T/vTO5Mnfn7
-	IdnHY/y+rrqRC7SyAyw0Hg7ZCBCiWWALE9kzNCbns3esECRi855+bwqefX1LunxJH4eZGCZrynA
-	TXeyYzoLw6h+A6R/2YXMpuJiOMkBe55ByevYO
-X-Google-Smtp-Source: AGHT+IFcpltYRj5g1jySgZ/6GoPjgsQ0yDI/CttpZ6v/mpIaX0DPVPHCVu9NXF6WDXyu3zKUp5cLGz4fA9D1UNwgF/M=
-X-Received: by 2002:a05:6871:68b:b0:210:a495:ba1f with SMTP id
- l11-20020a056871068b00b00210a495ba1fmr395060oao.15.1706894665224; Fri, 02 Feb
- 2024 09:24:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="JSdtw7GO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1706896108; x=1707500908; i=erick.archer@gmx.com;
+	bh=fRArofEFyV+mEzuCwxl1rFk1RSKjZ9nhZus4D76DbVU=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
+	 In-Reply-To;
+	b=JSdtw7GO816RZ2gkiccH1dMv+q9KOxYDOnVTZAAkZ8wzTWgEJTJsATWrdSRwHyOe
+	 bE3bUxc/JFIaGxH9s3bRar99ojTntA8WGfaQOOF2pJBeO1bxXIU0UV+pZTGvA+nMI
+	 sf2qfSOlpkPkmihGU6kdKjlUjsqdmDsaEG4FkiLCu5NzB/2BJyq/6IA9XHba2Mkly
+	 /RIA2RMTrOmfQd/DqGDSid3zFXvpCexhoMd9gGSYGFDbQocath2r8HxNKgjPxeRD4
+	 uA0m337egDT4n6z6kQ8pBqvT7igHsXE/D6NpDm81mx69IxltA26pFwturas46O8By
+	 MncHri29v2NTFvDDHQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from titan ([79.157.194.183]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MO9zH-1rglPB2gqf-00OXq7; Fri, 02
+ Feb 2024 18:48:28 +0100
+Date: Fri, 2 Feb 2024 18:48:17 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jeffrey Hugo <quic_jhugo@quicinc.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: ep: Use kcalloc() instead of kzalloc()
+Message-ID: <20240202174817.GA4528@titan>
+References: <20240120152518.13006-1-erick.archer@gmx.com>
+ <43614a09-d520-4111-873a-b352bd93ea07@moroto.mountain>
+ <20240128102933.GA2800@titan>
+ <3b175cb6-fcbe-4521-b6ac-442c8a11c297@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
- <20240202151345.kj4nhb5uog4aknsp@revolver>
-In-Reply-To: <20240202151345.kj4nhb5uog4aknsp@revolver>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 2 Feb 2024 09:24:13 -0800
-Message-ID: <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Introduce mseal
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@google.com>, 
-	Jeff Xu <jeffxu@chromium.org>, Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
-	willy@infradead.org, gregkh@linuxfoundation.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, 
-	rdunlap@infradead.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b175cb6-fcbe-4521-b6ac-442c8a11c297@moroto.mountain>
+X-Provags-ID: V03:K1:rtIgJn7pmL5lL6vGpRvFEKAofZVjZhyCaB9E/9VDne1F3q25qZ8
+ 7G/Jh4Acg9rS4kW0Md/PW4nR2rJapbUfT6DV3UoEGDPd0lwe+ROTKVYEfiA2Q0h5r92hDA3
+ Iw7WmbsTIA6YJKBLuluiTHjTAGkak36yvgoPaanEeUMGF1C33OO8VGYeNhotWBGOZ69ptKq
+ TmgcMjFokJe3bsDo8Lx5A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:29H8hio1c6g=;TkzoBl8a9dsfCi8c6fPJThbbKJ4
+ UVjlCR6g1UL7r/risxhYylpG3698ZTtztzwMTHuN5F1GHp4VKq9PIVZzeOjWq1Fe5hoOam/jQ
+ CnqOhCcggSfaTbXYSspkYKjWYc/vmP0icaJh7e96kJ6f4sss0HS+sqr7UXNisvzGQ8mLWNnhj
+ W1jRAY9xHmFieakEpVMryKE/rAoj9TkUNfxCYDizoTIkVxL9BSIpcB5yJtWzRHUhKJAb98ck4
+ 6lvkza/97frSU482Zlw6vOAkG10RYMPUepO2o5m4D0mqgtV/TogiP92Gz4yvsLR3xmC779mpP
+ /nn4nqIaK3m0mlCy2AAeZ2twv/WCRwsCcWBlhHc/J8royGPd/O3kFsQY2kvHTgGTj394JWbIc
+ EbWqV0nhCJiNSempCGmhQBick/PGN/4Gx77BtzP/qbpLRkeHbbKugRPp7IY/5SP0JEnZydopW
+ ukREJq3gf2y9AmZqp4z9U4qR9hEiuqHroXC3fC0ogylpMk7nfi91Zf+nNdyOuDnYMRMLGHzeu
+ j4U9L10frSQj9pxULAWpBLP2dII/jCF4rW4kMWDalqLVRDRcNX5xy/ATQ3zzv/fZTIgT7mDkv
+ 8M+dj7HJ/+c/YgZ0a/p52tdFEK5UrTqxpSnbmLDZI27EFPucXv72fM7v3CMc1mLjEcbf/PcAq
+ bYbQ5Lsu7e+hNy7KGsDBcfAmQsVQsu0HfGONlbuK7nKVuskpPMAhGixWE9jTjEwXylT82UQOM
+ NcqsPHPkPzIfXNI7L/TSqEqeqwSSpaHWWCqlMHr8qP6sDd/QKOlZJ36yKQRuUuhyo/aF/KuU0
+ AMC3XUFR6mDrcUD5/tzNS5m7WV05sWniUjHx7t6femOac=
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 2, 2024 at 7:13=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> * Jeff Xu <jeffxu@google.com> [240201 22:15]:
-> > On Thu, Feb 1, 2024 at 12:45=E2=80=AFPM Liam R. Howlett <Liam.Howlett@o=
-racle.com> wrote:
-> > >
-> > > * Jeff Xu <jeffxu@chromium.org> [240131 20:27]:
-> > > > On Wed, Jan 31, 2024 at 11:34=E2=80=AFAM Liam R. Howlett
-> > > > <Liam.Howlett@oracle.com> wrote:
-> > > > >
-> > >
-> > > Having to opt-in to allowing mseal will probably not work well.
-> > I'm leaving the opt-in discussion in Linus's thread.
+Hi Dan,
+
+On Mon, Jan 29, 2024 at 08:20:26AM +0300, Dan Carpenter wrote:
+> On Sun, Jan 28, 2024 at 11:29:33AM +0100, Erick Archer wrote:
+> > > It's a bit concerning that ->event_rings is set multiple times, but =
+only
+> > > allocated one time.  It's either unnecessary or there is a potential
+> > > memory corruption bug.  If it's really necessary then there should b=
+e a
+> > > check that the new size is <=3D the size of the original buffer that=
+ we
+> > > allocated.
 > >
-> > > Initial library mappings happen in one huge chunk then it's cut up in=
-to
-> > > smaller VMAs, at least that's what I see with my maple tree tracing. =
- If
-> > > you opt-in, then the entire library will have to opt-in and so the
-> > > 'discourage inadvertent sealing' argument is not very strong.
-> > >
-> > Regarding "The initial library mappings happen in one huge chunk then
-> > it is cut up into smaller VMAS", this is not a problem.
+> > The ->event_rings is set twice. In the mhi_ep_mmio_init function and i=
+n
+> > the mhi_ep_mmio_update_ner function.
 > >
-> > As example of elf loading (fs/binfmt_elf.c), there is just a few
-> > places to pass in what type of memory to be allocated, e.g.
-> > MAP_PRIVATE, MAP_FIXED_NOREPLACE, we can  add MAP_SEALABLE at those
-> > places.
-> > If glic does additional splitting on the memory range, by using
-> > mprotect(), then the MAP_SEALABLE is automatically applied after
-> > splitting.
-> > If glic uses mmap(MAP_FIXED), then it should use mmap(MAP_FIXED|MAP_SEA=
-LABLE).
 >
-> You are adding a flag that requires a new glibc.  When I try to point
-> out how this is unnecessary and excessive, you tell me it's fine and
-> probably not a whole lot of work.
+> It's not about the type.
 >
-> This isn't working with developers, you are dismissing the developers
-> who are trying to help you.
->
-> Can you please:
->
-> Provide code that uses this feature.
->
-> Provide benchmark results where you apply mseal to 1, 2, 4, 8, 16, and
-> 32 VMAs.
->
-I will prepare for the benchmark tests.
+> The event_rings struct member is the number of elements in the
+> mhi_cntrl->mhi_event array.  However, we ->event_rings without
+> re-allocating mhi_cntrl->mhi_event so those are not in sync any more.
+> So since we don't know the number of elements in the mhi_cntrl->mhi_even=
+t
+> array leading to memory corruption.
 
-> Provide code that tests and checks the failure paths.  Failures at the
-> start, middle, and end of the modifications.
->
-Regarding, "Failures at the start, middle, and end of the modifications."
+Thanks for this clarification. Now I understand what you are explaining
+to me.
 
-With the current implementation, e.g. it checks if the sealing is
-applied before actual modification of VMAs, so partial modifications
-are avoided in mprotect, mremap, munmap.
+Regards,
+Erick
 
-There are test cases in the selftests to cover the failure path,
-including the beginning, middle and end of VMAs.
-test_seal_unmapped_start
-test_seal_unmapped_middle
-test_seal_unmapped_end
-test_seal_invalid_input
-test_seal_start_mprotect
-test_seal_end_mprotect
-etc.
-
-Are those what you are looking for ?
-
-> Document what happens in those failure paths.
->
-> And, most importantly: keep an open mind and allow your opinion to
-> change when presented with new information.
->
-> All of these things are to help you.  We need to know what needs fixing
-> so you can be successful.
->
-Thanks for those feedbacks.
-
-I sincerely wish for more of those help so this syscall can be useful.
-
-Thanks.
-Best Regards,
--Jeff
-
->
-> Thanks,
-> Liam
