@@ -1,99 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD991148314;
-	Fri,  2 Feb 2024 16:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26A21420B3;
+	Fri,  2 Feb 2024 17:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706892348; cv=none; b=i66mOe4rKoLOJYpbVhurdAcUnmV/F0aEtUrk4WBEsc5EuiIjFPLzd4kzZ92E3llA4hvqJkf5uWzyhviLa24hyGWbHP2Y4xYoGOTs5HFkx55IOknGCJ7zJ/VC7OT7OKzukjrdvrqsC+2lU5pq6/Fw+sxZgSZEAoUrGpj+QHfX9+0=
+	t=1706893547; cv=none; b=mriKGij5w24zX+l2n5jjpDFp4H93Pq5OhX0GjFdQI5DbYRGHe4t35Egd31+pLE7++3TagzCHPBaAPSp3gNi6hZRH7t94qsVEbZwewe2lnJDC/Sux4hG3qcTHxTHfq/30VmTuhGKK7X0kpjjM5f9y6wIN+/2ZllrLH4JCaLzIfLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706892348; c=relaxed/simple;
-	bh=gCXtpaaFuGj/Sfv2J/qgI4C+ehnvqwEiWJQgGM4NB5E=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=Bhst7Re+cg5dwwwf/6ElmOeXdPp0gfzQbMYTawcl1gZa8gsHZDRx4DlSPk0U3FYrnYNkWDkauzDqBx/RuOLwVTjEQdUusl3hsdyD1S5m/SAPD1CWctYEA4pSk0BrxRRokEU3q4MCgjvDnR9RccMQEX9Mfuf5IvJfNLHjcoQEqP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lF8+cc/3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706893547; c=relaxed/simple;
+	bh=BAwvHs1egQiGyh3Tep3tXQoRaot7EO9KKStazGkphj8=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=uRzfieG6tTHAlX5GpfEM/1EsQ+a2fi7MLGxQbMElnxQVEZRJ9B1MujCN5+gkWzZ3s4xY3I8sKdjrus6UIoIJE/T6MZdkCVU1iidH9EPYYfox5OQgIlF7PkVQO+uUQTcYkiRrv+26IpAouJc+QsdRDVsR6PYmmSCogmb9qfEm33k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=3zgv7TD/; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lF8+cc/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 691F3C433F1;
-	Fri,  2 Feb 2024 16:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706892348;
-	bh=gCXtpaaFuGj/Sfv2J/qgI4C+ehnvqwEiWJQgGM4NB5E=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=lF8+cc/3GjCeNb/K2Y2/jTpo6vZYOAxO4wsHdUXD731NoAlK5/WtgIHIDumR6KnTf
-	 CmJwcmBUkmP6BwcfHG8RxV2C0kzpVwirz4iTukokWbuasbdPt51Er5Q1gZ4w82E/7D
-	 5iYiZwhCoh9iwgWLzOhW5ki5siBeQzxVvX7dxev+zvOXdpGnrLPAVvye2FmeuWEm3Q
-	 9VzxEn+u561Z8heuvD0IwmWe2mi+r0FKED1GxpXx6BRRtasDbC8e7AGizIVvPEra8y
-	 rk0D98GTJm6RD0K1FFjPFzJPLFFAbNwOSlGeSZBJ1hQt0XmC0sLgyFnx5BOzbIccio
-	 i67hwtIH6pSAg==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="3zgv7TD/"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=BAwvHs1egQ
+	iGyh3Tep3tXQoRaot7EO9KKStazGkphj8=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=3zgv7TD/ZhY+aUl0O7cUsE/W4VVRIWxeD
+	MKVJaQwalupXyQ9cd/mhDSVOFEJmr7qpl+Dj4k1x8hh61Ao1qVQdaBTm2vFYSCo+nd0cdN
+	jgIAK6z+F94bc6MtyRqcZN9tRbz6V5BzwE4RYcZapApJhS0SQeTS4tTXp9ZDsZkdd1Qwcz
+	3K+WKRIiTh/kD/gPXvdQd5CyGmHAjZvja4JxoKYC1Zc7gMu6ztpnhCj1b+gZQ/86FWI2vR
+	SKNXSYcY1E0uG8XGN3T8ayov7q1ihEb3QY9kh5GfwMsAP3mS1BQMy4G6bZLcUFNz5mCAM5
+	3i29NM/koL7kJT9x3vSOva+ioeorg==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id e09d1d9f;
+	Fri, 2 Feb 2024 10:05:43 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Jeff Xu <jeffxu@chromium.org>,
+    "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+    Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, sroettger@google.com,
+    willy@infradead.org, gregkh@linuxfoundation.org,
+    usama.anjum@collabora.com, rdunlap@infradead.org, jeffxu@google.com,
+    jorgelo@chromium.org, groeck@chromium.org,
+    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+In-reply-to: <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
+References: <20240131175027.3287009-1-jeffxu@chromium.org> <20240131193411.opisg5yoyxkwoyil@revolver> <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com> <20240201204512.ht3e33yj77kkxi4q@revolver> <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com> <58408.1706828083@cvs.openbsd.org> <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
+Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
+   message dated "Thu, 01 Feb 2024 15:15:27 -0800."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20240126223150.work.548-kees@kernel.org>
-References: <20240126223150.work.548-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Arend van Spriel <aspriel@gmail.com>, Kees Cook <keescook@chromium.org>,
- Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>,
- Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
- Johannes Berg <johannes.berg@intel.com>,
- Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Hans de Goede <hdegoede@redhat.com>,
- Aloka Dixit <quic_alokad@quicinc.com>, John Keeping <john@keeping.me.uk>,
- Jeff Johnson <quic_jjohnson@quicinc.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170689233342.3493863.10294472294618285046.kvalo@kernel.org>
-Date: Fri,  2 Feb 2024 16:45:37 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <95708.1706893543.1@cvs.openbsd.org>
+Date: Fri, 02 Feb 2024 10:05:43 -0700
+Message-ID: <66496.1706893543@cvs.openbsd.org>
 
-Kees Cook <keescook@chromium.org> wrote:
+Another interaction to consider is sigaltstack().
 
-> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
-> cfg80211_scan_request with __counted_by"), the compiler may enforce
-> dynamic array indexing of req->channels to stay below n_channels. As a
-> result, n_channels needs to be increased _before_ accessing the newly
-> added array index. Increment it first, then use "i" for the prior index.
-> Solves this warning in the coming GCC that has __counted_by support:
-> 
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
-> n_channels' may be undefined [-Wsequence-point]
->  3783 |                 req->channels[req->n_channels++] = chan;
->       |                               ~~~~~~~~~~~~~~~^~
-> 
-> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
-> Cc: Arend van Spriel <aspriel@gmail.com>
-> Cc: Franky Lin <franky.lin@broadcom.com>
-> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
-> Cc: Ian Lin <ian.lin@infineon.com>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Wright Feng <wright.feng@cypress.com>
-> Cc: Hector Martin <marcan@marcan.st>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+In OpenBSD, sigaltstack() forces MAP_STACK onto the specified
+(pre-allocated) region, because on kernel-entry we require the "sp"
+register to point to a MAP_STACK region (this severely damages ROP pivot
+methods).  Linux does not have MAP_STACK enforcement (yet), but one day
+someone may try to do that work.
 
-Patch applied to wireless.git, thanks.
+This interacted poorly with mimmutable() because some applications
+allocate the memory being provided poorly.  I won't get into the details
+unless pushed, because what we found makes me upset.  Over the years,
+we've upstreamed diffs to applications to resolve all the nasty
+allocation patterns.  I think the software ecosystem is now mostly
+clean.
 
-5bdda0048c8d wifi: brcmfmac: Adjust n_channels usage for __counted_by
+I suggest someone in Linux look into whether sigaltstack() is a mseal()
+bypass, perhaps somewhat similar to madvise MADV_FREE, and consider the
+correct strategy.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240126223150.work.548-kees@kernel.org/
+This is our documented strategy:
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+     On OpenBSD some additional restrictions prevent dangerous address space
+     modifications.  The proposed space at ss_sp is verified to be
+     contiguously mapped for read-write permissions (no execute) and incapable
+     of syscall entry (see msyscall(2)).  If those conditions are met, a page-
+     aligned inner region will be freshly mapped (all zero) with MAP_STACK
+     (see mmap(2)), destroying the pre-existing data in the region.  Once the
+     sigaltstack is disabled, the MAP_STACK attribute remains on the memory,
+     so it is best to deallocate the memory via a method that results in
+     munmap(2).
 
+OK, I better provide the details of what people were doing.
+sigaltstacks() in .data, in .bss, using malloc(), on a buffer on the
+stack, we even found one creating a sigaltstack inside a buffer on a
+pthread stack.  We told everyone to use mmap() and munmap(), with MAP_STACK
+if #ifdef MAP_STACK finds a definition.
