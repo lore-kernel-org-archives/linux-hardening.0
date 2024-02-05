@@ -1,108 +1,129 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C5E1CA89;
-	Mon,  5 Feb 2024 12:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB4933CE0
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 12:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137432; cv=none; b=PkrGN+jveWfO++QUNl3HE6aaMjOdZ0NAHnG21DoFmdeYPpUp+GHuu2O8B35zzt5pzzayG6yfoUGXHY+5fz1SDiUGmeUaekKPE/5G4+3EuXH45kdvMiVbxAchsPlsn3+7E3LWShP6HrTxRABEkofhyyDiKMCzVoO2TC7kBfLgMCM=
+	t=1707137496; cv=none; b=A48kwpQlYrQWhKUkng0grn439M46ChJ9nbs4/GNRAdY+PhMGbmOAtc/OsDTw1K07ycCELAyQwvcPrAvAbH4CtSEn6lQ3I4zznXFdiXEYrmjKHMhHm1wnvGvoFdSI0SsYrcg3qi7mYM5H8uh9c74yEGvWaTbMqvS+pvVe6MWETTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137432; c=relaxed/simple;
-	bh=hLZGntYcVISpE2zLtXc1B9aqkcHgRJES4wU+pnDSbxs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n42K2CHZwepvA/acb+BSIqBQJ83G+dnpvbBsWZ32kd1iqNOLmkngWdUbgMM6K6V3YaA6+Z2JUpGr5KbwTpc8uHo3ElQ4xu4Yju9pvXqIRwFgWnDqRAJxj05jfiyAPZDpInoXMAXr2Sy54ooOHZqx+h+LsKh81muqbC8TFbH/6og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60403c28ff6so48665637b3.1;
-        Mon, 05 Feb 2024 04:50:29 -0800 (PST)
+	s=arc-20240116; t=1707137496; c=relaxed/simple;
+	bh=T9TcOLUmk4jSDDNFl7EpE3EkNKAhZxnLx2Ork+9fGjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/f+RRytXCbP5w8iG1U0YAQjLthu9rWUtTJ1rRfQ16paqa43eVFd4rKCGI/xzMhrmwRT/rvSDeqXRqgpvp/9ESBkItBQuVprQBBO0DMhJpcwCqPZNwp/1ZHwwQ8wH1orxaDfEh7q4VRaY4ssHlhWsMEJqQhiePTwFxHL+Mdyx8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ol9gRZCp; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ol9gRZCp"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-295f3bf41d5so2129790a91.0
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 04:51:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707137494; x=1707742294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lAuOEn9XClUdiH1Uvm7Me/u+LDru9Z+XedI9uQ/DMIg=;
+        b=Ol9gRZCptHGCb1dCBBeXTrtusNphfFx6rWJxJS/PY3Q/LJjvp1yOUPqrVv8LGxIPXh
+         1FXZJEv7kyW2pBg4XHAB/d+OOabCxSngIW++ulSaLYA9u7/miYI/2R2zlly87m3Blh0O
+         xq+KHaNW3Xilrl/UGdTg3m6OFmOdfkqNOSgOE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707137427; x=1707742227;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U77xr3ZrDFcspY+RoHrYoDiB+2qyXayQOG7MFvZlIZo=;
-        b=xCp16zNgYbv8J2kLUm0/5n8m9XXBFbluRzLGZyJkYWKZYFaqLsXZhnWmm4Wk8wQpzR
-         xNsOHrodYC9nN9XLyEXqIAK9xWMl+eMr/JuI+epQbRlivRGY/AugXE6/nppl88pQVX9p
-         vgGgbKVxcvf0Z7u2d3F/2bN44wp+nUc1xXom0z2pZzX3Zgj9uwGty9uQv056z+jlSiKD
-         qete0AUtT3tHjq1y7kqezALG2pnn23R+TNLrFiG68SesWbQzzp25ixOpZMDU/IsURF3R
-         5aC0Ys5lOvoZxwYQ15FqcL9egwisE3e+ctDwngoBDgctAvzUmAcaIJjqKMj+oB4z+mwl
-         hgQw==
-X-Gm-Message-State: AOJu0YxwdVz1UkSQ1X4KUD0o0TKJ/ZM2hHvAA93idSgATUP11TZ0W+Lr
-	cZOPJhymKtHjCWbWrqCf4bFyjmrmDYCZr09nrDpvP9FpGxqhjlzzVdgdSFWP0cU=
-X-Google-Smtp-Source: AGHT+IFKH6m4lbbUsxSnqYSI2hudjFwUfFDhhJsqkno+e0xLdH6ejw8JV/wEuJaGBpOBWlD7mHOTWg==
-X-Received: by 2002:a81:9851:0:b0:604:9bf:45c1 with SMTP id p78-20020a819851000000b0060409bf45c1mr15819241ywg.8.1707137427335;
-        Mon, 05 Feb 2024 04:50:27 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUJx8ujAiiQyQqwkDHeAUQBCKYNIE2z/n0bOUzEkrV76KmJgp0eRbtcLt30Kp96bRsFPAl7RHDqAZ/FZ/U76s9zzYekmqwh3jbpsKTD4t+qqGTWTzv9vnGwqMStnBbhOI+cRY2yre6ntZqMlfIe
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id fv8-20020a05690c370800b006046471cff8sm354555ywb.79.2024.02.05.04.50.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 04:50:26 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6002317a427so37563017b3.2;
-        Mon, 05 Feb 2024 04:50:26 -0800 (PST)
-X-Received: by 2002:a05:6902:34e:b0:dc6:b9f4:a4c2 with SMTP id
- e14-20020a056902034e00b00dc6b9f4a4c2mr14515950ybs.57.1707137426212; Mon, 05
- Feb 2024 04:50:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707137494; x=1707742294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lAuOEn9XClUdiH1Uvm7Me/u+LDru9Z+XedI9uQ/DMIg=;
+        b=pUf/z4x1gigY4Qjq4KAIEZ40MjTcL5ScZu5143Tanxw5C5gdFsBs49MZc/eO8cw7EX
+         mi9vhF94WiJ8iPeJcRv/5/sP+YYZhPZo5HBnPqONQ3O3qJe4CPw9Gl1vlWXFP/5nueMu
+         G45m8804YoOKsMhErMk3lEW5K1/CRqbx06mEUNkWOKfF/rp+7euFTAhYALOpxkTp7Nc/
+         Aycxc6CpXBZatwD9gaXzSxK0n/h6LI/udbiDw3KF+OYVRjf0X6p3Wdqw2RM//JioqYMZ
+         cN+vA+UjMRZW4OpYRxnx761A8+V3YSAaMh0HSCSGpCKKPs/IgiwTPSVsrqNkYI9EnCo0
+         M36A==
+X-Gm-Message-State: AOJu0YzySQFWN5jcyXkMFCA4jfLEGNSbKDbrRI9p6yiKM7pvUSa4foNi
+	F0xeM6HWc8KUyTqva31IgS72vWk+ax2UCXuAtIT/+S1djO7L/3Rv8T6+d8kBmw==
+X-Google-Smtp-Source: AGHT+IFpSvrgeNaOR9aNU1B8dbFKhTL7aTCDCk5blFR97YFpACYogH1EgmowT0wZ53YNgglBgo/IiA==
+X-Received: by 2002:a17:90b:2348:b0:296:a76a:9711 with SMTP id ms8-20020a17090b234800b00296a76a9711mr1937769pjb.12.1707137494324;
+        Mon, 05 Feb 2024 04:51:34 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXiDr027h34JyAnnlbBVWpPAWDZpuzcJBvVg61uZLSfkey6Ga3gEO4vzW8geoynvMjRpmilnd/TWS78wZJw+96i9pzUQCwSmpSuqHwoEo15tfbU6rcH7UVYklps9ooOyytmuS/xlI90immDWeyq3Fk9hFAGcYT/u2M1DCBv/kw+sMnnos/w097tCKBAZ1LRPFxNqM7uFMHakgxwdr8WwHez1xPq4lFRJjmqmD6dsgDdrV6qN8jpYIFJmnx7jmLo+WVJD8RevM3IWaISVxLWL4mz9/UQvoXn4cCSIMd1A6YgbgIvRSzOjKJB9GwyuGGjPG3Uq78Q7dWJ4ayOL44pmn4+p0vUy5m0jsc5lwVI3FenW4mxHFJ8G3B7xCyKFxLCIiHu7Z8ofnm6GZzHx73zVNasMLQ1UcALy/hVwVC8XUAYrHEulzG/h3e2dbt40BZqg2+REzKS9LJYKqKHVth6+Wayw073kKyFGoYFddC6lmaYEFr7/NnjAdouop2NLJ8J9yKNv0KrghI=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id nm23-20020a17090b19d700b0029464b5fcdbsm5049540pjb.42.2024.02.05.04.51.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 04:51:33 -0800 (PST)
+Date: Mon, 5 Feb 2024 04:51:33 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
+Message-ID: <202402050448.0FB78C7C@keescook>
+References: <20240205093725.make.582-kees@kernel.org>
+ <CANpmjNO0QOsHQOqDf_87uXFB0a=p6BW+=zF_ypb5K0FbaObvzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205122916.it.909-kees@kernel.org> <20240205123525.1379299-4-keescook@chromium.org>
-In-Reply-To: <20240205123525.1379299-4-keescook@chromium.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 5 Feb 2024 13:50:14 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWOKEYvGKRUmii5CqtaM-RAM_4SZC5gds=00+KUYyu+MA@mail.gmail.com>
-Message-ID: <CAMuHMdWOKEYvGKRUmii5CqtaM-RAM_4SZC5gds=00+KUYyu+MA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] um: Convert strscpy() usage to 2-argument style
-To: Kees Cook <keescook@chromium.org>
-Cc: Andy Shevchenko <andy@kernel.org>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, 
-	Justin Stitt <justinstitt@google.com>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, 
-	kernel test robot <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Azeem Shaikh <azeemshaikh38@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNO0QOsHQOqDf_87uXFB0a=p6BW+=zF_ypb5K0FbaObvzA@mail.gmail.com>
 
-Hi Kees,
+On Mon, Feb 05, 2024 at 12:29:21PM +0100, Marco Elver wrote:
+> On Mon, 5 Feb 2024 at 10:37, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > In order to mitigate unexpected signed wrap-around[1], bring back the
+> > signed integer overflow sanitizer. It was removed in commit 6aaa31aeb9cf
+> > ("ubsan: remove overflow checks") because it was effectively a no-op
+> > when combined with -fno-strict-overflow (which correctly changes signed
+> > overflow from being "undefined" to being explicitly "wrap around").
+> >
+> > Compilers are adjusting their sanitizers to trap wrap-around and to
+> > detecting common code patterns that should not be instrumented
+> > (e.g. "var + offset < var"). Prepare for this and explicitly rename
+> > the option from "OVERFLOW" to "WRAP".
+> >
+> > To annotate intentional wrap-around arithmetic, the add/sub/mul_wrap()
+> > helpers can be used for individual statements. At the function level,
+> > the __signed_wrap attribute can be used to mark an entire function as
+> > expecting its signed arithmetic to wrap around. For a single object file
+> > the Makefile can use "UBSAN_WRAP_SIGNED_target.o := n" to mark it as
+> > wrapping, and for an entire directory, "UBSAN_WRAP_SIGNED := n" can be
+> > used.
+> >
+> > Additionally keep these disabled under CONFIG_COMPILE_TEST for now.
+> >
+> > Link: https://github.com/KSPP/linux/issues/26 [1]
+> > Cc: Justin Stitt <justinstitt@google.com>
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Miguel Ojeda <ojeda@kernel.org>
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Hao Luo <haoluo@google.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Looks good.
+> 
+> Reviewed-by: Marco Elver <elver@google.com>
 
-On Mon, Feb 5, 2024 at 1:36=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
-> The ARCH=3Dum build has its own idea about strscpy()'s definition. Adjust
-> the callers to remove the redundant sizeof() arguments ahead of treewide
-> changes, since it needs a manual adjustment for the newly named
-> sized_strscpy() export.
->
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: linux-um@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Thanks!
 
-Thanks for your patch!
+> And just to double check, you don't think we need 'depends on EXPERT'
+> (or DEBUG_KERNEL) to keep the noise down initially?
 
-> --- a/arch/um/include/shared/user.h
-> +++ b/arch/um/include/shared/user.h
-> @@ -52,7 +52,7 @@ static inline int printk(const char *fmt, ...)
->  extern int in_aton(char *str);
->  extern size_t strlcat(char *, const char *, size_t);
->  extern size_t sized_strscpy(char *, const char *, size_t);
-> -#define strscpy(dst, src, size)        sized_strscpy(dst, src, size)
-> +#define strscpy(dst, src)      sized_strscpy(dst, src, sizeof(dst))
+Not for signed, no. It's almost a no-op like this. Once Clang and GCC
+support the wrap version (which will likely require changing the
+command line argument), we can re-evaluate. So far in my testing, I've
+not been able to trip it. I'm planning to get a local syzbot running
+with the wrap sanitizer later this week to see how noisy it gets (if at
+all).
 
-(dst), (src)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+Kees Cook
