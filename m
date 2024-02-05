@@ -1,58 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD220131E5A;
-	Mon,  5 Feb 2024 20:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D791AB80D
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 22:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707164507; cv=none; b=NMg+hc3Q9zc4gNZULBeJBJ2apBS6l9Zs39/+mrZKFozAIEOqeihYiN8hS/ebD9C/lA37aQnTGdMgGIA9W6WgU+9UYPmz8rWcdGlTK8YwydPoKZ8OQtnp3R05DmY1UcUjxNfEyggypeJZ9/8fQ7SMGyT30DXIhMf0fmC6NNxdMEQ=
+	t=1707171202; cv=none; b=WlFUIbsxe1m3et+MmZGNMYkgX3ir2cbz3DqOPfUPwYunaH9zMlTeSX8LZHJrn6IzH/8Nzp3aIMJiNPeihkQuTMM6/3TZAeI7m87bkrKLB/LpDRpMJkooScjnKmee/WxBjTX3fYupGHNo2tjsnWII6IuxYhEKp8YF33+B3UCZNLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707164507; c=relaxed/simple;
-	bh=OnPs4J2FLqlSi9AAQWsy8ks+h3XUSpaDvBaw8zXZYQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3D5vZkXdnSRGmdA+HjiAJRXaNwuiGmVBA3vUtChjRTc4p9SgOoFocaNbp6Flc5g3ANh0XlXtk7Dpgbcw3WM22UsnIz6OcZNM2OZqcwBUxrieO7qWKryHyGAyiXWzABXVI4sQwvHR7HU40q3LcKCL87EMDS6sc8v5wpHD1qw1ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQU23IF+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707171202; c=relaxed/simple;
+	bh=jdd1RTnsCbK9CBh+Tor3vhucPu9sttBLgqAG8qJCD9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=AoJbpjDuZCZyQgV7YHEUdDvlGGj+oMKdDhX8e/LUt1wxBCoc6/1yX65ZbZvRAFZZdMY9LeaLxzx1ZSp9GNzb0U44/Fob6+m1wzOO7LbrRJ/6Gg3s9LbH4sV3QfkN0kyGnioaon65mXRwzBIPU4qXRY9OFvDQ3rN7vGfvexU/K3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HGdW1sy9; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQU23IF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19B56C43390;
-	Mon,  5 Feb 2024 20:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707164507;
-	bh=OnPs4J2FLqlSi9AAQWsy8ks+h3XUSpaDvBaw8zXZYQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IQU23IF+/34JM5UsTXGwn1C4ycg82FIgulYTDDJ9CBWTOVB/n/X7uBYLMm7HSPgOt
-	 i+cus8mTPvjvjWEo4Aw26/x+dVoCCXUrwTTrzecCMmq+SBzrp9nfk9IercDvb/RwxT
-	 60Im7bvxKSTFCnoDeHhyDNoIejyAnkKYwaeGXQo07Iux7rQSwW4qTiC3MD1ZcO0PYb
-	 EAX/V+f/52BeppcBvGr7nKWXYNc/L9JrAs3rGrw+zEfnDgQXSSADSCk1Dbi0ozS+Ic
-	 dVlJSnCocWslszkJWVahgh0jize4v/cZQL49RK3IbzeFVyHTre40nQz6BvOkKyMxDi
-	 0l0JHCnpGM3WA==
-Date: Mon, 5 Feb 2024 12:21:45 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and
- mul_wrap()
-Message-ID: <20240205202145.GB2220@sol.localdomain>
-References: <20240205090854.make.507-kees@kernel.org>
- <20240205091233.1357377-2-keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HGdW1sy9"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6043efd46f8so17369897b3.0
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 14:13:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707171200; x=1707776000; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l+wc7Sgfr0FX1NUK9lSF8NbngE4sfyd8aYAoXi3MmuY=;
+        b=HGdW1sy94car4fYnXdy3DYt9kTJQqZkFGoDoomMrHTRezfSkMgDOHSIdZZ8+swYV/X
+         uIKTZbzQ9fmiIZykn1fqK2RG5RSRizuNd+vtq5UHWE9GPo7WtWERAWu9qMHputgvVvaF
+         5Ea3pUJYbH0/QrQ8CUF9eB/CWfihWBEsfeQsMomvPrExQ3XqKAqqdauEjmzA3b9HsBFa
+         WerCYgEMTK6smljgIS4dZ4racsB2Past1PVXeWunWwIpyAxdqPxD83A06MXGkH3HHb47
+         CinGTW4xKU93oOkmRUM+R0uX0WYeYW2PbYE86ILcP9IITl3DwH/BuAANWbhjccSF4spN
+         InBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707171200; x=1707776000;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l+wc7Sgfr0FX1NUK9lSF8NbngE4sfyd8aYAoXi3MmuY=;
+        b=MkG5oewKicwoiOQWvQsYsWN96aR378L2DmUcvHyiYhVQAEKY+J37ReAUf/O95C1Qmg
+         FFjYVxNPoe8krHWBYvtIvSFrrtpqXjucaNHcZfq5T81a10uel+2D5z+is96quNBT7Ahr
+         AkyMkwGZYy4tBC3AaLPzmG0lRXWaQtxWbLKJ75ZzNO0dS5/ftkj1h+5wioqAWN+7Nlp1
+         IZdmatzjzmD9GUR4T/ZlmfZYqMflwyecvNDEr6BTVuZgk2MNPLahxVPhQj0hVPb/+StD
+         DyVe6Z3iMLilhLi+uVz/gatXIFmTttyeLd9lQWpMsN+njpWzh4vu18v6Tez1+MQ/SnwE
+         kKsA==
+X-Gm-Message-State: AOJu0YwBlzZ7OnfUFoqNw+hiwFUtTtuOknOgdvxjzNhhHz+5863Q7BhK
+	F9xjDKLx2TIlDYATe57Xk18t0Rhvw2jkVEUBVHj3/wA0IiuuGefLFgpRsxupj+PlrTyV3wDHbLp
+	7qNLuc6vyKWXaDJvRn5VavRtVmCFfu82lhZhS
+X-Google-Smtp-Source: AGHT+IE3Q8rQ7p44qPRhpPecrcgKN57uf9gFqW1Q2sgeAXqYfYu/n/QNxOLHPNun1c2+nnvHUGp3OOQurFj1SVrbBZ0=
+X-Received: by 2002:a81:b715:0:b0:604:ea3:6525 with SMTP id
+ v21-20020a81b715000000b006040ea36525mr1064920ywh.0.1707171199364; Mon, 05 Feb
+ 2024 14:13:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205091233.1357377-2-keescook@chromium.org>
+References: <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
+ <20240201204512.ht3e33yj77kkxi4q@revolver> <CALmYWFupdK_wc6jaamjbrZf-PzHwJ_4=b69yCtAik_7uu3hZug@mail.gmail.com>
+ <20240202151345.kj4nhb5uog4aknsp@revolver> <CABi2SkUSWLHM5KD=eK9bJrt3bBsEaB3gEpvJgr0LSTAE2G00Tg@mail.gmail.com>
+ <20240202192137.6lupguvhtdt72rbr@revolver> <85714.1706902336@cvs.openbsd.org>
+ <CAHk-=wjNXcqDVxDBJW8hEVpHHAE0odJEf63+oigabtpU6GoCBg@mail.gmail.com>
+ <20240202211807.6sca4ppezma7cyev@revolver> <CAHk-=whhmasHcmaS0MZkBe2NohjF7Wb3F3pdW4vqyaSbSzQ75g@mail.gmail.com>
+ <20240203044534.wkyfkxdlnskxctsq@revolver>
+In-Reply-To: <20240203044534.wkyfkxdlnskxctsq@revolver>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 5 Feb 2024 14:13:08 -0800
+Message-ID: <CAJuCfpHPk282ttjwEn0A39cHuUgsVTCDsSGzvG3hnFVV+G7edg@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Introduce mseal
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Jeff Xu <jeffxu@chromium.org>, Jeff Xu <jeffxu@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, usama.anjum@collabora.com, rdunlap@infradead.org, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 05, 2024 at 01:12:30AM -0800, Kees Cook wrote:
-> Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and mul_wrap()
+On Fri, Feb 2, 2024 at 8:46=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
+.com> wrote:
+>
+> * Linus Torvalds <torvalds@linux-foundation.org> [240202 18:36]:
+> > On Fri, 2 Feb 2024 at 13:18, Liam R. Howlett <Liam.Howlett@oracle.com> =
+wrote:
+> > >
+> > > There will be a larger performance cost to checking up front without
+> > > allowing the partial completion.
+> >
+> > I suspect that for mseal(), the only half-way common case will be
+> > sealing an area that is entirely contained within one vma.
+>
+> Agreed.
+>
+> >
+> > So the cost will be the vma splitting (if it's not the whole vma), and
+> > very unlikely to be any kind of "walk the vma's to check that they can
+> > all be sealed" loop up-front.
+>
+> That's the cost of calling mseal(), and I think that will be totally
+> reasonable.
+>
+> I'm more concerned with the other calls that do affect more than one vma
+> that will now have to ensure there is not an mseal'ed vma among the
+> affected area.
+>
+> As you pointed out, we don't do atomic updates and so we have to add a
+> loop at the beginning to check this new special case, which is what this
+> patch set does today.  That means we're going to be looping through
+> twice for any call that could fail if one is mseal'ed. This includes
+> munmap() and mprotect().
+>
+> The impact will vary based on how many vma's are handled. I'd like some
+> numbers on this so we can see if it is a concern, which Jeff has agreed
+> to provide in the future - Thank you, Jeff.
 
-Maybe these should be called wrapping_add, wrapping_sub, and wrapping_mul?
-Those names are more grammatically correct, and Rust chose those names too.
+Yes please. The additional walk Liam points to seems to be happening
+even if we don't use mseal at all. Android apps often create thousands
+of VMAs, so a small regression to a syscall like mprotect might cause
+a very visible regression to app launch times (one of the key metrics
+for Android). Having performance impact numbers here would be very
+helpful.
 
-- Eric
+>
+> It also means we're modifying the behaviour of those calls so they could
+> fail before anything changes (regardless of where the failure would
+> occur), and we could still fail later when another aspect of a vma would
+> cause a failure as we do today.  We are paying the price for a more
+> atomic update, but we aren't trying very hard to be atomic with our
+> updates - we don't have many (virtually no) vma checks before
+> modifications start.
+>
+> For instance, we could move the mprotect check for map_deny_write_exec()
+> to the pre-update loop to make it more atomic in nature.  This one seems
+> somewhat related to mseal, so it would be better if they were both
+> checked atomic(ish) together.  Although, I wonder if the user visible
+> changes would be acceptable and worth the risk.
+>
+> We will have two classes of updates to vma's: the more atomic view and
+> the legacy view.  The question of what happens when the two mix, or
+> where a specific check should go will get (more) confusing.
+>
+> Thanks,
+> Liam
+>
