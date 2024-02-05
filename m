@@ -1,95 +1,129 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7601C2B2;
-	Mon,  5 Feb 2024 12:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29B21C2B2
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 12:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707136180; cv=none; b=U1gOP2nvb8jVURPr/rcEGFrTaKIzvfy31EQamHnMuX4jNVaFeRMnkerS5ZjCocRKWKnDJK7AbJlVmxeNcnfzE1UGa4ceKfaYsiIoUdEP7gFW4ot5oscp463f96o6+TBxnp++uvqpUm/WiWeslyI0HDmC/bZBiiZEjOiGyFj8oy4=
+	t=1707136528; cv=none; b=JHYKhwJkjd819tNujFaDS7KBVwEaCFEbnsVHIcanTUJt8ztNXz2/Nw47OJHDu9Ge6JBFuLWY8SsP5ov4zzWlgAC3sY1Im05xxOkAq68cOYThZmBiVGvv0eyBYvvjMJKeuFTzknxAey2f22gbKrg9s9VRY8nvcFZmgsXsDAXdN5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707136180; c=relaxed/simple;
-	bh=zjQbb33QAX1T1JAhEwYPnm/SGkqzEpXW1ZbAKpPauBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DYTgxjt0y6rP0uqb+gZ6Tothta56UR7/RmXEOXwV//vx3aKskyvn+XhjwJLXzMvG5JKEdsYrg0fU21s74gsmN1ZFtSyQqY0vxSOMN4T73nMeC1Lgc0Dzh4+V47vOX5q90v7JV1jrFW7cEpoQaw1VJ8uX0ww8BmLca+yh2G0jb5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cneQkTkz; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1707136528; c=relaxed/simple;
+	bh=gb1pMezQom2o69/2/S4q14GG7K9g4wEflN/V7WqIjPU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HuPdudrfdarmUwMwgHZ2gAglVY8cnkNavxrEcSBghho/C6xPLoFOJqWiTTh/muBw1hdZtyf6UF27XKKqDmAUFAkR9QhDo29g+uZl2apaluR6gCrMMHJxin0IQJioDbuzSs1WaTG36Y7brKuAU/f/1XklR390iED/FuZ+DeD3i6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m1VeL4dD; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cneQkTkz"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707136170; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=0Ich9Lv7jUlR8bH4jRV52p8JlrleP6AcmyrMMLywpAs=;
-	b=cneQkTkzxeFpVP74/kCjY32D8vDbzjo2nOSyx3sc9dsNN7xCembIzc+wQ5IPRV3oJbsieo2pdx13+xEfG0GpM4Ld05476cZudvXVXh/477dpc7i0ECKQuHgViXRJIDa1dyrw2KBQZugDFWCIHdX6VPcu7t2VmOqCUxqx8C6W3OA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W0AVhQO_1707136168;
-Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0W0AVhQO_1707136168)
-          by smtp.aliyun-inc.com;
-          Mon, 05 Feb 2024 20:29:29 +0800
-From: Yuanhe Shu <xiangzao@linux.alibaba.com>
-To: keescook@chromium.org,
-	tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	shuah@kernel.org,
-	corbet@lwn.net
-Cc: xlpang@linux.alibaba.com,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m1VeL4dD"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d7431e702dso35825335ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 04:35:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707136526; x=1707741326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXCtrdF00SQKGnbl+QKIcgctTVGI/MnfqCbM8VG+D4A=;
+        b=m1VeL4dDsfe7kqhwDS11YhF+4oWfrnRisdS5mUvKcaKlCN2umoh0AihiEetvCsRC1h
+         8d0W2wtWqAbTbM4C0Wq4Wa5vmcCFrQH1vyZF7GHGUF2MppbXd6cakNSwHoeG8JyKs5Ij
+         5kTlr7mEwsIc7XC88OpU7nwAbL+LjxxRdniT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707136526; x=1707741326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LXCtrdF00SQKGnbl+QKIcgctTVGI/MnfqCbM8VG+D4A=;
+        b=E4JvPY3do6u8bJz7WJl7JAwFh/MzZRpn2t499aKH33E/LdZncW9REZFcELLvT7erNf
+         kDOA4cwIIUAssv3BAQv3TZG6pFRG2qGYrZlzpbudjYW61vjC3GcufP5rd+jYz361aiKH
+         jwycmFgsLVlI0r2sJyN9xkg6CmKqfTXoBIdX88jNOc2nqmY5vg95tTWB1JKhFNEDZt/n
+         soCg0kLPPzTUlPshRJSIbHsT/p3FvRFmGh4vGAhBpEdf1faA4MXnjftkoNlNQePwn6ql
+         Pw8LDWFwrXpiq5ouHVidsam8STbUB5nLwHOTNIGj+GEjmW2I1SnnJJdthfw+LOHEDW3G
+         C51A==
+X-Gm-Message-State: AOJu0YxDtRoFwLT9SBKGoDU+xnfFI8sRCYT/Sqyyw2IyVwYr3Cgn9YdI
+	Zi2DCL6m4mPjeQ0I9RX94U2F1JQED/61hE8MIQGNGA0sD3x7VJTsy0fy2fg9EQ==
+X-Google-Smtp-Source: AGHT+IFaLn+i8NopIbYaurvObg3Mn20y/WYSEUcqQ2DFqpELuc4XadIrAyrIdm1sTGv0KYjWUjYjGw==
+X-Received: by 2002:a17:902:ed89:b0:1d8:8bce:4b47 with SMTP id e9-20020a170902ed8900b001d88bce4b47mr12130224plj.65.1707136526270;
+        Mon, 05 Feb 2024 04:35:26 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXk5p6S6lfRKaUcKLL3y+54YU9665V3vplVUkWabvzhXSGG6cefCsS0fg0GmaAuvX1XpUjHN0kfhO74pge0p5RJOH6hxwrAHz9X2PKrTpFo5TTH2WcFxlRsai/zoG4JJ3e6aCrn+c8NQBf/dMQdjKq+i648dkBnTZBe1kUUcLoWAoMQgNxxiq7XomcNIZKW2JPUSf0hyWoHYURIYZu+o7kzUfF3IviwJXhE3Sfz9Y/vWXSnt1CUkxV8HIcBpnner4Du7lL2Fd3rgKViXbzi8M/K3jtVU2Q5UcGrDMlrouo+HaAv/jY8giE0zk6GIqe602cm+U/C0ciQwGawGSsUPBVd8zzhV+qZT7MkynDg+dqjS9gCuf6p/Vco8lbWLLiqggczSmy8VnxxInCkE9ZL3Fe7ca5qHcWYkc3JM06n8Up3VtI1GYxnUZJkd2Vs3GkmQKXjXTbUPV8YN+obyUZTiDz6
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jj14-20020a170903048e00b001d958a17e07sm6251149plb.294.2024.02.05.04.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 04:35:25 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Richard Weinberger <richard@nod.at>,
+	Justin Stitt <justinstitt@google.com>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jason Wang <jasowang@redhat.com>,
+	kernel test robot <lkp@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Yuanhe Shu <xiangzao@linux.alibaba.com>
-Subject: [PATCH 2/3] Documentation: adjust pstore backend related document
-Date: Mon,  5 Feb 2024 20:28:51 +0800
-Message-Id: <20240205122852.7069-3-xiangzao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240205122852.7069-1-xiangzao@linux.alibaba.com>
-References: <20240205122852.7069-1-xiangzao@linux.alibaba.com>
+	linux-um@lists.infradead.org
+Subject: [PATCH v2 0/4] string: Allow 2-argument strscpy()
+Date: Mon,  5 Feb 2024 04:35:20 -0800
+Message-Id: <20240205122916.it.909-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1408; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=gb1pMezQom2o69/2/S4q14GG7K9g4wEflN/V7WqIjPU=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwNYLbm8KrEo4o92C5K+vQbxvOEnNcE5pT/0OK
+ FUyaNJ00G2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcDWCwAKCRCJcvTf3G3A
+ JqjyD/45HaDlf2xlN86ZwY7uJDXkuQm1bipeu++EsScElkwHpim5eV9GxCdDzgGY8lgbSwOpZrH
+ 7CSbh2sTvX3KmGVqFxTPelq7eCz5QfcvMuorquo0AfoTAv7iMKIJqOvjKT30glEcQQvvkOBx2N6
+ jPIJ9bJQ909bLSeitjbqDzFmOjNYcjH2jOR5Q4Y064FgXENp54B5UEcsA1RIXsIQG8RHhDPuwRx
+ 06+pU/hUKVuZp0TMIyOG1tvj9WKLqpjWhM5xo15Ww8o4kbJshg4MIYoMAu3/OHHE9Q2Fk/BlejD
+ NRngSmz5BtCPRD01rgMGhUyeOLVmBFyWVmjOYihg8P7uVfL8YM2FDxN7kbIHcgMfvNVkX0gxkHF
+ wEBWOxFsnkXQNn3/yeVIO0mUtY6fB5zeesL2iyth8nO7tLax85EjyPL4WEyijXQVjtnyTEHHqaI
+ CYoIA8g2bzqshurlUj6iUmyOY4qMItiKIbgOkHB0NZiOkfbR6ErWjINDjMFoOIQokSF8JBPGYdC
+ NNh3wlaDHktdGv2lDiPsmYLYpEpa8CmdGA+47gA80iuynBbTZIZuVI0eDGdDd0iqNyqmYXLChwB
+ rbO4NR8AmDHbu64hE2Ejlnjmpdhy14BPmO+U8HYSfMkX9CeiPAq92XuusvpigykrxEDFOHVXbI9
+ CcEroad bJ+I/gIQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Pstore now supports multiple backends, adjust related document.
+Hi,
 
-Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
----
- Documentation/ABI/testing/pstore                | 8 ++++----
- Documentation/admin-guide/kernel-parameters.txt | 4 +++-
- 2 files changed, 7 insertions(+), 5 deletions(-)
+v2:
+ - add strscpy_pad() coverage
+ - fix up ARCH=um to handle the renaming
+ - use __must_be_array() to validate sizeof() usage
+v1: https://lore.kernel.org/all/20240131055340.work.279-kees@kernel.org/
 
-diff --git a/Documentation/ABI/testing/pstore b/Documentation/ABI/testing/pstore
-index d3cff4a7ee10..2cd67b502f11 100644
---- a/Documentation/ABI/testing/pstore
-+++ b/Documentation/ABI/testing/pstore
-@@ -41,7 +41,7 @@ Description:	Generic interface to platform dependent persistent storage.
- 		persistent storage until at least this amount is reached.
- 		Default is 10 Kbytes.
- 
--		Pstore only supports one backend at a time. If multiple
--		backends are available, the preferred backend may be
--		set by passing the pstore.backend= argument to the kernel at
--		boot time.
-+		Pstore now supports multiple backends at a time. If multiple
-+		backends are available, the registrable backends may be
-+		set by passing the pstore.backend= argument1, argument2...
-+		or pstore.backend= all to the kernel at boot time.
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25680d0..a8a109b822a9 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4748,7 +4748,9 @@
- 			[HW,MOUSE] Controls Logitech smartscroll autorepeat.
- 			0 = disabled, 1 = enabled (default).
- 
--	pstore.backend=	Specify the name of the pstore backend to use
-+	pstore.backend=backend1,...,backendN
-+			Specify the names of the pstore backends to use
-+			or =all for all available backends
- 
- 	pti=		[X86-64] Control Page Table Isolation of user and
- 			kernel address spaces.  Disabling this feature
+Make it possible for strscpy() and strscpy_pad() to use 2 arguments,
+making "sizeof(dst)" be the the default 3rd argument for the destination
+size. This can make future usage much easier to read. Additionally allows
+treewide changes to save a bunch of lines:
+ 1177 files changed, 2455 insertions(+), 3026 deletions(-)
+
+-Kees
+
+Kees Cook (4):
+  string: Redefine strscpy_pad() as a macro
+  string: Allow 2-argument strscpy()
+  string: Allow 2-argument strscpy_pad()
+  um: Convert strscpy() usage to 2-argument style
+
+ arch/um/drivers/net_kern.c               |  2 +-
+ arch/um/drivers/vector_kern.c            |  2 +-
+ arch/um/drivers/vector_user.c            |  4 +-
+ arch/um/include/shared/user.h            |  3 +-
+ arch/um/os-Linux/drivers/ethertap_user.c |  2 +-
+ arch/um/os-Linux/drivers/tuntap_user.c   |  2 +-
+ arch/um/os-Linux/umid.c                  |  6 +-
+ include/linux/fortify-string.h           | 22 +------
+ include/linux/string.h                   | 75 +++++++++++++++++++++++-
+ lib/string.c                             |  4 +-
+ lib/string_helpers.c                     | 34 -----------
+ 11 files changed, 87 insertions(+), 69 deletions(-)
+
 -- 
-2.39.3
+2.34.1
 
