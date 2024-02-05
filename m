@@ -1,59 +1,59 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AF51C6B2
-	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 12:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068901CA80
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 12:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707136529; cv=none; b=qXMTPrDz+uon8/A/kRsRaysh3IgB/03f0V0DWoCxtVzwkq01oJxOuGlUGXVtY58sDzNyULDKvzmzN08qcPFpIaHeLnu3CZRQzn3H9ldg7fpK0qZPH3yF+1lLAAyqoPw7AwhwmwaehgJ60osmZ5fZMen390fwnRcmnip93kKT2fQ=
+	t=1707136530; cv=none; b=bZ8OvBbJzEd8eDOl7UrOnvLf15TO2H2X13z8Cuuy4zChPnVZarGnNBw3aP5TrY2p6R5aFMBi7zDgaDaoo6bTuCRjPA8dngivUYWtqbI6gXmr56I+e5cN1g3DDSHXcSscsjwfNtUZjOyvXdORD5ooWxqZ7+x4rHrA9ygfP0dkk9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707136529; c=relaxed/simple;
-	bh=5d6UiYMglkTbWmRhqsEoPg9BNX2q12MK63EVcZLBafI=;
+	s=arc-20240116; t=1707136530; c=relaxed/simple;
+	bh=SCI5AVp/xP0K3m/Awqe4PFOk3LYWSNoQ5BQ2wUkaFRk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jOJ3bQ1V0xnilqU5UpOdbCu1ttZi4H6jlYcvPvwxdeXmM9PBipLM7fPLLmzxPGWWHPcH0kz7sc6woXvI6dSeJFCHLZ53QxCh2n9XOeNi1rfJ9A6Vsqo+LXm/XIETa5iJej3uwc3ZtSMW0Oo7PMDne+yeF+khnJWV3Q0z+gpYEHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZtrYtgLE; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=Y1oCFKUbLjRAJZvH6ZO3W2bCgDnJdSgp2FCJFOBDzmBarWT9HZvnHZieTt/itKZJMR8zoZ3c2UaaSXM820mjTOt5Nl3mfJikAe6+x8Tp4wamgDr6WWYFNQCesUz2snYTPbN1H03E83VCODoRcO9K6YtCQ/d09RDE8+7CzMpc8H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oAP5NDby; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZtrYtgLE"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d8ef977f1eso32090745ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 04:35:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oAP5NDby"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e0518c83c6so105863b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 04:35:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707136527; x=1707741327; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707136528; x=1707741328; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a8sipwMRC4Kd6MHj5r1Ne28hNhCgrZv7vPqfbBQ2q0M=;
-        b=ZtrYtgLE4lrp4hep7JNiDbGQt0SinOyw1fqb5W9sqzCg3bEWODfWAHbF/grbhueypU
-         GxZ2fTweRhyPmz8nBXFX1Xx9bdsTemSnC9II1PhocTspmrUyiQMH58+cOtptElaKytKB
-         OUD9jpl5LwJxxqNitFOTHSdwJD32oeDIaf4Hk=
+        bh=c5JNANRkgim7oX9erlFG0aAyh/IbhwSXSNW8ijW6EiU=;
+        b=oAP5NDbytlUEJbHmz7Jlie+xzHOo5gxHYx9jxDHMIRp80EjA1mB+uHxaTsYJn9Uhyz
+         uJ13m1cBTGRTQSlY623KGbJLPENs6jovpNb8cyqEdPcizwtboe5vSLZmhw4U5e5OdJnK
+         X9oDpGi0uLLbJ6qTT546qKNZA+T2m/JYjNfXQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707136527; x=1707741327;
+        d=1e100.net; s=20230601; t=1707136528; x=1707741328;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a8sipwMRC4Kd6MHj5r1Ne28hNhCgrZv7vPqfbBQ2q0M=;
-        b=lom3zzAG7WyVbHfqlrxRBWcozzwii5ADfdQgh5WYrbNpwVPBwPvpcjOgGfuJeWH1Ei
-         3CHpJEkQAzvbqMr7SxwOzGLGnrAPEo//g8sI7PRkm2rXL2SNeP26ivZ3JN6t47RHZN3k
-         UaQg/6MsEj+fwZrLP6L7bPH0OuZ+yJuT+9TXqCIL2ylrSxyoYbdNSyOMN7Zp29Kllot0
-         MkZHx/GHlC0gzxyqq5mw+kr0hX5h9KNGGqIybhlA/ITau0M56uh6NyptClIc/Xzg+Dlu
-         a+K7izS6bRp+NYqi5JUfh0uUzt2rQpKjVtfJte+HN3EVXvgNgS0WC6aQno7ny4KSMK7f
-         nlVQ==
-X-Gm-Message-State: AOJu0YyeuvFAtBE0mkduQmCWJBBs2KZ89ut5wIFoUl/NgGOJwyyDTuwE
-	Dmc4lDUA6nRekqCDaHi8g6D9KJaXp8DI4OF4qaBxd3aZj3JF4aa4nPbdU+I5fw==
-X-Google-Smtp-Source: AGHT+IHkHiW4eCpoZrH5VS9fL3wKdw7R87tdm2Mzop8u3my/RGXZjyKz1iWzGWMARGlP4o8yTfJaLQ==
-X-Received: by 2002:a17:903:11d0:b0:1d6:f1cb:7a95 with SMTP id q16-20020a17090311d000b001d6f1cb7a95mr17046893plh.57.1707136526725;
-        Mon, 05 Feb 2024 04:35:26 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWByyKi34EiBtuytAcMo6KMj6URrFVZ74/I4YaRUx7jw6ft7ydbHcPrJMa34hmYyUIhs9cH2qnU/xx8FhYaq9HJ0U3MkBMjasin/nW1UcbkS2a7mj1SzmE8BTcYjHDA7AOHT22fZ6eRugXVe6Wi/7kvmoRMWLibqZswU8V70tczIDUzmG0UC+65vvl+/8O1BFB6VGOFye62MbQrrtinDcuyGokYnuGz8v+wbZScio1q/AWhlvG6Wos7OcFTU0oo5aq1W5sjgZP5CnfVqKgNyi9AF2mm5agu8+3qn8u+xENHnq7e0qzvAO+zwRTYWRqvAyId9Ee58YJtv2tSp6QysUWodSAEnx8YCAaXJj6jvEZShKsJWbRXUSMoFbCiJu2BXFJGGykEt9ZXjazuc5b8kPZmaCsdA1dnyEVd8mAxehAYat+/ZuaQMIv88Lgc1EXfOcl6F4SWfULyk2KSIRZSmKsH
+        bh=c5JNANRkgim7oX9erlFG0aAyh/IbhwSXSNW8ijW6EiU=;
+        b=EAs9n+964Rftwt42ntfNEtZ5xVRterKVZwKrb30pfxyq6AAIOS2nqyk2EP1xFxWVEs
+         gFhc/qQ+dud+oLX2sIiGzIXTDQm7dVOBadzmC6yfOKZLavUr4PVau0+uO7e8itd9Dvpj
+         jS0hTZnRnwx6eNrYqFXGq3qVOYI3dZgo1h7PnbT3aFujKLKLg6BslSVbOYLc4pr19lPm
+         ZmAJvkh26jNTM/onFlGnDV1vFK+ZqZkucS/JSUBJ1Gz5ZaDliw4AiPGToEuGcSa9vECX
+         y1NxkwKvKDZTVrCy0SxCG+JW5YRUdEregNzQpAXF+I4w5pwCoS1/FPke9L3RngMLHu1I
+         6W4Q==
+X-Gm-Message-State: AOJu0Yz/y0qxmYhjGtRH1Oa3tmna/wqlQ/FAIciD02aiD3xSj+HS87Wq
+	lpuQyX/NR2k0FPihFHRLiMyKqI+7bi4n3hULmAk03zUhPfAF3bR4d9WyPiANDg==
+X-Google-Smtp-Source: AGHT+IGcyv6oUMvzmDLTrZfuvHow7dYZGNngdUIPt9/kNHjY4m35Nv3RLQZaeWenbYTl6YwPkxUvvA==
+X-Received: by 2002:a05:6a20:6f05:b0:19c:922b:13e5 with SMTP id gt5-20020a056a206f0500b0019c922b13e5mr8107466pzb.59.1707136528154;
+        Mon, 05 Feb 2024 04:35:28 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWagow0Xuqfyuxmq8ypSMoRdf8e/fatW5Km0Cy9EIBfS8Bu8otndraIk1Rh+l1J50Uw+3uqo4+kLRteVP/c7c1JUENfvDvsQ+hMrhl1w1jU2SFpUwdWIdPI9Ng3sTrGFPIIzzPBu/YJOCLERL1TMLWN/oWbQcvGo5iWImJ4xtyYgPGGi7AZZFEGJtyHcI/UMBpAglK7vaUg2S0rG/28zLmr9RYcafYYGZ0ixHConRJM03tyoZ/qvME8mBVetDJggGibbRGWBrh4KKdR53Qkzfg24dqBvyYrvOSh8OUIo17dFzVqnEBZ4Ln2hbuMs9mJWxI9+XpsBsO0nUf3KYAOkzScVnndD5QEaq64qo4sGONV7ZPEPAwutGac5THprucFy/HSyFp8zJ+TZo+/ODwoIoGgyvOgOOTJ9KOn04NF42iqgiiO1A5InQdi7W1c3z9PE7agbvVqFvOTCa4wRa2yO+c+
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mn16-20020a1709030a5000b001d8aa88f59esm6202642plb.110.2024.02.05.04.35.25
+        by smtp.gmail.com with ESMTPSA id 20-20020a631554000000b005d8be4c125csm6881440pgv.80.2024.02.05.04.35.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:35:25 -0800 (PST)
+        Mon, 05 Feb 2024 04:35:26 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Andy Shevchenko <andy@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	linux-hardening@vger.kernel.org,
 	Richard Weinberger <richard@nod.at>,
-	linux-um@lists.infradead.org,
 	Justin Stitt <justinstitt@google.com>,
 	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
 	Johannes Berg <johannes@sipsolutions.net>,
@@ -63,10 +63,10 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Azeem Shaikh <azeemshaikh38@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/4] um: Convert strscpy() usage to 2-argument style
-Date: Mon,  5 Feb 2024 04:35:24 -0800
-Message-Id: <20240205123525.1379299-4-keescook@chromium.org>
+	linux-um@lists.infradead.org
+Subject: [PATCH v2 3/4] string: Allow 2-argument strscpy_pad()
+Date: Mon,  5 Feb 2024 04:35:23 -0800
+Message-Id: <20240205123525.1379299-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240205122916.it.909-kees@kernel.org>
 References: <20240205122916.it.909-kees@kernel.org>
@@ -76,158 +76,86 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5346; i=keescook@chromium.org;
- h=from:subject; bh=5d6UiYMglkTbWmRhqsEoPg9BNX2q12MK63EVcZLBafI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwNYLb+R0+gw7GgnI3QI4KGLyNGSb52JGRxet5
- 1XMuj4aUkGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcDWCwAKCRCJcvTf3G3A
- JrXHD/4k2l9SR9HgecqdmGaTxym3IrejezIaI8b5MzIPvoImcFWT0Mf8aXTgXEyxq8uWxUSGeHF
- WbBtFjN5vndp+eT6d7Aau0bKlAgZIyzEb5oh+f4vwVnyErCKtq8eTR2yjy+ki6dPXhZ6yV/6yL/
- GX58ENWMI4OasMu+pLJDYzsdkCia0HyOtB6IYN+UcnWWEdLT4p6q1WN8uLfGUgxAWDif1KgsnHt
- wL1eZTaHu04b3TXgAbUYcHaAT7WdkDwcotPpcAshvhqyhILsV9GaRrkXZIq4mVVw3kn7KAuO8VU
- wmm4YHXaQgZO6P0F3dbT9CVdvBFQ95hne9VsR+LTrnh+eLKUyXYTtBZcE7qo/gC8P6gV7tmFTSn
- tyo0uiKhU1h4ykOlP4qxbmRQXTceEMzGZaWf7PuO8sOeHjfssdyktyPLKxuB+qfDGp5B7DLfel8
- 6kgbcZJ/PgHx45rckxp+K6ea68m6d5S5K3hCpfNcrmAbg3o4N8DCSLcC3cimv9KJtzQxDhYoRsT
- HO7X2O25NJL+WtwX62RvK8qmvioZ4Lxadnhl9DWe6o4Mi/bLK8es5poQg3jOy4wqI0x7F9HnhOX
- vfIrHiKUhhofqwMXaGiv2ZxH4yN/5Q7mUbiv/NPgHVG7c9p7EckxeVDWYw0VSyqUiFM2rTbu0TA qVzP3WSRN66gMAw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2506; i=keescook@chromium.org;
+ h=from:subject; bh=SCI5AVp/xP0K3m/Awqe4PFOk3LYWSNoQ5BQ2wUkaFRk=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwNYLp7ZL5ezJvmcodRQbG2/1dyQRVQycV79xB
+ /6BzOPeySKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcDWCwAKCRCJcvTf3G3A
+ Jvo2EACPXKqow/a1M7hjAGcliIdGfXhiepw3TyxOozHwHyFCXonE4ajdHlUJPs10NbzydfvJN7g
+ nLdam0lewEg/i3/kbxy4xNDPDUziZd8urp1MnoqrSxnPXxfieBSy0SCTjCijMcy1XhJ53bTP8VJ
+ Xp0kj8hktnbsgJorBULPaACOrK3SbM5jvagSfNhnkAdfqro/ds2EMVlBNUVdyUF/gbWoor0NaiM
+ DpMOv9I1wf6/UFA0xRJ4Kb9+XJOEvAbl4Qan9i1Zn+lIO3w4pG4A9HtCm5hysX8KV6hFGiKxbjZ
+ FL5rRAr5YoBMLj5YFVXFBmogCV1il7zo39IGffAMXJ8p35Rg0DSCoC1jEIThnS92DfNLZq5q5ht
+ hRB9o5XCsNTrkfbgjD4HHEAAKUqDCjem3uMdkjE42CuSPRN7z8YJ0yTvlGg+9RjNm463Jm0JDQU
+ sXFFR35pDYH9r2OWO4i4xhIKRTZvFoXuV427qHabe3Qvr6EhracQfE6W5VlvrO3GwdQ2YS9oSe7
+ XMMeWFatpxe8VL/1+itq2dnnt8iWYkwr/I2kjjyhfDcT1MBir9g+ACaU8QRv21G9Fi7Jkga4yfU
+ a5QAwX2USngq3ZMAitufdkf+VgoUnUqzee4E0lP9gg7m86XYSeJrRiOQGNd8X9xehhP5bKi6TD0 TkZFNDYTgcD33rA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The ARCH=um build has its own idea about strscpy()'s definition. Adjust
-the callers to remove the redundant sizeof() arguments ahead of treewide
-changes, since it needs a manual adjustment for the newly named
-sized_strscpy() export.
+Similar to strscpy(), update strscpy_pad()'s 3rd argument to be
+optional when the destination is a compile-time known size array.
 
-Cc: Richard Weinberger <richard@nod.at>
-Cc: linux-um@lists.infradead.org
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/um/drivers/net_kern.c               | 2 +-
- arch/um/drivers/vector_kern.c            | 2 +-
- arch/um/drivers/vector_user.c            | 4 ++--
- arch/um/include/shared/user.h            | 2 +-
- arch/um/os-Linux/drivers/ethertap_user.c | 2 +-
- arch/um/os-Linux/drivers/tuntap_user.c   | 2 +-
- arch/um/os-Linux/umid.c                  | 6 +++---
- 7 files changed, 10 insertions(+), 10 deletions(-)
+ include/linux/string.h | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/arch/um/drivers/net_kern.c b/arch/um/drivers/net_kern.c
-index cabcc501b448..77c4afb8ab90 100644
---- a/arch/um/drivers/net_kern.c
-+++ b/arch/um/drivers/net_kern.c
-@@ -265,7 +265,7 @@ static void uml_net_poll_controller(struct net_device *dev)
- static void uml_net_get_drvinfo(struct net_device *dev,
- 				struct ethtool_drvinfo *info)
- {
--	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	strscpy(info->driver, DRIVER_NAME);
- }
+diff --git a/include/linux/string.h b/include/linux/string.h
+index a21371aa2fd6..4f0f27013418 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -78,6 +78,10 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+ 	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst))
+ #define __strscpy1(dst, src, size)	sized_strscpy(dst, src, size)
  
- static const struct ethtool_ops uml_net_ethtool_ops = {
-diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
-index 131b7cb29576..dc2feae789cb 100644
---- a/arch/um/drivers/vector_kern.c
-+++ b/arch/um/drivers/vector_kern.c
-@@ -1373,7 +1373,7 @@ static void vector_net_poll_controller(struct net_device *dev)
- static void vector_net_get_drvinfo(struct net_device *dev,
- 				struct ethtool_drvinfo *info)
- {
--	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	strscpy(info->driver, DRIVER_NAME);
- }
++#define __strscpy_pad0(dst, src, ...)	\
++	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst))
++#define __strscpy_pad1(dst, src, size)	sized_strscpy_pad(dst, src, size)
++
+ /**
+  * strscpy - Copy a C-string into a sized buffer
+  * @dst: Where to copy the string to
+@@ -103,6 +107,18 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+ #define strscpy(dst, src, ...)	\
+ 	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
  
- static int vector_net_load_bpf_flash(struct net_device *dev,
-diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-index c719e1ec4645..b16a5e5619d3 100644
---- a/arch/um/drivers/vector_user.c
-+++ b/arch/um/drivers/vector_user.c
-@@ -141,7 +141,7 @@ static int create_tap_fd(char *iface)
- 	}
- 	memset(&ifr, 0, sizeof(ifr));
- 	ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_VNET_HDR;
--	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-+	strscpy(ifr.ifr_name, iface);
++#define sized_strscpy_pad(dest, src, count)	({			\
++	char *__dst = (dest);						\
++	const char *__src = (src);					\
++	const size_t __count = (count);					\
++	ssize_t __wrote;						\
++									\
++	__wrote = sized_strscpy(__dst, __src, __count);			\
++	if (__wrote >= 0 && __wrote < __count)				\
++		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
++	__wrote;							\
++})
++
+ /**
+  * strscpy_pad() - Copy a C-string into a sized buffer
+  * @dest: Where to copy the string to
+@@ -123,17 +139,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+  * * The number of characters copied (not including the trailing %NULs)
+  * * -E2BIG if count is 0 or @src was truncated.
+  */
+-#define strscpy_pad(dest, src, count)	({			\
+-	char *__dst = (dest);						\
+-	const char *__src = (src);					\
+-	const size_t __count = (count);					\
+-	ssize_t __wrote;						\
+-									\
+-	__wrote = strscpy(__dst, __src, __count);			\
+-	if (__wrote >= 0 && __wrote < __count)				\
+-		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
+-	__wrote;							\
+-})
++#define strscpy_pad(dst, src, ...)	\
++	CONCATENATE(__strscpy_pad, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
  
- 	err = ioctl(fd, TUNSETIFF, (void *) &ifr);
- 	if (err != 0) {
-@@ -171,7 +171,7 @@ static int create_raw_fd(char *iface, int flags, int proto)
- 		goto raw_fd_cleanup;
- 	}
- 	memset(&ifr, 0, sizeof(ifr));
--	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
-+	strscpy(ifr.ifr_name, iface);
- 	if (ioctl(fd, SIOCGIFINDEX, (void *) &ifr) < 0) {
- 		err = -errno;
- 		goto raw_fd_cleanup;
-diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user.h
-index 9568cc04cbb7..326e52450e41 100644
---- a/arch/um/include/shared/user.h
-+++ b/arch/um/include/shared/user.h
-@@ -52,7 +52,7 @@ static inline int printk(const char *fmt, ...)
- extern int in_aton(char *str);
- extern size_t strlcat(char *, const char *, size_t);
- extern size_t sized_strscpy(char *, const char *, size_t);
--#define strscpy(dst, src, size)	sized_strscpy(dst, src, size)
-+#define strscpy(dst, src)	sized_strscpy(dst, src, sizeof(dst))
- 
- /* Copied from linux/compiler-gcc.h since we can't include it directly */
- #define barrier() __asm__ __volatile__("": : :"memory")
-diff --git a/arch/um/os-Linux/drivers/ethertap_user.c b/arch/um/os-Linux/drivers/ethertap_user.c
-index 3363851a4ae8..bdf215c0eca7 100644
---- a/arch/um/os-Linux/drivers/ethertap_user.c
-+++ b/arch/um/os-Linux/drivers/ethertap_user.c
-@@ -105,7 +105,7 @@ static int etap_tramp(char *dev, char *gate, int control_me,
- 	sprintf(data_fd_buf, "%d", data_remote);
- 	sprintf(version_buf, "%d", UML_NET_VERSION);
- 	if (gate != NULL) {
--		strscpy(gate_buf, gate, sizeof(gate_buf));
-+		strscpy(gate_buf, gate);
- 		args = setup_args;
- 	}
- 	else args = nosetup_args;
-diff --git a/arch/um/os-Linux/drivers/tuntap_user.c b/arch/um/os-Linux/drivers/tuntap_user.c
-index 2284e9c1cbbb..91f0e27ca3a6 100644
---- a/arch/um/os-Linux/drivers/tuntap_user.c
-+++ b/arch/um/os-Linux/drivers/tuntap_user.c
-@@ -146,7 +146,7 @@ static int tuntap_open(void *data)
- 		}
- 		memset(&ifr, 0, sizeof(ifr));
- 		ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
--		strscpy(ifr.ifr_name, pri->dev_name, sizeof(ifr.ifr_name));
-+		strscpy(ifr.ifr_name, pri->dev_name);
- 		if (ioctl(pri->fd, TUNSETIFF, &ifr) < 0) {
- 			err = -errno;
- 			printk(UM_KERN_ERR "TUNSETIFF failed, errno = %d\n",
-diff --git a/arch/um/os-Linux/umid.c b/arch/um/os-Linux/umid.c
-index 288c422bfa96..e09d65b05d1c 100644
---- a/arch/um/os-Linux/umid.c
-+++ b/arch/um/os-Linux/umid.c
-@@ -40,7 +40,7 @@ static int __init make_uml_dir(void)
- 				__func__);
- 			goto err;
- 		}
--		strscpy(dir, home, sizeof(dir));
-+		strscpy(dir, home);
- 		uml_dir++;
- 	}
- 	strlcat(dir, uml_dir, sizeof(dir));
-@@ -243,7 +243,7 @@ int __init set_umid(char *name)
- 	if (strlen(name) > UMID_LEN - 1)
- 		return -E2BIG;
- 
--	strscpy(umid, name, sizeof(umid));
-+	strscpy(umid, name);
- 
- 	return 0;
- }
-@@ -262,7 +262,7 @@ static int __init make_umid(void)
- 	make_uml_dir();
- 
- 	if (*umid == '\0') {
--		strscpy(tmp, uml_dir, sizeof(tmp));
-+		strscpy(tmp, uml_dir);
- 		strlcat(tmp, "XXXXXX", sizeof(tmp));
- 		fd = mkstemp(tmp);
- 		if (fd < 0) {
+ #ifndef __HAVE_ARCH_STRCAT
+ extern char * strcat(char *, const char *);
 -- 
 2.34.1
 
