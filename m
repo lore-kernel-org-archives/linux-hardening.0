@@ -1,101 +1,133 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9612250F8
-	for <linux-hardening@vger.kernel.org>; Sun,  4 Feb 2024 19:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184C4125CD
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 09:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707075598; cv=none; b=aIrSqugaFIDVkr02S3dMrtAFryoP3fQCLVN/8Oqf0acPko+H6dl8wvdJ1+dGTayMlYP5hmSZW2VLcyPWClMMPQPCPjQEW63gIZYrcZ56US1EY//deoy0MxD+HwaKroQD4+B9uG5fbVGP1Vb+C+k7AwaOyS340/igBm/ntZw7Fls=
+	t=1707123821; cv=none; b=JKNS2P5kxglk3tvzM1N5owPHbR6Xjo5LtyM20cGNKg/2ZnS5MTke9JdVKNwyw538hdtEqMeeoDpAOO3EHPaJv6CQLKpMKYrTA8lWHFtDXD1Kn2xnrHjBxdzZmn7BmfgMggK31y0T8zWoTwOvvfUquDWGIu+HF0xUodX7kgEYuTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707075598; c=relaxed/simple;
-	bh=f+5aNJi030Y6YvMTKjOxVL9AtdO5FkxJ4YLuhjCLqvU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=gR3EqmAs9Am8K8cXZaEODjmZ+MZ5xmgd2nBsJFfuFgGS2++GykNPnhlQ0Fl02GCCpt9b4lyLJHYSlEdkPZ4eY0vkBb+c1eO3ZlMb2lRMDRXLhdxEjXLVjV1BKTTf+H3MZJWT6GsDSFPm8fUIAMmPLB1B0GcgjpsVCBXhJK2Se8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-141-bCSKLnLmOPmZ8GuKQPzVdQ-1; Sun, 04 Feb 2024 19:39:48 +0000
-X-MC-Unique: bCSKLnLmOPmZ8GuKQPzVdQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 4 Feb
- 2024 19:39:22 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 4 Feb 2024 19:39:22 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Pedro Falcato' <pedro.falcato@gmail.com>, Jeff Xu <jeffxu@chromium.org>
-CC: Theo de Raadt <deraadt@openbsd.org>, Jeff Xu <jeffxu@google.com>, "Linus
- Torvalds" <torvalds@linux-foundation.org>, "Liam R. Howlett"
-	<Liam.Howlett@oracle.com>, Jonathan Corbet <corbet@lwn.net>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"keescook@chromium.org" <keescook@chromium.org>, "jannh@google.com"
-	<jannh@google.com>, "sroettger@google.com" <sroettger@google.com>,
-	"willy@infradead.org" <willy@infradead.org>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "usama.anjum@collabora.com"
-	<usama.anjum@collabora.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>,
-	"jorgelo@chromium.org" <jorgelo@chromium.org>, "groeck@chromium.org"
-	<groeck@chromium.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"dave.hansen@intel.com" <dave.hansen@intel.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH v8 0/4] Introduce mseal
-Thread-Topic: [PATCH v8 0/4] Introduce mseal
-Thread-Index: AQHaVgr3yFwnK9gEQkCHuGFhXzylG7D6lXwg
-Date: Sun, 4 Feb 2024 19:39:22 +0000
-Message-ID: <acdc68a3067c437fbde184eab29924c0@AcuMS.aculab.com>
-References: <20240131175027.3287009-1-jeffxu@chromium.org>
- <20240131193411.opisg5yoyxkwoyil@revolver>
- <CABi2SkXOX4SRMs0y8FYccoj+XrEiPCJk2seqT+sgO7Na7NWwLg@mail.gmail.com>
- <20240201204512.ht3e33yj77kkxi4q@revolver>
- <CABi2SkWB2eV24LBJtgJ73zEwaAWuFhAwrfqx3Rs=tqnpcJ0qRw@mail.gmail.com>
- <58408.1706828083@cvs.openbsd.org>
- <CAHk-=wjqozic6JuRimXD=RamnJmD6FoaQki7RtNYrezzx_OfOg@mail.gmail.com>
- <CALmYWFtqcixi3p3Ab44wENJr+n2k2SNaCJEofNm_awnNdJZnDQ@mail.gmail.com>
- <8744.1706846710@cvs.openbsd.org>
- <CABi2SkWSt=UMFWe9n916ZH16wCzaipKXmEJ5VasQHMr1AxerxQ@mail.gmail.com>
- <29248.1706850035@cvs.openbsd.org>
- <CABi2SkXPNPKgqheuFuQ9iZApQkJm8o6bypNn0B-QDz_W9b0JBQ@mail.gmail.com>
- <CAKbZUD1EsAVupRotYV-ed4PQ3sL5wM4M=f4n-6rF+QNp7C1m4g@mail.gmail.com>
-In-Reply-To: <CAKbZUD1EsAVupRotYV-ed4PQ3sL5wM4M=f4n-6rF+QNp7C1m4g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1707123821; c=relaxed/simple;
+	bh=U0IaqYEgUxaoMI0fBY1yJtEGvGyAUmEfSrUJjZ33FhA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nGP5wDtwvLdVn2FL4P/2ZeEm+TDFsNK6bq70oAXeCc57iZcbsaD1LZPO8IpX6kICjrrXaChOlQyJjFzobl4/G4tEwbnVZNENHT5U7Bjcpvs/qPzjTShDFgCY24m9AK1H/S7tSknYJElczJfrsLil2bcQURwq3ZrKAN4j9shM12U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LfMl7mV0; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LfMl7mV0"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2969da3e5a7so525602a91.3
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 01:03:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707123818; x=1707728618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mp3IqjV4mL2aPdf1tPNFMiYIaoCwoYk+bStjGqy3K98=;
+        b=LfMl7mV05OXLy6hdSSBGa9rHKUK/jsAX8o5IfHQCl1mdEtKDbm6Z5T3jVVJghz5dbJ
+         +CriSBVvWW32W3arj2BnUeMTs5jBSS45N9M5oad/bOrG3V3jMe2EGbbc/Sdhz5f+XrEG
+         ShelNW7TGkjJMhuhvHxsxLqWJViCklR00nN6g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707123818; x=1707728618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mp3IqjV4mL2aPdf1tPNFMiYIaoCwoYk+bStjGqy3K98=;
+        b=RfrzdOCBr+/Z75ap7MYsQGweNo2JWJGst2MPRJxAHhBDIMWJvAA+bLEIdDyinmAfKn
+         hjAhDCQoKYnnjjlltktR+75es7bCu2Mpjot/dmADUuZKs8M+nU+VojHvd72pwZ+YRYcr
+         uQCrfJeCS3L7VgyQ+EGh9QnI4kahK2lp1AR78I97ZmphPdk3v/MYTGKKOwkdi862ZI8O
+         walC8IKDw8ruqVKq9kQD3TqcIdaXC6ftKWvwrPIgCyeOxwkhUJIatPgBTGGDI0A5RD0C
+         StjLzelgy/hhtlKeCxtWvcip+NvuArYUXSd+O2tZfRp3uY/PSAJ4Csn+2XUp9CaWcmbP
+         T9ew==
+X-Gm-Message-State: AOJu0YzzZ1d9vJLeWGjIJKROnyP2ioVO1kBnsGoI0wsJAbixHQfCKqOE
+	2ZH50y2qcTT68TWWcoGcwpYZTpgD+miPk9zt0P8WYFuTWdFV1laDul5qwDU7AQ==
+X-Google-Smtp-Source: AGHT+IFOv5sPhrdJJ3lg+vSR7bYP8rOWkFv6Ser6cZ9b6tmfqhaP5SyA0Q3Ijd/MMfpoJ5FObzPGTA==
+X-Received: by 2002:a17:90a:b396:b0:293:ed23:c2da with SMTP id e22-20020a17090ab39600b00293ed23c2damr11932866pjr.31.1707123818477;
+        Mon, 05 Feb 2024 01:03:38 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUq9BeWx1VsVS673oyYEwknMfep8C7cQ3JgH5JRfz2kue0NgAm6Ezy6xS+aPAzwHzBIfOvYupY+YZG4TU2fH6u0kOMtkwYhn9OUb6R2IcCXs1FgVW9F19ZiEZSpXoGqfFGjFt5Sja07XbhobA27GwasIa2kjhZhlHl2zDKLANllLbPrqbpQV5haY2lwjL0G2SksHjrUBDFrJRgj6l/2vDrVEHDXd0HN6G1rMiAbOQI=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c11-20020a17090a8d0b00b00296b50bb21asm145311pjo.27.2024.02.05.01.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 01:03:37 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] ubsan: Silence W=1 warnings in self-test
+Date: Mon,  5 Feb 2024 01:03:33 -0800
+Message-Id: <20240205090323.it.453-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1751; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=U0IaqYEgUxaoMI0fBY1yJtEGvGyAUmEfSrUJjZ33FhA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwKRliQJ3Zrj4Gq/zti8TCPet94FjB/Zy9OG7l
+ x66V+/rIbWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcCkZQAKCRCJcvTf3G3A
+ JjSgD/9lepgY25jHskT5SrVcPjJLGvkdPADYl6m4jH2xPgQDdn6CSFODj8EWE5GmvpcOVMJgwC6
+ 7jBV4u6voWcafB/4ANNf+bNgP+8EVId4RaGpxmP3NqGhVF4fstE6F2WdpdKdEfcVBoYKC4JrrxC
+ CyxsVPhvzOOxjiUVPi29gpOw+DJ8Lak4MTF4GGb6UO7RqcW7xvWY6nmekydhfZog2Gg52Orl65q
+ nrcUa0Gyn931e+soRLtInewzTR+nHwTrXHu6S/mQtqGh3+L5qxEPzjs/02+LBNSxH1Jm9cj2jWF
+ xElVm8Bg4JY4jmMqErpWNhde0lL2VnZmEEk5kUp3qhEoXknvT+j+36gihOlLS2kz6PAoFX9Ejoc
+ Ry1EFw5tQnArOVi+P4I2ykYbm6warowICK7N1POFwG0h4liJcjYdt/PuHZE6GRrqZlvabZIk3l5
+ XxcDJZ4vRdIMs4+HyrMI9ucsvgqER2zSpjFrrowoHX+Uum2zrlLTeKDNfs6b+5gyn2WFx4Rudt4
+ D9GvS1zUOt69boYoUR3nKDQBzlxFon520tI+qJgPQP13AYafZyVTAq4T6Cndf1lh/v79wZlG2NI
+ jqpW/1XbdMw2wxFLNI5N5E/ybq5bUy9LGjrXv+I9ov+KKidB5mAc8ee0ulimvA6qOIRYZ2ujySl
+ 4U4UVfi GEUKzg2A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Li4uDQo+IElNTywgVU5JWCBBUEkgZGVzaWduIGhhcyBoaXN0b3JpY2FsbHkgbW9zdGx5IGJlZW4g
-InBsYXkgc3R1cGlkIGdhbWVzLA0KPiB3aW4gc3R1cGlkIHByaXplcyIsIHdoaWNoIGlzIGUuZzog
-d2h5IHRoaW5ncyBsaWtlIGNsb3NlKFNURE9VVF9GSUxFTk8pDQo+IHdvcmsuIElmIHlvdSBjbG9z
-ZSBzdGRvdXQgKGFuZCBkb24ndCBkdXAvcmVvcGVuIHNvbWV0aGluZyB0byBzdGRvdXQpDQo+IGFu
-ZCBwcmludGYoKSwgdGhpbmdzIHdpbGwgYnJlYWssIGFuZCB5b3UgZ2V0IHRvIGtlZXAgYm90aCBw
-aWVjZXMuDQoNClRoYXQgaXMgcHJldHR5IG11Y2ggd2h5IGxpYnJhcmllcyBtdXN0IG5ldmVyIHVz
-ZSBwcmludGYoKS4NCihUcnkgdGVsbGluZyB0aGF0IHRvIHBlb3BsZSBhdCB3b3JrISkNCg0KSW4g
-dGhlIGRheXMgd2hlbiBwcm9jZXNzZXMgY291bGQgb25seSBoYXZlIDIwIGZpbGVzIG9wZW4NCml0
-IHdhcyBhIG11Y2ggYmlnZ2VyIHByb2JsZW0uDQpZb3UgY291bGRuJ3QgYWZmb3JkIHRvIG5vdCB1
-c2UgMCwgMSBhbmQgMi4NCkEgY2VydGFpbiBkYWVtb24gZW5kZWQgdXAgdXNpbmcgZmQgMSBhcyBh
-IHBpcGUgdG8gYW5vdGhlciBkYWVtb24uDQpTb21lb25lIGFjY2lkZW50YWxseSB1c2VkIHByaW50
-ZigpIGluc3RlYWQgb2YgZnByaW50ZigpIGZvciBhIHRyYWNlLg0KV2hlbiB0aGUgMTBrIHN0ZGlv
-IGJ1ZmZlciBmaWxsZWQgdGhlIHRleHQgZ290IHdyaXR0ZW4gdG8gdGhlIHBpcGUuDQpUaGUgZXhw
-ZWN0ZWQgZml4ZWQgc2l6ZSBtZXNzYWdlIGhhZCBhIDMyYml0ICd0cmFpbGVyJyBzaXplLg0KQWx0
-aG91Z2ggbm8gZGVmaW5lZCBtZXNzYWdlcyBzdXBwb3J0ZWQgdHJhaWxlcnMgdGhlIHNlY29uZCBk
-YWVtb24NCnN5bmNocm9ub3VzbHkgZGlzY2FyZGVkIHRoZSB0cmFpbGVyIC0gd2l0aCB0aGUgZXhw
-ZWN0ZWQgc2lkZSBlZmZlY3QuDQoNCldhc24ndCBteSBidWcsIGFuZCBzb21lb25lIGVsc2UgZm91
-bmQgaXQsIGJ1dCBJJ2QgcmVhZCB0aGUgYnJva2VuDQpjb2RlIGEgZmV3IHRpbWVzIHdpdGhvdXQg
-c2VlaW5nIHRoZSBmdWJhci4NCg0KVHJvdWJsZSBpcyBpdCBhbGwgd29ya2VkIGZvciBxdWl0ZSBh
-IGxvbmcgdGltZS4uLg0KDQoJRGF2aWQNCiANCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
-aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
-DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Silence a handful of W=1 warnings in the UBSan selftest, which set
+variables without using them. For example:
+
+   lib/test_ubsan.c:101:6: warning: variable 'val1' set but not used [-Wunused-but-set-variable]
+     101 |         int val1 = 10;
+         |             ^
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401310423.XpCIk6KO-lkp@intel.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2:
+ - add additional "volatile" annotations for potential future proofing (marco)
+v1: https://lore.kernel.org/all/20240202094550.work.205-kees@kernel.org/
+---
+ lib/Makefile     | 1 +
+ lib/test_ubsan.c | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/lib/Makefile b/lib/Makefile
+index 6b09731d8e61..bc36a5c167db 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -69,6 +69,7 @@ obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
+ obj-$(CONFIG_TEST_IDA) += test_ida.o
+ obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
+ CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
++CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
+ UBSAN_SANITIZE_test_ubsan.o := y
+ obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
+ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
+index 2062be1f2e80..f4ee2484d4b5 100644
+--- a/lib/test_ubsan.c
++++ b/lib/test_ubsan.c
+@@ -23,8 +23,8 @@ static void test_ubsan_divrem_overflow(void)
+ static void test_ubsan_shift_out_of_bounds(void)
+ {
+ 	volatile int neg = -1, wrap = 4;
+-	int val1 = 10;
+-	int val2 = INT_MAX;
++	volatile int val1 = 10;
++	volatile int val2 = INT_MAX;
+ 
+ 	UBSAN_TEST(CONFIG_UBSAN_SHIFT, "negative exponent");
+ 	val1 <<= neg;
+-- 
+2.34.1
 
