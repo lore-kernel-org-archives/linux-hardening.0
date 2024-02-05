@@ -1,128 +1,89 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DE3210F0;
-	Mon,  5 Feb 2024 12:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EB22374C
+	for <linux-hardening@vger.kernel.org>; Mon,  5 Feb 2024 12:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137645; cv=none; b=o7uP3Q2BNloiL2YzMKq6tjhBh2WGVZVlJ75PuwTt2PEgKAG8HbzLvG3zgBKHyA5vhQvGxTRFEb34VjbWUAK1Qr3uDbFx/pK6IY4y/XZ8wDikqi8LzM7bEmAb8RiHIRY8s5yBgb07T4+BxvJYCovUMXALXcDegSAgtt2p2VkZo2U=
+	t=1707137704; cv=none; b=Jv1XeJSZU1H71VSBqWHGq+6CKjw0ggWT3uqlBeuWnlEgQfVEtY6YEkTtTnxRvad26cV2nxfkx+yezG92lOagO/ncM0y8LghEgzxRMuUqynk6ZxdDrsCWQ6iQnDEION0iNV6n+5yppt6p35SqyPc+hVAodEb9z1H0uvHMIagOwuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137645; c=relaxed/simple;
-	bh=VCKvwMzG7w42NeF0InbR1amJ2floGRc0HxWfyTRcevU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=brjOQnpkMkKMcXh5OWYjkoVrRZNUC9P2y3/9OtRLHa+ABo0KEfs5f6lUWF9WWFdTiy9os/9Y1oq2C/4LVS4ZQoKNAYrY/z6UEEUaLKw9BKSADPH4E+t8n5CwDJKT/6UYJydXJmQvJJtBtrlati8yB4by1L+w2qIjy73dyLLlXVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8SAX0s5; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707137704; c=relaxed/simple;
+	bh=NtkIUt/NPExzmQ+Wgm/bq1k0NjISHJOHOb1px1CosPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlqOs7v9PrlhvC+WsmoQ7KC/TEZ8S/8GsykkdmGBglVFL+i3DXNS4hq5Hb8wmCayXXiMueUn0abQaqsr39KEdPlXolHghSS8G056lVbtp8XAQrykfCuf+B9rFt2XRLNDCvyM3VnKL49lPYoUukPN2GBqKLXzofkGWtVb1G1n/Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bB0+0/ky; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8SAX0s5"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5100cb238bcso7872468e87.3;
-        Mon, 05 Feb 2024 04:54:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bB0+0/ky"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d74045c463so33631235ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Feb 2024 04:55:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707137641; x=1707742441; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=14UfJITL0dkLd5SyibepbNnNaR97wsfScRKTGspT4eo=;
-        b=e8SAX0s53j/m7sVON/iz50DSQtTdlh0TFb/r4sw0LwGCQ+vApnSTh9U2lWGm6G6fi4
-         pceIZ7vmtySQEBbBPeCBPNHVUZWXJQeTXaKfsU/l761J6I2Vwg6735NMtOq1aEJJjzSh
-         wwB1hx8RnNDT40rg3foHmeOKqByYlYZyttlG2Z9QBQGjTBFJ02/WO2Oj9wnISaYh1fbR
-         eLwaUPncBSJbmYrP4zvyNbs+fFcrz22XUHTKCKQRwxRB9WCJqbRR57mEMixm/4laQQlS
-         FZlynuSQkkn9D3FFzYguTXUbfVKLckrmf84J3Uf6uO8zKqjDooVQ6/PZkCvYOZ8TCmD3
-         nW6A==
+        d=chromium.org; s=google; t=1707137703; x=1707742503; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9eqj6VUl3ElBcX9JFZIdAfEkD+ItQaBMHqyrnfhAesA=;
+        b=bB0+0/ky4JHuXyGYYSy5vXUmfaB7bItK39IhrUORN9M5UPfLNJSZe8fWe6yPOe+9tN
+         unDKDfDSKmUMBERlzsHNrDrrWvOQ5X5kIoF4LswI9BEKWio5YyZbGlsHjnJyXpsc20g1
+         ouDfzYSGFbxV1GvH4Fu9s3ewzMXQNHxrHXHgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707137641; x=1707742441;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=14UfJITL0dkLd5SyibepbNnNaR97wsfScRKTGspT4eo=;
-        b=ok3ZdvV2yElwjjgejRgABQcK69KRhTO+DzpL+ndFhc4aN1IfQEV5wjwtE5PYvx0jqG
-         cYYnmNqwqloJB5dG5DEhxwF7jLYofFWOw9tj9bezAbetLp4KyZI4MIg+GLEvbLk3hw39
-         6azipR2AEuuf3nLY2kwe8gqFNh71/HHMLRguPcmESCsFL71l9Y9m/qX4hV+WncUmX2B1
-         uI04dj7ULRB5+LhPlqE7tljBA9VAnvuzaWIhHJdzGRA+lZtZEVWQ9nKOU9ojksGNYYJY
-         bNrSSCADVLJQR2EgvLUp3Q9/jgJgfnQZcSY0yF0/1BX1iHQX1F15AmCZNzZxYcSQVf3q
-         sMzw==
-X-Gm-Message-State: AOJu0Yx/QvjbfAKSsWhHP5Ov2Z/o16Kp1O9+uYaShTbJz0/3ZjNR5adx
-	8kaJqg8TR/UyHnQL4OkVN+mHFkAlhiFxnG5/v74Y7vO6eTeyqtps
-X-Google-Smtp-Source: AGHT+IEstjd+gZA5Cwb9QE2UQ/KG2Wg84chLizfiWugJ6uIGX8oINJ/rvF1ahqw65PMnNrUF6dU2xQ==
-X-Received: by 2002:ac2:4837:0:b0:511:53c6:2d with SMTP id 23-20020ac24837000000b0051153c6002dmr820067lft.46.1707137640551;
-        Mon, 05 Feb 2024 04:54:00 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVUOahf5fd4pgIFmBCGkSP9TbLXOsKXAPzRLRivxXn//rhvweVuzFaDJ69xc7kbw+FUKoSpgmwG4aaUPFlpq7i/w2y3x5XHlAXboKgAe+bCWEuoT1B07kP0HmIZyjQzxaiZsSqdGUHspZlgw/Li0Fwn3HjboC60MEQ6wersRVUa8UlLZbTMP3U820JjCd+Q6+koSANQ3XceUCzFMYnhYbe5KLNRf9tyCUykZal6B0K3E20u+Ii5nWPoeB4Wuf0zIIX7krLC/sokKHCDUz/tChepB5C0U3TssT2luDxlm8lSQRDx2R43noYFIvhibezzRs8F3i235b4cJjKwRr0A6YB2F1Xh1bBOLR88ajJEbiZEJx7kyila69E1SoVMBAg4I251at2/KBtLkRjifszg7gnX8PssSnDKlelEvq+WseDxs3Kbgijx3E58G/TKsogl4DR6p2e16zhQK4FN80ZdpWPnsUQmRZL9RWMOm6QY4ASIbA8J4LvAuEyJTPnAWbws3yY2Az35zeUq8TsurKhu+BbiNeIV2h689CmWyRPVPG0=
-Received: from ?IPV6:2a02:6b8:83:1506:8b8c:af7e:d3ba:a153? ([2a02:6b8:83:1506:8b8c:af7e:d3ba:a153])
-        by smtp.gmail.com with ESMTPSA id i11-20020a056512318b00b00511525b9d57sm230097lfe.43.2024.02.05.04.53.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 04:54:00 -0800 (PST)
-Message-ID: <67a842ad-b900-4c63-afcb-63455934f727@gmail.com>
-Date: Mon, 5 Feb 2024 13:54:24 +0100
+        d=1e100.net; s=20230601; t=1707137703; x=1707742503;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9eqj6VUl3ElBcX9JFZIdAfEkD+ItQaBMHqyrnfhAesA=;
+        b=KGAIr6WsHF0kJF7iJFySIjnC0GWcXjICRPhpCHFxgByE1VyWdLsWZMbPyk7T4PiBL9
+         LA4Iz9wZ8k5lWFtteHF/HzP45CvXtDdeppTQTCOQ8nB8eQnNNrw0du8vn/XTPYDEvZco
+         3QRzixi/uN3ExQXsvtRetufp4W7JsJ/tFGnnvHKT3R4XIo0MtJ1BOJNgfAshHfSxlvFt
+         i/DsJDsr+vGzjBilUqT6387mpCGA1fmYnYM8veaDytSwc06xzDCq8LrAHgtYTDT5Ons4
+         5yEfUQLGVsBpIYVFEVu/EhdEuDAugDRzMuEyXK3TXZXP+2nk9VINatYr9Y8FgyRpj8ke
+         h4Aw==
+X-Gm-Message-State: AOJu0Yyj433wWHtqdfLq32eBw4QfYp8bn9nDgRlEPNyx5l2t5IbYtxlO
+	Ib3Y8wY3IY0aPiVWlb1WkzzwaR0WOFLdupOGyHFnR19lVFKGwxGMavu8Dn7lsg==
+X-Google-Smtp-Source: AGHT+IHyEglIjeQqir7zX7bqgdlVQTPfRLYGhj2TDOlxCrJpuSazsofGogVJ+1ntp+fMcQJK4wHRDA==
+X-Received: by 2002:a17:903:5c8:b0:1d9:119e:af45 with SMTP id kf8-20020a17090305c800b001d9119eaf45mr7936692plb.41.1707137702940;
+        Mon, 05 Feb 2024 04:55:02 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVvdRXb6IOojIEym9pwkxXlecm3xXPYtnEqiRGrRaTf3kIs2Z5KJraNbE/dJM891G3HSSeoAyl6cHepw9FKKFNe6zWRkBmJaPg4EPsrA297HHgCLk422SqAzhzcLyci1XD1IVJCDaf7u90yPFwGNklRZ9Xzkhxdf5euNB5RlG3QMNih/A==
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id o11-20020a170903008b00b001d94c01ae96sm6284354pld.66.2024.02.05.04.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Feb 2024 04:55:02 -0800 (PST)
+Date: Mon, 5 Feb 2024 04:55:01 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add UBSAN section
+Message-ID: <202402050454.AD5C144E@keescook>
+References: <20240130234634.work.003-kees@kernel.org>
+ <202402020154.0266109CBF@keescook>
+ <95711933-415e-4a49-a55b-8477a990a0e7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
-To: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
-Cc: Marco Elver <elver@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <20240205093725.make.582-kees@kernel.org>
-Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <20240205093725.make.582-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95711933-415e-4a49-a55b-8477a990a0e7@gmail.com>
 
-
-
-On 2/5/24 10:37, Kees Cook wrote:
-
-> ---
->  include/linux/compiler_types.h |  9 ++++-
->  lib/Kconfig.ubsan              | 14 +++++++
->  lib/test_ubsan.c               | 37 ++++++++++++++++++
->  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
->  lib/ubsan.h                    |  4 ++
->  scripts/Makefile.lib           |  3 ++
->  scripts/Makefile.ubsan         |  3 ++
->  7 files changed, 137 insertions(+), 1 deletion(-)
+On Mon, Feb 05, 2024 at 01:54:08PM +0100, Andrey Ryabinin wrote:
 > 
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 6f1ca49306d2..ee9d272008a5 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -282,11 +282,18 @@ struct ftrace_likely_data {
->  #define __no_sanitize_or_inline __always_inline
->  #endif
->  
-> +/* Do not trap wrapping arithmetic within an annotated function. */
-> +#ifdef CONFIG_UBSAN_SIGNED_WRAP
-> +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
-> +#else
-> +# define __signed_wrap
-> +#endif
-> +
->  /* Section for code which can't be instrumented at all */
->  #define __noinstr_section(section)					\
->  	noinline notrace __attribute((__section__(section)))		\
->  	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
-> -	__no_sanitize_memory
-> +	__no_sanitize_memory __signed_wrap
->  
+> 
+> On 2/2/24 10:55, Kees Cook wrote:
+> > On Tue, Jan 30, 2024 at 03:46:38PM -0800, Kees Cook wrote:
+> >> The kernel hardening efforts have continued to depend more and more
+> >> heavily on UBSAN, so make an actual MAINTAINERS entry for it.
+> >>
+> >> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> >
+> > I don't see Andrey on lkml in almost a year, so I'll drop the entry for
+> > now. Andrey, if you want to be added, just say the word! :)
+> 
+> I occasionally read that stuff, so I'd appreciate if you'd kept me in ;)
 
-Given this disables all kinds of code instrumentations,
-shouldn't we just add __no_sanitize_undefined here?
+You got it! :) I appreciate having more eyes on it. I'll add you back.
 
-I suspect that ubsan's instrumentation usually doesn't cause problems
-because it calls __ubsan_* functions with all heavy stuff (printk, locks etc)
-only if code has an UB. So the answer to the question above depends on
-whether we want to ignore UBs in "noinstr" code or to get some weird side effect,
-possibly without proper UBSAN report in dmesg.
-
+-- 
+Kees Cook
