@@ -1,175 +1,156 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2074.outbound.protection.outlook.com [40.107.241.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEE012BEB6;
-	Tue,  6 Feb 2024 08:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707208958; cv=fail; b=efQgR+zRBtGMY7L20ZY1gHxfwTc77ZLAON9FESW0oaKRXlIfWG9c5mRAFvLGX2TwS1gGbY4BvNVkNP593U8rrN+pl4MUwUSiMad79nEl4l7rPzOvK3xu4LekYFVk3d3c9CdfgJVEE55Pj4zerIGOHf064l+RpMkKRjUKRFe4soA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707208958; c=relaxed/simple;
-	bh=EqWvdiMRZ7ljqQ1exOF4MyAedqXHMzEbmF7vev9qw9E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MuzC9d4erBbamv/oduxOjv/QpUuF8vW6ALu5BiiAbO//YXQ6sP5AHs5Sr9ATsqXhYAwIv57sqrnLbiiTbtQ1YTBTcNKWbRD/eeaHjnwXDQy5h+bbLI5AVs/oBG4okS1x6kaG9l4tusdo+I3iqQlxkSG0YmthAW1xkLMPjBkYpnM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=asKSGC0Z; arc=fail smtp.client-ip=40.107.241.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEAF12D74D
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 09:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707213415; cv=none; b=TW8j6dATUEKaa716jPhxWzsmYo9epU1r5LvvtEJ5p2BOfDqtN2MoLEbu6s0QXo/LJrAi6aOxrOkbTXH2ctgBJSO0yozfeHGxBWwBS4rGTXWYa5ZSqY9FE69nsELxIxoXQL1B5NiLk3ZeVi9Ob8d59IeC9hT1lHjP4UP+arxa07Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707213415; c=relaxed/simple;
+	bh=gFwQT9q2MQDOLZo3TSNZibKCNFI0OYg5lS2v/Yij/5o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fsmUSH8Zcf+E+A+HJlbr/6Z5O22CVS3uqkp6peZCxlZAuirVCypvFiTr6IuzXA+CX3yVm25D9DhoXEp2qwmy/KQeijDmj0ysqj2r2dsZT+dC8M1pUsbnYaYooVMTIq7Dn76hNAt7aroapTXGE+fMg4aiB33Rl1nub61LZm1MdYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f34EUJS7; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="asKSGC0Z"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D2/Wm9gMg/tnVme2Rv4DPcYQ164QQYhg43zrkC+eA29C86IDzB/rB04M4lxvUqpSija/wZHERmi7QrPIaE7BlyjZWF/eBt3F6KPaY9uKaxh8PLqY2GSEagaeMPMtWCUgvJnnb02hsd4/HKTLZ8UI2w7g73SqoQxvFpEJa0PL3fJMwjemNlcpdMVoi1qUmMDfKucfC2MmY5ubW+2JFwpeER4VTiojWXuJTAOGXOrD/P8fZDZFsdZLyplNorACxVYrucE6zPXPPXzxSsIQxHvswrP+9Ghxm7O/qcGGsPXZadUCD+8SLF6pytIOGDojlbfWHx8KVF0yOl4BONAo+0rUtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EGPjGqp6FMwvgVibuvaJTE7X1rRkUrnQ2mtfS2dQRLI=;
- b=a8+jsH7ZYo/0F00LYHup1wXIM8M5y/QOXOXNdL9bF/lX70A6uSEh49eXm8YbqsUoN+bJZVjVShnXmQaEczUUyFa05sb59Hy6LO+8LxF0cb1QhArwwHjL0Cbpu0myVS9T+htkzYvj/Hf3FB3zkIlS+mVU1U+Vy5uiyjLJEac86ppl8bTRlk9hREYLR8+6Rg27nFSk9t3n+Hdme9FOAXrt3Qz3yKu6TB/C+rUin4qVcpomM81Ps5h4cV2LEpcePhIhu5svEagIeWIvDrTr3AC3J8H+gNIMd1XjmourcjxNiLqcd9Mdbf9+EEMgPVdHZW9LTdiMBuyLHQ7gntUd6sVjBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EGPjGqp6FMwvgVibuvaJTE7X1rRkUrnQ2mtfS2dQRLI=;
- b=asKSGC0ZJtK/X+U/v/Zyl+qn6nHbLw6USvphuExSAMtiKQSfH7fkS/5doMiAZcCjVX8LoF1o6arKppr6vu5ifqWoDkpRQFRVE5FTd3KnveuZ4mw6QC2gN54YUJWh/OH9JRkepkAQAmQCZZ0dpZfifjy5w4g/DSzpmtpY2jf5gZM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prevas.dk;
-Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:45a::14)
- by DB9PR10MB6668.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:3d0::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Tue, 6 Feb
- 2024 08:42:29 +0000
-Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::f059:23ad:b039:15de]) by DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::f059:23ad:b039:15de%7]) with mapi id 15.20.7249.035; Tue, 6 Feb 2024
- 08:42:29 +0000
-Message-ID: <1ee4bd0f-2a70-4696-bad3-782b5c0887f7@prevas.dk>
-Date: Tue, 6 Feb 2024 09:42:26 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and
- mul_wrap()
-Content-Language: en-US, da
-To: Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Marco Elver
- <elver@google.com>, linux-kernel@vger.kernel.org
-References: <20240205090854.make.507-kees@kernel.org>
- <20240205091233.1357377-2-keescook@chromium.org>
- <20240205202145.GB2220@sol.localdomain> <202402051443.A813E4D@keescook>
- <20240205231712.GC2220@sol.localdomain>
- <51025C22-0FEF-4047-BC36-EA7ED7A3BD62@kernel.org>
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-In-Reply-To: <51025C22-0FEF-4047-BC36-EA7ED7A3BD62@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P250CA0015.EURP250.PROD.OUTLOOK.COM
- (2603:10a6:20b:5df::14) To DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:45a::14)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f34EUJS7"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d8aadc624dso40471645ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 01:56:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707213413; x=1707818213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YvtejigsA6lvJftTJlUnU81wJFgRlPFcDxMvj4jJa74=;
+        b=f34EUJS7pq9JB9Iq765rxANwGO2iY+6kBVrCtx5b+JeiCZJI2tS4++CcyEJRrjm9pJ
+         Zukik37Sc6QeteFfd9fdViXQjXdIcguZkN0p6UbaQgQ0Vfm7aBUrhoc3HyX3EzyruySH
+         vDMqKuVeBMQSwI8hac4pK7CMJcfljIZPWLhaQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707213413; x=1707818213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YvtejigsA6lvJftTJlUnU81wJFgRlPFcDxMvj4jJa74=;
+        b=fpskvfk15JPQRglQbUBBpCGUuio/A/BlsMRgHmA2G0EGp+KyQ5/KvPOwUEM92s1joe
+         L1xz/oZrqDbKO41+dDPfLc827RqmJBOs7KX4TPARbery+OvFmsx1LsMB9wER+k6lrPcY
+         P7AH9VOvamTdkIuEdA4PGlnuhUtPt3+hQwQ5+0C4D13sYPbZAuIzSi0piWwrwfnVdG4k
+         aN+hSj2Xb/McVnP8ShvSKY9Za6HpF1ccVHvJFs+iG03H03T4LKF8aUFAAmqEr6NE4iN3
+         EopZBd/Ul4vmIEUbLJEy4yWtq41jCbhqAy1RPXfKcKrjYyj4brVJzTgdrN0UP9UY4xZX
+         RXNQ==
+X-Gm-Message-State: AOJu0YzksbDUn5tXY7uuf9MITPqENkSqZ4cbC390ZYocSLQCJjw5tWDd
+	jACunE5RfHRtAcUonziq+xPLZohFb5T+UiNTXmcSN8abF5zWWYsORGnv3QCcIQ==
+X-Google-Smtp-Source: AGHT+IEoS/Kl4hf4JsN5prm6mSrUJ2HBa0Fmc9/TJ19QJ5pdSUTD1wSZuuqJ9x9OlMDqrSJRoUYDeg==
+X-Received: by 2002:a17:903:2304:b0:1d8:f394:da39 with SMTP id d4-20020a170903230400b001d8f394da39mr1326364plh.65.1707213413601;
+        Tue, 06 Feb 2024 01:56:53 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW4XJapeWoVq693/JjVCP6x9T70VxgvoAa9DEw2WL3YUgGW4WylfVi6E9yCu/nZNSoV8n43/+0umk95KhnOt/x3SF1igjAd/G1ohmsrXg287GxUeFSUugHodmJNjmQjtCelCvT+SwNKnAj5DX82/i78b1orLqkyP3dJCq1XPf08nSCspRRCe1fG9nVRcnzcUCt7gLD7nY45bAP8OYcLPS731zpVcdW9njc8SUc5Q3THJUHoEfAWbo6jLbrCg8XZOPeqDU2e63BMRaVG8g3I/p3Lurfv0TjvBccwKmDzuvE=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id iy15-20020a170903130f00b001c407fac227sm1456525plb.41.2024.02.06.01.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 01:56:53 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] selftests/seccomp: Pin benchmark to single CPU
+Date: Tue,  6 Feb 2024 01:56:47 -0800
+Message-Id: <20240206095642.work.502-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR10MB7100:EE_|DB9PR10MB6668:EE_
-X-MS-Office365-Filtering-Correlation-Id: c18da68a-9205-4ea2-7a53-08dc26ef8d52
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	FQY4LcMBzE27fI9ECNM8q9+W6ekRy92okZ21BnUSSuTv3PZaTgr42xnZtre5Ip/NwTXX+E0SVha7YdIXHPdDaM8/OFvTfZIxwOWvXoqxFTB1I1gEtWeiwmtwzuQI5Y585D15gQhNMetFrp4gern/roLGxuFF4J+k8Srq08vIsKDLSiOmoDO1878+1+zybJvluFBCt4vLPpS/5Did33OyUEGlt9Wt+E4frwveq0fFXu2o2B8RDxf65bBLJwjReusEFO/ZOo4C2PEquYsN0LAOGEmTn2aeULnEHb8IC7g7TVQv5zzJqgFYpo4O8p9IKItyotw2g7IQJvV53tlzyLHQ52gKw7ootm9IoCSq+Ban3shHp+/sOcFj2yDwj5UI+zqaARZ9Ekz5PGnyD6T6h9+GEJOiWiTN9e9+xTEOpozsEv4K/lRMzrPdIRfzvVB7ew0zbaF+5Y3EiJ3tDTsdyTdlHdLZXdaUp+HAFBB8opOb1OFb37vQc8kz842GBplQEJkmO2yH1FYHYPe7hZPiNjbuOulRggbBeHQT2oaqXlX/6IEX0T7q/qVVin4XeVcLNOdipl8p3NmFtOCSC4Q2gufz5Wr650+ab5PSgly+HTcIOHLxnr8MYRT4kgfo+si+m8p4jEZYBt1QpRbgPjXDoysbhg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(366004)(396003)(39850400004)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(5660300002)(44832011)(2906002)(31686004)(41300700001)(83380400001)(38100700002)(31696002)(26005)(2616005)(86362001)(6506007)(6512007)(66476007)(54906003)(6666004)(478600001)(6486002)(66556008)(66946007)(110136005)(36756003)(4326008)(8976002)(8676002)(8936002)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y3cyWk9SdkZMOEdYOXp0cHVKbVFTeFBpcW9qSUNRTDIrNGZkUDd4b2NSQjU3?=
- =?utf-8?B?RzZwTzA4OFBuUDI3M2dPa0ZDV2l3ejUvKzRpZjNGbGRTRGlRSEFpSDJCckxT?=
- =?utf-8?B?Nk5ocmZONkgwSjhwWjJGZ0dEd0x2aThaMHVLZDBQZlYxUlZaY3RpYXNIWjBy?=
- =?utf-8?B?ZXBIMlMwQ2FRTUZQV01XMmQ5UDNEd1owc1FKUkI0blJ6SWNzZWNPcWdqU2lI?=
- =?utf-8?B?bVUwOTNGazZqcUUxYUZ3Z1hpV01UWjNCc1pRZnA3OCtSMU95SE11V08xSVpH?=
- =?utf-8?B?dkY2VWZzZDEzdERIL3pLY1ljZ2E3SkxjbUVtL2tPSzlESHUzcTBjTEsvdHpx?=
- =?utf-8?B?aU5UNHFpY3NOV0c4NXJQZC9nK0Z2aUJ6clkxMi9IYms4Q1YxRStlZzRzMzJC?=
- =?utf-8?B?V1ovU05lYlBZMTZXRjlnbGxWaTk0S1RvQlVTNnlDWDVaS244R01Lcjh1R2xq?=
- =?utf-8?B?anU3ZklheTUraHQwOXN0SUR0R2toWG5GWEExRXVUUVVWSkVEZ0VzRmVnNmM0?=
- =?utf-8?B?ODlCMGlkS3ZLemJZRzRFbFdYSG1wTlA5UHB3UTBva1o2SHZkUzFVUjZabjhR?=
- =?utf-8?B?QVRiczhrWlRjZTJEUXh4bThEcUxhTzRHM080eTlBU0dCYnRuaXVLcVJWTWRz?=
- =?utf-8?B?UytpSXYybDlEWitORU45NHlhVytRaDU2Kzg5cTdDcWdEa0hCMnFOdDhtK01x?=
- =?utf-8?B?MExpS3J3eWkzYnBrOTdrWkRMYXRIbHlJRXZTbUI1VmtTWEIwSHhIWVRhV0Nj?=
- =?utf-8?B?Wi9sZFhvYUlEV2xrSk5nNkJjOHRKcEwyOTlQNVJEKzVHWjNwb2xpUWY3WEtm?=
- =?utf-8?B?ZUxSZVR4cHY2Q1BpYUtzZG03bitMaldscDNvVEtFMjJJMmIwNHM2MGJiOHYv?=
- =?utf-8?B?aE1KbWtqM1gwT0lyVzJlcWFHR3U4a1huVWh2ajZXQTNrdGgzMDlld3hSTnVy?=
- =?utf-8?B?OHB6QVJuTXZZUEdjeXB6QnczcEtza2g0RzZ3cjdqZnFmWHd0Nm5zamdsTmJw?=
- =?utf-8?B?UlVTRHdwa21xUjk0WFRpdVlvaHhCZDBtaUVHQkR5UFNnZHpRYlRRbldtRFYv?=
- =?utf-8?B?ZDdWNjZwT3VHNy9HRTRKbE1xY2wvTmg5U3FnNk95L3dPalU5Nk5WSUxkcHlT?=
- =?utf-8?B?dkVaM08xMTZyQzNMMG50Q2Z2QThGbWVsSStkWDFjOVZwM3d1V0YySmNSQUpO?=
- =?utf-8?B?NERwcVVpZmwxK0VvaXlpTGtyQytXa3dzYVdjYytFMjFEcEdldmUwNmY4ckpm?=
- =?utf-8?B?Z1FwalpsYURlNTZabndmMmt3UVB0emR2Z2lKR0JtUHFZOVBLd3p3L0NXNmhC?=
- =?utf-8?B?eElYUFdzdWl3QTZEbkZUNXRJL2pUY0hzRldiOVdKSmUzTmM0S0kwT04vOEFW?=
- =?utf-8?B?U1lqRjNGSC9DMzhFMk1NNHNRQWZiZmw2YnNJTi96MFlYdFJoRlBBeTRtUFlj?=
- =?utf-8?B?djk2aFZIWi9TZ0o2c2UzT2FTbjlxc05SdG9mMVdldC81blhkWkxRNVJJRjV4?=
- =?utf-8?B?aTNJeXFyUGovMVJsNlNYaHoxa0o4TWtnb1Azb1lYeEU5dVlZc3pLNGdwcDM2?=
- =?utf-8?B?NWt1Smg2YVlEbVJleTVpTG9BL2ozRFRvUmlzamtrSlFRREJwZTgzOEpOTU50?=
- =?utf-8?B?U2VXVjlKN0dJWTlRUGpxMlBKdE1KWjNtOEEzMHhRN1Arcy9tSDZhcGJ6TWFu?=
- =?utf-8?B?WEpaaVloUkg3dHZhdEcrbzRNUzdmMm5aQjNPQmdIdEwvWUhMZENybXQ3UmFZ?=
- =?utf-8?B?VkxIbjN4SG5vcnVpdDNDVkZNdVM3S2wxOUxFTng1T0JUUm5jZmF2OXRNOUhX?=
- =?utf-8?B?MktVTWRoN1FDaEhLYWxRQ1ArNW1wVXJGdWJwd0puVHlSSkQwM2VMcEhmTEdj?=
- =?utf-8?B?aXpRS3piWTNiNUp4aE1jZnAyZlFZRU43Vk5kWkp0Z2hYTkgySU5aUG83djVF?=
- =?utf-8?B?UEg5VUlFYkR2TjlKclNiSE82U1VoRDlta1NCeXJKcG8yZUZjVzViSGVIa3pC?=
- =?utf-8?B?dWlBZEVEMlIvZnliOCtwSXYrcE1qdC9NcjJGak1EMVlYR2c3a1hCT1FjTnBi?=
- =?utf-8?B?V0tyRzVzdTh4QjBhY3EvRFF0WE5WOGdDbENBYW5iSVcxVDVJZFI3dDBHZlBT?=
- =?utf-8?B?Nm5WYVdjajBsL0wzT0FGRVM0dEZPaVRKNWY0RSs4ZVhQcTlZdGFHNEkxMDd4?=
- =?utf-8?B?RFE9PQ==?=
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: c18da68a-9205-4ea2-7a53-08dc26ef8d52
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2024 08:42:29.0735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3FCxC9rDikHcH2u4qKFtLX+iEFk42ZwgojLXhPGaC1R3BV4jDqHwi5E8HrrrtlcqddCC7BGU5WXjjisQfowT6xiTcbDG/oR6P/EUtZkmnLI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB6668
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2238; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=gFwQT9q2MQDOLZo3TSNZibKCNFI0OYg5lS2v/Yij/5o=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwgJfCsxNqlw4QkCwa0uTjz9m+WERqUM1QnArU
+ Nk8peGOJtCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcICXwAKCRCJcvTf3G3A
+ JqyTD/9FjpTBzQ/U/pDNYWZkbNEqKOmTGswAI5nhxPwJETkBv2PFztRglzljETLPB6slHXo50Xq
+ aaLyg3Tx0jUQWvCNGmus+ZcUaZeUc9ERbP7FajXNyUdvtd4FvpLqXrb7YLGBIyJRTt0pUvwsp08
+ dCXkfBVP0NEg+OM1SXDxtM43MKV8KNktVyLCjDueRmNXPGfukDqLPleO02h/dRCuc6UsznNrz7W
+ eJN8zn12je2bB+26ikjlbccbihquSHNFLUnCJShgg3EvXM9ywmZsFLlMzb4Fl5COijs0xPYrBNm
+ FWh1ZbJ1xA0G9GAvwpDF+lUEOvluGYMWudXBwiY48XSPsLcLS1ZluT5L/+SPsljItEjPo6hqk0n
+ CrBxjLamMqteQUQX9pIft8jHROCFAcOg0qF0sgPUzePBdn9BDi+gYjb4r6w18iT24tp090XbdnL
+ zD5pCjM7IO/PmNZsEsgYHqW5lww/o7nBOiGje91P116WFA9RvghnOY+qJ3tBxnmm6stuujMgFa9
+ wBFLrpkHt8ll0GUr0Wqlh6zkFIAB2+1Y36Vby3hcpVshfevj+rPFBwAbc/4VmkOGaKchlnUZCoe
+ fiRUeabcdhzM4JXK4d0mJYyjz8qcKzKZG5vWpDOW9gHHQNh2rYZitp7MV2ksHepXPw8qRdCK0Wz
+ HJa76r6 9E8DwurA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 06/02/2024 00.21, Kees Cook wrote:
-> 
-> 
-> On February 5, 2024 11:17:12 PM GMT, Eric Biggers <ebiggers@kernel.org> wrote:
->> On Mon, Feb 05, 2024 at 02:44:14PM -0800, Kees Cook wrote:
->>> On Mon, Feb 05, 2024 at 12:21:45PM -0800, Eric Biggers wrote:
->>>> On Mon, Feb 05, 2024 at 01:12:30AM -0800, Kees Cook wrote:
->>>>> Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and mul_wrap()
->>>>
->>>> Maybe these should be called wrapping_add, wrapping_sub, and wrapping_mul?
->>>> Those names are more grammatically correct, and Rust chose those names too.
->>>
->>> Sure, that works for me. What bout the inc_wrap() and dec_wrap() names?
->>> I assume wrapping_inc() and wrapping_dec() ?
->>>
->>
->> Yes, though I'm not sure those should exist at all.  Maybe a += b should just
->> become a = wrapping_add(a, b), instead of wrapping_inc(a, b)?
->> wrapping_inc(a, b) isn't as self-explanatory.  Likewise for wrapping_dec.
-> 
-> It was to avoid repeating type information, as it would go from:
-> 
-> var_a += var_b;
-> 
-> to:
-> 
-> var_a = wrapping_add(typeof(var_a), var_a, var_b);
-> 
-> Which repeats "var_a" 3 times. :|
+The seccomp benchmark test (for validating the benefit of bitmaps) can
+be sensitive to scheduling speed, so pin the process to a single CPU,
+which appears to significantly improve reliability.
 
-Yeah, I think that's a reasonable rationale. I'm fine with the
-wrapping_* naming, and then the _inc and _dec helpers should follow.
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202402061002.3a8722fd-oliver.sang@intel.com
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Will Drewry <wad@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ .../selftests/seccomp/seccomp_benchmark.c     | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-However, I now wonder if those should really also return the new value.
-Yes, that corresponds to the value of the expression (a += b), but
-nobody would ever write c = (a += b) or otherwise make use of that
-value, and the naming doesn't immediately imply whether one should think
-of ++a or a++.
-
-Rasmus
+diff --git a/tools/testing/selftests/seccomp/seccomp_benchmark.c b/tools/testing/selftests/seccomp/seccomp_benchmark.c
+index 5b5c9d558dee..d0b733e708cc 100644
+--- a/tools/testing/selftests/seccomp/seccomp_benchmark.c
++++ b/tools/testing/selftests/seccomp/seccomp_benchmark.c
+@@ -4,7 +4,9 @@
+  */
+ #define _GNU_SOURCE
+ #include <assert.h>
++#include <err.h>
+ #include <limits.h>
++#include <sched.h>
+ #include <stdbool.h>
+ #include <stddef.h>
+ #include <stdio.h>
+@@ -119,6 +121,29 @@ long compare(const char *name_one, const char *name_eval, const char *name_two,
+ 	return good ? 0 : 1;
+ }
+ 
++/* Pin to a single CPU so the benchmark won't bounce around the system. */
++void affinity(void)
++{
++	long cpu;
++	ulong ncores = sysconf(_SC_NPROCESSORS_CONF);
++	cpu_set_t *setp = CPU_ALLOC(ncores);
++	ulong setsz = CPU_ALLOC_SIZE(ncores);
++
++	/* Set from highest CPU down. */
++	for (cpu = ncores - 1; cpu >= 0; cpu--) {
++		CPU_ZERO_S(setsz, setp);
++		CPU_SET_S(cpu, setsz, setp);
++		if (sched_setaffinity(getpid(), setsz, setp) == -1)
++			continue;
++		printf("Pinned to CPU %lu of %lu\n", cpu + 1, ncores);
++		goto out;
++	}
++	fprintf(stderr, "Could not set CPU affinity -- calibration may not work well");
++
++out:
++	CPU_FREE(setp);
++}
++
+ int main(int argc, char *argv[])
+ {
+ 	struct sock_filter bitmap_filter[] = {
+@@ -153,6 +178,8 @@ int main(int argc, char *argv[])
+ 	system("grep -H . /proc/sys/net/core/bpf_jit_enable");
+ 	system("grep -H . /proc/sys/net/core/bpf_jit_harden");
+ 
++	affinity();
++
+ 	if (argc > 1)
+ 		samples = strtoull(argv[1], NULL, 0);
+ 	else
+-- 
+2.34.1
 
