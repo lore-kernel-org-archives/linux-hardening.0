@@ -1,156 +1,125 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEAF12D74D
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 09:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DB312D17A
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 10:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213415; cv=none; b=TW8j6dATUEKaa716jPhxWzsmYo9epU1r5LvvtEJ5p2BOfDqtN2MoLEbu6s0QXo/LJrAi6aOxrOkbTXH2ctgBJSO0yozfeHGxBWwBS4rGTXWYa5ZSqY9FE69nsELxIxoXQL1B5NiLk3ZeVi9Ob8d59IeC9hT1lHjP4UP+arxa07Q=
+	t=1707213716; cv=none; b=a7BO9tap7T9sDsUV3eASNr9+1FkUVQaqr2qhgLX6d3q6N6nRB2c05WhHpG3Aer4rq9jHQo7sYpE7qKfCUiKWJLDrMZ6LVYouyeQ49/4HtBVNui/kMdcuLfaR6QE6z9c+UnoVXusi/34ScmT4ReT9D30/0QQJ60CSKKxqTs0epc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213415; c=relaxed/simple;
-	bh=gFwQT9q2MQDOLZo3TSNZibKCNFI0OYg5lS2v/Yij/5o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fsmUSH8Zcf+E+A+HJlbr/6Z5O22CVS3uqkp6peZCxlZAuirVCypvFiTr6IuzXA+CX3yVm25D9DhoXEp2qwmy/KQeijDmj0ysqj2r2dsZT+dC8M1pUsbnYaYooVMTIq7Dn76hNAt7aroapTXGE+fMg4aiB33Rl1nub61LZm1MdYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f34EUJS7; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1707213716; c=relaxed/simple;
+	bh=9vc9GRSK2R2a0IE6kgxEFThcWt1JUujvnbpMYfq17fM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5VyCkxdZM+woSn/G7+ylq86Eruexj9AVvGTvw1ZApf19zyznJDXQSnVgXnYTTuJVtdE3ASu4yee1bAUeuOsBVSDyyU6GiBRbkWmP/nJwNS3zJr5jRiQ6eA4CtuLd7H89AZRDGqjnigGvBDrfpgEm+DYNxM2HDBwNTyr8fECIlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h+vpCPLE; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f34EUJS7"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d8aadc624dso40471645ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 01:56:54 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h+vpCPLE"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d8aadc624dso40500775ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 02:01:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707213413; x=1707818213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YvtejigsA6lvJftTJlUnU81wJFgRlPFcDxMvj4jJa74=;
-        b=f34EUJS7pq9JB9Iq765rxANwGO2iY+6kBVrCtx5b+JeiCZJI2tS4++CcyEJRrjm9pJ
-         Zukik37Sc6QeteFfd9fdViXQjXdIcguZkN0p6UbaQgQ0Vfm7aBUrhoc3HyX3EzyruySH
-         vDMqKuVeBMQSwI8hac4pK7CMJcfljIZPWLhaQ=
+        d=chromium.org; s=google; t=1707213714; x=1707818514; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iRhR9jRmXYeiA/qDO4/bNmHTbH+UMMuSM6BsgYcIZAw=;
+        b=h+vpCPLEFoTPPUGp0XBHZnJLPQrk2L3yOFZukJQrwj5Ejhj42aqHzzUiwI7b+FoJGg
+         dTX4Z1JFWzcte+rwtYdOuB99tV6B6q95GICHU4NHDeT8j/YmwcdEo3gyAcsZjzwL32yL
+         NKPyBgQMyBfTvh36fFt/M5QNahPA7iAphs+HM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707213413; x=1707818213;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YvtejigsA6lvJftTJlUnU81wJFgRlPFcDxMvj4jJa74=;
-        b=fpskvfk15JPQRglQbUBBpCGUuio/A/BlsMRgHmA2G0EGp+KyQ5/KvPOwUEM92s1joe
-         L1xz/oZrqDbKO41+dDPfLc827RqmJBOs7KX4TPARbery+OvFmsx1LsMB9wER+k6lrPcY
-         P7AH9VOvamTdkIuEdA4PGlnuhUtPt3+hQwQ5+0C4D13sYPbZAuIzSi0piWwrwfnVdG4k
-         aN+hSj2Xb/McVnP8ShvSKY9Za6HpF1ccVHvJFs+iG03H03T4LKF8aUFAAmqEr6NE4iN3
-         EopZBd/Ul4vmIEUbLJEy4yWtq41jCbhqAy1RPXfKcKrjYyj4brVJzTgdrN0UP9UY4xZX
-         RXNQ==
-X-Gm-Message-State: AOJu0YzksbDUn5tXY7uuf9MITPqENkSqZ4cbC390ZYocSLQCJjw5tWDd
-	jACunE5RfHRtAcUonziq+xPLZohFb5T+UiNTXmcSN8abF5zWWYsORGnv3QCcIQ==
-X-Google-Smtp-Source: AGHT+IEoS/Kl4hf4JsN5prm6mSrUJ2HBa0Fmc9/TJ19QJ5pdSUTD1wSZuuqJ9x9OlMDqrSJRoUYDeg==
-X-Received: by 2002:a17:903:2304:b0:1d8:f394:da39 with SMTP id d4-20020a170903230400b001d8f394da39mr1326364plh.65.1707213413601;
-        Tue, 06 Feb 2024 01:56:53 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCW4XJapeWoVq693/JjVCP6x9T70VxgvoAa9DEw2WL3YUgGW4WylfVi6E9yCu/nZNSoV8n43/+0umk95KhnOt/x3SF1igjAd/G1ohmsrXg287GxUeFSUugHodmJNjmQjtCelCvT+SwNKnAj5DX82/i78b1orLqkyP3dJCq1XPf08nSCspRRCe1fG9nVRcnzcUCt7gLD7nY45bAP8OYcLPS731zpVcdW9njc8SUc5Q3THJUHoEfAWbo6jLbrCg8XZOPeqDU2e63BMRaVG8g3I/p3Lurfv0TjvBccwKmDzuvE=
+        d=1e100.net; s=20230601; t=1707213714; x=1707818514;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iRhR9jRmXYeiA/qDO4/bNmHTbH+UMMuSM6BsgYcIZAw=;
+        b=o5FcjRzaUIQP9h4obfi1+FTLTyzOOJLu5c2pOaYBlr+KBSYFlvMsDqke6a/5gEpBrF
+         rz/aXiufrGlJnBiv/JIsVQiQvU2ESLsYegFNaWsEE1kS51cQglA1vTtdTO4P/yGyxaeS
+         F2RJSCQGoLq6IAvB8YRo7vdQkpsqjcgZqrQ1v+OFHHznmcydPAgP2xycALa8u9AbBAIQ
+         g4GpsLWkgwnudm47MaAyh9tvJf1tzK4ITxzi+Lk9crIwlmI3pb4HLWopdknfyXrFhjD/
+         3ZyhNJSg3Q1iqXOuB7x0RKX5p9NSJDjImhDrYv18LdWIgHGJLt7LV9I+bvPj30jzMxVP
+         1t5A==
+X-Gm-Message-State: AOJu0YxTGRkzBP46vLbMHkzQfEqkdMoxIm9NaBWEOACmzVZw+tvtNzZG
+	EXLGHVMJ/GeTI1m+d0SsdfKFgWB5ZpbJzAf8eO1lpHGWcH9yZHl49aKQsRU5xA==
+X-Google-Smtp-Source: AGHT+IHWL52WmPm6bNr953sUZX861hGdEh1n7cUglRSPLKTyvnf0g+GZMbpodtXl0TbQgxCD5k7UuQ==
+X-Received: by 2002:a17:902:a3c3:b0:1d9:4d3f:cbf6 with SMTP id q3-20020a170902a3c300b001d94d3fcbf6mr1184238plb.48.1707213714084;
+        Tue, 06 Feb 2024 02:01:54 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUtZ/Q6R13798ruAgfiOliz2pPEk8pHcbZOrpqe+ZlQ1QcA0KXPlNsRmD9cBaPKSx+CPjSCFqYS2QVMPxKhObo25onG72wZnYuzopk3GBTWfgrS7hxKaR53VeYxR3RfiVNyTLL8s4gmOsjoIH1Eo4B+M+myBqn9tFiWIjTQMGRTcnxChejQh+oCVJwDKDDQ1yAsrNj0U/UbHsSA0dW4U/nvhs0CaE1oKtIZfEIoQtzwa5pf4hb4FLuEFn1xH26oNNrG
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id iy15-20020a170903130f00b001c407fac227sm1456525plb.41.2024.02.06.01.56.52
+        by smtp.gmail.com with ESMTPSA id q10-20020a17090311ca00b001d9469967e8sm1455367plh.122.2024.02.06.02.01.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 01:56:53 -0800 (PST)
+        Tue, 06 Feb 2024 02:01:53 -0800 (PST)
+Date: Tue, 6 Feb 2024 02:01:53 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	kernel test robot <oliver.sang@intel.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] selftests/seccomp: Pin benchmark to single CPU
-Date: Tue,  6 Feb 2024 01:56:47 -0800
-Message-Id: <20240206095642.work.502-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and
+ mul_wrap()
+Message-ID: <202402060200.EDE488F8@keescook>
+References: <20240205090854.make.507-kees@kernel.org>
+ <20240205091233.1357377-2-keescook@chromium.org>
+ <20240205202145.GB2220@sol.localdomain>
+ <202402051443.A813E4D@keescook>
+ <20240205231712.GC2220@sol.localdomain>
+ <51025C22-0FEF-4047-BC36-EA7ED7A3BD62@kernel.org>
+ <1ee4bd0f-2a70-4696-bad3-782b5c0887f7@prevas.dk>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2238; i=keescook@chromium.org;
- h=from:subject:message-id; bh=gFwQT9q2MQDOLZo3TSNZibKCNFI0OYg5lS2v/Yij/5o=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwgJfCsxNqlw4QkCwa0uTjz9m+WERqUM1QnArU
- Nk8peGOJtCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcICXwAKCRCJcvTf3G3A
- JqyTD/9FjpTBzQ/U/pDNYWZkbNEqKOmTGswAI5nhxPwJETkBv2PFztRglzljETLPB6slHXo50Xq
- aaLyg3Tx0jUQWvCNGmus+ZcUaZeUc9ERbP7FajXNyUdvtd4FvpLqXrb7YLGBIyJRTt0pUvwsp08
- dCXkfBVP0NEg+OM1SXDxtM43MKV8KNktVyLCjDueRmNXPGfukDqLPleO02h/dRCuc6UsznNrz7W
- eJN8zn12je2bB+26ikjlbccbihquSHNFLUnCJShgg3EvXM9ywmZsFLlMzb4Fl5COijs0xPYrBNm
- FWh1ZbJ1xA0G9GAvwpDF+lUEOvluGYMWudXBwiY48XSPsLcLS1ZluT5L/+SPsljItEjPo6hqk0n
- CrBxjLamMqteQUQX9pIft8jHROCFAcOg0qF0sgPUzePBdn9BDi+gYjb4r6w18iT24tp090XbdnL
- zD5pCjM7IO/PmNZsEsgYHqW5lww/o7nBOiGje91P116WFA9RvghnOY+qJ3tBxnmm6stuujMgFa9
- wBFLrpkHt8ll0GUr0Wqlh6zkFIAB2+1Y36Vby3hcpVshfevj+rPFBwAbc/4VmkOGaKchlnUZCoe
- fiRUeabcdhzM4JXK4d0mJYyjz8qcKzKZG5vWpDOW9gHHQNh2rYZitp7MV2ksHepXPw8qRdCK0Wz
- HJa76r6 9E8DwurA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ee4bd0f-2a70-4696-bad3-782b5c0887f7@prevas.dk>
 
-The seccomp benchmark test (for validating the benefit of bitmaps) can
-be sensitive to scheduling speed, so pin the process to a single CPU,
-which appears to significantly improve reliability.
+On Tue, Feb 06, 2024 at 09:42:26AM +0100, Rasmus Villemoes wrote:
+> On 06/02/2024 00.21, Kees Cook wrote:
+> > 
+> > 
+> > On February 5, 2024 11:17:12 PM GMT, Eric Biggers <ebiggers@kernel.org> wrote:
+> >> On Mon, Feb 05, 2024 at 02:44:14PM -0800, Kees Cook wrote:
+> >>> On Mon, Feb 05, 2024 at 12:21:45PM -0800, Eric Biggers wrote:
+> >>>> On Mon, Feb 05, 2024 at 01:12:30AM -0800, Kees Cook wrote:
+> >>>>> Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and mul_wrap()
+> >>>>
+> >>>> Maybe these should be called wrapping_add, wrapping_sub, and wrapping_mul?
+> >>>> Those names are more grammatically correct, and Rust chose those names too.
+> >>>
+> >>> Sure, that works for me. What bout the inc_wrap() and dec_wrap() names?
+> >>> I assume wrapping_inc() and wrapping_dec() ?
+> >>>
+> >>
+> >> Yes, though I'm not sure those should exist at all.  Maybe a += b should just
+> >> become a = wrapping_add(a, b), instead of wrapping_inc(a, b)?
+> >> wrapping_inc(a, b) isn't as self-explanatory.  Likewise for wrapping_dec.
+> > 
+> > It was to avoid repeating type information, as it would go from:
+> > 
+> > var_a += var_b;
+> > 
+> > to:
+> > 
+> > var_a = wrapping_add(typeof(var_a), var_a, var_b);
+> > 
+> > Which repeats "var_a" 3 times. :|
+> 
+> Yeah, I think that's a reasonable rationale. I'm fine with the
+> wrapping_* naming, and then the _inc and _dec helpers should follow.
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202402061002.3a8722fd-oliver.sang@intel.com
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Will Drewry <wad@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- .../selftests/seccomp/seccomp_benchmark.c     | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Sounds good.
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_benchmark.c b/tools/testing/selftests/seccomp/seccomp_benchmark.c
-index 5b5c9d558dee..d0b733e708cc 100644
---- a/tools/testing/selftests/seccomp/seccomp_benchmark.c
-+++ b/tools/testing/selftests/seccomp/seccomp_benchmark.c
-@@ -4,7 +4,9 @@
-  */
- #define _GNU_SOURCE
- #include <assert.h>
-+#include <err.h>
- #include <limits.h>
-+#include <sched.h>
- #include <stdbool.h>
- #include <stddef.h>
- #include <stdio.h>
-@@ -119,6 +121,29 @@ long compare(const char *name_one, const char *name_eval, const char *name_two,
- 	return good ? 0 : 1;
- }
- 
-+/* Pin to a single CPU so the benchmark won't bounce around the system. */
-+void affinity(void)
-+{
-+	long cpu;
-+	ulong ncores = sysconf(_SC_NPROCESSORS_CONF);
-+	cpu_set_t *setp = CPU_ALLOC(ncores);
-+	ulong setsz = CPU_ALLOC_SIZE(ncores);
-+
-+	/* Set from highest CPU down. */
-+	for (cpu = ncores - 1; cpu >= 0; cpu--) {
-+		CPU_ZERO_S(setsz, setp);
-+		CPU_SET_S(cpu, setsz, setp);
-+		if (sched_setaffinity(getpid(), setsz, setp) == -1)
-+			continue;
-+		printf("Pinned to CPU %lu of %lu\n", cpu + 1, ncores);
-+		goto out;
-+	}
-+	fprintf(stderr, "Could not set CPU affinity -- calibration may not work well");
-+
-+out:
-+	CPU_FREE(setp);
-+}
-+
- int main(int argc, char *argv[])
- {
- 	struct sock_filter bitmap_filter[] = {
-@@ -153,6 +178,8 @@ int main(int argc, char *argv[])
- 	system("grep -H . /proc/sys/net/core/bpf_jit_enable");
- 	system("grep -H . /proc/sys/net/core/bpf_jit_harden");
- 
-+	affinity();
-+
- 	if (argc > 1)
- 		samples = strtoull(argv[1], NULL, 0);
- 	else
+> However, I now wonder if those should really also return the new value.
+> Yes, that corresponds to the value of the expression (a += b), but
+> nobody would ever write c = (a += b) or otherwise make use of that
+> value, and the naming doesn't immediately imply whether one should think
+> of ++a or a++.
+
+They were designed to return the new value, and the selftests validate
+that. I've updated the kern-doc to reflect this.
+
 -- 
-2.34.1
-
+Kees Cook
