@@ -1,150 +1,133 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC526117
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 16:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4D58F6E
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 17:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707238547; cv=none; b=hDJIX3Nu2QEJFjr1N8H64i2uqt1qaYAZLktvwdukrQR37LvxxF2rPYU8yXe0bzCfA1V592PvYWzcqePyqTvpu8kW4UPhtv8JrflMPSCe/BzMbYBMFxV7acz6AQl/9BIKXe5waR9MgZEj0qkEhp1CiVz++JzYrbDpPLIIVBGmEj0=
+	t=1707239011; cv=none; b=gTApgeQd4pDBqe/aoQyKyZgiIKY6X/fLU2IVBnEgkVDTJvfhAMl4qmK8cTDh0rAxzXeqLnTeGLbaxuzE6rntb5w77/VV8vZfdQt0AYNzhsqZc9z0IzfkQUH0AROmCn9kQeBqifuiaFdv+KMYkz+eA1oAP7ldg8P6Apsw3rGTSvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707238547; c=relaxed/simple;
-	bh=qtsEqJJzUy+Olwx/XQm8yqhZSbPc1Y5DjvZrKNlVnIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ui5igIJ68I8fTv1DW6V06yREjI06gA011w39ony8tV2X9q13OcYNsrTS1RKhR8bOY3IRS1wOSl6J2yrR15lbSK8qXJDox7bHwAjPPkrdzUuWPSwjJxQKpb2NNihJ1JZg78TRSroL1wodW59wNGcWj0Z63Y8qmI/HFl0LRM6bYls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZtG1jzlQ; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1707239011; c=relaxed/simple;
+	bh=U8HuNwUdlEEPLHdv3QRnH+uJMA60aHmIoxCx5CgE2PE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K+G9D2TGt7lVaZ/VpmRxxBKst+qTY3L3K/8mcYxK3R8XYAqUYVxwaIiGX9SURNeT6Shtek+xvyNOfKZaCjaMZ3vIzt4TaeBf3jDN5FLxCDWlgPgJQABTumWaf40ZYNZ6j6+KDzrK2wHPswjZ9ciBJiFuvCjPZ4lIR3fWksjY7Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FBDG1oux; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZtG1jzlQ"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id XKqDrN50rrh9zXOi2rXAFH; Tue, 06 Feb 2024 16:54:10 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id XOi1rvc6gOj29XOi1r9t8N; Tue, 06 Feb 2024 16:54:09 +0000
-X-Authority-Analysis: v=2.4 cv=Jv1Sr94C c=1 sm=1 tr=0 ts=65c26431
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=1XWaLZrsAAAA:8
- a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=cm27Pg_UAAAA:8 a=mv_botl0e71s4ZI3RmYA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=a-qgeE7W1pNrGK8U0ZQC:22
- a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=694IBjBGjM3a3HAgb7gRub3b16bitfxqqHI5UQvfdA8=; b=ZtG1jzlQTv5kfLeA8DHmM4VSew
-	asuSanJCBw/g+gaP2GAIQyETBhAX2Qfwc5ksqbSQ0qA7D/4w1NjjsGkf18KBgqiwB3TvfUxxbxYo5
-	wAsNcEKGJgedq0CyG77TxncnAYtlnDYj59BpPmm8k4t9XItI1qKTVggcPwFk8W1INyUq1/YTR41hd
-	vf5xSUIdCqAHbKaNu6mV8nBb5eZ+gdbcBk8vSdfPsjKRWPyyyl4OTluko5j3sFXnR7y13B4/KcsrQ
-	ogP6mFTV0plFPNzpUAUC+K7x4Vwu5VOJmkyAs0n7/vAo6R2nqAjmTXG2osxejq7bJ4BivLlRtFaxe
-	gImTSmbA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:44908 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rXOi0-003RHh-2u;
-	Tue, 06 Feb 2024 10:54:08 -0600
-Message-ID: <4bde6e72-c7f6-434d-9489-3a0de7804b18@embeddedor.com>
-Date: Tue, 6 Feb 2024 10:54:06 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FBDG1oux"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e03b3f7286so1553878b3a.3
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 09:03:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707239009; x=1707843809; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=umeDhyeqcFKdvC6xxd3vUkMjNRJ2Irf8wU+CDgjfryk=;
+        b=FBDG1oux/ky5+k755maPrtT0RG5gwjHPUBqHrZmCgIefVLPFxicCxqVmfF5gHnJTPY
+         YV79EDOKb80h0Bb7CHdMR9fzDTjGk+UZ8TrFxJ32tbPPQd6o+6L5QD/R6NyTB/lPfJoc
+         zg4WReuTd2L7ZpnWp9I1ADnBf2qQgKV2TvGXo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707239009; x=1707843809;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=umeDhyeqcFKdvC6xxd3vUkMjNRJ2Irf8wU+CDgjfryk=;
+        b=eQnVZMswU+baKlFjyuo2j5XuhXfObkOSJ4GQLlDIpr2zJA/uaHToap5scsBxDRg5NF
+         jWAyfJZfCGmww3dGjfj3koR/XqsbLXsIWuWOEd3CCL+2jKQpZPHGLn0hzuqxCIwEgUb/
+         lCLFOfkdkwUjq13DelqSOTQQsekZ/EO3njrcXWbQe8Jx4MVCYDIlYURdJOx9mspcQw5G
+         ZZsbJGNr6BsPelvAHM0C18+BZaVtDZ+OLV6CsUgiZmt4uQopWv/8LUqClytdnxtn7pvO
+         6Lv4z04XicEJ9Ub/aqtP+mHjszvLOEEcwjaWxEiBjcjH7eG39vkcwn+nWyfX12kTgU7p
+         DqtQ==
+X-Gm-Message-State: AOJu0YxqPphC9MIQbO9s2cINApwrXw4/V6qLHIUZDC99qcqKNBupqA0o
+	f44iQjK/I8wwVcwQsT73wMPWiyaa1FIjQGZOQdP4OP4OIlXNC3Nt0UZu47+ugw==
+X-Google-Smtp-Source: AGHT+IGvoigLJEbHKpYBrrZJJVxKU9n0m5DvgYvJ8ZsIdLNHqnrzt3qcY0VxotJUZVvRPos9blAcsQ==
+X-Received: by 2002:a05:6a00:842:b0:6e0:28eb:275e with SMTP id q2-20020a056a00084200b006e028eb275emr102249pfk.22.1707239007816;
+        Tue, 06 Feb 2024 09:03:27 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWfB/tr7pyFK2HPXESsJ1h9TpKXYrK9eOqf81YqGqlYqEBLTPjHVqjnFSch/E1RwQgtmUg6t/v1lbDkytUEOHoI+aPHG9TJb8Fjr1LUujkShO2c0Xt8LdUmwvicI/JBXQ2643PJqQGtsn/SOX8WNNhexsAZBeu/5DERV85KCPtfxGgG65Nj+Q0Q0nNft5VzbKWpP6fOg0dV1CRjqPX+zVrjeWj5NsaSfE6hrXbQav7R/+4KuONSyqslgF6VURAuJ8bjkvxUDAH/4PFKePXGPHpiSI2lGiW0evYlY2s=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h4-20020aa786c4000000b006dbda1b19f7sm2168838pfo.159.2024.02.06.09.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 09:03:27 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	xen-devel@lists.xenproject.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] xen/gntalloc: Replace UAPI 1-element array
+Date: Tue,  6 Feb 2024 09:03:24 -0800
+Message-Id: <20240206170320.work.437-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] overflow: Introduce wrapping_add(),
- wrapping_sub(), and wrapping_mul()
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-References: <20240206102354.make.081-kees@kernel.org>
- <20240206103201.2013060-2-keescook@chromium.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240206103201.2013060-2-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rXOi0-003RHh-2u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:44908
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJoZstNCyVmMILC67H7Vd4zpOFplsBbpw/VrVDbzMhxj1y/RLjCf27i3Dvx1iLkWbyyivdrhDli4ANW4DaEGr1tqNPSjh4iRwI+V52IbjDUVUuVj6kiY
- nANvONDTgKwzWMgEvdH6t7sigB0U8jclsqxLQZu02OXYdVaC6sD/ZlbbMRCS6Xk0SsIvD+cWozv6RdMqghaF0Q7HEvKYKO6nRzG/NYHD1RPu2vpGlVlwNmmQ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1659; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=U8HuNwUdlEEPLHdv3QRnH+uJMA60aHmIoxCx5CgE2PE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwmZc1Jfxj5fa/YwMvoyvAPkFWN+gRJLJEPn7F
+ n308vxItD6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcJmXAAKCRCJcvTf3G3A
+ Jm0GD/oDXr7gvAa43q/4w9dV1f3MZINBzTm2QNk9mHvC7Lp7XSOmcgrCG2Fi8o4c5s5TyWIybl8
+ slT25ToB1KNPSc6IPGYoFcQTXwRn39TzQq9T6n+5z5alG6Bz6ZcAk34BQcIm6vfpD3/N11fHF5F
+ pdXab4HtiJd2JS9uhggiaHQbN59FGqFQjmpFiouIQ/v5r3awL2QgSC+DznPmZAbee6vD1Rz7G3F
+ Ko9yltkr64NVBYCrLDQEylWIDjzGcaMn7kb9npaAYzOCcDcDcQgyfA41idDc+YZlQhxJhuTBe+h
+ kHCag8yYsbha7fMXGE+7jHPzjKzE92858eEHiqDJUS+n7u5FMMzarLFrfzeX2LRKJT3oKVKLNhA
+ pZ8OYm0q7YJihVOtzaWRo2aNTZ1TpHpDtp7xQo0UFmVh8lcE8p41nIm3bKoC/PbT6ygufKRWEgT
+ F1cqwtPM+91yYdVb5HqaHdJ1hIahqo84hQrS6uoeJb2fDi7VWnvopFiUKfVEjWhqUqDo4DCatRo
+ 9wGXoVt2ljvrVqDQoE56vPuRpeLfSDuLDp/koDL82+UGsSCzmRyXeFrADIlakadryKPFCIqd6xf
+ eyoiFXJ0khVBIixLTkPKRY4vvEmldd97HWkoEuj0POSSL7w/8LzGaHlA9x8qqoGsFQwQ6Uvf4U+
+ Vekxg2a ltTDiLAQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+Without changing the structure size (since it is UAPI), add a proper
+flexible array member, and reference it in the kernel so that it will
+not be trip the array-bounds sanitizer[1].
 
+Link: https://github.com/KSPP/linux/issues/113 [1]
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: xen-devel@lists.xenproject.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/xen/gntalloc.c      | 2 +-
+ include/uapi/xen/gntalloc.h | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-On 2/6/24 04:31, Kees Cook wrote:
-> Provide helpers that will perform wrapping addition, subtraction, or
-> multiplication without tripping the arithmetic wrap-around sanitizers. The
-> first argument is the type under which the wrap-around should happen
-> with. In other words, these two calls will get very different results:
-> 
-> 	wrapping_mul(int, 50, 50) == 2500
-> 	wrapping_mul(u8,  50, 50) ==  196
-> 
-> Add to the selftests to validate behavior and lack of side-effects.
-> 
-> Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Eric Biggers <ebiggers@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-hardening@vger.kernel.org
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   include/linux/overflow.h | 54 ++++++++++++++++++++++++++++++++++++++++
->   lib/overflow_kunit.c     | 24 +++++++++++++++---
->   2 files changed, 74 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 4e741ebb8005..429c4d61a940 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -64,6 +64,24 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->   #define check_add_overflow(a, b, d)	\
->   	__must_check_overflow(__builtin_add_overflow(a, b, d))
->   
-> +/**
-> + * wrapping_add() - Intentionally perform a wrapping addition
-> + * @type: type for result of calculation
-> + * @a: first addend
-> + * @b: second addend
-> + *
-> + * Return the potentially wrapped-around addition without
-> + * tripping any wrap-around sanitizers that may be enabled.
-> + */
-> +#define wrapping_add(type, a, b)				\
-> +	({							\
-> +		type __val;					\
-> +		if (__builtin_add_overflow(a, b, &__val)) {	\
-> +			/* do nothing */			\
-> +		}						\
-> +		__val;						\
-
-mmh... now that __builtin_*_overflow() is directly used, I guess
-we don't need to _check_ for overflow anymore.
-
-Thanks
---
-Gustavo
+diff --git a/drivers/xen/gntalloc.c b/drivers/xen/gntalloc.c
+index 26ffb8755ffb..f93f73ecefee 100644
+--- a/drivers/xen/gntalloc.c
++++ b/drivers/xen/gntalloc.c
+@@ -317,7 +317,7 @@ static long gntalloc_ioctl_alloc(struct gntalloc_file_private_data *priv,
+ 		rc = -EFAULT;
+ 		goto out_free;
+ 	}
+-	if (copy_to_user(arg->gref_ids, gref_ids,
++	if (copy_to_user(arg->gref_ids_flex, gref_ids,
+ 			sizeof(gref_ids[0]) * op.count)) {
+ 		rc = -EFAULT;
+ 		goto out_free;
+diff --git a/include/uapi/xen/gntalloc.h b/include/uapi/xen/gntalloc.h
+index 48d2790ef928..3109282672f3 100644
+--- a/include/uapi/xen/gntalloc.h
++++ b/include/uapi/xen/gntalloc.h
+@@ -31,7 +31,10 @@ struct ioctl_gntalloc_alloc_gref {
+ 	__u64 index;
+ 	/* The grant references of the newly created grant, one per page */
+ 	/* Variable size, depending on count */
+-	__u32 gref_ids[1];
++	union {
++		__u32 gref_ids[1];
++		__DECLARE_FLEX_ARRAY(__u32, gref_ids_flex);
++	};
+ };
+ 
+ #define GNTALLOC_FLAG_WRITABLE 1
+-- 
+2.34.1
 
