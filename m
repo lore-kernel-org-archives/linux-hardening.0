@@ -1,136 +1,83 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AF612D153
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 10:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32A112E1CC;
+	Tue,  6 Feb 2024 10:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707213945; cv=none; b=lOlOzFKkcypX8O6Fu8B20JbkN/wCuH/WDDPvnMIIpoNAoaNoAMsFxiQ4RhJQ4vVfIbAXPKN61co3m6vFqPCiprEaM06UFBz3VrR3GzntMaZXvJ1koty8mQntsvzQr8L7YQbGmU7O0GL53cVhooCcEpwI28E1HOZs4Tm2Y9CwEUo=
+	t=1707214584; cv=none; b=CLrOhbXCGrdeyBgAXl8jGfl1FXRC8P1hdLqyhy9omLE0zGMzWqq3hQXbBGqESyicP9PVZmABiMG7oVVrx2/jcF5YZIs2MMf8A6CTvtb+M3CvTy4diua9Y8FJeuzTpfXypCSGZt15k/UrAfo+tNjr1MdmImJmydEhbUkR9+VLxyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707213945; c=relaxed/simple;
-	bh=x5XCUSFKEL2GondDLeTtmfSmJigahMLLxVaHa2PuE1E=;
+	s=arc-20240116; t=1707214584; c=relaxed/simple;
+	bh=wMD5eAY0iQmIfhYhlvS2fvz7hSPiZv7Z1ENCFiASYCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mi8a1+RfmgQdeZKhDw9hA+VvtenBCheYODd8TT/TcbX94cMOuLlDay0OVu2uYnMSs6977I8ui0/fmb3TA3i5TWHxrwBMIfAtA8X/mj00QZFR1mdE8PQvPYgPtsuk6BvIt+meIsxlzBqLpnK0vLWjGGPS+WIjWbQk62VodfSa5E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SDxukGF4; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y+Hx5oI70Cql5PmekMresUOPXqRsY/tVpkiSZue4PmWhSwNo+aDG5cuUBYIExPglmYXkkHs/nCcXcAKJd8uLUqxA68Lunnr1RROWMMFv6an8mlbMDRR17o+MPfzD0QBMGib3lnwnFRtZzPUyZkDbZge0TQLIBsuKWHmWBAHFbM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzFXWqzg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SDxukGF4"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d944e8f367so42529125ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 02:05:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707213943; x=1707818743; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5I9TObzmAi1P/AMsCzIFNvlVehNJlwvLmZ8xF0j6GmY=;
-        b=SDxukGF4Q+ZsBJzqb7clde6fdHFkfEjMLUaPgI2AjFx88gPET1HJckAzWX175PqNlk
-         YtKr1Jee3rH1ZbrCEocIMkAngQtWDS/a1kF+zNbk7GXCvzcPw+ZXiEQTP92l3AHNOAb/
-         5zT/a0xgNApv8zLe/meKrdm4WQIP097R84Ms8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707213943; x=1707818743;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5I9TObzmAi1P/AMsCzIFNvlVehNJlwvLmZ8xF0j6GmY=;
-        b=FWwo6XRM1OK0cx/KbzO+UeX0gDnj3TxdP8RS6XX4O1Q2Gt+zK6EYYvMSbnfxspzBeU
-         JyWxFKbty24aFeH3XvzF+YJY2D7jktUNvIm4yxkvFEpN3SG2Cai5Ax64BB+PXLAG4Rm8
-         cKwH6t9GMOjcyc2Vd1qCqAp0yBFjJT06ndJLZgywZmMGW0cHzbUc7sjNiSCdRaO00dZ+
-         SwReH8fG0CernryWQtnFmiSenW7hOE2PE2DoedTORRSDAx0KdPY6DzBnDSP25h5J7wzr
-         HhtBIcHdIn8jXLqb/Eg/GKAmwHvYZKuhzi+qvSzcAw7fLi56c09cTufPM599viFthZdV
-         Uhrw==
-X-Gm-Message-State: AOJu0YwaYftpXRk9MzNbpKnlHp1YrSIP4IbP9Xahbp3v9PPM2LlNbmgv
-	3pK8pB7NZQLoyx8952zDGSCAF92FrpPHwXdXe8PX9w7/cFHc8MyeyPXn90hxAw==
-X-Google-Smtp-Source: AGHT+IGIF2iri9Zv8bM1b90EVV71H6JyQykLn1MgWKEbonz0H/0sEvP3zTH6IzVHYMxzE25+Na2ifg==
-X-Received: by 2002:a17:903:442:b0:1d9:624e:126d with SMTP id iw2-20020a170903044200b001d9624e126dmr1036329plb.62.1707213943305;
-        Tue, 06 Feb 2024 02:05:43 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXH1mTi7oy21rdcMXL/VIGIk0z2hwXV3OyoaD2elNdc69nHoOYhwMv05AcpghGxk6TAob65+qWXI+gqj8+bvDo6LDQ9tMbqZxGS7ludBhsqOm4ewKnllp4ItZ/91yCrVrRg9YPSOBl8Wwc/0y7COfovbJDvMjFKSHGI0f1aftEVgQVa3K6NQFcBC3UJoozE0pdwCYF8bg==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ju8-20020a170903428800b001d8d6ec2d7fsm1464771plb.61.2024.02.06.02.05.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 02:05:42 -0800 (PST)
-Date: Tue, 6 Feb 2024 02:05:42 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Marco Elver <elver@google.com>
-Cc: linux-hardening@vger.kernel.org,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] overflow: Introduce add_wrap(), sub_wrap(), and
- mul_wrap()
-Message-ID: <202402060204.A19FFF8FD5@keescook>
-References: <20240205090854.make.507-kees@kernel.org>
- <20240205091233.1357377-2-keescook@chromium.org>
- <CANpmjNNExn8DX2+Cnz3GDWXNZv-jZcpFSedCYx+y6HEemFoHRw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzFXWqzg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA5FC433F1;
+	Tue,  6 Feb 2024 10:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707214583;
+	bh=wMD5eAY0iQmIfhYhlvS2fvz7hSPiZv7Z1ENCFiASYCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SzFXWqzg8e3PBT9jW4dFw6fxwUbmu8CZCY9KGnO0NNUlxCKMEzTTSgQ/U895TntGr
+	 9g93t5pFD4h7rY+JyD1ZeFjtv/oPTWipNHXF7yfZKiZiqeblaq31t2zxByP52dnEN2
+	 WooPN0v5kPm5+8TM6l2YKD7UAqTpciIKGX9yQSC6iu4SEkZEmDbGSTVE4maXautYZ6
+	 6xrezg+vAW4eMMi2JRxVczB1rl0DPAQ8ACateSbghWmvrOHUjEN/DacnOn+YwXXLMi
+	 vCIPOdr3foPGFXBR+I+KPce9p62H2sQXWq2xkCm1oiqcW/zdPGb7JwDEloQL2X66A7
+	 n/BuPoQuLjEYg==
+Date: Tue, 6 Feb 2024 10:16:19 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests/seccomp: Pin benchmark to single CPU
+Message-ID: <ZcIG8y0U1VyMsCAD@finisterre.sirena.org.uk>
+References: <20240206095642.work.502-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="I7uCmILCv4P/yIfw"
+Content-Disposition: inline
+In-Reply-To: <20240206095642.work.502-kees@kernel.org>
+X-Cookie: You might have mail.
+
+
+--I7uCmILCv4P/yIfw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNNExn8DX2+Cnz3GDWXNZv-jZcpFSedCYx+y6HEemFoHRw@mail.gmail.com>
 
-On Mon, Feb 05, 2024 at 02:31:04PM +0100, Marco Elver wrote:
-> On Mon, 5 Feb 2024 at 10:12, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Provide helpers that will perform wrapping addition, subtraction, or
-> > multiplication without tripping the arithmetic wrap-around sanitizers. The
-> > first argument is the type under which the wrap-around should happen
-> > with. In other words, these two calls will get very different results:
-> >
-> >         mul_wrap(int, 50, 50) == 2500
-> >         mul_wrap(u8,  50, 50) ==  196
-> >
-> > Add to the selftests to validate behavior and lack of side-effects.
-> >
-> > Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/overflow.h | 54 ++++++++++++++++++++++++++++++++++++++++
-> >  lib/overflow_kunit.c     | 23 ++++++++++++++---
-> >  2 files changed, 73 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> > index 4e741ebb8005..9b8c05bdb788 100644
-> > --- a/include/linux/overflow.h
-> > +++ b/include/linux/overflow.h
-> > @@ -64,6 +64,24 @@ static inline bool __must_check __must_check_overflow(bool overflow)
-> >  #define check_add_overflow(a, b, d)    \
-> >         __must_check_overflow(__builtin_add_overflow(a, b, d))
-> >
-> > +/**
-> > + * add_wrap() - Intentionally perform a wrapping addition
-> > + * @type: type for result of calculation
-> > + * @a: first addend
-> > + * @b: second addend
-> > + *
-> > + * Return the potentially wrapped-around addition without
-> > + * tripping any wrap-around sanitizers that may be enabled.
-> > + */
-> > +#define add_wrap(type, a, b)                           \
-> > +       ({                                              \
-> > +               type __val;                             \
-> > +               if (check_add_overflow(a, b, &__val)) { \
-> > +                       /* do nothing */                \
-> 
-> The whole reason check_*_overflow() exists is to wrap the builtin in a
-> function with __must_check. Here the result is explicitly ignored, so
-> do we have to go through the check_add_overflow indirection? Why not
-> just use the builtin directly? It might make sense to make the
+On Tue, Feb 06, 2024 at 01:56:47AM -0800, Kees Cook wrote:
 
-Yes, this follows now. This is a leftover from extending the helpers to
-work with pointers, which I don't have any current use for now. I'll fix
-this.
+> +	/* Set from highest CPU down. */
+> +	for (cpu = ncores - 1; cpu >= 0; cpu--) {
+> +		CPU_ZERO_S(setsz, setp);
+> +		CPU_SET_S(cpu, setsz, setp);
 
-> compiler's job a little easier, because I predict that
-> __must_check_overflow will be outlined with enough instrumentation
-> (maybe it should have been __always_inline).
+Is there some particular reason to go from the highest CPU number down?
+Not that it super matters but the default would be to iterate from 0 and
+there's a comment but it just says the what not the why.
 
-I could change that separately, yeah.
+--I7uCmILCv4P/yIfw
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Kees Cook
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXCBvIACgkQJNaLcl1U
+h9DubAf+J3cp6PF/Zn8lKA03k0dw+PzlRe86nz0UwqF++h7gW5aebKtTNG2+8fsA
+MC0f3yJ8xCELVDN1HlDOKAbZgzUiHHAiBl/Np+b4qd9MIybOuwHf6A3quYZQi/f/
+1zZTiA6zTv5Ai4N+2Zj5cSK5gc7e8BTzzej2clem7GAHYjMEo6kNOcGKF21Puk2g
+ojpdD4VzIcmfk9CQimCTtZcMsCFEbcgKG9Rpbte64TQEdXyBDFMJp/AXhxqZvFS1
+4B4rDcsHw2+4riVnUrtQsufpEpi83eQUfOh/4pkjuC05wiDjqYa+7szguMO0+s80
+cXv9MJgxIYIv9ba/UjkKaSr5Yqs5GQ==
+=FFzA
+-----END PGP SIGNATURE-----
+
+--I7uCmILCv4P/yIfw--
