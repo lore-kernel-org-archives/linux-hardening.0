@@ -1,106 +1,107 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287041C01;
-	Tue,  6 Feb 2024 15:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D286134756;
+	Tue,  6 Feb 2024 15:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707231776; cv=none; b=ey3wjaVg6v+KQJ+YpObYmhjplxHjPS4RB+w2nkf/7J9rynCwjLoVi7kY5vvLw1YXy+os5WC4SATzzCxhSMlq76DhlgHYUT3qxkc4+clJSnNDzgonrgHqF+212PcQuKWwhr2IY2YVwCLkbM+00/hs2DK47gKvlNlpg8c5rYTTEtU=
+	t=1707235027; cv=none; b=VSzTL3Xesk+oPzFtaghsuvy7XnAH2+st8otOM1Kmhg6kVoLFAHimX5NykdIjSMQIpszq1uOeOO/5h04VOF/Kkm3D/6ULwGDPZF/56Nqyd/7mfDHqYrxe1u3GOhrTOVPW/72kQVfCuuPcBE3ORBUzVE+wCdMsGRl5oVZi9I1ULuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707231776; c=relaxed/simple;
-	bh=bAVUStCpnTHy34IuoXOjMIRGDhuXtT/wZlAhqE0qX3M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gq8l31ps4IARR/1Vvk/qAgB92ghrB4p9k8Ua3tVTsVVxbJMhavfj+VPg/9ZBh94yFmqOU3XskDg20Y9M9t8o9tvZSrtVT8zJgw+lkO6yliyfDxTLNRMwYqol9G5mqwy8HgumtQPZewvmn6OP6dnNJlzQr0BGQ6QNUUP3LSB1wjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cj2op3Q0; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1707235027; c=relaxed/simple;
+	bh=teYxShqIxP/uLVM1uE3oK+u6Q9w7V0gJUpxrElVvNzE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=koom65YPtdiiIVUWUTOztd1SehNyrgFcqzXIO/D6o8F5WQq50lHoldKCQdG9eFRltb6BQv/W7iTXWOmS3pOasevxMoBXpuuX34VKX7YDlWL0emzFozIRj4yKZB1Fg7OE4cZYQ8UaVgEda/p2WUYMKe/QYIP+V4HP2YjwebkgEQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Glj47lM0; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cj2op3Q0"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3832a61a79so73454366b.1;
-        Tue, 06 Feb 2024 07:02:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Glj47lM0"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55fc7f63639so6768192a12.1;
+        Tue, 06 Feb 2024 07:57:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707231773; x=1707836573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5SVGM65Du1cHuuQt3q8TxAhLq+zBG9N+zkQfXQrkH+g=;
-        b=Cj2op3Q0tz2CIZQb6g3DXXnQmmJbWnx3l0ltCrswQgxjk6sgo817IIljWH4mgZVzmE
-         rkGIRNgYxuwgAzRO+0eKLPXpKRtRZU+tsqX1e7UPLg9UbCLpjmTTYrwhzwjg/xTCcnrN
-         6o9cCWn+Ip52MTaLtOAguL12IrRUxJYDcrG5IUX8DBmpkHBiUfef4c6iAC93B9a7PjYh
-         FKqzZM+BKia/R+9k4N5vii1xOb4JPlxFfdA+e9xBMtV/yjLBJjsXx+TFls5EyoLwq8UA
-         tTQZLxzm7oqQdyuB+73qNvh+Sw7XdIQ3Bhh1ipj/7bXFtC7X6+O4uaf43aQvQdbtFNm7
-         enSQ==
+        d=gmail.com; s=20230601; t=1707235024; x=1707839824; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PSGpKzlxYKAshM9BfFGFO8H4EKQPq4yWk4Vf8BFZQD4=;
+        b=Glj47lM0yzIVtk/4iilJzMnhZpMcfWeovwbqCWS4btJFVQykHEntwRFLzJs1A4w+BS
+         iLKLC3jztyk0W7PyznWk3txIe0xPQssUosK3cMGU8WZ8E9oOlYlinwMzpOd3MePXXOWD
+         SNcFHocN9CUANBGOMj7Uxj1n+sIIUAvzDrNG3lp4HCN8v0T7Hlymh27EsNjv2Zru28w0
+         k14CCnWYALYTdXiXH6y0VH8teMX1JyAnLE7lsfQWUBLUj4NUMQBlurRHc5cgtcjmJnGx
+         60G1JH/66b91AgU8I9GZ+Ah3ZOevav/saS7lfHDcoWz9WgMw3kmDlWtrloqhRB3zG2Rg
+         s2FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707231773; x=1707836573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5SVGM65Du1cHuuQt3q8TxAhLq+zBG9N+zkQfXQrkH+g=;
-        b=dJ4o1su1MS5a881lr42A1EMfdbxghJdCO5ec6cCSsyKZzKA1kYBAZ9GGq2hsew4tf8
-         I5vs3C9k+ywq3l6apQ+nvvYPfIILOcfOaFPleXTu6bmn9Qp6+0N9QsVEtO35mtxgqyIi
-         qo/83EztCT3UySVDa7HstbTqbxkXwgHbiSqndCtJbp+wh6gMkx6ut5Sv6T4EREa2vEGj
-         5LjODj4PUi3vSsGGi22LmNWEJYVqhfgxplnqQekVS3Ihykkfsse/QDP3EZdXVpTp2v6T
-         oBPx5e8AS/CTeiJnula9JcymkrKy/sqH/0fK6Szl+TIzylNE5ABDauMhtMJEj1/Y8gII
-         EiIA==
-X-Gm-Message-State: AOJu0YxOeQAGsja/xmvVvpwjXLDC1EGUowVhafe6NEymkwFqFTDrNMwB
-	xVagz1zSUrnf+ZcDRGT53X30A5zSkVQ0MvFFmyR5ulyupRURZeDcJ8d2FQrGa8+63ijG+UVLMHe
-	N/eNmEEQAbOKd30WvAFveLJJYY7M=
-X-Google-Smtp-Source: AGHT+IHU9T6LL01GUecm+IvzzB70+L0tc5CbaFWmtFcZruG258wvuzAvviNNQid60Zhs0yhkTvn78d8ZDVK1MeAd5HM=
-X-Received: by 2002:a17:906:b28c:b0:a37:b1df:30ad with SMTP id
- q12-20020a170906b28c00b00a37b1df30admr2400439ejz.46.1707231773299; Tue, 06
- Feb 2024 07:02:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707235024; x=1707839824;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PSGpKzlxYKAshM9BfFGFO8H4EKQPq4yWk4Vf8BFZQD4=;
+        b=FxMAFmoeAsuyMJqAZPegjBZs94BC3QFldo/ZeMFbawLPPQ00u4BHrlPFIktZFQIyjE
+         Xivj9Ke2pfspSEWp+A00jMg8ThhmcS75QPB8hfHDe0LTFsTblmnXH7P1BBZzKu4uw0Zn
+         cELBmCa4N1Qv/RDcz3GkWk+sHq6rpRTcPynz02HOfwRoZqJF5uAcjns9yLxssTML6JJx
+         YucZ2sL2hYFL4GF+b0mDELzrJxgU8s7GrfVTamMC/rstFJScamK5dvw+6CsCB2z+YWvY
+         2HXEIJwhR5P1xJmbX1qNicg1Po479Xah6LNuAuY8d4ZMvdXGcbcOGqBGnV7zREVxplj2
+         gZJQ==
+X-Gm-Message-State: AOJu0YxVXEiampXHxD5NkeWH4NzENmAx7+avOaK3dfqZ29uykh/9YSho
+	F1FQPlMrwKXDIkgr9z7nu51rD0inmY58ZpojgXox8b1D27SnalpmO1jqzwVM
+X-Google-Smtp-Source: AGHT+IErNoohgyuwuSnvIajwww/bNAqRr3vTucVpLOVuTmb2767RsWVe87TJheblWMpjSpxEtVOxGA==
+X-Received: by 2002:aa7:d88c:0:b0:55f:f32b:cd57 with SMTP id u12-20020aa7d88c000000b0055ff32bcd57mr2098125edq.4.1707235023876;
+        Tue, 06 Feb 2024 07:57:03 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXFvEl/7pw62WXsSMlx9U03NoIY63KBCSxecTctzPun3JwWSv/zkyU9F153s93rfTCfX6tYMCassjQMr+BQRE2m5VvF1j5g0J+mmsnfdQ47q5BdPLt399wMQzRtJK19EbML+h2minYoFadjdeQPA8tyGZUKlGL+ZmtFhaqvk7qyC/2jlOVmvDSxy37y+QU6wqAy+vt9Wirj/zyPw66tcI0ErqyiSRnDqgjFGDDSPvBH5Q/dnkooFzkEHJlm83wDP7YmOqyzkFTfmCo2kncbfFLycNsRAusbj6yXsZkU+jEvp+T8BOLNvllUGDP4DizIR9dGKC04zSYc0KpJDDI4eduy3/WsE3NiEXWUIVP3zhXXx8hRFmy422vrL6jd+8o8sLaYBA==
+Received: from xeon.. ([188.163.112.49])
+        by smtp.gmail.com with ESMTPSA id ba14-20020a0564021ace00b005605716e755sm1149869edb.52.2024.02.06.07.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 07:57:03 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kees Cook <keescook@chromium.org>,
+	Maxim Schwalm <maxim.schwalm@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/3] Tegra30: add support for LG tegra based phones
+Date: Tue,  6 Feb 2024 17:56:40 +0200
+Message-Id: <20240206155643.28749-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206142027.make.107-kees@kernel.org> <20240206142221.2208763-4-keescook@chromium.org>
-In-Reply-To: <20240206142221.2208763-4-keescook@chromium.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 6 Feb 2024 17:02:16 +0200
-Message-ID: <CAHp75Vf3c0Q7tV8ih5fRL6Bsjr6dhspFe+mxV7xUN=vZ1JdTKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] um: Convert strscpy() usage to 2-argument style
-To: Kees Cook <keescook@chromium.org>
-Cc: Andy Shevchenko <andy@kernel.org>, Richard Weinberger <richard@nod.at>, linux-um@lists.infradead.org, 
-	Justin Stitt <justinstitt@google.com>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, 
-	kernel test robot <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Azeem Shaikh <azeemshaikh38@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 6, 2024 at 4:22=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> The ARCH=3Dum build has its own idea about strscpy()'s definition. Adjust
-> the callers to remove the redundant sizeof() arguments ahead of treewide
-> changes, since it needs a manual adjustment for the newly named
-> sized_strscpy() export.
+Bring up Tegra 3 based LG phones Optimus 4X HD and Optimus Vu based
+on LG X3 board.
 
-...
+---
+Changes from v2:
+- switched from _ to - in node names
 
-> -               strscpy(dir, home, sizeof(dir));
-> +               strscpy(dir, home);
->                 uml_dir++;
->         }
->         strlcat(dir, uml_dir, sizeof(dir));
+Changes from v1:
+- switched from prefix lge to lg
+---
 
-An (unrelated) side note: are we going to get rid of strlcat() as well
-(after strlcpy() is gone)?
+Maxim Schwalm (1):
+  dt-bindings: arm: tegra: Add LG Optimus Vu P895 and Optimus 4X P880
 
-...
+Svyatoslav Ryhel (2):
+  ARM: tegra: Add device-tree for LG Optimus Vu (P895)
+  ARM: tegra: Add device-tree for LG Optimus 4X HD (P880)
 
->         if (*umid =3D=3D '\0') {
-> -               strscpy(tmp, uml_dir, sizeof(tmp));
-> +               strscpy(tmp, uml_dir);
->                 strlcat(tmp, "XXXXXX", sizeof(tmp));
+ .../devicetree/bindings/arm/tegra.yaml        |    8 +
+ arch/arm/boot/dts/nvidia/Makefile             |    2 +
+ arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts  |  489 +++++
+ arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts  |  496 +++++
+ arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi   | 1807 +++++++++++++++++
+ 5 files changed, 2802 insertions(+)
+ create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts
+ create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
+ create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi
 
-This code is interesting... (Esp. taking into account making a
-temporary folder out of this...)
+-- 
+2.40.1
 
---=20
-With Best Regards,
-Andy Shevchenko
