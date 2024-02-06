@@ -1,66 +1,69 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A696512E1ED
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 16:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E6DC13B
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 16:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707236219; cv=none; b=nSo3objgTsUMYGNzl9xfS7n7/o3421mrb4+cX+Sr83QNP5X+Z2BV32dPCTaAkWqp5xioIV3M7o4CY/gxvfgmoWTPC2YH70Ogpp02Y1J/dUeHXjPSlOCaRZJdmDaP34vXLERsv7873esKEkPmurhayzd2P24dgIRawEzFUOE8C9s=
+	t=1707237309; cv=none; b=Y6B5hlSUvN4tHHTklMsa7520pN2JSV9hr9ZKgbuUf8+RI4PmH337rBLAvlQFaukJCJsF5JQPdccDxVJn3eZLSNr5GsmCaA/LWgFAUFqh483TeoSUSh4pEmNftD2Ph+THz3HWajrSuG3swAD/tC8V9owSuU52GjFUzulZS5fY6vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707236219; c=relaxed/simple;
-	bh=EekBsWAnlq0WJTl7c6M5NqulfYlR861+t7R4vHT+3d8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o2pdqZbrt/PKQuYcYyJhOUv+1zxoZHtVZIhvdx05x2jZ8fMcMZV7gXfS/ONOxIvhJZX4NzfHl4ghjH0408ZVsly/sS7MyX8CWPWlz7uzdlZRup8zwKkWnGopuVwZsTCH5xGy+o9w13WGsUAYhB9BBUhGcI0tBlTlZ95AfX6Ht+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=abmxUeNN; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1707237309; c=relaxed/simple;
+	bh=I1MfE6AhaDeVgzj4aA9PyyPGYZWM6AIX3a3/cMVgTaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nmLofkN+9z3FHeXdeTKH0IDxYvhMuHcd5A8AIh+gmFIo6SoK5HoPovlAPu38FbgZvWpuvmuZhEJdHabQvjRswBJYCTMir3FlznDXBDc6pNHSE//kU+4PpC6hlMCevwQYeWvl3i7LC+AfumOSLuTz5Tyn9AvBldZ/kAe4Wy/f32Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EeRA6zSb; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="abmxUeNN"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e0311797c5so1482631b3a.2
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 08:16:57 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EeRA6zSb"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d93f2c3701so31592775ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 08:35:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707236217; x=1707841017; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707237307; x=1707842107; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LEX22RlJNCMF+b9uLMU8dz3DFOkyLswCiXscGsHaJqM=;
-        b=abmxUeNNl2n8SxLh4cOFL7n/ITmT+AViL+GPLHx6TeoYPWDo3A9YbhKNteqBWoRk43
-         gQhoyYlDJytcghB/DbsK27nLhId0TCfF6Vto/mCP8eUx7oacWA+HBC5pkGTt06ejxQVy
-         31Mz8pHUiYz4eGrCAHMABwR2H2NRG8MRCxLuo=
+        bh=l9k8qmh5FtuqJT0VlM3e5bdRxi2TqKIV+Oi2Qsz4LGI=;
+        b=EeRA6zSbxkQuNXdyLY3C5+++uJrEXJzDiD2Hs/eQ3woDOTwVKsUYtmr1uQ+jPoV9TI
+         RRpQNkocwFMaxUBrCzDU8bvsMdnhqmPEe8qu8hbWjtEWwk9J9BiwQ967+opu/L9PMTsD
+         6odQiI2HQtfsqdMilID04vqiQoC98SYtAbbCM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707236217; x=1707841017;
+        d=1e100.net; s=20230601; t=1707237307; x=1707842107;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LEX22RlJNCMF+b9uLMU8dz3DFOkyLswCiXscGsHaJqM=;
-        b=dWF+TuJqKEPW+3ECcUbO8qv0UwMNF1RJXFQaImh2435e27r1QkIGY/dTiefDWrRZva
-         DnSg4kKcmsEmVg3XvsN5HuOcPRhjHeIJXIUSzymkAus0eXEswR2vnpYVCm2uNE7WiHZZ
-         CG2Fc/UBZULhZgPbYL1Lnq15AMjn2lHZ96QCn1DzxcdPKn3ulhSPMiwHM+NNm+rGGRT5
-         OWZKTn8B+YZ2kdQ0r/gq6FCnn9jOSX0lMHJ1DTqzNYbk3kMZrHf+EiOOUQox+PD+nQRi
-         IHUcaJkXFWN+wCMaWs6pE/R5OFYl5A/Hf52/I7wUMRHul5S2Szk5bbrbuu+lldttxEPj
-         XGzQ==
-X-Gm-Message-State: AOJu0YxqOcEQGxr2Y/pjpMgGevH1UlyydgscpYKKJgxx61HTdoDGFV+J
-	zRmvSTKWOJ0PsjTeXmq5UwbzQObXYXnfX7GWG+vOUtzZVPv2zboYtTOlDG8keA==
-X-Google-Smtp-Source: AGHT+IGQMxEJZRZPEr04B6IOkmt+bfCqt1AJqRmfDNLknqbLyEDxeFBIXT5pM8rXntzZrqjKYswaSw==
-X-Received: by 2002:a05:6a21:1706:b0:19c:8d73:721e with SMTP id nv6-20020a056a21170600b0019c8d73721emr2265343pzb.36.1707236216991;
-        Tue, 06 Feb 2024 08:16:56 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCU28e4mrJDjQpI0s4/V48s8dFNW5hiwuyQqSJsmxucCIFjDHSlQWRniuK/u+QXmZ+Q/TiZg0T7bcydkTyFcWjSwPu3p5V2LDbXn5eRaSylgGEiyjDk9KD5UjKDiUq5cUwngxGYbGWzOEpy5UbyybL6yOZ1q8FXObxLaeeSOk4sAs2+BA1y4R+dpa2EQBpFBu+lMcSZgbpKmhIurYFpRKXtRnaXd0hwCuC3ls/DepivUqGxOJaoY1n3qaCetNfnfSC+RROlImFujWrq6hyfYmR9HJlqt3Vtan9Pkbdodo6DKhHCJ6D4KDcaE+No=
+        bh=l9k8qmh5FtuqJT0VlM3e5bdRxi2TqKIV+Oi2Qsz4LGI=;
+        b=JSkZHrorLHAWe4R7ArFgXIOK8ZtrVtkO32WOr5tuCdfGYsHu/bjUY4kvEh/EFvbOro
+         2ILZk9Ly4J0e1E9feRVCAFZXIb87ruSwMYRt8D55hXdLtUtJynDatuuVam1BUuhwiL2n
+         rebwYwtWYGpV7ZfmuMyW4Cz/ZDkwzN30xMu1HU2fqrAUG4M52MCUoUWP0TvE35pkEKrF
+         oSLMYquYqUixbGvyQ+X4NtQRjHisW98CSw4JGLVkysRIJqGIs9YfIgz8HA04TjnqL0gv
+         nL6EbQZPE9zvtlZE2GJKjC2dmcikM/1pnn+/HchpOOG4cKARL9VHLnR+rgJUE0K6fTBB
+         FYGA==
+X-Gm-Message-State: AOJu0YyA17ofA61UHE+INDxwaZR5ZiuHPfewFJvei7LalIIngCJvUBO4
+	WTXOZNc3tLqBXCB3AGbO63zWWUGkPIt3skPX168m4MM1UIxyj20sAxj0Bfxrkg==
+X-Google-Smtp-Source: AGHT+IG8UBzgoFf0n/CYjiadrh9Keq0fKG2KclHIN6IbzHjapSkd7T5jS0c/GDpxVFGoQoKnhSVs/A==
+X-Received: by 2002:a17:902:7842:b0:1d9:c01a:dee6 with SMTP id e2-20020a170902784200b001d9c01adee6mr2028518pln.44.1707237307417;
+        Tue, 06 Feb 2024 08:35:07 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW5fumqxc1sH0MT/vwOXV2DI8bT3uU6YjbFErJAbqcnzXatDTQZA8UvmAQpn3MsO5TYa8t2ydZ5E7QAyfKaKjRBHmqs2qx9tGgj5OeJ6pRk9/CfUWTJ9wVbRwywVPp08C2Nz0lDEjiYP29tR+I7FErOnCh5DdrkGRO8T/i1YNI5HrjiZRCg6wzD3Zi1oJLZY4Xbp49ngh+pUWLvyE9zWQOZbhKlbTr+4+L1klJ74sj2y9Dwhvy2qgPQNFZbWyY/lFJrhXmB+MQd1JpFN2xgNuTGMHaHatWPrIeSTMNAGr02qkgjzZWaR3qIXHW59DlFoIV6jqLavP4FVl+QjkX9kzcjwWKyvD7M48MBHWCbOYvzH9jk7psJuuedBjanbpGG/hSC02PvBXGI2rlZfx8hsGFuVGz9ZcH5e+iJOzwWIx4zKflXlg==
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j21-20020a63e755000000b005c259cef481sm2315826pgk.59.2024.02.06.08.16.56
+        by smtp.gmail.com with ESMTPSA id k196-20020a6284cd000000b006e02f222c2esm2224188pfd.30.2024.02.06.08.35.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 08:16:56 -0800 (PST)
+        Tue, 06 Feb 2024 08:35:06 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Sam Creasey <sammy@sammy.net>
+To: Brian Norris <briannorris@chromium.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Johannes Berg <johannes.berg@intel.com>,
+	zuoqilin <zuoqilin@yulong.com>,
+	Ruan Jinjie <ruanjinjie@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] net/sun3_82586: Avoid reading past buffer in debug output
-Date: Tue,  6 Feb 2024 08:16:54 -0800
-Message-Id: <20240206161651.work.876-kees@kernel.org>
+Subject: [PATCH] wifi: mwifiex: Refactor 1-element array into flexible array in struct mwifiex_ie_types_chan_list_param_set
+Date: Tue,  6 Feb 2024 08:35:04 -0800
+Message-Id: <20240206163501.work.158-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -68,62 +71,91 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2144; i=keescook@chromium.org;
- h=from:subject:message-id; bh=EekBsWAnlq0WJTl7c6M5NqulfYlR861+t7R4vHT+3d8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwlt2L/TmxI94OSbcRDInwOI/Jc5sk6F4m3AMN
- SXhuXR4cpmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcJbdgAKCRCJcvTf3G3A
- JlL0D/4tu/ygbvMxMa2eojnxOzWzbHkOqItMS2qO6Aw0NK7/CDZpY4WOaNxqoxxB2yjzZkCMbhP
- 8CNoJecp3DD8G6L+7JxyOC4Jb6KYhexaE1QkE2ZEe3hsxcQCviINBKHee4n1Wu0tgi+3/pD4Zg7
- YjJ49zE9d/WD0puJHPmCSLKOXNHL2VbnsacCnE2QKa6kMb8W1LnKjuY0H+hgxTkHhqsJu6/iXqu
- s3v8POfVyQ9EEYxZSEtAz5cNmAmDmVoIldB00MsqwnC6TfLUDnX4W2L/tX5vDOFD893BdW1P2U/
- eCKovjVtAm8E7qJ2wzWcCIu6rCby1rJrq5QxlrHHH+NSoBM4Cx8bl8IVfC1pRmwHlP9SxLa0T3f
- NXr3853Nzymr1ivTz0VrgYPvPmsUyOEhay8wF5YJxROQDQInexPOu6brn6qduELdG9MYUVyN8dS
- gXnEW0n0woBclDO9ksAD/30gZ5qe7Msndsd35otv9BH8Vh0I+C/vOkWvjIq5UyqP/DyGWmVXJs6
- TE6mVNPA1FLOTg8XmIZs6u0sQwV78DaOARXzIm/y9pLsVpG4LYIplUlIBwYPFC+sC602PTQTCT7
- 59enc32hZShyIc+84b9gavN9TH6vwIS2Xq2DxwtAaUlSi90PPyrKqxQycviBe3LtBnB+cwuNylm
- pD7aKEv lTRPjtUA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2956; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=I1MfE6AhaDeVgzj4aA9PyyPGYZWM6AIX3a3/cMVgTaw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwl+4Lx4aPOoiEcILogqM539VTMsu2tv0D/daM
+ eRXD6FTw+aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcJfuAAKCRCJcvTf3G3A
+ JolcD/4yGn/OpLY/UrZ49y0DuN14RPalUzJvqINjBVH38HNl0YSWy2Rfpj9047GXuyUUMFFLHHx
+ QfEAYxSwu8rRhq3w1YjGVVOEOv0/QAMDghDgUwT2q8SRD/XsU/WS3jgjBcz8XZnyv050u2m3Gr8
+ a+8E+X9y7Mzf7XSetpEbknoE+CeWCfyMc/6wWHYOCbzhXXW8EY0AyJe6JgqAPEAaUw+XehXUSLD
+ EwFdq3dC0zKmBCzLrXC+zbIJvlG7z/CQIbYTodjvcAFGNBXlrjC8S3kqB74Fu2E1JobMDuPgX9O
+ dFKHJ6bPPNKVueX/dovLXiM7ESte1OMN1s0U/pOQz9feafcPSg6E8aEulB54RMsMbTfcXxFgWiP
+ dnmVDjQ9Dpv3NkwUZlY1zYB3BEciX9O4PwhwObEcF8gmY4LLaXSI6HP/mrr6tf/jKZ5S/4ksfuM
+ c2oouHiKEXQunEXv3nloSvYIN6cOycT1uyO997pesTbC8Z7TwGLZVEmJo+rW1McKlPe23Y6V92b
+ tywErVOd+98zGQPNz2v+AjwObBw79yyikxe4DzMj//96A1EPgSOPtnZHWaHFsl6fKp2xTHm0A55
+ 3KU2wEnoVlVgcP2tcnWD42CrVBPR62sT9IISncwlDrZ2b4kwRx38I1zw1aObyIBYt0QgcPStKtG
+ M+Hd05+ LE24MRPQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Since NUM_XMIT_BUFFS is always 1, building m68k with sun3_defconfig and
--Warraybounds, this build warning is visible[1]:
+struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
+as a flexible array, so convert it into one so that it doesn't trip the
+array bounds sanitizer[1]. The code was already calculating sizes by not
+including the trailing single element, so no sizeof() change are needed.
 
-drivers/net/ethernet/i825xx/sun3_82586.c: In function 'sun3_82586_timeout':
-drivers/net/ethernet/i825xx/sun3_82586.c:990:122: warning: array subscript 1 is above array bounds of 'volatile struct transmit_cmd_struct *[1]' [-Warray-bounds=]
-  990 |                 printk("%s: command-stats: %04x %04x\n",dev->name,swab16(p->xmit_cmds[0]->cmd_status),swab16(p->xmit_cmds[1]->cmd_status));
-      |                                                                                                               ~~~~~~~~~~~~^~~
-...
-drivers/net/ethernet/i825xx/sun3_82586.c:156:46: note: while referencing 'xmit_cmds'
-  156 |         volatile struct transmit_cmd_struct *xmit_cmds[NUM_XMIT_BUFFS];
-
-Avoid accessing index 1 since it doesn't exist.
-
-Link: https://github.com/KSPP/linux/issues/325 [1]
-Cc: Sam Creasey <sammy@sammy.net>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
+Link: https://github.com/KSPP/linux/issues/51 [1]
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: zuoqilin <zuoqilin@yulong.com>
+Cc: Ruan Jinjie <ruanjinjie@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: netdev@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/i825xx/sun3_82586.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/i825xx/sun3_82586.c b/drivers/net/ethernet/i825xx/sun3_82586.c
-index 5e27470c6b1e..f2d4669c81cf 100644
---- a/drivers/net/ethernet/i825xx/sun3_82586.c
-+++ b/drivers/net/ethernet/i825xx/sun3_82586.c
-@@ -987,7 +987,7 @@ static void sun3_82586_timeout(struct net_device *dev, unsigned int txqueue)
- 	{
- #ifdef DEBUG
- 		printk("%s: xmitter timed out, try to restart! stat: %02x\n",dev->name,p->scb->cus);
--		printk("%s: command-stats: %04x %04x\n",dev->name,swab16(p->xmit_cmds[0]->cmd_status),swab16(p->xmit_cmds[1]->cmd_status));
-+		printk("%s: command-stats: %04x\n", dev->name, swab16(p->xmit_cmds[0]->cmd_status));
- 		printk("%s: check, whether you set the right interrupt number!\n",dev->name);
- #endif
- 		sun3_82586_close(dev);
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index a2ddac363b10..0326b121747c 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
+ 
+ 			/* Copy the current channel TLV to the command being
+ 			   prepared */
+-			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
++			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
+ 			       tmp_chan_list,
+-			       sizeof(chan_tlv_out->chan_scan_param));
++			       sizeof(*chan_tlv_out->chan_scan_param));
+ 
+ 			/* Increment the TLV header length by the size
+ 			   appended */
+ 			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
+-					       sizeof(
+-						chan_tlv_out->chan_scan_param));
++					       sizeof(*chan_tlv_out->chan_scan_param));
+ 
+ 			/*
+ 			 * The tlv buffer length is set to the number of bytes
+@@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
+ 		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
+ 		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
+ 		     chan_idx++) {
+-			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
++			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
+ 
+ 			/* Increment the TLV header length by size appended */
+ 			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
+-					       sizeof(
+-					       chan_list_tlv->chan_scan_param));
++					       sizeof(*chan_list_tlv->chan_scan_param));
+ 
+ 			temp_chan->chan_number =
+ 				bgscan_cfg_in->chan_list[chan_idx].chan_number;
+@@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
+ 							   chan_scan_param);
+ 		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
+ 				       chan_num *
+-			     sizeof(chan_list_tlv->chan_scan_param[0]));
++			     sizeof(*chan_list_tlv->chan_scan_param));
+ 	}
+ 
+ 	tlv_pos += (sizeof(chan_list_tlv->header)
 -- 
 2.34.1
 
