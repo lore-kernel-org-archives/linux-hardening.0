@@ -1,161 +1,164 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E6DC13B
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 16:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3539D53B
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 16:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707237309; cv=none; b=Y6B5hlSUvN4tHHTklMsa7520pN2JSV9hr9ZKgbuUf8+RI4PmH337rBLAvlQFaukJCJsF5JQPdccDxVJn3eZLSNr5GsmCaA/LWgFAUFqh483TeoSUSh4pEmNftD2Ph+THz3HWajrSuG3swAD/tC8V9owSuU52GjFUzulZS5fY6vs=
+	t=1707237387; cv=none; b=GdNImNa3JhcQxcBOtR/RCap6fy/kJuTX7WMr76gnpJ/KDg15QxkAC7mXdxACohGbrLDxlospii5Zm0jxTsS/4sD8s7zarutz8CbNYWY7SFX6JF3Y+iIWKYpJenKLzMqu+NqRNFad0WbmY4ehp+Ho1n/w80U5WoLc3mizsZw+xPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707237309; c=relaxed/simple;
-	bh=I1MfE6AhaDeVgzj4aA9PyyPGYZWM6AIX3a3/cMVgTaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nmLofkN+9z3FHeXdeTKH0IDxYvhMuHcd5A8AIh+gmFIo6SoK5HoPovlAPu38FbgZvWpuvmuZhEJdHabQvjRswBJYCTMir3FlznDXBDc6pNHSE//kU+4PpC6hlMCevwQYeWvl3i7LC+AfumOSLuTz5Tyn9AvBldZ/kAe4Wy/f32Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EeRA6zSb; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707237387; c=relaxed/simple;
+	bh=mgZOgLB1HuathAGqKmjNnG/0xoJq5roM2WNaXcdTp9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NLdO7ieWrwfNZvSwerh4vZYQ8dTv0oyyyFlyfkvv0U/Dh1qLulFuN/TU3TFuf19j/XWtxcsYG7ivvltqRwZgbmqhdAoL0IJggwasXs5lGFwEDSy3Fpv9DTYFDoPRFLqvhtyJt3XHTPtkuLjf9cRe14/XcbXQ9dzYyiQwiV8ZpUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=FYm38sxs; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EeRA6zSb"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d93f2c3701so31592775ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 08:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707237307; x=1707842107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9k8qmh5FtuqJT0VlM3e5bdRxi2TqKIV+Oi2Qsz4LGI=;
-        b=EeRA6zSbxkQuNXdyLY3C5+++uJrEXJzDiD2Hs/eQ3woDOTwVKsUYtmr1uQ+jPoV9TI
-         RRpQNkocwFMaxUBrCzDU8bvsMdnhqmPEe8qu8hbWjtEWwk9J9BiwQ967+opu/L9PMTsD
-         6odQiI2HQtfsqdMilID04vqiQoC98SYtAbbCM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707237307; x=1707842107;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l9k8qmh5FtuqJT0VlM3e5bdRxi2TqKIV+Oi2Qsz4LGI=;
-        b=JSkZHrorLHAWe4R7ArFgXIOK8ZtrVtkO32WOr5tuCdfGYsHu/bjUY4kvEh/EFvbOro
-         2ILZk9Ly4J0e1E9feRVCAFZXIb87ruSwMYRt8D55hXdLtUtJynDatuuVam1BUuhwiL2n
-         rebwYwtWYGpV7ZfmuMyW4Cz/ZDkwzN30xMu1HU2fqrAUG4M52MCUoUWP0TvE35pkEKrF
-         oSLMYquYqUixbGvyQ+X4NtQRjHisW98CSw4JGLVkysRIJqGIs9YfIgz8HA04TjnqL0gv
-         nL6EbQZPE9zvtlZE2GJKjC2dmcikM/1pnn+/HchpOOG4cKARL9VHLnR+rgJUE0K6fTBB
-         FYGA==
-X-Gm-Message-State: AOJu0YyA17ofA61UHE+INDxwaZR5ZiuHPfewFJvei7LalIIngCJvUBO4
-	WTXOZNc3tLqBXCB3AGbO63zWWUGkPIt3skPX168m4MM1UIxyj20sAxj0Bfxrkg==
-X-Google-Smtp-Source: AGHT+IG8UBzgoFf0n/CYjiadrh9Keq0fKG2KclHIN6IbzHjapSkd7T5jS0c/GDpxVFGoQoKnhSVs/A==
-X-Received: by 2002:a17:902:7842:b0:1d9:c01a:dee6 with SMTP id e2-20020a170902784200b001d9c01adee6mr2028518pln.44.1707237307417;
-        Tue, 06 Feb 2024 08:35:07 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCW5fumqxc1sH0MT/vwOXV2DI8bT3uU6YjbFErJAbqcnzXatDTQZA8UvmAQpn3MsO5TYa8t2ydZ5E7QAyfKaKjRBHmqs2qx9tGgj5OeJ6pRk9/CfUWTJ9wVbRwywVPp08C2Nz0lDEjiYP29tR+I7FErOnCh5DdrkGRO8T/i1YNI5HrjiZRCg6wzD3Zi1oJLZY4Xbp49ngh+pUWLvyE9zWQOZbhKlbTr+4+L1klJ74sj2y9Dwhvy2qgPQNFZbWyY/lFJrhXmB+MQd1JpFN2xgNuTGMHaHatWPrIeSTMNAGr02qkgjzZWaR3qIXHW59DlFoIV6jqLavP4FVl+QjkX9kzcjwWKyvD7M48MBHWCbOYvzH9jk7psJuuedBjanbpGG/hSC02PvBXGI2rlZfx8hsGFuVGz9ZcH5e+iJOzwWIx4zKflXlg==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k196-20020a6284cd000000b006e02f222c2esm2224188pfd.30.2024.02.06.08.35.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 08:35:06 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Kalle Valo <kvalo@kernel.org>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	Johannes Berg <johannes.berg@intel.com>,
-	zuoqilin <zuoqilin@yulong.com>,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: mwifiex: Refactor 1-element array into flexible array in struct mwifiex_ie_types_chan_list_param_set
-Date: Tue,  6 Feb 2024 08:35:04 -0800
-Message-Id: <20240206163501.work.158-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="FYm38sxs"
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTPS
+	id XNY6r8x5zTHHuXOQlr0pZT; Tue, 06 Feb 2024 16:36:19 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id XOQkrqN9BoL7MXOQkr0zxq; Tue, 06 Feb 2024 16:36:18 +0000
+X-Authority-Analysis: v=2.4 cv=ZL10mm7b c=1 sm=1 tr=0 ts=65c26002
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=cm27Pg_UAAAA:8 a=lXWNAtzADcZZgIjtGc4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=8LfgHNaa6p4A:10 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ho3hrp7XcTsBErJhywPAagDi6Mkqk4q72L1K4GsdTRQ=; b=FYm38sxsIiXyEaRic6gNnCyQPN
+	jieaLQ1ZUefC3lameJVtACCu3wIbgJUUS6oVj3kQ+T7XD7iHEv/92rQ1LXloUwkRIyVUn01oN42l/
+	vgdZLOhtn8Z3YWHilM6+epHYQ4yIlsBW10IoRD7WoBBSIg5vnBL9M4hzpZF95UVj9cS5BaY6NeDWo
+	G9ULvv2gM2B20XmTUxPloOo1w1kCxMo6qeQFDJWzZh2dUnXSNjVBAHJ6cGmfyVKwOMWVBJ+G7S9Rs
+	bj4sTK5brhJDOxaaw5Gmx48u0cmt7mfa0mpI4FgzRnCyntjdpXjv2BuMT067jS/wH+j5/7tjQg4gS
+	iOLAF0jg==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:36786 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rXOQj-003Ba7-1b;
+	Tue, 06 Feb 2024 10:36:17 -0600
+Message-ID: <89a743fb-37fa-40b9-8ce5-d118ae95af38@embeddedor.com>
+Date: Tue, 6 Feb 2024 10:36:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2956; i=keescook@chromium.org;
- h=from:subject:message-id; bh=I1MfE6AhaDeVgzj4aA9PyyPGYZWM6AIX3a3/cMVgTaw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwl+4Lx4aPOoiEcILogqM539VTMsu2tv0D/daM
- eRXD6FTw+aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcJfuAAKCRCJcvTf3G3A
- JolcD/4yGn/OpLY/UrZ49y0DuN14RPalUzJvqINjBVH38HNl0YSWy2Rfpj9047GXuyUUMFFLHHx
- QfEAYxSwu8rRhq3w1YjGVVOEOv0/QAMDghDgUwT2q8SRD/XsU/WS3jgjBcz8XZnyv050u2m3Gr8
- a+8E+X9y7Mzf7XSetpEbknoE+CeWCfyMc/6wWHYOCbzhXXW8EY0AyJe6JgqAPEAaUw+XehXUSLD
- EwFdq3dC0zKmBCzLrXC+zbIJvlG7z/CQIbYTodjvcAFGNBXlrjC8S3kqB74Fu2E1JobMDuPgX9O
- dFKHJ6bPPNKVueX/dovLXiM7ESte1OMN1s0U/pOQz9feafcPSg6E8aEulB54RMsMbTfcXxFgWiP
- dnmVDjQ9Dpv3NkwUZlY1zYB3BEciX9O4PwhwObEcF8gmY4LLaXSI6HP/mrr6tf/jKZ5S/4ksfuM
- c2oouHiKEXQunEXv3nloSvYIN6cOycT1uyO997pesTbC8Z7TwGLZVEmJo+rW1McKlPe23Y6V92b
- tywErVOd+98zGQPNz2v+AjwObBw79yyikxe4DzMj//96A1EPgSOPtnZHWaHFsl6fKp2xTHm0A55
- 3KU2wEnoVlVgcP2tcnWD42CrVBPR62sT9IISncwlDrZ2b4kwRx38I1zw1aObyIBYt0QgcPStKtG
- M+Hd05+ LE24MRPQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] overflow: Adjust check_*_overflow() kern-doc to
+ reflect results
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>,
+ Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org, Marco Elver <elver@google.com>,
+ Eric Biggers <ebiggers@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+References: <20240206102354.make.081-kees@kernel.org>
+ <20240206103201.2013060-1-keescook@chromium.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240206103201.2013060-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1rXOQj-003Ba7-1b
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:36786
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOX1Z3X078JCif6zf9nE4N3sEaPTqkG84V5n8EihxL9YxyQhHqnajlQjf0FHiv3A4fGJtesb0CKEWJ9zatWwgBawegqgjU3YPmXqQ3rjRa3pcUaKXden
+ 0mE6ntiaPRt9hy2c62OwI6UViDYkOsulrdRp5VoFIPnPYoz3LjQca5/wkhMwvfh9+B4M+13/MiI4tkm++5rYjdvpDLFztgwSRiYaLehtIray7wGxWfUaO9aI
 
-struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
-as a flexible array, so convert it into one so that it doesn't trip the
-array bounds sanitizer[1]. The code was already calculating sizes by not
-including the trailing single element, so no sizeof() change are needed.
 
-Link: https://github.com/KSPP/linux/issues/51 [1]
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: zuoqilin <zuoqilin@yulong.com>
-Cc: Ruan Jinjie <ruanjinjie@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index a2ddac363b10..0326b121747c 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
- 
- 			/* Copy the current channel TLV to the command being
- 			   prepared */
--			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
-+			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
- 			       tmp_chan_list,
--			       sizeof(chan_tlv_out->chan_scan_param));
-+			       sizeof(*chan_tlv_out->chan_scan_param));
- 
- 			/* Increment the TLV header length by the size
- 			   appended */
- 			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
--					       sizeof(
--						chan_tlv_out->chan_scan_param));
-+					       sizeof(*chan_tlv_out->chan_scan_param));
- 
- 			/*
- 			 * The tlv buffer length is set to the number of bytes
-@@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
- 		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
- 		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
- 		     chan_idx++) {
--			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
-+			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
- 
- 			/* Increment the TLV header length by size appended */
- 			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
--					       sizeof(
--					       chan_list_tlv->chan_scan_param));
-+					       sizeof(*chan_list_tlv->chan_scan_param));
- 
- 			temp_chan->chan_number =
- 				bgscan_cfg_in->chan_list[chan_idx].chan_number;
-@@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
- 							   chan_scan_param);
- 		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
- 				       chan_num *
--			     sizeof(chan_list_tlv->chan_scan_param[0]));
-+			     sizeof(*chan_list_tlv->chan_scan_param));
- 	}
- 
- 	tlv_pos += (sizeof(chan_list_tlv->header)
+On 2/6/24 04:31, Kees Cook wrote:
+> The check_*_overflow() helpers will return results with potentially
+> wrapped-around values. These values have always been checked by the
+> selftests, so avoid the confusing language in the kern-doc. The idea of
+> "safe for use" was relative to the expectation of whether or not the
+> caller wants a wrapped value -- the calculation itself will always follow
+> arithmetic wrapping rules.
+> 
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Better to be concise and direct. 🙂
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
 -- 
-2.34.1
+Gustavo
 
+> ---
+>   include/linux/overflow.h | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 7b5cf4a5cd19..4e741ebb8005 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -57,11 +57,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>    * @b: second addend
+>    * @d: pointer to store sum
+>    *
+> - * Returns 0 on success.
+> + * Returns 0 on success, 1 on wrap-around.
+>    *
+> - * *@d holds the results of the attempted addition, but is not considered
+> - * "safe for use" on a non-zero return value, which indicates that the
+> - * sum has overflowed or been truncated.
+> + * *@d holds the results of the attempted addition, which may wrap-around.
+>    */
+>   #define check_add_overflow(a, b, d)	\
+>   	__must_check_overflow(__builtin_add_overflow(a, b, d))
+> @@ -72,11 +70,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>    * @b: subtrahend; value to subtract from @a
+>    * @d: pointer to store difference
+>    *
+> - * Returns 0 on success.
+> + * Returns 0 on success, 1 on wrap-around.
+>    *
+> - * *@d holds the results of the attempted subtraction, but is not considered
+> - * "safe for use" on a non-zero return value, which indicates that the
+> - * difference has underflowed or been truncated.
+> + * *@d holds the results of the attempted subtraction, which may wrap-around.
+>    */
+>   #define check_sub_overflow(a, b, d)	\
+>   	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+> @@ -87,11 +83,9 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>    * @b: second factor
+>    * @d: pointer to store product
+>    *
+> - * Returns 0 on success.
+> + * Returns 0 on success, 1 on wrap-around.
+>    *
+> - * *@d holds the results of the attempted multiplication, but is not
+> - * considered "safe for use" on a non-zero return value, which indicates
+> - * that the product has overflowed or been truncated.
+> + * *@d holds the results of the attempted multiplication, which may wrap-around.
+>    */
+>   #define check_mul_overflow(a, b, d)	\
+>   	__must_check_overflow(__builtin_mul_overflow(a, b, d))
