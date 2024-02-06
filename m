@@ -1,65 +1,75 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BE812FF63
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 11:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5441292CF
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 11:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707217476; cv=none; b=ChKqwQanoU6sYWzafAfY6mwAFzaqK71D86P3/5Bm/oY1F9bUb8WVwWu36iJHY14XwQ9wSjbHxOV3EAcp6UMmTxrIMly3PEhVxFyjnpxDQLgrNEsS9AohVrhB3GGn1v1mMSC1ZMxTVC3Z2qygml62x2t8xhhC9nPkYc7d+6emDws=
+	t=1707217760; cv=none; b=dwsUI5jQFUL1ejr5zevbKhlmEoEiU0lkocmGY6zPfqqQNZutKEhejuoLamaGKsUH1wWmm0fRbvMyxkLjXfMDkUy/yKxVaK3w0A7iHi+g3EIwh5YIopJKMGaM/xdZ2zrhqbs68M1DFtXnttQ99B4e/5TXW9ActfeiWkB20LvzRGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707217476; c=relaxed/simple;
-	bh=zLVrG5DEPYCkUeOG89F9N4ICOWJwgxPtAMWD+gTUT2E=;
+	s=arc-20240116; t=1707217760; c=relaxed/simple;
+	bh=I88T9DtBs60ZimAuUeMEtUlCdBG0kCHidolckOt/nWs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DG/rAtD8IaLYihTP3ZElv7ugh7BL5MRTznhtrZEuvHwZ2Q6o8gzHGcxJjM3EOCPB7BNZacT+TUrF5zM5Xl6Menoc1qWU8ViF2NMeZ0FGSZVz94pHS9biM8EHQnQuJm6wwvVSLjm9GrNsJLUAMNOY/mOI1adpTwnH8tDDcVuaCMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f57QU7Z4; arc=none smtp.client-ip=209.85.161.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=KIW0OoAbpjPJH4ELAGTeRa4MX7JKd7u+jFPhBK+a22C4kLib5pnd4LgXRj06ccjzv73SBdM4kkOMEbzbGT4H80zxZDv5prqtRq1LesV1+5Db14d5u/5I9hyclXl4Q3ISQuF+H8dVWh2AbWhSiwGxYMUynhMAHFx5tBTGI8qv0zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Vq4Z37rB; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f57QU7Z4"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-59a8b9b327aso2229867eaf.2
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 03:04:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vq4Z37rB"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d958e0d73dso3924835ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 03:09:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707217474; x=1707822274; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707217758; x=1707822558; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jdi57VxKHObnE5zoZGx9RhZHPRCTjhtH0EPbJ2FhTxM=;
-        b=f57QU7Z48M+foNZupPTyPXOsbbRyEvjaJDU1nUaKGp0cdJ74QH5NcCczhuQY4zaFJO
-         3kL+mkYwfcNQE55g2/1xhkbKo4nFTqFeEC0IPv/pju9pop7Q1imWei29LWekoUBPABnN
-         gEbfXAx8QZeCSE2f7yTSPFouOTUaFD6ICSbFQ=
+        bh=OK82JrlJXMGwOCPdhn7BsC/hEWZwW73rbUs1KIvU8rY=;
+        b=Vq4Z37rBi7PL1kQKcFf5EBnXkTg86f0AJmrk8NUN+WFmvNSwKyZyerIbB9plgJatLB
+         jPx14d6FO390Lryg6xenrONBlC9PM6QNUWzxXIrTNJQPtrQjI9WBXVm0+7CQQm1eurx7
+         PW6Hn9cNE5IliOA0uQuEI/mRydkzsb+8mJFUA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707217474; x=1707822274;
+        d=1e100.net; s=20230601; t=1707217758; x=1707822558;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jdi57VxKHObnE5zoZGx9RhZHPRCTjhtH0EPbJ2FhTxM=;
-        b=DG4YG1TQRb9h9EtGcr1CxOl6lrXCGqkxSfv2PR9cxnSa5GBqGa0LNiaplYjZjleFoP
-         3a/Vvz3tNxHO2JQ4QvkXKYxFl3IN0x2PPzNdIqLkSfEe2GYkZlhoWd4VI+UHK4us47xm
-         2GF0e8Q6fENl+ucwCyezWvMUUB+KcOMOe3stfjV3jx0NCZOoqqE/5kkKpQ3iP27Mi3NA
-         8hcMVQ9EdqY1KBnqvF8ZcTG5CjVsgiiOXQT1OztWbrIWm2ol6nF4cwNQ/Y+oN1eKQkfn
-         kVeA8WjqkAwGUWiJ4o20rlLCFpT7uuMesgTPbqLJGgd5iMyqvbuGP1/gU/U+G/+F6729
-         IQMw==
-X-Gm-Message-State: AOJu0YznjserpFjeChqHVJ8cTev/qrxr1bMkayeF837LR8NF7sCssixk
-	8WMCsxMS0b7H47FBZh+0sLHeIWyqyahl7tFidf4szndaHUfwzKcpDTpsO4visA==
-X-Google-Smtp-Source: AGHT+IHmkZcbY3sAPTl3c2KxpO3wQmiur2lCIYnOMA40LrsrgXdjZRT26TwYW4zBmvnbyLlVNZ+ruQ==
-X-Received: by 2002:a05:6358:d04c:b0:176:805d:4f1e with SMTP id jb12-20020a056358d04c00b00176805d4f1emr3626511rwb.12.1707217474083;
-        Tue, 06 Feb 2024 03:04:34 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVwRvQs5rTJifiKdaxvcG2Sx4mbpt8XyfRJjYcKF6mrb/BoOQjFuX424biVNdjGoiLaw08GmAL53be4Y4xZEXPBivbMDz0DScQzlnqchZA/O1F6LmYS2VJS9Mhd6NBMAfAHUi1itFdVCTJtraiGOhYVJy25AIaUVNrB1JCgcaKmXPnyAuSUsZbKQEVX3EcWiHGMemzyO4E0+9DJc1r654ytVcjdzQT5k1y9wgImsBmpnnMeGYm6EZozhf/aRVVry2unbG5Tmd/A
+        bh=OK82JrlJXMGwOCPdhn7BsC/hEWZwW73rbUs1KIvU8rY=;
+        b=XHZj6LDwRpdafu5K56HlVUDUWz44YML55D5sr3fLWVzMMSZy/w1EqWDtJeVMUJSUk+
+         4uZacDN1ssAylAJyXffVu+zVbDXsV5svSdiINI18T7NPhJp48DoOuvmqrqRUR+lWjcQ8
+         Xq9RfOIXLk0j2qUkKwcsPXObdbUJP64zfip2IkGY+tm1Np3Fcpvwgn3cGnMsV6XDkjoz
+         aXOtaYKrWXI9zpyR4lSmqtbUCpFohJQXZ5ecMpFifeK07mKSg+Xj18ZHwMSQuAPiN5/R
+         2OF3dE8mqVG39f/vca1j1YCyFRFPIwDQdX9Z9eg372h3teopRU+6cjviUAyE3dMjHoi5
+         kghg==
+X-Gm-Message-State: AOJu0Yy6HEMd9/Nc/BiZzBVn4USROc+pKUP3nuxeaOK1UV2PmUMXP9Rm
+	Nze4GqxTzSv0rju3xI7L19YrNpeurGCCOF7c05YP0xa4Ea9UoQnylHbWpehzZQ==
+X-Google-Smtp-Source: AGHT+IFZOORfXrMbTTsX7WOw0KRZQzimHM7fgRlgvyzAFriEdNiFMl7FCCdJQtXf34fHOtXX6s7WRw==
+X-Received: by 2002:a17:903:25d4:b0:1d9:803a:8b0b with SMTP id jc20-20020a17090325d400b001d9803a8b0bmr1488044plb.33.1707217758211;
+        Tue, 06 Feb 2024 03:09:18 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWD41BFbjj/gA9nr3hzGLWEWc28wGikJIa+U3DfYEG0+mhZav6ryva2TaZi/PuT+gDRDu3oPFfGLLauKK2I3iwCMOOkLmbqbllaBeIcb7Jfztp+AIIejdbl7TaDPuKZyAJU3Zi5oI6VCIuOR0uSOxs55kiSlmmhTdpw4iWIbnlbmzKnAeeNTRVdyMD7WLOMTJAfzFjLt4dlDx2gWwQ0SSli+08lhSJDOfaZFkSyqEAt9idPS4K9IBA0bgPei7tlmp98i5xFYyFtsvuMAFsnGwbcitjdhkSk+JjhPwTXPc+Cak+xGP930Q9GxgzYqvrScLmRHHswhkoOXiHfz4WS4FJoAGCXIak+7iFyl0/WnvOkBBnM3i6klYaN+gxVw2oLmoaLby9mJ7FioFHl3o/t9zZ+56J3jOuURB9oveQrlghN2XOHfRIUQQik1XssosFvbH2oCK4J8AIOnScjPQLuVjEoogGC0ZFii3Y9DUS2TkzP3HEy2L0NKH9YVD7LfyD6xOJJw93kac5+ZT1HEJ3MaTAhCkQKaaY/KQ8THpgBgZI=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id w10-20020a63d74a000000b005cd8044c6fesm1806452pgi.23.2024.02.06.03.04.33
+        by smtp.gmail.com with ESMTPSA id 5-20020a170902c14500b001d9557f6c04sm1567758plj.267.2024.02.06.03.09.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 03:04:33 -0800 (PST)
-Date: Tue, 6 Feb 2024 03:04:32 -0800
+        Tue, 06 Feb 2024 03:09:17 -0800 (PST)
+Date: Tue, 6 Feb 2024 03:09:17 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: kernel test robot <oliver.sang@intel.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] selftests/seccomp: Pin benchmark to single CPU
-Message-ID: <202402060302.C9BD99F@keescook>
-References: <20240206095642.work.502-kees@kernel.org>
- <ZcIG8y0U1VyMsCAD@finisterre.sirena.org.uk>
+To: Marco Elver <elver@google.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
+Message-ID: <202402060308.0FF75100@keescook>
+References: <20240205093725.make.582-kees@kernel.org>
+ <67a842ad-b900-4c63-afcb-63455934f727@gmail.com>
+ <202402050457.0B4D90B1A@keescook>
+ <CANpmjNMiMuUPPPeOvL76V9O-amx9uyKZYtOf5Q2b73v8O_xHWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,26 +78,71 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZcIG8y0U1VyMsCAD@finisterre.sirena.org.uk>
+In-Reply-To: <CANpmjNMiMuUPPPeOvL76V9O-amx9uyKZYtOf5Q2b73v8O_xHWw@mail.gmail.com>
 
-On Tue, Feb 06, 2024 at 10:16:19AM +0000, Mark Brown wrote:
-> On Tue, Feb 06, 2024 at 01:56:47AM -0800, Kees Cook wrote:
+On Mon, Feb 05, 2024 at 02:10:26PM +0100, Marco Elver wrote:
+> On Mon, 5 Feb 2024 at 13:59, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Mon, Feb 05, 2024 at 01:54:24PM +0100, Andrey Ryabinin wrote:
+> > >
+> > >
+> > > On 2/5/24 10:37, Kees Cook wrote:
+> > >
+> > > > ---
+> > > >  include/linux/compiler_types.h |  9 ++++-
+> > > >  lib/Kconfig.ubsan              | 14 +++++++
+> > > >  lib/test_ubsan.c               | 37 ++++++++++++++++++
+> > > >  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
+> > > >  lib/ubsan.h                    |  4 ++
+> > > >  scripts/Makefile.lib           |  3 ++
+> > > >  scripts/Makefile.ubsan         |  3 ++
+> > > >  7 files changed, 137 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> > > > index 6f1ca49306d2..ee9d272008a5 100644
+> > > > --- a/include/linux/compiler_types.h
+> > > > +++ b/include/linux/compiler_types.h
+> > > > @@ -282,11 +282,18 @@ struct ftrace_likely_data {
+> > > >  #define __no_sanitize_or_inline __always_inline
+> > > >  #endif
+> > > >
+> > > > +/* Do not trap wrapping arithmetic within an annotated function. */
+> > > > +#ifdef CONFIG_UBSAN_SIGNED_WRAP
+> > > > +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
+> > > > +#else
+> > > > +# define __signed_wrap
+> > > > +#endif
+> > > > +
+> > > >  /* Section for code which can't be instrumented at all */
+> > > >  #define __noinstr_section(section)                                 \
+> > > >     noinline notrace __attribute((__section__(section)))            \
+> > > >     __no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
+> > > > -   __no_sanitize_memory
+> > > > +   __no_sanitize_memory __signed_wrap
+> > > >
+> > >
+> > > Given this disables all kinds of code instrumentations,
+> > > shouldn't we just add __no_sanitize_undefined here?
+> >
+> > Yeah, that's a very good point.
+> >
+> > > I suspect that ubsan's instrumentation usually doesn't cause problems
+> > > because it calls __ubsan_* functions with all heavy stuff (printk, locks etc)
+> > > only if code has an UB. So the answer to the question above depends on
+> > > whether we want to ignore UBs in "noinstr" code or to get some weird side effect,
+> > > possibly without proper UBSAN report in dmesg.
+> >
+> > I think my preference would be to fail safe (i.e. leave in the
+> > instrumentation), but the intent of noinstr is pretty clear. :P I wonder
+> > if, instead, we could adjust objtool to yell about cases where calls are
+> > made in noinstr functions (like it does for UACCESS)... maybe it already
+> > does?
 > 
-> > +	/* Set from highest CPU down. */
-> > +	for (cpu = ncores - 1; cpu >= 0; cpu--) {
-> > +		CPU_ZERO_S(setsz, setp);
-> > +		CPU_SET_S(cpu, setsz, setp);
-> 
-> Is there some particular reason to go from the highest CPU number down?
-> Not that it super matters but the default would be to iterate from 0 and
-> there's a comment but it just says the what not the why.
+> It already does, see CONFIG_NOINSTR_VALIDATION (yes by default on x86).
 
-I was arbitrarily picking a direction and all the examples I could find
-started at 0, so this would be more (?) out of the way. :P
-
-Without a cpu cgroup, I can't _exclude_ the pinned CPU from other
-processes, so I was pretending the last CPU will be less likely to be
-used.
+This is actually a reason to not include the ubsan disabling in
+__noinstr_section just to see what ends up in there so we can fix it
+immediately....
 
 -- 
 Kees Cook
