@@ -1,156 +1,202 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48DB13AD1
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 18:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78514134BC
+	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 18:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707244190; cv=none; b=B6fK+wWPYDzAqC7370IdBOCgKm3ENjYiW9eXO/2peMwK9DuwfJdixPynvxeCLhr9lwn1ma7T89LDmjkjhVApkFB7CdGmFwyPsZRIcfupl++nImDI4sf6Tq143R0qge2VZORniDRwcIMFK6qVXZOsGttX6xU0p8JYOht2gL23zgE=
+	t=1707244746; cv=none; b=t1oFMzvTNUVERaB15dgj3RxR1ruQgBpLst0oN5QeCiXXBpp2svmnSYLk3xcIcZAYiq70M7NjJzwNicnQ/cO7kLSonF+hwq1DUAs1V6xNzwh2rbd3btxvYIobKbcXcUQOi7WAqjPnoM/kGYgX8Wk0AI2/HlUYpzOoGg3RVEsYfpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707244190; c=relaxed/simple;
-	bh=BUOquwLWLt01wMe0RZawNAn/DoGoKckY8/5pT4ZGko0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/ZTyBLLYPyyX+fx1W3j8l9W57BGAWauBq4q3Hctiaq0gbzk1JtZs5PUm41Ht4Iqsoeq+9BkAxFi3Nx0CPcNC1uiso3duBDKOrvsRYSqT/cokuqa2ydq7hRm3QmYQKFQMgBBCgfTt7Ow5bNYCAjDSKE86SVoDIHESUL9W5ru4Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kPRniyjf; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1707244746; c=relaxed/simple;
+	bh=gL6wUfzFxvfxPZGWpLEFqjtcbkxcIJZhE0UgHspyByg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sng4j5MEeJhlA88Od26NorvCLkxNr29ezbmxdrhZw4HHTko4HY22QdexIQVpUAxkzNYvwJa9WaCBSY/TCZvCng7VJ29c1gq++wuUABkRkKodwVAizbxi9EzGu5hv0c5rVKzZ5J14Rr3FoIplac48YvEo0xVxtf8vBnaZ5IiBe+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OM5MIO04; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kPRniyjf"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d932f6ccfaso9491025ad.1
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 10:29:48 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OM5MIO04"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-295c67ab2ccso4497097a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 10:39:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707244188; x=1707848988; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gHuc2cs/yJLVP6ISElunRDTShvSYh7RoYJQ5lUhlcmw=;
-        b=kPRniyjf8RSdGksHzpAFU4C3Nb5olzH+eDLUQq2N28pwkCDOcFi1iFN+xX0LT/FkJb
-         R5zl6a5KtVLnoTBQmqRyi2AapZJ7c34vDKG3uFSFPvVrY1ASNRn8bXROcoe5VsRmYD0y
-         0gccxmVKaf6wvNJbIaZVjdiqvdE4DA9eDzRD8=
+        d=chromium.org; s=google; t=1707244744; x=1707849544; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wrFw6OcFw29oUU8H5EOEkRWU7rw58dDsUIlQVNcW+Pk=;
+        b=OM5MIO04+DC3AcWgmmIjoLpKzRAW5TY9oD8ZLlU/KgGoRtIfPgR38T2t9vP14mg3eV
+         8t2esO9xfuBB987eebVg8bsmoVW86avBnA91aJXcSB8dUavV6Zo+EVh7jOoV+wOlVHt8
+         3mjmI+wXUrVT+/RghZGNkFArV3I7yJJ2nO744=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707244188; x=1707848988;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gHuc2cs/yJLVP6ISElunRDTShvSYh7RoYJQ5lUhlcmw=;
-        b=qvxls6niSR5JH1NJugYAeSAjPzkputv+KDj4aBPBvMGq3pxAhrbKrLiihMDMyhkfXo
-         CA/QGrAjZM7MkhjNyQh5Llbf0mh6R6VjWAYcOWdR23Ch/QjGcdZ6qzPbVKAWA9uhDByn
-         SM5ekOfrU5n7EGI7Zr7KsGFeMDkX8qoFLGxLLSBeIbOZPbbJUnN38+sF3wMLjJ/cVfvT
-         cHeEL9+tLAJL8mAOMJf0rt3nELQIN1JqKsLwJl/RAtwL2hJmz/aufInjRpDlzsnTGVds
-         t8OSrfEF9cYjg+oDJGtvP0lwTWJqSzm0fQpS2SRbFzAefcKFjxBGtL/aNEwxVZphuakj
-         l48w==
-X-Gm-Message-State: AOJu0YxPQ+AFr4SmO0OhvaMEU3wnjkmoOYGOAsLrdQ08CQtQY9Zc+Aq7
-	hVRFd0gV4W2W7GledUf4wifSLFlS9lf0be7IK0GKJseQwb0q6oDLZyBAxCc24g==
-X-Google-Smtp-Source: AGHT+IFCKBN5hGzEzxMLXw8xy0PgG9ZqC85fvG/hg0KhV/yQZx8KiRUuobiEhsXw/ffASJ1QYzaHiw==
-X-Received: by 2002:a17:902:eb86:b0:1d9:42fa:c238 with SMTP id q6-20020a170902eb8600b001d942fac238mr2729938plg.14.1707244187881;
-        Tue, 06 Feb 2024 10:29:47 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVtW5PU9sKMsQ2i9tSdfSv+ivEGaZFD0UvIbwgqb3ZrNtOEq/svazi5KAyocpsJlee+xBDl+9VuyAVyBkDaYV+JlRYt2iE+CVjYuWIhUeGskpU5FMB+ukWL1p6ec6okzsL2IZHMIdp25fmGxrkR6dFN5hAChXaybJjbSMbODSjOIt/efu/fH9ULrc7LSXK34pF9FNdoJ9w0lfF4+d65c4AYo3asd0HaMwBKfVWIyIzGoczW7BcKw6CFFp5k0A0PDECvffvHns8xKkCxLdRZDBEFssC0UtgS4rWJVX2z3jqJIetODbxUfDH4Wh9jXz+jSym+jIapQlVjbFHGQiL+v5j4KOkXgkPeJgSkZZaI+UITd5BU9jX4jVVLgRKAz9a6Ro4BTpM038n+opkhe6LKoyRfpA==
+        d=1e100.net; s=20230601; t=1707244744; x=1707849544;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wrFw6OcFw29oUU8H5EOEkRWU7rw58dDsUIlQVNcW+Pk=;
+        b=Oxptr1y3sEdFxf0DuA73hkRh1vwvbrwAI19TAGItlKwHNph2hI2bLIS7V8WRW22V6N
+         +aGVUt3OYoQ08a8RVh8O9cvG6f0PBMV37U2FPJAuB+VA9GRIiKfkJbBeg6SoXQUUbTBF
+         h9lfH+WlYLapSu6FrNegA6iB9OEL6xcEFp08hXMCviATDOLLVyQlqyEhmaYNWnULWE8G
+         A7ic756wfEMu46208RhcgAcD/IzPWCeL+NlJJoOUsKeiUAxke+EiYPULeapRNKqEwPGO
+         Lx/VNLtLBzRqYrdxJJGBJVencb8e2OO4DUrsMtqdPpugaWTSPx5KniIle2nuCY8vWKj+
+         nkRQ==
+X-Gm-Message-State: AOJu0YwJiWQUggylXM0Udk0x/+0JBmsaM7waB0e85JSxm1f2G5oOx6hZ
+	QRQUp9ZjsjB7MlwNsEXhL4CJBJjTt5ncDLJHAYpNtrle/yoiLCmIQSLOAb0Ebw==
+X-Google-Smtp-Source: AGHT+IFXExo/rfQDhE2G3o1tXJ+LATi7zds7yPCtX/Mt6GZhTF/DVi6VZTY8AdFTUrDn+55tECcrmg==
+X-Received: by 2002:a17:90a:bc98:b0:296:37c7:3b6b with SMTP id x24-20020a17090abc9800b0029637c73b6bmr469394pjr.2.1707244743796;
+        Tue, 06 Feb 2024 10:39:03 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUpUq+q16t/tO/bRMNwHTxBqH5erYfal6rQvDmcpuQoxhYJX81KaZ3lX6ykU3oInOIkkUM3aFk9Y7gkFYgN384cFlTJOmDkpKW2GbFh9GtdFN6UAM/AERw1T5/e26fbVXcWGy4H3vJioRHOxjbXii5LEp6/4rKSil/o7DKsMfbWONMGx0LuKPf3yjUnQoJi6NwUVII5CuLE0VXFnHo7E0S1TuAbT3+YH0KjoLCl35E4HTf+GYGy76QVBVSLfE5v3C7LRXuLMbkYPTG/lB7uozb934pCchu3ssSIlcN2/U4RgmM3Gzvq2LjzoAo9p4pM6aQwJCya9rx4HGjfiyXHOp/51j23VpZBhDdikhdPBrJ1h/3OglXxUohU9a79tDJaO/e3afjziqN8OBZGT37RC4H1Evy1ZZvBRH4HJssj5eOEQi8IERvyBMb71iw0xsfdPrWnu9fNcDjR25p25FKWDB3gCxxHDevU1r8oZ+IzR7UEVI/pVcJvyhf3a1bm4YLKr4Mr8IpeRY/fxOXsSnPOyHm2OujZsbo1EIcXJGr6MUEtVUlpg2JC6Zk=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y5-20020a170902ed4500b001d7439bf914sm2193952plb.235.2024.02.06.10.29.47
+        by smtp.gmail.com with ESMTPSA id g6-20020a170902740600b001d8d90d4f67sm2193828pll.249.2024.02.06.10.39.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 10:29:47 -0800 (PST)
-Date: Tue, 6 Feb 2024 10:29:46 -0800
+        Tue, 06 Feb 2024 10:39:03 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Brian Norris <briannorris@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Dmitry Antipov <dmantipov@yandex.ru>,
+Cc: Kees Cook <keescook@chromium.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
 	Johannes Berg <johannes.berg@intel.com>,
-	zuoqilin <zuoqilin@yulong.com>, Ruan Jinjie <ruanjinjie@huawei.com>,
+	zuoqilin <zuoqilin@yulong.com>,
+	Ruan Jinjie <ruanjinjie@huawei.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	Dan Carpenter <error27@gmail.com>,
+	Rafael Beims <rafael.beims@toradex.com>,
+	David Lin <yu-hao.lin@nxp.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: mwifiex: Refactor 1-element array into flexible
- array in struct mwifiex_ie_types_chan_list_param_set
-Message-ID: <202402061029.F0937444B2@keescook>
-References: <20240206163501.work.158-kees@kernel.org>
+Subject: [PATCH v2] wifi: mwifiex: Refactor 1-element array into flexible array in struct mwifiex_ie_types_chan_list_param_set
+Date: Tue,  6 Feb 2024 10:39:01 -0800
+Message-Id: <20240206183857.it.362-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206163501.work.158-kees@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4690; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=gL6wUfzFxvfxPZGWpLEFqjtcbkxcIJZhE0UgHspyByg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlwnzFBS+naesqyOm+jex8E2ol2qfR7ZhNVcLSc
+ EVqqdvSjMSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcJ8xQAKCRCJcvTf3G3A
+ JtOID/961P5ahoXgEYzbPIg9qA1VYdOIpn+AfICYE0+zz+ShW4FNrY5PN8DRqE8dGyMtZCZpljq
+ Kx8difB+vOQMH85q8vakcnKwqME7FJuikUnbCf5hS9AIRJeCvcsCmoPH44uDqXAuSksLUNCQRdz
+ /4jgremvQrOUpWSsqJGrceZoUlgFkByd/q7VMJK3nUZX6Ax2tQdDR6+FkPhZ6McoPxGxjRHr4CZ
+ PLC6xpPpXPS3suwJzv2idN+BNfVTWm+JWG/RAE1nF27OzQsLLWVzLOZsmtWx4bKtcjySVAL4BhE
+ UjIKW/evDyiGqzJXslMEizzjM5q0Qb8qmBc2qAMQYLxKvVYaEatiIhKeVKdyiH/P82W+K3GW8tt
+ BkUNXCm8OpduBeLtmhHxGdiey5H9JVirXw9LY2wTXAynqG6APStIUUJtJqzurKZvDsTfzq3GcMp
+ a9FdNDMIkXIJ1xL9bdVeBtzTCHYAQsiE7ibKBE7PQxnozS9SMEmM0K29fDF/pikFu/v6bFH80Ii
+ h8wzAPropTG+qdRT1wYtf4nGPOwuCoL+YayD3QEBgvTiaH6UsoggT7W2grT2OoAPoSHyJtPTfof
+ BusWwjDqSFCbPKlYp/OZc12rVbduQP+r70PrXsF8LsBYp55kJMMu8WtxqfhYnHlauzKdhh1p/TS
+ G/XRLMV qRw5DXSQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Apologies -- this patch is incomplete. My "git add" failed me. ;) I'll
-send a v2!
+struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
+as a flexible array, so convert it into one so that it doesn't trip the
+array bounds sanitizer[1]. Only once place was using sizeof() on the
+whole struct (in 11n.c), so adjust it to follow the calculation pattern
+used by scan.c to avoid including the trailing single element.
 
--Kees
+Link: https://github.com/KSPP/linux/issues/51 [1]
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: zuoqilin <zuoqilin@yulong.com>
+Cc: Ruan Jinjie <ruanjinjie@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/wireless/marvell/mwifiex/11n.c  |  8 +++-----
+ drivers/net/wireless/marvell/mwifiex/fw.h   |  2 +-
+ drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
+ 3 files changed, 10 insertions(+), 14 deletions(-)
 
-
-On Tue, Feb 06, 2024 at 08:35:04AM -0800, Kees Cook wrote:
-> struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
-> as a flexible array, so convert it into one so that it doesn't trip the
-> array bounds sanitizer[1]. The code was already calculating sizes by not
-> including the trailing single element, so no sizeof() change are needed.
-> 
-> Link: https://github.com/KSPP/linux/issues/51 [1]
-> Cc: Brian Norris <briannorris@chromium.org>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Dmitry Antipov <dmantipov@yandex.ru>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: zuoqilin <zuoqilin@yulong.com>
-> Cc: Ruan Jinjie <ruanjinjie@huawei.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-> index a2ddac363b10..0326b121747c 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/scan.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-> @@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
->  
->  			/* Copy the current channel TLV to the command being
->  			   prepared */
-> -			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
-> +			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
->  			       tmp_chan_list,
-> -			       sizeof(chan_tlv_out->chan_scan_param));
-> +			       sizeof(*chan_tlv_out->chan_scan_param));
->  
->  			/* Increment the TLV header length by the size
->  			   appended */
->  			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
-> -					       sizeof(
-> -						chan_tlv_out->chan_scan_param));
-> +					       sizeof(*chan_tlv_out->chan_scan_param));
->  
->  			/*
->  			 * The tlv buffer length is set to the number of bytes
-> @@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
->  		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
->  		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
->  		     chan_idx++) {
-> -			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
-> +			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
->  
->  			/* Increment the TLV header length by size appended */
->  			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
-> -					       sizeof(
-> -					       chan_list_tlv->chan_scan_param));
-> +					       sizeof(*chan_list_tlv->chan_scan_param));
->  
->  			temp_chan->chan_number =
->  				bgscan_cfg_in->chan_list[chan_idx].chan_number;
-> @@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
->  							   chan_scan_param);
->  		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
->  				       chan_num *
-> -			     sizeof(chan_list_tlv->chan_scan_param[0]));
-> +			     sizeof(*chan_list_tlv->chan_scan_param));
->  	}
->  
->  	tlv_pos += (sizeof(chan_list_tlv->header)
-> -- 
-> 2.34.1
-> 
-
+diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
+index 90e401100898..9ed90da4dfcf 100644
+--- a/drivers/net/wireless/marvell/mwifiex/11n.c
++++ b/drivers/net/wireless/marvell/mwifiex/11n.c
+@@ -392,12 +392,10 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
+ 
+ 		chan_list =
+ 			(struct mwifiex_ie_types_chan_list_param_set *) *buffer;
+-		memset(chan_list, 0,
+-		       sizeof(struct mwifiex_ie_types_chan_list_param_set));
++		memset(chan_list, 0, struct_size(chan_list, chan_scan_param, 1));
+ 		chan_list->header.type = cpu_to_le16(TLV_TYPE_CHANLIST);
+-		chan_list->header.len = cpu_to_le16(
+-			sizeof(struct mwifiex_ie_types_chan_list_param_set) -
+-			sizeof(struct mwifiex_ie_types_header));
++		chan_list->header.len =
++			cpu_to_le16(sizeof(struct mwifiex_chan_scan_param_set));
+ 		chan_list->chan_scan_param[0].chan_number =
+ 			bss_desc->bcn_ht_oper->primary_chan;
+ 		chan_list->chan_scan_param[0].radio_type =
+diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+index 62f3c9a52a1d..3adc447b715f 100644
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -770,7 +770,7 @@ struct mwifiex_chan_scan_param_set {
+ 
+ struct mwifiex_ie_types_chan_list_param_set {
+ 	struct mwifiex_ie_types_header header;
+-	struct mwifiex_chan_scan_param_set chan_scan_param[1];
++	struct mwifiex_chan_scan_param_set chan_scan_param[];
+ } __packed;
+ 
+ struct mwifiex_ie_types_rxba_sync {
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index a2ddac363b10..0326b121747c 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
+ 
+ 			/* Copy the current channel TLV to the command being
+ 			   prepared */
+-			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
++			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
+ 			       tmp_chan_list,
+-			       sizeof(chan_tlv_out->chan_scan_param));
++			       sizeof(*chan_tlv_out->chan_scan_param));
+ 
+ 			/* Increment the TLV header length by the size
+ 			   appended */
+ 			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
+-					       sizeof(
+-						chan_tlv_out->chan_scan_param));
++					       sizeof(*chan_tlv_out->chan_scan_param));
+ 
+ 			/*
+ 			 * The tlv buffer length is set to the number of bytes
+@@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
+ 		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
+ 		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
+ 		     chan_idx++) {
+-			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
++			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
+ 
+ 			/* Increment the TLV header length by size appended */
+ 			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
+-					       sizeof(
+-					       chan_list_tlv->chan_scan_param));
++					       sizeof(*chan_list_tlv->chan_scan_param));
+ 
+ 			temp_chan->chan_number =
+ 				bgscan_cfg_in->chan_list[chan_idx].chan_number;
+@@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
+ 							   chan_scan_param);
+ 		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
+ 				       chan_num *
+-			     sizeof(chan_list_tlv->chan_scan_param[0]));
++			     sizeof(*chan_list_tlv->chan_scan_param));
+ 	}
+ 
+ 	tlv_pos += (sizeof(chan_list_tlv->header)
 -- 
-Kees Cook
+2.34.1
+
