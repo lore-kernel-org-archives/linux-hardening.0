@@ -1,376 +1,95 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961CC14AB2
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 01:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7554DDC6;
+	Wed,  7 Feb 2024 02:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707270335; cv=none; b=fM127ZKiwYn3deyARwc64GBZFWjSnV7XZ81vF/KccyqD+8enn9FHWfYXdAOwABEPvCzY3dywzuIUuulh+WQS680UGYxUUDbNsj7l/MnPCFf/8ys3WxGzCMqAC53hHWq0rO/7HQHYQ0qoKKjrj/XLSaRAHI4R11H3UzCjuIQ6HBE=
+	t=1707272397; cv=none; b=kAA22HUyGM/nZtotkpvmCc7OFhmxZKXVE77NvQuyfUoCJiMkkrerxkASY9PaOpkch1om8CUr48C5gdR22BLx3O/poMaA9E1BeTr32lzOHj6w5PNcGSANPwaM3GtY2flnqsN688USwWuCRma3qJ6dkwhZA/fDVJJPzq4V2iNzNR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707270335; c=relaxed/simple;
-	bh=jtbEkMgACYBlVC9wzZ15NHjLL3L1OsM3ulBngMq6shI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lc6gv79eeu+eEjMknDDaiP8r5p6kRihEcaTUqKJviLbwJ2Xm98zodTY8g/tQntNYhrdyzJc9PvObOCTZgWLqg/u3LzLaAbhHItF22RS0VWA3dSrBoVcXjPQKa7bzJM2F14m6jhj4v1FOilaxI7tD93wnsBYeLKSBKb3i8mqpM7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2sgWUwPI; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707272397; c=relaxed/simple;
+	bh=Chp9zNiZQisqvJTCxnpUb83eLJUJnwZdDtmJwK5aEjE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TuI22k+YlsJc9R1PuqtoSfjjX00XT85dWQeBFYh9U8/YLwP7R3vEWT2oyfXpLv5+CT391ZfTrT5+q7q8rXpnr1e4Dl+pLVEZQ2XLSHOSH0tlQslyHMlRGJ1H+YF8Or6u707aV+PGmAbXbDEkPD7w5/iwt18+30oMKhheWz/2aIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ui/tL+mc; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2sgWUwPI"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7bc332d49f6so7070939f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 17:45:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707270332; x=1707875132; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i0KokQpsmVwCg2q3ckhuoiEueFde0IBUJuEJrRWd9+k=;
-        b=2sgWUwPIMZo5yHQpLDEsTIg87duygcOX7FID7qtPV3d5YlWLAA01TuSmeQX5z3ZTfw
-         WAnNZUeupSyJC/2nLa5YnPGuuEHquY3uAvFdfcjswCEJZ/paHIt6f4C1p7wTMloKhjOT
-         wWIWNfDY7OhDZKOrQUR/AiH6HO7FBIplRQjbj2gh5eTjCH3/jxry4F2k33rn+KjtmuGr
-         F/G9PJmj7X6IpUz5ugnYS+nY7Z5T0deLYKfx9hDMP6yYtzUSCHBRWvL7LAZOTd+bdAND
-         sJ7xaeHqGEsmFJXSA5WaXBCaYL+mG8+N8boYOw4Ffvv6VIUmKM1J/jZD47YCAUuETOPY
-         QKHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707270332; x=1707875132;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i0KokQpsmVwCg2q3ckhuoiEueFde0IBUJuEJrRWd9+k=;
-        b=dePLwCw7fYehXkwU30/c7WOl2NFsHcXmZ8po2m7DU8NrjbuYVT8H3FPQQUzbd92Ixx
-         +inSvSxCah/2pRBbcPvQZOxSXcutAeSdjm8QzGOpEwJBrD3HjKKu/t98yM1G75FUKGD2
-         UakIZUDhi6UKH7zz3vdqs5Qt+HVyHVOKJ3fAuXooIz1mZeRg1m/FJMPwjMpIJNmdZ8oV
-         3f5p2qHS6f5nmoh319XwDUSA4njqoVc+Pik1/lNJx7I/Fu2VGcLGXSYMvf1tIQFopX5O
-         V6mzG0S6L+TlrsJT8dO9adWLduI513CP7X6bmkNouzw/FepmtabWcwgSyqQWv2fnLnhQ
-         UybQ==
-X-Gm-Message-State: AOJu0YyYGm3zBgISUErqwe6VnddYl4k7dsGRtUI1Q6l9VtUTfeFFuPYk
-	rXjgeu0lMApSRp7trhqmOPFaAJyLEpjypmf5MVIExWBV1uFpBO/Yz4VGD1eF8A==
-X-Google-Smtp-Source: AGHT+IHOt4QXtkEcxV9O1FCVDBJ/4GN43Js9KOnslqrb7D6ePsbS6hOblVbQghsMZL86x4PbfVNWaQ==
-X-Received: by 2002:a05:6602:1d52:b0:7be:f7e5:44fc with SMTP id hi18-20020a0566021d5200b007bef7e544fcmr5190362iob.21.1707270332593;
-        Tue, 06 Feb 2024 17:45:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXgz0Bk3pqC37J5ry8Hitp4ra1NniLz7Y4v4Tphxf7iyTTW6uwWCALufaKvyh/+5X5pf8Ci3B/VwE4erM2dw7wNGsJN3BkWwQlckmsz+kD8rvAdJRrqdbfDHi7qI5NJ4SclpKgfkKskYgAe+Sgt+/8W+gy28AbW1X1tzm4ESG5ATlNDk+jetgjB5tbXMcK7/2YB7Spu6APCEKEq0JmT74M822R/XzG2ZYcvtXX4U3J/DohfzcR+IJ5j72zJ8fw37StRaKCVYftVKCQSzDicQNNK6PgzuE+DTJWrzuFLPDnwFqltv9slz53wterU3tt7jpG3HVknYUaq4+8UqKXEOa4HXUzpN2FuVoRQzByHikOw7ZTsEBeT2loLAmQ7991loj6fFB3yfkAr0YPCR1FjRjTkeMZKGISsAww5F7vouc9oR1sVxgjfAzAxHRi2hXzaemmLtz2BjUeG2owFlfGUo6lTAkZRtDDwwNYQ8PjUWnc1e/it9sD9+cb/dBJ8ADio1ra6HwSznQM=
-Received: from google.com (20.10.132.34.bc.googleusercontent.com. [34.132.10.20])
-        by smtp.gmail.com with ESMTPSA id ed7-20020a056638290700b004713a02614bsm29995jab.10.2024.02.06.17.45.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 17:45:31 -0800 (PST)
-Date: Wed, 7 Feb 2024 01:45:28 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Marco Elver <elver@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
-Message-ID: <20240207014528.5byuufi5f33bl6e2@google.com>
-References: <20240205093725.make.582-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ui/tL+mc"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1707272384; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=SzzRsuoKn9NUe6qiu7CdTsPN+rpGpZaX9D+ucZDQDig=;
+	b=ui/tL+mcqJVOTxMOJR2kU7D5xQAgfJqpdqcg9i+yvwllD7CNjqMsXqdKR9U79+WTGuzfeG3phA6dM+8bIGLycrLt+S66IhBTwZSpZn+EOH2eeM/L+m+P+4YezubFTV6f/wGxgv4DKisR3vSx+YHe1f7nTxx8nY7q+3BgvpPwLOQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W0F5hRE_1707272372;
+Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0W0F5hRE_1707272372)
+          by smtp.aliyun-inc.com;
+          Wed, 07 Feb 2024 10:19:43 +0800
+From: Yuanhe Shu <xiangzao@linux.alibaba.com>
+To: keescook@chromium.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	shuah@kernel.org,
+	corbet@lwn.net
+Cc: xlpang@linux.alibaba.com,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Yuanhe Shu <xiangzao@linux.alibaba.com>
+Subject: [PATCH v3 0/3] pstore: add multi-backend support
+Date: Wed,  7 Feb 2024 10:19:18 +0800
+Message-Id: <20240207021921.206425-1-xiangzao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205093725.make.582-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+I have been steadily working but struggled to find a seamlessly
+integrated way to implement tty frontend until Guilherme inspired me
+that multi-backend and tty frontend are actually two separate entities.
+This submission presents the 3rd iteration of my efforts, listing
+notable changes form the v1:
 
-On Mon, Feb 05, 2024 at 01:37:29AM -0800, Kees Cook wrote:
-> In order to mitigate unexpected signed wrap-around[1], bring back the
-> signed integer overflow sanitizer. It was removed in commit 6aaa31aeb9cf
-> ("ubsan: remove overflow checks") because it was effectively a no-op
-> when combined with -fno-strict-overflow (which correctly changes signed
-> overflow from being "undefined" to being explicitly "wrap around").
->
-> Compilers are adjusting their sanitizers to trap wrap-around and to
-> detecting common code patterns that should not be instrumented
-> (e.g. "var + offset < var"). Prepare for this and explicitly rename
-> the option from "OVERFLOW" to "WRAP".
->
-> To annotate intentional wrap-around arithmetic, the add/sub/mul_wrap()
-> helpers can be used for individual statements. At the function level,
-> the __signed_wrap attribute can be used to mark an entire function as
-> expecting its signed arithmetic to wrap around. For a single object file
-> the Makefile can use "UBSAN_WRAP_SIGNED_target.o := n" to mark it as
-> wrapping, and for an entire directory, "UBSAN_WRAP_SIGNED := n" can be
-> used.
->
-> Additionally keep these disabled under CONFIG_COMPILE_TEST for now.
->
-> Link: https://github.com/KSPP/linux/issues/26 [1]
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Hao Luo <haoluo@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v3:
->  - split out signed overflow sanitizer so we can do each separately
-> v2: https://lore.kernel.org/all/20240202101311.it.893-kees@kernel.org/
-> v1: https://lore.kernel.org/all/20240129175033.work.813-kees@kernel.org/
-> ---
->  include/linux/compiler_types.h |  9 ++++-
->  lib/Kconfig.ubsan              | 14 +++++++
->  lib/test_ubsan.c               | 37 ++++++++++++++++++
->  lib/ubsan.c                    | 68 ++++++++++++++++++++++++++++++++++
->  lib/ubsan.h                    |  4 ++
->  scripts/Makefile.lib           |  3 ++
->  scripts/Makefile.ubsan         |  3 ++
->  7 files changed, 137 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 6f1ca49306d2..ee9d272008a5 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -282,11 +282,18 @@ struct ftrace_likely_data {
->  #define __no_sanitize_or_inline __always_inline
->  #endif
->
-> +/* Do not trap wrapping arithmetic within an annotated function. */
-> +#ifdef CONFIG_UBSAN_SIGNED_WRAP
-> +# define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
-> +#else
-> +# define __signed_wrap
-> +#endif
-> +
->  /* Section for code which can't be instrumented at all */
->  #define __noinstr_section(section)					\
->  	noinline notrace __attribute((__section__(section)))		\
->  	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage \
-> -	__no_sanitize_memory
-> +	__no_sanitize_memory __signed_wrap
->
->  #define noinstr __noinstr_section(".noinstr.text")
->
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 56d7653f4941..129e9bc21877 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -116,6 +116,20 @@ config UBSAN_UNREACHABLE
->  	  This option enables -fsanitize=unreachable which checks for control
->  	  flow reaching an expected-to-be-unreachable position.
->
-> +config UBSAN_SIGNED_WRAP
-> +	bool "Perform checking for signed arithmetic wrap-around"
-> +	default UBSAN
-> +	depends on !COMPILE_TEST
-> +	depends on $(cc-option,-fsanitize=signed-integer-overflow)
-> +	help
-> +	  This option enables -fsanitize=signed-integer-overflow which checks
-> +	  for wrap-around of any arithmetic operations with signed integers.
-> +	  This currently performs nearly no instrumentation due to the
-> +	  kernel's use of -fno-strict-overflow which converts all would-be
-> +	  arithmetic undefined behavior into wrap-around arithmetic. Future
-> +	  sanitizer versions will allow for wrap-around checking (rather than
-> +	  exclusively undefined behavior).
-> +
->  config UBSAN_BOOL
->  	bool "Perform checking for non-boolean values used as boolean"
->  	default UBSAN
-> diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
-> index f4ee2484d4b5..276c12140ee2 100644
-> --- a/lib/test_ubsan.c
-> +++ b/lib/test_ubsan.c
-> @@ -11,6 +11,39 @@ typedef void(*test_ubsan_fp)(void);
->  			#config, IS_ENABLED(config) ? "y" : "n");	\
->  	} while (0)
->
-> +static void test_ubsan_add_overflow(void)
-> +{
-> +	volatile int val = INT_MAX;
-> +
-> +	UBSAN_TEST(CONFIG_UBSAN_SIGNED_WRAP);
-> +	val += 2;
-> +}
-> +
-> +static void test_ubsan_sub_overflow(void)
-> +{
-> +	volatile int val = INT_MIN;
-> +	volatile int val2 = 2;
-> +
-> +	UBSAN_TEST(CONFIG_UBSAN_SIGNED_WRAP);
-> +	val -= val2;
-> +}
-> +
-> +static void test_ubsan_mul_overflow(void)
-> +{
-> +	volatile int val = INT_MAX / 2;
-> +
-> +	UBSAN_TEST(CONFIG_UBSAN_SIGNED_WRAP);
-> +	val *= 3;
-> +}
-> +
-> +static void test_ubsan_negate_overflow(void)
-> +{
-> +	volatile int val = INT_MIN;
-> +
-> +	UBSAN_TEST(CONFIG_UBSAN_SIGNED_WRAP);
-> +	val = -val;
-> +}
-> +
->  static void test_ubsan_divrem_overflow(void)
->  {
->  	volatile int val = 16;
-> @@ -90,6 +123,10 @@ static void test_ubsan_misaligned_access(void)
->  }
->
->  static const test_ubsan_fp test_ubsan_array[] = {
-> +	test_ubsan_add_overflow,
-> +	test_ubsan_sub_overflow,
-> +	test_ubsan_mul_overflow,
-> +	test_ubsan_negate_overflow,
+1. pstore.backend no longer acts as "registered backend", but "backends
+eligible for registration".
 
-I wouldn't mind also seeing a test_ubsan_div_overflow test case here.
+2. drop subdir since it will break user space
 
-It has some quirky behavior and it'd be nice to test that the sanitizers
-properly capture it.
+3. drop tty frontend since I haven't yet devised a satisfactory
+implementation strategy
 
-Check out this Godbolt: https://godbolt.org/z/qG5f1j6n1
+Changes from v2:
 
-tl;dr: with -fsanitize=signed-integer-overflow division (/) and
-remainder (%) operators still instrument arithmetic even with
--fno-strict-overflow on.
+1. Fix ftrace.c build error as I did not compile with
+CONFIG_PSTORE_FTRACE.
 
-This makes sense as division by 0 and INT_MIN/-1 are UBs that are not
-influenced by -fno-strict-overflow.
+A heartfelt thank you to Kees and Guilherme for your suggestions.
+I firmly believe that a tty frontend is crucial for kdump debugging,
+and I am still dedicating effort to develop one. Hope in the future I
+can accomplish it with deeper comprehension with tty driver :) 
 
-Really though, the patch is fine and the above test case is optional and
-can be shipped later -- as such:
+Yuanhe Shu (3):
+  pstore: add multi-backend support
+  Documentation: adjust pstore backend related document
+  tools/testing: adjust pstore backend related selftest
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+ Documentation/ABI/testing/pstore              |   8 +-
+ .../admin-guide/kernel-parameters.txt         |   4 +-
+ fs/pstore/ftrace.c                            |  31 ++-
+ fs/pstore/inode.c                             |  19 +-
+ fs/pstore/internal.h                          |   4 +-
+ fs/pstore/platform.c                          | 225 ++++++++++++------
+ fs/pstore/pmsg.c                              |  24 +-
+ include/linux/pstore.h                        |  29 +++
+ tools/testing/selftests/pstore/common_tests   |   8 +-
+ .../selftests/pstore/pstore_post_reboot_tests |  65 ++---
+ tools/testing/selftests/pstore/pstore_tests   |   2 +-
+ 11 files changed, 295 insertions(+), 124 deletions(-)
 
->  	test_ubsan_shift_out_of_bounds,
->  	test_ubsan_out_of_bounds,
->  	test_ubsan_load_invalid_value,
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index df4f8d1354bb..5fc107f61934 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -222,6 +222,74 @@ static void ubsan_epilogue(void)
->  	check_panic_on_warn("UBSAN");
->  }
->
-> +static void handle_overflow(struct overflow_data *data, void *lhs,
-> +			void *rhs, char op)
-> +{
-> +
-> +	struct type_descriptor *type = data->type;
-> +	char lhs_val_str[VALUE_LENGTH];
-> +	char rhs_val_str[VALUE_LENGTH];
-> +
-> +	if (suppress_report(&data->location))
-> +		return;
-> +
-> +	ubsan_prologue(&data->location, type_is_signed(type) ?
-> +			"signed-integer-overflow" :
-> +			"unsigned-integer-overflow");
-> +
-> +	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
-> +	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
-> +	pr_err("%s %c %s cannot be represented in type %s\n",
-> +		lhs_val_str,
-> +		op,
-> +		rhs_val_str,
-> +		type->type_name);
-> +
-> +	ubsan_epilogue();
-> +}
-> +
-> +void __ubsan_handle_add_overflow(void *data,
-> +				void *lhs, void *rhs)
-> +{
-> +
-> +	handle_overflow(data, lhs, rhs, '+');
-> +}
-> +EXPORT_SYMBOL(__ubsan_handle_add_overflow);
-> +
-> +void __ubsan_handle_sub_overflow(void *data,
-> +				void *lhs, void *rhs)
-> +{
-> +	handle_overflow(data, lhs, rhs, '-');
-> +}
-> +EXPORT_SYMBOL(__ubsan_handle_sub_overflow);
-> +
-> +void __ubsan_handle_mul_overflow(void *data,
-> +				void *lhs, void *rhs)
-> +{
-> +	handle_overflow(data, lhs, rhs, '*');
-> +}
-> +EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
-> +
-> +void __ubsan_handle_negate_overflow(void *_data, void *old_val)
-> +{
-> +	struct overflow_data *data = _data;
-> +	char old_val_str[VALUE_LENGTH];
-> +
-> +	if (suppress_report(&data->location))
-> +		return;
-> +
-> +	ubsan_prologue(&data->location, "negation-overflow");
-> +
-> +	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
-> +
-> +	pr_err("negation of %s cannot be represented in type %s:\n",
-> +		old_val_str, data->type->type_name);
-> +
-> +	ubsan_epilogue();
-> +}
-> +EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
-> +
-> +
->  void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
->  {
->  	struct overflow_data *data = _data;
-> diff --git a/lib/ubsan.h b/lib/ubsan.h
-> index 5d99ab81913b..0abbbac8700d 100644
-> --- a/lib/ubsan.h
-> +++ b/lib/ubsan.h
-> @@ -124,6 +124,10 @@ typedef s64 s_max;
->  typedef u64 u_max;
->  #endif
->
-> +void __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
-> +void __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
-> +void __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
-> +void __ubsan_handle_negate_overflow(void *_data, void *old_val);
->  void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
->  void __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
->  void __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 52efc520ae4f..7ce8ecccc65a 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -177,6 +177,9 @@ ifeq ($(CONFIG_UBSAN),y)
->  _c_flags += $(if $(patsubst n%,, \
->  		$(UBSAN_SANITIZE_$(basetarget).o)$(UBSAN_SANITIZE)y), \
->  		$(CFLAGS_UBSAN))
-> +_c_flags += $(if $(patsubst n%,, \
-> +		$(UBSAN_WRAP_SIGNED_$(basetarget).o)$(UBSAN_SANITIZE_$(basetarget).o)$(UBSAN_WRAP_SIGNED)$(UBSAN_SANITIZE)y), \
-> +		$(CFLAGS_UBSAN_WRAP_SIGNED))
->  endif
->
->  ifeq ($(CONFIG_KCOV),y)
-> diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-> index 7cf42231042b..bc957add0b4d 100644
-> --- a/scripts/Makefile.ubsan
-> +++ b/scripts/Makefile.ubsan
-> @@ -13,3 +13,6 @@ ubsan-cflags-$(CONFIG_UBSAN_ENUM)		+= -fsanitize=enum
->  ubsan-cflags-$(CONFIG_UBSAN_TRAP)		+= $(call cc-option,-fsanitize-trap=undefined,-fsanitize-undefined-trap-on-error)
->
->  export CFLAGS_UBSAN := $(ubsan-cflags-y)
-> +
-> +ubsan-wrap-signed-cflags-$(CONFIG_UBSAN_SIGNED_WRAP)     += -fsanitize=signed-integer-overflow
-> +export CFLAGS_UBSAN_WRAP_SIGNED := $(ubsan-wrap-signed-cflags-y)
-> --
-> 2.34.1
->
+-- 
+2.39.3
 
-Thanks
-Justin
