@@ -1,70 +1,69 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056F020DC1
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 09:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E343422338
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 09:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707297533; cv=none; b=sHFcmozixN46qImdg1ZNuwT8lD7VUF/oiruQS2Hmbx7vjnPINrz3AMsQ8YETlJhQuE1R5NBSLuMqwEqmGPOSb0ezj/y743WPNa01C4lCY5i1ADzT3x5akin4+eay2OiBX7wk7Qyu9MUPuRBa83socGdjwkjaFkFQOcR9zmVSSwo=
+	t=1707298514; cv=none; b=RGP+9uD+CPg/lnFsiQtuUKDyxNnnGZTQdpsvYHjQfR3DDSyx1q+N7EfbMZ1vM0TftgnSSqZiGV/Fh4k4W1qljJ3pRgpR3kMhF3wykjmNr92gtS8vD1pxd3dtd4P1nDmKfvxauPAA55QfbQKac5UoBDYxoZVCMxq3WSBO4HXa/uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707297533; c=relaxed/simple;
-	bh=1jfkXzEU42XrNlTOrYgVxpel0/h+5EUT5MRCBrv1Wg8=;
+	s=arc-20240116; t=1707298514; c=relaxed/simple;
+	bh=XjpRzdoTfjP3OQt5mqE+y9WThcPznmjyICcveK2XvE0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCgkpcTloVje7cOfumWqbLAGANhWpSGR7BYvHCC0HvFWw8yLgdv1oKLbv1WgSnPqgg2HrF//cX6kubn2vgBQACegEWfgnRedzkCvCTbw5TqUb9NTDZNgdE+m3sWIep3LReVIDEwFM8pcIiE/p0Xx7KtXItlXr+FuAAt69QTIP88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hnmakqU+; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=i8iu3FE3j71SdUBgJYTBfOyRCo4LO0k/eiI0vdtUSKq8YcmaXvSghkBzCicnulPavXFpncykJllIjyiJ5lV3pd3iQgA7Qzq/fzRtes+A/ehPrAhKR8TYUrn+Brrh4m5KoAjJ3PUss05afSRsKtQRd0sorgwmcIevhrqm8yiIXtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mp2Qgq4l; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hnmakqU+"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d731314e67so2964725ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 01:18:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mp2Qgq4l"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6daf694b439so348747b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 01:35:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707297531; x=1707902331; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707298512; x=1707903312; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dvvwDnpbjNBn+9NOt2kovthLIHMOsqPt4VSpCq5q/E8=;
-        b=hnmakqU+26C6QwLJ7B2JkS7tm5s2QTRJfGk1/u1AKMqeEU+mrJ7DVII+9NCs3eNLfx
-         fGo8qUikwF8I0XfYXj/LnwO5PjbOwG8wrAy5+54E9NuJ73pBhNxArbBPPna8a748SmdM
-         BvFc3JGy93ACt5BSQd5dp94Xw5n6elTafzG8s=
+        bh=Lnzs6TPIgp3HqVBCfdcD7KxhniQZ5JYkJZ6YNmMCISs=;
+        b=mp2Qgq4ltvOvC+3iDb//06CICpkJJTdcqCM/FvZ9jpuxIfYxLsgSc+5uQB5yBtVFf5
+         tno0XYnwDiAuOkPzh0FnLztgL08ONAC6rPWoI1frOFzyJX3kKDOBog9xOtelb7Mydo/C
+         99r0VR8uMuIRQUG0X7ebItltvEoZXB/8mvB6g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707297531; x=1707902331;
+        d=1e100.net; s=20230601; t=1707298512; x=1707903312;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dvvwDnpbjNBn+9NOt2kovthLIHMOsqPt4VSpCq5q/E8=;
-        b=bmFQfyiHcp2xosSCEwjUdJEbLSwTl3p2daHKppem1KaDwl5hxyn2ZaV42E0BF7KaE9
-         QYL0BhbpTZVR11TiDmTJJblaEnEgCBY6POsQ6CbIxJQ22laVMeX1znyIv0zOMrbej3t+
-         yh7UtTYRgTvLGW9MpMSGS9d7WmdPYpgg45sEY77DyHMBWMUXZU83cWag4fmI9u2nfA+V
-         AgvIIY1EtqDMCk3mkAxCQA8E1Df/enfJeiyU0S72NLLPgFZS9QMryLlTnVnGeL9ea14H
-         WYRKxJwZ4erRlUkba6ZXT4W7qLAGgdQqYcS0TxfBWpI7Z9h6LEu1pEcXw7621kGMfdfw
-         jTKA==
-X-Gm-Message-State: AOJu0YwHdjW7o1PeEfWeJNS0bHC7q9JPSfa3GaLAjNMXYI24+sR/6VWJ
-	nw8ZMHM7XzgZSI2k3+gJmn0NJqW5Nc6Bi7FG7yhRVz5Ku8NscPTqbzUa1U4yaQ==
-X-Google-Smtp-Source: AGHT+IEFQALsTSc/iApggEuMndGposLY0LsIv3nQL6+uN09l4rY630QyTpJ4hUME2/Vgo02gZWcpOQ==
-X-Received: by 2002:a17:903:987:b0:1d9:2369:d0f8 with SMTP id mb7-20020a170903098700b001d92369d0f8mr4423261plb.9.1707297531344;
-        Wed, 07 Feb 2024 01:18:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU/ljlKv0gnPptnrgqIOdlLMqVbp7UOFuc0CZtBwpmV0aWypPzVcmXrY3WBHqm4Mbgx1//7mxmWJbFePvmMV/FTz9PAzADgmUMWZQ34w2gzb4jtCtkpNV8kl3qGM37sfq883PJL/ytuxw0IsOhFZVhK4IfN1Y/WRnzeenWktf/CAT0lT0I+jfJEtbWZLxpeIN3u+7Kl8PA0/8QDWMMXUniGiCzYC0fbR4lklo1idbnRDUFcqeskrWWlSD4upPNso+SSC8RA6GniQ5DFaOue32MDKW9Tx45fEUFMlVdge9S0823TrVJ7FLJd61HJW84kuvsIPkdklHic03dqBZDSGFl7BqsqXaCsee2VsBzedyaeZ4hlLiIXHlRDwIleVMoZZQRDkKCdiuHm6aHAtpLikEKbpAJfp06iWzzwJFTroo5+yj3GozHdax5Z
+        bh=Lnzs6TPIgp3HqVBCfdcD7KxhniQZ5JYkJZ6YNmMCISs=;
+        b=cwYQ4nStTfBQNfdJh47R9r/bcL1bkp1Cv1vhMIP8pk1c31ACEWG3tDP7i0lmL9SECH
+         IDKdbG3MqmipkdeKpMN+Vvpy/DOBbPpyIhcu7/zoL9TyNt4Cvn05WzV4U3Qa4HoRpxfa
+         KA4UVDK9UrDwRe7C/pznregUIHUfUGew6ocwWolc6rrEqS+E5QnszIyOQxRDFyBp+cZl
+         uotupgbf3pFiWHBCEECh1DPkow5P6XaN+BAPodtlFiAwQDCYaA4f2p6+wljUAE0ZYl8k
+         USU0zJXe1Iz7QBeaR78q2MRB+yh5GbX6mD6IjCPSRahloZnOdect40B2HTZ79tRHL+/h
+         9rGg==
+X-Gm-Message-State: AOJu0YwCmEAklPOMZqzrGL0LdsBuNVZVgCnKD5rrU9YlT/Ynvrxa7A3r
+	uI8PVL5/iwFESeX/lgLFvuLaG/Cm3U2kpdnff/5vAPe8P6iWxZSMJDTfGYyMkg==
+X-Google-Smtp-Source: AGHT+IEkEilvjof7TiSRF97ozyPZg+g25k745KHQmjN0ECt8d5Z5zPMmfEBaBMrEFYqdYbnRc0Guyw==
+X-Received: by 2002:a05:6a21:2d0a:b0:19e:9f2d:9814 with SMTP id tw10-20020a056a212d0a00b0019e9f2d9814mr2957878pzb.39.1707298512206;
+        Wed, 07 Feb 2024 01:35:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW5fXL+oPKiDobv+fb/lHAozLsmX7lK/yZb08Gn9bfd2pAuX+sot8hH0/znY26GmybtpE91R7S10ham8tIjbvT1yzWzIltOtz9zURXpQfQdTaE1E3KqHTrF09ABSgIuq0yFEQl64KuyMPyNH/jxEAHaxCQMHFIee4Xmv5J4t7pF3zNF4a+0BAK2U4cNEgS7yp3wyHkdL4RB5IHEjtQgFv/ZpNPqO6EsfmNDgg7Od/DVl15J6Zyzub1pYZo82EFL06rfZnoTQfAFC2nPbLRJEoxM3WP+9Q05oKwtFwnJ
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ld12-20020a170902facc00b001d7233dc459sm952236plb.76.2024.02.07.01.18.50
+        by smtp.gmail.com with ESMTPSA id lb6-20020a170902fa4600b001d95407f6f5sm986587plb.48.2024.02.07.01.35.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 01:18:50 -0800 (PST)
-Date: Wed, 7 Feb 2024 01:18:49 -0800
+        Wed, 07 Feb 2024 01:35:11 -0800 (PST)
+Date: Wed, 7 Feb 2024 01:35:10 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>, kernel test robot <lkp@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v3 3/4] string: Allow 2-argument strscpy_pad()
-Message-ID: <202402070115.2C86687F@keescook>
-References: <20240206142027.make.107-kees@kernel.org>
- <20240206142221.2208763-3-keescook@chromium.org>
- <20240207005151.lyrtgqd4wekolwe7@google.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+	Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] overflow: Introduce wrapping_add(),
+ wrapping_sub(), and wrapping_mul()
+Message-ID: <202402070134.53727173F@keescook>
+References: <20240206102354.make.081-kees@kernel.org>
+ <20240206103201.2013060-2-keescook@chromium.org>
+ <4bde6e72-c7f6-434d-9489-3a0de7804b18@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,41 +72,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240207005151.lyrtgqd4wekolwe7@google.com>
+In-Reply-To: <4bde6e72-c7f6-434d-9489-3a0de7804b18@embeddedor.com>
 
-On Wed, Feb 07, 2024 at 12:51:51AM +0000, Justin Stitt wrote:
-> Hi,
+On Tue, Feb 06, 2024 at 10:54:06AM -0600, Gustavo A. R. Silva wrote:
 > 
-> On Tue, Feb 06, 2024 at 06:22:18AM -0800, Kees Cook wrote:
-> > Similar to strscpy(), update strscpy_pad()'s 3rd argument to be
-> > optional when the destination is a compile-time known size array.
 > 
-> This patch is diff'd against Patch 1/4 in this series, right? I wonder
-> why you split them up. If I hadn't literally just read that patch I
-> would be mildly confused.
+> On 2/6/24 04:31, Kees Cook wrote:
+> > Provide helpers that will perform wrapping addition, subtraction, or
+> > multiplication without tripping the arithmetic wrap-around sanitizers. The
+> > first argument is the type under which the wrap-around should happen
+> > with. In other words, these two calls will get very different results:
+> > 
+> > 	wrapping_mul(int, 50, 50) == 2500
+> > 	wrapping_mul(u8,  50, 50) ==  196
+> > 
+> > Add to the selftests to validate behavior and lack of side-effects.
+> > 
+> > Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Eric Biggers <ebiggers@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-hardening@vger.kernel.org
+> > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >   include/linux/overflow.h | 54 ++++++++++++++++++++++++++++++++++++++++
+> >   lib/overflow_kunit.c     | 24 +++++++++++++++---
+> >   2 files changed, 74 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> > index 4e741ebb8005..429c4d61a940 100644
+> > --- a/include/linux/overflow.h
+> > +++ b/include/linux/overflow.h
+> > @@ -64,6 +64,24 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+> >   #define check_add_overflow(a, b, d)	\
+> >   	__must_check_overflow(__builtin_add_overflow(a, b, d))
+> > +/**
+> > + * wrapping_add() - Intentionally perform a wrapping addition
+> > + * @type: type for result of calculation
+> > + * @a: first addend
+> > + * @b: second addend
+> > + *
+> > + * Return the potentially wrapped-around addition without
+> > + * tripping any wrap-around sanitizers that may be enabled.
+> > + */
+> > +#define wrapping_add(type, a, b)				\
+> > +	({							\
+> > +		type __val;					\
+> > +		if (__builtin_add_overflow(a, b, &__val)) {	\
+> > +			/* do nothing */			\
+> > +		}						\
+> > +		__val;						\
 > 
-> I suppose one reason may be that 1/4 is a standalone change with a high
-> percentage chance of landing whilst this overloading magic may not land
-> as easily?
+> mmh... now that __builtin_*_overflow() is directly used, I guess
+> we don't need to _check_ for overflow anymore.
 
-I viewed it as a distinct logical change. I could certainly combine
-them, but I think it's easier to review the conversion from function to
-macro without needing to consider anything else. No behavioral changes
-are expected, etc.
+/me slaps his forehead
 
-But if they were together, there's a little more cognitive load to keep
-the func/macro conversion in mind while looking at the optional arg
-magic, etc.
-
-I don't think it's a strict rule or anything; it just felt like the
-right thing to do to split them up.
-
-> At any rate,
-> Reviewed-by: Justin Stitt <justinstitt@google.com>
-
-Thanks!
-
--Kees
+Yes indeed! I will adjust it.
 
 -- 
 Kees Cook
