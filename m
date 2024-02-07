@@ -1,59 +1,38 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521157FBDE
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 16:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90941446C8;
+	Wed,  7 Feb 2024 16:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707322098; cv=none; b=WCGOKddFGezB6pN8jnpnz2hyVpQn+j5EMS/f2CcDHpCDn3MylRT5xMogRwmUGxZg8c4zraXM+aThZ5kIwvID5CIcNc4Ftb6F7q/knr++X3TYBk9EyCUHrgsQw16uefGE9LHB4p9O8k7xTrFzDsMLRi6fRWNyz0lCkXaFBt0wpk8=
+	t=1707323655; cv=none; b=RxOl8ENv3vsQPPcP4VKToIa3KrXSGOtC/6PQR9A/Iqpb4IOwwVksYrW3RS6XwvnHbR7SAw8qfqTNfYctb7Yf2WHrtCLXyHDvl1AD1RUGGahYptOdk4/n8zcn+jcFxhJBy3XyG/XiKfaJQA+YAfA4izZw0j0FaB8C4l43+a99awg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707322098; c=relaxed/simple;
-	bh=Kd78ByyFT6a8YEwO3HZkgmw1fSvzekjxNAWgwK42edo=;
+	s=arc-20240116; t=1707323655; c=relaxed/simple;
+	bh=CNpATxVE7hKjcMfwE7sqK0SOMIV7HhiDIUzTYUEw6g0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mrctTJUHquG5t5EOD9jBhp1/Ldz2gcsqrNJhAHiI+Vq5D6ENGsx5s9WTixLXTOIl7C76xNwnM0xu+OyimY5JtagHC1Za7q+mPlB2EzD7F3MRVCte2x3zRku3CGfsziMqM+Zh+nTXFL/o1iw8fEmADDRJCayxnMhL+2vhr+MqzAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oCObCT43; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oCObCT43"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso702453a12.3
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 08:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707322096; x=1707926896; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TPcc1Z5tbUu/YfL1Zy2MeFweBmwTVf9DFXiNZ7Rr3v0=;
-        b=oCObCT43ZFjoI6IPa0YJJXy4VxMPOEoRZeWyvb6+NgzlPBsuajpllOkErMuitTwLEt
-         vh2ApUiEfXSNyT5fLTuH1hDKOHY78sLutfVcxy8vWvqpDo8tyz3sUPIlefHzCR2IgHqz
-         h9iXhRN0cZhM7pCYfzYIoTfAUi0eG9NVbrjrM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707322096; x=1707926896;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TPcc1Z5tbUu/YfL1Zy2MeFweBmwTVf9DFXiNZ7Rr3v0=;
-        b=n9RuaEcKv+Wp4UBXziscczN4h7MxQRSDwDu8MPzZwGq9mW8ZPO5is4k3jKmVlCDpqJ
-         lab+bqZ0xGrF1u8fygub+NbNZ5CC592ks/yv1Lct1RUaK9JPZAwE4X0J6MI+IQopNvKG
-         FU/lN4bGU+NVdxAoX98ALX9gRzmtdH5vSpdwByKkQsRpeQvwKZruOeeClulKngTjs7Z0
-         bxNgqXN1FqY63fiBO3bB9mYpqLttgBvmeZlnYC18AiGezB1yvo6QS0s/YRXnmEBPMbJ/
-         VClD420uJt1opnG5DaBfHmuREvTAkBZPIJ+1rZf5Mtb7wqnIj0Se2zZlAb4hNbWipVHq
-         FyYA==
-X-Gm-Message-State: AOJu0YwXgL5xGVp5TD3XIO8xltHuxQL/R736tNcqfKVgr/g7pzBVut/2
-	t0OBl6Slzbwx5UK0W6agjc+X/8ZrSdNbU60PskA6kWUcfP/nW2BYR4scpoxTww==
-X-Google-Smtp-Source: AGHT+IEL4dVoIUgrEfKuNyswXdeBCq+iJN21BgyINOhjGzVNggS7+fdaixLjZ7J98lvr0IBueRr7lg==
-X-Received: by 2002:a05:6a20:4285:b0:19c:a3e2:58b8 with SMTP id o5-20020a056a20428500b0019ca3e258b8mr5608303pzj.12.1707322096615;
-        Wed, 07 Feb 2024 08:08:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUS66k0uHq0b+5MwZzpaLXL0AsgXhY3IvIWBM9QHQ74huP9OpEpSRz771KZ1rqnVr8feMnwNO4Dxne8ARclmqWyEmUWtHsPkrqO6oy3zalSuK1uUr+zVkpIzIGv0WA96sX/0d30CXwOB3fo8/n/HBBzWIOrU9GhSa3XV/M6TCmXF+n3wpXTG8OKnVknN/0xKQEY8dIt8CfDPb+Ihqwtwz5+SRz1dmALXZBYMZbDX0ftsdnv5CMfdxIvg+LN7ogd+Z0wPQ9C+zu7BCVqOewH0RHjLL5+81muPt+q9dp/pXi2Elk3jM1Gh0dmL6Gx7hHMfCV5CopGod/9zQ==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y68-20020a62ce47000000b006e0545768dasm1800999pfg.151.2024.02.07.08.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 08:08:16 -0800 (PST)
-Date: Wed, 7 Feb 2024 08:08:14 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=U8N2ld2dPJ2Nb3KVHu7rtdQn1Uz34ckJ0knXLEW6qO9z3Bk8OMy7QdfMsjpbb6mpXAN5nxCyIB5ndHYwBxV90Sxm8bv5Cedzs9NWbuxFfvD17MXJu8zeqtcCxCSK3h1U/it/Pb082R4XiDHL2/Xlk6WztGhUvO3mctPzn+oxlgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12384133"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="12384133"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 08:34:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="910037935"
+X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
+   d="scan'208";a="910037935"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 08:34:10 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rXksB-00000002eol-28Gd;
+	Wed, 07 Feb 2024 18:34:07 +0200
+Date: Wed, 7 Feb 2024 18:34:07 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
 	Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
@@ -62,10 +41,11 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v5 3/3] overflow: Introduce wrapping_inc() and
  wrapping_dec()
-Message-ID: <202402070806.445F7F7F03@keescook>
+Message-ID: <ZcOw_5-1ghxJrqfg@smile.fi.intel.com>
 References: <20240207152317.do.560-kees@kernel.org>
  <20240207152422.3855315-3-keescook@chromium.org>
  <CAHp75Vf3emnw-=it-Smb_NG+xYjWhB+U0+i1hcNPWA=BByN6nw@mail.gmail.com>
+ <202402070806.445F7F7F03@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -75,37 +55,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vf3emnw-=it-Smb_NG+xYjWhB+U0+i1hcNPWA=BByN6nw@mail.gmail.com>
+In-Reply-To: <202402070806.445F7F7F03@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 07, 2024 at 05:31:54PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 7, 2024 at 5:24 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > This allows replacements of the idioms "var += offset" and "var -= offset"
-> > with the wrapping_inc() and wrapping_dec() helpers respectively. They
-> > will avoid wrap-around sanitizer instrumentation.
-> >
-> > Add to the selftests to validate behavior and lack of side-effects.
+On Wed, Feb 07, 2024 at 08:08:14AM -0800, Kees Cook wrote:
+> On Wed, Feb 07, 2024 at 05:31:54PM +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 7, 2024 at 5:24 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > This allows replacements of the idioms "var += offset" and "var -= offset"
+> > > with the wrapping_inc() and wrapping_dec() helpers respectively. They
+> > > will avoid wrap-around sanitizer instrumentation.
+> > >
+> > > Add to the selftests to validate behavior and lack of side-effects.
+> > 
+> > I would expect inc/dec to add/subtract 1. So, to me the terminology is
+> > confusing. The list of the C/C++ operators on Wikipedia describes
+> > above as
+> > 
+> > += Assignment by sum
+> > -= Assignment by difference
+> > 
+> > Hence the proposal is to have
+> > 
+> > wrapping_sum()
+> > wrapping_diff()
 > 
-> I would expect inc/dec to add/subtract 1. So, to me the terminology is
-> confusing. The list of the C/C++ operators on Wikipedia describes
-> above as
+> I think maybe the missing phrase is "assign", which is what makes
+> argument 1 "special" -- it's being changed. Perhaps:
 > 
-> += Assignment by sum
-> -= Assignment by difference
+> wrapping_add_assign()
+> wrapping_sub_assign()
 > 
-> 
-> Hence the proposal is to have
-> 
-> wrapping_sum()
-> wrapping_diff()
+> ?
 
-I think maybe the missing phrase is "assign", which is what makes
-argument 1 "special" -- it's being changed. Perhaps:
-
-wrapping_add_assign()
-wrapping_sub_assign()
-
-?
+WFM!
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
+
+
