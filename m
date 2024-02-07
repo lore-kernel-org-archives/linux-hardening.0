@@ -1,221 +1,141 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CF214A9F
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 10:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E3C17BB4
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 10:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707301841; cv=none; b=Kev8EADYc77m1niyuoSG4xfLvfOmvktaHvTSNblI4FWUOptA8ROhto0Wlcg4zKke5MDlP8NRenv34/12uQl1w7E5pXW5ES1+ZxlsmDpLXyHN5ePl8mRYBmUJft/O1G52rSLApiaf8J4mQDb1etiw5i3tp9lgqSRG3EZRv3yHISY=
+	t=1707302566; cv=none; b=E/WDG2QgtFomCf1anDqIEK/5sf9x5JTbnEY8brMmMR0nfSRt2gLED8zQ0FQADEg9SenAObcKhiQccQnUFk15VmcKyzuJDB0D07wbHkKUz7UPUu3UpxabWlvXxme3IvKYhiDtS/mEA+14z/m1WPMPF3RYqm8biY8YiKNbBKXsaFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707301841; c=relaxed/simple;
-	bh=mfdJ2PPYgHEwxxjFZw/P5kJZNUzHOxQcboOo1LpZkw0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QtCuTkUVQZ85T60F8Xr90cqn6wSF1XkeXCly6u1Es46/Xv6RjCTv0H1U+dRDJR8Bqo0pYHf5pLBZcroaryRUXOL+MpcaHWvWO5yyimuHDJ3SO/nFNXQXZM5+rF2DtVzLV1W/zj+MILaxX9JzlIU7nWBGhGCqeBZ2xciRk/xqkoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cWl4z5dK; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1707302566; c=relaxed/simple;
+	bh=qfsLy0hVGwKzPrnkw+4jzhgJbclF8ucq1TUc5eZptCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UE4xW+TmHcGP/TpcfJ14VFFH8OYF6yEkC+Y29vLAmshaGe10RD3Mlc5fW3K6k07sui+lf+R1bGuExv+QbTmParNQ05gSOMaeDxnCm6xGbDShTIU0Elph0F9Jg5JSAC/FyBTS4mqLs5kZ1RG5g5iJn7+MqjrIqmcq9xNlm/O0hb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ug3UVReh; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cWl4z5dK"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e062fa6e00so261767b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 02:30:37 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ug3UVReh"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d7431e702dso4826355ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 02:42:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707301837; x=1707906637; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VxFNaOu8p/9ubGE206OvvoWg6KWdTW3LtGWkxqDKC/I=;
-        b=cWl4z5dKv1M2R7IsE4qy2GENb69Mt9FAvvOmACj0dhtOPO3k07ombiUmG3C07fV+1W
-         hwJ5nf0+US/C0qZa3cfb+f+NN85kPucHMcvpVATAy586aH+uaokBBliGsz6a+K3M1T8w
-         tu3GdE1pNIggPBadIFzbTjpL69yQDHRkS5fBQ=
+        d=chromium.org; s=google; t=1707302564; x=1707907364; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=taLlJJFKKjXeiZCf5pE+xI1yoxTfeKphVpWOgqQieJ0=;
+        b=Ug3UVRehy5wsGALuVZoLgZpEIvYrHXipschU09nNxrF93jSyLLVZgWTZ0Ox/7zuvGN
+         BIfnrZigLjJSghL387qfpSMHhKYcl/LA1sM4oH36PJgzAHmeHB52PzbqUG5g3knOWPPI
+         WoIgIR3K6JvX10zT3ll3F0+vUg7jvu4KBcCuo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707301837; x=1707906637;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VxFNaOu8p/9ubGE206OvvoWg6KWdTW3LtGWkxqDKC/I=;
-        b=mn6drBhPbi3CAG+jK53pU3V3w1MWC4Av3qohVUOa67SNuag1tpGjPT2hUwbO0fBzYm
-         WY7jUETwFEnTv3FclhcBMFZkoioF0MS5Ka1dFLydVBzia/hY2Dd1nBQS/9ovJkBxTnj0
-         LZlSvq//cQZpoe9VLyfSnjkAM6pol/tmtYWhSXFy6OFUKDkxZaYhXuis9bJAfXpiFEaM
-         tuB/SC+BiqJY7f10LB7zQ38LAhTXEy516QmBDfITOpMck+zyO53p5hJ1GKkg4DEe4Me0
-         NUpAc940R0eKbrfP3PknUFVjIyxsi/TLIMmg1sBpNH45ksGYRmBPRxU+KOYXxfzuis66
-         c9Qw==
-X-Gm-Message-State: AOJu0YzB8GAPNoQOJg1QLkU6MKyGcvM4IFTVULJxEQ6DUYNze6K4pBE9
-	E43KHJstg7NVcvRi4nroZOXaW+JYheVlUDUcFPz1hfRs/K2X2+5gnHDQZNwyWw==
-X-Google-Smtp-Source: AGHT+IHmQZg2xWswwdLkZUM98lbm3vLfVgBAMhcWGbUTojrI4Zqbs6QzEf5x7bLF/EDsnFPI48iUWg==
-X-Received: by 2002:a05:6a00:1d92:b0:6e0:4e7e:ef57 with SMTP id z18-20020a056a001d9200b006e04e7eef57mr3001935pfw.32.1707301836433;
-        Wed, 07 Feb 2024 02:30:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWO4odlDrBis+DsohTTRvTsyebXfdWZVWI48lFGxK65fP3Fzg+ytlTwc1Weo883Su4sOfsmqLBFjIc5wXExyzQz6B6Xj6ZMzmeHmyUKGzdt2FEBNXStJnabo/KdmOoUKicma++b/GvtuEDClYEUjXXTLTvosf72kylcwn+iO8nLvADdM0oZa+iU4Y1L73/3YfuFFhK2ZkSvQj5MEbdk/mP8Tc2WftqzjPeWx7AczvzIlHv9iWmREAuoiRunc6BQdToPPot/MvYhj/rf6mqWjq979Ebu7NQ7lKzGNAwra75vu3M2AA9yt54Zer++gGJNEZ4IAZUYSPU+3BF88nn5PqoipVwXwBbObn1zLK5iX+aGeIXoKeo43ie+/SgIrsNAfD3BKxI3JD+5VWX0yEH29hquXIdFrKBC9CgJGgTOMkxM4cwTf5Cc0Uf11f9BykunCMT95olbHtMoHl4rnWzFV/oc8ZYs6v8CJ5brm8Ow3vsr4c81YL0DA+xZ3K7ZxQK7b+xXbXTR4C6svYuYuKPBa9yeFxkrcI/5CEV+c8FIicaIG8CvK9zWT3BYeL2zgQ==
+        d=1e100.net; s=20230601; t=1707302564; x=1707907364;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=taLlJJFKKjXeiZCf5pE+xI1yoxTfeKphVpWOgqQieJ0=;
+        b=KLxG896EBE0pml4SiXzA3UhXkfZrT8gAQ6tU6/ZcepQvQPLmvg9FDKYIlJ6iAlj8Ud
+         0ZYdP0I20Uh12oT1f30tyGaCvNXgLiq2s1oO/mvwVrtbr8axX5TIonxhC8GNITaztPln
+         j+NKcWc3hWJf3Izv3CKCNUxJh/QmD1fNUf6NtaOdBsGqtwVhUUAmVrOaqmC2HUpUk8OA
+         lCQZ+hOG8AWxWhhDxSMdgOqviYYa1hOpDxesKk7SibTQCNgC7/02+9HjojhC7Y5GzZbx
+         xp5++irIsRTstivA1Y2VnE+LmHU1YBEjK2HwysDO9RkFC9j8uGEDVdKLHYkd3C5JJ4UQ
+         XaPQ==
+X-Gm-Message-State: AOJu0YxXbEWnfycqja3V05zc41iCcO7d2ffL1643Ej59rRgyv16CPjIm
+	yc8Gcuzox+LrMfQr3sprG7EnNh1bTa88PAUMcDZWFVAcCunET2/jPxTo6Hg6AA==
+X-Google-Smtp-Source: AGHT+IGcqBnyCqUqdnANMHYt7Eh1Fhcfsr1n6hZQx/LknuAf/vrvb8y8pDKOVXVMm1pa4UwDyYA6Cg==
+X-Received: by 2002:a17:902:ec86:b0:1d9:1b55:a37 with SMTP id x6-20020a170902ec8600b001d91b550a37mr5140051plg.50.1707302564007;
+        Wed, 07 Feb 2024 02:42:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV/Xq6Rw0I9P8/CdxpvfRVWPDp8TQ5TScBRkNyxdCa0MKz6PfFT1WcYn+mW7Sdwj/sSJaqkSPaho+UMiPF9lA9Z8OtSledd+/d8icFk2tHuuumlDRViuP9gCvEodOVp80qFBZ1BNjb9UfJ/FMlwctH2P4WiAJm3QW2JAypwrStCeuxqGrnOOM3E0peMDRejcESKuwS4kA5KPz5NZaRYx0RPuSsUnvPYfiGghnyXWXpoMXR+kPTyF0AoogtwATzqRI6G4wMob5eHAhNeiixH+c1JlkC16fD/z93ynacGZ5FotBYllp+FipCyZ05M8TagrCwy0B3LhleChA46mm8QBdy8Ybku/Rf0YtVg32h0Z/6IPanfC8+NDddv81xzsGwvJKx/Kn7at1sCZ/rs07o1aJR+juC/EdyopW3S++4B6cYA4/aii8LjUneBstCt0AFeURFPpckJAlVJV9OuP2e6qMDd
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z1-20020aa78881000000b006e069e7d337sm995882pfe.38.2024.02.07.02.30.35
+        by smtp.gmail.com with ESMTPSA id x14-20020a170902ec8e00b001d9daf742ccsm1099403plg.233.2024.02.07.02.42.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 02:30:35 -0800 (PST)
+        Wed, 07 Feb 2024 02:42:43 -0800 (PST)
+Date: Wed, 7 Feb 2024 02:42:42 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Kalle Valo <kvalo@kernel.org>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	Johannes Berg <johannes.berg@intel.com>,
-	zuoqilin <zuoqilin@yulong.com>,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org,
-	Dan Carpenter <error27@gmail.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	David Lin <yu-hao.lin@nxp.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] wifi: mwifiex: Refactor 1-element array into flexible array in struct mwifiex_ie_types_chan_list_param_set
-Date: Wed,  7 Feb 2024 02:30:33 -0800
-Message-Id: <20240207103024.make.423-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Richard Weinberger <richard@nod.at>,
+	linux-um@lists.infradead.org, Justin Stitt <justinstitt@google.com>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jason Wang <jasowang@redhat.com>, kernel test robot <lkp@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Removing more str APIs (was Re: [PATCH v3 4/4] um: Convert strscpy()
+ usage to 2-argument style)
+Message-ID: <202402070234.79D2985585@keescook>
+References: <20240206142027.make.107-kees@kernel.org>
+ <20240206142221.2208763-4-keescook@chromium.org>
+ <CAHp75Vf3c0Q7tV8ih5fRL6Bsjr6dhspFe+mxV7xUN=vZ1JdTKQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5569; i=keescook@chromium.org;
- h=from:subject:message-id; bh=mfdJ2PPYgHEwxxjFZw/P5kJZNUzHOxQcboOo1LpZkw0=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlw1vJ+lZwuNYUZVoTHKCld+XDfk61MmQ4AJtWx
- yuRoj6FEbGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcNbyQAKCRCJcvTf3G3A
- JkvZD/4mFK7LLEbhJ+ACpF2DOwd6n5FovIkQqSygp7YBUe5qLC1D7jASrg3rHgr+sqR462EWon1
- 3KxxDedRFIsoyAkdCNXntjHBdsKfgZ1QBRTLd2pIZXIAheggn5paCnhuVTX4TZ1fY61QLs8ebBL
- RomkYhtasbfaGsweE6hgmE1zrbWa95puAiHAIzeHs2yUiMqx7M+atEyJmpVmFkFqLVrgj8To+Ip
- K8NORi12jx3V1gXHB5QdYcF4dG0JN0L0g9sXoUKYYWJSM16znpZaIrsHm4zE907D+De/nt9YfsR
- +4LkPAnculMO6rYWo0AYbJhsA1q3+3tHRfEU177vkvlFIyTjbk61+nYiShw+WXbKUDTcOcMGxqL
- w2ayqHOII87gFd2xJeBaSbar8NKDlgBGS61Nt3vVrEVVZ2WXYpn94B2NMNmIs92AYTRMnh79BhX
- WHpS8maUKFrwMyKQjFvsnl/gqZEyc7F4feJGREH9Tpd55DN5pMxZvqMeJsofq/dOGgyxLdaX3XH
- UE0kas8PDTZX0Wo62Aw6PjzhlCW4UWAD/+aL35wT1ojW314fjoJHlVQciicz1v4oVdYRe69FP8c
- Sr5uNzwUJ9CNG903kAPNwCHNt6JUlFZbgM9BPWCosKM5y1vYkCOGfCBES+OotDoSPY5ofTdR/R3
- K1spiwV rMYOllJA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vf3c0Q7tV8ih5fRL6Bsjr6dhspFe+mxV7xUN=vZ1JdTKQ@mail.gmail.com>
 
-struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
-as a flexible array, so convert it into one so that it doesn't trip
-the array bounds sanitizer[1]. Only a few places were using sizeof()
-on the whole struct, so adjust those to follow the calculation pattern
-to avoid including the trailing single element.
+On Tue, Feb 06, 2024 at 05:02:16PM +0200, Andy Shevchenko wrote:
+> On Tue, Feb 6, 2024 at 4:22 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > The ARCH=um build has its own idea about strscpy()'s definition. Adjust
+> > the callers to remove the redundant sizeof() arguments ahead of treewide
+> > changes, since it needs a manual adjustment for the newly named
+> > sized_strscpy() export.
+> 
+> ...
+> 
+> > -               strscpy(dir, home, sizeof(dir));
+> > +               strscpy(dir, home);
+> >                 uml_dir++;
+> >         }
+> >         strlcat(dir, uml_dir, sizeof(dir));
+> 
+> An (unrelated) side note: are we going to get rid of strlcat() as well
+> (after strlcpy() is gone)?
 
-Examining binary output differences doesn't appear to show any literal
-size values changing, though it is obfuscated a bit by the compiler
-adjusting register usage and stack spill slots, etc.
+I think it would be worthwhile to remove it, yes. Switching to seq_buf
+in many cases seemed to be the clear solution, which is what triggered
+my trying to improve the allocation ergonomics for seq_buf recently:
+https://lore.kernel.org/linux-hardening/20231027155634.make.260-kees@kernel.org/
 
-Link: https://github.com/KSPP/linux/issues/51 [1]
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: zuoqilin <zuoqilin@yulong.com>
-Cc: Ruan Jinjie <ruanjinjie@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v3: catch two more cases of changed sizeof (gustavo)
-v2: https://lore.kernel.org/linux-hardening/20240206183857.it.362-kees@kernel.org/
-v1: https://lore.kernel.org/linux-hardening/20240206163501.work.158-kees@kernel.org/
----
- drivers/net/wireless/marvell/mwifiex/11n.c  | 12 +++++-------
- drivers/net/wireless/marvell/mwifiex/fw.h   |  2 +-
- drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
- 3 files changed, 12 insertions(+), 16 deletions(-)
+Its not in super common usage, so I think we can start chipping away at
+it:
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
-index 90e401100898..c0c635e74bc5 100644
---- a/drivers/net/wireless/marvell/mwifiex/11n.c
-+++ b/drivers/net/wireless/marvell/mwifiex/11n.c
-@@ -392,12 +392,10 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
- 
- 		chan_list =
- 			(struct mwifiex_ie_types_chan_list_param_set *) *buffer;
--		memset(chan_list, 0,
--		       sizeof(struct mwifiex_ie_types_chan_list_param_set));
-+		memset(chan_list, 0, struct_size(chan_list, chan_scan_param, 1));
- 		chan_list->header.type = cpu_to_le16(TLV_TYPE_CHANLIST);
--		chan_list->header.len = cpu_to_le16(
--			sizeof(struct mwifiex_ie_types_chan_list_param_set) -
--			sizeof(struct mwifiex_ie_types_header));
-+		chan_list->header.len =
-+			cpu_to_le16(sizeof(struct mwifiex_chan_scan_param_set));
- 		chan_list->chan_scan_param[0].chan_number =
- 			bss_desc->bcn_ht_oper->primary_chan;
- 		chan_list->chan_scan_param[0].radio_type =
-@@ -411,8 +409,8 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
- 					  (bss_desc->bcn_ht_oper->ht_param &
- 					  IEEE80211_HT_PARAM_CHA_SEC_OFFSET));
- 
--		*buffer += sizeof(struct mwifiex_ie_types_chan_list_param_set);
--		ret_len += sizeof(struct mwifiex_ie_types_chan_list_param_set);
-+		*buffer += struct_size(chan_list, chan_scan_param, 1);
-+		ret_len += struct_size(chan_list, chan_scan_param, 1);
- 	}
- 
- 	if (bss_desc->bcn_bss_co_2040) {
-diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-index 62f3c9a52a1d..3adc447b715f 100644
---- a/drivers/net/wireless/marvell/mwifiex/fw.h
-+++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-@@ -770,7 +770,7 @@ struct mwifiex_chan_scan_param_set {
- 
- struct mwifiex_ie_types_chan_list_param_set {
- 	struct mwifiex_ie_types_header header;
--	struct mwifiex_chan_scan_param_set chan_scan_param[1];
-+	struct mwifiex_chan_scan_param_set chan_scan_param[];
- } __packed;
- 
- struct mwifiex_ie_types_rxba_sync {
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index a2ddac363b10..0326b121747c 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
- 
- 			/* Copy the current channel TLV to the command being
- 			   prepared */
--			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
-+			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
- 			       tmp_chan_list,
--			       sizeof(chan_tlv_out->chan_scan_param));
-+			       sizeof(*chan_tlv_out->chan_scan_param));
- 
- 			/* Increment the TLV header length by the size
- 			   appended */
- 			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
--					       sizeof(
--						chan_tlv_out->chan_scan_param));
-+					       sizeof(*chan_tlv_out->chan_scan_param));
- 
- 			/*
- 			 * The tlv buffer length is set to the number of bytes
-@@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
- 		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
- 		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
- 		     chan_idx++) {
--			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
-+			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
- 
- 			/* Increment the TLV header length by size appended */
- 			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
--					       sizeof(
--					       chan_list_tlv->chan_scan_param));
-+					       sizeof(*chan_list_tlv->chan_scan_param));
- 
- 			temp_chan->chan_number =
- 				bgscan_cfg_in->chan_list[chan_idx].chan_number;
-@@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
- 							   chan_scan_param);
- 		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
- 				       chan_num *
--			     sizeof(chan_list_tlv->chan_scan_param[0]));
-+			     sizeof(*chan_list_tlv->chan_scan_param));
- 	}
- 
- 	tlv_pos += (sizeof(chan_list_tlv->header)
+$ git grep '\bstrlcat(' | wc -l
+480
+
+It's more risky cases (using the return value) is relatively rare,
+though, so I hadn't been prioritizing its removal:
+
+$ git grep ' = strlcat(\b' | wc -l
+13
+
+(And almost all of it is in security/selinux/ima.c)
+
+
+As a comparison, strncpy has even fewer currently, with Justin making a
+dent on it recently:
+
+$ git grep '\bstrncpy(' | wc -l
+311
+
+
+> 
+> ...
+> 
+> >         if (*umid == '\0') {
+> > -               strscpy(tmp, uml_dir, sizeof(tmp));
+> > +               strscpy(tmp, uml_dir);
+> >                 strlcat(tmp, "XXXXXX", sizeof(tmp));
+> 
+> This code is interesting... (Esp. taking into account making a
+> temporary folder out of this...)
+
+I have tried to avoid reading UML code too closely. ;)
+
 -- 
-2.34.1
-
+Kees Cook
