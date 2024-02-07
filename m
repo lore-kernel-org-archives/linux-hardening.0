@@ -1,141 +1,111 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E3C17BB4
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 10:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAAA17BCE
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 11:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707302566; cv=none; b=E/WDG2QgtFomCf1anDqIEK/5sf9x5JTbnEY8brMmMR0nfSRt2gLED8zQ0FQADEg9SenAObcKhiQccQnUFk15VmcKyzuJDB0D07wbHkKUz7UPUu3UpxabWlvXxme3IvKYhiDtS/mEA+14z/m1WPMPF3RYqm8biY8YiKNbBKXsaFU=
+	t=1707303858; cv=none; b=dGEGefMWfKY4+mDND5NRolWFqQoQMcp5iz/DRKaDqWUhG9sl6k/fzFKChxRSQr7zFeiE1m9AN7cmRhI0zA8S7Djtdhn+Dg2NQLmWkxV1t0nIMxKuuHHy6AFwkhyzctVkA4on4AWGawwbF/1rBAdynaWjt8krEPQiy4n+anLFn9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707302566; c=relaxed/simple;
-	bh=qfsLy0hVGwKzPrnkw+4jzhgJbclF8ucq1TUc5eZptCQ=;
+	s=arc-20240116; t=1707303858; c=relaxed/simple;
+	bh=CgYyRmc6Z59PnXZh+5ZKWs0+Cbn8qJv1WXKrOV0Or9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UE4xW+TmHcGP/TpcfJ14VFFH8OYF6yEkC+Y29vLAmshaGe10RD3Mlc5fW3K6k07sui+lf+R1bGuExv+QbTmParNQ05gSOMaeDxnCm6xGbDShTIU0Elph0F9Jg5JSAC/FyBTS4mqLs5kZ1RG5g5iJn7+MqjrIqmcq9xNlm/O0hb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ug3UVReh; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=FnWtJhbiib8OnuwX8jv2yB8HP5ZhJs2cisTByUXDeN3lbx+s4ukVBQW7B3Krku3sM+vNF+uVFPVOa0t6ujHbOonaF/1ak9fVDPHG9DUKgQz1TOW/O/3hc+tdvgUOcAK233Vk2HfTkvVJn86NU6wBZIVp5ARBiIAC5erxmnFFxM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RNBtpq1M; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ug3UVReh"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d7431e702dso4826355ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 02:42:44 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RNBtpq1M"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-363ca193a7eso819985ab.2
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 03:04:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707302564; x=1707907364; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=taLlJJFKKjXeiZCf5pE+xI1yoxTfeKphVpWOgqQieJ0=;
-        b=Ug3UVRehy5wsGALuVZoLgZpEIvYrHXipschU09nNxrF93jSyLLVZgWTZ0Ox/7zuvGN
-         BIfnrZigLjJSghL387qfpSMHhKYcl/LA1sM4oH36PJgzAHmeHB52PzbqUG5g3knOWPPI
-         WoIgIR3K6JvX10zT3ll3F0+vUg7jvu4KBcCuo=
+        d=chromium.org; s=google; t=1707303856; x=1707908656; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MkHJEMhdHIEDISZVoKhCE9ifS1ot8NgYUDuuTg1ODbU=;
+        b=RNBtpq1MRPESx57cDJ2wvt+fsfxaz6FtCznbReN75Ij/Ise8wkzw5yJuMiajsv14vq
+         Ih8R64zS87/5xpfjgnzqnRwLse0rigqN+Qam00rj56JRkgt7I6gGiXb1xDdRrCFXelCx
+         u4hAza/gL9vD8O41sEJ114ZzZui3d+yph9NSY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707302564; x=1707907364;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=taLlJJFKKjXeiZCf5pE+xI1yoxTfeKphVpWOgqQieJ0=;
-        b=KLxG896EBE0pml4SiXzA3UhXkfZrT8gAQ6tU6/ZcepQvQPLmvg9FDKYIlJ6iAlj8Ud
-         0ZYdP0I20Uh12oT1f30tyGaCvNXgLiq2s1oO/mvwVrtbr8axX5TIonxhC8GNITaztPln
-         j+NKcWc3hWJf3Izv3CKCNUxJh/QmD1fNUf6NtaOdBsGqtwVhUUAmVrOaqmC2HUpUk8OA
-         lCQZ+hOG8AWxWhhDxSMdgOqviYYa1hOpDxesKk7SibTQCNgC7/02+9HjojhC7Y5GzZbx
-         xp5++irIsRTstivA1Y2VnE+LmHU1YBEjK2HwysDO9RkFC9j8uGEDVdKLHYkd3C5JJ4UQ
-         XaPQ==
-X-Gm-Message-State: AOJu0YxXbEWnfycqja3V05zc41iCcO7d2ffL1643Ej59rRgyv16CPjIm
-	yc8Gcuzox+LrMfQr3sprG7EnNh1bTa88PAUMcDZWFVAcCunET2/jPxTo6Hg6AA==
-X-Google-Smtp-Source: AGHT+IGcqBnyCqUqdnANMHYt7Eh1Fhcfsr1n6hZQx/LknuAf/vrvb8y8pDKOVXVMm1pa4UwDyYA6Cg==
-X-Received: by 2002:a17:902:ec86:b0:1d9:1b55:a37 with SMTP id x6-20020a170902ec8600b001d91b550a37mr5140051plg.50.1707302564007;
-        Wed, 07 Feb 2024 02:42:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV/Xq6Rw0I9P8/CdxpvfRVWPDp8TQ5TScBRkNyxdCa0MKz6PfFT1WcYn+mW7Sdwj/sSJaqkSPaho+UMiPF9lA9Z8OtSledd+/d8icFk2tHuuumlDRViuP9gCvEodOVp80qFBZ1BNjb9UfJ/FMlwctH2P4WiAJm3QW2JAypwrStCeuxqGrnOOM3E0peMDRejcESKuwS4kA5KPz5NZaRYx0RPuSsUnvPYfiGghnyXWXpoMXR+kPTyF0AoogtwATzqRI6G4wMob5eHAhNeiixH+c1JlkC16fD/z93ynacGZ5FotBYllp+FipCyZ05M8TagrCwy0B3LhleChA46mm8QBdy8Ybku/Rf0YtVg32h0Z/6IPanfC8+NDddv81xzsGwvJKx/Kn7at1sCZ/rs07o1aJR+juC/EdyopW3S++4B6cYA4/aii8LjUneBstCt0AFeURFPpckJAlVJV9OuP2e6qMDd
+        d=1e100.net; s=20230601; t=1707303856; x=1707908656;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MkHJEMhdHIEDISZVoKhCE9ifS1ot8NgYUDuuTg1ODbU=;
+        b=sRjaWA7rsp0gdTXnnUXfQn2L2natEqiT8klGNmlk3QuN++axgkT7tyAL1Vx5uHf5K6
+         nxjOHLEzMAnN2M0JHo1y62RlrC/AhIikjRaK6keSPCxzaWVW/ueZV6RQ9zqS8jEXBnCB
+         uMR4TMt6Wqp363INVJZNFHpjceoK/TqoceIdnoD+/DtLKIy9ZSITYGYBD8bmnI3S4CST
+         iq2yht97uUS1C4jvavq9tTGHP4Mv21gJf3NG5BJjhgG28RYfw5q2g2/RurrIGx3mPVCa
+         1g/m9WbbMtPoQd6v7VuKfuvOL7YClWQx0BQsiAdU8IEuQXX86e0Q7yagHYvp0JKc0Xny
+         lvWA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5glZClaYYrfmvrUWdZSSvqwEafxw71wkr4fdaKqjs02zBvGiGD4U1+iQqnI49NTqWiVDhDn8VpMYsRXY0UoGrA9tp6RM/3UjKX7T5jD9t
+X-Gm-Message-State: AOJu0Yz6Hmg4KmSFjm3z/ui2yRzfBQYir4636/JrtB7jTAkpv+RjnORS
+	qg41ZldQ6dafDfVwAYRNjqZWcG8r0D2z+arl7PG+ME+2yqVx4XfVxTPo5Wq39g==
+X-Google-Smtp-Source: AGHT+IFsYYm7hJGs5m67HBsC49sVaunlIdTZxtC+l0udvR2oLwzFexMXoEljKEGwE1VAc90ijtD/5w==
+X-Received: by 2002:a92:c20f:0:b0:363:ad00:106d with SMTP id j15-20020a92c20f000000b00363ad00106dmr5585505ilo.4.1707303856225;
+        Wed, 07 Feb 2024 03:04:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrtNEYtrYrUbd3WCx5d+Vo2gSvxdEHF0BNGt6ximizf7qYe7T5H46Ie55fL2VWgxMxlWduhoOX6KlMOKtsxeFyYCjnhIkE3L6KvmtJVxIpjw7kXgW5qPN+w4huuzEm3qwVbp0AVgQ1ZkASW5U90p88VrUkWp6nk5vR49oEi+InXGOlVot97XzK5pkmLoC/C2lIuxSGPyqlv0uv7XGoAEMGG6mOD7CY9rcJB8pP2E8YKfhqP27o1FFSVoC5YBVbtY5PZ9MkHM2h+wYCchXO4Cb0F8vo8CHqj9008WFYSz/M028lVxfT3MffozMwCJI64UcjTuNhYeBexPzgZrEmQuSK3FMTUJHePjnEMG8JGdN/epYhO8fGrZcF43GqGd7MGSkLs0TQbrG7Y1g3GzzCBrKf8uLtRggideexU9Q0w5aJ/L4dwMQvoBR9qCjBvFyTRh6Icke/q+ziPbcKh2mMkoOp3unEJyA0N6zOTMm/dlbK9WvXl3hPgy+yY0O9wlGZ62HqyqCbYDs=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x14-20020a170902ec8e00b001d9daf742ccsm1099403plg.233.2024.02.07.02.42.43
+        by smtp.gmail.com with ESMTPSA id ck4-20020a056a02090400b0059b2316be86sm1109248pgb.46.2024.02.07.03.04.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 02:42:43 -0800 (PST)
-Date: Wed, 7 Feb 2024 02:42:42 -0800
+        Wed, 07 Feb 2024 03:04:15 -0800 (PST)
+Date: Wed, 7 Feb 2024 03:04:14 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Richard Weinberger <richard@nod.at>,
-	linux-um@lists.infradead.org, Justin Stitt <justinstitt@google.com>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>, kernel test robot <lkp@intel.com>,
+To: Justin Stitt <justinstitt@google.com>
+Cc: Marco Elver <elver@google.com>, Miguel Ojeda <ojeda@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Removing more str APIs (was Re: [PATCH v3 4/4] um: Convert strscpy()
- usage to 2-argument style)
-Message-ID: <202402070234.79D2985585@keescook>
-References: <20240206142027.make.107-kees@kernel.org>
- <20240206142221.2208763-4-keescook@chromium.org>
- <CAHp75Vf3c0Q7tV8ih5fRL6Bsjr6dhspFe+mxV7xUN=vZ1JdTKQ@mail.gmail.com>
+	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3] ubsan: Reintroduce signed overflow sanitizer
+Message-ID: <202402070255.36699AE147@keescook>
+References: <20240205093725.make.582-kees@kernel.org>
+ <20240207014528.5byuufi5f33bl6e2@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vf3c0Q7tV8ih5fRL6Bsjr6dhspFe+mxV7xUN=vZ1JdTKQ@mail.gmail.com>
+In-Reply-To: <20240207014528.5byuufi5f33bl6e2@google.com>
 
-On Tue, Feb 06, 2024 at 05:02:16PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 6, 2024 at 4:22 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > The ARCH=um build has its own idea about strscpy()'s definition. Adjust
-> > the callers to remove the redundant sizeof() arguments ahead of treewide
-> > changes, since it needs a manual adjustment for the newly named
-> > sized_strscpy() export.
+On Wed, Feb 07, 2024 at 01:45:28AM +0000, Justin Stitt wrote:
+> I wouldn't mind also seeing a test_ubsan_div_overflow test case here.
 > 
-> ...
+> It has some quirky behavior and it'd be nice to test that the sanitizers
+> properly capture it.
 > 
-> > -               strscpy(dir, home, sizeof(dir));
-> > +               strscpy(dir, home);
-> >                 uml_dir++;
-> >         }
-> >         strlcat(dir, uml_dir, sizeof(dir));
+> Check out this Godbolt: https://godbolt.org/z/qG5f1j6n1
 > 
-> An (unrelated) side note: are we going to get rid of strlcat() as well
-> (after strlcpy() is gone)?
+> tl;dr: with -fsanitize=signed-integer-overflow division (/) and
+> remainder (%) operators still instrument arithmetic even with
+> -fno-strict-overflow on.
+> 
+> This makes sense as division by 0 and INT_MIN/-1 are UBs that are not
+> influenced by -fno-strict-overflow.
 
-I think it would be worthwhile to remove it, yes. Switching to seq_buf
-in many cases seemed to be the clear solution, which is what triggered
-my trying to improve the allocation ergonomics for seq_buf recently:
-https://lore.kernel.org/linux-hardening/20231027155634.make.260-kees@kernel.org/
-
-Its not in super common usage, so I think we can start chipping away at
-it:
-
-$ git grep '\bstrlcat(' | wc -l
-480
-
-It's more risky cases (using the return value) is relatively rare,
-though, so I hadn't been prioritizing its removal:
-
-$ git grep ' = strlcat(\b' | wc -l
-13
-
-(And almost all of it is in security/selinux/ima.c)
-
-
-As a comparison, strncpy has even fewer currently, with Justin making a
-dent on it recently:
-
-$ git grep '\bstrncpy(' | wc -l
-311
-
+There is actually already a test_ubsan_divrem_overflow, but because the
+failure modes result in a trap even without the sanitizer, it's disabled
+in the test. For testing a crashing mode, it might be interesting to add
+it to LKDTM, which is the crash tester...
 
 > 
-> ...
+> Really though, the patch is fine and the above test case is optional and
+> can be shipped later -- as such:
 > 
-> >         if (*umid == '\0') {
-> > -               strscpy(tmp, uml_dir, sizeof(tmp));
-> > +               strscpy(tmp, uml_dir);
-> >                 strlcat(tmp, "XXXXXX", sizeof(tmp));
-> 
-> This code is interesting... (Esp. taking into account making a
-> temporary folder out of this...)
+> Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-I have tried to avoid reading UML code too closely. ;)
+Thanks!
+
+-Kees
 
 -- 
 Kees Cook
