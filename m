@@ -1,69 +1,73 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E343422338
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 09:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB212555B
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 09:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707298514; cv=none; b=RGP+9uD+CPg/lnFsiQtuUKDyxNnnGZTQdpsvYHjQfR3DDSyx1q+N7EfbMZ1vM0TftgnSSqZiGV/Fh4k4W1qljJ3pRgpR3kMhF3wykjmNr92gtS8vD1pxd3dtd4P1nDmKfvxauPAA55QfbQKac5UoBDYxoZVCMxq3WSBO4HXa/uc=
+	t=1707299819; cv=none; b=FK5W6Dh3ddZRTIs7BOxed9AWekAOap6qGnxGOggcYpwI9PV7hbZPuDdm7fFgqXuVvbDmsRrDqSrhVWI3tas3k5vXW7f//3iyLQYd3ZdAxM4i92+vquZdElXUi/yS6HzrWc0TxOHR3GQJG1qlxCbc7hgDHMvTSsoNN3jBT7h0H+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707298514; c=relaxed/simple;
-	bh=XjpRzdoTfjP3OQt5mqE+y9WThcPznmjyICcveK2XvE0=;
+	s=arc-20240116; t=1707299819; c=relaxed/simple;
+	bh=9QoZb1lmroVO35bJvVBCgZvQwLS411mRGfg9/dag1g4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8iu3FE3j71SdUBgJYTBfOyRCo4LO0k/eiI0vdtUSKq8YcmaXvSghkBzCicnulPavXFpncykJllIjyiJ5lV3pd3iQgA7Qzq/fzRtes+A/ehPrAhKR8TYUrn+Brrh4m5KoAjJ3PUss05afSRsKtQRd0sorgwmcIevhrqm8yiIXtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mp2Qgq4l; arc=none smtp.client-ip=209.85.210.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xk5fN8wh0xpx4OW14kMu42XxcPr01rONXPPZbLwcVLBm6WNEY8X4jobZWcloCSvwhdBj/FJC9XfKYoqj6rWIsNCX7V5x7DWpnflTg7QhXtynnxaykvCxcBddKD/xwMwxqZVHplE2SQxwI89czEtjVEUgoF/V10rUnONg/aJUXsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j+TEedoG; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mp2Qgq4l"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6daf694b439so348747b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 01:35:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j+TEedoG"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6de2f8d6fb9so339790b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 01:56:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707298512; x=1707903312; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707299817; x=1707904617; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lnzs6TPIgp3HqVBCfdcD7KxhniQZ5JYkJZ6YNmMCISs=;
-        b=mp2Qgq4ltvOvC+3iDb//06CICpkJJTdcqCM/FvZ9jpuxIfYxLsgSc+5uQB5yBtVFf5
-         tno0XYnwDiAuOkPzh0FnLztgL08ONAC6rPWoI1frOFzyJX3kKDOBog9xOtelb7Mydo/C
-         99r0VR8uMuIRQUG0X7ebItltvEoZXB/8mvB6g=
+        bh=unzmP4VueDkLJ81egUXVXd93GsMx5x/4DFW2s8hdVdE=;
+        b=j+TEedoG+k0nZJRSJ3o/IdUChcvfSgvObsr5pwyeRcBIONUjDybn8tl4eg1JEmFCiw
+         b1Yb5WFPloarMsCOvL57ptUQ7zW4QWlA2G1HgEhu6Z+pTAFoaQvDBUMnB5VI6+T1B97j
+         /vU354/tnHB6d60bx9kLRMQS+hsrmbwDHrFOY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707298512; x=1707903312;
+        d=1e100.net; s=20230601; t=1707299817; x=1707904617;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lnzs6TPIgp3HqVBCfdcD7KxhniQZ5JYkJZ6YNmMCISs=;
-        b=cwYQ4nStTfBQNfdJh47R9r/bcL1bkp1Cv1vhMIP8pk1c31ACEWG3tDP7i0lmL9SECH
-         IDKdbG3MqmipkdeKpMN+Vvpy/DOBbPpyIhcu7/zoL9TyNt4Cvn05WzV4U3Qa4HoRpxfa
-         KA4UVDK9UrDwRe7C/pznregUIHUfUGew6ocwWolc6rrEqS+E5QnszIyOQxRDFyBp+cZl
-         uotupgbf3pFiWHBCEECh1DPkow5P6XaN+BAPodtlFiAwQDCYaA4f2p6+wljUAE0ZYl8k
-         USU0zJXe1Iz7QBeaR78q2MRB+yh5GbX6mD6IjCPSRahloZnOdect40B2HTZ79tRHL+/h
-         9rGg==
-X-Gm-Message-State: AOJu0YwCmEAklPOMZqzrGL0LdsBuNVZVgCnKD5rrU9YlT/Ynvrxa7A3r
-	uI8PVL5/iwFESeX/lgLFvuLaG/Cm3U2kpdnff/5vAPe8P6iWxZSMJDTfGYyMkg==
-X-Google-Smtp-Source: AGHT+IEkEilvjof7TiSRF97ozyPZg+g25k745KHQmjN0ECt8d5Z5zPMmfEBaBMrEFYqdYbnRc0Guyw==
-X-Received: by 2002:a05:6a21:2d0a:b0:19e:9f2d:9814 with SMTP id tw10-20020a056a212d0a00b0019e9f2d9814mr2957878pzb.39.1707298512206;
-        Wed, 07 Feb 2024 01:35:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW5fXL+oPKiDobv+fb/lHAozLsmX7lK/yZb08Gn9bfd2pAuX+sot8hH0/znY26GmybtpE91R7S10ham8tIjbvT1yzWzIltOtz9zURXpQfQdTaE1E3KqHTrF09ABSgIuq0yFEQl64KuyMPyNH/jxEAHaxCQMHFIee4Xmv5J4t7pF3zNF4a+0BAK2U4cNEgS7yp3wyHkdL4RB5IHEjtQgFv/ZpNPqO6EsfmNDgg7Od/DVl15J6Zyzub1pYZo82EFL06rfZnoTQfAFC2nPbLRJEoxM3WP+9Q05oKwtFwnJ
+        bh=unzmP4VueDkLJ81egUXVXd93GsMx5x/4DFW2s8hdVdE=;
+        b=e4ofQ+qBinvF0H4ejEeUWPcFFrcgTnvLPTgWVm8g0lBUonIydE78xmRMEZIm5vlXyd
+         5tZLZKRAWLy09eJlwjWvj9+D37GWXFAy0zbV+1XJiThErl4PwvUNzkDqyZrJACNq8YA2
+         libyaijQck3ddpnVwt2m7imNDhCFHHte3cTstQI5LycPsuu/HItJjIDuL0rF4nJ7w+8c
+         cV3d8xLGB2b1QQzbHQNuXI8YLpiH+A0UH6SCQzRnoj2cIWvT83XD1JjuupRfTkdeD/1N
+         ETk8ieGSJRz1xMuZIydYaTBpdweiFDyChusJEogbG+2Atusql3ysyYVBni0gARRsEo3L
+         li1A==
+X-Gm-Message-State: AOJu0YzRiA1GcjYdoPlSxWr3CMvoVN+75OrJU5iJOcv10nH3qWyp5C0j
+	/BhBdjZDHEA+KW8RidNvjKV78IXm9ymI/gZ/4fj0EWrcU+uoRjI7PuSaI4MGRg==
+X-Google-Smtp-Source: AGHT+IHrF+uWvHkuZ+EpPlH5CYFsMjMmFKSibstfxHs5EGfzP/nuLGDSF3vviyIYTLakkCSSrYPIZQ==
+X-Received: by 2002:a05:6a00:2d81:b0:6e0:3874:24da with SMTP id fb1-20020a056a002d8100b006e0387424damr2872821pfb.33.1707299816924;
+        Wed, 07 Feb 2024 01:56:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWbjXVsCQWWUNu1ltFUiLkJAac8m30g68PashXmCwiIAt1M6Ksk4TG1SZa+wnhLHaoisGB7VGdh6NNJBGhte+P0zoj1j2JEUnmdQOfT+SnN/xRHkyG2svrtJ8B/zq7pN9/z49iO3l2VYAV42KMKfe3UNCE3jrs4PK3O8CqIz8UQgVIRqlwMW5h38qIC7+Mb7QRSgKKOyYf6l26WnKL7sNLGJ9vmk7ieCQbCeaXzUqIihJZ0CGt6GnXqDH+0WijxYfISMULdjiBo7lMpzxqvpXs4mIBNbliGNqdzR5aS4xIrb+e8toU5zJYx+VphpCINF5z3mlLyJm1cBgcP3Lkvck4V1hkKOAw0Wp2eVgpVAHmetaWkdnHAFmzFE6LTwyAZJXCpIeSP9/bM/tgCeD8McE0tQETXYPzM8XU0ckXAxI4WJRklz4FxeAljDgivRcsI/1AmnuhR1P5zSxvxearhynvrJZzkp12alOVVGpIXcb3hV8tdcLyQs/HUgbWbKQ08JVJydgDVk7oVTAieFry2vQ3rWtHZxrf1bwUvv5pDFRJkFN00I3VI8Yc=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lb6-20020a170902fa4600b001d95407f6f5sm986587plb.48.2024.02.07.01.35.11
+        by smtp.gmail.com with ESMTPSA id a3-20020a62d403000000b006e02e816f13sm1105495pfh.111.2024.02.07.01.56.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 01:35:11 -0800 (PST)
-Date: Wed, 7 Feb 2024 01:35:10 -0800
+        Wed, 07 Feb 2024 01:56:56 -0800 (PST)
+Date: Wed, 7 Feb 2024 01:56:55 -0800
 From: Kees Cook <keescook@chromium.org>
 To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-hardening@vger.kernel.org,
+Cc: Brian Norris <briannorris@chromium.org>, Kalle Valo <kvalo@kernel.org>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Johannes Berg <johannes.berg@intel.com>,
+	zuoqilin <zuoqilin@yulong.com>, Ruan Jinjie <ruanjinjie@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] overflow: Introduce wrapping_add(),
- wrapping_sub(), and wrapping_mul()
-Message-ID: <202402070134.53727173F@keescook>
-References: <20240206102354.make.081-kees@kernel.org>
- <20240206103201.2013060-2-keescook@chromium.org>
- <4bde6e72-c7f6-434d-9489-3a0de7804b18@embeddedor.com>
+	linux-wireless@vger.kernel.org, Dan Carpenter <error27@gmail.com>,
+	Rafael Beims <rafael.beims@toradex.com>,
+	David Lin <yu-hao.lin@nxp.com>, Lukas Wunner <lukas@wunner.de>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: mwifiex: Refactor 1-element array into flexible
+ array in struct mwifiex_ie_types_chan_list_param_set
+Message-ID: <202402070156.189B1D8@keescook>
+References: <20240206183857.it.362-kees@kernel.org>
+ <fb9ec7de-7c8a-4e94-94c2-eeea6369550e@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,64 +76,71 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4bde6e72-c7f6-434d-9489-3a0de7804b18@embeddedor.com>
+In-Reply-To: <fb9ec7de-7c8a-4e94-94c2-eeea6369550e@embeddedor.com>
 
-On Tue, Feb 06, 2024 at 10:54:06AM -0600, Gustavo A. R. Silva wrote:
+On Tue, Feb 06, 2024 at 02:32:32PM -0600, Gustavo A. R. Silva wrote:
 > 
 > 
-> On 2/6/24 04:31, Kees Cook wrote:
-> > Provide helpers that will perform wrapping addition, subtraction, or
-> > multiplication without tripping the arithmetic wrap-around sanitizers. The
-> > first argument is the type under which the wrap-around should happen
-> > with. In other words, these two calls will get very different results:
+> On 2/6/24 12:39, Kees Cook wrote:
+> > struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
+> > as a flexible array, so convert it into one so that it doesn't trip the
+> > array bounds sanitizer[1]. Only once place was using sizeof() on the
+> > whole struct (in 11n.c), so adjust it to follow the calculation pattern
+> > used by scan.c to avoid including the trailing single element.
 > > 
-> > 	wrapping_mul(int, 50, 50) == 2500
-> > 	wrapping_mul(u8,  50, 50) ==  196
-> > 
-> > Add to the selftests to validate behavior and lack of side-effects.
-> > 
-> > Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> > Cc: Marco Elver <elver@google.com>
-> > Cc: Eric Biggers <ebiggers@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-hardening@vger.kernel.org
-> > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > Link: https://github.com/KSPP/linux/issues/51 [1]
+> > Cc: Brian Norris <briannorris@chromium.org>
+> > Cc: Kalle Valo <kvalo@kernel.org>
+> > Cc: Dmitry Antipov <dmantipov@yandex.ru>
+> > Cc: Johannes Berg <johannes.berg@intel.com>
+> > Cc: zuoqilin <zuoqilin@yulong.com>
+> > Cc: Ruan Jinjie <ruanjinjie@huawei.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > Cc: linux-wireless@vger.kernel.org
 > > Signed-off-by: Kees Cook <keescook@chromium.org>
 > > ---
-> >   include/linux/overflow.h | 54 ++++++++++++++++++++++++++++++++++++++++
-> >   lib/overflow_kunit.c     | 24 +++++++++++++++---
-> >   2 files changed, 74 insertions(+), 4 deletions(-)
+> >   drivers/net/wireless/marvell/mwifiex/11n.c  |  8 +++-----
+> >   drivers/net/wireless/marvell/mwifiex/fw.h   |  2 +-
+> >   drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
+> >   3 files changed, 10 insertions(+), 14 deletions(-)
 > > 
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> > index 4e741ebb8005..429c4d61a940 100644
-> > --- a/include/linux/overflow.h
-> > +++ b/include/linux/overflow.h
-> > @@ -64,6 +64,24 @@ static inline bool __must_check __must_check_overflow(bool overflow)
-> >   #define check_add_overflow(a, b, d)	\
-> >   	__must_check_overflow(__builtin_add_overflow(a, b, d))
-> > +/**
-> > + * wrapping_add() - Intentionally perform a wrapping addition
-> > + * @type: type for result of calculation
-> > + * @a: first addend
-> > + * @b: second addend
-> > + *
-> > + * Return the potentially wrapped-around addition without
-> > + * tripping any wrap-around sanitizers that may be enabled.
-> > + */
-> > +#define wrapping_add(type, a, b)				\
-> > +	({							\
-> > +		type __val;					\
-> > +		if (__builtin_add_overflow(a, b, &__val)) {	\
-> > +			/* do nothing */			\
-> > +		}						\
-> > +		__val;						\
+> > diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
+> > index 90e401100898..9ed90da4dfcf 100644
+> > --- a/drivers/net/wireless/marvell/mwifiex/11n.c
+> > +++ b/drivers/net/wireless/marvell/mwifiex/11n.c
+> > @@ -392,12 +392,10 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
+> >   		chan_list =
+> >   			(struct mwifiex_ie_types_chan_list_param_set *) *buffer;
+> > -		memset(chan_list, 0,
+> > -		       sizeof(struct mwifiex_ie_types_chan_list_param_set));
+> > +		memset(chan_list, 0, struct_size(chan_list, chan_scan_param, 1));
+> >   		chan_list->header.type = cpu_to_le16(TLV_TYPE_CHANLIST);
+> > -		chan_list->header.len = cpu_to_le16(
+> > -			sizeof(struct mwifiex_ie_types_chan_list_param_set) -
+> > -			sizeof(struct mwifiex_ie_types_header));
+> > +		chan_list->header.len =
+> > +			cpu_to_le16(sizeof(struct mwifiex_chan_scan_param_set));
+> >   		chan_list->chan_scan_param[0].chan_number =
+> >   			bss_desc->bcn_ht_oper->primary_chan;
+> >   		chan_list->chan_scan_param[0].radio_type =
+> This probably still needs a bit more work.
 > 
-> mmh... now that __builtin_*_overflow() is directly used, I guess
-> we don't need to _check_ for overflow anymore.
+> There are a couple more instances of `sizeof()` that should probably be
+> audited and adjusted:
+> 
+> drivers/net/wireless/marvell/mwifiex/11n.c:414:         *buffer += sizeof(struct mwifiex_ie_types_chan_list_param_set);
+> drivers/net/wireless/marvell/mwifiex/11n.c:415:         ret_len += sizeof(struct mwifiex_ie_types_chan_list_param_set);
 
-/me slaps his forehead
+Good call. I think this is the right delta:
 
-Yes indeed! I will adjust it.
+-               *buffer += sizeof(struct mwifiex_ie_types_chan_list_param_set);
+-               ret_len += sizeof(struct mwifiex_ie_types_chan_list_param_set);
++               *buffer += struct_size(chan_list, chan_scan_param, 1);
++               ret_len += struct_size(chan_list, chan_scan_param, 1);
+
+I will send a v3.
 
 -- 
 Kees Cook
