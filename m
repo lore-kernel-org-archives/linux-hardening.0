@@ -1,57 +1,57 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF24E8F5D
-	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 00:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D05CDDA8
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 00:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707265952; cv=none; b=QGOa5EimIvNrplzP6qYPl8E69vxqdG2mwuHzlFksZi9WHbEpy4129T2YftmTkjRcLSV/UmvTCD3vTHXPH1JmJk3J763380+BUJELpgBDVpWWsyh1Ns3uJvDFeJgteRKKt2SjzAtVmAerUitCFzMtk8OEg8Pj94iaaDrWPPBft+o=
+	t=1707267118; cv=none; b=AhWo9w5ky4fzzvauU6WM3L58L1h5ZXU43dU0IVZY/eaCcAzBsjoq5kImydnAhXjrSJa2p2/ficdOqDOqI6cpmOe82Y5mTRehlEKqfuLRVGXcEthFGXmSjvnf5ZcGbFUqkH8F5fCkpw+dStInMNA73y6V+54A79mAlsx/67KFdt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707265952; c=relaxed/simple;
-	bh=ax4kbwR1wG2ecwpHsW2swGQp3y7VpR79Vvh+CgItsug=;
+	s=arc-20240116; t=1707267118; c=relaxed/simple;
+	bh=zNJXxzOEtRt0uJXobHWSX6yUAHNaIahZf4y9z7/TbsI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u173U8ddfZt8GfEUegsH8cSFgo9duoKcpFCvmhI9hH5DTTfMvqqcxm8j7Ysw8ulYBa1djFwFL+97bC/7oMHYUdMB5pG5T2pdC4MPUf8TRBCmvqkzVuq5Q8w9G4VcJP529dCOb7wwIn0K+NXpfOU7e83YeKjAE4zx5ScwwzZb9z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KYbiyfde; arc=none smtp.client-ip=209.85.166.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOvRm/kGinb5XGhocDVvz629XDnULEqCzd9FORABAjohsdT+lny4PM/X7kQkUeOpj7hfa8C8HLXzY0VsAVfTrOtKzCwlznk4k2ZkVuOgT9T8qTdXNIki9Xblu5ayX823jrBK7I5h8e3uwYkWAYb+xLwNGINay4a/5PVR4PZcX74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONSqO9Sf; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYbiyfde"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7bffface817so2911639f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 16:32:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONSqO9Sf"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7c2c8606ef1so2701139f.2
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 16:51:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707265950; x=1707870750; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1707267115; x=1707871915; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJXlby+AD30AsP8JwtKyQnYYLLwLHxDqcJGOtskX1jw=;
-        b=KYbiyfdeSfwTPP2NVxxfCUMOF06JOc0Dhu1QtOsyxzSH/iyKgbpTvBtLv0CB13hXKs
-         OZiTi7P3N7ZEM+TDwspeORv3wdckfkEUCfnKdw4lNOEoVp7w8fMaU0CRSvc+gcZ64/gi
-         um8ous412hq2o3sI0LfxM/u33qnFOKLCO2vNgSKQttURnjKsIVEo1l+0FFnQ/EAa+2jZ
-         il1QcHqlFf86SY3YJmJ11O2CsQDUTyYVQiRtzOmopC1GB4+gG5zzu7aINF8q5Muw6KB2
-         TC9wkstRtCBFX89cV1K02aRFgrrMSMH6XE0IJqjbDnxRowLcvmBoNMaau31fVAYgWqn7
-         ijBA==
+        bh=baJvcfh2d5K+Em7xs4mnjX+k4FKta+zMPcd+Ztd7ZXw=;
+        b=ONSqO9SfoGbRMixn7fnRtS1G/1Jjc6fXjirkAxPoivDL7+XuZZZOYresRad+Cg7iW+
+         2ETEDAxrbhT7qJSXFxXzSMHKZi2zSYGwMS60d/GDR0WfjavxCBplXd3CR5AuuQhCesrq
+         moBVOiMthujXGMA7skBc13mGNV7mSpU55qOjZrk5oPBxfaKAhKhlpBWm9tKNNupQLavK
+         RItb0afaNhRmQZIp+agUVQmYODJ/z4CX9eTs2tJbGxpyqqiFBBL96bLe0i0wb7MehWu8
+         ecwr0GMiIMLCssVsFw9s5bza9ffAIHk36bjQQYpV54ukaJkfj3FJ7AW1ftQiFXDc4ycE
+         0trw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707265950; x=1707870750;
+        d=1e100.net; s=20230601; t=1707267115; x=1707871915;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QJXlby+AD30AsP8JwtKyQnYYLLwLHxDqcJGOtskX1jw=;
-        b=OoFTlm1WeAecsmbpWAm9jfvYP6Q8t50Y37CV3BLAV5WVaE4cFwHcAluQ51ynUni3qy
-         TbU+aXgDPROIsOCZ+YnmwstUNheeZNwoZ3GSbb+uy4z9vp25q6fXqw0p+txhCxylaF29
-         GtoO9takDiw0y7RPdznlz0vSDVk37kQ8L2TwPEFt18iqXQW9ajgSjLXJPKdZLAfjYBeB
-         IvaU4o1TMg0SxSBNueJZMK3VauqJ77M3dzJ40ORC7H8EEBK7ti3s9XtpPQTyWWyyF5eP
-         giqyq8hz5f4j/e6CN7OvqtHOwwkXs05sRbEjm8iWcOstxn+g4+d4fFC1X9q6N3tY6Tkf
-         tQ3Q==
-X-Gm-Message-State: AOJu0YxOXe/MLJB1kDl1wnC2ASRYTxDh9LpQJYT87fR1xsHT/Gr2T3ne
-	6j4BntjlLx4RkaclXy/r3D/OezSZjK/NaMyVsTNumm1X5jNCgr16DFCLmzr5Fg==
-X-Google-Smtp-Source: AGHT+IFc68UeTfh18sBbRkqxKprSuedOLBwsjWYaAXb6UcbNSOYzvLEShWlSsdkoB4CHqFd0WVDn7A==
-X-Received: by 2002:a6b:7b4b:0:b0:7c3:f398:7de8 with SMTP id m11-20020a6b7b4b000000b007c3f3987de8mr3414654iop.11.1707265949818;
-        Tue, 06 Feb 2024 16:32:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVqEC4vX8ewfaMiHobk4xS6GjGAJVg4zEGV4f2EcUVSYtvbaa7WKav90QosTXetCDOM6AK7MFFlYmnzWOVrdd9AWRh4DNgHtFbxbbQcRQGGg62wefpQmEAtz435+IlJizHzvyB1fSQFjZUAu8Ij6jhKuiMMU29qK4Xcw8xxSPG0YiQDLk5nnwaRZrQPB9FKLoIBXwo2mW9/mFypT35cHOkm1N2lrrjqxJGqqDiQU8L97onZjq58CVrmq8JdWPwAspczV9+p65+jtwNNGsJGz/HzogXLM63QHGSLsUxgt9zRpbNMofmu5rzgyzFM9tFoDLx0rleiv6bd8sk4zLRW+MPIkXu8cl3Y4YND1BBOn+ezc3Qi7K/WF1/YVkWjXWGTQWz/+D2Fpd7aLJZxJH0A9aMcX9R0OZivHReMhWiaALR0QE8iXdSvkjvN
+        bh=baJvcfh2d5K+Em7xs4mnjX+k4FKta+zMPcd+Ztd7ZXw=;
+        b=R7lhZh+PTimbRhexGHwszfkiJ/4ujBkub3EJb3QS8VL1J/24OjrB+p9y+4XNQeigDz
+         Q62vDDPmWpZCLivzmYaDcnZmSl/3KBnMUDohCge+MWYLnBOj+gVWuKE0uFUm5mEVySb7
+         nVj777WeEQfEFZOqFTUfsfZnTXLaHSy3OewKWmJRaTk+hh64BhACVzH1lxF/e+YdS3CK
+         sKNrjh2gkCtRlOHGarOlhhPEFWi3UmtI3h1LX1aB0R4ZDVrfgLEJtBdIhI19Dh5jSsl1
+         HB69+LP56bjF2Ut7c05h40KaVnagQUBvIq2ry44q7H7w/FoODCNGrUCwtDEwQ7h80XDG
+         ujHQ==
+X-Gm-Message-State: AOJu0YyX0sv+z0Rc9j1cKfAASyoS2Y0Qz7UV9420wfKHHSakg46Q4mrx
+	Ghr8WMYYpAC1u30+2p6lprfv81+FU3zH3YGgTCiyt0Bb3uitljDAmy4ETs80iA==
+X-Google-Smtp-Source: AGHT+IGa9tcSPup65Y2Ws5SFq33Iafx0c5ApEjnuekYBaJ/6NAEsvxGWsB8LTJVVfveSZlywMiHiZg==
+X-Received: by 2002:a92:dc10:0:b0:363:d953:a129 with SMTP id t16-20020a92dc10000000b00363d953a129mr1746208iln.25.1707267115441;
+        Tue, 06 Feb 2024 16:51:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWpfl7GfkjIT0OB4pGx9trasISF1+iPcKlXo1qDPQknWfHTqtIbJi2f5hVj0rQc5zx9SI2rbEy6dlI9jc0ym4OplbpgDs0c7/V1T1zwDOvK54r0fHyUQYCMYBtEJr44LRlMYz+c/W8ayPxf/rYquE/tE3ohp4I479wCwJV0w7YtikLrgny0+iT9LQUzB/lEx6BODMPoCybksTOYvFpsH05O2AzufbmZVubZKjt5z6tJmnssldAWpRywZv6mKuApFCNvglLZPnHE0HTHGrcySkGu7JKK8flu97ZuctM3Bm27WC3HTyplvO9zmh7HfkHjsmaulEzmwvz2lNdR6SbFZsn0WwNqpr//Tc+L225b1ybsDJD2idpsa/RV7gMuPgqFuvLAi9oRCnY15hprI6LDu6uaJYeFUiTucUuSJWVzgGO1f7rKa3Oo4T9P
 Received: from google.com (20.10.132.34.bc.googleusercontent.com. [34.132.10.20])
-        by smtp.gmail.com with ESMTPSA id b66-20020a0295c8000000b00470b6d256c1sm2975jai.91.2024.02.06.16.32.28
+        by smtp.gmail.com with ESMTPSA id s5-20020a92cc05000000b00363c8e5a1a1sm28357ilp.44.2024.02.06.16.51.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 16:32:28 -0800 (PST)
-Date: Wed, 7 Feb 2024 00:32:24 +0000
+        Tue, 06 Feb 2024 16:51:54 -0800 (PST)
+Date: Wed, 7 Feb 2024 00:51:51 +0000
 From: Justin Stitt <justinstitt@google.com>
 To: Kees Cook <keescook@chromium.org>
 Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
@@ -63,10 +63,10 @@ Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Azeem Shaikh <azeemshaikh38@gmail.com>,
 	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] string: Redefine strscpy_pad() as a macro
-Message-ID: <20240207003224.gzatchm47gy3aihv@google.com>
+Subject: Re: [PATCH v3 3/4] string: Allow 2-argument strscpy_pad()
+Message-ID: <20240207005151.lyrtgqd4wekolwe7@google.com>
 References: <20240206142027.make.107-kees@kernel.org>
- <20240206142221.2208763-1-keescook@chromium.org>
+ <20240206142221.2208763-3-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -75,118 +75,87 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240206142221.2208763-1-keescook@chromium.org>
+In-Reply-To: <20240206142221.2208763-3-keescook@chromium.org>
 
 Hi,
 
-On Tue, Feb 06, 2024 at 06:22:16AM -0800, Kees Cook wrote:
-> In preparation for making strscpy_pad()'s 3rd argument optional, redefine
-> it as a macro. This also has the benefit of allowing greater FORITFY
-> introspection, as it couldn't see into the strscpy() nor the memset()
-> within strscpy_pad().
+On Tue, Feb 06, 2024 at 06:22:18AM -0800, Kees Cook wrote:
+> Similar to strscpy(), update strscpy_pad()'s 3rd argument to be
+> optional when the destination is a compile-time known size array.
+
+This patch is diff'd against Patch 1/4 in this series, right? I wonder
+why you split them up. If I hadn't literally just read that patch I
+would be mildly confused.
+
+I suppose one reason may be that 1/4 is a standalone change with a high
+percentage chance of landing whilst this overloading magic may not land
+as easily?
+
+At any rate,
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
 >
 > Cc: Andy Shevchenko <andy@kernel.org>
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  include/linux/string.h | 33 +++++++++++++++++++++++++++++++--
->  lib/string_helpers.c   | 34 ----------------------------------
->  2 files changed, 31 insertions(+), 36 deletions(-)
+>  include/linux/string.h | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
 >
 > diff --git a/include/linux/string.h b/include/linux/string.h
-> index ab148d8dbfc1..03f59cf7fe72 100644
+> index 79b875de615e..9bd421ad92a4 100644
 > --- a/include/linux/string.h
 > +++ b/include/linux/string.h
-> @@ -70,8 +70,37 @@ extern char * strncpy(char *,const char *, __kernel_size_t);
->  ssize_t strscpy(char *, const char *, size_t);
->  #endif
+> @@ -79,6 +79,10 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+>  	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst))
+>  #define __strscpy1(dst, src, size)	sized_strscpy(dst, src, size)
 >
-> -/* Wraps calls to strscpy()/memset(), no arch specific code required */
-> -ssize_t strscpy_pad(char *dest, const char *src, size_t count);
-> +/**
-> + * strscpy_pad() - Copy a C-string into a sized buffer
-> + * @dest: Where to copy the string to
-> + * @src: Where to copy the string from
-> + * @count: Size of destination buffer
-> + *
-> + * Copy the string, or as much of it as fits, into the dest buffer. The
-> + * behavior is undefined if the string buffers overlap. The destination
-> + * buffer is always %NUL terminated, unless it's zero-sized.
-> + *
-> + * If the source string is shorter than the destination buffer, zeros
-> + * the tail of the destination buffer.
-> + *
-> + * For full explanation of why you may want to consider using the
-> + * 'strscpy' functions please see the function docstring for strscpy().
-> + *
-> + * Returns:
-> + * * The number of characters copied (not including the trailing %NULs)
-> + * * -E2BIG if count is 0 or @src was truncated.
-> + */
-> +#define strscpy_pad(dest, src, count)	({			\
+> +#define __strscpy_pad0(dst, src, ...)	\
+> +	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst))
+> +#define __strscpy_pad1(dst, src, size)	sized_strscpy_pad(dst, src, size)
+> +
+>  /**
+>   * strscpy - Copy a C-string into a sized buffer
+>   * @dst: Where to copy the string to
+> @@ -104,6 +108,18 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+>  #define strscpy(dst, src, ...)	\
+>  	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
+>
+> +#define sized_strscpy_pad(dest, src, count)	({			\
 > +	char *__dst = (dest);						\
 > +	const char *__src = (src);					\
 > +	const size_t __count = (count);					\
 > +	ssize_t __wrote;						\
 > +									\
-> +	__wrote = strscpy(__dst, __src, __count);			\
+> +	__wrote = sized_strscpy(__dst, __src, __count);			\
 > +	if (__wrote >= 0 && __wrote < __count)				\
 > +		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
 > +	__wrote;							\
 > +})
+> +
+>  /**
+>   * strscpy_pad() - Copy a C-string into a sized buffer
+>   * @dest: Where to copy the string to
+> @@ -124,17 +140,8 @@ ssize_t sized_strscpy(char *, const char *, size_t);
+>   * * The number of characters copied (not including the trailing %NULs)
+>   * * -E2BIG if count is 0 or @src was truncated.
+>   */
+> -#define strscpy_pad(dest, src, count)	({			\
+> -	char *__dst = (dest);						\
+> -	const char *__src = (src);					\
+> -	const size_t __count = (count);					\
+> -	ssize_t __wrote;						\
+> -									\
+> -	__wrote = strscpy(__dst, __src, __count);			\
+> -	if (__wrote >= 0 && __wrote < __count)				\
+> -		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
+> -	__wrote;							\
+> -})
+> +#define strscpy_pad(dst, src, ...)	\
+> +	CONCATENATE(__strscpy_pad, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
 >
 >  #ifndef __HAVE_ARCH_STRCAT
 >  extern char * strcat(char *, const char *);
-> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-> index 7713f73e66b0..606c3099013f 100644
-> --- a/lib/string_helpers.c
-> +++ b/lib/string_helpers.c
-> @@ -825,40 +825,6 @@ char **devm_kasprintf_strarray(struct device *dev, const char *prefix, size_t n)
->  }
->  EXPORT_SYMBOL_GPL(devm_kasprintf_strarray);
->
-> -/**
-> - * strscpy_pad() - Copy a C-string into a sized buffer
-> - * @dest: Where to copy the string to
-> - * @src: Where to copy the string from
-> - * @count: Size of destination buffer
-> - *
-> - * Copy the string, or as much of it as fits, into the dest buffer.  The
-> - * behavior is undefined if the string buffers overlap.  The destination
-> - * buffer is always %NUL terminated, unless it's zero-sized.
-> - *
-> - * If the source string is shorter than the destination buffer, zeros
-> - * the tail of the destination buffer.
-> - *
-> - * For full explanation of why you may want to consider using the
-> - * 'strscpy' functions please see the function docstring for strscpy().
-> - *
-> - * Returns:
-> - * * The number of characters copied (not including the trailing %NUL)
-> - * * -E2BIG if count is 0 or @src was truncated.
-> - */
-> -ssize_t strscpy_pad(char *dest, const char *src, size_t count)
-> -{
-> -	ssize_t written;
-> -
-> -	written = strscpy(dest, src, count);
-> -	if (written < 0 || written == count - 1)
-> -		return written;
-> -
-> -	memset(dest + written + 1, 0, count - written - 1);
-> -
-> -	return written;
-> -}
-> -EXPORT_SYMBOL(strscpy_pad);
-
-Yep, looks good. This is reminiscent of strtomem and strtomem_pad.
-
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-
-> -
->  /**
->   * skip_spaces - Removes leading whitespace from @str.
->   * @str: The string to be stripped.
 > --
 > 2.34.1
 >
