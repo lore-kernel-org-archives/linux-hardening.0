@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F0083CBD;
-	Wed,  7 Feb 2024 18:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF07F83CC0;
+	Wed,  7 Feb 2024 18:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707330531; cv=none; b=Src7jykbZn/Esx+kRrtd3lJEhl9PBO8mcDck6iWCUIxEd7w57OFK+KfxYGpHfCQIC0tH2+B+pkk+XAUCZhbLeo3K+KAKbM2NwbvXlmGlm0D3RFdzfxGMUE4Gsq+QNPqPFCYh2CssJL4l8Q0/qVNA3qGzsAUItWdImtWVu+BN1eU=
+	t=1707330957; cv=none; b=JhGiM2r4tQrCF60u3pPHpT8o9Zpp3UdTRPw8u/dEglylJVxdPxvNy9wQKKJXPFu2nHwuflQrC9jZrhQmAhk53HHIShbq13G+Hht7MZJ5N/5z8v1j/T/T/krGx8my4zV6oLvkuN3SLMgEzvuEnI0ZFLZtpGlSRgxBe+e1ioofyR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707330531; c=relaxed/simple;
-	bh=0TJwW29JTGbhg9XNRN6UMZKuXIG8Z+GdNywU3o8Rlvk=;
+	s=arc-20240116; t=1707330957; c=relaxed/simple;
+	bh=icPFixsoSGi7ryAtmdXeJgteKjh7fmTti/aV0mfZf50=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y5+ti7GTO9Q0sjQU6188mq2zpjR1SZ/2CTQ/AVCFtTFndZqUwBHLUbVCSr4IKIh1OjrbWf9VL/UQummE4wF1mn7Tk5aEWfA34T7PIbMGgnabe7a6sBYgchcrv7/nbRgYqZNlT+qQxH8eCDgz7R2FzMhbhx4lBzL3GRYwiGklH28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kILtloZU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EFbJa5MugSAcEZpL+T7fVhJOrfhstKQQgsnd0IVNQKnZWs19T9zvmJ57JeEfG0M7iqSgkhfsuG8K+U3pmVj01TGij8FDe474ntUm8ubSkh/SwRjanomYxzmwKZDZdamEK0otmrX3uHoDGGhC69otyPY3g6uKSh7OadhrNmEIUvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o79YWp1W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kILtloZU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2DDAC433F1;
-	Wed,  7 Feb 2024 18:28:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o79YWp1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438E4C43390;
+	Wed,  7 Feb 2024 18:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707330531;
-	bh=0TJwW29JTGbhg9XNRN6UMZKuXIG8Z+GdNywU3o8Rlvk=;
+	s=k20201202; t=1707330957;
+	bh=icPFixsoSGi7ryAtmdXeJgteKjh7fmTti/aV0mfZf50=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kILtloZUUPpdrHyfY9Qm/6XNOLjCI2j/eGpEQsa5s6VtC/41iSxL+65gQiNef/fey
-	 9ig7Qj1dxlDVP7XgGVqhcDPyq8yGYG+Ii8EA6CEIHVXJ1w5jn7Lywf9Piil63M9mzN
-	 TOE0XzxF/zPnq234SOEmwsv88P3Dmy5BB/l+set0Xdl9q8zgz6uxU7gzjm5lAMryEa
-	 CqJ9gR/nliFaGMWlN7ziokWRisc2F5Ube4yewYyUyUlLS8txPhMMPQhFfyu0+krS7R
-	 4saTY30U4PyS77F4Un9cWcme/VY3XozTpMBREs4MmS2IWa7i3bcOVclpSDKmErKQ1P
-	 6v7lZGP56ObFA==
-Message-ID: <44dece0f-5dde-4bbd-a713-cb7db2654ba1@kernel.org>
-Date: Wed, 7 Feb 2024 19:28:36 +0100
+	b=o79YWp1W32v0dErvSWxG8cbavMXAAp1Mny1t1NdTzlTaZz2JUURMxVh9hv0Ro/TfG
+	 hlz9bNQopFS7LXmc4hgn7p0XsRxCuzFSV+eRfiPyPELVmxyRPqDAHa+b75U4PIOjmf
+	 SSQBPgXW8on5k22Zd6g/h/ROBx0PhrOWGQUt8sTrNd6rnOFRvEraCzzIHDrC6lpOHF
+	 XXfGx7Ihy9V/t7/nfCNzllKGHqa3VVZFeIF5OJebeM91a4n3SLVJLLL6DAtD5sdaVp
+	 /bu1OqyPKe9RVW6DmXqYJQNvig/4asPTUxlztN3aUS+ezvKSku9o36LlAGq70DWYvq
+	 j5JA0MOx2NUQg==
+Message-ID: <d301faa8-548e-4e8f-b8a6-c32d6a56f45b@kernel.org>
+Date: Wed, 7 Feb 2024 19:35:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,7 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: KFENCE: included in x86 defconfig?
 Content-Language: en-GB, fr-BE
-To: Marco Elver <elver@google.com>
+To: Borislav Petkov <bp@alien8.de>, Marco Elver <elver@google.com>
 Cc: Alexander Potapenko <glider@google.com>,
  Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
  Netdev <netdev@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
@@ -45,6 +45,7 @@ Cc: Alexander Potapenko <glider@google.com>,
  the arch/x86 maintainers <x86@kernel.org>
 References: <e2871686-ea25-4cdb-b29d-ddeb33338a21@kernel.org>
  <CANpmjNP==CANQi4_qFV_VVFDMsj1wHROxt3RKzwJBqo8_McCTg@mail.gmail.com>
+ <20240207181619.GDZcPI87_Bq0Z3ozUn@fat_crate.local>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,51 +91,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CANpmjNP==CANQi4_qFV_VVFDMsj1wHROxt3RKzwJBqo8_McCTg@mail.gmail.com>
+In-Reply-To: <20240207181619.GDZcPI87_Bq0Z3ozUn@fat_crate.local>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Marco,
+Hi Boris,
 
-Thank you for your reply!
+Thank you for your reply.
 
-On 07/02/2024 19:05, Marco Elver wrote:
-> [Cc'ing a bunch more people to get input]
+On 07/02/2024 19:16, Borislav Petkov wrote:
+> On Wed, Feb 07, 2024 at 07:05:31PM +0100, Marco Elver wrote:
+>> I think this would belong into some "hardening" config - while KFENCE
+>> is not a mitigation (due to sampling) it has the performance
+>> characteristics of unintrusive hardening techniques, so I think it
+>> would be a good fit. I think that'd be
+>> "kernel/configs/hardening.config".
 > 
-> Hi Matt,
+> Instead of doing a special config for all the parties out there, why
+> don't parties simply automate their testing efforts by merging config
+> snippets into the default configs using
 > 
-> On Wed, 7 Feb 2024 at 17:16, Matthieu Baerts <matttbe@kernel.org> wrote:
-> [...]
->> When talking to Jakub about the kernel config used by the new CI for the
->> net tree [1], Jakub suggested [2] to check if KFENCE could not be
->> enabled by default for x86 architecture.
->>
->> As KFENCE maintainers, what do you think about that? Do you see some
->> blocking points? Do you plan to add it in x86_64_defconfig?
+> scripts/kconfig/merge_config.sh
 > 
-> We have no concrete plans to add it to x86 defconfig. I don't think
-> there'd be anything wrong with that from a technical point of view,
-> but I think defconfig should remain relatively minimal.
-> 
-> I guess different groups of people will disagree here: as kernel
-> maintainers, it'd be a good thing because we get more coverage and
-> higher probability of catching memory-safety bugs; as a user, I think
-> having defconfig enable KFENCE seems unintuitive.
+> before they run their specialized tests?
 
-Thank you for having shared your point of view. I agree with you, the
-x86_64_defconfig is probably not the right place.
+Sorry, I'm sure I understand your suggestion: do you mean not including
+KFENCE in hardening.config either, but in another one?
 
-> I think this would belong into some "hardening" config - while KFENCE
-> is not a mitigation (due to sampling) it has the performance
-> characteristics of unintrusive hardening techniques, so I think it
-> would be a good fit. I think that'd be
-> "kernel/configs/hardening.config".
-> 
-> Preferences?
-I didn't think about the hardening kconfig. It seems to make sense!
-
-I will wait for people from the Linux Hardening ML to comment if that's
-OK :)
+For the networking tests, we are already merging .config files, e.g. the
+debug.config one. We are not pushing to have KFENCE in x86 defconfig, it
+can be elsewhere, and we don't mind merging other .config files if they
+are maintained.
 
 Cheers,
 Matt
