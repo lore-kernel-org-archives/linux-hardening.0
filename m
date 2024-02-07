@@ -1,214 +1,195 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421C61B7FC
-	for <linux-hardening@vger.kernel.org>; Tue,  6 Feb 2024 20:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF24E8F5D
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 00:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707251562; cv=none; b=p7kbnmscNW4e5EykzGNccQu3LVcLRSZ1TNzTSoPlSO2iXPMiwUrFio7eq3yRN+X8onZLd6dNpMAOjlOdtCsrb1m2+uRCcawmwQVTczFkUvkB6NY+5/u+loP/LpHdvOaSaOh1YkqcVFM7/acAlwFoGL0VEZtE38fvLF9yeShOB7s=
+	t=1707265952; cv=none; b=QGOa5EimIvNrplzP6qYPl8E69vxqdG2mwuHzlFksZi9WHbEpy4129T2YftmTkjRcLSV/UmvTCD3vTHXPH1JmJk3J763380+BUJELpgBDVpWWsyh1Ns3uJvDFeJgteRKKt2SjzAtVmAerUitCFzMtk8OEg8Pj94iaaDrWPPBft+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707251562; c=relaxed/simple;
-	bh=zTX2u1hoRPQcMQPKj5Ece+F9DX0/+16099nKCTz+ggY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MHTKKUMK50udT0QJ8bKgpybicVtsOwhO50f5n318VQMUgpqSYBTEVi8SAxEefsEl1JwZWzN1Pi174jGXZAF75a54fqpgeGvaAyvzliAbO8fk8kOMeiflAMgC8wd7+ZQat9x8mktoMu/wV6ldehF/4KW7Q9UxWRkJj7Wr6MMCFr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ruoixArX; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1707265952; c=relaxed/simple;
+	bh=ax4kbwR1wG2ecwpHsW2swGQp3y7VpR79Vvh+CgItsug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u173U8ddfZt8GfEUegsH8cSFgo9duoKcpFCvmhI9hH5DTTfMvqqcxm8j7Ysw8ulYBa1djFwFL+97bC/7oMHYUdMB5pG5T2pdC4MPUf8TRBCmvqkzVuq5Q8w9G4VcJP529dCOb7wwIn0K+NXpfOU7e83YeKjAE4zx5ScwwzZb9z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KYbiyfde; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ruoixArX"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id XKpjre1M2pUFLXS7Sr9ZjB; Tue, 06 Feb 2024 20:32:38 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id XS7RrFiMh0FMeXS7Srx9lG; Tue, 06 Feb 2024 20:32:38 +0000
-X-Authority-Analysis: v=2.4 cv=BoQ+wpX5 c=1 sm=1 tr=0 ts=65c29766
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=vaJtXVxTAAAA:8 a=QyXUC8HyAAAA:8
- a=KS6gg5_tAAAA:8 a=i0EeH86SAAAA:8 a=iqgMOriEywssfaGR4noA:9 a=QEXdDO2ut3YA:10
- a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22 a=hZ4L7c2QG0rhM108vGPe:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KbvZVHNUxJAyFSSXDQTy9du7K8PY4t9oyk36I6Z3RzY=; b=ruoixArXBrzejUnF5nEmrIJ+vU
-	1CS7vGqxi3ro/tP/pvgZo+u8vJn8wNVLYvoy3cPTEuscmEkqh7Q1W+X4GsnLUwDSUDKn1ChMz+PjO
-	7NWcgikxivgr1PKIqATJwqX01o32myrrcxbTH+TUzh4/S3InQZrZViKMnfAV9RzSE/J6DR3NVQLqs
-	oazIwd4Duzg8DEooIN+fKc1ujztYdVf+ladzPfq13X9P25OudlLanEnPQIWm+gKFUdBitEfuXNZ4E
-	MbXJ9JGdNvE6shyKEeR08L8Vf139px3MPH5Hi5hGbYTe2kCPfnEvwrJEuoKYWG6x27qioiQaWJb9t
-	ogA889LQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:51298 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rXS7P-002bZx-0r;
-	Tue, 06 Feb 2024 14:32:35 -0600
-Message-ID: <fb9ec7de-7c8a-4e94-94c2-eeea6369550e@embeddedor.com>
-Date: Tue, 6 Feb 2024 14:32:32 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYbiyfde"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7bffface817so2911639f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Feb 2024 16:32:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707265950; x=1707870750; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QJXlby+AD30AsP8JwtKyQnYYLLwLHxDqcJGOtskX1jw=;
+        b=KYbiyfdeSfwTPP2NVxxfCUMOF06JOc0Dhu1QtOsyxzSH/iyKgbpTvBtLv0CB13hXKs
+         OZiTi7P3N7ZEM+TDwspeORv3wdckfkEUCfnKdw4lNOEoVp7w8fMaU0CRSvc+gcZ64/gi
+         um8ous412hq2o3sI0LfxM/u33qnFOKLCO2vNgSKQttURnjKsIVEo1l+0FFnQ/EAa+2jZ
+         il1QcHqlFf86SY3YJmJ11O2CsQDUTyYVQiRtzOmopC1GB4+gG5zzu7aINF8q5Muw6KB2
+         TC9wkstRtCBFX89cV1K02aRFgrrMSMH6XE0IJqjbDnxRowLcvmBoNMaau31fVAYgWqn7
+         ijBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707265950; x=1707870750;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QJXlby+AD30AsP8JwtKyQnYYLLwLHxDqcJGOtskX1jw=;
+        b=OoFTlm1WeAecsmbpWAm9jfvYP6Q8t50Y37CV3BLAV5WVaE4cFwHcAluQ51ynUni3qy
+         TbU+aXgDPROIsOCZ+YnmwstUNheeZNwoZ3GSbb+uy4z9vp25q6fXqw0p+txhCxylaF29
+         GtoO9takDiw0y7RPdznlz0vSDVk37kQ8L2TwPEFt18iqXQW9ajgSjLXJPKdZLAfjYBeB
+         IvaU4o1TMg0SxSBNueJZMK3VauqJ77M3dzJ40ORC7H8EEBK7ti3s9XtpPQTyWWyyF5eP
+         giqyq8hz5f4j/e6CN7OvqtHOwwkXs05sRbEjm8iWcOstxn+g4+d4fFC1X9q6N3tY6Tkf
+         tQ3Q==
+X-Gm-Message-State: AOJu0YxOXe/MLJB1kDl1wnC2ASRYTxDh9LpQJYT87fR1xsHT/Gr2T3ne
+	6j4BntjlLx4RkaclXy/r3D/OezSZjK/NaMyVsTNumm1X5jNCgr16DFCLmzr5Fg==
+X-Google-Smtp-Source: AGHT+IFc68UeTfh18sBbRkqxKprSuedOLBwsjWYaAXb6UcbNSOYzvLEShWlSsdkoB4CHqFd0WVDn7A==
+X-Received: by 2002:a6b:7b4b:0:b0:7c3:f398:7de8 with SMTP id m11-20020a6b7b4b000000b007c3f3987de8mr3414654iop.11.1707265949818;
+        Tue, 06 Feb 2024 16:32:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVqEC4vX8ewfaMiHobk4xS6GjGAJVg4zEGV4f2EcUVSYtvbaa7WKav90QosTXetCDOM6AK7MFFlYmnzWOVrdd9AWRh4DNgHtFbxbbQcRQGGg62wefpQmEAtz435+IlJizHzvyB1fSQFjZUAu8Ij6jhKuiMMU29qK4Xcw8xxSPG0YiQDLk5nnwaRZrQPB9FKLoIBXwo2mW9/mFypT35cHOkm1N2lrrjqxJGqqDiQU8L97onZjq58CVrmq8JdWPwAspczV9+p65+jtwNNGsJGz/HzogXLM63QHGSLsUxgt9zRpbNMofmu5rzgyzFM9tFoDLx0rleiv6bd8sk4zLRW+MPIkXu8cl3Y4YND1BBOn+ezc3Qi7K/WF1/YVkWjXWGTQWz/+D2Fpd7aLJZxJH0A9aMcX9R0OZivHReMhWiaALR0QE8iXdSvkjvN
+Received: from google.com (20.10.132.34.bc.googleusercontent.com. [34.132.10.20])
+        by smtp.gmail.com with ESMTPSA id b66-20020a0295c8000000b00470b6d256c1sm2975jai.91.2024.02.06.16.32.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 16:32:28 -0800 (PST)
+Date: Wed, 7 Feb 2024 00:32:24 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jason Wang <jasowang@redhat.com>, kernel test robot <lkp@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] string: Redefine strscpy_pad() as a macro
+Message-ID: <20240207003224.gzatchm47gy3aihv@google.com>
+References: <20240206142027.make.107-kees@kernel.org>
+ <20240206142221.2208763-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: mwifiex: Refactor 1-element array into flexible
- array in struct mwifiex_ie_types_chan_list_param_set
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Brian Norris <briannorris@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Dmitry Antipov <dmantipov@yandex.ru>,
- Johannes Berg <johannes.berg@intel.com>, zuoqilin <zuoqilin@yulong.com>,
- Ruan Jinjie <ruanjinjie@huawei.com>, Thomas Gleixner <tglx@linutronix.de>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- linux-wireless@vger.kernel.org, Dan Carpenter <error27@gmail.com>,
- Rafael Beims <rafael.beims@toradex.com>, David Lin <yu-hao.lin@nxp.com>,
- Lukas Wunner <lukas@wunner.de>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240206183857.it.362-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240206183857.it.362-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rXS7P-002bZx-0r
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:51298
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAr2c73dra+yH/wo3R4mX+g398fkHD8ScXuVpSJWKo2zFVnUJeXilUKaiLEwbPO/H8DfvveDuj4PoyJfAFV4UyJ2IarvV8RN+RzkgPOGyrGIH1xGOUR1
- 7UqqxWE7q+dejfyJQjRdP3tgkoIty9BFAAFlNBjaaXaNb0SUSxwPN0DdN0ScR1FdGcazs/oGHFZAQ9Ianybp3lvXdKrHoFeN2wX40U2OqzL9XmgLn61erLnH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206142221.2208763-1-keescook@chromium.org>
 
+Hi,
 
-
-On 2/6/24 12:39, Kees Cook wrote:
-> struct mwifiex_ie_types_chan_list_param_set::chan_scan_param is treated
-> as a flexible array, so convert it into one so that it doesn't trip the
-> array bounds sanitizer[1]. Only once place was using sizeof() on the
-> whole struct (in 11n.c), so adjust it to follow the calculation pattern
-> used by scan.c to avoid including the trailing single element.
-> 
-> Link: https://github.com/KSPP/linux/issues/51 [1]
-> Cc: Brian Norris <briannorris@chromium.org>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Dmitry Antipov <dmantipov@yandex.ru>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: zuoqilin <zuoqilin@yulong.com>
-> Cc: Ruan Jinjie <ruanjinjie@huawei.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
+On Tue, Feb 06, 2024 at 06:22:16AM -0800, Kees Cook wrote:
+> In preparation for making strscpy_pad()'s 3rd argument optional, redefine
+> it as a macro. This also has the benefit of allowing greater FORITFY
+> introspection, as it couldn't see into the strscpy() nor the memset()
+> within strscpy_pad().
+>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   drivers/net/wireless/marvell/mwifiex/11n.c  |  8 +++-----
->   drivers/net/wireless/marvell/mwifiex/fw.h   |  2 +-
->   drivers/net/wireless/marvell/mwifiex/scan.c | 14 ++++++--------
->   3 files changed, 10 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
-> index 90e401100898..9ed90da4dfcf 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/11n.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/11n.c
-> @@ -392,12 +392,10 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
->   
->   		chan_list =
->   			(struct mwifiex_ie_types_chan_list_param_set *) *buffer;
-> -		memset(chan_list, 0,
-> -		       sizeof(struct mwifiex_ie_types_chan_list_param_set));
-> +		memset(chan_list, 0, struct_size(chan_list, chan_scan_param, 1));
->   		chan_list->header.type = cpu_to_le16(TLV_TYPE_CHANLIST);
-> -		chan_list->header.len = cpu_to_le16(
-> -			sizeof(struct mwifiex_ie_types_chan_list_param_set) -
-> -			sizeof(struct mwifiex_ie_types_header));
-> +		chan_list->header.len =
-> +			cpu_to_le16(sizeof(struct mwifiex_chan_scan_param_set));
->   		chan_list->chan_scan_param[0].chan_number =
->   			bss_desc->bcn_ht_oper->primary_chan;
->   		chan_list->chan_scan_param[0].radio_type =
-This probably still needs a bit more work.
+>  include/linux/string.h | 33 +++++++++++++++++++++++++++++++--
+>  lib/string_helpers.c   | 34 ----------------------------------
+>  2 files changed, 31 insertions(+), 36 deletions(-)
+>
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index ab148d8dbfc1..03f59cf7fe72 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -70,8 +70,37 @@ extern char * strncpy(char *,const char *, __kernel_size_t);
+>  ssize_t strscpy(char *, const char *, size_t);
+>  #endif
+>
+> -/* Wraps calls to strscpy()/memset(), no arch specific code required */
+> -ssize_t strscpy_pad(char *dest, const char *src, size_t count);
+> +/**
+> + * strscpy_pad() - Copy a C-string into a sized buffer
+> + * @dest: Where to copy the string to
+> + * @src: Where to copy the string from
+> + * @count: Size of destination buffer
+> + *
+> + * Copy the string, or as much of it as fits, into the dest buffer. The
+> + * behavior is undefined if the string buffers overlap. The destination
+> + * buffer is always %NUL terminated, unless it's zero-sized.
+> + *
+> + * If the source string is shorter than the destination buffer, zeros
+> + * the tail of the destination buffer.
+> + *
+> + * For full explanation of why you may want to consider using the
+> + * 'strscpy' functions please see the function docstring for strscpy().
+> + *
+> + * Returns:
+> + * * The number of characters copied (not including the trailing %NULs)
+> + * * -E2BIG if count is 0 or @src was truncated.
+> + */
+> +#define strscpy_pad(dest, src, count)	({			\
+> +	char *__dst = (dest);						\
+> +	const char *__src = (src);					\
+> +	const size_t __count = (count);					\
+> +	ssize_t __wrote;						\
+> +									\
+> +	__wrote = strscpy(__dst, __src, __count);			\
+> +	if (__wrote >= 0 && __wrote < __count)				\
+> +		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
+> +	__wrote;							\
+> +})
+>
+>  #ifndef __HAVE_ARCH_STRCAT
+>  extern char * strcat(char *, const char *);
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 7713f73e66b0..606c3099013f 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -825,40 +825,6 @@ char **devm_kasprintf_strarray(struct device *dev, const char *prefix, size_t n)
+>  }
+>  EXPORT_SYMBOL_GPL(devm_kasprintf_strarray);
+>
+> -/**
+> - * strscpy_pad() - Copy a C-string into a sized buffer
+> - * @dest: Where to copy the string to
+> - * @src: Where to copy the string from
+> - * @count: Size of destination buffer
+> - *
+> - * Copy the string, or as much of it as fits, into the dest buffer.  The
+> - * behavior is undefined if the string buffers overlap.  The destination
+> - * buffer is always %NUL terminated, unless it's zero-sized.
+> - *
+> - * If the source string is shorter than the destination buffer, zeros
+> - * the tail of the destination buffer.
+> - *
+> - * For full explanation of why you may want to consider using the
+> - * 'strscpy' functions please see the function docstring for strscpy().
+> - *
+> - * Returns:
+> - * * The number of characters copied (not including the trailing %NUL)
+> - * * -E2BIG if count is 0 or @src was truncated.
+> - */
+> -ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+> -{
+> -	ssize_t written;
+> -
+> -	written = strscpy(dest, src, count);
+> -	if (written < 0 || written == count - 1)
+> -		return written;
+> -
+> -	memset(dest + written + 1, 0, count - written - 1);
+> -
+> -	return written;
+> -}
+> -EXPORT_SYMBOL(strscpy_pad);
 
-There are a couple more instances of `sizeof()` that should probably be
-audited and adjusted:
+Yep, looks good. This is reminiscent of strtomem and strtomem_pad.
 
-drivers/net/wireless/marvell/mwifiex/11n.c:414:         *buffer += sizeof(struct mwifiex_ie_types_chan_list_param_set);
-drivers/net/wireless/marvell/mwifiex/11n.c:415:         ret_len += sizeof(struct mwifiex_ie_types_chan_list_param_set);
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 
---
-Gustavo
+> -
+>  /**
+>   * skip_spaces - Removes leading whitespace from @str.
+>   * @str: The string to be stripped.
+> --
+> 2.34.1
+>
 
-> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-> index 62f3c9a52a1d..3adc447b715f 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-> @@ -770,7 +770,7 @@ struct mwifiex_chan_scan_param_set {
->   
->   struct mwifiex_ie_types_chan_list_param_set {
->   	struct mwifiex_ie_types_header header;
-> -	struct mwifiex_chan_scan_param_set chan_scan_param[1];
-> +	struct mwifiex_chan_scan_param_set chan_scan_param[];
->   } __packed;
->   
->   struct mwifiex_ie_types_rxba_sync {
-> diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-> index a2ddac363b10..0326b121747c 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/scan.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-> @@ -664,15 +664,14 @@ mwifiex_scan_channel_list(struct mwifiex_private *priv,
->   
->   			/* Copy the current channel TLV to the command being
->   			   prepared */
-> -			memcpy(chan_tlv_out->chan_scan_param + tlv_idx,
-> +			memcpy(&chan_tlv_out->chan_scan_param[tlv_idx],
->   			       tmp_chan_list,
-> -			       sizeof(chan_tlv_out->chan_scan_param));
-> +			       sizeof(*chan_tlv_out->chan_scan_param));
->   
->   			/* Increment the TLV header length by the size
->   			   appended */
->   			le16_unaligned_add_cpu(&chan_tlv_out->header.len,
-> -					       sizeof(
-> -						chan_tlv_out->chan_scan_param));
-> +					       sizeof(*chan_tlv_out->chan_scan_param));
->   
->   			/*
->   			 * The tlv buffer length is set to the number of bytes
-> @@ -2369,12 +2368,11 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
->   		     chan_idx < MWIFIEX_BG_SCAN_CHAN_MAX &&
->   		     bgscan_cfg_in->chan_list[chan_idx].chan_number;
->   		     chan_idx++) {
-> -			temp_chan = chan_list_tlv->chan_scan_param + chan_idx;
-> +			temp_chan = &chan_list_tlv->chan_scan_param[chan_idx];
->   
->   			/* Increment the TLV header length by size appended */
->   			le16_unaligned_add_cpu(&chan_list_tlv->header.len,
-> -					       sizeof(
-> -					       chan_list_tlv->chan_scan_param));
-> +					       sizeof(*chan_list_tlv->chan_scan_param));
->   
->   			temp_chan->chan_number =
->   				bgscan_cfg_in->chan_list[chan_idx].chan_number;
-> @@ -2413,7 +2411,7 @@ int mwifiex_cmd_802_11_bg_scan_config(struct mwifiex_private *priv,
->   							   chan_scan_param);
->   		le16_unaligned_add_cpu(&chan_list_tlv->header.len,
->   				       chan_num *
-> -			     sizeof(chan_list_tlv->chan_scan_param[0]));
-> +			     sizeof(*chan_list_tlv->chan_scan_param));
->   	}
->   
->   	tlv_pos += (sizeof(chan_list_tlv->header)
+Thanks
+Justin
