@@ -1,98 +1,111 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36B97F7D9;
-	Wed,  7 Feb 2024 15:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521157FBDE
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 16:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707319954; cv=none; b=azQPo9pT2yDemMN+OYUgr/eW9TMR8PQNU/PHUyHHH9GQc9eICO4pUkns2YawJL+nN2OCw+FKEWY4SUgN/hORlkC6jhgsYz+K8uBXMRdrk0YQHAjyqDQiBVGBQHqkS2kGrKoD8vzLCPcdru3gboiefqddRo7EylWdaMwPXP/+vJ8=
+	t=1707322098; cv=none; b=WCGOKddFGezB6pN8jnpnz2hyVpQn+j5EMS/f2CcDHpCDn3MylRT5xMogRwmUGxZg8c4zraXM+aThZ5kIwvID5CIcNc4Ftb6F7q/knr++X3TYBk9EyCUHrgsQw16uefGE9LHB4p9O8k7xTrFzDsMLRi6fRWNyz0lCkXaFBt0wpk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707319954; c=relaxed/simple;
-	bh=/ApcE6XEwaWfmGJrrnfNX8OxegVZFovON3wNgR1SCis=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jin71yFCg/s5KpvnStI9nSJWoDpdCAaToA/TTB9v5fpquQJn/Gep5ybKrjCWBZhJRN5uUinnZiqKmuDCHY2NYbLM628p2iBwvFZVCv+cIJvGkA9pCYcAHDz9+DaBRuTG+YUmYy1Btu9JqPOe4eGofJdL8kLz+fXlZtLofGHNZL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g77QhICE; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707322098; c=relaxed/simple;
+	bh=Kd78ByyFT6a8YEwO3HZkgmw1fSvzekjxNAWgwK42edo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mrctTJUHquG5t5EOD9jBhp1/Ldz2gcsqrNJhAHiI+Vq5D6ENGsx5s9WTixLXTOIl7C76xNwnM0xu+OyimY5JtagHC1Za7q+mPlB2EzD7F3MRVCte2x3zRku3CGfsziMqM+Zh+nTXFL/o1iw8fEmADDRJCayxnMhL+2vhr+MqzAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oCObCT43; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g77QhICE"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5600c43caddso819826a12.2;
-        Wed, 07 Feb 2024 07:32:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oCObCT43"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso702453a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 08:08:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707319951; x=1707924751; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ApcE6XEwaWfmGJrrnfNX8OxegVZFovON3wNgR1SCis=;
-        b=g77QhICE1Tf5OUcCaJtNG0zVScu+uWvW6Z4UbWADcmd6RoV6ZPaFgHV2BjqqtkI99U
-         zG3l2nqrwZSk3pv2vqTeVsAa3Lk/r4bjTBjAy9yjNg1CuXvjWu7/HJw5Jt5BzAyBnA0r
-         usA8a1Dd9H9PyvbYjYO7XjSyZdcWWh198UUnlC8FhgRNtlX9Ou0VdAlNrP8jPw+pYUwV
-         9RlcTo/JNyCU6KyTjcPBtfRH4C0yVVhbujQQoYcLTibOIlhjyy1Ldq8cpxsVlGn2Hqe9
-         VvG+CRt1DgQmbSVaYnoNkSvrlIpw4jp+qVZpE8pRnyDwlMfI4XAHpOEMs83GkRATpFkb
-         fRIw==
+        d=chromium.org; s=google; t=1707322096; x=1707926896; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TPcc1Z5tbUu/YfL1Zy2MeFweBmwTVf9DFXiNZ7Rr3v0=;
+        b=oCObCT43ZFjoI6IPa0YJJXy4VxMPOEoRZeWyvb6+NgzlPBsuajpllOkErMuitTwLEt
+         vh2ApUiEfXSNyT5fLTuH1hDKOHY78sLutfVcxy8vWvqpDo8tyz3sUPIlefHzCR2IgHqz
+         h9iXhRN0cZhM7pCYfzYIoTfAUi0eG9NVbrjrM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707319951; x=1707924751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ApcE6XEwaWfmGJrrnfNX8OxegVZFovON3wNgR1SCis=;
-        b=HsVsd+5JFJ3yTItdJjQQScbVKE686Og59/6cS6NgtbeNz5bMnj8nLrzEZlooPG/hOH
-         5n88ThJIJWjNT825HHeCJzRkYkFCfEJ4Or6bg8oNsngoYPPQcbnAXpFefWKcUd7Nz5Y/
-         qhBJPfV2tuT8Xywyvyb7ah7GtwCGtVBvRE+ukhEVYNN1AhwG69VDwl4vQ+rWFTxb+WYm
-         DOLw2VHhaAHHYVfmeXuCS94KYQDKyreLJs/XSuPZdlkFbAM1AMvleeGDUUfoicX5uXDX
-         gW3x6b+qPWYdGfmaK8V2d5Pdkxq8ywZ9MM2RggKLnN5g6yZW79YLwKRLkUnRy0g5BGja
-         0qjQ==
-X-Gm-Message-State: AOJu0YxkLgMomLUc2vkSV2WNek1uajiE5AZrWAHsIEMf7rrNEybyN5vN
-	mgmHmQWR2iiqcgtLdZRkZ4XWb2kZi/OJbrtvb/DRUMtJ5RHoQsbrMDQ78fC3J7hFpuUuBAo9nPT
-	NZkM40qhFljm1vIBDhftjq6Q6U/8=
-X-Google-Smtp-Source: AGHT+IEnxSWbM0I3wXaFaz73jW3Nr4GKkTgNZ6XWT8YQ0wZ4A6oE2SclCaUHv4oGP2+Cj5JRQobObXKryUZoXuv/UQ0=
-X-Received: by 2002:a17:906:f192:b0:a38:41ab:651c with SMTP id
- gs18-20020a170906f19200b00a3841ab651cmr3228401ejb.17.1707319950996; Wed, 07
- Feb 2024 07:32:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707322096; x=1707926896;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TPcc1Z5tbUu/YfL1Zy2MeFweBmwTVf9DFXiNZ7Rr3v0=;
+        b=n9RuaEcKv+Wp4UBXziscczN4h7MxQRSDwDu8MPzZwGq9mW8ZPO5is4k3jKmVlCDpqJ
+         lab+bqZ0xGrF1u8fygub+NbNZ5CC592ks/yv1Lct1RUaK9JPZAwE4X0J6MI+IQopNvKG
+         FU/lN4bGU+NVdxAoX98ALX9gRzmtdH5vSpdwByKkQsRpeQvwKZruOeeClulKngTjs7Z0
+         bxNgqXN1FqY63fiBO3bB9mYpqLttgBvmeZlnYC18AiGezB1yvo6QS0s/YRXnmEBPMbJ/
+         VClD420uJt1opnG5DaBfHmuREvTAkBZPIJ+1rZf5Mtb7wqnIj0Se2zZlAb4hNbWipVHq
+         FyYA==
+X-Gm-Message-State: AOJu0YwXgL5xGVp5TD3XIO8xltHuxQL/R736tNcqfKVgr/g7pzBVut/2
+	t0OBl6Slzbwx5UK0W6agjc+X/8ZrSdNbU60PskA6kWUcfP/nW2BYR4scpoxTww==
+X-Google-Smtp-Source: AGHT+IEL4dVoIUgrEfKuNyswXdeBCq+iJN21BgyINOhjGzVNggS7+fdaixLjZ7J98lvr0IBueRr7lg==
+X-Received: by 2002:a05:6a20:4285:b0:19c:a3e2:58b8 with SMTP id o5-20020a056a20428500b0019ca3e258b8mr5608303pzj.12.1707322096615;
+        Wed, 07 Feb 2024 08:08:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUS66k0uHq0b+5MwZzpaLXL0AsgXhY3IvIWBM9QHQ74huP9OpEpSRz771KZ1rqnVr8feMnwNO4Dxne8ARclmqWyEmUWtHsPkrqO6oy3zalSuK1uUr+zVkpIzIGv0WA96sX/0d30CXwOB3fo8/n/HBBzWIOrU9GhSa3XV/M6TCmXF+n3wpXTG8OKnVknN/0xKQEY8dIt8CfDPb+Ihqwtwz5+SRz1dmALXZBYMZbDX0ftsdnv5CMfdxIvg+LN7ogd+Z0wPQ9C+zu7BCVqOewH0RHjLL5+81muPt+q9dp/pXi2Elk3jM1Gh0dmL6Gx7hHMfCV5CopGod/9zQ==
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id y68-20020a62ce47000000b006e0545768dasm1800999pfg.151.2024.02.07.08.08.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 08:08:16 -0800 (PST)
+Date: Wed, 7 Feb 2024 08:08:14 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+	Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] overflow: Introduce wrapping_inc() and
+ wrapping_dec()
+Message-ID: <202402070806.445F7F7F03@keescook>
+References: <20240207152317.do.560-kees@kernel.org>
+ <20240207152422.3855315-3-keescook@chromium.org>
+ <CAHp75Vf3emnw-=it-Smb_NG+xYjWhB+U0+i1hcNPWA=BByN6nw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207152317.do.560-kees@kernel.org> <20240207152422.3855315-3-keescook@chromium.org>
-In-Reply-To: <20240207152422.3855315-3-keescook@chromium.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 Feb 2024 17:31:54 +0200
-Message-ID: <CAHp75Vf3emnw-=it-Smb_NG+xYjWhB+U0+i1hcNPWA=BByN6nw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] overflow: Introduce wrapping_inc() and wrapping_dec()
-To: Kees Cook <keescook@chromium.org>
-Cc: Andy Shevchenko <andy@kernel.org>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
-	Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vf3emnw-=it-Smb_NG+xYjWhB+U0+i1hcNPWA=BByN6nw@mail.gmail.com>
 
-On Wed, Feb 7, 2024 at 5:24=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> This allows replacements of the idioms "var +=3D offset" and "var -=3D of=
-fset"
-> with the wrapping_inc() and wrapping_dec() helpers respectively. They
-> will avoid wrap-around sanitizer instrumentation.
->
-> Add to the selftests to validate behavior and lack of side-effects.
+On Wed, Feb 07, 2024 at 05:31:54PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 7, 2024 at 5:24 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > This allows replacements of the idioms "var += offset" and "var -= offset"
+> > with the wrapping_inc() and wrapping_dec() helpers respectively. They
+> > will avoid wrap-around sanitizer instrumentation.
+> >
+> > Add to the selftests to validate behavior and lack of side-effects.
+> 
+> I would expect inc/dec to add/subtract 1. So, to me the terminology is
+> confusing. The list of the C/C++ operators on Wikipedia describes
+> above as
+> 
+> += Assignment by sum
+> -= Assignment by difference
+> 
+> 
+> Hence the proposal is to have
+> 
+> wrapping_sum()
+> wrapping_diff()
 
-I would expect inc/dec to add/subtract 1. So, to me the terminology is
-confusing. The list of the C/C++ operators on Wikipedia describes
-above as
+I think maybe the missing phrase is "assign", which is what makes
+argument 1 "special" -- it's being changed. Perhaps:
 
-+=3D Assignment by sum
--=3D Assignment by difference
+wrapping_add_assign()
+wrapping_sub_assign()
 
+?
 
-Hence the proposal is to have
-
-wrapping_sum()
-wrapping_diff()
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Kees Cook
