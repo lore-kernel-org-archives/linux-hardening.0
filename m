@@ -1,95 +1,113 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F3E10A0D;
-	Wed,  7 Feb 2024 02:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056F020DC1
+	for <linux-hardening@vger.kernel.org>; Wed,  7 Feb 2024 09:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707272404; cv=none; b=opWfevqQCjFBuys6g+TVwWjdguJ37uW0dGoQx+6UPp/PdJDkbs2Q5/bk/QZlvBalhMPZm3718+OaYgnmudcbCcXRqLxj/Whlh/0DeoCsI/TmMFFoynY86hXlNvs3LKW7jAPSGrWtSOf/dlKQRz/SnWhqxmOr0kaDUa1a91rRJ90=
+	t=1707297533; cv=none; b=sHFcmozixN46qImdg1ZNuwT8lD7VUF/oiruQS2Hmbx7vjnPINrz3AMsQ8YETlJhQuE1R5NBSLuMqwEqmGPOSb0ezj/y743WPNa01C4lCY5i1ADzT3x5akin4+eay2OiBX7wk7Qyu9MUPuRBa83socGdjwkjaFkFQOcR9zmVSSwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707272404; c=relaxed/simple;
-	bh=zjQbb33QAX1T1JAhEwYPnm/SGkqzEpXW1ZbAKpPauBo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z3rzfjio2HnhskfjvTk/Wh0VxHOGHCbcpzzEgHoCM9r/t8KxxJaZ0dZ3hn1SzILKt28MX5WBDr6DGFTjDpBiscgun0vblNe6UZGrBIhdUmennBRzDG7l31nw6LHnMHw//wR7mnGhK3yyyCHuW91HUehkz2uZnH4r63cZuSJZo4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bXe63CSp; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1707297533; c=relaxed/simple;
+	bh=1jfkXzEU42XrNlTOrYgVxpel0/h+5EUT5MRCBrv1Wg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCgkpcTloVje7cOfumWqbLAGANhWpSGR7BYvHCC0HvFWw8yLgdv1oKLbv1WgSnPqgg2HrF//cX6kubn2vgBQACegEWfgnRedzkCvCTbw5TqUb9NTDZNgdE+m3sWIep3LReVIDEwFM8pcIiE/p0Xx7KtXItlXr+FuAAt69QTIP88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hnmakqU+; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bXe63CSp"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707272393; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=0Ich9Lv7jUlR8bH4jRV52p8JlrleP6AcmyrMMLywpAs=;
-	b=bXe63CSpzVd6eYfyOfftXBOU4lciWYSlJbD01XjzMMevRcBoK7PxoN8sazkvu2RDPeIG4EG6cIlKZ6MGLjaAMX6lcFTb+QjbO03zMYurM7Oms4ufzz4FaV9x7pmhTp2V078L40B9xWoBkv35L360NtbHSZN/N6yaiyBY6J8hwlg=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W0F5hXj_1707272391;
-Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0W0F5hXj_1707272391)
-          by smtp.aliyun-inc.com;
-          Wed, 07 Feb 2024 10:19:53 +0800
-From: Yuanhe Shu <xiangzao@linux.alibaba.com>
-To: keescook@chromium.org,
-	tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	shuah@kernel.org,
-	corbet@lwn.net
-Cc: xlpang@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Yuanhe Shu <xiangzao@linux.alibaba.com>
-Subject: [PATCH 2/3] Documentation: adjust pstore backend related document
-Date: Wed,  7 Feb 2024 10:19:20 +0800
-Message-Id: <20240207021921.206425-3-xiangzao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240207021921.206425-1-xiangzao@linux.alibaba.com>
-References: <20240207021921.206425-1-xiangzao@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hnmakqU+"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d731314e67so2964725ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Feb 2024 01:18:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707297531; x=1707902331; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dvvwDnpbjNBn+9NOt2kovthLIHMOsqPt4VSpCq5q/E8=;
+        b=hnmakqU+26C6QwLJ7B2JkS7tm5s2QTRJfGk1/u1AKMqeEU+mrJ7DVII+9NCs3eNLfx
+         fGo8qUikwF8I0XfYXj/LnwO5PjbOwG8wrAy5+54E9NuJ73pBhNxArbBPPna8a748SmdM
+         BvFc3JGy93ACt5BSQd5dp94Xw5n6elTafzG8s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707297531; x=1707902331;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dvvwDnpbjNBn+9NOt2kovthLIHMOsqPt4VSpCq5q/E8=;
+        b=bmFQfyiHcp2xosSCEwjUdJEbLSwTl3p2daHKppem1KaDwl5hxyn2ZaV42E0BF7KaE9
+         QYL0BhbpTZVR11TiDmTJJblaEnEgCBY6POsQ6CbIxJQ22laVMeX1znyIv0zOMrbej3t+
+         yh7UtTYRgTvLGW9MpMSGS9d7WmdPYpgg45sEY77DyHMBWMUXZU83cWag4fmI9u2nfA+V
+         AgvIIY1EtqDMCk3mkAxCQA8E1Df/enfJeiyU0S72NLLPgFZS9QMryLlTnVnGeL9ea14H
+         WYRKxJwZ4erRlUkba6ZXT4W7qLAGgdQqYcS0TxfBWpI7Z9h6LEu1pEcXw7621kGMfdfw
+         jTKA==
+X-Gm-Message-State: AOJu0YwHdjW7o1PeEfWeJNS0bHC7q9JPSfa3GaLAjNMXYI24+sR/6VWJ
+	nw8ZMHM7XzgZSI2k3+gJmn0NJqW5Nc6Bi7FG7yhRVz5Ku8NscPTqbzUa1U4yaQ==
+X-Google-Smtp-Source: AGHT+IEFQALsTSc/iApggEuMndGposLY0LsIv3nQL6+uN09l4rY630QyTpJ4hUME2/Vgo02gZWcpOQ==
+X-Received: by 2002:a17:903:987:b0:1d9:2369:d0f8 with SMTP id mb7-20020a170903098700b001d92369d0f8mr4423261plb.9.1707297531344;
+        Wed, 07 Feb 2024 01:18:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/ljlKv0gnPptnrgqIOdlLMqVbp7UOFuc0CZtBwpmV0aWypPzVcmXrY3WBHqm4Mbgx1//7mxmWJbFePvmMV/FTz9PAzADgmUMWZQ34w2gzb4jtCtkpNV8kl3qGM37sfq883PJL/ytuxw0IsOhFZVhK4IfN1Y/WRnzeenWktf/CAT0lT0I+jfJEtbWZLxpeIN3u+7Kl8PA0/8QDWMMXUniGiCzYC0fbR4lklo1idbnRDUFcqeskrWWlSD4upPNso+SSC8RA6GniQ5DFaOue32MDKW9Tx45fEUFMlVdge9S0823TrVJ7FLJd61HJW84kuvsIPkdklHic03dqBZDSGFl7BqsqXaCsee2VsBzedyaeZ4hlLiIXHlRDwIleVMoZZQRDkKCdiuHm6aHAtpLikEKbpAJfp06iWzzwJFTroo5+yj3GozHdax5Z
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ld12-20020a170902facc00b001d7233dc459sm952236plb.76.2024.02.07.01.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 01:18:50 -0800 (PST)
+Date: Wed, 7 Feb 2024 01:18:49 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jason Wang <jasowang@redhat.com>, kernel test robot <lkp@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH v3 3/4] string: Allow 2-argument strscpy_pad()
+Message-ID: <202402070115.2C86687F@keescook>
+References: <20240206142027.make.107-kees@kernel.org>
+ <20240206142221.2208763-3-keescook@chromium.org>
+ <20240207005151.lyrtgqd4wekolwe7@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207005151.lyrtgqd4wekolwe7@google.com>
 
-Pstore now supports multiple backends, adjust related document.
+On Wed, Feb 07, 2024 at 12:51:51AM +0000, Justin Stitt wrote:
+> Hi,
+> 
+> On Tue, Feb 06, 2024 at 06:22:18AM -0800, Kees Cook wrote:
+> > Similar to strscpy(), update strscpy_pad()'s 3rd argument to be
+> > optional when the destination is a compile-time known size array.
+> 
+> This patch is diff'd against Patch 1/4 in this series, right? I wonder
+> why you split them up. If I hadn't literally just read that patch I
+> would be mildly confused.
+> 
+> I suppose one reason may be that 1/4 is a standalone change with a high
+> percentage chance of landing whilst this overloading magic may not land
+> as easily?
 
-Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
----
- Documentation/ABI/testing/pstore                | 8 ++++----
- Documentation/admin-guide/kernel-parameters.txt | 4 +++-
- 2 files changed, 7 insertions(+), 5 deletions(-)
+I viewed it as a distinct logical change. I could certainly combine
+them, but I think it's easier to review the conversion from function to
+macro without needing to consider anything else. No behavioral changes
+are expected, etc.
 
-diff --git a/Documentation/ABI/testing/pstore b/Documentation/ABI/testing/pstore
-index d3cff4a7ee10..2cd67b502f11 100644
---- a/Documentation/ABI/testing/pstore
-+++ b/Documentation/ABI/testing/pstore
-@@ -41,7 +41,7 @@ Description:	Generic interface to platform dependent persistent storage.
- 		persistent storage until at least this amount is reached.
- 		Default is 10 Kbytes.
- 
--		Pstore only supports one backend at a time. If multiple
--		backends are available, the preferred backend may be
--		set by passing the pstore.backend= argument to the kernel at
--		boot time.
-+		Pstore now supports multiple backends at a time. If multiple
-+		backends are available, the registrable backends may be
-+		set by passing the pstore.backend= argument1, argument2...
-+		or pstore.backend= all to the kernel at boot time.
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25680d0..a8a109b822a9 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4748,7 +4748,9 @@
- 			[HW,MOUSE] Controls Logitech smartscroll autorepeat.
- 			0 = disabled, 1 = enabled (default).
- 
--	pstore.backend=	Specify the name of the pstore backend to use
-+	pstore.backend=backend1,...,backendN
-+			Specify the names of the pstore backends to use
-+			or =all for all available backends
- 
- 	pti=		[X86-64] Control Page Table Isolation of user and
- 			kernel address spaces.  Disabling this feature
+But if they were together, there's a little more cognitive load to keep
+the func/macro conversion in mind while looking at the optional arg
+magic, etc.
+
+I don't think it's a strict rule or anything; it just felt like the
+right thing to do to split them up.
+
+> At any rate,
+> Reviewed-by: Justin Stitt <justinstitt@google.com>
+
+Thanks!
+
+-Kees
+
 -- 
-2.39.3
-
+Kees Cook
