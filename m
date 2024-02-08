@@ -1,98 +1,133 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864D66BFBF;
-	Thu,  8 Feb 2024 09:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15396F532;
+	Thu,  8 Feb 2024 10:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707383461; cv=none; b=f1zye2SieKH2YsuxtnDt3z5FaJsj4i3fFeMunpggFu22XVIu+nvYDB8ttRZvjDKcvezObhWlpe8H+6earKjCP6FAStpMQ9tXZvxWNMRSlNqDUHFlm3zqQthB43zCRSCTVm/AXz04LCalELBnhX1EY3vnF4xhusWWeMsOvkTODjI=
+	t=1707387767; cv=none; b=EIR0ZpqGw/sk6JAD5Vf3BGBRbTlcWck/gdthtrVekusKIdiFooNyfLJ3+waU9gdWGLTmB7yScZFtK7WqCkDohRQeDyVbf/GUHaa1BRFJ5twF99xKnsma6Z3/yBg1uIhs0K59D2RfXehKmpMgD9sI1hulGBgKDL/jX2TlVPo6afA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707383461; c=relaxed/simple;
-	bh=xztAfe8NIrTxTOh+SaDpX4UWTD8vUatoOqQ8o2Ddmg4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=to+n2pTADVh14KcQLz3CPi8vhBfId1PxmqTaKi/XsMs70fe93WYUnjdaJUIOxbJ5hhsqQbgHBGvq1L9lrs8a/AcNmk1GKsUoKqPOuAQCB98K68ejenSrS2B1BEK0DE/nnHBg6m6k6+LwAymyREDma/cWGAvJcM1laLntWw9VF5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asaT2fk2; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1707387767; c=relaxed/simple;
+	bh=1UH2o59ts+vAt0TTrrMt0M5kj3HFA0zfmOKue6ZirfE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j+PL/QxT0g36ulm/V6s1t7MufKfHzMRpkWtduuoWGSqTF9lNoWT1+tQfPU9a7F4BFjUm3GOKpfhGLwHtoeS2o/0GZK23SLX2ZVDRQOsw1M+e0OD/YH5ZwtJns8Wp/dDCbVzLbVdU0vM2Mmwa5BweO6UgiUrI3UTJh9LED/hVilE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asaT2fk2"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55f279dca99so2340172a12.3;
-        Thu, 08 Feb 2024 01:10:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707383458; x=1707988258; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jf+IpQUM3GkSU331X0U1mVeh/2v5Zggac5yTBr9mH/Y=;
-        b=asaT2fk2xxJru586BZ+omuHroe8lydrgxo0As/jFX04Hth9G7aFXQACRK3TYGNeZuF
-         0aPgVTg7Cmkm9KS3JQYM8TRlAa6UCNPEV8p5VNpH5Z40Lezunkt0e1gW2bsmyhbSlOHJ
-         x5aV9usyuUQFQb6AylAQbsZ2wbpsd24Tj1K7DImI+LUzBNiezEwgFPNKuowwP+w3tIhy
-         ycfqAUfNwkO9/294KId0KITjyxRN/NgQ7F/1c8zd44FV4FGCSrG2mqBZN5N5qBq2rlAT
-         XmEPIUAtwQUnv7X82Qa0kATo41h0BzNmiJvc+Lf66Ifw9S1gssgK/pakhYEnOJ5Wq3XA
-         HQEw==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-604a05a36d2so10792957b3.0;
+        Thu, 08 Feb 2024 02:22:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707383458; x=1707988258;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jf+IpQUM3GkSU331X0U1mVeh/2v5Zggac5yTBr9mH/Y=;
-        b=upfok5SaJU5zPzHyTv/FAwUdM7R04c8kXW9vRpUg2+sN3fieOVRq3JXr7ayJ41Ykmd
-         rZai7/yIbXuSGisyXMcnvUxKo/V3KHnVnERrAJen7hR/eQbw9d/5Ka6UlC8K9Wb9Rbnw
-         RvuntuTyKMime3OXLkBbnFXXFX2uY32+1uDTop6nqnEt1nu52yvG+GriVQMLTS+wHYXw
-         YNXyVVAlIEIfSK4pLiAIVuI3gdXm9gdC0cpxQVWdWPcw9XHmTXBI+XYqd9VOFJZp+ZZX
-         b2Bli2NWtT+bU6huXsnJ1pJ55RnwH19g71HmBc1rued+C5l9tjD/uM1yg1QdWgqrcDaq
-         mizQ==
-X-Gm-Message-State: AOJu0YxHYuyj45uXSeRGkveggOqdDL4UiVDuDdiM0XEAzG8GguZDV5zj
-	E9AGpdYxT20+ByL1CvJQQSShUiRJS1Tb5dN297t6xujPyoyBzrNE
-X-Google-Smtp-Source: AGHT+IHLSmXltAPAHNrVTintZ+4Trcvv/+wBCABaTPXruhUo1Rrh9Ii7BcEwfOcukmmsx9Ia6CbUnA==
-X-Received: by 2002:a17:907:778a:b0:a38:174c:c985 with SMTP id ky10-20020a170907778a00b00a38174cc985mr5328923ejc.63.1707383457589;
-        Thu, 08 Feb 2024 01:10:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUMwbC3ZfT8JJu+zXu2Yw6lHz1u5DESJSr8MH8BvzWT14jYqm+iTCb0IHHAoyL2fDe/D8vqzajCtcA5zPvaWZrVjR2Ojcx4b5/r/COxIkVqAfRj+f46e+9eTvKT7hx3pDk1tNbHYc8CevniMt2d+D9GqslCKg9CgsixRpjGDdbw1SsCJxmPrRkYBYuCFxe5axO5FK5phtTHKV/f6t0g
-Received: from felia.fritz.box ([2a02:810d:7e40:14b0:f81c:5b24:d269:24d])
-        by smtp.gmail.com with ESMTPSA id k5-20020a17090646c500b00a38535c6be0sm1691887ejs.16.2024.02.08.01.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 01:10:57 -0800 (PST)
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To: Kees Cook <keescook@chromium.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH 2/2] hardening: drop obsolete DRM_LEGACY from config fragment
-Date: Thu,  8 Feb 2024 10:10:45 +0100
-Message-Id: <20240208091045.9219-3-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240208091045.9219-1-lukas.bulwahn@gmail.com>
-References: <20240208091045.9219-1-lukas.bulwahn@gmail.com>
+        d=1e100.net; s=20230601; t=1707387763; x=1707992563;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P719nC8BiBLtYPLKz3vIEqLB5ifdhnjRlwd0//T3ZAg=;
+        b=IlNbiyjcf8dG395iD7doxlwGKcVSxJrsmz7ukCB2yG1h0+INJsjSEGm5YsAN9ldXwx
+         IaSQZUuSOAtxk57BRtM0ee5LqXHSo+f7Ozs2wtEaKgN2cmTei7LOL2NYpaFL8ReEq3h/
+         SGoXfqdzxw10DHvFNfQiz0ThobMS7tz4EvcfovTvYopfjm+pzo+MkGoP9X4zH+2ujo3w
+         4AV7FOcBdtVTfvp9AxY1/NxvfPxoE+MyVcd9H8so7HkL81sQxLfdD9FPOKegI1/Mf/7j
+         93ae6LkAXqgyC+5dKbMn+klMsGzU5NRDdAwK2JBkiRs3CzeYvCXixTY2iH6RSEGshB5B
+         gVYg==
+X-Gm-Message-State: AOJu0YxcYFcFOSsw798rDZMF4R6xZrmkQ4b9VoOnUynoJxXYneQMCRPY
+	ho83Yf7g2CV8SyJDFFscVgZ3BFTbYXuYX+KytjeUGugH88PUwGnbbb3NC8KF/LM=
+X-Google-Smtp-Source: AGHT+IETwm/JSu9xMfCeplIXYMQedn3Yy9M2WyehpPNbsLU7pfOCtOxdQB1ocMO4lW1vZOO/TvR8qQ==
+X-Received: by 2002:a0d:e893:0:b0:604:a3c1:1b1a with SMTP id r141-20020a0de893000000b00604a3c11b1amr2083104ywe.38.1707387762952;
+        Thu, 08 Feb 2024 02:22:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX2GTO5HIpxHYuILbyGC52lkCMrktua947fzUF70hkuzfGlfeqKANIoI6UqlWH6J74uReyU0kxUFFt+Xena97U1zPIvnH8bdYR/k6NkCOrGZN3KV6tN2BYKpHbCv2Qsu8ph+0jLbUHS8M1quQ==
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id b141-20020a0dd993000000b00604941e2f1fsm553131ywe.130.2024.02.08.02.22.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Feb 2024 02:22:42 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-604a05a36d2so10792397b3.0;
+        Thu, 08 Feb 2024 02:22:42 -0800 (PST)
+X-Received: by 2002:a81:e809:0:b0:5ff:b07b:fb0b with SMTP id
+ a9-20020a81e809000000b005ffb07bfb0bmr7260196ywm.49.1707387761877; Thu, 08 Feb
+ 2024 02:22:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240208084512.3803250-1-lee@kernel.org> <20240208084512.3803250-4-lee@kernel.org>
+In-Reply-To: <20240208084512.3803250-4-lee@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 Feb 2024 11:22:30 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX72mpGgb3Wp0WRX3V78nn+bWUqiYz25CjeMNPpWaPmxg@mail.gmail.com>
+Message-ID: <CAMuHMdX72mpGgb3Wp0WRX3V78nn+bWUqiYz25CjeMNPpWaPmxg@mail.gmail.com>
+Subject: Re: [PATCH 03/10] scsi: NCR5380: Replace snprintf() with the safer
+ scnprintf() variant
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Finn Thain <fthain@linux-m68k.org>, Michael Schmitz <schmitzmic@gmail.com>, 
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, drew@colorado.edu, 
+	Tnx to <Thomas_Roesch@m2.maus.de>, linux-scsi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 94f8f319cbcb ("drm: Remove Kconfig option for legacy support
-(CONFIG_DRM_LEGACY)") removes the config DRM_LEGACY, but one reference to
-that config is left in the hardening.config fragment.
+Hi Lee,
 
-As there is no drm legacy driver left, we do not need to recommend this
-attack surface reduction anymore.
+Thanks for your patch!
 
-Drop this reference in hardening.config fragment.
+On Thu, Feb 8, 2024 at 9:48=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
+> There is a general misunderstanding amongst engineers that {v}snprintf()
+> returns the length of the data *actually* encoded into the destination
+> array.  However, as per the C99 standard {v}snprintf() really returns
+> the length of the data that *would have been* written if there were
+> enough space for it.  This misunderstanding has led to buffer-overruns
+> in the past.  It's generally considered safer to use the {v}scnprintf()
+> variants in their place (or even sprintf() in simple cases).  So let's
+> do that.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- kernel/configs/hardening.config | 3 ---
- 1 file changed, 3 deletions(-)
+Confused... The return value is not used at all?
 
-diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
-index 4dc0cd342ced..ed126d7b5e83 100644
---- a/kernel/configs/hardening.config
-+++ b/kernel/configs/hardening.config
-@@ -92,6 +92,3 @@ CONFIG_SYN_COOKIES=y
- 
- # Attack surface reduction: Use the modern PTY interface (devpts) only.
- # CONFIG_LEGACY_PTYS is not set
--
--# Attack surface reduction: Use only modesetting video drivers.
--# CONFIG_DRM_LEGACY is not set
--- 
-2.17.1
+> --- a/drivers/scsi/NCR5380.c
+> +++ b/drivers/scsi/NCR5380.c
+> @@ -421,14 +421,14 @@ static int NCR5380_init(struct Scsi_Host *instance,=
+ int flags)
+>         if (!hostdata->work_q)
+>                 return -ENOMEM;
+>
+> -       snprintf(hostdata->info, sizeof(hostdata->info),
+> -               "%s, irq %d, io_port 0x%lx, base 0x%lx, can_queue %d, cmd=
+_per_lun %d, sg_tablesize %d, this_id %d, flags { %s%s%s}",
+> -               instance->hostt->name, instance->irq, hostdata->io_port,
+> -               hostdata->base, instance->can_queue, instance->cmd_per_lu=
+n,
+> -               instance->sg_tablesize, instance->this_id,
+> -               hostdata->flags & FLAG_DMA_FIXUP     ? "DMA_FIXUP "     :=
+ "",
+> -               hostdata->flags & FLAG_NO_PSEUDO_DMA ? "NO_PSEUDO_DMA " :=
+ "",
+> -               hostdata->flags & FLAG_TOSHIBA_DELAY ? "TOSHIBA_DELAY " :=
+ "");
+> +       scnprintf(hostdata->info, sizeof(hostdata->info),
+> +                "%s, irq %d, io_port 0x%lx, base 0x%lx, can_queue %d, cm=
+d_per_lun %d, sg_tablesize %d, this_id %d, flags { %s%s%s}",
+> +                instance->hostt->name, instance->irq, hostdata->io_port,
+> +                hostdata->base, instance->can_queue, instance->cmd_per_l=
+un,
+> +                instance->sg_tablesize, instance->this_id,
+> +                hostdata->flags & FLAG_DMA_FIXUP     ? "DMA_FIXUP "     =
+: "",
+> +                hostdata->flags & FLAG_NO_PSEUDO_DMA ? "NO_PSEUDO_DMA " =
+: "",
+> +                hostdata->flags & FLAG_TOSHIBA_DELAY ? "TOSHIBA_DELAY " =
+: "");
+>
+>         NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+>         NCR5380_write(MODE_REG, MR_BASE);
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
