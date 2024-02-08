@@ -1,187 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C056E74E2A;
-	Thu,  8 Feb 2024 08:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5962A67C45;
+	Thu,  8 Feb 2024 09:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707381938; cv=none; b=XvpprrpUgadia5CVM1NSfbgfarfEg2WH3gAFQsQQQ/RMtNqLK9CMP09m9oZfyaSzCDTQUCw8UC82r1TDvo6ejO9arz3C8Uah3zWxuBqIEkbYXwvjwKav66MOquzOCS5knTWGAjwg0A3uhAGOkQe7A2LOs2rOJq/r2Vc/UI7eNyQ=
+	t=1707383455; cv=none; b=WP3JnNsY9Katc6YuEM2fWvBpUsu6CfYHm0Gic0N9Y1Xi6+tRwOWScz8MeoyuODalkgr8Mg2Jj/GbjVMpTtL1mymgP5EQjdzi0Ph1JMPrBwxsx4nRJKQU76V6DsqKH3uZER3v2m+qv4wOSzEHrTVrYr5zm636tcL6AUKPfse4zZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707381938; c=relaxed/simple;
-	bh=qmbHfN/f8YgSLjrFL2hPNhuDBX1LYqccIkoXslfVQ1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rRrK3aks/8IQLgXXaD9OhBbxitdQf8znf7J0WXTZz27P6djHe7VX4KzeiHhR87JYXwX1iZZSF+Is6sNxEnKZXHVoI+GYwbuTYKZzGCT5Dhu4aNM3vUk2t7bYT/pDC7+ZNkQql88yrraDSq3eNIvbqzcB3qvuj7z64a8IhLnjIv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOEmzCzg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707383455; c=relaxed/simple;
+	bh=D/s7pmIGgrVodZoP/OSSpbEpMsrvZGwdi6k5iDsU5Rg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=MP6DagXAI5D3+/VGWklDnXdXRCvW1asD/O39zie3dGKYQptrNsm1q0Ltu485USvx0kGUmMBgkFsQsE31CeBlmA6VPeLwlju3bN2h3A2BGzuwLqMtleklm+8aIUxurw3ZKICrweG7vSwXYGtEaaDVdAnqAD9EO3hgS1CBWl1gu3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AJqxXesc; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOEmzCzg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6F1C433B1;
-	Thu,  8 Feb 2024 08:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707381938;
-	bh=qmbHfN/f8YgSLjrFL2hPNhuDBX1LYqccIkoXslfVQ1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LOEmzCzgxxjlFn+1XmC8QqhwKpmjJFNJilrBiaaa5pcylqyqEEg8E4wf2GwOCaUU9
-	 fegkkGzEwK1cmtc+QpLPwbHg96F2C7Ie9tVls5Ah66PKkdfldLMY9XXQaNy+MNK3dQ
-	 TzGwHdq/qNrgG/Cr+pjuxFRRm9NPhHiumqhc+QF3WTcRiCnwaCytOg2fObaVSrBmY3
-	 ox5G+HNe7WQOAeVbl057M+XYrRXShmn+DlS41O5L/tlxnFXemnFTuln958Q11MuV1e
-	 mbJcvIB59oJizF3UieAN2VSxFeZK+qYR8l+ueWh663SQ/ZO+NG9tBSATUUryXlpqrB
-	 XKnFiJpyUgDUQ==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	support@areca.com.tw,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH 10/10] scsi: arcmsr: Remove snprintf() from sysfs call-backs and replace with sysfs_emit()
-Date: Thu,  8 Feb 2024 08:44:22 +0000
-Message-ID: <20240208084512.3803250-11-lee@kernel.org>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-In-Reply-To: <20240208084512.3803250-1-lee@kernel.org>
-References: <20240208084512.3803250-1-lee@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJqxXesc"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a34c5ca2537so208589866b.0;
+        Thu, 08 Feb 2024 01:10:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707383452; x=1707988252; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k7Jb5Dug4kD88qLV++4VIsrhuZEsQ7qesE5FGrVCgbU=;
+        b=AJqxXescdQMlfcdZEA6tPQQDsvoKi6qgn+GPDmehSBtT04tOwqBzngi5Q+RcEwRTdZ
+         BI9tgydG5FrtT3Xa8zG0J7UJGyBT2gcTQ3EYinCFr6RBRm8kpM9CRh2vQoNJ/QvzGowX
+         fcRC6Llb7rLf649Q1Cz9ZfyP8xW8QylcKiHS0WyVu2pmB/93flm4TqlOaW39pwshIXDF
+         oDnHMd33YHVFHrfkbhg41LJwjxZbkRMIW4iFWBHnMpz6cMCN7Za37/Caq1ZujKIsAsNN
+         r4HaQpYbM/WJZFWHf3qjUy/kxIX0C8zRFli66EjEODt7z2ZAoxkQ2RduMU43G3bslFKi
+         fHDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707383452; x=1707988252;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k7Jb5Dug4kD88qLV++4VIsrhuZEsQ7qesE5FGrVCgbU=;
+        b=xASciahyuw9hs+EYWJWsFR1RVXeVVcTrBOoi64OQMhnNZHjgn1xRymxsH4Q1/HVmtF
+         soCJn2FIjXfwOkYPbbSEQoi+YX/3qPobOW/r9vZw9DxysV3HKlyRTWcqjh7yVO2msADj
+         Hn0AYZb03t2jzvCC93fbb5/oN2L9cG4PsSq9iGjGTDE0ZtEVMtPtlKkGNrJ5kkejvj1w
+         SMsdNrjc5Vi5weKk/AstJvXJh3m1ts7f0VFtzp07G2Nju9i4RzEUfsNaINMMb1AlIyMv
+         Bh5KKE4f62nkQmHntEgQT9BwVQ5bS/YMHhinEWmv8LzSh0z9gUV0N07IdleZ8ljoWPaq
+         sjvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmUoE8jaPxDE+JqzJ3QcvcABHmXnznXybUzefaOnagGi7aL3Sbig/t89A3rBezC8Et0iQqRxpgEYt2zcDx6S6Cj+7VNXQ4RIaJiUUR3RcohWAnPpNHhAJqvpVK4u5hl0TD/+Xt8ia34/qCP8ZE
+X-Gm-Message-State: AOJu0Yz2uqbKer84WVTsJW7WpNswpWh4ltkfJYDPtSbm4rv7fRV4DTxe
+	dOV/x3I+uyCrS/gpoIsfQrGvLjCiMiuM+R0zdpfecv/YqHVcxD5nk8uZPXEb
+X-Google-Smtp-Source: AGHT+IE4wxLZYuh/JldJmOmzEER7pyGidQnzyVpPKb8o3GZctekF6Pt9Bb2ShhbQySvBLyGkk1Kjyg==
+X-Received: by 2002:a17:906:e290:b0:a38:67df:b858 with SMTP id gg16-20020a170906e29000b00a3867dfb858mr3240502ejb.76.1707383452004;
+        Thu, 08 Feb 2024 01:10:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWvS9mNWKcfEHTgGqWEIrboBbBjniox2qLI+xsnefMs0IBa9al7Cdhn8eyMbBfQfsbhEuKP+9Bl8U+kTfMvCVsfz1HiRmaTM+nYRzqGyS2OkB2Fjj1CU4uEi4IfZ3u64rviftamey9Oc+FoNgRDl171jPrTY3JHnR+2Geiz2ukPtOc3W3oEqOHud58mMfc4HZF9FXLzxHcyW60htAQK
+Received: from felia.fritz.box ([2a02:810d:7e40:14b0:f81c:5b24:d269:24d])
+        by smtp.gmail.com with ESMTPSA id k5-20020a17090646c500b00a38535c6be0sm1691887ejs.16.2024.02.08.01.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 01:10:51 -0800 (PST)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: Kees Cook <keescook@chromium.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH 0/2] Drop obsolete configs from hardening.config
+Date: Thu,  8 Feb 2024 10:10:43 +0100
+Message-Id: <20240208091045.9219-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Since snprintf() has the documented, but still rather strange trait of
-returning the length of the data that *would have been* written to the
-array if space were available, rather than the arguably more useful
-length of data *actually* written, it is usually considered wise to use
-something else instead in order to avoid confusion.
+Dear Kees,
 
-In the case of sysfs call-backs, new wrappers exist that do just that.
+here are two patches cleaning up the hardening config fragment from obsolete
+config options.
 
-Link: https://lwn.net/Articles/69419/
-Link: https://github.com/KSPP/linux/issues/105
-Signed-off-by: Lee Jones <lee@kernel.org>
----
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: support@areca.com.tw
-Cc: linux-scsi@vger.kernel.org
----
- drivers/scsi/arcmsr/arcmsr_attr.c | 40 ++++++++-----------------------
- 1 file changed, 10 insertions(+), 30 deletions(-)
+Feel free to squash them if you think they should not be two separate commits.
 
-diff --git a/drivers/scsi/arcmsr/arcmsr_attr.c b/drivers/scsi/arcmsr/arcmsr_attr.c
-index baeb5e7956902..c430c835503be 100644
---- a/drivers/scsi/arcmsr/arcmsr_attr.c
-+++ b/drivers/scsi/arcmsr/arcmsr_attr.c
-@@ -258,9 +258,7 @@ static ssize_t
- arcmsr_attr_host_driver_version(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE,
--			"%s\n",
--			ARCMSR_DRIVER_VERSION);
-+	return sysfs_emit(buf, "%s\n", ARCMSR_DRIVER_VERSION);
- }
- 
- static ssize_t
-@@ -270,9 +268,7 @@ arcmsr_attr_host_driver_posted_cmd(struct device *dev,
- 	struct Scsi_Host *host = class_to_shost(dev);
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			atomic_read(&acb->ccboutstandingcount));
-+	return sysfs_emit(buf, "%4d\n",	atomic_read(&acb->ccboutstandingcount));
- }
- 
- static ssize_t
-@@ -282,9 +278,7 @@ arcmsr_attr_host_driver_reset(struct device *dev,
- 	struct Scsi_Host *host = class_to_shost(dev);
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			acb->num_resets);
-+	return sysfs_emit(buf, "%4d\n", acb->num_resets);
- }
- 
- static ssize_t
-@@ -294,9 +288,7 @@ arcmsr_attr_host_driver_abort(struct device *dev,
- 	struct Scsi_Host *host = class_to_shost(dev);
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			acb->num_aborts);
-+	return sysfs_emit(buf, "%4d\n", acb->num_aborts);
- }
- 
- static ssize_t
-@@ -306,9 +298,7 @@ arcmsr_attr_host_fw_model(struct device *dev, struct device_attribute *attr,
- 	struct Scsi_Host *host = class_to_shost(dev);
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
--	return snprintf(buf, PAGE_SIZE,
--			"%s\n",
--			acb->firm_model);
-+	return sysfs_emit(buf, "%s\n", acb->firm_model);
- }
- 
- static ssize_t
-@@ -319,9 +309,7 @@ arcmsr_attr_host_fw_version(struct device *dev,
- 	struct AdapterControlBlock *acb =
- 			(struct AdapterControlBlock *) host->hostdata;
- 
--	return snprintf(buf, PAGE_SIZE,
--			"%s\n",
--			acb->firm_version);
-+	return sysfs_emit(buf, "%s\n", acb->firm_version);
- }
- 
- static ssize_t
-@@ -332,9 +320,7 @@ arcmsr_attr_host_fw_request_len(struct device *dev,
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
- 
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			acb->firm_request_len);
-+	return sysfs_emit(buf, "%4d\n", acb->firm_request_len);
- }
- 
- static ssize_t
-@@ -345,9 +331,7 @@ arcmsr_attr_host_fw_numbers_queue(struct device *dev,
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
- 
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			acb->firm_numbers_queue);
-+	return sysfs_emit(buf, "%4d\n",	acb->firm_numbers_queue);
- }
- 
- static ssize_t
-@@ -358,9 +342,7 @@ arcmsr_attr_host_fw_sdram_size(struct device *dev,
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
- 
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			acb->firm_sdram_size);
-+	return sysfs_emit(buf, "%4d\n", acb->firm_sdram_size);
- }
- 
- static ssize_t
-@@ -371,9 +353,7 @@ arcmsr_attr_host_fw_hd_channels(struct device *dev,
- 	struct AdapterControlBlock *acb =
- 		(struct AdapterControlBlock *) host->hostdata;
- 
--	return snprintf(buf, PAGE_SIZE,
--			"%4d\n",
--			acb->firm_hd_channels);
-+	return sysfs_emit(buf, "%4d\n", acb->firm_hd_channels);
- }
- 
- static DEVICE_ATTR(host_driver_version, S_IRUGO, arcmsr_attr_host_driver_version, NULL);
+Lukas
+
+Lukas Bulwahn (2):
+  hardening: drop obsolete UBSAN_SANITIZE_ALL from config fragment
+  hardening: drop obsolete DRM_LEGACY from config fragment
+
+ kernel/configs/hardening.config | 4 ----
+ 1 file changed, 4 deletions(-)
+
 -- 
-2.43.0.594.gd9cf4e227d-goog
+2.17.1
 
