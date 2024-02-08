@@ -1,222 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491887EEFA;
-	Thu,  8 Feb 2024 17:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BFA125DA;
+	Thu,  8 Feb 2024 17:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707411950; cv=none; b=da7epeRcUwd40mHuicC04LVglEOUCgBVz9qJzoigQUreGV/2DuWjvOqzT3bgr8hwKJng6cSWLez3CH4yjzLakSQZAE7KoQMJkS8YNOpBf/bhO5dJOdRd5qtav3ub6zWepr3OqndzKPzd3kV56I9uQwtdUq9Bdhv5fMOqUnOeyqk=
+	t=1707414063; cv=none; b=WyeNzmGQ9nq+qU4ndAW/ltsH1+fnGKdwmuGJpZAXGT+euHRS0h6cpn5cNyPwpZhOxUZZIUwd+futzoU2X1gILCGs28yswVUS2coCQL1QfY6uy48jJQzKn4D88KUyCSHiZEVJjEdMHxGzgINtrADoQixDxTfM+Cd6ESFDTDdlGoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707411950; c=relaxed/simple;
-	bh=YnAV3cf2dVZn5SmfbURqED8Do4HIbJUHN3PAYcyqo9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tO8VFBykZzEE5fc7q9YEzBeu5hgHZfY1Rr0+D+OlpkxfyvU3sgRK6CZ42xCYkwd8j5NqRtficQpp6tiZ4xKZFTeCoGvO0F5/j6Lk6NShV+pVAUMvkdIS7UD9wS+s0oVw9jm6zo8qUwgt30MR44/qntRGZiaGf/28BKW4KyBD9zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JioAjxEI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JioAjxEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54645C433F1;
-	Thu,  8 Feb 2024 17:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707411949;
-	bh=YnAV3cf2dVZn5SmfbURqED8Do4HIbJUHN3PAYcyqo9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JioAjxEIF25UWXJ3iGFsxP2SknKfe0pbZTb55tQY/S+atONebMks8B0c75LaX6ruh
-	 QnbsSXzBApv3mZHIeFqkejqOLUZvRZN2gyuy4Ae9ClB0ztnrTjbIxiNaqamxprZGeo
-	 XSXHKyF9nmRPcsYa2RhXEm6yuDg4xtycoy1tqBKdTOnMmMwdhXEeVpt6DjHiKfo8/p
-	 vVTPbRAtjx4YHYptU4HiJ2vJGN399BuOamAfynRvL4KOCXJ31NsKAgfl8QKP6tWcYF
-	 VENaEs96bdDiViJToqKWJYzNltdrZenenPYZ/UhdLWI9DKzqyDzkT46hEAjMcaGFtJ
-	 sgVhyPUOFn4gw==
-Date: Thu, 8 Feb 2024 17:05:44 +0000
-From: Lee Jones <lee@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	David Laight <David.Laight@aculab.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
-	Juergen Quade <quade@hsnr.de>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
- truncated strings
-Message-ID: <20240208170544.GV689448@google.com>
-References: <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
- <20240125103624.GC74950@google.com>
- <54e518b6dd9647c1add38b706eccbb4b@AcuMS.aculab.com>
- <20240129092440.GA1708181@google.com>
- <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
- <20240129095237.GC1708181@google.com>
- <20240130150721.GA692144@google.com>
- <79921f9a-2453-48ec-85db-e63a0958db1e@prevas.dk>
- <20240130155336.GA8551@google.com>
- <ZcUAIqnA_SJN0Clg@alley>
+	s=arc-20240116; t=1707414063; c=relaxed/simple;
+	bh=JDlxEd4DUAltJgPtyMqh2rUgGaRPVzcz0OjIShKXtIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qr7s4Viewurt7bQgXiLhTKfSFhy9c8F5yoUjEikwct8IaH3OM/qfDnHYhq4BUhpR/Lcpdw/OW2L8DesuOHXgc2rJDRti8NNXqRFG2n7EWok+ZBScgsOE3H2l6IEdTHe0g4DD+wJ/0AV7/RT5xNtDsSF1r/MafXRG4e3N/Ai/aMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d73066880eso153715ad.3;
+        Thu, 08 Feb 2024 09:41:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707414061; x=1708018861;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JDlxEd4DUAltJgPtyMqh2rUgGaRPVzcz0OjIShKXtIA=;
+        b=Jq2rvyGUVo3NBnO27UpwBVPLO4sjCa/URCATcRE0zyvCopx6kIOdRpIxPzlUm67vqp
+         +N8sMd8nRVrTiuoToBb8TvQvkommp7bSTovBRIjZhdwWljgxCAAvAi+usS2MxrF+dC1z
+         yNY4dDCVrTEJtPdur8eeW5LLNl785V2PF4PvC8fF0HGePokMwn30CJiDpIxwDHkELqx4
+         EbzxGuKI/diNn3nom6GRNGeFyszxIGULBm8n6EXiOYnShYqGz7d8QEqKtMgRqJQWR2xN
+         egc6jZULCyHqOU3mppGKD/diUAdb1D85IAlKuOBJpCz9OILSpUcD9vzACdhSictIoNVV
+         ibrQ==
+X-Gm-Message-State: AOJu0YyZZYGzd2UIh4EJZS8mS5qyFh3JOoVKGfDFV3P03CLAwZxZley7
+	z80g02efr4G8j82mRe4RmvpCn6pij0atrpjnk57kNlmpTSRrxEBB
+X-Google-Smtp-Source: AGHT+IFqbBBf6L/TNgl9ud++eiJTxjSFTetMmFD3k56FU/BMtYyyW70vU5kc2Vv9Z8vtEXTsgQRdTw==
+X-Received: by 2002:a17:903:1c3:b0:1d9:6895:81c3 with SMTP id e3-20020a17090301c300b001d9689581c3mr10652820plh.22.1707414060984;
+        Thu, 08 Feb 2024 09:41:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWwjeR7M737s3YhNB8/OXBJ/YXwSu9RCoYeW2dKcndfY2WOZwrqMkODdN7ilPpGQw5lK3nvu+szGFUZIxSQ2ybJTxDZ8uZz3qzlgWHOIBhl8g5GS/coMsWQb13qveBsmfhspOO3IUE7hQwvdwRRrU/JhEUVKbedMJu8qZHEdtrYv8iJ2YFZFHTSBgiFSjNLVmSv4xYyweIy7p+5DybJBdtO/fqCwR4mH4fde0BktHj5NUiBf6GdRz6H/NbgSoX6Qu/x4rYUu86wC6Vw4an0aGhF2DqQBff9j202E9WX/Wz4HgbaDq8ZIIE6W5uRqRCgoMR/QI71vSkiVJ3aC17+ozL0b3cThc36+NIZfO6euMCxM+uHC9SCc1ovwKGvanjnO82FWHJW2xk3gEW0Dan66v9wTQt9t8QYJJOmjWS7uT7cXlVj5VuDU6Qcw7FZIemJQ8fiLoke7LGh24wWCOos2aZ51NKjhNipZ/+l6I9uQbTfLC29kIrV/XrwkfvgQxELkVQTY+LcXI9q0r+gSkJoXgfMwwX5q491x1zxEOBDQyEZ4ToWgMPzZl4bmoGj8MzcRemj8wzOheYD9EBjfUrDS08WDO+qudgq9BL/+CPurFWY1qMMpVFI1Brr7qRMTdno
+Received: from ?IPV6:2620:0:1000:8411:6ab9:a725:60e:97d2? ([2620:0:1000:8411:6ab9:a725:60e:97d2])
+        by smtp.gmail.com with ESMTPSA id g5-20020a170902740500b001d7439bf914sm5255pll.235.2024.02.08.09.40.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Feb 2024 09:41:00 -0800 (PST)
+Message-ID: <c9129b08-50fb-4371-aa05-6f6c7cd7acfa@acm.org>
+Date: Thu, 8 Feb 2024 09:40:55 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZcUAIqnA_SJN0Clg@alley>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/10] scsi: Replace {v}snprintf() variants with safer
+ alternatives
+Content-Language: en-US
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Adam Radford <aradford@gmail.com>,
+ Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+ Andre Hedrick <andre@suse.com>, de Melo <acme@conectiva.com.br>,
+ drew@colorado.edu, Finn Thain <fthain@linux-m68k.org>,
+ Hannes Reinecke <hare@suse.com>, "James E.J. Bottomley"
+ <jejb@linux.ibm.com>, Joel Jacobson <linux@3ware.com>,
+ John Garry <john.g.garry@oracle.com>, linux-scsi@vger.kernel.org,
+ Luben Tuikov <luben_tuikov@adaptec.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Michael Schmitz <schmitzmic@gmail.com>,
+ "PMC-Sierra, Inc" <aacraid@pmc-sierra.com>,
+ Richard Hirst <rhirst@linuxcare.com>, support@areca.com.tw,
+ Tnx to <Thomas_Roesch@m2.maus.de>
+References: <20240208084512.3803250-1-lee@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240208084512.3803250-1-lee@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 08 Feb 2024, Petr Mladek wrote:
+On 2/8/24 00:44, Lee Jones wrote:
+> Cc: Andre Hedrick <andre@suse.com>
 
-> On Tue 2024-01-30 15:53:36, Lee Jones wrote:
-> > On Tue, 30 Jan 2024, Rasmus Villemoes wrote:
-> > > On 30/01/2024 16.07, Lee Jones wrote:
-> > > > On Mon, 29 Jan 2024, Lee Jones wrote:
-> > > >> On Mon, 29 Jan 2024, David Laight wrote:
-> > > >>>> snprintf() does this and has been proven to cause buffer-overflows.
-> > > >>>> There have been multiple articles authored describing why using
-> > > >>>> snprintf() is not generally a good idea for the masses including the 2
-> > > >>>> linked in the commit message:
-> > > >>>
-> > > >>> snprintf() returns the number of bytes that would have been output [1].
-> >
-> > > > Okay, I've written a bunch of simple test cases and results are
-> > > > positive.  It seems to achieve my aim whilst minimising any potential
-> > > > pitfalls.
-> > > > 
-> > > >  - Success returns Bytes actually written - no functional change
-> > > >  - Overflow returns the size of the buffer - which makes the result
-> > > >    a) testable for overflow
-> > > >    b) non-catastrophic if accidentally used to manipulate later sizes
-> > > 
-> > > You are describing scnprintf(), which almost does exactly that. The last
-> > > thing we need is another interface with almost identical semantics.
-> > 
-> > It does, which is why when I first centred my efforts on this task the
-> > plan was to simply switch to it.  However, as I described in the commit
-> > message:
-> > 
-> >   "Whist executing the task, it quickly became apparent that the initial
-> >   thought of simply s/snprintf/scnprintf/ wasn't going to be adequate
-> >   for a number of cases.  Specifically ones where the caller needs to
-> >   know whether the given string ends up being truncated."
-> > 
-> > A great deal of callers want to know if the string they attempted to
-> > form was successful.  A malformed string would lead to oddities in the
-> > best cases and various device/probing/matching failures in the worst.
-> > 
-> > > >     int size = 10;
-> > > >     char buf[size];
-> > > >     char *b = buf;
-> > > > 
-> > > >     ret = spprintf(b, size, "1234");
-> > > >     size -= ret;
-> > > >     b += ret;
-> > > >     // ret = 4  size = 6  buf = "1234\0"
-> > > > 
-> > > >     ret = spprintf(b, size, "5678");
-> > > >     size -= ret;
-> > > >     b += ret;
-> > > >     // ret = 4  size = 2  buf = "12345678\0"
-> > > > 
-> > > >     ret = spprintf(b, size, "9***");
-> > > >     size -= ret;
-> > > >     b += ret;
-> > > >     // ret = 2  size = 0  buf = "123456789\0"
-> > > 
-> > > So here scnprint() would have returned 1, leaving size at 1. scnprintf()
-> > > has the invariant that, for non-zero size, the return value is strictly
-> > > less than that size, so when passed a size of 1, all subsequent calls
-> > > return 0 (corresponding to the fact that all it could do was to write
-> > > the '\0' terminator).
-> > > 
-> > > This pattern already exists, and is really the reason scnprint exists.
-> > > Yes, scnprintf() cannot distinguish overflow from
-> > > it-just-exactly-fitted. Maybe it would have been better to make it work
-> > > like this, but I don't think there's a real use
-> > 
-> > There are real use-cases.  They are what brought me here.
-> >
-> > > and we do have
-> > > seq_buf() if one really wants an interface that can build a string
-> > > piece-meal while keeping track of whether it ever caused overflow.
-> > 
-> > seq_buf_*() looks okay, but it's petty heavy requiring what looks like
-> > the buffers to be initialised with an API call before use.  We're
-> > looking for something more light weight.
-> > 
-> > scnprint() had clear safety centric improvements over snprintf() and
-> > spprintf() adds an additional layer of return value checking on top of
-> > that.
-> > 
-> > I'm not sure I understand the resistance to something which is needed
-> > and has clear benefits over what presently exists just for the sake of a
-> > few lines of code.  I'd be on board if it were change for the sake of
-> > change, but the added flexibility and ease of use is evident.
-> 
-> My view is the following:
-> 
-> First, I agree that snprintf() is dangerous and should be replaced.
+Please take a look at https://lwn.net/Articles/508222/.
 
-Thanks for your input Petr.
+Thanks,
 
-> I think that the resistance is because:
-> 
->   + ssprintf() has its danger as well. You wrote [1] that
->     "Under-running the buffer is no worse over-running". But it is
->     no better either.
-> 
->   + More APIs might create more confusion and increase the risk of
->     a misuse.
-> 
->   + spprintf() does not allow to detect truncated string. It means
->     that it does not provide any advantage over the existing scnprintf().
+Bart.
 
-spprintf() can detect a truncated string:
-
-  ret = spprintf(buf, 10, "1234567890");
-  if (ret == 10) {
-    /* The buffer truncated */
-  }
-
-And if the return value is used directly on a subsequent call:
-
-  spprintf(buf + ret, 10 - ret, "1234567890"); /* No underflow/overflow */
-
-Caveat: I just knocked this example up off the top of my head.  It's
-        completely untested and probably contains lots of errors.
-
-> So, if we could solve it another way then it might be better.
-
-I'm still quite fond of ssprintf() since it seems to solve the present
-issues and it's very light (compared with the alternative), but I think
-the preferred approach is to use seq_buf in cases where the caller needs
-to know if truncation occurred.
-
-> That said, people tend to look how an API is used instead of RTFM.
-> They copy good or bad patterns. There is even a term for this
-> but I can't remember it new.
-> 
-> So, if we introduce a new API and provide some good examples
-> then there is a good chance that people will continue using
-> it correctly. And it even might be checked more easily.
-> 
-> There is a similarity with alloc() APIs. Good (most) programmers
-> know that they need to check kalloc() return value. They might
-> also learn that they need to check also return value from
-> ssnprintf() of how we call it. Especially, when we provide
-> good examples from the very beginning. Also it might
-> be checked by Coccinelle.
-> 
-> 
-> Finally, if you eventually send a new version of a string API
-> then please add Linus into Cc. He has huge experience and very
-> good feeling for what is good and what is wrong. And he
-> is interested into exactly these types of APIs.
-> 
-> 
-> [1] https://lore.kernel.org/r/20240129092440.GA1708181@google.com
-> 
-> Best Regards,
-> Petr
-
--- 
-Lee Jones [李琼斯]
