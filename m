@@ -1,80 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788FB7B3C2;
-	Thu,  8 Feb 2024 17:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC8983CD5;
+	Thu,  8 Feb 2024 18:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414560; cv=none; b=uueJL2vDInCBX+J25cgyOKdRT5OZUlP8qvORbEkw/FhAGy8Qjyx8lVu0lGZFPEuXVAukWXpEq2D0ai3zfmzGkaFYDmCbGaU/4TyEYXIl29zkiFsYypgT15YugOZrFEwGTXMiLAU5NDZImEXM9m0aEl1QlvZGaSZRjtoclR9AgOk=
+	t=1707416039; cv=none; b=CryG6i/1DLp67AidZSjE+BnngQeby0c7J7viqXgFTW9zhHfuhKeDgTe6FIXsaexT+L+lxgdUIllqgVbbSTlNwx3TG9ami8wfrf689kcgD0QDFJ6NpIX8o2I6slEw7EBxASXA2QpVU3l2d6mvc8t3b+Cs9zyijKi3QHoo1SBxATA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707414560; c=relaxed/simple;
-	bh=cUlzWJZIGqNIKI5dwygE++YzgRhCS9mE4C/8W+hc7no=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IH6atazC00QCeb1UObIguDRDk25hWlcSCZVl9YiV81TnNfyg4SZGSHUopp7+sh+YO6BD01Y4+DDfo7dEU6bRYwwXKk2eBMROsdcCbXqkplY4s4G6YdDUgRoN1ApaUp/9jwibi8eOWlSIBABN17s1CvPeYYJUrK9YyTwcc2iVoJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLCHoYZu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707416039; c=relaxed/simple;
+	bh=ysgMn0ZRWUYT/Hge0FlA9uwr6TJWomFtNilVmXv2T/w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cZo5n1dPBeqOCmJ1V3uvXbM5Ps660KtcfT9IyNdphaP3kKI5RPS8tdsWu1KAGAdhBcWBCrHSac+OpZcn6tns/9fyg4HBHWtH+Xb9ZcI69EubyG/5kC37QKYc9JtpDtVt6nafJl7X8kL98sKGSaWGehsrDSC6VoUqImgeZuOXMqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=oWNaOguX; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLCHoYZu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A38C433F1;
-	Thu,  8 Feb 2024 17:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707414560;
-	bh=cUlzWJZIGqNIKI5dwygE++YzgRhCS9mE4C/8W+hc7no=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FLCHoYZuLz/ZxYoFOli5AfVt6L6NAnEQ4hUKl6INUpMysLLhpAre0tt/mOAHV/p/e
-	 j6brqfNgPy5HSnrk0e8sSOsYfNif7vS/nUdTja81IihfnJZ/eGK1QCbmzxuhgE3Ovc
-	 fNdONplRH+8ICQc2cTt7X2gJdqsPqfDG1ovdLRmeCd7ZiuqIdwotqdYMi+d6JXwTnE
-	 8A+geo+EgJku3OA9irYAZkhTmpOVLpZj3Rh4Oyk81L1VzIORM6qfwbqQGbbDjaxLkF
-	 zm6LdpP/7lA9vGtXEpayDPD0YP3NK+PT8ejR2bEMQ9Hc3y3Hv4dIIEaLBCPmy7YP+G
-	 zNkFr8ldPRSBA==
-Date: Thu, 8 Feb 2024 17:49:12 +0000
-From: Lee Jones <lee@kernel.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Adam Radford <aradford@gmail.com>,
-	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-	Andre Hedrick <andre@suse.com>, de Melo <acme@conectiva.com.br>,
-	drew@colorado.edu, Finn Thain <fthain@linux-m68k.org>,
-	Hannes Reinecke <hare@suse.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	Joel Jacobson <linux@3ware.com>,
-	John Garry <john.g.garry@oracle.com>, linux-scsi@vger.kernel.org,
-	Luben Tuikov <luben_tuikov@adaptec.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Michael Schmitz <schmitzmic@gmail.com>,
-	"PMC-Sierra, Inc" <aacraid@pmc-sierra.com>,
-	Richard Hirst <rhirst@linuxcare.com>, support@areca.com.tw,
-	Tnx to <Thomas_Roesch@m2.maus.de>
-Subject: Re: [PATCH 00/10] scsi: Replace {v}snprintf() variants with safer
- alternatives
-Message-ID: <20240208174912.GZ689448@google.com>
-References: <20240208084512.3803250-1-lee@kernel.org>
- <c9129b08-50fb-4371-aa05-6f6c7cd7acfa@acm.org>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="oWNaOguX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1707416015; x=1708020815; i=erick.archer@gmx.com;
+	bh=ysgMn0ZRWUYT/Hge0FlA9uwr6TJWomFtNilVmXv2T/w=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=oWNaOguXBS+OEugqNs5oiSX4ERBLtaNWdXGAmpmbvCulbsGo2Vly8ueemgf/tuFm
+	 ArLtR0+CyRhfuf17Io0mpxoI6Gr4sKh3eIrbd1hMx7+dUfudz4FLpk5mmdh1AHc3/
+	 J7HKmXQvJ0WII92bM9Braws0HJBi8mDF0phAC0goZiSGRa/4rNI/ffTt04oxDQp/g
+	 YWu9HbWSoYuKuAd6TIGS45tGwv17HOFB4tN/Kdac7/jFQUPXf76Q+5I3oC2F0gB8D
+	 jwb8RjPYxqKVcxZ69zzUZbjQlMk9OZSUf+MA5tGvl5lougAf5RRBodg8USxxWLYn+
+	 nncympLAZejWAvsTUg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1M7b6l-1rdLQw2iQn-0081qr; Thu, 08 Feb 2024 19:13:35 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] drm/i915: Add flex arrays to struct i915_syncmap
+Date: Thu,  8 Feb 2024 19:13:18 +0100
+Message-Id: <20240208181318.4259-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c9129b08-50fb-4371-aa05-6f6c7cd7acfa@acm.org>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pfHdlpNnJigTy8aCxrOPtJDMrJKf0ixBybkrQ5Vv5mXAzAOCOce
+ kE/56VgSJ24fEWyckAkZBiWw31er/4+LJmrLfiKbxBq0xz8Hfrzpel9d0ON3gwuUpxPyHbE
+ rdS3TQvdJZV2shpo3dlarUHJyNmnOMWYszl8ojPossp4pbrgBMG/j9ZA3TOBvkYMcVXSjOq
+ g75Q7z0uPqbDs2hAyGnmQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ppjXGd503ms=;sjS14y9jdFkBR6vOViIScjo85yN
+ KfTKdz2Fv9Nbq/W5Jqvf4xxfnQ1w2GCFByHAxdDUY2RP7202k2ZAWvlSM0urrJigc9CxXV/JG
+ fwSSv9Au+xgAUGBhSRXmXrGNBw8Mpxjcx2Cxu7ylwNVU5BryCPLJrVN1Kqr/X8LQciF4Z98SU
+ u88Pc8e3boUUlXoMAj7mDdqiUG7huRaG78K0QJj9+F/Dl+lblSDEpN22wsSlwHg1zrNgdWZy8
+ /ArZ65G8ejLxWZylem8Z3we7BgCej3GduFX1U+GV41Mr00zND7V7nXX6Ka3P8uf+XK+kdTYAe
+ 9zQ8hT9cZA+dkXBzt9xVlH+YIbD4AVS5yYU5IaIyW4l9aavPNbB5UbUYXi5qzST8PlXIO5z10
+ TPrJi6LF3FumJcdFR7qWBiXWqGCZj+pvj2C9rbh07K5CVN/isEh4GKm+EkV78vuPIi8vWx0fm
+ mTH59jiovQSkRvF4G0a/OVh8s0h5GrRQU0hAkfdEByT9MwE4ECYbRukwShgl0krjkngxES3X1
+ ph/FZa0bB7UifadOOCFDrdIr/Om8JNwTNjAPFHHCaQK5x/w8HukWSkvmHmqzC9pQ13wCV459x
+ lNuIoZ1rjwixYJlqDV6UUL5kIy6td/X87DNG9qUvbTyMEIU+2jzCrmHMcDfLDticHuHkHgd4j
+ hAHgq9zmV+EtfmhjBu9DZAuUCYzc58MiDGmXFhndtGgPfIFi3/ESTTct2RyTjOmOAUE3Xn0WX
+ HByY3J1zQo5Kiwqs36sScHeLnEIn8r1m9RBOFbbUyd6imT6SCGyF5Mj01+RhT6tW0DSWQXmoJ
+ Yo+WE7vkwJAAKwVZx6Sh83FtKOewKbNxiCF4OQ2vcaKJ0=
 
-On Thu, 08 Feb 2024, Bart Van Assche wrote:
+The "struct i915_syncmap" uses a dynamically sized set of trailing
+elements. It can use an "u32" array or a "struct i915_syncmap *"
+array.
 
-> On 2/8/24 00:44, Lee Jones wrote:
-> > Cc: Andre Hedrick <andre@suse.com>
-> 
-> Please take a look at https://lwn.net/Articles/508222/.
+So, use the preferred way in the kernel declaring flexible arrays [1].
+Because there are two possibilities for the trailing arrays, it is
+necessary to declare a union and use the DECLARE_FLEX_ARRAY macro.
 
-get_maintainer.pl pulled it from here:
+The comment can be removed as the union is now clear enough.
 
-https://github.com/torvalds/linux/blob/master/drivers/scsi/3w-xxxx.c#L11
+Also, avoid the open-coded arithmetic in the memory allocator functions
+[2] using the "struct_size" macro.
 
-I like to involve the people who take the time to list themselves as
-authors.  I guess these are likely to go out of date at one point or
-another, especially in such a long standing subsystem such as SCSI.  Not
-as big of an issue in NFC!
+Moreover, refactor the "__sync_seqno" and "__sync_child" functions due
+to now it is possible to use the union members added to the structure.
+This way, it is also possible to avoid the open-coded arithmetic in
+pointers.
 
--- 
-Lee Jones [李琼斯]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-le=
+ngth-and-one-element-arrays [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [2]
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ drivers/gpu/drm/i915/i915_syncmap.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_syncmap.c b/drivers/gpu/drm/i915/i9=
+15_syncmap.c
+index 60404dbb2e9f..df6437c37373 100644
+=2D-- a/drivers/gpu/drm/i915/i915_syncmap.c
++++ b/drivers/gpu/drm/i915/i915_syncmap.c
+@@ -75,13 +75,10 @@ struct i915_syncmap {
+ 	unsigned int height;
+ 	unsigned int bitmap;
+ 	struct i915_syncmap *parent;
+-	/*
+-	 * Following this header is an array of either seqno or child pointers:
+-	 * union {
+-	 *	u32 seqno[KSYNCMAP];
+-	 *	struct i915_syncmap *child[KSYNCMAP];
+-	 * };
+-	 */
++	union {
++		DECLARE_FLEX_ARRAY(u32, seqno);
++		DECLARE_FLEX_ARRAY(struct i915_syncmap *, child);
++	};
+ };
+
+ /**
+@@ -99,13 +96,13 @@ void i915_syncmap_init(struct i915_syncmap **root)
+ static inline u32 *__sync_seqno(struct i915_syncmap *p)
+ {
+ 	GEM_BUG_ON(p->height);
+-	return (u32 *)(p + 1);
++	return p->seqno;
+ }
+
+ static inline struct i915_syncmap **__sync_child(struct i915_syncmap *p)
+ {
+ 	GEM_BUG_ON(!p->height);
+-	return (struct i915_syncmap **)(p + 1);
++	return p->child;
+ }
+
+ static inline unsigned int
+@@ -200,7 +197,7 @@ __sync_alloc_leaf(struct i915_syncmap *parent, u64 id)
+ {
+ 	struct i915_syncmap *p;
+
+-	p =3D kmalloc(sizeof(*p) + KSYNCMAP * sizeof(u32), GFP_KERNEL);
++	p =3D kmalloc(struct_size(p, seqno, KSYNCMAP), GFP_KERNEL);
+ 	if (unlikely(!p))
+ 		return NULL;
+
+@@ -282,7 +279,7 @@ static noinline int __sync_set(struct i915_syncmap **r=
+oot, u64 id, u32 seqno)
+ 			unsigned int above;
+
+ 			/* Insert a join above the current layer */
+-			next =3D kzalloc(sizeof(*next) + KSYNCMAP * sizeof(next),
++			next =3D kzalloc(struct_size(next, child, KSYNCMAP),
+ 				       GFP_KERNEL);
+ 			if (unlikely(!next))
+ 				return -ENOMEM;
+=2D-
+2.25.1
+
