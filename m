@@ -1,28 +1,28 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5127B3FC
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Feb 2024 18:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94985A787
+	for <linux-hardening@vger.kernel.org>; Fri,  9 Feb 2024 18:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707503913; cv=none; b=txkYE6JOerRkuVVCbziwFJMz2Q2NsKANy3y8eySVyO8prZdlnovMDKLbgRbqfHfa2FUhzyvZsbMwSBXtXb4crSDHO0VGJnh+rBCZkDQwunUgtnd8yJcyUfc6MUN9+G7/Qhjukxn0cZqqJVCtlstLHWI9gNFv3fVPvVtIMS2qmCg=
+	t=1707504047; cv=none; b=sVBFngMe1EYoeY+Vxdj7WKKUGsYX7DX7/C9GqFjvcRQi8xsCtEoo/e5wuJRwqgRkObg8aqF/jkkFBd1gFTuxaugu8o/SGzLcbKAHBkWGENdTFlWXvQB+9NtygQj57RmulVsgzM0uaF2A3oyIa87vyF+Rk3/tt+c2uxwK+0+l/1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707503913; c=relaxed/simple;
-	bh=c+rwiItIstRSnL0bCsBeIfiiFeNHQerOKUZIMk9xT0E=;
+	s=arc-20240116; t=1707504047; c=relaxed/simple;
+	bh=cGmHWSGLHz17B8btCc2AE/o8aT7d8KP8VqeDD83SkMc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mrg56+RlNacntTBVTUdamssxdYLTH5TrlkHExQ++lF8MGgSKtNMkTDdCJZ7dWQqvdDmbT9j6j1hBvGOdnLH8vB3jJ6SLDaf+duspfETuDfWsDVrQ2lzH4YG8jYoZfXGGs9gZXw5AuVo1qgzKwNG4OFAA5PHQ7KpJ6MLcetPxkfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=G5aYQz3d; arc=none smtp.client-ip=35.89.44.37
+	 In-Reply-To:Content-Type; b=acsNpb5/cKC5ah4aq7Qt2h0DYq/P7AmL/wdBAWLo7/d3mnVNBD7kn73Cjza5YiwOOg1Su93yj8r9hFIWpbLK7MwyycTm7syd8ovKI11ixg9LjLDVPAlObgoyB38uvRUBHu8bHbsn+SpUwCAGPXvAGypjY2tKuwgfT/PWSisDYok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZzbK85aj; arc=none smtp.client-ip=35.89.44.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="G5aYQz3d"
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZzbK85aj"
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
 	by cmsmtp with ESMTPS
-	id YUuGrgfhVrh9zYVlZr4DH6; Fri, 09 Feb 2024 18:38:25 +0000
+	id YV9kr8om0CF6GYVnjrG9aY; Fri, 09 Feb 2024 18:40:39 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id YVlYr7bpdjeQdYVlYrbT7P; Fri, 09 Feb 2024 18:38:24 +0000
-X-Authority-Analysis: v=2.4 cv=ZYe+NdVA c=1 sm=1 tr=0 ts=65c67120
+	id YVnir0pUbDBJLYVnjrF7jQ; Fri, 09 Feb 2024 18:40:39 +0000
+X-Authority-Analysis: v=2.4 cv=BcB70at2 c=1 sm=1 tr=0 ts=65c671a7
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
  a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
  a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=2-LqU1-JSYPvSRI2HFEA:9 a=QEXdDO2ut3YA:10
@@ -34,20 +34,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ubhs5TTJlmjrNVcQ8/d8FvdbYjky0tqln9Hz+0mS83c=; b=G5aYQz3dT7H6nvvIE7oHOiEsj5
-	/NWS2+D1C2tHb+hSTOo1Up1YHqlQE4Wt/XzChjeBGvGZdZLXlBrgqYmG2uTmAs8EVX67FCbAUJCST
-	FpCEHoHQg1GipLjC3EmProNpo09ShJDCkV8o7ZMbhsSNkE+hJYhIoSHV62yhp+MNWS7n4SchyWzqR
-	uuYSfGJkyFEGuJPErIBj8Ksq/lyUqys/fHWcmX+fsexcgLVJngIml623AeNrBtGSRGDYuzzrdtNwA
-	5EEAFbrXH9RUvgo4R+FjdZM/W3qDKb22chTmFN3vB++ljI5GxxPK6d5nUcMSSoxn7sWfsanU4qTib
-	tTlZhVJQ==;
-Received: from [201.172.172.225] (port=33262 helo=[192.168.15.10])
+	bh=T/Vt6J+2HyI4fL0ju6FlCYXfypaAB0iP+HCsMPfsayQ=; b=ZzbK85aj0S9o6GgRYrUw4Dygwg
+	02nvp2ZsW3ANqCKSmh+lr/UBL0ImJqQEd8FCVbZJPbhX0qMw44TdOEB5nhRLXtjD9fTegmHSHhY0Y
+	nXOvYHO/u/MB21ma7UjscXZTBK4HirCLr01yDi1SjjCcm6k8XJ+MdGhHnRIGbsDCz8TBYvoSTOE25
+	WQWIyAbleG3cGvc/3IADf7U+hSxGJnRVtBiWyaBn84p6pq5CGdzV87PUWcFktiY8n2kktpL6rFk7y
+	uyP4naYwuUwjy+0Jra1YqLOL72KkoOhPmODXpzY8G1ok3iyuONFYLTT7ZT8H+TjMA+UyZhloZkeeu
+	5g67J31g==;
+Received: from [201.172.172.225] (port=40870 helo=[192.168.15.10])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1rYVlX-004CdG-2a;
-	Fri, 09 Feb 2024 12:38:23 -0600
-Message-ID: <3ef9dfc9-3d0f-434d-9836-066265975728@embeddedor.com>
-Date: Fri, 9 Feb 2024 12:38:18 -0600
+	id 1rYVni-004Ebp-0u;
+	Fri, 09 Feb 2024 12:40:38 -0600
+Message-ID: <b7cd5217-e7dc-4b57-aab2-bef1b78dca7d@embeddedor.com>
+Date: Fri, 9 Feb 2024 12:40:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,19 +55,20 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] irqchip/bcm-6345-l1: Prefer struct_size over open coded
- arithmetic
+Subject: Re: [PATCH] irqchip/irq-bcm7038-l1: Prefer struct_size over open
+ coded arithmetic
+Content-Language: en-US
 To: Erick Archer <erick.archer@gmx.com>,
  Florian Fainelli <florian.fainelli@broadcom.com>,
  Thomas Gleixner <tglx@linutronix.de>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
  Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, linux-hardening@vger.kernel.org
-References: <20240209181600.9472-1-erick.archer@gmx.com>
-Content-Language: en-US
+ <bcm-kernel-feedback-list@broadcom.com>,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20240209183128.10273-1-erick.archer@gmx.com>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240209181600.9472-1-erick.archer@gmx.com>
+In-Reply-To: <20240209183128.10273-1-erick.archer@gmx.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -78,31 +79,31 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.172.172.225
 X-Source-L: No
-X-Exim-ID: 1rYVlX-004CdG-2a
+X-Exim-ID: 1rYVni-004Ebp-0u
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:33262
+X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:40870
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 9
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCMC2u8XryeVrn/1UrWnqxwfR0suste6pTLd0wr8LzbfhMCm9xNyfD11P72vk6dg8iYKG+BPn7ya/cR/6UYCY22U5my0MTtVChE68gjAI7q6F3leKL72
- l5WNlaE86LwULC+6pGYEcdsefOTIOTiyrO/r76QXaoSzrsWqC+a+CWv9W9TRITZ1QZp8B4C5IASpT/OmqU7SHLDuB4Savjr6s7I4Wub8RJ0NOguDD84BXtni
+X-CMAE-Envelope: MS4xfClg4TJBDUWkwfjr238w6I1lSYDpLFaeOmzsCcLQ3ysNA4BFSQgDyegsXu0u8jwfQ9OLWlmqxPODsnKGRbRKATOtwYUQy9BErhx2hr7SmZ5Ntwz7kdHJ
+ 1XeLzK8Why0yUkiXGTUbmUg5OaQUt1808rbKziis0y1N5flN+BySUSdTG4NWP1pVa7jYzef7ECqakWSwYtxXJs0aIOlCvdEgWpRjGOfgkDYQQpC7fJyfPoOP
 
 
 
-On 2/9/24 12:16, Erick Archer wrote:
+On 2/9/24 12:31, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1].
 > 
-> As the cpu variable is a pointer to "struct bcm6345_l1_cpu" and this
+> As the cpu variable is a pointer to "struct bcm7038_l1_cpu" and this
 > structure ends in a flexible array:
 > 
-> struct bcm6345_l1_cpu {
-> 	[...]
-> 	u32	enable_cache[];
+> struct bcm7038_l1_cpu {
+> 	void __iomem	*map_base;
+> 	u32		mask_cache[];
 > };
 > 
 > the preferred way in the kernel is to use the struct_size() helper to
@@ -113,6 +114,7 @@ On 2/9/24 12:16, Erick Archer wrote:
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
 > Link: https://github.com/KSPP/linux/issues/162 [2]
+> 
 > Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
 LGTM:
@@ -124,23 +126,22 @@ Thanks
 Gustavo
 
 > ---
->   drivers/irqchip/irq-bcm6345-l1.c | 2 +-
+>   drivers/irqchip/irq-bcm7038-l1.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/irqchip/irq-bcm6345-l1.c b/drivers/irqchip/irq-bcm6345-l1.c
-> index 9745a119d0e6..eb02d203c963 100644
-> --- a/drivers/irqchip/irq-bcm6345-l1.c
-> +++ b/drivers/irqchip/irq-bcm6345-l1.c
-> @@ -242,7 +242,7 @@ static int __init bcm6345_l1_init_one(struct device_node *dn,
->   	else if (intc->n_words != n_words)
+> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+> index 24ca1d656adc..36e71af054e9 100644
+> --- a/drivers/irqchip/irq-bcm7038-l1.c
+> +++ b/drivers/irqchip/irq-bcm7038-l1.c
+> @@ -249,7 +249,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
 >   		return -EINVAL;
+>   	}
 > 
 > -	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
-> +	cpu = intc->cpus[idx] = kzalloc(struct_size(cpu, enable_cache, n_words),
+> +	cpu = intc->cpus[idx] = kzalloc(struct_size(cpu, mask_cache, n_words),
 >   					GFP_KERNEL);
 >   	if (!cpu)
 >   		return -ENOMEM;
 > --
 > 2.25.1
-> 
 > 
