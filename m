@@ -1,147 +1,220 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94985A787
-	for <linux-hardening@vger.kernel.org>; Fri,  9 Feb 2024 18:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B91B38399;
+	Fri,  9 Feb 2024 22:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707504047; cv=none; b=sVBFngMe1EYoeY+Vxdj7WKKUGsYX7DX7/C9GqFjvcRQi8xsCtEoo/e5wuJRwqgRkObg8aqF/jkkFBd1gFTuxaugu8o/SGzLcbKAHBkWGENdTFlWXvQB+9NtygQj57RmulVsgzM0uaF2A3oyIa87vyF+Rk3/tt+c2uxwK+0+l/1w=
+	t=1707517147; cv=none; b=QJNLa5BxZ7UYXHrkqhN4AXDbyRG+qayVBdBGtVRvn36JYkhvJ2/+PXXejWB9G1IWdQIRDBeWR/uA99ffQKMbWKHsW0U4HhCn8EtEPslNA7FxaU9Jol4Ahv7FNPZmZflTuqLdPcGkMk+iDsiqObjSG7GO4VUq8OVxSCSZX244+qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707504047; c=relaxed/simple;
-	bh=cGmHWSGLHz17B8btCc2AE/o8aT7d8KP8VqeDD83SkMc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=acsNpb5/cKC5ah4aq7Qt2h0DYq/P7AmL/wdBAWLo7/d3mnVNBD7kn73Cjza5YiwOOg1Su93yj8r9hFIWpbLK7MwyycTm7syd8ovKI11ixg9LjLDVPAlObgoyB38uvRUBHu8bHbsn+SpUwCAGPXvAGypjY2tKuwgfT/PWSisDYok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZzbK85aj; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZzbK85aj"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id YV9kr8om0CF6GYVnjrG9aY; Fri, 09 Feb 2024 18:40:39 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id YVnir0pUbDBJLYVnjrF7jQ; Fri, 09 Feb 2024 18:40:39 +0000
-X-Authority-Analysis: v=2.4 cv=BcB70at2 c=1 sm=1 tr=0 ts=65c671a7
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=2-LqU1-JSYPvSRI2HFEA:9 a=QEXdDO2ut3YA:10
- a=1F1461vogZIA:10 a=5kKzt1m56AEA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=T/Vt6J+2HyI4fL0ju6FlCYXfypaAB0iP+HCsMPfsayQ=; b=ZzbK85aj0S9o6GgRYrUw4Dygwg
-	02nvp2ZsW3ANqCKSmh+lr/UBL0ImJqQEd8FCVbZJPbhX0qMw44TdOEB5nhRLXtjD9fTegmHSHhY0Y
-	nXOvYHO/u/MB21ma7UjscXZTBK4HirCLr01yDi1SjjCcm6k8XJ+MdGhHnRIGbsDCz8TBYvoSTOE25
-	WQWIyAbleG3cGvc/3IADf7U+hSxGJnRVtBiWyaBn84p6pq5CGdzV87PUWcFktiY8n2kktpL6rFk7y
-	uyP4naYwuUwjy+0Jra1YqLOL72KkoOhPmODXpzY8G1ok3iyuONFYLTT7ZT8H+TjMA+UyZhloZkeeu
-	5g67J31g==;
-Received: from [201.172.172.225] (port=40870 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rYVni-004Ebp-0u;
-	Fri, 09 Feb 2024 12:40:38 -0600
-Message-ID: <b7cd5217-e7dc-4b57-aab2-bef1b78dca7d@embeddedor.com>
-Date: Fri, 9 Feb 2024 12:40:36 -0600
+	s=arc-20240116; t=1707517147; c=relaxed/simple;
+	bh=7xft6VdjJIn9OrQvD8ZcJDWYsG2EyFJWTBnzONoipxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCO0D1dx9NLQTmg0uj+pogz5w6KrhiJNwZdzbMMnyZ1enhegPFa2h7o1+Nn36eGJElSCbcu+LfDFoWtRmOg108H6Yb6snfk70O/21XSxnbNLzkk2YG0pDBd8XFhXOotZygX0rGg+EfaWovoTZe8pailav8rUguiyai9ZKQkrMXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id B1B1E72C8F5;
+	Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
+Received: from pony.office.basealt.ru (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id 9F4FE36D0246;
+	Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
+Received: by pony.office.basealt.ru (Postfix, from userid 500)
+	id 75D12360AE77; Sat, 10 Feb 2024 01:13:06 +0300 (MSK)
+Date: Sat, 10 Feb 2024 01:13:06 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>, 
+	Ronnie Sahlberg <lsahlber@redhat.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cifs: Convert struct fealist away from 1-element array
+Message-ID: <qjyfz2xftsbch6aozgplxyjfyqnuhn7j44udrucls4pqa5ey35@adxvvrdtagqf>
+References: <20230215000832.never.591-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] irqchip/irq-bcm7038-l1: Prefer struct_size over open
- coded arithmetic
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <20240209183128.10273-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240209183128.10273-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rYVni-004Ebp-0u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:40870
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfClg4TJBDUWkwfjr238w6I1lSYDpLFaeOmzsCcLQ3ysNA4BFSQgDyegsXu0u8jwfQ9OLWlmqxPODsnKGRbRKATOtwYUQy9BErhx2hr7SmZ5Ntwz7kdHJ
- 1XeLzK8Why0yUkiXGTUbmUg5OaQUt1808rbKziis0y1N5flN+BySUSdTG4NWP1pVa7jYzef7ECqakWSwYtxXJs0aIOlCvdEgWpRjGOfgkDYQQpC7fJyfPoOP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230215000832.never.591-kees@kernel.org>
 
+Kees,
 
-
-On 2/9/24 12:31, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
+On Tue, Feb 14, 2023 at 04:08:39PM -0800, Kees Cook wrote:
+> The kernel is globally removing the ambiguous 0-length and 1-element
+> arrays in favor of flexible arrays, so that we can gain both compile-time
+> and run-time array bounds checking[1].
 > 
-> As the cpu variable is a pointer to "struct bcm7038_l1_cpu" and this
-> structure ends in a flexible array:
+> While struct fealist is defined as a "fake" flexible array (via a
+> 1-element array), it is only used for examination of the first array
+> element. Walking the list is performed separately, so there is no reason
+> to treat the "list" member of struct fealist as anything other than a
+> single entry. Adjust the struct and code to match.
 > 
-> struct bcm7038_l1_cpu {
-> 	void __iomem	*map_base;
-> 	u32		mask_cache[];
-> };
+> Additionally, struct fea uses the "name" member either as a dynamic
+> string, or is manually calculated from the start of the struct. Redefine
+> the member as a flexible array.
 > 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the argument "size + count * size" in the
-> kzalloc() function.
+> No machine code output differences are produced after these changes.
 > 
-> This way, the code is more readable and more safer.
+> [1] For lots of details, see both:
+>     https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+>     https://people.kernel.org/kees/bounded-flexible-arrays-in-c
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162 [2]
-> 
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-
-LGTM:
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
--- 
-Gustavo
-
+> Cc: Steve French <sfrench@samba.org>
+> Cc: Paulo Alcantara <pc@cjr.nz>
+> Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+> Cc: Shyam Prasad N <sprasad@microsoft.com>
+> Cc: Tom Talpey <tom@talpey.com>
+> Cc: linux-cifs@vger.kernel.org
+> Cc: samba-technical@lists.samba.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   drivers/irqchip/irq-bcm7038-l1.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/cifs/cifspdu.h |  4 ++--
+>  fs/cifs/cifssmb.c | 16 ++++++++--------
+>  2 files changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-> index 24ca1d656adc..36e71af054e9 100644
-> --- a/drivers/irqchip/irq-bcm7038-l1.c
-> +++ b/drivers/irqchip/irq-bcm7038-l1.c
-> @@ -249,7 +249,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->   		return -EINVAL;
->   	}
-> 
-> -	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
-> +	cpu = intc->cpus[idx] = kzalloc(struct_size(cpu, mask_cache, n_words),
->   					GFP_KERNEL);
->   	if (!cpu)
->   		return -ENOMEM;
-> --
-> 2.25.1
+> diff --git a/fs/cifs/cifspdu.h b/fs/cifs/cifspdu.h
+> index 623caece2b10..add73be4902c 100644
+> --- a/fs/cifs/cifspdu.h
+> +++ b/fs/cifs/cifspdu.h
+> @@ -2583,7 +2583,7 @@ struct fea {
+>  	unsigned char EA_flags;
+>  	__u8 name_len;
+>  	__le16 value_len;
+> -	char name[1];
+> +	char name[];
+>  	/* optionally followed by value */
+>  } __attribute__((packed));
+>  /* flags for _FEA.fEA */
+> @@ -2591,7 +2591,7 @@ struct fea {
+>  
+>  struct fealist {
+>  	__le32 list_len;
+> -	struct fea list[1];
+> +	struct fea list;
+>  } __attribute__((packed));
+>  
+>  /* used to hold an arbitrary blob of data */
+> diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
+> index 60dd4e37030a..7c587157d030 100644
+> --- a/fs/cifs/cifssmb.c
+> +++ b/fs/cifs/cifssmb.c
+> @@ -5787,7 +5787,7 @@ CIFSSMBQAllEAs(const unsigned int xid, struct cifs_tcon *tcon,
+>  
+>  	/* account for ea list len */
+>  	list_len -= 4;
+> -	temp_fea = ea_response_data->list;
+> +	temp_fea = &ea_response_data->list;
+>  	temp_ptr = (char *)temp_fea;
+>  	while (list_len > 0) {
+>  		unsigned int name_len;
+> @@ -5902,7 +5902,7 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+>  	else
+>  		name_len = strnlen(ea_name, 255);
+>  
+> -	count = sizeof(*parm_data) + ea_value_len + name_len;
+> +	count = sizeof(*parm_data) + 1 + ea_value_len + name_len;
+>  	pSMB->MaxParameterCount = cpu_to_le16(2);
+>  	/* BB find max SMB PDU from sess */
+>  	pSMB->MaxDataCount = cpu_to_le16(1000);
+> @@ -5926,14 +5926,14 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+>  	byte_count = 3 /* pad */  + params + count;
+>  	pSMB->DataCount = cpu_to_le16(count);
+>  	parm_data->list_len = cpu_to_le32(count);
+> -	parm_data->list[0].EA_flags = 0;
+> +	parm_data->list.EA_flags = 0;
+>  	/* we checked above that name len is less than 255 */
+> -	parm_data->list[0].name_len = (__u8)name_len;
+> +	parm_data->list.name_len = (__u8)name_len;
+>  	/* EA names are always ASCII */
+>  	if (ea_name)
+> -		strncpy(parm_data->list[0].name, ea_name, name_len);
+> -	parm_data->list[0].name[name_len] = 0;
+> -	parm_data->list[0].value_len = cpu_to_le16(ea_value_len);
+> +		strncpy(parm_data->list.name, ea_name, name_len);
+
+Could non-applying this patch cause false-positive fortify_panic?
+We got a bug report from user of 6.1.73:
+
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: detected buffer overflow in strncpy
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: ------------[ cut here ]------------
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: kernel BUG at lib/string_helpers.c:1027!
+   ...
+   Jan 24 15:15:20 kalt2test.dpt.local kernel: Call Trace:
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  <TASK>
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __die_body.cold+0x1a/0x1f
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? die+0x2b/0x50
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? do_trap+0xcf/0x120
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? do_error_trap+0x83/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? exc_invalid_op+0x4e/0x70
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? asm_exc_invalid_op+0x16/0x20
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? fortify_panic+0xf/0x11
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  CIFSSMBSetEA.cold+0xc/0x18 [cifs]
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  cifs_xattr_set+0x596/0x690 [cifs]
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? evm_protected_xattr_common+0x41/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __vfs_removexattr+0x52/0x70
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __vfs_removexattr_locked+0xbc/0x150
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  vfs_removexattr+0x56/0x100
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  removexattr+0x58/0x90
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? ct_kernel_exit.constprop.0+0x6b/0x80
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_enter+0x5a/0xd0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? syscall_exit_to_user_mode+0x31/0x50
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? int80_emulation+0xb9/0x110
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? ct_kernel_exit.constprop.0+0x6b/0x80
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_enter+0x5a/0xd0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __fget_light.part.0+0x83/0xd0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  __ia32_sys_fremovexattr+0x80/0xa0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  int80_emulation+0xa9/0x110
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? get_vtime_delta+0xf/0xb0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? vtime_user_exit+0x1c/0x70
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? __ct_user_exit+0x6c/0xc0
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  ? int80_emulation+0x1b/0x110
+   Jan 24 15:15:20 kalt2test.dpt.local kernel:  asm_int80_emulation+0x16/0x20
+
+I don't find this patch appled to stable/linux-6.1.y.
+
+Thanks,
+
+ps. (Unfortunately `CIFSSMBSetEA+0xc` address is not resolvable to the
+actual line inside of CIFSSMBSetEA pointing just to the head of it.
+
+   (gdb) l *CIFSSMBSetEA+0xc
+   0x6de3c is in CIFSSMBSetEA (fs/smb/client/cifssmb.c:5776).
+   5771    int
+   5772    CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+   5773                 const char *fileName, const char *ea_name, const void *ea_value,
+   5774                 const __u16 ea_value_len, const struct nls_table *nls_codepage,
+   5775                 struct cifs_sb_info *cifs_sb)
+   5776    {
+   5777            struct smb_com_transaction2_spi_req *pSMB = NULL;
+   5778            struct smb_com_transaction2_spi_rsp *pSMBr = NULL;
+   5779            struct fealist *parm_data;
+   5780            int name_len;
+
+But there is only one strncpy there.
+
+> +	parm_data->list.name[name_len] = '\0';
+> +	parm_data->list.value_len = cpu_to_le16(ea_value_len);
+>  	/* caller ensures that ea_value_len is less than 64K but
+>  	we need to ensure that it fits within the smb */
+>  
+> @@ -5941,7 +5941,7 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+>  	     negotiated SMB buffer size BB */
+>  	/* if (ea_value_len > buffer_size - 512 (enough for header)) */
+>  	if (ea_value_len)
+> -		memcpy(parm_data->list[0].name+name_len+1,
+> +		memcpy(parm_data->list.name + name_len + 1,
+>  		       ea_value, ea_value_len);
+>  
+>  	pSMB->TotalDataCount = pSMB->DataCount;
+> -- 
+> 2.34.1
 > 
