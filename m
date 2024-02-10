@@ -1,91 +1,105 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DF6364B3;
-	Sat, 10 Feb 2024 09:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8B43D96F
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 12:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707557522; cv=none; b=dnmmxnaDPSh6+mwajhb1sd1Ez55xoJNOuDnMAzXehPUCpXG6hc7uumeUmdnqJ9eT1K7Up/7brjVh5R8TCxCysyKaIpMlrL6elDUupS0cdYuY2n5dwcxrUq5XxzSDYVD53XdZnDkos0qb0mV9v5+6bNyBXs56Oas/RZBsiBoFNFk=
+	t=1707568508; cv=none; b=bfKbEgweH0FuQ8FQ6zGp/0FiFi/Go9IcB1/GoCyZPHhD1Cr7nmMBc7uOKAWkAyrVghBbwwrX7wEp3N1WDhMlkLbntykuJWByB4BjUVwWolSsW1ncRWYelfJOoGeD5r6AaooV0XOKD3nnoU8n+1NuHCBjWvPOvIh9VdkX6W2/bnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707557522; c=relaxed/simple;
-	bh=TP9W4qCq8hgSVWD+ohqGLyVeD4l5sBB7DBV8tYBFOBA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=aKoQSpcyjdMwIZTu9JS4dnDDSG2zpgu19iB1YYNtj8mFgDBu1w/HrN1nNQ4jYM7VES7j+6F3dN2SqY81ohd803A5NOB6ftYOt7T5fTrnwKDaWri9gtpuZAJRCZoJsTC6NVThGCcUv0EOLcCHxKQo80nZqgWRHs3hGK9LtPZQmMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k7mAoGW9; arc=none smtp.client-ip=66.111.4.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k7mAoGW9"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id B1F445C0077;
-	Sat, 10 Feb 2024 04:31:58 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sat, 10 Feb 2024 04:31:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707557518; x=1707643918; bh=we3+CNIp/sCmExVts2CpdGbhGFMZ
-	ZEqrf8Zzk61UqYw=; b=k7mAoGW9Pzm6fLDCrX/8udswlMtlLI8f16Z0dsWLV1aw
-	6UEH6kq3mLRz/9T93kjud2ONbUAAQ6U1fsd0PM00d+YuVfF6IiN+RHi/yS7MfGnQ
-	d1iT2kRdK7jnvjXNckVx4Wgs/c0VTo2pLRYnNlupWwtm1ZJaoPK3kqquTaqn88Di
-	CcgdwidBw7lZ9uhAyRHlw5gvX2HtZcj0hGBTIoSew8zMEY7nD/3zJ6XJfROQ9Yiv
-	0tMEU3QRnqAf699kzuAZryF3fhBSafwrzqH9ifbjtPUr15zZiA1Jsg2xTv4soSoR
-	IQ7w45GG9gkyY1q5PlhpQ+xj5ihstfFfmUGCi/7SSw==
-X-ME-Sender: <xms:jULHZQyfUifbzIt4LZvH6rY4CqmoZsdGDyzHgfKw4dEkpLKqtNyRcQ>
-    <xme:jULHZUScGEiDsXxsJyx8I38K8F31t32CBfMDWgiwGvYI8YN3HPxMHY0t5IfhcAnHw
-    566Ddfd__Df7DCnXPs>
-X-ME-Received: <xmr:jULHZSX578yw010Lg8RVAMN9gayfDBtMKo16DyqyvdrXuWlhZfgSeJQaARScsSwu1ND0FD2bN3SHU4PDwWHp-3n1R9cgjzJX6pA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtdekgddtgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefujgfkfhggtgesthdtredttddtvdenucfhrhhomhephfhinhhnucfv
-    hhgrihhnuceofhhthhgrihhnsehlihhnuhigqdhmieekkhdrohhrgheqnecuggftrfgrth
-    htvghrnhepleeuheelheekgfeuvedtveetjeekhfffkeeffffftdfgjeevkeegfedvueeh
-    ueelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepfh
-    hthhgrihhnsehlihhnuhigqdhmieekkhdrohhrgh
-X-ME-Proxy: <xmx:jULHZei-A-VewmnbNE_NrtBkSvzwRkLiOl-2pMjazrDO2EnrQE-l-w>
-    <xmx:jULHZSB9QEoMCcHSE1PvprqZvDi4_lu11w368Kb5WxyFSWH64OeUYA>
-    <xmx:jULHZfKiRijmbauWA9RIS5CnlPYW1KA487OfpSXGhMjx0CB34JBffg>
-    <xmx:jkLHZe10U-Wb1gXUvZUpvxpOAuzcEaJVaiQiaurh3Yjsi-dO3aRuCA>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 10 Feb 2024 04:31:55 -0500 (EST)
-Date: Sat, 10 Feb 2024 20:32:18 +1100 (AEDT)
-From: Finn Thain <fthain@linux-m68k.org>
-To: Lee Jones <lee@kernel.org>
-cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
-    linux-hardening@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>, 
-    "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-    "Martin K. Petersen" <martin.petersen@oracle.com>, drew@colorado.edu, 
-    Thomas_Roesch@m2.maus.de, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 03/10] scsi: NCR5380: Replace snprintf() with the safer
- scnprintf() variant
-In-Reply-To: <20240208102939.GF689448@google.com>
-Message-ID: <0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org>
-References: <20240208084512.3803250-1-lee@kernel.org> <20240208084512.3803250-4-lee@kernel.org> <CAMuHMdX72mpGgb3Wp0WRX3V78nn+bWUqiYz25CjeMNPpWaPmxg@mail.gmail.com> <20240208102939.GF689448@google.com>
+	s=arc-20240116; t=1707568508; c=relaxed/simple;
+	bh=kV1dH9N0wl6dbAp2XFipJ67xCC7y7WlCPuruPIHVk6U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=Y4gvKk/IWxkX4SOEl0rp6x9r6F2SCXmzMHgsII6uapD8iamvRpa6A/RexaRv1RT9cx5cHN6pu54/ucg01wHec2aZHiI84uhrHiRJQiTRguky3aE81Xt82ZEFrsQPMSz05AFPb8N+WrAhVtT0RoychivGL51YzzjIVfqkhkNJkqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-285-B9mkscCCOyeXmvwkut24cQ-1; Sat, 10 Feb 2024 12:35:02 +0000
+X-MC-Unique: B9mkscCCOyeXmvwkut24cQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 10 Feb
+ 2024 12:34:41 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sat, 10 Feb 2024 12:34:41 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Kees Cook' <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+CC: Andy Shevchenko <andy@kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, Richard Weinberger <richard@nod.at>,
+	"Anton Ivanov" <anton.ivanov@cambridgegreys.com>, Johannes Berg
+	<johannes@sipsolutions.net>, Willem de Bruijn
+	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, "kernel
+ test robot" <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>, "Azeem
+ Shaikh" <azeemshaikh38@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-um@lists.infradead.org"
+	<linux-um@lists.infradead.org>
+Subject: RE: [PATCH v3 3/4] string: Allow 2-argument strscpy_pad()
+Thread-Topic: [PATCH v3 3/4] string: Allow 2-argument strscpy_pad()
+Thread-Index: AQHaWaavaD/gLIDMg0aBzFOj9pBKgrEDhhFw
+Date: Sat, 10 Feb 2024 12:34:41 +0000
+Message-ID: <d6710f82acfd4957a296601c420fba76@AcuMS.aculab.com>
+References: <20240206142027.make.107-kees@kernel.org>
+ <20240206142221.2208763-3-keescook@chromium.org>
+ <20240207005151.lyrtgqd4wekolwe7@google.com> <202402070115.2C86687F@keescook>
+In-Reply-To: <202402070115.2C86687F@keescook>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+From: Kees Cook
+> Sent: 07 February 2024 09:19
+>=20
+> On Wed, Feb 07, 2024 at 12:51:51AM +0000, Justin Stitt wrote:
+> > Hi,
+> >
+> > On Tue, Feb 06, 2024 at 06:22:18AM -0800, Kees Cook wrote:
+> > > Similar to strscpy(), update strscpy_pad()'s 3rd argument to be
+> > > optional when the destination is a compile-time known size array.
+> >
+> > This patch is diff'd against Patch 1/4 in this series, right? I wonder
+> > why you split them up. If I hadn't literally just read that patch I
+> > would be mildly confused.
+> >
+> > I suppose one reason may be that 1/4 is a standalone change with a high
+> > percentage chance of landing whilst this overloading magic may not land
+> > as easily?
+>=20
+> I viewed it as a distinct logical change. I could certainly combine
+> them, but I think it's easier to review the conversion from function to
+> macro without needing to consider anything else. No behavioral changes
+> are expected, etc.
 
-On Thu, 8 Feb 2024, Lee Jones wrote:
+I wonder about the code-bloat from inlining strscpy_pad()?
+Especially given the code that gcc is likely to generate
+for string ops.
 
-> On Thu, 08 Feb 2024, Geert Uytterhoeven wrote:
-> 
-> > 
-> > Confused... The return value is not used at all?
-> 
-> Future proofing. 
-> 
+I strongly suspect that the end of strscpy() knows exactly
+you many bytes weren't written (in the non-truncate path).
+So maybe implement both strscpy() and strscp_pad() in terms
+of an inline function that has a parameter that 'turns on'
+padding.
 
-Surely a better way to prevent potential future API abuse is by adding 
-checkpatch.pl rules. That way does not generate churn.
+That way you get a simple call site and still only one
+implementation.
 
-James or Martin, if you can find some value in this patch, go ahead and 
-apply it. I'm afraid I can't see it.
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
