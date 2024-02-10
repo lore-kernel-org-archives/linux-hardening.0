@@ -1,29 +1,29 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7727347F59
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 13:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D0C18030
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 13:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707570167; cv=none; b=u1laY42ohMsfiWzAlkRV+/2+RI7m/0L3cPgDODfL6iOJIjZlg4hZv3nub8021AhsNQyW9wL/oapACMErn8oF377k2X2dqVi35t78JZiGwYujwlwyMe5iXdfM/PhI783nmV3KD/oOqcPm18nIn6KC8eKcM9hYS92d1IdEsbbtHFk=
+	t=1707573110; cv=none; b=SVS13Bw2Hos5lIZM7e/TBAGzkVXCSp/PBdOnLYrvpzF3Ovb3/j2/g9qqa9ccw0aSjri80D5FQVyasB3bXh/Af0IQBfmismXpjwHwDm55MGb0bmzbw0VGnUmIQcPbcU+gnITkCgVxNo1363e9jOP/ACJoY+Q93TBbTqB5Lq9RaaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707570167; c=relaxed/simple;
-	bh=z++avKfPq9qDu4RZiReKmDmUzs0wTT/wjh7b/cwG4bU=;
+	s=arc-20240116; t=1707573110; c=relaxed/simple;
+	bh=mJNh+djTCqqKsg3FJVqIIWwHEHq7WgIc5UhFkuEM2bw=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=N51oPHjCR+mwqaXkABEAly0L1povNHzWXLAkvoIMSvXcNiJ47tQh+727OWNf8RLEP++V1cHQyc2JaNQOpku+trIrSGLha8UGix/rXvu9z3TJk52ivxhGMteXozh+bn3Wb7c/XtdTGPAiYjNzWm1/uOpDZF68H65Pa7cmxERIr2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+	 MIME-Version:Content-Type; b=fOe35t0cqV4jznbimaUGm4wyJieB75SGQw2egB7MwYz0yK1Q2eoHYYhiUSLq7dJjr5J4shJpcuJyAu6TqkZu2GTuQB7wUUAHCQbZBFTHH6J0AAwRPtAx71cNYNYWhX4jRtqLDBskDTAlt6R5FSOXkxs6rgXxlWdz39aXAHQ9lQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
 Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
  relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-102-tuk_flGuPWqAy7Bypew2Tg-1; Sat, 10 Feb 2024 13:02:41 +0000
-X-MC-Unique: tuk_flGuPWqAy7Bypew2Tg-1
+ uk-mta-75-PUFwWm4HMsG8Z9qT-lEh4g-1; Sat, 10 Feb 2024 13:51:40 +0000
+X-MC-Unique: PUFwWm4HMsG8Z9qT-lEh4g-1
 Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
  (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 10 Feb
- 2024 13:02:21 +0000
+ 2024 13:51:18 +0000
 Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 10 Feb 2024 13:02:20 +0000
+ id 15.00.1497.048; Sat, 10 Feb 2024 13:51:18 +0000
 From: David Laight <David.Laight@ACULAB.COM>
 To: 'Pavel Machek' <pavel@ucw.cz>, Justin Stitt <justinstitt@google.com>
 CC: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
@@ -32,9 +32,9 @@ CC: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: RE: [RFC] string: Allow 2-argument strscpy()
 Thread-Topic: [RFC] string: Allow 2-argument strscpy()
-Thread-Index: AQHaWe5TIJbv1x38yUWctvLGNyIGYrEDjCtw
-Date: Sat, 10 Feb 2024 13:02:20 +0000
-Message-ID: <7060edadcbac4452bd70d7894a50568d@AcuMS.aculab.com>
+Thread-Index: AQHaWe5TIJbv1x38yUWctvLGNyIGYrEDmx4Q
+Date: Sat, 10 Feb 2024 13:51:18 +0000
+Message-ID: <4b396628800149c69e157f0340778fbf@AcuMS.aculab.com>
 References: <20240129202901.work.282-kees@kernel.org>
  <20240129215525.4uxchtrywzzsrauc@google.com> <ZcPDMZFPY08S4MGR@duo.ucw.cz>
 In-Reply-To: <ZcPDMZFPY08S4MGR@duo.ucw.cz>
@@ -56,7 +56,6 @@ Content-Transfer-Encoding: quoted-printable
 
 From: Pavel Machek
 > Sent: 07 February 2024 17:52
->=20
 > > > Using sizeof(dst) is the overwhelmingly common case for strscpy().
 > > > Instead of requiring this everywhere, allow a 2-argument version to b=
 e
@@ -73,23 +72,29 @@ into
 > This hack is insane, but this is also highly confusing, please don't
 > do this.
 
-An alternative would be to convert xxx(tgt, src, 0) to
-xxx(tgt, src, sizeof (tgt) - that is when the specified
-length is a compile-time constant zero.
+A much simpler 'hack' - here defaulting in 16.
+Although you'd probably want a compile-time check on the
+number of arguments.
 
-Either with:
-=09(__builtin_constat_p(len) && (len) =3D=3D 0 ? sizeof (dst) : (len))
-Or, leveraging is_constexpr() and doing (I've probably got the syntax wrong=
-):
-=09__Generic(0 ? (void *)(len) : (int *)0,
-=09=09void *: len,
-=09=09int *: sizeof (dst))
-
-That probably needs a helper:
-=09is_constzero(value, if_zero, if_non_zero)
-to make it more generally useful.
+And convert 'sizeof 'non-array' to (say) -1 and error
+a length that is a constant -1.
 
 =09David
+
+extern int func_2(void *, const void *, int);
+
+#define func_1(_p0, _p1, len, ...) func_2(_p0, _p1, len)
+#define func(_p0, ...) func_1(_p0, __VA_ARGS__, 16)
+
+int f1(void *p0, const void *p1)
+{
+    return func(p0, p1);
+}
+
+int f2(void *p0, const void *p1, int len)
+{
+    return func(p0, p1, len);
+}
 
 -
 Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
