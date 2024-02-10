@@ -1,55 +1,54 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB81365
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 00:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C0D37A
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 00:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707524357; cv=none; b=R9qFtINruVePQJL3SZYB2H7f3fph8/wQ8e26yDHQZNrur0yJjwD0iV1bXLHTKJYVPWuTHldPFncsH4lVSQTDgTSkA0TfWmbg3B0jNwMsTT9fmuTkG7Nd1Jp4I8xMQCVMkI/fh1TyJgjtuaeQWZV6djc3HZbbyRDt0HE0mGZe7nw=
+	t=1707524415; cv=none; b=hGo6KBFjivQQgJiFd9weE4Lk9SDPMKoLUsSyAIJ3Z/23dB5GtCjFUOsL/DBjiVcvFlis5QmdUeFLBxPS9BRHzADuAtXrFgXh++LWLIfYMyg3H/AoMW1RMYWITJX5Yv5TJnJsVTb4ayFq37RO1Mo/ny8BKDvBiOk2+V8+8l5UPD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707524357; c=relaxed/simple;
-	bh=iq6fpzNvbrNJsO1zqHNpHfgJclfdwgHoVjvfJjXyk8Y=;
+	s=arc-20240116; t=1707524415; c=relaxed/simple;
+	bh=0xSehnWOhUJDEMMPQy+ntR0zNBeZLK2efFoW8K5pQW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LgM8Yz8sjLSc+bl1BHTnW1GtYofwA29F+4vnxJWJ3Ob5R8pOS7v3ideLuZP3Z0ExsUzF1+GPUTbbKBSnn+6Pe7xfrYcBNGWkkbmh58ZxBzGDZqgfHtYq/SfiwJwu3QnuB+u59MtIsLz2IDghUhWoZ4d9f0B05MQytDlxGXDLdNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UYrDWC6t; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=gTe7OKLYT1FMyh728h6uN9AS7SIgmeAfTBrXDPTtmTsXhIh2dKmuQ5bx7Sfw7H/YGO9d6bRximgGT2j7ujfGtitI2MZ6O3hSsgcSNhIGZWFIxaA9nAMOVFi1PiAOv0WLj1wKJTRijw0D5s+IMHV/j9+Xc6yfpee2ijqLS9kqduY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gaoYixg3; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UYrDWC6t"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d94323d547so14166285ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Feb 2024 16:19:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gaoYixg3"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6da9c834646so1277762b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Feb 2024 16:20:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707524355; x=1708129155; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707524413; x=1708129213; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wpUjtDpALKnkVEQ80qom9sdufdRNVtjYZoE0nb9Fp9w=;
-        b=UYrDWC6tIM7omHrmRTTJsCJUa2c/XicRE2tzQ2uRVBXOTu8734asInWDCqR6lE2Sa3
-         CKUP+cdHX/SJx07MjXMaAySBfBEuR/GxyvhN//kdaqOv9tEXH8aqdbTIHLBc0lrvZn0v
-         UrD0j8OqRmniFiHZBdtPxlPvWo+G5pGJ4P13Q=
+        bh=3xeDP/fFDWc1FaB3KHKxe3CtekZS5GdE8FoXXkdCZ34=;
+        b=gaoYixg3PNHBdwUBDMXHehi9CaXeK6Qk0G4FfuhFiYKBMWLoJLPjHdCbVuR7U8Vjr4
+         JacuUe1IdJVUzRFzqCN6kJokJR3tJR8ekYnJ5uj1IpwOdzC3SDeCVB0X3uYaL4R/RzUO
+         ATlbnusNZAyE8zXJabGAHpi1JAnPXSo+/gDzM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707524355; x=1708129155;
+        d=1e100.net; s=20230601; t=1707524413; x=1708129213;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wpUjtDpALKnkVEQ80qom9sdufdRNVtjYZoE0nb9Fp9w=;
-        b=JbVSPMBZn8k0Z+RkvNPt8R2RAXh+CrTfyGsp8CQd7NfIdCTPkOBaDhtvkjdzJXid8w
-         OO4RZObuiHeI4LHuGa1FMQMuD+ZkG0o3ZDnbkKmGFW9ZwxfzEra1xEEuXrT+mlYNnibO
-         W/fMbl3OoOPJTTLWZM10xLLAnC/WyFb82HFoWnqXsuKyUpTXx0XSioD6h86HdSYwRzUR
-         iakiJxeiv42KJKECkXPmQm+SZLihghjaTGQG8kJWOU+wT5KY/Ybup3bPkMyaNGtZt1Zf
-         4KS7KM+pAoVs2NySKp0PDkw6ZOcL5Oce1tX+bpjnukHk13oz8o5+olBWVP+V1nu81xaP
-         qQ+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWpZ1GFoz9+jWezZnwfkYzWqFM7uCovN5+Ht8+AS8o85489KYUqmhE2QZar7JQvCgg9x+Vx6RM+qUJSAyPUewhVq6ENEmj9SpFpKg2tRwfP
-X-Gm-Message-State: AOJu0Yz9O7GRE1PAPeQIJkIFW6qfWRPi+42AtT7x4oNlWQSsoNrj63Su
-	dxQDRA9+FhUcUwtQlVG2lp5Lay4iLRUTcsOAF1nYYrixZx+4d5jVsBODVlzOXA==
-X-Google-Smtp-Source: AGHT+IEEBZzTNPkIRqK2x7x6H9MYcqdhzdSNvyTXpmFuzJHAi/DDHjTK4INmh8ggJYegRx2ervn7bw==
-X-Received: by 2002:a17:903:28e:b0:1d9:c0a0:b3c8 with SMTP id j14-20020a170903028e00b001d9c0a0b3c8mr1269965plr.17.1707524355084;
-        Fri, 09 Feb 2024 16:19:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVWzJB3vM8kE82tscM0uXjwXFtLiuKgEcIbJeO/MfXudqoMVv4GPR4GutCMGagbghF3TM43L91pHWQJS0YbZ/USWxr4nMQdu0MHtSxprge0pe8hl7WtjsO+43KuUT3djqjHrBDavO1+OJZWU1QI2x/1JnJ7rWWr2Js/rTMw7+TfobFYaR2TUmrWW18msicFvg8bVxr92aNyEcu6ygqKoN5u9hsvGkwkax6dLEdx7HSj6H2a9G4Xr1hbxbLP+mC/QntrZNQsFcDIpyOSQ+mNfk6uvOZyU8Sb5zuncks=
+        bh=3xeDP/fFDWc1FaB3KHKxe3CtekZS5GdE8FoXXkdCZ34=;
+        b=FUJZQWNRU/oMBlTQnn9JSMIHcNEGfLoo73zMpeWQolNRu/sd1KDMBc9nZ4gj5TBBKM
+         fjZlFXWJHje/7zIzhFX1G+Jb3KGPWRJMfxfrdUoBdpk6q2y+g0jzaDnCgfxrP0vFvD8d
+         ecqJq8rCQBzYURTkpqkPfW5Am2xNxAqe4BpXaEtlp40qLAhEhH2WiTKsDVoNjdHXAyq0
+         ZM8tcOrHcHkHfZC2S/VCeFmafsZtsa0Emj2qvrVtRMp9FpihAc+gQwPayxjsIP5pnTIF
+         y/2UiyV32lkdPDEudGI1AKz9hV+2+q1RuZtlqi2w8Qu0LsQS32MhXQx0XK88rqVmNej7
+         0V8w==
+X-Gm-Message-State: AOJu0YwhFPHf/p8pLEtmpGwxfkDMR5FviD/DiiQKHjUX6XPAd4FSktI/
+	XCVGAV1Q9Lqn3Ii3v2tgW6TkEHL4fmaPR9Hhl5Wg53bCOQIWBTbFWsn5XXwEFw==
+X-Google-Smtp-Source: AGHT+IHGG5bvzmrn9ED2lC8Vqhz6kp2tJlcSJ6X+2ZZPbLUQCb06KGLYHbjXDO+ph4LGoZZBo0zjCA==
+X-Received: by 2002:a05:6a00:1743:b0:6e0:540e:bf43 with SMTP id j3-20020a056a00174300b006e0540ebf43mr1056819pfc.33.1707524412865;
+        Fri, 09 Feb 2024 16:20:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUfGHrJnljx2XckhnLiwGzFjO3g2MweYpXgXRSyekz83OtnJ4E1hV9lD09ACuUqtjeI/EcAe1tWbe9p+8pVU/BLGCarDM5pMfvdK9vVNvzszS6mMFUOHQbddOr4mD+ZXtFOZqrrHGxxAVb9vvc5udKrovz573DrrRfHcTgx0RpvByblN9FN/Ce06tjyTQHOjM3jSo/n4gZD6M6ztWUk4CAOJ6aekeZuOiqFHWKB2sotfDTaW06TPhvCwmyAcnJPwUxt+vwDVhLVm6ma3peazCo0NbWKwRY3eRJtz7p+JNCClOE+Qca0g2eJrrh7UYLrx6wt3TwZvcrZJTfSvvwcklYYPg==
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m2-20020a1709026bc200b001d958f8ab2bsm2043788plt.107.2024.02.09.16.19.14
+        by smtp.gmail.com with ESMTPSA id y20-20020a62b514000000b006ddb0dde293sm1136147pfe.65.2024.02.09.16.20.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 16:19:14 -0800 (PST)
-Date: Fri, 9 Feb 2024 16:19:14 -0800
+        Fri, 09 Feb 2024 16:20:12 -0800 (PST)
+Date: Fri, 9 Feb 2024 16:20:11 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Erick Archer <erick.archer@gmx.com>
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -57,11 +56,12 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] irqchip/bcm-6345-l1: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202402091619.80D0AE3141@keescook>
-References: <20240209181600.9472-1-erick.archer@gmx.com>
+Subject: Re: [PATCH] irqchip/irq-bcm7038-l1: Prefer struct_size over open
+ coded arithmetic
+Message-ID: <202402091620.006E59FF9@keescook>
+References: <20240209183128.10273-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,18 +70,18 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240209181600.9472-1-erick.archer@gmx.com>
+In-Reply-To: <20240209183128.10273-1-erick.archer@gmx.com>
 
-On Fri, Feb 09, 2024 at 07:16:00PM +0100, Erick Archer wrote:
+On Fri, Feb 09, 2024 at 07:31:28PM +0100, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1].
 > 
-> As the cpu variable is a pointer to "struct bcm6345_l1_cpu" and this
+> As the cpu variable is a pointer to "struct bcm7038_l1_cpu" and this
 > structure ends in a flexible array:
 > 
-> struct bcm6345_l1_cpu {
-> 	[...]
-> 	u32	enable_cache[];
+> struct bcm7038_l1_cpu {
+> 	void __iomem	*map_base;
+> 	u32		mask_cache[];
 > };
 > 
 > the preferred way in the kernel is to use the struct_size() helper to
@@ -92,9 +92,10 @@ On Fri, Feb 09, 2024 at 07:16:00PM +0100, Erick Archer wrote:
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
 > Link: https://github.com/KSPP/linux/issues/162 [2]
+> 
 > Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-Thanks!
+Yeah, looks right to me.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
