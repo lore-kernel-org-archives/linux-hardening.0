@@ -1,131 +1,262 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3739528DA4
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 07:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6442B9CF
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 09:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707549920; cv=none; b=E0ff+kjNCqnLMLQGE9M9rqsYLKu7ccHcfvxuQM49EmW9F2Fkq3OeHXuExO2XK2G6BCsmPG5zhqABodR6+L+VvKIhtCQMsgrwHhL1XPsGCgFOQtu3Fmni/EG14v34sjKA8WV6OXviAqoXkBJ3vLrvHQazpr7uzgJLNzLk4mTGTKo=
+	t=1707556723; cv=none; b=UjiOpBKJC7KZd4oqiYvN24Eo/NJ9lmVZy4QKyYa+qP24RIpf0g7jfSjL347DqCkBiksSrcwTBncURlRRWw+yrUXLED2M8sPZiKEmlhgzjxW9RZOcq/Pt0h1sd8iQWaCKV8WyPaq3/0LXsyWlOUWcB37t8/wjWrgQP7hVO397Gnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707549920; c=relaxed/simple;
-	bh=L0POMOG7TrbiWGoQ5l3VpV9fkdZx5fLFEvO60spaDg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DZ/GWLBD/cDduPogp84WvSYy/g9sGkKpeEZgR7bOdMqU773dawdDwsBZgV5vuaA2uyPoTQCKAmHPPWGhNmXDyIGbaDDt6gFg8g0PHPfwQnlj1kFrgDnm5NJIjw6OjN1+Knqk3FVPaUAcrj0zThzesqBFir9f+LqRHFb3f8TQNUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RvkQ25jh; arc=none smtp.client-ip=209.85.210.43
+	s=arc-20240116; t=1707556723; c=relaxed/simple;
+	bh=LC6wwKuwi5aVRuct2C9N3HzQXYLMKr4i4lX7/uXNsro=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bzBkZjH7fYbgYLFvh/Nyed2C9qnnJkuokojlj5RBOMfrBKaeJl6K9kiZbj3yC+iBv8aOGPcYbRFYm3m3LH4LQ0+7HIM93jSjdUhOo7E/tOHrurBn8rD2hcVxfMrCgFTylgpEedbRqJeM+h+p4XU7k9iLoPI7VFRRZTFkrc+Mwjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I8XjV0Yo; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RvkQ25jh"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e2bd54b7f6so945129a34.3
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Feb 2024 23:25:17 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I8XjV0Yo"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e2da00185dso77869a34.1
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 01:18:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707549917; x=1708154717; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8m8phvJbCBaUpR//XQr5m++ylbpQ4FZPXh/gWEIh+SE=;
-        b=RvkQ25jhHc3lzp0kdwXrt/WbI1OhHbjtwRYxdN7uuzWl3ztRGettY/kidqr6f4HU5g
-         dUkxQW6xWXnQFPC6xzQ825cZfrVsj88g7opbbC/fmEgIj3PsbcO5r5JMPYZCBeI414vh
-         3DU8GYlpg9GQsMhmPrabOqn0ggDgciefqKiG8=
+        d=chromium.org; s=google; t=1707556720; x=1708161520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bbrnpouUuffedythjQ6MAxMQbInpAn6Da5zEha5uHkM=;
+        b=I8XjV0Yo5CniwXE1aYGvFD+4FvzA7hTXtJGYzOV+ET3WRtV15srP+B6gZ8y1iom91C
+         E8jXVL4OzO7W6PkM3BQqgu8pZqpkuyHaiCigBetWnfwNgNuhC2SOM+5o35XTkZcttvy4
+         8ndDGBb4YpwkvF0W4KweROyff7QOfOWkvtyG4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707549917; x=1708154717;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8m8phvJbCBaUpR//XQr5m++ylbpQ4FZPXh/gWEIh+SE=;
-        b=gOOPMYnzjlZvkXcInMzFI3TEgK0gIp1FUGbF4T6J/eLP49CtSM/BIVcoCGMvjWpLb8
-         bTAlMv4C6P9s7GYyY2k2K99FSFGxeTv4yt9ruzz+ccMnse7jlGZJr9SGwWJw6FNOwa55
-         8zhUDQdDTSG9/BbrWXGCHDg4RR6I7kr+Nr9kecfyHpgWMISBZRqPtl+adyU5aGuLBzax
-         m3Y5OAOqFHpTlzl2wDHxQAlM2FtKgt11LjPdFZeiCqZzTCe0o+dpUhTaUPX84EgqVWS0
-         EsY3VD6JXQT9ZvwtjqYaUNKTEIuH4U3leP4Lgmavn5MNi5O5LQ97T8uvDroJbeUFTFse
-         oHuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXVhuwMXP2BQY/vEjSN3Gjrob2FM8XB2i3YMZeuDmsF1MGubHaTCp4GmC8XiAK59AeXiwHH+Va6yJ0ghxD1AbK3CDwdINjgiebfCGq+ODH
-X-Gm-Message-State: AOJu0YwOjn6tY0EwLkRIpXZ5qb/MjaDvt7tiJdH/50EeWpgA0nBQpeSz
-	/pdWK3tdYN5xVzy2UXdpzj+fEb7trvKBmRYC4fmRIGw9I5VXH1mCU8Twp/r2GQ==
-X-Google-Smtp-Source: AGHT+IElngRtfqOH7jE59C2E77px2P+jsgE2ilQV5OGTU5uO/TGyfz9K4uKnQQ8sPYMnkLE7+Gwnww==
-X-Received: by 2002:a9d:6c4d:0:b0:6e2:b26f:82d4 with SMTP id g13-20020a9d6c4d000000b006e2b26f82d4mr1634235otq.23.1707549917218;
-        Fri, 09 Feb 2024 23:25:17 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXWI+Qtz60dxMswupBxoATcUXayLu78VKmIYUB1WV7w5wAxJbzvFP5mOZyvKdqJTtivs97R3xpPqAcG6vl0W3hrjqBLJ4abTYwk+uFosaNu9NdJAdot9OanBEGqJvAYdugjCCKGmU3qXq3nHO6ohvfy9z/1wmNye7lW0R82vCupE6IcNGcmvVnS992QdBjh6V2xzVuTC3KBjMuGsM8KMF6iTUNlj9uiU/ZC5CFyoOU2FD701MXJ+2OabJHC8M1bcn+tks2vNmnOpfZ6wsrgBtWP5KLzxwcSLinuPpDj8Kr38lYK4rLetIFt3Rk9JInWt3sexODtvyg7pr3a9fmWNh95LflZZhHTXIcEEYWdOwb6MZLNXl/zTJmrmqUPQ/3eibOXfibW7jArw5x0i5Poqd+OuYu7gax/GbQ9Se9v2sVd4WYblg==
+        d=1e100.net; s=20230601; t=1707556720; x=1708161520;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bbrnpouUuffedythjQ6MAxMQbInpAn6Da5zEha5uHkM=;
+        b=vUAfB5z3PgdCFRs9mOSF+rgi3hxH4Nm76Mz0sDk5Z3z/Pk7ufo1N+ScV9Nx9V4OLeJ
+         N1xu2KOARf5xZciqgGmO+irASvQ+v1c6kpzLp39qaEUHSN0WA8o6yEIKzFCZ5TMGGY+i
+         AT4fI5GINmZEyabTfcEzqR+Y5XZgcitA+j0MxO1fT1pxmfHvupwYiIw7Uv6Qx+Z6Dfh+
+         VBRyu+A0Wwaz8iTXqukmWq/pUhDrR6IgBYdRlxBsTuR1CKYYuNzhe1UQ6H1iMwnR9lae
+         w8bqjtd7/K35W+kKYVFHnwXzGXpydDYAYQrLu3e6T3aOQ2yZpNNALp+K2bWGce6yXIZA
+         B4PQ==
+X-Gm-Message-State: AOJu0Yw0aM0MuqIA7o0INI5oAMI32sGm15JvXtsaEyzwUZnoEWQZqXEV
+	LfFEYtTxEuF1zclfWogZ5WTILibHwAu7ry3uQhqfvEOukEM116f5l4ZYOT4Hdg==
+X-Google-Smtp-Source: AGHT+IFU8zPeV6pg7NVco2CspTAljHSeVKcHPF+NDXjD4XLfIycXQY0lkm0Ks2GKd96muoZHBl44nA==
+X-Received: by 2002:a05:6359:1284:b0:179:2771:69b with SMTP id ix4-20020a056359128400b001792771069bmr2246292rwb.29.1707556720309;
+        Sat, 10 Feb 2024 01:18:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/6wH648XitzjB85LGagX01IAusIXFXJnajRIaSnCGXOAl9UaxapdT0NhciY0hS7vKCUhnOl5B/Z1sAMozqtUAbQ3KYAM/IcKJl2re4IXgCj7BtZWB/3Ek/G7iOrZkGrFI/ZPEKDnoLRon5FWdwgqp4kT8h6yE1jYEN1gi8Wep+nlSVfGYbXl0Ba7cJMa375/irN7JNO4gAGRxu9QuVd+a8JNTjC5u1hNYc2VbMyUwMgutxUUTKk4/GS7mF8+neQ5OVq2LPDg2bWvmtjnyUTqV0/R4w/OWy3lVTfUIdBuIsHTHODBxAUqwtqBjwlYBWK3UXuW01fPme82bU0ii7KBtoT+nhMsrmh8flW5Kv7MlewGC5XdXRIfKO0IxAQa5khZktkbHJ8nSo269aXM1yM7epFw23hRBInTcI7M+x7Hwkzf09TgHJb08TCggbrtcco8Dj9gpLxtuuYzvYh9IbfqAVQU2p52UBKCgvm1AvhVnTydKVDUa99FCtoZRKDnIXjUrp7ImItIbtQpbV6rXsOhM2Jh9kYQdzqr1CKRU0/ZRbzI1LGI95s53KTl/1ZaUd9Rlq8wG2ImcwG9PWLZQ3ftwIw==
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y20-20020a62b514000000b006ddb0dde293sm1669384pfe.65.2024.02.09.23.25.16
+        by smtp.gmail.com with ESMTPSA id h24-20020a62b418000000b006e046085ee8sm1900420pfn.174.2024.02.10.01.18.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 23:25:16 -0800 (PST)
-Date: Fri, 9 Feb 2024 23:25:16 -0800
+        Sat, 10 Feb 2024 01:18:39 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/i915: Add flex arrays to struct i915_syncmap
-Message-ID: <202402092322.09287B8@keescook>
-References: <20240208181318.4259-1-erick.archer@gmx.com>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Daniel Micay <danielmicay@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
+	Igor Zhbanov <i.zhbanov@omprussia.ru>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	linux-mm@kvack.org,
+	John Allen <john.allen@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] x86/vdso: Move vDSO to mmap region
+Date: Sat, 10 Feb 2024 01:18:35 -0800
+Message-Id: <20240210091827.work.233-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208181318.4259-1-erick.archer@gmx.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5800; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=nWAm4frIQZAHrwq360LYqJ/akdG0MCWYRqawD3LyjJQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlxz9rP8+/kxR495DuBW1sEef72P32z8HT+R5Vn
+ Woz2JQLg2OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcc/awAKCRCJcvTf3G3A
+ JsllD/9YCv1Um6OUYhAf13ZdwrqdFcxsN++7IxP2n+M5pIoxSQlB9seD6qdFsUVzMAnZ0FTPHcy
+ 9fNh/VLDCshDtRXNW8aFRCYprO+tzux051VXyF4M/VE2IMmOHUterNIq06F4LAk3nDp+puoosFf
+ DGCyYiuthr5vVkAe7ajMCL1YbYRCdRVFn3RAFfjVwHpZ56h2CydocVDAfIecenVsDK5xkkqsO1N
+ q5lq4bEN8WK5NHnzPHR/e477B2GAvF/WfJ1Awnar1aFcgIhWE2yka1hVnph+d9UgO0yIiUmR3J7
+ bRjHnys7MriuJp1lBKrgId009NDk7PRh21AAYy/mhSTermyYw0ExscO9RfdJLElH0ah0vT8Oqse
+ 1Qp2jPZYMP7bSVwfw6CqGKMWqDacRiP2/eFh48slUHD3Y4OqP29gRIgFljGKJZltx1OloThX6Xq
+ wl522PgOYOoJHFMss/BLuvZg2TThGsAj0oX7Jz7V+b0FnHp7f71gMAOpcaM19uPkOZ8yvboy9lo
+ GIGbCexBX+rCzb1tOe7q7AUc/HSXIzynmuMHlsIvz0hMZJ8tVy8jKvzGXiaKIBgPTheTuigmsJT
+ pH2ULTuVPMOey2c4o1sGOPGYYdVmoa/wGYiWWaGFBKeFmQPRwnACaTidI5mye1Nm+r2y/ymsyOn
+ FCtaRWJ oThix6Kw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 08, 2024 at 07:13:18PM +0100, Erick Archer wrote:
-> The "struct i915_syncmap" uses a dynamically sized set of trailing
-> elements. It can use an "u32" array or a "struct i915_syncmap *"
-> array.
-> 
-> So, use the preferred way in the kernel declaring flexible arrays [1].
-> Because there are two possibilities for the trailing arrays, it is
-> necessary to declare a union and use the DECLARE_FLEX_ARRAY macro.
-> 
-> The comment can be removed as the union is now clear enough.
-> 
-> Also, avoid the open-coded arithmetic in the memory allocator functions
-> [2] using the "struct_size" macro.
-> 
-> Moreover, refactor the "__sync_seqno" and "__sync_child" functions due
-> to now it is possible to use the union members added to the structure.
-> This way, it is also possible to avoid the open-coded arithmetic in
-> pointers.
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
->  drivers/gpu/drm/i915/i915_syncmap.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/i915_syncmap.c b/drivers/gpu/drm/i915/i915_syncmap.c
-> index 60404dbb2e9f..df6437c37373 100644
-> --- a/drivers/gpu/drm/i915/i915_syncmap.c
-> +++ b/drivers/gpu/drm/i915/i915_syncmap.c
-> @@ -75,13 +75,10 @@ struct i915_syncmap {
->  	unsigned int height;
->  	unsigned int bitmap;
->  	struct i915_syncmap *parent;
-> -	/*
-> -	 * Following this header is an array of either seqno or child pointers:
-> -	 * union {
-> -	 *	u32 seqno[KSYNCMAP];
-> -	 *	struct i915_syncmap *child[KSYNCMAP];
-> -	 * };
-> -	 */
-> +	union {
-> +		DECLARE_FLEX_ARRAY(u32, seqno);
-> +		DECLARE_FLEX_ARRAY(struct i915_syncmap *, child);
-> +	};
+From: Daniel Micay <danielmicay@gmail.com>
 
-This is a new code pattern for me! Trailing arrays of different element
-sizes but with a fixed element count. :)
+The vDSO (and its initial randomization) was introduced in commit
+2aae950b21e4 ("x86_64: Add vDSO for x86-64 with gettimeofday/clock_gettime/getcpu"),
+but had very low entropy. The entropy was improved in commit
+394f56fe4801 ("x86_64, vdso: Fix the vdso address randomization algorithm"),
+but there is still improvement to be made.
 
-I hope when __counted_by is expanded to take expressions we can add a
-literal. :)
+On principle there should not be executable code at a low entropy offset
+from the stack, since the stack and executable code having separate
+randomization is part of what makes ASLR stronger.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Remove the only executable code near the stack region and give the vDSO
+the same randomized base as other mmap mappings including the linker
+and other shared objects. This results in higher entropy being provided
+and there's little to no advantage in separating this from the existing
+executable code there. This is already how other architectures like
+arm64 handle the vDSO.
 
+As an side, while it's sensible for userspace to reserve the initial
+mmap base as a region for executable code with a random gap for other
+mmap allocations, along with providing randomization within that region,
+there isn't much the kernel can do to help due to how dynamic linkers
+load the shared objects.
+
+This was extracted from the PaX RANDMMAP feature.
+
+Closes: https://github.com/KSPP/linux/issues/280
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Nikolay Borisov <nik.borisov@suse.com>
+Cc: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: Igor Zhbanov <i.zhbanov@omprussia.ru>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-mm@kvack.org
+Signed-off-by: Daniel Micay <danielmicay@gmail.com>
+[kees: updated commit log with historical details and other tweaks]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/entry/vdso/vma.c    | 57 ++----------------------------------
+ arch/x86/include/asm/elf.h   |  1 -
+ arch/x86/kernel/sys_x86_64.c |  7 -----
+ 3 files changed, 2 insertions(+), 63 deletions(-)
+
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index 7645730dc228..6d83ceb7f1ba 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -274,59 +274,6 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+ 	return ret;
+ }
+ 
+-#ifdef CONFIG_X86_64
+-/*
+- * Put the vdso above the (randomized) stack with another randomized
+- * offset.  This way there is no hole in the middle of address space.
+- * To save memory make sure it is still in the same PTE as the stack
+- * top.  This doesn't give that many random bits.
+- *
+- * Note that this algorithm is imperfect: the distribution of the vdso
+- * start address within a PMD is biased toward the end.
+- *
+- * Only used for the 64-bit and x32 vdsos.
+- */
+-static unsigned long vdso_addr(unsigned long start, unsigned len)
+-{
+-	unsigned long addr, end;
+-	unsigned offset;
+-
+-	/*
+-	 * Round up the start address.  It can start out unaligned as a result
+-	 * of stack start randomization.
+-	 */
+-	start = PAGE_ALIGN(start);
+-
+-	/* Round the lowest possible end address up to a PMD boundary. */
+-	end = (start + len + PMD_SIZE - 1) & PMD_MASK;
+-	if (end >= DEFAULT_MAP_WINDOW)
+-		end = DEFAULT_MAP_WINDOW;
+-	end -= len;
+-
+-	if (end > start) {
+-		offset = get_random_u32_below(((end - start) >> PAGE_SHIFT) + 1);
+-		addr = start + (offset << PAGE_SHIFT);
+-	} else {
+-		addr = start;
+-	}
+-
+-	/*
+-	 * Forcibly align the final address in case we have a hardware
+-	 * issue that requires alignment for performance reasons.
+-	 */
+-	addr = align_vdso_addr(addr);
+-
+-	return addr;
+-}
+-
+-static int map_vdso_randomized(const struct vdso_image *image)
+-{
+-	unsigned long addr = vdso_addr(current->mm->start_stack, image->size-image->sym_vvar_start);
+-
+-	return map_vdso(image, addr);
+-}
+-#endif
+-
+ int map_vdso_once(const struct vdso_image *image, unsigned long addr)
+ {
+ 	struct mm_struct *mm = current->mm;
+@@ -369,7 +316,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	if (!vdso64_enabled)
+ 		return 0;
+ 
+-	return map_vdso_randomized(&vdso_image_64);
++	return map_vdso(&vdso_image_64, 0);
+ }
+ 
+ #ifdef CONFIG_COMPAT
+@@ -380,7 +327,7 @@ int compat_arch_setup_additional_pages(struct linux_binprm *bprm,
+ 	if (x32) {
+ 		if (!vdso64_enabled)
+ 			return 0;
+-		return map_vdso_randomized(&vdso_image_x32);
++		return map_vdso(&vdso_image_x32, 0);
+ 	}
+ #endif
+ #ifdef CONFIG_IA32_EMULATION
+diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+index 1e16bd5ac781..1fb83d47711f 100644
+--- a/arch/x86/include/asm/elf.h
++++ b/arch/x86/include/asm/elf.h
+@@ -392,5 +392,4 @@ struct va_alignment {
+ } ____cacheline_aligned;
+ 
+ extern struct va_alignment va_align;
+-extern unsigned long align_vdso_addr(unsigned long);
+ #endif /* _ASM_X86_ELF_H */
+diff --git a/arch/x86/kernel/sys_x86_64.c b/arch/x86/kernel/sys_x86_64.c
+index c783aeb37dce..cb9fa1d5c66f 100644
+--- a/arch/x86/kernel/sys_x86_64.c
++++ b/arch/x86/kernel/sys_x86_64.c
+@@ -52,13 +52,6 @@ static unsigned long get_align_bits(void)
+ 	return va_align.bits & get_align_mask();
+ }
+ 
+-unsigned long align_vdso_addr(unsigned long addr)
+-{
+-	unsigned long align_mask = get_align_mask();
+-	addr = (addr + align_mask) & ~align_mask;
+-	return addr | get_align_bits();
+-}
+-
+ static int __init control_va_addr_alignment(char *str)
+ {
+ 	/* guard against enabling this on other CPU families */
 -- 
-Kees Cook
+2.34.1
+
