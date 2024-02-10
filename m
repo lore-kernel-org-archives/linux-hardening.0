@@ -1,154 +1,110 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE1E5C8FB
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 16:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13ED5D72E
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 17:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707583965; cv=none; b=QEGhaxaDmAFEP+dhGc2m5LtyfnAObTqg8rKqkHjOlal4h6nZkAg8P8LG2FYcRmn7gOgJEKkkKsZhPgQWcNspRmeAggx4jGZQgD/yBXoftyPpoeeKs0PWIS62xAxXToEmVchF8vGjWMejGNQkUfoNl3K6qTgEIKSthy/9xdxFvKY=
+	t=1707585795; cv=none; b=hMRxI0eb6MlgmHT+9gIJcT7mE57iTLO4vtO42PrEr4GV3y98fcle3a4C0u6+aiA0rs8zWrsVG7ZumwNEhFVWehI9RJ1/IMaT8+uj9zDBKgxKTgMG5hbZCHYSjL/Hiila0hQskrKzUMI8idH0097oGQpWlTBJuPONmf1M4onA4U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707583965; c=relaxed/simple;
-	bh=yoZ6jO26gIwzcZY6vg7TXyzEpqXjO6SCow49aXsp1n0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mGL2fDyIi+yoT/1DEXWYytxEPfJo9gNaXOoZ/HqR+aMCeSRrt75SrvFNLhNq8zwrMGp/Idw5v+YuXSCB5oHcOZjUvTPt8NytWHScuX9dRjY4A4S/ydAqIhpthIF/2Qilpzth/j1qWp4Gv1okkzlpd2N7Ic+OpqDDZgNf6rorh/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=pzUct+xJ; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pzUct+xJ"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id YklYrIMXe8uLRYqanrRPSN; Sat, 10 Feb 2024 16:52:41 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id YqamrvjY9KPn6Yqanr1Oym; Sat, 10 Feb 2024 16:52:41 +0000
-X-Authority-Analysis: v=2.4 cv=IM6hCRvG c=1 sm=1 tr=0 ts=65c7a9d9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=UFccgQmPsxNMVL67FCoA:9 a=QEXdDO2ut3YA:10
- a=1F1461vogZIA:10 a=5kKzt1m56AEA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tEoQxh0SDX6LhIBHxa1o+jGxPnr7GiGz8Kpi2C96DZY=; b=pzUct+xJvY8RJEJgPd9wEOn8J7
-	knPnoxN+3ygMHpLr1awR+90flpSBlkQihH870kIBwMrc4KKfqtySQpCueQ/dr3wfiITWAUHFHtvzq
-	awO51/AVqmDqRD4dlEmEFY7ajfvym2CE32QZhD0V11CD+NppmGfqNQz4IOwM+rdIvroxJnvknt/jE
-	SNdbysb/FtWPK4UyxtQ5wK7ND0m+GiNVQuDZUP0vkiYFdxUmDk+D4YKiiRr+xLfOoXXhJG1CeG7Hn
-	QWAB0yUaEDSiIJd4Sc3vU+mUS5fLAilI6JB2ekkI4YpkDPV62BCAanWLq5if6zsMad3ed4b1Gr7++
-	UlKhuw2Q==;
-Received: from [201.172.172.225] (port=54094 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rYqak-000XHn-1i;
-	Sat, 10 Feb 2024 10:52:38 -0600
-Message-ID: <91f29d89-8c9b-46c4-b059-687ea3c57682@embeddedor.com>
-Date: Sat, 10 Feb 2024 10:52:36 -0600
+	s=arc-20240116; t=1707585795; c=relaxed/simple;
+	bh=3HOTMAvrmTBnH4wx3urQWmGfStLlmr/dw+Sp1ocasV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyQ0ajA68O+dbDanlCTQz5ebTkhToc2S0JcmTFZsah+/oZlAoIaHPn1z+SPoGfNL1irkDsjTzec820KNsPVpE2mT0peejwOdVAR0VZAJ66sIrLZ5AaSq52bClhFWrZKwmijiWVbe0GIgTmMta5fq3RLjUOCIBztKNxvhrWtjtNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rYr3s-0003V7-AK; Sat, 10 Feb 2024 18:22:44 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rYr3n-005icH-Po; Sat, 10 Feb 2024 18:22:39 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rYr3n-002FSV-2F;
+	Sat, 10 Feb 2024 18:22:39 +0100
+Date: Sat, 10 Feb 2024 18:22:39 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Li Zetao <lizetao1@huawei.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mtd: rawnand: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <vm3fk7wbqxjl3i6kmd3dv2ofeszjxrvi2n7cd3ohasgjpi4j4g@d3f6estk2xol>
+References: <20240210161619.12656-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtd: rawnand: Prefer struct_size over open coded
- arithmetic
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Heiko Stuebner <heiko@sntech.de>, =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?=
- <philmd@linaro.org>, Rob Herring <robh@kernel.org>,
- Li Zetao <lizetao1@huawei.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org
-References: <20240210161619.12656-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="346zxj37n4z5j2px"
+Content-Disposition: inline
 In-Reply-To: <20240210161619.12656-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rYqak-000XHn-1i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:54094
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBSqtU1ofHiibdVf68TWSLhubCQ7rNYgKzmAASzZLEelHwRFT7t7qx9JB8UlJqDtx+HAxQizFSVs8ksOHixwD9t+kRyVfRuySRTkn+NMqGebtG/2nMh8
- Gj2AtPYh/vDVkM3uonaZEGvMSpKvLnofsuOXLIguNaa51AJFkG6hwXrgx7o+U0hXw+bV6AQZk5tVk4riheVizqfbIOmAnpjrtEOIrpZMKEJcAUWUNEKfw7sl
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
 
+--346zxj37n4z5j2px
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/10/24 10:16, Erick Archer wrote:
+On Sat, Feb 10, 2024 at 05:16:19PM +0100, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1].
-> 
+>=20
 > As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
 > this structure ends in a flexible array:
-> 
+>=20
 > struct mtk_nfc_nand_chip {
 > 	[...]
 > 	u8 sels[] __counted_by(nsels);
 > };
-> 
+>=20
 > the preferred way in the kernel is to use the struct_size() helper to
 > do the arithmetic instead of the argument "size + count * size" in the
 > devm_kzalloc() function.
-> 
+>=20
 > This way, the code is more readable and more safer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-LGTM:
+Unless you intend this non-English comparative: s/more safer/safer/
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Best regards
+Uwe
 
-Thanks!
--- 
-Gustavo
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> ---
->   drivers/mtd/nand/raw/mtk_nand.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/mtk_nand.c b/drivers/mtd/nand/raw/mtk_nand.c
-> index 60198e33d2d5..17477bb2d48f 100644
-> --- a/drivers/mtd/nand/raw/mtk_nand.c
-> +++ b/drivers/mtd/nand/raw/mtk_nand.c
-> @@ -1356,7 +1356,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev, struct mtk_nfc *nfc,
->   		return -EINVAL;
->   	}
-> 
-> -	chip = devm_kzalloc(dev, sizeof(*chip) + nsels * sizeof(u8),
-> +	chip = devm_kzalloc(dev, struct_size(chip, sels, nsels),
->   			    GFP_KERNEL);
->   	if (!chip)
->   		return -ENOMEM;
-> --
-> 2.25.1
-> 
-> 
+--346zxj37n4z5j2px
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXHsN4ACgkQj4D7WH0S
+/k7uhggAkjErCNtMO9Tgeku9UEu3BBrTsCG6cirem2RU9oGOT4pbrCjRb2KCGYfU
+q+/lrPRkB6Tp8aLA3ljD5QZbmSN4UY7IFFRjTPhs2QeCfLX4USL2es+P4oCbd32u
+gZqw7aoZgZ1Gb05G5gboHeun8K3eEQE8eWfj1hq4BetoLNdq53tlW/csK98ayxPA
+JmPsBOXq5MHiGDSNqb1gp85oNS2F3D+F5YortaxkPr4F3L17MG9XDezixApG/nTw
+Uz2+EdFzM6BJN1Zac6t3Z2/6IaYa+aHE+ugdYp5aQIZ2NqiFaTHL7c9UfO85Zsi7
+1fYuhJr1sBGrZoWF8QnOgiJmoDAtPA==
+=Sihr
+-----END PGP SIGNATURE-----
+
+--346zxj37n4z5j2px--
