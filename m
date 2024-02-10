@@ -1,110 +1,76 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13ED5D72E
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 17:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C58259B;
+	Sat, 10 Feb 2024 22:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707585795; cv=none; b=hMRxI0eb6MlgmHT+9gIJcT7mE57iTLO4vtO42PrEr4GV3y98fcle3a4C0u6+aiA0rs8zWrsVG7ZumwNEhFVWehI9RJ1/IMaT8+uj9zDBKgxKTgMG5hbZCHYSjL/Hiila0hQskrKzUMI8idH0097oGQpWlTBJuPONmf1M4onA4U0=
+	t=1707605796; cv=none; b=UnVXa71eSoT7x6TWMi4OaJLPB0ZYg0ZwXpAl66WO5eRINHj77gGz89Bs+KmkixK6iObaqLtg5rNyQKaKuiU2+a/ZKpQRHEaG20v9nEYK3PMNjDgwbGlV/m0femZrYJ/LE9QQnHJ9DB8DMNO6zMR8Z4mqGLzTnm3xCubuu+YmCYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707585795; c=relaxed/simple;
-	bh=3HOTMAvrmTBnH4wx3urQWmGfStLlmr/dw+Sp1ocasV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyQ0ajA68O+dbDanlCTQz5ebTkhToc2S0JcmTFZsah+/oZlAoIaHPn1z+SPoGfNL1irkDsjTzec820KNsPVpE2mT0peejwOdVAR0VZAJ66sIrLZ5AaSq52bClhFWrZKwmijiWVbe0GIgTmMta5fq3RLjUOCIBztKNxvhrWtjtNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rYr3s-0003V7-AK; Sat, 10 Feb 2024 18:22:44 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rYr3n-005icH-Po; Sat, 10 Feb 2024 18:22:39 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rYr3n-002FSV-2F;
-	Sat, 10 Feb 2024 18:22:39 +0100
-Date: Sat, 10 Feb 2024 18:22:39 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Li Zetao <lizetao1@huawei.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: Prefer struct_size over open coded
- arithmetic
-Message-ID: <vm3fk7wbqxjl3i6kmd3dv2ofeszjxrvi2n7cd3ohasgjpi4j4g@d3f6estk2xol>
-References: <20240210161619.12656-1-erick.archer@gmx.com>
+	s=arc-20240116; t=1707605796; c=relaxed/simple;
+	bh=8tKZK6z3KddJFqAvQqo359iHqAsAGCKcJW+oBIFlSvM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O5qKPsSZu1q+pMKglW3EUoEE2c1+n+7EetY0cYhsCc6X4lTWw7LvgUJGUDkZNKBzwIgAjgdF97Gak3W6EpfrdcuU3578PNURZ75F54wVWJO1My40xodm3CkTdb9qvzDiCGR4+04ec1o28ouEVFg5mHESI4W+3noYluXKy+egHLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id A21071A0663;
+	Sat, 10 Feb 2024 22:56:26 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf06.hostedemail.com (Postfix) with ESMTPA id 4593A2000F;
+	Sat, 10 Feb 2024 22:56:22 +0000 (UTC)
+Message-ID: <beff7f4411586efd8f08d7b3d94b0ca235375790.camel@perches.com>
+Subject: Re: .mailmap support for removals (was Re: [PATCH 00/10] scsi:
+ Replace {v}snprintf() variants with safer alternatives)
+From: Joe Perches <joe@perches.com>
+To: Kees Cook <keescook@chromium.org>, tools@kernel.org
+Cc: Lee Jones <lee@kernel.org>, Bart Van Assche <bvanassche@acm.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Sat, 10 Feb 2024 14:56:21 -0800
+In-Reply-To: <202402092252.0A0A59A@keescook>
+References: <20240208084512.3803250-1-lee@kernel.org>
+	 <c9129b08-50fb-4371-aa05-6f6c7cd7acfa@acm.org>
+	 <20240208174912.GZ689448@google.com> <202402092252.0A0A59A@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="346zxj37n4z5j2px"
-Content-Disposition: inline
-In-Reply-To: <20240210161619.12656-1-erick.archer@gmx.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+X-Rspamd-Queue-Id: 4593A2000F
+X-Stat-Signature: bwbccfhzcjhn6x9rfoppaay1kuycw7fn
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18XdaBtlCF0Uon/g9L1Z+Hs0qwOLAsaqXA=
+X-HE-Tag: 1707605782-769569
+X-HE-Meta: U2FsdGVkX18RorYUsbIJWjdQMGidD7ifUMhZwGLP+HKmvn48l+vAsuV+JlhC6OZhTOHQDRvrFvLFk3kVmNjMYKT3KrgHmlQYrO9+IASqY9foKvNs4KfanWAesXOmAMTgS5uSkQ6ik/f5Cco+Syj7RHgHCmdTKu90Jtk7srjS8TZd37qluqy8UGDhgKaHltEYCBCl29pCAvlGc53VkNom+mUFtQZpW3ensQFjYHJaa0r5VK5Y3C3h0mhQRUPwBr+Ivy8+go9TGO33cZUoD+8s3tghZqbzBQ0LybuuWFm4r5+hqCRiF01oL7l8gcFcJJkG+VulL8vcEWI4e+H/DCt8vdtX56tVV43fAPazTRWCfdq7OK2avqXHVJUYqXTskUwryylnqNquWqUJ9d0bAa0pH09UL7MwpB7suoQxWqYaOQH2BnUsokr6wbudeZERrULu3z5eMJG+Imz+OTxJwlu73cyoQxNEC2DSRtwtAxrUmjnOLYJ1LH6Y/73Uyakp9sKADdOmPssjE7k=
 
-
---346zxj37n4z5j2px
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Feb 10, 2024 at 05:16:19PM +0100, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
+On Fri, 2024-02-09 at 22:56 -0800, Kees Cook wrote:
+> On Thu, Feb 08, 2024 at 05:49:12PM +0000, Lee Jones wrote:
+> > On Thu, 08 Feb 2024, Bart Van Assche wrote:
+> >=20
+> > > On 2/8/24 00:44, Lee Jones wrote:
+> > > > Cc: Andre Hedrick <andre@suse.com>
+> > >=20
+> > > Please take a look at https://lwn.net/Articles/508222/.
+> >=20
+> > get_maintainer.pl pulled it from here:
+> >=20
+> > https://github.com/torvalds/linux/blob/master/drivers/scsi/3w-xxxx.c#L1=
+1
 >=20
-> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
-> this structure ends in a flexible array:
+> Oh. Hm. It seems "git check-mailmap" (and get_maintainers.pl) don't
+> support a way to remove an email address -- only redirect it.
 >=20
-> struct mtk_nfc_nand_chip {
-> 	[...]
-> 	u8 sels[] __counted_by(nsels);
-> };
+> It seems we may want to support "don't use this email address" for more
+> than just the currently observed rationale. I don't have any good
+> suggestions for what the format should look like? Perhaps:
 >=20
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the argument "size + count * size" in the
-> devm_kzalloc() function.
->=20
-> This way, the code is more readable and more safer.
+> "" <address-to-remove@example.com>
 
-Unless you intend this non-English comparative: s/more safer/safer/
+/dev/null ?
 
-Best regards
-Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---346zxj37n4z5j2px
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXHsN4ACgkQj4D7WH0S
-/k7uhggAkjErCNtMO9Tgeku9UEu3BBrTsCG6cirem2RU9oGOT4pbrCjRb2KCGYfU
-q+/lrPRkB6Tp8aLA3ljD5QZbmSN4UY7IFFRjTPhs2QeCfLX4USL2es+P4oCbd32u
-gZqw7aoZgZ1Gb05G5gboHeun8K3eEQE8eWfj1hq4BetoLNdq53tlW/csK98ayxPA
-JmPsBOXq5MHiGDSNqb1gp85oNS2F3D+F5YortaxkPr4F3L17MG9XDezixApG/nTw
-Uz2+EdFzM6BJN1Zac6t3Z2/6IaYa+aHE+ugdYp5aQIZ2NqiFaTHL7c9UfO85Zsi7
-1fYuhJr1sBGrZoWF8QnOgiJmoDAtPA==
-=Sihr
------END PGP SIGNATURE-----
-
---346zxj37n4z5j2px--
