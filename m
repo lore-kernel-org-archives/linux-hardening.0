@@ -1,124 +1,149 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5BE5BADF;
-	Sat, 10 Feb 2024 16:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD435C5E4
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 16:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707581838; cv=none; b=oDDOoGIK5VGmldjOmIGgCyuyRC80CTkF/VlQJLRO4GpIcDeGjklFZInxVfS8s2GYJLwVyj0DgNHAZbVapUuOcrasfv8Cnonscf3Cxte1cpiN+ieiVLzOoq875Ix+7ad7kr5DwpsX1+KWD8qI6GhePHK9I5zi46c0EdntYWQjUdM=
+	t=1707583805; cv=none; b=dpBH4HhoV924uA1uv2I9ME4REd9KpZ+D1PzOWVPel5Ir3hRj4HBQT0EyJU82THkvYCHnYLxpLS3GrePu/djQBt1Zhuo0YJUhwxjLmmiQfNT+kFPSb9WLb7yI/eIZHDXNlhkfrEi7AVtTilutfFl7WoZ+cjY1vZjvmQCNqOkcScM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707581838; c=relaxed/simple;
-	bh=OfG4W2vrN+BKgpQ5aAwkOcwerxwIgHNq6byGUSl/zus=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QWoGudERsyxl7ldWNrMgDi/9gKdG/Z5I+2Eh/hsmguxABqxPQFOH6lbs9+qx4ypHDh8Piyq3ZRH/zz4jeKUo6cxUNGcr82w9TJQV1xCHvpgZdImICa62+QmlRcXaObefX3n2JCjnn/RpbBhva0CmTob1LZhODVqwa4KihRxICrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=HwdmEO3+; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1707583805; c=relaxed/simple;
+	bh=z8AOJdaJc+iGQg+0+8ubzRyMBNV6LhFl9jPM/Scon1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M5BSdvpFMqQObQYkRlgfVnLxpRlgPkifwVSN0iSoc2Abs/wJzBTFbwxjFLiORj1fazbr9Z7jx9zgnfNW9aQDwgsB1cYFbHSSh2N1u0krRKfMxVqvE6KmrQx9w6XAE5MkbOp9u3eKD67cxzkbolM0cDpyXr4SwGC+i9Ky9a6ihBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=mi4KsncL; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="HwdmEO3+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1707581794; x=1708186594; i=erick.archer@gmx.com;
-	bh=OfG4W2vrN+BKgpQ5aAwkOcwerxwIgHNq6byGUSl/zus=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=HwdmEO3+DYeTsTAqBIyXHET63T44a1xtI3JB+T4mOHbfg3YRlN3eTrgisx6Qty6V
-	 m5HZMB/jq0YStPEA8mzKn2U/ua2TXuKIq13sO+SCiyOSiH/vdvQsQpT4cw2nkWEAD
-	 Iwk253BH4JQQKw/q+0ebaAq1gwIFUkSzXElwMDJgCdkQkH23FiHGFiJWqP7JYpFw9
-	 OvJ8q9H+xTwTWBkZwKU0igZTiBE0vWz6bcwtqBySAt1L7/iKxEHBwLt9uUwzsHnOb
-	 dfIKytswsBmRPRpLrRMkznLeh/zV5xBLR8q2p/7VWD8oqvkyTacM0gR8VD0oitcNO
-	 EXtx4792DSfhgVXIWw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1Mv2xU-1qhyOQ2CRM-00qxEh; Sat, 10 Feb 2024 17:16:34 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Li Zetao <lizetao1@huawei.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: Prefer struct_size over open coded arithmetic
-Date: Sat, 10 Feb 2024 17:16:19 +0100
-Message-Id: <20240210161619.12656-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mi4KsncL"
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTPS
+	id YnlQr9sG4AxAkYqYErwQOr; Sat, 10 Feb 2024 16:50:03 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id YqYErHqrJIIhkYqYEru2tY; Sat, 10 Feb 2024 16:50:02 +0000
+X-Authority-Analysis: v=2.4 cv=ft9/Z04f c=1 sm=1 tr=0 ts=65c7a93a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
+ a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=PRyNG9Jn56gaZwuU5SgA:9 a=QEXdDO2ut3YA:10
+ a=1F1461vogZIA:10 a=5kKzt1m56AEA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=SLz71HocmBbuEhFRYD3r:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fW1AM9Qzpti44/4DeXbYCV+nbyp1ZPTvg+v3ApEi5WE=; b=mi4KsncL9ls0mGZQ11Gjp11mzj
+	10mOxb3XBgZtcev9Ui6v7zprTzwWlcitvXnYgcRiFSRTNd4LTHmUzs4muhsKcKtkvqpZTfE4e5uQa
+	FrdzJgl1fmi+KwZAD7RCzfPMe0k8Uhy72r4SRH8MIUes9D65G8EuezoS03N2SBSYnts74l9eijAoH
+	qtpL9wMGe3zb/rCp+B0ulvhTUDWU/ahrjvV3egswBe+ph/IGCNcnHDBAMDy4zEQaan7sWhaIx+ReW
+	7E67F0ThfVnm2l0zHezQ0L+X+nIQdQ8jn3AsmzD+MUJ2fnQXDSScg7DgQEE2Zs2s6Uv+Ae/Qcy0P9
+	eI2rMiYA==;
+Received: from [201.172.172.225] (port=35494 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rYqYC-000VNR-0W;
+	Sat, 10 Feb 2024 10:50:00 -0600
+Message-ID: <30715dc4-3285-4f4a-a041-a718a8509721@embeddedor.com>
+Date: Sat, 10 Feb 2024 10:49:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cE6WntWvcCnRVKbuPrflNE+LM0S/ZuMDnpLQs4Rt/3MVVPl0ZEl
- jh5hEvamdlnrlzQh+Xn/DyeW897UTiYJftyoSkjAModsgHBqwpZXASdUw2819ZPGgzRkdls
- 5oA0So3/CI6eU9lLpwToSblgBUGrk9KUtHno4oEtREQCIdpgxpQCMTxcS50WDCFkI7cs+s/
- N5Or+HfzYjxl5q9qB/RFw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VGFqzc3IIRc=;tUTDQhueCO0tu5eV2hl+d2qyQIF
- pcv/rPJ95xWai1+wm5czTvEb7E0H/FESByeA7Ej+E3BTUzPmw0Nj22QMPpbKGJ1tAc8sDZBSO
- PksapTUJlV/kbeH4Q2zzfKza2kHoLVkGdPn9lNy/sb2AUqbg7UXxdf7qSBJUcI2zc1dc/BFfg
- MtmfeF8ylN+cHz73T+ot3OImAt0ZfhowAmQaQU9IYvlP2C8nvsPx5VcdnQUlPFQ9Yf2T4SAcX
- Q9aLURNa0/5Om+lIbtsXGinBhu/gTsUasgZpQVDx9rsZ1C8rODomycnmispx7smtN5NIrG/kn
- UWgonq3mGlpChY6+CfhBgiUpkPzLlEodMp/PD/IFFe/B/znTawbueGIUvvApbMcL+m+S9dMjv
- CWHTULkg52xeaCydt7jKNATDiGTo6N8CJOH3LuGTvS09d1yvXv7hG6aBnzwZ8EhzQqiQXW7hZ
- ZGEYJgk4d/zh3t7CW8iHyLrgxnJCdeunR94Ps3PPKQm/ilHTylzD8xaHDoQpkCL58nsPVXOkL
- vr+M0GJnh97M/1d0TiZ6AceirrQlLEFLZ34A3Xl/sQKK/eU4FJ7MkD52jIOmd8OPnzlh3ILl9
- ugP+Bzef/0UxqC4p+oWhlGU8Psn8xQtMvmQP0kLNX7+tfiyv3Eoq84tVZz/kQwf3Z5Gqh3bvX
- pCaiUdkRp1edJ68x+OtgzmkYxqP4DHIFzgEK/mUjFbptOLCO5sMzQhaDQr/2lvkGJB2EfhIS4
- /BBlCdMvH5rPcxUQ0w4XOkXrAxaVTna6JEI+hw24C4h8VPIi1CvGOre9MM3mtkj1QST/wuOe7
- IOEWJHRkQJsTjnfNWBspSQmSmm7H5sa4Fx1/2kDycu4eg=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/xe: Prefer struct_size over open coded arithmetic
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>, Oded Gabbay
+ <ogabbay@kernel.org>, =?UTF-8?Q?Thomas_Hellstr=C3=B6m?=
+ <thomas.hellstrom@linux.intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <keescook@chromium.org>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240210141913.6611-1-erick.archer@gmx.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240210141913.6611-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.172.225
+X-Source-L: No
+X-Exim-ID: 1rYqYC-000VNR-0W
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:35494
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfL9zkjrNLIohymuu3UdYWSYSgVM9arciIPhobtcahpMfT47zDnaKwqLIZYSUc97avenMKubN6CD8am/K70DUvCSFlcPYwJ/tLy2NZZsZ3Q8njUSYbpPh
+ usd4ywzsME6sQqldUXBskiJ6xjOpMPT+uJjMwpbi9Gc1aCJTx7FgWX8AloPLjdInPfC2QbMeXDCdOlPtJTC4+t8y2Fiol6EaPdioPPtSYePW7Ve8RFzD3uh1
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1].
 
-As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
-this structure ends in a flexible array:
 
-struct mtk_nfc_nand_chip {
-	[...]
-	u8 sels[] __counted_by(nsels);
-};
+On 2/10/24 08:19, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
+> 
+> As the "q" variable is a pointer to "struct xe_exec_queue" and this
+> structure ends in a flexible array:
+> 
+> struct xe_exec_queue {
+> 	[...]
+> 	struct xe_lrc lrc[];
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the argument "size + size * count" in the
+> kzalloc() function.
+> 
+> This way, the code is more readable and more safer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-the preferred way in the kernel is to use the struct_size() helper to
-do the arithmetic instead of the argument "size + count * size" in the
-devm_kzalloc() function.
+LGTM:
 
-This way, the code is more readable and more safer.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
-coded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/160 [2]
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- drivers/mtd/nand/raw/mtk_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
+-- 
+Gustavo
 
-diff --git a/drivers/mtd/nand/raw/mtk_nand.c b/drivers/mtd/nand/raw/mtk_na=
-nd.c
-index 60198e33d2d5..17477bb2d48f 100644
-=2D-- a/drivers/mtd/nand/raw/mtk_nand.c
-+++ b/drivers/mtd/nand/raw/mtk_nand.c
-@@ -1356,7 +1356,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev=
-, struct mtk_nfc *nfc,
- 		return -EINVAL;
- 	}
-
--	chip =3D devm_kzalloc(dev, sizeof(*chip) + nsels * sizeof(u8),
-+	chip =3D devm_kzalloc(dev, struct_size(chip, sels, nsels),
- 			    GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
-=2D-
-2.25.1
-
+> ---
+>   drivers/gpu/drm/xe/xe_exec_queue.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/xe/xe_exec_queue.c b/drivers/gpu/drm/xe/xe_exec_queue.c
+> index bcfc4127c7c5..f4e53cbccd04 100644
+> --- a/drivers/gpu/drm/xe/xe_exec_queue.c
+> +++ b/drivers/gpu/drm/xe/xe_exec_queue.c
+> @@ -44,7 +44,7 @@ static struct xe_exec_queue *__xe_exec_queue_create(struct xe_device *xe,
+>   	/* only kernel queues can be permanent */
+>   	XE_WARN_ON((flags & EXEC_QUEUE_FLAG_PERMANENT) && !(flags & EXEC_QUEUE_FLAG_KERNEL));
+> 
+> -	q = kzalloc(sizeof(*q) + sizeof(struct xe_lrc) * width, GFP_KERNEL);
+> +	q = kzalloc(struct_size(q, lrc, width), GFP_KERNEL);
+>   	if (!q)
+>   		return ERR_PTR(-ENOMEM);
+> 
+> --
+> 2.25.1
+> 
+> 
