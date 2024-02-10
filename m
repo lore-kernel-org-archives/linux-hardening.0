@@ -1,57 +1,56 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146AE1FDA
-	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 01:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E424414
+	for <linux-hardening@vger.kernel.org>; Sat, 10 Feb 2024 01:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707528002; cv=none; b=QTa4X+QVghCJGpZ7YHPBVO2V0Jx20hA0/kvkJvTXnp/NfkdfAtqt1FRKZP65F3BYApeUleW1jzqH/gyYo3PrpupzQ4+ciAyQ1T1yc7T6xuqOAJP8PINKSukFyKGpRiMOQQ/v4U6R5WdLloCb4uzjo5o+6BWs/O8/6pPA9IGCq2s=
+	t=1707528078; cv=none; b=rm2akXG/mNlG2I038pJ4XkfkWO2IX0FS/CqRUyWPB+NQmvSA+N3GdHx48ooWZuxNePcFz7+SBELmgc8idS5CmeSLGKS8V35s0vXBVbVIiLqSbBQ3V+KCP/0jw+Bso+WDkokM6Bsk7bGNeolxcm90Qy4tuBNhP/R2SOzZ5RQIlkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707528002; c=relaxed/simple;
-	bh=mhYzvfO5qAdOvRqaeSWlpQ7Iw0KMt4EiD5xwuMivi2Q=;
+	s=arc-20240116; t=1707528078; c=relaxed/simple;
+	bh=YXOeaFyH/Pms8EHNs0Yn9VpxOYoeaMIHnsivrVAD5oI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A+sQH578U5x9xEieVtuewKP2+dKXm608PZmZXafaZ/gF1LVRAkQifPBCk5odPKipEvsCAzulFoHtuaOCmEEWWMg96Uc2bzqeiKrSRnfrtgdSR194GCYqEs8TduwSCHo4xjDqrP4EIKOQMffQApt6C73QEQx77r9uMasi3V3nwqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DUtsbamR; arc=none smtp.client-ip=209.85.210.175
+	 In-Reply-To:Content-Type; b=PYaxApPaNJAkj+MY8EpdtiH2prsEpX+igODblQo2tN43zJYmlM1T+yrYsZq0kDrR90V9vJAl+En+JhhkFjQyzIgr3+iLh+Yxxr1DiTbL+D9kp8K74a/LvrcGxabJG7RI0NXDJAGjuuVupeILJ3IFW/JcR8zK9eG9Xc2qy+thpzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FL4/4OX8; arc=none smtp.client-ip=209.85.167.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DUtsbamR"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e04ea51984so933407b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Feb 2024 17:20:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FL4/4OX8"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3bfd27f6dc0so831633b6e.1
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Feb 2024 17:21:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1707528000; x=1708132800; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1707528076; x=1708132876; darn=vger.kernel.org;
         h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vK6jFd1TXIqhxzFv7PXXoF4+Nn7lHuEpkqkJ6CtTRB0=;
-        b=DUtsbamRekOAW2RVSWB7B0QsUedyvJaH0noXtifxgvr37IdIHBZoC2Di7DfB9ZR3XD
-         JhBfHw5ikX08vpHyyMum2m5a/YRDVkgvgbSDuEJMKpPh0z+3kb9d565PKA9/yNUp/9aK
-         /H7l5meoRTI1K7JnW1npQOjCYdCCc5J+ZfKrI=
+        bh=nqVh7VheQPkGunYSVs8H2SzDbLWvIOLuHps6fYGqsmg=;
+        b=FL4/4OX8umN7lzFDaVD0z1B/ZRvQAARUo5+Xb3PFNxN4x94SUupUCTEot3erS7j/b3
+         U7K24EsUyT8oJguo5z0btmslbrYNkBOouBDeqIlq125Zl/dzSvZOyOr0DsXgb1rIAZOy
+         JEuMJVcBbPgRDJ7tU28iMrC/ejMYY10zzAMeA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707528000; x=1708132800;
+        d=1e100.net; s=20230601; t=1707528076; x=1708132876;
         h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=vK6jFd1TXIqhxzFv7PXXoF4+Nn7lHuEpkqkJ6CtTRB0=;
-        b=aqm7xhV1qUdAow2+FewAzCYKbdsp4M2G1KTTqflTKX5C+iQ0tkjYI6TFMfXl+skwfD
-         /e5mg+BGex8ZBjV2KjW/CVg9Km803FGRdfn+KJsl1DBTU/AOgQyKigp7roU7Id20iLCa
-         tvbEtUuODtkeIxQa9VBwyp/P4BD1tqiHj3mdJmzZcOM3A7dOdpda5O5DCGJQWSZlt5ii
-         zmT5jHJcbAl2sF/SQhNDMGl/ntBJXe8ZpJ6NsPk22OEsnitrFODYvehenkbgCZpQAu9V
-         O8oevd5PZAwxjqyCFslLAn2uEAsuSW5GJCOYQP61f51GborS4x1KVIaPcdxQFfRghUN8
-         /hJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXz4ixQhsNM62eM7UZN45zDY0Up9Vy/zvArGzkxwRf2lNn4jZgLA/R/d8k7E2i/L2ThEbi2yR95ANxHtbdzUj8uTjcyxLuDM6/5NiyUyi3L
-X-Gm-Message-State: AOJu0YxEfqWc6iQYm6bOIe4Pm9fmCgRO7A7aRiafzfv1q7FXU2T7y93s
-	wCVy2VYH1rWpCf4pOgiNgvShjzbjGzOmAa1heeWmm2re5JiKBHa0iheqERrhjQ==
-X-Google-Smtp-Source: AGHT+IGrzaQqCtgxj5ptjRMlebu8ohjLV9zrDqP844UybRDCK6f2DAe01pbM4bDiMGimbK8Qz9BXNA==
-X-Received: by 2002:aa7:8610:0:b0:6e0:2eae:c6a4 with SMTP id p16-20020aa78610000000b006e02eaec6a4mr1138323pfn.26.1707528000137;
-        Fri, 09 Feb 2024 17:20:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXreHkLKTx0bUw4tLn+GCQO63NE0l2azKaDTe2Ev8voDeWlMdZlRG11b0yM9KyBEGEdjYvl8SMCRZIq3Z/bymjBbNirBtBkQO76cuUIv6hocyWU2mfJxhvg5uJ3TZZ5uNWdlktebAcaqPU+quCbSoA9E1/IiOFKGnzZOfMCs0/RWUFydAiddqSN0CcufAkBZIkySEWiT2ntqCfysBJHg5033TASYEaVQQe8WMuygdBhWrC0O/wNJC8PwooOrnNFbQ==
+        bh=nqVh7VheQPkGunYSVs8H2SzDbLWvIOLuHps6fYGqsmg=;
+        b=HpapubBqj4e++yCbWJy8L9/1XGIDubMqpN3I9+5MzOVVBM+VT4omZLbe0oybaDBYnf
+         Q2yMeLfZm3ToqS+c+ndegSos/EPRuoCxk9qUYJAD+1vI+mB9yn9x6Z1y5Oh/4pqqATPm
+         kGIa/eCQRf137NcthkC8enPXrFIjTm5y0Hw6hA/8rblFHtQEDHDfFPNCU+BVqvpXDqHB
+         WnIFJ6Dq4wd48IEjzFI/IATB5207f1X+YejS/iD8oqvkyIrpFIj7UhTxa2f6xWn3TFpp
+         6w0D5Cmsf3dYSTj3NClzWjuHlt0V4LbJkpNmfF46meFu2jEurtgGV5P86wLl/Sfclmdp
+         6XWA==
+X-Gm-Message-State: AOJu0YwN+Zx5QTprOZqPifxyTT9tQCfNVanZKVyEVgFfFUVzR3tm7OjZ
+	pH0Vb2ppLqslkinGQFUYneVzGi3s6krHrkA3/7Da0UOGIl6odkhMI0rhOHxaDQ==
+X-Google-Smtp-Source: AGHT+IFsEw2XuPqtaSYJFgyHnGtSuMzibFR1ZrCA6gFpnQW9rMbeCUv0ULAbCBtaakeZvAFVPLlGcQ==
+X-Received: by 2002:a05:6808:178f:b0:3bf:d840:6c0b with SMTP id bg15-20020a056808178f00b003bfd8406c0bmr1027953oib.36.1707528076385;
+        Fri, 09 Feb 2024 17:21:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWVY2twy7uEoWOVEFn/5c21UNDSyxcVra7HVxPFLSY3Dk5asfaMztKqvb+RAR3Dz/5t/P1Aso5z6HVS+GUcfqO8nNuD1sMFf8pNaQIejY8kyyVJ3Ra42dEZCD5DKai/6BTT9BDwkrnsvrfzpo62eFZ3l8ppVQowmk+8BrO3rYUy5Mh5yuzaWqklLM8KPICJlisWrXHE5anG1xyg8BvravZz8KmsitaSUhbSB4fbPNHiUWoUbKd7TfRUPz+sFSR4h+mm60F7a5CneCpljEOThYq0KljzDfMSdGR1q6MD07RLcNmi5ALI
 Received: from [192.168.134.133] ([166.199.109.114])
-        by smtp.gmail.com with ESMTPSA id x186-20020a6263c3000000b006e0521c2156sm1269149pfb.173.2024.02.09.17.19.57
+        by smtp.gmail.com with ESMTPSA id x186-20020a6263c3000000b006e0521c2156sm1269149pfb.173.2024.02.09.17.21.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 17:19:58 -0800 (PST)
-Message-ID: <3b1b5028-531f-49d4-a59e-cc39868719cb@broadcom.com>
-Date: Fri, 9 Feb 2024 17:19:55 -0800
+        Fri, 09 Feb 2024 17:21:15 -0800 (PST)
+Message-ID: <cbf50038-4124-484d-b045-9090c5f9ab06@broadcom.com>
+Date: Fri, 9 Feb 2024 17:21:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,14 +58,15 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] irqchip/bcm-6345-l1: Prefer struct_size over open coded
- arithmetic
+Subject: Re: [PATCH] irqchip/irq-bcm7038-l1: Prefer struct_size over open
+ coded arithmetic
 To: Erick Archer <erick.archer@gmx.com>, Thomas Gleixner
  <tglx@linutronix.de>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
  Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, linux-hardening@vger.kernel.org
-References: <20240209181600.9472-1-erick.archer@gmx.com>
+ <bcm-kernel-feedback-list@broadcom.com>,
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20240209183128.10273-1-erick.archer@gmx.com>
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
@@ -100,27 +100,27 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240209181600.9472-1-erick.archer@gmx.com>
+In-Reply-To: <20240209183128.10273-1-erick.archer@gmx.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000eb60390610fcd77c"
+	boundary="00000000000073f3a30610fcdc75"
 
---000000000000eb60390610fcd77c
+--00000000000073f3a30610fcdc75
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/9/2024 10:16 AM, Erick Archer wrote:
+On 2/9/2024 10:31 AM, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1].
 > 
-> As the cpu variable is a pointer to "struct bcm6345_l1_cpu" and this
+> As the cpu variable is a pointer to "struct bcm7038_l1_cpu" and this
 > structure ends in a flexible array:
 > 
-> struct bcm6345_l1_cpu {
-> 	[...]
-> 	u32	enable_cache[];
+> struct bcm7038_l1_cpu {
+> 	void __iomem	*map_base;
+> 	u32		mask_cache[];
 > };
 > 
 > the preferred way in the kernel is to use the struct_size() helper to
@@ -131,13 +131,14 @@ On 2/9/2024 10:16 AM, Erick Archer wrote:
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
 > Link: https://github.com/KSPP/linux/issues/162 [2]
+> 
 > Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
 Florian
 
---000000000000eb60390610fcd77c
+--00000000000073f3a30610fcdc75
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -208,14 +209,14 @@ kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
 NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
 AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
 LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIAjdiJLlRlRT2dZO
-qN/0xk5STzm7g+atoabuXWAgOJvOMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTI0MDIxMDAxMjAwMFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIFT+JDGYDsuzexWn
+Mss3oIKHCldNLn16P3RhYiMXTS9DMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDIxMDAxMjExNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
 AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCUzbw00G9T2gugbbC+1UatU6vs6H2vr3TQ
-IYMYGBhZJ6ISsFRtLYtdkCZEQB6k9+MrMgI/zkqJyjTlFR3/6HqiO9TlCX41Vf/zuARaceiuM0cr
-U46IQaHfQv9ZFImNIqYfL+lKLEfUpFmUcsZDv4FJopZiV9tkGfxh9LcPuDZfQK/6aEubhljaA+go
-D9og+UKN2tzDt+YxfUHinahb5YRbL1aPINyrstaTf10iQFpqw2fXdLj3tJYQs9JPkCYw2ATiTuWi
-dDkLp5vWYbouEYNKpakEfs+d9VlK8NO3mpClukxLzBteMf23/qitC9H9XbWoyKBNe7ZVZ39l/ZU8
-WS3U
---000000000000eb60390610fcd77c--
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBWAleIQfo+PnZc/13tDDV67hCbVqI0jt6M
+pg6kJt0ybvscVX9IIsR7wbt5jXwSp9JAA9DPfoFOnYfJL2PKOYGkNDyjSbstspVROPvNY9U03U5v
+Y2SK/O3RrXwZBLRWlKWi39RpSMNMjtFk7JerdhUMIbnD33GkPafhYdDziYlrtyA/WQRxezjR4iiI
+mFbJhci2HgVOGtoCWr8EgK4SdMarTQtb6KaVReySNeZc0V3EjcfRP/Bvk32Xgff+2Pqnb2G/bVXh
+Of3N+fQUKRprPxrn7xcbX9cipLQS/qB1Snz2S1ixRdutpV9eBSs/bNzXn2+LlUDhlISwyNMBRdJG
+APyf
+--00000000000073f3a30610fcdc75--
