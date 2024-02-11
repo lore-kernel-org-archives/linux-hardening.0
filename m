@@ -1,125 +1,131 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEB01102
-	for <linux-hardening@vger.kernel.org>; Sun, 11 Feb 2024 04:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0661E168B7;
+	Sun, 11 Feb 2024 09:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707625920; cv=none; b=TcfBiR4fE2ZQBG4qX3jLYhBUY9u6nq5PznQBUQ4shXFnK32Krc1d4doIO2vn+ydRy741NqSqeli8tlHEc+JIckk+1sv4Y1C/TVZOonZxKETDJCTS3F2Kgq9Ag3PMC7xvqQUFH1pWvY3rIGusGdfITHNQLcsxUwM3nc1sgqx1g60=
+	t=1707643052; cv=none; b=ARKX5efoPIfDk/hE5GpkNy6k4NihrhzPZQFpYHWHKLQ0nZMYAGEO7zL+5lkvOUTy/JzoLnt8d57tE6MHygGa7tM7enMzCFueGpaGA9EGwSVBt+iLe84TgUIlYEySsgDf3WeBuW2Y66B3k8i/GxB9Otei0B7XovVrStx3OiwYKnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707625920; c=relaxed/simple;
-	bh=5ZwnpT8mcXjBFkyjqPTZeh5s0VMPzldNDT4ybxfhyqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i2o7YkHzwQTyBMe2qxL0v6iEQd5BghnnJuQXyr6UZCJdZwkEPKnsLUWl1koT9qd/MPkaiBnP/Qp1+B75gOLif+S8NZ09uJPeBH1SMYi5dkRwaDJyIxhZce/DSmRmoXAlEha5r4og5zzD5vfD35uhR8QkCII8bA7LM4OwQgCUrpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=WfIGol9O; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1707643052; c=relaxed/simple;
+	bh=rSHYS9qHk/jwImtw4+JVwsbnbAy0pXklABl265nds1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XSLjJTk/6uI70VfEMrrswDqxQ3rw5bZ/yUVqgv2l3/wUVVOpb7ktWN61SMbiHCsFBDyETW4G2jDq7D1c/HuO1FFdMQ5DUmaA2BxaZvyVybI+0ZGroASMBDuKbEPBYIYxJNn8tAbe5VrHhw2xppm3P7bH5vQPFqdt1mMJVlzMP8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=P8Np99p/; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WfIGol9O"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id YukSrm0Mbrh9zZ1VQrDdop; Sun, 11 Feb 2024 04:31:52 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Z1VPrpooIkXAgZ1VPrXZhW; Sun, 11 Feb 2024 04:31:51 +0000
-X-Authority-Analysis: v=2.4 cv=O5uavw9W c=1 sm=1 tr=0 ts=65c84db7
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=SFFPblQYn7CYJzprxtIA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JB/WeyEbAV7OyjD3c1GyCrBYmyVdRfm89lgXESEF2VM=; b=WfIGol9OItIddg2zBSp23EqrT5
-	zc0dF5un58Jy92Zs0udxqIhcXZaG7iF2qgqWS0poWnNLgXM4AI3BkvYc8jX+qbxvsDkR+zJchzJbh
-	SuCe4RlhcRtxUeYQnPDRpBdb6x9IuTTDReiGwUY5mTJcvVJPGgtp6cZcfoeIhdjUpx7MWHAUAk3dK
-	6kKWA3VcdP6ZFwSfKMjO/n9UrFxUnGa/nihgYD1MfMDmpz6lE8bTTLEa3ztHlFd1+cEoCEYbm1IX6
-	r582PhANx4MiQ809bUjVy+QDOFmffrLhT+iz+1i3IC6yv4qF0wHI6hxQGQL1W0P+14IOL+LDohMWm
-	Y3p3kuwg==;
-Received: from [201.172.172.225] (port=59896 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rZ1VP-001GeW-00;
-	Sat, 10 Feb 2024 22:31:51 -0600
-Message-ID: <bb7a8d29-d80d-41b0-8dde-2aba44c3fd90@embeddedor.com>
-Date: Sat, 10 Feb 2024 22:31:49 -0600
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="P8Np99p/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1707643010; x=1708247810; i=erick.archer@gmx.com;
+	bh=rSHYS9qHk/jwImtw4+JVwsbnbAy0pXklABl265nds1E=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=P8Np99p/+p9ERHHFhS7PD/pOfT2dBBXJIHtsDOJ8QeWuiL8RS4wg58MC1tDUtF3I
+	 GIJgL1Qv1ogbXlkXsE3dLCbmWzBs5EYt8Dkotr82zFA2LN59zWfIoZ+t3loKmIc2U
+	 VM47LRH4J8VPJ4aBZaxmaFbDghDcda92em6l6ER4JIcQVsWgfIFUsA+Vg2oh/MRvA
+	 hDeJ0yHCkdzrL2Nml9oj9ophK1f/0V2WnyODJze/8qIdeHvm9ubBEGsZTEdOJrAjG
+	 ewiseXCZxU2EY5Lhqc/U8Akb5/fG1+xNt+UnWY/xBAAhkMkR2pZcFxX+1hFJTSzIL
+	 E4dl311syDfFl6Mc9g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MDQeK-1rjaLv3tI6-00ATNc; Sun, 11 Feb 2024 10:16:50 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Li Zetao <lizetao1@huawei.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded arithmetic
+Date: Sun, 11 Feb 2024 10:16:33 +0100
+Message-Id: <20240211091633.4545-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/ntfs3: use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Lenko Donchev <lenko.donchev@gmail.com>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: ntfs3@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Zcgoighe07IahAV8@nixos>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <Zcgoighe07IahAV8@nixos>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rZ1VP-001GeW-00
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:59896
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfD8TiM8OvVZoRLdGfJmYLnyDcppRUwvr8+lL3G2gYiQJVVEMUFWXMmlB5Tx6SmjDaejT21+ZHMcjBwbTHWNY7p7DhlWmJmP02wsLycEIHEouiiptv4ml
- /vkpdIVsfrBElg8dpPztXwMo7AO5OeIENy//mzezzDp35R1xFUTr1ivnnIUqhK6tZzKgfuMsSX8ungHe8K/K39QTeGqwau1y+tQM0upT7211mA6bid0VtSVQ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:T+hTP+nIP/OHyAruT5vbyzud6ys/lN69HGWrX4oTcE/i2FVhsLb
+ KB1+1LMkHVn67DYnshciNkLlvXJBH7PrHaD6kPazuidAQ3uf7+ILEuHn5Zug3nf5IWR0uLP
+ dQ8jOMugei9vxKq8tNZK0YEo3hnZmFtY2P9kqlssEl7RsuygsGmnYzSjBGSbzhdIDw837pK
+ wZXnBXQy57CiHMIASp4JA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:NSjmnwszXxk=;Cbh7RAxypTb5l0v+Ku1wyOW3xX4
+ 2FZLp9I9qGqFp+d8FikX8Mb/wxlht9YG9qt1CThsj//a/h5HF++hqJyWvp8s8bpQ1DCp7h2J4
+ bvHP/orYTs1qm1TyPc2oSzxWu2lwQTwO0mIpQ17idfrdOcnVdOqp2Sj3uqtGa3p+aUEhdg7HR
+ qyazQNUAnNw+Rm3a1izZTMDwjK//gpp9KwThVr/fd00ZMlO4KNWTEGzS2uYtqdwc+7k+0eskv
+ TazVSmv5nzuEmGxT5/enrL9wluwpJzdudwgZEsnRs2vW5zxs4pR8JpaGQe2SwfPzxDehLsOWU
+ Rz+m4X7qrsoUXkwjEqRDjwJc5/zyG28dABjemoW9LPKWaHnbfCqc20rAcT70EDjM9JSBOxdP7
+ 8Suh84GDpLmXFSY2va1VIUEDWcAETfS5YhfsbmB+wMi5VMKlEYSLk1uJ58rVPfN1q+Zozz8Z5
+ lpDMnHVIga52kjN1m+nj30z4AVhsXwE9R8ck/N3UuiLD+UOs8fIhAEcOjobLbu9KsJkPToVgR
+ OQPs9w1hJn2lU+kVkpea+Q0aVOSDMQafkDwQu4RYWBH6D3IWTrFq724+a8uEb9cKRwLhTb/h8
+ DTRKlGw0Z49mn5o3qdVIqL8zB0+hsAlN0MkjVoj8KuWQnZQUdODeeraM/8Gjjaq6b9+H8cUdO
+ WVT8/ytmHjbeDcCSVNEp0qJyNCu9M/iaNm3bzGR37WcuSTqKA+15SX7YfHWv/nCjnLb1i5gr1
+ MA0ctpGc1u24wlGJ4YCxupldxRrbxhpJJRKhweMz3StESKeJtnOiu5Q8YCuPL9mKzAMFa0nCg
+ cINxvhCxkLxbckyyyVzNI/VQJHstAhTQpdn02cGmDVikI=
 
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1].
 
+As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
+this structure ends in a flexible array:
 
-On 2/10/24 19:53, Lenko Donchev wrote:
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows[1]. Here the multiplication is
-> obviously safe, but using kcalloc() is more appropriate and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link: https://github.com/KSPP/linux/issues/162 [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> 
-> Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
-> ---
->   fs/ntfs3/frecord.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-> index 3b42938a9d3b..d435446537ca 100644
-> --- a/fs/ntfs3/frecord.c
-> +++ b/fs/ntfs3/frecord.c
-> @@ -2636,7 +2636,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
->   		goto out1;
->   	}
->   
-> -	pages_disk = kzalloc(npages_disk * sizeof(struct page *), GFP_NOFS);
-> +	pages_disk = kcalloc(npages_disk, sizeof(struct page *), GFP_NOFS);
+struct mtk_nfc_nand_chip {
+	[...]
+	u8 sels[] __counted_by(nsels);
+};
 
-`sizeof(*pages_disk)` is preferable over `sizeof(struct page *)`
+the preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the argument "size + count * size" in the
+devm_kzalloc() function.
 
-Thanks
---
-Gustavo
+This way, the code is more readable and safer.
 
->   	if (!pages_disk) {
->   		err = -ENOMEM;
->   		goto out2;
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
+coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Add the "Reviewed-by:" tag.
+- Fix a spelling error in the commit message. Change "more safer" for
+  "safer" (Uwe Kleine-K=C3=B6nig)
+=2D--
+ drivers/mtd/nand/raw/mtk_nand.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/mtk_nand.c b/drivers/mtd/nand/raw/mtk_na=
+nd.c
+index 60198e33d2d5..17477bb2d48f 100644
+=2D-- a/drivers/mtd/nand/raw/mtk_nand.c
++++ b/drivers/mtd/nand/raw/mtk_nand.c
+@@ -1356,7 +1356,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev=
+, struct mtk_nfc *nfc,
+ 		return -EINVAL;
+ 	}
+
+-	chip =3D devm_kzalloc(dev, sizeof(*chip) + nsels * sizeof(u8),
++	chip =3D devm_kzalloc(dev, struct_size(chip, sels, nsels),
+ 			    GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+=2D-
+2.25.1
+
