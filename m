@@ -1,116 +1,306 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147755A785
-	for <linux-hardening@vger.kernel.org>; Sun, 11 Feb 2024 11:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4A51F16B;
+	Sun, 11 Feb 2024 11:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707652318; cv=none; b=Yevqkr+vT/X03ViPRungWOertGNCdMdbxL6wuFVqR4YIM3tDNLi8Kso2jTmJtjWj8432Jfx5YGG5IVueAEYbXv5OIyiKQ2+oTdWnUJhhvox0iuXI9buPXG3LJecvoQX4yoFI6yzdd8C9kFATcfwflcIk8Yec2ZRzfRKUjpGXfmU=
+	t=1707652763; cv=none; b=GMBXSVerEwoHJKGYGDdEe7PreD6t1ZqWl5xgzlJpGW8C17DdCWWPOP8PU8Ikyy85yvH52zM5o02KTUcMkd3yW6mzmoqs658POrR0CXa1bgu9taTg8pz56DYqB1CcdN8peWBwWf7SJGj9tbvmv6lLPjJnnC2qbqW/YNc+l1MHb9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707652318; c=relaxed/simple;
-	bh=XOk8Kr8T8eOC+VVzgQLqdZmZkP4QeC0s2lWogs+CjA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mGwShuUcqcyOsRexITYlD8laINCMRdrOs0zd8GbshUD6uh0V2V9X0m6suVBFdUZy+mDEYQq0hb/1rtd++FY/K4AvKMShoOsBF4lskpEc3u1oeI964tfw7nc+KF+YP06aRZ/BcApM/rdkVOSNpih5PSXCCwBrp0JCmYpAJp5+ou0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZ8Mp-0000La-H1; Sun, 11 Feb 2024 12:51:27 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZ8Mj-0005Ea-EX; Sun, 11 Feb 2024 12:51:21 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZ8Mj-002Utq-17;
-	Sun, 11 Feb 2024 12:51:21 +0100
-Date: Sun, 11 Feb 2024 12:51:21 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Li Zetao <lizetao1@huawei.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded
- arithmetic
-Message-ID: <rep3323evfhxh5ctmyd2biqrpg2ifej2jei5rsqpei7vuvnmsc@krh3gihuyoox>
-References: <20240211091633.4545-1-erick.archer@gmx.com>
+	s=arc-20240116; t=1707652763; c=relaxed/simple;
+	bh=F/PLXTMkyVwJbChPRdvu+2gvdsQ3yhXw4Bv2uHCzTtw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gN0mG0RWGZQKM1BZIb1qv1CUPQf1SQyQ+rWo2txAQJ9tQWSRTnkWIIdGQcezLkOqDKeTl6BcWCSn/x00PzG0KLu5CQzKP0+TL/LfzCPbH06yg5M1yn+s/eHFkPRLGZ1YoVlRh66kVrhUuCkI8jLy7eQ//nWHKwhiSNr01Z2kUWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=M5fpwnBf; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="M5fpwnBf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1707652750; x=1708257550; i=erick.archer@gmx.com;
+	bh=F/PLXTMkyVwJbChPRdvu+2gvdsQ3yhXw4Bv2uHCzTtw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=M5fpwnBfY9wIq2Eict+kpD4yuEFHT/8k3wNq5IgBWW188bW12+B/QCI7n/kzgr81
+	 Hm231NYpqkldblbUaWbPJAapkzoLJFP/9ydE2+R3ualHQ3nmi2TX16+OERezacQIU
+	 ev3vsyupXjOba0tNIrUf5oD+QnhbUDyLWDXdeLvNHaVuKjp6m8YaS0ydnHXcQvBMa
+	 XiSg3VxPalI1QBzumivZB2pn+7vr+qSc4DyWiGtxvfStS+UO1D0Eo8V7Wy4AabtEX
+	 7Zu2v5x/yhjKO3rGMhsf/FLov93ttw0TyKA8rS5Ysue9NY9wsOoCE3AFBgas98maC
+	 U/cHDo9+X4MTIpOF8w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MyKHc-1qlYbh3FVs-00ykWz; Sun, 11 Feb 2024 12:59:09 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Edward Srouji <edwards@nvidia.com>,
+	Patrisious Haddad <phaddad@nvidia.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] RDMA/uverbs: Remove flexible arrays from struct *_filter
+Date: Sun, 11 Feb 2024 12:58:56 +0100
+Message-Id: <20240211115856.9788-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sfcqdcis3bm2zuuf"
-Content-Disposition: inline
-In-Reply-To: <20240211091633.4545-1-erick.archer@gmx.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
-
-
---sfcqdcis3bm2zuuf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:v4KYnvSntkV7LAPS/Z4jE6jq7w2r9NC95ab9cbw5l25bk4Ynh/d
+ dfxTKZSNw2Ghtt5WWL6BPIRBpNuWz7LZ1e8rd+WQjmWolSkptfXVWecvkE7ImNYL+ZZ/wfb
+ 1aJGloC93dSJVRfLub9Y+JlAHjMf7VYhrQttto2Y7Q4jk8kScxVu48Jid77fo4/4yktZvuf
+ Ut3d69Wt106PV8aDx/VsA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hxC/Z1PMUwM=;Ra6n+mlC+ErZ8rxsHfTQsZcsFCv
+ 1J6MyqNe+rKPWGtWQGhX2Ml0c39PyUsYyFYxXVWEDEoy7AgrlJQ1Yb7ayh/G5YIV3bqnCeSEU
+ NCj9svlWG8picVtpZ1+YLPyEWTrpgaD3JEMzxyuuzvngn3eR10PaRFcA4wKc9GRs9chJEhdVf
+ XcTr9zclM46WQ5OeCM3rtuLcFHMWQa7E/5S1PB+j0tGp8zEMgd14HOglfiuqD+ebj2wT+GyR3
+ Pa7GaD3aYofbjx/p8fMDiB4xeGTxT/XqmRLMqBMmyvuWU6iQR2kT89Mp360kw2ecXZAbs51g2
+ aRvAGz115Wc7oDlTM6/Q+jvnlc+YOcyAPWz5O7x83fr7Q+C8TtnICXXe17keYcaMaJqPUQbvR
+ dThgMcoDHez4oOk6J5R8blf8ydIy3N3NTEcnLa7aV2iThyb08Kitq/pMp/e7CaekN3q8fhqzd
+ oz9oOcwiWkv9XEgzY4tPUzxsU++NNbIgSu1+m5ZashgFw1bEpmyWrZTyISeQQl5bITu/xO2aU
+ wkwtbS3lhqdjW/IQMrqYFL3pydJ4qdUPEmnmJdwDY9ZYs73yaFwMCgjvwj3IoJXFHL7fJMrJN
+ 3wy+XquX2NT9QbuDY1nKRGvFL4fr6zB8vbVMesYZeu8j51buj89VxLwfuViDZdrGWDKTBM1ri
+ CnN70mAh9ab83yB5Zc13Idbg72CNistPhXdPLoNcAxA9tBbwvsBOabZxDc6tSHHmfoKEOLecI
+ AoZjJR85dOop/5v0ckQToRqgl1aD5m9gj12g+VVz+wJJWQKtJVu4RAKFFctbH125GV/0viFgJ
+ ak/pScHguLisa5pmwz0bQezeApOlXVXnwmh5XDOdlsF4U=
 
-On Sun, Feb 11, 2024 at 10:16:33AM +0100, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
->=20
-> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
-> this structure ends in a flexible array:
->=20
-> struct mtk_nfc_nand_chip {
-> 	[...]
-> 	u8 sels[] __counted_by(nsels);
-> };
->=20
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the argument "size + count * size" in the
-> devm_kzalloc() function.
->=20
-> This way, the code is more readable and safer.
->=20
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open=
--coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+When a struct containing a flexible array is included in another struct,
+and there is a member after the struct-with-flex-array, there is a
+possibility of memory overlap. These cases must be audited [1]. See:
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+struct inner {
+	...
+	int flex[];
+};
 
-Best regards
-Uwe
+struct outer {
+	...
+	struct inner header;
+	int overlap;
+	...
+};
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+This is the scenario for all the "struct *_filter" structures that are
+included in the following "struct ib_flow_spec_*" structures:
 
---sfcqdcis3bm2zuuf
-Content-Type: application/pgp-signature; name="signature.asc"
+struct ib_flow_spec_eth
+struct ib_flow_spec_ib
+struct ib_flow_spec_ipv4
+struct ib_flow_spec_ipv6
+struct ib_flow_spec_tcp_udp
+struct ib_flow_spec_tunnel
+struct ib_flow_spec_esp
+struct ib_flow_spec_gre
+struct ib_flow_spec_mpls
 
------BEGIN PGP SIGNATURE-----
+The pattern is like the one shown below:
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXItLgACgkQj4D7WH0S
-/k5ikgf9F4/qTgtnox96aTKRccDzsaTgOw9Qi3pN71OjgluyHYlBZZuLkP5oxvMH
-1xtEtrRoArhwg8s5AISfkCSKbJG6D3uSXUf9HsjiHx2K2tK+RkQy1vFalheaw7V5
-E4xeT2nxo6jpRzzqeqs75p8KbDE1FdrEZZuarr3wqtfb+oapvNF8Fy9a82Yg1BZC
-DMVilJ/dMLxb6nLJ6V0fGGOzzio9S8AIFx0alMWvEzVu8i+yDDLBWbQDlQZTqzIn
-lfNs4OCNwrzqhNhlWD6V8lzYV8SaUtFW+1A6ZKJb19MwobAnXElAgIQJOWX0PSY1
-vASWpbUmeY9zm+JPlBvqvX/3KIcWew==
-=DQCU
------END PGP SIGNATURE-----
+struct *_filter {
+	...
+	u8 real_sz[];
+};
 
---sfcqdcis3bm2zuuf--
+struct ib_flow_spec_mpls {
+	...
+	struct *_filter val;
+	struct *_filter mask;
+};
+
+In this case, the trailing flexible array "real_sz" is never allocated
+and is only used to calculate the size of the structures. Here the use
+of the "offsetof" helper can be changed by the "sizeof" operator because
+the goal is to get the size of these structures. Therefore, the trailing
+flexible arrays can also be removed.
+
+Link: https://github.com/KSPP/linux/issues/202 [1]
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Hi everyone,
+
+This patch has not been tested. This has only been built-tested.
+Regards,
+
+Erick
+=2D--
+ drivers/infiniband/core/uverbs_cmd.c | 16 ++++++++--------
+ include/rdma/ib_verbs.h              | 17 -----------------
+ 2 files changed, 8 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/cor=
+e/uverbs_cmd.c
+index 6de05ade2ba9..3d3ee3eca983 100644
+=2D-- a/drivers/infiniband/core/uverbs_cmd.c
++++ b/drivers/infiniband/core/uverbs_cmd.c
+@@ -2737,7 +2737,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+
+ 	switch (ib_spec->type & ~IB_FLOW_SPEC_INNER) {
+ 	case IB_FLOW_SPEC_ETH:
+-		ib_filter_sz =3D offsetof(struct ib_flow_eth_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_eth_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2748,7 +2748,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 		memcpy(&ib_spec->eth.mask, kern_spec_mask, actual_filter_sz);
+ 		break;
+ 	case IB_FLOW_SPEC_IPV4:
+-		ib_filter_sz =3D offsetof(struct ib_flow_ipv4_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_ipv4_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2759,7 +2759,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 		memcpy(&ib_spec->ipv4.mask, kern_spec_mask, actual_filter_sz);
+ 		break;
+ 	case IB_FLOW_SPEC_IPV6:
+-		ib_filter_sz =3D offsetof(struct ib_flow_ipv6_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_ipv6_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2775,7 +2775,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 		break;
+ 	case IB_FLOW_SPEC_TCP:
+ 	case IB_FLOW_SPEC_UDP:
+-		ib_filter_sz =3D offsetof(struct ib_flow_tcp_udp_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_tcp_udp_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2786,7 +2786,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 		memcpy(&ib_spec->tcp_udp.mask, kern_spec_mask, actual_filter_sz);
+ 		break;
+ 	case IB_FLOW_SPEC_VXLAN_TUNNEL:
+-		ib_filter_sz =3D offsetof(struct ib_flow_tunnel_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_tunnel_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2801,7 +2801,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 			return -EINVAL;
+ 		break;
+ 	case IB_FLOW_SPEC_ESP:
+-		ib_filter_sz =3D offsetof(struct ib_flow_esp_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_esp_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2812,7 +2812,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 		memcpy(&ib_spec->esp.mask, kern_spec_mask, actual_filter_sz);
+ 		break;
+ 	case IB_FLOW_SPEC_GRE:
+-		ib_filter_sz =3D offsetof(struct ib_flow_gre_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_gre_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+@@ -2823,7 +2823,7 @@ int ib_uverbs_kern_spec_to_ib_spec_filter(enum ib_fl=
+ow_spec_type type,
+ 		memcpy(&ib_spec->gre.mask, kern_spec_mask, actual_filter_sz);
+ 		break;
+ 	case IB_FLOW_SPEC_MPLS:
+-		ib_filter_sz =3D offsetof(struct ib_flow_mpls_filter, real_sz);
++		ib_filter_sz =3D sizeof(struct ib_flow_mpls_filter);
+ 		actual_filter_sz =3D spec_filter_size(kern_spec_mask,
+ 						    kern_filter_sz,
+ 						    ib_filter_sz);
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index b7b6b58dd348..80e814a57034 100644
+=2D-- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -1910,8 +1910,6 @@ struct ib_flow_eth_filter {
+ 	u8	src_mac[6];
+ 	__be16	ether_type;
+ 	__be16	vlan_tag;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_eth {
+@@ -1924,8 +1922,6 @@ struct ib_flow_spec_eth {
+ struct ib_flow_ib_filter {
+ 	__be16 dlid;
+ 	__u8   sl;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_ib {
+@@ -1949,8 +1945,6 @@ struct ib_flow_ipv4_filter {
+ 	u8	tos;
+ 	u8	ttl;
+ 	u8	flags;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_ipv4 {
+@@ -1967,8 +1961,6 @@ struct ib_flow_ipv6_filter {
+ 	u8	next_hdr;
+ 	u8	traffic_class;
+ 	u8	hop_limit;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_ipv6 {
+@@ -1981,8 +1973,6 @@ struct ib_flow_spec_ipv6 {
+ struct ib_flow_tcp_udp_filter {
+ 	__be16	dst_port;
+ 	__be16	src_port;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_tcp_udp {
+@@ -1994,7 +1984,6 @@ struct ib_flow_spec_tcp_udp {
+
+ struct ib_flow_tunnel_filter {
+ 	__be32	tunnel_id;
+-	u8	real_sz[];
+ };
+
+ /* ib_flow_spec_tunnel describes the Vxlan tunnel
+@@ -2010,8 +1999,6 @@ struct ib_flow_spec_tunnel {
+ struct ib_flow_esp_filter {
+ 	__be32	spi;
+ 	__be32  seq;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_esp {
+@@ -2025,8 +2012,6 @@ struct ib_flow_gre_filter {
+ 	__be16 c_ks_res0_ver;
+ 	__be16 protocol;
+ 	__be32 key;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_gre {
+@@ -2038,8 +2023,6 @@ struct ib_flow_spec_gre {
+
+ struct ib_flow_mpls_filter {
+ 	__be32 tag;
+-	/* Must be last */
+-	u8	real_sz[];
+ };
+
+ struct ib_flow_spec_mpls {
+=2D-
+2.25.1
+
