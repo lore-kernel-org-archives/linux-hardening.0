@@ -1,76 +1,98 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C58259B;
-	Sat, 10 Feb 2024 22:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D350915BE;
+	Sun, 11 Feb 2024 01:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707605796; cv=none; b=UnVXa71eSoT7x6TWMi4OaJLPB0ZYg0ZwXpAl66WO5eRINHj77gGz89Bs+KmkixK6iObaqLtg5rNyQKaKuiU2+a/ZKpQRHEaG20v9nEYK3PMNjDgwbGlV/m0femZrYJ/LE9QQnHJ9DB8DMNO6zMR8Z4mqGLzTnm3xCubuu+YmCYI=
+	t=1707616398; cv=none; b=QeB+7K8BSwogl2lW3JVQY/5nb9rxNdGMv6hUX5DTLkwvfWwTx8kg463/HDPee2/dZaiImczabTneXS61YMRYYSpMK7ZEAF4YDaitDkPzCOGMu4BOW3iUW6JB4noNFJO16zYUXJQcsNZluWZmqaDt7xbMl+zh/XeXjPesNhmEBYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707605796; c=relaxed/simple;
-	bh=8tKZK6z3KddJFqAvQqo359iHqAsAGCKcJW+oBIFlSvM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O5qKPsSZu1q+pMKglW3EUoEE2c1+n+7EetY0cYhsCc6X4lTWw7LvgUJGUDkZNKBzwIgAjgdF97Gak3W6EpfrdcuU3578PNURZ75F54wVWJO1My40xodm3CkTdb9qvzDiCGR4+04ec1o28ouEVFg5mHESI4W+3noYluXKy+egHLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id A21071A0663;
-	Sat, 10 Feb 2024 22:56:26 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf06.hostedemail.com (Postfix) with ESMTPA id 4593A2000F;
-	Sat, 10 Feb 2024 22:56:22 +0000 (UTC)
-Message-ID: <beff7f4411586efd8f08d7b3d94b0ca235375790.camel@perches.com>
-Subject: Re: .mailmap support for removals (was Re: [PATCH 00/10] scsi:
- Replace {v}snprintf() variants with safer alternatives)
-From: Joe Perches <joe@perches.com>
-To: Kees Cook <keescook@chromium.org>, tools@kernel.org
-Cc: Lee Jones <lee@kernel.org>, Bart Van Assche <bvanassche@acm.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Sat, 10 Feb 2024 14:56:21 -0800
-In-Reply-To: <202402092252.0A0A59A@keescook>
-References: <20240208084512.3803250-1-lee@kernel.org>
-	 <c9129b08-50fb-4371-aa05-6f6c7cd7acfa@acm.org>
-	 <20240208174912.GZ689448@google.com> <202402092252.0A0A59A@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1707616398; c=relaxed/simple;
+	bh=nuSzSl9gWOU7ThKVhsz/gLgGzU40+yE07LZq1v68Oyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sIb5I4ZYv2IEq9/NK9jdu5D3ffJIWMFRuF2mW7dJZyLNBz3d2mxG0VGY7ZxaFvDQWPjBnWcKJoTje87ossUkKjhP333eFJn9ghEovv9xNcVVOTcDfaYgRNijlh7K9Mz9P6cUfe9r7Po7/i3PIuJUrKfMCsJZEwvtBP+cLyuY23o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCy/MYyQ; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCy/MYyQ"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-686b389b5d6so9487246d6.0;
+        Sat, 10 Feb 2024 17:53:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707616395; x=1708221195; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P1jV67d8m24PXZq1850zcH4U3UHNFlaMaq/fIupQAUA=;
+        b=VCy/MYyQU+vcRyP6KfaJDM4e4frRffsi4M89h5jxeKJyE/idS/8UH2toVweA3Ew3dv
+         tvcEToMmJfE2Kf61Bds1w2/v+KqwslUprDQFn5kobKKu/2H5+kkCa+nAILdI3nhMLcWk
+         pVqPolRFuTi+zHLBJyUHSw7VamUcXC4IKMRBVYz/21ZGBgDc7+hIi4fkFcMk1KmMVvAW
+         eFrl5fr8CjuoTA5Osp6RX823oDoB6DdcQ8T+EPQ8ePJV0J10MLiAstqIwsWp7Nkw/V3O
+         Gvcl8uvvemjoZNseXCi3EiaQIOvVk/fxRdf5gMJ8HxB2LWQCBqeqYNRN7AzDDXqCJeM4
+         EwEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707616395; x=1708221195;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P1jV67d8m24PXZq1850zcH4U3UHNFlaMaq/fIupQAUA=;
+        b=uZ2eeKLkJ8Z9SMLxftBGw41cQc/3SZtyNvowPyU6jvBSm8AC9JZ6ZM6VbVI6rb6e4G
+         +nQCnZS6voIfbVJv7QbLDDwcyYmsa5tRHr2QjeiMgMHKvB3w5wiitrUsLF1nCkQU2hn6
+         tI2W9FM/uIiHHlnVRShGcoUfqaTWPWusFuJX+Bvmq+cyRmVWFDZ7zRnnHWeLJ4Cavj++
+         Q31SCU+uXkVYnvOIktI+STai++mt5ibo7DwRjMaANSPil3v98AAERYhd+pOUBu8vYD2s
+         57X4bJY9HZh12WzUV++K0mpi7yntEwE13Kvy2h5BXZKqSfzygWIMtvGUQfcnN4Dky/Gd
+         nQ2w==
+X-Gm-Message-State: AOJu0YwTIovF2PLFrqFEi06CrrRqJADCivtd8HcFEE3EcEw1ReWJn4g2
+	6+ORYP9p+T4BDxgzK7qELNeIcHxAI1jz761OweRF/D3mlwFzxxrI5ur9+P/UeA==
+X-Google-Smtp-Source: AGHT+IF3qzQja2kR2RYxGLqTqgS4IjK8n9nvUEg00vvn7W9qbbH4rgzdjr+GRq5k2l0JAplN2mPzRQ==
+X-Received: by 2002:a0c:dd14:0:b0:68c:627f:ed53 with SMTP id u20-20020a0cdd14000000b0068c627fed53mr3608896qvk.59.1707616395646;
+        Sat, 10 Feb 2024 17:53:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV6O9Ebb21G/lrlgwem4+12w8w/ssoqnMBcmAlTA9/i7CKwYyO3yj/QoX0Faoum6H5Nkw2vH94Wf3fg5FDvLQEJZEqqle0mPfhEFd1PPREyOP8JHzxHt3gz62i7mRAJ+cE8u9Fzx/sHjNWoBqj9C3AmG7KUsfkMLKRnyqLoXBOXrCZYUMM=
+Received: from localhost ([207.181.197.26])
+        by smtp.gmail.com with ESMTPSA id mu19-20020a056214329300b0068ca3ed8cb1sm2285785qvb.73.2024.02.10.17.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Feb 2024 17:53:15 -0800 (PST)
+Date: Sat, 10 Feb 2024 19:53:14 -0600
+From: Lenko Donchev <lenko.donchev@gmail.com>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: ntfs3@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] fs/ntfs3: use kcalloc() instead of kzalloc()
+Message-ID: <Zcgoighe07IahAV8@nixos>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 4593A2000F
-X-Stat-Signature: bwbccfhzcjhn6x9rfoppaay1kuycw7fn
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18XdaBtlCF0Uon/g9L1Z+Hs0qwOLAsaqXA=
-X-HE-Tag: 1707605782-769569
-X-HE-Meta: U2FsdGVkX18RorYUsbIJWjdQMGidD7ifUMhZwGLP+HKmvn48l+vAsuV+JlhC6OZhTOHQDRvrFvLFk3kVmNjMYKT3KrgHmlQYrO9+IASqY9foKvNs4KfanWAesXOmAMTgS5uSkQ6ik/f5Cco+Syj7RHgHCmdTKu90Jtk7srjS8TZd37qluqy8UGDhgKaHltEYCBCl29pCAvlGc53VkNom+mUFtQZpW3ensQFjYHJaa0r5VK5Y3C3h0mhQRUPwBr+Ivy8+go9TGO33cZUoD+8s3tghZqbzBQ0LybuuWFm4r5+hqCRiF01oL7l8gcFcJJkG+VulL8vcEWI4e+H/DCt8vdtX56tVV43fAPazTRWCfdq7OK2avqXHVJUYqXTskUwryylnqNquWqUJ9d0bAa0pH09UL7MwpB7suoQxWqYaOQH2BnUsokr6wbudeZERrULu3z5eMJG+Imz+OTxJwlu73cyoQxNEC2DSRtwtAxrUmjnOLYJ1LH6Y/73Uyakp9sKADdOmPssjE7k=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, 2024-02-09 at 22:56 -0800, Kees Cook wrote:
-> On Thu, Feb 08, 2024 at 05:49:12PM +0000, Lee Jones wrote:
-> > On Thu, 08 Feb 2024, Bart Van Assche wrote:
-> >=20
-> > > On 2/8/24 00:44, Lee Jones wrote:
-> > > > Cc: Andre Hedrick <andre@suse.com>
-> > >=20
-> > > Please take a look at https://lwn.net/Articles/508222/.
-> >=20
-> > get_maintainer.pl pulled it from here:
-> >=20
-> > https://github.com/torvalds/linux/blob/master/drivers/scsi/3w-xxxx.c#L1=
-1
->=20
-> Oh. Hm. It seems "git check-mailmap" (and get_maintainers.pl) don't
-> support a way to remove an email address -- only redirect it.
->=20
-> It seems we may want to support "don't use this email address" for more
-> than just the currently observed rationale. I don't have any good
-> suggestions for what the format should look like? Perhaps:
->=20
-> "" <address-to-remove@example.com>
+We are trying to get rid of all multiplications from allocation
+functions to prevent integer overflows[1]. Here the multiplication is
+obviously safe, but using kcalloc() is more appropriate and improves
+readability. This patch has no effect on runtime behavior.
 
-/dev/null ?
+Link: https://github.com/KSPP/linux/issues/162 [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
 
+Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
+---
+ fs/ntfs3/frecord.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
+index 3b42938a9d3b..d435446537ca 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -2636,7 +2636,7 @@ int ni_read_frame(struct ntfs_inode *ni, u64 frame_vbo, struct page **pages,
+ 		goto out1;
+ 	}
+ 
+-	pages_disk = kzalloc(npages_disk * sizeof(struct page *), GFP_NOFS);
++	pages_disk = kcalloc(npages_disk, sizeof(struct page *), GFP_NOFS);
+ 	if (!pages_disk) {
+ 		err = -ENOMEM;
+ 		goto out2;
+-- 
+2.43.0
 
