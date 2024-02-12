@@ -1,160 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242C63BB23;
-	Mon, 12 Feb 2024 12:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A4A3A1A3
+	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 13:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707739310; cv=none; b=rjZk/RTc95aFmRg6DLwcss6DjDEJeWYfMhp1gPDrj54uLQ17c1NxmNL4hcZ2u709PLjIYPlD94YpfLfkZM62KmMbYQYj6j83/C48vby0EcWVe/qmgQOmay+BOnmDA09X9EOr5FAUeZ7JRrIEYyvwSNX1UVlQqhh1a8jS50HCvBc=
+	t=1707742899; cv=none; b=EQg/S62+l4/z0f45n5Q/hGM/SBo0SACjc+AaV00XkZkhwox69GP4yslb8olREhYpTxnGUlhyC9uGxhKmMdjCM6pMXm1e5BiTs0iW+ZlIE+f3UAzKOtOtL3TfaGnpHpRvyoW+yLuhfG1PeFgc7KKyqgG8CdAxAHaxHCJCGXzLXFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707739310; c=relaxed/simple;
-	bh=Zbm7OvR5CTMJxI3KIhd7PWN3VnpiSouivKvRc06eL7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CRG0sQ6T6wlGNNWtBmDS9YGK0yfCDArC8YxGFjeSgzaeXtwqHY28yJNa0Tf74DSKVWPlzXuZxiuWSOD2oOO5WhjSZFWhVeiHIjIirIbkl5HwODn2hVHt+yzxVX4SQyyKlGEDIkwdvmbeJwsc/D3kUDTgcLlpGYW+Wdz9WRVRFqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bJjVrxZr; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707742899; c=relaxed/simple;
+	bh=OEgOfFbBWtYOo4zoZjGOmPqaBaNBxeMwq2pAbEbCgeA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZUvI1Kr+fQuwnKykBBYnKw2BgONPbvKoiB4spCunMVDABxWLcfQYTaFFNc7nVSTM13SfXf01MlRdbcb2NKIFPRzunE14tf8cxWR2iClg9PdpYLrLIeHH39U8XRmX8QeRSQUtWPck+PFlIiiluQNjEwc3ozFdoa6zWgb0+YoAC+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HG/13fVu; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bJjVrxZr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707739310; x=1739275310;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Zbm7OvR5CTMJxI3KIhd7PWN3VnpiSouivKvRc06eL7M=;
-  b=bJjVrxZrcKuayAKBR646Bg8JiIDtlBpd4fZtrdlCXvSWOd1prGMjZrQk
-   Ja8XOWBaxXnJD7BWP6Q8aJTPnUgPD2OF3LiqpxOutMS4czGF0wi91LKdG
-   Wfb550+q7to5uoQbTIgYZZK2D05frWkBqIHr7AfCU/eqpUahbZt+FcA0t
-   rXiQaxB46i/obSGSRhscBGejyRpxKu3s/wkVT/QdMnYtsz4GTCU/Ux/pR
-   Vlw1RjQPgdYlGWK8Tt+UbVwEUV6BRAzK/oiYBrOirxO3u85yJ0AhdzQEH
-   QlqTRr54f58L740DmfkqImCzIKwgJ7wbXoiZ/V8+sUAdtr8papmymTHgZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="19124904"
-X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="19124904"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 04:01:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="7228547"
-Received: from hadjchai-mobl.ger.corp.intel.com (HELO [10.213.230.110]) ([10.213.230.110])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 04:01:46 -0800
-Message-ID: <c470ce0e-f52c-4240-9d5f-c1dfd9b46675@linux.intel.com>
-Date: Mon, 12 Feb 2024 12:01:43 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HG/13fVu"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc75b9611d8so3298809276.3
+        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 05:01:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707742897; x=1708347697; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pdujWWnO8d2IohPiw763CkbnCFmrIW28np/fZXta7cg=;
+        b=HG/13fVuF9jR74rWV+ReW4NcEyZvAtID0zs9CUmZPgAuR6gMHKLlUDOCbLWEjRg5ql
+         IgG8hdXSUwGL1Lc9qSlVcXbLlYY4dF/HGDWf9k+0yC78lwg7V6DOM24lsXe9ifnVtnM7
+         4Rnb3McrVDYj8Ptu8BMvKLKqBRZhfwpICYOjFi2E2yMicqW1Yh4q2h73ratj2n7Zrrio
+         QgNzaixTAFCHN80wTP/3G+RHofIKbM4un+104l12CL5OnSMl2kjwlXSvc6YSglBqkgVd
+         Pk4Gavf/50Hk9qPRlxaGZWXkGgrz6lKz76PctYCvL0aFusejQOeQ1mDUudk4ox7iCCiv
+         su6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707742897; x=1708347697;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pdujWWnO8d2IohPiw763CkbnCFmrIW28np/fZXta7cg=;
+        b=mGU24hOi+CbogCMImkCO3ADFeSn42dqH8Gl9xgzuquTHeRykurzU3GEAOKeTHQypwQ
+         m+9kER4kJbpXNzr576yVYcSmvyiMpgDzoOE3TVBwcTpn3hIXS/upCpPW07eY/p8imYBH
+         laAL2AEKgrR+SPWibL8ITe3AnbmAXDmlRLHA2Tro6YzdVuDtfjG2v6oFeYK9yfUXnpUR
+         H6al7VTXFLfmBNpB1oEVIsz5Gqh8EsdoOjnru9wzu48dtH2tsD+jf3YGT1SjOnwW0GN5
+         tp4OhpVFJXRATWAb1Mr6J1Utug/WdO7hzegnICaSPVahrRFTz4xaZcNY9CebCjfxcpPj
+         /Llw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHifpqEmUB7F6SOQ3h3QRPg93+z8+9frOS7Az9/0gIiopRDwDwy7vWlmwLrFqHfcZY1UP/usBT24gZ0jS0fsYxVTLqM2Ka7CLcbr368Nut
+X-Gm-Message-State: AOJu0Yz5j/CRustFuXrYr18w73QxBUa+t+fQTbXyuiFBs76XQGJUWg5Z
+	aFJkgGc4bkX4uX1cOnvHCIuw2/j14t+vLpms/90zzl6aCMbo346eSQfR7kv0VgecBJAXMvFqCA=
+	=
+X-Google-Smtp-Source: AGHT+IHYW5UG9oX+HgucYE1vnEAn3ElMO2Bfe6CkqTfCKXg6CbgSRaRP8kEIytUkLEyn4AtvAwJnUriFyg==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:d6c8:d450:ebb5:bf7b])
+ (user=elver job=sendgmr) by 2002:a05:6902:188e:b0:dc6:b768:2994 with SMTP id
+ cj14-20020a056902188e00b00dc6b7682994mr196715ybb.0.1707742897343; Mon, 12 Feb
+ 2024 05:01:37 -0800 (PST)
+Date: Mon, 12 Feb 2024 14:01:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/i915: Add flex arrays to struct i915_syncmap
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240208181318.4259-1-erick.archer@gmx.com>
-From: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Organization: Intel Corporation UK Plc
-In-Reply-To: <20240208181318.4259-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240212130116.997627-1-elver@google.com>
+Subject: [PATCH] hardening: Enable KFENCE in the hardening config
+From: Marco Elver <elver@google.com>
+To: elver@google.com, Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexander Potapenko <glider@google.com>, kasan-dev@googlegroups.com, 
+	Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+KFENCE is not a security mitigation mechanism (due to sampling), but has
+the performance characteristics of unintrusive hardening techniques.
+When used at scale, however, it improves overall security by allowing
+kernel developers to detect heap memory-safety bugs cheaply.
 
-On 08/02/2024 18:13, Erick Archer wrote:
-> The "struct i915_syncmap" uses a dynamically sized set of trailing
-> elements. It can use an "u32" array or a "struct i915_syncmap *"
-> array.
-> 
-> So, use the preferred way in the kernel declaring flexible arrays [1].
-> Because there are two possibilities for the trailing arrays, it is
-> necessary to declare a union and use the DECLARE_FLEX_ARRAY macro.
-> 
-> The comment can be removed as the union is now clear enough.
-> 
-> Also, avoid the open-coded arithmetic in the memory allocator functions
-> [2] using the "struct_size" macro.
-> 
-> Moreover, refactor the "__sync_seqno" and "__sync_child" functions due
-> to now it is possible to use the union members added to the structure.
-> This way, it is also possible to avoid the open-coded arithmetic in
-> pointers.
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Link: https://lkml.kernel.org/r/79B9A832-B3DE-4229-9D87-748B2CFB7D12@kernel.org
+Cc: Matthieu Baerts <matttbe@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ kernel/configs/hardening.config | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Looks good to me too so I've pushed it to drm-intel-gt-next, thanks!
+diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
+index 95a400f042b1..79c865bfb116 100644
+--- a/kernel/configs/hardening.config
++++ b/kernel/configs/hardening.config
+@@ -46,6 +46,9 @@ CONFIG_UBSAN_BOUNDS=y
+ # CONFIG_UBSAN_ALIGNMENT
+ CONFIG_UBSAN_SANITIZE_ALL=y
+ 
++# Sampling-based heap out-of-bounds and use-after-free detection.
++CONFIG_KFENCE=y
++
+ # Linked list integrity checking.
+ CONFIG_LIST_HARDENED=y
+ 
+-- 
+2.43.0.687.g38aa6559b0-goog
 
-Regards,
-
-Tvrtko
-
-> ---
->   drivers/gpu/drm/i915/i915_syncmap.c | 19 ++++++++-----------
->   1 file changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/i915_syncmap.c b/drivers/gpu/drm/i915/i915_syncmap.c
-> index 60404dbb2e9f..df6437c37373 100644
-> --- a/drivers/gpu/drm/i915/i915_syncmap.c
-> +++ b/drivers/gpu/drm/i915/i915_syncmap.c
-> @@ -75,13 +75,10 @@ struct i915_syncmap {
->   	unsigned int height;
->   	unsigned int bitmap;
->   	struct i915_syncmap *parent;
-> -	/*
-> -	 * Following this header is an array of either seqno or child pointers:
-> -	 * union {
-> -	 *	u32 seqno[KSYNCMAP];
-> -	 *	struct i915_syncmap *child[KSYNCMAP];
-> -	 * };
-> -	 */
-> +	union {
-> +		DECLARE_FLEX_ARRAY(u32, seqno);
-> +		DECLARE_FLEX_ARRAY(struct i915_syncmap *, child);
-> +	};
->   };
-> 
->   /**
-> @@ -99,13 +96,13 @@ void i915_syncmap_init(struct i915_syncmap **root)
->   static inline u32 *__sync_seqno(struct i915_syncmap *p)
->   {
->   	GEM_BUG_ON(p->height);
-> -	return (u32 *)(p + 1);
-> +	return p->seqno;
->   }
-> 
->   static inline struct i915_syncmap **__sync_child(struct i915_syncmap *p)
->   {
->   	GEM_BUG_ON(!p->height);
-> -	return (struct i915_syncmap **)(p + 1);
-> +	return p->child;
->   }
-> 
->   static inline unsigned int
-> @@ -200,7 +197,7 @@ __sync_alloc_leaf(struct i915_syncmap *parent, u64 id)
->   {
->   	struct i915_syncmap *p;
-> 
-> -	p = kmalloc(sizeof(*p) + KSYNCMAP * sizeof(u32), GFP_KERNEL);
-> +	p = kmalloc(struct_size(p, seqno, KSYNCMAP), GFP_KERNEL);
->   	if (unlikely(!p))
->   		return NULL;
-> 
-> @@ -282,7 +279,7 @@ static noinline int __sync_set(struct i915_syncmap **root, u64 id, u32 seqno)
->   			unsigned int above;
-> 
->   			/* Insert a join above the current layer */
-> -			next = kzalloc(sizeof(*next) + KSYNCMAP * sizeof(next),
-> +			next = kzalloc(struct_size(next, child, KSYNCMAP),
->   				       GFP_KERNEL);
->   			if (unlikely(!next))
->   				return -ENOMEM;
-> --
-> 2.25.1
-> 
