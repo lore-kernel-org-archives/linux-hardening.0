@@ -1,65 +1,66 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C41D3DBBF
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F0D45BE8
+	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762621; cv=none; b=iNERwxDS9j4U4AZbmpv4fPZSkwS5bDsimpefiEE5jDYH0mnkKd7iRcXDaM2usaTDEBs87kI1bt4cqWVTgx5/jWsk8msHOUdcZiebi7qfnlSd953DRpFIFilvdKfuO0c5YM4FNbOWCO3Ci9zgqvslnC8U8U5q+9HApCG6jW+bAGI=
+	t=1707762674; cv=none; b=B2grcBmdXWd3Onb09LORb3NIyWfJM9GMn2znuXMC75izkIoXmWk2QKs00GKNol7MLz/Itr6PtKZEUEbebP7k697oISVCTW8eB2e8XVvDqD5I0MITD7rEZl4BJZmc8uvAKkYVr2X5PIiJqZNusxDWLW9bgiOlBd0XSITTUqCRbsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762621; c=relaxed/simple;
-	bh=ljd3GW0VNxjxHS/gV3+xS6+IJarrBJeh1idhgkjc/cE=;
+	s=arc-20240116; t=1707762674; c=relaxed/simple;
+	bh=Vi6c5axLczsjAfZ/jdvV6TZrVwfcoDXEpjFAYHPKp3c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YuEjnih5vWj/cthLVdNIkOShHbZvpOkAW62sTBssg31ECk0eN/U1FRMaV/49UC2n9T4TX6R2lX3yprwuJN7CY2uN2OcrVWl+Pxuw+v9Kd1oVyg8GJNrbcTxO6kJKLCC0sa28txpN7sORTZG+/xwD6I63y84ASsYCQzDyCoTpaNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FqvSun7R; arc=none smtp.client-ip=209.85.215.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xa6o/woY8jESl4sFBERodWcp5wZZBrIkQMqFotHpXbqkPHS1tclcmBiHBt+zbcXRAIRthIIJn+mTG67L2vq50CJTSSfQcUes0LOCX/A2I76VVKKIvZRIpq0CWfvmfflzfAcZi2P84+QT2mP8ImXQrnXLWedA+WKfg53V2dPr8Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D/hV02gh; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqvSun7R"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso2454043a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:30:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D/hV02gh"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d93edfa76dso28095345ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:31:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707762619; x=1708367419; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707762672; x=1708367472; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N61bSTpFZ2e+PLuAfqmvguTh3fa1HE/2EqLDbYjvwcM=;
-        b=FqvSun7RXHL/H6ytHAgAmKWDsz3oGmPva50Q6H19bG8jjIIOx6FxGGXp4ixLRgCPaZ
-         MeoscEAT60i59UvzXbazQm9s4td6kToCv/VrgMj2porqbI7enwKZWI2PKD/EpUfnl9de
-         QDgISkSoe7Jziqcf89i6BnKQD1lMeNymJ3tAI=
+        bh=WxYKfxVc01RvCqlquCukYbiHiXMELvJ7WajMr+fzZiM=;
+        b=D/hV02ghUOW7InC8DBjnupW8sppG3rdPN97stTmQ+RJrVoAlwtCby26PXszVlz6gMN
+         IQ/2x0kHiBbshyjEyJHdyWlay+FMLpZIFVVU5XGxS4Pzcf9dLeVWvjDKtKOpt/ix07x8
+         4eD816rufukq9CNHbq4IUZRxgRy/vyHL/Z8jA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707762619; x=1708367419;
+        d=1e100.net; s=20230601; t=1707762672; x=1708367472;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N61bSTpFZ2e+PLuAfqmvguTh3fa1HE/2EqLDbYjvwcM=;
-        b=ohIteHiZvaYkoDoaYqQZEIsyPqrQgPjDsThegcXoEGTwi5XFMiTn00ucQhnNzNyEpY
-         xf4tftEPgSc1vDGC3GI8SsKGg1TkzXN0/TtIUplk72V1ngCOxtI/UzXk/qQ8kuXs0WgN
-         6fXDl0xHyPk5Tljf7/aQ1dz0T5IanI9mMHBo/qgSqU/UufIbDKdzwMy5Qo5Q41AQhv8U
-         HrNzD819PwrHc1J9jgCEx6l3Ng+4N8ivnoyoYndDfJokeOVjaHcQNMxVX9DlrSuxK3JB
-         9U3G+vZ4Ok5huyw8DcRlmpUEPQLq/U5bxK7zPOAsIwU2+yqYdBu2t+CBJcpdd1lQv8SL
-         QeKQ==
-X-Gm-Message-State: AOJu0Yx8xr5FxiAk+NvzcBpCC88HcYhGcJf5WluL/4865wJa5gAOKFjW
-	zoHlhMB1cHzPEC1xbMAr5f4YqIohCPW6wokGVUHMFDPG6Xq93yys0xNq3TNNFw==
-X-Google-Smtp-Source: AGHT+IEWVVrqr5Ta5/Y8coFAcbU/62c7uV5RG1RnJiaLdKJtTlCzfEyZvDIyFRYCS+zxfkBl8ASQfQ==
-X-Received: by 2002:a17:90b:1054:b0:297:1779:84fb with SMTP id gq20-20020a17090b105400b00297177984fbmr3738633pjb.43.1707762618832;
-        Mon, 12 Feb 2024 10:30:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWqzXReP3IYediOTpA4Y6OC6ft/joUK+DbNmZ8ShuoIpBTd0/KboIdivDaLOt5vZNYxKdzl+WOvG4XORuhYoNyibYUN9VXp/wkGK0yP4JRewr1UQUplInabN+LEwmrssN1JUWssJN1fsZZw8YsVjHSb62XTqJrpSQdZkEeLCvdtji2RL0fv1JEt9orngC4M0AHbgtdjwRkfJ+3Yktv6qug5esufKhfNneR0h4I+IuajP7KsRdy79020cVEeh0MT+3vHybMHJrxUKak+Y5gkO5ZeqEakCh9ObI+a
+        bh=WxYKfxVc01RvCqlquCukYbiHiXMELvJ7WajMr+fzZiM=;
+        b=fTIDHfumph4WlJYzm867TxGxlGZUCNQIJlvvEDEuYtZUjMXT71kmjve27U8ajv+dwJ
+         1Tu/44O7U2yTwIAQrA0AEQ2dwBHIcz4lEnpK/2iHVTTyAuwe/hKzC6ZHRG+dm06Rjl56
+         rRnsUEgSlg4ZIhYgP3roOlstcs1MvI74DNlwdgwVACWnDkMcUhGeQFXgWo4qJMYVuXoX
+         xBaJmmQsnQWn7Ia7OmUznINAiRkVt3AdZUPh5uWcIUnZ2tN8eh6Q8tJh7hTAarz9cykT
+         yx8whIJXwvsaieNMoKHdQGGrfhSg5+Ec86V5HS16T2Xw6hLIc3Sphy2WMnN0CvEDLYFM
+         olSw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1FEA+ifesUCFgi1ClkmTd2GlasOIkazAuUU/GKuYG8KgS4R/RzZw66IkymO2tuSGLz6EYu/XHZ58EW8HXrPnPlr9luNhUaW5W87Db+rqu
+X-Gm-Message-State: AOJu0Ywz+f/5ZUuo0hASIP66YQW8WGOYJkTwrHrBzbsuql7YetASFU61
+	Jm7m5CDUjD1dqetZw8J90H+E1HsuBUdEod7Mghlud0DFSTq/XrvW8ReyJEhm4A==
+X-Google-Smtp-Source: AGHT+IGgwfZ85ig5seHJCbnXSbj93G7dxG+Z8HmWUBYItrse6pgkNnMFfriCyi+RacTqAQ3g9R52ZQ==
+X-Received: by 2002:a17:902:fc46:b0:1db:28b4:4475 with SMTP id me6-20020a170902fc4600b001db28b44475mr1656842plb.9.1707762672359;
+        Mon, 12 Feb 2024 10:31:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUtqiIrorFvqjkApbF3idZ0NNZ5ryhVf4jv0lvSRs8BQcLjw0NMWxaEQu8LPuqrHMfyobiwwul93Aab5pCDYkBrY9W3bg2i7mqlQcoAFQQyYmGUTas1LBvaN0eXhGp9H8cMyHhB2/Q3mp7GKvlkANpIW9Wsyj84t7uczus2LAnei8WalXriCMZ7LUDrnMYTV9IHk/9NA5/PiUoWn60yClB2etHXG0QPKoMNUOUSMw4PXsAhnJztLYYRnfzHD0wF74cnM93rATXrgJcTQSYTLZO6vb+CIVa6/29VJsTH2F0UCAA90uUT8BRGcKcK504=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ok5-20020a17090b1d4500b0029703476e9bsm849739pjb.44.2024.02.12.10.30.18
+        by smtp.gmail.com with ESMTPSA id h12-20020a170902f7cc00b001d8924d8dbfsm644712plw.265.2024.02.12.10.31.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:30:18 -0800 (PST)
-Date: Mon, 12 Feb 2024 10:30:17 -0800
+        Mon, 12 Feb 2024 10:31:11 -0800 (PST)
+Date: Mon, 12 Feb 2024 10:31:11 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Erick Archer <erick.archer@gmx.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Edward Srouji <edwards@nvidia.com>,
-	Patrisious Haddad <phaddad@nvidia.com>,
+Cc: David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] RDMA/uverbs: Remove flexible arrays from struct *_filter
-Message-ID: <202402121026.0AF90DBA@keescook>
-References: <20240211115856.9788-1-erick.archer@gmx.com>
+Subject: Re: [PATCH] iommu/vt-d: Use kcalloc() instead of kzalloc()
+Message-ID: <202402121031.4649560C1@keescook>
+References: <20240211175143.9229-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,84 +69,33 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240211115856.9788-1-erick.archer@gmx.com>
+In-Reply-To: <20240211175143.9229-1-erick.archer@gmx.com>
 
-On Sun, Feb 11, 2024 at 12:58:56PM +0100, Erick Archer wrote:
-> When a struct containing a flexible array is included in another struct,
-> and there is a member after the struct-with-flex-array, there is a
-> possibility of memory overlap. These cases must be audited [1]. See:
+On Sun, Feb 11, 2024 at 06:51:43PM +0100, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
 > 
-> struct inner {
-> 	...
-> 	int flex[];
+> Here the multiplication is obviously safe because DMAR_LATENCY_NUM
+> is the number of latency types defined in the "latency_type" enum.
+> 
+> enum latency_type {
+> 	DMAR_LATENCY_INV_IOTLB = 0,
+> 	DMAR_LATENCY_INV_DEVTLB,
+> 	DMAR_LATENCY_INV_IEC,
+> 	DMAR_LATENCY_PRQ,
+> 	DMAR_LATENCY_NUM
 > };
 > 
-> struct outer {
-> 	...
-> 	struct inner header;
-> 	int overlap;
-> 	...
-> };
+> However, using kcalloc() is more appropriate [2] and improves
+> readability. This patch has no effect on runtime behavior.
 > 
-> This is the scenario for all the "struct *_filter" structures that are
-> included in the following "struct ib_flow_spec_*" structures:
-> 
-> struct ib_flow_spec_eth
-> struct ib_flow_spec_ib
-> struct ib_flow_spec_ipv4
-> struct ib_flow_spec_ipv6
-> struct ib_flow_spec_tcp_udp
-> struct ib_flow_spec_tunnel
-> struct ib_flow_spec_esp
-> struct ib_flow_spec_gre
-> struct ib_flow_spec_mpls
-> 
-> The pattern is like the one shown below:
-> 
-> struct *_filter {
-> 	...
-> 	u8 real_sz[];
-> };
-> 
-> struct ib_flow_spec_mpls {
-> 	...
-> 	struct *_filter val;
-> 	struct *_filter mask;
-> };
-> 
-> In this case, the trailing flexible array "real_sz" is never allocated
-> and is only used to calculate the size of the structures. Here the use
-> of the "offsetof" helper can be changed by the "sizeof" operator because
-> the goal is to get the size of these structures. Therefore, the trailing
-> flexible arrays can also be removed.
-> 
-> Link: https://github.com/KSPP/linux/issues/202 [1]
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
 > Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
-> Hi everyone,
-> 
-> This patch has not been tested. This has only been built-tested.
 
-I might suggest doing a binary difference comparison[1], as it's possible
-that "real_sz" is being used to try to avoid trailing padding on
-structs. I wasn't able to trivially construct an example, so maybe I'm
-not understanding its purpose correctly.
+Looks reasonable.
 
-If, however, there are cases where offsetof(..., real_sz) !=
-sizeof(...), then I would check two alternatives:
-
-	struct { } real_sz;
-
-but that may induce padding still, or:
-
-	u8 real_sz[0];
-
-which would be a literally zero-sized array, used only for addressing.
-
-Or, these can be left as-is, and the "flex array not at end of struct"
-warnings can be disabled for these targets.
-
--Kees
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
