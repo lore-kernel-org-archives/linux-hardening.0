@@ -1,98 +1,124 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A4A3A1A3
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 13:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A763A28E
+	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 13:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707742899; cv=none; b=EQg/S62+l4/z0f45n5Q/hGM/SBo0SACjc+AaV00XkZkhwox69GP4yslb8olREhYpTxnGUlhyC9uGxhKmMdjCM6pMXm1e5BiTs0iW+ZlIE+f3UAzKOtOtL3TfaGnpHpRvyoW+yLuhfG1PeFgc7KKyqgG8CdAxAHaxHCJCGXzLXFI=
+	t=1707743421; cv=none; b=gl2V8zMBPxbI1BXerdy/XT+QJG2gyTO8pamxVN+v+pZaV/3zXHP6YrDyh5yQVo9qVWPuV7+1XqkZbWiWqwXIExhk/nP0on/k3w5R4WTZxDo+q8DVCR4fPitRAIr4ewyhOgZ56zCU0D/7cYENKuFIIRyVZb5eiazbwoWp6FrxxbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707742899; c=relaxed/simple;
-	bh=OEgOfFbBWtYOo4zoZjGOmPqaBaNBxeMwq2pAbEbCgeA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZUvI1Kr+fQuwnKykBBYnKw2BgONPbvKoiB4spCunMVDABxWLcfQYTaFFNc7nVSTM13SfXf01MlRdbcb2NKIFPRzunE14tf8cxWR2iClg9PdpYLrLIeHH39U8XRmX8QeRSQUtWPck+PFlIiiluQNjEwc3ozFdoa6zWgb0+YoAC+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HG/13fVu; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1707743421; c=relaxed/simple;
+	bh=+63/Xgcnvvl++vw0kFSv69jgv62HeXw4wvXx3EN09/E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mhCtKALM29WoQt6+ZUKwiWChvGZX0NGdDC8JRu3sKwBN7Gv+tf61LEELuBDarrG3yBBzOdR+GJE0Z4hhxaxfG8ijDGT611DeAob6nr+nSzlM3mWRic4fY7OTE7g6GRrcB7afRXzQ3kZWnuUKRbKoVHZc09TaEysGGgWxQyasF14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ly2gxTxg; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HG/13fVu"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc75b9611d8so3298809276.3
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 05:01:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ly2gxTxg"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a3864258438so580078866b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 05:10:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707742897; x=1708347697; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pdujWWnO8d2IohPiw763CkbnCFmrIW28np/fZXta7cg=;
-        b=HG/13fVuF9jR74rWV+ReW4NcEyZvAtID0zs9CUmZPgAuR6gMHKLlUDOCbLWEjRg5ql
-         IgG8hdXSUwGL1Lc9qSlVcXbLlYY4dF/HGDWf9k+0yC78lwg7V6DOM24lsXe9ifnVtnM7
-         4Rnb3McrVDYj8Ptu8BMvKLKqBRZhfwpICYOjFi2E2yMicqW1Yh4q2h73ratj2n7Zrrio
-         QgNzaixTAFCHN80wTP/3G+RHofIKbM4un+104l12CL5OnSMl2kjwlXSvc6YSglBqkgVd
-         Pk4Gavf/50Hk9qPRlxaGZWXkGgrz6lKz76PctYCvL0aFusejQOeQ1mDUudk4ox7iCCiv
-         su6w==
+        d=linaro.org; s=google; t=1707743416; x=1708348216; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BsrFFtFar7TX/ORI8AiadfGDjdZ6VxExU8R2VKF2tt0=;
+        b=ly2gxTxgpbya2bAiKtoBObXqZnhjrMEVDw2J4VRBlQ1a8W0a2B6sInInc7+fcmjuyb
+         h1k+oXJqX766ETHzGLMA+wK2cDtG13BMHbevZB6RvlMeKI9Olp5l0LMRDCb4hPUeihVx
+         f/lr6ykwlRhlEDhg0WkX+O7uSJt7gBCdE5cDwAg4xLeg0QNFGGc5yFDFKH0mxlueomgC
+         2dZkZDENS3PsKUBapssta2Jkx98A4fsYhb5lLpqCoTgdOUYCHP8hIuLKeKZwrYrHiLGE
+         m06IqwGVl+LoCfekWsao9mdwML7ej84QX9JyPoUzZHNTCzR7Hgh8qfEZ5tYrNpcxIS2A
+         dwBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707742897; x=1708347697;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pdujWWnO8d2IohPiw763CkbnCFmrIW28np/fZXta7cg=;
-        b=mGU24hOi+CbogCMImkCO3ADFeSn42dqH8Gl9xgzuquTHeRykurzU3GEAOKeTHQypwQ
-         m+9kER4kJbpXNzr576yVYcSmvyiMpgDzoOE3TVBwcTpn3hIXS/upCpPW07eY/p8imYBH
-         laAL2AEKgrR+SPWibL8ITe3AnbmAXDmlRLHA2Tro6YzdVuDtfjG2v6oFeYK9yfUXnpUR
-         H6al7VTXFLfmBNpB1oEVIsz5Gqh8EsdoOjnru9wzu48dtH2tsD+jf3YGT1SjOnwW0GN5
-         tp4OhpVFJXRATWAb1Mr6J1Utug/WdO7hzegnICaSPVahrRFTz4xaZcNY9CebCjfxcpPj
-         /Llw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHifpqEmUB7F6SOQ3h3QRPg93+z8+9frOS7Az9/0gIiopRDwDwy7vWlmwLrFqHfcZY1UP/usBT24gZ0jS0fsYxVTLqM2Ka7CLcbr368Nut
-X-Gm-Message-State: AOJu0Yz5j/CRustFuXrYr18w73QxBUa+t+fQTbXyuiFBs76XQGJUWg5Z
-	aFJkgGc4bkX4uX1cOnvHCIuw2/j14t+vLpms/90zzl6aCMbo346eSQfR7kv0VgecBJAXMvFqCA=
-	=
-X-Google-Smtp-Source: AGHT+IHYW5UG9oX+HgucYE1vnEAn3ElMO2Bfe6CkqTfCKXg6CbgSRaRP8kEIytUkLEyn4AtvAwJnUriFyg==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:d6c8:d450:ebb5:bf7b])
- (user=elver job=sendgmr) by 2002:a05:6902:188e:b0:dc6:b768:2994 with SMTP id
- cj14-20020a056902188e00b00dc6b7682994mr196715ybb.0.1707742897343; Mon, 12 Feb
- 2024 05:01:37 -0800 (PST)
-Date: Mon, 12 Feb 2024 14:01:09 +0100
+        d=1e100.net; s=20230601; t=1707743416; x=1708348216;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BsrFFtFar7TX/ORI8AiadfGDjdZ6VxExU8R2VKF2tt0=;
+        b=MqFEET/baOwytP1328FPx7b1vVzjanyjQu09G+jnTe4ivZJyTHEphTc/Z991UT1Qf+
+         Iv3WZbMHvzGsXWCWziBNCDVFOAExjdsgeBPShv7msCnunY1FJZwEy2YDazJKGvdBIaUy
+         RgATO9kUpJlxw6uV6Ije5x1m3GQ8B+uCxJitkLMlX1LzSVI0Pg5MbBcbKv3aC/R/zCnO
+         vUI1z812/Gw9cHVp74qxWTqx7AVs6T98mK/rm+7Td/+2RFLGNfrvKwC6dzv0tmWijXnR
+         S+d2SyaubQQf+d/9c+CN/PKP7dpLFmvIr1fEYtJE6YQRygBhZmvJZMvKMLsxgwwuTFMA
+         FnBQ==
+X-Gm-Message-State: AOJu0YzDbYM89GjxnhoQQMx1/uPIAD2bnz9eq3w4nGea994nx0UbybnS
+	LYuge/HGRdEKdrLv3YseG8Io0QzBtWCzQ+mUA9y2arrzBk4/ItCPRHIhD5gDYxc=
+X-Google-Smtp-Source: AGHT+IGKQcbm/gLY8lNaBXnZ8bB41KLkoXe2u6YPlJKH4J4XNBLaZGYA1IMY4H/1Je6cum9j4HdrKw==
+X-Received: by 2002:a17:907:7630:b0:a3c:d535:39b4 with SMTP id jy16-20020a170907763000b00a3cd53539b4mr732454ejc.9.1707743416229;
+        Mon, 12 Feb 2024 05:10:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUXtlT2GK2hRcxDFaqLSEtNzsZew685DrIL22y3sX+/RTcf+JI+CNzNXA4MIXhBGQkVmhkZ8xie983qK3t5/DQVwP5jSRfo+grt8qUVWoNG7TARAtc40DsNPCNn3F1ZpKGmsWtljMslQcH+fZExpwMdTsUd4OUWjs19NZSkpDpvDyp+g/XTSOjbIoCvdCQNbpyO8HSyeCI453DLUNpDsWKoVLZYba73m+8tAyieSo2WmBA3I3m/ZXpmOBxByRFZ7KK8GlWEPaZUA8GcRceQgP8STyP77sHHG7Yn51geCFQGj6HmvPVuoPKBPpNojRNfAtSpdZRde1Qxa0sr86vbkJ9a6WGb0AFngzJ/rZQgzOUCzWuet+leYZz2ctLwaClJGbyqnpkGkOYugYGFNYT+rPQ4JT9SfP5m1BENaBaI41BYyu4bRMQG15iPwMAyHwrfNKHDck8lw9bSW3vmGxFQzv01fdYpPABWqNL3DL9alskhwQ2gCXDoeyZGhydxxlAJwCJz+S6SpH/wm+NdHEXAonp6BfbV1ZiMQWHte51UkTKAnmaIiXUz9HcpM44yV91nDjVWmMAQP93Ft1FR5dPIvsAsHE3dK2ffJc1AdtCxGHWv8WQWv9n0XRpVf69WZhl5GJ1gJ9SyzIPhc3H1Y7aHd2Nu8hvGyvHLm7g1dHgKrUvhfDSh+jALsFRS2jSsGmGE8koyh1Lz5s3KEqc/NGW8np8iITcGd5r1Ook7uDpyro+CQRh0d8KyFnfKCWKApLRof45G6gbKuU/XbfV48Awihs62JBwtOwjeW76cwLbFJmq9wO2Me417dgRSxomPOd12eSjhNHy+nDY7/hSPnareqyLvfDwJ
+Received: from [10.167.154.1] (037008245233.garwolin.vectranet.pl. [37.8.245.233])
+        by smtp.gmail.com with ESMTPSA id gz9-20020a170906f2c900b00a3515b35be4sm193052ejb.104.2024.02.12.05.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 05:10:15 -0800 (PST)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/7] Xperia 1 V support
+Date: Mon, 12 Feb 2024 14:10:08 +0100
+Message-Id: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240212130116.997627-1-elver@google.com>
-Subject: [PATCH] hardening: Enable KFENCE in the hardening config
-From: Marco Elver <elver@google.com>
-To: elver@google.com, Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexander Potapenko <glider@google.com>, kasan-dev@googlegroups.com, 
-	Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALAYymUC/x2MSwqAMAwFryJZG2iL/6uIi1qjBqRKqyIU725wO
+ Y95kyBSYIrQZQkC3Rx59wI6z8Ct1i+EPAmDUaZQRis894Md6ht1Q23V1pNRZQWijzYSjsF6t8r
+ BX9sm4xFo5ufv98P7fprnii5vAAAA
+To: James Schulman <james.schulman@cirrus.com>, 
+ David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Ricardo Rivera-Matos <rriveram@opensource.cirrus.com>, 
+ Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
+ Sai Prakash Ranjan <quic_saipraka@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707743413; l=1101;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=+63/Xgcnvvl++vw0kFSv69jgv62HeXw4wvXx3EN09/E=;
+ b=6YV2ckgdeayZEZbm5EwxHt13hD4TlThi32QfPyjikJXM4FpoWrBqYyXFMJjgA6J2yL1nJmbXU
+ IFYcrqy+DKiDHpnmQkzMx7gpsT1kjrSsW7cc/ESlI/vW8tJtCgvXG8Y
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-KFENCE is not a security mitigation mechanism (due to sampling), but has
-the performance characteristics of unintrusive hardening techniques.
-When used at scale, however, it improves overall security by allowing
-kernel developers to detect heap memory-safety bugs cheaply.
+DTS for the phone and some fly-by fixes
 
-Link: https://lkml.kernel.org/r/79B9A832-B3DE-4229-9D87-748B2CFB7D12@kernel.org
-Cc: Matthieu Baerts <matttbe@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Marco Elver <elver@google.com>
+Patch 1 for Mark/sound
+Rest for qcom
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- kernel/configs/hardening.config | 3 +++
- 1 file changed, 3 insertions(+)
+Konrad Dybcio (7):
+      dt-bindings: ASoC: cs35l45: Add interrupts
+      dt-bindings: arm: qcom: Add Xperia 1 V
+      arm64: dts: qcom: sm8550: Mark QUPs and GPI dma-coherent
+      arm64: dts: qcom: sm8550: Mark APPS SMMU as dma-coherent
+      arm64: dts: qcom: sm8550: Add missing DWC3 quirks
+      arm64: dts: qcom: sm8550: Mark DWC3 as dma-coherent
+      arm64: dts: qcom: Add SM8550 Xperia 1 V
 
-diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
-index 95a400f042b1..79c865bfb116 100644
---- a/kernel/configs/hardening.config
-+++ b/kernel/configs/hardening.config
-@@ -46,6 +46,9 @@ CONFIG_UBSAN_BOUNDS=y
- # CONFIG_UBSAN_ALIGNMENT
- CONFIG_UBSAN_SANITIZE_ALL=y
- 
-+# Sampling-based heap out-of-bounds and use-after-free detection.
-+CONFIG_KFENCE=y
-+
- # Linked list integrity checking.
- CONFIG_LIST_HARDENED=y
- 
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
+ .../devicetree/bindings/sound/cirrus,cs35l45.yaml  |   3 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts    | 779 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               |  20 +-
+ 5 files changed, 801 insertions(+), 3 deletions(-)
+---
+base-commit: ae00c445390b349e070a64dc62f08aa878db7248
+change-id: 20240210-topic-1v-18e9697d2056
+
+Best regards,
 -- 
-2.43.0.687.g38aa6559b0-goog
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
