@@ -1,100 +1,116 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BFB63D1;
-	Mon, 12 Feb 2024 05:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB8CF50D;
+	Mon, 12 Feb 2024 08:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707716328; cv=none; b=uI1Y+KdZDiVJTiu6u403f+Bl7oz+jopJE2aZpZEK3Cv9DxyrLcRJ/ZKrgkDa23hF8hzoGVtZ4Cunwcte0qwoyBHbKZwdo/l5u5EOkrx94KMNrgwW8NwhA26rWqdLKjpNkQE4KQp7ix0zUCFTxxJAkXvoBQ2ZEKsxbxKwhXOP6rw=
+	t=1707727537; cv=none; b=jM8iO5HmIhQrxARcZ97hWGtCFyiILN6BNAV5vk0TT7UaoRTBGPgGN7gbHlytcg0MyqorXMbIMcWcV21H82no+hWzhcDIOA2IXkPMOWHD6bMsn/U6ensOM3yk96eebwpwTYzLy+mVoq9ZeyxoaRY8Vusk9ypHNawEom0vt/02AE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707716328; c=relaxed/simple;
-	bh=aYRQrR078wUpY+e7Eyetoj2fffaA5I00zmjESLa/c/s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XJR3HVDIm90/7Oo7z2o45iEKvPPUr5A8xcpCXtV0THNiWh9BobbkHPhLfrqfxISGI/r5G4iwoi5w8qcNyJBv//O3jqm6h96BRpOTuTKQMzCA5r262DU+y4o5X4Ng+f9kKX4N39DCgzWV9BH6XIIUBIb7gVvHfQPga2RWJEvDkC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=UMfTjBFW; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1707727537; c=relaxed/simple;
+	bh=37r0uDvHoWoAoOBklJ4SqXVIYvqKxmwZ/Tk0SnZaf+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YGHv07Y9seel8BmJPrgE822RJF7IIf3lGGXgm1G/3VFacdw65gQZ3jw5ZT0QL/KVdekRHV8rd6WbxQi0T+pspcTKxnaIIAwsR9058KirvHLyf0JnG1CSgqFA44fekwRVTTUNz9GbOBkWJytqTOIKlglFcGNen+uX3iBLMs5/umU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fJryANDE; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="UMfTjBFW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1707716323;
-	bh=WlznTFxLp/HqFR/zHSqL++eDGzo1KkY/I6UV1Hx6DCk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=UMfTjBFWpNqTOIZvz6QcIVM3SE6n+B41vf/0Kvn85Pw7GDCUwInzDu6DTsJgwCaVy
-	 IMs4YMFg48fl9X+9RJUYaqR25O4+do2ND9cJpe41Y96p+hskf4xgEdJgFzBGjnMkrM
-	 XwSc3MT89EHjIjFFkDb9GmTOkaRWzDj9X8jy9+yCBwBUfgwQNFLYO5o6+oaChYUTyd
-	 16sI7XC8aQ/58Z/ZAT0jqwMYhxKx2GYl0ue66fznbLpoIJkree2ooJSxmatRgve7ed
-	 nIbJPhvT1dXw7cKUOtD+ZGOd64lJlyD73eUMxmeqBWfNp/hm98fGs7DDvpkZlW2dSM
-	 aiOq9Dzyo85xQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fJryANDE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707727533;
+	bh=37r0uDvHoWoAoOBklJ4SqXVIYvqKxmwZ/Tk0SnZaf+U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fJryANDEDkxFcOEd3TUe/SVHBoEa5dLt4yiSEQeu9fSuLMqXZx/6Z9AjuSgr0sb0w
+	 94y230CFIf0xaLG3dnGvej3PBfhS9NflyU/kD0wV1qHYnJlfYfkO0GogZ5VLMxeZem
+	 g6FAGJch+wn9KMso8OvF9ENAObto1qxsi4WbPxjFP31pNeXZEKTUyS1oYD7rtUrmae
+	 afznMbX52hgVfgCaJY1qjZO83Q9pEP+S6SwrTpYHHIo8hocnoX8QkmzmZBUyz+MgUx
+	 AsYpfxfSkwKKjMCMgpab6htGn5oNB6f3QdaUq3GFXX6G/4NcvmIJMFIshQ26BWe+g9
+	 v83F7VlTTi9WA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TYCtV1D1Kz4wyj;
-	Mon, 12 Feb 2024 16:38:42 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V"
- <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Mahesh Salgaonkar <mahesh@linux.ibm.com>, Vasant Hegde
- <hegdevasant@linux.vnet.ibm.com>, dingsenjie <dingsenjie@yulong.com>,
- linuxppc-dev@lists.ozlabs.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 60/82] powerpc: Refactor intentional wrap-around test
-In-Reply-To: <20240123002814.1396804-60-keescook@chromium.org>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-60-keescook@chromium.org>
-Date: Mon, 12 Feb 2024 16:38:41 +1100
-Message-ID: <87zfw66y3i.fsf@mail.lhotse>
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7ABC2378203F;
+	Mon, 12 Feb 2024 08:45:32 +0000 (UTC)
+Message-ID: <5cd419e6-2585-4f9e-b814-b928ebdb18f2@collabora.com>
+Date: Mon, 12 Feb 2024 09:45:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mtd: rawnand: Prefer struct_size over open coded
+ arithmetic
+To: Erick Archer <erick.archer@gmx.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Heiko Stuebner <heiko@sntech.de>, =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?=
+ <philmd@linaro.org>, Rob Herring <robh@kernel.org>,
+ Li Zetao <lizetao1@huawei.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <keescook@chromium.org>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-hardening@vger.kernel.org
+References: <20240210161619.12656-1-erick.archer@gmx.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240210161619.12656-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Kees Cook <keescook@chromium.org> writes:
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
->
-> 	VAR + value < VAR
->
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
->
-> Refactor open-coded wrap-around addition test to use add_would_overflow().
-> This paves the way to enabling the wrap-around sanitizers in the future.
->
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Cc: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
-> Cc: dingsenjie <dingsenjie@yulong.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Il 10/02/24 17:16, Erick Archer ha scritto:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
+> 
+> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
+> this structure ends in a flexible array:
+> 
+> struct mtk_nfc_nand_chip {
+> 	[...]
+> 	u8 sels[] __counted_by(nsels);
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the argument "size + count * size" in the
+> devm_kzalloc() function.
+> 
+> This way, the code is more readable and more safer.
+
+This way, the code is more readable and safer.
+
+Apart from that,
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 > ---
->  arch/powerpc/platforms/powernv/opal-prd.c | 2 +-
->  arch/powerpc/xmon/xmon.c                  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>   drivers/mtd/nand/raw/mtk_nand.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/mtk_nand.c b/drivers/mtd/nand/raw/mtk_nand.c
+> index 60198e33d2d5..17477bb2d48f 100644
+> --- a/drivers/mtd/nand/raw/mtk_nand.c
+> +++ b/drivers/mtd/nand/raw/mtk_nand.c
+> @@ -1356,7 +1356,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev, struct mtk_nfc *nfc,
+>   		return -EINVAL;
+>   	}
+> 
+> -	chip = devm_kzalloc(dev, sizeof(*chip) + nsels * sizeof(u8),
+> +	chip = devm_kzalloc(dev, struct_size(chip, sels, nsels),
+>   			    GFP_KERNEL);
+>   	if (!chip)
+>   		return -ENOMEM;
+> --
+> 2.25.1
+> 
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-cheers
