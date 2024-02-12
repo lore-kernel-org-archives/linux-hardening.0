@@ -1,71 +1,65 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8FA3FE36
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C41D3DBBF
+	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762367; cv=none; b=evYO1QH1EthSEDtZoR/3h5GAigM5+Ug6Q0hkxQUFHtLlf2N2eVpAJSdbaJCWoA7StC5vJEB2P+XkiSfs4nLh0bH79HpNHqvqSoJVPL1532DTNw+XpUI+2ZvucInd5pEQ52+EHsibZXKTKWVRJlHdUp3JUXrI8TgUhABKUYSpnGA=
+	t=1707762621; cv=none; b=iNERwxDS9j4U4AZbmpv4fPZSkwS5bDsimpefiEE5jDYH0mnkKd7iRcXDaM2usaTDEBs87kI1bt4cqWVTgx5/jWsk8msHOUdcZiebi7qfnlSd953DRpFIFilvdKfuO0c5YM4FNbOWCO3Ci9zgqvslnC8U8U5q+9HApCG6jW+bAGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762367; c=relaxed/simple;
-	bh=yAUHypRlpeoME/JqFNQ6+yrqIWhow/SYsyub6kJOuL8=;
+	s=arc-20240116; t=1707762621; c=relaxed/simple;
+	bh=ljd3GW0VNxjxHS/gV3+xS6+IJarrBJeh1idhgkjc/cE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ig1ccow7FI+pPUj6wdJLuqN0HrIUFUfajQxM8hYlBtaUrTlrnJh1m04MlWNDi7yKpxMCP1ZtPVLYpTqwXJzvr8AcOq+quVrPiQo8el43WRRMGZkpjC8q8dcv2WlPqOge9jCM0J05Z3Cu/BYvuJGCn4esw+aNczLy3a5Gn53XjaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EddX1/Gg; arc=none smtp.client-ip=209.85.210.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=YuEjnih5vWj/cthLVdNIkOShHbZvpOkAW62sTBssg31ECk0eN/U1FRMaV/49UC2n9T4TX6R2lX3yprwuJN7CY2uN2OcrVWl+Pxuw+v9Kd1oVyg8GJNrbcTxO6kJKLCC0sa28txpN7sORTZG+/xwD6I63y84ASsYCQzDyCoTpaNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FqvSun7R; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EddX1/Gg"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e08dd0fa0bso2361142b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:26:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqvSun7R"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso2454043a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:30:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707762365; x=1708367165; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707762619; x=1708367419; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kelddDkBCW+g7SFvND6ka4Ang08zpm8PxHIejMLmNTs=;
-        b=EddX1/GgAbEeDtEik8j732OAX1GG6mqLZtclhFqcdrWHYPFo8uRuaTgLmC6EN8s1Xm
-         yjaS0Qr0GnJvXBOvtBsaWomiMvHmKolRP6NZJQdMi12UfCRcUYQ8yQvpJd7zAYf6nKC0
-         8ZlTTuEq3m8rJaWpUwYs6m352PJQjeMUZKanM=
+        bh=N61bSTpFZ2e+PLuAfqmvguTh3fa1HE/2EqLDbYjvwcM=;
+        b=FqvSun7RXHL/H6ytHAgAmKWDsz3oGmPva50Q6H19bG8jjIIOx6FxGGXp4ixLRgCPaZ
+         MeoscEAT60i59UvzXbazQm9s4td6kToCv/VrgMj2porqbI7enwKZWI2PKD/EpUfnl9de
+         QDgISkSoe7Jziqcf89i6BnKQD1lMeNymJ3tAI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707762365; x=1708367165;
+        d=1e100.net; s=20230601; t=1707762619; x=1708367419;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kelddDkBCW+g7SFvND6ka4Ang08zpm8PxHIejMLmNTs=;
-        b=OIRH+izgIQyli2bqQbF1PFBoJCfs8V01c8q8SYccerSS4im2Yd4nMvcSDOGgLSFZmG
-         ZKqGGeW5uMV35ugxerZVRXARtIQ/CagXJyqJR/R+zhHhSoDri8I5lh7ahKymYvZg3+UC
-         CUALAZqeEKla88j75HVZrNZpagWAW1EuoU6TcmTVbh8h4e9RvB4/T2BeCnKM3Typ6MJo
-         VV8csgUBUkO2/1aRdpsDEga8qQLzINfA4Y5Jnrx6vw+F0iHVK7xoPEMbSj+johOZzI4U
-         EuFdG785fvWJx7PPAJngJP+z0BPh3GE43CYqWu1prkcHoezS9Raj8GL4uhSn/lOQvl7C
-         D9kw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsMsarqFqiVgO1HeedZKH4WU8uOC1vNfKcvTzYtszCU/Tgwj5z8jqi453SSYdXTHaVJoMnmnSnwPStSY3keakitOFv/3HxkfWkmdUnz20R
-X-Gm-Message-State: AOJu0YxtqwTY71jIOgP+XHi6LPJzoPQSYYQyHotwcNv2yTdgztMhCodJ
-	jg/JAw4dqcYmNTHApBY1D31DFTPucK4J4mcI0pvpSaGM335lVaZPOqMnPo4a/kyS7Exc5P7CLdU
-	=
-X-Google-Smtp-Source: AGHT+IHm5PSmStcCD2PbOKmO9HvYx5jctVUpwg+mA5CidbOqS112sDrGysxA8yytheZf5F/8il7XBA==
-X-Received: by 2002:a05:6a21:1788:b0:19d:e644:7c9 with SMTP id nx8-20020a056a21178800b0019de64407c9mr294312pzb.22.1707762364941;
-        Mon, 12 Feb 2024 10:26:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWtL7E/Ga3300LiXSPhQpKnlGv08BNISJBi/jBmB7YmHJiNT6YrIQwiAH9I8vBkaTBnDjziwBfcfr/PRvJMQEI8SyNDGq1QbgjzYxA4X2r9uBkF/UY/uZQ3V5lh4HO3EpicV3EyoRKeTXLxIIbov/L8ZEWORYZO7ID1Et7cPita3g01WnaoCTcRtV6KzD1U8GLFhX2Ha8muf8PRlXkVwUWaCzIxmISUdN05pQZSnlU2BQJq7yf2C0SNBCfe+oknwnOhWh64uJgcdqSJ36FShA==
+        bh=N61bSTpFZ2e+PLuAfqmvguTh3fa1HE/2EqLDbYjvwcM=;
+        b=ohIteHiZvaYkoDoaYqQZEIsyPqrQgPjDsThegcXoEGTwi5XFMiTn00ucQhnNzNyEpY
+         xf4tftEPgSc1vDGC3GI8SsKGg1TkzXN0/TtIUplk72V1ngCOxtI/UzXk/qQ8kuXs0WgN
+         6fXDl0xHyPk5Tljf7/aQ1dz0T5IanI9mMHBo/qgSqU/UufIbDKdzwMy5Qo5Q41AQhv8U
+         HrNzD819PwrHc1J9jgCEx6l3Ng+4N8ivnoyoYndDfJokeOVjaHcQNMxVX9DlrSuxK3JB
+         9U3G+vZ4Ok5huyw8DcRlmpUEPQLq/U5bxK7zPOAsIwU2+yqYdBu2t+CBJcpdd1lQv8SL
+         QeKQ==
+X-Gm-Message-State: AOJu0Yx8xr5FxiAk+NvzcBpCC88HcYhGcJf5WluL/4865wJa5gAOKFjW
+	zoHlhMB1cHzPEC1xbMAr5f4YqIohCPW6wokGVUHMFDPG6Xq93yys0xNq3TNNFw==
+X-Google-Smtp-Source: AGHT+IEWVVrqr5Ta5/Y8coFAcbU/62c7uV5RG1RnJiaLdKJtTlCzfEyZvDIyFRYCS+zxfkBl8ASQfQ==
+X-Received: by 2002:a17:90b:1054:b0:297:1779:84fb with SMTP id gq20-20020a17090b105400b00297177984fbmr3738633pjb.43.1707762618832;
+        Mon, 12 Feb 2024 10:30:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWqzXReP3IYediOTpA4Y6OC6ft/joUK+DbNmZ8ShuoIpBTd0/KboIdivDaLOt5vZNYxKdzl+WOvG4XORuhYoNyibYUN9VXp/wkGK0yP4JRewr1UQUplInabN+LEwmrssN1JUWssJN1fsZZw8YsVjHSb62XTqJrpSQdZkEeLCvdtji2RL0fv1JEt9orngC4M0AHbgtdjwRkfJ+3Yktv6qug5esufKhfNneR0h4I+IuajP7KsRdy79020cVEeh0MT+3vHybMHJrxUKak+Y5gkO5ZeqEakCh9ObI+a
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u189-20020a6385c6000000b005d8c1ce4443sm743664pgd.88.2024.02.12.10.26.04
+        by smtp.gmail.com with ESMTPSA id ok5-20020a17090b1d4500b0029703476e9bsm849739pjb.44.2024.02.12.10.30.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:26:04 -0800 (PST)
-Date: Mon, 12 Feb 2024 10:26:03 -0800
+        Mon, 12 Feb 2024 10:30:18 -0800 (PST)
+Date: Mon, 12 Feb 2024 10:30:17 -0800
 From: Kees Cook <keescook@chromium.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	kernel test robot <lkp@intel.com>, Rich Felker <dalias@libc.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <n.schier@avm.de>, linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
-Message-ID: <202402121025.B0B6E47@keescook>
-References: <20240130232717.work.088-kees@kernel.org>
- <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
- <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
- <202402020228.BBEF7DAC@keescook>
- <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
- <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Edward Srouji <edwards@nvidia.com>,
+	Patrisious Haddad <phaddad@nvidia.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] RDMA/uverbs: Remove flexible arrays from struct *_filter
+Message-ID: <202402121026.0AF90DBA@keescook>
+References: <20240211115856.9788-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,33 +68,84 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
+In-Reply-To: <20240211115856.9788-1-erick.archer@gmx.com>
 
-On Sun, Feb 11, 2024 at 11:39:49AM +0100, John Paul Adrian Glaubitz wrote:
-> Hi Kees,
+On Sun, Feb 11, 2024 at 12:58:56PM +0100, Erick Archer wrote:
+> When a struct containing a flexible array is included in another struct,
+> and there is a member after the struct-with-flex-array, there is a
+> possibility of memory overlap. These cases must be audited [1]. See:
 > 
-> On Fri, 2024-02-02 at 12:06 +0100, John Paul Adrian Glaubitz wrote:
-> > > When I use GCC 13.2 (I'm specifically on Ubuntu 23.10) and the randconfig
-> > > linked from the report:
-> > > https://download.01.org/0day-ci/archive/20240131/202401310416.s8HLiLnC-lkp@intel.com/config
-> > > (which is notably enabling CONFIG_UBSAN=y and CONFIG_UBSAN_SHIFT=y) then I
-> > > see at the final link stage:
-> > > 
-> > > /usr/bin/sh4-linux-gnu-ld: arch/sh/boot/compressed/misc.o: in function `zlib_inflate_table':
-> > > misc.c:(.text+0x650): undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> > > ...
-> > > 
-> > > After the patch, it's solved.
-> > 
-> > OK, let me test with gcc 13.x. My build host is currently running openSUSE Leap 15.5.
+> struct inner {
+> 	...
+> 	int flex[];
+> };
 > 
-> I just wanted to try reproduce the problem again with the reproducer in [1] as well
-> as with gcc-13.2.0, but your branch devel/overflow/ubsan-only no longer exists.
+> struct outer {
+> 	...
+> 	struct inner header;
+> 	int overlap;
+> 	...
+> };
 > 
-> Can you tell me where to find the patches now?
+> This is the scenario for all the "struct *_filter" structures that are
+> included in the following "struct ib_flow_spec_*" structures:
+> 
+> struct ib_flow_spec_eth
+> struct ib_flow_spec_ib
+> struct ib_flow_spec_ipv4
+> struct ib_flow_spec_ipv6
+> struct ib_flow_spec_tcp_udp
+> struct ib_flow_spec_tunnel
+> struct ib_flow_spec_esp
+> struct ib_flow_spec_gre
+> struct ib_flow_spec_mpls
+> 
+> The pattern is like the one shown below:
+> 
+> struct *_filter {
+> 	...
+> 	u8 real_sz[];
+> };
+> 
+> struct ib_flow_spec_mpls {
+> 	...
+> 	struct *_filter val;
+> 	struct *_filter mask;
+> };
+> 
+> In this case, the trailing flexible array "real_sz" is never allocated
+> and is only used to calculate the size of the structures. Here the use
+> of the "offsetof" helper can be changed by the "sizeof" operator because
+> the goal is to get the size of these structures. Therefore, the trailing
+> flexible arrays can also be removed.
+> 
+> Link: https://github.com/KSPP/linux/issues/202 [1]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+> Hi everyone,
+> 
+> This patch has not been tested. This has only been built-tested.
 
-Sure, they're in -next, but for an -rc2 based tree, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=for-next/kspp
+I might suggest doing a binary difference comparison[1], as it's possible
+that "real_sz" is being used to try to avoid trailing padding on
+structs. I wasn't able to trivially construct an example, so maybe I'm
+not understanding its purpose correctly.
+
+If, however, there are cases where offsetof(..., real_sz) !=
+sizeof(...), then I would check two alternatives:
+
+	struct { } real_sz;
+
+but that may induce padding still, or:
+
+	u8 real_sz[0];
+
+which would be a literally zero-sized array, used only for addressing.
+
+Or, these can be left as-is, and the "flex array not at end of struct"
+warnings can be disabled for these targets.
+
+-Kees
 
 -- 
 Kees Cook
