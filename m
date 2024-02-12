@@ -1,85 +1,121 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A5E3E464;
-	Mon, 12 Feb 2024 18:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C8A405DB
+	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763534; cv=none; b=UBnDPHDcb7gNP8OgUfbbLZe/c7xgKiXn7BtK3Y0ou7DTGBQZRSRkcZI2K2AUtHcNZqj+dgvJcP3WYXUnxdTiC0NxPuZfd3GQOuDy13pGbw2BczwRZdng9+z9BFncCAMIGr4y2aKtJKuBUNOh99Cau97h2qcUvQiBEuA7LPSziCg=
+	t=1707763913; cv=none; b=ZISWW/jBoiVRMWTCBv5ZfP8tO/iH/mJ6zPJwLqVynV96a47qoiq2ZBJ0VIv59EXn6/WRhEgIyUEp4THaTC/sEfm4BwQxneNPT8iLI4Z8lvrfdrsk9CrrA86gM9sE6zpyMgUpVncR0uRC9gHa3g5qZy59zDcu2/UagtM+d2O9m40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763534; c=relaxed/simple;
-	bh=tivdoKwTT7t5qPulnWSjQTNjfGJD0+2hMN3G73Wlk4A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=a0p3kB8gzKBn1MB9X8MoJE52nfSLonfY/s6dnVK0WTSuMitULzeVElaSaSyNWy2eP/eyUxmV2b1Rd7IznwlYRpuGbusRZV9ZdAVkEb+2gxFxeeIAXKJTtvuCvamjusLkYPsaeVAthmyQ3lQVPxt3e7G7eyIMX0OcVvKHhMLzN8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1rZbIx-00000003D58-1CdE; Mon, 12 Feb 2024 19:45:23 +0100
-Received: from dynamic-077-011-112-245.77.11.pool.telefonica.de ([77.11.112.245] helo=suse-laptop.fritz.box)
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1rZbIx-00000000zdb-0ERh; Mon, 12 Feb 2024 19:45:23 +0100
-Message-ID: <178e0bebb1a85efebce1f504122ee190c068e0c9.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, kernel test robot
-	 <lkp@intel.com>, Rich Felker <dalias@libc.org>, Masahiro Yamada
-	 <masahiroy@kernel.org>, Nicolas Schier <n.schier@avm.de>, 
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Date: Mon, 12 Feb 2024 19:45:22 +0100
-In-Reply-To: <202402121025.B0B6E47@keescook>
-References: <20240130232717.work.088-kees@kernel.org>
-	 <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
-	 <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
-	 <202402020228.BBEF7DAC@keescook>
-	 <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
-	 <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
-	 <202402121025.B0B6E47@keescook>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1707763913; c=relaxed/simple;
+	bh=GTS3knEn3U37SHf/wqemlrktyAqbrDzvlYNJt5L8bzg=;
+	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mPrpheDDQJRe/XqILp+tFTb4uNBTPKzcxqpdsurVEC4j2CtlpkLlEcpmAtClREqWDLfspK8fYG5rcfeHok8i524O6k4NH8K4W3SAcfXNGzHhSue9CoWBgCn4EzJismkWPWojkVUhJlH4w0vl7S2Hl7qc7Kxe7gbg19BfjK7f3rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LZc6u6+M; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LZc6u6+M"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso2944971a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:51:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707763911; x=1708368711; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mPGSiRqCPFqmFEWSJFO1d43GTTlaRz0f+e2eVAoQklI=;
+        b=LZc6u6+M3QXmf+mklCLv4nvYl4cE4F8WthRQeV0lG699Fm3xSLuFBJiSy7JFa6zeI9
+         +L1GWeahScedXT5h+2MY86yMXaPRXfnlghV0+BeSputyWoF83Rhiqrg1RJjazZ4dmw3R
+         Pghs2IEr54xMsGevUqsjmPkccrysWHMzatiYU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707763911; x=1708368711;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mPGSiRqCPFqmFEWSJFO1d43GTTlaRz0f+e2eVAoQklI=;
+        b=hMLLj5bYK65bStBmD06wtr8x8/TdhLcDOTOJMfU9KBNvo6usWiHx3EsphBIs2Lvd7i
+         Q8XqMu5zUOq7IjM8avtdDtcyETU9/6+THDlhq20dNKPa0NoAGlCoV6YxJkqj6lNKNdlF
+         au4R8UMB0G0+3TeWNMJLMslsNSSj8ZjpOtNKdNAaGEI8ZVe9NWWeofbloT7+WHRRpj1K
+         CVqdPutuRJYODyds3cxgIVGLkpXSrfeYRlZDKdWNWslDF9N+df2lrkT3/4czOZnrzKGX
+         s8nmNDT+P9ZYl51M4UEM6PnGGoiVXycdicH0ufemkAv+ySVVL9oETQjDqxxB4ug62ryC
+         M3Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUTIu+WO3JLjLB7oFO5Xs6ispFpKUNW8Jk3fsZaT9qoOitJ7mDumwNlTsJ7f4yTHOUdGGpK/k5+VqA9bwTlYHXakRXiudwg4m9aEzbSg27
+X-Gm-Message-State: AOJu0YzZx2ngE9i4bmhQAg+s/+oHsExZ0vpIBAD73vo7KtBeDLHnSgOz
+	CkJjRn6rxAXOICi9y5YYKLYnA7ZOhB3jsrMPs2KW4Qreh9c7WjaiJcm2cmIhZA==
+X-Google-Smtp-Source: AGHT+IFiP4XqEVFPUe0AQ5sfHfutAVORBuy6ctbchagD56aaWb7k8kuXps4xMsVwiJ9ZHG46ydaEYA==
+X-Received: by 2002:a17:902:e5c7:b0:1d9:a647:5579 with SMTP id u7-20020a170902e5c700b001d9a6475579mr5817557plf.1.1707763911196;
+        Mon, 12 Feb 2024 10:51:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWVMXpMNIhotAYcYiqvNVCkUE02lF5spebU9llp4fc83Uutkz2jejMC03XmEIikgbWSldV5H3FNfAtE/6Jgii8cDrbgJCUgH3FC06zl/KgIj9f0r9uzQf62jhBRN7BKOi1tZOnRyWmjtO7PY6+GSekpCARKo/B9UBpkn+azS/Cmmzi9TXICwENuOXYbDsVLW+aNl5BNyMY3j4f4tfwfGghjhJcNsUZ6UbcCDRZwnBmZD5vN27Xpt2chVq15/1Tj6eg7VCkbJz8orDtPaf0/GidfJtGvk+NZZPo9yUI35lJxR138j6xF646MPyb2DcV92qgf2IShUDlLrbaOWviiuXiOzIENe3ZZ1bXgGWRrVUEl1L12s9CLURo4SeY620eR/lcDl2m//IprO4DY6HkY9R14CW6xhIJkrV47ecHxKR84yndQsDXM3NJqMcpiu4M6Y+P8kbk2+ZWg8t1RBE4uXWXtDWTxFaVA9585IKWuec4srYj5WnES1gkpMYxVgbudrRnPzxYH+H7a4hODicJw9+ImmaeqZYgOPYsAmQk=
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170903308b00b001d9fa58f5a4sm675012plc.48.2024.02.12.10.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 10:51:50 -0800 (PST)
+From: coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date: Mon, 12 Feb 2024 10:51:50 -0800
+To: Anton Yakovlev <anton.yakovlev@opensynergy.com>
+Cc: Jason Wang <jasowang@redhat.com>, Takashi Iwai <tiwai@suse.de>,
+	Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, Jaroslav Kysela <perex@perex.cz>,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+	Aiswarya Cyriac <aiswarya.cyriac@opensynergy.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: virtsnd_kctl_tlv_op(): Uninitialized variables
+Message-ID: <202402121051.B091CCC4B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 2024-02-12 at 10:26 -0800, Kees Cook wrote:
-> > I just wanted to try reproduce the problem again with the reproducer in=
- [1] as well
-> > as with gcc-13.2.0, but your branch devel/overflow/ubsan-only no longer=
- exists.
-> >=20
-> > Can you tell me where to find the patches now?
->=20
-> Sure, they're in -next, but for an -rc2 based tree, see:
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=3Df=
-or-next/kspp
+Hello!
 
-OK, thanks. I will give it a try with gcc-13.
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20240212 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
 
-Adrian
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+  Fri Feb 9 14:01:15 2024 +0100
+    d6568e3de42d ("ALSA: virtio: add support for audio controls")
+
+Coverity reported the following:
+
+*** CID 1583619:  Uninitialized variables  (UNINIT)
+sound/virtio/virtio_kctl.c:294 in virtsnd_kctl_tlv_op()
+288
+289     		break;
+290     	}
+291
+292     	kfree(tlv);
+293
+vvv     CID 1583619:  Uninitialized variables  (UNINIT)
+vvv     Using uninitialized value "rc".
+294     	return rc;
+295     }
+296
+297     /**
+298      * virtsnd_kctl_get_enum_items() - Query items for the ENUMERATED element type.
+299      * @snd: VirtIO sound device.
+
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1583619 ("Uninitialized variables")
+Fixes: d6568e3de42d ("ALSA: virtio: add support for audio controls")
+
+Thanks for your attention!
+
+(Human comment: looks like there's no "default" case in the switch
+statement.)
+
+-- 
+Coverity-bot
