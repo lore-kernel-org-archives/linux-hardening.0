@@ -1,62 +1,33 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D64E3C08F
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 13:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365FE3FB19;
+	Mon, 12 Feb 2024 14:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745337; cv=none; b=brDHeiMFpZxsMJ7cAPnulHGODebFyDkhx4mLd4GQu09zlwvMVX4N16Htum2yLa7RdmEgtnKGIPe+CA9/uDOiMuPxXTjmOwiGCzevn88TUu0KWfeXr8xA8JKLRokhGhNqxENYjtRcrRFdQzYKRberCyHMycNfd0NK663x22hDPco=
+	t=1707746855; cv=none; b=KTKC9LwG1div2sojsvQBOG1e9XOZH2D9TOhJZqQAljbdrOKm73P1Kyptb0S+bGduAhY6qAXxQJvpVs9EaNzXQcgNtpHEtSN9GhTtcDJH/jWfYiH8XLRLDCZTlZA39JWqg9UJ7CdjMEwtw8WnYyy1lE3jklm0LoUF9C8BGt32GTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745337; c=relaxed/simple;
-	bh=rqH8V6xbdfF0F13rCGzXMzpp7vuMjDdnewyWWsEO/78=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=htFczCN2UX1Zp9p4FFkW/FVegUlO9FZlCJgjQ0KztaBmqA/Q1mtqPs9Y7tOHc+PTiYhmhQ8nWo7OHrW4VR1UdDK9OApu4Bikpc6ZTe4YOGUXUEV4QC+3ubWf7KQKmb6RfM/+n/5v0OaYZqdj6Fs2mh+iwNH53+l9+roXK+US6yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vb63mbps; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707746855; c=relaxed/simple;
+	bh=tk7susaLtsbNxhwZtsQjr7OaP2Q6DZ7zgriElIgnzFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N2zbyhDNZMg3DCaq3j2O8IN+gzYaOGnnxGj2lnCefYbEOa2I9HcopUPwnEP1M26kkArLAM3wa61IScJZEsLy1pwrURnBBhAEX93QbzoE6HZmuQP1tc+frFamSU+UAWRocHDFwvO4ZkrG+EEnVAJUAD4l5zoMXi0fdcZRin6T8QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBIv1suT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vb63mbps"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50eac018059so4038170e87.0
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 05:42:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707745333; x=1708350133; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i1egguljA3sQnHDnPRPPbcueWjcXgdGipGLJzM0d48g=;
-        b=Vb63mbps2X2lwnZu/gl7kssWgwOwnlcllMqQMgrSU+1mDNDq3HaQ0GiZSSM9FViLl7
-         n7K7SDL6Pbk/1BYSeWN4kGD8SfIlUtCxjyyxGbWuqwCHVJXu2DOcpZtBCMSPiwP/XG8n
-         5CM6lETdijaGEZU5jWlN1dNC48a0tSfr3U5GY8Cim8/yhs9r59gc373fB6fCQzHhEDvI
-         XuYw28xYdI1qQHhJgblXW0i1OJimfSD19K0DCp4W9xO/rNcHSpav5zEWrDyyl+w27Zo6
-         jBAqzz5MG9hwf3iUaL5+H52t7VQnuUM/E5uuO3oBcvJHlmI15/mdpe7/lPllHrF2DWcU
-         LPig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707745333; x=1708350133;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i1egguljA3sQnHDnPRPPbcueWjcXgdGipGLJzM0d48g=;
-        b=FWXZAsFTS1tzjhFT9mwnos30tmsmTN476oGZE/mS+BBn64vl0dNYCdfMeICTmlq0IE
-         +PHR0xeuDC5AS6eciQRYuG33yARPyVYgSZItvFkT2LlPhxPbmEvalTsph7wOyMVT5A2V
-         OTWmFfSpWtvHnbTZJqk7cPnNYKZfEdJ6FH734Cy8ANPFifWu5VKGzdTy3bp6u9LacwfP
-         rnGcZTPqPATjBQLiVv6ohh0Y0x3XVNOg9PZyzSKTivqEFq/nnfsfVAZRxoj7Xho+/Knh
-         qdXPqGMQ04OkyRJoy7XqgWlJU3NFTNjDNX2sA8+HCFgvXRz4lwx4Tkgoiib5z26bcD3o
-         XsCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKXxi4ds2ftWvPVYbvdye5Ba6MBPRKewy5jTqAvSFu950hYXFEP28yuRtOweqLEUn4GiQy+DHtZMG3ffchq1hmn11LiupbbD6/axp87sGG
-X-Gm-Message-State: AOJu0YyzU8t/N7dH/evdywOys0HospvkWqaeYBlZIV0Pc/WiThXM4tYD
-	gaX2vK+T4yzvg3d62bHXL7W2dCVhs9aG10+Nn3GkZoynRKZasdnKb9bUWNb8XcE=
-X-Google-Smtp-Source: AGHT+IE7YwnAR/t5AkP6YIn0uMqvFArgd0ofli+tExgAVx4Cgyw/iRwBsY/FeDi710tbkExSXCIOYg==
-X-Received: by 2002:ac2:518d:0:b0:511:694b:245a with SMTP id u13-20020ac2518d000000b00511694b245amr3909298lfi.58.1707745333527;
-        Mon, 12 Feb 2024 05:42:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWSGZEBeKuVwG5VasUk/o18BoRvc4R9Q7F5J+Lo/pwWIDyLBSFsdfdBW+Ug5S6sQEiESgazczGJNgzEtXSH7KCgyll9dF+BWTwx+GtoKN60WaP1mxhCL4fl78Ibxa6BuZedFAfxdWRl2QOtzLs0YMxAs0Qy8TDWgDGiw9R1AqO+qTDUa0mwR4/2z3eG/guHgkoYL6e0nyD08WAnBw8PwCSv0Sl++XmwvsvGrrH/VM5BB7mwS1DXZ0iQ11/yQ961yzkSNNY9qK4D/RWvzpoY5X2nHz7Vsmr7SiAi0TC2exwwFDgLeSk3xfUUQ4KFZpcY4ThLjhiprCW28zdR71SZdwDlRutKrgd+4g9zoCTFNP3CvfYn9ClQMO5rOiBN3qFFzBXa4Q82On/G6BD6B8AODSS5zfJNW2epYPclYs/rLndb6hRhzcCIDm3pQSywA5BNb3I+oppsOAKPZn8O3WF+qwQ5vL7coeQHKSzbuUO/3Y84WACJl9TaEmvEQQmdS0ssukbSHkkXAZ6Db5IpdejXVN4mPWGFz1wp6vxEY4LY/0XAGDvChusbP8yxm5I8zHD4CfIaQczmcu4jqrdx5d3qj4Ol77vshh2JZvZv8wS4nZ7mE99gvyqJXpISln4wJwVMSE/nyqlTziVSBurxnlZqQfqY9R3y2jJetsmfBlJynt1IHJystVq3bbo/JtqB6syONugrNRLdDT7wSMx008w61EgjwECmQpV43svrG2LnFwQI3osPkWrp6uWIuQ5jcvdoob/B3d6WGfNbfSgKptcxPPDHh8+ZXdZWV8c/ZHD1+zRZU5XHhPoG+s3Bjw==
-Received: from ?IPV6:2a01:e0a:982:cbb0:fcee:f026:296d:135f? ([2a01:e0a:982:cbb0:fcee:f026:296d:135f])
-        by smtp.gmail.com with ESMTPSA id a4-20020a05600c224400b00410ebcf8180sm1605785wmm.43.2024.02.12.05.42.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 05:42:13 -0800 (PST)
-Message-ID: <3b31a7da-1ac4-471c-827b-1d9782c9d9d8@linaro.org>
-Date: Mon, 12 Feb 2024 14:42:12 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBIv1suT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E59C433F1;
+	Mon, 12 Feb 2024 14:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707746854;
+	bh=tk7susaLtsbNxhwZtsQjr7OaP2Q6DZ7zgriElIgnzFc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VBIv1suTYVrHVE3zSP70AaehI6e/CFMaufnbbSFDsH+oRf69plYP+AZzEGXX2wHRe
+	 8xpaDIiouNJKMiLKVlXDkqxSAZbA+uFj+K1mZxjBFoYDfPQ/NiYE1J/AQlw1AfC6V9
+	 0rQWbNdu94bJY3jIn9eYi9cZRY9Xw+iYaa09THbikE8GIse/2Ebq7eGLysYAF03E8e
+	 u90F6zi4Gzy6XxfyuRvQ3S20MwagFUpC0VhwbPyH5qxyQk0aoyux9ycoKivMAnYGx/
+	 lNFr5+CUCDIOigftSg+kittyM8aD1NTpclDs5KbL3fRfdlBGakFBCKJpUWnTKk8SlJ
+	 PhpKaDPiXcBRQ==
+Message-ID: <0ffbfd54-57d2-474e-8dad-7f1469f4da21@kernel.org>
+Date: Mon, 12 Feb 2024 15:07:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,81 +35,74 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 6/7] arm64: dts: qcom: sm8550: Mark DWC3 as dma-coherent
-Content-Language: en-US, fr
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- James Schulman <james.schulman@cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Ricardo Rivera-Matos <rriveram@opensource.cirrus.com>,
- Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
- Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
- <20240210-topic-1v-v1-6-fda0db38e29b@linaro.org>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20240210-topic-1v-v1-6-fda0db38e29b@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] hardening: Enable KFENCE in the hardening config
+Content-Language: en-GB, fr-BE
+To: Marco Elver <elver@google.com>, Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dmitry Vyukov <dvyukov@google.com>, Alexander Potapenko <glider@google.com>,
+ kasan-dev@googlegroups.com, Jakub Kicinski <kuba@kernel.org>
+References: <20240212130116.997627-1-elver@google.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240212130116.997627-1-elver@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/02/2024 14:10, Konrad Dybcio wrote:
-> In a fairly new development, Qualcomm somehow made the DWC3 block
-> cache-coherent. Annotate that.
-> 
-> Fixes: 7f7e5c1b037f ("arm64: dts: qcom: sm8550: Add USB PHYs and controller nodes")
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/sm8550.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> index 925e56317fb0..e845c8814fb9 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> @@ -3207,6 +3207,7 @@ usb_1_dwc3: usb@a600000 {
->   				snps,usb2-lpm-disable;
->   				snps,has-lpm-erratum;
->   				tx-fifo-resize;
-> +				dma-coherent;
->   
->   				ports {
->   					#address-cells = <1>;
-> 
+Hi Marco,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+On 12/02/2024 14:01, Marco Elver wrote:
+> KFENCE is not a security mitigation mechanism (due to sampling), but has
+> the performance characteristics of unintrusive hardening techniques.
+> When used at scale, however, it improves overall security by allowing
+> kernel developers to detect heap memory-safety bugs cheaply.
+
+Thank you for having sent this patch!
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
