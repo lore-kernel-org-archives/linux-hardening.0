@@ -1,182 +1,117 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF263CF45;
-	Mon, 12 Feb 2024 15:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B970B3C473;
+	Mon, 12 Feb 2024 15:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707753060; cv=none; b=ouYg03WXzA4dbgHwKgfoJB/M4LG96Dl8GnX0IZf5p1fZGp6ap/nZG8Yl6L02B1mP//9DdCA3qoJToLkXMtk5fzmjxx3Cq53U6CbaM4MCuIeyYOW3DvUFSMM/xPg7rN2wsFMQfYLfnlbPbUeEAdOVghNfqSs/tCZq3KeqP3kHvsE=
+	t=1707753377; cv=none; b=apV1loz64EOwzzDoejNm0L+WBRDVXvMNtgHfvLiy9yu+FIVWrZNkpy+G2GMX1RO1nsWAgU/E06Zw7gaJ0osM94T0fhHjRgctX0R1ZMrfshW1JfGcadxWcjHjoZ+2iYAySHc4qvNX9LTep7YWnEhKXMsFLoDx7LeU+jC3AZ7DkKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707753060; c=relaxed/simple;
-	bh=xGPVBigagNRNZsOr8Us5qwixX890ZDiKv3BG7ESfd8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aj9wDoZuzsPfaV1CYNdpOagGZjNClJTdTl+CSElqY/oBZhJLpwdIrJeO/ZuT66uoR3bNaxCLO+Tk0Smn1rWu0n/ojB6gL3HIzzzfItDLunA24wfasLsUwQkrbm/ZmxPPqiZrevhGqXdwDMRJp1p3CUJGd/MB8Mfrvz+z2Ulwc04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SvwmNzT0; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707753377; c=relaxed/simple;
+	bh=UEoUzI0eopOfpfMWL9+ubXLmnf6UPKl4bf+SH/FfhF8=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:Date:CC:
+	 Message-ID:References:To; b=f/PNH0VE/4LcNtjcSvRC3BxycJUq2PbfzXMqiNKlSiNkAZp8JPMvL20Afu5E7suYsWj0ahSfphyeIpyy6glYl2xEKJq4l9ncrsQKBHr/ILDKuWplqtoIRA9EdEUumts0QUp6tZwJ0WeIdqXTTULvUAXbWKGtcsZsAhEqNAZ8rSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=kHJS4noC; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvwmNzT0"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-411a6ceada8so2430815e9.3;
-        Mon, 12 Feb 2024 07:50:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707753056; x=1708357856; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DKJbvwlkOP1SRi/Z77aD8twgFDCEOZM6sW2cKw9vfP8=;
-        b=SvwmNzT0RA9ei8qM5L3z82b1PaJeGy8sT76VQmIY/qkg5unByyq+C4R4Yj05kPBdtU
-         I4yEvicgtx/gFjmh01DWMcQcH+XNI6u2G9I7IbiGJsd3P762yqYYdfvnHXVhJz/FyKfG
-         HxFuLAv11hYIugqm62tdDia74c32mJMHKJjpylue1UOUrXxs/gLqtRFvFKdRs/yjLpxh
-         rW9a75f6O8UAOLGx0x1ixZRq1UgaasHcinr5vMimoxDE4WepUoqgHWE44FfcYIsjTK58
-         aSKJMU98eEAA+4n8XsTbmPP3SG3FgPHMFaWGSBrFdWeQc/Jq4UQHyJu1I6Uq+D8Mik3t
-         iE1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707753056; x=1708357856;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DKJbvwlkOP1SRi/Z77aD8twgFDCEOZM6sW2cKw9vfP8=;
-        b=LSaKoK50VVx+TAXnMSfHX5EPU7DaEMCoPGqSk1I+Az5L3QNPQLkGIyqW7vBYNTccfB
-         zxYpHL9CD2fLMjFOqk88sRTTkEzy3JBSKrEA4wTHfl5aJb3zIocVwSMyfJ/jWLknr7eW
-         QUXl5MS8Q7nUzKCraz6yi4JBg3b+Vn8pTBjIvfGxILdFSOp0ls2g7hJPYlubIdfyrg/i
-         hydUZaZeqLJfGzB9K76vqjUL5HHkQ2eB+PbhZhPhtNd9paTdPlQarBlGc4ow+eqzblCn
-         kPrT7o1vmvQ9AS2DiABMbeQvZf9tT15LiYetWXRs2MHBGIJiAvOBk9NgUrbB3RgTw2tX
-         xHQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtDDd1vuRU6Qlko9Ohlk9y9RWmQOVxZ8t0twa2avyrANKGNGupu1vzMVzoMQ+7RwsY41QJwdMcdkt7t79ZnJjveoz3sz5Xyw10Aen3NBrFxUkOgcgJvuvvYcHHSzkepl+bY1/F+C95+MIQ3CND
-X-Gm-Message-State: AOJu0Yy1635NpQKf2U7ehM10np7Xb9UewFQ7wWINvpGTruaC3xTOXRp8
-	r0XmxIKYSmN7ehMVVRf+7SyuR9X3tXESDHxBR3PuaCIj4jFAMv3E
-X-Google-Smtp-Source: AGHT+IEc+c8gZb2UL13KcPyzSt4NGhKYck2YJGye4943wMZe7LgW/jeKFsFr17NDmh3SEL0rg8X6Gg==
-X-Received: by 2002:a05:600c:4f8e:b0:410:7897:6c68 with SMTP id n14-20020a05600c4f8e00b0041078976c68mr5816893wmq.3.1707753056342;
-        Mon, 12 Feb 2024 07:50:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXD8geSAWQRDN9wEm603b2P2I5b3hHLLwQxozbSbN9lQC3GeJ1rtH2ArXvmkp3fKlw5svrA2kzag1dDitt1chiYFYYX3/ScuD+vNzYTtZceStz9yc+uZQQUcSqUD4QbIkxT/xnW5F2FDIV/1+TZR8yqPfh3ZyX76+NeuMne3GylIBnKfnWvtuqLfjbUBQsYp8ZIrpGbBieEQ760H/W9k5dLtJWVtGxsMeaZWV+AAqO7eQexjgKwBTwyEG6SW70VB2GIjgL0Y5+7YjcwhWrdlupeCsVeyXHsVcO3jWJ5+kOhwBMYShVe6O7QjfUgjIO8oj7YOiNqtm16Ro3wG3hDmGzF8WBUj0rvGe8voETzjsYfm5cbaXYCY9qGW7XvnMsp3SQp+q5A0BerKef3Ugsq+wPxsB1ftqw48DL4VCiuuWwDfUFo5DvfAXbUt9Pi+QD8tw0E1oDbOw6nlZwrL1WOcNCQYkapgZzda8W/GkUv/uDIR1bjXlOyx1j6afEPPLP0B3Ow0UIkzH73CFIyOSfw+9QzTaRGIVXsmBPWMtfDX39CUh2a3FFHkX6QYNZ2tO7/WYtXgZ1tNK0zakRtRto20y0HXrJVOn8HIxl036q0xjzwI7BmsgWy7Kyt
-Received: from [192.168.1.135] ([207.188.161.188])
-        by smtp.gmail.com with ESMTPSA id j36-20020a05600c1c2400b00410833555d5sm8461390wms.21.2024.02.12.07.50.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 07:50:52 -0800 (PST)
-Message-ID: <f5ea54f4-9176-4fde-89bf-71b1771e47c3@gmail.com>
-Date: Mon, 12 Feb 2024 16:50:51 +0100
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="kHJS4noC"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41C7wuOt021531;
+	Mon, 12 Feb 2024 09:55:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	content-type:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to; s=
+	PODMain02222019; bh=UEoUzI0eopOfpfMWL9+ubXLmnf6UPKl4bf+SH/FfhF8=; b=
+	kHJS4noCFaqhHA00df2Nyt5FmY+gB7OQUEEpeP6D0ExctWUJA3mYo5WEuWviyrsZ
+	zHrY3ylV93fWTxp591elNivJTtdqJyFz84ghlZhNvVbLM/Li4w8cSVjED4gkx51C
+	s4zl9UzYuYZNN7Cg86cNIsX6NftCxBvhN8UlXkMfAlPN4EYP+owuwTQYVAA60zpa
+	gxzz2LJgSv2+w2XisaJbdqntbrL1ARM57umBDUA/n2AN0PAqEf/xCTXMjvqdanPN
+	JbN6nYOJQL1XQf5Rhm61D1HnvGjI82/rS/IijKmAjCLoHhqhKYdTqliVB8S9UqRP
+	vA+9bmzebhDR/jr8EXGHwQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3w67e220gf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 Feb 2024 09:55:47 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 12 Feb
+ 2024 15:55:45 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Mon, 12 Feb 2024 15:55:45 +0000
+Received: from smtpclient.apple (unknown [141.131.76.118])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 7CA6A820242;
+	Mon, 12 Feb 2024 15:55:41 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded
- arithmetic
-Content-Language: en-US, ca-ES, es-ES
-To: Erick Archer <erick.archer@gmx.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Heiko Stuebner <heiko@sntech.de>, =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?=
- <philmd@linaro.org>, Rob Herring <robh@kernel.org>,
- Li Zetao <lizetao1@huawei.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org
-References: <20240211091633.4545-1-erick.archer@gmx.com>
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; keydata=
- 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
-In-Reply-To: <20240211091633.4545-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
+Subject: Re: [PATCH 1/7] dt-bindings: ASoC: cs35l45: Add interrupts
+From: "Rivera-Matos, Ricardo" <rriveram@opensource.cirrus.com>
+In-Reply-To: <ac5cbfbf-45ea-4d34-ac3d-d3a0fc6ff061@linaro.org>
+Date: Mon, 12 Feb 2024 09:55:29 -0600
+CC: James Schulman <james.schulman@cirrus.com>,
+        David Rhodes
+	<david.rhodes@cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        "Sai Prakash Ranjan" <quic_saipraka@quicinc.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Kees Cook <keescook@chromium.org>, Tony Luck
+	<tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <C8A97AB6-A3BB-4018-A8E3-CEEECFCBECE2@opensource.cirrus.com>
+References: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
+ <20240210-topic-1v-v1-1-fda0db38e29b@linaro.org>
+ <ac5cbfbf-45ea-4d34-ac3d-d3a0fc6ff061@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: Apple Mail (2.3774.300.61.1.2)
+X-Proofpoint-ORIG-GUID: HVAAhL2KDvY-331du_lPmDeJ2OJzJ91Y
+X-Proofpoint-GUID: HVAAhL2KDvY-331du_lPmDeJ2OJzJ91Y
+X-Proofpoint-Spam-Reason: safe
 
+Konrad,
 
+> On Feb 12, 2024, at 7:25=E2=80=AFAM, Krzysztof Kozlowski =
+<krzysztof.kozlowski@linaro.org> wrote:
+>=20
+> On 12/02/2024 14:10, Konrad Dybcio wrote:
+>> This chip seems to have an IRQ line, let us describe it.
+>>=20
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>=20
+> Subject: ASoC: dt-bindings: cs35l45=E2=80=A6=E2=80=A6
+ditto
+>=20
+>=20
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Ricardo Rivera-Matos <rriveram@opensource.cirrus.com =
+<mailto:rriveram@opensource.cirrus.com>>
+>=20
+> Best regards,
+> Krzysztof
+>=20
 
-On 11/02/2024 10:16, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
-> 
-> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
-> this structure ends in a flexible array:
-> 
-> struct mtk_nfc_nand_chip {
-> 	[...]
-> 	u8 sels[] __counted_by(nsels);
-> };
-> 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the argument "size + count * size" in the
-> devm_kzalloc() function.
-> 
-> This way, the code is more readable and safer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Thanks,
+Ricardo
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
-> Changes in v2:
-> - Add the "Reviewed-by:" tag.
-> - Fix a spelling error in the commit message. Change "more safer" for
->    "safer" (Uwe Kleine-König)
-> ---
->   drivers/mtd/nand/raw/mtk_nand.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/mtk_nand.c b/drivers/mtd/nand/raw/mtk_nand.c
-> index 60198e33d2d5..17477bb2d48f 100644
-> --- a/drivers/mtd/nand/raw/mtk_nand.c
-> +++ b/drivers/mtd/nand/raw/mtk_nand.c
-> @@ -1356,7 +1356,7 @@ static int mtk_nfc_nand_chip_init(struct device *dev, struct mtk_nfc *nfc,
->   		return -EINVAL;
->   	}
-> 
-> -	chip = devm_kzalloc(dev, sizeof(*chip) + nsels * sizeof(u8),
-> +	chip = devm_kzalloc(dev, struct_size(chip, sels, nsels),
->   			    GFP_KERNEL);
->   	if (!chip)
->   		return -ENOMEM;
-> --
-> 2.25.1
-> 
