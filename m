@@ -1,68 +1,73 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C8A405DB
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CCD4D9E1
+	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 18:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707763913; cv=none; b=ZISWW/jBoiVRMWTCBv5ZfP8tO/iH/mJ6zPJwLqVynV96a47qoiq2ZBJ0VIv59EXn6/WRhEgIyUEp4THaTC/sEfm4BwQxneNPT8iLI4Z8lvrfdrsk9CrrA86gM9sE6zpyMgUpVncR0uRC9gHa3g5qZy59zDcu2/UagtM+d2O9m40=
+	t=1707764400; cv=none; b=gkJ2QeJOfGOnWCrT8QWFwuc8/ZNWFQGT/kuUYso1906eIAHfK5R5Wbud0yaa33FUrqscAEn5wbscXFZGvrqR5SMJCzxdeoGy3bHmmacPy4/UYzvcNrazOwTzxJpJdgbHpeshBo7LbAmV1QaosLTWSky13Jzgo4I8jCKH8x38wWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707763913; c=relaxed/simple;
-	bh=GTS3knEn3U37SHf/wqemlrktyAqbrDzvlYNJt5L8bzg=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mPrpheDDQJRe/XqILp+tFTb4uNBTPKzcxqpdsurVEC4j2CtlpkLlEcpmAtClREqWDLfspK8fYG5rcfeHok8i524O6k4NH8K4W3SAcfXNGzHhSue9CoWBgCn4EzJismkWPWojkVUhJlH4w0vl7S2Hl7qc7Kxe7gbg19BfjK7f3rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LZc6u6+M; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707764400; c=relaxed/simple;
+	bh=YK+sGsUdZfCKVzahxbXULih6swELSJdE1qlLN7uwVGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0oPCResF8Ds2mAN+QZzC9v8QizZzpQM87rkpawCSUnqC4Jr+r5/T1JGWPdknOydM9riEbqKsfiBAAl/+xp3sWcwiHDPyAmJEtsfQr/LxraeJhGC2R3yEl6whlivrTy3gAUfCbr4Zdroj6bC/jFOMRzB/tlHq6l8ulHw89XcTUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=lLDikqb7; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LZc6u6+M"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso2944971a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:51:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lLDikqb7"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6e2ed77e94dso361168a34.3
+        for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 10:59:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707763911; x=1708368711; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mPGSiRqCPFqmFEWSJFO1d43GTTlaRz0f+e2eVAoQklI=;
-        b=LZc6u6+M3QXmf+mklCLv4nvYl4cE4F8WthRQeV0lG699Fm3xSLuFBJiSy7JFa6zeI9
-         +L1GWeahScedXT5h+2MY86yMXaPRXfnlghV0+BeSputyWoF83Rhiqrg1RJjazZ4dmw3R
-         Pghs2IEr54xMsGevUqsjmPkccrysWHMzatiYU=
+        d=ziepe.ca; s=google; t=1707764397; x=1708369197; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YK+sGsUdZfCKVzahxbXULih6swELSJdE1qlLN7uwVGM=;
+        b=lLDikqb72XIUGYz8SWG1QhVietJSjvsR776R3/MhrMoAXfxyxUD4dW17GppSzFyMGE
+         ysDeDpVMMmH8LY08LPAD6uj5t5/Xh2wS6Rg/oOjOvRsdYZ0cFiliJvGUIE5rGuw2O/im
+         CeBzdilEpDjIH0WMl6YFOOXvyxV+mJtIy3xsIdzTWc/2NSH8yx+35Gq2scOiQbqsZXy5
+         2ggF1Emtos9yYlYtB5uhCQ+WAQCagQLf8vo6sLOiiCzLx4fA8meZAKKmiBauuD68F2bY
+         nwxvq2sv385+i7Mdn+vTpvgdKxbepDJYzL7KCMVm59J/ynP6pS+LezbfTumOVeHnGor7
+         PbCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707763911; x=1708368711;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mPGSiRqCPFqmFEWSJFO1d43GTTlaRz0f+e2eVAoQklI=;
-        b=hMLLj5bYK65bStBmD06wtr8x8/TdhLcDOTOJMfU9KBNvo6usWiHx3EsphBIs2Lvd7i
-         Q8XqMu5zUOq7IjM8avtdDtcyETU9/6+THDlhq20dNKPa0NoAGlCoV6YxJkqj6lNKNdlF
-         au4R8UMB0G0+3TeWNMJLMslsNSSj8ZjpOtNKdNAaGEI8ZVe9NWWeofbloT7+WHRRpj1K
-         CVqdPutuRJYODyds3cxgIVGLkpXSrfeYRlZDKdWNWslDF9N+df2lrkT3/4czOZnrzKGX
-         s8nmNDT+P9ZYl51M4UEM6PnGGoiVXycdicH0ufemkAv+ySVVL9oETQjDqxxB4ug62ryC
-         M3Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUTIu+WO3JLjLB7oFO5Xs6ispFpKUNW8Jk3fsZaT9qoOitJ7mDumwNlTsJ7f4yTHOUdGGpK/k5+VqA9bwTlYHXakRXiudwg4m9aEzbSg27
-X-Gm-Message-State: AOJu0YzZx2ngE9i4bmhQAg+s/+oHsExZ0vpIBAD73vo7KtBeDLHnSgOz
-	CkJjRn6rxAXOICi9y5YYKLYnA7ZOhB3jsrMPs2KW4Qreh9c7WjaiJcm2cmIhZA==
-X-Google-Smtp-Source: AGHT+IFiP4XqEVFPUe0AQ5sfHfutAVORBuy6ctbchagD56aaWb7k8kuXps4xMsVwiJ9ZHG46ydaEYA==
-X-Received: by 2002:a17:902:e5c7:b0:1d9:a647:5579 with SMTP id u7-20020a170902e5c700b001d9a6475579mr5817557plf.1.1707763911196;
-        Mon, 12 Feb 2024 10:51:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWVMXpMNIhotAYcYiqvNVCkUE02lF5spebU9llp4fc83Uutkz2jejMC03XmEIikgbWSldV5H3FNfAtE/6Jgii8cDrbgJCUgH3FC06zl/KgIj9f0r9uzQf62jhBRN7BKOi1tZOnRyWmjtO7PY6+GSekpCARKo/B9UBpkn+azS/Cmmzi9TXICwENuOXYbDsVLW+aNl5BNyMY3j4f4tfwfGghjhJcNsUZ6UbcCDRZwnBmZD5vN27Xpt2chVq15/1Tj6eg7VCkbJz8orDtPaf0/GidfJtGvk+NZZPo9yUI35lJxR138j6xF646MPyb2DcV92qgf2IShUDlLrbaOWviiuXiOzIENe3ZZ1bXgGWRrVUEl1L12s9CLURo4SeY620eR/lcDl2m//IprO4DY6HkY9R14CW6xhIJkrV47ecHxKR84yndQsDXM3NJqMcpiu4M6Y+P8kbk2+ZWg8t1RBE4uXWXtDWTxFaVA9585IKWuec4srYj5WnES1gkpMYxVgbudrRnPzxYH+H7a4hODicJw9+ImmaeqZYgOPYsAmQk=
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u11-20020a170903308b00b001d9fa58f5a4sm675012plc.48.2024.02.12.10.51.50
+        d=1e100.net; s=20230601; t=1707764397; x=1708369197;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YK+sGsUdZfCKVzahxbXULih6swELSJdE1qlLN7uwVGM=;
+        b=FFcEnrldDXFL+wxv6vtLq67EJxhwFkH/vLDyUhGmx5lwrjOODVzTgyCCkyO/zzge1o
+         Y/u+24EtYVaXMTsvYrmWX/WjKrWNyafobxfoxFZZqdjlyogRN0la5OuobjHKk7VUk9M3
+         Jd9PsQwYsMDCgGKq5BAttk7afGpbquds8dkwdTaGFxHSe4r0Qck5t0nEaLjzOda6o6OE
+         NF+0veGPmie8yrgQNb61ywJEPMOB8wLW+kFkc+8bJcGsso27LIHgBuNlnEChd8wNKy9K
+         SDSjmJZNuJNskYQKjZxNlhMOm9//+sdCQelpdIWOIKxVZOAZ8/V7RvlJdBABjwu0n/GH
+         LIeA==
+X-Gm-Message-State: AOJu0YyBw241+UPFp33/Ay+uS7NrN675gV6pnTwsef61NtCDo89Zl0Cj
+	plWI8tl33GBuxk93Cd+Vbca5HoF6XDEw4jYBCB7DmtkXb4LWoGfsZRsdpEXngtE=
+X-Google-Smtp-Source: AGHT+IGLv5eFYNCU4+HomPY1o0vKj1PlmGaiQycPq0Q1ss6ZrPJnmX6ZnjQQphQqx/jfdKCsd3BQ/w==
+X-Received: by 2002:a9d:64cf:0:b0:6e1:14dd:78e6 with SMTP id n15-20020a9d64cf000000b006e114dd78e6mr6802246otl.33.1707764397591;
+        Mon, 12 Feb 2024 10:59:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWTi+7tX5r64ygyx5TKwbl71bUWtl+XXnoD12XhAm2ZTKI+tKjP9/Q+kSfXRykeBt1y1/qJDFKjW41BWdvMRWadJQsGA+H+OvzcLrrJS0oMZWcNuoVY6hqPr5LoBm1qTNkd+RGX+Xefs2CMbVUoC8DZIF/Bb75R7wyzPUr1FiT8SJ2FaU1pLazOtUaRZI5vAlLL/nf5KwssfpgLmISjJsqfFo0CalOoRraAQ8qQzkdEDqjAsAFZNRY6UymT+lUFLYEEu1rGkzuphk0+M95yacyHsHfyMf874fiO
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id o10-20020a9d6d0a000000b006e2e3fcc23dsm173805otp.58.2024.02.12.10.59.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 10:51:50 -0800 (PST)
-From: coverity-bot <keescook@chromium.org>
-X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date: Mon, 12 Feb 2024 10:51:50 -0800
-To: Anton Yakovlev <anton.yakovlev@opensynergy.com>
-Cc: Jason Wang <jasowang@redhat.com>, Takashi Iwai <tiwai@suse.de>,
-	Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, Jaroslav Kysela <perex@perex.cz>,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	Aiswarya Cyriac <aiswarya.cyriac@opensynergy.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: virtsnd_kctl_tlv_op(): Uninitialized variables
-Message-ID: <202402121051.B091CCC4B@keescook>
+        Mon, 12 Feb 2024 10:59:56 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rZbX2-000Sw4-0l;
+	Mon, 12 Feb 2024 14:59:56 -0400
+Date: Mon, 12 Feb 2024 14:59:56 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@gmx.com>, Leon Romanovsky <leon@kernel.org>,
+	Edward Srouji <edwards@nvidia.com>,
+	Patrisious Haddad <phaddad@nvidia.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] RDMA/uverbs: Remove flexible arrays from struct *_filter
+Message-ID: <20240212185956.GH765010@ziepe.ca>
+References: <20240211115856.9788-1-erick.archer@gmx.com>
+ <202402121026.0AF90DBA@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,51 +76,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <202402121026.0AF90DBA@keescook>
 
-Hello!
+On Mon, Feb 12, 2024 at 10:30:17AM -0800, Kees Cook wrote:
+> I might suggest doing a binary difference comparison[1], as it's possible
+> that "real_sz" is being used to try to avoid trailing padding on
+> structs. I wasn't able to trivially construct an example, so maybe I'm
+> not understanding its purpose correctly.
 
-This is an experimental semi-automated report about issues detected by
-Coverity from a scan of next-20240212 as part of the linux-next scan project:
-https://scan.coverity.com/projects/linux-next-weekly-scan
+Hmm.. No need for binary comparison:
 
-You're getting this email because you were associated with the identified
-lines of code (noted below) that were touched by commits:
++static_assert(offsetof(struct ib_flow_eth_filter, real_sz) == sizeof(struct ib_flow_eth_filter));
++static_assert(offsetof(struct ib_flow_ib_filter, real_sz) == sizeof(struct ib_flow_ib_filter));
++static_assert(offsetof(struct ib_flow_tunnel_filter, real_sz) == sizeof(struct ib_flow_tunnel_filter));
++static_assert(offsetof(struct ib_flow_esp_filter, real_sz) == sizeof(struct ib_flow_esp_filter));
++static_assert(offsetof(struct ib_flow_gre_filter, real_sz) == sizeof(struct ib_flow_gre_filter));
++static_assert(offsetof(struct ib_flow_mpls_filter, real_sz) == sizeof(struct ib_flow_mpls_filter));
 
-  Fri Feb 9 14:01:15 2024 +0100
-    d6568e3de42d ("ALSA: virtio: add support for audio controls")
+But yep, it is doing something:
 
-Coverity reported the following:
+In file included from ../include/linux/mlx5/device.h:37:
+../include/rdma/ib_verbs.h:1931:15: error: static assertion failed due to requirement '__builtin_offsetof(struct ib_flow_ib_filter, real_sz) == sizeof(struct ib_flow_ib_filter)': offsetof(struct ib_flow_ib_filter, real_sz) == sizeof(struct ib_flow_ib_filter)
+ 1931 | static_assert(offsetof(struct ib_flow_ib_filter, real_sz) == sizeof(struct ib_flow_ib_filter));
 
-*** CID 1583619:  Uninitialized variables  (UNINIT)
-sound/virtio/virtio_kctl.c:294 in virtsnd_kctl_tlv_op()
-288
-289     		break;
-290     	}
-291
-292     	kfree(tlv);
-293
-vvv     CID 1583619:  Uninitialized variables  (UNINIT)
-vvv     Using uninitialized value "rc".
-294     	return rc;
-295     }
-296
-297     /**
-298      * virtsnd_kctl_get_enum_items() - Query items for the ENUMERATED element type.
-299      * @snd: VirtIO sound device.
+__packed on that struct would probably be be OK.
 
-If this is a false positive, please let us know so we can mark it as
-such, or teach the Coverity rules to be smarter. If not, please make
-sure fixes get into linux-next. :) For patches fixing this, please
-include these lines (but double-check the "Fixes" first):
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1583619 ("Uninitialized variables")
-Fixes: d6568e3de42d ("ALSA: virtio: add support for audio controls")
-
-Thanks for your attention!
-
-(Human comment: looks like there's no "default" case in the switch
-statement.)
-
--- 
-Coverity-bot
+Jason
