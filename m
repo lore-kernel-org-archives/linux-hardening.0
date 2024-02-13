@@ -1,118 +1,122 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B544D633F3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DCC633E0
 	for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 23:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707867736; cv=none; b=L+0BSySGymmX2yZqRYpu/BKtW8wa1BBv2/RHQt8vRsNBMgT/YGqlrtujsUI6+jlC3H2WE+Xr3bpl02wWY8ggFfeq0Mv4OUkXgiWMIxvcXqsLk3necFsnYkFII8yiw4/dkYPy7Q9SfbrgGaDPyr6mNYgjVUPeziY2YwowFBbPe1Q=
+	t=1707867736; cv=none; b=hvkIYW3gmmS+zDD1bMNrtUZuz8V4IiFfpY0n1aMcPVvOagqrhSjKgi0V0Ayl+lTO5Aq0I7PjNps4OTj5x62HwhlzYeDTChoWm1IkwpzvcnFBq+CQypk2df5BVfFRNhw9XczBaqEOjWvHPIMFuizeg9R9a2NCVR2Xg2ybDKj04Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1707867736; c=relaxed/simple;
-	bh=JaLcS0MhnhYo6HqFOcWGWSj+KGWfIIInyL0CMdYPrLw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MaRGE4ljqPwMcoECiSASIWd5OP4VomotWPKuu/PldY4gXSYVcskgM7u+EqyX8jXM4fq7RdtCu+dFYYi2gjulZ1N5XEvtRL0Vc1SNEV3n1WRTv0PvNzMjqJoUs+1aDoRff0U9a4xqa8OxmwbmHzyfMQawUxUHhGHrG0D/mcrNbGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=heaiVvIL; arc=none smtp.client-ip=209.85.216.47
+	bh=hW38y6WJPmsQKEP/qFrXd2E/XyKsm+Fe0LPU3IywHpE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g/CFxI7Bg6MEP/62sgIPmQSCWocQ1bpCR13N1n6+GAKG6fHDiS8qp+CrTm9Y9mDKZ76ZXO9aJtGMl5hlLx336ZTI1vWorvOjT5Gufxwg0mGOET9bS65UzGdoNYo5XoPizxr5KzPWuy4oRxKdn4Pj7HCzwyWRRH0jRPFvATqVRo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dHI12NHQ; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="heaiVvIL"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-290b37bb7deso3593192a91.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dHI12NHQ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d51ba18e1bso48033465ad.0
         for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 15:42:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1707867734; x=1708472534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=in33zmkUwO/lJCZx5ql5VPHI+fJoeC5L2QBdGV5S4os=;
-        b=heaiVvIL7p1+JZGvP0iOwvDgcGu/fxW7meOB/pjLgJAoF0/QXH7oF21t33SY3q3pXJ
-         yDnjXvn3Gt8+Ea1HD1xmZGB94kGDzp0lMya85g8nqhjiqlbt+jJw+mVdt6g62zDTpo1n
-         ctP5yc/UOPXm/VYSB5cDnwNnwy/D8FhB3u2aI=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w0mtIXHXlHD45+RwrtuutvVPykfnjMAD2MPuh04ZZ3s=;
+        b=dHI12NHQ5dgAHFBfowyiQtKNdHLqZd/wG1vOdk6njRdmkBp5lGO1RxOpRi9Swt6y+W
+         dzzUna8hGb5ESOxrHsebVb4zwRyRT2Zn3n2mItOWGqfH1oAGO/SIkbGqVvD5z23LFjYV
+         2KSVGM51OoMvtrRb26c5EecAkiKDcx3vTZ/Og=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1707867734; x=1708472534;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=in33zmkUwO/lJCZx5ql5VPHI+fJoeC5L2QBdGV5S4os=;
-        b=lzSEVNcjSMKVc7T0ib88Wmx4BqnfbraInCvCgY/crGCHyrkMDTpziX72eTrEP6iktp
-         KBez14z81w0vCtwLDvJQHY7rWVjB2/ZJrwidgil326KqnBT6nD0kE6wh1UH5EwA83bEb
-         QS7TCmXKyW8itGjAoy8pLMWwsPsKN2nzenam+Jse2P296CGim/uUGmdSJJjV81oSa3UM
-         iDTgaq5PJYxdXfDDJqT1FmDwag9p2mh8v1AmgyvYZfGOkFYg6OLJx441eKGZkIOk9QB7
-         aC+b6pJzbXD3D+DgSITJY+Q+DHZd85X3A/g39TanuaGEWtEvyo/JCySibCKqTe6soiYE
-         4H8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWDJLE6sYrX6P0egAXnOJgZjn83uzE8BjL3Y8yBJ7EZrMeKH59e6Z5rWvh4qm/1aVN32u7JC+Cd2lvR8wnXj0w9H8ZdmDiHMR9thMhDpGVd
-X-Gm-Message-State: AOJu0YzyOuvnQy+v6EQ7hrvRsvK6y0gjKDMAQV0sgCj637jNejtLHaGP
-	nhQ/ipSXkh0eq4EGJNZ1allcBlCntomg5qM2RM1fqbJK4UNkniCNGyneglrSQw==
-X-Google-Smtp-Source: AGHT+IGSYalst2dKtHcY/eT+/mlGz5OigXUcaMLj6UjOLYc366SR0E5iVkAW+fP8lCyt4hbxMhmC3g==
-X-Received: by 2002:a17:90b:205:b0:296:892b:4c0 with SMTP id fy5-20020a17090b020500b00296892b04c0mr963267pjb.41.1707867734152;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w0mtIXHXlHD45+RwrtuutvVPykfnjMAD2MPuh04ZZ3s=;
+        b=oneb0gEWkUnBdO/fMw23BmNNFgNKC9jg7v6dP7AjlduAtKEaCPy+nn49WxhXZH9zIM
+         WPyUB6TZlaWeSQbm6UZDDbhnxZWz1YIXVXfXo2PjVpE1PSu1k+UYYoxrA/ILRBxZ0j4g
+         lGmlVLEDuR4BfPX7jStJk7+UaNv5cayZ8XuzUWDCEG8WwO7UtPAo4vQQAZ4WCeiQaBeT
+         k0talaB0+DzqiueTBQ6M4/ClmoOOGZQ8MAbt6oFKiDeiVfpQxoszz085CYBgY0bK5ecb
+         oAa2t7v1yagHNauymYf4ngKsMoQZZ1f5FJZF2Ksq/9HKeGwfYA8keG//5uXQqx1tRrxK
+         T1Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFY2yHWwhzk/vhnBIK1WrCdNkJzQEAsSFJInHoGXQj5HyadTqdR+frAm3lCaoMTm8ve8iCWAW7ci+BHK8oElJq4mjkAsLV8gXWy2y+mJ4r
+X-Gm-Message-State: AOJu0Ywi2D7NsQu4uzAYEqTfl9LCZwroNRq3iWc+HPyI7b4KPJ1P8sdj
+	DZDkdmhEluucvhzstgoEbkW3pCf2PFpBFpSScDV9fwHhq78RqeBMiGcJxJoeGw==
+X-Google-Smtp-Source: AGHT+IHDJgqPv/xuU8lFld0zKdNYV8TeMbseDl3sf1xG7aS5xoPNoFvvAKYSASG5Iou256qbZKti8w==
+X-Received: by 2002:a17:90a:16cf:b0:298:b8e0:43d8 with SMTP id y15-20020a17090a16cf00b00298b8e043d8mr904976pje.27.1707867734338;
         Tue, 13 Feb 2024 15:42:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVlVHC1f//hzKVyajZIa/bmyDWH5OQtGUzqsr7wgHc7Wl98sibIfjbfMPN1ydIq6ub1TlcIzCDSFA3iXjUdbeDDzsKqqfzpbT+69BWdJ5tIuPQSp667cZav30hy9odQq233bRml1rpMox0+VHwWhXt05zA4AI4b4mpzbY89rm1HAQzAG7Tl6BNMddRAIwzAcx7tYxnjYGb0oI1hdSdFybB5KKyLqVS5zaEeeDKd2n3VxWwJjV1zekHCmDRfBbtO4enBbIYqFxcpcDNFWrZRtxUVV4I6NQJsVgmOpX0kfTFMV+xj7aNsyIxrSuVMcsdGGwYoTO0C3w546gK4aCssnIdxn9DoE1V0CcXvJHpazg+zsgTWAJm5nz8VuzLL6m8SSOZzj0eJAr0iF6APm2jIUn6882qgS5bguwQXCE6rhN3EjAJsny79IHwcHRs2+m+4iUrKnkAhDTXdeBGsrL8JfZktsMjvUTLzG0opYjNjMn1ux70JX2pVBbys+rlXb13/
+X-Forwarded-Encrypted: i=1; AJvYcCVRaKZwxlf/vLGJiePIxgGvw+Rh+hGu6ddU0v9g5Xv63csNEKWIXEHNQFWqF83g7BtryViuHLdyX9GpftZ2jYcHge2r6MPIxZsoC5+4PLqHru+VjG6wsfRfIohT6O5MFCawb9bwDrtTWGlTx4M1nz6+6Q25Zy08Tio6b+3WoQUIZTwV578VHh67spTB96xOFgSn+FdY1Sr0McJtkJTsCv+1me0fxK4lrg40lWlk1Y1obC/7RiOUSNhwhxc+xyCas7WzKzFMqvisnw3Y/iKVYD5eNHNgAexuRE/CLWAGf1Usetwc3HEzuJ+zUtx7DeQXox8LlP57OX0QDlAJlvPTTEQzdbjWkgBEzn6f5x7zhHrG6ZGyW9ikxY4lHLMhhrgQaZ8in9hCooYWIYQIDM0GnnyVymtAnNtWA7ebpn5poU53f8yuRzQxTBQiVrbGCfNCgDAdZDxoVFrj7Gs2w+iuML0xF0HLkr+8HuulAmBBH0abPnv8ohzwxDlgpMswmyej
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f20-20020a17090ac29400b00298c06d843fsm84671pjt.3.2024.02.13.15.42.13
+        by smtp.gmail.com with ESMTPSA id fs9-20020a17090af28900b00298c686c621sm80939pjb.56.2024.02.13.15.42.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 13 Feb 2024 15:42:13 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Dan Williams <dan.j.williams@intel.com>,
 	Keith Packard <keithp@keithp.com>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Alexey Dobriyan <adobriyan@gmail.com>,
 	Dmitry Antipov <dmantipov@yandex.ru>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] net/ipv4: Annotate imsf_slist_flex with __counted_by(imsf_numsrc)
-Date: Tue, 13 Feb 2024 15:42:11 -0800
-Message-Id: <20240213234212.3766256-2-keescook@chromium.org>
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/2] stddef: Allow attributes to be used when creating flex arrays
+Date: Tue, 13 Feb 2024 15:42:09 -0800
+Message-Id: <20240213234023.it.219-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240213234023.it.219-kees@kernel.org>
-References: <20240213234023.it.219-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=965; i=keescook@chromium.org; h=from:subject; bh=JaLcS0MhnhYo6HqFOcWGWSj+KGWfIIInyL0CMdYPrLw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBly/5T7cTDxgTr0rDIqvT3vhjqivyAqSR9MrmXk vJe8ulo+06JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcv+UwAKCRCJcvTf3G3A JjLOD/9kSRrC1i4wpx5fWHuu7VPgWHXMKYgp17lT1gJYIk6Ae40EuhyRDJZR+MqkiW8msoUquzA cDzdbDz26Z0dJgcnpAmerx78u08EYTTHrYMUaZI00fnzYhfO7GrKKNQ2o4i4C2BOt3IuiO1CbMP zJ4di3CiyGy71ooSKn08Z3/5pTLNAdmig+gl3GP2GNI2U5ny8OHZOOdSXxbaaM5059spgeEdSPF nbU6vXD4q5enmZH3V9CBHGOG/uXxO4okDQDH1y0gKDJu/PQ1foGcmqtqlMoXCMF3bKvq4/eiQ/B dTPsR8alCW97wnaa+pi6F8SlkVC8XmxMghe18rGMMBLVOuh/IS/ypL5K0b5TCPKZ7leqWFiRUEZ Vd7OLDIFl2GbI84vzx4s7kbcM9rhX7ADl46J55D0+xFomlstdpJSJapDvEonhrYUda4b18+paY/ 6a9OxcX4ihmoNr83RlW/n9RXCNtBVQin+GylpP5LQvS07iQ8GCZhy1qr4Uajq1qaffdIDYwSS/M FMytHRtpsPJCOMq7evN65jd5bn82KKnoKnoIx/M/IyePgJy3gKPL6+lVP4YU5db/OgXrvDxuFM3 Bf1sZ826NZDOgvVq2QlC3wP9X3CDLTVHF4Ab4de9u15ky7gTRZMgYZ8CpdLqudDhJ3PyovS9e5S StLpaZfKQmBlPeg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=810; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=hW38y6WJPmsQKEP/qFrXd2E/XyKsm+Fe0LPU3IywHpE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBly/5T6BEAiVA8ujTLHGCLG3BpSzMgWwdTvSXxf
+ E7rKurlcc2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcv+UwAKCRCJcvTf3G3A
+ JqBqD/9mIQzk9MdkbeFAYfVd/iZ0m2dYUxas19LCSHaOrGZQI0szGULd0bqf13dJVpN2tvCFgmj
+ GCEuMWeucp8FI1zC6dhnBVakXkFa1ZKBl4XNDXuCJoAi7VbUxUJXfZHRiBuJ1Lcud8m7K4TMU+4
+ qI/M91c4TTVupB1sJeX4AWVCQx+6ASKMbc+OUa6JTKaRAruQIOgQTHKMKO9CP97AdFaz5ffz/V4
+ v+OzLD/klAGQgHjCsaklLQFPyTcH9kSoDH0cd2lZSN0f11rcNZwjvoBTbhq6LyH2orvO6iE8M96
+ eJB2MQReblKhqrfAUC3xclD1TTjJtIfCM4u+Wlndnf7QUCY9+GaBiDJSvfrHoHOIEboNUwHikNN
+ Z4oTgT/Swk93oWAY1ZKdLROZsSwl430zoc6+wim/hhog/jqgFyxFauzsLZV0XOjgxp6RG2VTFOX
+ pDYM/xs6WoYE1BgtdNq0GvzFBzFm/h07v7DwhFjX91nhz6LU2ydcyqCUHTCHVcFYHs99E7m7M9n
+ PrAjBAycwW8n3aqBVwGkYl/J4MnWnxjOE/xhEuDYjyXKP82yI5RPTjb+ivNXAJ8o7JUW7bRJKkx
+ AFHR/FWOYIth6aRlgFwNxfbDizVarYamv9scUJksPEj3CfUEDNsZboESdmhTDEVh4UdwTZ2XFye
+ TVR7dxwK 7sp99PA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The size of the imsf_slist_flex member is determined by imsf_numsrc, so
-annotate it as such.
+v2:
+ - don't add a new helper, just add __VA_ARGS__ (Rasmus)
+v1: https://lore.kernel.org/all/20240210011452.work.985-kees@kernel.org/
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/uapi/linux/in.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
-index e682ab628dfa..2f0c4d40bc7b 100644
---- a/include/uapi/linux/in.h
-+++ b/include/uapi/linux/in.h
-@@ -199,7 +199,8 @@ struct ip_msfilter {
- 	__u32		imsf_numsrc;
- 	union {
- 		__be32		imsf_slist[1];
--		__DECLARE_FLEX_ARRAY(__be32, imsf_slist_flex);
-+		__DECLARE_FLEX_ARRAY(__be32, imsf_slist_flex,
-+				     __counted_by(imsf_numsrc));
- 	};
- };
- 
+We're going to have more cases where we need to apply attributes
+(e.g. __counted_by) to struct members that have been declared with
+DECLARE_FLEX_ARRAY. Add an optional 3rd argument to allow for this and
+annotate one such user in linux/in.h.
+
+I kept the acks/reviews since it's effectively the same...
+
+-Kees
+
+Kees Cook (2):
+  stddef: Allow attributes to be used when creating flex arrays
+  net/ipv4: Annotate imsf_slist_flex with __counted_by(imsf_numsrc)
+
+ include/linux/stddef.h      |  6 +++---
+ include/uapi/linux/in.h     |  3 ++-
+ include/uapi/linux/stddef.h | 10 +++++-----
+ 3 files changed, 10 insertions(+), 9 deletions(-)
+
 -- 
 2.34.1
 
