@@ -1,146 +1,60 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4906142AAF
-	for <linux-hardening@vger.kernel.org>; Mon, 12 Feb 2024 20:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5721E1B59E;
+	Tue, 13 Feb 2024 01:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707770509; cv=none; b=cGs6VWD7bRW36Q0zYzjeNo05jPh3k8Nl1sE6qJTsBBFowzjQUMDpo7eaC5vcK3xKVPSe1VjVwTDjPP3+b7uijDqXnsXFXXTg6EauwZxs/olOQq+5zSwP/ueNVs+7Q8ojOqJYhfmkwZBNMg9V9OFtu1Xmo4CdLHYm4SUfWg62FWk=
+	t=1707788157; cv=none; b=VGv+pZecfWKUI2z8NRZ+VRIgtnbveW7kNu8a2VQ73+aulAt0zlQrtDD6AYxIBhQLsYhVmIWXj0jtJ3qaCXkET+emAQNb2GRpFqImvr9qokN13GQLtMz3rBsDWyTZaNs3d4ubt9TRhBPNZ6YmGxFnpNI6pmnjOUgDLHU9EhjRsA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707770509; c=relaxed/simple;
-	bh=70Cs7ov7NoNjbFObZWdWEBGERsNBoSbDT7igOQYMoRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gFqGE4NbCCywgX/qduv0a4+nFNMrP6x558ukVhbkyQSYmZJL3Fa985zOzTDYEuZAcDGmNkjMkwptmhltBDygaaK2o0BFzNU7KBOmmKfAjFko9xHYRr6oBELmZ5EuAqSsi4/WtJAqhnwA8gJXy/0GUzEi45C6Bn1ibVcWLawM3Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=zhl6oJc5; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1707788157; c=relaxed/simple;
+	bh=aKWoMQBhztJhzWgzX1R5/kODWr7ReQymBJbcPq6O0LA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fkz43uUP5r82lsziPvE2ZQnKz8xOsySPNzebQhNXPug/I8R7MHxnWV7zTo2J0o4PKfDUfJ39X5h7XrUF3dyc6h0QMvri2Kw3BjI8zZ+iLXy1wIhfRGBJA5STIS4n6tNGpcKt5SWpQAU+ikLjTGo4hwuwgWvfqbwx37JPULdQOJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T07/+ukb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zhl6oJc5"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id Zb1erLUfsCF6GZd7Wrc1an; Mon, 12 Feb 2024 20:41:42 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Zd7VrcwHESVe5Zd7VroVSt; Mon, 12 Feb 2024 20:41:42 +0000
-X-Authority-Analysis: v=2.4 cv=KrHu2nWN c=1 sm=1 tr=0 ts=65ca8286
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=7YfXLusrAAAA:8 a=twS1si07rgy1n0NQfEIA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=g8WgyYvFBXBBBgo1I/QNHAeGuuE+z9BnEavTarLPM9k=; b=zhl6oJc5gO0wT4sO9VwHZu1bvK
-	5Ibo/tsf1dUH/iwg6SVWrJrIBH5EbxUKD92wnCdBRSTYQN8KojIVzJxUA/dEo9K+kvr+3p786I2I3
-	/s+j6AAKOqnaAUH2xM7ECwXiDj7ESDU6d0CVjkrBWtdSAgFfRQgaXeQv6CS8hYm4P1guh02py00LI
-	HbvFeGk1ubVimzUKao+h0ABigZiIRiaNssDv/3cxVRsr8S7e3aUZDCz5g7HY5GCnS+59eDcociH/s
-	aMFrrKMWxLFs4u1QPlQCJtEpq0R7BUbUGLzGcbi+w4yBv9dI/eOo0Id7BFHL9dDSETjNiA+0BWl/2
-	/clN8iJg==;
-Received: from [201.172.172.225] (port=34544 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rZd7T-000F5z-32;
-	Mon, 12 Feb 2024 14:41:39 -0600
-Message-ID: <b66caca8-a8d8-4081-b462-92a95a7fa830@embeddedor.com>
-Date: Mon, 12 Feb 2024 14:41:38 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T07/+ukb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52EB9C433F1;
+	Tue, 13 Feb 2024 01:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707788156;
+	bh=aKWoMQBhztJhzWgzX1R5/kODWr7ReQymBJbcPq6O0LA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=T07/+ukbWJEp+zvZ0dmq4l5F94R6XpAQYYn+8+Xh8T6V13j5Jctwr3sRQLd5E6XAz
+	 KlRexcFuMREgNQ1Er7gTkagJdJh95kEFwKPHvTZUbNAsSikyAlumifKrGhKwQ42uCU
+	 q6grdcPlGlXoD5H18jndHgGkKyh8wysca++JR8TDRKxLGe7OJ391KS/113oF9HBtFi
+	 Rif10WyJwBAGrisT3Y1Gm0d4NsGwZP8QSCWEZqLhM7oO1TNho6J0htog/ZDTLnQZ3g
+	 gCDmivo+zMB+0/4TyKMiWIERFO477UmibH4sqsXzXifnedjhWHLwwPhVgh5Ffw1G/o
+	 Xq+pXz+Oabslg==
+Date: Mon, 12 Feb 2024 17:35:55 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, Dan Williams <dan.j.williams@intel.com>, Keith
+ Packard <keithp@keithp.com>, Miguel Ojeda <ojeda@kernel.org>, Alexey
+ Dobriyan <adobriyan@gmail.com>, Dmitry Antipov <dmantipov@yandex.ru>,
+ Nathan Chancellor <nathan@kernel.org>, kernel test robot <lkp@intel.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] net/ipv4: Annotate imsf_slist_flex with
+ __counted_by(imsf_numsrc)
+Message-ID: <20240212173555.576f1d59@kernel.org>
+In-Reply-To: <20240210011643.1706285-2-keescook@chromium.org>
+References: <20240210011452.work.985-kees@kernel.org>
+	<20240210011643.1706285-2-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/vt-d: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>, David Woodhouse
- <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240211175143.9229-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240211175143.9229-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rZd7T-000F5z-32
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:34544
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfG3nNRbfJDarO4FD0ipWqYOd9vLJ7pX4/MPIx68/d51+T4yyRV8Zt+detg2flu58t/f65/L9mhgQI9NqWcUbbF53ctx7rKIkgiG0tWmO1LvOGVp1ZxCZ
- tuTbzGnSZRe5uTpje3dbbpWqbksbDu0DGnHmjLEsH5XGbK/EGdPp2pxQ5m3auzRyjxhOsQ9lD9h6RKr3a90juFkBzA08DldlsgMGWbEvclwDbAwVx44qPv9p
 
+On Fri,  9 Feb 2024 17:16:42 -0800 Kees Cook wrote:
+> The size of the imsf_slist_flex member is determined by imsf_numsrc, so
+> annotate it as such.
 
-
-On 2/11/24 11:51, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
-> 
-> Here the multiplication is obviously safe because DMAR_LATENCY_NUM
-> is the number of latency types defined in the "latency_type" enum.
-> 
-> enum latency_type {
-> 	DMAR_LATENCY_INV_IOTLB = 0,
-> 	DMAR_LATENCY_INV_DEVTLB,
-> 	DMAR_LATENCY_INV_IEC,
-> 	DMAR_LATENCY_PRQ,
-> 	DMAR_LATENCY_NUM
-> };
-> 
-> However, using kcalloc() is more appropriate [2] and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link: https://github.com/KSPP/linux/issues/162 [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-
-LGTM:
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
--- 
-Gustavo
-
-> ---
->   drivers/iommu/intel/perf.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel/perf.c b/drivers/iommu/intel/perf.c
-> index 94ee70ac38e3..adc4de6bbd88 100644
-> --- a/drivers/iommu/intel/perf.c
-> +++ b/drivers/iommu/intel/perf.c
-> @@ -33,7 +33,7 @@ int dmar_latency_enable(struct intel_iommu *iommu, enum latency_type type)
-> 
->   	spin_lock_irqsave(&latency_lock, flags);
->   	if (!iommu->perf_statistic) {
-> -		iommu->perf_statistic = kzalloc(sizeof(*lstat) * DMAR_LATENCY_NUM,
-> +		iommu->perf_statistic = kcalloc(DMAR_LATENCY_NUM, sizeof(*lstat),
->   						GFP_ATOMIC);
->   		if (!iommu->perf_statistic) {
->   			ret = -ENOMEM;
-> --
-> 2.25.1
-> 
-> 
+Acked-by: Jakub Kicinski <kuba@kernel.org>
