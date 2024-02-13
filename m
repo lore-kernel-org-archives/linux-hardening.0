@@ -1,122 +1,149 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DCC633E0
-	for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 23:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6209E6340C
+	for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 23:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707867736; cv=none; b=hvkIYW3gmmS+zDD1bMNrtUZuz8V4IiFfpY0n1aMcPVvOagqrhSjKgi0V0Ayl+lTO5Aq0I7PjNps4OTj5x62HwhlzYeDTChoWm1IkwpzvcnFBq+CQypk2df5BVfFRNhw9XczBaqEOjWvHPIMFuizeg9R9a2NCVR2Xg2ybDKj04Wk=
+	t=1707868780; cv=none; b=UbtGmaK2YUa7a3q2D2QDjEStpq5cBW6E0Hu7+7Mkq77ak+BS11aHFxB62RtI4XAwlf0CeJXIgvMqBKQ8tM2OBeSHlFY2Dw3zLeJtEUUfzIwEqLxYqCqlQ/m1/erOv6Gr5rJ3O+PxcwASWumZcBb1VzJxxKu7p4egnahAaQZTE/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707867736; c=relaxed/simple;
-	bh=hW38y6WJPmsQKEP/qFrXd2E/XyKsm+Fe0LPU3IywHpE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g/CFxI7Bg6MEP/62sgIPmQSCWocQ1bpCR13N1n6+GAKG6fHDiS8qp+CrTm9Y9mDKZ76ZXO9aJtGMl5hlLx336ZTI1vWorvOjT5Gufxwg0mGOET9bS65UzGdoNYo5XoPizxr5KzPWuy4oRxKdn4Pj7HCzwyWRRH0jRPFvATqVRo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dHI12NHQ; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1707868780; c=relaxed/simple;
+	bh=Ytr20egkB5rUQerCRuc8K2hdcCCQ/nJlnrYqSSyG57Y=;
+	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=N8jHwuGp7JwVcN3Pn94Hz70nSvm2vj2bCaFsMk3girpyNzOQ7aMR1gg289nYSTu5JUkXlEpXHzyqjXfR+iLtVpxv9Zgq8+aHSDDWtU+SjakhMQnZYwpV8Oc9piMNye2lcR2q1evynfbCIDfx0K5XTcoBADojc/neXB9PbggcYko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=F/kw4rJC; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dHI12NHQ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d51ba18e1bso48033465ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 15:42:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F/kw4rJC"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso3684679a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 15:59:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707867734; x=1708472534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0mtIXHXlHD45+RwrtuutvVPykfnjMAD2MPuh04ZZ3s=;
-        b=dHI12NHQ5dgAHFBfowyiQtKNdHLqZd/wG1vOdk6njRdmkBp5lGO1RxOpRi9Swt6y+W
-         dzzUna8hGb5ESOxrHsebVb4zwRyRT2Zn3n2mItOWGqfH1oAGO/SIkbGqVvD5z23LFjYV
-         2KSVGM51OoMvtrRb26c5EecAkiKDcx3vTZ/Og=
+        d=chromium.org; s=google; t=1707868779; x=1708473579; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bhwWHZxcw8oFU0SxEpMu02bELl4566ovMO8rmS9gVPQ=;
+        b=F/kw4rJCg/HAQHGLxKAidNSoFzfVLXRIBGyLePAvb2xuzJIG4ZS4el18Gu/YKEwDdB
+         wujO+NFaurxHrquFyKCtgfPp20Pf/UdLPP9de2UEMz3fq71Hoo0Tacjes/8lxuSZn6Dy
+         9LpBD3odNpokW7/VgtxYYledbExPcyprHt66U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707867734; x=1708472534;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w0mtIXHXlHD45+RwrtuutvVPykfnjMAD2MPuh04ZZ3s=;
-        b=oneb0gEWkUnBdO/fMw23BmNNFgNKC9jg7v6dP7AjlduAtKEaCPy+nn49WxhXZH9zIM
-         WPyUB6TZlaWeSQbm6UZDDbhnxZWz1YIXVXfXo2PjVpE1PSu1k+UYYoxrA/ILRBxZ0j4g
-         lGmlVLEDuR4BfPX7jStJk7+UaNv5cayZ8XuzUWDCEG8WwO7UtPAo4vQQAZ4WCeiQaBeT
-         k0talaB0+DzqiueTBQ6M4/ClmoOOGZQ8MAbt6oFKiDeiVfpQxoszz085CYBgY0bK5ecb
-         oAa2t7v1yagHNauymYf4ngKsMoQZZ1f5FJZF2Ksq/9HKeGwfYA8keG//5uXQqx1tRrxK
-         T1Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFY2yHWwhzk/vhnBIK1WrCdNkJzQEAsSFJInHoGXQj5HyadTqdR+frAm3lCaoMTm8ve8iCWAW7ci+BHK8oElJq4mjkAsLV8gXWy2y+mJ4r
-X-Gm-Message-State: AOJu0Ywi2D7NsQu4uzAYEqTfl9LCZwroNRq3iWc+HPyI7b4KPJ1P8sdj
-	DZDkdmhEluucvhzstgoEbkW3pCf2PFpBFpSScDV9fwHhq78RqeBMiGcJxJoeGw==
-X-Google-Smtp-Source: AGHT+IHDJgqPv/xuU8lFld0zKdNYV8TeMbseDl3sf1xG7aS5xoPNoFvvAKYSASG5Iou256qbZKti8w==
-X-Received: by 2002:a17:90a:16cf:b0:298:b8e0:43d8 with SMTP id y15-20020a17090a16cf00b00298b8e043d8mr904976pje.27.1707867734338;
-        Tue, 13 Feb 2024 15:42:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVRaKZwxlf/vLGJiePIxgGvw+Rh+hGu6ddU0v9g5Xv63csNEKWIXEHNQFWqF83g7BtryViuHLdyX9GpftZ2jYcHge2r6MPIxZsoC5+4PLqHru+VjG6wsfRfIohT6O5MFCawb9bwDrtTWGlTx4M1nz6+6Q25Zy08Tio6b+3WoQUIZTwV578VHh67spTB96xOFgSn+FdY1Sr0McJtkJTsCv+1me0fxK4lrg40lWlk1Y1obC/7RiOUSNhwhxc+xyCas7WzKzFMqvisnw3Y/iKVYD5eNHNgAexuRE/CLWAGf1Usetwc3HEzuJ+zUtx7DeQXox8LlP57OX0QDlAJlvPTTEQzdbjWkgBEzn6f5x7zhHrG6ZGyW9ikxY4lHLMhhrgQaZ8in9hCooYWIYQIDM0GnnyVymtAnNtWA7ebpn5poU53f8yuRzQxTBQiVrbGCfNCgDAdZDxoVFrj7Gs2w+iuML0xF0HLkr+8HuulAmBBH0abPnv8ohzwxDlgpMswmyej
+        d=1e100.net; s=20230601; t=1707868779; x=1708473579;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bhwWHZxcw8oFU0SxEpMu02bELl4566ovMO8rmS9gVPQ=;
+        b=SOXx7itmMHjZfLqu5JLOxUbLpLqSSxWvorwRiYNz5XnMAKEBOB5i7inRfYSmqieaAg
+         EebTKYev+p1YWksX11b7hUV8D7Wv0Vy2eHzFeE0fgMoaeUQzhofK13sCE4SUjCVDp8cT
+         zZbfCFIvSBeGErtq9Qi1WEblHPf4ND1tHxeUiI7/9CtWj4qadwa++JsA1y3oLox4cGdO
+         bR3Wgb41WVnuHCSGEWF64+GtnTaBdQ3fAAuyEQPoLKloixQiOKc+D1AvttBJMXaUSuPB
+         wuTupCXAmqbaubMidSmAXtoKXqPhbaLXRflIZ7j1jyhXxY1UvGw2FE972djeOYV4ZXK1
+         3Njw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2WMv6FxJWVRjjUPLUb8IPaAQyC+knnzmZl/HIDf9WC+NwxnpDzuPvXltppnvbv7F/B5+S7VwV6I/Z6QtmBuj2oloNUvESz+4Dhyv/avas
+X-Gm-Message-State: AOJu0Yx/+k2jIfFrqfIKNnQMckiugT6qBOFD+dRmcrjXGI47BOCIBgXC
+	nyJoobCdSkwbqQh+p7D/LS8G/zdfhRzuASSTUFWeX1JJ9c5+3Avt2sQUbSBZ/Q==
+X-Google-Smtp-Source: AGHT+IEnr/iWneZTItN8heYRhcHe1kG98yemI7ZQwEvTd9fT32EjwfKa29waneXv20dDA1D0WxQHEQ==
+X-Received: by 2002:a05:6a21:3183:b0:19e:425e:ec56 with SMTP id za3-20020a056a21318300b0019e425eec56mr1365472pzb.24.1707868778792;
+        Tue, 13 Feb 2024 15:59:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUv5+5LdgK4axTKiAKE8Sd5LVhNu0oEOr2cxk8wq78ciXo/j7hWVJC16nfly7KRm/NegneR1sDwO6UcoNfLx69eLecZqDNP9LDusp8KbffG8jqLtY36u4L0Pj5kRJm4ZbCp+XVdubniEJOcX1CaeT3syZDz4BchQXLpGUjTQiVHKvK1S4sGci+v+AtMAWs7tJY9+AK4OW7CbJW1HNgt4r4X3tn79RgooVJAzzHqCmfYQ283qsHA0zHIUWusHyS7P/zkrXp0XoTrcq5zVKXBB0hH/vaH3cnZEj9FuLjX/biMoC2Mg4T8eiG5HY1wWKQp+mfGYRCSmX3hqj6Ye/Mo+9cXg6oqV0jmnQTS3LUi8EmZSS9bC4qCCqcAPk0cooWbymzgghWaLFpUqtQU9n2C+Fl0F1Qhrsk1XpzWeO90wxA3dCDeIOKtwNmCx4VFMuuTHUsJI1coPeIjlkNWZpl7l0MKeXjVSQJRmG01y6IFfAM31ZvrgYuxDKQ5hKXnA7Zy3v8C5N55q7g50Whx7nBeZ7/Nta97yAZ0FFMA6WA3LKKQG7q6zJH7ENtqHj+aaKBnMi7FwQS13xqpRuMIP4NcTtRfUCNwO4HZcDD1uM88nK2/lwz+o2+34KfGu7rVv915UKPDM/Rm+ue/ibJfjj68/yF4MMaKVZs8pvhVcgZPz4JvpuEt+9J6w7s=
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fs9-20020a17090af28900b00298c686c621sm80939pjb.56.2024.02.13.15.42.13
+        by smtp.gmail.com with ESMTPSA id jw12-20020a056a00928c00b006dddf2ed8f0sm7938734pfb.154.2024.02.13.15.59.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 15:42:13 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Keith Packard <keithp@keithp.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	kernel test robot <lkp@intel.com>,
+        Tue, 13 Feb 2024 15:59:38 -0800 (PST)
+From: coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date: Tue, 13 Feb 2024 15:59:37 -0800
+To: Oleg Nesterov <oleg@redhat.com>, Christian Brauner <brauner@kernel.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peng Zhang <zhangpeng.00@bytedance.com>,
+	Oleg Nesterov <oleg@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Tycho Andersen <tycho@tycho.pizza>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 0/2] stddef: Allow attributes to be used when creating flex arrays
-Date: Tue, 13 Feb 2024 15:42:09 -0800
-Message-Id: <20240213234023.it.219-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: __do_sys_pidfd_send_signal(): UNINIT
+Message-ID: <202402131559.B76A34B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=810; i=keescook@chromium.org;
- h=from:subject:message-id; bh=hW38y6WJPmsQKEP/qFrXd2E/XyKsm+Fe0LPU3IywHpE=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBly/5T6BEAiVA8ujTLHGCLG3BpSzMgWwdTvSXxf
- E7rKurlcc2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZcv+UwAKCRCJcvTf3G3A
- JqBqD/9mIQzk9MdkbeFAYfVd/iZ0m2dYUxas19LCSHaOrGZQI0szGULd0bqf13dJVpN2tvCFgmj
- GCEuMWeucp8FI1zC6dhnBVakXkFa1ZKBl4XNDXuCJoAi7VbUxUJXfZHRiBuJ1Lcud8m7K4TMU+4
- qI/M91c4TTVupB1sJeX4AWVCQx+6ASKMbc+OUa6JTKaRAruQIOgQTHKMKO9CP97AdFaz5ffz/V4
- v+OzLD/klAGQgHjCsaklLQFPyTcH9kSoDH0cd2lZSN0f11rcNZwjvoBTbhq6LyH2orvO6iE8M96
- eJB2MQReblKhqrfAUC3xclD1TTjJtIfCM4u+Wlndnf7QUCY9+GaBiDJSvfrHoHOIEboNUwHikNN
- Z4oTgT/Swk93oWAY1ZKdLROZsSwl430zoc6+wim/hhog/jqgFyxFauzsLZV0XOjgxp6RG2VTFOX
- pDYM/xs6WoYE1BgtdNq0GvzFBzFm/h07v7DwhFjX91nhz6LU2ydcyqCUHTCHVcFYHs99E7m7M9n
- PrAjBAycwW8n3aqBVwGkYl/J4MnWnxjOE/xhEuDYjyXKP82yI5RPTjb+ivNXAJ8o7JUW7bRJKkx
- AFHR/FWOYIth6aRlgFwNxfbDizVarYamv9scUJksPEj3CfUEDNsZboESdmhTDEVh4UdwTZ2XFye
- TVR7dxwK 7sp99PA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-v2:
- - don't add a new helper, just add __VA_ARGS__ (Rasmus)
-v1: https://lore.kernel.org/all/20240210011452.work.985-kees@kernel.org/
+Hello!
 
-Hi,
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20240213 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
 
-We're going to have more cases where we need to apply attributes
-(e.g. __counted_by) to struct members that have been declared with
-DECLARE_FLEX_ARRAY. Add an optional 3rd argument to allow for this and
-annotate one such user in linux/in.h.
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
 
-I kept the acks/reviews since it's effectively the same...
+  Sat Feb 10 22:37:25 2024 +0100
+    3f643cd23510 ("pidfd: allow to override signal scope in pidfd_send_signal()")
+  Sat Feb 10 22:37:23 2024 +0100
+    81b9d8ac0640 ("pidfd: change pidfd_send_signal() to respect PIDFD_THREAD")
 
--Kees
+Coverity reported the following:
 
-Kees Cook (2):
-  stddef: Allow attributes to be used when creating flex arrays
-  net/ipv4: Annotate imsf_slist_flex with __counted_by(imsf_numsrc)
+*** CID 1583637:    (UNINIT)
+kernel/signal.c:3963 in __do_sys_pidfd_send_signal()
+3957     		/* Only allow sending arbitrary signals to yourself. */
+3958     		ret = -EPERM;
+3959     		if ((task_pid(current) != pid) &&
+3960     		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+3961     			goto err;
+3962     	} else {
+vvv     CID 1583637:    (UNINIT)
+vvv     Using uninitialized value "type" when calling "prepare_kill_siginfo".
+3963     		prepare_kill_siginfo(sig, &kinfo, type);
+3964     	}
+3965
+3966     	if (type == PIDTYPE_PGID)
+3967     		ret = kill_pgrp_info(sig, &kinfo, pid);
+3968     	else
+kernel/signal.c:3966 in __do_sys_pidfd_send_signal()
+3960     		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+3961     			goto err;
+3962     	} else {
+3963     		prepare_kill_siginfo(sig, &kinfo, type);
+3964     	}
+3965
+vvv     CID 1583637:    (UNINIT)
+vvv     Using uninitialized value "type".
+3966     	if (type == PIDTYPE_PGID)
+3967     		ret = kill_pgrp_info(sig, &kinfo, pid);
+3968     	else
+3969     		ret = kill_pid_info_type(sig, &kinfo, pid, type);
+3970     err:
+3971     	fdput(f);
 
- include/linux/stddef.h      |  6 +++---
- include/uapi/linux/in.h     |  3 ++-
- include/uapi/linux/stddef.h | 10 +++++-----
- 3 files changed, 10 insertions(+), 9 deletions(-)
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1583637 ("UNINIT")
+Fixes: 3f643cd23510 ("pidfd: allow to override signal scope in pidfd_send_signal()")
+Fixes: 81b9d8ac0640 ("pidfd: change pidfd_send_signal() to respect PIDFD_THREAD")
+
+Thanks for your attention!
+
+(Human note: looks like a default case is needed in the switch
+statement.)
 
 -- 
-2.34.1
-
+Coverity-bot
