@@ -1,98 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAD758103;
-	Tue, 13 Feb 2024 14:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EE226AD4;
+	Tue, 13 Feb 2024 14:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707834150; cv=none; b=lluKPLielhSUMbkem6sp7OXyeF9rRhL7rcI22F5oo+rnNn9cryPhtstGYhU2EZtOB6M2sJConaCqZAsLKjkBMp+KlJFk8Sa5dDdGyIND0IGOjEuZkJ7Qko1ZKi4Mu5ddUJCgRti1/Nmwem8KAFvvfAId+87EiDFU10RoHqkqckM=
+	t=1707836053; cv=none; b=Jiy3g/+7kSOcfKaAKr0Hv52TdutIIkrjcX2t1mbNkydZARrsvv4JyX2bTtRNEDFkjq+TJIF91ItcIRLerVRgrY9Iwqhmhk4aaYlkrhCDaKzz/be9t3GURZ1kc01R6fgAw02ccZjPy3ksAoILHr/s7yVjz0DuzJTI8/jgBF/UpGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707834150; c=relaxed/simple;
-	bh=yqTyD/OjND337wp33t22PMtWJVzfs0J8AnORHF+7GG4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DbuUMgWFAAWNHEn7xJB+s90M4uqzhdNOIOAsvW9j/4/rpOqx1waspl8zJ2Y/wQUyMFxNebaImHxaUVjINm6kpaw0+cwA4kmDykpBHUNjAnl7fNNpEeFpkGvcj53nUWGec6/4hk7PD8Kct1AJ4vxvujZTCT2GoFnI9S5Mk/7ItYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j26fZM4J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707836053; c=relaxed/simple;
+	bh=K8jnAbBqeBhJFRVuQFwzQgzQsFNB5g/b5LfJqEQCsHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZyDU0aH/xmZT5zuAw8Ivvy8Y+chxVcLWZ6SqykQEByD9EK0WwqrOgGHsbo6E3D8KlPqSkDK+6zrXqXJ9AFRiTdkItH3xgpkQEV47ukALdmpiKrQK6w2RohE7Hhkkr53LnGnjTr92n/kRcQu7l5jxsubLhlY1rLPt+0SH3S4sJ58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=fxRUG6+y; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j26fZM4J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8057CC433C7;
-	Tue, 13 Feb 2024 14:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707834149;
-	bh=yqTyD/OjND337wp33t22PMtWJVzfs0J8AnORHF+7GG4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=j26fZM4JKyiZxhBok+sG84VvBt/MqBNn/AAUNCtYmbLqbII24bzx0mocMC/hifs26
-	 MymKA4NA/GocKd74u3tAEK7Wo9LnGSc2NrCM5ikCaVbclHgMJYLXvK2yEfhVsqzKvV
-	 0GDasPHFiXxHI9hYg2qlI2S85z6a82kZaKQKII1EvxtfTNoCMlNpv94hCVRoRhR12s
-	 rxpE6evzJqiHsg9zZMDsGEefXZBAOQCeyIqtWGm5GzikcW8lRXVH9ncgTgcJECZCaE
-	 PlamdIcJGZCTw1yV7lpCJ9+xs3FYwhkz1wGjrQklAGjP6wYJef1s6Yxq9rkzHWHsdy
-	 B+jkLkhJftv4A==
-From: Mark Brown <broonie@kernel.org>
-To: James Schulman <james.schulman@cirrus.com>, 
- David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Ricardo Rivera-Matos <rriveram@opensource.cirrus.com>, 
- Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
- Sai Prakash Ranjan <quic_saipraka@quicinc.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
-References: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
-Subject: Re: (subset) [PATCH 0/7] Xperia 1 V support
-Message-Id: <170783414525.38232.9788370045735417740.b4-ty@kernel.org>
-Date: Tue, 13 Feb 2024 14:22:25 +0000
+	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="fxRUG6+y"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4TZ3yd4Dj4z681k;
+	Tue, 13 Feb 2024 15:45:13 +0100 (CET)
+Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4TZ3yH6LD4z67wS;
+	Tue, 13 Feb 2024 15:44:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=unoeuro; t=1707835513;
+	bh=v6NrxM1eJN7Z7yzkWSBTKUltm5dbJ2HTXi9hG2LMSTA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=fxRUG6+yBSU+BFXn6+rebuuiiuqqWopqe29Vz2GaIf78w+V69ZIB+Af31iKeLr62p
+	 qpQdz7sWHzQ58CP3tqsZon5MfZ78+Sms5m4nebpjjUITGZQ1A2ZnKMsF4BxSh1OMBa
+	 S898RixpmWtD3+3XqXRY4JGgZ7I8bBk64Oy1wp1k=
+Message-ID: <4582ff28-a443-4b0f-ba92-f48c414e2248@gaisler.com>
+Date: Tue, 13 Feb 2024 15:44:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Build regressions/improvements in v6.8-rc1
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-mtd@lists.infradead.org,
+ mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+ linux-hardening@vger.kernel.org, qat-linux@intel.com,
+ linux-crypto@vger.kernel.org,
+ "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+ Netdev <netdev@vger.kernel.org>
+References: <CAHk-=wiB4iHTtfZKiy5pC24uOjun4fbj4kSX0=ZnGsOXadMf6g@mail.gmail.com>
+ <20240123111235.3097079-1-geert@linux-m68k.org>
+ <d03e90ca-8485-4d1b-5ec1-c3398e0e8da@linux-m68k.org>
+ <0229fa60-2d87-4b1c-b9f0-6f04c6e4dbdd@app.fastmail.com>
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <0229fa60-2d87-4b1c-b9f0-6f04c6e4dbdd@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
 
-On Mon, 12 Feb 2024 14:10:08 +0100, Konrad Dybcio wrote:
-> DTS for the phone and some fly-by fixes
+On 2024-01-23 15:21, Arnd Bergmann wrote:
+>>>  + /kisskb/src/arch/sparc/include/asm/floppy_64.h: error: no previous prototype for 'sparc_floppy_irq' [-Werror=missing-prototypes]:  => 200:13
+>>>  + /kisskb/src/arch/sparc/include/asm/floppy_64.h: error: no previous prototype for 'sun_pci_fd_dma_callback' [-Werror=missing-prototypes]:  => 437:6
+>>
+>> sparc64-gcc{5,11,12,13}/sparc64-allmodconfig
 > 
-> Patch 1 for Mark/sound
-> Rest for qcom
-> 
-> 
-
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/7] dt-bindings: ASoC: cs35l45: Add interrupts
-      commit: d0611f617d823a87f04186ad165e2990208c040b
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> Andrew Morton did a patch for the sparc warnings, and Andreas Larsson
+> is joining as a maintainer, so hopefully he can pick that up soon.
+Which patch do you refer to here? I can not seem to find a patch fixing
+these ones in particular on lore.kernel.org.
 
 Thanks,
-Mark
+Andreas
 
