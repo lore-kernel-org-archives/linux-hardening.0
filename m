@@ -1,237 +1,137 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B374613DB80
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 19:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BAF2E629;
+	Wed, 14 Feb 2024 22:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707939970; cv=none; b=bffWGpdtxA7TfhMY0JSKZw7kbmzP87medIl8YAxGqeGBvGWVE+vde5h2TkAaJReFKJB8+DrA389ayUakUNtIX6zuNvw30vPJMoYUPIK17EY/Td0daoeuP9N6FU95jZcyzVPvb2WjwLWyC/gYwQL54sB3CHWg5QLyzzvYmTO+4Zg=
+	t=1707951583; cv=none; b=h7GtUY890sVMDsMZWFLVYqGL7J+7ir2i5pKqQBJg72kCI98NiC7cagy9k7gEZuO6u8o0mqkk7I0lJwxT5CQUqkU4KA1MRhwuDi24CzCliLQgF+6/u2ZKLVgdfWxenmnWIzExRLD3dHOdgZE0tmL4RPrbiBWajvOj+yKYe6zdO+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707939970; c=relaxed/simple;
-	bh=YgOkKOXlR0ASzxusUpx89CgykDXZ1IYPis0fKK7VnqI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BlXpq0LXRZXZtP2eGqjByv7XlLetD9dAf7esydwCwaTVI8HGeoiLYOM7cAe1TpJ3X/lLutMcwXwK1omtzOZGVoi/mxs8LjpDFDapLMQ0JtiS/1g7ULomrYkr4DH9gdKz23CiD8cTJfW0LSkzXsI+/asbKp86jYxrBm1ZKwndcOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XDakyI+4; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707951583; c=relaxed/simple;
+	bh=2ROaEgqkwNNPiQW7EVRrBqCtC40xE0B+dzq3++mYJCQ=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:
+	 References; b=avtfos/w0k4mpYZ+/VkNkxZWfzTCnbzPD7iJ6XgJ42d1KOzYrCLnUZftFEriCLPNllcGHw1s+OkaSSgIrtDfgIpuwUyaLPLx1S+D0GcINFiHBJfMWZnWBKlUgVX4YbGuUBu0g7jV27GnIRWMQSVhjyaC00Qy1hXByF+JD+ydOh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mR5/mFSE; arc=none smtp.client-ip=211.189.100.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XDakyI+4"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso102358a12.2
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 11:46:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707939968; x=1708544768; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tejg3N9iGCbYi0dxTPU89TKxpvu16yaRkXNuqXs5Q5E=;
-        b=XDakyI+4vFORss2kyaqQ69FpmerJ42DgShcxxpOk83uc8eVjxHO4u/RY91+sX+icXk
-         V+D8nj2HQ0DcT3saUrXWIo7luJMeOBhgfSForzI1lw8MUKpDxyO6CASe3Z/mMltKX9m5
-         5/ZBgJZm/qVu2HVoChhVChIFcfUNYPIfTMGd0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707939968; x=1708544768;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tejg3N9iGCbYi0dxTPU89TKxpvu16yaRkXNuqXs5Q5E=;
-        b=mZpjZzkGxhAG3UO3brIjjrCdfglmRnvxyRmb0CKe5XD0KkKVJPOGYENsUDvCB9ALww
-         +ODRCFWYF/WAOuVIdtnj1sBsfWNmKDoFuNqeGJWeZTsHgJLzQw5NAsOR2xD9kKPdThg3
-         vYKQuFwS9dGZjkZtdvDrKZr6IgTtalbIXozaXOQaoSzLiApGqsY4P4PfyiWJuH2e5bCW
-         VDdp5W+UvTGX7vupcxnDGkP/hkoF6k2InuMg4T2+9gxrqjQs43zdpdYmup163gx31E0g
-         Q9uZVHOJcfLjVTqgXuwfGCQACwdURa+L7zIbvqROCMGVLMfu4BBqoinvLygnFa+HzjEm
-         XjwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGeaLZRwj+ta7C1s0BGawm8DcSsTg/TsKEshUfAW3fkpf+2WzzQLrFgENScEOKffDdVt2GJ+5nfY96U8iOfzZfwOp81jY//7xen2VtLU97
-X-Gm-Message-State: AOJu0YzNcMCEul88Kl79Og8MRQTTBXSpFyuIRki0iObmvSiDYgQkTElQ
-	nWzqh1lkDyO9bxsv0+0Khg/3w2AHEUI7Xo2i3M+BgTPiWdfzWdew4vc0zQ6J0g==
-X-Google-Smtp-Source: AGHT+IGhX+m1ysItgafdEVPrg16Fh4vAL5NZ3KeCRJwEzenqYmwBBssH8GTXTGwURsKGEbhU/+Ma4Q==
-X-Received: by 2002:a05:6a21:2d04:b0:19e:c9ad:68be with SMTP id tw4-20020a056a212d0400b0019ec9ad68bemr4640153pzb.43.1707939967996;
-        Wed, 14 Feb 2024 11:46:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXk4JjOdU3VaIljHajvjjDeaBTKLY9UcT+t21yeudA4/9s/0YwdgSI8JHPAJiTYyGDsOwJ2XOI7F4hOyjGHcV5YPxUsqszMqx6eEnlJqHvBMu2bVLm8nuSsRrbBznJqROl9bz2TRurZ1ZcoMlfOT78ma7J0Dy7AsHm9meREoRMztnUCx0pjlDsV00uP6qYKM16ygGJ1cS/K7XIYLr5PUO3Ln1+ZSAFb+FhR+IOEDHSpLUfVPKxa566b6ivDGVqGaymtl9mlbuaUMNDuSg5jemxIzhRKyGgiaLVUt/2+xCo//nB3L8j4Cath6f7KrLbm22AjfzTcKocAJA==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u23-20020a63b557000000b005cfb6e7b0c7sm4688648pgo.39.2024.02.14.11.46.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 11:46:05 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	Eric Biggers <ebiggers@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/3] overflow: Introduce wrapping_add(), wrapping_sub(), and wrapping_mul()
-Date: Wed, 14 Feb 2024 11:46:02 -0800
-Message-Id: <20240214194605.602505-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240214194432.makes.837-kees@kernel.org>
-References: <20240214194432.makes.837-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mR5/mFSE"
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20240214225939usoutp015a2256c4791d245d2f57aaa6751c393c~z3OmPAL2b0141401414usoutp01I;
+	Wed, 14 Feb 2024 22:59:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20240214225939usoutp015a2256c4791d245d2f57aaa6751c393c~z3OmPAL2b0141401414usoutp01I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1707951579;
+	bh=2ROaEgqkwNNPiQW7EVRrBqCtC40xE0B+dzq3++mYJCQ=;
+	h=From:To:Subject:Date:References:From;
+	b=mR5/mFSEceW96BS9Zp8ZR6PYaw/xKiJshbmMRW/macZguAGiT6lcOZ1N1XklqKPV3
+	 SgbEQysIqowDnkqN3yIU1r3PlANGUS44qm6Thpk3bMxhZNmMgPgm7NSk3xlWWgXTPV
+	 je9y9BYzTTo5qx24HiGoMMnf0BdRCoiD2CtTRTmM=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+	[203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240214225939uscas1p16b00de43837bdb8bd991be2655ac99e2~z3OmBfUa10931409314uscas1p1t;
+	Wed, 14 Feb 2024 22:59:39 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+	ussmges2new.samsung.com (USCPEMTA) with SMTP id AB.80.09760.BD54DC56; Wed,
+	14 Feb 2024 17:59:39 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+	[203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240214225938uscas1p28fc1f193d68b26b0e3b6e0e6da4574eb~z3OldINr42193821938uscas1p2Z;
+	Wed, 14 Feb 2024 22:59:38 +0000 (GMT)
+X-AuditID: cbfec36f-7f9ff70000002620-17-65cd45dba205
+Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
+	ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 81.F3.50167.AD54DC56; Wed,
+	14 Feb 2024 17:59:38 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.1.2375.24; Wed, 14 Feb 2024 14:59:37 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
+	14 Feb 2024 14:59:37 -0800
+From: Jim Harris <jim.harris@samsung.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+	"Jason Gunthorpe" <jgg@nvidia.com>, Alex Williamson
+	<alex.williamson@redhat.com>, "pierre.cregut@orange.com"
+	<pierre.cregut@orange.com>
+Subject: [PATCH v3 0/2] PCI/IOV: sriov_numvfs bug fixes
+Thread-Topic: [PATCH v3 0/2] PCI/IOV: sriov_numvfs bug fixes
+Thread-Index: AQHaX5l7eXJDO8TLJEqs+FrXTi3ZpQ==
+Date: Wed, 14 Feb 2024 22:59:37 +0000
+Message-ID: <170795147587.2393.15577527626926144858.stgit@bgt-140510-bm01.eng.stellus.in>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E73177EA56B5054CA153BA47190B29DD@ssi.samsung.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5699; i=keescook@chromium.org;
- h=from:subject; bh=YgOkKOXlR0ASzxusUpx89CgykDXZ1IYPis0fKK7VnqI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlzRh75R0GQGPPZ3V/orJDK5K3S77Rr4Gn5Trr5
- BIOzQyMkSqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc0YewAKCRCJcvTf3G3A
- JmR6D/47QsZE4N+Np5gKhL0eBIwumGpqxvTd6vDXmG0nJVHUr6MjBIsXaVPK8xgyC/CBJkqHnu4
- /3CHWgIQetK5nnziOHmusOYYYjzqjJ7xOwoZkv88oXIiHRBhoAJd4YGLeA4q2Xcr5R7cNm57+nI
- g7r7mIiy6m9H5c8409RHq8KglRXp1Fl/+DxfSSvPBmXPOciQvunRQLX7hTDqWYdoBtf7yMVic8r
- w3pVGGvmp1kXhNrzadU8VmDX/kI8nXu+oIuIklW6NhWUYUszF/AYva+k1jXU55cDxlpXBcWa/lP
- +prkhaCEwcTFYk8GubRxedPFKOf9Kh/LVKoQAJCLe7wForOeNv4FGhfj6bHQHrT1BslZK69u3H4
- dTDMEbvct38Yf0Y4jhHoec64KVzGJ0dW1YMmneNkMWoEh5N6a1d6vuQRdJ3FDiDQAtzY+jMf1yE
- 9ICNjGGU2xplXOsF/qa52hktVd2fCKxQtOZWY697Pv8tzEnkzl6rIqdk/zl7UtNitVg7NJFp1dQ
- VNTe5XOaY30gijj3BGqF94elswFSPP01/Uqw1hSUVJCGoo8krNGAWp4ek1+MN0Xr4NvOwvGrFB4
- TGJr+ZryV3TfTElN0qb4RVawAVOSy7Jflpogzin+/kO4/HTiDnZyBkO1Xh17AYFrH7v/d42jBrl 8juwtUGbB4vwKdQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOKsWRmVeSWpSXmKPExsWy7djX87q3Xc+mGiy4z2bx7X8Pm8XdxxfY
+	LKZPvcBoceJmI5vF6ptrGC1+XZzGarH/6XMWiyv/9jBarFp4jc3iTHeuxaYNT1gszs86xWIx
+	b/1PRovLu+awWaz/+p7N4taEY0wOAh6zGy6yeLQcecvqsXjPSyaPTas62Tx6m9+xebQ8O8nm
+	8X7fVTaPqbPrPT5vkgvgjOKySUnNySxLLdK3S+DKmHR+JUvBM46Kkw96GBsYT3B0MXJySAiY
+	SHy+O521i5GLQ0hgJaPEo6vPmSCcViaJm0s+McNUdTS8YYRIrGGUeHpiEVTLJ0aJNfNesEE4
+	yxgl3vQ1sYK0sAloSvy6sgZslojAR1aJvh1T2LsYOTiEBcwlPvyPB6kREbCReDRxGyuErSfR
+	9W4/I4jNIqAqcfXsLzCbVyBS4uHme2A2o4CYxPdTIDM5OZgFxCVuPZnPBHGeoMSi2XugThWT
+	+LfrIRuErShx//tLsLXMQPes36UP0WoncXfjHHYIW1FiSvdDdohVghInZz5hgWiVlDi44gYL
+	yPkSApM5JTZPOc8KMkdCwEXi6jQviBppiavXp0KtzZZYub6DCaKkQKLhSBBE2Fpi4Z/1UBfz
+	Sfz99YgRooRXoqNNaAKj0iwkv8xCuHMWkjtnIblzFpI7FzCyrmIULy0uzk1PLTbKSy3XK07M
+	LS7NS9dLzs/dxAhMi6f/Hc7fwXj91ke9Q4xMHIyHGCU4mJVEeCf1nkkV4k1JrKxKLcqPLyrN
+	SS0+xCjNwaIkzmtoezJZSCA9sSQ1OzW1ILUIJsvEwSnVwDT17w2HlKmep1TWxHE0lwo9W6kv
+	1eCnts3e+kLKQYnT6X+zeH/Ubk5V8PjRKqWYOCEieE7UsiaeqTqfmstlV8zKCd1p7ixYUXQh
+	ehFzpszZlkf6JSuepSvu33a3839n8olDG5Te1G2Z8WhuV2KYT/7a+CtiSRvnRri3qlpsm8i5
+	eJGaRbRj6mL1+SriUwrury9Vs1Z+k8q19XqSyM6lHld/bI9ePFPB7sHeDbOUf0+20IpcsDoi
+	4sklkeezjq/nXXlUVzn8Zbf+dN/rCuYvrwk2hNT0+8veV+7aeWqT2FrN77bzpIJu/1ssZRrV
+	36kptueo7da5hQHfV5p4zJngM+XJ/3tTsx3PTue//OBw+jslluKMREMt5qLiRACKE6yx+gMA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsWS2cDsrHvL9WyqwdOPkhbf/vewWdx9fIHN
+	YvrUC4wWJ242slmsvrmG0eLXxWmsFvufPmexuPJvD6PFqoXX2CzOdOdabNrwhMXi/KxTLBbz
+	1v9ktLi8aw6bxfqv79ksbk04xuQg4DG74SKLR8uRt6wei/e8ZPLYtKqTzaO3+R2bR8uzk2we
+	7/ddZfOYOrve4/MmuQDOKC6blNSczLLUIn27BK6MSedXshQ846g4+aCHsYHxBEcXIyeHhICJ
+	REfDG8YuRi4OIYFVjBJ9p9+yQjifGCVOzutignCWATmXtjCDtLAJaEr8urIGLCEi8JFV4vOD
+	qexdjBwcwgLmEh/+x4PUiAjYSDyauI0VwtaT6Hq3nxHEZhFQlbh69heYzSsQKfFw8z0wm1FA
+	TOL7KZCZnBzMAuISt57MZ4I4T0BiyZ7zzBC2qMTLx/9YIWxFifvfX4KtZQa6Z/0ufYhWO4m7
+	G+ewQ9iKElO6H7JDrBKUODnzCQtEq6TEwRU3WCYwis5Csm0WwqRZSCbNQjJpFpJJCxhZVzGK
+	lxYX56ZXFBvmpZbrFSfmFpfmpesl5+duYgSmg9P/DkfuYDx666PeIUYmDsZDjBIczEoivJN6
+	z6QK8aYkVlalFuXHF5XmpBYfYpTmYFES5737QCNVSCA9sSQ1OzW1ILUIJsvEwSnVwLQib9JK
+	/99F4htjXHddOKKpzfrZyjptnry/BIewRP0kc2meA+0uHmG12w7GXDpQfHdJ9fQMNwmlpppD
+	shzWh9f/rz5dGFzlsLNxmXrLs2u59ZFXnuhGBvQsse6f8PWBcHDFHp7VK54X767w+XnlkIhQ
+	+REGzvdZ4vu7HmilRFSW++ccUHhxeW2WwtWPh0/vsIjS2pUy7eqnzAVml33CHzid7XxyeZ7J
+	/sCGD3s87RM0/kvxJTG/smLVOPLt9Lf/v/2ty+bd2/xEQ14w8Mjs5v1/+j9cU2z99lV3Y+vy
+	xTkS+v23L79s7n5vGiAzraVV48ilt2fXKLf/venubfLzw9spHxc51c+1k3x7t2dat68SS3FG
+	oqEWc1FxIgBImar0dgMAAA==
+X-CMS-MailID: 20240214225938uscas1p28fc1f193d68b26b0e3b6e0e6da4574eb
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20240214225938uscas1p28fc1f193d68b26b0e3b6e0e6da4574eb
+References: <CGME20240214225938uscas1p28fc1f193d68b26b0e3b6e0e6da4574eb@uscas1p2.samsung.com>
 
-Provide helpers that will perform wrapping addition, subtraction, or
-multiplication without tripping the arithmetic wrap-around sanitizers. The
-first argument is the type under which the wrap-around should happen
-with. In other words, these two calls will get very different results:
-
-	wrapping_mul(int, 50, 50) == 2500
-	wrapping_mul(u8,  50, 50) ==  196
-
-Add to the selftests to validate behavior and lack of side-effects.
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Reviewed-by: Marco Elver <elver@google.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Marco Elver <elver@google.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-hardening@vger.kernel.org
----
- include/linux/overflow.h | 48 ++++++++++++++++++++++++++++++++++++++++
- lib/overflow_kunit.c     | 24 ++++++++++++++++----
- 2 files changed, 68 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index ad64d810c8aa..d3ff8e2bec29 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -65,6 +65,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- #define check_add_overflow(a, b, d)	\
- 	__must_check_overflow(__builtin_add_overflow(a, b, d))
- 
-+/**
-+ * wrapping_add() - Intentionally perform a wrapping addition
-+ * @type: type for result of calculation
-+ * @a: first addend
-+ * @b: second addend
-+ *
-+ * Return the potentially wrapped-around addition without
-+ * tripping any wrap-around sanitizers that may be enabled.
-+ */
-+#define wrapping_add(type, a, b)				\
-+	({							\
-+		type __val;					\
-+		__builtin_add_overflow(a, b, &__val);		\
-+		__val;						\
-+	})
-+
- /**
-  * check_sub_overflow() - Calculate subtraction with overflow checking
-  * @a: minuend; value to subtract from
-@@ -79,6 +95,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- #define check_sub_overflow(a, b, d)	\
- 	__must_check_overflow(__builtin_sub_overflow(a, b, d))
- 
-+/**
-+ * wrapping_sub() - Intentionally perform a wrapping subtraction
-+ * @type: type for result of calculation
-+ * @a: minuend; value to subtract from
-+ * @b: subtrahend; value to subtract from @a
-+ *
-+ * Return the potentially wrapped-around subtraction without
-+ * tripping any wrap-around sanitizers that may be enabled.
-+ */
-+#define wrapping_sub(type, a, b)				\
-+	({							\
-+		type __val;					\
-+		__builtin_sub_overflow(a, b, &__val);		\
-+		__val;						\
-+	})
-+
- /**
-  * check_mul_overflow() - Calculate multiplication with overflow checking
-  * @a: first factor
-@@ -93,6 +125,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- #define check_mul_overflow(a, b, d)	\
- 	__must_check_overflow(__builtin_mul_overflow(a, b, d))
- 
-+/**
-+ * wrapping_mul() - Intentionally perform a wrapping multiplication
-+ * @type: type for result of calculation
-+ * @a: first factor
-+ * @b: second factor
-+ *
-+ * Return the potentially wrapped-around multiplication without
-+ * tripping any wrap-around sanitizers that may be enabled.
-+ */
-+#define wrapping_mul(type, a, b)				\
-+	({							\
-+		type __val;					\
-+		__builtin_mul_overflow(a, b, &__val);		\
-+		__val;						\
-+	})
-+
- /**
-  * check_shl_overflow() - Calculate a left-shifted value and check overflow
-  * @a: Value to be shifted
-diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-index c527f6b75789..d3fdb906d3fe 100644
---- a/lib/overflow_kunit.c
-+++ b/lib/overflow_kunit.c
-@@ -258,20 +258,36 @@ DEFINE_TEST_ARRAY(s64) = {
- 									\
- 	_of = check_ ## op ## _overflow(a, b, &_r);			\
- 	KUNIT_EXPECT_EQ_MSG(test, _of, of,				\
--		"expected "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
-+		"expected check "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
- 		a, b, of ? "" : " not", #t);				\
- 	KUNIT_EXPECT_EQ_MSG(test, _r, r,				\
--		"expected "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
-+		"expected check "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
- 		a, b, r, _r, #t);					\
- 	/* Check for internal macro side-effects. */			\
- 	_of = check_ ## op ## _overflow(_a_orig++, _b_orig++, &_r);	\
--	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump, "Unexpected " #op " macro side-effect!\n"); \
--	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump, "Unexpected " #op " macro side-effect!\n"); \
-+	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump,			\
-+		"Unexpected check " #op " macro side-effect!\n");	\
-+	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump,			\
-+		"Unexpected check " #op " macro side-effect!\n");	\
-+									\
-+	_r = wrapping_ ## op(t, a, b);					\
-+	KUNIT_EXPECT_TRUE_MSG(test, _r == r,				\
-+		"expected wrap "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
-+		a, b, r, _r, #t);					\
-+	/* Check for internal macro side-effects. */			\
-+	_a_orig = a;							\
-+	_b_orig = b;							\
-+	_r = wrapping_ ## op(t, _a_orig++, _b_orig++);			\
-+	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump,			\
-+		"Unexpected wrap " #op " macro side-effect!\n");	\
-+	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump,			\
-+		"Unexpected wrap " #op " macro side-effect!\n");	\
- } while (0)
- 
- #define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
- static void do_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
- {									\
-+	/* check_{add,sub,mul}_overflow() and wrapping_{add,sub,mul} */	\
- 	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);	\
- 	check_one_op(t, fmt, add, "+", p->b, p->a, p->sum, p->s_of);	\
- 	check_one_op(t, fmt, sub, "-", p->a, p->b, p->diff, p->d_of);	\
--- 
-2.34.1
-
+QSBkZWFkbG9jayBjb25kaXRpb24gd2FzIGRpc2NvdmVyZWQgYnkgU1BESyB3aGVuIHJlbW92aW5n
+IGFuIFNSSU9WLWVuYWJsZWQgYW5kClZGSU8tYXR0YWNoZWQgZGV2aWNlLCB3aXRoIGEgc3BlY2lm
+aWMgdGhyZWFkaW5nIG1vZGVsLiBXaGlsZSBkaXNjdXNzaW5nIHRoaXMKb24gdGhlIG1haWxpbmcg
+bGlzdCwgYSBzZXBhcmF0ZSBpc3N1ZSBhcm91bmQgdXBkYXRpbmcgc3Jpb3ZfbnVtdmZzIGFuZCBp
+dHMKa29iamVjdF91ZXZlbnQoKSB3YXMgYWxzbyBkaXNjb3ZlcmVkLiBUaGlzIHNlcmllcyBmaXhl
+cyBib3RoIG9mIHRob3NlIGlzc3Vlcy4KCi0tLQp2MSA9PiB2MjoKKiBObyBjb2RlIGNoYW5nZXMK
+KiBVcGRhdGVkIGNvbW1pdCBtZXNzYWdlcyBwZXIgZmVlZGJhY2sgZnJvbSBCam9ybgoqIEFkZGVk
+IExlb24ncyBSZXZpZXdlZC1ieSB0YWdzCiogTW92ZWQgYnVsayBvZiB0aGUgdjEgY292ZXIgbGV0
+dGVyIHRvIHRoZSByZXZlcnQgcGF0Y2ggY29tbWl0IG1lc3NhZ2Ugd2hlcmUKICBpdCBiZWxvbmdl
+ZAoKdjIgPT4gdjM6CiogVXBkYXRlIGlvdi0+bnVtX1ZGcyBiZWZvcmUgVkZzIGFyZSBwcm9iZWQK
+Ci0tLQoKSmltIEhhcnJpcyAoMik6CiAgICAgIFBDSS9JT1Y6IFJldmVydCAiUENJL0lPVjogU2Vy
+aWFsaXplIHN5c2ZzIHNyaW92X251bXZmcyByZWFkcyB2cyB3cml0ZXMiCiAgICAgIFBDSS9JT1Y6
+IHNldCBpb3YtPm51bV9WRnMgYmVmb3JlIFZGcyBhcmUgcHJvYmVkCgoKIGRyaXZlcnMvcGNpL2lv
+di5jIHwgICAxNCArKysrKy0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
+KSwgOSBkZWxldGlvbnMoLSkKCi0tCg==
