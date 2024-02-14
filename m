@@ -1,158 +1,522 @@
-Received: from wflow8-smtp.messagingengine.com (wflow8-smtp.messagingengine.com [64.147.123.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE7B29437;
-	Wed, 14 Feb 2024 14:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3039E5C605
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 15:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707920338; cv=none; b=EJGlMsb/fSP6Txs8NAMb5rkSHUdCFplrU46vaFKjAQgzR8FJ36TpvXSl46FRaEk3Fmgr91yKkPVrUzTJOILSUfEmT85YaH+tiYOf8bMjafjIMxy0TxU6KnRMqesFXx1wNJMCcz86hvfF+rhvjbqcBYaxvNYcM1fpKsPehjr8sbs=
+	t=1707923504; cv=none; b=YjyoJ2F2wKLHOPt+Hnoze4JX1fzSOnJEKzpa/lkaxoWmwjArX11ZkW+kZEhqN/ZmPPgvRM6kRw4rytx/tz5ydmlIJi/RxksvT3/PRvA8khFVZ9ij9g1oGz3wnOA/+X3mfCeWMeLkN2tnQVZpem38vWAyj6BINc4GuudIdu23r4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707920338; c=relaxed/simple;
-	bh=nTl1e8UEmACUyenLLW2iCRqE5C4RtIPrVYx7Rhm8IDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SEtCKKf6DcQvut6YNr6RnKbKnIJbc/WZP/hZ7f4kMdF+uLyUuIsnbsbq6vQq+a514QEZu9RF6uOPtdUFihatddk62+I17mkQ2TSbiEjn2d+ie325TpaHojexm5cVsckBI08Qo6dlZqfH2Vco27oAnBYtn8QOT8l+D7aRcUhZOWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=jeMUyY42; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=In9lxJI2; arc=none smtp.client-ip=64.147.123.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+	s=arc-20240116; t=1707923504; c=relaxed/simple;
+	bh=stEdLz2b2kf1O6LPDO2yn1MKWkJG2SJcOQnAUy1OlLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tuXViu0EaoKrc//ZFzPwP/saYZClCDyC92p88udxZBxvTxqPqSTSkJVvF1knRB76UhFpWUX+72meJmchq7WuzTVumvOjt9Ub6BbpKjUDU+Ogw6/3X6gvmpJWpirtPPpGXy6zYjAIfgU6YQ1NBC6l/rzQzuTIO6fsY1wHLkzdupc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UKg5U9KF; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="jeMUyY42";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="In9lxJI2"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.west.internal (Postfix) with ESMTP id 03A492CC02D0;
-	Wed, 14 Feb 2024 09:18:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 14 Feb 2024 09:18:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1707920332; x=1707927532; bh=6RsiVidSCw
-	BrjsulM6iUvKUYTy+Y7E6NKV1i3zA5qpU=; b=jeMUyY42CXSJw46CT9NQVglyCM
-	E7RLRhEzcLYi1I8QeUo183E55xwmzqBHWAv4NLTpkqHNnt65+FgnK83oq4qcxz6k
-	q9tCfccKFZgtS5/NeIVLN6QvdeUUo5/r0ZdTWn7KZDtKJpHlq/vo+N/ObHUeLd8P
-	8WgWL3cwf64GiEdFu7CF/ZCKAf6vELZb8F2CbItzzqIRsO1/IylxcMnb3aI7xy/U
-	2aoWiUu++SvPfgrwlWr23pu8ZFEhUkmYBtS93SGtb066xY9VYgr1HqvZEPXnT7vZ
-	N0+s2Ykx0GdRHBfceSPdQ+2LIVyEwcbe/qOjhjOJy85ic4Sh2gvFo6yyO2Pw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707920332; x=1707927532; bh=6RsiVidSCwBrjsulM6iUvKUYTy+Y
-	7E6NKV1i3zA5qpU=; b=In9lxJI2/qikc/OHPx4USykX8W8PIUIKmbagu2mBdOhB
-	4bwb/STZdV1WcVFEaHvE8eXeK1uebqXZPyMGrvJeNAtpT592uy6MXOtqk4gEWBVL
-	VdIdDBt0epBzO/tVVljh81LxSYUx8w8VWBFx1eqPyaarXJhGRZt9YL+qMP16VIu5
-	YjN/q8aPybrdpW8ZJ3KERsmf1jjH3Pq+Z7vKaorOr9uDI5r94YqamyEQBpOTCMAP
-	VntQkstFmpps4gOR/5CnvUV3bss09HnuNFilvIEgId4CTeDN65gowCVrNm+65KUI
-	Iu5nwSVHeudYda0tjSht/962gXyfcTdrufrsfurCww==
-X-ME-Sender: <xms:y8vMZYrEu3ZKpzC-ur-lUClxdnSXcACjD27_Oi1Qv8UuggyMOM2uNQ>
-    <xme:y8vMZerGtGPjK4YqJTlMNUA0OmYNsTDOl-dIcQ5bBVHKhm4nkFOU77JXHcPAy6KTr
-    PSaW4YYeRJRbKVmuXY>
-X-ME-Received: <xmr:y8vMZdNFxyFZUJVEXRyDcP5mMXZBuqQ17FNSXetFbVa94R9P8PTbbfTkLDnkP5F7QiYZABHo13otPbRvwo2RfeSwOtrO>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdeifecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigthhho
-    ucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrg
-    htthgvrhhnpeeutedttefgjeefffehffffkeejueevieefudelgeejuddtfeffteeklefh
-    leelteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hthigthhhosehthigthhhordhpihiiiigr
-X-ME-Proxy: <xmx:y8vMZf64-wd7mz4pF2zxJRbMXrrp25fV54ch5xt5FEsg63gNDa-uxg>
-    <xmx:y8vMZX68zZhXPUHy5CeWIXe5a2jsJHZH7e5eaZPC_yDQqlbERPQuRg>
-    <xmx:y8vMZfgRAXCu25PXsPQr41w9J6C7WjwHBQgBFUdnYrbfNwoxvVkZUA>
-    <xmx:zMvMZV7ibGkEuF3toxvX4kD4YGPjYOBvZ4dLdyJ-EK3yZvJICdZlywQBlax07Xqq>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 14 Feb 2024 09:18:50 -0500 (EST)
-Date: Wed, 14 Feb 2024 07:18:48 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: coverity-bot <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peng Zhang <zhangpeng.00@bytedance.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UKg5U9KF"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e104a8e3f7so900357b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 07:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1707923501; x=1708528301; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iKRvUfP65U1ffniAVOOvF4GghsVtSOXabt1zX4dzt/E=;
+        b=UKg5U9KF5gBOVa+bG2QKBgWTWm6AUmybWPumJx1GUVPdy8uCQ+t8wSlxYNTLmfBZpi
+         ba2kat8ocd+IhD1NBGsKyBLwZsIfYoVGiuEFHErKIC+Oo99KpHDXGJm4kBwHUD+sImRl
+         WCFF4AU7184r4fKwOEshXUa+qBxwQ5zy9ZUxM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707923501; x=1708528301;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iKRvUfP65U1ffniAVOOvF4GghsVtSOXabt1zX4dzt/E=;
+        b=t95wglyJ+Rl6keOgN/YH9WtOgEVJPKYUO7T+i0qQAQh4L9OJg4WAXcCEcRT4YCfuQy
+         rlWKqFJqypM9y+EEtTxmuZKU/k52mMZLSFkcN6xQ/Mdh7UwJ0fpeB5V2iXcptf8BIAD1
+         g8BSFm+9WZahEiLWJI/VDcEcYGcTKzK0URI5gjpWFg3JGIy6DE3FV97D855V6SvtlHF9
+         PIMV65E2Lts8O5b8ia7ElB73W0f6eEx03cMIYRzAmw0UHTqItqOctC9I5iW4fAFZzPzj
+         baA34WattR2zICqlte9TLsM/2YdN6XNDuNkw2z4pZ9TaWMHWCWJqnOYeBO+935CvAEgn
+         dyAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWyLEUuPcUMN2lqzPdwHeeb0sX+Jea9bVyA6IPlOfwMCCKnaROfQ9ZbMuUI2Et3RafrPtIRwu/eK2fimd82bcpTZijTYDcPpNuz6UtpNgQ
+X-Gm-Message-State: AOJu0YxAINOrXanzAlIauNzOkUKaBYjF269NBQa0+bHK/EVLyf8CpRSh
+	i1n9oFRtdrXvpkZxFrqG1XQhGLVlD4o4UDFWAbe+zc/jVKCQyJzKXpfdjXkDuw==
+X-Google-Smtp-Source: AGHT+IESOqUgJ1EXWILtEIXTZYHo7bR+fFPqUnEPAyT89Pf7hLBaK/1lzubgs3upFpwd/D2AfJCo+Q==
+X-Received: by 2002:a05:6a00:3d4e:b0:6d9:b4e6:ffb with SMTP id lp14-20020a056a003d4e00b006d9b4e60ffbmr3251999pfb.0.1707923501151;
+        Wed, 14 Feb 2024 07:11:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVxXBz5qGx0tCJZifpxATH9+pffWgqXdmzgcgWCWue9XHwP0sVrx4++52k2jCuOK0edeMjmGdbQdwA0gi9ZyjQAd4sRLrcperpsDJis1E1VQ6f8IA9FpYW1q6MT6Bxt5WKSQIsuetpfnKw2PYxzvL3OC1SGXWMtKcvYiRMc6Kbd6vsC6/tF8fUBWP2+s8OcvV1QB+wVDxFXbczBNWhMqlsQYxuYhEYpAZyVffykeiH7820vUs+1gKRKoAxshXLW3i3pkpSC2NgdYJaCkMGrgCw9aFAwjW+bHSgMzlepqMpHAzShhqqAYFksYZ+cA4Loh/ZbToJHKMFm+Ov1SepAgsvOQWgf2DSmWx1DV+5YwXJwq22YdgJ+Y8oO41bBiIRldOOtSzyuZTbQmVyaSo3Qb+0rw/veTdGHB78z53nKBs/FR6ItYLBvJEVeYYj+5VwVvIv36Xr3G+ujUiCVCN8mjKbiKixxmiV8x+XFU5WiEpR06+qNQ69eT5VHkDCzdUUaxpXc1OyjTkMNmUiCJwAp5Q7vrBDb3qEV2HPKISEazJvdc6w1yGm+fcocKMZirE+J0ls8/7vJElK3e2eqcI7OjiQz+RTMmwvg+V/qm72xrT5+YaENDBNdrnGgh/yRnfnQEaR7E3JdP3hDTqUQQSwK0tXdRW5ZceagUOc7xPQO76CUfRpgo2Z0QfKZIqkRtRIC7Wwabsw1lVk24Y2W6Qi7KVb7iwpoegSWkrgp3JZF650uzHq+zTKKTEuzd5kez/hKNxuEdbi17Av3Rh1qQP2JWyYHP7Y=
+Received: from localhost (56.72.82.34.bc.googleusercontent.com. [34.82.72.56])
+        by smtp.gmail.com with UTF8SMTPSA id y23-20020aa78557000000b006e09ec69d7dsm9164968pfn.98.2024.02.14.07.11.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 07:11:40 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	sroettger@google.com,
+	willy@infradead.org,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	usama.anjum@collabora.com,
+	corbet@lwn.net,
+	Liam.Howlett@oracle.com,
+	surenb@google.com,
+	merimus@google.com,
+	rdunlap@infradead.org
+Cc: jeffxu@google.com,
+	jorgelo@chromium.org,
+	groeck@chromium.org,
 	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
-Message-ID: <ZczLyDCN+zG6imTd@tycho.pizza>
-References: <202402131559.B76A34B@keescook>
- <ZcwGua3a9Z8nJXVq@tycho.pizza>
- <20240214090332.GA14017@redhat.com>
- <20240214090640.GB14017@redhat.com>
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	pedro.falcato@gmail.com,
+	dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org,
+	deraadt@openbsd.org,
+	=David.Laight@aculab.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v9 0/5] Introduce mseal
+Date: Wed, 14 Feb 2024 15:11:24 +0000
+Message-ID: <20240214151130.616240-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214090640.GB14017@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 14, 2024 at 10:06:41AM +0100, Oleg Nesterov wrote:
-> On 02/14, Oleg Nesterov wrote:
-> >
-> > On 02/13, Tycho Andersen wrote:
-> > >
-> > > I think this is a false positive, we have:
-> >
-> > Agreed,
-> >
-> > > That said, a default case wouldn't hurt, and we should fix the first
-> > > comment anyways, since now we have extensions.
-> > >
-> > > I'm happy to send a patch or maybe it's better for Christian to fix it
-> > > in-tree.
-> >
-> > I leave this to you and Christian, whatever you prefer. But perhaps we
-> > can simplify these checks? Something like below.
-> 
-> forgot about -EINVAL ...
-> 
-> Oleg.
-> 
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -3876,10 +3876,6 @@ static struct pid *pidfd_to_pid(const struct file *file)
->  	return tgid_pidfd_to_pid(file);
->  }
->  
-> -#define PIDFD_SEND_SIGNAL_FLAGS                            \
-> -	(PIDFD_SIGNAL_THREAD | PIDFD_SIGNAL_THREAD_GROUP | \
-> -	 PIDFD_SIGNAL_PROCESS_GROUP)
-> -
->  /**
->   * sys_pidfd_send_signal - Signal a process through a pidfd
->   * @pidfd:  file descriptor of the process
-> @@ -3903,13 +3899,23 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
->  	kernel_siginfo_t kinfo;
->  	enum pid_type type;
->  
-> -	/* Enforce flags be set to 0 until we add an extension. */
-> -	if (flags & ~PIDFD_SEND_SIGNAL_FLAGS)
-> -		return -EINVAL;
-> -
-> -	/* Ensure that only a single signal scope determining flag is set. */
-> -	if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
-> +	switch (flags) {
-> +	case 0:
-> +		/* but see the PIDFD_THREAD check below */
+From: Jeff Xu <jeffxu@chromium.org>
 
-Why not put that bit inline? But I guess the hweight and flags mask
-are intended to be future proofness for flags that don't fit into this
-switch. That said, your patch reads better than the way it is in the
-tree and is what I was thinking.
+This is V9 version, with removing MAP_SEALABLE and PROT_SEAL
+from mmap(), adding perfrmance benchmark and a test
+to demo the sealing of read-only memory segment of elf mapping.
 
-Tycho
+------------------------------------------------------------------
+
+This patchset proposes a new mseal() syscall for the Linux kernel.
+
+In a nutshell, mseal() protects the VMAs of a given virtual memory
+range against modifications, such as changes to their permission bits.
+
+Modern CPUs support memory permissions, such as the read/write (RW)
+and no-execute (NX) bits. Linux has supported NX since the release of
+kernel version 2.6.8 in August 2004 [1]. The memory permission feature
+improves the security stance on memory corruption bugs, as an attacker
+cannot simply write to arbitrary memory and point the code to it. The
+memory must be marked with the X bit, or else an exception will occur.
+Internally, the kernel maintains the memory permissions in a data
+structure called VMA (vm_area_struct). mseal() additionally protects
+the VMA itself against modifications of the selected seal type.
+
+Memory sealing is useful to mitigate memory corruption issues where a
+corrupted pointer is passed to a memory management system. For
+example, such an attacker primitive can break control-flow integrity
+guarantees since read-only memory that is supposed to be trusted can
+become writable or .text pages can get remapped. Memory sealing can
+automatically be applied by the runtime loader to seal .text and
+.rodata pages and applications can additionally seal security critical
+data at runtime. A similar feature already exists in the XNU kernel
+with the VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the
+mimmutable syscall [4]. Also, Chrome wants to adopt this feature for
+their CFI work [2] and this patchset has been designed to be
+compatible with the Chrome use case.
+
+Two system calls are involved in sealing the map:  mmap() and mseal().
+
+The new mseal() is an syscall on 64 bit CPU, and with
+following signature:
+
+int mseal(void addr, size_t len, unsigned long flags)
+addr/len: memory range.
+flags: reserved.
+
+mseal() blocks following operations for the given memory range.
+
+1> Unmapping, moving to another location, and shrinking the size,
+   via munmap() and mremap(), can leave an empty space, therefore can
+   be replaced with a VMA with a new set of attributes.
+
+2> Moving or expanding a different VMA into the current location,
+   via mremap().
+
+3> Modifying a VMA via mmap(MAP_FIXED).
+
+4> Size expansion, via mremap(), does not appear to pose any specific
+   risks to sealed VMAs. It is included anyway because the use case is
+   unclear. In any case, users can rely on merging to expand a sealed VMA.
+
+5> mprotect() and pkey_mprotect().
+
+6> Some destructive madvice() behaviors (e.g. MADV_DONTNEED) for anonymous
+   memory, when users don't have write permission to the memory. Those
+   behaviors can alter region contents by discarding pages, effectively a
+   memset(0) for anonymous memory.
+
+The idea that inspired this patch comes from Stephen Röttger’s work in
+V8 CFI [5]. Chrome browser in ChromeOS will be the first user of this
+API.
+
+Indeed, the Chrome browser has very specific requirements for sealing,
+which are distinct from those of most applications. For example, in
+the case of libc, sealing is only applied to read-only (RO) or
+read-execute (RX) memory segments (such as .text and .RELRO) to
+prevent them from becoming writable, the lifetime of those mappings
+are tied to the lifetime of the process.
+
+Chrome wants to seal two large address space reservations that are
+managed by different allocators. The memory is mapped RW- and RWX
+respectively but write access to it is restricted using pkeys (or in
+the future ARM permission overlay extensions). The lifetime of those
+mappings are not tied to the lifetime of the process, therefore, while
+the memory is sealed, the allocators still need to free or discard the
+unused memory. For example, with madvise(DONTNEED).
+
+However, always allowing madvise(DONTNEED) on this range poses a
+security risk. For example if a jump instruction crosses a page
+boundary and the second page gets discarded, it will overwrite the
+target bytes with zeros and change the control flow. Checking
+write-permission before the discard operation allows us to control
+when the operation is valid. In this case, the madvise will only
+succeed if the executing thread has PKEY write permissions and PKRU
+changes are protected in software by control-flow integrity.
+
+Although the initial version of this patch series is targeting the
+Chrome browser as its first user, it became evident during upstream
+discussions that we would also want to ensure that the patch set
+eventually is a complete solution for memory sealing and compatible
+with other use cases. The specific scenario currently in mind is
+glibc's use case of loading and sealing ELF executables. To this end,
+Stephen is working on a change to glibc to add sealing support to the
+dynamic linker, which will seal all non-writable segments at startup.
+Once this work is completed, all applications will be able to
+automatically benefit from these new protections.
+
+In closing, I would like to formally acknowledge the valuable
+contributions received during the RFC process, which were instrumental
+in shaping this patch:
+
+Jann Horn: raising awareness and providing valuable insights on the
+  destructive madvise operations.
+Liam R. Howlett: perf optimization.
+Linus Torvalds: assisting in defining system call signature and scope.
+Theo de Raadt: sharing the experiences and insight gained from
+  implementing mimmutable() in OpenBSD.
+
+MM perf benchmarks
+==================
+This patch adds a loop in the mprotect/munmap/madvise(DONTNEED) to
+check the VMAs’ sealing flag, so that no partial update can be made,
+when any segment within the given memory range is sealed.
+
+To measure the performance impact of this loop, two tests are developed.
+[8]
+
+The first is measuring the time taken for a particular system call,
+by using clock_gettime(CLOCK_MONOTONIC). The second is using
+PERF_COUNT_HW_REF_CPU_CYCLES (exclude user space). Both tests have
+similar results.
+
+The tests have roughly below sequence:
+for (i = 0; i < 1000, i++)
+    create 1000 mappings (1 page per VMA)
+    start the sampling
+    for (j = 0; j < 1000, j++)
+        mprotect one mapping
+    stop and save the sample
+    delete 1000 mappings
+calculates all samples.
+
+Below tests are performed on Intel(R) Pentium(R) Gold 7505 @ 2.00GHz,
+4G memory, Chromebook.
+
+Based on the latest upstream code:
+The first test (measuring time)
+syscall__	vmas	t	t_mseal	delta_ns	per_vma	%
+munmap__  	1	909	944	35	35	104%
+munmap__  	2	1398	1502	104	52	107%
+munmap__  	4	2444	2594	149	37	106%
+munmap__  	8	4029	4323	293	37	107%
+munmap__  	16	6647	6935	288	18	104%
+munmap__  	32	11811	12398	587	18	105%
+mprotect	1	439	465	26	26	106%
+mprotect	2	1659	1745	86	43	105%
+mprotect	4	3747	3889	142	36	104%
+mprotect	8	6755	6969	215	27	103%
+mprotect	16	13748	14144	396	25	103%
+mprotect	32	27827	28969	1142	36	104%
+madvise_	1	240	262	22	22	109%
+madvise_	2	366	442	76	38	121%
+madvise_	4	623	751	128	32	121%
+madvise_	8	1110	1324	215	27	119%
+madvise_	16	2127	2451	324	20	115%
+madvise_	32	4109	4642	534	17	113%
+
+The second test (measuring cpu cycle)
+syscall__	vmas	cpu	cmseal	delta_cpu	per_vma	%
+munmap__	1	1790	1890	100	100	106%
+munmap__	2	2819	3033	214	107	108%
+munmap__	4	4959	5271	312	78	106%
+munmap__	8	8262	8745	483	60	106%
+munmap__	16	13099	14116	1017	64	108%
+munmap__	32	23221	24785	1565	49	107%
+mprotect	1	906	967	62	62	107%
+mprotect	2	3019	3203	184	92	106%
+mprotect	4	6149	6569	420	105	107%
+mprotect	8	9978	10524	545	68	105%
+mprotect	16	20448	21427	979	61	105%
+mprotect	32	40972	42935	1963	61	105%
+madvise_	1	434	497	63	63	115%
+madvise_	2	752	899	147	74	120%
+madvise_	4	1313	1513	200	50	115%
+madvise_	8	2271	2627	356	44	116%
+madvise_	16	4312	4883	571	36	113%
+madvise_	32	8376	9319	943	29	111%
+
+Based on the result, for 6.8 kernel, sealing check adds
+20-40 nano seconds, or around 50-100 CPU cycles, per VMA.
+
+In addition, I applied the sealing to 5.10 kernel:
+The first test (measuring time)
+syscall__	vmas	t	tmseal	delta_ns	per_vma	%
+munmap__	1	357	390	33	33	109%
+munmap__	2	442	463	21	11	105%
+munmap__	4	614	634	20	5	103%
+munmap__	8	1017	1137	120	15	112%
+munmap__	16	1889	2153	263	16	114%
+munmap__	32	4109	4088	-21	-1	99%
+mprotect	1	235	227	-7	-7	97%
+mprotect	2	495	464	-30	-15	94%
+mprotect	4	741	764	24	6	103%
+mprotect	8	1434	1437	2	0	100%
+mprotect	16	2958	2991	33	2	101%
+mprotect	32	6431	6608	177	6	103%
+madvise_	1	191	208	16	16	109%
+madvise_	2	300	324	24	12	108%
+madvise_	4	450	473	23	6	105%
+madvise_	8	753	806	53	7	107%
+madvise_	16	1467	1592	125	8	108%
+madvise_	32	2795	3405	610	19	122%
+					
+The second test (measuring cpu cycle)
+syscall__	nbr_vma	cpu	cmseal	delta_cpu	per_vma	%
+munmap__	1	684	715	31	31	105%
+munmap__	2	861	898	38	19	104%
+munmap__	4	1183	1235	51	13	104%
+munmap__	8	1999	2045	46	6	102%
+munmap__	16	3839	3816	-23	-1	99%
+munmap__	32	7672	7887	216	7	103%
+mprotect	1	397	443	46	46	112%
+mprotect	2	738	788	50	25	107%
+mprotect	4	1221	1256	35	9	103%
+mprotect	8	2356	2429	72	9	103%
+mprotect	16	4961	4935	-26	-2	99%
+mprotect	32	9882	10172	291	9	103%
+madvise_	1	351	380	29	29	108%
+madvise_	2	565	615	49	25	109%
+madvise_	4	872	933	61	15	107%
+madvise_	8	1508	1640	132	16	109%
+madvise_	16	3078	3323	245	15	108%
+madvise_	32	5893	6704	811	25	114%
+
+For 5.10 kernel, sealing check adds 0-15 ns in time, or 10-30
+CPU cycles, there is even decrease in some cases.
+
+It might be interesting to compare 5.10 and 6.8 kernel
+The first test (measuring time)
+syscall__	vmas	t_5_10	t_6_8	delta_ns	per_vma	%
+munmap__	1	357	909	552	552	254%
+munmap__	2	442	1398	956	478	316%
+munmap__	4	614	2444	1830	458	398%
+munmap__	8	1017	4029	3012	377	396%
+munmap__	16	1889	6647	4758	297	352%
+munmap__	32	4109	11811	7702	241	287%
+mprotect	1	235	439	204	204	187%
+mprotect	2	495	1659	1164	582	335%
+mprotect	4	741	3747	3006	752	506%
+mprotect	8	1434	6755	5320	665	471%
+mprotect	16	2958	13748	10790	674	465%
+mprotect	32	6431	27827	21397	669	433%
+madvise_	1	191	240	49	49	125%
+madvise_	2	300	366	67	33	122%
+madvise_	4	450	623	173	43	138%
+madvise_	8	753	1110	357	45	147%
+madvise_	16	1467	2127	660	41	145%
+madvise_	32	2795	4109	1314	41	147%
+
+The second test (measuring cpu cycle)
+syscall__	vmas	cpu_5_10	c_6_8	delta_cpu	per_vma	%
+munmap__	1	684	1790	1106	1106	262%
+munmap__	2	861	2819	1958	979	327%
+munmap__	4	1183	4959	3776	944	419%
+munmap__	8	1999	8262	6263	783	413%
+munmap__	16	3839	13099	9260	579	341%
+munmap__	32	7672	23221	15549	486	303%
+mprotect	1	397	906	509	509	228%
+mprotect	2	738	3019	2281	1140	409%
+mprotect	4	1221	6149	4929	1232	504%
+mprotect	8	2356	9978	7622	953	423%
+mprotect	16	4961	20448	15487	968	412%
+mprotect	32	9882	40972	31091	972	415%
+madvise_	1	351	434	82	82	123%
+madvise_	2	565	752	186	93	133%
+madvise_	4	872	1313	442	110	151%
+madvise_	8	1508	2271	763	95	151%
+madvise_	16	3078	4312	1234	77	140%
+madvise_	32	5893	8376	2483	78	142%
+
+From 5.10 to 6.8
+munmap: added 250-550 ns in time, or 500-1100 in cpu cycle, per vma.
+mprotect: added 200-750 ns in time, or 500-1200 in cpu cycle, per vma.
+madvise: added 33-50 ns in time, or 70-110 in cpu cycle, per vma.
+
+In comparison to mseal, which adds 20-40 ns or 50-100 CPU cycles, the
+increase from 5.10 to 6.8 is significantly larger, approximately ten
+times greater for munmap and mprotect.
+
+When I discuss the mm performance with Brian Makin, an engineer worked
+on performance, it was brought to my attention that such a performance
+benchmarks, which measuring millions of mm syscall in a tight loop, may
+not accurately reflect real-world scenarios, such as that of a database
+service. Also this is tested using a single HW and ChromeOS, the data
+from another HW or distribution might be different. It might be best
+to take this data with a grain of salt.
+
+
+Change history:
+===============
+V9:
+- remove mmap(PROT_SEAL) and mmap(MAP_SEALABLE) (Linus, Theo de Raadt)
+- Update mseal_test to check for prot bit (Liam R. Howlett)
+- Update documentation to give more detail on sealing check (Liam R. Howlett)
+- Add seal_elf test.
+- Add performance measure data.
+- mseal_test: fix arm build.
+
+V8:
+- perf optimization in mmap. (Liam R. Howlett)
+- add one testcase (test_seal_zero_address) 
+- Update mseal.rst to add note for MAP_SEALABLE.
+https://lore.kernel.org/lkml/20240131175027.3287009-1-jeffxu@chromium.org/
+
+V7:
+- fix index.rst (Randy Dunlap)
+- fix arm build (Randy Dunlap)
+- return EPERM for blocked operations (Theo de Raadt)
+https://lore.kernel.org/linux-mm/20240122152905.2220849-2-jeffxu@chromium.org/T/
+
+V6:
+- Drop RFC from subject, Given Linus's general approval.
+- Adjust syscall number for mseal (main Jan.11/2024) 
+- Code style fix (Matthew Wilcox)
+- selftest: use ksft macros (Muhammad Usama Anjum)
+- Document fix. (Randy Dunlap)
+https://lore.kernel.org/all/20240111234142.2944934-1-jeffxu@chromium.org/
+
+V5:
+- fix build issue in mseal-Wire-up-mseal-syscall
+  (Suggested by Linus Torvalds, and Greg KH)
+- updates on selftest.
+https://lore.kernel.org/lkml/20240109154547.1839886-1-jeffxu@chromium.org/#r
+
+V4:
+(Suggested by Linus Torvalds)
+- new signature: mseal(start,len,flags)
+- 32 bit is not supported. vm_seal is removed, use vm_flags instead.
+- single bit in vm_flags for sealed state.
+- CONFIG_MSEAL kernel config is removed.
+- single bit of PROT_SEAL in the "Prot" field of mmap().
+Other changes:
+- update selftest (Suggested by Muhammad Usama Anjum)
+- update documentation.
+https://lore.kernel.org/all/20240104185138.169307-1-jeffxu@chromium.org/
+
+V3:
+- Abandon per-syscall approach, (Suggested by Linus Torvalds).
+- Organize sealing types around their functionality, such as
+  MM_SEAL_BASE, MM_SEAL_PROT_PKEY.
+- Extend the scope of sealing from calls originated in userspace to
+  both kernel and userspace. (Suggested by Linus Torvalds)
+- Add seal type support in mmap(). (Suggested by Pedro Falcato)
+- Add a new sealing type: MM_SEAL_DISCARD_RO_ANON to prevent
+  destructive operations of madvise. (Suggested by Jann Horn and
+  Stephen Röttger)
+- Make sealed VMAs mergeable. (Suggested by Jann Horn)
+- Add MAP_SEALABLE to mmap()
+- Add documentation - mseal.rst
+https://lore.kernel.org/linux-mm/20231212231706.2680890-2-jeffxu@chromium.org/
+
+v2:
+Use _BITUL to define MM_SEAL_XX type.
+Use unsigned long for seal type in sys_mseal() and other functions.
+Remove internal VM_SEAL_XX type and convert_user_seal_type().
+Remove MM_ACTION_XX type.
+Remove caller_origin(ON_BEHALF_OF_XX) and replace with sealing bitmask.
+Add more comments in code.
+Add a detailed commit message.
+https://lore.kernel.org/lkml/20231017090815.1067790-1-jeffxu@chromium.org/
+
+v1:
+https://lore.kernel.org/lkml/20231016143828.647848-1-jeffxu@chromium.org/
+
+----------------------------------------------------------------
+[1] https://kernelnewbies.org/Linux_2_6_8
+[2] https://v8.dev/blog/control-flow-integrity
+[3] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
+[4] https://man.openbsd.org/mimmutable.2
+[5] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvxQMyXgeaRHo/edit#heading=h.bvaojj9fu6hc
+[6] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gmail.com/
+[7] https://lore.kernel.org/lkml/20230515130553.2311248-1-jeffxu@chromium.org/
+[8] https://github.com/peaktocreek/mmperf
+
+
+Jeff Xu (5):
+  mseal: Wire up mseal syscall
+  mseal: add mseal syscall
+  selftest mm/mseal memory sealing
+  mseal:add documentation
+  selftest mm/mseal read-only elf memory segment
+
+ Documentation/userspace-api/index.rst       |    1 +
+ Documentation/userspace-api/mseal.rst       |  199 ++
+ arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
+ arch/arm/tools/syscall.tbl                  |    1 +
+ arch/arm64/include/asm/unistd.h             |    2 +-
+ arch/arm64/include/asm/unistd32.h           |    2 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |    1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |    1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |    1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |    1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |    1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
+ include/linux/syscalls.h                    |    1 +
+ include/uapi/asm-generic/unistd.h           |    5 +-
+ kernel/sys_ni.c                             |    1 +
+ mm/Makefile                                 |    4 +
+ mm/internal.h                               |   37 +
+ mm/madvise.c                                |   12 +
+ mm/mmap.c                                   |   31 +-
+ mm/mprotect.c                               |   10 +
+ mm/mremap.c                                 |   31 +
+ mm/mseal.c                                  |  307 ++++
+ tools/testing/selftests/mm/.gitignore       |    2 +
+ tools/testing/selftests/mm/Makefile         |    2 +
+ tools/testing/selftests/mm/mseal_test.c     | 1836 +++++++++++++++++++
+ tools/testing/selftests/mm/seal_elf.c       |  183 ++
+ 33 files changed, 2678 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/userspace-api/mseal.rst
+ create mode 100644 mm/mseal.c
+ create mode 100644 tools/testing/selftests/mm/mseal_test.c
+ create mode 100644 tools/testing/selftests/mm/seal_elf.c
+
+-- 
+2.43.0.687.g38aa6559b0-goog
+
