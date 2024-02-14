@@ -1,173 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B521F12B6C
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 09:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1003112B61;
+	Wed, 14 Feb 2024 09:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707901694; cv=none; b=pB/FgOBL/a1/+Q3eEuxnY10vDRUJ3U0FN3zcHbNFU+4LTYSNi0x/XCAdrilm4f7rGtM6NyWnxcBvBMsCgk0WFRqATnHtio6U5p6vZUvsjQX0eKofkaVcfG/cS/N5h1WqXX1rqO+MLA5K9GrU7npapNfCpA15F6uPoVhR5JSvibY=
+	t=1707901948; cv=none; b=T6rRHTl0oP/dmVHVnabVBd0Ybp6ucpdeMnVFyyCIaP0TE8XW4y33qgu2aC4Oi8Z13Hze+S25d35iClfQY4uYsP4ZGCru6YuQ8ec4Yu9MKgZQ+/JHbSxFlUCrU+semPHD/Z+Ym3H8yihEEijlAibnqd2AM7XvMo8M3sSd6eaM6l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707901694; c=relaxed/simple;
-	bh=kq/xmzAzKkUX78zjj0NkaRIDOtPMjRiEEzYBBwwezNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z8u0kMjZr895+W3Iq6rsfsU++YT/xeq9VaR6Mh6jjBqe3YKHq+JJQaQZcKS2jksiEwWiwDBZItZZklxJz/4z71Ot4ekMlQv86L7sHzgX143t9aKtRO0CzlunUpU/vl0tvl9k1DdQKo+ja4myyXvne+IyTQrC9qo/lxYxyuSP7I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X6POMqxi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707901948; c=relaxed/simple;
+	bh=F9YHKt7vlCOx2x3TIANU6dgGdN4C9EWaFM6RKZfh7ws=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A6mqVaRhB5MBOcsIFXXr7TmaveejPJAR1aadrLc60gKloQrQzXBwB7Ewbls6YtlLyCgCiIdx8CRjHR3C8CHnKPTvIYQVpLuQPOOzH4TOA5iRai/Cb6VfUzPlVPClFU6rrtvlsAJKl3lH+YP5Z6jFedoTCkUM31mzvkiTWm3m1E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4lhTf+M; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X6POMqxi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707901691;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=frqZnAYmgYrPXNleQrtqcCNsHybPmVHtjDk3LAxHiiw=;
-	b=X6POMqxivWu4acX1vwTAnj2LH7AGV9ULZiJZwmpA0MME/W9ugoeCb5wRzya0A7Ye4WZ4S4
-	oGNqe+X03Lp8pJAQq2LaS8um+UPr8Pu54KPmiSmp6RwWM94zVuleYZA3dsV10ULxwmp8c9
-	sHiH6KUpiK5/mlGLy5XXsheEfYgN8C0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-82-kuMuO2gqPHyQs9PaL7UNKQ-1; Wed, 14 Feb 2024 04:08:05 -0500
-X-MC-Unique: kuMuO2gqPHyQs9PaL7UNKQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A10B185A785;
-	Wed, 14 Feb 2024 09:08:04 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.0])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 7BF6C492BC6;
-	Wed, 14 Feb 2024 09:07:59 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 14 Feb 2024 10:06:46 +0100 (CET)
-Date: Wed, 14 Feb 2024 10:06:41 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: coverity-bot <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peng Zhang <zhangpeng.00@bytedance.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4lhTf+M"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40fd2f7ef55so2934845e9.0;
+        Wed, 14 Feb 2024 01:12:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707901945; x=1708506745; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I08sVNnQTI0Ia1/oQu2yuFjR+ZMqJnMvnSDXwosq+50=;
+        b=b4lhTf+Mcf31xNYVW4LqvE8B9hpme7qVQD6dh+nkOdJz/gChP6CIJPrA0ehSmY3Xnx
+         GLcxiqdr4o2qJFPXw16YcB86d9GOoUHutcLD7gXmcjP+txfvZB3dqtt09irCreGuxFee
+         i8KQyV3iV3MudpkxB4B9zgfxeteApJHaBw3npFdKdyP7ht2deiMprIrt+HOFyW86uq7/
+         sAfBCN2PFF9G0ugBzEeaGX8s+6afk5wVSI5XzB9RLaZLNlNTGd8hVW5c+CHoDFAend0P
+         e5sTldbtIU1e26xCN8STJ1yEWEe/xK8FvDXHnJJaKB+3bPCDtIupC3Zt54lXA8EFXOB0
+         ATwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707901945; x=1708506745;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I08sVNnQTI0Ia1/oQu2yuFjR+ZMqJnMvnSDXwosq+50=;
+        b=r4Jhd8eC5NRU0wsEJ/X9F28w8282tpszEMVOCY+MWQYjGSi1P7LlyLQlW5rtvo5Gz9
+         3vUZ6PVBkz0mUYvDxAH99FWNdahyTlNIVhjlYTdi3WGH23rm4f8pWgBJpcAmeqDyA4Fm
+         LK+bD0EGLNCjExtUwTNuXZijt9kX71ixf7TdyaGJtAWvX04W6AqoqIXkFH7MV2A6WEbS
+         A3EwqgJUXAmPV+Covya1UTH26xwuOW0Ye2OjV4rlog401wHWdiOX1cvxyGJB3B+zHXsC
+         46kmdpsvrMCWvp3O+ROgPM4BAMzw2aiPETVZjgsNIWXN0uiV33MCSBvf2B93kl774h1v
+         A5CA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwq1DOpSkAw9oYBqALsV8hAUYQ4lqgCj2nyUbdN0GScQAxvRVtYSeFduSI2BdQW9vQ4QLzp3RL+LowbmBa50yfKXkH0YBgCb1Fw8nddQKg6QetdvovXQdYZEEOMFU/Q4iHwoiQ5Gn6d/4M1JA1R+AHsR5kq7wGx7YpWGi4h1fbMeeYh20MRKDHR/o=
+X-Gm-Message-State: AOJu0YwsNJ7LSl3Dq1zrT6yMtJ14J6Hw2/F/PgnkruhWH6gNHMZj7J30
+	KdWto2r/Stp6wdGJqH6joqF/Q2Qrk6UH2UqMlgJVBxtNY4bPzBRk
+X-Google-Smtp-Source: AGHT+IGc2a/pariFjVnhGDzMwNj8lX/FQ1kuJbdji4LsUJU9eT6elEttg6ZSO7TQO+OTN+tXcOmZaA==
+X-Received: by 2002:a05:600c:358c:b0:411:e0cd:9916 with SMTP id p12-20020a05600c358c00b00411e0cd9916mr1178198wmq.0.1707901944923;
+        Wed, 14 Feb 2024 01:12:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUJo0+d5Hgk3kbtsdsvu6OvPT7Q9R80TRmclN2RqNc/5xCqSMHWcYYi3RONwWwETsUSPRP/ochVNhrCda++8M2A5Eja9eKDWIFdG4PrE3rDJfcoxSUfiAmtcps59X52MlRPCV0yLXnIQe4HXhJIfjX1OqDGUwRC34SbI/z2tYKHb+IYtx4DEd4I/8W2WT4asQs9/HJ8rK51JwmfqOKppG/Z1HrVpi+ElGBkBCFQaKqgJQcKeRjPUWR4tGNdacZl52PmzYSUzLVIUUpXTDCcTHC5sEHPnPRPydg/DdShqDCbBP+StfKJ56QLIHwwVnvyRSAWA7OxQoYb6Ly3PHwXoEUgRB8RQH42f4nSL9AbzL4UNY98n/A+KyTMJVwg7ZhA/KR12Q==
+Received: from xeon.. ([188.163.112.53])
+        by smtp.gmail.com with ESMTPSA id ay7-20020a5d6f07000000b0033cf053fa1esm738376wrb.106.2024.02.14.01.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 01:12:24 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kees Cook <keescook@chromium.org>,
+	Maxim Schwalm <maxim.schwalm@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
-Message-ID: <20240214090640.GB14017@redhat.com>
-References: <202402131559.B76A34B@keescook>
- <ZcwGua3a9Z8nJXVq@tycho.pizza>
- <20240214090332.GA14017@redhat.com>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v4 0/3] Tegra30: add support for LG tegra based phones
+Date: Wed, 14 Feb 2024 11:11:58 +0200
+Message-Id: <20240214091201.17636-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214090332.GA14017@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Transfer-Encoding: 8bit
 
-On 02/14, Oleg Nesterov wrote:
->
-> On 02/13, Tycho Andersen wrote:
-> >
-> > I think this is a false positive, we have:
->
-> Agreed,
->
-> > That said, a default case wouldn't hurt, and we should fix the first
-> > comment anyways, since now we have extensions.
-> >
-> > I'm happy to send a patch or maybe it's better for Christian to fix it
-> > in-tree.
->
-> I leave this to you and Christian, whatever you prefer. But perhaps we
-> can simplify these checks? Something like below.
+Bring up Tegra 3 based LG phones Optimus 4X HD and Optimus Vu based
+on LG X3 board.
 
-forgot about -EINVAL ...
+---
+Changes from v3:
+- set max77663 ldo0 to be always on since it is required by the SOC
+- adjusted bluetooth module comment
+- added enable gpio to dw9714 focuser
 
-Oleg.
+Changes from v2:
+- switched from _ to - in node names
 
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3876,10 +3876,6 @@ static struct pid *pidfd_to_pid(const struct file *file)
- 	return tgid_pidfd_to_pid(file);
- }
- 
--#define PIDFD_SEND_SIGNAL_FLAGS                            \
--	(PIDFD_SIGNAL_THREAD | PIDFD_SIGNAL_THREAD_GROUP | \
--	 PIDFD_SIGNAL_PROCESS_GROUP)
--
- /**
-  * sys_pidfd_send_signal - Signal a process through a pidfd
-  * @pidfd:  file descriptor of the process
-@@ -3903,13 +3899,23 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	kernel_siginfo_t kinfo;
- 	enum pid_type type;
- 
--	/* Enforce flags be set to 0 until we add an extension. */
--	if (flags & ~PIDFD_SEND_SIGNAL_FLAGS)
--		return -EINVAL;
--
--	/* Ensure that only a single signal scope determining flag is set. */
--	if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
-+	switch (flags) {
-+	case 0:
-+		/* but see the PIDFD_THREAD check below */
-+		type = PIDTYPE_TGID;
-+		break;
-+	case PIDFD_SIGNAL_THREAD:
-+		type = PIDTYPE_PID;
-+		break;
-+	case PIDFD_SIGNAL_THREAD_GROUP:
-+		type = PIDTYPE_TGID;
-+		break;
-+	case PIDFD_SIGNAL_PROCESS_GROUP:
-+		type = PIDTYPE_PGID;
-+		break;
-+	default:
- 		return -EINVAL;
-+	}
- 
- 	f = fdget(pidfd);
- 	if (!f.file)
-@@ -3926,24 +3932,8 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	if (!access_pidfd_pidns(pid))
- 		goto err;
- 
--	switch (flags) {
--	case 0:
--		/* Infer scope from the type of pidfd. */
--		if (f.file->f_flags & PIDFD_THREAD)
--			type = PIDTYPE_PID;
--		else
--			type = PIDTYPE_TGID;
--		break;
--	case PIDFD_SIGNAL_THREAD:
-+	if (!flags && (f.file->f_flags & PIDFD_THREAD))
- 		type = PIDTYPE_PID;
--		break;
--	case PIDFD_SIGNAL_THREAD_GROUP:
--		type = PIDTYPE_TGID;
--		break;
--	case PIDFD_SIGNAL_PROCESS_GROUP:
--		type = PIDTYPE_PGID;
--		break;
--	}
- 
- 	if (info) {
- 		ret = copy_siginfo_from_user_any(&kinfo, info);
+Changes from v1:
+- switched from prefix lge to lg
+---
+
+Maxim Schwalm (1):
+  dt-bindings: arm: tegra: Add LG Optimus Vu P895 and Optimus 4X P880
+
+Svyatoslav Ryhel (2):
+  ARM: tegra: Add device-tree for LG Optimus Vu (P895)
+  ARM: tegra: Add device-tree for LG Optimus 4X HD (P880)
+
+ .../devicetree/bindings/arm/tegra.yaml        |    8 +
+ arch/arm/boot/dts/nvidia/Makefile             |    2 +
+ arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts  |  489 +++++
+ arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts  |  496 +++++
+ arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi   | 1812 +++++++++++++++++
+ 5 files changed, 2807 insertions(+)
+ create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts
+ create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
+ create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi
+
+-- 
+2.40.1
 
