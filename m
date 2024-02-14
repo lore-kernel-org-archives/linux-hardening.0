@@ -1,65 +1,93 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wflow7-smtp.messagingengine.com (wflow7-smtp.messagingengine.com [64.147.123.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0822553BE
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 00:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D55A191;
+	Wed, 14 Feb 2024 00:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707869020; cv=none; b=F4dZoVKxTUjE2pK+igLaLgzmWoXK/lRuzlVG1Y6G24nbcuEgCYTchc/KQ7UibPlEVrAKO6CNP59t4CQsb/PfNX48OOfynu5Pxi7zxmg+bXYdQNyhJG1Yd8ngjobF7DmwAqxm4LMCAfTCHG92lPDX8N5wziNO2KvIsQGj3v/6aXY=
+	t=1707869892; cv=none; b=gLQemPv5Yn3JBSqvhFGHW15Uh57fDWTXGiRB0b3NcyDrVmYSYpdkzAoO3UmCRMCcdGVMrnqa4ADcDBM6q3x/nUkPS37YeZedsZdIEMA6SZuYw0g0PqaqA6BpaKEsscDisQYuDdMKfwuJacZw0Ai0Uln1n8l9OkufQ6UdbWca6ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707869020; c=relaxed/simple;
-	bh=8hhjJArGuTrb01w9KR7VfGFjTK+QM8XbPfc5O1BlDNQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GD+WyrznRIEYUmtTuR5csX9kCvvFfoY/B7vh41w8wv2oPcnimj/VL03qynl3YkoI1CIKWzrgIn9R7cnTWRayLDRzLk3YOa3nS3VgscKQU13yPuu73tWQpdEujSsZtVkQUqFo+r1QNChISO26tqKLm/ip0ixkFUOA2cjJGmZ0shc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=djCBOE2y; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1707869892; c=relaxed/simple;
+	bh=gEf+mkmtwOGXura5Rt/DicCA9CrNFAQFmPRLVIIUT6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMw8DpqyVOCtXz3SwU7ewK1VibLBuswjuJ1qNPf/HDQxjt5DVPTXXjqUKdBe3cCYnDpqjjTTKFmNaLS6QZlPoCWKkmTw0t0gW7sUF9hCjMXqavimeDVuso3lo0FszgJM5ovAptE3zTTqPjMgnp0WgljOTC0Fec1yc1LRWRczLr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=YBHSZrOm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=T9PAm2m+; arc=none smtp.client-ip=64.147.123.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="djCBOE2y"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d51ba18e1bso48192145ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 16:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707869018; x=1708473818; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S5KvIIxgHED0qUD38JtNJLqQBOi5mdYPuXDuUCUlxsI=;
-        b=djCBOE2yZfChkl4BK4rM9eukCOAbfAMTqZoHl8Ee2TTxj/2lv8BiQZtqIpkaEygHqS
-         fuodi6w+OO4qRosBH/JiHz4fAmiLc02TEsldoR7cJwZMTne7sjWrpbFd4ELFLeQH4yh9
-         aAlI/ZU+3DtVMnNc0HGkr+FcY0xLCHNmdbfmY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707869018; x=1708473818;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S5KvIIxgHED0qUD38JtNJLqQBOi5mdYPuXDuUCUlxsI=;
-        b=NsmDXCG8ZeaJN81oKCycGnSsHxjkaZ8J6ySM2xt6ZXTyihyL7663jOIN75qhr27p4K
-         4/b1J1CtrRRAIpliG/stv/ZhlcTMNRIJWNbNqxKHjFqrTjY05/g8K2ad7vuBfClwInYa
-         tKb+/q0L7pYM8Puw26+LLjpMQxJjT0fVNJ4JpWHqva8UYSW1eVCXrPvm1kp5L/EOXF4W
-         HCQkTsIbw9Kv0YXOSltKuFXDmOhhjENIY1mEyED3KnQZEmdw7SvQ2o9DM7okx7Rh1W9a
-         gUTKnqqRb7ulsRawPltiyqYsM4jJ0Cjeqr/kajHohyZJxirihKFS39oQurIGZYBiER1Q
-         a0VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYVKAGfAlyqnXqt/YDn64j5LwXlo0kOCup+VoZFZjXSg0gKchOjQbvoJcI7cJYVQP2ygH8VhKHseZAdFeYmPjzXBKuYm6/HJ59l50BMZON
-X-Gm-Message-State: AOJu0Yy1YscCjindMSB3J5VWRStlmkXBV50iYZgi8NUGGVDZWCVjyXrC
-	NDAbufkGU7G6KQ4u4iz5d59UKXT4naAd5881mljtM2XqX/Bx8pL0/Rd+MiJ1uw==
-X-Google-Smtp-Source: AGHT+IGvii1pz5Qtbml0HlPO4mlvNOppuYUgtORJaUe6oE/++e0grTswYB62DSIZ5RJkmOTD6odEsg==
-X-Received: by 2002:a17:903:2289:b0:1db:4c8d:9135 with SMTP id b9-20020a170903228900b001db4c8d9135mr1097758plh.8.1707869018377;
-        Tue, 13 Feb 2024 16:03:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUGNfPy6SBtkiwYFx7mxAkHk5NefCYdhE0oFJsirFxOlvy154DJNYLhH8iNKcCbgDLM8tQwSpkD4vDYiOTVn6kKmS9xgT9f2tGxoZr3nZDpeKGifhQ+wfiE/R3kDoMripDcGmBiOFr9HHNwjeTUpKLjOtfzV9mwPjJ1UAfpf/QajoJehd80y7lIIu2p4W3w7KbpbI1iw/wrtu6YYXbEpxPBJhsZfW8Eta/S49d+dvSHaWx1OEGHkju4c+nFG7cJnZ6j6zuuEG3ZEOmoJygJ8yiUCA8aV5NLcjiY3QmvnxKkRJv07FH0weKDu0CTyjmJfAYyuLN7fj3Q70x/tQaJCAsgFZYR6DzjRA==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kd12-20020a17090313cc00b001d706e373a9sm178448plb.292.2024.02.13.16.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 16:03:38 -0800 (PST)
-From: coverity-bot <keescook@chromium.org>
-X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date: Tue, 13 Feb 2024 16:03:37 -0800
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Darrick J. Wong" <djwong@kernel.org>,
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="YBHSZrOm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T9PAm2m+"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailflow.west.internal (Postfix) with ESMTP id 951832CC0489;
+	Tue, 13 Feb 2024 19:18:07 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 13 Feb 2024 19:18:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1707869887; x=1707877087; bh=+YWq+i5wkg
+	LUyMl08epmILv+GcdTX//gtb/mupi/CfA=; b=YBHSZrOmvx6+CcLrFo4GSsKEJp
+	gYRIU2YOOAfK/RfQBK+Kq1R4BpofODQ108VkVwJ/LJJ93gRD2uJN7K7t+/Msrtgk
+	0gKVBbqs1YHRKhCO/5q3KUR3c/kb5eZX1QusyUcT9Q6eWBks5zO2VdDmG0cSZusA
+	yBguFhzrl2F4aLgWWB9IsEA7A/nsQLuCs4zwXhK/hhGNiNBoDXEuayy2dGEGs0g+
+	BFMqutX51g3c/HM/9+/nsuZKMOhnKVF11/aWTc6I59D3/UpkCx9HBF/LtCCElZ9M
+	xnDLZoSq4HPd2x0rx6NWlrpOFZp7+CQmcyU7ilnTWmjLMQXmsRd4dnDweesg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707869887; x=1707877087; bh=+YWq+i5wkgLUyMl08epmILv+GcdT
+	X//gtb/mupi/CfA=; b=T9PAm2m+adehj020mz5sR7uTZydpYbiI9iATyNzY6cza
+	C7vQTlD+UX6kCZ6AThUb4IWG76SVdZc/R5/XZGvzwFEld85CYyym/z96V/ds/Qt9
+	0S64IbLTUlhGjP9O4W/N25OqXApifx3e+SbIaRvA73sBUO1S8vp4F/V27kety90B
+	ko27YzD8y3NW9IMxkdrnJ5RKTIG6HTzX588wURXkZmje57NPjGaDIDZHyY8eJnx6
+	jcXogG7sueI8rr/6CUJYd5ko9SFM8CIbTTQqVQFGaJ+UKokNZUYbHCWTOh+w6yzd
+	ascXflD6S2c6EpbY8XeolsZdm55i5R23HS5sBLY8/A==
+X-ME-Sender: <xms:vgbMZch1IAdnL0dgQHNZ6-1lqe3RRsMXCgzMcsww43kfPpdea__EjA>
+    <xme:vgbMZVDy-X5mJwkQKPc4_DOjT0Z-08ZIm45yIUYajYmm9c4urwxzNBAQWCwE2Yf-6
+    cBchoc0YUkZ3qg1eug>
+X-ME-Received: <xmr:vgbMZUFkQFkX2qI5cHyFpgMCo-L1K82uLQc_9scDZScAR77CV-JNLXxaDcs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeigddvudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigthhho
+    ucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrg
+    htthgvrhhnpeevkefhudeffeetgeeggfevvdeuueefueegueeghffffedulefggfetieel
+    iedutdenucffohhmrghinheptghovhgvrhhithihrdgtohhmnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthihtghhohesthihtghhohdrphhi
+    iiiirg
+X-ME-Proxy: <xmx:vgbMZdSBTOmiwn0hCO6_Hs260tMk7exTnodgg9C5_qJ4ZvRybYAxyA>
+    <xmx:vgbMZZyD69W23Gk2t7gGfQs_6TN4CXt92brQq9raeY766Ffmtw5fGw>
+    <xmx:vgbMZb7NO8pU7mdSO1WWghxEqzVcZeOwirIgHT7Ad0SOSQOjwJQ0gQ>
+    <xmx:vwbMZez0Lzk2Vsjvp2O799s8CEOzPlAvzX0sE9cEulMWVQu_gk7km4K-zzV3zzTx>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 13 Feb 2024 19:18:03 -0500 (EST)
+Date: Tue, 13 Feb 2024 17:18:01 -0700
+From: Tycho Andersen <tycho@tycho.pizza>
+To: coverity-bot <keescook@chromium.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Christian Brauner <brauner@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peng Zhang <zhangpeng.00@bytedance.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Brian Foster <bfoster@redhat.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
 	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: darray_vprintf(): API usage errors
-Message-ID: <202402131603.E953E2CF@keescook>
+Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
+Message-ID: <ZcwGua3a9Z8nJXVq@tycho.pizza>
+References: <202402131559.B76A34B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,48 +96,98 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <202402131559.B76A34B@keescook>
 
-Hello!
+On Tue, Feb 13, 2024 at 03:59:37PM -0800, coverity-bot wrote:
+> Hello!
+> 
+> This is an experimental semi-automated report about issues detected by
+> Coverity from a scan of next-20240213 as part of the linux-next scan project:
+> https://scan.coverity.com/projects/linux-next-weekly-scan
+> 
+> You're getting this email because you were associated with the identified
+> lines of code (noted below) that were touched by commits:
+> 
+>   Sat Feb 10 22:37:25 2024 +0100
+>     3f643cd23510 ("pidfd: allow to override signal scope in pidfd_send_signal()")
+>   Sat Feb 10 22:37:23 2024 +0100
+>     81b9d8ac0640 ("pidfd: change pidfd_send_signal() to respect PIDFD_THREAD")
+> 
+> Coverity reported the following:
+> 
+> *** CID 1583637:    (UNINIT)
+> kernel/signal.c:3963 in __do_sys_pidfd_send_signal()
+> 3957     		/* Only allow sending arbitrary signals to yourself. */
+> 3958     		ret = -EPERM;
+> 3959     		if ((task_pid(current) != pid) &&
+> 3960     		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+> 3961     			goto err;
+> 3962     	} else {
+> vvv     CID 1583637:    (UNINIT)
+> vvv     Using uninitialized value "type" when calling "prepare_kill_siginfo".
+> 3963     		prepare_kill_siginfo(sig, &kinfo, type);
+> 3964     	}
+> 3965
+> 3966     	if (type == PIDTYPE_PGID)
+> 3967     		ret = kill_pgrp_info(sig, &kinfo, pid);
+> 3968     	else
+> kernel/signal.c:3966 in __do_sys_pidfd_send_signal()
+> 3960     		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+> 3961     			goto err;
+> 3962     	} else {
+> 3963     		prepare_kill_siginfo(sig, &kinfo, type);
+> 3964     	}
+> 3965
+> vvv     CID 1583637:    (UNINIT)
+> vvv     Using uninitialized value "type".
+> 3966     	if (type == PIDTYPE_PGID)
+> 3967     		ret = kill_pgrp_info(sig, &kinfo, pid);
+> 3968     	else
+> 3969     		ret = kill_pid_info_type(sig, &kinfo, pid, type);
+> 3970     err:
+> 3971     	fdput(f);
+> 
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
 
-This is an experimental semi-automated report about issues detected by
-Coverity from a scan of next-20240213 as part of the linux-next scan project:
-https://scan.coverity.com/projects/linux-next-weekly-scan
+I think this is a false positive, we have:
 
-You're getting this email because you were associated with the identified
-lines of code (noted below) that were touched by commits:
+        /* Enforce flags be set to 0 until we add an extension. */
+        if (flags & ~PIDFD_SEND_SIGNAL_FLAGS)
+                return -EINVAL;
 
-  Mon Feb 12 13:55:16 2024 -0500
-    ead021e0fe5b ("thread_with_file: Lift from bcachefs")
+        /* Ensure that only a single signal scope determining flag is set. */
+        if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
+                return -EINVAL;
 
-Coverity reported the following:
+which should enforce that at most one bit is set, and there's a case
+statement for each of these bits in the later switch,
 
-*** CID 1583634:  API usage errors  (VARARGS)
-lib/thread_with_file.c:123 in darray_vprintf()
-117     		va_copy(args2, args);
-118
-119     		len = vsnprintf(out->data + out->nr, darray_room(*out), fmt, args2);
-120     	} while (len + 1 > darray_room(*out) && !darray_make_room_gfp(out, len + 1, gfp));
-121
-122     	out->nr += min(len, darray_room(*out));
-vvv     CID 1583634:  API usage errors  (VARARGS)
-vvv     "va_end" was not called for "args2".
-123     }
-124
-125     void stdio_redirect_vprintf(struct stdio_redirect *stdio, bool nonblocking,
-126     			    const char *fmt, va_list args)
-127     {
-128     	struct stdio_buf *buf = &stdio->output;
+        switch (flags) {
+        case 0:
+                /* Infer scope from the type of pidfd. */
+                if (f.file->f_flags & PIDFD_THREAD)
+                        type = PIDTYPE_PID;
+                else
+                        type = PIDTYPE_TGID;
+                break;
+        case PIDFD_SIGNAL_THREAD:
+                type = PIDTYPE_PID;
+                break;
+        case PIDFD_SIGNAL_THREAD_GROUP:
+                type = PIDTYPE_TGID;
+                break;
+        case PIDFD_SIGNAL_PROCESS_GROUP:
+                type = PIDTYPE_PGID;
+                break;
+        }
 
-If this is a false positive, please let us know so we can mark it as
-such, or teach the Coverity rules to be smarter. If not, please make
-sure fixes get into linux-next. :) For patches fixing this, please
-include these lines (but double-check the "Fixes" first):
+That said, a default case wouldn't hurt, and we should fix the first
+comment anyways, since now we have extensions.
 
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1583634 ("API usage errors")
-Fixes: ead021e0fe5b ("thread_with_file: Lift from bcachefs")
+I'm happy to send a patch or maybe it's better for Christian to fix it
+in-tree.
 
-Thanks for your attention!
-
--- 
-Coverity-bot
+Tycho
