@@ -1,67 +1,77 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F17986AC5
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 19:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB0913B78C
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 19:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707937670; cv=none; b=UW/2sDJzvQ3TRdVziP17qUgtC/IqmI19DACB3iONOQiUIM6gcbpdiQutroNJOVuNw75Vl3AWesMDpvNj/wetAMU7OTBJp9wVZW8tHGwUPP7AwnaJu4854AWi7E4wU4lwzOScMZA61WQT2sTTeimA030PJrTTI3mlnWKPTznzF/s=
+	t=1707938376; cv=none; b=I7ER0YVHT/aayZK4EgnyZmDj/HBCkmYpcUzGpJVGRRf7Ha/KPq13QKfY6rcvrXQ7gduFG62eeM5i8BBgCbt2VIK/pOmiDsg0pd5Baw+FQucxbjdKhh6MARvrTyROdPf3kcY+fXwY1JxsRcSIEBhxH9znAd/4wSWpYz7DBSkxlng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707937670; c=relaxed/simple;
-	bh=2SKYVcaHK9Pi50JJ9qkGcbOdbkWBf+DMZ9eNF7pBTr0=;
+	s=arc-20240116; t=1707938376; c=relaxed/simple;
+	bh=WddP6Rm3FHbSkDJ/3e61+m5VRjT87hVk4bJfICjjttk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozu+B6AUIYZxQjMQVxWBCdo7JOu1M5h6gvtpAfsI9l7CNJyfpCQhsB9DR5OR0JtJ4UVtUG+wlRBZORzrZ0iTJyvqqDGFEWZStbfkTJ5muJpHdHlIqWKy5DDxW8ZHrpQDTeMmljQsbrWDXY72DQiinK7R/lDwzBV8u1syNzCGZ+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NiWZvYUE; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8DxhMOGdVNkWpxhRqisElHnANmpdVBE8ZhktxSwtMB8CP6ToVmFwxMSQh3SHaRjVjZvdxT7BfWCLtDmTQXAnXgpFsjPiMFkLZEkWPpnn0M9waEV0OyAf9v9BkKFWy+8/5xKRD8LMzGnEdJ8qXm1w1VkXKld4VFgtrtynMcHkyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dznLxN1C; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NiWZvYUE"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1db559a5e1fso543275ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 11:07:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707937668; x=1708542468; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/B1Y9HL3y5nrnbC6GpGjHmIUmKtamyRLKuJReGlvf54=;
-        b=NiWZvYUE3z2L6qo6ulQkwYD05x/54OS9SxjLnPozFBxA9o/g3FjbcNx66k+VRU6TMa
-         gLDF88+CuAJw3R65X6MmOPL5QqntUnG/toIpo3nCWvcuRx+rdu7yxER0/XqpZP5t8kzH
-         UirZlfFd7ycebpNl/rgTMyMEKmPqVHB2pp0Wk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707937668; x=1708542468;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/B1Y9HL3y5nrnbC6GpGjHmIUmKtamyRLKuJReGlvf54=;
-        b=hMjUs+6uwx86H3zmNFNAHGyYummFEdAPZotpCMvbXewbovbE+J2YG39JwqrOtChea+
-         EVJGa6jV5w+HxeC7XkefvddEWISMZRJo/oc1Aui2IuK4vrgyFuITeZfePBIV3BQdssOD
-         /W9HK5c3QJWcEcApA2EHv36arQhO0TY8hnkIPHu3m88ueRFeL+oBUnhdA3xysrOjOhrs
-         LJj8l6Hn9dnewDOSK3n2BviFJpdYuGvUYp+ShgTgGlxW3SrT3ODHIhM+3kRAOGUwdosK
-         44imzOkjNH6YMAvyn6tf6JcDdGlPXFRPq/BLL5FKsioFc/ADvl3ekDMKBaXL26HOCpOR
-         anMA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4M8+dZb+N555NB6HNDmfPESwCpQZuQdfSLJEAYpbEjJrfw7AiLLYq5LEHEjcFNMUA21YgWSZ5fKVMzeglhZPQpTPfPShLHiydJhmjZ0a7
-X-Gm-Message-State: AOJu0YzKNqf9vtNBPAKoTJ2hZJaooPiLiaCdfHFTIZZSZRbLxvIYRTKA
-	JtYk9qiX+vQXTYMV7M/4av7gMahaRcgyhc41dR5FLNUlCQ45IwPQ/wojLYK33w==
-X-Google-Smtp-Source: AGHT+IE8J8rrcTmub8stcrpUL5qz49QRIuK5nOh7loZERo0Uce3M003Ihxxjk2PSMtmIQRZnRBEpmQ==
-X-Received: by 2002:a17:903:2794:b0:1d9:196:4dae with SMTP id jw20-20020a170903279400b001d901964daemr3459122plb.8.1707937668559;
-        Wed, 14 Feb 2024 11:07:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU6XeoXCMYLkV1S+bV4hT7/ynDniMYLBxhic8VAh5dDN854Fd5Bb/AOhvwFcEU/nDqc1Qtk3Ky5WnzGk9t7Ru4P5VoUM16Mmp4IjL3yN6L2jl73okXLfSYUWzY9vW04sU0aX9AHWxSylbmPAg==
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a13-20020a170902b58d00b001da108ddad1sm4013071pls.252.2024.02.14.11.07.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 11:07:48 -0800 (PST)
-Date: Wed, 14 Feb 2024 11:07:47 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jani Nikula <jani.nikula@intel.com>,
-	Michal Wajdeczko <michal.wajdeczko@intel.com>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib/string_choices: Add str_plural() helper
-Message-ID: <202402141104.642F85D@keescook>
-References: <20240214165015.1656-1-michal.wajdeczko@intel.com>
- <Zc0BkKXZfIkwnvRs@smile.fi.intel.com>
- <Zc0Bz5hUHWgHu9UQ@smile.fi.intel.com>
- <87y1bm6gpu.fsf@intel.com>
- <Zc0LQ8YAWBwNptBF@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dznLxN1C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707938373;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WddP6Rm3FHbSkDJ/3e61+m5VRjT87hVk4bJfICjjttk=;
+	b=dznLxN1CiS579x9VldN1goelaCYADn6jagel6vEthqSpm8AXWWkZryN+UBMirID+BiK2Ev
+	Sy2ohbAvLW/WOBBMeRuS/5wQ46MadZ3aG4hBzraOisl9LZbDOLx5lQwQl07jdqt4mSIi9S
+	eLAI4ZjB/nIEjH+q2tGj3UWKfB1D6bY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-110-TE08d_v-OtOUaL93Si5HLQ-1; Wed, 14 Feb 2024 14:19:25 -0500
+X-MC-Unique: TE08d_v-OtOUaL93Si5HLQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E1B3C828CE3;
+	Wed, 14 Feb 2024 19:19:23 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.126])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 544DA8CED;
+	Wed, 14 Feb 2024 19:19:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 14 Feb 2024 20:18:07 +0100 (CET)
+Date: Wed, 14 Feb 2024 20:18:01 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: coverity-bot <keescook@chromium.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peng Zhang <zhangpeng.00@bytedance.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
+Message-ID: <20240214191801.GA27799@redhat.com>
+References: <202402131559.B76A34B@keescook>
+ <ZcwGua3a9Z8nJXVq@tycho.pizza>
+ <20240214090332.GA14017@redhat.com>
+ <20240214090640.GB14017@redhat.com>
+ <ZczLyDCN+zG6imTd@tycho.pizza>
+ <20240214175555.GC16265@redhat.com>
+ <Zc0Ca5te+QFBZ1U6@tycho.pizza>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,45 +80,26 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zc0LQ8YAWBwNptBF@smile.fi.intel.com>
+In-Reply-To: <Zc0Ca5te+QFBZ1U6@tycho.pizza>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Wed, Feb 14, 2024 at 08:49:39PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 14, 2024 at 08:30:53PM +0200, Jani Nikula wrote:
-> > On Wed, 14 Feb 2024, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Wed, Feb 14, 2024 at 08:08:16PM +0200, Andy Shevchenko wrote:
-> > >> On Wed, Feb 14, 2024 at 05:50:15PM +0100, Michal Wajdeczko wrote:
-> > >> > Add str_plural() helper to replace existing open implementations
-> > >> > used by many drivers and help improve future user facing messages.
-> > >> 
-> > >> Any user of this, please?
-> > 
-> > git grep "\"\" *: *\"s\""
-> 
-> You know what I meant.
-> Second patch in the series that shows usefulness of the first patch.
+On 02/14, Tycho Andersen wrote:
+>
+> On Wed, Feb 14, 2024 at 06:55:55PM +0100, Oleg Nesterov wrote:
+> >
+> > We want to check the "flags" argument at the start, we do not want to
+> > delay the "case 0:" check until we have f.file (so that we can check
+> > f.file->f_flags).
+>
+> Fair point. I was thinking delaying it would make it simpler, but then
+> you have to free the file and it's less fast in the EINVAL case.
 
-Or a Coccinelle script that could do some rewrites? But, yes, if you can
-include some examples, that would be nice. I think the helper is fine to
-add.
+plus we do not want to return, say, -EBADF if the "flags" argument is wrong.
 
-> 
-> ...
-> 
-> > >> > Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
-> > >> 
-> > >> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >> > Cc: Jani Nikula <jani.nikula@intel.com>
-> > >> 
-> > >> Move these Cc to the after '---' line.
-> > 
-> > Why?
-> 
-> At bare minimum to reduce noise in the commit message.
-> If going further, to be environment friendly (no jokes).
+> I also don't have a strong opinion here.
 
-I learned the above-the-line CC habit from akpm. But in looking through
-recent commit history, this does appear to be the exception now. I'll
-need to adjust my own workflow for this too...
+Neither me.
 
--- 
-Kees Cook
+Oleg.
+
