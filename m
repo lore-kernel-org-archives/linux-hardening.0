@@ -1,195 +1,116 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEDDD1A58B;
-	Wed, 14 Feb 2024 11:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653E055E54;
+	Wed, 14 Feb 2024 12:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707911923; cv=none; b=WUncYCfHg2R04binjPXiGoHUmZ4ISRrBrfXPvXoBUktKW6xZF8TDNAMzZ9toAyWSxG5n5DtWU9n/3TFFKWideH1yrwb9dnLZA7N/pN5QR3glOOmpeWYK6MVGBRR1eco2kwu3LGE8A2m6nFz/EFHOpqHg8jcVha5uhghblVQ7Gd0=
+	t=1707915161; cv=none; b=dWsFM+Rg4AIkHZ2cPeaRPhJz22+v6Q5Xfr3OPjfOOXc+FivKR2CoDN/0r5RIVEJGhx2lx/nCrRQuRYlea/5XPlVtC2B8xoCeYj+Qh1WrQp7qCN8bbzHfihhQ8KQR65Qb86pJv+McpvqpMNWPFJAxv6/O6PW7Y7NDpuBDINWh2Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707911923; c=relaxed/simple;
-	bh=VBdo7FmBsvmExzN2EusyOJyNOd8g7kFQT7CX30Alb/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKkrgiJ/XLP47KB5jVx1yrdw09EQ8lsceLdT6GsR/YQm88trTOS3UdkKMznzAvPngICcrdAIGGSqlAJyqvoS0zhO8b6AZrwxWh+q5HlwKle7GjwhaUlLDDt9UIn5pZe0uDnMHFZsPOMgcx74qelMbVS1uTxCL3hyyJ1fbXknYho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CF7A1FB;
-	Wed, 14 Feb 2024 03:59:21 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.64.145])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C1C33F5A1;
-	Wed, 14 Feb 2024 03:58:37 -0800 (PST)
-Date: Wed, 14 Feb 2024 11:58:35 +0000
-From: Mark Rutland <mark.rutland@arm.com>
+	s=arc-20240116; t=1707915161; c=relaxed/simple;
+	bh=HsLH1H+02TO+1p+dWEXVex14/w0w08tWbI3lYHJX+Zk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IHFP0PQjMvPfbJMbkuuCAxaQAXlP510HKUqTcAwDUmmeN29WexwDL3lv20zkXs6tpRl3R3haxbd7nsx/fS7NHhJFnTw4DSyMedmsQwS4ij/SuoNJjFWfRFqTSOSY3+76zE4QSZ0E63AC9WOsTxosUrReyWHelnrnx9m2VW+INCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1raEkZ-000000028xY-1IjO; Wed, 14 Feb 2024 13:52:31 +0100
+Received: from dynamic-077-191-118-037.77.191.pool.telefonica.de ([77.191.118.37] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1raEkZ-00000003pPq-0L9d; Wed, 14 Feb 2024 13:52:31 +0100
+Message-ID: <93572a771cb3a0b36a9213f18dd43c034c84cf6d.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 To: Kees Cook <keescook@chromium.org>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	Marco Elver <elver@google.com>, Eric Biggers <ebiggers@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] overflow: Introduce wrapping_add(),
- wrapping_sub(), and wrapping_mul()
-Message-ID: <Zcyq6_Eh6excL4RB@FVFF77S0Q05N>
-References: <20240213220844.it.345-kees@kernel.org>
- <20240213221100.3556356-2-keescook@chromium.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, kernel test robot
+	 <lkp@intel.com>, Rich Felker <dalias@libc.org>, Masahiro Yamada
+	 <masahiroy@kernel.org>, Nicolas Schier <n.schier@avm.de>, 
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Wed, 14 Feb 2024 13:52:30 +0100
+In-Reply-To: <178e0bebb1a85efebce1f504122ee190c068e0c9.camel@physik.fu-berlin.de>
+References: <20240130232717.work.088-kees@kernel.org>
+	 <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
+	 <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
+	 <202402020228.BBEF7DAC@keescook>
+	 <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
+	 <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
+	 <202402121025.B0B6E47@keescook>
+	 <178e0bebb1a85efebce1f504122ee190c068e0c9.camel@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240213221100.3556356-2-keescook@chromium.org>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Tue, Feb 13, 2024 at 02:10:58PM -0800, Kees Cook wrote:
-> Provide helpers that will perform wrapping addition, subtraction, or
-> multiplication without tripping the arithmetic wrap-around sanitizers. The
-> first argument is the type under which the wrap-around should happen
-> with. In other words, these two calls will get very different results:
-> 
-> 	wrapping_mul(int, 50, 50) == 2500
-> 	wrapping_mul(u8,  50, 50) ==  196
-> 
-> Add to the selftests to validate behavior and lack of side-effects.
-> 
-> Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Eric Biggers <ebiggers@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-hardening@vger.kernel.org
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Marco Elver <elver@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hi Kees,
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+On Mon, 2024-02-12 at 19:45 +0100, John Paul Adrian Glaubitz wrote:
+> On Mon, 2024-02-12 at 10:26 -0800, Kees Cook wrote:
+> > > I just wanted to try reproduce the problem again with the reproducer =
+in [1] as well
+> > > as with gcc-13.2.0, but your branch devel/overflow/ubsan-only no long=
+er exists.
+> > >=20
+> > > Can you tell me where to find the patches now?
+> >=20
+> > Sure, they're in -next, but for an -rc2 based tree, see:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=
+=3Dfor-next/kspp
+>=20
+> OK, thanks. I will give it a try with gcc-13.
 
-Mark.
+I'm still unable to reproduce the error that the kernel test robot reported=
+.
 
-> ---
->  include/linux/overflow.h | 48 ++++++++++++++++++++++++++++++++++++++++
->  lib/overflow_kunit.c     | 24 ++++++++++++++++----
->  2 files changed, 68 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 4e741ebb8005..849a49fb496e 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -64,6 +64,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  #define check_add_overflow(a, b, d)	\
->  	__must_check_overflow(__builtin_add_overflow(a, b, d))
->  
-> +/**
-> + * wrapping_add() - Intentionally perform a wrapping addition
-> + * @type: type for result of calculation
-> + * @a: first addend
-> + * @b: second addend
-> + *
-> + * Return the potentially wrapped-around addition without
-> + * tripping any wrap-around sanitizers that may be enabled.
-> + */
-> +#define wrapping_add(type, a, b)				\
-> +	({							\
-> +		type __val;					\
-> +		__builtin_add_overflow(a, b, &__val);		\
-> +		__val;						\
-> +	})
-> +
->  /**
->   * check_sub_overflow() - Calculate subtraction with overflow checking
->   * @a: minuend; value to subtract from
-> @@ -77,6 +93,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  #define check_sub_overflow(a, b, d)	\
->  	__must_check_overflow(__builtin_sub_overflow(a, b, d))
->  
-> +/**
-> + * wrapping_sub() - Intentionally perform a wrapping subtraction
-> + * @type: type for result of calculation
-> + * @a: minuend; value to subtract from
-> + * @b: subtrahend; value to subtract from @a
-> + *
-> + * Return the potentially wrapped-around subtraction without
-> + * tripping any wrap-around sanitizers that may be enabled.
-> + */
-> +#define wrapping_sub(type, a, b)				\
-> +	({							\
-> +		type __val;					\
-> +		__builtin_sub_overflow(a, b, &__val);		\
-> +		__val;						\
-> +	})
-> +
->  /**
->   * check_mul_overflow() - Calculate multiplication with overflow checking
->   * @a: first factor
-> @@ -90,6 +122,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  #define check_mul_overflow(a, b, d)	\
->  	__must_check_overflow(__builtin_mul_overflow(a, b, d))
->  
-> +/**
-> + * wrapping_mul() - Intentionally perform a wrapping multiplication
-> + * @type: type for result of calculation
-> + * @a: first factor
-> + * @b: second factor
-> + *
-> + * Return the potentially wrapped-around multiplication without
-> + * tripping any wrap-around sanitizers that may be enabled.
-> + */
-> +#define wrapping_mul(type, a, b)				\
-> +	({							\
-> +		type __val;					\
-> +		__builtin_mul_overflow(a, b, &__val);		\
-> +		__val;						\
-> +	})
-> +
->  /**
->   * check_shl_overflow() - Calculate a left-shifted value and check overflow
->   * @a: Value to be shifted
-> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-> index c527f6b75789..d3fdb906d3fe 100644
-> --- a/lib/overflow_kunit.c
-> +++ b/lib/overflow_kunit.c
-> @@ -258,20 +258,36 @@ DEFINE_TEST_ARRAY(s64) = {
->  									\
->  	_of = check_ ## op ## _overflow(a, b, &_r);			\
->  	KUNIT_EXPECT_EQ_MSG(test, _of, of,				\
-> -		"expected "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
-> +		"expected check "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
->  		a, b, of ? "" : " not", #t);				\
->  	KUNIT_EXPECT_EQ_MSG(test, _r, r,				\
-> -		"expected "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
-> +		"expected check "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
->  		a, b, r, _r, #t);					\
->  	/* Check for internal macro side-effects. */			\
->  	_of = check_ ## op ## _overflow(_a_orig++, _b_orig++, &_r);	\
-> -	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump, "Unexpected " #op " macro side-effect!\n"); \
-> -	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump, "Unexpected " #op " macro side-effect!\n"); \
-> +	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump,			\
-> +		"Unexpected check " #op " macro side-effect!\n");	\
-> +	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump,			\
-> +		"Unexpected check " #op " macro side-effect!\n");	\
-> +									\
-> +	_r = wrapping_ ## op(t, a, b);					\
-> +	KUNIT_EXPECT_TRUE_MSG(test, _r == r,				\
-> +		"expected wrap "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
-> +		a, b, r, _r, #t);					\
-> +	/* Check for internal macro side-effects. */			\
-> +	_a_orig = a;							\
-> +	_b_orig = b;							\
-> +	_r = wrapping_ ## op(t, _a_orig++, _b_orig++);			\
-> +	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump,			\
-> +		"Unexpected wrap " #op " macro side-effect!\n");	\
-> +	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump,			\
-> +		"Unexpected wrap " #op " macro side-effect!\n");	\
->  } while (0)
->  
->  #define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
->  static void do_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
->  {									\
-> +	/* check_{add,sub,mul}_overflow() and wrapping_{add,sub,mul} */	\
->  	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);	\
->  	check_one_op(t, fmt, add, "+", p->b, p->a, p->sum, p->s_of);	\
->  	check_one_op(t, fmt, sub, "-", p->a, p->b, p->diff, p->d_of);	\
-> -- 
-> 2.34.1
-> 
+I'm using gcc-13:
+
+glaubitz@node54:/data/home/glaubitz/linux-kees> sh4-linux-gcc
+sh4-linux-gcc: fatal error: no input files
+compilation terminated.
+glaubitz@node54:/data/home/glaubitz/linux-kees> sh4-linux-gcc --version
+sh4-linux-gcc (GCC) 13.2.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+glaubitz@node54:/data/home/glaubitz/linux-kees>
+
+I checked out your tree and the for-next/kspp branch.
+
+Then fetched the config that triggered the bug like this:
+
+$ wget https://download.01.org/0day-ci/archive/20240131/202401310416.s8HLiL=
+nC-lkp@intel.com/config -O .config
+
+Building the kernel with "make -j32 uImage" works fine. No errors except fo=
+r
+some unreleated warnings that still need to be fixed.
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
