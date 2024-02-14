@@ -1,85 +1,65 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C69B125C2
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 00:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0822553BE
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 00:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707868827; cv=none; b=TgoBiyJl9MgGMNSvOIE4u14KQr5sY3IAmgSguavO+4MIHVJ+8bPJ1a5cPr/89R2w5REdtxP2u3XlPPUnawvQWv3TBoKlAlqiwaYXkF7eaafwAEE15cBSB+WS64+OBwNVaD/daxd3WwqQAqqMb3E3E/eYjZignP+HYRdLSbjY3hg=
+	t=1707869020; cv=none; b=F4dZoVKxTUjE2pK+igLaLgzmWoXK/lRuzlVG1Y6G24nbcuEgCYTchc/KQ7UibPlEVrAKO6CNP59t4CQsb/PfNX48OOfynu5Pxi7zxmg+bXYdQNyhJG1Yd8ngjobF7DmwAqxm4LMCAfTCHG92lPDX8N5wziNO2KvIsQGj3v/6aXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707868827; c=relaxed/simple;
-	bh=tYu0rqPvKTdx4pnVuOKPIvquYhOnQYYcWPZ47Q6TdhE=;
+	s=arc-20240116; t=1707869020; c=relaxed/simple;
+	bh=8hhjJArGuTrb01w9KR7VfGFjTK+QM8XbPfc5O1BlDNQ=;
 	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CoKEsae+wDDV55dmMxTOMM/WzxsoYV/h1SY54wWH6czWFY6lX/38p0w/9OVOctCuM5Rsui/qcCAVaBLtkBZ616kB+zPT0v2gq2IhMt6861a50mF+35KjRgHSj8MpflprOYpPfCHfUSlTg+aSF96J83x9mZFcmZMUZUZ5/sueeU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g/IdfDh3; arc=none smtp.client-ip=209.85.214.172
+	 Content-Disposition; b=GD+WyrznRIEYUmtTuR5csX9kCvvFfoY/B7vh41w8wv2oPcnimj/VL03qynl3YkoI1CIKWzrgIn9R7cnTWRayLDRzLk3YOa3nS3VgscKQU13yPuu73tWQpdEujSsZtVkQUqFo+r1QNChISO26tqKLm/ip0ixkFUOA2cjJGmZ0shc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=djCBOE2y; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g/IdfDh3"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d918008b99so34784905ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 16:00:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="djCBOE2y"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d51ba18e1bso48192145ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Feb 2024 16:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707868824; x=1708473624; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707869018; x=1708473818; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YMBETSS65YtqnXuGPPIuISSAqLQJ5kfAKukBNt/idE8=;
-        b=g/IdfDh3nFeXG8CsElKPItCVf4m1wtyQYgNh9QQpbtTYjTCm37wJBTCjYIkFTRK661
-         +5ce6zWvG3EhqweBFILo8w6EIW4/PIvWfvM1ymJ1+bCDr6SKfXwYBSXooXAFesCrMYBV
-         alG4EBsTTnF1DiSrbwB2mi77u5jDgIR3cVmLg=
+        bh=S5KvIIxgHED0qUD38JtNJLqQBOi5mdYPuXDuUCUlxsI=;
+        b=djCBOE2yZfChkl4BK4rM9eukCOAbfAMTqZoHl8Ee2TTxj/2lv8BiQZtqIpkaEygHqS
+         fuodi6w+OO4qRosBH/JiHz4fAmiLc02TEsldoR7cJwZMTne7sjWrpbFd4ELFLeQH4yh9
+         aAlI/ZU+3DtVMnNc0HGkr+FcY0xLCHNmdbfmY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707868824; x=1708473624;
+        d=1e100.net; s=20230601; t=1707869018; x=1708473818;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YMBETSS65YtqnXuGPPIuISSAqLQJ5kfAKukBNt/idE8=;
-        b=HuJSJe8M2j6JJnpGii28j0rYif3OKmLgjsiVDIe/jibfS6cO+AWRrDubXWc3Og85QJ
-         NPg63ld3sgUjEtCdTuiBGA0bWPV8K3Wf47q5C5AX+cLMwNH27PaN1n6bhJkIdwxmYyrE
-         VYpDtczqKOGR8YJeynfG22hKzXUsLz3yzvldEjwCF+5nm/PE0zJ8Xvih9XFGw3dgbAWx
-         bA9ozt8Qts2/sZo62FtOcSPa4o9RkO8G8jesekdKYeQhY5PMFwRQiEyj/mrj7fZ+dxPA
-         D8HOFQixCrqMp0x0ZTBiSCzHHg0bn6aDwnaKaFTxgKoVnkzEL726TRzi26IA7mmZyVgP
-         Cysg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMQXkaniC2mnrVBoRswXTk+dHQgjWLJjlbOlhcHbZho7ojdRKNFr6jbhPmf0BtlB3O6nt4NA4ol+cO13BQJB9q9JaeEDdh1aV5UORpuIxI
-X-Gm-Message-State: AOJu0YzdY1ed41LyGjlA5nU9MOsSeJLOD9Dnvg7c5CyHFL8mulL9xFaA
-	id3NkA/olbnhGtWze/DIqYpYg+FDnZRFMaX0v8+GZSLYG4PXc80aXYez3sDHRw==
-X-Google-Smtp-Source: AGHT+IH9rsUe89jGMxEbzEa0N6vUYHDPRuvR/b9/k1IT9a00gMG0R2c9wJlulVF3FzsCot+gzaw1PA==
-X-Received: by 2002:a17:90a:f40c:b0:296:15ed:b220 with SMTP id ch12-20020a17090af40c00b0029615edb220mr832051pjb.45.1707868824140;
-        Tue, 13 Feb 2024 16:00:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXvqigQwCxsR1eRkChMkloewkaYy2M5PIy5Ni/XnHBQDAoKHR/aIWNhHUmSslt8uKRHk2RvI4FXgV3UeO0qZK5hqOibVcIauBOnaVV6bWqTt+6c8dkIprXNrI5L5VfYBFUHS69JyCg+nHpwWH2NA7USk6ZGA7BJYmKeBVNaUv6t7nbX6rD1Z408EwIrtCw4leiFoAOQQxPSKq96raZChBqacZ3+4FYorcIV+LyapGi48IgtKsvYmWtHxOooH1tU+9GuPo7DWxRObhQs2h/a8NPsVDG+8Ii56LWj61JxEfWg8Jpnp22Q5QXdxTZePUUSTJkUCjhZzswaHYKdG9wthJUgMDbiBypE28viY4HtoFLOasVUO9pQGnzZlTiocOiJc/j2G5FPsjyRYU/m/U+tLeylJhN8RRMOG1mblR4pXyrkPq8U4+QBJzK2xCgs4paq+UjHOlY6f8nCDaPTIYca6QGUU4oDY6Wxvl/ffuvXbNTLjgytPTUvb0LZI8DpX3qZ9VXoyFO2DA98Nd/FyAdnCsh9Wx4mk4ILJR0vc+h2OOqUOjdFTYgx1CTlgPMBCwL2wn02OHDgfzIBa4fgsHNuZ2cYDjFG1baEF2loFgOxwfI7AqA2M0tBhkyn56ZLLulIRLW9y2Yhe/oRExou8cAUYnr3X3fcva1E523zl+gb8uJN9PUnSoaBABRO4nU5Zub2E2rHh6pibQJRTd5zMWMDH/6Ng64ln4aFlKDp3UrwcNFtF+9YSPO3aiogzLGUboEk6CYsA2Qc6BtsMMWfB3lxYqpKqJTGb1frpJIrwJTMGNoHZ330172lV9akQVjbSxkHoEY9vEhupNRlyX1PhADYagw9Eug9eM1rAObW7gqFTdA9KWXKUA0JFFdMhd46aF3gGGOFbVnANrA1fRYLe3cigO4CcuNuISMz8MiDonjdbYtNfdfO9UmzV/30vOkiws/N/gTW7P
- 9ZxedQ9fPgpdcMoM9aUXZcpQijJVqwyZiu0ME7ezdhRn4k0vJV3sxJfd8YsRR/fEySJmzTASB18YtNpPAPC//yt7IQiwiKqBOckpWmQ0j4IQj5XbaBcWuhawwVFuZ4eLJmroLfpIackC8FxNUKY62wd6T0mgw4m9+N2ZG22Gfz
+        bh=S5KvIIxgHED0qUD38JtNJLqQBOi5mdYPuXDuUCUlxsI=;
+        b=NsmDXCG8ZeaJN81oKCycGnSsHxjkaZ8J6ySM2xt6ZXTyihyL7663jOIN75qhr27p4K
+         4/b1J1CtrRRAIpliG/stv/ZhlcTMNRIJWNbNqxKHjFqrTjY05/g8K2ad7vuBfClwInYa
+         tKb+/q0L7pYM8Puw26+LLjpMQxJjT0fVNJ4JpWHqva8UYSW1eVCXrPvm1kp5L/EOXF4W
+         HCQkTsIbw9Kv0YXOSltKuFXDmOhhjENIY1mEyED3KnQZEmdw7SvQ2o9DM7okx7Rh1W9a
+         gUTKnqqRb7ulsRawPltiyqYsM4jJ0Cjeqr/kajHohyZJxirihKFS39oQurIGZYBiER1Q
+         a0VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYVKAGfAlyqnXqt/YDn64j5LwXlo0kOCup+VoZFZjXSg0gKchOjQbvoJcI7cJYVQP2ygH8VhKHseZAdFeYmPjzXBKuYm6/HJ59l50BMZON
+X-Gm-Message-State: AOJu0Yy1YscCjindMSB3J5VWRStlmkXBV50iYZgi8NUGGVDZWCVjyXrC
+	NDAbufkGU7G6KQ4u4iz5d59UKXT4naAd5881mljtM2XqX/Bx8pL0/Rd+MiJ1uw==
+X-Google-Smtp-Source: AGHT+IGvii1pz5Qtbml0HlPO4mlvNOppuYUgtORJaUe6oE/++e0grTswYB62DSIZ5RJkmOTD6odEsg==
+X-Received: by 2002:a17:903:2289:b0:1db:4c8d:9135 with SMTP id b9-20020a170903228900b001db4c8d9135mr1097758plh.8.1707869018377;
+        Tue, 13 Feb 2024 16:03:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUGNfPy6SBtkiwYFx7mxAkHk5NefCYdhE0oFJsirFxOlvy154DJNYLhH8iNKcCbgDLM8tQwSpkD4vDYiOTVn6kKmS9xgT9f2tGxoZr3nZDpeKGifhQ+wfiE/R3kDoMripDcGmBiOFr9HHNwjeTUpKLjOtfzV9mwPjJ1UAfpf/QajoJehd80y7lIIu2p4W3w7KbpbI1iw/wrtu6YYXbEpxPBJhsZfW8Eta/S49d+dvSHaWx1OEGHkju4c+nFG7cJnZ6j6zuuEG3ZEOmoJygJ8yiUCA8aV5NLcjiY3QmvnxKkRJv07FH0weKDu0CTyjmJfAYyuLN7fj3Q70x/tQaJCAsgFZYR6DzjRA==
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mv21-20020a17090b199500b00298c373a820sm100292pjb.23.2024.02.13.16.00.23
+        by smtp.gmail.com with ESMTPSA id kd12-20020a17090313cc00b001d706e373a9sm178448plb.292.2024.02.13.16.03.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 16:00:23 -0800 (PST)
+        Tue, 13 Feb 2024 16:03:38 -0800 (PST)
 From: coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date: Tue, 13 Feb 2024 16:00:23 -0800
-To: Saleemkhan Jamadar <saleemkhan.jamadar@amd.com>
-Cc: Sun peng Li <sunpeng.li@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	amd-gfx@lists.freedesktop.org, "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Roman Li <Roman.Li@amd.com>,
-	Veerabadhran Gopalakrishnan <Veerabadhran.Gopalakrishnan@amd.com>,
-	Horatio Zhang <Hongkun.Zhang@amd.com>,
-	James Zhu <James.Zhu@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Yifan Zhang <yifan1.zhang@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Leo Liu <leo.liu@amd.com>,
-	Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-	Sonny Jiang <sonny.jiang@amd.com>, Lang Yu <Lang.Yu@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>, Li Ma <li.ma@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>, Morris Zhang <Shiwu.Zhang@amd.com>,
-	Tao Zhou <tao.zhou1@amd.com>, dri-devel@lists.freedesktop.org,
-	Shane Xiao <shane.xiao@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Ran Sun <sunran001@208suo.com>, Jane Jian <Jane.Jian@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Ivan Lipski <ivlipski@amd.com>, linux-kernel@vger.kernel.org,
-	Tom Chung <chiahsuan.chung@amd.com>,
+Date: Tue, 13 Feb 2024 16:03:37 -0800
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Brian Foster <bfoster@redhat.com>,
 	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
 	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: jpeg_v4_0_5_start(): Code maintainability issues
-Message-ID: <202402131600.FF35A56D27@keescook>
+Subject: Coverity: darray_vprintf(): API usage errors
+Message-ID: <202402131603.E953E2CF@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -98,27 +78,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Mon Feb 12 16:09:32 2024 -0500
-    0a119d53f74a ("drm/amdgpu/jpeg: add support for jpeg DPG mode")
+  Mon Feb 12 13:55:16 2024 -0500
+    ead021e0fe5b ("thread_with_file: Lift from bcachefs")
 
 Coverity reported the following:
 
-*** CID 1583635:  Code maintainability issues  (UNUSED_VALUE)
-drivers/gpu/drm/amd/amdgpu/jpeg_v4_0_5.c:461 in jpeg_v4_0_5_start()
-455
-456     		WREG32_SOC15(VCN, i, regVCN_JPEG_DB_CTRL,
-457     			ring->doorbell_index << VCN_JPEG_DB_CTRL__OFFSET__SHIFT |
-458     			VCN_JPEG_DB_CTRL__EN_MASK);
-459
-460     		if (adev->pg_flags & AMD_PG_SUPPORT_JPEG_DPG) {
-vvv     CID 1583635:  Code maintainability issues  (UNUSED_VALUE)
-vvv     Assigning value from "jpeg_v4_0_5_start_dpg_mode(adev, i, adev->jpeg.indirect_sram)" to "r" here, but that stored value is overwritten before it can be used.
-461     			r = jpeg_v4_0_5_start_dpg_mode(adev, i, adev->jpeg.indirect_sram);
-462     			continue;
-463     		}
-464
-465     		/* disable power gating */
-466     		r = jpeg_v4_0_5_disable_static_power_gating(adev, i);
+*** CID 1583634:  API usage errors  (VARARGS)
+lib/thread_with_file.c:123 in darray_vprintf()
+117     		va_copy(args2, args);
+118
+119     		len = vsnprintf(out->data + out->nr, darray_room(*out), fmt, args2);
+120     	} while (len + 1 > darray_room(*out) && !darray_make_room_gfp(out, len + 1, gfp));
+121
+122     	out->nr += min(len, darray_room(*out));
+vvv     CID 1583634:  API usage errors  (VARARGS)
+vvv     "va_end" was not called for "args2".
+123     }
+124
+125     void stdio_redirect_vprintf(struct stdio_redirect *stdio, bool nonblocking,
+126     			    const char *fmt, va_list args)
+127     {
+128     	struct stdio_buf *buf = &stdio->output;
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -126,8 +106,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1583635 ("Code maintainability issues")
-Fixes: 0a119d53f74a ("drm/amdgpu/jpeg: add support for jpeg DPG mode")
+Addresses-Coverity-ID: 1583634 ("API usage errors")
+Fixes: ead021e0fe5b ("thread_with_file: Lift from bcachefs")
 
 Thanks for your attention!
 
