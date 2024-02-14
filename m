@@ -1,75 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E29128363
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 17:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB412882A
+	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 18:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707933448; cv=none; b=pettwSU6I0oFh24KaTn9DKPGIkqibpN6KH0tXXXc3+iBfDddx4CF6tD2QrsqPpM/SegfCSB3tL3GWS+pPJA0JFeTmnlIUgnfMfZWTD2ARf+8v9mQYmFUh65DrsONgegi8x4xSG9vSEAHHA3PPaMAwKRnA30+NoJZCXpRhd3Oe7w=
+	t=1707934102; cv=none; b=DXZetuGTP8XdBGvuegRakOoGrb8ryXSG0fGGzYuuqYlZleXay9dDELeIS1unDelzDD+23ZBIXI6De+ku7/u0pztl8vUrYuaLXqfcSBpjO64eZeqsKSXB7JNDha0lnc0aweuQxJYPOl3tG2TzElze8F8wOA7MYUUeM2z4YPzkYFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707933448; c=relaxed/simple;
-	bh=C/07i7uhraJ/iCdkIrk3+g0sJu4LRkL1MeEwKjt2QEo=;
+	s=arc-20240116; t=1707934102; c=relaxed/simple;
+	bh=GEskh4OwgCxU6+2XRLs6cgU3AkLytYOWrfx/McRXP0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HYjAIk06EGGzErYGIHtscplBVdE9xPmqFTmEwTV+QYgTvqtiZa8GldvX6Tv/NRs3rshvvnCW0jl95GOy6rEIjQKzROAS2AHPxPXSfb54x0fnZmP38GhsBr9zssBIhp1nMTZNavHWzjd5vWZ7FSdDPTKJF3rqZXZsGOHv2aMLqY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2yA9n26; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jd5jxd/zToyZFgZqOsC1DWBP+/HKZPxKxYYcTYzjAx8RgcWJfs6p3GPe+ItCiMXkfMS20jI/hsKTTYzhdZAP+m53HgDHfAolMYoQFU7ipsfOFtvopEx8Vxjw5yfDF4cLM8rSobYjg8Tk+fQYNwIrwTfBfMi5Aw66j75GB7le5XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TDvFet49; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2yA9n26"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707933445;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QeVoRP0IbpurjG7gS4VE/L43GNfNUTlOq+29WpW/Zzo=;
-	b=A2yA9n262U8eZMaVD5YZYQ6imvdGgleRvady4MnPGAjviL8845pEiDMSXdiIMCdArXwWzL
-	Y/HyApROL0vCWnX/yIBclDIJ6NPiUlbSuIxhrYHIZqIyMc+MVp/h2lIkbSLaX6XpFESn9v
-	HRYcQkugBxKRncAk4JnbG3zCWMOYlwY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-157-_FqYJNzxP3iqxzNw-5dL_w-1; Wed, 14 Feb 2024 12:57:18 -0500
-X-MC-Unique: _FqYJNzxP3iqxzNw-5dL_w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 531DB185A785;
-	Wed, 14 Feb 2024 17:57:17 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.126])
-	by smtp.corp.redhat.com (Postfix) with SMTP id E186D2166B4F;
-	Wed, 14 Feb 2024 17:57:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 14 Feb 2024 18:56:00 +0100 (CET)
-Date: Wed, 14 Feb 2024 18:55:55 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tycho Andersen <tycho@tycho.pizza>
-Cc: coverity-bot <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Peng Zhang <zhangpeng.00@bytedance.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
-Message-ID: <20240214175555.GC16265@redhat.com>
-References: <202402131559.B76A34B@keescook>
- <ZcwGua3a9Z8nJXVq@tycho.pizza>
- <20240214090332.GA14017@redhat.com>
- <20240214090640.GB14017@redhat.com>
- <ZczLyDCN+zG6imTd@tycho.pizza>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TDvFet49"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707934101; x=1739470101;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GEskh4OwgCxU6+2XRLs6cgU3AkLytYOWrfx/McRXP0A=;
+  b=TDvFet49WvoZREbDT0vw7Misg6cQhV6TBN+Q2FtEyL/VW29EJzqZcZMy
+   4txkxCYt5wSGPTAd67YAzbAsttRo7vWvsxvMLNKTpNpSPapjJlx/CwFqy
+   g39/flFjHeTod7JwT+hvoxAEKA5PGPGzqPaNT2O52QNjvqAovVR0Lx1Wl
+   eP177jhOtEN2NxsqfihOi2zMIHd5FUAYG2jKIVbGobOMZIYVV8WuPeyXG
+   U7KlY15hoNeomVU+L6WZ4bSVeKJEvJb889W62S/s9Bdpxtr8j22NeE42q
+   l0K5Tl4le2WwIK3mmr1sOoQsHmgs1pM4v+XcyBf5gxS8y+5iOUCUWicWO
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="12542886"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="12542886"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:08:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912093269"
+X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
+   d="scan'208";a="912093269"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:08:18 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1raJg8-00000004Yxj-37NV;
+	Wed, 14 Feb 2024 20:08:16 +0200
+Date: Wed, 14 Feb 2024 20:08:16 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Michal Wajdeczko <michal.wajdeczko@intel.com>
+Cc: linux-hardening@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
+Subject: Re: [PATCH] lib/string_choices: Add str_plural() helper
+Message-ID: <Zc0BkKXZfIkwnvRs@smile.fi.intel.com>
+References: <20240214165015.1656-1-michal.wajdeczko@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,54 +59,26 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZczLyDCN+zG6imTd@tycho.pizza>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+In-Reply-To: <20240214165015.1656-1-michal.wajdeczko@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Tycho,
+On Wed, Feb 14, 2024 at 05:50:15PM +0100, Michal Wajdeczko wrote:
+> Add str_plural() helper to replace existing open implementations
+> used by many drivers and help improve future user facing messages.
 
-let me repeat just in case, I am fine either way, whatever you and
-Christian prefer. In particular, I agree in advance if you decide
-to not change the current code, it is correct even if it can fool
-the tools.
+Any user of this, please?
 
-That said,
+> Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
 
-On 02/14, Tycho Andersen wrote:
->
-> On Wed, Feb 14, 2024 at 10:06:41AM +0100, Oleg Nesterov wrote:
-> >
-> > -	/* Ensure that only a single signal scope determining flag is set. */
-> > -	if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
-> > +	switch (flags) {
-> > +	case 0:
-> > +		/* but see the PIDFD_THREAD check below */
->
-> Why not put that bit inline?
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Jani Nikula <jani.nikula@intel.com>
 
-Not sure I understand what does "inline" mean... but let me reply
-anyway.
+Move these Cc to the after '---' line.
 
-We want to check the "flags" argument at the start, we do not want to
-delay the "case 0:" check until we have f.file (so that we can check
-f.file->f_flags).
+> ---
 
-but perhaps this is another case when I misunderstand you.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> But I guess the hweight and flags mask
-> are intended to be future proofness for flags that don't fit into this
-> switch.
-
-Yes I see, but
-
-> That said, your patch reads better than the way it is in the
-> tree and is what I was thinking.
-
-this was my point.
-
-And if we add more flags, we will need to update the "switch" stmt anyway.
-
-But again, I won't insist. This is cosmetic afer all.
-
-Oleg.
 
