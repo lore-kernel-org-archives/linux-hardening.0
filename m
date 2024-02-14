@@ -1,57 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from wflow2-smtp.messagingengine.com (wflow2-smtp.messagingengine.com [64.147.123.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CB912BE87
-	for <linux-hardening@vger.kernel.org>; Wed, 14 Feb 2024 18:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FCD84A3E;
+	Wed, 14 Feb 2024 18:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707934175; cv=none; b=ulW0XmNTX6quVn0sF2pnFKUZ7NcHXJkZcICtsrdPGSnaeeEdh5cvyw3rNvVzAfCHNIKKH0wHa05ziWjsATdpgMuCibymRG71JKbsR7GuRF/TE27QxTNIJJnDS/DpxPk1upmLUA2tGLfU+90j5bxzyhUVkCu6wZ1dM+uiLupglwk=
+	t=1707934326; cv=none; b=QprWrXk8zyyGmE1E48lMijQiEbqys/qk++IQeXimUHiyWyLU7+JnanGps7T2GbYEAFaX7W70veZr3ifzIhVy9m2k2qRERUuM3u4dIg6eJuWbmtRXzbisLSOTG8mIEPM57IhciK3/ouMymvb8FWOrdXdj0ZKndQGl3plwMomwd8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707934175; c=relaxed/simple;
-	bh=cQM/pjCJX5NBvNdR5lYUwT2mLQZZefUEgxknmoOjuW4=;
+	s=arc-20240116; t=1707934326; c=relaxed/simple;
+	bh=xaNjbfsXALYJf7A9rUTlboAITdFj7hL2rnQGSgbm4FI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BaZQkJX1msg9QbiVx1B8R425mOEoMTnjHEhViYk9t+dTWStlRWZF0tUiYcmo54GlKAUB9rbBOAvtKSnEnVY0wxjjynydc7tS/EolvNES3j6zNktLlkG2W0aBgrfhfPT+z9mvuHLJh+sQAdkJbjigWvg1+T+MjcF/e7s0u/kQNiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gpfmk/3U; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kzs9d1Djf9n7jDvqOgpgpCHFq368FfpcHIr9tc6mQrcmSV9eWHgQz6OGL3oNYg5g8pr1PzHwSS0pP1NWAT4F6YVZgci5j+kr0rdsgfb5yQY9LtjUpn7xygf26aMmLmaj9EnKF/8MR9Nvc877mzAVt4/g8dKEZz2CI7GAnqhJpIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=TBNyiB7A; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YFwk5T69; arc=none smtp.client-ip=64.147.123.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gpfmk/3U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707934174; x=1739470174;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cQM/pjCJX5NBvNdR5lYUwT2mLQZZefUEgxknmoOjuW4=;
-  b=Gpfmk/3UU5x3EQ2VmGeXJjMGJtykmjpDzXuBuWz9iHZxj4cF29FCs//h
-   k8tuDBbgB85N9m0GcCCq5T9l38s57w4zMhcPfc3bzCjYYHWkpaDalrj/t
-   Xy6qt4S+0F3OAlQJHqHAh6qm2spRw/+n2VxrUyI0eRaxI/NdSEPNpYmQJ
-   O8BEMlPhLFZ++/ZF2fSvmBVoZf/OjjPeuRKUOHtjhoEPwYkgbLf1ov6re
-   hUAKVYAyJzyTmib9julFKyugLqGjdRYFaq3dqFNJmRnukSg3PQ/B8qIWe
-   QIRwNQoWv5qftxqbrgcdE7OnW/yAYPO4lQ6eCtu0oOu2jBLBgskKJYfrm
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="12543232"
-X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
-   d="scan'208";a="12543232"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:09:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912093292"
-X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
-   d="scan'208";a="912093292"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 10:09:21 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1raJh9-00000004Yyi-2Lwa;
-	Wed, 14 Feb 2024 20:09:19 +0200
-Date: Wed, 14 Feb 2024 20:09:19 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Cc: linux-hardening@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH] lib/string_choices: Add str_plural() helper
-Message-ID: <Zc0Bz5hUHWgHu9UQ@smile.fi.intel.com>
-References: <20240214165015.1656-1-michal.wajdeczko@intel.com>
- <Zc0BkKXZfIkwnvRs@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="TBNyiB7A";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YFwk5T69"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailflow.west.internal (Postfix) with ESMTP id C50602CC02C2;
+	Wed, 14 Feb 2024 13:12:01 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 14 Feb 2024 13:12:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1707934321; x=1707941521; bh=YyjszkVulV
+	wS9ApAAhU5F14N1kZwgfnmL4dXYcuxs4Y=; b=TBNyiB7AxVjfWKAklylOYdaEtS
+	LDX7hv+vsIFNJkciDeKmC4ZxZ66lQiy0d6ubGBo3UclIjS/EXbgGet9cdmvj2/ZK
+	JlDe+CaYXY0NfFbl0114ZR79HFmyyjRAn3MbzxI85GV8qUTyGc9A1qroNcrKib1Z
+	NEPZO54lFU7FELTmNiKngFYEOnrUnULjeCK/15B7j3VkCKtlE56PVFIbLIWL5CYR
+	U4kSpwnL8Ss+4PBd4qAztJf+J15+TzHRV2UMyxI2sU7EagE86i3kgalIM261OVRh
+	9ywIH0BP/3YvTJU/ESdl3ArhZ4GoDdX+UbAlQDfF7aWxT7dh+RMa7+zPEDnA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1707934321; x=1707941521; bh=YyjszkVulVwS9ApAAhU5F14N1kZw
+	gfnmL4dXYcuxs4Y=; b=YFwk5T69aHohbXMadg1f6TH9B2bxoFucQ+2mufrZF/7Q
+	amCR8gzOfkHLj4AZMwYSBzIXbsdwq1yyZLB+KRrK/gReB0fau04w7VXbF+oP47MD
+	jAnKJdHhs4Rx/cU5TyOcteljI3iSgm/EeLifVh8m9so+DBXalTaRqI7Spad19Qkt
+	qJO6LYEaZOfv9Tg9ax7JkoxnENBHBP79v/1t7iexWq20u370ZcF2dF9D0+wZDF5x
+	bkBy+m4dNveY7VGQ1yQxomv9AU06DhumYAGiHK6Fbmyk0WQlY39uNWt16BoFdCQe
+	VCCfIjrQZV5iToSQ3e7TTf5rSntTmT5XcdBk441H4w==
+X-ME-Sender: <xms:cALNZUfx16W7IjtETrHdLMm9SenOXZulc3V3WwJz6BV78HY-CCRC0A>
+    <xme:cALNZWOhIecGHB4B5NQ2ZBHrq5TksBlmKtibRNs972oxvGZrtQaRaZ6zS9-ivbL7X
+    WKbvivKFCaU1KMN80g>
+X-ME-Received: <xmr:cALNZVgB9ThiugBlx2eizIoR2kzEEinE3NsiOw5AzIk5t4WtDDgbqoAHdOg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejgdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
+    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
+    grthhtvghrnhepueettdetgfejfeffheffffekjeeuveeifeduleegjedutdefffetkeel
+    hfelleetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epthihtghhohesthihtghhohdrphhiiiiirg
+X-ME-Proxy: <xmx:cALNZZ8OijF3iXe7rHiP4uRqCEpNNecqhYVuEmwWeim6H68gYhYGLA>
+    <xmx:cALNZQvYwrmTLFlYHX4VFE_WjiYJ7GDzgnUZZOmjd0LnA394iFViMA>
+    <xmx:cALNZQF7GlsSfLnKkGChc8jcIMeuwKCN2a-BFEh5dxqt6cYWSPbMRg>
+    <xmx:cQLNZRPey3rcDYDaj_wTvqESmQhTvj2CXdVt-_pn9pZACw8_0NcNFQSS2a8bKQ73>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 14 Feb 2024 13:11:57 -0500 (EST)
+Date: Wed, 14 Feb 2024 11:11:55 -0700
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: coverity-bot <keescook@chromium.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Peng Zhang <zhangpeng.00@bytedance.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
+Message-ID: <Zc0Ca5te+QFBZ1U6@tycho.pizza>
+References: <202402131559.B76A34B@keescook>
+ <ZcwGua3a9Z8nJXVq@tycho.pizza>
+ <20240214090332.GA14017@redhat.com>
+ <20240214090640.GB14017@redhat.com>
+ <ZczLyDCN+zG6imTd@tycho.pizza>
+ <20240214175555.GC16265@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,30 +101,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zc0BkKXZfIkwnvRs@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240214175555.GC16265@redhat.com>
 
-On Wed, Feb 14, 2024 at 08:08:16PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 14, 2024 at 05:50:15PM +0100, Michal Wajdeczko wrote:
-> > Add str_plural() helper to replace existing open implementations
-> > used by many drivers and help improve future user facing messages.
+On Wed, Feb 14, 2024 at 06:55:55PM +0100, Oleg Nesterov wrote:
+> Hi Tycho,
 > 
-> Any user of this, please?
+> let me repeat just in case, I am fine either way, whatever you and
+> Christian prefer. In particular, I agree in advance if you decide
+> to not change the current code, it is correct even if it can fool
+> the tools.
 > 
-> > Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+> That said,
 > 
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Jani Nikula <jani.nikula@intel.com>
+> On 02/14, Tycho Andersen wrote:
+> >
+> > On Wed, Feb 14, 2024 at 10:06:41AM +0100, Oleg Nesterov wrote:
+> > >
+> > > -	/* Ensure that only a single signal scope determining flag is set. */
+> > > -	if (hweight32(flags & PIDFD_SEND_SIGNAL_FLAGS) > 1)
+> > > +	switch (flags) {
+> > > +	case 0:
+> > > +		/* but see the PIDFD_THREAD check below */
+> >
+> > Why not put that bit inline?
 > 
-> Move these Cc to the after '---' line.
+> Not sure I understand what does "inline" mean... but let me reply
+> anyway.
 > 
-> > ---
+> We want to check the "flags" argument at the start, we do not want to
+> delay the "case 0:" check until we have f.file (so that we can check
+> f.file->f_flags).
 
-Besides that, check with the latest MAINTAINERS updates,
-you missed the maintainer of this file.
+Fair point. I was thinking delaying it would make it simpler, but then
+you have to free the file and it's less fast in the EINVAL case. I
+also don't have a strong opinion here.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Tycho
