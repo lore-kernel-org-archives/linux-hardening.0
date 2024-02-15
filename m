@@ -1,180 +1,122 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FE12A14D
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 11:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543FE132C23
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 15:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707997617; cv=none; b=oQ7Ju8gWK1BMW8AM0/uky4YCc1ZctI6k3LZYZ3cmIQwbOsWjFQnEV6T4XyN8NPXOs2VPe1GvgykY/A42Va952ucziekNtji9ce3xra3nv9Tz8xhBlmBuKiQaupXqshPbFxVR+Encj3E5cuqmFZEJkVdeBKWEe6vAcoLDlecL1gI=
+	t=1708010417; cv=none; b=RO8c+xFh5EyuWv+8/eUuStXfscwhd1qX1Pd11vZGaIpf531axh+4CCNqPJi5+u2KRDQwp9F8hJKGcy8mVm/89GFsrAJBsNJ8V3/hDYCqLqm8mYVJV9tVev0miEENBD8NY63FGMnpiu0hszKvht05ZrtkFGUs9lIQG+Zv7f6Tp18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707997617; c=relaxed/simple;
-	bh=8IGtjDC8lwX138mc9T3n6QxlYh/K434+nFH09sU4g/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d/qa6LUqGBdwW/0ipFIHItHL1BdBi8IVGbuUJawDJqppgdT6xVqEJMyIWjpXca1fIIS0lTbXLbjzbE34oFnC8ScS9S40qdXohMQ172MlmqjQ1JVPJiPJvsyPi5LRErCOSVGLDlyeLFAQKcKdY3sjrXRveVqnIWH0JVuSdciQ5XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raaCW-0007ER-Rb; Thu, 15 Feb 2024 12:46:48 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raaCW-000sHf-Dq; Thu, 15 Feb 2024 12:46:48 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raaCW-005KD7-12;
-	Thu, 15 Feb 2024 12:46:48 +0100
-Date: Thu, 15 Feb 2024 12:46:48 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, James Clark <james.clark@arm.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mark Brown <broonie@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Alexander Shiyan <shc_work@mail.ru>, Benson Leung <bleung@chromium.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Michael Walle <mwalle@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Hammer Hsieh <hammerh0314@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, 
-	Sean Anderson <sean.anderson@seco.com>, Michal Simek <michal.simek@amd.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Robert Foss <rfoss@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>, 
-	Lee Jones <lee@kernel.org>, Anjelique Melendez <quic_amelende@quicinc.com>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Douglas Anderson <dianders@chromium.org>, linux-doc@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Guenter Roeck <groeck@chromium.org>, linux-riscv@lists.infradead.org, 
-	Fabio Estevam <festevam@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Jerome Brunet <jbrunet@baylibre.com>, 
-	chrome-platform@lists.linux.dev, linux-samsung-soc@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-rockchip@lists.infradead.org, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, NXP Linux Team <linux-imx@nxp.com>, linux-leds@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, Jonas Karlman <jonas@kwiboo.se>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-mips@vger.kernel.org, asahi@lists.linux.dev, 
-	kernel@pengutronix.de, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
-Message-ID: <frrn4vofjuskb67rxrgnwqrsqioonglp7nidoueumgw2hemhxq@6hrsnivgobuw>
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1708010417; c=relaxed/simple;
+	bh=qt7VsP5WqYtQpe9neowlVvrueQG/PmC+mvbkKKj+EcM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=i+Gw5eq+weNrHd8f9Be/3FWJeJuwzj+L8e6eTXGCMkOp8YmKoWtzOOo2BELxxT+dAL6U6QhwY19Dk980wGRxBvUszkFDBwxAUvJnCeVCsZ87IcuslcgznVgLAT8LvV6+VwA4DP+Ao6KEVrh+ca3bByYcTJmgw4WEMyCkiBJNHlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+lsRAvK; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+lsRAvK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708010416; x=1739546416;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=qt7VsP5WqYtQpe9neowlVvrueQG/PmC+mvbkKKj+EcM=;
+  b=B+lsRAvKNwK07BS001OlGEIiXZIo3XeeOblPI3wCBvuQJnGRjdZ2hKBO
+   n92ojPoKEi5NSdPZug84Blt5fKHO+vbIkLauN4v/bHgTDdj+ljYDos/ui
+   GUJkf4ckJxwebiPzOMZ1I1YCWKY2XT7YC+Ii4a/ZHkxClIjZNjnXr/kVL
+   etbM36W962ogDHxmGRg21OXXu6kzjTxO+TBPqmKyNBjNvkShbvxWphTW1
+   0leX2xL7EE9w8128VuxymkzS5B6gbuqSs0ynVmcZXV5uhyr1dn1XJbxSz
+   ISyWr/7v4JCgDldZP61nxqzMgrhMqtXH9WQewUXV5+4NMNCdwpN/AycdA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2240704"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="2240704"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 07:20:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="3548868"
+Received: from kraszkow-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.44.13])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 07:20:12 -0800
+From: Jani Nikula <jani.nikula@intel.com>
+To: Kees Cook <keescook@chromium.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] lib/string_choices: Add str_plural() helper
+In-Reply-To: <202402141104.642F85D@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240214165015.1656-1-michal.wajdeczko@intel.com>
+ <Zc0BkKXZfIkwnvRs@smile.fi.intel.com>
+ <Zc0Bz5hUHWgHu9UQ@smile.fi.intel.com> <87y1bm6gpu.fsf@intel.com>
+ <Zc0LQ8YAWBwNptBF@smile.fi.intel.com> <202402141104.642F85D@keescook>
+Date: Thu, 15 Feb 2024 17:20:09 +0200
+Message-ID: <874je969g6.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t4o747itgdnx5oup"
-Content-Disposition: inline
-In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+Content-Type: text/plain
+
+On Wed, 14 Feb 2024, Kees Cook <keescook@chromium.org> wrote:
+> On Wed, Feb 14, 2024 at 08:49:39PM +0200, Andy Shevchenko wrote:
+>> On Wed, Feb 14, 2024 at 08:30:53PM +0200, Jani Nikula wrote:
+>> > On Wed, 14 Feb 2024, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+>> > > On Wed, Feb 14, 2024 at 08:08:16PM +0200, Andy Shevchenko wrote:
+>> > >> On Wed, Feb 14, 2024 at 05:50:15PM +0100, Michal Wajdeczko wrote:
+>> > >> > Add str_plural() helper to replace existing open implementations
+>> > >> > used by many drivers and help improve future user facing messages.
+>> > >> 
+>> > >> Any user of this, please?
+>> > 
+>> > git grep "\"\" *: *\"s\""
+>> 
+>> You know what I meant.
+>> Second patch in the series that shows usefulness of the first patch.
+>
+> Or a Coccinelle script that could do some rewrites? But, yes, if you can
+> include some examples, that would be nice. I think the helper is fine to
+> add.
+
+In all kindness, I think it's actually better to get the inevitable
+bikeshedding rounds done first. It's trivial to add users after
+that. And for simple things like this it should really be obvious to
+everyone what the usage would be like.
+
+My first attempt at adding a plural helper seems to date back to
+2019. Yes, really. Personally, I honestly can no longer be bothered to
+put in the extra effort before there's some indication of
+acceptance. (Like there's here now, thanks!)
+
+>> > >> > Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+>> > >> 
+>> > >> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> > >> > Cc: Jani Nikula <jani.nikula@intel.com>
+>> > >> 
+>> > >> Move these Cc to the after '---' line.
+>> > 
+>> > Why?
+>> 
+>> At bare minimum to reduce noise in the commit message.
+>> If going further, to be environment friendly (no jokes).
+>
+> I learned the above-the-line CC habit from akpm. But in looking through
+> recent commit history, this does appear to be the exception now. I'll
+> need to adjust my own workflow for this too...
+
+It just depends on where in the kernel you look, every subsystem is
+subtly different. In the drm subsystem if you added the Cc's below
+"---", you might be asked to move them above.
+
+Trivial for whoever applies the patches to do whatever they please with
+the trailers, impossible for the contributor. It's like The Trial. :p
+
+BR,
+Jani.
 
 
---t4o747itgdnx5oup
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Wed, Feb 14, 2024 at 10:30:47AM +0100, Uwe Kleine-K=F6nig wrote:
-> this is v6 of the series introducing better lifetime tracking for
-> pwmchips that addresses (for now theoretic) lifetime issues of pwm
-> chips. Addressing these is a necessary precondition to introduce chardev
-> support for PWMs.
->=20
-> Locking got more complicated due to non-sleeping chips, so I dropped
-> the character device patch because it got still more incomplete now.
-> Also I'm not yet entirely sure about patches #162 and #163 and I expect
-> them to change before they can go in. My plan for the next merge window
-> is to get the patches in up to #160. After that the addition of chardev
-> support (including correct locking) can continue without having to touch
-> the lowlevel driver. So the idea of this series is to get the driver
-> adaptions out of the way as this requires some cross-tree coordination.
->=20
-> The patches that touch files outside of drivers/pwm include:
->=20
->  - gpio: mvebu: Make use of devm_pwmchip_alloc() function
->    It already has an Ack by Linus Walleij.
->=20
->  - drm/bridge: ti-sn65dsi86: Make use of pwmchip_parent() accessor
->  - drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
->    The 2nd already has an Ack by Douglas Anderson which I tend to assume
->    good enough to merge this via my pwm tree, too. An Ack for the first
->    patch would be nice.
->=20
->  - leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
->    Already has an Ack by Lee Jones.
->=20
->  - staging: greybus: pwm: Change prototype of helpers to prepare further =
-changes
->  - staging: greybus: pwm: Make use of pwmchip_parent() accessor
->  - staging: greybus: pwm: Rely on pwm framework to pass a valid hwpwm
->  - staging: greybus: pwm: Drop unused gb_connection_set_data()
->  - staging: greybus: pwm: Rework how the number of PWM lines is determined
->  - staging: greybus: pwm: Make use of devm_pwmchip_alloc() function
->    The greybus patches already got an Ack by Greg Kroah-Hartman in an
->    earlier series, but I dropped it as the patches changed considerably.
-
-After getting the needed acks, I pushed out this series in
-
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-
-up to patch #161.
-
-(But don't let you stop looking at the changes, reviews are still
-welcome.)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---t4o747itgdnx5oup
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN+acACgkQj4D7WH0S
-/k6nrwf9Huw1P/RTRggrOHnHFRGpBXi+TWvCPbsOC65CPiHeI7iVxtq/vUtQ4A6L
-CNA0O2W96568TwCEnxxCI6Be+7t8/H/Xb+oTs0yb6hblYkDhxYrXz+wAtoCTWOM8
-MI6xhfufB/JvOhgeX0iVMIx/TOc7gDY0wnFCS7bE15PPxMTjb1yF9Uo3az97CIld
-AF8InyaA81p8dcTlhmHzMa59LEFqoPzmNoySKqTIII7UuHmQRXOqV1RuEmKxN9Ho
-yRvisZgaqoinb8K7tXdw6G8HErBcN1aHM4OQBkZWI0ufVRNzQ8gT1sfoaRlsilOv
-yc/xo9Wl8bLPEKrjcpb9Hv/C+LgzyQ==
-=hkRd
------END PGP SIGNATURE-----
-
---t4o747itgdnx5oup--
+-- 
+Jani Nikula, Intel
