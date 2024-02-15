@@ -1,152 +1,180 @@
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5E21419B1;
-	Wed, 14 Feb 2024 22:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FE12A14D
+	for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 11:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707951593; cv=none; b=bjj6MSPI8tQMYHXecL3F54QmII+uSXRpqlT+Fx7X+goPIuEiGtviOOPgLe588tYJuS2sqiv+JROW8z+XchgMTbbJ4cfii23vkzH34k+xYh+D9/3Hx/Er36sdrQPG5L946TOrW0w0JGUf2Rdl/DnCSEb3WkPt3aCThcl1bWS4TRw=
+	t=1707997617; cv=none; b=oQ7Ju8gWK1BMW8AM0/uky4YCc1ZctI6k3LZYZ3cmIQwbOsWjFQnEV6T4XyN8NPXOs2VPe1GvgykY/A42Va952ucziekNtji9ce3xra3nv9Tz8xhBlmBuKiQaupXqshPbFxVR+Encj3E5cuqmFZEJkVdeBKWEe6vAcoLDlecL1gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707951593; c=relaxed/simple;
-	bh=NWHjQPlaGIQ9OtliJHmGY1JMnvToGgMO8MA8ryL6e5g=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=pNeGITCqI5rJPkL/Zfv9SSGJ4rUtqEtjKU4Nv29BSmWP65fsGy3zSYfEIOk0BdEKcR4FQ2Ao3z8wTCIackDWa5J/UW4h9ws4Fn4dzxQpF45+U/TMXoOHoBSPi5qKN5sVsNu5PGDesz+DnFkzw/1eWiDbr2iQtT3cCHN2D0gEnlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iISglxAa; arc=none smtp.client-ip=211.189.100.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iISglxAa"
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20240214225944usoutp029bb5161cc91390c85bc25f43697aa417~z3OrJ-v6e1082210822usoutp02V;
-	Wed, 14 Feb 2024 22:59:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20240214225944usoutp029bb5161cc91390c85bc25f43697aa417~z3OrJ-v6e1082210822usoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707951584;
-	bh=NWHjQPlaGIQ9OtliJHmGY1JMnvToGgMO8MA8ryL6e5g=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=iISglxAa5pWGqgz0yG661PwTZzPlrNEUvdZ31H5On9wxXgrN1X2iShK05O9Ks6NAx
-	 4A4+a0CB9WUE8a0AFvmq4yiNI4BR0w08DXVbCm+5khhNoTb7+kt0mqtfnVKn83Ka8y
-	 qQDfOeaA9qQhxMTnp0HZLmDaHq7KPgQHsd7UznT0=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240214225944uscas1p26fa9f885a7fd56b6dfe1c7f1b7945330~z3Oqvi9Qb1133111331uscas1p2K;
-	Wed, 14 Feb 2024 22:59:44 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id 78.B6.09550.0E54DC56; Wed,
-	14 Feb 2024 17:59:44 -0500 (EST)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-	[203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240214225943uscas1p21ffa8b362bac11379168b83e42159160~z3OqcL0Yr3221832218uscas1p2B;
-	Wed, 14 Feb 2024 22:59:43 +0000 (GMT)
-X-AuditID: cbfec370-bbbfe7000000254e-32-65cd45e06f44
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 11.D5.45319.FD54DC56; Wed,
-	14 Feb 2024 17:59:43 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Wed, 14 Feb 2024 14:59:42 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-	14 Feb 2024 14:59:42 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
-	"Jason Gunthorpe" <jgg@nvidia.com>, Alex Williamson
-	<alex.williamson@redhat.com>, "pierre.cregut@orange.com"
-	<pierre.cregut@orange.com>
-Subject: [PATCH v3 1/2] PCI/IOV: Revert
- "PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes"
-Thread-Topic: [PATCH v3 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
- sriov_numvfs reads vs writes"
-Thread-Index: AQHaX5l/Y5bHR2DvZ0+eeI1J9u0GaA==
-Date: Wed, 14 Feb 2024 22:59:42 +0000
-Message-ID: <170795158249.2393.6069168125066679172.stgit@bgt-140510-bm01.eng.stellus.in>
-In-Reply-To: <170795147587.2393.15577527626926144858.stgit@bgt-140510-bm01.eng.stellus.in>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <84A3C9C8FC63C94C827BCF517FA70757@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1707997617; c=relaxed/simple;
+	bh=8IGtjDC8lwX138mc9T3n6QxlYh/K434+nFH09sU4g/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d/qa6LUqGBdwW/0ipFIHItHL1BdBi8IVGbuUJawDJqppgdT6xVqEJMyIWjpXca1fIIS0lTbXLbjzbE34oFnC8ScS9S40qdXohMQ172MlmqjQ1JVPJiPJvsyPi5LRErCOSVGLDlyeLFAQKcKdY3sjrXRveVqnIWH0JVuSdciQ5XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raaCW-0007ER-Rb; Thu, 15 Feb 2024 12:46:48 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raaCW-000sHf-Dq; Thu, 15 Feb 2024 12:46:48 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raaCW-005KD7-12;
+	Thu, 15 Feb 2024 12:46:48 +0100
+Date: Thu, 15 Feb 2024 12:46:48 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, James Clark <james.clark@arm.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mark Brown <broonie@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Alexander Shiyan <shc_work@mail.ru>, Benson Leung <bleung@chromium.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Michael Walle <mwalle@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Hammer Hsieh <hammerh0314@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, 
+	Sean Anderson <sean.anderson@seco.com>, Michal Simek <michal.simek@amd.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Robert Foss <rfoss@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>, 
+	Lee Jones <lee@kernel.org>, Anjelique Melendez <quic_amelende@quicinc.com>, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Douglas Anderson <dianders@chromium.org>, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Guenter Roeck <groeck@chromium.org>, linux-riscv@lists.infradead.org, 
+	Fabio Estevam <festevam@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Jerome Brunet <jbrunet@baylibre.com>, 
+	chrome-platform@lists.linux.dev, linux-samsung-soc@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-rockchip@lists.infradead.org, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, NXP Linux Team <linux-imx@nxp.com>, linux-leds@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Jonas Karlman <jonas@kwiboo.se>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-mips@vger.kernel.org, asahi@lists.linux.dev, 
+	kernel@pengutronix.de, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
+Message-ID: <frrn4vofjuskb67rxrgnwqrsqioonglp7nidoueumgw2hemhxq@6hrsnivgobuw>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJKsWRmVeSWpSXmKPExsWy7djX87oPXM+mGjz+yWnx7X8Pm8XdxxfY
-	LKZPvcBoceJmI5vF6ptrGC1+XZzGarH/6XMWiyv/9jBarFp4jc3iTHeuxaYNT1gszs86xWIx
-	b/1PRovLu+awWaz/+p7N4taEY0wOAh6zGy6yeLQcecvqsXjPSyaPTas62Tx6m9+xebQ8O8nm
-	8X7fVTaPqbPrPT5vkgvgjOKySUnNySxLLdK3S+DKaJqxh6Vgm0DF7cUN7A2MDQJdjJwcEgIm
-	Ev2nd7F0MXJxCAmsZJS4fPAxlNPKJDF/8mQ2mKrNKydAJdYwSix9e58NwvnEKNF67AZUZhmj
-	xN+fbxhBWtgENCV+XVnDBJIQEfjIKtG3Ywo7SEJYIFHi0LdbrCC2iECaxPreHhYIW0/i1/2l
-	YM0sAqoS35r6wGp4BSIkdp76BRbnFIiS+P35BZjNKCAm8f0UyAJODmYBcYlbT+YzQdwqKLFo
-	9h5mCFtM4t+uh1A/KErc//4S6AYOoHpNifW79CFa7SQm3bnABmErSkzpfsgOsVZQ4uTMJywQ
-	rZISB1fcgLJXc0p0H1aBsF0kLs1ayQhhS0v8vbsM6oRsiZXrO5hAVkkIFEg0HAmCCFtLLPyz
-	HupiPom/vx4xTmBUnoXkgVkIx81CctwsJMfNQnLcAkbWVYzipcXFuempxcZ5qeV6xYm5xaV5
-	6XrJ+bmbGIGp8fS/wwU7GG/d+qh3iJGJg/EQowQHs5II76TeM6lCvCmJlVWpRfnxRaU5qcWH
-	GKU5WJTEeQ1tTyYLCaQnlqRmp6YWpBbBZJk4OKUamBp89hreC+ZIWH4y1NzuVtW3oyKBujOj
-	VF69Xskq4vvtWTufmFR6wCrLEE736UeNHm68/Leg79uVv6+atS88FJ7NcU2467wuu+7yp+ud
-	trl+yzmcP5/t+sWdRounzw7OnXfxU6oLT2JjTVfQ9s5fJ40Sru5QqO3MdjvDbRReszg+6Ero
-	4gkBkQten76436/CyMwmsMezY85m76hYLfZ7n3XD/Xtk8+bmHtUXCrxwjeHbrhsrFySu7/9X
-	FvCvNOn5Aq2/S4PeM17ZU9mz4/21iTNuRcyTnq3ufOJjqfSRWfcKsz7+nZb1M3itsN31ozKT
-	xasMLv62PSZaHDHPaNqSxubKu6/UXO3C+t+GzLstsEuJpTgj0VCLuag4EQCTTbim/AMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XbOjsfR8mtafi2QGnQxSLtRH2QShXGC1G6kGVEjT9NypjtO
-	K7rMC0aXxRTndJbLsqglaMssbRVTy0ulRpblNA1nTcIsLcsZmvMU+d/ve5/3ed7nj48mJKOk
-	lI6NT2JV8fI4GSUiYzXE+iVdIS/Ypb8s/nh4/DyFO3taKGzQtwBc/y6VwrfelQDsepkrxI97
-	P5G4dcwKsLnoDYWfn1NiS5mDxM3GRhIXlo4A/KrqIoVLfwxQuF33VLAOMgWalySTUdsvZK5a
-	+wSMxXyGYrTpXygm42MDxQw8ek0x+oJTzJDFb4tnlCgomo2LTWZVgcH7RDFpeVYyoQIesV/V
-	eGiABp4FnjSCK9GdmzryLBDREmgG6N5vi4B/DALkGO/+q1wHKNdm8HBbKOiPXK0lk1s+8JsQ
-	DXXrJwVvKEdaQ63AzT7wACrVnid5DkCurmvAzSScj4bTLgjdLIaRqLLRNTGnJy7sQrq2JPfY
-	E0ah0SHn5DqAs9DPxpLJSAL6onaHScDXhqjY2kzwPBP19YwJeZ6Hun72ebgjiYmepVWBvDUY
-	ZXe0UDzPQznnPnjwDWaghnwHyVtnI9uNt6QO+BqnXDP+TzJOSTJOSTJOSboMhGbgq+Y4peII
-	tzyeTQng5EpOHa8I2H9YaQET/+PZWM3u+8De/i2gGghoUA0QTch8xNna56xEHC0/eoxVHd6r
-	UsexXDWYQ5MyX3Fn9yJWAhXyJPYQyyawqn+qgPaUagSrDaZcvwjTgAomZ9qcm6TNpuCycOvn
-	K9kiadHn9qaYus2XfqH09LvRI6GSjsf5tbO5zDQdQSt2yZ7FnihuXiPcFvJBvGFRXOV0KUgp
-	rG+ojbQ1zNp+Kef019bGrMvKCLF9Ey0ThTrrF/qZThlGVuC8GrV/mD61TWlpWrAjTIiZ+akV
-	q7Tvd/annJ5W931r75or906aiwtW3tl4ZnC3s3AwMfFVLqpQv+6vr5AQYu+UtgVeMtLVUZ7A
-	7omwN4mCJHnbHxRFMsezjFu8uqwvbJu33aZ7l3uVrw46mpisfNP5RD8t1DXXKcl6WLk02Xmx
-	hwzvPvhW4dhnX4tD+tZXyUguRr5sMaHi5H8Ami8tP44DAAA=
-X-CMS-MailID: 20240214225943uscas1p21ffa8b362bac11379168b83e42159160
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20240214225943uscas1p21ffa8b362bac11379168b83e42159160
-References: <170795147587.2393.15577527626926144858.stgit@bgt-140510-bm01.eng.stellus.in>
-	<CGME20240214225943uscas1p21ffa8b362bac11379168b83e42159160@uscas1p2.samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t4o747itgdnx5oup"
+Content-Disposition: inline
+In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
-SWYgYW4gU1ItSU9WIGVuYWJsZWQgZGV2aWNlIGlzIGhlbGQgYnkgdmZpbywgYW5kIHRoZSBkZXZp
-Y2UgaXMgcmVtb3ZlZCwKdmZpbyB3aWxsIGhvbGQgZGV2aWNlIGxvY2sgYW5kIG5vdGlmeSB1c2Vy
-c3BhY2Ugb2YgdGhlIHJlbW92YWwuIElmCnVzZXJzcGFjZSByZWFkcyB0aGUgc3Jpb3ZfbnVtdmZz
-IHN5c2ZzIGVudHJ5LCB0aGF0IHRocmVhZCB3aWxsIGJlIGJsb2NrZWQKc2luY2Ugc3Jpb3ZfbnVt
-dmZzX3Nob3coKSBhbHNvIHRyaWVzIHRvIGFjcXVpcmUgdGhlIGRldmljZSBsb2NrLiBJZiB0aGF0
-CnNhbWUgdGhyZWFkIGlzIHJlc3BvbnNpYmxlIGZvciByZWxlYXNpbmcgdGhlIGRldmljZSB0byB2
-ZmlvLCBpdCByZXN1bHRzIGluCmEgZGVhZGxvY2suCgpUaGUgcHJvcGVyIHdheSB0byBkZXRlY3Qg
-YSBjaGFuZ2UgdG8gdGhlIG51bV9WRnMgdmFsdWUgaXMgdG8gbGlzdGVuIGZvciBhCnN5c2ZzIGV2
-ZW50LCBub3QgdG8gYWRkIGEgZGV2aWNlX2xvY2soKSBvbiB0aGUgYXR0cmlidXRlIF9zaG93KCkg
-aW4gdGhlCmtlcm5lbC4KClRoaXMgcmV2ZXJ0cyBjb21taXQgMzVmZjg2N2I3NjU3NmUzMmYzNGM2
-OThjY2QxMTM0M2Y3ZDYxNjIwNC4KUmV2ZXJ0IGhhZCBhIHNtYWxsIGNvbmZsaWN0LCB0aGUgc3By
-aW50ZigpIGlzIG5vdyBjaGFuZ2VkIHRvIHN5c2ZzX2VtaXQoKS4KCkxpbms6IGh0dHBzOi8vbG9y
-ZS5rZXJuZWwub3JnL2xpbnV4LXBjaS9aWEpJNStmOGJVZWxWWHF1QHVidW50dS8KU3VnZ2VzdGVk
-LWJ5OiBMZW9uIFJvbWFub3Zza3kgPGxlb25yb0BudmlkaWEuY29tPgpSZXZpZXdlZC1ieTogTGVv
-biBSb21hbm92c2t5IDxsZW9ucm9AbnZpZGlhLmNvbT4KU2lnbmVkLW9mZi1ieTogSmltIEhhcnJp
-cyA8amltLmhhcnJpc0BzYW1zdW5nLmNvbT4KLS0tCiBkcml2ZXJzL3BjaS9pb3YuYyB8ICAgIDgg
-Ky0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgNyBkZWxldGlvbnMoLSkK
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9pb3YuYyBiL2RyaXZlcnMvcGNpL2lvdi5jCmluZGV4
-IGFhYTMzZThkYzRjOS4uMGNhMjBjZDUxOGQ1IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BjaS9pb3Yu
-YworKysgYi9kcml2ZXJzL3BjaS9pb3YuYwpAQCAtMzk1LDE0ICszOTUsOCBAQCBzdGF0aWMgc3Np
-emVfdCBzcmlvdl9udW12ZnNfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsCiAJCQkJIGNoYXIgKmJ1
-ZikKIHsKIAlzdHJ1Y3QgcGNpX2RldiAqcGRldiA9IHRvX3BjaV9kZXYoZGV2KTsKLQl1MTYgbnVt
-X3ZmczsKLQotCS8qIFNlcmlhbGl6ZSB2cyBzcmlvdl9udW12ZnNfc3RvcmUoKSBzbyByZWFkZXJz
-IHNlZSB2YWxpZCBudW1fVkZzICovCi0JZGV2aWNlX2xvY2soJnBkZXYtPmRldik7Ci0JbnVtX3Zm
-cyA9IHBkZXYtPnNyaW92LT5udW1fVkZzOwotCWRldmljZV91bmxvY2soJnBkZXYtPmRldik7CiAK
-LQlyZXR1cm4gc3lzZnNfZW1pdChidWYsICIldVxuIiwgbnVtX3Zmcyk7CisJcmV0dXJuIHN5c2Zz
-X2VtaXQoYnVmLCAiJXVcbiIsIHBkZXYtPnNyaW92LT5udW1fVkZzKTsKIH0KIAogLyoKCg==
+
+--t4o747itgdnx5oup
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+On Wed, Feb 14, 2024 at 10:30:47AM +0100, Uwe Kleine-K=F6nig wrote:
+> this is v6 of the series introducing better lifetime tracking for
+> pwmchips that addresses (for now theoretic) lifetime issues of pwm
+> chips. Addressing these is a necessary precondition to introduce chardev
+> support for PWMs.
+>=20
+> Locking got more complicated due to non-sleeping chips, so I dropped
+> the character device patch because it got still more incomplete now.
+> Also I'm not yet entirely sure about patches #162 and #163 and I expect
+> them to change before they can go in. My plan for the next merge window
+> is to get the patches in up to #160. After that the addition of chardev
+> support (including correct locking) can continue without having to touch
+> the lowlevel driver. So the idea of this series is to get the driver
+> adaptions out of the way as this requires some cross-tree coordination.
+>=20
+> The patches that touch files outside of drivers/pwm include:
+>=20
+>  - gpio: mvebu: Make use of devm_pwmchip_alloc() function
+>    It already has an Ack by Linus Walleij.
+>=20
+>  - drm/bridge: ti-sn65dsi86: Make use of pwmchip_parent() accessor
+>  - drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
+>    The 2nd already has an Ack by Douglas Anderson which I tend to assume
+>    good enough to merge this via my pwm tree, too. An Ack for the first
+>    patch would be nice.
+>=20
+>  - leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
+>    Already has an Ack by Lee Jones.
+>=20
+>  - staging: greybus: pwm: Change prototype of helpers to prepare further =
+changes
+>  - staging: greybus: pwm: Make use of pwmchip_parent() accessor
+>  - staging: greybus: pwm: Rely on pwm framework to pass a valid hwpwm
+>  - staging: greybus: pwm: Drop unused gb_connection_set_data()
+>  - staging: greybus: pwm: Rework how the number of PWM lines is determined
+>  - staging: greybus: pwm: Make use of devm_pwmchip_alloc() function
+>    The greybus patches already got an Ack by Greg Kroah-Hartman in an
+>    earlier series, but I dropped it as the patches changed considerably.
+
+After getting the needed acks, I pushed out this series in
+
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+up to patch #161.
+
+(But don't let you stop looking at the changes, reviews are still
+welcome.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--t4o747itgdnx5oup
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN+acACgkQj4D7WH0S
+/k6nrwf9Huw1P/RTRggrOHnHFRGpBXi+TWvCPbsOC65CPiHeI7iVxtq/vUtQ4A6L
+CNA0O2W96568TwCEnxxCI6Be+7t8/H/Xb+oTs0yb6hblYkDhxYrXz+wAtoCTWOM8
+MI6xhfufB/JvOhgeX0iVMIx/TOc7gDY0wnFCS7bE15PPxMTjb1yF9Uo3az97CIld
+AF8InyaA81p8dcTlhmHzMa59LEFqoPzmNoySKqTIII7UuHmQRXOqV1RuEmKxN9Ho
+yRvisZgaqoinb8K7tXdw6G8HErBcN1aHM4OQBkZWI0ufVRNzQ8gT1sfoaRlsilOv
+yc/xo9Wl8bLPEKrjcpb9Hv/C+LgzyQ==
+=hkRd
+-----END PGP SIGNATURE-----
+
+--t4o747itgdnx5oup--
