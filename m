@@ -1,87 +1,82 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C013F1386D7
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 19:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D6813A24E;
+	Thu, 15 Feb 2024 19:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708025059; cv=none; b=nDDTIi37rXHcNLuw1IiJW0ZSmD8vca6dxnZyvKmVOzVz+7uUOuCBI0aYilfNaYaS7CivRlLB+uNDi2p4fDAzMz8FJ2ek9cmjhDJlHBq6h9ki2+/YsGhgPKWWuV5/4CILIg7i2b26pbNIC2eXG4NSqTmozH4+b+Yp+j17u3zmXDk=
+	t=1708025650; cv=none; b=Eq2fQ1PpX36pBgqqRH5U0WPoR+MNoA7F5G4gKoRm8APUl+p7FT95aQhb3LaVprtpx+lPoBlDtF+AUgfsD0Z3oL94j4VBsz0GQm+3ZME74THLSyTMVnEwkjiEHP67An3jD0jbu6xEiboSo6rZniidurAwjfpmK70SY984vmNcKno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708025059; c=relaxed/simple;
-	bh=8z8MAvxHKzS+k6fGXC+xO+ybT+hocgzo/7IjzUaDw14=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hOggmDqr7zPfCUljdei3ozwaca9RpgzvrS1qBdGImcYZTec/8mr68u9NVLuRFjLTWb1/7VYsdzr2/MAyQtzZfhjoDW34j4k9zGTW9l56I2CbfCZGpzCq5sRkm3TyPzV2F1/xlLBxF8VlrAOXXTnS4tg2fjLoDxXXpQBUrJ+diGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Y4Oo4t8T; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708025650; c=relaxed/simple;
+	bh=uI6p2EeYM8i+aIvLwXONNd+KHjJzBDE6AmusnfGfHWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tC0hVUIuZd8BFz9xcpmVLpgOmyzDZZkvn0JZfvqzVMQcc7KkIeF16biPtzIDXJNOv3VXKv1jYp993J/RtMvS5yiFydUB9hDU6zj9oafg3jvYENgrRKZ0lLzkjlcoazJDJyCtv2dpnwiJdMfom078V/xzesrCbuotMKdktjSdx3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4/IGeaS; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y4Oo4t8T"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5dc816e4affso1122102a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 11:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708025057; x=1708629857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z8ArUu1n5mbPGhrI6j3PiZyJhlgxK+hO19Vb/Bon/xw=;
-        b=Y4Oo4t8TMtYeuplV6385axfrNhFlHgkFOdC3AgL2lQGG6qwp9MuHf8cmMA2m8bXjc6
-         JdE7tqV7US8jzYk69S35ekHa/roIE3EuNPWJmZcIJJQrF4OzJl4t38MazNswwPdvdBz0
-         q4RDMJc/5FrDqPl7j1kJeLJPQiNZ8vL14ZCcg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708025057; x=1708629857;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z8ArUu1n5mbPGhrI6j3PiZyJhlgxK+hO19Vb/Bon/xw=;
-        b=nSFvWMwiHjviEnKgT6vtaIUOZ9DGJhk4RtHuAQqO51Sol4lWz2DbRRm9mm92vd8TOP
-         dWzRgM0xbrd1j/GQnNcICgW4HW3oRdkizHHJiDDDCycTZvt4oclo5KUNs0r/jGo7IENU
-         BWwCHtrCbo70VbW0ol1nNf5/cw16LIAyZ6vgelA8Y3YMWEsw5rpihuCuYB1dN89Ni/SQ
-         gMehNPj/aDf0GAU8u8mZX6ha2Tus3dEpiCaMP0FfCWHK5lUQ7F0anPejX/HzqjEv3PKg
-         6VR/F2JkRu6u9lDfcWuc5Iz8IgzG+ZPnauqIy5cZ84LMjzW+d5xLXrUgal3/lYFXBTuf
-         Gl5g==
-X-Gm-Message-State: AOJu0YxtJKYkBePKws3VU6WqhwELtlpU0X9R0Jmxh6O7piDiHwqyA28O
-	F7geSz+wC4wSyJP4SN1aufJSnb9xcXwyxNznioO+7DWJMbKDS6RzkqNGimbnXw==
-X-Google-Smtp-Source: AGHT+IF6MYT83ArqVcfJtGT7UyBafcmI5dHnsXdLc/BkRmSosPteEZbttMXhR0YN9WfbZ/ulisp+ag==
-X-Received: by 2002:a17:90a:f193:b0:299:1aa6:f20b with SMTP id bv19-20020a17090af19300b002991aa6f20bmr1715839pjb.21.1708025057053;
-        Thu, 15 Feb 2024 11:24:17 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g13-20020a17090ace8d00b00298ca46547fsm1823494pju.36.2024.02.15.11.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 11:24:16 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: linux-hardening@vger.kernel.org,
-	Michal Wajdeczko <michal.wajdeczko@intel.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH] lib/string_choices: Add str_plural() helper
-Date: Thu, 15 Feb 2024 11:23:56 -0800
-Message-Id: <170802503450.1193091.12053934932020706660.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240214165015.1656-1-michal.wajdeczko@intel.com>
-References: <20240214165015.1656-1-michal.wajdeczko@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4/IGeaS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708025649; x=1739561649;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uI6p2EeYM8i+aIvLwXONNd+KHjJzBDE6AmusnfGfHWU=;
+  b=R4/IGeaSNCICSNAnblNjGgyW8AwsURJyNjddio39Gfds1AyOm2KN/J3b
+   VxiBdZbEU9omzd4HpZY4Ex05fFDW0f21eeC9w8IB/tpEYmth1ZZJPw8JV
+   VVBbS3QMoHuoS8SsKh3HfYVWoEWXXwzqZMH9qdEnmVkRLg3VvWkKWgwn3
+   9tKRbZnMdorXpRUAMW7TRlB0+HYlttYcGYGPywZXRRqVmcyMAw3k5EMOO
+   6IGIW/mfitYOR7PqVIO10yJSEtWJHTMczlE/OFJF1VswNymsBT7IGzJc4
+   iMeu7LiPxCPBPDmKtGZXK6xSKpgzgevSqvgcUV98+s1L3etecFOgxtMJl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="5948070"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="5948070"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 11:33:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="912217507"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="912217507"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 11:33:34 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rahUB-00000004sJI-0qA7;
+	Thu, 15 Feb 2024 21:33:31 +0200
+Date: Thu, 15 Feb 2024 21:33:30 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cocci: Add rules to find str_plural() replacements
+Message-ID: <Zc5nCsE74E33PdD2@smile.fi.intel.com>
+References: <20240215180156.work.548-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215180156.work.548-kees@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 14 Feb 2024 17:50:15 +0100, Michal Wajdeczko wrote:
-> Add str_plural() helper to replace existing open implementations
-> used by many drivers and help improve future user facing messages.
+On Thu, Feb 15, 2024 at 10:02:00AM -0800, Kees Cook wrote:
+> Add rules for finding places where str_plural() can be used. This
+> currently finds:
+>  54 files changed, 62 insertions(+), 61 deletions(-)
 
-I added some kern-doc just for good measure.
+Can we extend this to cover string_choices and call the script probably
+str_choices.cocci ?
 
-Applied to for-next/hardening, thanks!
-
-[1/1] lib/string_choices: Add str_plural() helper
-      https://git.kernel.org/kees/c/bf10745c0053
-
-Take care,
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
+
 
