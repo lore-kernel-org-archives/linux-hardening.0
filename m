@@ -1,170 +1,179 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B7E1386BC
-	for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 19:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54AEDDC4
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 02:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708026527; cv=none; b=FHivq6uYbOxax3oeA3cWLx8etzYLpoUJX2b4riNm53BzCXsgmPG9wQz/xRkeJPw7CNTilLxzSz47TYCJQufKznlbJM7NulpyV5OzjyK1SUh+hti/Lbmzu7meaw0RuaSM73TAiNHywvgLg//wmHbTrexP7pnZD2co3tHGTENdVG8=
+	t=1708049301; cv=none; b=Tf/UOVtHmfVvoaS2VWInLUDY36+XWkbd7B57lvE8csdxZ8isZwpvwUZHBO4H32YCYBkk6sQyFC+SHOjrfIfV28sMqmUC/jdkjgSnrW0b30E+aE3cXgpD+2edu6686q9ZSBg3njjB2xMeYqfiBHDCg1nT39l5FJxG7icft/ooI+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708026527; c=relaxed/simple;
-	bh=A5PjOGMPXIrdqCLXYAaU3KmDy3tgFDmnsiE7yKFkflo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mLq/pT52UaV8qzTD1Dvaf5zeTNgf+vRI0A7sTcqfTtlM2iWq/7J/BlicXPpDboLFqwNCIk8YWK2gXfSjnaCgCFSipoMCwa4uc9JYhM65xcCQ2WYhh4aK98Rx7p92egc/n3pReXqHhI5lRqMoffQtmjV2CJ/g+wpe0h39Vb34TmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cAtzLz1Q; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708049301; c=relaxed/simple;
+	bh=WPcvYjxb4w9YIWWYMIdg7ZaHOMchUT6fLkJQ32xNvGo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Be7K5YGVk/gNeijmjCOeiiPb2dCNcMdU1C6VabW3bemd7yqm9CdCxUR1N+fvub4H1ji1ldyXKKMmOeD8072jm9tSUZUmWZtEC4Mmq/lPQQ0DRxa25Lo+2jAB8DM3nxrR3l56onyI7JdPW4/M1I+0JYkYx9gcbmhmPxy/hTFWvFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8ZfnsEY; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cAtzLz1Q"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so1044691b3a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 11:48:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8ZfnsEY"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7d2a67daa25so885668241.0
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Feb 2024 18:08:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708026525; x=1708631325; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QIYw7eSbWLV7XoUbQKHEdm790KcZl0MNKg+/VA8SNvQ=;
-        b=cAtzLz1QnqsETTFd67zjJoXhNUQc0Tx2YeipAMbezBs45EEg+KlqRyuBJV/c8pyLn1
-         6whPDV+zCF5g13af5WtjC0OAaC0vEOUfzoM1+HeSbs/JhTONqFLF4MivgsE0GqC7AKzv
-         vCbPXht+i0MfaC9Cu2x5EUofrTrnVaN9H74GM=
+        d=gmail.com; s=20230601; t=1708049298; x=1708654098; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XTc+84P6h7qaWeWHuphcF1mjd1aBRb3DZ4CwaFy4lYo=;
+        b=F8ZfnsEY9AMBsWiS9+Kr0I1W7htlFpQaKrgiohxGWdNuQoyB+PakJ5fOgJLcsj+mT6
+         hooVrF6+gHuO/8RnOTC6D1flI5iXuDAbM7R07Nk2JblS4tXBXtA+e7+/3REDmZCbwsGZ
+         pOClFUiIn6ZFGiMqLlKyF7p5Y6UwjFlnzoD2+dbSNyEZoKunOx9ki0/Y6PbNxRctwk4t
+         swZbmeBaZ77PWrW91REbay/omybMYM8j+c0i8CPyrVLKxRx8V+KiV/XYwQykrzs/3pqR
+         TeYpfnaRpG2/EmNj9fKKZqTmFTIWofDlk8yIX0YLHnMIC65lD5rUG1aPxWItC8mv+DuF
+         lOeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708026525; x=1708631325;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QIYw7eSbWLV7XoUbQKHEdm790KcZl0MNKg+/VA8SNvQ=;
-        b=e6CXwhYI9hkWzGWuMCBXbgxZ8+LIvziw5ipI6WQ3K1EVNNHnTE9G871IQ6Udjq3DKL
-         VgONok+Z+0wVU45Gl2/hCo7sfCX8rmPge82IZzTkoUpAXPgXeuLGVGlR90pUNh7A9gpT
-         zOrj0CfaiVT4vTd2hJoY5SQRvQXtYAlXRAIOp5Ckw7BhHcFY9jcBLUv3VVcFZj0En3KY
-         3VPjZZskfk6E5HjpbsBIjSd/q4ZcTeX6difDtfS3lIHeYyjgXaHWQu9o5hOXSce6/NhK
-         3gvxVTrMq08Ih2qSnh/65P6/geYiduNLQdm7oWcW69D2bH+8mP3PJYm7R4NikWsIYKy3
-         7X1w==
-X-Forwarded-Encrypted: i=1; AJvYcCX9/X7kKVAFDyz0PbXc8D9Gpgy57vGk6cPv59nnF7s9Tt5G7XLlISzUsBcZCDQP6xzmD71SqLTL/+aIVgU4ztkz2IFpkfz+vSb486oNOUr6
-X-Gm-Message-State: AOJu0YztsEkCnUCldcwrLuAl+YXvq9aNnmuUGsbtfnEa/H96WAHmbiO2
-	AdbB5zzjPquE/dk0SZ+wCfeUY+jIgPVSaoF24otSxpyE77AENsTW0Nu8YQajPw==
-X-Google-Smtp-Source: AGHT+IEM+StosCqZ55sygRnsnsOd8RG91kej8rW/CYhQnz564dOpCtuBK4/olP1fc7zPiVUQ1amuwg==
-X-Received: by 2002:a05:6a00:cd1:b0:6e0:540e:bf43 with SMTP id b17-20020a056a000cd100b006e0540ebf43mr3746595pfv.33.1708026524790;
-        Thu, 15 Feb 2024 11:48:44 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fb6-20020a056a002d8600b006e06b8548c3sm1716126pfb.139.2024.02.15.11.48.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 11:48:44 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	cocci@inria.fr,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] cocci: Add rules to find str_plural() replacements
-Date: Thu, 15 Feb 2024 11:48:38 -0800
-Message-Id: <20240215194834.it.509-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1708049298; x=1708654098;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XTc+84P6h7qaWeWHuphcF1mjd1aBRb3DZ4CwaFy4lYo=;
+        b=i/ZFoR+WEhNxa8mh5hI++y98KKKFjKSIHyKBHzEbodnqdlLY5lyCKYxu/8iVLpa2rT
+         fqJl+LbtVyc/RVbPjKBrcVh0h973igsjc861FC8vLxXszQg/EDG/4otUCnwfZtSEPKDA
+         yJ+G5CXIiEH7DCzzrpqDCSeEgVvE5Wqxyj5kRP8oTF2wxiIHyKH95lYA5ChZq1+Uh5jf
+         Dw9RP42ex6DKtowoPGTH4pMhK19x5ABjkYOpRtkceKf8obw4kiPWaYWTm/03l2oxXWgQ
+         awAaMb6l3ftVy1T0LquP36w5gwv8SsPu00cxDUa48koxDUz0LXdQsVR9gZ4xQwwb0rCx
+         PAnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUajuUuioyPXRTvvc/3O1VwcG6/uzlDGJgNMO2YZKQl+2/JLlU6oD7cHmaYEaB+/R6l622XlSk/Grp9VoEC3sVGWLmdP0HwRhvetC+AF27J
+X-Gm-Message-State: AOJu0YzMhJ9OzQ4l5ALOot6bhUQ2fKS6lSW3wMSshP8t27VElj5uEekS
+	EjnSqs3/cXD+Y00t8HLpjHLDxQq3tyy6FmaUEcifxegUSoCYERCM4iKv5v7IwHZVLODc75xFnoB
+	qDheiKzY3J8W8cxeWAxyjAj4Aiec=
+X-Google-Smtp-Source: AGHT+IG4WvUcl0FAVHjhMGixRZsvdpjswizL3cOSEl7lIA4nqJnbB7abKKT72ncNf7SNpPQDfh8YGoP72xLCH1INXLI=
+X-Received: by 2002:a05:6102:243c:b0:46e:bcbe:67cd with SMTP id
+ l28-20020a056102243c00b0046ebcbe67cdmr3458871vsi.18.1708049298588; Thu, 15
+ Feb 2024 18:08:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2300; i=keescook@chromium.org;
- h=from:subject:message-id; bh=A5PjOGMPXIrdqCLXYAaU3KmDy3tgFDmnsiE7yKFkflo=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlzmqV+0wutn9XyekUmyiDf5ZhU6fAehM/QsZ3A
- 6Ynpnw+na+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc5qlQAKCRCJcvTf3G3A
- JqZXD/4puC6/Pv7aBKVlPmGek/tSw3eiITHz9KDqi4WWlX3vQqItXAQeju8KfX9dY1a0ahQP91u
- Rc7URV4jgOwyP8AWCvYKhgdVRL2NmKVYyzUuNm2O/599sTf5BqQdGkMHyAig/6GCb8SE2ZVs0E/
- 7/2TIwUR4QkGnaS5hE6KMPCG5ai+2YWsNR8hXj4G/5YAMlGG71i/1xhu1A+8TyAAY6zHaQI3kRQ
- RbOf+1OGpnP8/PZtyGqvdsc1FgcEY0AeZ3i0zIlPKrPcpqiV2cJDf+APwO7cZkmeGGNaGpvs59b
- vUy65MOpZPsaa4Jehgw4OM5bO43Q6qjSSc1F85B9FIH/eUqs+aoT99WNZUzNVTXQevXhmjOobE8
- oVXcvqZG1hTp6q1xzSR2nK9qh8ddAniyED9xviF+U5x1M6+f3Y+de9b7tTPymr2aes3JBOp7qST
- 5dSXbDhJ7VTRKmdYgQPdRc1ZswTprEB003W7km5oJwXQQJKw2EDTwTiTfsMJazs2c/jHpdL8AA8
- 9/gUWv/qO7JcmpnmYZhLj6Yh2MqtbaFePZwPr4zkfqClxF+qjub6zLf104ugFgN7yzNWjgBCORX
- KVMeq8/ieRKOPl3suLvgefRMKEDUQn8lMrDceiDLIX4Y8r7v7A9QICq3rAaSYpqDZRDqF6/6O1S
- FqcHgwm 3KrGcs+w==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <CA+2EKTUwj-WzNh0BNxCdAQoxRyn1Bg7Nx7yaXJBSeqoGTBkLrA@mail.gmail.com>
+ <202402141415.FF36393A@keescook>
+In-Reply-To: <202402141415.FF36393A@keescook>
+From: n132 <y0un9n132@gmail.com>
+Date: Thu, 15 Feb 2024 19:08:07 -0700
+Message-ID: <CA+2EKTVLvc8hDZc+2Yhwmus=dzOUG5E4gV7ayCbu0MPJTZzWkw@mail.gmail.com>
+Subject: Re: Two Seucrity Issues for arch_randomize_brk(arch/x86/kernel/process.c)
+To: Kees Cook <keescook@chromium.org>
+Cc: security@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add rules for finding places where str_plural() can be used. This
-currently finds:
- 54 files changed, 62 insertions(+), 61 deletions(-)
+On Wed, Feb 14, 2024 at 3:31=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Wed, Feb 14, 2024 at 01:31:47PM -0700, n132 wrote:
+> > Dear Linux Kernel Security Team,
+> >
+> > I am writing to bring to your attention some security vulnerabilities I
+> > have discovered in the `*arch_randomize_brk*` function located in `
+> > *arch/x86/kernel/process.c*`. This function is critical for generating =
+a
+> > random offset used as the heap space offset for programs in user space.=
+ My
+> > concerns are twofold:
+>
+> Thanks for bringing this up. FWIW, I don't think it needs to be private.
+> The limitations of the brk randomization is understood. Regardless, some
+> comments below:
+>
 
-Co-developed-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Link: https://lore.kernel.org/all/fc1b25a8-6381-47c2-831c-ab6b8201a82b@intel.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Julia Lawall <Julia.Lawall@inria.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: cocci@inria.fr
----
- MAINTAINERS                                 |  1 +
- scripts/coccinelle/api/string_choices.cocci | 41 +++++++++++++++++++++
- 2 files changed, 42 insertions(+)
- create mode 100644 scripts/coccinelle/api/string_choices.cocci
+Thanks for your attention to this issue.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0df728734c1..216d02a3fed5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8979,6 +8979,7 @@ F:	lib/string.c
- F:	lib/string_helpers.c
- F:	lib/test-string_helpers.c
- F:	lib/test_string.c
-+F:	scripts/coccinelle/api/string_choices.cocci
- 
- GENERIC UIO DRIVER FOR PCI DEVICES
- M:	"Michael S. Tsirkin" <mst@redhat.com>
-diff --git a/scripts/coccinelle/api/string_choices.cocci b/scripts/coccinelle/api/string_choices.cocci
-new file mode 100644
-index 000000000000..a71966c0494e
---- /dev/null
-+++ b/scripts/coccinelle/api/string_choices.cocci
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// Find places to use string_choices.h's various helpers.
-+//
-+// Confidence: Medium
-+// Options: --no-includes --include-headers
-+virtual patch
-+virtual context
-+virtual report
-+
-+@str_plural depends on patch@
-+expression E;
-+@@
-+(
-+-	((E == 1) ? "" : "s")
-++	str_plural(E)
-+|
-+-	((E != 1) ? "s" : "")
-++	str_plural(E)
-+|
-+-	((E > 1) ? "s" : "")
-++	str_plural(E)
-+)
-+
-+@str_plural_r depends on !patch exists@
-+expression E;
-+position P;
-+@@
-+(
-+*	((E@P == 1) ? "" : "s")
-+|
-+*	((E@P != 1) ? "s" : "")
-+|
-+*	((E@P > 1) ? "s" : "")
-+)
-+
-+@script:python depends on report@
-+p << str_plural_r.P;
-+e << str_plural_r.E;
-+@@
-+
-+coccilib.report.print_report(p[0], "opportunity for str_plural(%s)" % e)
--- 
-2.34.1
+> >
+> > *tl;dt*: Heap can connect to bss's end and the offset between heap and =
+.bss
+> > is in the range of 0x2000 pages.
+> >
+> > 1. *Insufficient Randomization*: The current implementation, which reli=
+es
+> > on a 0x2000 page offset, does not provide adequate randomness. This
+> > limitation could allow attackers to brute force the heap or Position
+> > Independent Executable (PIE) addresses if they acquire one of the base
+> > addresses. The predictability of the offset significantly lowers the ef=
+fort
+> > required for successful exploitation.
+>
+> The brk randomization entropy was originally chosen on ia32 and came
+> with some concerns about programs where randomization broke assumptions
+> they had about distances between various allocations.
+>
+> See commit c1d171a00294 ("x86: randomize brk")
+>
+> This is using 13 bits of entropy, which isn't terrible. On x86_64 it's
+> not as high as stack (28) and mmap (20), so I'm not convinced it's
+> "insufficient" (brk is used for somewhat limited purposes). Perhaps we
+> could raise this to 20 bits on x86_64? (Totally untested...)
+>
 
+20-bit entropy (same as mmap) is not bad for x64 and it's okay to keep 13-b=
+it
+entropy for x86 since the limited memory space.
+
+> > 2. *Lack of Guard Page*: In certain instances (with a probability of
+> > 1/8192), there is no guard page between the .bss segment and the heap. =
+This
+> > absence facilitates an attacker's ability to overflow from the .bss seg=
+ment
+> > into the heap, thereby extending the attack surface.
+>
+> Getting allocated next to .bss is certainly not ideal. It should be
+> possible to trivially add a guard page here with something like this
+> (totally untested):
+>
+> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+> index ab49ade31b0d..1489829e86e2 100644
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -1030,7 +1030,7 @@ unsigned long arch_align_stack(unsigned long sp)
+>
+>  unsigned long arch_randomize_brk(struct mm_struct *mm)
+>  {
+> -       return randomize_page(mm->brk, 0x02000000);
+> +       return randomize_page(mm->brk + PAGE_SIZE, 0x02000000);
+>  }
+>
+>  /*
+>
+
+It looks good. That is also what was in my head. Can't find another
+simple and effective solution to this issue.
+I did some tests for this modification, finding this can set a guard
+page between BSS and heap.
+Also, this modification doesn't influence other parts of the kernel
+(since it just avoids one possible case).
+
+> >
+> > Given the complexity of the necessary modifications and my limited
+> > experience in kernel patching, I am reaching out to seek your expertise=
+ and
+> > assistance in addressing these vulnerabilities. I am looking forward to
+> > your feedback and am willing to provide any further information or
+> > assistance required to resolve these issues.
+>
+> What results would you see as solving the issues you detailed? (And feel
+> free to bring this up on linux-hardening@vger.kernel.org)
+>
+
+Your fix looks good to me. We can try to solve the "bss overflow to
+heap" issue first and figure out a way to
+add entropy later. I also cc this email to the hardening team.
+
+Thanks so much for your help!
+- Neil
+
+> Thanks!
+>
+> -Kees
+>
+> --
+> Kees Cook
