@@ -1,135 +1,112 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE04913A88B
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 20:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9860A146904
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 21:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708116275; cv=none; b=rKTucGfNUDqEF+bn+2rHsONT8cr8QC+ENjvXKVSy5VpzM9W+fed9dp9j++yxVytro0CRbmaOnVivYYKlBbPQ+Gc6DjBu/oIAns8/T4lrpcvjTuY+lYriaNr7VUt+s2aaHnM8+pPdoHLl/1ayKjkh0B2fo63+HguK/0KNnDE3JvM=
+	t=1708119753; cv=none; b=S9KIcQsd9S5Q0PiBGmJ52sqEiFTIAzrqbOelnhe6Gg6d/QerDDUJ/mm6axULUKVL1me1KVmKMDpB5c035+yLuvFKX71B+gNLLZzKzxZ0dkzjTuCKdKNd1/QuXvTkfCk0TLK/XKLSudsbzeIG3uWspTK54x7tO3tUsMFAI9Mgytw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708116275; c=relaxed/simple;
-	bh=dcgKF8UiBBz34XJT7VHWm6Do34FT3jmf0XIZ/Dyw5Gc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N53DoLsLlstVh8jcUW2ea0SJZU0JncPIC8AfsZl3MXX788wYSUJJjuvmSMlHubm+KB2YeEiJlDgj6oOLbWCCpufX5jP9sYAjnxgTsd5GUcW8qjFY3ng7x+w5WbZeohKMbVwPW0PvJSYj2WIJrZCIa5bYhZuBArKso0haSdxxExQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a70QFPIy; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1708119753; c=relaxed/simple;
+	bh=4c3eMKTWbi+wcF5n+RJsW+tkHhjsCNbcJlVT2UgwhH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/noHfbefNTjKhkPMG3mKEr/+AJVd54ftQxS8CozDlMeEuG9nMmxsew+sYB1+m1AoKe4SSo4qMnLX0xmDBU/DzXJ900rtS6OdMcuGrqj56mlYHU3t8BBkpFWmZCt4PxJGu/9IWNf9mQ21c8Rlyk9jGzGpWIhCDDYqSGo+OH5ps4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d/Z+i0Gs; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a70QFPIy"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e104a8e3f7so2077188b3a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 12:44:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d/Z+i0Gs"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e1126f57f1so1515887b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 13:42:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708116273; x=1708721073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KfdPOM/mYc/pJQP93wRUe5zkjH2nJXn1uubLQkwefXU=;
-        b=a70QFPIyG4/o5/xtmwXYobO4aNYt4Vr1abmDz2KqPg3ykNeFldET8fWLAR3kDwVwiW
-         WBKbf6o6Ktns4fTlQHDySxUm/+Kke7cy0gDmSUoE+iEiNAS5WF2uD/EHpbIYFFgPEMDr
-         BkioCPp2YnG3mQDmYrkphCZQLDW4yg/K1nLBk=
+        d=chromium.org; s=google; t=1708119751; x=1708724551; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmqvLalSTvjyY0hPo1vwRpJX0mbABPaN9LQ6zaR4OAw=;
+        b=d/Z+i0GsxaluQ09Eag9Jx/VRbvIGgYqk5+TPqboE7vd2kcAWt6lWhgcIc/4QNYWYXe
+         uqFdfxjbZ0k9GvgePThKtazLI/P6K/n/ViTz7n5Itqt6D33I5vVZ6K+WX8Y/bThvkOcM
+         GZ5BrfacAeH+5+j4IKuYE90L+Hu0CbaEGetKQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708116273; x=1708721073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KfdPOM/mYc/pJQP93wRUe5zkjH2nJXn1uubLQkwefXU=;
-        b=X4A+d/VUGdhV+BIao/OZb1n2x573il5IBowhhdargTrCPRQaOBhth7EmNF7iCyjlp8
-         3JvmB+hXHJU3hoE/AgtrPFaZo4tD/abk02RFwhCFCSEqq3kNqYqUosQU/P4MQn7pow1D
-         K0SAMI2G+jgbG2zTuc1VgUp2/mqDKTfvx5jOcdcPgPkxHg72XbprJiM0kebq9t9s06rQ
-         BclgBdlMIQF/8y6S51uE4Hn4Q7WYtPW5vNAi+BN6+zbHTttYzMBXTEyOxQlz4eyqfCJq
-         42YFUrGxYQrgeupi4Oq0lSW5b0mZDKjwG4r+jLU0vlzkDy+2L/JDh5UkDI0EqjaAaJq4
-         CDLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrG/Fur4wJKpSSxZ/uJPxnznAIbw0MIuHszQeHHZQXjjfGVz2Kp9rlljtr8QCoTq96hSmCd6LT/p0nNnSVt5RJzsiDaaNC8YBDDyDU9LOg
-X-Gm-Message-State: AOJu0Yz+i+gBgZ4XtC3M0+7PIvGRIhgoZZklOY1SJKOFRFsNniWt0OJL
-	UO+SsMIjJT3Gnr4cyUb3z+CeBLZcKMfmNRbeVHfzOSBEaFwJjn9dBeUJ5v3ndg==
-X-Google-Smtp-Source: AGHT+IFMp/+uwtXoTt8ZTB7NzHGsxYYLBqDWpyM5s8tBLrts/aiShty1PMRbExqYCcV/V7ylknMcZg==
-X-Received: by 2002:a05:6a00:3d11:b0:6d9:b4e6:ffb with SMTP id lo17-20020a056a003d1100b006d9b4e60ffbmr7107600pfb.0.1708116272797;
-        Fri, 16 Feb 2024 12:44:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708119751; x=1708724551;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pmqvLalSTvjyY0hPo1vwRpJX0mbABPaN9LQ6zaR4OAw=;
+        b=i+dd/hxCzzEo3Rz7nZDLI3S9AadO6VrxxeU1fL0No54EAiv4VU2LebHVueXj5gzw9V
+         VmcKVMwMQw4FfKJHXBWo5eFozGQH8l3MUqQwIH91Hq325w0023LEc5v93cgAyX1UJJzv
+         tolXCTXmyt36+nt4rL53ZWM1WOkM4PPd5Rnb7UompRA0Z8MQeYs9TUs4urk6xhRsc8Er
+         /l3PUfwcFDuALcwMXn6okqu98TIQcPHlJrtjujKp+gol6/QtRMjLOV3FbO5o66rFFLbh
+         Nrhe/XPmDWJdDnIrc6cI5gpv1DMt6ejcPPKbkd4570PcEWIqYp5x8y6MH4sj8zvWa5/4
+         4icg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLbtnF6N08NFQLQFsRiI2bZUvF5HSqOra+GYLxVZCp2tKu4wdRm+Skf/aSB0i7uZc4xts5Gk4ThkzNAdLFmh4oF+bNM0EOpMmR4rsrMaXT
+X-Gm-Message-State: AOJu0YxSPFUqKvY3LBNSEPFa3RgYjH21qaXGwpZewqIdRwbHeVhFDZFp
+	3FYIEUhnm0OapGj1byMI3Zhk7GmVUVX8NcXguHxUnVJg0fJC7NHIwj6vDMHJdR+09qWzHNzmRmI
+	=
+X-Google-Smtp-Source: AGHT+IEXIq2vlhY0MRi3dbghbU5hzq6K5TiA/bjopoX0NzcTaYWwUJfK3zWU4HYBShZXvZGvCuUPfg==
+X-Received: by 2002:a17:90a:b902:b0:299:24ae:7ed9 with SMTP id p2-20020a17090ab90200b0029924ae7ed9mr5316353pjr.36.1708119750822;
+        Fri, 16 Feb 2024 13:42:30 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e3-20020aa798c3000000b006dfff453f8esm366899pfm.75.2024.02.16.12.44.32
+        by smtp.gmail.com with ESMTPSA id cz15-20020a17090ad44f00b0029703476e9bsm453747pjb.44.2024.02.16.13.42.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 12:44:32 -0800 (PST)
+        Fri, 16 Feb 2024 13:42:30 -0800 (PST)
+Date: Fri, 16 Feb 2024 13:42:29 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	David Howells <dhowells@redhat.com>,
-	linux-kernel@vger.kernel.org,
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] sock: Use unsafe_memcpy() for sock_copy()
-Date: Fri, 16 Feb 2024 12:44:24 -0800
-Message-Id: <20240216204423.work.066-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH][next] wifi: brcmfmac: fweh: Fix boot crash on Raspberry
+ Pi 4
+Message-ID: <202402161341.AC45AC7@keescook>
+References: <Zc+3PFCUvLoVlpg8@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1864; i=keescook@chromium.org;
- h=from:subject:message-id; bh=dcgKF8UiBBz34XJT7VHWm6Do34FT3jmf0XIZ/Dyw5Gc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlz8knIiqX0gNushGFi5tcu+b6Z2huNDqRuDpnD
- 7OBa/E/fjGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc/JJwAKCRCJcvTf3G3A
- Jka2D/49xf0HEbfzzY6ewPuxOsgLo3p19BQFaeQdlEVmWTaTYVIkRIeAWuEM4tucWsRNjfFhtwL
- 6h3b29oXEkNy+gSDIPriR9wiJ22Wc1ZNZitIyF5f6Vw6JdPJIDULPiAIF5SIEAJJCLOgbW+9kDG
- ZK1tFnFSilN3mdrPd+RaXPlGxvAfrGTb4Z13bkYd4odPAq/suwjVfTFnIGZGh+Dw7f6YWzEkKhd
- FW+B/PJ/EXxf+tQD2nVLFBZwE/iGUKYROXMrQarGY9On+dW/KZzVYK1Xm3ku9MUDeF2kBlqwIqN
- +v37IyAiiVTpM5O9Hmvdkm8J1AT9kWx4LMGK1TyQwwUpfgBrFs6MLmj+rRlubFGDuFJCRscbTY9
- EqysezRvgwPS68ntriQ2+6J6Gprejz/KiUneDnklbHYHoD0O/iopV0CqZUItKqH+ZEg2fHx0yHK
- 2x1f1c7Cg8A9zVRy/fS77XTqQTLDKzVUKCV00Ug68xBain4Htb7k7KocPnSGgD/twCM5QioXQkj
- G5jg31qGUDwOMmWJMMG7MTjkHUEoxzRO+MqT0LBW+8kHR1M2zDSakXjZcjkSvlkWu8LegHqTIdG
- vFpt7rr5iY4esTyi0IA3MfGnzTMPkuM2BA3sVo+rZUkepnNhuVIQAmZHj/7j2ntVSzc+9fApR8G
- XtCi7K1 Uu1NLRFw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zc+3PFCUvLoVlpg8@neat>
 
-While testing for places where zero-sized destinations were still
-showing up in the kernel, sock_copy() was found, which is using very
-specific memcpy() offsets for both avoiding a portion of struct sock,
-and copying beyond the end of it (since struct sock is really just a
-common header before the protocol-specific allocation). Instead of
-trying to unravel this historical lack of container_of(), just switch
-to unsafe_memcpy(), since that's effectively what was happening already
-(memcpy() wasn't checking 0-sized destinations while the code base was
-being converted away from fake flexible arrays).
+On Fri, Feb 16, 2024 at 01:27:56PM -0600, Gustavo A. R. Silva wrote:
+> Fix boot crash on Raspberry Pi by moving the update to `event->datalen`
+> before data is copied into flexible-array member `data` via `memcpy()`.
+> 
+> Flexible-array member `data` was annotated with `__counted_by(datalen)`
+> in commit 62d19b358088 ("wifi: brcmfmac: fweh: Add __counted_by for
+> struct brcmf_fweh_queue_item and use struct_size()"). The intention of
+> this is to gain visibility into the size of `data` at run-time through
+> its _counter_ (in this case `datalen`), and with this have its accesses
+> bounds-checked at run-time via CONFIG_FORTIFY_SOURCE and
+> CONFIG_UBSAN_BOUNDS.
+> 
+> To effectively accomplish the above, we shall update the counter
+> (`datalen`), before the first access to the flexible array (`data`),
+> which was also done in the mentioned commit.
+> 
+> However, commit edec42821911 ("wifi: brcmfmac: allow per-vendor event
+> handling") inadvertently caused a buffer overflow, detected by
+> FORTIFY_SOURCE. It moved the `event->datalen = datalen;` update to after
+> the first `data` access, at which point `event->datalen` was not yet
+> updated from zero (after calling `kzalloc()`), leading to the overflow
+> issue.
+> 
+> This fix repositions the `event->datalen = datalen;` update before
+> accessing `data`, restoring the intended buffer overflow protection. :)
+> 
+> Fixes: edec42821911 ("wifi: brcmfmac: allow per-vendor event handling")
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://gist.github.com/nathanchance/e22f681f3bfc467f15cdf6605021aaa6
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Avoid the following false positive warning with future changes to
-CONFIG_FORTIFY_SOURCE:
+Yup, this looks correct. Thanks!
 
-  memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
----
- net/core/sock.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 0a7f46c37f0c..b7ea358eb18f 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2053,8 +2053,9 @@ static void sock_copy(struct sock *nsk, const struct sock *osk)
- 
- 	memcpy(nsk, osk, offsetof(struct sock, sk_dontcopy_begin));
- 
--	memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
--	       prot->obj_size - offsetof(struct sock, sk_dontcopy_end));
-+	unsafe_memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
-+		      prot->obj_size - offsetof(struct sock, sk_dontcopy_end),
-+		      /* alloc is larger than struct, see sk_prot_alloc() */);
- 
- #ifdef CONFIG_SECURITY_NETWORK
- 	nsk->sk_security = sptr;
 -- 
-2.34.1
-
+Kees Cook
