@@ -1,70 +1,73 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EA31487D8
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 23:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F30917BC4
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 23:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708125752; cv=none; b=t/RlH9GLLYOKhKSnJNEkjS14eaCuxz+7Y1D3yJsy2w6leqdcby28Ks6MQbycDoF6j4DbjHLXzAm1I00VAj7F2tuJPgZuQsqIpOQrIEctT4wdu7FYzOGzKGcvxXxhJP7pYi3QLwtvi8s5iowU9iSdt9yCkbXb1Z4+et7wm3NJYD4=
+	t=1708126070; cv=none; b=PK+pnYdEhijCLGxQYfQXIlTwiDG66vu7LAAEN3u78Q1+bpTJkFQBDPOxNlCaBTPxxlqkVHpHf0ggEaZY1EdVSNpAl3hPCTpGFtT/rzG5poPhgEL1mxX46iaYWv2oNG3hsrn2OSKTn/0mkR8WrNU1InjBnolycjakhHce8l6wj3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708125752; c=relaxed/simple;
-	bh=AfToehbazLkk4D8atJ2IeQiatl0vfo2gPuKKeEbzT0c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kEiJ2bgKkO87Y6H4mIFh0Vx87WXwslQ6OOfdIR7h1AsU1M3krRVZeL3AvnWGf02jqd3SX3VctKJmFUy0DK5ZtKi4+C+s39KNRypa+7mQ1zOsdA0TLZzJsIQCzW0OhY/Mf49Y8zmyx6Ex9egkOfbq9o4U/JeuKERQSUy6MsHcG4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mxFuPjy+; arc=none smtp.client-ip=209.85.167.180
+	s=arc-20240116; t=1708126070; c=relaxed/simple;
+	bh=RNT0g0cgXQrcIvbNgrkk3LhFhJNchXw4WLd58eWGTyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N3Vj5QCMW+UO7j4By/8jXt2OVMp/Z2G9UnuJjpb5OggW0PEGwCTxSRlCOhV1/0bVr4un5U5ohCuyV5pF+3MuPRYabHO0pPbaq9C2Ky3PGalV1E3YF0mhmX5C5N4R+0idmfc4F+tykhY6JVGQ7M4bu+c04hJZ8E7IOtgmajDPwtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SRBq0NJN; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mxFuPjy+"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c1404d05bfso796393b6e.3
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 15:22:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SRBq0NJN"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso2124521a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 15:27:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708125746; x=1708730546; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708126067; x=1708730867; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cySFSaaMS+dXgwcEMJ3GUQwT0nia05ir6tsszW4Yyu4=;
-        b=mxFuPjy+4EyPa1lp3qyaEyBzEBalHk0TPCYA5sROZ3/0QmO2VGf49fsRbhlnzfupgm
-         qAqJ5jrGeAhcN98B839PELAh5ZIMzlqSY3zTGHbIvruB+a6wwbg4V6e4Dx0IFacsJlK0
-         KUzsp24MAZ4R1FvM+upNdfajX7Rj3nOcB24lY=
+        bh=lLi9PHtxZsuZz7e5RQdykX5MWOEl3dE9qrCPIM1hrRo=;
+        b=SRBq0NJNtAZ6jpCpaDoDq0gS2MIV1sFPCquA0NnTAn0Bn4+TCURcDgAjIDwJ5oVser
+         eeounGyiNP722gPZ4vqG3zFwHZeCT5zHIZZj/QNwLUB/DA6U5ImtNn8MuYPeAyPRlbzK
+         /OVmhGvYIXJeeObYRBrFPapXbsXeD2Yx0EVHo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708125746; x=1708730546;
+        d=1e100.net; s=20230601; t=1708126067; x=1708730867;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cySFSaaMS+dXgwcEMJ3GUQwT0nia05ir6tsszW4Yyu4=;
-        b=Im8BsdBXQQmov55KrBYPMTtek9wJfgsI8fKt0wxl2QiS8hlzV7CQIIFrPvDYip2rfo
-         WjDXI1Ysf/lY76f6spiAbCZ8+pOWirghFulGEcx2Noriuh2cZWMeKS5X0/PrKObvIIqW
-         qq94az4dejc8kmHaZb8P6IR8tvamgms9KX72hIxyN9xtoyKqyTkuNU67sFR17RidLIYJ
-         SkF1KsaaYdSTXZ/iZs0dYusEBP/Dm+3SXB62UxvX2ARX50xtPA24hByC1mPUkQx1KCE5
-         ENlZNLysaJHRi8xTYwZIi/BClwhoWjjwMuFz2s+MlSikSbzkeZ5MFlLucPEpNRj2c+ED
-         alOg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7OLRbJcYRU9b0QMRpnlNYpI7roh9RXJ7xiO29iG4LFtRttd/1bdPGL34RUNvyFadcy8IEnEzl0UCtRN2vA5PU+HQwaXXOno1XPHkqSdC9
-X-Gm-Message-State: AOJu0YzgYQ/C4E6bUB4QDZL3ZB/WPJmv1JiVU3h+p9TiRdVJK3iJbBS5
-	3w7XWq7zRNgQrKjJKOzi7yj04YFJnhnkBKN2ppef5JxF34ljOafM3Q4U/qWTBg==
-X-Google-Smtp-Source: AGHT+IFJ7BJQmwIMICkPDlvj2/02BvzkvmoecpFuyBPJXIAzmHz5zxn1mLoQ0cD6kwU9B+oBT5SI6w==
-X-Received: by 2002:a05:6358:478d:b0:178:c943:d2d8 with SMTP id i13-20020a056358478d00b00178c943d2d8mr7301354rwn.19.1708125746167;
-        Fri, 16 Feb 2024 15:22:26 -0800 (PST)
+        bh=lLi9PHtxZsuZz7e5RQdykX5MWOEl3dE9qrCPIM1hrRo=;
+        b=vRe8xYBjHVM8YfF2pyoV2loUU6eZiZ2ghMOmWeG6d/vS4VSWkWx66bsdnSzWh59JFx
+         Ke61dGAPCaOnOKS7RKG16T++gYY1V4APy47h3rCMe0p3SAKN+Yi2lhbMlenK5kxns/Dc
+         K8JIdeHwXzyfRbe0d+NmCcyXsmkLo6Prjkvn48n0WQ5qlpfQc9qCRcvnj6MjLo4NGdVp
+         rfRmV/cacrMF/l4rfWDci1d/AJnlZsRsqQkRO7bTHxu6d1wzuwDVbLHNXO+bPEGmh1sI
+         zZ1EQu2a6ki4s/iv+IeIQUBlZnZz2qU+dE0zoESuYE0df/ijzwuH/ILxft6/NhNJusQu
+         9X9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsaQaG1irGSJGOaF4wcgHr1AtcYV/Az2Kf9sX/VsScQU0sY5dkddrR+0zMFrlNjIxp2JRYWUzLctRxtFuMCNtGpUKoSiOQGw57kWS7Jl4R
+X-Gm-Message-State: AOJu0YxnQLhY/cHzS8zGx6362UYmC2zhWviZrH+aLu4J4yV2/KyvYWVu
+	aORTWUG6rozOnzIhDOWBaNOtnAAhllrTqMx2u+x8Dsal89nbymEcF8aOVFyPlw==
+X-Google-Smtp-Source: AGHT+IGPCpilatN+troOQhhuhZJ1ZyJIP1f1BukTAiQCIoKk/LNCdR5GS6r7rJFOX+rcu0p3vRbu7Q==
+X-Received: by 2002:a05:6a20:4fa2:b0:19e:a9bf:d51a with SMTP id gh34-20020a056a204fa200b0019ea9bfd51amr5455247pzb.32.1708126067651;
+        Fri, 16 Feb 2024 15:27:47 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y14-20020a62f24e000000b006e25d4085b4sm160890pfl.27.2024.02.16.15.22.25
+        by smtp.gmail.com with ESMTPSA id kn14-20020a170903078e00b001d8f82c61cdsm369379plb.231.2024.02.16.15.27.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 15:22:25 -0800 (PST)
+        Fri, 16 Feb 2024 15:27:47 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	netdev@vger.kernel.org,
-	David Ahern <dsahern@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	David Howells <dhowells@redhat.com>,
+	linux-hardening@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] sock: Use unsafe_memcpy() for sock_copy()
-Date: Fri, 16 Feb 2024 15:22:23 -0800
-Message-Id: <20240216232220.it.450-kees@kernel.org>
+	llvm@lists.linux.dev
+Subject: [PATCH] net: sched: Annotate struct tc_pedit with __counted_by
+Date: Fri, 16 Feb 2024 15:27:44 -0800
+Message-Id: <20240216232744.work.514-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -72,85 +75,81 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2895; i=keescook@chromium.org;
- h=from:subject:message-id; bh=AfToehbazLkk4D8atJ2IeQiatl0vfo2gPuKKeEbzT0c=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlz+4vtP9XZ8kb58vJFJPFh9mWGtCyoBdybB67c
- vfYeLhguQuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc/uLwAKCRCJcvTf3G3A
- JgOBEACWWQWMGqzQ5TszpLZqznvaGGgzkjAXu/Q5IAR+0mPMA8Zh4Hx4w411JmzASDuZmA4RLIp
- SidMjd5Wbg35DLnr6ncwOxByfpgh5YdOrlHaHFbnP/Lyg3IIDTE2pstAJiCEg3aDX7/Usmvnm2T
- 11etazgXJQXuHXf1gZsD5grxVjk1FKX8GAFul0+UYv/VzZLBOe+W9V2dR+2LvUrdDr+++OwDyos
- J1B/7yKzw6UVtvnx41hKacMM5WoOknJ82MbQYFuzSWLgl+WEmlXm8tRijnC5sn0PO0YmTQOaPuq
- MssOQYoUkIFE/mxsH70FrMlgZSkd6KQTJB7BLjQl9oOv2dovBC4dTbYhC9IvRpcazrXJleTZFyA
- GlQ3otlVg89xz+njrGCyqKefEK8a67G/stqm9fDmJZUql0/pqGJqz8G7LEtOQ6+r66ERZ6/he+M
- s7DGi+I3fWlmpHIfZ4s1TNZ5eIawHlnt19jLnOdD1c27V7nP2BvIb4ovgvLX4/JKNqleqfMjeE/
- oHdD6ANNlDCinWsHK+QDIh7hjvnM7DWDG3yluAwD8ichFbqi2ANXojfklBkqJ0gCZb13ufqHZZs
- r5dpl8CJABQalqKVMj2auUbh9vgJDAl72Ck9BM15MOLfRc19qrCvNv4HMe/FAmAAX+UWYapVSrj
- kkwSRQe +9Fye++g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2338; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=RNT0g0cgXQrcIvbNgrkk3LhFhJNchXw4WLd58eWGTyM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlz+9w9qSnRo2mb+YJM+Gu1IwPUsAtgHSw+l89v
+ SbeoLT1YpuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc/vcAAKCRCJcvTf3G3A
+ JgMGD/9xRXBIxLCBH7+ga8H8o/WOsCi9LCOVzwWZDpHbh6TZefl0ftvDhBHx7fg1n4l61k6f3w9
+ 1El1BpQBebgi7nX+Ets4Ub4/N8660HPXoRbAz6As6Ne5h8z2F1kw3ZBn6ITb7uqN2izMxRfy3/T
+ 8XA/eTuICYCEYDIQa4FqnmhVLh6WkR8mN0/N+LTAymXxd00ECGrhXlJW2dhrUhhTbhkzdvUF3WB
+ XEWJGtf4nP0kA3omfRN5CDGZ0YjDY2GS1mKIvj6eoJZrXXb+a09jCGPm9Y7qU1MB0F5A8pVlwNF
+ hK3T5yvnAdsN2FsboC223ZEzRd9XnGjM+xA+ZoQtpE5cKpu/HX80H11TmqAw/RZZtwbycKZ3MN1
+ VAlI70Igu9n71hjMCRL6of2MjZud4bPUAduFb42FOvZvXqiKkkwRD0LAy0+R2VX8/KsB2E4TrUA
+ vKh4f615Zd5qR3DKd3mjl1F5VnBxqa7oW67YYU/f+MCg86r+pT9RYj3Yl2tLNnjtBTLG+ePv8rK
+ otI00CvwQ2/R2IU/zEL5jtJqM9y+xTTP4Y2MVa2Mv/3RJSPHSSV8x40Hrpc+RA6rIjMFj19BWI5
+ oKc5WEPBofLAACgXz8fhUrXfyuUZfg0qeE0JqzukNFzqWGCbGESpOyHoQBYnslPSqhqGdZ3oJjl
+ TVrnnPI y3rX9jFg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-While testing for places where zero-sized destinations were still showing
-up in the kernel, sock_copy() and inet_reqsk_clone() were found, which
-are using very specific memcpy() offsets for both avoiding a portion of
-struct sock, and copying beyond the end of it (since struct sock is really
-just a common header before the protocol-specific allocation). Instead
-of trying to unravel this historical lack of container_of(), just switch
-to unsafe_memcpy(), since that's effectively what was happening already
-(memcpy() wasn't checking 0-sized destinations while the code base was
-being converted away from fake flexible arrays).
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Avoid the following false positive warning with future changes to
-CONFIG_FORTIFY_SOURCE:
+As found with Coccinelle[1], add __counted_by for struct tc_pedit.
+Additionally, since the element count member must be set before accessing
+the annotated flexible array member, move its initialization earlier.
 
-  memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
-
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
 Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Eric Dumazet <edumazet@google.com>
 Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: netdev@vger.kernel.org
-
-v2- add inet_reqsk_clone() instance too
-v1- https://lore.kernel.org/lkml/20240216204423.work.066-kees@kernel.org/
+Cc: linux-hardening@vger.kernel.org
 ---
- net/core/sock.c                 | 5 +++--
- net/ipv4/inet_connection_sock.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ include/uapi/linux/tc_act/tc_pedit.h | 2 +-
+ net/sched/act_pedit.c                | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 0a7f46c37f0c..b7ea358eb18f 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2053,8 +2053,9 @@ static void sock_copy(struct sock *nsk, const struct sock *osk)
+diff --git a/include/uapi/linux/tc_act/tc_pedit.h b/include/uapi/linux/tc_act/tc_pedit.h
+index f3e61b04fa01..f5cab7fc96ab 100644
+--- a/include/uapi/linux/tc_act/tc_pedit.h
++++ b/include/uapi/linux/tc_act/tc_pedit.h
+@@ -62,7 +62,7 @@ struct tc_pedit_sel {
+ 	tc_gen;
+ 	unsigned char           nkeys;
+ 	unsigned char           flags;
+-	struct tc_pedit_key     keys[0];
++	struct tc_pedit_key     keys[] __counted_by(nkeys);
+ };
  
- 	memcpy(nsk, osk, offsetof(struct sock, sk_dontcopy_begin));
+ #define tc_pedit tc_pedit_sel
+diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+index 2ef22969f274..21e863d2898c 100644
+--- a/net/sched/act_pedit.c
++++ b/net/sched/act_pedit.c
+@@ -515,11 +515,11 @@ static int tcf_pedit_dump(struct sk_buff *skb, struct tc_action *a,
+ 		spin_unlock_bh(&p->tcf_lock);
+ 		return -ENOBUFS;
+ 	}
++	opt->nkeys = parms->tcfp_nkeys;
  
--	memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
--	       prot->obj_size - offsetof(struct sock, sk_dontcopy_end));
-+	unsafe_memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
-+		      prot->obj_size - offsetof(struct sock, sk_dontcopy_end),
-+		      /* alloc is larger than struct, see sk_prot_alloc() */);
- 
- #ifdef CONFIG_SECURITY_NETWORK
- 	nsk->sk_security = sptr;
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index 459af1f89739..4a1d96ba3ad1 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -906,8 +906,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
- 
- 	memcpy(nreq_sk, req_sk,
- 	       offsetof(struct sock, sk_dontcopy_begin));
--	memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end,
--	       req->rsk_ops->obj_size - offsetof(struct sock, sk_dontcopy_end));
-+	unsafe_memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end,
-+		      req->rsk_ops->obj_size - offsetof(struct sock, sk_dontcopy_end),
-+		      /* alloc is larger than struct, see sk_prot_alloc() */);
- 
- 	sk_node_init(&nreq_sk->sk_node);
- 	nreq_sk->sk_tx_queue_mapping = req_sk->sk_tx_queue_mapping;
+ 	memcpy(opt->keys, parms->tcfp_keys,
+ 	       flex_array_size(opt, keys, parms->tcfp_nkeys));
+ 	opt->index = p->tcf_index;
+-	opt->nkeys = parms->tcfp_nkeys;
+ 	opt->flags = parms->tcfp_flags;
+ 	opt->action = p->tcf_action;
+ 	opt->refcnt = refcount_read(&p->tcf_refcnt) - ref;
 -- 
 2.34.1
 
