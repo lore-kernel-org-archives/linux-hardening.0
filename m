@@ -1,84 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205CB2E641;
-	Fri, 16 Feb 2024 12:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BFD12C817;
+	Fri, 16 Feb 2024 14:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708087079; cv=none; b=kGph4YGgJxQKSAvdYvDI2xoSF0hcPH7lGKGCbtXFO4xHc5eXUcJBRyA8RyMQHXsIdZ+kTrIsGLdafAkVbseT1MMV0Ax20KVcZV43eV7vFlM1ltdU4IJ1vhK1R5WFREgNKTB4/ClHIiSRAlMHS9GLpu4MRtUYE1RyNP/Jb/aRwSw=
+	t=1708093123; cv=none; b=YxvEOSaLDUh+zhXyQuKd7au1o/cm+ntdBRzkrY9HD90MS4e7fmR/6hvlaRI9XSzYnEBxIcuvFOODAn837vSYiIWXTRhb8ga2z16qhvYTDusR4vfAedODf5L9HdTJA4oAr8zFGmcvVnr2ZBwblgrQwnoj5Z/zdzZfDNc5s6D9T88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708087079; c=relaxed/simple;
-	bh=z1sBY58BDg/3llEaa4HysrUIoaHtRN+Da+kU9maVq48=;
+	s=arc-20240116; t=1708093123; c=relaxed/simple;
+	bh=SZZOeJbM9IqCNRzXyb/vtXg4j78a3vQTIUylqLxTqTE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VmlPG4RDObaPlet77EoU+Sw1ZQI4OAjm0FpFg0YFZMd8RbpUGvBBU6omrrpefNvyykHhcCeAelKXm/OCfGAMnpdUmEEaoRhJQbb2QqqYbPM9ELfXBiZn/Xdo+MUGxYoCz51+/HieSOxYEktoVEzC4EYkg2e1GXSWPmovuTW9V1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPrTM/h+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCbfKVvlC5J+iVWX/cgGbbfrgHX9lDtjpw316ZiEoyhZfkIHn2NKAyxgcEjRdNGW42zoH9f0nhnd7s9FST0QFcL9LaK2RxX7sZ1xnKoxUFkodgIaltnmek2oDBfNHCw/Cr++/P6F3ZnL7HLVTpxkwnByZvybH7uoSzsOLluAiI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=Bn2HfMIH; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPrTM/h+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3AACC433F1;
-	Fri, 16 Feb 2024 12:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708087079;
-	bh=z1sBY58BDg/3llEaa4HysrUIoaHtRN+Da+kU9maVq48=;
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="Bn2HfMIH"
+Received: from 8bytes.org (p4ffe0c3c.dip0.t-ipconnect.de [79.254.12.60])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 2F8731C462F;
+	Fri, 16 Feb 2024 15:18:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1708093120;
+	bh=SZZOeJbM9IqCNRzXyb/vtXg4j78a3vQTIUylqLxTqTE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CPrTM/h+yr8xHtfln0FuJIAOEyKLdIc8Pf6BJzUa7cQooTPgF0aJEFzC6XSjxVPlb
-	 mHuQmcq0xfvHyR+XEEaYrxlfzssxTD7a/ZKH4l5E2+EHGe85jItdgc6JDGqzuifSCG
-	 D8bcspXsoxuyXEK3qqs7/nIEe0i85QGO/T1bqDBp/58WujNP45Wi5/dD+xs0N2HGuR
-	 pOTEqfa6kwSB3VUQfTxDcPw5IOAaNY3eQ7wGndWUEaXiulaZdWgoRqGNfjVDBNk9hf
-	 Dq2zMJMXEsungzU2tUGcyzxRDD7WSVfSQcgmxQ7eS+vOsOZgcUm3UDEDVf0hZSLRp7
-	 8X22tPYqaK9Cw==
-Date: Fri, 16 Feb 2024 13:37:49 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Tycho Andersen <tycho@tycho.pizza>, 
-	coverity-bot <keescook@chromium.org>, Nicholas Piggin <npiggin@gmail.com>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Peng Zhang <zhangpeng.00@bytedance.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Mateusz Guzik <mjguzik@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Tycho Andersen <tandersen@netflix.com>, Mike Christie <michael.christie@oracle.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org, 
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>, linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __do_sys_pidfd_send_signal(): UNINIT
-Message-ID: <20240216-polster-stopfen-7fafe753180f@brauner>
-References: <202402131559.B76A34B@keescook>
- <ZcwGua3a9Z8nJXVq@tycho.pizza>
- <20240214090332.GA14017@redhat.com>
- <20240214090640.GB14017@redhat.com>
- <ZczLyDCN+zG6imTd@tycho.pizza>
- <20240214175555.GC16265@redhat.com>
- <Zc0Ca5te+QFBZ1U6@tycho.pizza>
- <20240214191801.GA27799@redhat.com>
+	b=Bn2HfMIHDvH9l7V2fAjwpcG0c0/NmPWKIJH52PiBhofcHz6e8hQkwUtugapU8ixfY
+	 nw1ZuEJanOj9/S2F+ygKSJmWhnMUU5vpY6iaIQKy5d4z3KtgYfybLAQHIXlLnXbecG
+	 pdPSOZGYcFyNvyJ9pOQgyeqr1cZpPe0hdE1MZfV5VDKM0oSChLnSlbo8z7ClQiVjvB
+	 KxZqriHWB9+QO3em1KHwl9W4qG96QuAMSckuNhohjqeofGvIR9ZnefA0HH+U4lXzed
+	 fBy1Q+i5J6tZGSFiwmhr3rnb42eUik86OjtG7GZI/FTHiPnz6+dfDSWS8f0HTnrQPb
+	 2aF35QAc5aPvQ==
+Date: Fri, 16 Feb 2024 15:18:39 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>, iommu@lists.linux.dev,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iommu/mtk_iommu: Use devm_kcalloc() instead of
+ devm_kzalloc()
+Message-ID: <Zc9uv4smFRfzf_mY@8bytes.org>
+References: <20240211182250.12656-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240214191801.GA27799@redhat.com>
+In-Reply-To: <20240211182250.12656-1-erick.archer@gmx.com>
 
-On Wed, Feb 14, 2024 at 08:18:01PM +0100, Oleg Nesterov wrote:
-> On 02/14, Tycho Andersen wrote:
-> >
-> > On Wed, Feb 14, 2024 at 06:55:55PM +0100, Oleg Nesterov wrote:
-> > >
-> > > We want to check the "flags" argument at the start, we do not want to
-> > > delay the "case 0:" check until we have f.file (so that we can check
-> > > f.file->f_flags).
-> >
-> > Fair point. I was thinking delaying it would make it simpler, but then
-> > you have to free the file and it's less fast in the EINVAL case.
-> 
-> plus we do not want to return, say, -EBADF if the "flags" argument is wrong.
-> 
-> > I also don't have a strong opinion here.
-> 
-> Neither me.
+On Sun, Feb 11, 2024 at 07:22:50PM +0100, Erick Archer wrote:
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+>  drivers/iommu/mtk_iommu.c    | 2 +-
+>  drivers/iommu/mtk_iommu_v1.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-Or you know, we just don't care about this. ;)
-In any case since tis is a false positive it's not urgent in any way. If
-either of you cares enough about this then please just send me patch that
-reorders the checks to please that tool. The specific way doesn't matter
-to me as well as long as we don't pointlessly fdget()/fdput().
+Applied, thanks.
