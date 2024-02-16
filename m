@@ -1,220 +1,246 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8866414280;
-	Fri, 16 Feb 2024 07:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708068961; cv=fail; b=EsHjBySlVb/XuEGA2AeCO+qwg/4KDVmNp+SJdUplsHni3z14swGKH+fnqhG09tCj6rFnevEozL71onzM/SDkPtKv35SK2aq1oIhXmkKxj45aF7HQqhnjL/FE8Tzp8esAayc7TY2f5+cl8Vwh5/ZCm7rqxt8JHI+DbhU+QcUKagU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708068961; c=relaxed/simple;
-	bh=V6+cBnW8p2bb9Ob8Z1Yir8zxn7EWxJsAlQ4ZHKM8klo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P89c4JDPQHBgyp0NPBZqJnnUfmrQi7fYTbt08iL0Neo/8gGEKX6OHps0KMYaSLFt+PzEReW/b6x6itOcwb6EGc6VG1z3tz6bSuFDMWJlB7V67N8MBkKOI9fMpy59zV0wXsQdt7LROhXdpm6NKlMjA15+MYjNecgD2s4AuvCoD+s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FzZW3yNj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kxoTS8zB; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FzZW3yNj";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kxoTS8zB"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41G50DVj021037;
-	Fri, 16 Feb 2024 07:35:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=s+SYZowH0QfNN5ESswaxj3vGvque37rR19VBvozh+Ps=;
- b=FzZW3yNjgnnRyf0uTLKciBoQWX3kWqLO0F8cANFIHnMQ6RhydduDy+yt+3Mqo+0xvBL7
- sAJmahemzHesHsIF4dt4fEOBz87DRD1NnHUPVRhGsJQrdgvZI1UyldSHlCY3P0gX++rF
- RFdro4PcM10cn2UswLsEmaQ+i+k+aazmunexnlEmajUo2ZjRsTd43Usnp9ZQvvWH6uTI
- 4L98Vv8C2GQZUzNFicAQBxkSop7IRTZfkAlvawqSSXR4WrAAj2a4a+P2GSOLDsGzdkkF
- gK6GR2sIE+CuS4pd9Nn21nVfCo1o4BkHz8lNfCNn7We8qxPCgn1Jw+BU/QuJh2VgmxM5 LQ== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w91f04p1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Feb 2024 07:35:48 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41G6fZtG031332;
-	Fri, 16 Feb 2024 07:35:46 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5ykbrk6k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Feb 2024 07:35:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JGBOI8YlQ/wST/sp/BfAGBNn3x5lFi4GwwENSrnBnVBf/RHrkbx6XrHiqsJGJ5cRGXgWo7y9VwiDyYwFhmeUYufirXPafbeMducbqR3FB5EAAtOzlMujm4fbMyMFsLT0r0xO718C8v2EqYov/8zfXQbFH0gPfyo/Grdm4NO86u/+RfI9jCzolFi49VVGUigAr3FK77nsQW8tmEr6w0AYR75O4ssX1AAORzW/gt6/WekAgXhhpSnjLREFq0Mf7apRULWljOhcKxoaBRnFBEQayhXbClpozdWm3VptfVBmUeauzhMjX9d8weuXskT8yd1X6A/p6eu4ECjvUToeodaLsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s+SYZowH0QfNN5ESswaxj3vGvque37rR19VBvozh+Ps=;
- b=Ssk6jfA6Wbah7NDqMM1XqtiBgLyhtOnCu+Rdso7sjZBcFpfvrDEmuy9kSl8RnmGVglcceuMNtUOeJ9Obi84wG/i3kfZuZDh0m814TwFl9KQpiSfM373FOAqEysV/XRSpF2wyCTLnUL9XAuXJfQ6PBneFPavhnuTL4HC1Bn12lZGUecqdF3hgWsjzk2gLOYJTXxq7qKLgBl/RnXwxn+myZDaOuih97P6hfa3Afak++Zax97Y/Y4bKoZd8+XU4O+0KFCc7W8AdZGQulNNfQh5YIE5ktJCygczz7/ZyAovDuqIt47YORqYWHIkr/RvjaYi+TK4dg71Bk6AQAPWC+g/CoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s+SYZowH0QfNN5ESswaxj3vGvque37rR19VBvozh+Ps=;
- b=kxoTS8zBGeO6/QvWNQTpiwp2A4WtWXJxxtTssKfv1iumyzpTa9AmMiwILd3Q/Nsfaic9WX34Ym2RXJ/UZGWYNRuVhYUerzF26T1UvIsXbsscshG/VJkn6dKVejNm0x5PTrSOQttTyZ4U8OGItV9I4i7OExiA/vxNhIV3B0lYj6A=
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com (2603:10b6:510:1c1::7)
- by BLAPR10MB5043.namprd10.prod.outlook.com (2603:10b6:208:332::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.32; Fri, 16 Feb
- 2024 07:35:44 +0000
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::f41b:4111:b10e:4fa5]) by PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::f41b:4111:b10e:4fa5%4]) with mapi id 15.20.7292.027; Fri, 16 Feb 2024
- 07:35:44 +0000
-Message-ID: <3c2801be-acb6-4e6b-95e2-5bebe834c258@oracle.com>
-Date: Fri, 16 Feb 2024 13:05:35 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Content-Language: en-US
-To: kovalev@altlinux.org, keescook@chromium.org
-Cc: arnd@arndb.de, bryantan@vmware.com, darren.kenny@oracle.com,
-        error27@gmail.com, gregkh@linuxfoundation.org, gustavoars@kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pv-drivers@vmware.com, syzkaller@googlegroups.com, vdasa@vmware.com,
-        vegard.nossum@oracle.com, nickel@altlinux.org, oficerovas@altlinux.org,
-        dutyrok@altlinux.org
-References: <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <20240111125330.53853-1-kovalev@altlinux.org>
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <20240111125330.53853-1-kovalev@altlinux.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR02CA0095.apcprd02.prod.outlook.com
- (2603:1096:4:90::35) To PH8PR10MB6290.namprd10.prod.outlook.com
- (2603:10b6:510:1c1::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEC01B805;
+	Fri, 16 Feb 2024 08:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708071306; cv=none; b=P7hdsEZ1TM/W8jLnJhX+XpZK0lIndZ3/KqSkVOidjbATztw+HpF2UGfpLXPnG7uxVs/MwNRy/EVrXMCTj8Gbzy3ol1C1BaAg/ZZlhM52Nv4Vmye1Ut8d1Yp5dqGfQ+DqYfEEkaMYQi4MMUHIjY0kKToIfAvixVBC0UwN49PSvpc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708071306; c=relaxed/simple;
+	bh=9GN9iBufDM+/oHP89fEYbJjbEjzPtGj8kAlRejRoEWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fyzYXKJ06v2eu214Gc1gh1/rw1b9QI0VconqyM/YOopKxhkjvEsy0u+7HhOD3sVUUikNxQPQgWgY3WuYjPOi0mgwKZhYsohvHrT518FH794bvyS+j9qm41huA6Sef9rVGogAkU9VZHq3YaD88UdmE4BCiJCInKZ56C7ui4hM+xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Tbl8q6gv6z9tBG;
+	Fri, 16 Feb 2024 09:14:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id UWwJpXI0bjU3; Fri, 16 Feb 2024 09:14:51 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Tbl8q633Lz9t0b;
+	Fri, 16 Feb 2024 09:14:51 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CB3308B786;
+	Fri, 16 Feb 2024 09:14:51 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id WuF13jiKnWvS; Fri, 16 Feb 2024 09:14:51 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.102])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 52ADA8B765;
+	Fri, 16 Feb 2024 09:14:51 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Luis Chamberlain <mcgrof@kernel.org>,
+	linux-modules@vger.kernel.org
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2] module: Don't ignore errors from set_memory_XX()
+Date: Fri, 16 Feb 2024 09:14:27 +0100
+Message-ID: <21037bf38438a285f5dff9501668f1675bc45989.1708070781.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR10MB6290:EE_|BLAPR10MB5043:EE_
-X-MS-Office365-Filtering-Correlation-Id: c67e649c-51f4-4b2b-faf3-08dc2ec1e248
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	A5slfL0FI+cbszOmRPHNb+s2kFbvMSJpH37g7SEXqOyKmLBrtCims56+HHu7uD62eRhvw3p/q1Q6F7Q2wZSJzVoyxAC8estNrlsJsLHXWnF/veMEHqAcgJQTxuzN1qyW0prhErh25Zc193bA8lQlAaXFtJONHK5BPKYC9czlY8knNjeYgGDhv7G4W7WY4dr5fpcG3AfzoH5ZXpjSx8hrAJkBnAGsaAkaUj06BuSIpbbaVeR1EnRK9cyd1+nMM+/ehKQxYwzpsaatqbJdYtUgwwuVbFeN2BoQPuOoRVlrjL4m++X2mL201M6QoqYPdRoNS2IZ4v+lpgKR8fPnsDBWgCgJtWn2voLPVCcL0xQQrScFNVoEFyQ1dAovmik5aKur1Zcv2E1a4Y4+BZR3S/RTzeAKrE3EAYsRgi3C6xCawc7f0LEsyf0kTfdd408+4MrKz6iMKzEUe7qoZnULnCfs+rdHegOm05aFVgMQE+mQw2EDEBRotxYY0bDqo0shjjPqGDtbiZojGkNQj49mwMPwoV0nyLbtBvKV7b0GWeRSGYBcQKb0g++sgLvFzbJ3L/fl
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(376002)(136003)(396003)(230922051799003)(230273577357003)(186009)(451199024)(64100799003)(1800799012)(86362001)(31696002)(36756003)(38100700002)(53546011)(966005)(6486002)(6506007)(478600001)(6666004)(316002)(6512007)(26005)(83380400001)(41300700001)(2616005)(4326008)(66946007)(8676002)(66556008)(66476007)(8936002)(7416002)(31686004)(2906002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?TzZXMHlrZmp4S0lWNzN2dGpEKzhjd05iUTBZMjhsc0hKcjZGdWwrZ29RQVNj?=
- =?utf-8?B?b0FUbHJQSHR0QWwvVEhwOXpaalNjODh1OVAxeDI3M0dKbGgramNhREp0aTQ5?=
- =?utf-8?B?d2VTUUx0dzJKMG1ETFlyU0JGN2c5aUdmMFRNMDV6V1F3cENSMmFZcFZSVnFU?=
- =?utf-8?B?SDVmYWE4cUNvOUllSHdKRXlYUFRLTzFmN2RyOWlPRyt1VTZTcXdBNWhmSTdP?=
- =?utf-8?B?eWFJOERMN2pHYi9xcmlrRW1HTzVlYnh5MGYzandVL0lvd01hZXY1YjdQeisr?=
- =?utf-8?B?UzZORDJXaTJpeS81RDFpUGJYWDYxV0U1NkNQeXRFOG5PcXBBN0szNFUxSkVH?=
- =?utf-8?B?ZmdjZjFtT0RGUTBTOGhuS0xsMlgwRVJqU1lDdXZETEV1VGtHUkd2N05jcEZH?=
- =?utf-8?B?ZGFURkFmOUlLWWVNM0RxdkhSNnBmYmkzc0JKaURPVFFnR1g2aVhNcU0xS1Mw?=
- =?utf-8?B?anZQV213SzE1WW5RbTJMelZsNWlLcUJISFZ2SVhoQzduY3piN2VIK2Z0TnJQ?=
- =?utf-8?B?NUtMZVh6RmNYbEtvWW5XZSswUXVKRUpRVGlWckVOUzNHRm5zMEtlcCtRbjdT?=
- =?utf-8?B?TmF1SVBQMjhkUFpnQ094aWxvQ3NrSVRpNURVMWh5WEFEM2FKbkoxYjJnNGl1?=
- =?utf-8?B?VFBsYlhEWENtNFgvSE9LV0g5L1NpcnhjOHZ2QUlxMmdZU2FrNkdmV2ZMVDRl?=
- =?utf-8?B?Uk1YcW1qTWRrMitmd1drRlgyMktpMllzemZ3b0lqdUpjQUlhQzFiK3dsMlBv?=
- =?utf-8?B?bUJvby9zdWJobWtnOS9zUm5TK3BBejVJeUVSQURNZzZ5eXFmeGxRdERraFdq?=
- =?utf-8?B?NXZFZkhteHdPTjBCOFV6Z3YwN2JJbEEyQ1BISDNkSWVCL041R1RIcGNmbjY0?=
- =?utf-8?B?SDViZ1lkK3F6VWdzTzRuTmxwSXUyamZPTlZpNlBBUVhINk5WeDNQaXNqeHl3?=
- =?utf-8?B?eVp0SWFzVDBYQ1NaL2tCanlsTFpzYTdna3lZdkNYQUNRckhZdnh1WWI5dU1E?=
- =?utf-8?B?Tk01aXVvdVBmMUVENWJEdVovaXVVaWszRktTTXZTVFZKU29SWDRHMFFKOWQ3?=
- =?utf-8?B?dUtsSktNVTRhbDZHdzMvSTA4OE1mMnRlaXpuTVZoenVuMWs1dWU3SVpFNnVz?=
- =?utf-8?B?NW4yWTViMjNtRDg4ZXpDSUZUZCtpallMdldoNzFQaGJWcGdIZ3Axd0E0dkNB?=
- =?utf-8?B?V2hxQ3JiTTlPRVg3N2R2ajNiNnhnang3a3lIUVJDVXVLdmdyb2hpdS93UDk4?=
- =?utf-8?B?WGhtNEdQbDJMU1Y0NkhISFd1QUphUlVORy90d0NYNDBlSXIrQU5SdTBRMS9s?=
- =?utf-8?B?OXZXL0p2cW1WOWhvcHpvNStKUzNGeUJNZlphcWNFUGhRTDVEdmVaMEZMVkZz?=
- =?utf-8?B?L3N6bzUxQm81dXAvYXF6YjhPdjBkdFhaQkZGd2FsRnVQejVBWUsyYVNkS2xq?=
- =?utf-8?B?UEhtNUE3T2lPWTJtUXY0ZE1Ic1FSWDZ6bEc3QUgxY05GUXJNT01RMkdEU1Q2?=
- =?utf-8?B?SzFYQ2RkUTNlSmk4NzkvVGx5eFp6WjU1Tk4wY3BnRDNXU2hwdnBaeVgwUk5M?=
- =?utf-8?B?Q01RT2JZeFVBenlOOHZoNVVYRktOUmN4Qy9tajF2QkI2TjJEdjVZUlFyWmlp?=
- =?utf-8?B?V3k0bU1QUVF3Y3YwdndoMWVlQjZKaVp4Qkl3MFNmc3JlSHZnRzdPck1LMFRM?=
- =?utf-8?B?V0V6eXdJLytxQnRhNktrak8zL0xRU2YvcHovVG9oQk1zMktXdW1rNFltaEs5?=
- =?utf-8?B?T21TTmw2N3dHMVlwUCtKSUFMMzJCUzZRaDNQaEhDOHN4dzVOeUFwS0czVm5H?=
- =?utf-8?B?cG55cHJETWJxMEd4Q0g2RTlZUEpBQnNWa0o2WGtSWHVBRE5rRm9xQkJFL3Av?=
- =?utf-8?B?a3puallLOTRSR1ducTlMNjlTaHBuWUorbUd1bjlHM3ZRQmJGbUI1VnFCQzFD?=
- =?utf-8?B?aVNpSldiRm5aODd0SzdFUnpnNXVpM3NnY29MUnR6eFR5NGEyaTU1MytXcldj?=
- =?utf-8?B?U1FuMzBrTXkrbUtEekxTRnNVTjdqbGFIWXVWVmwrTWRxdkZ0YWFDcWtoV2NB?=
- =?utf-8?B?dHBWN3E5WEpvbW4wSU5TVzRJSmx4NnVaMm9pNWk0VXA3ZTc3b2JjOWVpMVZ0?=
- =?utf-8?B?TXpmbDZHYVkvZ0srbC8zWGxHZEtVVmh2TFhCaGFrWFRNUEM0MFBkY2JPT1po?=
- =?utf-8?Q?dyVLYulSZsh1vZoLZhAMdxo=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	A4CPR3jKmKKByBZGlmsp0gj+nh0VAdJkzy/fKy7lpox6YJeOdcUSGQTpjw0zpXzPAOYoq7NUIcHevoCg9PD16VDf/LTMO4+PyBbk2q37lFjyUSDtmPooG15/Xa6ulBSzjYh5sOpBIBtT8HNnefDGygazegWDjMuQKlssiH7BZeZz353sbH6vuuhK/FtJjKGrkvm7zNh3IEjawSPM6KnFg8QY/zVdKXaJF+Fb7DNOLBCYCuh0w2aBW+Zhq51SDF+KHgoMNaZAei4GKrV2GIlRVQkIDk7MWXo8ttuTta584ucM0hcTJTZGWR0qYTuIYcOr+LxfXAHfqBo9+ps6PHti8aWksRsziiAz+zVk2mzZQAW83bHlUUJUKPcp2P/mgwS25bedCOdqJ19z8g3HNDNvBi/Njdy1cxsz4xinp1148CPNI8S3eepQHTymK4qKx43gNDtXeI1u6s5Ucs02+qmK63Ci6CWZcgPPmwTjt0C1GdwwVoMKYFNBFAdHfmAyuYVPKezrGllfYIZIu3RmKjo24zqdyLbRaLDdoWqpmcb2TKf6N/wwReYOsSUXZIHJAsdbkmhuEqYdZIFBfTgOqk849DMrBOnYzLC/fGycarg+7VA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c67e649c-51f4-4b2b-faf3-08dc2ec1e248
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6290.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 07:35:44.3528
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o6kHaRmDk99th4LW+lja7TRPNbW8HQwpD9l1OZN3dYX2mKcWnKYbQxB/HaE7cMv6dHMEAMfhrb32e8+iJLdlr0C/9ffuQI0u/mpnBVvdc2jIl46tttKUzyMujLuGJP4i
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5043
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-16_06,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 spamscore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402160060
-X-Proofpoint-ORIG-GUID: 2Ayf1Y0DbW_yNO7KYGgAtocN_mskjr8G
-X-Proofpoint-GUID: 2Ayf1Y0DbW_yNO7KYGgAtocN_mskjr8G
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708071268; l=6327; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=9GN9iBufDM+/oHP89fEYbJjbEjzPtGj8kAlRejRoEWg=; b=P3K6GlVBRBPXlxEvy+H6K/9xCzTD9h8+3DfVm6efkKz4SvieMaKF0/Xdr3B//ZCDOUWES9Nu4 EFuABmForTxC7yh5vGIiI6aREv22Jix23WCiyGo4JRXUYwDzWjrxPH7
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-Hi Kovalev,
+set_memory_ro(), set_memory_nx(), set_memory_x() and other helpers
+can fail and return an error. In that case the memory might not be
+protected as expected and the module loading has to be aborted to
+avoid security issues.
 
-On 11/01/24 6:23 pm, kovalev@altlinux.org wrote:
-> Hello, I was also working on solving this problem
-> https://lore.kernel.org/lkml/20240110104042.31865-1-kovalev@altlinux.org/T/#t.
-> 
-> Please note that there are 2 such places in the code, and by analogy with your
-> version of the changes, including changes in the approach to calculating the
-> size of the allocated memory, additional changes on top of your changes will
-> be as follows:
-> 
-> diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
-> index ba379cd6d054bd..1a50fcea681bf8 100644
-> --- a/drivers/misc/vmw_vmci/vmci_datagram.c
-> +++ b/drivers/misc/vmw_vmci/vmci_datagram.c
-> @@ -369,8 +369,9 @@ int vmci_datagram_invoke_guest_handler(struct vmci_datagram *dg)
->          if (dst_entry->run_delayed) {
->                  struct delayed_datagram_info *dg_info;
->   
-> -               dg_info = kmalloc(sizeof(*dg_info) + (size_t)dg->payload_size,
-> +               dg_info = kmalloc(struct_size(dg_info, msg_payload, dg->payload_size),
->                                    GFP_ATOMIC);
-> +
->                  if (!dg_info) {
->                          vmci_resource_put(resource);
->                          return VMCI_ERROR_NO_MEM;
-> @@ -378,7 +379,9 @@ int vmci_datagram_invoke_guest_handler(struct vmci_datagram *dg)
->   
->                  dg_info->in_dg_host_queue = false;
->                  dg_info->entry = dst_entry;
-> -               memcpy(&dg_info->msg, dg, VMCI_DG_SIZE(dg));
-> +               dg_info->msg = *dg;
-> +               memcpy(&dg_info->msg_payload, dg + 1, dg->payload_size);
-> +
->   
->                  INIT_WORK(&dg_info->work, dg_delayed_dispatch);
->                  schedule_work(&dg_info->work);
-I think you need to send a separate patch/patches for this.
+Check return value of all calls to set_memory_XX() and handle
+error if any.
 
-[linux-next]$ git describe
-next-20240216
-[linux-next]$ git log --oneline drivers/misc/vmw_vmci/vmci_datagram.c
-19b070fefd0d VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
-e03d4910e6e4 VMCI: Use struct_size() in kmalloc()
+Add a check to not call set_memory_XX() on NULL pointers as some
+architectures may not like it allthough numpages is always 0 in that
+case. This also avoid a useless call to set_vm_flush_reset_perms().
 
-I see that the two patches I sent are applied by Kees and are in linux-next.
+Link: https://github.com/KSPP/linux/issues/7
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+v2:
+- Bail out early from module_set_memory() when address is NULL.
+- Properly clear bug list when module_set_memory() fails in complete_formation().
 
-I am thinking if we can reproduce the above WARNING in 
-vmci_datagram_invoke_guest_handler() by modifying the C reproducer 
-generated by Syzkaller for dg_dispatch_as_host()
+This patch applies on top of modules/modules-next branch
+---
+ kernel/module/internal.h   |  6 ++---
+ kernel/module/main.c       | 20 ++++++++++++---
+ kernel/module/strict_rwx.c | 51 +++++++++++++++++++++++++++-----------
+ 3 files changed, 55 insertions(+), 22 deletions(-)
 
-Thanks,
-Harshit
+diff --git a/kernel/module/internal.h b/kernel/module/internal.h
+index 4f1b98f011da..2ebece8a789f 100644
+--- a/kernel/module/internal.h
++++ b/kernel/module/internal.h
+@@ -322,9 +322,9 @@ static inline struct module *mod_find(unsigned long addr, struct mod_tree_root *
+ }
+ #endif /* CONFIG_MODULES_TREE_LOOKUP */
+ 
+-void module_enable_rodata_ro(const struct module *mod, bool after_init);
+-void module_enable_data_nx(const struct module *mod);
+-void module_enable_text_rox(const struct module *mod);
++int module_enable_rodata_ro(const struct module *mod, bool after_init);
++int module_enable_data_nx(const struct module *mod);
++int module_enable_text_rox(const struct module *mod);
+ int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 				char *secstrings, struct module *mod);
+ 
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index a9a4a4885102..689def7676c4 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2571,7 +2571,9 @@ static noinline int do_init_module(struct module *mod)
+ 	/* Switch to core kallsyms now init is done: kallsyms may be walking! */
+ 	rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
+ #endif
+-	module_enable_rodata_ro(mod, true);
++	ret = module_enable_rodata_ro(mod, true);
++	if (ret)
++		goto fail_mutex_unlock;
+ 	mod_tree_remove_init(mod);
+ 	module_arch_freeing_init(mod);
+ 	for_class_mod_mem_type(type, init) {
+@@ -2609,6 +2611,8 @@ static noinline int do_init_module(struct module *mod)
+ 
+ 	return 0;
+ 
++fail_mutex_unlock:
++	mutex_unlock(&module_mutex);
+ fail_free_freeinit:
+ 	kfree(freeinit);
+ fail:
+@@ -2736,9 +2740,15 @@ static int complete_formation(struct module *mod, struct load_info *info)
+ 	module_bug_finalize(info->hdr, info->sechdrs, mod);
+ 	module_cfi_finalize(info->hdr, info->sechdrs, mod);
+ 
+-	module_enable_rodata_ro(mod, false);
+-	module_enable_data_nx(mod);
+-	module_enable_text_rox(mod);
++	err = module_enable_rodata_ro(mod, false);
++	if (err)
++		goto out_strict_rwx;
++	err = module_enable_data_nx(mod);
++	if (err)
++		goto out_strict_rwx;
++	err = module_enable_text_rox(mod);
++	if (err)
++		goto out_strict_rwx;
+ 
+ 	/*
+ 	 * Mark state as coming so strong_try_module_get() ignores us,
+@@ -2749,6 +2759,8 @@ static int complete_formation(struct module *mod, struct load_info *info)
+ 
+ 	return 0;
+ 
++out_strict_rwx:
++	module_bug_cleanup(mod);
+ out:
+ 	mutex_unlock(&module_mutex);
+ 	return err;
+diff --git a/kernel/module/strict_rwx.c b/kernel/module/strict_rwx.c
+index b36d93983465..c45caa4690e5 100644
+--- a/kernel/module/strict_rwx.c
++++ b/kernel/module/strict_rwx.c
+@@ -11,13 +11,16 @@
+ #include <linux/set_memory.h>
+ #include "internal.h"
+ 
+-static void module_set_memory(const struct module *mod, enum mod_mem_type type,
+-			      int (*set_memory)(unsigned long start, int num_pages))
++static int module_set_memory(const struct module *mod, enum mod_mem_type type,
++			     int (*set_memory)(unsigned long start, int num_pages))
+ {
+ 	const struct module_memory *mod_mem = &mod->mem[type];
+ 
++	if (!mod_mem->base)
++		return 0;
++
+ 	set_vm_flush_reset_perms(mod_mem->base);
+-	set_memory((unsigned long)mod_mem->base, mod_mem->size >> PAGE_SHIFT);
++	return set_memory((unsigned long)mod_mem->base, mod_mem->size >> PAGE_SHIFT);
+ }
+ 
+ /*
+@@ -26,35 +29,53 @@ static void module_set_memory(const struct module *mod, enum mod_mem_type type,
+  * CONFIG_STRICT_MODULE_RWX because they are needed regardless of whether we
+  * are strict.
+  */
+-void module_enable_text_rox(const struct module *mod)
++int module_enable_text_rox(const struct module *mod)
+ {
+ 	for_class_mod_mem_type(type, text) {
++		int ret;
++
+ 		if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
+-			module_set_memory(mod, type, set_memory_rox);
++			ret = module_set_memory(mod, type, set_memory_rox);
+ 		else
+-			module_set_memory(mod, type, set_memory_x);
++			ret = module_set_memory(mod, type, set_memory_x);
++		if (ret)
++			return ret;
+ 	}
++	return 0;
+ }
+ 
+-void module_enable_rodata_ro(const struct module *mod, bool after_init)
++int module_enable_rodata_ro(const struct module *mod, bool after_init)
+ {
++	int ret;
++
+ 	if (!IS_ENABLED(CONFIG_STRICT_MODULE_RWX) || !rodata_enabled)
+-		return;
++		return 0;
+ 
+-	module_set_memory(mod, MOD_RODATA, set_memory_ro);
+-	module_set_memory(mod, MOD_INIT_RODATA, set_memory_ro);
++	ret = module_set_memory(mod, MOD_RODATA, set_memory_ro);
++	if (ret)
++		return ret;
++	ret = module_set_memory(mod, MOD_INIT_RODATA, set_memory_ro);
++	if (ret)
++		return ret;
+ 
+ 	if (after_init)
+-		module_set_memory(mod, MOD_RO_AFTER_INIT, set_memory_ro);
++		return module_set_memory(mod, MOD_RO_AFTER_INIT, set_memory_ro);
++
++	return 0;
+ }
+ 
+-void module_enable_data_nx(const struct module *mod)
++int module_enable_data_nx(const struct module *mod)
+ {
+ 	if (!IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
+-		return;
++		return 0;
+ 
+-	for_class_mod_mem_type(type, data)
+-		module_set_memory(mod, type, set_memory_nx);
++	for_class_mod_mem_type(type, data) {
++		int ret = module_set_memory(mod, type, set_memory_nx);
++
++		if (ret)
++			return ret;
++	}
++	return 0;
+ }
+ 
+ int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+-- 
+2.43.0
+
