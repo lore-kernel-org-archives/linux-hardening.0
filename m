@@ -1,100 +1,120 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD99B145328
-	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 21:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E20146900;
+	Fri, 16 Feb 2024 22:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708119956; cv=none; b=K4TEzndiqdrKsRycGi9fiSNl2sYwmIY00o4E12z6uUcdPd2iWeETGWm/jLA8X5ABc9+3Cbc0hMSwwzoGq8XkmzmH+iQ8b6vZHFj05XLs9BTOY8XfkiEeyIciGQUvvLQ7f34mJ5bIkA+GHF61yJJJ55GjB788QTyBJy2iaPNRbqg=
+	t=1708121221; cv=none; b=B+p4LpbRF/UXPymJjfRC1HFn2fw/oofhoR5f+51kC4JAYnkFxX9DsTqe/2uCZ8yN++msDCwhLi2JZHh7JSaXGqE6lXeQOzkkPbX6UFFF/+PojzDJ43aag9i/dC6ElU/KdQMbL9wcc4lc8CeI0LSrbEMTIfO1S2BdazZB+TY+uzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708119956; c=relaxed/simple;
-	bh=sWcb4QWZQerF6dGRRf3Saf0ygsiHNPwWHpaQ0U2ubAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RrHZOdWz2ZELYoEeRYBijtf8r5v4YJ7ybKo8iZLpkc5lasdfwfsehtP3DGmc9w1+e7j3fz+qEx2Bq8tSfI8hhDkk0Eh4zOssA49ZvyIcPlvD+eVY1guh2eZi/oePWj8jx8GyC1d9fHjP3vKQ4RvQhMYf10xxyYO6WOKC1SZoT/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TdZbvg5k; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708121221; c=relaxed/simple;
+	bh=6WONRnosR0Fp6iJnVPXy3F6vPXXlIX/5qT82o+Br1wc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tvnIGdmI2liC23SJyRXhtyZj2edKIj96b3sO8mPXbYEHHSq3SsmRIJ/HB5kQJbfzMn+Nzp5GGHBNfByqDHK7NyCpx3mluY8ICP8LL/kgmnoad1hPe4tbnZ76a2ehrYwquu7upcPkH2gnKEKsRGDZkz/jFMWWPynnDZZ2ac/AenY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=JABqaPdL; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TdZbvg5k"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-599f5e71d85so1533668eaf.3
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 13:45:54 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JABqaPdL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708119954; x=1708724754; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jksvwB5iTFy80QFc8o5j3z92gnehVl2fAGc//WCCKZg=;
-        b=TdZbvg5k1WzoSRChsZ8ZH0hIBJkpubl4faHGJBahsAR4Rn1FbSpuNIqXbeQxN+Lqv3
-         cl5u9EIsM6UTMHn1zhkGC3A8fvhn+6ZBQ0aSS07tZXNk8Ix1XkWGigxhdKpvhSubBrYd
-         irmgEFLSC+x384R3lGCtxIpLBrVn8qbSNCONA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708119954; x=1708724754;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jksvwB5iTFy80QFc8o5j3z92gnehVl2fAGc//WCCKZg=;
-        b=Ou7+UBijBMhAbYoedxGWNx5IxhrJX/5XefbkbdzfP1tI9kNZmgaxFaYNJU1BPesEE4
-         MPVKJ1Mye1jO6fn8RevQ7wqkTe6vl04P9vSR99LSqio08PrN+uh+UMgpQFNJUvOSd1wg
-         gNWGw4i3KUWv8hjLjR47mrU0tT/O2CtKZUnqnFoKnMkf3XNm3vtGboLLbAEsaQKzTDAx
-         OF7lIhyiqK28+1dFgsOJExT0liwP1kZXzE/KE7hj2UjM47271ecAiKAXdnwf53+oZImO
-         lDNjN+ceyJY2/7s9MbHRP6gjoQR35TNjVtjlwU1xNWnBt0T+4XitbRruoOXbMEA/Occ3
-         0TdA==
-X-Forwarded-Encrypted: i=1; AJvYcCV45vXHhtDscCsPfFajJVY36GVdLP7URPDn5jMteL3aH6G3edUmz6/9c97uXMn+aEOWdmI3g1EDs99qSDvAVJBWgIRXu82cwDZcWYQNa+RM
-X-Gm-Message-State: AOJu0YzpseIVaisEKBostvTUIzC3vs3Wwki+kjeyeEHikoI0M1XPXAE5
-	8cJZ6IdeBEW3xMiGNK7AECQYbyM5j+j3rj/S/H5WcwzleRQxP8PyHStkPHYQfQ==
-X-Google-Smtp-Source: AGHT+IF9+vJFbk3kmtKKuYnkYafkp2Qrd9UzE5RWwOf99PqpIE62RSHCclH6Xu0D7RM+/Fd/EwCtzg==
-X-Received: by 2002:a05:6358:648b:b0:179:2136:9971 with SMTP id g11-20020a056358648b00b0017921369971mr6537867rwh.11.1708119953974;
-        Fri, 16 Feb 2024 13:45:53 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b11-20020a6567cb000000b005dcbb855530sm296297pgs.76.2024.02.16.13.45.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 13:45:53 -0800 (PST)
-Date: Fri, 16 Feb 2024 13:45:52 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fortify: Include more details when reporting overflows
-Message-ID: <202402161343.DC688FDB@keescook>
-References: <20240216203935.work.829-kees@kernel.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1708121217; x=1739657217;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=luqn3+mL66LkEnqJW2Idc2GGi5UV6QGJD0hWMbRsxiY=;
+  b=JABqaPdL++w9JKhXsmLGNZXYGGQp028otuk2JQmLbwiPJezkpTOdwtYJ
+   3FRk/TsM9UTKeVrAPrPGNPreKWxIajc8Ye9lufPBHjyPX9FBOlrc0M+ZE
+   84CHBYYBHDcQUrOh97rogmBaq6W+QKW9OOX1ueyCmrkdEZPBp7Z/OcKse
+   8=;
+X-IronPort-AV: E=Sophos;i="6.06,165,1705363200"; 
+   d="scan'208";a="185388154"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 22:06:49 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:31833]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.24.112:2525] with esmtp (Farcaster)
+ id b2c3214c-81a0-4661-9e5f-a145032dd5b0; Fri, 16 Feb 2024 22:06:48 +0000 (UTC)
+X-Farcaster-Flow-ID: b2c3214c-81a0-4661-9e5f-a145032dd5b0
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 16 Feb 2024 22:06:48 +0000
+Received: from 88665a182662.ant.amazon.com.com (10.106.100.6) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1118.40;
+ Fri, 16 Feb 2024 22:06:44 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <keescook@chromium.org>
+CC: <alexander@mihalicyn.com>, <davem@davemloft.net>, <dhowells@redhat.com>,
+	<edumazet@google.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<leitao@debian.org>, <linux-hardening@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <wuyun.abel@bytedance.com>
+Subject: Re: [PATCH] sock: Use unsafe_memcpy() for sock_copy()
+Date: Fri, 16 Feb 2024 14:06:29 -0800
+Message-ID: <20240216220629.71672-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240216204423.work.066-kees@kernel.org>
+References: <20240216204423.work.066-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240216203935.work.829-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D037UWB001.ant.amazon.com (10.13.138.123) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Fri, Feb 16, 2024 at 12:39:41PM -0800, Kees Cook wrote:
-> When a memcpy() would exceed the length of an entire structure, no
-> detailed WARN would be emitted, making debugging a bit more challenging.
-> Similarly, other buffer overflow reports would have no size information
-> reported.
->
-> Always warn for memcpy() overflows, but distinguish between the two
-> cases in the message before continuing (warn-only) or blocking the copy
-> (hard-fail). Additionally add size information to existing overflow
-> reports.
->
+From: Kees Cook <keescook@chromium.org>
+Date: Fri, 16 Feb 2024 12:44:24 -0800
+> While testing for places where zero-sized destinations were still
+> showing up in the kernel, sock_copy() was found, which is using very
+> specific memcpy() offsets for both avoiding a portion of struct sock,
+> and copying beyond the end of it (since struct sock is really just a
+> common header before the protocol-specific allocation). Instead of
+> trying to unravel this historical lack of container_of(), just switch
+> to unsafe_memcpy(), since that's effectively what was happening already
+> (memcpy() wasn't checking 0-sized destinations while the code base was
+> being converted away from fake flexible arrays).
+> 
+> Avoid the following false positive warning with future changes to
+> CONFIG_FORTIFY_SOURCE:
+> 
+>   memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
+> 
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This will need a v2 ... something in my manipulations is triggering a
-bizarre warning in Clang:
+I confirmed unsafe_memcpy() is just memcpy() without fortified checks.
+
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
 
-../fs/dlm/rcom.c:490:13: error: member reference type 'int' is not a pointer
-  490 |         memcpy(rc->rc_buf, rc_in->rc_buf, sizeof(struct rcom_lock));
-      |                ~~  ^
-../include/linux/fortify-string.h:636:47: note: expanded from macro 'memcpy'
-  636 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-      |                                               ^
-../include/linux/fortify-string.h:591:20: note: expanded from macro '__fortify_memcpy_chk'
-  591 |         __underlying_##op(p, q, __fortify_size);                        \
-      |                           ^
-
-
-I'll track it down...
-
---
-Kees Cook
+> ---
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> ---
+>  net/core/sock.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index 0a7f46c37f0c..b7ea358eb18f 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -2053,8 +2053,9 @@ static void sock_copy(struct sock *nsk, const struct sock *osk)
+>  
+>  	memcpy(nsk, osk, offsetof(struct sock, sk_dontcopy_begin));
+>  
+> -	memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
+> -	       prot->obj_size - offsetof(struct sock, sk_dontcopy_end));
+> +	unsafe_memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
+> +		      prot->obj_size - offsetof(struct sock, sk_dontcopy_end),
+> +		      /* alloc is larger than struct, see sk_prot_alloc() */);
+>  
+>  #ifdef CONFIG_SECURITY_NETWORK
+>  	nsk->sk_security = sptr;
+> -- 
+> 2.34.1
