@@ -1,155 +1,412 @@
-Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-pr2fra01on2123.outbound.protection.outlook.com [40.107.12.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3651350E4;
-	Fri, 16 Feb 2024 19:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.12.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708112137; cv=fail; b=uFF3+volEuL2/3rn6NZWGHu1PRWn9lUeCgJEQndNYaMlMrVqgmk1VGTD47zo0qEDgCp3G/2l5+WjRqRZtFiKQzgkipl07qSh8+lA9CEv7viDryhHKLcS1YyojDtLVIH5O4sqT46OrHjusj5bY2/Lo79rCF2AAgAohmDDZLCZgds=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708112137; c=relaxed/simple;
-	bh=EojwXAbU5kHOn4ZIlJ0TT2fBiUmrcYEjqvRV+ECtbhQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D1obfPcABwsO91cstSn94WnOb1WclQqxrLuU1vW6odtNnRuX1la79crKsuBQEaf5iowpbrMETQ5/2aYLpX4SF0/MYQ16g1yh1nVrKklIYD7gqmASH9qE8BSe4Y+oOAAzEYFuA4VcEhvuaeqOqwJaukaBnzac8OMuwKwqxHibyVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=jGu7TOKU; arc=fail smtp.client-ip=40.107.12.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D9F1487D8
+	for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 20:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708115987; cv=none; b=YV48q91W9u2BlJY0xSG0yDpyEg7/43JDMXAAhm3Ctv1N/ooparnr2BC8nwqidFaKy8d3ww3QJr/Qa1cjugJiRAgfSQXTE4dpok+2bCUJW8QhruP2+seOP0tcxxNYHh+8v70yAoEW+C4VQrFznayr+QcUoeap6xOWkAwFgLZq6Uc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708115987; c=relaxed/simple;
+	bh=UAarzlLZNnS7Vm2NrmTERcnGSEK4P42ieUXek0iNry4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r31sYXz0K9VdU+DvnON1zzXNG97zmZtHq88l8Ba3fl8ELnzJOtgUgMUyZRIjTT7XT6m3RvXHWcUsh2var+RW+ajOj6WDQaVEd/c0LJYJ8HP+x1FO50FpcrDOL9E1/YmS2pod05YqJ1a4GldiXD06CBtxDi3Bc5EVRyZOZbwlXQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ywx5Ixl9; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="jGu7TOKU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P938WWysBglOuLrjWDHkaim1wpqjaMPN32/imh2BBY5ncBI0w4nmPhzqBFGXUGB2gGyFVbsUaE/7qP/a8mw+crd0mxabhUGnd1ukPal8l5j8vGKk6KRoYElLRhgYjVIRw8/pT18rYIkW37qCvAIspUX1O9qZLgXbRn5puybrRSMlJqItNcCbyoLCfM3FwR6A/ZstfLl6pUvEkM4xJUPu/14AhzB1c3MJ8AvsywhnXIXhkhohPPG/ardKwnrmcpy57Wp4zAlzB97U+8uQQTtfcWsRm/fiqLy5xctpltGdWq+Dyi5aNGjN6q+pcIFRM0wpHAl0Txl4yUl57LV7X9v9cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EojwXAbU5kHOn4ZIlJ0TT2fBiUmrcYEjqvRV+ECtbhQ=;
- b=M+oyttbMoI4qsud4YbvaeOmXVXk2DA4fSAWbCZdV6BOOU8DZLzYPJQMUP9NlqSh1OKiSPhbtoBuFer2hvo+daJjKojjvih0H/IJAeFrC6qlHggpT+2q5vHdATHHedEs2gAXSnyWaODOcRfxtUJbSXjlxjUEozHgLXnByEB2CjXERNmP8HqAdS4CRoWKEbIPKdzltj9sqlBnHTq9wtieDiHF83Qh+gXtn/cds6o+9+ee9J2i7L3iSVCWexw+SLpJEKf9ElZfnpZnAvGfsuPuiTzu0fkpSsx9MxfKJOoebSKLjFmn+xIyI4zVyb+LDilo6wpQGG+16kGK7IRbt7T0j9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
- dkim=pass header.d=csgroup.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EojwXAbU5kHOn4ZIlJ0TT2fBiUmrcYEjqvRV+ECtbhQ=;
- b=jGu7TOKUvCFU5QVGQunNsdbPSJPoVL6qWjpWgV3vMMvg/yopD6W09ma0i+Pi9dFlgZqiD/YvxdUFcUPFZzZAI3JRsC/FazWMYpHFHiclAOTH29gr9nn0kAhVLpubBVbWMbc+yTZUNfrShCQc4mNJ9ua3rbXuPir4m1N89ZjfOOibxzczqULxT5WoXyel7+fQ5Lg0I9cgWvKJi4ZMR9dAhnb2czVdhljVdXouiUPbOcF34+43yw7oQlwUMGGyXvMEmf1+OqiwJOwQsQHr+n4i/5RZpRlRiAVVoupabkbTCplPR+PoizAkN3w0TiExBkoneDVPSt6eh8q6DZnOl3E16A==
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
- by PAZP264MB3285.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:141::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.32; Fri, 16 Feb
- 2024 19:35:32 +0000
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::64a9:9a73:652c:1589]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::64a9:9a73:652c:1589%7]) with mapi id 15.20.7292.029; Fri, 16 Feb 2024
- 19:35:32 +0000
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Kees Cook <keescook@chromium.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>, "linux-modules@vger.kernel.org"
-	<linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hardening @ vger . kernel . org"
-	<linux-hardening@vger.kernel.org>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Michael
- Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2] module: Don't ignore errors from set_memory_XX()
-Thread-Topic: [PATCH v2] module: Don't ignore errors from set_memory_XX()
-Thread-Index: AQHaYLA4WWYhqLg05kqaZUvko5K+cLENW1cAgAAB44A=
-Date: Fri, 16 Feb 2024 19:35:32 +0000
-Message-ID: <12b5fa1e-c6cf-489b-b7bd-4f9d5ed9aba6@csgroup.eu>
-References:
- <21037bf38438a285f5dff9501668f1675bc45989.1708070781.git.christophe.leroy@csgroup.eu>
- <202402161128.21EA3F8@keescook>
-In-Reply-To: <202402161128.21EA3F8@keescook>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=csgroup.eu;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PAZP264MB3285:EE_
-x-ms-office365-filtering-correlation-id: 8841c7cd-ffa9-43a3-26ca-08dc2f26707b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Y7xGRo6NLc8iOcEV3W5mN66Kj9/bK4P1GM//l0r5MChAeocxsuIUb9SafIfQ+vBV5AgaPYSutMLcAEblLVEQNzc2XfeMtSP4CmcOF6/UcP+i2Lt/+I1Hv6IYeLWW/kTNIcGvQBc/HedV4zoQsk/jWbZDFCRy32jReoowvEgFWp+ToZoGP91Aii5+cO3CXvqdnSN3EOLeqQ3krh5XIDcWJq/IKz+jejqm6OrZPMfL1D34RxRYPRBt1BH8Y1FRwOQ0RkYHQd9fsgiqixzjC+Sj5IDqiVwnglP9JTWySj1VYpWNlwQPH+ol0mzArIfJhM+sVjZ1QV6yWlHooF5XeVJNTBLtAPDol2sDqZByi84eGKouHpaKdjBJ0ZWAiMd3ZCKw/3titutudTaO4SGUFMm7MdJqf3lSpbwQYuDTEgGXFs8o2omWwwY/3Xzw5lmIG4fRe66dUg8cylfPcf7rN5RG54VTes1sEkptL/WTctcP3ECnKaplpZ/0IaaHrGhV7ytWjUAO37wnnR/18+e/yIUxQogpt/ikYggCO1xz3BNymu+Pnbn+Y0S7xUsCoFAtVG6r7dkmN6uzFN8XdpyQBUIX4xdYiCpydOavAxk8xpKhOs0=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(376002)(396003)(39850400004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(8676002)(8936002)(4326008)(6916009)(44832011)(5660300002)(2906002)(38070700009)(36756003)(41300700001)(2616005)(26005)(478600001)(38100700002)(122000001)(83380400001)(66574015)(31696002)(86362001)(966005)(66556008)(66476007)(66446008)(64756008)(66946007)(76116006)(6512007)(6506007)(6486002)(316002)(54906003)(71200400001)(31686004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?V3IrY1VDcDN5K1pnMHl0RWRkOW4zSU4xOTNPTzFjN0MyZlA3RXZQdlRZRnFR?=
- =?utf-8?B?V0tVYmk1S0tmejRpYS9rVmlja0FKcURlZGZhbHJOL2I3NXFHMXF3RXZ5bzhM?=
- =?utf-8?B?SHUvQU12ZkFtRWpZdXdSSzRFam1wWllFbWtNVjA2NXlXaDZMZjFYbGNTQlNK?=
- =?utf-8?B?S3BYWTlOODVaUWZTc0sxNHZ5OC9RcXRmS1c3djZHSElza1lYeUp3Q1IydzdT?=
- =?utf-8?B?VzVmZTc1WUFpN0oreXlUU1krTStzNnFHMGFlMkdjRUJJMHBVUEVKUXZsTngz?=
- =?utf-8?B?Q0tLeFFZdGJtakRKQTNSM2xGTWk5Y1dBN1lSeEpvNkJPRWFtNjVrQ1Q2Misv?=
- =?utf-8?B?eWNENzFNODVSRVFHenNmbEJ5dlA1anpNam1qTkMxVXFyd1pRK0JiYms4VW94?=
- =?utf-8?B?VWpLcXRTaEwrZ2NwcCtDb08raTdISUFkN3VDcUw4elFaaEVrRFR0TWJwOWEx?=
- =?utf-8?B?WDB0WkdNMTJ0YmdhWnFoVElXMjdMK0Q5dWkra3cyalQ5MFVMVG44KzVOZVl1?=
- =?utf-8?B?SmhBdGszdm9CaTlKVlRELzNldU13MGxoeDhwYUpZUUNJa050ajZnTzdPclhW?=
- =?utf-8?B?Z1FLMFcybk9mNG9DT0wxTVdDZnZhN3h6K05Dck9LajF4dUpmcG1XSW9hUXJm?=
- =?utf-8?B?SWVKSzdpL0ppSk9BaFBqa1FNSlJtc3dHMEJUMW5WQTdqcHAxRmlldUVwbHdW?=
- =?utf-8?B?dlhvbXN2V0ZjRW5kc2VrTFBIZ3poWVRDc01MT1drR3RYUU5EblFKV29CaHNk?=
- =?utf-8?B?S0t6QmJNTWVRVFRvLzNCNVh6d2syaUdMT3p5NmhhakZENmJFRlFVOHFuazVQ?=
- =?utf-8?B?bzBrNHRKMDcxaXY2NFd1OGQwSHd6eHQ4RjArenB2YVBCMkduN2wyRjhiV3M5?=
- =?utf-8?B?bUwreEhaTlZPRTd6QzBKN1JaYU45M2lFeGpnbWFSTU5XOEg1VitVdElZSitO?=
- =?utf-8?B?QW8reVNUakx2a0pHai85NkdUclN3bFlxK3VkUXNmY0F3emV0bk15eXF0OTVm?=
- =?utf-8?B?c3RJempXWHhqZVZFTVRvaEpMeWM3aStrMDVSOFIvZDFvRkxlZEZHRHNDZ1dn?=
- =?utf-8?B?UnQzeml4ZVdaRVFSL05zNFp6UmZ1YjJ0MjVWSmtabDkxbmFqeXozWjRSNSsw?=
- =?utf-8?B?RytXY3RWSHFzYmYxYW94SVJUNnh4amU5TEtRZE9oVUJHTmtKNnk2ZDJXNjJE?=
- =?utf-8?B?SUJ4VXNUcFFYSkVKekZVUzZMckgxTTlSVkhTZGdWQnJkaGtxQ3J5Y1dsazdt?=
- =?utf-8?B?MThoeUc2dHdidXpxQ1cyckxhKzhTQVNkaEh4NzFDTTlab3ZGcHlsMEMvZm9T?=
- =?utf-8?B?SlR4V3ZBQzFkMjkyT09ocGI4aVFPWW1oZmlpNm9pYmE3S0V2V1hoa2ExUTk2?=
- =?utf-8?B?NkI1b0p2NEMrdno3eUR6VkFrek81bjFLMjBZTkROTlorU3ZweW5wRldnaEVN?=
- =?utf-8?B?bjg5NDNaeHdmSFYvQk9VMVhuQmNaSEExdllrdHZRTVJoVFpKaDIxQVdCbDNX?=
- =?utf-8?B?QjhsaTQwczJGUE5KV2VMSFhlczdISFEzcDU2OUJpRDd2emJYaC9CdE5TN3ZZ?=
- =?utf-8?B?ek10SWRId0VVODdoa21sbm5DUWxTUlNaRVhvNGREMmZKR0RrMS93dktnYWhs?=
- =?utf-8?B?UGVSc0x4SnkyOU5qZzNaWm1vZ0tXcDdNTE1kWTlPYXQyZW5GM2pQRUJtUUQv?=
- =?utf-8?B?bVVmRXVFQVVueGQ3VEpFZWhQVk1PR0F1ZHAwUXlUWXlBWTNtVFVuUjFzamdr?=
- =?utf-8?B?aHJyQzRiUGt0ZGEyL3BSV3ZVdkRIZlVMUUNVNHJGd1RJYzRWWjFSNGVBMFF1?=
- =?utf-8?B?bGM5OXhmaWdPMU0vL1U2dzZMNjhuV0lEQmNTWDkxbndsQlMzMW96QXoxRHhF?=
- =?utf-8?B?VVJucmVqbWx1OU1tRUlSNnhoUVpENkxaZjh5ZXFNb2RrdjhjL3p1RTlHZk0y?=
- =?utf-8?B?MmNyakFvZkJXQmQvRGtpdFZrZTZFTllXeG5TdjdPZzFzbXltUHJ2ejhDVnBM?=
- =?utf-8?B?NVkvdlYvVWVkS2NYL0hXU1AveDA2VDZadU1FV1ZJRTNtc3ZJa3llZVk2OEhu?=
- =?utf-8?B?TVd0d1VjSGxORXZmS2R5MklzSlJzbnZqQ01HZFdEVVMwRmF5RU1RVThVK3Nj?=
- =?utf-8?Q?5LUn50q95B1COwF5jxC8mVjWX?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9B9E2B01DD578949B623E5D9CE7DB1E3@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ywx5Ixl9"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-296e22f85abso1987443a91.3
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 12:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708115984; x=1708720784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mz+jKxxKsBo4Xcua4thlFKQreFCbjzfEWLASDxnfABk=;
+        b=Ywx5Ixl9bXtTcCASeu84XxBcf3wA0L7eho+458DKGDy9teqUCWOzU4/Q38r0gWn5LG
+         VNS9MhOV5XgDKlakUnJ69U+vZukqhyNj3VmPUrygB8gqs+0fEVAAkf/iFr2YW8zOwjwc
+         v3WYFlURkDp5LzilGRZndC/laUDUZArJZGGnQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708115984; x=1708720784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mz+jKxxKsBo4Xcua4thlFKQreFCbjzfEWLASDxnfABk=;
+        b=UDn4IxRAQLQCD563AzB2WY6IK7Gdc6/KACm9sDx7QCT5PZik693SsrYZBg1Juq2UES
+         syIvxOHjYoOT4oDt8M0M4XhYM8Z0dtG+k0sKZLZ1hgf60Ckai8IilMddZAA+tBtI3XO8
+         6EJ+q+Gadu4KgOSTYijErPuxdjnpKRfvtWaKcNeaaXxlBgEPpKEmndY9YbECSlmqI1su
+         aIvR2pIY7umuLx2SRePG7IXf5AOLV7a2IMPDA+PyuqRl5RhR0OuOks9cfrGH44A5WjWf
+         FTMCHdExrvacUGPKB2XleC7q+mElrizWd/yStQo7mJDAXSq2bM/Ob+yDJaCCVeQuigre
+         BE9g==
+X-Forwarded-Encrypted: i=1; AJvYcCV6DBB0M5ocBu/RffWfQNaTfsYNIhwru5u1jVq2t/nS8XgwF5xT3CpjAXGoxRlNN6S9irkyCbuDwDFQwuWjL8h+ybltdRJy45mGt7+T2v6A
+X-Gm-Message-State: AOJu0YzPbA80ekT9vKe520/ayuMLQAELypyunqRIUWbALMTUzth3UgBJ
+	T9bLCj/jWtqydeWbpmr2tD9GkzBF08es/6sGsa6JJs6xzCUD0y4VIdyE3ucipQ==
+X-Google-Smtp-Source: AGHT+IGYgl3gQl4Cmde6i17y1uUfnj2tUICkxVuF2V/VMYxqsgOJ37h8BbLRRpI6ZiyO945kOuIkHg==
+X-Received: by 2002:a17:90b:1953:b0:296:359a:22f0 with SMTP id nk19-20020a17090b195300b00296359a22f0mr6062420pjb.36.1708115983834;
+        Fri, 16 Feb 2024 12:39:43 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id mp14-20020a17090b190e00b002993f72ed02sm422428pjb.34.2024.02.16.12.39.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 12:39:43 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fortify: Include more details when reporting overflows
+Date: Fri, 16 Feb 2024 12:39:41 -0800
+Message-Id: <20240216203935.work.829-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: csgroup.eu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8841c7cd-ffa9-43a3-26ca-08dc2f26707b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2024 19:35:32.1598
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f1cACIdlRwOSPXv8TTfEKSHmd4ySx6g3emgO7byMf8IvGeXrtO5KiacQUfIoef+qVuwqE9b8Oj+z6VAVW2jbp3qqLyXx/yeaRj/V2xNrqf0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB3285
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12427; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=UAarzlLZNnS7Vm2NrmTERcnGSEK4P42ieUXek0iNry4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlz8gN5oedJPqvQfhNkOccc+veejVyk7cBAz9F5
+ 7Wuj4LaUR2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZc/IDQAKCRCJcvTf3G3A
+ JvWBD/9Skuyw4/sVIKVPI7E9tVZ64SFo4cL+4tfHfA/+pcODVsEXe4k13ZTUeSYzBHI/wV2GJG0
+ nMBFWhsQoWDncv5I5gOooFbFgnrhxRMYIJ7LvlcnmeEnmoRlb2ph+KkO3qIdp/4bng696KHSG8n
+ tgPMXYiae2g1vXKoIJe7ho5P1mVaY6xpE83kSAVRVZseVIMBkEOs+K8cgpZ6vQzLgkATe1f8E7h
+ uiAZl1WccvX1yRU79fOc0rxIbv0St/H+/8dn+wr6ypx12ZOdk/sAv620dhbSKfKzhCUh020HYlm
+ 7xdG4zICyipCTagwPh0FuaBZg9afrhduV6qjGEuZW0IYaFm0nT8Np1tOmv3QBQIEftfFcUTjJWC
+ 4BnLsZHXNW6k/MQnzoYVxORG+o3WoAsGTXMZ7tQxWTBX4MOPo7UrR61dfaexQ5vxqSMstqcrhxI
+ c/iZVmSswL/SfO6RXiw72PoXa7SLjbeBTDQEn+EqEGkrvvD3hRkC7WkDbIUVhKsxe0tk0ijdPfL
+ OTP4IRshOqVHgBRppsy3523VGm7qOsC7uFoUtbMF+m1+L08qGCbB4xrhHGQjYiHzscwLaCGI0lY
+ fdIcZ4vUO9OlTKjqqZHZCa58OlLg27njf+maH/ozsUZMXP8R9LaEaCAZs0dtctsAdGl/NRTDvSZ
+ 6EltVg A4aHpMbcw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-DQoNCkxlIDE2LzAyLzIwMjQgw6AgMjA6MjgsIEtlZXMgQ29vayBhIMOpY3JpdMKgOg0KPiBPbiBG
-cmksIEZlYiAxNiwgMjAyNCBhdCAwOToxNDoyN0FNICswMTAwLCBDaHJpc3RvcGhlIExlcm95IHdy
-b3RlOg0KPj4gc2V0X21lbW9yeV9ybygpLCBzZXRfbWVtb3J5X254KCksIHNldF9tZW1vcnlfeCgp
-IGFuZCBvdGhlciBoZWxwZXJzDQo+PiBjYW4gZmFpbCBhbmQgcmV0dXJuIGFuIGVycm9yLiBJbiB0
-aGF0IGNhc2UgdGhlIG1lbW9yeSBtaWdodCBub3QgYmUNCj4+IHByb3RlY3RlZCBhcyBleHBlY3Rl
-ZCBhbmQgdGhlIG1vZHVsZSBsb2FkaW5nIGhhcyB0byBiZSBhYm9ydGVkIHRvDQo+PiBhdm9pZCBz
-ZWN1cml0eSBpc3N1ZXMuDQo+Pg0KPj4gQ2hlY2sgcmV0dXJuIHZhbHVlIG9mIGFsbCBjYWxscyB0
-byBzZXRfbWVtb3J5X1hYKCkgYW5kIGhhbmRsZQ0KPj4gZXJyb3IgaWYgYW55Lg0KPj4NCj4+IEFk
-ZCBhIGNoZWNrIHRvIG5vdCBjYWxsIHNldF9tZW1vcnlfWFgoKSBvbiBOVUxMIHBvaW50ZXJzIGFz
-IHNvbWUNCj4+IGFyY2hpdGVjdHVyZXMgbWF5IG5vdCBsaWtlIGl0IGFsbHRob3VnaCBudW1wYWdl
-cyBpcyBhbHdheXMgMCBpbiB0aGF0DQo+PiBjYXNlLiBUaGlzIGFsc28gYXZvaWQgYSB1c2VsZXNz
-IGNhbGwgdG8gc2V0X3ZtX2ZsdXNoX3Jlc2V0X3Blcm1zKCkuDQo+Pg0KPj4gTGluazogaHR0cHM6
-Ly9naXRodWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzcNCj4+IFNpZ25lZC1vZmYtYnk6IENocmlz
-dG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAY3Nncm91cC5ldT4NCj4gDQo+IFlheSEgR2xh
-ZCB0byBzZWUgdGhpcyBoYXBwZW5pbmcuIFVuaXZlcnNhbCBfX211c3RfY2hlY2sgZm9yIHNldF9t
-ZW1vcnlfKigpDQo+IHN0YXJ0cyB0byBhcHBlYXIgb24gdGhlIGhvcml6b24uIDspDQo+IA0KPiBS
-ZXZpZXdlZC1ieTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+DQo+IA0KDQpUaGFu
-a3MNCg0KSSBhbHNvIHNlbnQgMyBwYXRjaGVzIHRvIHBvd2VycGMsIEkgZm9yZ290IHRvIGNvcHkg
-eW91IGJ1dCBJIHB1dCB0aGUgDQpsaW5rcyBpbiBodHRwczovL2dpdGh1Yi5jb20vS1NQUC9saW51
-eC9pc3N1ZXMvNw0KDQpDaHJpc3RvcGhlDQo=
+When a memcpy() would exceed the length of an entire structure, no
+detailed WARN would be emitted, making debugging a bit more challenging.
+Similarly, other buffer overflow reports would have no size information
+reported.
+
+Always warn for memcpy() overflows, but distinguish between the two
+cases in the message before continuing (warn-only) or blocking the copy
+(hard-fail). Additionally add size information to existing overflow
+reports.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+---
+ arch/arm/boot/compressed/misc.c |  2 +-
+ arch/arm/boot/compressed/misc.h |  2 +-
+ arch/x86/boot/compressed/misc.c |  2 +-
+ include/linux/fortify-string.h  | 96 ++++++++++++++++++++-------------
+ lib/string_helpers.c            |  5 +-
+ 5 files changed, 64 insertions(+), 43 deletions(-)
+
+diff --git a/arch/arm/boot/compressed/misc.c b/arch/arm/boot/compressed/misc.c
+index 6b4baa6a9a50..c8b978c0cc5a 100644
+--- a/arch/arm/boot/compressed/misc.c
++++ b/arch/arm/boot/compressed/misc.c
+@@ -154,7 +154,7 @@ decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
+ 		putstr(" done, booting the kernel.\n");
+ }
+ 
+-void fortify_panic(const char *name)
++void fortify_panic(const char *name, size_t avail, size_t size)
+ {
+ 	error("detected buffer overflow");
+ }
+diff --git a/arch/arm/boot/compressed/misc.h b/arch/arm/boot/compressed/misc.h
+index 6da00a26ac08..efe3d40d3e61 100644
+--- a/arch/arm/boot/compressed/misc.h
++++ b/arch/arm/boot/compressed/misc.h
+@@ -10,7 +10,7 @@ void __div0(void);
+ void
+ decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
+ 		  unsigned long free_mem_ptr_end_p, int arch_id);
+-void fortify_panic(const char *name);
++void fortify_panic(const char *name, size_t avail, size_t size);
+ int atags_to_fdt(void *atag_list, void *fdt, int total_space);
+ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt);
+ int do_decompress(u8 *input, int len, u8 *output, void (*error)(char *x));
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index b99e08e6815b..c382419f1e4e 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -496,7 +496,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
+ 	return output + entry_offset;
+ }
+ 
+-void fortify_panic(const char *name)
++void fortify_panic(const char *name, size_t avail, size_t size)
+ {
+ 	error("detected buffer overflow");
+ }
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 06b3aaa63724..d278671dcd44 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -9,7 +9,7 @@
+ #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
+ #define __RENAME(x) __asm__(#x)
+ 
+-void fortify_panic(const char *name) __noreturn __cold;
++void fortify_panic(const char *name, size_t avail, size_t size) __noreturn __cold;
+ void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
+ void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
+ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("detected read beyond size of field (2nd parameter); maybe use struct_group()?");
+@@ -143,7 +143,7 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__write_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, size);
+ 	return __underlying_strncpy(p, q, size);
+ }
+ 
+@@ -174,7 +174,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+ 	/* Do not check characters beyond the end of p. */
+ 	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+ 	if (p_size <= ret && maxlen != ret)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, ret + 1);
+ 	return ret;
+ }
+ 
+@@ -210,7 +210,7 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
+ 		return __underlying_strlen(p);
+ 	ret = strnlen(p, p_size);
+ 	if (p_size <= ret)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, ret + 1);
+ 	return ret;
+ }
+ 
+@@ -261,7 +261,7 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
+ 	 * p_size.
+ 	 */
+ 	if (len > p_size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, len);
+ 
+ 	/*
+ 	 * We can now safely call vanilla strscpy because we are protected from:
+@@ -319,7 +319,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+ 
+ 	/* Give up if string is already overflowed. */
+ 	if (p_size <= p_len)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, p_len + 1);
+ 
+ 	if (actual >= avail) {
+ 		copy_len = avail - p_len - 1;
+@@ -328,7 +328,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+ 
+ 	/* Give up if copy will overflow. */
+ 	if (p_size <= actual)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, actual + 1);
+ 	__underlying_memcpy(p + p_len, q, copy_len);
+ 	p[actual] = '\0';
+ 
+@@ -355,9 +355,10 @@ __FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
+ char *strcat(char * const POS p, const char *q)
+ {
+ 	const size_t p_size = __member_size(p);
++	const size_t size = strlcat(p, q, p_size);
+ 
+-	if (strlcat(p, q, p_size) >= p_size)
+-		fortify_panic(__func__);
++	if (size >= p_size)
++		fortify_panic(__func__, p_size, size + 1);
+ 	return p;
+ }
+ 
+@@ -386,14 +387,15 @@ char *strncat(char * const POS p, const char * const POS q, __kernel_size_t coun
+ {
+ 	const size_t p_size = __member_size(p);
+ 	const size_t q_size = __member_size(q);
+-	size_t p_len, copy_len;
++	size_t p_len, copy_len, size;
+ 
+ 	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
+ 		return __underlying_strncat(p, q, count);
+ 	p_len = strlen(p);
+ 	copy_len = strnlen(q, count);
+-	if (p_size < p_len + copy_len + 1)
+-		fortify_panic(__func__);
++	size = p_len + copy_len + 1;
++	if (p_size < size)
++		fortify_panic(__func__, p_size, size);
+ 	__underlying_memcpy(p + p_len, q, copy_len);
+ 	p[p_len + copy_len] = '\0';
+ 	return p;
+@@ -434,7 +436,7 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
+ 	 * lengths are unknown.)
+ 	 */
+ 	if (p_size != SIZE_MAX && p_size < size)
+-		fortify_panic("memset");
++		fortify_panic("memset", p_size, size);
+ }
+ 
+ #define __fortify_memset_chk(p, c, size, p_size, p_size_field) ({	\
+@@ -482,13 +484,17 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
+  * B = can perform run-time bounds checking (currently unimplemented)
+  * V = vulnerable to run-time overflow (will need refactoring to solve)
+  *
++ * Return 0 if buffer size checks pass (or cannot be evaluated).
++ * Return 1 if a cross-field overflow is detected within the dest structure.
++ * Return 2 if an overflow beyond the end of the dest structure is detected.
++ * Return 3 if an overflow beyond the end of the source structure is detected.
+  */
+-__FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+-					 const size_t p_size,
+-					 const size_t q_size,
+-					 const size_t p_size_field,
+-					 const size_t q_size_field,
+-					 const char *func)
++__FORTIFY_INLINE int fortify_memcpy_chk(__kernel_size_t size,
++					const size_t p_size,
++					const size_t q_size,
++					const size_t p_size_field,
++					const size_t q_size_field,
++					const char *func)
+ {
+ 	if (__builtin_constant_p(size)) {
+ 		/*
+@@ -532,9 +538,10 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	 * (The SIZE_MAX test is to optimize away checks where the buffer
+ 	 * lengths are unknown.)
+ 	 */
+-	if ((p_size != SIZE_MAX && p_size < size) ||
+-	    (q_size != SIZE_MAX && q_size < size))
+-		fortify_panic(func);
++	if (p_size != SIZE_MAX && p_size < size)
++		return 2;
++	if (q_size != SIZE_MAX && q_size < size)
++		return 3;
+ 
+ 	/*
+ 	 * Warn when writing beyond destination field size.
+@@ -553,9 +560,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	 */
+ 	if (p_size_field != 0 && p_size_field != SIZE_MAX &&
+ 	    p_size != p_size_field && p_size_field < size)
+-		return true;
++		return 1;
+ 
+-	return false;
++	return 0;
+ }
+ 
+ #define __fortify_memcpy_chk(p, q, size, p_size, q_size,		\
+@@ -565,13 +572,24 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	const size_t __q_size = (q_size);				\
+ 	const size_t __p_size_field = (p_size_field);			\
+ 	const size_t __q_size_field = (q_size_field);			\
+-	WARN_ONCE(fortify_memcpy_chk(__fortify_size, __p_size,		\
+-				     __q_size, __p_size_field,		\
+-				     __q_size_field, #op),		\
+-		  #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
+-		  __fortify_size,					\
+-		  "field \"" #p "\" at " FILE_LINE,			\
+-		  __p_size_field);					\
++	int rc;								\
++	rc = fortify_memcpy_chk(__fortify_size, __p_size,		\
++				__q_size, __p_size_field,		\
++				__q_size_field, #op);			\
++	WARN_ONCE(rc,							\
++		#op ": detected %s-spanning %s (size %zu) of %s (size %zu)\n", \
++		rc == 1 ? "field" : "struct",				\
++		rc == 3 ? "read" : "write",				\
++		__fortify_size,						\
++		rc < 3 ?						\
++			"destination \"" #p "\" at " FILE_LINE :	\
++			"source \"" #q "\" at " FILE_LINE,		\
++		rc == 3 ? __q_size :					\
++			(rc == 2 ? __p_size : __p_size_field));		\
++	if (rc == 2)							\
++		fortify_panic(#op " write", __p_size, __fortify_size);	\
++	if (rc == 3)							\
++		fortify_panic(#op " read", __q_size, __fortify_size);	\
+ 	__underlying_##op(p, q, __fortify_size);			\
+ })
+ 
+@@ -634,7 +652,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, size);
+ 	return __real_memscan(p, c, size);
+ }
+ 
+@@ -650,8 +668,10 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
+ 		if (__compiletime_lessthan(q_size, size))
+ 			__read_overflow2();
+ 	}
+-	if (p_size < size || q_size < size)
+-		fortify_panic(__func__);
++	if (p_size < size)
++		fortify_panic(__func__, p_size, size);
++	if (q_size < size)
++		fortify_panic(__func__, q_size, size);
+ 	return __underlying_memcmp(p, q, size);
+ }
+ 
+@@ -663,7 +683,7 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, size);
+ 	return __underlying_memchr(p, c, size);
+ }
+ 
+@@ -675,7 +695,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, size);
+ 	return __real_memchr_inv(p, c, size);
+ }
+ 
+@@ -688,7 +708,7 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, size);
+ 	return __real_kmemdup(p, size, gfp);
+ }
+ 
+@@ -725,7 +745,7 @@ char *strcpy(char * const POS p, const char * const POS q)
+ 		__write_overflow();
+ 	/* Run-time check for dynamic size overflow. */
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(__func__, p_size, size);
+ 	__underlying_memcpy(p, q, size);
+ 	return p;
+ }
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 606c3099013f..0661c563101e 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -1008,9 +1008,10 @@ EXPORT_SYMBOL(__read_overflow2_field);
+ void __write_overflow_field(size_t avail, size_t wanted) { }
+ EXPORT_SYMBOL(__write_overflow_field);
+ 
+-void fortify_panic(const char *name)
++void fortify_panic(const char *name, size_t avail, size_t size)
+ {
+-	pr_emerg("detected buffer overflow in %s\n", name);
++	pr_emerg("detected buffer overflow in %s (%zu > %zu)\n",
++		 name, size, avail);
+ 	BUG();
+ }
+ EXPORT_SYMBOL(fortify_panic);
+-- 
+2.34.1
+
