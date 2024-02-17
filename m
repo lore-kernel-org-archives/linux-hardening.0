@@ -1,229 +1,105 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56A11E880
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 21:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FFC7E58F
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 21:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708204745; cv=none; b=O5ePKbcdOWZfFjvSW+CKZ8pDw9Pcn0HiBSzKLariHydt1buFA+JE2gnD+DApJk266ISgwLo7F+oEhd4BEU8pAwuhgs6rKzQym9cxsxB5MzAPnyzuMw3Fk1OKJbO97RRj0f0O2VimpJlWw1Qpa8miWPS61tC25sfdZNLFALu9OLo=
+	t=1708207122; cv=none; b=ZZUzuEfNCzsNJKhbQPjmcNdauPZ8xbDxMEiX4Aci0GY80GF43eRY6DXb17b1ub0P6nrLklx7ydr2+lC+sdkLG5Bng5sVITxdr/dAC49zpSbL2br6L09/3ekgGfcYFpFGc4zs5RnUh48BhsUt4ewIfPNEdaBttPzSkHAsV/eRAl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708204745; c=relaxed/simple;
-	bh=jqmSZE/6hIL7tHTUq7XBmsqEMOHIxcazTD9D7B73dnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rG5VdI2jTCWRndHJwNeXc1vK2uX6M2PEmX7dvkuff3mAWOiZqExrPMXVNdT5WqhbuAEUSdMWwORtikhpDsezH6xzx9spV9yZfcrPfq71BXg3gUgGOtFPbiu/MgPm5a77ZD4ENhIRRzzVyyroA7rbQvUUcfVRrvcGh+HPCh+oo+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=fRjUtNWb; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	s=arc-20240116; t=1708207122; c=relaxed/simple;
+	bh=ywZlTuum4wD7jSFZh6uqgulvkk0AYR4CsjB1nx0/r5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPrPxy/5u0n8ibBAw5jdM1UE3b9FXP7htwbrRbejTGWcIRoQNAC3m4cVtKkYplE4vMhcl5FFauHVRBokQAoErLrtmJBFdJkqD538Cbfr+9ELC/W0G8wWWdhTjFl7JJGerbE4yBMV4Wj7cREoCL0FvveoT2AvL7eWsmLG3TNqWRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gbUFQu1W; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="fRjUtNWb"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7874a96a0a8so85306285a.1
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 13:19:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gbUFQu1W"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-290b37bb7deso2654883a91.0
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 13:58:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1708204742; x=1708809542; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jsUAb6vb40+XemerMiSmb6ZuxYzXcwGlQ49c+yrXOkw=;
-        b=fRjUtNWbyUcxuRIkCB0gXWYH6TIvfHCtO29QgX3+Ws+ceUgFRqNzEYiutvsEmoBBYM
-         ypJp25oScrs8hIJBClbEkerQf+Um4HRE0GUZ+JrpN8Pzx8C4G5JwFfJKXVuZvVFP+MIG
-         f+tCQxLCGwwjS0d5d8xqHaIMgDw958TM+cDl0=
+        d=chromium.org; s=google; t=1708207120; x=1708811920; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2udDkf3nnvuGOZcbthLGLXbiEAUsVkkHJpuyz93NVo4=;
+        b=gbUFQu1WDY8HtZtoZXaVt6DQ0oKmGOplHQWSi1B6jPEvRNAvdMYofZV/iaZH69AfBM
+         nID3LAlSGLnUX2F/VvggUP/N+XAKJgHOGBHPKtqe06ETn+rvNEA8hznIZADJqe9uHr0X
+         RApo3QES/0QzoxTbElfbYpe1cbDtVqNoviAf0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708204742; x=1708809542;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jsUAb6vb40+XemerMiSmb6ZuxYzXcwGlQ49c+yrXOkw=;
-        b=RXBtQYo7sDt3InVymjUh/FbXaw++tgDw7XcnAS4USV1FvA5Byf9zplPvm4fhMqXjco
-         Icu03UK++aM54BQs5osEd+LHg/2m02WUwM+PuK4SerXFdlCdKEEULbd66Jlt3quGJdiU
-         iQX79wlODfUhKDL4UOkfRf+sTAZYpxPEHhxc7O4tp8u59x5YgD0dJ8299wvgUZx+Do+k
-         PfK/F0YxufHopwv5jzoqpDn/fh+swfIZxRqF2agLtZ5gh44Xr4faLXbFYx/e2pD6OkPM
-         4gGodjaPGZqOldTKkv2YF0d5vjJv0slzXhahI3Tw2+/6Cf5DJOlUlQg5XM6PKP4stqt1
-         i/IA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGK/zrjj5ycHf23idTf0CPzmDNJ2lpe9ZHzx9fIxs9NDj7eefhJwAMWIO2N2faYD5vP+GEQmPRJxDG4uRcdJ25CoK2quCXVtSNbAKwnZ38
-X-Gm-Message-State: AOJu0YwDCMA8taz96bdwEdOA1NhTucLfalUbd9KnYqWYRViqKdkbit9M
-	TK47yDkGsW6BWSkXQgXMicLxowI85fpqu8b/b9QqPAB2KECRZ1TryuaUfKAimg==
-X-Google-Smtp-Source: AGHT+IGP14v6oCCtMP0+vugRbMd2i51vK0hqWp5NBXjAY0xKJajqQMGwjum2Jn2GI6G56nWQ9lc40Q==
-X-Received: by 2002:a05:620a:46ab:b0:787:538c:58cb with SMTP id bq43-20020a05620a46ab00b00787538c58cbmr4663545qkb.28.1708204741830;
-        Sat, 17 Feb 2024 13:19:01 -0800 (PST)
-Received: from [10.211.55.3] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
-        by smtp.googlemail.com with ESMTPSA id c3-20020a05620a11a300b00785d7f634bcsm1116200qkk.8.2024.02.17.13.19.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Feb 2024 13:19:01 -0800 (PST)
-Message-ID: <02cf87a3-4e92-4f6d-98f6-dfc0e198d462@ieee.org>
-Date: Sat, 17 Feb 2024 15:18:59 -0600
+        d=1e100.net; s=20230601; t=1708207120; x=1708811920;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2udDkf3nnvuGOZcbthLGLXbiEAUsVkkHJpuyz93NVo4=;
+        b=IH2UDGmXcsIUBm0jAX2oeETG0lEB1kjYqdSR5iKaJ2FqHeYvRemkyTULDb7aJVB/Ep
+         fdUI9bR2SufgbUpDi045wFXJ2Oke5MrW5g7VUluEdbaEmF2zp8fHq4l2s4ZY4CuQXbam
+         zxvnByHOY+MkvYsp1Bl2JCrzKniAYOJOCjahJUlRYgnfSCptHCgIxaKV72WMzYxrAVi7
+         Wa9JXak8FTB3dCeutVUWkXn2i91SuYN6GV7fJZiisxqQNpRZrUa5rreHGQFB8YsJsX8w
+         jeVZGniJXr+omLG7KCf5m10Dl83wXSuBpC+qb880TnIPQ8y5qaxTMpKkyuBiXjGETokJ
+         KJdA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/1MhHrxxwtOoQYIATbk/VIuqeIwMwnpnPB5MFkbRLaEaFmvt7DUK6s0nu1wRKCNBOcRuUYHLRJU/uY+cWnyEYx9/n+Th8kfzH39f20PXW
+X-Gm-Message-State: AOJu0YxCIGCte3yFtHXxFZUNWX0wpFOGfyploIgtlN4kboVab2eQPcGK
+	9Lzbrh5/egT05uAI0Ej98JDy5BBoEeRRPIERV2FSS48wPLYl12AaQTRMcQJ0Uym/c9XowVgSs5E
+	=
+X-Google-Smtp-Source: AGHT+IHOMhJGSekMFv4rEX09CV/DMe6NhlrWe0tPcvwNf9MdbYiiO6SbhgkLkSoAEiSdMjj1pRgGYg==
+X-Received: by 2002:a17:903:98f:b0:1db:b495:1391 with SMTP id mb15-20020a170903098f00b001dbb4951391mr5503536plb.36.1708207120363;
+        Sat, 17 Feb 2024 13:58:40 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id mi11-20020a170902fccb00b001db608107ecsm1865857plb.167.2024.02.17.13.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Feb 2024 13:58:39 -0800 (PST)
+Date: Sat, 17 Feb 2024 13:58:39 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Alex Elder <elder@ieee.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+	greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] greybus: Avoid fake flexible array for response data
+Message-ID: <202402171357.E671B5589@keescook>
+References: <20240216232824.work.862-kees@kernel.org>
+ <672fafca-547e-443e-8dd8-80ccd2320767@ieee.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] greybus: audio: apbridgea: Remove flexible array from
- struct audio_apbridgea_hdr
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Vaibhav Agarwal <vaibhav.sr@gmail.com>, Mark Greer <mgreer@animalcreek.com>,
- Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240217154758.7965-1-erick.archer@gmx.com>
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20240217154758.7965-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <672fafca-547e-443e-8dd8-80ccd2320767@ieee.org>
 
-On 2/17/24 9:47 AM, Erick Archer wrote:
-> When a struct containing a flexible array is included in another struct,
-> and there is a member after the struct-with-flex-array, there is a
-> possibility of memory overlap. These cases must be audited [1]. See:
+On Sat, Feb 17, 2024 at 02:17:33PM -0600, Alex Elder wrote:
+> On 2/16/24 5:28 PM, Kees Cook wrote:
+> > FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
+> > code base has been converted to flexible arrays. In order to enforce
+> > the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
+> > destinations need to be handled. Instead of converting an empty struct
+> > into using a flexible array, just directly use a pointer without any
+> > additional indirection. Remove struct gb_bootrom_get_firmware_response
+> > and struct gb_fw_download_fetch_firmware_response.
 > 
-> struct inner {
-> 	...
-> 	int flex[];
-> };
+> The only down side I see is that it sort of disrupts a pattern
+> used on Greybus request handlers (and the response structure definitions).
 > 
-> struct outer {
-> 	...
-> 	struct inner header;
-> 	int overlap;
-> 	...
-> };
-> 
-> This is the scenario for the "struct audio_apbridgea_hdr" structure
-> that is included in the following "struct audio_apbridgea_*_request"
-> structures:
+> I think a one-line comment in place of each of these two
+> definitions would be helpful, something like:
+> /* gb_fw_download_fetch_firmware_response contains no data */
 
-Yeah this was not a very good way to define these header
-structures, but I'm glad to hear the flexible array at the
-end was never used.  I don't know why it was there; maybe
-it's an artifact from some other information that got removed.
+Er, maybe this should be "no other data" ? Do you want a v2 of this
+patch?
 
-If the code compiles with your change, it ought to be fine.
-(It compiles for me.)
+> And then add a similar comment above the calls to
+> gb_operation_response_alloc().
+> 
+> Otherwise this looks good.
+> 
+> Reviewed-by: Alex Elder <elder@linaro.org>
 
-It would be good for Vaibhav or Mark to comment though, maybe
-they can provide some context.
+Thanks!
 
-
-> 
-> struct audio_apbridgea_set_config_request
-> struct audio_apbridgea_register_cport_request
-> struct audio_apbridgea_unregister_cport_request
-> struct audio_apbridgea_set_tx_data_size_request
-> struct audio_apbridgea_prepare_tx_request
-> struct audio_apbridgea_start_tx_request
-> struct audio_apbridgea_stop_tx_request
-> struct audio_apbridgea_shutdown_tx_request
-> struct audio_apbridgea_set_rx_data_size_request
-> struct audio_apbridgea_prepare_rx_request
-> struct audio_apbridgea_start_rx_request
-> struct audio_apbridgea_stop_rx_request
-> struct audio_apbridgea_shutdown_rx_request
-> 
-> The pattern is like the one shown below:
-> 
-> struct audio_apbridgea_hdr {
-> 	...
-> 	__u8 data[];
-> } __packed;
-> 
-> struct audio_apbridgea_*_request {
-> 	struct audio_apbridgea_hdr hdr;
-> 	...
-> } __packed;
-> 
-> In this case, the trailing flexible array can be removed because it is
-> never used.
-> 
-> Link: https://github.com/KSPP/linux/issues/202 [1]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
-> Hi everyone,
-> 
-> I'm not sure this patch is correct. My concerns are:
-> 
-> The "struct audio_apbridgea_hdr" structure is used as a first member in
-> all the "struct audio_apbridgea_*_request" structures. And these last
-> structures are used in the "gb_audio_apbridgea_*(...)" functions. These
-> functions fill the "request" structure and always use:
-> 
-> 	gb_hd_output(connection->hd, &req, sizeof(req),
-> 		     GB_APB_REQUEST_AUDIO_CONTROL, true);
-> 
-> Then, the "gb_hd_output(struct gb_host_device *hd, ...)" function calls:
-> 
-> 	hd->driver->output(hd, req, size, cmd, async);
-> 
-> The first parameter to this function is of type:
-> 
-> 	struct gb_host_device {
-> 		...
-> 		const struct gb_hd_driver *driver;
-> 		...
-> 	};
-> 
-> And the "gb_hd_driver" structure is defined as:
-> 
-> 	struct gb_hd_driver {
-> 		...
-> 		int (*output)(struct gb_host_device *hd, void *req, u16 size, u8 cmd,
-> 			      bool async);
-> 	};
-> 
-> Therefore, my question is:
-> Where is the "output" function pointer set? I think I'm missing something.
-
-I think it will be drivers/greybus/es2.c:output().
-
-But in any case, the output function will know nothing about
-the structure of the request, so I think it's unrelated to
-the change you're proposing.
-
-Johan can confirm this.
-
-I'd like to hear from these others, but otherwise this change
-looks good to me.
-
-Reviewed-by: Alex Elder <elder@linaro.org>
-
-> 
-> I have search for another greybus drivers and I have found that, for
-> example, the "es2_ap_driver" (drivers/greybus/es2.c) sets the "output"
-> member in:
-> 
-> 	static struct gb_hd_driver es2_driver = {
-> 		...
-> 		.output	= output,
-> 	};
-> 
-> I think that the flexible array that I have removed should be used in
-> the function assigned to the "output" function pointer. But I am not
-> able to find this function.
-> 
-> A bit of light on this would be greatly appreciated.
-> 
-> Thanks,
-> Erick
-> ---
->   drivers/staging/greybus/audio_apbridgea.h | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/staging/greybus/audio_apbridgea.h b/drivers/staging/greybus/audio_apbridgea.h
-> index efec0f815efd..ab707d310129 100644
-> --- a/drivers/staging/greybus/audio_apbridgea.h
-> +++ b/drivers/staging/greybus/audio_apbridgea.h
-> @@ -65,7 +65,6 @@
->   struct audio_apbridgea_hdr {
->   	__u8	type;
->   	__le16	i2s_port;
-> -	__u8	data[];
->   } __packed;
-> 
->   struct audio_apbridgea_set_config_request {
-> --
-> 2.25.1
-> 
-
+-- 
+Kees Cook
