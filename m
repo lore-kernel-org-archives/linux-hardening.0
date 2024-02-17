@@ -1,274 +1,161 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37D281E;
-	Sat, 17 Feb 2024 10:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813A56A031
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 12:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708165462; cv=none; b=B5KKg1JED7k/GMm2WoR4sI+n4eokVsSxnbUYyM6/6HGHd6kZ0jFGEJtEJJCXEMDd6Zj5XG4t0mykuCRFjbK2ztSKc372mhC8x6uFkWalL3A8vNGuqMT60JzNEpmrerGZIQ5v7tz7fg01/2YVE1do+tLhJgZqG0ysMUDV6TiYzes=
+	t=1708172301; cv=none; b=OjyF08W4y6cvZUbKSyG1fJUp1++VQo3/KLP3R/or+yyHY8R5maeaEDCSZS+N4pIDVDC3iTcZEj44ZwrtjnuPu3e437jAgAcU5vWpf541DkMz4UX2aec+mmJ89p+U5dHpH2IqQpwYD3C78QwhGXhD4WckuRt82iU8UnR2N3QoS5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708165462; c=relaxed/simple;
-	bh=Mz+g/1CVM2PJP2Uq812BuwnoZ/L5UEO66m09oWnr1QU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WQvBrvQrcHcfdKG+B11wOFv56JfwN/roY/yA1i+GU2GinoUBe/TyC3VERDWNcQibMqvK63GVPMQltX7591HPV7/7tMM+HT8PsSowWU9TeFL41COtYrE/0M4b0q+7T1GC8av+Z07R00+hk45f1TJstcKMwjJ1XsyVh7VJqSTrJV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TcPzb6CXPz9v73;
-	Sat, 17 Feb 2024 11:24:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 6KspJ0V2-DIb; Sat, 17 Feb 2024 11:24:11 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TcPzb5FtVz9v6y;
-	Sat, 17 Feb 2024 11:24:11 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id A5B908B76E;
-	Sat, 17 Feb 2024 11:24:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id rrFoO8lLqJVF; Sat, 17 Feb 2024 11:24:11 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.2])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5EB7E8B763;
-	Sat, 17 Feb 2024 11:24:10 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Subject: [PATCH bpf-next] bpf: Check return from set_memory_rox() and friends
-Date: Sat, 17 Feb 2024 11:24:07 +0100
-Message-ID: <63322c8e8454de9b240583de58cd730bc97bb789.1708165016.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1708172301; c=relaxed/simple;
+	bh=UKjxS5vpoedsgomMAJB5omeAKldlU4nDgXE0PfEP1jw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kdxnu/Egtt202DxWziZT7MI0SYt89Oaq1ix5lMir4iZCSjoso8xkxrFk/PBWGPTE1dG05haEY7KMXeTxYyu8NFYkZXWtDbmaTCVLl2tMDzjpD5JLBkdzWlBqjjbzfDr5+GahjM5bV6TlPquYL55vcG5gBMgGsH3Wo+CzBLSyQxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=BMQgdtcd; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="BMQgdtcd"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcc84ae94c1so2593946276.1
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 04:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1708172297; x=1708777097; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dakj+J26FIps8JKFMFOM1GnEisCAC0H9NUZsZ7rhH34=;
+        b=BMQgdtcdSf3H47IUiwwr8HJdITWC+49arzOLMbs7H86dMe292pGsAe1MIa0AUnBVwM
+         DuhuNq502KPZZv8CMl7yUXBDtARRAjeoAy1lcJgfEyCELvGZGRetVkArZBhV7q6iBE2u
+         7pJfn4byabokQtnWB3leKjftoaiS7pM8m1rRWbqPWiNiYQqPiyPt81eDOFNDwjZ820Y4
+         O7szF1vm/FwlNbhl4XML1+FzlV5Em0B2S+I7aeqR5eKAJc03ZTOqXlxNg1mki0Bbv3ti
+         WOA1Lmc5YUvP2FhXI/WixBjj8vCgJG9SKvskt/Y0O4DQq2Q4OBdhIHYDTzhUIa39g3LV
+         jlxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708172297; x=1708777097;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dakj+J26FIps8JKFMFOM1GnEisCAC0H9NUZsZ7rhH34=;
+        b=jbD+/dek67Opqh4qL6Djd9N/l8WkCjhH6YboLxvKKTAcAL5LlJRS0ljKMKRKQArJnC
+         BNlMrhQ/jEOZK//LZ+mKpb8fBUBwCUc2LPIEMwWFfXPMB/rVelaVcwtOhjCoXLoKEQ8L
+         PD0S8wx5pxjL8rHNtI4/Zim+9DvGr7Ngulcd6mkftxsNbbmODl1jnZTovDOoFJruJWgz
+         4SruJ9lkN2aC9Tr7pdR7hw987nUsFQ2pcBSsnQayvP4+QgL17sG/mYL2GtNoIoN+/HRO
+         qrpmEHYWbExMyesRQ32v3C0asYclvzesbEAZNLudKDdAxsL6B4yqLBsupHMR7GrUQf1M
+         vQSA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7y1hYA4fRLWuP3FDULtBZKhnZlmPMS2Lo/gOX2QsWf1M59xHwleCY/HT10kFEZeilMI9FGGgZqLD1+YzxoYlJGSKzAq7dRnmPy2kD5VmS
+X-Gm-Message-State: AOJu0YzkPhi9XYVN/AjANnvnuQoQ2zLGUqp9FrGfi2jRHXk0p9x2U6jz
+	6MF8QUR1VQzOLz7ihhdkGfriMdYLf9tt+p6GhSrOWBSuYJytj8y4bfyzMFb6Ve6NspGSizkH0D5
+	x1n6J2GyUoLz6Fl/R/SN3xAz8fDf8TrIn8YsI
+X-Google-Smtp-Source: AGHT+IEYHTeRxmK8Tgb29GhppupMJ2XDrsJxJTUarro8uv3qP63OjBIOPHkVh7dMXpiawqTtzwrBAlosTJQ5VBj7vcw=
+X-Received: by 2002:a25:adc9:0:b0:dcd:63f8:ba32 with SMTP id
+ d9-20020a25adc9000000b00dcd63f8ba32mr6963090ybe.65.1708172297594; Sat, 17 Feb
+ 2024 04:18:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708165448; l=6853; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=Mz+g/1CVM2PJP2Uq812BuwnoZ/L5UEO66m09oWnr1QU=; b=YEQ3YCkk7J/1zGFK/ZSlyru0s4KexlE0XcLFVWKXeuTKMVK6q0ZK4DS5AuxlH0/h+hGSMoxRU O7BYxxTK8QeAcyh9SKokVb9ivVqn208+RoHx3eOdpBoZRkSdtyz6u2w
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <20240216232744.work.514-kees@kernel.org> <9ed28341-8bf7-4b6a-ba9a-6cfe07dc5964@embeddedor.com>
+In-Reply-To: <9ed28341-8bf7-4b6a-ba9a-6cfe07dc5964@embeddedor.com>
+From: Jamal Hadi Salim <jhs@mojatatu.com>
+Date: Sat, 17 Feb 2024 07:18:06 -0500
+Message-ID: <CAM0EoMnDHDGao6NToo5WcT16GZCyQ_SR8aXQ3AXmJFYaWoqv1A@mail.gmail.com>
+Subject: Re: [PATCH] net: sched: Annotate struct tc_pedit with __counted_by
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, netdev@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-arch_protect_bpf_trampoline() and alloc_new_pack() call
-set_memory_rox() which can fail, leading to unprotected memory.
+On Fri, Feb 16, 2024 at 7:04=E2=80=AFPM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+>
+>
+> On 2/16/24 17:27, Kees Cook wrote:
+> > Prepare for the coming implementation by GCC and Clang of the __counted=
+_by
+> > attribute. Flexible array members annotated with __counted_by can have
+> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOU=
+NDS
+> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-famil=
+y
+> > functions).
+> >
+> > As found with Coccinelle[1], add __counted_by for struct tc_pedit.
+> > Additionally, since the element count member must be set before accessi=
+ng
+> > the annotated flexible array member, move its initialization earlier.
+> >
+> > Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/exampl=
+es/counted_by.cocci [1]
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+> > Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> > Cc: Jiri Pirko <jiri@resnulli.us>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: netdev@vger.kernel.org
+> > Cc: linux-hardening@vger.kernel.org
+>
+> `opt->nkeys` updated before `memcpy()`, looks good to me:
+>
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Take into account return from set_memory_XX() functions and add
-__must_check flag to arch_protect_bpf_trampoline().
+Looks good to me.
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/x86/net/bpf_jit_comp.c    |  6 ++++--
- include/linux/bpf.h            |  4 ++--
- kernel/bpf/bpf_struct_ops.c    |  9 +++++++--
- kernel/bpf/core.c              | 25 +++++++++++++++++++------
- kernel/bpf/trampoline.c        | 18 ++++++++++++------
- net/bpf/bpf_dummy_struct_ops.c |  4 +++-
- 6 files changed, 47 insertions(+), 19 deletions(-)
+cheers,
+jamal
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 919f647c740f..db05e0ba9f68 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -2780,12 +2780,14 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
- 	bpf_prog_pack_free(image, size);
- }
- 
--void arch_protect_bpf_trampoline(void *image, unsigned int size)
-+int arch_protect_bpf_trampoline(void *image, unsigned int size)
- {
-+	return 0;
- }
- 
--void arch_unprotect_bpf_trampoline(void *image, unsigned int size)
-+int arch_unprotect_bpf_trampoline(void *image, unsigned int size)
- {
-+	return 0;
- }
- 
- int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *image_end,
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index e30100597d0a..169847ed1f8d 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1112,8 +1112,8 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *i
- 				void *func_addr);
- void *arch_alloc_bpf_trampoline(unsigned int size);
- void arch_free_bpf_trampoline(void *image, unsigned int size);
--void arch_protect_bpf_trampoline(void *image, unsigned int size);
--void arch_unprotect_bpf_trampoline(void *image, unsigned int size);
-+int __must_check arch_protect_bpf_trampoline(void *image, unsigned int size);
-+int arch_unprotect_bpf_trampoline(void *image, unsigned int size);
- int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
- 			     struct bpf_tramp_links *tlinks, void *func_addr);
- 
-diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
-index 02068bd0e4d9..7638a735f48f 100644
---- a/kernel/bpf/bpf_struct_ops.c
-+++ b/kernel/bpf/bpf_struct_ops.c
-@@ -522,7 +522,9 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
- 			if (err)
- 				goto reset_unlock;
- 		}
--		arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
-+		err = arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
-+		if (err)
-+			goto reset_unlock;
- 		/* Let bpf_link handle registration & unregistration.
- 		 *
- 		 * Pair with smp_load_acquire() during lookup_elem().
-@@ -531,7 +533,10 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
- 		goto unlock;
- 	}
- 
--	arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
-+	err = arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
-+	if (err)
-+		goto reset_unlock;
-+
- 	err = st_ops->reg(kdata);
- 	if (likely(!err)) {
- 		/* This refcnt increment on the map here after
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ea6843be2616..23ce17da3bf7 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -898,23 +898,30 @@ static LIST_HEAD(pack_list);
- static struct bpf_prog_pack *alloc_new_pack(bpf_jit_fill_hole_t bpf_fill_ill_insns)
- {
- 	struct bpf_prog_pack *pack;
-+	int err;
- 
- 	pack = kzalloc(struct_size(pack, bitmap, BITS_TO_LONGS(BPF_PROG_CHUNK_COUNT)),
- 		       GFP_KERNEL);
- 	if (!pack)
- 		return NULL;
- 	pack->ptr = bpf_jit_alloc_exec(BPF_PROG_PACK_SIZE);
--	if (!pack->ptr) {
--		kfree(pack);
--		return NULL;
--	}
-+	if (!pack->ptr)
-+		goto out;
- 	bpf_fill_ill_insns(pack->ptr, BPF_PROG_PACK_SIZE);
- 	bitmap_zero(pack->bitmap, BPF_PROG_PACK_SIZE / BPF_PROG_CHUNK_SIZE);
- 	list_add_tail(&pack->list, &pack_list);
- 
- 	set_vm_flush_reset_perms(pack->ptr);
--	set_memory_rox((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
-+	err = set_memory_rox((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
-+	if (err)
-+		goto out_free;
- 	return pack;
-+
-+out_free:
-+	bpf_jit_free_exec(pack->ptr);
-+out:
-+	kfree(pack);
-+	return NULL;
- }
- 
- void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
-@@ -929,9 +936,15 @@ void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
- 		size = round_up(size, PAGE_SIZE);
- 		ptr = bpf_jit_alloc_exec(size);
- 		if (ptr) {
-+			int err;
-+
- 			bpf_fill_ill_insns(ptr, size);
- 			set_vm_flush_reset_perms(ptr);
--			set_memory_rox((unsigned long)ptr, size / PAGE_SIZE);
-+			err = set_memory_rox((unsigned long)ptr, size / PAGE_SIZE);
-+			if (err) {
-+				bpf_jit_free_exec(ptr);
-+				ptr = NULL;
-+			}
- 		}
- 		goto out;
- 	}
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index d382f5ebe06c..6e64ac9083b6 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -456,7 +456,9 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
- 	if (err < 0)
- 		goto out_free;
- 
--	arch_protect_bpf_trampoline(im->image, im->size);
-+	err = arch_protect_bpf_trampoline(im->image, im->size);
-+	if (err)
-+		goto out_free;
- 
- 	WARN_ON(tr->cur_image && total == 0);
- 	if (tr->cur_image)
-@@ -1072,17 +1074,21 @@ void __weak arch_free_bpf_trampoline(void *image, unsigned int size)
- 	bpf_jit_free_exec(image);
- }
- 
--void __weak arch_protect_bpf_trampoline(void *image, unsigned int size)
-+int __weak arch_protect_bpf_trampoline(void *image, unsigned int size)
- {
- 	WARN_ON_ONCE(size > PAGE_SIZE);
--	set_memory_rox((long)image, 1);
-+	return set_memory_rox((long)image, 1);
- }
- 
--void __weak arch_unprotect_bpf_trampoline(void *image, unsigned int size)
-+int __weak arch_unprotect_bpf_trampoline(void *image, unsigned int size)
- {
-+	int err;
- 	WARN_ON_ONCE(size > PAGE_SIZE);
--	set_memory_nx((long)image, 1);
--	set_memory_rw((long)image, 1);
-+
-+	err = set_memory_nx((long)image, 1);
-+	if (err)
-+		return err;
-+	return set_memory_rw((long)image, 1);
- }
- 
- int __weak arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
-diff --git a/net/bpf/bpf_dummy_struct_ops.c b/net/bpf/bpf_dummy_struct_ops.c
-index 8906f7bdf4a9..6d49a00fba4d 100644
---- a/net/bpf/bpf_dummy_struct_ops.c
-+++ b/net/bpf/bpf_dummy_struct_ops.c
-@@ -129,7 +129,9 @@ int bpf_struct_ops_test_run(struct bpf_prog *prog, const union bpf_attr *kattr,
- 	if (err < 0)
- 		goto out;
- 
--	arch_protect_bpf_trampoline(image, PAGE_SIZE);
-+	err = arch_protect_bpf_trampoline(image, PAGE_SIZE);
-+	if (err)
-+		goto out;
- 	prog_ret = dummy_ops_call_op(image, args);
- 
- 	err = dummy_ops_copy_args(args);
--- 
-2.43.0
-
+> Thanks!
+> --
+> Gustavo
+>
+> > ---
+> >   include/uapi/linux/tc_act/tc_pedit.h | 2 +-
+> >   net/sched/act_pedit.c                | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/tc_act/tc_pedit.h b/include/uapi/linux/=
+tc_act/tc_pedit.h
+> > index f3e61b04fa01..f5cab7fc96ab 100644
+> > --- a/include/uapi/linux/tc_act/tc_pedit.h
+> > +++ b/include/uapi/linux/tc_act/tc_pedit.h
+> > @@ -62,7 +62,7 @@ struct tc_pedit_sel {
+> >       tc_gen;
+> >       unsigned char           nkeys;
+> >       unsigned char           flags;
+> > -     struct tc_pedit_key     keys[0];
+> > +     struct tc_pedit_key     keys[] __counted_by(nkeys);
+> >   };
+> >
+> >   #define tc_pedit tc_pedit_sel
+> > diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
+> > index 2ef22969f274..21e863d2898c 100644
+> > --- a/net/sched/act_pedit.c
+> > +++ b/net/sched/act_pedit.c
+> > @@ -515,11 +515,11 @@ static int tcf_pedit_dump(struct sk_buff *skb, st=
+ruct tc_action *a,
+> >               spin_unlock_bh(&p->tcf_lock);
+> >               return -ENOBUFS;
+> >       }
+> > +     opt->nkeys =3D parms->tcfp_nkeys;
+> >
+> >       memcpy(opt->keys, parms->tcfp_keys,
+> >              flex_array_size(opt, keys, parms->tcfp_nkeys));
+> >       opt->index =3D p->tcf_index;
+> > -     opt->nkeys =3D parms->tcfp_nkeys;
+> >       opt->flags =3D parms->tcfp_flags;
+> >       opt->action =3D p->tcf_action;
+> >       opt->refcnt =3D refcount_read(&p->tcf_refcnt) - ref;
