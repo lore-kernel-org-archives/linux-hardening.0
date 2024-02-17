@@ -1,70 +1,69 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729461C2BC
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 04:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704A31CAAC
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 04:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708145623; cv=none; b=YEf4ulDJ+52AadgP6DuA3zihzA/DyPQ9Pyn4FBXQr60zrMEkIvMnbfqEgaR5ImtczdPU4+UypHmY8yTDBoRiI5bKmfIECTed+J4dTZxVhI8p7ZwiNUcioMvw3ug1c804Z0UoS35qEcLs/7R/m1XeneBSm7tulUToJovi9AyEF9Y=
+	t=1708145623; cv=none; b=kv9KEoXaskWhZpQzHlg6IEcuZ+jhxMBIKv8FQestxCiuyfuIzLAOjcLXzZvD5xle3VgTn8iSH9yOn5zVkeX5O3mC6xGNpFaibP02SgWGu2X2hvzGr+hDr0M99qx0wCH/i9meUR2rXeqLb/2HP/E1LoWBFZl68azF/nAOohJdtyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708145623; c=relaxed/simple;
-	bh=hokFyy8qPsOZQK0QxxkCCaEHdxSLYeLL82uvMMA2NB4=;
+	bh=o9bi0PQaph7nLtjH/UpCrP47Rjaglgom5drD61yQXYI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=COTcwb7DqIrGCLNJFhXR3oKoLVJC0UXUkpDJerhd8Cp9BlkXhaYQMwa1Tup92F+I1FSeY3RHk0DIpsGDa1A/q7sCDK8Nn05l9KpBolcdjEHXZq5Ekw9rO4+BvArmgkPWe1IVjcRJpMzaEc9Seo4wYrt+H7kSu/4K7apsYFaMi0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FG2W5ld3; arc=none smtp.client-ip=209.85.167.180
+	 MIME-Version; b=uXaBQZjYrqBWFODGfm1U8indtBpAqNOol8Gr0nR48pqed7kvdjT9+ZcRW4df0yRfI3DsYmwSPzeU+MHs8X7ngOHPWg1zAalJYFHsD2PsyEXL4UUZZ6UDn1elym790iJVTDozxBHLhsLIijCINcFWrVzMdDBwqi6BNEyjWIyNndg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PW2M3D5F; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FG2W5ld3"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c13410a319so1683299b6e.3
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 20:53:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PW2M3D5F"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d751bc0c15so25955055ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 20:53:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708145618; x=1708750418; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708145621; x=1708750421; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CqD9QSOaWitNrV/YtqVACNtULpzHLxmWAN5VYT7BaOg=;
-        b=FG2W5ld3TvsqpUlq58rOIyh9ekRMIEiwkb6iMDnzB1P8lFFbHFdRONpYFyVYldgYm4
-         MQ7M+cLoD8vtmNFgoIMgnQ0kxUf7atzJgKO0PVV9KMPWfJcpqi0oR7tzrbjWrRW8wk4g
-         cHdilNq5nMKevdHOBkPkL0JsttyMxaGJc13B0=
+        bh=ywnWEQ8XGtSxKO6WdLPFCCZ1X6Rmd0BoX1prDPDFNU0=;
+        b=PW2M3D5F3LZqRaR4xKb4A3ZU8T+BAypqiU+1wzyWU7NPiP7oap6HxuRVhjhh505Lbe
+         KQmqp+y3rMwAXV4QeSG9bPawwLCH8tPimqdsbWTDppiFRpMtG+lui74C2atTVlYx+Cug
+         2AMDX958xFtua5d6pp+C+sAXcht3ta/AGZFso=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708145618; x=1708750418;
+        d=1e100.net; s=20230601; t=1708145621; x=1708750421;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CqD9QSOaWitNrV/YtqVACNtULpzHLxmWAN5VYT7BaOg=;
-        b=JjdPhtYdf0TpQHfV5BHxzQ8K3eibxu0jp69jutrr9KNu6YHwdfSfBHSE4nqMGtSHdU
-         P9k/DWweRMa2q/yNbZ5tn8tzw7nCVmrzWR45m6o8HD2OcI+KcC+sqlxO5ahBUyuQljVm
-         ZMNCrQxQqok2hURuAZBYi0ekwTdQNgbU22pfdvKEMdNsyh1M+Q9yLU8YCHElLL5ZRCrg
-         OS+VloDpiVQVfS6tH9kPXFxz/K0xrW/Wn3wA+zEW2l3JqZigcf8XxwbRUxlV5e3Avcv8
-         suONHhrsd1a9bd4jsyCeKAuiVczufXhR0wwRzK6kSAVx6hAuppabUUKHiDSByk4y2ENC
-         XXSg==
-X-Gm-Message-State: AOJu0YzeG2HB+wJAX1tryW68dAdIYTX3FIcSNU5dcrOy4LDM6t3on1Bf
-	TaUOWqUYxlCxyNl9zD16b/2GYM03VqnKW2k1P8NknTHQ7FkVZG3kJfWP18Q3YA==
-X-Google-Smtp-Source: AGHT+IFXk37pqOtFYFj2V8I9XyHtrhE15ZYO/PirOvsAr2uYwIja8ZLk7ltfSNfKur2pJUgG7nOF/g==
-X-Received: by 2002:a05:6808:2cd:b0:3bf:d1ea:23bc with SMTP id a13-20020a05680802cd00b003bfd1ea23bcmr7007093oid.49.1708145618428;
-        Fri, 16 Feb 2024 20:53:38 -0800 (PST)
+        bh=ywnWEQ8XGtSxKO6WdLPFCCZ1X6Rmd0BoX1prDPDFNU0=;
+        b=GeZ+t0eliswgYTn3MqcE0MQaBCWgOAwUiwMbJ2O6CGZq9yt0LPL47XjpP6kp/Q7Fk7
+         fXfTT/Dg1sxbWo+0VCvdAOz4hTxTjSxHm3I+15NCFUfsK84dyk/iSaM7oxNx7qhESX5l
+         Mi+TUbOezkOhzrriESAA+89z3sCWhkIE75XgWvJnZMCrA+h44MV8NFD+583lqFsZy93E
+         RPKA2BVjQ8uECset9237VdIZNKfNX//C0lV43fofB9XVuWnMQtESdobEgnac8xmly1jD
+         RvEDr09rjNuwetpdsGmrCdqH5Y80OuoTbIfKsYNMUoqFBl7VS0XMoidbClOI+yWj0jNA
+         9OtQ==
+X-Gm-Message-State: AOJu0YwREX28awCcvqYPmAfgO+rHTmdhyxrjqtkTp4qXsr7cu2j7HFbm
+	PzZkYDDpVtzxXmBLcnxfHRGGjYiq3cyEmaU9HqCuQ3v6iv4AgXoPh2XudIfrhw==
+X-Google-Smtp-Source: AGHT+IHARhz47PIHMyawvTQF5rNLL4xjB01X7ngu2akfWhwaqeMQhFBwOTxodRi0WcSq88ok9tiN0A==
+X-Received: by 2002:a17:902:b944:b0:1d9:893f:cd06 with SMTP id h4-20020a170902b94400b001d9893fcd06mr6105079pls.60.1708145620829;
+        Fri, 16 Feb 2024 20:53:40 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fh14-20020a056a00390e00b006e08c103dddsm756206pfb.192.2024.02.16.20.53.36
+        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001db92e7b80fsm626092plc.155.2024.02.16.20.53.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 20:53:36 -0800 (PST)
+        Fri, 16 Feb 2024 20:53:39 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	kunit-dev@googlegroups.com,
 	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
 	Cezary Rojewski <cezary.rojewski@intel.com>,
 	Puyou Lu <puyou.lu@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
 	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
 	Nick Desaulniers <ndesaulniers@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] fortify: Provide KUnit counters for failure testing
-Date: Fri, 16 Feb 2024 20:48:26 -0800
-Message-Id: <20240217045335.1526675-3-keescook@chromium.org>
+	linux-kernel@vger.kernel.org,
+	kunit-dev@googlegroups.com
+Subject: [PATCH v3 5/5] fortify: Improve buffer overflow reporting
+Date: Fri, 16 Feb 2024 20:48:28 -0800
+Message-Id: <20240217045335.1526675-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240217043535.make.664-kees@kernel.org>
 References: <20240217043535.make.664-kees@kernel.org>
@@ -74,304 +73,308 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10228; i=keescook@chromium.org;
- h=from:subject; bh=hokFyy8qPsOZQK0QxxkCCaEHdxSLYeLL82uvMMA2NB4=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0DqcQaQiJnoleWY/J6HeSpUirntlCXzKCTaUg
- YFFbsxYzRSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdA6nAAKCRCJcvTf3G3A
- JkaGD/0XK03QS4Ju4T33E26ZgsIiEgVjdZlDIYTxV55sr1wcFy8otOKbTu+K0sKJZ0WxnOOAKdQ
- 7Nl1pZacWsADJZ98A8gp5O8qDT42vvkXwGmLNsJe+1p4FNyBLlDU2iYuo7o9RNu7QhZRzNGnFNG
- c+UBduxPwil71P59eigc5JsxW10g2JWCvcAIMgcVwxcr3FPEUagdyvIKFUte02xVwsHNH5bVOAI
- FfmldAasLq/m0yVqOP1XF7z/N5sd18qU8UFenMKrFqpNetQammLDnV5h5ZogJwCTTDMTRzSXOaX
- 7ZJrCB0t5r7aeCN8hOV1FGH2m/YCXtizW0TDRNzn0OYE8fXH/fwk5TK62Uc0R7XmXXXAUZUilYb
- oxMkNRce+xVZbEQxtSUjJJJT3OOaKbm7snNn1pw8tzc5hhudDPOsWl0gg74/Kp+aoGOUJ3R5otj
- m7yLJdHmvky6Uy3+rglN3Wd6OcesRDY/eHHjUngIUtWEjKSp4+6vmwTKJ58g7+zIaH4R8rIm45w
- X0P7UtrpFh0SJO+xERUA+XYVWYWT98TAVzPEJsIiY9RWfMhEmLBJ3QMNeapZGuPsGoRf/i07SAZ
- xCd1Gnqvwl9OFwPfCIGPvBffCIWiNcs32s70lFLF/Ym7WGDK7lO95lWPQu+vwiQMROYM9joFueK +f7LydPrDdge8Aw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11459; i=keescook@chromium.org;
+ h=from:subject; bh=o9bi0PQaph7nLtjH/UpCrP47Rjaglgom5drD61yQXYI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0DqcWSD5g8bWqw5Np2W+346suamMHJeWtUZ8p
+ TdB8pK3rSGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdA6nAAKCRCJcvTf3G3A
+ JgE4D/9m0K1cswkGbu1+lS3yfX+30qR+82N7kQbHh4UkbEoYbKLfZM90+18eewHgou7+48MEg23
+ qjJbbTuKatJQjEZntkXXchY6oI2NR5IMHnL7Rg8/QCGEOBr3iSn0pzsbN95kCX5+9zR9byw4qPe
+ mtCYhckX38QdRAxxQZGUFpdEGjF7VcQ9YQ8BXPHzNFHfxr6gFeb3HQ9Zq1tc2HN2+bd3YIpHdkg
+ kr+4AjBo5pssrXXhSoUehYYWrUgfCuQ8cd3jLPLrjXxiD0L7A1GUO0ppP1lWxUJAt5ISEscBxWL
+ Bpzhh+rlyW/74e9JVDH1DMO8aI6Kc/4t2149NAH1e+pidkGxbt11FpfV9yrDjn4SajAmIp5unVT
+ KXLboyvtY5ED8Hcy2t4coe3OUgX3gZpR5OZFKJgMt0DWLB/jgMB5TK39Jp4zABnIThXLCg3ibew
+ WhgEw9p2Fm2bBgxFoU0/NQo4rudSBCqYZnJQ8ATfmuuyPMwYUnyRnOF7KPQNun4gZxOfgSgQdYX
+ ZLJB1BEO3d+jCN1X9aWMHb32nNU61rdcmHfNK9/cMlUJw1H+aTnPYz+kWv3MbDHwRCCO8RNTpsB
+ s0k8aYFA6JCA5SVlRC+Rt5T51tmV42na5BcHOF2nVgAQyKMbyJQfm46z6wt3scIUlYhVTUaMAmy 5yU7tIvgBucRKCA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The standard C string APIs were not designed to have a failure mode;
-they were expected to always succeed without memory safety issues.
-Normally, CONFIG_FORTIFY_SOURCE will use fortify_panic() to stop
-processing, as truncating a read or write may provide an even worse
-system state. However, this creates a problem for testing under things
-like KUnit, which needs a way to survive failures.
+Improve the reporting of buffer overflows under CONFIG_FORTIFY_SOURCE to
+help accelerate debugging efforts. The calculations are all just sitting
+in registers anyway, so pass them along to the function to be reported.
 
-When building with CONFIG_KUNIT, provide a failure path for all users
-of fortify_panic, and track whether the failure was a read overflow or
-a write overflow, for KUnit tests to examine. Inspired by similar logic
-in the slab tests.
+For example, before:
 
+  detected buffer overflow in memcpy
+
+and after:
+
+  memcpy: detected buffer overflow: 4096 byte read of buffer size 1
+
+Link: https://lore.kernel.org/r/20230407192717.636137-10-keescook@chromium.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Cc: linux-hardening@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
-Cc: kunit-dev@googlegroups.com
----
- include/linux/fortify-string.h | 43 ++++++++++++++++++----------------
- lib/fortify_kunit.c            | 41 ++++++++++++++++++++++++++++++++
- lib/string_helpers.c           |  2 ++
- 3 files changed, 66 insertions(+), 20 deletions(-)
+ arch/arm/boot/compressed/misc.c |  2 +-
+ arch/x86/boot/compressed/misc.c |  2 +-
+ include/linux/fortify-string.h  | 56 ++++++++++++++++++---------------
+ lib/fortify_kunit.c             |  4 +--
+ lib/string_helpers.c            |  9 +++---
+ 5 files changed, 39 insertions(+), 34 deletions(-)
 
+diff --git a/arch/arm/boot/compressed/misc.c b/arch/arm/boot/compressed/misc.c
+index d93e2e466f6a..6c41b270560e 100644
+--- a/arch/arm/boot/compressed/misc.c
++++ b/arch/arm/boot/compressed/misc.c
+@@ -154,7 +154,7 @@ decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,
+ 		putstr(" done, booting the kernel.\n");
+ }
+ 
+-void __fortify_panic(const u8 reason)
++void __fortify_panic(const u8 reason, size_t avail, size_t size)
+ {
+ 	error("detected buffer overflow");
+ }
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index c9971b9dbb09..1844da203da9 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -496,7 +496,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
+ 	return output + entry_offset;
+ }
+ 
+-void __fortify_panic(const u8 reason)
++void __fortify_panic(const u8 reason, size_t avail, size_t size)
+ {
+ 	error("detected buffer overflow");
+ }
 diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index 4f6767dcd933..fbfb90479b8f 100644
+index fbfb90479b8f..6aeebe0a6777 100644
 --- a/include/linux/fortify-string.h
 +++ b/include/linux/fortify-string.h
-@@ -15,8 +15,10 @@
- #define FORTIFY_REASON(func, write)	(FIELD_PREP(BIT(0), write) | \
+@@ -16,8 +16,8 @@
  					 FIELD_PREP(GENMASK(7, 1), func))
  
--#define fortify_panic(func, write)	\
--	__fortify_panic(FORTIFY_REASON(func, write))
-+#ifndef fortify_panic
-+# define fortify_panic(func, write, retfail)	\
-+	 __fortify_panic(FORTIFY_REASON(func, write))
-+#endif
+ #ifndef fortify_panic
+-# define fortify_panic(func, write, retfail)	\
+-	 __fortify_panic(FORTIFY_REASON(func, write))
++# define fortify_panic(func, write, avail, size, retfail)	\
++	 __fortify_panic(FORTIFY_REASON(func, write), avail, size)
+ #endif
  
  #define FORTIFY_READ		 0
- #define FORTIFY_WRITE		 1
-@@ -181,7 +183,7 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
+@@ -48,8 +48,8 @@ enum fortify_func {
+ 	EACH_FORTIFY_FUNC(MAKE_FORTIFY_FUNC)
+ };
+ 
+-void __fortify_report(const u8 reason);
+-void __fortify_panic(const u8 reason) __cold __noreturn;
++void __fortify_report(const u8 reason, const size_t avail, const size_t size);
++void __fortify_panic(const u8 reason, const size_t avail, const size_t size) __cold __noreturn;
+ void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
+ void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
+ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("detected read beyond size of field (2nd parameter); maybe use struct_group()?");
+@@ -183,7 +183,7 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
  	if (__compiletime_lessthan(p_size, size))
  		__write_overflow();
  	if (p_size < size)
--		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p);
+-		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p);
++		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p_size, size, p);
  	return __underlying_strncpy(p, q, size);
  }
  
-@@ -212,7 +214,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+@@ -214,7 +214,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
  	/* Do not check characters beyond the end of p. */
  	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
  	if (p_size <= ret && maxlen != ret)
--		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, ret);
+-		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, ret);
++		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, p_size, ret + 1, ret);
  	return ret;
  }
  
-@@ -248,7 +250,7 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
+@@ -250,7 +250,7 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
  		return __underlying_strlen(p);
  	ret = strnlen(p, p_size);
  	if (p_size <= ret)
--		fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ, ret);
+-		fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ, ret);
++		fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ, p_size, ret + 1, ret);
  	return ret;
  }
  
-@@ -299,7 +301,7 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
+@@ -300,8 +300,8 @@ __FORTIFY_INLINE ssize_t sized_strscpy(char * const POS p, const char * const PO
+ 	 * Generate a runtime write overflow error if len is greater than
  	 * p_size.
  	 */
- 	if (len > p_size)
--		fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE, -E2BIG);
+-	if (len > p_size)
+-		fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE, -E2BIG);
++	if (p_size < len)
++		fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE, p_size, len, -E2BIG);
  
  	/*
  	 * We can now safely call vanilla strscpy because we are protected from:
-@@ -357,7 +359,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+@@ -359,7 +359,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
  
  	/* Give up if string is already overflowed. */
  	if (p_size <= p_len)
--		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ, wanted);
+-		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ, wanted);
++		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ, p_size, p_len + 1, wanted);
  
  	if (actual >= avail) {
  		copy_len = avail - p_len - 1;
-@@ -366,7 +368,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+@@ -368,7 +368,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
  
  	/* Give up if copy will overflow. */
  	if (p_size <= actual)
--		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE, wanted);
+-		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE, wanted);
++		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE, p_size, actual + 1, wanted);
  	__underlying_memcpy(p + p_len, q, copy_len);
  	p[actual] = '\0';
  
-@@ -395,7 +397,7 @@ char *strcat(char * const POS p, const char *q)
+@@ -395,9 +395,10 @@ __FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
+ char *strcat(char * const POS p, const char *q)
+ {
  	const size_t p_size = __member_size(p);
++	const size_t wanted = strlcat(p, q, p_size);
  
- 	if (strlcat(p, q, p_size) >= p_size)
--		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p);
+-	if (strlcat(p, q, p_size) >= p_size)
+-		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p);
++	if (p_size <= wanted)
++		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p_size, wanted + 1, p);
  	return p;
  }
  
-@@ -431,13 +433,13 @@ char *strncat(char * const POS p, const char * const POS q, __kernel_size_t coun
+@@ -426,14 +427,15 @@ char *strncat(char * const POS p, const char * const POS q, __kernel_size_t coun
+ {
+ 	const size_t p_size = __member_size(p);
+ 	const size_t q_size = __member_size(q);
+-	size_t p_len, copy_len;
++	size_t p_len, copy_len, total;
+ 
+ 	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
+ 		return __underlying_strncat(p, q, count);
  	p_len = strlen(p);
  	copy_len = strnlen(q, count);
- 	if (p_size < p_len + copy_len + 1)
--		fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE, p);
+-	if (p_size < p_len + copy_len + 1)
+-		fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE, p);
++	total = p_len + copy_len + 1;
++	if (p_size < total)
++		fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE, p_size, total, p);
  	__underlying_memcpy(p + p_len, q, copy_len);
  	p[p_len + copy_len] = '\0';
  	return p;
- }
- 
--__FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
-+__FORTIFY_INLINE bool fortify_memset_chk(__kernel_size_t size,
- 					 const size_t p_size,
- 					 const size_t p_size_field)
- {
-@@ -472,7 +474,8 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
+@@ -474,7 +476,7 @@ __FORTIFY_INLINE bool fortify_memset_chk(__kernel_size_t size,
  	 * lengths are unknown.)
  	 */
  	if (p_size != SIZE_MAX && p_size < size)
--		fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE, true);
-+	return false;
+-		fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE, true);
++		fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE, p_size, size, true);
+ 	return false;
  }
  
- #define __fortify_memset_chk(p, c, size, p_size, p_size_field) ({	\
-@@ -571,9 +574,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+@@ -574,9 +576,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
  	 * lengths are unknown.)
  	 */
  	if (p_size != SIZE_MAX && p_size < size)
--		fortify_panic(func, FORTIFY_WRITE);
-+		fortify_panic(func, FORTIFY_WRITE, true);
+-		fortify_panic(func, FORTIFY_WRITE, true);
++		fortify_panic(func, FORTIFY_WRITE, p_size, size, true);
  	else if (q_size != SIZE_MAX && q_size < size)
--		fortify_panic(func, FORTIFY_READ);
-+		fortify_panic(func, FORTIFY_READ, true);
+-		fortify_panic(func, FORTIFY_READ, true);
++		fortify_panic(func, FORTIFY_READ, p_size, size, true);
  
  	/*
  	 * Warn when writing beyond destination field size.
-@@ -673,7 +676,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
+@@ -676,7 +678,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
  	if (__compiletime_lessthan(p_size, size))
  		__read_overflow();
  	if (p_size < size)
--		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, NULL);
+-		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, NULL);
++		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, p_size, size, NULL);
  	return __real_memscan(p, c, size);
  }
  
-@@ -690,7 +693,7 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
+@@ -692,8 +694,10 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
+ 		if (__compiletime_lessthan(q_size, size))
  			__read_overflow2();
  	}
- 	if (p_size < size || q_size < size)
--		fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ, INT_MIN);
+-	if (p_size < size || q_size < size)
+-		fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ, INT_MIN);
++	if (p_size < size)
++		fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ, p_size, size, INT_MIN);
++	else if (q_size < size)
++		fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ, q_size, size, INT_MIN);
  	return __underlying_memcmp(p, q, size);
  }
  
-@@ -702,7 +705,7 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
+@@ -705,7 +709,7 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
  	if (__compiletime_lessthan(p_size, size))
  		__read_overflow();
  	if (p_size < size)
--		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, NULL);
+-		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, NULL);
++		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, p_size, size, NULL);
  	return __underlying_memchr(p, c, size);
  }
  
-@@ -714,7 +717,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
+@@ -717,7 +721,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
  	if (__compiletime_lessthan(p_size, size))
  		__read_overflow();
  	if (p_size < size)
--		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, NULL);
+-		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, NULL);
++		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, p_size, size, NULL);
  	return __real_memchr_inv(p, c, size);
  }
  
-@@ -727,7 +730,7 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp
+@@ -730,7 +734,7 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp
  	if (__compiletime_lessthan(p_size, size))
  		__read_overflow();
  	if (p_size < size)
--		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ);
-+		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, NULL);
+-		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, NULL);
++		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, p_size, size, NULL);
  	return __real_kmemdup(p, size, gfp);
  }
  
-@@ -764,7 +767,7 @@ char *strcpy(char * const POS p, const char * const POS q)
+@@ -767,7 +771,7 @@ char *strcpy(char * const POS p, const char * const POS q)
  		__write_overflow();
  	/* Run-time check for dynamic size overflow. */
  	if (p_size < size)
--		fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE);
-+		fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE, p);
+-		fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE, p);
++		fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE, p_size, size, p);
  	__underlying_memcpy(p, q, size);
  	return p;
  }
 diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index 7a88b5dd3d27..4ba7d02fdd78 100644
+index f0accebeca02..493ec02dd5b3 100644
 --- a/lib/fortify_kunit.c
 +++ b/lib/fortify_kunit.c
-@@ -15,8 +15,17 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -17,8 +17,8 @@
  
-+/* Redefine fortify_panic() to track failures. */
-+void fortify_add_kunit_error(int write);
-+#define fortify_panic(func, write, retfail) do {			\
-+	__fortify_report(FORTIFY_REASON(func, write));			\
-+	fortify_add_kunit_error(write);					\
-+	return (retfail);						\
-+} while (0)
-+
- #include <kunit/device.h>
- #include <kunit/test.h>
-+#include <kunit/test-bug.h>
- #include <linux/device.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -27,10 +36,34 @@
- # define __compiletime_strlen __builtin_strlen
- #endif
- 
-+static struct kunit_resource read_resource;
-+static struct kunit_resource write_resource;
-+static int fortify_read_overflows;
-+static int fortify_write_overflows;
-+
- static const char array_of_10[] = "this is 10";
- static const char *ptr_of_11 = "this is 11!";
- static char array_unknown[] = "compiler thinks I might change";
- 
-+void fortify_add_kunit_error(int write)
-+{
-+	struct kunit_resource *resource;
-+	struct kunit *current_test;
-+
-+	current_test = kunit_get_current_test();
-+	if (!current_test)
-+		return;
-+
-+	resource = kunit_find_named_resource(current_test,
-+			write ? "fortify_write_overflows"
-+			      : "fortify_read_overflows");
-+	if (!resource)
-+		return;
-+
-+	(*(int *)resource->data)++;
-+	kunit_put_resource(resource);
-+}
-+
- static void known_sizes_test(struct kunit *test)
- {
- 	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
-@@ -318,6 +351,14 @@ static int fortify_test_init(struct kunit *test)
- 	if (!IS_ENABLED(CONFIG_FORTIFY_SOURCE))
- 		kunit_skip(test, "Not built with CONFIG_FORTIFY_SOURCE=y");
- 
-+	fortify_read_overflows = 0;
-+	kunit_add_named_resource(test, NULL, NULL, &read_resource,
-+				 "fortify_read_overflows",
-+				 &fortify_read_overflows);
-+	fortify_write_overflows = 0;
-+	kunit_add_named_resource(test, NULL, NULL, &write_resource,
-+				 "fortify_write_overflows",
-+				 &fortify_write_overflows);
- 	return 0;
- }
- 
+ /* Redefine fortify_panic() to track failures. */
+ void fortify_add_kunit_error(int write);
+-#define fortify_panic(func, write, retfail) do {			\
+-	__fortify_report(FORTIFY_REASON(func, write));			\
++#define fortify_panic(func, write, avail, size, retfail) do {		\
++	__fortify_report(FORTIFY_REASON(func, write), avail, size);	\
+ 	fortify_add_kunit_error(write);					\
+ 	return (retfail);						\
+ } while (0)
 diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-index 9291dc74ae01..5e53d42e32bb 100644
+index 5e53d42e32bb..5419282e12bd 100644
 --- a/lib/string_helpers.c
 +++ b/lib/string_helpers.c
-@@ -18,6 +18,8 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/string_helpers.h>
-+#include <kunit/test.h>
-+#include <kunit/test-bug.h>
+@@ -1016,20 +1016,21 @@ static const char * const fortify_func_name[] = {
+ #undef  MAKE_FORTIFY_FUNC_NAME
+ };
  
- /**
-  * string_get_size - get the size in the specified units
+-void __fortify_report(const u8 reason)
++void __fortify_report(const u8 reason, const size_t avail, const size_t size)
+ {
+ 	const u8 func = FORTIFY_REASON_FUNC(reason);
+ 	const bool write = FORTIFY_REASON_DIR(reason);
+ 	const char *name;
+ 
+ 	name = fortify_func_name[umin(func, FORTIFY_FUNC_UNKNOWN)];
+-	WARN(1, "%s: detected buffer %s overflow\n", name, str_read_write(!write));
++	WARN(1, "%s: detected buffer overflow: %zu byte %s of buffer size %zu\n",
++		 name, size, str_read_write(!write), avail);
+ }
+ EXPORT_SYMBOL(__fortify_report);
+ 
+-void __fortify_panic(const u8 reason)
++void __fortify_panic(const u8 reason, const size_t avail, const size_t size)
+ {
+-	__fortify_report(reason);
++	__fortify_report(reason, avail, size);
+ 	BUG();
+ }
+ EXPORT_SYMBOL(__fortify_panic);
 -- 
 2.34.1
 
