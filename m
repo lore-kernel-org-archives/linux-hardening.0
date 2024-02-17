@@ -1,103 +1,148 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1656D14AAD
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 05:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195F51CAA1
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 06:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708147865; cv=none; b=okEW54DLyLJoiczjp0QAyL1ww3Nd61jyEcf0krwvvSMarsjWbRhTTK2RO+YS9NlQZg35vxNye4EpzEfKPY0EFR526FPvts7RFV1UiD+cYN425MN91MmkDh/4MjMU6ERmHQBx64ruLvlzu96eXbRGfUbCXeLjcJrRaOWIQc4fJqQ=
+	t=1708151149; cv=none; b=FMmSs1Ou9Ar1fP/Kcxr+XU/dWLNcQo9UACNSpLXn2rJKkAvv4pJkkB/t/GVpLAiWHlymuD/NtvhXtdxDrDsP5r6I6ikAKSGMBMwG/wSOJFUJaGXh7eVPNEIJvzA82vO7Nz7qhUzB7Z1VmOQSPxW7TjsXIByqIuY1TgxFAGfNYmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708147865; c=relaxed/simple;
-	bh=PbafzkH81LhkpwejYVuH2b9Gw2w/z4yy4LwySp3ScDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liWRjZUHqD2G0pMXK42lhz8v7Ono2OAM/orKKAA+ra7r5BZTmk4WMhdRO3xlPlNGRxyiM67KhGy3bIIqfIlkgw5CN+RAnzS2letTJaeAIzUzYvQOw5kcuKDxDFu6enzuVFNdiNik3A69k8CBIrzufOM9DIx4AVrRXgTxaDxV2TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IpKm/CJA; arc=none smtp.client-ip=209.85.215.172
+	s=arc-20240116; t=1708151149; c=relaxed/simple;
+	bh=Y9GWQSNdeMe/TiCQJCjXENrVrfi7E3amSjOSWzM2S1o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VjMFNJIaYyeHKkjnPUP6qYoaktsWZHAxoXGeOvuRaAmIbhdbl/uiVaaYPK0LPgjTcrBVfZzf15b+zJy3kPsDNWsDC7LNgfpAaLcCQlrvwWEHDGoNHEUeTQUOPx5AndsR0ZyhznJEcMxGzcVnxjWPlUuKs7gwq+m0XdSxSUcgERA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PSM2Juy3; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IpKm/CJA"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5ca29c131ebso2142480a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 21:31:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PSM2Juy3"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dba94f9201so12124745ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 22:25:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708147863; x=1708752663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pH1ffPnywlJckbhLTl8zM+cpKx6cCA6ardzfAPepLZc=;
-        b=IpKm/CJAk/WIAOIXopChnAMND6ghYE7+2a3/hA0lI/pb1Tm0rvnfzzlke/J9jDn2hW
-         XqMRXYhy7QLC5LKuMVYC6bLR7H37O/m+idPi9uIyFHTwHTQlTm3nfFiYU6Ix8dPuznZn
-         MrldHPgkmqt8IOCKmnCZEQwVCiS6KWrqSMiEQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708147863; x=1708752663;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1708151147; x=1708755947; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pH1ffPnywlJckbhLTl8zM+cpKx6cCA6ardzfAPepLZc=;
-        b=NlURIEq9oCH0ggrc4qBip6IZLjsWZOw8CJtWz/rOtpYSDpnP2oyV69fopIqfC4eb5v
-         yPuID4lKnFlyHvFAc5IYmbdSeK2ZUdAjIxFrGqulBcNtmWtx71aZWXR4JRRtcwvONtnb
-         mNnJcInLpf2JX8K7SUMUHiozjKXwvItN+TEpRl3HnWBFYZtRoXRu3ysl6+emWq9KZHTB
-         rT1XDKbUTgYfWnLrPU/WZ4qn9y6l7VcpFb4t0zCFBOngrgDyhVPWn1XTmgpHURlbpqAO
-         SfpYkQz/ttUWCI3NWBznDKCFRYcNMynn5imMpdh96cKs6sN8y9ePLB+qWiupfKcXh5fJ
-         nTFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZCBA6MdtWN8Fhbkm0mWIHsZRqFCW6UiERdQv2qyPkM7U9PK2EccnPlauiAp7BmT4ECTpY2Q/dg050To+73z7sfySreu7Rw+SEn3arO2Y3
-X-Gm-Message-State: AOJu0YwE99Dwx/BD8T59AAb65oM2gfi4A+uEBzth5QSfXT5hshvhX3Ui
-	YtXZJP258qvePZQnQHLzQeyi3Y719MtdjGdxeFid1tQYe3iksFai5zcvJ5VxxQ==
-X-Google-Smtp-Source: AGHT+IFoEmuZSigHtEIPgXAs4/5DtlTFnAAS1avxsigIbWW4ZjtTR0AyaAMva44chxBAjaTsoPprfw==
-X-Received: by 2002:a05:6a20:43a2:b0:19e:ba42:4edf with SMTP id i34-20020a056a2043a200b0019eba424edfmr9398908pzl.7.1708147863364;
-        Fri, 16 Feb 2024 21:31:03 -0800 (PST)
+        bh=E2RXdELjA1+Y5TPLiUTm0d2mhfp+RAxxenDK5Rv9UCY=;
+        b=PSM2Juy3NgnPRmxXplM3Wgy7959T+vLMrYBXBrlbGwTI4LRMympMzyf7Oba6Kxq+M0
+         oLkEU/4veTGKHBrBNvnNeXue0AEP1spIBpvIvX+eYMlFgP3lCl//sJc5aUhqjeNGVwX4
+         0IhOfT2NCGli2rJy/vCZS4aywrhoQOywPKfxU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708151147; x=1708755947;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E2RXdELjA1+Y5TPLiUTm0d2mhfp+RAxxenDK5Rv9UCY=;
+        b=RHfWVTYaBy6uX3gQbrrCK/Mk43WHrZ56jNNbQTpiaHKSTC3RIG0ai5mz6rWkMZ/ncE
+         sQ1ETPsGL2JXNrD/CHoemi62yN5ZsnLd/HQsBfA/1P7Hhjuw1PUTaaNVCvZKoaGNSz8B
+         /kp/5Apaz6oIJQB0UbZp2yeYzpuYVSMUZMjC/l2ikSjkg9/W0t1n8kRrxQNE/Xug7wsF
+         Oot6xjiE24+9i2DyFu2oFqwQZaqiooilmtWdNIjwpshoiqRTaOU/yLqqsRGQPUgQgZkI
+         TbGCom8WZX10/GNywpmoiMqdLxr4t6/3rCD5mXAI+SAfNsy3k6hKBBb3zTMkiJgQ+1J1
+         +OOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPatQZd+v1F12cPFWyDV6TXD2S6wtUzqv+Wt8yfwaPuUxqeI+uxhA/qCQuYXmxQ6O3hZS3KuchreDm3egDStmC+0L9sZU36PusJLXRQL7O
+X-Gm-Message-State: AOJu0Ywo5z7Czmlxj0m1W68kqTAXZD3BPkJLFuvGQ0qplWtlmSfMfPoz
+	hBwXjRiyQnMF0dYH9n7U4/ID/C9F0ealZ8nGlOOb9HNanpFKe+GH9/5T2fZqcg==
+X-Google-Smtp-Source: AGHT+IFmbsrgSelSyVzmXuB/u0yC3Rb3JZKRSRjPThoVTEFLQ9HMIMVjPwpT7DE29BVipx3A1VGplg==
+X-Received: by 2002:a17:902:e80d:b0:1d9:427a:991 with SMTP id u13-20020a170902e80d00b001d9427a0991mr8385363plg.20.1708151147280;
+        Fri, 16 Feb 2024 22:25:47 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e3-20020aa798c3000000b006dfff453f8esm837201pfm.75.2024.02.16.21.31.02
+        by smtp.gmail.com with ESMTPSA id mm11-20020a1709030a0b00b001db6da30331sm788247plb.86.2024.02.16.22.25.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 21:31:02 -0800 (PST)
-Date: Fri, 16 Feb 2024 21:31:01 -0800
+        Fri, 16 Feb 2024 22:25:46 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Daniel Micay <danielmicay@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	y0un9n132@gmail.com,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
 	Eric Biederman <ebiederm@xmission.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	Igor Zhbanov <i.zhbanov@omprussia.ru>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
 	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
-	John Allen <john.allen@amd.com>, linux-kernel@vger.kernel.org,
+	Brian Gerst <brgerst@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Battersby <tonyb@cybernetics.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/vdso: Move vDSO to mmap region
-Message-ID: <202402162129.792C1AC@keescook>
-References: <20240210091827.work.233-kees@kernel.org>
+Subject: [PATCH 2/2] binfmt_elf: Leave a gap between .bss and brk
+Date: Fri, 16 Feb 2024 22:25:44 -0800
+Message-Id: <20240217062545.1631668-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240217062035.work.493-kees@kernel.org>
+References: <20240217062035.work.493-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240210091827.work.233-kees@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1512; i=keescook@chromium.org;
+ h=from:subject; bh=Y9GWQSNdeMe/TiCQJCjXENrVrfi7E3amSjOSWzM2S1o=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0FFoSMLWKnRZV/Xpg3nYIyPCuv0NWoUMuFI3f
+ ssQMNwOx8mJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdBRaAAKCRCJcvTf3G3A
+ JvXFD/0ZGY+pv/RW0jEwUr/fOJKrMeYvRA+q8dAhwBU4yZf/9WvOK1OItaQt6erwqczIQcGDsKX
+ RWFEhlQbXwgzOXrwCvEVU3X/MwTvOZFnZ0wTXOJZIuqX6uhvJuDZYq+kDfDixzSf+vvZ5N5gZBO
+ TJzXBbBFV7TqO+okj4IS3xOJWZewgGjhNT8vbeQcPdzj69HDDkXXfpLkoSfygpZcWqlp9XDZiNy
+ vXK3r7lesiRP3IhhoJj7l67XzCYktFTMcgxwx7uHCkePYddv5NSQpYuV1e3GrWYPneqbU/ta/RX
+ cWwsnNmxh2abzRU47UKh05W/uYImIbey5l0CSZI/7QN6m152TAREIrmIXwl2k22fjZgwgd+Apv8
+ 4oW4U/bqzoG9w1PMnHKDMQ9jsdEQB9hjMCKn8XCd+7Gv1wyNPPDXV5RFfLYuFJeaPMBdmXP7zFy
+ E345+0/LhEK6UZl9XBsjpHxXtro8hrLNXyQJNR0dzipAEXd7VeizjMBrL4dibLwpq9Vt5GEwcbV
+ rdHrk6W8yGkeyTm7dflKIXZxINWwAC8JEcnyTOaMiaSf+7Trt7zTSHdjJwqs75llY8Q2hwdTTG3
+ H4HQ8+CnaTwekWZMYV2AJy4oOxU2TWbO/56rrPwpm2xEE837qZM9Jz9EeaTLbA9t0NKKZotRk7n IeAJGDC3TTWSd+A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 10, 2024 at 01:18:35AM -0800, Kees Cook wrote:
-> The vDSO (and its initial randomization) was introduced in commit
-> 2aae950b21e4 ("x86_64: Add vDSO for x86-64 with gettimeofday/clock_gettime/getcpu"),
-> but had very low entropy. The entropy was improved in commit
-> 394f56fe4801 ("x86_64, vdso: Fix the vdso address randomization algorithm"),
-> but there is still improvement to be made.
-> 
-> On principle there should not be executable code at a low entropy offset
-> from the stack, since the stack and executable code having separate
-> randomization is part of what makes ASLR stronger.
-> 
-> Remove the only executable code near the stack region and give the vDSO
-> the same randomized base as other mmap mappings including the linker
-> and other shared objects. This results in higher entropy being provided
-> and there's little to no advantage in separating this from the existing
-> executable code there. This is already how other architectures like
-> arm64 handle the vDSO.
+Currently the brk starts its randomization immediately after .bss,
+which means there is a chance that when the random offset is 0, linear
+overflows from .bss can reach into the brk area. Leave at least a single
+page gap between .bss and brk (when it has not already been explicitly
+relocated into the mmap range).
 
-Thread ping. Anyone have thoughts on this? I can carry it in -next to
-see if anything melts...
+Reported-by: y0un9n132@gmail.com
+Closes: https://lore.kernel.org/linux-hardening/CA+2EKTVLvc8hDZc+2Yhwmus=dzOUG5E4gV7ayCbu0MPJTZzWkw@mail.gmail.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ fs/binfmt_elf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 5397b552fbeb..7862962f7a85 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1262,6 +1262,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
+ 		    elf_ex->e_type == ET_DYN && !interpreter) {
+ 			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
++		} else {
++			/* Otherwise leave a gap between .bss and brk. */
++			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
+ 		}
+ 
+ 		mm->brk = mm->start_brk = arch_randomize_brk(mm);
 -- 
-Kees Cook
+2.34.1
+
