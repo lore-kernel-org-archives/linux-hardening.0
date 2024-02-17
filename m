@@ -1,67 +1,79 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FFC7E58F
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 21:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EB5657BE
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 22:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708207122; cv=none; b=ZZUzuEfNCzsNJKhbQPjmcNdauPZ8xbDxMEiX4Aci0GY80GF43eRY6DXb17b1ub0P6nrLklx7ydr2+lC+sdkLG5Bng5sVITxdr/dAC49zpSbL2br6L09/3ekgGfcYFpFGc4zs5RnUh48BhsUt4ewIfPNEdaBttPzSkHAsV/eRAl0=
+	t=1708209908; cv=none; b=JjF7iPW79DmO3ymCvBtje+oucSbtzfp2xZUtML3Pa+4eFjj4uHE4pPnNL8f1P/hbzZM/IG8W1qtanNwiHS8VeHLgQ0/ujZ+PsDeJVH7H6C1yyDmNJzxWGt98aq8F+ILZGJtqKm1aBhwHWvJDbXiBE2H5EKWpvIyNK366GsE9w+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708207122; c=relaxed/simple;
-	bh=ywZlTuum4wD7jSFZh6uqgulvkk0AYR4CsjB1nx0/r5M=;
+	s=arc-20240116; t=1708209908; c=relaxed/simple;
+	bh=urM+nLCqAhqOanY4utAYiFvmTeBTP9vM1GuLdCAu7dU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HPrPxy/5u0n8ibBAw5jdM1UE3b9FXP7htwbrRbejTGWcIRoQNAC3m4cVtKkYplE4vMhcl5FFauHVRBokQAoErLrtmJBFdJkqD538Cbfr+9ELC/W0G8wWWdhTjFl7JJGerbE4yBMV4Wj7cREoCL0FvveoT2AvL7eWsmLG3TNqWRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gbUFQu1W; arc=none smtp.client-ip=209.85.216.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nom6Xy89Ht5owEMHrBIoEb30MuxC6F7FRnfrYPLz3g+zubI8ip9kxqplfLJKJjcqaE0DMAoPiTgfz765gHU9jqCqTaItudRR7dmwMfMga3RLlDF2qORqUlTPJCgy7TvT+bbUQUXkQ5utFjAbQ3wPYxU6Ft3kJnVL5esCjqi8KMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kzRoPuDU; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gbUFQu1W"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-290b37bb7deso2654883a91.0
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 13:58:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kzRoPuDU"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ce942efda5so1556368a12.2
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 14:45:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708207120; x=1708811920; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708209905; x=1708814705; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2udDkf3nnvuGOZcbthLGLXbiEAUsVkkHJpuyz93NVo4=;
-        b=gbUFQu1WDY8HtZtoZXaVt6DQ0oKmGOplHQWSi1B6jPEvRNAvdMYofZV/iaZH69AfBM
-         nID3LAlSGLnUX2F/VvggUP/N+XAKJgHOGBHPKtqe06ETn+rvNEA8hznIZADJqe9uHr0X
-         RApo3QES/0QzoxTbElfbYpe1cbDtVqNoviAf0=
+        bh=6zYveub7yYw/4yOK4qfAyNaSqjm09WW1iA3q80zNNrI=;
+        b=kzRoPuDU1k7WdDDWHWFIgd4yz75FvLnn0aJYYAL3SndOZpcv77XLMTIQHNuPvOVqat
+         7BW2yeWSAjm6YhG6dGfoN+Nvg3BpRWI50TU4gzN1WhHL9xk2ALAZZ+XWx2CEJGyT/XPS
+         Aiu1M30MDTXYfHh2xiIWjTJnyBDOVUQLOqN1U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708207120; x=1708811920;
+        d=1e100.net; s=20230601; t=1708209905; x=1708814705;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2udDkf3nnvuGOZcbthLGLXbiEAUsVkkHJpuyz93NVo4=;
-        b=IH2UDGmXcsIUBm0jAX2oeETG0lEB1kjYqdSR5iKaJ2FqHeYvRemkyTULDb7aJVB/Ep
-         fdUI9bR2SufgbUpDi045wFXJ2Oke5MrW5g7VUluEdbaEmF2zp8fHq4l2s4ZY4CuQXbam
-         zxvnByHOY+MkvYsp1Bl2JCrzKniAYOJOCjahJUlRYgnfSCptHCgIxaKV72WMzYxrAVi7
-         Wa9JXak8FTB3dCeutVUWkXn2i91SuYN6GV7fJZiisxqQNpRZrUa5rreHGQFB8YsJsX8w
-         jeVZGniJXr+omLG7KCf5m10Dl83wXSuBpC+qb880TnIPQ8y5qaxTMpKkyuBiXjGETokJ
-         KJdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/1MhHrxxwtOoQYIATbk/VIuqeIwMwnpnPB5MFkbRLaEaFmvt7DUK6s0nu1wRKCNBOcRuUYHLRJU/uY+cWnyEYx9/n+Th8kfzH39f20PXW
-X-Gm-Message-State: AOJu0YxCIGCte3yFtHXxFZUNWX0wpFOGfyploIgtlN4kboVab2eQPcGK
-	9Lzbrh5/egT05uAI0Ej98JDy5BBoEeRRPIERV2FSS48wPLYl12AaQTRMcQJ0Uym/c9XowVgSs5E
-	=
-X-Google-Smtp-Source: AGHT+IHOMhJGSekMFv4rEX09CV/DMe6NhlrWe0tPcvwNf9MdbYiiO6SbhgkLkSoAEiSdMjj1pRgGYg==
-X-Received: by 2002:a17:903:98f:b0:1db:b495:1391 with SMTP id mb15-20020a170903098f00b001dbb4951391mr5503536plb.36.1708207120363;
-        Sat, 17 Feb 2024 13:58:40 -0800 (PST)
+        bh=6zYveub7yYw/4yOK4qfAyNaSqjm09WW1iA3q80zNNrI=;
+        b=SXAsw6x2nzHJWnkoolnVRS3vOejVOSf+TCK3xiOElw1JUZyEMq9DWGAbr9yO5z7/iG
+         N/jSXTLgDTK6TOITmtVQyjJ7yFPifoLwTlv1tiEhB+7pDEoQOvhQVUob4EaequDimpKj
+         l3F+qnhLjgdnr6Pbe80VYIERJ9sdyF7G0NN8uFCvFH+V3sWn3uqzvCCQmZ51R8mgpggR
+         tsc49rCzXAcAqWQRyeu0SPvI4ZXUP3km2/MFfzVMU5kakkGbsGDDtUrMeQc/BVgbOiFU
+         6a/yuIz8yvAlhmAKkkVifeKP6xEJqI8urC6NhN1VlVi6NXwWInaruumEonjXmZcVI3di
+         MZ8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVzISYPBxdPQ0c0bEQOEFpmml1wxVbz3Ia278616qkwLDJIg21Qf2y5+4DNzBIp06uym9J9jgPLt30YFdmcCpKOcsSBoR+azwAKiHZrw4jP
+X-Gm-Message-State: AOJu0YzXmnSq8vn7t72HBjeSqmmOFf5w6kL7YC1E1fegocUon++2cR/B
+	l2XL2erjV1wLq+qOJPK4YhzpC+tqQ75B0Zz7gNDNc3lDnWvws2upG2x4i7+OQg==
+X-Google-Smtp-Source: AGHT+IGfBwCI/zJRAfkI3/3guXIHn5ScNJfsMg7yf6ZXenaRb2Xqpg5ydDYfgeE6X+Dq0UeBGs5IJw==
+X-Received: by 2002:a05:6a20:9c97:b0:19e:bca3:213f with SMTP id mj23-20020a056a209c9700b0019ebca3213fmr11331029pzb.52.1708209905129;
+        Sat, 17 Feb 2024 14:45:05 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mi11-20020a170902fccb00b001db608107ecsm1865857plb.167.2024.02.17.13.58.39
+        by smtp.gmail.com with ESMTPSA id w3-20020a17090a528300b002990d91d31dsm2270321pjh.15.2024.02.17.14.45.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Feb 2024 13:58:39 -0800 (PST)
-Date: Sat, 17 Feb 2024 13:58:39 -0800
+        Sat, 17 Feb 2024 14:45:04 -0800 (PST)
+Date: Sat, 17 Feb 2024 14:45:03 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Alex Elder <elder@ieee.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-	greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] greybus: Avoid fake flexible array for response data
-Message-ID: <202402171357.E671B5589@keescook>
-References: <20240216232824.work.862-kees@kernel.org>
- <672fafca-547e-443e-8dd8-80ccd2320767@ieee.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH bpf-next] bpf: Check return from set_memory_rox() and
+ friends
+Message-ID: <202402171444.C121486@keescook>
+References: <63322c8e8454de9b240583de58cd730bc97bb789.1708165016.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,36 +82,21 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <672fafca-547e-443e-8dd8-80ccd2320767@ieee.org>
+In-Reply-To: <63322c8e8454de9b240583de58cd730bc97bb789.1708165016.git.christophe.leroy@csgroup.eu>
 
-On Sat, Feb 17, 2024 at 02:17:33PM -0600, Alex Elder wrote:
-> On 2/16/24 5:28 PM, Kees Cook wrote:
-> > FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
-> > code base has been converted to flexible arrays. In order to enforce
-> > the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
-> > destinations need to be handled. Instead of converting an empty struct
-> > into using a flexible array, just directly use a pointer without any
-> > additional indirection. Remove struct gb_bootrom_get_firmware_response
-> > and struct gb_fw_download_fetch_firmware_response.
+On Sat, Feb 17, 2024 at 11:24:07AM +0100, Christophe Leroy wrote:
+> arch_protect_bpf_trampoline() and alloc_new_pack() call
+> set_memory_rox() which can fail, leading to unprotected memory.
 > 
-> The only down side I see is that it sort of disrupts a pattern
-> used on Greybus request handlers (and the response structure definitions).
+> Take into account return from set_memory_XX() functions and add
+> __must_check flag to arch_protect_bpf_trampoline().
 > 
-> I think a one-line comment in place of each of these two
-> definitions would be helpful, something like:
-> /* gb_fw_download_fetch_firmware_response contains no data */
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-Er, maybe this should be "no other data" ? Do you want a v2 of this
-patch?
+Thanks for doing this! This seems to hit all the right error paths that
+I can see.
 
-> And then add a similar comment above the calls to
-> gb_operation_response_alloc().
-> 
-> Otherwise this looks good.
-> 
-> Reviewed-by: Alex Elder <elder@linaro.org>
-
-Thanks!
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
