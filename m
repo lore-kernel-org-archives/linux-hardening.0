@@ -1,220 +1,139 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBFE374C4
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 00:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D861CA8A;
+	Sat, 17 Feb 2024 01:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708129644; cv=none; b=nU/p4b9cCB++lQdzyrw/5/huB6afmm1p70nhefCvll3iiGiDbFuXw1w3zdaB8/BaxDub6Vk35GaZ8zw8mPkybrwWAGiDlPpzVG8V0wSl0AbXc15qpWKG9cGFPlXA6Fhuwh6tDlrm/kj6i0tbAnLxEcReJ9bAg2Lv/AeWPz+Ejxk=
+	t=1708131634; cv=none; b=q46BX4U3z0pK/3+nXw/miGSAswrccrn4YIYk+TVmk+j+DbtDEtRXSEu0OsQ8SrpsdYwR9YgqNBcPSpa1MKCGRTGJwQVYP5NifagtBiB7JqnuaC5JSaggShl5dDq8rMtkXXnujCnwSZpTcs2jlXPX10LxGNiznBgkVocqYz5+6Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708129644; c=relaxed/simple;
-	bh=6qi5i2HZdurFWg68hISCVmuDEvRQ7/se82kz2njo5qI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IyqIBU55sXtLtZRv49nItri6mpgyX1ziiXYy2wtrLkJyJGWG2oeu/Ppf1sO43absEG6x/EqdluyN/HACGIGFcYDrVJRS3NzLDFasYfjVcfd6cbYmKrrzhFlpzhH/8MpeJqj2xmRlqiYxZCkKxi0EbPOHkN8t4NgDfl+KInjAwM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ZvI+7UlQ; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1708131634; c=relaxed/simple;
+	bh=1zfNqioyniR4xnLdtvSzh0f8uun5eZtSu1xERp95dN4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SNCPa+F3C5JjCWvN4xGOK9lac9/gfklJFMYybKpMCDb2Tkhof1deKJLOZOIhyQ4QPdooJ4dFmC8EsdDMeeFRhCyIIve7V4EAt9rE7D2iIWBfVPUGLlRvEI2c5g9P/bnl2pxdUshDwbpwxHXSj9mqHAY3wFxREuwo693B96hUGOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=RkBi+WEp; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZvI+7UlQ"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id b7YGrHV8crh9zb8Xyr64Ud; Sat, 17 Feb 2024 00:27:14 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id b8XxrVS5dgqgEb8XyrFjoS; Sat, 17 Feb 2024 00:27:14 +0000
-X-Authority-Analysis: v=2.4 cv=bYHIU/PB c=1 sm=1 tr=0 ts=65cffd62
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=7CQSdrXTAAAA:8 a=3_uRt0xjAAAA:8 a=cm27Pg_UAAAA:8 a=hWMQpYRtAAAA:8
- a=FOH2dFAWAAAA:8 a=pGLkceISAAAA:8 a=1XWaLZrsAAAA:8 a=yjU-xTemAAAA:8
- a=EU4AEG8cihyboLecn_oA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=a-qgeE7W1pNrGK8U0ZQC:22 a=z1SuboXgGPGzQ8_2mWib:22 a=xmb-EsYY8bH0VWELuYED:22
- a=KCsI-UfzjElwHeZNREa_:22 a=i3VuKzQdj-NEYjvDI-p3:22 a=SwQY0DHxSCHDbjv2szoi:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=wByDJQzTAShm7Gkyw4stFr/KXSxVitihfe54G/dVvfE=; b=ZvI+7UlQ3j/mAJ/+A1JIB2m0jL
-	B9lbVrudd/U0viF7X6bD8UkKruJQvjyk+hcvIGQAUNI6MlvbTRREVimfouXeUJRLlvlMFmqpigGrO
-	XibCe5LuLxruX6X8A/RZnkqgTnvIiE2JYnjjPul+PWnUHKQe4wNQsRBZlDqZje7xmHSLMagUhxpW/
-	NGa18liFeIj8rFEFxmDUJ1sMT1XZMqT7eoaQ8VR0g/DYqB9krGTbUS+1VGgRE3fqV7rukR8ugpMq+
-	orHqy9oZN8xnQwysXH6XWC0hJww9hcZP33W6ViBtYVAxCXrZrGqKaJr202Hpjp/CuA7b5aFKjN52h
-	pQuh+e3Q==;
-Received: from [201.172.172.225] (port=39390 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rb8Xv-002wqL-0B;
-	Fri, 16 Feb 2024 18:27:11 -0600
-Message-ID: <e58d035c-fb74-4d29-94d5-6c22542e7513@embeddedor.com>
-Date: Fri, 16 Feb 2024 18:27:08 -0600
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RkBi+WEp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1708131633; x=1739667633;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RquXHbfufZByeP1vhcrpgfQqW1al7eeTE6lYVW9xOH8=;
+  b=RkBi+WEpSR0fekqhEaeNsYpGeOhVdyHybeZdyw04XfpDuo7VO5rNaaST
+   XrcY1HlgdzQZjC94JlZJIeR2eC44W30Ng8mEgTec4Q8yeN9HmqckOV9hg
+   B6Vbu5YZYr5cr6s4oCFQy7Rde7M5MuO1i3SeTnPM3gGUmRvjae4+CRX/Q
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.06,165,1705363200"; 
+   d="scan'208";a="273878251"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 01:00:32 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:61573]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.203:2525] with esmtp (Farcaster)
+ id 15ba2131-9529-4178-82bc-c81ecd60df33; Sat, 17 Feb 2024 01:00:30 +0000 (UTC)
+X-Farcaster-Flow-ID: 15ba2131-9529-4178-82bc-c81ecd60df33
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sat, 17 Feb 2024 01:00:30 +0000
+Received: from 88665a182662.ant.amazon.com.com (10.106.100.6) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sat, 17 Feb 2024 01:00:26 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <keescook@chromium.org>
+CC: <alexander@mihalicyn.com>, <davem@davemloft.net>, <dhowells@redhat.com>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <leitao@debian.org>, <linux-hardening@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <wuyun.abel@bytedance.com>
+Subject: Re: [PATCH v2] sock: Use unsafe_memcpy() for sock_copy()
+Date: Fri, 16 Feb 2024 17:00:17 -0800
+Message-ID: <20240217010017.88921-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240216232220.it.450-kees@kernel.org>
+References: <20240216232220.it.450-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Alexei Starovoitov <ast@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Yonghong Song <yonghong.song@linux.dev>,
- Anton Protopopov <aspsk@isovalent.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240216235536.it.234-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240216235536.it.234-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rb8Xv-002wqL-0B
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:39390
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHbsVUT5ZtXDBBPDhjYA33EWTmcfXKqnIsq3bchTsXuZaRLzhpLGwjS+uo6YEEPVYnhlz+jcpWmw4hzCVcEa3wFMAoBiYo3Auqsz3V6xm2MklJBfzur9
- BVlvvj34bLe4/Zl+b+sh2zd2uFXEf3H2rhKqw9oizCGxxmWz4GgrCHi+bzezn1/Vf7Hy0HHznx+pwTNRsKZ1NQgslq0FWaYvtHwCBsz1Twafdqu/z5HvXxcB
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWA001.ant.amazon.com (10.13.139.112) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-
-
-On 2/16/24 17:55, Kees Cook wrote:
-> Replace deprecated 0-length array in struct bpf_lpm_trie_key with
-> flexible array. Found with GCC 13:
+From: Kees Cook <keescook@chromium.org>
+Date: Fri, 16 Feb 2024 15:22:23 -0800
+> While testing for places where zero-sized destinations were still showing
+> up in the kernel, sock_copy() and inet_reqsk_clone() were found, which
+> are using very specific memcpy() offsets for both avoiding a portion of
+> struct sock, and copying beyond the end of it (since struct sock is really
+> just a common header before the protocol-specific allocation). Instead
+> of trying to unravel this historical lack of container_of(), just switch
+> to unsafe_memcpy(), since that's effectively what was happening already
+> (memcpy() wasn't checking 0-sized destinations while the code base was
+> being converted away from fake flexible arrays).
 > 
-> ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
->    207 |                                        *(__be16 *)&key->data[i]);
->        |                                                   ^~~~~~~~~~~~~
-> ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
->    102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
->        |                                                      ^
-> ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
->     97 | #define be16_to_cpu __be16_to_cpu
->        |                     ^~~~~~~~~~~~~
-> ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
->    206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
-> ^
->        |                            ^~~~~~~~~~~
-> In file included from ../include/linux/bpf.h:7:
-> ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
->     82 |         __u8    data[0];        /* Arbitrary size */
->        |                 ^~~~
+> Avoid the following false positive warning with future changes to
+> CONFIG_FORTIFY_SOURCE:
 > 
-> And found at run-time under CONFIG_FORTIFY_SOURCE:
+>   memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
 > 
->    UBSAN: array-index-out-of-bounds in kernel/bpf/lpm_trie.c:218:49
->    index 0 is out of range for type '__u8 [*]'
-> 
-> This includes fixing the selftest which was incorrectly using a
-> variable length struct as a header, identified earlier[1]. Avoid this
-> by just explicitly including the prefixlen member instead of struct
-> bpf_lpm_trie_key.
-> 
-> Note that it is not possible to simply remove the "data" member, as it
-> is referenced by userspace
-> 
-> cilium:
->          struct egress_gw_policy_key in_key = {
->                  .lpm_key = { 32 + 24, {} },
->                  .saddr   = CLIENT_IP,
->                  .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
->          };
-> 
-> systemd:
-> 	ipv6_map_fd = bpf_map_new(
-> 			BPF_MAP_TYPE_LPM_TRIE,
-> 			offsetof(struct bpf_lpm_trie_key, data) + sizeof(uint32_t)*4,
-> 			sizeof(uint64_t),
-> 			...
-> 
-> The only risk to UAPI would be if sizeof() were used directly on the
-> data member, which it does not seem to be. It is only used as a static
-> initializer destination and to find its location via offsetof().
-> 
-> Link: https://lore.kernel.org/all/202206281009.4332AA33@keescook/ [1]
-> Reported-by: Mark Rutland <mark.rutland@arm.com>
-> Closes: https://paste.debian.net/hidden/ca500597/
-
-mmh... this URL expires: 2024-05-15
-
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
---
-Gustavo
-
 > ---
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> Cc: Song Liu <song@kernel.org>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: Stanislav Fomichev <sdf@google.com>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Mykola Lysenko <mykolal@fb.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Haowen Bai <baihaowen@meizu.com>
-> Cc: bpf@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
 > 
-> v2- clarify commit log, add more failure examples
-> v1- https://lore.kernel.org/all/63e531e3.170a0220.3a46a.3262@mx.google.com/
+> v2- add inet_reqsk_clone() instance too
+> v1- https://lore.kernel.org/lkml/20240216204423.work.066-kees@kernel.org/
 > ---
->   include/uapi/linux/bpf.h                         | 2 +-
->   tools/testing/selftests/bpf/progs/map_ptr_kern.c | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+>  net/core/sock.c                 | 5 +++--
+>  net/ipv4/inet_connection_sock.c | 5 +++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
 > 
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 754e68ca8744..359dd8a429c1 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -80,7 +80,7 @@ struct bpf_insn {
->   /* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
->   struct bpf_lpm_trie_key {
->   	__u32	prefixlen;	/* up to 32 for AF_INET, 128 for AF_INET6 */
-> -	__u8	data[0];	/* Arbitrary size */
-> +	__u8	data[];		/* Arbitrary size */
->   };
->   
->   struct bpf_cgroup_storage_key {
-> diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-> index 3325da17ec81..1d476c6ae284 100644
-> --- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-> +++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-> @@ -316,7 +316,7 @@ struct lpm_trie {
->   } __attribute__((preserve_access_index));
->   
->   struct lpm_key {
-> -	struct bpf_lpm_trie_key trie_key;
-> +	__u32 prefixlen;
->   	__u32 data;
->   };
->   
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index 0a7f46c37f0c..b7ea358eb18f 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -2053,8 +2053,9 @@ static void sock_copy(struct sock *nsk, const struct sock *osk)
+>  
+>  	memcpy(nsk, osk, offsetof(struct sock, sk_dontcopy_begin));
+>  
+> -	memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
+> -	       prot->obj_size - offsetof(struct sock, sk_dontcopy_end));
+> +	unsafe_memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
+> +		      prot->obj_size - offsetof(struct sock, sk_dontcopy_end),
+> +		      /* alloc is larger than struct, see sk_prot_alloc() */);
+>  
+>  #ifdef CONFIG_SECURITY_NETWORK
+>  	nsk->sk_security = sptr;
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+> index 459af1f89739..4a1d96ba3ad1 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
+> @@ -906,8 +906,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
+>  
+>  	memcpy(nreq_sk, req_sk,
+>  	       offsetof(struct sock, sk_dontcopy_begin));
+> -	memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end,
+> -	       req->rsk_ops->obj_size - offsetof(struct sock, sk_dontcopy_end));
+> +	unsafe_memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end,
+> +		      req->rsk_ops->obj_size - offsetof(struct sock, sk_dontcopy_end),
+> +		      /* alloc is larger than struct, see sk_prot_alloc() */);
+
+nit: reqsk is allocated in inet_reqsk_clone().
+
+
+>  
+>  	sk_node_init(&nreq_sk->sk_node);
+>  	nreq_sk->sk_tx_queue_mapping = req_sk->sk_tx_queue_mapping;
+> -- 
+> 2.34.1
+> 
