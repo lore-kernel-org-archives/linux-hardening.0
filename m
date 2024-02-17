@@ -1,149 +1,125 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93828DF4D
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 03:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06F31C2B2
+	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 04:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708139002; cv=none; b=IJjG0Ao5HfENy8MbgQT9wn+wf4G2fIAuFoow6ghkKOc/8QOzxMwE0N2znZTdvTkp5USL+1XyFpyoGAiNb8FuE3jMf3qBy3yY7NqPVPNy7XHNiyNPRwx43Ti5vpZCCvLCUQTIntxqVF/wqHwTKqyZLbtN90tDJq9fMe6DoAqvQR8=
+	t=1708145620; cv=none; b=JynEr10Rwc5dD5cBKpsG2m9BjOrBkNk+EWR4ILA3u22iHXp+gMTvgp+GDWLhHFnX9Rj+J32+ojSGtl+OrsoJQeA+K2VW2lOW91mTh/frtrMsVbJId8/pJCQzBZi1VQw1VGZSFsYWwbwPY7D9ycIYhozAm3y+9uyqBttSrTe73NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708139002; c=relaxed/simple;
-	bh=xpvnUQORiMZ/oAeyo85a9kbOqGl2fDmjOk2texpVn8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7fU6IuCNz6mbKDIbCuQuvi99HKHCjDuuXWDZzKDVlBXuWvTkvQGF2ujNNFVglIIdDs5gMLsKqltUfUskrERSamn/PBZgE6A4rIKmJWfWQg4ZAZCtp7K3eZj0qWL1XxWRz6Nf+LuANJpXKWUjPdlWpwAZKq3KJRvUDfk6A2vGzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=McLXvosS; arc=none smtp.client-ip=209.85.215.180
+	s=arc-20240116; t=1708145620; c=relaxed/simple;
+	bh=zRpD3i14j/2w1ZsYki0VbB7I7bNWgKIPU4c0cpGG3xY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DYrk2M1U7e+CqOs6Ayc4mP0GPnmeh2W+mG6V6o8jhBNmsCyQGtoAwynaFe4+55BninMTHDzfna2EFA3LUoxCtyr6BZ8aVFO+B7j3df/N2F78WKY7DwYBTlJ/dzD0On0V4GFZcgxCnfMz1BdQgpBSO1HFFt0UI+CfqVUO3L89Q9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HSAL6gG1; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="McLXvosS"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so1618599a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 19:03:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HSAL6gG1"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e2dbf54b2eso1474662a34.0
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 20:53:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708139000; x=1708743800; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9E8QSOafC61clD8Eej3Har3OU/+oWCjszElG8x74Hj8=;
-        b=McLXvosSYm2MWVUEK/eacWgTkwXq1xzXKmxqORZBZPBuc3Ea19jdw3dDdgY4rnRJc+
-         Lg8YS/ydevC1hc4f3uEOa4b87WlgZw4yJO/MSqSdFhnjwhspJEgP/FkxIIXw+iicBmkf
-         QKnB14duiBoR5bPq8YbixNjN9g6iGJXuq0h1I=
+        d=chromium.org; s=google; t=1708145617; x=1708750417; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pre8rdxQFTXsJMOmbo4q2vB4alhDjD0VEGxZ6UooGwo=;
+        b=HSAL6gG1ntFsT5uPB5pn97va67f0Sqk9Nx9RwRl8OfJnSCex4wN4QWdF0MtBTK0Iyn
+         3IXeK/zNj/1sbsElyPGarHHStxMTkYN/BSEnqa5vki3/nnJq3FPwsa4mLIUss7K+wo50
+         aP+ugiPlwcRqwrMcj5ilQ4DEgJ3KyWMAoUOOQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708139000; x=1708743800;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9E8QSOafC61clD8Eej3Har3OU/+oWCjszElG8x74Hj8=;
-        b=FYYquydE/l1Lp7cT/KK7uKVngO7hWDpKHMulL59OvXIIDdr7Oi2z5DXdzNMkJ1Z17r
-         fHBTF5hE/uZeTT+gItsy+XMmYbqvQ1dsb/oeSJH0wxH2pSdi3aJ0Ggs7TzfDBLoeXc4G
-         Ofit8Ti7GILFFXLzvywLoyA/nBss8269GH1G5RgbE3kS9lCDluw2D+RU3T5iApVTrzcv
-         6oU6e+UHvl0ygJWSYHMrjTyADkl+Mc0q+jQQ1tPqikUo1/qt+7sgIqEzjoI2NbzOyC8b
-         l7CccUWTNQwUFIGJJxi+RVHGrWG53rN3xE/gh+Z38AFu/lFWOJEARqwV8SIo7TObWXhi
-         Dnjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVb640W/5o7XxLoJvhUnSQDT7bAyVZORqw8SG5ivjUbIzqhC8Srafr/R9U9fKBsJFWgUrJaEd2FaDza2E7PdeMvaXFoESjlyD28SvjYK2st
-X-Gm-Message-State: AOJu0Yxl0turl2uErk9nm12Fwg8xSi1hqsrtelbtW4ewlE9KyVlsogCc
-	w3bo2v4J+VjNOmyvtFGXkKY0zn1EPYf7kKytgTi8IdgOHYATNA6u+s7Arfk2Sg==
-X-Google-Smtp-Source: AGHT+IGk3vr0O8poIMmGJlhPEiEvPKSSXAAztZELBQ+98gW6sIlAiN+nPC+62bRu84NsZRY0YVzpBw==
-X-Received: by 2002:a17:902:f54a:b0:1db:55cc:d222 with SMTP id h10-20020a170902f54a00b001db55ccd222mr9000388plf.4.1708139000004;
-        Fri, 16 Feb 2024 19:03:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708145617; x=1708750417;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pre8rdxQFTXsJMOmbo4q2vB4alhDjD0VEGxZ6UooGwo=;
+        b=dFh+8HxuAMMKcpSYBbpiGKvOS4ISs3bOEHqIHozT/JBLBFbhF4qz1zKZTlxqyHudHT
+         rtTzdiRF3B0IDpwgCU6OIJrtDWQLyX8ROYuUj7ww6v66I2I3PBMrz2ldhDNupnICIl43
+         bO2C6LxZ/86JBQxchvdVc2CNuMCgf5loHrAPV9B4HpZ/WDprznU1HIXnIiu+Ukm0yBLp
+         uDa6zM0zOCF6VxSNmysYsx5jqsjyOXyHZ8+QCijeR6UVu/3Eq3FaTi4iknfJIXJxXGIn
+         RQ5ONQiaoLMy9Nv7k1RfvAcHskiJ60nr4uowlTSdFJVAR36Z5Tb+SHJ5sfVLozLn92UO
+         pi4w==
+X-Gm-Message-State: AOJu0Yx4uJFm5GOW7pdK5EwKuZ/kdU244WnwhXO8hfuLi7Q1b2GvZZb3
+	IwB+/Bw0USqW+ouJ3RzL9r9lEg5hT+Xz2h9bnqTwO/4O+Ew+xzK+4mjLC2i8lw==
+X-Google-Smtp-Source: AGHT+IGDIOA8s7DcZ2JWhv5DnHy/V7d398TBqBZ99yg/VvpEy7OQgasOf5c0GBUPTRQ9Dbabcxe0aQ==
+X-Received: by 2002:a9d:6f91:0:b0:6e2:f006:47fd with SMTP id h17-20020a9d6f91000000b006e2f00647fdmr7007844otq.14.1708145617638;
+        Fri, 16 Feb 2024 20:53:37 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kq13-20020a170903284d00b001db5c8202a4sm525497plb.59.2024.02.16.19.03.18
+        by smtp.gmail.com with ESMTPSA id fd3-20020a056a002e8300b006e0dd50b0d0sm781429pfb.8.2024.02.16.20.53.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 19:03:19 -0800 (PST)
-Date: Fri, 16 Feb 2024 19:03:18 -0800
+        Fri, 16 Feb 2024 20:53:36 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Anton Protopopov <aspsk@isovalent.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
-Message-ID: <202402161902.FCFFEC322@keescook>
-References: <20240216235536.it.234-kees@kernel.org>
- <e58d035c-fb74-4d29-94d5-6c22542e7513@embeddedor.com>
+To: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Puyou Lu <puyou.lu@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-kernel@vger.kernel.org,
+	kunit-dev@googlegroups.com
+Subject: [PATCH v3 0/5] fortify: Add KUnit tests for runtime overflows
+Date: Fri, 16 Feb 2024 20:48:23 -0800
+Message-Id: <20240217043535.make.664-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e58d035c-fb74-4d29-94d5-6c22542e7513@embeddedor.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1353; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=zRpD3i14j/2w1ZsYki0VbB7I7bNWgKIPU4c0cpGG3xY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0DqctI0mx20hHHhmadUsrvuh0OTaGgyzHOFy6
+ FSuahTJRSqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdA6nAAKCRCJcvTf3G3A
+ Jlc3D/9VDNUP82RbsQ7PRTxtIAEJZw7ZbJP1Dv4HKergyingJKkG0gvnVqc+iIWlznrnLjq7k6x
+ InDEYdELraJvCAI8EAofWD+lN/ECQJ7F/ItkrijKGJRvJ8guO602oGXIdlzD0qjnDPAf8HoAlRl
+ v+0DxCV+HoEOHcNknGTBsrbvGEYjcfOHxcbc0Gog31000YXqe9CAiu2vvjlNXw3hsj6ol0k2CPX
+ gSIyrZb2b0l1eDcPlP/YyOrf7tD5ibzmLcHiIheJ60WV1eCmvmzkpter7jBqwYUpFrvU5G5zbeC
+ HYf7AXLXXQd5X1kmJq9EPHOcMl5EXCTTFFD0eSveJ2UMrmCyIFCLNfgVBcjzOzPMDO6sbNurvMZ
+ iK1dcVJwtNPxQ+5zkhnV70iov8QuYIFjGVOLlCmX+zE+6KjrGSQKc4L6SjAuUq4dWrW4maSAlGh
+ vcdgzrtvUvotsZX8fFVg/lUwINWvaiLVandW0LcvSiO2YgUl2IyWoxHmPFPR4hfAn3ySkeyTUjw
+ zziZonywo1HczNweOA5W8NnGZtBiCX40TQrzLMyIGK572rhnljvAgKcxZeWPJnmA0De+WbZTW/i
+ pUyu+OKQhD+BHxEKsRJnWr0SbLxh4OEzxSNGJyyw356tvONJj1VeZvIIlDDsbMqjSU7ZxIJkIj6
+ 5OLIjFf bta9meKA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 16, 2024 at 06:27:08PM -0600, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 2/16/24 17:55, Kees Cook wrote:
-> > Replace deprecated 0-length array in struct bpf_lpm_trie_key with
-> > flexible array. Found with GCC 13:
-> > 
-> > ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
-> >    207 |                                        *(__be16 *)&key->data[i]);
-> >        |                                                   ^~~~~~~~~~~~~
-> > ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
-> >    102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-> >        |                                                      ^
-> > ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
-> >     97 | #define be16_to_cpu __be16_to_cpu
-> >        |                     ^~~~~~~~~~~~~
-> > ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
-> >    206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
-> > ^
-> >        |                            ^~~~~~~~~~~
-> > In file included from ../include/linux/bpf.h:7:
-> > ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
-> >     82 |         __u8    data[0];        /* Arbitrary size */
-> >        |                 ^~~~
-> > 
-> > And found at run-time under CONFIG_FORTIFY_SOURCE:
-> > 
-> >    UBSAN: array-index-out-of-bounds in kernel/bpf/lpm_trie.c:218:49
-> >    index 0 is out of range for type '__u8 [*]'
-> > 
-> > This includes fixing the selftest which was incorrectly using a
-> > variable length struct as a header, identified earlier[1]. Avoid this
-> > by just explicitly including the prefixlen member instead of struct
-> > bpf_lpm_trie_key.
-> > 
-> > Note that it is not possible to simply remove the "data" member, as it
-> > is referenced by userspace
-> > 
-> > cilium:
-> >          struct egress_gw_policy_key in_key = {
-> >                  .lpm_key = { 32 + 24, {} },
-> >                  .saddr   = CLIENT_IP,
-> >                  .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
-> >          };
-> > 
-> > systemd:
-> > 	ipv6_map_fd = bpf_map_new(
-> > 			BPF_MAP_TYPE_LPM_TRIE,
-> > 			offsetof(struct bpf_lpm_trie_key, data) + sizeof(uint32_t)*4,
-> > 			sizeof(uint64_t),
-> > 			...
-> > 
-> > The only risk to UAPI would be if sizeof() were used directly on the
-> > data member, which it does not seem to be. It is only used as a static
-> > initializer destination and to find its location via offsetof().
-> > 
-> > Link: https://lore.kernel.org/all/202206281009.4332AA33@keescook/ [1]
-> > Reported-by: Mark Rutland <mark.rutland@arm.com>
-> > Closes: https://paste.debian.net/hidden/ca500597/
-> 
-> mmh... this URL expires: 2024-05-15
+Hi,
 
-Yup, but that's why I included the run-time splat above too. :)
+This series is the rest of the v2 series that was half landed last year,
+and finally introduces KUnit runtime testing of the CONFIG_FORTIFY_SOURCE
+APIs. Additionally FORTIFY failure messages are improved to give more
+context about read/write and sizes.
+
+-Kees
+
+v3
+ - rebase (goodbye strlcpy)
+ - avoid extra macros for replacing fortify_panic() (nick)
+ - generally clean up macro usage
+ - avoid build warnings when testing known overflow conditions
+v2 https://lore.kernel.org/all/20230407192717.636137-10-keescook@chromium.org/
+v1 https://lore.kernel.org/lkml/20230405235832.never.487-kees@kernel.org/
+
+Kees Cook (5):
+  fortify: Split reporting and avoid passing string pointer
+  fortify: Allow KUnit test to build without FORTIFY
+  fortify: Provide KUnit counters for failure testing
+  fortify: Add KUnit tests for runtime overflows
+  fortify: Improve buffer overflow reporting
+
+ arch/arm/boot/compressed/misc.c |   2 +-
+ arch/x86/boot/compressed/misc.c |   2 +-
+ include/linux/fortify-string.h  | 100 +++--
+ lib/Kconfig.debug               |   2 +-
+ lib/Makefile                    |   1 +
+ lib/fortify_kunit.c             | 662 +++++++++++++++++++++++++++++++-
+ lib/string_helpers.c            |  26 +-
+ tools/objtool/noreturns.h       |   2 +-
+ 8 files changed, 761 insertions(+), 36 deletions(-)
 
 -- 
-Kees Cook
+2.34.1
+
