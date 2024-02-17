@@ -1,183 +1,274 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FB91C6A0
-	for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 06:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37D281E;
+	Sat, 17 Feb 2024 10:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708152653; cv=none; b=uSiJeWxbok9so+X5TkALoF0x/7uO4Anuvm0sLF8boxIW1XU71LhUhpDDfHL4iZT/PeLJQPh9Sezv857RweMww1B1ZXU8GdVg7UdQlpDuLrO4f+tJS59ppM8/OwfsypweSLNkY1JL7TziDRRN+b90xg/WAbCiJ3v5dgwPRxEZb98=
+	t=1708165462; cv=none; b=B5KKg1JED7k/GMm2WoR4sI+n4eokVsSxnbUYyM6/6HGHd6kZ0jFGEJtEJJCXEMDd6Zj5XG4t0mykuCRFjbK2ztSKc372mhC8x6uFkWalL3A8vNGuqMT60JzNEpmrerGZIQ5v7tz7fg01/2YVE1do+tLhJgZqG0ysMUDV6TiYzes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708152653; c=relaxed/simple;
-	bh=qcMK+mURa9874jU0PVCvy2wIzqu0h8z9BCMIzikP4I4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eNlYbo1hlGwt6gscSeQ8CgbfBjO0OiuCpFIDAM/fa0dvy6HsVGzgeADFgR0EUSUovAel365dEmYj+mzgrQNfjtzzCa3i6W9lF7iHKjdPWSDQOxuO3w6MsshbIH8x8kc2wDPk8xlJIx+nw/2KkPJxSCDdxIyPboljMVZAjHcuR6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FwTE1kEj; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FwTE1kEj"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d944e8f367so26261365ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Feb 2024 22:50:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708152651; x=1708757451; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M0q5qNIApr2OHWTfe/JN5Axwx5QFdCs/VPp5utoSVVg=;
-        b=FwTE1kEj8HOolxCjt0151cLgEna5eDUBBoLRhpxQHvxUlq3tQKXlJERIgli9ZEmEA3
-         XJV/fNdSyPsnaJ+JOYXnwgQlD48CrFfLBNeemAKEcLpCzaNHI/oCia22tKVsicyGlMqq
-         Npaq0Q5RdenO7WO/MSM4g1I1jlyNU3H4tI7ps=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708152651; x=1708757451;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M0q5qNIApr2OHWTfe/JN5Axwx5QFdCs/VPp5utoSVVg=;
-        b=s+/P3/lANNT9+X8EodA+OJDB2zndbLr6TvsXiZv9AGHl6UHIdETwPM4vS8p/Y/eSu+
-         78iZOemItmyuOVOzh2+03VNnlR1T69xOx1/MXUoLpVwiSNpAExhYjDBuvckdCl/7DqEH
-         xx+ne5s2Nr8HffgULf/Lsa2Lltfyj24FRzXpkiRxzmx6B7107PGA/oXzwqbjqNGtVG8a
-         homX1xfmzTZGyeopQ1jNoRQJGiGFxdchL0ceYstS6QkRio8S9jA8+FzPZZgm2MQn7Ol0
-         xsBXr5RoLvoupL67y6I4pFrMLrkSjb47qd+HVCjHg4DPGv3kOCseqIA7TIYSH0Fo9vFM
-         /6BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhfrrZcyOXKpuaniaX1iWbdPS0hxci1nmzTzWIICIs89iMzooMuvP1Q+Fzfke6pnLxPiiyO+PSrhN12QaovJqP6eKQIhJMMFNxfuKk/gO/
-X-Gm-Message-State: AOJu0YylA7ksn+JbqNY/BVYc+gFW7j4sdDiEm/g56oYDnPEyBlORj2Tl
-	Ns7rLo0PH/svmC3sUFsq+/J0H08DpL71afdOYbIPUGpbiskHYaBWyTVBp36B7w==
-X-Google-Smtp-Source: AGHT+IFSRrYHCfvNmI4dBaEfzwYrVFvg0hjm2ZEaDRlwH/ZNcq3QNYV4GRamj4PDHKIaB210IqDS8w==
-X-Received: by 2002:a17:902:eb83:b0:1db:aef8:8db4 with SMTP id q3-20020a170902eb8300b001dbaef88db4mr3585714plg.24.1708152650948;
-        Fri, 16 Feb 2024 22:50:50 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id w16-20020a1709029a9000b001db60446abdsm815390plp.262.2024.02.16.22.50.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 22:50:50 -0800 (PST)
-Date: Fri, 16 Feb 2024 22:50:49 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Kostya Serebryany <kcc@google.com>, Vitaly Buka <vitalybuka@google.com>,
-	glider@google.com
-Cc: Evgeniy Stepanov <eugenis@google.com>,
-	Daniel Micay <danielmicay@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will.deacon@arm.com>,
+	s=arc-20240116; t=1708165462; c=relaxed/simple;
+	bh=Mz+g/1CVM2PJP2Uq812BuwnoZ/L5UEO66m09oWnr1QU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WQvBrvQrcHcfdKG+B11wOFv56JfwN/roY/yA1i+GU2GinoUBe/TyC3VERDWNcQibMqvK63GVPMQltX7591HPV7/7tMM+HT8PsSowWU9TeFL41COtYrE/0M4b0q+7T1GC8av+Z07R00+hk45f1TJstcKMwjJ1XsyVh7VJqSTrJV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4TcPzb6CXPz9v73;
+	Sat, 17 Feb 2024 11:24:11 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 6KspJ0V2-DIb; Sat, 17 Feb 2024 11:24:11 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4TcPzb5FtVz9v6y;
+	Sat, 17 Feb 2024 11:24:11 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id A5B908B76E;
+	Sat, 17 Feb 2024 11:24:11 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id rrFoO8lLqJVF; Sat, 17 Feb 2024 11:24:11 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.2])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5EB7E8B763;
+	Sat, 17 Feb 2024 11:24:10 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org, Pratyush Anand <panand@redhat.com>,
-	Dong Bo <dongbo4@huawei.com>,
-	Dmitry Safonov <dsafonov@virtuozzo.com>,
-	Rik van Riel <riel@redhat.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Reid Kleckner <rnk@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, address-sanitizer@googlegroups.com
-Subject: Re: [PATCH] mm: Revert x86_64 and arm64 ELF_ET_DYN_BASE base
-Message-ID: <202402162238.E5D08F5968@keescook>
-References: <20170807201542.GA21271@beast>
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Subject: [PATCH bpf-next] bpf: Check return from set_memory_rox() and friends
+Date: Sat, 17 Feb 2024 11:24:07 +0100
+Message-ID: <63322c8e8454de9b240583de58cd730bc97bb789.1708165016.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20170807201542.GA21271@beast>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708165448; l=6853; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=Mz+g/1CVM2PJP2Uq812BuwnoZ/L5UEO66m09oWnr1QU=; b=YEQ3YCkk7J/1zGFK/ZSlyru0s4KexlE0XcLFVWKXeuTKMVK6q0ZK4DS5AuxlH0/h+hGSMoxRU O7BYxxTK8QeAcyh9SKokVb9ivVqn208+RoHx3eOdpBoZRkSdtyz6u2w
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-*extreme thread[1] necromancy*
+arch_protect_bpf_trampoline() and alloc_new_pack() call
+set_memory_rox() which can fail, leading to unprotected memory.
 
-On Mon, Aug 07, 2017 at 01:15:42PM -0700, Kees Cook wrote:
-> Moving the x86_64 and arm64 PIE base from 0x555555554000 to 0x000100000000
-> broke AddressSanitizer. This is a partial revert of:
-> 
->   commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
->   commit 02445990a96e ("arm64: move ELF_ET_DYN_BASE to 4GB / 4MB")
-> 
-> The AddressSanitizer tool has hard-coded expectations about where
-> executable mappings are loaded. The motivation for changing the PIE
-> base in the above commits was to avoid the Stack-Clash CVEs that
-> allowed executable mappings to get too close to heap and stack. This
-> was mainly a problem on 32-bit, but the 64-bit bases were moved too,
-> in an effort to proactively protect those systems (proofs of concept
-> do exist that show 64-bit collisions, but other recent changes to fix
-> stack accounting and setuid behaviors will minimize the impact).
+Take into account return from set_memory_XX() functions and add
+__must_check flag to arch_protect_bpf_trampoline().
 
-I happened to be looking at this again today, and wondered where things
-stood. It seems like ASan's mappings are documented here:
-https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm#64-bit
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/x86/net/bpf_jit_comp.c    |  6 ++++--
+ include/linux/bpf.h            |  4 ++--
+ kernel/bpf/bpf_struct_ops.c    |  9 +++++++--
+ kernel/bpf/core.c              | 25 +++++++++++++++++++------
+ kernel/bpf/trampoline.c        | 18 ++++++++++++------
+ net/bpf/bpf_dummy_struct_ops.c |  4 +++-
+ 6 files changed, 47 insertions(+), 19 deletions(-)
 
-This implies that it would be safe to move the ELF_ET_DYN_BASE from
-0x555555554000 down to 0x200000000000, since the shadow map ends at
-0x10007fff7fff. (Well, anything above there would work, I was just
-picking a "round" number above it. We could just as well use
-0x100080000000, I think.)
-
-Is this correct? I'd like to open up some more room between mmap and
-stack...
-
-Thanks!
-
--Kees
-
-[1] https://lore.kernel.org/lkml/20170807201542.GA21271@beast/
-
-> 
-> The new 32-bit PIE base is fine for ASan (since it matches the ET_EXEC
-> base), so only the 64-bit PIE base needs to be reverted to let x86 and
-> arm64 ASan binaries run again. Future changes to the 64-bit PIE base on
-> these architectures can be made optional once a more dynamic method for
-> dealing with AddressSanitizer is found. (e.g. always loading PIE into
-> the mmap region for marked binaries.)
-> 
-> Reported-by: Kostya Serebryany <kcc@google.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/arm64/include/asm/elf.h | 4 ++--
->  arch/x86/include/asm/elf.h   | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-> index acae781f7359..3288c2b36731 100644
-> --- a/arch/arm64/include/asm/elf.h
-> +++ b/arch/arm64/include/asm/elf.h
-> @@ -114,10 +114,10 @@
->  
->  /*
->   * This is the base location for PIE (ET_DYN with INTERP) loads. On
-> - * 64-bit, this is raised to 4GB to leave the entire 32-bit address
-> + * 64-bit, this is above 4GB to leave the entire 32-bit address
->   * space open for things that want to use the area for 32-bit pointers.
->   */
-> -#define ELF_ET_DYN_BASE		0x100000000UL
-> +#define ELF_ET_DYN_BASE		(2 * TASK_SIZE_64 / 3)
->  
->  #ifndef __ASSEMBLY__
->  
-> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> index 1c18d83d3f09..9aeb91935ce0 100644
-> --- a/arch/x86/include/asm/elf.h
-> +++ b/arch/x86/include/asm/elf.h
-> @@ -247,11 +247,11 @@ extern int force_personality32;
->  
->  /*
->   * This is the base location for PIE (ET_DYN with INTERP) loads. On
-> - * 64-bit, this is raised to 4GB to leave the entire 32-bit address
-> + * 64-bit, this is above 4GB to leave the entire 32-bit address
->   * space open for things that want to use the area for 32-bit pointers.
->   */
->  #define ELF_ET_DYN_BASE		(mmap_is_ia32() ? 0x000400000UL : \
-> -						  0x100000000UL)
-> +						  (TASK_SIZE / 3 * 2))
->  
->  /* This yields a mask that user programs can use to figure out what
->     instruction set this CPU supports.  This could be done in user space,
-> -- 
-> 2.7.4
-> 
-> 
-> -- 
-> Kees Cook
-> Pixel Security
-
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 919f647c740f..db05e0ba9f68 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -2780,12 +2780,14 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
+ 	bpf_prog_pack_free(image, size);
+ }
+ 
+-void arch_protect_bpf_trampoline(void *image, unsigned int size)
++int arch_protect_bpf_trampoline(void *image, unsigned int size)
+ {
++	return 0;
+ }
+ 
+-void arch_unprotect_bpf_trampoline(void *image, unsigned int size)
++int arch_unprotect_bpf_trampoline(void *image, unsigned int size)
+ {
++	return 0;
+ }
+ 
+ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *image_end,
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index e30100597d0a..169847ed1f8d 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1112,8 +1112,8 @@ int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *image, void *i
+ 				void *func_addr);
+ void *arch_alloc_bpf_trampoline(unsigned int size);
+ void arch_free_bpf_trampoline(void *image, unsigned int size);
+-void arch_protect_bpf_trampoline(void *image, unsigned int size);
+-void arch_unprotect_bpf_trampoline(void *image, unsigned int size);
++int __must_check arch_protect_bpf_trampoline(void *image, unsigned int size);
++int arch_unprotect_bpf_trampoline(void *image, unsigned int size);
+ int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
+ 			     struct bpf_tramp_links *tlinks, void *func_addr);
+ 
+diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+index 02068bd0e4d9..7638a735f48f 100644
+--- a/kernel/bpf/bpf_struct_ops.c
++++ b/kernel/bpf/bpf_struct_ops.c
+@@ -522,7 +522,9 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+ 			if (err)
+ 				goto reset_unlock;
+ 		}
+-		arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++		err = arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++		if (err)
++			goto reset_unlock;
+ 		/* Let bpf_link handle registration & unregistration.
+ 		 *
+ 		 * Pair with smp_load_acquire() during lookup_elem().
+@@ -531,7 +533,10 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+ 		goto unlock;
+ 	}
+ 
+-	arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++	err = arch_protect_bpf_trampoline(st_map->image, PAGE_SIZE);
++	if (err)
++		goto reset_unlock;
++
+ 	err = st_ops->reg(kdata);
+ 	if (likely(!err)) {
+ 		/* This refcnt increment on the map here after
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index ea6843be2616..23ce17da3bf7 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -898,23 +898,30 @@ static LIST_HEAD(pack_list);
+ static struct bpf_prog_pack *alloc_new_pack(bpf_jit_fill_hole_t bpf_fill_ill_insns)
+ {
+ 	struct bpf_prog_pack *pack;
++	int err;
+ 
+ 	pack = kzalloc(struct_size(pack, bitmap, BITS_TO_LONGS(BPF_PROG_CHUNK_COUNT)),
+ 		       GFP_KERNEL);
+ 	if (!pack)
+ 		return NULL;
+ 	pack->ptr = bpf_jit_alloc_exec(BPF_PROG_PACK_SIZE);
+-	if (!pack->ptr) {
+-		kfree(pack);
+-		return NULL;
+-	}
++	if (!pack->ptr)
++		goto out;
+ 	bpf_fill_ill_insns(pack->ptr, BPF_PROG_PACK_SIZE);
+ 	bitmap_zero(pack->bitmap, BPF_PROG_PACK_SIZE / BPF_PROG_CHUNK_SIZE);
+ 	list_add_tail(&pack->list, &pack_list);
+ 
+ 	set_vm_flush_reset_perms(pack->ptr);
+-	set_memory_rox((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
++	err = set_memory_rox((unsigned long)pack->ptr, BPF_PROG_PACK_SIZE / PAGE_SIZE);
++	if (err)
++		goto out_free;
+ 	return pack;
++
++out_free:
++	bpf_jit_free_exec(pack->ptr);
++out:
++	kfree(pack);
++	return NULL;
+ }
+ 
+ void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
+@@ -929,9 +936,15 @@ void *bpf_prog_pack_alloc(u32 size, bpf_jit_fill_hole_t bpf_fill_ill_insns)
+ 		size = round_up(size, PAGE_SIZE);
+ 		ptr = bpf_jit_alloc_exec(size);
+ 		if (ptr) {
++			int err;
++
+ 			bpf_fill_ill_insns(ptr, size);
+ 			set_vm_flush_reset_perms(ptr);
+-			set_memory_rox((unsigned long)ptr, size / PAGE_SIZE);
++			err = set_memory_rox((unsigned long)ptr, size / PAGE_SIZE);
++			if (err) {
++				bpf_jit_free_exec(ptr);
++				ptr = NULL;
++			}
+ 		}
+ 		goto out;
+ 	}
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index d382f5ebe06c..6e64ac9083b6 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -456,7 +456,9 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr, bool lock_direct_mut
+ 	if (err < 0)
+ 		goto out_free;
+ 
+-	arch_protect_bpf_trampoline(im->image, im->size);
++	err = arch_protect_bpf_trampoline(im->image, im->size);
++	if (err)
++		goto out_free;
+ 
+ 	WARN_ON(tr->cur_image && total == 0);
+ 	if (tr->cur_image)
+@@ -1072,17 +1074,21 @@ void __weak arch_free_bpf_trampoline(void *image, unsigned int size)
+ 	bpf_jit_free_exec(image);
+ }
+ 
+-void __weak arch_protect_bpf_trampoline(void *image, unsigned int size)
++int __weak arch_protect_bpf_trampoline(void *image, unsigned int size)
+ {
+ 	WARN_ON_ONCE(size > PAGE_SIZE);
+-	set_memory_rox((long)image, 1);
++	return set_memory_rox((long)image, 1);
+ }
+ 
+-void __weak arch_unprotect_bpf_trampoline(void *image, unsigned int size)
++int __weak arch_unprotect_bpf_trampoline(void *image, unsigned int size)
+ {
++	int err;
+ 	WARN_ON_ONCE(size > PAGE_SIZE);
+-	set_memory_nx((long)image, 1);
+-	set_memory_rw((long)image, 1);
++
++	err = set_memory_nx((long)image, 1);
++	if (err)
++		return err;
++	return set_memory_rw((long)image, 1);
+ }
+ 
+ int __weak arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
+diff --git a/net/bpf/bpf_dummy_struct_ops.c b/net/bpf/bpf_dummy_struct_ops.c
+index 8906f7bdf4a9..6d49a00fba4d 100644
+--- a/net/bpf/bpf_dummy_struct_ops.c
++++ b/net/bpf/bpf_dummy_struct_ops.c
+@@ -129,7 +129,9 @@ int bpf_struct_ops_test_run(struct bpf_prog *prog, const union bpf_attr *kattr,
+ 	if (err < 0)
+ 		goto out;
+ 
+-	arch_protect_bpf_trampoline(image, PAGE_SIZE);
++	err = arch_protect_bpf_trampoline(image, PAGE_SIZE);
++	if (err)
++		goto out;
+ 	prog_ret = dummy_ops_call_op(image, args);
+ 
+ 	err = dummy_ops_copy_args(args);
 -- 
-Kees Cook
+2.43.0
+
