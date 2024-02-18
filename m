@@ -1,86 +1,134 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B807FC1D
-	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 09:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A314D11D;
+	Sun, 18 Feb 2024 10:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708247221; cv=none; b=jwti/tOPKdrCY2WIZIVAfHUONL6FGzORw+D5cAEmlkC9B2uYZqmQ1ik5K1eW1nAeQ0dClEb02YEPYz5aKTiDoFuMqcONRpO32NyWa9gMVkPz154fHV9n4VwrZKHLjqX5TioYIy2vOU0/69KLOJDjH6KmKmjRraZOd4HyrNl3Yx4=
+	t=1708253723; cv=none; b=jyif8oQLUwKe2mM+rUY16tlE3y5PXcoxT5vz6SDPzRbhGDzRiLtpbfeHCYyGmmNh86mI+DtsWz/Z7E7PqCsWyAUWRw3ecDyKi3Cfofbx7g2kalPdrlQyG65/JeACAAdodLyrF2GjGrPQRiOGl6DkjaVKtlL34D60g0sn2wze6K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708247221; c=relaxed/simple;
-	bh=HFou+Ynhj8r45qIYynVJq3BPxFIXGbuKAoHIGhaH17M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HCS94IVQwQ1f5AOzhQKdgAHMh32ai8XLmDn9uAaDUetLUail8v+/kV3J+fHY/HZA2GAixvJFkkrx4CrVNZuGkrjIpU1f5DEksZL6HSsCNcHEI5/Ti9TL2Mc50H3V6p442xEOBNgdUao3VrXgGnyZZMeKp0HtTPP2u679jbSNqTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CfENhN4+; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CfENhN4+"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso1482305a12.2
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 01:07:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708247220; x=1708852020; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+pYjP8Elq30R0i6ycDkBbNUM938GG/2nOBO34J/gBts=;
-        b=CfENhN4+7of4UE9gjPzdZOhi2bMwCVSCAGl3GBKhH6SFsZ3u62gWEJ7wMEaKRfaDW6
-         wphwf1ieqcQmWlzhDt2mCiOwZEouB3WdlTyC+jmN+megcEs8dqAltFuoBSrzJr2MXp1n
-         G2xrB4mxSKP68DMz3akurQweDLE3bw8eeVlwQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708247220; x=1708852020;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+pYjP8Elq30R0i6ycDkBbNUM938GG/2nOBO34J/gBts=;
-        b=SRdEY/mznUF40H1Vc4a3CLI7VtuFd0ZratCaD3YCCCTkjiKq3rQNbHD8gSB0PtFC+/
-         m2VxF6+jiFTuj9/g1G73TPGffbLuIjyVsF7MeUa7i5c2uXB5r7XacdO632P3oMrsv3Hg
-         eptLlczM8+tBsq1Yx6T1gjCq5mpfbnLSRbg8QyYaaUNtkZTxXx3+ZX1fH7H4bsrrx/T+
-         LfpmbZF6QThStxU+CAi5+4uYgYIWhcHv4qTPVPNHnjYU352Ie/An1obBvbb6Fw2cLxfw
-         npglKBGAFt2z9H/kAVXX4Aw/W0OlcVJD4fz7SRulthC7v9IKr1OFFUf0/yaWosUnfcKH
-         pcIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXczxdg29fbwmarf+CTKdkisrXp5d7VTJvcD92Bfd2lmySkbwMJPXip6ScOuqsaarbgWTZPOe2RtLOaQ6SHgXG/Kw9yqADJDIecZhn28UHL
-X-Gm-Message-State: AOJu0YyFisXuzJykr0b8/7QPBmjgwWWTeQflORMTciZ7WeLJi+Yf/vUk
-	Uz/yVw7RT1dP8Gaj3OEuwAuEL/bNbuSGOqwQEARRQiZMqdoIHA39UwW3GUYOTSFJA3fIxJHGRow
-	=
-X-Google-Smtp-Source: AGHT+IHE3MbZ/4iRpYOBLF5b91QTfJN5jdx5IDOudYN6UjSGzsBL2ieEcjeoydWDpFek6WFz9QfxRg==
-X-Received: by 2002:a62:cec9:0:b0:6e4:1a29:732f with SMTP id y192-20020a62cec9000000b006e41a29732fmr991819pfg.12.1708247219780;
-        Sun, 18 Feb 2024 01:06:59 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c18-20020aa78812000000b006e1464e71f9sm495605pfo.47.2024.02.18.01.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 01:06:59 -0800 (PST)
-Date: Sun, 18 Feb 2024 01:06:58 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1708253723; c=relaxed/simple;
+	bh=EbBTO80WkRv7m3C0/eIYgeu1ZNHlQh49ZLc+XBBYCWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TZGas89Dslzg7Np51it3DqvypFnoGtEcoKGB7CiEYBzYKlJN1q9pcN8Zvmxuq/eiLJhwjx6t/S5AwVNV13w4T6PJ7ChdXTRoD10TXCN5FxdsQZRSL+txvWG5tntrze2kMCom+vRfAOmX+E9coLQrmd7RefIDX7/ZBuDFqWHnja8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Td2cx1hvmz9v4J;
+	Sun, 18 Feb 2024 11:55:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id oNLdMsMYWM-I; Sun, 18 Feb 2024 11:55:13 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Td2cx0nzTz9v4H;
+	Sun, 18 Feb 2024 11:55:13 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 133EC8B76C;
+	Sun, 18 Feb 2024 11:55:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id rSFuxJHSf4wJ; Sun, 18 Feb 2024 11:55:12 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.5])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F9778B763;
+	Sun, 18 Feb 2024 11:55:12 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
 	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] PM: hibernate: Don't ignore return from set_memory_ro()
-Message-ID: <202402180106.25E08136F5@keescook>
-References: <be49c794567f3bd00ae16e91b54fe8cfe6cb4999.1708245599.git.christophe.leroy@csgroup.eu>
+Subject: [PATCH bpf-next 1/2] bpf: Take return from set_memory_ro() into account with bpf_prog_lock_ro()
+Date: Sun, 18 Feb 2024 11:55:01 +0100
+Message-ID: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be49c794567f3bd00ae16e91b54fe8cfe6cb4999.1708245599.git.christophe.leroy@csgroup.eu>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708253703; l=2087; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=EbBTO80WkRv7m3C0/eIYgeu1ZNHlQh49ZLc+XBBYCWQ=; b=F8NxWRnHg/MwjNEFQ6M9LOolCSgQxtP3c3JmOchmjBXK4w3gNTQyvbbU8Dfk5LMKUUuWJdiXO gQxH9ILOKV4BiYc52c44ZK+GDQsbGG8QeTRKNZ0eeQFcfNep8r/rx1n
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 18, 2024 at 09:40:58AM +0100, Christophe Leroy wrote:
-> set_memory_ro() and set_memory_rw() can fail, leaving memory
-> unprotected.
-> 
-> Take the returned value into account and abort in case of
-> failure.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+set_memory_ro() can fail, leaving memory unprotected.
 
-More set_memory* consumers! :) Error paths look good to me.
+Check its return and take it into account as an error.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ include/linux/filter.h | 5 +++--
+ kernel/bpf/core.c      | 4 +++-
+ kernel/bpf/verifier.c  | 4 +++-
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index fee070b9826e..fc0994dc5c72 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -881,14 +881,15 @@ bpf_ctx_narrow_access_offset(u32 off, u32 size, u32 size_default)
+ 
+ #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+ 
+-static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
++static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+ {
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+ 	if (!fp->jited) {
+ 		set_vm_flush_reset_perms(fp);
+-		set_memory_ro((unsigned long)fp, fp->pages);
++		return set_memory_ro((unsigned long)fp, fp->pages);
+ 	}
+ #endif
++	return 0;
+ }
+ 
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 71c459a51d9e..c49619ef55d0 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2392,7 +2392,9 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
+ 	}
+ 
+ finalize:
+-	bpf_prog_lock_ro(fp);
++	*err = bpf_prog_lock_ro(fp);
++	if (*err)
++		return fp;
+ 
+ 	/* The tail call compatibility check can only be done at
+ 	 * this late stage as we need to determine, if we deal
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index c5d68a9d8acc..1f831a6b4bbc 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -19020,7 +19020,9 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+ 	 * bpf_prog_load will add the kallsyms for the main program.
+ 	 */
+ 	for (i = 1; i < env->subprog_cnt; i++) {
+-		bpf_prog_lock_ro(func[i]);
++		err = bpf_prog_lock_ro(func[i]);
++		if (err)
++			goto out_free;
+ 		bpf_prog_kallsyms_add(func[i]);
+ 	}
+ 
 -- 
-Kees Cook
+2.43.0
+
