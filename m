@@ -1,196 +1,183 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF43149E15;
-	Sun, 18 Feb 2024 08:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4BB63A7
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 09:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708245674; cv=none; b=c+wKjM2L8/KfmpGhsN517074frJzveKKOnM+UJUYBjSxC3hoDMf+uYIL0v7xuaJ+cdQthjLJIg1gbB+vjNvgOz8Nc5rrymm9FQzVdLod2jP13mZVzicNuuJuS1LiMHOBYvqVde9byphtIublrV/E1AcYJ3nLtuWFQUl60K4tfqs=
+	t=1708247092; cv=none; b=I+OBgMYPvG3cFgNEhdJohZLvCxJueGjMQpfdBSphYfVFbRue59nnicic3yMbM3TH123aQpeHRvMhvydbGs3/J04pG6pAWVXcm9oB4qlIBmfsGzE28npuojVEKiykB8iyMd8VKZfoLke/CqqpHMTGzz0OmX8ZeMUlYISGXMqdeMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708245674; c=relaxed/simple;
-	bh=sMaAPhkoOe/wmvExKDqyxO2hoivL+2zo6774VKxyGTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bGAdKAoJRmVjs4+rccgZyo+8nWgejlXM00ymKc+bjprQSuRIYu60l45m+UXHDTB+8fqTgIkXcyWJGj35h8iHZHFTM1Bub/x3+kPfaUi6BJNv0ci9ZTDYHEEuXfIIli8FnuKbha1amA97MucE40JmAUy8T7ycNXarn6NHlbRwfdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TczfF0yd4z9v8l;
-	Sun, 18 Feb 2024 09:41:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 6XKgRyMUJsmE; Sun, 18 Feb 2024 09:41:09 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TczfD722lz9v6V;
-	Sun, 18 Feb 2024 09:41:08 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id E88F28B76C;
-	Sun, 18 Feb 2024 09:41:08 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id QB5cK6e3yLyc; Sun, 18 Feb 2024 09:41:08 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.5])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6EFE68B763;
-	Sun, 18 Feb 2024 09:41:08 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Subject: [PATCH] PM: hibernate: Don't ignore return from set_memory_ro()
-Date: Sun, 18 Feb 2024 09:40:58 +0100
-Message-ID: <be49c794567f3bd00ae16e91b54fe8cfe6cb4999.1708245599.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1708247092; c=relaxed/simple;
+	bh=gsfp648GSeu4GSSGGmUz6uwvgJjtHhBRQ1HuetedarU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJWZfl6NedOHeasqBIG7d5k9lL8trYuX16fxzRaZFlQ3HdkuSYjW2EVD3aEUEj4HCP1kTlN4KFWhFB6D5H+BQPDlCZozOoKnuEbmUfBKo7ejFXEdZ2bqHtDP0tWxwyrZMrY+m4Qmqyj15N6O0zfky/NkNphIMVgWanFk117xRFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TAhcGFc2; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TAhcGFc2"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d7393de183so27404165ad.3
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 01:04:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708247089; x=1708851889; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+PSGviE7P+pWKcxbR82hBe0e7HZtwlv0NsdYte+C5Ww=;
+        b=TAhcGFc2D+xw4WANX79tqHrNVyJ1xT70hoVNMELKMJFfbftr0gGCaun5vsCqqpWcDv
+         tLwpHYldPgkhpfKrqNsJ6QLPTHf16LEncrKuM6t3MNOYNPqCcom5AbGcE+FXjYM93MAl
+         zK0DUY7Rrmm7X5YWkHj5ZDwPbJuzoWGKTh8cE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708247089; x=1708851889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+PSGviE7P+pWKcxbR82hBe0e7HZtwlv0NsdYte+C5Ww=;
+        b=C+zveNGyKZuJqVw1yTnBJhoKetqEMXF77JAhmRyHdiuGdSZ5Sv29RTWZVI8HdeIy6c
+         jDKgrCdY193aN7v9WR2xIN3ESA6OId54/hsBbOhUsei8aoXkxgY5RU8TDKsGEScbljCe
+         DvR3ac0ebdmO9qy3KBgGgzPUnQnmXPU1ScAZv+/McdWHTCOA0xlUvjcZnj4PKOGJ2H8S
+         UJQJ4IItPaEP7PDuCVE9lF5rOkcZiksrdmLVebSeoNhr9tp8h5jxmzNZ477LmVPbJQ2h
+         ykGQCsWrcHKFw0VWK49YHUUDwfFiHkS4FvmTayZ5Zcl40lkbFPApsJQrGS4D7Xr1Izw5
+         pjRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQdGxIGNlEkc0AYPr640Ayl1N4U9c8Im9yVq378WtzopJi8Oopa84bwys08V58hks/XOdTd6Dd+CAFqrxT1GKms4ois9jODLXvUBCbJKJB
+X-Gm-Message-State: AOJu0Yx1JjT5BR0q6Z/73E6rG7i0TEqbz/1Kw6fY9PYaskqGPmu7smPd
+	u3LKGzvdIsSJIMkyvdWzcIBc6SyYDB5uXkjBCmYe0I8X2veeP/aRzJ6AfHX3AQ==
+X-Google-Smtp-Source: AGHT+IE8Ghl8NWV5BRDjTffg6tAQE1Fy/8QmYMG3CMSvf0PFWMiDr/5Kpsv3BwMiRgjuLIrzy52Cbw==
+X-Received: by 2002:a17:902:778c:b0:1da:2bd6:a450 with SMTP id o12-20020a170902778c00b001da2bd6a450mr8279022pll.32.1708247089287;
+        Sun, 18 Feb 2024 01:04:49 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id v13-20020a170902f0cd00b001d8d1a2e5f2sm2435675pla.216.2024.02.18.01.04.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Feb 2024 01:04:48 -0800 (PST)
+Date: Sun, 18 Feb 2024 01:04:48 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Guixiong Wei <guixiongwei@gmail.com>, linux-hardening@vger.kernel.org,
+	Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Guixiong Wei <weiguixiong@bytedance.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC] kernel/ksysfs.c: restrict /sys/kernel/notes to root
+ access
+Message-ID: <202402180028.6DB512C50@keescook>
+References: <20240218073501.54555-1-guixiongwei@gmail.com>
+ <2024021825-skiing-trustee-a56a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708245658; l=5282; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=sMaAPhkoOe/wmvExKDqyxO2hoivL+2zo6774VKxyGTg=; b=dL54jghPy4GRYknveendqZEnByR39IMPEL7EcmQgTI845XRsjhQMcxlvWY2uTT8Sly/qmJ7Hl aHPgM8klwleCauLxcHkUrwg6i29FHPt1nhd0d6uhyw23wp5PWyFhrUj
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024021825-skiing-trustee-a56a@gregkh>
 
-set_memory_ro() and set_memory_rw() can fail, leaving memory
-unprotected.
+On Sun, Feb 18, 2024 at 08:47:03AM +0100, Greg KH wrote:
+> On Sun, Feb 18, 2024 at 03:35:01PM +0800, Guixiong Wei wrote:
+> > From: Guixiong Wei <weiguixiong@bytedance.com>
+> > 
+> > Restrict non-privileged user access to /sys/kernel/notes to
+> > avoid security attack.
+> > 
+> > The non-privileged users have read access to notes. The notes
+> > expose the load address of startup_xen. This address could be
+> > used to bypass KASLR.
+> 
+> How can it be used to bypass it?
+> 
+> KASLR is, for local users, pretty much not an issue, as that's not what
+> it protects from, only remote ones.
+> 
+> > For example, the startup_xen is built at 0xffffffff82465180 and
+> > commit_creds is built at 0xffffffff810ad570 which could read from
+> > the /boot/System.map. And the loaded address of startup_xen is
+> > 0xffffffffbc265180 which read from /sys/kernel/notes. So the loaded
+> > address of commit_creds is 0xffffffffbc265180 - (0xffffffff82465180
+> >  - 0xffffffff810ad570) = 0xffffffffbaead570.
+> 
+> I've cc: the hardening list on this, I'm sure the developers there have
+> opinions about this.
 
-Take the returned value into account and abort in case of
-failure.
+Oh eww, why is Xen spewing addresses into the notes section? (This must
+be how it finds its entry point? But that would be before relocations
+happen...)
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- kernel/power/power.h    |  2 +-
- kernel/power/snapshot.c | 25 ++++++++++++++++---------
- kernel/power/swap.c     |  8 ++++----
- kernel/power/user.c     |  4 +++-
- 4 files changed, 24 insertions(+), 15 deletions(-)
+But yes, I can confirm that relocations are done against the .notes
+section at boot, so the addresses exposed in .notes is an immediate
+KASLR offset exposure.
 
-diff --git a/kernel/power/power.h b/kernel/power/power.h
-index 8499a39c62f4..84d235f491a5 100644
---- a/kernel/power/power.h
-+++ b/kernel/power/power.h
-@@ -148,7 +148,7 @@ extern unsigned int snapshot_additional_pages(struct zone *zone);
- extern unsigned long snapshot_get_image_size(void);
- extern int snapshot_read_next(struct snapshot_handle *handle);
- extern int snapshot_write_next(struct snapshot_handle *handle);
--extern void snapshot_write_finalize(struct snapshot_handle *handle);
-+int snapshot_write_finalize(struct snapshot_handle *handle);
- extern int snapshot_image_loaded(struct snapshot_handle *handle);
- 
- extern bool hibernate_acquire(void);
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index 5c96ff067c64..405eddbda4fc 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -58,22 +58,24 @@ static inline void hibernate_restore_protection_end(void)
- 	hibernate_restore_protection_active = false;
- }
- 
--static inline void hibernate_restore_protect_page(void *page_address)
-+static inline int __must_check hibernate_restore_protect_page(void *page_address)
- {
- 	if (hibernate_restore_protection_active)
--		set_memory_ro((unsigned long)page_address, 1);
-+		return set_memory_ro((unsigned long)page_address, 1);
-+	return 0;
- }
- 
--static inline void hibernate_restore_unprotect_page(void *page_address)
-+static inline int hibernate_restore_unprotect_page(void *page_address)
- {
- 	if (hibernate_restore_protection_active)
--		set_memory_rw((unsigned long)page_address, 1);
-+		return set_memory_rw((unsigned long)page_address, 1);
-+	return 0;
- }
- #else
- static inline void hibernate_restore_protection_begin(void) {}
- static inline void hibernate_restore_protection_end(void) {}
--static inline void hibernate_restore_protect_page(void *page_address) {}
--static inline void hibernate_restore_unprotect_page(void *page_address) {}
-+static inline int __must_check hibernate_restore_protect_page(void *page_address) {return 0; }
-+static inline int hibernate_restore_unprotect_page(void *page_address) {return 0; }
- #endif /* CONFIG_STRICT_KERNEL_RWX  && CONFIG_ARCH_HAS_SET_MEMORY */
- 
- 
-@@ -2832,7 +2834,9 @@ int snapshot_write_next(struct snapshot_handle *handle)
- 		}
- 	} else {
- 		copy_last_highmem_page();
--		hibernate_restore_protect_page(handle->buffer);
-+		error = hibernate_restore_protect_page(handle->buffer);
-+		if (error)
-+			return error;
- 		handle->buffer = get_buffer(&orig_bm, &ca);
- 		if (IS_ERR(handle->buffer))
- 			return PTR_ERR(handle->buffer);
-@@ -2858,15 +2862,18 @@ int snapshot_write_next(struct snapshot_handle *handle)
-  * stored in highmem.  Additionally, it recycles bitmap memory that's not
-  * necessary any more.
-  */
--void snapshot_write_finalize(struct snapshot_handle *handle)
-+int snapshot_write_finalize(struct snapshot_handle *handle)
- {
-+	int error;
-+
- 	copy_last_highmem_page();
--	hibernate_restore_protect_page(handle->buffer);
-+	error = hibernate_restore_protect_page(handle->buffer);
- 	/* Do that only if we have loaded the image entirely */
- 	if (handle->cur > 1 && handle->cur > nr_meta_pages + nr_copy_pages + nr_zero_pages) {
- 		memory_bm_recycle(&orig_bm);
- 		free_highmem_data();
- 	}
-+	return error;
- }
- 
- int snapshot_image_loaded(struct snapshot_handle *handle)
-diff --git a/kernel/power/swap.c b/kernel/power/swap.c
-index 6053ddddaf65..b2d708952aae 100644
---- a/kernel/power/swap.c
-+++ b/kernel/power/swap.c
-@@ -1100,8 +1100,8 @@ static int load_image(struct swap_map_handle *handle,
- 		ret = err2;
- 	if (!ret) {
- 		pr_info("Image loading done\n");
--		snapshot_write_finalize(snapshot);
--		if (!snapshot_image_loaded(snapshot))
-+		ret = snapshot_write_finalize(snapshot);
-+		if (!ret && !snapshot_image_loaded(snapshot))
- 			ret = -ENODATA;
- 	}
- 	swsusp_show_speed(start, stop, nr_to_read, "Read");
-@@ -1441,8 +1441,8 @@ static int load_image_lzo(struct swap_map_handle *handle,
- 	stop = ktime_get();
- 	if (!ret) {
- 		pr_info("Image loading done\n");
--		snapshot_write_finalize(snapshot);
--		if (!snapshot_image_loaded(snapshot))
-+		ret = snapshot_write_finalize(snapshot);
-+		if (!ret && !snapshot_image_loaded(snapshot))
- 			ret = -ENODATA;
- 		if (!ret) {
- 			if (swsusp_header->flags & SF_CRC32_MODE) {
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 3a4e70366f35..3aa41ba22129 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -317,7 +317,9 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
- 		break;
- 
- 	case SNAPSHOT_ATOMIC_RESTORE:
--		snapshot_write_finalize(&data->handle);
-+		error = snapshot_write_finalize(&data->handle);
-+		if (error)
-+			break;
- 		if (data->mode != O_WRONLY || !data->frozen ||
- 		    !snapshot_image_loaded(&data->handle)) {
- 			error = -EPERM;
+In /sys/kernel/notes (are there any tools to read this? I wrote my own...)
+
+	type: 1
+	name: Xen
+	desc: 0xb4a711c0 0xffffffff
+
+which matches a privileged read of /proc/kallsysms:
+
+	ffffffffb4a711c0 T startup_xen
+
+(and the hypercall_page too)
+
+There are all coming from arch/x86/xen/xen-head.S:
+
+        ELFNOTE(Xen, XEN_ELFNOTE_GUEST_OS,       .asciz "linux")
+        ELFNOTE(Xen, XEN_ELFNOTE_GUEST_VERSION,  .asciz "2.6")
+        ELFNOTE(Xen, XEN_ELFNOTE_XEN_VERSION,    .asciz "xen-3.0")
+#ifdef CONFIG_XEN_PV
+        ELFNOTE(Xen, XEN_ELFNOTE_VIRT_BASE,      _ASM_PTR __START_KERNEL_map)
+        /* Map the p2m table to a 512GB-aligned user address. */
+        ELFNOTE(Xen, XEN_ELFNOTE_INIT_P2M,       .quad (PUD_SIZE * PTRS_PER_PUD))
+        ELFNOTE(Xen, XEN_ELFNOTE_ENTRY,          _ASM_PTR startup_xen)
+...
+
+Introduced in commit 5ead97c84fa7 ("xen: Core Xen implementation")
+
+Exposed in commit da1a679cde9b ("Add /sys/kernel/notes")
+
+Amazingly these both went in on the same release (v2.6.23, 2007). This
+has been exposed for longer than KASLR has been upstream. :P
+
+> 
+> > Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
+> > ---
+> >  kernel/ksysfs.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+> > index b1292a57c2a5..09bc0730239b 100644
+> > --- a/kernel/ksysfs.c
+> > +++ b/kernel/ksysfs.c
+> > @@ -199,7 +199,7 @@ static ssize_t notes_read(struct file *filp, struct kobject *kobj,
+> >  static struct bin_attribute notes_attr __ro_after_init  = {
+> >  	.attr = {
+> >  		.name = "notes",
+> > -		.mode = S_IRUGO,
+> > +		.mode = S_IRUSR,
+> >  	},
+> >  	.read = &notes_read,
+> >  };
+
+Yes please.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+I wonder if we should also remove relocations that are aimed at the
+.notes section for good measure? If that had already been true, this
+would have just given the same info as System.map.
+
+> 
+> No objection from me, but what userspace tool requires access to this
+> file today?  Will it break if permissions are changed on it?
+> 
+> And what about the module notes files?  If you change one, shouldn't you
+> change all?
+
+Luckily all of _those_ contain what I'd expect: the Linux and
+GNU.build-id notes, which are harmless. But if we're going to suddenly
+have things appearing in here, let's make those root-only too.
+
+-Kees
+
 -- 
-2.43.0
-
+Kees Cook
