@@ -1,122 +1,209 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD3AFBEA
-	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 16:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BAC376EE
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 17:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708274919; cv=none; b=pEDIem9eBhH5fT32UMD4QPsviipbFwbwLnPVUxDc0BwpTkqWKpVLWpklv6BtNGJjRzrYcx4C9mucYW4jvxaEJVt4Nbb9oherZOagBqckMbfz0gwiZ+uaqnJmFau/40zb3be6DaXFXl7aJJf/tx1fo93pw9+sOxaTnhd95B42zTw=
+	t=1708277898; cv=none; b=CiARvnSHVBMmlYwsnRrgOKn5b6uoAPmafvcSI1/ST6tANJUcfOgo8LLS1jisoYSNsll8f1p3j4BfB7ABFhTEcDT0hRaVt6mKaxhN691ktUEekL4+OnKzcd2vr03+ileMwmJ1sPw+r30LtKWgRB3PAdZR2BHu3pXzSe7G9PtMZr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708274919; c=relaxed/simple;
-	bh=KpFfggUZ5hMwU47Zuz91oYFFmXWnyTnZeq8DfngWL8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O8w95lqW5nHXMzTNXuDknDxyTdpe25clhmYtD82iO02+MIz2Zdmrrrnes4MquHG+VrHOYcoGEalgLOKvUUcJItKG4SPJbhOfkgTeqxYISQr9xXp2zOAaxpPp9lxqNSV0JJfQIkTFs8QMwcw9aVyHSjeMvaaR701TxZSFg+8NRYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=LW2WGzzD; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	s=arc-20240116; t=1708277898; c=relaxed/simple;
+	bh=fOi63sMG14wosBcU+xQx6Pnzfjt7UBebBFJw8HndHpI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kW/LR8E76Nz9GxoDXTihx2eGpQDEqYcSzxzbn+IitmNLEscST6vhstkFTa62oOeQ5T1rs7WdyOKcMHQ6t8j+fJsnatlqVVn1cJ7JI4p1Z0Xwl9ETw+5QZ7neldCca4Qm6ShnIcFKMiQJHyjRHaa3EodKbCkrtSdE0jG5GvVhTYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ivoiaAYV; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="LW2WGzzD"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-365220a2c3dso4743405ab.0
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 08:48:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ivoiaAYV"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d93edfa76dso18873145ad.1
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 09:38:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1708274915; x=1708879715; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=37nms9BmJJEsQJsbt0jcgUsWdlYRkTGGuwtAPDF2YJA=;
-        b=LW2WGzzDP38WdWR4YgRHs1KJWpyZpeb3WqDXMGHc7daZZ1UzFQqMdbSzYVLlHy4IPC
-         5vwtHiMKNMyo3wwF7vNI6SZo26mxIc8EVd1y05Fr9QN62GYenKfI/wCkVmhHetHWmFz2
-         EIU1Zy+Mjty2IbtcRQulO/HwpX0rFbaLqidTI=
+        d=chromium.org; s=google; t=1708277896; x=1708882696; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hh9EATpmgCzyJUwdSpfM2xdtAniiVIGVgEMoMg2JFk0=;
+        b=ivoiaAYVOzaieC5nVagJP7XIlISH8ZbXC5Y7LsszclV4Th7DOIj/zdmzci7fZ3sj+G
+         qrWfqGTUAchMkhrOESgfi8abpm1FsOW3ypCOoi8Rp6Q0pLKc1lSZLXeQwZabao4DuQin
+         DsxYhRv3h1EWI/TsUUwbiHhPjvHw3RXMb1swI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708274915; x=1708879715;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=37nms9BmJJEsQJsbt0jcgUsWdlYRkTGGuwtAPDF2YJA=;
-        b=Syd1K8oQrFKLBsc+ibayOlaLetA2uwzQ4mu2b+890OW6bWCiBzpaQPlqbMB9MO+Dcg
-         rY5fB90awg2lPN3pMfpFbQnutNIhnN/sGBlqcRszUmtBN1f6vOWeR5llf8LGNfO+5Au1
-         Doq4H4eISMumExog57FH+qXqg7yiY2/epCFYDtzpyA3re8AD9X8RVbPISwsgMm4p/x1E
-         n9huWpnrSla31Zb6u14Ky/l21PrkgHU99tu1VVXrwlPaPw3NLAbAPvbwOI1lYUhJCOyo
-         XTKjwT9wtIHpJ+KuGTPRVaDdFq3/u5bi5nI5jP9VX03Cx0DLzEBCDEHmbVgjsfqQgQwQ
-         69yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhvv/MJC5pX2GFhQ2KnGnHBA/jQgJBg+dYOYU43RdxGYYyMe9Oap/dbjp8RAsQR8w0NQ78qKKRcyiwl0uOCqgW8VdqWh3G1VkIn/wiIHg7
-X-Gm-Message-State: AOJu0YyR56TC4Zjpd9K9/Vx08MsC/tVFaF5uqH1dmPQHQA/7fEluZixk
-	fNv6oT/dvEmdcp7giY3UOpLr7ccs0WFrOhP3LQc9KGPgFzV4bJOkSmQzppI43w==
-X-Google-Smtp-Source: AGHT+IFcE6tBwMe7ot5+O/3t4TbbhIKrINl4J+8hLvJT/caqX8sqYCCWCefFmQzI3F/jhqPVS3tGLw==
-X-Received: by 2002:a05:6e02:154c:b0:364:216e:d1dc with SMTP id j12-20020a056e02154c00b00364216ed1dcmr9851712ilu.22.1708274915594;
-        Sun, 18 Feb 2024 08:48:35 -0800 (PST)
-Received: from [172.22.22.28] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
-        by smtp.googlemail.com with ESMTPSA id hm11-20020a0566020f4b00b007c46318b9ccsm1107820iob.14.2024.02.18.08.48.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 08:48:35 -0800 (PST)
-Message-ID: <0123aec7-f7ae-454d-9b4a-361e97756242@ieee.org>
-Date: Sun, 18 Feb 2024 10:48:33 -0600
+        d=1e100.net; s=20230601; t=1708277896; x=1708882696;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hh9EATpmgCzyJUwdSpfM2xdtAniiVIGVgEMoMg2JFk0=;
+        b=lebIMCIzQjs1Tilv/QZrjKphdXpYABRaXu6lV3WjBMDl250Ha/YR1RmY0KmMUceq37
+         2DZSeKLcfm6PgROCoDI2Sg0GAFnuQUdbkEwaTiHVYZIzXIrR7wBvu9z5/6vvhf+81yCl
+         8elz0m5bdGcx7vxRyw3awYB6+mnp+dC61SJVnR0ttjEyR4yzD+YiqEQUnoVADhcnaDqw
+         /YhikAy6ezi9Mabhart5ckYsaXjFnmwx1brpYaeH3JbRbXou/hvuWyi9LAxYU/AbZBYR
+         TXDo3LTAlrMMH4VMwyBKB5BszS+AFqzQ01Vb2GMJGk1SgMVQpSBqlPzK4JT/BrWTIpa0
+         C9Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7B5s1OmVe2wx7Yc+m4hOwDXgLVQA9+lq8h/yCOKBY/YBjko1JX5MpP87LNXCme7uKS8kmiSl7xS7pkyGLzO8c4Ypkxel5l9L/7yv+BlKk
+X-Gm-Message-State: AOJu0Yz4ydWz/XIZf7tX4F05XUv0H0uTfNO0tnEJ/oaQSffhZkxLUqDk
+	O8IBpUEKnokEB4umbfQSIgsqxOGesaxqnH6O2SjECyPd+6iY10xlBRU+9HGucg==
+X-Google-Smtp-Source: AGHT+IFiDFAx5zD5XAyCA55VJU5Pi+d3INaNfFUuFMV5btA5rTZyAGg4fDsBByXEwuCMn2nQIGocBA==
+X-Received: by 2002:a17:902:e5d0:b0:1db:e6f6:e284 with SMTP id u16-20020a170902e5d000b001dbe6f6e284mr2525345plf.68.1708277895594;
+        Sun, 18 Feb 2024 09:38:15 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h15-20020a170902f7cf00b001db4433ef95sm2895483plw.152.2024.02.18.09.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Feb 2024 09:38:14 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: "Tobin C. Harding" <me@tobin.cc>
+Cc: Kees Cook <keescook@chromium.org>,
+	Tycho Andersen <tycho@tycho.pizza>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] leaking_addresses: Provide mechanism to scan binary files
+Date: Sun, 18 Feb 2024 09:38:12 -0800
+Message-Id: <20240218173809.work.286-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] greybus: Avoid fake flexible array for response data
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
- Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240216232824.work.862-kees@kernel.org>
- <672fafca-547e-443e-8dd8-80ccd2320767@ieee.org>
- <202402171357.E671B5589@keescook>
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <202402171357.E671B5589@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3736; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=fOi63sMG14wosBcU+xQx6Pnzfjt7UBebBFJw8HndHpI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0kCEiQb58OHQzHl2G7UhYX9JgRRCdCZvoZewO
+ AV2DXHyBLOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdJAhAAKCRCJcvTf3G3A
+ JuVAD/43HbHPxACwrZxImnCyHR2FGGIldZcjwL9rzxA2xEfpQenKFlWdRFW8KBtc1PV3IS5xGVE
+ eq7/yB1FOlcsrXRFpmAaC7wKVVITm5/8HiPRKuxCEe+Dl19v/bi41bBKibOCxTStMBJXScul3Cz
+ vAUHiq6GxL/jEQ2nArezBD0VVjHwGbUvMHulFUSvTASAh9E+fPjMPxik5CzMORhxQyiiIk05yYo
+ ljFQk6sXP8Q+6kupVRVYiqApWYiT7Upb1oDF4kg3hDNVecbz7e/H1tOu70wBGmJ5jpAlwbr4vSb
+ lhj5UOhJL1611IIKaVF3DAQNhpNhw7kvfzk1pQFiCjQLgg9ZLTMV7BIiPxAs1V7heOePYqSxa72
+ 6XKU4g/oJF+iZrrrvvOT66s/QzgnHOS9vrLT+P4OaY8t7Lhe7uLh5mMnw2Al+mu2D+iOJSwRDqv
+ LWAS7tterhyusC68jlEKcikaM17g4NyZkdLuqH2Bd6y6pruDx+qvedQveZbKX3P1Jf2lwyp9/5M
+ UXqyzi7KPwT9nENEMPKt3Ry93nALTRwbMtfp/HRp91yCQDxuXtkzJpYAzwN+e8MQb1rAOQoR8Ac
+ lklMBifu1KULxvDf7CGaFR9vUix4sBDYJMSisNwimqRPCUPYmjiJ+5DFI/w74nHJnMDXupK/v6N
+ pbZ541i eDjibwBg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 2/17/24 3:58 PM, Kees Cook wrote:
-> On Sat, Feb 17, 2024 at 02:17:33PM -0600, Alex Elder wrote:
->> On 2/16/24 5:28 PM, Kees Cook wrote:
->>> FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
->>> code base has been converted to flexible arrays. In order to enforce
->>> the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
->>> destinations need to be handled. Instead of converting an empty struct
->>> into using a flexible array, just directly use a pointer without any
->>> additional indirection. Remove struct gb_bootrom_get_firmware_response
->>> and struct gb_fw_download_fetch_firmware_response.
->>
->> The only down side I see is that it sort of disrupts a pattern
->> used on Greybus request handlers (and the response structure definitions).
->>
->> I think a one-line comment in place of each of these two
->> definitions would be helpful, something like:
->> /* gb_fw_download_fetch_firmware_response contains no data */
-> 
-> Er, maybe this should be "no other data" ? Do you want a v2 of this
-> patch?
+Introduce --kallsyms argument for scanning binary files for known symbol
+addresses. This would have found the exposure in /sys/kernel/notes:
 
+$ scripts/leaking_addresses.pl --kallsyms=<(sudo cat /proc/kallsyms)
+/sys/kernel/notes: hypercall_page @ 156
+/sys/kernel/notes: xen_hypercall_set_trap_table @ 156
+/sys/kernel/notes: startup_xen @ 132
 
-Sending v2 is probably best, because I'd like to see these
-comments.  Greg could fix it up himself but he probably wants
-to pull it from the list
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: "Tobin C. Harding" <me@tobin.cc>
+Cc: Tycho Andersen <tycho@tycho.pizza>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Guixiong Wei <guixiongwei@gmail.com>
+Cc: linux-hardening@vger.kernel.org
+---
+ scripts/leaking_addresses.pl | 53 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-And yes, "no other data" is fine, or maybe "no payload"
-or "has an empty payload".  Any of those is better than
-nothing; you choose.
-
-Thank you.
-
-					-Alex
-
-> 
->> And then add a similar comment above the calls to
->> gb_operation_response_alloc().
->>
->> Otherwise this looks good.
->>
->> Reviewed-by: Alex Elder <elder@linaro.org>
-> 
-> Thanks!
-> 
+diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
+index e695634d153d..cbaa17c244cc 100755
+--- a/scripts/leaking_addresses.pl
++++ b/scripts/leaking_addresses.pl
+@@ -51,10 +51,13 @@ my $input_raw = "";	# Read raw results from file instead of scanning.
+ my $suppress_dmesg = 0;		# Don't show dmesg in output.
+ my $squash_by_path = 0;		# Summary report grouped by absolute path.
+ my $squash_by_filename = 0;	# Summary report grouped by filename.
++my $kallsyms_file = "";		# Kernel symbols file.
+ my $kernel_config_file = "";	# Kernel configuration file.
+ my $opt_32bit = 0;		# Scan 32-bit kernel.
+ my $page_offset_32bit = 0;	# Page offset for 32-bit kernel.
+ 
++my @kallsyms = ();
++
+ # Skip these absolute paths.
+ my @skip_abs = (
+ 	'/proc/kmsg',
+@@ -95,6 +98,8 @@ Options:
+ 	      --squash-by-path		Show one result per unique path.
+ 	      --squash-by-filename	Show one result per unique filename.
+ 	--kernel-config-file=<file>     Kernel configuration file (e.g /boot/config)
++	--kallsyms=<file>		Read kernel symbol addresses from file (for
++						scanning binary files).
+ 	--32-bit			Scan 32-bit kernel.
+ 	--page-offset-32-bit=o		Page offset (for 32-bit kernel 0xABCD1234).
+ 	-d, --debug			Display debugging output.
+@@ -115,6 +120,7 @@ GetOptions(
+ 	'squash-by-path'        => \$squash_by_path,
+ 	'squash-by-filename'    => \$squash_by_filename,
+ 	'raw'                   => \$raw,
++	'kallsyms=s'            => \$kallsyms_file,
+ 	'kernel-config-file=s'	=> \$kernel_config_file,
+ 	'32-bit'		=> \$opt_32bit,
+ 	'page-offset-32-bit=o'	=> \$page_offset_32bit,
+@@ -155,6 +161,25 @@ if ($output_raw) {
+ 	select $fh;
+ }
+ 
++if ($kallsyms_file) {
++	open my $fh, '<', $kallsyms_file or die "$0: $kallsyms_file: $!\n";
++	while (<$fh>) {
++		chomp;
++		my @entry = split / /, $_;
++		my $addr_text = $entry[0];
++		# TODO: Why is hex() so impossibly slow?
++		my $addr = hex($addr_text);
++		my $symbol = $entry[2];
++		# Only keep kernel text addresses.
++		if ($addr_text !~ /^0/) {
++			my $long = pack("J", $addr);
++			my $entry = [$long, $symbol];
++			push @kallsyms, $entry;
++		}
++	}
++	close $fh;
++}
++
+ parse_dmesg();
+ walk(@DIRS);
+ 
+@@ -442,6 +467,25 @@ sub timed_parse_file
+ 	}
+ }
+ 
++sub parse_binary
++{
++	my ($file) = @_;
++
++	open my $fh, "<:raw", $file or return;
++	local $/ = undef;
++	my $bytes = <$fh>;
++	close $fh;
++
++	foreach my $entry (@kallsyms) {
++		my $addr = $entry->[0];
++		my $symbol = $entry->[1];
++		my $offset = index($bytes, $addr);
++		if ($offset != -1) {
++			printf("$file: $symbol @ $offset\n");
++		}
++	}
++}
++
+ sub parse_file
+ {
+ 	my ($file) = @_;
+@@ -451,6 +495,15 @@ sub parse_file
+ 	}
+ 
+ 	if (! -T $file) {
++		if ($file =~ m|^/sys/kernel/btf/| or
++		    $file =~ m|^/sys/devices/pci| or
++		    $file =~ m|^/sys/firmware/efi/efivars/| or
++		    $file =~ m|^/proc/bus/pci/|) {
++			return;
++		}
++		if (scalar @kallsyms > 0) {
++			parse_binary($file);
++		}
+ 		return;
+ 	}
+ 
+-- 
+2.34.1
 
