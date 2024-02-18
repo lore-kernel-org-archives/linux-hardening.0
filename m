@@ -1,94 +1,155 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF4E37140
-	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 13:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDB36BFB3
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 15:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708261319; cv=none; b=QALexQT/gQ6PffTWkcZxJ6zPhHvzHH6yoDBXu7f2po81FFq3wgJUE9c2blc/5YaHy6Ur1TDXaVYUYK9W7EJ/1sCU9GJ5JThAs/X2BFlcgUuDSCC5a9TWpNUxr2hUAmoEJ1V0jvc2qYgcFCifKC6Gy3VOR3QfriFwrBK0cWflOaQ=
+	t=1708268782; cv=none; b=Tp03lOnjg0l7gIF+01u3Ubba4nNCD1hqGTarmMrsTwf3PHmyR7MoubUGgoeIeCMsD0lkwro+A0JlBsFNv4fjsjON+5FLRHDOdOP/Cg+1nTiy4s9si4tnaqbbmjc3zS80Tgq/c6fWqo+Y25+NH3oystFEptqgUHrYtOm//w79cms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708261319; c=relaxed/simple;
-	bh=CArwFe0qu0rUAkzUEv7P8qSaBIOWCLLpZlpvdXeYt0g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kpgt4itUl8O82QZf2xzMpUiJJcnJwVbb/ohkYM/VrS8MPuW0s5BbNT+VtUoHPcJEvF6jOhWUNUzu3OEB7IkUSmQUVyOUZ3WOWyWBE9jeVBxZ8D2zNcFKyrBKG4caBR7PmXG2vAWUs2b8Cxg7rd4uV6qf+0j/e1mFjFtp2Z4NOxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=JhVbExaK; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1708268782; c=relaxed/simple;
+	bh=tGxXT1XhuS6erETM7SEYMuB1n/Ny+q6o/Kd1LNyFGkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WE5aYbVo2gOomwd1sKWt6uBBVQHg/2WHVUoiupttoDk5pJ7wM403KoDGsfOAWZO9lMVqgjCZXMO6a4wMiYVeU3v3nYP1VkiqRHXAf+ke0Mxbm4UOzgrrEvfMMCWxsHfnCexAISZ5nUPfsrLUPR6ZVPumTbK6hagnBsjMDn5SAjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Nok6Eciu; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="JhVbExaK"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2866b15b013so994139a91.0
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 05:01:57 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nok6Eciu"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso2839870a12.2
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 07:06:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708261317; x=1708866117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iIYyy/W1tr/0bAEhThJxXh8k4ZWLMBlLPwt2pJ+jp6Y=;
-        b=JhVbExaKZAiiOrbb7iq5oKT+m7TBI48oaaFxNzw5jUtVohmspPtBQEtdabTwMWaWXK
-         xxhsWqfEuWeab9foLvASxXZxlnsbOuRePBQVlfRdlJsm07Y8v2mbct2j2O/3YO0+M91W
-         fAY8AqC6yjSvJ8rUrkXCMMsWTVHdGE3gUCTMdW4M5MQ1NkSZaRZ3oPnbkRYK1scD5fpk
-         jSXDckj0opFoK4QV088xAW2wiLTiTrpNnwIZXoV6o5+HTfHf2W7L7bY1C+Bpj2e4kypA
-         syWWSNbMYvyvOMXk7vYO6/fyBJbm4agCqTHbtWiR/YdjXbH3WOwTtgz52yU+WdY8Z5xJ
-         uKGg==
+        d=chromium.org; s=google; t=1708268780; x=1708873580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=weWvwdjLFnP8JZ5vKjO/UijVTnJpQLLncBhysMzZFhc=;
+        b=Nok6EciuTdMz1z1pS6cwicCCDdDOCTlLLo8ABabxLV63CY9iqUxn64wyit7TOT0kaJ
+         QX2hm83AMDkBl2NkOt5cVe4oG7h2l8B+qZVKbsRS73MoqmO7I6RX4K8TrcKX5jtJzLUk
+         tI3z8QSxh8c2UaT8LapZMXo5PsTJA9g3cZCDQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708261317; x=1708866117;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iIYyy/W1tr/0bAEhThJxXh8k4ZWLMBlLPwt2pJ+jp6Y=;
-        b=W7nMA71lZzHlzc+nZkKgKcjulmUkYMNf8JvAq7Cv8ENmmFA1ndIg8mVgLhWjnxivEs
-         KSotBG3SjMEYjONum0rHYwdyJfFc3agiRUbZsxdX9VoLeLkwhBau7qdJXuip1fFHzMVw
-         B/9A9bxhvzh2m/DTjCIsuN4i6/o2ggp0XLBBQET+HaRpdM2Mt3qbTfJYzhhUqUd7O0cg
-         T//a7khweVk+RsNx3SB77bY7fwLAv4Y3B7djn904xy1Cjzd0LXAv3IlRRycTErv6qh1R
-         cj6Wj+vtQevXokcnEmxrwFIeoIYLuD2K35BWK3qhaiAkNMTCP+i10joxRu9h+K2FVRc5
-         ShqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX98Ijwc/owZtIzaCQvwmbA2qGM1W6hpnTuaN1On6DZnfZgd804Wc51YexHpB15yW9rg4qj03Iw70VOKGLAlWIX4XZNF6OY32V7L6eUA9a3
-X-Gm-Message-State: AOJu0YwsQfK5Y/rGgx+mfy7N9v3bAzRazXjkGyoWQJFMAtZpFfzcst4a
-	DBHpJsk5o5u9nuJgJpDemuPEMdKD/d2N+PYOBB8B1cl9F76diNjOG3dgclghSRG+sVjDp10Usi/
-	b
-X-Google-Smtp-Source: AGHT+IFOVa6oJdPekL8bCPtPXjepHYdheq4ZXbm6St90f/I+EkgW0h8RafEA/oyz36xEGT9oV83dCg==
-X-Received: by 2002:a17:902:bb81:b0:1d8:ca3a:9d2a with SMTP id m1-20020a170902bb8100b001d8ca3a9d2amr10414358pls.4.1708261317334;
-        Sun, 18 Feb 2024 05:01:57 -0800 (PST)
-Received: from [127.0.0.1] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id kn14-20020a170903078e00b001d9a91af8a4sm2685725plb.28.2024.02.18.05.01.56
+        d=1e100.net; s=20230601; t=1708268780; x=1708873580;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=weWvwdjLFnP8JZ5vKjO/UijVTnJpQLLncBhysMzZFhc=;
+        b=Cvauso7tMSrOJXyYkmvTe/1/qHKD6asa/O1sV3IGXiKxUQ4Cbab6sdfuvctSV9E0Sg
+         yw4K4JJWHfynpeDg598NeYOZO/6wGENROx2URsVxVMs7suSJKp3rv6VjZO1DMrL5Z/Sf
+         WlWc3IEf/5hHMXKJPf6crpZG7Dd/4BbAt2SESUHeV36LLCTDPcnJ2/PMwopjyEj+PJWH
+         3cEDTPlNlytCYFhUOMSHgBHHG9XWbdXiKqQtJFMLrdcO1stpwmbmh8sNUvPlG6U4eLll
+         6br8R56wa9hGCHDKRGkSuzP2iLDsDiWDmh0vziHWMIE3tdVLWAcaEdtcqhWsdzl6CiG2
+         ORTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqjaEaMgnL1Rtdo7jhBVNCGDzosx/w3Zg0NrrqyqIIxTiCTupNPxdIN87ZgHYQIbDOECYEaw7sXGmgBGCRL9CshOvSMTP/suATNtITcCLj
+X-Gm-Message-State: AOJu0YypWQs9mWuPHMBo11AmET0vx/2ZWPvWiTfawXix8Vx+bgtxk43G
+	RCMvUuPKd++f412525VLnoOUkZTautIlmJAGuCFbCulua4zOxeIDqMgqL1zdxg==
+X-Google-Smtp-Source: AGHT+IG/mO2zX6w/nhGHQ9iPPz8f+kIiHx6ka4l6BoesYRu+P37Fs580FgkZTJG8iwIS84D9OwUWXw==
+X-Received: by 2002:a05:6a00:450e:b0:6e2:9bca:fdc4 with SMTP id cw14-20020a056a00450e00b006e29bcafdc4mr4640585pfb.21.1708268780315;
+        Sun, 18 Feb 2024 07:06:20 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id a30-20020aa78e9e000000b006e45fc20539sm598295pfr.123.2024.02.18.07.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 05:01:56 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Josef Bacik <josef@toxicpanda.com>, Kees Cook <keescook@chromium.org>
-Cc: Navid Emamdoost <navid.emamdoost@gmail.com>, 
- Michal Kubecek <mkubecek@suse.cz>, linux-kernel@vger.kernel.org, 
- linux-block@vger.kernel.org, nbd@other.debian.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20240218042534.it.206-kees@kernel.org>
-References: <20240218042534.it.206-kees@kernel.org>
-Subject: Re: [PATCH v4] nbd: null check for nla_nest_start
-Message-Id: <170826131614.3482432.1638173744340292313.b4-ty@kernel.dk>
-Date: Sun, 18 Feb 2024 06:01:56 -0700
+        Sun, 18 Feb 2024 07:06:19 -0800 (PST)
+Date: Sun, 18 Feb 2024 07:06:19 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Take return from set_memory_ro() into
+ account with bpf_prog_lock_ro()
+Message-ID: <202402180701.FA42F70BE2@keescook>
+References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
 
-
-On Sat, 17 Feb 2024 20:25:38 -0800, Kees Cook wrote:
-> nla_nest_start() may fail and return NULL. Insert a check and set errno
-> based on other call sites within the same source code.
+On Sun, Feb 18, 2024 at 11:55:01AM +0100, Christophe Leroy wrote:
+> set_memory_ro() can fail, leaving memory unprotected.
 > 
+> Check its return and take it into account as an error.
 > 
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  include/linux/filter.h | 5 +++--
+>  kernel/bpf/core.c      | 4 +++-
+>  kernel/bpf/verifier.c  | 4 +++-
+>  3 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index fee070b9826e..fc0994dc5c72 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -881,14 +881,15 @@ bpf_ctx_narrow_access_offset(u32 off, u32 size, u32 size_default)
+>  
+>  #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+>  
+> -static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
+> +static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+>  {
+>  #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+>  	if (!fp->jited) {
+>  		set_vm_flush_reset_perms(fp);
+> -		set_memory_ro((unsigned long)fp, fp->pages);
+> +		return set_memory_ro((unsigned long)fp, fp->pages);
+>  	}
+>  #endif
+> +	return 0;
+>  }
+>  
+>  static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 71c459a51d9e..c49619ef55d0 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -2392,7 +2392,9 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
+>  	}
+>  
+>  finalize:
+> -	bpf_prog_lock_ro(fp);
+> +	*err = bpf_prog_lock_ro(fp);
+> +	if (*err)
+> +		return fp;
 
-Applied, thanks!
+Weird error path, but yes.
 
-[1/1] nbd: null check for nla_nest_start
-      commit: 31edf4bbe0ba27fd03ac7d87eb2ee3d2a231af6d
+>  
+>  	/* The tail call compatibility check can only be done at
+>  	 * this late stage as we need to determine, if we deal
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index c5d68a9d8acc..1f831a6b4bbc 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -19020,7 +19020,9 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+>  	 * bpf_prog_load will add the kallsyms for the main program.
+>  	 */
+>  	for (i = 1; i < env->subprog_cnt; i++) {
+> -		bpf_prog_lock_ro(func[i]);
+> +		err = bpf_prog_lock_ro(func[i]);
+> +		if (err)
+> +			goto out_free;
+>  		bpf_prog_kallsyms_add(func[i]);
+>  	}
 
-Best regards,
+Just to double-check if memory permissions being correctly restored on
+this error path, I walked back through it and see that it ultimately
+lands on vfree(), which appears to just throw the entire mapping away,
+so I think that's safe. :)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-Jens Axboe
-
-
-
+Kees Cook
