@@ -1,121 +1,124 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D08EBB
-	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 01:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0AE610C
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 04:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708219537; cv=none; b=cqsCbcmKFWMjuh4pkI+1X7vlOSCUGArLdSmToY7IKal9XpRzO33cLnwN08fhBkVupQo3Wm97hciww/ctHow0DEEJaIp8dlJGgTYucuY0xAQ00De8Lgxp/eZlO4GtR82bdxdxsNX31qJccKhvlTrV5u53M3rvI5pYZeg4kg2+rmo=
+	t=1708230344; cv=none; b=cdNVGsyNpRvk4NEa2HS5IzLrrsU6EhQl/BZ6iJIJx6IRV4yuvOEA6jHN/eeXd+Guqktn14M1gNmHrdHtl63GYgAttYAt2Uk/5d8yj1nsxh15EDPpQ+Q7ZcnHV+FOWlySFgtAi4nYPzqIZxjf5CiqfEslhxrF5REhDeugPvBQimk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708219537; c=relaxed/simple;
-	bh=a3hJQoAtYSUkKDh/waTTxwVQsYYIvXqoZW7AfetXO1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jyLzoXdIC/mG9/DDqzFIjUc4szjV4TqCiT+F1JICCyaF/ZlN1zugwZMZhYWSr/ekFk3kP0+ePfmqup9QRAhRrnFSXWFGGlT+g6TwfcJxJMOLbVVg3kP/Fid5wwTGw2Sj802yI4UP4yR1N/sY3Q6q0ky5mFKhGxZbaXb8Q8DN6fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xq5UyXTr; arc=none smtp.client-ip=209.85.160.50
+	s=arc-20240116; t=1708230344; c=relaxed/simple;
+	bh=8X2LbBluiP62PhY4yTx2Vm7OR5mhIBYACk5drh7CJDM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SvLIVyZlVduojm9UKNH6IRup899JRl6sF0y8seajVhV65roxN/ZhwTU9UnV+2FjUCMipVFpXccbnR86ryN1EzXaJQqtZcaJqqz3037NffC7AcZ/PcmRGRXGQrFl8nNdu5dwMTIyI/nNVOsJd+e/MxLOPTqz5hZU9H+IqtGWE4Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hAjeusk3; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xq5UyXTr"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2185739b64cso1982856fac.0
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 17:25:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hAjeusk3"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5d8b519e438so3128303a12.1
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Feb 2024 20:25:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708219534; x=1708824334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VuoBtT2e7jiJsHrgcaJkRcD5zeydER6RGTa0O/OCH9A=;
-        b=Xq5UyXTrn3X6COKYrRkFMlDVB0KcI0cr+RjjxXQ61P76WT6ApgRMYI6+4wF4Gv2qhI
-         ggfozzffPJun+wMy5DBToaePmcgv12KzuLyUHk6eA2H14zScdcgC5MIfFEalLnastZUf
-         EUbbNOXTUILTpIP1xoT4D6ygu0h3oCCzvrP0E=
+        d=chromium.org; s=google; t=1708230342; x=1708835142; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PPPOVToP9KvYFFYAhd+euhiEp/R/1IO3VQIxg89zLZk=;
+        b=hAjeusk3a+b3Tdepb9qBRtSsPMYj6LSe1dil95hBwTw4/eFeSzYzwIz5A11Zj45vMO
+         br/EkBaWN1hyMcgEnDyagfI4Ye7UDtLdUnkZWife3JCcf6xODHgL6woJarTXY1rYcqFa
+         h6LHzIRQa+NRk9a42IvT2WvKrMMbz3+6iKUe4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708219534; x=1708824334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VuoBtT2e7jiJsHrgcaJkRcD5zeydER6RGTa0O/OCH9A=;
-        b=KrR/LZj5xqQtXWGpJn86yWDy4rNKygl+987dhyC+gOIBDyGDa1jxQp+pEhXYG7YanA
-         MKcAuGRlvk3fwV/4N2fjqbIJqfcoGAaZrMcQiR49DK7AczqXqy4ld5rCRt59hZBNv+9A
-         rf5CkeBJyOCy+zUyoBfWR8gA7pWj+DJQ/yT+b+ktQOV+tNhGvNfAa2FhvlyBEgRCjCxQ
-         J6FbA94k8FafCuHN/1HJMIyN281PlQ03+yG8zIDTU51rPgTpTYTvZNRbQdwMTCJ0rYPU
-         FSivqxt3mBJ5QKS8rNCGKzTgPlZYN7YGhxbdTz+GigAIWNsCiOnvZkYrK7VODTpiims1
-         C7kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw389wNENesJglApSqVUL5giRlMKd4PDHq86yhgfnveN70fgJkT0cd2UnlUukm3nywSeKC6xK5zpfGgSepJP3AN1JfRN/4mKuhDoN74xjC
-X-Gm-Message-State: AOJu0YxM0v/fhBlB/+d5TYjRh8TRxrIPouLFTa6mbphfYyaAeNWI+ljv
-	24HJ+xs3bxPjMbGJidiNPl+Gl+qbWj6z8qaaAEuAqYQ1MaVxP9kuPp5P2SGzPg==
-X-Google-Smtp-Source: AGHT+IHjBUDoientSzd3b5MGz9AJNkPP1IEibihvCcJEeLidYINReimoOazQTftO263H7irZPdbdug==
-X-Received: by 2002:a05:6871:453:b0:21e:bbdf:8b94 with SMTP id e19-20020a056871045300b0021ebbdf8b94mr543705oag.37.1708219533979;
-        Sat, 17 Feb 2024 17:25:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708230342; x=1708835142;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PPPOVToP9KvYFFYAhd+euhiEp/R/1IO3VQIxg89zLZk=;
+        b=D0RuQwxiUYbHo0L0IJfLK+zdm7t49CSe/VBmisk6aO6THiNBha3+3f5dhvC3hYPveQ
+         gGqzWyIUVfeB3u8VhX+41ofDwUxf3u1yIWl9g3nOJ+sbdI0I4ZC4E+raSQ67sMRAor2r
+         bNzq8c0KvLMGNL+aLw0tpDdJfmjWkLg/1I+X1NibZMzqZoNmqlWf6sOYigw/hiuXRqpe
+         s5SipKN+8feX4BicoYTebmkIkMyFOEWlZanjt2x/9Jo9xb1p91qMZ3CUQegZdqfRJBsV
+         XDYSnrQ3uBVgVoeAdYV7wIz8FzmKnWpdMW0CGLIVgnCW2BdyF9Z8JSwOlzIdmsbnvryT
+         r1/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVGhuh8U77Leip+jdfjlLvrZwcoyomAYE+51GQRn6+AbwXPrO+1MIeX1Cqv6/xgTk6W3GaB2Xyc3L/Gu3zTgNBoSwyn9wm/CQs9J0Jo6smH
+X-Gm-Message-State: AOJu0YzYZdywRL6G81778wCMX29m+3Vi5Ky6hqXMC3KIUgbOXdoI+pPh
+	4xJDYWCepWbrvdMdzQSLrKX8/k/TEZp0dSn5eyk8oRErS+aP21XNeqjjNWq5jw==
+X-Google-Smtp-Source: AGHT+IFjk09QrySxOgBtDCo76+mGw+pZNd0U5JFGwf/tqqImzzxQdPNFpc9iNKIfio5NAiR63Hw3VQ==
+X-Received: by 2002:a17:902:b20b:b0:1db:4b23:f97b with SMTP id t11-20020a170902b20b00b001db4b23f97bmr7487589plr.59.1708230342654;
+        Sat, 17 Feb 2024 20:25:42 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r135-20020a632b8d000000b005dc4f9cecdcsm2168893pgr.86.2024.02.17.17.25.33
+        by smtp.gmail.com with ESMTPSA id jc15-20020a17090325cf00b001db54324488sm2142726plb.38.2024.02.17.20.25.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Feb 2024 17:25:33 -0800 (PST)
-Date: Sat, 17 Feb 2024 17:25:32 -0800
+        Sat, 17 Feb 2024 20:25:41 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Jiri Kosina <jikos@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Tony Battersby <tonyb@cybernetics.com>,
-	linux-kernel@vger.kernel.org, y0un9n132@gmail.com, x86@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Navid Emamdoost <navid.emamdoost@gmail.com>,
+	Michal Kubecek <mkubecek@suse.cz>,
+	Jens Axboe <axboe@kernel.dk>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	nbd@other.debian.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2] Adjust brk randomness
-Message-ID: <202402171723.914538A526@keescook>
-References: <20240217062035.work.493-kees@kernel.org>
- <05E12A71-D8A4-4E6D-9C9D-024251C1BDC7@zytor.com>
+Subject: [PATCH v4] nbd: null check for nla_nest_start
+Date: Sat, 17 Feb 2024 20:25:38 -0800
+Message-Id: <20240218042534.it.206-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05E12A71-D8A4-4E6D-9C9D-024251C1BDC7@zytor.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1211; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=0R8zCu0X/ARVuSqlyl7fu4di67hYDgO+9WqGqz+HaEc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl0YbBPe25EqmI5l5nzuL7+soJkeVhsbtCpCkDH
+ ubGmi/BvUiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdGGwQAKCRCJcvTf3G3A
+ Jm4SD/4k25Oc6EkBmLy4hVwdpNNdRv+uyAuAXQKD7aOBOpyDpt8qh8Wjxpe+PkBlP8wDVT7g+hi
+ SDxOzbm7NvrlnYL6aF9fyDUz1W2tmTVvVnTJuDOIxdMRT4Z9Eer9IhO+LEXmuY8WevRZrbFgnKl
+ /n+ZC3HYgck0RexH2TJBbMulSVwwh/rgxqbY4NPz19YLMRs1W4k+artJg6buZ9B+VEFT1WYoNU3
+ r33Kr5nru90Yd1QyCEAV28QqD37LynEdBgkUj58fmnzWx5hYluvUR+cSDvtt+ov7Ie5/bcBOoXG
+ lArRTlM6G3GMBDcPWXs8AZ3jJPc3YnyK/N9yvyL0VKqfJQcErqJy2RhCS0PbLZkKjQW1ofg3cm8
+ 3QKhCRRkRDKTCx6FOL7fNT+P5ealU0YBNhatm4gAUl/+9Bn7vTXqWt3NQ8XyPm8TYgf0R3assGN
+ NRnf4P/0HkcKTOIx9w7FC7BA2jMXJJAxXxVUPlFNuznghWXsPQQccfjqxjibsjY7bJBa05ljLo8
+ 7rLaFHTHiVQe8oVL5RR8joZAmlHLGgQjUxLAVm+VoJrP4QMKUOW6wCAGzHWJnFEPupswbmlV/eZ
+ rwitO9926hht8LZtRlvZNm2vco0tFIvBmFgkJ0nO2ZuhY3cWZ9sOA1zf70bgn5re+XXe2oYEpFe
+ Qx6xzOa L6H7WvAw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 17, 2024 at 04:25:33PM -0800, H. Peter Anvin wrote:
-> On February 16, 2024 10:25:42 PM PST, Kees Cook <keescook@chromium.org> wrote:
-> >Hi,
-> >
-> >It was recently pointed out[1] that x86_64 brk entropy was not great,
-> >and that on all architectures the brk can (when the random offset is 0)
-> >be immediately adjacent to .bss, leaving no gap that could stop linear
-> >overflows from the .bss. Address both issues.
-> >
-> >-Kees
-> >
-> >Link: https://lore.kernel.org/linux-hardening/CA+2EKTVLvc8hDZc+2Yhwmus=dzOUG5E4gV7ayCbu0MPJTZzWkw@mail.gmail.com [1]
-> >
-> >Kees Cook (2):
-> >  x86: Increase brk randomness entropy on x86_64
-> >  binfmt_elf: Leave a gap between .bss and brk
-> >
-> > arch/x86/kernel/process.c | 5 ++++-
-> > fs/binfmt_elf.c           | 3 +++
-> > 2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> 
-> Why do we even have the brk, or perhaps more importantly, why do we use it? Is there any reason whatsoever why glibc uses brk instead of mmap to her heap memory?
-> 
-> I thought the base of the brk wasn't even known to userspace other than in the form of the image end...
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-AFAIK, it's part of ELF ABI, and the loader uses it only for very early
-allocations. e.g. it's what shows up as "[heap]" in /proc/$pid/maps.
-It's also available to any program that wants it still (see "man brk").
-I don't think glibc has plans to redirect it.
+nla_nest_start() may fail and return NULL. Insert a check and set errno
+based on other call sites within the same source code.
 
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Fixes: 47d902b90a32 ("nbd: add a status netlink command")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v3- https://lore.kernel.org/lkml/20190911164013.27364-1-navid.emamdoost@gmail.com/
+Resending on behalf of the author. This seems to have gotten lost and
+has been getting tracked as CVE-2019-16089 ever since. For example:
+https://ubuntu.com/security/CVE-2019-16089
+---
+ drivers/block/nbd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 33a8f37bb6a1..b7c332528ed7 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2433,6 +2433,12 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
++	if (!dev_list) {
++		nlmsg_free(reply);
++		ret = -EMSGSIZE;
++		goto out;
++	}
++
+ 	if (index == -1) {
+ 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
+ 		if (ret) {
 -- 
-Kees Cook
+2.34.1
+
