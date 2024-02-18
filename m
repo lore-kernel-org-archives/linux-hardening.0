@@ -1,206 +1,122 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8A26BFD9
-	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 15:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD3AFBEA
+	for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 16:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708269588; cv=none; b=Q+sehrlGMwU5oR9E0KCzdbjvV2CF2ukkLkequ7P2ZxQi2ewFIZWjLQKGuT46C2KGvSXe0evhsi1avdv1LbQh6/3NHVig2dNLWgPcMj/IWwLmQZmFQ64Rn6mGHu3yY7gS8uC68wyE2rFymgz5QSFRHIQU0G+s49WlCGtHw3WFDV8=
+	t=1708274919; cv=none; b=pEDIem9eBhH5fT32UMD4QPsviipbFwbwLnPVUxDc0BwpTkqWKpVLWpklv6BtNGJjRzrYcx4C9mucYW4jvxaEJVt4Nbb9oherZOagBqckMbfz0gwiZ+uaqnJmFau/40zb3be6DaXFXl7aJJf/tx1fo93pw9+sOxaTnhd95B42zTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708269588; c=relaxed/simple;
-	bh=lYFHSwKGcbZg0KftqGMF5GiOnvyk1uaue8OvErSz/MI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AwJXLted7GPU07EzaqeT98GaRJHuByy7frj9TydWRjjaeHneUsAKOyqCTz8s6buOgh27NiWuZKqT1b3rh7VqISSDzO5+4zwo0N8vrBIaqLp/ZCmmaf4DtkQTtIlk85QKzP8plBSC10+CrCGspsWFLAoRtC9BXc5eluxvAhzGy60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z0XxTgjq; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708274919; c=relaxed/simple;
+	bh=KpFfggUZ5hMwU47Zuz91oYFFmXWnyTnZeq8DfngWL8E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O8w95lqW5nHXMzTNXuDknDxyTdpe25clhmYtD82iO02+MIz2Zdmrrrnes4MquHG+VrHOYcoGEalgLOKvUUcJItKG4SPJbhOfkgTeqxYISQr9xXp2zOAaxpPp9lxqNSV0JJfQIkTFs8QMwcw9aVyHSjeMvaaR701TxZSFg+8NRYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=LW2WGzzD; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z0XxTgjq"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e104a8e3f7so2971576b3a.1
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 07:19:46 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="LW2WGzzD"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-365220a2c3dso4743405ab.0
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Feb 2024 08:48:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708269586; x=1708874386; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eiWOUozWnezeYn8cXQvtDvCvh6gTYyUB/9KcoNgO2S8=;
-        b=Z0XxTgjqWyazp15zaW/ZnhQPP/vQUJ16DOZ1Hq0r+BT7AlgmbJ9FONeOG3yHNtb9PL
-         NY72Vj0zKPqaAgRpopK2+aqqkrQfRItybiUPkatXi9wwD13ZxQHcl8NYYoFU5Jp6RHdm
-         c0o9K96cAg54FH5HIBpabLJjAOkt0mQ2F2mQg=
+        d=ieee.org; s=google; t=1708274915; x=1708879715; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=37nms9BmJJEsQJsbt0jcgUsWdlYRkTGGuwtAPDF2YJA=;
+        b=LW2WGzzDP38WdWR4YgRHs1KJWpyZpeb3WqDXMGHc7daZZ1UzFQqMdbSzYVLlHy4IPC
+         5vwtHiMKNMyo3wwF7vNI6SZo26mxIc8EVd1y05Fr9QN62GYenKfI/wCkVmhHetHWmFz2
+         EIU1Zy+Mjty2IbtcRQulO/HwpX0rFbaLqidTI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708269586; x=1708874386;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eiWOUozWnezeYn8cXQvtDvCvh6gTYyUB/9KcoNgO2S8=;
-        b=H1gSZRfQu5FZJAph7+ONdSn/VcWVna2rk5RkZLkpCFHSpF296pxdvIMVjprgGadgz6
-         eSUPDyUEfZirmcgZsuHxyl0VLd3YUYRWAmOkBbk/Qql/5H2M59gGcYqcpzyseUFJFr95
-         xBiPfPLqtYZIshZZnLdVkWOrl6dLOqXkVcxvhA/cP1PWGCfUWkwErU5dNNIS6yJhJCH6
-         CLVMOPt2vz6lnAzNyFP0NdzW+3/Qr91Bg9IH4Gvg+qNYWnZ+II51RHEawsJP3qFaEl/m
-         cNOyXIFNvl1lYl4uhzDrBs+GkrXKiVCrdkOJKQcYig7hoyTEzLPGu22JHGppeDad3DUo
-         rc7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVqcIWK2FQdeyYyfPybs7ECiOMCwyUATWEpiUkK/TVM6Oa4X97M1cayXyVhgMH3Ic5zd0470b1n0r0km3M0Q0kfNC5FoNaT8Fn5xB+L3BGA
-X-Gm-Message-State: AOJu0YzYNXUrLJIDn7hRIP9K0SGagzkOrhGGnNt9ohopLLXrfynJ+ozf
-	LZ5DV01ifXjliwnDuzPUNAs6JuR0wDtUIRtl7/9S3fKgHd4RetNT0jhs6R9NDA==
-X-Google-Smtp-Source: AGHT+IHQkmCTEZjB8VrcrwmYPHm1xqN+oDo5E9U8MtwdiC0lI+BGRPycjpyIHGY52kr+uXWivxarDw==
-X-Received: by 2002:aa7:8202:0:b0:6e1:dbd:e800 with SMTP id k2-20020aa78202000000b006e10dbde800mr9961775pfi.17.1708269585774;
-        Sun, 18 Feb 2024 07:19:45 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r22-20020aa78456000000b006e24991dd5bsm2894532pfn.98.2024.02.18.07.19.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Feb 2024 07:19:45 -0800 (PST)
-Date: Sun, 18 Feb 2024 07:19:44 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Zi Shen Lim <zlim.lnx@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
-	Paul Burton <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Wang YanQing <udknight@gmail.com>, David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, netdev@vger.kernel.org,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
- account with bpf_jit_binary_lock_ro()
-Message-ID: <202402180711.22F5C511E5@keescook>
-References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
- <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+        d=1e100.net; s=20230601; t=1708274915; x=1708879715;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=37nms9BmJJEsQJsbt0jcgUsWdlYRkTGGuwtAPDF2YJA=;
+        b=Syd1K8oQrFKLBsc+ibayOlaLetA2uwzQ4mu2b+890OW6bWCiBzpaQPlqbMB9MO+Dcg
+         rY5fB90awg2lPN3pMfpFbQnutNIhnN/sGBlqcRszUmtBN1f6vOWeR5llf8LGNfO+5Au1
+         Doq4H4eISMumExog57FH+qXqg7yiY2/epCFYDtzpyA3re8AD9X8RVbPISwsgMm4p/x1E
+         n9huWpnrSla31Zb6u14Ky/l21PrkgHU99tu1VVXrwlPaPw3NLAbAPvbwOI1lYUhJCOyo
+         XTKjwT9wtIHpJ+KuGTPRVaDdFq3/u5bi5nI5jP9VX03Cx0DLzEBCDEHmbVgjsfqQgQwQ
+         69yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhvv/MJC5pX2GFhQ2KnGnHBA/jQgJBg+dYOYU43RdxGYYyMe9Oap/dbjp8RAsQR8w0NQ78qKKRcyiwl0uOCqgW8VdqWh3G1VkIn/wiIHg7
+X-Gm-Message-State: AOJu0YyR56TC4Zjpd9K9/Vx08MsC/tVFaF5uqH1dmPQHQA/7fEluZixk
+	fNv6oT/dvEmdcp7giY3UOpLr7ccs0WFrOhP3LQc9KGPgFzV4bJOkSmQzppI43w==
+X-Google-Smtp-Source: AGHT+IFcE6tBwMe7ot5+O/3t4TbbhIKrINl4J+8hLvJT/caqX8sqYCCWCefFmQzI3F/jhqPVS3tGLw==
+X-Received: by 2002:a05:6e02:154c:b0:364:216e:d1dc with SMTP id j12-20020a056e02154c00b00364216ed1dcmr9851712ilu.22.1708274915594;
+        Sun, 18 Feb 2024 08:48:35 -0800 (PST)
+Received: from [172.22.22.28] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
+        by smtp.googlemail.com with ESMTPSA id hm11-20020a0566020f4b00b007c46318b9ccsm1107820iob.14.2024.02.18.08.48.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Feb 2024 08:48:35 -0800 (PST)
+Message-ID: <0123aec7-f7ae-454d-9b4a-361e97756242@ieee.org>
+Date: Sun, 18 Feb 2024 10:48:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] greybus: Avoid fake flexible array for response data
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+ greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240216232824.work.862-kees@kernel.org>
+ <672fafca-547e-443e-8dd8-80ccd2320767@ieee.org>
+ <202402171357.E671B5589@keescook>
+From: Alex Elder <elder@ieee.org>
+In-Reply-To: <202402171357.E671B5589@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 18, 2024 at 11:55:02AM +0100, Christophe Leroy wrote:
-> set_memory_rox() can fail, leaving memory unprotected.
+On 2/17/24 3:58 PM, Kees Cook wrote:
+> On Sat, Feb 17, 2024 at 02:17:33PM -0600, Alex Elder wrote:
+>> On 2/16/24 5:28 PM, Kees Cook wrote:
+>>> FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
+>>> code base has been converted to flexible arrays. In order to enforce
+>>> the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
+>>> destinations need to be handled. Instead of converting an empty struct
+>>> into using a flexible array, just directly use a pointer without any
+>>> additional indirection. Remove struct gb_bootrom_get_firmware_response
+>>> and struct gb_fw_download_fetch_firmware_response.
+>>
+>> The only down side I see is that it sort of disrupts a pattern
+>> used on Greybus request handlers (and the response structure definitions).
+>>
+>> I think a one-line comment in place of each of these two
+>> definitions would be helpful, something like:
+>> /* gb_fw_download_fetch_firmware_response contains no data */
 > 
-> Check return and bail out when bpf_jit_binary_lock_ro() returns
-> and error.
+> Er, maybe this should be "no other data" ? Do you want a v2 of this
+> patch?
+
+
+Sending v2 is probably best, because I'd like to see these
+comments.  Greg could fix it up himself but he probably wants
+to pull it from the list
+
+And yes, "no other data" is fine, or maybe "no payload"
+or "has an empty payload".  Any of those is better than
+nothing; you choose.
+
+Thank you.
+
+					-Alex
+
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
-> It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
-> ---
->  arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
->  arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
->  arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
->  arch/mips/net/bpf_jit_comp.c     |  3 ++-
->  arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
->  arch/s390/net/bpf_jit_comp.c     |  6 +++++-
->  arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
->  arch/x86/net/bpf_jit_comp32.c    |  3 +--
->  include/linux/filter.h           |  4 ++--
->  9 files changed, 64 insertions(+), 33 deletions(-)
+>> And then add a similar comment above the calls to
+>> gb_operation_response_alloc().
+>>
+>> Otherwise this looks good.
+>>
+>> Reviewed-by: Alex Elder <elder@linaro.org>
 > 
-> diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-> index 1d672457d02f..01516f83a95a 100644
-> --- a/arch/arm/net/bpf_jit_32.c
-> +++ b/arch/arm/net/bpf_jit_32.c
-> @@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  	/* If building the body of the JITed code fails somehow,
->  	 * we fall back to the interpretation.
->  	 */
-> -	if (build_body(&ctx) < 0) {
-> -		image_ptr = NULL;
-> -		bpf_jit_binary_free(header);
-> -		prog = orig_prog;
-> -		goto out_imms;
-> -	}
-> +	if (build_body(&ctx) < 0)
-> +		goto out_free;
->  	build_epilogue(&ctx);
->  
->  	/* 3.) Extra pass to validate JITed Code */
-> -	if (validate_code(&ctx)) {
-> -		image_ptr = NULL;
-> -		bpf_jit_binary_free(header);
-> -		prog = orig_prog;
-> -		goto out_imms;
-> -	}
-> +	if (validate_code(&ctx))
-> +		goto out_free;
->  	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
->  
->  	if (bpf_jit_enable > 1)
->  		/* there are 2 passes here */
->  		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
->  
-> -	bpf_jit_binary_lock_ro(header);
-> +	if (bpf_jit_binary_lock_ro(header))
-> +		goto out_free;
->  	prog->bpf_func = (void *)ctx.target;
->  	prog->jited = 1;
->  	prog->jited_len = image_size;
-> @@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  		bpf_jit_prog_release_other(prog, prog == orig_prog ?
->  					   tmp : orig_prog);
->  	return prog;
-> +
-> +out_free:
-> +	image_ptr = NULL;
-> +	bpf_jit_binary_free(header);
-> +	prog = orig_prog;
-> +	goto out_imms;
+> Thanks!
+> 
 
-These gotos give me the creeps, but yes, it does appear to be in the
-style of the existing error handling.
-
-> [...]
-> diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-> index b18ce19981ec..f2be1dcf3b24 100644
-> --- a/arch/x86/net/bpf_jit_comp32.c
-> +++ b/arch/x86/net/bpf_jit_comp32.c
-> @@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->  	if (bpf_jit_enable > 1)
->  		bpf_jit_dump(prog->len, proglen, pass + 1, image);
->  
-> -	if (image) {
-> -		bpf_jit_binary_lock_ro(header);
-> +	if (image && !bpf_jit_binary_lock_ro(header)) {
-
-I find the "!" kind of hard to read the "inverted" logic (0 is success),
-so if this gets a revision, maybe do "== 0"?:
-
-	if (image && bpf_jit_binary_lock_ro(header) == 0) {
-
-But that's just me. So, regardless:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
