@@ -1,168 +1,130 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE5B56448
-	for <linux-hardening@vger.kernel.org>; Mon, 19 Feb 2024 19:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD671E538
+	for <linux-hardening@vger.kernel.org>; Mon, 19 Feb 2024 21:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708372120; cv=none; b=J+XRXLu0CUx50cgciM7GK6pbTry1nz1HFHv2Dt2n62zlZ0Dcgos8XKuyhyOOjCFzKuQtse8tzD62bP1q10IGjGpaSrlLUP0wSwRchW6n4BuooKnZ7mcyAoVqQYMMp61cSdoc9BVkiZHt1Ompv3b/8s7lo+FycUCiOzf913l7f2I=
+	t=1708376871; cv=none; b=FPukU8PpgncjZ6KqxboaaTYLNjzff+QWiHQq2vwDsfDgzmL2oVN6DZtWrLpZuGX/Qj1/SqN3cddqVriALGKORS4om+k+j2GPMlwzDI5IEbCsBYSvlCTjPY4i5qg+ckELFdkX7eYY5Wg5GclEfup1Rx4VEI0rcgnVavgtpwugh6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708372120; c=relaxed/simple;
-	bh=mTwnrWFRVkMmk/C370Z2PfPl2ZzMt3ZnRg8rjXdj5M8=;
+	s=arc-20240116; t=1708376871; c=relaxed/simple;
+	bh=Wb1EsAOdRQ+TypSlFyHwyJrlgDHcSksuMbbbXKbQxA8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sH7rofAwYaUiUVEmovBBy2QVtCiPO5dxivttvdUH//wVT04H3/axNJ0f0lo8jSaESc8nsFheFeDHsAArPpFgrV4HQn5ng+sHtze1S2GSf6EgWaEe5nyXJDtKhnqnP5678aAsL1jk4hjt9wKoXp6GwwB6v8nWrqnSAVHXLpQh2Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BsRtgLJs; arc=none smtp.client-ip=209.85.214.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=OOyGfnDzLaiY5+DdnHOaF0wu0ET6WPfhCu86Yu1VtXFuQOOgyczr0jc7cFP01foe+VSEQ4Sh/ERaZTm6RK12QmHbdoaitemn2iuQ0urrdsJusTmL97JiFJI5fStDouYlN2ky5MICdXB34CHRdVDvix/DCP2osWtzn4na6yLbJJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FqGzwUhi; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BsRtgLJs"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d953fa3286so28698285ad.2
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Feb 2024 11:48:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FqGzwUhi"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e466a679bfso704078b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Feb 2024 13:07:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708372118; x=1708976918; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOFMy5aAASBYxwEuY26DwtWuV8GmVWpkF2wskH7Kuzg=;
-        b=BsRtgLJsQMCLQ16wev0X7ok0toZRzp0KMmRlhfMFBLuARhuBWGzIl1ddg0B+jTFuxw
-         bX3pq1/yM9RamwfpYN0PVgdPZ5W3X9xlsiGPQq+t6dM9+Y120t+uk2oRPHPq6ZzQA8lY
-         JskCbXmzlBznsWKd0WPivfLmfJ0+Gtj7FMo7w=
+        d=chromium.org; s=google; t=1708376869; x=1708981669; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0v4aGJ9LU9dBSomS+ec3dUGjJlpnKfj3hq8T5zymb8w=;
+        b=FqGzwUhij7LMdv6aCDTBzNyV/FOCGQFfjP95A8FhobdSv6sKeSPPDCLt0EpOP+5A7v
+         he2QN+7Cja4kaqwis/BvHSrH1rogQMeJiqOTF2obTVHYwvSjT36FYNYczo9B6v5jW9u6
+         mUiXAUqczrccMdjUkpIa2XerW3AWNebPy4dEk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708372118; x=1708976918;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DOFMy5aAASBYxwEuY26DwtWuV8GmVWpkF2wskH7Kuzg=;
-        b=AqF3kITbKbqqR1d6PO3rnpMbP2AyD7g9LX06718FURG4CwSBahlFOzRy+jNNRJsOot
-         rJqKGZN6eIp3fHyyfT4TnA3adNGKW0R4+fMwolKGPWSLZHH+7ur4jhhkGXLz3ekZIyBg
-         Hx4JnrsrNyCpnk1qzDViNVEmo2HewTGnZa3m0r2HcbylzRg9l4G0AWppJPE+jMpAx7Uu
-         68KK1mBuQuQCVLka9CtcSp5snobPC78KXrzjmE7mz25bSSoTBYjhq4td4egBKJg8+vdL
-         wkjDwc34aAg7cV5ZS9HYh+XZjHuerT5MWVr4PuEXsREDRgqwTL1mFGS9LUr+W4C1ckOx
-         GI8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX2P9eVVrHA+jXpeN2kqWcttqQLCXjug4iM1NVheze0N9MI8bDLVwEyGmgSySMQPxl/WXOncb1fARwY8fgHXa3twb0AusG/Q4SVLhH7mvb4
-X-Gm-Message-State: AOJu0YwfoxBls1WPlEFeraHBJyJWVl0MMf5BjcZAR5INahVnhQlUYVy5
-	tvf+TlscL+JzDijDI4bgYupPetdl+gLjvI8T62v63a/UjbfBF5LcH/8IoQINhg==
-X-Google-Smtp-Source: AGHT+IGPuriO6pO2eohejQtmG+dYzeSLnoSt3wKlrVseB6ozhIMP/LdUZ29p1wXTlJey7+1f6pPqsA==
-X-Received: by 2002:a17:903:298b:b0:1db:be69:d02d with SMTP id lm11-20020a170903298b00b001dbbe69d02dmr11902487plb.32.1708372118058;
-        Mon, 19 Feb 2024 11:48:38 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708376869; x=1708981669;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0v4aGJ9LU9dBSomS+ec3dUGjJlpnKfj3hq8T5zymb8w=;
+        b=F7qsRJpbJ/FtykKTTRiSlTn0eudeUermHK4IYc5gB7AL8sLUvXuBGD7dkCxwZB7U0j
+         VeoyznXUElnJp9XbCDqsNiZCu6OU6MTLB3CoITxlOCTemyCLH1v56aplFM6EG9UuIIMz
+         bR3bHyCJ1PLQBaTxC2w8V6oTFK+HtN7xrlhlnAFO0ipniUqiYVwOaAZsHLGyFtvEVk7C
+         O5A2fUJdqtRGf1w8mlLI9enyWPZVSYFVn8pqkgK6UuLKEF8bUw5su4iQze5p2F19nyN7
+         G/vHSrVbkx93vVDBWmpXsCIh580r3aw8S7Kv7iesKipIsbV2OACnTlD6SbHdAS5BNm9L
+         C2Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrJN9HxfrWkeo3RAUoZsY2UHXBr8uu/SXLDRiNnZGxnSFYLPyfdqLfHVAbiz6cG3Cd8IcE/j2LxIQ63Te3nSvtJ25BqoCEU7UjzK1oyGZc
+X-Gm-Message-State: AOJu0Yz/p6MnawhCPsmLt/PmGEfVvRZsFwsUK9MtabYen/MBnh/wjEvh
+	g2AS7oHDjasvCN78KFkGQ/sP2IMHR1g50BCysisbZiBJoWwcmROrFiqldtPjAQ==
+X-Google-Smtp-Source: AGHT+IHbLBW3EDVvJdonxYBkFDS1KzBBkz2Oq6mObdvWo4OQ4squ6PL/TXRDYA61vIonSEErhJiQtw==
+X-Received: by 2002:a05:6a00:812:b0:6e4:6047:fdf3 with SMTP id m18-20020a056a00081200b006e46047fdf3mr4974895pfk.14.1708376869048;
+        Mon, 19 Feb 2024 13:07:49 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a16-20020a170902b59000b001d8dd636705sm4716588pls.190.2024.02.19.11.48.37
+        by smtp.gmail.com with ESMTPSA id h9-20020a62b409000000b006e448fa3d93sm3401025pfn.174.2024.02.19.13.07.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 11:48:37 -0800 (PST)
-Date: Mon, 19 Feb 2024 11:48:37 -0800
+        Mon, 19 Feb 2024 13:07:48 -0800 (PST)
+Date: Mon, 19 Feb 2024 13:07:48 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Daniel Borkmann <daniel@iogearbox.net>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Anton Protopopov <aspsk@isovalent.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
-Message-ID: <202402191144.C4DB9B7AA@keescook>
-References: <20240216235536.it.234-kees@kernel.org>
- <e58d035c-fb74-4d29-94d5-6c22542e7513@embeddedor.com>
- <202402161902.FCFFEC322@keescook>
- <a74a7255-5dbd-060e-fe2f-ac3563f466fb@iogearbox.net>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
+ while disabled
+Message-ID: <202402191304.ED03339B@keescook>
+References: <20240219191804.2978911-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <a74a7255-5dbd-060e-fe2f-ac3563f466fb@iogearbox.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240219191804.2978911-1-mic@digikod.net>
 
-On Mon, Feb 19, 2024 at 06:48:41PM +0100, Daniel Borkmann wrote:
-> On 2/17/24 4:03 AM, Kees Cook wrote:
-> > On Fri, Feb 16, 2024 at 06:27:08PM -0600, Gustavo A. R. Silva wrote:
-> > > On 2/16/24 17:55, Kees Cook wrote:
-> > > > Replace deprecated 0-length array in struct bpf_lpm_trie_key with
-> > > > flexible array. Found with GCC 13:
-> > > > 
-> > > > ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
-> > > >     207 |                                        *(__be16 *)&key->data[i]);
-> > > >         |                                                   ^~~~~~~~~~~~~
-> > > > ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
-> > > >     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-> > > >         |                                                      ^
-> > > > ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
-> > > >      97 | #define be16_to_cpu __be16_to_cpu
-> > > >         |                     ^~~~~~~~~~~~~
-> > > > ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
-> > > >     206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
-> > > > ^
-> > > >         |                            ^~~~~~~~~~~
-> > > > In file included from ../include/linux/bpf.h:7:
-> > > > ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
-> > > >      82 |         __u8    data[0];        /* Arbitrary size */
-> > > >         |                 ^~~~
-> > > > 
-> > > > And found at run-time under CONFIG_FORTIFY_SOURCE:
-> > > > 
-> > > >     UBSAN: array-index-out-of-bounds in kernel/bpf/lpm_trie.c:218:49
-> > > >     index 0 is out of range for type '__u8 [*]'
-> > > > 
-> > > > This includes fixing the selftest which was incorrectly using a
-> > > > variable length struct as a header, identified earlier[1]. Avoid this
-> > > > by just explicitly including the prefixlen member instead of struct
-> > > > bpf_lpm_trie_key.
-> > > > 
-> > > > Note that it is not possible to simply remove the "data" member, as it
-> > > > is referenced by userspace
-> > > > 
-> > > > cilium:
-> > > >           struct egress_gw_policy_key in_key = {
-> > > >                   .lpm_key = { 32 + 24, {} },
-> > > >                   .saddr   = CLIENT_IP,
-> > > >                   .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
-> > > >           };
-> > > > 
-> > > > systemd:
-> > > > 	ipv6_map_fd = bpf_map_new(
-> > > > 			BPF_MAP_TYPE_LPM_TRIE,
-> > > > 			offsetof(struct bpf_lpm_trie_key, data) + sizeof(uint32_t)*4,
-> > > > 			sizeof(uint64_t),
-> > > > 			...
-> > > > 
-> > > > The only risk to UAPI would be if sizeof() were used directly on the
-> > > > data member, which it does not seem to be. It is only used as a static
-> > > > initializer destination and to find its location via offsetof().
-> > > > 
-> > > > Link: https://lore.kernel.org/all/202206281009.4332AA33@keescook/ [1]
-> > > > Reported-by: Mark Rutland <mark.rutland@arm.com>
-> > > > Closes: https://paste.debian.net/hidden/ca500597/
-> > > 
-> > > mmh... this URL expires: 2024-05-15
-> > 
-> > Yup, but that's why I included the run-time splat above too. :)
+On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
+> Because sandboxing can be used as an opportunistic security measure,
+> user space may not log unsupported features.  Let the system
+> administrator know if an application tries to use Landlock but failed
+> because it isn't enabled at boot time.  This may be caused by bootloader
+> configurations with outdated "lsm" kernel's command-line parameter.
 > 
-> I don't quite follow, this basically undoes 3024d95a4c52 ("bpf: Partially revert
-> flexible-array member replacement") again with the small change that this 'fixes'
-> up the BPF selftest to not embed struct bpf_lpm_trie_key.
->
-> Outside of BPF selftests though aren't we readding the same error that we fixed
-> earlier for BPF programs in the wild which embed struct bpf_lpm_trie_key into their
-> key structure?
+> Cc: Günther Noack <gnoack@google.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> ---
+>  security/landlock/syscalls.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+> index f0bc50003b46..b5b424819dee 100644
+> --- a/security/landlock/syscalls.c
+> +++ b/security/landlock/syscalls.c
+> @@ -33,6 +33,18 @@
+>  #include "ruleset.h"
+>  #include "setup.h"
+>  
+> +static bool is_not_initialized(void)
+> +{
+> +	if (likely(landlock_initialized))
+> +		return false;
+> +
+> +	pr_warn_once(
+> +		"Disabled but requested by user space. "
+> +		"You should enable Landlock at boot time: "
+> +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
 
-Oops, yes, sorry. I see how that cilium does include it in the same
-fashion. I will adjust this patch again. Thanks for double-checking!
+Perhaps update this docs to be really explicit with a example, maybe...
 
-struct egress_gw_policy_key {
-        struct bpf_lpm_trie_key lpm_key;
-        __u32 saddr;
-        __u32 daddr;
-};
+If `landlock` is not present in `CONFIG_LSM`, you can add it. For
+example, if this was the current config::
+
+  $ zgrep -h ^CONFIG_LSM= /boot/config-$(uname -r) /proc/config.gz 2>/dev/null
+  CONFIG_LSM="lockdown,yama,integrity,apparmor"
+
+You can boot with::
+
+  lsm=landlock,lockdown,yama,integrity,apparmor
+
+
+I *still* wish we had the "+" operator for lsm=. It would be SO much
+easier to say "boot with lsm=+landlock". *shrug*
+
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
