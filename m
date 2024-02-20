@@ -1,122 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44045C8E3;
-	Tue, 20 Feb 2024 08:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6075F64A9F
+	for <linux-hardening@vger.kernel.org>; Tue, 20 Feb 2024 08:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708417702; cv=none; b=g32VrOaEAp7sJguIeQ4LaERopkKqVYY6Lp+Iy7q+b/Svh1VOKtRmVJi5ckHznuAPvd6Iul/5ZnaIK7nDd+UEN4QMNbU0N+4g/kgaHb0Ql6OFmR26N36Pxwd98fdJYC409Rk3YBe9flpg+/MQxLHlIe6ENVeHQmtJz7E6LHNRI7c=
+	t=1708419387; cv=none; b=LYOAuqvwEIqeZIcF1Vcqo29xOhrpGhzQYKSiv0IO2i5KHrKKXrgwi4dYjBWiWKS2O4f8Z1LMaEHW9xB5g5RBFdktKbdWO8m3+SdnVlZhSUo/3+p/bDrrxGHAJ8hoLbN76CycqgDo7BH/TDi1e4BwvBarqTzXsYfDehqvZXqqwn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708417702; c=relaxed/simple;
-	bh=oJi3V1tRMEwgDlhC520Ifp/R6zBTkiVQaqZyEkhfrVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EpGFMQ9OXemzvspeFmVTJzJtcJA7c62YPdE6uol31F6uCDBBZOjIrMhEko3ocVncQfIAaiTeT6kCVJuT9jkx4J6QUegVkgIeSyhkW0rlruZDnmBKzjSK1lPi+GfrbPDDpp419R6DEdyFEyIkQxdnSiTYaYGgtHSDxvyA8hr7Hb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBOlYvZw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708419387; c=relaxed/simple;
+	bh=XxS2PiR8TvPD6PooYcEaHBnRrtlm5KfcjvweKguWnMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=giMdH0DcitI0hQWQWwz4AuS68034hTaowyphlDzaajZddd1LnGZobsJBCihX5CVTrf80jQgbNEiDYvoXm8OOYNbaCxd0gAHKMTRH5PtFUOuiyrbiUjTsAANzIzv7ZBinrv/iYx2QVsvisHvbplyyFtkY2/LOPg4J2p0xmtBuK18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anyfinetworks.com; spf=none smtp.mailfrom=anyfinetworks.com; dkim=pass (2048-bit key) header.d=anyfinetworks-com.20230601.gappssmtp.com header.i=@anyfinetworks-com.20230601.gappssmtp.com header.b=h0GLh4RQ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anyfinetworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=anyfinetworks.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBOlYvZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52899C433C7;
-	Tue, 20 Feb 2024 08:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708417702;
-	bh=oJi3V1tRMEwgDlhC520Ifp/R6zBTkiVQaqZyEkhfrVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OBOlYvZw2tJRck/Zg8EMtwh7APiUr/fhwwAHze2BPIm7NcUcbqGJse9WXmPoi0ksw
-	 goQn52o3dXxiobRdcjtMGDPuPHsPoxGOkCWsIsPBb3Np/7WHHUtbGwtzvIxI2Kza8D
-	 ++rmMriBysq3Z9RoB/nNQlkwEwiilLM7RxS5/ULt83c2yjJ4z8Hhplxqi/b4ib8kdf
-	 xIFzdSy66602G9NdAlH5GY+NGK2BAZT7GsW+zUIzgDmS8NTqVUg1bwRJAnXfYLf2HB
-	 tlBRlPh6wRKL0sbFMSZYpjC02+h0dAFtGfAdaL5zFcR+iACpKVa4WVypeNl/XZyjii
-	 YRBdp0xU0g1GQ==
-Date: Tue, 20 Feb 2024 08:28:16 +0000
-From: Lee Jones <lee@kernel.org>
-To: James Bottomley <jejb@linux.ibm.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>,
-	Michael Schmitz <schmitzmic@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	drew@colorado.edu, Tnx to <Thomas_Roesch@m2.maus.de>,
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 03/10] scsi: NCR5380: Replace snprintf() with the safer
- scnprintf() variant
-Message-ID: <20240220082816.GI10170@google.com>
-References: <20240208084512.3803250-1-lee@kernel.org>
- <20240208084512.3803250-4-lee@kernel.org>
- <CAMuHMdX72mpGgb3Wp0WRX3V78nn+bWUqiYz25CjeMNPpWaPmxg@mail.gmail.com>
- <20240208102939.GF689448@google.com>
- <98bdd564c6bf1894717d060f3187c779e969fc5f.camel@linux.ibm.com>
- <20240219152312.GD10170@google.com>
- <f5bef33da6c50e5fd067577f16f460025fe9a601.camel@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=anyfinetworks-com.20230601.gappssmtp.com header.i=@anyfinetworks-com.20230601.gappssmtp.com header.b="h0GLh4RQ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dc13fb0133so4711645ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Feb 2024 00:56:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anyfinetworks-com.20230601.gappssmtp.com; s=20230601; t=1708419384; x=1709024184; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dchRxoxVGKioFcq/L4EKVcfcET3Jr75StrPrjuqQjL0=;
+        b=h0GLh4RQIVLzVLbe8bp+bnwWfCCl8/am1azMVG8j9x/pf7WzYHYHqrdPyClK6ldiVt
+         RVgydbd581CGpeqebpB8wUsuydpAbR9W8qxBbrNvHITYCwMzGiVtIHoeWIOdea3jJXLW
+         BK4Rko4LsKB4/W0Yjo8eQ9QGAGGG1FABugsJDm6e0LtBV+XIlIu7YaGGiRZmgEviLbHj
+         m8ioux5EFen4Y6eMkO6DjL0809cTtD05/5/z8uOLyi7kaurzT4AG55ErqCpDyZGDEsdt
+         KmtCD5kmTU9JzJTI7xd/B53T32FQXpslVn25zUtK3oiF2zfZT8ieYnl8vRQs14v1qrKi
+         6tSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708419384; x=1709024184;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dchRxoxVGKioFcq/L4EKVcfcET3Jr75StrPrjuqQjL0=;
+        b=XVN8aZeL/ODaRMNzReEFHWup9P0npfoJLQwPddrlJLXgmOFqs5QWZM9SU8eL3THDvj
+         yILv+NyeQ0QtT0kGIPu4i7bh/vJ50KES7eJ8yX9+h9X6E7/oonSzss5L81/ZxaOVYzOJ
+         QuCXhy935q0CzuCc+G7wjorxIC7afsMG+B/pFr6nFdu3BLC9fx30mLJH2yl8BD4oxYIL
+         4QilUeVcOs8ZcpqZh08FRv4D90kKJb6MEbB1NNC5yCWUf2Or8h+ir36eg6kiBId/PzYK
+         XbLryXXPABFo4mF98mFEBo27vqzCxTJphS9h4dSPjomx+nVcuQAdIjER8XsvjlqXVyIg
+         c8HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfBvI7pB/5v8SHxMb6pvMQQCzeIhrAnWIzwBGOVif5X4T20IPG4p4Jdauw7UIpPMS29O7jD+qIoztiISo07SINaz6gfKCEECrOABh1lkzz
+X-Gm-Message-State: AOJu0YzanVs9utQjExgm839ckRuzN+0IrtTJFVqzeYh+SM0PIB2/Nxqh
+	DxfJVjTY1BBgNBvFtOB/cnWD1Ecflzil1ypkl53TvwBk4NukJVAo4cfwMdhORC9iFIJV6cx988W
+	1YwkIhq/lsrsPCZPa2cAaLZmT2kDqoChqErgZQA==
+X-Google-Smtp-Source: AGHT+IHl7TYiCYsEXMrh4VmDGMZtMQoKh4DXw10jPMT7TOqjy20gTUqscrvJKqfiSDRCNiwo83Vx2RGvwz2GtNa0WA4=
+X-Received: by 2002:a17:90a:34cf:b0:299:5b95:cd7d with SMTP id
+ m15-20020a17090a34cf00b002995b95cd7dmr4504419pjf.45.1708419384629; Tue, 20
+ Feb 2024 00:56:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f5bef33da6c50e5fd067577f16f460025fe9a601.camel@linux.ibm.com>
+References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
+ <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <ec35e06dbe8672a36415ebe2b9273277c2921977.1708253445.git.christophe.leroy@csgroup.eu>
+From: Johan Almbladh <johan.almbladh@anyfinetworks.com>
+Date: Tue, 20 Feb 2024 09:56:13 +0100
+Message-ID: <CAM1=_QTF1amgOZUWJ4BA872RW3DE_papO5yi7ak+-WCkBfvC5g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Take return from set_memory_rox() into
+ account with bpf_jit_binary_lock_ro()
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Puranjay Mohan <puranjay12@gmail.com>, Zi Shen Lim <zlim.lnx@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Burton <paulburton@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Wang YanQing <udknight@gmail.com>, 
+	David Ahern <dsahern@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
+	netdev@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 19 Feb 2024, James Bottomley wrote:
+On Sun, Feb 18, 2024 at 11:55=E2=80=AFAM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+> set_memory_rox() can fail, leaving memory unprotected.
+>
+> Check return and bail out when bpf_jit_binary_lock_ro() returns
+> and error.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+> Previous patch introduces a dependency on this patch because it modifies =
+bpf_prog_lock_ro(), but they are independant.
+> It is possible to apply this patch as standalone by handling trivial conf=
+lict with unmodified bpf_prog_lock_ro().
+> ---
+>  arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
+>  arch/arm64/net/bpf_jit_comp.c    | 21 +++++++++++++++------
+>  arch/loongarch/net/bpf_jit.c     | 21 +++++++++++++++------
+>  arch/mips/net/bpf_jit_comp.c     |  3 ++-
+>  arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
+>  arch/s390/net/bpf_jit_comp.c     |  6 +++++-
+>  arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
+>  arch/x86/net/bpf_jit_comp32.c    |  3 +--
+>  include/linux/filter.h           |  4 ++--
+>  9 files changed, 64 insertions(+), 33 deletions(-)
 
-> On Mon, 2024-02-19 at 15:23 +0000, Lee Jones wrote:
-> > On Sat, 10 Feb 2024, James Bottomley wrote:
-> > 
-> > > On Thu, 2024-02-08 at 10:29 +0000, Lee Jones wrote:
-> > > > On Thu, 08 Feb 2024, Geert Uytterhoeven wrote:
-> > > > 
-> > > > > Hi Lee,
-> > > > > 
-> > > > > Thanks for your patch!
-> > > > > 
-> > > > > On Thu, Feb 8, 2024 at 9:48 AM Lee Jones <lee@kernel.org>
-> > > > > wrote:
-> > > > > > There is a general misunderstanding amongst engineers that
-> > > > > > {v}snprintf() returns the length of the data *actually*
-> > > > > > encoded into the destination array.  However, as per the C99
-> > > > > > standard {v}snprintf() really returns the length of the data
-> > > > > > that *would have been* written if there were enough space for
-> > > > > > it.  This misunderstanding has led to buffer-overruns in the
-> > > > > > past.  It's generally considered safer to use the
-> > > > > > {v}scnprintf() variants in their place (or even sprintf() in
-> > > > > > simple cases).  So let's do that.
-> > > > > 
-> > > > > Confused... The return value is not used at all?
-> > > > 
-> > > > Future proofing.  The idea of the effort is to rid the use
-> > > > entirely.
-> > > > 
-> > > >  - Usage is inside a sysfs handler passing PAGE_SIZE as the size
-> > > >    - s/snprintf/sysfs_emit/
-> > > >  - Usage is inside a sysfs handler passing a bespoke value as the
-> > > > size
-> > > >    - s/snprintf/scnprintf/
-> > > >  - Return value used, but does *not* care about overflow
-> > > >    - s/snprintf/scnprintf/
-> > > >  - Return value used, caller *does* care about overflow
-> > > >    - s/snprintf/seq_buf/
-> > > >  - Return value not used
-> > > >    - s/snprintf/scnprintf/
-> > > > 
-> > > > This is the final case.
-> > > 
-> > > To re-ask Geert's question: the last case can't ever lead to a bug
-> > > orproblem, what value does churning the kernel to change it
-> > > provide? As Finn said, if we want to deprecate it as a future
-> > > pattern, put it in checkpatch.
-> > 
-> > Adding this to checkpatch is a good idea.
-> > 
-> > What if we also take Kees's suggestion and hit all of these found in
-> > SCSI in one patch to keep the churn down to a minimum?
-> 
-> That doesn't fix the churn problem because you're still changing the
-> source.  For ancient drivers, we keep the changes to a minimum to avoid
-> introducing inadvertent bugs which aren't discovered until months
-> later.  If there's no actual bug in the driver, there's no reason to
-> change the code.
+For the MIPS part:
+Reviewed-by: Johan Almbladh <johan.almbladh@anyfinetworks.com>
 
-Okay, no problem.  Would you like me to drop these from the set and
-resubmit or are you happy to cherry-pick the remainder?
-
--- 
-Lee Jones [李琼斯]
+Thanks,
+Johan
