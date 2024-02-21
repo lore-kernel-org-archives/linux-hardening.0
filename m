@@ -1,57 +1,57 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D9F86653
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 21:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA7B8664F
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 21:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708549594; cv=none; b=HHR7TwXOAsJ9dkPzU1Vd1N2LWKtaG67VPfR3xQ+XcZOc9Zha8qhzY93souHzgfzX32Xq3B6jlZska+TX6JfXMsA+6F+fgERjkgDfJzuAxxCrE5qitEMGig5HJOCFhqaUzQj9XJuaoofHnodo37wyfD5yM5TP3v/xHI8DVp928X8=
+	t=1708549625; cv=none; b=pP4/F9jQUJEaawIpjjBKMLcP7aeC/TGtE7lH0J1R6Gn0rFhC90ure1nAkQd4j2KgeOrCfarq9lyGBgGTZEh2B8AI0S0zYPujxjVvrFNfF+OCOel34OG3ERblWJ6gmMuCLnVyV7RuVAwOfsNMgXg4lbliQyDG3Uyc0QRlmTgkhTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708549594; c=relaxed/simple;
-	bh=dbd4jsxBGwYIp3VjbKuVkI9DXoIGdk9CI+527muwnNs=;
+	s=arc-20240116; t=1708549625; c=relaxed/simple;
+	bh=ji6GCepH8kSSb47OKXAEdHfFIEwmtzu8M/MoXQ+oc9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZVDWpZgDr0K+2tweP5gAbxR3WNnRc7Af9HZij3zILgfkSWpM+sxWWOEwRSCR/1Xd/aw+7Yv87+wiVfOJeEHOhmPVGVP+Cv3P/FxzVWBklG8EKRTvxWgyCL+mLm96s6rPeu3W8JJZBAySl8KpAbDD8fYm/XZqJeTYDDvUvLCLLew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wnkSgrnD; arc=none smtp.client-ip=209.85.166.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=X3FdUFoZw0H3WAnfOBQ73eDz0TysV4nAABFY8Dhwe2zTP3gHCH4AJf/KFAZckTwjgBXiyMzafUkzDlvfKmwDfwkM3sEe9GbJ8BMbkfYZ976wyJXFJcDWMOts3gEN53g++QXQ4EovVqyP24WQpRbFIPye/+4txlBDnq9pp+2mQPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fDgPqCbq; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wnkSgrnD"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7bb5fda069bso372692839f.0
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 13:06:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fDgPqCbq"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36503a4980aso2897375ab.3
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 13:07:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708549592; x=1709154392; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708549623; x=1709154423; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XxARLNt21W5VmobeBOcLL0WanHWe98+J1gabaOyO2/o=;
-        b=wnkSgrnDtrCT794OYkOXGGbOvpniRDs5+3cLfBKfwxzzpVwGNzeh1PxPnT6iNNUAB0
-         cqqgGlvb7BTIugUY7AkAUURsIeKJdmqJb2XzzOGagX0kSrJ6CM/wBahjT9ImMjDV2Da2
-         t0Af32ltnhTvLHdtBkPBq4mPWppuhFK4l78ytFzIcET/2jXS3jEt/cBRR3TL5NhhbT+2
-         Vy8rfEySQ9e26yq37LyL/OAC9jKDSarKmX93BCw6r3wzedTcLrxUk9IvD+1Rs85p/CqW
-         sjoilQw0k5ucvfutGedOXjLsrcJ00ZblWhKyYjn3o/CtB4FngDxiyKzZYsuQrNzMNTFb
-         1MIQ==
+        bh=AAAZa1jDC6WKP3dR2NzQXLtAyykABKSP5MJcfQiYXKs=;
+        b=fDgPqCbq+GFEfg5A2wEHyR/30VAq1XmAp+VwLsxp81acdyqCFx6qjMA4MV5hzxd/BR
+         +tP9OX66qAagwV5UxuwZ6Gd2TvtSBxxKnfxc5yIEwVwIzxXMKsbrKnKBMjAs3WGRPyMN
+         UO+3Vhoacs4PEcIoDO1KSO5CSy5Kfs1tFR6NPWiKOA5K4fhr4ekZ5N0nlm1n0U1CREqt
+         jSIikTx5Bj7/7Uc/wBBvk+tXW/zLFcrMvTsJh0SWNyHb1PVGQJ31sEn0ryCswfoSpAvo
+         YGmowUENEXOjgrK1nZ9T34xYJ4Mimkbu5xxiQIJXECJbvUqfMOjJyOrkXSc2+xGxtNVP
+         CZoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708549592; x=1709154392;
+        d=1e100.net; s=20230601; t=1708549623; x=1709154423;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XxARLNt21W5VmobeBOcLL0WanHWe98+J1gabaOyO2/o=;
-        b=rEpS75JO8bC99hKVwKktuOIi1T5OwX267NPIThs22phf03LzPXL/vUS4Hk2T0hdFyB
-         egxsxyPVA+70J9Ia4VPr+OaaU9mXzu6SV2O5l5QE4mX6b68jxfPgFMvHcqIrQFBUf79A
-         /mZt7frPW101IW660chSbqrav40Bn0RvZ3IJ30ZUQzbL2/2PuJC5bDACV+IJO47PQoE2
-         9Oj3CxTCNvEL3BmzREX9cGpt9/BWGoW5ipZM0/YkFCVrazzd432l/P8MQ5oHcj1wCT9H
-         Jj+zxE4F3U5z4YeGi3DDZJ03CAB2H3tBlljDA7+0tB65NleuPD1EEhYCrmXSm80TGDJ0
-         2NZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPcDMMzc+0htpRmvLuyVwXqbTEYaAdlQvQ77zPJ+c2HuKcBGJf63yj2j69UTpd0i4spCpUNXd+oiFbh9mvPKN95/PrShDT0PtQTxtuntpU
-X-Gm-Message-State: AOJu0YwINBgfpax17Q4y8xbIkt1/atCXRdoLEMI2/jXZndDvsCeen90M
-	4mdlHDb4lfz5rMgEm4Lre2KkplYobh9p3/p7/v4c+pExnINM1tgqaosPTEkZrw==
-X-Google-Smtp-Source: AGHT+IHqbTAIdmbfdrW7leotGJWoTRmx3P/Ksrvh7bnDyBM1dx8JyMMMiikIoom0nj0o+fE8Ko+j0A==
-X-Received: by 2002:a5d:894e:0:b0:7c3:f542:66d8 with SMTP id b14-20020a5d894e000000b007c3f54266d8mr21472703iot.1.1708549591657;
-        Wed, 21 Feb 2024 13:06:31 -0800 (PST)
+        bh=AAAZa1jDC6WKP3dR2NzQXLtAyykABKSP5MJcfQiYXKs=;
+        b=DV8QDlmbO9cWY7utN6nwIWbdFRwJ2+JM/I9WG2I19O+KstSPmjxZNNR/VmGg4t2P84
+         iVhwHSjEcnt9MGom3S8YGhqd3opNqnGKtJK/pbmaAZcVyCULZ/fO+X413HHrjYvtPxlO
+         /BxKfT6jPJVT1nuhlYMAMqUdmgxs7HkfL0VVQE3K4rtvmPhv+ZxxdVBOLQk53ypGO2c8
+         f8bfh7zWiqZF7tbg0SgHe5RsxHc4yeqqC0tgPYqz18HmhdCZo2sqeTT5iRnIQC5NWFbA
+         g0M2/EkwRBZVMxcAFveWSInv6KtzFZMt4e9lEth+eTpBaOeL8y1hBd0kREF1iK1YGsFW
+         DjFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUc8krGzXxcb9JjzDGB19/vBHZzG/aS/teI+pmRciEY0A4gqRPH6eSy993R7lwd/QYAsfYJYzifKejNYRn1a9+EZ4HaPFfazudn/LG0or/
+X-Gm-Message-State: AOJu0YwZjeQQc/8BpIV0xsIydzu0ydXrLfdS9go6aEd9UXJjF+FQinNR
+	2CzxRNNkbDNrITAxqQf1pojcHCSVKA27cpn/85y6AZIhvHolLg/Bhtp7Hrc+Mg==
+X-Google-Smtp-Source: AGHT+IGat+ZOlE3TaiF7TUr34C9oDGm5EHv4BN9HXA/+oFvVMsLjUVwjzy0AX0VUmgXwUPrLBRg1OQ==
+X-Received: by 2002:a92:d790:0:b0:365:4aa1:8bd5 with SMTP id d16-20020a92d790000000b003654aa18bd5mr5504674iln.5.1708549622918;
+        Wed, 21 Feb 2024 13:07:02 -0800 (PST)
 Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id fv5-20020a05663866c500b004741f7683ebsm2272779jab.154.2024.02.21.13.06.30
+        by smtp.gmail.com with ESMTPSA id bd6-20020a056e02300600b00363807d5c4esm2799990ilb.13.2024.02.21.13.07.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 13:06:30 -0800 (PST)
-Date: Wed, 21 Feb 2024 21:06:28 +0000
+        Wed, 21 Feb 2024 13:07:02 -0800 (PST)
+Date: Wed, 21 Feb 2024 21:06:59 +0000
 From: Justin Stitt <justinstitt@google.com>
 To: David Gow <davidgow@google.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -78,10 +78,10 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
 	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 4/9] time: test: Fix incorrect format specifier
-Message-ID: <20240221210628.vshmqtyeecemin4k@google.com>
+Subject: Re: [PATCH 5/9] rtc: test: Fix invalid format specifier.
+Message-ID: <20240221210659.4p6cq4lhmoz3eaqj@google.com>
 References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-5-davidgow@google.com>
+ <20240221092728.1281499-6-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -90,35 +90,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240221092728.1281499-5-davidgow@google.com>
+In-Reply-To: <20240221092728.1281499-6-davidgow@google.com>
 
 Hi,
 
-On Wed, Feb 21, 2024 at 05:27:17PM +0800, David Gow wrote:
+On Wed, Feb 21, 2024 at 05:27:18PM +0800, David Gow wrote:
 > 'days' is a s64 (from div_s64), and so should use a %lld specifier.
 >
 > This was found by extending KUnit's assertion macros to use gcc's
 > __printf attribute.
 >
-> Fixes: 276010551664 ("time: Improve performance of time64_to_tm()")
+> Fixes: 1d1bb12a8b18 ("rtc: Improve performance of rtc_time64_to_tm(). Add tests.")
 > Signed-off-by: David Gow <davidgow@google.com>
 
 Reviewed-by: Justin Stitt <justinstitt@google.com>
 > ---
->  kernel/time/time_test.c | 2 +-
+>  drivers/rtc/lib_test.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kernel/time/time_test.c b/kernel/time/time_test.c
-> index ca058c8af6ba..3e5d422dd15c 100644
-> --- a/kernel/time/time_test.c
-> +++ b/kernel/time/time_test.c
-> @@ -73,7 +73,7 @@ static void time64_to_tm_test_date_range(struct kunit *test)
+> diff --git a/drivers/rtc/lib_test.c b/drivers/rtc/lib_test.c
+> index d5caf36c56cd..225c859d6da5 100644
+> --- a/drivers/rtc/lib_test.c
+> +++ b/drivers/rtc/lib_test.c
+> @@ -54,7 +54,7 @@ static void rtc_time64_to_tm_test_date_range(struct kunit *test)
 >
 >  		days = div_s64(secs, 86400);
 >
-> -		#define FAIL_MSG "%05ld/%02d/%02d (%2d) : %ld", \
-> +		#define FAIL_MSG "%05ld/%02d/%02d (%2d) : %lld", \
->  			year, month, mdday, yday, days
+> -		#define FAIL_MSG "%d/%02d/%02d (%2d) : %ld", \
+> +		#define FAIL_MSG "%d/%02d/%02d (%2d) : %lld", \
+>  			year, month, mday, yday, days
 >
 >  		KUNIT_ASSERT_EQ_MSG(test, year - 1900, result.tm_year, FAIL_MSG);
 > --
