@@ -1,72 +1,88 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7579883CDB
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 17:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174161272B2
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 20:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708537775; cv=none; b=l2jonVukE5fA7XbguKFXVuIsvfM+Dzq2iwvdXcPniP+n1gup85wM828cEGECpAM+9Kw0LFNLVnN75Om9rGGjvl3sgCsamS42twMjx1EQb1/v/Qi9iIkYzKoXeqPyyGR9Pe3/8Dvscuy7tPoLCvGGtYe7muRYykchM1ppCm2NMDk=
+	t=1708545733; cv=none; b=caTMWK4yc3FIJZ7/rGqmwye5fOzqmksEO6C2U2wYcT372IeMIWNrBvzN4ZkXPaZHElslVS9OT8ZTVvyloaHcPxX4NBxm7zKPXAfQ6GhaXiXEG6V15baRaEb7ZesVRKR0SqejN5tE4F/ecj/3vI5qw7nRM0glXLp4MBZHX/ZkniM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708537775; c=relaxed/simple;
-	bh=KQoMuU1dvefNeleeWBIm6wpRfUoOOi3/4vzojzj2KWI=;
+	s=arc-20240116; t=1708545733; c=relaxed/simple;
+	bh=b48lXPZQ+02Q0x3yLHzWYedk9fLZtBBvGY00YBRj8DY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGSXFnYI7Aa2Xt0u/lrtxb6Unm2T7OC+3L/fQHhAK8NGGRiZQCyERR8Z+4IX9DMyN4/0E48eiKJiXJMql8g3rh93RcYc33MzOPH58sCWFEXihxfVV0dIiUAXrjBnpPjjCJtWFDV3pia+lv+7LOeLLiiFHpLkGIUpnOJcI/8t6y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mGcA/PMF; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=jU/0i5KBDwTt3u3T5Zyj/c8CWNYmgDusFnb7LItyQf1xJlfl03vUU9CSIXB5jn1EVClAZXZjJLjVcJn19WREJlk29wfkck0jQt2/A6678KvkwR5zaeEl/lCqdGLTOJAyODwEliYjQrYnH6x7im5idra9VEYK4mLcPYeFoMBkH14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bLAOop5P; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mGcA/PMF"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-781753f52afso397554085a.2
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 09:49:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bLAOop5P"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7beda6a274bso41470839f.2
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 12:02:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1708537771; x=1709142571; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708545731; x=1709150531; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9EA8cf2yDI8ps402vONEh4eN8mg2XcKNJwopEt2wzvo=;
-        b=mGcA/PMFITU/YtAdN7ADh5yQL705F1RRARAjRuqdKuiW9l4AF3PDF4M0ncPgtNtmTW
-         CgGEpuRUQkR10r4rYPz6VCcfz8cqnk0H7uEmaxDUxRVk5rkQwXYvW9ScB0SsBvaakDGr
-         4wadF9zykK3kPHUyL5DirA3+Yj8xyLhNtnje5tqp9nGIui2M79r10ZJ4jl6Eq6sNtiIz
-         7PfEWKM+tl9kiEB0/4UEC7knOCgP2JRbJC2Py0EXuaQEcIvmzao2pnOfilg9yUuaYFFR
-         lgvxh0EpzJaqMRdnmbcoG9tMYRDV7i/5fHHe+YOgwq+fzqYPHBcAs2AtzD44PmDrzNXi
-         f2gA==
+        bh=hW/eD+217SwbFSrd+7OlcqgqqQaX2xcDsJgsLrnW3ms=;
+        b=bLAOop5PY9nIMWtJBK0X4o+9ohSJFVebjUsn5fEj/Pbi+RE3nBNv6UFiiGyj6gA4VP
+         pw/74OJosTSnESt4IkCbHrL0tmvqRKVB5IvGRf9Nm8/XA8ByA7rBWnFCW/e+zoGfCNra
+         gqu3oc9ctgVEHwA5BAptS2Br5zo13+P6//I5mQS6ApOiXciEAiNr5iQXdGMvSak2iFqq
+         xzAmtlZRJx5Yd6RPxRa5QN45nmqIt7wH9SBhG7NwCB8v87ZmeCSNwvAarFSFN7cr4nOC
+         6VSfgJLNSN2sTx5EDAcjRtb4F1wjF04ac1lIpq+fCMpOA/TZVcInz0aPFxfP6sNTsMUX
+         GnXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708537771; x=1709142571;
+        d=1e100.net; s=20230601; t=1708545731; x=1709150531;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9EA8cf2yDI8ps402vONEh4eN8mg2XcKNJwopEt2wzvo=;
-        b=TWl8gFraL9ymjgPr5nDYirVI1cE354pe/gWKugwtm5g/Rs/3GvYx4N2r62qKS13DEr
-         5jzniiZQ+c4uxvBGWX1/uXo4GldDLSlRB3I/3Pzh7m+PITEh0h+MJsTXaL86Kn9OeGHJ
-         FAgvBM1KP7trA2/V/rufgm2azMIS3RXGbrXo90ueQtlAvaP7Ea5i17c9pQuV+lG3nJFk
-         8ZzIPGj0MlWiIPR5UkfRjSAQ8ReIHkPC3TBVN/nAwLtE4BXp+vQkoTC8sUopseG9uqBi
-         X5VPedJZgL257cHk5S/JQoAcZB6VeeDnaeK0Y1wH2WO/ips8F+N8dBEIOyY4smBHWWyb
-         MQ8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV0YsJpMCpYEIp8fEThQlkfjhJ5SScF0BERze1MeHEV6quudB4P8wnnbvxEyjVFH12b6E1qu9vowbZ7Sna5FhuQ+5/n8s7+8keNN/4MxhOt
-X-Gm-Message-State: AOJu0YwLrUA57fXDs7cw+7ENHzJXjSgtw1o+vkGa9J83+oj1m7CoMbDb
-	2RBNbnHdOq8zeVkzDisOoWeG9GxLR8hjuBSksqzhoxHvg7JqwvymdIGsdkKz7Fc=
-X-Google-Smtp-Source: AGHT+IGZoGA7n7eCfimDJ/ips2D3ir5jrWAPbQVAC3bWxC/pS1Fb+XCKAPN5rul+kokP5AVMOOLtmQ==
-X-Received: by 2002:a05:620a:8325:b0:787:8168:87f5 with SMTP id pa37-20020a05620a832500b00787816887f5mr3237298qkn.58.1708537771450;
-        Wed, 21 Feb 2024 09:49:31 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id l9-20020a37f509000000b00787236a4ba7sm4527367qkk.40.2024.02.21.09.49.30
+        bh=hW/eD+217SwbFSrd+7OlcqgqqQaX2xcDsJgsLrnW3ms=;
+        b=H04SfChHx/7/4CfV5ydmLSF5hVfTKAy85wVtAXNXhyqQQOxojFIqZMl9Jn+i7uzQxQ
+         QjRcXjL2cOfFRsAO6OO0wYKkooaYHZl148Vnt+DnDHORZdUaMmnoBgG+rWJlnAx28GYe
+         788ME667DkFOW16iQHcqZLC/iSLWv+eb818D/0ILGJ07e12DfNl7Z3O4XMW2nyLMhUrY
+         Z5Gv/HC4qeKBCmxVvTj2ZFBpriJ/CK85H/Yv++Cl5luDRO4goDSvl3JkZUe9NpyWYj78
+         wN6woZkWBRJ1q5iVh+lccr7QUzvmM3+9ac5GTaU6YQUnP0oTRGU0r1KVMU+FEdAHFsDd
+         d5Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVvLXssFXOSWDi/5/0iwQ8fyI27kCl7GcgmyXv4xFc1dm1w9TbnMbAObJvNxjfYXU3BYlT3yoiwkoHF7x5H2KsIhExMfSY5Ey6nugdfCVa
+X-Gm-Message-State: AOJu0YxZhXXKeM3NBdWx94bjx0S8gcFFA/t58e+7Lvhz5jSKT802kgL0
+	B5LYsBx7y/OmcWwEdggUwqg7jRqdXpVdKEHLW+B2faPoU4Lb0lCPWegMmXnUUw==
+X-Google-Smtp-Source: AGHT+IG39BbcKPU1il8vkTs2a8eXqdOP0Ld0XjhZHI7TKaGTsFOA7fu8B9CXr669y5rm4dsiJ0Wmbg==
+X-Received: by 2002:a5d:929a:0:b0:7c7:4d7e:de87 with SMTP id s26-20020a5d929a000000b007c74d7ede87mr10763875iom.1.1708545731187;
+        Wed, 21 Feb 2024 12:02:11 -0800 (PST)
+Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
+        by smtp.gmail.com with ESMTPSA id fv5-20020a05663866c500b004741f7683ebsm2243287jab.154.2024.02.21.12.02.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 09:49:30 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rcqio-00Bx8M-6S;
-	Wed, 21 Feb 2024 13:49:30 -0400
-Date: Wed, 21 Feb 2024 13:49:30 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Edward Srouji <edwards@nvidia.com>,
-	Patrisious Haddad <phaddad@nvidia.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] RDMA/uverbs: Remove flexible arrays from struct
- *_filter
-Message-ID: <20240221174930.GF13491@ziepe.ca>
-References: <20240217142913.4285-1-erick.archer@gmx.com>
+        Wed, 21 Feb 2024 12:02:10 -0800 (PST)
+Date: Wed, 21 Feb 2024 20:02:04 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: David Gow <davidgow@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Kees Cook <keescook@chromium.org>,
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Florian Westphal <fw@strlen.de>,
+	Cassio Neri <cassio.neri@gmail.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Arthur Grillo <arthur.grillo@usp.br>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Daniel Latypov <dlatypov@google.com>,
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 9/9] kunit: Annotate _MSG assertion variants with gnu
+ printf specifiers
+Message-ID: <20240221200204.frzov7n5bxb4cekd@google.com>
+References: <20240221092728.1281499-1-davidgow@google.com>
+ <20240221092728.1281499-10-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -75,79 +91,57 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240217142913.4285-1-erick.archer@gmx.com>
+In-Reply-To: <20240221092728.1281499-10-davidgow@google.com>
 
-On Sat, Feb 17, 2024 at 03:29:13PM +0100, Erick Archer wrote:
-> When a struct containing a flexible array is included in another struct,
-> and there is a member after the struct-with-flex-array, there is a
-> possibility of memory overlap. These cases must be audited [1]. See:
-> 
-> struct inner {
-> 	...
-> 	int flex[];
-> };
-> 
-> struct outer {
-> 	...
-> 	struct inner header;
-> 	int overlap;
-> 	...
-> };
-> 
-> This is the scenario for all the "struct *_filter" structures that are
-> included in the following "struct ib_flow_spec_*" structures:
-> 
-> struct ib_flow_spec_eth
-> struct ib_flow_spec_ib
-> struct ib_flow_spec_ipv4
-> struct ib_flow_spec_ipv6
-> struct ib_flow_spec_tcp_udp
-> struct ib_flow_spec_tunnel
-> struct ib_flow_spec_esp
-> struct ib_flow_spec_gre
-> struct ib_flow_spec_mpls
-> 
-> The pattern is like the one shown below:
-> 
-> struct *_filter {
-> 	...
-> 	u8 real_sz[];
-> };
-> 
-> struct ib_flow_spec_* {
-> 	...
-> 	struct *_filter val;
-> 	struct *_filter mask;
-> };
-> 
-> In this case, the trailing flexible array "real_sz" is never allocated
-> and is only used to calculate the size of the structures. Here the use
-> of the "offsetof" helper can be changed by the "sizeof" operator because
-> the goal is to get the size of these structures. Therefore, the trailing
-> flexible arrays can also be removed.
-> 
-> However, due to the trailing padding that can be induced in structs it
-> is possible that the:
-> 
-> offsetof(struct *_filter, real_sz) != sizeof(struct *_filter)
-> 
-> This situation happens with the "struct ib_flow_ipv6_filter" and to
-> avoid it the "__packed" macro is used in this structure. But now, the
-> "sizeof(struct ib_flow_ipv6_filter)" has changed. This is not a problem
-> since this size is not used in the code.
-> 
-> The situation now is that "sizeof(struct ib_flow_spec_ipv6)" has also
-> changed (this struct contains the struct ib_flow_ipv6_filter). This is
-> also not a problem since it is only used to set the size of the "union
-> ib_flow_spec", which can store all the "ib_flow_spec_*" structures.
-> 
-> Link: https://github.com/KSPP/linux/issues/202 [1]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Hi,
+
+On Wed, Feb 21, 2024 at 05:27:22PM +0800, David Gow wrote:
+> KUnit's assertion macros have variants which accept a printf format
+> string, to allow tests to specify a more detailed message on failure.
+> These (and the related KUNIT_FAIL() macro) ultimately wrap the
+> __kunit_do_failed_assertion() function, which accepted a printf format
+> specifier, but did not have the __printf attribute, so gcc couldn't warn
+> on incorrect agruments.
+>
+> It turns out there were quite a few tests with such incorrect arguments.
+>
+> Add the __printf() specifier now that we've fixed these errors, to
+> prevent them from recurring.
+>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: David Gow <davidgow@google.com>
+
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 > ---
-> Changes in v2:
-> - Add the "__packed" macro to the "struct ib_flow_ipv6_filter".
-> - Update the commit message to explain why the "__packed" macro is used.
+>  include/kunit/test.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index fcb4a4940ace..61637ef32302 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -579,12 +579,12 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
+>
+>  void __noreturn __kunit_abort(struct kunit *test);
+>
+> -void __kunit_do_failed_assertion(struct kunit *test,
+> -			       const struct kunit_loc *loc,
+> -			       enum kunit_assert_type type,
+> -			       const struct kunit_assert *assert,
+> -			       assert_format_t assert_format,
+> -			       const char *fmt, ...);
+> +void __printf(6, 7) __kunit_do_failed_assertion(struct kunit *test,
+> +						const struct kunit_loc *loc,
+> +						enum kunit_assert_type type,
+> +						const struct kunit_assert *assert,
+> +						assert_format_t assert_format,
+> +						const char *fmt, ...);
+>
+>  #define _KUNIT_FAILED(test, assert_type, assert_class, assert_format, INITIALIZER, fmt, ...) do { \
+>  	static const struct kunit_loc __loc = KUNIT_CURRENT_LOC;	       \
+> --
+> 2.44.0.rc0.258.g7320e95886-goog
+>
 
-Applied to for-next, thanks
-
-Jason
+Thanks
+Justin
