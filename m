@@ -1,126 +1,147 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A098947A62
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 09:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867533B781;
+	Wed, 21 Feb 2024 09:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708507725; cv=none; b=Hbtf7f50lZBDGE3DGy2gILMG97k357qVmG/HFtFoJKZWVykdcyKOuDilIwmYi2udQwGoMH1c+PmAezl6Fo0qLYvIKJa9xqWnaclzYcy+PPIJFumKAyrkBkGZUUm0vUNYJtBOtXYGjWjK1dr3ajPrYH4OrQ2bkidJI/uye4VZf2o=
+	t=1708508919; cv=none; b=sh8caVVozQPmhJM+J9WPNtQZWGoho5ulofqYOxSKpaoPeKNsDqJ6RDYkuIl/eTq8pXRH9gyaycRBfWKkUIQETTG9FWAY60iAeISjaxILbk8Nt+CZo0MAuVbX3mDrfVONM7+xsrYzepqHg0K3iTO7u4PUoMMQJ30MsCuQuDqOK0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708507725; c=relaxed/simple;
-	bh=MALY8PY87om1B5rM9PQyZB962vp0AzyA5B9YGRQAQS4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NdTpx34DrchJ8Bi2Wu96GQBFc8mN3LdAwN27BpKNIH5kdS2Sth9jRmrlzP56D9PA8t2+DQ32dfjR2tFCKPLuHODUMZHH/sTJRGxoyJEVbSNouiAQHhjbB3XcXjYAWrkbtDbH7hhjN52COH0SzQ105EXPTkTDT1sTdr2vyNZpTJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZtDnRb1H; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	s=arc-20240116; t=1708508919; c=relaxed/simple;
+	bh=HLE/MP1SWWxlDamRNgvoEaBeblwna1EiTKCiw4WhSCk=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=qlQVm70MABritlQ+1hPoW+/GoZ4whfytwiisEdxksZp9vVn4rH/PmraoFfa01biAJpfPjE1CZdWG/KrYqJvKpo635wEF01hgIpxe6PeBccXcaiuitTh8HTs+3w/gvMzRpTif4YLf3tWFx1xw0PQFfI8PM8078SfVfuZrCkKHu4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=2gNEAT4p; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Y+jJlUhw; arc=none smtp.client-ip=64.147.123.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZtDnRb1H"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dced704f17cso2525608276.1
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 01:28:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708507722; x=1709112522; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UtSX1a4twDclpP0XCHq3xRlg28EKI7v3CFBboD2ALTI=;
-        b=ZtDnRb1HzJUvAH/0oR/bwjouHiGv5Hx12Z2jxcyrZDvjJX98lm29rJnvTIR3l4ObQM
-         Ov3OCZO5XOKws6sxRzWJDcWAvUjveniIONlT2qOQU27aN9W5ygjKa9/Dbdy5zxc1xQrN
-         IxNG2r44hsCgnlpuc8kXITwp6cnQeAetTruqquLTRkOSJPERNBjayKovt+WYmuZfmu/N
-         XDYPli2ynlc65GjfIyiP0X/AUvLqv3K3gKJiGwul6r8aRt8FUtd322nyYEHLGyQ2O2FR
-         XoBITuavIT1fSwdX+FNatnoLoYVjFKExpvElpj+OXcfSasXJJVlEAbboVA+Ys4hQDguq
-         qTtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708507722; x=1709112522;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UtSX1a4twDclpP0XCHq3xRlg28EKI7v3CFBboD2ALTI=;
-        b=EvxwaWhY4Hu+F72Bl2fp0ZW7kGIXTJ4mzcp3OePkCXeDLPzbsFLttqrkk1lBYZLJN6
-         MyM3HEOGxNbgLyDazOCqDTsRZtZ4lNyt+nd6F3UaXNPZhKUjgxZ+fNH7GThQvoCIrka5
-         QlfcoO80+M5dFp4HCMvnqJcQVvStVQ9kg/8IznC18Jjo+7gzGjCIY18jdnAW+7f6hZLj
-         Zuz/2+579Ek2ddGtq7mMIoAM5lwzUUrcHuBS6DVirZJKRdUC184KQAAP47Kf/wG3K5aO
-         3MD3NRLtNiqxbqPLMlf6gQeT03gqmMuVHzbVq+o7rCYXBHITe19aWvdQQUwsKk9NuvVD
-         4gyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXS2EPwOTyF2ZLtzgWdjgslkgzkk69btVp61OR1MrJ1ALMDGwzTakP/gf++s1rJdTK4LLOOpUNmY9U6FW/PIekte7KZCMdh7UpUihAVpvpq
-X-Gm-Message-State: AOJu0Yxy/OqvLbmcqXuaZLKPoupTy6o4Vi/MQunX5wvAiUbiV5tD6L1X
-	uJgTNqsYTRo836ZTs6uZimwEREKhUq6IyiABy89UUKRnF+y96WUVVcvlkwdq8zsSl7dj6HFdOsM
-	O2NjmH2Wp/g==
-X-Google-Smtp-Source: AGHT+IE+u4BHsnTY4zBV9uwlLnSALfH2VACViqUl+6ZdsI4Ll1wRpv0qUeWfBww+/YNGvG/0sUR+LBCAIAUp6Q==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a05:6902:4ce:b0:dc7:865b:22c6 with SMTP
- id v14-20020a05690204ce00b00dc7865b22c6mr618682ybs.8.1708507721736; Wed, 21
- Feb 2024 01:28:41 -0800 (PST)
-Date: Wed, 21 Feb 2024 17:27:22 +0800
-In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="2gNEAT4p";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y+jJlUhw"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 2719432001AB;
+	Wed, 21 Feb 2024 04:48:35 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 21 Feb 2024 04:48:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1708508914; x=1708595314; bh=Fw9lSJoYft
+	ih2HH5DSoXI7rUStJLYAI4RgfN/FK3Rx8=; b=2gNEAT4pin6JGIAnt8bwDF8i/y
+	dxEN6bb4iHtQoqbP3lVzUxytZUW00tT3+JjWU4qg5fqI1guNgjRy68mUGWNgV+C1
+	1xsIejWLV5OQjEbNMzcU9ggp2RXzud15v35SiCS5UfBcpIi54yCe5dWmJzkIL9rL
+	a85RIpRD6ZPv8sumhAKtm/SjOdRGS9qDJHCplrWv0KxQtQxIHRBgoh8JkG3gGMlF
+	l3rZp8xOBpMN514u8tm8+XqwkMeHYVD6/TiJ1fIT+4bMBiVJBFg4ubv0kBt9unFi
+	zyiKRdecuT7mGCXTG+ndxo47a1cBssKpv2IL+4/fXQ3YbJUnlv4N3DXldFPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1708508914; x=1708595314; bh=Fw9lSJoYftih2HH5DSoXI7rUStJL
+	YAI4RgfN/FK3Rx8=; b=Y+jJlUhwn2Xxw5axMqBCkm6M4C2Y/yBLWAoNSy1RShLI
+	rH+TmCdFjkJZdQGKN3t5GMVXjg2YsNhOTxq/QE5OClC0Q78aNRlYT9fitKY4qjNh
+	7HdM9Zsn5R8FHlfPhM51nE3duHAaqeQFDsewCNZKoTC0jIqwE2OMZkzuso39OsBc
+	HX7mT5kCvkWZWLq2vqUV6m7nhKZ5rNn/vDmB4snjDXQTD2/m1kvDgPB9cLTx86YH
+	zMWH0YCJjC1c+Nmmcu67f7jfPAPR8fIakBOo40agc+LrYMynVH4lTuFuW3ZVIHJU
+	8db1OhMLygnZ7OzdKAjFPmg24CGKNskQTeZiovWsPA==
+X-ME-Sender: <xms:8sbVZSMzblp1OEWPd-v2NpPQ3PjdRcaZ6kawcqduEoE1wmkFiC4rAg>
+    <xme:8sbVZQ9UF0lyRCoMoN3qphU4tyTxrkMnMY7wvbGVpIoA-Ee1QyvgddQzqg-oMyFzw
+    0h-WoRsXuxA8HCcZ2w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:8sbVZZScqItcSO1tcHZc2YIG43a4PawB7RjYMfePrVwiKUDm_Nj1-g>
+    <xmx:8sbVZSsPy-iXcZYKkJBjOqyfVl3mn41HoUdesiYlscHAb7rsu3HDEA>
+    <xmx:8sbVZafb_Q_hf0W56ovGZceEXz-ISsc8LWRtIJHrP-TyyjQa6KVYpA>
+    <xmx:8sbVZR-j0XCHrDFtXulF0JMNDiCyjeGvkH7SCCCy8xLd2UCKXEMO2Q>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 29F20B6008D; Wed, 21 Feb 2024 04:48:34 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240221092728.1281499-1-davidgow@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221092728.1281499-10-davidgow@google.com>
-Subject: [PATCH 9/9] kunit: Annotate _MSG assertion variants with gnu printf specifiers
-From: David Gow <davidgow@google.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Kees Cook <keescook@chromium.org>, 
-	"=?UTF-8?q?Ma=C3=ADra=20Canal?=" <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Willem de Bruijn <willemb@google.com>, 
-	Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>
-Cc: David Gow <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Maxime Ripard <mripard@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Message-Id: <938f3418-fd88-476d-b67f-3f7ada98e444@app.fastmail.com>
+In-Reply-To: <20240221020258.1210148-1-jeremy.linton@arm.com>
+References: <20240221020258.1210148-1-jeremy.linton@arm.com>
+Date: Wed, 21 Feb 2024 10:48:12 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jeremy Linton" <jeremy.linton@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, "Kees Cook" <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
+ "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
+Subject: Re: [RFC] arm64: syscall: Direct PRNG kstack randomization
+Content-Type: text/plain
 
-KUnit's assertion macros have variants which accept a printf format
-string, to allow tests to specify a more detailed message on failure.
-These (and the related KUNIT_FAIL() macro) ultimately wrap the
-__kunit_do_failed_assertion() function, which accepted a printf format
-specifier, but did not have the __printf attribute, so gcc couldn't warn
-on incorrect agruments.
+On Wed, Feb 21, 2024, at 03:02, Jeremy Linton wrote:
+> The existing arm64 stack randomization uses the kernel rng to acquire
+> 5 bits of address space randomization. This is problematic because it
+> creates non determinism in the syscall path when the rng needs to be
+> generated or reseeded. This shows up as large tail latencies in some
+> benchmarks and directly affects the minimum RT latencies as seen by
+> cyclictest.
 
-It turns out there were quite a few tests with such incorrect arguments.
+Hi Jeremy,
 
-Add the __printf() specifier now that we've fixed these errors, to
-prevent them from recurring.
+I think from your description it's clear that reseeding the
+rng is a problem for predictable RT latencies, but at the same
+time we have too many things going on to fix this by
+special-casing kstack randomization on one architecture:
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: David Gow <davidgow@google.com>
----
- include/kunit/test.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+- if reseeding latency is a problem, can we be sure that
+  none of the other ~500 files containing a call to
+  get_random_{bytes,long,u8,u16,u32,u64} are in an equally
+  critical path for RT? Maybe those are just harder to hit?
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index fcb4a4940ace..61637ef32302 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -579,12 +579,12 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
- 
- void __noreturn __kunit_abort(struct kunit *test);
- 
--void __kunit_do_failed_assertion(struct kunit *test,
--			       const struct kunit_loc *loc,
--			       enum kunit_assert_type type,
--			       const struct kunit_assert *assert,
--			       assert_format_t assert_format,
--			       const char *fmt, ...);
-+void __printf(6, 7) __kunit_do_failed_assertion(struct kunit *test,
-+						const struct kunit_loc *loc,
-+						enum kunit_assert_type type,
-+						const struct kunit_assert *assert,
-+						assert_format_t assert_format,
-+						const char *fmt, ...);
- 
- #define _KUNIT_FAILED(test, assert_type, assert_class, assert_format, INITIALIZER, fmt, ...) do { \
- 	static const struct kunit_loc __loc = KUNIT_CURRENT_LOC;	       \
--- 
-2.44.0.rc0.258.g7320e95886-goog
+- CONFIG_RANDOMIZE_KSTACK_OFFSET can already be disabled
+  at compile or at at boot time to avoid the overhead entirely,
+  which may be the right thing to do for users that care more
+  deeply about syscall latencies than the fairly weak stack
+  randomization. Most architectures don't implement it at all.
 
+- It looks like the unpredictable latency from reseeding
+  started with f5b98461cb81 ("random: use chacha20 for
+  get_random_int/long"), which was intended to make
+  get_random() faster and better, but it could be seen
+  as  regression for real-time latency guarantees. If this
+  turns out to be a general problem for RT workloads,
+  the answer might be to bring back an option to make
+  get_random() have predictable overhead everywhere
+  rather than special-casing the stack randomization.
+
+> Other architectures are using timers/cycle counters for this function,
+> which is sketchy from a randomization perspective because it should be
+> possible to estimate this value from knowledge of the syscall return
+> time, and from reading the current value of the timer/counters.
+>
+> So, a poor rng should be better than the cycle counter if it is hard
+> to extract the stack offsets sufficiently to be able to detect the
+> PRNG's period.
+
+I'm not convinced by the argument that the implementation you
+have here is less predictable than the cycle counter, but I
+have not done any particular research here and would rely on
+others to take a closer look. The 32 bit global state variable
+does appear weak, and I know that 
+
+OTOH if we can show that a particular implementation is in fact
+better than a cycle counter, I strongly think we should
+use the same one across all architectures that currently
+use the cycle counter.
+
+      Arnd
