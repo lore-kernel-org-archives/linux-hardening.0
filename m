@@ -1,104 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4437FBC4;
-	Wed, 21 Feb 2024 16:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53182D8F;
+	Wed, 21 Feb 2024 17:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708534509; cv=none; b=TP19tpH6hozl45z1lL0ZSQYzyw4KHPBGdHLn5/TYqEZ4qlTGZpJt7ODCxble/4fSac2yyuDhUgq3EEf6jnaF9tIs+GbH2N7/aERh3AYQeFK41NLFCQCbSHdZx7W7i9x3Q86cglOQrq2mqHr0JA1+0YOLzD3XDZZqFHK6syHsXzw=
+	t=1708536644; cv=none; b=g8LuG/gwI0UnIy0ilNShZucZOzd53i864m5apw6Iwm1kmUAalgWUoscs91wZTDXzzgI4UOVZ3eaHjC6cJasNRRRqet+iNh4UgGTCUMaiBMZ+v4Dgdje6YCkrp5hrtPo1bpELVUbhYNmXXTzefIWyjN8Vi78Zu+nqhZbhe6TBMbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708534509; c=relaxed/simple;
-	bh=07lkd9NoppxxiEpP29PS7z0+eMrgeWwUwan7L7s+lZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EkcFzvmKN0TGsdtQUBZNapr7Z2CsXn/zdpaDzhKekosed8hcwdSC4/bSVSj4fChBDBx4HU2vrA1o2waq98w9VtlLreMucP6FFYRy6c02yVDCFl/J2fkEydire2eFtlcyXw9kmNanOTo71Ig1qmgGNrDeVgkCEV2oPTu49JmNdas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D0611007;
-	Wed, 21 Feb 2024 08:55:43 -0800 (PST)
-Received: from [192.168.20.13] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5F143F73F;
-	Wed, 21 Feb 2024 08:55:00 -0800 (PST)
-Message-ID: <305d26ba-8738-4244-801f-939e1a9730a1@arm.com>
-Date: Wed, 21 Feb 2024 10:54:58 -0600
+	s=arc-20240116; t=1708536644; c=relaxed/simple;
+	bh=VVJKBus/4hY3nazwz3pZiLEtUFESTJ1fNiTVxhfAPy8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fM4QWwqusHPWuR64guH1A3efrUEKvGoTV2hf6QwWhtIbxyKJHSPtHI05wGN/01WX9XHMqAW3TMUZb2G7/YuSUCq7YBaJuDq1fKeXXX3cBVKaGrWc4zqaNoOM36K7kw/Yf0I5dnPBBKypgX/rwJDMwALkOVQAqThqrS5eQX/mM38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=Wbi6jkdu; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="Wbi6jkdu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=I87YIZpurdfl8CTcBVVyeB1j4NeBVQcdCIaP0A3iopg=; b=Wbi6jkduFDxsAg3gq98PHpUcSq
+	aPM+WXH/eyj6E6cMlenpE90+cdly1BVWqZB6ONVaiY8julWfqqoG3pUFl+AvtS7xqybQALkdyiCOo
+	CrpduV0kwBnHP7w1Gvgch5neon/t/NXjK/tlNZVS07pUouiNswnCxjD9E1yMqrgCouzrEvUQrPdPC
+	PvmbhlVxxThM7yvKKISOPzDuh4Z7w3ewE/LNdN/HqMkOSRwqdey/VluqZaJhG70tBSln8j4TL4IKe
+	J8K250ppqDuGsZv87Q1bPknz68dtbZaAutZ01j6/Cxg/QAuaRWMs3tl9BP+p1AMPgMLRbm2StSITl
+	Fns2ykmw==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rcqQU-000DLL-Kx; Wed, 21 Feb 2024 18:30:34 +0100
+Received: from [178.197.249.13] (helo=linux.home)
+	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rcqQT-003ehV-20;
+	Wed, 21 Feb 2024 18:30:33 +0100
+Subject: Re: [PATCH bpf-next 1/2] bpf: Take return from set_memory_ro() into
+ account with bpf_prog_lock_ro()
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Kees Cook <keescook@chromium.org>,
+ "linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
+ <CAEyhmHT8H3AXyOKMc3eQSdM2+1UDETJDPyEQ0-AEb6E8pt9LTg@mail.gmail.com>
+ <4d53e0f9-cfee-4877-8b56-9f258c8325f6@csgroup.eu>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <2abc14fc-a19e-8205-c54f-a87c11ebd5be@iogearbox.net>
+Date: Wed, 21 Feb 2024 18:30:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] arm64: syscall: Direct PRNG kstack randomization
+In-Reply-To: <4d53e0f9-cfee-4877-8b56-9f258c8325f6@csgroup.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, Kees Cook <keescook@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
- will@kernel.org, gustavoars@kernel.org, mark.rutland@arm.com,
- rostedt@goodmis.org, arnd@arndb.de, broonie@kernel.org,
- guohui@uniontech.com, Manoj.Iyer@arm.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, James Yang <james.yang@arm.com>,
- Shiyou Huang <shiyou.huang@arm.com>
-References: <20240221020258.1210148-1-jeremy.linton@arm.com>
- <202402202226.A6817927@keescook>
- <CAHmME9pYS=YZM1b0ftrjj_qjz_U4V8PsiLzB15JmBRr39Av2Ng@mail.gmail.com>
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <CAHmME9pYS=YZM1b0ftrjj_qjz_U4V8PsiLzB15JmBRr39Av2Ng@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27192/Wed Feb 21 10:23:23 2024)
 
-Hi,
-
-Thanks for looking at this.
-
-On 2/21/24 06:44, Jason A. Donenfeld wrote:
-> Hi,
+On 2/19/24 7:39 AM, Christophe Leroy wrote:
 > 
-> On Wed, Feb 21, 2024 at 7:33 AM Kees Cook <keescook@chromium.org> wrote:
->>> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
->>> +DEFINE_PER_CPU(u32, kstackrng);
->>> +static u32 xorshift32(u32 state)
->>> +{
->>> +     /*
->>> +      * From top of page 4 of Marsaglia, "Xorshift RNGs"
->>> +      * This algorithm is intended to have a period 2^32 -1
->>> +      * And should not be used anywhere else outside of this
->>> +      * code path.
->>> +      */
->>> +     state ^= state << 13;
->>> +     state ^= state >> 17;
->>> +     state ^= state << 5;
->>> +     return state;
->>> +}
 > 
-> Can we please *not* introduce yet another RNG? You can't just sprinkle
-> this stuff all over the place with no rhyme or reason.
+> Le 19/02/2024 à 02:40, Hengqi Chen a écrit :
+>> [Vous ne recevez pas souvent de courriers de hengqi.chen@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+>>
+>> Hello Christophe,
+>>
+>> On Sun, Feb 18, 2024 at 6:55 PM Christophe Leroy
+>> <christophe.leroy@csgroup.eu> wrote:
+>>>
+>>> set_memory_ro() can fail, leaving memory unprotected.
+>>>
+>>> Check its return and take it into account as an error.
+>>>
+>>
+>> I don't see a cover letter for this series, could you describe how
+>> set_memory_ro() could fail.
+>> (Most callsites of set_memory_ro() didn't check the return values)
 > 
-> If you need repeatable randomness, use prandom_u32_state() or similar.
-> If you need non-repeatable randomness, use get_random_bytes() or
-> similar.
-
-Sure prandom_u32_state() should have a similar effect being a bit 
-slower, and a bit better due to the extra hidden state.
-
+> Yeah, there is no cover letter because as explained in patch 2 the two
+> patches are autonomous. The only reason why I sent it as a series is
+> because the patches both modify include/linux/filter.h in two places
+> that are too close to each other.
 > 
-> If you think prandom_u32_state() is insufficient for some reason or
-> doesn't have some property or performance that you want, submit a
-> patch to make it better.
+> I should have added a link to https://github.com/KSPP/linux/issues/7
+> See that link for detailed explanation.
 > 
-> Looking at the actual intention here, of using repeatable randomness,
-> I find the intent pretty weird. Isn't the whole point of kstack
-> randomization that you can't predict it? If so, get_random_u*() is
-> what you want. If performance isn't sufficient, let's figure out some
+> If we take powerpc as an exemple, set_memory_ro() is a frontend to
+> change_memory_attr(). When you look at change_memory_attr() you see it
+> can return -EINVAL in two cases. Then it calls
+> apply_to_existing_page_range(). When you go down the road you see you
+> can get -EINVAL or -ENOMEM from that function or its callees.
 
-There isn't anything wrong with get_random_u16 from a kstack 
-randomization standpoint, except for the latency spikes of course.
+By that logic, don't you have the same issue when undoing all of this?
+E.g. take arch_protect_bpf_trampoline() / arch_unprotect_bpf_trampoline()
+which is not covered in here, but what happens if you set it first to ro
+and later the setting back to rw fails? How would the error path there
+look like? It's something you cannot recover.
 
-> way to improve performance. And as Kees said, if the point of this is
-> to have some repeatable benchmarks, maybe just don't enable the
-> security-intended code whose purpose is non-determinism? Both exploits
-> and now apparently benchmarks like determinism.
-
-As I mentioned in the other email, benchmark is probably the wrong word. 
-Its a better QoS response time distributions for a given workload. And 
-its not strictly in RT kernel latency test types of things, but normal 
-memcached style workloads on !RT kernels as well.
-
-
+Thanks,
+Daniel
