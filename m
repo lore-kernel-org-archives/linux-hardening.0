@@ -1,144 +1,177 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55C377A03;
-	Wed, 21 Feb 2024 13:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91FB69D2E;
+	Wed, 21 Feb 2024 13:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708522009; cv=none; b=tUBhex5rP2D2nlxGxBpuPs6H+fjYscESmLK7uHEDdzJ5L/pAKdk1Pp2aD8qnBMJE//nEadaiMb1E7PwqGOz1IzKOKoagy9knsBlos6SgY4UPIqJJC87a7qJpmHK01wdSWEfpi6mLF+Q/9q2oDwtMoRd6OrapXShNdC00tNtXlew=
+	t=1708522037; cv=none; b=ma0cXd9jozPxIA3eu05zLO9kP9844axbt2I1pZZ1kCSw2jv4XcSpLj/KdtiwndkJ56sztIrqOCkPuUqxuvLpll0gga8YMeOTQ7ZfewzPO7TyRGWFCqRwzRGCOXPvgP/tikv24l0lA+vCJJ6uFT3svzPuYBnBsMLraqxnVWNXA30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708522009; c=relaxed/simple;
-	bh=F+O2jT8N2BIEGIYwYUqoDBWQmBTa2NMIDug/qqNZ5Hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r04yEurEDpr3HyNMrW9P76bBshc2fjFDTXNjjmH8DE4ifk6b61Y3EoexiF+7ZL5I3sHilsu08vDWHlHeE+7z4xoqVQazurRC21fNW96puGXjKnSxXY5G/h7ROFEkML/xsC+1uyeR7WMZNVpbUXxDgJVkBvGIIPcL69AMGxxBrvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPCRgmP6; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708522037; c=relaxed/simple;
+	bh=/iH7i1U4+nbrRg70LOYZSDuVVBn9sifEjT3gouJ1jLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PY0oT6A+5Rl/PzK102O0taCbbSt9kRqm/DYFoJjxS1miS58tjLkfhn9lSzT1YSJCTY+kDatBBjQ+3K0WkSZqt1MKmj4Gck+VUD15ANLyTuUb01/D+LFuiXmPBVLpmkk+V1juB8W4gZ05R4+BGmaGsQWRwgy1+rXWYpu4T1DpulY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2dqNcgyX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPCRgmP6"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d731314e67so47519845ad.1;
-        Wed, 21 Feb 2024 05:26:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708522007; x=1709126807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FIcGpMiTUFuShIJcNZW3Z6nnK/vjwEkJ2H69Fs4AHDY=;
-        b=NPCRgmP6U42OtlkgqwEWc6Rt5ApAtn4Z8GzHJ0ECxDbWb4EKPx/2r4SHjW0Avbfk8p
-         Zk7Wd02iO/qlmC8A2xm9jjiOxeo6Aitn4YqnHLaETgWC9iPRIwE1VYy9aUIL1M/4XN4/
-         2uEyuYER3WuVaDfxYbcticsRCZL7mOeRB/uYmeJjsguCA5zHETBMw2J5qd6TBZu3nSaC
-         R7sBOgvSH2QfB/Ua19ZJDfgU+SbvJaKBfAYlcStr3A0uvFQpZfzD1nSeGLUNOEPZAfp5
-         S0vc6Xzzc/9mTj8ExmtawE4V+FFal7dX1X727PaYl3cGzcWJDaAHkruVIFMFTAXJSa0x
-         Ambg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708522007; x=1709126807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FIcGpMiTUFuShIJcNZW3Z6nnK/vjwEkJ2H69Fs4AHDY=;
-        b=bZ3lacwWWojrYnGaC8w1zvAdIA9DGpv5kN2bb1GYI5/khh7A3DvmBUBpJzAtNkcAJ6
-         9t8DxNWROUk8ymVIkiaPwiyne7ZZ0Qum8dqtnDnSoMR1cBAYmyntP3zGwDNfCEvxD73c
-         FIE/OdoxOI37jrAufCJYLAxUdtSx42AT/bkPeGwlDM3EonD91sbJXOLAVR04HgaEawLO
-         ZimtWRUGOqAg4QQFwNTArfNA/oJobItNmYQ8wOMpJ4EMi/bfa7NA2/oFfSfGcXTpx8FF
-         m/jEi6rZdwzShJVLcerHqCyHFgkiMcEbF/VFDocliGJR2YA7We1VScI4iyqqyNbvvO4Q
-         X+1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJJwznjKjIxLDgvJgIFwKiBJA9sHCIYnkIqMPSgLhpiPnbkXTbPSjjmjYhi2jMJ9G8pJolzGVzMsisd0nysMe20AXFaAJiSiaFsOpX/Cl/B1S+DuG7vm0Vr6WuQ28VAcmBf60NzjbsT6UTCfML/hNY5nArxdu39XudaBcEv0OsBgsx6I1lVblvzMAL07BGr0mMd7EobL3dLVUV1mw8GD/7jDondWS+Od7cUaR2Qs3JC3VW5J3fZP8+uXgowUYriXgv
-X-Gm-Message-State: AOJu0YwHZNjWjrqxU5vCWDIRGyTmNsT/gbIFxYR+IIXO/ICwOH3f5HIk
-	knuw6lSKKuF0s1YqWA85rEkYIGkGky0q2FMxqaJFEhey8DdVrvCP
-X-Google-Smtp-Source: AGHT+IFE0VdYohKERbDpngNjL2p6AnzRx2gY/8gsbGjsig+sWD9GvuWZ3WTfrhlLRHdoubZSLlvgUQ==
-X-Received: by 2002:a17:90b:3b50:b0:299:6c4a:c5f0 with SMTP id ot16-20020a17090b3b5000b002996c4ac5f0mr8381795pjb.9.1708522007304;
-        Wed, 21 Feb 2024 05:26:47 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h23-20020a17090aea9700b00298c633bd5fsm1699769pjz.30.2024.02.21.05.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 05:26:46 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 21 Feb 2024 05:26:45 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>, Rae Moar <rmoar@google.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Kees Cook <keescook@chromium.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Cassio Neri <cassio.neri@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Arthur Grillo <arthur.grillo@usp.br>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Latypov <dlatypov@google.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 9/9] kunit: Annotate _MSG assertion variants with gnu
- printf specifiers
-Message-ID: <678b4b1b-6319-448b-b6a7-7692b368bf31@roeck-us.net>
-References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-10-davidgow@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2dqNcgyX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3980AC433C7;
+	Wed, 21 Feb 2024 13:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708522037;
+	bh=/iH7i1U4+nbrRg70LOYZSDuVVBn9sifEjT3gouJ1jLI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=2dqNcgyXa0mZ2HlqJ7JTe9YdP6XKbnye78XtIWYCrcliy891yp7/M7Nn3Nle8/eYH
+	 Df4mwREW+iNwON+rVzUw5RorTvN64MmRlfZBd2DzqJGzzPlX7oCNkVOyzaRuryIv2F
+	 QLrCtits1H6At/XSFWCxd8A1/tPOnfcPonGlzICs=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	linux-hardening@vger.kernel.org,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.15 063/476] overflow: Allow mixed type arguments
+Date: Wed, 21 Feb 2024 14:01:54 +0100
+Message-ID: <20240221130010.264862772@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240221130007.738356493@linuxfoundation.org>
+References: <20240221130007.738356493@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221092728.1281499-10-davidgow@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 21, 2024 at 05:27:22PM +0800, David Gow wrote:
-> KUnit's assertion macros have variants which accept a printf format
-> string, to allow tests to specify a more detailed message on failure.
-> These (and the related KUNIT_FAIL() macro) ultimately wrap the
-> __kunit_do_failed_assertion() function, which accepted a printf format
-> specifier, but did not have the __printf attribute, so gcc couldn't warn
-> on incorrect agruments.
-> 
-> It turns out there were quite a few tests with such incorrect arguments.
-> 
-> Add the __printf() specifier now that we've fixed these errors, to
-> prevent them from recurring.
-> 
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: David Gow <davidgow@google.com>
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+------------------
 
-> ---
->  include/kunit/test.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index fcb4a4940ace..61637ef32302 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -579,12 +579,12 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
->  
->  void __noreturn __kunit_abort(struct kunit *test);
->  
-> -void __kunit_do_failed_assertion(struct kunit *test,
-> -			       const struct kunit_loc *loc,
-> -			       enum kunit_assert_type type,
-> -			       const struct kunit_assert *assert,
-> -			       assert_format_t assert_format,
-> -			       const char *fmt, ...);
-> +void __printf(6, 7) __kunit_do_failed_assertion(struct kunit *test,
-> +						const struct kunit_loc *loc,
-> +						enum kunit_assert_type type,
-> +						const struct kunit_assert *assert,
-> +						assert_format_t assert_format,
-> +						const char *fmt, ...);
->  
->  #define _KUNIT_FAILED(test, assert_type, assert_class, assert_format, INITIALIZER, fmt, ...) do { \
->  	static const struct kunit_loc __loc = KUNIT_CURRENT_LOC;	       \
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
-> 
+From: Kees Cook <keescook@chromium.org>
+
+commit d219d2a9a92e39aa92799efe8f2aa21259b6dd82 upstream.
+
+When the check_[op]_overflow() helpers were introduced, all arguments
+were required to be the same type to make the fallback macros simpler.
+However, now that the fallback macros have been removed[1], it is fine
+to allow mixed types, which makes using the helpers much more useful,
+as they can be used to test for type-based overflows (e.g. adding two
+large ints but storing into a u8), as would be handy in the drm core[2].
+
+Remove the restriction, and add additional self-tests that exercise
+some of the mixed-type overflow cases, and double-check for accidental
+macro side-effects.
+
+[1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
+[2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
+
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-hardening@vger.kernel.org
+Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
+Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Tested-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+[ dropped the test portion of the commit as that doesn't apply to
+  5.15.y - gregkh]
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/overflow.h |   72 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 41 insertions(+), 31 deletions(-)
+
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -51,40 +51,50 @@ static inline bool __must_check __must_c
+ 	return unlikely(overflow);
+ }
+ 
+-/*
+- * For simplicity and code hygiene, the fallback code below insists on
+- * a, b and *d having the same type (similar to the min() and max()
+- * macros), whereas gcc's type-generic overflow checkers accept
+- * different types. Hence we don't just make check_add_overflow an
+- * alias for __builtin_add_overflow, but add type checks similar to
+- * below.
++/** check_add_overflow() - Calculate addition with overflow checking
++ *
++ * @a: first addend
++ * @b: second addend
++ * @d: pointer to store sum
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted addition, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * sum has overflowed or been truncated.
+  */
+-#define check_add_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_add_overflow(__a, __b, __d);	\
+-}))
++#define check_add_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_add_overflow(a, b, d))
+ 
+-#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_sub_overflow(__a, __b, __d);	\
+-}))
++/** check_sub_overflow() - Calculate subtraction with overflow checking
++ *
++ * @a: minuend; value to subtract from
++ * @b: subtrahend; value to subtract from @a
++ * @d: pointer to store difference
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted subtraction, but is not considered
++ * "safe for use" on a non-zero return value, which indicates that the
++ * difference has underflowed or been truncated.
++ */
++#define check_sub_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+ 
+-#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
+-	typeof(a) __a = (a);			\
+-	typeof(b) __b = (b);			\
+-	typeof(d) __d = (d);			\
+-	(void) (&__a == &__b);			\
+-	(void) (&__a == __d);			\
+-	__builtin_mul_overflow(__a, __b, __d);	\
+-}))
++/** check_mul_overflow() - Calculate multiplication with overflow checking
++ *
++ * @a: first factor
++ * @b: second factor
++ * @d: pointer to store product
++ *
++ * Returns 0 on success.
++ *
++ * *@d holds the results of the attempted multiplication, but is not
++ * considered "safe for use" on a non-zero return value, which indicates
++ * that the product has overflowed or been truncated.
++ */
++#define check_mul_overflow(a, b, d)	\
++	__must_check_overflow(__builtin_mul_overflow(a, b, d))
+ 
+ /** check_shl_overflow() - Calculate a left-shifted value and check overflow
+  *
+
+
