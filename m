@@ -1,105 +1,141 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66860365
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 06:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8259C3D0BF
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 09:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708497558; cv=none; b=OvDzvCGRaD/pr2YVjKKtRKG12l6Azazxb77wgNadKEheHzvrUNY3bPD7TUG3xW1MKNstVKJZKdjyZuiFG2C79r8qfITdKBcQ9C14tGGC4lx5wwk3+RJpFvBd2rCIzoGjS25kufWyx5Yxyfexm99oBW6zRlYveaGnkwbY40BWnuI=
+	t=1708507684; cv=none; b=SWvwz5DIY+AJP7qYSXtRpcfZ8afmGqVVzkfZ2R2xRgo6rC2oZMgjrBI19pp46aruUxTuJZECs+ZRij0IDHgmxv7q5oRwmbbRA+TFFkLM0uMEuywQPJtGjpGxO0vm/lUUukI3QfUOf9K+ZUaS3syC6IppOAr387ad4SdA8z60VCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708497558; c=relaxed/simple;
-	bh=f0HDwa1vf5SRBb3ZPUrzmRhDIF3eBxQOxuTRSxuw4UM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxhKrbEoo5QHR5IaCgndlWdL/vtZojLzitMELGeASNHf+Oj3tz2AT5nlRmDnYKYzJOWux4ZHdzivDgug/eOs0jU8MjJrJERyaDRHxddTNb/ywPGC4nQ68OOvgAkmG53jaEG7w+OE4ASMQXKQDuruCnRTc0xl+YZsW8+hBqekvlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hXMmRKNK; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708507684; c=relaxed/simple;
+	bh=rqOJUF9M6mrQc8dXD7M61zFQtSxp3b+ZbBeG2t6aQ78=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=a0VxXfYL2kiuyB00Oh6epBrj5SIK43GTSxti2B73G50K/YM1M5qvvYAiGEN+Gv548/DkQhqjrCZZSMh9oSQp+WaqS/t7SnXpwf4RSuS1t9xk3vKjqGlV5JYq4X62j4d/UTifmruHFXADjByCfWvpip2t1zWNouv56dMIPnhsmu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KGrfOqHQ; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hXMmRKNK"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so5564753276.0
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Feb 2024 22:39:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KGrfOqHQ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608084ce3c3so7117847b3.0
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 01:28:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708497556; x=1709102356; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C/kx0MMgzpebCxflYE7VD+ZZKlLv7LbIjirao9DRCq0=;
-        b=hXMmRKNKO+o4LWqDRkIDLFmWIWac90Q7TlXzX6G0HZaryly4v0BZKVFcHIF+MHE+zc
-         4qj0+Ansbrxd0xUPKBPV+x5sAdpJsOz+iW70xaxxbVV7++cqMp8HD9RxcixWNHGBkhvV
-         aJwKnK/kzobZWD/e6ofJ4aza19zs6jh2ZDdCA=
+        d=google.com; s=20230601; t=1708507680; x=1709112480; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eT/uH0qZq3eqCfd94wgAJ0+lZ7IXzMci6RxxltQCKcU=;
+        b=KGrfOqHQz28RK8t77rt5ggx03KxOwAFzkpedVpi5057cKMpApzJygU4Zjxbktz584G
+         pzqxZcplfxBJKKStCROql6+LlpHjEulo+NwsaS66AWIcNfNiFyMXg72DJHI9kAxkAwpD
+         pjgwbVfBhM7xVRkBB1bdlqUIWkkb3TJ/O88666LvBVWwzVGcOB6BXvfjx/RZxCNLi7jJ
+         84ETuusGPKXg2Zwn0kK6WPg1CW5dpLKKbr9Hcs66so2YNmPhh2EjamJsxJ/rTIP2q8qX
+         IoDqNKMITG2fR3csA4vkehNX+mQssYD3GEGKCsIWfnTZsCL4qeqqTBJZZ9P3ix5CPaJO
+         tScg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708497556; x=1709102356;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C/kx0MMgzpebCxflYE7VD+ZZKlLv7LbIjirao9DRCq0=;
-        b=Db4uTbVykyBwIgKHciJvY3YABM2KW5a+tSBDqE11oO5AXxc/S0F2j00IiCHO5APHyD
-         Ki91dQVxxM05Wzm38Q7mqIv3PLQK8MkXvNuujjDd/x3oSz2cZIR2FNL+MpM978sH/hpY
-         LTJ1nWuOeKzgzNwnrHScc43FXc1292w1E95Pw76cQJku9ZDIq/QdY6/NYrecUMsk24A8
-         tTqfywaDW3bux8KBHt2LK8e9QlgmZNhVS8cEiTFoO2nkaOsBjyoYj9t5MCQ7+SZlIUU9
-         R60OGHSJu0P9hDph8XBuLp94ly2RyrCpwlrb/daBxpkwuwPthXzuIhwp+IJsiyvo2dSn
-         MNwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEcNZqWpPbliJpoN4CByIGFb2+eWSBcRPxqBAwnkpLqnZWKc5DOocJkkTctdUaWJeqinQxcnWCO4aoLTwrJ10cTmGJbCg9zHLiVzZL62Nu
-X-Gm-Message-State: AOJu0YyKlELLZpNzUYNPPmi2NhfhM88qMGw5GzOfqk44JKaNCyyAdJEk
-	YIBb4NNoee2DWlEk6V/32KDw1MDHqijaqMoyX2iBIyFp8lHJP31EQf8/jhfA9w==
-X-Google-Smtp-Source: AGHT+IEDBNlgi9fOUdqyWnl61n6BJWPOOAV7EQV0qVdwgnub+GBgpaz0jIe8FwPV8Mtvha7IwXR11Q==
-X-Received: by 2002:a25:ab27:0:b0:dcb:c0ea:6abc with SMTP id u36-20020a25ab27000000b00dcbc0ea6abcmr13836899ybi.64.1708497556402;
-        Tue, 20 Feb 2024 22:39:16 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i5-20020a639d05000000b005dc4829d0e1sm7729634pgd.85.2024.02.20.22.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 22:39:16 -0800 (PST)
-Date: Tue, 20 Feb 2024 22:39:15 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Russell King <linux@armlinux.org.uk>
-Cc: Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Wang Kefeng <wangkefeng.wang@huawei.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Hutchings <ben@decadent.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ARM: fault: Implement copy_from_kernel_nofault_allowed()
-Message-ID: <202402202235.A77C9AD@keescook>
-References: <20240123011238.work.301-kees@kernel.org>
+        d=1e100.net; s=20230601; t=1708507680; x=1709112480;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eT/uH0qZq3eqCfd94wgAJ0+lZ7IXzMci6RxxltQCKcU=;
+        b=r8vX+avI4BTAlEBDLFjaD+8imNAUBRLrByYqscr7fo6aFgugYjeVjWG0tUpRfLJHg9
+         xjAZkGO1k7OZ3oKAq26W0GsCDNRquDgjZKBmXj+vTAfx5WNzkIYwsIjMEgzwsZER8G+F
+         +hlbtpkt3PhL5Ef2K6XFwlviJzLcRVtRnWh9u2XXi0IdI0Rc+Ubl+Z9PSl6uNicQ3cXY
+         e1ZIXHPobctCmGNISglYezyWoyyByq0q9LzZ/LvQf6xD3B6N6eCovt4X3AwhHo4h0ltg
+         m4zJuShXgmsiQuS5SsvgPzTJsnIf6BnMF1Ob1SSohzFpEFSOHiWZC7gYGDQc9vKR9gtV
+         FPow==
+X-Forwarded-Encrypted: i=1; AJvYcCWVRRFG3o9yaYGL7LB53x9uPAwXzKjDjn8LM/8dkv9X3ml7jThPGoflH9kw71eCI1NUAM8IyblGJJpjLb/OfNBHqAFq+LX/qnRSbMT88VlB
+X-Gm-Message-State: AOJu0YxY19V30UD065zWceaZoRe+Tlp6QHxCySKnsEnnB8a1eUm/LifM
+	9ndCebrBqBf4LbIJBKpl+rEZhKZquNn6YqLWf6dV8PiaB027HXTffCCqewzUdc9pp0CiwWNJprg
+	3OISqDDW9bA==
+X-Google-Smtp-Source: AGHT+IGgpxMwkWEuztRpScY6gpG7tiyfC6FQuhNT36WOurGMxJcdy1PSlvVZEYKt9//gZI89E5vnji5S6AEFRQ==
+X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
+ (user=davidgow job=sendgmr) by 2002:a05:6902:188f:b0:dc6:dfc6:4207 with SMTP
+ id cj15-20020a056902188f00b00dc6dfc64207mr4738387ybb.10.1708507680618; Wed,
+ 21 Feb 2024 01:28:00 -0800 (PST)
+Date: Wed, 21 Feb 2024 17:27:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123011238.work.301-kees@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Message-ID: <20240221092728.1281499-1-davidgow@google.com>
+Subject: [PATCH 0/9] kunit: Fix printf format specifier issues in KUnit assertions
+From: David Gow <davidgow@google.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
+	Matthew Auld <matthew.auld@intel.com>, 
+	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Kees Cook <keescook@chromium.org>, 
+	"=?UTF-8?q?Ma=C3=ADra=20Canal?=" <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Willem de Bruijn <willemb@google.com>, 
+	Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>
+Cc: David Gow <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Maxime Ripard <mripard@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 22, 2024 at 05:12:38PM -0800, Kees Cook wrote:
-> Under PAN emulation when dumping backtraces from things like the
-> LKDTM EXEC_USERSPACE test[1], a double fault (which would hang a CPU)
-> would happen because of dump_instr() attempting to read a userspace
-> address. Make sure copy_from_kernel_nofault() does not attempt this
-> any more.
-> 
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Link: https://lore.kernel.org/all/202401181125.D48DCB4C@keescook/ [1]
-> Suggested-by: "Russell King (Oracle)" <linux@armlinux.org.uk>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Wang Kefeng <wangkefeng.wang@huawei.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Ben Hutchings <ben@decadent.org.uk>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+KUnit has several macros which accept a log message, which can contain
+printf format specifiers. Some of these (the explicit log macros)
+already use the __printf() gcc attribute to ensure the format specifiers
+are valid, but those which could fail the test, and hence used
+__kunit_do_failed_assertion() behind the scenes, did not.
 
-Russell, do you mind if I carry in my tree the 3 ARM patches I sent?
-They're mostly pretty trivial, and they've been in "Incoming"[1] for 2
-weeks but haven't shown up in -next yet. I'd really like them to get
-some soak time, and for them to reach the v6.9 merge window in time.
+These include:
+- KUNIT_EXPECT_*_MSG()
+- KUNIT_ASSERT_*_MSG()
+- KUNIT_FAIL()
 
-Please let me know what you think. :) Thanks!
+This series adds the __printf() attribute, and fixes all of the issues
+uncovered. (Or, at least, all of those I could find with an x86_64
+allyesconfig, and the default KUnit config on a number of other
+architectures. Please test!)
 
--Kees
+The issues in question basically take the following forms:
+- int / long / long long confusion: typically a type being updated, but
+  the format string not.
+- Use of integer format specifiers (%d/%u/%li/etc) for types like size_t
+  or pointer differences (technically ptrdiff_t), which would only work
+  on some architectures.
+- Use of integer format specifiers in combination with PTR_ERR(), where
+  %pe would make more sense.
+- Use of empty messages which, whilst technically not incorrect, are not
+  useful and trigger a gcc warning.
 
-[1] https://www.arm.linux.org.uk/developer/patches/section.php?section=0
+We'd like to get these (or equivalent) in for 6.9 if possible, so please
+do take a look if possible.
+
+Thanks,
+-- David
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Closes: https://lore.kernel.org/linux-kselftest/CAHk-=wgJMOquDO5f8ShH1f4rzZwzApNVCw643m5-Yj+BfsFstA@mail.gmail.com/
+
+David Gow (9):
+  kunit: test: Log the correct filter string in executor_test
+  lib/cmdline: Fix an invalid format specifier in an assertion msg
+  lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
+  time: test: Fix incorrect format specifier
+  rtc: test: Fix invalid format specifier.
+  net: test: Fix printf format specifier in skb_segment kunit test
+  drm: tests: Fix invalid printf format specifiers in KUnit tests
+  drm/xe/tests: Fix printf format specifiers in xe_migrate test
+  kunit: Annotate _MSG assertion variants with gnu printf specifiers
+
+ drivers/gpu/drm/tests/drm_buddy_test.c | 14 +++++++-------
+ drivers/gpu/drm/tests/drm_mm_test.c    |  6 +++---
+ drivers/gpu/drm/xe/tests/xe_migrate.c  |  8 ++++----
+ drivers/rtc/lib_test.c                 |  2 +-
+ include/kunit/test.h                   | 12 ++++++------
+ kernel/time/time_test.c                |  2 +-
+ lib/cmdline_kunit.c                    |  2 +-
+ lib/kunit/executor_test.c              |  2 +-
+ lib/memcpy_kunit.c                     |  4 ++--
+ net/core/gso_test.c                    |  2 +-
+ 10 files changed, 27 insertions(+), 27 deletions(-)
 
 -- 
-Kees Cook
+2.44.0.rc0.258.g7320e95886-goog
+
