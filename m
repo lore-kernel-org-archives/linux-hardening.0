@@ -1,121 +1,126 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A661272D6
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 22:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0671272CB
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 22:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708552873; cv=none; b=bFGK3Ci+iFAix5y3WPc4pF7Ve1FSGDEzeKhTI7ZfZJELO5vHE7S0d+yED5Ow4YOELVmb9iyS0OQ79OsbxBoLxforCIRYbiwou+D4Sk6dp4fsFYz/9dF1gLYpTSGIksaJFFcX1tr97wHfKkt1+lQKdASDZI3mv7UOtPB0nR6BNEc=
+	t=1708553131; cv=none; b=UuWqUa4lzexJJD/eE3oGV/UWYsVlMUTbnNLli+wy8vMYJJbIvM6Fcgrz2bCVpzbI/UmjDwRlSKdQrLPsDSoKIfwaT5on4+JRC25V87S8zRhIFwmAXv/xwr/J8e5Lcvc2WBpBFENaCodxl9roMbby96Lg+NQsLaSDWTBprlQ8+TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708552873; c=relaxed/simple;
-	bh=wqGWw9nOiid78rmVoNJpLAKogw9OxxtIINANjebVuns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3wqefXznFRvEyC+d0LhWgpbxe29T6yWwHs5ZfIiuViy4k7soe4+wwbb9PZIBQqImqpA92wE0Z/P4dZyokvlVhZCnkhGSnqFp3KJibtabhXXzE8elKJLctZG93cu78DryiMC/l3hCQ6xaWzk69BxDn/oMT+C9/2AHsTCbgt2+jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bpj48WmF; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708553131; c=relaxed/simple;
+	bh=glDEKtdwdqyJIt9bRVsA7OStBeZEdBkYYd62ei+rhmE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Yg+ul5z5Sy9Zfv0qxYmpxhuItn1mfo3ot2aNMwoO5XfjwrTr0DbODu5VPaMBGZxb08gVY2HVQ4IkXD1QB1OK6WKOYumAYR4ZLAVy4o/s4ioFyI1809hAewfPMbEoS+J09O9Ei2WZP6AxK2XH9mVrYLJWwK/rHcxwSNPDR2pfSug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcQQq+4W; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bpj48WmF"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d7431e702dso70935795ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 14:01:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcQQq+4W"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcc58cddb50so1973660276.0
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 14:05:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708552871; x=1709157671; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=k+6LHH2NPUzYokJHyaMeg6P0BHjKGeB4TbkarefmniY=;
-        b=bpj48WmFS/Iv/Pl0hg7lOS8zJgnv0NSStFCNmbJ6KEpuG46kTUN/691glGTo/3Ussp
-         p+NO4+VI9TFFxK1I1IpwAumuQPpNmQosA0O5VcsIoRgOfll/Zs90O7tq42+7asod3qYo
-         QfauMBovnb/+K04a39tMMdP5sPWShkQq8NrPA=
+        d=google.com; s=20230601; t=1708553127; x=1709157927; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CEXpQXg5vnSo+q/Y96zcMRb8jRrXDHbwFt0Ekcc6U9I=;
+        b=XcQQq+4WQ1MZQLL9UPv+1x6qXBcOYK3405lqc8h21vpYT40o+1qyoF65kO7QQoAxfX
+         tu3xF5X+uHntG6SQiFjgQiXHm9jp89M38ocEsmZbC7JPiJjoOmij/01JePm38rWj7GG/
+         aPIY0J6mzWJb+lGQGmTSqA1m2KNS7NlmBNxCq0Lyic+9/ssQGwPKlaEsN2SSRzXIjV0V
+         hlVop0ZgMR3fZyrv+WS2rlFGMrNjHAuK1IWIEjQceICZvJo8o5bO5jp6nrtVovp5VJ1Z
+         ifF9WqKSZsnyhMg14kG01h57KId4B0gI5dj16ThNTgtEyyoYL4OT+fJmO2LfZrIXZ51i
+         4DFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708552871; x=1709157671;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k+6LHH2NPUzYokJHyaMeg6P0BHjKGeB4TbkarefmniY=;
-        b=kM35iw6Wd9kAbA6az42vyh3mzUoMycjrtgaKmopBTuaKYgwRtv4RYWGGYpHLI8kOHF
-         Gq1GhzVXNhOP5WgZZz67g8l17SEh7QPQlA5xe99V0MzxtPKks8h3pfgr9GtUC3TEI2bP
-         L6hFu/hBaRgPDnqpG8DaZlT0+2ZJQvHEaqgCf3Y6dBC00MM5e8ccO9+T4t8wW9LFIbqe
-         Z1tZNnRZOMUJ7dP/+C8cTYSIGcsTFv6eyxBgo2qA3wSN+UG52LO6DMjhdvX5BmgKYC0h
-         LOu9MB4c5aJp3zTISFiVJnofAUEETNQYh0YEsc8rESIj+NOtjRKrUuW3ZtYCB6oMZz8F
-         UQLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFV4W0P5kOGX6kXBeCMPvPDjHuxq3W1VtPge5y3KM2mEnzM7C7ZjW4oJcoANhUECRsJuwyyj5OQFPt7rWLipAQnH7TG5wq9gRghmM7GDPw
-X-Gm-Message-State: AOJu0YzBi6BBkK0sbtjoJNPe1cxZv8CFySvOzjzNXEmua/2jwFZWbFEI
-	YK/2R/udkAnn99bsSy9jdFV8AgISyfxKnFHdxMfUdwkMg3jlJyFnohk3CigAQQ==
-X-Google-Smtp-Source: AGHT+IEf5eKUQSWm+opFfaiF5eBQJmg0AXhYyA+h2y9jNbW7sOQuiyq0AM8mKQQVx25bJ6R/7Y4UCw==
-X-Received: by 2002:a17:902:f70f:b0:1dc:4b04:13d4 with SMTP id h15-20020a170902f70f00b001dc4b0413d4mr60269plo.8.1708552870628;
-        Wed, 21 Feb 2024 14:01:10 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k4-20020a170902e90400b001dbba4c8289sm8533989pld.202.2024.02.21.14.01.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 14:01:10 -0800 (PST)
-Date: Wed, 21 Feb 2024 14:01:09 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>,
-	Anton Protopopov <aspsk@isovalent.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
-Message-ID: <202402211347.2AF2EC4621@keescook>
-References: <20240220185421.it.949-kees@kernel.org>
- <da75b2bf-0d14-6ed5-91c2-dfeba9ad55c4@iogearbox.net>
+        d=1e100.net; s=20230601; t=1708553127; x=1709157927;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CEXpQXg5vnSo+q/Y96zcMRb8jRrXDHbwFt0Ekcc6U9I=;
+        b=d/OpK6Z/ZaRl/IsjwdnXov485DDWnfwrKtyUeh5FfQOJVHurb4nqvFLVKahTHOtrp/
+         GaI4w3jCLrJ+rI9n7JfUJJbEqJZiY+k6wBOSorIl152aGIgqHevOu96C8n0JTCToYBC8
+         6AT8A74MiUkw3A9nqfDHr1tifl7uBJE0WrX8pxXjnPaiyM6bLpqHhBWRfuWTqvcR97Pf
+         fB29gnsIZTb8jonruR022EEaqWJ96x1FezsB6uX3i8LCQGzU7wz2RHiDG0B371pasx2k
+         mZtzfE92iNrRhi2ipNk/zInoTMikvD6L6XLKGLrO8/kFhCsSQLGnfIA1SLjgCOFCdfOe
+         YMUg==
+X-Forwarded-Encrypted: i=1; AJvYcCW4VZIQr72jtHgbZTa5NtL9Mo3zDwa2Fjoe+SSmogOtEuoNwU77P+ErXSvjgvZRoxw0Tg9nPeSFCPifMf3D9JVNUB3UdnAM68n8V934exkE
+X-Gm-Message-State: AOJu0Yymy5G4wIr8+VkQ+XzUcJembupcusjcXE51PXG6VGDwNnIlYdfC
+	1YRwRNCXj/8q2GOCH3FoHDgsLJSdPpLF/eyVN2dTxdqz9gH59mEzsgVgz/VT9BCwRTzc45lRu34
+	IeekVuwUHPPaZLRV2I+2luQ==
+X-Google-Smtp-Source: AGHT+IH65ETPwbThwk5AYf7wJ0+qz1pjROYQoRed6Nxu0TgqLyz0Kj79tkAiKpPEL1LlETwVW/wVTtfz+bTZkf2Qfw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:100a:b0:dc9:5ef8:2b2d with
+ SMTP id w10-20020a056902100a00b00dc95ef82b2dmr158311ybt.4.1708553127595; Wed,
+ 21 Feb 2024 14:05:27 -0800 (PST)
+Date: Wed, 21 Feb 2024 22:05:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da75b2bf-0d14-6ed5-91c2-dfeba9ad55c4@iogearbox.net>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJtz1mUC/x3MQQqAIBBA0avIrBNUwqKrRAvTMYfARCWC8O5Jy
+ 7f4/4WCmbDAwl7IeFOhK3bIgYENJh7IyXWDEmoUSkleYsoUq+c2oD2TqTZwM+sRnZ5wdwJ6mTJ 6ev7rurX2AVsF9GhlAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708553126; l=1887;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=glDEKtdwdqyJIt9bRVsA7OStBeZEdBkYYd62ei+rhmE=; b=uyJIZ0LPetF0XN9X4zCF00e6OsEkDTxKePErRG4rK3MlHowXuvM/g/ti/1N5Q7c9JLpIRHmzb
+ jOOSpBX2gahDxCJ40oMTEt9NWPSyrvjCWqzNtseVW8J0tQWA4ku2Dd7
+X-Mailer: b4 0.12.3
+Message-ID: <20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com>
+Subject: [PATCH] checkpatch: add check for snprintf to scnprintf
+From: Justin Stitt <justinstitt@google.com>
+To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Finn Thain <fthain@linux-m68k.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Feb 21, 2024 at 05:39:55PM +0100, Daniel Borkmann wrote:
-> The build in BPF CI is still broken, did you try to build selftests?
+I am going to quote Lee Jones who has been doing some snprintf ->
+scnprintf refactorings:
 
-Okay, I give up. How is a mortal supposed to build these?
+"There is a general misunderstanding amongst engineers that
+{v}snprintf() returns the length of the data *actually* encoded into the
+destination array.  However, as per the C99 standard {v}snprintf()
+really returns the length of the data that *would have been* written if
+there were enough space for it.  This misunderstanding has led to
+buffer-overruns in the past.  It's generally considered safer to use the
+{v}scnprintf() variants in their place (or even sprintf() in simple
+cases).  So let's do that."
 
-If I try to follow what I see in
-https://github.com/libbpf/ci/blob/main/build-selftests/build_selftests.sh
-I just get more and more kinds of errors:
+To help prevent new instances of snprintf() from popping up, let's add a
+check to checkpatch.pl.
 
-In file included from progs/cb_refs.c:5:
-progs/../bpf_testmod/bpf_testmod_kfunc.h:29:8: error: redefinition of 'prog_test_pass1'
-   29 | struct prog_test_pass1 {
-      |        ^
-/srv/code/tools/testing/selftests/bpf/tools/include/vmlinux.h:106850:8: note: previous definition is
- here
- 106850 | struct prog_test_pass1 {
-        |        ^
+Suggested-by: Finn Thain <fthain@linux-m68k.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+From a discussion here [1].
 
-Messing around with deleting vmlinux.h seems to get me further, but later:
+[1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+---
+ scripts/checkpatch.pl | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-/srv/code/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c: In function 'bpf_testmod_ops_is_valid_access':
-/srv/code/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:535:16: error: implicit declaration of function 'bpf_tracing_btf_ctx_access' [-Werror=implicit-function-declaration]
-  535 |         return bpf_tracing_btf_ctx_access(off, size, type, prog, info);
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c4c4a61bc83..bb4e99c818a9 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7012,6 +7012,12 @@ sub process {
+ 			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+ 		}
+ 
++# snprintf uses that should likely be {v}scnprintf
++		if ($line =~ /\snprintf\s*\(\s*/) {
++				WARN("SNPRINTF",
++				     "Prefer scnprintf over snprintf\n" . $herecurr);
++		}
++
+ # ethtool_sprintf uses that should likely be ethtool_puts
+ 		if ($line =~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/) {
+ 			if (WARN("PREFER_ETHTOOL_PUTS",
 
-and then I'm stuck. It looks like the build isn't actually using
-KBUILD_OUTPUT for finding includes. If I try to add -I flags to the
-Makefile I just drown in new errors.
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240221-snprintf-checkpatch-a864ed67ebd0
 
--- 
-Kees Cook
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
