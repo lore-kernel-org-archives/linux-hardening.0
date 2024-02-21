@@ -1,218 +1,144 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132112BEAE
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 21:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0D412DD81;
+	Wed, 21 Feb 2024 21:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708550998; cv=none; b=GU/c8XF/d3X03NMTrtHgdw2mfSncQxwO1F2+0wc3WF20jqJlORTqKiM84XUXkc/dfFvcC18wS4lbwFT4oUlzIAoDOabdJlI9yHbywaKFbpG47xLYgOWn+3VEMktl63BXiA5v5nXJ6jw2fWiJCaPJu6ftAnqwwVbItKLwfZum0wM=
+	t=1708551358; cv=none; b=oO5k34ddnqqxwmKoXCvb8IUiCSxHK0KprAsUzG+8M9CIxKwfej8gMUbyB4MEYZy7Xcp6wsfH7BgDTa7c3t2WkYzp4mZJLb8M6ewfMsPW12saKuTNmj42dM8h98kBUb0HJLh9aRH8EydR9Mvgqie3XTb7OkH/ADZOdM7bPWVa44E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708550998; c=relaxed/simple;
-	bh=jhbT5Cr5KxXONXs4T6cwnDbtOKqKVBRtP9a65KT+oaM=;
+	s=arc-20240116; t=1708551358; c=relaxed/simple;
+	bh=7kAfcN1/13WrOj7hm7Y4/wFCohh865CFE4P/KUkvp1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YzedvxynxA2q992kFTScLjF9QfO838B/4lw7h2PqggjiT6Gz8GR4tB1wpUzphb0bErKrxIsc71Ho42NazzybmI8ukJfsIy33ZmMnUobXyXq0IAffNZBhszVMTu3NoQkoKQE5FXIDlR6W3s2wygVbTN2krKfooJMkaL3wipOGThc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D0FOyXkc; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJ9W/S4jyJGaaYvE6kmuMEP20SgK+f3rB6MfRgYQu6/bIGFUtE+Kfd32zX+c5oFkctZGWANoq5nO1/Mj+5Nocyb+uXYtHdWY2imv87GPTw/EeCTeGqHxJ2D+0dXDEgk9d4U0ISCY6roKthUA+ajR7A7ic8FwS/qNFZ5qavqmyb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxjvrMMI; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D0FOyXkc"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c4949a366fso279955339f.1
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 13:29:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxjvrMMI"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c488a5af5eso6964539f.1;
+        Wed, 21 Feb 2024 13:35:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708550996; x=1709155796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHJzWSZbaUVkrjgtkdycbYKuoIbcz4QqReZXQuIUTd8=;
-        b=D0FOyXkcN99A8U2pypJobo/iI1rVmSj6DKFobDqrZr7YyzHGpvKpwcRQGEIDw6EbPC
-         +T4++/maF4JeYetwSfFO1/M/uhMW1BA3g7/eQWpodAJUFczLM1SgEa/ggFfvp+ENwyEU
-         0UvCXNhbjPVfWedQ2lVqe+3tPm0k0dQq/2hEQJZlmUS9fOuiy9CKIKwPDyU0Bxi7qK4/
-         INhd6nuqer6EPWnAx+EQrbhjntKaiU84ERlIbiNO3i1oV7jrKMNXvYOznFFw1IAURQig
-         UVDg6rHDUUQfu57sr5rpsWUSd0oP3nArNmCYR/OK43USKT7O5o2cfmCLOM4gtI4sGOJ7
-         XrfA==
+        d=gmail.com; s=20230601; t=1708551356; x=1709156156; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hEhygBtosGq+EZCjwlVt0RPtsTFLG976dZg39gbKTO0=;
+        b=MxjvrMMIEUwucQ17vwd1WU657hQ3Mm/unPdh9zSRwzcimFA0yUD8FAOLu8iYnRz9P0
+         vZQOub1Qpr3nRaHhDXIVA+QwLmtW6FPuElHS/mtn2k8ypdW9xX4bTI8eyBMJcTIHvRyh
+         E9+wO0PjkpbWDpJHMepg/81PHMr4VGEgvHyw/+lOxQYBgwjsK868aGtXfvJ6p69HsUJx
+         z/R1Q2uY7b97PPcGBVWtxlrxt+kaYO6mss9BnbwiRrtuTNgr6+LH8Lc44oocoKUAreJC
+         isQC8kPnhh0xiYdNPLMeAdI6714LYR4sCoWh8D4pvrmY8rnO2qtgzxFBI0oeyEykgp4Z
+         h+Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708550996; x=1709155796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fHJzWSZbaUVkrjgtkdycbYKuoIbcz4QqReZXQuIUTd8=;
-        b=RKZYv8HeNh5uQgY8n8PdYEwfx4FySBYbOJUGR/ghQYgsf/0zl2dfGgZRkkGg4buWVZ
-         xC0y2O4nJTLfMzdqWcxxQpnm1j0juBgQE7GW4crRYgu8NojTv4gVAcJZ9D9kz3jSd3WV
-         CvnKik4YzZ73U+LDApAHYe0gCEYY/nq14IdxjJbc6GolWfq6q92Ardy2vMwdNxgmEIs4
-         POs4Iki6wLAPE02UEl/cgmqnI8vQKHNAmwnLjMeAX/5cRKLQwbfADtnvZLtZvb7WlGzW
-         A/BCR/oP11tEsb7nhLTsbksXMkIcgVYwqUDfGHjswvP9skcex6beuQlESsnhZQXLdJAT
-         MqcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF/vtQ+FMeLmdd3/UMJ9vZKtXkgi+a+v5oAY8OaYQ9W80j7XgtO+ZoZmuEoBy0gv43yPh0WhDh24O042YW+soImiQMfAfMf4CrN9j+yHsC
-X-Gm-Message-State: AOJu0Yz/z3cTFIpH+P/j2G2jzH4DDWlt3yUSFgP69ktAbSwozJkMoDPB
-	g6XduJWsFb4Lb6Dkz+cA4CYZz8Fb5MO/h+UQV7ir0RvYazV3x9uAlln4Hq3BrA==
-X-Google-Smtp-Source: AGHT+IH3xGOF+O0PatOjKRFVOXKn3+X8AKF5AtBxottFnw4acxjqjkkOFdnbYMdTb0txcBwNyBSoFw==
-X-Received: by 2002:a05:6602:3fd1:b0:7c7:397c:6690 with SMTP id fc17-20020a0566023fd100b007c7397c6690mr17957645iob.17.1708550995732;
-        Wed, 21 Feb 2024 13:29:55 -0800 (PST)
-Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id h21-20020a02c735000000b004742bbf11c0sm1712244jao.120.2024.02.21.13.29.54
+        d=1e100.net; s=20230601; t=1708551356; x=1709156156;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hEhygBtosGq+EZCjwlVt0RPtsTFLG976dZg39gbKTO0=;
+        b=eagmxiH88QEgN2sfeU8tc9ur4z3BoIcnD9SLGjQ0zpUOqNDZZh8GywJxbBtBHcCkJy
+         pSgaTMrehvYlIWFuxwLSj+m7Sn39uLkHwVBF5Zq6O/DcgPuPdijNd9eTohese8aLN2tE
+         BtEwf7yJW6b9ti2MPHJVqaduK8ufGm/TKvCLS31EhmRElZE2WqcjALiECJ4jHOZmRfoe
+         KqLDksQYhL9BYoQQVwayL2ONnN5Bi9FdnWQO/ZTyZjqRFRaaUZtoQU5rjltRoJuj9C8A
+         0Cr51WqK3XWCPMJb5nDiqqqM8gQPXQqxKViQXF6iNJHPPZSALvDKiyVzjVk0/BV04SLA
+         n0/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWuw0QrLmmRumJi2PxUvMCY/0nbMRV3m1h4TaUi4kcfUeTR3N/G/iOgaGyuRHKEpqDNEhgAD+q4A8ZDj+RBH0jgokKjayDAb5FZNPWSQ4xUWVIn3IGnkzxRfJqB7zugrc9JfaD1UwCwA+u/eBoaRT0m1l7JJGN7Gdaqp1hGA3/9S8pe6+9FuJN/unIcXR6/sxSgwtEEYLX3z2PmQbzuF4pM1E0hYRXMZXESqa+F
+X-Gm-Message-State: AOJu0Yzi+wEBAYtX7uHT0kiKQV6E4TxRlrva4A6xsmNoj55iHmMfAyDZ
+	WoDtuzoYMfNFrU4khwuZc4ZHwu+8LCVx9OdmE3rmGBFcd3ctTprCidKktZjT
+X-Google-Smtp-Source: AGHT+IFmF1+6vZPUdEg3sXIJoAZI1kHF31CDjrsju8l+yXoRnYkhWW8unvAUdMdGtN7NXXgO7XVipQ==
+X-Received: by 2002:a6b:6f15:0:b0:7bf:e57f:3ecf with SMTP id k21-20020a6b6f15000000b007bfe57f3ecfmr657115ioc.0.1708551356458;
+        Wed, 21 Feb 2024 13:35:56 -0800 (PST)
+Received: from localhost ([2a02:168:59f0:1:63b6:5e21:e19f:4684])
+        by smtp.gmail.com with ESMTPSA id f32-20020a0284a3000000b00473c8573648sm3007942jai.146.2024.02.21.13.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 13:29:54 -0800 (PST)
-Date: Wed, 21 Feb 2024 21:29:52 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Kees Cook <keescook@chromium.org>,
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Cassio Neri <cassio.neri@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Arthur Grillo <arthur.grillo@usp.br>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Latypov <dlatypov@google.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 7/9] drm: tests: Fix invalid printf format specifiers in
- KUnit tests
-Message-ID: <20240221212952.bqw4rdz2i2yf3now@google.com>
-References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-8-davidgow@google.com>
+        Wed, 21 Feb 2024 13:35:56 -0800 (PST)
+Date: Wed, 21 Feb 2024 22:35:50 +0100
+From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
+ while disabled
+Message-ID: <20240221.b8dcd9590c37@gnoack.org>
+References: <20240219191804.2978911-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221092728.1281499-8-davidgow@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240219191804.2978911-1-mic@digikod.net>
 
-Hi,
+Hello!
 
-On Wed, Feb 21, 2024 at 05:27:20PM +0800, David Gow wrote:
-> The drm_buddy_test's alloc_contiguous test used a u64 for the page size,
-> which was then updated to be an 'unsigned long' to avoid 64-bit
-> multiplication division helpers.
->
-> However, the variable is logged by some KUNIT_ASSERT_EQ_MSG() using the
-> '%d' or '%llu' format specifiers, the former of which is always wrong,
-> and the latter is no longer correct now that ps is no longer a u64. Fix
-> these to all use '%lu'.
->
-> Also, drm_mm_test calls KUNIT_FAIL() with an empty string as the
-> message. gcc warns if a printf format string is empty (apparently), so
+I think this is a good idea.
+Some minor implementation remarks below.
 
-clang does too; under -Wformat-zero-length
-
-> give these some more detailed error messages, which should be more
-> useful anyway.
->
-> Fixes: a64056bb5a32 ("drm/tests/drm_buddy: add alloc_contiguous test")
-> Fixes: fca7526b7d89 ("drm/tests/drm_buddy: fix build failure on 32-bit targets")
-> Fixes: fc8d29e298cf ("drm: selftest: convert drm_mm selftest to KUnit")
-> Signed-off-by: David Gow <davidgow@google.com>
-
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
+> Because sandboxing can be used as an opportunistic security measure,
+> user space may not log unsupported features.  Let the system
+> administrator know if an application tries to use Landlock but failed
+> because it isn't enabled at boot time.  This may be caused by bootloader
+> configurations with outdated "lsm" kernel's command-line parameter.
+> 
+> Cc: Günther Noack <gnoack@google.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
 > ---
->  drivers/gpu/drm/tests/drm_buddy_test.c | 14 +++++++-------
->  drivers/gpu/drm/tests/drm_mm_test.c    |  6 +++---
->  2 files changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/tests/drm_buddy_test.c b/drivers/gpu/drm/tests/drm_buddy_test.c
-> index 8a464f7f4c61..3dbfa3078449 100644
-> --- a/drivers/gpu/drm/tests/drm_buddy_test.c
-> +++ b/drivers/gpu/drm/tests/drm_buddy_test.c
-> @@ -55,30 +55,30 @@ static void drm_test_buddy_alloc_contiguous(struct kunit *test)
->  		KUNIT_ASSERT_FALSE_MSG(test,
->  				       drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							      ps, ps, list, 0),
-> -				       "buddy_alloc hit an error size=%d\n",
-> +				       "buddy_alloc hit an error size=%lu\n",
->  				       ps);
->  	} while (++i < n_pages);
->
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   3 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%d\n", 3 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
->
->  	drm_buddy_free_list(&mm, &middle);
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   3 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%llu\n", 3 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   2 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%llu\n", 2 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 2 * ps);
->
->  	drm_buddy_free_list(&mm, &right);
->  	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							   3 * ps, ps, &allocated,
->  							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc didn't error size=%llu\n", 3 * ps);
-> +			       "buddy_alloc didn't error size=%lu\n", 3 * ps);
->  	/*
->  	 * At this point we should have enough contiguous space for 2 blocks,
->  	 * however they are never buddies (since we freed middle and right) so
-> @@ -87,13 +87,13 @@ static void drm_test_buddy_alloc_contiguous(struct kunit *test)
->  	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							    2 * ps, ps, &allocated,
->  							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc hit an error size=%d\n", 2 * ps);
-> +			       "buddy_alloc hit an error size=%lu\n", 2 * ps);
->
->  	drm_buddy_free_list(&mm, &left);
->  	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
->  							    3 * ps, ps, &allocated,
->  							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
-> -			       "buddy_alloc hit an error size=%d\n", 3 * ps);
-> +			       "buddy_alloc hit an error size=%lu\n", 3 * ps);
->
->  	total = 0;
->  	list_for_each_entry(block, &allocated, link)
-> diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/drm_mm_test.c
-> index 1eb0c304f960..f37c0d765865 100644
-> --- a/drivers/gpu/drm/tests/drm_mm_test.c
-> +++ b/drivers/gpu/drm/tests/drm_mm_test.c
-> @@ -157,7 +157,7 @@ static void drm_test_mm_init(struct kunit *test)
->
->  	/* After creation, it should all be one massive hole */
->  	if (!assert_one_hole(test, &mm, 0, size)) {
-> -		KUNIT_FAIL(test, "");
-> +		KUNIT_FAIL(test, "mm not one hole on creation");
->  		goto out;
->  	}
->
-> @@ -171,14 +171,14 @@ static void drm_test_mm_init(struct kunit *test)
->
->  	/* After filling the range entirely, there should be no holes */
->  	if (!assert_no_holes(test, &mm)) {
-> -		KUNIT_FAIL(test, "");
-> +		KUNIT_FAIL(test, "mm has holes when filled");
->  		goto out;
->  	}
->
->  	/* And then after emptying it again, the massive hole should be back */
->  	drm_mm_remove_node(&tmp);
->  	if (!assert_one_hole(test, &mm, 0, size)) {
-> -		KUNIT_FAIL(test, "");
-> +		KUNIT_FAIL(test, "mm does not have single hole after emptying");
->  		goto out;
->  	}
->
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
->
+>  security/landlock/syscalls.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+> index f0bc50003b46..b5b424819dee 100644
+> --- a/security/landlock/syscalls.c
+> +++ b/security/landlock/syscalls.c
+> @@ -33,6 +33,18 @@
+>  #include "ruleset.h"
+>  #include "setup.h"
+>  
+> +static bool is_not_initialized(void)
+> +{
+> +	if (likely(landlock_initialized))
+> +		return false;
 
-Thanks
-Justin
+Optional stylistic remark; I try to avoid predicate functions which
+have a "negated" meaning, because double negations are slightly more
+error prone.  (We return false here, so Landlock is not not
+initialized.)
+
+> +
+> +	pr_warn_once(
+> +		"Disabled but requested by user space. "
+> +		"You should enable Landlock at boot time: "
+> +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
+> +	return true;
+> +}
+> +
+>  /**
+>   * copy_min_struct_from_user - Safe future-proof argument copying
+>   *
+> @@ -173,7 +185,7 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
+>  	/* Build-time checks. */
+>  	build_check_abi();
+>  
+> -	if (!landlock_initialized)
+> +	if (is_not_initialized())
+>  		return -EOPNOTSUPP;
+
+Technically, any Landlock user needs to go through the
+landlock_create_ruleset() system call anyway; it might be enough to
+just add it in that place and leave the other system calls as they
+were.  Then you could also omit the special function.
+
+Reviewed-by: Günther Noack <gnoack3000@gmail.com>
+
+–Günther
