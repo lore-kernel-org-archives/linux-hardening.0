@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35893D978
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 09:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA41F3EA6C
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 09:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708507693; cv=none; b=fcUYaaphXPJ53SyZvU8lRXLvK+eVHt03KQcLEsdtTNPFQF53K4PRdyHuZE5QlTMmqP0uegsq/W5SyNaecCc435lSFat7xZOw/1kI4M0EcoCAqK+t8SJ+2L1HlAKhTXqjW7LOBzyG1+DFksqzl6kv5X7gcxRslo6IfDyWomLFGs0=
+	t=1708507698; cv=none; b=QtY57Vh5wgkcBbhHOYWZOIPHnC4lP5fhq1VMlVo9CTFHahsGDJw2lAL7tlllxnNoPg1Sx37nNerJgneoIeHia0AWQddljF6llcikykQwCheGzyo1oA6QAKZ/VU5zXSzHYBTTSUTMkd2B1Afdf3Xcn3ZpmUdK2qvkEfdFN9mWA4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708507693; c=relaxed/simple;
-	bh=Dmbe5BP8c+8aPc1x3J6VMn8AMWKKdm1dWr1AhfYnkWA=;
+	s=arc-20240116; t=1708507698; c=relaxed/simple;
+	bh=AyL+J0FmKPt3EGU4p+x7TFB+PCgMwrwT1HRvusvK3Wo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IGbHC4nv97ojVDVbxRJzTgclL4iqOS4RZ9WLr12Y7TySM6KNETOC0m8pCCLDEvbeRuhyVzMSJGzfh/LZYQXUUR39p3I2a0S940sRBnugpqGEif03i7eCwIg+3kLTuNTEUR8vWNl8+cN2ejnSbPPjhbxiRtffTu0/nqbotmXpELo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hpU1mo4c; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=uL3ZDtB7OkZXEQmUXsW7Q883NjfuuT86uqIndi9jTyKxeJOr8dzILQhJjrTDCmYIw/BJSXiCxCa4raU9fevZ/q1ORQkSr2eM9DcOC2WlbtPD8o2JRmj+DtnEG7Pqg2Oe6/bCnyckN4jL9MlwTMZxX/9cTnK0rD4jml8NoPKvG9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pzScccO8; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hpU1mo4c"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc15b03287so8909683276.3
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 01:28:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pzScccO8"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608835a1febso6534797b3.2
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 01:28:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708507690; x=1709112490; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708507694; x=1709112494; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NeQowu5ygMbqfsZc+b92OS1HjirLANcwpz/yagEqKMA=;
-        b=hpU1mo4c4VTOaQ/zVlQmv4i7QNv4xa1OmIftHY/i6aT9JV07sXoNBTk2w44z94zsIz
-         Ljhu+Zn3S0/XMosXhJs2mf6h7qi8QKM4NG4iCHeLwUds3lrrUTDD3ZnkgPffF1gheDyV
-         7sOjZ1fEm166dcVzljViZzv3N73d79lOwT64ZIXsoMWhQPeeZt0QeANi4WpYEAsbLk6s
-         DHm35Y91ZMS3uKeZ3dELhM9GT6JmM3d7QIcRfGGIHhz/jktGtdqlE3u7envfX1YL7g0H
-         LUplByodsH6N2WrPeNquOH57ZL4BXva3havvfWeeB1f4Hopkypmg384oEusnYKnPo1Bn
-         QrCA==
+        bh=sajAUUIIQYuGe8qQNpfUtUdwcf5MUYWJWHx5st8lTqQ=;
+        b=pzScccO83Xqt5YTyI3e8KOZjqvik1l3KJrlFrrJH9Ta+LErh21Rdrqy1ZQsGiWUMp0
+         7eqXrCzrT1wkFDRx6bJ3GWZiuhLcR7Izj5Tl3tqJNl+B08Y1tdqG2h68HAH3Yl8YoiYq
+         mdhkd5aPMNUAv0IRlUAoIIjj15DmcQ81fArdFxmaiatAUjGi05FpjR3GMqMzJLqDYbgM
+         d2Hn6NPIoeVoPDOOZm0u26msaJfIreaBE94aplRS5P5jkrZbyhHkV8tVIjYshQPk3K88
+         e23VTomTKSwjqoRLfyHjmBT0HJKCOSPNH24VjMaIkawKs9oOmfRNumUkDMPCHP2thVFp
+         0grw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708507690; x=1709112490;
+        d=1e100.net; s=20230601; t=1708507694; x=1709112494;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NeQowu5ygMbqfsZc+b92OS1HjirLANcwpz/yagEqKMA=;
-        b=b3dVU1z6b+TO53m1jJHjw6ZgKHa9ZXXhhcOhqPbXaxb1vR5FZOJMsxtQKm15EQUN9e
-         LV9g6zWCZBAuUsOv6oyT+O+KjC11KXR0Tjhq92CcMI/xQln7H8uirljsKs1vlLAeP3sG
-         2rBCxLQz3E2+PvyZJHQzyChKs+OLziBrczeyYgh6P6QinrDRDXzsgO15h3iBEpFffBU0
-         ahu+RZsBIXfhFXBqJLT4F3X3IZ5I3dLcHB86VKhSkOkfJdF3yh9zrc8UM8zurnl+Jjhn
-         z1A1sSUHNg4HI1uZHpI+1cVnbueU6glkGspuuWECyVLT4SthlyRyd6ELMO2QqBxw+xq9
-         VZEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNvNQ+mIASDYVvuK8ghOra45LQbgO4DXZEpRaJ0PEk/7DYfSShyeLznf9afLW8jEZsJi1aai5uW3KMSaNQZ/m2LxkBvy9h+otNgxQouFNs
-X-Gm-Message-State: AOJu0YwpvU7UHT34TRa2kQXBzIQorrFPkK3VmjF19+o7IkM4zI69E+ft
-	JeDPRG1SYF1jNvVYAmoc1g9QaA/9lsdxB8DN+6jRFKWRIuc8+83jfa7GkjgfL2D+dUHYqNxTClW
-	GDSrs0RKYGA==
-X-Google-Smtp-Source: AGHT+IGKmHDvlseXRZ4Y+4ut8ocdYLBEplEGH+dd9qwAR6JMHTXNGTF3psUQFQki1OvQHuO3rgwKUwj3z7weqQ==
+        bh=sajAUUIIQYuGe8qQNpfUtUdwcf5MUYWJWHx5st8lTqQ=;
+        b=Bi8Q34G+zw0npvlEJNi6Yk0u8I6GssDf+ThWXS1q4Sa6d4C8QEtE55Da23z9Wlikqa
+         VVeXMFZhdJHJAvSNVmJU9oaMA2JbytAZNnF+Kf1Mpf5/IxnXhrCwQpHo3aqjU4yT+fuj
+         ZNSOO3KLRGvUmLhE5psEF1JWxElQocrfu3equLpksv7NTaB1C8bMsruxPL9mYLJaLt3p
+         ByRHa76wXJ+9quly/WzpDVUaLU7aRa0aYcP9X/Hzrsg6ixaPoB+C51I2VbKfu6CpsubF
+         Y3Yym9B2J71UMP3YNb1Z5RX4sMWv3dCrd9cMmSfcM7gnHww4FyHxly8XQ33nX400ChI7
+         +O+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXQIU++fA4mBGfvPvEq2bTYXFHOUQBUQjixhDucfY4TrJmyKMC6CdW3Lgo5Dn42fnxjjRHxbwSKcQNiZwpNeVIYixlCVYuQu4e3lbXL8jzd
+X-Gm-Message-State: AOJu0YxfFlbBjCLWSV870DYqgMSvgEBH0kOCoFASuR65ea1cxgIqVVUB
+	I+Tyl9ycs90iFCW3Pds6Ud1YLqdvwR0UN+vzg2qVnNgzTXYTmYetb9VxdeA4z9bt9tITSTT3ijZ
+	uywsmHOPL1A==
+X-Google-Smtp-Source: AGHT+IHXN4IhYXj6gHEWGA94Amz/iLtPWuo+Xnyc3GcMGDuMyWPS0mpLGyU+Di2N0vYTLFyOCsPHpf7g1H0Bgg==
 X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a05:6902:1001:b0:dcc:79ab:e522 with SMTP
- id w1-20020a056902100100b00dcc79abe522mr728743ybt.11.1708507689903; Wed, 21
- Feb 2024 01:28:09 -0800 (PST)
-Date: Wed, 21 Feb 2024 17:27:15 +0800
+ (user=davidgow job=sendgmr) by 2002:a25:b192:0:b0:dcd:88e9:e508 with SMTP id
+ h18-20020a25b192000000b00dcd88e9e508mr4406327ybj.5.1708507694045; Wed, 21 Feb
+ 2024 01:28:14 -0800 (PST)
+Date: Wed, 21 Feb 2024 17:27:16 +0800
 In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240221092728.1281499-1-davidgow@google.com>
 X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221092728.1281499-3-davidgow@google.com>
-Subject: [PATCH 2/9] lib/cmdline: Fix an invalid format specifier in an
+Message-ID: <20240221092728.1281499-4-davidgow@google.com>
+Subject: [PATCH 3/9] lib: memcpy_kunit: Fix an invalid format specifier in an
  assertion msg
 From: David Gow <davidgow@google.com>
 To: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -81,33 +81,40 @@ Cc: David Gow <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>
 	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The correct format specifier for p - n (both p and n are pointers) is
-%td, as the type should be ptrdiff_t.
+The 'i' passed as an assertion message is a size_t, so should use '%zu',
+not '%d'.
 
-This was discovered by annotating KUnit assertion macros with gcc's
-printf specifier, but note that gcc incorrectly suggested a %d or %ld
-specifier (depending on the pointer size of the architecture being
-built).
+This was found by annotating the _MSG() variants of KUnit's assertions
+to let gcc validate the format strings.
 
-Fixes: 0ea09083116d ("lib/cmdline: Allow get_options() to take 0 to validate the input")
+Fixes: bb95ebbe89a7 ("lib: Introduce CONFIG_MEMCPY_KUNIT_TEST")
 Signed-off-by: David Gow <davidgow@google.com>
 ---
- lib/cmdline_kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/memcpy_kunit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/cmdline_kunit.c b/lib/cmdline_kunit.c
-index d4572dbc9145..705b82736be0 100644
---- a/lib/cmdline_kunit.c
-+++ b/lib/cmdline_kunit.c
-@@ -124,7 +124,7 @@ static void cmdline_do_one_range_test(struct kunit *test, const char *in,
- 			    n, e[0], r[0]);
- 
- 	p = memchr_inv(&r[1], 0, sizeof(r) - sizeof(r[0]));
--	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %u out of bound", n, p - r);
-+	KUNIT_EXPECT_PTR_EQ_MSG(test, p, NULL, "in test %u at %td out of bound", n, p - r);
- }
- 
- static void cmdline_test_range(struct kunit *test)
+diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+index 440aee705ccc..30e00ef0bf2e 100644
+--- a/lib/memcpy_kunit.c
++++ b/lib/memcpy_kunit.c
+@@ -32,7 +32,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(instance.data) != 32);	\
+ 	for (size_t i = 0; i < sizeof(instance.data); i++) {	\
+ 		KUNIT_ASSERT_EQ_MSG(test, instance.data[i], v, \
+-			"line %d: '%s' not initialized to 0x%02x @ %d (saw 0x%02x)\n", \
++			"line %d: '%s' not initialized to 0x%02x @ %zu (saw 0x%02x)\n", \
+ 			__LINE__, #instance, v, i, instance.data[i]);	\
+ 	}	\
+ } while (0)
+@@ -41,7 +41,7 @@ struct some_bytes {
+ 	BUILD_BUG_ON(sizeof(one) != sizeof(two)); \
+ 	for (size_t i = 0; i < sizeof(one); i++) {	\
+ 		KUNIT_EXPECT_EQ_MSG(test, one.data[i], two.data[i], \
+-			"line %d: %s.data[%d] (0x%02x) != %s.data[%d] (0x%02x)\n", \
++			"line %d: %s.data[%zu] (0x%02x) != %s.data[%zu] (0x%02x)\n", \
+ 			__LINE__, #one, i, one.data[i], #two, i, two.data[i]); \
+ 	}	\
+ 	kunit_info(test, "ok: " TEST_OP "() " name "\n");	\
 -- 
 2.44.0.rc0.258.g7320e95886-goog
 
