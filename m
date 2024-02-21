@@ -1,118 +1,153 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53182D8F;
-	Wed, 21 Feb 2024 17:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7579883CDB
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 17:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708536644; cv=none; b=g8LuG/gwI0UnIy0ilNShZucZOzd53i864m5apw6Iwm1kmUAalgWUoscs91wZTDXzzgI4UOVZ3eaHjC6cJasNRRRqet+iNh4UgGTCUMaiBMZ+v4Dgdje6YCkrp5hrtPo1bpELVUbhYNmXXTzefIWyjN8Vi78Zu+nqhZbhe6TBMbU=
+	t=1708537775; cv=none; b=l2jonVukE5fA7XbguKFXVuIsvfM+Dzq2iwvdXcPniP+n1gup85wM828cEGECpAM+9Kw0LFNLVnN75Om9rGGjvl3sgCsamS42twMjx1EQb1/v/Qi9iIkYzKoXeqPyyGR9Pe3/8Dvscuy7tPoLCvGGtYe7muRYykchM1ppCm2NMDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708536644; c=relaxed/simple;
-	bh=VVJKBus/4hY3nazwz3pZiLEtUFESTJ1fNiTVxhfAPy8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fM4QWwqusHPWuR64guH1A3efrUEKvGoTV2hf6QwWhtIbxyKJHSPtHI05wGN/01WX9XHMqAW3TMUZb2G7/YuSUCq7YBaJuDq1fKeXXX3cBVKaGrWc4zqaNoOM36K7kw/Yf0I5dnPBBKypgX/rwJDMwALkOVQAqThqrS5eQX/mM38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=Wbi6jkdu; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1708537775; c=relaxed/simple;
+	bh=KQoMuU1dvefNeleeWBIm6wpRfUoOOi3/4vzojzj2KWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nGSXFnYI7Aa2Xt0u/lrtxb6Unm2T7OC+3L/fQHhAK8NGGRiZQCyERR8Z+4IX9DMyN4/0E48eiKJiXJMql8g3rh93RcYc33MzOPH58sCWFEXihxfVV0dIiUAXrjBnpPjjCJtWFDV3pia+lv+7LOeLLiiFHpLkGIUpnOJcI/8t6y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mGcA/PMF; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="Wbi6jkdu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=I87YIZpurdfl8CTcBVVyeB1j4NeBVQcdCIaP0A3iopg=; b=Wbi6jkduFDxsAg3gq98PHpUcSq
-	aPM+WXH/eyj6E6cMlenpE90+cdly1BVWqZB6ONVaiY8julWfqqoG3pUFl+AvtS7xqybQALkdyiCOo
-	CrpduV0kwBnHP7w1Gvgch5neon/t/NXjK/tlNZVS07pUouiNswnCxjD9E1yMqrgCouzrEvUQrPdPC
-	PvmbhlVxxThM7yvKKISOPzDuh4Z7w3ewE/LNdN/HqMkOSRwqdey/VluqZaJhG70tBSln8j4TL4IKe
-	J8K250ppqDuGsZv87Q1bPknz68dtbZaAutZ01j6/Cxg/QAuaRWMs3tl9BP+p1AMPgMLRbm2StSITl
-	Fns2ykmw==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1rcqQU-000DLL-Kx; Wed, 21 Feb 2024 18:30:34 +0100
-Received: from [178.197.249.13] (helo=linux.home)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1rcqQT-003ehV-20;
-	Wed, 21 Feb 2024 18:30:33 +0100
-Subject: Re: [PATCH bpf-next 1/2] bpf: Take return from set_memory_ro() into
- account with bpf_prog_lock_ro()
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Kees Cook <keescook@chromium.org>,
- "linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
-References: <135feeafe6fe8d412e90865622e9601403c42be5.1708253445.git.christophe.leroy@csgroup.eu>
- <CAEyhmHT8H3AXyOKMc3eQSdM2+1UDETJDPyEQ0-AEb6E8pt9LTg@mail.gmail.com>
- <4d53e0f9-cfee-4877-8b56-9f258c8325f6@csgroup.eu>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <2abc14fc-a19e-8205-c54f-a87c11ebd5be@iogearbox.net>
-Date: Wed, 21 Feb 2024 18:30:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mGcA/PMF"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-781753f52afso397554085a.2
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 09:49:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1708537771; x=1709142571; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9EA8cf2yDI8ps402vONEh4eN8mg2XcKNJwopEt2wzvo=;
+        b=mGcA/PMFITU/YtAdN7ADh5yQL705F1RRARAjRuqdKuiW9l4AF3PDF4M0ncPgtNtmTW
+         CgGEpuRUQkR10r4rYPz6VCcfz8cqnk0H7uEmaxDUxRVk5rkQwXYvW9ScB0SsBvaakDGr
+         4wadF9zykK3kPHUyL5DirA3+Yj8xyLhNtnje5tqp9nGIui2M79r10ZJ4jl6Eq6sNtiIz
+         7PfEWKM+tl9kiEB0/4UEC7knOCgP2JRbJC2Py0EXuaQEcIvmzao2pnOfilg9yUuaYFFR
+         lgvxh0EpzJaqMRdnmbcoG9tMYRDV7i/5fHHe+YOgwq+fzqYPHBcAs2AtzD44PmDrzNXi
+         f2gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708537771; x=1709142571;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9EA8cf2yDI8ps402vONEh4eN8mg2XcKNJwopEt2wzvo=;
+        b=TWl8gFraL9ymjgPr5nDYirVI1cE354pe/gWKugwtm5g/Rs/3GvYx4N2r62qKS13DEr
+         5jzniiZQ+c4uxvBGWX1/uXo4GldDLSlRB3I/3Pzh7m+PITEh0h+MJsTXaL86Kn9OeGHJ
+         FAgvBM1KP7trA2/V/rufgm2azMIS3RXGbrXo90ueQtlAvaP7Ea5i17c9pQuV+lG3nJFk
+         8ZzIPGj0MlWiIPR5UkfRjSAQ8ReIHkPC3TBVN/nAwLtE4BXp+vQkoTC8sUopseG9uqBi
+         X5VPedJZgL257cHk5S/JQoAcZB6VeeDnaeK0Y1wH2WO/ips8F+N8dBEIOyY4smBHWWyb
+         MQ8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0YsJpMCpYEIp8fEThQlkfjhJ5SScF0BERze1MeHEV6quudB4P8wnnbvxEyjVFH12b6E1qu9vowbZ7Sna5FhuQ+5/n8s7+8keNN/4MxhOt
+X-Gm-Message-State: AOJu0YwLrUA57fXDs7cw+7ENHzJXjSgtw1o+vkGa9J83+oj1m7CoMbDb
+	2RBNbnHdOq8zeVkzDisOoWeG9GxLR8hjuBSksqzhoxHvg7JqwvymdIGsdkKz7Fc=
+X-Google-Smtp-Source: AGHT+IGZoGA7n7eCfimDJ/ips2D3ir5jrWAPbQVAC3bWxC/pS1Fb+XCKAPN5rul+kokP5AVMOOLtmQ==
+X-Received: by 2002:a05:620a:8325:b0:787:8168:87f5 with SMTP id pa37-20020a05620a832500b00787816887f5mr3237298qkn.58.1708537771450;
+        Wed, 21 Feb 2024 09:49:31 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id l9-20020a37f509000000b00787236a4ba7sm4527367qkk.40.2024.02.21.09.49.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 09:49:30 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rcqio-00Bx8M-6S;
+	Wed, 21 Feb 2024 13:49:30 -0400
+Date: Wed, 21 Feb 2024 13:49:30 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Edward Srouji <edwards@nvidia.com>,
+	Patrisious Haddad <phaddad@nvidia.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] RDMA/uverbs: Remove flexible arrays from struct
+ *_filter
+Message-ID: <20240221174930.GF13491@ziepe.ca>
+References: <20240217142913.4285-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4d53e0f9-cfee-4877-8b56-9f258c8325f6@csgroup.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27192/Wed Feb 21 10:23:23 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240217142913.4285-1-erick.archer@gmx.com>
 
-On 2/19/24 7:39 AM, Christophe Leroy wrote:
+On Sat, Feb 17, 2024 at 03:29:13PM +0100, Erick Archer wrote:
+> When a struct containing a flexible array is included in another struct,
+> and there is a member after the struct-with-flex-array, there is a
+> possibility of memory overlap. These cases must be audited [1]. See:
 > 
+> struct inner {
+> 	...
+> 	int flex[];
+> };
 > 
-> Le 19/02/2024 à 02:40, Hengqi Chen a écrit :
->> [Vous ne recevez pas souvent de courriers de hengqi.chen@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
->>
->> Hello Christophe,
->>
->> On Sun, Feb 18, 2024 at 6:55 PM Christophe Leroy
->> <christophe.leroy@csgroup.eu> wrote:
->>>
->>> set_memory_ro() can fail, leaving memory unprotected.
->>>
->>> Check its return and take it into account as an error.
->>>
->>
->> I don't see a cover letter for this series, could you describe how
->> set_memory_ro() could fail.
->> (Most callsites of set_memory_ro() didn't check the return values)
+> struct outer {
+> 	...
+> 	struct inner header;
+> 	int overlap;
+> 	...
+> };
 > 
-> Yeah, there is no cover letter because as explained in patch 2 the two
-> patches are autonomous. The only reason why I sent it as a series is
-> because the patches both modify include/linux/filter.h in two places
-> that are too close to each other.
+> This is the scenario for all the "struct *_filter" structures that are
+> included in the following "struct ib_flow_spec_*" structures:
 > 
-> I should have added a link to https://github.com/KSPP/linux/issues/7
-> See that link for detailed explanation.
+> struct ib_flow_spec_eth
+> struct ib_flow_spec_ib
+> struct ib_flow_spec_ipv4
+> struct ib_flow_spec_ipv6
+> struct ib_flow_spec_tcp_udp
+> struct ib_flow_spec_tunnel
+> struct ib_flow_spec_esp
+> struct ib_flow_spec_gre
+> struct ib_flow_spec_mpls
 > 
-> If we take powerpc as an exemple, set_memory_ro() is a frontend to
-> change_memory_attr(). When you look at change_memory_attr() you see it
-> can return -EINVAL in two cases. Then it calls
-> apply_to_existing_page_range(). When you go down the road you see you
-> can get -EINVAL or -ENOMEM from that function or its callees.
+> The pattern is like the one shown below:
+> 
+> struct *_filter {
+> 	...
+> 	u8 real_sz[];
+> };
+> 
+> struct ib_flow_spec_* {
+> 	...
+> 	struct *_filter val;
+> 	struct *_filter mask;
+> };
+> 
+> In this case, the trailing flexible array "real_sz" is never allocated
+> and is only used to calculate the size of the structures. Here the use
+> of the "offsetof" helper can be changed by the "sizeof" operator because
+> the goal is to get the size of these structures. Therefore, the trailing
+> flexible arrays can also be removed.
+> 
+> However, due to the trailing padding that can be induced in structs it
+> is possible that the:
+> 
+> offsetof(struct *_filter, real_sz) != sizeof(struct *_filter)
+> 
+> This situation happens with the "struct ib_flow_ipv6_filter" and to
+> avoid it the "__packed" macro is used in this structure. But now, the
+> "sizeof(struct ib_flow_ipv6_filter)" has changed. This is not a problem
+> since this size is not used in the code.
+> 
+> The situation now is that "sizeof(struct ib_flow_spec_ipv6)" has also
+> changed (this struct contains the struct ib_flow_ipv6_filter). This is
+> also not a problem since it is only used to set the size of the "union
+> ib_flow_spec", which can store all the "ib_flow_spec_*" structures.
+> 
+> Link: https://github.com/KSPP/linux/issues/202 [1]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+> Changes in v2:
+> - Add the "__packed" macro to the "struct ib_flow_ipv6_filter".
+> - Update the commit message to explain why the "__packed" macro is used.
 
-By that logic, don't you have the same issue when undoing all of this?
-E.g. take arch_protect_bpf_trampoline() / arch_unprotect_bpf_trampoline()
-which is not covered in here, but what happens if you set it first to ro
-and later the setting back to rw fails? How would the error path there
-look like? It's something you cannot recover.
+Applied to for-next, thanks
 
-Thanks,
-Daniel
+Jason
