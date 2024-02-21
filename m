@@ -1,57 +1,57 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174161272B2
-	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 20:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AB185C52
+	for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 20:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708545733; cv=none; b=caTMWK4yc3FIJZ7/rGqmwye5fOzqmksEO6C2U2wYcT372IeMIWNrBvzN4ZkXPaZHElslVS9OT8ZTVvyloaHcPxX4NBxm7zKPXAfQ6GhaXiXEG6V15baRaEb7ZesVRKR0SqejN5tE4F/ecj/3vI5qw7nRM0glXLp4MBZHX/ZkniM=
+	t=1708545867; cv=none; b=nin+yvLzSwZcMTD33SlRHVljjWFUJ0a2Tg+sxZneYSeSWmkZrNAx8qEGkdEuOtHQE25kdGLiYGnjtEml4/1qGhhBuQ7mt+zaAFIwsMwwAFJZCKmO8KsFaBUx+o0og9XRqQ5izZBMm0qcv67SdpT8zhSTQJp12btfFhZwpbCWmY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708545733; c=relaxed/simple;
-	bh=b48lXPZQ+02Q0x3yLHzWYedk9fLZtBBvGY00YBRj8DY=;
+	s=arc-20240116; t=1708545867; c=relaxed/simple;
+	bh=OA1/1MIUS+P/xii3X+kUs1opugBAYp2FXnCE8iim2Fs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jU/0i5KBDwTt3u3T5Zyj/c8CWNYmgDusFnb7LItyQf1xJlfl03vUU9CSIXB5jn1EVClAZXZjJLjVcJn19WREJlk29wfkck0jQt2/A6678KvkwR5zaeEl/lCqdGLTOJAyODwEliYjQrYnH6x7im5idra9VEYK4mLcPYeFoMBkH14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bLAOop5P; arc=none smtp.client-ip=209.85.166.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNTYJYjp8myImCXURXrNQNYh/wlF730xiy3EZWVl4JF7rpU18G7PB3cT0gwqcS2RocsVS1uHgzTg/VFzMG2s2lhsqhldnYOGU6MU1VDh0XBPFPaA6uOaligNDPtXrYckeAy10LXXc+o4GM3wvvUovsKmUaMb92tlC8iWxGjYcXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3m+74o8S; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bLAOop5P"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7beda6a274bso41470839f.2
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 12:02:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3m+74o8S"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7bb5fda069bso370077639f.0
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 12:04:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708545731; x=1709150531; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708545865; x=1709150665; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hW/eD+217SwbFSrd+7OlcqgqqQaX2xcDsJgsLrnW3ms=;
-        b=bLAOop5PY9nIMWtJBK0X4o+9ohSJFVebjUsn5fEj/Pbi+RE3nBNv6UFiiGyj6gA4VP
-         pw/74OJosTSnESt4IkCbHrL0tmvqRKVB5IvGRf9Nm8/XA8ByA7rBWnFCW/e+zoGfCNra
-         gqu3oc9ctgVEHwA5BAptS2Br5zo13+P6//I5mQS6ApOiXciEAiNr5iQXdGMvSak2iFqq
-         xzAmtlZRJx5Yd6RPxRa5QN45nmqIt7wH9SBhG7NwCB8v87ZmeCSNwvAarFSFN7cr4nOC
-         6VSfgJLNSN2sTx5EDAcjRtb4F1wjF04ac1lIpq+fCMpOA/TZVcInz0aPFxfP6sNTsMUX
-         GnXA==
+        bh=HUxWnozNASldM6mLZUsm3giXihd3A7IaClJa0LXBxNU=;
+        b=3m+74o8SjvRsdmUgcYcVhHtkQ5gtjFXUrXn6POXh1c7bs4FNNLFfqhCoweEw0t6rVC
+         1gwzCq7K8wG2mewcUH2FA551uDimGj2Ajm4SVSdCyDNHl4+rqoAO5P9Hn6kzTK4pM6mD
+         MJCR/dYGEVDqVbPN3yr6STHiC8ZpEXAyZ9MD29xvbsWnaImAmx7Pc4PwXmurgb/Tes65
+         8/+sCDGnn0uta56Orh5loeKJolOEzWejwsObm98RrnI5Go2s4sZH+4qQj7IVSLUSRbGc
+         H/N8zYGffOrHaABy3J+cKHCtTG0ogUFtzi0InKaEuFy1ChIC/QCz2GxbDvO9cJSuogPd
+         RhZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708545731; x=1709150531;
+        d=1e100.net; s=20230601; t=1708545865; x=1709150665;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hW/eD+217SwbFSrd+7OlcqgqqQaX2xcDsJgsLrnW3ms=;
-        b=H04SfChHx/7/4CfV5ydmLSF5hVfTKAy85wVtAXNXhyqQQOxojFIqZMl9Jn+i7uzQxQ
-         QjRcXjL2cOfFRsAO6OO0wYKkooaYHZl148Vnt+DnDHORZdUaMmnoBgG+rWJlnAx28GYe
-         788ME667DkFOW16iQHcqZLC/iSLWv+eb818D/0ILGJ07e12DfNl7Z3O4XMW2nyLMhUrY
-         Z5Gv/HC4qeKBCmxVvTj2ZFBpriJ/CK85H/Yv++Cl5luDRO4goDSvl3JkZUe9NpyWYj78
-         wN6woZkWBRJ1q5iVh+lccr7QUzvmM3+9ac5GTaU6YQUnP0oTRGU0r1KVMU+FEdAHFsDd
-         d5Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVvLXssFXOSWDi/5/0iwQ8fyI27kCl7GcgmyXv4xFc1dm1w9TbnMbAObJvNxjfYXU3BYlT3yoiwkoHF7x5H2KsIhExMfSY5Ey6nugdfCVa
-X-Gm-Message-State: AOJu0YxZhXXKeM3NBdWx94bjx0S8gcFFA/t58e+7Lvhz5jSKT802kgL0
-	B5LYsBx7y/OmcWwEdggUwqg7jRqdXpVdKEHLW+B2faPoU4Lb0lCPWegMmXnUUw==
-X-Google-Smtp-Source: AGHT+IG39BbcKPU1il8vkTs2a8eXqdOP0Ld0XjhZHI7TKaGTsFOA7fu8B9CXr669y5rm4dsiJ0Wmbg==
-X-Received: by 2002:a5d:929a:0:b0:7c7:4d7e:de87 with SMTP id s26-20020a5d929a000000b007c74d7ede87mr10763875iom.1.1708545731187;
-        Wed, 21 Feb 2024 12:02:11 -0800 (PST)
+        bh=HUxWnozNASldM6mLZUsm3giXihd3A7IaClJa0LXBxNU=;
+        b=eZwLIBTnKGYftfmLWhaMSrPFNMVDE8t9T05AFvjzG/kuqMnUh+He3qrPZrjDt0/axO
+         XxMr57pe3x+nnwcLNLvtDfjXk2TgrhzdoNRYh3Qgp2SoYtho8VfG5J9I/EB8WZtOjLhC
+         HAH7Exu3FcAkCqLu8xn5uQdNlxSIzNeszw7ioZAHrSuhtubZ1phaLT2F2usdNWsBnazx
+         OzVXJmNxgGwxVdxxGiKgUrh12VWgpD3sCP3pPEhiQNZ9qDMY80t1MVB76/DLk1/A4/Uy
+         Adne/DUlRXJ69RHic8O5EFpYuQRAVzj+mvycH7d7dFywD4DamCajiCdU82y6MBJe8dNr
+         gsCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeLhnJYFwFaoo0xIlY9d9FZxAm+PWc2zjR9Il5y+KWhaBKXeVRDTT6U6fMD4PD9a+6/X3h80W7Q6WsU789qot5cje8iUl4aCDPrGmlIiwg
+X-Gm-Message-State: AOJu0YxD1QsQPDyNr825GiRlfzxtyPJRv9b66QiFBa3eEihnvptP3fY5
+	26379SvDRSUKjB4vYl6u4wZLxPCkAjUBUCKchHpfZvKZZwKFmflr5dBzZXdFGQ==
+X-Google-Smtp-Source: AGHT+IERZJoWhG4EWPF6TTNxmVzRySC9KGEbeq7lW206WSkBdenSx9MWqz5eGYR8XIoLVoQASwKcyw==
+X-Received: by 2002:a5d:9b10:0:b0:7c7:6e49:2208 with SMTP id y16-20020a5d9b10000000b007c76e492208mr4170773ion.13.1708545864703;
+        Wed, 21 Feb 2024 12:04:24 -0800 (PST)
 Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id fv5-20020a05663866c500b004741f7683ebsm2243287jab.154.2024.02.21.12.02.10
+        by smtp.gmail.com with ESMTPSA id dl5-20020a056638278500b004742837424fsm1881404jab.53.2024.02.21.12.04.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 12:02:10 -0800 (PST)
-Date: Wed, 21 Feb 2024 20:02:04 +0000
+        Wed, 21 Feb 2024 12:04:23 -0800 (PST)
+Date: Wed, 21 Feb 2024 20:04:21 +0000
 From: Justin Stitt <justinstitt@google.com>
 To: David Gow <davidgow@google.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
@@ -78,11 +78,11 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	intel-xe@lists.freedesktop.org, linux-rtc@vger.kernel.org,
 	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
 	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 9/9] kunit: Annotate _MSG assertion variants with gnu
- printf specifiers
-Message-ID: <20240221200204.frzov7n5bxb4cekd@google.com>
+Subject: Re: [PATCH 1/9] kunit: test: Log the correct filter string in
+ executor_test
+Message-ID: <20240221200421.us26bqteeihiwiwu@google.com>
 References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-10-davidgow@google.com>
+ <20240221092728.1281499-2-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,54 +91,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240221092728.1281499-10-davidgow@google.com>
+In-Reply-To: <20240221092728.1281499-2-davidgow@google.com>
 
 Hi,
 
-On Wed, Feb 21, 2024 at 05:27:22PM +0800, David Gow wrote:
-> KUnit's assertion macros have variants which accept a printf format
-> string, to allow tests to specify a more detailed message on failure.
-> These (and the related KUNIT_FAIL() macro) ultimately wrap the
-> __kunit_do_failed_assertion() function, which accepted a printf format
-> specifier, but did not have the __printf attribute, so gcc couldn't warn
-> on incorrect agruments.
+On Wed, Feb 21, 2024 at 05:27:14PM +0800, David Gow wrote:
+> KUnit's executor_test logs the filter string in KUNIT_ASSERT_EQ_MSG(),
+> but passed a random character from the filter, rather than the whole
+> string.
 >
-> It turns out there were quite a few tests with such incorrect arguments.
+> This was found by annotating KUNIT_ASSERT_EQ_MSG() to let gcc validate
+> the format string.
 >
-> Add the __printf() specifier now that we've fixed these errors, to
-> prevent them from recurring.
->
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Fixes: 76066f93f1df ("kunit: add tests for filtering attributes")
 > Signed-off-by: David Gow <davidgow@google.com>
 
 Reviewed-by: Justin Stitt <justinstitt@google.com>
 > ---
->  include/kunit/test.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  lib/kunit/executor_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index fcb4a4940ace..61637ef32302 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -579,12 +579,12 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
+> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+> index 22d4ee86dbed..3f7f967e3688 100644
+> --- a/lib/kunit/executor_test.c
+> +++ b/lib/kunit/executor_test.c
+> @@ -129,7 +129,7 @@ static void parse_filter_attr_test(struct kunit *test)
+>  			GFP_KERNEL);
+>  	for (j = 0; j < filter_count; j++) {
+>  		parsed_filters[j] = kunit_next_attr_filter(&filter, &err);
+> -		KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter '%s'", filters[j]);
+> +		KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter from '%s'", filters);
+>  	}
 >
->  void __noreturn __kunit_abort(struct kunit *test);
->
-> -void __kunit_do_failed_assertion(struct kunit *test,
-> -			       const struct kunit_loc *loc,
-> -			       enum kunit_assert_type type,
-> -			       const struct kunit_assert *assert,
-> -			       assert_format_t assert_format,
-> -			       const char *fmt, ...);
-> +void __printf(6, 7) __kunit_do_failed_assertion(struct kunit *test,
-> +						const struct kunit_loc *loc,
-> +						enum kunit_assert_type type,
-> +						const struct kunit_assert *assert,
-> +						assert_format_t assert_format,
-> +						const char *fmt, ...);
->
->  #define _KUNIT_FAILED(test, assert_type, assert_class, assert_format, INITIALIZER, fmt, ...) do { \
->  	static const struct kunit_loc __loc = KUNIT_CURRENT_LOC;	       \
+>  	KUNIT_EXPECT_STREQ(test, kunit_attr_filter_name(parsed_filters[0]), "speed");
 > --
 > 2.44.0.rc0.258.g7320e95886-goog
 >
