@@ -1,54 +1,54 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E0732C84;
-	Thu, 22 Feb 2024 23:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B35B13BAD8;
+	Thu, 22 Feb 2024 23:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708645774; cv=none; b=Hcb49pO1+/gQMke+H3HyUWtKhnPqbhUHlxWvYXJVC0LcYbi6KORw3qlK+n3YuRH+KUVvo7PWmqT2b22Q3mdN/FEldvLOn/teGoZcmUfsD51TfKUVHaUFLqYMI0ibF0YNkhSeieNUHekCSH4yQNjX8NzVlCWtZ0sOmIwCMvbeeJI=
+	t=1708646116; cv=none; b=MWiB9+bP5N09+fqQbOKN+YXKNdCN+cr90YZmK6+hh1DznZzSwatuXcUC4lKAI4obHTUlDuNAH/ujVziG/ZJjQggTDFRTWp8U11O1/mOIwchqQaqBWbu/VzBXB9nRslZeOK/4OplNMQ921QUZQAdYSaoRxTQSOvzjVqHzttIsKTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708645774; c=relaxed/simple;
-	bh=Rf4YFZGCoDZ1bCrs/37WDyG/DW+iNIONt5UEqAWkVq8=;
+	s=arc-20240116; t=1708646116; c=relaxed/simple;
+	bh=5DbrVE98gnMbW/sOxH/2/zMMJkQFjIVpVGo0lc7VS5c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hP7Bc5rBd4Y6QrEFCmV10A1+wU0tOEmR6bys0bnljFdcue9IHfY02qPh+7OBWgXUVZVwex98B8AD62u7p5ZZ5pG1DpAWVLbbADhSW+gs//X7rZ8P/tvOeklGE4KilAQZ5lWnQXCRV9iS5PLQg3Akiz9qwE34V7o+16eKS3sALMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=FSbouayq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H1FMMH0I; arc=none smtp.client-ip=64.147.123.156
+	 Content-Type:Content-Disposition:In-Reply-To; b=PEkZxyjJFLwcg7N66MuWC81cP1AgiYr3+GjBYyn+Vg5Um7Sr7rdEm2zMQEZjurbV6qKkbfZGm7U82puR5rhnDccD25nUxmRAxbfFP+b4Wy4xEWP6yC/Wi0cDJb0Ikb3UfQkmP6qqw2+sloXtbi/5AhdLGgIri4oJ/Mr/CwVE1T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=N4cPvAnS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YBRqsSVJ; arc=none smtp.client-ip=64.147.123.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="FSbouayq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H1FMMH0I"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfhigh.west.internal (Postfix) with ESMTP id B8262180011D;
-	Thu, 22 Feb 2024 18:49:29 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="N4cPvAnS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YBRqsSVJ"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 321511C0007D;
+	Thu, 22 Feb 2024 18:55:13 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 22 Feb 2024 18:49:30 -0500
+  by compute5.internal (MEProxy); Thu, 22 Feb 2024 18:55:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
 	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708645769; x=1708732169; bh=ILw8Lb9NRg
-	Vjbv3d3fgqIKL7GVVXnpquofQj0VHt3qc=; b=FSbouayqr83HDce0dLvghbHifh
-	fg7AEv+KzCVmVsK1bHQgMVZN1LMw2AS68mtxAg+tJWGqU9QydknKVDhKLfOz4SM7
-	laOAwGxsLxKJjJXeA5IS9/CadvmnOmyprAFcEIzv/Jwe26hui4y8jl7c4gzF7eHZ
-	fTCrip5I9n3/mzctP5MCjuzZV6bSi+WKXiWV++jpBCtCsXb7mCMszAb/6Oamz4cd
-	S+yzbg1vXkHROpgE8spmFIWdSPiVk/1Kr4BtgAXG0kFa0sz+HErvq1CGhtd6TTX/
-	xZqixqVMsK7nVWMMlg177P1PmMIuFiIKtxFmCUkYGDLbS2nwvbs169NUPRtA==
+	:subject:to:to; s=fm3; t=1708646112; x=1708732512; bh=Pl5vMqRidv
+	VS3SQYlynbhIdESVfcbmX9djCvU9x2wXo=; b=N4cPvAnSweShcMB1XLNY81DJ8+
+	F9vxf7JZsBOALVaHY4hy7dNmzenRz0fc3qEiY9paB/b0NBeIp5sDZpCRTClkmrXT
+	VoEDj029veG9v0ax7UIGWq+CnJ1ZvrHf56u7WgY4iU9IbFx6JXOmQsWPJ5kKd3Fq
+	WZi/EdWvHsVsFS3VgzFzFuxIL+aZpK0i9FmowqUqbLK5kWoa4GviFJBuz7O8HMm4
+	Km8spXAlnD0n3XutD38kSl7FGygO2CrjrAf4f1EMWZ7XYhW0ICxOa8M8xRxhnCiM
+	EQJsjiHYgFS/xIWVbrliXV6Nr6y3aTtx5lCoS5UE4Wa8lGY6896PQNw/cTiA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708645769; x=1708732169; bh=ILw8Lb9NRgVjbv3d3fgqIKL7GVVX
-	npquofQj0VHt3qc=; b=H1FMMH0If/yP9lEBc2BZCSuNCo4ZS+ao8n+tCJstsGSj
-	cuu7GImKal3QF7hc7CupvyNqMBISdHevjoJIezleCourEcNKL6iIN5m/5MRktttf
-	RltUIoQn+qzl/YdLkTVgNklNnhsSa5Xb1WuHqtoGnJPK1cUTUfagS9x4ivqBAUDm
-	DP1uHkWsslrSLREyTcaDrGdImLu3MBVTUHtAoCJfTdQrqpwlmneLnzbpQ75eq9Bx
-	mK8fQvl/kT3teltV2APibNCu1hBd9rJ3PLld+h9g7iXTaZ9HDKbLLi7Q3JTw1sH9
-	3IMXzFUd4B6ukfjszpslg3S3abviB6YH9rBbcv1o3w==
-X-ME-Sender: <xms:id3XZcZIvU7jIzS28dgRu5tKrfITPfG0q7l6N4HnS3J3zY4uiijq4Q>
-    <xme:id3XZXb8d6jAfCWgzbGzKyV3a9CFtPBTiI4lPG4N4TRhp4Zh9NmKlDLdgqPdwDZWg
-    Kc-FSrBWMlmjUZmENE>
-X-ME-Received: <xmr:id3XZW_aEJB_xo0vM1L1XOOX3RizcIo1iYkGGUAfghuLl1mwsv2HvIrq7EM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeehgddufecutefuodetggdotefrodftvf
+	fm1; t=1708646112; x=1708732512; bh=Pl5vMqRidvVS3SQYlynbhIdESVfc
+	bmX9djCvU9x2wXo=; b=YBRqsSVJqK9CrlMIbF99AtjQTUSNF7AuV8tjQbV4cXGQ
+	h8ZrPtfg7cZ2M5/BlCVKChYXo9Auv74w8I0GI+jIlVdM28Hm/Lk8XM3N1h/Hzxti
+	6k9fwoWlpH99hNDsk5H3v/YhEhi+kwxPqEzQfBTXVT3KKvO16O0Oek+xXqsoGH4W
+	YwtytgyWLRYEhvJZaJWc7/PtOk51DXLnsPs+spM98F6mgkB/ZaArcw4ethBDoTT/
+	8RSpnpQisPHK94yg9HKVqM9+ntyjwGcmfS6zVdcTuUAPN6VRvOYZTBubekNMV4AZ
+	+4yvgn/6SH2/ewjkyxOiRgJwUoOl1Q43GiyEVuuC7A==
+X-ME-Sender: <xms:4N7XZe6s6BpoK6IEAWAFRjpHeFKUZzyZWLgnSR3JBBDASNZlSlslkQ>
+    <xme:4N7XZX6RzZecA_xZLHaIjL6lyzbcqHntZ2HZpfup94tnoLyAshLUEl71C3WR-7RJM
+    2b7fcb6XFBH6O3io3Q>
+X-ME-Received: <xmr:4N7XZdd-xq5EiOWyEpcaThNuPZzguC_f547wle3yoTRQWXub6k6SJujrLes>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeehgdduhecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigthhho
@@ -56,24 +56,24 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeehgddufecutefuodetggdote
     htthgvrhhnpeeutedttefgjeefffehffffkeejueevieefudelgeejuddtfeffteeklefh
     leelteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
     hthigthhhosehthigthhhordhpihiiiigr
-X-ME-Proxy: <xmx:id3XZWonpGDQDkQZmXmuVXQKRIO65y08sA4Eql24Curs0f1-Vt0lpA>
-    <xmx:id3XZXrISR8H6_awCtDYWS6041JEMWvIpA9fWzlYSV3G1BwvNMoUNQ>
-    <xmx:id3XZUSU5rldCwqj-GVWqit2JMV-dp1JQnaF-CsMzHyJz2vCLeR4iA>
-    <xmx:id3XZYdrxl3TeIMTKa36i6-yJEQQTYUIgOxfVxJmmMtweCEqLnWXLY6E7wc>
+X-ME-Proxy: <xmx:4N7XZbKXkGX29ehCbjpcgVU4jL-4-moyeK7IRn6-scv4A-DF-ykHew>
+    <xmx:4N7XZSJHNpeHj57N8yS51lGisUE5ONhHklevuzQddTD9cp42N6xnlg>
+    <xmx:4N7XZcxxQ7asKFnZjtFl_JaS4qpJeBov9hB1_G1QWS4WcR74EXakBg>
+    <xmx:4N7XZa8ps-2IUHLj4xLwptKNuuZuRMO_Q5rBcAjR_RrVETEF_ey_kxew_OY>
 Feedback-ID: i21f147d5:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Feb 2024 18:49:27 -0500 (EST)
-Date: Thu, 22 Feb 2024 16:49:26 -0700
+ 22 Feb 2024 18:55:11 -0500 (EST)
+Date: Thu, 22 Feb 2024 16:55:09 -0700
 From: Tycho Andersen <tycho@tycho.pizza>
 To: Kees Cook <keescook@chromium.org>
-Cc: "Tobin C. Harding" <me@tobin.cc>, Greg KH <gregkh@linuxfoundation.org>,
-	Guixiong Wei <guixiongwei@gmail.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leaking_addresses: Provide mechanism to scan binary files
-Message-ID: <Zdfdhl78xgBuZdXu@tycho.pizza>
-References: <20240218173809.work.286-kees@kernel.org>
- <ZddnEtnxhJsafdcF@tycho.pizza>
- <202402221249.FA17A8940@keescook>
+Cc: "Tobin C. Harding" <me@tobin.cc>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guixiong Wei <guixiongwei@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] leaking_addresses: Provide mechanism to scan
+ binary files
+Message-ID: <Zdfe3Ze/PKLxvvt7@tycho.pizza>
+References: <20240222215755.it.764-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,43 +82,21 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202402221249.FA17A8940@keescook>
+In-Reply-To: <20240222215755.it.764-kees@kernel.org>
 
-On Thu, Feb 22, 2024 at 01:00:40PM -0800, Kees Cook wrote:
-> > This does bring up some interesting questions. From off-list
-> > discussions with Tobin, I believe he is not particularly interested in
-> > maintaining this script any more. I was never set up to do the PRs
-> > myself, I agreed to be a reviewer to help Tobin out. I'm happy to
-> > adopt it if that makes sense, but I'm curious about the future of the
-> > script:
-> > 
-> > 1. is it useful? (seems like yes if you're adding features)
-> 
-> Yes, LKP runs it as part of 0-day, and it's found leaks in the past[1].
-> (Though its usage could be improved.)
+Hi Kees,
 
-Oh! That is good news :)
+On Thu, Feb 22, 2024 at 02:00:47PM -0800, Kees Cook wrote:
+> Hi,
+> 
+> Since I was in this script for the binary file scanning, I did other
+> clean-ups and tweaked the MAINTAINERS file per Tycho's suggestion.
 
-> > 2. does it make sense to live here as a separate thing? should we
-> >    perhaps run it as part of kselftests or similar? I think that e.g.
-> >    681ff0181bbf ("x86/mm/init/32: Stop printing the virtual memory
-> >    layout") was not discovered with this script, but maybe if we put it
-> >    inline with some other stuff people regularly run more of these would
-> >    fall out? Maybe it makes sense to live somewhere else entirely
-> >    (syzkaller)? I can probably set up some x86/arm64 infra to run it
-> >    regularly, but that won't catch other less popular arches.
-> 
-> We could certainly do that. It would need some work to clean it up,
-> though -- it seems like it wasn't designed to run as root (which is how
-> LKP runs it, and likely how at least some CIs would run it).
-> 
-> > 3. perl. I'm mostly not a perl programmer, but would be happy to
-> >    rewrite it in python pending the outcome of discussion above.
-> 
-> I am not a Perl fan either. It does work as-is, though. Address leaks,
-> while worth fixing, are relatively low priority over all, so I wouldn't
-> prioritize a rewrite very highly.
+Thanks, the whole series is:
 
-Yep, fair enough.
+Reviewed-by: Tycho Andersen <tandersen@netflix.com>
+
+I also pinged Tobin off-list with this thread, perhaps he will respond
+here.
 
 Tycho
