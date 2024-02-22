@@ -1,149 +1,80 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287E512D21A
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 22:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BAB3210
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 22:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708640624; cv=none; b=ElFOuPXl42pwrmoRiKOME2YezjlJhAWyDef8o8OrkbzZjb9edIvH2PfQsLQ6YY8Iv23/0CQ75H5fHV7JqVg49DA7/MDp4VgqhpvrKh6duX3+ZKDYlE0/iKMf6a5AP4WiqrxcX0kPERkleW7LHHHVW36bidsm/xvkG/bHXVriyJ4=
+	t=1708641053; cv=none; b=iQH7vgwvyFR+JMYce8g2LmsyV+SA5t2SwF4jQ1CCJ51/Fbbe+PCXlQoUO71SiCUFYcVyDD/nFuR7AbsJxaHjlTXZEDoT359ZmcvtzSgDmf1YYz4y4KfcWnLo5DVynXubstJ3SEBV7JXn2p03D6ICSmr+A4AW93pSCNrzXMviKhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708640624; c=relaxed/simple;
-	bh=0xRi+wRovLEtle3IAhjBAqJ3i0Q5IwxvEzplbN5MjGY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=juEkYIIj1miDq+ioDgo3Rd2olAlMiY60BIIfnAVRA7ctkZmHkW66ALQapY8TYHw80DDsaDQZet3sooFpPdUMAdT01L/IfDlwYOH9wDA9ZvKK5OTt9JF7X9Jd2ttuvKacgDRGHUXBcmG25cMH1sAcXztErwbNAK2pwNvIe0Yo9sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Wk8sM5Jr; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wk8sM5Jr"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dc5d0162bcso1439345ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 14:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708640622; x=1709245422; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q+5ilM19CFuUy0zgxwZQpQ+MBc9LAqwOhihVDIFuqNw=;
-        b=Wk8sM5Jr5RVyv1CJ8e2xQ7BJ05jg8DtIk2sQRodjsmsowBM38MTt9Ik6ECevL8beVg
-         CxDVqSaPBAl0NpcyJI092dcwpNPngExtl8mRPRMIv+wCZ6leaMpld2aW1BD2rUi2KQpu
-         LuBWqlxFSzqTpjHIUZ+R6pNOHGE8H6M/i6id8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708640622; x=1709245422;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q+5ilM19CFuUy0zgxwZQpQ+MBc9LAqwOhihVDIFuqNw=;
-        b=ISa2Uk5MnI/NtsOXdizVfr7m1V3vvG6K3b1y6/WElAPg/wY6mUUkg0o7Tvm+IsZPRR
-         1ildvLFDxuoaogCKfNfnXGgmT5OMYEZ13UrBPoPNzZQv7KADPV3+Z/fPYMG8+mXhAgby
-         3EFp1NGpY9vP545AbzplIr2hSj1ypo6ZKKh+x/D/P+0ufQNEDLEnKStGQMU+7V4nMI6m
-         LG8caUpoRMPjX9EBw1exIoNEpb36UbY7284XsVaba5n19dtfLyTpeszf6L8ygiLz3Z1n
-         hj69PD3xbncEPpwVvZ4ZwsXnmWTaZeyzsRaHnqyvq85tvaZKd7j8+tkQZdB/+p41FlKv
-         2LXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBJUEcy9ag7vhUPadxGUhS6bJjmtVoftRBaULn2iXbTvvTOy7QxxjfitQcc7w3xxiDelPQbTyYk+X2I8NrUrebev+QDN1gLK2Lh7AeEq0e
-X-Gm-Message-State: AOJu0YxM7q/c6N0SOguspGVMbYW9NYSyxZJEgI161ofnG8bvPttuFEBq
-	LPPf1//dssLU11rGy0mdNhUDWH4O3mQSltGC6gJCI0/WMdxstZ/YMp/hiXCd/w==
-X-Google-Smtp-Source: AGHT+IHTlMT87C9FVzzBUlliIz9cjmezsgccL1stCQ33LCcAcJX6p5zAFxvPwu7ziBvSPYuZmtGtZw==
-X-Received: by 2002:a17:902:e5cb:b0:1db:d13e:26fb with SMTP id u11-20020a170902e5cb00b001dbd13e26fbmr266381plf.5.1708640622569;
-        Thu, 22 Feb 2024 14:23:42 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g12-20020a170902c98c00b001d8aadaa7easm10458002plc.96.2024.02.22.14.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 14:23:41 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] [RFC] iio: pressure: dlhl60d: Check mask_width for IRQs
-Date: Thu, 22 Feb 2024 14:23:39 -0800
-Message-Id: <20240222222335.work.759-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1708641053; c=relaxed/simple;
+	bh=9K2TkXTtpGHwF4trUhJe9FBOVST8II0WVSKn8XHMPHk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=BZodE53ZdY+x81XWdU+XkJYWKNBMOoFDgeMAIW5YPPuOA82otMbmC5PZ1l39iUnyEutC/OCA0j3bRxP96NygAcKFjAHr0HWS7NmRy6vJj0lIRklkGF6Wct5S4wU8bCb2WFxer1uZGJ17t0ySQfDBGub3ekiwDD7rzxCq4mo0Hew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-23-5HTgjfU-MUShVYi32w2fHw-1; Thu, 22 Feb 2024 22:30:47 +0000
+X-MC-Unique: 5HTgjfU-MUShVYi32w2fHw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 22 Feb
+ 2024 22:30:46 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 22 Feb 2024 22:30:46 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Justin Stitt' <justinstitt@google.com>, Andy Whitcroft
+	<apw@canonical.com>, Joe Perches <joe@perches.com>, Dwaipayan Ray
+	<dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lee Jones
+	<lee@kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, Kees Cook <keescook@chromium.org>, "Finn
+ Thain" <fthain@linux-m68k.org>
+Subject: RE: [PATCH v2] checkpatch: add check for snprintf to scnprintf
+Thread-Topic: [PATCH v2] checkpatch: add check for snprintf to scnprintf
+Thread-Index: AQHaZRMM8CNyJsqITEut/pZzq7c0N7EW8e/A
+Date: Thu, 22 Feb 2024 22:30:46 +0000
+Message-ID: <dd2b4ac483b54a41aff11a04b6906fd6@AcuMS.aculab.com>
+References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
+In-Reply-To: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1986; i=keescook@chromium.org;
- h=from:subject:message-id; bh=0xRi+wRovLEtle3IAhjBAqJ3i0Q5IwxvEzplbN5MjGY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl18lq4o+31/1R0DWW8xWF6Y+7BP30IH/M1esol
- O1U6dy83cuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdfJagAKCRCJcvTf3G3A
- JtaRD/9phV+1oaxweCDWM7RyA5yYZNO0eEqTdKf4RB6phXBkx9kEI7rGUVfbyrXtZ0NC+Nx1rNv
- YPwLgODU6hZ6heWm1tX+r26uJ4XR7UM/wqORisZmp8e9X4iicnJtPPF9BpC8YsWfbDf5EFw09ip
- N+4mhNwKHfW6hvAG4l0ujSvKtJnIGTaKy8JowAz0VRswGgw/xGbQatKmvPuABoOxt3HMXXBP3Qm
- gSzJQ09JSv2A74EpZAcRKvX1qg8a3bAdPrHyQFHmZNt1sqW54K2KWU+w2umluFntRwtv9AfItiv
- 81zNznm5WHoKMz83Y8VyHE5bBcUpRp06+1+KfnAZ6JdexzUsQ3Sw7t1rqTfUsRLjreMaplHPbf1
- Xbv4YatUXU3FeQ0kuvAH3z66vmuGvG9j4GvjxjvJ1tgJ/aFAD6gsayqP1j07Op5om1MCgspydfv
- ATbWJR60pbqyr37CFhZ7LDB3ko/cKUq+FBUFl8Ot4iN0ffVMOtLLHNTY0Os0A/L2ZyM9MLilnLF
- 4M5PfHPjKrAeU869+gMxnFWfA/vTdZ3ti4rVtvLwYPzpCbTxcRmOTNY7zo9bA8HEUqHelVjo0Bv
- f0RfC+TisOs7I5itK9ke182+3YIAUbVYWtkOFQluiu5dsJCzihtVr6/0MVdORj1rVJ+Jq4pW1CP
- x2bqQQk KFcoGfpA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 
-Clang tripped over a FORTIFY warning in this code, and while it seems it
-may be a false positive in Clang due to loop unwinding, the code in
-question seems to make a lot of assumptions. Comments added, and the
-Clang warning[1] has been worked around by growing the array size.
-Also there was an uninitialized 4th byte in the __be32 array that was
-being sent through to iio_push_to_buffers().
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/2000 [1]
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Nuno Sá" <nuno.sa@analog.com>
-Cc: linux-iio@vger.kernel.org
----
- drivers/iio/pressure/dlhl60d.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/pressure/dlhl60d.c b/drivers/iio/pressure/dlhl60d.c
-index 28c8269ba65d..9bbecd0bfe88 100644
---- a/drivers/iio/pressure/dlhl60d.c
-+++ b/drivers/iio/pressure/dlhl60d.c
-@@ -250,20 +250,27 @@ static irqreturn_t dlh_trigger_handler(int irq, void *private)
- 	struct dlh_state *st = iio_priv(indio_dev);
- 	int ret;
- 	unsigned int chn, i = 0;
--	__be32 tmp_buf[2];
-+	/* This was only an array pair of 4 bytes. */
-+	__be32 tmp_buf[4] = { };
- 
- 	ret = dlh_start_capture_and_read(st);
- 	if (ret)
- 		goto out;
- 
-+	/* Nothing was checking masklength vs ARRAY_SIZE(tmp_buf)? */
-+	if (WARN_ON_ONCE(indio_dev->masklength > ARRAY_SIZE(tmp_buf)))
-+		goto out;
-+
- 	for_each_set_bit(chn, indio_dev->active_scan_mask,
- 		indio_dev->masklength) {
--		memcpy(tmp_buf + i,
-+		/* This is copying 3 bytes. What about the 4th? */
-+		memcpy(&tmp_buf[i],
- 			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
- 			DLH_NUM_DATA_BYTES);
- 		i++;
- 	}
- 
-+	/* How do we know the iio buffer_list has only 2 items? */
- 	iio_push_to_buffers(indio_dev, tmp_buf);
- 
- out:
--- 
-2.34.1
+RnJvbTogSnVzdGluIFN0aXR0DQo+IFNlbnQ6IDIxIEZlYnJ1YXJ5IDIwMjQgMjI6MTINCj4gDQo+
+IEkgYW0gZ29pbmcgdG8gcXVvdGUgTGVlIEpvbmVzIHdobyBoYXMgYmVlbiBkb2luZyBzb21lIHNu
+cHJpbnRmIC0+DQo+IHNjbnByaW50ZiByZWZhY3RvcmluZ3M6DQo+IA0KPiAiVGhlcmUgaXMgYSBn
+ZW5lcmFsIG1pc3VuZGVyc3RhbmRpbmcgYW1vbmdzdCBlbmdpbmVlcnMgdGhhdA0KPiB7dn1zbnBy
+aW50ZigpIHJldHVybnMgdGhlIGxlbmd0aCBvZiB0aGUgZGF0YSAqYWN0dWFsbHkqIGVuY29kZWQg
+aW50byB0aGUNCj4gZGVzdGluYXRpb24gYXJyYXkuICBIb3dldmVyLCBhcyBwZXIgdGhlIEM5OSBz
+dGFuZGFyZCB7dn1zbnByaW50ZigpDQo+IHJlYWxseSByZXR1cm5zIHRoZSBsZW5ndGggb2YgdGhl
+IGRhdGEgdGhhdCAqd291bGQgaGF2ZSBiZWVuKiB3cml0dGVuIGlmDQo+IHRoZXJlIHdlcmUgZW5v
+dWdoIHNwYWNlIGZvciBpdC4gIFRoaXMgbWlzdW5kZXJzdGFuZGluZyBoYXMgbGVkIHRvDQo+IGJ1
+ZmZlci1vdmVycnVucyBpbiB0aGUgcGFzdC4gIEl0J3MgZ2VuZXJhbGx5IGNvbnNpZGVyZWQgc2Fm
+ZXIgdG8gdXNlIHRoZQ0KPiB7dn1zY25wcmludGYoKSB2YXJpYW50cyBpbiB0aGVpciBwbGFjZSAo
+b3IgZXZlbiBzcHJpbnRmKCkgaW4gc2ltcGxlDQo+IGNhc2VzKS4gIFNvIGxldCdzIGRvIHRoYXQu
+Ig0KDQpXaGlsZSBnZW5lcmFsbHkgdHJ1ZSwgdGhlcmUgYXJlIHBsYWNlcyB0aGF0IHJlYWxseSBk
+byB3YW50IHRvDQpkZXRlY3QgKGFuZCBlcnJvcikgb3ZlcmZsb3cuDQpUaGF0IGlzbid0IHBvc3Np
+YmxlIHdpdGggc2NucHJpbnRmKCkuDQoNCkknbSBub3Qgc3VyZSB3aGF0IHRoZSBzb2x1dGlvbiBp
+cyB0aG91Z2guDQpIYXZpbmcgYSBmdW5jdGlvbiB0aGF0IHJldHVybnMgYSBuZWdhdGl2ZSB2YWx1
+ZSBvbiBvdmVyZmxvdyBpcyBhbHNvDQpsaWtlbHkgdG8gZ2V0IG1pc3VzZWQuDQpzZXFfcHJpbnRm
+KCkgKG9yIHdoYXRldmVyIGl0IGlzIGNhbGxlZCkgbWF5IGxldCB5b3UgY2hlY2ssDQpidXQgaXQg
+aXMgaGFyZGx5IGEgY2hlYXAgd3JhcHBlciBhbmQgYSBiaXQgb2YgYSBQSVRBIHRvIHVzZS4NCg0K
+CURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBN
+b3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAx
+Mzk3Mzg2IChXYWxlcykNCg==
 
