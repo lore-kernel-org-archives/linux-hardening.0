@@ -1,141 +1,174 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9036A154BE3;
-	Thu, 22 Feb 2024 17:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1C2155303
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 17:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708622393; cv=none; b=o0vfJyOu9tHFjPWXkye0peXK3pdz+XTSYHSv/3l/8APHbkc0J15uj1HGjwVaVY+9a4NyQC5jjDO7LcyoKipBvexSJIAN0UY4QNfieumR2+AS/lKg9x/H45mHOdLHfWfbPJpX0ECKQSe6FtmajnUq1irDldatdDWs3OFpcS1ibs4=
+	t=1708623377; cv=none; b=Cu6Fl/rtiv5U29IoIMHaLh02+zIduf65Lb8ev4wdi4JtZ/wi9cvLVyllIhsnk9OhYVMMv/dPiG2Nxlvx+I1Px05h9Ln6lAQrbAKlheAkp3x0HUB2CSJ22tDP1eeDygcjLrQe7pGi4jU/tcGbGOGJ4nwSKt7VwRpsKBSbeVzHKgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708622393; c=relaxed/simple;
-	bh=8CEg/RKdoDPInzI7juj6Pe6d6f/MCz9OOa+Abxcwaq0=;
-	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=P9G7ZbXVSuMG37vKx4ZUhpVhJa900VAIdq/pEzeaa9Ad1WmBe0AQNzkwWX6/NQMZ52n4iQCANTH1PWtXae67kVXlyPtOmhnVjCgo4yw6LCH+axC78OyO/zyILSw+KME+0Bok3z4ZvpEo/6+anzFLJGRAmV3+2CLGJgAEp+iGXiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=InY9sYoE; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708623377; c=relaxed/simple;
+	bh=d65n5xxTD0/aMcmzOPHCt3iAilOWcSe0SlSiiwYdBzo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XpUAvga6f2Hbp3JyjzIIg73IezigoDvCBK6xqL73vzVDEAlnIdUNY/CwxfTZhf3AthwKCkMYroQAahnywLiX6Al2KtiyqvGLWrxcbuCQqR0YgYlG/OlgW3AcBOfZ084TTeLyYSx3Crvq3LIQqAueBzfzZwYYKrt6xMAhlZw4vls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ESR0p+cS; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InY9sYoE"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3f5808b0dfso265033266b.1;
-        Thu, 22 Feb 2024 09:19:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ESR0p+cS"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso6841a12.0
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 09:36:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708622390; x=1709227190; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQMhMz89ycmZ70Ia4sIX+P56KQVZUaP0RVmqAd/9EXs=;
-        b=InY9sYoEUxm9LCJTB9VHQXmzpqr5KVHNSohIL7LDhjDCgy4oYsys0xKoO6rNfqgHZ2
-         ExIpdnhnc7WFSb1GpicPRmq3YB1Sf/ROfutzuNj0/ozgpkwtVHbyOv3/AdjLAwyPZ9O6
-         MzxDDDQTiVKFXfAElVQdQkN9kXG5qvDp3KPwnFg6hSv7DT5Lk3Bs7rR9lJ6x4DSbxkr6
-         98q9Yu/AliKUWwp6C3HecFLzvVY4Gsh1xGeljUuWzlbMAIuwW8OuZBKg+7eHrQeWzchA
-         QRRdMNC5j6qa++mmwuu2YQlSZU1TMDipmcSDHlliU25n0riXl54pw5S1miOFBOfwhXxH
-         TFpA==
+        d=google.com; s=20230601; t=1708623374; x=1709228174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OmEKVyetFL548x1phH+vDmo2g1KI7fqBu5h2gLzPo5M=;
+        b=ESR0p+cSLbdxqzoHOZabd9oYJwWEocaERPdJJs4ITL6QBBGaaJMHK4fVfg+ZvRsQyi
+         EYORRqjXcYZlZZXs74sZMngIj4N+C6OmIzT9oO+S9mGwDejeyphXxyevGC+91dCUldJO
+         rhmPzkAbE/aALEtx0qRCEcfl5oe/vQVDclbLqJXoXqdyKTjuMyCYqpziKiMh4UMWmA1V
+         An/H5izoWpgYF8AT0hsN37q32SxvCluK+P5LB63hDrOcwGgghKcLdNBBzrxtU8ySWqEu
+         u5akKAqWLRhfH4feiw2SrT4nLBSE6aCW7XU5FDe436WCTE5Q2dJ/BhjCpUo2UhQ1YUkD
+         D4Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708622390; x=1709227190;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CQMhMz89ycmZ70Ia4sIX+P56KQVZUaP0RVmqAd/9EXs=;
-        b=uIalnx8i3uf9yhMxTLMyGm9jDdW0SgsrTMqse6D4GJHXrQBX5SrDAK1/lNvUGO4tTJ
-         bFEsYVXetDf/6Cc5wBDoMDVSvuAIx1ULJlXd5/j+Be70ib9sSzzQ18b+oonFw4TUn6+2
-         /qjoQn2UB96XlzagiZ7ggTc/w4vKBUDxQZnF2WX/dvsMgBGPAwx6RzBlxcm+k5vs6esf
-         MvGpsHIdRAD62EacJdg+gqnuKcmw3N5NbHGMdy9GKzURS1fpwCAy5KARtviFk7EDEMZd
-         2fBfm97YReOYemo7jEkWNtcVIp1qcbxjhOD/cx9sMtWu0jS1X++q0NQcqkUSor+oJSDj
-         /H2g==
-X-Forwarded-Encrypted: i=1; AJvYcCW9DyWEhdzBEwBFC0qqJdM/odKO5D24einiQ0KbV7ek2jB9ePGqz9RON5yl2xwgvhrplQkoI8wuU3BoeG8DndXwRDlA4ZeOSOgbx4ZROh26Fx8ykfLClmi3rwY0dzPv7kxpwWOvfrCB7EMuhPryMY7pL7FGEbnwwCnuQu3W63/KVUq+s3W0TFum5WQ=
-X-Gm-Message-State: AOJu0Yzo4xPpbisiQunqMwF1WG7/CIudEF39MDp5WGvb3avuKj1wVH7r
-	WGEa8PfuE0I45jyxvnDprD/MfC1B2GH6dp6qpErIOk8uvSRcuX7ibtg8nndN
-X-Google-Smtp-Source: AGHT+IG/A2Zz+TNmcwZ83Ix3GENVBoY4VDLiLrmD1Q4+RDnMLOBCPfXOIHB3Cs54Y2XtVODY2oQdSA==
-X-Received: by 2002:a17:906:5fd7:b0:a3e:4f8b:bcc5 with SMTP id k23-20020a1709065fd700b00a3e4f8bbcc5mr9505053ejv.34.1708622389841;
-        Thu, 22 Feb 2024 09:19:49 -0800 (PST)
-Received: from localhost (p200300e41f2d4600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f2d:4600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id vw3-20020a170907a70300b00a3fb4d11809sm25842ejc.204.2024.02.22.09.19.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 09:19:49 -0800 (PST)
-Content-Type: multipart/signed;
- boundary=0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1;
- micalg=pgp-sha256; protocol="application/pgp-signature"
+        d=1e100.net; s=20230601; t=1708623374; x=1709228174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OmEKVyetFL548x1phH+vDmo2g1KI7fqBu5h2gLzPo5M=;
+        b=lzS0LaK4VNermrviqCvaPGLWeimhuCtRxvCQQgfDDO3+KGTiszl99bIYpeIlWKZYjQ
+         ssWrF4SD8DqfxERwLl6N6GOyvhAoWh9AonVRtg2IIAYXyELzFq3PCemcPQFB4W9q4vfV
+         pWHlppfkV9ibiI1Do6GBiYdRrX4hbRLpJ+TLKECMsR0kUi8JXXrCdXosPhA9pADbEIDM
+         NtNCpjWk1mli1HjPpzeR650765UP9SErLocjBZLhJlRKT6HGcFlM75zJBkpuQYDAdHpJ
+         /sJcoydbzN629OQPWDI5pmNhIAqVeFXRD6Ock7alsJtkYwemh809sioYx4S4RWo3KYOu
+         qPVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjUzySdOR268/5WxpwtgffEXBN7ptc41auFuXjy/RgeLStEPaze+cvGgjJJegBxLkwlIvXCbZydELy7DtBnrwkVnHvglodvlJf8DEDziND
+X-Gm-Message-State: AOJu0YzTud2JahsvtO7hKSfwYe+1dL7zIRYskKvwx8H7Cs2KxPzTXu6Y
+	unLUNTFln7IXpol1FdWjZv60iFgXM0sPdSlJhZign3Y31Z0rZYjol4+K2ci6k/0afh+RCHfzK0z
+	Fx2MorBypkL7c3L3Vllmm1mYhoekAr0oWJFw8
+X-Google-Smtp-Source: AGHT+IH+4QsAKS6v2wz/3Ohm5UGixFC1Is/yek5Qgz+ij5+wrc7QXl4sCi0AbqHTx6nwjSX1cBP+z7ipSxtuApYMC+k=
+X-Received: by 2002:a50:c309:0:b0:565:4b98:758c with SMTP id
+ a9-20020a50c309000000b005654b98758cmr128301edb.4.1708623373891; Thu, 22 Feb
+ 2024 09:36:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Thu, 22 Feb 2024 18:19:48 +0100
-Message-Id: <CZBS35EFPNLY.3UV6B9TKIU1@gmail.com>
-Cc: <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 0/3] Tegra30: add support for LG tegra based phones
-From: "Thierry Reding" <thierry.reding@gmail.com>
-To: "Svyatoslav Ryhel" <clamor95@gmail.com>, "Rob Herring"
- <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Jonathan Hunter" <jonathanh@nvidia.com>, "Kees Cook"
- <keescook@chromium.org>, "Maxim Schwalm" <maxim.schwalm@gmail.com>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20240214091201.17636-1-clamor95@gmail.com>
-In-Reply-To: <20240214091201.17636-1-clamor95@gmail.com>
-
---0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240221092728.1281499-1-davidgow@google.com> <20240221092728.1281499-3-davidgow@google.com>
+ <20240221201008.ez5tu7xvkedtln3o@google.com> <CABVgOSn+VxTb5TOmZd82HN04j_ZG9J2G-AoJmdxWG8QDh9xGxg@mail.gmail.com>
+In-Reply-To: <CABVgOSn+VxTb5TOmZd82HN04j_ZG9J2G-AoJmdxWG8QDh9xGxg@mail.gmail.com>
+From: Daniel Latypov <dlatypov@google.com>
+Date: Thu, 22 Feb 2024 09:36:01 -0800
+Message-ID: <CAGS_qxoW0v0eM646zLu=SWL1O5UUp5k08SZsQO51gCDx_LnhcQ@mail.gmail.com>
+Subject: Re: [PATCH 2/9] lib/cmdline: Fix an invalid format specifier in an
+ assertion msg
+To: David Gow <davidgow@google.com>
+Cc: Justin Stitt <justinstitt@google.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Rae Moar <rmoar@google.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Kees Cook <keescook@chromium.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Stephen Boyd <sboyd@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
+	"David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Wed Feb 14, 2024 at 10:11 AM CET, Svyatoslav Ryhel wrote:
-> Bring up Tegra 3 based LG phones Optimus 4X HD and Optimus Vu based
-> on LG X3 board.
+On Wed, Feb 21, 2024 at 10:22=E2=80=AFPM David Gow <davidgow@google.com> wr=
+ote:
 >
-> ---
-> Changes from v3:
-> - set max77663 ldo0 to be always on since it is required by the SOC
-> - adjusted bluetooth module comment
-> - added enable gpio to dw9714 focuser
+> On Thu, 22 Feb 2024 at 04:10, 'Justin Stitt' via KUnit Development
+> <kunit-dev@googlegroups.com> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Feb 21, 2024 at 05:27:15PM +0800, David Gow wrote:
+> > > The correct format specifier for p - n (both p and n are pointers) is
+> > > %td, as the type should be ptrdiff_t.
+> >
+> > I think %tu is better. d specifies a signed type. I don't doubt that th=
+e
+> > warning is fixed but I think %tu represents the type semantics here.
+> >
 >
-> Changes from v2:
-> - switched from _ to - in node names
+> While I agree that this should never be negative, I'd still lean on
+> this being a signed type, for two reasons:
+> - I think, if there's a bug in this code, it's easier to debug this if
+> a 'negative' value were to appear as such.
+> - While, as I understand it, the C spec does provide for a
+> ptrdiff_t-sized unsigned printf specifier in '%tu', the difference
+> between two pointers is always signed:
 >
-> Changes from v1:
-> - switched from prefix lge to lg
-> ---
+> "When two pointers are subtracted, both shall point to elements of the
+> same array object,
+> or one past the last element of the array object; the result is the
+> difference of the
+> subscripts of the two array elements. The size of the result is
+> implementation-defined,
+> and its type (a signed integer type) is ptrdiff_t defined in the
+> <stddef.h> header"
 >
-> Maxim Schwalm (1):
->   dt-bindings: arm: tegra: Add LG Optimus Vu P895 and Optimus 4X P880
+> (Technically, the kernel's ptrdiff_t type isn't defined in stddef.h,
+> so a bit of deviation from the spec is happening anyway, though.)
 >
-> Svyatoslav Ryhel (2):
->   ARM: tegra: Add device-tree for LG Optimus Vu (P895)
->   ARM: tegra: Add device-tree for LG Optimus 4X HD (P880)
->
->  .../devicetree/bindings/arm/tegra.yaml        |    8 +
->  arch/arm/boot/dts/nvidia/Makefile             |    2 +
->  arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts  |  489 +++++
->  arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts  |  496 +++++
->  arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi   | 1812 +++++++++++++++++
->  5 files changed, 2807 insertions(+)
->  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts
->  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
->  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi
+> If there's a particularly good reason to make this unsigned in this
+> case, I'd be happy to change it, of course. But I'd otherwise prefer
+> to keep it as-is.
 
-Applied, thanks.
+Copying the line for context, it's about `p-r` where
+  p =3D memchr_inv(&r[1], 0, sizeof(r) - sizeof(r[0]));
+`p-r` should never be negative unless something has gone horribly
+horribly wrong.
 
-Thierry
+So in this particular case, either %tu or %td would be fine.
 
---0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1
-Content-Type: application/pgp-signature; name="signature.asc"
+(sorta bikeshedding warning)
+But, I'd personally lean towards using the signed %td in tests to
+guard against typos in test code as _a guiding principle._
 
------BEGIN PGP SIGNATURE-----
+This is especially true given that the failure messages aren't
+verified since they are mostly "dead code."
+You can have crazy incorrect things going on in the format arguments,
+see patch 1/9 in this series [1]. One of kunit's own tests would do a
+read from a ~random memory region if that specific assertion failed.
+Not a good look ;)
+We never noticed until this series enabled the format string checks.
+You also can't expect reviewers to go through and modify every
+assertion to fail to see what the failure mode looks like, so these
+kinds of errors will continue to slip through.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmXXgjUACgkQ3SOs138+
-s6EQnw//T3TGiscSn6UwTQWA/k7/K4loL3jUeWw3q5tn04EP5N6dqJBuKEg3WF48
-DYu1z6Z5P6lUS/axfxPnszFqEJu99g+O8OgJgqlcv7dOaoL3RXLBCiWHzqCV6fsP
-i7gfak36LTv8fTY88JG3xl1T27VL7rNjQ8qMFh1iqXQrRvKFtEEpkIFGAF/liMQT
-EmqTBSIO7HJE+ER1nscITCU3rUuZ4I17ZMQo+MZVYp1otdHnqI8qzWNL/cGb9k6a
-SchIHrOXO/jCXjh4j1tWh0pVrPQtN89c66MM8qllGw+0ef1dl9tqzSsPUDT9OvkK
-R7SWbYrYAwBGhTSMwrKmtMSl2fI5VHRyr1RSewvmflfpup6P+wgfDJENT1/9B/pl
-FkX3UzZiLY4tKc8SQ38rXL6MoYYaHTpaL6Nz210tPm96lJvPrx/dM2Ge+MCt3Bv0
-47hUWslfhPe9UhggaTDz3Nrm81PCCMH9s7ucV9BQSbwwHYRNzJLI0aHmuABzLFu6
-vJ0IXW+9N9wG6usjbzujq/LHCEDhm6eNHI4yXIASoz6BzuH9nfQHv91oHg5WhkNM
-8356TcPyz+Q6vsRI6QPsnKGcEIaDxen9GW6/VjxqkbPUfRO1274lCczrHsWpJP73
-8yYfQ25yz4OyfTkBUiKwfC38JDXbEFwPElTUDQcWzJ9NbBqs0E0=
-=tZ71
------END PGP SIGNATURE-----
+*So IMO, we should generally adopt a more defensive stance when it
+comes to these.*
 
---0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1--
+Also consider the user experience if there is a failure and I
+accidentally wrote `r-p` here.
+Someone else sees an error report from this test and needs to investigate.
+
+What message is easier to deal with?
+>  in test 18 at -5 out of bound
+or
+> in test 18 at 18446744073709551611 out of bound
+
+Sure, I can eventually figure out what both messages mean, but it's a
+immediately obvious from the first that there's a
+a) real error: something is wrong at index 5
+b) test code error: there's a flipped sign somewhere
+
+So I'd strongly prefer the current version of the patch over one with %tu.
+Reviewed-by: Daniel Latypov <dlatypov@google.com>
+
+[1] https://lore.kernel.org/linux-kselftest/20240221092728.1281499-2-davidg=
+ow@google.com/
+
+Thanks,
+Daniel
