@@ -1,135 +1,125 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305811474B1
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 14:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91321474AC;
+	Thu, 22 Feb 2024 15:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708611807; cv=none; b=bL496sjA/1lYADfnt9+gU6ukMmYD3F4gLCHwZz8Jj075PzTP9YQQMPnbtfY1iEmir72CqH/FisFQWY0NYSCgfWnHdZhQ2TjZ6zSklTUxduV/TNHNnjQJtbE3fUtz2v6itAMF8K1RDSSnEEGiwqPbkmtCO4eaSlwyRs3F34LAs+Q=
+	t=1708615449; cv=none; b=eD+5GtYcBzQGq4MJ1IB/4MtcjbuU91WpmLQuZOvaMcC1N1/ZB2Ngqwb+UYrlCYAO2flK1c0vAAmt99N7LXIV7xjJgYiEeaBVqGoPCwzYqejah+ZCcq5pMauKrx6I3ULXuk5mx6GCnEj8Qdja2ZdIP9u/UbpDphOcjjtVJeXYW7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708611807; c=relaxed/simple;
-	bh=Mp82jeP2ujByGkHzqK9TDgR5FlKS5q+5jbi8/ebGkm8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AXzljjmiyPdReTkxjnMjYMcCid3LSRO3BlnpSXhLjn1px3yYsDA0XjkzPVOKxRxbKx0I7v7e4L9ydGzFe34ymtE8n08hSmQrIPaI3gWqG+WmvNI9jcJOY5We50P6RuX9oDUJMw3j3k/xgVp3pAEx8kjoS12J3IGVQ2eKHav44tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Tq6RPqfI; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1708615449; c=relaxed/simple;
+	bh=q4hZCcz/bl8SZjjfDLe/pnUi5JMqdAmCHiBzeXrZpyU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=izPYcursNj0jd5dPo3xjN7o94yeHIIvlz3mfqTXN79bqHcLnX2p7qGJmmA+MITby4RA/kPXh5lmhFF864XfokyFKr5V1ZmtkVHfRTeqy0pSK6iBYbMYovruESdf9/c7cGGhtRCAN3G4BthqA2hJWkWZa8/OooBNuV+8hjaZh1cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=MjHSoh1g; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GG1wN9W1; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Tq6RPqfI"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bf3283c18dso128574539f.0
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 06:23:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1708611804; x=1709216604; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VHaXxIxgBTJmgtue73WVl6b/Cy0dVFZjoWVjGUpCh3I=;
-        b=Tq6RPqfIaQmh5ZS+wBv4yfNUt1zEHRHki6eMjLz9R2NHLK0U3S8TLpjW25w/TFXaL6
-         87ayYSQ9hg/ZEdUTueKu3Ji3YscQfR7j7B+DmUoKwbFheK1USW28nHEVIWSoS0kXTZei
-         Y4bksQlbo9mCRcbLYTwWP60UkmU7/dP7UeWmo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708611804; x=1709216604;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VHaXxIxgBTJmgtue73WVl6b/Cy0dVFZjoWVjGUpCh3I=;
-        b=SkGReQFM/KAq9QBA/FYnRmtQdT1tj2NmYkdueLHn9lS74CYtvuALQnGpjBF7UmgqNq
-         EywhY6pN4WscslQGjWXjEUMdx5jZuqyWS97kEl+Ync5KXHz9of2PUysn/chM5oF41fbh
-         Af2KJKQaAkAYDSfAWhAcySWzV/lFCyl4JgiNum+J4YB9kURIOefsDZR60pEHtCS2E0+J
-         7U9cA4t7W1Enci9icV6KBkcGeivUdgM60kQJVUN2Goz8ZiF7uhYbJYs5B69V+GDvG2P9
-         p62O+mQ3o4znTvVe1ngTUbN79uMKn7lMNnCf1ka09GXoss7kh9OeXs+ZGWi7tyUuhwEj
-         6thw==
-X-Forwarded-Encrypted: i=1; AJvYcCWldv2Mc9TGCqOK2JQx3cSIlcwOMqDKPc09jYLSO5a1Lf/5B6k8IpxuHc74GLOT3sb6drB722dN69t0vRWvc2xAg54hRC8BDJmpYyRJucXY
-X-Gm-Message-State: AOJu0YyM6XLvjKczla9iK7LX+u5cm59cKBuzZVJ0HdfmK0kLSV7B9kqy
-	cYRXl6Mq4NFNuC02Ong7524Vf2XDmelpT+HCsRX5KEGEjCDt614Nnxzq9MlqLag=
-X-Google-Smtp-Source: AGHT+IFae9GfHftZi8zK41FezlChjHIL0jhjWV8Bs/s6McEy9uQqRVDUnPsC8m/z1HG2Wc+9hRWIVA==
-X-Received: by 2002:a5e:970a:0:b0:7c4:9ed9:8e7c with SMTP id w10-20020a5e970a000000b007c49ed98e7cmr17459202ioj.0.1708611804205;
-        Thu, 22 Feb 2024 06:23:24 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id w14-20020a5ed60e000000b007c75a3c0184sm1834078iom.9.2024.02.22.06.23.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 06:23:23 -0800 (PST)
-Message-ID: <d0c81ab8-b404-4710-9b27-71aede157b3b@linuxfoundation.org>
-Date: Thu, 22 Feb 2024 07:23:21 -0700
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="MjHSoh1g";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GG1wN9W1"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id B1F4411400BE;
+	Thu, 22 Feb 2024 10:24:05 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Thu, 22 Feb 2024 10:24:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1708615445; x=1708701845; bh=ak/xySA9kP
+	x5TQpgiD9qkPOWCJZDiY1FRY7rnoAd+nI=; b=MjHSoh1gTLkHrYXp2mwqvo7RnM
+	24Et6oTsgnBDvxFOMfEFX4DWynykTjy/aoNkMm/hixoenPCUwQM/YTACnCBPQwJT
+	GU+vx5gRW4krEuz5xn1AO+KCNksDeOsKdIiJTSOunwEiD9c4PrLlgmCpMWGBvhN0
+	VDexuHspgxH8lVHNnox1o3ijpDUb+CgF0Kl+JPtY2iS7S0d56yixdGtJhDCh+bEa
+	e8jYqBknoCd5CrAJKdLjipptN5HOV1i5g6iLTkS0Z8dtpjZMR6EeBZIOypwduAVa
+	AqSk7RSy7sPCSh5TE6975v4Y2eY29YzOPkCJCOCkWBsFacj6gQinMet01aRQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1708615445; x=1708701845; bh=ak/xySA9kPx5TQpgiD9qkPOWCJZD
+	iY1FRY7rnoAd+nI=; b=GG1wN9W1KVdtYsG8N1Q/jA8GEpqPy2w65ZDmRnxsMlgs
+	ZiigHLzqDxGbkJOwC7YfaoyBbbOs/7aDFF7+Qba1qX0wQ4pO0n+guV7nbdPgf+76
+	KCgef/7GUBGs88Zyay2Oz01A11iWz3L1RPmPxtFPyF06dhM4+C8bf1BBicU5xsDA
+	d30QeEb9LBvaryH7jCRjPO8fbw9NKawtrDDnzh1b62ijhaJ48xZnpIS5PyNgn9Ym
+	DxtnIB0+c65//mogLNG41sgF0fs5ECvfKbdfgYrG5u/7vmxvl2YheLI+yjCDE3Xg
+	mnYyofmawWhMPuqfBN6rUfKA/rjfZnp2+/NDa1pcHg==
+X-ME-Sender: <xms:FWfXZVFULwUjMu1sJs9F4rIJpIwiP7zbyC1jfndfBIFxkUStnKFMew>
+    <xme:FWfXZaXIifusNiy4xocsOlqwNQfUFBVX3RdT8px_D-UlBu4oTr7SMFq2XiSIsX0Ug
+    EVKcbtv8xZEm0ijLmI>
+X-ME-Received: <xmr:FWfXZXIEa-kIOrMaXum5R5jyLKG1nqGzBIPdzhz-nqNQJ6F43idRlSKSJRY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeggdejgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdortddttddvnecuhfhrohhmpefvhigthhho
+    ucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrg
+    htthgvrhhnpeelffekveduvefftdejkefhtefhgeduhffghfejtdehieevjedtkeejveej
+    keeuieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hthigthhhosehthigthhhordhpihiiiigr
+X-ME-Proxy: <xmx:FWfXZbG8isINsh5AiOJWEy6JD-uvrpiEdOqo3IALjnmPeWo78I6eow>
+    <xmx:FWfXZbUhCSilefL2foYJa229cuBgLf1071sqNgVko_c8xTNl3gnd8w>
+    <xmx:FWfXZWOU7snIUzi-FB5V6-DMrOt5BvESBmTvD0_Nu_0gM2dEuMVGdw>
+    <xmx:FWfXZdJvzu8H4jGekdXMAMIfefmMNPDRkBLIFdzDoYLHqFm5OiRnYw>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 22 Feb 2024 10:24:04 -0500 (EST)
+Date: Thu, 22 Feb 2024 08:24:02 -0700
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Tobin C. Harding" <me@tobin.cc>, Greg KH <gregkh@linuxfoundation.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] leaking_addresses: Provide mechanism to scan binary files
+Message-ID: <ZddnEtnxhJsafdcF@tycho.pizza>
+References: <20240218173809.work.286-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/9] kunit: Fix printf format specifier issues in KUnit
- assertions
-To: David Gow <davidgow@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
- Matthew Auld <matthew.auld@intel.com>,
- Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Kees Cook <keescook@chromium.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>,
- Cassio Neri <cassio.neri@gmail.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Arthur Grillo <arthur.grillo@usp.br>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>,
- Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>,
- David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org,
- linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240221092728.1281499-1-davidgow@google.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240218173809.work.286-kees@kernel.org>
 
-On 2/21/24 02:27, David Gow wrote:
-> KUnit has several macros which accept a log message, which can contain
-> printf format specifiers. Some of these (the explicit log macros)
-> already use the __printf() gcc attribute to ensure the format specifiers
-> are valid, but those which could fail the test, and hence used
-> __kunit_do_failed_assertion() behind the scenes, did not.
-> 
-> These include:
-> - KUNIT_EXPECT_*_MSG()
-> - KUNIT_ASSERT_*_MSG()
-> - KUNIT_FAIL()
-> 
-> This series adds the __printf() attribute, and fixes all of the issues
-> uncovered. (Or, at least, all of those I could find with an x86_64
-> allyesconfig, and the default KUnit config on a number of other
-> architectures. Please test!)
-> 
-> The issues in question basically take the following forms:
-> - int / long / long long confusion: typically a type being updated, but
->    the format string not.
-> - Use of integer format specifiers (%d/%u/%li/etc) for types like size_t
->    or pointer differences (technically ptrdiff_t), which would only work
->    on some architectures.
-> - Use of integer format specifiers in combination with PTR_ERR(), where
->    %pe would make more sense.
-> - Use of empty messages which, whilst technically not incorrect, are not
->    useful and trigger a gcc warning.
-> 
-> We'd like to get these (or equivalent) in for 6.9 if possible, so please
-> do take a look if possible.
-> 
-> Thanks,
-> -- David
-> 
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Closes: https://lore.kernel.org/linux-kselftest/CAHk-=wgJMOquDO5f8ShH1f4rzZwzApNVCw643m5-Yj+BfsFstA@mail.gmail.com/
-> 
->
+Hi Kees,
 
-Thank you for a quick response David. I will apply the series to
-kunit next for Linux 6.9 as soon as the reviews are complete.
+On Sun, Feb 18, 2024 at 09:38:12AM -0800, Kees Cook wrote:
+> Introduce --kallsyms argument for scanning binary files for known symbol
+> addresses. This would have found the exposure in /sys/kernel/notes:
+> 
+> $ scripts/leaking_addresses.pl --kallsyms=<(sudo cat /proc/kallsyms)
+> /sys/kernel/notes: hypercall_page @ 156
+> /sys/kernel/notes: xen_hypercall_set_trap_table @ 156
+> /sys/kernel/notes: startup_xen @ 132
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-thanks,
--- Shuah
+Patch itself is
 
+Reviewed-by: Tycho Andersen <tandersen@netflix.com>
+
+And if you can carry it, that would be great (see below :).
+
+This does bring up some interesting questions. From off-list
+discussions with Tobin, I believe he is not particularly interested in
+maintaining this script any more. I was never set up to do the PRs
+myself, I agreed to be a reviewer to help Tobin out. I'm happy to
+adopt it if that makes sense, but I'm curious about the future of the
+script:
+
+1. is it useful? (seems like yes if you're adding features)
+2. does it make sense to live here as a separate thing? should we
+   perhaps run it as part of kselftests or similar? I think that e.g.
+   681ff0181bbf ("x86/mm/init/32: Stop printing the virtual memory
+   layout") was not discovered with this script, but maybe if we put it
+   inline with some other stuff people regularly run more of these would
+   fall out? Maybe it makes sense to live somewhere else entirely
+   (syzkaller)? I can probably set up some x86/arm64 infra to run it
+   regularly, but that won't catch other less popular arches.
+3. perl. I'm mostly not a perl programmer, but would be happy to
+   rewrite it in python pending the outcome of discussion above.
+
+Thoughts?
+
+Tycho
