@@ -1,130 +1,131 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F41D107B4
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 20:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3470C6E5F8
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 21:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708635549; cv=none; b=rC9EUomsYlmGcb4ia4Vx2vIsI/haFap5kAGau2sF+meP4bdFQu7ivAile+Zcw8CpVUuAjYlV6GuOKwWVGOAhL5ezyd+r/7qrOMe5i0RUL6RNl67jHJeWf5oxiuP+DrrYVfBPzBHsIFmRiH+ZrBqFo7KgP2wO7ExYFXsyc8EYNf4=
+	t=1708635643; cv=none; b=RsbvYLKtM9u5IMAijXNsdHE/Jj6Vj6PZacaSaWmBBvTLMJ9rwhVypDNR7D0NN0nPA7K26vNSXcszDFmz80MNTememgX9uzMTGtm72KjRBfuQkeF8MToDsmcAG3Z9x27r6KFzQ/w4lF45btn2wfoN8Q3h3GGjJ9lzZHpvRMmjgC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708635549; c=relaxed/simple;
-	bh=C4F7mlB1MqkcQcSyoJUPRfFHjf+dal0cew/+pSwHCXo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G/7w5mP3socPkXCcNQIj64kW36pZQZTvBXFOYnOqBwyxd70ZT33Zn6/CvUDFyPDTY8Z5rXIoDyCARy/KqtMR+TvrZCDomkGr6XvZF4Sc1K8xJY/JLnG98KKUt/CXoBfyEX/xYbNDaVNTJO63GvPlYhZxou04P7YMmpOFcq4BfOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MOHJAqqc; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708635643; c=relaxed/simple;
+	bh=HYirffWuREqInys6H1sJGnW444LN+8gm7IIzreiFbV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OSOmqWhPQQT81MUbawIUG3VUABjs5vj8sZ/mpwU7htwHAqEBMQH3P9NzHhQpEL4fvKGRvmvSkfC1hoFhYkfbxWAUSEJ7zHyOkHVKdOk/n/rgOXoCxWV2ddv/KU7Rer0timkUIPr151tq6cChuTrzgGYzE5kcm8ARnwn5w2P6Pbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VtCed+W0; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MOHJAqqc"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42e2507c6e1so82241cf.1
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 12:59:07 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VtCed+W0"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso112814a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 13:00:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708635546; x=1709240346; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/zEWuRWWHcJcQcinmF9Ig0PacXm/lMdwIIHptRGDzpU=;
-        b=MOHJAqqcAnRE2NSLZhyESs/g5WAAwqx5bZyPaxifPADGalK3WQEz1I3/0pCW5PdqkI
-         ppGl1SyQhYFGzNy3SRnVVLTY8Q1L8ClG3FqEJkJFXqganGsY65/lTMo5K9QmgtbfBQBT
-         /MeX8JzP/yxOS/GN9tRwdo5b9tqFO67Q3SN5n3ZFQmGAOoKwdOojExjprnKpJnkBuAye
-         J/xcM0eZbNV01MeMB6Zn38/zOZ0fXEcY92HQMr85IBGcDe7q1sFoYO+RTn8ebga0c6zy
-         PEdTG+3lch6bIe0ZKqq+1kwFgOLk1lc9vRg49EcN0d0xSJgE9xzi9uGljq5REEQ/s7/E
-         Vqew==
+        d=chromium.org; s=google; t=1708635641; x=1709240441; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nwpFD5/+GTNERxZKsWUikWXT7ybqY7JIlXCpe9IyarY=;
+        b=VtCed+W0fGrXk2PMGyL5dqZwL4zC90lxa5dQQq3rqPcJtLiXw3hZ2Hp1vwgcu0Ilrb
+         xFlqOLt/iND4nkLL692ezNq6zDwzc0cF6um2gErDKQJUjWTwYu0BB0MVBR2RUSFkjDxs
+         qgzNP4AqfUaPwYt0BttOmjA7YTjxC9ImQOvsQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708635546; x=1709240346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/zEWuRWWHcJcQcinmF9Ig0PacXm/lMdwIIHptRGDzpU=;
-        b=EJE6fyfWSJs1LXE8s1a53ZlqMWmGT3aAxGr9VWFUUjMYKGmI1zt2OoVXuHxCUIw2Jl
-         Z1c2kwUaOx3uCPZ9Jf6ucLFcb+NujQTJ5o8HuE6NI+nT0l+ln/BpYYfAlLdZ+kYtddqc
-         Gpo08gZ5u2NCMDSpipzay3Gw3TMSdnfLzEq2A2qRlXLSL2hULggUJSF+Mky0UJJaugBI
-         4tzkD8cF+aJdU86kaCZAdtzInAcYyhR1C5Dae5HiQ8iLYkWT5/tdW+35EXIP2WN/uArD
-         OfSTnjLIMD5dtqOJ9fKcHor5pCvP5Xb3I2rFfNaYOczmbOrZiTSRwEo1H5D0bsHCH2Sg
-         6iOw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1o+IiXA0F1Rs+CVoz1qBoJHhuAmYf3oxGlopNJfujLgJ/p7q/migayGMEruGx4RhIQJ2lplLimo0fzSX9Hea4Qbo1d3rbJCQJji/X+VUT
-X-Gm-Message-State: AOJu0Yznpo23EjWY4A07/W+m0coufWLK95kgqX8mlndypvF1hTf/oAYS
-	CArNjdn827g2L3wmMZWrffuDXdfg6Kc9Pgei+D+C+QgiG6QQ2LuW8Qmzn+jLA94KFvHsMrnkQqp
-	chVReWTzTtYx5C0O4Bx4fAlYTqnDB0zMwdB3i
-X-Google-Smtp-Source: AGHT+IFSpfaLdIKihK3iEVOja+3Eqku3dKQtV6o3yrUl8zcXbBHUkfm22S3h1VkUJApYDgRUGbJE0TXcXoTj3FcGfX4=
-X-Received: by 2002:ac8:7643:0:b0:42e:1260:c4e6 with SMTP id
- i3-20020ac87643000000b0042e1260c4e6mr732606qtr.10.1708635546371; Thu, 22 Feb
- 2024 12:59:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708635641; x=1709240441;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nwpFD5/+GTNERxZKsWUikWXT7ybqY7JIlXCpe9IyarY=;
+        b=khFt81KJ3JQ/T5B+RBDirr3sUKomSvrwsR8ppo5RfmPz7pED2A2Q+3kGLjXMrjoiXc
+         W9QNRNlz8Ez53kIjpQhPG+c+eGnkRvwxEnuaFiAMOx8ruJUly5Z9AIln1WCO22VfKAkd
+         Y/ld+dWZ1tIBFYljnW04fJGH9THEU60EHYS18Tl144ggXJZVPi2cJFHrKcgX9JZJik19
+         1KSczhQEZvmINOQUSGD1SPUnVvYg/ogTTzDZTxxPJR61AcQJjgvgTDKMrVkhRHNsAJXU
+         PiQHZNVBKOMX+XVFBt1FeJH2vOdY2WQqgleUTbr1jF65uTt6wR98O/fsHvOBLUqk4wrH
+         UgRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtqZRr3/eFyDanEzxm/01T727+UoxmFdm+ZSz4vqMZ5Ypja9Q+NGJ2+NJ31oGbtuCVcNutqdmld/J5Y4GgbCJJYVYAcrLNsP/Mx97M+KGq
+X-Gm-Message-State: AOJu0YzLCAEzEzQS5ogJrrsTLZCe1OslPOypKDu5LykkmyZiS5SbCUgg
+	rQ59oTd/pc+E6EWCUk421frvl6INAfd+0ZezfrOW+lbFQ8FaiqkMtYDREZpMPCgYI8miUnZICCE
+	=
+X-Google-Smtp-Source: AGHT+IEJ5nbdhE42w3G704058D1d35mQpG8k93pV0OzcXNwLvIqqhhJHitHMTlm1oAZ/Re19xJq4Uw==
+X-Received: by 2002:a05:6a21:3945:b0:19e:cce1:ed7e with SMTP id ac5-20020a056a21394500b0019ecce1ed7emr25404565pzc.62.1708635641391;
+        Thu, 22 Feb 2024 13:00:41 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h2-20020a62b402000000b006e45c823660sm9172303pfn.122.2024.02.22.13.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 13:00:41 -0800 (PST)
+Date: Thu, 22 Feb 2024 13:00:40 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: "Tobin C. Harding" <me@tobin.cc>, Greg KH <gregkh@linuxfoundation.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] leaking_addresses: Provide mechanism to scan binary files
+Message-ID: <202402221249.FA17A8940@keescook>
+References: <20240218173809.work.286-kees@kernel.org>
+ <ZddnEtnxhJsafdcF@tycho.pizza>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221092728.1281499-1-davidgow@google.com> <20240221092728.1281499-2-davidgow@google.com>
-In-Reply-To: <20240221092728.1281499-2-davidgow@google.com>
-From: Rae Moar <rmoar@google.com>
-Date: Thu, 22 Feb 2024 15:58:54 -0500
-Message-ID: <CA+GJov6GyU0t0D5quhroCgEQOJgk0PCjVn5LROifBcNMx-ovcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] kunit: test: Log the correct filter string in executor_test
-To: David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Kees Cook <keescook@chromium.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Daniel Latypov <dlatypov@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
-	"David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZddnEtnxhJsafdcF@tycho.pizza>
 
-On Wed, Feb 21, 2024 at 4:28=E2=80=AFAM David Gow <davidgow@google.com> wro=
-te:
->
-> KUnit's executor_test logs the filter string in KUNIT_ASSERT_EQ_MSG(),
-> but passed a random character from the filter, rather than the whole
-> string.
->
-> This was found by annotating KUNIT_ASSERT_EQ_MSG() to let gcc validate
-> the format string.
->
-> Fixes: 76066f93f1df ("kunit: add tests for filtering attributes")
-> Signed-off-by: David Gow <davidgow@google.com>
+On Thu, Feb 22, 2024 at 08:24:02AM -0700, Tycho Andersen wrote:
+> Hi Kees,
+> 
+> On Sun, Feb 18, 2024 at 09:38:12AM -0800, Kees Cook wrote:
+> > Introduce --kallsyms argument for scanning binary files for known symbol
+> > addresses. This would have found the exposure in /sys/kernel/notes:
+> > 
+> > $ scripts/leaking_addresses.pl --kallsyms=<(sudo cat /proc/kallsyms)
+> > /sys/kernel/notes: hypercall_page @ 156
+> > /sys/kernel/notes: xen_hypercall_set_trap_table @ 156
+> > /sys/kernel/notes: startup_xen @ 132
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Patch itself is
+> 
+> Reviewed-by: Tycho Andersen <tandersen@netflix.com>
+> 
+> And if you can carry it, that would be great (see below :).
 
-Hello!
+Sure!
 
-This change looks good to me. Thanks for fixing this mistake.
+> This does bring up some interesting questions. From off-list
+> discussions with Tobin, I believe he is not particularly interested in
+> maintaining this script any more. I was never set up to do the PRs
+> myself, I agreed to be a reviewer to help Tobin out. I'm happy to
+> adopt it if that makes sense, but I'm curious about the future of the
+> script:
+> 
+> 1. is it useful? (seems like yes if you're adding features)
 
-Thanks!
--Rae
+Yes, LKP runs it as part of 0-day, and it's found leaks in the past[1].
+(Though its usage could be improved.)
 
-Reviewed-by: Rae Moar <rmoar@google.com>
+> 2. does it make sense to live here as a separate thing? should we
+>    perhaps run it as part of kselftests or similar? I think that e.g.
+>    681ff0181bbf ("x86/mm/init/32: Stop printing the virtual memory
+>    layout") was not discovered with this script, but maybe if we put it
+>    inline with some other stuff people regularly run more of these would
+>    fall out? Maybe it makes sense to live somewhere else entirely
+>    (syzkaller)? I can probably set up some x86/arm64 infra to run it
+>    regularly, but that won't catch other less popular arches.
 
-> ---
->  lib/kunit/executor_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
-> index 22d4ee86dbed..3f7f967e3688 100644
-> --- a/lib/kunit/executor_test.c
-> +++ b/lib/kunit/executor_test.c
-> @@ -129,7 +129,7 @@ static void parse_filter_attr_test(struct kunit *test=
-)
->                         GFP_KERNEL);
->         for (j =3D 0; j < filter_count; j++) {
->                 parsed_filters[j] =3D kunit_next_attr_filter(&filter, &er=
-r);
-> -               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
- '%s'", filters[j]);
-> +               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
- from '%s'", filters);
->         }
->
->         KUNIT_EXPECT_STREQ(test, kunit_attr_filter_name(parsed_filters[0]=
-), "speed");
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
->
+We could certainly do that. It would need some work to clean it up,
+though -- it seems like it wasn't designed to run as root (which is how
+LKP runs it, and likely how at least some CIs would run it).
+
+> 3. perl. I'm mostly not a perl programmer, but would be happy to
+>    rewrite it in python pending the outcome of discussion above.
+
+I am not a Perl fan either. It does work as-is, though. Address leaks,
+while worth fixing, are relatively low priority over all, so I wouldn't
+prioritize a rewrite very highly.
+
+-Kees
+
+[1] https://lore.kernel.org/all/20210103142726.GC30643@xsang-OptiPlex-9020/
+
+-- 
+Kees Cook
