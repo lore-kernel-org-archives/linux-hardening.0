@@ -1,110 +1,131 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE44321D
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 00:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373C610E3
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 00:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708561835; cv=none; b=S2wbwr6mAY/1dKhUFnVtoy0utBhRHEboXV1UTHThkuOaSEgBgMuuasfiLTHXyHw05rFIgHBiIq/g5mYgOVXkJge9RkFv1FjLk+xBgZ0KiS/IGJsrIbU31VyBXEj1LhiHTTPw6V8+INVkfuiGG/7FOcvtKQfcMGSlW08WGNn+tQc=
+	t=1708562516; cv=none; b=HL6M8VyTYR4lZRvmkPWyZwB743TdrbYbn/3rwxqYcuH5MgbC/57XiZQEiLGHB8qWq7RqDZfziNQExjOLEidBKos1UST5w5fS4QCCiBA3chbM9ekJLyYbyRKImr695yQTsjlR9O5cvexQOVggVFoRV0z5Z7/BBmM+Thu4fHo5V3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708561835; c=relaxed/simple;
-	bh=0a+PXUr4/M4QxUhsk3p3ht76EXkTT/vUlf3xCYroLtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u7GkDU3WLXOJ0Htv0czbRRq3ZV8RvHe1FPpzUmUz7af3JUnTymKsoP0BcrzUt1yzpH0qndFwlHQQzjGJJJ7PRAFfnzbGLvXjkYBaPr5t0WCs7XeOe3Cmmw15syqiFXEY1HA13DXSLlpg3JnQMXkxgSYB/Tr3G+82uTgyUQ4dW7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FewjVpXr; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708562516; c=relaxed/simple;
+	bh=OTTeh2V6QDGWlxJqsDj3XrQmqyt1AJR5mKB7r3e/JNI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HtQiLKoj6BO8ZkfttUh8YTrRjPtRjYNoe8OxvMLVML5v1ST4z7hb8WdBTxQkw1T4jX4dRT9Smd+sFov9+KLyuUUCkLvh9YN43OnDBtM8GmsS+12eupLrj8G/yK4Yjz+DUjBRznyIwJEedpj6NLjEePzPYipz2p2WkjdCkP0AyXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tk75PSBw; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FewjVpXr"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-29954bb87b4so873547a91.2
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 16:30:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tk75PSBw"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc0bcf9256so8293471276.3
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 16:41:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708561833; x=1709166633; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cphzXha2ug67Fvg8bHldw5MnRmdUMWu6AQ/eN1G60FM=;
-        b=FewjVpXrIrXCAek5YMytycaY9A9MQ2RoFd3GLoRK2WyUbT57vK63pWTQjLE7j7ugiX
-         nPWzTjI6JiIvnZ6HIzDShW6NbJYJs2Qo3e26peOn8PjRFSgB1gIlF5l4r9fFkVB11kVU
-         N9pxagOfd4lKZF/jSVOGF/q8qW7XLoBsp1oRk=
+        d=google.com; s=20230601; t=1708562513; x=1709167313; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=G583JTbO9RH5e4qatRoF50zt3H5aOXeubyono7wZgbU=;
+        b=Tk75PSBwIRulegjD4wXVI1LoeKNytzxPNKGF4r7J5YViBQNmAULy2k/fqEPqOxoeD2
+         zixpnd7HmSHoVdtIaGmE40ejGYb3MduYVIVSXlkrUzje0S0c1eB5APUQ9pWYMd87glFC
+         fGFEoJS/WLc+Uwo8L1TowBnpXCxdaEQXCmtIxwOSKACuzriFetajC0psuuFdcopskDFp
+         3u4eSuBVwLAeDykDPx5ZkMscJhz9HplfH1TWN77M6W36VxkNZ8mlJYHyGGaJ0CEsOAWO
+         XHJEGOUVVO2rreQRe7HNKGUtqO1inIqTss1JInnIwUGV0u8rU0p9VcDxiJfPndObQZIw
+         869w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708561833; x=1709166633;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cphzXha2ug67Fvg8bHldw5MnRmdUMWu6AQ/eN1G60FM=;
-        b=ChyGYFOR+Nw1n8cNr1LUMnF2rOQiReIa/6LsUzuEnQIwd1GrbwbB5ABjehIB0/7yx4
-         CvXUm9ltyL54siWLxJ+0NILhNBrF7KHTWxVRcV1fY7J/yqeg+IUts8AjgR564WjExVrU
-         md1xZD7uy4Sf4Ga3ZMqBGvncDYECs+mU/xSLXeUo9i+EB1f+3WgOPXnvpHsptbv3TLcd
-         UxN9SmIktlsDzk1ELq8aHvwYVanwvxGa8L5AY0fNsjTJvV65j/+gvVjioz6eEiodBj4s
-         cFYjkLWxuW1pV2k+uhFmyIbWGLlDRJVtsJGy4Mk1ylreyARtv8uo9pp/8kiAcTVtkgT0
-         oxfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYqVZR9mivX91neSOGiV+mb58PkkAvlSIdPOEpmJ33Dnb68RD6jeQAc71hkw/Ke2MgpPkjOI5aVJi+b7JtC4sAlqbU8BJnVTXeYjflmb2d
-X-Gm-Message-State: AOJu0Ywb7h34zpzNUGYVLyc1CKCjUjX7gmZpSGDrgflL+OQFnSz7RBrH
-	gruuNQTfAbcrZ94eeS7j0GHBtrxyjgh2AtkpVI6pGER+uQ+f1hZjotoTpR8+cQ==
-X-Google-Smtp-Source: AGHT+IFPk//p0bZSwagAp3iX4U/EP6BCxupu6BvHEFS6IcIIUIlmW54lKSp/YxG5QTnQKWBq6j+csA==
-X-Received: by 2002:a17:90a:b902:b0:299:3258:4053 with SMTP id p2-20020a17090ab90200b0029932584053mr14295400pjr.15.1708561833583;
-        Wed, 21 Feb 2024 16:30:33 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e21-20020a17090ac21500b00298dd684b8csm10445951pjt.32.2024.02.21.16.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 16:30:33 -0800 (PST)
-Date: Wed, 21 Feb 2024 16:30:32 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: libfc: replace deprecated strncpy with memcpy
-Message-ID: <202402211630.184FE822FB@keescook>
-References: <20240221-strncpy-drivers-scsi-libfc-fc_encode-h-v2-1-019a0889c5ca@google.com>
+        d=1e100.net; s=20230601; t=1708562513; x=1709167313;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G583JTbO9RH5e4qatRoF50zt3H5aOXeubyono7wZgbU=;
+        b=GrJvhvtgQ71xvNLI8TPlvbhbsXrIF7LmI8Cwd6FNp4hTNNkMljVOwuc9B873AaTm3x
+         R5rUcyAal3T7YuNeTL4wxvDyRRaO9aKiwdLzr07XU96aWdtYzgbHt1akQ5mE4FdMvkHS
+         IatuUYS13E3VjV3dRVc6sgjhvdIeYAunQNBuCb3pJ7n34C3henu7IMZRxvfeEzuXTFbP
+         PDRnlvz0vn0H4UxLG7Nmc/xHhYWJjIMgU9kaLD/gbXU0EMZKynXhjWxgztLFUMbqg7n5
+         bBm5m+CUtz8yHFQJQwAMqel6pmLwLrfMBrFkWmsJiNTVf1Ud0DLszWzXzRXj0sHRpZlC
+         3atw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+vwKqhiafaXun0ZZYmA7ElUHQs6+ZJFseFHMFloE+WL6T/klGCS2G4lB9le+XkCPpZg+3oYVRH1VPY5kDqqhx6mNeBEe7/OPAKZsy49Yf
+X-Gm-Message-State: AOJu0YzSFSs3vmxcOcDz7ihPGSCw7SO3OGQKwUDk/2wM6o6Pa4ccqVXv
+	i3AWMWUjrJh5nglefmkqmfiQ9I90/DFhlMLXHmr7PZsHLEzwFwChcm4kMeijgqMCi+WkxtgnO4e
+	Vh6pP5zBgqg6fJEyYJKTYRA==
+X-Google-Smtp-Source: AGHT+IGiyZ42qLqEd5VQhwppGk37FON0JE3UDwx/pyMP6iMh4zKRGnb0Q2Uu5IjrwRjQyoA/k3ecbiXnP1KcI9kYAg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1008:b0:dbe:387d:a8ef with
+ SMTP id w8-20020a056902100800b00dbe387da8efmr33807ybt.1.1708562513250; Wed,
+ 21 Feb 2024 16:41:53 -0800 (PST)
+Date: Thu, 22 Feb 2024 00:41:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221-strncpy-drivers-scsi-libfc-fc_encode-h-v2-1-019a0889c5ca@google.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAE+Y1mUC/x2NwQrCQAwFf6XkbKCGWsVfESk2fasBWZekFKX03
+ 116GZjLzEoBNwRdm5Uci4V9cpXjoSF9PfITbFN1kla6VkQ4Zs9afjy5LfDg0DB+l6Q7Bp1ZOZ2 6sT8DGPsL1VJxJPvul9t92/4hgrO3dQAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708562512; l=2488;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=OTTeh2V6QDGWlxJqsDj3XrQmqyt1AJR5mKB7r3e/JNI=; b=A2o2fiTjLDUmZ9F3wqmvRRVWLzoT82nVkkZDj98Xnn0hewgY8d0BMBO+anxo+q5J1CvgVNGan
+ ecX1M9fbJJPB0fqNn0QDDpCEd/lQOrqsnM7HQ5lW5sI5e2Ioaybsh6P
+X-Mailer: b4 0.12.3
+Message-ID: <20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v1-1-20c685bd1b43@google.com>
+Subject: [PATCH] scsi: lpfc: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Feb 21, 2024 at 11:50:26PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated [1] and as such we should use different apis to
-> copy string data.
-> 
-> We can see that ct is NUL-initialized with fc_ct_hdr_fill:
-> |       ct = fc_ct_hdr_fill(fp, op, sizeof(struct fc_ns_rspn) + len,
-> ...
-> 
-> In fc_ct_hdr_fill():
-> |       memset(ct, 0, ct_plen);
-> 
-> We also calculate the length of the source string:
-> |       len = strnlen(fc_host_symbolic_name(lport->host), 255);
-> 
-> ...then this argument is used in strncpy(), which is bad because the
-> pattern of (dest, src, strlen(src)) usually leaves the destination
-> buffer without NUL-termination. However, it looks as though we do not
-> require NUL-termination since fr_name is part of a seq_buf-like
-> structure wherein its length is monitored:
-> |       struct fc_ns_rspn {
-> |       	struct fc_ns_fid fr_fid;	/* port ID object */
-> |       	__u8		fr_name_len;
-> |       	char		fr_name[];
-> |       } __attribute__((__packed__));
-> 
-> So, this is really just a byte copy into a length-bounded buffer. Let's
-> use memcpy().
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Thanks for the refresh! This looks right to me.
+We expect ae->value_string to be NUL-terminated because there's a
+comment that says as much; these attr strings are also used with other
+string APIs, further cementing the fact.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Now, the question of whether or not to NUL-pad the destination buffer:
+lpfc_fdmi_rprt_defer() initializes vports (all zero-initialized), then
+we call lpfc_fdmi_cmd() with each vport and a mask. Then, inside of
+lpfc_fdmi_cmd() we check each bit in the mask to invoke the proper
+callback. Importantly, the zero-initialized vport is passed in as the
+"attr" parameter. Seeing this:
+|	struct lpfc_fdmi_attr_string *ae = attr;
+... we can tell that ae->value_string is entirely zero-initialized. Due
+to this, NUL-padding is _not_ required as it would be redundant.
 
--- 
-Kees Cook
+Conveniently, strscpy also returns the number of bytes copied into the
+destination buffer, eliminating the need for strnlen!
+
+Considering the above, a suitable replacement is `strscpy` [2].
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ drivers/scsi/lpfc/lpfc_ct.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index baae1f8279e0..42594ec87290 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -2569,9 +2569,8 @@ lpfc_fdmi_set_attr_string(void *attr, uint16_t attrtype, char *attrstring)
+ 	 * 64 bytes or less.
+ 	 */
+ 
+-	strncpy(ae->value_string, attrstring, sizeof(ae->value_string));
+-	len = strnlen(ae->value_string, sizeof(ae->value_string));
+-	/* round string length to a 32bit boundary. Ensure there's a NULL */
++	len = strscpy(ae->value_string, attrstring, sizeof(ae->value_string));
++	/* round string length to a 32bit boundary */
+ 	len += (len & 3) ? (4 - (len & 3)) : 4;
+ 	/* size is Type/Len (4 bytes) plus string length */
+ 	size = FOURBYTES + len;
+
+---
+base-commit: 39133352cbed6626956d38ed72012f49b0421e7b
+change-id: 20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-f54b67eeeb68
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
