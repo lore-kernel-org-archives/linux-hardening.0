@@ -1,134 +1,135 @@
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B9B131E5D
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 13:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305811474B1
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 14:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708606857; cv=none; b=SQ4FfdYYEhbA2Ck7cQUgQxgzTLkJslfGG/Y9tQAmHNtxjfX4v0ZOFZ0iYSNq6CyRB8oQW4So0JM5/fjy2mfiAsk9CPSwvhjYMFKd9P5Sh5tSrqHXz9j1Tcx11FaT1IpBwRLAWetfrd6WAfHy/Bgv+V7HR/XSKvo9LNRS1v+TX0k=
+	t=1708611807; cv=none; b=bL496sjA/1lYADfnt9+gU6ukMmYD3F4gLCHwZz8Jj075PzTP9YQQMPnbtfY1iEmir72CqH/FisFQWY0NYSCgfWnHdZhQ2TjZ6zSklTUxduV/TNHNnjQJtbE3fUtz2v6itAMF8K1RDSSnEEGiwqPbkmtCO4eaSlwyRs3F34LAs+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708606857; c=relaxed/simple;
-	bh=am4Ng3rL5t852npAsV8y6BOWy1fVRkGuTTpFhiplqb8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HbdoCo3QZM+VciIPxqntYa4Mdix72pbKMKp1u0+JhWTg2qLArTXTQD30mvREIbcke5dEbJBX1licBVxM1Yu7+RX/IAvKMTJ0nK/AaBlrKEkhppgaTmyypmSQkBmEfU/RR+lQ/ChgKQ684r2e4Gt213U0dClqYGsYU1W27DxkNYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=B3cjFOv1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jL2JOfDw; arc=none smtp.client-ip=64.147.123.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708611807; c=relaxed/simple;
+	bh=Mp82jeP2ujByGkHzqK9TDgR5FlKS5q+5jbi8/ebGkm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AXzljjmiyPdReTkxjnMjYMcCid3LSRO3BlnpSXhLjn1px3yYsDA0XjkzPVOKxRxbKx0I7v7e4L9ydGzFe34ymtE8n08hSmQrIPaI3gWqG+WmvNI9jcJOY5We50P6RuX9oDUJMw3j3k/xgVp3pAEx8kjoS12J3IGVQ2eKHav44tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Tq6RPqfI; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="B3cjFOv1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jL2JOfDw"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.west.internal (Postfix) with ESMTP id 8599C2B001E5;
-	Thu, 22 Feb 2024 08:00:49 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 22 Feb 2024 08:00:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708606849; x=1708614049; bh=n4/M7vy4AR
-	r+jl2e72cYY4Om1kbz4URjhjLljpwEbcQ=; b=B3cjFOv19/4ZCY0Th2TuZnUUSN
-	nlTM1PUptQQWHW7SzXEnZkmEahqhhrq1aRxnyL3WnMoNVfMx4Ta/pKVLw0QXOuxd
-	obKy5Gx0X4LV0404uEf68FmnFpedvID3s9pZTq+b60ZF/MaU/YBCTr82V2iiMP3G
-	3yZuxYw7e29UKXIXyUGd3ZGw2aXlRgfV4XbArAxBIc+ghuZbP8XQrWvUiyu+BPIC
-	BI1uJ5eUNHsoyg6kraOWinoQFoqRvCFYiFtCHC6GljI4QSlCWi+bEhyUafc5oeoa
-	RUsLIM9CvGdMIHdQTAVFQqf0rXOgvb7yK3HPrkGxiPMjJs9U0KuyZgbc/VpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708606849; x=1708614049; bh=n4/M7vy4ARr+jl2e72cYY4Om1kbz
-	4URjhjLljpwEbcQ=; b=jL2JOfDwYW/4tlfCMnCupJ43p03IZcWiwln1giVnJB0+
-	5OOFBNFu64s+CbfzhpfnaReFSJefnZsaVzWetOZJL54Tezo1/Zzmg393B1aUvIuA
-	ohl9op3F0/mGtYq4AwKk763IlpBRbw82ybXodWcSyzrPZl8ddBFtEvDB0Slq3rzk
-	bOTGaFcJP6qkjELl0DQAnL+/p20wQeWFSOk6fkU421p5lugOatzx0iDR8mBrD3zU
-	rd3F/2c3MvPw/gLPLDBM3yRYxIM3tYWh/fG6k2o0hd0axib5A0yGKfZpvudPBdHo
-	5wJe0YuwiGLmNCn3T4b/P/8WnlEFSZGHVKWcpCRuSg==
-X-ME-Sender: <xms:fkXXZYh5dJI_KimPKR3Hf6u5OuBYzfiwwGBqz6v16eID1U2t9fw8jQ>
-    <xme:fkXXZRALHkI_iG1Hr-mOGk3Lj1J36U1e_smjbRWODkE8K7FDCe3KDRzkJBR8IX35_
-    QBtyTyg7kmU8dOMJoY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeggdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:fkXXZQFu2y5gm06r_YD7beYYOaAiKYhdYCbyKEOz1L301hozwMkG6Q>
-    <xmx:fkXXZZQoEqRPayXhv1Q54bNaw0oQeywwBudfm5zdjdrw5oiP0WvQHQ>
-    <xmx:fkXXZVwD5ChNrgMbaL5QaYr3e7pBBNYL6NFz1WyAHB2UyDrbaBZuCA>
-    <xmx:gUXXZffVUFxYysvw3JHcVLEZabjkY0qcvl0ASFnEqY-EKTYxn3cJNocp9K0>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 60071B6008D; Thu, 22 Feb 2024 08:00:46 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Tq6RPqfI"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bf3283c18dso128574539f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 06:23:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1708611804; x=1709216604; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VHaXxIxgBTJmgtue73WVl6b/Cy0dVFZjoWVjGUpCh3I=;
+        b=Tq6RPqfIaQmh5ZS+wBv4yfNUt1zEHRHki6eMjLz9R2NHLK0U3S8TLpjW25w/TFXaL6
+         87ayYSQ9hg/ZEdUTueKu3Ji3YscQfR7j7B+DmUoKwbFheK1USW28nHEVIWSoS0kXTZei
+         Y4bksQlbo9mCRcbLYTwWP60UkmU7/dP7UeWmo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708611804; x=1709216604;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VHaXxIxgBTJmgtue73WVl6b/Cy0dVFZjoWVjGUpCh3I=;
+        b=SkGReQFM/KAq9QBA/FYnRmtQdT1tj2NmYkdueLHn9lS74CYtvuALQnGpjBF7UmgqNq
+         EywhY6pN4WscslQGjWXjEUMdx5jZuqyWS97kEl+Ync5KXHz9of2PUysn/chM5oF41fbh
+         Af2KJKQaAkAYDSfAWhAcySWzV/lFCyl4JgiNum+J4YB9kURIOefsDZR60pEHtCS2E0+J
+         7U9cA4t7W1Enci9icV6KBkcGeivUdgM60kQJVUN2Goz8ZiF7uhYbJYs5B69V+GDvG2P9
+         p62O+mQ3o4znTvVe1ngTUbN79uMKn7lMNnCf1ka09GXoss7kh9OeXs+ZGWi7tyUuhwEj
+         6thw==
+X-Forwarded-Encrypted: i=1; AJvYcCWldv2Mc9TGCqOK2JQx3cSIlcwOMqDKPc09jYLSO5a1Lf/5B6k8IpxuHc74GLOT3sb6drB722dN69t0vRWvc2xAg54hRC8BDJmpYyRJucXY
+X-Gm-Message-State: AOJu0YyM6XLvjKczla9iK7LX+u5cm59cKBuzZVJ0HdfmK0kLSV7B9kqy
+	cYRXl6Mq4NFNuC02Ong7524Vf2XDmelpT+HCsRX5KEGEjCDt614Nnxzq9MlqLag=
+X-Google-Smtp-Source: AGHT+IFae9GfHftZi8zK41FezlChjHIL0jhjWV8Bs/s6McEy9uQqRVDUnPsC8m/z1HG2Wc+9hRWIVA==
+X-Received: by 2002:a5e:970a:0:b0:7c4:9ed9:8e7c with SMTP id w10-20020a5e970a000000b007c49ed98e7cmr17459202ioj.0.1708611804205;
+        Thu, 22 Feb 2024 06:23:24 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id w14-20020a5ed60e000000b007c75a3c0184sm1834078iom.9.2024.02.22.06.23.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 06:23:23 -0800 (PST)
+Message-ID: <d0c81ab8-b404-4710-9b27-71aede157b3b@linuxfoundation.org>
+Date: Thu, 22 Feb 2024 07:23:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <19930c5a-f1ed-4b04-b69a-d7259966f020@app.fastmail.com>
-In-Reply-To: <202304061930.4Au0PASm-lkp@intel.com>
-References: <20230406000212.3442647-6-keescook@chromium.org>
- <202304061930.4Au0PASm-lkp@intel.com>
-Date: Thu, 22 Feb 2024 14:00:26 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "kernel test robot" <lkp@intel.com>, "Kees Cook" <keescook@chromium.org>,
- linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- "Andy Shevchenko" <andy@kernel.org>,
- "Cezary Rojewski" <cezary.rojewski@intel.com>,
- "Puyou Lu" <puyou.lu@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Brendan Higgins" <brendan.higgins@linux.dev>,
- "David Gow" <davidgow@google.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Linux Memory Management List" <linux-mm@kvack.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Alexander Potapenko" <glider@google.com>,
- "Zhaoyang Huang" <zhaoyang.huang@unisoc.com>,
- "Randy Dunlap" <rdunlap@infradead.org>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Miguel Ojeda" <ojeda@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Liam R. Howlett" <liam.howlett@oracle.com>,
- "Vlastimil Babka" <vbabka@suse.cz>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
- "Yury Norov" <yury.norov@gmail.com>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>,
- "Sander Vanheule" <sander@svanheule.net>,
- "Eric Biggers" <ebiggers@google.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Andrey Konovalov" <andreyknvl@gmail.com>,
- "Linus Walleij" <linus.walleij@linaro.org>
-Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/9] kunit: Fix printf format specifier issues in KUnit
+ assertions
+To: David Gow <davidgow@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
+ Matthew Auld <matthew.auld@intel.com>,
+ Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Kees Cook <keescook@chromium.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>,
+ Cassio Neri <cassio.neri@gmail.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Arthur Grillo <arthur.grillo@usp.br>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>,
+ Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+ netdev@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240221092728.1281499-1-davidgow@google.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 6, 2023, at 13:19, kernel test robot wrote:
-
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: 
-> https://lore.kernel.org/oe-kbuild-all/202304061930.4Au0PASm-lkp@intel.com/
+On 2/21/24 02:27, David Gow wrote:
+> KUnit has several macros which accept a log message, which can contain
+> printf format specifiers. Some of these (the explicit log macros)
+> already use the __printf() gcc attribute to ensure the format specifiers
+> are valid, but those which could fail the test, and hence used
+> __kunit_do_failed_assertion() behind the scenes, did not.
+> 
+> These include:
+> - KUNIT_EXPECT_*_MSG()
+> - KUNIT_ASSERT_*_MSG()
+> - KUNIT_FAIL()
+> 
+> This series adds the __printf() attribute, and fixes all of the issues
+> uncovered. (Or, at least, all of those I could find with an x86_64
+> allyesconfig, and the default KUnit config on a number of other
+> architectures. Please test!)
+> 
+> The issues in question basically take the following forms:
+> - int / long / long long confusion: typically a type being updated, but
+>    the format string not.
+> - Use of integer format specifiers (%d/%u/%li/etc) for types like size_t
+>    or pointer differences (technically ptrdiff_t), which would only work
+>    on some architectures.
+> - Use of integer format specifiers in combination with PTR_ERR(), where
+>    %pe would make more sense.
+> - Use of empty messages which, whilst technically not incorrect, are not
+>    useful and trigger a gcc warning.
+> 
+> We'd like to get these (or equivalent) in for 6.9 if possible, so please
+> do take a look if possible.
+> 
+> Thanks,
+> -- David
+> 
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Closes: https://lore.kernel.org/linux-kselftest/CAHk-=wgJMOquDO5f8ShH1f4rzZwzApNVCw643m5-Yj+BfsFstA@mail.gmail.com/
+> 
 >
-> All errors (new ones prefixed by >>):
->
->>> ld.lld: error: undefined symbol: __fortify_panic
->    >>> referenced by fortify-string.h:208 (include/linux/fortify-string.h:208)
->    >>>               arch/arm/boot/compressed/fdt_ro.o:(fdt_stringlist_count)
->    >>> referenced by fortify-string.h:208 (include/linux/fortify-string.h:208)
->    >>>               arch/arm/boot/compressed/fdt_ro.o:(fdt_stringlist_search)
->    >>> referenced by fortify-string.h:208 (include/linux/fortify-string.h:208)
->    >>>               arch/arm/boot/compressed/fdt_ro.o:(fdt_stringlist_get)
 
-I get a related build failure from the same commit:
+Thank you for a quick response David. I will apply the series to
+kunit next for Linux 6.9 as soon as the reviews are complete.
 
-arch/arm/boot/compressed/misc.c:157:6: error: no previous prototype for '__fortify_panic' [-Werror=missing-prototypes]
-  157 | void __fortify_panic(const u8 reason, size_t avail, size_t size)
+thanks,
+-- Shuah
 
-      Arnd
