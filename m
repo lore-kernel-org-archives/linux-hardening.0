@@ -1,77 +1,82 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91321474AC;
-	Thu, 22 Feb 2024 15:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E021E14E2EC
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 15:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708615449; cv=none; b=eD+5GtYcBzQGq4MJ1IB/4MtcjbuU91WpmLQuZOvaMcC1N1/ZB2Ngqwb+UYrlCYAO2flK1c0vAAmt99N7LXIV7xjJgYiEeaBVqGoPCwzYqejah+ZCcq5pMauKrx6I3ULXuk5mx6GCnEj8Qdja2ZdIP9u/UbpDphOcjjtVJeXYW7k=
+	t=1708617178; cv=none; b=Cpzpw0ioULioX6eTYFS4uw4wf/23VG9Cy9ntHcH66t1c95y7Lfn5KhAeVIw8HSkpWlxlYUVE5/VyE19u/ulDCFTc9Ez+CDHhOKRrG7ZLFqwXr9hHLNfgViNgZk3EqyQWu7FOtu3jpAk8m5nLDBBz26C3Eb7PUPacuPOXn70Ps0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708615449; c=relaxed/simple;
-	bh=q4hZCcz/bl8SZjjfDLe/pnUi5JMqdAmCHiBzeXrZpyU=;
+	s=arc-20240116; t=1708617178; c=relaxed/simple;
+	bh=Vd3UzDgmX7Ao1DnE+nzyieBLFnftQ/B8sJIJRrxRpco=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izPYcursNj0jd5dPo3xjN7o94yeHIIvlz3mfqTXN79bqHcLnX2p7qGJmmA+MITby4RA/kPXh5lmhFF864XfokyFKr5V1ZmtkVHfRTeqy0pSK6iBYbMYovruESdf9/c7cGGhtRCAN3G4BthqA2hJWkWZa8/OooBNuV+8hjaZh1cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=MjHSoh1g; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GG1wN9W1; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+	 Content-Type:Content-Disposition:In-Reply-To; b=ux/uMIoa/Bw3r10heIJV/f48T/XSu3siX/WEZxirgd4D+pe3wYP+eOg24JIiN8rqrV4rdDg37TVgTEDyVShN+1yWimr5u2++teYfEIwNdiwI5um8F7+CwIXi3CHm41eMu/Ga7X1vabsZI2xJ99g3Jy3QNp/IN6BLqBJnpoUuscc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bSXkMABR; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="MjHSoh1g";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GG1wN9W1"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id B1F4411400BE;
-	Thu, 22 Feb 2024 10:24:05 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Thu, 22 Feb 2024 10:24:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708615445; x=1708701845; bh=ak/xySA9kP
-	x5TQpgiD9qkPOWCJZDiY1FRY7rnoAd+nI=; b=MjHSoh1gTLkHrYXp2mwqvo7RnM
-	24Et6oTsgnBDvxFOMfEFX4DWynykTjy/aoNkMm/hixoenPCUwQM/YTACnCBPQwJT
-	GU+vx5gRW4krEuz5xn1AO+KCNksDeOsKdIiJTSOunwEiD9c4PrLlgmCpMWGBvhN0
-	VDexuHspgxH8lVHNnox1o3ijpDUb+CgF0Kl+JPtY2iS7S0d56yixdGtJhDCh+bEa
-	e8jYqBknoCd5CrAJKdLjipptN5HOV1i5g6iLTkS0Z8dtpjZMR6EeBZIOypwduAVa
-	AqSk7RSy7sPCSh5TE6975v4Y2eY29YzOPkCJCOCkWBsFacj6gQinMet01aRQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708615445; x=1708701845; bh=ak/xySA9kPx5TQpgiD9qkPOWCJZD
-	iY1FRY7rnoAd+nI=; b=GG1wN9W1KVdtYsG8N1Q/jA8GEpqPy2w65ZDmRnxsMlgs
-	ZiigHLzqDxGbkJOwC7YfaoyBbbOs/7aDFF7+Qba1qX0wQ4pO0n+guV7nbdPgf+76
-	KCgef/7GUBGs88Zyay2Oz01A11iWz3L1RPmPxtFPyF06dhM4+C8bf1BBicU5xsDA
-	d30QeEb9LBvaryH7jCRjPO8fbw9NKawtrDDnzh1b62ijhaJ48xZnpIS5PyNgn9Ym
-	DxtnIB0+c65//mogLNG41sgF0fs5ECvfKbdfgYrG5u/7vmxvl2YheLI+yjCDE3Xg
-	mnYyofmawWhMPuqfBN6rUfKA/rjfZnp2+/NDa1pcHg==
-X-ME-Sender: <xms:FWfXZVFULwUjMu1sJs9F4rIJpIwiP7zbyC1jfndfBIFxkUStnKFMew>
-    <xme:FWfXZaXIifusNiy4xocsOlqwNQfUFBVX3RdT8px_D-UlBu4oTr7SMFq2XiSIsX0Ug
-    EVKcbtv8xZEm0ijLmI>
-X-ME-Received: <xmr:FWfXZXIEa-kIOrMaXum5R5jyLKG1nqGzBIPdzhz-nqNQJ6F43idRlSKSJRY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeggdejgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdortddttddvnecuhfhrohhmpefvhigthhho
-    ucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrg
-    htthgvrhhnpeelffekveduvefftdejkefhtefhgeduhffghfejtdehieevjedtkeejveej
-    keeuieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hthigthhhosehthigthhhordhpihiiiigr
-X-ME-Proxy: <xmx:FWfXZbG8isINsh5AiOJWEy6JD-uvrpiEdOqo3IALjnmPeWo78I6eow>
-    <xmx:FWfXZbUhCSilefL2foYJa229cuBgLf1071sqNgVko_c8xTNl3gnd8w>
-    <xmx:FWfXZWOU7snIUzi-FB5V6-DMrOt5BvESBmTvD0_Nu_0gM2dEuMVGdw>
-    <xmx:FWfXZdJvzu8H4jGekdXMAMIfefmMNPDRkBLIFdzDoYLHqFm5OiRnYw>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Feb 2024 10:24:04 -0500 (EST)
-Date: Thu, 22 Feb 2024 08:24:02 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Tobin C. Harding" <me@tobin.cc>, Greg KH <gregkh@linuxfoundation.org>,
-	Guixiong Wei <guixiongwei@gmail.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leaking_addresses: Provide mechanism to scan binary files
-Message-ID: <ZddnEtnxhJsafdcF@tycho.pizza>
-References: <20240218173809.work.286-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bSXkMABR"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e47a104c2eso2177945b3a.2
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 07:52:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708617176; x=1709221976; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1gfwnWmu63cYswR0b/u7RtSKFeQyr0VL4Kut1suu2n8=;
+        b=bSXkMABRd5Gy9iYQZn6+kg10M0jGKVqcKbqT6VPDcuAA7I4OwHLOV8WaS+y/iZyRAA
+         ZXkOoGHpESpLUfIhI9+kzg2G+h3GF+ylw44PN5ekhfb4B0mYFV+jnIr21/MZ8Ub7Wnw1
+         xJO9AxAD0f5W355FyYMKjxJ+6Hq2yKqAYPkWI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708617176; x=1709221976;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1gfwnWmu63cYswR0b/u7RtSKFeQyr0VL4Kut1suu2n8=;
+        b=qDrqvB5HpuHEaweUKVg4FHWyyoKRq+QLgpdDsMlbsKWT+7iGtMrA/4Gyg9MripMmRe
+         7hh2ZVomCk4Ic6edVCI5xo+ef3Y1qhDuGW/Lmgkvkqg0WwR3J4caYFaxzqeFYvP0wFql
+         BHhTgSfaJOgN5KLItHNv7amMDg5VY6XxNI2KV3W4N79wG6PDYHBTg0SjASMyiciYtgIN
+         XtqmLDqXMHoY7rySaJ8CVk9piwaQ5C1dJENIZ/Jwm46HRfFdt3VkUqPh3M2zEViNNQtI
+         0N15pihO5MZAOhMKgNO/PYeyMoTB2qheG88P+TTJyxu3dTYed6p+uCK/p1+vSKGgQDAS
+         Hlig==
+X-Forwarded-Encrypted: i=1; AJvYcCWOjtopWl3ISYr1A+KN+Umql2ZAMB/luKhwZR39P1s5h2K/I6Plo9s7DoZj/vOY5ZHR/92T48kjegO40foj8gpfSPY2ad2/GRH1ljtH2ual
+X-Gm-Message-State: AOJu0Yx5dPDdS7492XvrtVV1EKGk51CWt5CyhK2kogGXFT2JmSQn7v06
+	0E/eLS1RuUcaucVRvhmVMEG5j7xEOlE+VwDhrqXeQ17tBXvMaCbLad7hLg5FlA==
+X-Google-Smtp-Source: AGHT+IGrtsHGeHfg7xJD4IpKzMvkDmfLWoRjY3MrY0wjNmBdDYmkUNv35SM8aT2MKwO5Lko2A1nlBA==
+X-Received: by 2002:aa7:90c6:0:b0:6e1:44ec:8e9e with SMTP id k6-20020aa790c6000000b006e144ec8e9emr14895496pfk.21.1708617176218;
+        Thu, 22 Feb 2024 07:52:56 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id g19-20020a056a0023d300b006e469e8b634sm7589863pfc.3.2024.02.22.07.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 07:52:55 -0800 (PST)
+Date: Thu, 22 Feb 2024 07:52:54 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>,
+	Anton Protopopov <aspsk@isovalent.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5] bpf: Replace bpf_lpm_trie_key 0-length array with
+ flexible array
+Message-ID: <202402220751.2370A263AD@keescook>
+References: <20240221222613.do.428-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,46 +85,16 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240218173809.work.286-kees@kernel.org>
+In-Reply-To: <20240221222613.do.428-kees@kernel.org>
 
-Hi Kees,
+On Wed, Feb 21, 2024 at 02:26:20PM -0800, Kees Cook wrote:
+> Replace deprecated 0-length array in struct bpf_lpm_trie_key with
+> flexible array. Found with GCC 13:
 
-On Sun, Feb 18, 2024 at 09:38:12AM -0800, Kees Cook wrote:
-> Introduce --kallsyms argument for scanning binary files for known symbol
-> addresses. This would have found the exposure in /sys/kernel/notes:
-> 
-> $ scripts/leaking_addresses.pl --kallsyms=<(sudo cat /proc/kallsyms)
-> /sys/kernel/notes: hypercall_page @ 156
-> /sys/kernel/notes: xen_hypercall_set_trap_table @ 156
-> /sys/kernel/notes: startup_xen @ 132
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Nope, still breaking CI. I will respin again...
+https://github.com/kernel-patches/bpf/actions/runs/7996482005/job/21839056683?pr=6451
 
-Patch itself is
+-Kees
 
-Reviewed-by: Tycho Andersen <tandersen@netflix.com>
-
-And if you can carry it, that would be great (see below :).
-
-This does bring up some interesting questions. From off-list
-discussions with Tobin, I believe he is not particularly interested in
-maintaining this script any more. I was never set up to do the PRs
-myself, I agreed to be a reviewer to help Tobin out. I'm happy to
-adopt it if that makes sense, but I'm curious about the future of the
-script:
-
-1. is it useful? (seems like yes if you're adding features)
-2. does it make sense to live here as a separate thing? should we
-   perhaps run it as part of kselftests or similar? I think that e.g.
-   681ff0181bbf ("x86/mm/init/32: Stop printing the virtual memory
-   layout") was not discovered with this script, but maybe if we put it
-   inline with some other stuff people regularly run more of these would
-   fall out? Maybe it makes sense to live somewhere else entirely
-   (syzkaller)? I can probably set up some x86/arm64 infra to run it
-   regularly, but that won't catch other less popular arches.
-3. perl. I'm mostly not a perl programmer, but would be happy to
-   rewrite it in python pending the outcome of discussion above.
-
-Thoughts?
-
-Tycho
+-- 
+Kees Cook
