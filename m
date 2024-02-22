@@ -1,75 +1,130 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DAE2575B;
-	Thu, 22 Feb 2024 19:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F41D107B4
+	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 20:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708628978; cv=none; b=EiAFsjMTjmH5dAN/pJq4hJrspHOfZWdnXYEMf+h5dEHq6zmz0KLaCIdYkObhQaJJcq9ay4QT+vLYGY8rBitzcK5sOINawwMPx/bjDIVrPeFi1f9xLyHyZ/2tv9eGUDotq7fOZTi2Ao1EoicfintQGx1dFCheGGALUDtSh792KEA=
+	t=1708635549; cv=none; b=rC9EUomsYlmGcb4ia4Vx2vIsI/haFap5kAGau2sF+meP4bdFQu7ivAile+Zcw8CpVUuAjYlV6GuOKwWVGOAhL5ezyd+r/7qrOMe5i0RUL6RNl67jHJeWf5oxiuP+DrrYVfBPzBHsIFmRiH+ZrBqFo7KgP2wO7ExYFXsyc8EYNf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708628978; c=relaxed/simple;
-	bh=mI57a/fFX3uiYjIsw96ouRhYjWUvg53pK3eC7aGFRcg=;
+	s=arc-20240116; t=1708635549; c=relaxed/simple;
+	bh=C4F7mlB1MqkcQcSyoJUPRfFHjf+dal0cew/+pSwHCXo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s7KEzDbGNB2Uu9xdChu8v8LD3K0lXSM0A3WgDwNH17UjXoVwdRV2NaID9md+iIfNZtprZvl4wfaNeyVJM5kcuaHYt0nrPOSGWlAr2ZeJZF37uWzyNQZtFSTZmAdu8waIWCdiu4M4O19cXrE2NwQKkWubz+Mh9+Y6nOTR5prEpZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-59f9045d18dso14793eaf.0;
-        Thu, 22 Feb 2024 11:09:36 -0800 (PST)
+	 To:Cc:Content-Type; b=G/7w5mP3socPkXCcNQIj64kW36pZQZTvBXFOYnOqBwyxd70ZT33Zn6/CvUDFyPDTY8Z5rXIoDyCARy/KqtMR+TvrZCDomkGr6XvZF4Sc1K8xJY/JLnG98KKUt/CXoBfyEX/xYbNDaVNTJO63GvPlYhZxou04P7YMmpOFcq4BfOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MOHJAqqc; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MOHJAqqc"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-42e2507c6e1so82241cf.1
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 12:59:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708635546; x=1709240346; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/zEWuRWWHcJcQcinmF9Ig0PacXm/lMdwIIHptRGDzpU=;
+        b=MOHJAqqcAnRE2NSLZhyESs/g5WAAwqx5bZyPaxifPADGalK3WQEz1I3/0pCW5PdqkI
+         ppGl1SyQhYFGzNy3SRnVVLTY8Q1L8ClG3FqEJkJFXqganGsY65/lTMo5K9QmgtbfBQBT
+         /MeX8JzP/yxOS/GN9tRwdo5b9tqFO67Q3SN5n3ZFQmGAOoKwdOojExjprnKpJnkBuAye
+         J/xcM0eZbNV01MeMB6Zn38/zOZ0fXEcY92HQMr85IBGcDe7q1sFoYO+RTn8ebga0c6zy
+         PEdTG+3lch6bIe0ZKqq+1kwFgOLk1lc9vRg49EcN0d0xSJgE9xzi9uGljq5REEQ/s7/E
+         Vqew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708628976; x=1709233776;
+        d=1e100.net; s=20230601; t=1708635546; x=1709240346;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mI57a/fFX3uiYjIsw96ouRhYjWUvg53pK3eC7aGFRcg=;
-        b=Yu8cqUnOH8S0eKYiO25FkdhUE62rBjCey3P7ZKuJL8nguRT8IlpC+mP9HWEvruK62p
-         oLNbcG5QcvOlFyVNGd2IqTcBcQI5/KSJdfuwTvHu0/k1Pgna7VfkqctkGac9It8QyIlh
-         hAjEnGJ3tWOOM7rMupm6yBCrQJflXhpp4iPiLEib6D6kRhUU0JM/32CRNCLzAmAFFs5k
-         on4VTQMY9h61c379v4wZAYoChvUc/L1W3kPK3uDHZPhPLkJvwlqXWuKwFrqDVEQixAbn
-         /XsExkyGF6QeXl6YHFSZlOV9eIYGPu2LATN2PEuce+V9EAOTmC9SgTPjYSrQY41fPjz2
-         TZqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuAvg7A0ybsNkgFO7qdH109PQyM1Nsp0gpJJJK4wWnbg/tAhwykmZplZSostlHuH9WDaoa8qQIudVg+y1Ja4l8i+DGgEOFzTcCE0yeD0MpsymtOgFw9JH6xeV4faO/qwnaplPF0BIgj06l6magRabEDm/lv483bEP9VMkzbtmP9A99oYMgkj8=
-X-Gm-Message-State: AOJu0YzYppUEhoR8pd+VGtOzZ3gMSD4sIoOLT4MkCm12lJ2hpK/BRR6f
-	MboJ3RyNwxrJ1eGrm0QCWckyZ/0cYyImoPKPyVmDbZxVm1z8q6xlKG+ni8rBb3fYHH3gI8mQsJ1
-	+vxI1XRzDMlc9O8xj7iEYdgqLqeo=
-X-Google-Smtp-Source: AGHT+IETFoK7T6C1tnmiR90r6kea/Z2OWg9BazXFmeAErs0t530tnUL62eTa+Y7FdI3dCEbLLbKs2EKUr5DCNNZAP5I=
-X-Received: by 2002:a05:6820:305:b0:5a0:1c1e:a8c2 with SMTP id
- l5-20020a056820030500b005a01c1ea8c2mr4929393ooe.0.1708628975933; Thu, 22 Feb
- 2024 11:09:35 -0800 (PST)
+        bh=/zEWuRWWHcJcQcinmF9Ig0PacXm/lMdwIIHptRGDzpU=;
+        b=EJE6fyfWSJs1LXE8s1a53ZlqMWmGT3aAxGr9VWFUUjMYKGmI1zt2OoVXuHxCUIw2Jl
+         Z1c2kwUaOx3uCPZ9Jf6ucLFcb+NujQTJ5o8HuE6NI+nT0l+ln/BpYYfAlLdZ+kYtddqc
+         Gpo08gZ5u2NCMDSpipzay3Gw3TMSdnfLzEq2A2qRlXLSL2hULggUJSF+Mky0UJJaugBI
+         4tzkD8cF+aJdU86kaCZAdtzInAcYyhR1C5Dae5HiQ8iLYkWT5/tdW+35EXIP2WN/uArD
+         OfSTnjLIMD5dtqOJ9fKcHor5pCvP5Xb3I2rFfNaYOczmbOrZiTSRwEo1H5D0bsHCH2Sg
+         6iOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1o+IiXA0F1Rs+CVoz1qBoJHhuAmYf3oxGlopNJfujLgJ/p7q/migayGMEruGx4RhIQJ2lplLimo0fzSX9Hea4Qbo1d3rbJCQJji/X+VUT
+X-Gm-Message-State: AOJu0Yznpo23EjWY4A07/W+m0coufWLK95kgqX8mlndypvF1hTf/oAYS
+	CArNjdn827g2L3wmMZWrffuDXdfg6Kc9Pgei+D+C+QgiG6QQ2LuW8Qmzn+jLA94KFvHsMrnkQqp
+	chVReWTzTtYx5C0O4Bx4fAlYTqnDB0zMwdB3i
+X-Google-Smtp-Source: AGHT+IFSpfaLdIKihK3iEVOja+3Eqku3dKQtV6o3yrUl8zcXbBHUkfm22S3h1VkUJApYDgRUGbJE0TXcXoTj3FcGfX4=
+X-Received: by 2002:ac8:7643:0:b0:42e:1260:c4e6 with SMTP id
+ i3-20020ac87643000000b0042e1260c4e6mr732606qtr.10.1708635546371; Thu, 22 Feb
+ 2024 12:59:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <be49c794567f3bd00ae16e91b54fe8cfe6cb4999.1708245599.git.christophe.leroy@csgroup.eu>
- <202402180106.25E08136F5@keescook>
-In-Reply-To: <202402180106.25E08136F5@keescook>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 22 Feb 2024 20:09:24 +0100
-Message-ID: <CAJZ5v0jbPvP6TfF9QS5szaW3bfGw6M=kzOFjTDAOjKHBiWNdrg@mail.gmail.com>
-Subject: Re: [PATCH] PM: hibernate: Don't ignore return from set_memory_ro()
-To: Kees Cook <keescook@chromium.org>, Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>
+References: <20240221092728.1281499-1-davidgow@google.com> <20240221092728.1281499-2-davidgow@google.com>
+In-Reply-To: <20240221092728.1281499-2-davidgow@google.com>
+From: Rae Moar <rmoar@google.com>
+Date: Thu, 22 Feb 2024 15:58:54 -0500
+Message-ID: <CA+GJov6GyU0t0D5quhroCgEQOJgk0PCjVn5LROifBcNMx-ovcQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] kunit: test: Log the correct filter string in executor_test
+To: David Gow <davidgow@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Matthew Auld <matthew.auld@intel.com>, 
+	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Kees Cook <keescook@chromium.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>, Cassio Neri <cassio.neri@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Arthur Grillo <arthur.grillo@usp.br>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Daniel Latypov <dlatypov@google.com>, 
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
+	"David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+	netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 18, 2024 at 10:07=E2=80=AFAM Kees Cook <keescook@chromium.org> =
-wrote:
+On Wed, Feb 21, 2024 at 4:28=E2=80=AFAM David Gow <davidgow@google.com> wro=
+te:
 >
-> On Sun, Feb 18, 2024 at 09:40:58AM +0100, Christophe Leroy wrote:
-> > set_memory_ro() and set_memory_rw() can fail, leaving memory
-> > unprotected.
-> >
-> > Take the returned value into account and abort in case of
-> > failure.
-> >
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> KUnit's executor_test logs the filter string in KUNIT_ASSERT_EQ_MSG(),
+> but passed a random character from the filter, rather than the whole
+> string.
 >
-> More set_memory* consumers! :) Error paths look good to me.
+> This was found by annotating KUNIT_ASSERT_EQ_MSG() to let gcc validate
+> the format string.
 >
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Fixes: 76066f93f1df ("kunit: add tests for filtering attributes")
+> Signed-off-by: David Gow <davidgow@google.com>
 
-Applied as 6.9 material, thanks!
+Hello!
+
+This change looks good to me. Thanks for fixing this mistake.
+
+Thanks!
+-Rae
+
+Reviewed-by: Rae Moar <rmoar@google.com>
+
+> ---
+>  lib/kunit/executor_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+> index 22d4ee86dbed..3f7f967e3688 100644
+> --- a/lib/kunit/executor_test.c
+> +++ b/lib/kunit/executor_test.c
+> @@ -129,7 +129,7 @@ static void parse_filter_attr_test(struct kunit *test=
+)
+>                         GFP_KERNEL);
+>         for (j =3D 0; j < filter_count; j++) {
+>                 parsed_filters[j] =3D kunit_next_attr_filter(&filter, &er=
+r);
+> -               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
+ '%s'", filters[j]);
+> +               KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter=
+ from '%s'", filters);
+>         }
+>
+>         KUNIT_EXPECT_STREQ(test, kunit_attr_filter_name(parsed_filters[0]=
+), "speed");
+> --
+> 2.44.0.rc0.258.g7320e95886-goog
+>
