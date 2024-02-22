@@ -1,131 +1,106 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373C610E3
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 00:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061F812E49;
+	Thu, 22 Feb 2024 01:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708562516; cv=none; b=HL6M8VyTYR4lZRvmkPWyZwB743TdrbYbn/3rwxqYcuH5MgbC/57XiZQEiLGHB8qWq7RqDZfziNQExjOLEidBKos1UST5w5fS4QCCiBA3chbM9ekJLyYbyRKImr695yQTsjlR9O5cvexQOVggVFoRV0z5Z7/BBmM+Thu4fHo5V3g=
+	t=1708563944; cv=none; b=GI5At/X6pjMZHC7Iw+ICeOUS07CV9pbKhJllmGrSV2Hljp3uAhtN7ZMJ5+KReYgWsbhZKdYoKBmdZJ1QFwX2dnGl+1kaXRtZB6dT4DtIDv2brpqYqxxjYmYASBXMrp+EK5Bd+d7yyIa6bDsAGia9P3lsmdUHaBHRxhEAUbMZkkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708562516; c=relaxed/simple;
-	bh=OTTeh2V6QDGWlxJqsDj3XrQmqyt1AJR5mKB7r3e/JNI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HtQiLKoj6BO8ZkfttUh8YTrRjPtRjYNoe8OxvMLVML5v1ST4z7hb8WdBTxQkw1T4jX4dRT9Smd+sFov9+KLyuUUCkLvh9YN43OnDBtM8GmsS+12eupLrj8G/yK4Yjz+DUjBRznyIwJEedpj6NLjEePzPYipz2p2WkjdCkP0AyXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tk75PSBw; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tk75PSBw"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcc0bcf9256so8293471276.3
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Feb 2024 16:41:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708562513; x=1709167313; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=G583JTbO9RH5e4qatRoF50zt3H5aOXeubyono7wZgbU=;
-        b=Tk75PSBwIRulegjD4wXVI1LoeKNytzxPNKGF4r7J5YViBQNmAULy2k/fqEPqOxoeD2
-         zixpnd7HmSHoVdtIaGmE40ejGYb3MduYVIVSXlkrUzje0S0c1eB5APUQ9pWYMd87glFC
-         fGFEoJS/WLc+Uwo8L1TowBnpXCxdaEQXCmtIxwOSKACuzriFetajC0psuuFdcopskDFp
-         3u4eSuBVwLAeDykDPx5ZkMscJhz9HplfH1TWN77M6W36VxkNZ8mlJYHyGGaJ0CEsOAWO
-         XHJEGOUVVO2rreQRe7HNKGUtqO1inIqTss1JInnIwUGV0u8rU0p9VcDxiJfPndObQZIw
-         869w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708562513; x=1709167313;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G583JTbO9RH5e4qatRoF50zt3H5aOXeubyono7wZgbU=;
-        b=GrJvhvtgQ71xvNLI8TPlvbhbsXrIF7LmI8Cwd6FNp4hTNNkMljVOwuc9B873AaTm3x
-         R5rUcyAal3T7YuNeTL4wxvDyRRaO9aKiwdLzr07XU96aWdtYzgbHt1akQ5mE4FdMvkHS
-         IatuUYS13E3VjV3dRVc6sgjhvdIeYAunQNBuCb3pJ7n34C3henu7IMZRxvfeEzuXTFbP
-         PDRnlvz0vn0H4UxLG7Nmc/xHhYWJjIMgU9kaLD/gbXU0EMZKynXhjWxgztLFUMbqg7n5
-         bBm5m+CUtz8yHFQJQwAMqel6pmLwLrfMBrFkWmsJiNTVf1Ud0DLszWzXzRXj0sHRpZlC
-         3atw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+vwKqhiafaXun0ZZYmA7ElUHQs6+ZJFseFHMFloE+WL6T/klGCS2G4lB9le+XkCPpZg+3oYVRH1VPY5kDqqhx6mNeBEe7/OPAKZsy49Yf
-X-Gm-Message-State: AOJu0YzSFSs3vmxcOcDz7ihPGSCw7SO3OGQKwUDk/2wM6o6Pa4ccqVXv
-	i3AWMWUjrJh5nglefmkqmfiQ9I90/DFhlMLXHmr7PZsHLEzwFwChcm4kMeijgqMCi+WkxtgnO4e
-	Vh6pP5zBgqg6fJEyYJKTYRA==
-X-Google-Smtp-Source: AGHT+IGiyZ42qLqEd5VQhwppGk37FON0JE3UDwx/pyMP6iMh4zKRGnb0Q2Uu5IjrwRjQyoA/k3ecbiXnP1KcI9kYAg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1008:b0:dbe:387d:a8ef with
- SMTP id w8-20020a056902100800b00dbe387da8efmr33807ybt.1.1708562513250; Wed,
- 21 Feb 2024 16:41:53 -0800 (PST)
-Date: Thu, 22 Feb 2024 00:41:52 +0000
+	s=arc-20240116; t=1708563944; c=relaxed/simple;
+	bh=FsJU68LcNxW7h4DF/UR5XSZahK63i7JaNo9cTyHunOc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=De3FxXe8O5Leh0LMqIk9oz3t2S6S3ZgPptW1XpbruiVaXOWTh9jDz9zwmTv3kFK/aTueHff5xLgg30PuRv3lfTI9+1qtpSeLB4N33V6Rc4JwnSXzYQpGiKoijnGk11SLgg3zAZiTGEwasJFHplGmyBUQ4sjXny6eLiGKMrDdISQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 400B7C0C28;
+	Thu, 22 Feb 2024 01:05:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf11.hostedemail.com (Postfix) with ESMTPA id AA0B12002C;
+	Thu, 22 Feb 2024 01:05:31 +0000 (UTC)
+Message-ID: <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
+Subject: Re: [PATCH v2] checkpatch: add check for snprintf to scnprintf
+From: Joe Perches <joe@perches.com>
+To: Justin Stitt <justinstitt@google.com>, Andy Whitcroft
+ <apw@canonical.com>,  Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas
+ Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+ linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, Finn
+ Thain <fthain@linux-m68k.org>
+Date: Wed, 21 Feb 2024 17:05:30 -0800
+In-Reply-To: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
+References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAE+Y1mUC/x2NwQrCQAwFf6XkbKCGWsVfESk2fasBWZekFKX03
- 116GZjLzEoBNwRdm5Uci4V9cpXjoSF9PfITbFN1kla6VkQ4Zs9afjy5LfDg0DB+l6Q7Bp1ZOZ2 6sT8DGPsL1VJxJPvul9t92/4hgrO3dQAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708562512; l=2488;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=OTTeh2V6QDGWlxJqsDj3XrQmqyt1AJR5mKB7r3e/JNI=; b=A2o2fiTjLDUmZ9F3wqmvRRVWLzoT82nVkkZDj98Xnn0hewgY8d0BMBO+anxo+q5J1CvgVNGan
- ecX1M9fbJJPB0fqNn0QDDpCEd/lQOrqsnM7HQ5lW5sI5e2Ioaybsh6P
-X-Mailer: b4 0.12.3
-Message-ID: <20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v1-1-20c685bd1b43@google.com>
-Subject: [PATCH] scsi: lpfc: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-Rspamd-Queue-Id: AA0B12002C
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: cyucsypd3qhnw59f9ezfa9557qf9fsux
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/0uf+Q0wPPk+E8Q442h+fw1PySOnfqySI=
+X-HE-Tag: 1708563931-486686
+X-HE-Meta: U2FsdGVkX18di8ZY8Lx3J5yZpNPSNulE1qFL0I57DOQ/eaeZywd5jWcZRnNYgG9paRrRvpE8dgeSdevTISn2cf5OLsschxZqnxdaV1U5bNYMB3HbohNNP5DYTyH/PCP14IZjr+ZnLIkcEeros7ZlNQRMMqz4Ni7+YyLmDTb0JAFt3G9VePngpbF4XmwmG9sh/6SyPr8V6K9g2CDvS5wCUfX3QM1aG5Sy5CpwLE/PqbIfkPajWImacyXWI/iqxo5uv0vHoGTbjA3Yxs1mFm2ZeUCYNDIg8ZjVri0JAGKtNHgh2k87u6OTNysp4pnrxxTnFgYssMhs6MUiHAv81+a8lpqWmNmVDE6SHhaczHD1CMIkD+TYjS9Tvifnq0tmLhABz9CAq/DpfO0DUcwLyio6P2DOZkvwIz3/+8iJBFJGhF2nKDWH/YNEfEVEj6Lw9H/awthTWL3Qe14EoJjIDXsp/1y6fHCrG7WPSjezpj4e8tI=
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Wed, 2024-02-21 at 22:11 +0000, Justin Stitt wrote:
+> I am going to quote Lee Jones who has been doing some snprintf ->
+> scnprintf refactorings:
+>=20
+> "There is a general misunderstanding amongst engineers that
+> {v}snprintf() returns the length of the data *actually* encoded into the
+> destination array.  However, as per the C99 standard {v}snprintf()
+> really returns the length of the data that *would have been* written if
+> there were enough space for it.  This misunderstanding has led to
+> buffer-overruns in the past.  It's generally considered safer to use the
+> {v}scnprintf() variants in their place (or even sprintf() in simple
+> cases).  So let's do that."
+>=20
+> To help prevent new instances of snprintf() from popping up, let's add a
+> check to checkpatch.pl.
+>=20
+> Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - Had a vim moment and deleted a character before sending the patch.
+> - Replaced the character :)
+> - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1=
+-3ac5025b5961@google.com
+> ---
+> From a discussion here [1].
+>=20
+> [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@lin=
+ux-m68k.org/
 
-We expect ae->value_string to be NUL-terminated because there's a
-comment that says as much; these attr strings are also used with other
-string APIs, further cementing the fact.
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -7012,6 +7012,12 @@ sub process {
+>  			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see:=
+ https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+>  		}
+> =20
+> +# snprintf uses that should likely be {v}scnprintf
+> +		if ($line =3D~ /\bsnprintf\s*\(\s*/) {
+> +				WARN("SNPRINTF",
+> +				     "Prefer scnprintf over snprintf\n" . $herecurr);
 
-Now, the question of whether or not to NUL-pad the destination buffer:
-lpfc_fdmi_rprt_defer() initializes vports (all zero-initialized), then
-we call lpfc_fdmi_cmd() with each vport and a mask. Then, inside of
-lpfc_fdmi_cmd() we check each bit in the mask to invoke the proper
-callback. Importantly, the zero-initialized vport is passed in as the
-"attr" parameter. Seeing this:
-|	struct lpfc_fdmi_attr_string *ae = attr;
-... we can tell that ae->value_string is entirely zero-initialized. Due
-to this, NUL-padding is _not_ required as it would be redundant.
+There really should be some sort of reference link here
+similar to the one above this.
 
-Conveniently, strscpy also returns the number of bytes copied into the
-destination buffer, eliminating the need for strnlen!
+Also, I rather doubt _all_ of these should be changed just
+for churn's sake.
 
-Considering the above, a suitable replacement is `strscpy` [2].
+Maybe add a test for some return value use like
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- drivers/scsi/lpfc/lpfc_ct.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+		if (defined($stat) &&
+		    $stat =3D~ /$Lval\s*=3D\s*snprintf\s*\(/) {
+			etc...
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index baae1f8279e0..42594ec87290 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -2569,9 +2569,8 @@ lpfc_fdmi_set_attr_string(void *attr, uint16_t attrtype, char *attrstring)
- 	 * 64 bytes or less.
- 	 */
- 
--	strncpy(ae->value_string, attrstring, sizeof(ae->value_string));
--	len = strnlen(ae->value_string, sizeof(ae->value_string));
--	/* round string length to a 32bit boundary. Ensure there's a NULL */
-+	len = strscpy(ae->value_string, attrstring, sizeof(ae->value_string));
-+	/* round string length to a 32bit boundary */
- 	len += (len & 3) ? (4 - (len & 3)) : 4;
- 	/* size is Type/Len (4 bytes) plus string length */
- 	size = FOURBYTES + len;
-
----
-base-commit: 39133352cbed6626956d38ed72012f49b0421e7b
-change-id: 20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-f54b67eeeb68
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+Maybe offer to --fix it too.
 
