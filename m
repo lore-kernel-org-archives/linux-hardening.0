@@ -1,129 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64771428F;
-	Thu, 22 Feb 2024 02:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD911775B;
+	Thu, 22 Feb 2024 04:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708569478; cv=none; b=a1fkasKzrCFhTihT4Lto4jdlFvHXZPW0w52nkTdSh4FiL6kuM2brpNKkZXRqSUyphzRDfL3Nm77PNLdscyDrhkAG7mM+adF4YgcYWS1QPzx6Jd9BKP0R7Am9avFrCnRE4JN1bPVqkMpYheenJ29LrlFm8nsGRyeqXNep58GszHw=
+	t=1708576055; cv=none; b=dAmWzxPjJXcEkqk8EMEa2F5D+Yv64XRqL9uxibdoA0eF5pbvbxF9bgI5Tbq/MgObje/BeZxnAG0e6UzCFj7Or70foRXYMLg1by4ZD0z/jGqOYZ0Fyx9DGQ0nhFTdY//vibRptvf+YJQPt7AKZU7WSil6nDpjlm1KKZOpaEgPZaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708569478; c=relaxed/simple;
-	bh=VpSH7WVSxh8xOIVjMtllw69spK1nwJejrLyyov99v88=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=aE8bmmd0mpXVZuy8CfbpQTRL3ZV2UCPJ1w1YB1DxqTegYyuHYayEkM4GPfakMp8uKcibShKOG1SA+ykP6Am7BExDbnB8nhDVdsESnzGEQjRV9oEhcu2OsMgkfLU3USOp2HZer2fba6RBoQezOGtkJeTKid/cXNyS24L/8ueqoxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtWhxMyU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708576055; c=relaxed/simple;
+	bh=oFSGpvFms3hEQid0nl1slnjolsRI31AFhOlPP3m17wA=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=HGWvfBferquwfSN8yHc0ZnX8CU82xEljaSHTU6RThPINtpQrg/wUQ/03JgvVZNMVT9wur1fReBURl0eGZR0Q1SzD4piqbbQd9D63rSkh4rfHhPhzCIQOdBd9R6wqQYQ288c88VjhyWc58D7N5FamJkERGUwkD/uFD6EB69D3dXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=degz5bbf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtWhxMyU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3DDC433C7;
-	Thu, 22 Feb 2024 02:37:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="degz5bbf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A34DBC433F1;
+	Thu, 22 Feb 2024 04:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708569477;
-	bh=VpSH7WVSxh8xOIVjMtllw69spK1nwJejrLyyov99v88=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=AtWhxMyURRBKpAzyO3agWNlorMBTJFKQLesVrouSUVbEcnumHaOqpg+nwPK0iVAAw
-	 SRwDAh6kjHQ+tSlhdPprywWiqEbNqeWmlObQK14PrVzXjanSmkPs1sB3tPs4+5FSeO
-	 hopc/3yKxMg8FDP7Uxxre+AZOiZVOFoizXbKOcIG/8yYAQVTcGc+y9aGTapCaPysCa
-	 DQoznAfr824hjL7W9zAvbCTt7XUx22yW87vy4YYfzNpY2+qgu4hh+NYAVW5mefctmI
-	 hTHyKTBuFqIhl5qz1naVFWpsmH1IDs7wzYB5/V+t4TnIJLAL5ag7u0ZtJg0m78e547
-	 qHmdA5i35XfRA==
-Date: Wed, 21 Feb 2024 18:37:48 -0800
-From: Kees Cook <kees@kernel.org>
-To: Justin Stitt <justinstitt@google.com>, James Smart <james.smart@broadcom.com>,
- Dick Kennedy <dick.kennedy@broadcom.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-CC: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: lpfc: replace deprecated strncpy with strscpy
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v1-1-20c685bd1b43@google.com>
-References: <20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v1-1-20c685bd1b43@google.com>
-Message-ID: <BE9C61AA-633F-4CD1-BE5E-B01DC947626E@kernel.org>
+	s=k20201202; t=1708576054;
+	bh=oFSGpvFms3hEQid0nl1slnjolsRI31AFhOlPP3m17wA=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=degz5bbfCmTaX8+5xbK3rWriaahvDIWKfVNKagSXqfrDwnJYzezNaMrFgFKzQVhPO
+	 OXlyXwpvl5c2miPkr3w9BXgN/by/UynCS9BaSNGeO2fC6O18AAYU8SsqSLGdcqlao0
+	 SMabx0q4vSAu82azyCa1AOq5qfnqbej1qBz7pz7ji1T3RRZTmi5kuBUHBs0DTDrGh/
+	 0GX8E9pPELXyU1acG/xtKhEQ4hkTOjzk66sY9Eq/P1wrfKavrZYFUhcebc3kw0whiA
+	 2iYk4dvQkZ51w3wGKLWecb3as1adaWETmS/n6aHcObe+1VaTW4lYCQH0JHzo53/J+3
+	 EwMiMFyKbEAgQ==
+Message-ID: <61113ffd54a32399ebdc31fc1a57912f.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240121142946.2796-1-erick.archer@gmx.com>
+References: <20240121142946.2796-1-erick.archer@gmx.com>
+Subject: Re: [PATCH] clk: hisilicon: Use devm_kcalloc() instead of devm_kzalloc()
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+To: Conor Dooley <conor.dooley@microchip.com>, Dinh Nguyen <dinguyen@kernel.org>, Erick Archer <erick.archer@gmx.com>, Gustavo A. R. Silva <gustavoars@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Michael Turquette <mturquette@baylibre.com>, Nick Alcock <nick.alcock@oracle.com>, Rob Herring <robh@kernel.org>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Date: Wed, 21 Feb 2024 20:27:32 -0800
+User-Agent: alot/0.10
 
-
-
-On February 21, 2024 4:41:52 PM PST, Justin Stitt <justinstitt@google=2Eco=
-m> wrote:
->strncpy() is deprecated for use on NUL-terminated destination strings
->[1] and as such we should prefer more robust and less ambiguous string
->interfaces=2E
->
->We expect ae->value_string to be NUL-terminated because there's a
->comment that says as much; these attr strings are also used with other
->string APIs, further cementing the fact=2E
->
->Now, the question of whether or not to NUL-pad the destination buffer:
->lpfc_fdmi_rprt_defer() initializes vports (all zero-initialized), then
->we call lpfc_fdmi_cmd() with each vport and a mask=2E Then, inside of
->lpfc_fdmi_cmd() we check each bit in the mask to invoke the proper
->callback=2E Importantly, the zero-initialized vport is passed in as the
->"attr" parameter=2E Seeing this:
->|	struct lpfc_fdmi_attr_string *ae =3D attr;
->=2E=2E=2E we can tell that ae->value_string is entirely zero-initialized=
-=2E Due
->to this, NUL-padding is _not_ required as it would be redundant=2E
->
->Conveniently, strscpy also returns the number of bytes copied into the
->destination buffer, eliminating the need for strnlen!
->
->Considering the above, a suitable replacement is `strscpy` [2]=2E
->
->Link: https://www=2Ekernel=2Eorg/doc/html/latest/process/deprecated=2Ehtm=
-l#strncpy-on-nul-terminated-strings [1]
->Link: https://manpages=2Edebian=2Eorg/testing/linux-manual-4=2E8/strscpy=
-=2E9=2Een=2Ehtml [2]
->Link: https://github=2Ecom/KSPP/linux/issues/90
->Cc: linux-hardening@vger=2Ekernel=2Eorg
->Signed-off-by: Justin Stitt <justinstitt@google=2Ecom>
->---
-> drivers/scsi/lpfc/lpfc_ct=2Ec | 5 ++---
-> 1 file changed, 2 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/scsi/lpfc/lpfc_ct=2Ec b/drivers/scsi/lpfc/lpfc_ct=2E=
-c
->index baae1f8279e0=2E=2E42594ec87290 100644
->--- a/drivers/scsi/lpfc/lpfc_ct=2Ec
->+++ b/drivers/scsi/lpfc/lpfc_ct=2Ec
->@@ -2569,9 +2569,8 @@ lpfc_fdmi_set_attr_string(void *attr, uint16_t attr=
-type, char *attrstring)
-> 	 * 64 bytes or less=2E
-> 	 */
+Quoting Erick Archer (2024-01-21 06:29:46)
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 >=20
->-	strncpy(ae->value_string, attrstring, sizeof(ae->value_string));
->-	len =3D strnlen(ae->value_string, sizeof(ae->value_string));
->-	/* round string length to a 32bit boundary=2E Ensure there's a NULL */
->+	len =3D strscpy(ae->value_string, attrstring, sizeof(ae->value_string))=
-;
+> So, use the purpose specific devm_kcalloc() function instead of the
+> argument size * count in the devm_kzalloc() function.
+>=20
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-c=
+oded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
 
-This could be < 0 on error, and at least lpfc_fdmi_hba_attr_os_ver() may p=
-resent more than 64 bytes=2E=2E=2E
-
--Kees
-
-
->+	/* round string length to a 32bit boundary */
-> 	len +=3D (len & 3) ? (4 - (len & 3)) : 4;
-> 	/* size is Type/Len (4 bytes) plus string length */
-> 	size =3D FOURBYTES + len;
->
->---
->base-commit: 39133352cbed6626956d38ed72012f49b0421e7b
->change-id: 20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-f54b67eeeb68
->
->Best regards,
->--
->Justin Stitt <justinstitt@google=2Ecom>
->
->
-
---=20
-Kees Cook
+Applied to clk-next
