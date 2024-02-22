@@ -1,164 +1,141 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78728153BCE
-	for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 17:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9036A154BE3;
+	Thu, 22 Feb 2024 17:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708622334; cv=none; b=FdH6JnsLgBh9FuzSOBE33H+4y/SZ9pHQV0UPaE2J4oo38l6GWY1D7SIxY1krEqHZMqOmVEeENqq4zl15i6i3QnGGPGdi6/nZMis+a3QkJQuOm60cdIGiPQK9CJuFR6aEn6Pi3hAtKuTCopfMBz9VCEP3RUtuw5Yg2Y8XP2+2dDk=
+	t=1708622393; cv=none; b=o0vfJyOu9tHFjPWXkye0peXK3pdz+XTSYHSv/3l/8APHbkc0J15uj1HGjwVaVY+9a4NyQC5jjDO7LcyoKipBvexSJIAN0UY4QNfieumR2+AS/lKg9x/H45mHOdLHfWfbPJpX0ECKQSe6FtmajnUq1irDldatdDWs3OFpcS1ibs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708622334; c=relaxed/simple;
-	bh=ZgiBlspHc07RmIjkE8DOJutQscrRDMa0qQqnkJLfA14=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hPJPviB9XOusAqXrAkB0hXJnkKzmNvViurVhHv/0UdrC9DTdrwlCIj+JMM0mh6yk/PLhl+NzHgafFCgtPyrhMlbmwGuy0YeXMTG0yirYezeDvHzPERj4jY1R9DCMOomrx7jLCfovm6xGcU4SXYi8jXAsOmB6v2HKzu4Mmy+zlAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U/4cQIsy; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708622393; c=relaxed/simple;
+	bh=8CEg/RKdoDPInzI7juj6Pe6d6f/MCz9OOa+Abxcwaq0=;
+	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=P9G7ZbXVSuMG37vKx4ZUhpVhJa900VAIdq/pEzeaa9Ad1WmBe0AQNzkwWX6/NQMZ52n4iQCANTH1PWtXae67kVXlyPtOmhnVjCgo4yw6LCH+axC78OyO/zyILSw+KME+0Bok3z4ZvpEo/6+anzFLJGRAmV3+2CLGJgAEp+iGXiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=InY9sYoE; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U/4cQIsy"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso4936502a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Feb 2024 09:18:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InY9sYoE"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3f5808b0dfso265033266b.1;
+        Thu, 22 Feb 2024 09:19:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708622332; x=1709227132; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vVmjmBRsPoGn9M0d14QLHctUVl0w4akGVbG8WJOk1IA=;
-        b=U/4cQIsynNWm0yE8aI8yUDDxeWNQ/HlyVabA58sdqovYKKw2V2QcyGN6C/Ulyeu1X6
-         FoM7Fx0R5A0qdWLivkKDDuhubu6+kWkjBs71pl2hh990taLhTzq/xGcVXMmapSZZuNmK
-         3++BZmBpr1on0Y0kBJE4X1IxQMCtdECuWDFnM=
+        d=gmail.com; s=20230601; t=1708622390; x=1709227190; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CQMhMz89ycmZ70Ia4sIX+P56KQVZUaP0RVmqAd/9EXs=;
+        b=InY9sYoEUxm9LCJTB9VHQXmzpqr5KVHNSohIL7LDhjDCgy4oYsys0xKoO6rNfqgHZ2
+         ExIpdnhnc7WFSb1GpicPRmq3YB1Sf/ROfutzuNj0/ozgpkwtVHbyOv3/AdjLAwyPZ9O6
+         MzxDDDQTiVKFXfAElVQdQkN9kXG5qvDp3KPwnFg6hSv7DT5Lk3Bs7rR9lJ6x4DSbxkr6
+         98q9Yu/AliKUWwp6C3HecFLzvVY4Gsh1xGeljUuWzlbMAIuwW8OuZBKg+7eHrQeWzchA
+         QRRdMNC5j6qa++mmwuu2YQlSZU1TMDipmcSDHlliU25n0riXl54pw5S1miOFBOfwhXxH
+         TFpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708622332; x=1709227132;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1708622390; x=1709227190;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vVmjmBRsPoGn9M0d14QLHctUVl0w4akGVbG8WJOk1IA=;
-        b=QKg6qaiFM6EsuBoEwKaDcskrOtXRypznZbu5IcEeZ2n8YrflTYBCbX4fDK7p249Yk0
-         oIcVQ8dkrFiFtCASGSO81S2JUtFQ0PdLAk15oljjIoCMOM+atq5/M5U3MXsLCnfOuJ7G
-         x22hwcBXDLaVFkmsHwdsBq7KER5yle/LvnYGXmKOE0d36ztAWVsutRgFvm6jrBRPtET3
-         H+AhltO2bEvccRDSK1vbdjGSf+WuLnqGmxk2uteAm2BqgQZG5GvrUv5Bv3X8i1X66Exs
-         CZBq77/VJwWjZolNgPHh/WnjZC189tWPkzvhOt+EslYQjxn5M35bm6gLUmhQ9dnzFewP
-         UFWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXruJE9jN6l8ZbV4F+Z7V6yaHs6WNVHyLF94BlMwnGgSAz5pofW9zZHXHykybRKfHBLVJSVDEI2qukoawppDmks2I1R6ioDxgk6zzr8OOg8
-X-Gm-Message-State: AOJu0YxU21E1+ek0pyIqiViTwn1u33SZKsvtN2nsq4/jFd98XZ8IzLrX
-	Hk3Xk1/riJZeKtpv/dxSwatxFDdE16kPUH56T74WGG4AGSydPQ4U6QgGRzNSwA==
-X-Google-Smtp-Source: AGHT+IHEgOOrFNITHcUyIpVZpjASQNJ0KWkdYx+1YAJkzhl3M0qVg0o0+Za1mYOSj5acpB1pE90N/A==
-X-Received: by 2002:a17:90a:d501:b0:29a:496a:ccb3 with SMTP id t1-20020a17090ad50100b0029a496accb3mr1842380pju.24.1708622331654;
-        Thu, 22 Feb 2024 09:18:51 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ss4-20020a17090b2ec400b0029930881068sm4322632pjb.49.2024.02.22.09.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 09:18:51 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kees Cook <keescook@chromium.org>,
-	Guixiong Wei <guixiongwei@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Kristen Carlson Accardi <kristen@linux.intel.com>,
-	=?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Guixiong Wei <weiguixiong@bytedance.com>,
-	Jann Horn <jannh@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Chris Wright <chrisw@sous-sol.org>,
-	Jeremy Fitzhardinge <jeremy@xensource.com>,
-	Roland McGrath <roland@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] x86, relocs: Ignore relocations in .notes section
-Date: Thu, 22 Feb 2024 09:18:47 -0800
-Message-Id: <20240222171840.work.027-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        bh=CQMhMz89ycmZ70Ia4sIX+P56KQVZUaP0RVmqAd/9EXs=;
+        b=uIalnx8i3uf9yhMxTLMyGm9jDdW0SgsrTMqse6D4GJHXrQBX5SrDAK1/lNvUGO4tTJ
+         bFEsYVXetDf/6Cc5wBDoMDVSvuAIx1ULJlXd5/j+Be70ib9sSzzQ18b+oonFw4TUn6+2
+         /qjoQn2UB96XlzagiZ7ggTc/w4vKBUDxQZnF2WX/dvsMgBGPAwx6RzBlxcm+k5vs6esf
+         MvGpsHIdRAD62EacJdg+gqnuKcmw3N5NbHGMdy9GKzURS1fpwCAy5KARtviFk7EDEMZd
+         2fBfm97YReOYemo7jEkWNtcVIp1qcbxjhOD/cx9sMtWu0jS1X++q0NQcqkUSor+oJSDj
+         /H2g==
+X-Forwarded-Encrypted: i=1; AJvYcCW9DyWEhdzBEwBFC0qqJdM/odKO5D24einiQ0KbV7ek2jB9ePGqz9RON5yl2xwgvhrplQkoI8wuU3BoeG8DndXwRDlA4ZeOSOgbx4ZROh26Fx8ykfLClmi3rwY0dzPv7kxpwWOvfrCB7EMuhPryMY7pL7FGEbnwwCnuQu3W63/KVUq+s3W0TFum5WQ=
+X-Gm-Message-State: AOJu0Yzo4xPpbisiQunqMwF1WG7/CIudEF39MDp5WGvb3avuKj1wVH7r
+	WGEa8PfuE0I45jyxvnDprD/MfC1B2GH6dp6qpErIOk8uvSRcuX7ibtg8nndN
+X-Google-Smtp-Source: AGHT+IG/A2Zz+TNmcwZ83Ix3GENVBoY4VDLiLrmD1Q4+RDnMLOBCPfXOIHB3Cs54Y2XtVODY2oQdSA==
+X-Received: by 2002:a17:906:5fd7:b0:a3e:4f8b:bcc5 with SMTP id k23-20020a1709065fd700b00a3e4f8bbcc5mr9505053ejv.34.1708622389841;
+        Thu, 22 Feb 2024 09:19:49 -0800 (PST)
+Received: from localhost (p200300e41f2d4600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f2d:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id vw3-20020a170907a70300b00a3fb4d11809sm25842ejc.204.2024.02.22.09.19.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 09:19:49 -0800 (PST)
+Content-Type: multipart/signed;
+ boundary=0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Date: Thu, 22 Feb 2024 18:19:48 +0100
+Message-Id: <CZBS35EFPNLY.3UV6B9TKIU1@gmail.com>
+Cc: <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 0/3] Tegra30: add support for LG tegra based phones
+From: "Thierry Reding" <thierry.reding@gmail.com>
+To: "Svyatoslav Ryhel" <clamor95@gmail.com>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Jonathan Hunter" <jonathanh@nvidia.com>, "Kees Cook"
+ <keescook@chromium.org>, "Maxim Schwalm" <maxim.schwalm@gmail.com>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <20240214091201.17636-1-clamor95@gmail.com>
+In-Reply-To: <20240214091201.17636-1-clamor95@gmail.com>
+
+--0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2397; i=keescook@chromium.org;
- h=from:subject:message-id; bh=ZgiBlspHc07RmIjkE8DOJutQscrRDMa0qQqnkJLfA14=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl14H3cLKBllAwCTNaA+sMR/e+lwUx3DC6qFCVS
- WLfUp2WGuGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdeB9wAKCRCJcvTf3G3A
- Jjr9D/9AiSu2IAmMp7CrzXigYeYkg+Ret+8/WgaWkZRxGZ9IzL9HbrkxFmsSSWFpFbA2+CwZ/ua
- N683lCDixXYyFYsVv93ierIErJDlwmbzlyE6HvkSC75T3C2lETqleWI6b6T+JMfXMt0U9h7Loyb
- 9Llx7XcUEHUZWiXbUJVomSX6kKrix9wQJE50f6un4yRz/MRjqqvQiLDNcI6MyhsmBJMV5Pl73bz
- qmqiysNJteCc1MMcSOGTwh9JGwCiyJZ9ryqgbOVNT3meWNsue3Oe+bcdl4WqgOjci63q5BlQb5P
- 9bGKIL6ky9Dvz+bxGMvAgaOgdKtdKdxKrr/mqvaR7MOHQBDkhNnOpp7l4BABQPDyEaYPztuGU9T
- 8pa5gQnNQXVctOyLy0LaSoMWmGnRpaosfkThIQmJfPUFK7obKhWDp6zrHaUPmHe4xHxAgtK/Q2x
- xjpkQ5J9XrYy/dxzAfTn1cZwGKcZiTe/Mxuw29A39MQFc76JboCCwZaIJrMnv5oaRUmcuHEYbDp
- j6oqK0b0UecdkKp3rDRLf5C7DoA9P+Cx2kiyzxJxw2Hr2xJYgGfwAKTdsabyW8q8YsFDbzAcUld
- vo+1xeyWiqTE/DBBgn7dYptvxftQ5QYJn65T+X6ppNfkpKfuAf/avEjZFHa9lMDpewpgyt3qKK3
- h4qLM8o P1monr5Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
 
-When building with CONFIG_XEN_PV=y, .text symbols are emitted into the
-.notes section so that Xen can find the "startup_xen" entry point. This
-information is used prior to booting the kernel, so relocations are not
-useful. In fact, performing relocations against the .notes section means
-that the KASLR base is exposed since /sys/kernel/notes is world-readable.
+On Wed Feb 14, 2024 at 10:11 AM CET, Svyatoslav Ryhel wrote:
+> Bring up Tegra 3 based LG phones Optimus 4X HD and Optimus Vu based
+> on LG X3 board.
+>
+> ---
+> Changes from v3:
+> - set max77663 ldo0 to be always on since it is required by the SOC
+> - adjusted bluetooth module comment
+> - added enable gpio to dw9714 focuser
+>
+> Changes from v2:
+> - switched from _ to - in node names
+>
+> Changes from v1:
+> - switched from prefix lge to lg
+> ---
+>
+> Maxim Schwalm (1):
+>   dt-bindings: arm: tegra: Add LG Optimus Vu P895 and Optimus 4X P880
+>
+> Svyatoslav Ryhel (2):
+>   ARM: tegra: Add device-tree for LG Optimus Vu (P895)
+>   ARM: tegra: Add device-tree for LG Optimus 4X HD (P880)
+>
+>  .../devicetree/bindings/arm/tegra.yaml        |    8 +
+>  arch/arm/boot/dts/nvidia/Makefile             |    2 +
+>  arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts  |  489 +++++
+>  arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts  |  496 +++++
+>  arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi   | 1812 +++++++++++++++++
+>  5 files changed, 2807 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p880.dts
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-p895.dts
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra30-lg-x3.dtsi
 
-To avoid leaking the KASLR base without breaking unprivileged tools that
-are expecting to read /sys/kernel/notes, skip performing relocations in
-the .notes section. The values readable in .notes are then identical to
-those found in System.map.
+Applied, thanks.
 
-Reported-by: Guixiong Wei <guixiongwei@gmail.com>
-Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
-Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
-Fixes: da1a679cde9b ("Add /sys/kernel/notes")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc: "Jürgen Groß" <jgross@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: Guixiong Wei <weiguixiong@bytedance.com>
-Cc: Jann Horn <jannh@google.com>
----
- arch/x86/tools/relocs.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Thierry
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index a3bae2b24626..0811fff23b9c 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -733,6 +733,16 @@ static void walk_relocs(int (*process)(struct section *sec, Elf_Rel *rel,
- 		if (sec->shdr.sh_type != SHT_REL_TYPE) {
- 			continue;
- 		}
-+
-+		/*
-+		 * Do not perform relocations in .notes section; any
-+		 * values there are meant for pre-boot consumption (e.g.
-+		 * startup_xen).
-+		 */
-+		if (strcmp(sec_name(sec->shdr.sh_info), ".notes") == 0) {
-+			continue;
-+		}
-+
- 		sec_symtab  = sec->link;
- 		sec_applies = &secs[sec->shdr.sh_info];
- 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
--- 
-2.34.1
+--0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmXXgjUACgkQ3SOs138+
+s6EQnw//T3TGiscSn6UwTQWA/k7/K4loL3jUeWw3q5tn04EP5N6dqJBuKEg3WF48
+DYu1z6Z5P6lUS/axfxPnszFqEJu99g+O8OgJgqlcv7dOaoL3RXLBCiWHzqCV6fsP
+i7gfak36LTv8fTY88JG3xl1T27VL7rNjQ8qMFh1iqXQrRvKFtEEpkIFGAF/liMQT
+EmqTBSIO7HJE+ER1nscITCU3rUuZ4I17ZMQo+MZVYp1otdHnqI8qzWNL/cGb9k6a
+SchIHrOXO/jCXjh4j1tWh0pVrPQtN89c66MM8qllGw+0ef1dl9tqzSsPUDT9OvkK
+R7SWbYrYAwBGhTSMwrKmtMSl2fI5VHRyr1RSewvmflfpup6P+wgfDJENT1/9B/pl
+FkX3UzZiLY4tKc8SQ38rXL6MoYYaHTpaL6Nz210tPm96lJvPrx/dM2Ge+MCt3Bv0
+47hUWslfhPe9UhggaTDz3Nrm81PCCMH9s7ucV9BQSbwwHYRNzJLI0aHmuABzLFu6
+vJ0IXW+9N9wG6usjbzujq/LHCEDhm6eNHI4yXIASoz6BzuH9nfQHv91oHg5WhkNM
+8356TcPyz+Q6vsRI6QPsnKGcEIaDxen9GW6/VjxqkbPUfRO1274lCczrHsWpJP73
+8yYfQ25yz4OyfTkBUiKwfC38JDXbEFwPElTUDQcWzJ9NbBqs0E0=
+=tZ71
+-----END PGP SIGNATURE-----
+
+--0688b8b99b58602d6dc6058d279e832db2b7d6c583f7afba1028c2f475c1--
