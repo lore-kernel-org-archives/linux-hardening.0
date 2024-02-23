@@ -1,143 +1,156 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B00128834
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06966129A76;
+	Fri, 23 Feb 2024 17:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708708113; cv=none; b=dhcEuW9m8SY//mUh8LW818YNjhTLpQT5wD7nQPg0M/w1OgJPMWj7fqg61oSbZ7Nw7dML8s0PWGzFzvzyza01PmzzRx8U/FovYCQ2D9Rj9273ukjfqZ8vi/B53VutpXzursdaQT3Z4ZuIWYq4Tf19lRNfqmGu0TiprLJ6m/B4QEg=
+	t=1708708166; cv=none; b=ZC2vs+kwY6/ofv75IWscQ8G1fGIgWxCpXJ7/pj5rEgT0Y7GNR5i3v97pPrv9GNWVJ8nbqP4hKWDX7ww4K3TQ57HQRpGtKLTGaBD7ZOLVjx87GpEc+yzESapYWYqvcuqd4joek4YOGCenDKr5tCTCMEqW+fLyl0Zefj0SMafkeKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708708113; c=relaxed/simple;
-	bh=RpPzyUdBMHw+e6c2w/zSbIImslWkeJsD/hfLbs5EbQ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=es/rjtMIobFV1xGcNsI+qaFzkwyoKHHU6wDOe7kNRNFJpDKhUAoFs5trLbblRcOThQK5fPUCMnv9cUerkoOlFgHWZVbAgHdILZ75gOVnqCFxX/sVzaO+J7xOjTxWJ4qyJzXY+rOb74QFFbjUkn3+/NBETO4IuZNdbirOTsjWblE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VYF/VkRH; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VYF/VkRH"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e46b5e7c43so342591b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 09:08:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708708111; x=1709312911; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yXvSc66LmdizGZD4epGGkU6zC2BImPYnyN6VRPIWMFA=;
-        b=VYF/VkRHEQMJjT+8i/SKyug/XbU7qo5K9o74XgmYj90UFOwKWk6Rku5cEKtxcp97UP
-         g5r+MCW/XoqjiVL77ePVvvgSFxQPeRN9zCIrPmrFk9XvGWSiVPEWOG9eE4jPMNCj7tZy
-         /cesk59yd24nwEx5QE9GlSRv85Y+VfKBHYoqw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708708111; x=1709312911;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yXvSc66LmdizGZD4epGGkU6zC2BImPYnyN6VRPIWMFA=;
-        b=Fd9NnZG/d/yQSEmiJg6TtQwYlYqOyjtXdJiIMTrgPv6Db8hDfLNf8Ik2hxxCOdT+fc
-         ekZYKU7Fk7P/7GaWAztiqSYl8EbJwACMEXyw82U27srlu4fmH8LztIOcwtQWb+86xHym
-         KutJbZj0M7KjCc13xKD1RsdbBk0f6Alw/Far3tnM4U65YscGCbDT3rUb/QOATXAakAHe
-         5MgWXrHQjpjQUIugBU6GcOWHIhHXN5xCUVRpuAw0/7mWK+CsYhgF7LLSZtEs9j99b3XS
-         j3cANbLJFyRJ/Yy3Tj9nbUi/cQfwryiuVFSQbAyjGplzBAJiP1s36zTxTRIHuoEYnEyc
-         GEjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWo0ahWJ8RrgV6TWT7HHFfNkGSQXj/suJQwQ9WQqqtYxsjAZlxQKe66menQiXRLQrYKQQ7ETMlD8oZY5tTrszLw3uEcb3XYQEjO0ptH5RY4
-X-Gm-Message-State: AOJu0Yy4T3BGyPdcuiGedJUXiqBL+N2N7UPSfhPxRsBOdbk2JXwRsKw8
-	28o59O6APvTslcg3FLuiy7OUdD9KwLU0mkbq2RdF59vcH7kOzVqVn8p/yCkjVA==
-X-Google-Smtp-Source: AGHT+IHFW/iUeNLUozR223PAOpx6Oy4hwmjAHdcEZV0VxryiJP+lYZS4yikAD2OSHNobuSJ6PmMdmg==
-X-Received: by 2002:a62:6342:0:b0:6e2:d162:6315 with SMTP id x63-20020a626342000000b006e2d1626315mr383813pfb.29.1708708109770;
-        Fri, 23 Feb 2024 09:08:29 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y14-20020a62f24e000000b006e25d4085b4sm12654312pfl.27.2024.02.23.09.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 09:08:29 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Lu Yao <yaolu@kylinos.cn>,
-	Paul Moore <paul@paul-moore.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	=?UTF-8?q?Marc=20Aur=C3=A8le=20La=20France?= <tsi@tuyoix.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] init/Kconfig: Lower GCC version check for -Warray-bounds
-Date: Fri, 23 Feb 2024 09:08:27 -0800
-Message-Id: <20240223170824.work.768-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1708708166; c=relaxed/simple;
+	bh=c2F4ATjzYPy88wzTfQiSLZxU8flLRd+N5pfPB2OqJw4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ELakZg/os0WcJoX7zC0iYlsvjZAiM2/3cqmjeGSTbeQr0ajyXZ7dkUc+HeQCDINxL0R/dFFQR249cyXduohpdrmAKbGyH0k/A0FYjLIGEpdNIiI0kh9XXRJUYSMci/Fa4qSMPWpONdpvEmzHHbw/rQjtFvKTSz3eYDNWuH+5wpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ThGbW00nHz6899K;
+	Sat, 24 Feb 2024 01:05:11 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A7FA7140684;
+	Sat, 24 Feb 2024 01:09:20 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 23 Feb
+ 2024 17:09:20 +0000
+Date: Fri, 23 Feb 2024 17:09:18 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Kees Cook <keescook@chromium.org>
+CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+	<nuno.sa@analog.com>, <linux-iio@vger.kernel.org>, Nathan Chancellor
+	<nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, "Bill
+ Wendling" <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	<linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>,
+	<linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] [RFC] iio: pressure: dlhl60d: Check mask_width for IRQs
+Message-ID: <20240223170918.00006b16@Huawei.com>
+In-Reply-To: <20240222222335.work.759-kees@kernel.org>
+References: <20240222222335.work.759-kees@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1811; i=keescook@chromium.org;
- h=from:subject:message-id; bh=RpPzyUdBMHw+e6c2w/zSbIImslWkeJsD/hfLbs5EbQ4=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl2NEL0zsDJYYB06VoCsoWg3N7+Cdx8Q75NiD6H
- r+wnxUbt96JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdjRCwAKCRCJcvTf3G3A
- Jp2eD/wKURtgCmOGso2RwQSmy+gv7/r4iAPC+JLwA+vYHD6qvZuXgUGGAjpeqZX+A70NpwCAVoO
- vFKkrsN4JjdJ6CJTvCPkbze2+dqgLX3uvDPOs/HsuRYByFTh1sJjogogv9EtXs1iDMDRaLSwH9w
- Gmz+N7Qydd/XxBpf/v+ttsfEJ6uO4qIKd0OdYDlJYO8p20vVy4o7gdLV31Z3kaux4/MtyEUyQWB
- KLJrTC9vJcWlgJYTJsiLm49jW0/fvu6AxPcjNeYWCLjFAhG515K0HIcLFIG0Sj8nVGp7pyuiJBM
- cbk8Y9atz6Otapq6IZ0LKFkj2aDhSGkhYcm5NB6+m8u40IPl8Bh+dCceimTAFn0j/dHwsyW5cka
- kz7j+jx7QS8ZGgtG/zH14NclTtbRNydyJkejzZ3/NKcWuzah9rpZbo1Zk2DYTVgqp3fVwHiPKSc
- 6bXXDCOvvdo9wjrIqSw/xhwFR+lI3o+ABrTVrpBi6VY9tNIPxKmYvJpsJD6FpMG1O+K2cYNd902
- RUYBxJ0NqHk3zwTCxWJ+j5KnR5SDW8icgJVwosC5zhYe+lbh+Ep0y+5t8Lmd+k3iXQTqziCCfXe
- QrBkL5uU3xqcvSxj1ZsIVLV5ykvjmnzeFqFoToDl+yTqV05H85citCy/ycSfk69UpbRaJ1gkIme
- WLlUqFH f+Yjh/AA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-We continue to see false positives from -Warray-bounds even in GCC 10,
-which is getting reported in a few places[1] still:
+On Thu, 22 Feb 2024 14:23:39 -0800
+Kees Cook <keescook@chromium.org> wrote:
 
-security/security.c:811:2: warning: ‘memcpy’ offset 32 is out of the bounds [0, 0] [-Warray-bounds]
+> Clang tripped over a FORTIFY warning in this code, and while it seems it
+> may be a false positive in Clang due to loop unwinding, the code in
+> question seems to make a lot of assumptions.=20
 
-Lower the GCC version check from 11 to 10.
+Hi Kees,
 
-Reported-by: Lu Yao <yaolu@kylinos.cn>
-Closes: https://lore.kernel.org/lkml/20240117014541.8887-1-yaolu@kylinos.cn/
-Link: https://lore.kernel.org/linux-next/65d84438.620a0220.7d171.81a7@mx.google.com [1]
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
----
- init/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The assumptions are mostly characteristics of how the IIO buffers work
+with the scan masks defined based on indexes in the driver provided
+struct iio_chan_spec arrays.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 8d4e836e1b6b..7b352f2943f2 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -867,14 +867,14 @@ config CC_IMPLICIT_FALLTHROUGH
- 	default "-Wimplicit-fallthrough=5" if CC_IS_GCC && $(cc-option,-Wimplicit-fallthrough=5)
- 	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
- 
--# Currently, disable gcc-11+ array-bounds globally.
-+# Currently, disable gcc-10+ array-bounds globally.
- # It's still broken in gcc-13, so no upper bound yet.
--config GCC11_NO_ARRAY_BOUNDS
-+config GCC10_NO_ARRAY_BOUNDS
- 	def_bool y
- 
- config CC_NO_ARRAY_BOUNDS
- 	bool
--	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC11_NO_ARRAY_BOUNDS
-+	default y if CC_IS_GCC && GCC_VERSION >= 100000 && GCC10_NO_ARRAY_BOUNDS
- 
- # Currently, disable -Wstringop-overflow for GCC 11, globally.
- config GCC11_NO_STRINGOP_OVERFLOW
--- 
-2.34.1
+This driver is doing more work than it should need to as we long ago
+moved some of the more fiddly handling into the IIO core.
+
+> Comments added, and the
+> Clang warning[1] has been worked around by growing the array size.
+> Also there was an uninitialized 4th byte in the __be32 array that was
+> being sent through to iio_push_to_buffers().
+
+That is indeed not good - the buffer should have been zero initialized.
+
+>=20
+> Link: https://github.com/ClangBuiltLinux/linux/issues/2000 [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: "Uwe Kleine-K=F6nig" <u.kleine-koenig@pengutronix.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: "Nuno S=E1" <nuno.sa@analog.com>
+> Cc: linux-iio@vger.kernel.org
+> ---
+>  drivers/iio/pressure/dlhl60d.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/iio/pressure/dlhl60d.c b/drivers/iio/pressure/dlhl60=
+d.c
+> index 28c8269ba65d..9bbecd0bfe88 100644
+> --- a/drivers/iio/pressure/dlhl60d.c
+> +++ b/drivers/iio/pressure/dlhl60d.c
+> @@ -250,20 +250,27 @@ static irqreturn_t dlh_trigger_handler(int irq, voi=
+d *private)
+>  	struct dlh_state *st =3D iio_priv(indio_dev);
+>  	int ret;
+>  	unsigned int chn, i =3D 0;
+> -	__be32 tmp_buf[2];
+> +	/* This was only an array pair of 4 bytes. */
+
+True, which is the right size as far as I can tell.
+If we need this to suppress a warning then comment should say that.
+
+> +	__be32 tmp_buf[4] =3D { };
+> =20
+>  	ret =3D dlh_start_capture_and_read(st);
+>  	if (ret)
+>  		goto out;
+> =20
+> +	/* Nothing was checking masklength vs ARRAY_SIZE(tmp_buf)? */
+
+Not needed but no way a compiler could know that.
+
+> +	if (WARN_ON_ONCE(indio_dev->masklength > ARRAY_SIZE(tmp_buf)))
+> +		goto out;
+> +
+>  	for_each_set_bit(chn, indio_dev->active_scan_mask,
+
+This is all a bit pointless if not 'wrong' other than the
+4th byte uninitialized part.  The limit can be hard coded as 2 as
+that's a characteristic of this driver.
+
+For device that always read a particular set of channels they
+should provide indio_dev->available_scan_masks =3D { BIT(1) | BIT(0), 0 };
+and then always push all the data making this always
+
+	memcpy(&tmp_buf[0], &st->rx_buf[1], 3);
+	mempcy(&tmp_buf[1], &st->rx_buf[1] + 3, 3);
+
+The buffer demux code in the IIO core will deal with repacking the data
+if only one channel is enabled.
+
+>  		indio_dev->masklength) {
+> -		memcpy(tmp_buf + i,
+> +		/* This is copying 3 bytes. What about the 4th? */
+> +		memcpy(&tmp_buf[i],
+>  			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
+>  			DLH_NUM_DATA_BYTES);
+>  		i++;
+>  	}
+> =20
+> +	/* How do we know the iio buffer_list has only 2 items? */
+
+Can only include items from the channels array at indexes up to the max
+scan_index in there, so 0 and 1 in this case (1 might not be present if only
+one channel is enabled). Sizes (and alignment) are given by storagebits so
+4 bytes for each.
+
+>  	iio_push_to_buffers(indio_dev, tmp_buf);
+> =20
+>  out:
 
