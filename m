@@ -1,117 +1,97 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3B77E0E8;
-	Fri, 23 Feb 2024 12:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365446E600;
+	Fri, 23 Feb 2024 15:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708692489; cv=none; b=c4FSyG4TaVGVbQSPl2V0vyZDWxOIPWz1Grr6seFp1uf4d64iQgpYfPlfDi6ptLAQflT5l4cSu16q8zSR9LAkWC0DF9MgDjEAupvirz35zkxbrAIReA3l510QPelC5B5CIpxC8KCjpnxUtAU7DpLyfUXRh4Oa1gKa9pxCIhUUQ0g=
+	t=1708703202; cv=none; b=bXhDMWpubyJMVoF4wjT75AWKZzGu3ZwISgIE1U1uxpiX0KVk/rqPA/euxO1rXIwtiFcv/FmQ5WwdMVMzivqr5WIE5/OPUI3MmFGrLflNKNt5UNJrdtTXoL9IrhDszaIuWr3Pkvwd+7O8hl30TAe1Se3XqAAH8OX1mawQ9dZNN6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708692489; c=relaxed/simple;
-	bh=LAjfPoz2drXqfQvAjv9IzHKfA5IrdcSZOOkt/CeiU1c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M5KopDuGYo9gsf6WYOyfcm8c6/qmDQlJcRzVt4szi1DJ7ls+a9ytdiGaeyDl0ofqlWbtKxZYlaeSk+nN5T3Ivj5brckjPjmRNSdjynEUbn2AG4u2sPlqZhQ/91pGNWIgjmWKdirzozW077EW5WtdY3WuoNXvbhQY1kn51CrJq6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 2073BA1164;
-	Fri, 23 Feb 2024 12:48:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf02.hostedemail.com (Postfix) with ESMTPA id 682A78000E;
-	Fri, 23 Feb 2024 12:47:57 +0000 (UTC)
-Message-ID: <bc22e93196284ddece102929ae9f6636358e6716.camel@perches.com>
-Subject: Re: [PATCH v2] checkpatch: add check for snprintf to scnprintf
-From: Joe Perches <joe@perches.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>, Andy Whitcroft
- <apw@canonical.com>,  Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas
- Bulwahn <lukas.bulwahn@gmail.com>,  linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, Finn
- Thain <fthain@linux-m68k.org>
-Date: Fri, 23 Feb 2024 04:47:56 -0800
-In-Reply-To: <20240223103845.GP10170@google.com>
-References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
-	 <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
-	 <20240223103845.GP10170@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1708703202; c=relaxed/simple;
+	bh=3K1YElhmGqBFBiWcDwhwhoj2GW63wMKrK52rUUQ+rtM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ais88D4/D6ESPC/ARkp3VnTcRBfWdmm3bEjutozWYpNZQfGf+fqd45FLvcDfz3bJ9GmkxEW8ClqoiQT+Ozdoa9yOWioakgswptj4VnL/woKgeZ9g5Sd1updZ1o8P+diw/8+E7kNeynDUonx4+HlPelyI+eag2V5G6AQR24+JtjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIirtlHU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIirtlHU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B61CC433F1;
+	Fri, 23 Feb 2024 15:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708703201;
+	bh=3K1YElhmGqBFBiWcDwhwhoj2GW63wMKrK52rUUQ+rtM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=uIirtlHUpC1FGughklquX9RfUKvNSJRmLfGw1z6KEj84g2kNdfMf0OHxDtvMYlRpc
+	 jpCHdbxXBGrv7CNMzN2Pic348dI8sAkJ6cvSJ+G353tThgHm/WNhaS914LXko7/3TG
+	 CtYyjFrH3MQN0YMDAs1xk/NR8jYopK86es26QS4ut9XvudOIUQcFfBbf2nbfgO4pav
+	 QEOyyt5BKwN0fn0mON21uiGer6nB4Kt54Vg1qv3eKHZpU1FsED3euVNchv4nbZs014
+	 dchJL+OVNuKY+58W/itQGCUXYuUMf3UoGk2ge41JIuP4vW5A102AdbStULbdkKbjxW
+	 U7S1sJP8HwoWg==
+Date: Fri, 23 Feb 2024 07:46:40 -0800
+From: Kees Cook <kees@kernel.org>
+To: kernel test robot <lkp@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+CC: Linux Memory Management List <linux-mm@kvack.org>,
+ dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-sound@vger.kernel.org, mhi@lists.linux.dev,
+ nouveau@lists.freedesktop.org, ntfs3@lists.linux.dev,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: =?US-ASCII?Q?Re=3A_=5Blinux-next=3Amaster=5D_BUILD_REGRESSION?= =?US-ASCII?Q?_e31185ce00a96232308300008db193416ceb9769?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <202402231222.DVB9DC74-lkp@intel.com>
+References: <202402231222.DVB9DC74-lkp@intel.com>
+Message-ID: <3532AACB-176A-4C48-9855-CCD6C97FDE91@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 682A78000E
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: ukf9z8exot3f8st6ets4czmu8p6frtk4
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/0INiopDmML8A145GUuo/QwEloV8aKws4=
-X-HE-Tag: 1708692477-39706
-X-HE-Meta: U2FsdGVkX1/UFjuIy6XDV0zdZU7pS54VpS1HyjtO8u/qVXIGPoXkdNloAv9Sw8rpIUAPYfmxbMgHsnXqz8ZXNUggPoGrMTDkMdjsuMYWEHsMBtLG+GZ+K0dEpAG+22xU1nj+tBk6LPV2pmIMpu6VcwvdSN5oBJGgkUsZbi3K8YncxD+mFqec84H8gFg73naopm5Ka34RzGP0P3M8ftqmMYFcSENvpigT1xsbb6144nhzfETCpQep1i53OKAf09EE3oRn7IF4I5FVorDTY4lpSSH5zAu+ApCymd3jDS8UkgtNx8/nNclHejShy0COFHeS75DYc+/UUZLFEms+GtiIM9Kef3betaQiXQfvaeMuQHyiEmbqKsw54ghsnU6uDBRyngX909KJKOnXPr0ZezUvEIk96GdPiZl6pP0rV0g7PWb9qkAf6J2VyX97st7Bmklws/FWmwXIWOn48xySR1ZDw9x5qStU9/1Rug+6mB1uBZs=
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2024-02-23 at 10:38 +0000, Lee Jones wrote:
-> On Wed, 21 Feb 2024, Joe Perches wrote:
->=20
-> > On Wed, 2024-02-21 at 22:11 +0000, Justin Stitt wrote:
-> > > I am going to quote Lee Jones who has been doing some snprintf ->
-> > > scnprintf refactorings:
-> > >=20
-> > > "There is a general misunderstanding amongst engineers that
-> > > {v}snprintf() returns the length of the data *actually* encoded into =
-the
-> > > destination array.  However, as per the C99 standard {v}snprintf()
-> > > really returns the length of the data that *would have been* written =
-if
-> > > there were enough space for it.  This misunderstanding has led to
-> > > buffer-overruns in the past.  It's generally considered safer to use =
-the
-> > > {v}scnprintf() variants in their place (or even sprintf() in simple
-> > > cases).  So let's do that."
-> > >=20
-> > > To help prevent new instances of snprintf() from popping up, let's ad=
-d a
-> > > check to checkpatch.pl.
-> > >=20
-> > > Suggested-by: Finn Thain <fthain@linux-m68k.org>
-> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > ---
-> > > Changes in v2:
-> > > - Had a vim moment and deleted a character before sending the patch.
-> > > - Replaced the character :)
-> > > - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-=
-v1-1-3ac5025b5961@google.com
-> > > ---
-> > > From a discussion here [1].
-> > >=20
-> > > [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4=
-@linux-m68k.org/
-> >=20
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > []
-> > > @@ -7012,6 +7012,12 @@ sub process {
-> > >  			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - =
-see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
-> > >  		}
-> > > =20
-> > > +# snprintf uses that should likely be {v}scnprintf
-> > > +		if ($line =3D~ /\bsnprintf\s*\(\s*/) {
-> > > +				WARN("SNPRINTF",
-> > > +				     "Prefer scnprintf over snprintf\n" . $herecurr);
-> >=20
-> > There really should be some sort of reference link here
-> > similar to the one above this.
-> >=20
-> > Also, I rather doubt _all_ of these should be changed just
-> > for churn's sake.
->=20
-> This is for new implementations only.
->=20
-> Kees is planning on changing all of the current instances kernel-wide.
 
-I saw that.  I also saw pushback.
-Not just my own.
 
-Creating a cocci script is easy.
-Getting Linus and others to run it isn't.
+On February 22, 2024 8:29:28 PM PST, kernel test robot <lkp@intel=2Ecom> w=
+rote:
+>tree/branch: https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/next/lin=
+ux-next=2Egit master
+>branch HEAD: e31185ce00a96232308300008db193416ceb9769  Add linux-next spe=
+cific files for 20240222
+>
+>Error/Warning reports:
+>
+>https://lore=2Ekernel=2Eorg/oe-kbuild-all/202402222223=2Eh9rFmYj4-lkp@int=
+el=2Ecom
+>https://lore=2Ekernel=2Eorg/oe-kbuild-all/202402222314=2EJ6A7eb4B-lkp@int=
+el=2Ecom
+>https://lore=2Ekernel=2Eorg/oe-kbuild-all/202402230537=2E2s6Nhfsn-lkp@int=
+el=2Ecom
+>
+>Error/Warning: (recently discovered and may have been fixed)
+>
+>arch/arm/boot/compressed/misc=2Ec:157:6: warning: no previous prototype f=
+or function '__fortify_panic' [-Wmissing-prototypes]
+>arch/arm/boot/compressed/misc=2Eh:13:36: error: macro "fortify_panic" req=
+uires 2 arguments, but only 1 given
 
+This is fixed for the subsequent -next tree=2E
+
+>arch/sh/boot/compressed/=2E=2E/=2E=2E/=2E=2E/=2E=2E/lib/decompress_unxz=
+=2Ec:350:(=2Etext+0x20b4): undefined reference to `__ubsan_handle_out_of_bo=
+unds'
+>sh4-linux-ld: arch/sh/boot/compressed/=2E=2E/=2E=2E/=2E=2E/=2E=2E/lib/xz/=
+xz_dec_lzma2=2Ec:751:(=2Etext+0x904): undefined reference to `__ubsan_handl=
+e_out_of_bounds'
+
+This is fixed here and is waiting to land:
+https://lore=2Ekernel=2Eorg/linux-hardening/20240130232717=2Ework=2E088-ke=
+es@kernel=2Eorg/
+
+-Kees
+
+--=20
+Kees Cook
