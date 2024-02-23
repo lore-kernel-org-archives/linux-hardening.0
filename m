@@ -1,156 +1,201 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06966129A76;
-	Fri, 23 Feb 2024 17:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B953D12C523
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708708166; cv=none; b=ZC2vs+kwY6/ofv75IWscQ8G1fGIgWxCpXJ7/pj5rEgT0Y7GNR5i3v97pPrv9GNWVJ8nbqP4hKWDX7ww4K3TQ57HQRpGtKLTGaBD7ZOLVjx87GpEc+yzESapYWYqvcuqd4joek4YOGCenDKr5tCTCMEqW+fLyl0Zefj0SMafkeKM=
+	t=1708708496; cv=none; b=DU43wQMfNtt2BgQyPETV+SFlJHZAx9303dfHEJuynCNSpLVIUDJ7e9WtWO+LAh5In/5c6MIxSfFGYPzrZJ8mw8sMv6vxdP9hsYACQ8bkfMbFuMOTA7ST3cRM35RAHs7WqdiZ2O6/H5sf0NDsyxPcoquIgpCOQpSF1/1seDSgQQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708708166; c=relaxed/simple;
-	bh=c2F4ATjzYPy88wzTfQiSLZxU8flLRd+N5pfPB2OqJw4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ELakZg/os0WcJoX7zC0iYlsvjZAiM2/3cqmjeGSTbeQr0ajyXZ7dkUc+HeQCDINxL0R/dFFQR249cyXduohpdrmAKbGyH0k/A0FYjLIGEpdNIiI0kh9XXRJUYSMci/Fa4qSMPWpONdpvEmzHHbw/rQjtFvKTSz3eYDNWuH+5wpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ThGbW00nHz6899K;
-	Sat, 24 Feb 2024 01:05:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A7FA7140684;
-	Sat, 24 Feb 2024 01:09:20 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 23 Feb
- 2024 17:09:20 +0000
-Date: Fri, 23 Feb 2024 17:09:18 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Kees Cook <keescook@chromium.org>
-CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-	Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, <linux-iio@vger.kernel.org>, Nathan Chancellor
-	<nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, "Bill
- Wendling" <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	<linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>,
-	<linux-hardening@vger.kernel.org>
+	s=arc-20240116; t=1708708496; c=relaxed/simple;
+	bh=ztI079C4kK2GAb/GQ39H0guLv9wqTuVaU/tymCIWIXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmzbLKO77J+Kz++xfUwO/JzsMpZvs8Tznnskg3pAiDFMsqMYjInC6Ov+2V1c7W7VSBa1fTczxfon+aZ+be7xb/1BXpUo7FllHb/f+2+4cSasz+V6sUloRqotaDOK2j1MI/ic9dHZy2QuaPEv7dQR0nVsc4Yx7oFDJEC15XXQ8cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nD9O8SxF; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nD9O8SxF"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-299c11b250fso804506a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 09:14:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708708494; x=1709313294; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Vg7OXlKlVYW7hg5QFkzlyn1txlxCwfeUmFWqrZZakkI=;
+        b=nD9O8SxFwXZ5OICagtej07tg8zISocQZb43sE8vXfeMn6qcQabMD5xGGSZfpgRR6GI
+         n6Zwh9qSxycabFyxfep3LeG2LygBwOC+KsYKAMZkFMf5aY3uwdNpes0/o++bsRFe/WQR
+         Arzj/PXAEn39txFhmk8+uC7RuUPn51+7BO9b0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708708494; x=1709313294;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vg7OXlKlVYW7hg5QFkzlyn1txlxCwfeUmFWqrZZakkI=;
+        b=oPk2qhbDgz9CLDEuYVQmihsWEdZwMI8ITm1gl+Nk8x2xq0f2Bx+Syid7rM2hrGS0DK
+         xC0P1+s3pB8P5+bNFvoa5Tu4SzuE7s/jj8pO1LDogzdxBhKoHzqGdT42a2UE0DWdP0sO
+         LAR5a2RbIlVICj1FKY4w2BBbDFl9Ovf/1bNEhtFhZOSnYujCpVoQshhATsokR1/6GaGE
+         sRiIz6aQZF7Jesl4XMOG203k2B7UgmxEotFflDISPL/hWTiKPNlbkcJ0EJO8I6HDc2WK
+         KTl9yHYNtJuzUfvt7/bYEBdFWsORD3S4YejIdOi4ZPIq+Lc5pbz+c5LsYn7RZiqVSSJ/
+         5Hwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAAyJGVKgwq07bqM2TwD1XXU48D9k8XQV1VXr6Wg+iDVXpVNvtPytqN9FAOnvVP940oAh9iirNYveEpr06gP2uJsJiKDExiad1gg89HSze
+X-Gm-Message-State: AOJu0Yyy+2vpPxkwmyDIMp03sA0Jgz68WNcFfIbQpcXVTExEBmuJd45N
+	pgTClaN2GxUKlATPnxbQtvrxi7Ro6TVW136n0FCmkg+6EkEPMc2cmCyLgO1HTQ==
+X-Google-Smtp-Source: AGHT+IHYsFzFj8B69cBmCkJ+HRyrAZNB3qghpWQMDXfj6imG1QPDbz2xJ3wDEwcSJ8BYkVFwQqGa9A==
+X-Received: by 2002:a17:90a:c797:b0:29a:5eb9:71ab with SMTP id gn23-20020a17090ac79700b0029a5eb971abmr462657pjb.21.1708708494023;
+        Fri, 23 Feb 2024 09:14:54 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id a4-20020a17090acb8400b002973162eca1sm1738761pju.17.2024.02.23.09.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 09:14:53 -0800 (PST)
+Date: Fri, 23 Feb 2024 09:14:53 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] [RFC] iio: pressure: dlhl60d: Check mask_width for IRQs
-Message-ID: <20240223170918.00006b16@Huawei.com>
-In-Reply-To: <20240222222335.work.759-kees@kernel.org>
+Message-ID: <202402230912.50332AF1@keescook>
 References: <20240222222335.work.759-kees@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+ <20240223170918.00006b16@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240223170918.00006b16@Huawei.com>
 
-On Thu, 22 Feb 2024 14:23:39 -0800
-Kees Cook <keescook@chromium.org> wrote:
+On Fri, Feb 23, 2024 at 05:09:18PM +0000, Jonathan Cameron wrote:
+> On Thu, 22 Feb 2024 14:23:39 -0800
+> Kees Cook <keescook@chromium.org> wrote:
+> 
+> > Clang tripped over a FORTIFY warning in this code, and while it seems it
+> > may be a false positive in Clang due to loop unwinding, the code in
+> > question seems to make a lot of assumptions. 
+> 
+> Hi Kees,
+> 
+> The assumptions are mostly characteristics of how the IIO buffers work
+> with the scan masks defined based on indexes in the driver provided
+> struct iio_chan_spec arrays.
+> 
+> This driver is doing more work than it should need to as we long ago
+> moved some of the more fiddly handling into the IIO core.
+> 
+> > Comments added, and the
+> > Clang warning[1] has been worked around by growing the array size.
+> > Also there was an uninitialized 4th byte in the __be32 array that was
+> > being sent through to iio_push_to_buffers().
+> 
+> That is indeed not good - the buffer should have been zero initialized.
 
-> Clang tripped over a FORTIFY warning in this code, and while it seems it
-> may be a false positive in Clang due to loop unwinding, the code in
-> question seems to make a lot of assumptions.=20
+Okay, I'll get this respun and include the fix.
 
-Hi Kees,
+> 
+> > 
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/2000 [1]
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: "Nuno Sá" <nuno.sa@analog.com>
+> > Cc: linux-iio@vger.kernel.org
+> > ---
+> >  drivers/iio/pressure/dlhl60d.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iio/pressure/dlhl60d.c b/drivers/iio/pressure/dlhl60d.c
+> > index 28c8269ba65d..9bbecd0bfe88 100644
+> > --- a/drivers/iio/pressure/dlhl60d.c
+> > +++ b/drivers/iio/pressure/dlhl60d.c
+> > @@ -250,20 +250,27 @@ static irqreturn_t dlh_trigger_handler(int irq, void *private)
+> >  	struct dlh_state *st = iio_priv(indio_dev);
+> >  	int ret;
+> >  	unsigned int chn, i = 0;
+> > -	__be32 tmp_buf[2];
+> > +	/* This was only an array pair of 4 bytes. */
+> 
+> True, which is the right size as far as I can tell.
+> If we need this to suppress a warning then comment should say that.
 
-The assumptions are mostly characteristics of how the IIO buffers work
-with the scan masks defined based on indexes in the driver provided
-struct iio_chan_spec arrays.
+Okay. I think I'll leave it as 2 and manually "unroll" the loop.
 
-This driver is doing more work than it should need to as we long ago
-moved some of the more fiddly handling into the IIO core.
+> 
+> > +	__be32 tmp_buf[4] = { };
+> >  
+> >  	ret = dlh_start_capture_and_read(st);
+> >  	if (ret)
+> >  		goto out;
+> >  
+> > +	/* Nothing was checking masklength vs ARRAY_SIZE(tmp_buf)? */
+> 
+> Not needed but no way a compiler could know that.
+> 
+> > +	if (WARN_ON_ONCE(indio_dev->masklength > ARRAY_SIZE(tmp_buf)))
+> > +		goto out;
+> > +
+> >  	for_each_set_bit(chn, indio_dev->active_scan_mask,
+> 
+> This is all a bit pointless if not 'wrong' other than the
+> 4th byte uninitialized part.  The limit can be hard coded as 2 as
+> that's a characteristic of this driver.
+> 
+> For device that always read a particular set of channels they
+> should provide indio_dev->available_scan_masks = { BIT(1) | BIT(0), 0 };
+> and then always push all the data making this always
+> 
+> 	memcpy(&tmp_buf[0], &st->rx_buf[1], 3);
+> 	mempcy(&tmp_buf[1], &st->rx_buf[1] + 3, 3);
 
-> Comments added, and the
-> Clang warning[1] has been worked around by growing the array size.
-> Also there was an uninitialized 4th byte in the __be32 array that was
-> being sent through to iio_push_to_buffers().
+Okay, so this could be unrolled manually to check just for bits 0 and 1?
 
-That is indeed not good - the buffer should have been zero initialized.
+> 
+> The buffer demux code in the IIO core will deal with repacking the data
+> if only one channel is enabled.
+> 
+> >  		indio_dev->masklength) {
+> > -		memcpy(tmp_buf + i,
+> > +		/* This is copying 3 bytes. What about the 4th? */
+> > +		memcpy(&tmp_buf[i],
+> >  			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
+> >  			DLH_NUM_DATA_BYTES);
+> >  		i++;
+> >  	}
+> >  
+> > +	/* How do we know the iio buffer_list has only 2 items? */
+> 
+> Can only include items from the channels array at indexes up to the max
+> scan_index in there, so 0 and 1 in this case (1 might not be present if only
+> one channel is enabled). Sizes (and alignment) are given by storagebits so
+> 4 bytes for each.
 
->=20
-> Link: https://github.com/ClangBuiltLinux/linux/issues/2000 [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: "Uwe Kleine-K=F6nig" <u.kleine-koenig@pengutronix.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: "Nuno S=E1" <nuno.sa@analog.com>
-> Cc: linux-iio@vger.kernel.org
-> ---
->  drivers/iio/pressure/dlhl60d.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/iio/pressure/dlhl60d.c b/drivers/iio/pressure/dlhl60=
-d.c
-> index 28c8269ba65d..9bbecd0bfe88 100644
-> --- a/drivers/iio/pressure/dlhl60d.c
-> +++ b/drivers/iio/pressure/dlhl60d.c
-> @@ -250,20 +250,27 @@ static irqreturn_t dlh_trigger_handler(int irq, voi=
-d *private)
->  	struct dlh_state *st =3D iio_priv(indio_dev);
->  	int ret;
->  	unsigned int chn, i =3D 0;
-> -	__be32 tmp_buf[2];
-> +	/* This was only an array pair of 4 bytes. */
+This code pattern seems repeated through all of iio, so I guess we'll
+leave it as-is. It seems like it'd be nice to have a "length" argument
+to iio_push_to_buffers(), just to sanity check, but that would need to
+be a pretty large patch. :P
 
-True, which is the right size as far as I can tell.
-If we need this to suppress a warning then comment should say that.
+> 
+> >  	iio_push_to_buffers(indio_dev, tmp_buf);
+> >  
+> >  out:
 
-> +	__be32 tmp_buf[4] =3D { };
-> =20
->  	ret =3D dlh_start_capture_and_read(st);
->  	if (ret)
->  		goto out;
-> =20
-> +	/* Nothing was checking masklength vs ARRAY_SIZE(tmp_buf)? */
+Thanks for looking at this!
 
-Not needed but no way a compiler could know that.
+-Kees
 
-> +	if (WARN_ON_ONCE(indio_dev->masklength > ARRAY_SIZE(tmp_buf)))
-> +		goto out;
-> +
->  	for_each_set_bit(chn, indio_dev->active_scan_mask,
-
-This is all a bit pointless if not 'wrong' other than the
-4th byte uninitialized part.  The limit can be hard coded as 2 as
-that's a characteristic of this driver.
-
-For device that always read a particular set of channels they
-should provide indio_dev->available_scan_masks =3D { BIT(1) | BIT(0), 0 };
-and then always push all the data making this always
-
-	memcpy(&tmp_buf[0], &st->rx_buf[1], 3);
-	mempcy(&tmp_buf[1], &st->rx_buf[1] + 3, 3);
-
-The buffer demux code in the IIO core will deal with repacking the data
-if only one channel is enabled.
-
->  		indio_dev->masklength) {
-> -		memcpy(tmp_buf + i,
-> +		/* This is copying 3 bytes. What about the 4th? */
-> +		memcpy(&tmp_buf[i],
->  			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
->  			DLH_NUM_DATA_BYTES);
->  		i++;
->  	}
-> =20
-> +	/* How do we know the iio buffer_list has only 2 items? */
-
-Can only include items from the channels array at indexes up to the max
-scan_index in there, so 0 and 1 in this case (1 might not be present if only
-one channel is enabled). Sizes (and alignment) are given by storagebits so
-4 bytes for each.
-
->  	iio_push_to_buffers(indio_dev, tmp_buf);
-> =20
->  out:
-
+-- 
+Kees Cook
