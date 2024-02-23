@@ -1,83 +1,123 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0364C79;
-	Fri, 23 Feb 2024 16:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06C4128833
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 16:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708704496; cv=none; b=HTzYFn+HWZdMx0Yr4QrQnZ2O0yFEVIUmFgyfivPu4Va7NrVpcn5xVPxlKa5zMx1cHY9fvgPuxDOcifQXbdHNWQqZ8FIeYnSRz3yIlwMAtbK52T0kJldTt/jbt7NrvrrPF+KkM97jSST2N2thgMEVBF/EfgK7YR/7UuFW1SaW7Vk=
+	t=1708707590; cv=none; b=kck1sftSkVjyPlCIvAisIE6iNLXDF7T/rzwrbpdww+I6d6MFtHtLgW4xK3Dsu4S7TMbTwU/MVtaqM/2MPzP/amXPIxhFJ7F94C3vbTMF6VDf5vQbbrSB6aDzpOvTDsJqfrWP3lIAsTk+1Eh12x2xLsLK5WR2qBmPjZzqp25Vbn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708704496; c=relaxed/simple;
-	bh=/VvXgHYVKi3JEK5r7LXu715d+K0HpSYZLgbMiS/L9qk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aNko81DNsbWush0DPpGzQvwriGMxHp+k4i/WpBYiyZnPgmU3cj44M41DvUNr565KtknoIMvGnwxSMZSK9a+/JuJdYvIlq08TBmobMxJoOFSxHq8S7Ze75bI44n1fUIM/QXGY1rqk1XdStnhAzrRvFKkvep0j6X+1hMFimWRuPik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1rdY2B-00000002T7v-07Yo; Fri, 23 Feb 2024 17:04:23 +0100
-Received: from p5b13a6ce.dip0.t-ipconnect.de ([91.19.166.206] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1rdY2A-00000002Rcl-3SNp; Fri, 23 Feb 2024 17:04:23 +0100
-Message-ID: <0f2060fcda53ac33fe893a27634f015f6e42bbe8.camel@physik.fu-berlin.de>
-Subject: Re: [linux-next:master] BUILD REGRESSION
- e31185ce00a96232308300008db193416ceb9769
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Kees Cook <kees@kernel.org>, kernel test robot <lkp@intel.com>, Andrew
-	Morton <akpm@linux-foundation.org>
-Cc: Linux Memory Management List <linux-mm@kvack.org>, 
- dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, 
- kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-sound@vger.kernel.org, mhi@lists.linux.dev,
- nouveau@lists.freedesktop.org,  ntfs3@lists.linux.dev
-Date: Fri, 23 Feb 2024 17:04:21 +0100
-In-Reply-To: <3532AACB-176A-4C48-9855-CCD6C97FDE91@kernel.org>
-References: <202402231222.DVB9DC74-lkp@intel.com>
-	 <3532AACB-176A-4C48-9855-CCD6C97FDE91@kernel.org>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1708707590; c=relaxed/simple;
+	bh=GFnd+uRgcZ5JE6+yaYSUeEigjBZZ5ehiRJbCdQFjMSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ozekoIdvCTY2azSc2/ucZPKKWjmewyAOwP6c0RJ53waWnFutXRPQDkCiOLDFwaCSlFrKzI0IWHG2WQQEyj0eJbtpu3Sl2SFE6rNfnHB6ufIv9muiBoZPo8M9BtqfmFWD2l7Y7MY+hGpbxM+u0OAljmklIQvWisKF09T5xyJV4W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nitAuW0n; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nitAuW0n"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e4ca46ab04so363462b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 08:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708707588; x=1709312388; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDMzDk/lBMFwiZnh7jtuEycU3dW7wec2i4CrQjkGJo4=;
+        b=nitAuW0nEJXqcuwrvok8CkVkbfn2pnfOCTGqhqgni0qOUhvTAhltyrpkmRwSRrbh0B
+         98mW8FxQhTkRddbNuvjY1OlR4EehYdeL0eARCJG8gW0y3gsHiuUVmVyOiDl/jLh1TF5D
+         j58bfHK882zi2L5G6JAhTPLzgzIjkBqHE0PuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708707588; x=1709312388;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FDMzDk/lBMFwiZnh7jtuEycU3dW7wec2i4CrQjkGJo4=;
+        b=nFKzF3Cl3KLnmAyR798Q/i3acTCu37vUGeqDFyt/ul2QJXDAnZFEiCTxVNg2ysB5Ik
+         LW38xYVv46a3Ko+WEIgzXXirC3ne46Xes/533p36lH1ZC9aXHknxOqtK+I2AzPBJwxY1
+         atXoEMUtdz8coztuGH6pnc1U8nHO6cZFc3/gu9G88/IzSuf6gI8yRIWrL3FLHla0yoo+
+         4GjXpCPlqfE81i+vUvkg7MvjQTyixMLm99HlN/89FtDimFmLZTJapV5WkMAWDiA+c6ow
+         qGA+qxBDF0bkzabp4UjkzG+9vrv9nSn8TytzvuatDh19j8N1wAS8h7x02JrmI2VCxkpK
+         Swig==
+X-Forwarded-Encrypted: i=1; AJvYcCXxvguUzLZNPGixpK8i2OAyqkdSb2LLPCPQLOvf/kimZEGsLT4c28gA/4XMS48UGmo8IsoRjRGCtIHCCuAsqrCT212bxh4BXBUEbjQZ4FVn
+X-Gm-Message-State: AOJu0YwptrtPjQUb1Z1MTyV5/TrrZoxX9WHYLvl84wupkdGXmUur1cgF
+	eSE00GHjsbghK4tKsPcWwtJByKfvi3h5CABPMyXnldKXzsgEpVFO59yJMCcN0A==
+X-Google-Smtp-Source: AGHT+IHX/Yc4T9nL5wRR/DYkhblZDpzp2THzLbdrmdP4IR1mBZ1kcT2liaypJSpebHmorYbeiH+inw==
+X-Received: by 2002:aa7:9d82:0:b0:6e3:636b:dd99 with SMTP id f2-20020aa79d82000000b006e3636bdd99mr331864pfq.24.1708707588228;
+        Fri, 23 Feb 2024 08:59:48 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id o74-20020a62cd4d000000b006e3f09fd6a7sm11865200pfg.85.2024.02.23.08.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 08:59:47 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Kees Cook <keescook@chromium.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Helge Deller <deller@gmx.de>,
+	Guo Ren <guoren@kernel.org>,
+	sparclinux@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] sparc: vdso: Disable UBSAN instrumentation
+Date: Fri, 23 Feb 2024 08:59:45 -0800
+Message-Id: <20240223165942.work.950-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+X-Developer-Signature: v=1; a=openpgp-sha256; l=997; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=GFnd+uRgcZ5JE6+yaYSUeEigjBZZ5ehiRJbCdQFjMSg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl2M8BVTkPTYzeAtIdjSlijqw9uZvhDwrdnLvn9
+ blIHXwVpeGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdjPAQAKCRCJcvTf3G3A
+ JoCwEACKVFAmUO4no0Qaxq8qbED2OYobHjEx8UJ+OGsvTvGLxdH8D7zH1Jm07MIB5qteNWszAPW
+ mmeZi2C8ojqf8QZCcqjRXQJWlCBUm6nET1lK20B7bHNNenRsAU3f+oq4vdh143ne09ThQL0vycD
+ GkDx6xhb0cdwF/fuoUugrYKfxI242MeUa/lIkLQMoxXyJ+uQvBLKYtshUKKs/AdBkdZ56fsAR6W
+ WK/+Q26n6BKUSxtMnNvhGt+AiOe0ElsbAbAPLSAf/+ACWu34JMXSe6b3o6WbemF7w6zZSFfxx3L
+ aiWCjVpYB49at5XwwkPh4ZiViM11V4RJIIV8Wq2Lj3Wn2SfL+xAfohSXysGvuiAxtXG7wgnWXCl
+ YkaEHux6vs5pt1/gsv6WKr+/UpXZvWQJkqpYBmRJY502AnAbYg00exgRnJoCpHC2bgyAS+cb9Zu
+ YqnvktgImg3XSAhBvOhxXMf/40ggBFstPwm6YOucNM1IdW4aKRktYWll8E0i3M54hNRCm8eREdF
+ 7CUN7Wo3pISsoJ5iWpsP3QdnuKVtUTXyu7XI5CcS33ZzxMMFpWTwMH1yZcEwM7e5+h4a4tSFsuK
+ jSEdGEu1KEwGh3gepDThUCJTuVkHMRQLz80mbbn4/SrwStrx23fql2KEfgBMP0h30pfMsV78289
+ Q67U30eW 2zupgVA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2024-02-23 at 07:46 -0800, Kees Cook wrote:
-> > arch/sh/boot/compressed/../../../../lib/decompress_unxz.c:350:(.text+0x=
-20b4): undefined reference to `__ubsan_handle_out_of_bounds'
-> > sh4-linux-ld: arch/sh/boot/compressed/../../../../lib/xz/xz_dec_lzma2.c=
-:751:(.text+0x904): undefined reference to `__ubsan_handle_out_of_bounds'
->=20
-> This is fixed here and is waiting to land:
-> https://lore.kernel.org/linux-hardening/20240130232717.work.088-kees@kern=
-el.org/
+The UBSAN instrumentation cannot work in the vDSO since it is executing
+in userspace, so disable it in the Makefile. Fixes the build failures
+such as:
 
-I was unable to reproduce this issue.
+arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
 
-Adrian
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: sparclinux@vger.kernel.org
+---
+ arch/sparc/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
+index 7f5eedf1f5e0..e8aef2c8ae99 100644
+--- a/arch/sparc/vdso/Makefile
++++ b/arch/sparc/vdso/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Building vDSO images for sparc.
+ #
++UBSAN_SANITIZE := n
+ 
+ # files to link into the vdso
+ vobjs-y := vdso-note.o vclock_gettime.o
+-- 
+2.34.1
+
