@@ -1,121 +1,111 @@
-Received: from mailrelay5-1.pub.mailoutpod2-cph3.one.com (mailrelay5-1.pub.mailoutpod2-cph3.one.com [46.30.211.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B727143C54
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 18:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3005371735
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 19:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708712881; cv=none; b=P897IuJs+HbpIEPrxGhwTWKJc4XkRHlhr4AhHyEM7DVidgBgqoJBJ8vXOZR4iF9tpXT+iaTEh/HrxzVIXO6exGDNDu1l8zACyYbEebvJDFs3Ke0UvxKoZtEjoCc0xSMSULPhywzKvltvei5BDNs1TZ/cA0XIcTBk5TOcRoiCeNI=
+	t=1708715496; cv=none; b=Q58zr4ZaQQRSpEp0S7S2dH6F8veP3o78j6SOUlt28WCVumKpsyuqA/q4e5iyxp1sgw3qiSTvGA2KcKUrnZjQpHr+Em1KHrJ2dIpRDBPaVuLAnKIPE6w6u4dWvCt1sUU7l+qriHcyODlWxzwFhZxkujQN4YcHqt54yyPCnJJZnRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708712881; c=relaxed/simple;
-	bh=D1QGXZw6sUZ778PeZk9AsWl7LhHjAPoaCloTBO103w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KD1MkIrOpU8u8dPZDbre3H2OwnCKj9Z81ElyyasL5y8RJREPlotQQWGwkLtJChDB3b1SmJ0kY6yYfNXwKjyn7ycUga7bQQVj+MVGVsY3HVxdY+lc8/06a21MLWOeesz9x0Tdbr5Md2c7Z0dcoQ0DGqbZSALzkjvyJMC+qOPkNIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=uiEBRAvj; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=oLwsR/0C; arc=none smtp.client-ip=46.30.211.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	s=arc-20240116; t=1708715496; c=relaxed/simple;
+	bh=ClfBlzO7QpgXN5F3JKLl+3YPCiaYFHLAJGvdDZM4QEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WSPc9ii1VkoHXYjJVKrMcHy78YrOLo/i1d5NaFaLSERVhBhkStBeAUtAxszQngOm/Jk8kfzYgXVxMYo5Xc3FbqBajGkcBLIVFRhgs3W5p7UazypdFct+vFIzG5ELPRKOYaAWsDTRjkVcB1Kd1xFW0DLa8vkpgUSW1PONPq7guho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=BMp0xEww; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="uiEBRAvj";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="oLwsR/0C"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="BMp0xEww"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d2e16b552dso367930241.1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 11:11:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=B6EjNaWdiktqEuLncaKVE82jxx+NKh1TlSMryRmLWUA=;
-	b=uiEBRAvjxOsaJwk90DFlIOWSmTME7MH4GDlWu5J/vG1Okq9cmza6UGoBlXeNS3sLDcVsBLxHAADjD
-	 e2ZxhAQj4u0cQOdBAuCjB6Un0IEmUZDOm8lciiu7GhoQvittFnnYTZZN1nqSLQaJvZDcEo/XsU/EeY
-	 9jhdNMSD8/Nidu4uaxLuUdRBrtF1MI6JyOCLP+iLcglu6K+1WpQxA+E3YZZHzkGjCfZA9JD+RRUDeg
-	 riAheo4PZlQzGtOdPfZ+6di84OcIaib+qjrbHiHIUBXxppG+GEZlylwj1TymX1asVXMUKAVI6/fFoN
-	 eK84IcYM75uHLBRpWw/gbRdBjFQF/gg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=B6EjNaWdiktqEuLncaKVE82jxx+NKh1TlSMryRmLWUA=;
-	b=oLwsR/0Cr6RWTYv5L83UN2z/haUi/To0reQmcJ4qbMung9oH9COqad2IyStuvbuQoBprzANSv0l3C
-	 CW/4520DQ==
-X-HalOne-ID: 19483c2d-d279-11ee-ad41-657a30c718c6
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 19483c2d-d279-11ee-ad41-657a30c718c6;
-	Fri, 23 Feb 2024 18:26:47 +0000 (UTC)
-Date: Fri, 23 Feb 2024 19:26:46 +0100
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Helge Deller <deller@gmx.de>, Guo Ren <guoren@kernel.org>,
-	sparclinux@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sparc: vdso: Disable UBSAN instrumentation
-Message-ID: <20240223182646.GA2825372@ravnborg.org>
-References: <20240223165942.work.950-kees@kernel.org>
+        d=paul-moore.com; s=google; t=1708715494; x=1709320294; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j0XCvTK0JutYyKCTFM1dWFP+TyUZlvqtwx4Xm5HJezU=;
+        b=BMp0xEwwkNSaExo3V3Djl3bbXRw75NUaNr4aOrAlwlxLA36VIrZ7oqbUPRBhM7uj4w
+         /0W2+aAnTOCIdSXugAXsN5ohh2iZhP7613aVf3+uD1zkmeKot5aGDZ79yYCi9dZ72LiS
+         CgLf5MBwlEwrpuZ3xBsgcLkxlXwytXRXTRxW4e7VNEgiXsPZ7TwrXUSAzjOISMsVaIts
+         vbUv+M0DGt97XuXmhSIBD8+4TgYgfDluctR8D7q9TC8ftTdQO2XebmTUcCeTdE6vWFtN
+         QG1jLs2Mco31KKSB9OXvXP/Ken46oEM/TdjgDilXnP9SassootgM0VkGrsCN6+Uc4Y5U
+         ERvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708715494; x=1709320294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j0XCvTK0JutYyKCTFM1dWFP+TyUZlvqtwx4Xm5HJezU=;
+        b=m4Sg25np1GZyN9goZHtJsf4nEJhvp5a8p5brbC6HJ858iXmXoSMUArhLWnqLSrRQB1
+         vUDSP+bxaCYJFaYTBb4d0X7kI6znB7uir0B+oY3S+4eevEUEKzAtMB+HcF2TCEspU7Ts
+         h7dGjXFmSAsrY/MuhK1M6K/e71Hyz3obU6eHskLn6kyknIC/gL9IDmTrVloTkxCVvvty
+         Vr/JtFnB0Whl3mvLFRAkxywQlkhUjji0TTCofQsDYTZxoX9TcHdvz6vV4WT2dPQIIFHq
+         sr0bMcRsLxxhJqpVfMvSO7ZHJ98+H2h8m9WieDIFD5PWgQ5b60z7KfBK8m4kbCyrCd4v
+         Ygpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuVXwlFTaHyMTdOMZieRu40ygRwdR5nGqoFabF5g8wM1PE0UUqavJgoB7WNRlK45fmKEVtFGDLDdl4fI8/Ey+VgPh0PNbnuCF8SFYGYB4o
+X-Gm-Message-State: AOJu0YyfPE0mPMNAGeJs9dSzt6E1huHIkGfcIrqlnUD+yFLhXGm3ZIBc
+	uQM35NgEoqt+499GuFDHKdYkEqDdJQ71GaMg0q583HPFVBSQ+8nx2ewn9mdJu+OhtZaSgvyEMkv
+	EZ+dvV27iECuSMhpPshqsO8Cb/XLBHK8sOCnT
+X-Google-Smtp-Source: AGHT+IHgnpzrAJiqOtQa0RtIP05NlipiiJgyjy+Jaz0pPBXd/km1Jma/USlORd79vvIIEbsdXpIneAyVk15v6ZKaFuo=
+X-Received: by 2002:a1f:c4c3:0:b0:4c0:2182:3cdc with SMTP id
+ u186-20020a1fc4c3000000b004c021823cdcmr866522vkf.1.1708715494038; Fri, 23 Feb
+ 2024 11:11:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223165942.work.950-kees@kernel.org>
+References: <20240223170824.work.768-kees@kernel.org>
+In-Reply-To: <20240223170824.work.768-kees@kernel.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 23 Feb 2024 14:11:22 -0500
+Message-ID: <CAHC9VhSyupEj_WfD=6tFUkujqBrNS86_TVFLpb+Um=5hc2C-8w@mail.gmail.com>
+Subject: Re: [PATCH] init/Kconfig: Lower GCC version check for -Warray-bounds
+To: Kees Cook <keescook@chromium.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Lu Yao <yaolu@kylinos.cn>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Petr Mladek <pmladek@suse.com>, Suren Baghdasaryan <surenb@google.com>, 
+	=?UTF-8?Q?Marc_Aur=C3=A8le_La_France?= <tsi@tuyoix.net>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Nhat Pham <nphamcs@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kees,
-
-On Fri, Feb 23, 2024 at 08:59:45AM -0800, Kees Cook wrote:
-> The UBSAN instrumentation cannot work in the vDSO since it is executing
-> in userspace, so disable it in the Makefile. Fixes the build failures
-> such as:
-> 
-> arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> 
+On Fri, Feb 23, 2024 at 12:08=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
+>
+> We continue to see false positives from -Warray-bounds even in GCC 10,
+> which is getting reported in a few places[1] still:
+>
+> security/security.c:811:2: warning: =E2=80=98memcpy=E2=80=99 offset 32 is=
+ out of the bounds [0, 0] [-Warray-bounds]
+>
+> Lower the GCC version check from 11 to 10.
+>
+> Reported-by: Lu Yao <yaolu@kylinos.cn>
+> Closes: https://lore.kernel.org/lkml/20240117014541.8887-1-yaolu@kylinos.=
+cn/
+> Link: https://lore.kernel.org/linux-next/65d84438.620a0220.7d171.81a7@mx.=
+google.com [1]
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Andreas Larsson <andreas@gaisler.com>
 > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: sparclinux@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
 > ---
->  arch/sparc/vdso/Makefile | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> index 7f5eedf1f5e0..e8aef2c8ae99 100644
-> --- a/arch/sparc/vdso/Makefile
-> +++ b/arch/sparc/vdso/Makefile
-> @@ -2,6 +2,7 @@
->  #
->  # Building vDSO images for sparc.
->  #
-> +UBSAN_SANITIZE := n
+>  init/Kconfig | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-When I read:
+Thanks Kees.
 
-config UBSAN_SANITIZE_ALL
-        bool "Enable instrumentation for the entire kernel"
-        depends on ARCH_HAS_UBSAN_SANITIZE_ALL
-        default y
-        help
-          This option activates instrumentation for the entire kernel.
-          If you don't enable this option, you have to explicitly specify
-          UBSAN_SANITIZE := y for the files/directories you want to check for UB.
-          Enabling this option will get kernel image size increased
-          significantly.
+Reviewed-by: Paul Moore <paul@paul-moore.com>
 
-
-I am left with the understanding that only arch's that
-selects ARCH_HAS_UBSAN_SANITIZE_ALL would need to turn off
-UBSAN_SANITIZE.
-
-Are this fix papering over some other bug where we enable
-UBSAN_SANITIZE_ALL for arch's that should not have it,
-or something else that enable it?
-
-	Sam
-
+--=20
+paul-moore.com
