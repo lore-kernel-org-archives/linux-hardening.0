@@ -1,146 +1,140 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow6-smtp.messagingengine.com (flow6-smtp.messagingengine.com [103.168.172.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CA514CAD5
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 23:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A8A84FB3;
+	Fri, 23 Feb 2024 23:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708731161; cv=none; b=ceNspaJXlvEVnRHujG0MEUT1yVD9iWB3lkC3Yn6IGIXp81wdLKqXco4xzkWNTuf3fW7aGGB3v0vWOdKaIz9vshafZnkx8XoJYAnGSjLyW630PoeB6gEWbPVavtL9tWyo5EeVTsvNNhwcGijjyk3MjGDIG0KxUQOoOD63S8NPkg0=
+	t=1708731820; cv=none; b=eN6czBg4aQAf924MvLxhCGB+V6Um1Ep8iBxHlVvITQO+NqLFC8IqXAL//h/P4pCgH0RXRlLpRAaLVOnL4hmAoI994hzT9+AAcdqyTWdrr+4rXhGflpP4w3Jz4qUw89AAFny7Y5R+3dLu5/z4vRGHJOw+Etveb8QiKXoNRf0LMo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708731161; c=relaxed/simple;
-	bh=qAlzQZJ5HuSuEuorKunTFjf+EG4KPnsGK6iZyg24Wgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CObufBj7qiiu5eBgHH0WX+Qsh3UND9Kcub7hHVw7SPEzh8FXBNMqrlHrVFIV7SHmyYoGq7Y8iKjymriuwlFtzivHe0nOJSsyk/OE6xWRCIsHuPjXBm4o3HtvM7pjjD/mR6CVoOutj6w3uK7bdkljP8qLLv+1c8IS1UOdWdJg+1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VexPIpQy; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708731820; c=relaxed/simple;
+	bh=uc2tZGR4P0x+PoLZlQj6rY29hlVYa/H5ELy0Qw70NOE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FL0Bkiv+knp5Q+rGDHTUvgWgwt0JWZe/c+BHhgj3BQUWwtfi53Sbys8T7nPns90lmgE6abHnNbIhEq0xzGttQCqeotUuurGmqKmcxiJGi/+d9OoN00zLzwZCWLmAbn6apcdFx5OuwshnWGcXY9OUunWpTFhIEoydDvPI3Bp9lU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E3zsd4U6; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VexPIpQy"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e47c503fb5so1036642b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 15:32:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708731159; x=1709335959; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8MiC/Y9ij7qyWusfGRR5nYD1rSzZT16R0qiyjbvTN78=;
-        b=VexPIpQynMJpr5w1yrIXPjAHDjOcx/VUBRL5eWcotfubjmLqsciY4Wsxxis3HmKkFo
-         WtpoxrUMOkMj7sQERAk15cnPPl3VC3cyxgslb8DQ+qpJxlWkkWhAkY7mX8O/1C4g27KA
-         dPTuGwDDEGOABbeO/q5ElywMCB9JAMbYJ88vc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708731159; x=1709335959;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8MiC/Y9ij7qyWusfGRR5nYD1rSzZT16R0qiyjbvTN78=;
-        b=Mnms4+2YWL3Wy44DACAs5RrjuEKayhdi1FMmq1r1FjGhYdvSpUG2U/iXtOWceW4RVN
-         yKRWKfGsOuzm3J34rkeyZxj7waNZLfaJKFCGomrpVdlcNeWioXFgA7a4UYTjq6Aun905
-         qRYYQsY3TUSgje4xvrMCcAVT3pwnKVBFsPmZCDbdlCNHZoMrWmf5DMG0R0qySak1nWA7
-         Lf1uMlhM1QYv73/0IP2BRWKxpcuktWPY0UKpcE36ZNk4qzBBB3zUMEPxBwD0KJyEcQi/
-         7M0UxdMvZK7qxBjO2StSiMws6/cmKjSOcgk46QbGUYBESckuhFyW/+Nwxnvazi9SR6ai
-         A6vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ6fgBEibhZCeuGbEKcDm7nS4Fz1JR8NMSEyKB4zd8+UTnTaK6qWP5+FSRHJ4N4RKVlcCIm7X4YQxD+wQXf9Lt9kDJrgTOZA41pQPVZRSL
-X-Gm-Message-State: AOJu0YyowtIZM2ZqTCJ2R6UUymYG0hDWSHkGBl9p5lDSQsqmQ07PpJDu
-	06yWgNlGQ9dl9bKglXTr6la9SQY4866lmnu0zWsewSeowbgGFd0PpMpqDKmJhQ==
-X-Google-Smtp-Source: AGHT+IHHbtlWvqXEAzKyFPhXFwCSzfqpoXYQuYUCa/E3PcHbBOBfwUkS3YRGeulfKSQAuy98RxjMlw==
-X-Received: by 2002:a05:6a20:d386:b0:1a0:e463:fcad with SMTP id iq6-20020a056a20d38600b001a0e463fcadmr1483733pzb.2.1708731159688;
-        Fri, 23 Feb 2024 15:32:39 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a28-20020a631a1c000000b005dcbb855530sm32149pga.76.2024.02.23.15.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 15:32:38 -0800 (PST)
-Date: Fri, 23 Feb 2024 15:32:37 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Helge Deller <deller@gmx.de>, Guo Ren <guoren@kernel.org>,
-	sparclinux@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sparc: vdso: Disable UBSAN instrumentation
-Message-ID: <202402231523.F9E3740EB@keescook>
-References: <20240223165942.work.950-kees@kernel.org>
- <20240223182646.GA2825372@ravnborg.org>
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E3zsd4U6"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailflow.nyi.internal (Postfix) with ESMTP id B67DF2000CD;
+	Fri, 23 Feb 2024 18:43:36 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 23 Feb 2024 18:43:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1708731816; x=1708739016; bh=liG+eRquBSeLX1xRKI6KGXUP1iEl
+	r+oOxWU/4UKc9+A=; b=E3zsd4U6ySZdHjZ1ZcyNYUztkCoxVsEl2WezxqhTe6yh
+	Mi6CiE828lh7V8bkEmLJbvkTZ+uiCzXg5I3iA5WEsdoVoIpH5g2if3uSg6FhAP8I
+	ybmYhl+E/FAmIuvVF64qkGKZpUbtwGUcQcFf0IMOL8tDNyNFGZ3Di+IzxNxLEaxE
+	O52NsXuaNXXIG0Ttm5NyvKHmkdfsto145HbmEzTXpD1CHTbsTpH412oEZra6Rv6G
+	C22vgUIn3tcXtPIAlsGfeBdjBNlRYi7VeoDfbA5ihapHwd2mRHPrMdZYyFKsLmG8
+	JWPY4WIOFcy0ZtjlDRpDoE4RQcjw3WCpLwvHSlDjxw==
+X-ME-Sender: <xms:py3ZZVyNwA6UXfikG1XyRs4grz5pbKuBAyMdkBJzGUsBife0Kn231g>
+    <xme:py3ZZVT0wqcs60QLfUhgPEaMTM91gE7oqkkV4YX0cjvNyZDUuowyDH4bLHELC6S7t
+    IeWzsXWTjZnwis18Hw>
+X-ME-Received: <xmr:py3ZZfXXVaLCQ2BmHeTtEH_h8Y2TUFVG9fEmrJMbpcdpI9EzJF6SV-vndkzhcAvZY9M_-TTAXxVeQWS9Pj2trioOS19s8xGKPxE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeejgddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefujgfkfhggtgesthdtredttddtvdenucfhrhhomhephfhinhhnucfv
+    hhgrihhnuceofhhthhgrihhnsehlihhnuhigqdhmieekkhdrohhrgheqnecuggftrfgrth
+    htvghrnhepleeuheelheekgfeuvedtveetjeekhfffkeeffffftdfgjeevkeegfedvueeh
+    ueelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepfh
+    hthhgrihhnsehlihhnuhigqdhmieekkhdrohhrgh
+X-ME-Proxy: <xmx:qC3ZZXh9Ug-46AOI2iv4wnkMfRWaLbOwulie6Y4fGTLOqfFSw_80yQ>
+    <xmx:qC3ZZXAAvZkHz9Ovo_oSy3070rENDUMVEIvs8t9clnknU2HJi6cLUw>
+    <xmx:qC3ZZQJsBEzjE1XHBfune7Fhfi8Xg10mcF5_YWIUMmSsUa72iVmg4A>
+    <xmx:qC3ZZSVcZZUDWD79WogST1V2XxBr2UXci3SGkbs65vfCNWvLxYBRlV5IwFA>
+Feedback-ID: i58a146ae:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 23 Feb 2024 18:43:32 -0500 (EST)
+Date: Sat, 24 Feb 2024 10:44:12 +1100 (AEDT)
+From: Finn Thain <fthain@linux-m68k.org>
+To: Justin Stitt <justinstitt@google.com>
+cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+     Kashyap Desai <kashyap.desai@broadcom.com>,
+     Sumit Saxena <sumit.saxena@broadcom.com>,
+     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+     "Martin K. Petersen" <martin.petersen@oracle.com>,
+     Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+     Ariel Elior <aelior@marvell.com>,
+ Manish Chopra <manishc@marvell.com>,
+     "David S. Miller" <davem@davemloft.net>,
+     Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+     Paolo Abeni <pabeni@redhat.com>,
+ Saurav Kashyap <skashyap@marvell.com>,
+     Javed Hasan <jhasan@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com,
+     Nilesh Javali <njavali@marvell.com>,
+     Manish Rangankar <mrangankar@marvell.com>,
+     Don Brace <don.brace@microchip.com>,
+ mpi3mr-linuxdrv.pdl@broadcom.com,     linux-scsi@vger.kernel.org,
+ linux-hardening@vger.kernel.org,     linux-kernel@vger.kernel.org,
+ Kees Cook <keescook@chromium.org>,     MPT-FusionLinux.pdl@broadcom.com,
+ netdev@vger.kernel.org,     storagedev@microchip.com
+Subject: Re: [PATCH 7/7] scsi: wd33c93: replace deprecated strncpy with
+ strscpy
+In-Reply-To: <20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-7-9cd3882f0700@google.com>
+Message-ID: <4a52a2ae-8abf-30e2-5c2a-d57280cb6028@linux-m68k.org>
+References: <20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com> <20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-7-9cd3882f0700@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223182646.GA2825372@ravnborg.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Feb 23, 2024 at 07:26:46PM +0100, Sam Ravnborg wrote:
-> Hi Kees,
+
+On Fri, 23 Feb 2024, Justin Stitt wrote:
+
+> @p1 is assigned to @setup_buffer and then we manually assign a NUL-byte
+> at the first index. This renders the following strlen() call useless.
+> Moreover, we don't need to reassign p1 to setup_buffer for any reason --
+> neither do we need to manually set a NUL-byte at the end. strscpy()
+> resolves all this code making it easier to read.
 > 
-> On Fri, Feb 23, 2024 at 08:59:45AM -0800, Kees Cook wrote:
-> > The UBSAN instrumentation cannot work in the vDSO since it is executing
-> > in userspace, so disable it in the Makefile. Fixes the build failures
-> > such as:
-> > 
-> > arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Andreas Larsson <andreas@gaisler.com>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Helge Deller <deller@gmx.de>
-> > Cc: Guo Ren <guoren@kernel.org>
-> > Cc: sparclinux@vger.kernel.org
-> > ---
-> >  arch/sparc/vdso/Makefile | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> > index 7f5eedf1f5e0..e8aef2c8ae99 100644
-> > --- a/arch/sparc/vdso/Makefile
-> > +++ b/arch/sparc/vdso/Makefile
-> > @@ -2,6 +2,7 @@
-> >  #
-> >  # Building vDSO images for sparc.
-> >  #
-> > +UBSAN_SANITIZE := n
+> Even considering the path where @str is falsey, the manual NUL-byte
+> assignment is useless 
+
+And yet your patch would only remove one of those assignments...
+
+> as setup_buffer is declared with static storage
+> duration in the top-level scope which should NUL-initialize the whole
+> buffer.
 > 
-> When I read:
+
+So, in order to review this patch, to try to avoid regressions, I would 
+have to check your assumption that setup_buffer cannot change after being 
+statically initialized. (The author of this code apparently was not 
+willing to make that assumption.) It seems that patch review would require 
+exhaustively searching for functions using the buffer, and examining the 
+call graphs involving those functions. Is it really worth the effort?
+
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+>  drivers/scsi/wd33c93.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> config UBSAN_SANITIZE_ALL
->         bool "Enable instrumentation for the entire kernel"
->         depends on ARCH_HAS_UBSAN_SANITIZE_ALL
->         default y
->         help
->           This option activates instrumentation for the entire kernel.
->           If you don't enable this option, you have to explicitly specify
->           UBSAN_SANITIZE := y for the files/directories you want to check for UB.
->           Enabling this option will get kernel image size increased
->           significantly.
+> diff --git a/drivers/scsi/wd33c93.c b/drivers/scsi/wd33c93.c
+> index e4fafc77bd20..a44b60c9004a 100644
+> --- a/drivers/scsi/wd33c93.c
+> +++ b/drivers/scsi/wd33c93.c
+> @@ -1721,9 +1721,7 @@ wd33c93_setup(char *str)
+>  	p1 = setup_buffer;
+>  	*p1 = '\0';
+>  	if (str)
+> -		strncpy(p1, str, SETUP_BUFFER_SIZE - strlen(setup_buffer));
+> -	setup_buffer[SETUP_BUFFER_SIZE - 1] = '\0';
+> -	p1 = setup_buffer;
+> +		strscpy(p1, str, SETUP_BUFFER_SIZE);
+>  	i = 0;
+>  	while (*p1 && (i < MAX_SETUP_ARGS)) {
+>  		p2 = strchr(p1, ',');
 > 
 > 
-> I am left with the understanding that only arch's that
-> selects ARCH_HAS_UBSAN_SANITIZE_ALL would need to turn off
-> UBSAN_SANITIZE.
-
-Ah, right. So, I removed[1] UBSAN_SANITIZE_ALL in -next (it was the only
-sanitizer using this logic) and this appears to be one of the impacts. :)
-I sent similar fixes for sh[2] and LoongArch[3].
-
-> Are this fix papering over some other bug where we enable
-> UBSAN_SANITIZE_ALL for arch's that should not have it,
-> or something else that enable it?
-
-It's possible we should implement HAVE_ARCH_UBSAN, but in my testing
-everything built fine with it, so I didn't opt to do that (it looked
-like just additional configs for no real benefit). What do you think?
-
--Kees
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/kspp&id=918327e9b7ffb45321cbb4b9b86b58ec555fe6b3
-[2] https://lore.kernel.org/lkml/20240130232717.work.088-kees@kernel.org/
-[3] https://lore.kernel.org/lkml/20240130233140.work.887-kees@kernel.org/
-
--- 
-Kees Cook
