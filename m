@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E30B67C7D;
-	Fri, 23 Feb 2024 10:38:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3647963111;
+	Fri, 23 Feb 2024 10:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684730; cv=none; b=pCR/QhomsLymZ8iVrBa1DgzcZFFRS2gXHJb1hNtViRBpYuDpZJI6vLry5pXNSGXfF96quzsKHvi/2zjY2AtE/Fi5j9vGeR7ifU1gt7VXs+2VzPQBd5x9WE3AVMXXQ9NTL8SrrIWBWpimmyayYLMwg89f/o73U9fpwAngoO2Wiug=
+	t=1708684887; cv=none; b=qwBOX3hs2IuuS9LplA5dy6gjnOyH17MTss3PRuGx9N85ZYA3/COQBrZCOQS5GMxA8PRlLJV99RDHnXYjd++iOwI8PP2xhABXeMu5t63W240aIluLsCiGy2LDivgh72D6kI0mrwQ5CrSUqoFse6Q8sp6emGuciurv85M9c5zCFkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684730; c=relaxed/simple;
-	bh=NWT5bX994Gc9URSqTJ1uQ/MVapIMzP60ER2OflZLuLw=;
+	s=arc-20240116; t=1708684887; c=relaxed/simple;
+	bh=yQ5gfwOefwOYR/TaCnNrogXr3ETb5Amk5wl97VmmEbA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pkdVSY2y3vhycJzy+3QgAkiiCqy7at0z8HM2APMwuaWZfk3XakvUEs4+DapT+0ADZbIC1bt5OCktAwwtViqTfd/4CMJdDDp3G8zZ7a+FyOwHCbYYcvFQjwCpXTPQvQjLDqxbnwLQhcENUjfvO/7DLvb1CSeIPUJ2U22KlYblBos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2HjcuNN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qADtgk7NPSa7NwMVC84GhC/6iC4c0CNolQb+SHFhoNh15PiSnadNvuhxsj9WRtaggK6c5znrTPAGee9eLTVPOgcVBYIk2UaBGhlX9riI6Wld0YQzde5WfOJpevbS5n6Fr3ic9XPujAEPnQ+XV9l+8icKzUtGGQ+S07Tp0xBAvAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6DU9Lko; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2HjcuNN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDDAC433C7;
-	Fri, 23 Feb 2024 10:38:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6DU9Lko"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBEA6C433F1;
+	Fri, 23 Feb 2024 10:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708684730;
-	bh=NWT5bX994Gc9URSqTJ1uQ/MVapIMzP60ER2OflZLuLw=;
+	s=k20201202; t=1708684886;
+	bh=yQ5gfwOefwOYR/TaCnNrogXr3ETb5Amk5wl97VmmEbA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r2HjcuNNUujkUWMNDNnrB78JazeIbOj63Yi6su96i4X1jHKfp+xNSEA+JErWEz3r+
-	 ZhCP+6MzK7joA79HaNeDScuq08FfZidzymx3wWrBVCF3kv4zJV+knzxB5QZF06Wh9D
-	 ayjLt+1eFkSpXsU0G3AYZuytji4M94H4Er3PpEHCAUyZTv7lmG/EHA/3tQJ8KZgja4
-	 1p/HW8uThdRxNOSLfBLdS/TbtwGO1Ze83JzlfXwYiwu8kpAutImi6gSzcB2RlpKpc4
-	 9tmIjQDK5WDf2koNRQoVNCvqc8gzyHbTmhwVPzBY7hExmClb1fjq3c1o2alhjh6u//
-	 CiVB5R+MMpy/w==
-Date: Fri, 23 Feb 2024 10:38:45 +0000
+	b=K6DU9LkoALnHKFvraTWmnJPi71aDWQwUWdz9BFoY5zQg1PPgl79U5SA0buvUmM72M
+	 wwNXXpmQpzhl5Je1d9egRhXJ+9BRw0PXDt+MUDyfU3EIBw4U5BGEE/0aVPQupIcxi6
+	 SeDch/AFzOd8U4QJyfzU+4pF744oUcOJPl9niqBTX7EOz6o3scAM/ktT5VkD2oBfq7
+	 3HaR8aHcfVWKiYjRpKQa7KhNQeVEgOZDKPc1EHyS631wKkQ9A0k6XHhEDXsGtD6U3U
+	 3MSZJVz3IsceBu3TiHlgyBJNWt1PwConf31kAUq0ysYpoz1XzQHZtQAI7i/aqksE0D
+	 Swe/EJ2/O1OfA==
+Date: Fri, 23 Feb 2024 10:41:21 +0000
 From: Lee Jones <lee@kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Andy Whitcroft <apw@canonical.com>,
+To: David Laight <David.Laight@aculab.com>
+Cc: 'Justin Stitt' <justinstitt@google.com>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
 	Dwaipayan Ray <dwaipayanray1@gmail.com>,
 	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
 	Kees Cook <keescook@chromium.org>,
 	Finn Thain <fthain@linux-m68k.org>
 Subject: Re: [PATCH v2] checkpatch: add check for snprintf to scnprintf
-Message-ID: <20240223103845.GP10170@google.com>
+Message-ID: <20240223104121.GQ10170@google.com>
 References: <20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com>
- <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
+ <dd2b4ac483b54a41aff11a04b6906fd6@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,11 +50,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bccc704fc78b362bbc57a79eb240219f5ec1548e.camel@perches.com>
+In-Reply-To: <dd2b4ac483b54a41aff11a04b6906fd6@AcuMS.aculab.com>
 
-On Wed, 21 Feb 2024, Joe Perches wrote:
+On Thu, 22 Feb 2024, David Laight wrote:
 
-> On Wed, 2024-02-21 at 22:11 +0000, Justin Stitt wrote:
+> From: Justin Stitt
+> > Sent: 21 February 2024 22:12
+> > 
 > > I am going to quote Lee Jones who has been doing some snprintf ->
 > > scnprintf refactorings:
 > > 
@@ -65,51 +68,24 @@ On Wed, 21 Feb 2024, Joe Perches wrote:
 > > buffer-overruns in the past.  It's generally considered safer to use the
 > > {v}scnprintf() variants in their place (or even sprintf() in simple
 > > cases).  So let's do that."
-> > 
-> > To help prevent new instances of snprintf() from popping up, let's add a
-> > check to checkpatch.pl.
-> > 
-> > Suggested-by: Finn Thain <fthain@linux-m68k.org>
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Changes in v2:
-> > - Had a vim moment and deleted a character before sending the patch.
-> > - Replaced the character :)
-> > - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
-> > ---
-> > From a discussion here [1].
-> > 
-> > [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
 > 
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -7012,6 +7012,12 @@ sub process {
-> >  			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
-> >  		}
-> >  
-> > +# snprintf uses that should likely be {v}scnprintf
-> > +		if ($line =~ /\bsnprintf\s*\(\s*/) {
-> > +				WARN("SNPRINTF",
-> > +				     "Prefer scnprintf over snprintf\n" . $herecurr);
+> While generally true, there are places that really do want to
+> detect (and error) overflow.
+> That isn't possible with scnprintf().
 > 
-> There really should be some sort of reference link here
-> similar to the one above this.
-> 
-> Also, I rather doubt _all_ of these should be changed just
-> for churn's sake.
+> I'm not sure what the solution is though.
+> Having a function that returns a negative value on overflow is also
+> likely to get misused.
+> seq_printf() (or whatever it is called) may let you check,
+> but it is hardly a cheap wrapper and a bit of a PITA to use.
 
-This is for new implementations only.
+I agree.
 
-Kees is planning on changing all of the current instances kernel-wide.
+spprinf() was my favorite solution, but it seems that the lib string
+people don't like to accept new functionality, even if it's a clear
+improvement over the currently available solutions.
 
-> Maybe add a test for some return value use like
-> 
-> 		if (defined($stat) &&
-> 		    $stat =~ /$Lval\s*=\s*snprintf\s*\(/) {
-> 			etc...
-> 
-> Maybe offer to --fix it too.
-> 
+[0] https://lore.kernel.org/all/20240130160953.766676-1-lee@kernel.org/
 
 -- 
 Lee Jones [李琼斯]
