@@ -1,148 +1,87 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B31D13A27A
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC1526295
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708709384; cv=none; b=YVM0zSOi50NI+/pjj/ePwGbwfQR33J260LiENu4Vbmu4weI6A9G1UgTrDjdIAb8Gtw2MB++LMlVwv2AUPH+qvRPNiiz/PTDBWKODU8DWeJ6caWezCwPC5kWzI35gnDRnpOPHKFTXfsjT7dEfWF43Yfs57wzSpueLJMnhluEpT3w=
+	t=1708710097; cv=none; b=u4EOGckZp9iGJ/RACZBAHxic2NGVHiAzp5yEXf5xS1VmlSavywxoPoCwlgaxqaleoVsDmJm9ifxJufcM3MW3ylaUd2kFN/Rpn+97PWfvM6d7/X4iMoWbVImBB/xOPSVna1sd/w4Pa/qupr7G450vQP2lJV6T0ZQ8NNPODD3AXpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708709384; c=relaxed/simple;
-	bh=ZSQMrFcXK67EoYJFvWEtAVXpJz5HlNabiFfB2+DnMz4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DriPGSi2Otzj/VDsMFlmgs4i88AhNM6J+yez7sUBP4h94GYSH1W+7iD+5aEtuNypuqhg4ohlPVc3CTO2mrxhdIMh9yKPcN7JaZzi+sSphJLydB+Hd4tkoBRKWbzzj1jmFBv99SPxVmpYLqY5dCRquFzpBXqTcj3kxAVUk8JyWrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HxlLyd3w; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1708710097; c=relaxed/simple;
+	bh=/cfXkZKvvqLcP6jJz/p/9gKAVQOgMwem9pa4Afsc7kA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RHqRrGAnP7wdRMB5f7ldxF+akFzl0jGfpc3qmpjU1+T3heT1svTe6BXgKj1Xz/cnwuE5cjMM0kCksvCTo8tcCox6wUHeO7GzOKAW9qSuF8F4mLVUKx6rZtv8KU1QXJn390fGBgWENTCGSoVO/KLetaVGI3h61gcC9dyTs0JOhe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cUu8XqDT; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HxlLyd3w"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dc0e5b223eso8821735ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 09:29:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cUu8XqDT"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e4ea90762aso364857b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 09:41:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708709382; x=1709314182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bM3MPkF58+jFMGrw4OrogBOTmRr+QWSJaSYzjCyKYu4=;
-        b=HxlLyd3wWp/ZtJmDGIhSVJrTQECsFgCM/77iCE2CRWD2fY2+jeyERBZOXlM8GtInHD
-         deAVVscCHDZSs18oOHyqJVBYOflGvccJf+Zu2PfhXdm9MTT+JSBUU/jAchGUqDqy32rT
-         /MMF1V59vC9RgcIEGFS4LUTz+RPKL+l+nsY+0=
+        d=chromium.org; s=google; t=1708710095; x=1709314895; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t7UJGfjTB3r4rfNyh0P4i8Q6gZhf2u55+l1+DfEGGmQ=;
+        b=cUu8XqDTT5kMpTqn5S691Bs3VKzmlw2lYY4lIB38fFiTfArB/bb/EQsvv4iJKaT2ai
+         z+taZH+uDt1tRkhxm5tC4bN0+FZzqHyz6bqL6DC49ugpEKCQGEV4f97z2m9DCbefoG4R
+         0dwcW9+MRmwC94yoYCXIO/PFbwhMsI4OMIfYA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708709382; x=1709314182;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bM3MPkF58+jFMGrw4OrogBOTmRr+QWSJaSYzjCyKYu4=;
-        b=HWQUyis/0NqYNjpBfgurq405qrfGcXiZW49kL11zunCOEeq2Bt4vpUEx4O2Mpl2u04
-         /8z7VEjSk/uj0zeMorjzclZbrj40HVz232B3de29HMpz0QyxUI+Gg2EO7izl1pz/CiAI
-         TGyVg9ee7AWf2xv0qb/2raGz1enYRbLeNkGyKm2+vP1f1oEmpqK7ClRMvVGWnRw7Edq+
-         URw/QkBB4wtXCgw9Xk6J/FFRoNQtDP1bd4+UjnH7w5TGuBQF9Dt2S0jVnq13EjSVdz7a
-         9sxMDzYLicZXr4d7aIp/IGiDiuKpt/uEQkqOCA8F0/V10MFQ+P/fwg8zd4emn+I76vwI
-         rG9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWxc1YRmFRVnm7F4Br0/kpNqT6uYz0dBgw+OthAUcA1hbeYvMuq2jDFkjObsRaMifIuN2wxDAcwgP8EJXTWci0vddtI/3hplcuLByvcOQ8b
-X-Gm-Message-State: AOJu0Yy4AWwbjTDFnp2j7yK7R/GW/+zSXsi8VC3bB+nPqnoIHUHjvWJd
-	CyaUwfv2g85Gs5Uk+sUjyKantExXYwMt3QiYD/DJbfLUpfvpyiOuRtSqfjdpanPhpnhA1DDfkhQ
-	=
-X-Google-Smtp-Source: AGHT+IFzDY8go56+ptU8+F6xFCu+b2Z7ssHDmUg/9Vyz+3JhhD1xjzJWr9XeBbMxTH99G/AutAFy0g==
-X-Received: by 2002:a17:902:c102:b0:1db:c536:803c with SMTP id 2-20020a170902c10200b001dbc536803cmr435891pli.33.1708709382389;
-        Fri, 23 Feb 2024 09:29:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708710095; x=1709314895;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t7UJGfjTB3r4rfNyh0P4i8Q6gZhf2u55+l1+DfEGGmQ=;
+        b=loLek4y+HZETi+Iei6KZJkH58ky5GsJM3ABgflsg/ghVYo09MuLzNwJe3+grsuAp1y
+         V3e5kwrH+vzsxmdYEMGxCUVFLtWKLtxoCc3yNRV+xc4ramRX1tQ5Fx5wm/wgIDGNTmXb
+         S/oqNl5PFiOhmG6RmOBnyLHUzQN+e9Ym411yZyEZPodgjst08eLg+ZQc50xTCP9xAwHS
+         pNuKsluoSdATaYmaIjEqn/VMfAFfkt3kX/3kaOvk7sTiukEmP08/W2KdMnMlHQG7YBWZ
+         /crij31XXJMZsu62dYlKTy7Dg/AQErs246PfAm/UP6lMUZBCfO9kAFiuOXN7BLwkAdim
+         Fpvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlJxXzimYSrAhT3ShDB+kAarIqMfCY+WW0vKNZUoDjBd+1J2uVEksULUmYTJQNnw/K+65lBQLCGjG/pYdwyvHbaH0cMhw+N6s3KQht3E/3
+X-Gm-Message-State: AOJu0YwpMIRU0+sn3YEkwm1tnAYgTfzk+T39PZ1dA/cJ2Uct9/pfevjd
+	iu+5J3WkvirSiF3lOx1cStexoMsWJR0tZShJK32yBgCq9pT3nzRAW+ci8fhXBQ==
+X-Google-Smtp-Source: AGHT+IHI3sboCzzLm5bJGfvuXYCbUIC67s5dRbVsLDDPz+tIpD5ZqlS6VGpG8bKgUJgEkZhff7aV/Q==
+X-Received: by 2002:a17:90b:23cb:b0:29a:8e6a:ffe2 with SMTP id md11-20020a17090b23cb00b0029a8e6affe2mr575548pjb.26.1708710095280;
+        Fri, 23 Feb 2024 09:41:35 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b2-20020a170902b60200b001db604f41dcsm1778891pls.103.2024.02.23.09.29.42
+        by smtp.gmail.com with ESMTPSA id r13-20020a17090ad40d00b0029a7df64720sm1586705pju.53.2024.02.23.09.41.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 09:29:42 -0800 (PST)
+        Fri, 23 Feb 2024 09:41:34 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Jonathan Cameron <jic23@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	"Lars-Peter Clausen" <lars@metafoo.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	"Nathan Chancellor" <nathan@kernel.org>,
-	"Nick Desaulniers" <ndesaulniers@google.com>,
-	"Bill Wendling" <morbo@google.com>,
-	"Justin Stitt" <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	Tomislav Denis <tomislav.denis@avl.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] iio: pressure: dlhl60d: Initialize empty DLH bytes
-Date: Fri, 23 Feb 2024 09:29:39 -0800
-Message-Id: <20240223172936.it.875-kees@kernel.org>
+	Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 1/1] kernel.h: Move lib/cmdline.c prototypes to string.h
+Date: Fri, 23 Feb 2024 09:41:28 -0800
+Message-Id: <170871008605.2107490.16630176763358283551.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231003130142.2936503-1-andriy.shevchenko@linux.intel.com>
+References: <20231003130142.2936503-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1937; i=keescook@chromium.org;
- h=from:subject:message-id; bh=ZSQMrFcXK67EoYJFvWEtAVXpJz5HlNabiFfB2+DnMz4=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl2NYDdis920sydQS6ipBI49BtcHYYpvp5bOl50
- hx40NdinzyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdjWAwAKCRCJcvTf3G3A
- JnTxD/wM4aMItMA1GlvtME+XbzHXS9RwkeN0sJ2am73tn22dB2vdV/htY/rmnPgBgjy46iuc62k
- Q3m4V2vmIRR7oin7Dp6MHFYVWNysZUrOrwO8uoINALTCyF30N3JPEUAlk4XA7j+U6DxerZ2IdL2
- jERDFaW6E+LGdZ3aQ6NsWuJxVvv1CRf2vcdwt8LL852yhg04L+MVtjejOhyu5dpy2wwFWU1qRGD
- cclqSl/4dB639iKcUgL3C9V9HKkPNtCYNINpITFMjIQFQzsNWTGonSvc/j3a5qgjb0gOMjlZ3+w
- cgF0DtlubTNlGX3Cpcq1K1B7qACqsit98xxDp561xm8fxD5LzuBoUfAlUZ3FhMj03iGsyMibDs8
- sk2GVwIANvPLWEriBJoqA83QqASX0TUC2BoszwezFgAriD0yMUS1O+j9zvO1SL8sNENlY7hzfIF
- Uo8fIy0Ey61dvD4BLNIY/5gQINuPOcGnpiw6PUIuUw1YywkubRbxs/Kajkeh2JjzESkcGpHXVO2
- zWqeB9B8/TO83C5O/BVx13LUq4OabuCRcOQA3anJYepO7RV5Nm2pUlZkx7gznkJtH68AMU9pmiu
- F3zxSeRPQ96CxmN+/baatYUN4AR1631D1oJIWyIM9SKfmCwzVUENT+QYOHbx0I0DhV0/52n0wAY
- wgn4Woo Gjwzea2g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-3 bytes were being read but 4 were being written. Explicitly initialize
-the unused bytes to 0 and refactor the loop to use direct array
-indexing, which appears to silence a Clang false positive warning[1].
+On Tue, 03 Oct 2023 16:01:42 +0300, Andy Shevchenko wrote:
+> The lib/cmdline.c is basically a set of some small string parsers
+> which are wide used in the kernel. Their prototypes belong to the
+> string.h rather then kernel.h.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/2000 [1]
-Fixes: ac78c6aa4a5d ("iio: pressure: Add driver for DLH pressure sensors")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: "Lars-Peter Clausen" <lars@metafoo.de>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Nuno Sá" <nuno.sa@analog.com>
-Cc: linux-iio@vger.kernel.org
-Cc: "Nathan Chancellor" <nathan@kernel.org>
-Cc: "Nick Desaulniers" <ndesaulniers@google.com>
-Cc: "Bill Wendling" <morbo@google.com>
-Cc: "Justin Stitt" <justinstitt@google.com>
-Cc: llvm@lists.linux.dev
- v2: drop comments, array expansion, and WARN. refactor loop.
- v1: https://lore.kernel.org/linux-hardening/20240222222335.work.759-kees@kernel.org/
----
- drivers/iio/pressure/dlhl60d.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Applied to for-next/hardening, thanks!
 
-diff --git a/drivers/iio/pressure/dlhl60d.c b/drivers/iio/pressure/dlhl60d.c
-index 28c8269ba65d..0bba4c5a8d40 100644
---- a/drivers/iio/pressure/dlhl60d.c
-+++ b/drivers/iio/pressure/dlhl60d.c
-@@ -250,18 +250,17 @@ static irqreturn_t dlh_trigger_handler(int irq, void *private)
- 	struct dlh_state *st = iio_priv(indio_dev);
- 	int ret;
- 	unsigned int chn, i = 0;
--	__be32 tmp_buf[2];
-+	__be32 tmp_buf[2] = { };
- 
- 	ret = dlh_start_capture_and_read(st);
- 	if (ret)
- 		goto out;
- 
- 	for_each_set_bit(chn, indio_dev->active_scan_mask,
--		indio_dev->masklength) {
--		memcpy(tmp_buf + i,
-+			 indio_dev->masklength) {
-+		memcpy(&tmp_buf[i++],
- 			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
- 			DLH_NUM_DATA_BYTES);
--		i++;
- 	}
- 
- 	iio_push_to_buffers(indio_dev, tmp_buf);
+[1/1] kernel.h: Move lib/cmdline.c prototypes to string.h
+      https://git.kernel.org/kees/c/9f938458a5dd
+
+Take care,
+
 -- 
-2.34.1
+Kees Cook
 
