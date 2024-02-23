@@ -1,68 +1,74 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06C4128833
-	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 16:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B00128834
+	for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708707590; cv=none; b=kck1sftSkVjyPlCIvAisIE6iNLXDF7T/rzwrbpdww+I6d6MFtHtLgW4xK3Dsu4S7TMbTwU/MVtaqM/2MPzP/amXPIxhFJ7F94C3vbTMF6VDf5vQbbrSB6aDzpOvTDsJqfrWP3lIAsTk+1Eh12x2xLsLK5WR2qBmPjZzqp25Vbn4=
+	t=1708708113; cv=none; b=dhcEuW9m8SY//mUh8LW818YNjhTLpQT5wD7nQPg0M/w1OgJPMWj7fqg61oSbZ7Nw7dML8s0PWGzFzvzyza01PmzzRx8U/FovYCQ2D9Rj9273ukjfqZ8vi/B53VutpXzursdaQT3Z4ZuIWYq4Tf19lRNfqmGu0TiprLJ6m/B4QEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708707590; c=relaxed/simple;
-	bh=GFnd+uRgcZ5JE6+yaYSUeEigjBZZ5ehiRJbCdQFjMSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ozekoIdvCTY2azSc2/ucZPKKWjmewyAOwP6c0RJ53waWnFutXRPQDkCiOLDFwaCSlFrKzI0IWHG2WQQEyj0eJbtpu3Sl2SFE6rNfnHB6ufIv9muiBoZPo8M9BtqfmFWD2l7Y7MY+hGpbxM+u0OAljmklIQvWisKF09T5xyJV4W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nitAuW0n; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1708708113; c=relaxed/simple;
+	bh=RpPzyUdBMHw+e6c2w/zSbIImslWkeJsD/hfLbs5EbQ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=es/rjtMIobFV1xGcNsI+qaFzkwyoKHHU6wDOe7kNRNFJpDKhUAoFs5trLbblRcOThQK5fPUCMnv9cUerkoOlFgHWZVbAgHdILZ75gOVnqCFxX/sVzaO+J7xOjTxWJ4qyJzXY+rOb74QFFbjUkn3+/NBETO4IuZNdbirOTsjWblE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VYF/VkRH; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nitAuW0n"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e4ca46ab04so363462b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 08:59:48 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VYF/VkRH"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e46b5e7c43so342591b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 09:08:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708707588; x=1709312388; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708708111; x=1709312911; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FDMzDk/lBMFwiZnh7jtuEycU3dW7wec2i4CrQjkGJo4=;
-        b=nitAuW0nEJXqcuwrvok8CkVkbfn2pnfOCTGqhqgni0qOUhvTAhltyrpkmRwSRrbh0B
-         98mW8FxQhTkRddbNuvjY1OlR4EehYdeL0eARCJG8gW0y3gsHiuUVmVyOiDl/jLh1TF5D
-         j58bfHK882zi2L5G6JAhTPLzgzIjkBqHE0PuQ=
+        bh=yXvSc66LmdizGZD4epGGkU6zC2BImPYnyN6VRPIWMFA=;
+        b=VYF/VkRHEQMJjT+8i/SKyug/XbU7qo5K9o74XgmYj90UFOwKWk6Rku5cEKtxcp97UP
+         g5r+MCW/XoqjiVL77ePVvvgSFxQPeRN9zCIrPmrFk9XvGWSiVPEWOG9eE4jPMNCj7tZy
+         /cesk59yd24nwEx5QE9GlSRv85Y+VfKBHYoqw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708707588; x=1709312388;
+        d=1e100.net; s=20230601; t=1708708111; x=1709312911;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FDMzDk/lBMFwiZnh7jtuEycU3dW7wec2i4CrQjkGJo4=;
-        b=nFKzF3Cl3KLnmAyR798Q/i3acTCu37vUGeqDFyt/ul2QJXDAnZFEiCTxVNg2ysB5Ik
-         LW38xYVv46a3Ko+WEIgzXXirC3ne46Xes/533p36lH1ZC9aXHknxOqtK+I2AzPBJwxY1
-         atXoEMUtdz8coztuGH6pnc1U8nHO6cZFc3/gu9G88/IzSuf6gI8yRIWrL3FLHla0yoo+
-         4GjXpCPlqfE81i+vUvkg7MvjQTyixMLm99HlN/89FtDimFmLZTJapV5WkMAWDiA+c6ow
-         qGA+qxBDF0bkzabp4UjkzG+9vrv9nSn8TytzvuatDh19j8N1wAS8h7x02JrmI2VCxkpK
-         Swig==
-X-Forwarded-Encrypted: i=1; AJvYcCXxvguUzLZNPGixpK8i2OAyqkdSb2LLPCPQLOvf/kimZEGsLT4c28gA/4XMS48UGmo8IsoRjRGCtIHCCuAsqrCT212bxh4BXBUEbjQZ4FVn
-X-Gm-Message-State: AOJu0YwptrtPjQUb1Z1MTyV5/TrrZoxX9WHYLvl84wupkdGXmUur1cgF
-	eSE00GHjsbghK4tKsPcWwtJByKfvi3h5CABPMyXnldKXzsgEpVFO59yJMCcN0A==
-X-Google-Smtp-Source: AGHT+IHX/Yc4T9nL5wRR/DYkhblZDpzp2THzLbdrmdP4IR1mBZ1kcT2liaypJSpebHmorYbeiH+inw==
-X-Received: by 2002:aa7:9d82:0:b0:6e3:636b:dd99 with SMTP id f2-20020aa79d82000000b006e3636bdd99mr331864pfq.24.1708707588228;
-        Fri, 23 Feb 2024 08:59:48 -0800 (PST)
+        bh=yXvSc66LmdizGZD4epGGkU6zC2BImPYnyN6VRPIWMFA=;
+        b=Fd9NnZG/d/yQSEmiJg6TtQwYlYqOyjtXdJiIMTrgPv6Db8hDfLNf8Ik2hxxCOdT+fc
+         ekZYKU7Fk7P/7GaWAztiqSYl8EbJwACMEXyw82U27srlu4fmH8LztIOcwtQWb+86xHym
+         KutJbZj0M7KjCc13xKD1RsdbBk0f6Alw/Far3tnM4U65YscGCbDT3rUb/QOATXAakAHe
+         5MgWXrHQjpjQUIugBU6GcOWHIhHXN5xCUVRpuAw0/7mWK+CsYhgF7LLSZtEs9j99b3XS
+         j3cANbLJFyRJ/Yy3Tj9nbUi/cQfwryiuVFSQbAyjGplzBAJiP1s36zTxTRIHuoEYnEyc
+         GEjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWo0ahWJ8RrgV6TWT7HHFfNkGSQXj/suJQwQ9WQqqtYxsjAZlxQKe66menQiXRLQrYKQQ7ETMlD8oZY5tTrszLw3uEcb3XYQEjO0ptH5RY4
+X-Gm-Message-State: AOJu0Yy4T3BGyPdcuiGedJUXiqBL+N2N7UPSfhPxRsBOdbk2JXwRsKw8
+	28o59O6APvTslcg3FLuiy7OUdD9KwLU0mkbq2RdF59vcH7kOzVqVn8p/yCkjVA==
+X-Google-Smtp-Source: AGHT+IHFW/iUeNLUozR223PAOpx6Oy4hwmjAHdcEZV0VxryiJP+lYZS4yikAD2OSHNobuSJ6PmMdmg==
+X-Received: by 2002:a62:6342:0:b0:6e2:d162:6315 with SMTP id x63-20020a626342000000b006e2d1626315mr383813pfb.29.1708708109770;
+        Fri, 23 Feb 2024 09:08:29 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o74-20020a62cd4d000000b006e3f09fd6a7sm11865200pfg.85.2024.02.23.08.59.47
+        by smtp.gmail.com with ESMTPSA id y14-20020a62f24e000000b006e25d4085b4sm12654312pfl.27.2024.02.23.09.08.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 08:59:47 -0800 (PST)
+        Fri, 23 Feb 2024 09:08:29 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: "David S. Miller" <davem@davemloft.net>
+To: Masahiro Yamada <masahiroy@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Helge Deller <deller@gmx.de>,
-	Guo Ren <guoren@kernel.org>,
-	sparclinux@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Lu Yao <yaolu@kylinos.cn>,
+	Paul Moore <paul@paul-moore.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	=?UTF-8?q?Marc=20Aur=C3=A8le=20La=20France?= <tsi@tuyoix.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] sparc: vdso: Disable UBSAN instrumentation
-Date: Fri, 23 Feb 2024 08:59:45 -0800
-Message-Id: <20240223165942.work.950-kees@kernel.org>
+Subject: [PATCH] init/Kconfig: Lower GCC version check for -Warray-bounds
+Date: Fri, 23 Feb 2024 09:08:27 -0800
+Message-Id: <20240223170824.work.768-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -70,54 +76,68 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=997; i=keescook@chromium.org;
- h=from:subject:message-id; bh=GFnd+uRgcZ5JE6+yaYSUeEigjBZZ5ehiRJbCdQFjMSg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl2M8BVTkPTYzeAtIdjSlijqw9uZvhDwrdnLvn9
- blIHXwVpeGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdjPAQAKCRCJcvTf3G3A
- JoCwEACKVFAmUO4no0Qaxq8qbED2OYobHjEx8UJ+OGsvTvGLxdH8D7zH1Jm07MIB5qteNWszAPW
- mmeZi2C8ojqf8QZCcqjRXQJWlCBUm6nET1lK20B7bHNNenRsAU3f+oq4vdh143ne09ThQL0vycD
- GkDx6xhb0cdwF/fuoUugrYKfxI242MeUa/lIkLQMoxXyJ+uQvBLKYtshUKKs/AdBkdZ56fsAR6W
- WK/+Q26n6BKUSxtMnNvhGt+AiOe0ElsbAbAPLSAf/+ACWu34JMXSe6b3o6WbemF7w6zZSFfxx3L
- aiWCjVpYB49at5XwwkPh4ZiViM11V4RJIIV8Wq2Lj3Wn2SfL+xAfohSXysGvuiAxtXG7wgnWXCl
- YkaEHux6vs5pt1/gsv6WKr+/UpXZvWQJkqpYBmRJY502AnAbYg00exgRnJoCpHC2bgyAS+cb9Zu
- YqnvktgImg3XSAhBvOhxXMf/40ggBFstPwm6YOucNM1IdW4aKRktYWll8E0i3M54hNRCm8eREdF
- 7CUN7Wo3pISsoJ5iWpsP3QdnuKVtUTXyu7XI5CcS33ZzxMMFpWTwMH1yZcEwM7e5+h4a4tSFsuK
- jSEdGEu1KEwGh3gepDThUCJTuVkHMRQLz80mbbn4/SrwStrx23fql2KEfgBMP0h30pfMsV78289
- Q67U30eW 2zupgVA==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1811; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=RpPzyUdBMHw+e6c2w/zSbIImslWkeJsD/hfLbs5EbQ4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl2NEL0zsDJYYB06VoCsoWg3N7+Cdx8Q75NiD6H
+ r+wnxUbt96JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZdjRCwAKCRCJcvTf3G3A
+ Jp2eD/wKURtgCmOGso2RwQSmy+gv7/r4iAPC+JLwA+vYHD6qvZuXgUGGAjpeqZX+A70NpwCAVoO
+ vFKkrsN4JjdJ6CJTvCPkbze2+dqgLX3uvDPOs/HsuRYByFTh1sJjogogv9EtXs1iDMDRaLSwH9w
+ Gmz+N7Qydd/XxBpf/v+ttsfEJ6uO4qIKd0OdYDlJYO8p20vVy4o7gdLV31Z3kaux4/MtyEUyQWB
+ KLJrTC9vJcWlgJYTJsiLm49jW0/fvu6AxPcjNeYWCLjFAhG515K0HIcLFIG0Sj8nVGp7pyuiJBM
+ cbk8Y9atz6Otapq6IZ0LKFkj2aDhSGkhYcm5NB6+m8u40IPl8Bh+dCceimTAFn0j/dHwsyW5cka
+ kz7j+jx7QS8ZGgtG/zH14NclTtbRNydyJkejzZ3/NKcWuzah9rpZbo1Zk2DYTVgqp3fVwHiPKSc
+ 6bXXDCOvvdo9wjrIqSw/xhwFR+lI3o+ABrTVrpBi6VY9tNIPxKmYvJpsJD6FpMG1O+K2cYNd902
+ RUYBxJ0NqHk3zwTCxWJ+j5KnR5SDW8icgJVwosC5zhYe+lbh+Ep0y+5t8Lmd+k3iXQTqziCCfXe
+ QrBkL5uU3xqcvSxj1ZsIVLV5ykvjmnzeFqFoToDl+yTqV05H85citCy/ycSfk69UpbRaJ1gkIme
+ WLlUqFH f+Yjh/AA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The UBSAN instrumentation cannot work in the vDSO since it is executing
-in userspace, so disable it in the Makefile. Fixes the build failures
-such as:
+We continue to see false positives from -Warray-bounds even in GCC 10,
+which is getting reported in a few places[1] still:
 
-arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
+security/security.c:811:2: warning: ‘memcpy’ offset 32 is out of the bounds [0, 0] [-Warray-bounds]
 
+Lower the GCC version check from 11 to 10.
+
+Reported-by: Lu Yao <yaolu@kylinos.cn>
+Closes: https://lore.kernel.org/lkml/20240117014541.8887-1-yaolu@kylinos.cn/
+Link: https://lore.kernel.org/linux-next/65d84438.620a0220.7d171.81a7@mx.google.com [1]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andreas Larsson <andreas@gaisler.com>
 Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Helge Deller <deller@gmx.de>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: sparclinux@vger.kernel.org
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 ---
- arch/sparc/vdso/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ init/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-index 7f5eedf1f5e0..e8aef2c8ae99 100644
---- a/arch/sparc/vdso/Makefile
-+++ b/arch/sparc/vdso/Makefile
-@@ -2,6 +2,7 @@
- #
- # Building vDSO images for sparc.
- #
-+UBSAN_SANITIZE := n
+diff --git a/init/Kconfig b/init/Kconfig
+index 8d4e836e1b6b..7b352f2943f2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -867,14 +867,14 @@ config CC_IMPLICIT_FALLTHROUGH
+ 	default "-Wimplicit-fallthrough=5" if CC_IS_GCC && $(cc-option,-Wimplicit-fallthrough=5)
+ 	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
  
- # files to link into the vdso
- vobjs-y := vdso-note.o vclock_gettime.o
+-# Currently, disable gcc-11+ array-bounds globally.
++# Currently, disable gcc-10+ array-bounds globally.
+ # It's still broken in gcc-13, so no upper bound yet.
+-config GCC11_NO_ARRAY_BOUNDS
++config GCC10_NO_ARRAY_BOUNDS
+ 	def_bool y
+ 
+ config CC_NO_ARRAY_BOUNDS
+ 	bool
+-	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC11_NO_ARRAY_BOUNDS
++	default y if CC_IS_GCC && GCC_VERSION >= 100000 && GCC10_NO_ARRAY_BOUNDS
+ 
+ # Currently, disable -Wstringop-overflow for GCC 11, globally.
+ config GCC11_NO_STRINGOP_OVERFLOW
 -- 
 2.34.1
 
