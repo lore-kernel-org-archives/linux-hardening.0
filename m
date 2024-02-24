@@ -1,79 +1,60 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay2-1.pub.mailoutpod3-cph3.one.com (mailrelay2-1.pub.mailoutpod3-cph3.one.com [46.30.211.241])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B923D138A
-	for <linux-hardening@vger.kernel.org>; Sat, 24 Feb 2024 01:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A66916429
+	for <linux-hardening@vger.kernel.org>; Sat, 24 Feb 2024 07:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708736486; cv=none; b=PsRTt+tkOIaS2hNBI4IHC9bF7t5ERQ8OY9nUblH8wgsfXfyZs3zLfG942b/iHcqK7Fp9n2bBuWdzRnFOtsnA39gVF7k3MOwNHI8nFO8zUC3Yjv2I29qnK+1P7UXA7oS71BN+bAlfcIk3vjOCYuM5io73HIQY+ww5t6S1ULo9cpk=
+	t=1708760191; cv=none; b=Ld3yO+fLMr1ODlr0AKWjNqhBMU4rxIZ63FysVleIDeygsXdRTMSda5Gy5Ojx9oAxHYVVgPY9XTnrpvGNZ3nGCR62DZIZzFeyCpXiE4TFlMAeNVig6BKGqAOhYcVmNLv3uOXqTx9VnH/xzZ6mCC7nlnLdUJ8V3maAE6zXaVN7zbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708736486; c=relaxed/simple;
-	bh=K+YWxm3ZnA65N6uzvESG36jAKxg1RHhLnGwcPKoEkUo=;
+	s=arc-20240116; t=1708760191; c=relaxed/simple;
+	bh=NBBFFEuDcsu1iPvXO+MDeW9qJLvD+c0z/ZAiy526cCs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhI2IV0hrONAO6lmLsAq1pvL43/pI91maY6Lfzsn7SuS/0W6wnbiWChx2m4TAzFI9vys1BNmApBmNajCeKhVbyNsNYDI9mp4rfCUltPtGvzf0dPd29V3nEarmkEogGbr/64ovZ8yIgasEnku+et/D95ICG5QvwOZDlX0P4RH9fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e8NzR+3F; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=J4nbz0acS4VKbTsP+u9cru6jWpZHahrYSLSvl6fYYVxb/lGaG0IFsggv5LpA1u3tX2YMJ6nzJHUQRdTHhBvGkCvRuskwfJus3lblbmRepChK01uRvCjwEGaMWPGtw7uXcGws+udRenzg6mOWSuEXAYtEOR3kJeo/HYXD3oOeDis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=fvtd4q7a; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=YdSuk4Qh; arc=none smtp.client-ip=46.30.211.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e8NzR+3F"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1322230a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:01:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="fvtd4q7a";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="YdSuk4Qh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708736484; x=1709341284; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DRLwM6QENBYo07bvqNRkIhBVin7jRxajehNcXch+bs4=;
-        b=e8NzR+3FJP72fLHPIUoJZxSd/2svcOlFZjOI9737xBHqIIKFTGC/vqzbkpLtRkHlZB
-         CBhNAUNralXCpV2B4K8ObspOoXMhzMLJKmM3fn9qZImwpokvNvYm5k+gvj2+s2WtQN8U
-         OOwbY3jURKIO4cb1b6Spwc7LcQE7hh1gxN9tA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708736484; x=1709341284;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DRLwM6QENBYo07bvqNRkIhBVin7jRxajehNcXch+bs4=;
-        b=PzEiNGIhfMxygbmaZdmzvKwQjIt4Uabibn3VDjAfrnzVvMfL6N1p6WBH+B/96/UuWS
-         sCSMg0pIrUDElGJzthU7WQuhc8FlFl46awGAmEXLwhccoyLWH2OBxbf/Xri7ZjHHSBy3
-         Lj3z6UGtfh/zOHa+QjP+uyvOE53/2TJGuXPCzgRIbHHq6f+xkPrNuSLf3TKgf9vkH6xU
-         /hpO5p3KseJ4C/s6hYhZIJSOxYMVB0g2YG4wYM8jTTmkW8COM/g9oFKH732Mj9QMlHL0
-         7zOBagVmYz2IwKYQc2QBXfsnFg6iecpLMV5hwMa8W+0XrN2KL2I848BLPYSqXTV7ILwZ
-         rhhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvhxtQABRctWLIzwMk1KMyztWKnIP0ODFTT8xSi4aYUiish5uumYw1z7Fu35o2OO1BM96dtkIJZSrWjJ7bzuHMtxnhYPiHIouGdomiwceG
-X-Gm-Message-State: AOJu0YzRHrFFICKZLZIhvfVYSwzZXxtmJxzvgXJMBETa4JHmxiuCNWAf
-	MmaIfcna7P6xHcyjsOuVp2j5eQFYzrLmfikMj8u1OdyG1dfJlvjT2EX4+MJLfA==
-X-Google-Smtp-Source: AGHT+IEQ/boZR0NbbEtoiMOkLTe3Imh3KOI4GOUbKXTvlWKbMxa6XhC6hM+HIa944+irNktavkW2SA==
-X-Received: by 2002:a05:6a21:8ccc:b0:19e:c777:5c6c with SMTP id ta12-20020a056a218ccc00b0019ec7775c6cmr1727576pzb.19.1708736482583;
-        Fri, 23 Feb 2024 17:01:22 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y5-20020a62b505000000b006e0447d48b0sm90582pfe.23.2024.02.23.17.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 17:01:22 -0800 (PST)
-Date: Fri, 23 Feb 2024 17:01:21 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Kostya Serebryany <kcc@google.com>, Vitaly Buka <vitalybuka@google.com>,
-	glider@google.com, Evgeniy Stepanov <eugenis@google.com>,
-	Daniel Micay <danielmicay@gmail.com>,
+	d=ravnborg.org; s=rsa2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=8GmhWkSF8iRno9ChV3Han0O9GYjagY89c/HUMSM4bRA=;
+	b=fvtd4q7aMKxtlMa0v+LfeBnULgo/aLgQXPrTKU8rvVRUrYswisVUp+T9/W3SBfHgpbgScoNrPQ41d
+	 Nf8NkQ7BdQ6afTGkraVn1W1PTO0EylJYf3gSyEU38D4RJJrEdYUH5ez+h114xN9ywdkCl12w7c8JbH
+	 s/FMnJXw7CT2tAo7VJRU9EyJi/XXjMm4EA1dFDjRpx+ipS/pL9ao5ya853qP8AYdS2HDKIgRdxr2c5
+	 sToo2u4H5A7n//xVGqxEyCISmAbYZSpn3ZSZaPxRy+oaN3myDdujRGAikrfiBlXGKluK3ipzPQ08vm
+	 MP5D0qJMcq4GLlwq1JwLNZwB2pkXPgQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=8GmhWkSF8iRno9ChV3Han0O9GYjagY89c/HUMSM4bRA=;
+	b=YdSuk4QhWqAelZnOC9jnrU87RJ77rjeSszc019nEuhgNE9Sz8ojaC7Lchcgv2ZmTejUDemEwscVxs
+	 VblM+zhBg==
+X-HalOne-ID: 64aa335a-d2e7-11ee-9f80-657348328a86
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay2.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id 64aa335a-d2e7-11ee-9f80-657348328a86;
+	Sat, 24 Feb 2024 07:36:18 +0000 (UTC)
+Date: Sat, 24 Feb 2024 08:36:17 +0100
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Helge Deller <deller@gmx.de>, Guo Ren <guoren@kernel.org>,
+	sparclinux@vger.kernel.org,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will.deacon@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org, Pratyush Anand <panand@redhat.com>,
-	Dong Bo <dongbo4@huawei.com>,
-	Dmitry Safonov <dsafonov@virtuozzo.com>,
-	Rik van Riel <riel@redhat.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Reid Kleckner <rnk@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, address-sanitizer@googlegroups.com
-Subject: Re: [PATCH] mm: Revert x86_64 and arm64 ELF_ET_DYN_BASE base
-Message-ID: <202402231649.086D1A3A@keescook>
-References: <20170807201542.GA21271@beast>
- <202402162238.E5D08F5968@keescook>
- <CACT4Y+ZnNdb1z7oSq0zb3XHFTcdEwSMFvcvLJxm1VrgnpaohMw@mail.gmail.com>
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sparc: vdso: Disable UBSAN instrumentation
+Message-ID: <20240224073617.GA2959352@ravnborg.org>
+References: <20240223165942.work.950-kees@kernel.org>
+ <20240223182646.GA2825372@ravnborg.org>
+ <202402231523.F9E3740EB@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,65 +63,94 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZnNdb1z7oSq0zb3XHFTcdEwSMFvcvLJxm1VrgnpaohMw@mail.gmail.com>
+In-Reply-To: <202402231523.F9E3740EB@keescook>
 
-On Tue, Feb 20, 2024 at 08:47:09AM +0100, Dmitry Vyukov wrote:
-> On Sat, 17 Feb 2024 at 07:50, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > *extreme thread[1] necromancy*
-> >
-> > On Mon, Aug 07, 2017 at 01:15:42PM -0700, Kees Cook wrote:
-> > > Moving the x86_64 and arm64 PIE base from 0x555555554000 to 0x000100000000
-> > > broke AddressSanitizer. This is a partial revert of:
-> > >
-> > >   commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
-> > >   commit 02445990a96e ("arm64: move ELF_ET_DYN_BASE to 4GB / 4MB")
-> > >
-> > > The AddressSanitizer tool has hard-coded expectations about where
-> > > executable mappings are loaded. The motivation for changing the PIE
-> > > base in the above commits was to avoid the Stack-Clash CVEs that
-> > > allowed executable mappings to get too close to heap and stack. This
-> > > was mainly a problem on 32-bit, but the 64-bit bases were moved too,
-> > > in an effort to proactively protect those systems (proofs of concept
-> > > do exist that show 64-bit collisions, but other recent changes to fix
-> > > stack accounting and setuid behaviors will minimize the impact).
-> >
-> > I happened to be looking at this again today, and wondered where things
-> > stood. It seems like ASan's mappings are documented here:
-> > https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm#64-bit
-> >
-> > This implies that it would be safe to move the ELF_ET_DYN_BASE from
-> > 0x555555554000 down to 0x200000000000, since the shadow map ends at
-> > 0x10007fff7fff. (Well, anything above there would work, I was just
-> > picking a "round" number above it. We could just as well use
-> > 0x100080000000, I think.)
-> >
-> > Is this correct? I'd like to open up some more room between mmap and
-> > stack...
+Hi Kees,
 
-Thanks for the details!
-
-> Note that there is also TSAN and MSAN with their own mappings.
-> These are also different per-arch, e.g. TSAN/Linux/x86_64:
-> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L48-L58
-> Search "linux/" in that file for other arches, e.g.:
-> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L156-L165
-> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L187-L196
-> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L218-L227
-> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L252-L263
-
-Depending on VA size, these are effectively all below 0x3800 0000 0000.
-
+On Fri, Feb 23, 2024 at 03:32:37PM -0800, Kees Cook wrote:
+> On Fri, Feb 23, 2024 at 07:26:46PM +0100, Sam Ravnborg wrote:
+> > Hi Kees,
+> > 
+> > On Fri, Feb 23, 2024 at 08:59:45AM -0800, Kees Cook wrote:
+> > > The UBSAN instrumentation cannot work in the vDSO since it is executing
+> > > in userspace, so disable it in the Makefile. Fixes the build failures
+> > > such as:
+> > > 
+> > > arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Andreas Larsson <andreas@gaisler.com>
+> > > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > > Cc: Helge Deller <deller@gmx.de>
+> > > Cc: Guo Ren <guoren@kernel.org>
+> > > Cc: sparclinux@vger.kernel.org
+> > > ---
+> > >  arch/sparc/vdso/Makefile | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
+> > > index 7f5eedf1f5e0..e8aef2c8ae99 100644
+> > > --- a/arch/sparc/vdso/Makefile
+> > > +++ b/arch/sparc/vdso/Makefile
+> > > @@ -2,6 +2,7 @@
+> > >  #
+> > >  # Building vDSO images for sparc.
+> > >  #
+> > > +UBSAN_SANITIZE := n
+> > 
+> > When I read:
+> > 
+> > config UBSAN_SANITIZE_ALL
+> >         bool "Enable instrumentation for the entire kernel"
+> >         depends on ARCH_HAS_UBSAN_SANITIZE_ALL
+> >         default y
+> >         help
+> >           This option activates instrumentation for the entire kernel.
+> >           If you don't enable this option, you have to explicitly specify
+> >           UBSAN_SANITIZE := y for the files/directories you want to check for UB.
+> >           Enabling this option will get kernel image size increased
+> >           significantly.
+> > 
+> > 
+> > I am left with the understanding that only arch's that
+> > selects ARCH_HAS_UBSAN_SANITIZE_ALL would need to turn off
+> > UBSAN_SANITIZE.
 > 
-> And MSAN mappings:
-> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/msan/msan.h#L44-L61
+> Ah, right. So, I removed[1] UBSAN_SANITIZE_ALL in -next (it was the only
+> sanitizer using this logic) and this appears to be one of the impacts. :)
+> I sent similar fixes for sh[2] and LoongArch[3].
+> 
+> > Are this fix papering over some other bug where we enable
+> > UBSAN_SANITIZE_ALL for arch's that should not have it,
+> > or something else that enable it?
+> 
+> It's possible we should implement HAVE_ARCH_UBSAN, but in my testing
+> everything built fine with it, so I didn't opt to do that (it looked
+> like just additional configs for no real benefit). What do you think?
 
-These are all below 0x1000 0000 0000.
+Coffee has not yet kicked in, but...
 
-So there probably isn't much benefit in reducing the PIE program
-position below the current 0x55....
 
-Okay, thanks!
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/kspp&id=918327e9b7ffb45321cbb4b9b86b58ec555fe6b3
 
--- 
-Kees Cook
+OK, I did not have this patch in my tree so it explain the need for the
+patch in this mail. Looking at the linked patch the ARCH_HAS_UBSAN symbol
+is selected by some architecture but I see no use of it. Maybe that is a
+later patch and then all is good.
+
+
+In general I am not fan of naked config symbols (no help / comment) like this:
+config ARCH_HAS_UBSAN
+ 	bool
+
+The reader is left only with the symbol name trying to understand the
+purpose of a symbol that is selected by some architectures.
+But that is a different matter for another day.
+
+As you now put the patch in this mail in context it makes sense and it has my:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+	Sam
