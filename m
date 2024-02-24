@@ -1,127 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D514CE04;
-	Sat, 24 Feb 2024 18:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30C6C2D0;
+	Sat, 24 Feb 2024 21:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708798834; cv=none; b=C7HClWI68Q3JcL/XUcialeue4YpSNBWPjgAY6xWHcGshDW3w3pBguPe9SCAYyJah5aGDf1JzAcGQE+Tv0ZdPalhfF1lMsvoaHEuIYsaDCfktLoZI1wEu0Y+h1LplV+bTXVP+PrrS1SnecstMXeNjTgbsI+x/MRDmtEd0h7dSCzA=
+	t=1708810764; cv=none; b=s+1MhwIIdNVB9VzrM6REWBriUlJPaPqATUmI2P5J1BZ6brNvw+3JT9A8q15iDZ2XWkOdJ7jP0x5tUNFkjafNSowCHrLJ2YaOhEE9iZWumKI3xf1CuQhO3LbBwegsBG56cy60rpY5In7UJks72sxElH+J/f3Lcu2apdhaWk87EGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708798834; c=relaxed/simple;
-	bh=HLdtFuwBDRNLRQYjgEwBZfjetsumFZP9EINs5eu8Ui0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qxlRoVwAQO1HoEPqf/rH3aJKbNOxAmj7EAljzJyMQJa+hURysmf8qNvEauIrfeQqN4DRp0ntlUGSS/9JgDU9urwUPwwAr0KtMm9BJScMeOGOJLePt+EVERfaTp1W5/EmXlDz1JxHZmOWJI3lWWuacyPRxE6tNv5VNjA25v+yvlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=IEP426xT; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1708810764; c=relaxed/simple;
+	bh=Tu9OK29VGpH/7RoDqIIppvvxvciKCRwxT2ehQJXmT5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HtF1mc4xtC4IeWXwAxDDtuXCV4MSwL+byvFiiSh8jmES/2d/3tyNdRxu9sMpISDQLyz/O3W95EjxCzGmkougjn9sOpm7Si6B3J7txl+QoTa+a/hkahWi919IZ48rtpybpX1whHusHGXaBF5H/gSRW6Uxp/mvG0OGCfG35htZWhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaX6G8k2; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="IEP426xT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1708798805; x=1709403605; i=erick.archer@gmx.com;
-	bh=HLdtFuwBDRNLRQYjgEwBZfjetsumFZP9EINs5eu8Ui0=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=IEP426xTmej+7wKw+cfrPlRcwHyTD2bo6IKM9j8f4FRW9IH91ACv+ZZ1oR3ljs8/
-	 jzGmx3XrzB5p21J2sX+RFH2XbY99Ji8EnAMnX+wVs7fNLy25JjsA09DAIoYOx2ge0
-	 z67MXv0gRBZhaq2tJjVTIeA3YNcACLUjmpnuKNAQpGAvQ0IYwBm+fW/Dt395Th5M2
-	 0vl+c565fUx5qBgLxOpU3glRVvsS7UrIVxOSqfufnbf1fwBqcJhgMz1dltAmbKJbr
-	 k4NAwiyp5iAXL/cFjXQzEXIcbeWD/8QO9NKBkqOTooOHrwh0FoI+6XPTtC5LfkmcE
-	 4OKqJ3OJdITMBpYLNw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1Mzyuc-1qjUQ638qs-00wzVL; Sat, 24 Feb 2024 19:20:05 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
-	Chiranjeevi Rapolu <chiranjeevi.rapolu@linux.intel.com>,
-	Liu Haijun <haijun.liu@mediatek.com>,
-	M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
-	Ricardo Martinez <ricardo.martinez@linux.intel.com>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] net: wwan: t7xx: Prefer struct_size over open coded arithmetic
-Date: Sat, 24 Feb 2024 19:19:32 +0100
-Message-Id: <20240224181932.2720-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaX6G8k2"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33da51fd636so1202016f8f.3;
+        Sat, 24 Feb 2024 13:39:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708810761; x=1709415561; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DkdGdhFoc0akFM5OFRz9BIUNFYP570NY+QU/9XQ+PN4=;
+        b=MaX6G8k2PaZ9wKEn1jDcQEeQYWRKqQtSGVQH8ugWWi1A4Qq/trSEx5rjW6/TFiwuHz
+         VPwBgaf1wOetj7qbvj3KFcTjS3oaoa/0ZU7nRx3zeCdL40kKpwOSFrT2aBCgYG58ZKBY
+         dAbthhLMBsNux4cBF+0R49gqRgchQ/ESn0HtsZp+5w34b3+UBEI4gbLB9el5U4MIeYgp
+         NKWrtDwlqBDaYVtbRjtIBFh4i9+SjXkIM3+dMRassVnkA62ds4Y87zXCba2r2oQU+9LY
+         1MDI9KURF5rdqFtpuNsRx/j2bpG2dqPggCR/b3zDlf3TzcQA0ZNNo+i3KUykTgMlaWQo
+         vpXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708810761; x=1709415561;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DkdGdhFoc0akFM5OFRz9BIUNFYP570NY+QU/9XQ+PN4=;
+        b=heZ1PpqWKz6dZpARjRrmxPVXe7DN0otYlPEOsVzV80wLRNE3GX8Ju7DZke4HcIoMn+
+         iGXKiLe191IPnsRPJ4wQ1NLgs6YfBnPuPIYVKeg1XtkySuN1it3T/Evou8YATlfKmyis
+         rrjegLHRFRCRWR3gPiTIUVRHZUd4eRVXy/CtAz1S0adEEsiOh/bQeOCS1yjY8d0YiUi+
+         nueg7En9SzFttX01KJ7lD994cWZQLaVVV1WCniHkh1quM3AndPVOM2v//gdhIDA6DqQz
+         5lnbE3T6KfowyzEW+nfNiDbOlEl2kEeGr5WaxLt1Pyk1H5Ec0mGU7qmG9AoSo2UK0oz6
+         QDmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIpB+bWXDFYY0QZl2iRRZ2yeo+fUft2KqjwfR0woXR428IDrwSCYzS4ZDdSOoh9GarQ7rjT4MRZ96bhvc0gMuhQVCZkEs1tw3b7QHGiocYGLYuzt9Fsc1egu2TNiALJX+pA3rSCuFgampJh6Wq
+X-Gm-Message-State: AOJu0YxxdEBC6h2PlqPkm02Y/jiMCoeqtKlm/i+EH7nMDeQ8D9XB1OFJ
+	mau/8JUrPp7FiUESuiZh6CQSjOA5tA/bNFsFsQxTm24yZAazeO5k
+X-Google-Smtp-Source: AGHT+IGKhvrP5vmS7jSBHkidmWWgYtbYT6cKOJlGMZk3qh7TyfIvHiiBl6iNO1h7JSeMCU2HYMI4OQ==
+X-Received: by 2002:adf:e284:0:b0:33a:eb25:31a2 with SMTP id v4-20020adfe284000000b0033aeb2531a2mr2396019wri.67.1708810760877;
+        Sat, 24 Feb 2024 13:39:20 -0800 (PST)
+Received: from [192.168.0.2] ([69.6.8.124])
+        by smtp.gmail.com with ESMTPSA id k2-20020a5d6d42000000b0033b79d385f6sm3190973wri.47.2024.02.24.13.39.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Feb 2024 13:39:20 -0800 (PST)
+Message-ID: <81dc43d9-1a65-4cf3-967c-9ee3458de26a@gmail.com>
+Date: Sat, 24 Feb 2024 23:39:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Zqwqz6nr2f2W88YDtxj5s173lC+WL8Q3S4fkpDNb1BxCayF7w1B
- hiCsPIspmSeo9iD2LNzgyOJJHCXzOZK9RUcL/lcMGu3szbUEieZxyCk7aITHWPn7rAqhg5T
- XMbRQYVfUl73uwaX3hZiEp9ssE/TFiYTLsCvjHa9X7FnAK3/MR5hXC2FrIpTIL7SH9uIvZX
- x6DXFyrAcH//mveWSeAMQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:H68dJOmZMmY=;ChL+qRCgvBIQRtWHzfugkT2SI+x
- +Oi5d92008y1yW13c9DyKvLTBUnq8BrfHQxxe4JNI3mdQv3/A6xOPpkdibF5VA3UzCusMrVKp
- zyCD9mgiwg9b6J5nntqh2zG0U3qvfWGehEFhfpKb6KR106FlFfFh/QOtolxgv44VOD5amdtFU
- DxoEEqDnC9rhmLI+BblRg+ndf/8KF8NCvlmuSpRYlGiB/4towQTW4cBmMzf1iCmMOenzkClIo
- +xcZEnxGcaN/kcYqYu7sQXHjBiPqVYXFGlst2TbuX4tN16RIoufpiuEb6O6OvgMAYEj8IfqtA
- SIVdkuLcsw/MMIsO6LRS6SPprEGJ/XBzWmjnhBrYrJ9sfhrvlvuUUWik3Ez/hvNdb1IUKrda8
- FdPQ3Ll0jS3MgCiehwqX+7URUqirCX27rHv2447iD4gV7WIeie6PUo2H8aqNs5ccV0XErA700
- I0NFCSCKj3E8MKQSmKv/ahbtjjFLcn3nwMi+vDPW4Cwrxdk3chqIv37pWsqeHl9sffEm2diZ3
- 3zI26HBTz/i8jWm/V2us69meMXliDX7s6yDSU3vPOR2xtxxAlR3GM0Nvt0x8XU08ezOEmBuN4
- sYVAySeTgDD+DpHh8vjTff84tfABOXYogOLfFsPBSOnh6jmV3owJCScKfndCeatsurWkRloW4
- kuvWTlMi6LxB1wJGnFlD4GstSHVaiYFYbGyChZ46yV6N+CYFs/Q8AXnnOCkdAoO5Vkfrb7/+E
- wrBaV2fyfF2Z+r+zf3k3kY34l8bp+RcU6wrxQOOttNoJ/upP38pvBe3BNXNQyVGWlD19YO7N/
- qsK5qexm6Y6XWfZcqex7o4fysVoq7JLhrF63tUdBRLxcY=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: wwan: t7xx: Prefer struct_size over open coded
+ arithmetic
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>,
+ Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
+ Chiranjeevi Rapolu <chiranjeevi.rapolu@linux.intel.com>,
+ Liu Haijun <haijun.liu@mediatek.com>,
+ M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
+ Ricardo Martinez <ricardo.martinez@linux.intel.com>,
+ Loic Poulain <loic.poulain@linaro.org>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <keescook@chromium.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240224181932.2720-1-erick.archer@gmx.com>
+From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+In-Reply-To: <20240224181932.2720-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1][2].
+On 24.02.2024 20:19, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+> 
+> As the "port_prox" variable is a pointer to "struct port_proxy" and
+> this structure ends in a flexible array:
+> 
+> struct port_proxy {
+> 	[...]
+> 	struct t7xx_port ports[];
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the argument "size + size * count" in the
+> devm_kzalloc() function.
+> 
+> This way, the code is more readable and safer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> 
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-As the "port_prox" variable is a pointer to "struct port_proxy" and
-this structure ends in a flexible array:
-
-struct port_proxy {
-	[...]
-	struct t7xx_port ports[];
-};
-
-the preferred way in the kernel is to use the struct_size() helper to
-do the arithmetic instead of the argument "size + size * count" in the
-devm_kzalloc() function.
-
-This way, the code is more readable and safer.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
-coded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/160 [2]
-
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- drivers/net/wwan/t7xx/t7xx_port_proxy.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wwan/t7xx/t7xx_port_proxy.c b/drivers/net/wwan/t7=
-xx/t7xx_port_proxy.c
-index 8f5e01705af2..7d6388bf1d7c 100644
-=2D-- a/drivers/net/wwan/t7xx/t7xx_port_proxy.c
-+++ b/drivers/net/wwan/t7xx/t7xx_port_proxy.c
-@@ -543,8 +543,10 @@ static int t7xx_proxy_alloc(struct t7xx_modem *md)
- 	struct device *dev =3D &md->t7xx_dev->pdev->dev;
- 	struct port_proxy *port_prox;
-
--	port_prox =3D devm_kzalloc(dev, sizeof(*port_prox) +
--				 sizeof(struct t7xx_port) * T7XX_MAX_POSSIBLE_PORTS_NUM,
-+	port_prox =3D devm_kzalloc(dev,
-+				 struct_size(port_prox,
-+					     ports,
-+					     T7XX_MAX_POSSIBLE_PORTS_NUM),
- 				 GFP_KERNEL);
- 	if (!port_prox)
- 		return -ENOMEM;
-=2D-
-2.25.1
-
+Reviewed-by: Sergey Ryazanov <ryazanov.s.a@gmail.com>
