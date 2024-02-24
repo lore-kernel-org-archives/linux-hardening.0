@@ -1,83 +1,79 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260FE64D
-	for <linux-hardening@vger.kernel.org>; Sat, 24 Feb 2024 00:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B923D138A
+	for <linux-hardening@vger.kernel.org>; Sat, 24 Feb 2024 01:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708734470; cv=none; b=FhH013kB0afDClb72cgmeYJTU98s+pQh/Jr2xmx3RA1i4q4vf+SSkOtNWkoJyrRoogZ4QRkgPNf7/00WpFEfvq3GHHnr86lo7z9p9+LiyYrB2jo5in0xA8tqeS97LtR1fR5RjQuEg2QzXST0VVQyfblht6EwMEYCR23GI00Wdow=
+	t=1708736486; cv=none; b=PsRTt+tkOIaS2hNBI4IHC9bF7t5ERQ8OY9nUblH8wgsfXfyZs3zLfG942b/iHcqK7Fp9n2bBuWdzRnFOtsnA39gVF7k3MOwNHI8nFO8zUC3Yjv2I29qnK+1P7UXA7oS71BN+bAlfcIk3vjOCYuM5io73HIQY+ww5t6S1ULo9cpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708734470; c=relaxed/simple;
-	bh=rgLsaSsKqhDN11XXsl7SBz4QYb2l1KqGudDgv2mpG/k=;
+	s=arc-20240116; t=1708736486; c=relaxed/simple;
+	bh=K+YWxm3ZnA65N6uzvESG36jAKxg1RHhLnGwcPKoEkUo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otPeFsNHsNUIu+xs2/NIhFMY+/B+THMwbmyvb0J74iMFXh4ZFzjV8dtHSSfiTTa54c2bq6ypRahfBFy+38n49pDlSyglKCPC2J7xgB4uzevj+Jf5CnufAoaKFegRlG2sl44tafi+9NRu+ENxdZ0tgGibwuHOPp1Xi2YaiY7+yjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ehFNujYN; arc=none smtp.client-ip=209.85.210.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhI2IV0hrONAO6lmLsAq1pvL43/pI91maY6Lfzsn7SuS/0W6wnbiWChx2m4TAzFI9vys1BNmApBmNajCeKhVbyNsNYDI9mp4rfCUltPtGvzf0dPd29V3nEarmkEogGbr/64ovZ8yIgasEnku+et/D95ICG5QvwOZDlX0P4RH9fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e8NzR+3F; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ehFNujYN"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e47a104c2eso979690b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 16:27:48 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e8NzR+3F"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d8b519e438so1322230a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Feb 2024 17:01:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708734468; x=1709339268; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708736484; x=1709341284; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jX3JXs6F7q/8BnIOexrzyzqfCwNhMyVCMGgfEA4FEVs=;
-        b=ehFNujYNUw3vhiNrJtlQMyBFPNIHICaRgZdOV1wntnBywWgca0H/TZouUgBS3ckXpq
-         Sj1HGsAQ1PdUgzyzgsZ+mCWP52fSxnjYDAQQf2a0/F1XRd7J64HdLFetNXg63fK0PXQt
-         m8FrqMWptR0pAN/sn0PURDEYG7BuC0snf7Cqs=
+        bh=DRLwM6QENBYo07bvqNRkIhBVin7jRxajehNcXch+bs4=;
+        b=e8NzR+3FJP72fLHPIUoJZxSd/2svcOlFZjOI9737xBHqIIKFTGC/vqzbkpLtRkHlZB
+         CBhNAUNralXCpV2B4K8ObspOoXMhzMLJKmM3fn9qZImwpokvNvYm5k+gvj2+s2WtQN8U
+         OOwbY3jURKIO4cb1b6Spwc7LcQE7hh1gxN9tA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708734468; x=1709339268;
+        d=1e100.net; s=20230601; t=1708736484; x=1709341284;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jX3JXs6F7q/8BnIOexrzyzqfCwNhMyVCMGgfEA4FEVs=;
-        b=jjt551ZWqQTyG7AXNAI9L6ieBRb5hJWlBHIJK/fqjjp/O56f4nBSOOYK4IGwanC2Gm
-         FAk0tXJLlUUN5SH+nw750GBx1ESHZ8q1e5PkrAeBM5zEGEG1WidXQyHFsndjb14Nx54H
-         RpeyauPnF2/cG/pucLLpwaFL6uEeAzoUISl/F916ZwiOfuX9tjpTWrl9U2svRH6a8hcH
-         NtrxNNBiLgCYuKXiOLonubOS/I1zKI754OB8/32OB/x01WC1cLG5JDn9EicG+3zXCJ0Q
-         WPGDQxXtSm46AQSt1idMP5G6rF84/R9g1agwboqN115tPxxuN+saOwPWPGdp8AfEbBy9
-         xQeA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+CG3Yy6sl4UU7/cvj6E+36lzZqrMVxm3kvsk0msanw2J7M8dhSC/RMUnITtk/0BJwwyYwdwke1Y2TC7TgNWCUpoDtfBL7OLCmMxWx3GL8
-X-Gm-Message-State: AOJu0Yw9oR2dqK4opV/VM/oscAqjb2P55CBYOK2A3E5rKXTRgdGJ9iN+
-	HekGNlhlp/+liKk8FEYgDWK83eA3Kfz3mMpj4JWmJA4VJqP3oi8FIjcLs/8LNg==
-X-Google-Smtp-Source: AGHT+IETT3HwnaAs3jTQFeXYPTU7J+2asNMwkklPlBU3DazlDcRsrwOBcFqTj0a/gtB9u0fJzAsU6A==
-X-Received: by 2002:a05:6a20:8f95:b0:1a0:566a:5974 with SMTP id k21-20020a056a208f9500b001a0566a5974mr1427284pzj.61.1708734468509;
-        Fri, 23 Feb 2024 16:27:48 -0800 (PST)
+        bh=DRLwM6QENBYo07bvqNRkIhBVin7jRxajehNcXch+bs4=;
+        b=PzEiNGIhfMxygbmaZdmzvKwQjIt4Uabibn3VDjAfrnzVvMfL6N1p6WBH+B/96/UuWS
+         sCSMg0pIrUDElGJzthU7WQuhc8FlFl46awGAmEXLwhccoyLWH2OBxbf/Xri7ZjHHSBy3
+         Lj3z6UGtfh/zOHa+QjP+uyvOE53/2TJGuXPCzgRIbHHq6f+xkPrNuSLf3TKgf9vkH6xU
+         /hpO5p3KseJ4C/s6hYhZIJSOxYMVB0g2YG4wYM8jTTmkW8COM/g9oFKH732Mj9QMlHL0
+         7zOBagVmYz2IwKYQc2QBXfsnFg6iecpLMV5hwMa8W+0XrN2KL2I848BLPYSqXTV7ILwZ
+         rhhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvhxtQABRctWLIzwMk1KMyztWKnIP0ODFTT8xSi4aYUiish5uumYw1z7Fu35o2OO1BM96dtkIJZSrWjJ7bzuHMtxnhYPiHIouGdomiwceG
+X-Gm-Message-State: AOJu0YzRHrFFICKZLZIhvfVYSwzZXxtmJxzvgXJMBETa4JHmxiuCNWAf
+	MmaIfcna7P6xHcyjsOuVp2j5eQFYzrLmfikMj8u1OdyG1dfJlvjT2EX4+MJLfA==
+X-Google-Smtp-Source: AGHT+IEQ/boZR0NbbEtoiMOkLTe3Imh3KOI4GOUbKXTvlWKbMxa6XhC6hM+HIa944+irNktavkW2SA==
+X-Received: by 2002:a05:6a21:8ccc:b0:19e:c777:5c6c with SMTP id ta12-20020a056a218ccc00b0019ec7775c6cmr1727576pzb.19.1708736482583;
+        Fri, 23 Feb 2024 17:01:22 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lp16-20020a056a003d5000b006e4c7aa0ba4sm58482pfb.182.2024.02.23.16.27.48
+        by smtp.gmail.com with ESMTPSA id y5-20020a62b505000000b006e0447d48b0sm90582pfe.23.2024.02.23.17.01.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 16:27:48 -0800 (PST)
-Date: Fri, 23 Feb 2024 16:27:47 -0800
+        Fri, 23 Feb 2024 17:01:22 -0800 (PST)
+Date: Fri, 23 Feb 2024 17:01:21 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	Ariel Elior <aelior@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saurav Kashyap <skashyap@marvell.com>,
-	Javed Hasan <jhasan@marvell.com>,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	Nilesh Javali <njavali@marvell.com>,
-	Manish Rangankar <mrangankar@marvell.com>,
-	Don Brace <don.brace@microchip.com>,
-	mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	MPT-FusionLinux.pdl@broadcom.com, netdev@vger.kernel.org,
-	storagedev@microchip.com
-Subject: Re: [PATCH 6/7] scsi: smartpqi: replace deprecated strncpy with
- strscpy
-Message-ID: <202402231627.13E27D4@keescook>
-References: <20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com>
- <20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-6-9cd3882f0700@google.com>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Kostya Serebryany <kcc@google.com>, Vitaly Buka <vitalybuka@google.com>,
+	glider@google.com, Evgeniy Stepanov <eugenis@google.com>,
+	Daniel Micay <danielmicay@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will.deacon@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org, Pratyush Anand <panand@redhat.com>,
+	Dong Bo <dongbo4@huawei.com>,
+	Dmitry Safonov <dsafonov@virtuozzo.com>,
+	Rik van Riel <riel@redhat.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Reid Kleckner <rnk@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Collingbourne <pcc@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, address-sanitizer@googlegroups.com
+Subject: Re: [PATCH] mm: Revert x86_64 and arm64 ELF_ET_DYN_BASE base
+Message-ID: <202402231649.086D1A3A@keescook>
+References: <20170807201542.GA21271@beast>
+ <202402162238.E5D08F5968@keescook>
+ <CACT4Y+ZnNdb1z7oSq0zb3XHFTcdEwSMFvcvLJxm1VrgnpaohMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,24 +82,65 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-6-9cd3882f0700@google.com>
+In-Reply-To: <CACT4Y+ZnNdb1z7oSq0zb3XHFTcdEwSMFvcvLJxm1VrgnpaohMw@mail.gmail.com>
 
-On Fri, Feb 23, 2024 at 10:23:11PM +0000, Justin Stitt wrote:
-> buffer->driver_version is sized 32:
-> |	struct bmic_host_wellness_driver_version {
-> |	...
-> |		char	driver_version[32];
-> ... the source string "Linux " + DRIVER_VERISON is sized at 16. There's
-> really no bug in the existing code since the buffers are sized
-> appropriately with great care taken to manually NUL-terminate the
-> destination buffer. Nonetheless, let's make the swap over to strscpy()
-> for robustness' (and readability's) sake.
+On Tue, Feb 20, 2024 at 08:47:09AM +0100, Dmitry Vyukov wrote:
+> On Sat, 17 Feb 2024 at 07:50, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > *extreme thread[1] necromancy*
+> >
+> > On Mon, Aug 07, 2017 at 01:15:42PM -0700, Kees Cook wrote:
+> > > Moving the x86_64 and arm64 PIE base from 0x555555554000 to 0x000100000000
+> > > broke AddressSanitizer. This is a partial revert of:
+> > >
+> > >   commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
+> > >   commit 02445990a96e ("arm64: move ELF_ET_DYN_BASE to 4GB / 4MB")
+> > >
+> > > The AddressSanitizer tool has hard-coded expectations about where
+> > > executable mappings are loaded. The motivation for changing the PIE
+> > > base in the above commits was to avoid the Stack-Clash CVEs that
+> > > allowed executable mappings to get too close to heap and stack. This
+> > > was mainly a problem on 32-bit, but the 64-bit bases were moved too,
+> > > in an effort to proactively protect those systems (proofs of concept
+> > > do exist that show 64-bit collisions, but other recent changes to fix
+> > > stack accounting and setuid behaviors will minimize the impact).
+> >
+> > I happened to be looking at this again today, and wondered where things
+> > stood. It seems like ASan's mappings are documented here:
+> > https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm#64-bit
+> >
+> > This implies that it would be safe to move the ELF_ET_DYN_BASE from
+> > 0x555555554000 down to 0x200000000000, since the shadow map ends at
+> > 0x10007fff7fff. (Well, anything above there would work, I was just
+> > picking a "round" number above it. We could just as well use
+> > 0x100080000000, I think.)
+> >
+> > Is this correct? I'd like to open up some more room between mmap and
+> > stack...
+
+Thanks for the details!
+
+> Note that there is also TSAN and MSAN with their own mappings.
+> These are also different per-arch, e.g. TSAN/Linux/x86_64:
+> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L48-L58
+> Search "linux/" in that file for other arches, e.g.:
+> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L156-L165
+> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L187-L196
+> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L218-L227
+> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/tsan/rtl/tsan_platform.h#L252-L263
+
+Depending on VA size, these are effectively all below 0x3800 0000 0000.
+
 > 
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> And MSAN mappings:
+> https://github.com/llvm/llvm-project/blob/d2a26a7bd5fc7cc5752337b7f4f999642feb37dc/compiler-rt/lib/msan/msan.h#L44-L61
 
-Yup, good cleanup.
+These are all below 0x1000 0000 0000.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+So there probably isn't much benefit in reducing the PIE program
+position below the current 0x55....
+
+Okay, thanks!
 
 -- 
 Kees Cook
