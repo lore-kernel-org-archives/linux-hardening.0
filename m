@@ -1,57 +1,96 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B110F4
-	for <linux-hardening@vger.kernel.org>; Sun, 25 Feb 2024 00:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6473CD528;
+	Sun, 25 Feb 2024 12:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708822349; cv=none; b=lxHrsUkja3djMHQ42TYfU0USuE4X5iW9c6qxMZcEfAEljOycZLm3T4QASlSWEXgjg94F6B+RjSHiQIL/vYvvwQTgyppBBL4H9Y0i2cs8tTU1i2/TMXQQ52O3f9pEZjnC290J/5nGv1Nsib7X1OnRVR8M9fZuZHWaUy3/8eUF6wM=
+	t=1708863272; cv=none; b=FhCxRZ5CX/H58VVnF3y3LmcExjuXxdtOr4XNuh63VrSVSZoWjIF+OXR6Ugm7Kco9g4QRj/RrVStAJ+FtQIlTFsq2iS0QpJDZDqX1ysqB/AttzEJ3skjHeTosvu5A4VV+Gm0hSkslSpa2b+tmiS8fyqDeeqHv7MiV0UXLnirNNmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708822349; c=relaxed/simple;
-	bh=ftZtns3qGmb9r2WveXongU4udenzPbV4fOt/bbe+hF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GAZQmr+Q9GmBOG4IH5lDWgbDBGfjxvm+Qy2BDfg8FTUTmfzLwBi+ePuo4OxmMpKVDY8WbSWuIua2o2zcaqjZ8yvVcolRKXkUwLFmZgrVKVPup+zp2Y/xEufgQK44dEyLeaS0GjfotZoFBg5kZOeaG7XxiOlvDzvryMGn19o5mT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wjSOZ0LU; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708863272; c=relaxed/simple;
+	bh=lYRiH0WxZt/e65XgOHzmCpT7ziP+FDLeHqqPGpHDKWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t8Eku5dP4/3sSw4m1uh0jnVJG6PeRPLgay0zq2+1OVRi2hOhI/xW8jakuWzqivNMdf9hvPfxxB+zqWNt7Vy99kC0VnOVNUTHH4aAzewX35HlEd+m/XhTmB8+fgANbdOx07H8r09XigWLQ2I4pvEhtTj8UBFZKd7hh4Z/PfL6Fxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAqHxAmn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wjSOZ0LU"
-Date: Sat, 24 Feb 2024 19:52:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708822344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6C+8ude/+IwsBnI5QizZR0SvU1w8AEuhKPokRHqFkIg=;
-	b=wjSOZ0LUZGu35THtDakv4UCym4yNrece0LcspfXPSsh3m+TTxh0zFDkrhEBRRv9Da+CSuU
-	YKcHZ+vhClBiXU8LANlMPV/ipp+xI2J1fYOYFTZw2ihOy6ahBhVi6VE4cafp+NCmBFltXp
-	ElO5vHtIjYRWcc7+TRIYg6LiStB91Rw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Brian Foster <bfoster@redhat.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: Prefer struct_size over open coded arithmetic
-Message-ID: <2ysy6s2on7ae24j7tiwpwp6vp33gqvn2apqhprnvip6lzqxdao@p73c3ukzvcjd>
-References: <20240224151658.8272-1-erick.archer@gmx.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAqHxAmn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FF5C433C7;
+	Sun, 25 Feb 2024 12:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708863271;
+	bh=lYRiH0WxZt/e65XgOHzmCpT7ziP+FDLeHqqPGpHDKWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lAqHxAmnwX+wQgFgMmo/WoutOetPW7LfjA51qEu/bIinx7PuGe4QFMBtzZ2pli1qe
+	 tCy69NXBD6bc06eLQCHF6upiWLbgyzUIq7Bc/rmxt8y/OrsDt2d/1Gbfas5NeMWXjq
+	 HtGzbG2er9uxpYTo8P8gzNrkj8dSRihiS35BEfYNMpCI3vK3un9emf/E9hTs2u/3Xu
+	 Jv+zllXJaSr0mtf72QAbYRbfK33P2eHSfNS2on2Kog45f0U6GsxTLtQYtCvkLVGUji
+	 Q2efWsaJGetOV5qclliApd73zJV/eNKvSZosBdavPMO39huBNmr5twTc3UpoVQNcrx
+	 UTJhqxwGiDHFw==
+Date: Sun, 25 Feb 2024 12:14:15 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@pengutronix.de>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, linux-iio@vger.kernel.org, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ llvm@lists.linux.dev, Tomislav Denis <tomislav.denis@avl.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] iio: pressure: dlhl60d: Initialize empty DLH bytes
+Message-ID: <20240225121415.273ec110@jic23-huawei>
+In-Reply-To: <202402230949.E06F3297@keescook>
+References: <20240223172936.it.875-kees@kernel.org>
+	<ZdjaOLVd1yxNXhsp@smile.fi.intel.com>
+	<202402230949.E06F3297@keescook>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224151658.8272-1-erick.archer@gmx.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 24, 2024 at 04:16:58PM +0100, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
+On Fri, 23 Feb 2024 09:50:10 -0800
+Kees Cook <keescook@chromium.org> wrote:
+
+> On Fri, Feb 23, 2024 at 07:47:36PM +0200, Andy Shevchenko wrote:
+> > On Fri, Feb 23, 2024 at 09:29:39AM -0800, Kees Cook wrote:  
+> > > 3 bytes were being read but 4 were being written. Explicitly initialize
+> > > the unused bytes to 0 and refactor the loop to use direct array
+> > > indexing, which appears to silence a Clang false positive warning[1].  
+> > 
+> > ...
+> >   
+> > >  	for_each_set_bit(chn, indio_dev->active_scan_mask,
+> > > -		indio_dev->masklength) {
+> > > -		memcpy(tmp_buf + i,
+> > > +			 indio_dev->masklength) {
+> > > +		memcpy(&tmp_buf[i++],
+> > >  			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
+> > >  			DLH_NUM_DATA_BYTES);
+> > > -		i++;
+> > >  	}  
+> > 
+> > Not that I'm against the changes, but they (in accordance with the commit
+> > message) are irrelevant to this fix. I prefer fixes to be more focused on
+> > the real issues.  
 > 
-> As the "t" variable is a pointer to "struct journal_seq_blacklist_table"
-> and this structure ends in a flexible array:
+> Jonathan, let me know if you'd prefer I split this patch...
+> 
+Andy is strictly speaking correct that the indent should be separate patch
+but meh - not worth the time to split that out + the change makes the
+fixed code itself easier to read. 
 
-there's no reason to break these out into multiple patches, just send me
-a single patch when you're done - thanks!
+I added a tiny comment to say it the indent tidying up was incorporated
+so the fixed code was more readable.
+
+Applied to the fixes-togreg branch of iio.git and marked for stable.
+
+Given timing this may well go in during the merge window rather than
+before.
+
+Jonathan
+
