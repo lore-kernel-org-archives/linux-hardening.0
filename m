@@ -1,110 +1,57 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30C6C2D0;
-	Sat, 24 Feb 2024 21:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B110F4
+	for <linux-hardening@vger.kernel.org>; Sun, 25 Feb 2024 00:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810764; cv=none; b=s+1MhwIIdNVB9VzrM6REWBriUlJPaPqATUmI2P5J1BZ6brNvw+3JT9A8q15iDZ2XWkOdJ7jP0x5tUNFkjafNSowCHrLJ2YaOhEE9iZWumKI3xf1CuQhO3LbBwegsBG56cy60rpY5In7UJks72sxElH+J/f3Lcu2apdhaWk87EGs=
+	t=1708822349; cv=none; b=lxHrsUkja3djMHQ42TYfU0USuE4X5iW9c6qxMZcEfAEljOycZLm3T4QASlSWEXgjg94F6B+RjSHiQIL/vYvvwQTgyppBBL4H9Y0i2cs8tTU1i2/TMXQQ52O3f9pEZjnC290J/5nGv1Nsib7X1OnRVR8M9fZuZHWaUy3/8eUF6wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708810764; c=relaxed/simple;
-	bh=Tu9OK29VGpH/7RoDqIIppvvxvciKCRwxT2ehQJXmT5o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HtF1mc4xtC4IeWXwAxDDtuXCV4MSwL+byvFiiSh8jmES/2d/3tyNdRxu9sMpISDQLyz/O3W95EjxCzGmkougjn9sOpm7Si6B3J7txl+QoTa+a/hkahWi919IZ48rtpybpX1whHusHGXaBF5H/gSRW6Uxp/mvG0OGCfG35htZWhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaX6G8k2; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708822349; c=relaxed/simple;
+	bh=ftZtns3qGmb9r2WveXongU4udenzPbV4fOt/bbe+hF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GAZQmr+Q9GmBOG4IH5lDWgbDBGfjxvm+Qy2BDfg8FTUTmfzLwBi+ePuo4OxmMpKVDY8WbSWuIua2o2zcaqjZ8yvVcolRKXkUwLFmZgrVKVPup+zp2Y/xEufgQK44dEyLeaS0GjfotZoFBg5kZOeaG7XxiOlvDzvryMGn19o5mT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wjSOZ0LU; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaX6G8k2"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33da51fd636so1202016f8f.3;
-        Sat, 24 Feb 2024 13:39:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708810761; x=1709415561; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DkdGdhFoc0akFM5OFRz9BIUNFYP570NY+QU/9XQ+PN4=;
-        b=MaX6G8k2PaZ9wKEn1jDcQEeQYWRKqQtSGVQH8ugWWi1A4Qq/trSEx5rjW6/TFiwuHz
-         VPwBgaf1wOetj7qbvj3KFcTjS3oaoa/0ZU7nRx3zeCdL40kKpwOSFrT2aBCgYG58ZKBY
-         dAbthhLMBsNux4cBF+0R49gqRgchQ/ESn0HtsZp+5w34b3+UBEI4gbLB9el5U4MIeYgp
-         NKWrtDwlqBDaYVtbRjtIBFh4i9+SjXkIM3+dMRassVnkA62ds4Y87zXCba2r2oQU+9LY
-         1MDI9KURF5rdqFtpuNsRx/j2bpG2dqPggCR/b3zDlf3TzcQA0ZNNo+i3KUykTgMlaWQo
-         vpXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708810761; x=1709415561;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkdGdhFoc0akFM5OFRz9BIUNFYP570NY+QU/9XQ+PN4=;
-        b=heZ1PpqWKz6dZpARjRrmxPVXe7DN0otYlPEOsVzV80wLRNE3GX8Ju7DZke4HcIoMn+
-         iGXKiLe191IPnsRPJ4wQ1NLgs6YfBnPuPIYVKeg1XtkySuN1it3T/Evou8YATlfKmyis
-         rrjegLHRFRCRWR3gPiTIUVRHZUd4eRVXy/CtAz1S0adEEsiOh/bQeOCS1yjY8d0YiUi+
-         nueg7En9SzFttX01KJ7lD994cWZQLaVVV1WCniHkh1quM3AndPVOM2v//gdhIDA6DqQz
-         5lnbE3T6KfowyzEW+nfNiDbOlEl2kEeGr5WaxLt1Pyk1H5Ec0mGU7qmG9AoSo2UK0oz6
-         QDmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIpB+bWXDFYY0QZl2iRRZ2yeo+fUft2KqjwfR0woXR428IDrwSCYzS4ZDdSOoh9GarQ7rjT4MRZ96bhvc0gMuhQVCZkEs1tw3b7QHGiocYGLYuzt9Fsc1egu2TNiALJX+pA3rSCuFgampJh6Wq
-X-Gm-Message-State: AOJu0YxxdEBC6h2PlqPkm02Y/jiMCoeqtKlm/i+EH7nMDeQ8D9XB1OFJ
-	mau/8JUrPp7FiUESuiZh6CQSjOA5tA/bNFsFsQxTm24yZAazeO5k
-X-Google-Smtp-Source: AGHT+IGKhvrP5vmS7jSBHkidmWWgYtbYT6cKOJlGMZk3qh7TyfIvHiiBl6iNO1h7JSeMCU2HYMI4OQ==
-X-Received: by 2002:adf:e284:0:b0:33a:eb25:31a2 with SMTP id v4-20020adfe284000000b0033aeb2531a2mr2396019wri.67.1708810760877;
-        Sat, 24 Feb 2024 13:39:20 -0800 (PST)
-Received: from [192.168.0.2] ([69.6.8.124])
-        by smtp.gmail.com with ESMTPSA id k2-20020a5d6d42000000b0033b79d385f6sm3190973wri.47.2024.02.24.13.39.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Feb 2024 13:39:20 -0800 (PST)
-Message-ID: <81dc43d9-1a65-4cf3-967c-9ee3458de26a@gmail.com>
-Date: Sat, 24 Feb 2024 23:39:22 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wjSOZ0LU"
+Date: Sat, 24 Feb 2024 19:52:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708822344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6C+8ude/+IwsBnI5QizZR0SvU1w8AEuhKPokRHqFkIg=;
+	b=wjSOZ0LUZGu35THtDakv4UCym4yNrece0LcspfXPSsh3m+TTxh0zFDkrhEBRRv9Da+CSuU
+	YKcHZ+vhClBiXU8LANlMPV/ipp+xI2J1fYOYFTZw2ihOy6ahBhVi6VE4cafp+NCmBFltXp
+	ElO5vHtIjYRWcc7+TRIYg6LiStB91Rw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Brian Foster <bfoster@redhat.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Prefer struct_size over open coded arithmetic
+Message-ID: <2ysy6s2on7ae24j7tiwpwp6vp33gqvn2apqhprnvip6lzqxdao@p73c3ukzvcjd>
+References: <20240224151658.8272-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: wwan: t7xx: Prefer struct_size over open coded
- arithmetic
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
- Chiranjeevi Rapolu <chiranjeevi.rapolu@linux.intel.com>,
- Liu Haijun <haijun.liu@mediatek.com>,
- M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
- Ricardo Martinez <ricardo.martinez@linux.intel.com>,
- Loic Poulain <loic.poulain@linaro.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240224181932.2720-1-erick.archer@gmx.com>
-From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-In-Reply-To: <20240224181932.2720-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224151658.8272-1-erick.archer@gmx.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 24.02.2024 20:19, Erick Archer wrote:
+On Sat, Feb 24, 2024 at 04:16:58PM +0100, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1][2].
 > 
-> As the "port_prox" variable is a pointer to "struct port_proxy" and
-> this structure ends in a flexible array:
-> 
-> struct port_proxy {
-> 	[...]
-> 	struct t7xx_port ports[];
-> };
-> 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the argument "size + size * count" in the
-> devm_kzalloc() function.
-> 
-> This way, the code is more readable and safer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> 
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> As the "t" variable is a pointer to "struct journal_seq_blacklist_table"
+> and this structure ends in a flexible array:
 
-Reviewed-by: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+there's no reason to break these out into multiple patches, just send me
+a single patch when you're done - thanks!
