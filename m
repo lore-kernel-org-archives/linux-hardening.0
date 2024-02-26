@@ -1,46 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942301B7E5;
-	Mon, 26 Feb 2024 06:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFFB1BC22
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 07:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708928125; cv=none; b=QbOOoAUL5IXX+vxWGh9wPKivFUoVoPXdGdxoZZKmclIyHHFxoFk66Ci9jQeavQxnWdgbPS1CBt1F+zMEmF494+s1oplljDxj7tYqOrXnOqxO0e7QZ0iPAJWvl4Rxo6Mijo8uaeF6Za7uTgOstSrCzt1LO4U3DSnMYVQEYHGs3Uk=
+	t=1708931124; cv=none; b=Y5Scz06mU2c2O6pmHYWVcQIWr9JQUq9ksZ3mLFQOM9+kHzwNEDVxDpW12U1iaunKQoE2dtKsacdf4yZMYOKVHDE/FJzbKX46PgBFFMpApww9WLjTFkcbSTOV9YDq5eRlURpwZSUSTigUaNJctIgdlH+Zd6uZbKyXz1Dom3noV6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708928125; c=relaxed/simple;
-	bh=HQrmzzWDLhjubSxo7AflYgWxHtE1KBZ4wM94UIcsutI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JZoP/csszWS5KyZ5jrVEfZXVUbHVwKVqYPAPLM8oAN1e63i5iNXFO+ij/vKEF2pzUB5pO0uzn/MbXrFv5BUnXrVyjrMCe//RP2VEptiFqXgXyfc36nkDiWN6mB/f53qEmQ9zcEabz/lEr/5/LLlVRSTJTNilMCefHYU6e24J7Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HdOIx5Lz; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708931124; c=relaxed/simple;
+	bh=nYgb0HWRu8YyT74BAkDx/Un2/2W4bfQcIXn1jyX5dhM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d8lrDRn6Cw8DZx9BrMgznxlUgymghtYMLhQDG9nkKewsWBtPs7bpd6LoityX7Vd8rVWgMbmbCFWFuwilut2n4LkRgm8RTe+abZZ7KEUn+kctxFIL4CVeTRhjgCBq1RYfWpvxU0hLJitAAW8zrjzuluoOzfLJ7A8FlYzKrr9F2Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vqdwiVI/; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HdOIx5Lz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708928124; x=1740464124;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HQrmzzWDLhjubSxo7AflYgWxHtE1KBZ4wM94UIcsutI=;
-  b=HdOIx5Lzp9s7aqFX4wQzozw2eFIhPxCiPKoAqZBoKOWL0Z4h50Cz54bT
-   HLFozFWbKU71k3JywoISJO1PeP/oprs0ufLVTEMOuU4MxMpvVa1zxTgod
-   mUn2OKf1oKOjWbkRq5i0o+FYvi/wvSiEZJxa03n7OwKIhrXBTBuTlX4Uq
-   u39Z70cvowFW/x6o29V8levyX+LjuYASOsW0PhujRmm9flvYvW6hEo9lU
-   cpZBnApuFSPOpgfO/tJcaIy2Q4puEH2ctgkfwDmIihJ91GVfbiAjI38nt
-   cZ1MyidEMvNKyqavVe0tLWTnBYrs1oHA4ne5z/B6xCafmL7qCD7ZcQG33
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3738339"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3738339"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:15:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11130153"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa005.fm.intel.com with ESMTP; 25 Feb 2024 22:15:20 -0800
-Message-ID: <1e3b71a7-1515-4533-a102-34509f8b2f01@linux.intel.com>
-Date: Mon, 26 Feb 2024 14:09:26 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqdwiVI/"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3e706f50beso343015166b.0
+        for <linux-hardening@vger.kernel.org>; Sun, 25 Feb 2024 23:05:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708931119; x=1709535919; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zYlFi0LHJsAlgLIGIcShBABCv/yjhadsmMI/Fg1bJc4=;
+        b=vqdwiVI/1DJk7LGizjcFH5cs6ouJiV9eMSTxMDadht7qUSLjsgiN5hdNykkihzzx+d
+         lu2kERgqS5s5TnQd/1JhcF7IZUxLSGf5/u2Mvuh6jh4/PkXVaJbNiYhMgfb47ztR5+2d
+         etdb81nLd6C22nb/hfFJO8rVYFRAeg2TC4N4IDsdQzSYNaSm6Q7ZyuCi0jEEyzuGzOgj
+         MtA3MM4VLR1x6j6kRRL5RK4rFBgHJzmTkqepKFjyHcdAPW1mx6LNDWj16OGy4DHYvIfJ
+         mo8LvXCDLtIGztiEYgKQDU1HYrI3Ir3vrn06OCVqbxTaZvPtP1wOjVBFQpveZdVbn6GV
+         XDqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708931119; x=1709535919;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zYlFi0LHJsAlgLIGIcShBABCv/yjhadsmMI/Fg1bJc4=;
+        b=jiR13bocuynbZ0X2Wxm609t3PbpbrV7cofSb/B//bBYLixTwmMs+wIFOiXQXlvY1G0
+         gls5Rrc92rxQWeFIjMHcdR9v65Ex2yOf+8PjkQzLFBhmEQFheSes5b2jmhexfVwfZjXw
+         X3aj+SyLhT0CbvVI5luDjgnAQcdEJjaQePzWj66xpXtCnjfsEKeHK+HrBiDqTwtcxRbw
+         4U7h40sxCzjF0qyqCOEwyaJ5omp6Yy+Vmas8BxzkVrnqWW6SQJMLUpRHWAPPCLX6SUrI
+         oEIQifHMdb8E0wEiv8kVIBykVdloeCsJOzstDvw4fkg8yuS1GVkD+7L37EbidRRZP8qw
+         yGkw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5NCn39WWBDQfNk3avhOUMP7Q3pe9C96PyD8lRXUoZH+nUgoSzwTGU7R8Z6F48WJv8pwpP5LRttQEd8okpvJuOpUJXw9Hiej0Z1RJTTLdP
+X-Gm-Message-State: AOJu0YwEn0SWQ2R3b+Ox89qssjjCFExyt3YU9C5Ym8S7ScUVrhodVx5b
+	vRWQx9/u2W9Uy5skE6dL9ZW5kn0pFo3ZRDpjzImMCqyLRxyMunUmqWyjoIl0FCs=
+X-Google-Smtp-Source: AGHT+IGIUhAHxmHdb5Nr/f680qAPCsRQZ4ihTdSW0wFJ2SVbK0DFLJ2t/Vzjxxd1NO9R08tbikOw7Q==
+X-Received: by 2002:a17:906:c34b:b0:a42:f194:9cd6 with SMTP id ci11-20020a170906c34b00b00a42f1949cd6mr3273335ejb.7.1708931119395;
+        Sun, 25 Feb 2024 23:05:19 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id vi17-20020a170907d41100b00a43215bff13sm1269633ejc.117.2024.02.25.23.05.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Feb 2024 23:05:18 -0800 (PST)
+Message-ID: <a762f756-1a92-4d82-be38-098bacaf25dc@linaro.org>
+Date: Mon, 26 Feb 2024 08:05:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,47 +62,122 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iommu/vt-d: Use kcalloc() instead of kzalloc()
+Subject: Re: [PATCH] arm64: dts: qcom: msm8953-lenovo-kuntao: Add initial
+ device tree
+To: Raihan Ahamed <raihan1999ahamed@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
 Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>, David Woodhouse
- <dwmw2@infradead.org>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-References: <20240211175143.9229-1-erick.archer@gmx.com>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240211175143.9229-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/12/24 1:51 AM, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
+On 26/02/2024 06:55, Raihan Ahamed wrote:
+> Lenovo P2 is a handset using the MSM8953 SoC released in 2016
 > 
-> Here the multiplication is obviously safe because DMAR_LATENCY_NUM
-> is the number of latency types defined in the "latency_type" enum.
+> Add a device tree for with initial support for:
 > 
-> enum latency_type {
-> 	DMAR_LATENCY_INV_IOTLB = 0,
-> 	DMAR_LATENCY_INV_DEVTLB,
-> 	DMAR_LATENCY_INV_IEC,
-> 	DMAR_LATENCY_PRQ,
-> 	DMAR_LATENCY_NUM
-> };
+> - GPIO keys
+> - SDHCI (internal and external storage)
+> - USB Device Mode
+> - WCNSS (WiFi/BT)
+> - Regulators
 > 
-> However, using kcalloc() is more appropriate [2] and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link:https://github.com/KSPP/linux/issues/162  [1]
-> Link:https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments  [2]
-> Signed-off-by: Erick Archer<erick.archer@gmx.com>
+> Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
 > ---
->   drivers/iommu/intel/perf.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/msm8953-lenovo-kuntao.dts   | 240 ++++++++++++++++++
+>  2 files changed, 241 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 39889d5f8e12..aebfb1ae728c 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-sony-xperia-kanuti-tulip.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-lenovo-kuntao.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+> new file mode 100644
+> index 000000000000..2fd6345bbe15
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+> @@ -0,0 +1,240 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024, Raihan Ahamed <raihan1999ahamed@gmail.com>
+> + */
+> +/dts-v1/;
+> +
+> +#include "msm8953.dtsi"
+> +#include "pm8953.dtsi"
+> +#include "pmi8950.dtsi"
+> +
+> +/delete-node/ &qseecom_mem;
+> +
+> +/ {
+> +	model = "Lenovo P2";
+> +	compatible = "lenovo,kuntao", "qcom,msm8953";
 
-I have queued this patch for v6.9.
+Missing bindings.
 
 Best regards,
-baolu
+Krzysztof
+
