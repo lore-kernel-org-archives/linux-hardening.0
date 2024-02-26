@@ -1,99 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7A112EBC7;
-	Mon, 26 Feb 2024 16:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F3B12C55E
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 17:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966478; cv=none; b=ZR1Duljn388AHOSAJ6/B3GvcRCjIGZFxM2gbVEuW5d8ADKyy4QhbbiIqx75wq+9peaKFazJqARvZfJ9Ww6OqZSI52HhFruVTHk9hH16JsCXCKTgSRjVkSejeuYWitVBM7hlpWvSZAw5/hZDOFprY6gPQy+ovUciHvu9Sk/OC61Q=
+	t=1708967148; cv=none; b=EWcCtf9Jsenki0KgOk9nOKTgk5uOAqmW4tl5igFtPb9EGjCLwtoIbB5Andrv+FUO2wVhiiCPa9zByGAuQ+a2HW9j+v/zc6iyKnr3IRCk+97Hyat68Qf7mmGXrdHGInKdqQIXpNGYbRgT+mEZbOgACRv5YTzuH6MjDDQVj9gJh24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966478; c=relaxed/simple;
-	bh=ZSBYgop6Y8AnjOgbcpBlQvaeC2c8w7HULMDL6B3hV54=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=CEMhr84QrG61J52cr2ofPAQiNyhNCmqAHQYAnb9zhkxdl6PhMZwr0DPXp77F+7zXsGd+yiBnSd2IdgQSBlm9zeUYwOiD3Av3VvBG7+zWmfouiW2+gfybTYHi7phsH+MxA+T4j/6B95KjUpWYVgAywYNGE+QUHmdZKmx8XtC/Eps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sykW0ZKX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708967148; c=relaxed/simple;
+	bh=TEpQO8oVhWg12vbtVS68hwoIFoQZycElKAGrNEzuM9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bpasQneow025Y64dPwVjD+3xcvZQ3Wc4Rry/4MgAWT8ISCUVS5E4bk/vxEThD2w762YQhwlQGZRVan6s1XK2+NxshLfvHa5DBkT5WRh2NTIZCsHYs80YMUl9QW9aqKIy+KSPtb72WmvqzP8vEbFVbpYV+0k+WBq9eaE9Vo3z4FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=J5hwbTHq; arc=none smtp.client-ip=45.157.188.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sykW0ZKX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A191C433C7;
-	Mon, 26 Feb 2024 16:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708966477;
-	bh=ZSBYgop6Y8AnjOgbcpBlQvaeC2c8w7HULMDL6B3hV54=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=sykW0ZKXAnK9PJOS2CTHTF4vltW+0RmBuAOsKACXiv5DWOT/zVQ0+emhSdjc5FzXw
-	 Ib/us1sqP8Id71an85z8ynV0tqJg7iDSZxN89xvCaeUEQnaYcfMDXteY++bSATyGXs
-	 +GBVPAA+dFuGJ+RdKFrqEOJ7CMIsV4qR+ilu7edBPFpoDLWFzZOFv3vpM8xDGh8PVy
-	 tpCptnT6s9o3iwOMg7MwdP8VjD2m6Ge6k6fWc+YBGHcnEpT+p/J2CAuMPR4ny1P6bV
-	 n3nzMUxxZeJ6O5BA/fwltxmTsLxcMLR1MzK2coUCo3c3D29H+nssq02k9ffVhbMIlR
-	 cKDhxpCaLcGTg==
-Date: Mon, 26 Feb 2024 10:54:36 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="J5hwbTHq"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tk6Sk4MjfzQkL;
+	Mon, 26 Feb 2024 18:05:42 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tk6Sj5blNz1sr;
+	Mon, 26 Feb 2024 18:05:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1708967142;
+	bh=TEpQO8oVhWg12vbtVS68hwoIFoQZycElKAGrNEzuM9o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J5hwbTHqlvYD7XVRvMUl+1yLrl1IYNrSHFaPd8XOBjVbSlYpYstl5VbR9fB/ZR0zT
+	 JMGK2lOQSwEMUYdDl7Dyk0mcgPxC3oA1Jqi097/QPKxFi0rLGPUkh6CUmXtp72Ifs7
+	 JsByWA9GE4IGe2H/Z8jBwKANLAlE0JkMPCdJXydE=
+Date: Mon, 26 Feb 2024 18:05:33 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Paul Moore <paul@paul-moore.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Shervin Oloumi <enlightened@chromium.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
+ while disabled
+Message-ID: <20240226.Ceemai4ahxei@digikod.net>
+References: <20240219191804.2978911-1-mic@digikod.net>
+ <20240221.b8dcd9590c37@gnoack.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Raihan Ahamed <raihan1999ahamed@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Rob Herring <robh+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
- Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, 
- linux-hardening@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org
-In-Reply-To: <20240226094256.5736-1-raihan1999ahamed@gmail.com>
-References: <a762f756-1a92-4d82-be38-098bacaf25dc@linaro.org>
- <20240226094256.5736-1-raihan1999ahamed@gmail.com>
-Message-Id: <170896502334.859081.15812588010355406308.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: qcom: Add Lenovo P2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240221.b8dcd9590c37@gnoack.org>
+X-Infomaniak-Routing: alpha
 
-
-On Mon, 26 Feb 2024 15:11:03 +0530, Raihan Ahamed wrote:
-> Document the compatible for the MSM8953-based Lenovo P2
+On Wed, Feb 21, 2024 at 10:35:50PM +0100, Günther Noack wrote:
+> Hello!
 > 
-> smartphone released in 2016
+> I think this is a good idea.
+> Some minor implementation remarks below.
 > 
-> Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
+> > Because sandboxing can be used as an opportunistic security measure,
+> > user space may not log unsupported features.  Let the system
+> > administrator know if an application tries to use Landlock but failed
+> > because it isn't enabled at boot time.  This may be caused by bootloader
+> > configurations with outdated "lsm" kernel's command-line parameter.
+> > 
+> > Cc: Günther Noack <gnoack@google.com>
+> > Cc: stable@vger.kernel.org
+> > Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
+> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > ---
+> >  security/landlock/syscalls.c | 18 +++++++++++++++---
+> >  1 file changed, 15 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+> > index f0bc50003b46..b5b424819dee 100644
+> > --- a/security/landlock/syscalls.c
+> > +++ b/security/landlock/syscalls.c
+> > @@ -33,6 +33,18 @@
+> >  #include "ruleset.h"
+> >  #include "setup.h"
+> >  
+> > +static bool is_not_initialized(void)
+> > +{
+> > +	if (likely(landlock_initialized))
+> > +		return false;
 > 
+> Optional stylistic remark; I try to avoid predicate functions which
+> have a "negated" meaning, because double negations are slightly more
+> error prone.  (We return false here, so Landlock is not not
+> initialized.)
 
+I agree, I was also bothered about this double negation. I'll send a v2
+with the same behavior but an is_initialized() helper instead.
 
-My bot found new DT warnings on the .dts files added or changed in this
-series.
+> 
+> > +
+> > +	pr_warn_once(
+> > +		"Disabled but requested by user space. "
+> > +		"You should enable Landlock at boot time: "
+> > +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
+> > +	return true;
+> > +}
+> > +
+> >  /**
+> >   * copy_min_struct_from_user - Safe future-proof argument copying
+> >   *
+> > @@ -173,7 +185,7 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
+> >  	/* Build-time checks. */
+> >  	build_check_abi();
+> >  
+> > -	if (!landlock_initialized)
+> > +	if (is_not_initialized())
+> >  		return -EOPNOTSUPP;
+> 
+> Technically, any Landlock user needs to go through the
+> landlock_create_ruleset() system call anyway; it might be enough to
+> just add it in that place and leave the other system calls as they
+> were.  Then you could also omit the special function.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not.
+True, but we never know. I prefer to cover all entry points the same
+way.  It makes things more consistent and easier to review.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y qcom/msm8953-lenovo-kuntao.dtb' for 20240226094256.5736-1-raihan1999ahamed@gmail.com:
-
-arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dtb: gpu@1c00000: clock-names:5: 'anyOf' conditional failed, one must be fixed:
-	'core' was expected
-	'iface' was expected
-	'mem' was expected
-	'mem_iface' was expected
-	'alt_mem_iface' was expected
-	'gfx3d' was expected
-	'rbbmtimer' was expected
-	'rbcpr' was expected
-	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
-arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dtb: iommu@1c48000: compatible: 'oneOf' conditional failed, one must be fixed:
-	'qcom,msm8953-iommu' is not one of ['qcom,msm8976-iommu']
-	'qcom,msm-iommu-v1' was expected
-	from schema $id: http://devicetree.org/schemas/iommu/qcom,iommu.yaml#
-
-
-
-
-
+> 
+> Reviewed-by: Günther Noack <gnoack3000@gmail.com>
+> 
+> –Günther
+> 
