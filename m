@@ -1,60 +1,66 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFFB1BC22
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 07:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5A14F1EB
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 08:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708931124; cv=none; b=Y5Scz06mU2c2O6pmHYWVcQIWr9JQUq9ksZ3mLFQOM9+kHzwNEDVxDpW12U1iaunKQoE2dtKsacdf4yZMYOKVHDE/FJzbKX46PgBFFMpApww9WLjTFkcbSTOV9YDq5eRlURpwZSUSTigUaNJctIgdlH+Zd6uZbKyXz1Dom3noV6o=
+	t=1708936634; cv=none; b=T11CMjS2UtU4cn51Ke9wPM8nn1PCsK5uCg8v9FLwo3LDu68jBSFrLTj9EM4Ih77vUgLhFtzZYb0Cy7QVPIs0NmpGOMy2ycqIvXJaktMPPqyxEcMBraExNEzWbsbzsgLDMeA57ZgmiQUHI9fzejz79vwuuZ4wQNSelcGBHZ/UiaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708931124; c=relaxed/simple;
-	bh=nYgb0HWRu8YyT74BAkDx/Un2/2W4bfQcIXn1jyX5dhM=;
+	s=arc-20240116; t=1708936634; c=relaxed/simple;
+	bh=Wpyv7cwfAh+/8axnwuNHvynIMAy4pwR4p2tH3OEB1pk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d8lrDRn6Cw8DZx9BrMgznxlUgymghtYMLhQDG9nkKewsWBtPs7bpd6LoityX7Vd8rVWgMbmbCFWFuwilut2n4LkRgm8RTe+abZZ7KEUn+kctxFIL4CVeTRhjgCBq1RYfWpvxU0hLJitAAW8zrjzuluoOzfLJ7A8FlYzKrr9F2Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vqdwiVI/; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=OlfiK3Ei+ScSqxChuy9W3skmZtcQ0S25rnTkgVnakeY3OjRSYfibuRDt5sB56hTBycVuJZnsmbiHY2hlLsK+s2TuNNRsh3sFLagDqGNqzqEUC3NvS+1rg+3g/T36x1/M6UiGRpkfLBiJRBoHeO9moup8lYVfQfXh3apIU+aF+SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OFO/XG/O; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqdwiVI/"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3e706f50beso343015166b.0
-        for <linux-hardening@vger.kernel.org>; Sun, 25 Feb 2024 23:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708931119; x=1709535919; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zYlFi0LHJsAlgLIGIcShBABCv/yjhadsmMI/Fg1bJc4=;
-        b=vqdwiVI/1DJk7LGizjcFH5cs6ouJiV9eMSTxMDadht7qUSLjsgiN5hdNykkihzzx+d
-         lu2kERgqS5s5TnQd/1JhcF7IZUxLSGf5/u2Mvuh6jh4/PkXVaJbNiYhMgfb47ztR5+2d
-         etdb81nLd6C22nb/hfFJO8rVYFRAeg2TC4N4IDsdQzSYNaSm6Q7ZyuCi0jEEyzuGzOgj
-         MtA3MM4VLR1x6j6kRRL5RK4rFBgHJzmTkqepKFjyHcdAPW1mx6LNDWj16OGy4DHYvIfJ
-         mo8LvXCDLtIGztiEYgKQDU1HYrI3Ir3vrn06OCVqbxTaZvPtP1wOjVBFQpveZdVbn6GV
-         XDqQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFO/XG/O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708936631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tEsGHyKmhHFaggiU/p+Qf67ugl62p05Uk9RKbVQZhjk=;
+	b=OFO/XG/O1iIVjPoO++P649T/DzS9iRQ6WORbzDVceNaL+B3FristcgfK1aGNYgHgq9ImhU
+	rYayv2tk+lWluvgB54r467Y+WU5tPHm1+fDKyRebso5PV8TqoSzXfbWV45WlxwV5q7afWl
+	YsxfjRjBx4ZjzHwYoGdaTShf/fkpytc=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-206-yV4vBaMpOVKwWPk3-ZtRUw-1; Mon, 26 Feb 2024 03:37:10 -0500
+X-MC-Unique: yV4vBaMpOVKwWPk3-ZtRUw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d22e2f9a0cso18667551fa.3
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 00:37:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708931119; x=1709535919;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
+        d=1e100.net; s=20230601; t=1708936628; x=1709541428;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zYlFi0LHJsAlgLIGIcShBABCv/yjhadsmMI/Fg1bJc4=;
-        b=jiR13bocuynbZ0X2Wxm609t3PbpbrV7cofSb/B//bBYLixTwmMs+wIFOiXQXlvY1G0
-         gls5Rrc92rxQWeFIjMHcdR9v65Ex2yOf+8PjkQzLFBhmEQFheSes5b2jmhexfVwfZjXw
-         X3aj+SyLhT0CbvVI5luDjgnAQcdEJjaQePzWj66xpXtCnjfsEKeHK+HrBiDqTwtcxRbw
-         4U7h40sxCzjF0qyqCOEwyaJ5omp6Yy+Vmas8BxzkVrnqWW6SQJMLUpRHWAPPCLX6SUrI
-         oEIQifHMdb8E0wEiv8kVIBykVdloeCsJOzstDvw4fkg8yuS1GVkD+7L37EbidRRZP8qw
-         yGkw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5NCn39WWBDQfNk3avhOUMP7Q3pe9C96PyD8lRXUoZH+nUgoSzwTGU7R8Z6F48WJv8pwpP5LRttQEd8okpvJuOpUJXw9Hiej0Z1RJTTLdP
-X-Gm-Message-State: AOJu0YwEn0SWQ2R3b+Ox89qssjjCFExyt3YU9C5Ym8S7ScUVrhodVx5b
-	vRWQx9/u2W9Uy5skE6dL9ZW5kn0pFo3ZRDpjzImMCqyLRxyMunUmqWyjoIl0FCs=
-X-Google-Smtp-Source: AGHT+IGIUhAHxmHdb5Nr/f680qAPCsRQZ4ihTdSW0wFJ2SVbK0DFLJ2t/Vzjxxd1NO9R08tbikOw7Q==
-X-Received: by 2002:a17:906:c34b:b0:a42:f194:9cd6 with SMTP id ci11-20020a170906c34b00b00a42f1949cd6mr3273335ejb.7.1708931119395;
-        Sun, 25 Feb 2024 23:05:19 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id vi17-20020a170907d41100b00a43215bff13sm1269633ejc.117.2024.02.25.23.05.17
+        bh=tEsGHyKmhHFaggiU/p+Qf67ugl62p05Uk9RKbVQZhjk=;
+        b=lxUDP1k9A1waQwdHgykyeMEZK3WxbfoKQUcSiN9PrS/oBiMdeQ7yeM6TW98F+64OZj
+         L9Oe6cuzfTkkhqUI4xzC4ZpheoJRLRhklHp5BFQMjEScHWNTCkLp7yBYH+FS3spH6LXx
+         o5yhCRaM5zVgcHQT/muGpR0fHjbBC+NXPVynxcwL8qaeRj0iaKkEsSRi2QvI2SzrFmS5
+         m/uJ50rtq+0Cawb0z/nBUXgLsZG0hhXd8i0UBcxGq6cXLRX+WkEl6Wb5RyqeUwMgtmac
+         wvrztC2jkLNW3a3WaAN7Yd0Qb51UNVN2BpGSfsfbXdgY7tljFR3bHNCEi5wtH2cIMEDO
+         Pc9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeGwNWLSlUi9ICwKOReR6IvR8hZUm11A+A803vDWSHyKCsyvXIBD45HVpj+ZXM8XvTCAK34HZqS9z8ILV/4Ma2WsrqggAo6+PSl5fNCr5Q
+X-Gm-Message-State: AOJu0YxbKjmtBU0XBU2vIMzfkuskWqnYUQGzq8YGN+jgr8mSW1GSgQf6
+	m5DTKmDVviciGvTZnTQQaTKbBBt9jlrNCPTDdo4WgVrfL58Oo9Bc/Zt/SQNe45hZ6fF7SQ+eon9
+	3SxYdEUDzSbw4l4IAyejBiSRTYs6/hMBaPqv9OZk3pNdDHIfPwaPq2Izldxo4QngaKg==
+X-Received: by 2002:a2e:bea0:0:b0:2d2:86c4:c8a7 with SMTP id a32-20020a2ebea0000000b002d286c4c8a7mr2448196ljr.34.1708936628666;
+        Mon, 26 Feb 2024 00:37:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEqZtNVcAgG0XLU1mqokLPY5YlcLtZdA3CUKhIij4yRc415t+fg4oJkJsPWsk6ORBAGzfr9Bg==
+X-Received: by 2002:a2e:bea0:0:b0:2d2:86c4:c8a7 with SMTP id a32-20020a2ebea0000000b002d286c4c8a7mr2448168ljr.34.1708936628238;
+        Mon, 26 Feb 2024 00:37:08 -0800 (PST)
+Received: from ?IPV6:2003:cb:c72f:f700:104b:9184:1b45:1898? (p200300cbc72ff700104b91841b451898.dip0.t-ipconnect.de. [2003:cb:c72f:f700:104b:9184:1b45:1898])
+        by smtp.gmail.com with ESMTPSA id bv20-20020a0560001f1400b0033d73e1505bsm7571209wrb.18.2024.02.26.00.37.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Feb 2024 23:05:18 -0800 (PST)
-Message-ID: <a762f756-1a92-4d82-be38-098bacaf25dc@linaro.org>
-Date: Mon, 26 Feb 2024 08:05:16 +0100
+        Mon, 26 Feb 2024 00:37:07 -0800 (PST)
+Message-ID: <8d70939f-ca14-4167-9647-b8f44ddcbb98@redhat.com>
+Date: Mon, 26 Feb 2024 09:37:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,122 +68,160 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: msm8953-lenovo-kuntao: Add initial
- device tree
-To: Raihan Ahamed <raihan1999ahamed@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
+Subject: Re: [PATCH] PM: hibernate: Fix level3 translation fault in
+ swsusp_save()
+To: Yaxiong Tian <13327272236@163.com>, rafael@kernel.org, pavel@ucw.cz,
+ len.brown@intel.com, keescook@chromium.org, tony.luck@intel.com,
+ gpiccoli@igalia.com, akpm@linux-foundation.org, ardb@kernel.org,
+ rppt@kernel.org, wangkefeng.wang@huawei.com, catalin.marinas@arm.com,
+ will@kernel.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>,
+ xiongxin <xiongxin@kylinos.cn>
+References: <20240226034225.48689-1-13327272236@163.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240226034225.48689-1-13327272236@163.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 26/02/2024 06:55, Raihan Ahamed wrote:
-> Lenovo P2 is a handset using the MSM8953 SoC released in 2016
+On 26.02.24 04:42, Yaxiong Tian wrote:
+> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 > 
-> Add a device tree for with initial support for:
+> On ARM64 machines using UEFI, if the linear map is not set (can_set_direct_map()
+> return false), swsusp_save() will fail due to can't finding the map table
+> under the nomap memory.such as:
 > 
-> - GPIO keys
-> - SDHCI (internal and external storage)
-> - USB Device Mode
-> - WCNSS (WiFi/BT)
-> - Regulators
+> [   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
+> [   48.532162] Mem abort info:
+> [   48.532162]   ESR = 0x0000000096000007
+> [   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   48.532162]   SET = 0, FnV = 0
+> [   48.532162]   EA = 0, S1PTW = 0
+> [   48.532162]   FSC = 0x07: level 3 translation fault
+> [   48.532162] Data abort info:
+> [   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+> [   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
+> [   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
+> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+> [   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
+> [   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
+> [   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
+> [   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
+> [   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   48.532162] pc : swsusp_save+0x280/0x538
+> [   48.532162] lr : swsusp_save+0x280/0x538
+> [   48.532162] sp : ffffffa034a3fa40
+> [   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
+> [   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
+> [   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
+> [   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
+> [   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
+> [   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
+> [   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
+> [   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
+> [   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
+> [   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
+> [   48.532162] Call trace:
+> [   48.532162]  swsusp_save+0x280/0x538
+> [   48.532162]  swsusp_arch_suspend+0x148/0x190
+> [   48.532162]  hibernation_snapshot+0x240/0x39c
+> [   48.532162]  hibernate+0xc4/0x378
+> [   48.532162]  state_store+0xf0/0x10c
+> [   48.532162]  kobj_attr_store+0x14/0x24
 > 
-> Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
+> QEMU ARM64 using UEFI also has the problem by setting can_set_direct_map()
+> return false.
+> 
+> Since the NOMAP regions are now marked as PageReserved(), pfn walkers
+> and the rest of core mm will treat them as unusable memory. So this
+> regions should not saved in hibernation.
+> 
+> This problem may cause by changes to pfn_valid() logic in commit
+> a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
+> 
+> So to fix it, we add pfn_is_map_memory() check in saveable_page(). It
+> make such regisons don't save in hibernation.
+> 
+> Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
+> Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
 > ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../boot/dts/qcom/msm8953-lenovo-kuntao.dts   | 240 ++++++++++++++++++
->  2 files changed, 241 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+>   kernel/power/snapshot.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 39889d5f8e12..aebfb1ae728c 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-sony-xperia-kanuti-tulip.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-lenovo-kuntao.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
-> new file mode 100644
-> index 000000000000..2fd6345bbe15
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
-> @@ -0,0 +1,240 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2024, Raihan Ahamed <raihan1999ahamed@gmail.com>
-> + */
-> +/dts-v1/;
-> +
-> +#include "msm8953.dtsi"
-> +#include "pm8953.dtsi"
-> +#include "pmi8950.dtsi"
-> +
-> +/delete-node/ &qseecom_mem;
-> +
-> +/ {
-> +	model = "Lenovo P2";
-> +	compatible = "lenovo,kuntao", "qcom,msm8953";
+> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+> index 0f12e0a97e43..a06e3b1869d2 100644
+> --- a/kernel/power/snapshot.c
+> +++ b/kernel/power/snapshot.c
+> @@ -1400,7 +1400,7 @@ static struct page *saveable_page(struct zone *zone, unsigned long pfn)
+>   		return NULL;
+>   
+>   	if (PageReserved(page)
+> -	    && (!kernel_page_present(page) || pfn_is_nosave(pfn)))
+> +	    && (!kernel_page_present(page) || pfn_is_nosave(pfn) || !pfn_is_map_memory(pfn)))
+>   		return NULL;
+>   
+>   	if (page_is_guard(page))
 
-Missing bindings.
+On top of which tree does this apply?
 
-Best regards,
-Krzysztof
+All occurrences of pfn_is_map_memory() are in arch/arm64, how does this 
+compile on other architectures?
+
+-- 
+Cheers,
+
+David / dhildenb
 
