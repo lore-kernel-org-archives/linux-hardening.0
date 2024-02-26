@@ -1,57 +1,57 @@
 Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5887C130AEA
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 19:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F5512F395
+	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 19:24:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975358; cv=none; b=rOijpBahW1gcY6mMgMi8udWWCvRrHaokBANQnYYfG9ik5HjDTFrFJ04oDbWb/3iA7RmDV48Al2f4bBB2LmXeSu5KQ0YdhBE8P6ibzRLTkQbeKtFyK+LrE8ByiWO0X6IwKZgg6/xsyXaFcmg0OirQjCX6RWQjQQ5rxfPO2mDUmJY=
+	t=1708975476; cv=none; b=GGJtdolC9gj3WNJ5uUrPCxStRATDv2lRu1OV+H1RfiGou51Yf3kWvyb6gQurlPo47AdUteNApMIkvUxePYgVuNtKN8kAebmtM3rMnlrd3k2BJB6bfZ8OljgwIANUu8XHLFxmHCtRLcatp0jYu2lcMqFBuMwKyh9U7idgwYweNKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975358; c=relaxed/simple;
-	bh=MCDjtaRWEF67bT1IdABaJO8kKhnAH/vfBzzPU+hrTKk=;
+	s=arc-20240116; t=1708975476; c=relaxed/simple;
+	bh=THgm6rGLpzdRlqCmuQGYCh3G2e2uZuhgn1thuX7TM28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GvkB0ocBHJQjTsFvCV2HUW7uNq3KbEM8gRZ3TNtw9/jdUVBwmEEO4fIMdO1trwoNAXYW/+X3JVUPVozyUS/Lz61u613IeHMjo3gxmTs2Ynhw4006U1Tfgw+FaZSiQZCPr7hCyYY3lBUotyCVz/SSOxHk5ZzjUm92adUPSdWVkTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SuUEgLZv; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZNdWgwJ69fsDWJL5OOmsCD+2HsHNz7YTvnNxZAdPsG0v/YITUdvfd781k/UaX/q6X2/27grYS26xiAIT5hHcewf6vafuXiVoG9zkIq5ToGsbUOTlDJ6Kp6MCx/A+JpPrwPU9uRN1YkuZXp9+rkuLlqlfqq3myZfFNhfhjCzFxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IDawg6Dh; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SuUEgLZv"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so29734875ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 11:22:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IDawg6Dh"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dc0e5b223eso28772705ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 11:24:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708975355; x=1709580155; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1708975474; x=1709580274; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=82wd+SSaRsguFcZt+U0NWaZAuP5LxkM0aZkdE6Hnh5c=;
-        b=SuUEgLZvpDNR1cbi6DQiXEsCpA3fNrg6t9rUUEdWz86OkXxeuRvzI5j8UE0mf1x2uH
-         VEpTGnz2tml+LdYLDJduDpfCPM57iKHc7fOe8x2zrEin+x1dn5XqNRvMjvk9opwZSaGP
-         +hjZkxLOrFNMSFwDMashvLPNPlSkSyQeN7kYo=
+        bh=InMne0CIdEUH5H66AFxEIsfbiaQhDQQyahGGSNpAGCM=;
+        b=IDawg6DhM0XUTrV9XNtDtxehkJZRJwGpvO5ptOOXE9onzexPKtwIc1EQvwTOiYXXIu
+         S8+A3bnPp5HmicrtSCh+6mmZ7MeMB+WA/0WQvsTlVdIAruUkqYkfSTxVc4HJMrySEMFp
+         dCIo/mHxl8iSUS620NEsHqSX9wr6vpT6/mQcc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708975355; x=1709580155;
+        d=1e100.net; s=20230601; t=1708975474; x=1709580274;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=82wd+SSaRsguFcZt+U0NWaZAuP5LxkM0aZkdE6Hnh5c=;
-        b=uCSJHfyguSQ72QZbKr1UhAvG49HBk2Q/m+GyO2hhENEREmcQCP30ziO/jzMAiDdTV6
-         1/nZk5aFaytCKkWM1hQs1vbrBwkU/Y6LBTpVDT9mE8BmW71GLRA1CIliW6QcMeToE8QO
-         KPabCroHWMCdpuOULUz9HopSWzPaV1/xUMHYQRKYrmyhxo9k0nIfsxtRr2a5EZCJzmWn
-         jHnqBC/c/JV99J1RgvQ4Y3X8Ux4xf1KK+8dQxghDeTGASGT6k6mRcHihnn7F0esl2Vkz
-         RccNcgczGJUvDhF1D8XLvYht7YkLHK1djel6QAvhdwvuUtNogQy+4Cr6Ir5O632rCi10
-         NP1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXKISFAs8MbDyQECDl/RlO9Vb8wH+3Y+nA7HYMysIOiTM6reQMwJu0pP2ZG4IG8pPFlO+qn4dA9oc03GtS8H3DGl0ImNQOqaf6HUcdFOT/e
-X-Gm-Message-State: AOJu0YwONVxof2fsiYqcUG0YcPOyVT61fbt9lt537cJZ8AHV/+PBDNsp
-	zV29cQg/72PPSwZFbwDT0H9Np1KN0MiEY/jpqq6ZiX0x6Df74zRnopIvBFJJKA==
-X-Google-Smtp-Source: AGHT+IGm/d0iXIJdlYC6aDqTkJ0Dek+SnpLbHY0CpSp5qMDbjbKlyiINkhqdePy0H1Q5g6gTwUTYcA==
-X-Received: by 2002:a17:903:4303:b0:1db:9ff1:b59b with SMTP id jz3-20020a170903430300b001db9ff1b59bmr7578787plb.23.1708975355588;
-        Mon, 26 Feb 2024 11:22:35 -0800 (PST)
+        bh=InMne0CIdEUH5H66AFxEIsfbiaQhDQQyahGGSNpAGCM=;
+        b=KTBjhVQrImj2KnsRgHmZ1K5G/CCFaBUD6HG7zXphWMKLy9s/Rx98y0GIwyeqNSi2VD
+         Dm4+XxB6WMZnHreG7HKX0sLc50PvMpvn4PG40dtgvdzAsjZTdEU+rkGYj5HTp6vkS1eS
+         vJvFDNg1BYN5X4iFybk62obT/qCNuLeYn9ZNFe3xd3fYmKL3lPW/R/fgI5X1Ocl/2lTa
+         dj3l9aPNi+OOaguLbWON5XdIg9zXnTH116BS596fivNV7ixU+A32TOti5ifBJCxGRiGV
+         1txSPofwA5Yqo4bP2t+Pv1zt9L+ihZNTQz0mdHP8b1/+6j0J8kOKDu2/HEyXZqMD2txD
+         Yvxg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5/IKPP4O9tT6NbyAYj7hYus3dicGViJpdB/gFBwtEEPuCK9MVlGKXV0gJ7zsQCZSLhgufNl3PH2RmJIFDNEg4dXh3S2IjCQO6eldJfBUB
+X-Gm-Message-State: AOJu0YxGOQh9T6sCp92hbS6KKpf3P5q7ydjrjHwQwZz+UIOiIkNxrrA7
+	QHqDKRVK1CBrN35JRPwcx5E353neXI69GlDFszNX5BjL7FrjPZhvSmUpjY/L3A==
+X-Google-Smtp-Source: AGHT+IGuKJW5UHzRannH3J/uDHtHCTUjnDGiC7Kw9nAZoWU+O3ZdeIO5FhWpusWjRzPLtJW8pjElAA==
+X-Received: by 2002:a17:902:e94c:b0:1dc:ada9:bceb with SMTP id b12-20020a170902e94c00b001dcada9bcebmr1895063pll.5.1708975473701;
+        Mon, 26 Feb 2024 11:24:33 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h2-20020a170902748200b001db8f7720e2sm38549pll.288.2024.02.26.11.22.35
+        by smtp.gmail.com with ESMTPSA id u13-20020a170903308d00b001dc2d1bd4d6sm51088plc.77.2024.02.26.11.24.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 11:22:35 -0800 (PST)
-Date: Mon, 26 Feb 2024 11:22:34 -0800
+        Mon, 26 Feb 2024 11:24:33 -0800 (PST)
+Date: Mon, 26 Feb 2024 11:24:32 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>, jannhorn@google.com
+To: Adrian Ratiu <adrian.ratiu@collabora.com>, jannh@google.com
 Cc: Doug Anderson <dianders@chromium.org>,
 	linux-security-module@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -59,9 +59,10 @@ Cc: Doug Anderson <dianders@chromium.org>,
 	Mike Frysinger <vapier@chromium.org>,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] proc: allow restricting /proc/pid/mem writes
-Message-ID: <202402261110.B8129C002@keescook>
+Message-ID: <202402261123.B2A1D0DE@keescook>
 References: <20240221210626.155534-1-adrian.ratiu@collabora.com>
  <CAD=FV=WR51_HJA0teHhBKvr90ufzZePVcxdA+iVZqXUK=cYJng@mail.gmail.com>
+ <202402261110.B8129C002@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,7 +72,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=WR51_HJA0teHhBKvr90ufzZePVcxdA+iVZqXUK=cYJng@mail.gmail.com>
+In-Reply-To: <202402261110.B8129C002@keescook>
+
+[sorry for the duplicate, fixing Jann's email address]
 
 On Mon, Feb 26, 2024 at 09:10:54AM -0800, Doug Anderson wrote:
 > Hi,
