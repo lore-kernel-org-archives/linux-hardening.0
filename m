@@ -1,82 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D759A1CD2B;
-	Mon, 26 Feb 2024 10:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6DC55C01;
+	Mon, 26 Feb 2024 10:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943975; cv=none; b=RHWKNao42Eex6DNqYe/MxZZQ9DRLIboxXwomMlt4UT42M6HiEalI71922XBQNCFDEunA9VB407tWeKZiJPPrFusP1F3QUR9TmO+x7Uyct6/U3PyGdy+5ggU3OBxOGw579jIMLtf7KEbv2MfgZk3PprP6bEIIXL0UgWMRMGaCVB8=
+	t=1708944301; cv=none; b=RgJSl8+k4xco9Ln9keU4uFxnr5MAp5NHSA4DXxYSSkjsQQx87kn9slSdN4nlrEesaRqpI735Seio/V1hngM8bF10G0uz8ecOdiSDIMHy8mXzP/AViBy3sRc/tIOw3NH7jWjRIFnHCxfRKjGkJWZ/gtiJZEzAV2C81xgPRPa9O90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943975; c=relaxed/simple;
-	bh=ymjcFen8c3Su6bcKnRhsOkKT7wLiavklUN50no/AaHQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KPZOGPSybuNR9XQ68t/q6tA/xJexzc+0ma4dcJNSTh8sWSMmj8jz1ElP1EgnIsX9DguwOZRCa8T15FdNSHyXR15tHW6AmKwlBDDuYDqIv43dQnPwQFU8ZYsod/SIbVUcsiD8bMdiGES6kqroGJ+GSNIDOlM4ml/3a83G+EDAjuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfutgURm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708944301; c=relaxed/simple;
+	bh=dbzJ5HplGKB0UbVpYH6JV4HOfKZddkYMfHSn2nxZab8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b0fwZ3iIk82v86fVw7L5GalhKfSIZzIuTm7/j7ieuhHKuzO68YI3eMiab+jrDYpqB7wFDx3lpzHSdhLPNjIro+8BhcsmY3uhVHcrtaQXBY+zLs5voJZPW/lul7h8MqWtjbNgWMkXsmYczsTAjnOyZqydJgiYvL5wOFbHkXkhCNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PbNfK+Fe; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfutgURm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8C3DC433C7;
-	Mon, 26 Feb 2024 10:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708943974;
-	bh=ymjcFen8c3Su6bcKnRhsOkKT7wLiavklUN50no/AaHQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=WfutgURm5TLAIvDzJD7MQrGOiOzovl+SSrWQDpL4BQZXqKXSlQ2C9l6cELAoAMBEq
-	 vdMEAelQUFi/VxzMO6RrmQAmEQK39mArk2ZgicrtiN7neDkvZI8bBAbAiOiXh9rn5v
-	 YRvqot7ee5G9BMdNI//SqP2QdML0e7tUw6dL1dQ2UbtHd4V0JqbCAca/IoBvMG3E7A
-	 q4l+a4VZS9iqKGPq5Hox7Ql+vxXdi8fiT6iUksgDB77c1408r/w2On0Q6QUCktvl6P
-	 umNGMDfpge25hvRiJ/pqUHobDyJpqvIhSyUKPC9rdtULwBYLJTcd/68H75Kv1+g69e
-	 mKgW5FtuQO6mw==
-Date: Mon, 26 Feb 2024 11:39:35 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-cc: y0un9n132@gmail.com, Geert Uytterhoeven <geert@linux-m68k.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
-    Qi Zheng <zhengqi.arch@bytedance.com>, 
-    Alexandre Ghiti <alexghiti@rivosinc.com>, x86@kernel.org, 
-    Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-    Jan Kara <jack@suse.cz>, Eric Biederman <ebiederm@xmission.com>, 
-    Christophe Leroy <christophe.leroy@csgroup.eu>, 
-    Josh Poimboeuf <jpoimboe@kernel.org>, 
-    "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-    Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-    Brian Gerst <brgerst@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Tony Battersby <tonyb@cybernetics.com>, linux-kernel@vger.kernel.org, 
-    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86: Increase brk randomness entropy on x86_64
-In-Reply-To: <20240217062545.1631668-1-keescook@chromium.org>
-Message-ID: <nycvar.YFH.7.76.2402261138370.21798@cbobk.fhfr.pm>
-References: <20240217062035.work.493-kees@kernel.org> <20240217062545.1631668-1-keescook@chromium.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PbNfK+Fe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F18C060005;
+	Mon, 26 Feb 2024 10:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708944298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zL/Tgozd757x0uspKJ/QO1fI2sa1DUP6bzOx+70NEX0=;
+	b=PbNfK+FefzTpRRZZaLv6nXskQ+mmjm6jtVHrDL7HRvcQUxrt/ON5CBHIra+IRzW5oSP3mC
+	qL0rcEu5cs9tcn9SnBMBL/eM1OxBZfSwfB/j6BSbxCBBSPT6hoADU1JUblR3QK5LVJSHMF
+	MhmzEaiQP7PPOzilGKqZR8Pxp1pjllqW51/TO2+/XDxIS1lzGDEMpvXjGzbNIOhYVx13eA
+	S/xIGuK89v2kZwSrZJ0PAF4SxW3+AiVnLiFBfq6vNJwE0hVbsNPyME4lPuM/CUu/mGz3z2
+	4ck9hwW45k2IESMkzf5Mdo+mppFvwVwPNaY81MpS+5bJR5rghPxnyXJmZ74hiA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Erick Archer <erick.archer@gmx.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Li Zetao <lizetao1@huawei.com>,
+	=?utf-8?q?Uw?= =?utf-8?q?e_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded arithmetic
+Date: Mon, 26 Feb 2024 11:44:56 +0100
+Message-Id: <20240226104456.490065-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240211091633.4545-1-erick.archer@gmx.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: b'e395036504c4e19d15ba64543a4c3beca373f7a9'
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, 16 Feb 2024, Kees Cook wrote:
-
-> In commit c1d171a00294 ("x86: randomize brk"), arch_randomize_brk() was
-> defined to use a 32MB range (13 bits of entropy), but was never increased
-> when moving to 64-bit. The default arch_randomize_brk() uses 32MB for
-> 32-bit tasks, and 1GB (18 bits of entropy) for 64-bit tasks. Update
-> x86_64 to match the entropy used by arm64 and other 64-bit architectures.
+On Sun, 2024-02-11 at 09:16:33 UTC, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
 > 
-> Reported-by: y0un9n132@gmail.com
-> Closes: https://lore.kernel.org/linux-hardening/CA+2EKTVLvc8hDZc+2Yhwmus=dzOUG5E4gV7ayCbu0MPJTZzWkw@mail.gmail.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
+> this structure ends in a flexible array:
+> 
+> struct mtk_nfc_nand_chip {
+> 	[...]
+> 	u8 sels[] __counted_by(nsels);
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the argument "size + count * size" in the
+> devm_kzalloc() function.
+> 
+> This way, the code is more readable and safer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Wow, this is a pretty aged code indeed.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-	Acked-by: Jiri Kosina <jkosina@suse.com>
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Miquel
