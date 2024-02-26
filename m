@@ -1,36 +1,36 @@
-Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
+Received: from smtp-42ae.mail.infomaniak.ch (smtp-42ae.mail.infomaniak.ch [84.16.66.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F3B12C55E
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 17:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2839512DD9B;
+	Mon, 26 Feb 2024 17:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708967148; cv=none; b=EWcCtf9Jsenki0KgOk9nOKTgk5uOAqmW4tl5igFtPb9EGjCLwtoIbB5Andrv+FUO2wVhiiCPa9zByGAuQ+a2HW9j+v/zc6iyKnr3IRCk+97Hyat68Qf7mmGXrdHGInKdqQIXpNGYbRgT+mEZbOgACRv5YTzuH6MjDDQVj9gJh24=
+	t=1708967785; cv=none; b=OYWbq0eefxvevwD/ad/IjcCxVCCNogezKBmu41Ig4rlamd2tM6dptBzO5tRfz5xGMtKSxzaBcFt/NJyfGqPjN0A0Vhte5qauD//gqA5vDeOtwoizqY8heI82C1v5TO8wMW6dNAkmh0PNBjy439HgtCe8ONXJxCGmSlP6i2RSeAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708967148; c=relaxed/simple;
-	bh=TEpQO8oVhWg12vbtVS68hwoIFoQZycElKAGrNEzuM9o=;
+	s=arc-20240116; t=1708967785; c=relaxed/simple;
+	bh=oE8hrpoUSR9N67ZJZXv3erGxT2tzDmf9YxuB+DY4Wss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bpasQneow025Y64dPwVjD+3xcvZQ3Wc4Rry/4MgAWT8ISCUVS5E4bk/vxEThD2w762YQhwlQGZRVan6s1XK2+NxshLfvHa5DBkT5WRh2NTIZCsHYs80YMUl9QW9aqKIy+KSPtb72WmvqzP8vEbFVbpYV+0k+WBq9eaE9Vo3z4FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=J5hwbTHq; arc=none smtp.client-ip=45.157.188.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=tBCwELn0zFcHWWfxc76+7F3kjX9TWx2c8IoaIm9E1lzybn3HV5iEmYGFxqSmu919hNPD/gh3pK1i1OHvuxaGA9/PZwUzAMDEabrW0NvGRpLZWuKy/gui0x5uDra+SLDUlNZ5KW8gLjrcWt1jtWYJMJFa998F1vVC++VyOBKKXQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ByQIpJxH; arc=none smtp.client-ip=84.16.66.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="J5hwbTHq"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tk6Sk4MjfzQkL;
-	Mon, 26 Feb 2024 18:05:42 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tk6Sj5blNz1sr;
-	Mon, 26 Feb 2024 18:05:41 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ByQIpJxH"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tk6hz36YLzMq1N3;
+	Mon, 26 Feb 2024 18:16:19 +0100 (CET)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tk6hy5x0KzMpnPs;
+	Mon, 26 Feb 2024 18:16:18 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1708967142;
-	bh=TEpQO8oVhWg12vbtVS68hwoIFoQZycElKAGrNEzuM9o=;
+	s=20191114; t=1708967779;
+	bh=oE8hrpoUSR9N67ZJZXv3erGxT2tzDmf9YxuB+DY4Wss=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J5hwbTHqlvYD7XVRvMUl+1yLrl1IYNrSHFaPd8XOBjVbSlYpYstl5VbR9fB/ZR0zT
-	 JMGK2lOQSwEMUYdDl7Dyk0mcgPxC3oA1Jqi097/QPKxFi0rLGPUkh6CUmXtp72Ifs7
-	 JsByWA9GE4IGe2H/Z8jBwKANLAlE0JkMPCdJXydE=
-Date: Mon, 26 Feb 2024 18:05:33 +0100
+	b=ByQIpJxHSGgdthDGkZsHgkIajVMAPN9ctSDwfU4e9sd4231s+G/sTgW6XXXwu0C2a
+	 nv524ywUOinsIC/TRRPPcIrN4c+EcCGNz2TxguG4qEYDgkRNC3W3r+5zwwT5J5JrLr
+	 /3OrmT/Y5n1Dgmtf8zFBK0GmQmpMPXhbi4qYc/2s=
+Date: Mon, 26 Feb 2024 18:16:10 +0100
 From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>
+To: Kees Cook <keescook@chromium.org>
 Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
 	Paul Moore <paul@paul-moore.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
 	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Shervin Oloumi <enlightened@chromium.org>, 
@@ -38,9 +38,9 @@ Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
 	linux-security-module@vger.kernel.org, stable@vger.kernel.org
 Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
  while disabled
-Message-ID: <20240226.Ceemai4ahxei@digikod.net>
+Message-ID: <20240226.wu2ageiPi6Ch@digikod.net>
 References: <20240219191804.2978911-1-mic@digikod.net>
- <20240221.b8dcd9590c37@gnoack.org>
+ <202402191304.ED03339B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,15 +50,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221.b8dcd9590c37@gnoack.org>
+In-Reply-To: <202402191304.ED03339B@keescook>
 X-Infomaniak-Routing: alpha
 
-On Wed, Feb 21, 2024 at 10:35:50PM +0100, Günther Noack wrote:
-> Hello!
-> 
-> I think this is a good idea.
-> Some minor implementation remarks below.
-> 
+On Mon, Feb 19, 2024 at 01:07:48PM -0800, Kees Cook wrote:
 > On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
 > > Because sandboxing can be used as an opportunistic security measure,
 > > user space may not log unsupported features.  Let the system
@@ -86,45 +81,38 @@ On Wed, Feb 21, 2024 at 10:35:50PM +0100, Günther Noack wrote:
 > > +{
 > > +	if (likely(landlock_initialized))
 > > +		return false;
-> 
-> Optional stylistic remark; I try to avoid predicate functions which
-> have a "negated" meaning, because double negations are slightly more
-> error prone.  (We return false here, so Landlock is not not
-> initialized.)
-
-I agree, I was also bothered about this double negation. I'll send a v2
-with the same behavior but an is_initialized() helper instead.
-
-> 
 > > +
 > > +	pr_warn_once(
 > > +		"Disabled but requested by user space. "
 > > +		"You should enable Landlock at boot time: "
 > > +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
-> > +	return true;
-> > +}
-> > +
-> >  /**
-> >   * copy_min_struct_from_user - Safe future-proof argument copying
-> >   *
-> > @@ -173,7 +185,7 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
-> >  	/* Build-time checks. */
-> >  	build_check_abi();
-> >  
-> > -	if (!landlock_initialized)
-> > +	if (is_not_initialized())
-> >  		return -EOPNOTSUPP;
 > 
-> Technically, any Landlock user needs to go through the
-> landlock_create_ruleset() system call anyway; it might be enough to
-> just add it in that place and leave the other system calls as they
-> were.  Then you could also omit the special function.
+> Perhaps update this docs to be really explicit with a example, maybe...
+> 
+> If `landlock` is not present in `CONFIG_LSM`, you can add it. For
+> example, if this was the current config::
+> 
+>   $ zgrep -h ^CONFIG_LSM= /boot/config-$(uname -r) /proc/config.gz 2>/dev/null
+>   CONFIG_LSM="lockdown,yama,integrity,apparmor"
+> 
+> You can boot with::
+> 
+>   lsm=landlock,lockdown,yama,integrity,apparmor
+> 
 
-True, but we never know. I prefer to cover all entry points the same
-way.  It makes things more consistent and easier to review.
+Indeed, I'll send a dedicated patch and update the link accordingly.
 
 > 
-> Reviewed-by: Günther Noack <gnoack3000@gmail.com>
+> I *still* wish we had the "+" operator for lsm=. It would be SO much
+> easier to say "boot with lsm=+landlock". *shrug*
+
+I guess it's still possible and it would need to be backported to be
+more useful.
+
 > 
-> –Günther
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> -- 
+> Kees Cook
 > 
