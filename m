@@ -1,184 +1,106 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F5512F395
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 19:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5810C12FF9E;
+	Mon, 26 Feb 2024 19:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975476; cv=none; b=GGJtdolC9gj3WNJ5uUrPCxStRATDv2lRu1OV+H1RfiGou51Yf3kWvyb6gQurlPo47AdUteNApMIkvUxePYgVuNtKN8kAebmtM3rMnlrd3k2BJB6bfZ8OljgwIANUu8XHLFxmHCtRLcatp0jYu2lcMqFBuMwKyh9U7idgwYweNKs=
+	t=1708977367; cv=none; b=NA0cavUC/Lw0q1Mxqfk5dawTRGuABZm3z39hl69tsmRw07hpOmTA1BK8NlfpYR6Vm3pgby5/p3E7e4GYlhu8mrfFPmn+pxRquiXYgWQBd4oZWlIQgY/6mpvV6XGrG1c4ytwkA1HGvG8CYbgPAfvAIpgzV/LfILPutXwrNhaUZN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975476; c=relaxed/simple;
-	bh=THgm6rGLpzdRlqCmuQGYCh3G2e2uZuhgn1thuX7TM28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MZNdWgwJ69fsDWJL5OOmsCD+2HsHNz7YTvnNxZAdPsG0v/YITUdvfd781k/UaX/q6X2/27grYS26xiAIT5hHcewf6vafuXiVoG9zkIq5ToGsbUOTlDJ6Kp6MCx/A+JpPrwPU9uRN1YkuZXp9+rkuLlqlfqq3myZfFNhfhjCzFxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IDawg6Dh; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708977367; c=relaxed/simple;
+	bh=6Zl7pRrMwE9dGNrCDqkWNA3304G2EaRtfiPFgXD6Pog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nsxNtpNakkB53EXcyYaJS2P0ajcNOFoSWfgU4yzRrQsYoy4usmzTKZ5JSU34QnH8l9HSHaIS0HtNvQv1kjZQl0tYwqniHjrl2E1/hod0/OajRVmN2Rp85TlUXx+v9beEikJeMUSp9oJgqLlF9eYNtOE8gqsouKABdgESaf9kxBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxbsFE44; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IDawg6Dh"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dc0e5b223eso28772705ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 11:24:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxbsFE44"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e4f45d4369so1047167b3a.0;
+        Mon, 26 Feb 2024 11:56:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708975474; x=1709580274; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=InMne0CIdEUH5H66AFxEIsfbiaQhDQQyahGGSNpAGCM=;
-        b=IDawg6DhM0XUTrV9XNtDtxehkJZRJwGpvO5ptOOXE9onzexPKtwIc1EQvwTOiYXXIu
-         S8+A3bnPp5HmicrtSCh+6mmZ7MeMB+WA/0WQvsTlVdIAruUkqYkfSTxVc4HJMrySEMFp
-         dCIo/mHxl8iSUS620NEsHqSX9wr6vpT6/mQcc=
+        d=gmail.com; s=20230601; t=1708977365; x=1709582165; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cJVioeNisc4dy/+Rk70H6D/CcaCXrKsjxQfBoFKY1rM=;
+        b=IxbsFE44+h3EGs1rnmzsmcAJHk0OyAZtf6n2Lh0FgAjWqy1+PEJB9EYGMmFAPQ9gEq
+         fqdtuC8TkxmYDpq9UClUhHc78GBrgXdzxC3jDz0nc/7oA16vDISoYD5qmOy6sZX0ALMw
+         mSvENgzK/n9a1acPZSPIxd21k61eUVbKrb65uSYW6qF5DXB/hiKPN4f8NwonezYy4KKD
+         9jzFkOT6T2H+RzrlrDcjs5Do/WVunq/0zCYpttZVP2SgibCcEVvXYZsY6RHU5epvaI47
+         p9AU+9+Y92bgulRLuUhCfo6lA0ScPdI5jc5Cydb8lffHKkEjV6QjQ40U9GilRPnCdmJN
+         tDuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708975474; x=1709580274;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=InMne0CIdEUH5H66AFxEIsfbiaQhDQQyahGGSNpAGCM=;
-        b=KTBjhVQrImj2KnsRgHmZ1K5G/CCFaBUD6HG7zXphWMKLy9s/Rx98y0GIwyeqNSi2VD
-         Dm4+XxB6WMZnHreG7HKX0sLc50PvMpvn4PG40dtgvdzAsjZTdEU+rkGYj5HTp6vkS1eS
-         vJvFDNg1BYN5X4iFybk62obT/qCNuLeYn9ZNFe3xd3fYmKL3lPW/R/fgI5X1Ocl/2lTa
-         dj3l9aPNi+OOaguLbWON5XdIg9zXnTH116BS596fivNV7ixU+A32TOti5ifBJCxGRiGV
-         1txSPofwA5Yqo4bP2t+Pv1zt9L+ihZNTQz0mdHP8b1/+6j0J8kOKDu2/HEyXZqMD2txD
-         Yvxg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5/IKPP4O9tT6NbyAYj7hYus3dicGViJpdB/gFBwtEEPuCK9MVlGKXV0gJ7zsQCZSLhgufNl3PH2RmJIFDNEg4dXh3S2IjCQO6eldJfBUB
-X-Gm-Message-State: AOJu0YxGOQh9T6sCp92hbS6KKpf3P5q7ydjrjHwQwZz+UIOiIkNxrrA7
-	QHqDKRVK1CBrN35JRPwcx5E353neXI69GlDFszNX5BjL7FrjPZhvSmUpjY/L3A==
-X-Google-Smtp-Source: AGHT+IGuKJW5UHzRannH3J/uDHtHCTUjnDGiC7Kw9nAZoWU+O3ZdeIO5FhWpusWjRzPLtJW8pjElAA==
-X-Received: by 2002:a17:902:e94c:b0:1dc:ada9:bceb with SMTP id b12-20020a170902e94c00b001dcada9bcebmr1895063pll.5.1708975473701;
-        Mon, 26 Feb 2024 11:24:33 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u13-20020a170903308d00b001dc2d1bd4d6sm51088plc.77.2024.02.26.11.24.33
+        d=1e100.net; s=20230601; t=1708977365; x=1709582165;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cJVioeNisc4dy/+Rk70H6D/CcaCXrKsjxQfBoFKY1rM=;
+        b=ScGCEixwvZbikANxGTewEoCCx9o3cjB0Gj5Uftf3Q6lpL7BlTv08SoY7RWfeNGNGca
+         ZAcDDIJty242siHtmh75QWam+xsHoAurujhOKmEov0plWInQ3MJw6vrt43/MO65hIM4W
+         iHEC8wI+jDzLJhI6FtU8LjgdeECikOnWQXhwv4jcH7htjHqpRDHKeVklhmkEuQpi2I6a
+         vhYCD/J/fUU+WCmVh9dWB892L59/O8YU4yDOkytq+77AZwsNtgjCRAD5/1R0ppjEZwYm
+         WUcVxeZHLUmTnlo1VdiJ7lxyOA+EpCHTHPo8xndIYD+GqJ6XOcpDH2Cg/OW/njew18x1
+         LZng==
+X-Forwarded-Encrypted: i=1; AJvYcCUKn2+VcIuTfG1vjB1wdjZPMT3YDSmbp/BKwYVXGonAlUOoEHDpQKlHH1cGH14f0NEkPQOwAbVWYHbRTw9ON+UxJj2GcjO22+OHWdYrYo2u9V4RAGsL0GLIMsVo7BrEMK7P0jxv0M5D3cEPLpULe6Bb686cCLtf1SXPr6XE6DYebc0N7A6jr02SvFuIw7dgII0rO7ZjEuma+dn+coLfg/slZ4O6cCE6hEI=
+X-Gm-Message-State: AOJu0Yz+McaKtFgbXZWaGlrCzAjreaLHlscujjL8NvXcki1WpVq9Og4Y
+	UhdF8Z7jwtLBVU3oJxUAKy+tSLUsIyOL1zHjhd2dztHitHhRqG6T
+X-Google-Smtp-Source: AGHT+IE0vdy4nq3mjSDWbLvfK/nPZRJvq7XrZHmv1/yQFVMoH09Wq0qFtlEesXmEaNamvmG6Vn7uqw==
+X-Received: by 2002:a05:6a00:2d96:b0:6e5:3e08:cbf1 with SMTP id fb22-20020a056a002d9600b006e53e08cbf1mr2371390pfb.23.1708977365278;
+        Mon, 26 Feb 2024 11:56:05 -0800 (PST)
+Received: from localhost.localdomain ([115.187.42.119])
+        by smtp.gmail.com with ESMTPSA id ls25-20020a056a00741900b006e532495091sm1902252pfb.73.2024.02.26.11.56.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 11:24:33 -0800 (PST)
-Date: Mon, 26 Feb 2024 11:24:32 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>, jannh@google.com
-Cc: Doug Anderson <dianders@chromium.org>,
-	linux-security-module@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com, Guenter Roeck <groeck@chromium.org>,
-	Mike Frysinger <vapier@chromium.org>,
+        Mon, 26 Feb 2024 11:56:04 -0800 (PST)
+From: Raihan Ahamed <raihan1999ahamed@gmail.com>
+To: krzysztof.kozlowski+dt@linaro.org,
+	robh+dt@kernel.org
+Cc: raihan1999ahamed@gmail.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] proc: allow restricting /proc/pid/mem writes
-Message-ID: <202402261123.B2A1D0DE@keescook>
-References: <20240221210626.155534-1-adrian.ratiu@collabora.com>
- <CAD=FV=WR51_HJA0teHhBKvr90ufzZePVcxdA+iVZqXUK=cYJng@mail.gmail.com>
- <202402261110.B8129C002@keescook>
+Subject: [PATCH v3 1/2] dt-bindings: arm: qcom: Add Lenovo P2
+Date: Tue, 27 Feb 2024 01:24:41 +0530
+Message-ID: <20240226195516.174737-1-raihan1999ahamed@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
+References: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202402261110.B8129C002@keescook>
 
-[sorry for the duplicate, fixing Jann's email address]
+Document the compatible for the MSM8953-based Lenovo P2 smartphone released in 2016.
 
-On Mon, Feb 26, 2024 at 09:10:54AM -0800, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Feb 21, 2024 at 1:06 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
-> >
-> > Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
-> > after which it got allowed in commit 198214a7ee50 ("proc: enable
-> > writing to /proc/pid/mem"). Famous last words from that patch:
-> > "no longer a security hazard". :)
-> >
-> > Afterwards exploits appeared started causing drama like [1]. The
-> > /proc/*/mem exploits can be rather sophisticated like [2] which
-> > installed an arbitrary payload from noexec storage into a running
-> > process then exec'd it, which itself could include an ELF loader
-> > to run arbitrary code off noexec storage.
-> >
-> > As part of hardening against these types of attacks, distrbutions
-> > can restrict /proc/*/mem to only allow writes when they makes sense,
-> > like in case of debuggers which have ptrace permissions, as they
-> > are able to access memory anyway via PTRACE_POKEDATA and friends.
-> >
-> > Dropping the mode bits disables write access for non-root users.
-> > Trying to `chmod` the paths back fails as the kernel rejects it.
-> >
-> > For users with CAP_DAC_OVERRIDE (usually just root) we have to
-> > disable the mem_write callback to avoid bypassing the mode bits.
-> >
-> > Writes can be used to bypass permissions on memory maps, even if a
-> > memory region is mapped r-x (as is a program's executable pages),
-> > the process can open its own /proc/self/mem file and write to the
-> > pages directly.
-> >
-> > Even if seccomp filters block mmap/mprotect calls with W|X perms,
-> > they often cannot block open calls as daemons want to read/write
-> > their own runtime state and seccomp filters cannot check file paths.
-> > Write calls also can't be blocked in general via seccomp.
-> >
-> > Since the mem file is part of the dynamic /proc/<pid>/ space, we
-> > can't run chmod once at boot to restrict it (and trying to react
-> > to every process and run chmod doesn't scale, and the kernel no
-> > longer allows chmod on any of these paths).
-> >
-> > SELinux could be used with a rule to cover all /proc/*/mem files,
-> > but even then having multiple ways to deny an attack is useful in
-> > case on layer fails.
-> >
-> > [1] https://lwn.net/Articles/476947/
-> > [2] https://issues.chromium.org/issues/40089045
-> >
-> > Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
-> >
-> > Cc: Guenter Roeck <groeck@chromium.org>
-> > Cc: Doug Anderson <dianders@chromium.org>
-> > Signed-off-by: Mike Frysinger <vapier@chromium.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-This should have a "Co-developed-by: Mike..." tag, since you're making
-changes and not just passing it along directly.
-
-> > Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> > ---
-> > Tested on next-20240220.
-> >
-> > I would really like to avoid depending on CONFIG_MEMCG which is
-> > required for the struct mm_stryct "owner" pointer.
-> >
-> > Any suggestions how check the ptrace owner without MEMCG?
-> > ---
-> >  fs/proc/base.c   | 26 ++++++++++++++++++++++++--
-> >  security/Kconfig | 13 +++++++++++++
-> >  2 files changed, 37 insertions(+), 2 deletions(-)
-> 
-> Thanks for posting this! This looks reasonable to me, but I'm nowhere
-> near an expert on this so I won't add a Reviewed-by tag.
-> 
-> This feels like the kind of thing that Kees might be interested in
-> reviewing, so adding him to the "To" list.
-
-I'd love to make /proc/$pid/mem more strict. A few comments:
-
-> [...]
-> +	if (ptracer_capable(current, mm->user_ns) &&
-
-It really looks like you're trying to do a form of ptrace_may_access(),
-but _without_ the introspection exception?
-
-Also, using "current" in the write path can lead to problems[1], so this
-should somehow use file->f_cred, or limit write access during the open()
-instead?
-
-> [...]
-> +config SECURITY_PROC_MEM_RESTRICT_WRITES
-
-Instead of a build-time CONFIG, I'd prefer a boot-time config (or a
-sysctl, but that's be harder given the perms). That this is selectable
-by distro users, etc, and they don't need to rebuild their kernel to
-benefit from it.
-
-Jann Horn has tried to restrict access to this file in the past as well,
-so he may have some additional advice about it.
-
--Kees
-
-[1] https://docs.kernel.org/security/credentials.html#open-file-credentials
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 1a5fb889a444..6cc19c8d116d 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -263,6 +263,7 @@ properties:
+ 
+       - items:
+           - enum:
++              - lenovo,kuntao
+               - motorola,potter
+               - xiaomi,daisy
+               - xiaomi,mido
 -- 
-Kees Cook
+2.44.0
+
