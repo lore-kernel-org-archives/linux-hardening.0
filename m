@@ -1,99 +1,107 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6DC55C01;
-	Mon, 26 Feb 2024 10:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8BE1386DD;
+	Mon, 26 Feb 2024 16:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944301; cv=none; b=RgJSl8+k4xco9Ln9keU4uFxnr5MAp5NHSA4DXxYSSkjsQQx87kn9slSdN4nlrEesaRqpI735Seio/V1hngM8bF10G0uz8ecOdiSDIMHy8mXzP/AViBy3sRc/tIOw3NH7jWjRIFnHCxfRKjGkJWZ/gtiJZEzAV2C81xgPRPa9O90=
+	t=1708966473; cv=none; b=T0Qjw+BL3W+qV2s+XPj+8nSb3fmFrIBx4S8yS5cy3XoO78jAw7I3B3ghiFljTWAy59z2Sb8JYpbG0NmHKq/93uKb+jOUSN/Mn96rbB7OMl+QoN/2qvqPe/ripj3Y90dxKB35CXNDpry32pNb/JZb8KZ6hAvUMZF44MltnEPGTw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944301; c=relaxed/simple;
-	bh=dbzJ5HplGKB0UbVpYH6JV4HOfKZddkYMfHSn2nxZab8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b0fwZ3iIk82v86fVw7L5GalhKfSIZzIuTm7/j7ieuhHKuzO68YI3eMiab+jrDYpqB7wFDx3lpzHSdhLPNjIro+8BhcsmY3uhVHcrtaQXBY+zLs5voJZPW/lul7h8MqWtjbNgWMkXsmYczsTAjnOyZqydJgiYvL5wOFbHkXkhCNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PbNfK+Fe; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708966473; c=relaxed/simple;
+	bh=1BbFXI8+e/uTRBZj3bHZ1/qCl2EwN2YL4ljd8lQDGyg=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=j8CTMqn/+XZ87GuvEvUT3wjVj3D8MXj0vIu36ALVgcYOYHaL7iwyUTuXAS2WUVnAd0uN/eAYKUpCCR/y4OToXAuxtkrLckWdBoUMPlpJrZlV0//2W4f+eCOy3AzASZV2RZ7GJ9smppLzr6cFE2Wf68fH5AbVu57URAgT02GykXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgC41Xfe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PbNfK+Fe"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F18C060005;
-	Mon, 26 Feb 2024 10:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708944298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zL/Tgozd757x0uspKJ/QO1fI2sa1DUP6bzOx+70NEX0=;
-	b=PbNfK+FefzTpRRZZaLv6nXskQ+mmjm6jtVHrDL7HRvcQUxrt/ON5CBHIra+IRzW5oSP3mC
-	qL0rcEu5cs9tcn9SnBMBL/eM1OxBZfSwfB/j6BSbxCBBSPT6hoADU1JUblR3QK5LVJSHMF
-	MhmzEaiQP7PPOzilGKqZR8Pxp1pjllqW51/TO2+/XDxIS1lzGDEMpvXjGzbNIOhYVx13eA
-	S/xIGuK89v2kZwSrZJ0PAF4SxW3+AiVnLiFBfq6vNJwE0hVbsNPyME4lPuM/CUu/mGz3z2
-	4ck9hwW45k2IESMkzf5Mdo+mppFvwVwPNaY81MpS+5bJR5rghPxnyXJmZ74hiA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Erick Archer <erick.archer@gmx.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	=?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Li Zetao <lizetao1@huawei.com>,
-	=?utf-8?q?Uw?= =?utf-8?q?e_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] mtd: rawnand: Prefer struct_size over open coded arithmetic
-Date: Mon, 26 Feb 2024 11:44:56 +0100
-Message-Id: <20240226104456.490065-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240211091633.4545-1-erick.archer@gmx.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgC41Xfe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2548C433C7;
+	Mon, 26 Feb 2024 16:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708966473;
+	bh=1BbFXI8+e/uTRBZj3bHZ1/qCl2EwN2YL4ljd8lQDGyg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=PgC41Xfe09R4yKk237ud4IIc4cagLva74Y/ljKHEAsDgxknMsVN7nXTEiqfi62ocv
+	 JVct8HUBICbIAj1Lid0RgXmoJN7MvzFDY0PquqCZCf6pLr8JgowNXf4iRZMSWTZObr
+	 pccKf121CC7bXyVtowkQFS9kpiSr2H4q9IFQzQjj9C7As9+8vlT+SOam/63KnxPyMx
+	 cM4EGay1siV/Fdxo/FbyUtuIYQeWZW+LP6vIKgAVT3HX6RxfbzTjPprk6cDNEGfh7B
+	 GDHesODJk6EkIwZEg5YaGsK0zkX4PToSXhFNPRuge5mmcyKrTCJv6Rg2l+yZgZuyJO
+	 piFF9z4P0bLGg==
+Date: Mon, 26 Feb 2024 10:54:31 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'e395036504c4e19d15ba64543a4c3beca373f7a9'
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: miquel.raynal@bootlin.com
+From: Rob Herring <robh@kernel.org>
+To: Raihan Ahamed <raihan1999ahamed@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+ Rob Herring <robh+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ Bjorn Andersson <andersson@kernel.org>, linux-hardening@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org
+In-Reply-To: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
+References: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
+Message-Id: <170896502279.859050.12118817690939109079.robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8953-lenovo-kuntao: Add initial
+ device tree
 
-On Sun, 2024-02-11 at 09:16:33 UTC, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
-> 
-> As the "chip" variable is a pointer to "struct mtk_nfc_nand_chip" and
-> this structure ends in a flexible array:
-> 
-> struct mtk_nfc_nand_chip {
-> 	[...]
-> 	u8 sels[] __counted_by(nsels);
-> };
-> 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the argument "size + count * size" in the
-> devm_kzalloc() function.
-> 
-> This way, the code is more readable and safer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+On Mon, 26 Feb 2024 11:25:56 +0530, Raihan Ahamed wrote:
+> Lenovo P2 is a handset using the MSM8953 SoC released in 2016
+> 
+> Add a device tree for with initial support for:
+> 
+> - GPIO keys
+> - SDHCI (internal and external storage)
+> - USB Device Mode
+> - WCNSS (WiFi/BT)
+> - Regulators
+> 
+> Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/msm8953-lenovo-kuntao.dts   | 240 ++++++++++++++++++
+>  2 files changed, 241 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+> 
 
-Miquel
+
+My bot found new DT warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y qcom/msm8953-lenovo-kuntao.dtb' for 20240226055615.79195-1-raihan1999ahamed@gmail.com:
+
+arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dtb: gpu@1c00000: clock-names:5: 'anyOf' conditional failed, one must be fixed:
+	'core' was expected
+	'iface' was expected
+	'mem' was expected
+	'mem_iface' was expected
+	'alt_mem_iface' was expected
+	'gfx3d' was expected
+	'rbbmtimer' was expected
+	'rbcpr' was expected
+	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
+arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dtb: iommu@1c48000: compatible: 'oneOf' conditional failed, one must be fixed:
+	'qcom,msm8953-iommu' is not one of ['qcom,msm8976-iommu']
+	'qcom,msm-iommu-v1' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/qcom,iommu.yaml#
+
+
+
+
+
