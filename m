@@ -1,161 +1,177 @@
-Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF5E1468E3;
-	Tue, 27 Feb 2024 15:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF719145B15
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 15:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709047516; cv=none; b=ac5JU3rSX/+bB5OdDuUzjpT6NejdVxejENVtjyxCDbxelFDtkN+yNVY2FIcGaBLzkuN4HUM/abG0JnJ1a8JPpMvUlDXbkGHsqSp8vw5SqYWTJ3P8jncRpxrpZoEzdE77wEPGbEwEye6ynOx5ElYb5CL5MhmasH4e5cNxjIq+KTI=
+	t=1709048262; cv=none; b=Ys2q3dx2zxLPzVHkvQt7UN1N4eHNG0K747TcBuhb8Blua4tbaA79fFIfwOTnVxaNqMmd2kOKfz7X6O0VGRsd3atwn3MPZG5QX04UTgdfvKUro9h4fl2xLtGJUX43ysirwBdMcpelefZ29w0aMFJBdQSQMQHmney1GIVPj6KB9GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709047516; c=relaxed/simple;
-	bh=/0CX/GTDlI99GNqGRU+WOoXiS5slLjuQQEO7NtWVgFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYkfZWaTmzD5vkOlpiAM+AEU39c/zGYLgfMt70HbOIMI++j1IqcVHssB2S+mKbVrGxe+cHg1Q5Wr4hC97gmOlfX9CQ9ddFYmzey14BqY8BIYpQ/S83+xsGX7uehfqxT5KhRrBrYpBwBufN7iuQcfJ8369qFdD1mLBt499DXFbs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=animalcreek.com; spf=pass smtp.mailfrom=animalcreek.com; dkim=pass (2048-bit key) header.d=animalcreek.com header.i=@animalcreek.com header.b=g/OAwn8N; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=auIvCa4B; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=animalcreek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=animalcreek.com
+	s=arc-20240116; t=1709048262; c=relaxed/simple;
+	bh=WrNAavq49JnUtL9z1fXa8kbbV9Ll1HlVFnPdARwhMTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mg5gCd57qdMZutANSh3e9cqEPdyizmy7OVmwlvKtr8aKCrWGGdwIJBnh6iW7BSpQWJ2VFBRyMT6D4uSci0b085UR1TD7mDH4Te73HecxrMXT/i7HVP5qM7SgC6/wb3PwTQOQZLGZZgaXx6+YTZWw8D8UlAM0cedNPbYRqsgkvu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q4lcmzsZ; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=animalcreek.com header.i=@animalcreek.com header.b="g/OAwn8N";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="auIvCa4B"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id EC67311400AB;
-	Tue, 27 Feb 2024 10:25:13 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 27 Feb 2024 10:25:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=animalcreek.com;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1709047513; x=
-	1709133913; bh=vk7zMywue6u8Ewys2yjE1YQdG3Ysi/Bjgx+fg8Jugd8=; b=g
-	/OAwn8Nnd5m2DeHCOg5TZK3ISBP+1I13sk4tur6CbpG6Zfo4jrTWcFTD287kNrM9
-	/ImIlcYeneF5cktE0bVwndusGl0UKNDbQkHL8D3580oIe5JkQ5er/jJyODDWNU4E
-	TJVzhKtyfxvhik86j2RGgD/RpPr661K4FfyXnFPs/jxrgLiRAv0deAGBAOPyz/TS
-	5EwPR/Sji/TG8uaQ8qzS2GB0NXLKPgh6mhK22n73uRUFy6HS9L8n5tBxoYvd+SIz
-	UPbj2DQMMn2LkK0vqJMSd0M5lkjb+LRfQlClFOdLJhQRurMPEkugnLuizbXXRbv6
-	UcyA5htnWMvFRUxmUEGUg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709047513; x=1709133913; bh=vk7zMywue6u8Ewys2yjE1YQdG3Ys
-	i/Bjgx+fg8Jugd8=; b=auIvCa4Bew62NXoHyKzQ9QD86zcWg4W/ntUvHxa3VrLP
-	swYPAQgJDNxhX57rC6LdlOFs2V/dfZDgruU526I144YNsOm3N/TlVNFKS/OYYuem
-	De+QROOwIaN+UdDeyQXdAUQwM+A0ddkCs3c0lXBV5xRglUyJcAWl0uryg+03EcTS
-	SofGAOpjCVpQiT/SP+V7TxKLJHJFo0GWxIgq6udPpsW8ezVOY/Tb+vZsB3enf/TY
-	DPZCJu3eTjP+7HX0N+27ZL0mrFoJDRPT7EY6P6D+bXXrB+TDGopfp89LDDQDyQnN
-	m+mj0bzwf3iwaUOUusFyqzw8BA+al/TSKQUi7bLPAQ==
-X-ME-Sender: <xms:2f7dZUJAXZnYXvIvAF2-0j4e77H-W92fq7tchj4kgDUkR6qJmJFfkw>
-    <xme:2f7dZULEPdV4H-hUqMxH8HXOwzwmxLOl_Uh7YQLP4JL8cgSUXCxPbcRP0jIoAyMhE
-    aR0xqCNRDdKofdxzg>
-X-ME-Received: <xmr:2f7dZUs02GkQ4DkmUxSU6tAkvA6nns-mWYm_v2FmV61osXXOTXaX0T4WzuNGQtWxJfQ8X8gZkLN6iQkgdhNLUNdQTvG0GdZzJ95q3O8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeehgdehudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjohesthdtredttddtvdenucfhrhhomhepofgrrhhk
-    ucfirhgvvghruceomhhgrhgvvghrsegrnhhimhgrlhgtrhgvvghkrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeeugfejtefgteegieffjeejtedtveefvefffeegkefhtdehtdfgfeev
-    keegvedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehmghhrvggvrhesrghnihhmrghltghrvggvkhdrtghomh
-X-ME-Proxy: <xmx:2f7dZRYSEdTKiw6R15rDIrPVYYebeNpstNURMPqaeJIp835TaHPDzA>
-    <xmx:2f7dZbY7EJ45ERcoMfNheIhetD0dCO0groHy2l0absyxjoqR0MAqAw>
-    <xmx:2f7dZdCMPUPcPY8MYFGAijD5ve1ergrRr_bjMufMdeqEoPOQ_2ZfYQ>
-    <xmx:2f7dZXrm061gXS4OrDsnJsGaqWnOESVkr1RdXkH9YjzHhh50JUKT-A>
-Feedback-ID: i9cc843c7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 27 Feb 2024 10:25:12 -0500 (EST)
-Received: by blue.animalcreek.com (Postfix, from userid 1000)
-	id 9CF18521078; Tue, 27 Feb 2024 08:25:11 -0700 (MST)
-Date: Tue, 27 Feb 2024 08:25:11 -0700
-From: Mark Greer <mgreer@animalcreek.com>
-To: Alex Elder <elder@ieee.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	Vaibhav Agarwal <vaibhav.sr@gmail.com>,
-	Mark Greer <mgreer@animalcreek.com>,
-	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>, greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] greybus: audio: apbridgea: Remove flexible array from
- struct audio_apbridgea_hdr
-Message-ID: <Zd3+1xJnl7d22xIb@animalcreek.com>
-References: <20240217154758.7965-1-erick.archer@gmx.com>
- <02cf87a3-4e92-4f6d-98f6-dfc0e198d462@ieee.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q4lcmzsZ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33d38c9ca5bso2326442f8f.2
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 07:37:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709048258; x=1709653058; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f011dxj9zX/OM++lF4k76GO0m8hQN5ggQ81URSsSTBQ=;
+        b=Q4lcmzsZg0Wfj89MmgWRwJxBhAAxcXHY0VDeWTjn+A2ZS91Bb3dtJdSIlt6AEIEVQy
+         TppnKGk4Q9u2f0e/T2MhaeQMrh9+oeXoJA0G5HnKDEIerJvQmrYXOzlH+WMbnImBVrfW
+         5EarXBPS5I+Tas/UmXsWp4uZCVmxbdPapWJNkFnz+qPpGwDz/5hZHoSqyfk6hQDUqkC1
+         saDu2bN2q3O5picG9ZCe+rShRRbXDr6WdebGJoD5Iapt+SiWZJ7aSissS7hpIJmQN1J3
+         +pUxPHNagthwOfGZxvwNrlPjlnDaXWAMDYl/Ujm6MbLhSkceLHszAWXXOpsesEX+G3hc
+         MBog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709048258; x=1709653058;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f011dxj9zX/OM++lF4k76GO0m8hQN5ggQ81URSsSTBQ=;
+        b=EH0gJgtv/trYl5kjSWC3lFhgAmaJc1y5JMWstK7CNdKRCAGV191Zl9fu/v2CVtOSNU
+         c7eiXazAuQbrTZ12ftYo8gm1ROMoMMDt5C2cnB45vj0n4WsFqL+l2d50S6RTWWqjPt+V
+         CH79e5sxKBJNu5TTlUCntVDm/D9zWm69i4WHorSu74UMn1k5xR01+aa9kgOSta900MKW
+         KtPVtgafTYtUj8odusdtt2Fir6rDJJQsyALS9EI+6U1UBsgJ9NgtBDqWbDbJwlWF1b/+
+         f+doUw6C36PYdqvPkNjh/Ey1orLLliLKME7nkfwPGsNT3/ueyr9FHvuu+XAwTfuEUNNM
+         hGwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxlEI7WAv0rGTQ1XM+xsafOiQR8wGHH36m0yxwmUoX/7zrIIIIUAG2NUD0pXlUCyHsuwfl1+o7kTT+r8ue8mUI0evQp3RRkB/7FpRcIzbe
+X-Gm-Message-State: AOJu0YyWRLeZkT/rSxUhjJee4YK3Kpfe7D4e2RYmB4PAOU9PVxeFbNN4
+	QsYlkM6guwvpjyMzP1l0tfCDX6eo4K9pilfPdoHAGmaSV+MiwKSZ8djS/+He+tgxF2vsGK6j1WP
+	M
+X-Google-Smtp-Source: AGHT+IEZ9Q2DpyJ+09LMJ9SXPvNjO+kk0h+b3Ur06pLLqMWUNExCixaGNE9ytC+Nwv3uhK01GyCZbQ==
+X-Received: by 2002:adf:f150:0:b0:33d:1469:d254 with SMTP id y16-20020adff150000000b0033d1469d254mr3099982wro.70.1709048258133;
+        Tue, 27 Feb 2024 07:37:38 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id t9-20020adfeb89000000b0033dbeb2eb4dsm11549365wrn.110.2024.02.27.07.37.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 07:37:37 -0800 (PST)
+Message-ID: <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+Date: Tue, 27 Feb 2024 16:37:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02cf87a3-4e92-4f6d-98f6-dfc0e198d462@ieee.org>
-Organization: Animal Creek Technologies, Inc.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, rui.zhang@intel.com,
+ lukasz.luba@arm.com, keescook@chromium.org, gustavoars@kernel.org,
+ morbo@google.com, justinstitt@google.com, stanislaw.gruszka@linux.intel.com,
+ linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev, patches@lists.linux.dev
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+ <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
+ <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 17, 2024 at 03:18:59PM -0600, Alex Elder wrote:
-> On 2/17/24 9:47 AM, Erick Archer wrote:
-> > When a struct containing a flexible array is included in another struct,
-> > and there is a member after the struct-with-flex-array, there is a
-> > possibility of memory overlap. These cases must be audited [1]. See:
-> > 
-> > struct inner {
-> > 	...
-> > 	int flex[];
-> > };
-> > 
-> > struct outer {
-> > 	...
-> > 	struct inner header;
-> > 	int overlap;
-> > 	...
-> > };
-> > 
-> > This is the scenario for the "struct audio_apbridgea_hdr" structure
-> > that is included in the following "struct audio_apbridgea_*_request"
-> > structures:
+On 27/02/2024 12:09, Rafael J. Wysocki wrote:
+> On Tue, Feb 27, 2024 at 11:14 AM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 27/02/2024 01:54, Nathan Chancellor wrote:
+>>> When booting a CONFIG_FORTIFY_SOURCE=y kernel compiled with a toolchain
+>>> that supports __counted_by() (such as clang-18 and newer), there is a
+>>> panic on boot:
+>>>
+>>>     [    2.913770] memcpy: detected buffer overflow: 72 byte write of buffer size 0
+>>>     [    2.920834] WARNING: CPU: 2 PID: 1 at lib/string_helpers.c:1027 __fortify_report+0x5c/0x74
+>>>     ...
+>>>     [    3.039208] Call trace:
+>>>     [    3.041643]  __fortify_report+0x5c/0x74
+>>>     [    3.045469]  __fortify_panic+0x18/0x20
+>>>     [    3.049209]  thermal_zone_device_register_with_trips+0x4c8/0x4f8
+>>>
+>>> This panic occurs because trips is counted by num_trips but num_trips is
+>>> assigned after the call to memcpy(), so the fortify checks think the
+>>> buffer size is zero because tz was allocated with kzalloc().
+>>>
+>>> Move the num_trips assignment before the memcpy() to resolve the panic
+>>> and ensure that the fortify checks work properly.
+>>>
+>>> Fixes: 9b0a62758665 ("thermal: core: Store zone trips table in struct thermal_zone_device")
+>>> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+>>> ---
+>>>    drivers/thermal/thermal_core.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+>>> index bb21f78b4bfa..1eabc8ebe27d 100644
+>>> --- a/drivers/thermal/thermal_core.c
+>>> +++ b/drivers/thermal/thermal_core.c
+>>> @@ -1354,8 +1354,8 @@ thermal_zone_device_register_with_trips(const char *type,
+>>>
+>>>        tz->device.class = thermal_class;
+>>>        tz->devdata = devdata;
+>>> -     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>>>        tz->num_trips = num_trips;
+>>> +     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>>
+>> IIUC, clang-18 is used and supports __counted_by().
+>>
+>> Is it possible sizeof(*trips) returns already the real trips array size
+>> and we are multiplying it again by num_trips ?
+>>
+>> While with an older compiler, __counted_by() does nothing and we have to
+>> multiply by num_trips ?
+>>
+>> IOW, the array size arithmetic is different depending if we have
+>> _counted_by supported or not ?
 > 
-> Yeah this was not a very good way to define these header
-> structures, but I'm glad to hear the flexible array at the
-> end was never used.  I don't know why it was there; maybe
-> it's an artifact from some other information that got removed.
-> 
-> If the code compiles with your change, it ought to be fine.
-> (It compiles for me.)
-> 
-> It would be good for Vaibhav or Mark to comment though, maybe
-> they can provide some context.
+> IIUC it is just the instrumentation using the current value of
+> tz->num_trips (which is 0 before the initialization).
 
-Sorry for the delay guys.
+Right, but I am wondering if
 
-The way this was done comes from associated firmware that ran on the
-APBridge. This goes back a while but I think the packet headers may have
-been in flux at the time and this was a convenient way to change all of
-the packets if & when it changed.  Anyway, it doesn't seem so convenient
-now. :)
+	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
 
-So, yeah, getting rid of it sounds like a good thing to do to me.
+	is still correct with __counted_by because:
 
-> I'd like to hear from these others, but otherwise this change
-> looks good to me.
-> 
-> Reviewed-by: Alex Elder <elder@linaro.org>
+  (1) if the compiler supports it:
+
+	sizeof(*trips) == 24 bytes * num_trips
+
+	then:
+
+	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+
+	memcpy(tz->trips, trips, num_trips * 24 * num_trips);
+
+	==> memory size = 24 * num_trips^2
+
+  (2) if the compiler does not support it:
+
+	sizeof(*trips) == 24 bytes
+
+	then:
+
+	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+
+	memcpy(tz->trips, trips, num_trips * 24);
+
+	==> memory size = 24 * num_trips
+
+Or did I misunderstand __counted_by ?
 
 
-> > diff --git a/drivers/staging/greybus/audio_apbridgea.h b/drivers/staging/greybus/audio_apbridgea.h
-> > index efec0f815efd..ab707d310129 100644
-> > --- a/drivers/staging/greybus/audio_apbridgea.h
-> > +++ b/drivers/staging/greybus/audio_apbridgea.h
-> > @@ -65,7 +65,6 @@
-> >   struct audio_apbridgea_hdr {
-> >   	__u8	type;
-> >   	__le16	i2s_port;
-> > -	__u8	data[];
-> >   } __packed;
-> > 
-> >   struct audio_apbridgea_set_config_request {
-> > --
-> > 2.25.1
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Acked-by: Mark Greer <mgreer@animalcreek.com>
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
