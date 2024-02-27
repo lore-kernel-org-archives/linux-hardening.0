@@ -1,103 +1,107 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5861879
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 00:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EAE15CB;
+	Tue, 27 Feb 2024 00:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708995215; cv=none; b=hC2dm/+/eQIGyPSUxaUUnJbGMQPNIcumcUZeAlGfvRSJR3dWOgaIj537TMeHxGrAlTrN7YjvlzcWYtsp80bebpkl/PucKEhLrO+H1FQoCLBX1DkQWrHcgF96Hgkb/cCAUfIaXA5Tl8xmpDa/un6pMBH3QtKrmImHlkRJ4EdfhLc=
+	t=1708995306; cv=none; b=maMytcflrA7LcBeQhyEBjyps3/msuuFN3nFbS+o10ni2D0rYjcqAGRhczPMkMFfQZI9f+B6/56hBQ6beXmiKIj8r4XyUKtMzq31H66TGOCC2TYzZeIfv9tHznaKS+lje8V+0WRlflNsCgEgwHPlnYJ2aWEFHnPn+eYKSEYz6hg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708995215; c=relaxed/simple;
-	bh=TxORtXxaPeaeUvIH5aVvdBg+Zjai6yqmN65Ed33TOKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mt1nqQ2NT8cSbPHMz306KB6EZ489eC7lFmfpNUfm7Q0p4awi3tpkDYgh60pgY+6meGtKSVU5tZcqZvd1L8vZHu1vJm3qSlDjCwNUFj6TjpQBO/lupCPOoGJuG8LlNnYYppG4U/z/iWRP621L/Dx69c9LCm9B6Z5C4g4cL7jJ9Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lbh0E5lC; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708995306; c=relaxed/simple;
+	bh=ss8VwZn4a5t6mx/5BWpuy9l0XPO5ja2ql+oKmi1naJg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gn6I7LgSjY85MxzJxaPJyXEYVgzlJRHGuqG5EmW2WHWODkrlxelDIPiKHCWdtV+XgvVbHUIMFm/g/CsL4KR/s8YxWWolFiqQwvKsAvpE89pCYhWTswp5lDhxmAj56yFqUy9A71vrt3FBAbwyuMWPCQuEqf05YEfkVRuMHlit/y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3EtBjPw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lbh0E5lC"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29abd02d0d9so1245958a91.0
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 16:53:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708995214; x=1709600014; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=soUpkQvo6unU26F2AMxm/1yRW0fRVNaH6SBb9tzJmVc=;
-        b=Lbh0E5lCnPE71vj6auHAklif3Mb1PhEPb+Q3k+Anvi+l81zKPqo2QtI8/0g5MbayAx
-         ZC/rAjjWSstgrIFPADbMFL+YpCwn+RHiY9yK88/yca7Dhk+dK+5Zl471P8spDVgCcG4T
-         Rq2S/6ObZvnmV5zxwIAPTXxIdSZ4vq11DBYZ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708995214; x=1709600014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=soUpkQvo6unU26F2AMxm/1yRW0fRVNaH6SBb9tzJmVc=;
-        b=rAavUmqqQ285pPJz3Q7bR+sfK7rDt/hsjfYSZEZs1nTdwIIOaLq9/xfbomXkhxp9yl
-         yAkfXLjt/oGK8p5yyf7gFewR/5qDWdhdVW1rObiJpY4oiVFmqE/FDP26ot3OHyQBOQkc
-         9u7qOVnjSTjmPfuw4S90f738KqEsL2zMbsMY7DxA0TX6B1I75ordQBx35uPn5IWD0Vq1
-         5dmjI3gWqebr04TltVR48RfE9lnFmxiyg+VWKFFsPDjKwzjXEyklJGwZy5hZPOPaoCvV
-         8TdRuYCxNFa7PD0TMXCbW4eGgk/zfpKlK4kPP4w7Lu2sJHSAK/OvDKsi4DCfi0J9/foO
-         Uyxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUz4V3aOctIS7CZHtY2ut9fx+zw2Hz9y3xwpjbE9rP5iDDmlw90CCaFvUZX9TtERfGhdZ0tB6D9hue/GBCqvNyCMWqxRjo/EjExtg/6uYD
-X-Gm-Message-State: AOJu0Yw0gpMQpTX2rSS83+qM6Zhyr3YK7rx7Os3rEam1Y3kRx4XCQxVM
-	z3rtpS3cIRlpHKVLDkuQGHbu2ffpsfAI4dLTCpPckual5yAmWFYI1ymbo0lLug==
-X-Google-Smtp-Source: AGHT+IE+2QwNGUqRpV9gCw9eBgDmcaY/8Tgc/ruaUDruqzYM+njjzZX5h8mfzxDu9AcxVJ1qJTW98w==
-X-Received: by 2002:a17:90a:f40e:b0:299:29a5:d575 with SMTP id ch14-20020a17090af40e00b0029929a5d575mr6050194pjb.12.1708995213720;
-        Mon, 26 Feb 2024 16:53:33 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x19-20020a17090ab01300b002990d91d31dsm7025335pjq.15.2024.02.26.16.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 16:53:33 -0800 (PST)
-Date: Mon, 26 Feb 2024 16:53:32 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: James Smart <james.smart@broadcom.com>,
-	Dick Kennedy <dick.kennedy@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: lpfc: replace deprecated strncpy with strscpy
-Message-ID: <202402261653.F65AAFDED3@keescook>
-References: <20240226-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v2-1-2df2e46569b9@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3EtBjPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 965FDC433F1;
+	Tue, 27 Feb 2024 00:55:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708995305;
+	bh=ss8VwZn4a5t6mx/5BWpuy9l0XPO5ja2ql+oKmi1naJg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=g3EtBjPw9BkQf1JaTfipWe2RSvJN+FjTxpHl8mmlomdAhvj/4Y1I2Le0T24DZkNBe
+	 7uk3pXy0MTVHwvHFRzs7JSSUUMXDH+i/wTKyexaAn7wxlGJ9lZJUIPpG8WJoXBdSHu
+	 vhIPL0hEmbbIZNyJ/JjsIA7RU/VU2g3JeYNcwTE4wxGeT48sRMl0ehhNGoXR6X72ar
+	 0aYHU/vZuK+gX59lsGbNcbxnk8hf0csOhnV2Zafj1V3Y+vYn7hnYbqiWFwCdXRP0BK
+	 NXHQOWaDKZJdDbpD35VdzgUQ7AT1fsONlOzG9uJFec+F3sCRXHnOR+v8MmoIrC2u/a
+	 MLXdWgVVYvKIg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 26 Feb 2024 17:54:58 -0700
+Subject: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v2-1-2df2e46569b9@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOIy3WUC/x2N0QqDMAwAf0XyvEBXO6H7lTFG5xINaC1pJ4r47
+ yt7PDjuDsikQhnuzQFKq2RZYoXrpYF+DHEglE9lsMY6Y22HZSSdw4QsG/KiRXjHFKL0GL/zq6i
+ kjDf2znjHb9+1UEtJqer/y+N5nj++m9k2dQAAAA==
+To: rafael@kernel.org, daniel.lezcano@linaro.org
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, keescook@chromium.org, 
+ gustavoars@kernel.org, morbo@google.com, justinstitt@google.com, 
+ stanislaw.gruszka@linux.intel.com, linux-pm@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1946; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=ss8VwZn4a5t6mx/5BWpuy9l0XPO5ja2ql+oKmi1naJg=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDKl3jV6EfCpn4bv2/K1+5c1nAcxxSgyTMxkc86IDc135G
+ vZsYrjeUcrCIMbFICumyFL9WPW4oeGcs4w3Tk2CmcPKBDKEgYtTACYirsHwP07kle3h+3G7nt9R
+ Xxc1u6p7a2rBnMfPf16Z5zkrX0R52ylGhrfmh1R3rCtTf/OTYcnvOQa/3ihM7Z07N39DYI9s/2H
+ XDDYA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Mon, Feb 26, 2024 at 11:53:44PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We expect ae->value_string to be NUL-terminated because there's a
-> comment that says as much; these attr strings are also used with other
-> string APIs, further cementing the fact.
-> 
-> Now, the question of whether or not to NUL-pad the destination buffer:
-> lpfc_fdmi_rprt_defer() initializes vports (all zero-initialized), then
-> we call lpfc_fdmi_cmd() with each vport and a mask. Then, inside of
-> lpfc_fdmi_cmd() we check each bit in the mask to invoke the proper
-> callback. Importantly, the zero-initialized vport is passed in as the
-> "attr" parameter. Seeing this:
-> |	struct lpfc_fdmi_attr_string *ae = attr;
-> ... we can tell that ae->value_string is entirely zero-initialized. Due
-> to this, NUL-padding is _not_ required as it would be redundant.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2].
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+When booting a CONFIG_FORTIFY_SOURCE=y kernel compiled with a toolchain
+that supports __counted_by() (such as clang-18 and newer), there is a
+panic on boot:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+  [    2.913770] memcpy: detected buffer overflow: 72 byte write of buffer size 0
+  [    2.920834] WARNING: CPU: 2 PID: 1 at lib/string_helpers.c:1027 __fortify_report+0x5c/0x74
+  ...
+  [    3.039208] Call trace:
+  [    3.041643]  __fortify_report+0x5c/0x74
+  [    3.045469]  __fortify_panic+0x18/0x20
+  [    3.049209]  thermal_zone_device_register_with_trips+0x4c8/0x4f8
 
+This panic occurs because trips is counted by num_trips but num_trips is
+assigned after the call to memcpy(), so the fortify checks think the
+buffer size is zero because tz was allocated with kzalloc().
+
+Move the num_trips assignment before the memcpy() to resolve the panic
+and ensure that the fortify checks work properly.
+
+Fixes: 9b0a62758665 ("thermal: core: Store zone trips table in struct thermal_zone_device")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/thermal/thermal_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index bb21f78b4bfa..1eabc8ebe27d 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -1354,8 +1354,8 @@ thermal_zone_device_register_with_trips(const char *type,
+ 
+ 	tz->device.class = thermal_class;
+ 	tz->devdata = devdata;
+-	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+ 	tz->num_trips = num_trips;
++	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+ 
+ 	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
+ 	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
+
+---
+base-commit: a85739c8c6894c3b9ff860e79e91db44cb59bd63
+change-id: 20240226-thermal-fix-fortify-panic-num_trips-5f94094fb963
+
+Best regards,
 -- 
-Kees Cook
+Nathan Chancellor <nathan@kernel.org>
+
