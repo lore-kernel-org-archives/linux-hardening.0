@@ -1,154 +1,204 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EB71CD3E;
-	Tue, 27 Feb 2024 16:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5519C1DA4D
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 16:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051675; cv=none; b=rBExxNvBihiN68w6LWyXgf5YBGnLfDoC1qSvcFiZBGfPusEjckB5NN6ykMkK/DPbyhZa6JNA8qNZR6x34J9mT/YPY7x8gmgimkxQVkMsZhJQNMFtpo0Z020TBPU9WaUo5rgHbwWr15Y7r+rjyKhss0dGnFZKkHe1zMx546PEQaM=
+	t=1709052469; cv=none; b=cTn4qHIkkuJ4O6JQc6Ul0FSTesVbOJs0THvyF7EL+biqxZX2cylZi6mpBK/aTZ62Tgk0RVjNzdPaN7zmLlV2VtxbXH1GFN13IC2GxHN0kaf9r54+lOyEf5v50Z4sVZPsCXSpot5cTMtYcvcdACUfM+6wd9IWqcmNKrDs2bCMtGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051675; c=relaxed/simple;
-	bh=qEBzGDkMgdmuVcguzq0GaV4UtJ8S4emKApf0/ZnZ10I=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=EfWE56UKDs2Bt3SNTN9VeC7/I4tZzRhd3scjpc8SAU57BHkvCJOlEkWhogRvskxF4RB1SvdOZrD8gYvLWHZIUAAhmRGZDvVIWnM4uOG6fzsW1ZfagGW87SxRcv4ki20EDtSfU6JcLIXBOImtr32owY46hh4FSxjFr/Y/ubWz+wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bQi6gSNI; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1709052469; c=relaxed/simple;
+	bh=6zkBEAuVKD3dn+SJ9jTkTMgU/DW87RV1/7vWT8Sk0h8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IGP+ZJ1sw2YXgvRIUOOE59REK03KFnnJOtCTUIwIVOat8BQ+ZMO/ms6dSyz0OD54Tn/b4McVaZkPhjoe5ir5whuW0oJ7N/Cazm5TSvwhuJkKmvHP6m1Icc+klCszIcAFUSiW1vtCjMnfteSUQJC0jRKk5ipVy+RDwWSVAbG83Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IYoEErTY; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bQi6gSNI"
-Received: from [IPv6:::1] ([172.56.208.254])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 41RGX2Fr2314875
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 27 Feb 2024 08:33:04 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 41RGX2Fr2314875
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024021201; t=1709051587;
-	bh=HZEOIHwb3V/1D7cUZ0XGo95NAMXuauNS76pNRRQm74s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=bQi6gSNI2dHkBGn7f/jCZgoUd4XQubS6qAYN6gV9F9dgEAW/vnJQMK0sB22MR4D8w
-	 ScGNcWkjsOxumSmuy3xxyDRZ0ZHbaF/XHuVneV1M4suypKmwYm7C/SrD2gl79S+c20
-	 827pMMF9fa5pP1BMp1E0zQbKK7reyiUikwP+Iqd82hsIC7Z1h73P+JdYyOf4cNikSX
-	 rOGg7erwmnmmHmQ2soL8cL0zQj6Y6eJ8oMY7mX1uNS1Xx8h5RDAwa2mxhKqnIbwkij
-	 Sc+knQnBy89soQHa2e5NMYPLek/KdPTlQo+/NjBwjOMDhOGSrnj64UuI12rLNM9/kv
-	 k3WRmf5HPf9hA==
-Date: Tue, 27 Feb 2024 08:32:51 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: =?ISO-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
-CC: Guixiong Wei <guixiongwei@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        Guixiong Wei <weiguixiong@bytedance.com>, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Chris Wright <chrisw@sous-sol.org>,
-        Jeremy Fitzhardinge <jeremy@xensource.com>,
-        Roland McGrath <roland@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section
-User-Agent: K-9 Mail for Android
-In-Reply-To: <0443c7c2-1c3f-4cf8-940d-88306956832a@suse.com>
-References: <20240222171840.work.027-kees@kernel.org> <0443c7c2-1c3f-4cf8-940d-88306956832a@suse.com>
-Message-ID: <18FD83CD-CCD3-44DE-A086-2317739BB488@zytor.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYoEErTY"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412a390347dso19475795e9.3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 08:47:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709052466; x=1709657266; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BJeS3+GsoLHCZD1u/+yVO3ToKC1f+F8eZicM2YTy7dM=;
+        b=IYoEErTYB6GFiD+3D9YhSMVV9zfEKNHJuBQeDw6CLiZqUQJn4QwdFw94m9CmFQXJC+
+         ua1udJOjo58cZX8VVvNYjYuRl+d9IjYneYxP70EpnbGLvxPw0xVGJ+UZ8s5aa2CsMw/I
+         PPTv62/zYv9UXKylBJz3gdfC/9PYIYnaJYqUFJB43gc2hOPObHqWu1HPOhGrk7AGJl2R
+         q/JgeccaRifQzwlVhmDlkZZTkC8oMCVniw4fWaL/yzboJtRUC2d2prrgbj7lxZz/z21Q
+         uRimOe9ljw3BtLiBmaOyZC16jfXP8+iAzi6I1Y8tJthkuFLR1uve2ZQD7LfDSsOAqnsD
+         6ixg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709052466; x=1709657266;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BJeS3+GsoLHCZD1u/+yVO3ToKC1f+F8eZicM2YTy7dM=;
+        b=AlLysk3BZd6KdQH7dO/Qc6J2Yw7D/zYX2Ut7F386GJe16KHuJVg4OfSmQtQllj84ad
+         Jqc7YfQ3ACfRYh2bqQgeNDs/4es1mYKbuVblNirCWv5vP9Mje299nZ80vKaEofFC/zoU
+         9LYFuECRMbvrBLHl58nhjQTJuU/8d2ExNy15PN8yZSbt6kWCA17F//erBk0SOLW+FuLc
+         du5jn+IG7IhDWRyoOPcUEngUwwaPmtX5+B2F5vNanIUzqQ+Hot53SxhsWSg3A/MMNF3Q
+         aSCTqBLip07RXTzgkqD6PWoKTRBAYmPQ43JAQIp2V0p1WzHvBZAPEm/4gP9T3cC9otBh
+         wPKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1CWOLqPTJALUsdqJdDjwluROOExJb5b4ljtWFF0wY1HeXKsRBwr5UgjHgudx4/lmdlQuTEQZit22wlZl6kirn+fPu6nPL5W0E4c1xJKnS
+X-Gm-Message-State: AOJu0YywPF3PSFyjtqPr5pt8NjWian8VfzlK9o0Ub5sFEHq3o+q1xcg+
+	vxGtfr/Mwc451nN6cNvMOb1gDIn/B0scixlPhI3b2lXtu7gbT8WBpQfC1Jh2Y7c=
+X-Google-Smtp-Source: AGHT+IFR7ptc3nvFIOiQO3yUySKihomDEnERXujeGlC81SqO5CS+DQw5OwFhlkPhWppuYiMTGE5r5A==
+X-Received: by 2002:a05:600c:1c90:b0:412:ae2f:e9fa with SMTP id k16-20020a05600c1c9000b00412ae2fe9famr1761559wms.11.1709052465690;
+        Tue, 27 Feb 2024 08:47:45 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id v13-20020a05600c444d00b0041294d015fbsm11929001wmn.40.2024.02.27.08.47.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 08:47:45 -0800 (PST)
+Message-ID: <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
+Date: Tue, 27 Feb 2024 17:47:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, rui.zhang@intel.com,
+ lukasz.luba@arm.com, gustavoars@kernel.org, morbo@google.com,
+ justinstitt@google.com, stanislaw.gruszka@linux.intel.com,
+ linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev, patches@lists.linux.dev
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+ <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
+ <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+ <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+ <202402270816.0EA3349A76@keescook>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <202402270816.0EA3349A76@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On February 27, 2024 8:13:35 AM PST, "J=C3=BCrgen Gro=C3=9F" <jgross@suse=
-=2Ecom> wrote:
->On 22=2E02=2E24 18:18, Kees Cook wrote:
->> When building with CONFIG_XEN_PV=3Dy, =2Etext symbols are emitted into =
-the
->> =2Enotes section so that Xen can find the "startup_xen" entry point=2E =
-This
->> information is used prior to booting the kernel, so relocations are not
->> useful=2E In fact, performing relocations against the =2Enotes section =
-means
->> that the KASLR base is exposed since /sys/kernel/notes is world-readabl=
-e=2E
->>=20
->> To avoid leaking the KASLR base without breaking unprivileged tools tha=
-t
->> are expecting to read /sys/kernel/notes, skip performing relocations in
->> the =2Enotes section=2E The values readable in =2Enotes are then identi=
-cal to
->> those found in System=2Emap=2E
->>=20
->> Reported-by: Guixiong Wei <guixiongwei@gmail=2Ecom>
->> Closes: https://lore=2Ekernel=2Eorg/all/20240218073501=2E54555-1-guixio=
-ngwei@gmail=2Ecom/
->> Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
->> Fixes: da1a679cde9b ("Add /sys/kernel/notes")
->> Signed-off-by: Kees Cook <keescook@chromium=2Eorg>
->> ---
->> Cc: Borislav Petkov <bp@alien8=2Ede>
->> Cc: Thomas Gleixner <tglx@linutronix=2Ede>
->> Cc: Ingo Molnar <mingo@redhat=2Ecom>
->> Cc: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
->> Cc: x86@kernel=2Eorg
->> Cc: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
->> Cc: "Peter Zijlstra (Intel)" <peterz@infradead=2Eorg>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation=2Eorg>
->> Cc: Tony Luck <tony=2Eluck@intel=2Ecom>
->> Cc: Kristen Carlson Accardi <kristen@linux=2Eintel=2Ecom>
->> Cc: "J=C3=BCrgen Gro=C3=9F" <jgross@suse=2Ecom>
->> Cc: Boris Ostrovsky <boris=2Eostrovsky@oracle=2Ecom>
->> Cc: Stefano Stabellini <sstabellini@kernel=2Eorg>
->> Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam=2Ecom>
->> Cc: Guixiong Wei <weiguixiong@bytedance=2Ecom>
->> Cc: Jann Horn <jannh@google=2Ecom>
->> ---
->>   arch/x86/tools/relocs=2Ec | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>=20
->> diff --git a/arch/x86/tools/relocs=2Ec b/arch/x86/tools/relocs=2Ec
->> index a3bae2b24626=2E=2E0811fff23b9c 100644
->> --- a/arch/x86/tools/relocs=2Ec
->> +++ b/arch/x86/tools/relocs=2Ec
->> @@ -733,6 +733,16 @@ static void walk_relocs(int (*process)(struct sect=
-ion *sec, Elf_Rel *rel,
->>   		if (sec->shdr=2Esh_type !=3D SHT_REL_TYPE) {
->>   			continue;
->>   		}
->> +
->> +		/*
->> +		 * Do not perform relocations in =2Enotes section; any
->> +		 * values there are meant for pre-boot consumption (e=2Eg=2E
->> +		 * startup_xen)=2E
->> +		 */
->> +		if (strcmp(sec_name(sec->shdr=2Esh_info), "=2Enotes") =3D=3D 0) {
->
->Instead of a strcmp(), wouldnt't =2E=2E=2E
->
->> +			continue;
->> +		}
->> +
->>   		sec_symtab  =3D sec->link;
->>   		sec_applies =3D &secs[sec->shdr=2Esh_info];
->>   		if (!(sec_applies->shdr=2Esh_flags & SHF_ALLOC)) {
->
->=2E=2E=2E a test of "sec_applies->shdr=2Esh_type =3D=3D SHT_NOTE" work as=
- well?
->
->In the end I'm fine with both variants, so:
->
->Reviewed-by: Juergen Gross <jgross@suse=2Ecom>
->
->
->Juergen
+On 27/02/2024 17:26, Kees Cook wrote:
+> On Tue, Feb 27, 2024 at 04:37:36PM +0100, Daniel Lezcano wrote:
+>> On 27/02/2024 12:09, Rafael J. Wysocki wrote:
+>>> On Tue, Feb 27, 2024 at 11:14 AM Daniel Lezcano
+>>> <daniel.lezcano@linaro.org> wrote:
+>>>>
+>>>> On 27/02/2024 01:54, Nathan Chancellor wrote:
+>>>>> When booting a CONFIG_FORTIFY_SOURCE=y kernel compiled with a toolchain
+>>>>> that supports __counted_by() (such as clang-18 and newer), there is a
+>>>>> panic on boot:
+>>>>>
+>>>>>      [    2.913770] memcpy: detected buffer overflow: 72 byte write of buffer size 0
+>>>>>      [    2.920834] WARNING: CPU: 2 PID: 1 at lib/string_helpers.c:1027 __fortify_report+0x5c/0x74
+>>>>>      ...
+>>>>>      [    3.039208] Call trace:
+>>>>>      [    3.041643]  __fortify_report+0x5c/0x74
+>>>>>      [    3.045469]  __fortify_panic+0x18/0x20
+>>>>>      [    3.049209]  thermal_zone_device_register_with_trips+0x4c8/0x4f8
+>>>>>
+>>>>> This panic occurs because trips is counted by num_trips but num_trips is
+>>>>> assigned after the call to memcpy(), so the fortify checks think the
+>>>>> buffer size is zero because tz was allocated with kzalloc().
+>>>>>
+>>>>> Move the num_trips assignment before the memcpy() to resolve the panic
+>>>>> and ensure that the fortify checks work properly.
+>>>>>
+>>>>> Fixes: 9b0a62758665 ("thermal: core: Store zone trips table in struct thermal_zone_device")
+>>>>> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+>>>>> ---
+>>>>>     drivers/thermal/thermal_core.c | 2 +-
+>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+>>>>> index bb21f78b4bfa..1eabc8ebe27d 100644
+>>>>> --- a/drivers/thermal/thermal_core.c
+>>>>> +++ b/drivers/thermal/thermal_core.c
+>>>>> @@ -1354,8 +1354,8 @@ thermal_zone_device_register_with_trips(const char *type,
+>>>>>
+>>>>>         tz->device.class = thermal_class;
+>>>>>         tz->devdata = devdata;
+>>>>> -     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>>>>>         tz->num_trips = num_trips;
+>>>>> +     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>>>>
+>>>> IIUC, clang-18 is used and supports __counted_by().
+>>>>
+>>>> Is it possible sizeof(*trips) returns already the real trips array size
+>>>> and we are multiplying it again by num_trips ?
+>>>>
+>>>> While with an older compiler, __counted_by() does nothing and we have to
+>>>> multiply by num_trips ?
+>>>>
+>>>> IOW, the array size arithmetic is different depending if we have
+>>>> _counted_by supported or not ?
+>>>
+>>> IIUC it is just the instrumentation using the current value of
+>>> tz->num_trips (which is 0 before the initialization).
+>>
+>> Right, but I am wondering if
+>>
+>> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>>
+>> 	is still correct with __counted_by because:
+>>
+>>   (1) if the compiler supports it:
+>>
+>> 	sizeof(*trips) == 24 bytes * num_trips
+> 
+> I think you're misunderstanding. The above sizeof() only evaluates a
+> single instance -- it has no idea how many more there may be.
+> Specifically:
+> 
+> 	sizeof(*trips) == sizeof(struct thermal_trip)
+> 
+>> 	then:
+>>
+>> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>>
+>> 	memcpy(tz->trips, trips, num_trips * 24 * num_trips);
+>>
+>> 	==> memory size = 24 * num_trips^2
+> 
+> It's not counted twice. Under CONFIG_FORTIFY_SOURCE=y, memcpy is a macro
+> that expands to a checking routine (see include/linux/fortify-string.h),
+> which is using __builtin_dynamic_object_size() to determine the
+> available size of the destination buffer (tz->trips). Specifically:
+> 
+> 	__builtin_dynamic_object_size(tz->trips)
+> 
+> When __bdos evaluates a flexible array (i.e. tz->trips), it will see the
+> associated 'counted_by' attribute, and go look up the value of the
+> designated struct member (tz->num_trips). It then calculates:
+> 
+> 	sizeof(*tz->trips) /* a single instance */
+> 		*
+> 	tz->num_trips
 
-A type check would probably be better=2E=2E=2E
+Ok my misunderstanding was I thought sizeof() was calling _bdos under 
+the hood, so when calling sizeof(flex_array), it was returning the 
+computed size inferring from the __counted_by field.
+
+
+> Before the patch, tz->num_trips is 0, so the destination buffer size
+> appears to be of size 0 bytes. After the patch, it contains the
+> same value as the "num_trips" function argument, so the destination
+> buffer appears to be the matching size of "num_trips * sizeof(struct
+> thermal_trip)".
+> 
+> Hopefully that helps! If not, I can try again. :)
+
+It is ok thanks for the clarification
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
