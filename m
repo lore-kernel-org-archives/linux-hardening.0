@@ -1,113 +1,154 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C31614F964
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 21:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0B35576B
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 22:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709069014; cv=none; b=nlxGr0QaI4l3ENK0nyLdHeFFl30lV+lz18rhY8bzpMOimNXnXEPijud/T4h4wBCheiiboMUbhQ0z9Nfg8k6LQM1uXxuOnCnAAr+SZOmp09L0MgUnpnrIAuRDzP0j9VYbEbVYeVFr3L35hZCHcMIWz2ywHNb+aiHaVjJlwVRwuNk=
+	t=1709074020; cv=none; b=T80uTpFMnhrIZReJhFIk7mcDn06s5BpfSR47M/2F4lfvyAvmxo7afx75iMMToYN2xOA5tCqWrcE8Kv6MtFu4OUiL/PZrLLjaUOyw68NEl7jW3LHW1udsni8vAFNntkW8cDQ/bwMgbx9Kn3nAZR24O5KR7ijEDQgylDomUAck3wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709069014; c=relaxed/simple;
-	bh=x0k9KPWxpMjPpZo+FkyIevXhBqRIFk50MHuqVr7KDaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YOQMOOXNK2G9kxxd8poeUn8Z/+EVM2XlV26ofmAsQKNuzvOaP+Lwn4Qp6Hpy6KPE7zxP24m2/xPboMUYC4oiPGITJEHygJ1IlKYWz5LUe8Yom+BzD5yqJ/ByYxWEQt9nOpYX9h1tH6c6LBvZVt2g+UKtpFOXASY6UU37R7fjpT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZNOB4uOg; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709074020; c=relaxed/simple;
+	bh=9Fi67i95/kAeREHqLFvk3tyaog6fahIgnSjOjLdnjT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ynm6pYE58g7aaLWI4+jCt6UhtZcZD1Wims2Yc+Vyydmj8yE5EYS4sYOMI6GvXy+kXJitU/eXrKdBeGxoGRkR2TercJxLmh+UP0e1sZWua0SjW/tkLZ/E6kMaxk4dn264iRRihuyAT/LySQYPgqjd3Uygy39F7VSY+DJb9domqSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fHCiwZyr; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZNOB4uOg"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c49c979b5dso96217839f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 13:23:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fHCiwZyr"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3bbbc6bcc78so3561308b6e.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 14:46:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1709069011; x=1709673811; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DbGdkLlpvK16N0hfZoWh5Gw9/QwXnepLBQjOEcjQHHM=;
-        b=ZNOB4uOgno+VpIO2W4PY1beOucE+SHUoDmzXisJWwdwQ+IUsoQ4sF4GepJZyx3g2tO
-         C87f+kflSg4ivpCjlD/8eb09Qsh37gaJzgN67dTMBXrZ5TxJ766ybe9cpAOY5xWD252T
-         Zs3+lWGB8C4nAuZaqg6GLmi4YYHOAZRu1Hv4c=
+        d=chromium.org; s=google; t=1709074018; x=1709678818; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hLVwRTSD9ZA8wnLZflOwUZvL7Dh0SCpTGUEycKGf948=;
+        b=fHCiwZyrjoe1pAMv04eVduZbZwUkAR2iLSHd0nvXsQbZTvo9ivE/h2UX/r5Qas2ruA
+         3EtggsaA3LAYxJdbFnLZWDYPftdwFOUgfNIwmDomzMmzxAGqcUbSINZ/p4DU0r+rNyg2
+         RM19tmMshoCd0dNAQIZ4/svtafzfio7sGRV8M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709069011; x=1709673811;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DbGdkLlpvK16N0hfZoWh5Gw9/QwXnepLBQjOEcjQHHM=;
-        b=KQCvXwvKxY6kpKormRx4d5qE18V8UAiGsaicQRxIxKcIc2h/2t7p+idD6NhQKFx1Li
-         3JIVaTXYTSFVF9dviTbqcITDkUarfp5qBu+AQTDtcIHIPeQITjJlnNQxFumwishFiVps
-         dnrH9f3bLcNxq64NztIuZchtIlqp/DayWS13r7v2dYJQdOBjNym4B2Fi3GAKlCbCLKeK
-         Oi0tp9Y8dksl58h+gsI6JlTAhR40BdCWFbC/eGiz0DzgqVChZSGeUeqw/bzMZKxk/mE5
-         nJt33WEHRmuF8BnTyAX4P3rNeZTdrvi7GkFhzAk6yYRln0zf/Tno1dFn+3DF28a0h0s0
-         XBIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWtTY4rHpSlPM4FWSnkaCsczPjye+sUwg0hiX+cQ+kiM4/BgkEKnaSHOeZCjsyiTw2aXrVomONp/YUQGPkaeXlWisO+D63gvZvV1ArbekT
-X-Gm-Message-State: AOJu0YwgGizTCwOH6ZlZlbpUkuoGkCL73SFN9UWcr93RHB628WKz9kl8
-	N/xs1HxZuoy+5EjDGL2k5slgAcoggOQZwvbXYYnjeZcX3q1e6IeRhqHWal698YY=
-X-Google-Smtp-Source: AGHT+IFc3RgJRdGVkP2NPs5Y/GfM+e2c3LeD0bxO2noPvCmHIWJaDhFOLsvOZQ0IljP20IzU/UY25Q==
-X-Received: by 2002:a05:6e02:214d:b0:365:3fb7:f77 with SMTP id d13-20020a056e02214d00b003653fb70f77mr11217673ilv.3.1709069010744;
-        Tue, 27 Feb 2024 13:23:30 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id bf19-20020a056e02309300b0036524b8c632sm2413353ilb.0.2024.02.27.13.23.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 13:23:30 -0800 (PST)
-Message-ID: <56680d34-59f1-460c-a835-f1258abf4569@linuxfoundation.org>
-Date: Tue, 27 Feb 2024 14:23:29 -0700
+        d=1e100.net; s=20230601; t=1709074018; x=1709678818;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hLVwRTSD9ZA8wnLZflOwUZvL7Dh0SCpTGUEycKGf948=;
+        b=C2pZfbmOrTq2geCKSxIz1tjJ2XohJYRLSOhyb3PMZ76yqgCSHRkXaatAQbe4H1wwPu
+         FjXKJUITcAj6uiihS+CjLOAeEle/ypKiNzDHbUVqt4GuVk7KRmy6SclzOJFkI74SUF08
+         H8eNLLuw8U7dmX0+5D70sKeIHf7P69smrGSPXjQxJOBsyKhnCn6vJe8XJyiTMp+r8jm6
+         XDTtc2ZPp0msNc0x3NwCD3+dOP1n8PXq/BMO6csuauJjOLStYNZ6hHMYrp9kZx4yN20s
+         S2vWon5RX400ODjIl4ioF4kvSEJ3yitguLfcxpTDdfr6J9La9aAcWDw1iPiH0uL0t0cM
+         9l0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0VB7q8eZvkLHys9EGY4mPBQAqUOQKGoCyTH9TBW/mCI7JVHQk5RX+Hbk5jESQuKAqAS/SJ7KBokUG++WtlZh0zO9IeCUlFV/+tL73vXOW
+X-Gm-Message-State: AOJu0YwGeD84RFy1JUMAW1/KVkNAG0sU/IY3Yoaho0X0sl8MdD1sKHeV
+	3zHwfM194btc1TUS8QdvGn8pQQsKtu5HDd6o1HHZQ3B0/jZijrTLSAFqB70TGeAsd2gl+RfXvKs
+	=
+X-Google-Smtp-Source: AGHT+IFL7/hUbHtEX+C8ENjORP0ILArfVaCkvARMjulurnSQ6MhJue6ixDwTvfM+Se+ZdgDRLrC+uw==
+X-Received: by 2002:a05:6808:114b:b0:3c1:aace:475e with SMTP id u11-20020a056808114b00b003c1aace475emr4314155oiu.1.1709074018445;
+        Tue, 27 Feb 2024 14:46:58 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c10-20020aa781ca000000b006e4ce93dc28sm6462431pfn.104.2024.02.27.14.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 14:46:57 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] lib: stackinit: Adjust target string to 8 bytes for m68k
+Date: Tue, 27 Feb 2024 14:46:56 -0800
+Message-Id: <20240227224653.work.603-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/9] rtc: test: Fix invalid format specifier.
-Content-Language: en-US
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
- David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
- Matthew Auld <matthew.auld@intel.com>,
- Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Kees Cook <keescook@chromium.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>,
- Cassio Neri <cassio.neri@gmail.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Arthur Grillo <arthur.grillo@usp.br>,
- Brendan Higgins <brendan.higgins@linux.dev>,
- Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>,
- David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org,
- linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-6-davidgow@google.com>
- <20240227203243070e7d85@mail.local>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240227203243070e7d85@mail.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2886; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=9Fi67i95/kAeREHqLFvk3tyaog6fahIgnSjOjLdnjT8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl3mZgX4RYYkhnet9g+fNYxlAk16036/x70gZOB
+ gwF8N+55sWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZd5mYAAKCRCJcvTf3G3A
+ JpHzD/4/WTvgh1uRidbb9W95fV24HgJlTmIR5Dxy7PCQrI4dYNV+OG8l4P7CbVXbAfW5xHELhEW
+ SmPi0XdYHDlXEWGKOMeqzD8H399fuUfIenhcw/ahukDnvSc+4tt5x/5QCB4q+01me6BIETQOxnm
+ jGT4eFF4rEYOmRjx5g1PoQx13kdH5MqWHRxI6uyYBi0yoomwckog4OoDIxAK+euzD/KTnYYqsN8
+ 5uQ71dcFzRdTsZJkYmZJzFB/r0RR9Plk0WkVrDiJ+XgJcDuwbtjQDHiDk3V9VRI8BV5vLfeIWx8
+ BNCpEdJ5KKHCcEso+n69DN7I2O1uQLP4vvWg0k3dQgB/h0bhW+61xwoz7DLmren7abhpZXToMTw
+ FtY0DLy9PUzRBFCSwVm3BSIjW7yHT0/GGRdgU1ZrLWpxGd2WY6U3bR+G4uHu/tg4ljRGV8hb8JV
+ vqFqp6ywVMeSEZnKipNmYs37+/Dj6y9NKelGdcFO7XoW8uenDUyJMlmVkNSMF2tGzIh3CPVVJpK
+ Jc9MsguYXiTk4UKN4kqqOV2VRaKDYFm5DIEIDeH55i9V9MX2+n1vTg/uABHwNqXsJpIAKfQ1d8t
+ u0h+9GCBQO5SAdMVIco8IVfK9M8IMiPZWNM5zG/UaYa914WHH4LO3OuBInpAWMM5gxGdwGYPqOy
+ Pednaz4 9+/FuD2Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 2/27/24 13:32, Alexandre Belloni wrote:
-> Hello,
-> 
-> On 21/02/2024 17:27:18+0800, David Gow wrote:
->> 'days' is a s64 (from div_s64), and so should use a %lld specifier.
->>
->> This was found by extending KUnit's assertion macros to use gcc's
->> __printf attribute.
->>
->> Fixes: 1d1bb12a8b18 ("rtc: Improve performance of rtc_time64_to_tm(). Add tests.")
->> Signed-off-by: David Gow <davidgow@google.com>
-> 
-> Who do you expect to take this patch?
-> 
+For reasons I cannot understand, m68k moves the start of the stack frame
+for consecutive calls to the same function if the function's test
+variable is larger than 8 bytes. This was only happening for the char
+array test (obviously), so adjust the length of the string for m68k
+only. I want the array size to be longer than "unsigned long" for every
+given architecture, so the other remain unchanged.
 
-I am going to be applying this series to linux-kselftest kunit next
-in just a bit. Would you like to ack the pacth?
+Additionally adjust the error message to be a bit more clear about
+what's happened, and move the KUNIT check outside of the consecutive
+calls to minimize what happens between them.
 
-thanks,
--- Shuah
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Closes: https://lore.kernel.org/lkml/a0d10d50-2720-4ecd-a2c6-c2c5e5aeee65@roeck-us.net/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ lib/stackinit_kunit.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
+index 05947a2feb93..dc3c68f46f0a 100644
+--- a/lib/stackinit_kunit.c
++++ b/lib/stackinit_kunit.c
+@@ -63,7 +63,16 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ #define FETCH_ARG_STRING(var)		var
+ #define FETCH_ARG_STRUCT(var)		&var
+ 
++/*
++ * On m68k, if the leaf function test variable is longer than 8 bytes,
++ * the start of the stack frame moves. 8 is sufficiently large to
++ * test m68k char arrays, but leave it at 16 for other architectures.
++ */
++#ifdef CONFIG_M68K
++#define FILL_SIZE_STRING		8
++#else
+ #define FILL_SIZE_STRING		16
++#endif
+ 
+ #define INIT_CLONE_SCALAR		/**/
+ #define INIT_CLONE_STRING		[FILL_SIZE_STRING]
+@@ -165,19 +174,23 @@ static noinline void test_ ## name (struct kunit *test)		\
+ 	/* Verify all bytes overwritten with 0xFF. */		\
+ 	for (sum = 0, i = 0; i < target_size; i++)		\
+ 		sum += (check_buf[i] != 0xFF);			\
+-	KUNIT_ASSERT_EQ_MSG(test, sum, 0,			\
+-			    "leaf fill was not 0xFF!?\n");	\
+ 	/* Clear entire check buffer for later bit tests. */	\
+ 	memset(check_buf, 0x00, sizeof(check_buf));		\
+ 	/* Extract stack-defined variable contents. */		\
+ 	ignored = leaf_ ##name((unsigned long)&ignored, 0,	\
+ 				FETCH_ARG_ ## which(zero));	\
++	/*							\
++	 * Delay the sum test to here to do as little as	\
++	 * possible between the two leaf function calls.	\
++	 */							\
++	KUNIT_ASSERT_EQ_MSG(test, sum, 0,			\
++			    "leaf fill was not 0xFF!?\n");	\
+ 								\
+ 	/* Validate that compiler lined up fill and target. */	\
+ 	KUNIT_ASSERT_TRUE_MSG(test,				\
+ 		stackinit_range_contains(fill_start, fill_size,	\
+ 			    target_start, target_size),		\
+-		"stack fill missed target!? "			\
++		"stackframe was not the same between calls!? "	\
+ 		"(fill %zu wide, target offset by %d)\n",	\
+ 		fill_size,					\
+ 		(int)((ssize_t)(uintptr_t)fill_start -		\
+-- 
+2.34.1
 
