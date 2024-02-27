@@ -1,175 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424651487C7;
-	Tue, 27 Feb 2024 16:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C901DDD1
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 16:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051222; cv=none; b=mnTMbB3wf5YGZrxvk0z8m+MZ+K2iP/DzJyf4mACe2c9fVGRB5O5AgXR97dfks2eev1pjj5AsHCYDS9c7y8qPAW7CgMQJdaSWvq8NUTBae+C/WLDzQzRj8kMiqOT4p+pSZUK5xpSLdXV49MZPwznnH64WUcEhOpDrWGiXcm77+/g=
+	t=1709051551; cv=none; b=O3IvHWYKrz5YiC2egFn96lgh6ZWHW0I7jl+eCCbbbYTEo5/wmD2K47AlfOLvwHis5V6E5ki+RYevV3B2KbfxEeWc37UeJIs0m3IBLFcxKFrznpHz8z0G2HgV5udLj2b98d+zxih8kyyToRBhoiVTIub1ePU1lcDx9Q9uO5YRBKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051222; c=relaxed/simple;
-	bh=8jFZAo+3Rlkk8YpfU62JRB7rR92Dw98Vakvf43eEjpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZLn91P5KaegznosU1HgXT/ohOvp9VKDIhd44SJ9QjWZs6yHIB0sgDx9h1VOkPccAN1FG4ITHlwyrip0hV00bsgOx6tKpVh37N0ElU7FI4nHtxOPGKWqK23O+YEdOh2NrQhdP3BSD05cBKdK8OZqqbgteHt66DnfoSTjut3XAfNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VlBgnWT7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709051551; c=relaxed/simple;
+	bh=VwaM4TGE7WzbXuL2owqLIfl8UDopXMwoZLqlae/zpt4=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Cc:Content-Type; b=ciihFD1o/Kq0G9Qg2V2U+vFMGBSnlJerUWtukH21xKRA/LcJfjNh+jHDtclnLzVrjpvTe8gacN4Wq5tQV8LI5CWheRU1p/TqNoubR1CdN9Wk39dySYvRVUlRmEhbYCojDtib79D7Xm3CVahQQ1E/UMXNigkkYhFevr9mC4gJAG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zwGig5jZ; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VlBgnWT7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04B4AC43390;
-	Tue, 27 Feb 2024 16:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709051221;
-	bh=8jFZAo+3Rlkk8YpfU62JRB7rR92Dw98Vakvf43eEjpQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VlBgnWT7rsdBa5BM/FJZpKlHcUnBmWUo8v2UFXJi+QII9XK2wfAucQGOFk2dwt3Vw
-	 ekdluhlkh1VRWuNBkd6QLak3InKZhPX4gd4WQV+8q86+Dt0b39ion8OFRfMXd+7rOS
-	 fi+wQRfo4Cd8mbHs9o79L+z+OvRIFpBaZG6YIuWydzUl4vHKuzanK4nP6HDc+g0baO
-	 /bYfL7LJxrqwnuBGeY0/SrQPcuuA4YIiTrDq8SyLSOzzfKld8KGcCpr4QoNDRF3YJu
-	 DSaAydna3XbLQKZWjaeacWazGaTNRmHm3NHsV6Xv1tBWWn0lY2vcBxJxKr2tDGoPq/
-	 gofkM6v5kYCTQ==
-Date: Tue, 27 Feb 2024 09:26:59 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, lukasz.luba@arm.com
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, rui.zhang@intel.com,
-	keescook@chromium.org, gustavoars@kernel.org, morbo@google.com,
-	justinstitt@google.com, stanislaw.gruszka@linux.intel.com,
-	linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev, patches@lists.linux.dev
-Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
- memcpy()
-Message-ID: <20240227162659.GB819789@dev-arch.thelio-3990X>
-References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
- <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
- <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
- <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zwGig5jZ"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-a3e426228acso179195766b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 08:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709051548; x=1709656348; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oGLM6msTnPiYGE047U6w31wTMpGKpq/ku8c4CLDd44M=;
+        b=zwGig5jZorXZGIC12BzDvn5cDFT7Z9W/cCQkpirwon1zXRWMFBExID67fTwyAe8w5E
+         dZ46uC2JK5F0o8MufLNukhcsWvHj2tPPaHLmKZXMS1smYppF6JU/E338pCMwkies+2c8
+         K8hofQSFfPDa1VTGSXJXXomiVtZzZjk9clYRBLq7SqhZl/udxtZD+xsOhYIcEbScZKr4
+         Zb50je3XZ2lIfPpLbjyYGHyM0v9MQxBpRgFmdagmCWmCz94Blj+gywvMEAlY0ilaQvcm
+         YgblPRsWv2z4fQEKBozUFz++qGwZle5bvlwfmE2kOlMMufTcPW0UWJd74zAHhfxXP3O5
+         QoTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709051548; x=1709656348;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oGLM6msTnPiYGE047U6w31wTMpGKpq/ku8c4CLDd44M=;
+        b=tda6J6PttDy16C9hV8vofSkirR5wADkhpRgNt9wwlSSStYmc4uy48XxGlduDI30owg
+         LrVbpvZwCquHd44jpTkJrOo3n6WRrmoMpvUMGRTWOvte2k4NzRPMTuRCxicX/hGlzzqA
+         I272mdTNZsaQ2i+wPSroiujR8yNdl9XGt2xkuVBfo5QyM/A0hr4dRxaAsFKMUB/dQSoY
+         NPJePeNMcTpoAZwYI9hcduxxIJNMEWaThwxEfA8iU3hY4sDOUhINsjZPThevup017ac6
+         6sOYO+XbY66186t3T0U//37ye1ghZWKBncx7D/lv90dZZtu47YQfeH7FL/VYIi3YMby8
+         3+YA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJshRMCUqU4CcgwSrgL4d0vxyWfzsY411RWmDWWhMFf9ga7osJivaC7QsO/C6gvleGso+Dh6Xo2u+e1lmX9kC63OReCIrTTSogWllVumk6
+X-Gm-Message-State: AOJu0YyGYshfatUBuOUXNoYyFu835OyjLmveTpX8PqF3H0rICzQvPmUT
+	YkxLm+UakYJ2P37KqaWX3id0Qf8G0CDPiF5WLPOJq0f2oXAgZgcMhA+z1mvcbGM4Wiuy7D9BN7C
+	L1g==
+X-Google-Smtp-Source: AGHT+IHxiYuri1W9KUnm7rvgXvnst0dfGu9BH35r2xYwG5xmzTBUc7nx+APscQ4Xryj8t9ypMETY6Vr2jqQ=
+X-Received: from sport.zrh.corp.google.com ([2a00:79e0:9d:4:a340:5a1b:3a37:50cc])
+ (user=gnoack job=sendgmr) by 2002:a17:906:9c88:b0:a3e:81de:78c0 with SMTP id
+ fj8-20020a1709069c8800b00a3e81de78c0mr31089ejc.3.1709051548382; Tue, 27 Feb
+ 2024 08:32:28 -0800 (PST)
+Date: Tue, 27 Feb 2024 17:32:20 +0100
+In-Reply-To: <20240227110550.3702236-1-mic@digikod.net>
+Message-Id: <Zd4OlL1G3t1D3TgC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+Mime-Version: 1.0
+References: <20240227110550.3702236-1-mic@digikod.net>
+Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
+From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Paul Moore <paul@paul-moore.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Shervin Oloumi <enlightened@chromium.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel and Lukasz,
+On Tue, Feb 27, 2024 at 12:05:49PM +0100, Micka=C3=ABl Sala=C3=BCn wrote:
+> Extend the kernel support section with one subsection for build time
+> configuration and another for boot time configuration.
+>=20
+> Extend the boot time subsection with a concrete example.
+>=20
+> Update the journalctl command to include the boot option.
+>=20
+> Cc: G=C3=BCnther Noack <gnoack@google.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> ---
+>=20
+> Changes since v1:
+> * New patch, suggested by Kees Cook.
+> ---
+>  Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++---
+>  1 file changed, 51 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/use=
+rspace-api/landlock.rst
+> index 2e3822677061..838cc27db232 100644
+> --- a/Documentation/userspace-api/landlock.rst
+> +++ b/Documentation/userspace-api/landlock.rst
+> +Boot time configuration
+> +-----------------------
+> +
+>  If the running kernel does not have ``landlock`` in ``CONFIG_LSM``, then=
+ we can
+> -still enable it by adding ``lsm=3Dlandlock,[...]`` to
+> +enable Landlock by adding ``lsm=3Dlandlock,[...]`` to
+>  Documentation/admin-guide/kernel-parameters.rst thanks to the bootloader
+>  configuration.
 
-On Tue, Feb 27, 2024 at 04:37:36PM +0100, Daniel Lezcano wrote:
-> On 27/02/2024 12:09, Rafael J. Wysocki wrote:
-> > On Tue, Feb 27, 2024 at 11:14 AM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> > > 
-> > > On 27/02/2024 01:54, Nathan Chancellor wrote:
-> > > > When booting a CONFIG_FORTIFY_SOURCE=y kernel compiled with a toolchain
-> > > > that supports __counted_by() (such as clang-18 and newer), there is a
-> > > > panic on boot:
-> > > > 
-> > > >     [    2.913770] memcpy: detected buffer overflow: 72 byte write of buffer size 0
-> > > >     [    2.920834] WARNING: CPU: 2 PID: 1 at lib/string_helpers.c:1027 __fortify_report+0x5c/0x74
-> > > >     ...
-> > > >     [    3.039208] Call trace:
-> > > >     [    3.041643]  __fortify_report+0x5c/0x74
-> > > >     [    3.045469]  __fortify_panic+0x18/0x20
-> > > >     [    3.049209]  thermal_zone_device_register_with_trips+0x4c8/0x4f8
-> > > > 
-> > > > This panic occurs because trips is counted by num_trips but num_trips is
-> > > > assigned after the call to memcpy(), so the fortify checks think the
-> > > > buffer size is zero because tz was allocated with kzalloc().
-> > > > 
-> > > > Move the num_trips assignment before the memcpy() to resolve the panic
-> > > > and ensure that the fortify checks work properly.
-> > > > 
-> > > > Fixes: 9b0a62758665 ("thermal: core: Store zone trips table in struct thermal_zone_device")
-> > > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> > > > ---
-> > > >    drivers/thermal/thermal_core.c | 2 +-
-> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> > > > index bb21f78b4bfa..1eabc8ebe27d 100644
-> > > > --- a/drivers/thermal/thermal_core.c
-> > > > +++ b/drivers/thermal/thermal_core.c
-> > > > @@ -1354,8 +1354,8 @@ thermal_zone_device_register_with_trips(const char *type,
-> > > > 
-> > > >        tz->device.class = thermal_class;
-> > > >        tz->devdata = devdata;
-> > > > -     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
-> > > >        tz->num_trips = num_trips;
-> > > > +     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
-> > > 
-> > > IIUC, clang-18 is used and supports __counted_by().
-> > > 
-> > > Is it possible sizeof(*trips) returns already the real trips array size
-> > > and we are multiplying it again by num_trips ?
-> > > 
-> > > While with an older compiler, __counted_by() does nothing and we have to
-> > > multiply by num_trips ?
-> > > 
-> > > IOW, the array size arithmetic is different depending if we have
-> > > _counted_by supported or not ?
-> > 
-> > IIUC it is just the instrumentation using the current value of
-> > tz->num_trips (which is 0 before the initialization).
-> 
-> Right, but I am wondering if
-> 
-> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
-> 
-> 	is still correct with __counted_by because:
-> 
->  (1) if the compiler supports it:
-> 
-> 	sizeof(*trips) == 24 bytes * num_trips
+I would suggest: s/thanks to/in/
 
-No, this is incorrect. sizeof(*trips) == sizeof(struct thermal_trip),
-which is never affected by __counted_by. As far as I am aware,
-sizeof() in general is never affected by __counted_by because calling
-sizeof() on a flexible array member (which are the only things currently
-allowed to have __counted_by) is invalid because a FAM is by definition
-an unknown size at compile time.
+> +For example, if the current built-in configuration is:
+> +
+> +.. code-block:: console
+> +
+> +    $ zgrep -h "^CONFIG_LSM=3D" "/boot/config-$(uname -r)" /proc/config.=
+gz 2>/dev/null
+> +    CONFIG_LSM=3D"lockdown,yama,integrity,apparmor"
+> +
+> +...and if the cmdline doesn't contain ``landlock`` either:
+> +
+> +.. code-block:: console
+> +
+> +    $ sed -n 's/.*\(\<lsm=3D\S\+\).*/\1/p' /proc/cmdline
+> +    lsm=3Dlockdown,yama,integrity,apparmor
+> +
+> +...we should configure the bootloader to set a cmdline extending the ``l=
+sm``
+> +list with the ``landlock,`` prefix::
 
-> 	then:
-> 
-> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
-> 
-> 	memcpy(tz->trips, trips, num_trips * 24 * num_trips);
-> 
-> 	==> memory size = 24 * num_trips^2
-> 
->  (2) if the compiler does not support it:
-> 
-> 	sizeof(*trips) == 24 bytes
-> 
-> 	then:
-> 
-> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
-> 
-> 	memcpy(tz->trips, trips, num_trips * 24);
-> 
-> 	==> memory size = 24 * num_trips
-> 
-> Or did I misunderstand __counted_by ?
+Nit: Is the double colon at the end of this line accidental?
+(It does not appear before the previous code block.)
 
-I see there has been some confusion around this change from both
-yourself and Lukasz, so I will try to make things as clear and concise
-as I can.
+> +
+> +  lsm=3Dlandlock,lockdown,yama,integrity,apparmor
+> +
+> +After a reboot, we can check that Landlock is up and running by looking =
+at
+> +kernel logs:
+> +
+> +.. code-block:: console
+> +
+> +    # dmesg | grep landlock || journalctl -kb -g landlock
+> +    [    0.000000] Command line: [...] lsm=3Dlandlock,lockdown,yama,inte=
+grity,apparmor
+> +    [    0.000000] Kernel command line: [...] lsm=3Dlandlock,lockdown,ya=
+ma,integrity,apparmor
+> +    [    0.000000] LSM: initializing lsm=3Dlockdown,capability,landlock,=
+yama,integrity,apparmor
+> +    [    0.000000] landlock: Up and running.
+> +
+> +Note that according to the built time kernel configuration,
 
-The fortify routines in the kernel rely on __builtin_dynamic_object_size
-to get the size of flexible array members (see the macro soup around
-memcpy() in include/linux/fortify-string.h). Before __counted_by,
-__builtin_dynamic_object_size() on a FAM would return -1. With
-__counted_by, __builtin_dynamic_object_size() will be able to return the
-correct size of the FAM by looking at the counted by member.
+s/built time/build time/
+                 ^
 
-In this case, memcpy() was called with tz->num_trips (the counted by
-member) == 0 (meaning that __bdos() will return 0) while trying to copy
-'sizeof(*trips) * num_trips' bytes into it, triggering the fortify panic
-routine. Moving the tz->num_trips assignment before the memcpy() call
-ensures that __bdos() returns the correct amount for checking in the
-fortify routines.
+It feels like the phrase "according to" could be slightly more specific her=
+e.
 
-Hope that helps clear things up, I will make sure to write a clearer
-commit message next time.
+To paraphrase Alejandro Colomar, "Note that" is usually redundant.
+https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gmail.com/
 
-Cheers,
-Nathan
+I'd suggest:
+
+  The kernel may be configured at build time to always load the ``lockdown`=
+` and
+  ``capability`` LSMs.  In that case, these LSMs will appear at the beginni=
+ng of
+  the ``LSM: initializing`` log line as well, even if they are not configur=
+ed in
+  the boot loader.
+
+> +``lockdown,capability,`` may always stay at the beginning of the ``LSM:
+> +initializing lsm=3D`` list even if they are not configured with the boot=
+loader,
+
+Nit: The man pages spell this in two words as "boot loader".
+
+
+> +which is OK.
+> +
+> +Network support
+> +---------------
+> +
+>  To be able to explicitly allow TCP operations (e.g., adding a network ru=
+le with
+>  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
+>  (``CONFIG_INET=3Dy``).  Otherwise, sys_landlock_add_rule() returns an
+>=20
+> base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
+> --=20
+> 2.44.0
+>=20
+
+Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
