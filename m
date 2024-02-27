@@ -1,92 +1,96 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8890A250F8
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 17:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFABF4E1CB
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 17:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053248; cv=none; b=F1ghCS4St19/+J7casVVm6P4FhOcLd25sS0BBYakpn8rwy5zpvlp5/LtTRPZLBcQMzQMHmlFikSEBDy1xWtFULckZUA4E+QS/jhOpcZJjAgcuHbQpLX+Hy1L3AQo1VtwQfawdsjHXuS9kEG/ggzoINzZ2/zx5XVYVaNQksD+tz8=
+	t=1709056390; cv=none; b=HMff85aH2DJD78qK2zm9Ue4dt7UhxvV/dE+8ox40dL1Nhv/Eo4I0X7RmoNTxALK88fDIDQmUQDUATpNp4+Zvsg5vRTc6hVHZzeHfw0E4IrWJIRN3FAf7y9oHoEQJTgC8nlM8u7cNMH6ESJjxyKWczKZ8Yz4LoLu0OWGZPUI8oxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053248; c=relaxed/simple;
-	bh=kaZPwy1DnnJwKmEiqW49+N4tGBugK5KqDPoQuOPHqX4=;
+	s=arc-20240116; t=1709056390; c=relaxed/simple;
+	bh=johZxZO1BLynAj27mgUIzBpZBiX+HwYZwRJmg+3qXYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EeRI7hyuqPvvyV8gWtOFALLQ9BsU2RM/3y5TkbVM/vElahZVPw70LK4uqOn0GBoJuaXCs8I7bkd0JPsPQgVox6+qslAdcEF5uBGKLmwWXr7bVMiWCsG5dZ9e3Ny8MsSFAQJEHmQFbCPOn+EBb6RP+oiWliNfQxICsQ0hBZcPkFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h8IsAKtw; arc=none smtp.client-ip=209.85.215.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=hJNugQXatnj00UMk53K1D6lVJ2Nv36QJ4Z6xBHDP1Vavs2yWGDLBLK+DCW4IqkIhyyf4QLchyWkljkXgWomTDY20Vr8wCRguT6NsYOG3qgqlfJglW+YC63gTaiyROPIlu/mxYewfjOIdQ1vAG8zDIyBA4c99yqH2uRrGu0dCrjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fnzfJaTV; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h8IsAKtw"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so3664377a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 09:00:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fnzfJaTV"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-364f791a428so15761265ab.3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 09:53:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709053247; x=1709658047; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fVB/mgTuOok+gnoF/FjLnOVs65Yn1KQT4qK8xBXRKZk=;
-        b=h8IsAKtwLq4NbTtRLrIFV/bMl+10yUh/J82+Opm7iJASboxzGvaKTgcwZqzXnDZObH
-         Tbd22PMnsydlCmb3JVxTJRSzQXgCmTJsHhtot2yc5FH1XYVHRQ0sVeorvjCuPnkzWQoG
-         +Gl+OMMdAPMS20IqC2Jvv5q5Lqrl2xpYWEZ9I=
+        d=chromium.org; s=google; t=1709056388; x=1709661188; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CUGpOInHfB6oXANt5lLDq7+qRlwHtdSo25I/C8lV/gE=;
+        b=fnzfJaTV+nyhUr76UkWyLKrcOOPungxNguphO43afBIlEVFU+Cc/5p5nJwrBoL9Qrw
+         mHB2NFHK2adkUqhP89PfRpY3gy5QBXjpty+EPFU39fQxUmFjDkENVOxmpujboasLI//j
+         JlUR6rRHNMFesLJaIf2hlJmnSRN3XNM98IKHU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709053247; x=1709658047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fVB/mgTuOok+gnoF/FjLnOVs65Yn1KQT4qK8xBXRKZk=;
-        b=cw//Z6cpCvZpMs0ryZcjQgFoSVfV9I3kFG3tiDWSfU89E1x7NXH5l8dnwO5n0vPVax
-         RY/br2k/aNmD01w6zcph7ugegD00iupT4LR2pzcfRAIauhwHXRB6MMVOF9Jf92WSjh9M
-         HDxeWjv8Eh6Zg6W3QZyu0OyVTUwIaaQV73F3a83ln1MvSrrl/7xd+WAeMOmmbqPLfG4w
-         ny020BXSc0MrfPdK0GD38wG5DrmnnTsjYIQoep1R0n4hRoX1eCLdZneXljv3Rb16dMMr
-         Mgp+M4CPw1UzMXqduChPHoNYDQWWslhYjob2woGY8PLAIYrV1Ndh3MLLYNwVW8S7Ww6G
-         3AKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVp+9BgjAPZdiK2eKUM+XKrh6ez/DLCz19gWqHiRfqFeAiGP29b0lf0i+Dluh1LC2w5US6j/TBX+dbkYWPNC9N3MTx1dk/peGpzG/7e/DHD
-X-Gm-Message-State: AOJu0YxUKQZiKhVSeFbrftNur7Nm0pVRYTE7D8vmVe+u7/aFmeGaLprH
-	0Lp0tJl19nnzkQVbm10GHBXpmVf9N1H4tChpprc7crHbRoJPKxOEiIb79MIHBTaQJCjsJ2R/aHg
-	=
-X-Google-Smtp-Source: AGHT+IFg0NCtYbETJpvRCOpzy0XTL7KtmhpC1VhxZupEkO0MpW4B3yevf7ZLibVvBRAtyz/LEba0cQ==
-X-Received: by 2002:a17:90a:d90d:b0:29a:a39e:e651 with SMTP id c13-20020a17090ad90d00b0029aa39ee651mr7555235pjv.11.1709053246818;
-        Tue, 27 Feb 2024 09:00:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709056388; x=1709661188;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CUGpOInHfB6oXANt5lLDq7+qRlwHtdSo25I/C8lV/gE=;
+        b=ZbTjT6SVP3tWKbryk3BvnpGfZHdAGpMBJHAf6tLeoTxyO6kL0dmBp7hjkoUbzPUsp0
+         9PLCHB3RmfEe4v+u6CTCWaOE9nOanf/u+F2fqhYfKR1VLw/4jsQZOPBdt4rLLPJRBV4C
+         k4uoIRBpwGW/oXSIUp+m9LJY3EuBgcZDwYCJfi9+9yJzY7wsWy+d3xAkz+qDZNzje6go
+         CZRR+ls71RxHbUP644nykl68d9eE5UP0zregCZJP1y/8oZhTdDoMAyp8jUSqhpUPnNDK
+         8/4apRRHjbdYXwWD5HNbcMjuhZgOvRow6Hk5iwQJneDNDyxTz2go9V956NwocymnGn1s
+         OlTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxNJcAoVuRC1RWJlvIkzhrDMTUSLfzJYOBhTlS4ZFFH0fpzQxYZ8PzQg6akuvqvE4IE9NWjT7wZw2SPmeUfODYJ3+J0POeFGDQ3E+20YvU
+X-Gm-Message-State: AOJu0YwUDzyLUNhrhmgvSuTR21RZsPJ5hhFPEXY5FlJFJZlduHu3SS5s
+	rWrqqm7dopLkYOcmWukeSidFIwVdNsyRy4SxAE1CnoMoKrC3kUlPVq35/ewKCA==
+X-Google-Smtp-Source: AGHT+IEhVBgpTHrn9Ciy4eW8hD0nPWBOmU5d2rRoCerXInpxX852iX7CB7uYxZsaZhGPfs7otbQ+Cg==
+X-Received: by 2002:a05:6e02:118a:b0:363:c919:2716 with SMTP id y10-20020a056e02118a00b00363c9192716mr9374131ili.20.1709056387901;
+        Tue, 27 Feb 2024 09:53:07 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u3-20020a17090ac88300b0029a4db713b9sm8760981pjt.39.2024.02.27.09.00.45
+        by smtp.gmail.com with ESMTPSA id ld18-20020a056a004f9200b006e533074414sm3593917pfb.21.2024.02.27.09.53.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 09:00:46 -0800 (PST)
-Date: Tue, 27 Feb 2024 09:00:44 -0800
+        Tue, 27 Feb 2024 09:53:07 -0800 (PST)
+Date: Tue, 27 Feb 2024 09:53:06 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, rui.zhang@intel.com,
-	lukasz.luba@arm.com, gustavoars@kernel.org, morbo@google.com,
-	justinstitt@google.com, stanislaw.gruszka@linux.intel.com,
-	linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev, patches@lists.linux.dev
-Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
- memcpy()
-Message-ID: <202402270852.E46A5268@keescook>
-References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
- <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
- <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
- <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
- <202402270816.0EA3349A76@keescook>
- <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
+To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc: Borislav Petkov <bp@alien8.de>, Guixiong Wei <guixiongwei@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Kristen Carlson Accardi <kristen@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Guixiong Wei <weiguixiong@bytedance.com>,
+	Jann Horn <jannh@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Chris Wright <chrisw@sous-sol.org>,
+	Jeremy Fitzhardinge <jeremy@xensource.com>,
+	Roland McGrath <roland@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section
+Message-ID: <202402270952.93228D6@keescook>
+References: <20240222171840.work.027-kees@kernel.org>
+ <0443c7c2-1c3f-4cf8-940d-88306956832a@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0443c7c2-1c3f-4cf8-940d-88306956832a@suse.com>
 
-On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
-> Ok my misunderstanding was I thought sizeof() was calling _bdos under the
-> hood, so when calling sizeof(flex_array), it was returning the computed size
-> inferring from the __counted_by field.
+On Tue, Feb 27, 2024 at 05:13:35PM +0100, Jürgen Groß wrote:
+> ... a test of "sec_applies->shdr.sh_type == SHT_NOTE" work as well?
 
-Yeah, sizeof() has a very limited scope. __builtin_object_size() has
-more flexibility (via the 2nd argument, "type"), but it was still
-compile-time only. __builtin_dynamic_object_size() was added to bring
-runtime evaluations into the mix (initially to support the alloc_size
-attribute, and now includes the counted_by attribute too).
+Oh yeah! Thanks. I'll send a v2.
 
 -- 
 Kees Cook
