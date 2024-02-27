@@ -1,133 +1,104 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC046135A43
-	for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 23:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF6D1848
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 00:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708991634; cv=none; b=N9GsJ2zv6mzNULC/EGFoiYf/u6Bf7zUVJaldbuIpesXTqCtzhC7rbHn5+qQgaP4FsJHTdgJwuUCEFXy/1lckGxtLbfg4RR5/2jT8OYVkZByawSMnTMaO2kmolQpypLFqpTaY9R6PtrjdFGWxv5xpuDCDDgbUuvMtqMIO0Vf+sNc=
+	t=1708995183; cv=none; b=G0PtGsOQ1D3opHu2ufC77P2VMN+MMzUV720rmqVFUL0rtAnz6etkKue33pEFVnmyhMWkOsXDndywDfFDQ1Skp4SGQryUVfgpKLQABigF7AB7hULO+IExKAZTmtw5d3Ipg0T8rsdHncuAwTEt9de1F4UiFVblEXJVXgVcPglP76c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708991634; c=relaxed/simple;
-	bh=JeCxx3c4ppdgFDh3lp6P1rqNUJwDxT9JEo9Mm+GfI38=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sZxKFxQZpEN6f87UymYnQSayErcVACybQGsDwIXVK2WHdagYyMc5jvzXirDEyZUmtXE+SzUqaqFUDKkV2tsOo+lOvvkarT8hRq9fjVnLXIGZU7Dl1gRrYb8Fe74LhrqtkhndhW3l6pVlHy12KaE+Y+qYKLH2OGzTVV8VwXvi2hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fy1d2mYM; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1708995183; c=relaxed/simple;
+	bh=V6A7al1ppGka0azTB8qp3lV4rogqK7JhSynkjAKsxYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1VciZ6l3uASBAABA9PaUgLPoS9R90tQsdQe5vhK5Y39avkzwFp+FAmfHy41mwudIa3DEHFBvIQ2Wb5R78k3WBIGYENu2dhNmz9WTFdOWnAf04IKHf8YMT0Ro5fTAKJK61ejtkXhekJT/VTrBqFufi/h1JlDKtMMgZgVAjtVReI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JRQIksFS; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fy1d2mYM"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608ad239f8fso63319337b3.0
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 15:53:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JRQIksFS"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e544f927d4so338659b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Feb 2024 16:53:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708991632; x=1709596432; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=S39j559seDHpHoyUT6gNBve2pYTlYnQB3wRYpD7F2CQ=;
-        b=Fy1d2mYM9bV1lszCzKF98Q2nCdK/94vBoLQjkpBqgs7WL0pb83HxuWjXTTz6vxRp6E
-         NQYYO4PIfEeSJ8bfzWG5u/Yc/Wtqix4gYedQOzAEp+0Yj1/YIuDKrrHNimbIPid9DVJi
-         zJw6/pPPofKVeRvZYOFIgLIfuZBI1d1k479azNx3HBndxJi1DH+AituoPfikWgMdWAfY
-         Xsb0S3EdK+OZjOrIesBv0/3QIV15xaY6wA/hPeTsm31ylWbuLvkGFi3ThEtXchmXwxjD
-         /PrAoR9j+KlwSPC90FU5IDCD8sctiVJOzS/SHtnPp8FGyrj+rZSdx6rqB74WiOCYlbmG
-         A4bw==
+        d=chromium.org; s=google; t=1708995181; x=1709599981; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BZbMzkvIVzOfkFlvvubcJk0J0hloUqaH3xyhrZRKFHU=;
+        b=JRQIksFSOBMZLWcmRlVGnx75hNRXVEmKBqY2aaDC1XffXWmuaTAmRIAPzuxdLzyVzj
+         9uRV+y4GAqDeOEXut+LFTDwtJyphzoT9IRwgVkA1PQxovXtPB9Up7OCF+m+AlWqUR+7S
+         bw4ivt4B+D6xQlV126bErH9mRPtWuE0/frcHQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708991632; x=1709596432;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S39j559seDHpHoyUT6gNBve2pYTlYnQB3wRYpD7F2CQ=;
-        b=UyWnprkLwlTwufcMY0339SlqqDT+W2MDJmlxWpnyT1JLY71d/sxHgYRdkWyro1JFQd
-         hrD9Gq/mfNoMWM5021e6wBNw2IYonyrox2OrxLxAVccUy2uNsWclu8fECAs5fvfmKGZn
-         8jY5V0Ahx0BYX2J7BD37lNJ6CeohvSfQmTEqhGguDzPoD5o9PbBQn2Mvh/PUcmsfYjQk
-         pFgPVpptYxDsQsoB4gIxHSIpUo9cBWYaBq950hKn2SdCMiC6u408ZWtpc3s1+nCGRw7Y
-         12J8iGJ3nEAQVyZDkKXg9mgoYVvzlfzXwc4HHDAvGJtucR7MjOv70eZtzmgpks4D+FCo
-         OdJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2SL9gG08lNtnT2/zYH5iJxotW04nJR6do54v/iCtN15ZcmRDb8ontrU/RHLUEUkyFN4k5dmjVoKAgxtrIeuOCXj7ntyLLCupX7BvaRMSU
-X-Gm-Message-State: AOJu0YxIeM0fHqO5tj7050VBEyAwShhEDZjqnoM14z+iKjg+fvIFeRFV
-	9X3EQv8rvxzV9Ramm5BIxDKTUWzPm6To6RyKsrCfVRDZX3sPSMJfRFgwlZUYDTfXIbnmXykp1Gd
-	cgyhIzKOZMalFb9qEM5Y3gw==
-X-Google-Smtp-Source: AGHT+IH54DJnpJg9iPluQxwsW66Wg0QACJLoVbFpM8JyEIz57ZeMOw8tfs/bwhBt9SCw4HWibOH+XXlMWWCOk7NznQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1887:b0:dcc:e1a6:aca9 with
- SMTP id cj7-20020a056902188700b00dcce1a6aca9mr189067ybb.9.1708991631843; Mon,
- 26 Feb 2024 15:53:51 -0800 (PST)
-Date: Mon, 26 Feb 2024 23:53:44 +0000
+        d=1e100.net; s=20230601; t=1708995181; x=1709599981;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BZbMzkvIVzOfkFlvvubcJk0J0hloUqaH3xyhrZRKFHU=;
+        b=IzOt9pyoun8CDmyuBcav8aFwSlLLRODKidf2WXL2AoKec6H0+Rbk5k4uEizlZeoCSB
+         p61IWxJWyWFMU9s/pm6g+zKW48FrQCd1IFP/jw9K1w/f3XuWq9cgoWbB2+gJFylvcGOc
+         pEcMfPnvd/PY0Qvqj+hUJvgqcXpbDsG63/MTAz3gAoQ5IT9NlJC31pfOv3TktU/Ot105
+         s8U6c0E7GRqqAbdXrU1Fm+W1QqvFCSq3tFghI/xBNJGRufvEJhT55yWoPFZhbdGWqjb9
+         wfLe5MMfVSpZp8/SDyY/aLHKu8uJ8trqc1IM9O5lbkiIehTV7wuSsUkmYNRiqoDmSBTZ
+         BuhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTOvJ/qjGr5vIBgckF9SQ45Ug80hik/Jys8B5OfgknNlaI2GhpTR1XZJ2gxKPq1vIp3nq7EbpV7O428BqWovOykr4Z71qHGw0bjr37GIMH
+X-Gm-Message-State: AOJu0YxUqG7k1xFSkMCaMfkxAeUJthYX9NAzzwmADyjwOPMnssLlJhb1
+	WhxoeZcqslR+qapFpBmYYl6P15dEb+y6J4nlors5P7EpBXFB+1JpwmjhjwedaQ==
+X-Google-Smtp-Source: AGHT+IGymmYDQSZ5/XUv6z4QO2Px0IowCoCW3KGp+FsYBiIOOkSnr19mWBPp31IKLedgPuIEP0pvTQ==
+X-Received: by 2002:aa7:8883:0:b0:6e0:50cb:5f0a with SMTP id z3-20020aa78883000000b006e050cb5f0amr10992854pfe.12.1708995181484;
+        Mon, 26 Feb 2024 16:53:01 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 16-20020a056a00071000b006e3809da4fdsm4573143pfl.83.2024.02.26.16.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 16:53:01 -0800 (PST)
+Date: Mon, 26 Feb 2024 16:53:00 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>, jannh@google.com,
+	linux-security-module@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, Guenter Roeck <groeck@chromium.org>,
+	Mike Frysinger <vapier@chromium.org>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] proc: allow restricting /proc/pid/mem writes
+Message-ID: <202402261650.DE0601F01@keescook>
+References: <20240221210626.155534-1-adrian.ratiu@collabora.com>
+ <CAD=FV=WR51_HJA0teHhBKvr90ufzZePVcxdA+iVZqXUK=cYJng@mail.gmail.com>
+ <202402261110.B8129C002@keescook>
+ <202402261123.B2A1D0DE@keescook>
+ <1405e4-65dd1180-3-7a785380@32026879>
+ <CAD=FV=Vh7Ctaj6N_k9gdkrqpb687zJqQN19qTZXMyDw6TujvLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIck3WUC/42NQQqDMBBFryJZd4qG1GpXvUeRYsaJDlgjGQkV8
- e5Nhe67+fD+4r1NCQUmUbdsU4EiC/spgT5lCod26gm4S6x0rk2utQZZwoTzCl3gSEFAUBjG2eE
- xT1wAwV2MLa9EZMtKJdMcyPH7qDyaxAPL4sN6RGPxfX/+8i9/LKCAyhpTt1Q7h3jvve9HOqN/q Wbf9w8CtWNb1wAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708991630; l=2521;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=JeCxx3c4ppdgFDh3lp6P1rqNUJwDxT9JEo9Mm+GfI38=; b=aI8lYYQTCTWr5poJcPKK8qGIaYaUXNNsUPhPuHz8s+B2GXWwyabkAt5Y93G5bTZHu1TS6wyRB
- e1Z6lu+bX0RDep2Xlb7/pIjK9b5aqj9hCE2PQ1b3XxtRQKpfxD3hgt3
-X-Mailer: b4 0.12.3
-Message-ID: <20240226-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v2-1-2df2e46569b9@google.com>
-Subject: [PATCH v2] scsi: lpfc: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: James Smart <james.smart@broadcom.com>, Dick Kennedy <dick.kennedy@broadcom.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=Vh7Ctaj6N_k9gdkrqpb687zJqQN19qTZXMyDw6TujvLQ@mail.gmail.com>
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Mon, Feb 26, 2024 at 02:37:29PM -0800, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Feb 26, 2024 at 2:33 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+> >
+> > > > [...]
+> > > > +config SECURITY_PROC_MEM_RESTRICT_WRITES
+> > >
+> > > Instead of a build-time CONFIG, I'd prefer a boot-time config (or a
+> > > sysctl, but that's be harder given the perms). That this is selectable
+> > > by distro users, etc, and they don't need to rebuild their kernel to
+> > > benefit from it.
+> >
+> > Ack, I'll implement a cmdline arg in v2.
+> 
+> Any objections to doing both? Have a CONFIG option for a default and a
+> cmdline to override it? This way if a distro wants to restrict writes
+> by default then don't need to jam more stuff into the kernel command
+> line.
 
-We expect ae->value_string to be NUL-terminated because there's a
-comment that says as much; these attr strings are also used with other
-string APIs, further cementing the fact.
+For an example, take a look at randomize_kstack_offset and
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT.
 
-Now, the question of whether or not to NUL-pad the destination buffer:
-lpfc_fdmi_rprt_defer() initializes vports (all zero-initialized), then
-we call lpfc_fdmi_cmd() with each vport and a mask. Then, inside of
-lpfc_fdmi_cmd() we check each bit in the mask to invoke the proper
-callback. Importantly, the zero-initialized vport is passed in as the
-"attr" parameter. Seeing this:
-|	struct lpfc_fdmi_attr_string *ae = attr;
-... we can tell that ae->value_string is entirely zero-initialized. Due
-to this, NUL-padding is _not_ required as it would be redundant.
-
-Considering the above, a suitable replacement is `strscpy` [2].
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- keep strnlen (thanks Kees)
-- Link to v1: https://lore.kernel.org/all/20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-v1-1-20c685bd1b43@google.com/
----
- drivers/scsi/lpfc/lpfc_ct.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index baae1f8279e0..296d2d4796cb 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -2569,9 +2569,9 @@ lpfc_fdmi_set_attr_string(void *attr, uint16_t attrtype, char *attrstring)
- 	 * 64 bytes or less.
- 	 */
- 
--	strncpy(ae->value_string, attrstring, sizeof(ae->value_string));
-+	strscpy(ae->value_string, attrstring, sizeof(ae->value_string));
- 	len = strnlen(ae->value_string, sizeof(ae->value_string));
--	/* round string length to a 32bit boundary. Ensure there's a NULL */
-+	/* round string length to a 32bit boundary */
- 	len += (len & 3) ? (4 - (len & 3)) : 4;
- 	/* size is Type/Len (4 bytes) plus string length */
- 	size = FOURBYTES + len;
-
----
-base-commit: 39133352cbed6626956d38ed72012f49b0421e7b
-change-id: 20240222-strncpy-drivers-scsi-lpfc-lpfc_ct-c-f54b67eeeb68
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
