@@ -1,247 +1,162 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8D113956D
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 11:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28BF137C38
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 11:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709032383; cv=none; b=TGnizeSRCdTe5QZrKaIEaDhErOYadSyeU/6EIhYCWZCfA9XfctymkQyp6AkWL2su6f9RRPFh9CeRVRCsR+hPwsRaRbQPoTLA7rMoIr9/MYILYq3jku6nTn95M8q1VsFDVpFRWrO60vx9flXPMFkBt35iWOr0MkqjtFUDMU8pago=
+	t=1709032514; cv=none; b=Z6a1G3scwbuCO9GExMzTiiUfBe/yJKthLEazxBI4GYgbjoKzHiaI9RfERbdk9xskZJL9PKASVsrC2me08AYhy9WGKs+SHYNGnHRt53SySsBOATO122scau5UEo8C4HpqIX2slO5AtsEdJSTdF4/VFTs+nULBgXFGnBSVKGCnI8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709032383; c=relaxed/simple;
-	bh=2JppE6jHQJvJDG0BZnL8iKgzWQfAeEfTbwtWRN3IiqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wv/wOa4Z+BwQX5LdsTrGgBgbYxjgpK8urgOlNtN6ibElO53r0XINlEgMWRAVww4EclSX455zBImTReMR+hEh5FNoyrS6eus7gIiOQo08cDTzqTuKw4jl8DWloEmnqrTP3M69+HA0w1HlJCfcFDDX39wSbl5x6E2DQNviPdk8D4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=a2QoiKKg; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1709032514; c=relaxed/simple;
+	bh=fo0e4FRJyzZJ6d6n/7sR3VvkreP3rfZ9EhEu8wKED6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zq7JcYG406UgrQtP0KWX4f9J2GA9HxK8A/kNcfxphE7sq5RFFbH6mNXK0q6wk53u2JEitjCLlKm/RIez4o1AanuznDEhqVXrhYQpDSF63bDl1QEJ/xNdmKXyo8ygl4lQ5NIccRQ7Pb/66bqnIEo8l0sg81uId+39/28LljoUQFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=aJAgMZqv; arc=none smtp.client-ip=84.16.66.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="a2QoiKKg"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33d18931a94so3195763f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 03:12:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1709032378; x=1709637178; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JpskKeceFKjoMKeast8vwtqn7CA6sXRQaoDCrtpoRK0=;
-        b=a2QoiKKg8V0OqMHiX4WT45Lx7J/7tbq6fMpikjsMwFJhEJc0hqisXMLzwzKdg/RSoI
-         3wXoZydA3iuJHqJKIvYMJrTAO/A3TUBYwOxFjUprk/A0q41F3yWDaDYBX4FxAfdx/6ps
-         1UCMjqHrVFlaawz83OVsrpnVRAU7x6Sau/m7M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709032378; x=1709637178;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JpskKeceFKjoMKeast8vwtqn7CA6sXRQaoDCrtpoRK0=;
-        b=vxUR2ZdtkPIV36wxmDNG6iVJzUOVVigp79lg6FjPhPtbux3nRZsTP9w54vaRpKLpRB
-         Cmlm1JvAyughkWPQhHhGHrE28iInD3Ezl9O23zPIfZneKaMGF1eSSA6CIVjmnBDtQFlC
-         FW4wMamiTTqAnGYQAR30O+IY2IUU3eWFprZwyWpyQ2k5Pb/GFKfTovGGBRP/zOGc+nEs
-         b5fdaJHLFwW0QYNUdm6GQUUHtTcQwIfx4G45zXJZJnAtX4qVM2ME+nfa2E66F2EvRJEO
-         /ey1nBe8RCtWB+lnrznYq0MB5Rxy8TpVxNsBEPTjYTyq1nQYzMDxJO4xPTRxequt9CwG
-         zb7g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3uj/B+26NcMS0445+CFcd7xchWrHbDAFcbc/NtcA8FP9ETBEK0yMUsSnkXZiUBwbHycgDGX2fVobv64mN0f8sGlN/1KZavL1utUalw7mF
-X-Gm-Message-State: AOJu0YxPU4mr25HB79Mb/c1HmdTHaDUk1/wuizJ1xe6he9EtV35YpcLa
-	Sii0Ejf4knSKcj3Bd8w+Jsmv+NhqFyhQE/pVynuCY4ILajlGC7NI7mmh2bASrA==
-X-Google-Smtp-Source: AGHT+IHHvz90/p2Xwwzr4JipR+b7w6FewUofHz/rB0n3h35sC6WNGRzXnS1OB6r03nFrD5oDiv+SWA==
-X-Received: by 2002:adf:eecf:0:b0:33d:2474:5aa with SMTP id a15-20020adfeecf000000b0033d247405aamr6683014wrp.40.1709032378466;
-        Tue, 27 Feb 2024 03:12:58 -0800 (PST)
-Received: from [10.230.42.27] ([192.19.152.250])
-        by smtp.gmail.com with ESMTPSA id bu25-20020a056000079900b0033d8a17a710sm11352379wrb.88.2024.02.27.03.12.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 03:12:58 -0800 (PST)
-Message-ID: <356ec25f-b5e0-4b1b-bd0a-0d6cb9ae3c0c@broadcom.com>
-Date: Tue, 27 Feb 2024 12:12:57 +0100
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="aJAgMZqv"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TkZRK3mSFzMq5jp;
+	Tue, 27 Feb 2024 12:06:05 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TkZRJ1SGDzDLf;
+	Tue, 27 Feb 2024 12:06:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1709031965;
+	bh=fo0e4FRJyzZJ6d6n/7sR3VvkreP3rfZ9EhEu8wKED6Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aJAgMZqvXCuTbBi3QrqQEix+We3BKKkgtSzWSI/iyXVsm+O11Q4WECvzP7XS5p7AK
+	 SysOh8oMYi25zAJ5MEnSVlYHTBLoZKpMm1EgyycJhArAgZ+5oaXh/Ej5Es4I7TuWwX
+	 6Vizit1a6SoZwfE3jEmCv42kq4iV/5BZJ2nNfIPM=
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2 1/2] landlock: Extend documentation for kernel support
+Date: Tue, 27 Feb 2024 12:05:49 +0100
+Message-ID: <20240227110550.3702236-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: brcmfmac: fweh: Fix boot crash on Raspberry
- Pi 4
-To: Kalle Valo <kvalo@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Zc+3PFCUvLoVlpg8@neat>
- <170902559101.3280425.2706190192200235643.kvalo@kernel.org>
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
- 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
-In-Reply-To: <170902559101.3280425.2706190192200235643.kvalo@kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d8ac8f06125b1b4d"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
---000000000000d8ac8f06125b1b4d
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Extend the kernel support section with one subsection for build time
+configuration and another for boot time configuration.
 
-On 2/27/2024 10:19 AM, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-> 
->> Fix boot crash on Raspberry Pi by moving the update to `event->datalen`
->> before data is copied into flexible-array member `data` via `memcpy()`.
->>
->> Flexible-array member `data` was annotated with `__counted_by(datalen)`
->> in commit 62d19b358088 ("wifi: brcmfmac: fweh: Add __counted_by for
->> struct brcmf_fweh_queue_item and use struct_size()"). The intention of
->> this is to gain visibility into the size of `data` at run-time through
->> its _counter_ (in this case `datalen`), and with this have its accesses
->> bounds-checked at run-time via CONFIG_FORTIFY_SOURCE and
->> CONFIG_UBSAN_BOUNDS.
->>
->> To effectively accomplish the above, we shall update the counter
->> (`datalen`), before the first access to the flexible array (`data`),
->> which was also done in the mentioned commit.
->>
->> However, commit edec42821911 ("wifi: brcmfmac: allow per-vendor event
->> handling") inadvertently caused a buffer overflow, detected by
->> FORTIFY_SOURCE. It moved the `event->datalen = datalen;` update to after
->> the first `data` access, at which point `event->datalen` was not yet
->> updated from zero (after calling `kzalloc()`), leading to the overflow
->> issue.
->>
->> This fix repositions the `event->datalen = datalen;` update before
->> accessing `data`, restoring the intended buffer overflow protection. :)
->>
->> Fixes: edec42821911 ("wifi: brcmfmac: allow per-vendor event handling")
->> Reported-by: Nathan Chancellor <nathan@kernel.org>
->> Closes: https://gist.github.com/nathanchance/e22f681f3bfc467f15cdf6605021aaa6
->> Tested-by: Nathan Chancellor <nathan@kernel.org>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> Arend, ack?
+Extend the boot time subsection with a concrete example.
 
-Figured Kees Cook was the trumping authority here, but here it is:
+Update the journalctl command to include the boot option.
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Günther Noack <gnoack@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
 
-Gr. AvS
+Changes since v1:
+* New patch, suggested by Kees Cook.
+---
+ Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++---
+ 1 file changed, 51 insertions(+), 6 deletions(-)
 
---000000000000d8ac8f06125b1b4d
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/userspace-api/landlock.rst
+index 2e3822677061..838cc27db232 100644
+--- a/Documentation/userspace-api/landlock.rst
++++ b/Documentation/userspace-api/landlock.rst
+@@ -19,11 +19,12 @@ unexpected/malicious behaviors in user space applications.  Landlock empowers
+ any process, including unprivileged ones, to securely restrict themselves.
+ 
+ We can quickly make sure that Landlock is enabled in the running system by
+-looking for "landlock: Up and running" in kernel logs (as root): ``dmesg | grep
+-landlock || journalctl -kg landlock`` .  Developers can also easily check for
+-Landlock support with a :ref:`related system call <landlock_abi_versions>`.  If
+-Landlock is not currently supported, we need to :ref:`configure the kernel
+-appropriately <kernel_support>`.
++looking for "landlock: Up and running" in kernel logs (as root):
++``dmesg | grep landlock || journalctl -kb -g landlock`` .
++Developers can also easily check for Landlock support with a
++:ref:`related system call <landlock_abi_versions>`.
++If Landlock is not currently supported, we need to
++:ref:`configure the kernel appropriately <kernel_support>`.
+ 
+ Landlock rules
+ ==============
+@@ -499,6 +500,9 @@ access rights.
+ Kernel support
+ ==============
+ 
++Build time configuration
++------------------------
++
+ Landlock was first introduced in Linux 5.13 but it must be configured at build
+ time with ``CONFIG_SECURITY_LANDLOCK=y``.  Landlock must also be enabled at boot
+ time as the other security modules.  The list of security modules enabled by
+@@ -507,11 +511,52 @@ contains ``CONFIG_LSM=landlock,[...]`` with ``[...]``  as the list of other
+ potentially useful security modules for the running system (see the
+ ``CONFIG_LSM`` help).
+ 
++Boot time configuration
++-----------------------
++
+ If the running kernel does not have ``landlock`` in ``CONFIG_LSM``, then we can
+-still enable it by adding ``lsm=landlock,[...]`` to
++enable Landlock by adding ``lsm=landlock,[...]`` to
+ Documentation/admin-guide/kernel-parameters.rst thanks to the bootloader
+ configuration.
+ 
++For example, if the current built-in configuration is:
++
++.. code-block:: console
++
++    $ zgrep -h "^CONFIG_LSM=" "/boot/config-$(uname -r)" /proc/config.gz 2>/dev/null
++    CONFIG_LSM="lockdown,yama,integrity,apparmor"
++
++...and if the cmdline doesn't contain ``landlock`` either:
++
++.. code-block:: console
++
++    $ sed -n 's/.*\(\<lsm=\S\+\).*/\1/p' /proc/cmdline
++    lsm=lockdown,yama,integrity,apparmor
++
++...we should configure the bootloader to set a cmdline extending the ``lsm``
++list with the ``landlock,`` prefix::
++
++  lsm=landlock,lockdown,yama,integrity,apparmor
++
++After a reboot, we can check that Landlock is up and running by looking at
++kernel logs:
++
++.. code-block:: console
++
++    # dmesg | grep landlock || journalctl -kb -g landlock
++    [    0.000000] Command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
++    [    0.000000] Kernel command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
++    [    0.000000] LSM: initializing lsm=lockdown,capability,landlock,yama,integrity,apparmor
++    [    0.000000] landlock: Up and running.
++
++Note that according to the built time kernel configuration,
++``lockdown,capability,`` may always stay at the beginning of the ``LSM:
++initializing lsm=`` list even if they are not configured with the bootloader,
++which is OK.
++
++Network support
++---------------
++
+ To be able to explicitly allow TCP operations (e.g., adding a network rule with
+ ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
+ (``CONFIG_INET=y``).  Otherwise, sys_landlock_add_rule() returns an
 
-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
-2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
-Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
-HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
-KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
-Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
-dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
-OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
-MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
-BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
-ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
-zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
-sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
-BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
-N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
-p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
-YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
-bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCwydhRWMdgWfTIWju3
-3ooZ+RvfBqj0Yqh+AqxYEhHj7jAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
-BTEPFw0yNDAyMjcxMTEyNThaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
-AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
-BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAH9kljoXCXD9T2daecWDCoLsCeLqmPgrSKKZv
-08GL68CAu2cOBUu/IuXlOTBnqJ4qhBHQkZsSlc86zXAtxdTrrMOXEDkBf3ZZkjPGSuP4DaDuncBT
-iM9gVjHzcTew7J3MrVF8Y2Ps5ud6xk9Gx7GME8M79TIHA4Da4ke95/sYWFUxMLN/KUkxi3Vha0n5
-r09LLTBmC8OUwieY8J6v9rIBJ57SOs1CA7ygFgY10MtTNjRxnsEGJfUP4kBNQgqmbE2fu3/ySKkq
-3vIo/qhLQNO61isDUdCJVpLLXZB+CFCjnnLqfvuqOYNcdUKisUafDW8CtFH4UWfBfmXVo6DIk6ph
-wg==
---000000000000d8ac8f06125b1b4d--
+base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
+-- 
+2.44.0
+
