@@ -1,41 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EEA4CDE0;
-	Tue, 27 Feb 2024 03:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D49D52F6E;
+	Tue, 27 Feb 2024 05:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709006104; cv=none; b=JO/mgZI2cs02g7N1WGe5HhchqbJ/CnwXsrD68TQBcg86z5gKkSuzr2CRYGOA/9B9JKU/NKnWAJ8mST9oiB++4uXuTXnirly8q8Gu4HdIh1OGUMnqdh2gnZptozYDJ592DU38nSO2JEWgoUG+LMIPSDeKf9KVmGVJ/Apf4E27rRk=
+	t=1709012409; cv=none; b=IwO9DPYyy8IbAXigVf+y/uoADTf/YT6BUGIxLhHV4nDi12mfZZlCJmY6mdA0QgpXE/ABTJJ15SnqAmzrikbt4MfXzBetFHt3GiUsWyhMpI+2dHp5KGYlWzm3URCwhL61yedWYrLmSygGPAS+nkbBxXEGVCdaQEHFbSF+IsVwUqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709006104; c=relaxed/simple;
-	bh=GapRhH6Ok62RJMtMFM7fqvjgxBgjNKUulRJwiJTDpRY=;
+	s=arc-20240116; t=1709012409; c=relaxed/simple;
+	bh=wn6WyDQ+QCTZgdpTCiohhRqSl5xr6Z1cWOOB+YO2+Tg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GJJVt8SUDpE8e97A1hY1wA0HY3xX6Gh3t5D0+b5qjQ1rDDK+XBSRsN6ECClfgl/dFH3Vd/XBkj67Qqx2CbkJz2b156IxTX8L0lformJB0h2sfXGVz/oG3nLm3g+Dp11HHzjpBeWIlIyRYo6HL9ADQWI3PUvQHrr/vgxYg/8aQoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTrLlMjX; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=oX158EuBGcAXpl0AlamXgMRZuNl2s+MVG8kKpjjx5xs75PKoVj0WsJMnZYHeUfVdN2G5pK4L3o+65vVg8SjxNKn41+2SN5B4SNPIXXFfIL6ALQ6pLx6ExulBs082g7iQOiZME3NoI2tRpFpycKaI8tuWC8aZSHOdhqk3R9V3kWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fStzRphD; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTrLlMjX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE542C43394;
-	Tue, 27 Feb 2024 03:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709006104;
-	bh=GapRhH6Ok62RJMtMFM7fqvjgxBgjNKUulRJwiJTDpRY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mTrLlMjX/+85j1Qik9LUrEUIPSGS/IIWHxZbi/K6RhtrnbpBYdwh7KC+WHJZk1dJH
-	 o136O7M9cCBrJRyTK5ZO4VAmu4ouLE1ArFofsbFxNRJ+a8c2dfHpjLJ6efsr1LcuWX
-	 qyaDnrxqCwCRikGfwfnV+0I76TIaC1zVWppLh6VDVe0pR5ONXcdSG0dFHywNw8voFA
-	 hBlNEQnsbdtWOP1zT1Ix/hRig9SravsJ0aIZoDLincjCTXjIpiZ28gtJP4LLiXMINC
-	 MqTI70oc9oTlnw52Xn6U51t1XFpHPT7h4m43I/Vwg8dotyrQfOcOoUoFHnbNZ3aKBF
-	 zD0HaymskfPoQ==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-512ff385589so1917052e87.1;
-        Mon, 26 Feb 2024 19:55:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXCuQK0vAlB3sbjL3aPPEq3FvP1Cw1AF6oojkyv3sKFKSupwCHQnTFZE0v1DEmUwfOrHiQE0aAI6jRtKr32gj5Ua3TQQHX15H2rZFuTAvfz/c4NAF9SH2YwU0t0GpOhC3Zw+ZnNBUVbq10fl1u5wSstBWc65Z1HZ3lGztmC5zGvquXcngnqaYX9GHAWaPHc2tljPKidCniLT33rpUV72j36fkdrRK65+n4=
-X-Gm-Message-State: AOJu0Yy0Oz5Q08ETrEv68ElEV6e0DRd59vZLb5jyKTbyG55G94ZWIYi7
-	EkQK23YnKZwJF9JSEFrjWFPnZFr4ek49QpLTYDUjh4BLHcdAbTbvy6tvSHJrpvMej48K0v9Rohi
-	nwMaX2Tz19hbt8OcwoZnX3aiHUQ==
-X-Google-Smtp-Source: AGHT+IEa5SEn2U+j2tz2rEkGzuP63uIymMu+x3njmMP2xVTj3Tb+5qkgznrNTzN48OXftf7xrzekiuie5b0+ROvcOPY=
-X-Received: by 2002:a05:6512:2241:b0:513:34b:67ec with SMTP id
- i1-20020a056512224100b00513034b67ecmr965394lfu.58.1709006102187; Mon, 26 Feb
- 2024 19:55:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fStzRphD"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d27184197cso46305001fa.1;
+        Mon, 26 Feb 2024 21:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709012405; x=1709617205; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wn6WyDQ+QCTZgdpTCiohhRqSl5xr6Z1cWOOB+YO2+Tg=;
+        b=fStzRphDrK9m4hBDCRDCWY+TfUYSZ9gcUQRuNNSUKotGnKLZ0CZ33y3tf8ZTxsbfOb
+         mAKVDW+Vwg45pjqPMV1VlRYQsBzIhxwOCpXHvJx4mMR36gb7pqeGvIHzVBHZjA9DemNS
+         bHyNh3DZFXGq15uFRuYWF/bXHEdUXH+6UWAen91eAauqMUNLz31nrfXbVwCNhmNS73vj
+         pfo64H5uvdqyBZo/Yiruf9vD/dOuGZfHwSEjwIsXnFhRNTiguWSRVVlTMAmGeuEg+tEf
+         wDNDB/GNY2jmO8XfuOGO6o0L8kSfP9jBKPeFzg5fwWdh6SwkOj9WiGiEAKUlnZ1nyPjX
+         8Ubw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709012405; x=1709617205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wn6WyDQ+QCTZgdpTCiohhRqSl5xr6Z1cWOOB+YO2+Tg=;
+        b=sIxEcu8rBVhB1hvMUxJmVA+lk8cTOlqcv+6oLRzf2PIlcTQtbauuUgjDHCXO1qzmf/
+         Q0cLUhYlOSRMuvRQGxj2IzIY8rH3ZibETRgKoaM62EoTTjl5JG4bsb6oQCOgKgfeU3Il
+         6sTYpl93+EOPKKzmUjgO4ZAn1e4IE9DLgzjBpCfY1ijZbOZMccWI6XxzoI+U7ZiZF9L6
+         QKM41MvHea+8wx1n7GcgJLCU0slV3KrXYa/RPJqwOkLR5lIK+RqMJVFJVBWEQGizQew/
+         uSm6gkafEy/QCqjURLnUILijP6Y5Z/d0LqOa/RzrbHp4bqBsKZ2VQhttPA/rE5AQnmAc
+         e7aw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQGhbs7bjjL+PXCTGNLsWO3DRnJcf2i9Zm5B5CKxMJK7+7s+CooVinE2UAlzijuHwG0w30ckxaLkNvgT2OOcZyD3Z/5nkFtMWmMn+Fw1JC2iukhBsqScu2YRG78r7+Nr+NxGWzLK70WstGT35au7Ilo0AGhP4X4Sxx0ym589DUNYAWa9eOySX9cQV/fhL2UpWxfFMfdZ77fetaiY6Yy391vwL9NlTAWnM=
+X-Gm-Message-State: AOJu0YzZzzeXUZwXBwBhc525q+rf2bFHAP945tXAECqnFc2H+4WFIXX/
+	3gjtkYph7tMqEEz14Vkz5vRyfZQlGW4mafFZw14G0d2ZkQWnYSnvVMZ9j0tUWq3JnavuhTtANGz
+	z/sxLN4eGHdG4bgZQ9s3+oNdVd+o=
+X-Google-Smtp-Source: AGHT+IF0pISg/Wj307ixj1jIc+wdFd/bWw8aU+wr23F63gviWlDhD8OZ11VV5CnVYmUFM++oaQPOue6gi3xCrgvKYS4=
+X-Received: by 2002:a05:651c:1994:b0:2d2:7cb9:8d21 with SMTP id
+ bx20-20020a05651c199400b002d27cb98d21mr5775823ljb.16.1709012405155; Mon, 26
+ Feb 2024 21:40:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,14 +58,14 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
  <20240226195516.174737-1-raihan1999ahamed@gmail.com> <20240226195516.174737-2-raihan1999ahamed@gmail.com>
-In-Reply-To: <20240226195516.174737-2-raihan1999ahamed@gmail.com>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Mon, 26 Feb 2024 21:54:48 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Z5UA1jEJSL0tRSXrC+Juud6ZMXtvR9ne5Cn_-cw9UzA@mail.gmail.com>
-Message-ID: <CAL_Jsq+Z5UA1jEJSL0tRSXrC+Juud6ZMXtvR9ne5Cn_-cw9UzA@mail.gmail.com>
+ <CAL_Jsq+Z5UA1jEJSL0tRSXrC+Juud6ZMXtvR9ne5Cn_-cw9UzA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+Z5UA1jEJSL0tRSXrC+Juud6ZMXtvR9ne5Cn_-cw9UzA@mail.gmail.com>
+From: Raihan Ahamed <raihan1999ahamed@gmail.com>
+Date: Tue, 27 Feb 2024 11:09:53 +0530
+Message-ID: <CANt1HJtm992N-t0uHsU6t+LG+bqW402-1cHnRMj13Si6n4mfqA@mail.gmail.com>
 Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: msm8953-lenovo-kuntao: Add
  initial device tree
-To: Raihan Ahamed <raihan1999ahamed@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>
 Cc: krzysztof.kozlowski+dt@linaro.org, 
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
 	Konrad Dybcio <konrad.dybcio@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -62,22 +76,29 @@ Cc: krzysztof.kozlowski+dt@linaro.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024 at 1:56=E2=80=AFPM Raihan Ahamed
-<raihan1999ahamed@gmail.com> wrote:
->
-> Lenovo P2 is a handset using the MSM8953 SoC released in 2016
->
-> Add a device tree with initial support for:
->
-> - GPIO keys
-> - SDHCI (internal and external storage)
-> - USB Device Mode
-> - WCNSS (WiFi/BT)
-> - Regulators
->
-> Acked-by: Rob Herring <robh+dt@kernel.org>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Sorry, I misunderstood the fact. Is it necessary to change the tags
+only by sending another version?
 
-We gave no such tag. I'd suggest you go read what these mean.
 
-Rob
+On Tue, Feb 27, 2024 at 9:25=E2=80=AFAM Rob Herring <robh+dt@kernel.org> wr=
+ote:
+>
+> On Mon, Feb 26, 2024 at 1:56=E2=80=AFPM Raihan Ahamed
+> <raihan1999ahamed@gmail.com> wrote:
+> >
+> > Lenovo P2 is a handset using the MSM8953 SoC released in 2016
+> >
+> > Add a device tree with initial support for:
+> >
+> > - GPIO keys
+> > - SDHCI (internal and external storage)
+> > - USB Device Mode
+> > - WCNSS (WiFi/BT)
+> > - Regulators
+> >
+> > Acked-by: Rob Herring <robh+dt@kernel.org>
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> We gave no such tag. I'd suggest you go read what these mean.
+>
+> Rob
