@@ -1,92 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E98A13664A;
-	Tue, 27 Feb 2024 09:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A1D13699A;
+	Tue, 27 Feb 2024 09:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709025595; cv=none; b=kRjQJBpM4JLvEJHjMr9fRl0WIXVMeTPXiFETvlVcQloEq52DFxwkkH4vblNpho96u5SYusuhF/uRQs3pxRE+yM43GTOTGy7MeBPr8VA+unft2RE8Efhikcq42VMLjpG13VAjUMRFkhCyu8lwA0eDv7HWVTbSKXn353OZ3pYkexQ=
+	t=1709027886; cv=none; b=jE/KFdYjY/OcnipLgV87H+NViCZEXicRVVVhJduFgpr1a8EFMo2CBAG1wKeSwKNGinw87FhVeMYHKz4liEbrSltgASY6peqPfYTqj/gQCsFeJYSks/2FF49lBlTupv2J4hrEYtOabxAOtkqHLmZTBj4VT+KwI4PWodHTaaaRzMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709025595; c=relaxed/simple;
-	bh=4FKpQ2YxhRM1cS9JvwGrN9mJcPARYZbWsBsplFmE57w=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=fEeA84JfLENS1BPQgC0BKwZxPQZZv9y807U23SuNHDtIR4drXCmMmvUHKwxFBj8hyViROmS2V9zOKJz49HyTtnJfjJm5Lotk6/AmJQhsdFZXNRJ41j4PwI27FMT0jNYEScjeIoIjaa3CiHoc/Qm/NMJn0cWb9f+7j9x8YNCl5wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPM2wtJT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPM2wtJT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FEACC433F1;
-	Tue, 27 Feb 2024 09:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709025595;
-	bh=4FKpQ2YxhRM1cS9JvwGrN9mJcPARYZbWsBsplFmE57w=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=jPM2wtJTHyWKh4fNtYM9y0G1BAyPnS/qGRUR/VbivdAJTPr7wGgbuuqenpnx+Te2X
-	 b/2ePMzsnfZWFfvZtKjuNvKLq9kIkzPYhBYJ703NFRQNusIT1AWV8ATgJjrY0IcpS9
-	 bgTKUDEEAzRqBBKgjJdTSd5wUxfMn2h9heYZ9D3H6DLfqWlqXR8gGYTX16I0eRj24d
-	 pcHUikBx7/0JgxKXaQ2kS974YfcU59GQh72M4Yc/CP/4tdUtEkiV/Nx/s7WsqWgZbQ
-	 wWcvZW65ZdwnZYRKWlbaOR+yRCOsTdKgmTqpriFzw7jT8Vjq9vkfat5IxsFo2t5JG+
-	 wX14nOE3RDc4g==
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1709027886; c=relaxed/simple;
+	bh=S024RKU4/uf+ZQYZb/1K/aCmcUdsqW1xY1/WsWufW5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a2i0Id+s1UOsknc6G9mB13vWiuETNGXE3B+zprJlaRmTXBqnaabSyY6qEX/L2Sdf6HsqpyqWTPeJlB036SgJn4qv6WCLji9c4eernnZba10zpfBrbHBU9X0H5WxhUxXsmO926rbQvd3uQ2dfhhB/X19HsBK//YYah+4XlwCrjAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1BF4DA7;
+	Tue, 27 Feb 2024 01:58:42 -0800 (PST)
+Received: from [10.57.10.173] (unknown [10.57.10.173])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C6AC3F762;
+	Tue, 27 Feb 2024 01:58:02 -0800 (PST)
+Message-ID: <260488a3-2e4b-43bd-a818-c15558e71077@arm.com>
+Date: Tue, 27 Feb 2024 09:58:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Content-Language: en-US
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: rui.zhang@intel.com, keescook@chromium.org, gustavoars@kernel.org,
+ morbo@google.com, justinstitt@google.com, stanislaw.gruszka@linux.intel.com,
+ linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev, patches@lists.linux.dev, rafael@kernel.org,
+ daniel.lezcano@linaro.org
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wifi: brcmfmac: fweh: Fix boot crash on Raspberry
- Pi 4
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <Zc+3PFCUvLoVlpg8@neat>
-References: <Zc+3PFCUvLoVlpg8@neat>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>,
- Nathan Chancellor <nathan@kernel.org>, linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170902559101.3280425.2706190192200235643.kvalo@kernel.org>
-Date: Tue, 27 Feb 2024 09:19:53 +0000 (UTC)
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+Hi Nathan,
 
-> Fix boot crash on Raspberry Pi by moving the update to `event->datalen`
-> before data is copied into flexible-array member `data` via `memcpy()`.
+On 2/27/24 00:54, Nathan Chancellor wrote:
+> When booting a CONFIG_FORTIFY_SOURCE=y kernel compiled with a toolchain
+> that supports __counted_by() (such as clang-18 and newer), there is a
+> panic on boot:
 > 
-> Flexible-array member `data` was annotated with `__counted_by(datalen)`
-> in commit 62d19b358088 ("wifi: brcmfmac: fweh: Add __counted_by for
-> struct brcmf_fweh_queue_item and use struct_size()"). The intention of
-> this is to gain visibility into the size of `data` at run-time through
-> its _counter_ (in this case `datalen`), and with this have its accesses
-> bounds-checked at run-time via CONFIG_FORTIFY_SOURCE and
-> CONFIG_UBSAN_BOUNDS.
+>    [    2.913770] memcpy: detected buffer overflow: 72 byte write of buffer size 0
+>    [    2.920834] WARNING: CPU: 2 PID: 1 at lib/string_helpers.c:1027 __fortify_report+0x5c/0x74
+>    ...
+>    [    3.039208] Call trace:
+>    [    3.041643]  __fortify_report+0x5c/0x74
+>    [    3.045469]  __fortify_panic+0x18/0x20
+>    [    3.049209]  thermal_zone_device_register_with_trips+0x4c8/0x4f8
 > 
-> To effectively accomplish the above, we shall update the counter
-> (`datalen`), before the first access to the flexible array (`data`),
-> which was also done in the mentioned commit.
+> This panic occurs because trips is counted by num_trips but num_trips is
+> assigned after the call to memcpy(), so the fortify checks think the
+> buffer size is zero because tz was allocated with kzalloc().
+
+I don't know this tool (yet), but this description doesn't help to
+understand it better.
+
+In the memcpy() the 'num_trips' is used not 'tz->num_trips' and
+'num_trips' is set in the function argument.
+
 > 
-> However, commit edec42821911 ("wifi: brcmfmac: allow per-vendor event
-> handling") inadvertently caused a buffer overflow, detected by
-> FORTIFY_SOURCE. It moved the `event->datalen = datalen;` update to after
-> the first `data` access, at which point `event->datalen` was not yet
-> updated from zero (after calling `kzalloc()`), leading to the overflow
-> issue.
+> Move the num_trips assignment before the memcpy() to resolve the panic
+> and ensure that the fortify checks work properly.
+
+I don't see how this change can impact the code not this tool.
+
 > 
-> This fix repositions the `event->datalen = datalen;` update before
-> accessing `data`, restoring the intended buffer overflow protection. :)
+> Fixes: 9b0a62758665 ("thermal: core: Store zone trips table in struct thermal_zone_device")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+>   drivers/thermal/thermal_core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Fixes: edec42821911 ("wifi: brcmfmac: allow per-vendor event handling")
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Closes: https://gist.github.com/nathanchance/e22f681f3bfc467f15cdf6605021aaa6
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index bb21f78b4bfa..1eabc8ebe27d 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -1354,8 +1354,8 @@ thermal_zone_device_register_with_trips(const char *type,
+>   
+>   	tz->device.class = thermal_class;
+>   	tz->devdata = devdata;
+> -	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>   	tz->num_trips = num_trips;
+> +	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+>   
+>   	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
+>   	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
+> 
+> ---
+> base-commit: a85739c8c6894c3b9ff860e79e91db44cb59bd63
+> change-id: 20240226-thermal-fix-fortify-panic-num_trips-5f94094fb963
+> 
+> Best regards,
 
-Arend, ack?
+Maybe it reports different issue. There is some corner case when the
+num_trips is 0. It's called from
+thermal_tripless_zone_device_register().
+Does your code is triggered from that function?
+(you've cut the call stack so I cannot see this there)
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/Zc+3PFCUvLoVlpg8@neat/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Regards,
+Lukasz
