@@ -1,185 +1,186 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC771482E3;
-	Tue, 27 Feb 2024 16:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F988149007
+	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 16:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709050420; cv=none; b=Nw4pZnDLxM/ued3Jla4ylvi9CKhe8RNrrI0w6o/p+TPJAosdu0sIjPf5ECMSTKPW2FAKQW8JFXuRUbUkLV1Tkq0rDx+2lN++DLsJ7DizMsa3jvh7+JAHCti4/lC/9AgwSwtoFVymqdO/pLfj8g6dllLc6u8zqpLZESfJjAnxbtI=
+	t=1709051170; cv=none; b=ca3fniVxpEc/ehqhxEo4HN4meyYIXg/B0au7vOVxTQxfvy+Ak2a01rtjw8vBEQjqtktJNI5coTiKTh4gOeepg6WCgJ5shx0b2tHWKhaHqIIS12IqjX/OKppYC0qeFB/gYvV/IvXb/1qqFyFuEYJxvG53JjF9XvE1kTxWsLW/fS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709050420; c=relaxed/simple;
-	bh=hH5VZDTaPA7gWWcOU5gFYjv9mGjEw76o5Pk8eeaddms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OBHrcLDza/b0xWk3YVVjdgCczVUVK8Q4xduuqqVvrovgeTQD6ii+OWTld26G5u3jVcDRAdyM0fkupllgunzT5zyKaGpCzXRnqwd5IhBOJ9nXwt833PrwGgnaPRSmdxD763ATB7sXJgy6mUEg8BGI+jof1qUE67yj0jXAopU7bUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qBfsTw1Q; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qBfsTw1Q; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1709051170; c=relaxed/simple;
+	bh=6SkUnP9RGBvWR4IoA2E6NHjide+8sSSiyPtcwNOOa3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLkqVyIAkEzSagDrM03dPhLIum1GxZ9BQUyubuzL12d7jzF74DCEFxeZ1LXdS3bh+LW1MBl156ax4qqzxFxwAJIj6TZ4EahLEajsqTlI3k5rBBKZvhHF70GApIjSoUi4cA/fQkFTrTzcvJ2H086P7+Bh6/pT6nFNI2NuEY7wX3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H+YwJR20; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qBfsTw1Q";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qBfsTw1Q"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8F61E2273B;
-	Tue, 27 Feb 2024 16:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1709050416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W+xJjudoH6jIHZHOuTHOKtgzEe1Mf8dOrRQLijDGuVc=;
-	b=qBfsTw1Q5zB2ayQcnXO7lPOxCV0yX6aTYYma+wP3KEUgH9JHHO7uwMxxSBSZUFzsvIlq7K
-	ax/vWnKzyCjbtPAfk2JyRi5Q2kRYUymCt/D0gWk06QYeCsdxUSv8yAB5IN8wkjY0ylWgaP
-	R9IToFgnOtR1ptvGbmzYOyi+cpo5umQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1709050416; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W+xJjudoH6jIHZHOuTHOKtgzEe1Mf8dOrRQLijDGuVc=;
-	b=qBfsTw1Q5zB2ayQcnXO7lPOxCV0yX6aTYYma+wP3KEUgH9JHHO7uwMxxSBSZUFzsvIlq7K
-	ax/vWnKzyCjbtPAfk2JyRi5Q2kRYUymCt/D0gWk06QYeCsdxUSv8yAB5IN8wkjY0ylWgaP
-	R9IToFgnOtR1ptvGbmzYOyi+cpo5umQ=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CE42F13A65;
-	Tue, 27 Feb 2024 16:13:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oi3FMC8K3mU+WAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 27 Feb 2024 16:13:35 +0000
-Message-ID: <0443c7c2-1c3f-4cf8-940d-88306956832a@suse.com>
-Date: Tue, 27 Feb 2024 17:13:35 +0100
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H+YwJR20"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso4134088a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 08:26:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709051168; x=1709655968; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hBKFu0Ya5JmP4az7C2cHxRd0awbl84xqh3yGGRws2Po=;
+        b=H+YwJR20gWchVIcfBCXZwuWAxloXgT5oo1NRIVfyjvDFEElK5nOIiRzSlAH+0n3zBz
+         pwoYmztFdCmuo7Vk2tXzpAqJfQvscjfeG6wvdyTmmL2Se9lFfxoFq38DP0MPRHz0hiFT
+         YMzfjIYROGFd23T7Q6aFRO+QubBsf/LOvTZCg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709051168; x=1709655968;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hBKFu0Ya5JmP4az7C2cHxRd0awbl84xqh3yGGRws2Po=;
+        b=qJkAAXqvNT4LwsBKSBTByRPNqtPC4VYrUoZxIp4CKVUoA6XcqFJGlc5ZrV4u1disfE
+         J32EIKIb6Aa7bclHYVbZcK5nJzeQQUuS+KjZQIoqee67szt38K/y207qhxQfH5fRiwa5
+         JPJuWLXgLei4o70s6HhgnYvYE+aMJ/JoTtSR9gtVZzcKm98XCxhZOmzu7m5E8F+IQ7S5
+         j0Pf3nWI+9DmKYE+b0BvGWLO3bl5CL1Igj5gdep1ZAkcOOzeB/Tk97r6vO4m96JURdpL
+         hLMofrS8TDNWxjtgs7TddXTvW4ramV+OdJjqrHOf6gBTm3lqBt7UyPq58v8zuMzRS2Cv
+         vuMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTymKAhDKLNq4Oap6GJixczi0MaEGVbG+k8l70/3Yd+TW+OlAjoljC4MR7wmv9+yR7qfIljSvqkKdKXPcP01qRJ+p40zvriiCCgIGjLWSg
+X-Gm-Message-State: AOJu0Yx7eISNmBPwudP4n3Viq3b2u/UHxVJw/JGO0o7IVE3w4ZFePykS
+	17I0Db3DTIQeZDc35SdhRwO3mjo6z9kwJad7KM72uACILEz2ifeQzaKWzunaig==
+X-Google-Smtp-Source: AGHT+IF5A7otWY6j9n+RuyI5RPoqh6fnGIgjMJzPafRPfezs1JD//wxGP07nyFU8qtveZBY9jAwrNQ==
+X-Received: by 2002:a17:90b:804:b0:29a:6436:ed59 with SMTP id bk4-20020a17090b080400b0029a6436ed59mr8967426pjb.2.1709051167889;
+        Tue, 27 Feb 2024 08:26:07 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id su6-20020a17090b534600b0029a7951c4a3sm8622065pjb.41.2024.02.27.08.26.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 08:26:07 -0800 (PST)
+Date: Tue, 27 Feb 2024 08:26:06 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, rui.zhang@intel.com,
+	lukasz.luba@arm.com, gustavoars@kernel.org, morbo@google.com,
+	justinstitt@google.com, stanislaw.gruszka@linux.intel.com,
+	linux-pm@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev, patches@lists.linux.dev
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Message-ID: <202402270816.0EA3349A76@keescook>
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+ <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
+ <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+ <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
-Cc: Guixiong Wei <guixiongwei@gmail.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Tony Luck <tony.luck@intel.com>,
- Kristen Carlson Accardi <kristen@linux.intel.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Guixiong Wei <weiguixiong@bytedance.com>, Jann Horn <jannh@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexey Dobriyan <adobriyan@gmail.com>, Chris Wright <chrisw@sous-sol.org>,
- Jeremy Fitzhardinge <jeremy@xensource.com>,
- Roland McGrath <roland@redhat.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240222171840.work.027-kees@kernel.org>
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-In-Reply-To: <20240222171840.work.027-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.18 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_TWELVE(0.00)[24];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email,infradead.org:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 R_MIXED_CHARSET(0.91)[subject];
-	 FREEMAIL_CC(0.00)[gmail.com,linutronix.de,redhat.com,linux.intel.com,kernel.org,zytor.com,infradead.org,linuxfoundation.org,intel.com,oracle.com,epam.com,bytedance.com,google.com,linux-foundation.org,sous-sol.org,xensource.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.18
+In-Reply-To: <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
 
-On 22.02.24 18:18, Kees Cook wrote:
-> When building with CONFIG_XEN_PV=y, .text symbols are emitted into the
-> .notes section so that Xen can find the "startup_xen" entry point. This
-> information is used prior to booting the kernel, so relocations are not
-> useful. In fact, performing relocations against the .notes section means
-> that the KASLR base is exposed since /sys/kernel/notes is world-readable.
+On Tue, Feb 27, 2024 at 04:37:36PM +0100, Daniel Lezcano wrote:
+> On 27/02/2024 12:09, Rafael J. Wysocki wrote:
+> > On Tue, Feb 27, 2024 at 11:14 AM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> > > 
+> > > On 27/02/2024 01:54, Nathan Chancellor wrote:
+> > > > When booting a CONFIG_FORTIFY_SOURCE=y kernel compiled with a toolchain
+> > > > that supports __counted_by() (such as clang-18 and newer), there is a
+> > > > panic on boot:
+> > > > 
+> > > >     [    2.913770] memcpy: detected buffer overflow: 72 byte write of buffer size 0
+> > > >     [    2.920834] WARNING: CPU: 2 PID: 1 at lib/string_helpers.c:1027 __fortify_report+0x5c/0x74
+> > > >     ...
+> > > >     [    3.039208] Call trace:
+> > > >     [    3.041643]  __fortify_report+0x5c/0x74
+> > > >     [    3.045469]  __fortify_panic+0x18/0x20
+> > > >     [    3.049209]  thermal_zone_device_register_with_trips+0x4c8/0x4f8
+> > > > 
+> > > > This panic occurs because trips is counted by num_trips but num_trips is
+> > > > assigned after the call to memcpy(), so the fortify checks think the
+> > > > buffer size is zero because tz was allocated with kzalloc().
+> > > > 
+> > > > Move the num_trips assignment before the memcpy() to resolve the panic
+> > > > and ensure that the fortify checks work properly.
+> > > > 
+> > > > Fixes: 9b0a62758665 ("thermal: core: Store zone trips table in struct thermal_zone_device")
+> > > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> > > > ---
+> > > >    drivers/thermal/thermal_core.c | 2 +-
+> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> > > > index bb21f78b4bfa..1eabc8ebe27d 100644
+> > > > --- a/drivers/thermal/thermal_core.c
+> > > > +++ b/drivers/thermal/thermal_core.c
+> > > > @@ -1354,8 +1354,8 @@ thermal_zone_device_register_with_trips(const char *type,
+> > > > 
+> > > >        tz->device.class = thermal_class;
+> > > >        tz->devdata = devdata;
+> > > > -     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+> > > >        tz->num_trips = num_trips;
+> > > > +     memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+> > > 
+> > > IIUC, clang-18 is used and supports __counted_by().
+> > > 
+> > > Is it possible sizeof(*trips) returns already the real trips array size
+> > > and we are multiplying it again by num_trips ?
+> > > 
+> > > While with an older compiler, __counted_by() does nothing and we have to
+> > > multiply by num_trips ?
+> > > 
+> > > IOW, the array size arithmetic is different depending if we have
+> > > _counted_by supported or not ?
+> > 
+> > IIUC it is just the instrumentation using the current value of
+> > tz->num_trips (which is 0 before the initialization).
 > 
-> To avoid leaking the KASLR base without breaking unprivileged tools that
-> are expecting to read /sys/kernel/notes, skip performing relocations in
-> the .notes section. The values readable in .notes are then identical to
-> those found in System.map.
+> Right, but I am wondering if
 > 
-> Reported-by: Guixiong Wei <guixiongwei@gmail.com>
-> Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
-> Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
-> Fixes: da1a679cde9b ("Add /sys/kernel/notes")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Kristen Carlson Accardi <kristen@linux.intel.com>
-> Cc: "Jürgen Groß" <jgross@suse.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-> Cc: Guixiong Wei <weiguixiong@bytedance.com>
-> Cc: Jann Horn <jannh@google.com>
-> ---
->   arch/x86/tools/relocs.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
+> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
 > 
-> diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-> index a3bae2b24626..0811fff23b9c 100644
-> --- a/arch/x86/tools/relocs.c
-> +++ b/arch/x86/tools/relocs.c
-> @@ -733,6 +733,16 @@ static void walk_relocs(int (*process)(struct section *sec, Elf_Rel *rel,
->   		if (sec->shdr.sh_type != SHT_REL_TYPE) {
->   			continue;
->   		}
-> +
-> +		/*
-> +		 * Do not perform relocations in .notes section; any
-> +		 * values there are meant for pre-boot consumption (e.g.
-> +		 * startup_xen).
-> +		 */
-> +		if (strcmp(sec_name(sec->shdr.sh_info), ".notes") == 0) {
+> 	is still correct with __counted_by because:
+> 
+>  (1) if the compiler supports it:
+> 
+> 	sizeof(*trips) == 24 bytes * num_trips
 
-Instead of a strcmp(), wouldnt't ...
+I think you're misunderstanding. The above sizeof() only evaluates a
+single instance -- it has no idea how many more there may be.
+Specifically:
 
-> +			continue;
-> +		}
-> +
->   		sec_symtab  = sec->link;
->   		sec_applies = &secs[sec->shdr.sh_info];
->   		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+	sizeof(*trips) == sizeof(struct thermal_trip)
 
-... a test of "sec_applies->shdr.sh_type == SHT_NOTE" work as well?
+> 	then:
+> 
+> 	memcpy(tz->trips, trips, num_trips * sizeof(*trips));
+> 
+> 	memcpy(tz->trips, trips, num_trips * 24 * num_trips);
+> 
+> 	==> memory size = 24 * num_trips^2
 
-In the end I'm fine with both variants, so:
+It's not counted twice. Under CONFIG_FORTIFY_SOURCE=y, memcpy is a macro
+that expands to a checking routine (see include/linux/fortify-string.h),
+which is using __builtin_dynamic_object_size() to determine the
+available size of the destination buffer (tz->trips). Specifically:
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+	__builtin_dynamic_object_size(tz->trips)
 
+When __bdos evaluates a flexible array (i.e. tz->trips), it will see the
+associated 'counted_by' attribute, and go look up the value of the
+designated struct member (tz->num_trips). It then calculates:
 
-Juergen
+	sizeof(*tz->trips) /* a single instance */
+		*
+	tz->num_trips
+
+Before the patch, tz->num_trips is 0, so the destination buffer size
+appears to be of size 0 bytes. After the patch, it contains the
+same value as the "num_trips" function argument, so the destination
+buffer appears to be the matching size of "num_trips * sizeof(struct
+thermal_trip)".
+
+Hopefully that helps! If not, I can try again. :)
+
+-Kees
+
+-- 
+Kees Cook
