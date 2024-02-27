@@ -1,162 +1,99 @@
-Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28BF137C38
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 11:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B331419A9;
+	Tue, 27 Feb 2024 13:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709032514; cv=none; b=Z6a1G3scwbuCO9GExMzTiiUfBe/yJKthLEazxBI4GYgbjoKzHiaI9RfERbdk9xskZJL9PKASVsrC2me08AYhy9WGKs+SHYNGnHRt53SySsBOATO122scau5UEo8C4HpqIX2slO5AtsEdJSTdF4/VFTs+nULBgXFGnBSVKGCnI8c=
+	t=1709041498; cv=none; b=jrMoNu1Hkk2kwmlLlKzdSx/Y960WsRJ5yKuwt+0C8qFaI+sGdzsRE7V+QaP8gq2esOp989r2QVhBncMyQ1vsibiGf0yGSVydZi3qIBAC4PKxGB+Bxm8/s672Fm7mfmwGIPWADXVuR7tWOD71Qm/7qkd21lM39ll28mH0VzIF3ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709032514; c=relaxed/simple;
-	bh=fo0e4FRJyzZJ6d6n/7sR3VvkreP3rfZ9EhEu8wKED6Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zq7JcYG406UgrQtP0KWX4f9J2GA9HxK8A/kNcfxphE7sq5RFFbH6mNXK0q6wk53u2JEitjCLlKm/RIez4o1AanuznDEhqVXrhYQpDSF63bDl1QEJ/xNdmKXyo8ygl4lQ5NIccRQ7Pb/66bqnIEo8l0sg81uId+39/28LljoUQFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=aJAgMZqv; arc=none smtp.client-ip=84.16.66.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1709041498; c=relaxed/simple;
+	bh=UPZNsUJYN9E994wAoevWRJNCB5jFPFI8m0dQ1K5I25w=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=JcUqVQ5+xw98vyTlA0Dlnt/IxnR0QmE2TfOXuSdUon2hSkfCHVQ4tbAYDEhHcvWyC/H1mBbj2hk/40wi0BE1Nn6+9MZ2OA0UYq7z2o0IpjUI7hbnFepv0BPNa73eq/NFaK/ED901o+eQilIF1i5cHGA7bVujQey+x9h3gByp8vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpTFH5np; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="aJAgMZqv"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TkZRK3mSFzMq5jp;
-	Tue, 27 Feb 2024 12:06:05 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TkZRJ1SGDzDLf;
-	Tue, 27 Feb 2024 12:06:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709031965;
-	bh=fo0e4FRJyzZJ6d6n/7sR3VvkreP3rfZ9EhEu8wKED6Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aJAgMZqvXCuTbBi3QrqQEix+We3BKKkgtSzWSI/iyXVsm+O11Q4WECvzP7XS5p7AK
-	 SysOh8oMYi25zAJ5MEnSVlYHTBLoZKpMm1EgyycJhArAgZ+5oaXh/Ej5Es4I7TuWwX
-	 6Vizit1a6SoZwfE3jEmCv42kq4iV/5BZJ2nNfIPM=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Shervin Oloumi <enlightened@chromium.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2 1/2] landlock: Extend documentation for kernel support
-Date: Tue, 27 Feb 2024 12:05:49 +0100
-Message-ID: <20240227110550.3702236-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpTFH5np"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68985C433C7;
+	Tue, 27 Feb 2024 13:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709041497;
+	bh=UPZNsUJYN9E994wAoevWRJNCB5jFPFI8m0dQ1K5I25w=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=BpTFH5npiGPdjFAX15Ns3qHO7gEAmnOAd9hgv/nbaTRXgF0nTuPJCZtodcC/iZXSI
+	 t+IRExFpBXrUkmHami2rp5qycpahjuucv7xKnTFoEf9V/TxrK9brJeHaw/yXDOdHoM
+	 zFcbaGPPr9/HWMIHGdsnPBJWCt8Plply1uL6DPzms2EUppWenOl44GV6xnvp7n820F
+	 xEBDfZJzHpVc8y0wVPDrKBNGx4Ua3y3W79RdDWuChpXDkR/ZjFz8YI8hqfAoBzpFgt
+	 QoZ79mUie4NuLjaans0yKLdoxE3l04VnU/DW9nOCMqd3cjSiyio5txcGxWCHkh1Mdu
+	 hmmxmxYtaQ1oQ==
+Date: Tue, 27 Feb 2024 07:44:56 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+From: Rob Herring <robh@kernel.org>
+To: Raihan Ahamed <raihan1999ahamed@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, robh+dt@kernel.org, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Tony Luck <tony.luck@intel.com>, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20240226195516.174737-1-raihan1999ahamed@gmail.com>
+References: <20240226055615.79195-1-raihan1999ahamed@gmail.com>
+ <20240226195516.174737-1-raihan1999ahamed@gmail.com>
+Message-Id: <170904127267.3703741.9339449368620984308.robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: qcom: Add Lenovo P2
 
-Extend the kernel support section with one subsection for build time
-configuration and another for boot time configuration.
 
-Extend the boot time subsection with a concrete example.
+On Tue, 27 Feb 2024 01:24:41 +0530, Raihan Ahamed wrote:
+> Document the compatible for the MSM8953-based Lenovo P2 smartphone released in 2016.
+> 
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Update the journalctl command to include the boot option.
 
-Cc: Günther Noack <gnoack@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
+My bot found new DT warnings on the .dts files added or changed in this
+series.
 
-Changes since v1:
-* New patch, suggested by Kees Cook.
----
- Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 6 deletions(-)
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not.
 
-diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/userspace-api/landlock.rst
-index 2e3822677061..838cc27db232 100644
---- a/Documentation/userspace-api/landlock.rst
-+++ b/Documentation/userspace-api/landlock.rst
-@@ -19,11 +19,12 @@ unexpected/malicious behaviors in user space applications.  Landlock empowers
- any process, including unprivileged ones, to securely restrict themselves.
- 
- We can quickly make sure that Landlock is enabled in the running system by
--looking for "landlock: Up and running" in kernel logs (as root): ``dmesg | grep
--landlock || journalctl -kg landlock`` .  Developers can also easily check for
--Landlock support with a :ref:`related system call <landlock_abi_versions>`.  If
--Landlock is not currently supported, we need to :ref:`configure the kernel
--appropriately <kernel_support>`.
-+looking for "landlock: Up and running" in kernel logs (as root):
-+``dmesg | grep landlock || journalctl -kb -g landlock`` .
-+Developers can also easily check for Landlock support with a
-+:ref:`related system call <landlock_abi_versions>`.
-+If Landlock is not currently supported, we need to
-+:ref:`configure the kernel appropriately <kernel_support>`.
- 
- Landlock rules
- ==============
-@@ -499,6 +500,9 @@ access rights.
- Kernel support
- ==============
- 
-+Build time configuration
-+------------------------
-+
- Landlock was first introduced in Linux 5.13 but it must be configured at build
- time with ``CONFIG_SECURITY_LANDLOCK=y``.  Landlock must also be enabled at boot
- time as the other security modules.  The list of security modules enabled by
-@@ -507,11 +511,52 @@ contains ``CONFIG_LSM=landlock,[...]`` with ``[...]``  as the list of other
- potentially useful security modules for the running system (see the
- ``CONFIG_LSM`` help).
- 
-+Boot time configuration
-+-----------------------
-+
- If the running kernel does not have ``landlock`` in ``CONFIG_LSM``, then we can
--still enable it by adding ``lsm=landlock,[...]`` to
-+enable Landlock by adding ``lsm=landlock,[...]`` to
- Documentation/admin-guide/kernel-parameters.rst thanks to the bootloader
- configuration.
- 
-+For example, if the current built-in configuration is:
-+
-+.. code-block:: console
-+
-+    $ zgrep -h "^CONFIG_LSM=" "/boot/config-$(uname -r)" /proc/config.gz 2>/dev/null
-+    CONFIG_LSM="lockdown,yama,integrity,apparmor"
-+
-+...and if the cmdline doesn't contain ``landlock`` either:
-+
-+.. code-block:: console
-+
-+    $ sed -n 's/.*\(\<lsm=\S\+\).*/\1/p' /proc/cmdline
-+    lsm=lockdown,yama,integrity,apparmor
-+
-+...we should configure the bootloader to set a cmdline extending the ``lsm``
-+list with the ``landlock,`` prefix::
-+
-+  lsm=landlock,lockdown,yama,integrity,apparmor
-+
-+After a reboot, we can check that Landlock is up and running by looking at
-+kernel logs:
-+
-+.. code-block:: console
-+
-+    # dmesg | grep landlock || journalctl -kb -g landlock
-+    [    0.000000] Command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
-+    [    0.000000] Kernel command line: [...] lsm=landlock,lockdown,yama,integrity,apparmor
-+    [    0.000000] LSM: initializing lsm=lockdown,capability,landlock,yama,integrity,apparmor
-+    [    0.000000] landlock: Up and running.
-+
-+Note that according to the built time kernel configuration,
-+``lockdown,capability,`` may always stay at the beginning of the ``LSM:
-+initializing lsm=`` list even if they are not configured with the bootloader,
-+which is OK.
-+
-+Network support
-+---------------
-+
- To be able to explicitly allow TCP operations (e.g., adding a network rule with
- ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
- (``CONFIG_INET=y``).  Otherwise, sys_landlock_add_rule() returns an
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
--- 
-2.44.0
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y qcom/msm8953-lenovo-kuntao.dtb' for 20240226195516.174737-1-raihan1999ahamed@gmail.com:
+
+arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dtb: gpu@1c00000: clock-names:5: 'anyOf' conditional failed, one must be fixed:
+	'core' was expected
+	'iface' was expected
+	'mem' was expected
+	'mem_iface' was expected
+	'alt_mem_iface' was expected
+	'gfx3d' was expected
+	'rbbmtimer' was expected
+	'rbcpr' was expected
+	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
+arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dtb: iommu@1c48000: compatible: 'oneOf' conditional failed, one must be fixed:
+	'qcom,msm8953-iommu' is not one of ['qcom,msm8976-iommu']
+	'qcom,msm-iommu-v1' was expected
+	from schema $id: http://devicetree.org/schemas/iommu/qcom,iommu.yaml#
+
+
+
+
 
