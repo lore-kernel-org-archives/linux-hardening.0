@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3E714AD07
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 22:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36F57D083
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 22:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709161159; cv=none; b=WUbHdptM1PVwrlKq8UN05aHyPcn4jBdL2Xaw3RhDBmZp5ChYychSvZTIwDj/WOPNkLmgrKxG5QuYqzasT3LREj0ZBYJapNTfv+RnqwnRl2itfexXwnlTdxmDIYQPipjBnUeNCIbtE2OC7MOnBSS8vzTY2TbXfjKMbnmTojrWYKo=
+	t=1709161160; cv=none; b=fX1cxrVY9F/g95GP7Q9Ljb4aSSMgki7hi5ucqABCaZ0d8eiskKpBI2AvDN+ZGiKGAVHXC8OPGhGaHCo1exwboWTwIaEc4IdypuUIgdyU8sqv32dX977jecoL3/PpXtdxSrR4QHAvZrNUOGwqYFEqAtc3edR0EGkpGqLBUup7f6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709161159; c=relaxed/simple;
-	bh=Lddxx/7+zTRDdPfPCQR3m48LNdlBsdHAfzX1ldXLmxg=;
+	s=arc-20240116; t=1709161160; c=relaxed/simple;
+	bh=lLsSWUlgp7HueQKOzwtJI79py/7OoTHxtK4sEEcMNNg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OTls7dd2bI9zNCyMCH/+UPU/YeJlDpkOgXi1gAyX/H4bnLUxddEbfivnyjtLooi+b4Y+xZhGpTLLF0G+cN0lN86c3X7MXiqeQfzN1Gk8SI0Ikjb06DQAUaH7vOyiQ32M00P86B7HbFZ2FIpPOFj3kpll2/6YYWOht72C3pXHqWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yy3oKL8p; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=CrTPPePpQnYZxd3eZfL9sc20gCB39iI6oA9ogVR+KUgX9q2ivbmuXTEhqdAMFneR+BbrRL0ibF/R+PJqpI2fwHSJ0Ja1DJSjTmfqMZ9nZWLS98J4MKZWD8Y3kvorUfRtsWS+dug0vcJ+5zTN8jAqQENoK8R3CVXuQVbNecUXNqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Do6crlRz; arc=none smtp.client-ip=209.85.166.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yy3oKL8p"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608ac8c5781so5097947b3.3
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 14:59:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Do6crlRz"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3657bb7b9d2so4966675ab.2
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 14:59:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709161156; x=1709765956; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709161158; x=1709765958; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEPqDrb3kuqBi4wlFiHmXpXFNsJMzopZPuYDXQBwtp8=;
-        b=Yy3oKL8piYhFHPFq+2GugB5MRoqsGwybvABd8XdoQflltcrnx26GGxSAUj8Izbt1pJ
-         bbClVAZJ8jx5fUkby51sufkjIlDVXNokgCtAtH6EaNNAd4KntkDzQLUTLDppCJA8piQB
-         8PmnG6+CVD6TqR5p5NEoCTPs6YoMQKILiqg9LOY89cUjEe/glER1WydyBwpA8TK+nBlp
-         RfASxJRdiEHq6Ja5r+PpKfQ/Rkua1zPAAvCZV1ir9Q08MSTCcDbwP5JRFnyPBRZqxaEt
-         xWPLjP/ShFGvNwCOgRwkeVlZ0OxfIx5boFRHSQyNlBAVDb3gdxa6FPojbO1gAuRBfNPd
-         q12w==
+        bh=HhfHnaxbWsSYThMRH7N1siBwLrWUAgtSctM6HfRV2Ag=;
+        b=Do6crlRzhDsizeNjHwbDPNw+B4lVIEE0TsBpogvqy/DEpNJkzRPpOnRxXtLHYjgsV1
+         zn1egIRppZAfZpOMPonIF1AwJWsckjNngRcegPehVpjM6A5OVSYE15UNuOTDIDuGDt9m
+         3I5KeQ5cYvz3KNMGfvfcUxnpymB1B7RRpc6sLB5ypFWONCH/nh5ig9p2c6oXmdk0ksJq
+         sXMaQH3c1vAfCJdlA/+LAJJC/Tc49nv+920AU8TmSHEdY9/GUbrEzK7OHr3SYLvu37fK
+         ws0QMRN0iO8dZRoQ23zjteUqdaIHS6l/I8OXAi+qA50MU413sXJj9I8v5zP/VQWM5H/V
+         eFVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709161156; x=1709765956;
+        d=1e100.net; s=20230601; t=1709161158; x=1709765958;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEPqDrb3kuqBi4wlFiHmXpXFNsJMzopZPuYDXQBwtp8=;
-        b=MpAqTIAqt8TbNftMlTc3WI0ir5W9A7sA1SupXs5Iq2q+tuiaJYWrmc0SirNTpqJwmP
-         z3c4TtPzxq8YumXrFJRChH2SZpQeKzMDWq/gha8lOgTe978n7m5268Rf9wIkaMfu2Tad
-         9L+VjyastlS8cZpKihn0I0H+hcXYazJMqaE+kGtwKLS6ZeazfoiQpZv/tgFrA6F+qCDI
-         5tcLFizfNQmcnWhSmGwhRtnzHOJCepJeUCldi+eQ+v//GVCUfNGFnXgh2VUkkZlKh+bp
-         D5WWtXv/rot1jLmbOq7tgySkpk8x176C/mM9Bcvw2KMtYMw0afImbg5Oirwg2qqGtt1R
-         MZ9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYis0hJcmlARz9p6Iz4hvhRBLdLE+alfpUK81sC3fTwvKIrtJqrB0v8m5+GUzC1rIC2MkbmOtB+Vq/p30dbB4Omh8yKRgbD7w1v2PbX+GY
-X-Gm-Message-State: AOJu0YzMcD+OZuvlJz+V02FfHQwviELpd6BIANx/NklKnYN8x5VdgWmP
-	Np/Q4Hj9kzQcXep8auClYmWQIrD1kLoS06ib115QAmNBsbmdUIPzAu5p595S8jIt6lhdonc1K+T
-	o4nWwrJ3HRPvAd7o/lfU/9A==
-X-Google-Smtp-Source: AGHT+IH+AYAEjmtd2HEeqQ8tauvpcfTSBaCfiTSyn0oA8Q1wOY4uNUBXxv4dwpdfs73rhiHAaOwNYfrscLpmjQUwhA==
+        bh=HhfHnaxbWsSYThMRH7N1siBwLrWUAgtSctM6HfRV2Ag=;
+        b=bezkbIz8q695WQBxQF4dIlbmlIS36rPJOaHGbUoHofjzvxdwJrb9wOfdeL/MUzoxui
+         c+uYEsPFXnhRzKiv3cFCxngKMNm59gydjqmm9n7x0GzDujo8FdD830Fmho5mVMTy9CGv
+         Tp0KV/Ir2Q+/nl4ABtWm9OXhjDsrv1Gmsd07Fr6TtZXBtEu5J2lVz81IpANb/2vtvFXN
+         mouYKtiOMxc2VmtBAMKBQrK+VivorK7RLGLhytNoUUma1A0D5V5AXN9scyMIfrkA6pGj
+         PorpMP7NCthY3k5q3M4SB9Cadcpm7B9FCFachBY/l7kRFTzTQXXnHy1Bz71yQ2k3Z0ib
+         OJkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVur9Lyzxm7IZart/8AyHZclpAU4IV6hNrcPNxiqw82UvZ8F4ak0njcASAMMYZPe5cyDYhBKmK8gZSW7WKMaop/6qx5pok6qHY9ID9msaaW
+X-Gm-Message-State: AOJu0Yyr3BqzoOCVMvtm3ecQpHXNtVtL9g+4Y+t75iJVdULZuU9fl01E
+	fzmvilS3bgsPls04aD5LBPfQfXBtPPUdTghAuxuWJbhzbc/m0BQfVYT5ZR4U8CjdeVqlvaQj/pl
+	b4Ogyfxj64OodJrajwbTflg==
+X-Google-Smtp-Source: AGHT+IEIrIDo5sTt6gMSCiyyslq0yK1A1xLzdyJOiaImV0GkhHuEn6/P8wZRb8UKtb0X7RlT7oI9X/gwcnVP4zsqSQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:7947:0:b0:609:3c14:b700 with SMTP
- id u68-20020a817947000000b006093c14b700mr99395ywc.5.1709161155734; Wed, 28
- Feb 2024 14:59:15 -0800 (PST)
-Date: Wed, 28 Feb 2024 22:59:05 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6e02:1c42:b0:365:1f2b:7be8 with
+ SMTP id d2-20020a056e021c4200b003651f2b7be8mr40548ilg.5.1709161157889; Wed,
+ 28 Feb 2024 14:59:17 -0800 (PST)
+Date: Wed, 28 Feb 2024 22:59:07 +0000
 In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,13 +59,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709161149; l=1839;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709161149; l=1256;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=Lddxx/7+zTRDdPfPCQR3m48LNdlBsdHAfzX1ldXLmxg=; b=4RsSr+qnPfhdDTcGycu17RdkJmrh4DmmUkOdoQw9koC5UujHTwsgQh/Uhx6IjYaCNsiCcGPX6
- S20zo9iGEmOC/bLHTndhTRmKqABL888rxYhO1DTZe+hS+pjh43d3Vza
+ bh=lLsSWUlgp7HueQKOzwtJI79py/7OoTHxtK4sEEcMNNg=; b=O/Y8/j91ffHOW/H1lkp7P7xEh0IoohQDvBGDW0wX5DBkBQO3wENCK+STBh6SvA2jO4s+2rUiC
+ /3kFM5uAc+ABhNpGPSm9eO2vRTlpeqKmRKJ1d1onyaPQI7F48pNtHxB
 X-Mailer: b4 0.12.3
-Message-ID: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-5-dacebd3fcfa0@google.com>
-Subject: [PATCH v2 5/7] scsi: devinfo: replace strncpy and manual pad
+Message-ID: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-7-dacebd3fcfa0@google.com>
+Subject: [PATCH v2 7/7] scsi: wd33c93: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>, Kashyap Desai <kashyap.desai@broadcom.com>, 
 	Sumit Saxena <sumit.saxena@broadcom.com>, Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
@@ -83,59 +83,37 @@ Cc: mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
 	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Depending on the state of @compatible, we are going to do different
-things with our @to buffer.
+@p1 is assigned to @setup_buffer and then we manually assign a NUL-byte
+at the first index. This renders the following strlen() call useless.
+Moreover, we don't need to reassign p1 to setup_buffer for any reason --
+neither do we need to manually set a NUL-byte at the end. strscpy()
+resolves all this code making it easier to read.
 
-When @compatible is true we want a NUL-term'd and NUL-padded destination
-buffer. Conversely, if @compatible is false we just want a space-padded
-destination buffer (no NUL-term required).
-
-As per:
-/**
- * scsi_dev_info_list_add_keyed - add one dev_info list entry.
- * @compatible: if true, null terminate short strings.  Otherwise space pad.
-...
-
-Note that we can't easily use `strtomem_pad` here as the size of the @to
-buffer is unknown to the compiler due to indirection layers.
-
-Now, the intent of the code is more clear (I probably didn't even need
-to add a comment -- that's how clear it is).
+Even considering the path where @str is falsey, the manual NUL-byte
+assignment is useless as setup_buffer is declared with static storage
+duration in the top-level scope which should NUL-initialize the whole
+buffer.
 
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/scsi/scsi_devinfo.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/scsi/wd33c93.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-index 3fcaf10a9dfe..2d3dbce25629 100644
---- a/drivers/scsi/scsi_devinfo.c
-+++ b/drivers/scsi/scsi_devinfo.c
-@@ -293,14 +293,16 @@ static void scsi_strcpy_devinfo(char *name, char *to, size_t to_length,
- 	size_t from_length;
- 
- 	from_length = strlen(from);
--	/* This zero-pads the destination */
--	strncpy(to, from, to_length);
--	if (from_length < to_length && !compatible) {
--		/*
--		 * space pad the string if it is short.
--		 */
--		memset(&to[from_length], ' ', to_length - from_length);
--	}
-+
-+	/*
-+	 * null pad and null terminate if compatible
-+	 * otherwise space pad
-+	 */
-+	if (compatible)
-+		strscpy_pad(to, from, to_length);
-+	else
-+		memcpy_and_pad(to, to_length, from, from_length, ' ');
-+
- 	if (from_length > to_length)
- 		 printk(KERN_WARNING "%s: %s string '%s' is too long\n",
- 			__func__, name, from);
+diff --git a/drivers/scsi/wd33c93.c b/drivers/scsi/wd33c93.c
+index e4fafc77bd20..a44b60c9004a 100644
+--- a/drivers/scsi/wd33c93.c
++++ b/drivers/scsi/wd33c93.c
+@@ -1721,9 +1721,7 @@ wd33c93_setup(char *str)
+ 	p1 = setup_buffer;
+ 	*p1 = '\0';
+ 	if (str)
+-		strncpy(p1, str, SETUP_BUFFER_SIZE - strlen(setup_buffer));
+-	setup_buffer[SETUP_BUFFER_SIZE - 1] = '\0';
+-	p1 = setup_buffer;
++		strscpy(p1, str, SETUP_BUFFER_SIZE);
+ 	i = 0;
+ 	while (*p1 && (i < MAX_SETUP_ARGS)) {
+ 		p2 = strchr(p1, ',');
 
 -- 
 2.44.0.rc1.240.g4c46232300-goog
