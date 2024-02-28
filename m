@@ -1,111 +1,71 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FC725601;
-	Wed, 28 Feb 2024 07:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09019250E0;
+	Wed, 28 Feb 2024 08:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709107100; cv=none; b=EI7DTSTpTnlSQhFnqCfinDRBFvGaH79IRoeLTsemT/N7aKJH1RkuFSD5PjmGDuodOgKPMdn7Lxh2fwO60AiFz/ECbYIglgSJPHkA3UE5BAclFkwnyoLHvjDwwBYsD/h5f4aLK2oco5PpCGGtIaURMt6f3yWv6mvtANxxdoLQzuw=
+	t=1709109654; cv=none; b=eDvEth33BE7GFYNfqmslP8eJu+LI8wq8jZ5hrefzmsHyFcLWYodfAerOf2pFr2YF3ME2O9LSjXDlLdip7PAqsMhdFEN7IQcpGIDdLd9E3e0PK4o1Zf9ewKyLlr8lwzMFlXn8AL8u2CRZyG6/YmH+hG73sC7lH8c6tY7K0yGbI3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709107100; c=relaxed/simple;
-	bh=trymZ7YQNfoxgQzjdvi4FBNN10bDU2cFwmLnp4I3YnU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WnqXXClQH56xSeue+STQcafTKU5LL4PLxB1Aq8D+3KJeUQPIZKQ5+N7tGQSxZUCnpgLediYoQoVU6L6eSib+u3NZgoTfxBhhGgtXEp3oKKqOw+BFwxq71Nei2a/BG0ws0cCm207mHJY8+KKaAOGMfv2Qu9Yh6+3vHVMUg4lgadc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcbf82cdf05so5296354276.2;
-        Tue, 27 Feb 2024 23:58:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709107096; x=1709711896;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vsKMJK12uTn8rSKE4dhgJsLuGznZe3oJnJWzo8HLoJA=;
-        b=LnAHl/kKGsdiCzXQNOavXeyjrwEs+nAOMzpSWT5Mg6oNdPKBsFjNnIigDS2MQB2UP9
-         7CsoSpEkWmuXwKe0xLhfu9mGTu7uznuDMpBYBHoS5xKxFBt3B7OZFtSwDCujXTucxpJq
-         JEMCn7ilBBOwoK3+y16R7ocDiPJu+0SvSMGXiVXkjiS4+kyW+cH+6DrXVXA0bJJX7ORJ
-         nPPetvDlLQXGWsZkj83mMgULE+omwD/EtmAcwxkYT0jv0NmtoCYTtKZwp4wa9rABzqG7
-         ILb9yVqBRF9zxVLnt+E3DEnqZEAIBkh0R+ud1fL5dA6eB782lSlNVCNJcKddjzdBS2Ys
-         UOXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgENUK0+wMeh6PsS1ENA24N7cPyYSDZYOi8RYzpG9I9xZqHeW+x1OcvoNYty2Ad9ht8rGBUZ4oUzIiFWzfweQ5d9j9kVXPy5dbqZNoMcZ9OSor/WsRRgNLDxqB+/4V5QtoLBtp5O5yMx8As+na
-X-Gm-Message-State: AOJu0YxDf8B+6VouX+AzxTZXz2zQ1y3NphqkhJildI34+jJltRcJCYmJ
-	l08EG+BofnJGSrUNak34E/vAcGvT8hJ1Vb6cJPERKL0shTrLKHNgU84XE/njaeTlww==
-X-Google-Smtp-Source: AGHT+IH8LGJvHXvyjQkPJVRzBEFNdKxQuC8ac+hjllyf/NUu/GdjH4io5hAfsRKpFAShx5r2dTtV6w==
-X-Received: by 2002:a05:6902:4cc:b0:dc6:9daf:35c7 with SMTP id v12-20020a05690204cc00b00dc69daf35c7mr1645671ybs.28.1709107096489;
-        Tue, 27 Feb 2024 23:58:16 -0800 (PST)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id y14-20020a25860e000000b00dcdac51bad9sm1798102ybk.49.2024.02.27.23.58.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 23:58:15 -0800 (PST)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso5423695276.3;
-        Tue, 27 Feb 2024 23:58:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWPK4RkC5mUxPA3US4vgOoSzEn4dRj3PEnuEC4r8iwDvxVUyZUToaSzGmXny1QkBAsBN5uh6CIBDTS688/6pR3vZtfN3U3+Wm1SCqn+m/4XY9uLBQzzemzZqrC2oSS2u5Ov/sRu0mzmCheADVrL
-X-Received: by 2002:a25:aaee:0:b0:dcd:407d:52e5 with SMTP id
- t101-20020a25aaee000000b00dcd407d52e5mr1799682ybi.29.1709107095484; Tue, 27
- Feb 2024 23:58:15 -0800 (PST)
+	s=arc-20240116; t=1709109654; c=relaxed/simple;
+	bh=WwgjU44tVUA8AEoqcZgtgfLaS9tkTahfdO6/GuC5sNk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i8w8H36Ve9T2Y3RXC5ktBjk9QZG8nZxP+L7/3EeZCKhPh9Crt7lLmIhrrjVxlsiOa91DIsIH7YF0gmHvHPpOWFFOCgSuhyjrgzle/7iRbOr+MBC4jpCYP8esSVHsUvrBEJdF+6w3ZlVQOPXN2XUXXQIsK4UhXsKLhYdx4WzWZVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AA2EC15;
+	Wed, 28 Feb 2024 00:41:31 -0800 (PST)
+Received: from [10.57.11.244] (unknown [10.57.11.244])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 130723F6C4;
+	Wed, 28 Feb 2024 00:40:49 -0800 (PST)
+Message-ID: <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
+Date: Wed, 28 Feb 2024 08:41:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227224653.work.603-kees@kernel.org>
-In-Reply-To: <20240227224653.work.603-kees@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 Feb 2024 08:58:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVMsbVPmcztWCDaorLSvwtLfWz-QVuA=vLFfX_iTdARcA@mail.gmail.com>
-Message-ID: <CAMuHMdVMsbVPmcztWCDaorLSvwtLfWz-QVuA=vLFfX_iTdARcA@mail.gmail.com>
-Subject: Re: [PATCH] lib: stackinit: Adjust target string to 8 bytes for m68k
-To: Kees Cook <keescook@chromium.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, rui.zhang@intel.com,
+ gustavoars@kernel.org, morbo@google.com, justinstitt@google.com,
+ stanislaw.gruszka@linux.intel.com, linux-pm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+ patches@lists.linux.dev, Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+ <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
+ <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+ <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+ <202402270816.0EA3349A76@keescook>
+ <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
+ <202402270852.E46A5268@keescook>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <202402270852.E46A5268@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Kees,
+Hi Nathan and Kees,
 
-On Tue, Feb 27, 2024 at 11:47=E2=80=AFPM Kees Cook <keescook@chromium.org> =
-wrote:
-> For reasons I cannot understand, m68k moves the start of the stack frame
-> for consecutive calls to the same function if the function's test
-> variable is larger than 8 bytes. This was only happening for the char
-> array test (obviously), so adjust the length of the string for m68k
-> only. I want the array size to be longer than "unsigned long" for every
-> given architecture, so the other remain unchanged.
->
-> Additionally adjust the error message to be a bit more clear about
-> what's happened, and move the KUNIT check outside of the consecutive
-> calls to minimize what happens between them.
+On 2/27/24 17:00, Kees Cook wrote:
+> On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
+>> Ok my misunderstanding was I thought sizeof() was calling _bdos under the
+>> hood, so when calling sizeof(flex_array), it was returning the computed size
+>> inferring from the __counted_by field.
+> 
+> Yeah, sizeof() has a very limited scope. __builtin_object_size() has
+> more flexibility (via the 2nd argument, "type"), but it was still
+> compile-time only. __builtin_dynamic_object_size() was added to bring
+> runtime evaluations into the mix (initially to support the alloc_size
+> attribute, and now includes the counted_by attribute too).
+> 
 
-Thanks for your patch!
+Thanks for your earlier emails explaining these stuff.
+Do you have maybe some presentation about those features
+for the kernel (ideally w/ a video from some conference)?
 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Closes: https://lore.kernel.org/lkml/a0d10d50-2720-4ecd-a2c6-c2c5e5aeee65=
-@roeck-us.net/
-
-Do reports have an expiration date? ;-)
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Closes: https://lore.kernel.org/r/CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFY=
-AL4TzvstFg@mail.gmail.com
-Closes: https://lore.kernel.org/r/CAMuHMdW6N40+0gGQ+LSrN64Mo4A0-ELAm0pR3gWQ=
-0mNanyBuUQ@mail.gmail.com
-
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Finally all parts of this test are passing on m68k, great!
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Regards,
+Lukasz
