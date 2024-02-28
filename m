@@ -1,153 +1,208 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C49058121
-	for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 23:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DCBEA4
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 00:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076734; cv=none; b=g2LcFrI9EiwedfGG/4QtajEwxvjxs4B7N1Y5u7oGLS/O0MPep+s4p+vkFc2Qe8I2fEVwGB4Mgf4/fkxzzLf3lpB6TcCmCr3KbnelGIKhuVIEFgfVtAAZqrimOzdCwvC/Q5w79gxMQI9uQ678Gzi3cpPyW59Ofwtge5UA9csAwLM=
+	t=1709081871; cv=none; b=VVWymbV8ef4UGEn4BDRpWPXmnBMqEc7SSZKxlm9B6vDkOPAxz5mmanmJpo4vRfewBrFLlsdzmCas4vhH0CfBV+E+DTURMyji4ll4P7RLeXGnHFWsfEh2CoDr1P0iP4r4RouHOMIbhwfW/9yHuaJl8lHWzvbDHw73kv3bXE+M+hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709076734; c=relaxed/simple;
-	bh=vuJ8723KNo7c2i4PE8+dSpAbj4FcKwCZBz13erSUw9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YDtsYZA5dW6jdoQKFcdPN4X+Uo2cT6vOuhR1uM64eBjxtxz/gX5seUXdqOEZ+BGbxd7EXOdRTXg6p0cJy9szRJmalp+QTwiH+9Sys3Mc+Dz08PRslHlAvGTN0UxECTACHqd6emq/7JUdBWHMKIDFc41LScsp//vdjcH873T/xok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M/9jUsDk; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709081871; c=relaxed/simple;
+	bh=J52l5GvbPpvQV0SlI1cajTdwoGcxKSQNv/+Bf2T6xFQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aYYK9sa0vCDXmnny6t2sboV6qp02LMHWX7AUAC3+NjIkxYtdlE/NJ/wDJB8YUi0B3y54F+p7jGMm4aDUEXZbdn2PdLEHeZIXL+nkCHfpfHSPN9/KQByYBZr1mXGB9gKcDod7tORta3k8CY0T43YsVHGf06u2yDVS/y3lyYRmIYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CN51qTyz; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M/9jUsDk"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7c49c979b5dso98703339f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 15:32:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CN51qTyz"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a43488745bcso417023466b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 16:57:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1709076731; x=1709681531; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=80vE8I00zUuMjb98bapG9u6P0XhLZj80ZGaIUfonjH8=;
-        b=M/9jUsDke8TosbOh9m+Bc+Whgu6pRM/Fbw2x6KlW4NmRhBXJazX2IOizi7Kz4id8MB
-         hU89w9hUF3bF4ttXEun1OfTdOgwtJIHIFw4MIyPCCj2b0/nUPF5Ai0BQM478AYoTTTex
-         yNy9fQCWHDb6GKdtfA8eenpxpx5ccnGpMI5hc=
+        d=chromium.org; s=google; t=1709081867; x=1709686667; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xr41oLUL07lwHIIdNtUg07Bh7MIOah2pszh7uTbsMgM=;
+        b=CN51qTyz9YMfPKoGKzPK6BAwtj7cUksOGN1II/OHplX4rXpGcrPv8P/rD39TKjjFLd
+         0wF+gTapHFUIX9gcwAQz2YVXKvLyTdSnvD144nnExUh67tw6NmfDBdv3wC6cpgcYflKf
+         dLahHPnCplAwR8Me2dE1iMZFHHzvJAFbXUNo8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709076731; x=1709681531;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=80vE8I00zUuMjb98bapG9u6P0XhLZj80ZGaIUfonjH8=;
-        b=cRomos/0MDrXqve/YnL7OMzY9xGN1rMR0tf6uo5lASK8Z5n+TcUeqEUNwE0ehyA3ch
-         xcBKzJFugs8ba5PqeTPARJdbkAfDJWF8SOlntsgB5xM4US2mKzRAd6WxLpbnw9/d+wqT
-         65bYLO3Qg9sdyWYNU0IadDl/MAkD+TpfCUDc7Kg237uvEG6SnA+aqUGzTVLXX9NXlMob
-         PNNAGJwnL8oSdNyAJsL+xaMqumj4tjf2AYWpCdyKMn008iJCqr2RHaJkb1uOG16BZM2M
-         ct1JU5gncOIDIVhW0O9X4OgaOU5hFp8hbF9O+i6LFnMDW7R9oogRq3Tl5YWZ11i5ZjmP
-         AtvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSCle1M7koeImg9k/lzPTB1guNH3JQOBVTlwbrpSW79ujd7/P51kEeLIwmItfXXOzKohc/lT5MOkt/n1VCpIJnFEOKOogqf6F9h/0WDxVq
-X-Gm-Message-State: AOJu0YxFXDA7CyJmOAV8vM7Sv/8Ekg1HaAZy7Gl5C43ynFwVbUIseD3o
-	GebUp5qv46+ZIkEVPBim6TkNXOcWhSQ9SwVD96mXyf4oB366z7kg2EJX0a76KqM=
-X-Google-Smtp-Source: AGHT+IG69oUodDQLtj9TB2lWzXOa+NfkxOjVRrZm5njOmm/xNqu/JAHdlHJH3zfk/5jCzDJ8f9tmVg==
-X-Received: by 2002:a05:6602:2195:b0:7c7:ce93:f532 with SMTP id b21-20020a056602219500b007c7ce93f532mr5798424iob.1.1709076731281;
-        Tue, 27 Feb 2024 15:32:11 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id s20-20020a6bd314000000b007c45ab3dc34sm1998648iob.29.2024.02.27.15.32.10
+        d=1e100.net; s=20230601; t=1709081867; x=1709686667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xr41oLUL07lwHIIdNtUg07Bh7MIOah2pszh7uTbsMgM=;
+        b=DL82qPqGype9sMz+3KBa4HY+64XWISqCFR0J+ATH2s1pZtEpnP/A+69Sa0y0lprZ8N
+         eHBkRO9E/MN0CMqL/fhNha/mak+Q+5q+/nfUB95pog57YfB2xME/bIAOQpoADiCdw9ta
+         0arutsYd+YYSAGzGsDNvcMtSOiQExXzfRRc/bo6Fy6xvBfWbu60J0REXVCettBBC+uBb
+         v362ndgYuVLJpqA5+Gb1z9mCF5FF86IpLQksB5CFmc2eGWTkDBfttJCgb0VBmhvLmu+9
+         FvVlQaG3afmGR+68WpxVmzpj3EUbIODlTt/9oulrTjjboJDtXDpG5uZZRRi0tXlnUdED
+         3I1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDpfNnx8pm58JnNIrt4XqPpRlYe7zJQoV0Jcb4pN56Wxz2iX+Cfpa/BWNSNPOGxLbla4lC6sl+aGntoJkRepG+tK+y8+BcnKuRWscgdkYz
+X-Gm-Message-State: AOJu0YyaUFWNj16aFFRgWx5H05IbFwhdSftVZ1RZvrU44x4CDc87FHtR
+	zFhw+OZPbrffbL6DW53PsgN6t6XjcfKQt9jb2Tj9ZuMoyi7JSUEsb6qW4ioU6Yh0eRQR0onC1Cy
+	wgaPx
+X-Google-Smtp-Source: AGHT+IHjTLDE+E/A1VKY/L/K72dxuvWP7v9UKNmBLpzx7le/CT3lrEF044WjKl/+u+AreVX6xhUS3w==
+X-Received: by 2002:a17:906:194d:b0:a43:8371:2efe with SMTP id b13-20020a170906194d00b00a4383712efemr3408629eje.32.1709081867424;
+        Tue, 27 Feb 2024 16:57:47 -0800 (PST)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
+        by smtp.gmail.com with ESMTPSA id ts7-20020a170907c5c700b00a43f4722eaesm153973ejc.103.2024.02.27.16.57.46
+        for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 15:32:10 -0800 (PST)
-Message-ID: <fd438c6c-87a2-4976-aee1-b706212914c4@linuxfoundation.org>
-Date: Tue, 27 Feb 2024 16:32:09 -0700
+        Tue, 27 Feb 2024 16:57:46 -0800 (PST)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-412a2c2ce88so14905e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 27 Feb 2024 16:57:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVyJlPuGkhmjWZgVDALQnHvNAO7402FrpLLpwnooDoT1z7Q0sJW9idL/5AU00/yWR+tASx1CjzFmfx+S8C1CYUlppacB4hGZYdJcKw0d6gl
+X-Received: by 2002:a05:600c:a39c:b0:412:985b:a1e1 with SMTP id
+ hn28-20020a05600ca39c00b00412985ba1e1mr33142wmb.4.1709081866214; Tue, 27 Feb
+ 2024 16:57:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/9] kunit: Fix printf format specifier issues in KUnit
- assertions
-Content-Language: en-US
-To: David Gow <davidgow@google.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
- Matthew Auld <matthew.auld@intel.com>,
- Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Kees Cook <keescook@chromium.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>,
- Cassio Neri <cassio.neri@gmail.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Arthur Grillo <arthur.grillo@usp.br>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>,
- Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>,
- David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org,
- linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240221092728.1281499-1-davidgow@google.com>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240221092728.1281499-1-davidgow@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
+ <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 27 Feb 2024 16:57:31 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com>
+Message-ID: <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
+ should try non-NMI first
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Misono Tomohiro <misono.tomohiro@fujitsu.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Stephen Boyd <swboyd@chromium.org>, Daniel Thompson <daniel.thompson@linaro.org>, 
+	Sumit Garg <sumit.garg@linaro.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
+	Valentin Schneider <vschneid@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/24 02:27, David Gow wrote:
-> KUnit has several macros which accept a log message, which can contain
-> printf format specifiers. Some of these (the explicit log macros)
-> already use the __printf() gcc attribute to ensure the format specifiers
-> are valid, but those which could fail the test, and hence used
-> __kunit_do_failed_assertion() behind the scenes, did not.
-> 
-> These include:
-> - KUNIT_EXPECT_*_MSG()
-> - KUNIT_ASSERT_*_MSG()
-> - KUNIT_FAIL()
-> 
-> This series adds the __printf() attribute, and fixes all of the issues
-> uncovered. (Or, at least, all of those I could find with an x86_64
-> allyesconfig, and the default KUnit config on a number of other
-> architectures. Please test!)
-> 
-> The issues in question basically take the following forms:
-> - int / long / long long confusion: typically a type being updated, but
->    the format string not.
-> - Use of integer format specifiers (%d/%u/%li/etc) for types like size_t
->    or pointer differences (technically ptrdiff_t), which would only work
->    on some architectures.
-> - Use of integer format specifiers in combination with PTR_ERR(), where
->    %pe would make more sense.
-> - Use of empty messages which, whilst technically not incorrect, are not
->    useful and trigger a gcc warning.
-> 
-> We'd like to get these (or equivalent) in for 6.9 if possible, so please
-> do take a look if possible.
-> 
-> Thanks,
-> -- David
-> 
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Closes: https://lore.kernel.org/linux-kselftest/CAHk-=wgJMOquDO5f8ShH1f4rzZwzApNVCw643m5-Yj+BfsFstA@mail.gmail.com/
-> 
-> David Gow (9):
->    kunit: test: Log the correct filter string in executor_test
->    lib/cmdline: Fix an invalid format specifier in an assertion msg
->    lib: memcpy_kunit: Fix an invalid format specifier in an assertion msg
->    time: test: Fix incorrect format specifier
->    rtc: test: Fix invalid format specifier.
->    net: test: Fix printf format specifier in skb_segment kunit test
->    drm: tests: Fix invalid printf format specifiers in KUnit tests
->    drm/xe/tests: Fix printf format specifiers in xe_migrate test
->    kunit: Annotate _MSG assertion variants with gnu printf specifiers
-> 
+Hi,
 
-Applied all patches in this series except to linux-ksefltest kunit
-for linux 6.9-rc1
+On Mon, Jan 8, 2024 at 4:54=E2=80=AFPM Doug Anderson <dianders@chromium.org=
+> wrote:
+>
+> Hi,
+>
+> On Thu, Dec 7, 2023 at 5:03=E2=80=AFPM Douglas Anderson <dianders@chromiu=
+m.org> wrote:
+> >
+> > When testing hard lockup handling on my sc7180-trogdor-lazor device
+> > with pseudo-NMI enabled, with serial console enabled and with kgdb
+> > disabled, I found that the stack crawls printed to the serial console
+> > ended up as a jumbled mess. After rebooting, the pstore-based console
+> > looked fine though. Also, enabling kgdb to trap the panic made the
+> > console look fine and avoided the mess.
+> >
+> > After a bit of tracking down, I came to the conclusion that this was
+> > what was happening:
+> > 1. The panic path was stopping all other CPUs with
+> >    panic_other_cpus_shutdown().
+> > 2. At least one of those other CPUs was in the middle of printing to
+> >    the serial console and holding the console port's lock, which is
+> >    grabbed with "irqsave". ...but since we were stopping with an NMI
+> >    we didn't care about the "irqsave" and interrupted anyway.
+> > 3. Since we stopped the CPU while it was holding the lock it would
+> >    never release it.
+> > 4. All future calls to output to the console would end up failing to
+> >    get the lock in qcom_geni_serial_console_write(). This isn't
+> >    _totally_ unexpected at panic time but it's a code path that's not
+> >    well tested, hard to get right, and apparently doesn't work
+> >    terribly well on the Qualcomm geni serial driver.
+> >
+> > It would probably be a reasonable idea to try to make the Qualcomm
+> > geni serial driver work better, but also it's nice not to get into
+> > this situation in the first place.
+> >
+> > Taking a page from what x86 appears to do in native_stop_other_cpus(),
+> > let's do this:
+> > 1. First, we'll try to stop other CPUs with a normal IPI and wait a
+> >    second. This gives them a chance to leave critical sections.
+> > 2. If CPUs fail to stop then we'll retry with an NMI, but give a much
+> >    lower timeout since there's no good reason for a CPU not to react
+> >    quickly to a NMI.
+> >
+> > This works well and avoids the corrupted console and (presumably)
+> > could help avoid other similar issues.
+> >
+> > In order to do this, we need to do a little re-organization of our
+> > IPIs since we don't have any more free IDs. We'll do what was
+> > suggested in previous conversations and combine "stop" and "crash
+> > stop". That frees up an IPI so now we can have a "stop" and "stop
+> > NMI".
+> >
+> > In order to do this we also need a slight change in the way we keep
+> > track of which CPUs still need to be stopped. We need to know
+> > specifically which CPUs haven't stopped yet when we fall back to NMI
+> > but in the "crash stop" case the "cpu_online_mask" isn't updated as
+> > CPUs go down. This is why that code path had an atomic of the number
+> > of CPUs left. We'll solve this by making the cpumask into a
+> > global. This has a potential memory implication--with NR_CPUs =3D 4096
+> > this is 4096/8 =3D 512 bytes of globals. On the upside in that same cas=
+e
+> > we take 512 bytes off the stack which could potentially have made the
+> > stop code less reliable. It can be noted that the NMI backtrace code
+> > (lib/nmi_backtrace.c) uses the same approach and that use also
+> > confirms that updating the mask is safe from NMI.
+> >
+> > All of the above lets us combine the logic for "stop" and "crash stop"
+> > code, which appeared to have a bunch of arbitrary implementation
+> > differences. Possibly this could make up for some of the 512 wasted
+> > bytes. ;-)
+> >
+> > Aside from the above change where we try a normal IPI and then an NMI,
+> > the combined function has a few subtle differences:
+> > * In the normal smp_send_stop(), if we fail to stop one or more CPUs
+> >   then we won't include the current CPU (the one running
+> >   smp_send_stop()) in the error message.
+> > * In crash_smp_send_stop(), if we fail to stop some CPUs we'll print
+> >   the CPUs that we failed to stop instead of printing all _but_ the
+> >   current running CPU.
+> > * In crash_smp_send_stop(), we will now only print "SMP: stopping
+> >   secondary CPUs" if (system_state <=3D SYSTEM_RUNNING).
+> >
+> > Fixes: d7402513c935 ("arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP s=
+hould try for NMI")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> > I'm not setup to test the crash_smp_send_stop(). I made sure it
+> > compiled and hacked the panic() method to call it, but I haven't
+> > actually run kexec. Hopefully others can confirm that it's working for
+> > them.
+> >
+> >  arch/arm64/kernel/smp.c | 115 +++++++++++++++++++---------------------
+> >  1 file changed, 54 insertions(+), 61 deletions(-)
+>
+> The sound of crickets is overwhelming. ;-) Does anyone have any
+> comments here? Is this a terrible idea? Is this the best idea you've
+> heard all year (it's only been 8 days, so maybe)? Is this great but
+> the implementation is lacking (at best)? Do you hate that this waits
+> for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
+>
+> Aside from the weirdness of a processor being killed while holding the
+> console lock, it does seem beneficial to give IRQs at least a little
+> time to finish before killing a processor. I don't have any other
+> explicit examples, but I could just imagine that things might be a
+> little more orderly in such a case...
 
-drm: tests: Fix invalid printf format specifiers in KUnit tests
+I'm still hoping to get some sort of feedback here. If people think
+this is a terrible idea then I'll shut up now and leave well enough
+alone, but it would be nice to actively decide and get the patch out
+of limbo.
 
-David, as requtested in 7/9 thread, if you can send me patch on
-top pf 6.8-rc6, will apply it
+FWIW the serial console dumping issue that originally inspired me to
+track this down has been worked around at least well enough to not
+spew garbage in my console. See commit 9e957a155005 ("serial:
+qcom-geni: Don't cancel/abort if we can't get the port lock"). It's
+still a little awkward because we'll be running fully lockless during
+panic time, but it seems to work...
 
-7-9 drm: tests: Fix invalid printf format specifiers in KUnit tests
-
-thanks,
--- Shuah
-
-
+-Doug
