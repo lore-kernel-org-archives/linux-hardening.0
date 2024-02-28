@@ -1,35 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833866EF10;
-	Wed, 28 Feb 2024 16:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60AA208C6
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 17:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709139414; cv=none; b=AO9r6dvSAPHnY77flnajr7nEd8Ihii6wlz/bL8muV0Kfm01k1BKtiLx51DtRNsl539dyNpMPS+vXZvsI1z+QQqPoymnXvkGb7cKOl8BT4Y6Zn2I6awCxNXLZuTcL/QpYNhv4exTXaPZati0nukhmngR95vjnvdZHIb1CsjePvE4=
+	t=1709142509; cv=none; b=TvLsos4uchOiCj8T4HbOXA4LNQgIabylxrFckU0qyof2HbAWOxqSBuuAnHxu17JVGvtkqAKv1lhbPGsf+u7EGZreAyYgZ6q7roe6BQBPEKM95JAOYQTtbR+Vfuw9Mx4RPJ3BSZCP35K52d4HgqOC15iCNiORNv7f+2nTvSBPyb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709139414; c=relaxed/simple;
-	bh=j8GW5PM05J1eAob6plV8ZY09tWLXwx3VfJvudI3zpx0=;
+	s=arc-20240116; t=1709142509; c=relaxed/simple;
+	bh=dXvYAhmkYcjGWARl7hgbthDBAfsGWyz70D4tvgd/LGM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CeXZkFt1pczSsIvS+we5M3kKEkpfwZwVT7Tpdy5X/Eq29l6e1T7drYG6qhVlyCrqgT077A6+QwduBZkB1w1t4Hg1KhlROtMYf634jFSd7l+1ALtIum79oEKFQ2gqgYyzPFCYV97uZTC+j8sTF/oLRtqkGv5VcgYkciOCF+6k0L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QB3r/qRI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D3xZLB06+zZU9jv3pB+C22X93Ep+n5cQwKgwIraUA2ZOdJG/k4cAStp2nYux+lJVPyXfwD5hCFUabKHuzjYuxFKylTdvFn1YljOTsp/zugU9ymadfqh4zW4F7SXQN2d2V/s2l0PRPbUoprZM+Dpg+UGD1JrTdeR9GmYrniOODWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=et/TxfRK; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QB3r/qRI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3549AC43399;
-	Wed, 28 Feb 2024 16:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709139413;
-	bh=j8GW5PM05J1eAob6plV8ZY09tWLXwx3VfJvudI3zpx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QB3r/qRIx/u9gXVXlbY/IYNL+g/tdiv0GzEOVBTyiHegvQDwBaTaGjm7ZE9xY89+6
-	 f/G6zZzL13nXctyCJdnlEZ82fh/dKtLCwe/VWu05aGyZQfgk1KlNjakwk4rCEaG4CB
-	 h0ovQZ0b016/rxeNkJVs1xgKwPvghpQdKPozy1fYsurBDtoKprTzYUS8yTNUZy5ere
-	 bwk9XgA3aSqr6Yb1M7CM5DRbTw6dK6xsxZp/EcW0kaPikflydMFjZvDb+YsnlS/AvQ
-	 BpJn++NEwa0OIGTeU4W+Jo4t14JZYPnCMy2GmIQbOzY1GGGZ6GzxYrw3bGT08Ryy+w
-	 3C5lLT+c6ioKg==
-Date: Wed, 28 Feb 2024 09:56:51 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Kees Cook <keescook@chromium.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="et/TxfRK"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc0e5b223eso505155ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 09:48:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709142507; x=1709747307; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9WM/LnzzYMg9VooSl3tyFbgZCCVmVnx60g53OBbQ0+k=;
+        b=et/TxfRKOiKI5c7Gv4OnewW9GEBpxpJ6vAGkOSlGN9KMGqVEcfkYLE3mOkecvLfL+X
+         Px7pDNEG3Hvk033GgHGhjF1IVqFhCZAZbQXYGOelgmIIkRXihfSM3hnZk0XFngAhf9Mi
+         uQzFbalPOoQsIwBnZDZPmDP7moFIhcc7VSvTk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709142507; x=1709747307;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9WM/LnzzYMg9VooSl3tyFbgZCCVmVnx60g53OBbQ0+k=;
+        b=DTmYbKxrd5uJidwoB0Hi44shepoPaRoWj8DQ2uFiWprBZF/2HEFUagRtPL+6KavvZI
+         az77YP6UJ04MJGjuT2fanWPsqjmCBPVgddVGmbhofNh0oKxMv8IkHWGjqiMXbR3tWlOx
+         BYjnEBKWGQOifdFqKxx3OUptUSJAD0cuKQOGsvTBro40FAnzX7fEG55k7iVzTf7gc/A8
+         A/uYolE/DrLLd6hmS5K76FNo14DcdGwMRaknpTnEZ7R/a9Q7DBkCShtzAAk7fslGWUa6
+         cB7zefRMqDMrKV9llcIXwKkFG80u4SKMxE1UxUkxFzYzcFfmdX6YyyiUEIAs37J1SwFS
+         7VOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVowyBMtrtdRYjDrhDFMuBFR5C+2/vN/Z23M77Kw2PT9d8Fe48z92q0TybZJe1YnnJBXPw1eKX4toNlGKXS7HKH/fR3J/nYAqOPcmd6LBKT
+X-Gm-Message-State: AOJu0Yw/0RvZqHGE/KDRfoGWdblnMpS+WX149Zb/Ft52YFh/xOG4yMQ6
+	M1wnWh5JGji7krcPpJ923QG6fWJ2mi6vaLSaGgjoxf8/MJblm09OmYjlKB3bLw==
+X-Google-Smtp-Source: AGHT+IESP0EHYAJw+XKsHw0+0gEOxsKXhQ4JPqQc7jTcHPqGl3oRdKut0HWB7EJyZ5KfIQrOtGCd4w==
+X-Received: by 2002:a17:903:110d:b0:1dc:1ff2:c6d6 with SMTP id n13-20020a170903110d00b001dc1ff2c6d6mr248654plh.22.1709142507278;
+        Wed, 28 Feb 2024 09:48:27 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ba6-20020a170902720600b001db604f41dcsm3564350plb.103.2024.02.28.09.48.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 09:48:26 -0800 (PST)
+Date: Wed, 28 Feb 2024 09:48:26 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>, rui.zhang@intel.com,
 	gustavoars@kernel.org, morbo@google.com, justinstitt@google.com,
 	stanislaw.gruszka@linux.intel.com, linux-pm@vger.kernel.org,
@@ -37,7 +59,7 @@ Cc: Kees Cook <keescook@chromium.org>,
 	patches@lists.linux.dev, Daniel Lezcano <daniel.lezcano@linaro.org>
 Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
  memcpy()
-Message-ID: <20240228165651.GA2158263@dev-arch.thelio-3990X>
+Message-ID: <202402280944.CE26D81@keescook>
 References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
  <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
  <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
@@ -46,6 +68,7 @@ References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kern
  <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
  <202402270852.E46A5268@keescook>
  <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
+ <20240228165651.GA2158263@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,35 +77,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
+In-Reply-To: <20240228165651.GA2158263@dev-arch.thelio-3990X>
 
-On Wed, Feb 28, 2024 at 08:41:07AM +0000, Lukasz Luba wrote:
-> Hi Nathan and Kees,
-> 
-> On 2/27/24 17:00, Kees Cook wrote:
-> > On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
-> > > Ok my misunderstanding was I thought sizeof() was calling _bdos under the
-> > > hood, so when calling sizeof(flex_array), it was returning the computed size
-> > > inferring from the __counted_by field.
+On Wed, Feb 28, 2024 at 09:56:51AM -0700, Nathan Chancellor wrote:
+> On Wed, Feb 28, 2024 at 08:41:07AM +0000, Lukasz Luba wrote:
+> > Hi Nathan and Kees,
 > > 
-> > Yeah, sizeof() has a very limited scope. __builtin_object_size() has
-> > more flexibility (via the 2nd argument, "type"), but it was still
-> > compile-time only. __builtin_dynamic_object_size() was added to bring
-> > runtime evaluations into the mix (initially to support the alloc_size
-> > attribute, and now includes the counted_by attribute too).
+> > On 2/27/24 17:00, Kees Cook wrote:
+> > > On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
+> > > > Ok my misunderstanding was I thought sizeof() was calling _bdos under the
+> > > > hood, so when calling sizeof(flex_array), it was returning the computed size
+> > > > inferring from the __counted_by field.
+> > > 
+> > > Yeah, sizeof() has a very limited scope. __builtin_object_size() has
+> > > more flexibility (via the 2nd argument, "type"), but it was still
+> > > compile-time only. __builtin_dynamic_object_size() was added to bring
+> > > runtime evaluations into the mix (initially to support the alloc_size
+> > > attribute, and now includes the counted_by attribute too).
+> > > 
 > > 
+> > Thanks for your earlier emails explaining these stuff.
+> > Do you have maybe some presentation about those features
+> > for the kernel (ideally w/ a video from some conference)?
 > 
-> Thanks for your earlier emails explaining these stuff.
-> Do you have maybe some presentation about those features
-> for the kernel (ideally w/ a video from some conference)?
+> I think Kees's 2022 and 2023 talks at LPC are a good place to start:
+> 
+> https://youtu.be/tQwv79i02ks?si=Nj9hpvmQwPB4K3Y4&t=452
+> https://youtu.be/OEFFqhP5sts?si=u6RnOP641S8FkouD&t=614
+> 
+> https://outflux.net/slides/2022/lpc/features.pdf
+> https://outflux.net/slides/2023/lpc/features.pdf
 
-I think Kees's 2022 and 2023 talks at LPC are a good place to start:
+I've also got a write-up on the entire topic of array bounds, which ends
+with some discussion of "the future" (which is now) involving the use of
+the "counted_by" attribute:
+https://people.kernel.org/kees/bounded-flexible-arrays-in-c#coming-soon-annotate-bounds-of-flexible-arrays
 
-https://youtu.be/tQwv79i02ks?si=Nj9hpvmQwPB4K3Y4&t=452
-https://youtu.be/OEFFqhP5sts?si=u6RnOP641S8FkouD&t=614
-
-https://outflux.net/slides/2022/lpc/features.pdf
-https://outflux.net/slides/2023/lpc/features.pdf
-
-Cheers,
-Nathan
+-- 
+Kees Cook
