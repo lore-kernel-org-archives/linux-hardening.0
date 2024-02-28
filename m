@@ -1,55 +1,55 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36F57D083
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 22:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B5415DBC7
+	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 22:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709161160; cv=none; b=fX1cxrVY9F/g95GP7Q9Ljb4aSSMgki7hi5ucqABCaZ0d8eiskKpBI2AvDN+ZGiKGAVHXC8OPGhGaHCo1exwboWTwIaEc4IdypuUIgdyU8sqv32dX977jecoL3/PpXtdxSrR4QHAvZrNUOGwqYFEqAtc3edR0EGkpGqLBUup7f6g=
+	t=1709161160; cv=none; b=PWoE+DKeF2gi7XDw/D6fJ0k4uIgQhRg7ZmZ1sMU+n66kX9xESiiOMbmKmba1QMAnSyCPYwDvVP02O7Z6wTRBgBqDl6aI9hXsDQ8IxM8a9C6/udYwm8iyCrlE9yg/NDldypu3foAjoOFAlbYECUvaZYMu1QEJYDDQxm2bRF4Qz4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709161160; c=relaxed/simple;
-	bh=lLsSWUlgp7HueQKOzwtJI79py/7OoTHxtK4sEEcMNNg=;
+	bh=sByDsDMKp44vyq2pot5Hhxm/eaP0ttE9ltVB3LqVHFs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CrTPPePpQnYZxd3eZfL9sc20gCB39iI6oA9ogVR+KUgX9q2ivbmuXTEhqdAMFneR+BbrRL0ibF/R+PJqpI2fwHSJ0Ja1DJSjTmfqMZ9nZWLS98J4MKZWD8Y3kvorUfRtsWS+dug0vcJ+5zTN8jAqQENoK8R3CVXuQVbNecUXNqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Do6crlRz; arc=none smtp.client-ip=209.85.166.202
+	 To:Cc:Content-Type; b=QjOSvXrQMQL1cxe3LA3eDBwTC2q5fgjTUpEh3uYn+fSXv2t4Tqw2X1jPan+1lZfg5OpidmguLLERyeXKwnk97ZD557xUvGeEtiO4oUL9azTcWsJsh4qx/TF3IjwbYSmHE+1y4tUaO0X1Y9rKItlMgJapAO/pdFZ20jU2T2mqfDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x7FQIIbi; arc=none smtp.client-ip=209.85.166.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Do6crlRz"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3657bb7b9d2so4966675ab.2
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 14:59:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x7FQIIbi"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-36516d55c5fso3751465ab.2
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 14:59:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709161158; x=1709765958; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709161157; x=1709765957; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HhfHnaxbWsSYThMRH7N1siBwLrWUAgtSctM6HfRV2Ag=;
-        b=Do6crlRzhDsizeNjHwbDPNw+B4lVIEE0TsBpogvqy/DEpNJkzRPpOnRxXtLHYjgsV1
-         zn1egIRppZAfZpOMPonIF1AwJWsckjNngRcegPehVpjM6A5OVSYE15UNuOTDIDuGDt9m
-         3I5KeQ5cYvz3KNMGfvfcUxnpymB1B7RRpc6sLB5ypFWONCH/nh5ig9p2c6oXmdk0ksJq
-         sXMaQH3c1vAfCJdlA/+LAJJC/Tc49nv+920AU8TmSHEdY9/GUbrEzK7OHr3SYLvu37fK
-         ws0QMRN0iO8dZRoQ23zjteUqdaIHS6l/I8OXAi+qA50MU413sXJj9I8v5zP/VQWM5H/V
-         eFVA==
+        bh=YAj5OZXxeaW4sKlBVmOyaWiE/dDaeK+k40BuTuu533I=;
+        b=x7FQIIbiUTu8GEWN+AawAD1f6igoVfjJyAGlagzRpY4ZMwmrpQBQ370WbKMVvyJnip
+         p9gK4lILU51xV0OTG+Lvb10hA1fIzcOUKq6L+GZjHVlVKNTQsu+e2WUhw/Ioadiuu7Eh
+         cHiitHCRQ3PL8HP8gWrcViZIT8MUn13REIhbsGbC0ZKIVEOnTZD2pcORiLGTrWEo/GkD
+         eGT9EFaOpFMEehUh+fi65Sz02YD6f7lSAsS3ZZsVDFLO/d6TOLGpPI3Q5VMoDPM1GlVX
+         +5iksbasBiZp4rwR9GfEaYQc80Ika3S3bxBwFkR6QVLuuj66jo8A86wHRBNVFtgLPVVh
+         XMig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709161158; x=1709765958;
+        d=1e100.net; s=20230601; t=1709161157; x=1709765957;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HhfHnaxbWsSYThMRH7N1siBwLrWUAgtSctM6HfRV2Ag=;
-        b=bezkbIz8q695WQBxQF4dIlbmlIS36rPJOaHGbUoHofjzvxdwJrb9wOfdeL/MUzoxui
-         c+uYEsPFXnhRzKiv3cFCxngKMNm59gydjqmm9n7x0GzDujo8FdD830Fmho5mVMTy9CGv
-         Tp0KV/Ir2Q+/nl4ABtWm9OXhjDsrv1Gmsd07Fr6TtZXBtEu5J2lVz81IpANb/2vtvFXN
-         mouYKtiOMxc2VmtBAMKBQrK+VivorK7RLGLhytNoUUma1A0D5V5AXN9scyMIfrkA6pGj
-         PorpMP7NCthY3k5q3M4SB9Cadcpm7B9FCFachBY/l7kRFTzTQXXnHy1Bz71yQ2k3Z0ib
-         OJkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVur9Lyzxm7IZart/8AyHZclpAU4IV6hNrcPNxiqw82UvZ8F4ak0njcASAMMYZPe5cyDYhBKmK8gZSW7WKMaop/6qx5pok6qHY9ID9msaaW
-X-Gm-Message-State: AOJu0Yyr3BqzoOCVMvtm3ecQpHXNtVtL9g+4Y+t75iJVdULZuU9fl01E
-	fzmvilS3bgsPls04aD5LBPfQfXBtPPUdTghAuxuWJbhzbc/m0BQfVYT5ZR4U8CjdeVqlvaQj/pl
-	b4Ogyfxj64OodJrajwbTflg==
-X-Google-Smtp-Source: AGHT+IEIrIDo5sTt6gMSCiyyslq0yK1A1xLzdyJOiaImV0GkhHuEn6/P8wZRb8UKtb0X7RlT7oI9X/gwcnVP4zsqSQ==
+        bh=YAj5OZXxeaW4sKlBVmOyaWiE/dDaeK+k40BuTuu533I=;
+        b=eMzQLlUUo8uot2ThDTsk4NuimATnOATesrM/KT7wFh3mii/3G0fw+foo5g2NEzjaR2
+         YwtR80R06ofwRbe1BATo9qX0nKGCIMf3f7Xfi4LtC4YclTiiIJ3DN5UKf29GQrEd0sDu
+         z6H1HPbrWhFNNML6Ec4PnhVXlv1aHS5YxThSlArFKXuQoCfYyRTl60O1DLRj4a/NJUy8
+         Vf5UH9QaHpnYlFfs7TyNEu5mV1V6b5/PTT1YsVvvXM3Xs1oc9+7T2CNDgZrI2dnGYhLG
+         OfSW9RdRrnFXFidO4JmKqF63t4wNj9KZVXtkZnDFG41Jq9ceCEnwn5kczONsU2izpJTt
+         1cTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVnLb3bvM8761G0G6pFJeSpQgGMsFhNIp1b0r/7DGtLIw1u7fvTfOY9Ity66ziHMsVdBZy/x3rc7p8EcUBkIiOisAJMLg6DLfZLrt0oVm3
+X-Gm-Message-State: AOJu0YwRM9SBipKTynlfK0UNZv2VZ5SVFJ+mViQfL1c0OSy9mbewbr1V
+	kCnpfkOkEqZp3iQOiI3cgd3IgUCvjdBu1g/fOCceztNwZp/NGlJIBhuaLHh4043tYRJWWWYX/Ev
+	Lx05p5p5eUACWrGUVGZltcA==
+X-Google-Smtp-Source: AGHT+IHoQVSAKtTKWMR9HqVfcdvMQJ5TQ9kT4Qfz/mA8h9PaGzJ6iHCM0QJAjUXmqcpaYEmHg0FOvRz7HtCHG9nbhg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6e02:1c42:b0:365:1f2b:7be8 with
- SMTP id d2-20020a056e021c4200b003651f2b7be8mr40548ilg.5.1709161157889; Wed,
- 28 Feb 2024 14:59:17 -0800 (PST)
-Date: Wed, 28 Feb 2024 22:59:07 +0000
+ (user=justinstitt job=sendgmr) by 2002:a92:c563:0:b0:365:21f4:700d with SMTP
+ id b3-20020a92c563000000b0036521f4700dmr34184ilj.2.1709161156751; Wed, 28 Feb
+ 2024 14:59:16 -0800 (PST)
+Date: Wed, 28 Feb 2024 22:59:06 +0000
 In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,13 +59,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709161149; l=1256;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709161149; l=1441;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=lLsSWUlgp7HueQKOzwtJI79py/7OoTHxtK4sEEcMNNg=; b=O/Y8/j91ffHOW/H1lkp7P7xEh0IoohQDvBGDW0wX5DBkBQO3wENCK+STBh6SvA2jO4s+2rUiC
- /3kFM5uAc+ABhNpGPSm9eO2vRTlpeqKmRKJ1d1onyaPQI7F48pNtHxB
+ bh=sByDsDMKp44vyq2pot5Hhxm/eaP0ttE9ltVB3LqVHFs=; b=MQmDO4s1joPg8qz5k1DfkUDPX+8AhggVdiQ9eJscb4HSloFwaCNCdz/nFzT/ALueyz6YmZ8NY
+ 6fbXI+QlUapD1QbsdKWY+t/Yuw1thXdsz72jHdrFaniAPlmI60I+0Zw
 X-Mailer: b4 0.12.3
-Message-ID: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-7-dacebd3fcfa0@google.com>
-Subject: [PATCH v2 7/7] scsi: wd33c93: replace deprecated strncpy with strscpy
+Message-ID: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-6-dacebd3fcfa0@google.com>
+Subject: [PATCH v2 6/7] scsi: smartpqi: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>, Kashyap Desai <kashyap.desai@broadcom.com>, 
 	Sumit Saxena <sumit.saxena@broadcom.com>, Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
@@ -83,37 +83,37 @@ Cc: mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
 	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-@p1 is assigned to @setup_buffer and then we manually assign a NUL-byte
-at the first index. This renders the following strlen() call useless.
-Moreover, we don't need to reassign p1 to setup_buffer for any reason --
-neither do we need to manually set a NUL-byte at the end. strscpy()
-resolves all this code making it easier to read.
-
-Even considering the path where @str is falsey, the manual NUL-byte
-assignment is useless as setup_buffer is declared with static storage
-duration in the top-level scope which should NUL-initialize the whole
-buffer.
+buffer->driver_version is sized 32:
+|	struct bmic_host_wellness_driver_version {
+|	...
+|		char	driver_version[32];
+... the source string "Linux " + DRIVER_VERISON is sized at 16. There's
+really no bug in the existing code since the buffers are sized
+appropriately with great care taken to manually NUL-terminate the
+destination buffer. Nonetheless, let's make the swap over to strscpy()
+for robustness' (and readability's) sake.
 
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/scsi/wd33c93.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/smartpqi/smartpqi_init.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/wd33c93.c b/drivers/scsi/wd33c93.c
-index e4fafc77bd20..a44b60c9004a 100644
---- a/drivers/scsi/wd33c93.c
-+++ b/drivers/scsi/wd33c93.c
-@@ -1721,9 +1721,7 @@ wd33c93_setup(char *str)
- 	p1 = setup_buffer;
- 	*p1 = '\0';
- 	if (str)
--		strncpy(p1, str, SETUP_BUFFER_SIZE - strlen(setup_buffer));
--	setup_buffer[SETUP_BUFFER_SIZE - 1] = '\0';
--	p1 = setup_buffer;
-+		strscpy(p1, str, SETUP_BUFFER_SIZE);
- 	i = 0;
- 	while (*p1 && (i < MAX_SETUP_ARGS)) {
- 		p2 = strchr(p1, ',');
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index ceff1ec13f9e..bfe6f42e8e96 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -1041,9 +1041,8 @@ static int pqi_write_driver_version_to_host_wellness(
+ 	buffer->driver_version_tag[1] = 'V';
+ 	put_unaligned_le16(sizeof(buffer->driver_version),
+ 		&buffer->driver_version_length);
+-	strncpy(buffer->driver_version, "Linux " DRIVER_VERSION,
+-		sizeof(buffer->driver_version) - 1);
+-	buffer->driver_version[sizeof(buffer->driver_version) - 1] = '\0';
++	strscpy(buffer->driver_version, "Linux " DRIVER_VERSION,
++		sizeof(buffer->driver_version));
+ 	buffer->dont_write_tag[0] = 'D';
+ 	buffer->dont_write_tag[1] = 'W';
+ 	buffer->end_tag[0] = 'Z';
 
 -- 
 2.44.0.rc1.240.g4c46232300-goog
