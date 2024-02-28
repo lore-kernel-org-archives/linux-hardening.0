@@ -1,117 +1,110 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60AA208C6
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 17:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF7571ECC;
+	Wed, 28 Feb 2024 20:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709142509; cv=none; b=TvLsos4uchOiCj8T4HbOXA4LNQgIabylxrFckU0qyof2HbAWOxqSBuuAnHxu17JVGvtkqAKv1lhbPGsf+u7EGZreAyYgZ6q7roe6BQBPEKM95JAOYQTtbR+Vfuw9Mx4RPJ3BSZCP35K52d4HgqOC15iCNiORNv7f+2nTvSBPyb8=
+	t=1709153383; cv=none; b=m8LSTPq2wBCb7SoxzMBdwHmD4HKdIRMRgjnUljy+EllwmqCQxmYpFEczQ6dPAB8lyLo9Tjsuv5Vu/CToM8NT4KALhZxGdMavdQPhrXDgN5hYI4m7neyJUoww9E2LxjEFeIt/gcMb7UWcdDawxa67/+PuFdmaRBAO4B2zLOZ1qoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709142509; c=relaxed/simple;
-	bh=dXvYAhmkYcjGWARl7hgbthDBAfsGWyz70D4tvgd/LGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3xZLB06+zZU9jv3pB+C22X93Ep+n5cQwKgwIraUA2ZOdJG/k4cAStp2nYux+lJVPyXfwD5hCFUabKHuzjYuxFKylTdvFn1YljOTsp/zugU9ymadfqh4zW4F7SXQN2d2V/s2l0PRPbUoprZM+Dpg+UGD1JrTdeR9GmYrniOODWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=et/TxfRK; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709153383; c=relaxed/simple;
+	bh=bSX7yIwX43d/OsXwr5kkmyf++rin8N4VYe4LXrJgvRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZfKuravMgxafUKTyd1bSNrP7z9CSkQKTfapA3lpVUzW/BS6a5rFcvRwX3NSSpSUrnkbXL6Cn55zjbEHbdOST9st7yM37fMflg64HOWytexJ6YEFrij6IrVaXPP2FM3qwKJNp4KPYgM04gbCUlYekSgRS4yOpPX/WtMxToJ7UJIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=meZNFtV5; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="et/TxfRK"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc0e5b223eso505155ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 09:48:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709142507; x=1709747307; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9WM/LnzzYMg9VooSl3tyFbgZCCVmVnx60g53OBbQ0+k=;
-        b=et/TxfRKOiKI5c7Gv4OnewW9GEBpxpJ6vAGkOSlGN9KMGqVEcfkYLE3mOkecvLfL+X
-         Px7pDNEG3Hvk033GgHGhjF1IVqFhCZAZbQXYGOelgmIIkRXihfSM3hnZk0XFngAhf9Mi
-         uQzFbalPOoQsIwBnZDZPmDP7moFIhcc7VSvTk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709142507; x=1709747307;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9WM/LnzzYMg9VooSl3tyFbgZCCVmVnx60g53OBbQ0+k=;
-        b=DTmYbKxrd5uJidwoB0Hi44shepoPaRoWj8DQ2uFiWprBZF/2HEFUagRtPL+6KavvZI
-         az77YP6UJ04MJGjuT2fanWPsqjmCBPVgddVGmbhofNh0oKxMv8IkHWGjqiMXbR3tWlOx
-         BYjnEBKWGQOifdFqKxx3OUptUSJAD0cuKQOGsvTBro40FAnzX7fEG55k7iVzTf7gc/A8
-         A/uYolE/DrLLd6hmS5K76FNo14DcdGwMRaknpTnEZ7R/a9Q7DBkCShtzAAk7fslGWUa6
-         cB7zefRMqDMrKV9llcIXwKkFG80u4SKMxE1UxUkxFzYzcFfmdX6YyyiUEIAs37J1SwFS
-         7VOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVowyBMtrtdRYjDrhDFMuBFR5C+2/vN/Z23M77Kw2PT9d8Fe48z92q0TybZJe1YnnJBXPw1eKX4toNlGKXS7HKH/fR3J/nYAqOPcmd6LBKT
-X-Gm-Message-State: AOJu0Yw/0RvZqHGE/KDRfoGWdblnMpS+WX149Zb/Ft52YFh/xOG4yMQ6
-	M1wnWh5JGji7krcPpJ923QG6fWJ2mi6vaLSaGgjoxf8/MJblm09OmYjlKB3bLw==
-X-Google-Smtp-Source: AGHT+IESP0EHYAJw+XKsHw0+0gEOxsKXhQ4JPqQc7jTcHPqGl3oRdKut0HWB7EJyZ5KfIQrOtGCd4w==
-X-Received: by 2002:a17:903:110d:b0:1dc:1ff2:c6d6 with SMTP id n13-20020a170903110d00b001dc1ff2c6d6mr248654plh.22.1709142507278;
-        Wed, 28 Feb 2024 09:48:27 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ba6-20020a170902720600b001db604f41dcsm3564350plb.103.2024.02.28.09.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 09:48:26 -0800 (PST)
-Date: Wed, 28 Feb 2024 09:48:26 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Lukasz Luba <lukasz.luba@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, rui.zhang@intel.com,
-	gustavoars@kernel.org, morbo@google.com, justinstitt@google.com,
-	stanislaw.gruszka@linux.intel.com, linux-pm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	patches@lists.linux.dev, Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
- memcpy()
-Message-ID: <202402280944.CE26D81@keescook>
-References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
- <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
- <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
- <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
- <202402270816.0EA3349A76@keescook>
- <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
- <202402270852.E46A5268@keescook>
- <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
- <20240228165651.GA2158263@dev-arch.thelio-3990X>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="meZNFtV5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709153382; x=1740689382;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=bSX7yIwX43d/OsXwr5kkmyf++rin8N4VYe4LXrJgvRQ=;
+  b=meZNFtV5g+j2wCZ08yPnnZHrTFvEiDWp9jjC61JRCsnEULFXkiNEavbI
+   9jqeyrq5Rk3jXXyXTLchwtDQ815eC6XDhpnM17zuX7pic5EjWRmD+SHI8
+   mEkfkJExm+OrXeiIzWEpVd/88roMLXerSGV8nGK06kt6Eb1pPf/OIL4Co
+   PbGBZv+/5zIzpp3dunlKn1tvARMViE7499Ehu1YqftNnQGlSrPnr/YKmI
+   YldSbMsb6LS+SjwrZty8giyYaQ+g6MJp7kplrA6aj9zfPCjR4KryQdAJZ
+   Pxxu5KCkJ4H6NZ71jUX1CeNRCTkPfHrTrr9FMS6HJX/7qw1iii/XCiJ31
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3428674"
+X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
+   d="scan'208";a="3428674"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 12:49:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937034659"
+X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
+   d="scan'208";a="937034659"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2024 12:49:35 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3AD28524; Wed, 28 Feb 2024 22:49:34 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	linux-arm-kernel@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH v4 4/8] iio: core: Calculate alloc_size only once in iio_device_alloc()
+Date: Wed, 28 Feb 2024 22:41:34 +0200
+Message-ID: <20240228204919.3680786-5-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
+References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228165651.GA2158263@dev-arch.thelio-3990X>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 09:56:51AM -0700, Nathan Chancellor wrote:
-> On Wed, Feb 28, 2024 at 08:41:07AM +0000, Lukasz Luba wrote:
-> > Hi Nathan and Kees,
-> > 
-> > On 2/27/24 17:00, Kees Cook wrote:
-> > > On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
-> > > > Ok my misunderstanding was I thought sizeof() was calling _bdos under the
-> > > > hood, so when calling sizeof(flex_array), it was returning the computed size
-> > > > inferring from the __counted_by field.
-> > > 
-> > > Yeah, sizeof() has a very limited scope. __builtin_object_size() has
-> > > more flexibility (via the 2nd argument, "type"), but it was still
-> > > compile-time only. __builtin_dynamic_object_size() was added to bring
-> > > runtime evaluations into the mix (initially to support the alloc_size
-> > > attribute, and now includes the counted_by attribute too).
-> > > 
-> > 
-> > Thanks for your earlier emails explaining these stuff.
-> > Do you have maybe some presentation about those features
-> > for the kernel (ideally w/ a video from some conference)?
-> 
-> I think Kees's 2022 and 2023 talks at LPC are a good place to start:
-> 
-> https://youtu.be/tQwv79i02ks?si=Nj9hpvmQwPB4K3Y4&t=452
-> https://youtu.be/OEFFqhP5sts?si=u6RnOP641S8FkouD&t=614
-> 
-> https://outflux.net/slides/2022/lpc/features.pdf
-> https://outflux.net/slides/2023/lpc/features.pdf
+No need to rewrite the value, instead use 'else' branch.
+This will also help further refactoring the code later on.
 
-I've also got a write-up on the entire topic of array bounds, which ends
-with some discussion of "the future" (which is now) involving the use of
-the "counted_by" attribute:
-https://people.kernel.org/kees/bounded-flexible-arrays-in-c#coming-soon-annotate-bounds-of-flexible-arrays
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/iio/industrialio-core.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index bd305fa87093..1986b3386307 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1643,11 +1643,10 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+ 	struct iio_dev *indio_dev;
+ 	size_t alloc_size;
+ 
+-	alloc_size = sizeof(struct iio_dev_opaque);
+-	if (sizeof_priv) {
+-		alloc_size = ALIGN(alloc_size, IIO_DMA_MINALIGN);
+-		alloc_size += sizeof_priv;
+-	}
++	if (sizeof_priv)
++		alloc_size = ALIGN(alloc_size, IIO_DMA_MINALIGN) + sizeof_priv;
++	else
++		alloc_size = sizeof(struct iio_dev_opaque);
+ 
+ 	iio_dev_opaque = kzalloc(alloc_size, GFP_KERNEL);
+ 	if (!iio_dev_opaque)
 -- 
-Kees Cook
+2.43.0.rc1.1.gbec44491f096
+
