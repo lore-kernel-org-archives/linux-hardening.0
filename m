@@ -1,230 +1,88 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5E41474D8
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 13:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833866EF10;
+	Wed, 28 Feb 2024 16:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709125871; cv=none; b=tblH2RgwoANPNcJSFoBru9xFWiEcJQ0Om3y7INsGecZnj1xuSmk3y+78XF0M4CD7laGv8xy5Vn0oqjOQ2I4fRiC8Enhil1zRcBIvOxkRsZu0pu8CKQIFyn2Uj8tI8E9h7bvII/9I0m1MTfWdwn/GhkLTkKl2deYQc69gKl4Y8Ns=
+	t=1709139414; cv=none; b=AO9r6dvSAPHnY77flnajr7nEd8Ihii6wlz/bL8muV0Kfm01k1BKtiLx51DtRNsl539dyNpMPS+vXZvsI1z+QQqPoymnXvkGb7cKOl8BT4Y6Zn2I6awCxNXLZuTcL/QpYNhv4exTXaPZati0nukhmngR95vjnvdZHIb1CsjePvE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709125871; c=relaxed/simple;
-	bh=pqawju+a24ExbQYB8MjrouWxnqD+tGLBsT+gniNfu0A=;
+	s=arc-20240116; t=1709139414; c=relaxed/simple;
+	bh=j8GW5PM05J1eAob6plV8ZY09tWLXwx3VfJvudI3zpx0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ClmZIR74OutusGU2yPsYvZmr4u2yGN5Qa05mOD0ScEku4xY/N6ZjAMjMOEB/4Rt3YxGsJXQKpfbrMDPgH0gDynHyzlfmEtXfN0anV4vlbrYQE3r0LibRiJyqL6d6YOo00lsXp5CIDXBDEkylh2r69KmSA5hHELUB8BeLZ5bFglE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+OeNsCU; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeXZkFt1pczSsIvS+we5M3kKEkpfwZwVT7Tpdy5X/Eq29l6e1T7drYG6qhVlyCrqgT077A6+QwduBZkB1w1t4Hg1KhlROtMYf634jFSd7l+1ALtIum79oEKFQ2gqgYyzPFCYV97uZTC+j8sTF/oLRtqkGv5VcgYkciOCF+6k0L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QB3r/qRI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+OeNsCU"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412b272799aso6476005e9.3
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 05:11:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709125867; x=1709730667; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qJD1W327BiKI98MCb1pXVIatRG0iyNZTqwC1jZzBmvo=;
-        b=A+OeNsCUVzExRpEW7bymfviWQIj6ED1cd5Blk8RtBGuwLGDb+farL9ZRcFuGbDFX9N
-         rGWsNgM+BlMMtwKFh7yXjhEzIasmhXLgBOQ954XLmu0VoaI0FqyFF9xXrjL/Twgyl8+X
-         fW56Bk2ZKJ/Adu34qwar7PH2eSe46DFo2oeIG2c+bUhjNcssRZ7CkAX1Th6mpyIY7alv
-         wxzSR9+WwXuPhRV8wupSlMBJsjKAD7qCvV6jua+zem8IghUSJP7SxqdiN6esds/tmEZN
-         zblvxKs/dOd9L/4/WIh4U0sHbN1u3yMQ8PLumqx3pOpPIrRuSMkVYhA++53yKuv43SaT
-         XkIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709125867; x=1709730667;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qJD1W327BiKI98MCb1pXVIatRG0iyNZTqwC1jZzBmvo=;
-        b=HLFz2DpF4qor/LcS/drZABoNXERKLRcKIZvKrnNaVRu7tq7wBe1EUdXOtIO0DOp9JE
-         tHX9P6OEP1gQ7hwds72G6Bfh4aLtsr7CQOjWa2JYD5m8Bwutxt7IbpdTbE/SD/1f0p+y
-         p9otxX7rvpTJRYdVBv/5L+uitLGM3iNOYihaKcaK3ioRqUYsBXbJ5HSAIuFvzDLTBGTM
-         tJlT+s38NPzKhKlEMPhPpIAyVherlYN/xaLTpX6Rwt27WwIHAkCI+zPS9/ZfoEVb5CwU
-         zZm2mU3NYJ5pcYaYr/UUFvCixS4a3IN4HIsgtGuit+oaiZJ5RCZZED+opzoKkMNBXPM6
-         rgVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtAb249yd58tBprU3mTKEkV1ytnyuh1jSSOkPkmRFqdIxNED9Q0keyFbUTmVrQoTzwj0tw5pwKRjqC1RmUUU8jn0ryHFdmni5s7NqnDYKe
-X-Gm-Message-State: AOJu0YzscFmsqyQY7/RZXu/+NmS6ahTMopAFrvDFQeuHFjNCbhgWK1rq
-	pcDDgOSqBZsGPYDFKHOAb3VcuxRQJIqJpGHCdjR9Og1euYyTK+tVqwU5aFxTJmU=
-X-Google-Smtp-Source: AGHT+IHkjDQ0jy8446w5QH4Mojlhm/NHAFGBOg1TPPqVtaVh3gnc1TkEjqP+ht7CxO7h2f1OlbfGvg==
-X-Received: by 2002:adf:e4c1:0:b0:33d:409b:5738 with SMTP id v1-20020adfe4c1000000b0033d409b5738mr9582230wrm.26.1709125867034;
-        Wed, 28 Feb 2024 05:11:07 -0800 (PST)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id bu11-20020a056000078b00b0033daaef7afcsm14979790wrb.83.2024.02.28.05.11.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 05:11:06 -0800 (PST)
-Date: Wed, 28 Feb 2024 13:11:04 +0000
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Misono Tomohiro <misono.tomohiro@fujitsu.com>,
-	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-Message-ID: <20240228131104.GB22898@aspen.lan>
-References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
- <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
- <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QB3r/qRI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3549AC43399;
+	Wed, 28 Feb 2024 16:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709139413;
+	bh=j8GW5PM05J1eAob6plV8ZY09tWLXwx3VfJvudI3zpx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QB3r/qRIx/u9gXVXlbY/IYNL+g/tdiv0GzEOVBTyiHegvQDwBaTaGjm7ZE9xY89+6
+	 f/G6zZzL13nXctyCJdnlEZ82fh/dKtLCwe/VWu05aGyZQfgk1KlNjakwk4rCEaG4CB
+	 h0ovQZ0b016/rxeNkJVs1xgKwPvghpQdKPozy1fYsurBDtoKprTzYUS8yTNUZy5ere
+	 bwk9XgA3aSqr6Yb1M7CM5DRbTw6dK6xsxZp/EcW0kaPikflydMFjZvDb+YsnlS/AvQ
+	 BpJn++NEwa0OIGTeU4W+Jo4t14JZYPnCMy2GmIQbOzY1GGGZ6GzxYrw3bGT08Ryy+w
+	 3C5lLT+c6ioKg==
+Date: Wed, 28 Feb 2024 09:56:51 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Lukasz Luba <lukasz.luba@arm.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, rui.zhang@intel.com,
+	gustavoars@kernel.org, morbo@google.com, justinstitt@google.com,
+	stanislaw.gruszka@linux.intel.com, linux-pm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Message-ID: <20240228165651.GA2158263@dev-arch.thelio-3990X>
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+ <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
+ <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+ <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+ <202402270816.0EA3349A76@keescook>
+ <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
+ <202402270852.E46A5268@keescook>
+ <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com>
+In-Reply-To: <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
 
-On Tue, Feb 27, 2024 at 04:57:31PM -0800, Doug Anderson wrote:
-> Hi,
->
-> On Mon, Jan 8, 2024 at 4:54 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Dec 7, 2023 at 5:03 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > When testing hard lockup handling on my sc7180-trogdor-lazor device
-> > > with pseudo-NMI enabled, with serial console enabled and with kgdb
-> > > disabled, I found that the stack crawls printed to the serial console
-> > > ended up as a jumbled mess. After rebooting, the pstore-based console
-> > > looked fine though. Also, enabling kgdb to trap the panic made the
-> > > console look fine and avoided the mess.
-> > >
-> > > After a bit of tracking down, I came to the conclusion that this was
-> > > what was happening:
-> > > 1. The panic path was stopping all other CPUs with
-> > >    panic_other_cpus_shutdown().
-> > > 2. At least one of those other CPUs was in the middle of printing to
-> > >    the serial console and holding the console port's lock, which is
-> > >    grabbed with "irqsave". ...but since we were stopping with an NMI
-> > >    we didn't care about the "irqsave" and interrupted anyway.
-> > > 3. Since we stopped the CPU while it was holding the lock it would
-> > >    never release it.
-> > > 4. All future calls to output to the console would end up failing to
-> > >    get the lock in qcom_geni_serial_console_write(). This isn't
-> > >    _totally_ unexpected at panic time but it's a code path that's not
-> > >    well tested, hard to get right, and apparently doesn't work
-> > >    terribly well on the Qualcomm geni serial driver.
-> > >
-> > > It would probably be a reasonable idea to try to make the Qualcomm
-> > > geni serial driver work better, but also it's nice not to get into
-> > > this situation in the first place.
-> > >
-> > > Taking a page from what x86 appears to do in native_stop_other_cpus(),
-> > > let's do this:
-> > > 1. First, we'll try to stop other CPUs with a normal IPI and wait a
-> > >    second. This gives them a chance to leave critical sections.
-> > > 2. If CPUs fail to stop then we'll retry with an NMI, but give a much
-> > >    lower timeout since there's no good reason for a CPU not to react
-> > >    quickly to a NMI.
-> > >
-> > > This works well and avoids the corrupted console and (presumably)
-> > > could help avoid other similar issues.
-> > >
-> > > In order to do this, we need to do a little re-organization of our
-> > > IPIs since we don't have any more free IDs. We'll do what was
-> > > suggested in previous conversations and combine "stop" and "crash
-> > > stop". That frees up an IPI so now we can have a "stop" and "stop
-> > > NMI".
-> > >
-> > > In order to do this we also need a slight change in the way we keep
-> > > track of which CPUs still need to be stopped. We need to know
-> > > specifically which CPUs haven't stopped yet when we fall back to NMI
-> > > but in the "crash stop" case the "cpu_online_mask" isn't updated as
-> > > CPUs go down. This is why that code path had an atomic of the number
-> > > of CPUs left. We'll solve this by making the cpumask into a
-> > > global. This has a potential memory implication--with NR_CPUs = 4096
-> > > this is 4096/8 = 512 bytes of globals. On the upside in that same case
-> > > we take 512 bytes off the stack which could potentially have made the
-> > > stop code less reliable. It can be noted that the NMI backtrace code
-> > > (lib/nmi_backtrace.c) uses the same approach and that use also
-> > > confirms that updating the mask is safe from NMI.
-> > >
-> > > All of the above lets us combine the logic for "stop" and "crash stop"
-> > > code, which appeared to have a bunch of arbitrary implementation
-> > > differences. Possibly this could make up for some of the 512 wasted
-> > > bytes. ;-)
-> > >
-> > > Aside from the above change where we try a normal IPI and then an NMI,
-> > > the combined function has a few subtle differences:
-> > > * In the normal smp_send_stop(), if we fail to stop one or more CPUs
-> > >   then we won't include the current CPU (the one running
-> > >   smp_send_stop()) in the error message.
-> > > * In crash_smp_send_stop(), if we fail to stop some CPUs we'll print
-> > >   the CPUs that we failed to stop instead of printing all _but_ the
-> > >   current running CPU.
-> > > * In crash_smp_send_stop(), we will now only print "SMP: stopping
-> > >   secondary CPUs" if (system_state <= SYSTEM_RUNNING).
-> > >
-> > > Fixes: d7402513c935 ("arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP should try for NMI")
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > I'm not setup to test the crash_smp_send_stop(). I made sure it
-> > > compiled and hacked the panic() method to call it, but I haven't
-> > > actually run kexec. Hopefully others can confirm that it's working for
-> > > them.
-> > >
-> > >  arch/arm64/kernel/smp.c | 115 +++++++++++++++++++---------------------
-> > >  1 file changed, 54 insertions(+), 61 deletions(-)
-> >
-> > The sound of crickets is overwhelming. ;-) Does anyone have any
-> > comments here? Is this a terrible idea? Is this the best idea you've
-> > heard all year (it's only been 8 days, so maybe)? Is this great but
-> > the implementation is lacking (at best)? Do you hate that this waits
-> > for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
-> >
-> > Aside from the weirdness of a processor being killed while holding the
-> > console lock, it does seem beneficial to give IRQs at least a little
-> > time to finish before killing a processor. I don't have any other
-> > explicit examples, but I could just imagine that things might be a
-> > little more orderly in such a case...
->
-> I'm still hoping to get some sort of feedback here. If people think
-> this is a terrible idea then I'll shut up now and leave well enough
-> alone, but it would be nice to actively decide and get the patch out
-> of limbo.
+On Wed, Feb 28, 2024 at 08:41:07AM +0000, Lukasz Luba wrote:
+> Hi Nathan and Kees,
+> 
+> On 2/27/24 17:00, Kees Cook wrote:
+> > On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
+> > > Ok my misunderstanding was I thought sizeof() was calling _bdos under the
+> > > hood, so when calling sizeof(flex_array), it was returning the computed size
+> > > inferring from the __counted_by field.
+> > 
+> > Yeah, sizeof() has a very limited scope. __builtin_object_size() has
+> > more flexibility (via the 2nd argument, "type"), but it was still
+> > compile-time only. __builtin_dynamic_object_size() was added to bring
+> > runtime evaluations into the mix (initially to support the alloc_size
+> > attribute, and now includes the counted_by attribute too).
+> > 
+> 
+> Thanks for your earlier emails explaining these stuff.
+> Do you have maybe some presentation about those features
+> for the kernel (ideally w/ a video from some conference)?
 
-I've read patch through a couple of times and was generally convinced by
-the "do what x86 does" argument.
+I think Kees's 2022 and 2023 talks at LPC are a good place to start:
 
-However until now I've always held my council since I wasn't familiar
-with these code paths and I figured it was OK for me to have no opinion
-because the first line of the description says that kgdb/kdb is 100% not
-involved in causing the problem ;-) .
+https://youtu.be/tQwv79i02ks?si=Nj9hpvmQwPB4K3Y4&t=452
+https://youtu.be/OEFFqhP5sts?si=u6RnOP641S8FkouD&t=614
 
-However today I also took a look at the HAVE_NMI architectures and there
-is no consensus between them about how to implement this: PowerPC uses
-NMI and most of the others use IRQ only, s390 special cases for the
-panic code path and acts differently compared to a normal SMP shutdown.
+https://outflux.net/slides/2022/lpc/features.pdf
+https://outflux.net/slides/2023/lpc/features.pdf
 
-FWIW the x86 route was irq-only and then switching to irq-plus-nmi
-(after a short trial with NMI-only that had problems with pstore
-reliability[1]) and that approach has been in place for over
-a decade now!
-
-However, if we talking ourselves into copying x86 then perhaps we should
-more accurately copy x86! Assuming I read the x86 code correctly then
-crash_smp_send_stop() will (mostly) go staight to NMI rather
-than trialling an IRQ first! That is not what is currently implemented
-in the patch for arm64.
-
-
-Daniel.
-
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7d007d21e539dbecb6942c5734e6649f720982cf
+Cheers,
+Nathan
