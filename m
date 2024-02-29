@@ -1,77 +1,83 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4B7A38
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 00:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2394A15BE
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 00:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709164914; cv=none; b=A/P/MWywjEtcH8kKCgY/ujl+xYC+te9bqb1ynQwW21cgxiukAtUGwBDg0QEfhxyJ3M24/g7uA7ILpiCIQpbwmPDWhWIl0pXOwzYa0lxUEDUtr9zwnEQoAYstkBUYcVS+uSkR+FK6Zk0/oiacz04elcfwtcYcIsVvMkQKkZGddMw=
+	t=1709164968; cv=none; b=JTJJ6Nqaqxpn/RmOrLT+9C58i0v41A5Wm1pA3rwhfmk2NPYypyTKFchaYNM8IGV6be/HFylr5BiTrYAhT2FOBx1M1erVMpOfSIC0aC6pElQ3Skwb58l1JFwuhOnKWmEcZLRXiq8MrhTbLJNNWV5ssjBa43Cb10I7FC3kZVxJV48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709164914; c=relaxed/simple;
-	bh=qxsoqrA85W0ZABODeQ55zexBoMTqe+0G6tTR4C4edFg=;
+	s=arc-20240116; t=1709164968; c=relaxed/simple;
+	bh=tH8Do06WsHG8uh7bIC0z1/jOfTEgMGtUd5RXQ5jyXwY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GGB8bTXTQ/ZzpMAseRO+TVmlrgftt8W9AmfbXGAiYORLjS2hA5aYt14U3ohCLO6U9401ud7zG0VBwIH2hDuXutcW8hTJrB2ylfWrFEJr/GQ0DPUay5HrX9CP8qo/eJhUqsXSA8QfaohROLmMh1Qs2NmORTKSLzUuy9EISm2AJa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Y3RfdnXT; arc=none smtp.client-ip=209.85.167.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZqwWCVGALaYlv1F5EbU3VlGxTMQWvfj1a12DeSv5c30H526NgeJEPG06yviCsOcW69SBGrZTAsIz5i4vpsD8Kt5sQuTkTicU5wHnhi14tQskDLk0igZ59kqJXdokOIzXPwbP9YlE5uyLBFXIwN/1SUnbcvs3euR35HgW+EIGEMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iQAAjyIW; arc=none smtp.client-ip=209.85.210.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3RfdnXT"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c1a9b567edso129343b6e.3
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 16:01:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iQAAjyIW"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6e4b34f2455so170047a34.2
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 16:02:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709164911; x=1709769711; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709164966; x=1709769766; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iEBIJm8L8y8D/KMJdxSN242jmeihBdO84S0mND9uaps=;
-        b=Y3RfdnXTWmbJLlQXNnkjy+ZF0gXZKzA0KjRs2qwdBt21m8GvVCMIXgNMBURHBwjeKJ
-         IyVQt+Po3ndN5q7/hWcZF56J5FgF+RMhrM8DzLqJmi0EnLfSTqemYneQq1kvGQU9wY3x
-         Apg7VWhU2fM47BtJyjtDA9BGDyI3ypa2yFpm8=
+        bh=dzYFHNFtHHHpRZc8edEq8bHU8oqWM7vjNzOC9ZZj3Zw=;
+        b=iQAAjyIWjHzlp0w0zAz8XfTortXy50gEPPvXUInJQNpwa2nzLMHuBnYqRILTEpwNbi
+         GJFm+FilgeG+XUGAHAtwkUM4M3sEMT87s0zsdaXbf3Vz/MGUO0LzDopdH4+CbDPkG6L9
+         MFTXQyqmObj1eNFTbtl8xAFTIGsl3UADpscxE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709164911; x=1709769711;
+        d=1e100.net; s=20230601; t=1709164966; x=1709769766;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iEBIJm8L8y8D/KMJdxSN242jmeihBdO84S0mND9uaps=;
-        b=kv7VD4e2CtLYkzK4YRpXEUpyUAonmaXn4Er9AgH49rwio2ekU3RtY9cRYE15eoXahq
-         QLkGLb7cpuP4OyYfq0+ZcZ0bAeyJVTy/AgF+OAUVQk33OFasI/YPPKjDe/b8f800BWtT
-         EYOaHRi/3KTurE67OIvggMBChsX+4a85UBagF6Rj1URgSvsXN2M5DAr9dbHlBF4460tn
-         He2LngU244WWejSN240Ux3Kva10vpUIOho0eh/BI2cpcgwHcWBZI1Q6TPSPirqBD2bUM
-         xIN1aFOVbNw/OY67gzfLtq6qOlDvpLoexL9VM0w478pCBvRP3f0XsWTg98CFs8KvHU8e
-         PRlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzcx0UbHt/qLHkGT81Z8KcnMieWLeV7chEFw5sVf8I+jsMogMhe3j+V+pTZgIwe1hrOfnyflyWkOdAXxCgGKpSOS0DayeZibC4i3Q4CGwt
-X-Gm-Message-State: AOJu0YxMBbvC5nPuvmEVQjix8Bf3xT6fCt3au0OEtwhT6iL3rDDUbHAL
-	G1cPc0vfQB7w03JM+dV+sRzDmrxUegv7zD3gzXEMaU7TuqF6T7mQLn1WBuZRMw==
-X-Google-Smtp-Source: AGHT+IGs0rI0VXo4/NJKO1cSeuk/mHsATz8xyv2BYMzSCXsOlf2JpK8n8vhC+odnJINdbkFZX6M9Dw==
-X-Received: by 2002:a05:6808:19a4:b0:3c1:af9f:a866 with SMTP id bj36-20020a05680819a400b003c1af9fa866mr607658oib.45.1709164910890;
-        Wed, 28 Feb 2024 16:01:50 -0800 (PST)
+        bh=dzYFHNFtHHHpRZc8edEq8bHU8oqWM7vjNzOC9ZZj3Zw=;
+        b=c0fO0yhSNg6zEtOQ2afUXutZENwYrEjahzFO4f5JVS8r+gu1hCc6wp0CfcOOJRzSFX
+         YteA+WnkzvFeYI18b87c5WCjEsyxnPyRUv1UA4KSS4qA8eRRgwupQ9IvPX+MTarEtgh3
+         WD1M32rNt21plsIYpuqLeDU7naq2alLCm8CIcY3TMtV1rW6mRXF1YhDVMedtY5coZBqa
+         jYEybo3mKsq77PuUn0kcWrCxXr8AwLiwPKi/wDG/gAa/b85vvo72R+7NjcMq5BWqoM4T
+         extOEXo4z+oyIH2HAg9HElipFmbodokpnN9L1zllNV7c+OzYbRa2TBhcq/VNnKyiR40v
+         S96w==
+X-Forwarded-Encrypted: i=1; AJvYcCVapUzlYJLQDZSpjtN8DczlHSUGo4zbUGBiqibNGWg+mSHZmgqJYSzmunmVYoQwpRSS/MSGMjk5sSy2ElMmsoQt2HbgpIeEM2XupmQQo6Zt
+X-Gm-Message-State: AOJu0YwFuEX+krYoMQqUnJdcYBgEyaWcWxIfjEQDc4sRWnwJy9dN0lpK
+	8MV8whtCY7ExgxGT4jCinlkGVK8Tei7tbET7nmEq3E8Rl/Cmvkros3IqfBDrcQ==
+X-Google-Smtp-Source: AGHT+IHqJ/JwJcpPTP9TpL7Xpyx58Z+NNG0bN9Bpx1sjxaHowFIn1a95cgyKBfJKxJgwJgp15rh7Lw==
+X-Received: by 2002:a9d:7acd:0:b0:6e4:787a:9bc5 with SMTP id m13-20020a9d7acd000000b006e4787a9bc5mr461484otn.14.1709164966200;
+        Wed, 28 Feb 2024 16:02:46 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a24-20020a631a18000000b005dc491ccdcesm60329pga.14.2024.02.28.16.01.50
+        by smtp.gmail.com with ESMTPSA id k3-20020a63d843000000b005dcbb855530sm61436pgj.76.2024.02.28.16.02.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 16:01:50 -0800 (PST)
-Date: Wed, 28 Feb 2024 16:01:49 -0800
+        Wed, 28 Feb 2024 16:02:45 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:02:45 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-spi@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
+To: Justin Stitt <justinstitt@google.com>
+Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+	Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+	Ariel Elior <aelior@marvell.com>,
+	Manish Chopra <manishc@marvell.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in
- netdevice APIs
-Message-ID: <202402281554.C1CEEF744@keescook>
-References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
- <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
- <202402281341.AC67EB6E35@keescook>
- <20240228144148.5c227487@kernel.org>
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saurav Kashyap <skashyap@marvell.com>,
+	Javed Hasan <jhasan@marvell.com>,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	Nilesh Javali <njavali@marvell.com>,
+	Manish Rangankar <mrangankar@marvell.com>,
+	Don Brace <don.brace@microchip.com>,
+	mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	MPT-FusionLinux.pdl@broadcom.com, netdev@vger.kernel.org,
+	storagedev@microchip.com
+Subject: Re: [PATCH v2 1/7] scsi: mpi3mr: replace deprecated strncpy with
+ assignments
+Message-ID: <202402281602.2750B1F2@keescook>
+References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
+ <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-1-dacebd3fcfa0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,55 +86,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240228144148.5c227487@kernel.org>
+In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-1-dacebd3fcfa0@google.com>
 
-On Wed, Feb 28, 2024 at 02:41:48PM -0800, Jakub Kicinski wrote:
-> On Wed, 28 Feb 2024 13:46:10 -0800 Kees Cook wrote:
-> > I really don't like hiding these trailing allocations from the compiler.
-> > Why can't something like this be done (totally untested):
-> > 
-> > 
-> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> > index 118c40258d07..dae6df4fb177 100644
-> > --- a/include/linux/netdevice.h
-> > +++ b/include/linux/netdevice.h
-> > @@ -2475,6 +2475,8 @@ struct net_device {
-> >  	/** @page_pools: page pools created for this netdevice */
-> >  	struct hlist_head	page_pools;
-> >  #endif
-> > +	u32			priv_size;
-> > +	u8			priv_data[] __counted_by(priv_size) __aligned(NETDEV_ALIGN);
+On Wed, Feb 28, 2024 at 10:59:01PM +0000, Justin Stitt wrote:
+> Really, there's no bug with the current code. Let's just ditch strncpy()
+> all together.
 > 
-> I like, FWIW, please submit! :)
+> We can just copy the const strings instead of reserving room on the
+> stack.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-So, I found several cases where struct net_device is included in the
-middle of another structure, which makes my proposal more awkward. But I
-also don't understand why it's in the _middle_. Shouldn't it always be
-at the beginning (with priv stuff following it?)
-Quick search and examined manually: git grep 'struct net_device [a-z0-9_]*;'
-
-struct rtw89_dev
-struct ath10k
-etc.
-
-Some even have two included (?)
-
-But I still like the idea -- Gustavo has been solving these cases with
-having two structs, e.g.:
-
-struct net_device {
-	...unchanged...
-};
-
-struct net_device_alloc {
-	struct net_device	dev;
-	u32			priv_size;
-	u8			priv_data[] __counted_by(priv_size) __aligned(NETDEV_ALIGN);
-};
-
-And internals can use struct net_device_alloc...
-
--Kees
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
