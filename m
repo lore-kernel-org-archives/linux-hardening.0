@@ -1,68 +1,41 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D9716FF29
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 21:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307186D501
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 21:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709242376; cv=none; b=RyNlPtuPAwoV0hh/XAZcQdlE4RplSY0EBNTrbVFxoWfdDF6xEqKpmrV8zIeNk/1DsQl3ggocq7jyF1uSShLaxYfmQDC1JEGHQRunPTVywu3TGZTmubUBWRzoHgNcUXJeFIaD6wMXfRYbYA2badL/svd76e2JlkAEiMi3gSx0Y0Q=
+	t=1709243150; cv=none; b=rAm/7oIWbHaC/w51Wcbz38Pr0dqQjdJeCvn8CfnwCeovaHGiRli0xibQACuN6Kz9LORRg1StkGG+MjFNWfnQL/wwJt/XEbK68hJNqYalofJtkFkJ39mVYG4n9lT4uZ7M+Q7BPfixtQ4H8tgBqQeiDago1EqDpJWv9EyKehyJc+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709242376; c=relaxed/simple;
-	bh=M1OIAA0ItaLeA6OMZsMNhafiM0P2mVk8eYOUN2HrEfw=;
+	s=arc-20240116; t=1709243150; c=relaxed/simple;
+	bh=S9qmQJQHpV9xIh/ueBb59oZ2Q3ShwYdLcu4/9qIjFrc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jnm/JaE5ZrTAUxPg06MOcNz5Nrc3RoRORi04zhh9y4V+taCWIfi7C1of6vsH+yQgYzzquPSAC+2edK8FjCLVFi+cEiNHY/jkA6vQVMf6qD03dLnvQA3rP2XQDaj+U5OtAKl9D9CIcK+qs9LibcBiyLUM15CKujVR9pGj/IfjLSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I+9QetA6; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdlzNTaY6uC++aF82EEWYOWhO5XM8X434ZGDbX743ZZt19eOYdYGbAyFbf50fxJUpds4fctfyzQ/DP+RrWjdwg6MYD2K7Jinq6hxu2QsZFTKASO2qzM8QeqwogV395d+AlxZNq4aaQaP3kfW0xPhkp3xi6ogFbswD+JNKE31bec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OYviilRO; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I+9QetA6"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5dc20645871so1002904a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 13:32:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709242374; x=1709847174; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nZXiBnNhAhi4ZtO0SADmUcnGG7Y1r2RQ91McDK9U7hM=;
-        b=I+9QetA60AKN7+t5WCRGjyqQwKr9rI+ukig6Mf/i2z299vpTYLGtWS9tn9ZHxElQkt
-         dFio/wStFf14NLTi30iYq8N8D09+JygkatmXoIRG1z9YbJKvEnTi8GQHUGsOWiK/spJF
-         1zSwoSK5171OWb4jpi4BY+BLYI7PQ+0/a6jaE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709242374; x=1709847174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nZXiBnNhAhi4ZtO0SADmUcnGG7Y1r2RQ91McDK9U7hM=;
-        b=peUIPLYt9O4DiZHvQW8u0vVENtaDdaiQVWxZt0sS3/sJwdVO0kX9PQojBwJV8+i5IA
-         Fbx3cMjNg80gWgREt0FVkSPZNnbIVqFQPpsuSlbkanlhclGxspfs/YA7J/fFswiV2xCx
-         F0308XUrMymfjQv5BG9IXh6rov+DIWkzlSufoeDYcDrbNvhMIITYzusbVLLmFpNikbRN
-         n+6iPjGAe5NlIPZCG2xk2fI1QwjyuQrBeVtCuYdH+T49mQ46SdHC1iTX74Vb45RBuDeF
-         nesP5a1X7dUdotm35COGaJGhJyYHFmy/Yq3l+kiNXztFp2t43uABKcpfvnc331+ikm6/
-         eGFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVX9EbdCnL2ricfA6IgnxAsNiDxT2ulO2vSBiHSsk55uzXJBRthR+1w02HBloYP0nBDefWK3zSYfzwRX5tlfxgfwL9RZdmqQ2KIxaSY2irv
-X-Gm-Message-State: AOJu0Yw/Ba1AMNNdP++qvm/PVGc2ueeXxUsFBdxWTBhzC+i/bZ6Vmrdu
-	Vst8pwVBPv5h10qx60M6dtvw5Y7M0tkA0/agqRV3K2cy3YRf44XU/6eoKbj7bQ==
-X-Google-Smtp-Source: AGHT+IEvsn9DgpO+cW37vUplHd97MaD5TAZWQ0EdSVcQR53nFAD39hdF/sei1lWoc7NAH+n5Ef2cEw==
-X-Received: by 2002:a17:90a:4491:b0:299:3c2c:b680 with SMTP id t17-20020a17090a449100b002993c2cb680mr241994pjg.15.1709242374560;
-        Thu, 29 Feb 2024 13:32:54 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e53cc789c3sm1728164pfo.107.2024.02.29.13.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 13:32:54 -0800 (PST)
-Date: Thu, 29 Feb 2024 13:32:53 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Sam Ravnborg <sam@ravnborg.org>, Helge Deller <deller@gmx.de>,
-	Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sparc: vdso: Disable UBSAN instrumentation
-Message-ID: <202402291332.2C89081A@keescook>
-References: <20240223165942.work.950-kees@kernel.org>
- <ZeDiZrrLuqkvxrIY@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OYviilRO"
+Date: Thu, 29 Feb 2024 16:45:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1709243144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zZDxmk1B+ofxrDQ7dG4j+k5Pazi1ITkGCjFdRirB4k4=;
+	b=OYviilRODIKEHnO2GBwq7PwFGIKF+VgLGRKmPbARgomthjlz0JDA48BxJB5Me4FE8jszNj
+	HZdXjsD+4nLEiQIza5b7GwVg7nh9tN+KFjjQgt3BafihBaca5l6Mu5Md+ZIWjvlILQZL7Y
+	V3mPZYy6i71Pbt14yTzF0sflmPNwSl4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v1 1/1] lib/string_helpers: Add flags param to
+ string_get_size()
+Message-ID: <gpuskwq7kwwf52abwrh6my462cnlhorpohpk6a5wzya4qdyvdb@gqibcr57zkv3>
+References: <20240229205345.93902-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,34 +44,249 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeDiZrrLuqkvxrIY@smile.fi.intel.com>
+In-Reply-To: <20240229205345.93902-1-andriy.shevchenko@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 29, 2024 at 10:00:38PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 23, 2024 at 08:59:45AM -0800, Kees Cook wrote:
-> > The UBSAN instrumentation cannot work in the vDSO since it is executing
-> > in userspace, so disable it in the Makefile. Fixes the build failures
-> > such as:
-> > 
-> > arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Andreas Larsson <andreas@gaisler.com>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Helge Deller <deller@gmx.de>
-> > Cc: Guo Ren <guoren@kernel.org>
-> > Cc: sparclinux@vger.kernel.org
+On Thu, Feb 29, 2024 at 10:52:30PM +0200, Andy Shevchenko wrote:
+> From: Kent Overstreet <kent.overstreet@linux.dev>
 > 
-> I dunno how you applied patches, but these Cc seems to appear in a few commits
-> in your hardening branch.
+> The new flags parameter allows controlling
+>  - Whether or not the units suffix is separated by a space, for
+>    compatibility with sort -h
+>  - Whether or not to append a B suffix - we're not always printing
+>    bytes.
 > 
-> I formatted patch from 9fd54b08040669, checked out the new branch just before
-> this commit and run `git am 0001-...`. I don't see them.
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Ah, hm, yes, I'll need to split up my trees a bit to get the right
-results. Thanks for pointing that out!
+You shouldn't have included my SOB after making your own changes - this
+all looks fine, though.
 
--- 
-Kees Cook
+Reviewed-by: Kent Overstreet <kent.overstreet@linux.dev>
+
+Also, does this mean you're picking this patch up? We're actually
+dropping it from our patchset, but I'd still like to get it in, it's
+just a patch routing question now. I'd use it for other stuff, so I can
+add it to another pull request if you prefer.
+
+> ---
+> 
+> My vesrion of https://lore.kernel.org/r/20240212213922.783301-2-surenb@google.com
+> Enjoy!
+> 
+>  include/linux/string_helpers.h | 10 ++++--
+>  lib/string_helpers.c           | 29 ++++++++-------
+>  lib/test-string_helpers.c      | 65 ++++++++++++++++++++++++++++------
+>  3 files changed, 78 insertions(+), 26 deletions(-)
+> 
+> diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
+> index 58fb1f90eda5..e93fbb5b0c01 100644
+> --- a/include/linux/string_helpers.h
+> +++ b/include/linux/string_helpers.h
+> @@ -17,14 +17,18 @@ static inline bool string_is_terminated(const char *s, int len)
+>  	return memchr(s, '\0', len) ? true : false;
+>  }
+>  
+> -/* Descriptions of the types of units to
+> - * print in */
+> +/* Descriptions of the types of units to print in */
+>  enum string_size_units {
+>  	STRING_UNITS_10,	/* use powers of 10^3 (standard SI) */
+>  	STRING_UNITS_2,		/* use binary powers of 2^10 */
+> +	STRING_UNITS_MASK	= BIT(0),
+> +
+> +	/* Modifiers */
+> +	STRING_UNITS_NO_SPACE	= BIT(30),
+> +	STRING_UNITS_NO_BYTES	= BIT(31),
+>  };
+>  
+> -int string_get_size(u64 size, u64 blk_size, enum string_size_units units,
+> +int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  		    char *buf, int len);
+>  
+>  int parse_int_array_user(const char __user *from, size_t count, int **array);
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 6bbafd6a10d9..69ba49b853c7 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -25,7 +25,7 @@
+>   * string_get_size - get the size in the specified units
+>   * @size:	The size to be converted in blocks
+>   * @blk_size:	Size of the block (use 1 for size in bytes)
+> - * @units:	units to use (powers of 1000 or 1024)
+> + * @units:	Units to use (powers of 1000 or 1024), whether to include space separator
+>   * @buf:	buffer to format to
+>   * @len:	length of buffer
+>   *
+> @@ -39,11 +39,12 @@
+>  int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  		    char *buf, int len)
+>  {
+> +	enum string_size_units units_base = units & STRING_UNITS_MASK;
+>  	static const char *const units_10[] = {
+> -		"B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"
+> +		"", "k", "M", "G", "T", "P", "E", "Z", "Y",
+>  	};
+>  	static const char *const units_2[] = {
+> -		"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"
+> +		"", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi", "Yi",
+>  	};
+>  	static const char *const *const units_str[] = {
+>  		[STRING_UNITS_10] = units_10,
+> @@ -68,7 +69,7 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  
+>  	/* This is Napier's algorithm.  Reduce the original block size to
+>  	 *
+> -	 * coefficient * divisor[units]^i
+> +	 * coefficient * divisor[units_base]^i
+>  	 *
+>  	 * we do the reduction so both coefficients are just under 32 bits so
+>  	 * that multiplying them together won't overflow 64 bits and we keep
+> @@ -78,12 +79,12 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  	 * precision is in the coefficients.
+>  	 */
+>  	while (blk_size >> 32) {
+> -		do_div(blk_size, divisor[units]);
+> +		do_div(blk_size, divisor[units_base]);
+>  		i++;
+>  	}
+>  
+>  	while (size >> 32) {
+> -		do_div(size, divisor[units]);
+> +		do_div(size, divisor[units_base]);
+>  		i++;
+>  	}
+>  
+> @@ -92,8 +93,8 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  	size *= blk_size;
+>  
+>  	/* and logarithmically reduce it until it's just under the divisor */
+> -	while (size >= divisor[units]) {
+> -		remainder = do_div(size, divisor[units]);
+> +	while (size >= divisor[units_base]) {
+> +		remainder = do_div(size, divisor[units_base]);
+>  		i++;
+>  	}
+>  
+> @@ -103,10 +104,10 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  	for (j = 0; sf_cap*10 < 1000; j++)
+>  		sf_cap *= 10;
+>  
+> -	if (units == STRING_UNITS_2) {
+> +	if (units_base == STRING_UNITS_2) {
+>  		/* express the remainder as a decimal.  It's currently the
+>  		 * numerator of a fraction whose denominator is
+> -		 * divisor[units], which is 1 << 10 for STRING_UNITS_2 */
+> +		 * divisor[units_base], which is 1 << 10 for STRING_UNITS_2 */
+>  		remainder *= 1000;
+>  		remainder >>= 10;
+>  	}
+> @@ -128,10 +129,12 @@ int string_get_size(u64 size, u64 blk_size, const enum string_size_units units,
+>  	if (i >= ARRAY_SIZE(units_2))
+>  		unit = "UNK";
+>  	else
+> -		unit = units_str[units][i];
+> +		unit = units_str[units_base][i];
+>  
+> -	return snprintf(buf, len, "%u%s %s", (u32)size,
+> -			tmp, unit);
+> +	return snprintf(buf, len, "%u%s%s%s%s", (u32)size, tmp,
+> +			(units & STRING_UNITS_NO_SPACE) ? "" : " ",
+> +			unit,
+> +			(units & STRING_UNITS_NO_BYTES) ? "" : "B");
+>  }
+>  EXPORT_SYMBOL(string_get_size);
+>  
+> diff --git a/lib/test-string_helpers.c b/lib/test-string_helpers.c
+> index 9a68849a5d55..dce67698297b 100644
+> --- a/lib/test-string_helpers.c
+> +++ b/lib/test-string_helpers.c
+> @@ -3,6 +3,7 @@
+>   */
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> +#include <linux/array_size.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/slab.h>
+> @@ -500,21 +501,65 @@ static __init void test_string_get_size_check(const char *units,
+>  	pr_warn("expected: '%s', got '%s'\n", exp, res);
+>  }
+>  
+> +static __init void __strchrcut(char *dst, const char *src, const char *cut)
+> +{
+> +	const char *from = src;
+> +	size_t len;
+> +
+> +	do {
+> +		len = strcspn(from, cut);
+> +		memcpy(dst, from, len);
+> +		dst += len;
+> +		from += len;
+> +	} while (*from++);
+> +	*dst = '\0';
+> +}
+> +
+> +static __init void __test_string_get_size_one(const u64 size, const u64 blk_size,
+> +					      const char *exp_result10,
+> +					      const char *exp_result2,
+> +					      enum string_size_units units,
+> +					      const char *cut)
+> +{
+> +	char buf10[string_get_size_maxbuf];
+> +	char buf2[string_get_size_maxbuf];
+> +	char exp10[string_get_size_maxbuf];
+> +	char exp2[string_get_size_maxbuf];
+> +	char prefix10[64];
+> +	char prefix2[64];
+> +
+> +	sprintf(prefix10, "STRING_UNITS_10 [%s]", cut);
+> +	sprintf(prefix2, "STRING_UNITS_2 [%s]", cut);
+> +
+> +	__strchrcut(exp10, exp_result10, cut);
+> +	__strchrcut(exp2, exp_result2, cut);
+> +
+> +	string_get_size(size, blk_size, STRING_UNITS_10 | units, buf10, sizeof(buf10));
+> +	string_get_size(size, blk_size, STRING_UNITS_2 | units, buf2, sizeof(buf2));
+> +
+> +	test_string_get_size_check(prefix10, exp10, buf10, size, blk_size);
+> +	test_string_get_size_check(prefix2, exp2, buf2, size, blk_size);
+> +}
+> +
+>  static __init void __test_string_get_size(const u64 size, const u64 blk_size,
+>  					  const char *exp_result10,
+>  					  const char *exp_result2)
+>  {
+> -	char buf10[string_get_size_maxbuf];
+> -	char buf2[string_get_size_maxbuf];
+> +	struct {
+> +		enum string_size_units units;
+> +		const char *cut;
+> +	} get_size_test_cases[] = {
+> +		{ 0, "" },
+> +		{ STRING_UNITS_NO_SPACE, " " },
+> +		{ STRING_UNITS_NO_SPACE | STRING_UNITS_NO_BYTES, " B" },
+> +		{ STRING_UNITS_NO_BYTES, "B" },
+> +	};
+> +	int i;
+>  
+> -	string_get_size(size, blk_size, STRING_UNITS_10, buf10, sizeof(buf10));
+> -	string_get_size(size, blk_size, STRING_UNITS_2, buf2, sizeof(buf2));
+> -
+> -	test_string_get_size_check("STRING_UNITS_10", exp_result10, buf10,
+> -				   size, blk_size);
+> -
+> -	test_string_get_size_check("STRING_UNITS_2", exp_result2, buf2,
+> -				   size, blk_size);
+> +	for (i = 0; i < ARRAY_SIZE(get_size_test_cases); i++)
+> +		__test_string_get_size_one(size, blk_size, exp_result10, exp_result2,
+> +					   get_size_test_cases[i].units,
+> +					   get_size_test_cases[i].cut);
+>  }
+>  
+>  static __init void test_string_get_size(void)
+> -- 
+> 2.43.0.rc1.1.gbec44491f096
+> 
