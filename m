@@ -1,491 +1,77 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B948A74BF0
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 23:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEA744368
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 23:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249735; cv=none; b=NDD/DYTlt1yEZHtBAr/5gWP9X45szbO96+D03r3lmmGmi6BD+CeI4t2uNFDyiM8YQfbMvVN0vEsQHP6RkhDxMwcXeNXgkhYCuPSLCWylEwKnpu7HsTONv1LltEnJ3LSo7OSEozDxStEJLNcEvc8YxO9LPiKRHb/OYX21dWME6zc=
+	t=1709249950; cv=none; b=Yhke7QIHNXyriWAAxcRg80uXeLL/x5aspr1j6dxrdvMrOLvO5hRTZXGySk/rTeMt2459Le1aFv9JCAxDunLaEYzait6pHyzAiZvzoHhyse916JKlB6QZxxU8xInxemJGTF3Ppmzh8Bh6h2eGpll6BDrOptsi0VcHoj0Q6xTpAzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249735; c=relaxed/simple;
-	bh=8AW6vpLoBsvSGGVQr6eadfqDgRiZzNtT+j+25yacYoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cQ12dr3+8CYjL4iDBXPlj/fnrc68i6b1RVZwX8TUvQiR6DdacMQTVhff3ZLOpbn9qxWESpiEKzBgxe2npF4zueObMBRr8GumN/USp4i2OTxa4fAnhRideY7QFxLcmZuo3Nl1+pktHNUyvK5RoNxh0Opi9K0O7Q7srNoWM2g6J+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SJF1zktF; arc=none smtp.client-ip=209.85.210.175
+	s=arc-20240116; t=1709249950; c=relaxed/simple;
+	bh=e/8V7q0T5PQHD8Yc+VQwsb6DOiBHkVWPVrFu2N9+wis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PszSlmsm9QYKDw4pAPuWjmxJw3NXBkrLwGmSXle25m2HGfM199mp90YnAJ3I4XnUkFFevmlq/pNgzgZ3cwAKbBsN4A3Iclep+Qwr0Ghtla9+4077P7r3B+JUkZKCZ+ZC66i2Gt+GgYGx73whxNocg6exFUiSYpB121CFKk+Dqug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AW67M3HE; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SJF1zktF"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6da9c834646so1254777b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 15:35:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AW67M3HE"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e581ba25e1so1212954b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 15:39:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709249732; x=1709854532; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xaSgUgfOZn9fgH6QcdlrLYMK12GQmmivaE6Pb6d2BPw=;
-        b=SJF1zktFcDiqAD0ChmcC/e9AcZl2KgveVIA+u2XzhO/yqnsd2upDJKAzFO9TkGx0YB
-         YOx1kMOfeHdS16x6asO8J38O9+qyrgpq8DsOPIvr/fH0qzXiMZbClw4vKJ/odSDHg7q9
-         kjll02vL8c1yxFXZEt7GH+MZBPTijYwXvU6XQ=
+        d=chromium.org; s=google; t=1709249948; x=1709854748; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrpA1mv8JfPN81Pqls2RUoWHBrGbGLLk6Rp+CKKaj/s=;
+        b=AW67M3HEZ8+Ko+S4R3j/DvmN4MVoDg3TDZNuAbZqUz/VFKHMsUsdNh/+1ZdSQsSkvr
+         hp9HCzh5UdgCOcyGFxcJuA9Dh9znea32nlkv4PM06/9wRhCQHGNngGYa1JAmewCY7SDl
+         LcZuHZk2REpIz+uTgCvUUL3ru3b3OYswWiuXI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709249732; x=1709854532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xaSgUgfOZn9fgH6QcdlrLYMK12GQmmivaE6Pb6d2BPw=;
-        b=lfiJnNtRVHwFGe5i/+HVcr644tUOKEH+XkQC1JY8jRIoW9yUAjf+OZsZVxujP6hdin
-         udApkiQRi6+BSZcNnGclScUaNMlhREpJeoEkrDQ1mbX+aY2pFa9MYgv4ZS5WNEMrts2P
-         2OtWLIR5W5if0RyDgkvHc8pZicGQQgCWD54rFpkArOBvUV73nRGxjb9eG37AiY17tflI
-         mbQY40SEyOe5avCaW1ZX41MD/4Zo4wWqNt/mb1NCfNo/N42lFkS0xCtpYASqwl0scvmZ
-         jOcqtm3jtaoNaAGglAEAotoWXYrouwBtLk2dSWePKQO2YmdEspRh3/zo9dLfcjFAJdJW
-         I6mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbZkMD2ytAxI6IzPJuvlJTun1mAbaPBTVg4uLrUt7MPafeJKd1XIR5qqzbRNNG6h1xmX7ys25nHI4PCXKjjA/YZv3bWhCVmqYq/o3sEVqj
-X-Gm-Message-State: AOJu0YxoG74OoJsNZGy8uME3+hT5+2LFfZNa492/SZm4eKZTBA4qETnZ
-	qp6zaqhAw2faNElZ6DxnxrYi4HKykGA1NK/YAa6zQuDKmbOpbXm6vyMEdfZH/g==
-X-Google-Smtp-Source: AGHT+IE5B7mswf+4qUh2cf+dDQa1tBkBuEawV7F8OA8wSM4dkH/uSFxyG7LiHngrk0Q0ti87JOh+zA==
-X-Received: by 2002:a05:6a00:929d:b0:6e5:8cc1:f75b with SMTP id jw29-20020a056a00929d00b006e58cc1f75bmr247230pfb.4.1709249732019;
-        Thu, 29 Feb 2024 15:35:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709249948; x=1709854748;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zrpA1mv8JfPN81Pqls2RUoWHBrGbGLLk6Rp+CKKaj/s=;
+        b=OHgLTIjGD2t8qHdQ/Hi+qs92Tce1gNtVDUB83hBDl9MF20kvq7Ht9eZ+vx4v0licqb
+         rlhfxw1Pi31XQ3wNHvLi9OCAY/RYJ9Zi3ElEM20xlrfJ7azSMjWntuls4n5Bj2UBsD99
+         lRP42gwC7HYeiFHKNHLUD0A2vv6INrFf3Z5sCh9uc8q/lWqUiRZdiNNnQElAzfDXOJ06
+         AAg9Gy9GwNw3/uPjJ1xJ0AFbxqi8zNT4rizp/HwREm3mPckW0z7vgP39PO+of8HmFP4J
+         CvB6VygMNVL/ETCzSVjVMuC0cY/JezzbxUd+kk56NOOJo7U2R1kxj3higy3SIUpEBwCJ
+         zdPQ==
+X-Gm-Message-State: AOJu0YzNzji8EYNSaCCBbmWSg60PhPZTRpzK7uH5gCSuvUMQMotFxABG
+	o4+i199862udlRxtqtGLn1eXXbfYSVWr0GlOcwz4OeJxTmU6CqrtRSuk4qChEEmsbMHahyYmiy0
+	=
+X-Google-Smtp-Source: AGHT+IGJVW2Kg8FOzevwO891TfCYJpBIFcznOfoM7q4NgpLUnUQXz9LiC/9jjgPSzgqu4jXznWV/FQ==
+X-Received: by 2002:a05:6a00:2293:b0:6e5:599a:5252 with SMTP id f19-20020a056a00229300b006e5599a5252mr665091pfe.15.1709249947822;
+        Thu, 29 Feb 2024 15:39:07 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y133-20020a62ce8b000000b006e45a0101basm1926356pfg.99.2024.02.29.15.35.29
+        by smtp.gmail.com with ESMTPSA id m19-20020aa78a13000000b006e509762bc2sm1813393pfa.26.2024.02.29.15.39.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:35:29 -0800 (PST)
+        Thu, 29 Feb 2024 15:39:07 -0800 (PST)
+Date: Thu, 29 Feb 2024 15:39:06 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] string: Convert helpers selftest to KUnit
-Date: Thu, 29 Feb 2024 15:35:24 -0800
-Message-Id: <20240229233528.1538803-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240229233432.work.675-kees@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] string: Convert helpers selftest to KUnit
+Message-ID: <202402291539.F0E3E63061@keescook>
 References: <20240229233432.work.675-kees@kernel.org>
+ <20240229233528.1538803-2-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13861; i=keescook@chromium.org;
- h=from:subject; bh=8AW6vpLoBsvSGGVQr6eadfqDgRiZzNtT+j+25yacYoY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4RS8pY37KRfK0m6BW6mkRvOBGJyKj4b3fBznP
- DPbMv/BUQuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeEUvAAKCRCJcvTf3G3A
- JoheD/4ysCqHzF0OnapGBM5miH8aDv6O141tgCMfC0/53/u3YAtpJ9qyC23hmr1Q1D5rfy2Cw2P
- WJlBS29/i7mXfEZmdxQH8lNWHcbblmTZdj1aIbdbwiGPwrzW5GzK0i4NL/NPehKeYFT+YKSBhVU
- ACa2W4FloX21fDjlT5PSLOVL2JIBClNfxFg/L4Y0KuT1Nkia4rLmQRPJtD0QN3K42F4A5nWs2me
- FNYQiaDbAwmGEpbHc4LP5WBJcKsnAvg8UsOocRvXocqJQAv0AEPR21P6fXrQQNvwAV58jlKG4Ig
- CZMYkFbfs+f89b+leZpYs82cHx2eoQddQkq9dBgbSkH4QL7feUU1Lf9pNl++9C/8k2TUs6oAAtK
- yjJkSYC25Y0xf8nG8W1RI50hlGewF11i9VenOB2yREdNwvuFdLoIJggPvFsot4mvAIM0OupNsp9
- BglWt9plPqHmvE77rr45g4Cc6e0Gy8VAm/qaaYuLHZCFTQJze7xXq7Y0SOf8MQk5d4lONcMOGKv
- bVYYxZGbcAVElDIVWWBH2zUEamotjaYHyRFKUokCienmCJEbqxoBKOeHCG8GFBw8k8pVBDSqH1y
- eM25HkrIrqY7mJ9xSfxw0bNRzcnzFQjnLDVRc1gB0eW8y+4HFdyWv6FmcagLSZvpZx2bmTH9aUl UVlhf+lZvaLbLvA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229233528.1538803-2-keescook@chromium.org>
 
-Convert test-string_helpers.c to KUnit so it can be easily run with
-everything else.
+On Thu, Feb 29, 2024 at 03:35:24PM -0800, Kees Cook wrote:
+> Convert test-string_helpers.c to KUnit so it can be easily run with
+> everything else.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org
----
- MAINTAINERS                                   |   2 +-
- lib/Kconfig.debug                             |   6 +-
- lib/Makefile                                  |   2 +-
- ...tring_helpers.c => string_helpers_kunit.c} | 160 ++++++++++--------
- 4 files changed, 93 insertions(+), 77 deletions(-)
- rename lib/{test-string_helpers.c => string_helpers_kunit.c} (79%)
+Gah, I will send a v2. I thought I was doing this on top of the
+get_size() change, but I didn't...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f1f68cccd6a..f3f26d2d4ffb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8978,7 +8978,7 @@ F:	include/linux/string_helpers.h
- F:	lib/string.c
- F:	lib/string_kunit.c
- F:	lib/string_helpers.c
--F:	lib/test-string_helpers.c
-+F:	lib/string_helpers_kunit.c
- F:	scripts/coccinelle/api/string_choices.cocci
- 
- GENERIC UIO DRIVER FOR PCI DEVICES
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 406cdf353488..5429e6f170f3 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2357,8 +2357,10 @@ config STRING_KUNIT_TEST
- 	depends on KUNIT
- 	default KUNIT_ALL_TESTS
- 
--config TEST_STRING_HELPERS
--	tristate "Test functions located in the string_helpers module at runtime"
-+config STRING_HELPERS_KUNIT_TEST
-+	tristate "KUnit test string helpers at runtime" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
- 
- config TEST_KSTRTOX
- 	tristate "Test kstrto*() family of functions at runtime"
-diff --git a/lib/Makefile b/lib/Makefile
-index 946277c37831..97c42e38046f 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -51,7 +51,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
- 	 generic-radix-tree.o bitmap-str.o
- obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
- obj-y += string_helpers.o
--obj-$(CONFIG_TEST_STRING_HELPERS) += test-string_helpers.o
-+obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
- obj-y += hexdump.o
- obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
- obj-y += kstrtox.o
-diff --git a/lib/test-string_helpers.c b/lib/string_helpers_kunit.c
-similarity index 79%
-rename from lib/test-string_helpers.c
-rename to lib/string_helpers_kunit.c
-index 9a68849a5d55..67d6703146c0 100644
---- a/lib/test-string_helpers.c
-+++ b/lib/string_helpers_kunit.c
-@@ -3,7 +3,7 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/init.h>
-+#include <kunit/test.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-@@ -11,13 +11,21 @@
- #include <linux/string.h>
- #include <linux/string_helpers.h>
- 
--static __init bool test_string_check_buf(const char *name, unsigned int flags,
--					 char *in, size_t p,
--					 char *out_real, size_t q_real,
--					 char *out_test, size_t q_test)
-+static void test_string_check_buf(struct kunit *test,
-+				  const char *name, unsigned int flags,
-+				  char *in, size_t p,
-+				  char *out_real, size_t q_real,
-+				  char *out_test, size_t q_test)
- {
--	if (q_real == q_test && !memcmp(out_test, out_real, q_test))
--		return true;
-+	int result;
-+
-+	KUNIT_EXPECT_EQ(test, q_real, q_test);
-+
-+	result = memcmp(out_test, out_real, q_test);
-+	KUNIT_EXPECT_EQ(test, 0, result);
-+
-+	if (q_real == q_test && result == 0)
-+		return;
- 
- 	pr_warn("Test '%s' failed: flags = %#x\n", name, flags);
- 
-@@ -27,8 +35,6 @@ static __init bool test_string_check_buf(const char *name, unsigned int flags,
- 		       out_test, q_test, true);
- 	print_hex_dump(KERN_WARNING, "Got: ", DUMP_PREFIX_NONE, 16, 1,
- 		       out_real, q_real, true);
--
--	return false;
- }
- 
- struct test_string {
-@@ -37,7 +43,7 @@ struct test_string {
- 	unsigned int flags;
- };
- 
--static const struct test_string strings[] __initconst = {
-+static const struct test_string strings[] = {
- 	{
- 		.in = "\\f\\ \\n\\r\\t\\v",
- 		.out = "\f\\ \n\r\t\v",
-@@ -60,8 +66,9 @@ static const struct test_string strings[] __initconst = {
- 	},
- };
- 
--static void __init test_string_unescape(const char *name, unsigned int flags,
--					bool inplace)
-+static void test_string_unescape(struct kunit *test,
-+				 const char *name, unsigned int flags,
-+				 bool inplace)
- {
- 	int q_real = 256;
- 	char *in = kmalloc(q_real, GFP_KERNEL);
-@@ -103,7 +110,7 @@ static void __init test_string_unescape(const char *name, unsigned int flags,
- 		q_real = string_unescape(in, out_real, q_real, flags);
- 	}
- 
--	test_string_check_buf(name, flags, in, p - 1, out_real, q_real,
-+	test_string_check_buf(test, name, flags, in, p - 1, out_real, q_real,
- 			      out_test, q_test);
- out:
- 	kfree(out_real);
-@@ -123,7 +130,7 @@ struct test_string_2 {
- };
- 
- #define	TEST_STRING_2_DICT_0		NULL
--static const struct test_string_2 escape0[] __initconst = {{
-+static const struct test_string_2 escape0[] = {{
- 	.in = "\f\\ \n\r\t\v",
- 	.s1 = {{
- 		.out = "\\f\\ \\n\\r\\t\\v",
-@@ -221,7 +228,7 @@ static const struct test_string_2 escape0[] __initconst = {{
- }};
- 
- #define	TEST_STRING_2_DICT_1		"b\\ \t\r\xCF"
--static const struct test_string_2 escape1[] __initconst = {{
-+static const struct test_string_2 escape1[] = {{
- 	.in = "\f\\ \n\r\t\v",
- 	.s1 = {{
- 		.out = "\f\\134\\040\n\\015\\011\v",
-@@ -358,7 +365,7 @@ static const struct test_string_2 escape1[] __initconst = {{
- 	/* terminator */
- }};
- 
--static const struct test_string strings_upper[] __initconst = {
-+static const struct test_string strings_upper[] = {
- 	{
- 		.in = "abcdefgh1234567890test",
- 		.out = "ABCDEFGH1234567890TEST",
-@@ -369,7 +376,7 @@ static const struct test_string strings_upper[] __initconst = {
- 	},
- };
- 
--static const struct test_string strings_lower[] __initconst = {
-+static const struct test_string strings_lower[] = {
- 	{
- 		.in = "ABCDEFGH1234567890TEST",
- 		.out = "abcdefgh1234567890test",
-@@ -380,8 +387,8 @@ static const struct test_string strings_lower[] __initconst = {
- 	},
- };
- 
--static __init const char *test_string_find_match(const struct test_string_2 *s2,
--						 unsigned int flags)
-+static const char *test_string_find_match(const struct test_string_2 *s2,
-+					  unsigned int flags)
- {
- 	const struct test_string_1 *s1 = s2->s1;
- 	unsigned int i;
-@@ -402,21 +409,20 @@ static __init const char *test_string_find_match(const struct test_string_2 *s2,
- 	return NULL;
- }
- 
--static __init void
--test_string_escape_overflow(const char *in, int p, unsigned int flags, const char *esc,
-+static void
-+test_string_escape_overflow(struct kunit *test,
-+			    const char *in, int p, unsigned int flags, const char *esc,
- 			    int q_test, const char *name)
- {
- 	int q_real;
- 
- 	q_real = string_escape_mem(in, p, NULL, 0, flags, esc);
--	if (q_real != q_test)
--		pr_warn("Test '%s' failed: flags = %#x, osz = 0, expected %d, got %d\n",
--			name, flags, q_test, q_real);
-+	KUNIT_EXPECT_EQ(test, q_real, q_test);
- }
- 
--static __init void test_string_escape(const char *name,
--				      const struct test_string_2 *s2,
--				      unsigned int flags, const char *esc)
-+static void test_string_escape(struct kunit *test, const char *name,
-+			       const struct test_string_2 *s2,
-+			       unsigned int flags, const char *esc)
- {
- 	size_t out_size = 512;
- 	char *out_test = kmalloc(out_size, GFP_KERNEL);
-@@ -462,10 +468,10 @@ static __init void test_string_escape(const char *name,
- 
- 	q_real = string_escape_mem(in, p, out_real, out_size, flags, esc);
- 
--	test_string_check_buf(name, flags, in, p, out_real, q_real, out_test,
-+	test_string_check_buf(test, name, flags, in, p, out_real, q_real, out_test,
- 			      q_test);
- 
--	test_string_escape_overflow(in, p, flags, esc, q_test, name);
-+	test_string_escape_overflow(test, in, p, flags, esc, q_test, name);
- 
- out:
- 	kfree(in);
-@@ -474,22 +480,26 @@ static __init void test_string_escape(const char *name,
- }
- 
- #define string_get_size_maxbuf 16
--#define test_string_get_size_one(size, blk_size, exp_result10, exp_result2)    \
--	do {                                                                   \
--		BUILD_BUG_ON(sizeof(exp_result10) >= string_get_size_maxbuf);  \
--		BUILD_BUG_ON(sizeof(exp_result2) >= string_get_size_maxbuf);   \
--		__test_string_get_size((size), (blk_size), (exp_result10),     \
--				       (exp_result2));                         \
-+#define test_string_get_size_one(size, blk_size, exp_result10, exp_result2)      \
-+	do {                                                                     \
-+		BUILD_BUG_ON(sizeof(exp_result10) >= string_get_size_maxbuf);    \
-+		BUILD_BUG_ON(sizeof(exp_result2) >= string_get_size_maxbuf);     \
-+		__test_string_get_size(test, (size), (blk_size), (exp_result10), \
-+				       (exp_result2));                           \
- 	} while (0)
- 
- 
--static __init void test_string_get_size_check(const char *units,
--					      const char *exp,
--					      char *res,
--					      const u64 size,
--					      const u64 blk_size)
-+static void test_string_get_size_check(struct kunit *test,
-+				       const char *units,
-+				       const char *exp,
-+				       char *res,
-+				       const u64 size,
-+				       const u64 blk_size)
- {
--	if (!memcmp(res, exp, strlen(exp) + 1))
-+	int result = memcmp(res, exp, strlen(exp) + 1);
-+
-+	KUNIT_EXPECT_EQ(test, 0, result);
-+	if (!result)
- 		return;
- 
- 	res[string_get_size_maxbuf - 1] = '\0';
-@@ -500,9 +510,10 @@ static __init void test_string_get_size_check(const char *units,
- 	pr_warn("expected: '%s', got '%s'\n", exp, res);
- }
- 
--static __init void __test_string_get_size(const u64 size, const u64 blk_size,
--					  const char *exp_result10,
--					  const char *exp_result2)
-+static void __test_string_get_size(struct kunit *test,
-+				   const u64 size, const u64 blk_size,
-+				   const char *exp_result10,
-+				   const char *exp_result2)
- {
- 	char buf10[string_get_size_maxbuf];
- 	char buf2[string_get_size_maxbuf];
-@@ -510,14 +521,14 @@ static __init void __test_string_get_size(const u64 size, const u64 blk_size,
- 	string_get_size(size, blk_size, STRING_UNITS_10, buf10, sizeof(buf10));
- 	string_get_size(size, blk_size, STRING_UNITS_2, buf2, sizeof(buf2));
- 
--	test_string_get_size_check("STRING_UNITS_10", exp_result10, buf10,
-+	test_string_get_size_check(test, "STRING_UNITS_10", exp_result10, buf10,
- 				   size, blk_size);
- 
--	test_string_get_size_check("STRING_UNITS_2", exp_result2, buf2,
-+	test_string_get_size_check(test, "STRING_UNITS_2", exp_result2, buf2,
- 				   size, blk_size);
- }
- 
--static __init void test_string_get_size(void)
-+static void test_get_size(struct kunit *test)
- {
- 	/* small values */
- 	test_string_get_size_one(0, 512, "0 B", "0 B");
-@@ -537,7 +548,7 @@ static __init void test_string_get_size(void)
- 	test_string_get_size_one(4096, U64_MAX, "75.6 ZB", "64.0 ZiB");
- }
- 
--static void __init test_string_upper_lower(void)
-+static void test_upper_lower(struct kunit *test)
- {
- 	char *dst;
- 	int i;
-@@ -545,65 +556,68 @@ static void __init test_string_upper_lower(void)
- 	for (i = 0; i < ARRAY_SIZE(strings_upper); i++) {
- 		const char *s = strings_upper[i].in;
- 		int len = strlen(strings_upper[i].in) + 1;
-+		int result;
- 
- 		dst = kmalloc(len, GFP_KERNEL);
--		if (!dst)
--			return;
-+		KUNIT_ASSERT_NOT_NULL(test, dst);
- 
- 		string_upper(dst, s);
--		if (memcmp(dst, strings_upper[i].out, len)) {
-+		result = memcmp(dst, strings_upper[i].out, len);
-+		KUNIT_EXPECT_EQ(test, 0, result);
-+		if (result)
- 			pr_warn("Test 'string_upper' failed : expected %s, got %s!\n",
- 				strings_upper[i].out, dst);
--			kfree(dst);
--			return;
--		}
- 		kfree(dst);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(strings_lower); i++) {
- 		const char *s = strings_lower[i].in;
- 		int len = strlen(strings_lower[i].in) + 1;
-+		int result;
- 
- 		dst = kmalloc(len, GFP_KERNEL);
--		if (!dst)
--			return;
-+		KUNIT_ASSERT_NOT_NULL(test, dst);
- 
- 		string_lower(dst, s);
--		if (memcmp(dst, strings_lower[i].out, len)) {
-+		result = memcmp(dst, strings_lower[i].out, len);
-+		KUNIT_EXPECT_EQ(test, 0, result);
-+		if (result)
- 			pr_warn("Test 'string_lower failed : : expected %s, got %s!\n",
- 				strings_lower[i].out, dst);
--			kfree(dst);
--			return;
--		}
- 		kfree(dst);
- 	}
- }
- 
--static int __init test_string_helpers_init(void)
-+static void test_unescape(struct kunit *test)
- {
- 	unsigned int i;
- 
--	pr_info("Running tests...\n");
- 	for (i = 0; i < UNESCAPE_ALL_MASK + 1; i++)
--		test_string_unescape("unescape", i, false);
--	test_string_unescape("unescape inplace",
-+		test_string_unescape(test, "unescape", i, false);
-+	test_string_unescape(test, "unescape inplace",
- 			     get_random_u32_below(UNESCAPE_ALL_MASK + 1), true);
- 
- 	/* Without dictionary */
- 	for (i = 0; i < ESCAPE_ALL_MASK + 1; i++)
--		test_string_escape("escape 0", escape0, i, TEST_STRING_2_DICT_0);
-+		test_string_escape(test, "escape 0", escape0, i, TEST_STRING_2_DICT_0);
- 
- 	/* With dictionary */
- 	for (i = 0; i < ESCAPE_ALL_MASK + 1; i++)
--		test_string_escape("escape 1", escape1, i, TEST_STRING_2_DICT_1);
-+		test_string_escape(test, "escape 1", escape1, i, TEST_STRING_2_DICT_1);
-+}
-+
-+static struct kunit_case string_helpers_test_cases[] = {
-+	KUNIT_CASE(test_get_size),
-+	KUNIT_CASE(test_upper_lower),
-+	KUNIT_CASE(test_unescape),
-+	{}
-+};
- 
--	/* Test string_get_size() */
--	test_string_get_size();
-+static struct kunit_suite string_helpers_test_suite = {
-+	.name = "string_helpers",
-+	.test_cases = string_helpers_test_cases,
-+};
- 
--	/* Test string upper(), string_lower() */
--	test_string_upper_lower();
-+kunit_test_suites(&string_helpers_test_suite);
- 
--	return -EINVAL;
--}
--module_init(test_string_helpers_init);
- MODULE_LICENSE("Dual BSD/GPL");
 -- 
-2.34.1
-
+Kees Cook
