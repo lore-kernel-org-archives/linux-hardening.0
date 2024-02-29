@@ -1,99 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91477A125;
-	Thu, 29 Feb 2024 20:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DEA144056;
+	Thu, 29 Feb 2024 20:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709236847; cv=none; b=O7Jo/jdfRjVlVbiBVBx+FbtWlcxA4ppy2XE8dPdI/mcCPgwzcje42/L+tKz/WXnypFaez39pZGnd2hxh6eadG7mdhwxWp8RaUwBH8HXQ7D6Ad5MJ2ZfTjVS3KJXLcyTa4jEdhzAvNips+7RP54Rx1YgrEwK3ppsKcHKLNuolE0E=
+	t=1709239082; cv=none; b=jnEKacVaWJwvgXUIgSc/Bfy9dblMp72D+GrSHgRu6ZD9cmceo4QxT2tVpXCXhWmeUq+rtIL8+j/h+ROpTTQdNT/YRELsIADuqpG7zHbA5Nwnd0caWv/vsXbapfFqLitwGy2gOiHsqhNIAuKopkKBoOaUZVfTa6cNTr5hPODzDIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709236847; c=relaxed/simple;
-	bh=pgMPjnzpWVwWRax5G9fKHRUUN5IDvl4E8Lqx/QZdIyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVTUL59uxV1CE6szegIC3tXYRey9Mj8UjSYSE5I1RCX+beB8ypyh/dzCIT2XJuVT59F5dA1zixix/uEVGVnDHCknzX/AbIFP9nCd3Fp2UoAPx1vdacUrUpmeO8ebTbpa62eGRIq5wXH+AFc2WeXaigJXgfUAoMy9Bfo3ksFqxcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOtieByr; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709239082; c=relaxed/simple;
+	bh=fCm23I8sefIMiHN4Ppc70lTcvGhr+Jve9juzMu0LdPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sLhRTj0rOD9dGoIy+up78KQtSoH9+5jGfppCzM68Rdiuh9gNl7Kj59CdCU95jy9jqUTycCAqpxk8NVeSaCDh/y6F7YrKbV9B0XrSzUA5O4luhCwv/rmuJVuCUgOK08vvw1QWT1yHTgTtnkBRhQV5eFIl6R9jZhHalNDZXqS9WRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ymw3dy0N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOtieByr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709236846; x=1740772846;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pgMPjnzpWVwWRax5G9fKHRUUN5IDvl4E8Lqx/QZdIyg=;
-  b=ZOtieByr5ATnyeWbDDZNXYNcuY1EKzMZ7MNGtb5wJ7AS/EZ7FappYSQd
-   LLxSKjeEQYp/Fg8N/Z0rDmI0rhYBlHx/oK1eFKYJ2Sm5hihaXCltClz9v
-   8+0HLzDDiGqpCuApERqcNkkt9srbHbQnvIWNlHbGKn5asYGYXvN4EyNPQ
-   vLHsRXSmg01RC+4Jy1+3+0FQNL/EvyA8WTApPifEr14k2cmt6Otz/BlNY
-   Vgv/ccEezonpqBt5OE7JgAQmMMClppNn3c1RxcIcKaL3IHJs8E8PNdYGv
-   RQKNysq4XX/bPZa8JRdgCFmNq2u6qn/OzzEXuzNasT9DOPvwmrcVqeHRx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="14376081"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="14376081"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:00:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="913991086"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="913991086"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 12:00:42 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rfma6-00000008m8s-3tH6;
-	Thu, 29 Feb 2024 22:00:38 +0200
-Date: Thu, 29 Feb 2024 22:00:38 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Sam Ravnborg <sam@ravnborg.org>, Helge Deller <deller@gmx.de>,
-	Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sparc: vdso: Disable UBSAN instrumentation
-Message-ID: <ZeDiZrrLuqkvxrIY@smile.fi.intel.com>
-References: <20240223165942.work.950-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ymw3dy0N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4008BC43394;
+	Thu, 29 Feb 2024 20:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709239081;
+	bh=fCm23I8sefIMiHN4Ppc70lTcvGhr+Jve9juzMu0LdPM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ymw3dy0NZQxGLBCzNXPfHQ+pdhmosVMpsiDCORPutbSpu+ERHxNtjgQzw/bNmHCQu
+	 nPZiVWOPH9V3tgfwDkmM9UH0bHGPxblh2nqck6nvGZXiJVFyjoGQGdTuk64XYqYHfk
+	 ukam37+gS720FQHbKMls+l+p15fo2jwCQDhC9dnlv7l+C6T49u6MA/e5DfNLeYPLWi
+	 PhSzuBdJMv+0VangPBibKq1VWb+NYfuXSXDgSJoCJl/Mme6xWBjRA1BISKJCMyityv
+	 MevSVOPnjbDHnSuWfAd/TniayamqPOzil39mvdgn+2fnRWcwJWhXWfOPzj/MvTFRAR
+	 vH60b+Sly3QzQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>,
+	benve@cisco.com,
+	satishkh@cisco.com,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 15/24] enic: Avoid false positive under FORTIFY_SOURCE
+Date: Thu, 29 Feb 2024 15:36:55 -0500
+Message-ID: <20240229203729.2860356-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229203729.2860356-1-sashal@kernel.org>
+References: <20240229203729.2860356-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223165942.work.950-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.6
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 08:59:45AM -0800, Kees Cook wrote:
-> The UBSAN instrumentation cannot work in the vDSO since it is executing
-> in userspace, so disable it in the Makefile. Fixes the build failures
-> such as:
-> 
-> arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Andreas Larsson <andreas@gaisler.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: sparclinux@vger.kernel.org
+From: Kees Cook <keescook@chromium.org>
 
-I dunno how you applied patches, but these Cc seems to appear in a few commits
-in your hardening branch.
+[ Upstream commit 40b9385dd8e6a0515e1c9cd06a277483556b7286 ]
 
-I formatted patch from 9fd54b08040669, checked out the new branch just before
-this commit and run `git am 0001-...`. I don't see them.
+FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
+code base has been converted to flexible arrays. In order to enforce
+the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
+destinations need to be handled. Unfortunately, struct vic_provinfo
+resists full conversion, as it contains a flexible array of flexible
+arrays, which is only possible with the 0-sized fake flexible array.
 
+Use unsafe_memcpy() to avoid future false positives under
+CONFIG_FORTIFY_SOURCE.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/cisco/enic/vnic_vic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cisco/enic/vnic_vic.c b/drivers/net/ethernet/cisco/enic/vnic_vic.c
+index 20fcb20b42ede..66b5778353389 100644
+--- a/drivers/net/ethernet/cisco/enic/vnic_vic.c
++++ b/drivers/net/ethernet/cisco/enic/vnic_vic.c
+@@ -49,7 +49,8 @@ int vic_provinfo_add_tlv(struct vic_provinfo *vp, u16 type, u16 length,
+ 
+ 	tlv->type = htons(type);
+ 	tlv->length = htons(length);
+-	memcpy(tlv->value, value, length);
++	unsafe_memcpy(tlv->value, value, length,
++		      /* Flexible array of flexible arrays */);
+ 
+ 	vp->num_tlvs = htonl(ntohl(vp->num_tlvs) + 1);
+ 	vp->length = htonl(ntohl(vp->length) +
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
