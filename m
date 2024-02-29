@@ -1,54 +1,54 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C01236E
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 00:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8044659150
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 00:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709165740; cv=none; b=sQb8v7l3hIhe6T90ImQFD7oPx/aUiJCzZp9R9JTb6ejxwD68QR8COuuZVXoSHfyXDxVzprq2Gdv2PBoYrM8Kip0jfr/FOyFD+KX5TCP4jtIZJqXBtGWLZpT7gEJZDpx4leZDxMJ7n6umCZN+ufIlCQi4LpszDCLM+siBInIJjdo=
+	t=1709165931; cv=none; b=fzwZmsscwnHV3ePrwdAcOjFrrzOs3vnE7qNRw7mZFz6bIP2PdVpLLwMKLjn3SYKgVbn+ICMZNYHA1NPKqtTPnwT9eDpvHHz2o+awienf3azP4UzPfpzTj/1GG1v4aPlj1cobzeH6ZQIH8IrRUy4USpPj7CgK1rAjqn7biKcf6wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709165740; c=relaxed/simple;
-	bh=KFpGHaygOWnJZs+S5tsNAPLYMttJbW5qbzuu4vmTpc4=;
+	s=arc-20240116; t=1709165931; c=relaxed/simple;
+	bh=9DJj6YTz0ZZOl6MAUN9AsplTyADMYRPheFd4FjREcq0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RmByFAGgqOnxpq0KI3vC0jee4MV81qjHw4Rwy1iRCiHDLYLvdyRNVuXznDMrUHr/KZJgrsK9Vf4/ZouyWzfluHw8rzHNvrPztX2xJ/ZmenqRtScjc6+t0pFFKN2XDV7gQL3xOl0ob2yphFh50g3h9B1MyaWSAk+2Piymh4tEm5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hGy0WtMM; arc=none smtp.client-ip=209.85.214.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPAoZtlI3LjXq92iTRVPZOw64/wZYtDq/ep0HfBT8CjZ1dGHRk/rlnsNDZ69sTCOyNUAN44E0rEdxjwlXMJMSQ71CZbdtqcntJEDXT8FqwZOE4VKHklGKWEIIblwBTxFXvPleTFxAIsDagTxhdKDIfayw4k5HlgCj7rYqjjMokM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Zd6FsrbG; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hGy0WtMM"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1dba177c596so2575155ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 16:15:37 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zd6FsrbG"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d8b519e438so275359a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 16:18:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709165737; x=1709770537; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709165929; x=1709770729; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dl/GQscns58RVf5+2mGUWDm5GmcEQAfx5f0kshMZgAg=;
-        b=hGy0WtMMyq/7SSgQO29K2djMuuvM/SiqF/PLXBkbFLcSSP3nloMA4w3gALA4ArPl7H
-         Kzan5v1wo2Ju4foH/zqAEvgv8yVAYkcSSoLe+esrg2KujTEtB6cVI53iQDu61PiLyQdx
-         39JroGTTMyfNMs0Kxk/bH0CXeNS4yowA77ru0=
+        bh=K5uqn8jk7ThAKtuWvpjc6qdSbK1EvuBbH6icwTpGIW4=;
+        b=Zd6FsrbGvnNHW8S/xTkaP8iOt0/OYTPNpeWEampDlCmOtdciZpBKQacdXgA3W8WqKd
+         je2ed3pek8hzLO8jLXSAiCfElrc/dD2tOLHFMyF0P5JuV1g+AZaU0I40tkMAVPEhCjEU
+         kbIf/NuBfZz5rKsXoMemtF89f69aO0mt0e9/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709165737; x=1709770537;
+        d=1e100.net; s=20230601; t=1709165929; x=1709770729;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dl/GQscns58RVf5+2mGUWDm5GmcEQAfx5f0kshMZgAg=;
-        b=qZfleaM5SISIcXlWnhY9cjykArpE9dHOW5vD8MKMG8Ofrlt4uBikKsKjkVKz/p+TQ6
-         tWuX5gd0TOH+ZAZNmLxp6TAlejfzzOx4brSctxmKOVZ4LNYzDWCNB71quZu8bjWlJDt2
-         F+7x3o/zRQEHMJeY4f16iEfM7NPrmp4bA+ODCs/ewRakpxTHVw9xvokjpuXyM9Fwfwk6
-         VzXgdEXZUn3ry9L6JEzX6WAC4FC5S+NhSskZZ/7QCR2S0uw1VqSGdg2WqT6xXbKq5BnI
-         57l287wM1fg9PKXQ3H+qZxQ8UR0nCkTq1JCeeNP8rJHF+9mfYHon7U6qMLwcTeXgL2Oz
-         5lyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWObsh8oJH2xbMLgMQCeJjgq9974SjHxtjF2BGvOJ5u7WS5f4QbYBS6CRQVJzPwgvWmuYbA/eACdhHE3n25hLW8U6SAYzSGlArQuC12Kf2
-X-Gm-Message-State: AOJu0YwMqB04tYJXyOLmmK2fHTQ5zGd1ELEI81y1ACV+2Q4gPInAZvlG
-	WxtTi6WbPGLTaUHXriX4E4UQnlKcz9VPsuoOVlM1WRCKVbUP9ESFV8JWp3FKHg==
-X-Google-Smtp-Source: AGHT+IHzIAviZPXDsQ2a9pCkRPqaZL+hqxFBObnzqP5Kwh51sYmhd/jFpQPt/tKQjXbPEaA3tqt85A==
-X-Received: by 2002:a17:903:181:b0:1dc:cc0c:a29f with SMTP id z1-20020a170903018100b001dccc0ca29fmr507842plg.4.1709165736703;
-        Wed, 28 Feb 2024 16:15:36 -0800 (PST)
+        bh=K5uqn8jk7ThAKtuWvpjc6qdSbK1EvuBbH6icwTpGIW4=;
+        b=FA8lqv/Od7Q4R0prZylHdeDXWLz0vgrr7W5zQsapUrD8DXS/xlvQDuT+m+HN2BQ/og
+         j9hIK8ejIIVCHXJmmtm0gRN7c3x3NqswEz8Iy67qWoBteuxu/1qbu1hk6kCLjvz7VHHM
+         0fly1uKlJCWUAAotVMORMQGotP9++/hB4jiLfkxu0o+SW8ivwfpHeu6X6+s+y9R4PaxS
+         3bhqbvomphFUAi/Ftxxa1V9m2zL6mkgPDizTdUlyDVJW/ZvG6fabFi4V7+rkOmCsrVHA
+         UFU0BvjyNSy9CMg4iA70C5qvegNPv6GVT6QkwcEKIS43NvX95bwedJNCFixGgyBEUzp/
+         d4ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUuD4qdkjjCoj1tOv96euMEEVXTR8K5xWJXsUeu1Bc4tlupG/TAGwHMRuB5zZQ+X5wJ8lgAKnx3hKCR/ugOt50lcyILZbBEea1VDfW9Q06e
+X-Gm-Message-State: AOJu0Yz0aGv+lt9aMbXh4qaGRrBW3p+ts31SqLyXXrZpnURGWIA0DRU5
+	Xrkq9+VuhKIDH8Y0cFvT9rg0Hai+e0TMjMwSLUixT5FW0vHBdn3jiSUU3jqweQ==
+X-Google-Smtp-Source: AGHT+IG9LGv7xga1c26psaW5lSQ/a3FgyK1kDrzHgkNdLgVdVr5RsO1xWGsalLcOFQ/g2GqHBPATsg==
+X-Received: by 2002:a17:90b:3905:b0:299:6848:28c1 with SMTP id ob5-20020a17090b390500b00299684828c1mr834549pjb.26.1709165928724;
+        Wed, 28 Feb 2024 16:18:48 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o20-20020a170902779400b001d94e6a7685sm41728pll.234.2024.02.28.16.15.36
+        by smtp.gmail.com with ESMTPSA id su7-20020a17090b534700b002973162eca1sm2292760pjb.17.2024.02.28.16.18.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 16:15:36 -0800 (PST)
-Date: Wed, 28 Feb 2024 16:15:35 -0800
+        Wed, 28 Feb 2024 16:18:48 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:18:47 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
 Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
@@ -73,11 +73,9 @@ Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
 	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
 	MPT-FusionLinux.pdl@broadcom.com, netdev@vger.kernel.org,
 	storagedev@microchip.com
-Subject: Re: [PATCH v2 4/7] scsi: qla4xxx: replace deprecated strncpy with
- strscpy
-Message-ID: <202402281606.199AC93A4B@keescook>
+Subject: Re: [PATCH v2 0/7] scsi: replace deprecated strncpy
+Message-ID: <202402281617.807B1B7@keescook>
 References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
- <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-4-dacebd3fcfa0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -86,151 +84,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-4-dacebd3fcfa0@google.com>
+In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
 
-On Wed, Feb 28, 2024 at 10:59:04PM +0000, Justin Stitt wrote:
-> Replace 3 instances of strncpy in ql4_mbx.c
+On Wed, Feb 28, 2024 at 10:59:00PM +0000, Justin Stitt wrote:
+> This series contains multiple replacements of strncpy throughout the
+> scsi subsystem.
 > 
-> No bugs exist in the current implementation as some care was taken to
-> ensure the write length was decreased by one to leave some space for a
-> NUL-byte. However, instead of using strncpy(dest, src, LEN-1) we can opt
-> for strscpy(dest, src, sizeof(dest)) which will result in
-> NUL-termination as well. It should be noted that the entire chap_table
-> is zero-allocated so the NUL-padding provided by strncpy is not needed.
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces. The details of each replacement will be in their respective
+> patch.
 > 
-> While here, I noticed that MIN_CHAP_SECRET_LEN was not used anywhere.
-> Since strscpy gives us the number of bytes copied into the destination
-> buffer (or an -E2BIG) we can check both for an error during copying and
-> also for a non-length compliant secret. Add a new jump label so we can
-> properly clean up our chap_table should we have to abort due to bad
-> secret.
-> 
-> The third instance in this file involves some more peculiar handling of
-> strings:
-> |	uint32_t mbox_cmd[MBOX_REG_COUNT];
-> |	...
-> |	memset(&mbox_cmd, 0, sizeof(mbox_cmd));
-> |	...
-> |	mbox_cmd[0] = MBOX_CMD_SET_PARAM;
-> |	if (param == SET_DRVR_VERSION) {
-> |		mbox_cmd[1] = SET_DRVR_VERSION;
-> |		strncpy((char *)&mbox_cmd[2], QLA4XXX_DRIVER_VERSION,
-> |			MAX_DRVR_VER_LEN - 1);
-> 
-> mbox_cmd has a size of 8:
-> |	#define MBOX_REG_COUNT 8
-> ... and its type width is 4 bytes. Hence, we have 32 bytes to work with
-> here. The first 4 bytes are used as a flag for the MBOX_CMD_SET_PARAM.
-> The next 4 bytes are used for SET_DRVR_VERSION. We now have 32-8=24
-> bytes remaining -- which thankfully is what MAX_DRVR_VER_LEN is equal to
-> |	#define MAX_DRVR_VER_LEN                    24
-> 
-> ... and the thing we're copying into this pseudo-string buffer is
-> |	#define QLA4XXX_DRIVER_VERSION        "5.04.00-k6"
-> 
-> ... which is great because its less than 24 bytes (therefore we aren't
-> truncating the source).
-> 
-> All to say, there's no bug in the existing implementation (yay!) but we
-> can clean the code up a bit by using strscpy().
-> 
-> In ql4_os.c, there aren't any strncpy() uses to replace but there are
-> some existing strscpy() calls that could be made more idiomatic. Where
-> possible, use strscpy(dest, src, sizeof(dest)). Note that
-> chap_rec->password has a size of ISCSI_CHAP_AUTH_SECRET_MAX_LEN
-> |	#define ISCSI_CHAP_AUTH_SECRET_MAX_LEN	256
-> ... while the current strscpy usage uses QL4_CHAP_MAX_SECRET_LEN
-> |	#define QL4_CHAP_MAX_SECRET_LEN 100
-> ... however since chap_table->secret was set and bounded properly in its
-> string assignment its probably safe here to switch over to sizeof().
-> 
-> |	struct iscsi_chap_rec {
-> 	...
-> |		char username[ISCSI_CHAP_AUTH_NAME_MAX_LEN];
-> |		uint8_t password[ISCSI_CHAP_AUTH_SECRET_MAX_LEN];
-> 	...
-> |	};
-> 
-> |	strscpy(chap_rec->password, chap_table->secret,
-> |		QL4_CHAP_MAX_SECRET_LEN);
-> 
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
->  drivers/scsi/qla4xxx/ql4_mbx.c | 17 ++++++++++++-----
->  drivers/scsi/qla4xxx/ql4_os.c  | 14 +++++++-------
->  2 files changed, 19 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
-> index 249f1d7021d4..75125d2021f5 100644
-> --- a/drivers/scsi/qla4xxx/ql4_mbx.c
-> +++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-> @@ -1641,6 +1641,7 @@ int qla4xxx_set_chap(struct scsi_qla_host *ha, char *username, char *password,
->  	struct ql4_chap_table *chap_table;
->  	uint32_t chap_size = 0;
->  	dma_addr_t chap_dma;
-> +	ssize_t secret_len;
->  
->  	chap_table = dma_pool_zalloc(ha->chap_dma_pool, GFP_KERNEL, &chap_dma);
->  	if (chap_table == NULL) {
-> @@ -1652,9 +1653,13 @@ int qla4xxx_set_chap(struct scsi_qla_host *ha, char *username, char *password,
->  		chap_table->flags |= BIT_6; /* peer */
->  	else
->  		chap_table->flags |= BIT_7; /* local */
-> -	chap_table->secret_len = strlen(password);
-> -	strncpy(chap_table->secret, password, MAX_CHAP_SECRET_LEN - 1);
-> -	strncpy(chap_table->name, username, MAX_CHAP_NAME_LEN - 1);
-> +
-> +	secret_len = strscpy(chap_table->secret, password,
-> +			     sizeof(chap_table->secret));
-> +	if (secret_len < MIN_CHAP_SECRET_LEN)
-> +		goto cleanup_chap_table;
-> +	chap_table->secret_len = (uint8_t)secret_len;
-> +	strscpy(chap_table->name, username, sizeof(chap_table->name));
->  	chap_table->cookie = cpu_to_le16(CHAP_VALID_COOKIE);
->  
->  	if (is_qla40XX(ha)) {
-> @@ -1679,6 +1684,8 @@ int qla4xxx_set_chap(struct scsi_qla_host *ha, char *username, char *password,
->  		memcpy((struct ql4_chap_table *)ha->chap_list + idx,
->  		       chap_table, sizeof(struct ql4_chap_table));
->  	}
-> +
-> +cleanup_chap_table:
->  	dma_pool_free(ha->chap_dma_pool, chap_table, chap_dma);
->  	if (rval != QLA_SUCCESS)
->  		ret =  -EINVAL;
-> @@ -2281,8 +2288,8 @@ int qla4_8xxx_set_param(struct scsi_qla_host *ha, int param)
->  	mbox_cmd[0] = MBOX_CMD_SET_PARAM;
->  	if (param == SET_DRVR_VERSION) {
->  		mbox_cmd[1] = SET_DRVR_VERSION;
-> -		strncpy((char *)&mbox_cmd[2], QLA4XXX_DRIVER_VERSION,
-> -			MAX_DRVR_VER_LEN - 1);
-> +		strscpy((char *)&mbox_cmd[2], QLA4XXX_DRIVER_VERSION,
-> +			MAX_DRVR_VER_LEN);
->  	} else {
->  		ql4_printk(KERN_ERR, ha, "%s: invalid parameter 0x%x\n",
->  			   __func__, param);
-> diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-> index 675332e49a7b..17cccd14765f 100644
-> --- a/drivers/scsi/qla4xxx/ql4_os.c
-> +++ b/drivers/scsi/qla4xxx/ql4_os.c
-> @@ -799,10 +799,10 @@ static int qla4xxx_get_chap_list(struct Scsi_Host *shost, uint16_t chap_tbl_idx,
->  
->  		chap_rec->chap_tbl_idx = i;
->  		strscpy(chap_rec->username, chap_table->name,
-> -			ISCSI_CHAP_AUTH_NAME_MAX_LEN);
-> -		strscpy(chap_rec->password, chap_table->secret,
-> -			QL4_CHAP_MAX_SECRET_LEN);
-> -		chap_rec->password_length = chap_table->secret_len;
-> +			sizeof(chap_rec->username));
-> +		chap_rec->password_length = strscpy(chap_rec->password,
-> +						    chap_table->secret,
-> +						    sizeof(chap_rec->password));
+> Changes in v2:
+> - for (1/7): change strscpy to simple const char* assignments
+> - Link to v1: https://lore.kernel.org/r/20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com
 
-This hunk took me a bit to convince myself it's safe, but yes, I agree.
-It all boils down to sizeof(chap_table->secret) being less than
-sizeof(chap_rec->password), so there's no behavioral change here.
+I think you lost my tags for the later patches. I re-reviewed a few and
+then remembered I'd already reviewed these and they were unchanged. :)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Please run:
+
+b4 trailers -u 20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com
+
+:)
+
+-Kees
 
 -- 
 Kees Cook
