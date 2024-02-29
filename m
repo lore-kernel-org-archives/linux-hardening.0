@@ -1,120 +1,134 @@
-Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B5415DBC7
-	for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 22:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4B7A38
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 00:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709161160; cv=none; b=PWoE+DKeF2gi7XDw/D6fJ0k4uIgQhRg7ZmZ1sMU+n66kX9xESiiOMbmKmba1QMAnSyCPYwDvVP02O7Z6wTRBgBqDl6aI9hXsDQ8IxM8a9C6/udYwm8iyCrlE9yg/NDldypu3foAjoOFAlbYECUvaZYMu1QEJYDDQxm2bRF4Qz4A=
+	t=1709164914; cv=none; b=A/P/MWywjEtcH8kKCgY/ujl+xYC+te9bqb1ynQwW21cgxiukAtUGwBDg0QEfhxyJ3M24/g7uA7ILpiCIQpbwmPDWhWIl0pXOwzYa0lxUEDUtr9zwnEQoAYstkBUYcVS+uSkR+FK6Zk0/oiacz04elcfwtcYcIsVvMkQKkZGddMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709161160; c=relaxed/simple;
-	bh=sByDsDMKp44vyq2pot5Hhxm/eaP0ttE9ltVB3LqVHFs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QjOSvXrQMQL1cxe3LA3eDBwTC2q5fgjTUpEh3uYn+fSXv2t4Tqw2X1jPan+1lZfg5OpidmguLLERyeXKwnk97ZD557xUvGeEtiO4oUL9azTcWsJsh4qx/TF3IjwbYSmHE+1y4tUaO0X1Y9rKItlMgJapAO/pdFZ20jU2T2mqfDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x7FQIIbi; arc=none smtp.client-ip=209.85.166.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1709164914; c=relaxed/simple;
+	bh=qxsoqrA85W0ZABODeQ55zexBoMTqe+0G6tTR4C4edFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGB8bTXTQ/ZzpMAseRO+TVmlrgftt8W9AmfbXGAiYORLjS2hA5aYt14U3ohCLO6U9401ud7zG0VBwIH2hDuXutcW8hTJrB2ylfWrFEJr/GQ0DPUay5HrX9CP8qo/eJhUqsXSA8QfaohROLmMh1Qs2NmORTKSLzUuy9EISm2AJa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Y3RfdnXT; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x7FQIIbi"
-Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-36516d55c5fso3751465ab.2
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 14:59:17 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3RfdnXT"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c1a9b567edso129343b6e.3
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Feb 2024 16:01:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709161157; x=1709765957; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YAj5OZXxeaW4sKlBVmOyaWiE/dDaeK+k40BuTuu533I=;
-        b=x7FQIIbiUTu8GEWN+AawAD1f6igoVfjJyAGlagzRpY4ZMwmrpQBQ370WbKMVvyJnip
-         p9gK4lILU51xV0OTG+Lvb10hA1fIzcOUKq6L+GZjHVlVKNTQsu+e2WUhw/Ioadiuu7Eh
-         cHiitHCRQ3PL8HP8gWrcViZIT8MUn13REIhbsGbC0ZKIVEOnTZD2pcORiLGTrWEo/GkD
-         eGT9EFaOpFMEehUh+fi65Sz02YD6f7lSAsS3ZZsVDFLO/d6TOLGpPI3Q5VMoDPM1GlVX
-         +5iksbasBiZp4rwR9GfEaYQc80Ika3S3bxBwFkR6QVLuuj66jo8A86wHRBNVFtgLPVVh
-         XMig==
+        d=chromium.org; s=google; t=1709164911; x=1709769711; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iEBIJm8L8y8D/KMJdxSN242jmeihBdO84S0mND9uaps=;
+        b=Y3RfdnXTWmbJLlQXNnkjy+ZF0gXZKzA0KjRs2qwdBt21m8GvVCMIXgNMBURHBwjeKJ
+         IyVQt+Po3ndN5q7/hWcZF56J5FgF+RMhrM8DzLqJmi0EnLfSTqemYneQq1kvGQU9wY3x
+         Apg7VWhU2fM47BtJyjtDA9BGDyI3ypa2yFpm8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709161157; x=1709765957;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YAj5OZXxeaW4sKlBVmOyaWiE/dDaeK+k40BuTuu533I=;
-        b=eMzQLlUUo8uot2ThDTsk4NuimATnOATesrM/KT7wFh3mii/3G0fw+foo5g2NEzjaR2
-         YwtR80R06ofwRbe1BATo9qX0nKGCIMf3f7Xfi4LtC4YclTiiIJ3DN5UKf29GQrEd0sDu
-         z6H1HPbrWhFNNML6Ec4PnhVXlv1aHS5YxThSlArFKXuQoCfYyRTl60O1DLRj4a/NJUy8
-         Vf5UH9QaHpnYlFfs7TyNEu5mV1V6b5/PTT1YsVvvXM3Xs1oc9+7T2CNDgZrI2dnGYhLG
-         OfSW9RdRrnFXFidO4JmKqF63t4wNj9KZVXtkZnDFG41Jq9ceCEnwn5kczONsU2izpJTt
-         1cTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVnLb3bvM8761G0G6pFJeSpQgGMsFhNIp1b0r/7DGtLIw1u7fvTfOY9Ity66ziHMsVdBZy/x3rc7p8EcUBkIiOisAJMLg6DLfZLrt0oVm3
-X-Gm-Message-State: AOJu0YwRM9SBipKTynlfK0UNZv2VZ5SVFJ+mViQfL1c0OSy9mbewbr1V
-	kCnpfkOkEqZp3iQOiI3cgd3IgUCvjdBu1g/fOCceztNwZp/NGlJIBhuaLHh4043tYRJWWWYX/Ev
-	Lx05p5p5eUACWrGUVGZltcA==
-X-Google-Smtp-Source: AGHT+IHoQVSAKtTKWMR9HqVfcdvMQJ5TQ9kT4Qfz/mA8h9PaGzJ6iHCM0QJAjUXmqcpaYEmHg0FOvRz7HtCHG9nbhg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a92:c563:0:b0:365:21f4:700d with SMTP
- id b3-20020a92c563000000b0036521f4700dmr34184ilj.2.1709161156751; Wed, 28 Feb
- 2024 14:59:16 -0800 (PST)
-Date: Wed, 28 Feb 2024 22:59:06 +0000
-In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
+        d=1e100.net; s=20230601; t=1709164911; x=1709769711;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iEBIJm8L8y8D/KMJdxSN242jmeihBdO84S0mND9uaps=;
+        b=kv7VD4e2CtLYkzK4YRpXEUpyUAonmaXn4Er9AgH49rwio2ekU3RtY9cRYE15eoXahq
+         QLkGLb7cpuP4OyYfq0+ZcZ0bAeyJVTy/AgF+OAUVQk33OFasI/YPPKjDe/b8f800BWtT
+         EYOaHRi/3KTurE67OIvggMBChsX+4a85UBagF6Rj1URgSvsXN2M5DAr9dbHlBF4460tn
+         He2LngU244WWejSN240Ux3Kva10vpUIOho0eh/BI2cpcgwHcWBZI1Q6TPSPirqBD2bUM
+         xIN1aFOVbNw/OY67gzfLtq6qOlDvpLoexL9VM0w478pCBvRP3f0XsWTg98CFs8KvHU8e
+         PRlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzcx0UbHt/qLHkGT81Z8KcnMieWLeV7chEFw5sVf8I+jsMogMhe3j+V+pTZgIwe1hrOfnyflyWkOdAXxCgGKpSOS0DayeZibC4i3Q4CGwt
+X-Gm-Message-State: AOJu0YxMBbvC5nPuvmEVQjix8Bf3xT6fCt3au0OEtwhT6iL3rDDUbHAL
+	G1cPc0vfQB7w03JM+dV+sRzDmrxUegv7zD3gzXEMaU7TuqF6T7mQLn1WBuZRMw==
+X-Google-Smtp-Source: AGHT+IGs0rI0VXo4/NJKO1cSeuk/mHsATz8xyv2BYMzSCXsOlf2JpK8n8vhC+odnJINdbkFZX6M9Dw==
+X-Received: by 2002:a05:6808:19a4:b0:3c1:af9f:a866 with SMTP id bj36-20020a05680819a400b003c1af9fa866mr607658oib.45.1709164910890;
+        Wed, 28 Feb 2024 16:01:50 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id a24-20020a631a18000000b005dc491ccdcesm60329pga.14.2024.02.28.16.01.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 16:01:50 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:01:49 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-spi@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in
+ netdevice APIs
+Message-ID: <202402281554.C1CEEF744@keescook>
+References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
+ <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
+ <202402281341.AC67EB6E35@keescook>
+ <20240228144148.5c227487@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709161149; l=1441;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=sByDsDMKp44vyq2pot5Hhxm/eaP0ttE9ltVB3LqVHFs=; b=MQmDO4s1joPg8qz5k1DfkUDPX+8AhggVdiQ9eJscb4HSloFwaCNCdz/nFzT/ALueyz6YmZ8NY
- 6fbXI+QlUapD1QbsdKWY+t/Yuw1thXdsz72jHdrFaniAPlmI60I+0Zw
-X-Mailer: b4 0.12.3
-Message-ID: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-6-dacebd3fcfa0@google.com>
-Subject: [PATCH v2 6/7] scsi: smartpqi: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>, Kashyap Desai <kashyap.desai@broadcom.com>, 
-	Sumit Saxena <sumit.saxena@broadcom.com>, Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>, Ariel Elior <aelior@marvell.com>, 
-	Manish Chopra <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saurav Kashyap <skashyap@marvell.com>, Javed Hasan <jhasan@marvell.com>, 
-	GR-QLogic-Storage-Upstream@marvell.com, Nilesh Javali <njavali@marvell.com>, 
-	Manish Rangankar <mrangankar@marvell.com>, Don Brace <don.brace@microchip.com>
-Cc: mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, MPT-FusionLinux.pdl@broadcom.com, 
-	netdev@vger.kernel.org, storagedev@microchip.com, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240228144148.5c227487@kernel.org>
 
-buffer->driver_version is sized 32:
-|	struct bmic_host_wellness_driver_version {
-|	...
-|		char	driver_version[32];
-... the source string "Linux " + DRIVER_VERISON is sized at 16. There's
-really no bug in the existing code since the buffers are sized
-appropriately with great care taken to manually NUL-terminate the
-destination buffer. Nonetheless, let's make the swap over to strscpy()
-for robustness' (and readability's) sake.
+On Wed, Feb 28, 2024 at 02:41:48PM -0800, Jakub Kicinski wrote:
+> On Wed, 28 Feb 2024 13:46:10 -0800 Kees Cook wrote:
+> > I really don't like hiding these trailing allocations from the compiler.
+> > Why can't something like this be done (totally untested):
+> > 
+> > 
+> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > index 118c40258d07..dae6df4fb177 100644
+> > --- a/include/linux/netdevice.h
+> > +++ b/include/linux/netdevice.h
+> > @@ -2475,6 +2475,8 @@ struct net_device {
+> >  	/** @page_pools: page pools created for this netdevice */
+> >  	struct hlist_head	page_pools;
+> >  #endif
+> > +	u32			priv_size;
+> > +	u8			priv_data[] __counted_by(priv_size) __aligned(NETDEV_ALIGN);
+> 
+> I like, FWIW, please submit! :)
 
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- drivers/scsi/smartpqi/smartpqi_init.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+So, I found several cases where struct net_device is included in the
+middle of another structure, which makes my proposal more awkward. But I
+also don't understand why it's in the _middle_. Shouldn't it always be
+at the beginning (with priv stuff following it?)
+Quick search and examined manually: git grep 'struct net_device [a-z0-9_]*;'
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index ceff1ec13f9e..bfe6f42e8e96 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -1041,9 +1041,8 @@ static int pqi_write_driver_version_to_host_wellness(
- 	buffer->driver_version_tag[1] = 'V';
- 	put_unaligned_le16(sizeof(buffer->driver_version),
- 		&buffer->driver_version_length);
--	strncpy(buffer->driver_version, "Linux " DRIVER_VERSION,
--		sizeof(buffer->driver_version) - 1);
--	buffer->driver_version[sizeof(buffer->driver_version) - 1] = '\0';
-+	strscpy(buffer->driver_version, "Linux " DRIVER_VERSION,
-+		sizeof(buffer->driver_version));
- 	buffer->dont_write_tag[0] = 'D';
- 	buffer->dont_write_tag[1] = 'W';
- 	buffer->end_tag[0] = 'Z';
+struct rtw89_dev
+struct ath10k
+etc.
+
+Some even have two included (?)
+
+But I still like the idea -- Gustavo has been solving these cases with
+having two structs, e.g.:
+
+struct net_device {
+	...unchanged...
+};
+
+struct net_device_alloc {
+	struct net_device	dev;
+	u32			priv_size;
+	u8			priv_data[] __counted_by(priv_size) __aligned(NETDEV_ALIGN);
+};
+
+And internals can use struct net_device_alloc...
+
+-Kees
 
 -- 
-2.44.0.rc1.240.g4c46232300-goog
-
+Kees Cook
