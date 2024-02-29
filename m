@@ -1,33 +1,33 @@
-Received: from smtp-bc0c.mail.infomaniak.ch (smtp-bc0c.mail.infomaniak.ch [45.157.188.12])
+Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FB94AEEC
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 17:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210184AECF
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 17:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709226277; cv=none; b=AEnBr6f3Q6cfqS7TlJvYFFJKKEhaVkskHCYTjvarBVxbdvJGIdt1hjVZS72voth/GZNSCMyx1NeTc9pgphJZ7ZAcN8dngavY1f81VRFv8TW5t4iz1Q9u/M0lz8u+QQYRq+LEn1y5Ik6TxhG7qAmdqbPdZPV4iiTfNC7Vc4+vU1E=
+	t=1709226279; cv=none; b=l72V0gA4SLk27l5H5+yM8GQGXVGSFHxWeWHYUcmQOGzPE6LIDNjPPa1vbOQItYTGkYvs2Dyi6j1iZbkzf6k/n2Ld6hUhSgyPPYLWJ+Ytc/5SV+NjcQemHgwtySu3E9Lo2YnerdBG9w0zqRJkLOs5idN42sBvEOxiF+eGA8jrzeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709226277; c=relaxed/simple;
-	bh=uBMChHU5UNMlEl3ATgwx20Pp9VOumM9CW4wvZ2gv728=;
+	s=arc-20240116; t=1709226279; c=relaxed/simple;
+	bh=iEMsEf9vHd9/SI1OU/FMhsYF3Xf0RZ6zSUY0txBsePY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PJinR9vgKKU7mAIGI6Vl0PtUcOK+n2zeaswSHgmOt//fxoMApYRWIBsiOSKpmq3+sqrZGDQV+4WbWGJPQ6EHiKHBG1+LrG1mcLWWqqaoFFhJOPkeTVp1hidsrw5OVi+g0grlKeex64xYR8hJgP7IShlpO6ode4U4VvgrmAaq6fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=g3VQrtX/; arc=none smtp.client-ip=45.157.188.12
+	 MIME-Version:Content-Type; b=Xf1NvZ0VWk+jKUdReRatL9XYgndnKzdUJwMe5aHvYimN+Y1ZZc5hxXM6BL7P5XPc1Lg/4Ng+FuHDfA423XjXRG7vkE+cHn8DVfnNqTK1LJukq6VwJpCES+m0eOFjue/Timi6VYHMwAfYE3KCsNBbFL7VvmnJofvgXqJ1XdI4wV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=mt5sEYwZ; arc=none smtp.client-ip=185.125.25.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="g3VQrtX/"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TlyHv6JJjzMrkvR;
-	Thu, 29 Feb 2024 18:04:27 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TlyHv0Y1GzMppV9;
-	Thu, 29 Feb 2024 18:04:27 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="mt5sEYwZ"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TlyHs3xr2zMrktf;
+	Thu, 29 Feb 2024 18:04:25 +0100 (CET)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TlyHr5l81zsG;
+	Thu, 29 Feb 2024 18:04:24 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709226267;
-	bh=uBMChHU5UNMlEl3ATgwx20Pp9VOumM9CW4wvZ2gv728=;
+	s=20191114; t=1709226265;
+	bh=iEMsEf9vHd9/SI1OU/FMhsYF3Xf0RZ6zSUY0txBsePY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g3VQrtX/j4mrYOK5lCD4XPwom/SI0/y/0R4myV2rOLoAWJbQXs3vRNiqY7hBGvPKt
-	 IWhFH8Ae2AB6sbRZrZYR+D0SJT6lcgzTL2uwOpY7ATOhYsFr6lnwl26n6gEktkAfAl
-	 F696GqV8G1WnaDB4mg5K41u90uy9ksSd19IE4k0Q=
+	b=mt5sEYwZdJqMXsg2RNP3sZk7FXe2d42pQAwMlKqEqVeZoUnZxWKILpymJr3/osTy1
+	 HATdiX6VsrwoP0gD2blvTb19qjeTYzsRp4SafqrsoXPddY8xyBu1Qc8e4S1DueQbzl
+	 Gv250bTvI44E66febWNikJHzk267euM4+x5fW+J8=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Brendan Higgins <brendanhiggins@google.com>,
 	David Gow <davidgow@google.com>,
@@ -59,9 +59,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	x86@kernel.org
-Subject: [PATCH v1 4/8] kunit: Fix timeout message
-Date: Thu, 29 Feb 2024 18:04:05 +0100
-Message-ID: <20240229170409.365386-5-mic@digikod.net>
+Subject: [PATCH v1 2/8] kunit: Handle thread creation error
+Date: Thu, 29 Feb 2024 18:04:03 +0100
+Message-ID: <20240229170409.365386-3-mic@digikod.net>
 In-Reply-To: <20240229170409.365386-1-mic@digikod.net>
 References: <20240229170409.365386-1-mic@digikod.net>
 Precedence: bulk
@@ -74,8 +74,11 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-The exit code is always checked, so let's properly handle the -ETIMEDOUT
-error code.
+Previously, if a thread creation failed (e.g. -ENOMEM), the function was
+called (kunit_catch_run_case or kunit_catch_run_case_cleanup) without
+marking the test as failed.  Instead, fill try_result with the error
+code returned by kthread_run(), which will mark the test as failed and
+print "internal error occurred...".
 
 Cc: Brendan Higgins <brendanhiggins@google.com>
 Cc: David Gow <davidgow@google.com>
@@ -83,30 +86,21 @@ Cc: Rae Moar <rmoar@google.com>
 Cc: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
- lib/kunit/try-catch.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/kunit/try-catch.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 73f5007f20ea..cab8b24b5d5a 100644
+index f7825991d576..a5cb2ef70a25 100644
 --- a/lib/kunit/try-catch.c
 +++ b/lib/kunit/try-catch.c
-@@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	time_remaining = wait_for_completion_timeout(&try_completion,
- 						     kunit_test_timeout());
- 	if (time_remaining == 0) {
--		kunit_err(test, "try timed out\n");
- 		try_catch->try_result = -ETIMEDOUT;
- 		kthread_stop(task_struct);
+@@ -69,6 +69,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 				  try_catch,
+ 				  "kunit_try_catch_thread");
+ 	if (IS_ERR(task_struct)) {
++		try_catch->try_result = PTR_ERR(task_struct);
+ 		try_catch->catch(try_catch->context);
+ 		return;
  	}
-@@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 		try_catch->try_result = 0;
- 	else if (exit_code == -EINTR)
- 		kunit_err(test, "wake_up_process() was never called\n");
-+	else if (exit_code == -ETIMEDOUT)
-+		kunit_err(test, "try timed out\n");
- 	else if (exit_code)
- 		kunit_err(test, "Unknown error: %d\n", exit_code);
- 
 -- 
 2.44.0
 
