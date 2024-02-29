@@ -1,103 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DBD612CE;
-	Thu, 29 Feb 2024 09:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622046351C;
+	Thu, 29 Feb 2024 10:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199791; cv=none; b=VeGg7lwFHJiF4Iof8GM/jgLwSD7kC36+a650IN5xiC7saoYgSy/yN87jlpyvonxcazVvxCWNox3T6m+qAGFjgqYF8VVhK7XKAo5MHVTBbNlaCekHWDvWFE0s3V6Ue8YgzMVX6jj/qCtiHEWlu1MDZ8/a3EyyOk/KrEtfTw4HAXU=
+	t=1709204081; cv=none; b=ueukYRqLzXuUDLTyfAC2KPtv2XlmXThvFaKBFpcRrmY+ccjtD0fT1uGp8tS+H1aeG3c38BQPxfn5TNnsm8IwXdnlID80EK2yay9seGsw/IXajCfDBsKpPyUd/aQ95p+XLfU9CI1LObNOvdNSJsHq4OoF2Uj/jEN6OAt6/Ik4CVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199791; c=relaxed/simple;
-	bh=aDbHWCEN87gifEkin69igfn4UnaUalbm7Xpzz7Tjuw4=;
+	s=arc-20240116; t=1709204081; c=relaxed/simple;
+	bh=SxVA8/lAGPXj7aJ44Uc6WXqxSXmTeZTF1kbZzTL+u+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GidAiNcg8fvKSQwsYP9mGe7GJmLDEqQpXvGC/E53ASWYTy2hYf0IRSCNlF+sbB5QeUl8wlgpyfMGkrfT4ENmaepHJN1nRWA/OyVZrjNeFpe/0nl/S6Pnb3wI/KXzBRbmWkcvpQX03s3z/VZbrz3LyvTGoE/R3XtRIlLdga3c6V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cr0nGGfQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uS5AGxik6qVQDELx2dwlrEgzEJpws+gYIkolw2pZnjrg2/24k9mS2euJ5zz4hAwAHWK1dnaUPqP/9woqa1DDKjUgqegyW0rAq95I8irRcgWk3R4ioNK8PdcEDk/l1ARcnuWGwSpTR2shoTNvmUHPcq+CgZBwAhQfAJ+WJDNvJtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWVZ0rdQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cr0nGGfQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1605BC43390;
-	Thu, 29 Feb 2024 09:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709199790;
-	bh=aDbHWCEN87gifEkin69igfn4UnaUalbm7Xpzz7Tjuw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cr0nGGfQcPJzRlpgBOWurWE1FlP0/lVOeyoJ0y+JMWFPkBi7Z8r358ncafvax+LcU
-	 Utr4eykovmyPVLbRrMd9NNaM5I2CsGLModtc7FUdwAqEqrde8pi5ztd3SWRrtB7q2n
-	 yFcYOJo7yRqY5TEgHSWuwo52+FQvMzf/Px27hOyrwc90xeLmHZ8loRRFRRfZFIgy8H
-	 6nplNOpn0Z+LhIHagrRGsVo3ANvtj8700A0dL9clQp1aeAWYxzr+8tRSUX5W6L9bWb
-	 vZzJ+9zg/s/2116gI22aOiKJiQCK8U4Z3pzPLfAI3O2e7nwXPGiAhbLXW8C5yO/cnj
-	 iqjhmV+h7jGzw==
-Date: Thu, 29 Feb 2024 11:42:23 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Yaxiong Tian <13327272236@163.com>
-Cc: David Hildenbrand <david@redhat.com>, rafael@kernel.org, pavel@ucw.cz,
-	len.brown@intel.com, keescook@chromium.org, tony.luck@intel.com,
-	gpiccoli@igalia.com, akpm@linux-foundation.org, ardb@kernel.org,
-	wangkefeng.wang@huawei.com, catalin.marinas@arm.com,
-	will@kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>,
-	xiongxin <xiongxin@kylinos.cn>
-Subject: Re: [PATCH] PM: hibernate: Fix level3 translation fault in
- swsusp_save()
-Message-ID: <ZeBRfxQ8WTEVzpfL@kernel.org>
-References: <20240226034225.48689-1-13327272236@163.com>
- <8d70939f-ca14-4167-9647-b8f44ddcbb98@redhat.com>
- <ZdxWcG2XCqBum3_R@kernel.org>
- <3399d2af-3d42-4ac1-9b74-8475bec25f7f@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWVZ0rdQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709204081; x=1740740081;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SxVA8/lAGPXj7aJ44Uc6WXqxSXmTeZTF1kbZzTL+u+8=;
+  b=jWVZ0rdQt5go+ZpxRpiDtn6ggJHBJsD42o6n+qWqRJsoH7DO2KLPZQQY
+   qRUZ9t3s9H5wuMKbcn3j78vTeEjRkv2SGzZJvlComnEOHIsZMcyLcUz/6
+   Ohothe0O1oSRRDkUxrYeZV4xWAwXHFT6SM/Gm5enrQUZCokdhtJD7Ib2Q
+   zpvzwjI17Lda0OEQIuW0v6FClOi6pyRUuJ87p1I0X8brVlh4oOF3DdE1L
+   CTHmkRmak51Hedc0QV7xaEe2IhsZP1Jn7dhxzPokMjLHlXS1csClwskgI
+   bXsRzJYjQ3vitpBII1MrMCGoLUqlh7o2uzKAs1XoUgOQpnn8iVdDM664k
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="21122607"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="21122607"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:54:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913978961"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913978961"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:54:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rfe3b-00000008e8j-2Ooc;
+	Thu, 29 Feb 2024 12:54:31 +0200
+Date: Thu, 29 Feb 2024 12:54:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-spi@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in
+ netdevice APIs
+Message-ID: <ZeBiZ_aulsAqP83c@smile.fi.intel.com>
+References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
+ <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
+ <202402281341.AC67EB6E35@keescook>
+ <20240228144148.5c227487@kernel.org>
+ <202402281554.C1CEEF744@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3399d2af-3d42-4ac1-9b74-8475bec25f7f@163.com>
+In-Reply-To: <202402281554.C1CEEF744@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 27, 2024 at 03:51:25PM +0800, Yaxiong Tian wrote:
+On Wed, Feb 28, 2024 at 04:01:49PM -0800, Kees Cook wrote:
+> On Wed, Feb 28, 2024 at 02:41:48PM -0800, Jakub Kicinski wrote:
+> > On Wed, 28 Feb 2024 13:46:10 -0800 Kees Cook wrote:
+
+...
+
+> But I still like the idea -- Gustavo has been solving these cases with
+> having two structs, e.g.:
 > 
-> 在 2024/2/26 17:14, Mike Rapoport 写道:
-> > On Mon, Feb 26, 2024 at 09:37:06AM +0100, David Hildenbrand wrote:
-> > > On 26.02.24 04:42, Yaxiong Tian wrote:
-> > > > From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> > > > 
-> > > > On ARM64 machines using UEFI, if the linear map is not set (can_set_direct_map()
-> > > > return false), swsusp_save() will fail due to can't finding the map table
-> > > > under the nomap memory.such as:
-> > can_set_direct_map() has nothing to do with presence or absence of the
-> > linear map.
-> > 
-> > Do you mean that kernel_page_present() presumes that a page is present when
-> > can_set_direct_map() returns false even for NOMAP ranges?
-> Yes， in swsusp_save()->copy_data_pages()->page_is_saveable(),
-> kernel_page_present() presumes that a page is present when
-> can_set_direct_map()
-> returns false even for NOMAP ranges.So NOMAP pages will saved in after,and
-> then
-> cause level3 translation fault in this pages.
+> struct net_device {
+> 	...unchanged...
+> };
+> 
+> struct net_device_alloc {
+> 	struct net_device	dev;
+> 	u32			priv_size;
+> 	u8			priv_data[] __counted_by(priv_size) __aligned(NETDEV_ALIGN);
+> };
+> 
+> And internals can use struct net_device_alloc...
 
-So this should be the description of the problem in the changelog rather
-than saying "if the linear map is not set (can_set_direct_map() return
-false)"
+I just realized that I made same approach in 
 
-> > > > QEMU ARM64 using UEFI also has the problem by setting can_set_direct_map()
-> > > > return false.
-> >
-> > Huh?
-> > Why would you do that?
-> >
-> I discovered this problem when upgrading from 5.4 to 6.6 using the 5.4
-> configuration.
-> So I using latest linux-next code,find the problem still exist.To rule out
-> the effects
-> of a particular machine，I also use qemu to check it.
+f6d7f050e258 ("spi: Don't use flexible array in struct spi_message definition")
+75e308ffc4f0 ("spi: Use struct_size() helper")
 
-I believe this can be reproduced if you boot with rodata=off and then
-a better description would be something like
-
-	This issue can be reproduced in QEMU when booting with rodata=off
 
 -- 
-Sincerely yours,
-Mike.
+With Best Regards,
+Andy Shevchenko
+
+
