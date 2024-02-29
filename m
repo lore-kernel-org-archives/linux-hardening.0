@@ -1,221 +1,104 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCF06D535
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 22:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5807074BED
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 23:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709245009; cv=none; b=ZMazCxCspMMl/ZmX2VL9S1eM8Kn5FRpnACu1oLEMX/IvivGZuneY7jV7D2ghays0t51Nynf5KqFw83CZ9ythX+cPvvFe58uUImkT20z2EAq8q7BHm20D6u7+aPHGm8GJgYM9FLectusjIhfHcHrIOV/lEZhdllL/kDe2qQmguDA=
+	t=1709249733; cv=none; b=NmOUiP/fpfuwNbTYNcLAcw34xKh8+H8iv98W2YnhuKQQnKatKPswjI+6CrylG8nOT7LNrU0rjKD+yze+MHEJc9SvGtPpI1FHL312YLuRzZMN2oXWfQQumeFAVpvDZ11SSmryIaiP7etOeLR9z6aOd+C4UMFB/5zlf7mzZWVTrJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709245009; c=relaxed/simple;
-	bh=5FSiTuqHmDsjXTZPDXr3lj4oUQySDL+fFiia69OcWH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W/traZOxRLfGytGo8OYqfEMI+Gdxxi/UnXH/1y9+ho8voe4emMOwf6kNzYBBsYzsTky2SDj4cIgjMrjKiGGEyLSv16vLyLzYoks2DtdzXttlDgyYIWlcbAO8CeTJ05XUaA0OUAG0etCd2kyAVhVfzPTqed2+X/3zr5Uf5+zqTLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=e0yP1pzt; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1709249733; c=relaxed/simple;
+	bh=af0i+Z+NBmK8wTAcFrJRYhmqFQ66AAdLmiOFLw1OeN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=axZaQieFAjKlu+R1N86sehmECXB8cDXuuuEgR6eG8OQpOo9jeaFiWR0aFC3njjqyHmxvQMPGk0jnTixw0tjz4ZBTlsOuKTvg0J1ufzluhwG1Cb45uNoMMiAEswS9WUN7CU/g8+4YsrR0qW54UpOePMYEX1bI4NKSQNUTjQGj3q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iV33OeB/; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e0yP1pzt"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id fRwlrcLUoQr4SfogOrOq8w; Thu, 29 Feb 2024 22:15:16 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id fogNr1Ok9mJpTfogNrCaY7; Thu, 29 Feb 2024 22:15:15 +0000
-X-Authority-Analysis: v=2.4 cv=e8AAS7p/ c=1 sm=1 tr=0 ts=65e101f3
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8
- a=QyXUC8HyAAAA:8 a=xfJypzPxiScX5pcAhuAA:9 a=QEXdDO2ut3YA:10
- a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22 a=y1Q9-5lHfBjTkpIzbSAN:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cf1DZ2erRbMxD8JvVLJPv18i9Hg6aww57G4W3t9Oeoc=; b=e0yP1pztbkxkhpcJxYDiCSOm9p
-	fihMzZKmaTkeqIBnkZZupDuJlp5aNCxO2ey9rO97gUBe4WSG8LzztnW4JPppdUM6t1XjnLPbt1CLP
-	bWp+VnMM7SkP+NJpbTAmj6GdeKiGJU69QxgmuFo4zx4EPNUDjrhSXLipqVR7anVOJdv9OOLDjtbDG
-	xu3x7Ww1m0CEEA1WCr5l0lDJxqPh99MM5R7NpSOKYbs4drDgFiWxObM2b2SL8JobMShCccoSZ/rc+
-	iVH/f3WVNC4K9jVImTVChD53aiFwo3zDZfX/oLxl2aD/4xQC8HIhRIX9AZ3/jdrBgBDIMelq8rgX2
-	M8Az3Fzw==;
-Received: from [201.172.172.225] (port=53434 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rfogM-002d6M-1s;
-	Thu, 29 Feb 2024 16:15:14 -0600
-Message-ID: <93cbd0a3-60cf-400f-a05c-f81dc3d8c75d@embeddedor.com>
-Date: Thu, 29 Feb 2024 16:15:12 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iV33OeB/"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5ce942efda5so1215730a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 15:35:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709249730; x=1709854530; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qgeC0dWQiXHpXbv+RTu39Eq188gL97uOmLAZY2hF3fA=;
+        b=iV33OeB/heUvveeMxMcuzWULjLQOcnaBkonkrwllHoMHT9+q6G7sgVqjqs9iqspm12
+         QqLO0jSpm/i2UNS+HjnS2KXgqhnLKSQP6OcHQpFiHakAVrmhl1N58ojk/wt3yspqp0Ff
+         yc5+F5x++hWxSdiy8QHHczoGzyQwaSj8VBM50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709249730; x=1709854530;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qgeC0dWQiXHpXbv+RTu39Eq188gL97uOmLAZY2hF3fA=;
+        b=cAIypQoa7xEtN80Y+ZLnPV3dBL+g+vRtX+AErfb6kCgQjGo+wojva913b7aVcrGC9d
+         GtlkrBIltwy0oU34WE7dP4X2ccToup5HQfdZlPkFRebrajjHTXBHWhD2upU2MXb4dv49
+         /O7seMNVJ6R8vpSPxs2jHyYHWTCvDjH21GhtxkVTSTr7EDOl4lslgrJWvdHE+7scLgIB
+         zvIvER3uVezrv8MHq0C0h6eURl0zhzoZahwQQBu1t6cidwCrHIQnRxkoo7ILZ9PoBVu5
+         WBbgqxQYbza/XZhxUibfxfGy8P6NKA7UDTajwIJwzeWQpPf9Z4etuwC7OmdOXBz9VgRe
+         IxQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKnc5QdjfFeH5guoYRb6k+0EzIdtoD1iNv0aj/D+3CD06zphUDvi3J673Gg67XOrP9k11e4hlwuHTbBZ0xIJIVz/i43K7eUJsyUb16n1fM
+X-Gm-Message-State: AOJu0YxxGKgSMGTEe3bgQZMXFOlC9QnazKDBH1PVQ20ZyO92E2ym/Sfh
+	dFIG+pjB2zRpj/3WgrkuN71rUgDVA+M86IeH/Y2dlZELC7q+8fzPOg0NouZPEV2Faa42WATcDkM
+	=
+X-Google-Smtp-Source: AGHT+IHdzgU8MOGA5OKgWWi/ALEW2RCneug+tnxz+xSDAC8KU+oM+pEJdlK0nR/tNDGF6pdVEe5zug==
+X-Received: by 2002:a17:90a:9481:b0:29b:1964:3921 with SMTP id s1-20020a17090a948100b0029b19643921mr82708pjo.46.1709249730678;
+        Thu, 29 Feb 2024 15:35:30 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x24-20020a17090a531800b00298975077d0sm4146974pjh.19.2024.02.29.15.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 15:35:29 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/2] string: Convert selftests to KUnit
+Date: Thu, 29 Feb 2024 15:35:22 -0800
+Message-Id: <20240229233432.work.675-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>,
- Coco Li <lixiaoyan@google.com>, Amritha Nambiar <amritha.nambiar@intel.com>,
- linux-kernel@vger.kernel.org
-References: <20240229213018.work.556-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240229213018.work.556-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rfogM-002d6M-1s
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:53434
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMNUfk2H1+NFKqAoPR3RohjgiLS7oAxkYt9WysQuhvbkr1M/Gw7FUCC7+LUK7rpCjWIX/cLAYMrRE6In7tJc0hLnlmeYBY9MQ0Ek1Gan5LKL46r7+nIJ
- sdB0L3KwA9MCjRJ0QrgI3OQCEbvHT77NcGZqTI/tvfzf1EEzLG+Sl4fwbdAy80tIUD+U59tUXpb3iSoGI4c02E3+RufsAUy1ZaOHmKDyjOMddEdaRXb4JXsu
+X-Developer-Signature: v=1; a=openpgp-sha256; l=704; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=af0i+Z+NBmK8wTAcFrJRYhmqFQ66AAdLmiOFLw1OeN4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4RS8DgHghW1lD3n4SWnltPLnr7H9SGtGAp+Br
+ 8H0kDAa54GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeEUvAAKCRCJcvTf3G3A
+ Jn8kD/9JnIyBUTtwBNswGjX9Dv3u9HUZt9zvuY9Dmpb+fBXd/VSq9KauLA7vo2CrSnruGsZ9GYG
+ o6/DQynkvUK2WSzaV/wcqovVciPJ+OZ9MuZ8N4Lj8dVsASz4wxNnU0rsCfg/A9q7q7ph3BUiV52
+ Y7V6udqf9+2ezuI/1mq5wdv3HrEvfqogMbwx3LPW+ZJRaBBqTAg7dqVRxU6eavWPzHxX67uVbg/
+ y/jfS89N4d8hanXtonuifHw0nFudU4SNW+C14EKC1UuqHxwQ2qR4iiXc0Mw1lPYmZrPoD2hG9DJ
+ BG5Lw0AbVECzEk/je4GwaWQ/sBSh+ZfEaxx2xBD0ISJgyLmIlm60FL8BKtYAtjUFmqoMGeiXWGm
+ qMlK+Y6SNHSPS37CJ/wrUz+OaSdEOZbV7dbrE7cP3T6HveouT5b2xj+Lb2weInPKQgjVXONukfU
+ vI+xy+JgEArv/fcZGM4hRqx5vzdH8bZoXMWBLxw12SjE/nKA4VHHRU7DUs5/vL8F5FVebF2iuJx
+ mAt5wfqbtoQeqELn+3BopODrgR5C/EhR3lKpe1K40kfQqaiogSXW9A5RBxHUAVkdl2LLYj5fi9a
+ 57JjcO+5QckYCYZ8xE7U/EuOl+RJj81uG4BCU1EQeSPWHQ1Vbkn3q8C45GVe82YlTERf83zKmk9
+ pjpt1zYC ratD4aA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
+I realized the string selftests hadn't been converted to KUnit yet. Do that.
 
-On 2/29/24 15:30, Kees Cook wrote:
-> Introduce a new struct net_device_priv that contains struct net_device
-> but also accounts for the commonly trailing bytes through the "size" and
-> "data" members. As many dummy struct net_device instances exist still,
-> it is non-trivial to but this flexible array inside struct net_device
-> itself. But we can add a sanity check in netdev_priv() to catch any
-> attempts to access the private data of a dummy struct.
-> 
-> Adjust allocation logic to use the new full structure.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+-Kees
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-[for the flex `struct net_device_priv`, `struct_size()`, `__counted_by()`,
-and the use of `container_of()` to retrieve a pointer to the flex struct
-and return pointer to flex-array member `data` in `netdev_priv()`]
+Kees Cook (2):
+  string: Convert selftest to KUnit
+  string: Convert helpers selftest to KUnit
 
-Thanks
---
-Gustavo
+ MAINTAINERS                                   |   4 +-
+ lib/Kconfig.debug                             |  12 +-
+ lib/Makefile                                  |   4 +-
+ ...tring_helpers.c => string_helpers_kunit.c} | 160 +++++++++--------
+ lib/{test_string.c => string_kunit.c}         | 166 ++++++------------
+ 5 files changed, 154 insertions(+), 192 deletions(-)
+ rename lib/{test-string_helpers.c => string_helpers_kunit.c} (79%)
+ rename lib/{test_string.c => string_kunit.c} (54%)
 
-> ---
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> ---
->   include/linux/netdevice.h | 21 ++++++++++++++++++---
->   net/core/dev.c            | 12 ++++--------
->   2 files changed, 22 insertions(+), 11 deletions(-)
-> 
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index 118c40258d07..b476809d0bae 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -1815,6 +1815,8 @@ enum netdev_stat_type {
->   	NETDEV_PCPU_STAT_DSTATS, /* struct pcpu_dstats */
->   };
->   
-> +#define	NETDEV_ALIGN		32
-> +
->   /**
->    *	struct net_device - The DEVICE structure.
->    *
-> @@ -2476,6 +2478,14 @@ struct net_device {
->   	struct hlist_head	page_pools;
->   #endif
->   };
-> +
-> +struct net_device_priv {
-> +	struct net_device	dev;
-> +	u32			size;
-> +	u8			data[] __counted_by(size)
-> +				       __aligned(NETDEV_ALIGN);
-> +};
-> +
->   #define to_net_dev(d) container_of(d, struct net_device, dev)
->   
->   /*
-> @@ -2496,8 +2506,6 @@ static inline bool netif_elide_gro(const struct net_device *dev)
->   	return false;
->   }
->   
-> -#define	NETDEV_ALIGN		32
-> -
->   static inline
->   int netdev_get_prio_tc_map(const struct net_device *dev, u32 prio)
->   {
-> @@ -2665,7 +2673,14 @@ void dev_net_set(struct net_device *dev, struct net *net)
->    */
->   static inline void *netdev_priv(const struct net_device *dev)
->   {
-> -	return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
-> +	struct net_device_priv *priv;
-> +
-> +	/* Dummy struct net_device have no trailing data. */
-> +	if (WARN_ON_ONCE(dev->reg_state == NETREG_DUMMY))
-> +		return NULL;
-> +
-> +	priv = container_of(dev, struct net_device_priv, dev);
-> +	return (u8 *)priv->data;
->   }
->   
->   /* Set the sysfs physical device reference for the network logical device
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index cb2dab0feee0..0fcaf6ae8486 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -10800,7 +10800,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
->   {
->   	struct net_device *dev;
->   	unsigned int alloc_size;
-> -	struct net_device *p;
-> +	struct net_device_priv *p;
->   
->   	BUG_ON(strlen(name) >= sizeof(dev->name));
->   
-> @@ -10814,20 +10814,16 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
->   		return NULL;
->   	}
->   
-> -	alloc_size = sizeof(struct net_device);
-> -	if (sizeof_priv) {
-> -		/* ensure 32-byte alignment of private area */
-> -		alloc_size = ALIGN(alloc_size, NETDEV_ALIGN);
-> -		alloc_size += sizeof_priv;
-> -	}
-> +	alloc_size = struct_size(p, data, sizeof_priv);
->   	/* ensure 32-byte alignment of whole construct */
->   	alloc_size += NETDEV_ALIGN - 1;
->   
->   	p = kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
->   	if (!p)
->   		return NULL;
-> +	p->size = sizeof_priv;
->   
-> -	dev = PTR_ALIGN(p, NETDEV_ALIGN);
-> +	dev = &PTR_ALIGN(p, NETDEV_ALIGN)->dev;
->   	dev->padded = (char *)dev - (char *)p;
->   
->   	ref_tracker_dir_init(&dev->refcnt_tracker, 128, name);
+-- 
+2.34.1
+
