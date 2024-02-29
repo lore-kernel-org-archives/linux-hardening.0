@@ -1,79 +1,44 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1491113B792
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 19:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4257A140;
+	Thu, 29 Feb 2024 19:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709233741; cv=none; b=qtdXSXkDy21ZPR1PCWdxLXw6yYsugcypCp3/iAZ4JZ5V1fPIv5/S2asUy2KE6+Ymeh7FbyNCrNJITTTxLbYYfx2c47Zu5GuAwS6DZXIJJamvncyGplFALStDNSZL0iHyDXKLiRMEN/YPAuwkr8lFxliyW9OdnU51RBA6D1nZxJ4=
+	t=1709234503; cv=none; b=drH1uaF3zNv/VhQE/4YVcrKHVBRDEURYNI/ZQ6R32ln/4UYqY0kCVv6haH7Rkkdu51voorTAj8mGWzaBXH4aP58fl53S1Edttv687Ne3u0+AY0mkbVQZtrzZWO6UeIarAILNnGhcn0Et3Tg18RwmBLgH8qiUbzG2GuTkLnLKpiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709233741; c=relaxed/simple;
-	bh=XhYVxNr3yIQGYfPBq8eZl7fW5SFxmb1whNnII5+VYe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iNWKc/rH3F1/5XvU2EZrdmMQJ6PInESpz90VTC27Z/jiCOY7mdI6oiR7mwZ8T+zu1S1xQtfZJ/XigRqfZHA9oHnyenXYR7nsOsRaMoGEA1mEqAnajy1LVQUHID8L9ASVWMgkC3HghJguy4693v6tzinudnji6T1RUtvU4hTUw2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WPFTpjyi; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709234503; c=relaxed/simple;
+	bh=GCWCeqhm4LZf/5l3dD8UzJw4yhk96djI2q+ZTnr4omM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XlzVBO5z3dvGCX4FwAPeyYeKfqs031tZf3zdAF+uFVXsrMqlZldkLASX/Bx8fVuy+UBn5BT4DHzRDOJOVkiqhgyTe6/KusVej67FamG1kcDFn52vlyvdTlw6dNsmSn0DPb+Fk4fRwuZIn4gGDiBtXaqintFIJu+qMThRCA67ubE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J//fa1EN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPFTpjyi"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6e49833ccdfso550294a34.2
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 11:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709233739; x=1709838539; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UPNx03vL5gJBUsLY5izQNSc5f5aQFQJTo3mFc1Gcb0A=;
-        b=WPFTpjyiRDs+msv4Rcc4/qQvq3jlA5SfObvFs8J1jxZ+hsqoA8y2mmS/xj0bHHmGxt
-         4RQ+Vbpb7J99vt2blfAzhImkl3cMVSnvDq/urcg/XftJn0Pc/UZqL0z2YxSQtfwPOIwG
-         q5FuNu5UmCxQohquaFF0QadN7TK8tF6YHwPZ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709233739; x=1709838539;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UPNx03vL5gJBUsLY5izQNSc5f5aQFQJTo3mFc1Gcb0A=;
-        b=csVxh9EVQOChnrn1EQywFRRYpUlHSgTlTnGpfVgGQp+fJlpA5Fhnto/o0S03ca8457
-         H6+dxUb42GlmOUwgE6/k2BYkBe/R9Uo3a55RXCxSgl829KkTGWvox9L6oa53YST3wAhk
-         R5SFbenmXgfdcnUbV52aXeiazA5q2k2D5uQfdsFyl9OXbGVn7DhLmAUMwcg7QQrAdFBy
-         XtEjRNxmK0tQeO4d5ysGmJLR/9HQQItehvOtnDhppM4qf3OhO1P0NVVOnhBD/vPeqHUk
-         piykvwWX594N9sCCn/ntAP2LoxGMO1wgAC65vjW/H46o6mbuOcsQ8JY2wlVZtMVXoj46
-         j4fA==
-X-Forwarded-Encrypted: i=1; AJvYcCXo4ef66FuYVLogZoNNAWx7zmbTbmOEwO+rp/j7IiwJNDhdUkcy9U85LjMSfRYEZUKChYCj30tQWDxLyuiD9KPwVtJUtLsoqPFkzwRa3myy
-X-Gm-Message-State: AOJu0Yzm/6Ky3GtMlwa8ywy62v0Ffs/LP3CKTjmxSz+R6DV5Vb9xJSJu
-	Jc2vnoHZ66G2ATJ3k5Or68XbjhhDmSXV651izQHt3lRyzonJo7kKIe+QsiX0nA==
-X-Google-Smtp-Source: AGHT+IHgyC7clemZIshyNx4SoJ7Udvxw9GwegtcRM1FBJfrzoLTLgcJeKmWLE72ksvmhiwetvndvRw==
-X-Received: by 2002:a9d:618c:0:b0:6e4:9e38:37a7 with SMTP id g12-20020a9d618c000000b006e49e3837a7mr2725366otk.23.1709233739242;
-        Thu, 29 Feb 2024 11:08:59 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c4-20020aa78804000000b006e05c801748sm1613455pfo.199.2024.02.29.11.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 11:08:58 -0800 (PST)
-Date: Thu, 29 Feb 2024 11:08:58 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-spi@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in
- netdevice APIs
-Message-ID: <202402291059.491B5E03@keescook>
-References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
- <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
- <202402281341.AC67EB6E35@keescook>
- <20240228144148.5c227487@kernel.org>
- <202402281554.C1CEEF744@keescook>
- <20240228165609.06f5254a@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J//fa1EN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDFF6C433F1;
+	Thu, 29 Feb 2024 19:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709234503;
+	bh=GCWCeqhm4LZf/5l3dD8UzJw4yhk96djI2q+ZTnr4omM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=J//fa1ENXzUizJNH88cEPo1CGuloy2jsYmWq2XdCwen/umG6+yuHmdEsHxUlRv2zv
+	 Eofd3Dg7icI4hG5kINpL+qeNXX2khLN6WcRm/BBQvdMlTyJj4GsmD0ovvnMVd0bNtD
+	 DO1cx0/ZUte+iiw5YILsurewgvHQpkv8eLs3s0UcaoI3x95Hp9DOhPQCQ9UOp7Yp/b
+	 eY/MFQFQFBLACYsmEszokCbNAUkuUogPRt35hFW7j3c7egCZ2Vh9o9hhZa2MoXlwCs
+	 oGjIwYIzXjtXZVRXiiO1VaAH8PR909NB09aKEEAhPKWPzXwqvFDXfOR10qDpsVJu9W
+	 uJn3DDhjHOJJg==
+Date: Thu, 29 Feb 2024 13:21:41 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
+ device removal
+Message-ID: <20240229192141.GA342851@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,55 +47,152 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240228165609.06f5254a@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240229062201.49500-1-kai.heng.feng@canonical.com>
 
-On Wed, Feb 28, 2024 at 04:56:09PM -0800, Jakub Kicinski wrote:
-> On Wed, 28 Feb 2024 16:01:49 -0800 Kees Cook wrote:
-> > So, I found several cases where struct net_device is included in the
-> > middle of another structure, which makes my proposal more awkward. But I
-> > also don't understand why it's in the _middle_. Shouldn't it always be
-> > at the beginning (with priv stuff following it?)
-> > Quick search and examined manually: git grep 'struct net_device [a-z0-9_]*;'
-> > 
-> > struct rtw89_dev
-> > struct ath10k
-> > etc.
-> 
-> Ugh, yes, the (ab)use of NAPI.
-> 
-> > Some even have two included (?)
-> 
-> And some seem to be cargo-culted from out-of-tree code and are unused :S
+[+to Rafael, can you comment on whether this is the right fix for the
+=2Eremove() vs .runtime_idle() race?]
 
-Ah, which can I remove?
+On Thu, Feb 29, 2024 at 02:22:00PM +0800, Kai-Heng Feng wrote:
+> When inserting an SD7.0 card to Realtek card reader, the card reader
+> unplugs itself and morph into a NVMe device. The slot Link down on hot
+> unplugged can cause the following error:
+>=20
+> pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> BUG: unable to handle page fault for address: ffffb24d403e5010
+> PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+> Oops: 0000 [#1] PREEMPT SMP PTI
+> CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+> Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4, =
+BIOS P3.40 10/25/2018
+> Workqueue: pm pm_runtime_work
+> RIP: 0010:ioread32+0x2e/0x70
+> Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 54 01 b8 ff f=
+f ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b> 07 c3 cc cc=
+ cc cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
+> RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
+> RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000000007f
+> RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403e5010
+> RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 0000000000000000
+> R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000000007f
+> R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 0000000000009003
+> FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003706e0
+> Call Trace:
+>  <TASK>
+>  ? show_regs+0x68/0x70
+>  ? __die_body+0x20/0x70
+>  ? __die+0x2b/0x40
+>  ? page_fault_oops+0x160/0x480
+>  ? search_bpf_extables+0x63/0x90
+>  ? ioread32+0x2e/0x70
+>  ? search_exception_tables+0x5f/0x70
+>  ? kernelmode_fixup_or_oops+0xa2/0x120
+>  ? __bad_area_nosemaphore+0x179/0x230
+>  ? bad_area_nosemaphore+0x16/0x20
+>  ? do_kern_addr_fault+0x8b/0xa0
+>  ? exc_page_fault+0xe5/0x180
+>  ? asm_exc_page_fault+0x27/0x30
+>  ? ioread32+0x2e/0x70
+>  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+>  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+>  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+>  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+>  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+>  pci_pm_runtime_idle+0x34/0x70
+>  rpm_idle+0xc4/0x2b0
+>  pm_runtime_work+0x93/0xc0
+>  process_one_work+0x21a/0x430
+>  worker_thread+0x4a/0x3c0
+>  ? __pfx_worker_thread+0x10/0x10
+>  kthread+0x106/0x140
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork+0x29/0x50
+>  </TASK>
+> Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_sof_pci_intel_cn=
+l snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_codec_generic snd_=
+soc_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 soundwire_generic_=
+allocation soundwire_cadence snd_sof_intel_hda_mlink snd_sof_intel_hda snd_=
+sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext_core snd_soc_a=
+cpi_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_compress ac97_b=
+us snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_intel_sdw_acpi=
+ intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core x86_pkg_temp_t=
+hermal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel drm_buddy ttm =
+mei_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_event cec crct10d=
+if_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypto_simd rc_core =
+cryptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cstate i2c_algo_bi=
+t joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_timer sysfillrect =
+input_leds snd ee1004 sysimgblt mei_me soundcore
+>  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_codel msr parport=
+_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_tables x_tables=
+ autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ahci e1000e i2c=
+_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas video wmi
 
-> That's... less pretty. I'd rather push the ugly into the questionable
-> users. Make them either allocate the netdev dynamically and store 
-> a pointer, or move the netdev to the end of the struct.
-> 
-> But yeah, that's a bit of a cleanup :(
+The module list is a big distraction and isn't relevant to this issue.
 
-So far, it's not too bad. I'm doing some test builds now.
+> CR2: ffffb24d403e5010
+> ---[ end trace 0000000000000000 ]---
+>=20
+> This happens because scheduled pm_runtime_idle() is not cancelled.
 
+I think it would be useful to include a little more background about
+how we got here.  In particular, I think we got here because
+=2Eruntime_idle() raced with .remove():
 
-As a further aside, this code:
+  - rtsx_pci_runtime_idle() did iowrite32(pcr->remap_addr + RTSX_HAIMR)
+    in rtsx_pci_write_register() successfully
 
-        struct net_device *dev;
-	...
-        struct net_device *p;
-	...
-        /* ensure 32-byte alignment of whole construct */
-        alloc_size += NETDEV_ALIGN - 1;
-        p = kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
-	...
-        dev = PTR_ALIGN(p, NETDEV_ALIGN);
+  - rtsx_pci_remove() iounmapped pcr->remap_addr
 
-Really screams for a dynamic-sized (bucketed) kmem_cache_alloc
-API. Alignment constraints can be described in a regular kmem_cache
-allocator (rather than this open-coded version). I've been intending to
-build that for struct msg_msg for a while now, and here's another user. :)
+  - rtsx_pci_runtime_idle() did ioread32(pcr->remap_addr + RTSX_HAIMR)
+    in rtsx_pci_write_register(), which faulted
 
--Kees
+The write and the read access the same register, but the write was
+successful and we faulted on the *read* (see [1]), which means
+rtsx_pci_runtime_idle() started execution first, and rtsx_pci_remove()
+raced with it and happened to unmap pcr->remap_addr (see [2]) between
+the write and the read.
 
--- 
-Kees Cook
+It looks like this kind of race between .runtime_idle() and .remove()
+could happen with any driver.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/misc/cardreader/rtsx_pcr.c?id=3Dv6.7#n164
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/drivers/misc/cardreader/rtsx_pcr.c?id=3Dv6.7#n1633
+
+> So before releasing the device, stop all runtime power managements by
+> using pm_runtime_barrier() to fix the issue.
+>=20
+> Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realte=
+k.com/
+> Cc: Ricky Wu <ricky_wu@realtek.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v3:
+>   Move the change the device driver core.
+> =20
+> v2:
+>   Cover more cases than just pciehp.
+>=20
+>  drivers/base/dd.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 85152537dbf1..38c815e2b3a2 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device *=
+dev, struct device *parent)
+> =20
+>  	drv =3D dev->driver;
+>  	if (drv) {
+> +		pm_runtime_barrier(dev);
+>  		pm_runtime_get_sync(dev);
+> =20
+>  		while (device_links_busy(dev)) {
+> --=20
+> 2.34.1
+>=20
