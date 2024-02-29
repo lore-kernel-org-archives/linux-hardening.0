@@ -1,55 +1,55 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B48B7D06F
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 18:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061BA7BAF0
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 18:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709231168; cv=none; b=I1SBKUCTpFVLPgqk57rL4uzTk8h6R4Z+8pDceajhOnl0bFrLbFeeAvSSF6umIcIrPAgqy0TVPTXOjlLNlbJOLxv4xPE6ZEfItiz/QEbhUFUi0+aIdG/HVNUujaLoLjSFjGit8LpguFFT6zcSIDi61f2fDsIzWI2Xv4wHQFi6CMA=
+	t=1709231301; cv=none; b=H2Nth/vZIQNN3NY18yjC5fEMfYropwOX2FF9rELGqmirb4v5gCVcWFWc3Xczed+Cl+Au1sI182pm3OFmj74OdDKJuUJI3JoQgnDHhnFBSkdNjtA9oudr6nFXs67X6IhJD1yUa6wwnyx6UE1fbUZLR54UKC6mtmakBynX/jCSBc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709231168; c=relaxed/simple;
-	bh=GMRN6SUrrHoEIDYQZaXbYank+mE4jIYwZGljGX8JzRs=;
+	s=arc-20240116; t=1709231301; c=relaxed/simple;
+	bh=TsNS9H9GnTpwvcccMLUCGH9dbY20A+4uTVdeOoyOT04=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMawmzOFQrgdXKGWrDi0xyTn53OAPGDQcnCKwD4PQP/fxWdR5ESJMxJDmpGAfDQOkVeQr6NWvRheH75Tcmus69P5x/pFEAflAVsbUfPB4+R7Jj/YSBfpxgWppOPM6oIwfK7M/0lNrnBc2fDD9+rI52pYY45CvB2ZPWShn88cWN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GWtPP+Gs; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhjLVrnJVzYoFH4v1pqaPrYQ7VI/4sBX55hoyUkitbGj2OUhEoqnDZnZ5r1jbBMMBbHnRUTsk07JA+/AZapihLcrbOcThFywmcZ2UKsK5zXPHczbmqTbJiSb7vY2ssYQrtzWZZ+qMTOzxAf/rMj4rZ2J1biGzMJouGZpbuHahyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ft0sFR8H; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GWtPP+Gs"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc13fb0133so10492515ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 10:26:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ft0sFR8H"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d944e8f367so9788745ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 10:28:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709231165; x=1709835965; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709231299; x=1709836099; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=onsMWwzpvtENple3SFlR2LMD09MQgc6sYAmAsDrNdvU=;
-        b=GWtPP+Gsy8M3uLFQ3Bn8eCkaLfwMSCXbCoiwv7X9D6CXKax2kNaR0Yit3mNLBqIftB
-         UBUbEj3tonKTijg/2l0GXZlW1Y1C5l4OuQ6c7+OlA8nofTANoAHX5RPdp3PVZcuzyOP8
-         oK8vndSURR2ikGP6Tv+IZmb/ahraIVLlxtEwI=
+        bh=S7hpS9VpNEze5H4aDuNsMr11UTcGSJ5cm/3AR7/T5Hc=;
+        b=Ft0sFR8H+zbuiyIAKexQ970Fx7JhlQ21wk125e53FUT7WAKC0Kv6b32aFjCXt31Cdw
+         YwYLEbkFU1Po8mGu8gHM0AYQkev29ajaqmVNJ4DBrDOwUjH4EJ7hpCS/vvFEMnYKoku/
+         +7G7W9Sd+q+dG+9hp6MIjgFNMao++iFBvT/iM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709231165; x=1709835965;
+        d=1e100.net; s=20230601; t=1709231299; x=1709836099;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=onsMWwzpvtENple3SFlR2LMD09MQgc6sYAmAsDrNdvU=;
-        b=ZU/OTyso12ZP8PURQ7+bMUENGuQfSleT4PfR9cALPFNETsi7IS5/hlRTpD5LlRvlWd
-         sZXYoSMZrzGqLAEl1t9Pgfw6Zw2agF8CHoT1RyqXMM3pGCsgmjD9fFHD9SUFzsYDLdqo
-         lwRc+b8vxhTUsDVb5dzxCExXt/OT8R9Nh5HS6cyhjiagUxIUDPN9/PjGzHjerhqtjA2x
-         vH9NXTs1BiLWkoUQh2fl8zL2FwmLMueDfiShJilBDlCntPiuA5nZ4gYju5XesTs/TPno
-         NpCpIKXNcXHJxJeMYEbx88usbecR71uCsGCymHXqcoqcpKP1WrCJU8s/588QW3I3GPOb
-         NXQw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6FtNefZluCZ200RfCNcCo3bmcUxpm4t0Wmfx6OkLsuWI5PqeAuGRdUOJvM514JgU4NZKCTurALtGSMQaA0w2ook3GCZsaHQE9K2hNjDsn
-X-Gm-Message-State: AOJu0YzusgCWcmN8NBOKpwwHICo5evuy4Nwz4mKYHzAxzJTMOZR/Xz6x
-	FPlEkzNuJ381W0dnwVkFKs+b9HxHZ5/fygr319xk9Uvfua7uue8mu2myWWOgfg==
-X-Google-Smtp-Source: AGHT+IFaOyXib1ZvD8HKP8qWNtoqD6PNUUwUwDcIGpR6CELmVt23qtsOEdbZ9mepYl+BYt4oLI9EwA==
-X-Received: by 2002:a17:902:a3c7:b0:1db:c6ff:664a with SMTP id q7-20020a170902a3c700b001dbc6ff664amr2752373plb.53.1709231165470;
-        Thu, 29 Feb 2024 10:26:05 -0800 (PST)
+        bh=S7hpS9VpNEze5H4aDuNsMr11UTcGSJ5cm/3AR7/T5Hc=;
+        b=Rndk50Y4UY/SCbtnafNJNT+vlOpzgDlQyMjOoZ0wT2qZCfX/eT1XzDVkdt6en8AmN3
+         QVNcgjxpXq44LTpHbtKxAKiRPX3J+gzTZfE6oEbux5CRbryJk3brZk2xRMFD/eApprd8
+         +0o+1HFyjEHjXvQNPSZYqofTqYcgK9jF2GD8LvfMnmEhP8NaZRfOSEx6VJZ1dlo8I+xj
+         KnsYrm3+KhczY8ooLhVwN7l0OtBwSIgjd/oyciksBnMdutUIDNkRoJi91d8/INpXFF8J
+         R6BULrGh/q7+PtvisreOW/or4LENrzMdfBKh6E0sKflpIXdWb5gyI+CAwz5XEIQwSvoi
+         UZxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEXMC5CfH3epfsTTE7286EAya0JOewm627P45wVM8Xo2CoihO0WtglTfu5tbqxc5o0CWVJf5WVe5e1hTEOxNjrWX8nV8yGdVsYL5v7kjKl
+X-Gm-Message-State: AOJu0YwGirthMdHekwpJgHZF+ejmn8jEWCurWDfbeAI3FbiH0MS8ylJK
+	tiXuFKTh/jJol+pNiphtdV4B1ldt1p+lXu2amBxp18oBQgTYrsus1Az0wT+nZA==
+X-Google-Smtp-Source: AGHT+IFv6v7GCq84bRF/XSbui043ytODMyWUS4Rfqf+IDs54+SrN6ooF1PL5gcE4I2rCfOz2B9orlw==
+X-Received: by 2002:a17:902:c394:b0:1dc:1831:8ede with SMTP id g20-20020a170902c39400b001dc18318edemr3025429plg.53.1709231299355;
+        Thu, 29 Feb 2024 10:28:19 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o8-20020a170902d4c800b001da1fae8a73sm1821003plg.12.2024.02.29.10.26.05
+        by smtp.gmail.com with ESMTPSA id n4-20020a170903110400b001dc391cc28fsm1798569plh.121.2024.02.29.10.28.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 10:26:05 -0800 (PST)
-Date: Thu, 29 Feb 2024 10:26:04 -0800
+        Thu, 29 Feb 2024 10:28:18 -0800 (PST)
+Date: Thu, 29 Feb 2024 10:28:18 -0800
 From: Kees Cook <keescook@chromium.org>
 To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
 Cc: Brendan Higgins <brendanhiggins@google.com>,
@@ -74,10 +74,10 @@ Cc: Brendan Higgins <brendanhiggins@google.com>,
 	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 7/8] kunit: Print last test location on fault
-Message-ID: <202402291025.0BAEBC1@keescook>
+Subject: Re: [PATCH v1 8/8] kunit: Add tests for faults
+Message-ID: <202402291027.6F0E4994@keescook>
 References: <20240229170409.365386-1-mic@digikod.net>
- <20240229170409.365386-8-mic@digikod.net>
+ <20240229170409.365386-9-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,10 +87,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240229170409.365386-8-mic@digikod.net>
+In-Reply-To: <20240229170409.365386-9-mic@digikod.net>
 
-On Thu, Feb 29, 2024 at 06:04:08PM +0100, Mickaël Salaün wrote:
-> This helps identify the location of test faults.
+On Thu, Feb 29, 2024 at 06:04:09PM +0100, Mickaël Salaün wrote:
+> The first test checks NULL pointer dereference and make sure it would
+> result as a failed test.
+> 
+> The second and third tests check that read-only data is indeed read-only
+> and trying to modify it would result as a failed test.
+> 
+> This kunit_x86_fault test suite is marked as skipped when run on a
+> non-x86 native architecture.  It is then skipped on UML because such
+> test would result to a kernel panic.
+> 
+> Tested with:
+> ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_x86_fault
 > 
 > Cc: Brendan Higgins <brendanhiggins@google.com>
 > Cc: David Gow <davidgow@google.com>
@@ -98,9 +109,32 @@ On Thu, Feb 29, 2024 at 06:04:08PM +0100, Mickaël Salaün wrote:
 > Cc: Shuah Khan <skhan@linuxfoundation.org>
 > Signed-off-by: Mickaël Salaün <mic@digikod.net>
 
-Much more detailed error!
+If we can add some way to collect WARN/BUG output for examination, I
+could rewrite most of LKDTM in KUnit! I really like this!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+>  lib/kunit/kunit-test.c | 115 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 114 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+> index f7980ef236a3..57d8eff00c66 100644
+> --- a/lib/kunit/kunit-test.c
+> +++ b/lib/kunit/kunit-test.c
+> @@ -10,6 +10,7 @@
+>  #include <kunit/test-bug.h>
+>  
+>  #include <linux/device.h>
+> +#include <linux/init.h>
+>  #include <kunit/device.h>
+>  
+>  #include "string-stream.h"
+> @@ -109,6 +110,117 @@ static struct kunit_suite kunit_try_catch_test_suite = {
+>  	.test_cases = kunit_try_catch_test_cases,
+>  };
+>  
+> +#ifdef CONFIG_X86
+
+Why is this x86 specific?
 
 -- 
 Kees Cook
