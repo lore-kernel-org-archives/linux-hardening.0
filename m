@@ -1,172 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38DD3E47E;
-	Thu, 29 Feb 2024 06:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 899371F951;
+	Thu, 29 Feb 2024 07:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709188698; cv=none; b=Wmsz4zifx49HpJj0O+RkULaHEHkyctyEteCcPxZmtw6If8Smie/P4Qfp4YeIt+A4CXDF4ihYIrk/EhIN+AA/dJdw+B5i75KZw0XkV3JHh58tikTWu1oAWVWqPW0g+0LIsIz1z7VZRZ///nuOcnCchLXnTTkQPPmGyhjAzEzeJGc=
+	t=1709192546; cv=none; b=bMoQ3Uqlv4pVyZ6kFjVJOp/ci40feguy0lmaD+Pa5SyHw0jpMrMT+Tb400AT1gghujf1qE6N564wSNe4sb3dJP8j82Mfq2uJdXWnoYruW+E8XSACFEf1W8Em3D67FNbfnsR4DnNVAkI7fjLKxB7tKHMPkpDNI39Mpu3xz8SyVi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709188698; c=relaxed/simple;
-	bh=VnaCGmTbhdOxcaI9YOBv8ChVZ1c9Uo+mqEnOdGTunRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6lU9woth/+VHM9O0ysU5bGJuzJHeGVbQ67jhyr5EJb37UUDV/GCyYW1zUnFvthvHt+EZVZfviScqAJaD9EtZLeV3bqsIH9HEcaXPaw3Q1ErIlm9P4Bq2yQM05pRARCMrm8nzEppYBWUziE+BGZNi3cQNERiycI7iuEuoN6Seh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kKYCfUTj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kKYCfUTj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04749C433C7;
-	Thu, 29 Feb 2024 06:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709188697;
-	bh=VnaCGmTbhdOxcaI9YOBv8ChVZ1c9Uo+mqEnOdGTunRQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kKYCfUTjlHsSI85yXg91f1hcMEnc4IaSOnLMDBbHvnFG2xlO0wNdWa54lUmmrwNV3
-	 zixmUh28pPClhwMvdtSbq7f9l/+KvVaJ4kYS0lLlRCI+zzWN78REdRrON6GuO8seJH
-	 4a4A2VfAATpOLLwi8Q3XbDrwQHpFLvKlgwX8br7c=
-Date: Thu, 29 Feb 2024 07:38:14 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: rafael@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>,
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-Message-ID: <2024022925-kudos-frugally-04a0@gregkh>
-References: <20240229062201.49500-1-kai.heng.feng@canonical.com>
+	s=arc-20240116; t=1709192546; c=relaxed/simple;
+	bh=Q/11Q49KEKt/Spi4akngBYieCr5yha8+eBtEahXuFrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W0r9mYdXi+BTz+IoFHI5EPjR/lo4ofxa8ljv306U+I6StIT3LfLbYKAczyworJgOb5UfDoUzBQU0JtG60ZHajcA3oQVeXlxXzrPShkG2OkWDLwyWNaj1Z8yGQ2M0YiScngMzLwgTSrr0WteLUMh1DScTOj9KqpMsz5/XcbmJUCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76EFA1FB;
+	Wed, 28 Feb 2024 23:43:02 -0800 (PST)
+Received: from [10.57.12.184] (unknown [10.57.12.184])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41FBD3F6C4;
+	Wed, 28 Feb 2024 23:42:21 -0800 (PST)
+Message-ID: <2496f490-fbfb-403c-a86c-73960afb4e76@arm.com>
+Date: Thu, 29 Feb 2024 07:42:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240229062201.49500-1-kai.heng.feng@canonical.com>
-
-On Thu, Feb 29, 2024 at 02:22:00PM +0800, Kai-Heng Feng wrote:
-> When inserting an SD7.0 card to Realtek card reader, the card reader
-> unplugs itself and morph into a NVMe device. The slot Link down on hot
-> unplugged can cause the following error:
->=20
-> pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> BUG: unable to handle page fault for address: ffffb24d403e5010
-> PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4, =
-BIOS P3.40 10/25/2018
-> Workqueue: pm pm_runtime_work
-> RIP: 0010:ioread32+0x2e/0x70
-> Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 54 01 b8 ff f=
-f ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b> 07 c3 cc cc=
- cc cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
-> RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
-> RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000000007f
-> RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403e5010
-> RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 0000000000000000
-> R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000000007f
-> R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 0000000000009003
-> FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003706e0
-> Call Trace:
->  <TASK>
->  ? show_regs+0x68/0x70
->  ? __die_body+0x20/0x70
->  ? __die+0x2b/0x40
->  ? page_fault_oops+0x160/0x480
->  ? search_bpf_extables+0x63/0x90
->  ? ioread32+0x2e/0x70
->  ? search_exception_tables+0x5f/0x70
->  ? kernelmode_fixup_or_oops+0xa2/0x120
->  ? __bad_area_nosemaphore+0x179/0x230
->  ? bad_area_nosemaphore+0x16/0x20
->  ? do_kern_addr_fault+0x8b/0xa0
->  ? exc_page_fault+0xe5/0x180
->  ? asm_exc_page_fault+0x27/0x30
->  ? ioread32+0x2e/0x70
->  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
->  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
->  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
->  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
->  ? __pfx_pci_pm_runtime_idle+0x10/0x10
->  pci_pm_runtime_idle+0x34/0x70
->  rpm_idle+0xc4/0x2b0
->  pm_runtime_work+0x93/0xc0
->  process_one_work+0x21a/0x430
->  worker_thread+0x4a/0x3c0
->  ? __pfx_worker_thread+0x10/0x10
->  kthread+0x106/0x140
->  ? __pfx_kthread+0x10/0x10
->  ret_from_fork+0x29/0x50
->  </TASK>
-> Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_sof_pci_intel_cn=
-l snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_codec_generic snd_=
-soc_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 soundwire_generic_=
-allocation soundwire_cadence snd_sof_intel_hda_mlink snd_sof_intel_hda snd_=
-sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext_core snd_soc_a=
-cpi_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_compress ac97_b=
-us snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_intel_sdw_acpi=
- intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core x86_pkg_temp_t=
-hermal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel drm_buddy ttm =
-mei_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_event cec crct10d=
-if_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypto_simd rc_core =
-cryptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cstate i2c_algo_bi=
-t joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_timer sysfillrect =
-input_leds snd ee1004 sysimgblt mei_me soundcore
->  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_codel msr parport=
-_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_tables x_tables=
- autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ahci e1000e i2c=
-_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas video wmi
-> CR2: ffffb24d403e5010
-> ---[ end trace 0000000000000000 ]---
->=20
-> This happens because scheduled pm_runtime_idle() is not cancelled.
->=20
-> So before releasing the device, stop all runtime power managements by
-> using pm_runtime_barrier() to fix the issue.
->=20
-> Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realte=
-k.com/
-> Cc: Ricky Wu <ricky_wu@realtek.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-What commit id does this fix?
-
-Should it also go to stable kernels?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: core: Move initial num_trips assignment before
+ memcpy()
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, rui.zhang@intel.com,
+ gustavoars@kernel.org, morbo@google.com, justinstitt@google.com,
+ stanislaw.gruszka@linux.intel.com, linux-pm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+ patches@lists.linux.dev, Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <20240226-thermal-fix-fortify-panic-num_trips-v1-1-accc12a341d7@kernel.org>
+ <6a6be01d-3453-4268-8b2e-0279cc20835d@linaro.org>
+ <CAJZ5v0h87k6xoi-9V0Cfb2rHQcr-STfG_bNWpzfoj4Dy46U0Lw@mail.gmail.com>
+ <f81af0ae-7458-47d3-90ae-71d5217ee7dd@linaro.org>
+ <202402270816.0EA3349A76@keescook>
+ <bbc65508-eb0e-4d63-921b-85d242cc556f@linaro.org>
+ <202402270852.E46A5268@keescook>
+ <3ed4ad69-1229-4834-95b7-9397364ea401@arm.com>
+ <20240228165651.GA2158263@dev-arch.thelio-3990X>
+ <202402280944.CE26D81@keescook>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <202402280944.CE26D81@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-> ---
-> v3:
->   Move the change the device driver core.
-> =20
-> v2:
->   Cover more cases than just pciehp.
->=20
->  drivers/base/dd.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 85152537dbf1..38c815e2b3a2 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device *=
-dev, struct device *parent)
-> =20
->  	drv =3D dev->driver;
->  	if (drv) {
-> +		pm_runtime_barrier(dev);
->  		pm_runtime_get_sync(dev);
 
-This is going to affect every device, are you sure about that?
+On 2/28/24 17:48, Kees Cook wrote:
+> On Wed, Feb 28, 2024 at 09:56:51AM -0700, Nathan Chancellor wrote:
+>> On Wed, Feb 28, 2024 at 08:41:07AM +0000, Lukasz Luba wrote:
+>>> Hi Nathan and Kees,
+>>>
+>>> On 2/27/24 17:00, Kees Cook wrote:
+>>>> On Tue, Feb 27, 2024 at 05:47:44PM +0100, Daniel Lezcano wrote:
+>>>>> Ok my misunderstanding was I thought sizeof() was calling _bdos under the
+>>>>> hood, so when calling sizeof(flex_array), it was returning the computed size
+>>>>> inferring from the __counted_by field.
+>>>>
+>>>> Yeah, sizeof() has a very limited scope. __builtin_object_size() has
+>>>> more flexibility (via the 2nd argument, "type"), but it was still
+>>>> compile-time only. __builtin_dynamic_object_size() was added to bring
+>>>> runtime evaluations into the mix (initially to support the alloc_size
+>>>> attribute, and now includes the counted_by attribute too).
+>>>>
+>>>
+>>> Thanks for your earlier emails explaining these stuff.
+>>> Do you have maybe some presentation about those features
+>>> for the kernel (ideally w/ a video from some conference)?
+>>
+>> I think Kees's 2022 and 2023 talks at LPC are a good place to start:
+>>
+>> https://youtu.be/tQwv79i02ks?si=Nj9hpvmQwPB4K3Y4&t=452
+>> https://youtu.be/OEFFqhP5sts?si=u6RnOP641S8FkouD&t=614
+>>
+>> https://outflux.net/slides/2022/lpc/features.pdf
+>> https://outflux.net/slides/2023/lpc/features.pdf
+> 
+> I've also got a write-up on the entire topic of array bounds, which ends
+> with some discussion of "the future" (which is now) involving the use of
+> the "counted_by" attribute:
+> https://people.kernel.org/kees/bounded-flexible-arrays-in-c#coming-soon-annotate-bounds-of-flexible-arrays
+> 
 
-And shouldn't we be checking the return value?  Wait, why does EVERYONE
-ignore the return value of this call?
-
-thanks,
-
-greg k-h
+Thank you guys!
