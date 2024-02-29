@@ -1,55 +1,55 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268CA134413
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 18:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E864978284
+	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 18:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709230911; cv=none; b=sRja5YOzvO4vjiVmv9KBUaWxsfGuqMDZ7Oa+HpKQQbGD8EKiyWktGd/H+phFWW2Yky2zwndFyykS3RFNZHz+WsxngcFaHLWBlavGbADdaRoE4X8sSJQb3pzhgZj0SybgmzIwiZ1Rl7fWyj2G3FwAPPZdht3Yv/0W1YnLuCdh0cs=
+	t=1709230937; cv=none; b=MRBLLZI7Kr/3ht/HsdbbEKmHviF6C11FmCwOaFTjkmbMSH5Q2gOpJ2iXsuumEPSg/BLlrk1skZoPE4LIvH9ohrk/rx6OKfESMyJ7m+f+Bg7Eyf1mfDIbHl0vN20MoK3UsRZwWIwhURM0YngNaWPVf2+XZUq2I+3XvxOi/8zw+4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709230911; c=relaxed/simple;
-	bh=YL/SyMq50QLHRa6w1uhHS9ErDLnXGftgcw+i2diIQZU=;
+	s=arc-20240116; t=1709230937; c=relaxed/simple;
+	bh=fDc9Uwhm++z7zUnn73jE8m6PTGMIZXn9lNaCfrSaFKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RQkE07Tih4ILZwGdB9lbMNoQlAUDb/OqBEp3wWwXzjOW+6Onkk2cHorp5IouWIzsgWQYOkU7S55/y1eJPKQKlILB7SNXdJj3JDhcdBuUp5TQn+vQAEheeb7kDZy/VbBynzfP+RY+xwXOr0LFAlolaW46JsiuC7tFAjAoAZP/BRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oPn0oM3h; arc=none smtp.client-ip=209.85.167.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=O0wabmRw9vb5vjgPqhvwXdn/lJgc6CXdl51LL5XsMoY2CqxJXDDtnDUoBW1sbHQwm7oc2nKhOT9Rtm6h5PE8LtCNuuhiSR3X5TE0UCIOMj+LgWsKkHwsgRwdIXsvKTUCf23x5TUu6bLnfGoNBF+Lk6ZPMdK5XjbJMnflAokb4sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B9KciT6Z; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oPn0oM3h"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3bba50cd318so843578b6e.0
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 10:21:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B9KciT6Z"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d93edfa76dso12127835ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 10:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709230909; x=1709835709; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709230935; x=1709835735; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=yXpj2r2UG5nknOxqJR2jUPNqVqUgtdngKnqrB/4KOeU=;
-        b=oPn0oM3hBHX9yRPVgDCgyYl2WY/6iqVSv2StMCNrJZbuvSi4gLCNH+QHd79HZUn63f
-         fQEFhH1iYT2xdKneqnl65Mk1Ik0sgiwA8ImV1/8C/KrEgwgSDIvpweNIEwv1thPMcRZR
-         gwhRwumWhubt/uiwxs9eMbRkeu+4CJ2jRsAqs=
+        bh=d0x4aOlew+ChlnlW593MwGC8/uLA2yAII6jDpil+AZo=;
+        b=B9KciT6ZaaZF4rRQhqyiILzLdNkpla2QbXXkNeuCqrChpu0qtMIaDWenDbQ8rrSIFh
+         9XynGDga/vimj3ueeTB3rdqIRVOjTHTM95CYqqb8qeQr22gNsndvohB4T8KofRerc6rN
+         48/S2kHkaGM+eNJMxTNvKpqQO0LME4EEwFUmE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709230909; x=1709835709;
+        d=1e100.net; s=20230601; t=1709230935; x=1709835735;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yXpj2r2UG5nknOxqJR2jUPNqVqUgtdngKnqrB/4KOeU=;
-        b=iPFvj2TJvARoIUY60Zak6PveDyj564jkG9UctEwbTboMcF7Tyuy4m4TaqL+tbluj4u
-         7E+lY4SXLJlYsJXxA/n4ZZCdxHq9wk4TThlhG6yc9r9IZRuB0PWLMTtgijglXA9FJkmc
-         BrJLbI2wgGhLTCljd3NQHx4Lng3V86ol3vQ5XZ4Wj40nWHjXbkzXcZZOyr6xCjFiA5gE
-         HW0Rt1Ef3KU3HwcLrw0T/n40J6Tdc9eqAa3Vl+SbsmNfP7/Z4GnFmE5aJuyVCUvVyj0D
-         F941ZDNT37v0bfLarpnMfA4piaoDx8eF5WjEiBj195WPUjucGh02qnbo0mxde6lNR7V5
-         PqhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVW5tBUSYxrTMBgObU2qk2X6fbn6S8Q2quJ+tcjzALt+J+w/bmEwiralGUSeqFkRWib4pyH6fxbiMwJ2kAIWsQ6d+Wyhvf9KYrNzz1Tnar
-X-Gm-Message-State: AOJu0YzqkIT3nvZKIlyOkRPRgAkvWHUe+O7jWYXvxF5DSTSXFLHOtKM8
-	xmIUF2FcmYhHJGNn5IkYRY0qi2meN1vwRL/lW2Zz440A6HYAHdey0f8N8E7UxA==
-X-Google-Smtp-Source: AGHT+IERpkPQz2QB9IYFYaYwAdfGdaisE77tDyny+LVcbAZefwDQDU4gXxLqYhBKqHQ71m4zzv55/g==
-X-Received: by 2002:a05:6808:3089:b0:3c1:cc65:5737 with SMTP id bl9-20020a056808308900b003c1cc655737mr1233505oib.16.1709230909255;
-        Thu, 29 Feb 2024 10:21:49 -0800 (PST)
+        bh=d0x4aOlew+ChlnlW593MwGC8/uLA2yAII6jDpil+AZo=;
+        b=wWZ5zn9xWhrji4vTDe/Fek/VeD3Y5YadSBSQXBxAEwv/0uJIz8W70hTV6QMlaTf0zI
+         lDA0V6zn1XBKIle/zO1H3pBqlJ0XAjoTG19A5aV4VUPf+vSl1ze+kZn/XPk8Q+ryn79m
+         LuT75ZiyoIfGiPW3FOf7v+XRRC/ybxEp9hPfgkzcnkbbWM7s1kgvEtc2vzTRNe+7kbSX
+         fLPOIu9XhOh8+ocU2n5MpHHDgSPqPL7NRB2bKimFd0ddib/G9ScFuL1NoXgWpImCG/8v
+         DQkWc6yzAvIJKhbpzCzmsSmRboRZQRgnPAnTuWgMPa4Ds1+GQsmtEcXoz6j7MsK0XP3M
+         IqtA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjRd4dj3efOI7T6TrUdLzZHembrEVGxu0cXF/hgqGABUKiiQ2fn7juY5LoG34DF5UPlfLYpLfE02zoUNsCbVKRut0ZkkMyowrKqpauLMI+
+X-Gm-Message-State: AOJu0YwfGKkz5YfZK6sE7QGwZv6x5j3ilho68HAaKjZ+JgWbXwIvGa4H
+	nvm+Kqa8l7WBTO5t/lyNs/7kUYsynSvd/iBgdxZHtkFRLLlZXix1gBSnL9yhSQ==
+X-Google-Smtp-Source: AGHT+IFHZRhftFXgpyhoht+oIaLzwS0XuiJOF7tco0dVyJI5zhbRvtaKiuO5uiLkXREbQDVyDJP6vw==
+X-Received: by 2002:a17:902:6547:b0:1db:e7a4:90a5 with SMTP id d7-20020a170902654700b001dbe7a490a5mr2736748pln.12.1709230935335;
+        Thu, 29 Feb 2024 10:22:15 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j2-20020a056a00234200b006e56e5abc0bsm1556931pfj.51.2024.02.29.10.21.48
+        by smtp.gmail.com with ESMTPSA id u5-20020a170902e5c500b001dcc158df20sm1813098plf.97.2024.02.29.10.22.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 10:21:48 -0800 (PST)
-Date: Thu, 29 Feb 2024 10:21:48 -0800
+        Thu, 29 Feb 2024 10:22:14 -0800 (PST)
+Date: Thu, 29 Feb 2024 10:22:14 -0800
 From: Kees Cook <keescook@chromium.org>
 To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
 Cc: Brendan Higgins <brendanhiggins@google.com>,
@@ -74,10 +74,10 @@ Cc: Brendan Higgins <brendanhiggins@google.com>,
 	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 2/8] kunit: Handle thread creation error
-Message-ID: <202402291021.43ED7D2@keescook>
+Subject: Re: [PATCH v1 3/8] kunit: Fix kthread reference
+Message-ID: <202402291022.A8E2AB8A@keescook>
 References: <20240229170409.365386-1-mic@digikod.net>
- <20240229170409.365386-3-mic@digikod.net>
+ <20240229170409.365386-4-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,14 +87,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240229170409.365386-3-mic@digikod.net>
+In-Reply-To: <20240229170409.365386-4-mic@digikod.net>
 
-On Thu, Feb 29, 2024 at 06:04:03PM +0100, Mickaël Salaün wrote:
-> Previously, if a thread creation failed (e.g. -ENOMEM), the function was
-> called (kunit_catch_run_case or kunit_catch_run_case_cleanup) without
-> marking the test as failed.  Instead, fill try_result with the error
-> code returned by kthread_run(), which will mark the test as failed and
-> print "internal error occurred...".
+On Thu, Feb 29, 2024 at 06:04:04PM +0100, Mickaël Salaün wrote:
+> There is a race condition when a kthread finishes after the deadline and
+> before the call to kthread_stop(), which may lead to use after free.
 > 
 > Cc: Brendan Higgins <brendanhiggins@google.com>
 > Cc: David Gow <davidgow@google.com>
