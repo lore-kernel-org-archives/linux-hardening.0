@@ -1,77 +1,106 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEA744368
-	for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 23:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F9C365
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 00:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249950; cv=none; b=Yhke7QIHNXyriWAAxcRg80uXeLL/x5aspr1j6dxrdvMrOLvO5hRTZXGySk/rTeMt2459Le1aFv9JCAxDunLaEYzait6pHyzAiZvzoHhyse916JKlB6QZxxU8xInxemJGTF3Ppmzh8Bh6h2eGpll6BDrOptsi0VcHoj0Q6xTpAzE=
+	t=1709252814; cv=none; b=D2+A0Ayoc7UTtc05kvWys+cEeExXErc8XPtG7wdsrTDWAmby70QsyYTxJkO/AO2+QZXtDen8Xu0tZjXGX4LNaLfkl8hZQ7/r3/D1zDHNljjERJhzEE0+s8wjE11U5slf3G9wHAdMhygWlcEz7WrVnwPLRW+/BMvM4cikUuXfgag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249950; c=relaxed/simple;
-	bh=e/8V7q0T5PQHD8Yc+VQwsb6DOiBHkVWPVrFu2N9+wis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PszSlmsm9QYKDw4pAPuWjmxJw3NXBkrLwGmSXle25m2HGfM199mp90YnAJ3I4XnUkFFevmlq/pNgzgZ3cwAKbBsN4A3Iclep+Qwr0Ghtla9+4077P7r3B+JUkZKCZ+ZC66i2Gt+GgYGx73whxNocg6exFUiSYpB121CFKk+Dqug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AW67M3HE; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1709252814; c=relaxed/simple;
+	bh=moYrqqxo2UDnuGHZWzH0ODEv4jfFfQLJ2rNJTkxWGDg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eYQEwg1jTIpoBdKP4xwq0PBFe6VGFctlBEbGOLEuDdyds0rzrnW+EeQ/GGtFt5mBkdqKSU3OSYbUdehFBmTM5HcQnm2hFdN7EfA8Gh2KL3bpfH98WgJ+WbCKFD/Cjq5FXiN6dsxDjNlCFPRCO54hZpWEQkMzwQpYC6AvEonvZq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dH292u/1; arc=none smtp.client-ip=209.85.167.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AW67M3HE"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e581ba25e1so1212954b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 15:39:08 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dH292u/1"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c1c7fdfe9cso881809b6e.3
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 16:26:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709249948; x=1709854748; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zrpA1mv8JfPN81Pqls2RUoWHBrGbGLLk6Rp+CKKaj/s=;
-        b=AW67M3HEZ8+Ko+S4R3j/DvmN4MVoDg3TDZNuAbZqUz/VFKHMsUsdNh/+1ZdSQsSkvr
-         hp9HCzh5UdgCOcyGFxcJuA9Dh9znea32nlkv4PM06/9wRhCQHGNngGYa1JAmewCY7SDl
-         LcZuHZk2REpIz+uTgCvUUL3ru3b3OYswWiuXI=
+        d=chromium.org; s=google; t=1709252812; x=1709857612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QrA5UyLICMttuHo47AmdIq8RaxySGVb6p80fwiVlvuQ=;
+        b=dH292u/1WWBJblIgtYZoIn6cRYLmh7BgnOEtQ+4MdItsmgDL1RXoCsQpGKvvz0L6vH
+         qneVxIe1+N1ra1os89nGS+j0iZZrC+CFcV63s1r4IR2p6Q/LfkksTIJjveC6mkz+naf5
+         sQTSfWAXVdQWy8LN3eXqBfHLyF7TqgwQ8X2/A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709249948; x=1709854748;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zrpA1mv8JfPN81Pqls2RUoWHBrGbGLLk6Rp+CKKaj/s=;
-        b=OHgLTIjGD2t8qHdQ/Hi+qs92Tce1gNtVDUB83hBDl9MF20kvq7Ht9eZ+vx4v0licqb
-         rlhfxw1Pi31XQ3wNHvLi9OCAY/RYJ9Zi3ElEM20xlrfJ7azSMjWntuls4n5Bj2UBsD99
-         lRP42gwC7HYeiFHKNHLUD0A2vv6INrFf3Z5sCh9uc8q/lWqUiRZdiNNnQElAzfDXOJ06
-         AAg9Gy9GwNw3/uPjJ1xJ0AFbxqi8zNT4rizp/HwREm3mPckW0z7vgP39PO+of8HmFP4J
-         CvB6VygMNVL/ETCzSVjVMuC0cY/JezzbxUd+kk56NOOJo7U2R1kxj3higy3SIUpEBwCJ
-         zdPQ==
-X-Gm-Message-State: AOJu0YzNzji8EYNSaCCBbmWSg60PhPZTRpzK7uH5gCSuvUMQMotFxABG
-	o4+i199862udlRxtqtGLn1eXXbfYSVWr0GlOcwz4OeJxTmU6CqrtRSuk4qChEEmsbMHahyYmiy0
-	=
-X-Google-Smtp-Source: AGHT+IGJVW2Kg8FOzevwO891TfCYJpBIFcznOfoM7q4NgpLUnUQXz9LiC/9jjgPSzgqu4jXznWV/FQ==
-X-Received: by 2002:a05:6a00:2293:b0:6e5:599a:5252 with SMTP id f19-20020a056a00229300b006e5599a5252mr665091pfe.15.1709249947822;
-        Thu, 29 Feb 2024 15:39:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709252812; x=1709857612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QrA5UyLICMttuHo47AmdIq8RaxySGVb6p80fwiVlvuQ=;
+        b=bimysmOgei+/GPxuHTZFIc0oYuT/OB+G1nvp5lcUng7jmMLBJFnlb0GDpkqNTDBHzg
+         GCQhubLLKMWrvP7NkcgmBMWL1tov0RFZYJvplRQJsW7iHrX7J8yWVPfqzp4irBYx23yT
+         y9zSpM9KF2lgw8Wf+RcHvMHrxNc2s5zLMsczkygc2IawW8GrgS/NM567EHJ7LC7cs1B3
+         AvghztbNj8fqJBL5tdqNtca1AoEWowLV+mFMzOEQ7Mrni5EnjWca3ppLSTErqCUhvv85
+         2hGqU38cli1654EKTABHBN1UnYvpNAnKTIiOPCTeJCJo8333rUh9bbHlp+K0YUIkoBQ+
+         usUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUw6Ni5XwOprfE6xoC5j3HKAB5UrUYaULYm6IkyxPsr4V+lhpZEUhmHOuNYr3VNoCSipLatcfzKPLVkcaTdqBwwxhDBgfWGPXaSUh17zrxR
+X-Gm-Message-State: AOJu0Yws0wdjd7veip3crPn9sGd1ruNvPdD32g+mxwe4sD+3VnY9819s
+	R/2h5KDxCZJ79HZ8TuopBYaLXpSwG1keOg5qd5daTp9zSmHOLPXCFka5gJAeGA==
+X-Google-Smtp-Source: AGHT+IFTbmLNW/f53D7zdSesRBbXGfMhl15+6/jTYpyEzlfT0bpba3gTpNhwOVwa/Sy78AMal1HEnQ==
+X-Received: by 2002:a05:6808:3c93:b0:3c1:41fc:d012 with SMTP id gs19-20020a0568083c9300b003c141fcd012mr247384oib.34.1709252811946;
+        Thu, 29 Feb 2024 16:26:51 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m19-20020aa78a13000000b006e509762bc2sm1813393pfa.26.2024.02.29.15.39.07
+        by smtp.gmail.com with ESMTPSA id d4-20020aa78684000000b006e4ecc3e394sm1841748pfo.79.2024.02.29.16.26.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:39:07 -0800 (PST)
-Date: Thu, 29 Feb 2024 15:39:06 -0800
+        Thu, 29 Feb 2024 16:26:50 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] string: Convert helpers selftest to KUnit
-Message-ID: <202402291539.F0E3E63061@keescook>
-References: <20240229233432.work.675-kees@kernel.org>
- <20240229233528.1538803-2-keescook@chromium.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/2] string: Convert selftests to KUnit
+Date: Thu, 29 Feb 2024 16:26:46 -0800
+Message-Id: <20240301002416.it.092-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229233528.1538803-2-keescook@chromium.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=893; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=moYrqqxo2UDnuGHZWzH0ODEv4jfFfQLJ2rNJTkxWGDg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4SDIx+1hzENuYl6hlOaohCcjbErtMu6nYDGpe
+ tlKDFUKztOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeEgyAAKCRCJcvTf3G3A
+ Jj8YD/9tmTSBz1IaC0rs2X8jkqHkNcS3dAM5KC6mzlItIbkMb2ZHf9M465ykfWmEP+2Q1wihYN5
+ ptkoLrHxVV3arN+ciF1A/vkdxajkFcKlp8PSEQHzgT+COw2fgNBbTfZgRPl1s/u7x/K9MkEy5zg
+ 2tRLQ2dwT0g/OSw7naV/4f2+JlpCmhPslQzluJZoO5/hsuIUEhuqdSAEWTqPO52a6KdXXOKh9dl
+ XM4glyth1t1Zu2ASU7rcBjYzq06bnBtLZHQJw44eA3eZAtH/MXlN7/de+DLcRTnaE4/GZiMfgzf
+ hykOx05svh8WhAlwl0YjWMS2awUhhuhjQm7aIIhqzMomIldvNN+MxQBMC+KMDvjjOYhE54hmXKz
+ tdezZPI0n7Vs2jSfPGZdOgccwILJefwZu6Ft1H5jlgLCE1qwPwgksrpf68+AqSX+57KxOGmbSSk
+ 7TWjRcr19DJIHp2ZO9Ck+U04XW5wuuRptge/eO6ztTAxsiCaE4d2qmlRCm9X42UKBG6JegT/ef0
+ S8Nwsbs/rI90TkUFvhZfnZwh3dpl3f4/Q/Y/NffZtnuoC5GZvGU5n29zsdea7OeqjUwFE+++VNe
+ TzAwT6XQth1oHb6iNeuOMxINtdY5JYTidKMFTy0CvYyy6HeZt9VnnGV9/hOZrvT1aAqtLIMJZx5
+ knHIZ5A6 Q8Jq0Eg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 29, 2024 at 03:35:24PM -0800, Kees Cook wrote:
-> Convert test-string_helpers.c to KUnit so it can be easily run with
-> everything else.
+Hi,
 
-Gah, I will send a v2. I thought I was doing this on top of the
-get_size() change, but I didn't...
+I realized the string selftests hadn't been converted to KUnit yet. Do that.
+
+-Kees
+
+ v2: rebase onto https://lore.kernel.org/r/20240229205345.93902-1-andriy.shevchenko@linux.intel.com
+ v1: https://lore.kernel.org/linux-hardening/20240229233432.work.675-kees@kernel.org/
+
+Kees Cook (2):
+  string: Convert selftest to KUnit
+  string: Convert helpers selftest to KUnit
+
+ MAINTAINERS                                   |   4 +-
+ lib/Kconfig.debug                             |  12 +-
+ lib/Makefile                                  |   4 +-
+ ...tring_helpers.c => string_helpers_kunit.c} | 177 ++++++++++--------
+ lib/{test_string.c => string_kunit.c}         | 166 ++++++----------
+ 5 files changed, 164 insertions(+), 199 deletions(-)
+ rename lib/{test-string_helpers.c => string_helpers_kunit.c} (78%)
+ rename lib/{test_string.c => string_kunit.c} (54%)
 
 -- 
-Kees Cook
+2.34.1
+
