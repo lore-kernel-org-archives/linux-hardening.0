@@ -1,75 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D34B79C2;
-	Fri,  1 Mar 2024 17:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0440B36120;
+	Fri,  1 Mar 2024 17:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314152; cv=none; b=RxWQ3iHI0sZF3yWYnq2lBwNYQq7GvuIrkeC9JkrDuR52aOg6YfouztYe8ND4JQwV+tS5AK8kMywt0WRtgMXh+ptOf+oPkE/Qu/Q8SzEkEQLS4E8/IJaSDePUv1g6nqb2bFGgzjWqrSvT3755+7+irXFEKah6AEcupIrixR7QCjc=
+	t=1709314519; cv=none; b=kvehxK6uKTKDwi4DdZuHFtFggwplhphCjofMfuoBQ5nwnNO5LKkAsvDItG0s0vbjuAplnOFeaNZHCmdsQhMOA0CHqq76eJWCS6CqvAAi2jbtRp2edSnPKz75PK7ei4ld8GPtMkyfVwxbAUl0OPknGFaAk+u9Ia4rcoOTNNwIDos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314152; c=relaxed/simple;
-	bh=cQbj9nw1nsXY6pJq/AyxfpVBj7eJaG3yYixrJ/2GWGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENeskhQVTkg4cOhg4Qr61nIBxZ2YX1ZHqOgVTN1paQ6o9kC1Q++hqiqeG3xDYKSZwtFfJ6s2Rj4+8M19RimbzuqpRVxx3o6/xlahqx0IDtZI0SFLr5VESmS0hX438gn6ayrE46Y808Dz/XqGyG3IZ/UAO6CMOIUvj/Y7ntfeA3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15273528"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="15273528"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:29:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914020951"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="914020951"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:29:09 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1rg6h1-0000000910F-01ei;
-	Fri, 01 Mar 2024 19:29:07 +0200
-Date: Fri, 1 Mar 2024 19:29:06 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] string: Convert selftest to KUnit
-Message-ID: <ZeIQYkRc_5lj6dd6@smile.fi.intel.com>
-References: <20240301002416.it.092-kees@kernel.org>
- <20240301002650.1544829-1-keescook@chromium.org>
- <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
- <202403010921.65C845411@keescook>
+	s=arc-20240116; t=1709314519; c=relaxed/simple;
+	bh=EIj/hPN+ik4qmCHTNuVgjY4pQTRSkTwciabO+oM1s/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CYuzTJ34sX42gmHxchW+1S2tu6VywUBbprr7flxEqXoNZLgwleUPaFrXSKq1dGd2YffE9pq5knit4x8Bt5zP4DNZh200PvVZvN8Nvr5oIhm+KOw2y8om+4nl4jrCxx8QpA3AsAJOUg1tcmpvK5MYu1C0cfd4woWLCE0XzhE9cfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WkaA+sqq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WkaA+sqq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DFFEC433F1;
+	Fri,  1 Mar 2024 17:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709314518;
+	bh=EIj/hPN+ik4qmCHTNuVgjY4pQTRSkTwciabO+oM1s/E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WkaA+sqqt5Aprf/+ou7cadfG7bxUeTKvsb5UJe29yaHjEOEn6Xl888m3O2bwtLr6m
+	 kBnYkXlU4+7VoH2QtqxJ2DRwKn4HrRYX/16b57ztkG+ZAN5A7ICLi58/9rswLl8Rti
+	 Qya+bELvvD8OVl4sCXqtzQPB9dso+1CAesx2eAHVWtsvAi9GaHYbTxtlvVIJpoiDA4
+	 HGxm3AyZ6Y6hdoDZTywToy6Jb+RstK9GbEzAfhoKabwFkPa/JSDS1rDfY+xGrfXWMR
+	 bbS/FfN63kTeEybMi4gMbgSLSzIloMpSLLJwly7c9dmfhbFWPlDNskqEs2w7TbRgra
+	 bOOWtop18STRw==
+Date: Fri, 1 Mar 2024 09:35:17 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Eric Dumazet <edumazet@google.com>, Kees Cook <keescook@chromium.org>,
+ "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, <netdev@vger.kernel.org>,
+ <linux-hardening@vger.kernel.org>, Simon Horman <horms@kernel.org>, "Jiri
+ Pirko" <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li
+ <lixiaoyan@google.com>, Amritha Nambiar <amritha.nambiar@intel.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
+Message-ID: <20240301093517.428e5b5d@kernel.org>
+In-Reply-To: <77d3f074-8cb6-466b-ab31-a7b0bac659d0@intel.com>
+References: <20240229213018.work.556-kees@kernel.org>
+	<20240229225910.79e224cf@kernel.org>
+	<CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com>
+	<9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
+	<CANn89iLSLPn5PyXNQcA2HO0e5jGYvHKhTh_9_EMmfbTJKZPfbg@mail.gmail.com>
+	<77d3f074-8cb6-466b-ab31-a7b0bac659d0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202403010921.65C845411@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 01, 2024 at 09:25:07AM -0800, Kees Cook wrote:
-> On Fri, Mar 01, 2024 at 01:09:27PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 1, 2024 at 2:26 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Convert test_string.c to KUnit so it can be easily run with everything
-> > > else.
-> > 
-> > Have you run it?
-> 
-> Yes:
+On Fri, 1 Mar 2024 15:30:03 +0100 Alexander Lobakin wrote:
+> I like the idea of declaring priv explicitly rather than doing size +
+> ptr magic. But maybe we could just add this flex array to struct
+> net_device and avoid introducing a new structure.
 
-Of course I new the answer :-)
-
-The problem as I described is the (absence of) fault injection in KUnit itself.
-When tests are passed the picture is nice, when they are not, the reports become
-a disaster (if this is applied).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+100% I should have linked to the thread that led to Kees's work.
+Adding directly to net_device would be way better but there's
+a handful of drivers which embed the struct.
+If we can switch them to dynamic allocation, that'd be great.
+And, as you may be alluding to, it removes the need for the WARN_ON()
+entirely as well.
