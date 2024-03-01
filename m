@@ -1,34 +1,34 @@
-Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
+Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F1830FA4
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 19:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3A839AEA
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 19:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709320190; cv=none; b=qqhYksbNruCbKKhpHBD8r2iAmezxCV3/FQ2SjrEV2Z/+k1kCprRRuVDQa3bQQvc8a7lOHLTivbHaag/oKoXmAgDge9XeWd/7/kwS9EwcA5z98tjRdDZyG7AVPa/SkRgUywMtaoTdj3IlYSYMP6F/rle6qTyZ697FOQzMfEKf7Sk=
+	t=1709320583; cv=none; b=ljSPP7SDKRQ5iah4mEGuiyqxYEKFgKc0xTwMQZ+/mIyVOo4gCa+uMvVrcOVrxdQtHeYm2ZMhH0EMLQg2md4CI5hniZHxVfvm8v4imWq+WmQA9eFrSEfs4wzdLEgSApQ41GLwhlvJxn/oh2mR6z7MR6E5SAUuqTm2gbVA3bbsPXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709320190; c=relaxed/simple;
-	bh=rjofMt5czWAZ/8UdgmbuNLIMUbqVfuBuDdVqP8nEB2w=;
+	s=arc-20240116; t=1709320583; c=relaxed/simple;
+	bh=Q7fU6Ub3q+6YxoCBFaoEp7a/GqkOwDsLuYbxuGhGrJY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaotNkRSQ6e2nWQwckGmljR6L67XP75AAIoQFc3KtvlBrNbd+yb1PqqpdSPlfMEc705nYwTnpSUt6v0xICsVdJ+Ln1Y5R3jFj9w8hQh/ubbKdpRfiB2740kh2sRb4hfA1sksLuYSQyFh7YkQ90VGH0kCN54VT7+w7F5TviBWdh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=dnzKh2OB; arc=none smtp.client-ip=185.125.25.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSqQhkhi0i80xu9o6Aeil727R0pEvLchzWeltygawCPTdph7U4M0OOeFyVDQGpTBEKtXqB/FsEdLvRKBd5NjsE3ijz/NUCbet9EGCpj0ZDEiHtOUwdbf5Yb9+TwYUoUxlayxVvoUxxsiVI8tjGu6qvbt1Tyxd2iJG2MLqsREb+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ekdE8C1Y; arc=none smtp.client-ip=185.125.25.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="dnzKh2OB"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tmd1t6YX5zMyYJT;
-	Fri,  1 Mar 2024 20:09:38 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tmd1s45G5zMpnPg;
-	Fri,  1 Mar 2024 20:09:37 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ekdE8C1Y"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tmd9Y1VK2zXyj;
+	Fri,  1 Mar 2024 20:16:17 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tmd9W6JqCzpmw;
+	Fri,  1 Mar 2024 20:16:15 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709320178;
-	bh=rjofMt5czWAZ/8UdgmbuNLIMUbqVfuBuDdVqP8nEB2w=;
+	s=20191114; t=1709320577;
+	bh=Q7fU6Ub3q+6YxoCBFaoEp7a/GqkOwDsLuYbxuGhGrJY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dnzKh2OBS0YkrIYpEspkpvDAydMZFIZk4Nh0+Gbx0+8Lk3b671LXi4kdNjVmCBsTZ
-	 Rm7K2WbZWudBEHrEPsAMJOJB+6kHAUx0XE/0mQzOmvZ1EZHpPA5fTAcSzByG999MpW
-	 RTwlsi3ZWspSksJZHRaVH8PWKdKF1bQBjNrpiNAw=
-Date: Fri, 1 Mar 2024 20:09:27 +0100
+	b=ekdE8C1Ycehc5cU0FFdPBLOQIWYuuwCoAVIcd6blq2ECeRFY83hIegduUPkzETJSJ
+	 1aED213nnnjEoQbHieGvuKeSAmm8UB1bPBZPlrobr+nQOfkOfTvxMUACoi0q1XEtyO
+	 1h134Jafh7/zywAVozq8HQY0K0a+ZnyoDROUVHAo=
+Date: Fri, 1 Mar 2024 20:16:05 +0100
 From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
 To: Kees Cook <keescook@chromium.org>
 Cc: Brendan Higgins <brendanhiggins@google.com>, 
@@ -44,11 +44,11 @@ Cc: Brendan Higgins <brendanhiggins@google.com>,
 	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 5/8] kunit: Handle test faults
-Message-ID: <20240301.EeyeePa2lien@digikod.net>
+Subject: Re: [PATCH v1 8/8] kunit: Add tests for faults
+Message-ID: <20240301.aekiung2aL7K@digikod.net>
 References: <20240229170409.365386-1-mic@digikod.net>
- <20240229170409.365386-6-mic@digikod.net>
- <202402291023.071AA58E3@keescook>
+ <20240229170409.365386-9-mic@digikod.net>
+ <202402291027.6F0E4994@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,27 +58,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202402291023.071AA58E3@keescook>
+In-Reply-To: <202402291027.6F0E4994@keescook>
 X-Infomaniak-Routing: alpha
 
-On Thu, Feb 29, 2024 at 10:24:19AM -0800, Kees Cook wrote:
-> On Thu, Feb 29, 2024 at 06:04:06PM +0100, Mickaël Salaün wrote:
-> > Previously, when a kernel test thread crashed (e.g. NULL pointer
-> > dereference, general protection fault), the KUnit test hanged for 30
-> > seconds and exited with a timeout error.
+On Thu, Feb 29, 2024 at 10:28:18AM -0800, Kees Cook wrote:
+> On Thu, Feb 29, 2024 at 06:04:09PM +0100, Mickaël Salaün wrote:
+> > The first test checks NULL pointer dereference and make sure it would
+> > result as a failed test.
 > > 
-> > Fix this issue by waiting on task_struct->vfork_done instead of the
-> > custom kunit_try_catch.try_completion, and track the execution state by
-> > initially setting try_result with -EFAULT and only setting it to 0 if
-> > the test passed.
+> > The second and third tests check that read-only data is indeed read-only
+> > and trying to modify it would result as a failed test.
 > > 
-> > Fix kunit_generic_run_threadfn_adapter() signature by returning 0
-> > instead of calling kthread_complete_and_exit().  Because thread's exit
-> > code is never checked, always set it to 0 to make it clear.
+> > This kunit_x86_fault test suite is marked as skipped when run on a
+> > non-x86 native architecture.  It is then skipped on UML because such
+> > test would result to a kernel panic.
 > > 
-> > Fix the -EINTR error message, which couldn't be reached until now.
-> > 
-> > This is tested with a following patch.
+> > Tested with:
+> > ./tools/testing/kunit/kunit.py run --arch x86_64 kunit_x86_fault
 > > 
 > > Cc: Brendan Higgins <brendanhiggins@google.com>
 > > Cc: David Gow <davidgow@google.com>
@@ -86,18 +82,42 @@ On Thu, Feb 29, 2024 at 10:24:19AM -0800, Kees Cook wrote:
 > > Cc: Shuah Khan <skhan@linuxfoundation.org>
 > > Signed-off-by: Mickaël Salaün <mic@digikod.net>
 > 
-> I assume we can start checking for "intentional" faults now?
+> If we can add some way to collect WARN/BUG output for examination, I
+> could rewrite most of LKDTM in KUnit! I really like this!
 
-Yes, but adding dedicated exception handling for such faults would
-probably be cleaner.
-
-At least we can now easily write tests as I did with the last patch. The
-only potential issue is that the kernel will still print the related
-warning in logs, but I think it's OK for tests (and maybe something we'd
-like to test too by the way).
+Thanks!  About the WARN/BUG examination, I guess the easier way would be
+to do in in user space by extending kunit_parser.py.
 
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  lib/kunit/kunit-test.c | 115 ++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 114 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+> > index f7980ef236a3..57d8eff00c66 100644
+> > --- a/lib/kunit/kunit-test.c
+> > +++ b/lib/kunit/kunit-test.c
+> > @@ -10,6 +10,7 @@
+> >  #include <kunit/test-bug.h>
+> >  
+> >  #include <linux/device.h>
+> > +#include <linux/init.h>
+> >  #include <kunit/device.h>
+> >  
+> >  #include "string-stream.h"
+> > @@ -109,6 +110,117 @@ static struct kunit_suite kunit_try_catch_test_suite = {
+> >  	.test_cases = kunit_try_catch_test_cases,
+> >  };
+> >  
+> > +#ifdef CONFIG_X86
+> 
+> Why is this x86 specific?
+
+Because I didn't test on other architecture, and it looks it crashed on
+arm64. :)
+
+I'll test on arm64 and change this condition with !CONFIG_UML.
+
 > 
 > -- 
 > Kees Cook
