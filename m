@@ -1,147 +1,211 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585FE6A8AD
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 13:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBAF7E1;
+	Fri,  1 Mar 2024 13:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709299555; cv=none; b=j4OEReZKtV1JxgCKeAB3G0DMLsqvAv3riA7wdpyFMBBb2EbN/6WC9gz4ovoGFUn4wJ6TdYSil206Cw7ilMVKzOK4gRUscbfvklpyi5gamRm35GNM2T2UqTMIUCVwxyzeDyVzsofiT7JaDra0GHhvgm1v6X+QGBQIYIASzqqWS5M=
+	t=1709300522; cv=none; b=Yp6jvxaWgwtAICSAMlCAwZOyLkTd6JH7fo+yYph/Eu46RY9I2aV2l0xyyIvEvRzDT+By1O3YoV8yUsJGb6FwJcHQAuEf3WAVudZVF0GFVZ/wXx+sTmQ5TVf1+NyuSia+Odne4WGR2Gie7uUEAI/tqXyBKi4d/J0s45K6rHdAVhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709299555; c=relaxed/simple;
-	bh=JHWldWA6nNHKcTRlr05zV/nwVzVNIlbYVSMFB9iJlos=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBKe1p4UzdedMrg2VqmHE5bujpGnUj2ZHK0aRoXR9sL2+wv2MCycgMZxC3Ni5EoJ1AbFcp4n65qVohGsQk0X0v+wY1UeG8xM+UB23YJZFydG4Z0gK2OqlxWCh05fDvJlAzgi6a9B6ra9/4MxrynF0cl4kW8loRBrdxz4/dTuXB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+Q2+3Fy; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709300522; c=relaxed/simple;
+	bh=Y9SwzoxYcapFKA/eWs8SzI3sCgAD67MmxsRX57sigzA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nBJacV+nRShqX64bvtrtmc9jsPgABb25qXG0xhut4aSt9pilvT4FJ71rW0rutEeRRMQ6ozvZukVg4xrG6PdFNvvL7/q9xGPoqgsbwsTjEPIftnMQ1mJd03YSnb1+hr0JM/bq972bDgyg18OCCsHyvDQbIHEB1S057yylrqMm9mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G7OwHWaz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+Q2+3Fy"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-565223fd7d9so5944a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 05:25:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709299552; x=1709904352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+1teAiWc1jVGCssi6rgN3jeMMtmC7N9NmiOj97TQSRI=;
-        b=B+Q2+3FyhzzHOF8F2GLt2wkZhMidxgsedxhsBtInm8nvf198JXT1DWUuF0u/356Wxn
-         bHie3f4Uu/XHdrg+Vfa953FWhqx8oTkSxkHOqiW2KnCzAx7R4cD2NPj2TsXquakIjDcE
-         76UQQglv9A6OGSz2uwzZkR8KRPH8tPj4ZZe2hogP5p7bxSCh5+f3aUvhHjuq5MZHp8P7
-         7M2KrYJhNfbtyRCQP89PQJ/FD9VfpkinyagzG8V2v+DAKiZ7P84LOwrPvC5bXiBAILiy
-         Ra0kWb1lgODBF7kJQfvGMA3m9OzYX4TpQbrPd4MRKf2eJIzvsx2D4eOV8BvrxHB8P7Su
-         094A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709299552; x=1709904352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+1teAiWc1jVGCssi6rgN3jeMMtmC7N9NmiOj97TQSRI=;
-        b=AL1x364FiW5YLZxY3TLRH1cnAlREZKqdrsEv58Dpr8zXiGVuXYIBPzuf70mIahF33+
-         ALNRuoGCipNAeKClrwHO2pLiFut2VfhMp5jOnMi4wfzXdhp42MYi9RvCnd8IULEN1vlL
-         VEvzGFZz/WoI7fN3rJDNNoLd/XO8LEMLlF3yj7Hg/7mBkYMh5QEDgS9oTWdsHipUST4H
-         6kSwfeDX7xCyoTInIQoTG00Q884z/xkpkqOn1pALkE+pQ/0yIJKOa6ev+KpGRlah+6ku
-         T8xwe0Sg1YD1hNxAxLDasclcmiLb2V3UUhd4z6FrCYcus9sVECVO0ZvWAf/CGG765/Ti
-         NtEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUy7QNuXbx5AEWXo6FA5V0zFdwkaMtAxHv8WjnHf7PIQ+5j0a6xIzkts7LA0vaGDQQvXI9fj8Jy6Dd5PIoOSJCR2aylq91wlL/iZsFbJBXH
-X-Gm-Message-State: AOJu0YwhiCIDnr9SM4TshB1zZBXSx7vFx591RKQ5U9eaq8x0+pKGxxof
-	keXAZp0gW1OJ86qtxISU5DGMuJysft/qaG4EScHDL/bYcTDErsnR6r81c226Oes1xLac2bJfTWg
-	FZJDcI6DUwOLDuBIGehXOjF4LLGlgXymJJb7G
-X-Google-Smtp-Source: AGHT+IHAr/zt6nB351plwUC26OzlBDCvnjhX4XuWJqRSF9vysrKL8/mndZ7DIMKjrKSevJ2zGGPoqI2B9cbCF0OdxRw=
-X-Received: by 2002:a05:6402:350e:b0:563:f48a:aa03 with SMTP id
- b14-20020a056402350e00b00563f48aaa03mr141224edd.2.1709299551406; Fri, 01 Mar
- 2024 05:25:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G7OwHWaz"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4215cCjj006462;
+	Fri, 1 Mar 2024 13:41:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=zheshLQXi7uJZs+Iz0byhTVO8VTQDzKpy9DsiQROJ3w=; b=G7
+	OwHWazXgZbwZiceeg3PMVQmgunsFA7M6kLrRYlh4I+ZzlJO9oEsb7ktvmtGCSBK7
+	CuAEWyvmCPp0NtRe5w/a1gMwnuWMwskZRD+WZn/nv8J/sNpo2oJ8WFw2NCuXmwNR
+	DsviLHyewM2q22Xgy4yw5KytV7Ezy8WQktRtZ4XqtbzeFkk3WaP9j396A7M8Ne/j
+	eE+NrFerx0shT0NKbq02+f/jRkgNqZAFwpfSUSqkRgBtL0/PdRmphJVfjJpD+WWU
+	H/x+ABKJ3TvA5HkQXEdKjbyzg6fU0UmJS/obCVZ24xR4RO1KKAQOV70B9RRuVeP6
+	PlBW0UiRYoa8J8GHGx6g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wk91912dd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Mar 2024 13:41:54 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 421DfrXx007273
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 1 Mar 2024 13:41:53 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 1 Mar 2024 05:41:47 -0800
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.co>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v5 0/4] arm64: qcom: add AIM300 AIoT board suppo
+Date: Fri, 1 Mar 2024 21:41:09 +0800
+Message-ID: <20240301134113.14423-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229213018.work.556-kees@kernel.org> <20240229225910.79e224cf@kernel.org>
- <CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com> <9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
-In-Reply-To: <9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 1 Mar 2024 14:25:37 +0100
-Message-ID: <CANn89iLSLPn5PyXNQcA2HO0e5jGYvHKhTh_9_EMmfbTJKZPfbg@mail.gmail.com>
-Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, netdev@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>, 
-	Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li <lixiaoyan@google.com>, 
-	Amritha Nambiar <amritha.nambiar@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Qv0xSGrXaHh21HSYY5s9MjgrF8EGLTzR
+X-Proofpoint-ORIG-GUID: Qv0xSGrXaHh21HSYY5s9MjgrF8EGLTzR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-01_13,2024-03-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 suspectscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403010114
 
-On Fri, Mar 1, 2024 at 1:59=E2=80=AFPM Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
->
-> From: Eric Dumazet <edumazet@google.com>
-> Date: Fri, 1 Mar 2024 09:03:55 +0100
->
-> > On Fri, Mar 1, 2024 at 7:59=E2=80=AFAM Jakub Kicinski <kuba@kernel.org>=
- wrote:
-> >>
-> >> On Thu, 29 Feb 2024 13:30:22 -0800 Kees Cook wrote:
->
-> Re WARN_ONCE() in netdev_priv(): netdev_priv() is VERY hot, I'm not sure
-> we want to add checks there. Maybe under CONFIG_DEBUG_NET?
->
-> >
-> >>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> >>> index 118c40258d07..b476809d0bae 100644
-> >>> --- a/include/linux/netdevice.h
-> >>> +++ b/include/linux/netdevice.h
-> >>> @@ -1815,6 +1815,8 @@ enum netdev_stat_type {
-> >>>       NETDEV_PCPU_STAT_DSTATS, /* struct pcpu_dstats */
-> >>>  };
-> >>>
-> >>> +#define      NETDEV_ALIGN            32
-> >>
-> >> Unless someone knows what this is for it should go.
-> >> Align priv to cacheline size.
-> >
-> > +2
-> >
->
-> Maybe
->
-> > #define NETDEV_ALIGN    L1_CACHE_BYTES
->
-> #define NETDEV_ALIGN    max(SMP_CACHE_BYTES, 32)
+Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
+and PMIC functions.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
+chip etc.
+Here is a diagram of AIM300 AIoT Carrie Board and SoM
+ +--------------------------------------------------+
+ |             AIM300 AIOT Carrie Board             |
+ |                                                  |
+ |           +-----------------+                    |
+ |power----->| Fixed regulator |---------+          |
+ |           +-----------------+         |          |
+ |                                       |          |
+ |                                       v VPH_PWR  |
+ | +----------------------------------------------+ |
+ | |                          AIM300 SOM |        | |
+ | |                                     |VPH_PWR | |
+ | |                                     v        | |
+ | |   +-------+       +--------+     +------+    | |
+ | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+ | |   +-------+       +--------+     +------+    | |
+ | |                                              | |
+ | +----------------------------------------------+ |
+ |                                                  |
+ |                    +----+          +------+      |
+ |                    |USB |          | UART |      |
+ |                    +----+          +------+      |
+ +--------------------------------------------------+
+The following functions have been verified:
+  - uart
+  - usb
+  - ufs
+  - PCIe
+  - PMIC
+  - display
+  - adsp
+  - cdsp
+  - tlmm
 
-Why would we care if some arches have a very small SMP_CACHE_BYTES ?
-Bet it !
+Documentation for qcs8550[1] and sm8550[2]
+[1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+[2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
 
-IMO nothing in networking mandates this minimal 32 byte alignment.
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
 
->
-> ?
->
-> (or even max(1 << INTERNODE_CACHE_SHIFT, 32))
+v4 -> v5:
+  - "2023-2024" instead of "2023~2024" for License
+  - update patch commit message to previous comments and with an updated
+    board diagram
+  - use qcs8550.dtsi instead of qcm8550.dtsi
+  - remove the reserved memory regions which will be handled by
+    bootloader
+  - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
+    remoteproc_mpss function node, audio sound DTS node, new patch will
+    be updated after respective team's end to end full verification
+  - address comments to vph_pwr, move vph_pwr node and related
+    references to qcs8550-aim300-aiot.dts
+  - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
+  - add pcie0I AND pcie1 support together
+  - the following patches were applied, so remove these patches from new
+    patch series:
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
+  - verified with dtb check, and result is expected, because those
+    warnings are not introduced by current patch series.
+    DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
+    arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
+    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+    #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
 
-I do not think so.
+v3 -> v4:
+  - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
+    of qcm8550, another board with qcm8550 will be added later
+  - add AIM300 AIoT board string in qcom.yaml file
+  - add sm8550 and qcm8550 fallback compatible
+  - add qcm8550 SoC id
+  - add reserved memory map codes in qcm8550.dtsi
+  - pm8010 and pmr73d are splited into carrier board DTS file. Because
+    the regulators which in pm8550, pm8550ve and pm8550vs are present
+    on the SoM. The regulators which in pm8010 and pmr73d are present
+    on the carrier board.
+  - stay VPH_PWR at qcs8550-aim300.dtsi file
+      VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
+      with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
+      SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
 
-INTERNODE_CACHE_SHIFT is a bit extreme on allyesconfig on x86 :/
-(with CONFIG_X86_VSMP=3Dy)
+v2 -> v3:
+  - introduce qcs8550.dtsi
+  - separate fix dtc W=1 warning patch to another patch series
+
+v1 -> v2:
+  - merge the splited dts patches into one patch
+  - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
+  - drop PCIe1 dts node due to it is not enabled
+  - update display node name for drop sde characters
+
+previous discussion here:
+[1] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
+[2] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
+[3] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
+[4] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
+
+Tengfei Fan (4):
+  dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+  arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+  arm64: dts: qcom: add base AIM300 dtsi
+  arm64: dts: qcom: aim300: add AIM300 AIoT
+
+ .../devicetree/bindings/arm/qcom.yaml         |   8 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 384 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 345 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 169 ++++++++
+ 5 files changed, 907 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
 
 
->
-> >
-> > or a general replacement of NETDEV_ALIGN....
-> >
-> >
->
-> + I'd align both struct net_device AND its private space to
-> %NETDEV_ALIGN and remove this weird PTR_ALIGN. {k,v}malloc ensures
-> natural alignment of allocations for at least a couple years already
-> (IOW if struct net_device is aligned to 64, {k,v}malloc will *always*
-> return a 64-byte aligned address).
+base-commit: 1870cdc0e8dee32e3c221704a2977898ba4c10e8
+-- 
+2.17.1
 
-I think that with SLAB or SLOB in the past with some DEBUG options
-there was no such guarantee.
-
-But this is probably no longer the case, and heavy DEBUG options these
-days (KASAN, KFENCE...)
-do not expect fast networking anyway.
