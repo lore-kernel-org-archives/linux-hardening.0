@@ -1,154 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3196051C2A;
-	Fri,  1 Mar 2024 08:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C3C6A8B9
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 09:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709281020; cv=none; b=amrxZsswbORHWHFhDByOABmrrNKXOb8YGX3ulYqROhNeIfQ7d+u4LPzZnRwjGjq+fylw5fSAKl9OoGpndYSd/CbnJyilAYdv517LqJTOtPjFR0jLB4yJo0bTk3xbpbuY4Rj8/fN/lWfqQUzHsDE1WdwZ0/UqM+lrPQjjlMEz/vE=
+	t=1709285542; cv=none; b=VMjyV1t0ghaLn9HytA77CtUtLtld9YkdMEd+afdl5ohIM6Kr13D/eLWgccmtJZdWxk+0i4687Ld0iStAmZiXguNT05F6v7TnqQlF6zkZA8nE8g2mDM/6TqtTSMIiveM9yFWWDDdp16f8dJ7NwE2qN70gyiuKhAVFn96LMuu9+hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709281020; c=relaxed/simple;
-	bh=u1iHu4eIaiptVr+p3li5vHjKU06YVZVzQkaU1uqK2qs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EyDOeYFhvigqivS00EMpJ+Qm6uEWSUkoUIEIhoYkn8ASxZb5bQbsrnUGWgFE/cCM28aiGtyhmK5PgxLBq3yo9p0mR9RmTr2p36t9kZlhezXfSVCrY2VTAcZO/YLFTLrKYFkveZ9DH9GfYeojNzAxZMMaiDk2FNzD2JQD+TrIefM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AHmii60F; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHmii60F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709281018; x=1740817018;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=u1iHu4eIaiptVr+p3li5vHjKU06YVZVzQkaU1uqK2qs=;
-  b=AHmii60FQmiWdb52l1QN2y1NzzfgF63KjIxaZp1jMVuo0aCpmSyqlUU0
-   g0TRiMwYBKLujr0v9zfj4iB88swssErnDTCeYLNGrNkCfZf4n09ZcEL3s
-   scSyyjYfpeLViVngEINaHusRopBVfSf5Ldn7+kjV5kssZN50Ekwoa8Nbu
-   Z80iC32RiawBnapRBmhKuzNYodChMyUiVTd218dw9P8urQ9SYmGCCIpBO
-   Haw9yAVn7jJnPesKH9mBN2LMwfXeq+UfjmNMuw3TlSiwNl5ii4YouXr4Q
-   Gns7t7/Xjq+T9T/OkgKAmvruxZGAv8syMNlto1BqcqQTy6vxsGfUBNK6R
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3733834"
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="3733834"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 00:16:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="8063103"
-Received: from eseresrx-mobl.ger.corp.intel.com (HELO localhost) ([10.252.50.228])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 00:16:53 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Kees Cook <keescook@chromium.org>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>
-Cc: Kees Cook <keescook@chromium.org>, "Gustavo A . R . Silva"
- <gustavoars@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- David Laight <David.Laight@aculab.com>, Nick Desaulniers
- <ndesaulniers@google.com>, Martin Uecker
- <Martin.Uecker@med.uni-goettingen.de>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] compiler.h: Explain how __is_constexpr() works
-In-Reply-To: <20240301044428.work.411-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+	s=arc-20240116; t=1709285542; c=relaxed/simple;
+	bh=pY/JAuUkdZ3AyIyGff0Ip5uQfvmqurSeKSVYl4idjR0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=H9pCv8Vz8xFBbUl2+xm5CRUS6S9MZZnr1qczY6lSE5dFmwO/FBLzmebQgicR6YNscJtSTWmZb7vQd9vu6mS0brT9s5FWR+oJ/kBHxNLUk4v5LxE2OER9NBmjOUdzieCUqYz7xcJ7jHCZS24VQz4qnPrQp+Q/pGGlRRZ2QpWYRkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-144-cAe80tt0OtKldFFkrcHoig-1; Fri, 01 Mar 2024 09:32:17 +0000
+X-MC-Unique: cAe80tt0OtKldFFkrcHoig-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 1 Mar
+ 2024 09:32:16 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 1 Mar 2024 09:32:16 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Kees Cook' <keescook@chromium.org>, Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>
+CC: "Gustavo A . R . Silva" <gustavoars@kernel.org>, Miguel Ojeda
+	<miguel.ojeda.sandonis@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+	Nick Desaulniers <ndesaulniers@google.com>, Martin Uecker
+	<Martin.Uecker@med.uni-goettingen.de>, Jonathan Corbet <corbet@lwn.net>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] compiler.h: Explain how __is_constexpr() works
+Thread-Topic: [PATCH] compiler.h: Explain how __is_constexpr() works
+Thread-Index: AQHaa5MvghvgXFQBskOAdfSAj6aDybEilNag
+Date: Fri, 1 Mar 2024 09:32:16 +0000
+Message-ID: <af0eff12e6bc41039614add550406c11@AcuMS.aculab.com>
 References: <20240301044428.work.411-kees@kernel.org>
-Date: Fri, 01 Mar 2024 10:16:47 +0200
-Message-ID: <87zfvi5pu8.fsf@intel.com>
+In-Reply-To: <20240301044428.work.411-kees@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Feb 2024, Kees Cook <keescook@chromium.org> wrote:
+From: Kees Cook
+> Sent: 01 March 2024 04:45
+> To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>=20
 > The __is_constexpr() macro is dark magic. Shed some light on it with
 > a comment to explain how and why it works.
 
-Hey, it was a fun little puzzle to figure out using the C standard. Now
-you're ruining it for everyone! ;)
+All the 8s don't help...
 
-The description matches my recollection of how it works. Especially the
-meaning of the first 8 threw me off way back when. And looks like I've
-replied to that effect for v1.
+I don't think you need that much explanation.
 
-FWIW,
+Perhaps just saying that the type of ?: depends on the types
+of the values and is independent of the condition.
+The type of (0 ? (void *)p : (foo *)q) is normally 'void *'
+(so that both values can be assigned to it).
+But if 'p' is 'an integer constant expression with value 0'
+then (void *)p is NULL and the type is 'foo *'.
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+The type can then be checked to find out it 'p' is constant 0.
+A non-zero constant 'p' can be multiples by 0.
 
-but I'm sure there are more pedantic reviewers for all the minor
-details.
+I need to replace the definition with (the more portable):
+#define __if_constexpr(cond, if_const, if_not_const) \
+=09_Generic(0 ? (void *)((long)(cond) * 0) : (char *)0, \
+=09=09char *: (if_const), \
+=09=09void *: (if_not_const))
+which is arguably less cryptic.
 
->
-> Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: David Laight <David.Laight@aculab.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> v2: *thread necromancy* rewrite based on feedback to v1
-> v1: https://lore.kernel.org/all/20220131204357.1133674-1-keescook@chromium.org/
-> ---
->  include/linux/compiler.h | 39 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index bb1339c7057b..38cd9f3c8f6a 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -231,6 +231,45 @@ static inline void *offset_to_ptr(const int *off)
->   * This returns a constant expression while determining if an argument is
->   * a constant expression, most importantly without evaluating the argument.
->   * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
-> + *
-> + * Details:
-> + * - sizeof() return an integer constant expression, and does not evaluate
-> + *   the value of its operand; it only examines the type of its operand.
-> + * - The results of comparing two integer constant expressions is also
-> + *   an integer constant expression.
-> + * - The first literal "8" isn't important. It could be any literal value.
-> + * - The second literal "8" is to avoid warnings about unaligned pointers;
-> + *   this could otherwise just be "1".
-> + * - (long)(x) is used to avoid warnings about 64-bit types on 32-bit
-> + *   architectures.
-> + * - The C Standard defines "null pointer constant", "(void *)0", as
-> + *   distinct from other void pointers.
-> + * - If (x) is an integer constant expression, then the "* 0l" resolves
-> + *   it into an integer constant expression of value 0. Since it is cast to
-> + *   "void *", this makes the second operand a null pointer constant.
-> + * - If (x) is not an integer constant expression, then the second operand
-> + *   resolves to a void pointer (but not a null pointer constant: the value
-> + *   is not an integer constant 0).
-> + * - The conditional operator's third operand, "(int *)8", is an object
-> + *   pointer (to type "int").
-> + * - The behavior (including the return type) of the conditional operator
-> + *   ("operand1 ? operand2 : operand3") depends on the kind of expressions
-> + *   given for the second and third operands. This is the central mechanism
-> + *   of the macro:
-> + *   - When one operand is a null pointer constant (i.e. when x is an integer
-> + *     constant expression) and the other is an object pointer (i.e. our
-> + *     third operand), the conditional operator returns the type of the
-> + *     object pointer operand (i.e. "int *). Here, within the sizeof(), we
-> + *     would then get:
-> + *       sizeof(*((int *)(...))  == sizeof(int)  == 4
-> + *   - When one operand is a void pointer (i.e. when x is not an integer
-> + *     constant expression) and the other is an object pointer (i.e. our
-> + *     third operand), the conditional operator returns a "void *" type.
-> + *     Here, within the sizeof(), we would then get:
-> + *       sizeof(*((void *)(...)) == sizeof(void) == 1
-> + * - The equality comparison to "sizeof(int)" therefore depends on (x):
-> + *     sizeof(int) == sizeof(int)     (x) was a constant expression
-> + *     sizeof(int) != sizeof(void)    (x) was not a constant expression
->   */
->  #define __is_constexpr(x) \
->  	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+#define __is_constexpr(cond) __if_constexpr(cond, 1, 0)
 
--- 
-Jani Nikula, Intel
+So that I can write:
+#define is_non_neg_const(x) (__if_constexpr(x, x , -1) >=3D 0)
+and avoid the compiler bleating about some comparisons
+in unreachable code.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
