@@ -1,153 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B4A6BFC6;
-	Fri,  1 Mar 2024 11:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB946F071;
+	Fri,  1 Mar 2024 11:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291043; cv=none; b=WBYVSDCGdY30qz29pcUwm24q3UEWw2i59/VreB7XvxLS16keiFskEuAIEStnsDVJZdpZiJSGVq5fW6AYteogAF+B7t8DrAvkZsjVqInm8L1z4JYbd2RH9plmEN8+l0+Me4T5JoM6yRmqbFiA4am0X+W2WlrN9V0tGWzHApVE2vk=
+	t=1709291414; cv=none; b=c/ua6bhFbsDn3veIeDTdYYM60yGySaqp4B4PsEQ4W/1kM0vDBiygPyv4iTbLsz+r3ayR+Yv1yC8w8ALoLNNjFBT8FKLmSZdnPKCTuQlO5eA4B7TvC9NRHZXIs+gPm3MSy+wjsTlKJa2lNiSjB13t/a7y2VfJeWP7Lfau+frbeKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291043; c=relaxed/simple;
-	bh=jNe/Uxf2dtNJ+TSKuJ5UUvXN6Zva3VEg28Sf51IxPB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWVNGiNaXUHOPk1fvEwlMsECi2BptFm60MX7Gr7bmreioIr1mJEJGv7TG/xk0jnjerWX4naN71CXAmm0P0Usp7tSQUttfxodm3hvbC76Em0xjGIiAGKFrSVTIdfvGNLtFzOwqO7LExT+y7fcBz8vubHsUuw1IEiJsRMG5wkcEJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZHY/nx0l; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709291414; c=relaxed/simple;
+	bh=ZPuYGNDtU2C61JrD8awnzL2eNGY9J7zqh51rLsBoCO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gYTTPZFPIaJkBjmg412wlp+FChAgnwuxdT77BAjbdNi6uShIp5WbEgUpCEvir707ybTaTCQGGjeu6i5+uLJbadqxYIB0W6VZxU3Ynk3rVaHNkGybE3H7EX1siW//XprndPgs0Hizvs56CSaIewT2GBlygnOGz1b0uvFCCbSHgX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQDnH84x; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZHY/nx0l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709291042; x=1740827042;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jNe/Uxf2dtNJ+TSKuJ5UUvXN6Zva3VEg28Sf51IxPB8=;
-  b=ZHY/nx0lKJB9QddKfvvWu9VcYPZuS6R200BtvyxzRseH63s0wlSjGTjh
-   tZfzGanMGl69mMxRSG5NErjAjTrpLkJeAmmQaknAayu4G3PQEvez25Y38
-   0DeME+M9+2Ij+2AL4LTePn0LqY/RmhXDR60RzhKP6R1f9hfhtN46wnUSC
-   +3ZHlI7QNf4VpSjOj0IB/KcbeBy/yhXU5OZ0de1MRFHysyl/fr6X0ZMNQ
-   z4aSgczXdj7RzMtKVj71Q8W+ig81wt8o+QTTSEuyWUc/TLuqWrJcEPWjS
-   Aj9rS+VmVlbb/ZgD2NSzfNRIyZsmEnZnhAX6nZ9mYwUj3A2uJpqGN/qJ8
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3986123"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="3986123"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 03:04:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="8565542"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 01 Mar 2024 03:03:54 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rg0gA-000Dnj-32;
-	Fri, 01 Mar 2024 11:03:50 +0000
-Date: Fri, 1 Mar 2024 19:03:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v1 1/8] kunit: Run tests when the kernel is fully setup
-Message-ID: <202403011856.cJe6do38-lkp@intel.com>
-References: <20240229170409.365386-2-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQDnH84x"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3e552eff09so273814666b.3;
+        Fri, 01 Mar 2024 03:10:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709291412; x=1709896212; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9f1cuB9REaK+HmuUhlOguaJHGRgFgUSmSu3BLd/is7Q=;
+        b=SQDnH84x/ZNsySWFhpU5nHUcErnFjQ2nfUJusVWCdLIJQFPyZ2qgQ9SECHJ4RxwZZu
+         vX5dZLV7Pvp9FM3t5gZcVY+2n6HzENGAuR66FoxFScxXM5YigxHanpEh/zWdAJxf9b3G
+         2wwPNnTctj6kVG1rrQpJhWx6uuUjrTliAhEvXrkufPOKScF3vTDVLa8U6XKH7+ILt0fP
+         XP9W1I9oZISp49xZryuWAJOjA2Z7VA7rtbrgOdseFOdgicvBWGuA2rNO6veDOax7LHOu
+         FTEaM0Ntcnm/aildzEFlKwsi1Ih3LQuj6JA9pSwwEl3RmX3dokza41lmBCawfr7XiPkL
+         lTYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709291412; x=1709896212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9f1cuB9REaK+HmuUhlOguaJHGRgFgUSmSu3BLd/is7Q=;
+        b=iETZYQxN+m2t+vX94fzBEOt0xrm/e8a7Kp8LHFSYWt3Ks/NjjxYknzhj/OOqhXBLI8
+         gwMdfCaeXkEZzBTb14tLn+lvjDO/1MveaNqMATNd3dGfn9+y5p4dvgbCXtLT42Ve46SP
+         1JhFyibyBC4YBvO+2PUzjVQsbdaOtq8SN6ZlCA3Gm8wgkJbCnZnC4meWkGFpwYcI7Mjv
+         Y/ZDHKSVFjUgT27b7d472B8J9IO0rz1fSV64ai8fdCkP7YYedJyyNhj8U/qm92NjwwkM
+         Eq/cRgVyG7yrmzvgdL75ZydrPSzV7iUv20P9AfRoOOblZ5A4mw4zgNXXdzWzb8lhNMTO
+         +h3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDIULqGBrhYKpqbkTtutYDkCyDuyimTE5NNRM+i7yH0Shk2nSZS8vJVHO5+wZ/OMU44HcgGhkh96M+NsQ9izRdYwma49tDexU0qVARSLUrKGJ3ZXY8y3M4JKsUZ00ur17z3NOFGfvOm6jv8Ykr
+X-Gm-Message-State: AOJu0YyfUN6mOc+tE8p3asrnNhBSLTN7dpabtPJINnfd6P1Et+5r5rXO
+	qNUrq5QAGNBoDYv+ltiN/RTDmZVO7FXpkuEcxTdlOAVD+JQGH43qKIrckB7KXRLGrngYMBFlfUg
+	pJRy8hvsFyyADgQpdyzM8d/Oeoso=
+X-Google-Smtp-Source: AGHT+IG4ULdoDoSbkfrP+miccWHuw/7d6R6I5AAI3byeWcQqNIfoQWB5rAdNyRBtfs5i55sB6OBzHA6Tf/ZWQ1w7uhI=
+X-Received: by 2002:a17:906:4951:b0:a3f:2259:da62 with SMTP id
+ f17-20020a170906495100b00a3f2259da62mr1035572ejt.52.1709291404238; Fri, 01
+ Mar 2024 03:10:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240229170409.365386-2-mic@digikod.net>
+References: <20240301002416.it.092-kees@kernel.org> <20240301002650.1544829-1-keescook@chromium.org>
+In-Reply-To: <20240301002650.1544829-1-keescook@chromium.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 1 Mar 2024 13:09:27 +0200
+Message-ID: <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] string: Convert selftest to KUnit
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mickaël,
+On Fri, Mar 1, 2024 at 2:26=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> Convert test_string.c to KUnit so it can be easily run with everything
+> else.
 
-kernel test robot noticed the following build warnings:
+Have you run it?
 
-[auto build test WARNING on d206a76d7d2726f3b096037f2079ce0bd3ba329b]
+...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Micka-l-Sala-n/kunit-Run-tests-when-the-kernel-is-fully-setup/20240301-011020
-base:   d206a76d7d2726f3b096037f2079ce0bd3ba329b
-patch link:    https://lore.kernel.org/r/20240229170409.365386-2-mic%40digikod.net
-patch subject: [PATCH v1 1/8] kunit: Run tests when the kernel is fully setup
-config: s390-defconfig (https://download.01.org/0day-ci/archive/20240301/202403011856.cJe6do38-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 325f51237252e6dab8e4e1ea1fa7acbb4faee1cd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403011856.cJe6do38-lkp@intel.com/reproduce)
+>         if (i < 256)
+> -               return (i << 24) | (j << 16) | k | 0x8000;
+> -       return 0;
+> +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x80=
+00);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403011856.cJe6do38-lkp@intel.com/
+First of all, this special value encodes the problematic patterns, so
+you missed proper messaging.
+Second, the returned value has a constant, how do you expect 0 to be
+equal to something (guaranteed not to be 0)?
 
-All warnings (new ones prefixed by >>):
+This needs a good rethink of what you should do in the KUnit approach.
 
-   In file included from lib/kunit/executor.c:4:
-   In file included from include/kunit/test.h:24:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:173:
-   In file included from arch/s390/include/asm/mmu_context.h:11:
-   In file included from arch/s390/include/asm/pgalloc.h:18:
-   In file included from include/linux/mm.h:2188:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> lib/kunit/executor.c:18:31: warning: unused variable 'final_suite_set' [-Wunused-variable]
-      18 | static struct kunit_suite_set final_suite_set = {};
-         |                               ^~~~~~~~~~~~~~~
-   6 warnings generated.
+...
 
+> +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x80=
+00);
 
-vim +/final_suite_set +18 lib/kunit/executor.c
+Ditto.
 
-    17	
-  > 18	static struct kunit_suite_set final_suite_set = {};
-    19	
+...
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x80=
+00);
+
+Ditto.
+
+...
+
+>         for (i =3D 0; i < strlen(test_string) + 1; i++) {
+>                 result =3D strchr(test_string, test_string[i]);
+> -               if (result - test_string !=3D i)
+> -                       return i + 'a';
+> +               KUNIT_ASSERT_EQ(test, result - test_string, i);
+
+In a similar way, all returned values are *special*, you really need
+to think about them before converting to a simple (and sometimes
+wrong) checks)
+
+...
+
+I dunno if KUnit has a fault ejection simulation. It should, in order
+to be sure that test cases are fine when they fail.
+
+--=20
+With Best Regards,
+Andy Shevchenko
