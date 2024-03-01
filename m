@@ -1,93 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A8FB3A8DE;
-	Fri,  1 Mar 2024 16:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20B047F51;
+	Fri,  1 Mar 2024 16:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709309169; cv=none; b=VLO0aNPUFtECG2KkVm9Vif6SwtHSMyjozd3PBMA7Ygbnn5l9aXLPiLzo9jZoIP635I5Gb1PvZHUe/LT2VfZSkAIr7NzEUlkCR1kXQByi2CIWCwvGUzUNjcokltDSMkSeTQulsEyQNaA9C3NV2SNs0R0PPgxT3FFlU/lERPNKw/E=
+	t=1709309461; cv=none; b=sP/rl/xaExZMYvQInJ/lgivkDeHVgl0XhwxlHVuHYb7V3ZCSLfD3KSgKNMPjwq/iODbvJEHggMitoyiJ9i3BPhAQCsM/W8ALDVv2jS7Bh5/IvTPJ5jALJ64TlpT/5Orv1HdYvoKGC7+6cq+VCv6SqYn7Y4Nt3fgy5uCrBWX+1mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709309169; c=relaxed/simple;
-	bh=+I5q0INsRXMPfcHW7TQCG058hRSgznIpYTjriNmFjAk=;
+	s=arc-20240116; t=1709309461; c=relaxed/simple;
+	bh=4UlzlQnuaUuNI0r77fMlqJ+SG0x9lL2jodQkvrashRc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kevFHJRcx08rvKNd6F51ovrzhzL1tDpPaYzL1uyp9eo+YvjFoExpavCHCdv0NJhKoeWbQYxQNlCtf1pBRqhu3YqB9OPLFmASv4Zu9OF8Xp83/HwC+vcJGevx/mDLDAVzwFvhEJC3QB179JSaXpdXjJ/puGSixLk79speiX2+GZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 193491FB;
-	Fri,  1 Mar 2024 08:06:43 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.66.115])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAD6A3F73F;
-	Fri,  1 Mar 2024 08:06:01 -0800 (PST)
-Date: Fri, 1 Mar 2024 16:05:52 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Misono Tomohiro <misono.tomohiro@fujitsu.com>,
-	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-Message-ID: <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
-References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
- <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
- <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=B4O/S0tu+HMA+ODEeIJK4+1uikWm6SqqWEUAFSQTk28U6jLu6Ow+0P0MPwUDgIKeRqnGOrdL736SKAzpKgR4Gj47Sn16xlPwtWFsaGuOEYsFh08bbUL9WxkX5zDNiNY1vu8lst46xK3QhVJU+efziX9LwOZCMb4fQtNCf2J8xG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BIU4xa9Q; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BIU4xa9Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709309459; x=1740845459;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4UlzlQnuaUuNI0r77fMlqJ+SG0x9lL2jodQkvrashRc=;
+  b=BIU4xa9QokP5Guie1c+gOIS1kok6z5pk7aXktwO4R5MHi5HC58EyildU
+   kUwMNsdM4mY1sOcnbp8MNtpiGgqxVq4DLqTi4GHdSGBr0iGw8IO36Jc1Y
+   uo4xDed3Xuaz6hdwyS0Qn1Bo/OKRMkGjMc4by4Wy1zvmhQDNBAn4ZSbB4
+   BNnsObU17qbQIQqBcdgXZMgeH+f/DIQTQrOoyUnvmDC5jJPbi2PW/Srcp
+   AKYgHhQIFIoLX3M7VXGCgsKb8nX/QNcMQrSXP46r143bIffhQ8bKnKfM/
+   7+K6ivl42tXbYQNxnaRTyopgM2t1nwB0tK63+HXUBzZ8gTDwYfMHR9gEr
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15263476"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="15263476"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 08:10:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914019332"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="914019332"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 08:10:56 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rg5TJ-0000000900U-2OVm;
+	Fri, 01 Mar 2024 18:10:53 +0200
+Date: Fri, 1 Mar 2024 18:10:53 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v1 1/1] lib/string_helpers: Add flags param to
+ string_get_size()
+Message-ID: <ZeH-DelIspVMWPv1@smile.fi.intel.com>
+References: <20240229205345.93902-1-andriy.shevchenko@linux.intel.com>
+ <170924355200.1509550.2313379734413200100.b4-ty@chromium.org>
+ <sdjfagrzk5p736wzeqdfhzxkivtg3rnhhtt3rh672fbuzxc7ya@icgcqv2d3cr7>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com>
+In-Reply-To: <sdjfagrzk5p736wzeqdfhzxkivtg3rnhhtt3rh672fbuzxc7ya@icgcqv2d3cr7>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Doug,
-
-On Tue, Feb 27, 2024 at 04:57:31PM -0800, Doug Anderson wrote:
-> On Mon, Jan 8, 2024 at 4:54 PM Doug Anderson <dianders@chromium.org> wrote:
-> > On Thu, Dec 7, 2023 at 5:03 PM Douglas Anderson <dianders@chromium.org> wrote:
-
-> > The sound of crickets is overwhelming. ;-) Does anyone have any
-> > comments here? Is this a terrible idea? Is this the best idea you've
-> > heard all year (it's only been 8 days, so maybe)? Is this great but
-> > the implementation is lacking (at best)? Do you hate that this waits
-> > for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
-> >
-> > Aside from the weirdness of a processor being killed while holding the
-> > console lock, it does seem beneficial to give IRQs at least a little
-> > time to finish before killing a processor. I don't have any other
-> > explicit examples, but I could just imagine that things might be a
-> > little more orderly in such a case...
+On Thu, Feb 29, 2024 at 04:54:30PM -0500, Kent Overstreet wrote:
+> On Thu, Feb 29, 2024 at 01:52:34PM -0800, Kees Cook wrote:
+> > On Thu, 29 Feb 2024 22:52:30 +0200, Andy Shevchenko wrote:
+> > > The new flags parameter allows controlling
+> > >  - Whether or not the units suffix is separated by a space, for
+> > >    compatibility with sort -h
+> > >  - Whether or not to append a B suffix - we're not always printing
+> > >    bytes.
+> > 
+> > I cleaned up the Co-developed-by/S-o-b and applied to for-next/hardening, thanks!
 > 
-> I'm still hoping to get some sort of feedback here. If people think
-> this is a terrible idea then I'll shut up now and leave well enough
-> alone, but it would be nice to actively decide and get the patch out
-> of limbo.
-> 
-> FWIW the serial console dumping issue that originally inspired me to
-> track this down has been worked around at least well enough to not
-> spew garbage in my console. See commit 9e957a155005 ("serial:
-> qcom-geni: Don't cancel/abort if we can't get the port lock"). It's
-> still a little awkward because we'll be running fully lockless during
-> panic time, but it seems to work...
+> thanks Kees!
 
-This is on my list of things to look into, but I haven't had the chance to go
-through it in detail.
+Thank you, folks, glad we close this.
 
-From a high level, I think this sounds reasonable; I just want to make sure
-this doesn't lead to any new surprises...
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Mark.
+
