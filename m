@@ -1,311 +1,97 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9856769DE6;
-	Fri,  1 Mar 2024 07:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE446996C
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 08:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709279879; cv=none; b=GY2x4zjXcQEKgvSfFmI5Qz5p9eJWqxq8/fSRD7Mynvj3qbU2+ezx01QroBxfsmQyRw6DInFTw83A1XwT3Amo8btgNKFgatL+7B4hUt/Su4ILYesNZoEK6cZGrvhzBVlLQwLxBf1RkNCcl09Bdwm+9vQZToikOBkfvcQ8PKbU1iQ=
+	t=1709280249; cv=none; b=PFSez6qdgrCHDGPWBkEoeecSyysJdkDSQzzrc3Zsdqnll4h4xIZtXSnD/fTfAGAJ38uLFNUHmUhIgR6pJMhJEY2fOREL2CkJ5Z6FrdgiOJOi9htvV3D8dqQgkYUGaI6GexjPyHHf8to3w2qJaGW/JKdAzsxjkoNqdsauUCr97Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709279879; c=relaxed/simple;
-	bh=mA8Nr7G9TAPkD5sqPufRUnHn1tnfUaK4p8WVZGooq8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JN2MQKiKdqSXGJzH+cVtoaSgPdocNArjd5EZCDMvzqpdD5HzWeli77PpTy92//LMboQHWJXOEsi8G61uxGLMH+zpRcPN47PPeJ+zVkBwgFeDw5p/3V+Vzs2Edlj8fwz6wroS5ASxPGSMxoyf5eRgwVDPi6lHZ0tWdwlesd3fCB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TmL6l0nKfz9v7S;
-	Fri,  1 Mar 2024 08:57:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id i0XsyqV2ONYa; Fri,  1 Mar 2024 08:57:51 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TmL6f0bQxz9v7b;
-	Fri,  1 Mar 2024 08:57:46 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0B4598B766;
-	Fri,  1 Mar 2024 08:57:46 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id slDMHRxkFljc; Fri,  1 Mar 2024 08:57:45 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.117])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id BCA928B773;
-	Fri,  1 Mar 2024 08:57:44 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Johan Almbladh <johan.almbladh@anyfinetworks.com>
-Subject: [PATCH bpf-next RESEND v2 2/2] bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()
-Date: Fri,  1 Mar 2024 08:57:24 +0100
-Message-ID: <9c0b7a2e25f05c7128adcd04cf33a2df64c82627.1709279661.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <8f3b3823cce2177e5912ff5f2f11381a16db07db.1709279661.git.christophe.leroy@csgroup.eu>
-References: <8f3b3823cce2177e5912ff5f2f11381a16db07db.1709279661.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1709280249; c=relaxed/simple;
+	bh=n4spHHvJLlMGZHVr7fqI5nbP9JLbO0KC62LA3csKOP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nCT1a5NLA6AD8Xyq5wDM0TqBUhdgr/lcrxKSiLmQTU7MbcwsaVjoEx7AyofbUUaQ9KaMQwE7zpg3X36EZDateQjmVEaBqfhtW/b2w0Ob2uOTGaWpR8JSR8NkrKoRF8/Kl+FbWzA3AXoQOWeckDl5vwR69t8mRsKytFKWfrzje7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D00CdYJs; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D00CdYJs"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-565223fd7d9so3918a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 00:04:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709280246; x=1709885046; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7X4wFyOx0wdvgK1yfOcV9T4++P8vIrbb+J2WByTndeM=;
+        b=D00CdYJsA9JWtnjZ+C9vhCytHtPJvdidm7Kmln0Yh9V3K45PHW9z6eQD5FM/eZaCwG
+         1tLHQNUQdSFbLS8kOrs58u5rCu25bpdSeV8r0sOxk+ThaikPu1IkkPcefUYUTQG7jjpZ
+         oIkZ0ZXfhTyJuT4sM1pneWLgZ0irXjNn9KWfvvnzdeb8OkRhjmWIjwjShu4FG+9tPiYW
+         3pNq6dF4B4LVpoFI3kpxObmQUyfl9P0VoeeIlYDJoaA1XY5HLQkyhwTKmiRcMJ8g14oB
+         BhSWHA3X0PojcKTXayhDAwRx96FhThlmBp9NGTJJ14mQriggwzqK1kxTltdq/IBtRBCp
+         qmhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709280246; x=1709885046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7X4wFyOx0wdvgK1yfOcV9T4++P8vIrbb+J2WByTndeM=;
+        b=aQdG0sFSXPzVl5EDt2veLeD7knVXa3jeG8R36tABeFdpX50EHx//BV072QAkiywD+q
+         z66ROPRTZ6b1vSfqnZQ8/GDHj32IyhrVbRGNNr2VLuKa/YGk571r11acD0MUi8mUEabt
+         ropiE+8/Gz3/2e7RlNP7DujPLm/BYtbOJM+sjOlUQbcl7rSJvwto0fHOPbLCAAlPRFE2
+         Ds3Alc+sIhCShSiSq0BzN9fECxp9VNTrPQMFkcNqsXcSj0ds5EHc2iTKY1deKB+CIY5U
+         qyHmTFaqXWdwomg2ydX6s2IiuvKle2sBrill2bQuo2S7UTJk52trqoz0wpXtscgivD37
+         E+Og==
+X-Forwarded-Encrypted: i=1; AJvYcCXs0Qk2llnzmiV/+p6p64oclrqir+hMi30Rc1kfdz+virwbFaBIEPuNBlIWK1SkAe2+5ztSA4GsGJJIAN4IOyC3aTww3BVpUKtmItbJyER4
+X-Gm-Message-State: AOJu0YwhKPTWwv1kQezBiHD8kbCWHTwJPgo6sPkOYHgU00ZQkmLZCg2d
+	gAhK0VEwEJRvkWarBGeACvdwYoHw1vcJ4e2UejVmLXEJ1+OUFE9Yy4WtGbbtcvFYifDImEYUBnN
+	sp6si6vENapBLf+/s1/WqlFhu1+Z9fE7EEgjX
+X-Google-Smtp-Source: AGHT+IFOvZyHykyduIz94CdHCof11T2iEVmpeMxGsKXRX8OsG8eBWy5K5UWwwoNyQqGC7PCA+EV0NmT93gNYH1arh0I=
+X-Received: by 2002:a05:6402:5244:b0:565:4f70:6ed with SMTP id
+ t4-20020a056402524400b005654f7006edmr109469edd.6.1709280246294; Fri, 01 Mar
+ 2024 00:04:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709279844; l=8144; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=mA8Nr7G9TAPkD5sqPufRUnHn1tnfUaK4p8WVZGooq8s=; b=j9vQ9R1jVLVC1M4yemdntqptsVsR+lR5DBiaClWbQ/YpJD/UFDE+PUpJrJym97mdqSyQMejBe MSPp0lrVMLIAYPPZv7FkPAZS7zQ1aUoGbh1iO9WYNK/zxIf+eGVCJE7
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <20240229213018.work.556-kees@kernel.org> <20240229225910.79e224cf@kernel.org>
+In-Reply-To: <20240229225910.79e224cf@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 1 Mar 2024 09:03:55 +0100
+Message-ID: <CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com>
+Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
+	Paolo Abeni <pabeni@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, netdev@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>, 
+	Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li <lixiaoyan@google.com>, 
+	Amritha Nambiar <amritha.nambiar@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-set_memory_rox() can fail, leaving memory unprotected.
+On Fri, Mar 1, 2024 at 7:59=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wro=
+te:
+>
+> On Thu, 29 Feb 2024 13:30:22 -0800 Kees Cook wrote:
 
-Check return and bail out when bpf_jit_binary_lock_ro() returns
-an error.
+> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > index 118c40258d07..b476809d0bae 100644
+> > --- a/include/linux/netdevice.h
+> > +++ b/include/linux/netdevice.h
+> > @@ -1815,6 +1815,8 @@ enum netdev_stat_type {
+> >       NETDEV_PCPU_STAT_DSTATS, /* struct pcpu_dstats */
+> >  };
+> >
+> > +#define      NETDEV_ALIGN            32
+>
+> Unless someone knows what this is for it should go.
+> Align priv to cacheline size.
 
-Link: https://github.com/KSPP/linux/issues/7
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Puranjay Mohan <puranjay12@gmail.com>
-Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>  # s390x
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>  # LoongArch
-Reviewed-by: Johan Almbladh <johan.almbladh@anyfinetworks.com> # MIPS Part
----
-Sorry for the resend, I forgot to flag patch 2 as bpf-next
++2
 
-Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
-It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
+#define NETDEV_ALIGN    L1_CACHE_BYTES
 
-v2:
-- Dropped arm64 change following commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory management")
-- Fixed too long lines reported by checkpatch
----
- arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
- arch/loongarch/net/bpf_jit.c     | 22 ++++++++++++++++------
- arch/mips/net/bpf_jit_comp.c     |  3 ++-
- arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
- arch/s390/net/bpf_jit_comp.c     |  6 +++++-
- arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
- arch/x86/net/bpf_jit_comp32.c    |  3 +--
- include/linux/filter.h           |  5 +++--
- 8 files changed, 51 insertions(+), 27 deletions(-)
-
-diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-index 1d672457d02f..01516f83a95a 100644
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	/* If building the body of the JITed code fails somehow,
- 	 * we fall back to the interpretation.
- 	 */
--	if (build_body(&ctx) < 0) {
--		image_ptr = NULL;
--		bpf_jit_binary_free(header);
--		prog = orig_prog;
--		goto out_imms;
--	}
-+	if (build_body(&ctx) < 0)
-+		goto out_free;
- 	build_epilogue(&ctx);
- 
- 	/* 3.) Extra pass to validate JITed Code */
--	if (validate_code(&ctx)) {
--		image_ptr = NULL;
--		bpf_jit_binary_free(header);
--		prog = orig_prog;
--		goto out_imms;
--	}
-+	if (validate_code(&ctx))
-+		goto out_free;
- 	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
- 
- 	if (bpf_jit_enable > 1)
- 		/* there are 2 passes here */
- 		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
- 
--	bpf_jit_binary_lock_ro(header);
-+	if (bpf_jit_binary_lock_ro(header))
-+		goto out_free;
- 	prog->bpf_func = (void *)ctx.target;
- 	prog->jited = 1;
- 	prog->jited_len = image_size;
-@@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ?
- 					   tmp : orig_prog);
- 	return prog;
-+
-+out_free:
-+	image_ptr = NULL;
-+	bpf_jit_binary_free(header);
-+	prog = orig_prog;
-+	goto out_imms;
- }
- 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index e73323d759d0..7dbefd4ba210 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1294,16 +1294,19 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	flush_icache_range((unsigned long)header, (unsigned long)(ctx.image + ctx.idx));
- 
- 	if (!prog->is_func || extra_pass) {
-+		int err;
-+
- 		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
- 			pr_err_once("multi-func JIT bug %d != %d\n",
- 				    ctx.idx, jit_data->ctx.idx);
--			bpf_jit_binary_free(header);
--			prog->bpf_func = NULL;
--			prog->jited = 0;
--			prog->jited_len = 0;
--			goto out_offset;
-+			goto out_free;
-+		}
-+		err = bpf_jit_binary_lock_ro(header);
-+		if (err) {
-+			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n",
-+				    err);
-+			goto out_free;
- 		}
--		bpf_jit_binary_lock_ro(header);
- 	} else {
- 		jit_data->ctx = ctx;
- 		jit_data->image = image_ptr;
-@@ -1334,6 +1337,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	out_offset = -1;
- 
- 	return prog;
-+
-+out_free:
-+	bpf_jit_binary_free(header);
-+	prog->bpf_func = NULL;
-+	prog->jited = 0;
-+	prog->jited_len = 0;
-+	goto out_offset;
- }
- 
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
-diff --git a/arch/mips/net/bpf_jit_comp.c b/arch/mips/net/bpf_jit_comp.c
-index a40d926b6513..e355dfca4400 100644
---- a/arch/mips/net/bpf_jit_comp.c
-+++ b/arch/mips/net/bpf_jit_comp.c
-@@ -1012,7 +1012,8 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_prog_fill_jited_linfo(prog, &ctx.descriptors[1]);
- 
- 	/* Set as read-only exec and flush instruction cache */
--	bpf_jit_binary_lock_ro(header);
-+	if (bpf_jit_binary_lock_ro(header))
-+		goto out_err;
- 	flush_icache_range((unsigned long)header,
- 			   (unsigned long)&ctx.target[ctx.jit_index]);
- 
-diff --git a/arch/parisc/net/bpf_jit_core.c b/arch/parisc/net/bpf_jit_core.c
-index d6ee2fd45550..979f45d4d1fb 100644
---- a/arch/parisc/net/bpf_jit_core.c
-+++ b/arch/parisc/net/bpf_jit_core.c
-@@ -167,7 +167,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_flush_icache(jit_data->header, ctx->insns + ctx->ninsns);
- 
- 	if (!prog->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(jit_data->header);
-+		if (bpf_jit_binary_lock_ro(jit_data->header)) {
-+			bpf_jit_binary_free(jit_data->header);
-+			prog->bpf_func = NULL;
-+			prog->jited = 0;
-+			prog->jited_len = 0;
-+			goto out_offset;
-+		}
- 		prologue_len = ctx->epilogue_offset - ctx->body_len;
- 		for (i = 0; i < prog->len; i++)
- 			ctx->offset[i] += prologue_len;
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index b418333bb086..e613eebfd349 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -2111,7 +2111,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 		print_fn_code(jit.prg_buf, jit.size_prg);
- 	}
- 	if (!fp->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(header);
-+		if (bpf_jit_binary_lock_ro(header)) {
-+			bpf_jit_binary_free(header);
-+			fp = orig_fp;
-+			goto free_addrs;
-+		}
- 	} else {
- 		jit_data->header = header;
- 		jit_data->ctx = jit;
-diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
-index fa0759bfe498..73bf0aea8baf 100644
---- a/arch/sparc/net/bpf_jit_comp_64.c
-+++ b/arch/sparc/net/bpf_jit_comp_64.c
-@@ -1602,7 +1602,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_flush_icache(header, (u8 *)header + header->size);
- 
- 	if (!prog->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(header);
-+		if (bpf_jit_binary_lock_ro(header)) {
-+			bpf_jit_binary_free(header);
-+			prog = orig_prog;
-+			goto out_off;
-+		}
- 	} else {
- 		jit_data->ctx = ctx;
- 		jit_data->image = image_ptr;
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index b18ce19981ec..f2be1dcf3b24 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (bpf_jit_enable > 1)
- 		bpf_jit_dump(prog->len, proglen, pass + 1, image);
- 
--	if (image) {
--		bpf_jit_binary_lock_ro(header);
-+	if (image && !bpf_jit_binary_lock_ro(header)) {
- 		prog->bpf_func = (void *)image;
- 		prog->jited = 1;
- 		prog->jited_len = proglen;
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 7dd59bccaeec..fc42dcfdbd62 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -895,10 +895,11 @@ static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
- 	return 0;
- }
- 
--static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
-+static inline int __must_check
-+bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
- 	set_vm_flush_reset_perms(hdr);
--	set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
-+	return set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
- }
- 
- int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap);
--- 
-2.43.0
-
+or a general replacement of NETDEV_ALIGN....
