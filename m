@@ -1,123 +1,108 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D683C68A
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 20:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8B63C46B
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 20:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324754; cv=none; b=E6xrXoBCQ1GFPVCDD26tfsBgj/jrPL9QKOsJiOhXn39rugjI/A6GHKbb8QTJwHQI95wVX2iCZH9y35npMifnmya/PKn07uoCDIYoB8b4Y56AHLmhjFBj0PoYKUIrmKkNGpFfRTnCUy0yA6gH8QIXlHcfSvbf0Jls0ybWIUl9oZU=
+	t=1709324856; cv=none; b=VIc6qNzmkKZIs+N9YCKgUNt+rO7ePCEwaok5Ueolo31rI2bv76p8DO32k3/bztkdLGIxmaYb1GDC4GQc4GHPLZ674bXNT31kXSjh2dCFF0M5lzfYtUMZL8BXk20+omch2FhIAoDhrqBzT8iPu9bY/hzlElYQzpiZsEtuGmAWEKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324754; c=relaxed/simple;
-	bh=r0GlreGLsYtbA/Nea/FJMUIpPOXUZxD98Y/U+q/kZ/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PfCfDLDZfotglILhsJx7wZL34bnDOLpoMFYhJ/h17TWFTf+0JRs8Jqt1jWOYcsOspSAe/Y8jLBdznz107AC5Wjvvsm3FGjGvciR7Ah7yK1vr1k2chnqYTZCB5ZkEvVQblqRScmaaXlISEjWtndk00OUb7tOsDnjoc5Xl+KC7uTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=i6GOcPL8; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1709324856; c=relaxed/simple;
+	bh=DnUJs5+uISqN9crku1KoMOQ953Bxm+qboqKzjh/95IE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uFAkSPPjY0zbuSXI7Tff51RowCXFCTp/o7zIEDbZgYcE3eYL1a8A4GJWWPNelvdRCywmHX+ecMQnWzZOrolipS/bXloQ+FgCA5w7FrSnXlcix9zKpmgjXgNhiR+aM8kddcpvFJdW38/w6VNwmsdzq6R3G3vy243027AAjdDY5EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GCsC91Eq; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="i6GOcPL8"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e4a803c72aso1285348a34.3
-        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 12:25:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCsC91Eq"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2091433a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 12:27:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709324751; x=1709929551; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4uxZbt0qin0Wn8Pr+rE6EDCFD41pXx3sQye6WwUWzw=;
-        b=i6GOcPL8AT1LAVXkhE7YUVgaLtFy2ynvq0/1YkUBJArcYTcaZkv6pMXSXoHiagensk
-         G7h0+i4TW0z6uNSqwrp4tX9krzlD9+3ppTYXmQR/1JpwqCD12PfGhwNaUdutGJN4pgzl
-         oHC062+S1jK8DA2IZkB7H4dyLthluYAr/0PeoJAXJ2Be+HfbQ8DIw75OiqUsjPSp/g3x
-         VerqdUwMuORqDfOwFkzqDZEcb475OVihaVC7rlNkaewqViRLEhR7z4CnljE4t7A+FEsJ
-         wx4grYg7cNZwWKhhdjmcf0pNG5MiMWDuw88f5zbt1wMcDGtzxxAsByD8KEXwuX60Edmq
-         z21Q==
+        d=chromium.org; s=google; t=1709324854; x=1709929654; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FbfKK2EYH3OSU0GBIWu6lSnSWqW1KYjbvzvVhBb4gRQ=;
+        b=GCsC91Eqgvyh4afFCuSz8H3qZ8QqrZDoprnVqDBINTy173L8fMqWw5rnkita0+fRmn
+         XIbAYw1IFkWxA2iBOpwFaFKHUmVyKpSPW5l7Gt3titTuB37KZlgkikp0sO+iM/DEWHQ4
+         qjDSly3WY52FReUEKQu+b+0P2uI5LiGS/+VwU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709324751; x=1709929551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r4uxZbt0qin0Wn8Pr+rE6EDCFD41pXx3sQye6WwUWzw=;
-        b=PYFKRsgeMggY4C6I5crigsXHmjoX0n0b2PDFmklXlsXqOg9bSVzFgBGRgfJg3OS+2W
-         dr2lyWX5iKCOpcFUIUjI0IXadzmWJt54trAUcA1JILvnmYA2tFNE5xTc4Zs+BqpOCB1b
-         ++/mAIsIM3ozCq1efkQSC2nV8u6vY4cHWxbBvRGhTA+yJ2RR8kmYnWZkqfoqDRAt29OZ
-         0gOQNfZuKRCCrV9MFFRssfnB1A+STi7wNCsNOc7J/x1JIbQi3Iv6naCneJsY4+PcGwhK
-         dRipg/bzSy5xAwPxXsFv9Q8T5UYciGtUB7UKBzQ05xL/yu380Y27zMToDe5zfbGXEERU
-         Ls3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiR5fYjkusTWWoDHABIU+FbUdBNQJZV24jYLJRE/vpLn9pXxUhi0MPkBE8re+I8LQqN8s+JDjQKXIe6EtjFECQA/3KPVb3ZY1NmXOtGU7x
-X-Gm-Message-State: AOJu0Yz1QgKh0W1IWzcY2zZNwFHwdHJdFFKJrjwM3/7b/SM3+5k3cXL7
-	UvPpOSHFIETIJtYypjRXmLL9hJeytZFUEtGecdAoRx+4xbFA2NdOjdJrQqiz8jc=
-X-Google-Smtp-Source: AGHT+IGOIf9N2e0j0sOh4gWwieqF/orAK7lWNJdnsL4VsiGKxZBiUNq+AipTLP8PSCm9ay/w98JPVg==
-X-Received: by 2002:a9d:6215:0:b0:6e2:baa2:42c8 with SMTP id g21-20020a9d6215000000b006e2baa242c8mr2925611otj.28.1709324751180;
-        Fri, 01 Mar 2024 12:25:51 -0800 (PST)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id f10-20020a9d6c0a000000b006e454aa54d1sm806213otq.56.2024.03.01.12.25.50
+        d=1e100.net; s=20230601; t=1709324854; x=1709929654;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FbfKK2EYH3OSU0GBIWu6lSnSWqW1KYjbvzvVhBb4gRQ=;
+        b=YMO5U8lIL44Oq1rVR6gpFLrmhY5de4deNjHi1fcBN2JM1hdHrqdJFuXtuD5lQACQ1B
+         3jg+5H/LcDNGlYEobbB3DIf6TfNjz6nRMhiV1cinkNbpWfoZ4p6zhWp7gZ+lDEQGiJVp
+         8ObjDKLT7BbJKwt8gpOMVrKKGjvqBC3nVKBL2lSKIt4VzAAPOvdDGcVRh7nEZex/UtgD
+         Bn+B7rO/v28pL3GFFPwq27Dz4RH5oop2+263npIawFBlg1zFi7pDWzzm2Nd8iuDkBXx5
+         rB/eIJcF/yglMNuDxmOpX6abuK988uO49Ak8nt+yWwgMlYohOsx4eQXA+31DqiS8N4wM
+         +ZiA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+8gwUG7xSZDwcdweJl3nzFO5PNUhYXR5HU/wixBfRtoF6Lqqo8OhHcT0L4onshQThogVq6nOObu1z4IRe6guBxiT9fc63Y7yHD9Q3GEMK
+X-Gm-Message-State: AOJu0YwNZtuErgwxiFhggbkn4u7eAgiP9nUo+tKVPED0MCncCWY2HGhI
+	6PKJi23e5bTyj3802b3hxTYRc0Lv3sRdKMxf3ZuND460pSS69kz7qXtFdISKiQ==
+X-Google-Smtp-Source: AGHT+IFCqqO7wZ18+05UaKVoS8w2IKK+O4ARDFgyorWuSmx3ehlO/p40sKlA9YJ91qT+gZfsdivgyw==
+X-Received: by 2002:a17:90a:b394:b0:299:42d1:91df with SMTP id e20-20020a17090ab39400b0029942d191dfmr2788029pjr.14.1709324854080;
+        Fri, 01 Mar 2024 12:27:34 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d23-20020a17090ac25700b0029ae07f56b3sm3668071pjx.5.2024.03.01.12.27.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 12:25:50 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-spi@vger.kernel.org,
+        Fri, 01 Mar 2024 12:27:33 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 3/3] spi: axi-spi-engine: use struct_size() macro
-Date: Fri,  1 Mar 2024 14:25:20 -0600
-Message-ID: <20240301-mainline-axi-spi-engine-small-cleanups-v1-3-241dfd2a79f7@baylibre.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240301-mainline-axi-spi-engine-small-cleanups-v1-0-241dfd2a79f7@baylibre.com>
-References: <20240301-mainline-axi-spi-engine-small-cleanups-v1-0-241dfd2a79f7@baylibre.com>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/2] string: Convert selftests to KUnit
+Date: Fri,  1 Mar 2024 12:27:29 -0800
+Message-Id: <20240301202524.make.800-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=908; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=DnUJs5+uISqN9crku1KoMOQ953Bxm+qboqKzjh/95IE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4jozssJSDBeQ6SS3cHQIRC2M+sjmHVadtdbbw
+ jC5BioxJFiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeI6MwAKCRCJcvTf3G3A
+ JgAED/wII/zyCWUkDErz/vQ6I40XSy0Zfa+6aIzCeKJUsXVuJMl2azaL/wTX76kzKuFWFI3Wy0S
+ sTXJNJXeop+Q+XlCfSly/87MqGuRNs1C3YO1X6Eus9r5gHPoH5+dqrxsbatTlJWjdpNNAeV8XZ7
+ fiR7J1Kxrt3YJvc/5vzyQWer+pJ1+4q7XEaGYhEAJC3mXP05xtYmJXPIT71g6SxLq1O4fSytCcp
+ MHrb+0zvyD5TMvWWqnTMXF0tcMLbEN4R0RhLwaPVG2zAYk68AIATv3G07QIF7qMZO9VHZrojU+n
+ B/GG4Ja8jOSkjDoxnrwKG4xPpTVVoTHBOlR9hBb8M77vEbbeAFPnTuleTZj7uJ5tcCqbT4Ilma/
+ dCp+4insJmj/jnJDMzBy6h4BGlKnPETxb1p+pFF1fJUQC2vVkKeO0nupw2dn5Zw2Dfm4cWiH3u8
+ 2j/+HNJVh2/8piWORl29kMlyuWNkhLv11IwFyj4ZzYvMLguw2vW25dgEzLSCLRDgNe2SPp52J16
+ O1vBXB2xfe9Z7ZojvMt3IhoT5yVHX4zGRjDRh0u9ZetvjNE4YyDz6EkOx7JFUcfOP8XqpeHWKC1
+ HbiPUBPVFk6GNm1LgSQa2j8UiqVvhbQWvxEYXw8hP4IGGStOxyshAqpn0iju37SS6+lNWe2NOrQ
+ ImSrpdg/ 4ST6TkA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-This makes use of the struct_size() macro to calculate the size of the
-struct axi_spi_engine when allocating it.
+Hi,
 
-Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/spi/spi-axi-spi-engine.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I realized the string selftests hadn't been converted to KUnit yet. Do that.
 
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index e801eed820df..9646764b0042 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -12,6 +12,7 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- 
-@@ -501,15 +502,13 @@ static irqreturn_t spi_engine_irq(int irq, void *devid)
- static int spi_engine_optimize_message(struct spi_message *msg)
- {
- 	struct spi_engine_program p_dry, *p;
--	size_t size;
- 
- 	spi_engine_precompile_message(msg);
- 
- 	p_dry.length = 0;
- 	spi_engine_compile_message(msg, true, &p_dry);
- 
--	size = sizeof(*p->instructions) * (p_dry.length + 1);
--	p = kzalloc(sizeof(*p) + size, GFP_KERNEL);
-+	p = kzalloc(struct_size(p, instructions, p_dry.length + 1), GFP_KERNEL);
- 	if (!p)
- 		return -ENOMEM;
- 
+-Kees
+
+ v3: retain all text context in failure reporting
+ v2: https://lore.kernel.org/lkml/20240301002416.it.092-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20240229233432.work.675-kees@kernel.org/
+
+
+Kees Cook (2):
+  string: Convert selftest to KUnit
+  string: Convert helpers selftest to KUnit
+
+ MAINTAINERS                                   |   4 +-
+ lib/Kconfig.debug                             |  12 +-
+ lib/Makefile                                  |   4 +-
+ ...tring_helpers.c => string_helpers_kunit.c} | 216 ++++++++----------
+ lib/{test_string.c => string_kunit.c}         | 200 ++++++----------
+ 5 files changed, 178 insertions(+), 258 deletions(-)
+ rename lib/{test-string_helpers.c => string_helpers_kunit.c} (72%)
+ rename lib/{test_string.c => string_kunit.c} (46%)
 
 -- 
-2.43.2
+2.34.1
 
