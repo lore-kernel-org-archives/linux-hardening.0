@@ -1,113 +1,163 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B74442A87;
-	Fri,  1 Mar 2024 02:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A13B52F81
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 04:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709261815; cv=none; b=Ajo2p7F4HN9x/O/S2bINy/zNV/sHaFpSjTocKb5rj+xHlIklS2B54N9iEUHcoaCWfVg10qm0887jjqGLr/pYFlq+jTUXBhBq5XZUIdry3X+DALnldlT+bRRcdvC7WM15YFUbGvSXW/ITfyOMbqordXCrq20FYRKobavyL2SMYcE=
+	t=1709268284; cv=none; b=ljg3/2K/J4jyLKtLd0amWq/2KJgGOLuSG7Bve4st6iAeetQLF3HwbGYCaVS4vwEbXEhg5JORV4YQfQLdJz19E41Z4A91wVUDumpYAhw8GUJ/DQcapTH4czU1LBxBYe5Mx8063IONk1EHJJatSerg7i/WRETj7ulJ0b+WjTPUkkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709261815; c=relaxed/simple;
-	bh=Pqh+NpCuWum5dqlqbMUL3TqqnHP2lEiT2fIxy9FzlNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jOnt4oCFKtpGd5VsgU6SGMqslvwtzXm7DUBsHmke1gmEdR5Q/tajcQkJ2wNS04ZCB2usRUkRkad6w2jt/xLm0MdX6wHG3rDRRBaCmwkoTCOuUgrsTifYBiq+Fp8asMcowJrNdaow1AbpNPrCm12AYSNH1KeGB/V8ZunEh7/Uzhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ObMS8wAZ; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1709268284; c=relaxed/simple;
+	bh=mZCSNoaZZKbSakFDmMwKoymVUugJ1bVB7eASshxhkHw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GODu8cVgNNbReDZ++TQ7TZap1FhT/hXkKucYgYASyU2LpZ629wFoUYNP2ANwc7SBYWe8X9k+04dg8RAEiaQWLrAe0o2tw5jUItBy9Wn3ToJ/3ms3B+Xl530bLujYWQDOTJ4ai30wwlXeYerMHJVOAiTUxft+1Jow5+ZX9ovX1eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SsL/ZEBw; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ObMS8wAZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=Qgts2Hmu+UjCHCfkiwx/Y2ncBIM0RZp13+yxLu7uyHk=;
-	b=ObMS8wAZgi2E9Lk4dw8w0gKbkYgaFTJNhQeRiLY3rdtM0g3qs1kmxpch2xFwhQ
-	KGglM8VehwRt28PYyTuWpbMRikrzoesdueziAEzavbs1tnc3vZnu2nrH49xQY57w
-	tjWr29ERHX/sMJPU5ar29tsEeHTle+PoEMbh3c2CJYZyk=
-Received: from [192.168.174.19] (unknown [223.147.65.76])
-	by gzga-smtp-mta-g1-1 (Coremail) with SMTP id _____wDn122QQ+FlpIeKDg--.55921S2;
-	Fri, 01 Mar 2024 10:55:13 +0800 (CST)
-Message-ID: <1a5aed22-63ec-4445-b449-39659f414e79@163.com>
-Date: Fri, 1 Mar 2024 10:55:12 +0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SsL/ZEBw"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bba50cd318so1174395b6e.0
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 20:44:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709268281; x=1709873081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LUicd2n6ht+rA5byppQHy+nx4IzWcP+LTMq589jP68Y=;
+        b=SsL/ZEBwo4yOajF83l3tWeE3zUcqp7+MGFhG1sukjrLqR79CRZRqIeh5V84tuW/a72
+         s3HVZoy3P2td1BHQR1YxsPK/2MOlCSm4QbWKiLbVFq/vWo5o1kJOnEluOV6zp6sxwt6O
+         TXFIiZwxoMgHcfhzz6uQnnC5aBpEpaw9nK2fk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709268281; x=1709873081;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LUicd2n6ht+rA5byppQHy+nx4IzWcP+LTMq589jP68Y=;
+        b=YZl7PGfx6+7HPIHf4N/Sci/pGe+gwyWCDEOzOIFSH0FnxsxBgUF87HR2DKdDPWKNQv
+         LTzX6dYVXXid8ys+MZtCEVG1iFv7nSRkJayRLA2YEBxhCt8wpE7dZRV06vgTuPeIT8rk
+         /05pm+1wYl3pY21bSfETxuwZ31Ix6qiie5a6ljO5cy2Hswgp5lrdClipyv1Qbz/a1Gat
+         SPVCc1ntdM2BxJXw1VQbq9hDvvDQNnWKwxuPw6SEEjQtPwrcOl23ALL5TR9FKd09Lrfh
+         XeRCue93+so19oOszz4Uwq7tIfuV5+kf6Xp9EIJGSMr89Ei3Kba276gJp/L3saa54OHz
+         k4pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUZIG0v7AZW2L1fo6SdhP5qX0hPaS1zw214UPn9li6g+PdtveH2WPX+8FTS0ajRsAVfZ9J6GX+B2GXUVGNtwwb7Uti3SCOmUI+uU/rFf2N
+X-Gm-Message-State: AOJu0Yw2ElTSBKUyyRIi93QeQXJL0RvKTUOOEuQVD/tQ/+ALbZv0rlFP
+	MsWMn6pMNqO2xOvTqfgvn+aa7T7fcDTeHtupwszsQxwGxdbog0gxggXA6WKR0g==
+X-Google-Smtp-Source: AGHT+IHxhneCZvSya6MvyvgL3RGHKA11Kn0g5FZc6lrd0p58P+2hnWFkDMdO/hK42mOZSjstfdFApg==
+X-Received: by 2002:a05:6808:bc8:b0:3c1:663e:ceb2 with SMTP id o8-20020a0568080bc800b003c1663eceb2mr831324oik.24.1709268281588;
+        Thu, 29 Feb 2024 20:44:41 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id se3-20020a17090b518300b00296fd5e0de1sm4444309pjb.34.2024.02.29.20.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 20:44:41 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	David Laight <David.Laight@aculab.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] compiler.h: Explain how __is_constexpr() works
+Date: Thu, 29 Feb 2024 20:44:37 -0800
+Message-Id: <20240301044428.work.411-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PM: hibernate: Fix level3 translation fault in
- swsusp_save()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: David Hildenbrand <david@redhat.com>, rafael@kernel.org, pavel@ucw.cz,
- len.brown@intel.com, keescook@chromium.org, tony.luck@intel.com,
- gpiccoli@igalia.com, akpm@linux-foundation.org, ardb@kernel.org,
- wangkefeng.wang@huawei.com, catalin.marinas@arm.com, will@kernel.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>,
- xiongxin <xiongxin@kylinos.cn>
-References: <20240226034225.48689-1-13327272236@163.com>
- <8d70939f-ca14-4167-9647-b8f44ddcbb98@redhat.com>
- <ZdxWcG2XCqBum3_R@kernel.org> <3399d2af-3d42-4ac1-9b74-8475bec25f7f@163.com>
- <ZeBRfxQ8WTEVzpfL@kernel.org>
-Content-Language: en-US
-From: Yaxiong Tian <13327272236@163.com>
-In-Reply-To: <ZeBRfxQ8WTEVzpfL@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3830; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=mZCSNoaZZKbSakFDmMwKoymVUugJ1bVB7eASshxhkHw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4V01DNueOMxKBHs1UNYi4cYy1NODxLhYG/ufE
+ zM5XYdHsWuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeFdNQAKCRCJcvTf3G3A
+ JvsWD/41meKbJvTmmS63eBbTW06592QnHpGowqbBjGfTc/aFd2X9Y5fyc1502V1dr2w1pFO9mhD
+ k4zOwkMno3DeB8ls+aLkQ+IG0qv2mBAT+sKkYUlTd2d04/e6PgwF/wKaEGGefhxhhFbbIyme616
+ 3fZ1By98Hs9K3QbuMNAD8/1ns7gRqsm8whwJACqeEVPJcmVUG7CYqw0xv+OyvLSLb9b2gVe/vav
+ +aNTSrCHBaEG6X/SUZYK9Ms45l8R8MRdo4lVnyWWmFXFKtkiftdogKeDMbDcb4IMtbNo6khAW06
+ 1cboFMV7ZcvZF49NhMkxN/du3mjyhWZfN2CpcHo2PiU2CM3dHX2itJl/AKT/nrlSl1TnUaduxSM
+ aRU48jYdYspLBfe5MDHPoIfvE2e7vip5KxyVLzuTDDTsI+s45N4jHSEukiiKNljLkV2t8J4mC7S
+ DPkoAEdEYaleWvakf94egJdxCPE8F723bHoBvSgvcr1P8u8hVPhXHRyraYXcuaZipZewdT5JQ9B
+ rev2s5GZJLLvnJrfYMN9sR9SO3DvmS6GODRBzjD+u00isEXqM8EQUs0MlitaXcob6r9/5XIcpKp
+ 3bCK0SFvjhdlPxiSKaOZSEjVzOiQ5xybHyVsdY27A/qvPJfRdjsEu/hf/cHqR3dEfc5WDAxmM2+
+ Rb1bEsY JaZm7f4Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn122QQ+FlpIeKDg--.55921S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar13Zr15uw1kWF1UXw1DJrb_yoW8uw47pF
-	yfWayFkw1kAryvgrs2v3yfAF4av3yfJFW0qr1UAr97Aan09FZFgr4jk3WY9Fyqqrn5CF1a
-	qrZxK3ZxZ3WUta7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jtL05UUUUU=
-X-CM-SenderInfo: jprtjjaxsxjjitw6il2tof0z/1tbiRROUJWXAkskyHQAAs2
 
+The __is_constexpr() macro is dark magic. Shed some light on it with
+a comment to explain how and why it works.
 
-在 2024/2/29 17:42, Mike Rapoport 写道:
-> On Tue, Feb 27, 2024 at 03:51:25PM +0800, Yaxiong Tian wrote:
->> 在 2024/2/26 17:14, Mike Rapoport 写道:
->>> On Mon, Feb 26, 2024 at 09:37:06AM +0100, David Hildenbrand wrote:
->>>> On 26.02.24 04:42, Yaxiong Tian wrote:
->>>>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>>>>
->>>>> On ARM64 machines using UEFI, if the linear map is not set (can_set_direct_map()
->>>>> return false), swsusp_save() will fail due to can't finding the map table
->>>>> under the nomap memory.such as:
->>> can_set_direct_map() has nothing to do with presence or absence of the
->>> linear map.
->>>
->>> Do you mean that kernel_page_present() presumes that a page is present when
->>> can_set_direct_map() returns false even for NOMAP ranges?
->> Yes， in swsusp_save()->copy_data_pages()->page_is_saveable(),
->> kernel_page_present() presumes that a page is present when
->> can_set_direct_map()
->> returns false even for NOMAP ranges.So NOMAP pages will saved in after,and
->> then
->> cause level3 translation fault in this pages.
-> So this should be the description of the problem in the changelog rather
-> than saying "if the linear map is not set (can_set_direct_map() return
-> false)"
->
->>>>> QEMU ARM64 using UEFI also has the problem by setting can_set_direct_map()
->>>>> return false.
->>> Huh?
->>> Why would you do that?
->>>
->> I discovered this problem when upgrading from 5.4 to 6.6 using the 5.4
->> configuration.
->> So I using latest linux-next code,find the problem still exist.To rule out
->> the effects
->> of a particular machine，I also use qemu to check it.
-> I believe this can be reproduced if you boot with rodata=off and then
-> a better description would be something like
->
-> 	This issue can be reproduced in QEMU when booting with rodata=off
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: David Laight <David.Laight@aculab.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+v2: *thread necromancy* rewrite based on feedback to v1
+v1: https://lore.kernel.org/all/20220131204357.1133674-1-keescook@chromium.org/
+---
+ include/linux/compiler.h | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-Thanks, I opt commit messages,and move !pfn_is_map_memory() check from 
-page_is_saveable()
-to arm64::pfn_is_nosave().  The patch v2 is in:
-
-https://lore.kernel.org/all/20240301021924.33210-1-13327272236@163.com/
-
-I heard that if it is a single PATCH it should be placed under the 
-original mailing list,
-so please ignore the February 27 patch mailing.
-
->
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index bb1339c7057b..38cd9f3c8f6a 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -231,6 +231,45 @@ static inline void *offset_to_ptr(const int *off)
+  * This returns a constant expression while determining if an argument is
+  * a constant expression, most importantly without evaluating the argument.
+  * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
++ *
++ * Details:
++ * - sizeof() return an integer constant expression, and does not evaluate
++ *   the value of its operand; it only examines the type of its operand.
++ * - The results of comparing two integer constant expressions is also
++ *   an integer constant expression.
++ * - The first literal "8" isn't important. It could be any literal value.
++ * - The second literal "8" is to avoid warnings about unaligned pointers;
++ *   this could otherwise just be "1".
++ * - (long)(x) is used to avoid warnings about 64-bit types on 32-bit
++ *   architectures.
++ * - The C Standard defines "null pointer constant", "(void *)0", as
++ *   distinct from other void pointers.
++ * - If (x) is an integer constant expression, then the "* 0l" resolves
++ *   it into an integer constant expression of value 0. Since it is cast to
++ *   "void *", this makes the second operand a null pointer constant.
++ * - If (x) is not an integer constant expression, then the second operand
++ *   resolves to a void pointer (but not a null pointer constant: the value
++ *   is not an integer constant 0).
++ * - The conditional operator's third operand, "(int *)8", is an object
++ *   pointer (to type "int").
++ * - The behavior (including the return type) of the conditional operator
++ *   ("operand1 ? operand2 : operand3") depends on the kind of expressions
++ *   given for the second and third operands. This is the central mechanism
++ *   of the macro:
++ *   - When one operand is a null pointer constant (i.e. when x is an integer
++ *     constant expression) and the other is an object pointer (i.e. our
++ *     third operand), the conditional operator returns the type of the
++ *     object pointer operand (i.e. "int *). Here, within the sizeof(), we
++ *     would then get:
++ *       sizeof(*((int *)(...))  == sizeof(int)  == 4
++ *   - When one operand is a void pointer (i.e. when x is not an integer
++ *     constant expression) and the other is an object pointer (i.e. our
++ *     third operand), the conditional operator returns a "void *" type.
++ *     Here, within the sizeof(), we would then get:
++ *       sizeof(*((void *)(...)) == sizeof(void) == 1
++ * - The equality comparison to "sizeof(int)" therefore depends on (x):
++ *     sizeof(int) == sizeof(int)     (x) was a constant expression
++ *     sizeof(int) != sizeof(void)    (x) was not a constant expression
+  */
+ #define __is_constexpr(x) \
+ 	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+-- 
+2.34.1
 
