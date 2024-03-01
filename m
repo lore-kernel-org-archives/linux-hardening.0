@@ -1,117 +1,147 @@
-Received: from mail1.med.uni-goettingen.de (mail1.med.uni-goettingen.de [134.76.103.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105C415A8
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 13:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.103.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585FE6A8AD
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 13:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709299444; cv=none; b=C+KKuuEXWsTGoYjelNUWzwuut1NMZy/JZT52dBb8fCWoVAamlQ3UTAk4iTRMm/k7swwGgaKv7HiBD8Xu/N2evTAIKBEeRPyUJMoNjTS3bPhPek7sKlCooY86xdJJZuGarJh1kuGcCwkkA8CruGPBA7ge4cYRq/oV/Pdskextdm0=
+	t=1709299555; cv=none; b=j4OEReZKtV1JxgCKeAB3G0DMLsqvAv3riA7wdpyFMBBb2EbN/6WC9gz4ovoGFUn4wJ6TdYSil206Cw7ilMVKzOK4gRUscbfvklpyi5gamRm35GNM2T2UqTMIUCVwxyzeDyVzsofiT7JaDra0GHhvgm1v6X+QGBQIYIASzqqWS5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709299444; c=relaxed/simple;
-	bh=mxWKJ8RTRnGA7eFG1tywu8YEdQFGZoDBTHm7fjuKdTU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TPrxRwfmCJdLRqKwj7c40NbhTWhFnA6vA/x9Vmg7k4Odm+9IyeTItOgBSdbOj5vtdG4io6DAV+pLaUUBvTvEa1Sj0KWZHS9auU36IWCeQ6QcoqxBs79TfT1RGM7mRVGWW+Lj4aAiYGVfcz6k4tykoOM4833nNLoKsGd3xm1Hix0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=med.uni-goettingen.de; spf=pass smtp.mailfrom=med.uni-goettingen.de; dkim=pass (2048-bit key) header.d=med.uni-goettingen.de header.i=@med.uni-goettingen.de header.b=Ps5nlape; arc=none smtp.client-ip=134.76.103.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=med.uni-goettingen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=med.uni-goettingen.de
+	s=arc-20240116; t=1709299555; c=relaxed/simple;
+	bh=JHWldWA6nNHKcTRlr05zV/nwVzVNIlbYVSMFB9iJlos=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XBKe1p4UzdedMrg2VqmHE5bujpGnUj2ZHK0aRoXR9sL2+wv2MCycgMZxC3Ni5EoJ1AbFcp4n65qVohGsQk0X0v+wY1UeG8xM+UB23YJZFydG4Z0gK2OqlxWCh05fDvJlAzgi6a9B6ra9/4MxrynF0cl4kW8loRBrdxz4/dTuXB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+Q2+3Fy; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=med.uni-goettingen.de header.i=@med.uni-goettingen.de header.b="Ps5nlape"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=med.uni-goettingen.de; s=Mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:
-	From:Sender:Reply-To:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mxWKJ8RTRnGA7eFG1tywu8YEdQFGZoDBTHm7fjuKdTU=; b=Ps5nlapeyCdeYTvUj3ICVS2vg5
-	zdj8/b9anNyLt1UWZtGaovWMpHtFfgdPmNCqJqRUXKhG57Rb768EViLErecZeeXSJieDlSKZfVejD
-	UZ6LUzCG5kmlo9ymfCYFTD2CHIFlJpPkW65Ols9p6b/SdLM59hzWfIxpmudRwSp25oS8U2cqZxf55
-	MW/qxwmm9iMIIfGChqZCZsRMIapEdVadnTPb8Y6cvYipCrRD7nWJJTObvU7lDZUtBeGK0uqEIOzY0
-	4tKRJqVJErlvoKVrNlpnlgCtLPkwhmT3t6OseyPy2JwzR6vBoldAejnT5pyNbd21rDTBHGUvjJwbL
-	MYyjszAw==;
-Received: from umg-exc-01.ads.local.med.uni-goettingen.de ([10.76.100.74]:29415)
-	by mail1.med.uni-goettingen.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <Martin.Uecker@med.uni-goettingen.de>)
-	id 1rg2pg-00032L-0c;
-	Fri, 01 Mar 2024 14:21:48 +0100
-Received: from umg-exc-01.ads.local.med.uni-goettingen.de (10.76.100.74) by
- umg-exc-01.ads.local.med.uni-goettingen.de (10.76.100.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 1 Mar 2024 14:21:45 +0100
-Received: from umg-exc-01.ads.local.med.uni-goettingen.de
- ([fe80::2886:b6b:10e3:deea]) by umg-exc-01.ads.local.med.uni-goettingen.de
- ([fe80::2886:b6b:10e3:deea%6]) with mapi id 15.01.2507.035; Fri, 1 Mar 2024
- 14:21:45 +0100
-From: "Uecker, Martin" <Martin.Uecker@med.uni-goettingen.de>
-To: "keescook@chromium.org" <keescook@chromium.org>,
-	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-	"David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>
-CC: "corbet@lwn.net" <corbet@lwn.net>, "miguel.ojeda.sandonis@gmail.com"
-	<miguel.ojeda.sandonis@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"ndesaulniers@google.com" <ndesaulniers@google.com>,
-	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-	"ojeda@kernel.org" <ojeda@kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>
-Subject: Re: [+externe Mail+] RE: [PATCH] compiler.h: Explain how
- __is_constexpr() works
-Thread-Topic: [+externe Mail+] RE: [PATCH] compiler.h: Explain how
- __is_constexpr() works
-Thread-Index: AQHaa7zea2tnGf5kn0G3mh48EMfk27EizpQA
-Date: Fri, 1 Mar 2024 13:21:45 +0000
-Message-ID: <22c9c4cc27b13b2fb6f3cd9fa6f827f56f30770b.camel@med.uni-goettingen.de>
-References: <20240301044428.work.411-kees@kernel.org>
-	 <af0eff12e6bc41039614add550406c11@AcuMS.aculab.com>
-In-Reply-To: <af0eff12e6bc41039614add550406c11@AcuMS.aculab.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <935E7E0ABD95954982DB4A23C34DA0E8@med.uni-goettingen.de>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+Q2+3Fy"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-565223fd7d9so5944a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 05:25:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709299552; x=1709904352; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+1teAiWc1jVGCssi6rgN3jeMMtmC7N9NmiOj97TQSRI=;
+        b=B+Q2+3FyhzzHOF8F2GLt2wkZhMidxgsedxhsBtInm8nvf198JXT1DWUuF0u/356Wxn
+         bHie3f4Uu/XHdrg+Vfa953FWhqx8oTkSxkHOqiW2KnCzAx7R4cD2NPj2TsXquakIjDcE
+         76UQQglv9A6OGSz2uwzZkR8KRPH8tPj4ZZe2hogP5p7bxSCh5+f3aUvhHjuq5MZHp8P7
+         7M2KrYJhNfbtyRCQP89PQJ/FD9VfpkinyagzG8V2v+DAKiZ7P84LOwrPvC5bXiBAILiy
+         Ra0kWb1lgODBF7kJQfvGMA3m9OzYX4TpQbrPd4MRKf2eJIzvsx2D4eOV8BvrxHB8P7Su
+         094A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709299552; x=1709904352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+1teAiWc1jVGCssi6rgN3jeMMtmC7N9NmiOj97TQSRI=;
+        b=AL1x364FiW5YLZxY3TLRH1cnAlREZKqdrsEv58Dpr8zXiGVuXYIBPzuf70mIahF33+
+         ALNRuoGCipNAeKClrwHO2pLiFut2VfhMp5jOnMi4wfzXdhp42MYi9RvCnd8IULEN1vlL
+         VEvzGFZz/WoI7fN3rJDNNoLd/XO8LEMLlF3yj7Hg/7mBkYMh5QEDgS9oTWdsHipUST4H
+         6kSwfeDX7xCyoTInIQoTG00Q884z/xkpkqOn1pALkE+pQ/0yIJKOa6ev+KpGRlah+6ku
+         T8xwe0Sg1YD1hNxAxLDasclcmiLb2V3UUhd4z6FrCYcus9sVECVO0ZvWAf/CGG765/Ti
+         NtEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUy7QNuXbx5AEWXo6FA5V0zFdwkaMtAxHv8WjnHf7PIQ+5j0a6xIzkts7LA0vaGDQQvXI9fj8Jy6Dd5PIoOSJCR2aylq91wlL/iZsFbJBXH
+X-Gm-Message-State: AOJu0YwhiCIDnr9SM4TshB1zZBXSx7vFx591RKQ5U9eaq8x0+pKGxxof
+	keXAZp0gW1OJ86qtxISU5DGMuJysft/qaG4EScHDL/bYcTDErsnR6r81c226Oes1xLac2bJfTWg
+	FZJDcI6DUwOLDuBIGehXOjF4LLGlgXymJJb7G
+X-Google-Smtp-Source: AGHT+IHAr/zt6nB351plwUC26OzlBDCvnjhX4XuWJqRSF9vysrKL8/mndZ7DIMKjrKSevJ2zGGPoqI2B9cbCF0OdxRw=
+X-Received: by 2002:a05:6402:350e:b0:563:f48a:aa03 with SMTP id
+ b14-20020a056402350e00b00563f48aaa03mr141224edd.2.1709299551406; Fri, 01 Mar
+ 2024 05:25:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240229213018.work.556-kees@kernel.org> <20240229225910.79e224cf@kernel.org>
+ <CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com> <9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
+In-Reply-To: <9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 1 Mar 2024 14:25:37 +0100
+Message-ID: <CANn89iLSLPn5PyXNQcA2HO0e5jGYvHKhTh_9_EMmfbTJKZPfbg@mail.gmail.com>
+Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, netdev@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Simon Horman <horms@kernel.org>, 
+	Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li <lixiaoyan@google.com>, 
+	Amritha Nambiar <amritha.nambiar@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQpCVFcgbXkgbWFpbiBlbWFpbCBhZGRlc3MgaXMgbm93OiB1ZWNrZXJAdHVncmF6LmF0DQoNCk15
-IHN1Z2dlc3Rpb24gd291bGQgYWxzbyB0byBsaW1pdCBleHBsYW5hdGlvbi4gTm9ib2R5IHNob3Vs
-ZA0Kd3JpdGUgc3VjaCBjb2RlIGFuZCBpZiB5b3UgbmVlZCB0bywgeW91IGNhbiBmaW5kIGV4cGxh
-bmF0aW9ucw0KYWxsIG92ZXIgdGhlIGludGVybmV0Lg0KDQpGaW5hbGx5LCBJIHN0aWxsIHRoaW5r
-IHRoZSBtb3RpdmF0aW9uIGZvciB0aGlzIG1hY3JvIChyZW1vdmluZw0KVkxBcykgaXMgbWlzZ3Vp
-ZGVkIGlmIHNlY3VyaXR5IGlzIHRoZSBnb2FsIGJlY2F1c2UgVkxBcyBwcm92aWRlDQpwcmVjaXNl
-IGJvdW5kcyBhbmQgbGFyZ2VyIHdvcnN0LWNhc2UgZml4ZWQtc2l6ZSBhcnJheXMgZG8gbm90LiAg
-wqANCg0KSXQgd291bGQgYmUgYmV0dGVyIHRvIHVzZSB0aGUgY29tcGlsZXIgb3B0aW9ucyB0aGF0
-IGRldGVjdA0KcG9zc2libHkgdXNlIG9mIFZMQXMgb2YgdW5ib3VuZGVkIHNpemUgYW5kIGlmIHRo
-ZXJlIGEgcHJvYmxlbXMNCndpdGggdGhpcywgaW1wcm92ZSB0aGlzIG9uIHRoZSBjb21waWxlciBz
-aWRlLg0KDQpNYXJ0aW4NCg0KDQpBbSBGcmVpdGFnLCBkZW0gMDEuMDMuMjAyNCB1bSAwOTozMiAr
-MDAwMCBzY2hyaWViIERhdmlkIExhaWdodDoNCj4gRnJvbTogS2VlcyBDb29rDQo+ID4gU2VudDog
-MDEgTWFyY2ggMjAyNCAwNDo0NQ0KPiA+IFRvOiBSYXNtdXMgVmlsbGVtb2VzIDxsaW51eEByYXNt
-dXN2aWxsZW1vZXMuZGs+DQo+ID4gDQo+ID4gVGhlIF9faXNfY29uc3RleHByKCkgbWFjcm8gaXMg
-ZGFyayBtYWdpYy4gU2hlZCBzb21lIGxpZ2h0IG9uIGl0IHdpdGgNCj4gPiBhIGNvbW1lbnQgdG8g
-ZXhwbGFpbiBob3cgYW5kIHdoeSBpdCB3b3Jrcy4NCj4gDQo+IEFsbCB0aGUgOHMgZG9uJ3QgaGVs
-cC4uLg0KPiANCj4gSSBkb24ndCB0aGluayB5b3UgbmVlZCB0aGF0IG11Y2ggZXhwbGFuYXRpb24u
-DQo+IA0KPiBQZXJoYXBzIGp1c3Qgc2F5aW5nIHRoYXQgdGhlIHR5cGUgb2YgPzogZGVwZW5kcyBv
-biB0aGUgdHlwZXMNCj4gb2YgdGhlIHZhbHVlcyBhbmQgaXMgaW5kZXBlbmRlbnQgb2YgdGhlIGNv
-bmRpdGlvbi4NCj4gVGhlIHR5cGUgb2YgKDAgPyAodm9pZCAqKXAgOiAoZm9vICopcSkgaXMgbm9y
-bWFsbHkgJ3ZvaWQgKicNCj4gKHNvIHRoYXQgYm90aCB2YWx1ZXMgY2FuIGJlIGFzc2lnbmVkIHRv
-IGl0KS4NCj4gQnV0IGlmICdwJyBpcyAnYW4gaW50ZWdlciBjb25zdGFudCBleHByZXNzaW9uIHdp
-dGggdmFsdWUgMCcNCj4gdGhlbiAodm9pZCAqKXAgaXMgTlVMTCBhbmQgdGhlIHR5cGUgaXMgJ2Zv
-byAqJy4NCj4gDQo+IFRoZSB0eXBlIGNhbiB0aGVuIGJlIGNoZWNrZWQgdG8gZmluZCBvdXQgaXQg
-J3AnIGlzIGNvbnN0YW50IDAuDQo+IEEgbm9uLXplcm8gY29uc3RhbnQgJ3AnIGNhbiBiZSBtdWx0
-aXBsZXMgYnkgMC4NCj4gDQo+IEkgbmVlZCB0byByZXBsYWNlIHRoZSBkZWZpbml0aW9uIHdpdGgg
-KHRoZSBtb3JlIHBvcnRhYmxlKToNCj4gI2RlZmluZSBfX2lmX2NvbnN0ZXhwcihjb25kLCBpZl9j
-b25zdCwgaWZfbm90X2NvbnN0KSBcDQo+IAlfR2VuZXJpYygwID8gKHZvaWQgKikoKGxvbmcpKGNv
-bmQpICogMCkgOiAoY2hhciAqKTAsIFwNCj4gCQljaGFyICo6IChpZl9jb25zdCksIFwNCj4gCQl2
-b2lkICo6IChpZl9ub3RfY29uc3QpKQ0KPiB3aGljaCBpcyBhcmd1YWJseSBsZXNzIGNyeXB0aWMu
-DQo+IA0KPiAjZGVmaW5lIF9faXNfY29uc3RleHByKGNvbmQpIF9faWZfY29uc3RleHByKGNvbmQs
-IDEsIDApDQo+IA0KPiBTbyB0aGF0IEkgY2FuIHdyaXRlOg0KPiAjZGVmaW5lIGlzX25vbl9uZWdf
-Y29uc3QoeCkgKF9faWZfY29uc3RleHByKHgsIHggLCAtMSkgPj0gMCkNCj4gYW5kIGF2b2lkIHRo
-ZSBjb21waWxlciBibGVhdGluZyBhYm91dCBzb21lIGNvbXBhcmlzb25zDQo+IGluIHVucmVhY2hh
-YmxlIGNvZGUuDQo+IA0KPiAJRGF2aWQNCj4gDQo+IC0NCj4gUmVnaXN0ZXJlZCBBZGRyZXNzIExh
-a2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQs
-IFVLDQo+IFJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo+IA0KDQo=
+On Fri, Mar 1, 2024 at 1:59=E2=80=AFPM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
+>
+> From: Eric Dumazet <edumazet@google.com>
+> Date: Fri, 1 Mar 2024 09:03:55 +0100
+>
+> > On Fri, Mar 1, 2024 at 7:59=E2=80=AFAM Jakub Kicinski <kuba@kernel.org>=
+ wrote:
+> >>
+> >> On Thu, 29 Feb 2024 13:30:22 -0800 Kees Cook wrote:
+>
+> Re WARN_ONCE() in netdev_priv(): netdev_priv() is VERY hot, I'm not sure
+> we want to add checks there. Maybe under CONFIG_DEBUG_NET?
+>
+> >
+> >>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> >>> index 118c40258d07..b476809d0bae 100644
+> >>> --- a/include/linux/netdevice.h
+> >>> +++ b/include/linux/netdevice.h
+> >>> @@ -1815,6 +1815,8 @@ enum netdev_stat_type {
+> >>>       NETDEV_PCPU_STAT_DSTATS, /* struct pcpu_dstats */
+> >>>  };
+> >>>
+> >>> +#define      NETDEV_ALIGN            32
+> >>
+> >> Unless someone knows what this is for it should go.
+> >> Align priv to cacheline size.
+> >
+> > +2
+> >
+>
+> Maybe
+>
+> > #define NETDEV_ALIGN    L1_CACHE_BYTES
+>
+> #define NETDEV_ALIGN    max(SMP_CACHE_BYTES, 32)
+
+Why would we care if some arches have a very small SMP_CACHE_BYTES ?
+Bet it !
+
+IMO nothing in networking mandates this minimal 32 byte alignment.
+
+>
+> ?
+>
+> (or even max(1 << INTERNODE_CACHE_SHIFT, 32))
+
+I do not think so.
+
+INTERNODE_CACHE_SHIFT is a bit extreme on allyesconfig on x86 :/
+(with CONFIG_X86_VSMP=3Dy)
+
+
+>
+> >
+> > or a general replacement of NETDEV_ALIGN....
+> >
+> >
+>
+> + I'd align both struct net_device AND its private space to
+> %NETDEV_ALIGN and remove this weird PTR_ALIGN. {k,v}malloc ensures
+> natural alignment of allocations for at least a couple years already
+> (IOW if struct net_device is aligned to 64, {k,v}malloc will *always*
+> return a 64-byte aligned address).
+
+I think that with SLAB or SLOB in the past with some DEBUG options
+there was no such guarantee.
+
+But this is probably no longer the case, and heavy DEBUG options these
+days (KASAN, KFENCE...)
+do not expect fast networking anyway.
