@@ -1,90 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20B047F51;
-	Fri,  1 Mar 2024 16:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3D15CAC
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 17:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709309461; cv=none; b=sP/rl/xaExZMYvQInJ/lgivkDeHVgl0XhwxlHVuHYb7V3ZCSLfD3KSgKNMPjwq/iODbvJEHggMitoyiJ9i3BPhAQCsM/W8ALDVv2jS7Bh5/IvTPJ5jALJ64TlpT/5Orv1HdYvoKGC7+6cq+VCv6SqYn7Y4Nt3fgy5uCrBWX+1mg=
+	t=1709313911; cv=none; b=RI+r9DD4D3RkqQ7EbtGWvPlL0Yr2q0dTX16OO+cjkc3OhftPM5ZH4ulCyyVmIqRY1HlTCY+o5+xSI53+zREuqjDfVxSTGWF6O6TO//DkOeHxWmphRiXx0LxG94qaiNI0+cpphj0zApvCdsyQNWQpiqVBxr5RL3geuMpAXsnswbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709309461; c=relaxed/simple;
-	bh=4UlzlQnuaUuNI0r77fMlqJ+SG0x9lL2jodQkvrashRc=;
+	s=arc-20240116; t=1709313911; c=relaxed/simple;
+	bh=VcXtlf/XeXr2PobHBVHkid9ZaTLChKSRWS1muUvaUck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B4O/S0tu+HMA+ODEeIJK4+1uikWm6SqqWEUAFSQTk28U6jLu6Ow+0P0MPwUDgIKeRqnGOrdL736SKAzpKgR4Gj47Sn16xlPwtWFsaGuOEYsFh08bbUL9WxkX5zDNiNY1vu8lst46xK3QhVJU+efziX9LwOZCMb4fQtNCf2J8xG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BIU4xa9Q; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWp0hTATtVO4fUOtF8BfCtP9ib6tWATEqF2sUZpDMJ3OyE1eDEtevQaEN1h7iRRWu0oQp2RUt7xo9fMsFV1Uxv3K6XrkGgLo0G1CUvtB7ykKsjDI1yGa13PHTSs3Q6YcHlQutF7c1Jak0cgN4T+vwJ0vjGROvV7l4sYcdC76pZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D5I6PWUI; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BIU4xa9Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709309459; x=1740845459;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4UlzlQnuaUuNI0r77fMlqJ+SG0x9lL2jodQkvrashRc=;
-  b=BIU4xa9QokP5Guie1c+gOIS1kok6z5pk7aXktwO4R5MHi5HC58EyildU
-   kUwMNsdM4mY1sOcnbp8MNtpiGgqxVq4DLqTi4GHdSGBr0iGw8IO36Jc1Y
-   uo4xDed3Xuaz6hdwyS0Qn1Bo/OKRMkGjMc4by4Wy1zvmhQDNBAn4ZSbB4
-   BNnsObU17qbQIQqBcdgXZMgeH+f/DIQTQrOoyUnvmDC5jJPbi2PW/Srcp
-   AKYgHhQIFIoLX3M7VXGCgsKb8nX/QNcMQrSXP46r143bIffhQ8bKnKfM/
-   7+K6ivl42tXbYQNxnaRTyopgM2t1nwB0tK63+HXUBzZ8gTDwYfMHR9gEr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15263476"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="15263476"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 08:10:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914019332"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="914019332"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 08:10:56 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rg5TJ-0000000900U-2OVm;
-	Fri, 01 Mar 2024 18:10:53 +0200
-Date: Fri, 1 Mar 2024 18:10:53 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v1 1/1] lib/string_helpers: Add flags param to
- string_get_size()
-Message-ID: <ZeH-DelIspVMWPv1@smile.fi.intel.com>
-References: <20240229205345.93902-1-andriy.shevchenko@linux.intel.com>
- <170924355200.1509550.2313379734413200100.b4-ty@chromium.org>
- <sdjfagrzk5p736wzeqdfhzxkivtg3rnhhtt3rh672fbuzxc7ya@icgcqv2d3cr7>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D5I6PWUI"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc9222b337so23734115ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 09:25:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709313909; x=1709918709; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=s3TCjvJYZgSg9yWOOlR3AhfW0G1oI5rbUeEwPh6CwQQ=;
+        b=D5I6PWUI45s5wzCKDlHWqTjBY+s8k1vna3KeNoDPcqvSubCKUi9xh82wCeFlozPq2g
+         2BbAPiMhNM1+43ap3Ezwp5fQFN0Sef1GWzf4dFKz7+VmcVcYHndSlgvO7MLeYvN6v891
+         OVCn8RqOoPA1pd+Ur6r7QCD6VWIDm62tH7aBc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709313909; x=1709918709;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s3TCjvJYZgSg9yWOOlR3AhfW0G1oI5rbUeEwPh6CwQQ=;
+        b=EQ7o5/9LXmUr3ifF1mXqjWibbxOPH2h9pWaJDkcccZ08rlkG/7ZRQVRX0eC96LwH5C
+         Ks9baze8BCPoIsnizgEe8d3prp2N3BNmfIcinwqM08FmAC4FbXv1oNsNiO6z2elcn9LV
+         7iO42D4ZBsEh2IACt4SwtMl7fWvYuf5qRzZykDp5bbCSVdqqZTiRngPsbz4odq/8xG93
+         WNuMP5nQFnx87Phhspur0XS3ELuP7R1KFON835B+N31AyGSgwvDGfhQhRwfss7XSIdZV
+         t6exWMzktMtybyP4SIc0ARdeFrk+1CTHnxuhxrpGJ8yHFgwP94+h6/xNa33fX2Sho6YH
+         EhHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwcBUxr6OxqtSNLaUFM4c1lUEHdueYw3XRpI52cgagJAmoXMFKsCTNRKNjiTBGxsP6bne+8RY8qIrC1a/cB5xDZrqwqOPyE8pPQWUeFAvM
+X-Gm-Message-State: AOJu0YxNhagnxsWCnVKLVNE1e4jY+3YW8w8m5ENENyCQWmoFfrMYxkCP
+	sMjiEbCOr7llHxUcdIhPRTElyyTOZBBQFP/tju+SzbKLgD/uh0mIEZPcQtnEqA==
+X-Google-Smtp-Source: AGHT+IFYOEPfuMi7RE8d8lflSS9kWlCHn0kDcNrMzQOwSeOi+RK6QIs7nrpl/DVQLtbCnM7pieIqJQ==
+X-Received: by 2002:a17:902:e843:b0:1db:9a7d:2e6 with SMTP id t3-20020a170902e84300b001db9a7d02e6mr3155921plg.48.1709313908823;
+        Fri, 01 Mar 2024 09:25:08 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i11-20020a170902c94b00b001dcdf24e336sm2984379pla.47.2024.03.01.09.25.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 09:25:08 -0800 (PST)
+Date: Fri, 1 Mar 2024 09:25:07 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] string: Convert selftest to KUnit
+Message-ID: <202403010921.65C845411@keescook>
+References: <20240301002416.it.092-kees@kernel.org>
+ <20240301002650.1544829-1-keescook@chromium.org>
+ <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <sdjfagrzk5p736wzeqdfhzxkivtg3rnhhtt3rh672fbuzxc7ya@icgcqv2d3cr7>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
 
-On Thu, Feb 29, 2024 at 04:54:30PM -0500, Kent Overstreet wrote:
-> On Thu, Feb 29, 2024 at 01:52:34PM -0800, Kees Cook wrote:
-> > On Thu, 29 Feb 2024 22:52:30 +0200, Andy Shevchenko wrote:
-> > > The new flags parameter allows controlling
-> > >  - Whether or not the units suffix is separated by a space, for
-> > >    compatibility with sort -h
-> > >  - Whether or not to append a B suffix - we're not always printing
-> > >    bytes.
-> > 
-> > I cleaned up the Co-developed-by/S-o-b and applied to for-next/hardening, thanks!
+On Fri, Mar 01, 2024 at 01:09:27PM +0200, Andy Shevchenko wrote:
+> On Fri, Mar 1, 2024 at 2:26 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Convert test_string.c to KUnit so it can be easily run with everything
+> > else.
 > 
-> thanks Kees!
+> Have you run it?
 
-Thank you, folks, glad we close this.
+Yes:
+
+$ ./tools/testing/kunit/kunit.py run string
+
+[09:21:32] Starting KUnit Kernel (1/1)...
+[09:21:32] ============================================================
+[09:21:32] =================== string (6 subtests) ====================
+[09:21:32] [PASSED] test_memset16
+[09:21:32] [PASSED] test_memset32
+[09:21:32] [PASSED] test_memset64
+[09:21:32] [PASSED] test_strchr
+[09:21:32] [PASSED] test_strnchr
+[09:21:32] [PASSED] test_strspn
+[09:21:32] ===================== [PASSED] string ======================
+[09:21:32] ============================================================
+[09:21:32] Testing complete. Ran 6 tests: passed: 6
+[09:21:32] Elapsed time: 11.545s total, 0.001s configuring, 11.327s building, 0.183s running
+
+
+> ...
+> 
+> >         if (i < 256)
+> > -               return (i << 24) | (j << 16) | k | 0x8000;
+> > -       return 0;
+> > +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x8000);
+> 
+> First of all, this special value encodes the problematic patterns, so
+> you missed proper messaging.
+
+Yeah, I see now this isn't a test but rather an encoded report. Since
+the failures are caught earlier, I can improve those messages instead of
+doing an encoded version.
+
+> Second, the returned value has a constant, how do you expect 0 to be
+> equal to something (guaranteed not to be 0)?
+> 
+> This needs a good rethink of what you should do in the KUnit approach.
+> 
+> ...
+> 
+> > +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x8000);
+> 
+> Ditto.
+> 
+> ...
+> 
+> > +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x8000);
+> 
+> Ditto.
+> 
+> ...
+> 
+> >         for (i = 0; i < strlen(test_string) + 1; i++) {
+> >                 result = strchr(test_string, test_string[i]);
+> > -               if (result - test_string != i)
+> > -                       return i + 'a';
+> > +               KUNIT_ASSERT_EQ(test, result - test_string, i);
+> 
+> In a similar way, all returned values are *special*, you really need
+> to think about them before converting to a simple (and sometimes
+> wrong) checks)
+
+This encoding is trying to report "i", so I've adjusted the error
+reporting in v3.
+
+> I dunno if KUnit has a fault ejection simulation. It should, in order
+> to be sure that test cases are fine when they fail.
+
+Yeah, bumping offsets and such produce expected failures.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kees Cook
