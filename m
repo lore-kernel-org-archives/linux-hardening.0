@@ -1,102 +1,153 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C3C6A8B9
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 09:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B4A6BFC6;
+	Fri,  1 Mar 2024 11:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709285542; cv=none; b=VMjyV1t0ghaLn9HytA77CtUtLtld9YkdMEd+afdl5ohIM6Kr13D/eLWgccmtJZdWxk+0i4687Ld0iStAmZiXguNT05F6v7TnqQlF6zkZA8nE8g2mDM/6TqtTSMIiveM9yFWWDDdp16f8dJ7NwE2qN70gyiuKhAVFn96LMuu9+hk=
+	t=1709291043; cv=none; b=WBYVSDCGdY30qz29pcUwm24q3UEWw2i59/VreB7XvxLS16keiFskEuAIEStnsDVJZdpZiJSGVq5fW6AYteogAF+B7t8DrAvkZsjVqInm8L1z4JYbd2RH9plmEN8+l0+Me4T5JoM6yRmqbFiA4am0X+W2WlrN9V0tGWzHApVE2vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709285542; c=relaxed/simple;
-	bh=pY/JAuUkdZ3AyIyGff0Ip5uQfvmqurSeKSVYl4idjR0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=H9pCv8Vz8xFBbUl2+xm5CRUS6S9MZZnr1qczY6lSE5dFmwO/FBLzmebQgicR6YNscJtSTWmZb7vQd9vu6mS0brT9s5FWR+oJ/kBHxNLUk4v5LxE2OER9NBmjOUdzieCUqYz7xcJ7jHCZS24VQz4qnPrQp+Q/pGGlRRZ2QpWYRkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-144-cAe80tt0OtKldFFkrcHoig-1; Fri, 01 Mar 2024 09:32:17 +0000
-X-MC-Unique: cAe80tt0OtKldFFkrcHoig-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 1 Mar
- 2024 09:32:16 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 1 Mar 2024 09:32:16 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Kees Cook' <keescook@chromium.org>, Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>
-CC: "Gustavo A . R . Silva" <gustavoars@kernel.org>, Miguel Ojeda
-	<miguel.ojeda.sandonis@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>, Martin Uecker
-	<Martin.Uecker@med.uni-goettingen.de>, Jonathan Corbet <corbet@lwn.net>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] compiler.h: Explain how __is_constexpr() works
-Thread-Topic: [PATCH] compiler.h: Explain how __is_constexpr() works
-Thread-Index: AQHaa5MvghvgXFQBskOAdfSAj6aDybEilNag
-Date: Fri, 1 Mar 2024 09:32:16 +0000
-Message-ID: <af0eff12e6bc41039614add550406c11@AcuMS.aculab.com>
-References: <20240301044428.work.411-kees@kernel.org>
-In-Reply-To: <20240301044428.work.411-kees@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1709291043; c=relaxed/simple;
+	bh=jNe/Uxf2dtNJ+TSKuJ5UUvXN6Zva3VEg28Sf51IxPB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWVNGiNaXUHOPk1fvEwlMsECi2BptFm60MX7Gr7bmreioIr1mJEJGv7TG/xk0jnjerWX4naN71CXAmm0P0Usp7tSQUttfxodm3hvbC76Em0xjGIiAGKFrSVTIdfvGNLtFzOwqO7LExT+y7fcBz8vubHsUuw1IEiJsRMG5wkcEJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZHY/nx0l; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZHY/nx0l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709291042; x=1740827042;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=jNe/Uxf2dtNJ+TSKuJ5UUvXN6Zva3VEg28Sf51IxPB8=;
+  b=ZHY/nx0lKJB9QddKfvvWu9VcYPZuS6R200BtvyxzRseH63s0wlSjGTjh
+   tZfzGanMGl69mMxRSG5NErjAjTrpLkJeAmmQaknAayu4G3PQEvez25Y38
+   0DeME+M9+2Ij+2AL4LTePn0LqY/RmhXDR60RzhKP6R1f9hfhtN46wnUSC
+   +3ZHlI7QNf4VpSjOj0IB/KcbeBy/yhXU5OZ0de1MRFHysyl/fr6X0ZMNQ
+   z4aSgczXdj7RzMtKVj71Q8W+ig81wt8o+QTTSEuyWUc/TLuqWrJcEPWjS
+   Aj9rS+VmVlbb/ZgD2NSzfNRIyZsmEnZnhAX6nZ9mYwUj3A2uJpqGN/qJ8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3986123"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="3986123"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 03:04:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="8565542"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 01 Mar 2024 03:03:54 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rg0gA-000Dnj-32;
+	Fri, 01 Mar 2024 11:03:50 +0000
+Date: Fri, 1 Mar 2024 19:03:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/8] kunit: Run tests when the kernel is fully setup
+Message-ID: <202403011856.cJe6do38-lkp@intel.com>
+References: <20240229170409.365386-2-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240229170409.365386-2-mic@digikod.net>
 
-From: Kees Cook
-> Sent: 01 March 2024 04:45
-> To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->=20
-> The __is_constexpr() macro is dark magic. Shed some light on it with
-> a comment to explain how and why it works.
+Hi Mickaël,
 
-All the 8s don't help...
+kernel test robot noticed the following build warnings:
 
-I don't think you need that much explanation.
+[auto build test WARNING on d206a76d7d2726f3b096037f2079ce0bd3ba329b]
 
-Perhaps just saying that the type of ?: depends on the types
-of the values and is independent of the condition.
-The type of (0 ? (void *)p : (foo *)q) is normally 'void *'
-(so that both values can be assigned to it).
-But if 'p' is 'an integer constant expression with value 0'
-then (void *)p is NULL and the type is 'foo *'.
+url:    https://github.com/intel-lab-lkp/linux/commits/Micka-l-Sala-n/kunit-Run-tests-when-the-kernel-is-fully-setup/20240301-011020
+base:   d206a76d7d2726f3b096037f2079ce0bd3ba329b
+patch link:    https://lore.kernel.org/r/20240229170409.365386-2-mic%40digikod.net
+patch subject: [PATCH v1 1/8] kunit: Run tests when the kernel is fully setup
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240301/202403011856.cJe6do38-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 325f51237252e6dab8e4e1ea1fa7acbb4faee1cd)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403011856.cJe6do38-lkp@intel.com/reproduce)
 
-The type can then be checked to find out it 'p' is constant 0.
-A non-zero constant 'p' can be multiples by 0.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403011856.cJe6do38-lkp@intel.com/
 
-I need to replace the definition with (the more portable):
-#define __if_constexpr(cond, if_const, if_not_const) \
-=09_Generic(0 ? (void *)((long)(cond) * 0) : (char *)0, \
-=09=09char *: (if_const), \
-=09=09void *: (if_not_const))
-which is arguably less cryptic.
+All warnings (new ones prefixed by >>):
 
-#define __is_constexpr(cond) __if_constexpr(cond, 1, 0)
+   In file included from lib/kunit/executor.c:4:
+   In file included from include/kunit/test.h:24:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:173:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2188:
+   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     509 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     516 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     528 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     537 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> lib/kunit/executor.c:18:31: warning: unused variable 'final_suite_set' [-Wunused-variable]
+      18 | static struct kunit_suite_set final_suite_set = {};
+         |                               ^~~~~~~~~~~~~~~
+   6 warnings generated.
 
-So that I can write:
-#define is_non_neg_const(x) (__if_constexpr(x, x , -1) >=3D 0)
-and avoid the compiler bleating about some comparisons
-in unreachable code.
 
-=09David
+vim +/final_suite_set +18 lib/kunit/executor.c
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+    17	
+  > 18	static struct kunit_suite_set final_suite_set = {};
+    19	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
