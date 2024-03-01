@@ -1,526 +1,162 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D883622
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 00:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E3A37705;
+	Fri,  1 Mar 2024 02:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709252816; cv=none; b=N+CeSynS0Wtyn+pNhZmibasH1Vw/YALhmnGuVaCO4v8MV+qut45mCToy4c3abqG/XYB8NY3mu3TKDg7HUfONAA4U3ltzRxAlDdbXh4rWLQdaDbxt+8dhjnQIrZ3V7cV5KNeEBgg5+DmbXVD0Mv1mdhaCPZyhDhTzufSl+6BBaDw=
+	t=1709259642; cv=none; b=nDLfkwx22NU1bkWuGrDHJE3vx3j/ImxHBIDt3AQgh7c33QMcZsGUQZ98cap2OWTC6e/kYR2kSjvvxX2S/DnUlnzxMO4iAedNDZXsYkAzLmklhNWsIidUqVO9jPUDakbkGnyapwUDdCtkkHE8d9hxFF20FhDiMwgwRZ2rcQLIlc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709252816; c=relaxed/simple;
-	bh=KDDjoM6A5PAucF/jTCWxQ0PKblp1gjUY4Bj03CQrEXo=;
+	s=arc-20240116; t=1709259642; c=relaxed/simple;
+	bh=TLnRq8HiU1POsQUZmMNxjoiSReV6/pX4N053Dacpxg4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mKdPU+B8LYsMn/Vf5YUFSAF8M9Nfcsw4D8L/XUO9sHhptzG2NOMSJktxJYIk0BAGhpGFH9hrzqblD6hSs+2BB0yUax8X4U+wsRnWIzJNzfWV43GMKueV/gsOXsU//i80iax+EVWnQlNQbIG+5pyzzjE6TdOfuYLZDSJOz7TgEoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g9Wd+5g/; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 MIME-Version:Content-Type; b=HUTntDSwBehK1RcibR+tINu/I05pxODpxXOH30/f3Op0RLrhpdXt/mBjR07qfkm/nBB4eNAJ7r/1pnBXVAmCQBNJwlUNVIc2yc+GmBsf6QeIquokZjX7azJ3/FJJdAZ0ySRhT3cwv1hDnfMbFLgcyjVty06VEkKTCySgeU+hC3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I5tqTcN/; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g9Wd+5g/"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so1456865b3a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Feb 2024 16:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709252814; x=1709857614; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N7bRmosJbyZC7ndFguV6EJboVLhr8lLHSQFdlQ3jzWE=;
-        b=g9Wd+5g/iVb+bPitYJXzCGKfdixrdch1eNoIHkYTQNOrP1TqIVB5Mh4wunV6Y4xLgD
-         u7OTZiY+PIfcUO6SgCG+kqteGWWFDsnmSm+o7DcBujX+ngOAW1JoPtvUkFBTlmVVXcUd
-         LtgCc3ZkP0BghJC+E92eQ3ePDyRv/WxCb9sf4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709252814; x=1709857614;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N7bRmosJbyZC7ndFguV6EJboVLhr8lLHSQFdlQ3jzWE=;
-        b=QSErZ4M60bwc06ojziNPoVGCiL+C5MyTGRH5ZiZuGM9xc6FCE8U4O4LPHJJlT8mDok
-         gqo2ptcubuXFUNoxWekxAa0LyKMnR7CzbXOSi1/vSVMJHpoO+5wkTbNW6H9PFyCxyHIR
-         kPa3u9AqTjUskUrLsSZRtvc810r0NKTqwlp9gjbhuNDsgl9A71o0z5KhB7Sg6knrV4Mc
-         yql3O0oWgrZZlq7ebHW6R2qGwcOdYIN8b2csGlBf6+s87DCSZ//p38a+l0dMOG3GDtVn
-         xxAKxs5ZOFPkDZYEb0+6Uva0WFi98iSCBJ4iNLhnSDPTT5jQrrKu9Hc0YrY2MVpBE0IS
-         umwg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0FcCHvM9gXl/EgD99IWT6+e4l2ZLz4sJkrkipUUmxp+fNKl6bwvsZuhJXChKh2JxVZu/rfDXtRsQB1WU1Tv6YmlXgy5DNMZg9Obi3eNKJ
-X-Gm-Message-State: AOJu0YzYbOGnQz/rkKeHydZ1GWowenMZP/YVsy/cYy2lwCZ6Wzqqri1y
-	wEaqgps8ldVYn7hTsEb60Qn+UKxVSC3W1AdAfubpLhNquV2YBD4NcWMGR4TfZw==
-X-Google-Smtp-Source: AGHT+IEFck/4RuZec23JUkAngqfrVx8YBgBtsPV1rE252GXcqZs+EtAiO2ImDV4mhSoxT61evxAxAg==
-X-Received: by 2002:a05:6a21:3288:b0:1a0:9ab5:1e83 with SMTP id yt8-20020a056a21328800b001a09ab51e83mr36196pzb.24.1709252813623;
-        Thu, 29 Feb 2024 16:26:53 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id oe1-20020a17090b394100b0029929dca278sm4249147pjb.16.2024.02.29.16.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 16:26:50 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] string: Convert helpers selftest to KUnit
-Date: Thu, 29 Feb 2024 16:26:48 -0800
-Message-Id: <20240301002650.1544829-2-keescook@chromium.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I5tqTcN/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=vntvjbo5LKelHNLhuZc1kd/hRhea0DDqk8MBG/GQ51s=;
+	b=I5tqTcN/6ue5jKtUPRT2aP6bpCc0askXC/8TamOgTO7VjuyOmRp4ucxx1mzS5F
+	ObK+Od2t0k3U4NIjOaOR5ukXJqkfDJektBR3D59rtP9zzLEOWGx3A8Pt5wle/9Ms
+	u3jA0VDbNfnjJOQSmPCRDaQ9z2S8vuS+7JBRGK0uMWxBs=
+Received: from tian-ThinkPad-X390.. (unknown [111.48.58.12])
+	by gzga-smtp-mta-g2-0 (Coremail) with SMTP id _____wDXX_g1O+Fl5445BQ--.250S2;
+	Fri, 01 Mar 2024 10:19:35 +0800 (CST)
+From: Yaxiong Tian <13327272236@163.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	keescook@chromium.org,
+	tianyaxiong@kylinos.cn,
+	xiongxin@kylinos.cn,
+	rppt@kernel.org
+Cc: tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	songshuaishuai@tinylab.org,
+	wangkefeng.wang@huawei.com,
+	akpm@linux-foundation.org,
+	ardb@kernel.org,
+	david@redhat.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] arm64: hibernate: Fix level3 translation fault in swsusp_save()
+Date: Fri,  1 Mar 2024 10:19:24 +0800
+Message-Id: <20240301021924.33210-1-13327272236@163.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240301002416.it.092-kees@kernel.org>
-References: <20240301002416.it.092-kees@kernel.org>
+In-Reply-To: <ZeBRfxQ8WTEVzpfL@kernel.org>
+References: <ZeBRfxQ8WTEVzpfL@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=15224; i=keescook@chromium.org;
- h=from:subject; bh=KDDjoM6A5PAucF/jTCWxQ0PKblp1gjUY4Bj03CQrEXo=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4SDI5Kz4zXaH8+qTFLSxONpT1sbN6feRXpVsc
- QeLAK+W6G6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeEgyAAKCRCJcvTf3G3A
- JnxUD/9a02Wuryk8/8zvgKX5QeBB7lKP1KY2QINTt0kSaafqjtcBy901aaD4Vt5YeVcvKuGvlLs
- CU33MIrTYtqqKH6EPSyo1URO02/iUDzm29eHP7jEPhgIw3YNCY/cZ8BBBeMcP8cjBNpRweW0ElE
- Ed61l9noS4bFeATRvEsEBctXJxeeWRL9Mpueal0p0dt5lwI+xnqLk5aFLbgmQibfpH+zEy4Ct/M
- NPx9nuPB7MeLPr7o+RGKrZLTQplCZXZKr1GAD6YSWzNcC0u5APIsmng8i/GF3Q3P8nq65hV8FOU
- +dtX0VGnJ7qg2QwbC5lrHcclW9YLgWIHR/xfT2EdyG48HoQNpbHwkGEhW4e7uhqeO8FV40bGQmJ
- mj8937jKtzdFIwqyyoW5qKWQ9kWyMqiTq5H6MX0YVrahxWbscuCSSl8ZGRZoY/pqe8enwLjfa5q
- G2nWQbTSc0rvgkm3tKxm+/W9mGpH3pjmGkiHV20mgdlQ28YoGm1nXXX1nwHErA9CTfa56+YW/vH
- vXFAh9B8bOnywK7BlNKhWLvtG1dLe8TzWjsxvufhqsmeezGk5nGhZCDaUIIqF6XLyq3dvgrEbyp
- d2HQtxrbravC5gHD1im6sHAMb4czItbvKyyyM0TIfPeFhy3nPHZMczaqqjobvKVqhg5fz+zY0B8 Q4vnclsJpa3/eCg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXX_g1O+Fl5445BQ--.250S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtFy8uFWrWr48XF43Cr1kAFb_yoW7CFyrpF
+	WUGr1kGr4xCF1jyr4UAFy5uw1kWw4qvanxJr1UJwn7AF1UCw15Xr45Kry7tFyDtw4fJFs7
+	trWDKw40yF1DGaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jtYFAUUUUU=
+X-CM-SenderInfo: jprtjjaxsxjjitw6il2tof0z/1tbiYRuUJWV4HUtyXgAAss
 
-Convert test-string_helpers.c to KUnit so it can be easily run with
-everything else.
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+On ARM64 machines using UEFI, if can_set_direct_map() return false by
+setting some CONFIGS in kernel build or grub,such as
+NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
+NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
+debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+swsusp_save() will fail due to can't finding the map table under the 
+nomap memory.such as:
+
+[   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
+[   48.532162] Mem abort info:
+[   48.532162]   ESR = 0x0000000096000007
+[   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   48.532162]   SET = 0, FnV = 0
+[   48.532162]   EA = 0, S1PTW = 0
+[   48.532162]   FSC = 0x07: level 3 translation fault
+[   48.532162] Data abort info:
+[   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+[   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
+[   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
+[   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+[   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+[   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
+[   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
+[   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
+[   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
+[   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   48.532162] pc : swsusp_save+0x280/0x538
+[   48.532162] lr : swsusp_save+0x280/0x538
+[   48.532162] sp : ffffffa034a3fa40
+[   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
+[   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
+[   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
+[   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
+[   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
+[   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
+[   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
+[   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
+[   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
+[   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
+[   48.532162] Call trace:
+[   48.532162]  swsusp_save+0x280/0x538
+[   48.532162]  swsusp_arch_suspend+0x148/0x190
+[   48.532162]  hibernation_snapshot+0x240/0x39c
+[   48.532162]  hibernate+0xc4/0x378
+[   48.532162]  state_store+0xf0/0x10c
+[   48.532162]  kobj_attr_store+0x14/0x24
+
+This issue can be reproduced in QEMU using UEFI when booting with 
+rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+
+This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
+kernel_page_present() presumes that a page is present when can_set_direct_map()
+returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
+cause level3 translation fault in this pages.
+
+Since the NOMAP regions are now marked as PageReserved(), pfn walkers
+and the rest of core mm will treat them as unusable memory. So this
+regions should not saved in hibernation.
+
+This problem may cause by changes to pfn_valid() logic in commit
+a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
+
+So to fix it, we add !pfn_is_map_memory() check in arm64::pfn_is_nosave(). It
+make such regisons don't save in hibernation.
+
+Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
+
+Suggested-by: Mike Rapoport <rppt@kernel.org>
+Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+
 ---
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-hardening@vger.kernel.org
+v1->v2: move !pfn_is_map_memory() check from page_is_saveable()
+to arm64::pfn_is_nosave(),add opt commit messages.
 ---
- MAINTAINERS                                   |   2 +-
- lib/Kconfig.debug                             |   6 +-
- lib/Makefile                                  |   2 +-
- ...tring_helpers.c => string_helpers_kunit.c} | 177 ++++++++++--------
- 4 files changed, 103 insertions(+), 84 deletions(-)
- rename lib/{test-string_helpers.c => string_helpers_kunit.c} (78%)
+ arch/arm64/kernel/hibernate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f1f68cccd6a..f3f26d2d4ffb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8978,7 +8978,7 @@ F:	include/linux/string_helpers.h
- F:	lib/string.c
- F:	lib/string_kunit.c
- F:	lib/string_helpers.c
--F:	lib/test-string_helpers.c
-+F:	lib/string_helpers_kunit.c
- F:	scripts/coccinelle/api/string_choices.cocci
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 02870beb271e..d90005de1d26 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -94,7 +94,7 @@ int pfn_is_nosave(unsigned long pfn)
+ 	unsigned long nosave_end_pfn = sym_to_pfn(&__nosave_end - 1);
  
- GENERIC UIO DRIVER FOR PCI DEVICES
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 406cdf353488..5429e6f170f3 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2357,8 +2357,10 @@ config STRING_KUNIT_TEST
- 	depends on KUNIT
- 	default KUNIT_ALL_TESTS
- 
--config TEST_STRING_HELPERS
--	tristate "Test functions located in the string_helpers module at runtime"
-+config STRING_HELPERS_KUNIT_TEST
-+	tristate "KUnit test string helpers at runtime" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
- 
- config TEST_KSTRTOX
- 	tristate "Test kstrto*() family of functions at runtime"
-diff --git a/lib/Makefile b/lib/Makefile
-index 946277c37831..97c42e38046f 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -51,7 +51,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
- 	 generic-radix-tree.o bitmap-str.o
- obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
- obj-y += string_helpers.o
--obj-$(CONFIG_TEST_STRING_HELPERS) += test-string_helpers.o
-+obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
- obj-y += hexdump.o
- obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
- obj-y += kstrtox.o
-diff --git a/lib/test-string_helpers.c b/lib/string_helpers_kunit.c
-similarity index 78%
-rename from lib/test-string_helpers.c
-rename to lib/string_helpers_kunit.c
-index dce67698297b..1fed4fa38f97 100644
---- a/lib/test-string_helpers.c
-+++ b/lib/string_helpers_kunit.c
-@@ -3,8 +3,9 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/array_size.h>
- #include <linux/init.h>
-+#include <kunit/test.h>
-+#include <linux/array_size.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-@@ -12,13 +13,21 @@
- #include <linux/string.h>
- #include <linux/string_helpers.h>
- 
--static __init bool test_string_check_buf(const char *name, unsigned int flags,
--					 char *in, size_t p,
--					 char *out_real, size_t q_real,
--					 char *out_test, size_t q_test)
-+static void test_string_check_buf(struct kunit *test,
-+				  const char *name, unsigned int flags,
-+				  char *in, size_t p,
-+				  char *out_real, size_t q_real,
-+				  char *out_test, size_t q_test)
- {
--	if (q_real == q_test && !memcmp(out_test, out_real, q_test))
--		return true;
-+	int result;
-+
-+	KUNIT_EXPECT_EQ(test, q_real, q_test);
-+
-+	result = memcmp(out_test, out_real, q_test);
-+	KUNIT_EXPECT_EQ(test, 0, result);
-+
-+	if (q_real == q_test && result == 0)
-+		return;
- 
- 	pr_warn("Test '%s' failed: flags = %#x\n", name, flags);
- 
-@@ -28,8 +37,6 @@ static __init bool test_string_check_buf(const char *name, unsigned int flags,
- 		       out_test, q_test, true);
- 	print_hex_dump(KERN_WARNING, "Got: ", DUMP_PREFIX_NONE, 16, 1,
- 		       out_real, q_real, true);
--
--	return false;
+ 	return ((pfn >= nosave_begin_pfn) && (pfn <= nosave_end_pfn)) ||
+-		crash_is_nosave(pfn);
++		crash_is_nosave(pfn) || !pfn_is_map_memory(pfn);
  }
  
- struct test_string {
-@@ -38,7 +45,7 @@ struct test_string {
- 	unsigned int flags;
- };
- 
--static const struct test_string strings[] __initconst = {
-+static const struct test_string strings[] = {
- 	{
- 		.in = "\\f\\ \\n\\r\\t\\v",
- 		.out = "\f\\ \n\r\t\v",
-@@ -61,8 +68,9 @@ static const struct test_string strings[] __initconst = {
- 	},
- };
- 
--static void __init test_string_unescape(const char *name, unsigned int flags,
--					bool inplace)
-+static void test_string_unescape(struct kunit *test,
-+				 const char *name, unsigned int flags,
-+				 bool inplace)
- {
- 	int q_real = 256;
- 	char *in = kmalloc(q_real, GFP_KERNEL);
-@@ -104,7 +112,7 @@ static void __init test_string_unescape(const char *name, unsigned int flags,
- 		q_real = string_unescape(in, out_real, q_real, flags);
- 	}
- 
--	test_string_check_buf(name, flags, in, p - 1, out_real, q_real,
-+	test_string_check_buf(test, name, flags, in, p - 1, out_real, q_real,
- 			      out_test, q_test);
- out:
- 	kfree(out_real);
-@@ -124,7 +132,7 @@ struct test_string_2 {
- };
- 
- #define	TEST_STRING_2_DICT_0		NULL
--static const struct test_string_2 escape0[] __initconst = {{
-+static const struct test_string_2 escape0[] = {{
- 	.in = "\f\\ \n\r\t\v",
- 	.s1 = {{
- 		.out = "\\f\\ \\n\\r\\t\\v",
-@@ -222,7 +230,7 @@ static const struct test_string_2 escape0[] __initconst = {{
- }};
- 
- #define	TEST_STRING_2_DICT_1		"b\\ \t\r\xCF"
--static const struct test_string_2 escape1[] __initconst = {{
-+static const struct test_string_2 escape1[] = {{
- 	.in = "\f\\ \n\r\t\v",
- 	.s1 = {{
- 		.out = "\f\\134\\040\n\\015\\011\v",
-@@ -359,7 +367,7 @@ static const struct test_string_2 escape1[] __initconst = {{
- 	/* terminator */
- }};
- 
--static const struct test_string strings_upper[] __initconst = {
-+static const struct test_string strings_upper[] = {
- 	{
- 		.in = "abcdefgh1234567890test",
- 		.out = "ABCDEFGH1234567890TEST",
-@@ -370,7 +378,7 @@ static const struct test_string strings_upper[] __initconst = {
- 	},
- };
- 
--static const struct test_string strings_lower[] __initconst = {
-+static const struct test_string strings_lower[] = {
- 	{
- 		.in = "ABCDEFGH1234567890TEST",
- 		.out = "abcdefgh1234567890test",
-@@ -381,8 +389,8 @@ static const struct test_string strings_lower[] __initconst = {
- 	},
- };
- 
--static __init const char *test_string_find_match(const struct test_string_2 *s2,
--						 unsigned int flags)
-+static const char *test_string_find_match(const struct test_string_2 *s2,
-+					  unsigned int flags)
- {
- 	const struct test_string_1 *s1 = s2->s1;
- 	unsigned int i;
-@@ -403,21 +411,20 @@ static __init const char *test_string_find_match(const struct test_string_2 *s2,
- 	return NULL;
- }
- 
--static __init void
--test_string_escape_overflow(const char *in, int p, unsigned int flags, const char *esc,
-+static void
-+test_string_escape_overflow(struct kunit *test,
-+			    const char *in, int p, unsigned int flags, const char *esc,
- 			    int q_test, const char *name)
- {
- 	int q_real;
- 
- 	q_real = string_escape_mem(in, p, NULL, 0, flags, esc);
--	if (q_real != q_test)
--		pr_warn("Test '%s' failed: flags = %#x, osz = 0, expected %d, got %d\n",
--			name, flags, q_test, q_real);
-+	KUNIT_EXPECT_EQ(test, q_real, q_test);
- }
- 
--static __init void test_string_escape(const char *name,
--				      const struct test_string_2 *s2,
--				      unsigned int flags, const char *esc)
-+static void test_string_escape(struct kunit *test, const char *name,
-+			       const struct test_string_2 *s2,
-+			       unsigned int flags, const char *esc)
- {
- 	size_t out_size = 512;
- 	char *out_test = kmalloc(out_size, GFP_KERNEL);
-@@ -463,10 +470,10 @@ static __init void test_string_escape(const char *name,
- 
- 	q_real = string_escape_mem(in, p, out_real, out_size, flags, esc);
- 
--	test_string_check_buf(name, flags, in, p, out_real, q_real, out_test,
-+	test_string_check_buf(test, name, flags, in, p, out_real, q_real, out_test,
- 			      q_test);
- 
--	test_string_escape_overflow(in, p, flags, esc, q_test, name);
-+	test_string_escape_overflow(test, in, p, flags, esc, q_test, name);
- 
- out:
- 	kfree(in);
-@@ -475,22 +482,26 @@ static __init void test_string_escape(const char *name,
- }
- 
- #define string_get_size_maxbuf 16
--#define test_string_get_size_one(size, blk_size, exp_result10, exp_result2)    \
--	do {                                                                   \
--		BUILD_BUG_ON(sizeof(exp_result10) >= string_get_size_maxbuf);  \
--		BUILD_BUG_ON(sizeof(exp_result2) >= string_get_size_maxbuf);   \
--		__test_string_get_size((size), (blk_size), (exp_result10),     \
--				       (exp_result2));                         \
-+#define test_string_get_size_one(size, blk_size, exp_result10, exp_result2)      \
-+	do {                                                                     \
-+		BUILD_BUG_ON(sizeof(exp_result10) >= string_get_size_maxbuf);    \
-+		BUILD_BUG_ON(sizeof(exp_result2) >= string_get_size_maxbuf);     \
-+		__test_string_get_size(test, (size), (blk_size), (exp_result10), \
-+				       (exp_result2));                           \
- 	} while (0)
- 
- 
--static __init void test_string_get_size_check(const char *units,
--					      const char *exp,
--					      char *res,
--					      const u64 size,
--					      const u64 blk_size)
-+static void test_string_get_size_check(struct kunit *test,
-+				       const char *units,
-+				       const char *exp,
-+				       char *res,
-+				       const u64 size,
-+				       const u64 blk_size)
- {
--	if (!memcmp(res, exp, strlen(exp) + 1))
-+	int result = memcmp(res, exp, strlen(exp) + 1);
-+
-+	KUNIT_EXPECT_EQ(test, 0, result);
-+	if (!result)
- 		return;
- 
- 	res[string_get_size_maxbuf - 1] = '\0';
-@@ -501,7 +512,7 @@ static __init void test_string_get_size_check(const char *units,
- 	pr_warn("expected: '%s', got '%s'\n", exp, res);
- }
- 
--static __init void __strchrcut(char *dst, const char *src, const char *cut)
-+static void __strchrcut(char *dst, const char *src, const char *cut)
- {
- 	const char *from = src;
- 	size_t len;
-@@ -515,11 +526,12 @@ static __init void __strchrcut(char *dst, const char *src, const char *cut)
- 	*dst = '\0';
- }
- 
--static __init void __test_string_get_size_one(const u64 size, const u64 blk_size,
--					      const char *exp_result10,
--					      const char *exp_result2,
--					      enum string_size_units units,
--					      const char *cut)
-+static void __test_string_get_size_one(struct kunit *test,
-+				       const u64 size, const u64 blk_size,
-+				       const char *exp_result10,
-+				       const char *exp_result2,
-+				       enum string_size_units units,
-+				       const char *cut)
- {
- 	char buf10[string_get_size_maxbuf];
- 	char buf2[string_get_size_maxbuf];
-@@ -537,13 +549,14 @@ static __init void __test_string_get_size_one(const u64 size, const u64 blk_size
- 	string_get_size(size, blk_size, STRING_UNITS_10 | units, buf10, sizeof(buf10));
- 	string_get_size(size, blk_size, STRING_UNITS_2 | units, buf2, sizeof(buf2));
- 
--	test_string_get_size_check(prefix10, exp10, buf10, size, blk_size);
--	test_string_get_size_check(prefix2, exp2, buf2, size, blk_size);
-+	test_string_get_size_check(test, prefix10, exp10, buf10, size, blk_size);
-+	test_string_get_size_check(test, prefix2, exp2, buf2, size, blk_size);
- }
- 
--static __init void __test_string_get_size(const u64 size, const u64 blk_size,
--					  const char *exp_result10,
--					  const char *exp_result2)
-+static void __test_string_get_size(struct kunit *test,
-+				   const u64 size, const u64 blk_size,
-+				   const char *exp_result10,
-+				   const char *exp_result2)
- {
- 	struct {
- 		enum string_size_units units;
-@@ -557,12 +570,13 @@ static __init void __test_string_get_size(const u64 size, const u64 blk_size,
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(get_size_test_cases); i++)
--		__test_string_get_size_one(size, blk_size, exp_result10, exp_result2,
-+		__test_string_get_size_one(test, size, blk_size,
-+					   exp_result10, exp_result2,
- 					   get_size_test_cases[i].units,
- 					   get_size_test_cases[i].cut);
- }
- 
--static __init void test_string_get_size(void)
-+static void test_get_size(struct kunit *test)
- {
- 	/* small values */
- 	test_string_get_size_one(0, 512, "0 B", "0 B");
-@@ -582,7 +596,7 @@ static __init void test_string_get_size(void)
- 	test_string_get_size_one(4096, U64_MAX, "75.6 ZB", "64.0 ZiB");
- }
- 
--static void __init test_string_upper_lower(void)
-+static void test_upper_lower(struct kunit *test)
- {
- 	char *dst;
- 	int i;
-@@ -590,65 +604,68 @@ static void __init test_string_upper_lower(void)
- 	for (i = 0; i < ARRAY_SIZE(strings_upper); i++) {
- 		const char *s = strings_upper[i].in;
- 		int len = strlen(strings_upper[i].in) + 1;
-+		int result;
- 
- 		dst = kmalloc(len, GFP_KERNEL);
--		if (!dst)
--			return;
-+		KUNIT_ASSERT_NOT_NULL(test, dst);
- 
- 		string_upper(dst, s);
--		if (memcmp(dst, strings_upper[i].out, len)) {
-+		result = memcmp(dst, strings_upper[i].out, len);
-+		KUNIT_EXPECT_EQ(test, 0, result);
-+		if (result)
- 			pr_warn("Test 'string_upper' failed : expected %s, got %s!\n",
- 				strings_upper[i].out, dst);
--			kfree(dst);
--			return;
--		}
- 		kfree(dst);
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(strings_lower); i++) {
- 		const char *s = strings_lower[i].in;
- 		int len = strlen(strings_lower[i].in) + 1;
-+		int result;
- 
- 		dst = kmalloc(len, GFP_KERNEL);
--		if (!dst)
--			return;
-+		KUNIT_ASSERT_NOT_NULL(test, dst);
- 
- 		string_lower(dst, s);
--		if (memcmp(dst, strings_lower[i].out, len)) {
-+		result = memcmp(dst, strings_lower[i].out, len);
-+		KUNIT_EXPECT_EQ(test, 0, result);
-+		if (result)
- 			pr_warn("Test 'string_lower failed : : expected %s, got %s!\n",
- 				strings_lower[i].out, dst);
--			kfree(dst);
--			return;
--		}
- 		kfree(dst);
- 	}
- }
- 
--static int __init test_string_helpers_init(void)
-+static void test_unescape(struct kunit *test)
- {
- 	unsigned int i;
- 
--	pr_info("Running tests...\n");
- 	for (i = 0; i < UNESCAPE_ALL_MASK + 1; i++)
--		test_string_unescape("unescape", i, false);
--	test_string_unescape("unescape inplace",
-+		test_string_unescape(test, "unescape", i, false);
-+	test_string_unescape(test, "unescape inplace",
- 			     get_random_u32_below(UNESCAPE_ALL_MASK + 1), true);
- 
- 	/* Without dictionary */
- 	for (i = 0; i < ESCAPE_ALL_MASK + 1; i++)
--		test_string_escape("escape 0", escape0, i, TEST_STRING_2_DICT_0);
-+		test_string_escape(test, "escape 0", escape0, i, TEST_STRING_2_DICT_0);
- 
- 	/* With dictionary */
- 	for (i = 0; i < ESCAPE_ALL_MASK + 1; i++)
--		test_string_escape("escape 1", escape1, i, TEST_STRING_2_DICT_1);
-+		test_string_escape(test, "escape 1", escape1, i, TEST_STRING_2_DICT_1);
-+}
- 
--	/* Test string_get_size() */
--	test_string_get_size();
-+static struct kunit_case string_helpers_test_cases[] = {
-+	KUNIT_CASE(test_get_size),
-+	KUNIT_CASE(test_upper_lower),
-+	KUNIT_CASE(test_unescape),
-+	{}
-+};
- 
--	/* Test string upper(), string_lower() */
--	test_string_upper_lower();
-+static struct kunit_suite string_helpers_test_suite = {
-+	.name = "string_helpers",
-+	.test_cases = string_helpers_test_cases,
-+};
-+
-+kunit_test_suites(&string_helpers_test_suite);
- 
--	return -EINVAL;
--}
--module_init(test_string_helpers_init);
- MODULE_LICENSE("Dual BSD/GPL");
+ void notrace save_processor_state(void)
 -- 
 2.34.1
 
