@@ -1,64 +1,44 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3D15CAC
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Mar 2024 17:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D34B79C2;
+	Fri,  1 Mar 2024 17:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709313911; cv=none; b=RI+r9DD4D3RkqQ7EbtGWvPlL0Yr2q0dTX16OO+cjkc3OhftPM5ZH4ulCyyVmIqRY1HlTCY+o5+xSI53+zREuqjDfVxSTGWF6O6TO//DkOeHxWmphRiXx0LxG94qaiNI0+cpphj0zApvCdsyQNWQpiqVBxr5RL3geuMpAXsnswbQ=
+	t=1709314152; cv=none; b=RxWQ3iHI0sZF3yWYnq2lBwNYQq7GvuIrkeC9JkrDuR52aOg6YfouztYe8ND4JQwV+tS5AK8kMywt0WRtgMXh+ptOf+oPkE/Qu/Q8SzEkEQLS4E8/IJaSDePUv1g6nqb2bFGgzjWqrSvT3755+7+irXFEKah6AEcupIrixR7QCjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709313911; c=relaxed/simple;
-	bh=VcXtlf/XeXr2PobHBVHkid9ZaTLChKSRWS1muUvaUck=;
+	s=arc-20240116; t=1709314152; c=relaxed/simple;
+	bh=cQbj9nw1nsXY6pJq/AyxfpVBj7eJaG3yYixrJ/2GWGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SWp0hTATtVO4fUOtF8BfCtP9ib6tWATEqF2sUZpDMJ3OyE1eDEtevQaEN1h7iRRWu0oQp2RUt7xo9fMsFV1Uxv3K6XrkGgLo0G1CUvtB7ykKsjDI1yGa13PHTSs3Q6YcHlQutF7c1Jak0cgN4T+vwJ0vjGROvV7l4sYcdC76pZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D5I6PWUI; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D5I6PWUI"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc9222b337so23734115ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 09:25:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709313909; x=1709918709; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s3TCjvJYZgSg9yWOOlR3AhfW0G1oI5rbUeEwPh6CwQQ=;
-        b=D5I6PWUI45s5wzCKDlHWqTjBY+s8k1vna3KeNoDPcqvSubCKUi9xh82wCeFlozPq2g
-         2BbAPiMhNM1+43ap3Ezwp5fQFN0Sef1GWzf4dFKz7+VmcVcYHndSlgvO7MLeYvN6v891
-         OVCn8RqOoPA1pd+Ur6r7QCD6VWIDm62tH7aBc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709313909; x=1709918709;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s3TCjvJYZgSg9yWOOlR3AhfW0G1oI5rbUeEwPh6CwQQ=;
-        b=EQ7o5/9LXmUr3ifF1mXqjWibbxOPH2h9pWaJDkcccZ08rlkG/7ZRQVRX0eC96LwH5C
-         Ks9baze8BCPoIsnizgEe8d3prp2N3BNmfIcinwqM08FmAC4FbXv1oNsNiO6z2elcn9LV
-         7iO42D4ZBsEh2IACt4SwtMl7fWvYuf5qRzZykDp5bbCSVdqqZTiRngPsbz4odq/8xG93
-         WNuMP5nQFnx87Phhspur0XS3ELuP7R1KFON835B+N31AyGSgwvDGfhQhRwfss7XSIdZV
-         t6exWMzktMtybyP4SIc0ARdeFrk+1CTHnxuhxrpGJ8yHFgwP94+h6/xNa33fX2Sho6YH
-         EhHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwcBUxr6OxqtSNLaUFM4c1lUEHdueYw3XRpI52cgagJAmoXMFKsCTNRKNjiTBGxsP6bne+8RY8qIrC1a/cB5xDZrqwqOPyE8pPQWUeFAvM
-X-Gm-Message-State: AOJu0YxNhagnxsWCnVKLVNE1e4jY+3YW8w8m5ENENyCQWmoFfrMYxkCP
-	sMjiEbCOr7llHxUcdIhPRTElyyTOZBBQFP/tju+SzbKLgD/uh0mIEZPcQtnEqA==
-X-Google-Smtp-Source: AGHT+IFYOEPfuMi7RE8d8lflSS9kWlCHn0kDcNrMzQOwSeOi+RK6QIs7nrpl/DVQLtbCnM7pieIqJQ==
-X-Received: by 2002:a17:902:e843:b0:1db:9a7d:2e6 with SMTP id t3-20020a170902e84300b001db9a7d02e6mr3155921plg.48.1709313908823;
-        Fri, 01 Mar 2024 09:25:08 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i11-20020a170902c94b00b001dcdf24e336sm2984379pla.47.2024.03.01.09.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 09:25:08 -0800 (PST)
-Date: Fri, 1 Mar 2024 09:25:07 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ENeskhQVTkg4cOhg4Qr61nIBxZ2YX1ZHqOgVTN1paQ6o9kC1Q++hqiqeG3xDYKSZwtFfJ6s2Rj4+8M19RimbzuqpRVxx3o6/xlahqx0IDtZI0SFLr5VESmS0hX438gn6ayrE46Y808Dz/XqGyG3IZ/UAO6CMOIUvj/Y7ntfeA3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15273528"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="15273528"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:29:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914020951"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="914020951"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:29:09 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rg6h1-0000000910F-01ei;
+	Fri, 01 Mar 2024 19:29:07 +0200
+Date: Fri, 1 Mar 2024 19:29:06 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 1/2] string: Convert selftest to KUnit
-Message-ID: <202403010921.65C845411@keescook>
+Message-ID: <ZeIQYkRc_5lj6dd6@smile.fi.intel.com>
 References: <20240301002416.it.092-kees@kernel.org>
  <20240301002650.1544829-1-keescook@chromium.org>
  <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
+ <202403010921.65C845411@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,85 +48,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdhY6-OmNYtbpnb+dv1Du=LTnignsTRSU9+8yqpbFqPsQ@mail.gmail.com>
+In-Reply-To: <202403010921.65C845411@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 01, 2024 at 01:09:27PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 1, 2024 at 2:26 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Convert test_string.c to KUnit so it can be easily run with everything
-> > else.
+On Fri, Mar 01, 2024 at 09:25:07AM -0800, Kees Cook wrote:
+> On Fri, Mar 01, 2024 at 01:09:27PM +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 1, 2024 at 2:26 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > Convert test_string.c to KUnit so it can be easily run with everything
+> > > else.
+> > 
+> > Have you run it?
 > 
-> Have you run it?
+> Yes:
 
-Yes:
+Of course I new the answer :-)
 
-$ ./tools/testing/kunit/kunit.py run string
-
-[09:21:32] Starting KUnit Kernel (1/1)...
-[09:21:32] ============================================================
-[09:21:32] =================== string (6 subtests) ====================
-[09:21:32] [PASSED] test_memset16
-[09:21:32] [PASSED] test_memset32
-[09:21:32] [PASSED] test_memset64
-[09:21:32] [PASSED] test_strchr
-[09:21:32] [PASSED] test_strnchr
-[09:21:32] [PASSED] test_strspn
-[09:21:32] ===================== [PASSED] string ======================
-[09:21:32] ============================================================
-[09:21:32] Testing complete. Ran 6 tests: passed: 6
-[09:21:32] Elapsed time: 11.545s total, 0.001s configuring, 11.327s building, 0.183s running
-
-
-> ...
-> 
-> >         if (i < 256)
-> > -               return (i << 24) | (j << 16) | k | 0x8000;
-> > -       return 0;
-> > +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x8000);
-> 
-> First of all, this special value encodes the problematic patterns, so
-> you missed proper messaging.
-
-Yeah, I see now this isn't a test but rather an encoded report. Since
-the failures are caught earlier, I can improve those messages instead of
-doing an encoded version.
-
-> Second, the returned value has a constant, how do you expect 0 to be
-> equal to something (guaranteed not to be 0)?
-> 
-> This needs a good rethink of what you should do in the KUnit approach.
-> 
-> ...
-> 
-> > +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x8000);
-> 
-> Ditto.
-> 
-> ...
-> 
-> > +               KUNIT_EXPECT_EQ(test, 0, (i << 24) | (j << 16) | k | 0x8000);
-> 
-> Ditto.
-> 
-> ...
-> 
-> >         for (i = 0; i < strlen(test_string) + 1; i++) {
-> >                 result = strchr(test_string, test_string[i]);
-> > -               if (result - test_string != i)
-> > -                       return i + 'a';
-> > +               KUNIT_ASSERT_EQ(test, result - test_string, i);
-> 
-> In a similar way, all returned values are *special*, you really need
-> to think about them before converting to a simple (and sometimes
-> wrong) checks)
-
-This encoding is trying to report "i", so I've adjusted the error
-reporting in v3.
-
-> I dunno if KUnit has a fault ejection simulation. It should, in order
-> to be sure that test cases are fine when they fail.
-
-Yeah, bumping offsets and such produce expected failures.
+The problem as I described is the (absence of) fault injection in KUnit itself.
+When tests are passed the picture is nice, when they are not, the reports become
+a disaster (if this is applied).
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
+
+
