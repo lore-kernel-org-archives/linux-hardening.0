@@ -1,69 +1,63 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A115CA1
-	for <linux-hardening@vger.kernel.org>; Sat,  2 Mar 2024 00:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5EA10FA
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Mar 2024 00:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709338173; cv=none; b=RULMq7w8UP/ftFyJVrEU1qRgO6EIQm2MhAUfZE3WnPEKGwC/AgpckrpG9oWdxw9zCq/OprZg91nbmDyRmhk/MkXwgAdOqL+HjT7zJv5q6AwU2bvCYCcE1+RDjLq5Gh18xMRUHTPfZCzqgRSRrzB6Qr2AgSJlqKwIb3FjALGTfrk=
+	t=1709338490; cv=none; b=m2xN6czELCCGGGpIlLsafs9/Qcux37piqXFkel0gC70dXe4I4ODljzHk5MOLzM6eeAw4bouNEkEIhXCykqJ8NpZUzwGTqn4qoeEyJLskfv2Cu/8PXFVtb7j6THcn7IVZaqMImX8fTRn4d7jMYg1UH94zB9u0/ClxV7se4APJp5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709338173; c=relaxed/simple;
-	bh=dH+R3CHq13HZg3o2FiRpD3Sc4l20ml1BM78TmQhj43s=;
+	s=arc-20240116; t=1709338490; c=relaxed/simple;
+	bh=J9RecM11zoh+0vCDfzEiQKHVBWqECX6ysWPdITOtwpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gof6HQHa6V3t6sJa1AYwdM1ZT++GdR3DaXzMsW4Ft3vtAp57Xkikqz5Z/nC0A3S8/GzdopkNdg1t5vOkmDpbASh/SrLhvteHg3Zr7Ebyx6S6xCOExaJebwsDC4QuDhfXLCLO2YBDtLRM/sCzu+6QwhQJ1zen5Mr2JMwuIQ5lovE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MOuTRwXE; arc=none smtp.client-ip=209.85.215.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=n2ubKgqnH15s27loEP0dtxVAyHGaK8LainqeffrS0sl6II7zBtqocfdjJnVrc25BiUMtDX7zGzvTLvw6kfX5YegFSipC7rVAezutgzicgOjcad2fjw2s1r2zfv63vgOOf7+gpu5eBRbBp4pe2e9ryI5xFCE/bjSUWXfuqu7Y6tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gOkPtCKn; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MOuTRwXE"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso1958949a12.3
-        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 16:09:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gOkPtCKn"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e58d259601so1733029b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Mar 2024 16:14:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709338171; x=1709942971; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709338488; x=1709943288; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PlEMlXrKVoQ/VI5q1b4zpBL3OsqlVw7CAlvaBiVG6mY=;
-        b=MOuTRwXEhIPRWgSif23piWeAVFPc+vdnbxKruPntORcbsZe7Ootk7sViJ1qaDdgx2M
-         F3cD09TiuqgzusAKPhmQtslpHuPNr8SczIuJMXdnnZ9haIVfdI5Vs3KAVlvjNTx8pfTd
-         yhjULxFjOZValpASY13e1gED6NXKg4FVa6fj8=
+        bh=FF4IiXm7A+T8Frcn1xhwOocDaZJ/4WKQwj1y8lgr4F8=;
+        b=gOkPtCKnpB1O7rMJ+Q7MkzCYfrC0Wn69S0rpH6FJKIwtblME4dUFVbWIl4EddOq/dh
+         3CdOIeZ0NkfIpc89Q2u4BDeZ2B9azSNDl9OOPCoeLU/qTTvQTHj8X0O1nn40rqm8n7um
+         p9oXDZuOFCJDgP0i/u1VtIg4d6ymgM4cN5AnQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709338171; x=1709942971;
+        d=1e100.net; s=20230601; t=1709338488; x=1709943288;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PlEMlXrKVoQ/VI5q1b4zpBL3OsqlVw7CAlvaBiVG6mY=;
-        b=lzQzAUSbuI93RoyOqHc36j/c08Ux8bAunQLreLbdk7SinIHW5G6kHh5TNGzB2/a4mV
-         HF8ksIKg6AZDiX7q84vPhLWnBwoZdqL7HuXdtcc9ep35xct9fjgqX8qcUGUranwwDB02
-         3dcIb3//FCiN8a7v7DXqlUA6UsyzO8ncYbzur5S1u/gY/nfZWlyw6VaW0Y25UZtVMUtK
-         gx9OKh3/pIPi61Q3G96sMCvaMWDnjNypv7kemj4bpRlwj3GquzSZH5kmt5u8zFBf9KWS
-         W7Bn75QLX6UgB1RshyCgDGMlX+crbiUSUEi5TNVw4bgYbWPrFoTFA6VCTtFA9xFAdQNa
-         f8UA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/4Cn9051rXsPFMv1PaLFc94xbSDu/35kKtrbHntU2lJz8ibkK07KWPOwNkd3jQMpi24TJ3f1b4iiTQu2fcmgJ7QoTW8PgSQWoc80/WuMc
-X-Gm-Message-State: AOJu0YyBo1D2lgPSksG62bRirm2S/BxtfnA7rIMqC2O1iu0+X32Svkx2
-	5TzRDVgYfjrsPbmYYtPDwrSaAyuwvgplg93xGrkA8Enq3xGwKymWbYSrnAJ3Ag==
-X-Google-Smtp-Source: AGHT+IHKe06QTxKDNmVjUj7y4VmLN7+kjewYOtUfSzwCo6UhE83ZK5FaGcdZDV0lptWbQ2W8F/RMaA==
-X-Received: by 2002:a05:6a20:6a22:b0:1a1:461a:36ac with SMTP id p34-20020a056a206a2200b001a1461a36acmr494126pzk.11.1709338171344;
-        Fri, 01 Mar 2024 16:09:31 -0800 (PST)
+        bh=FF4IiXm7A+T8Frcn1xhwOocDaZJ/4WKQwj1y8lgr4F8=;
+        b=O+ZIV8uJEbxT7Yjbm/iSTobVnGZLGG359iRC8D4/Z8dA5eFtS866GuhfHPHAe8z2Dw
+         0x6h21AD7D1vneWBakEM9XNDaRCzGcZf+NgdyYXc6teQyIFGp8q5x67aP77HCh0wQClq
+         4TIaWLYhVe/MdpibACcszQCfK4jIJCnosXpNST125NI1fgE2pAsSykRkqfJZ0eZCqy3x
+         esNjOxapWyQnQM4c8pIX8z+mN+12+hDzx9cEdelhVXjL2OIBHCExJE315C2X4eiz/InS
+         Wya9RkKpI/BzFqLn9hjMYvkRpImjoGsXisGAw9otO+G5ZGKQKqUZ92yRfS/wiX3VNK+L
+         xF3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUSG4udHWaAvVo0R2+trT0oEOuCsZxTq+ve0Tl52l1FEqnYanjh2htFkXnLvzeXM03cVoKrGyWWQNtLfWFT91EELxGw2WpE7G10jtU1Rwa7
+X-Gm-Message-State: AOJu0Yz/DcCKkdE7S+AScnFVNDskT9c6ZeGpwCHjdEnFtJrVR7ZNylFP
+	VMzHlJR5nZuo+1jeTGJorariHDX5cdNzQrkYF7CbTZ6JrMHkUqhwl8iupuefNg==
+X-Google-Smtp-Source: AGHT+IEQo2qIPhB9LTmigxSPC/z8GP5w2KmXdHPe4k2dtlqi/60ZWzje2+zCus9dKjUyCYKc5QJ4pA==
+X-Received: by 2002:a05:6a00:1916:b0:6e5:e8ee:38f2 with SMTP id y22-20020a056a00191600b006e5e8ee38f2mr628578pfi.23.1709338488017;
+        Fri, 01 Mar 2024 16:14:48 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x11-20020aa784cb000000b006e45c5d7720sm3611474pfn.93.2024.03.01.16.09.30
+        by smtp.gmail.com with ESMTPSA id e29-20020aa7981d000000b006e592a2d073sm3423740pfl.161.2024.03.01.16.14.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 16:09:30 -0800 (PST)
-Date: Fri, 1 Mar 2024 16:09:29 -0800
+        Fri, 01 Mar 2024 16:14:47 -0800 (PST)
+Date: Fri, 1 Mar 2024 16:14:46 -0800
 From: Kees Cook <keescook@chromium.org>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net/smc: Avoid -Wflex-array-member-not-at-end
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] RDMA/uverbs: Avoid -Wflex-array-member-not-at-end
  warnings
-Message-ID: <202403011607.8E903049@keescook>
-References: <ZeIhOT44ON5rjPiP@neat>
+Message-ID: <202403011613.BB548211F3@keescook>
+References: <ZeIgeZ5Sb0IZTOyt@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,73 +66,77 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeIhOT44ON5rjPiP@neat>
+In-Reply-To: <ZeIgeZ5Sb0IZTOyt@neat>
 
-On Fri, Mar 01, 2024 at 12:40:57PM -0600, Gustavo A. R. Silva wrote:
+On Fri, Mar 01, 2024 at 12:37:45PM -0600, Gustavo A. R. Silva wrote:
 > -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
 > ready to enable it globally.
 > 
-> There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
-> that contain a couple of flexible structures:
+> There are currently a couple of objects (`alloc_head` and `bundle`) in
+> `struct bundle_priv` that contain a couple of flexible structures:
 > 
-> struct smc_clc_msg_proposal_area {
+> struct bundle_priv {
+>         /* Must be first */
+>         struct bundle_alloc_head alloc_head;
+> 
 > 	...
-> 	struct smc_clc_v2_extension             pclc_v2_ext;
-> 	...
-> 	struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-> 	...
+> 
+>         /*
+>          * Must be last. bundle ends in a flex array which overlaps
+>          * internal_buffer.
+>          */
+>         struct uverbs_attr_bundle bundle;
+>         u64 internal_buffer[32];
 > };
 > 
 > So, in order to avoid ending up with a couple of flexible-array members
 > in the middle of a struct, we use the `struct_group_tagged()` helper to
 > separate the flexible array from the rest of the members in the flexible
-> structure:
+> structures:
 > 
-> struct smc_clc_smcd_v2_extension {
->         struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
->                             u8 system_eid[SMC_MAX_EID_LEN];
->                             u8 reserved[16];
+> struct uverbs_attr_bundle {
+>         struct_group_tagged(uverbs_attr_bundle_hdr, hdr,
+> 		... the rest of the members
 >         );
->         struct smc_clc_smcd_gid_chid gidchid[];
+>         struct uverbs_attr attrs[];
 > };
 > 
 > With the change described above, we now declare objects of the type of
 > the tagged struct without embedding flexible arrays in the middle of
 > another struct:
 > 
-> struct smc_clc_msg_proposal_area {
+> struct bundle_priv {
+>         /* Must be first */
+>         struct bundle_alloc_head_hdr alloc_head;
+> 
 >         ...
->         struct smc_clc_v2_extension_hdr		pclc_v2_ext;
->         ...
->         struct smc_clc_smcd_v2_extension_hdr	pclc_smcd_v2_ext;
->         ...
+> 
+>         struct uverbs_attr_bundle_hdr bundle;
+>         u64 internal_buffer[32];
 > };
 > 
-> We also use `container_of()` when we need to retrieve a pointer to the
-> flexible structures.
+> We also use `container_of()` whenever we need to retrieve a pointer
+> to the flexible structures.
+> 
+> Notice that the `bundle_size` computed in `uapi_compute_bundle_size()`
+> remains the same.
 > 
 > So, with these changes, fix the following warnings:
 > 
-> In file included from net/smc/af_smc.c:42:
-> net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->   186 |         struct smc_clc_v2_extension             pclc_v2_ext;
->       |                                                 ^~~~~~~~~~~
-> net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->   188 |         struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
->       |                                                 ^~~~~~~~~~~~~~~~
+> drivers/infiniband/core/uverbs_ioctl.c:45:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>    45 |         struct bundle_alloc_head alloc_head;
+>       |                                  ^~~~~~~~~~
+> drivers/infiniband/core/uverbs_ioctl.c:67:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>    67 |         struct uverbs_attr_bundle bundle;
+>       |                                   ^~~~~~
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-I think this is a nice way to deal with these flex-array cases. Using
-the struct_group() and container_of() means there is very little
-collateral impact. Since this is isolated to a single file, I wonder if
-it's easy to check that there are no binary differences too? I wouldn't
-expect any -- container_of() is all constant expressions, so the
-assignment offsets should all be the same, etc.
+This looks complex, but I think it's simpler that other changes that
+would have much more collateral impact. Thanks for figuring out a
+workable solution!
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
 
 -- 
 Kees Cook
