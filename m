@@ -1,87 +1,70 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F31447781
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 15:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9EDC4653A;
+	Mon,  4 Mar 2024 15:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709565348; cv=none; b=anYVKOw99pJKuPImhBr6tqaYq/F+wuO7Vfc87yieLfL5UPj7irET4BV3pacGJAUh9reL5qVZvKjjExpNDsfOKCC5Jv2nfkZ/4czn44dggvD4tXGhSAzlvN4Rauc05Ja5mjx2hMoKmcHs0vY343ezHVoU/QwZQgRImLdlLZYb0Fw=
+	t=1709565891; cv=none; b=JNjEabveeNaHe4xMfnxjFgiphnAy7mTpp9Sp8Nt7sSARDJZ8pDXZHLcGfZA0VkO6OueMKyXkGc2iZhJFejZI492pLcddvPrUlKAJ7bzfZtFL+SSraTusiPS9p53GFjoE5t5Hr2dYn3XBRa38jcHSrL2lvxZwOifLz6M+8tRoVbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709565348; c=relaxed/simple;
-	bh=JaftqBjRUd5OiE9mP6ElGruCPofNrsQHVf3pU9lO0lo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BmrS2zwIpW+8+V1KLUVEgP9qTgwaPDNJkvfor5c0JIGMWfKzEUJ38I55/8SD4wg+dn3EFbqXokhncILmna9Ry/pirw+Wqkr7WAUw+28k6uWZCzp0E6TVGa9f508AyYz/a9ntvt+CiGRUqtFfBvpTrw8p5EQyMOqQMtLvOv8kfDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FN46C1w0; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709565891; c=relaxed/simple;
+	bh=N1JfdXgyaxSd4c/fdLzv44gAp2pZlsV4ZCg6XBxQnKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X0NY+yyJcwm1yxZzENcJeleVJVy/b1WxcqSrZOtYRiNAXzrhRvQNUnpPzbcjB9FKIO0KzXDLii/qx7atW97kSVDuei6kZJQTrGQGjG7eGPX2Ep4Ts4tneO790M8/kSOvkv8BSNeLqBUPtZJ0TteKOfgBfOeJd+yj/ZiZb9maTNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OX2NwF11; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FN46C1w0"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56693f0d235so23485a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 07:15:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709565345; x=1710170145; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JaftqBjRUd5OiE9mP6ElGruCPofNrsQHVf3pU9lO0lo=;
-        b=FN46C1w0opZL3pGHIueXrQM50J/X+AFiedCy/K528RxK763i+sQCdC2uY7bnXfK82f
-         A9+2zCM8hCtu4sp81xtJiNEq9IT19WJF3WtakgIMRd51hXxnRJHQzxyvmbuQ1+FC0Y3B
-         8pKg7oWwCsIoqYfQs6WG9XRykmZIFoNaSWAm+VaIpupWLR+PVfWh2G8NOF78d2EuAngy
-         BGI46NV0vW/PofhoEtOAm1e2T2wmcJd9GtWDpdyA1ZJeEkohbbX4OtAH+YK5pQkafxMR
-         hCIlyk2x35x50+RvMMaG/pt05FsHcJTTan01adb5a9qfyxo0VvXozafRMfkHs7PKV7Th
-         tu7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709565345; x=1710170145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JaftqBjRUd5OiE9mP6ElGruCPofNrsQHVf3pU9lO0lo=;
-        b=SVwihABf47NI7IPwqswc2Fy+ZLVnK25eG6qjQVBCiPyZ84kIzQUIj2J8VKHLBw/NL6
-         1rHWy91istw8c3k79oGyOIiHg7OYmc/yH3IdvTGoma1kpjAe4L/brWcANW0q+uJQhT7v
-         p97/AbudhAWwuJXlGgprSBy0zRQ7hzU7Mx0YU1PW+OReKDkT/YaVjgwQv4BTfg41dNKZ
-         HJEgkONOsqJBRTEUX2VpsOK+mp6+Ir+E+660MaK3TbFGnVKb+arpKWGlkB1HWrNGm6wH
-         XgoCt+nlaQPMB/d9tX4erDJmpqIu3FryTA9bKB07CC+o/iqnR8tk2A8+cxCETFU808TK
-         fAzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXI9fK/ThKOzVIB2f2FHnRJuKmI9WRtuDSa4j5EBMBTz4ZHAFSO2vZSn9bktmM+9HPnjrv4yIVFHKl0KzEnRyCeUgp3GZDLIMEM64kD7Ce
-X-Gm-Message-State: AOJu0YwTkewGBC0h2/Uxa+KXDvO6GgAtSrHm3HhVczlO5YphNuf3mON6
-	Fq0eeqdAW4fj1UO/qPqAFObDHyKpDs6zxG86f35zIIYqJQr8g59rksPIbAkX19eIXGEOjJzTlBh
-	Ovq8cIOmWso915jPH6Z76pbS+9QTsLO0VvKAc
-X-Google-Smtp-Source: AGHT+IEtc8iFkUDhfxTXSKFmqZJRm6+dqGzN80jS12Vcq179DqSiAJDtL89r2EpdoV8ru4yX3BzzCTnXQuN4tukZYxk=
-X-Received: by 2002:a50:bac2:0:b0:566:ecde:290d with SMTP id
- x60-20020a50bac2000000b00566ecde290dmr291227ede.4.1709565344548; Mon, 04 Mar
- 2024 07:15:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OX2NwF11"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCCCC433C7;
+	Mon,  4 Mar 2024 15:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709565891;
+	bh=N1JfdXgyaxSd4c/fdLzv44gAp2pZlsV4ZCg6XBxQnKI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OX2NwF114dP1vGv3xCFxgAvAJK2k/1x1RApKZFIsPAByq9z7xAhDsd29VNt9XzVIO
+	 4TbehB+V6LbEjw0Yf2tx0BDzE7pRMOej4x/4DB1ewe064WyFjF4xhUD6FDyF1v16LN
+	 rZ87eYQKNvFBQtWhLGmK+EzcJmE8VBZNCPsJEuw98y231hfBEZEdfkbyyI888kng2c
+	 B8SDOa8cDBSoIzP3MeNFTYzukgVel6/G9UFjpCOrq7WyL5Jw96IsoGqUEIfCGYu1LG
+	 daoe8ukCR3vsixhy66NkAUk1JmJgjG4P7GMYJl2ZELgkhmqmNRo1tGrx9i2iri7Gx0
+	 dwlQt5hEJoSLw==
+Date: Mon, 4 Mar 2024 07:24:49 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Eric Dumazet <edumazet@google.com>, Kees Cook <keescook@chromium.org>,
+ "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, <netdev@vger.kernel.org>,
+ <linux-hardening@vger.kernel.org>, Simon Horman <horms@kernel.org>, "Jiri
+ Pirko" <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, Coco Li
+ <lixiaoyan@google.com>, Amritha Nambiar <amritha.nambiar@intel.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
+Message-ID: <20240304072449.0c10b397@kernel.org>
+In-Reply-To: <ae6b1114-1c71-46f0-82e5-23b9f05df1bf@intel.com>
+References: <20240229213018.work.556-kees@kernel.org>
+	<20240229225910.79e224cf@kernel.org>
+	<CANn89iKeJGvhY0K=kLhhR39NVbaizP2UBk0Vk0r_XCe2XMBZHg@mail.gmail.com>
+	<9050bdec-b34a-4133-8ba5-021dfd4b1c75@intel.com>
+	<CANn89iLSLPn5PyXNQcA2HO0e5jGYvHKhTh_9_EMmfbTJKZPfbg@mail.gmail.com>
+	<77d3f074-8cb6-466b-ab31-a7b0bac659d0@intel.com>
+	<20240301093517.428e5b5d@kernel.org>
+	<ae6b1114-1c71-46f0-82e5-23b9f05df1bf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
-In-Reply-To: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 4 Mar 2024 16:15:07 +0100
-Message-ID: <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
-Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
-To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Cc: gustavoars@kernel.org, akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	peterz@infradead.org, dave.hansen@linux.intel.com, 
-	kirill.shutemov@linux.intel.com, keescook@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, nixiaoming@huawei.com, kepler.chenxin@huawei.com, 
-	wangbing6@huawei.com, wangfangpeng1@huawei.com, douzhaolei@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 4, 2024 at 3:02=E2=80=AFAM Jiangfeng Xiao <xiaojiangfeng@huawei=
-.com> wrote:
-> When the last instruction of a noreturn function is a call
-> to another function, the return address falls outside
-> of the function boundary. This seems to cause kernel
-> to interrupt the backtrace.
-[...]
-> Delete __noreturn from usercopy_abort,
+On Mon, 4 Mar 2024 15:32:51 +0100 Alexander Lobakin wrote:
+> > 100% I should have linked to the thread that led to Kees's work.
+> > Adding directly to net_device would be way better but there's
+> > a handful of drivers which embed the struct.  
+> 
+> I think it's okay to embed a struct with flex array at the end as long
+> as it's not used? Or the compiler will say that the flex array is not at
+> the end of the structure?
 
-This sounds like the actual bug is in the backtracing logic? I don't
-think removing __noreturn annotations from an individual function is a
-good fix, since the same thing can happen with other __noreturn
-functions depending on what choices the compiler makes.
+Technically, yes. Practically it ties the lifetime of a refcounted
+object to something semi-related with different lifetime rules :(
