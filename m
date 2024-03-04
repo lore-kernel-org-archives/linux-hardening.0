@@ -1,57 +1,58 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F304E4778E
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 16:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E0C487BC
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 16:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709568417; cv=none; b=bcxz4h1eKfLWVdzgwHwSC/2KriwNlIRpGqn/Jt8azxdWFR7tjqnEe8iME+5UUDXYo8ZZHPd7ORVK4toqS3EgLr2Mb8I5N6dAWoBPCqLHpZ8EfuMAiDLZXU9ycvZlM9xzeyKPjKjVdTjG0qp3uqTiMJUK/Ix1HTtLThFiWsUGfgE=
+	t=1709568418; cv=none; b=kNg1VIQxIeoUnvmBJx3x4KPz30rW0XQtYxX4nP8VA3nIla4Ym6UYc9p75NwyZDqYypc5zufJtgGgch74wdWho5sLYbQOuSlYadOdtVotE4s/oPvgOYW8FVzmXpV7IJtDTxzExu//SIGdYHeg7IEFzGvV/el0udAN78NxYQDEtq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709568417; c=relaxed/simple;
-	bh=Iov+SLQtBZ5UAEb6YDKr9rdAOJnCjM7+0r7ET3OF5dA=;
+	s=arc-20240116; t=1709568418; c=relaxed/simple;
+	bh=HDTEIEeTth+YlarlZwpbtqNSffqitQLrinmgPBP7yu8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pMBtEKjqaC6TVF1/6fr7mZxt/i86IxVnd6ZECD/QpF9CeU/BBZ6CaMW17xPP2Ffhz6E+celfnR7K7uH6OpB/0LvGLRHz5uajRTMXIahL82l6at2VyZiL5zcHeTqwR/hoGbhXVpHy8X80mmEGiMO/LcEaTQK8bcAZRMJy5IR3y0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kMgmySUD; arc=none smtp.client-ip=209.85.160.49
+	 MIME-Version:Content-Type; b=OpU9UR5tQLrmZYVkDIYMIgrPVW16wxuVgT5stO5clZqdaQXLC/E7GZTXkMQ5iUwHcUFdfdEY/4cuCAlYjqSGrR5vPY62p0j65Q1BZDjyeOjkuze8zTLIzWEt8OELXLGtyArTNFFdcz9m65NpujykAzEi1iaHzhMuEAAQI1MWsRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HIh9XJsY; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kMgmySUD"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-21fa6e04835so1505895fac.1
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 08:06:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HIh9XJsY"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e2c45b81d8so1508650a34.0
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 08:06:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709568415; x=1710173215; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709568416; x=1710173216; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JCP8eJQPKeVzox/Qa6ATJPu9ofpJI+UjARSHWwbkYKs=;
-        b=kMgmySUDd6O8PX8aZH+RTbu1pDkEu0602rzF0RZRHJsRu4qGQNunJnnXLtipR3zewS
-         wudzqWiofmjMNNUVMgtY7Rsx1WWgVagTE0fMDXzme2u3vIfkKxhlvA5cqi7c0lXA26uN
-         y0clrAfkJneiS9oRsotjBlVGooQslWkaqL9N0aFqCfHhSzLtDUsRtGnbMuoFBtBQxckU
-         ycpLLjNCitB39uZRl6Ga/3ZFfnuird0GXYSPffj5taiyqoWVAgVtrnChW5VmbdAXkdoP
-         /kQz/bEgW1xySjiGu4oW7LeFAxZOu5M3a+b2ZMDC8fUkInSLsvhEInoAjJ0u/dDt9Ms6
-         OMDw==
+        bh=yn3BxlJjgBPLtIhw8+vZTdHKWgVz7bubHMhhj+7dA28=;
+        b=HIh9XJsYBqEMYRZ8eqTP1tlbkwygZg35Z15NyWUUL9pqFI+K7BC8nxqaRJCUP4bTYa
+         fJNFOGfr89S6ZL1dr12WqBLdhoRmjg0PRO0L/Z/tc5HgQB0DA59XtGE5yZKpLjA720Ll
+         kTNbBKV90lMMKndvzQ1EJU5DFWuP4+mZ+UivCTHTfN2yywKjzrNayUQh/+JfvQeQYHO3
+         tdlRTiY6oiycYraN+2Pa97OQEmeseynPpZ6Zk2HfrkQ/Hij0uByIY0JQivFE0eVqJnUo
+         geRetPZWlRrrs22mfqNq862Lw3xhLMKRbg4K9Dg/1zkvr3BVU/X37m3NOYBtGT7c5ixA
+         GXag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709568415; x=1710173215;
+        d=1e100.net; s=20230601; t=1709568416; x=1710173216;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JCP8eJQPKeVzox/Qa6ATJPu9ofpJI+UjARSHWwbkYKs=;
-        b=NAiK22dLoCWC9qRASjD0o3UVqGFhmSBketUyKOFCcz92K1jd5eD3ZNkqONqVHQBcpf
-         tWrUF6a2OGet/guMw3uV3YyVlArKmJcrlhi8Xs+nNZwXzNlyvKiLMMRQBBTJxM7w4ZHi
-         Z16y2I3bPSi8E/j6cDWbJPRmiUKzOPRUCtNYNU5ZvYvfzeLkDpLlWiiZ0KD2VdXfqIeo
-         xVp82F/YYz3B5fhh0g6iCqBouQeVHiKeSbr/RG0VSlWWJujMV/bKwExId9SN8hJONxt9
-         H0VdG0dNzp/s32iK3lUKsq92OEJFjf4CJrsbsIlGsZWRxkRiPxHb31jPqoH7EinnPGVT
-         1zig==
-X-Forwarded-Encrypted: i=1; AJvYcCUrTfyQ42ls5m4QYcQkI4hzF4McjIrZJRxlyOokB1pFN5kdcb/Zo+MryMMmGktcIqe/v9yXKHw8Ab50X8NPr5QVGtXZ4srz6tOutgJIK2dG
-X-Gm-Message-State: AOJu0YxSEdUt+eF+y3l4KNsSsTtNRGpEv7ngVYLamygyAoyDqBzXx7hi
-	nwofvFx+6v094DkWAlK28eeyuVTVPq82ErpeD0qlwKSU5blgOQBvwR92G9gCwaM=
-X-Google-Smtp-Source: AGHT+IHdqhPGLcqP8KvM0oEOY4dxrGT/0OINH0urzsMtnq4EMXL6ZM/tA2tvq5C6ZZ2itfpQXPu/MA==
-X-Received: by 2002:a05:6870:b526:b0:21e:8afd:65d0 with SMTP id v38-20020a056870b52600b0021e8afd65d0mr10111952oap.52.1709568415111;
+        bh=yn3BxlJjgBPLtIhw8+vZTdHKWgVz7bubHMhhj+7dA28=;
+        b=moeEFgHAzGSunqD2IsH7WxSWIU8aVi1CEm3EkkpsH8IEx2Gx0cd3wOOO82+RRdCNXu
+         6kfAcB8V5BseBjlgYdHOt8ai7ptfl18HYHtPvVuKTptuSUT1B5w/7M4mTKiXYFVeCidW
+         B1ZPW1vriJk68zGkJkRcXisIF5np6lPR5NS6+zwvb6J5tNtBk+FswLKA1LoXYjlQ3Y4A
+         Jgn3PoMdGqmrZTq/v7OzYsLZ/ozZqm8xJv4BUEnkzaPemWsVDnK8fUCtV9Dvv1vmByje
+         mYiFBO4JL7t02egBYyq27ZMe4ibbAb/uJPAe+YOqIOgLxu1/WAs25BlRoMijM0OrdshD
+         tzJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDKIwsYVjHsQucdec7Fl/cSxtR/7TplP9cVJWZCUampFuFR2FakgZyHL2zOSdi0fwQe43VV9G8P35eCS57RlniHzNiGmSyTN6xdYJGLKNo
+X-Gm-Message-State: AOJu0YxUZODfLpjuzrCN+r7eWdlVuTQqARte7VcZwn6TxIAoqjZkqn0r
+	hvKXK25NnDnht8v8JmJi7rVXeB9lRVPcoxlPiyqv5JGIvC1jJxpy+emDolyRrcJsyIXrmSSZ+Ff
+	9
+X-Google-Smtp-Source: AGHT+IEf31u9H/Myq6t1QuUwWolHTsna+Q0D0Xy9VLu1SozYg1bm/W09fH44eW599tqlHTEORQ0BUQ==
+X-Received: by 2002:a05:6870:55d2:b0:220:c434:385b with SMTP id qk18-20020a05687055d200b00220c434385bmr4105937oac.0.1709568415975;
         Mon, 04 Mar 2024 08:06:55 -0800 (PST)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id lu6-20020a056871314600b00221287ebd03sm83392oac.4.2024.03.04.08.06.54
+        by smtp.gmail.com with ESMTPSA id lu6-20020a056871314600b00221287ebd03sm83392oac.4.2024.03.04.08.06.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 08:06:54 -0800 (PST)
+        Mon, 04 Mar 2024 08:06:55 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>
 Cc: David Lechner <dlechner@baylibre.com>,
@@ -61,10 +62,11 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 2/3] spi: axi-spi-engine: use __counted_by() attribute
-Date: Mon,  4 Mar 2024 10:04:24 -0600
-Message-ID: <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
+	linux-hardening@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v2 3/3] spi: axi-spi-engine: use struct_size() macro
+Date: Mon,  4 Mar 2024 10:04:25 -0600
+Message-ID: <20240304-mainline-axi-spi-engine-small-cleanups-v2-3-5b14ed729a31@baylibre.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
 References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
@@ -78,48 +80,45 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-This adds the __counted_by() attribute to the flex array at the end of
-struct spi_engine_program in the AXI SPI Engine controller driver.
+This makes use of the struct_size() macro to calculate the size of the
+struct axi_spi_engine when allocating it.
 
-The assignment of the length field has to be reordered to be before
-the access to the flex array in order to avoid potential compiler
-warnings/errors due to adding the __counted_by() attribute.
-
-Suggested-by: Nuno Sá <nuno.sa@analog.com>
+Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
-v2 changes:
-* Reordered assignment of length field.
----
- drivers/spi/spi-axi-spi-engine.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/spi/spi-axi-spi-engine.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index d89f75170c9e..a8f626165f44 100644
+index a8f626165f44..7cc219d78551 100644
 --- a/drivers/spi/spi-axi-spi-engine.c
 +++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -75,7 +75,7 @@
+@@ -12,6 +12,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/module.h>
++#include <linux/overflow.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
  
- struct spi_engine_program {
- 	unsigned int length;
--	uint16_t instructions[];
-+	uint16_t instructions[] __counted_by(length);
- };
- 
- /**
-@@ -115,9 +115,10 @@ struct spi_engine {
- static void spi_engine_program_add_cmd(struct spi_engine_program *p,
- 	bool dry, uint16_t cmd)
+@@ -502,15 +503,13 @@ static irqreturn_t spi_engine_irq(int irq, void *devid)
+ static int spi_engine_optimize_message(struct spi_message *msg)
  {
--	if (!dry)
--		p->instructions[p->length] = cmd;
- 	p->length++;
-+
-+	if (!dry)
-+		p->instructions[p->length - 1] = cmd;
- }
+ 	struct spi_engine_program p_dry, *p;
+-	size_t size;
  
- static unsigned int spi_engine_get_config(struct spi_device *spi)
+ 	spi_engine_precompile_message(msg);
+ 
+ 	p_dry.length = 0;
+ 	spi_engine_compile_message(msg, true, &p_dry);
+ 
+-	size = sizeof(*p->instructions) * (p_dry.length + 1);
+-	p = kzalloc(sizeof(*p) + size, GFP_KERNEL);
++	p = kzalloc(struct_size(p, instructions, p_dry.length + 1), GFP_KERNEL);
+ 	if (!p)
+ 		return -ENOMEM;
+ 
 
 -- 
 2.43.2
