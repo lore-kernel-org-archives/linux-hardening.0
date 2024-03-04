@@ -1,67 +1,70 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71BD1CAA6
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 21:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621331F60A
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 21:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587191; cv=none; b=s55NeWgdYEWvkDHPh2c6cJ7saPAeW28R0zxAB89IGU6eIdfgJ6qaVJg1FyqxVR3G5QmSG7wOUGiFeNzRioSta4InOsJdWqDf9TijxbZG5lif0M9XJgcyMqdeAv6h9wcNqFX/CSy0CuswkvI21tFqfugGO+XGIJiZeVlpCWTZly8=
+	t=1709587776; cv=none; b=KoXzt3c9VZV6LJ60CaEFVg/5h4elchtwB8PnFh4twyvj64fkyXlCX+75WyoXpSwV4Ci1GcButBEVbbZBiaXIcz0UrBSptIm/NtcujakGjJStBPpvLsKw7Ey+3BiDITnIBcCJ6q0gBPBwTVE109DRteZxUyg3QzjSIyiHfKcqS/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587191; c=relaxed/simple;
-	bh=GzpZ/81jwqeQvoZLzsqYfc6Kb/FkPz/ssCrmMegdNyY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VyLtShCH1KH+rjZHZaf/1NmrVCmTWkdNWMbxcH2+C1H/Q9AbqkwCOMmrRqT5oJSUt4y0FGu5C3d2awfI/l/osl+qfLBHZplyfuoW0nv/jUfU+2yIZeDtzs60YDIieDd98+F1O9ITgM8wfZHjQrGDdDxgzEUQJiYxZbejgDUG8Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Nqbr3pNb; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1709587776; c=relaxed/simple;
+	bh=rNbVohFr1lX5bqscK9PE0eqcrmu5KWoLl5ZCdmYHEKc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cnnoivapu4OJ4AQ2gZfgtT1F5Lb5ZI6buS3c9HnIYhbw6HAww9AX6lmOSsUo4ShmLkgq275Q0eQux+ViXzzup2X45fPdchLZux6rICSV6bIiwx7iNNxU3oRkIuoj69TqNivCSX8GSZb/gSTcgys0LHHPNjVF0WP3Rt20G8G89RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gACpX3zU; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nqbr3pNb"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e5dddd3b95so1976145b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 13:19:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gACpX3zU"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e56d594b31so31625b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 13:29:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709587189; x=1710191989; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709587775; x=1710192575; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kuwjsv4D6U5YXnr6LRJiA6f6hlMDXAPMBAB9PBj+oJs=;
-        b=Nqbr3pNbsSs8KOAPkHUiwKe6Fa7D4jH0z0CEshmReq56L35YYwMFneilP5LRy0BKSN
-         +8rfkv/JPmB1jd5RQNm0sqD4cwRDfiL646dF3le/S6vjrlXeD4QZOnnIo6U5Sp9U196F
-         Vm+EW8pkxbaGoMS44QB4mTwTcT6UgmBk8mw28=
+        bh=NqP29r2eazzveHXly0NG7eBRSXtQow90bgEnhzwvqjk=;
+        b=gACpX3zUP4l6vhdrrqlfqMJ1OlGKwNF+MDclwQ/YZTq6tFagrF9MPUTMfS2Xk0RuqU
+         +PCcrhO7WCPkI/v49m/RPQoCxXI2HbM6pR1PYucFL2PLZoDeRCoR27JeiLBxdfZvht4S
+         hVNaUycxK7aV9vBpCFBzrhwk5jOOak4ju6wAI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709587189; x=1710191989;
+        d=1e100.net; s=20230601; t=1709587775; x=1710192575;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kuwjsv4D6U5YXnr6LRJiA6f6hlMDXAPMBAB9PBj+oJs=;
-        b=kLzEe8N697fTQJXODepSDwkZgz70Eonm4jr60pprmW0PDM+ttUw+KNXhET7VrX88Lh
-         rNOC/0SS+YaY6kJZtdWCzUpNj09U0Bc2sJAkEhH0vp9UOvI5L7b8NW5UZgoUFmPwx4FJ
-         PGoTMPhRHAkP5yfVVQuJ3HNbIU9RnRr6aHDyloGqpym7ssO2XaPJsVvFVGB2+RYQa5aW
-         Xb7Fh+FiF93gviXV5ZjGJm/CuPx38HGnaP7H+f/QLEGPW/xO1BrQAsF7idY1SIP8KA2H
-         Gp+ngFbpgEhyObyBjyxUzWpvZe2ks3bHGIglJH9u8KQgHJFiGf4KbVEKOc1SrPSJgC3T
-         hArQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnMEA03AoM6Htd9uzEAH3aowzu084V5otaA2IejNwGbBzcBXAcS5vWdBMvcfSjF0r2O3QoBPuvf0jaq1IKHxpYim2dPghM3uqkPEOW4Fmc
-X-Gm-Message-State: AOJu0YzkL9oyrF1/uTXOwOopzcjvyKF85OETVGN/kVbPgpnAsWEYgAgR
-	X1f0i6nwNYSmPIYC3tip9LR8h15bvu6+HeC0xgEQIpXZibrIktDa8N3R6KKGQA==
-X-Google-Smtp-Source: AGHT+IFLxwTdMSiyaeqLoOgKMl1Ene20t6SG2k2rnn50xB6oOWu9hS/cIeVubtkEo9a2ceOAc//KiA==
-X-Received: by 2002:a05:6a00:3c8e:b0:6e4:c592:deaa with SMTP id lm14-20020a056a003c8e00b006e4c592deaamr854224pfb.11.1709587189198;
-        Mon, 04 Mar 2024 13:19:49 -0800 (PST)
+        bh=NqP29r2eazzveHXly0NG7eBRSXtQow90bgEnhzwvqjk=;
+        b=L7nVsWBHPyHeX0b8O3Q5EawyfhowtAnEoeXGvkQOQqPrnW9NG0e1FUUpwc2lPqubZJ
+         Jcai9TwccfhZeWK11im3BwEOCt4WlK6rghuZsuymr/dLePx/XdXOGy33l9tWOXdyWPmM
+         Mlgxso6qQQlq2ZKDibFF4l7o5O3RzCfNxkTE1eftR8OWuA5983MHqXrSpWxiRZlM3dSD
+         bHCRNs1RXTeDwxeNvKXEvbEO2jmeJzoOWsw4oVaGs0g8aj6roP5o+jhDH8YDSSDJDG0j
+         Wa7JVzCHsUqk2EYCiq0J5iQMc8JCkou2c6IVDyaitroXAO4UrbryxSNbJ3V8+PwvR3pw
+         kjXw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8AF8ryIIIVqGBq8iwyb3y/KIYlNzDaLK5jNaldy83lIrmM8N7LwQLQCK32suCcpJX5lh3TjlN4rjKb3Mc1hkkOc5MT1CROXJp9LGRJ9CK
+X-Gm-Message-State: AOJu0YyIBBx+KodM/s6OLxP/3JLuD/Yu7DZacw4vuTOo7zWZnazD/44L
+	yiA7awVYPebFlM/uDO5iA5lOoKkPNcOcSknH8ci+dv5OqUVA5uvsbXVv2ArmGw==
+X-Google-Smtp-Source: AGHT+IGU8j4KvUz1DwEvLk09jvZcoIyKd2+u1vN7u+r7I94kyQI8R7YbQP3ZcJO4Su8cxFfFi8huzQ==
+X-Received: by 2002:a05:6a20:1609:b0:19e:3173:4bdd with SMTP id l9-20020a056a20160900b0019e31734bddmr2543274pzj.2.1709587774753;
+        Mon, 04 Mar 2024 13:29:34 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t26-20020a62d15a000000b006e04c3b3b5asm8283288pfl.175.2024.03.04.13.19.47
+        by smtp.gmail.com with ESMTPSA id b76-20020a63344f000000b005dc4829d0e1sm7871696pga.85.2024.03.04.13.29.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 13:19:47 -0800 (PST)
+        Mon, 04 Mar 2024 13:29:33 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Alex Elder <elder@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Johan Hovold <johan@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-	greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	David Ahern <dsahern@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Breno Leitao <leitao@debian.org>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	David Howells <dhowells@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] greybus: Avoid fake flexible array for response data
-Date: Mon,  4 Mar 2024 13:19:45 -0800
-Message-Id: <20240304211940.it.083-kees@kernel.org>
+Subject: [PATCH v3] sock: Use unsafe_memcpy() for sock_copy()
+Date: Mon,  4 Mar 2024 13:29:31 -0800
+Message-Id: <20240304212928.make.772-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -69,146 +72,85 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5072; i=keescook@chromium.org;
- h=from:subject:message-id; bh=GzpZ/81jwqeQvoZLzsqYfc6Kb/FkPz/ssCrmMegdNyY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5jrxN9hNacEYPFNk5QoT2iY8dnME3XUqQe4kW
- 4SvJZfSbCCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeY68QAKCRCJcvTf3G3A
- JjA/D/9ZZh0WdLrPuYsTqE5waxJVDv77dJ7ZtPPon1KGE7ZBUoDU2617qGC0iPW7EBH6V0zqmzM
- zZwqpVFu/pGNwMEfVPMNXj+q0FPfqAxDDQXWcpH/KVpEYQ1d+y7j+4dENod3GgXzeJxqEk0hR4Y
- lgDr8tKheYkl7kSH+a4r8mM5Kn8akoAA9nWpvg5bDzQIefT7dAoUULSbzrMqEkiz4OdQr2XrGZo
- XPPKxbu09NtSJOLMXgkrQAXQJJue1JZwhQSzQ283Di6OjQXDZnwEDUM6ZubiIMztf5uRJ1e70NI
- m3ca/eug+fjncW2K5aciaPRf7FfISVjaXM9dHvSrLPy9KbKlLelXFeOb252L5fi4zz0g2ce8aVR
- k5QWe0rQRUjGAMfaf05h41sTbv8qppoIfNyysuPEx2tCdlX+ut7A9AV2wnIeoQU32JBgDIzHa5R
- Ayd05DxHwPoze3qRRg8H1D1DkGCsOp6V9K1EgLs/J94xN4kOM+X1CYfiFV+tw5pIFPuwIrYcjY/
- YMn9dLJ7lGZifd1eN6LmnKniG/o38iJhTJTL4bVsrsZHOfFHBE1O0E7X6gdjGYOkUOPV1Q1Eb+z
- VCFyTofIZ3UVEye8ohwp1XI3YF8sGZXa5Jtv4yUpv+9EskUlTq7C2p1iUkgQwl2pl6ZKftEqQ1b
- kGTKWup urpNnjpQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2952; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=rNbVohFr1lX5bqscK9PE0eqcrmu5KWoLl5ZCdmYHEKc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5j07GdCOGFZU/xyLkr9A/AuF584WDoUWMKmnm
+ rO64d+93gyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeY9OwAKCRCJcvTf3G3A
+ JnnqEACD182Vp6ijr9bKxzF77cbxV5/bfYctEwChHnWMPKpfSkhfPu4gBkvIYpFMZ7rwLhSHou+
+ UhddgLEJsmZk5GWJZmgO6WfcSETPxq8mGCjVOgcSD0JkCyUxzc6lEzMPKYtKlCXqS6KZRa/DWXm
+ eZmxtRNj+owwM1gAIazXxZhNqfTRd/4qGJN9q0GsaqEOciPLcc5U7N8dirO7fS+47iwyQqSq1u4
+ q560sRl2J3w0/9NvPHzFvWcnanuhRaQVX1ah6YTo3B3+hcsp4W/888bEKzm+garbBxj/aewNybG
+ 7oRd4NzY+JSeToqBH9dZCtkWkfzgGBO9laipqd/m+xieLa7Fj8e8zVThKsxx0cg/iMyGqf4fFwg
+ aJtWPInCnSo7qKbKaue34lFeuiPCErczwwOjf/54eTgr/hW8urm1Orj41vZiQMt9Ew6FaK5Jn3V
+ hCQneYBBizCkp2UhCujKFP3AOoqBbdKCODlR4ZOGgWUO6T2cehI38cG4tDRQtTXhHp6qYYqQg7k
+ 04q+BqYrGiNbMiBD839UYDgoMvbG/z8T/GMI6F2yBAJPnsPsJ3JArQECblvstN64t4bzxLn/wvD
+ LyewMsxgh4mJ1iZgb+qPnk+kRbI51vVW1H6RjEYlZnG9ayHsZSRCB86TYQ4m7XXkdUZc5J5O8lG
+ l1nwepV cfDK8Ucw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
-code base has been converted to flexible arrays. In order to enforce
-the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
-destinations need to be handled. Instead of converting an empty struct
-into using a flexible array, just directly use a pointer without any
-additional indirection. Remove struct gb_bootrom_get_firmware_response
-and struct gb_fw_download_fetch_firmware_response.
+While testing for places where zero-sized destinations were still showing
+up in the kernel, sock_copy() and inet_reqsk_clone() were found, which
+are using very specific memcpy() offsets for both avoiding a portion of
+struct sock, and copying beyond the end of it (since struct sock is really
+just a common header before the protocol-specific allocation). Instead
+of trying to unravel this historical lack of container_of(), just switch
+to unsafe_memcpy(), since that's effectively what was happening already
+(memcpy() wasn't checking 0-sized destinations while the code base was
+being converted away from fake flexible arrays).
+
+Avoid the following false positive warning with future changes to
+CONFIG_FORTIFY_SOURCE:
+
+  memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Cc: Alex Elder <elder@kernel.org>
-Cc: Viresh Kumar <vireshk@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: greybus-dev@lists.linaro.org
-Cc: linux-staging@lists.linux.dev
- v2: add comments about removed structs
- v1: https://patchwork.kernel.org/project/linux-hardening/patch/20240216232824.work.862-kees@kernel.org/
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+ v3: fix inet_reqsk_clone() comment
+ v2: https://lore.kernel.org/lkml/20240216232220.it.450-kees@kernel.org
+ v1: https://lore.kernel.org/lkml/20240216204423.work.066-kees@kernel.org
 ---
- drivers/staging/greybus/bootrom.c         | 8 ++++----
- drivers/staging/greybus/fw-download.c     | 8 ++++----
- include/linux/greybus/greybus_protocols.h | 8 ++------
- 3 files changed, 10 insertions(+), 14 deletions(-)
+ net/core/sock.c                 | 5 +++--
+ net/ipv4/inet_connection_sock.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/greybus/bootrom.c b/drivers/staging/greybus/bootrom.c
-index 79581457c4af..c0d338db6b52 100644
---- a/drivers/staging/greybus/bootrom.c
-+++ b/drivers/staging/greybus/bootrom.c
-@@ -243,10 +243,10 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
- 	struct gb_bootrom *bootrom = gb_connection_get_data(op->connection);
- 	const struct firmware *fw;
- 	struct gb_bootrom_get_firmware_request *firmware_request;
--	struct gb_bootrom_get_firmware_response *firmware_response;
- 	struct device *dev = &op->connection->bundle->dev;
- 	unsigned int offset, size;
- 	enum next_request_type next_request;
-+	u8 *firmware_response;
- 	int ret = 0;
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 0a7f46c37f0c..b7ea358eb18f 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2053,8 +2053,9 @@ static void sock_copy(struct sock *nsk, const struct sock *osk)
  
- 	/* Disable timeouts */
-@@ -280,15 +280,15 @@ static int gb_bootrom_get_firmware(struct gb_operation *op)
- 		goto unlock;
- 	}
+ 	memcpy(nsk, osk, offsetof(struct sock, sk_dontcopy_begin));
  
--	if (!gb_operation_response_alloc(op, sizeof(*firmware_response) + size,
--					 GFP_KERNEL)) {
-+	/* gb_bootrom_get_firmware_response contains only a byte array */
-+	if (!gb_operation_response_alloc(op, size, GFP_KERNEL)) {
- 		dev_err(dev, "%s: error allocating response\n", __func__);
- 		ret = -ENOMEM;
- 		goto unlock;
- 	}
+-	memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
+-	       prot->obj_size - offsetof(struct sock, sk_dontcopy_end));
++	unsafe_memcpy(&nsk->sk_dontcopy_end, &osk->sk_dontcopy_end,
++		      prot->obj_size - offsetof(struct sock, sk_dontcopy_end),
++		      /* alloc is larger than struct, see sk_prot_alloc() */);
  
- 	firmware_response = op->response->payload;
--	memcpy(firmware_response->data, fw->data + offset, size);
-+	memcpy(firmware_response, fw->data + offset, size);
+ #ifdef CONFIG_SECURITY_NETWORK
+ 	nsk->sk_security = sptr;
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 459af1f89739..6a14a44aa161 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -906,8 +906,9 @@ static struct request_sock *inet_reqsk_clone(struct request_sock *req,
  
- 	dev_dbg(dev, "responding with firmware (offs = %u, size = %u)\n",
- 		offset, size);
-diff --git a/drivers/staging/greybus/fw-download.c b/drivers/staging/greybus/fw-download.c
-index 543692c567f9..a06065fb0c5e 100644
---- a/drivers/staging/greybus/fw-download.c
-+++ b/drivers/staging/greybus/fw-download.c
-@@ -271,11 +271,11 @@ static int fw_download_fetch_firmware(struct gb_operation *op)
- 	struct gb_connection *connection = op->connection;
- 	struct fw_download *fw_download = gb_connection_get_data(connection);
- 	struct gb_fw_download_fetch_firmware_request *request;
--	struct gb_fw_download_fetch_firmware_response *response;
- 	struct fw_request *fw_req;
- 	const struct firmware *fw;
- 	unsigned int offset, size;
- 	u8 firmware_id;
-+	u8 *response;
- 	int ret = 0;
+ 	memcpy(nreq_sk, req_sk,
+ 	       offsetof(struct sock, sk_dontcopy_begin));
+-	memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end,
+-	       req->rsk_ops->obj_size - offsetof(struct sock, sk_dontcopy_end));
++	unsafe_memcpy(&nreq_sk->sk_dontcopy_end, &req_sk->sk_dontcopy_end,
++		      req->rsk_ops->obj_size - offsetof(struct sock, sk_dontcopy_end),
++		      /* alloc is larger than struct, see above */);
  
- 	if (op->request->payload_size != sizeof(*request)) {
-@@ -325,8 +325,8 @@ static int fw_download_fetch_firmware(struct gb_operation *op)
- 		goto put_fw;
- 	}
- 
--	if (!gb_operation_response_alloc(op, sizeof(*response) + size,
--					 GFP_KERNEL)) {
-+	/* gb_fw_download_fetch_firmware_response contains only a byte array */
-+	if (!gb_operation_response_alloc(op, size, GFP_KERNEL)) {
- 		dev_err(fw_download->parent,
- 			"error allocating fetch firmware response\n");
- 		ret = -ENOMEM;
-@@ -334,7 +334,7 @@ static int fw_download_fetch_firmware(struct gb_operation *op)
- 	}
- 
- 	response = op->response->payload;
--	memcpy(response->data, fw->data + offset, size);
-+	memcpy(response, fw->data + offset, size);
- 
- 	dev_dbg(fw_download->parent,
- 		"responding with firmware (offs = %u, size = %u)\n", offset,
-diff --git a/include/linux/greybus/greybus_protocols.h b/include/linux/greybus/greybus_protocols.h
-index aeb8f9243545..820134b0105c 100644
---- a/include/linux/greybus/greybus_protocols.h
-+++ b/include/linux/greybus/greybus_protocols.h
-@@ -232,9 +232,7 @@ struct gb_fw_download_fetch_firmware_request {
- 	__le32			size;
- } __packed;
- 
--struct gb_fw_download_fetch_firmware_response {
--	__u8			data[0];
--} __packed;
-+/* gb_fw_download_fetch_firmware_response contains no other data */
- 
- /* firmware download release firmware request */
- struct gb_fw_download_release_firmware_request {
-@@ -414,9 +412,7 @@ struct gb_bootrom_get_firmware_request {
- 	__le32			size;
- } __packed;
- 
--struct gb_bootrom_get_firmware_response {
--	__u8			data[0];
--} __packed;
-+/* gb_bootrom_get_firmware_response contains no other data */
- 
- /* Bootrom protocol Ready to boot request */
- struct gb_bootrom_ready_to_boot_request {
+ 	sk_node_init(&nreq_sk->sk_node);
+ 	nreq_sk->sk_tx_queue_mapping = req_sk->sk_tx_queue_mapping;
 -- 
 2.34.1
 
