@@ -1,210 +1,142 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B075CDC8;
-	Mon,  4 Mar 2024 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257D46166B
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 17:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571655; cv=none; b=W/kQV+NjGenVAfqOZL1twVtP2HNAGiEfj8oifM/cf7em7pKIDoaO3m5GxjaFZmTCSDfpVnQgHyEbe4fsRyGc1SLV61PWakW5rfSUbta34kgPvZqTArWjfT+OX0miYoCXfvwYuYUwRC9KqVx+nRuNllsLLADKAnmNLpRpUK53Irw=
+	t=1709573683; cv=none; b=r25HcM6BoD9dEbalcTIOeIqGpfC1bSghB6kzAmjbrFRg5Ros7aJTuPdlUZ/dLFAQH1OQHCbTXFqYAWl+2fvWsmYJPEDoAXkKjsXVFkIbgihflxs+zdSlE7dGch3k8TefrHngKRNDPnwugfcGjOu43mjk8RD5SzOU5gsFGUCZW34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571655; c=relaxed/simple;
-	bh=Laz43/toJ+CkA+jWC7gzQOwmXAzKZT27uTX7HYmngHk=;
+	s=arc-20240116; t=1709573683; c=relaxed/simple;
+	bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IXmnpAXIV+tGt+uoP1SNBG8N8OnvkjfniutkmG4iefTKHUXc16RmiQepmqVgo3dYoGA1oTnDTI/QAgh6LcARPJBi2u8A3KIjsVp91fkWqOyhClPcuazJOMLpo/E1/7OP33z7jjnAyoZZk7AB5WgCDcJ/ZGPzUwswcIa74AmT474=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e447c39525so1139148a34.0;
-        Mon, 04 Mar 2024 09:00:53 -0800 (PST)
+	 To:Cc:Content-Type; b=gNJ3DaX8R5Q5dAUsd5vlK79pxVU1ZJmyU2WswhDQRtch1Hmkmp+KvQLyEEP9RVwUE6J6nCEmf7TPf4m7S91reYLC69fI9hV5JdEmZzTUdNVLBKQ2yWFia9sen8d0pb/2oqRoNNV0msj94J85g4PmYtSNF8l37rG1DkfU5WD0bWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kJ1PNG76; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJ1PNG76"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a4595bd5f8cso18797566b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 09:34:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709573678; x=1710178478; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
+        b=kJ1PNG76qJ5Hxcv8LSryZZlFeZDVa1IzeQeQeUAJ2H8f58sp6Niu9kotN1LZNI9tRP
+         rGePkKf/5M2FN9eHOayctU3Gl3esYzU2cF6SDdmQjdlejFS7keA9kiGEHMU/zxiapOCV
+         UQYVH41TeTnTquJMtgfRn6tN+XLQ5qJ9n8nLo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571653; x=1710176453;
+        d=1e100.net; s=20230601; t=1709573678; x=1710178478;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a+zuvGq2BylT2luj+C31yYI14tYn4jtwnQpoH9GR+z0=;
-        b=NOhQftf0MWO2yLWUFPJO+HCoBdMkilyGnobiJ7bszvmd8vsSLssWQGaSvqzfLNs9vH
-         5WQo6stSSlKvzKikXVV4ptLMwS3c7eP2amdqe+FZmXj7oRtJcVUgw+YxKnNS5gIVRd1q
-         yH+xWidx1z1tsMrw/zuJlnZq1+pQQoNzntxZkNtQqs/LQE4lmoPg8BDY43wRuvuIGK6D
-         i1FdoaldivtODGeU3nWFs3LyactF+AZwQwjZTjb/wt2FbUxRgKre8ncf+rgBz6gaMISo
-         LfTlgdth5GL+WEKBdRkkT+fwPHS7UuvGJv++Sg6lJUJL6v5weX+TDCNw8E4Gi73golTf
-         h31w==
-X-Forwarded-Encrypted: i=1; AJvYcCUPaY530fBMxgcKm5CYNw2ZSdqkK14+NHGhChvvS0fyjR6oaha1da/HgO2UhZayV+9pQEqIZ1AnVCWyY673Ifkj9INJGv4HjBlS/n39e/ObTCIA1m5C5xtMNhNf9LUWii3uLwefunAht44lc+SYbeyYLbpUpe6yEWbhU6kT6chtwNyw6r3sEJSvVzHboTgfPWbwjM5eHsHNQaABq9xY
-X-Gm-Message-State: AOJu0YxSvXNV4DrDYnn9vEa4C6VKgvsf+SWi4Y0m/chmZAoFMpF+t8xe
-	QfihEm9m06uwt/nFsYkvALqWMn5IFZPF1UuBave5umMD7+DDFwqOQJTnOUm8FLuLHg/5Z4s8NV+
-	Uvronl0/qgP15yh+z49WQNEuwpmE=
-X-Google-Smtp-Source: AGHT+IFe5CoLXdwTWZri+YmoaUAb2RrxHFWOYb+z81FLv8KNl6eWpiBkok49CDccKobp+XPkEfFzP7Vg9gzmNS+oABo=
-X-Received: by 2002:a05:6870:3913:b0:21e:c50a:5e91 with SMTP id
- b19-20020a056870391300b0021ec50a5e91mr10750683oap.0.1709571652985; Mon, 04
- Mar 2024 09:00:52 -0800 (PST)
+        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
+        b=MonXKX2Ti6fIbNW68l9e4yxsfRoyCSEJmRutxPbT//yZlcgQGX+y7/oaWYXY4Ht7rF
+         vTnox4uFjRLywpZMtcJJyIVKcECEBA2PwhS+9nn7Etr/bnEG+L6o0j4MQvaWwGSnd1Wo
+         gbZ73YD/5i91n22xKKNdmEJp81wavqLy0/gvacgObbPd1ixg0SP1UMD0Zm3tvIbQCfci
+         bBfjGQTLGdHGKRUjW3NQcFs2tRUYDqOS1ggnCCyaB1QuEJKXaOYyUZHJQH1m8YMHQhRh
+         EbKhaWHo6G3VQM2bYKpgWeOYkOSmUMmvajLJb5UkjkN75ynIRKoJHCB1nm5n6/wilUrm
+         bUKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXtMWnT0qB/3OowUFurDBNRccUDCCVXvGptVhoe+uE8uYLrZzJ7Eraliwek64hFUNpUCdiFw4TyS7SPFr3+IW+MlXZdOAuVgBZpGFwnYNIt
+X-Gm-Message-State: AOJu0YzKvz7iw/2nSsGGLKKFjG/0feTDpbPGZSde4N5qx3myyQkKS+HC
+	/BYj//AEs1RB5qwa/nFlWnHBAcVB6tDzBDhrJR3WPv/kacMcbraL0dy9kpxWKkXEOTDcYiLyJ1C
+	WLvu9
+X-Google-Smtp-Source: AGHT+IGAVBbwhMq7eNb8pbLAw7kQs+7tO2iit/fJHpaqcRaoIg+f2QdRPxDOmNOZPnhWruPbhnhOjw==
+X-Received: by 2002:a17:906:48cb:b0:a45:206d:6bcc with SMTP id d11-20020a17090648cb00b00a45206d6bccmr2604638ejt.2.1709573678130;
+        Mon, 04 Mar 2024 09:34:38 -0800 (PST)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
+        by smtp.gmail.com with ESMTPSA id kj2-20020a170907764200b00a44180ab871sm5050573ejc.50.2024.03.04.09.34.36
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 09:34:37 -0800 (PST)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-412d84ffbfaso1035e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 09:34:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUE4yMrWAWBM7yI+gAPnAghQdefFo30nFSuIAANRyCh4Jx8QycZE5yd7u+AHgx712Kvnnu5NtQNKb8V9RhXtPBuaJ5EtTUCqgCZ2Ec5M+6H
+X-Received: by 2002:a05:600c:4f07:b0:412:d6be:a32b with SMTP id
+ l7-20020a05600c4f0700b00412d6bea32bmr2093wmq.6.1709573676220; Mon, 04 Mar
+ 2024 09:34:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
- <20240304155138.GA482969@bhelgaas> <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 4 Mar 2024 18:00:41 +0100
-Message-ID: <CAJZ5v0idOkeod9-RmnNGCwMGG+9nYi8eJSBpQYWJnv=N+eVoWg@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, gregkh@linuxfoundation.org, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
+ <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
+ <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com> <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
+In-Reply-To: <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 4 Mar 2024 09:34:19 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
+Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
+ should try non-NMI first
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Misono Tomohiro <misono.tomohiro@fujitsu.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Tony Luck <tony.luck@intel.com>, Valentin Schneider <vschneid@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 4, 2024 at 5:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
-> wrote:
+Hi,
+
+On Fri, Mar 1, 2024 at 8:06=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
+wrote:
 >
-> On Mon, Mar 4, 2024 at 4:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
-> >
-> > On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Feb 29, 2024 at 7:23=E2=80=AFAM Kai-Heng Feng
-> > > <kai.heng.feng@canonical.com> wrote:
-> > > >
-> > > > When inserting an SD7.0 card to Realtek card reader, the card reade=
-r
-> > > > unplugs itself and morph into a NVMe device. The slot Link down on =
-hot
-> > > > unplugged can cause the following error:
-> > > >
-> > > > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > > > BUG: unable to handle page fault for address: ffffb24d403e5010
-> > > > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-> > > > Oops: 0000 [#1] PREEMPT SMP PTI
-> > > > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> > > > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M =
-Pro4, BIOS P3.40 10/25/2018
-> > > > Workqueue: pm pm_runtime_work
-> > > > RIP: 0010:ioread32+0x2e/0x70
-> > > ...
-> > > > Call Trace:
-> > > >  <TASK>
-> > > >  ? show_regs+0x68/0x70
-> > > >  ? __die_body+0x20/0x70
-> > > >  ? __die+0x2b/0x40
-> > > >  ? page_fault_oops+0x160/0x480
-> > > >  ? search_bpf_extables+0x63/0x90
-> > > >  ? ioread32+0x2e/0x70
-> > > >  ? search_exception_tables+0x5f/0x70
-> > > >  ? kernelmode_fixup_or_oops+0xa2/0x120
-> > > >  ? __bad_area_nosemaphore+0x179/0x230
-> > > >  ? bad_area_nosemaphore+0x16/0x20
-> > > >  ? do_kern_addr_fault+0x8b/0xa0
-> > > >  ? exc_page_fault+0xe5/0x180
-> > > >  ? asm_exc_page_fault+0x27/0x30
-> > > >  ? ioread32+0x2e/0x70
-> > > >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> > > >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> > > >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> > > >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> > > >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> > > >  pci_pm_runtime_idle+0x34/0x70
-> > > >  rpm_idle+0xc4/0x2b0
-> > > >  pm_runtime_work+0x93/0xc0
-> > > >  process_one_work+0x21a/0x430
-> > > >  worker_thread+0x4a/0x3c0
-> > > ...
-> >
-> > > > This happens because scheduled pm_runtime_idle() is not cancelled.
+> Hi Doug,
+>
+> On Tue, Feb 27, 2024 at 04:57:31PM -0800, Doug Anderson wrote:
+> > On Mon, Jan 8, 2024 at 4:54=E2=80=AFPM Doug Anderson <dianders@chromium=
+.org> wrote:
+> > > On Thu, Dec 7, 2023 at 5:03=E2=80=AFPM Douglas Anderson <dianders@chr=
+omium.org> wrote:
+>
+> > > The sound of crickets is overwhelming. ;-) Does anyone have any
+> > > comments here? Is this a terrible idea? Is this the best idea you've
+> > > heard all year (it's only been 8 days, so maybe)? Is this great but
+> > > the implementation is lacking (at best)? Do you hate that this waits
+> > > for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
 > > >
-> > > But rpm_resume() changes dev->power.request to RPM_REQ_NONE and if
-> > > pm_runtime_work() sees this, it will not run rpm_idle().
-> > >
-> > > However, rpm_resume() doesn't deactivate the autosuspend timer if it
-> > > is running (see the comment in rpm_resume() regarding this), so it ma=
-y
-> > > queue up a runtime PM work later.
-> > >
-> > > If this is not desirable, you need to stop the autosuspend timer
-> > > explicitly in addition to calling pm_runtime_get_sync().
+> > > Aside from the weirdness of a processor being killed while holding th=
+e
+> > > console lock, it does seem beneficial to give IRQs at least a little
+> > > time to finish before killing a processor. I don't have any other
+> > > explicit examples, but I could just imagine that things might be a
+> > > little more orderly in such a case...
 > >
-> > I don't quite follow all this.  I think the race is between
-> > rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
->
-> I think so too and the latter is not expected to run.
->
-> >   rtsx_pci_remove()
-> >   {
-> >     pm_runtime_get_sync()
-> >     pm_runtime_forbid()
-> >     ...
+> > I'm still hoping to get some sort of feedback here. If people think
+> > this is a terrible idea then I'll shut up now and leave well enough
+> > alone, but it would be nice to actively decide and get the patch out
+> > of limbo.
 > >
-> > If this is an rtsx bug, what exactly should be added to
-> > rtsx_pci_remove()?
-> >
-> > Is there ever a case where we want any runtime PM work to happen
-> > during or after a driver .remove()?  If not, maybe the driver core
-> > should prevent that, which I think is basically what this patch does.
+> > FWIW the serial console dumping issue that originally inspired me to
+> > track this down has been worked around at least well enough to not
+> > spew garbage in my console. See commit 9e957a155005 ("serial:
+> > qcom-geni: Don't cancel/abort if we can't get the port lock"). It's
+> > still a little awkward because we'll be running fully lockless during
+> > panic time, but it seems to work...
 >
-> No, it is not, because it doesn't actually prevent the race from
-> occurring, it just narrows the window quite a bit.
+> This is on my list of things to look into, but I haven't had the chance t=
+o go
+> through it in detail.
 >
-> It would be better to call pm_runtime_dont_use_autosuspend() instead
-> of pm_runtime_barrier().
->
-> > If this is an rtsx driver bug, I'm concerned there may be many other
-> > drivers with a similar issue.  rtsx exercises this path more than most
-> > because the device switches between card reader and NVMe SSD using
-> > hotplug add/remove based on whether an SD card is inserted (see [1]).
->
-> This is a valid concern, so it is mostly a matter of where to disable
-> autosuspend.
->
-> It may be the driver core in principle, but note that it calls
-> ->remove() after invoking pm_runtime_put_sync(), so why would it
-> disable autosuspend when it allows runtime PM to race with device
-> removal in general?
->
-> Another way might be to add a pm_runtime_dont_use_autosuspend() call
-> at the beginning of pci_device_remove().
->
-> Or just remove the optimization in question from rpm_resume() which is
-> quite confusing and causes people to make assumptions that lead to
-> incorrect behavior in this particular case.
+> From a high level, I think this sounds reasonable; I just want to make su=
+re
+> this doesn't lead to any new surprises...
 
-Well, scratch this.
+Sounds good. For now I'll snooze this for another 2 months and if I
+haven't heard from you then I'll pester you again. There's no crazy
+hurry, I was just hoping for some sort of decision one way or the
+other. For now I'll hold off on changing things to match x86 exactly
+until I get your take on it too.
 
-If rpm_idle() is already running at the time rpm_resume() is called,
-the latter may return right away without waiting, which is incorrect.
-
-rpm_resume() needs to wait for the "idle" callback to complete, so
-this (again, modulo GMail-induced whitespace mangling) should help:
-
----
- drivers/base/power/runtime.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-Index: linux-pm/drivers/base/power/runtime.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
---- linux-pm.orig/drivers/base/power/runtime.c
-+++ linux-pm/drivers/base/power/runtime.c
-@@ -798,7 +798,8 @@ static int rpm_resume(struct device *dev
-     }
-
-     if (dev->power.runtime_status =3D=3D RPM_RESUMING ||
--        dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
-+        dev->power.runtime_status =3D=3D RPM_SUSPENDING ||
-+        dev->power.idle_notification) {
-         DEFINE_WAIT(wait);
-
-         if (rpmflags & (RPM_ASYNC | RPM_NOWAIT)) {
-@@ -826,7 +827,8 @@ static int rpm_resume(struct device *dev
-             prepare_to_wait(&dev->power.wait_queue, &wait,
-                     TASK_UNINTERRUPTIBLE);
-             if (dev->power.runtime_status !=3D RPM_RESUMING &&
--                dev->power.runtime_status !=3D RPM_SUSPENDING)
-+                dev->power.runtime_status !=3D RPM_SUSPENDING &&
-+                !dev->power.idle_notification)
-                 break;
-
-             spin_unlock_irq(&dev->power.lock);
+-Doug
