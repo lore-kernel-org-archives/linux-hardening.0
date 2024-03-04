@@ -1,142 +1,196 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCEC482FF
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 16:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CAF495E0;
+	Mon,  4 Mar 2024 16:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709569013; cv=none; b=Hv8qPs0dgui7OmYBkkG7gzlcTUszIlyf1cyn2QMRpr6OkEQgXIBOpn0PmJeWXoHkNT7x9MkswkTzcv3CZtcn4mW9/ZV63y3s9P91HSsiqvIdK88H9M92svdvHApfwaO7Rz7kaUTuVBl+I/1CzkmIZkiTsHJ0DVi3jW58bYc0B4k=
+	t=1709570494; cv=none; b=p+86ia2yg/R+sGRkAC6JrvxLfl2qVLX6J03kXsOJkL/qPAhJTguUrQW8QBWjhveJbsTioBqnP1uOAtRS9PeuE3cJ0b6R2cnra2NSzhVP2q9wcVr6VA7RzRMaIhD+glLdjGmQycZQ+Prpx5N3JcFFtRK+W+6vyAgBkjCgnbwMpE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709569013; c=relaxed/simple;
-	bh=B0WTZO0wX7ifnrfjJRPFUY0SwyrbQWNW/0wtLsL3FLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rRz3RyEcRg8wO1tSTlD7ujOm4smx7RboXG630QyHSs/4gIEZXlsPd9CxLVnRtjj3Dg0C5FuSvj9df0pxNkX0ArSmQ5/hDfsHvMSiVRb60mscXnffiJMa6cmxLUiMvcu3QNfkWu2UZoIbnKgqopIjyxcNY2d3ndfVsrCEFOAr4RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=e/aP+Tv1; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e/aP+Tv1"
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
-	by cmsmtp with ESMTPS
-	id hAVGraKRAHXmAhAzdr5ao3; Mon, 04 Mar 2024 16:16:45 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id hAzcrwLaBfIiqhAzcrlhPD; Mon, 04 Mar 2024 16:16:44 +0000
-X-Authority-Analysis: v=2.4 cv=bNwQIu+Z c=1 sm=1 tr=0 ts=65e5f3ec
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=IpJZQVW2AAAA:8 a=VwQbUJbxAAAA:8 a=OotqXb1hOlGMc3tnO1gA:9 a=QEXdDO2ut3YA:10
- a=xmb-EsYY8bH0VWELuYED:22 a=IawgGOuG5U0WyFbmm1f5:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oElvryJN6dwtKfgYQ9eTH9ycs8jYw64ERiMsk+Y+q8U=; b=e/aP+Tv10C/1WvHAXfLCtoHNvR
-	b4oJGkH1OMplKsdciempOdCOboh1UuOSNmKiy8+Q9HIoj7a+OiJhqrsyFIJ/QI2Q6XaTFbEghAAqW
-	pN3ZR6H2mFwHwjVi57Sl0nUDqd+3CbAQ1OBeg14C2/RgHmOpyQpmn7kvSaiPlCvI2uc9iQVWqvEB3
-	cjEzilz+g6RzM2eunJO1wSnC3tNiXnUgmn+ehy+X24vGZvGFNbJu4mai4brEV4bRguWi29JTsvhfF
-	ZSWzVtQF4BbX2Vn1OYUFd5RmE3h4v5gw1UgxCBbUXxOz2zBmMP1GwxGQxG8Tg+fDYEHrJOxxFy5qJ
-	aUNjJXIA==;
-Received: from [201.172.172.225] (port=49252 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rhAzb-003iEz-1a;
-	Mon, 04 Mar 2024 10:16:43 -0600
-Message-ID: <60f43759-ea04-41af-9667-006018e5c750@embeddedor.com>
-Date: Mon, 4 Mar 2024 10:16:42 -0600
+	s=arc-20240116; t=1709570494; c=relaxed/simple;
+	bh=WF5yncz6g/9Mh8GpF3BGz7UNGN6nzwG3LAT4Qy6Xaio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f4PYu+Unrg6kJj36ZdSpzii4V3I4TTedqaQ2iTDa7Fj36zvY6eleD8oaE4mMXfG9OTcodPqGdWHyfYGjxq0sC5Iwau23y3V6lkS+OA7it/YtqIoAuqBgJwBzl27hhi/j5Ux9mj+wPu53x02rDzh3Ds+ts8+/bmD7hmx+zSRneZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e4ea48972cso349898a34.0;
+        Mon, 04 Mar 2024 08:41:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709570491; x=1710175291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VFEvVmR8mpln9PL6OoXoC/Ne2hrqBirmQBmOubPamhM=;
+        b=YA2de6ZSTvZXCNhn95podiput1z9VfVru6dewyXCjJJTKfQMfAECOTUeINzhZTt4U1
+         5FP/J9ZQ6UQxKCyy/NDcsnAIILkGFYNkilpd1OciNrnKgdc7z0e2TJUaTByFR2NiNguJ
+         PnKmOTAg3E9f46JNTV+q8Y65uYxWfhHY0uQ94YoUtPL9yZ/CtG/PZJU61mIxRzkiIcIQ
+         mAk4Tf1OEABYnyL9PoP908SBtrIMPJF/OdgqFC2n19YpbM487BXFIje7Up3SF5RCgZc7
+         qGAg+Wg4ISceHR1gnotO0g2NutmYiVC/ChjZGLqWlYhUyrFqgAz/2OGxYq935j9ZwdUe
+         +KUw==
+X-Forwarded-Encrypted: i=1; AJvYcCXReyYU0ENnsYG6Q7gGsk9sQ07/chZauazrMiqemJ97CKYvEQMyB15lMJyKnCoYqN59Le8nNgpI1ASaP4V8bBZRHJGfIW6Cz1rqiPRMZU2NJF6uJE8Iccsh3hXQhaTJBSMxQAbVUQTixUuXbW3a2zkErBsivgzVSxR58FVNDZ7T6jTs2U7n87PMky6ciq7tJjfdvtiv41XQuvrLJF/8
+X-Gm-Message-State: AOJu0YwNeLDlRKHDo6L4jb4j2x1F3eu31zUv2msx3XTpG0TbDxq0V8Bm
+	Eqq3tbuQ9pMH7LarXVYeCCI+jBUtvVfrtyP9rP4PoXWQROwa3FyoXCs2Yynaw9CcsFjcByzzXQC
+	wvWYYSKFdrGnwWw2ogbWVz56sp+k=
+X-Google-Smtp-Source: AGHT+IFOLTCVRY6mWwBXwQ8bn84DuU3MLvfAPphMkKwDWG2kShUWWEC/Gh+iRLlPQgqLOSE+Q2+c67uENaJegwa9oW4=
+X-Received: by 2002:a05:6870:c69d:b0:220:bd4d:674d with SMTP id
+ cv29-20020a056870c69d00b00220bd4d674dmr10062324oab.5.1709570491549; Mon, 04
+ Mar 2024 08:41:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] spi: axi-spi-engine: use struct_size() macro
-Content-Language: en-US
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
- <20240304-mainline-axi-spi-engine-small-cleanups-v2-3-5b14ed729a31@baylibre.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-3-5b14ed729a31@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rhAzb-003iEz-1a
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.172.225]:49252
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 20
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfE1C7aSuLZme7+oKqkgNfAetqqZNNf6Xo00O0zOK3uQY+4gG/17awGR5YZgHNqXpwgih0PuROUNmd8HiFh/Ky6Vn4/pNJ79ssOas6kqiSPNEytW5ljRy
- JRQMeLB2l9sB+xehgLb6IqOkqmUdfuLi+jTejSI6G89cf8Bal9UT+odSlaoaiixP4ELPUdUlEKSRQRbDoYEXHc2ICatwkqbPkZPlXpJgsczdMpxir6ZUSNNJ
+References: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
+ <20240304155138.GA482969@bhelgaas>
+In-Reply-To: <20240304155138.GA482969@bhelgaas>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 4 Mar 2024 17:41:19 +0100
+Message-ID: <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
+ device removal
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	gregkh@linuxfoundation.org, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>, 
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 4, 2024 at 4:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wrote:
+> > On Thu, Feb 29, 2024 at 7:23=E2=80=AFAM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com> wrote:
+> > >
+> > > When inserting an SD7.0 card to Realtek card reader, the card reader
+> > > unplugs itself and morph into a NVMe device. The slot Link down on ho=
+t
+> > > unplugged can cause the following error:
+> > >
+> > > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > > BUG: unable to handle page fault for address: ffffb24d403e5010
+> > > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+> > > Oops: 0000 [#1] PREEMPT SMP PTI
+> > > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+> > > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pr=
+o4, BIOS P3.40 10/25/2018
+> > > Workqueue: pm pm_runtime_work
+> > > RIP: 0010:ioread32+0x2e/0x70
+> > ...
+> > > Call Trace:
+> > >  <TASK>
+> > >  ? show_regs+0x68/0x70
+> > >  ? __die_body+0x20/0x70
+> > >  ? __die+0x2b/0x40
+> > >  ? page_fault_oops+0x160/0x480
+> > >  ? search_bpf_extables+0x63/0x90
+> > >  ? ioread32+0x2e/0x70
+> > >  ? search_exception_tables+0x5f/0x70
+> > >  ? kernelmode_fixup_or_oops+0xa2/0x120
+> > >  ? __bad_area_nosemaphore+0x179/0x230
+> > >  ? bad_area_nosemaphore+0x16/0x20
+> > >  ? do_kern_addr_fault+0x8b/0xa0
+> > >  ? exc_page_fault+0xe5/0x180
+> > >  ? asm_exc_page_fault+0x27/0x30
+> > >  ? ioread32+0x2e/0x70
+> > >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+> > >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+> > >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+> > >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+> > >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+> > >  pci_pm_runtime_idle+0x34/0x70
+> > >  rpm_idle+0xc4/0x2b0
+> > >  pm_runtime_work+0x93/0xc0
+> > >  process_one_work+0x21a/0x430
+> > >  worker_thread+0x4a/0x3c0
+> > ...
+>
+> > > This happens because scheduled pm_runtime_idle() is not cancelled.
+> >
+> > But rpm_resume() changes dev->power.request to RPM_REQ_NONE and if
+> > pm_runtime_work() sees this, it will not run rpm_idle().
+> >
+> > However, rpm_resume() doesn't deactivate the autosuspend timer if it
+> > is running (see the comment in rpm_resume() regarding this), so it may
+> > queue up a runtime PM work later.
+> >
+> > If this is not desirable, you need to stop the autosuspend timer
+> > explicitly in addition to calling pm_runtime_get_sync().
+>
+> I don't quite follow all this.  I think the race is between
+> rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
 
+I think so too and the latter is not expected to run.
 
-On 04/03/24 10:04, David Lechner wrote:
-> This makes use of the struct_size() macro to calculate the size of the
-> struct axi_spi_engine when allocating it.
-> 
-> Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->   drivers/spi/spi-axi-spi-engine.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-> index a8f626165f44..7cc219d78551 100644
-> --- a/drivers/spi/spi-axi-spi-engine.c
-> +++ b/drivers/spi/spi-axi-spi-engine.c
-> @@ -12,6 +12,7 @@
->   #include <linux/io.h>
->   #include <linux/of.h>
->   #include <linux/module.h>
-> +#include <linux/overflow.h>
->   #include <linux/platform_device.h>
->   #include <linux/spi/spi.h>
->   
-> @@ -502,15 +503,13 @@ static irqreturn_t spi_engine_irq(int irq, void *devid)
->   static int spi_engine_optimize_message(struct spi_message *msg)
+>   rtsx_pci_remove()
 >   {
->   	struct spi_engine_program p_dry, *p;
-> -	size_t size;
->   
->   	spi_engine_precompile_message(msg);
->   
->   	p_dry.length = 0;
->   	spi_engine_compile_message(msg, true, &p_dry);
->   
-> -	size = sizeof(*p->instructions) * (p_dry.length + 1);
-> -	p = kzalloc(sizeof(*p) + size, GFP_KERNEL);
-> +	p = kzalloc(struct_size(p, instructions, p_dry.length + 1), GFP_KERNEL);
->   	if (!p)
->   		return -ENOMEM;
->   
-> 
+>     pm_runtime_get_sync()
+>     pm_runtime_forbid()
+>     ...
+>
+> If this is an rtsx bug, what exactly should be added to
+> rtsx_pci_remove()?
+>
+> Is there ever a case where we want any runtime PM work to happen
+> during or after a driver .remove()?  If not, maybe the driver core
+> should prevent that, which I think is basically what this patch does.
+
+No, it is not, because it doesn't actually prevent the race from
+occurring, it just narrows the window quite a bit.
+
+It would be better to call pm_runtime_dont_use_autosuspend() instead
+of pm_runtime_barrier().
+
+> If this is an rtsx driver bug, I'm concerned there may be many other
+> drivers with a similar issue.  rtsx exercises this path more than most
+> because the device switches between card reader and NVMe SSD using
+> hotplug add/remove based on whether an SD card is inserted (see [1]).
+
+This is a valid concern, so it is mostly a matter of where to disable
+autosuspend.
+
+It may be the driver core in principle, but note that it calls
+->remove() after invoking pm_runtime_put_sync(), so why would it
+disable autosuspend when it allows runtime PM to race with device
+removal in general?
+
+Another way might be to add a pm_runtime_dont_use_autosuspend() call
+at the beginning of pci_device_remove().
+
+Or just remove the optimization in question from rpm_resume() which is
+quite confusing and causes people to make assumptions that lead to
+incorrect behavior in this particular case.
+
+So this (modulo GMail-induced whitespace breakage):
+
+---
+ drivers/base/power/runtime.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+Index: linux-pm/drivers/base/power/runtime.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+--- linux-pm.orig/drivers/base/power/runtime.c
++++ linux-pm/drivers/base/power/runtime.c
+@@ -782,15 +782,8 @@ static int rpm_resume(struct device *dev
+     if (retval)
+         goto out;
+
+-    /*
+-     * Other scheduled or pending requests need to be canceled.  Small
+-     * optimization: If an autosuspend timer is running, leave it running
+-     * rather than cancelling it now only to restart it again in the near
+-     * future.
+-     */
+     dev->power.request =3D RPM_REQ_NONE;
+-    if (!dev->power.timer_autosuspends)
+-        pm_runtime_deactivate_timer(dev);
++    pm_runtime_deactivate_timer(dev);
+
+     if (dev->power.runtime_status =3D=3D RPM_ACTIVE) {
+         retval =3D 1;
