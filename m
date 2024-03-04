@@ -1,52 +1,50 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7056978B44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106E16216C
 	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 18:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709578179; cv=none; b=cB5N0ouw13fTWsX1t5QM8Gm+Wu5Jj/V9fMhm/6D+XnWc82rKz3K7kdRgqVn1KTZEvrA9fk8dvTbangekfbL9EAApRj1XiK5AY0WQ5S9i6HIEsmAwl7kbfcOaY9KR47XUjO16PmKktur6EGd1WNE5bpnMmsIZrcs/qPM9srCWJFs=
+	t=1709578179; cv=none; b=jc/vVObuGSgh16M8diHgUgYIuS8GggbELN4P1BO/pGIanQO9nhJknhW9A3vAyMQCNf2UDkYpC6SdyZ68B1mgYVB8DrHStr/dmNtD018wfzeIy5j4oL8YNqJxOnKAcFY4hguUWpvsX55dALYGdPKIEbJIMfobIzYoEhLfwCRnwyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709578179; c=relaxed/simple;
-	bh=+zltM60WJIwhQhbYbj+QC0RcHFfEEaTaC5b3PkagfmU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=coXgbivEBXWucbVNO3ZIz9bro1jRgZTluTG7ZK2xVAl4XaSam1hI26ZEgsM/lvqDBO3YEcmOaOL2KkQWS4+o77c88vwAT0qjXpnJCE7+pknPn+Me/jo+NeGkvZsvxyES/0rOxIdZr/NMNDaSoiEUg2HDFRNvgLa6CtumUXaFaq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lnAxA0LX; arc=none smtp.client-ip=209.85.215.170
+	bh=Z625OVS2xp7R5VmVOq8oa1wppYlZ30y7U3WLqYCRayc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Etdu7Yb2TDQTfPiVAfBe8N4rkIiqRlpMDWLAUHM7ZjnlTARXdQMhgvSxVpt6g78qwgvPaynre7nR0HK0gZOwx2wKTUWbrG3bDoQpjYI7pYn456NgOBdh+q9rCAPWXFA9i8d5qGsaO0QlekmIUeSAQmV7mRtRqn0RZienjlMY5wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xli4yDW+; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lnAxA0LX"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so3175846a12.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xli4yDW+"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e6277f72d8so779022b3a.1
         for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 10:49:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709578176; x=1710182976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=63pQSv4lgdcPPxgjmIdkeCTgPw+ykuMnj3qldPskCm4=;
-        b=lnAxA0LX5r4TexID833cxBb9m6AYk1kuPjjHNW75Uz5yV5mnYRoxey8+d/FilyimRc
-         z6bcJsRjZhuOgaGrcoPoZjEjOD7lTn6SCdPL9Egl121TaxJLgeYqQLiPxoUVz/ArfXce
-         2ZxCUOR4cid/r/gD9cESFTgMJ2GsjxvVqVbzc=
+        d=chromium.org; s=google; t=1709578177; x=1710182977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wdLvSkRRcYIrR92tCDZgEdSw6ID8B6Ukmhsojy2h3c4=;
+        b=Xli4yDW+1jum+RVNpTbdFQgKWZ5W4jIpNCRxQYd/KTggAoySSZQheFBmZqxiU1smww
+         8cEGwq2OyfgZ6duTA7piYrGRhqJgEJWlBBOL1T/UMarwnv/07zbYBarkZ4hQU/C3SzNy
+         YeDLVEbBSKmDw1Ra8jBUgkfwE5stk1VB8HNtw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709578176; x=1710182976;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=63pQSv4lgdcPPxgjmIdkeCTgPw+ykuMnj3qldPskCm4=;
-        b=rk1+g0uR4OFymuvX2kAlbEO6iOZqP2H/CvjXeIoutaF4VobgSX+mU1l+3X3LhTU/LQ
-         /rSsY69NmC8DRKXsBQ6hh4PuboJcYJ7SecFMY4niH5gkuhQW/H4/n5dBTH9afavJYD2R
-         srz/SEsrmoTXPuUOkiiFMYsnkErrBH6Nd8zoapKfwTOHRKGV1j4Bq+0kr7MNA8/6ovaf
-         MSjryrcMIgZSaWspNnLBB39lCeYaGEdJ1Qz+iRmYxNGVkHBnG8qr3bAqnMFJvy6jBLuA
-         N92QB6cKdiFkze2RcWN1WYcaSqtC2QwQnoBC0zt1p2P3xjvb+7yOji18nh5NvTQ2/6ys
-         5hbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzM8LstJwksPl5uFmVm4ClgtJDt2zeIZl0J7nTTB/WL+56iGD1L9L5GJj25L17tjiNkHWc9X35PHna5PFT/JHnR0dTQMQ3bjLN46Lzmmxo
-X-Gm-Message-State: AOJu0YwXvVx8iyEhQKa2OJr3P28t1qD5dG/9JdAQDcdoYjGhzBAHm5oP
-	JlHCgwxr3sKtwnPpJNreQCaK8AzcM8gRkApSE7sYLOSM/zij++34RVt8Hij2MA==
-X-Google-Smtp-Source: AGHT+IEqbrBUCeaoycN6eZ+VoJQJ/3ekxM3Ni9GrmrAmVAhx541ISPKoahwiO20Sd0vgoGv+eX/7cQ==
-X-Received: by 2002:a05:6a21:9214:b0:1a1:4842:6760 with SMTP id tl20-20020a056a21921400b001a148426760mr1903106pzb.50.1709578176499;
-        Mon, 04 Mar 2024 10:49:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709578177; x=1710182977;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wdLvSkRRcYIrR92tCDZgEdSw6ID8B6Ukmhsojy2h3c4=;
+        b=Cf6+mpysmY3pl8kZM6204YjpX1tKIt5RQneHvRmxioXJq4z/eRvE9UTeVlxo5WQ5kU
+         yCvEavfqDu3CuHVsdSXs+4Kr8FRUWSyeG/vV2IW6pVcIPVZ4QNxkQBTeFhODkRR+GeRz
+         VfmuH6rI2+gCitcvQDO6MwxEGtXe15ufoygZ49SMSQRV01ziNeP4JB9TEAqWR74BOGdY
+         LRhaJUJZ6j7xqnm+dPusQKVzA5imGvZiIBV6PY+IRSxp5eUuRE3CszfmR64yg5+zRzIo
+         krc8PX22TMivZstvqGHiDiIBPbbk9CuA0Fv1uDg/QxizpDIKV8pQbq0VDV8/iXHU2PU0
+         tQsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbzh8m+8n4bbh8tjtq1Wxk36Y4Itg7/zuNZ/Z1RRiQn2HGCg+NnH1VjZv4k79FptHzA54QSFJqYaixEEqRqLcAIRAYjslxp0I1Up8kvjVe
+X-Gm-Message-State: AOJu0Yx0tP+LjXmT6t8zIg5/B+rmAwb1GhRKUkXu9G+1il1Zt0KdQWNg
+	1XCrJzkNoACRRx2b8M2ZkHK5uHwWoWZ+59IzdyhcRS8iVUxU+Ez03sjpEACCLQ==
+X-Google-Smtp-Source: AGHT+IHtNnKRvWzISz04plZ/Sn4VuSsQpitQzokIytXUOscKGTQn7JeB5Fu2kWiz62axSJe5xomkrg==
+X-Received: by 2002:a05:6a00:3908:b0:6e5:a96:6286 with SMTP id fh8-20020a056a00390800b006e50a966286mr9606526pfb.31.1709578175764;
+        Mon, 04 Mar 2024 10:49:35 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j4-20020a654284000000b005d8be4c125csm6743414pgp.80.2024.03.04.10.49.34
+        by smtp.gmail.com with ESMTPSA id x7-20020a626307000000b006e624f5c866sm2059172pfb.145.2024.03.04.10.49.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 04 Mar 2024 10:49:34 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
@@ -70,91 +68,107 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/4] ipc, msg: Use dedicated slab buckets for alloc_msg()
-Date: Mon,  4 Mar 2024 10:49:30 -0800
-Message-Id: <20240304184933.3672759-2-keescook@chromium.org>
+Subject: [PATCH 0/4] slab: Introduce dedicated bucket allocator
+Date: Mon,  4 Mar 2024 10:49:28 -0800
+Message-Id: <20240304184252.work.496-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240304184252.work.496-kees@kernel.org>
-References: <20240304184252.work.496-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2289; i=keescook@chromium.org;
- h=from:subject; bh=+zltM60WJIwhQhbYbj+QC0RcHFfEEaTaC5b3PkagfmU=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5he8qRUAcVCqu4hpjGv4CjmdHzSAnbUNg4er3
- NYamCewr9+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeYXvAAKCRCJcvTf3G3A
- JuDzEACBBwraGVldgENLbkSYf63dOOHOPJEiqhaSkAxMKXMPigi7yQdQbfcNSnwgtebo1L2uUYv
- 8a5GjWZgg0pW2K8BJCfxaWqaOKGcKcaQl1JGzOhYIznQhTvy3eFL7liqoKr/iyqINgJllEJw5u1
- 73nGpA9SrpjgMVQ1WWjUKo3CDRewIUR0dTk28fcGEgg2RubRBocB+ojMwSQvPfl2WwXNNJ6NnaM
- t1jPN5TOfmjkQwM+IKkwdXSau+eNTMhtba3hE02RRu1OPtszIgPzv9e6R7LQqcPA+z5Nnw9Mx4y
- ZbqEuw8j6jqARnWfEt9pH8SBkxg5A5JD8uhSVvD9eLQTvHQ47gbqoIV3OvqhNEVQB2mMxiFpJIK
- NlLkEb/nSKSv3ezcvBEPp9sNggeP6uknRz72aj7v0lLBeL9dnwoPjQS8Vx4tIco3WJcVgCiOxes
- 11aqWUfxoQSK/Hm/2uAQSZRBPq9t11u4mLp4PCdwiyhfBdIqhHXQUXwKfqAd5M95kCOWSger5J9
- de8D2cgNhvOQlrVe+1Oj+J515SQVuJJH4p1jmyS5NEs9nXqR8qExyhvPhjm7ka/HrKG77o3MS0F
- 7hijfdr4qYUQTGuK0lTaECipjA3875yLPsHC4EB0tB+xynBLCgMVx7JT6jFuddPDRtCkf8QdmaT L+aT5CFzJLRrfWA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3623; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Z625OVS2xp7R5VmVOq8oa1wppYlZ30y7U3WLqYCRayc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5he70IwCoMgSCvBAjUKwWeJz01b3BvWIw+IZn
+ NkFBnkbdrmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeYXuwAKCRCJcvTf3G3A
+ JvLUEACOIeAvgkaKb4LbQPberShJfvihoE78bYC2zvaEx0MTsRGFBHPurFQpeBPK1mKDI5nhzYL
+ r1/7AZ5cVLPbrhQI/v4kyrlZ4fuDf5jzh3KsaRLSf/7bl2hdg1+ZGkcT8WX1cKfv3l5jKXeXUPv
+ 0J2ay6PQbYAOCSoW3lY1o55Gkjn+2F3u9SRtVywyD1pC4KJxpy/Ef40p7xaDWjtcB0Y2ytY+Uxd
+ EiJoN6mPUxdwnZ4LcTWbKRm7XoCaI/Dh+fIE5S+ZPclsmabZFHsGIY2Dw1SCkggBXss6ypNQfL6
+ rexlpzBZj7tc5iLwhXroRl+jJvJfpU0L7/gJt/KrpffdUpj3Y62pVHt07cebOdCKuz+WLLIvzu0
+ CEwIkm7gf2oiwzJdzm9fzJpojjG+p7mTqb7Wf/Jv26soM5Q/EQsZf2S8jPq970mOrVSEQ1WOSFj
+ kTyk5At7MJUTo5ZdUG3bzYcnFOeg9kpynAxCUT3SPlvqoMl1cEGzsRoBjq3RM1Y71+QKwerivQU
+ NNfvBqiNdaE0X/o7wOd5AxOGTbeBwXXx+SJVeMzvl+ysx3uT7mSN394vPEiCa655EmUxLxzDWaR
+ J7y2dnav0uSekT2i9vyMZCWBhU/fczOZAbzJbydLA3zwJEFT4eFTUOkGgV+fSVTQx5tvoo6mOue
+ j/ujTw8 SiQNFfrw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
-use-after-free type confusion flaws in the kernel for both read and
-write primitives. Avoid having a user-controlled size cache share the
-global kmalloc allocator by using a separate set of kmalloc buckets.
+Hi,
 
-After a fresh boot under Ubuntu 23.10, we can see the caches are already
-in use:
+Repeating the commit logs for patch 1 here:
 
- # grep ^msg_msg /proc/slabinfo
- msg_msg-8k             0      0   8192    4    8 : ...
- msg_msg-4k            96    128   4096    8    8 : ...
- msg_msg-2k            64     64   2048   16    8 : ...
- msg_msg-1k            64     64   1024   16    4 : ...
- msg_msg-16          1024   1024     16  256    1 : ...
- msg_msg-8              0      0      8  512    1 : ...
+    Dedicated caches are available For fixed size allocations via
+    kmem_cache_alloc(), but for dynamically sized allocations there is only
+    the global kmalloc API's set of buckets available. This means it isn't
+    possible to separate specific sets of dynamically sized allocations into
+    a separate collection of caches.
 
-Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
-Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
-Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
-Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
-Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
-Link: https://zplin.me/papers/ELOISE.pdf [6]
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
----
- ipc/msgutil.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+    This leads to a use-after-free exploitation weakness in the Linux
+    kernel since many heap memory spraying/grooming attacks depend on using
+    userspace-controllable dynamically sized allocations to collide with
+    fixed size allocations that end up in same cache.
 
-diff --git a/ipc/msgutil.c b/ipc/msgutil.c
-index d0a0e877cadd..36f1aa9ea1cf 100644
---- a/ipc/msgutil.c
-+++ b/ipc/msgutil.c
-@@ -42,6 +42,15 @@ struct msg_msgseg {
- #define DATALEN_MSG	((size_t)PAGE_SIZE-sizeof(struct msg_msg))
- #define DATALEN_SEG	((size_t)PAGE_SIZE-sizeof(struct msg_msgseg))
- 
-+static struct kmem_buckets *msg_buckets __ro_after_init;
-+
-+static int __init init_msg_buckets(void)
-+{
-+	msg_buckets = kmem_buckets_create("msg_msg", 0, SLAB_ACCOUNT, 0, 0, NULL);
-+
-+	return 0;
-+}
-+subsys_initcall(init_msg_buckets);
- 
- static struct msg_msg *alloc_msg(size_t len)
- {
-@@ -50,7 +59,7 @@ static struct msg_msg *alloc_msg(size_t len)
- 	size_t alen;
- 
- 	alen = min(len, DATALEN_MSG);
--	msg = kmalloc(sizeof(*msg) + alen, GFP_KERNEL_ACCOUNT);
-+	msg = kmem_buckets_alloc(msg_buckets, sizeof(*msg) + alen, GFP_KERNEL);
- 	if (msg == NULL)
- 		return NULL;
- 
+    While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+    against these kinds of "type confusion" attacks, including for fixed
+    same-size heap objects, we can create a complementary deterministic
+    defense for dynamically sized allocations.
+
+    In order to isolate user-controllable sized allocations from system
+    allocations, introduce kmem_buckets_create() and kmem_buckets_alloc(),
+    which behave like kmem_cache_create() and like kmem_cache_alloc() for
+    confining allocations to a dedicated set of sized caches (which have
+    the same layout as the kmalloc caches).
+
+    This can also be used in the future once codetag allocation annotations
+    exist to implement per-caller allocation cache isolation[0] even for
+    dynamic allocations.
+
+    Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [0]
+
+After the implemetation are 3 example patch of how this could be used
+for some repeat "offenders" that get used in exploits. There are more to
+be isolated beyond just these. Repeating the commit log for patch 2 here:
+
+    The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
+    use-after-free type confusion flaws in the kernel for both read and
+    write primitives. Avoid having a user-controlled size cache share the
+    global kmalloc allocator by using a separate set of kmalloc buckets.
+
+    After a fresh boot under Ubuntu 23.10, we can see the caches are already
+    in use:
+
+     # grep ^msg_msg /proc/slabinfo
+     msg_msg-8k             0      0   8192    4    8 : ...
+     msg_msg-4k            96    128   4096    8    8 : ...
+     msg_msg-2k            64     64   2048   16    8 : ...
+     msg_msg-1k            64     64   1024   16    4 : ...
+     msg_msg-16          1024   1024     16  256    1 : ...
+     msg_msg-8              0      0      8  512    1 : ...
+
+    Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
+    Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
+    Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
+    Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
+    Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
+    Link: https://zplin.me/papers/ELOISE.pdf [6]
+
+-Kees
+
+Kees Cook (4):
+  slab: Introduce dedicated bucket allocator
+  ipc, msg: Use dedicated slab buckets for alloc_msg()
+  xattr: Use dedicated slab buckets for setxattr()
+  mm/util: Use dedicated slab buckets for memdup_user()
+
+ fs/xattr.c           | 12 ++++++++-
+ include/linux/slab.h | 26 ++++++++++++++++++
+ ipc/msgutil.c        | 11 +++++++-
+ mm/slab_common.c     | 64 ++++++++++++++++++++++++++++++++++++++++++++
+ mm/util.c            | 12 ++++++++-
+ 5 files changed, 122 insertions(+), 3 deletions(-)
+
 -- 
 2.34.1
 
