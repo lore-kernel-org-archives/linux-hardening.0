@@ -1,287 +1,272 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2474962140;
-	Mon,  4 Mar 2024 18:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51B578690
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 18:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709576075; cv=none; b=k3HASEjj8e5VOuTKvzBZ8DxuOVx6jDYgRixrEkzS5S67G3/mIO8TZOtQA9n+uUBU6mFmd82TXmXA8NRhH9XI3zehilI8ws6MPVlTq3+MVeU9+8BRgEEpNi58hKU3mMdJ3SLzq+gigtmH2RKMgsHL7DovXvIuAGH6N14G//dxU6o=
+	t=1709578178; cv=none; b=MxEqbeIwim9S+aF2QMu3bDDXQjbO2jfHqIx1d9/fQTXDTKUdayFIwqWTxvHSPKxnl4zy2qxqaKcArCIrk2TGkOiKLznXUTLdF4tx3S3/ksTpxUBSRzEc59lKHM79PLIUbaA4peae12MC/BaWbWHI17GiQ9KrHw+jVgdtJk3QGsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709576075; c=relaxed/simple;
-	bh=AbHH7qvr0CkJaDNmydY1dltP0/FMPdTokrWUJsnffuU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f9oLEps4yMCoeRY9eepS30CO6rXfW7ZPVXhncCKav09brexL9u7Bw262jN28SOwz2WcgVxtm+rCBued3lfhZxxgIFvYVfgGMZR2MwbxV2yYioCHPxcE78+3hbpzhwBdz4MhtmMb16CMi4eBCuopDSFRJlKJenhZXMkzxJkRREiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a1358e7e16so311954eaf.0;
-        Mon, 04 Mar 2024 10:14:33 -0800 (PST)
+	s=arc-20240116; t=1709578178; c=relaxed/simple;
+	bh=h85WkZi4o3uylzu/3xQb8d5MHb8DhVgIptaT/36yfQM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HSPWRiU9vBwPPtj1Nw3KP1sh9rHQJBhYsStffKV6GwM4GSeTQJwyOBzpQdJ/Qvh3LI3A39ulEigT0nAhBbCY19ipqWMJEjufosl0CNqE/aEWGxtRGW/2czE9itD0h8gz4DGEPTYPKuul3TclHzT/DnhC40tYevr0V2MqjP15eGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XBfUlYJh; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XBfUlYJh"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so3222023a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 10:49:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709578176; x=1710182976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cMb+PmcOht+K9M0r7eBe/cOsz5NTpNrdAZ0O4xFPS4c=;
+        b=XBfUlYJhMBybjlOMNRAj5jluBu/WLtbNctsJM++zZaY68hcfA2Mwo6tFe+9ub90Xwl
+         fsIf/a+NPH9h02da4izV6Qhx2PerYhs1hZWzpgExEn4rVjwXYDZP801/Sm+QZqD1/z1k
+         bq3W5H+cjtOQ3qGJl8/fLYZ2wAoXsPJCv/tUI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709576073; x=1710180873;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709578176; x=1710182976;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i5gamsQVlsE6wgphQJ/+utzCP9dR4QkeR7TBdxOk1d4=;
-        b=ZRMdsz8pt9qlbRe+c8FHIgKyh/1WOQZTtH8SxTCrOOL7MxWwDc+n2qgDMCw6Gy4PfT
-         5iP2q4V6aAI5xYjRvYD284ZN2YIFMLGQW/PyLcUqq+ztWHHTGcdXJtMjFglRjcixwSYI
-         SEfNQbsqY6Qf9QmGP2Hf5XnyajueBEPVansEJ6ygFITr4c0uwOG7gSGnOhtzSRumzSol
-         7hepj9783R8sRqtXn0CfdJYqHXloUVGKqqIGimTFbZXAWWBr4E2xuQS+WKrA6s2bqQ7d
-         +fnigBrFjq6AjWLo0zeGrI08l7xljgSh9gI7YXZGhZVDTcrvYYssTdryprTWWRY2xDb6
-         G7Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWXIb3gQTvZxiBh8dZqeseljb7ujcpaJh94yRx6xC+zjFGryJsEgfnNZ4I62b757RghkB7lwI97vgwb2gNlUR+yBjVzxNHYJpUpR504NqoFIcVfDbYjfZSq/DlgDnLXzwKCoUgSVgJCbzUEt7kUhN2+tIxBfz4dY2HVZD/oHewE+C9USR4cOps5DcFsNTaSPBYqWbe1CF+ozLH1Icf
-X-Gm-Message-State: AOJu0YzLCDpeHMtZ++kgtFJ5EI5PCKy1VshFyTF/arpp65CKJtoj/0Qw
-	9qGNkqOBP0CrgAwiLggb1mv/8+FNoTbiM3m8DJ/NO2jtEdp61OPE1k6QV1eclUIZ5Bqbmn0rabW
-	jBmUIJmEhXxAdUeLmsibb9jxlWWs=
-X-Google-Smtp-Source: AGHT+IFMKHIsModLunczVJGSOLKf94HeyBgQmo5PVZagqZz0uW/+O6O2mUXS4e2ysrsmrx4WJqMPtto6+Qb7T9IqYr4=
-X-Received: by 2002:a05:6820:1c13:b0:5a1:31a1:7f75 with SMTP id
- cl19-20020a0568201c1300b005a131a17f75mr3926238oob.1.1709576073177; Mon, 04
- Mar 2024 10:14:33 -0800 (PST)
+        bh=cMb+PmcOht+K9M0r7eBe/cOsz5NTpNrdAZ0O4xFPS4c=;
+        b=GyAY8d+TxocACMNth+gbB+P++eL6cbburp9PMDQT02xdARB9ke+nW1RQiXJB60/h/L
+         BbBwZAvluIesjiGzZzvH+s6YPrkG0nB9BJmFGXFAQJQhqp5ahcsNJpiMO401sB/TJq++
+         SedMccEpw2vtRfHT8ezx6VbFqJC4fld7r8NWkKhUj3sOazF2v6B+GyK+s297TP02XGHL
+         DjfvNV0rJMSpSiaICAt/brl/DqVNk6nA8RfvpU85YLUGx3jKSDuDZ85Ltl2kY06eDppT
+         6Hkbz6TQmmnc+K8aEocVTsatMkMeSMN4MwyICdM3R68TKVuwM2F0cuWPYYdfnhwQUqbE
+         8iLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVI6hIE0WR5mGeto3G05zRTlOXKwBBTO/ZIXH+KRykvw3Wq+9Z5ciLntL4APOPHeqeT6ZdCD1gh914Q/7ljTZwXhSgxw+O+TUZXvimQ2v4L
+X-Gm-Message-State: AOJu0YzXNOBQisa9/Eb3RHyQ+NLD+pZdzsLwhBsRObUe8AkMRSioixmr
+	cYSwHRSWQ0KPHsf0Z5HwpLf8Aq5w0ZrQmhkli5Yh19s18GP00Y2I49oXe56UDg==
+X-Google-Smtp-Source: AGHT+IHXfzDDi+Jk/MGWJiolbgqaEdJ79sjoSCtqB+82MCn/uMPrW4nNSDO9Xzsngfqy/Yg749crOw==
+X-Received: by 2002:a05:6a20:a11a:b0:1a1:4a21:1fe3 with SMTP id q26-20020a056a20a11a00b001a14a211fe3mr1759584pzk.0.1709578176143;
+        Mon, 04 Mar 2024 10:49:36 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id z12-20020aa785cc000000b006e56e5c09absm7810419pfn.14.2024.03.04.10.49.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 10:49:34 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <keescook@chromium.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 1/4] slab: Introduce dedicated bucket allocator
+Date: Mon,  4 Mar 2024 10:49:29 -0800
+Message-Id: <20240304184933.3672759-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240304184252.work.496-kees@kernel.org>
+References: <20240304184252.work.496-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
- <20240304155138.GA482969@bhelgaas> <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
- <CAJZ5v0idOkeod9-RmnNGCwMGG+9nYi8eJSBpQYWJnv=N+eVoWg@mail.gmail.com> <CAJZ5v0jJEo5p4Wr_bZjHHOfQG4WomX9pFtBwFnU6eMJRoCctOA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jJEo5p4Wr_bZjHHOfQG4WomX9pFtBwFnU6eMJRoCctOA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 4 Mar 2024 19:14:21 +0100
-Message-ID: <CAJZ5v0izNQ=2oaFff3WBQUm2AHZ5XnrYHq3pz0_Yx685QUUfMA@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, gregkh@linuxfoundation.org, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5798; i=keescook@chromium.org;
+ h=from:subject; bh=h85WkZi4o3uylzu/3xQb8d5MHb8DhVgIptaT/36yfQM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5he8a2IWxCB3p2pd4ASVvCAfbFqAl2DgpfxWQ
+ QjMAXgEaQyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeYXvAAKCRCJcvTf3G3A
+ Ju0qD/9wLY1KtAVlKpiIcbRaHdOPbTRV4/D+hFxL5B9cNYkqbIS1fUdUJI71wBUD6kJnhCd9kCz
+ zY7AbWXcvcgkl2cA36q3sg5ftbAUAugShF8SRrO7cuJBDBjz61Sd3q8a2ajePTuRLXO+IkiOZSW
+ fEs0uw7D3bTOvVIQAaqxYIRhm5g0wDeFJcikNAE06pyX++iA/ePzCLUTui8hhrErnor+Eok1Gio
+ km/LhI+jGhbmoV8EFNFn5yCij/hBhmf/m80ThCIvRs4Lrfs+Jc6NOeSHI0vjyiNxh2dY+XB5kpD
+ yrScvBaBU8MD0PtoCFyo3sqIlhB8epaO9WymgCqRuF+mYuac6RjWgjZh2wBApo+SwpQFUb8g2fH
+ as59RRHY0OQj+s75GtR8Ra9PHvO03ZpOGrKZj/tZqCkbIt92ysyof2t2O2n5yBLKAnTWrUAbw5g
+ SUF7DF0cRG3BfxkZknrhUe6vrhx7uHHB3EHgs3aqEPbc15a38JptIoGR6vga6dtfq38DvPQguDC
+ 2FQBjQRAQbIhYnATKR31hLJTYiwQ2n+HwHoOW0NawX/LV5lAFUf/Z6+hHodr5UK8PFA6Nd+44eM
+ BnNhe+/usfeJyldh8jlzjBfT3UJIcUYGR+sfEjSE48hTeze4iwwNvv/OMOHmv417pCMNY8ohvDd m7Otqn2ryvvKzHg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 4, 2024 at 7:10=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
-> wrote:
->
-> On Mon, Mar 4, 2024 at 6:00=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
-rg> wrote:
-> >
-> > On Mon, Mar 4, 2024 at 5:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
-.org> wrote:
-> > >
-> > > On Mon, Mar 4, 2024 at 4:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.=
-org> wrote:
-> > > >
-> > > > On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wrote:
-> > > > > On Thu, Feb 29, 2024 at 7:23=E2=80=AFAM Kai-Heng Feng
-> > > > > <kai.heng.feng@canonical.com> wrote:
-> > > > > >
-> > > > > > When inserting an SD7.0 card to Realtek card reader, the card r=
-eader
-> > > > > > unplugs itself and morph into a NVMe device. The slot Link down=
- on hot
-> > > > > > unplugged can cause the following error:
-> > > > > >
-> > > > > > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > > > > > BUG: unable to handle page fault for address: ffffb24d403e5010
-> > > > > > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-> > > > > > Oops: 0000 [#1] PREEMPT SMP PTI
-> > > > > > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> > > > > > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H3=
-70M Pro4, BIOS P3.40 10/25/2018
-> > > > > > Workqueue: pm pm_runtime_work
-> > > > > > RIP: 0010:ioread32+0x2e/0x70
-> > > > > ...
-> > > > > > Call Trace:
-> > > > > >  <TASK>
-> > > > > >  ? show_regs+0x68/0x70
-> > > > > >  ? __die_body+0x20/0x70
-> > > > > >  ? __die+0x2b/0x40
-> > > > > >  ? page_fault_oops+0x160/0x480
-> > > > > >  ? search_bpf_extables+0x63/0x90
-> > > > > >  ? ioread32+0x2e/0x70
-> > > > > >  ? search_exception_tables+0x5f/0x70
-> > > > > >  ? kernelmode_fixup_or_oops+0xa2/0x120
-> > > > > >  ? __bad_area_nosemaphore+0x179/0x230
-> > > > > >  ? bad_area_nosemaphore+0x16/0x20
-> > > > > >  ? do_kern_addr_fault+0x8b/0xa0
-> > > > > >  ? exc_page_fault+0xe5/0x180
-> > > > > >  ? asm_exc_page_fault+0x27/0x30
-> > > > > >  ? ioread32+0x2e/0x70
-> > > > > >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> > > > > >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> > > > > >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> > > > > >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> > > > > >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> > > > > >  pci_pm_runtime_idle+0x34/0x70
-> > > > > >  rpm_idle+0xc4/0x2b0
-> > > > > >  pm_runtime_work+0x93/0xc0
-> > > > > >  process_one_work+0x21a/0x430
-> > > > > >  worker_thread+0x4a/0x3c0
-> > > > > ...
-> > > >
-> > > > > > This happens because scheduled pm_runtime_idle() is not cancell=
-ed.
-> > > > >
-> > > > > But rpm_resume() changes dev->power.request to RPM_REQ_NONE and i=
-f
-> > > > > pm_runtime_work() sees this, it will not run rpm_idle().
-> > > > >
-> > > > > However, rpm_resume() doesn't deactivate the autosuspend timer if=
- it
-> > > > > is running (see the comment in rpm_resume() regarding this), so i=
-t may
-> > > > > queue up a runtime PM work later.
-> > > > >
-> > > > > If this is not desirable, you need to stop the autosuspend timer
-> > > > > explicitly in addition to calling pm_runtime_get_sync().
-> > > >
-> > > > I don't quite follow all this.  I think the race is between
-> > > > rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
-> > >
-> > > I think so too and the latter is not expected to run.
-> > >
-> > > >   rtsx_pci_remove()
-> > > >   {
-> > > >     pm_runtime_get_sync()
-> > > >     pm_runtime_forbid()
-> > > >     ...
-> > > >
-> > > > If this is an rtsx bug, what exactly should be added to
-> > > > rtsx_pci_remove()?
-> > > >
-> > > > Is there ever a case where we want any runtime PM work to happen
-> > > > during or after a driver .remove()?  If not, maybe the driver core
-> > > > should prevent that, which I think is basically what this patch doe=
-s.
-> > >
-> > > No, it is not, because it doesn't actually prevent the race from
-> > > occurring, it just narrows the window quite a bit.
-> > >
-> > > It would be better to call pm_runtime_dont_use_autosuspend() instead
-> > > of pm_runtime_barrier().
-> > >
-> > > > If this is an rtsx driver bug, I'm concerned there may be many othe=
-r
-> > > > drivers with a similar issue.  rtsx exercises this path more than m=
-ost
-> > > > because the device switches between card reader and NVMe SSD using
-> > > > hotplug add/remove based on whether an SD card is inserted (see [1]=
-).
-> > >
-> > > This is a valid concern, so it is mostly a matter of where to disable
-> > > autosuspend.
-> > >
-> > > It may be the driver core in principle, but note that it calls
-> > > ->remove() after invoking pm_runtime_put_sync(), so why would it
-> > > disable autosuspend when it allows runtime PM to race with device
-> > > removal in general?
-> > >
-> > > Another way might be to add a pm_runtime_dont_use_autosuspend() call
-> > > at the beginning of pci_device_remove().
-> > >
-> > > Or just remove the optimization in question from rpm_resume() which i=
-s
-> > > quite confusing and causes people to make assumptions that lead to
-> > > incorrect behavior in this particular case.
-> >
-> > Well, scratch this.
-> >
-> > If rpm_idle() is already running at the time rpm_resume() is called,
-> > the latter may return right away without waiting, which is incorrect.
-> >
-> > rpm_resume() needs to wait for the "idle" callback to complete, so
-> > this (again, modulo GMail-induced whitespace mangling) should help:
-> >
-> > ---
-> >  drivers/base/power/runtime.c |    6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > Index: linux-pm/drivers/base/power/runtime.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/base/power/runtime.c
-> > +++ linux-pm/drivers/base/power/runtime.c
-> > @@ -798,7 +798,8 @@ static int rpm_resume(struct device *dev
-> >      }
-> >
-> >      if (dev->power.runtime_status =3D=3D RPM_RESUMING ||
-> > -        dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
-> > +        dev->power.runtime_status =3D=3D RPM_SUSPENDING ||
-> > +        dev->power.idle_notification) {
-> >          DEFINE_WAIT(wait);
-> >
-> >          if (rpmflags & (RPM_ASYNC | RPM_NOWAIT)) {
-> > @@ -826,7 +827,8 @@ static int rpm_resume(struct device *dev
-> >              prepare_to_wait(&dev->power.wait_queue, &wait,
-> >                      TASK_UNINTERRUPTIBLE);
-> >              if (dev->power.runtime_status !=3D RPM_RESUMING &&
-> > -                dev->power.runtime_status !=3D RPM_SUSPENDING)
-> > +                dev->power.runtime_status !=3D RPM_SUSPENDING &&
-> > +                !dev->power.idle_notification)
-> >                  break;
-> >
-> >              spin_unlock_irq(&dev->power.lock);
->
-> Well, not really.
->
-> The problem is that rtsx_pci_runtime_idle() is not expected to be
-> running after pm_runtime_get_sync(), but the latter doesn't really
-> guarantee that.  It only guarantees that the suspend/resume callbacks
-> will not be running after it returns.
->
-> As I said above, if the ->runtime_idle() callback is already running
-> when pm_runtime_get_sync() runs, the latter will notice that the
-> status is RPM_ACTIVE and will return right away without waiting for
-> the former to complete.  In fact, it cannot wait for it to complete,
-> because it may be called from a ->runtime_idle() callback itself (it
-> arguably does not make much sense to do that, but it is not strictly
-> forbidden).
->
-> So whoever is providing a ->runtime_idle() callback, they need to
-> protect it from running in parallel with whatever code runs after
-> pm_runtime_get_sync().  Note that ->runtime_idle() will not start
-> after pm_runtime_get_sync(), but it may continue running then if it
-> has started earlier already.
->
-> Calling pm_runtime_barrier() after pm_runtime_get_sync() (not before
-> it) should suffice, but once the runtime PM usage counter is dropped,
-> rpm_idle() may run again, so this is only effective until the usage
-> counter is greater than 1.  This means that
-> __device_release_driver(() is not the right place to call it, because
-> the usage counter is dropped before calling device_remove() in that
-> case.
->
-> The PCI bus type can prevent the race between driver-provided
-> ->runtime_idle() and ->remove() from occurring by adding a
-> pm_runtime_probe() call in the following way:
+Dedicated caches are available For fixed size allocations via
+kmem_cache_alloc(), but for dynamically sized allocations there is only
+the global kmalloc API's set of buckets available. This means it isn't
+possible to separate specific sets of dynamically sized allocations into
+a separate collection of caches.
 
-s/pm_runtime_probe/pm_runtime_barrier/ (sorry)
+This leads to a use-after-free exploitation weakness in the Linux
+kernel since many heap memory spraying/grooming attacks depend on using
+userspace-controllable dynamically sized allocations to collide with
+fixed size allocations that end up in same cache.
 
-The patchlet below is correct, though.
+While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+against these kinds of "type confusion" attacks, including for fixed
+same-size heap objects, we can create a complementary deterministic
+defense for dynamically sized allocations.
 
-> ---
->  drivers/pci/pci-driver.c |    7 +++++++
->  1 file changed, 7 insertions(+)
->
-> Index: linux-pm/drivers/pci/pci-driver.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -473,6 +473,13 @@ static void pci_device_remove(struct dev
->
->      if (drv->remove) {
->          pm_runtime_get_sync(dev);
-> +        /*
-> +         * If the driver provides a .runtime_idle() callback and it has
-> +         * started to run already, it may continue to run in parallel
-> +         * with the code below, so wait until all of the runtime PM
-> +         * activity has completed.
-> +         */
-> +        pm_runtime_barrier(dev);
->          drv->remove(pci_dev);
->          pm_runtime_put_noidle(dev);
->      }
+In order to isolate user-controllable sized allocations from system
+allocations, introduce kmem_buckets_create() and kmem_buckets_alloc(),
+which behave like kmem_cache_create() and like kmem_cache_alloc() for
+confining allocations to a dedicated set of sized caches (which have
+the same layout as the kmalloc caches).
+
+This can also be used in the future once codetag allocation annotations
+exist to implement per-caller allocation cache isolation[1] even for
+dynamic allocations.
+
+Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: linux-mm@kvack.org
+---
+ include/linux/slab.h | 26 ++++++++++++++++++
+ mm/slab_common.c     | 64 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index b5f5ee8308d0..4a4ff84534be 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -492,6 +492,16 @@ void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+ 			   gfp_t gfpflags) __assume_slab_alignment __malloc;
+ void kmem_cache_free(struct kmem_cache *s, void *objp);
+ 
++struct kmem_buckets {
++	struct kmem_cache *caches[ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL])];
++};
++
++struct kmem_buckets *
++kmem_buckets_create(const char *name, unsigned int align, slab_flags_t flags,
++		    unsigned int useroffset, unsigned int usersize,
++		    void (*ctor)(void *));
++
++
+ /*
+  * Bulk allocation and freeing operations. These are accelerated in an
+  * allocator specific way to avoid taking locks repeatedly or building
+@@ -594,6 +604,22 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+ 	return __kmalloc(size, flags);
+ }
+ 
++static __always_inline __alloc_size(2)
++void *kmem_buckets_alloc(struct kmem_buckets *b, size_t size, gfp_t flags)
++{
++	unsigned int index;
++
++	if (size > KMALLOC_MAX_CACHE_SIZE)
++		return kmalloc_large(size, flags);
++	if (WARN_ON_ONCE(!b))
++		return NULL;
++	index = kmalloc_index(size);
++	if (WARN_ONCE(!b->caches[index],
++		      "missing cache for size %zu (index %d)\n", size, index))
++		return kmalloc(size, flags);
++	return kmalloc_trace(b->caches[index], flags, size);
++}
++
+ static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
+ {
+ 	if (__builtin_constant_p(size) && size) {
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 238293b1dbe1..6002a182d014 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -392,6 +392,66 @@ kmem_cache_create(const char *name, unsigned int size, unsigned int align,
+ }
+ EXPORT_SYMBOL(kmem_cache_create);
+ 
++static struct kmem_cache *kmem_buckets_cache __ro_after_init;
++
++struct kmem_buckets *
++kmem_buckets_create(const char *name, unsigned int align,
++		  slab_flags_t flags,
++		  unsigned int useroffset, unsigned int usersize,
++		  void (*ctor)(void *))
++{
++	struct kmem_buckets *b;
++	int idx;
++
++	if (WARN_ON(!kmem_buckets_cache))
++		return NULL;
++
++	b = kmem_cache_alloc(kmem_buckets_cache, GFP_KERNEL|__GFP_ZERO);
++	if (WARN_ON(!b))
++		return NULL;
++
++	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
++		char *short_size, *cache_name;
++		unsigned int size;
++
++		if (!kmalloc_caches[KMALLOC_NORMAL][idx])
++			continue;
++
++		size = kmalloc_caches[KMALLOC_NORMAL][idx]->object_size;
++		if (!size)
++			continue;
++
++		short_size = strchr(kmalloc_caches[KMALLOC_NORMAL][idx]->name, '-');
++		if (WARN_ON(!short_size))
++			goto fail;
++
++		cache_name = kasprintf(GFP_KERNEL, "%s-%s", name, short_size + 1);
++		if (WARN_ON(!cache_name))
++			goto fail;
++
++		b->caches[idx] = kmem_cache_create_usercopy(cache_name, size,
++					align, flags, useroffset,
++					min(size - useroffset, usersize), ctor);
++		kfree(cache_name);
++		if (WARN_ON(!b->caches[idx]))
++			goto fail;
++	}
++
++	return b;
++
++fail:
++	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
++		if (b->caches[idx]) {
++			kfree(b->caches[idx]->name);
++			kmem_cache_destroy(b->caches[idx]);
++		}
++	}
++	kfree(b);
++
++	return NULL;
++}
++EXPORT_SYMBOL(kmem_buckets_create);
++
+ #ifdef SLAB_SUPPORTS_SYSFS
+ /*
+  * For a given kmem_cache, kmem_cache_destroy() should only be called
+@@ -934,6 +994,10 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ 
+ 	/* Kmalloc array is now usable */
+ 	slab_state = UP;
++
++	kmem_buckets_cache = kmem_cache_create("kmalloc_buckets",
++				sizeof(struct kmem_buckets) * ARRAY_SIZE(kmalloc_info),
++				0, 0, NULL);
+ }
+ 
+ /**
+-- 
+2.34.1
+
