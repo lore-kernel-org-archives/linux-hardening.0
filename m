@@ -1,142 +1,92 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257D46166B
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 17:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E277A612E3
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 17:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709573683; cv=none; b=r25HcM6BoD9dEbalcTIOeIqGpfC1bSghB6kzAmjbrFRg5Ros7aJTuPdlUZ/dLFAQH1OQHCbTXFqYAWl+2fvWsmYJPEDoAXkKjsXVFkIbgihflxs+zdSlE7dGch3k8TefrHngKRNDPnwugfcGjOu43mjk8RD5SzOU5gsFGUCZW34=
+	t=1709573786; cv=none; b=auXTdiWqQ9IqQQD5o/fYFu8rnPx4won1t5AnHnZazLh6tXn+HbLcbLbEQGE84LIrYteObAeUUTVopSqOA8Y643f8jq0616GrwrT5KmqwmpDjzQFvYsPq8KcUelvDcgLgKsoVxoode8AYp5sJVjDagVCVVozrvCyCLGZ40+w8flM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709573683; c=relaxed/simple;
-	bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gNJ3DaX8R5Q5dAUsd5vlK79pxVU1ZJmyU2WswhDQRtch1Hmkmp+KvQLyEEP9RVwUE6J6nCEmf7TPf4m7S91reYLC69fI9hV5JdEmZzTUdNVLBKQ2yWFia9sen8d0pb/2oqRoNNV0msj94J85g4PmYtSNF8l37rG1DkfU5WD0bWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kJ1PNG76; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1709573786; c=relaxed/simple;
+	bh=8ooV8dB1mFGHQY9jMgeckMAWoFF0hDH+vzsJ4I6wVLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDBRC013A8PLUXtv+DvfdPgi6Yi3Qxbu1l/dRhtBMfwLixwkdBeHxxy4o08RjHWAiP0mz92AXrpucQGZmIIWgvtbJDnun0y/SSEzxPjZ3xxwxT0aFj4zAhBbN64qrC21q+55qy9NNLl+6vza1n0Pan1V8WGGlRLEY9RUMg3GoeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V7cUH+H9; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJ1PNG76"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a4595bd5f8cso18797566b.0
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 09:34:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V7cUH+H9"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e58a984ea1so3090593b3a.2
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 09:36:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709573678; x=1710178478; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
-        b=kJ1PNG76qJ5Hxcv8LSryZZlFeZDVa1IzeQeQeUAJ2H8f58sp6Niu9kotN1LZNI9tRP
-         rGePkKf/5M2FN9eHOayctU3Gl3esYzU2cF6SDdmQjdlejFS7keA9kiGEHMU/zxiapOCV
-         UQYVH41TeTnTquJMtgfRn6tN+XLQ5qJ9n8nLo=
+        d=chromium.org; s=google; t=1709573784; x=1710178584; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JWlfNcQD5ehyoT1o3mhe5Duet0Ppnvl8B0mdktks9m0=;
+        b=V7cUH+H9ELHH0cNKbSVsG/WWfSt8TMCgu0abHVykmJfVEAl/4GkEo1M/lbG0U8Rmz7
+         mn84RQVeGgkL5c1Rlf2FUmQFpEhoGInrOZmR4EewGnaTNE87dat43H3kFoN0ZcHiidsq
+         haq5MxwsSuABBTzFU4NnIpXSiuK2qdVILvb7g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709573678; x=1710178478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tfmsGbKyPBL3Ittd+OpakBE0HsGkb62jQroArNWygKo=;
-        b=MonXKX2Ti6fIbNW68l9e4yxsfRoyCSEJmRutxPbT//yZlcgQGX+y7/oaWYXY4Ht7rF
-         vTnox4uFjRLywpZMtcJJyIVKcECEBA2PwhS+9nn7Etr/bnEG+L6o0j4MQvaWwGSnd1Wo
-         gbZ73YD/5i91n22xKKNdmEJp81wavqLy0/gvacgObbPd1ixg0SP1UMD0Zm3tvIbQCfci
-         bBfjGQTLGdHGKRUjW3NQcFs2tRUYDqOS1ggnCCyaB1QuEJKXaOYyUZHJQH1m8YMHQhRh
-         EbKhaWHo6G3VQM2bYKpgWeOYkOSmUMmvajLJb5UkjkN75ynIRKoJHCB1nm5n6/wilUrm
-         bUKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtMWnT0qB/3OowUFurDBNRccUDCCVXvGptVhoe+uE8uYLrZzJ7Eraliwek64hFUNpUCdiFw4TyS7SPFr3+IW+MlXZdOAuVgBZpGFwnYNIt
-X-Gm-Message-State: AOJu0YzKvz7iw/2nSsGGLKKFjG/0feTDpbPGZSde4N5qx3myyQkKS+HC
-	/BYj//AEs1RB5qwa/nFlWnHBAcVB6tDzBDhrJR3WPv/kacMcbraL0dy9kpxWKkXEOTDcYiLyJ1C
-	WLvu9
-X-Google-Smtp-Source: AGHT+IGAVBbwhMq7eNb8pbLAw7kQs+7tO2iit/fJHpaqcRaoIg+f2QdRPxDOmNOZPnhWruPbhnhOjw==
-X-Received: by 2002:a17:906:48cb:b0:a45:206d:6bcc with SMTP id d11-20020a17090648cb00b00a45206d6bccmr2604638ejt.2.1709573678130;
-        Mon, 04 Mar 2024 09:34:38 -0800 (PST)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id kj2-20020a170907764200b00a44180ab871sm5050573ejc.50.2024.03.04.09.34.36
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 09:34:37 -0800 (PST)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-412d84ffbfaso1035e9.0
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Mar 2024 09:34:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUE4yMrWAWBM7yI+gAPnAghQdefFo30nFSuIAANRyCh4Jx8QycZE5yd7u+AHgx712Kvnnu5NtQNKb8V9RhXtPBuaJ5EtTUCqgCZ2Ec5M+6H
-X-Received: by 2002:a05:600c:4f07:b0:412:d6be:a32b with SMTP id
- l7-20020a05600c4f0700b00412d6bea32bmr2093wmq.6.1709573676220; Mon, 04 Mar
- 2024 09:34:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709573784; x=1710178584;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JWlfNcQD5ehyoT1o3mhe5Duet0Ppnvl8B0mdktks9m0=;
+        b=jzW/LG1UPRZWKjzDMm+6nHYOXmJTqsRW0mCHYQyTI2a7ANb4HE4+Umacl7tyDzkuHU
+         7KSQWqRLL96NSAeTJUcbL7S/dUkAX7GBR2hrnWkGwljPtLO4NsY/ZhrayTsvFjczWAKn
+         6hS/AqI8yzYVkfHAFKXx6JbtvuigEBRiZlJ1sjo6oGzHmyCzKcOOG8xIAViUPm30Zbvr
+         XxwRf7ujezihxROmtv4SfAv/EM4G6dPwidNT7nxKfVKIMAS3MjZBO7zg1uYfK4duxX9E
+         exNfn7Hxi+A5RSAA23QJ79AwLyOsssEfPKBU6FMJV8TBRE/krF58/1ZgM8xPHAQgSZn8
+         Ul0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDQTmD6PRfxES9Ao+GdvDpw3QHszVl//4b/YZAuRShl4NsAyEyxtLBIBx35WFod+pd8EHjI/HPbVicMTpR/O/m2aBCzw7hRUkgYusvSx5t
+X-Gm-Message-State: AOJu0Yx2XCW1WA4UHMHvpbM2F31kFydz3QwH1mhhtMbaXFTKHmwe+ebD
+	xNpsaOZ8rL2KO328KjtON4p7DRTkyGYQfkqOANMP/vk2ZBSFlodBOKYMk13kaw==
+X-Google-Smtp-Source: AGHT+IGH+PXOCFE8Sx+8SDXrIRe2J4LTaRX/jocxs+KNVTAxz1MSfGPWTzHpvTrkX9a//yribdgf2w==
+X-Received: by 2002:a05:6a20:8e16:b0:1a1:4d74:cc48 with SMTP id y22-20020a056a208e1600b001a14d74cc48mr3248181pzj.21.1709573784240;
+        Mon, 04 Mar 2024 09:36:24 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r27-20020aa7845b000000b006e04d2be954sm7484585pfn.187.2024.03.04.09.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 09:36:23 -0800 (PST)
+Date: Mon, 4 Mar 2024 09:36:23 -0800
+From: Kees Cook <keescook@chromium.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] spi: axi-spi-engine: use __counted_by() attribute
+Message-ID: <202403040936.E933B96@keescook>
+References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
+ <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
- <CAD=FV=WtJCkdSY=HYDmBjn3hc4TYT7j0bMxGCV-=B3o3bm-kpQ@mail.gmail.com>
- <CAD=FV=XMkrWmA1D6UjdTs8oZiXxKc1xiUoRqtNqAE-7GoPk8mA@mail.gmail.com> <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
-In-Reply-To: <ZeH81_k6TFk7W4tm@FVFF77S0Q05N>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 4 Mar 2024 09:34:19 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
-Message-ID: <CAD=FV=XJhvVO7k0hhz_KPH4eSrJQdb+k2CJQeCAP40+PYAdDBg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Misono Tomohiro <misono.tomohiro@fujitsu.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Tony Luck <tony.luck@intel.com>, Valentin Schneider <vschneid@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
 
-Hi,
+On Mon, Mar 04, 2024 at 10:04:24AM -0600, David Lechner wrote:
+> This adds the __counted_by() attribute to the flex array at the end of
+> struct spi_engine_program in the AXI SPI Engine controller driver.
+> 
+> The assignment of the length field has to be reordered to be before
+> the access to the flex array in order to avoid potential compiler
+> warnings/errors due to adding the __counted_by() attribute.
+> 
+> Suggested-by: Nuno Sá <nuno.sa@analog.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-On Fri, Mar 1, 2024 at 8:06=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
-wrote:
->
-> Hi Doug,
->
-> On Tue, Feb 27, 2024 at 04:57:31PM -0800, Doug Anderson wrote:
-> > On Mon, Jan 8, 2024 at 4:54=E2=80=AFPM Doug Anderson <dianders@chromium=
-.org> wrote:
-> > > On Thu, Dec 7, 2023 at 5:03=E2=80=AFPM Douglas Anderson <dianders@chr=
-omium.org> wrote:
->
-> > > The sound of crickets is overwhelming. ;-) Does anyone have any
-> > > comments here? Is this a terrible idea? Is this the best idea you've
-> > > heard all year (it's only been 8 days, so maybe)? Is this great but
-> > > the implementation is lacking (at best)? Do you hate that this waits
-> > > for 1 second and wish it waited for 1 ms? 10 ms? 100 ms? 8192 ms?
-> > >
-> > > Aside from the weirdness of a processor being killed while holding th=
-e
-> > > console lock, it does seem beneficial to give IRQs at least a little
-> > > time to finish before killing a processor. I don't have any other
-> > > explicit examples, but I could just imagine that things might be a
-> > > little more orderly in such a case...
-> >
-> > I'm still hoping to get some sort of feedback here. If people think
-> > this is a terrible idea then I'll shut up now and leave well enough
-> > alone, but it would be nice to actively decide and get the patch out
-> > of limbo.
-> >
-> > FWIW the serial console dumping issue that originally inspired me to
-> > track this down has been worked around at least well enough to not
-> > spew garbage in my console. See commit 9e957a155005 ("serial:
-> > qcom-geni: Don't cancel/abort if we can't get the port lock"). It's
-> > still a little awkward because we'll be running fully lockless during
-> > panic time, but it seems to work...
->
-> This is on my list of things to look into, but I haven't had the chance t=
-o go
-> through it in detail.
->
-> From a high level, I think this sounds reasonable; I just want to make su=
-re
-> this doesn't lead to any new surprises...
+Looks good! Thanks for the respin.
 
-Sounds good. For now I'll snooze this for another 2 months and if I
-haven't heard from you then I'll pester you again. There's no crazy
-hurry, I was just hoping for some sort of decision one way or the
-other. For now I'll hold off on changing things to match x86 exactly
-until I get your take on it too.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
--Doug
+-- 
+Kees Cook
