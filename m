@@ -1,52 +1,53 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B784CB28
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 16:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBF94D9FB
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Mar 2024 16:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709568942; cv=none; b=Pb6jx9mMcdQjI0vsFCsu11XbR/+q5Gk49kAwX1FGffdpra7k06K4jVVRMU/+tikyPAnzxctUVhc/T65352SAN9H6YVnm/isw5h9X3cs3cshYUEjnJhWMxy9HzQxoE6bxks5G+wRYAklN/R0YQqeVxwVQT0hb7YwCzdUHgd3+2AA=
+	t=1709568977; cv=none; b=Anufui4q0IKzrMtAjAKNtAUIQ0imT1Iorsr/sBBzqebbMBwlHPFg6rGVYQ5QdSIvTl02XAEriq8KJwKJd2PttDn69EjWd0+gP74NGbIkJMfjvgWw4L/EPjH31RojPbWUZwM1s+o0U1oFCixHlx+IZvol5qnvh0tG6VAxdFaMmIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709568942; c=relaxed/simple;
-	bh=4wLXXGapyhl5RXVihnd+1Vp73lXL989wXTA0Ag/ZZ1w=;
+	s=arc-20240116; t=1709568977; c=relaxed/simple;
+	bh=g0/AEZ+kj3ofFSyxuc6SkwhOHdxhpZlJ9InLYUqrsAE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gf1Dr9hIGSYsel0x/YrZJT5nR8M8xUEzm5o9A5wzgLG1Zo5PHDDxZJ4ZW9g6EQaTsOdK/1C/QkGhVszAZsI7Pty20zzdj9uHe0h6FCwgfJONyMh0EiO7bhMfwedjRFk3OKQjYT6sfc0kT6cdH5uviRmwAmhj+NU1GJLCAE2sINk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cjo+/8JL; arc=none smtp.client-ip=35.89.44.37
+	 In-Reply-To:Content-Type; b=XEh9ozRe0B+Cs3W3BVoqA6dUeZuEALEX4e++hYq8JFqnfIiKu/jv3zWT7I5BJ3fXdNn3gYy0WHA9REE+J/LSOPcIi6L7z68ZUrIZZaaLQjOzTsfZLK4pdsLfQhNF6QtkOfp0Np4FtWrSINGi6blqgfSy668zPg383ogvnfXUtqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=UKp4OvJf; arc=none smtp.client-ip=35.89.44.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cjo+/8JL"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UKp4OvJf"
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
 	by cmsmtp with ESMTPS
-	id hAVRrTdXkDI6fhAyUrLLc5; Mon, 04 Mar 2024 16:15:34 +0000
+	id hAVCrSfvQPM1hhAz2r4ZuN; Mon, 04 Mar 2024 16:16:08 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id hAyTrLMVOGNvAhAyTrF0c1; Mon, 04 Mar 2024 16:15:33 +0000
-X-Authority-Analysis: v=2.4 cv=Dc4RqOtW c=1 sm=1 tr=0 ts=65e5f3a5
+	id hAz1rSSk01Ks9hAz1riOY5; Mon, 04 Mar 2024 16:16:07 +0000
+X-Authority-Analysis: v=2.4 cv=MbdquY/f c=1 sm=1 tr=0 ts=65e5f3c7
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=IpJZQVW2AAAA:8 a=VwQbUJbxAAAA:8 a=dPq7nFLFEyjAz7fAJV0A:9 a=QEXdDO2ut3YA:10
- a=xmb-EsYY8bH0VWELuYED:22 a=IawgGOuG5U0WyFbmm1f5:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=gAnH3GRIAAAA:8
+ a=IpJZQVW2AAAA:8 a=VwQbUJbxAAAA:8 a=b3IyxZijl_8VvaR0It0A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=oVHKYsEdi7-vN-J5QA_j:22 a=IawgGOuG5U0WyFbmm1f5:22
+ a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8i2X/bWggq1yfpDbyb2kwdQL3S/U6M4BjzbCsEE+miw=; b=cjo+/8JLIpVVj8RUICChZHzoqx
-	XXKQHmpHQAnC4UKC22Bzg3n3eQAxaGzntF0h93IIp5KmW76LC4kmoFYtfpZ4DoKPBfbaEU/HSzDlC
-	0Az9mOjkHScrMgK9+GAQZkGPCbt9pPZ98pd6Hgx22tlzFx9ACS3Dj0wWDfW3NkKGLEycgMuPmuh2C
-	PB6l9QtHvw81goFu5ndmwwQgCba4oWVx4ET4jtN7zK/8lL6rNRZPjjzHWCBXHAyGQqEAPUOon2PfZ
-	heb9iFidHHfE5WC9B0AOv1ivBcu0OnixBskO2P99oWtspbIvSwk7dVkbzHHqBZZBSNgeWrnPzT24d
-	nW72FOfA==;
+	bh=xKSrONrt5I6Ut2/eB3mdoDjp4fdULvLP/a8V6qevuBc=; b=UKp4OvJfORU0mOpx3u0dgh+NW6
+	mEEHmrDfVxWLHfmEwsxeBBhnX8VoBqVvbMNIcx7zPbErt4b+S5JL7GxU8Z3PMRylfCm9lcPukGL+l
+	ZLfBCcd0BclMLx1LLi2mtOS32GW3pml5AijwrzWFQ05e8J+i1rvp66x237/D/G3VkDGRiF94YJ0bn
+	K/SesWBbeIqkQog9Mg9maAIBllnorGaPEgOQDvIU4CKYrDsdwWuFVXeocdK59WPKqPYOjNSBr5XwG
+	FDTHrlkGlRPcsV/RQy3G2kDXF0DTy313FLcVlIyYORm2hJ7BF/IeLAVHi+NaSVlEleSX30F48em10
+	OCIKGS8A==;
 Received: from [201.172.172.225] (port=49252 helo=[192.168.15.14])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1rhAyS-003iEz-30;
-	Mon, 04 Mar 2024 10:15:32 -0600
-Message-ID: <8281c9ed-8532-40c3-ad5b-3c7955935705@embeddedor.com>
-Date: Mon, 4 Mar 2024 10:15:26 -0600
+	id 1rhAz0-003iEz-2L;
+	Mon, 04 Mar 2024 10:16:06 -0600
+Message-ID: <cb286926-3ebe-4ff3-926e-df9dfe215fda@embeddedor.com>
+Date: Mon, 4 Mar 2024 10:16:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,8 +55,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] spi: axi-spi-engine: remove p from struct
- spi_engine_message_state
+Subject: Re: [PATCH v2 2/3] spi: axi-spi-engine: use __counted_by() attribute
+Content-Language: en-US
 To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>
 Cc: Michael Hennerich <michael.hennerich@analog.com>,
  =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
@@ -63,12 +64,11 @@ Cc: Michael Hennerich <michael.hennerich@analog.com>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-spi@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
- <20240304-mainline-axi-spi-engine-small-cleanups-v2-1-5b14ed729a31@baylibre.com>
-Content-Language: en-US
+ <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-1-5b14ed729a31@baylibre.com>
+In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-2-5b14ed729a31@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -77,27 +77,30 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.172.172.225
 X-Source-L: No
-X-Exim-ID: 1rhAyS-003iEz-30
+X-Exim-ID: 1rhAz0-003iEz-2L
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: ([192.168.15.14]) [201.172.172.225]:49252
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 10
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPNtbbsepFSVudzWZfv41BlghhUnqyidkDDzTvb5ovc+N4xSfOYv3GqifQ+uMeQSmc3aN9yrWOnx+mVqcY2jW/eHlLzE+5Cmmq5xyc0RKKNTgmowLINS
- qtjstlPu3C5+FDs45YIUpxX9o8ysQG34cK8NXxqKGvA6VGDI1NFi3AiK1AgIjDtTiHgvOgLvGEFIqlKwHjvEVDX/FOdPTFTavUAszPjCwfoacCGqQddzOPMd
+X-CMAE-Envelope: MS4xfBuVQkOBi1xPpOf9JjzwoNrGMFm/bYuKjF3kz/Ig3RT9zO1EZg7VhtnSjL4m2+fu/QZB4SL4zJlTAaf2Dbxh7C4ET2NAPaFQK57sInAxd3g+ryIIaj+m
+ cerU/Q8KxgTNt6lyUGP7UtnJ12277wngB6vJanMF/vp1aORqM3z6FQrSLpcPHygX/068JS0kpIMpzpeEwGbc38hxrRbzftFyiMmS5HIZBj2D8wsTfgEXWUE2
 
 
 
 On 04/03/24 10:04, David Lechner wrote:
-> The program pointer p in struct spi_engine_message_state in the AXI SPI
-> Engine controller driver was assigned but never read so it can be
-> removed.
+> This adds the __counted_by() attribute to the flex array at the end of
+> struct spi_engine_program in the AXI SPI Engine controller driver.
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> The assignment of the length field has to be reordered to be before
+> the access to the flex array in order to avoid potential compiler
+> warnings/errors due to adding the __counted_by() attribute.
+> 
+> Suggested-by: Nuno Sá <nuno.sa@analog.com>
 > Signed-off-by: David Lechner <dlechner@baylibre.com>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -107,28 +110,36 @@ Thanks
 Gustavo
 
 > ---
->   drivers/spi/spi-axi-spi-engine.c | 3 ---
->   1 file changed, 3 deletions(-)
+> v2 changes:
+> * Reordered assignment of length field.
+> ---
+>   drivers/spi/spi-axi-spi-engine.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-> index 6177c1a8d56e..d89f75170c9e 100644
+> index d89f75170c9e..a8f626165f44 100644
 > --- a/drivers/spi/spi-axi-spi-engine.c
 > +++ b/drivers/spi/spi-axi-spi-engine.c
-> @@ -82,8 +82,6 @@ struct spi_engine_program {
->    * struct spi_engine_message_state - SPI engine per-message state
->    */
->   struct spi_engine_message_state {
-> -	/** @p: Instructions for executing this message. */
-> -	struct spi_engine_program *p;
->   	/** @cmd_length: Number of elements in cmd_buf array. */
->   	unsigned cmd_length;
->   	/** @cmd_buf: Array of commands not yet written to CMD FIFO. */
-> @@ -543,7 +541,6 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+> @@ -75,7 +75,7 @@
 >   
->   	/* reinitialize message state for this transfer */
->   	memset(st, 0, sizeof(*st));
-> -	st->p = p;
->   	st->cmd_buf = p->instructions;
->   	st->cmd_length = p->length;
->   	msg->state = st;
+>   struct spi_engine_program {
+>   	unsigned int length;
+> -	uint16_t instructions[];
+> +	uint16_t instructions[] __counted_by(length);
+>   };
+>   
+>   /**
+> @@ -115,9 +115,10 @@ struct spi_engine {
+>   static void spi_engine_program_add_cmd(struct spi_engine_program *p,
+>   	bool dry, uint16_t cmd)
+>   {
+> -	if (!dry)
+> -		p->instructions[p->length] = cmd;
+>   	p->length++;
+> +
+> +	if (!dry)
+> +		p->instructions[p->length - 1] = cmd;
+>   }
+>   
+>   static unsigned int spi_engine_get_config(struct spi_device *spi)
 > 
