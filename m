@@ -1,76 +1,76 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AD55E58
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE4956778
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633435; cv=none; b=fLfHZ4Exny+5bU24+K2IISeIZcZ/oCd++dPK3ny9AEVvNmW0cm5UeLJffBd4YP9xA2sp0+WoFAbJ9qs8NcL21uqb+3HlRiw3yc+7YxIaIWDm8cIg/pun290iLoPXgG0A2gKrgdwvPT7FR5bN/NtRi6RAQoTsopqUr0nWMrFL6PA=
+	t=1709633436; cv=none; b=Q7T1UPxbkZEOMEAtu1qNSt/9e/z9BThuxj7oeUJzddGFeYKArPym3zPAhPnYbzh6+qB9rAaZ+pPwHHYXkC0cKECCUi3SaZvGg/yiFAdWpUK2lnrdNxptZv2nLxPC4otDCGOImemiivdjaIviCCHxy0EMSSnMilnMlfAQz5TOYxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633435; c=relaxed/simple;
-	bh=5+bllf7wQXoQ1iiymcQxAaVJUnLpEaTtP4WhLyfCGPk=;
+	s=arc-20240116; t=1709633436; c=relaxed/simple;
+	bh=6qDL+BboHaqcTpZSUCl+S9ocvneIfXXeMs3ajiQ2O/Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nwsrmnYxY3nFiKg8PDd5Zp9tChHkG/0un93f6ICyil8i3+yCccl5fmNN9dUxh6DTV63wAoTfYmn7CSyquIB4sayZ0pcdAxCurNRPTlccM8dBdqBRhpkfialnBCFLmIDz9O9sgev4qOoDdcHNQsU01fG61cJ1BYTALTL2nTHNBIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Jq5k6fQ7; arc=none smtp.client-ip=209.85.210.173
+	 MIME-Version; b=DlibnD2ot1RHPaz/DPqM/52pYerfOiD8HdScj2/69nxKbyHRxvqnc0usxWTs0v/EMrqiK3uRQt48srnOM3V6ifJSNw+AibO2GgP5lK+nzGhHbtNDpihP48h5aza9Wmd6FniObIHKV8jKwgBzimH0TxR9Qg79rtRSHJDzJV0ps9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=afKW85Vc; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jq5k6fQ7"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e5e4b1d1f1so1959461b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="afKW85Vc"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dcce5e84bcso44154745ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709633432; x=1710238232; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709633434; x=1710238234; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W6tSmWQUz9mHEs7KKdtWRSqXpZBjknnUveJhwT+v2FU=;
-        b=Jq5k6fQ703V9hULNmaMj51rmkGH4CZW4hnaqyjwDdexzJc3KRKc3FZohTAuw3xhVzh
-         NAVVN1Lmmtv2M2c2IIeawk+kfjYC5A3Ez3gi9VSBRvidR0CoSLFmZ1WywTNWOPe67oA+
-         pbNEBGHPBJYMKL7jN67cKd9iWt4tbRxpFRel8=
+        bh=Jdg+vWQ/glPg3PLzwoChyf7fue9eFP8PVvp8lsS5Lok=;
+        b=afKW85VcRubI10YjZUBeM6xATHrPsAt3P4VKvRlK8VNrcMjYzRcdNQdpTMDAqmQ3ax
+         kdq/syHQW16HUT9dJ3yWw/h71pEuxNL7YsormhU1ulz6uIajLI3lCvO0qwar2NIEOSYB
+         dpPEwMfdU6sRJPZISTZedRn/y3vAWy0ijnM9g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709633432; x=1710238232;
+        d=1e100.net; s=20230601; t=1709633434; x=1710238234;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W6tSmWQUz9mHEs7KKdtWRSqXpZBjknnUveJhwT+v2FU=;
-        b=Q1yIzru8EGoA32dArSGSjpwgLT7rl2K/YKfrq/S9gRvCVFYY8nPGPDpkHBx02cMVE4
-         /fpG3pFB0NPxU9ctkPbPJLiBhd7ZOmrzSpV8AKr9yKo+TN/JNZzW0IVXcwwVNJh0SPs1
-         m7a2YZ6vqrLrBz2/YPK1zl34g6P55pIg2EVXXyXtk/zMUgYXAGTzS9AMsm5rdqzgabSx
-         nwUTF5boG8x+NcY9YX26hGnBtQLHe1OgG+WbbY8BEm6VClMK79O3OpnqWswl/Am3b3OF
-         9bY4jhneJM6GwzM6HUB6/sylxSSDZCNoPg9CIfqhMtwFAgONa3gnNph4Nty9LxfIX66V
-         6xcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMxXX2bcrGxcr56u8pOnpbUVu+9mvJvoYR6tOxX5+r5PUHLD8sxJoCvz6Jlv/rjFrERTJrCHTuVF2W/cZ2OAgLhkq3kuEnx9Y/hsBsSFj/
-X-Gm-Message-State: AOJu0YxNgNBDjT7kGz31r2ykowizMbDykhCa+Q+Djl3Aw8uIvFP/j4D/
-	fp2CKL6xZUe1wpXRrL8fOetpAA7fEcYDihc7WwD62EZ0szq411SfqrqdWp3TTQ==
-X-Google-Smtp-Source: AGHT+IGioGxnLf58krzooyXRSux/Zxx7hWwNEvHeCXchceFMByRkqxZ+PaMIxnsL+kY8mFgOqRxI3w==
-X-Received: by 2002:a05:6a20:729a:b0:1a1:3b27:4f3f with SMTP id o26-20020a056a20729a00b001a13b274f3fmr1585251pzk.2.1709633432471;
-        Tue, 05 Mar 2024 02:10:32 -0800 (PST)
+        bh=Jdg+vWQ/glPg3PLzwoChyf7fue9eFP8PVvp8lsS5Lok=;
+        b=bTnJoNbBxgOSe01i35aTKj09q3cSFM69YrGyyMCgJeWHg2ZkVfc87A2IVKTGMjQGdM
+         V4zAXLr1XoEalmMYHGq/uVzM89soQCjWSh6VBfky/D90TdKLo0hshdXW1XsMqsFs/4Qb
+         3ggIbyudKRqcQYY2gfnDbRLFBZ6x5e1y9Y8YBlZCRC6DvmSyOwU6yvgRBonR7WaYIVXc
+         JpFL2JVpDCzJw++3uMa1UCkmXUvT1GyIyiGKKLaT+jKaDWFJ1CPOGXXg4NFNEKPWmFds
+         M6gCmRQq1aWecfSX8Y8WLIGEVvHPwDTqHz5LHhqp3YOUSZaA9uKUS4aT+i6kQZtBA7FH
+         99aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1Sw5wIIe62ODK8hxE+EpdmmOMik4xOjWh7/7E4SkL9xBTMFByWCS28oIOLHPKeyQ4R29nlGsshW7LYmyhCqHvVX9vyIGdtb/lLVJIXFI7
+X-Gm-Message-State: AOJu0Yxr69ud/lznl2JzWNUcCmjB5KCsdGgcrMnvpPywc8TGnRnUtVaX
+	Khq6WnZJRd++5VhD5O17zCOsNbO6kPJ58XTuqL7GIuhsEe8YjpGphw6h53ieHw==
+X-Google-Smtp-Source: AGHT+IHYCn9DBg9xzTvpQ8G0/N3dK13ZQWLK1qCcLYJXKOoBEAWGORs21YgWZoWg8YTIQaCZeo4VAA==
+X-Received: by 2002:a17:903:2287:b0:1dd:7da:e0a9 with SMTP id b7-20020a170903228700b001dd07dae0a9mr1791845plh.69.1709633433734;
+        Tue, 05 Mar 2024 02:10:33 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m7-20020a62f207000000b006e580678dfbsm8485054pfh.193.2024.03.05.02.10.28
+        by smtp.gmail.com with ESMTPSA id q17-20020a170902e31100b001dbcf653017sm10134281plc.289.2024.03.05.02.10.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 05 Mar 2024 02:10:30 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Kees Cook <keescook@chromium.org>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-mm@kvack.org,
 	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
 	Xiu Jianfeng <xiujianfeng@huawei.com>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	Jann Horn <jannh@google.com>,
 	Matteo Rizzo <matteorizzo@google.com>,
+	linux-mm@kvack.org,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 6/9] slub: Introduce kmem_buckets_alloc_track_caller()
-Date: Tue,  5 Mar 2024 02:10:22 -0800
-Message-Id: <20240305101026.694758-6-keescook@chromium.org>
+Subject: [PATCH v2 9/9] mm/util: Use dedicated slab buckets for memdup_user()
+Date: Tue,  5 Mar 2024 02:10:25 -0800
+Message-Id: <20240305101026.694758-9-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240305100933.it.923-kees@kernel.org>
 References: <20240305100933.it.923-kees@kernel.org>
@@ -80,95 +80,106 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2914; i=keescook@chromium.org;
- h=from:subject; bh=5+bllf7wQXoQ1iiymcQxAaVJUnLpEaTtP4WhLyfCGPk=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+Q9Fez113NbGGVqjvVTslyLAH8TI+6Wb4a3
- UHTy9ESMGeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A
- Jum0D/9tfCyWy09BzH1L9P4M66z0u2ctSfRJPeQ1x4bgaEnW38mkbjG41ME6e+R5Zj0gpmBgZ+L
- BVNaHnefEXko8smuTRzZ4FGGksACNwKf0+N86253pNgtssxWUfgfa3aQ1EA8XEBCMceHWGnr84H
- h34x9bAbwoUCp96M4lvRDs8cKxVlleF0jjCvDpvMT3T1ZAyvoPvNHYpvj6mth+oFIZTSkt3Wz+X
- 919IaLbl/IDuiJVd9rtpALExUWOh+KXL6FuuwYZHWN+SaSa712xlgG/5pLuJ+2l8Ub1IJiEQVWp
- r/4azSgELrhUJFvtIbkEWWKreqYhRzNs/rKZUmxW7K1gGKiGdDk4ZDqhqhclVbw3MMBNLZbLerx
- rSCyI/khhcdBGZYwjg6IFEY/vpFVkrL44xPf13VdK07PEsrsff7tXBBEX59HFI2KvQG5OsvWVhP
- aHHbbGxMkh8n+z9aHH4WpY49kUBjUPRrASB5fIz5FsMzXVgyemQHiUSYTVdkJ3aT34AdKNF6pks
- Immb98LUo/rCvKgXzxq/u49qS0zQkVpV4BWtD/SwK4MuhHIOU8Rm9ytXz8ZSxeZ0v1pYc89qObI
- o3aW/HpIQI7IY2DuYh0+o+TW5k0hDDZa00o0vGiCTiQIKa61gmW3pYCwmM5FPO2U0gagUkJ30W6 V9QFinQCp7WdukA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3141; i=keescook@chromium.org;
+ h=from:subject; bh=6qDL+BboHaqcTpZSUCl+S9ocvneIfXXeMs3ajiQ2O/Q=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+Ruvag2LjJsl5BflMWP3F10S0bpaicfQjrP
+ em4Flv551eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkQAKCRCJcvTf3G3A
+ Jh5rD/wJ5mDNRMwSTsAR06j+XsdZ1LXMSaSe8WeQSfww+7fSDo2bwPbB2YuP2imZfi2Z0ALaDNc
+ QjrOdKcPLNAptwDgTvG8rgq8Ads/uaBkD6rP1GpQd9XF7ZP+IN5Tj/Ust9Zx+YZOh1j757Tk9f4
+ /2I7O+56tM7rqcJYTzDVwwN3lx5z9LnJAIv9cA2fc5WZw4zdqRbzRZ2x2/jTvOictVZIOz75vdw
+ eHxukjUd1puppQSWDfMARwCUPIILs8IjoAaR8UZAfPVGp0pxZe2GBSsLG2wB+yvlBFR58gg+qkr
+ PPA4dy4re0Tig2xdNDMKxFzPI2MGhDuckv7+bdXYa1y03Qk/hE9om+kdYryhKz3AJ7c2FU6lReH
+ mTQ/EPfpM/DP3hVk1yOvB4YQVT+SsRzeBQyHjE7vMel9E0zPFPRlsHvTQYQfzF3xQMEWSjWW4GG
+ 5VQ0LGp6u8ey7adQvju72Jq5NXyiMZbaTebl1RgLT0AX7iek73VAJKe9Vp1MeHbuW3KzheQjEhv
+ V+GYAiXu51x1VsKLuN69+yg2ofManoTrfcNE9k/KiZywKTTRvzJ7GlsihkF1zScLCrOfnIJLfWn
+ mSg61FpR2fsWqar318TaCYm5iTXskabguFfuho/W7iHJo+XHIJRToiRH7s34zAmcK3ETFBpzTUP t3ctwbz/OBT4vHA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-For better capturing the caller details for allocation wrappers,
-introduce kmem_buckets_alloc_track_caller() by plumbing the
-buckets into the existing *_track_caller() interfaces.
+Both memdup_user() and vmemdup_user() handle allocations that are
+regularly used for exploiting use-after-free type confusion flaws in
+the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
+respectively).
 
+Since both are designed for contents coming from userspace, it allows
+for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
+buckets so these allocations do not share caches with the global kmalloc
+buckets.
+
+After a fresh boot under Ubuntu 23.10, we can see the caches are already
+in active use:
+
+ # grep ^memdup /proc/slabinfo
+ memdup_user-8k         4      4   8192    4    8 : ...
+ memdup_user-4k         8      8   4096    8    8 : ...
+ memdup_user-2k        16     16   2048   16    8 : ...
+ memdup_user-1k         0      0   1024   16    4 : ...
+ memdup_user-512        0      0    512   16    2 : ...
+ memdup_user-256        0      0    256   16    1 : ...
+ memdup_user-128        0      0    128   32    1 : ...
+ memdup_user-64       256    256     64   64    1 : ...
+ memdup_user-32       512    512     32  128    1 : ...
+ memdup_user-16      1024   1024     16  256    1 : ...
+ memdup_user-8       2048   2048      8  512    1 : ...
+ memdup_user-192        0      0    192   21    1 : ...
+ memdup_user-96       168    168     96   42    1 : ...
+
+Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
+Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
+Link: https://etenal.me/archives/1336 [3]
+Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc: Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Jann Horn <jannh@google.com>
+Cc: Matteo Rizzo <matteorizzo@google.com>
 Cc: linux-mm@kvack.org
 ---
- include/linux/slab.h | 11 +++++++----
- mm/slub.c            |  4 ++--
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ mm/util.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 08d248f9a1ba..7d84f875dcf4 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -606,6 +606,9 @@ void *kmem_buckets_alloc(kmem_buckets *b, size_t size, gfp_t flags)
- 	return __kmalloc_node(b, size, flags, NUMA_NO_NODE);
+diff --git a/mm/util.c b/mm/util.c
+index 02c895b87a28..25b9122022a7 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -181,6 +181,16 @@ char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
  }
+ EXPORT_SYMBOL(kmemdup_nul);
  
-+#define kmem_buckets_alloc_track_caller(b, size, flags)	\
-+	__kmalloc_node_track_caller(b, size, flags, NUMA_NO_NODE, _RET_IP_)
++static kmem_buckets *user_buckets __ro_after_init;
 +
- static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
++static int __init init_user_buckets(void)
++{
++	user_buckets = kmem_buckets_create("memdup_user", 0, 0, 0, INT_MAX, NULL);
++
++	return 0;
++}
++subsys_initcall(init_user_buckets);
++
+ /**
+  * memdup_user - duplicate memory region from user space
+  *
+@@ -194,7 +204,7 @@ void *memdup_user(const void __user *src, size_t len)
  {
- 	if (__builtin_constant_p(size) && size) {
-@@ -670,10 +673,10 @@ static inline __alloc_size(1, 2) void *kcalloc(size_t n, size_t size, gfp_t flag
- 	return kmalloc_array(n, size, flags | __GFP_ZERO);
- }
+ 	void *p;
  
--void *__kmalloc_node_track_caller(size_t size, gfp_t flags, int node,
--				  unsigned long caller) __alloc_size(1);
-+void *__kmalloc_node_track_caller(kmem_buckets *b, size_t size, gfp_t flags, int node,
-+				  unsigned long caller) __alloc_size(2);
- #define kmalloc_node_track_caller(size, flags, node) \
--	__kmalloc_node_track_caller(size, flags, node, \
-+	__kmalloc_node_track_caller(NULL, size, flags, node, \
- 				    _RET_IP_)
+-	p = kmalloc_track_caller(len, GFP_USER | __GFP_NOWARN);
++	p = kmem_buckets_alloc_track_caller(user_buckets, len, GFP_USER | __GFP_NOWARN);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
  
- /*
-@@ -685,7 +688,7 @@ void *__kmalloc_node_track_caller(size_t size, gfp_t flags, int node,
-  * request comes from.
-  */
- #define kmalloc_track_caller(size, flags) \
--	__kmalloc_node_track_caller(size, flags, \
-+	__kmalloc_node_track_caller(NULL, size, flags, \
- 				    NUMA_NO_NODE, _RET_IP_)
- 
- static inline __alloc_size(1, 2) void *kmalloc_array_node(size_t n, size_t size, gfp_t flags,
-diff --git a/mm/slub.c b/mm/slub.c
-index 71220b4b1f79..ae54ec452a11 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3995,10 +3995,10 @@ void *__kmalloc(size_t size, gfp_t flags)
- }
- EXPORT_SYMBOL(__kmalloc);
- 
--void *__kmalloc_node_track_caller(size_t size, gfp_t flags,
-+void *__kmalloc_node_track_caller(kmem_buckets *b, size_t size, gfp_t flags,
- 				  int node, unsigned long caller)
+@@ -220,7 +230,7 @@ void *vmemdup_user(const void __user *src, size_t len)
  {
--	return __do_kmalloc_node(NULL, size, flags, node, caller);
-+	return __do_kmalloc_node(b, size, flags, node, caller);
- }
- EXPORT_SYMBOL(__kmalloc_node_track_caller);
+ 	void *p;
+ 
+-	p = kvmalloc(len, GFP_USER);
++	p = kmem_buckets_valloc(user_buckets, len, GFP_USER);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
  
 -- 
 2.34.1
