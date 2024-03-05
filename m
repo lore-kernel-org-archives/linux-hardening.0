@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596CB944F;
-	Tue,  5 Mar 2024 17:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BCD17582;
+	Tue,  5 Mar 2024 17:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709659459; cv=none; b=qrA8qMkyX558VbRh60H2uVwaAkkpESuwPGrDncUMHw9ar0ma1WI3WACOfCFRTcJlIcDy7+il9MzFrwOyiBZIGZmqA5r1QGXa7jl/iqxT4rJUjUBwm3lv3ACptjUTGhjloQpcFzYvJbmzCR9qWu2Hnv9w2FedHErTeNjeJQRJHmk=
+	t=1709659498; cv=none; b=JfCHO1CLAQiKAMd+BOr5honlFPUvTBgTNgmJAsOUBYnUlXTGmxEJcOE68DENZ2HzQhnb7kKJhOypRbMhLSbzLH0HpV/GhmSyDqT7nSp7Zm9zxb9XVprPcRDY2gtBeUBmF7AkhfdG5q6WHkVAixk2rcOtQslsW0fsZn8hGCd90fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709659459; c=relaxed/simple;
-	bh=ulWrTp+lCV+gMNzuEsMt7+NdH9m0bIisaeuCfQ/H8QE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=flSugAaGgIw4eTyqox2Vbdeh/ORZ+IUHUGZSoTfWEo5CgEMVKw+KNQF59XwsK9XgfWKPYa2p/PeK1D1GVmR//KPsNN46HeWMa0MIV/s78jb3erV8BfnBaSJnK4fOeROPhNfYD/XqVFGAMPO9J44Y14NpCbfivDgz49WXlPJ3yKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QrNdYMDP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709659498; c=relaxed/simple;
+	bh=0lwIjheUVVinIAmrLyBNdgK66HWaAqekBzSfCyt9IXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZpcOet2AJhSn5nUxdxY4pFbLo01bUGNgwb0ejp5So9KVjnnsYTSQ2cYjQXmcubz5PW9MPb7I7Bk3GFat0lOeTD1G8Oo1DnqKmxBncZf5m8dg+1WBT4Ds9IEIkBgK6uGDQWsJ4loW0b9TV5j480iyczy8whu+zJqqgnH07y6gV9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z903NSju; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QrNdYMDP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE591C433F1;
-	Tue,  5 Mar 2024 17:24:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z903NSju"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 427CCC433F1;
+	Tue,  5 Mar 2024 17:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709659458;
-	bh=ulWrTp+lCV+gMNzuEsMt7+NdH9m0bIisaeuCfQ/H8QE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QrNdYMDPC/2tFJec41XasQKtNc041wNjuL5OO8PQ1hxCSb/ldGPYzjb0+xAueLtB5
-	 QyGGFFB3eXPzuD8MP59Xwfh4Q5HbPZ8mqASpYcTd/uywW43rD4H0J6Y2l6jP+aH9Uz
-	 03CnagADHeI4OrUvpjlxgEASx3VuVKCwrrhQOEKaV79BM2FUL/npnEXTRwFEVStAk+
-	 KZDzeX71Cfeehmxe/IkcDIVpGK5wnQChaFYQc8HqYHKfZqCElrcT+MmF5Kd+FYfu1c
-	 Q3jROYzeJxzSaf9T4pG53d9VHi2Cy9BP1G15pbrsOa9L7MgDEd0WXxq/+tRS7S1poW
-	 iu/QSAT4pDzlA==
-Date: Tue, 5 Mar 2024 11:24:15 -0600
+	s=k20201202; t=1709659498;
+	bh=0lwIjheUVVinIAmrLyBNdgK66HWaAqekBzSfCyt9IXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z903NSjuRS54CjitvIUAHCtyiTeYD9kpF16xaR6iCL0pBoY7G2j1sdFwYrxw9llc3
+	 vAneSCEfELCgq9mk8dxSj/AJSDfxpBXh9Of7zHDuhZgbHAJVxkAPbYfl++P3FK7PFB
+	 ep2fLKsOtkra6ll9CtSwoHrap4qqibhT7NhvSAsbvhhSAbPu4D6lEVM+8v8wbrxjeD
+	 J+RXr4lNozZ6SEp6K5qX54J4yelJI2ZD5Q14HEPyj3rVU/e1/PvAXhhSsVP7b+Ay2T
+	 fI6tLHe/LNMDZMrS3K4cUImbIQPtrpmQ8XFYMUZCyUphwI5obMSq0gHxYRJAXyh1z/
+	 gC/rlOZXKIS3Q==
+Date: Tue, 5 Mar 2024 11:24:55 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
 	Clemens Ladisch <clemens@ladisch.de>,
@@ -35,48 +35,133 @@ Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org, alsa-devel@alsa-project.org,
 	linux-sound@vger.kernel.org, linux1394-devel@lists.sourceforge.net
-Subject: [PATCH 0/2][next] firewire: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <cover.1709658886.git.gustavoars@kernel.org>
+Subject: [PATCH 1/2][next] firewire: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <eac86b3b9b84859528c346977a8f879188dc61e0.1709658886.git.gustavoars@kernel.org>
+References: <cover.1709658886.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1709658886.git.gustavoars@kernel.org>
 
 -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally. So, we are deprecating flexible-array
-members in the middle of another struct.
+ready to enable it globally.
 
-There are currently a couple of local structures (`u` and `template`)
-that are using a flexible `struct fw_iso_packet` as header for a couple
-of on-stack arrays.
+There is currently a local structure `u` that is using a flexible
+`struct fw_iso_packet` as header for an on-stack array `u8 header[256]`.
 
-We make use of the `struct_group_tagged()` helper to separate the
-flexible array from the rest of the members in the flexible structure,
-and, with this, we can now declare objects of the type of the tagged
-struct, without embedding the flexible array in the middle of another
-struct.
+struct {
+	struct fw_iso_packet packet;
+	u8 header[256];
+} u;
+
+However, we are deprecating flexible arrays in the middle of another
+struct. So, in order to avoid this, we use the `struct_group_tagged()`
+helper to separate the flexible array from the rest of the members in
+the flexible structure:
+
+struct fw_iso_packet {
+        struct_group_tagged(fw_iso_packet_hdr, hdr,
+		... the rest of the members
+        );
+        u32 header[];           /* tx: Top of 1394 isoch. data_block    */
+};
+
+With the change described above, we can now declare an object of the
+type of the tagged struct, without embedding the flexible array in the
+middle of another struct:
+
+struct {
+        struct fw_iso_packet_hdr packet;
+        u8 header[256];
+} u;
 
 We also use `container_of()` whenever we need to retrieve a pointer to
 the flexible structure, through which the flexible-array member can be
-accessed.
+accessed, as in this case.
 
-With these changes, we fix a couple of -Wflex-array-member-not-at-end
-warnings.
+So, with these changes, fix the following warning:
 
-Gustavo A. R. Silva (2):
-  firewire: Avoid -Wflex-array-member-not-at-end warning
-  ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning
+drivers/firewire/core-cdev.c: In function ‘ioctl_queue_iso’:
+drivers/firewire/core-cdev.c:1129:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+ 1129 |                 struct fw_iso_packet packet;
+      |                                      ^~~~~~
 
- drivers/firewire/core-cdev.c  |  9 +++++----
- include/linux/firewire.h      | 16 +++++++++-------
- sound/firewire/amdtp-stream.c |  8 +++++---
- 3 files changed, 19 insertions(+), 14 deletions(-)
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/firewire/core-cdev.c |  9 +++++----
+ include/linux/firewire.h     | 16 +++++++++-------
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+index 6274b86eb943..e1f1daa2e667 100644
+--- a/drivers/firewire/core-cdev.c
++++ b/drivers/firewire/core-cdev.c
+@@ -1126,9 +1126,11 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+ 	u32 control;
+ 	int count;
+ 	struct {
+-		struct fw_iso_packet packet;
++		struct fw_iso_packet_hdr packet;
+ 		u8 header[256];
+ 	} u;
++	struct fw_iso_packet *packet =
++			container_of(&u.packet, struct fw_iso_packet, hdr);
+ 
+ 	if (ctx == NULL || a->handle != 0)
+ 		return -EINVAL;
+@@ -1192,7 +1194,7 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+ 		if (next > end)
+ 			return -EINVAL;
+ 		if (copy_from_user
+-		    (u.packet.header, p->header, transmit_header_bytes))
++		    (packet->header, p->header, transmit_header_bytes))
+ 			return -EFAULT;
+ 		if (u.packet.skip && ctx->type == FW_ISO_CONTEXT_TRANSMIT &&
+ 		    u.packet.header_length + u.packet.payload_length > 0)
+@@ -1200,8 +1202,7 @@ static int ioctl_queue_iso(struct client *client, union ioctl_arg *arg)
+ 		if (payload + u.packet.payload_length > buffer_end)
+ 			return -EINVAL;
+ 
+-		if (fw_iso_context_queue(ctx, &u.packet,
+-					 &client->buffer, payload))
++		if (fw_iso_context_queue(ctx, packet, &client->buffer, payload))
+ 			break;
+ 
+ 		p = next;
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index dd9f2d765e68..becd3a60d0fb 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -456,13 +456,15 @@ void fw_core_remove_descriptor(struct fw_descriptor *desc);
+  * scatter-gather streaming (e.g. assembling video frame automatically).
+  */
+ struct fw_iso_packet {
+-	u16 payload_length;	/* Length of indirect payload		*/
+-	u32 interrupt:1;	/* Generate interrupt on this packet	*/
+-	u32 skip:1;		/* tx: Set to not send packet at all	*/
+-				/* rx: Sync bit, wait for matching sy	*/
+-	u32 tag:2;		/* tx: Tag in packet header		*/
+-	u32 sy:4;		/* tx: Sy in packet header		*/
+-	u32 header_length:8;	/* Length of immediate header		*/
++	struct_group_tagged(fw_iso_packet_hdr, hdr,
++		u16 payload_length;	/* Length of indirect payload		*/
++		u32 interrupt:1;	/* Generate interrupt on this packet	*/
++		u32 skip:1;		/* tx: Set to not send packet at all	*/
++		/* rx: Sync bit, wait for matching sy	*/
++		u32 tag:2;		/* tx: Tag in packet header		*/
++		u32 sy:4;		/* tx: Sy in packet header		*/
++		u32 header_length:8;	/* Length of immediate header		*/
++	);
+ 	u32 header[];		/* tx: Top of 1394 isoch. data_block	*/
+ };
+ 
 -- 
 2.34.1
 
