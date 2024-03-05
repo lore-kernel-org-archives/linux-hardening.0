@@ -1,88 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096A412C811;
-	Tue,  5 Mar 2024 20:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E785C5FD
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 20:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709671334; cv=none; b=UVoxZLrblPLy1eayrae83pLAaXf0qrOVQo2jyxo/vwGhyNouJMfoNoJRI78ExID8xf7xrACBvdnnm+UUbWKYujFgSy+Fh87m1KHyblpD4A48C1m35CgPkgMyazD791I/FrB3tsUMlNVicMUQHBdeR1h2dtXMQlcnvZnXT+mMxIo=
+	t=1709672270; cv=none; b=pmMeeaXsPaFojG4YlgYhnryE7eILd0SKg6AGHCbmxwy6L73gQux+V4lImX0nBoucmUkzHlS5R84NdDLDQ71HA2m8SvuxhxYIgP7UY83Rkl2baA8rLpEE1QsI6R0xuHHjd17XmVzmO5Nixn0SWFXH41gHdEnj1HZ4U5lQVa+nvaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709671334; c=relaxed/simple;
-	bh=U6U/tKB5/ThplqMAjY6bvXtQtE+7iNWfe3xadqfijik=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tq/jjHbc1veYWwalEKgSV9qZPCMpVSoTFARjZw88cfNSrskzAs/UN1Twyz6LJc4p/IT3KiLqePs/INnNUMnzWPIbBKqhM1Q5BPyU86IH+fib//qZZXaWSph2e1LhVBznviCL2jKP6lSJnWP4luKC3HSYBrKJ4zxVxjE8SmMwFtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEst1wRH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709672270; c=relaxed/simple;
+	bh=4y2L0boXZTMV4TDb8hO8PgzieZmUzq9lbLSb3KvG8k0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ued6Omzggzwc8TW2bje3GF7L2y/tGgIiBqzqJOTioVSzgsW3TKLxEUNxSr2pOyMAqee0lJX7khKOnML/U+Cprdpbf0yDbZXxqBqg/68FhaXJWp02e5sQKZnhC396DGWO+s0VcqTfVUPFIUxLIFGjtHnpOo2YNlOefH0OcbMKw8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VBWqCKDG; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEst1wRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7215CC43399;
-	Tue,  5 Mar 2024 20:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709671333;
-	bh=U6U/tKB5/ThplqMAjY6bvXtQtE+7iNWfe3xadqfijik=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=TEst1wRHEgaYoAooy+IPmlz+xRqwYPTTwA09b2jvjKBu1DB062fLjZC5LYPNREpth
-	 Xk/H7ML9ku70HIsPI4mXSvIq3diZldIE56V495QFNQjLntdS2cDE1m2eDL7yM17zOL
-	 JR5igTPBfFmJvSkf5GRcxM0Mm7vhDyWYrWlAhfURNiVNRHkvzOV5LoP6O7DAYpHTAI
-	 7nBvT997wagvJMxdFhqcIuoyicdy/wrf+yv4jbDN8Df3KwJ4xMTyWlVmyte1wM+Opw
-	 jtBRze9t4l5nKbsuCChdrEWQOe0f3nvzTaepqgM1/CA2407IM6C+6aSqCQJwkG6iW0
-	 pZSvy60fZGfaw==
-From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Kees Cook <keescook@chromium.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
-References: <20240304-mainline-axi-spi-engine-small-cleanups-v2-0-5b14ed729a31@baylibre.com>
-Subject: Re: [PATCH v2 0/3] spi: axi-spi-engine: small cleanups
-Message-Id: <170967133115.228925.14810837415699118831.b4-ty@kernel.org>
-Date: Tue, 05 Mar 2024 20:42:11 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBWqCKDG"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-42ef8193ae6so81821cf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 12:57:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709672268; x=1710277068; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DMppHw7KV/r56VUSnIREU2O979JxXuHNtcifN4Olhis=;
+        b=VBWqCKDGDtqfSjtVb345vt3+W6a38qDDSmcNfrprRiqVm5KKVxFG1eaTAs9zIWM7nw
+         XkfOxDepJJzr4XmZd2u0E14fT33iq5bTYaYJAj3YXIw3pmu04FxywWf4wDtLfOOe835A
+         8kzpzXszReLLvUFCmeHlZGEqYf+80F8kAuEVgvBt84uIPsSTZBAmHO6jNpzDHrfodkz5
+         c6WNZ/4ukxpBT5QAY192A537hKlu+uJfMgubl5uWcaSnP+OBxYno6lBa2Na//z/s/1se
+         X7EpWXiF+JDkISNr909WYap/KO8NOmEeRwkBSjEq4MPYqu9SXDfRAV7It/+xUW8waKIf
+         +byg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709672268; x=1710277068;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DMppHw7KV/r56VUSnIREU2O979JxXuHNtcifN4Olhis=;
+        b=dOuTIDR9ebPDkrpUyQHNV4ZSxmVTfpRLX3gH5Z+8u4mWWhUVRmIGbFM0nTwKtxBx57
+         edtS4gDz+LVtHnj9n2okpDPAZ8oGlL+y+1hdb26pvA9QylyXCpRzFsaFOd4oCH+400zP
+         iUeIQt9d4cN8Y40y8/rX/tTfWhWIaBoZPKOqCdmmdE4OJTZQJn8pfcJJgIgLau45Xma2
+         FLrXykxF/e5PPzIbvjP0GBfXCnCw6sJW2Ql0eo8ps6wqm0exqKKVVn/YEQUvWSoC7x4T
+         ZXR9avvK8vqksVuiv/ZM2Q/yS157a57x2EY9515O0KUSSDhrqEJKlzrRPnyMCG/ihVdf
+         Rh1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWR64/GI0E93/z9ps/3askBvM9cw4onQGopXLu1wTo0RUHvj9+Hz7hciT2FQjfP4SKHGcDD69qzRPYv8pyNQ84EQFDs2yvuGZI+j7YAdgQB
+X-Gm-Message-State: AOJu0Yz4Xok7o0793VwcjBqScnvDI6gI9TTKzf5M/sc7uoIkjfDgOQDe
+	+aPi16BcpI06AeSHvLc/UweObS8VTHkKTVVlj341iSM9KSO1pnswhlRyu/rf8J04AXFYlHCYt6Z
+	pJlpmwThxzBJkNnZunT5AtKJ5QQyNLYHmF48W
+X-Google-Smtp-Source: AGHT+IHUUnMvT3jqlx4mYU0Zq3/oVljYM3tgXS+x8Lb6hAUG4wgFseZ7U1lT7XFjP+BusQQ9kBXfhI9r5cdZ6lf7hXM=
+X-Received: by 2002:a05:622a:28c:b0:42e:6de9:cd13 with SMTP id
+ z12-20020a05622a028c00b0042e6de9cd13mr258781qtw.3.1709672267992; Tue, 05 Mar
+ 2024 12:57:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
+References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-2-mic@digikod.net>
+In-Reply-To: <20240301194037.532117-2-mic@digikod.net>
+From: Rae Moar <rmoar@google.com>
+Date: Tue, 5 Mar 2024 15:57:35 -0500
+Message-ID: <CA+GJov4U+bXK3Q2cmXtsdnrNNiwuDmxsU4-ghVM_8M1vjyMVWA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] kunit: Handle thread creation error
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>, David Gow <davidgow@google.com>, 
+	Kees Cook <keescook@chromium.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-um@lists.infradead.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 04 Mar 2024 10:04:22 -0600, David Lechner wrote:
-> This series contains a few small cleanups to the axi-spi-engine driver,
-> mostly suggested from previous reviews.
-> 
+On Fri, Mar 1, 2024 at 2:40=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digiko=
+d.net> wrote:
+>
+> Previously, if a thread creation failed (e.g. -ENOMEM), the function was
+> called (kunit_catch_run_case or kunit_catch_run_case_cleanup) without
+> marking the test as failed.  Instead, fill try_result with the error
+> code returned by kthread_run(), which will mark the test as failed and
+> print "internal error occurred...".
 
-Applied to
+Hello!
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+I have tested this and this fix looks good to me. Thanks!
+-Rae
 
-Thanks!
+Reviewed-by: Rae Moar <rmoar@google.com>
 
-[1/3] spi: axi-spi-engine: remove p from struct spi_engine_message_state
-      commit: 69d54ee2e5b0dab9350be2a7019c472b9b8d4c14
-[2/3] spi: axi-spi-engine: use __counted_by() attribute
-      commit: c8340ac1015471ec5af234beff535efe15f382e9
-[3/3] spi: axi-spi-engine: use struct_size() macro
-      commit: 5c708541301e695b611cb0b9c6d732bed9b5d904
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+>
+> Cc: Brendan Higgins <brendanhiggins@google.com>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> Link: https://lore.kernel.org/r/20240301194037.532117-2-mic@digikod.net
+> ---
+>
+> Changes since v1:
+> * Added Kees's Reviewed-by.
+> ---
+>  lib/kunit/try-catch.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+> index f7825991d576..a5cb2ef70a25 100644
+> --- a/lib/kunit/try-catch.c
+> +++ b/lib/kunit/try-catch.c
+> @@ -69,6 +69,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
+>                                   try_catch,
+>                                   "kunit_try_catch_thread");
+>         if (IS_ERR(task_struct)) {
+> +               try_catch->try_result =3D PTR_ERR(task_struct);
+>                 try_catch->catch(try_catch->context);
+>                 return;
+>         }
+> --
+> 2.44.0
+>
