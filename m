@@ -1,139 +1,80 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353E612BEAE
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 20:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62E118E29;
+	Tue,  5 Mar 2024 22:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709672299; cv=none; b=WmQ0PWDCekKyk38ePaxa42oFxGl7xtUYmefkmNCyxrrOGakAZXThAn8GHpmG+A3XMC3QzKPu2LiogSm7PSo6sZKF/Pog/AACj9TFSUjanM45MBDDirCGjs0rgxJIb+opv4YwS0pLiW046TW/p2R87etwjZfWCj4Zj3wOBHLdRyQ=
+	t=1709677117; cv=none; b=f9d9Di1UOzjOCpj1QgwaK0pKMNvcfZKUvEKK/y8Gb+lCMCYfvYv+wZs0OQkVW/T6M0B1WacO+nWJEgd1ubSpHmLBKtSNFr6MxceB5Qti+FZYgGk7iNuvGk7yhNcx5ccYjGsGoMAFUp6DhEW1vrBJqYSwoeyQ8Jk7bT+gEXgrrr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709672299; c=relaxed/simple;
-	bh=hz+ZxSOYv8PxZNrsTqx4IxtCpcRrFHGU/VQIYl36LGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ULMtDMQA8wcsirMQU6WGiBMtZXwOJ/Er6JpkYypoigWwG6rIFi2Zj4AtaFTnNkTnsqtN1JBMoNenwUXTTs8a3yd4YrZ2vK4ViGpRAAwtZ50gHMxZwOlZCDfRkiEObccxfRcVUj1Fp5TLfUipbcgc79U+wp44eNoWAsUakcBc3Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VItnTInX; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VItnTInX"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-428405a0205so75891cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 12:58:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709672297; x=1710277097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NM9bu0HcRSpvQ/lk6AsEXTNfL1CGnBbQK/LGwtIb+y4=;
-        b=VItnTInX7KAkkHOMp2ynIn3AlD2CYHHFuIraqXwe9THhasvj/qOOkonyVAxlRjOTWO
-         kPo8lezaR4nNpxQJfm6V4lsF68/BZH2fvpVfYyaXLccHLrbh+4MievBbhCLPf508tC2R
-         ZY+RuPcM+MhOetVT04AzXndvmTqnxvlWkNOKceGo6o+gTFbn0kB6Gs/VIRXG29TB7tsK
-         lW3FcunEAG/JJrDbd5B4fhdZBjc7bQSxKvqE7kGC55M4wdpEQZgfEHGhnzOBgmVV2tVC
-         chFM5sxG7LVxwOm4ONNVpchwCiDfe14GHs/s1MzYCG54VSk1Pc4Oa0EsDKwAnk0Wppkn
-         AKxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709672297; x=1710277097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NM9bu0HcRSpvQ/lk6AsEXTNfL1CGnBbQK/LGwtIb+y4=;
-        b=TsK7ahb2Fhd9aCVJ9nvekjHoXGODPaV59DDNBd0hT90u2BT/MYPKctAsOTe12sZUea
-         FrEbJCTyiKUfSPhvpybNgNeYrFsJtdn4EV7bUwOYqObB1am7tl35uqr/j9g6CmSq5BpH
-         gVsRfTtZEOUNgK4R1pVlZKKNldpPXvTa6CN9ejMKG6GnBNeTxjgBXbNVbuPtS5tmcdAY
-         UJrvCe8q6JMwQEeVewjf6P7xvAJ72yAt4pwH7bYFOXVvg0wDChsrHUtfGQ0VIbSMw5Qc
-         0W35dzeyV1dS8CD2rUomnl1JunmmiTW4Pdrz93EA/Qw6CBscDQTTuYLv/ev+3HgkG35q
-         lOew==
-X-Forwarded-Encrypted: i=1; AJvYcCWWHxt8rlH72Bbf8+HFsCPYepaWVJvoXOHL3yCpUZQeS83NkEkC6YlkLLaEZedu4fYk9OZxeSH44p1N+4XZhiJTNZUiYVN9WDkbJYDccrTM
-X-Gm-Message-State: AOJu0YzeEfY/Z9/KaSYKIKM5wtDb/9XqGeMyMJQKrV4Thk4XjwHkPs9/
-	bXX4qVdPl5Ec447hF+pbTIyVJU2b3fErtTA6vKOi66f21heNyMbBW914y8PhKVs1ChkkJ70Dbss
-	cklThL752U+TbcFGVMFAvM40csPyaLPYaXeqB
-X-Google-Smtp-Source: AGHT+IGJuhFV2CSZhTpphuYInlBxp0BhTfrnQUeh2OvKsSqzEL4tX1NuAVfzJjBoxId+yPuVZh+Ut8IQpuDDq6mQdxI=
-X-Received: by 2002:ac8:59d5:0:b0:42f:a3c:2d4c with SMTP id
- f21-20020ac859d5000000b0042f0a3c2d4cmr72229qtf.13.1709672297226; Tue, 05 Mar
- 2024 12:58:17 -0800 (PST)
+	s=arc-20240116; t=1709677117; c=relaxed/simple;
+	bh=rOMbBrw6dKCy0QI69rgKxwVJpe5Z9XH8c/ETM0PM1tM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f/J33RPTTNB1NzxVPtw4QDnqNDZkyPV12rZrJuH4xaeCyymzxjg9zSTyT29VMTuDqL1wQOBJVW2YM1c5oo+Z9ppTyGdrkUj38z4Wn+BXm35x9f7VP4ifmem8SiX0s9x9akdI2YMVi15LMdTUgV3IEVqkvItJtSiYTFoQ6hsOvPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E73031FB;
+	Tue,  5 Mar 2024 14:19:05 -0800 (PST)
+Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.65])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 990143F738;
+	Tue,  5 Mar 2024 14:18:28 -0800 (PST)
+From: Jeremy Linton <jeremy.linton@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	keescook@chromium.org,
+	Jason@zx2c4.com,
+	gustavoars@kernel.org,
+	mark.rutland@arm.com,
+	rostedt@goodmis.org,
+	arnd@arndb.de,
+	broonie@kernel.org,
+	guohui@uniontech.com,
+	Manoj.Iyer@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH 0/1] Bring kstack randomized perf closer to unrandomized
+Date: Tue,  5 Mar 2024 16:18:23 -0600
+Message-ID: <20240305221824.3300322-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-4-mic@digikod.net>
-In-Reply-To: <20240301194037.532117-4-mic@digikod.net>
-From: Rae Moar <rmoar@google.com>
-Date: Tue, 5 Mar 2024 15:58:05 -0500
-Message-ID: <CA+GJov4BPGuuu+oivgX3Z0J8sb1bYLhrNRrex7qza45WNMtBcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] kunit: Fix timeout message
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>, David Gow <davidgow@google.com>, 
-	Kees Cook <keescook@chromium.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-um@lists.infradead.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 1, 2024 at 2:40=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digiko=
-d.net> wrote:
->
-> The exit code is always checked, so let's properly handle the -ETIMEDOUT
-> error code.
+Currently with kstack randomization there is somewhere on the order of
+5x worse variation in response latencies vs unrandomized
+syscalls. This is down from ~10x on pre 6.2 kernels where the RNG
+reseeding was moved out of the syscall path, but get_random_uXX()
+still contains a fair amount of additional global state manipulation
+which is problematic.
 
-Hello!
+So, lets replace the full get_random_u16 in the syscall path with
+prandom_u32_state(). This also has the advantage of bringing the
+randomized and unrandomized overall syscall performace much closer
+together. Although in the syscall path, prandom_u32_state() remains
+measurably worse than other architectures relying on non-random
+functions (cycle counters) with respect to perf/latency
+measurements. By comparison, the algorithm presented in the RFC which
+had basically no impact given recent OoO cores are able to hide all of
+the overhead from the the handful of additional instructions.
 
-This change looks good to me. Thanks!
--Rae
+I'm still looking for suggestions reseeding prandom_u32_state() if
+needed or improving the performace of get_random_u16. so consider this
+somewhate more than an RFC and maybe less of a full patch request.
 
-Reviewed-by: Rae Moar <rmoar@google.com>
+RFC->V1:
+	Replace custom inline RNG with prandom_u32_state
 
+Jeremy Linton (1):
+  arm64: syscall: Direct PRNG kstack randomization
 
->
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: David Gow <davidgow@google.com>
-> Cc: Rae Moar <rmoar@google.com>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240301194037.532117-4-mic@digikod.net
-> ---
->
-> Changes since v1:
-> * Added Kees's Reviewed-by.
-> ---
->  lib/kunit/try-catch.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index 73f5007f20ea..cab8b24b5d5a 100644
-> --- a/lib/kunit/try-catch.c
-> +++ b/lib/kunit/try-catch.c
-> @@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->         time_remaining =3D wait_for_completion_timeout(&try_completion,
->                                                      kunit_test_timeout()=
-);
->         if (time_remaining =3D=3D 0) {
-> -               kunit_err(test, "try timed out\n");
->                 try_catch->try_result =3D -ETIMEDOUT;
->                 kthread_stop(task_struct);
->         }
-> @@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->                 try_catch->try_result =3D 0;
->         else if (exit_code =3D=3D -EINTR)
->                 kunit_err(test, "wake_up_process() was never called\n");
-> +       else if (exit_code =3D=3D -ETIMEDOUT)
-> +               kunit_err(test, "try timed out\n");
->         else if (exit_code)
->                 kunit_err(test, "Unknown error: %d\n", exit_code);
->
-> --
-> 2.44.0
->
+ arch/arm64/kernel/syscall.c | 42 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
+
