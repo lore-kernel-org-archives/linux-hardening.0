@@ -1,301 +1,123 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EA44F1F5;
-	Tue,  5 Mar 2024 09:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9874CB2E
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 09:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709630605; cv=none; b=On7JpI5YVpNKc1IDw/izFd6bqpQPuzFBwBZXhynUHVHK1fwzfU/1EuXxZ/1qZJfyTQ/sEi2cQC4MHEg2vUTlMdDS21qkLe3i+OIqmyCGMlaEUeQrTjinD77wdq6+FFOe1xl/iAR9IxaNvoOVXr+49vxKybdtzBjc/1Sr5ZXS/Yg=
+	t=1709631127; cv=none; b=dH3qmEP80XHjXMtSsi0pyuggZnn9cMOVkuvLu+YoLC2Ig9g1SqFaUdu0IRUCDhb/YvLlyBXxzv+LwvpyVKrtBp0NprGxdwPdHp8CsccUXnSad0g78uLE1bUqoiZ25zfdIGcnm3+zdo7f+QOTkhvpsHL4CWh1zndsHstQuOL2QXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709630605; c=relaxed/simple;
-	bh=l8xILxIP+aGWbSeHaqRzcIu8VgcP1j0Q7WU+Qn8aVUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UdygT9t5oiY7oQHrnBl1PMb9dUMBr/avHKzXnGOAytJpd9BRi5etYl+73p8uwwqvAv9RfQ7sP9P69haXcCWod4I4uLlC/JztuvxpH95DphWXDezYzsJXwJ5kAzHDGeumgeTD1CTZMDcQ9JGdWfOJUMe9CtsXYUg73JaYSxzWzWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-21eab2bd67bso267641fac.0;
-        Tue, 05 Mar 2024 01:23:23 -0800 (PST)
+	s=arc-20240116; t=1709631127; c=relaxed/simple;
+	bh=zBeKo3AW0umWo2+oVzF0kvmctDMJc7DeYmGkbvuWUkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CUh2dzt6k586qlh9nOSnixZ5jtmT/HiLau65OUWp/KHTT4simZpNu02J90cEEq6udv4MVAio5mG+LUGyCStzxGLsP0iuxmM4rY3yI4hSmOBXmfQJa0r/k6TXw0Iowh1LztELgzv/1Fs6EavMdXKW/b53Bw+zCyx/OnuJPgf/hlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VkMK7cNs; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VkMK7cNs"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dd178fc492so13560145ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 01:32:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709631126; x=1710235926; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jwQHCS1RApRdLMtnfYY4Lo44hm6+L8NjNwQTBjGnVfA=;
+        b=VkMK7cNsjtRVVRv4Q12/cCxH25ITbWCYfVKc6utxrZ/r1uLkAm16zKTDORrL7o+2ub
+         hTaQUJE44SzNGiawHLrxeoyBxSEp0t/UgUC/t19bcKErtrXCvJP0huLcfZu9A5MXG73+
+         WpXzTWZuk+smsErVMM7zj4208fgsh4YFv30+c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709630603; x=1710235403;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gQCTBTW7IfJ5vlMZrr2LXR2j09n4mGKlX0Dyj4r0c1E=;
-        b=gh8nS5dxTmqamU6NsDIXMkaAiIoUCTfQR9MY9FoArVJ2YyUwlxEmknjLlUWz034jD5
-         TVV4ylTswxdKQTDQrRy6YHcqykkDsQCHRsDsQ6ttNbxDUGgnaQy0xrDafVvVdhIU9x5O
-         +2iv7ZD4lbmqwrq4ZQDNq49Irjgd8YnaaaCXW8J2wfPsZgKh7I7iX4v51+zSLURkGMNA
-         q9NQPVwuh9CI+cDZa4h89piUNTNA3r29I5sIAPEafXWdCStW9rF5yjvzYvt2pEfQxZ3d
-         lcn/XivFV4VufYywPS3sKDYys6zZg2eBnxCPILRCCKJQlXeqg+Ms5VoouPYALWeonh8J
-         sutA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIbMqO3Wz9wo9xsOhIV4BP7HZ+VSVJMXUEzcu13m4Y9BY7+eaLCNUOWe0ah1e9P9FG1H12xGtcgZ2X8c75DQ04voQx8WUR1/WXLKVXbx/SMvPESXYL2n8yZzZUwJnuKsRgBDxnGl375Z4smn/SG9bSkGAXaqEWGmXcbaEfQh8MeJTl3k5j4Htec9acR4731hmN4Vd2lMzrLYUxzDcs
-X-Gm-Message-State: AOJu0Yz2IpIKMV1vELF5vyxU9kODftYz7V0xo88L7/fFOO4neTxBCRj4
-	g0tZXQH8+LhgmXXox155dUV1GxAdz/Xprpv3JmXQLrkQvaaF/tF3UyDhogNJ/+EoIQTus7uhTEC
-	Qx0TjMATM2kc3w+hH9USFUmA1mQs=
-X-Google-Smtp-Source: AGHT+IHqGzKm27BRW4GE3MVzZnFqIdO0adC084tGWtqBCO3c4qtsqa2XTbAyQOgt4xCT+eAL7GOz3wowkjku+qGIf6g=
-X-Received: by 2002:a05:6871:4393:b0:220:873d:db8b with SMTP id
- lv19-20020a056871439300b00220873ddb8bmr13217962oab.4.1709630603153; Tue, 05
- Mar 2024 01:23:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709631126; x=1710235926;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jwQHCS1RApRdLMtnfYY4Lo44hm6+L8NjNwQTBjGnVfA=;
+        b=qji2Cjy3XB9nTXzUIjF4EpL5wj8FupSjLH6UHO1du5Ub3TsG+KQSqiqcboEbzoRUWe
+         MVh/w7myAsBbWigggYL8JaqaQRhbVX+zT8/sGT+OJyqgBUQbAM7eG4VlmzCM9kY0D4yO
+         abvz8tpcEsELsnEFWoc2cyihp+0P9gs7rIr8OPBXEsAT/isUoUffV4oNJcFva46KSqHS
+         rm9hkLIskqlM0Cm5c6VlgcA1u2gXOpE/mKGrO8+LnfZ5T4CJTUGI10n9ppam2gMkoA6p
+         gW2/dPjFJlC91uTYu6tk6yfjznVnC65Vn3uXn4oXmf8gYKgWusY/raLLNJXd1ypx7Awn
+         Svxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpbahtDPr4OH3WpkRjWJfnj3sD7tb9HDivefV208ktA2nfL4HjotAD4s20LHqXmd9+NJgWI7zZRRnINfzZ6tVI7t6+ZRezkmLypRr5ZVWB
+X-Gm-Message-State: AOJu0YwPho+MUtQ5Iqi9quwDtEgbhnd5lePtt7TSHIrF41uYfO+mP0gA
+	v0g+XiVz9HLkQlVL1qgP3zmlpSod15qLA/gvbtdPyrkP2V3KUY0paKc7UCVOSA==
+X-Google-Smtp-Source: AGHT+IEkIjd9sE8/PNSfNzhkY5QnMDDggNLePYzvx388RJGPnJJiHoeKZ/QNY7uY/4Q61sqgAgAuEg==
+X-Received: by 2002:a17:902:a50e:b0:1dc:66da:d21a with SMTP id s14-20020a170902a50e00b001dc66dad21amr1054443plq.28.1709631125912;
+        Tue, 05 Mar 2024 01:32:05 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001db5c8202a4sm10192588plb.59.2024.03.05.01.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 01:32:05 -0800 (PST)
+Date: Tue, 5 Mar 2024 01:32:04 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc: Jann Horn <jannh@google.com>, gustavoars@kernel.org,
+	akpm@linux-foundation.org, jpoimboe@kernel.org,
+	peterz@infradead.org, dave.hansen@linux.intel.com,
+	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	nixiaoming@huawei.com, kepler.chenxin@huawei.com,
+	wangbing6@huawei.com, wangfangpeng1@huawei.com,
+	douzhaolei@huawei.com
+Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
+Message-ID: <202403050129.5B72ACAA0D@keescook>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
+ <202403040938.D770633@keescook>
+ <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
- <20240304155138.GA482969@bhelgaas> <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
- <CAJZ5v0idOkeod9-RmnNGCwMGG+9nYi8eJSBpQYWJnv=N+eVoWg@mail.gmail.com>
- <CAJZ5v0jJEo5p4Wr_bZjHHOfQG4WomX9pFtBwFnU6eMJRoCctOA@mail.gmail.com>
- <CAJZ5v0izNQ=2oaFff3WBQUm2AHZ5XnrYHq3pz0_Yx685QUUfMA@mail.gmail.com> <a03039a96bed43568564cfc2832d61bf@realtek.com>
-In-Reply-To: <a03039a96bed43568564cfc2832d61bf@realtek.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 5 Mar 2024 10:23:11 +0100
-Message-ID: <CAJZ5v0iNdSo7B-1jHBO9dFmmjH=oG4G=V-pDeqL6+qrtLzatqw@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-To: Ricky WU <ricky_wu@realtek.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Kai-Heng Feng <kai.heng.feng@canonical.com>, 
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
 
-On Tue, Mar 5, 2024 at 10:20=E2=80=AFAM Ricky WU <ricky_wu@realtek.com> wro=
-te:
->
-> > On Mon, Mar 4, 2024 at 7:10=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
-.org>
-> > wrote:
-> > >
-> > > On Mon, Mar 4, 2024 at 6:00=E2=80=AFPM Rafael J. Wysocki <rafael@kern=
-el.org>
-> > wrote:
-> > > >
-> > > > On Mon, Mar 4, 2024 at 5:41=E2=80=AFPM Rafael J. Wysocki <rafael@ke=
-rnel.org>
-> > wrote:
-> > > > >
-> > > > > On Mon, Mar 4, 2024 at 4:51=E2=80=AFPM Bjorn Helgaas <helgaas@ker=
-nel.org>
-> > wrote:
-> > > > > >
-> > > > > > On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wro=
-te:
-> > > > > > > On Thu, Feb 29, 2024 at 7:23=E2=80=AFAM Kai-Heng Feng
-> > > > > > > <kai.heng.feng@canonical.com> wrote:
-> > > > > > > >
-> > > > > > > > When inserting an SD7.0 card to Realtek card reader, the ca=
-rd
-> > reader
-> > > > > > > > unplugs itself and morph into a NVMe device. The slot Link =
-down on
-> > hot
-> > > > > > > > unplugged can cause the following error:
-> > > > > > > >
-> > > > > > > > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > > > > > > > BUG: unable to handle page fault for address: ffffb24d403e5=
-010
-> > > > > > > > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067
-> > PTE 0
-> > > > > > > > Oops: 0000 [#1] PREEMPT SMP PTI
-> > > > > > > > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> > > > > > > > Hardware name: To Be Filled By O.E.M. To Be Filled By
-> > O.E.M./H370M Pro4, BIOS P3.40 10/25/2018
-> > > > > > > > Workqueue: pm pm_runtime_work
-> > > > > > > > RIP: 0010:ioread32+0x2e/0x70
-> > > > > > > ...
-> > > > > > > > Call Trace:
-> > > > > > > >  <TASK>
-> > > > > > > >  ? show_regs+0x68/0x70
-> > > > > > > >  ? __die_body+0x20/0x70
-> > > > > > > >  ? __die+0x2b/0x40
-> > > > > > > >  ? page_fault_oops+0x160/0x480
-> > > > > > > >  ? search_bpf_extables+0x63/0x90
-> > > > > > > >  ? ioread32+0x2e/0x70
-> > > > > > > >  ? search_exception_tables+0x5f/0x70
-> > > > > > > >  ? kernelmode_fixup_or_oops+0xa2/0x120
-> > > > > > > >  ? __bad_area_nosemaphore+0x179/0x230
-> > > > > > > >  ? bad_area_nosemaphore+0x16/0x20
-> > > > > > > >  ? do_kern_addr_fault+0x8b/0xa0
-> > > > > > > >  ? exc_page_fault+0xe5/0x180
-> > > > > > > >  ? asm_exc_page_fault+0x27/0x30
-> > > > > > > >  ? ioread32+0x2e/0x70
-> > > > > > > >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> > > > > > > >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> > > > > > > >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> > > > > > > >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> > > > > > > >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> > > > > > > >  pci_pm_runtime_idle+0x34/0x70
-> > > > > > > >  rpm_idle+0xc4/0x2b0
-> > > > > > > >  pm_runtime_work+0x93/0xc0
-> > > > > > > >  process_one_work+0x21a/0x430
-> > > > > > > >  worker_thread+0x4a/0x3c0
-> > > > > > > ...
-> > > > > >
-> > > > > > > > This happens because scheduled pm_runtime_idle() is not
-> > cancelled.
-> > > > > > >
-> > > > > > > But rpm_resume() changes dev->power.request to RPM_REQ_NONE
-> > and if
-> > > > > > > pm_runtime_work() sees this, it will not run rpm_idle().
-> > > > > > >
-> > > > > > > However, rpm_resume() doesn't deactivate the autosuspend time=
-r if
-> > it
-> > > > > > > is running (see the comment in rpm_resume() regarding this), =
-so it
-> > may
-> > > > > > > queue up a runtime PM work later.
-> > > > > > >
-> > > > > > > If this is not desirable, you need to stop the autosuspend ti=
-mer
-> > > > > > > explicitly in addition to calling pm_runtime_get_sync().
-> > > > > >
-> > > > > > I don't quite follow all this.  I think the race is between
-> > > > > > rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
-> > > > >
-> > > > > I think so too and the latter is not expected to run.
-> > > > >
-> > > > > >   rtsx_pci_remove()
-> > > > > >   {
-> > > > > >     pm_runtime_get_sync()
-> > > > > >     pm_runtime_forbid()
-> > > > > >     ...
-> > > > > >
-> > > > > > If this is an rtsx bug, what exactly should be added to
-> > > > > > rtsx_pci_remove()?
-> > > > > >
-> > > > > > Is there ever a case where we want any runtime PM work to happe=
-n
-> > > > > > during or after a driver .remove()?  If not, maybe the driver c=
-ore
-> > > > > > should prevent that, which I think is basically what this patch=
- does.
-> > > > >
-> > > > > No, it is not, because it doesn't actually prevent the race from
-> > > > > occurring, it just narrows the window quite a bit.
-> > > > >
-> > > > > It would be better to call pm_runtime_dont_use_autosuspend() inst=
-ead
-> > > > > of pm_runtime_barrier().
-> > > > >
-> > > > > > If this is an rtsx driver bug, I'm concerned there may be many =
-other
-> > > > > > drivers with a similar issue.  rtsx exercises this path more th=
-an most
-> > > > > > because the device switches between card reader and NVMe SSD us=
-ing
-> > > > > > hotplug add/remove based on whether an SD card is inserted (see=
- [1]).
-> > > > >
-> > > > > This is a valid concern, so it is mostly a matter of where to dis=
-able
-> > > > > autosuspend.
-> > > > >
-> > > > > It may be the driver core in principle, but note that it calls
-> > > > > ->remove() after invoking pm_runtime_put_sync(), so why would it
-> > > > > disable autosuspend when it allows runtime PM to race with device
-> > > > > removal in general?
-> > > > >
-> > > > > Another way might be to add a pm_runtime_dont_use_autosuspend()
-> > call
-> > > > > at the beginning of pci_device_remove().
-> > > > >
-> > > > > Or just remove the optimization in question from rpm_resume() whi=
-ch is
-> > > > > quite confusing and causes people to make assumptions that lead t=
-o
-> > > > > incorrect behavior in this particular case.
-> > > >
-> > > > Well, scratch this.
-> > > >
-> > > > If rpm_idle() is already running at the time rpm_resume() is called=
-,
-> > > > the latter may return right away without waiting, which is incorrec=
-t.
-> > > >
-> > > > rpm_resume() needs to wait for the "idle" callback to complete, so
-> > > > this (again, modulo GMail-induced whitespace mangling) should help:
-> > > >
-> > > > ---
-> > > >  drivers/base/power/runtime.c |    6 ++++--
-> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > >
-> > > > Index: linux-pm/drivers/base/power/runtime.c
-> > > >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > =3D=3D=3D
-> > > > --- linux-pm.orig/drivers/base/power/runtime.c
-> > > > +++ linux-pm/drivers/base/power/runtime.c
-> > > > @@ -798,7 +798,8 @@ static int rpm_resume(struct device *dev
-> > > >      }
-> > > >
-> > > >      if (dev->power.runtime_status =3D=3D RPM_RESUMING ||
-> > > > -        dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
-> > > > +        dev->power.runtime_status =3D=3D RPM_SUSPENDING ||
-> > > > +        dev->power.idle_notification) {
-> > > >          DEFINE_WAIT(wait);
-> > > >
-> > > >          if (rpmflags & (RPM_ASYNC | RPM_NOWAIT)) {
-> > > > @@ -826,7 +827,8 @@ static int rpm_resume(struct device *dev
-> > > >              prepare_to_wait(&dev->power.wait_queue, &wait,
-> > > >                      TASK_UNINTERRUPTIBLE);
-> > > >              if (dev->power.runtime_status !=3D RPM_RESUMING &&
-> > > > -                dev->power.runtime_status !=3D RPM_SUSPENDING)
-> > > > +                dev->power.runtime_status !=3D RPM_SUSPENDING &&
-> > > > +                !dev->power.idle_notification)
-> > > >                  break;
-> > > >
-> > > >              spin_unlock_irq(&dev->power.lock);
-> > >
-> > > Well, not really.
-> > >
-> > > The problem is that rtsx_pci_runtime_idle() is not expected to be
-> > > running after pm_runtime_get_sync(), but the latter doesn't really
-> > > guarantee that.  It only guarantees that the suspend/resume callbacks
-> > > will not be running after it returns.
-> > >
-> > > As I said above, if the ->runtime_idle() callback is already running
-> > > when pm_runtime_get_sync() runs, the latter will notice that the
-> > > status is RPM_ACTIVE and will return right away without waiting for
-> > > the former to complete.  In fact, it cannot wait for it to complete,
-> > > because it may be called from a ->runtime_idle() callback itself (it
-> > > arguably does not make much sense to do that, but it is not strictly
-> > > forbidden).
-> > >
-> > > So whoever is providing a ->runtime_idle() callback, they need to
-> > > protect it from running in parallel with whatever code runs after
-> > > pm_runtime_get_sync().  Note that ->runtime_idle() will not start
-> > > after pm_runtime_get_sync(), but it may continue running then if it
-> > > has started earlier already.
-> > >
-> > > Calling pm_runtime_barrier() after pm_runtime_get_sync() (not before
-> > > it) should suffice, but once the runtime PM usage counter is dropped,
-> > > rpm_idle() may run again, so this is only effective until the usage
-> > > counter is greater than 1.  This means that
-> > > __device_release_driver(() is not the right place to call it, because
-> > > the usage counter is dropped before calling device_remove() in that
-> > > case.
-> > >
-> > > The PCI bus type can prevent the race between driver-provided
-> > > ->runtime_idle() and ->remove() from occurring by adding a
-> > > pm_runtime_probe() call in the following way:
-> >
-> > s/pm_runtime_probe/pm_runtime_barrier/ (sorry)
-> >
-> > The patchlet below is correct, though.
-> >
->
-> I tested this patch it work and well...
-> Tested-by: Ricky Wu <ricky_wu@realtek.com>
+On Tue, Mar 05, 2024 at 11:31:06AM +0800, Jiangfeng Xiao wrote:
+> 
+> 
+> On 2024/3/5 1:40, Kees Cook wrote:
+> > On Mon, Mar 04, 2024 at 04:15:07PM +0100, Jann Horn wrote:
+> >> On Mon, Mar 4, 2024 at 3:02 AM Jiangfeng Xiao <xiaojiangfeng@huawei.com> wrote:
+> >>> When the last instruction of a noreturn function is a call
+> >>> to another function, the return address falls outside
+> >>> of the function boundary. This seems to cause kernel
+> >>> to interrupt the backtrace.
+> > 
+> > FWIW, all email from huawei.com continues to get eaten by anti-spam
+> > checking. I've reported this a few times -- it'd be really nice if the
+> > domain configuration could get fixed.
+> > 
+> >> [...]
+> >>> Delete __noreturn from usercopy_abort,
+> >>
+> >> This sounds like the actual bug is in the backtracing logic? I don't
+> >> think removing __noreturn annotations from an individual function is a
+> >> good fix, since the same thing can happen with other __noreturn
+> >> functions depending on what choices the compiler makes.
+> > 
+> > Yeah, NAK. usercopy_abort() doesn't return. It ends with BUG().
+> > 
+> When the user directly or indirectly calls usercopy_abort,
+> the final call stack is incorrect, and the
+> code where the problem occurs cannot be located.
+> In this case, the user will be frustrated.
 
-Thank you!
+Can you please give an example of this?
 
-I will resend it with a proper changelog.
+> For the usercopy_abort function, whether '__noreturn' is added
+> does not affect the internal behavior of the usercopy_abort function.
+> Therefore, it is recommended that '__noreturn' be deleted
+> so that backtrace can work properly.
+
+This isn't acceptable. Removing __noreturn this will break
+objtool's processing of execution flow for livepatching, IBT, and
+KCFI instrumentation. These all depend on an accurate control flow
+descriptions, and usercopy_abort is correctly marked __noreturn.
+
+-- 
+Kees Cook
