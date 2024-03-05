@@ -1,54 +1,54 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7161F54F86
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E604355E48
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633433; cv=none; b=DkrlshXxfCV5C6+qMch3l8wZ8f6RawIrHZ4n8ztjgXg2x0J3kE2px0WwBPD+CmIm0Azgru5q83TpGPzSrMV4FQxi9jAzfzHOx4FX+ZKjrbCnsv3JMqOy89pCwKKf7pg3RyOcQzY11issNiyRw1uLSXd5KlGfMpqlZReYsE2JosU=
+	t=1709633434; cv=none; b=h62daBlxg2LqYVLA5V1FVXvTtXjv/kFDkCnTdCFBmSnZcjbygiZKUo89bU1b/obO+NitJy0CjdJZiQ+CKuy+iuhm2ZXN2kOCyqtlKpoOCe8JMi9mZOarSfApCrf1SdUUkd39n91IlCqNoREYJFKUtCN/l37WBAT+JQAmzbagIu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633433; c=relaxed/simple;
-	bh=y3vf/uqNKTNnOBLgqwE3tYFT2Luy4iHXIHzaxbjeLuY=;
+	s=arc-20240116; t=1709633434; c=relaxed/simple;
+	bh=qg6+zLyXOvclDNk40orVz0UwK8KHs3WN88KHdjuAoYc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=im+8owKQT4Uif/08XCglpROvFuX2DrcRiRamvyKTHLBsTKscJxjUnCR4fl/Hdt4nV2aMCp28MygEw+YjvxVKPiM/GH3eYu9t8HAZP9xJTdaA6OzTEjB2ObN2YPTppcegjUq7i9aUre9A0doHCPbJXxqqpvWJkqT0AEwMquJCCiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=T2v9Wzno; arc=none smtp.client-ip=209.85.215.179
+	 MIME-Version; b=Wz9nOdbyeo5EwPSWpJMnlGrcI/vBFghDXZVXNqjsFzn/C76lP821r+bl5Ygj82xr739LVx5NRrWWdnNqjFJRRmnlGcTJITuO2vtZiG8fcD3AizZ5f1tL610BHAGaLCtigWq2s5sjQq/lYmHM6HIct4b2wLeFjjJdGh3d4HOm5S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BItY9Tly; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T2v9Wzno"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so4969642a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BItY9Tly"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so374481a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709633430; x=1710238230; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709633432; x=1710238232; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BeUYrlEBxVnkyCc/znLfwIQ49KwaP7QNJJ/emVdVuls=;
-        b=T2v9Wznov3Rjko+n4hZHVIXdf5g1oiKwCASjTXgI5KOSchhWyill9f5IUjDGxRzSES
-         yEJaQKUmwDPxRp1Gi+t4H51myK2dZ2s/CEHnHOrvUf3BbKMgXb2wseL6eNmws7ZNHLlR
-         YQJ9SxjGN2xqeDKXD23BLrNvq7zMMcWkgGSW8=
+        bh=YqypDeuefMJmnQ8sf5GSNnN+8VJFJPXjvaUOYfHLyEk=;
+        b=BItY9TlyKABqFNiQZW+MiXx1NsFwp6PhFbDLdxVqGRrElTOyZtWfsiUE5wy3FGayxs
+         EJiPId9v7hN5/s+aSRYFjGLJ/82HpupxL08simauFrLKoxGjllpyjXtx/GIIrl+W8WQ3
+         pDr+e49VwbW2A2mIpOfan8YkdOmwhXU8h6wjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709633430; x=1710238230;
+        d=1e100.net; s=20230601; t=1709633432; x=1710238232;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BeUYrlEBxVnkyCc/znLfwIQ49KwaP7QNJJ/emVdVuls=;
-        b=SFZEWCqrt76AXiyNs5lfj3xPj4ZH+zzJRvrqo1L/sXCjVpHDixv8BZVCgQBljoAS1v
-         +yeuyQHZQzDiPy8Vb9yH7zkmdVKQv+cF6Din0k86WKDlw+sopXxQeaWtA4SFe8O38VyO
-         T/uvXn0GQoUbsuJ/C3VLIQbymTQJ8fKe2mcVgug8XF7eO0mOMx5qb/BZ8gM21zz1cQ3F
-         tnuug73Wz+dWWQsAi6KtdE3MP6vvoypRXp6EHORqq1EmN/TQe2JoIbZXtc6E4Svfc+Yg
-         tlmmw1StJDrOmXO8TskuvKfsJPRQNjXcTvL6nW+DhKpi4XK6mcdDod5EJMse8bQ20F28
-         CSHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhzbIVKroorFNxGV/oez85k/49OPVEGgyKT8OIOpWK5qS7x/QRDxlYVPapU2+RYvuK2tKddXyXbtu3z1dUluCa+0Rh86hsM/1Xyk/r9I2S
-X-Gm-Message-State: AOJu0YyiOCOCWkBAopAH3crbHtsiQiDuaC2dYCC0praynBihDQ9EtsFj
-	5T7gg66nj4hB6MW6zdwNCjL4aHVHA66q8zzE5KZ1eVHPcbbjGjfwduLqcp8Njw==
-X-Google-Smtp-Source: AGHT+IEA1CSyGq/q0upjn8FhCc79X1Sz1fnRam7a7llwA6f0dlAvS0keaevB9x35pohBL6JFKtxYYg==
-X-Received: by 2002:a05:6a20:244c:b0:1a1:4cbe:bf74 with SMTP id t12-20020a056a20244c00b001a14cbebf74mr1486585pzc.15.1709633429921;
-        Tue, 05 Mar 2024 02:10:29 -0800 (PST)
+        bh=YqypDeuefMJmnQ8sf5GSNnN+8VJFJPXjvaUOYfHLyEk=;
+        b=s1SBKx3hxvLYyiBQDAEsL3JYDGygVZZSXKgZgPH+1/nwcXuOoIVjAFOyUMKgb1avsX
+         /T9FDs1GWZqjNJE/3otvM9wb32dUUPZhhQjtJ12hd/FifXRFUsHaXGTQsgOOYRXbbu/N
+         rr4L2zIIZiyk1bZFCIwkfWcgxFTJk/Zerq4wMfNAGsyzzFh89FzWl4x/81hNmqffF+Ry
+         wrjy8nDeyD7s+F6pea++qi1GIkdILfkE461ly+65i8e9JE0GrtXM1GhP51Ztlfxr1Gix
+         H3jNmJV4gN84ehJ3paJdLRE7XpAgCmU3+ucAYuzI8rH3t8eFJLNnYJ4YDeGI1WQpPsrl
+         w7ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQkj78bHsNol3drNFkkQmlNQ+5nNBMOOUr0B4UI11N2M/+NDTONiKEILMz4U+SYe/kBMmr8uiNZOQ4Mr9yMioSngoV/5btKFQ9HHGS8ug2
+X-Gm-Message-State: AOJu0Yxdz2JHTwqRP8sNVFSx9RoLB2KfsKJf0fBJpBT2dJMB3jU0WINv
+	J5wD4BrGuPjigG4pCTHDYdkihl/2uDpX8FuDSypCzX8MzOq9zCkFnYY5g9lYBA==
+X-Google-Smtp-Source: AGHT+IGeJZyVJ09gI9gdMeeZa2TNl9QqRwg39EBpS2gnYKvxtqTdu16IIH+Z1sVU6rZsLUOu3KxERg==
+X-Received: by 2002:a17:90a:2c8:b0:299:ecd0:483b with SMTP id d8-20020a17090a02c800b00299ecd0483bmr8668816pjd.10.1709633432154;
+        Tue, 05 Mar 2024 02:10:32 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g5-20020a170902c38500b001dc78455383sm10146541plg.223.2024.03.05.02.10.27
+        by smtp.gmail.com with ESMTPSA id h8-20020a17090a3d0800b00299be0e00c1sm12409317pjc.33.2024.03.05.02.10.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 02:10:27 -0800 (PST)
+        Tue, 05 Mar 2024 02:10:30 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Kees Cook <keescook@chromium.org>,
@@ -68,9 +68,9 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Matteo Rizzo <matteorizzo@google.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/9] slab: Introduce kmem_buckets_create()
-Date: Tue,  5 Mar 2024 02:10:20 -0800
-Message-Id: <20240305101026.694758-4-keescook@chromium.org>
+Subject: [PATCH v2 5/9] slab: Introduce kmem_buckets_alloc()
+Date: Tue,  5 Mar 2024 02:10:21 -0800
+Message-Id: <20240305101026.694758-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240305100933.it.923-kees@kernel.org>
 References: <20240305100933.it.923-kees@kernel.org>
@@ -80,39 +80,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5125; i=keescook@chromium.org; h=from:subject; bh=y3vf/uqNKTNnOBLgqwE3tYFT2Luy4iHXIHzaxbjeLuY=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+QPWE1fKjC5eCeZH4vakqfDEWTI/IohhLqT GoUV/5ej76JAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A Jm/UD/jfSpO31HjXWApCYeolkFhb19QZEq8SrIOIqsqGoGZVAU3k6RWg8yQniQMy3yngBQfa2Ww h/QK0A6lEPzXyLI42kPBmua1RHFrT+Vqe3/1WofvSSsTESICw9TsnzitVinrUOM0nQo51nWISXI rTAc2Dqc1+eteEhuO2mBf61hDJZKYlE3dAE5Oy4yiPLQFOXU363T3VyPS1+jHmjCX9a7U/Fwp1L RE0Jo+IrwYWkV7JCru2Lf9QUOZcLZe1kaDT1S8KGCLBUj0qGfSQ0+6oYCVle7ZtWnAgM69VdfEM u0aSFr9DMPQLnL8DW+S2i4Y7E5d0OaG/m+vACFCAyEOjbMvqBotLX2oVqDLe3wNMWZN/GBxUDdu 9D/jUe03FvtktaMo2UTni3Qsx3d0boMxXGArJ5wo+vyGDDDBs8hxF/3ZhnEd58EUf4/WPWb7Hax 2EybOpRinpRqyal2KGNFPDIBOG4YgGqWYgGXRb3pw4pH6eFdr/PLQhggawSo/Wg96qL8WHZRvZ8 Ndwaph2SCDS3DM+r5nhF8mm7Tw5P9exoRn+a0tJNyv0i8CcN7W2IbJjkG9d/LV/uokfH1SLJWNJ VY+Op6bioLEyekWFsA4tTJyWA5wDB2UiYy2llni7suxYh5HYAzl4ULcPr/X6iHSyvXfscabaGjQ iPexMVWCtLcF/
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1274; i=keescook@chromium.org;
+ h=from:subject; bh=qg6+zLyXOvclDNk40orVz0UwK8KHs3WN88KHdjuAoYc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+QePW1cikxrAkyTkNPDsM7P6WLLogreKw78
+ DkUscrwcj2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A
+ JkIeD/9SGhc8L8n+b0l4YrTF1D9VoErEfn1Ca1UNFW/W0gggb8pmBG/YuAzR/noRa8vP/Obacdv
+ xX/kz3RVVUNa5CYWF20lMDU/Lp8oLF05rVXs0+FZ7Y+Hj4NcwGb4ZDEcTwKpevYm7+jo9WEDQ5d
+ zMSamVXJp/wkyr1XfGZ7cxjHlDRKSjdplhbJgG0UpihMCnecqlqWCXwJbsKgeaEq4Sl26MCcrlM
+ K0ULjcAvpm6F3d4s636IjEqcvuIG1obEke1QFfbVJC5/dJduyyEKm1Lgraw5dGP56FR+aC56qjS
+ 65EMTIxf1kNAW+Fy8bPuL7WDntcwNqNENqpozW05vn4+JPT/wOhqoVmXjQZ3DQfbw1ikOaWsuGR
+ +wrVI1e9aMbAxyN+NV6Dk09hIjGge2x1xZ4ikVrEqfYiJl/PlZG1rZ3YtAjKzVhhHSlziq1EXO7
+ eLtSu666WzevVuCoqb7mheOeAM4BFhlrgwfm+ZnWU0YM/Ycmrv70Q8134urLdvFSqmvc8qAL1CF
+ xi+VJmmdh42aZ/SeMDt4C3lJogV3xKZGfmixjPA3HWDF8q7OPo6tVZ0GK5r+TW9BmbGeL5G/Mz5
+ ehqYwoqpMNk2S8s4t7WPvdOakD8dz8vt+onslIuOlwmQgDswizHCZFv3m2uwtvVSPNlj7ZIDrUi W3INC3N8UCVkL0g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Dedicated caches are available For fixed size allocations via
-kmem_cache_alloc(), but for dynamically sized allocations there is only
-the global kmalloc API's set of buckets available. This means it isn't
-possible to separate specific sets of dynamically sized allocations into
-a separate collection of caches.
+To perform allocations with the buckets allocated with
+kmem_buckets_create(), introduce kmem_buckets_alloc() which behaves
+like kmem_cache_alloc().
 
-This leads to a use-after-free exploitation weakness in the Linux
-kernel since many heap memory spraying/grooming attacks depend on using
-userspace-controllable dynamically sized allocations to collide with
-fixed size allocations that end up in same cache.
-
-While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-against these kinds of "type confusion" attacks, including for fixed
-same-size heap objects, we can create a complementary deterministic
-defense for dynamically sized allocations.
-
-In order to isolate user-controllable sized allocations from system
-allocations, introduce kmem_buckets_create(), which behaves like
-kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
-which behaves like kmem_cache_alloc().)
-
-Allows for confining allocations to a dedicated set of sized caches
-(which have the same layout as the kmalloc caches).
-
-This can also be used in the future once codetag allocation annotations
-exist to implement per-caller allocation cache isolation[1] even for
-dynamic allocations.
-
-Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
 Cc: Vlastimil Babka <vbabka@suse.cz>
@@ -125,116 +112,26 @@ Cc: Roman Gushchin <roman.gushchin@linux.dev>
 Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 Cc: linux-mm@kvack.org
 ---
- include/linux/slab.h |  5 +++
- mm/slab_common.c     | 72 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+ include/linux/slab.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/include/linux/slab.h b/include/linux/slab.h
-index f26ac9a6ef9f..058d0e3cd181 100644
+index 058d0e3cd181..08d248f9a1ba 100644
 --- a/include/linux/slab.h
 +++ b/include/linux/slab.h
-@@ -493,6 +493,11 @@ void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
- 			   gfp_t gfpflags) __assume_slab_alignment __malloc;
- void kmem_cache_free(struct kmem_cache *s, void *objp);
- 
-+kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
-+				  slab_flags_t flags,
-+				  unsigned int useroffset, unsigned int usersize,
-+				  void (*ctor)(void *));
-+
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-  * allocator specific way to avoid taking locks repeatedly or building
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 1d0f25b6ae91..03ba9aac96b6 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -392,6 +392,74 @@ kmem_cache_create(const char *name, unsigned int size, unsigned int align,
+@@ -600,6 +600,12 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+ 	return __kmalloc(size, flags);
  }
- EXPORT_SYMBOL(kmem_cache_create);
  
-+static struct kmem_cache *kmem_buckets_cache __ro_after_init;
-+
-+kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
-+				  slab_flags_t flags,
-+				  unsigned int useroffset,
-+				  unsigned int usersize,
-+				  void (*ctor)(void *))
++static __always_inline __alloc_size(2)
++void *kmem_buckets_alloc(kmem_buckets *b, size_t size, gfp_t flags)
 +{
-+	kmem_buckets *b;
-+	int idx;
-+
-+	if (WARN_ON(!kmem_buckets_cache))
-+		return NULL;
-+
-+	b = kmem_cache_alloc(kmem_buckets_cache, GFP_KERNEL|__GFP_ZERO);
-+	if (WARN_ON(!b))
-+		return NULL;
-+
-+	flags |= SLAB_NO_MERGE;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-+		char *short_size, *cache_name;
-+		unsigned int cache_useroffset, cache_usersize;
-+		unsigned int size;
-+
-+		if (!kmalloc_caches[KMALLOC_NORMAL][idx])
-+			continue;
-+
-+		size = kmalloc_caches[KMALLOC_NORMAL][idx]->object_size;
-+		if (!size)
-+			continue;
-+
-+		short_size = strchr(kmalloc_caches[KMALLOC_NORMAL][idx]->name, '-');
-+		if (WARN_ON(!short_size))
-+			goto fail;
-+
-+		cache_name = kasprintf(GFP_KERNEL, "%s-%s", name, short_size + 1);
-+		if (WARN_ON(!cache_name))
-+			goto fail;
-+
-+		if (useroffset >= size) {
-+			cache_useroffset = 0;
-+			cache_usersize = 0;
-+		} else {
-+			cache_useroffset = useroffset;
-+			cache_usersize = min(size - cache_useroffset, usersize);
-+		}
-+		(*b)[idx] = kmem_cache_create_usercopy(cache_name, size,
-+					align, flags, cache_useroffset,
-+					cache_usersize, ctor);
-+		kfree(cache_name);
-+		if (WARN_ON(!(*b)[idx]))
-+			goto fail;
-+	}
-+
-+	return b;
-+
-+fail:
-+	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-+		if ((*b)[idx])
-+			kmem_cache_destroy((*b)[idx]);
-+	}
-+	kfree(b);
-+
-+	return NULL;
++	return __kmalloc_node(b, size, flags, NUMA_NO_NODE);
 +}
-+EXPORT_SYMBOL(kmem_buckets_create);
 +
- #ifdef SLAB_SUPPORTS_SYSFS
- /*
-  * For a given kmem_cache, kmem_cache_destroy() should only be called
-@@ -933,6 +1001,10 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 
- 	/* Kmalloc array is now usable */
- 	slab_state = UP;
-+
-+	kmem_buckets_cache = kmem_cache_create("kmalloc_buckets",
-+					       sizeof(kmem_buckets),
-+					       0, 0, NULL);
- }
- 
- /**
+ static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
+ {
+ 	if (__builtin_constant_p(size) && size) {
 -- 
 2.34.1
 
