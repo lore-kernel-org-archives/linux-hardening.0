@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D756C5A7A4;
-	Tue,  5 Mar 2024 13:23:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596CB944F;
+	Tue,  5 Mar 2024 17:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709645012; cv=none; b=gBICQwvlYSBELwW/jn94m4jx2fCaxTPnpC4jVw9QPebK/+j5nk+GjhWL3p4mlMWXkYgdlj9H6vATK3xkafyQ1APeqgi8GjTEvPcaEjUjy0BK2gJo6ZXTA+QlKVfhClYwZq05FWfdMxrt3KbeX3lLy2BQQZgUg8KL0ZpgbMetAFs=
+	t=1709659459; cv=none; b=qrA8qMkyX558VbRh60H2uVwaAkkpESuwPGrDncUMHw9ar0ma1WI3WACOfCFRTcJlIcDy7+il9MzFrwOyiBZIGZmqA5r1QGXa7jl/iqxT4rJUjUBwm3lv3ACptjUTGhjloQpcFzYvJbmzCR9qWu2Hnv9w2FedHErTeNjeJQRJHmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709645012; c=relaxed/simple;
-	bh=ZjacMFRjFcKPH1OLTek2CYbT+B+oPwe4QFvsl3DXWm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n++0Cfmbtm0NMOpOqT/TbamTPf3QN13uT/suAdYGsOGVIElP2gvXhI+BdM9FHFTAe15Zo+tMBdD7SBM9V5fRL333s9m5jiPz2f9Oa5BVvekyEJeiKFmtLr+nAzjPYsLOdox95sYje0bqmRwFN3AhTHMnkcqVExlTrJxDiNXF4oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIIavN0w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709659459; c=relaxed/simple;
+	bh=ulWrTp+lCV+gMNzuEsMt7+NdH9m0bIisaeuCfQ/H8QE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=flSugAaGgIw4eTyqox2Vbdeh/ORZ+IUHUGZSoTfWEo5CgEMVKw+KNQF59XwsK9XgfWKPYa2p/PeK1D1GVmR//KPsNN46HeWMa0MIV/s78jb3erV8BfnBaSJnK4fOeROPhNfYD/XqVFGAMPO9J44Y14NpCbfivDgz49WXlPJ3yKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QrNdYMDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIIavN0w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BAD0C43390;
-	Tue,  5 Mar 2024 13:23:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QrNdYMDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE591C433F1;
+	Tue,  5 Mar 2024 17:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709645011;
-	bh=ZjacMFRjFcKPH1OLTek2CYbT+B+oPwe4QFvsl3DXWm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jIIavN0waKQKcV1EyO/wpS0H1pK1jeNJn1GezqFBjIrilCwRrLz/8IxcKXDOPIJ6h
-	 y5/NRftgrdirKEByRlN0f7N3w/LBCM3m8U7lFve3SHcDDiKnP9Oq4h8yJsRKDd2qQU
-	 dl6UjOhXGDASmp/uwgIEXgamHMk8O7QkENPcwYSQawYdOJvFsTxAF1Y8WxelnNjvhK
-	 s0szFET8QHzUo/8iul8FbbxY9wTwNNbG5/pCmdac+WqtqzOiG52kd5846uzfQVHK10
-	 CAF4tqHJ4PHqLZnlgBzm+MDWgZNrZ8+LaUBkD3QED+h8DSvhDs6xhpI6w92jyXzk4n
-	 OX7hiN0Rwwccg==
-Date: Tue, 5 Mar 2024 13:23:26 +0000
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] sock: Use unsafe_memcpy() for sock_copy()
-Message-ID: <20240305132326.GE2357@kernel.org>
-References: <20240304212928.make.772-kees@kernel.org>
+	s=k20201202; t=1709659458;
+	bh=ulWrTp+lCV+gMNzuEsMt7+NdH9m0bIisaeuCfQ/H8QE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QrNdYMDPC/2tFJec41XasQKtNc041wNjuL5OO8PQ1hxCSb/ldGPYzjb0+xAueLtB5
+	 QyGGFFB3eXPzuD8MP59Xwfh4Q5HbPZ8mqASpYcTd/uywW43rD4H0J6Y2l6jP+aH9Uz
+	 03CnagADHeI4OrUvpjlxgEASx3VuVKCwrrhQOEKaV79BM2FUL/npnEXTRwFEVStAk+
+	 KZDzeX71Cfeehmxe/IkcDIVpGK5wnQChaFYQc8HqYHKfZqCElrcT+MmF5Kd+FYfu1c
+	 Q3jROYzeJxzSaf9T4pG53d9VHi2Cy9BP1G15pbrsOa9L7MgDEd0WXxq/+tRS7S1poW
+	 iu/QSAT4pDzlA==
+Date: Tue, 5 Mar 2024 11:24:15 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org, linux1394-devel@lists.sourceforge.net
+Subject: [PATCH 0/2][next] firewire: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <cover.1709658886.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,33 +46,37 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240304212928.make.772-kees@kernel.org>
 
-On Mon, Mar 04, 2024 at 01:29:31PM -0800, Kees Cook wrote:
-> While testing for places where zero-sized destinations were still showing
-> up in the kernel, sock_copy() and inet_reqsk_clone() were found, which
-> are using very specific memcpy() offsets for both avoiding a portion of
-> struct sock, and copying beyond the end of it (since struct sock is really
-> just a common header before the protocol-specific allocation). Instead
-> of trying to unravel this historical lack of container_of(), just switch
-> to unsafe_memcpy(), since that's effectively what was happening already
-> (memcpy() wasn't checking 0-sized destinations while the code base was
-> being converted away from fake flexible arrays).
-> 
-> Avoid the following false positive warning with future changes to
-> CONFIG_FORTIFY_SOURCE:
-> 
->   memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
->  v3: fix inet_reqsk_clone() comment
->  v2: https://lore.kernel.org/lkml/20240216232220.it.450-kees@kernel.org
->  v1: https://lore.kernel.org/lkml/20240216204423.work.066-kees@kernel.org
+-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally. So, we are deprecating flexible-array
+members in the middle of another struct.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+There are currently a couple of local structures (`u` and `template`)
+that are using a flexible `struct fw_iso_packet` as header for a couple
+of on-stack arrays.
+
+We make use of the `struct_group_tagged()` helper to separate the
+flexible array from the rest of the members in the flexible structure,
+and, with this, we can now declare objects of the type of the tagged
+struct, without embedding the flexible array in the middle of another
+struct.
+
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which the flexible-array member can be
+accessed.
+
+With these changes, we fix a couple of -Wflex-array-member-not-at-end
+warnings.
+
+Gustavo A. R. Silva (2):
+  firewire: Avoid -Wflex-array-member-not-at-end warning
+  ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning
+
+ drivers/firewire/core-cdev.c  |  9 +++++----
+ include/linux/firewire.h      | 16 +++++++++-------
+ sound/firewire/amdtp-stream.c |  8 +++++---
+ 3 files changed, 19 insertions(+), 14 deletions(-)
+
+-- 
+2.34.1
+
