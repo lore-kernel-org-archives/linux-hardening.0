@@ -1,67 +1,67 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9716A12AAEB
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 20:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353E612BEAE
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 20:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709672286; cv=none; b=hz9edoTK20YUN8m1Ed5cogaKvk35XqMxBDSi+t73yEqSEgujzUNfmBxKuWDEImneb/xpnO5x+6q9Tdjec9IC2jtWt8JIHIt25AXH+MHQYI9uoRQdbYqS/ciX8hfVsuYWSMfWufHMHzY0plHzf0aSnmNUMlfFyChcFzSvg0PEXt0=
+	t=1709672299; cv=none; b=WmQ0PWDCekKyk38ePaxa42oFxGl7xtUYmefkmNCyxrrOGakAZXThAn8GHpmG+A3XMC3QzKPu2LiogSm7PSo6sZKF/Pog/AACj9TFSUjanM45MBDDirCGjs0rgxJIb+opv4YwS0pLiW046TW/p2R87etwjZfWCj4Zj3wOBHLdRyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709672286; c=relaxed/simple;
-	bh=wWG/Kgy0jS1x5qSuFdcHkkq/gavTMiUaXVlXVaHjyIQ=;
+	s=arc-20240116; t=1709672299; c=relaxed/simple;
+	bh=hz+ZxSOYv8PxZNrsTqx4IxtCpcRrFHGU/VQIYl36LGQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nCUgzISZbQF2yG9ZattxABJPMZ6tXDqmb+4nz/ewrpPB8Dpkw7G1F4rXCr7KjFqVPs23C+/w4jVb2Rv+solqzmjKb+NrrCGAlmyjIIi8fZVk2ov/kt+8uOKSm6luQ4CD03t1YUH8rU+O1HVj1ueA0moU5Z/7mrtEFOjj75tJx0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ITZvfUJr; arc=none smtp.client-ip=209.85.160.177
+	 To:Cc:Content-Type; b=ULMtDMQA8wcsirMQU6WGiBMtZXwOJ/Er6JpkYypoigWwG6rIFi2Zj4AtaFTnNkTnsqtN1JBMoNenwUXTTs8a3yd4YrZ2vK4ViGpRAAwtZ50gHMxZwOlZCDfRkiEObccxfRcVUj1Fp5TLfUipbcgc79U+wp44eNoWAsUakcBc3Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VItnTInX; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITZvfUJr"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-42ef8193ae6so82131cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 12:58:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VItnTInX"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-428405a0205so75891cf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 12:58:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709672283; x=1710277083; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709672297; x=1710277097; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WxiO4n45vzilrBo9kDMmtmLfT3QtdcOwiJ3TQqHhtUU=;
-        b=ITZvfUJraFd5Y8WZ0O2trYqgAs5xl8lqnJTECVALowK09cCrh1igdXQpaDBOzvMoRO
-         WcPIibKjwXXeq2m7cWRpDwuqTveNL+JZtgBDSBpxVbxOO1BPPCUqn+hSYPjBlIOyCEfJ
-         SgG1wfga3dAyR/5yP/Kzq/i9Vpjfn+EFwz1Qa1bFTUMsvvWQROxj8bpVBrIwgOGjxuak
-         WvN275O+tmeQOvxrJGgxdUPdbMcR/J7E82VV7c88yAcfDf1TvFwclC9ExtoewAqD/pa9
-         uvbPaFoekaJDVNQGCW7vOaJUqI0UrqcOiNzb7oUBaIYJ0jCyZ91IbXMfEtYQietkumQV
-         q8Lg==
+        bh=NM9bu0HcRSpvQ/lk6AsEXTNfL1CGnBbQK/LGwtIb+y4=;
+        b=VItnTInX7KAkkHOMp2ynIn3AlD2CYHHFuIraqXwe9THhasvj/qOOkonyVAxlRjOTWO
+         kPo8lezaR4nNpxQJfm6V4lsF68/BZH2fvpVfYyaXLccHLrbh+4MievBbhCLPf508tC2R
+         ZY+RuPcM+MhOetVT04AzXndvmTqnxvlWkNOKceGo6o+gTFbn0kB6Gs/VIRXG29TB7tsK
+         lW3FcunEAG/JJrDbd5B4fhdZBjc7bQSxKvqE7kGC55M4wdpEQZgfEHGhnzOBgmVV2tVC
+         chFM5sxG7LVxwOm4ONNVpchwCiDfe14GHs/s1MzYCG54VSk1Pc4Oa0EsDKwAnk0Wppkn
+         AKxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709672283; x=1710277083;
+        d=1e100.net; s=20230601; t=1709672297; x=1710277097;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WxiO4n45vzilrBo9kDMmtmLfT3QtdcOwiJ3TQqHhtUU=;
-        b=alfxuJ0ggObEjrY/GKeomyq0KC5YGRfW0YVQpsYOVctXpPeM40GLO+xbOsxqRFo7kf
-         /CvRcFYdCOeXkeoLPT0fwBYD9UA+V8rHOUXoXODuWBVupThU1NTQ9NCjyo6cjMR0NVqS
-         jBhMSpV4cnlYy/9dXuPlwTKRMzSPexmWDOUq2VX+G+vtwrgPH9IGBejpvxUkE4r25myZ
-         Ygt0i1eoVfpNLgNRdwXPTAPRxX7BnNi0X11IIA2bwVZ4WAy9byb5lNI2qys0qoge6xDw
-         itcjtBmv3SFPLlLayMnUjZYK+oR1/HC3yjgalYxaqHQgzX2oPppR1NVuponBox1tnhoh
-         UwtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVV/P8pDz2POx+qgyeMFgJtYz73YH6mggGRa+eJp1frf+gfZEUgNS3W531pW19+IjeU5U22lumIlVXrKRFw2qsk2mOnyoVvCkWVKctvRMkV
-X-Gm-Message-State: AOJu0YxKjNKP3pPFrZ7mojUsDeOGpp3iOTKPTf4lzs0+RMsWIYlFViCW
-	wJ12g3J9V9JCtEZ32TjR33TpdmTVtXrbDKq6fZAl7KuGiWmyNvg99KhplFyBukfw2eF3RTkA+5O
-	qbhXPptWHDNX0EvpG1o2koctQuaSReasLuC+m
-X-Google-Smtp-Source: AGHT+IHGajjUdBLk7kb5aU5IzN9BFfXaz7kyHr0r9Hfw9dnJJ6/Mro4cDB9qMZ+LQnnYDduac+wAa+5vLvNmFAFMPZ8=
-X-Received: by 2002:a05:622a:489:b0:42e:ef12:8025 with SMTP id
- p9-20020a05622a048900b0042eef128025mr263015qtx.25.1709672283186; Tue, 05 Mar
- 2024 12:58:03 -0800 (PST)
+        bh=NM9bu0HcRSpvQ/lk6AsEXTNfL1CGnBbQK/LGwtIb+y4=;
+        b=TsK7ahb2Fhd9aCVJ9nvekjHoXGODPaV59DDNBd0hT90u2BT/MYPKctAsOTe12sZUea
+         FrEbJCTyiKUfSPhvpybNgNeYrFsJtdn4EV7bUwOYqObB1am7tl35uqr/j9g6CmSq5BpH
+         gVsRfTtZEOUNgK4R1pVlZKKNldpPXvTa6CN9ejMKG6GnBNeTxjgBXbNVbuPtS5tmcdAY
+         UJrvCe8q6JMwQEeVewjf6P7xvAJ72yAt4pwH7bYFOXVvg0wDChsrHUtfGQ0VIbSMw5Qc
+         0W35dzeyV1dS8CD2rUomnl1JunmmiTW4Pdrz93EA/Qw6CBscDQTTuYLv/ev+3HgkG35q
+         lOew==
+X-Forwarded-Encrypted: i=1; AJvYcCWWHxt8rlH72Bbf8+HFsCPYepaWVJvoXOHL3yCpUZQeS83NkEkC6YlkLLaEZedu4fYk9OZxeSH44p1N+4XZhiJTNZUiYVN9WDkbJYDccrTM
+X-Gm-Message-State: AOJu0YzeEfY/Z9/KaSYKIKM5wtDb/9XqGeMyMJQKrV4Thk4XjwHkPs9/
+	bXX4qVdPl5Ec447hF+pbTIyVJU2b3fErtTA6vKOi66f21heNyMbBW914y8PhKVs1ChkkJ70Dbss
+	cklThL752U+TbcFGVMFAvM40csPyaLPYaXeqB
+X-Google-Smtp-Source: AGHT+IGJuhFV2CSZhTpphuYInlBxp0BhTfrnQUeh2OvKsSqzEL4tX1NuAVfzJjBoxId+yPuVZh+Ut8IQpuDDq6mQdxI=
+X-Received: by 2002:ac8:59d5:0:b0:42f:a3c:2d4c with SMTP id
+ f21-20020ac859d5000000b0042f0a3c2d4cmr72229qtf.13.1709672297226; Tue, 05 Mar
+ 2024 12:58:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-3-mic@digikod.net>
-In-Reply-To: <20240301194037.532117-3-mic@digikod.net>
+References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-4-mic@digikod.net>
+In-Reply-To: <20240301194037.532117-4-mic@digikod.net>
 From: Rae Moar <rmoar@google.com>
-Date: Tue, 5 Mar 2024 15:57:51 -0500
-Message-ID: <CA+GJov46__vOS9m7Jz9tw+nxd1LFh_a=g1SR=BjUzR9HT65Vew@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] kunit: Fix kthread reference
+Date: Tue, 5 Mar 2024 15:58:05 -0500
+Message-ID: <CA+GJov4BPGuuu+oivgX3Z0J8sb1bYLhrNRrex7qza45WNMtBcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] kunit: Fix timeout message
 To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
 Cc: Brendan Higgins <brendanhiggins@google.com>, David Gow <davidgow@google.com>, 
 	Kees Cook <keescook@chromium.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -83,19 +83,15 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Mar 1, 2024 at 2:40=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digiko=
 d.net> wrote:
 >
-> There is a race condition when a kthread finishes after the deadline and
-> before the call to kthread_stop(), which may lead to use after free.
+> The exit code is always checked, so let's properly handle the -ETIMEDOUT
+> error code.
 
 Hello!
 
-I have tested this patch and it looks good to me.
-
-Thanks!
+This change looks good to me. Thanks!
 -Rae
 
 Reviewed-by: Rae Moar <rmoar@google.com>
-
-
 
 
 >
@@ -105,59 +101,39 @@ Reviewed-by: Rae Moar <rmoar@google.com>
 > Cc: Shuah Khan <skhan@linuxfoundation.org>
 > Reviewed-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240301194037.532117-3-mic@digikod.net
+> Link: https://lore.kernel.org/r/20240301194037.532117-4-mic@digikod.net
 > ---
 >
 > Changes since v1:
 > * Added Kees's Reviewed-by.
 > ---
->  lib/kunit/try-catch.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  lib/kunit/try-catch.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
 > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index a5cb2ef70a25..73f5007f20ea 100644
+> index 73f5007f20ea..cab8b24b5d5a 100644
 > --- a/lib/kunit/try-catch.c
 > +++ b/lib/kunit/try-catch.c
-> @@ -11,6 +11,7 @@
->  #include <linux/completion.h>
->  #include <linux/kernel.h>
->  #include <linux/kthread.h>
-> +#include <linux/sched/task.h>
->
->  #include "try-catch-impl.h"
->
-> @@ -65,14 +66,15 @@ void kunit_try_catch_run(struct kunit_try_catch *try_=
-catch, void *context)
->         try_catch->context =3D context;
->         try_catch->try_completion =3D &try_completion;
->         try_catch->try_result =3D 0;
-> -       task_struct =3D kthread_run(kunit_generic_run_threadfn_adapter,
-> -                                 try_catch,
-> -                                 "kunit_try_catch_thread");
-> +       task_struct =3D kthread_create(kunit_generic_run_threadfn_adapter=
-,
-> +                                    try_catch, "kunit_try_catch_thread")=
-;
->         if (IS_ERR(task_struct)) {
->                 try_catch->try_result =3D PTR_ERR(task_struct);
->                 try_catch->catch(try_catch->context);
->                 return;
->         }
-> +       get_task_struct(task_struct);
-> +       wake_up_process(task_struct);
->
+> @@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
 >         time_remaining =3D wait_for_completion_timeout(&try_completion,
 >                                                      kunit_test_timeout()=
 );
-> @@ -82,6 +84,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
+>         if (time_remaining =3D=3D 0) {
+> -               kunit_err(test, "try timed out\n");
+>                 try_catch->try_result =3D -ETIMEDOUT;
 >                 kthread_stop(task_struct);
 >         }
+> @@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
+>                 try_catch->try_result =3D 0;
+>         else if (exit_code =3D=3D -EINTR)
+>                 kunit_err(test, "wake_up_process() was never called\n");
+> +       else if (exit_code =3D=3D -ETIMEDOUT)
+> +               kunit_err(test, "try timed out\n");
+>         else if (exit_code)
+>                 kunit_err(test, "Unknown error: %d\n", exit_code);
 >
-> +       put_task_struct(task_struct);
->         exit_code =3D try_catch->try_result;
->
->         if (!exit_code)
 > --
 > 2.44.0
 >
