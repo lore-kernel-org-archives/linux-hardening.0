@@ -1,123 +1,104 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFC012DD96
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 23:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D1412DD96
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 23:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709681767; cv=none; b=VMOBMiw7mEyOZR52sMds7VR/a3CDPNI36wekksV4CW52bv08vnpFjNdFLge+2+BVmt/G3FqoY8qcWORuj9aVOhBFQ0FEVQeukOjqoI0VHJMQYEUnDfNktyG2ESiVgl5UOSdfugRl8GNKbQ2orQEgcu4tVm4ZbqCk9FhPf7iiwBw=
+	t=1709682735; cv=none; b=nx3paU1t0iznaeJaFSxWXwm/XcA9fUpiLs8eSaEztvXbhvI9tDrsNxvwXRU1/gSjrqAtPJc0DopMf30vxi0zxULNElqQvAJRvnyQy8eUryi5VOiaD5LvJ+m99uOD97qIQyQsPmUBj41KxoBKquTocUlQS292voZ7I0AGhAvFQ08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709681767; c=relaxed/simple;
-	bh=PG9dPNyzq6JVaBBw+HFrzAHEWMQl1R7aRqbEgTh3gMc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LwNUNM0qiSz9fr1d+uLP67VCvfYQ/SRQGn9dW5/MbqKNjlY9TSMvMe6g2omhCGuDH6AJDKRKdi38NzUqi3ahc31/0XcRVJ5bfbxIHZpS4W1FobZp8XPfz575tM7XqweXO5gbi+Xv6Ufs1+3DtkPK4SaYJ6cnEOYjSG93dM4OeBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KskmwLjO; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709682735; c=relaxed/simple;
+	bh=jad1ZTuPBnQnVhyAUaIXJ0sj2KmNN+XpvGPh1Z8NAiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nIE9RL6FEKg9xmEUInQgd0XBzrZnIzuwS5c9QVRVwoGB+wmA/7Wls8+TSMP9dxDI82w57eOYDv6gqZYwhyzBkYvNiLzPkkchisXLLmRD0o/nV7ppbLbSvnI+uGmb5vaIYsyjj9cI8IqEBXuWSxCG8G9/+KykfWJ9DJcitTTNUZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hWQNwmko; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KskmwLjO"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d3f4fef377so4389731fa.1
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 15:36:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hWQNwmko"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d7232dcb3eso46487455ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 15:52:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709681764; x=1710286564; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PG9dPNyzq6JVaBBw+HFrzAHEWMQl1R7aRqbEgTh3gMc=;
-        b=KskmwLjOg4zuOKK+qISkV70xL6R+FwjTDVbalus6AUf4n2qZMXLZ2pIge3J+TR/OPH
-         gb5O0zjq7v4tCNeURLCTpfvBmk0h2A706fyova/gF+eSIOW5YeXtimSqJ2pKiGD/kvwV
-         kgn9SWutLbo8v4aLFGdfvp/8+c30KjeVyeRQ4Bbrp75+HktNLF4X7ViJf5q6bp8atVf5
-         bKuI3B3ADYozWffO9/TdTxDl5NWIxfYOS5slABWfwSdg+soM8M2IQAO7GWin6CKtRAp9
-         HNQwkHBuSQfcjySLMJBVmZrhHTAwNuoUUXrZsSGkYNPshHDkIlOqkQildHro11pClUA3
-         1f/w==
+        d=chromium.org; s=google; t=1709682733; x=1710287533; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jyoc6sqBdOY+7wLmmpdaiPXTvskeQaEAskb3Q12WvtU=;
+        b=hWQNwmkoP6X9trL+mOxnNbMVV5ZgU4F4xTCcdQhzKJqixqNrhe/FaY7XPOdBZH3Wfl
+         sZ6wD2ubgEZpJnJNcab0ofM/vJ4mW3tPl+Eojwwm/m7YFpU6nE63s6Yi2AQqYGPU7tk0
+         KIfQUPpcg0mZ8Bd8PXd+LPnMZvYWnhgE6gu7c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709681764; x=1710286564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PG9dPNyzq6JVaBBw+HFrzAHEWMQl1R7aRqbEgTh3gMc=;
-        b=Z7iqcFneK/nlbUlfdO/rvyXGG98Th2jbHMbJhL7hLty9vG4ovu7jDSVG41t687mM3W
-         kOWSplV/CiLXuBno+mglQQ2/8s0qwjkS6nErjwDjJwS1dtaGV+Kc6n/vMuzLROo8kHYY
-         3SIH+PihYl6UmWh8jAwMv/QHXf5DvCj57ZIoOrEmgIFPU131TDhprJ7e/HqVMG+qWA3R
-         YKxXoJduXBbuJua4XokIQK0JvBwvnjbWjMZkQdaaezP3qVWOVOWPnpvtkEKDUHxUo+bC
-         xX/JpLiGgCtN5pmDB93euctdqsih4fTJ5ZTLen5o9s7qih30EL2j+250X2si3rK1PFTv
-         5lAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxqfXKUbT3Zcib74oBGj82vTIyJVW6yWttD4u7UCTy5/2ED+WW75MY2bs8+NS3XHi1wolCM+XOeYhNN2QL8h5qQO1ZuPssqmy+8XpAQEBZ
-X-Gm-Message-State: AOJu0YyHXyDgmGLk4FchJCQ4jVYkLEALzxj5EwZddWFKGYiwL4Wu8FAv
-	/hMhbMLPVqsxaXdr0YKCmBR0Avh6wK42Rg7feKbIedKh57HFvwkIGt+yKiuVZ67O2i7vz1cTzRV
-	IdNeB02t3uGS7CjqXkniPq1TmX+O6+Emb+SLm
-X-Google-Smtp-Source: AGHT+IGpSN+I9ELO3EEtLN6HV+ncZHwDlK/bM8JASdlvQji2M0BQ7DI+znDfQMnETpZtHBNJpmDxLtKKdRzScr/3jcA=
-X-Received: by 2002:a2e:7a18:0:b0:2d2:a443:9c64 with SMTP id
- v24-20020a2e7a18000000b002d2a4439c64mr2110734ljc.45.1709681763937; Tue, 05
- Mar 2024 15:36:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709682733; x=1710287533;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jyoc6sqBdOY+7wLmmpdaiPXTvskeQaEAskb3Q12WvtU=;
+        b=Kf3/AgEKsF0hjJFkHWhy/ufwZQ1IYAu7fFoDW0rGsCr/jy6tmVHKnA2w2GLC8xSMzz
+         nV7MUt3cTJeo+SkIzJzYoQvpgnwNLZZbBTz7oRjdhLUqttjFNiq7sCpSYZr19SfFNnoM
+         UwcsUOdE1/VeG9p6z8RuNvaKdRCd68+uCQMLomW7Sz3qh6luNtH8j6ZI+3kPOlm+LfFk
+         HNK+Q4V/MpslOeG9px9W7kMqm09KMs9/7by1GP0tp+eiAdmu7HuVAyoqUQWjh/vpp8/X
+         WSKeaQloqJMIHz85WPdZgGIawXmaJ4o6wHILrPx/8DdDSDHhswbCk/8/ZAcDwcaU8KM9
+         qgGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKT+dVS+tlhw86ledHB9U6JaqaM4WhYtsnoEytFlpUPSlnwbviq5ebQwXjktebLksnJsKGRQEsVnVUnmWMIQ/Yg2C8uGHhTCcjAJlmxD/V
+X-Gm-Message-State: AOJu0Yy6lvDZToLbknD/9085+SgGABXCOoOnNgGEMHGwP3Gpn00B7J5b
+	QEOxh8O7Hb9Atg5Ihy1y6hOk1fwzucqedHAP1M4WOpi2qB5gXbE0QL0FZmgsmg==
+X-Google-Smtp-Source: AGHT+IHSAi/R0Z+FnSnYEll+Jdzr9evRXwkkfto2W7u2LIJBRhmtHvsvuWPYgTohLmHE92SmGPwJxg==
+X-Received: by 2002:a17:902:a514:b0:1d9:7095:7e3c with SMTP id s20-20020a170902a51400b001d970957e3cmr3152769plq.57.1709682733364;
+        Tue, 05 Mar 2024 15:52:13 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k23-20020a170902ba9700b001da105d6a83sm11089065pls.224.2024.03.05.15.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 15:52:12 -0800 (PST)
+Date: Tue, 5 Mar 2024 15:52:12 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] fsnotify: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <202403051548.045B16BF@keescook>
+References: <ZeeaRuTpuxInH6ZB@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
- <202402281617.807B1B7@keescook>
-In-Reply-To: <202402281617.807B1B7@keescook>
-From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 5 Mar 2024 15:35:51 -0800
-Message-ID: <CAFhGd8qvdnyvtGv+nDfQNSQr1mjttHGUqa+==nVLQPqRvEwWgg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] scsi: replace deprecated strncpy
-To: Kees Cook <keescook@chromium.org>
-Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>, Kashyap Desai <kashyap.desai@broadcom.com>, 
-	Sumit Saxena <sumit.saxena@broadcom.com>, Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>, Ariel Elior <aelior@marvell.com>, 
-	Manish Chopra <manishc@marvell.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saurav Kashyap <skashyap@marvell.com>, Javed Hasan <jhasan@marvell.com>, 
-	GR-QLogic-Storage-Upstream@marvell.com, Nilesh Javali <njavali@marvell.com>, 
-	Manish Rangankar <mrangankar@marvell.com>, Don Brace <don.brace@microchip.com>, 
-	mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	MPT-FusionLinux.pdl@broadcom.com, netdev@vger.kernel.org, 
-	storagedev@microchip.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZeeaRuTpuxInH6ZB@neat>
 
-On Wed, Feb 28, 2024 at 4:18=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Wed, Feb 28, 2024 at 10:59:00PM +0000, Justin Stitt wrote:
-> > This series contains multiple replacements of strncpy throughout the
-> > scsi subsystem.
-> >
-> > strncpy() is deprecated for use on NUL-terminated destination strings
-> > [1] and as such we should prefer more robust and less ambiguous string
-> > interfaces. The details of each replacement will be in their respective
-> > patch.
-> >
-> > ---
-> > Changes in v2:
-> > - for (1/7): change strscpy to simple const char* assignments
-> > - Link to v1: https://lore.kernel.org/r/20240223-strncpy-drivers-scsi-m=
-pi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com
->
-> I think you lost my tags for the later patches. I re-reviewed a few and
-> then remembered I'd already reviewed these and they were unchanged. :)
->
-> Please run:
->
-> b4 trailers -u 20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3=
-882f0700@google.com
+On Tue, Mar 05, 2024 at 04:18:46PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
+> 
+> There is currently a local structure `f` that is using a flexible
+> `struct file_handle` as header for an on-stack place-holder for the
+> flexible-array member `unsigned char f_handle[];`.
+> 
+> struct {
+> 	struct file_handle handle;
+> 	u8 pad[MAX_HANDLE_SZ];
+> } f;
 
-Gotcha, I've resent [1]
+This code pattern is "put a flex array struct on the stack", but we have
+a macro for this now:
 
-I've also added this into my scripting so I shouldn't miss any future
-trailers from vN to vN+1. :)
+DEFINE_FLEX(struct file_handle, handle, f_handle, MAX_HANDLE_SZ);
 
->
-> :)
->
-> -Kees
->
-> --
-> Kees Cook
+And you can even include the initializer:
 
-[1]: https://lore.kernel.org/r/20240305-strncpy-drivers-scsi-mpi3mr-mpi3mr_=
-fw-c-v3-0-5b78a13ff984@google.com
+_DEFINE_FLEX(struct file_handle, handle, f_handle, MAX_HANDLE_SZ,
+	     = { .handle_bytes = MAX_HANDLE_SZ });
+
+I think this would be a simpler conversion.
+
+Also, this could use a __counted_by tag...
+
+I need to improve the DEFINE_FLEX macro a bit, though, to take advantage
+of __counted_by.
+
+-- 
+Kees Cook
