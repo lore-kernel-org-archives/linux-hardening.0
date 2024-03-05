@@ -1,44 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB00714AA3;
-	Tue,  5 Mar 2024 17:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CAB182B3;
+	Tue,  5 Mar 2024 17:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709659535; cv=none; b=fyS5zioiC+Yw9UGBABaY8Kx+NUreRcX4ChU+89diz9HOkJgffo2ocJcnRJEtDufclBphqEhXW+xV5AK6xUOckr04j0jJiyU313/fkqDQZBto6X24f2EBuZpaSFNKAU9d9rmEZEjXVoL6tVQDXSHMWlwYEKVfJYT2Hwg9HN9GDks=
+	t=1709661529; cv=none; b=jC9m2h+eDcw3r14pbA71OWPDrzN8uCX1RnqRH/diARZgZzUFHzKy+m7NiSC5hrVkLuV/YJGg+BDBLtw4UqhyoftYXeRT9IHPoKymobwzHyJtPClBlAhCtmpBd5pSRzXrPpve835guVX3f4PxtZ4Sh6SR8cQrAb2EpWoepL6nKto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709659535; c=relaxed/simple;
-	bh=4nFC5omIFOjOAJ+cP/UoTfF1yurBWzlnntNqzpar1uA=;
+	s=arc-20240116; t=1709661529; c=relaxed/simple;
+	bh=n/toLIPHbeaoCIED5/1fJO2jWwcxruDUgbg++Dsbijk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HfBtgAV6H+rNMgDeAlAdUi8CX/rDNANU2Pgg1V4p3FCfL2+D929f4JWlP4nfNIWm/n6NlndLMSR4I/eY6wD1X9IldsPjqb0IszrRt4jsVrVZY27kzd4YSj88BM1z4UbXm6zmUfjxq5tOpuqKHB3i5nBL4BOaQr+7YxU8kD/5g5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGIoI2Rq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cq5YhoSgzeYonvlWsLRQHkxsBhrSHj698GUY9Hpr7gSFy72Y262VxZKHhrQ+zJJCGOmNEO3VYDKEhhKEZXzjWv6yU6dV4ptf/xndq5v4qtcdJAlmBtoLaUpRVCIkPHIwpQdTAVPBh1/GJQQP1FpPJGwp9Z3rz+xFzPuWUf1WFuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyuOFdij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGIoI2Rq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE95C433C7;
-	Tue,  5 Mar 2024 17:25:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyuOFdij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D08BBC433C7;
+	Tue,  5 Mar 2024 17:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709659535;
-	bh=4nFC5omIFOjOAJ+cP/UoTfF1yurBWzlnntNqzpar1uA=;
+	s=k20201202; t=1709661528;
+	bh=n/toLIPHbeaoCIED5/1fJO2jWwcxruDUgbg++Dsbijk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nGIoI2RqSSD+o5WgK9vgZYqgif+hg8huqzeRQfiT4srghDdJmIeoqQSII8KF0NwNc
-	 WhTFl3lISg2N3BXnnD8honFCDlkWkCLPzATIHWdliP3x3xjDnxmO6KuHzM2zL5APwC
-	 sAiyhqYbkWpDmbBP1JA/FAzosdQDSChqnfX/LBUGWTz9WUX/TEx3zPIzORcgYSm99b
-	 xYlQr6Z0yT4rAAWNEdQHP02sm4tNCDMnTGNARDBIrNaLW3sU3t2zXk1dvhGbcqpg0n
-	 2F/sl6ixgTHrDNsicoFbpZ7owAlaGBnYy+P+Se9N6NqcNkd121JRUA5eDQIObyb65h
-	 wno0/gZxqkbdw==
-Date: Tue, 5 Mar 2024 11:25:32 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org, linux1394-devel@lists.sourceforge.net
-Subject: [PATCH 2/2][next] ALSA: firewire-lib: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <d3a764eb76909b16b8a22d9ff530e5edf0e59e6b.1709658886.git.gustavoars@kernel.org>
-References: <cover.1709658886.git.gustavoars@kernel.org>
+	b=WyuOFdij78BbskVgyqWFM/kzuBAvozgJDjD+TyHF7hPV9/yM2i3UYBjxrJkgZGhdJ
+	 hW0lISaHBCuCz3x58q3LcNLqE0iGTM41jWlFKhXlgzZsm7d6YIn+vslueGkx6QnfSR
+	 GWWKGicIcHu12H3OYH9O6JyEOP+wleGX4Ylc32EUYlgbQ5v+9gp+D5Hkroim2V4IW2
+	 wOij1bmoo7i0nbyfE4LownVfl/7lY+dZvCOeF3nG8tj5rWlBvW3fZPAawsdL81QtiU
+	 v2w6UlebkcHRtTMGiwSY+kewSqrytcnmtNwKciHGI3gOJ98z/1rPmc1zQ/HBtB3c7J
+	 IHyTn8DDq4gew==
+Date: Tue, 5 Mar 2024 09:58:46 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc: Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+	gustavoars@kernel.org, akpm@linux-foundation.org,
+	peterz@infradead.org, dave.hansen@linux.intel.com,
+	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	nixiaoming@huawei.com, kepler.chenxin@huawei.com,
+	wangbing6@huawei.com, wangfangpeng1@huawei.com,
+	douzhaolei@huawei.com, Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
+Message-ID: <20240305175846.qnyiru7uaa7itqba@treble>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
+ <202403040938.D770633@keescook>
+ <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
+ <202403050129.5B72ACAA0D@keescook>
+ <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,87 +55,212 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1709658886.git.gustavoars@kernel.org>
+In-Reply-To: <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+> >> For the usercopy_abort function, whether '__noreturn' is added
+> >> does not affect the internal behavior of the usercopy_abort function.
+> >> Therefore, it is recommended that '__noreturn' be deleted
+> >> so that backtrace can work properly.
+> > 
+> > This isn't acceptable. Removing __noreturn this will break
+> > objtool's processing of execution flow for livepatching, IBT, and
+> > KCFI instrumentation. These all depend on an accurate control flow
+> > descriptions, and usercopy_abort is correctly marked __noreturn.
 
-There is currently a local structure `template` that is using a flexible
-`struct fw_iso_packet` as a header for an on-stack array
-`__be32 header[CIP_HEADER_QUADLETS];`.
+__noreturn also has the benefit of enabling the compiler to produce more
+compact code for callees.
 
-struct {
-	struct fw_iso_packet params;
-	__be32 header[CIP_HEADER_QUADLETS];
-} template = { {0}, {0} };
+> Thank you for providing this information.
+> I'll go back to further understand how __noreturn is used
+> in features such as KCFI and livepatching.
 
-However, we are deprecating flexible arrays in the middle of another
-struct. So, in order to avoid this, we use the `struct_group_tagged()`
-helper to separate the flexible array from the rest of the members in
-the flexible structure:
+Adding ARM folks -- see
+https://lkml.kernel.org/lkml/1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com
+for the original bug report.
 
-struct fw_iso_packet {
-        struct_group_tagged(fw_iso_packet_hdr, hdr,
-                ... the rest of the members
-        );
-        u32 header[];           /* tx: Top of 1394 isoch. data_block    */
-};
+This is an off-by-one bug which is common in unwinders, due to the fact
+that the address on the stack points to the return address rather than
+the call address.
 
-With the change described above, we can now declare an object of the
-type of the tagged struct, without embedding the flexible array in the
-middle of another struct:
+So, for example, when the last instruction of a function is a function
+call (e.g., to a noreturn function), it can cause the unwinder to
+incorrectly try to unwind from the function *after* the callee.
 
-struct {
-	struct fw_iso_packet_hdr params;
-	__be32 header[CIP_HEADER_QUADLETS];
-} template = { {0}, {0} };
+For ORC (x86), we fixed this by decrementing the PC for call frames (but
+not exception frames).  I've seen user space unwinders do similar, for
+non-signal frames.
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure.
+Something like the following might fix your issue (completely untested):
 
-So, with these changes, fix the following warning:
-
-sound/firewire/amdtp-stream.c: In function ‘process_rx_packets’:
-sound/firewire/amdtp-stream.c:1184:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
- 1184 |                         struct fw_iso_packet params;
-      |
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- sound/firewire/amdtp-stream.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/sound/firewire/amdtp-stream.c b/sound/firewire/amdtp-stream.c
-index c9f153f85ae6..7ba1cd64d7f1 100644
---- a/sound/firewire/amdtp-stream.c
-+++ b/sound/firewire/amdtp-stream.c
-@@ -1181,12 +1181,14 @@ static void process_rx_packets(struct fw_iso_context *context, u32 tstamp, size_
+diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
+index 360f0d2406bf..4891e38cdc1f 100644
+--- a/arch/arm/include/asm/stacktrace.h
++++ b/arch/arm/include/asm/stacktrace.h
+@@ -21,9 +21,7 @@ struct stackframe {
+ 	struct llist_node *kr_cur;
+ 	struct task_struct *tsk;
+ #endif
+-#ifdef CONFIG_UNWINDER_FRAME_POINTER
+ 	bool ex_frame;
+-#endif
+ };
  
- 	for (i = 0; i < packets; ++i) {
- 		struct {
--			struct fw_iso_packet params;
-+			struct fw_iso_packet_hdr params;
- 			__be32 header[CIP_HEADER_QUADLETS];
- 		} template = { {0}, {0} };
-+		struct fw_iso_packet *params =
-+			container_of(&template.params, struct fw_iso_packet, hdr);
- 		bool sched_irq = false;
+ static __always_inline
+@@ -37,9 +35,8 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
+ 		frame->kr_cur = NULL;
+ 		frame->tsk = current;
+ #endif
+-#ifdef CONFIG_UNWINDER_FRAME_POINTER
+-		frame->ex_frame = in_entry_text(frame->pc);
+-#endif
++		frame->ex_frame = !!regs;
++
+ }
  
--		build_it_pkt_header(s, desc->cycle, &template.params, pkt_header_length,
-+		build_it_pkt_header(s, desc->cycle, params, pkt_header_length,
- 				    desc->data_blocks, desc->data_block_counter,
- 				    desc->syt, i, curr_cycle_time);
+ extern int unwind_frame(struct stackframe *frame);
+diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+index 620aa82e3bdd..caed7436da09 100644
+--- a/arch/arm/kernel/stacktrace.c
++++ b/arch/arm/kernel/stacktrace.c
+@@ -154,9 +154,6 @@ static void start_stack_trace(struct stackframe *frame, struct task_struct *task
+ 	frame->kr_cur = NULL;
+ 	frame->tsk = task;
+ #endif
+-#ifdef CONFIG_UNWINDER_FRAME_POINTER
+-	frame->ex_frame = in_entry_text(frame->pc);
+-#endif
+ }
  
-@@ -1198,7 +1200,7 @@ static void process_rx_packets(struct fw_iso_context *context, u32 tstamp, size_
- 			}
- 		}
- 
--		if (queue_out_packet(s, &template.params, sched_irq) < 0) {
-+		if (queue_out_packet(s, params, sched_irq) < 0) {
- 			cancel_stream(s);
+ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+@@ -167,6 +164,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 	if (regs) {
+ 		start_stack_trace(&frame, NULL, regs->ARM_fp, regs->ARM_sp,
+ 				  regs->ARM_lr, regs->ARM_pc);
++		frame.ex_frame = true;
+ 	} else if (task != current) {
+ #ifdef CONFIG_SMP
+ 		/*
+@@ -180,6 +178,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 				  thread_saved_sp(task), 0,
+ 				  thread_saved_pc(task));
+ #endif
++		frame.ex_frame = false;
+ 	} else {
+ here:
+ 		start_stack_trace(&frame, task,
+@@ -187,6 +186,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 				  current_stack_pointer,
+ 				  (unsigned long)__builtin_return_address(0),
+ 				  (unsigned long)&&here);
++		frame.ex_frame = false;
+ 		/* skip this function */
+ 		if (unwind_frame(&frame))
  			return;
+diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+index 3bad79db5d6e..46a5b1eb3f0a 100644
+--- a/arch/arm/kernel/traps.c
++++ b/arch/arm/kernel/traps.c
+@@ -84,10 +84,10 @@ void dump_backtrace_entry(unsigned long where, unsigned long from,
+ 	printk("%sFunction entered at [<%08lx>] from [<%08lx>]\n",
+ 		loglvl, where, from);
+ #elif defined CONFIG_BACKTRACE_VERBOSE
+-	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pS)\n",
++	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pB)\n",
+ 		loglvl, where, (void *)where, from, (void *)from);
+ #else
+-	printk("%s %ps from %pS\n", loglvl, (void *)where, (void *)from);
++	printk("%s %ps from %pB\n", loglvl, (void *)where, (void *)from);
+ #endif
+ 
+ 	if (in_entry_text(from) && end <= ALIGN(frame, THREAD_SIZE))
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 9d2192156087..99ded32196af 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -407,7 +407,7 @@ int unwind_frame(struct stackframe *frame)
+ {
+ 	const struct unwind_idx *idx;
+ 	struct unwind_ctrl_block ctrl;
+-	unsigned long sp_low;
++	unsigned long sp_low, pc;
+ 
+ 	/* store the highest address on the stack to avoid crossing it*/
+ 	sp_low = frame->sp;
+@@ -417,19 +417,22 @@ int unwind_frame(struct stackframe *frame)
+ 	pr_debug("%s(pc = %08lx lr = %08lx sp = %08lx)\n", __func__,
+ 		 frame->pc, frame->lr, frame->sp);
+ 
+-	idx = unwind_find_idx(frame->pc);
++	pc = frame->ex_frame ? frame->pc : frame->pc - 4;
++
++	idx = unwind_find_idx(pc);
+ 	if (!idx) {
+-		if (frame->pc && kernel_text_address(frame->pc)) {
+-			if (in_module_plt(frame->pc) && frame->pc != frame->lr) {
++		if (kernel_text_address(pc)) {
++			if (in_module_plt(pc) && frame->pc != frame->lr) {
+ 				/*
+ 				 * Quoting Ard: Veneers only set PC using a
+ 				 * PC+immediate LDR, and so they don't affect
+ 				 * the state of the stack or the register file
+ 				 */
+ 				frame->pc = frame->lr;
++				frame->ex_frame = false;
+ 				return URC_OK;
+ 			}
+-			pr_warn("unwind: Index not found %08lx\n", frame->pc);
++			pr_warn("unwind: Index not found %08lx\n", pc);
  		}
--- 
-2.34.1
-
+ 		return -URC_FAILURE;
+ 	}
+@@ -442,7 +445,7 @@ int unwind_frame(struct stackframe *frame)
+ 	if (idx->insn == 1)
+ 		/* can't unwind */
+ 		return -URC_FAILURE;
+-	else if (frame->pc == prel31_to_addr(&idx->addr_offset)) {
++	else if (frame->ex_frame && pc == prel31_to_addr(&idx->addr_offset)) {
+ 		/*
+ 		 * Unwinding is tricky when we're halfway through the prologue,
+ 		 * since the stack frame that the unwinder expects may not be
+@@ -451,9 +454,10 @@ int unwind_frame(struct stackframe *frame)
+ 		 * a function, we are still effectively in the stack frame of
+ 		 * the caller, and the unwind info has no relevance yet.
+ 		 */
+-		if (frame->pc == frame->lr)
++		if (pc == frame->lr)
+ 			return -URC_FAILURE;
+ 		frame->pc = frame->lr;
++		frame->ex_frame = false;
+ 		return URC_OK;
+ 	} else if ((idx->insn & 0x80000000) == 0)
+ 		/* prel31 to the unwind table */
+@@ -515,6 +519,7 @@ int unwind_frame(struct stackframe *frame)
+ 	frame->lr = ctrl.vrs[LR];
+ 	frame->pc = ctrl.vrs[PC];
+ 	frame->lr_addr = ctrl.lr_addr;
++	frame->ex_frame = false;
+ 
+ 	return URC_OK;
+ }
+@@ -544,6 +549,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ 		 */
+ here:
+ 		frame.pc = (unsigned long)&&here;
++		frame.ex_frame = false;
+ 	} else {
+ 		/* task blocked in __switch_to */
+ 		frame.fp = thread_saved_fp(tsk);
+@@ -554,11 +560,12 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ 		 */
+ 		frame.lr = 0;
+ 		frame.pc = thread_saved_pc(tsk);
++		frame.ex_frame = false;
+ 	}
+ 
+ 	while (1) {
+ 		int urc;
+-		unsigned long where = frame.pc;
++		unsigned long where = frame.ex_frame ? frame.pc : frame.pc - 4;
+ 
+ 		urc = unwind_frame(&frame);
+ 		if (urc < 0)
