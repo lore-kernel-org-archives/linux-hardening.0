@@ -1,62 +1,65 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085A3548E2
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B5254916
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709633430; cv=none; b=W8/U0566G5G7oy6/fNXG/i3NTa9f8mjN7w5xC8Rw5//BWf2jF6MXiq1rmLA6Kyj4Iw+XjYlx2g/29koE+1q9EiUkhkWMRefXd9xSNR5KYrqE+WZ/IxMPT1Ln16yzAXBLWhNu0ilcqlMBspSwxX4zmVNWCn5tqYqQPpCfreNwdF4=
+	t=1709633431; cv=none; b=Rs7m56MHqNZ/iG4t+GLlQsBQpxzLDAhc77i6vwsS+RK51pG9KxruOqK9hMD9cm+7MYoHDSNbp32zKDtGAmNujxZGTx4NB6Eds3b+T6/nWUdy1MgvniW9Fnp4/Qq7umNzyHCNbbi+ultY/q7crtfOkJofPbGOBVLIi1S32Gjc7vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709633430; c=relaxed/simple;
-	bh=edWPsSNhLUgYV01JFEWzJeLACWZPsISNNEUjPT6beEY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q83uPcbKBf9zOiCuJPJwFWCwXPPUF6yJX6KBBupPnSIi2ZLuukCvNSz+2nac6a1m8oDiJd+OWf6tbYes1qcn+W1XtDLaEncB3vknAXwkelBMMdVVgbBWcOFf8iCn8at0LuT0WcNCX2jQeGXK4UDmi1PZ3xf5L+6ly2Ysw9rKiYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JIv+ryrM; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1709633431; c=relaxed/simple;
+	bh=JqAs2ONNE7kMO16unP+0GI5vQbPsq9Mj6KA7f6Xw/go=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FQ3uWASoT6BsqEBCu6mTBnI3GaRr2F0nGVyNGnvMG5277iZWi/Kueqh/aY9j7jrd+2B62n6eQhaujKEsUJHsg+eqrFuwzv8YFmAaG5Mz0TIiauDuggwzpHDfZlOZGO6krdU92LYj8EmLKBXpDOX6PbP4m9RqaM6mKHS7PtYyvTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c7s1eTp2; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JIv+ryrM"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dca3951ad9so52542935ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c7s1eTp2"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1dcb3e6ff3fso28228915ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709633428; x=1710238228; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qzpdpDEJllHVHW238bpdd9oiZXbWj3sBmoX33gVHYPg=;
-        b=JIv+ryrMWLpfE02llpYj2oksvSjElgimSP8Md/V8iFNhz+FSl/umKXrz2EfTyhv1+s
-         CR4zZ8/TlvWQgi8+7odm0eABT33Py3CUy5pRH7yVpG6k7cLpb/PZys98StKIOaPWchPd
-         +zxNsCyf5r4vmh1D8Tf9G4DNuep/bcy6Pc0FE=
+        d=chromium.org; s=google; t=1709633429; x=1710238229; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=99J+yh1I+zD4qoBsjvOLBvxyDWRgmU0/2arb8UvstmI=;
+        b=c7s1eTp2x2Pq2b9KQvTawnB3//dDRaQv74AoAQ0vFDZMj5jR6j9mTZSvTDYq8Rp2sv
+         VcNa/zs5XOC0eWji8hCrNtjl+TiPm0tuokacJ5QssGeaDCO9TPwyeSAF/DzJI83YdF2B
+         q+oYzDkdnlAHhfPKhnP9lBuczvlEVL2LeUEqk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709633428; x=1710238228;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qzpdpDEJllHVHW238bpdd9oiZXbWj3sBmoX33gVHYPg=;
-        b=C+ZBUXGEM6AYyO2GyLIGFMZAZXjOLxYnVP2iLaSc/1+6KgukQciqxwk3NNFUuhz+ob
-         ZkoPVXPKG3sS3Err3sQLRo7eW3rt47U/DsgwuUjypmJQ48xWoE84MkMbfYqS39T3uvRY
-         0ASqlARVum/uyi1slw/52XNK03NyuhOYNtmkiGj+KpQDXuiW3MbYOXAqB/o5ANqnxxxv
-         Jk8tWX5EpWTk2dCcaqF6GGyuKtmgDpQx2dTW9oF/rt9zmd7fpInxKlnhhqJ4Zt9V4e9m
-         1EijeKd72ATunv0CDNcSD89JYD3EipYYUh33k+DV7CqdFZ4gzsnyHSgJq8bpbX8FZFAe
-         3OXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZo0cHDQqbGCm+6/YeYZ15XOUlcSKR7UeAWKfnHtNSj2WDIHlocJIyAWrHuD2g9Gk2tl4JFPWJ8jXCICW0/pUHLu3Q669mllBbWpFSEPV7
-X-Gm-Message-State: AOJu0YzWtowPXvdx1q/7CjYwjAh9jCU7spaIcbl+ieFAifle2IpluyJg
-	vpKxR0c2kW3CVQEhGOVwe41+Zk5UtTp955ok6Z6jH17CUoufnjLSzOCTWZl71Q==
-X-Google-Smtp-Source: AGHT+IEcqbQWha9zMTphyDxsSYTGyjtkP6BMhcrJEIBec5zMiUY2asWhZg5sbtJjMtzOhdLnrw8tqw==
-X-Received: by 2002:a17:902:c951:b0:1dc:673:1932 with SMTP id i17-20020a170902c95100b001dc06731932mr1799892pla.38.1709633428204;
-        Tue, 05 Mar 2024 02:10:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709633429; x=1710238229;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=99J+yh1I+zD4qoBsjvOLBvxyDWRgmU0/2arb8UvstmI=;
+        b=Nhp7zvfDYrdGXUH1VOPkPqaTjN7fTPLOqz5VCBy6KXnJC5Wo+2QJWGz4W2fLDWTpPo
+         pSQVxP4PK5MiNV+aLXD/NufCqwGYrioOzGaqj/w9zocMcbchTeXx734DI6Xeq2lOMj9s
+         s+s61X2YXrRErXfq/h2zq6ofv5sCnwidwrYeFcFJ9GlbDU7nykIsArSCerjxHBbCVC0Q
+         /duV6yrdOWQj6bPxxZ64F3Tf8fIdEDiz1bHVkOaz52HdvH50YBddE8cU/j6jlmrXH1gV
+         lmSJ26LR3FPEa/fpGf4XPPQgEnZejtjmykoZkDf2ZYNk05n6b1sgY57S//j+yVw9cjZn
+         38qA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMlSmo45uNJCHpDIXzI0VxtpvqpgNcvlXXYq9vMTpySpd/8cmDXdKg3JH0eCKV0ozhiWLsfu6HTab4U00gki6sGMTyi4i5VyTp1amMKVCM
+X-Gm-Message-State: AOJu0Yxed1dbC1s+8yxk62dbSdkuacjHPrEUKLWUDzrRFjRvoNsqBDmV
+	8x32xWSivys83UJ6UjLaESo05Siz9okzPfmVJzz/3YGFm8ClIMwjqU04uEH/lg==
+X-Google-Smtp-Source: AGHT+IFqjHRULQpfLuOIfWcrg86BprEdjHxZ7A04s1os533fRHV67h+yavqSGXCERg/CRb9UyIa8KQ==
+X-Received: by 2002:a17:902:d4c1:b0:1d8:ab27:d76c with SMTP id o1-20020a170902d4c100b001d8ab27d76cmr1643127plg.51.1709633429324;
+        Tue, 05 Mar 2024 02:10:29 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p4-20020a170902780400b001dd2b9ed407sm1124556pll.213.2024.03.05.02.10.27
+        by smtp.gmail.com with ESMTPSA id n15-20020a170903110f00b001dcc3a46a6bsm10081558plh.262.2024.03.05.02.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 05 Mar 2024 02:10:27 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Kees Cook <keescook@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
 	Christoph Lameter <cl@linux.com>,
 	Pekka Enberg <penberg@kernel.org>,
 	David Rientjes <rientjes@google.com>,
 	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
 	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
 	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
 	Xiu Jianfeng <xiujianfeng@huawei.com>,
 	Suren Baghdasaryan <surenb@google.com>,
@@ -64,109 +67,116 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Jann Horn <jannh@google.com>,
 	Matteo Rizzo <matteorizzo@google.com>,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
-Date: Tue,  5 Mar 2024 02:10:16 -0800
-Message-Id: <20240305100933.it.923-kees@kernel.org>
+Subject: [PATCH v2 3/9] util: Introduce __kvmalloc_node() that can take kmem_buckets argument
+Date: Tue,  5 Mar 2024 02:10:19 -0800
+Message-Id: <20240305101026.694758-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240305100933.it.923-kees@kernel.org>
+References: <20240305100933.it.923-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3660; i=keescook@chromium.org;
- h=from:subject:message-id; bh=edWPsSNhLUgYV01JFEWzJeLACWZPsISNNEUjPT6beEY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+QN2e7WFyXuymiV+m02giXTmHe/hI5tR0+A
- 6PRup3N4OaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A
- Jo14EACeZ3xWd6gW/b5hjqMeZ55W6EyPP6VoUB67J6zJ2PdYd8Gzy9EWRFtQVTdR5Z19nH0w9fD
- mBFL1sDyKQktxuNO36ylzQLo4OCN/I4vYgwsPblfZ5B/MW/inL/WaDQoXo598aporgDtOgmRFLO
- MB4M3LTyYa68aJgD94dQNbcMzn2501HtvR6SBWqNiYm9h2B74D40BNNbMPClXGSuVfmfbg/aCd2
- t2DwUY0YSDIRDK/fvmUc+XAuC2MrktCSvSptBgZKkP5c7iTk+Se1z3Enn4l9UUqvTH5utSiuLDw
- +Bht0qxCTk5l2+LbakA1p2FFCzUnGg2lfIsCwyPr98FhaOw38eFoOluQnPv9Up7pcxW/JUAUYO8
- X5sTPv2Wx5R3ZbGABQ9vf2Ms2iva5WmflzdKvmPm3cOqvzJWn4HRWNfMZGbCrke4ZGvYcfMC7vC
- 6v/FsPuSCrN5jYwU5O5IDmBbai5BLiBaydRhA5PO4OF63vKkiGuJNnAjti/vV8XsHU1d7RalfLv
- AwanRdWj9ObRQ8NhB53I5EzVgzPQiirraBFtktNTU10znDXg3hmlG6mi+EVQSY2UtJ8c/+0Yass
- SSWa9u6GFsB4FA/mnLKybDeRqPOvRyOuA13CZJE6xWPhGmpBhq27s70SA9E5mentgD4dh15OReO
- t8rAp2K KqXW0Zxw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2996; i=keescook@chromium.org;
+ h=from:subject; bh=JqAs2ONNE7kMO16unP+0GI5vQbPsq9Mj6KA7f6Xw/go=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+QU4fAZ6X0I2VVjtMMEATXAWJJ5dqn0j2T+
+ P8LqusMSw+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A
+ JmecD/92uSdARNPOF/Ig41R9iblLk9UxCbO1fB2HKnaa/w+yLHjuEWP2fptZr1u4cl7oBi+V+7e
+ XCMsvWK4pkOYAP7NuRX8GU6AxmvUqlZpmQXa283pIL7cWbyoBryIVD0uVp7YjUDWMT3mZYo8kTI
+ WOxJrg2BS22j8FjJ0SmfK28wsBeG/6y4f11iNleBFW5KpXlGaRw2NoFGPv/oYzmVJdpOvno7tv1
+ SrJhdM++M5F4fg8dy8UZdPFSBIjoz4VC49dlXRzdsM9GoSdV+aakrKnzGaX8WPqr1QTfDcy5qEv
+ RCskJbWRYLonWFp9KcpeVrWeXB43I5oPU6H/DHx0PGqLxhEKdHMseOCtWkAKNPVhtqOufAQLdct
+ 2XPAIyB+CIavIHRn8oZvNB8dhF46U1bKOM9jFISSARfnGEZp8WC4c4OStJpN9nCnwYHPz32sXy5
+ IFPtLolXYwV9mqfABdpmFQb/QG6+XuvjFWZ+HpxdxuAD/41pG2HrHPS3XlG77pqtqM+/vtWm5LH
+ hf8/tXhzxjo8B8vey28JSnydpkHd63SeElyfCf/JQ/Vbe5wzsRt/oHddPw1OThs95gN/vEjmHXH
+ rP+vV3/i9F7vKu273jzC4MIKRmYWSs3/Lc000Nj3NCnpIp6uaAeGZFpJIzs1h/qLp3rQGBKT8yw TPX8rWd+pV6qhAA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Provide an API to perform kvmalloc-style allocations with a particular
+set of buckets.
 
-Repeating the commit logs for patch 4 here:
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: linux-mm@kvack.org
+---
+ include/linux/slab.h | 9 ++++++++-
+ mm/util.c            | 9 +++++----
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
-    Dedicated caches are available For fixed size allocations via
-    kmem_cache_alloc(), but for dynamically sized allocations there is only
-    the global kmalloc API's set of buckets available. This means it isn't
-    possible to separate specific sets of dynamically sized allocations into
-    a separate collection of caches.
-
-    This leads to a use-after-free exploitation weakness in the Linux
-    kernel since many heap memory spraying/grooming attacks depend on using
-    userspace-controllable dynamically sized allocations to collide with
-    fixed size allocations that end up in same cache.
-
-    While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-    against these kinds of "type confusion" attacks, including for fixed
-    same-size heap objects, we can create a complementary deterministic
-    defense for dynamically sized allocations.
-
-    In order to isolate user-controllable sized allocations from system
-    allocations, introduce kmem_buckets_create(), which behaves like
-    kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
-    which behaves like kmem_cache_alloc().)
-
-    Allows for confining allocations to a dedicated set of sized caches
-    (which have the same layout as the kmalloc caches).
-
-    This can also be used in the future once codetag allocation annotations
-    exist to implement per-caller allocation cache isolation[0] even for
-    dynamic allocations.
-
-    Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [0]
-
-After the implemetation are 2 example patches of how this could be used
-for some repeat "offenders" that get used in exploits. There are more to
-be isolated beyond just these. Repeating the commit log for patch 8 here:
-
-    The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
-    use-after-free type confusion flaws in the kernel for both read and
-    write primitives. Avoid having a user-controlled size cache share the
-    global kmalloc allocator by using a separate set of kmalloc buckets.
-
-    Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
-    Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
-    Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
-    Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
-    Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
-    Link: https://zplin.me/papers/ELOISE.pdf [6]
-
--Kees
-
- v2: significant rewrite, generalized the buckets type, added kvmalloc style
- v1: https://lore.kernel.org/lkml/20240304184252.work.496-kees@kernel.org/
-
-Kees Cook (9):
-  slab: Introduce kmem_buckets typedef
-  slub: Plumb kmem_buckets into __do_kmalloc_node()
-  util: Introduce __kvmalloc_node() that can take kmem_buckets argument
-  slab: Introduce kmem_buckets_create()
-  slab: Introduce kmem_buckets_alloc()
-  slub: Introduce kmem_buckets_alloc_track_caller()
-  slab: Introduce kmem_buckets_valloc()
-  ipc, msg: Use dedicated slab buckets for alloc_msg()
-  mm/util: Use dedicated slab buckets for memdup_user()
-
- include/linux/slab.h | 50 +++++++++++++++++++++-------
- ipc/msgutil.c        | 13 +++++++-
- lib/fortify_kunit.c  |  2 +-
- mm/slab.h            |  6 ++--
- mm/slab_common.c     | 77 ++++++++++++++++++++++++++++++++++++++++++--
- mm/slub.c            | 14 ++++----
- mm/util.c            | 23 +++++++++----
- 7 files changed, 154 insertions(+), 31 deletions(-)
-
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 1cc1a7637b56..f26ac9a6ef9f 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -723,7 +723,14 @@ static inline __alloc_size(1) void *kzalloc_node(size_t size, gfp_t flags, int n
+ 	return kmalloc_node(size, flags | __GFP_ZERO, node);
+ }
+ 
+-extern void *kvmalloc_node(size_t size, gfp_t flags, int node) __alloc_size(1);
++void * __alloc_size(2)
++__kvmalloc_node(kmem_buckets *b, size_t size, gfp_t flags, int node);
++
++static inline __alloc_size(1) void *kvmalloc_node(size_t size, gfp_t flags, int node)
++{
++	return __kvmalloc_node(NULL, size, flags, node);
++}
++
+ static inline __alloc_size(1) void *kvmalloc(size_t size, gfp_t flags)
+ {
+ 	return kvmalloc_node(size, flags, NUMA_NO_NODE);
+diff --git a/mm/util.c b/mm/util.c
+index 5a6a9802583b..02c895b87a28 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -577,8 +577,9 @@ unsigned long vm_mmap(struct file *file, unsigned long addr,
+ EXPORT_SYMBOL(vm_mmap);
+ 
+ /**
+- * kvmalloc_node - attempt to allocate physically contiguous memory, but upon
++ * __kvmalloc_node - attempt to allocate physically contiguous memory, but upon
+  * failure, fall back to non-contiguous (vmalloc) allocation.
++ * @b: which set of kmalloc buckets to allocate from.
+  * @size: size of the request.
+  * @flags: gfp mask for the allocation - must be compatible (superset) with GFP_KERNEL.
+  * @node: numa node to allocate from
+@@ -592,7 +593,7 @@ EXPORT_SYMBOL(vm_mmap);
+  *
+  * Return: pointer to the allocated memory of %NULL in case of failure
+  */
+-void *kvmalloc_node(size_t size, gfp_t flags, int node)
++void *__kvmalloc_node(kmem_buckets *b, size_t size, gfp_t flags, int node)
+ {
+ 	gfp_t kmalloc_flags = flags;
+ 	void *ret;
+@@ -614,7 +615,7 @@ void *kvmalloc_node(size_t size, gfp_t flags, int node)
+ 		kmalloc_flags &= ~__GFP_NOFAIL;
+ 	}
+ 
+-	ret = kmalloc_node(size, kmalloc_flags, node);
++	ret = __kmalloc_node(b, size, kmalloc_flags, node);
+ 
+ 	/*
+ 	 * It doesn't really make sense to fallback to vmalloc for sub page
+@@ -643,7 +644,7 @@ void *kvmalloc_node(size_t size, gfp_t flags, int node)
+ 			flags, PAGE_KERNEL, VM_ALLOW_HUGE_VMAP,
+ 			node, __builtin_return_address(0));
+ }
+-EXPORT_SYMBOL(kvmalloc_node);
++EXPORT_SYMBOL(__kvmalloc_node);
+ 
+ /**
+  * kvfree() - Free memory.
 -- 
 2.34.1
+
