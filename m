@@ -1,148 +1,82 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A667854905;
-	Tue,  5 Mar 2024 11:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D756C5A7A4;
+	Tue,  5 Mar 2024 13:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709638736; cv=none; b=g2ElHneyd0WLpYAnTjb9umqQd+DesWRCdS0lQuH2FoTa3zUTmSFPzMEzYpi5tJYpKbpmVu271A0HJTt2/g3mdTVBnkHaxWzff3GkgEN8+37qReyq3ep6WPqJ9eJBH9vkKnQBcFMfub/p6xbQPlRrFhvpe/7sZFHswhlF0w14NuU=
+	t=1709645012; cv=none; b=gBICQwvlYSBELwW/jn94m4jx2fCaxTPnpC4jVw9QPebK/+j5nk+GjhWL3p4mlMWXkYgdlj9H6vATK3xkafyQ1APeqgi8GjTEvPcaEjUjy0BK2gJo6ZXTA+QlKVfhClYwZq05FWfdMxrt3KbeX3lLy2BQQZgUg8KL0ZpgbMetAFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709638736; c=relaxed/simple;
-	bh=ESIQQK1CBZ0tuFJ0FmUUdt0XhpiOl/97OyiFWo+h6g0=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=o3h8EAVUDw5UYhpNuyujdGmHOoeJEQCRdrby7EccHhuAODwGjxRlN+5oPillHXms4ckP4OMQ+Q8P3iOiOyhbp6zI3aANeqcDEVJHKV2riwIzzSV9Zv+q01dTarwx9Dpcj/SF8ozSlVx/SlTySjqBLBlo/iwdRvF3LSF4okO1Azk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TptnG4ZB0zwPDy;
-	Tue,  5 Mar 2024 19:36:34 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C24F1400C8;
-	Tue,  5 Mar 2024 19:38:51 +0800 (CST)
-Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 5 Mar
- 2024 19:38:50 +0800
-Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
+	s=arc-20240116; t=1709645012; c=relaxed/simple;
+	bh=ZjacMFRjFcKPH1OLTek2CYbT+B+oPwe4QFvsl3DXWm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n++0Cfmbtm0NMOpOqT/TbamTPf3QN13uT/suAdYGsOGVIElP2gvXhI+BdM9FHFTAe15Zo+tMBdD7SBM9V5fRL333s9m5jiPz2f9Oa5BVvekyEJeiKFmtLr+nAzjPYsLOdox95sYje0bqmRwFN3AhTHMnkcqVExlTrJxDiNXF4oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIIavN0w; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIIavN0w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BAD0C43390;
+	Tue,  5 Mar 2024 13:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709645011;
+	bh=ZjacMFRjFcKPH1OLTek2CYbT+B+oPwe4QFvsl3DXWm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jIIavN0waKQKcV1EyO/wpS0H1pK1jeNJn1GezqFBjIrilCwRrLz/8IxcKXDOPIJ6h
+	 y5/NRftgrdirKEByRlN0f7N3w/LBCM3m8U7lFve3SHcDDiKnP9Oq4h8yJsRKDd2qQU
+	 dl6UjOhXGDASmp/uwgIEXgamHMk8O7QkENPcwYSQawYdOJvFsTxAF1Y8WxelnNjvhK
+	 s0szFET8QHzUo/8iul8FbbxY9wTwNNbG5/pCmdac+WqtqzOiG52kd5846uzfQVHK10
+	 CAF4tqHJ4PHqLZnlgBzm+MDWgZNrZ8+LaUBkD3QED+h8DSvhDs6xhpI6w92jyXzk4n
+	 OX7hiN0Rwwccg==
+Date: Tue, 5 Mar 2024 13:23:26 +0000
+From: Simon Horman <horms@kernel.org>
 To: Kees Cook <keescook@chromium.org>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
- <202403040938.D770633@keescook>
- <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
- <202403050129.5B72ACAA0D@keescook>
-CC: Jann Horn <jannh@google.com>, <gustavoars@kernel.org>,
-	<akpm@linux-foundation.org>, <jpoimboe@kernel.org>, <peterz@infradead.org>,
-	<dave.hansen@linux.intel.com>, <kirill.shutemov@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<linux-mm@kvack.org>, <nixiaoming@huawei.com>, <kepler.chenxin@huawei.com>,
-	<wangbing6@huawei.com>, <wangfangpeng1@huawei.com>, <douzhaolei@huawei.com>
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Message-ID: <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
-Date: Tue, 5 Mar 2024 19:38:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Breno Leitao <leitao@debian.org>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] sock: Use unsafe_memcpy() for sock_copy()
+Message-ID: <20240305132326.GE2357@kernel.org>
+References: <20240304212928.make.772-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <202403050129.5B72ACAA0D@keescook>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500010.china.huawei.com (7.192.105.118)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240304212928.make.772-kees@kernel.org>
 
-
-
-On 2024/3/5 17:32, Kees Cook wrote:
-> On Tue, Mar 05, 2024 at 11:31:06AM +0800, Jiangfeng Xiao wrote:
->>
->>
->> On 2024/3/5 1:40, Kees Cook wrote:
->>> On Mon, Mar 04, 2024 at 04:15:07PM +0100, Jann Horn wrote:
->>>> On Mon, Mar 4, 2024 at 3:02 AM Jiangfeng Xiao <xiaojiangfeng@huawei.com> wrote:
->>>>> When the last instruction of a noreturn function is a call
->>>>> to another function, the return address falls outside
->>>>> of the function boundary. This seems to cause kernel
->>>>> to interrupt the backtrace.
->>>
->>> FWIW, all email from huawei.com continues to get eaten by anti-spam
->>> checking. I've reported this a few times -- it'd be really nice if the
->>> domain configuration could get fixed.
->>>
->>>> [...]
->>>>> Delete __noreturn from usercopy_abort,
->>>>
->>>> This sounds like the actual bug is in the backtracing logic? I don't
->>>> think removing __noreturn annotations from an individual function is a
->>>> good fix, since the same thing can happen with other __noreturn
->>>> functions depending on what choices the compiler makes.
->>>
->>> Yeah, NAK. usercopy_abort() doesn't return. It ends with BUG().
->>>
->> When the user directly or indirectly calls usercopy_abort,
->> the final call stack is incorrect, and the
->> code where the problem occurs cannot be located.
->> In this case, the user will be frustrated.
+On Mon, Mar 04, 2024 at 01:29:31PM -0800, Kees Cook wrote:
+> While testing for places where zero-sized destinations were still showing
+> up in the kernel, sock_copy() and inet_reqsk_clone() were found, which
+> are using very specific memcpy() offsets for both avoiding a portion of
+> struct sock, and copying beyond the end of it (since struct sock is really
+> just a common header before the protocol-specific allocation). Instead
+> of trying to unravel this historical lack of container_of(), just switch
+> to unsafe_memcpy(), since that's effectively what was happening already
+> (memcpy() wasn't checking 0-sized destinations while the code base was
+> being converted away from fake flexible arrays).
 > 
-> Can you please give an example of this?
-
-The main configurations of my kernel are as follows:
-
-CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE is enabled.
-(This config uses the compilation parameter -O2.)
-
-CONFIG_RELOCATABLE is disabled.
-(This config uses the compilation option -fpic.)
-
-You can use the following kernel module testcase
-to reproduce this problem on the ARM32 platform.
-
-```
-#include <linux/module.h>
-#include <linux/sched.h>
-
-static volatile size_t unconst = 0;
-/*
-check_object_size
-    __check_object_size
-        check_kernel_text_object
-            usercopy_abort("kernel text", ...)
-*/
-void test_usercopy_kernel(void)
-{
-        check_object_size(schedule, unconst + PAGE_SIZE, 1);
-}
-
-static int __init test_usercopy_init(void)
-{
-        test_usercopy_kernel();
-        return 0;
-}
-
-static void __exit test_usercopy_exit(void)
-{
-}
-
-module_init(test_usercopy_init);
-module_exit(test_usercopy_exit);
-MODULE_LICENSE("GPL");
-```
-
+> Avoid the following false positive warning with future changes to
+> CONFIG_FORTIFY_SOURCE:
 > 
->> For the usercopy_abort function, whether '__noreturn' is added
->> does not affect the internal behavior of the usercopy_abort function.
->> Therefore, it is recommended that '__noreturn' be deleted
->> so that backtrace can work properly.
+>   memcpy: detected field-spanning write (size 3068) of destination "&nsk->__sk_common.skc_dontcopy_end" at net/core/sock.c:2057 (size 0)
 > 
-> This isn't acceptable. Removing __noreturn this will break
-> objtool's processing of execution flow for livepatching, IBT, and
-> KCFI instrumentation. These all depend on an accurate control flow
-> descriptions, and usercopy_abort is correctly marked __noreturn.
-> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+>  v3: fix inet_reqsk_clone() comment
+>  v2: https://lore.kernel.org/lkml/20240216232220.it.450-kees@kernel.org
+>  v1: https://lore.kernel.org/lkml/20240216204423.work.066-kees@kernel.org
 
-Thank you for providing this information.
-I'll go back to further understand how __noreturn is used
-in features such as KCFI and livepatching.
+Reviewed-by: Simon Horman <horms@kernel.org>
