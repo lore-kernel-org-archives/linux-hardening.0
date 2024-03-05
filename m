@@ -1,123 +1,151 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9874CB2E
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 09:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70AF5490A
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Mar 2024 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709631127; cv=none; b=dH3qmEP80XHjXMtSsi0pyuggZnn9cMOVkuvLu+YoLC2Ig9g1SqFaUdu0IRUCDhb/YvLlyBXxzv+LwvpyVKrtBp0NprGxdwPdHp8CsccUXnSad0g78uLE1bUqoiZ25zfdIGcnm3+zdo7f+QOTkhvpsHL4CWh1zndsHstQuOL2QXk=
+	t=1709633430; cv=none; b=QQUcmqwPd4jxTNfoT39jq4F7DE6FegguMWefDVAIrqueRFTuECj2EUFyT2mbmxmnIHtapvxiITrXh3euwZzFNIiUevGDOEMc8XTjKP0nsIJlQpzRWkpbJp9oVJIXWgut1UmOHsg6WQNV2HSGHp/IljxLWG9ZQ6mxRzTClrnSAkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709631127; c=relaxed/simple;
-	bh=zBeKo3AW0umWo2+oVzF0kvmctDMJc7DeYmGkbvuWUkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUh2dzt6k586qlh9nOSnixZ5jtmT/HiLau65OUWp/KHTT4simZpNu02J90cEEq6udv4MVAio5mG+LUGyCStzxGLsP0iuxmM4rY3yI4hSmOBXmfQJa0r/k6TXw0Iowh1LztELgzv/1Fs6EavMdXKW/b53Bw+zCyx/OnuJPgf/hlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VkMK7cNs; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1709633430; c=relaxed/simple;
+	bh=Wyo8wzm4MTDz4JStiYyO080jO0R+E8V6S6bv9ZTR4iA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=geCDlgPACiAHPxeHdBAgCbqRX6CGHA3URgC4UZ/nxjuSWDI4k2NM/1YnQ36S2X7HIv8+2cA3NV2NwlzE02OMsVkE9/bDB293Xnglm+96NuNLgMetdLuNFoRrq9C5lHmbsfyj/IyrluZZOEhged9o4jpF44POgJ925p6uNJOayGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VnyWQvGo; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VkMK7cNs"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dd178fc492so13560145ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 01:32:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VnyWQvGo"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c19aaedfdaso3388578b6e.2
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Mar 2024 02:10:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709631126; x=1710235926; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jwQHCS1RApRdLMtnfYY4Lo44hm6+L8NjNwQTBjGnVfA=;
-        b=VkMK7cNsjtRVVRv4Q12/cCxH25ITbWCYfVKc6utxrZ/r1uLkAm16zKTDORrL7o+2ub
-         hTaQUJE44SzNGiawHLrxeoyBxSEp0t/UgUC/t19bcKErtrXCvJP0huLcfZu9A5MXG73+
-         WpXzTWZuk+smsErVMM7zj4208fgsh4YFv30+c=
+        d=chromium.org; s=google; t=1709633428; x=1710238228; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D8rMBFW0tg47V1vhR+hT7ZAeuwLlaibSycxaH+YicYQ=;
+        b=VnyWQvGoaTrXEWac3DWanC0wt1NS9T9vvxs3BxvbDsM5KF/8Nfn8o/Pz4snNDmj72v
+         eby0QoOYbUA1lQlEnKfMK97JUMbps0xP5dJmqaBY/2xaND9S+Z1wBBqRFkZqlI6eWpmp
+         jPmLVRClTxt2ovLmsrd1pTzTPL0ayxxcTBz3M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709631126; x=1710235926;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jwQHCS1RApRdLMtnfYY4Lo44hm6+L8NjNwQTBjGnVfA=;
-        b=qji2Cjy3XB9nTXzUIjF4EpL5wj8FupSjLH6UHO1du5Ub3TsG+KQSqiqcboEbzoRUWe
-         MVh/w7myAsBbWigggYL8JaqaQRhbVX+zT8/sGT+OJyqgBUQbAM7eG4VlmzCM9kY0D4yO
-         abvz8tpcEsELsnEFWoc2cyihp+0P9gs7rIr8OPBXEsAT/isUoUffV4oNJcFva46KSqHS
-         rm9hkLIskqlM0Cm5c6VlgcA1u2gXOpE/mKGrO8+LnfZ5T4CJTUGI10n9ppam2gMkoA6p
-         gW2/dPjFJlC91uTYu6tk6yfjznVnC65Vn3uXn4oXmf8gYKgWusY/raLLNJXd1ypx7Awn
-         Svxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpbahtDPr4OH3WpkRjWJfnj3sD7tb9HDivefV208ktA2nfL4HjotAD4s20LHqXmd9+NJgWI7zZRRnINfzZ6tVI7t6+ZRezkmLypRr5ZVWB
-X-Gm-Message-State: AOJu0YwPho+MUtQ5Iqi9quwDtEgbhnd5lePtt7TSHIrF41uYfO+mP0gA
-	v0g+XiVz9HLkQlVL1qgP3zmlpSod15qLA/gvbtdPyrkP2V3KUY0paKc7UCVOSA==
-X-Google-Smtp-Source: AGHT+IEkIjd9sE8/PNSfNzhkY5QnMDDggNLePYzvx388RJGPnJJiHoeKZ/QNY7uY/4Q61sqgAgAuEg==
-X-Received: by 2002:a17:902:a50e:b0:1dc:66da:d21a with SMTP id s14-20020a170902a50e00b001dc66dad21amr1054443plq.28.1709631125912;
-        Tue, 05 Mar 2024 01:32:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709633428; x=1710238228;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D8rMBFW0tg47V1vhR+hT7ZAeuwLlaibSycxaH+YicYQ=;
+        b=u+PKIYzbFuP5NTp0SBX/DheptdXE/ET9Zv7C3IYhgMoJyvzgt0ln/2mt3T0Qb6r/9V
+         GDRP/JugXLnya0vXoHznAYJzdAtuG+x+Ew98goQdNwyR2I31Cl1S05guC15CtX9KdmV0
+         4YhMYKNmJwzBFovnTzLTQ4RVJY7nViYg322eHdIeKPrrEXv5WupruFX+NJknn4KA2kY7
+         RAWINgQoNsMLdeeWb7zy5dwjegnaUotTAWH8nw1LenB233X1mI/WFbwj3MOHIk4o7sWA
+         hnrS8J4MkDp9gbf2VERALIt7r9XQZ1WZjNKrYxaKr/5AOWAvUpkkVDNhZnv8BVeM74P/
+         56Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4CqkD6juS/d86or54vuwZO+XbjGMWNK2a7oEHqlkjo0YCSrw08LQwL8hx7HHdCNm/bWRyhZIQ0KbD2RTgXqRNUGk/+slcV57vEIxXSzfZ
+X-Gm-Message-State: AOJu0Yzb5vplXKx/CIdbajmWBH/earwN8SwiDjfah1QGreAUEbwnK5k4
+	ckFQ3z19aLj/IzPHIXb4/9KGcjPYEyevsxalvmeHuTqr8WWRwHZ1x0cwCJVBGg==
+X-Google-Smtp-Source: AGHT+IGYfAbScDqt9gSvtMMgpvMOmJMAT2r+uZEpZv8yZZyNk7NeKQx1h1ByxW1TZ8pqZAe02uLOcw==
+X-Received: by 2002:a05:6808:607:b0:3c1:559b:4290 with SMTP id y7-20020a056808060700b003c1559b4290mr1272920oih.42.1709633427854;
+        Tue, 05 Mar 2024 02:10:27 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001db5c8202a4sm10192588plb.59.2024.03.05.01.32.05
+        by smtp.gmail.com with ESMTPSA id y185-20020a638ac2000000b005df41b00ee9sm8692546pgd.68.2024.03.05.02.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 01:32:05 -0800 (PST)
-Date: Tue, 5 Mar 2024 01:32:04 -0800
+        Tue, 05 Mar 2024 02:10:27 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Cc: Jann Horn <jannh@google.com>, gustavoars@kernel.org,
-	akpm@linux-foundation.org, jpoimboe@kernel.org,
-	peterz@infradead.org, dave.hansen@linux.intel.com,
-	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	nixiaoming@huawei.com, kepler.chenxin@huawei.com,
-	wangbing6@huawei.com, wangfangpeng1@huawei.com,
-	douzhaolei@huawei.com
-Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
-Message-ID: <202403050129.5B72ACAA0D@keescook>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
- <202403040938.D770633@keescook>
- <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <keescook@chromium.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/9] slab: Introduce kmem_buckets typedef
+Date: Tue,  5 Mar 2024 02:10:17 -0800
+Message-Id: <20240305101026.694758-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240305100933.it.923-kees@kernel.org>
+References: <20240305100933.it.923-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1794; i=keescook@chromium.org;
+ h=from:subject; bh=Wyo8wzm4MTDz4JStiYyO080jO0R+E8V6S6bv9ZTR4iA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl5u+QdzwZRrBHJ6q6tZF3ljbnIROOFCv0Jfi5y
+ dLhu0dVnMWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZebvkAAKCRCJcvTf3G3A
+ JhRGEACXqOYvigduxdiLg5s3NKoZ5sAGZvlIOApR3AAy5NlVdVm3El7+ClqD7kAsaRASlCZzfCE
+ SnrdJUJTmH8pIf9m0+2frgqPwuRmMlb09607iDkUQPLPN1YxJMR27tBwJWq9BgA3ubUWo+QsdgT
+ YXE7VP7nPQdqREOzraeyi2MHH+U3DNUaP61lbMW6KxmdVKDTNvRohGXZ4t+fDkAx3qPc5WUijJu
+ +T0ZdLwbHIqRgXmTleQTynxNAt+ias93uGlGLgEDjoQZXs3asvnUvukRlD4dRoL8Jw9iQijFq1Q
+ Dt4OD7yUPU+PD4XJr3GZIJhcJtIYM4IVHGlAVfYnKDclM8zlcITotaYHXQpXMql4PslEEE4eao3
+ 2lj3oguta9XJ6ZA8lMy1oJUDczWNwOLRtiE4ocEojO7GA2/sMkSDKFBWiQoXoqqozQ72/GOfjya
+ z0P7wyB5UCUQt13UQzDHMpYOQ/D5+iqge17qSf3KrlYD3bDZTO0UxJ6zzyDqVGApKdVJXmzv1nS
+ 5BCsV9JIyHRHMs1bxaWyexVgrO27nMe+VW7LxuZWBm53lHjxxXQXT0bPu26dEUkeQrRMBN6BrfR
+ Hi8QkUDZmoqSL/wiOIGv/c+qZfMpokFWp+beQoz6lhK2cuoYx+8nFdtG2JAcDlfnXKJ5RU+DLD4 BUBdZTAp9dA4F9w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
 
-On Tue, Mar 05, 2024 at 11:31:06AM +0800, Jiangfeng Xiao wrote:
-> 
-> 
-> On 2024/3/5 1:40, Kees Cook wrote:
-> > On Mon, Mar 04, 2024 at 04:15:07PM +0100, Jann Horn wrote:
-> >> On Mon, Mar 4, 2024 at 3:02 AM Jiangfeng Xiao <xiaojiangfeng@huawei.com> wrote:
-> >>> When the last instruction of a noreturn function is a call
-> >>> to another function, the return address falls outside
-> >>> of the function boundary. This seems to cause kernel
-> >>> to interrupt the backtrace.
-> > 
-> > FWIW, all email from huawei.com continues to get eaten by anti-spam
-> > checking. I've reported this a few times -- it'd be really nice if the
-> > domain configuration could get fixed.
-> > 
-> >> [...]
-> >>> Delete __noreturn from usercopy_abort,
-> >>
-> >> This sounds like the actual bug is in the backtracing logic? I don't
-> >> think removing __noreturn annotations from an individual function is a
-> >> good fix, since the same thing can happen with other __noreturn
-> >> functions depending on what choices the compiler makes.
-> > 
-> > Yeah, NAK. usercopy_abort() doesn't return. It ends with BUG().
-> > 
-> When the user directly or indirectly calls usercopy_abort,
-> the final call stack is incorrect, and the
-> code where the problem occurs cannot be located.
-> In this case, the user will be frustrated.
+Encapsulate the concept of a single set of kmem_caches that are used
+for the kmalloc size buckets. Redefine kmalloc_caches as an array
+of these buckets (for the different global cache buckets).
 
-Can you please give an example of this?
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: linux-mm@kvack.org
+---
+ include/linux/slab.h | 5 +++--
+ mm/slab_common.c     | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> For the usercopy_abort function, whether '__noreturn' is added
-> does not affect the internal behavior of the usercopy_abort function.
-> Therefore, it is recommended that '__noreturn' be deleted
-> so that backtrace can work properly.
-
-This isn't acceptable. Removing __noreturn this will break
-objtool's processing of execution flow for livepatching, IBT, and
-KCFI instrumentation. These all depend on an accurate control flow
-descriptions, and usercopy_abort is correctly marked __noreturn.
-
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index b5f5ee8308d0..55059faf166c 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -375,8 +375,9 @@ enum kmalloc_cache_type {
+ 	NR_KMALLOC_TYPES
+ };
+ 
+-extern struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
++typedef struct kmem_cache * kmem_buckets[KMALLOC_SHIFT_HIGH + 1];
++
++extern kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES];
+ 
+ /*
+  * Define gfp bits that should not be set for KMALLOC_NORMAL.
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 238293b1dbe1..8787cf17d6e4 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -649,8 +649,7 @@ static struct kmem_cache *__init create_kmalloc_cache(const char *name,
+ 	return s;
+ }
+ 
+-struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
++kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES] __ro_after_init =
+ { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
+ 
 -- 
-Kees Cook
+2.34.1
+
