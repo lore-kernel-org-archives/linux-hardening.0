@@ -1,139 +1,104 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7396FAF;
-	Wed,  6 Mar 2024 01:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BC219F;
+	Wed,  6 Mar 2024 01:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709687440; cv=none; b=vD6JOhWzDqyAMe94fbWbrYcuMN9dp9MYfslHJJ3VDSzFegcnfWos56Tqq+NlXjtSqDQznFJMmenVam1CYjeyDMwKqArAfeNaTkvQ6vx/66CI+Jln18pefIMSwASLDSIwn+2dNyK1rR608yNirXwPHfFiU2tXKb5vOSwLbnQ6Wc0=
+	t=1709689681; cv=none; b=ltvzjAyvrKwiuAumv5EA4dGf5KqVbFWbPs3Qfy2t9wA/y3hf7qadvibzA+bt32BfS0t8/adCBpCTOVFQZ4UulL/3n+EbHRo+/WcKNGA3ugqc6UJQeRVRKLzZDaHocVI/AjgGlrFEXMvbZ/0H4WpM5S2IN4PDFBOPYHyZnPwTisM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709687440; c=relaxed/simple;
-	bh=YOr/GbT9jgOAplPWvdq3W+lM+vmFTaiSh/I1Fj3fFKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kye0uSGBXHkXgWHiMX3ninzggzdEnoYbUp7y14NTySPtTon+3YQ1B350Kg1vPuIKF+b7knx27XCdPL37IOMlcA/4Jtg0h/dKirokpvG4RLv5+2XtMi/UqVa/A9ECZGAi01C9CxSJbkbGay30Kmj+xMwhT7s5UCehRmXY1hni/3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=qrgdFPf6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VNrdu7IY; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="qrgdFPf6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VNrdu7IY"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 1E23A1140138;
-	Tue,  5 Mar 2024 20:10:37 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 05 Mar 2024 20:10:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1709687437; x=
-	1709773837; bh=nIgXLago0+goMoIVpizmwo89vrCawNjtqrrcg3tzX1o=; b=q
-	rgdFPf6B/Q7LoPmKvahlzpP6JYC84k8/nOrdLSn1SmDiWPM6SnSbBo+nylNVsnrf
-	P9jKSmiSzMH1dkX6RW8arBUg+9/IRYB02iM4oiPU3S1asK7UVbCmJ19iDZhQDpyz
-	eryN07pFHehUojspgvP7m9jHrtjmXU9FxtS4/Dj9XliMwMjD8ikZYPKrC3iqRfHs
-	VpVfMjN7bSpLHtw1yOn+YWrI9MuenfsqbrNggmtXa8jfsEHyv83A3+XAfj3ydzTX
-	/UyKA6wdmHjeVILM7CBEx9f6dDHBXldL0Ff4gYFMUs0xqpyJVkHUhCRvt7pLBzuW
-	8hDjitwM1dU8TluXxG+Xw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709687437; x=1709773837; bh=nIgXLago0+goMoIVpizmwo89vrCa
-	wNjtqrrcg3tzX1o=; b=VNrdu7IYFx1muMn62Ghnbw39NUezZAj2Rshfg0atzAc9
-	tEhLV48vgNaUkv9zxmpQQuhggLpZBW7P1B/zKYNlcQZMzoi/wwxzldhz0iIWB1qX
-	kC+MR8Jy0kthJEsDBQer46phQBZ8eaesk1KGRSgehzh13NsAo83ifr3vYYyWUoa/
-	ED1xBwNjM6qsi4bqH3D/bONMck6kuCRKW4O9Mj7kZE2BZl/bMF1OFy31DLlzqYH3
-	5TsGjXSqHKp7Xg+WrHWr524t3W8c18dlrv0X0w8kfiJWfRbtJXlYl2cRaf0BgPjP
-	uw0n4FreaAxifJxUoegKRfz9Z7xgwjf+Wr2fRDtvPQ==
-X-ME-Sender: <xms:jMLnZVScJBPyx5Bp4vhSd06NTpKHtTUgf_hL6ak7oTigjrf7in7EKw>
-    <xme:jMLnZewjcEgvDveZgSL04ft44fsIQzvKIN4whkam4AjuHeL_wHA4E3QOOy6Or1xhT
-    sPIqDTTlIKqZ2GrZPE>
-X-ME-Received: <xmr:jMLnZa2r9VQQea-dw39tuzS--aK80RYPo3FNPGVhbGRmB331yCuiPpBuzduJR_FchKm4lv7ZtL-IUt03-kVZKflJHoXH8FNN6Xo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledriedtgdefudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
-    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
-    hpqeenucggtffrrghtthgvrhhnpeehhffhteetgfekvdeiueffveevueeftdelhfejieei
-    tedvleeftdfgfeeuudekueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:jMLnZdDyNnM-Dy_VlVrz7kKEYL0pMVg3gM-FkA7rNI-od0FKJDVCBQ>
-    <xmx:jMLnZegGkOAkEqF7Er105GduAHiasmTdaIZID_K5Uoz_8s3WUW_DfA>
-    <xmx:jMLnZRr9TRLZRp-9xMn9ApVoQBvv7o41PgA3x1t-ztEsCCk5Og81cw>
-    <xmx:jcLnZTYjJtbn9ek55E_4CSPMt0fi-zmny7eN95KbUhAyG3SFoj_f8Q>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 5 Mar 2024 20:10:33 -0500 (EST)
-Date: Wed, 6 Mar 2024 10:10:30 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Kees Cook <keescook@chromium.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net
-Subject: Re: [PATCH 0/2][next] firewire: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <20240306011030.GA71684@workstation.local>
-Mail-Followup-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org, linux1394-devel@lists.sourceforge.net
-References: <cover.1709658886.git.gustavoars@kernel.org>
+	s=arc-20240116; t=1709689681; c=relaxed/simple;
+	bh=+hFi36aMqZWsnXpT6JPl1HGKgU1leSL6Y0XDL6EU6VA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OYseDzZY//AJFtUH969m2MLKDO9xFFyg7dje/7cLdvvxxKz0+HdCcNK0sz0zAKXvoUQhIVN83o52+PQ7Auf9FxYUkNzceLn9cmiGAYAP8KIqiEWFVm/8mSGyWMsERkUZUkYeAz3HfPqv/vIY3BYsLtE0YTALkN79bOhP+xTffgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TqFgT3B7zz4f3kFd;
+	Wed,  6 Mar 2024 09:47:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id D77871A016E;
+	Wed,  6 Mar 2024 09:47:54 +0800 (CST)
+Received: from [10.67.110.48] (unknown [10.67.110.48])
+	by APP4 (Coremail) with SMTP id gCh0CgBXqGo3y+dl7_isGA--.28780S2;
+	Wed, 06 Mar 2024 09:47:54 +0800 (CST)
+Message-ID: <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
+Date: Wed, 6 Mar 2024 09:47:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1709658886.git.gustavoars@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
+ Matteo Rizzo <matteorizzo@google.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20240305100933.it.923-kees@kernel.org>
+From: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+In-Reply-To: <20240305100933.it.923-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgBXqGo3y+dl7_isGA--.28780S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zry3Xr4rGw18uFyxZw4rAFb_yoW8WFyxpF
+	Z5XryIya1UJr17Aa4kZw18Wr1F9a1xGF45G390gw1rZrnxA3Z29r1jy3y3ZFWfCryDt3WU
+	Xryq9w1S9wn8AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
+	AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFDGOUUUUU
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
 
-Hi,
 
-On Tue, Mar 05, 2024 at 11:24:15AM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally. So, we are deprecating flexible-array
-> members in the middle of another struct.
+
+On 2024/03/05 18:10, Kees Cook wrote:
+> Hi,
 > 
-> There are currently a couple of local structures (`u` and `template`)
-> that are using a flexible `struct fw_iso_packet` as header for a couple
-> of on-stack arrays.
+> Repeating the commit logs for patch 4 here:
 > 
-> We make use of the `struct_group_tagged()` helper to separate the
-> flexible array from the rest of the members in the flexible structure,
-> and, with this, we can now declare objects of the type of the tagged
-> struct, without embedding the flexible array in the middle of another
-> struct.
+>     Dedicated caches are available For fixed size allocations via
+>     kmem_cache_alloc(), but for dynamically sized allocations there is only
+>     the global kmalloc API's set of buckets available. This means it isn't
+>     possible to separate specific sets of dynamically sized allocations into
+>     a separate collection of caches.
 > 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which the flexible-array member can be
-> accessed.
+>     This leads to a use-after-free exploitation weakness in the Linux
+>     kernel since many heap memory spraying/grooming attacks depend on using
+>     userspace-controllable dynamically sized allocations to collide with
+>     fixed size allocations that end up in same cache.
 > 
-> With these changes, we fix a couple of -Wflex-array-member-not-at-end
-> warnings.
+>     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+>     against these kinds of "type confusion" attacks, including for fixed
+>     same-size heap objects, we can create a complementary deterministic
+>     defense for dynamically sized allocations.
 > 
-> Gustavo A. R. Silva (2):
->   firewire: Avoid -Wflex-array-member-not-at-end warning
->   ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning
-> 
->  drivers/firewire/core-cdev.c  |  9 +++++----
->  include/linux/firewire.h      | 16 +++++++++-------
->  sound/firewire/amdtp-stream.c |  8 +++++---
->  3 files changed, 19 insertions(+), 14 deletions(-)
+>     In order to isolate user-controllable sized allocations from system
+>     allocations, introduce kmem_buckets_create(), which behaves like
+>     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+>     which behaves like kmem_cache_alloc().)
 
-Thanks for the improvements, however we are mostly at the end of
-development period for v6.8 kernel. Let me postpone applying the patches
-until closing the next merge window (for v6.9), since we need the term to
-evaluate the change. I mean that it goes to v6.10 kernel.
+So can I say the vision here would be to make all the kernel interfaces
+that handles user space input to use separated caches? Which looks like
+creating a "grey zone" in the middle of kernel space (trusted) and user
+space (untrusted) memory. I've also thought that maybe hardening on the
+"border" could be more efficient and targeted than a mitigation that
+affects globally, e.g. CONFIG_RANDOM_KMALLOC_CACHES.
 
-If you would like me to applying the patch v6.9 kernel, please inform it
-to us.
-
-
-Thanks
-
-Takashi Sakamoto
