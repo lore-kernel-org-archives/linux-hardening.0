@@ -1,90 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCDC137904;
-	Wed,  6 Mar 2024 16:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF4C137768
+	for <linux-hardening@vger.kernel.org>; Wed,  6 Mar 2024 16:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709740970; cv=none; b=oasRNsGNkT+H1D7ehUTapwJGAhI2txZ4TrMa7zSMsEMiDPmEPLvyTPmoUahG3paR2jYFxbNZ0RwuPzOHeO61sCVvRux89xuoUaphtHktUSxaRvM+LH3gvWJzmG5t9oVGYl6sAGg3Iyy69WfNNYi0LsXEj0duywXDx7UFqLv+SXk=
+	t=1709741931; cv=none; b=FaGpQN+RxCOPhYyO2WHdhzfmxgo0+TlWUsV6nohgjCUiNj3HXt8fzXiloTPnI5ulV9IN+aQ7C4fhZl+pCWdF8oEfhWxMCfmEFi/1kq6Cl65/PLpcB63X/9LE4oATpX7uJUT4R03faJOVxOMJ2+FuSrkFrPJZIFNHB443s+IedMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709740970; c=relaxed/simple;
-	bh=IG8ko0VxIq5wqmccJeKPMEw+wW9fETH2/U5QZozNYlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0JtDgeVlbpx/H+X+VkurTltPk5RIl8b3Qo97dUiwbAPr23F7Ei6X9/k9W5YjIJ65YbzRhvVaLvge0EEwQy6NKFJCT8dqW8wwjCmL4Gbjs2gFIM9jMP4UWHyWQDnLgbDj4fjNn8fHhRz4Rtab1LCd/LuV1bk78EJ1tmHGnE4478=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8xe60q1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709741931; c=relaxed/simple;
+	bh=4VWeBYARvXlXtxRM3ztD5oedY7YP+mKI+ej/UlpRijk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P8mOHJ1MKDISPymayzg+p6yP96COriPDhm/WuT7xxJyN/QINBG1stbdeX2zho2OPUV+U8ip61YQPIzs8GjUEph3UCBgkncL2kEX4lXut0OUVavhUXVoiKGUecFJ09g05Ahs6uNOKUgQ0egeyAgT3aWR2etqZ8NJh3yESEKGM2ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IV4t6jld; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8xe60q1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C5AC43390;
-	Wed,  6 Mar 2024 16:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709740970;
-	bh=IG8ko0VxIq5wqmccJeKPMEw+wW9fETH2/U5QZozNYlA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U8xe60q1U4UDSVgM19Kfn8IQ3KbWk/TOY6ykEVfiCuow4FBb811BhgFZHXYqTw+YA
-	 sYRIZuRtcj6NbVqPUlHFiDW4wcm4FrxATY1DCxlQWv7zhalsJcuLYAn6zFyZiG3aMx
-	 23TSIPOGxLIwvRCHaJg1R5Zepuiz0rkQ65Y6O/0AwpAnzxV1HdwX9CbeEzcNWhQYlw
-	 lgoZdmkHPO3vIcOjRwzV7va+8B7wjJe30bs3PwYULC788JvXpIvY+NW56Yjk4U/aDI
-	 S8Vqit6socqN0kKKV2ILZlfOyWLcmpj3r6uG4v9Oy+YOVWB0FjnOdKC6sJKxTDW3TQ
-	 ubsCZETCragQQ==
-Date: Wed, 6 Mar 2024 08:02:48 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-	Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-	gustavoars@kernel.org, akpm@linux-foundation.org,
-	peterz@infradead.org, dave.hansen@linux.intel.com,
-	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	nixiaoming@huawei.com, kepler.chenxin@huawei.com,
-	wangbing6@huawei.com, wangfangpeng1@huawei.com,
-	douzhaolei@huawei.com, linux-arm-kernel@lists.infradead.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
-Message-ID: <20240306160248.oxeblpwa5zvplmgw@treble>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
- <202403040938.D770633@keescook>
- <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
- <202403050129.5B72ACAA0D@keescook>
- <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
- <20240305175846.qnyiru7uaa7itqba@treble>
- <Zeg8wRYFemMjcCxG@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IV4t6jld"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5134d7e16a8so1490579e87.3
+        for <linux-hardening@vger.kernel.org>; Wed, 06 Mar 2024 08:18:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709741927; x=1710346727; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hrydq/RdJikRIfc87umFKTutUZLP8jNuTQIOBJnDlns=;
+        b=IV4t6jldN0Yf3RpFUBlzaFdtPsz6tMrLHX57u0bj4Zs60faOWEnJBjVnFP6mGsgkE+
+         Z5a9FWChfJUbrIo7QMnXJzKUd14ypd8mc38Bv+WeA+1lUVCmj0m9hkkU9yNF+WfaxQN0
+         qJ3Kv0UIRrK14JK4yQjFkpZIViKTqDkJrUptQed8I6ikz/dI2e60AZGqdnavs0smlraN
+         6PF+O0SG3eRFakAUVK2sxCm66kAcCs+v99pANbzCr/EJgIUFcUa42nO2jcH9XMBN8Hy/
+         Fxy5eZDOrMFX2aL0q10HlYZCDVRcX3hc1DMHCrOoBgI2nf48xiQTur36AbFOWBcE3exi
+         GoIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709741927; x=1710346727;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hrydq/RdJikRIfc87umFKTutUZLP8jNuTQIOBJnDlns=;
+        b=BOP2QsJCYcf7iIFxxqpU0tBNMeMZh/1Jvuz7U2lqii54OUW+pWtFU9CFTG5CP68bnX
+         gBftVvE1ikM4LLhNBkPdtxfPBZx+01f5Ektmf5zoX5NkD1O79kR4hdNPMsBmDco9o0um
+         sGIhrxMy4OlsJ1FeYbybAagHO+8rGk60nfvs482feUP9gCnppx0AWERspHWrF0+3ZwBP
+         c6MlrzFve5OQ9agTdrkjvqJQgzIeSE5ijXQ6GpjDGfiqNpyfd+kusp0fpL1vUXSWmoyH
+         RT1Tl5pW2CZajo2gghvc+Fg2jTaIZ+np53qEJ8baHOHNzL28KzXcy8b1IThQLOrnyPer
+         PV1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUSeY/ZnYnn8VJmkYgiRx2sImudE3P3RGbwOr5jFkn50vOTj+g50C4Ytl3bCkzo2DP0++m3lWBtoPDiCS3MYPHt32cVkHpBvsii7sFc0s1G
+X-Gm-Message-State: AOJu0Yxgm8AcWYl049H7/AZY3kpFjOGRVGB4oAzruBavwzyU6s8nHigW
+	BrwIWuSWry+AQE0D6OL46Mgr6Fh/3SzRYCm6slBobdiu91qqIuehkzsp5+fWecKeKHjhRYEknDb
+	nGPQ=
+X-Google-Smtp-Source: AGHT+IGKdJ4IIIOuKLJDe+yk/Iutux3iHWYuZ2nSTLmqZtFgNnLz9ofothAzyQzmMciLDmY7KjCTUA==
+X-Received: by 2002:a19:e006:0:b0:513:25b9:6cf8 with SMTP id x6-20020a19e006000000b0051325b96cf8mr3681484lfg.19.1709741927501;
+        Wed, 06 Mar 2024 08:18:47 -0800 (PST)
+Received: from [87.246.221.128] (netpanel-87-246-221-128.pol.akademiki.lublin.pl. [87.246.221.128])
+        by smtp.gmail.com with ESMTPSA id u12-20020ac258cc000000b005131941f7e9sm2668396lfo.5.2024.03.06.08.18.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Mar 2024 08:18:47 -0800 (PST)
+Message-ID: <b5ade82e-3a7e-427f-907f-bafe1d203d45@linaro.org>
+Date: Wed, 6 Mar 2024 17:18:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zeg8wRYFemMjcCxG@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+Content-Language: en-US
+To: Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240306073016.2163-1-quic_okukatla@quicinc.com>
+ <20240306073016.2163-2-quic_okukatla@quicinc.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240306073016.2163-2-quic_okukatla@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 06, 2024 at 09:52:01AM +0000, Russell King (Oracle) wrote:
-> On Tue, Mar 05, 2024 at 09:58:46AM -0800, Josh Poimboeuf wrote:
-> > This is an off-by-one bug which is common in unwinders, due to the fact
-> > that the address on the stack points to the return address rather than
-> > the call address.
-> > 
-> > So, for example, when the last instruction of a function is a function
-> > call (e.g., to a noreturn function), it can cause the unwinder to
-> > incorrectly try to unwind from the function *after* the callee.
-> 
-> I suppose this can only happen in __noreturn functions because that
-> can be:
-> 
-> foo:
-> ...
-> 	bl	bar
-> ... end of function and thus next function ...
-> 
-> which results in LR pointing into the next function.
-> 
-> Would it make better sense to lookup the LR value winding it back by
-> one instruction like ORC on x86 does (as you mention) rather than
-> the patch you proposed which looks rather large and complicated?
 
-That patch *is* an attempt to make it match ORC's behavior.  What
-specifically looks complicated about it?
 
--- 
-Josh
+On 3/6/24 08:30, Odelu Kukatla wrote:
+> It adds QoS support for QNOC device and includes support for
+> configuring priority, priority forward disable, urgency forwarding.
+> This helps in priortizing the traffic originating from different
+> interconnect masters at NoC(Network On Chip).
+> 
+> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+> ---
+>   drivers/interconnect/qcom/icc-rpmh.c | 105 +++++++++++++++++++++++++++
+>   drivers/interconnect/qcom/icc-rpmh.h |  32 ++++++++
+>   2 files changed, 137 insertions(+)
+> 
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+> index c1aa265c1f4e..b4681849df80 100644
+> --- a/drivers/interconnect/qcom/icc-rpmh.c
+> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+> @@ -1,19 +1,57 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   /*
+>    * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>    */
+>   
+> +#include <linux/clk.h>
+>   #include <linux/interconnect.h>
+>   #include <linux/interconnect-provider.h>
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+>   #include <linux/of_platform.h>
+>   #include <linux/slab.h>
+> +#include <linux/bitfield.h>
+
+Please keep the alphabetical order
+
+>   
+>   #include "bcm-voter.h"
+>   #include "icc-common.h"
+>   #include "icc-rpmh.h"
+>   
+> +/* QNOC QoS */
+> +#define QOSGEN_MAINCTL_LO(p, qp)	(0x8 + (p->port_offsets[qp]))
+> +#define QOS_SLV_URG_MSG_EN_MASK		BIT_MASK(3)
+
+Mixing BIT_MASK and GENMASK is very confusing..
+
+> +#define QOS_DFLT_PRIO_MASK		GENMASK(6, 4)
+> +#define QOS_DISABLE_MASK		BIT_MASK(24)
+> +
+> +/**
+> + * qcom_icc_set_qos - initialize static QoS configurations
+> + * @qp: qcom icc provider to which @node belongs
+> + * @node: qcom icc node to operate on
+> + */
+> +static void qcom_icc_set_qos(struct qcom_icc_provider *qp,
+> +				struct qcom_icc_node *node)
+> +{
+> +	const struct qcom_icc_qosbox *qos = node->qosbox;
+> +	int port;
+> +
+> +	if (!qp->regmap || !qos)
+> +		return;
+
+This is not possible if you follow the code flow, I think..
+
+[...]
+
+> + * @prio: priority value assigned to requests on the node
+> + * @urg_fwd: whether to forward the urgency promotion issued by master(endpoint), or discard
+
+space before the opening brace, please also wrap to 80 lines
+
+> + * @prio_fwd_disable: whether to forward the priority driven by mster, or override by @prio
+
+typo: mster, please also wrap it
+
+Konrad
