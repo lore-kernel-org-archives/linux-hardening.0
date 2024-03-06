@@ -1,64 +1,60 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6875D8F6;
-	Wed,  6 Mar 2024 09:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B062F7FBAA;
+	Wed,  6 Mar 2024 13:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709718749; cv=none; b=b5uQJ2w3SMUTD/4HJ1LHh71JZdcymzRs9YfCLdDW0ehk901kAVmIO6ypAMzeUpcC1KzkqjjfLzHNj1jTwy6vQPtp6wy0ozCTELbZYy9NbeUSJq1ep/Cfc48NqhqPNvBuMX5Cm5qkIpk4RWfrt7bTFOgm5m41qEz4u7z9ahy3i2E=
+	t=1709730983; cv=none; b=hInI7OaA/HHKN2z6REn6neHUdBGg7o8SarNiSGgHnD1zrO6q2QqfyQDzYGXg7QeOLmoGa8Wqqxdi2m2VWP9FN7YworXcp9DoB6uXS3Erhgnd3+gOQd2U4gzyC+r9IpO+MUs3dRbKqMhgFfActasL7o3GMtCdRxD0VyM+1Iptp/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709718749; c=relaxed/simple;
-	bh=7JYD9tHQqkKyAOpDYz8v9QbcUBvbZmg5L8nFtmnhjKU=;
+	s=arc-20240116; t=1709730983; c=relaxed/simple;
+	bh=UN5GxUcdpytO2U2Ldms6mARi4xRRCE3E9Hta9POhZ64=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Avuc7dTZM/ad8p3RUHFqynko/95DGpmg8TMBeYtL/g90PE7/fDFjubIEMQIjjmV15PvbA4MGVCcnJGlh3QpE9UuULxULd6345TGGCzgOsDMvcHmY2KrrMkLRHoFhd/kYdX8b3ghI3lRIbewqy029qy3VBG4vvlXvm3trplS6tzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=WWfmFupb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WWfmFupb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+UHTxiMOCWmnYGbzdr3xdIdiyFhD3trL1IlYn9sx2Ik=; b=WWfmFupbS1FWFYcVIBHqaTAfFo
-	JT81TSIj80enOhfKIvYWxZw2DEVGtf4L9tMGSmq37QOCWbTSsD8kIrIUvSTE9rWsdUOqXl0V6BGWU
-	TJ2WCLM+C8qogGo1lg7ZCilq7+J90LxSkB5Edb57G/utb42hdwtLn8ODtjpuTt6vrYiX+uaixttSq
-	ghFAnCsyprG0PesBYJK3+disNSjK5IECAHw/kA3E82iLCy9xQR2dH/gh8oVQ3ZmQtZSyMxctVu9w1
-	dnzTrvFqipnX7KbNMpsBLt+s25yM35D5l8kg7nTWo9cuzc4Nkxi+joj6DaPglnJJltC6Sk0yIGL46
-	HmeZKelQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37134)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rhnwU-00089f-0i;
-	Wed, 06 Mar 2024 09:52:06 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rhnwQ-0006GG-1M; Wed, 06 Mar 2024 09:52:02 +0000
-Date: Wed, 6 Mar 2024 09:52:01 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-	Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-	gustavoars@kernel.org, akpm@linux-foundation.org,
-	peterz@infradead.org, dave.hansen@linux.intel.com,
-	kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	nixiaoming@huawei.com, kepler.chenxin@huawei.com,
-	wangbing6@huawei.com, wangfangpeng1@huawei.com,
-	douzhaolei@huawei.com, linux-arm-kernel@lists.infradead.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
-Message-ID: <Zeg8wRYFemMjcCxG@shell.armlinux.org.uk>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
- <202403040938.D770633@keescook>
- <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
- <202403050129.5B72ACAA0D@keescook>
- <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
- <20240305175846.qnyiru7uaa7itqba@treble>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HjINBt1OtV7fXtK3CkaP0t3XJ3fQZY13iazPg3ZntdP8vsLpSkR4HILLBWmclHqFd1fg0EasczI1UXWCXKAPEsRWyQzb0/QA8XSoH0Vyzm8b/AZ6WNmH19FNnbmdoy5I8GI9thIvMMChSkr1LS5u/DMLOEXwhU14KZSGB5G+gCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso151513166b.1;
+        Wed, 06 Mar 2024 05:16:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709730980; x=1710335780;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L/tWs4fwCFAZTFAAtDBZh8EOdci0pgq2gOC8rOm/wUU=;
+        b=WXm1vZPoK4l4oN79kgOiioPM8WcqbpiBWALVMq3iSEMtkqq+E6sNv0XPpTifs8Mrre
+         ZTrVak9EnpMVpbqaMDeughU22zqrbJ6Hp1dSqmjR14BKTJ8RMFL2oQ6L0T9FRTwjEvnz
+         h45I1KmJbE5Hab2TJYiylbt72iKoo9o9D5zVd1HncMkcJm2LZGNHitjXeah9QL4fHp+q
+         JgcuMziSNHYSepo4nrFjq3qI5s/grfjYmp+gcVyj02Vuv0LltT5kHObJLedxUCYxpvTB
+         LgyV0QycFwlwzNOOIBHsDweZzKdBZ5N6EJyo7W9cV7ljZJbYBuWgHj9jYGmF9pK6SZHG
+         yAhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ2v129hMhBWInqAjOHSe4fHPHHva5lU7F6Je/nDGO2BUXHeo6M5JeSGk4VKGDKSSIuLhnHI17H8F1lQ4kej/1rTlfDJQmB0hy28qHmcAyJZ2z9moyuOJOP264mB7Zk1kZbYmFosO+1f2AfUQp+QCcqKzy57D7Yi8InG6lAQNGQobpFwdZ
+X-Gm-Message-State: AOJu0YwJmPP82Xe9s4GWjGHoTV/pl65cMnft8jQuH6zu0pLrZ0HGJAyx
+	4WJnBf17slJJiUxJVDDbHuB9tz25RlpTtHwiJuqNX/rf3STcJTjS
+X-Google-Smtp-Source: AGHT+IEIJgWZ+UxwNt0E0FsQRxJuaM40G5bRPgHAbMZdVYsXZGcRQxWwzTl9LNOtD+BeAqHsNuqevw==
+X-Received: by 2002:a17:906:57d4:b0:a45:a2cc:eb93 with SMTP id u20-20020a17090657d400b00a45a2cceb93mr5652823ejr.4.1709730979709;
+        Wed, 06 Mar 2024 05:16:19 -0800 (PST)
+Received: from gmail.com (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id k14-20020a1709063e0e00b00a45beabb104sm499441eji.159.2024.03.06.05.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 05:16:19 -0800 (PST)
+Date: Wed, 6 Mar 2024 05:16:16 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>, keescook@chromium.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Simon Horman <horms@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Coco Li <lixiaoyan@google.com>,
+	Amritha Nambiar <amritha.nambiar@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netdev: Use flexible array for trailing private bytes
+Message-ID: <ZehsoPb/WZzUcFHa@gmail.com>
+References: <20240229213018.work.556-kees@kernel.org>
+ <20240229225910.79e224cf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,32 +63,35 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240305175846.qnyiru7uaa7itqba@treble>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20240229225910.79e224cf@kernel.org>
 
-On Tue, Mar 05, 2024 at 09:58:46AM -0800, Josh Poimboeuf wrote:
-> This is an off-by-one bug which is common in unwinders, due to the fact
-> that the address on the stack points to the return address rather than
-> the call address.
+On Thu, Feb 29, 2024 at 10:59:10PM -0800, Jakub Kicinski wrote:
+> On Thu, 29 Feb 2024 13:30:22 -0800 Kees Cook wrote:
+> > Introduce a new struct net_device_priv that contains struct net_device
+> > but also accounts for the commonly trailing bytes through the "size" and
+> > "data" members.
 > 
-> So, for example, when the last instruction of a function is a function
-> call (e.g., to a noreturn function), it can cause the unwinder to
-> incorrectly try to unwind from the function *after* the callee.
+> I'm a bit unclear on the benefit. Perhaps I'm unaccustomed to "safe C".
+> 
+> > As many dummy struct net_device instances exist still,
+> > it is non-trivial to but this flexible array inside struct net_device
+> 
+> put
+> 
+> Non-trivial, meaning what's the challenge?
+> We also do somewhat silly things with netdev lifetime, because we can't
+> assume netdev gets freed by netdev_free(). Cleaning up the "embedders"
+> would be beneficial for multiple reasons.
 
-I suppose this can only happen in __noreturn functions because that
-can be:
+I've been looking at some of these embedders as reported by Kees[1], and
+most of them are for dummy interfaces. I.e, they are basically used for
+schedule NAPI poll.
 
-foo:
-...
-	bl	bar
-... end of function and thus next function ...
+From that list[1], most of the driver matches with:
 
-which results in LR pointing into the next function.
+	# git grep init_dummy_netdev
 
-Would it make better sense to lookup the LR value winding it back by
-one instruction like ORC on x86 does (as you mention) rather than
-the patch you proposed which looks rather large and complicated?
+That said, do you think it is still worth cleaning up embedders for
+dummy net_devices?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+[1] https://lore.kernel.org/all/202402281554.C1CEEF744@keescook/
