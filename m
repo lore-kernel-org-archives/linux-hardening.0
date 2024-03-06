@@ -1,116 +1,103 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA735C91C;
-	Wed,  6 Mar 2024 07:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B29717745;
+	Wed,  6 Mar 2024 07:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709710266; cv=none; b=kWcyNBNWsaCm3Tf+XPNaw7+i8s5fb6tk9nAwSRAZ+K4KzWvYQfI5JJ70NzpO2jpEMe+USwbPm7AHzwGqDTvgsesx4DcXCG3JnqgttRmBa7eNvuBEFs2eY4TzQKsVyLsWiQnf/GXC2pvuhtJV3CnggocLza9VTg8X5U8dHCmbACM=
+	t=1709710588; cv=none; b=FW8Zhoyz2alyBSx3Kwpcw/SpoRwPZrVtUZ4uYvUb9rhcI46g8nFrr7EBEM1/Ce6U3OmHxXb0hNtALyKuGbDJMhyMAKnOv3ETLn9jwVDbQpypJ0MDB0J8kgUIEFP2CYJuz9zJgStljyITdnrF6p62vLhud/FLq9PS/iHaTY81Ccs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709710266; c=relaxed/simple;
-	bh=SNSEkGY4kQ3s9M8b7X9I+IIVDxto5d7ri1uoIzQCEFI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TXPBmuMwuVNP0qz+MS3r9tMIWFT4ahVVodtJcbXFnoy37Xz04I4PzFL3WYILvBas2hyu1+KxVBFgyCKr7KuzcOIWsyC2VR6VnPRWfHTEKwOaIw+kq04LO8SWqST2XEO9rn//6ikNVjQEObzcTyxkH9s4nr37GAHfyaXUWk1Se/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WzILONoW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709710588; c=relaxed/simple;
+	bh=LrAJCCpBSl+gG4ngOTkrw02P1idCRsPrXIl0LP5p91A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fAlgJxzxGC4R7nUslNVI/n9DnjAg3zlroNrsudW14BieD41Xv2r2I8Nonjc6Xg/L5blFsG4/F10eT4gZcF0DbABO8dQ1FaLGoheaL3GG/dAL7LnCO3bLtvnBROSpxkB4ep4OhPNN/dhhtl7yAAdhVlEvkF/HDIhWgiKGYzXREhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nLXMRpNn; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WzILONoW"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42677nLi030225;
-	Wed, 6 Mar 2024 07:31:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=6rAJW/h3885Nr/rnSGzJ
-	8U/YAZnDo33NgvDYU1YLb8I=; b=WzILONoWir410R/V0jlcvGJlvfW1nCUNf4PZ
-	bDaH0mCToDJB8GALIZPGQZbRl4owFbfosv6OzwgiYSDppA95VFwVvO6khCUh/lay
-	WoFaRm7YWo4JCBlTrsyLcvu6Saf8BlP3rTqT94aPu6unV97xOnA9tALh/tFos3Xo
-	K0Ao/DdeY661FendvPnl1xKH05EaIgXKV/8LZQE2rMXCSL8Nq7XwVgc5eLZlcvs9
-	62BRyWReohHm4JMLk40NFbZKYe6m3wELlfoLvgRUwpCmB8PoZ4xsrDHtW5G0N+qW
-	8TyIVaDDpVK2YH2GgZDNqaGdPGH22rKPWNLm2dsXo35FkSij1g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wpktpr1pc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Mar 2024 07:31:01 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4267V0ae003911
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 6 Mar 2024 07:31:00 GMT
-Received: from hu-okukatla-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 5 Mar 2024 23:30:55 -0800
-From: Odelu Kukatla <quic_okukatla@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Georgi Djakov <djakov@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
-        <quic_mdtipton@quicinc.com>
-Subject: [PATCH v3 4/4] arm64: dts: qcom: sc7280: Add clocks for QOS configuration
-Date: Wed, 6 Mar 2024 13:00:16 +0530
-Message-ID: <20240306073016.2163-5-quic_okukatla@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240306073016.2163-1-quic_okukatla@quicinc.com>
-References: <20240306073016.2163-1-quic_okukatla@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLXMRpNn"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-42e323a2e39so4969101cf.1;
+        Tue, 05 Mar 2024 23:36:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709710585; x=1710315385; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wDrwQgCUDNhac4YClML9QXk4EGLdxQZ3FXrvzoxi6b4=;
+        b=nLXMRpNns0z4HJE+c/jg1ZSHh2aj9CPI9caLHG2fbtQZdzdCBctS12sul35RSjZYvi
+         4yBQ9WyvBh8jUmJ2dLxD9O/LC3fpLp+5lNA4KUPkPmuVEbCISxGfpLv8ZXsaeJo8VcEs
+         3KQ/Q/1VZbuX/Ze4kNR5UXiTvmUKyxMU8tUqoyxDEfabrIPCNOHQ/X36dNM7I0J7jyL8
+         R2vEGoYUS8a+k5xCkpJqtubHGEidE8ij1eH75yZm6I399lSHW/QlCyfonO4Ta3zhW2bK
+         gTeC7iiMPFD3hH0fjdqta6EnL1o1ebzuZSO4XKoa75S0gEv6HqK/7K9UZrsUmqw/Z4Qi
+         I8Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709710585; x=1710315385;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wDrwQgCUDNhac4YClML9QXk4EGLdxQZ3FXrvzoxi6b4=;
+        b=BRwN3gqlCNnux1iukJYs8ZOgKBqWDykbW+7MErWve/ZjlWxDFYSC4EuuTLIyjPp/3w
+         3IHE1L9z70y6zmlGlL/X90JCSL5V3/UVZ3Ryw9B5cI7EYXqKvqJWwuap0VmxdQd1uzrZ
+         2JYZNvCjVxHtCQ4rxBEz5JaGCGtJstfNgHtSQXL9SbLbRn0Jq/s67uQTWTGaDCDTTzBB
+         6FQzT7ff6vPrhh+g0z/QrB9u8Q//tHcRDuPYlEvuKvttJl5J1dtrA3xN3mvNDXLL1EWF
+         QLcGg5WIdp2mMlRlh4Z4i3L5p/3CtvT60hCLVApEy0GVpQ6QHMuc3ujBCz8KQNjtW2Zn
+         1T1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUP2YA6rZCj0Bnah07zl/eVbU+OXCeJ15wlwSCQgwp5eldAl+WAlfmtomARSAXk+nMJZzyGBrxKDdhd7Cn2NqhYF4T0I8u7jDCzAdAeEgve7xLZxJs5lW1NCUt45BJNObxqxbq1+TAME1UtztMaNh0hiF9mhpqGguTNKJIyvU5Dm8Nxrd9K3f4AW896jA==
+X-Gm-Message-State: AOJu0YyS6XQYcZzBd48nLOwo31kitmGXZhavcxfY/Slf/NAZmXxZhpdX
+	hVYxwMfIC4GCmrOMCGg8riVuYSdeNFqx/vnUwP/pPgUTvUy2nQpI+84eIOK7VC9arJEKSS3wcTB
+	WounVoX0a/fVDjt5guLYHUSSRsYN4AHEX
+X-Google-Smtp-Source: AGHT+IGjOyAXtAHcG6tM6H/9gW3KIAOM2zeiwg+k8x76N6uNWWD6hM5htKG/sAErFhUzTn5MVAgGhGKfdQa/78b0mK4=
+X-Received: by 2002:a05:622a:2cb:b0:42e:7dae:5e41 with SMTP id
+ a11-20020a05622a02cb00b0042e7dae5e41mr5748490qtx.33.1709710585393; Tue, 05
+ Mar 2024 23:36:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: h82VgwHg5JhEsd0D82HAq4ROj_Ih23wi
-X-Proofpoint-ORIG-GUID: h82VgwHg5JhEsd0D82HAq4ROj_Ih23wi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-06_04,2024-03-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 phishscore=0 adultscore=0 bulkscore=0 spamscore=0
- clxscore=1015 mlxlogscore=999 mlxscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403060058
+References: <ZeeaRuTpuxInH6ZB@neat> <202403051548.045B16BF@keescook>
+In-Reply-To: <202403051548.045B16BF@keescook>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 6 Mar 2024 09:36:14 +0200
+Message-ID: <CAOQ4uxg185+i+n_mnXsEaxXYJ1SseDH6RtGreTJDhjkOt6mmSA@mail.gmail.com>
+Subject: Re: [PATCH][next] fsnotify: Avoid -Wflex-array-member-not-at-end warning
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add handles for required clocks to be enabled for configuring
-QoS on sc7280.
+On Wed, Mar 6, 2024 at 1:52=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> On Tue, Mar 05, 2024 at 04:18:46PM -0600, Gustavo A. R. Silva wrote:
+> > -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> > ready to enable it globally.
+> >
+> > There is currently a local structure `f` that is using a flexible
+> > `struct file_handle` as header for an on-stack place-holder for the
+> > flexible-array member `unsigned char f_handle[];`.
+> >
+> > struct {
+> >       struct file_handle handle;
+> >       u8 pad[MAX_HANDLE_SZ];
+> > } f;
+>
+> This code pattern is "put a flex array struct on the stack", but we have
+> a macro for this now:
+>
+> DEFINE_FLEX(struct file_handle, handle, f_handle, MAX_HANDLE_SZ);
+>
+> And you can even include the initializer:
+>
+> _DEFINE_FLEX(struct file_handle, handle, f_handle, MAX_HANDLE_SZ,
+>              =3D { .handle_bytes =3D MAX_HANDLE_SZ });
+>
 
-Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+Indeed that looks much nicer.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 7e7f0f0fb41b..e1d8fb6afae8 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -2129,6 +2129,8 @@
- 			reg = <0 0x016e0000 0 0x1c080>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
-+			clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
-+				<&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
- 		};
- 
- 		aggre2_noc: interconnect@1700000 {
-@@ -2136,6 +2138,7 @@
- 			compatible = "qcom,sc7280-aggre2-noc";
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
-+			clocks = <&rpmhcc RPMH_IPA_CLK>;
- 		};
- 
- 		mmss_noc: interconnect@1740000 {
--- 
-2.17.1
-
+Thanks,
+Amir.
