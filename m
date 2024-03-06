@@ -1,130 +1,277 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99262DDBC
-	for <linux-hardening@vger.kernel.org>; Wed,  6 Mar 2024 03:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538E214280;
+	Wed,  6 Mar 2024 04:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709695559; cv=none; b=XVBFrO4EDVvNT8AyaeKaCt4k2UNKoBHBCaQ+3wE5W7fADzczPLbBt/B5xifbS5v7iADn/uqzPsq7z1T2XwpIslir1RSVZRv5I1LmWoO04w9eQA2kDx3EEwOlPox04gvCVNLTN/J/xUAFYTfpY8WA5Seg45px3L/FbqQLQwdKzFE=
+	t=1709697618; cv=none; b=n74GRQISFDNueVaS1YO/RTuY4okC1O+/zQMs8oEHI1SgyBIcEl+nxrcMLyJImsOOydNCZVY5kwfz0yPGWao4gCYnsXidcjJPEAu3Nu6ER3fhMm6/gKkuVfw0ijkeINkDi+HPlaiRFzNj2lkYTxMnLLIfJsO38T80Yyp2Q3Y8W30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709695559; c=relaxed/simple;
-	bh=zAReeEU8/qi5a+yFDj7UXBuoBjH1MPHcc7huo3+zByw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=btkwvcvKZNf6MqgSg/N7mKChFT7N08eFI7J2RcrJWzY7/z3y8OgqqK3Rt7t0nFK713TSlmFlFNAuGgQUJnqITb5pD4rcsEQnjA7IXfawmck+Zm4oKhw9DtspdlcBw/TiwsQAOuV4bewIZoauWFedl9DuNEfIAtkWwp7hnTVRss8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=OgJGzG5u; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OgJGzG5u"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id hPQfr2I5oQr4Shhumr7fhm; Wed, 06 Mar 2024 03:25:56 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id hhulr60aj2iorhhulrpSnp; Wed, 06 Mar 2024 03:25:56 +0000
-X-Authority-Analysis: v=2.4 cv=Atzo3v9P c=1 sm=1 tr=0 ts=65e7e244
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=XVdhlGlpZy0Tqqe4dGwA:9 a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hA5anOLDf9hOII6ZL+mpHqZgQ3rs+L/N8KnCrTRwBMY=; b=OgJGzG5urvOSye6X4o/ZpFKHHX
-	TbW58mPd5ZZTTYRrOfSOsYbTltFxdq/haZS2WgK4RzIVvF6vv1E2KwmkmgVoaO8ts84sRaGGGLy4A
-	JpAIy29MWILwYRBPY6ygZJ4Xb6JkMkR0A+20gaC9EyZPjW7qw9J/ld6ZpVB27UL+u2Dci3Tm7caLY
-	5OAiRCHSdvKjD8WrqiQCXOTi3bKUV0622cYY7YWN3zFrPjmKNiCaL6qnNrlGk/iGjnlFYrTqYcKAm
-	wU5U99v5vc0nvjAba/Ymv1j9eur9ovuP/TcwFBetIXAZgib48WQgdySJx0DyGVd/JeGNheFLMa1kv
-	vArK3QuQ==;
-Received: from [201.172.172.225] (port=46818 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rhhuj-001ukg-2u;
-	Tue, 05 Mar 2024 21:25:53 -0600
-Message-ID: <9c2990f0-7407-49c6-9e3a-b92de82ea437@embeddedor.com>
-Date: Tue, 5 Mar 2024 21:25:51 -0600
+	s=arc-20240116; t=1709697618; c=relaxed/simple;
+	bh=18I9mupyrBGOFzaf8UoK03PmTIbkKPxV4//j3ENYo2Q=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Zdux9A7j8wifnT0/GoLsfIyHmgqY8AH2AI8NbP72fTIja2WwO8PfuY4tdDc+mOMfVbCxyAfncR4xECYL52yQ1H0h0Gt6Wrh7SAbHw9XZQDpmw4xbvuJ6qGDnt2EbNMZgRY+31wjm+gtqxmhtN7frOVmIuGDPqBJ8HRpa8n4wpN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TqJYS5MLvz2BfN5;
+	Wed,  6 Mar 2024 11:57:48 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id A006014011A;
+	Wed,  6 Mar 2024 12:00:09 +0800 (CST)
+Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 6 Mar
+ 2024 12:00:09 +0800
+Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
+ <202403040938.D770633@keescook>
+ <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
+ <202403050129.5B72ACAA0D@keescook>
+ <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
+ <20240305175846.qnyiru7uaa7itqba@treble>
+CC: Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+	<gustavoars@kernel.org>, <akpm@linux-foundation.org>, <peterz@infradead.org>,
+	<dave.hansen@linux.intel.com>, <kirill.shutemov@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<linux-mm@kvack.org>, <nixiaoming@huawei.com>, <kepler.chenxin@huawei.com>,
+	<wangbing6@huawei.com>, <wangfangpeng1@huawei.com>, <douzhaolei@huawei.com>,
+	Russell King <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <be92b3b6-9f08-6f99-75be-35c217751101@huawei.com>
+Date: Wed, 6 Mar 2024 12:00:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] overflow: Change DEFINE_FLEX to take __counted_by member
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org
-References: <20240306010746.work.678-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240306010746.work.678-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20240305175846.qnyiru7uaa7itqba@treble>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.172.225
-X-Source-L: No
-X-Exim-ID: 1rhhuj-001ukg-2u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.172.225]:46818
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfN3pyGTZufMeVNVu/gvQaiR/QXsow3NcmzE6RlgQw6nPuEe5oarxP3PH8oN4+/6FXCRmloCIFY73uw1R3ssh9T4WzEN2E1dUXP96aUVq9iKhQfqLlUQo
- gXx2ZD2Y+djaW4Fjx28XpSAiWXbHEnKEC8aDbv0pIRezqg+VDiPMH2MfVXfEikCQRDct6lBMSNJG5rt4fwR8uEHjs85SOhLY/Fm3X6sAowbr1iyqj0/fcLzp
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
 
 
-On 05/03/24 19:07, Kees Cook wrote:
-> The norm should be flexible array structures with __counted_by
-> annotations, so DEFINE_FLEX() is updated to expect that. Rename
-> the non-annotated version to DEFINE_RAW_FLEX(), and update the few
-> existing users. Additionally add self-tests to validate syntax and
-> size calculations.
+On 2024/3/6 1:58, Josh Poimboeuf wrote:
+>>>> For the usercopy_abort function, whether '__noreturn' is added
+>>>> does not affect the internal behavior of the usercopy_abort function.
+>>>> Therefore, it is recommended that '__noreturn' be deleted
+>>>> so that backtrace can work properly.
+>>>
+>>> This isn't acceptable. Removing __noreturn this will break
+>>> objtool's processing of execution flow for livepatching, IBT, and
+>>> KCFI instrumentation. These all depend on an accurate control flow
+>>> descriptions, and usercopy_abort is correctly marked __noreturn.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+> __noreturn also has the benefit of enabling the compiler to produce more
+> compact code for callees.
+> 
+>> Thank you for providing this information.
+>> I'll go back to further understand how __noreturn is used
+>> in features such as KCFI and livepatching.
+> 
+> Adding ARM folks -- see
+> https://lkml.kernel.org/lkml/1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com
+> for the original bug report.
+> 
+> This is an off-by-one bug which is common in unwinders, due to the fact
+> that the address on the stack points to the return address rather than
+> the call address.
+> 
 
-[..]
+Thanks for your advice. I think I understand. To solve this problem, I need to
+fix the off-by-one bug which is common in unwinders. I'll try to fix it later
+by referring to your patch.
 
-> +/**
-> + * DEFINE_FLEX() - Define an on-stack instance of structure with a trailing
-> + * flexible array member.
-> + *
-> + * @TYPE: structure type name, including "struct" keyword.
-> + * @NAME: Name for a variable to define.
-> + * @COUNTER: Name of the __counted_by member.
-> + * @MEMBER: Name of the array member.
-> + * @COUNT: Number of elements in the array; must be compile-time const.
-> + *
-> + * Define a zeroed, on-stack, instance of @TYPE structure with a trailing
-> + * flexible array member.
-> + * Use __struct_size(@NAME) to get compile-time size of it afterwards.
-> + */
-> +#define DEFINE_FLEX(TYPE, NAME, COUNTER, MEMBER, COUNT)	\
-
-Probably, swapping COUNTER and MEMBER is better?
-
-	DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)
-
-Thanks
---
-Gustavo
+> So, for example, when the last instruction of a function is a function
+> call (e.g., to a noreturn function), it can cause the unwinder to
+> incorrectly try to unwind from the function *after* the callee.
+> 
+> For ORC (x86), we fixed this by decrementing the PC for call frames (but
+> not exception frames).  I've seen user space unwinders do similar, for
+> non-signal frames.
+> 
+> Something like the following might fix your issue (completely untested):
+> 
+> diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
+> index 360f0d2406bf..4891e38cdc1f 100644
+> --- a/arch/arm/include/asm/stacktrace.h
+> +++ b/arch/arm/include/asm/stacktrace.h
+> @@ -21,9 +21,7 @@ struct stackframe {
+>  	struct llist_node *kr_cur;
+>  	struct task_struct *tsk;
+>  #endif
+> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
+>  	bool ex_frame;
+> -#endif
+>  };
+>  
+>  static __always_inline
+> @@ -37,9 +35,8 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
+>  		frame->kr_cur = NULL;
+>  		frame->tsk = current;
+>  #endif
+> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
+> -		frame->ex_frame = in_entry_text(frame->pc);
+> -#endif
+> +		frame->ex_frame = !!regs;
+> +
+>  }
+>  
+>  extern int unwind_frame(struct stackframe *frame);
+> diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+> index 620aa82e3bdd..caed7436da09 100644
+> --- a/arch/arm/kernel/stacktrace.c
+> +++ b/arch/arm/kernel/stacktrace.c
+> @@ -154,9 +154,6 @@ static void start_stack_trace(struct stackframe *frame, struct task_struct *task
+>  	frame->kr_cur = NULL;
+>  	frame->tsk = task;
+>  #endif
+> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
+> -	frame->ex_frame = in_entry_text(frame->pc);
+> -#endif
+>  }
+>  
+>  void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+> @@ -167,6 +164,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+>  	if (regs) {
+>  		start_stack_trace(&frame, NULL, regs->ARM_fp, regs->ARM_sp,
+>  				  regs->ARM_lr, regs->ARM_pc);
+> +		frame.ex_frame = true;
+>  	} else if (task != current) {
+>  #ifdef CONFIG_SMP
+>  		/*
+> @@ -180,6 +178,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+>  				  thread_saved_sp(task), 0,
+>  				  thread_saved_pc(task));
+>  #endif
+> +		frame.ex_frame = false;
+>  	} else {
+>  here:
+>  		start_stack_trace(&frame, task,
+> @@ -187,6 +186,7 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+>  				  current_stack_pointer,
+>  				  (unsigned long)__builtin_return_address(0),
+>  				  (unsigned long)&&here);
+> +		frame.ex_frame = false;
+>  		/* skip this function */
+>  		if (unwind_frame(&frame))
+>  			return;
+> diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+> index 3bad79db5d6e..46a5b1eb3f0a 100644
+> --- a/arch/arm/kernel/traps.c
+> +++ b/arch/arm/kernel/traps.c
+> @@ -84,10 +84,10 @@ void dump_backtrace_entry(unsigned long where, unsigned long from,
+>  	printk("%sFunction entered at [<%08lx>] from [<%08lx>]\n",
+>  		loglvl, where, from);
+>  #elif defined CONFIG_BACKTRACE_VERBOSE
+> -	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pS)\n",
+> +	printk("%s[<%08lx>] (%ps) from [<%08lx>] (%pB)\n",
+>  		loglvl, where, (void *)where, from, (void *)from);
+>  #else
+> -	printk("%s %ps from %pS\n", loglvl, (void *)where, (void *)from);
+> +	printk("%s %ps from %pB\n", loglvl, (void *)where, (void *)from);
+>  #endif
+>  
+>  	if (in_entry_text(from) && end <= ALIGN(frame, THREAD_SIZE))
+> diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+> index 9d2192156087..99ded32196af 100644
+> --- a/arch/arm/kernel/unwind.c
+> +++ b/arch/arm/kernel/unwind.c
+> @@ -407,7 +407,7 @@ int unwind_frame(struct stackframe *frame)
+>  {
+>  	const struct unwind_idx *idx;
+>  	struct unwind_ctrl_block ctrl;
+> -	unsigned long sp_low;
+> +	unsigned long sp_low, pc;
+>  
+>  	/* store the highest address on the stack to avoid crossing it*/
+>  	sp_low = frame->sp;
+> @@ -417,19 +417,22 @@ int unwind_frame(struct stackframe *frame)
+>  	pr_debug("%s(pc = %08lx lr = %08lx sp = %08lx)\n", __func__,
+>  		 frame->pc, frame->lr, frame->sp);
+>  
+> -	idx = unwind_find_idx(frame->pc);
+> +	pc = frame->ex_frame ? frame->pc : frame->pc - 4;
+> +
+> +	idx = unwind_find_idx(pc);
+>  	if (!idx) {
+> -		if (frame->pc && kernel_text_address(frame->pc)) {
+> -			if (in_module_plt(frame->pc) && frame->pc != frame->lr) {
+> +		if (kernel_text_address(pc)) {
+> +			if (in_module_plt(pc) && frame->pc != frame->lr) {
+>  				/*
+>  				 * Quoting Ard: Veneers only set PC using a
+>  				 * PC+immediate LDR, and so they don't affect
+>  				 * the state of the stack or the register file
+>  				 */
+>  				frame->pc = frame->lr;
+> +				frame->ex_frame = false;
+>  				return URC_OK;
+>  			}
+> -			pr_warn("unwind: Index not found %08lx\n", frame->pc);
+> +			pr_warn("unwind: Index not found %08lx\n", pc);
+>  		}
+>  		return -URC_FAILURE;
+>  	}
+> @@ -442,7 +445,7 @@ int unwind_frame(struct stackframe *frame)
+>  	if (idx->insn == 1)
+>  		/* can't unwind */
+>  		return -URC_FAILURE;
+> -	else if (frame->pc == prel31_to_addr(&idx->addr_offset)) {
+> +	else if (frame->ex_frame && pc == prel31_to_addr(&idx->addr_offset)) {
+>  		/*
+>  		 * Unwinding is tricky when we're halfway through the prologue,
+>  		 * since the stack frame that the unwinder expects may not be
+> @@ -451,9 +454,10 @@ int unwind_frame(struct stackframe *frame)
+>  		 * a function, we are still effectively in the stack frame of
+>  		 * the caller, and the unwind info has no relevance yet.
+>  		 */
+> -		if (frame->pc == frame->lr)
+> +		if (pc == frame->lr)
+>  			return -URC_FAILURE;
+>  		frame->pc = frame->lr;
+> +		frame->ex_frame = false;
+>  		return URC_OK;
+>  	} else if ((idx->insn & 0x80000000) == 0)
+>  		/* prel31 to the unwind table */
+> @@ -515,6 +519,7 @@ int unwind_frame(struct stackframe *frame)
+>  	frame->lr = ctrl.vrs[LR];
+>  	frame->pc = ctrl.vrs[PC];
+>  	frame->lr_addr = ctrl.lr_addr;
+> +	frame->ex_frame = false;
+>  
+>  	return URC_OK;
+>  }
+> @@ -544,6 +549,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+>  		 */
+>  here:
+>  		frame.pc = (unsigned long)&&here;
+> +		frame.ex_frame = false;
+>  	} else {
+>  		/* task blocked in __switch_to */
+>  		frame.fp = thread_saved_fp(tsk);
+> @@ -554,11 +560,12 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+>  		 */
+>  		frame.lr = 0;
+>  		frame.pc = thread_saved_pc(tsk);
+> +		frame.ex_frame = false;
+>  	}
+>  
+>  	while (1) {
+>  		int urc;
+> -		unsigned long where = frame.pc;
+> +		unsigned long where = frame.ex_frame ? frame.pc : frame.pc - 4;
+>  
+>  		urc = unwind_frame(&frame);
+>  		if (urc < 0)
+> .
+> 
