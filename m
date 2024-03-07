@@ -1,127 +1,277 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE031EF13;
-	Thu,  7 Mar 2024 22:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7E03D3BB
+	for <linux-hardening@vger.kernel.org>; Thu,  7 Mar 2024 23:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709848989; cv=none; b=M2OC8y5a9hkqAlac2c2ap19Q69FYD3iq9H+vqxLNCDIoE2otkiHGkEyNiCXOdL9sO3z8RyYkbPqbtCp/6cwrKmIp6qbDIE5T5xEEYyXq8KIqU5g/niPK4ZOjIMkmerbxsvzXOHWLLQa5D9VROX1dt4adl9oPdzalPf1btxhhgq8=
+	t=1709855215; cv=none; b=XEPc5mebcrs6bxRsU7G8wVuGqel/K2nGfUMZ4gjYEd17VaG+kP5eZxC4PtuQSbJeFZuyZtQVhCX2wCTGECSDt98RIQ/4t+TVBnwwJlZEPU9Hl1XhAmQzLToTHsboBcQJyu2icDif7BqYVvUCjaYl0hMkTX6nAFii070ZOlBk6+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709848989; c=relaxed/simple;
-	bh=h13ZTm7u1JJO+VYJXOBDXxxL9HqoMuypkPU5m6JDQhI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=KkkUWvk37UjAtYSp7VDFI/Je+zq2jGxhTFOR+y9hjWMaxtJH0VO6hRm7/6L9dHO7L7EfoW7cCuHZ4QxHXpbbgIQ8N3fkA4mKWTR30i4hPo9sN2pvigxmBc2Jl0G5+wppMnQ9ww7iNsqCNLLFLbgTc0gfyvBg1WzFNIPC01Quic4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=K1b/5dgZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QaTlkbED; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709855215; c=relaxed/simple;
+	bh=wF6nOFCqocpsBSgk2lYQp+fzFod97LPq/8M/FHS/q0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FZvwknGttK+e8CDeq5Q2bsvzHKOQB+aPlvgq6TkW4w4BMIAFKxUXo/IhJRhkikP9UWIprC2iKTpZuMRp3QDG98N+IluoDmu/x6LorWAnskaQsLhpAHHkBC/EzTpEiNO7ffCoYCaw/P1QtToxd9UoTGnHXvtrm+IlKJ+nKgnD5gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=gf4QFrwz; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="K1b/5dgZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QaTlkbED"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 684421140136;
-	Thu,  7 Mar 2024 17:03:06 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2024 17:03:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709848986; x=1709935386; bh=+n2iTlu6tj
-	T5UsntdZxAxAKK1QgtXH1QkeKDQAid2y0=; b=K1b/5dgZW2uu76h53FmTmy2+/D
-	2rRUzv03JAQLx1lnDHeQ4Msl2DvrLXftlyo0HXwUac460xIlDdJE00fYT0VLpL5l
-	dGB0352RafPBh+JVAneFaUJzHlKEO7FBznvilElJWKuN+kIz7FJZlJ3hrvIdyWzD
-	paAGlp6lh4/0y6n4fCNfhT9XboGcB4pfwSgHCmK0Clw+hmbw3n4rcJz5JdRf/Eb5
-	KGsAEHr+61+d9zoL96Wy3o7HdG23MkCfwPfWv71ctvHnpFhNHR3JXO28hUKbijPF
-	RHWl0rEHi4C+F2NoxFMyofOA8x723nO/elfv/ZU76fArFObpmzK4Dph6N4aQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709848986; x=1709935386; bh=+n2iTlu6tjT5UsntdZxAxAKK1Qgt
-	XH1QkeKDQAid2y0=; b=QaTlkbED+EM4DSEeBXiBZVbSI3osgFvi3OXEKseEbX0G
-	OuQFHmURvXMQSrkSnaEYkU0b35Xcz1bjKA2msnKuKNsWEmZQpVPmv7BCnUV7qUNz
-	ZzS8MYN+VjWyPjuy8+j70hlkD8IN2nWcMGGpH7neOIRqc1Hh/nrHvYfM9YK8S9aa
-	ij86MkyLjmxgT2bT068MaPVYo9qAOtP1VkDlwN1NLWBjpNSxIeYX8GHuTlAOWwh5
-	+GLfim7bd1M55uWNWjSXeri8INLufBBDUCMTkMekobe4v803Mmskt96XVIJVrmKK
-	DgJ+x6Gn7fEWncyoldP7pDmi7wkWEFNTq3HIjf3fHw==
-X-ME-Sender: <xms:mjnqZbC6NOjHp83n4Y0SnafZs3bXxNp2SH_F9_MZoEkKqgJjsizgVA>
-    <xme:mjnqZRi5Y0C8Ya9NEZy_Lrq25GnKEYgVylqcrg7zPTZsmKuMfEf3N906_-BVZ4aN_
-    DrQTdYGm5tlWIzEUEo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduheehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:mjnqZWm3QWz2WI1zK066S-mjC94Fj0BqnHXLUq2XTHXh9XTqgUyKdg>
-    <xmx:mjnqZdzZcorw4PN2gRFwGDqhnzqwzoo0EEmvcONC-PB72qz58EtBFg>
-    <xmx:mjnqZQQvtv0qEi-GAVlwVdX0SuAweSztF1CnBo9xT9dLm3Yujk7Rug>
-    <xmx:mjnqZdgb4rZgBFb5WgJ3gqdrHtj0Io2FM5cvmpdA83knl485-DTesQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E8C54B6008D; Thu,  7 Mar 2024 17:03:05 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gf4QFrwz"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id iJsUrNoCcuh6siNRkrheoy; Thu, 07 Mar 2024 23:46:45 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id iNRkryfxrabrLiNRkr6ai5; Thu, 07 Mar 2024 23:46:44 +0000
+X-Authority-Analysis: v=2.4 cv=PvSVbRM3 c=1 sm=1 tr=0 ts=65ea51e4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=_DmBcgav1riKsY_yCuwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7z7q2oC1uoCR6VrsF8fDkT9utXrmRySUy35G6DBhC1U=; b=gf4QFrwz4lDtNHm7liWxG8HSKB
+	vgRIhxQ9/oZkTzEJNqtoFlrcqyEatYSfZUTcuA0wZzejMZ4n7B1WvF6Kz5EhWTbYc0nZgsynniLAm
+	rUjD3tds3mZCQQBsHgRGgk5D+SdDSOEhEiuYTqjyX/e/+iuGT0rbr3iUtAByIgHN/hrw+hxPHzd+n
+	RIxz8JLIsBvGm/LMb30T3g+nXSHNSQPV8V1WIDK/mfj+DXRifkWZOFg0S0dbKADGqThapGSupPGcp
+	FGp+8jgaS0DynQFlkPpwJbvoKny/GBmmfON9iH31qx6sCCjycJr9EzmqO3KvurdmfNKm04GEgl0Rd
+	hUgWAd2g==;
+Received: from [201.172.172.225] (port=50666 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1riNRi-000vqt-1f;
+	Thu, 07 Mar 2024 17:46:42 -0600
+Message-ID: <82c1dc9e-d5b6-40e3-9d81-d18cc270724b@embeddedor.com>
+Date: Thu, 7 Mar 2024 17:46:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <db9bc2dc-6a66-4248-b8ab-abc2723af053@app.fastmail.com>
-In-Reply-To: <202403071112.01B4579@keescook>
-References: <20240305221824.3300322-1-jeremy.linton@arm.com>
- <20240305221824.3300322-2-jeremy.linton@arm.com>
- <202403051526.0BE26F99E@keescook>
- <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
- <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
- <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
- <202403071112.01B4579@keescook>
-Date: Thu, 07 Mar 2024 23:02:44 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <keescook@chromium.org>
-Cc: "Jeremy Linton" <jeremy.linton@arm.com>,
- linux-arm-kernel@lists.infradead.org,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] net/smc: Avoid -Wflex-array-member-not-at-end
+ warnings
+Content-Language: en-US
+To: Jan Karcher <jaka@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
- "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
+ Wenjia Zhang <wenjia@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>,
+ Tony Lu <tonylu@linux.alibaba.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
-Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
-Content-Type: text/plain
+ Kees Cook <keescook@chromium.org>
+References: <ZeIhOT44ON5rjPiP@neat>
+ <71aa847b-2edc-44a2-beb7-3610bf744937@linux.alibaba.com>
+ <1cb9a110-c877-4420-9b23-1e7980f1300a@linux.ibm.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <1cb9a110-c877-4420-9b23-1e7980f1300a@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.172.225
+X-Source-L: No
+X-Exim-ID: 1riNRi-000vqt-1f
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:50666
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMJmVETf0O9SJryCXofSKrllE+Qp9tmMq+sMceJSkqILDXpeEiWSH/uYHuyo+l1UsvyAbOs8dcZ4sm0+bUzjhAC0Doq9zifJAzUo/sNeqcdQH+ZJ/HFt
+ 9Io9gOJoGE3o2n4c7p1xeSvlE8OvRr7N9UoRB10uX0mRHGOMCuuTovOVkLfJSZhIjFqxlRTLExK5Ov0/Osqu0QyxOLstJYktmtY+H/e0imxa+NgmLZYbBWgt
 
-On Thu, Mar 7, 2024, at 20:15, Kees Cook wrote:
-> On Thu, Mar 07, 2024 at 12:10:34PM +0100, Arnd Bergmann wrote:
->> There is not even any attempt to use the most random bits of
->> the cycle counter, as both the high 22 to 24 bits get masked
->> out (to keep the wasted stack space small) and the low 3 or 4
->> bits get ignored because of stack alignment. If there was
->> any desire to make it more random, a trivial improvement
->> would be:
->> 
->> +++ b/include/linux/randomize_kstack.h
->> @@ -80,7 +80,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
->>         if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
->>                                 &randomize_kstack_offset)) {            \
->>                 u32 offset = raw_cpu_read(kstack_offset);               \
->> -               offset ^= (rand);                                       \
->> +               offset = ror32(offset, 5) & (rand);                     \
->
-> Shouldn't this stay ^ instead of & ?
 
-Yes, my mistake.
 
->>                 raw_cpu_write(kstack_offset, offset);                   \
->>         }                                                               \
->>  } while (0)
->
-> But yeah, we should likely make this change regardless.
+On 3/7/24 02:17, Jan Karcher wrote:
+> 
+> 
+> On 04/03/2024 10:00, Wen Gu wrote:
+>>
+>>
+>> On 2024/3/2 02:40, Gustavo A. R. Silva wrote:
+>>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+>>> ready to enable it globally.
+>>>
+>>> There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
+>>> that contain a couple of flexible structures:
+>>>
+> 
+> Thank you Gustavo for the proposal.
+> I had to do some reading to better understand what's happening and how your patch solves this.
+> 
+>>> struct smc_clc_msg_proposal_area {
+>>>     ...
+>>>     struct smc_clc_v2_extension             pclc_v2_ext;
+>>>     ...
+>>>     struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
+>>>     ...
+>>> };
+>>>
+>>> So, in order to avoid ending up with a couple of flexible-array members
+>>> in the middle of a struct, we use the `struct_group_tagged()` helper to
+>>> separate the flexible array from the rest of the members in the flexible
+>>> structure:
+>>>
+>>> struct smc_clc_smcd_v2_extension {
+>>>          struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
+>>>                              u8 system_eid[SMC_MAX_EID_LEN];
+>>>                              u8 reserved[16];
+>>>          );
+>>>          struct smc_clc_smcd_gid_chid gidchid[];
+>>> };
+>>>
+>>> With the change described above, we now declare objects of the type of
+>>> the tagged struct without embedding flexible arrays in the middle of
+>>> another struct:
+>>>
+>>> struct smc_clc_msg_proposal_area {
+>>>          ...
+>>>          struct smc_clc_v2_extension_hdr        pclc_v2_ext;
+>>>          ...
+>>>          struct smc_clc_smcd_v2_extension_hdr    pclc_smcd_v2_ext;
+>>>          ...
+>>> };
+>>>
+>>> We also use `container_of()` when we need to retrieve a pointer to the
+>>> flexible structures.
+>>>
+>>> So, with these changes, fix the following warnings:
+>>>
+>>> In file included from net/smc/af_smc.c:42:
+>>> net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>    186 |         struct smc_clc_v2_extension             pclc_v2_ext;
+>>>        |                                                 ^~~~~~~~~~~
+>>> net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>>    188 |         struct smc_clc_smcd_v2_extension pclc_smcd_v2_ext;
+>>>        |                                                 ^~~~~~~~~~~~~~~~
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>   net/smc/smc_clc.c |  5 +++--
+>>>   net/smc/smc_clc.h | 24 ++++++++++++++----------
+>>>   2 files changed, 17 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+>>> index e55026c7529c..3094cfa1c458 100644
+>>> --- a/net/smc/smc_clc.c
+>>> +++ b/net/smc/smc_clc.c
+>>> @@ -853,8 +853,9 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+>>>       pclc_smcd = &pclc->pclc_smcd;
+>>>       pclc_prfx = &pclc->pclc_prfx;
+>>>       ipv6_prfx = pclc->pclc_prfx_ipv6;
+>>> -    v2_ext = &pclc->pclc_v2_ext;
+>>> -    smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
+>>> +    v2_ext = container_of(&pclc->pclc_v2_ext, struct smc_clc_v2_extension, _hdr);
+>>> +    smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
+>>> +                   struct smc_clc_smcd_v2_extension, hdr);
+>>>       gidchids = pclc->pclc_gidchids;
+>>>       trl = &pclc->pclc_trl;
+>>> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
+>>> index 7cc7070b9772..5b91a1947078 100644
+>>> --- a/net/smc/smc_clc.h
+>>> +++ b/net/smc/smc_clc.h
+>>> @@ -134,12 +134,14 @@ struct smc_clc_smcd_gid_chid {
+>>>                */
+>>>   struct smc_clc_v2_extension {
+>>> -    struct smc_clnt_opts_area_hdr hdr;
+>>> -    u8 roce[16];        /* RoCEv2 GID */
+>>> -    u8 max_conns;
+>>> -    u8 max_links;
+>>> -    __be16 feature_mask;
+>>> -    u8 reserved[12];
+>>> +    struct_group_tagged(smc_clc_v2_extension_hdr, _hdr,
+>>> +        struct smc_clnt_opts_area_hdr hdr;
+>>> +        u8 roce[16];        /* RoCEv2 GID */
+>>> +        u8 max_conns;
+>>> +        u8 max_links;
+>>> +        __be16 feature_mask;
+>>> +        u8 reserved[12];
+>>> +    );
+>>>       u8 user_eids[][SMC_MAX_EID_LEN];
+>>>   };
+>>> @@ -159,8 +161,10 @@ struct smc_clc_msg_smcd {    /* SMC-D GID information */
+>>>   };
+>>>   struct smc_clc_smcd_v2_extension {
+>>> -    u8 system_eid[SMC_MAX_EID_LEN];
+>>> -    u8 reserved[16];
+>>> +    struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
+>>> +        u8 system_eid[SMC_MAX_EID_LEN];
+>>> +        u8 reserved[16];
+>>> +    );
+>>>       struct smc_clc_smcd_gid_chid gidchid[];
+>>>   };
+>>> @@ -183,9 +187,9 @@ struct smc_clc_msg_proposal_area {
+>>>       struct smc_clc_msg_smcd            pclc_smcd;
+>>>       struct smc_clc_msg_proposal_prefix    pclc_prfx;
+>>>       struct smc_clc_ipv6_prefix pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
+>>> -    struct smc_clc_v2_extension        pclc_v2_ext;
+>>> +    struct smc_clc_v2_extension_hdr        pclc_v2_ext;
+>>>       u8            user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
+>>> -    struct smc_clc_smcd_v2_extension    pclc_smcd_v2_ext;
+>>> +    struct smc_clc_smcd_v2_extension_hdr    pclc_smcd_v2_ext;
+>>>       struct smc_clc_smcd_gid_chid
+>>>                   pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
+>>>       struct smc_clc_msg_trail        pclc_trl;
+>>
+>> Thank you! Gustavo. This patch can fix this warning well, just the name
+>> '*_hdr' might not be very accurate, but I don't have a good idea ATM.
+> 
+> I agree. Should we chose this option we should come up for a better name.
+> 
+>>
+>> Besides, I am wondering if this can be fixed by moving
+>> user_eids of smc_clc_msg_proposal_area into smc_clc_v2_extension,
+>> and
+>> pclc_gidchids of smc_clc_msg_proposal_area into smc_clc_smcd_v2_extension.
+>>
+>> so that we can avoid to use the flexible-array in smc_clc_v2_extension
+>> and smc_clc_smcd_v2_extension.
+> 
+> I like the idea and put some thought into it. The only thing that is not perfectly clean IMO is the following:
+> By the current definition it is easily visible that we are dealing with a variable sized array. If we move them into the structs one could think they are always 
+> at their MAX size which they are not.
+> E.g.: An incoming proposal can have 0 UEIDs indicated by the eid_cnt.
+> That said nothing a comment can't fix.
+> 
+>  From what i have seen the offset and length calculations regarding the "real" size of those structs is fine with your proposal.
+> 
+> Can you verify that your changes also resolve the warnings?
 
-Ok, do you want to send a patch, or should I?
+I can confirm that the changes Wen Gu is proposing also resolve the warnings.
 
-     Arnd
+Wen,
+
+If you send a proper patch, you can include the following tags:
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Build-tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+--
+Gustavo
+
+> 
+> [...]
+> 
+>>   };
+>>
+>>
+>> Thanks!
+>> Wen Gu
+> 
+> Thanks you
+> - Jan
