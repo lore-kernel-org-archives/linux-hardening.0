@@ -1,53 +1,53 @@
-Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
+Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849EC135A5C;
-	Thu,  7 Mar 2024 21:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE031EF13;
+	Thu,  7 Mar 2024 22:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709848641; cv=none; b=QFGAHIz3Z1OzVVN+6agxv2rai50nzYDBgismxyXllbkvmgzwsI7Voeifdx7rF9DgfWDX7Za82uCs1PY8IMOlF7+5F25EKjhJowjRwAuxfKInBs5YhllAoKjEMuMIrRzNQ+FY3hyS6hSneTLUzAbxEL7gTExxe7nGc12+gXzTnwU=
+	t=1709848989; cv=none; b=M2OC8y5a9hkqAlac2c2ap19Q69FYD3iq9H+vqxLNCDIoE2otkiHGkEyNiCXOdL9sO3z8RyYkbPqbtCp/6cwrKmIp6qbDIE5T5xEEYyXq8KIqU5g/niPK4ZOjIMkmerbxsvzXOHWLLQa5D9VROX1dt4adl9oPdzalPf1btxhhgq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709848641; c=relaxed/simple;
-	bh=HiQyqI5rhqj3eJbJ9OeeVS0Z5fHH9JryUtUYn6IL4I0=;
+	s=arc-20240116; t=1709848989; c=relaxed/simple;
+	bh=h13ZTm7u1JJO+VYJXOBDXxxL9HqoMuypkPU5m6JDQhI=;
 	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Pf0pTzYB2OWP3tVwLoYHj0/W905FGUbrC/7d1sbLyWwat7DB/V3/AfHQJ0S8+78HaVlgTNwzbJIBtWZssE5RCtUCkKYrirtIfJZCOhg0mPxSKAq4D/Ff59vzbzNgN+oolvpW8W+4oK1U3AZo+wnlLeoSvcMYih0+Cp7fZaPNOzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IXIoiZAS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IoR/RmPg; arc=none smtp.client-ip=103.168.172.149
+	 Subject:Content-Type; b=KkkUWvk37UjAtYSp7VDFI/Je+zq2jGxhTFOR+y9hjWMaxtJH0VO6hRm7/6L9dHO7L7EfoW7cCuHZ4QxHXpbbgIQ8N3fkA4mKWTR30i4hPo9sN2pvigxmBc2Jl0G5+wppMnQ9ww7iNsqCNLLFLbgTc0gfyvBg1WzFNIPC01Quic4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=K1b/5dgZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QaTlkbED; arc=none smtp.client-ip=103.168.172.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IXIoiZAS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IoR/RmPg"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="K1b/5dgZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QaTlkbED"
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 84EE91380089;
-	Thu,  7 Mar 2024 16:57:18 -0500 (EST)
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 684421140136;
+	Thu,  7 Mar 2024 17:03:06 -0500 (EST)
 Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2024 16:57:18 -0500
+  by compute5.internal (MEProxy); Thu, 07 Mar 2024 17:03:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709848638; x=1709935038; bh=fKOSRnnBdF
-	tGTfuNnx0zHhRTbIYCaKgWUvk5mFPlNag=; b=IXIoiZASfg4ILvonS78TTpY3DW
-	xs+6+Dvt4YuN7NTQMvgO7K0v2cjg6FvVxMeOYj0GvpeoS9fo8RvVL0Q6UmsjfarY
-	/uT1ccQZ+2qGfd7qOcIvnFr+MRvHKHvIP9S/GPDW7sYJjebi/r0wF/n8teeZU1dN
-	Z5CI3St5Dy6yEQJPQnDBKmMyW97aLFPU4Ox2iY6joScyMrltuhohGQILQuzqIeg5
-	pma967mIltBq5F8dWR2IFAUtLaRyCfGizui9bgwUPN7Cl9Kv/SH829t73dJaropt
-	aWKFimvbubKKoT+/PNsHQKWi8dCfcHpMCGM/EH8hrsJlxHcRWKGXc3j/3Emw==
+	:subject:to:to; s=fm3; t=1709848986; x=1709935386; bh=+n2iTlu6tj
+	T5UsntdZxAxAKK1QgtXH1QkeKDQAid2y0=; b=K1b/5dgZW2uu76h53FmTmy2+/D
+	2rRUzv03JAQLx1lnDHeQ4Msl2DvrLXftlyo0HXwUac460xIlDdJE00fYT0VLpL5l
+	dGB0352RafPBh+JVAneFaUJzHlKEO7FBznvilElJWKuN+kIz7FJZlJ3hrvIdyWzD
+	paAGlp6lh4/0y6n4fCNfhT9XboGcB4pfwSgHCmK0Clw+hmbw3n4rcJz5JdRf/Eb5
+	KGsAEHr+61+d9zoL96Wy3o7HdG23MkCfwPfWv71ctvHnpFhNHR3JXO28hUKbijPF
+	RHWl0rEHi4C+F2NoxFMyofOA8x723nO/elfv/ZU76fArFObpmzK4Dph6N4aQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709848638; x=1709935038; bh=fKOSRnnBdFtGTfuNnx0zHhRTbIYC
-	aKgWUvk5mFPlNag=; b=IoR/RmPgMpfk+DxEz3rub8QhBHlyi6qOlgNda8o1KgP5
-	1OCTKXunFhxGvVjUyy2SWG+Rpx6mFjwuvBKLLNrCQt7ZK/jNq/G5i4hFXFB8+hMd
-	ObDCAz1Dvml8RCqCQJohdOo7FUYE7W86X2NiUCRlW5z63SoU/FmfmWqpbvAhGh3B
-	UVp1mYIaAnqn4uq/eUYMFQQTRmqpZAivd5zcpS7JIB/6+lpenAdnuA4FTV+KfIwE
-	ILtw2h/SwDC9Oua8+ZZK6N8U/20paBJr+mhOxiZLXkRzJmNmWzto7n9D+Z1gzLfx
-	/iQjEZeGCUlidb5gRlKvYddrhRC9HeaDJZBB9Bjogw==
-X-ME-Sender: <xms:PTjqZVGhlAXQVTuB_90xBhXagE-P8qoGKG4_GmK9xUXZ_kYlPaVjyg>
-    <xme:PTjqZaWR2SXrNf-KIuv_0XwFdGFeGA9SyPtmjOqWfK-naKLq_Y2JkJ5PyM1uXCmAq
-    pH5IAeawzyZ5nrNsAA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduheegucetufdoteggodetrfdotf
+	fm1; t=1709848986; x=1709935386; bh=+n2iTlu6tjT5UsntdZxAxAKK1Qgt
+	XH1QkeKDQAid2y0=; b=QaTlkbED+EM4DSEeBXiBZVbSI3osgFvi3OXEKseEbX0G
+	OuQFHmURvXMQSrkSnaEYkU0b35Xcz1bjKA2msnKuKNsWEmZQpVPmv7BCnUV7qUNz
+	ZzS8MYN+VjWyPjuy8+j70hlkD8IN2nWcMGGpH7neOIRqc1Hh/nrHvYfM9YK8S9aa
+	ij86MkyLjmxgT2bT068MaPVYo9qAOtP1VkDlwN1NLWBjpNSxIeYX8GHuTlAOWwh5
+	+GLfim7bd1M55uWNWjSXeri8INLufBBDUCMTkMekobe4v803Mmskt96XVIJVrmKK
+	DgJ+x6Gn7fEWncyoldP7pDmi7wkWEFNTq3HIjf3fHw==
+X-ME-Sender: <xms:mjnqZbC6NOjHp83n4Y0SnafZs3bXxNp2SH_F9_MZoEkKqgJjsizgVA>
+    <xme:mjnqZRi5Y0C8Ya9NEZy_Lrq25GnKEYgVylqcrg7zPTZsmKuMfEf3N906_-BVZ4aN_
+    DrQTdYGm5tlWIzEUEo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduheehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
@@ -55,13 +55,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduheegucetufdoteggod
     htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
     teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
     hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:PTjqZXKZ-ee6QPgP2XJt5HsWhsiczr5ueWR9sHGlUFumrliEVlKRng>
-    <xmx:PTjqZbEtHpuRsp4GkE9adwMiUE6D6Nmg0MdR4WlkX9C1hvUs2QJYkg>
-    <xmx:PTjqZbU-VgK6pupr5v3wvcg60SQMzPM9AX002vsvanifomlyXhMNHg>
-    <xmx:PjjqZUU-sVuQfsXw9XSS5RafDMsJ0qaKl5P0gM8qTolyGpxwG4oe6A>
+X-ME-Proxy: <xmx:mjnqZWm3QWz2WI1zK066S-mjC94Fj0BqnHXLUq2XTHXh9XTqgUyKdg>
+    <xmx:mjnqZdzZcorw4PN2gRFwGDqhnzqwzoo0EEmvcONC-PB72qz58EtBFg>
+    <xmx:mjnqZQQvtv0qEi-GAVlwVdX0SuAweSztF1CnBo9xT9dLm3Yujk7Rug>
+    <xmx:mjnqZdgb4rZgBFb5WgJ3gqdrHtj0Io2FM5cvmpdA83knl485-DTesQ>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 80BD1B6008F; Thu,  7 Mar 2024 16:57:17 -0500 (EST)
+	id E8C54B6008D; Thu,  7 Mar 2024 17:03:05 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
 Precedence: bulk
@@ -70,16 +70,16 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <50d4146e-57a2-48a8-809f-713279935f32@app.fastmail.com>
-In-Reply-To: <202403071105.C3B038C@keescook>
+Message-Id: <db9bc2dc-6a66-4248-b8ab-abc2723af053@app.fastmail.com>
+In-Reply-To: <202403071112.01B4579@keescook>
 References: <20240305221824.3300322-1-jeremy.linton@arm.com>
  <20240305221824.3300322-2-jeremy.linton@arm.com>
  <202403051526.0BE26F99E@keescook>
  <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
  <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
  <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
- <202403071105.C3B038C@keescook>
-Date: Thu, 07 Mar 2024 22:56:56 +0100
+ <202403071112.01B4579@keescook>
+Date: Thu, 07 Mar 2024 23:02:44 +0100
 From: "Arnd Bergmann" <arnd@arndb.de>
 To: "Kees Cook" <keescook@chromium.org>
 Cc: "Jeremy Linton" <jeremy.linton@arm.com>,
@@ -95,41 +95,33 @@ Cc: "Jeremy Linton" <jeremy.linton@arm.com>,
 Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
 Content-Type: text/plain
 
-On Thu, Mar 7, 2024, at 20:10, Kees Cook wrote:
+On Thu, Mar 7, 2024, at 20:15, Kees Cook wrote:
 > On Thu, Mar 07, 2024 at 12:10:34PM +0100, Arnd Bergmann wrote:
->> For the strength, we have at least four options:
+>> There is not even any attempt to use the most random bits of
+>> the cycle counter, as both the high 22 to 24 bits get masked
+>> out (to keep the wasted stack space small) and the low 3 or 4
+>> bits get ignored because of stack alignment. If there was
+>> any desire to make it more random, a trivial improvement
+>> would be:
 >> 
->> - strong rng, most expensive
->> - your new prng, less strong but somewhat cheaper and/or more
->>   predictable overhead
->> - cycle counter, cheap but probably even less strong,
->>   needs architecture code.
+>> +++ b/include/linux/randomize_kstack.h
+>> @@ -80,7 +80,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
+>>         if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
+>>                                 &randomize_kstack_offset)) {            \
+>>                 u32 offset = raw_cpu_read(kstack_offset);               \
+>> -               offset ^= (rand);                                       \
+>> +               offset = ror32(offset, 5) & (rand);                     \
 >
-> Are the low bits of a cycler counter really less safe than a
-> deterministic pRNG?
+> Shouldn't this stay ^ instead of & ?
 
-I don't know, that was based on Jeremy's assertion. I'm not
-even convinced that either one is actually safer than no
-randomization. ;-)
+Yes, my mistake.
 
-For both the timer and the pRNG, I guess you'd need a gadget
-to extract the current offset and from there extract the
-per-cpu state value. Once you know the state and there is no
-reseed, you can pick the value you want for the next syscall
-by either calling getpid() repeatedly or waiting for the
-cycle counter to reach the desired value before calling
-a vulnerable syscall. At that point the pRNG and no
-randomization are reliably predictable, while the timer
-may still have some jitter left.
-
->> - no rng, no overhead and no protection.
+>>                 raw_cpu_write(kstack_offset, offset);                   \
+>>         }                                                               \
+>>  } while (0)
 >
-> For the pRNG, why not just add a reseed timer or something that'll
-> happen outside the syscall window, if that's the concern about reseeding
-> delay? (In which case, why not continue to use the strong rng?)
+> But yeah, we should likely make this change regardless.
 
-I fear a timer or workqueue would be both weaker than a forced
-reseed if the attacker wins the race against the reseed, and
-still cause latency that hurts realtime usecases.
+Ok, do you want to send a patch, or should I?
 
-       Arnd
+     Arnd
