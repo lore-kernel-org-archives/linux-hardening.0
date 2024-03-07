@@ -1,63 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C951E12F598;
-	Thu,  7 Mar 2024 19:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07ED4135A75
+	for <linux-hardening@vger.kernel.org>; Thu,  7 Mar 2024 19:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709838381; cv=none; b=Igp2Xigl2UlpSkwiyqQ9ceHJCiuLTRrUg0tfYr2PA5Vy2GZlHpKOp9MrCvz2ay190vzafSmAD5c2m7FounxEwxBvKvl69D/h9OfdCp2n7QDeaehgrLvmna8I/5xplRmWnPlBlMxP+42AHMmfDr13MjEpqmw2ZQuB0i9t+J5Sq70=
+	t=1709838650; cv=none; b=WKTAnmJzfrOKk+Z/VbUd8wIM8If7WWAWXhQDsNunM/Jz2pi7piECgXoTW0kqFzNhbzy2UL3Af3D1v0smdSpixJEtT4yebYWbWz5I92c4/F2izcphCHnVsPfk6L5F2781V9j3t4LDbB+x44lITlwkiMwWeIXoxdpyDgI92MLtepA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709838381; c=relaxed/simple;
-	bh=5vnN3HzvbNmZuZXAM0Si1YlHaOVxj30ihRTND0eJ1G4=;
+	s=arc-20240116; t=1709838650; c=relaxed/simple;
+	bh=izSH/PMxUOlhLqiqWhtGUMGagmQW6jaoeudrrfnJ9Qo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L/MVPy+0mHor9gDU+bxEkyaSAEIiEkGs33Faqa6sF2LCf1Rf6hef5EiFx9Nc/lzK3L/MK4VbgxUZsA8sBdq6ni5yWtp6k+JzQAgg4EAAwoqV2SfeL3dA5F3OG97NjT4C83RkVcGXIXWb+58jgoJbBZIWbLX5TySX5dG3aooMza0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LNTZ04HX; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ti22Y3pPQYbJ1p2rUdU1q0zRwp7u0kmK7jElfPmaJ3vfRMpslM0//MsG0FOF4cMxQfNKlQ3C2he5bE+M3DkIxwctC0urP1goei8wZ1WE/c/rt81EEO30ylOs8jg8j96c9wZ+oaivKoWtWaFia3lCrJPIEWzv3i9gAWLLU1DyEQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KGGKnv/8; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LNTZ04HX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709838379; x=1741374379;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5vnN3HzvbNmZuZXAM0Si1YlHaOVxj30ihRTND0eJ1G4=;
-  b=LNTZ04HXkbDIhCKXOEVqtjNx6Ziy4TCQOYCPecriT/73SA+m8zavQuM6
-   deq8a7cewykhP0hm4YnhlviQ783WpmS0W9681mqUM9l1dB2EMRZrizRCj
-   fxlWiJrYTBoSKsz/OeNKvzYz3BKPJOnBdPDS6FKRh1qH8oXUyvF82jKzs
-   w/sHKDcgRscNkl1KDKOqmoaCICDHsjGuL49y4GGMqfIkqg7XDHeyN/Xya
-   f9XEay3ruBbYJkyZKSYnwOXrZE1PrceKOjbFo9QyoXNNSBMZLbRpLHgn3
-   BgA5Yz7e5DkfCn28kxVICzh6fJICX1wLuXmC73BfKGuelFjKWBdWXDAVI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="27000447"
-X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="27000447"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 11:06:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="47686842"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 07 Mar 2024 11:06:14 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1riJ4F-0005WT-1M;
-	Thu, 07 Mar 2024 19:06:11 +0000
-Date: Fri, 8 Mar 2024 03:05:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jeremy Linton <jeremy.linton@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org,
-	keescook@chromium.org, Jason@zx2c4.com, gustavoars@kernel.org,
-	mark.rutland@arm.com, rostedt@goodmis.org, arnd@arndb.de,
-	broonie@kernel.org, guohui@uniontech.com, Manoj.Iyer@arm.com,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	James Yang <james.yang@arm.com>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KGGKnv/8"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e5dddd3b95so975816b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 07 Mar 2024 11:10:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709838648; x=1710443448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q6/jADR/0UePn6YUf/L4DAbrCMU1cm50ZPRMKWLUirY=;
+        b=KGGKnv/8YuctKrGXVQXW8dxWq8ftiGlZx51D84ZxcYEX42nz27+TWRx9Uh8mpm2tVH
+         fnEjkQ28SUetzzWjr0Ouk1OG2F1J30fVbfy4gBafrf+QqGuTb++PJFj/cb6huPtBqXtu
+         +h8BGP8cL6aEqg0eZlsINgnPvumAdxMCYiE4k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709838648; x=1710443448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q6/jADR/0UePn6YUf/L4DAbrCMU1cm50ZPRMKWLUirY=;
+        b=uF2VpR6m9+l4OZaZ6d9TBLFlroJYtfexcqMlWGhBOWULkPwSjZafBRLETdEEIos9K7
+         /JK5+DmeUk5dyMdUs3HbuLgirhAJncsx6q0csn34bybzyvaoOqRrXa9YVTjCa3ftK+py
+         ID5PRVrLSbcC2+vLBRVIhyC9ddfjEpjRUnzWvMiMGF2fKNGdOspQmHKmEfJ7bme+g2dA
+         mZ5IfP4xYRml/MRr7VIIUoNBpmIFBmoF6ryht3z9vih5HqgEoJTu9j+KitYxHGFarUgH
+         sbAzTWU1yCknsckKYpCupg0pb8Kr4Y1CypWyPLoCD9EM2FmnSeT0n21NBQSWbdrnLEWA
+         uiKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWA1qQAKgXEI8967H9IBre5eRu7U4KdIsImVWaULvI4dHiyl3WENNJwBrtKqpm4Z8RzfvpwG84sRwaPgnrXsOxBEMyQQ+tyQhMkBtfLmsy/
+X-Gm-Message-State: AOJu0YwL196Amdnr9lzmeudH7EDl2zMVlp6Ny/jmJLsLu5BAKhvzYMCz
+	ByEvxUZILRkTkqiTGFFBKlODE8JJ9De2kIZJoZEM+nsNDyf25TlzmS7A9mqyD8jyw9gRy7DKUTY
+	=
+X-Google-Smtp-Source: AGHT+IFN6Sz1G8Qiw0tjzpneM1RD2JAmKvXtZLyGSb+PlWyD/N9lVUXVr/U3iktkEiuQ0N39CeDwsA==
+X-Received: by 2002:a05:6a20:5498:b0:1a1:6914:6bc0 with SMTP id i24-20020a056a20549800b001a169146bc0mr3186404pzk.5.1709838648372;
+        Thu, 07 Mar 2024 11:10:48 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r11-20020a63ec4b000000b005d880b41598sm12872052pgj.94.2024.03.07.11.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 11:10:47 -0800 (PST)
+Date: Thu, 7 Mar 2024 11:10:47 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jeremy Linton <jeremy.linton@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mark Brown <broonie@kernel.org>, Guo Hui <guohui@uniontech.com>,
+	Manoj.Iyer@arm.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, James Yang <james.yang@arm.com>,
 	Shiyou Huang <shiyou.huang@arm.com>
 Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
-Message-ID: <202403080244.U8fiY8Dy-lkp@intel.com>
-References: <20240305221824.3300322-2-jeremy.linton@arm.com>
+Message-ID: <202403071105.C3B038C@keescook>
+References: <20240305221824.3300322-1-jeremy.linton@arm.com>
+ <20240305221824.3300322-2-jeremy.linton@arm.com>
+ <202403051526.0BE26F99E@keescook>
+ <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
+ <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
+ <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,47 +80,25 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240305221824.3300322-2-jeremy.linton@arm.com>
+In-Reply-To: <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
 
-Hi Jeremy,
+On Thu, Mar 07, 2024 at 12:10:34PM +0100, Arnd Bergmann wrote:
+> For the strength, we have at least four options:
+> 
+> - strong rng, most expensive
+> - your new prng, less strong but somewhat cheaper and/or more
+>   predictable overhead
+> - cycle counter, cheap but probably even less strong,
+>   needs architecture code.
 
-kernel test robot noticed the following build warnings:
+Are the low bits of a cycler counter really less safe than a
+deterministic pRNG?
 
-[auto build test WARNING on arm64/for-next/core]
-[also build test WARNING on arm/for-next arm/fixes kvmarm/next soc/for-next linus/master v6.8-rc7 next-20240307]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> - no rng, no overhead and no protection.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jeremy-Linton/arm64-syscall-Direct-PRNG-kstack-randomization/20240306-061930
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-patch link:    https://lore.kernel.org/r/20240305221824.3300322-2-jeremy.linton%40arm.com
-patch subject: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
-config: arm64-randconfig-r063-20240307 (https://download.01.org/0day-ci/archive/20240308/202403080244.U8fiY8Dy-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240308/202403080244.U8fiY8Dy-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403080244.U8fiY8Dy-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> arch/arm64/kernel/syscall.c:74:12: warning: 'kstack_rng' defined but not used [-Wunused-function]
-      74 | static u16 kstack_rng(void) { return 0; }
-         |            ^~~~~~~~~~
-
-
-vim +/kstack_rng +74 arch/arm64/kernel/syscall.c
-
-    71	
-    72	arch_initcall(kstack_init);
-    73	#else
-  > 74	static u16 kstack_rng(void) { return 0; }
-    75	#endif /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
-    76	
+For the pRNG, why not just add a reseed timer or something that'll
+happen outside the syscall window, if that's the concern about reseeding
+delay? (In which case, why not continue to use the strong rng?)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
