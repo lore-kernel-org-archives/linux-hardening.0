@@ -1,73 +1,73 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835211384B7
-	for <linux-hardening@vger.kernel.org>; Thu,  7 Mar 2024 20:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00F6241E4
+	for <linux-hardening@vger.kernel.org>; Thu,  7 Mar 2024 20:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709842972; cv=none; b=HtUuCUAESodbF0abJaXs5B4m9IA+63miY43fWsh8kLenqFDfpPi53hGw0NipczYnRutfWc4XO8E4/UL5t6CdnrFc/+nqhIuMAlbHknnucNrbiC/KnL190MNKWGDAOBb1uZ+NDJbmXM5Y8Kq0X59PPADNCE80fmwNWASkZpgJWLE=
+	t=1709843481; cv=none; b=c8jnJTp6jpGAnk3zyl7NfCSGV9CMX2vwmKlcSmO4NX/5LHVzzeS70mDHFaLnPHWz8cjOcfZGXf9CQI/Ywe8xywIkbWKzNFVM+IIUtwKeSD6WSeS+xs6ukdK5pybDGKIjeq75DVLXtmCGT7Y9kuKXG9E+CxQ3I7Sm/Z+ffQupdP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709842972; c=relaxed/simple;
-	bh=rsRY4KHhOJ11hCtZ8v0Bh9J/hZ5MuHy4e/+hy4b7p7c=;
+	s=arc-20240116; t=1709843481; c=relaxed/simple;
+	bh=uFkSV3XWA6pSvBdWPTS5Z4D4hTCdELrOUpWgEurePV0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fu01TK1tlv8BZp89jVgp7862Zb+hLyS74LGoIbodXwV6xf/ITFyWNB4Sz1bB4A/iDMZXpVh9McwHDTzZ30A3Y8VPNa5n4CqC01z15Io8SFmQQtNoQYyA5CzCgIa0ikSttCPHyYhd+3q4X18fYBJQKcMnty26v01HiY9PSrOyyNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z9qYltEc; arc=none smtp.client-ip=209.85.214.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPZjbZqZu6yp/sir6Mc9Tt9tftfXY3Acn3MJ8XWC1OoK+bFPlNIqqN3FGbuUyTpfO+2szOIRQ/xp3yKyGX1KzPR3qrjl/nt9tz7ed0ITJEJ0JvBqjxVJP9A4hvI4XCOC+KTN4ljwI4mxYJT4/NQBx/KD5fEQ9uACIPtRyklY2uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PcZLmtxG; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z9qYltEc"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc09556599so12096735ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 07 Mar 2024 12:22:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PcZLmtxG"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc139ed11fso17862205ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 07 Mar 2024 12:31:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709842971; x=1710447771; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709843479; x=1710448279; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gj7oOuwiWTs3D3sNhRN8A6+8rBskvEU4W316SxnrZUQ=;
-        b=Z9qYltEczee533bhL6XcuFl3TuMK+ESAhilan3P4tEKBrRuWu4xMSw2AVzsiGFK//K
-         Iv4JNewp1DzM5TKsoI+f9U+O6uxYMjMrNvITeoy+wMIfZRv7MEcUOrU73oQHCWG8JRim
-         EFrot9hhxqtP59O9lGYQT7iMAetLMkhmdVsb0=
+        bh=td/qc1v+LcJcAxN8xi3WFcUXSnLHGt1lHwkmw1ZD0As=;
+        b=PcZLmtxGTh7uVIpOoxFb+QeLRCq04OP99KCB1sSGFi0d/uUTcPGVZwkss6BrXiAiUi
+         fhV3wi1KmFHke/EUAggJyb4TDH8uN6X9TWvYkhoFq/2TNkOkurSMCYzZ/OAwgZQkYQx8
+         +JL3tjctLJ3J2e2JwyNP5wJw6MY3H1FSyEZ7U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709842971; x=1710447771;
+        d=1e100.net; s=20230601; t=1709843479; x=1710448279;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gj7oOuwiWTs3D3sNhRN8A6+8rBskvEU4W316SxnrZUQ=;
-        b=u6as3gGd7HHLI/O7AjbKuJCVb+Xx/gqgECqj7enivyYOxyq/YWgqF7cFMQ8dyLc2Rh
-         m5YDv9dweraKuOPcNu0RnrL7qPogOC6YZF4vVBTksidZu1DJRxTFvt55yB2fOA7RbFRM
-         smheAGUy9HwFpbwUAEVq4LLd20Iu+8AbZM/OXZUMKeILeVtIurT501iOlS6JxJWFXkMG
-         Jt5zjvsQjgUpOBSNAEBOfW3h7L7L9gDyTPI7pgLO575D0s0gl/+i1GIQjD1/W8xyKwcG
-         xvU9VGtlX5ydoEJJ2UBs5rsw9RzO7AvyBX+a8s+rMBNzLnioV1d2JYTA+oxxl+bKKGRw
-         vZ1g==
-X-Forwarded-Encrypted: i=1; AJvYcCU7pKuSgBCqN3to7QpNXwX2xg4zcMAY6pF5Pme8LMlCsDZtX6x/JvTXDZ8e5QezMyoY7SYLGhQL5ewF+H5h0c1fvOxmdU25QAscTpvv77gP
-X-Gm-Message-State: AOJu0YwyqcfdCgSNNNbpBY34QXH1jtLR65q+OgxRI1GoJ6dzQHnPjbH5
-	tTVWdEGh3VE0vmSUodkIPt03OO7mtBKpkIKuIwvIJs67fU1CwBZiwXcvtKJBbQ==
-X-Google-Smtp-Source: AGHT+IEaVq/z1Ao7qbCydAde3vlTjlckhexdCldutHJ7sK0OKwFxXDLmqCrbxxaDdS2K2YLHyqccRA==
-X-Received: by 2002:a17:902:e84f:b0:1dc:3c3f:c64b with SMTP id t15-20020a170902e84f00b001dc3c3fc64bmr10989479plg.24.1709842970750;
-        Thu, 07 Mar 2024 12:22:50 -0800 (PST)
+        bh=td/qc1v+LcJcAxN8xi3WFcUXSnLHGt1lHwkmw1ZD0As=;
+        b=tqnyiCBKlMAr0SCTQjejudmndFn3vGcogzaWCWcm/kI1RG4+tFMLPT79goEkrYO56P
+         ZJmeWpCy2rdTMjW4BJwXok3v5Upm26F3GRz8axgAJM89BSBTUe/f0wV95DU8Hkkf7S2E
+         wnyIBieVbDVR+JMZB/9nLXwkzLxxSgC2bZQLMTN1dVYes8gpoaNgvkHi2GpDB5GcD8gq
+         /7WyjVAAEmwp6Xf9PgNDUsH2bLsdG+Ll5Ws0BrgZag7jA5IIfEDwS+VDyNVGeUcF1qO0
+         TeiwLzqhNb0ijr4yvv29+MdbFSj0GWHJ2powUWPC/sa97oPR5I656E2Q/O0/RSmvXELB
+         TtLg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7iaZ1XJBTg2bpIP1iBuhZ3R1XNW2QadRabHsmxWiqtsAxRLKF8B6C8ezI4pSisHx1/arA5AFdY2Sd29jGsa30HKFLM9s2xRvSxUBamXKA
+X-Gm-Message-State: AOJu0Yy69fBoabMEe0eP2f4MmmWCCdKVH3FgxV2MshBIadB0/ODOKNJ4
+	VgdcmtJvEGEz3Zf94vXW70ODY7mEhoYNm//0qzujx8LExmcezHXZh8CxJ10wRA==
+X-Google-Smtp-Source: AGHT+IHhycg/pXareFKjHDwHXtqmeBe85lRVxuPqPrSPkJ5nHJkgXlFDDbM6P1CA4nS+KS/ufBK3GA==
+X-Received: by 2002:a17:903:22cf:b0:1db:9ff1:b59b with SMTP id y15-20020a17090322cf00b001db9ff1b59bmr3493970plg.23.1709843479184;
+        Thu, 07 Mar 2024 12:31:19 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h14-20020a170902680e00b001dd62b4dd7asm581604plk.47.2024.03.07.12.22.50
+        by smtp.gmail.com with ESMTPSA id i9-20020a170902c94900b001dcc09487e8sm15044171pla.50.2024.03.07.12.31.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 12:22:50 -0800 (PST)
-Date: Thu, 7 Mar 2024 12:22:49 -0800
+        Thu, 07 Mar 2024 12:31:18 -0800 (PST)
+Date: Thu, 7 Mar 2024 12:31:17 -0800
 From: Kees Cook <keescook@chromium.org>
-To: "Christian A. Ehrhardt" <lk@c--e.de>
-Cc: Jameson Thies <jthies@google.com>, Hans de Goede <hdegoede@redhat.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-usb@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-	Saranya Gopal <saranya.gopal@intel.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Prashant Malani <pmalani@chromium.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: ucsi_check_cable(): Null pointer dereferences
-Message-ID: <202403071216.DD2F952B@keescook>
-References: <202403071134.7C7C077655@keescook>
- <ZeoggIXSLy+lVHP1@cae.in-ulm.de>
+To: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Message-ID: <202403071227.D29DE5F8C4@keescook>
+References: <20240305100933.it.923-kees@kernel.org>
+ <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,76 +76,52 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeoggIXSLy+lVHP1@cae.in-ulm.de>
+In-Reply-To: <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
 
-On Thu, Mar 07, 2024 at 09:16:00PM +0100, Christian A. Ehrhardt wrote:
+On Wed, Mar 06, 2024 at 09:47:36AM +0800, GONG, Ruiqi wrote:
 > 
-> Hi,
 > 
-> On Thu, Mar 07, 2024 at 11:34:21AM -0800, coverity-bot wrote:
-> > Hello!
+> On 2024/03/05 18:10, Kees Cook wrote:
+> > Hi,
 > > 
-> > This is an experimental semi-automated report about issues detected by
-> > Coverity from a scan of next-20240307 as part of the linux-next scan project:
-> > https://scan.coverity.com/projects/linux-next-weekly-scan
+> > Repeating the commit logs for patch 4 here:
 > > 
-> > You're getting this email because you were associated with the identified
-> > lines of code (noted below) that were touched by commits:
+> >     Dedicated caches are available For fixed size allocations via
+> >     kmem_cache_alloc(), but for dynamically sized allocations there is only
+> >     the global kmalloc API's set of buckets available. This means it isn't
+> >     possible to separate specific sets of dynamically sized allocations into
+> >     a separate collection of caches.
 > > 
-> >   Tue Mar 5 13:11:08 2024 +0000
-> >     f896d5e8726c ("usb: typec: ucsi: Register SOP/SOP' Discover Identity Responses")
+> >     This leads to a use-after-free exploitation weakness in the Linux
+> >     kernel since many heap memory spraying/grooming attacks depend on using
+> >     userspace-controllable dynamically sized allocations to collide with
+> >     fixed size allocations that end up in same cache.
 > > 
-> > Coverity reported the following:
+> >     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> >     against these kinds of "type confusion" attacks, including for fixed
+> >     same-size heap objects, we can create a complementary deterministic
+> >     defense for dynamically sized allocations.
 > > 
-> > *** CID 1584245:  Null pointer dereferences  (FORWARD_NULL)
-> > drivers/usb/typec/ucsi/ucsi.c:1136 in ucsi_check_cable()
-> > 1130     	}
-> > 1131
-> > 1132     	ret = ucsi_register_cable(con);
-> > 1133     	if (ret < 0)
-> > 1134     		return ret;
-> > 1135
-> > vvv     CID 1584245:  Null pointer dereferences  (FORWARD_NULL)
-> > vvv     Passing "con" to "ucsi_get_cable_identity", which dereferences null "con->cable".
-> > 1136     	ret = ucsi_get_cable_identity(con);
-> > 1137     	if (ret < 0)
-> > 1138     		return ret;
-> > 1139
-> > 1140     	ret = ucsi_register_plug(con);
-> > 1141     	if (ret < 0)
-> > 
-> > If this is a false positive, please let us know so we can mark it as
-> > such, or teach the Coverity rules to be smarter. If not, please make
-> > sure fixes get into linux-next. :) For patches fixing this, please
-> > include these lines (but double-check the "Fixes" first):
+> >     In order to isolate user-controllable sized allocations from system
+> >     allocations, introduce kmem_buckets_create(), which behaves like
+> >     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+> >     which behaves like kmem_cache_alloc().)
 > 
-> This looks like a false positive to me. The code looks like this:
-> 
-> 	if (con->cable)
-> 		return 0;
-> 	[ ... ]
-> 	ret = ucsi_register_cable(con)
-> 	if (ret < 0)
-> 		return ret;
-> 	ret = ucsi_get_cable_identity(con);
-> 	[ ... ]
-> 
-> From the con->cable check coverity concludes that con->cable is
-> initially NULL. Later ucsi_register_cable() initializes con->cable
-> if successful. Coverity seems to miss this and still thinks that
-> con->cable is NULL. Then converity correctly notices that
-> ucsi_get_cable_identity() dereferences con->cable and complains.
+> So can I say the vision here would be to make all the kernel interfaces
+> that handles user space input to use separated caches? Which looks like
+> creating a "grey zone" in the middle of kernel space (trusted) and user
+> space (untrusted) memory. I've also thought that maybe hardening on the
+> "border" could be more efficient and targeted than a mitigation that
+> affects globally, e.g. CONFIG_RANDOM_KMALLOC_CACHES.
 
-Ah-ha! Yes, the ucsi_register_cable() check seems to have been missed.
-I think it's confused by:
-
-        cable = typec_register_cable(con->port, &desc);
-        if (IS_ERR(cable)) {
-
-This isn't IS_ERR_OR_NULL, so it thinks cable might still be NULL, but
-there's no path through typec_register_cable() where that can be true.
-
-Thanks for taking a look!
+I think it ends up having a similar effect, yes. The more copies that
+move to memdup_user(), the more coverage is created. The main point is to
+just not share caches between different kinds of allocations. The most
+abused version of this is the userspace size-controllable allocations,
+which this targets. The existing caches (which could still be used for
+type confusion attacks when the sizes are sufficiently similar) have a
+good chance of being mitigated by CONFIG_RANDOM_KMALLOC_CACHES already,
+so this proposed change is just complementary, IMO.
 
 -Kees
 
