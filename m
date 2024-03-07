@@ -1,143 +1,112 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154721C684
-	for <linux-hardening@vger.kernel.org>; Wed,  6 Mar 2024 23:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CD41391
+	for <linux-hardening@vger.kernel.org>; Thu,  7 Mar 2024 00:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709769136; cv=none; b=JIO+vgUDrU1ACtGdtixi9l6NSmI9SOtlo/FPMBFTsI6QF1gYzKKxXfdofldBRGeeXK0dBqQdT7ZJ+g1qNzIwPR5ggHvaxZXAZwsj8INMHZgOIT2bcXzPKeYT52qHjTu8LSWBAdaI53EsfnCnOP0IdamxMj9/BLLBpEKW616lUDA=
+	t=1709772066; cv=none; b=M0CGKhbyvHaG2apekMhXcokZQfWwk/wDDoGeNuSrcFdlK/c/y29iRRhpVzwk/9h6RdMOIT25MGFCUE+E2G+FEEPWiKTLKVZEs1o/VJaVgkd9IycEunRpnG8Z0a7zoyeXMULXsJIUADCLGJXsqMTiKCN/tkbSZcbue1x7oNE0bqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709769136; c=relaxed/simple;
-	bh=HKuLgTVFRKaKDoqvDomRm/dSKx0b/g4r+MceYXqEzKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XGvz6mrasSVJ9wVkspPnp1Al1rD13S6FVBvolCJjrbWKW9e8SzpFXvdLYDB+Anh6XL5oDAPx59yoXyMp5E1gC4ce8rZ0auKje/RsjHOL0iqaRhf16Rt2pD+VyhCoFey1B6yGH/lqfVmkv7zpg+LnfgQIEnzJfw8/flDfBwvrFe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Bwftwxeh; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709772066; c=relaxed/simple;
+	bh=EbCRrC7D836n3/gfVrkt21cUTLd++USvTDfHPhMW0+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqEeM/5ygYsiWHdIP82NBU3oljkEhhf3aeqed0PjPcQHmm0g50+h/N7UyMsbP11DQ7BRhM1rEcKB8qFyvoCFgMkknQGFKym7eq3iwKjkW2FpSxIc52Uti5XuUe/zEPrI62CHuz3yktZflHe+hvgBBeATcT9qiHLZpfdeAhEF4Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=KU46e9cx; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bwftwxeh"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e4e835ee5dso152819a34.0
-        for <linux-hardening@vger.kernel.org>; Wed, 06 Mar 2024 15:52:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709769134; x=1710373934; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZEAVZcoYSQFZcvaftM2f/g9GOC1c60DgaQV+1wgZreQ=;
-        b=BwftwxehXmL5+X12BpMGO7AVdGn7ENPJuQO37XD8UvbxMs5R4ODUp+VOoF7Z5txQEh
-         syS7pEzNr56D6Au2fD6GvaGI2VNwFl4rp22QJ2O2fwJYG/IxYGgmIDMvHBDP86/oK4i7
-         roEAmc7XXuE35VIcYB13UGSySoCraUw+m+GTs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709769134; x=1710373934;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEAVZcoYSQFZcvaftM2f/g9GOC1c60DgaQV+1wgZreQ=;
-        b=gCBB3DnBA71FergQR9BZt+jlerS1WWqA5UZijCpInEqVjEQUnrtX7TyxjbVx3ocvEp
-         pRdJB/vfAbSj7/sipbE8ynIeYQPssx8MnHLNJKtnC+T4U5pVUw0nDp0kG5DOuUMycxDC
-         rDXHJPKirdb/dh99EeJ3InRBagOGcQd5qC1UB2TtfQWSMccNxF6SYSu/o0lDs0MTDES6
-         7Xx891lvn7p8xXoArfK4yc903E/FwDuun28WVhF+YAm07TbZTV8cOSfvaPg+1DjCK7Rd
-         eAQgdJzDxBQyYNvSZ1jd3/oOSGWYhb/UIzh4QXcChd9YhEN6GDg5PHkCyfhj6dlaXfs8
-         uOlA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0obQWUcWmWyJNkYbd+mZFrIVyNvuctfSZ5BpgTXSFHmrCKnBk78L1E/I/w3UvNrRYW/c1zU11Z4zOVxZtbs0T4P3rhQxunRgLQIw+TXlP
-X-Gm-Message-State: AOJu0Yyl2iDb/otKCzG7TYj3rN9vwWmJ5mOXEZe5maufMKb+5o7gON3D
-	pKb1I9B/X1bDHDx/QS7dl8Zkyw1woyoaUjiEtblVe7/l+OEbGIj2z9y3ChGefA==
-X-Google-Smtp-Source: AGHT+IGzQi4Hj1eR1TravKHp4tPRAiBWafpLp3PdehA3PNgOnJ+Bn3bpQz0p2gslmzv3nDrpdQZRtA==
-X-Received: by 2002:a9d:6b13:0:b0:6e4:fa90:3c79 with SMTP id g19-20020a9d6b13000000b006e4fa903c79mr5596220otp.22.1709769134215;
-        Wed, 06 Mar 2024 15:52:14 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c11-20020a63da0b000000b005bd980cca56sm11450066pgh.29.2024.03.06.15.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 15:52:13 -0800 (PST)
-Date: Wed, 6 Mar 2024 15:52:13 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] overflow: Change DEFINE_FLEX to take __counted_by member
-Message-ID: <202403061551.00DAFE8B39@keescook>
-References: <20240306010746.work.678-kees@kernel.org>
- <9c2990f0-7407-49c6-9e3a-b92de82ea437@embeddedor.com>
- <bd21f7dc-9f89-40ee-895e-601c80165225@intel.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="KU46e9cx"
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+	by cmsmtp with ESMTPS
+	id i0vernSmIHXmAi1omrWIXs; Thu, 07 Mar 2024 00:41:04 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id i1olr6yfaJ8Qmi1olrVrmw; Thu, 07 Mar 2024 00:41:04 +0000
+X-Authority-Analysis: v=2.4 cv=KNZcDkFo c=1 sm=1 tr=0 ts=65e90d20
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
+ a=VwQbUJbxAAAA:8 a=vznqr7mipjY0YkA7v-cA:9 a=QEXdDO2ut3YA:10
+ a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5BVrUIvBfOEk6nFXkFrEkJGrcbLKTx3N+QLOz2Ii6fA=; b=KU46e9cxXRHxCpm2jlbl/bYAGv
+	3QO4r2zEV4/MVLI/+DgJSKHhOuGD6putlxEfPmr3mE+S72URrEbonRTC5l4C6arewij3hE0bDSYcr
+	4fICckYkdF4Q+Kpk01lNNNSvoot+pNWMwiY5D1Pqv6N0imQAeYgbUXUkAgIBrjW62oGjouS4oAF2h
+	MrWsRiT5oqzyi9wsKutmBFsyQ1V3eBHiFWbqi3qcfloky9O81heGE8bRHZG6b+9PuNTJMCHOuMDa/
+	qre1mj//RwuYb4dnyBSx4HOBF03/5MkX4uimbVSS+FvdB2WI55CEp2IFgRS3zxNmMmBTCfOTALUKv
+	b1fCumUg==;
+Received: from [201.172.172.225] (port=38044 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1ri1oj-003fVW-27;
+	Wed, 06 Mar 2024 18:41:01 -0600
+Message-ID: <22b99862-5889-4acb-96e5-7552c06e362b@embeddedor.com>
+Date: Wed, 6 Mar 2024 18:40:59 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd21f7dc-9f89-40ee-895e-601c80165225@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] overflow: Change DEFINE_FLEX to take __counted_by
+ member
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org
+References: <20240306235128.it.933-kees@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240306235128.it.933-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.172.225
+X-Source-L: No
+X-Exim-ID: 1ri1oj-003fVW-27
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:38044
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDqFxWcFdyjNbZite/FwqUxjSQLCIMIj9OfIJw7xDLYm1Ulywd6rUbK68LTlQL+Vc2kjLa4Z0nCR3PH9q4pQq5F6/v9NZirnwndrmYM++cyzbxN3bBo9
+ qdERCVgjnA00lcEZIFos9xKwtfXdwYjfw6XebgJJ9RFDIcCtoQPBKU1DlVisB/bcMj+XwLl+C29ogMIdBolhlU4uE6u/ABnBUuYGzKr1tfQr7yrgSxHxWvoK
 
-On Wed, Mar 06, 2024 at 08:06:29AM +0100, Przemek Kitszel wrote:
-> On 3/6/24 04:25, Gustavo A. R. Silva wrote:
-> > 
-> > 
-> > On 05/03/24 19:07, Kees Cook wrote:
-> > > The norm should be flexible array structures with __counted_by
-> > > annotations, so DEFINE_FLEX() is updated to expect that. Rename
-> > > the non-annotated version to DEFINE_RAW_FLEX(), and update the few
-> > > existing users. Additionally add self-tests to validate syntax and
-> > > size calculations.
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > 
-> > [..]
+
+
+On 3/6/24 17:51, Kees Cook wrote:
+> The norm should be flexible array structures with __counted_by
+> annotations, so DEFINE_FLEX() is updated to expect that. Rename
+> the non-annotated version to DEFINE_RAW_FLEX(), and update the
+> few existing users.
 > 
-> Just a note that ice changes are purely mechanical, so this seems ok
-> to go via linux-hardening tree. And changes per-se are fine too :)
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+LGTM:
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Thanks!
-
-> 
-> > 
-> > > +/**
-> > > + * DEFINE_FLEX() - Define an on-stack instance of structure with a
-> > > trailing
-> > > + * flexible array member.
-> > > + *
-> > > + * @TYPE: structure type name, including "struct" keyword.
-> > > + * @NAME: Name for a variable to define.
-> > > + * @COUNTER: Name of the __counted_by member.
-> > > + * @MEMBER: Name of the array member.
-> > > + * @COUNT: Number of elements in the array; must be compile-time const.
-> > > + *
-> > > + * Define a zeroed, on-stack, instance of @TYPE structure with a
-> > > trailing
-> > > + * flexible array member.
-> > > + * Use __struct_size(@NAME) to get compile-time size of it afterwards.
-> > > + */
-> > > +#define DEFINE_FLEX(TYPE, NAME, COUNTER, MEMBER, COUNT)    \
-> > 
-> > Probably, swapping COUNTER and MEMBER is better?
-> 
-> right now we have usage scenario (from Kunits):
-> 	DEFINE_FLEX(struct foo, eight, counter, array, 8);
-> 
-> > 
-> >      DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)
-> 
-> usage would become:
-> 	DEFINE_FLEX(struct foo, eight, array, counter, 8);
-> 
-> which reads a bit better indeed, with the added benefit that we
-> go from broader to more specific:
-> whole struct -> array -> array size variable -> given array size
-> 
-> so +1 from me for the params swap
-
-Sounds good. You and Gustavo have convinced me. :) I've sent a v2 now.
-
 -- 
-Kees Cook
+Gustavo
