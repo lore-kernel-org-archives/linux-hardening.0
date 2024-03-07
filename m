@@ -1,225 +1,173 @@
-Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8093F12839B;
-	Thu,  7 Mar 2024 11:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39861130AF1;
+	Thu,  7 Mar 2024 17:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709809861; cv=none; b=MqfoPZEAALml+dG26jIsn1LaewMBKq+Toi8+zlhMBTW+Kv1OtpyFE3lIvKQs1tXQ91jF5fi5qtjzpqCZsRjGu8/2EoS5Q+NzfUa1QuYG7+yD0QnUNBrTfAFcMr67ITgXMW14CQWKZNJg5ssIMtz5CPq/wnD8UfHxf6hj/zcUIy0=
+	t=1709832706; cv=none; b=RRnSRX1waA97wAXiTMwUvE7ST/2XdbaQq2u7kSnEBfmhjbp/X20ZUm6oQTvTi7ml22mI5DTKHEFM0W4tWhwHeYXI6aFQLMsz5l4NyzSor1O0+8VxO9URrpjJmlAKM4e99tI30deVh84bOkzTcM35nz8OYYBrZDDdV6ZLKLQhaRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709809861; c=relaxed/simple;
-	bh=MoREPiTv1yKmu90Q/9l2I/LfYL/ZqPWpLVhh62qRurU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=mQlG1rD2y59RJEgWDjIYDd8CkWUdkxt26V1ME70cvGEWgUwfkFP7azBfgtEavTQTyFpSHLqyWYsmew16DL7vzU6MmlhBcMBrCFGjHFvHY49iWpvdWOa5WQhtldUMgH3S9otuZEFieU7kCCYvh/V8GlT7ZmBPbuXwcpkJH+g2cMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OSFmEkZC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qshz4UXt; arc=none smtp.client-ip=64.147.123.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709832706; c=relaxed/simple;
+	bh=Pw1wjnfdkstP4sMjq/SqSIfAkxHM4ROpPhW1adlHMZI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MDWyNvEjUmqvPxv7Uaq5B2Vz3L76Z4uIx5LL6iFzhA/P/jST/DGfDUVj2d6oVCo463fCad9k7jifgRkBum7kL7BaJaVM1MTlACkNz1cQofWGYkzaXe9vF/XOYeaJVUTKxgwyzyrH/xV1fECr/YkISD2KrQE3DQ2Jsz7ubFuZcw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=JXWx3fcS; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OSFmEkZC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qshz4UXt"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 24A451C0005B;
-	Thu,  7 Mar 2024 06:10:57 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 07 Mar 2024 06:10:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709809856; x=1709896256; bh=AtFaL5EGzw
-	xRRbAOMHdeBVoU44eLeNyTo8XPDMkPqiY=; b=OSFmEkZCJGBrbqz9g7e/8w0teR
-	WUo9kKzYjoJcjENBEYmlZQeaK0jgDetatmG9hNKwGA9qnPnHZHZDXEsmNN+QkrC2
-	196R/0u28NUhfZsyMfIg2JYb/s3iyAxEKSlcz9Yjmx6YHZg94MyiNfsn8i0zfQIb
-	F8/MAz5MtvAW7YNNH7vBzrTlGFhZIxu+xOZes60pE+9e5SfZzOOJHwiWJKAL34iS
-	VbVXVLUtOCLrQW4b9AOkqgj2KMKecdtTiIj6dQxvo36y4fAXj3MNmNyUtT2NEA1i
-	XEnSCHmBarAS/cwh/V+/FMLCDBU0/0ZrgAWX9NIl8akvZaaUULbgc1ci7kyw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709809856; x=1709896256; bh=AtFaL5EGzwxRRbAOMHdeBVoU44eL
-	eNyTo8XPDMkPqiY=; b=Qshz4UXtsyv+fARPcD2AY8botM+ZWZ7PLLmEbnJ9FVO9
-	zXFSu3Rdj8hP8AGJA002XJNMaof07GnXoJfmFZMWnCKpllzf5a0nc6DUulLomLIw
-	pZdkBE2n83iX61owqb4NdXmWtfIWwHOjR4LnLbtCkx3YYBSkoKW4oh6zCiFrm77T
-	NiGwBIJeaQYqQ3vk2kOzFr+AgammZ7xGyIEzdaOEAexEPQ68otmthKCxFJH7qdiO
-	KObgA+t9WCYvsOYxfAkn2z4/wGcjOtdpYVJl27OUCuxBZoyaHwRlX116uTryO2AD
-	k0kzTfWkPTX6PrBNFZcSoQRmCXw8LwOF3zUBFRy5vg==
-X-ME-Sender: <xms:v6DpZWxZn2gmfg3zfwbwBetZrfg2q-s45SteM7B6_KV0_p9QeYfk6w>
-    <xme:v6DpZSQ3thUXdU6UXkQ2MVGo4G_POWI1FzDdH9aYaIw6F2y0eXJKNBNqvgpsXPceF
-    Md8f9p-omy0orGw0Ec>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgddvhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:wKDpZYUqsPi8GYTBhsWQGUJF3xhXOIbHba0Yk2U_qVYgQU95NSOznw>
-    <xmx:wKDpZcgEtfYJ-omZO4hDdlIv7OUXgcMbdNpMldWJVhD3TsOlzf8RdQ>
-    <xmx:wKDpZYB9AsLe0UdXoghnkKgj90L953t-KvsbF45LWpEx56cTO99anw>
-    <xmx:wKDpZWTKTTOoYeaASoQMqYL2lAbT2LToqOmJeySJ0hxAjCBCTQE3hiOxTUM>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D9D49B6008D; Thu,  7 Mar 2024 06:10:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="JXWx3fcS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=6GKHuULFobI/veCzO71hJuFZMvHW2DBWIwJthjIFZt0=; b=JXWx3fcSvqEd2usjf0tQN1DMCi
+	vSO6xR4WJptmR2KKeHQgwZrwN8Kcxo2SsAwQYU3GqG1uUhHegfI3SUUIcj3xuPPVcnq4qvvd9Z59E
+	QEXIJexwsh/xmTHCzcD+vFT4djVEoZUoeVEOEWDbhnGjDhNOexCanK8oqtsXqubWrWGy58R7eCA5a
+	KMkwOmTd6RBHYUW7MOdrUMkaxa0IBDN9EMKZ1xegBgTvPlxJM2R9eO51SJIrfnnNNvBIZE0Kisxb1
+	7MM1fiEoUnsAibMICY+p3wL4QPlBDDx84amzwvLXj1OsBgSDB7e/8IGpBSO57JhZs1rwQ14crw6Zx
+	jCusX5Yw==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1riHZL-000J8N-R9; Thu, 07 Mar 2024 18:30:11 +0100
+Received: from [77.58.94.13] (helo=localhost.localdomain)
+	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1riHZI-0034Od-1I;
+	Thu, 07 Mar 2024 18:30:08 +0100
+Subject: Re: [PATCH bpf-next RESEND v2 1/2] bpf: Take return from
+ set_memory_ro() into account with bpf_prog_lock_ro()
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Puranjay Mohan <puranjay12@gmail.com>, Tiezhu Yang <yangtiezhu@loongson.cn>,
+ Hengqi Chen <hengqi.chen@gmail.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Johan Almbladh <johan.almbladh@anyfinetworks.com>,
+ Paul Burton <paulburton@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Ilya Leoshkevich <iii@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
+ <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ Wang YanQing <udknight@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ netdev@vger.kernel.org,
+ "linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>,
+ Kees Cook <keescook@chromium.org>
+References: <8f3b3823cce2177e5912ff5f2f11381a16db07db.1709279661.git.christophe.leroy@csgroup.eu>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <093da237-50c1-5898-1637-7a9a84e1076c@iogearbox.net>
+Date: Thu, 7 Mar 2024 18:30:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
-In-Reply-To: <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
-References: <20240305221824.3300322-1-jeremy.linton@arm.com>
- <20240305221824.3300322-2-jeremy.linton@arm.com>
- <202403051526.0BE26F99E@keescook>
- <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
- <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
-Date: Thu, 07 Mar 2024 12:10:34 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jeremy Linton" <jeremy.linton@arm.com>,
- "Kees Cook" <keescook@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Jason A . Donenfeld" <Jason@zx2c4.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
- "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
-Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
-Content-Type: text/plain
+In-Reply-To: <8f3b3823cce2177e5912ff5f2f11381a16db07db.1709279661.git.christophe.leroy@csgroup.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27207/Thu Mar  7 10:27:12 2024)
 
-On Wed, Mar 6, 2024, at 22:54, Jeremy Linton wrote:
-> On 3/6/24 14:46, Arnd Bergmann wrote:
->> On Wed, Mar 6, 2024, at 00:33, Kees Cook wrote:
->>> On Tue, Mar 05, 2024 at 04:18:24PM -0600, Jeremy Linton wrote:
->>>> The existing arm64 stack randomization uses the kernel rng to acquire
->>>> 5 bits of address space randomization. This is problematic because it
->>>> creates non determinism in the syscall path when the rng needs to be
->>>> generated or reseeded. This shows up as large tail latencies in some
->>>> benchmarks and directly affects the minimum RT latencies as seen by
->>>> cyclictest.
->>>>
->>>> Other architectures are using timers/cycle counters for this function,
->>>> which is sketchy from a randomization perspective because it should be
->>>> possible to estimate this value from knowledge of the syscall return
->>>> time, and from reading the current value of the timer/counters.
->> 
->> As I commented on the previous version, I don't want to see
->> a change that only addresses one architecture like this. If you
->> are convinced that using a cycle counter is a mistake, then we
->> should do the same thing on the other architectures as well
->> that currently use a cycle counter.
->
-> I personally tend to agree as long as we aren't creating a similar set 
-> of problems for those architectures as we are seeing on arm. Currently 
-> the kstack rng on/off choice is basically zero overhead for them.
+On 3/1/24 8:57 AM, Christophe Leroy wrote:
+> set_memory_ro() can fail, leaving memory unprotected.
+> 
+> Check its return and take it into account as an error.
+> 
+> Link: https://github.com/KSPP/linux/issues/7
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+> Sorry for the resend, I forgot to flag patch 2 as bpf-next
+> 
+> Note: next patch is autonomous, it is sent as a follow-up of this one to minimize risk of conflict on filter.h because the two changes are too close to each other.
+> 
+> v2: No modification (Just added link in patch message), patchwork discarded this series due to failed test of s390 but it seems unrelated, see https://lore.kernel.org/bpf/wvd5gzde5ejc2rzsbrtwqyof56uw5ea3rxntfrxtkdabzcuwt6@w7iczzhmay2i/T/#m2e61446f42d5dc3d78f2e0e8b7a783f15cfb109d
+> ---
+>   include/linux/filter.h | 5 +++--
+>   kernel/bpf/core.c      | 4 +++-
+>   kernel/bpf/verifier.c  | 4 +++-
+>   3 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index 36cc29a2934c..7dd59bccaeec 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -884,14 +884,15 @@ bpf_ctx_narrow_access_offset(u32 off, u32 size, u32 size_default)
+>   
+>   #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+>   
+> -static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
+> +static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+>   {
+>   #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+>   	if (!fp->jited) {
+>   		set_vm_flush_reset_perms(fp);
+> -		set_memory_ro((unsigned long)fp, fp->pages);
+> +		return set_memory_ro((unsigned long)fp, fp->pages);
+>   	}
+>   #endif
+> +	return 0;
+>   }
+>   
+>   static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 71c459a51d9e..c49619ef55d0 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -2392,7 +2392,9 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
+>   	}
+>   
+>   finalize:
+> -	bpf_prog_lock_ro(fp);
+> +	*err = bpf_prog_lock_ro(fp);
+> +	if (*err)
+> +		return fp;
+>   
+>   	/* The tail call compatibility check can only be done at
+>   	 * this late stage as we need to determine, if we deal
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 1c34b91b9583..6ec134f76a11 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -19096,7 +19096,9 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+>   	 * bpf_prog_load will add the kallsyms for the main program.
+>   	 */
+>   	for (i = 1; i < env->subprog_cnt; i++) {
+> -		bpf_prog_lock_ro(func[i]);
+> +		err = bpf_prog_lock_ro(func[i]);
+> +		if (err)
+> +			goto out_free;
 
-I think we have two separate problems to solve here: how
-strong a kernel stack randomization should be on a given system,
-and who gets to make the decision.
+How does the error path take out the subprogs from kallsyms in your case? Suppose some of
+the loop iterations succeed before we hit an error. I believe the subprogs still exist in
+kallsyms here.
 
-For the strength, we have at least four options:
+>   		bpf_prog_kallsyms_add(func[i]);
+>   	}
+>   
+> 
 
-- strong rng, most expensive
-- your new prng, less strong but somewhat cheaper and/or more
-  predictable overhead
-- cycle counter, cheap but probably even less strong,
-  needs architecture code.
-- no rng, no overhead and no protection.
-
-On architectures that have a cheap hardware rng instruction, you
-can count that one as well.
-
-For picking between the options, we have
-
-- architecture maintainer
-- defconfig (CONFIG_RANDOMIZE_KSTACK_OFFSET)
-- boot time (randomize_kstack_offset=on)
-
-For both of these lists, I would like to see as few options
-as possible, and in particular I think the architecture
-maintainer should not make that decision for the users.
-
-If we want to improve this, I would start by changing
-the binary CONFIG_RANDOMIZE_KSTACK_OFFSET option into
-a three-way choice between cycle counter (where available),
-strong rng and off, possibly adding the cycle counter
-option to the two architectures that currently don't use
-it, while moving the strong rng into common code.
-
-After that, we can debate adding a fourth option, or
-replacing one of the existing two that is too slow or
-not random enough.
-
->> Won't that defeat the purpose of the patch that was intended
->> to make the syscall latency more predictable? At least the
->> simpler approaches of reseeding from the kstack_rng()
->> function itself would have this problem, deferring it to
->> another context comes with a separate set of problems.
->
-> And that describes why I've not come up with an inline reseeding 
-> solution. Which of course isn't a problem on !arm if one just pushes a 
-> few bits of a cycle counter into the rnd_state every few dozen syscalls, 
-> or whatever. Mark R, mentioned offline the idea of just picking a few 
-> bits off CNTVCT as a seed, but its so slow it basically has to be used 
-> to fuzz a bit or two of rnd_state on some fairly long interval. Long 
-> enough that if someone has a solution for extracting rnd_state it might 
-> not add any additional security. Or that is my take, since i'm not a big 
-> fan of any independent counter/clock based RNG seeding (AFAIK, entropy 
-> from clocks requires multiple _independent_ sources).
-
-I'm not sure I understand the logic. Do you mean that accessing
-CNTVCT itself is slow, or that reseeding based on CNTVCT is slow
-because of the overhead of reseeding?
-
-On powerpc/s390/x86, the low bits of the respective cycle counter
-is simply used without any kind of bit shuffling, and we already
-rely on the cycle counter to be fast to access since it's used
-for timekeeping anywhere.
-
-There is not even any attempt to use the most random bits of
-the cycle counter, as both the high 22 to 24 bits get masked
-out (to keep the wasted stack space small) and the low 3 or 4
-bits get ignored because of stack alignment. If there was
-any desire to make it more random, a trivial improvement
-would be:
-
-+++ b/include/linux/randomize_kstack.h
-@@ -80,7 +80,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
-        if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
-                                &randomize_kstack_offset)) {            \
-                u32 offset = raw_cpu_read(kstack_offset);               \
--               offset ^= (rand);                                       \
-+               offset = ror32(offset, 5) & (rand);                     \
-                raw_cpu_write(kstack_offset, offset);                   \
-        }                                                               \
- } while (0)
-
-My impression is that is is already bordering on becoming
-a "bespoke rng" implementation that Jason was objecting to,
-so the current version is intentionally left weak in order
-to not even give the appearance of being a security relevant
-feature.
-
-> This is a bit out of my wheelhouse, so I defer to anyone with a better 
-> feel or some actual data.
->
-> The best plan I have at the moment is just some deferred work to call 
-> kstack_rng_setup on some call or time based interval, which AFAIK isn't 
-> ideal for RT workloads which expect ~100% CPU isolation. Plus, that 
-> solution assumes we have some handle on how fast an attacker can extract 
-> kstackrng sufficiently to make predictions.
-
-I think you fundamentally can't have both. If you rely on the
-reseeding to happen for a particular number of syscalls, you
-eventually end up blocking on it, regardless of the context
-it runs in. Deferring it to another process means blocking
-for longer, and deferring it to a low-priority task would mean
-that real-time tasks get less randomness.
-
-       Arnd
