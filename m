@@ -1,129 +1,135 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00F6241E4
-	for <linux-hardening@vger.kernel.org>; Thu,  7 Mar 2024 20:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849EC135A5C;
+	Thu,  7 Mar 2024 21:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709843481; cv=none; b=c8jnJTp6jpGAnk3zyl7NfCSGV9CMX2vwmKlcSmO4NX/5LHVzzeS70mDHFaLnPHWz8cjOcfZGXf9CQI/Ywe8xywIkbWKzNFVM+IIUtwKeSD6WSeS+xs6ukdK5pybDGKIjeq75DVLXtmCGT7Y9kuKXG9E+CxQ3I7Sm/Z+ffQupdP0=
+	t=1709848641; cv=none; b=QFGAHIz3Z1OzVVN+6agxv2rai50nzYDBgismxyXllbkvmgzwsI7Voeifdx7rF9DgfWDX7Za82uCs1PY8IMOlF7+5F25EKjhJowjRwAuxfKInBs5YhllAoKjEMuMIrRzNQ+FY3hyS6hSneTLUzAbxEL7gTExxe7nGc12+gXzTnwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709843481; c=relaxed/simple;
-	bh=uFkSV3XWA6pSvBdWPTS5Z4D4hTCdELrOUpWgEurePV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPZjbZqZu6yp/sir6Mc9Tt9tftfXY3Acn3MJ8XWC1OoK+bFPlNIqqN3FGbuUyTpfO+2szOIRQ/xp3yKyGX1KzPR3qrjl/nt9tz7ed0ITJEJ0JvBqjxVJP9A4hvI4XCOC+KTN4ljwI4mxYJT4/NQBx/KD5fEQ9uACIPtRyklY2uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PcZLmtxG; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709848641; c=relaxed/simple;
+	bh=HiQyqI5rhqj3eJbJ9OeeVS0Z5fHH9JryUtUYn6IL4I0=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=Pf0pTzYB2OWP3tVwLoYHj0/W905FGUbrC/7d1sbLyWwat7DB/V3/AfHQJ0S8+78HaVlgTNwzbJIBtWZssE5RCtUCkKYrirtIfJZCOhg0mPxSKAq4D/Ff59vzbzNgN+oolvpW8W+4oK1U3AZo+wnlLeoSvcMYih0+Cp7fZaPNOzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IXIoiZAS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IoR/RmPg; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PcZLmtxG"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc139ed11fso17862205ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 07 Mar 2024 12:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709843479; x=1710448279; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=td/qc1v+LcJcAxN8xi3WFcUXSnLHGt1lHwkmw1ZD0As=;
-        b=PcZLmtxGTh7uVIpOoxFb+QeLRCq04OP99KCB1sSGFi0d/uUTcPGVZwkss6BrXiAiUi
-         fhV3wi1KmFHke/EUAggJyb4TDH8uN6X9TWvYkhoFq/2TNkOkurSMCYzZ/OAwgZQkYQx8
-         +JL3tjctLJ3J2e2JwyNP5wJw6MY3H1FSyEZ7U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709843479; x=1710448279;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=td/qc1v+LcJcAxN8xi3WFcUXSnLHGt1lHwkmw1ZD0As=;
-        b=tqnyiCBKlMAr0SCTQjejudmndFn3vGcogzaWCWcm/kI1RG4+tFMLPT79goEkrYO56P
-         ZJmeWpCy2rdTMjW4BJwXok3v5Upm26F3GRz8axgAJM89BSBTUe/f0wV95DU8Hkkf7S2E
-         wnyIBieVbDVR+JMZB/9nLXwkzLxxSgC2bZQLMTN1dVYes8gpoaNgvkHi2GpDB5GcD8gq
-         /7WyjVAAEmwp6Xf9PgNDUsH2bLsdG+Ll5Ws0BrgZag7jA5IIfEDwS+VDyNVGeUcF1qO0
-         TeiwLzqhNb0ijr4yvv29+MdbFSj0GWHJ2powUWPC/sa97oPR5I656E2Q/O0/RSmvXELB
-         TtLg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7iaZ1XJBTg2bpIP1iBuhZ3R1XNW2QadRabHsmxWiqtsAxRLKF8B6C8ezI4pSisHx1/arA5AFdY2Sd29jGsa30HKFLM9s2xRvSxUBamXKA
-X-Gm-Message-State: AOJu0Yy69fBoabMEe0eP2f4MmmWCCdKVH3FgxV2MshBIadB0/ODOKNJ4
-	VgdcmtJvEGEz3Zf94vXW70ODY7mEhoYNm//0qzujx8LExmcezHXZh8CxJ10wRA==
-X-Google-Smtp-Source: AGHT+IHhycg/pXareFKjHDwHXtqmeBe85lRVxuPqPrSPkJ5nHJkgXlFDDbM6P1CA4nS+KS/ufBK3GA==
-X-Received: by 2002:a17:903:22cf:b0:1db:9ff1:b59b with SMTP id y15-20020a17090322cf00b001db9ff1b59bmr3493970plg.23.1709843479184;
-        Thu, 07 Mar 2024 12:31:19 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i9-20020a170902c94900b001dcc09487e8sm15044171pla.50.2024.03.07.12.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 12:31:18 -0800 (PST)
-Date: Thu, 7 Mar 2024 12:31:17 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
-Message-ID: <202403071227.D29DE5F8C4@keescook>
-References: <20240305100933.it.923-kees@kernel.org>
- <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IXIoiZAS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IoR/RmPg"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 84EE91380089;
+	Thu,  7 Mar 2024 16:57:18 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 07 Mar 2024 16:57:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1709848638; x=1709935038; bh=fKOSRnnBdF
+	tGTfuNnx0zHhRTbIYCaKgWUvk5mFPlNag=; b=IXIoiZASfg4ILvonS78TTpY3DW
+	xs+6+Dvt4YuN7NTQMvgO7K0v2cjg6FvVxMeOYj0GvpeoS9fo8RvVL0Q6UmsjfarY
+	/uT1ccQZ+2qGfd7qOcIvnFr+MRvHKHvIP9S/GPDW7sYJjebi/r0wF/n8teeZU1dN
+	Z5CI3St5Dy6yEQJPQnDBKmMyW97aLFPU4Ox2iY6joScyMrltuhohGQILQuzqIeg5
+	pma967mIltBq5F8dWR2IFAUtLaRyCfGizui9bgwUPN7Cl9Kv/SH829t73dJaropt
+	aWKFimvbubKKoT+/PNsHQKWi8dCfcHpMCGM/EH8hrsJlxHcRWKGXc3j/3Emw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1709848638; x=1709935038; bh=fKOSRnnBdFtGTfuNnx0zHhRTbIYC
+	aKgWUvk5mFPlNag=; b=IoR/RmPgMpfk+DxEz3rub8QhBHlyi6qOlgNda8o1KgP5
+	1OCTKXunFhxGvVjUyy2SWG+Rpx6mFjwuvBKLLNrCQt7ZK/jNq/G5i4hFXFB8+hMd
+	ObDCAz1Dvml8RCqCQJohdOo7FUYE7W86X2NiUCRlW5z63SoU/FmfmWqpbvAhGh3B
+	UVp1mYIaAnqn4uq/eUYMFQQTRmqpZAivd5zcpS7JIB/6+lpenAdnuA4FTV+KfIwE
+	ILtw2h/SwDC9Oua8+ZZK6N8U/20paBJr+mhOxiZLXkRzJmNmWzto7n9D+Z1gzLfx
+	/iQjEZeGCUlidb5gRlKvYddrhRC9HeaDJZBB9Bjogw==
+X-ME-Sender: <xms:PTjqZVGhlAXQVTuB_90xBhXagE-P8qoGKG4_GmK9xUXZ_kYlPaVjyg>
+    <xme:PTjqZaWR2SXrNf-KIuv_0XwFdGFeGA9SyPtmjOqWfK-naKLq_Y2JkJ5PyM1uXCmAq
+    pH5IAeawzyZ5nrNsAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieefgdduheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:PTjqZXKZ-ee6QPgP2XJt5HsWhsiczr5ueWR9sHGlUFumrliEVlKRng>
+    <xmx:PTjqZbEtHpuRsp4GkE9adwMiUE6D6Nmg0MdR4WlkX9C1hvUs2QJYkg>
+    <xmx:PTjqZbU-VgK6pupr5v3wvcg60SQMzPM9AX002vsvanifomlyXhMNHg>
+    <xmx:PjjqZUU-sVuQfsXw9XSS5RafDMsJ0qaKl5P0gM8qTolyGpxwG4oe6A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 80BD1B6008F; Thu,  7 Mar 2024 16:57:17 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
+Message-Id: <50d4146e-57a2-48a8-809f-713279935f32@app.fastmail.com>
+In-Reply-To: <202403071105.C3B038C@keescook>
+References: <20240305221824.3300322-1-jeremy.linton@arm.com>
+ <20240305221824.3300322-2-jeremy.linton@arm.com>
+ <202403051526.0BE26F99E@keescook>
+ <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
+ <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
+ <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
+ <202403071105.C3B038C@keescook>
+Date: Thu, 07 Mar 2024 22:56:56 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <keescook@chromium.org>
+Cc: "Jeremy Linton" <jeremy.linton@arm.com>,
+ linux-arm-kernel@lists.infradead.org,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
+ "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
+Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
+Content-Type: text/plain
 
-On Wed, Mar 06, 2024 at 09:47:36AM +0800, GONG, Ruiqi wrote:
-> 
-> 
-> On 2024/03/05 18:10, Kees Cook wrote:
-> > Hi,
-> > 
-> > Repeating the commit logs for patch 4 here:
-> > 
-> >     Dedicated caches are available For fixed size allocations via
-> >     kmem_cache_alloc(), but for dynamically sized allocations there is only
-> >     the global kmalloc API's set of buckets available. This means it isn't
-> >     possible to separate specific sets of dynamically sized allocations into
-> >     a separate collection of caches.
-> > 
-> >     This leads to a use-after-free exploitation weakness in the Linux
-> >     kernel since many heap memory spraying/grooming attacks depend on using
-> >     userspace-controllable dynamically sized allocations to collide with
-> >     fixed size allocations that end up in same cache.
-> > 
-> >     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-> >     against these kinds of "type confusion" attacks, including for fixed
-> >     same-size heap objects, we can create a complementary deterministic
-> >     defense for dynamically sized allocations.
-> > 
-> >     In order to isolate user-controllable sized allocations from system
-> >     allocations, introduce kmem_buckets_create(), which behaves like
-> >     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
-> >     which behaves like kmem_cache_alloc().)
-> 
-> So can I say the vision here would be to make all the kernel interfaces
-> that handles user space input to use separated caches? Which looks like
-> creating a "grey zone" in the middle of kernel space (trusted) and user
-> space (untrusted) memory. I've also thought that maybe hardening on the
-> "border" could be more efficient and targeted than a mitigation that
-> affects globally, e.g. CONFIG_RANDOM_KMALLOC_CACHES.
+On Thu, Mar 7, 2024, at 20:10, Kees Cook wrote:
+> On Thu, Mar 07, 2024 at 12:10:34PM +0100, Arnd Bergmann wrote:
+>> For the strength, we have at least four options:
+>> 
+>> - strong rng, most expensive
+>> - your new prng, less strong but somewhat cheaper and/or more
+>>   predictable overhead
+>> - cycle counter, cheap but probably even less strong,
+>>   needs architecture code.
+>
+> Are the low bits of a cycler counter really less safe than a
+> deterministic pRNG?
 
-I think it ends up having a similar effect, yes. The more copies that
-move to memdup_user(), the more coverage is created. The main point is to
-just not share caches between different kinds of allocations. The most
-abused version of this is the userspace size-controllable allocations,
-which this targets. The existing caches (which could still be used for
-type confusion attacks when the sizes are sufficiently similar) have a
-good chance of being mitigated by CONFIG_RANDOM_KMALLOC_CACHES already,
-so this proposed change is just complementary, IMO.
+I don't know, that was based on Jeremy's assertion. I'm not
+even convinced that either one is actually safer than no
+randomization. ;-)
 
--Kees
+For both the timer and the pRNG, I guess you'd need a gadget
+to extract the current offset and from there extract the
+per-cpu state value. Once you know the state and there is no
+reseed, you can pick the value you want for the next syscall
+by either calling getpid() repeatedly or waiting for the
+cycle counter to reach the desired value before calling
+a vulnerable syscall. At that point the pRNG and no
+randomization are reliably predictable, while the timer
+may still have some jitter left.
 
--- 
-Kees Cook
+>> - no rng, no overhead and no protection.
+>
+> For the pRNG, why not just add a reseed timer or something that'll
+> happen outside the syscall window, if that's the concern about reseeding
+> delay? (In which case, why not continue to use the strong rng?)
+
+I fear a timer or workqueue would be both weaker than a forced
+reseed if the attacker wins the race against the reseed, and
+still cause latency that hurts realtime usecases.
+
+       Arnd
