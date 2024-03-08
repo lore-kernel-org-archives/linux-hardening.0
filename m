@@ -1,334 +1,216 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8C9374F1;
-	Fri,  8 Mar 2024 05:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5F41CFB2;
+	Fri,  8 Mar 2024 07:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709876310; cv=none; b=Opa/JSIzCoEEXyegjiDk8kbd+dE+pnpyQkGiUMJA6KWKiOEzTiYrSIkAAbELxuX5+Q6IGvgJTWRXAwCf/4hPygu2kTYGJ4VnNxtgc/C7kq9Ubm0hhUllgMrfrjsrg2mI4xrRR/8i2bpQF7JrA5Akymiuyn69mIA1Ut4Ad0OF3hQ=
+	t=1709881514; cv=none; b=RrxIbb8pY97nATAQEGRDHoKXKB1QBAjHwiJuvACz3rDA/fhelB/kMpdEKyHwq/lGBjXLUdufQsvogx8TF+22cc/1kzfaPk0uLmerSTQnrxQVF1YSAfQE9PRMJgNOzh7FGdNTEo3nvUaW8PAU88jyvlhSo56fCWjTJJ6dHP1ogQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709876310; c=relaxed/simple;
-	bh=VB7aCjrEyzCQl6Nd/SXyLObblfAjTNf+f9jJHdI22IY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kX26G5ie/yRpn8p1uLJPhyfME9JL7UxkRwf65As6plN0ctvDlgBKFra6kdEKRShEs4Z1o7li0KSpxOuMfCYYhQTFbLjcjQ2y0XwrAkJgl2iQ7kLwd8FtoaNalumw/pTyeO9EHOK0XkhDMaDYEEtFNSW0XLlhgfFuZ+95ez6muak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4TrZhS5TqJz9sq0;
-	Fri,  8 Mar 2024 06:38:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id iQWDwp23YgG0; Fri,  8 Mar 2024 06:38:16 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4TrZhR6Sgnz9sps;
-	Fri,  8 Mar 2024 06:38:15 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CBE128B775;
-	Fri,  8 Mar 2024 06:38:15 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ENLZYn_Rd5af; Fri,  8 Mar 2024 06:38:15 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (PO23130.IDSI0.si.c-s.fr [192.168.232.110])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B13378B774;
-	Fri,  8 Mar 2024 06:38:14 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Hengqi Chen <hengqi.chen@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Johan Almbladh <johan.almbladh@anyfinetworks.com>,
-	Paul Burton <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Wang YanQing <udknight@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	netdev@vger.kernel.org,
-	"linux-hardening @ vger . kernel . org" <linux-hardening@vger.kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Subject: [PATCH bpf-next v3 2/2] bpf: Take return from set_memory_rox() into account with bpf_jit_binary_lock_ro()
-Date: Fri,  8 Mar 2024 06:38:08 +0100
-Message-ID: <036b6393f23a2032ce75a1c92220b2afcb798d5d.1709850515.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
-References: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1709881514; c=relaxed/simple;
+	bh=NoLY6wvr0NBH9i4Khvw1ZQlKbnYqHnz11skHyj4PYaM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QH9AoSJyS3iGQ1df8ZrRDM8RtPpVCd4q9AsZDRVkXvYchWhLkp+VW4ucl5uh81IWc15I7FTBf0tgmhj+wn/FRlrjGJWwSL7fVRaZTfgoNsdRje2z+2oqFz/gNgyHmDCEFeWrIrMVYAfoKDJe93M7BZTQtXyBkUcDNCYiv1h1i3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q3uD7Vo1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q3uD7Vo1"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4285oES7005166;
+	Fri, 8 Mar 2024 07:04:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=nWSTEbUVizkupgM//5iGEPWX7xbw8835q9HWmKf9PbM=; b=Q3
+	uD7Vo1BV4zNuHI4OFR4QHPpEt8wnZD1cACfyFVAkDL/+eMun2MYGEkQK9Vk3bEFX
+	dlXbhVTics2TlwBR8Qc4vqcbzbYDRdkrgjtOSYq9pBlEg9j3w1226KfElwf5aJtk
+	v8MjEU27fxn+DAJGloX7lV+730qiuP82rf4amM6pvayu12lbD+4tErqnTVtlaIef
+	cpmKPbbEwwea88EO+r+A9eWTOa2HIFTOpeTJm5dsQJXpo5BLEdXJRjiB5PDzOqQ/
+	JwqOz1xpz2w4w9ulvYomnlWtKuNeiMo4TIffwlPkvc1WEx7vSMlBvY322bCR/M7i
+	C7fxiiwhh57zzs43D9JQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wqn8mh2t5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 07:04:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42874ujW005319
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 8 Mar 2024 07:04:56 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 7 Mar 2024 23:04:49 -0800
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v6 0/4] arm64: qcom: add AIM300 AIoT board support
+Date: Fri, 8 Mar 2024 15:04:28 +0800
+Message-ID: <20240308070432.28195-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709876288; l=8100; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=VB7aCjrEyzCQl6Nd/SXyLObblfAjTNf+f9jJHdI22IY=; b=W33lPIDIgr8PEUyjwxEMcKO+D+Z+D1qaqtgtxD+CJRhI5nR6avIRzXxN4xH8ZhGslueQokkTD 6pCCtavJARKCNfgTPc1pXtSM6n9j4jA+SIP+lOhNv4QtO4ONZe1cMHc
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IciFOMJyBT1MNBISpwTs49NAQm6Oy79P
+X-Proofpoint-ORIG-GUID: IciFOMJyBT1MNBISpwTs49NAQm6Oy79P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-08_05,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 mlxlogscore=999 phishscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2403080054
 
-set_memory_rox() can fail, leaving memory unprotected.
+Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
+and PMIC functions.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
+chip etc.
+Here is a diagram of AIM300 AIoT Carrie Board and SoM
+ +--------------------------------------------------+
+ |             AIM300 AIOT Carrie Board             |
+ |                                                  |
+ |           +-----------------+                    |
+ |power----->| Fixed regulator |---------+          |
+ |           +-----------------+         |          |
+ |                                       |          |
+ |                                       v VPH_PWR  |
+ | +----------------------------------------------+ |
+ | |                          AIM300 SOM |        | |
+ | |                                     |VPH_PWR | |
+ | |                                     v        | |
+ | |   +-------+       +--------+     +------+    | |
+ | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+ | |   +-------+       +--------+     +------+    | |
+ | |                                              | |
+ | +----------------------------------------------+ |
+ |                                                  |
+ |                    +----+          +------+      |
+ |                    |USB |          | UART |      |
+ |                    +----+          +------+      |
+ +--------------------------------------------------+
+The following functions have been verified:
+  - uart
+  - usb
+  - ufs
+  - PCIe
+  - PMIC
+  - display
+  - adsp
+  - cdsp
+  - tlmm
 
-Check return and bail out when bpf_jit_binary_lock_ro() returns
-an error.
+Documentation for qcs8550[1] and sm8550[2]
+[1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+[2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
 
-Link: https://github.com/KSPP/linux/issues/7
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Puranjay Mohan <puranjay12@gmail.com>
-Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>  # s390x
-Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>  # LoongArch
-Reviewed-by: Johan Almbladh <johan.almbladh@anyfinetworks.com> # MIPS Part
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
-Previous patch introduces a dependency on this patch because it modifies bpf_prog_lock_ro(), but they are independant.
-It is possible to apply this patch as standalone by handling trivial conflict with unmodified bpf_prog_lock_ro().
 
-v3: No change.
+v5 -> v6:
+  - move qcs8550 board info bebind sm8550 boards info in qcom.yaml
 
-v2:
-- Dropped arm64 change following commit 1dad391daef1 ("bpf, arm64: use bpf_prog_pack for memory management")
-- Fixed too long lines reported by checkpatch
----
- arch/arm/net/bpf_jit_32.c        | 25 ++++++++++++-------------
- arch/loongarch/net/bpf_jit.c     | 22 ++++++++++++++++------
- arch/mips/net/bpf_jit_comp.c     |  3 ++-
- arch/parisc/net/bpf_jit_core.c   |  8 +++++++-
- arch/s390/net/bpf_jit_comp.c     |  6 +++++-
- arch/sparc/net/bpf_jit_comp_64.c |  6 +++++-
- arch/x86/net/bpf_jit_comp32.c    |  3 +--
- include/linux/filter.h           |  5 +++--
- 8 files changed, 51 insertions(+), 27 deletions(-)
+v4 -> v5:
+  - "2023-2024" instead of "2023~2024" for License
+  - update patch commit message to previous comments and with an updated
+    board diagram
+  - use qcs8550.dtsi instead of qcm8550.dtsi
+  - remove the reserved memory regions which will be handled by
+    bootloader
+  - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
+    remoteproc_mpss function node, audio sound DTS node, new patch will
+    be updated after respective team's end to end full verification
+  - address comments to vph_pwr, move vph_pwr node and related
+    references to qcs8550-aim300-aiot.dts
+  - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
+  - add pcie0I AND pcie1 support together
+  - the following patches were applied, so remove these patches from new
+    patch series:
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
+  - verified with dtb check, and result is expected, because those
+    warnings are not introduced by current patch series.
+    DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
+    arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
+    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+    #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
 
-diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
-index 1d672457d02f..01516f83a95a 100644
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -2222,28 +2222,21 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	/* If building the body of the JITed code fails somehow,
- 	 * we fall back to the interpretation.
- 	 */
--	if (build_body(&ctx) < 0) {
--		image_ptr = NULL;
--		bpf_jit_binary_free(header);
--		prog = orig_prog;
--		goto out_imms;
--	}
-+	if (build_body(&ctx) < 0)
-+		goto out_free;
- 	build_epilogue(&ctx);
- 
- 	/* 3.) Extra pass to validate JITed Code */
--	if (validate_code(&ctx)) {
--		image_ptr = NULL;
--		bpf_jit_binary_free(header);
--		prog = orig_prog;
--		goto out_imms;
--	}
-+	if (validate_code(&ctx))
-+		goto out_free;
- 	flush_icache_range((u32)header, (u32)(ctx.target + ctx.idx));
- 
- 	if (bpf_jit_enable > 1)
- 		/* there are 2 passes here */
- 		bpf_jit_dump(prog->len, image_size, 2, ctx.target);
- 
--	bpf_jit_binary_lock_ro(header);
-+	if (bpf_jit_binary_lock_ro(header))
-+		goto out_free;
- 	prog->bpf_func = (void *)ctx.target;
- 	prog->jited = 1;
- 	prog->jited_len = image_size;
-@@ -2260,5 +2253,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ?
- 					   tmp : orig_prog);
- 	return prog;
-+
-+out_free:
-+	image_ptr = NULL;
-+	bpf_jit_binary_free(header);
-+	prog = orig_prog;
-+	goto out_imms;
- }
- 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index e73323d759d0..7dbefd4ba210 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1294,16 +1294,19 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	flush_icache_range((unsigned long)header, (unsigned long)(ctx.image + ctx.idx));
- 
- 	if (!prog->is_func || extra_pass) {
-+		int err;
-+
- 		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
- 			pr_err_once("multi-func JIT bug %d != %d\n",
- 				    ctx.idx, jit_data->ctx.idx);
--			bpf_jit_binary_free(header);
--			prog->bpf_func = NULL;
--			prog->jited = 0;
--			prog->jited_len = 0;
--			goto out_offset;
-+			goto out_free;
-+		}
-+		err = bpf_jit_binary_lock_ro(header);
-+		if (err) {
-+			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n",
-+				    err);
-+			goto out_free;
- 		}
--		bpf_jit_binary_lock_ro(header);
- 	} else {
- 		jit_data->ctx = ctx;
- 		jit_data->image = image_ptr;
-@@ -1334,6 +1337,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	out_offset = -1;
- 
- 	return prog;
-+
-+out_free:
-+	bpf_jit_binary_free(header);
-+	prog->bpf_func = NULL;
-+	prog->jited = 0;
-+	prog->jited_len = 0;
-+	goto out_offset;
- }
- 
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
-diff --git a/arch/mips/net/bpf_jit_comp.c b/arch/mips/net/bpf_jit_comp.c
-index a40d926b6513..e355dfca4400 100644
---- a/arch/mips/net/bpf_jit_comp.c
-+++ b/arch/mips/net/bpf_jit_comp.c
-@@ -1012,7 +1012,8 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_prog_fill_jited_linfo(prog, &ctx.descriptors[1]);
- 
- 	/* Set as read-only exec and flush instruction cache */
--	bpf_jit_binary_lock_ro(header);
-+	if (bpf_jit_binary_lock_ro(header))
-+		goto out_err;
- 	flush_icache_range((unsigned long)header,
- 			   (unsigned long)&ctx.target[ctx.jit_index]);
- 
-diff --git a/arch/parisc/net/bpf_jit_core.c b/arch/parisc/net/bpf_jit_core.c
-index d6ee2fd45550..979f45d4d1fb 100644
---- a/arch/parisc/net/bpf_jit_core.c
-+++ b/arch/parisc/net/bpf_jit_core.c
-@@ -167,7 +167,13 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_flush_icache(jit_data->header, ctx->insns + ctx->ninsns);
- 
- 	if (!prog->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(jit_data->header);
-+		if (bpf_jit_binary_lock_ro(jit_data->header)) {
-+			bpf_jit_binary_free(jit_data->header);
-+			prog->bpf_func = NULL;
-+			prog->jited = 0;
-+			prog->jited_len = 0;
-+			goto out_offset;
-+		}
- 		prologue_len = ctx->epilogue_offset - ctx->body_len;
- 		for (i = 0; i < prog->len; i++)
- 			ctx->offset[i] += prologue_len;
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index b418333bb086..e613eebfd349 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -2111,7 +2111,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 		print_fn_code(jit.prg_buf, jit.size_prg);
- 	}
- 	if (!fp->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(header);
-+		if (bpf_jit_binary_lock_ro(header)) {
-+			bpf_jit_binary_free(header);
-+			fp = orig_fp;
-+			goto free_addrs;
-+		}
- 	} else {
- 		jit_data->header = header;
- 		jit_data->ctx = jit;
-diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
-index fa0759bfe498..73bf0aea8baf 100644
---- a/arch/sparc/net/bpf_jit_comp_64.c
-+++ b/arch/sparc/net/bpf_jit_comp_64.c
-@@ -1602,7 +1602,11 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	bpf_flush_icache(header, (u8 *)header + header->size);
- 
- 	if (!prog->is_func || extra_pass) {
--		bpf_jit_binary_lock_ro(header);
-+		if (bpf_jit_binary_lock_ro(header)) {
-+			bpf_jit_binary_free(header);
-+			prog = orig_prog;
-+			goto out_off;
-+		}
- 	} else {
- 		jit_data->ctx = ctx;
- 		jit_data->image = image_ptr;
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index b18ce19981ec..f2be1dcf3b24 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -2600,8 +2600,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (bpf_jit_enable > 1)
- 		bpf_jit_dump(prog->len, proglen, pass + 1, image);
- 
--	if (image) {
--		bpf_jit_binary_lock_ro(header);
-+	if (image && !bpf_jit_binary_lock_ro(header)) {
- 		prog->bpf_func = (void *)image;
- 		prog->jited = 1;
- 		prog->jited_len = proglen;
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 7dd59bccaeec..fc42dcfdbd62 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -895,10 +895,11 @@ static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
- 	return 0;
- }
- 
--static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
-+static inline int __must_check
-+bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
- 	set_vm_flush_reset_perms(hdr);
--	set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
-+	return set_memory_rox((unsigned long)hdr, hdr->size >> PAGE_SHIFT);
- }
- 
- int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap);
+v3 -> v4:
+  - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
+    of qcm8550, another board with qcm8550 will be added later
+  - add AIM300 AIoT board string in qcom.yaml file
+  - add sm8550 and qcm8550 fallback compatible
+  - add qcm8550 SoC id
+  - add reserved memory map codes in qcm8550.dtsi
+  - pm8010 and pmr73d are splited into carrier board DTS file. Because
+    the regulators which in pm8550, pm8550ve and pm8550vs are present
+    on the SoM. The regulators which in pm8010 and pmr73d are present
+    on the carrier board.
+  - stay VPH_PWR at qcs8550-aim300.dtsi file
+      VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
+      with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
+      SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
+
+v2 -> v3:
+  - introduce qcs8550.dtsi
+  - separate fix dtc W=1 warning patch to another patch series
+
+v1 -> v2:
+  - merge the splited dts patches into one patch
+  - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
+  - drop PCIe1 dts node due to it is not enabled
+  - update display node name for drop sde characters
+
+previous discussion here:
+[1] v5: https://lore.kernel.org/linux-arm-msm/20240301134113.14423-1-quic_tengfan@quicinc.com
+[2] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
+[3] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
+[4] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
+[5] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
+
+
+Tengfei Fan (4):
+  dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+  arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+  arm64: dts: qcom: add base AIM300 dtsi
+  arm64: dts: qcom: aim300: add AIM300 AIoT
+
+ .../devicetree/bindings/arm/qcom.yaml         |   8 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 384 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 345 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 169 ++++++++
+ 5 files changed, 907 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+
+
+base-commit: 8ffc8b1bbd505e27e2c8439d326b6059c906c9dd
 -- 
-2.43.0
+2.17.1
 
