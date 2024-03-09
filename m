@@ -1,117 +1,115 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944B940852
-	for <linux-hardening@vger.kernel.org>; Sat,  9 Mar 2024 14:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4683C4AEE8
+	for <linux-hardening@vger.kernel.org>; Sat,  9 Mar 2024 20:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709996303; cv=none; b=PfMekROO0J2X3+Ibbr6meqsk5ITXEQlws6XTvs9X6gMvCJOIaxJDM1t5Y3uvtxgHFzhjku/M3vAvB+Ade7sxa/vgXSUGsY3f+0xQPFoWiJr78JMogzBa6oRIykmunfGF5qDsAt5Ip40e3Q+7s4dXwZrfleTrRE/Zeu+AVe+QR7A=
+	t=1710015893; cv=none; b=IkMCCAO52kRy4cu46YiMFs1pkDzvQcAY1u0ZwE/v1VB2g3Z1D0hO6jwoirkwhd5aTPg2HvlT/Ba+hbCeU5JdcfDwGpeRzUuU/8nGv5imG4yPPFdVD2pv2yPw1zRFU0Qd4E6xcrHN//gkoCP3wfIsAsBuAbaM63tVm0oVcaBssiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709996303; c=relaxed/simple;
-	bh=/X7H1ggJXyw8oZM2tEuo8CdkdavfIrnwt00+d/TQK+U=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=qnjdgGmlnh2jxbHYFoGEefmWgOhivoXyO97ax7UbnAP2S0VktPm8L8wm+3QJ/KaBMNjUYKZ56gLiH2bPGXiNluhpzw/Wf67AdSk11huolWPBmqmP6fviy1HFf4K4gPVGVQHVkz2BujJs3EDG2nbacyME07DaSUYV0vPUWpqyAHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-156-mu8viMgRPXKNX4dY6V6FnA-1; Sat, 09 Mar 2024 14:58:11 +0000
-X-MC-Unique: mu8viMgRPXKNX4dY6V6FnA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 9 Mar
- 2024 14:58:25 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 9 Mar 2024 14:58:25 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Russell King' <linux@armlinux.org.uk>, Josh Poimboeuf
-	<jpoimboe@kernel.org>
-CC: Jiangfeng Xiao <xiaojiangfeng@huawei.com>, Kees Cook
-	<keescook@chromium.org>, Jann Horn <jannh@google.com>,
-	"gustavoars@kernel.org" <gustavoars@kernel.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "peterz@infradead.org" <peterz@infradead.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "nixiaoming@huawei.com"
-	<nixiaoming@huawei.com>, "kepler.chenxin@huawei.com"
-	<kepler.chenxin@huawei.com>, "wangbing6@huawei.com" <wangbing6@huawei.com>,
-	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
-	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: RE: [PATCH] usercopy: delete __noreturn from usercopy_abort
-Thread-Topic: [PATCH] usercopy: delete __noreturn from usercopy_abort
-Thread-Index: AQHab6wYEHIoKEvMpEWW5WbAwswgILEvgkBg
-Date: Sat, 9 Mar 2024 14:58:25 +0000
-Message-ID: <15437f635ba94224b6ed808bd6f42065@AcuMS.aculab.com>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
- <202403040938.D770633@keescook>
- <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
- <202403050129.5B72ACAA0D@keescook>
- <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
- <20240305175846.qnyiru7uaa7itqba@treble>
- <Zeg8wRYFemMjcCxG@shell.armlinux.org.uk>
-In-Reply-To: <Zeg8wRYFemMjcCxG@shell.armlinux.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1710015893; c=relaxed/simple;
+	bh=K9RoT73X71QnB+uU8sWtSEx1Mtsrf1E5zhfyiv3p1ZE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DTvy3KzbtTw5fJ7mraJIwpaPZSgK32ikbhcTotQb1vzuzoVzpYLq/hnmO0ECCT0gvbaN8uH2rAu6cC1BEgkE2FXvQVWLdkP16ztjgVQ0TK8Q2imDkQeCcf/hl7QZO4xH/23wcWBhsMgwkKKb6VOvDMmqTWl4RLzamv3MaYFMkFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YX3h28jB; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YX3h28jB"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dd10ae77d8so26162865ad.0
+        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 12:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710015891; x=1710620691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pzdoSSC7M3Gn4nXch6enCVEFVBAir+v+I5+bn35uJJU=;
+        b=YX3h28jB4WRGi8wJ7maxuIUdu3IA/SyxGwsGyKSysTuUxqt4RdCWISSRKrBb73+omm
+         8LrXJU8Q152eXWTVi2ap6yN+wg1jxk38dZHEfU/1xDUPkdqEwEyCqBHFVAoO1FrqnZbv
+         ccDXNWMXlkJiG1ACdvW+Ay71rFBL8lSPTFkr8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710015891; x=1710620691;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pzdoSSC7M3Gn4nXch6enCVEFVBAir+v+I5+bn35uJJU=;
+        b=gIG5ulJEjzBLUY4VhUEK9kcrC9yn71J1VJroUcO9PrejKnaY+Yluxu1jdMp8G73yNq
+         i4coPMDtM4fa9ActkMBFcQl5Dl6avbEqQq3s12f+7/VER7GWtn+bNWBVy6FrDb8w0RZm
+         kENwpHEikJ1wALElGQqgJrbnRGJdDiV6XH+KaFra9t3x8+4gnmzYctobSNOS24X8Xdsf
+         tsQzotkMz4263280YMIkFg/6fZiBXgwsWpjq1WewTMmm3Pq7Fk4mzWvCwo4CalNIeOPg
+         8xg2ck9aSIRV251tgbOS8xyuMDScKj4XuI40chWIFQP3GXiiVyWmE/nhErTsn8036zke
+         uG7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWymWM1S1hBz7LchoUkF0nb7eU0NykolzLRoICzIicBFlx4UTv7EnjFUKv5s672ZypOVRs+V5oq2EE1wmEe4jeiJY3xdqrbyodIYlkhORNi
+X-Gm-Message-State: AOJu0YxyQ57BA1wkzUSvK0t9IDgZUtTWwV32IgR5BNTT52G3dnHxOrek
+	r52HVd5k2aHGcWhfntvvVApSiK9ELeUcueOikQ7miUOPyIkENnd9flllcHDsDQ==
+X-Google-Smtp-Source: AGHT+IHS3V/gDLEjjvi9Itvln/GKgAbneox6bx5epnt2P+RSO7WF1SQOAKdmHYGasuxFgTMM+KSrxg==
+X-Received: by 2002:a17:902:ee51:b0:1dc:abf0:14ee with SMTP id 17-20020a170902ee5100b001dcabf014eemr1783343plo.22.1710015891485;
+        Sat, 09 Mar 2024 12:24:51 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id kv13-20020a17090328cd00b001dc91b4081dsm1689004plb.271.2024.03.09.12.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Mar 2024 12:24:51 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] randomize_kstack: Improve entropy diffusion
+Date: Sat,  9 Mar 2024 12:24:48 -0800
+Message-Id: <20240309202445.work.165-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1133; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=K9RoT73X71QnB+uU8sWtSEx1Mtsrf1E5zhfyiv3p1ZE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl7MWQSFajPauij2zI2NqidKesJzjt4bPzfLCaH
+ yknBCinsCGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZezFkAAKCRCJcvTf3G3A
+ Jmw7D/9F0pyXIKqu9kZmrjuYv8/kfrd8EBz4K3EsSJ877q3bmqlQxMfJwm/KOL/Wt6HVE0a/P8a
+ dHAS5wUM14FBGvPkoEmUPu2kuxeegqRC2FCKCuvx2JiiXFVoQ/YF3RHw6XNosQUi465oFMZHf7i
+ wArtIwAloVlVK5fvYEvDoYP/fmZ+cgUxuraqrTDQZRQq637paFp+HGthtvdQd81bV4mrwDoKrpm
+ FFPbq5uvAKued3ymyZ4XFRYy7ryBz8reIgIyxACSnBX8PG5ZY/JX9eFX5Dgglyd+epZ+wkeOV3Q
+ y8mk8G+7vK/3CInx+EXsjU2biIIRKgHSYaCa2G79XRL6YiJH5y4HgONJVCZ5EgG2F91yhGuCYsi
+ zyNVm77/4EQ1EFjhP0qSritGVorn3HavQlWvSnk//b2z+VcZVQ5168aImJCyhI5IbTdKyjjxfGC
+ WnPMAnkqPIkPvhM2o9C8I7fP5FLY09G/hcZNW7pz+3G7tbOd5eEe4NqaUKqchu4KT+/3gnuWYE6
+ pmEruvww9YJn5ZcMteecUkWWHrUDMOwLu/lROpmnh00fUcs0zfg58ynqC1v0UPacrXxZH31MYzW
+ YnRnu++vJJEhejWU18Lxkc8JugyphNk95dSlnqhKjCnXnvU5qgxbV4ieXmq4OWM6J3uhbLHAZEr
+ aXbZzcE j2hbFSUQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-From: Russell King
-> Sent: 06 March 2024 09:52
->=20
-> On Tue, Mar 05, 2024 at 09:58:46AM -0800, Josh Poimboeuf wrote:
-> > This is an off-by-one bug which is common in unwinders, due to the fact
-> > that the address on the stack points to the return address rather than
-> > the call address.
-> >
-> > So, for example, when the last instruction of a function is a function
-> > call (e.g., to a noreturn function), it can cause the unwinder to
-> > incorrectly try to unwind from the function *after* the callee.
->=20
-> I suppose this can only happen in __noreturn functions because that
-> can be:
->=20
-> foo:
-> ..
-> =09bl=09bar
-> .. end of function and thus next function ...
->=20
-> which results in LR pointing into the next function.
->=20
-> Would it make better sense to lookup the LR value winding it back by
-> one instruction like ORC on x86 does (as you mention) rather than
-> the patch you proposed which looks rather large and complicated?
+The kstack_offset variable was really only ever using the low bits for
+kernel stack offset entropy. Add a ror32() to increase bit diffusion.
 
-Is it even possible to always reliably get a stack trace from
-a no-return function on a cpu that uses a 'lr'?
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 39218ff4c625 ("stack: Optionally randomize kernel stack offset each syscall")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Jeremy Linton <jeremy.linton@arm.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/randomize_kstack.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If the function doesn't return then the compiler need not save
-'lr' on stack and can still use it as a temporary register.
-Without a valid 'lr' I think all you can do is search the stack
-for a likely code address?
-
-Am I missing something?
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+index 5d868505a94e..6d92b68efbf6 100644
+--- a/include/linux/randomize_kstack.h
++++ b/include/linux/randomize_kstack.h
+@@ -80,7 +80,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
+ 	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+ 				&randomize_kstack_offset)) {		\
+ 		u32 offset = raw_cpu_read(kstack_offset);		\
+-		offset ^= (rand);					\
++		offset = ror32(offset, 5) ^ (rand);			\
+ 		raw_cpu_write(kstack_offset, offset);			\
+ 	}								\
+ } while (0)
+-- 
+2.34.1
 
