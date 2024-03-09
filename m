@@ -1,92 +1,139 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903DF20B22
-	for <linux-hardening@vger.kernel.org>; Sat,  9 Mar 2024 20:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EA44F8A2
+	for <linux-hardening@vger.kernel.org>; Sat,  9 Mar 2024 21:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710016436; cv=none; b=G36bQPOAOaX/vCro1FILOeR2hFlKliaZai+uEyMkBdLOV5RQVt1/inCTULxk3aH0mACHw17GcxC22tgIsvPMT965vnhb2x2BA7ANw24UxRY/8TpEMv/sTTYD7CTvVU3I0ZSpv9+UuQDakJs47m1/8ikwGUioJ0IMpJ7nV6d2/gg=
+	t=1710020915; cv=none; b=dp7yHAhYsar//0nBhPcdyWTSezLv7iC0phIy6GAhjseOUukezvDF4ray/6u73C2CYKctjVppxG8GgjYRxQ0YrDdkoSM0ztCUs/bAcfEbVoMUu6aVgWcPCWMwhkHBawD74uqn0JEiLk2hQ0sEz1TAVJ/r+FrpuqRATw7imspmeOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710016436; c=relaxed/simple;
-	bh=EcVIXfIICY3Ok2eDXhdHjNP9eppBGwoPoBbQbWCdGQs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mb4IkZH4k2DkFHA71LBK20rxYfEXfoyWj5h7hk9Yv8EhGXs59kxvCC0LlCHLTcS+FX7umDom21zEKru7xpBLn7stCAGuxc2xM0vYuGXhPi/RTiB1o0HuJNrR/4fTjWst95enrWairRi46jD/tf2qCOsz8xRFOh4N8x/mPzpZ/Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0VGmGZX; arc=none smtp.client-ip=209.85.215.177
+	s=arc-20240116; t=1710020915; c=relaxed/simple;
+	bh=TlbeLRS6KIxUGIuaEwI09g/BKrurDk428JKg+03aOWE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dshfwtBCHUymIusL9QDL22qcm3otWZSUFHkCPEPQiWhVEC7T71rsfROk22kDYNRq6NdAGnId/i7JBaMazoTaX2n1ZRcrMZ2wI81g80Ft1aoGHlOgsDZCyYV6qBQ7k0ACjCZ1IAH6CQzsXdAs/pP67l9mt1ChAVvnRMwSqhpZtVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=am4H5s3i; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0VGmGZX"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso2667173a12.2
-        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 12:33:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="am4H5s3i"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so20484125ad.1
+        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 13:48:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710016435; x=1710621235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wsLvds74XFvPRZt+5SLhXxXFTA14aJAZhNEVhjPIrvk=;
-        b=H0VGmGZXyUF+OV3/clYF/ovjxWbHc2nKovGKsUKXgr4m0F4BoSTLxopfmw7MHCxtJS
-         Qf384rAFnF8rjq+UkIiawNKdPbYQytf8KSQAl8XnilBaIEKmxR84O4F8DTBPjC9KoslF
-         3L0f/k9BPEJqOdpVWpBiJaTXmfgwoZieyRfVE=
+        d=chromium.org; s=google; t=1710020914; x=1710625714; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ij4dl6s+fU5V8GRSIdSDyUxEbjNq2rinUUwBlPc9zv8=;
+        b=am4H5s3i5gsv96Zqq4crWTeB9+EM8EF5wLsYzbI019n65LOBuVxM9Ji01cwmdX2qCC
+         glhU+chp+IG65qcPFmFp+HTM5vMw3TPuClv3qvnP2bSMyE+wPCBLcCeUadTiXN+mIuZF
+         VwbfjmCbNZWY6ndooJvFJ9fRi6w223DfhoG44=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710016435; x=1710621235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wsLvds74XFvPRZt+5SLhXxXFTA14aJAZhNEVhjPIrvk=;
-        b=j8tMLIkRZS1KAUbe3lHGwY76YT+qHIO0IFn+clhDl7Ait2DaflEsQSs3E43KPWJz64
-         4jCO5UsSXoGnn7LhUPhlY1BqT8GkO47Inx5v+g6jFdwHgQY/+gLOBZyRJc8/Pt1h3V69
-         wpT2ajdD9CNvwsYiwtkytacKHEmjR9sEHkt19e0IXHWGjU9pnxMno4+5lSQOYnOCMt9Q
-         AbImmp03JgHFTQkLgmv2hrtMjN7mvZbiP0065D+zLI+qrEpJBJXU3m5geymnXs+uLeFZ
-         qyiOe0ZLiSmc7TWwMeGJ52aRicJ9u995DR3B++i3ODzCqMbketa75RdbK65jdpw+JwvW
-         MNkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAAE0l66JNNnkvNeF+j40ZI0PAGO7YSSpQfLKyFfoKjRMOSamBbteL9QxYqpbk3SW7M8HSYzAkkjYeAji6G9UHOc9aN/ZFjQt2/FVqQzQe
-X-Gm-Message-State: AOJu0Yyhc+jqU6feGfUOM1rnUPLxn9HOa571CUevCBC7dGRFDdXQpVVq
-	qJJ7LETKWUDsGXKlCF0TiZY5Bu1anL8+Gue42I1da7OlWpuwTaFTYrnvnYpl9A==
-X-Google-Smtp-Source: AGHT+IGs8pUXb5mDGS8kHPviqknzo+hzJ7Te+hq+G7yo5xcEkhGPpfVIqG3exWqTnYNB4l5GZuju7w==
-X-Received: by 2002:a05:6a20:72a6:b0:1a3:11b7:a0de with SMTP id o38-20020a056a2072a600b001a311b7a0demr317316pzk.15.1710016434950;
-        Sat, 09 Mar 2024 12:33:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1710020914; x=1710625714;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ij4dl6s+fU5V8GRSIdSDyUxEbjNq2rinUUwBlPc9zv8=;
+        b=EVlANtgLIq1PXwT9dDAN8jk+xglgWzs5UV/QYFgVBsXjX+/a05Ci/vZXgf+0jhsy+7
+         fPESw5bUzSK0WdW5BiVuXdhbVZAAqCZmjHVk0RCED1IvKr5ZwWKc4AZCQZCgppMqdV1f
+         W189DQ6xO+TY0NRg0q4vmNevkOF5v9jozRVgdt0UP+Mrop0eFU2JewU2Y4sZ8sGRZ42R
+         /l1bwN7bXpsb6IGVKiZYsoGTVttbA6RHEKkrwKSvaMBk1xQcyGc/6N6GrNeUKcCDQZT1
+         +5Vm0H6w3xCAYKJmbj8VAUi7DYC5KQtQkZfXyKeV0VWgazgss9NtvVEIl0lpEwjW2pn6
+         2s0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWmVrAhrXrujBgt3XO7Af6g5xqSSPfmzAkrfGKOFlBPU/aa47yknLGtxslvAoacZ72cAm8CuiEYalDhSRH6x9VCi9n7e6r0sxeMb2N93n7D
+X-Gm-Message-State: AOJu0YxxpKQPVwxsinYfNWEVb3AGLWfQEo95BdG5/HsTti0O+e+5oaCz
+	7Elfj80GWIw3FiJ2PgjnczibiOVJDq22CDH7srkiVED/A4OeDr9I5tHMuRIqkQ==
+X-Google-Smtp-Source: AGHT+IE03Bnsaj7XifM5/uMKxOJjyFpeQ9/fOFvr/AdwuuzOscOuC+xbByKTNfiifwemz2iFWjiZxQ==
+X-Received: by 2002:a17:903:2305:b0:1dc:b64:13cd with SMTP id d5-20020a170903230500b001dc0b6413cdmr3672457plh.27.1710020913729;
+        Sat, 09 Mar 2024 13:48:33 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a18-20020a637f12000000b005e49bf50ff9sm1644000pgd.0.2024.03.09.12.33.54
+        by smtp.gmail.com with ESMTPSA id i14-20020a17090332ce00b001dd621111e2sm1729518plr.194.2024.03.09.13.48.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 12:33:54 -0800 (PST)
+        Sat, 09 Mar 2024 13:48:32 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Eric Biederman <ebiederm@xmission.com>
 Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] pstore/zone: Don't clear memory twice
-Date: Sat,  9 Mar 2024 12:33:51 -0800
-Message-Id: <171001642971.4101342.15404186717889149238.b4-ty@chromium.org>
+Subject: [PATCH] exec: Simplify remove_arg_zero() error path
+Date: Sat,  9 Mar 2024 13:48:30 -0800
+Message-Id: <20240309214826.work.449-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <fa2597400051c18c6ca11187b0e4b906729991b2.1709972649.git.christophe.jaillet@wanadoo.fr>
-References: <fa2597400051c18c6ca11187b0e4b906729991b2.1709972649.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1307; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=TlbeLRS6KIxUGIuaEwI09g/BKrurDk428JKg+03aOWE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl7NkuHimbUFvP3Wujjd+L1DSMiaEMK4gLNVck8
+ Sc0MmkSs/OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZezZLgAKCRCJcvTf3G3A
+ JgXtEACOtfBcv83tcJRDanJKvoKkTfWWrjQSKpdkksCWC6yENNwJql9scRvASM5S6DzURuhkq2d
+ N7/W42guz9FpQ+L1UDXoskzaaVCzXOwq3YzF/xTmtrRyXE6GC9NIUJVtE+S3vQGA8WzDo6y8uT2
+ WGHvgzK8ddIuVI4SkIr1K0hGRNUyu41RamOTeoLSdb8yQgF6x7Eew0Iukiloqi888aKm7Qpje+S
+ +zM4zlnvwtVfmxZzVrszoxqrYJtldziDtD0Pfn9L5wU8lC5BeUw5Dj402JtJeKTP251+QY5MqH4
+ NgFGPzm/+xgntTpVCtsqBuiqmqozIOfOPByEycZWnYGIaeA8ICgCkwQEdQbP5ynYqHikt1JG71Q
+ 2z3rZHyt3ESV387UNCRVbmaPXWE1Erx0hLLfIppSPltc8zNi9wz8KsnRVdaSDKZ1stl3/IHCr7V
+ pPGOf9pbrMW4J55FC7s8KbxiTMiUNjOLFb7a24F9HBB6zfnONbPDqkJKKTp/TfeFbr090JYw8lk
+ reVExDRQdz8TVr756XON8JmKFpty+iaTzNDKtz/ip7qquwfy3PrgIwtIx6ESfGWJxDRQIsKBrBp
+ QcPjLoqkeYf2/HHpBGOgv+3pgBWJtKdxqyiXbp8F5sc4dAVPZm+XFcfJshWtCQ8OHMM3D8pzAxk
+ dFhwp4R FAveH4jg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-On Sat, 09 Mar 2024 09:24:27 +0100, Christophe JAILLET wrote:
-> There is no need to call memset(..., 0, ...) on memory allocated by
-> kcalloc(). It is already zeroed.
-> 
-> Remove the redundant call.
-> 
-> 
+We don't need the "out" label any more, so remove "ret" and return
+directly on error.
 
-Applied to for-next/pstore, thanks!
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org
+---
+ fs/exec.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-[1/1] pstore/zone: Don't clear memory twice
-      https://git.kernel.org/kees/c/c8d25d696f52
-
-Take care,
-
+diff --git a/fs/exec.c b/fs/exec.c
+index 715e1a8aa4f0..e7d9d6ad980b 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1720,7 +1720,6 @@ static int prepare_binprm(struct linux_binprm *bprm)
+  */
+ int remove_arg_zero(struct linux_binprm *bprm)
+ {
+-	int ret = 0;
+ 	unsigned long offset;
+ 	char *kaddr;
+ 	struct page *page;
+@@ -1731,10 +1730,8 @@ int remove_arg_zero(struct linux_binprm *bprm)
+ 	do {
+ 		offset = bprm->p & ~PAGE_MASK;
+ 		page = get_arg_page(bprm, bprm->p, 0);
+-		if (!page) {
+-			ret = -EFAULT;
+-			goto out;
+-		}
++		if (!page)
++			return -EFAULT;
+ 		kaddr = kmap_local_page(page);
+ 
+ 		for (; offset < PAGE_SIZE && kaddr[offset];
+@@ -1748,8 +1745,7 @@ int remove_arg_zero(struct linux_binprm *bprm)
+ 	bprm->p++;
+ 	bprm->argc--;
+ 
+-out:
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL(remove_arg_zero);
+ 
 -- 
-Kees Cook
+2.34.1
 
