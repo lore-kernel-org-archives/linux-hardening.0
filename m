@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CAF1FB9
-	for <linux-hardening@vger.kernel.org>; Sun, 10 Mar 2024 02:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414435396
+	for <linux-hardening@vger.kernel.org>; Sun, 10 Mar 2024 02:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036336; cv=none; b=EhnXHcw1OF4fhTeoX351pwp1g7tRFkz58W6nCisdTup4ZZPWae7DYHtawAfWDO8yTFfQw/1hLwq0krn7L9purZUJZXSHqNKId/4XHBsmNip0fCRwVIdczP3kYdU5LfztYlDEqJ1TrqJ7OZGcLho6Ta4VXg7dpd0VaamAxHDy2ek=
+	t=1710036339; cv=none; b=DFNr8G6h8kcGb/3fV92FXonG2AsN2RmmTPY0Ne3bkHb2fmKOYQZPJcoZFTt69FrMYEX/f5+K6rFsexMw517y22LAHZ9LX/XHfhyZNAkqD6pddbGGFTdNrgh/v0OuCUmi6636nXN2+2CIoyhvJQMARtTdSfqlYbcGy7XZ4I/u60s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036336; c=relaxed/simple;
-	bh=ZSKBQS+8Mn7aJnZUbJUB/8XB7m9MXAj5PzIqShvjvqw=;
+	s=arc-20240116; t=1710036339; c=relaxed/simple;
+	bh=D2uX+Mnk+6vztSUZd5hP00XWtGAz0CoTxvXAkzGNj1I=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=jdpgx8t0qSMOllIMCC4k6qsIyqyeNeHlsyIJKccnewg+NuuHrc6LV3IWHuemC39vNsNOmd8BYvIhmVl3zwyWzfZHvEkKeFsJWRq+tDSbKi5NdB1G97l90W2izCLhmVqbyW8p1YUtX//MFtRMt5VY/YEOTuBZ6nqSKta3sL3TF+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BZG3qtOl; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=kAJ+vBJXxIkC9AtljqsX5vcI15/yVrPb8W6L3sK8jMSb/Xsn83lAo7mKo4Wyz+UuA7+QgcwF/glSUTzrazL2v+RTMjWy8AusJ32Lz4yM8nSK3LFJq8qwpzGRfE0wduIC8QrNIaStlkfldTRz2676R+cLi1gMNVsQp/sgUCUDnsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kMIRydFx; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BZG3qtOl"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dd0ae66422fso6702571276.0
-        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 18:05:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kMIRydFx"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a2386e932so7272897b3.1
+        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 18:05:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710036333; x=1710641133; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710036336; x=1710641136; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=s1Gx+zOxHa5G/G1Me70ulKh3Qhwa8FiZyBNMKmpUzIM=;
-        b=BZG3qtOl1Lk1bJytdZIVHW9ExdwmwN/JyuPocEHdNsRCuLVNgssy0pB7ZrYEQaeIYt
-         Xpch/sx+B2mZNpYIaXqj2ErUzL6DyoV9k51hqaseqtNGf+tFPDIRK0M4UZno+WFKhLzx
-         I/I7jVpTe4tOwOALJYHX3N8rV1W+aEpvY8fz70RitI7T1/f6kzlysPSkUjqFAx4JYqr7
-         RL4UC9w9/wJzj4mfBMoUr9SbFp/bd2Wl1eTTa5pbVD6pheNUauDUd02cBvj+dgS3dj0R
-         cif0w2wMFYBZxxJYd0amy0KrezZWmVQ9RRQYg5tMQh/H/faAl1wfckVzIhOyijqDmJWc
-         XsiA==
+        bh=T7XIYLAkcLSrj5FLrGjKI8q+UW4mZzYyudvGuQ4/TZo=;
+        b=kMIRydFxidKzY7BpYx9EUp/eSGgFea4GwwQrTWrZFWAG+5gWnMJU0Gbf6KDWEXRVbB
+         yt7yTV4W7LoKxr4bwuLNicNelGV0VJdo8+Xxc3tr9qWqEormXicnooeGM+XBHP/F8Lpv
+         MkZPbXBbSyvDxovJoSlKKkCQ8NeOEsoPsWWeQ/wCQOw3jDd+VazdaPjgJjjglqJ2YrqQ
+         DzXZQwEmve8ZRYv9vrjP3ObWuuQVtRPblfKrVNINjUlnr0Z/lkXrGfycXXpfWJCveve2
+         LkbG7/7/jskn+XiPH/2MRqGAtT1mcFiev5F2k5tRA7Uy3qUjHzrB0948Z1PAUaO33IXn
+         CXSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036333; x=1710641133;
+        d=1e100.net; s=20230601; t=1710036336; x=1710641136;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s1Gx+zOxHa5G/G1Me70ulKh3Qhwa8FiZyBNMKmpUzIM=;
-        b=oYJsEpSZm1JQUmtSFmIEGYcIXsMSgjHpo0cR9MUM2iKXVljCCui+N78qmRs6VkfBfT
-         FCPRNXrqj0tUQOD5/5/IGqTwT+X1x0i2tWqAVnYsZ6QETDN43ZvWxm6APoTQ0YgtN3TX
-         spKSj/Bw6/agmhFbPOITPN6gNKce7W3RpJAUPzCNeVcF27z7UweSL1cBbK2styJmYwoP
-         rKW1flxP5T+54ZNbIuZSpvhmca4uR8cmNHXdx4H3rdP94TzE3H8PGEaKhdFLYoOsoH4F
-         NhhIZAtzyDdeAS4QcnLjNzdwSQ5UmkZZkpP8SbHoQDFrKX1qWuZsl9JlagoAdP3qBcuv
-         oI9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWBgAPXGibqw5xSVVxZ0Z+0GctYWF5TuV0k/+JEJSm1DUWOkXX6D2YDJj7jCvKaFj7DB3fzHj42Zs69CLlgxAewlbEv+jWj7lbC68axXCSZ
-X-Gm-Message-State: AOJu0YwAFvUDsa9pEevMUyMzf7kZ2nZ77la59dfC6m0dJWgo2mQ+65en
-	k/LdtjFUzfCSEjbrzkochAb72wp56RBGuk5gewf3FhzjefJZFLU3rqmNsaGnxtjlHdGtk9Bj6PP
-	VpKiWIA==
-X-Google-Smtp-Source: AGHT+IF4u5R6JlS2lv4g7BW2szOoJKeUuXHhe4ENBdL2Zr6Mgb8g7E49MW+hNNmJV1buj1jkBdxVOnRyOcxA
+        bh=T7XIYLAkcLSrj5FLrGjKI8q+UW4mZzYyudvGuQ4/TZo=;
+        b=q9QjMj9MPsxdpms6MsZAMunenIUpnLSJ8AZk37WIJSaSdkY2MsGpewam0+HLRbagqe
+         BFNHY8c1LXdPtdoyi8IX5nyVk9wRovseNyAKuYdqcuc7wZOxxtvEfSkFkIOgZbtGrbkB
+         32726x5fS6pF9LSLCjlUuNsh4+qYZgKPyFzyAjvNKGGd5UdWpx2KZLIy0ndD+t77Z8If
+         pgB6IWlpfTH9Nu48TSTBa3nSdNf7qJukxt4EmiUywd1lv+s9Mh+wCeuycCjFLqHTMvlH
+         xuFuW8WI+k3ZGuUPyPRjFDuvQXcItnYwMY8w+ZWQOAacWa1FGel3mmO3YZZk95vCGwee
+         XWAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXardUf5ISz2KlBhNG8Xr3caUZ46tXXiOfFpHnqK3zZvZrkhTkj+q+8B5WIHo4n2i/BeYDv9Xv0pOIShajSHEWhBPOxyehGNIIaJ01QqT0+
+X-Gm-Message-State: AOJu0YwDuGjdlKHW4bVqNx7Q08u4QU6RtC/8bfsa3xmXiZKIUT/dw1Pq
+	QxhUfQolKwss81tk8UeOWfDVOm8ULlEEhoOtDX5Q2oTZwt5C/gfaspJX+E1YXchocn9li5jRxQk
+	6jbkOhg==
+X-Google-Smtp-Source: AGHT+IHgDNWM+Z4QXgFMm7GizvEhHToqcLHuZHJtXyYeO1MzHp7huAG4ihDQbMUHqCDQpOBGjLQSGQDO0YZe
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
- (user=irogers job=sendgmr) by 2002:a05:6902:10c2:b0:dbd:b4e8:1565 with SMTP
- id w2-20020a05690210c200b00dbdb4e81565mr1091610ybu.4.1710036333476; Sat, 09
- Mar 2024 18:05:33 -0800 (PST)
-Date: Sat,  9 Mar 2024 18:04:56 -0800
+ (user=irogers job=sendgmr) by 2002:a0d:d7cd:0:b0:608:72fe:b8a1 with SMTP id
+ z196-20020a0dd7cd000000b0060872feb8a1mr953360ywd.4.1710036336387; Sat, 09 Mar
+ 2024 18:05:36 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:04:57 -0800
 In-Reply-To: <20240310020509.647319-1-irogers@google.com>
-Message-Id: <20240310020509.647319-2-irogers@google.com>
+Message-Id: <20240310020509.647319-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240310020509.647319-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 01/13] tools bpf: Synchronize bpf.h with kernel uapi version
+Subject: [PATCH v1 02/13] libbpf: Make __printf define conditional
 From: Ian Rogers <irogers@google.com>
 To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
@@ -93,46 +93,34 @@ To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Commit 91051f003948 ("tcp: Dump bound-only sockets in inet_diag.")
-added BPF_TCP_BOUND_INACTIVE to the enum of tcp states in uapi's
-bpf.h. Synchronize the tools version of the file.
-
-To avoid future divergence add uapi/linux/bpf.h,
-include/uapi/linux/bpf_common.h and
-include/uapi/linux/bpf_perf_event.h to the check-headers.sh script.
+libbpf depends upon linux/err.h which has a linux/compiler.h
+dependency. In the kernel includes, as opposed to the tools version,
+linux/compiler.h includes linux/compiler_attributes.h which defines
+__printf. As the libbpf.c __printf definition isn't guarded by an
+ifndef, this leads to a duplicate definition compilation error when
+trying to update the tools/include/linux/compiler.h. Fix this by
+adding the missing ifndef.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/include/uapi/linux/bpf.h | 1 +
- tools/perf/check-headers.sh    | 3 +++
- 2 files changed, 4 insertions(+)
+ tools/lib/bpf/libbpf.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 7f24d898efbb..754e68ca8744 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -6904,6 +6904,7 @@ enum {
- 	BPF_TCP_LISTEN,
- 	BPF_TCP_CLOSING,	/* Now a valid state */
- 	BPF_TCP_NEW_SYN_RECV,
-+	BPF_TCP_BOUND_INACTIVE,
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index afd09571c482..2152360b4b18 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -66,7 +66,9 @@
+  */
+ #pragma GCC diagnostic ignored "-Wformat-nonliteral"
  
- 	BPF_TCP_MAX_STATES	/* Leave at the end! */
- };
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 66ba33dbcef2..64dbf199dff9 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -6,6 +6,9 @@ NC='\033[0m' # No Color
+-#define __printf(a, b)	__attribute__((format(printf, a, b)))
++#ifndef __printf
++# define __printf(a, b)	__attribute__((format(printf, a, b)))
++#endif
  
- declare -a FILES
- FILES=(
-+  "include/uapi/linux/bpf.h"
-+  "include/uapi/linux/bpf_common.h"
-+  "include/uapi/linux/bpf_perf_event.h"
-   "include/uapi/linux/const.h"
-   "include/uapi/drm/drm.h"
-   "include/uapi/drm/i915_drm.h"
+ static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
+ static bool prog_is_subprog(const struct bpf_object *obj, const struct bpf_program *prog);
 -- 
 2.44.0.278.ge034bb2e1d-goog
 
