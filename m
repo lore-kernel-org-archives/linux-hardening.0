@@ -1,319 +1,150 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB493A8C3
-	for <linux-hardening@vger.kernel.org>; Sun, 10 Mar 2024 02:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CD92F5B;
+	Sun, 10 Mar 2024 11:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710036371; cv=none; b=ZwmDk/WTwBrN5iVsdfVzDmCQVMVrHhX/xWlJJGEoubfzQ9TPxhh0XTXuIO+DJPNbcKv+4ENx29ys26cH4JmISwGx1bAsEPpxdFYiwhforKnnDOReI+Pp3X44/KlovX4ue8RKv/we81Z46ifSLpOLtNdGdpZpisZaENCWXbEB2bY=
+	t=1710068576; cv=none; b=IelaEKlGwTxcdS99PvWBfp0xZ6JHko9H7RYwENYyBWcTm4sgaltAI2oFQLj5T+LAWjGlnZWT103gSTrGHD0E9YtdeLdkIzkTab+jYWn/Wg9KVXXvrWGkw/8Ox0gj//tzfhGR515xzG8TkIZ7k59wORUy8yuH3GTj0qSmWQyG2aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710036371; c=relaxed/simple;
-	bh=qvu80I2tuIwczv3ewDN5Kf8bkfHfC9IP72lON4Zzmek=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=VT7NWlrOgMRRyEIYHmBjhoKmys+d3JoK8+6ZBovyl1cMqMJybg5qPeEoygb+gwjNTXUD+U/2VNVInC7xe/FJAWlrl4O3PRvxsZi/1d6qRSsPPvky6dpgiyiVYr/ubIim/lJuIGGmLgpRvPNA6THJ47sytblDDXmgQ+iSmpdTZM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hV39oof8; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1710068576; c=relaxed/simple;
+	bh=+5rMfr/k6XDk+OyUhtil8qcaQkwr2DZZRPRtYFIAiHY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RHWA2toy1DUtHY4aB6Gq+VQVX4OeYL+kENXNZgi5h2Fhu2o5uIgyiQtIygAf3pAp0HBc86RFzrYXcq8Nbp3NrDHx1YK/D8l7+LowZX6KxBvzSFa+0du9bEArmSNN5os5CQEOoa++unixuN9/Ylp4/aDEkRaUjx1EYB0kUmFtUmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=LOmqMada; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hV39oof8"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc647f65573so5995155276.2
-        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 18:06:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710036365; x=1710641165; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z2TI3BR52BOETJMkXQVYiCvqxjFYb61EnnuV6r2EGgU=;
-        b=hV39oof8n6gQYhpoRdQBNKXrF9luve4Gjjy1Iibfj18oWaFulJIcW/K0a+36t6prcz
-         c2TirRz8836CT+nuHJYaKfcP8O3elPqWrHmJdhPhrYbIebqJVgH2tC4zE2I3VeLdlg23
-         ihbhVIuMkt4Fo+motqOpBgLeIqMlgh6bVwkPGzIwr78rsxBOM839rKLVNIweb/bB37oC
-         bee/hJw0Psd6q4+giekuPYhNzCCyOGVouxE66vuCTKa3h+WcMmDafItdyLDBzhIC+mvw
-         yus2gBGtfrawoxBl/bS0bvetjFoluac4zdUvlbymAVId8gCuS3ZZ+LOeQ0GGcBYxc1wG
-         mt4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710036365; x=1710641165;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z2TI3BR52BOETJMkXQVYiCvqxjFYb61EnnuV6r2EGgU=;
-        b=GXIG5uzLFE3JPqaMTa5mAx6IlF0y0LN1gZyhWubAH0FF9tp89YogjN6MNmuGmQOkmf
-         K1p4xO+yjp5EhZ0WUilVFEGLugOB7jVlFKgnMBPepD7EzRPn55AwhJcs+GGc8deO3MOx
-         6bU/57CRNh4e94QTqN2bFANGKA4EwKSog+5BCKQYWTepvkmtOpfjSQ0bHGxI7EEJd3Rd
-         q/3Q9qhvka9CeXsZYut5zFZs39U+zPMU3iotkax6RXYmeeDZuQVNrVF3p2hsspmFlIM8
-         Ou0cA+Va8CLsXYdwu9EUqxs22SO0PwabhCiYsua/IFfeINMlWDrUAwi5/OPr66cBC2Rp
-         L37w==
-X-Forwarded-Encrypted: i=1; AJvYcCVV+RhFZuuChr4csnOgSMrKswrCmQHLYHbDbZAaYfSZ3p7noJxxJZ3EkHyKzswi09NN2TSxd0EMbpckhIejQYYmV5oHw02bWT8tkWI3Kn1Q
-X-Gm-Message-State: AOJu0YzrJJ6m67bsgzE/53lArVXFoC6zKKFVRRVdtpzAmmTEUSJMYBEh
-	zWT8UYGWgOE+ybN2UJcFYMCXo3tOV5rUR61cAahXq2fOIEujXA95b/DdcTsMi+CciDktEhvJy9V
-	ek0Zf0Q==
-X-Google-Smtp-Source: AGHT+IHg84e8jFIAgnoZrRiN8Pu+L19uE2B6rig+tSx4eREFwobOlwuHge4FvzAmOSQKYE9pLZGbcXyYmOgE
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
- (user=irogers job=sendgmr) by 2002:a05:6902:18c9:b0:dc6:fec4:1c26 with SMTP
- id ck9-20020a05690218c900b00dc6fec41c26mr897542ybb.1.1710036365375; Sat, 09
- Mar 2024 18:06:05 -0800 (PST)
-Date: Sat,  9 Mar 2024 18:05:08 -0800
-In-Reply-To: <20240310020509.647319-1-irogers@google.com>
-Message-Id: <20240310020509.647319-14-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="LOmqMada"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1710068564; x=1710673364; i=erick.archer@gmx.com;
+	bh=+5rMfr/k6XDk+OyUhtil8qcaQkwr2DZZRPRtYFIAiHY=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=LOmqMadaANh0URyyeDwqOx+00f3MsVnMzVsLE0uhcG1byIOMPmo+kfs0Wfghmu3d
+	 b81IoXhUPcYQvX2JTuAp1kCn8W16x6pc5S49oLcapmlF/gYD9DQ5jeSKdmmqvIhyH
+	 tI3tOhQ7OLh05Pj7dKVChPQSIyZo8Fs54gwg0kvZHGueBqVG/hi4zwT7r7232W/61
+	 VXNy2mxtQBkR4ZHHKfdBOp6+RJGg45xino/mMBGspproZ7pYEhNZWtMfBEXdSJdUa
+	 hb53+oz8YFRhMJ0+a/2RUQBvKWsglJpV7r4JUMYQZpGTjQ8o4JVw7FXmasjVVGlVt
+	 lwvnfCHBv3UylzyCKg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1Mr9Fs-1r50WT4634-00oDvT; Sun, 10 Mar 2024 12:02:44 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] bcachefs: Prefer struct_size over open coded arithmetic
+Date: Sun, 10 Mar 2024 12:02:26 +0100
+Message-Id: <20240310110226.6366-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240310020509.647319-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v1 13/13] tools headers: Rename noinline to __noinline
-From: Ian Rogers <irogers@google.com>
-To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	David Laight <David.Laight@ACULAB.COM>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
-	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
-	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
-	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
-	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
-	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev
-Cc: Christopher Di Bella <cjdb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1gqFpsuchBie185tu/ilDuLd/4EkL2N0Cl0n4oU0HUDgj5jkASv
+ 2JxRgVRDvB8/EaPtFAioHFHJxAagCpY7mL9CkPmiABF7tOIFXdkaR5hgluwClEh9Axg1ewJ
+ VjI8Uuu+nMLCFBMl7xEdIjXh5OZZePiASH2hkNdNoxJz+nPUNCMHD2psMmGIAgkKj/u7GGW
+ yNX9qp9L1pPm+UBI3PbYA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JwKYqJuPPMo=;3Zx3bGf7tDqDsQJzmUIOrUtp13Y
+ B9nVzkrtiSCLALgkQ1ZfCdfjxLUfC+asnVqjIUfXJ3KyJyFb3Gn+jIBE0FPmmRUMiNIVSk5hz
+ DJLHQanyaYeAIsTnHtsF0iHaBwkiP54+1MTGSLXqyQ4g42Z846mMoTJe+1Uv2Aj3a6pAre5Q1
+ EHHE+rEJKel2GMu4rPEqOu8tjNJTe045/irw8dVa8BSm2R6/Y2iqAmVoslZp3Xt93LCUHUI1Q
+ /IqhcUH1bSn1hExcymfnvakqIZ9bosSUeWta619trRu03yW5OAtclZBtUZuWyHoHqMrPrmUc3
+ zaLrS/sdZGdAskS9tuq1cTM0TWVAsksrrC2qTysaWxIVKfEa5O2wAvZH0ORitGO32XYyYzdHO
+ chfvcEsarJf4RGWJ0bGDxvew0JuHhStzBw+hijEDJCQaCOHaI50AkJf343fRo4vLFIDL1h+9F
+ TFir0JsSDd+EoTW69S8/++/sLcQqaXQFUpaJxjoYn1TC3C9Polq+1C+fbYc6/dv8Y+496Z/+9
+ tK10XstzvtMIEMh0UUBRCcV1Pu47dHM0jUrNQf/dNrgYVs8va25VwfQRsUZ7AqlvLwzm7d3ny
+ XUIhpsqTPyqsiDxmWmCy+slZS6PrTYGcQIWsBA63w11na/ks+NtrapebyFlI6XBpBSaLM9xor
+ Nih5932npaGl22GI+pLcOXV7P7+Q5JVUXYFPa8CLK9zJh8LxnJRBgnR3c8Quszrv8kdFE2ITd
+ ebFl6K8ulN+mxJKMAKwkSMTaTeiHWvcqYxkT4pj/E4CxgukTiYHnWt5YzWtpcTQ/GJaxIgCam
+ YuFeb0cowD7n0ZJaI1IxmcKALQ6oDr9AxToilGTuz8ZF0=
 
-An issue was reported with clang and llvm libc where the noinline
-attribute [1] was being expanded due to the #define in
-linux/compiler.h (now in compiler_attributes.h). The expansion caused
-the __attribute__ to appear twice and break the build. To avoid this
-conflict, rename noinline to __noinline which is more consistent with
-other compiler attributes.
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1][2].
 
-[1] https://clang.llvm.org/docs/AttributeReference.html#noinline
-Reported-by: Christopher Di Bella <cjdb@google.com>
+As the "op" variable is a pointer to "struct promote_op" and this
+structure ends in a flexible array:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/include/linux/compiler_attributes.h |  4 ++--
- tools/perf/arch/x86/tests/bp-modify.c     |  4 ++--
- tools/perf/bench/find-bit-bench.c         |  2 +-
- tools/perf/tests/bp_account.c             |  2 +-
- tools/perf/tests/bp_signal.c              |  2 +-
- tools/perf/tests/bp_signal_overflow.c     |  2 +-
- tools/perf/tests/dwarf-unwind.c           | 12 ++++++------
- tools/perf/tests/workloads/leafloop.c     |  8 ++++----
- tools/perf/tests/workloads/thloop.c       |  4 ++--
- 9 files changed, 20 insertions(+), 20 deletions(-)
+struct promote_op {
+	[...]
+	struct bio_vec bi_inline_vecs[];
+};
 
-diff --git a/tools/include/linux/compiler_attributes.h b/tools/include/linux/compiler_attributes.h
-index 9bfaec783e48..1ff3d85f5af3 100644
---- a/tools/include/linux/compiler_attributes.h
-+++ b/tools/include/linux/compiler_attributes.h
-@@ -267,12 +267,12 @@
- # define __flatten			__attribute__((flatten))
- 
- /*
-- * Note the missing underscores.
-+ * Note, the kernel version is missing the underscores.
-  *
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-noinline-function-attribute
-  * clang: mentioned
-  */
--#define   noinline                      __attribute__((__noinline__))
-+#define   __noinline                      __attribute__((__noinline__))
- 
- /*
-  * Optional: only supported since gcc >= 8
-diff --git a/tools/perf/arch/x86/tests/bp-modify.c b/tools/perf/arch/x86/tests/bp-modify.c
-index 0924ccd9e36d..65493ff7a76f 100644
---- a/tools/perf/arch/x86/tests/bp-modify.c
-+++ b/tools/perf/arch/x86/tests/bp-modify.c
-@@ -15,13 +15,13 @@
- #include "tests/tests.h"
- #include "arch-tests.h"
- 
--static noinline int bp_1(void)
-+static __noinline int bp_1(void)
- {
- 	pr_debug("in %s\n", __func__);
- 	return 0;
- }
- 
--static noinline int bp_2(void)
-+static __noinline int bp_2(void)
- {
- 	pr_debug("in %s\n", __func__);
- 	return 0;
-diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
-index 7e25b0e413f6..dd97a51649bc 100644
---- a/tools/perf/bench/find-bit-bench.c
-+++ b/tools/perf/bench/find-bit-bench.c
-@@ -31,7 +31,7 @@ static const char *const bench_usage[] = {
- static unsigned int accumulator;
- static unsigned int use_of_val;
- 
--static noinline void workload(int val)
-+static __noinline void workload(int val)
- {
- 	use_of_val += val;
- 	accumulator++;
-diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
-index 6f921db33cf9..459f61752a71 100644
---- a/tools/perf/tests/bp_account.c
-+++ b/tools/perf/tests/bp_account.c
-@@ -34,7 +34,7 @@
- 
- static volatile long the_var;
- 
--static noinline int test_function(void)
-+static __noinline int test_function(void)
- {
- 	return 0;
- }
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 1f2908f02389..484a7e7f96ee 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -59,7 +59,7 @@ static void __test_function(volatile long *ptr)
- }
- #endif
- 
--static noinline int test_function(void)
-+static __noinline int test_function(void)
- {
- 	__test_function(&the_var);
- 	the_var++;
-diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
-index 4e897c2cf26b..9436bf2973f8 100644
---- a/tools/perf/tests/bp_signal_overflow.c
-+++ b/tools/perf/tests/bp_signal_overflow.c
-@@ -30,7 +30,7 @@
- 
- static int overflows;
- 
--static noinline int test_function(void)
-+static __noinline int test_function(void)
- {
- 	return time(NULL);
- }
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index d01aa931fe81..a669c69a9242 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -109,7 +109,7 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 	return strcmp((const char *) symbol, funcs[idx]);
- }
- 
--NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__thread(struct thread *thread)
-+NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__thread(struct thread *thread)
- {
- 	struct perf_sample sample;
- 	unsigned long cnt = 0;
-@@ -140,7 +140,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__thread(struct thread *thr
- 
- static int global_unwind_retval = -INT_MAX;
- 
--NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__compare(void *p1, void *p2)
-+NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__compare(void *p1, void *p2)
- {
- 	/* Any possible value should be 'thread' */
- 	struct thread *thread = *(struct thread **)p1;
-@@ -159,7 +159,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__compare(void *p1, void *p
- 	return p1 - p2;
- }
- 
--NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_3(struct thread *thread)
-+NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__krava_3(struct thread *thread)
- {
- 	struct thread *array[2] = {thread, thread};
- 	void *fp = &bsearch;
-@@ -178,7 +178,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_3(struct thread *th
- 	return global_unwind_retval;
- }
- 
--NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_2(struct thread *thread)
-+NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__krava_2(struct thread *thread)
- {
- 	int ret;
- 
-@@ -187,7 +187,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_2(struct thread *th
- 	return ret;
- }
- 
--NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_1(struct thread *thread)
-+NO_TAIL_CALL_ATTRIBUTE __noinline int test_dwarf_unwind__krava_1(struct thread *thread)
- {
- 	int ret;
- 
-@@ -196,7 +196,7 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_1(struct thread *th
- 	return ret;
- }
- 
--noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
-+__noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
- 				int subtest __maybe_unused)
- {
- 	struct machine *machine;
-diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
-index 1bf5cc97649b..89d2cec2f461 100644
---- a/tools/perf/tests/workloads/leafloop.c
-+++ b/tools/perf/tests/workloads/leafloop.c
-@@ -4,18 +4,18 @@
- #include "../tests.h"
- 
- /* We want to check these symbols in perf script */
--noinline void leaf(volatile int b);
--noinline void parent(volatile int b);
-+__noinline void leaf(volatile int b);
-+__noinline void parent(volatile int b);
- 
- static volatile int a;
- 
--noinline void leaf(volatile int b)
-+__noinline void leaf(volatile int b)
- {
- 	for (;;)
- 		a += b;
- }
- 
--noinline void parent(volatile int b)
-+__noinline void parent(volatile int b)
- {
- 	leaf(b);
- }
-diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-index 457b29f91c3e..e252efb76203 100644
---- a/tools/perf/tests/workloads/thloop.c
-+++ b/tools/perf/tests/workloads/thloop.c
-@@ -9,14 +9,14 @@
- static volatile sig_atomic_t done;
- 
- /* We want to check this symbol in perf report */
--noinline void test_loop(void);
-+__noinline void test_loop(void);
- 
- static void sighandler(int sig __maybe_unused)
- {
- 	done = 1;
- }
- 
--noinline void test_loop(void)
-+__noinline void test_loop(void)
- {
- 	while (!done);
- }
--- 
-2.44.0.278.ge034bb2e1d-goog
+and the "t" variable is a pointer to "struct journal_seq_blacklist_table"
+and this structure also ends in a flexible array:
+
+struct journal_seq_blacklist_table {
+	[...]
+	struct journal_seq_blacklist_table_entry {
+		u64		start;
+		u64		end;
+		bool		dirty;
+	}			entries[];
+};
+
+the preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the argument "size + size * count" in the
+kzalloc() functions.
+
+This way, the code is more readable and safer.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
+coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Merge the two patches in one single patch (Kent Overstreet).
+
+Previous versions:
+v1 -> https://lore.kernel.org/linux-hardening/20240224145924.7468-1-erick.=
+archer@gmx.com/
+v1 -> https://lore.kernel.org/linux-hardening/20240224151658.8272-1-erick.=
+archer@gmx.com/
+=2D--
+ fs/bcachefs/io_read.c               | 2 +-
+ fs/bcachefs/journal_seq_blacklist.c | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs/bcachefs/io_read.c b/fs/bcachefs/io_read.c
+index dce136cd2271..01beab55c6b3 100644
+=2D-- a/fs/bcachefs/io_read.c
++++ b/fs/bcachefs/io_read.c
+@@ -174,7 +174,7 @@ static struct promote_op *__promote_alloc(struct btree=
+_trans *trans,
+ 	if (!bch2_write_ref_tryget(c, BCH_WRITE_REF_promote))
+ 		return ERR_PTR(-BCH_ERR_nopromote_no_writes);
+
+-	op =3D kzalloc(sizeof(*op) + sizeof(struct bio_vec) * pages, GFP_KERNEL)=
+;
++	op =3D kzalloc(struct_size(op, bi_inline_vecs, pages), GFP_KERNEL);
+ 	if (!op) {
+ 		ret =3D -BCH_ERR_nopromote_enomem;
+ 		goto err;
+diff --git a/fs/bcachefs/journal_seq_blacklist.c b/fs/bcachefs/journal_seq=
+_blacklist.c
+index 024c9b1b323f..2c2490aa15fe 100644
+=2D-- a/fs/bcachefs/journal_seq_blacklist.c
++++ b/fs/bcachefs/journal_seq_blacklist.c
+@@ -165,8 +165,7 @@ int bch2_blacklist_table_initialize(struct bch_fs *c)
+ 	if (!bl)
+ 		return 0;
+
+-	t =3D kzalloc(sizeof(*t) + sizeof(t->entries[0]) * nr,
+-		    GFP_KERNEL);
++	t =3D kzalloc(struct_size(t, entries, nr), GFP_KERNEL);
+ 	if (!t)
+ 		return -BCH_ERR_ENOMEM_blacklist_table_init;
+
+=2D-
+2.25.1
 
