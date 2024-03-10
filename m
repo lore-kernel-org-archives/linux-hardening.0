@@ -1,139 +1,159 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EA44F8A2
-	for <linux-hardening@vger.kernel.org>; Sat,  9 Mar 2024 21:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B183C24
+	for <linux-hardening@vger.kernel.org>; Sun, 10 Mar 2024 02:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710020915; cv=none; b=dp7yHAhYsar//0nBhPcdyWTSezLv7iC0phIy6GAhjseOUukezvDF4ray/6u73C2CYKctjVppxG8GgjYRxQ0YrDdkoSM0ztCUs/bAcfEbVoMUu6aVgWcPCWMwhkHBawD74uqn0JEiLk2hQ0sEz1TAVJ/r+FrpuqRATw7imspmeOg=
+	t=1710036333; cv=none; b=gP+iMpHwmAEZzQNT6bU1bAUJkzNwP12NdBDE1Ze2k3U7YcbRqo7kbe6BVUq2653Me/zRgQylmTif24G9q03HjVVss2VfxOdCBRPUDW83Sa10EEeGcyAsRBmO8wrIGNEeMCZcor7CiotCeQCWDTuuCg3i2Pni1HzTWU4sgBDX6SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710020915; c=relaxed/simple;
-	bh=TlbeLRS6KIxUGIuaEwI09g/BKrurDk428JKg+03aOWE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dshfwtBCHUymIusL9QDL22qcm3otWZSUFHkCPEPQiWhVEC7T71rsfROk22kDYNRq6NdAGnId/i7JBaMazoTaX2n1ZRcrMZ2wI81g80Ft1aoGHlOgsDZCyYV6qBQ7k0ACjCZ1IAH6CQzsXdAs/pP67l9mt1ChAVvnRMwSqhpZtVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=am4H5s3i; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710036333; c=relaxed/simple;
+	bh=as7KSNoSZZw9qpo+zjIfLwBqz9yg94llh3SNLLkBgkY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=bDqpBQd+XFQVRjQT1AYmreL694xN4+W+mXyzV4RiBHzHWiRMIZQZSYsE74To5mbPNPztmF80wQcaZAjWD3P8sZFfWadUnFVMl90fly8ek31ml0lWfatMfIiB+svWRUMBXAeKEqZW2XS+63ZWEz1nx6XkJpCo2Qv9iIHETE3UrdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=thYILaaq; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="am4H5s3i"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so20484125ad.1
-        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 13:48:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="thYILaaq"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-29ba8f333easo2374571a91.0
+        for <linux-hardening@vger.kernel.org>; Sat, 09 Mar 2024 18:05:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710020914; x=1710625714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ij4dl6s+fU5V8GRSIdSDyUxEbjNq2rinUUwBlPc9zv8=;
-        b=am4H5s3i5gsv96Zqq4crWTeB9+EM8EF5wLsYzbI019n65LOBuVxM9Ji01cwmdX2qCC
-         glhU+chp+IG65qcPFmFp+HTM5vMw3TPuClv3qvnP2bSMyE+wPCBLcCeUadTiXN+mIuZF
-         VwbfjmCbNZWY6ndooJvFJ9fRi6w223DfhoG44=
+        d=google.com; s=20230601; t=1710036331; x=1710641131; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eHEIYqeti5loGAbMg5pT9rTzLm2kPQlk4+PZDUbNnbs=;
+        b=thYILaaq0N8hztWo1a6G6Gna5tcUK7A8Pr9P0KTYl8eXkQzu4f5M4gJuRJSyTWIsCG
+         I4+QDYfzsbg9YxV+Pjyu8vHBAZ5FXW7QkIz/FGBv1PaWK7/Hwc7GlhTPmH8gruT+4uL/
+         t7bcVG7ZWNg4aqJH0Ercooi2T+Np4zQcIj4qfRsp7ZEMxNrXdDwL6uvnTYvKRiqUW+VF
+         fwnluvnGaF2iqIWxm85sua6JPALE5wQSdzUuT5inUmSxZpQLR8kKYdMKiZ7xkjpm3Q1F
+         WmIWPij3/Zcwd3sXtc2oWy1QtJWi4K1YxwfWZE9jznqUNPwflSNeHC/DhsrRKQK9ipoE
+         kUew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710020914; x=1710625714;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ij4dl6s+fU5V8GRSIdSDyUxEbjNq2rinUUwBlPc9zv8=;
-        b=EVlANtgLIq1PXwT9dDAN8jk+xglgWzs5UV/QYFgVBsXjX+/a05Ci/vZXgf+0jhsy+7
-         fPESw5bUzSK0WdW5BiVuXdhbVZAAqCZmjHVk0RCED1IvKr5ZwWKc4AZCQZCgppMqdV1f
-         W189DQ6xO+TY0NRg0q4vmNevkOF5v9jozRVgdt0UP+Mrop0eFU2JewU2Y4sZ8sGRZ42R
-         /l1bwN7bXpsb6IGVKiZYsoGTVttbA6RHEKkrwKSvaMBk1xQcyGc/6N6GrNeUKcCDQZT1
-         +5Vm0H6w3xCAYKJmbj8VAUi7DYC5KQtQkZfXyKeV0VWgazgss9NtvVEIl0lpEwjW2pn6
-         2s0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWmVrAhrXrujBgt3XO7Af6g5xqSSPfmzAkrfGKOFlBPU/aa47yknLGtxslvAoacZ72cAm8CuiEYalDhSRH6x9VCi9n7e6r0sxeMb2N93n7D
-X-Gm-Message-State: AOJu0YxxpKQPVwxsinYfNWEVb3AGLWfQEo95BdG5/HsTti0O+e+5oaCz
-	7Elfj80GWIw3FiJ2PgjnczibiOVJDq22CDH7srkiVED/A4OeDr9I5tHMuRIqkQ==
-X-Google-Smtp-Source: AGHT+IE03Bnsaj7XifM5/uMKxOJjyFpeQ9/fOFvr/AdwuuzOscOuC+xbByKTNfiifwemz2iFWjiZxQ==
-X-Received: by 2002:a17:903:2305:b0:1dc:b64:13cd with SMTP id d5-20020a170903230500b001dc0b6413cdmr3672457plh.27.1710020913729;
-        Sat, 09 Mar 2024 13:48:33 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i14-20020a17090332ce00b001dd621111e2sm1729518plr.194.2024.03.09.13.48.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 13:48:32 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] exec: Simplify remove_arg_zero() error path
-Date: Sat,  9 Mar 2024 13:48:30 -0800
-Message-Id: <20240309214826.work.449-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1710036331; x=1710641131;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eHEIYqeti5loGAbMg5pT9rTzLm2kPQlk4+PZDUbNnbs=;
+        b=EBJdKYFlRk+NGoORj9zHUKyVpxjATx/HGwolD9wmB2pvLrG1FlqmgB+/dSAXlls7K+
+         90a+Kmn6QRN8XFfHeske505N8y/0JL7+9yTSBnpMVGbjlqryYs5Xr7cYThCEGGhm6+Ta
+         I3dzw0ooRcplZEe3LjC995EetkXyZQUjBR4X2dYo+b9irZgdU3JxcqPv4tRWYVk1WHSq
+         pY860WnMK9LsyxLG2o30PjbqBx3kLDczfes/RSu09GU+qtAb4QYkCm9oVEgw6yHUlfiW
+         nts+RsgWatiU7lDKBvSyz1UeSMQw55MawU1vFI2yqaUUehLZRudZQuXkefFJur55C0sb
+         lfcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUy0CqKlIh/mxq1HrJPV1roTyS7MvS0x7g7qhVOW4/wyH041/ow7mIjk1v5baBeb6pY97UyMtH5NqlxVjLsKhwfKUU01MD15j8vVOnjsJqQ
+X-Gm-Message-State: AOJu0YzfdsgSuqtbXiftWm/p/1d7knBfbet1XtugbALLS6J33PVhljGY
+	11nfkJOMRqwTGnAvfnu+sp9HeBZwMD7AAKTMMYDMbEJ0l9mHKR+o18Wjc/fESe56V1gypX7C32+
+	UamaOQg==
+X-Google-Smtp-Source: AGHT+IFFeRmPXH/DhdnrjLnsP7WPRqqtOIbezxRAyR/jnJBja3zK8/JuocE9C3SHGAEjuI8M5e1xF7iOTDOC
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a63d:1b65:e810:3ad3])
+ (user=irogers job=sendgmr) by 2002:a17:90b:3804:b0:29b:b854:54ad with SMTP id
+ mq4-20020a17090b380400b0029bb85454admr192655pjb.0.1710036330740; Sat, 09 Mar
+ 2024 18:05:30 -0800 (PST)
+Date: Sat,  9 Mar 2024 18:04:55 -0800
+Message-Id: <20240310020509.647319-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1307; i=keescook@chromium.org;
- h=from:subject:message-id; bh=TlbeLRS6KIxUGIuaEwI09g/BKrurDk428JKg+03aOWE=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl7NkuHimbUFvP3Wujjd+L1DSMiaEMK4gLNVck8
- Sc0MmkSs/OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZezZLgAKCRCJcvTf3G3A
- JgXtEACOtfBcv83tcJRDanJKvoKkTfWWrjQSKpdkksCWC6yENNwJql9scRvASM5S6DzURuhkq2d
- N7/W42guz9FpQ+L1UDXoskzaaVCzXOwq3YzF/xTmtrRyXE6GC9NIUJVtE+S3vQGA8WzDo6y8uT2
- WGHvgzK8ddIuVI4SkIr1K0hGRNUyu41RamOTeoLSdb8yQgF6x7Eew0Iukiloqi888aKm7Qpje+S
- +zM4zlnvwtVfmxZzVrszoxqrYJtldziDtD0Pfn9L5wU8lC5BeUw5Dj402JtJeKTP251+QY5MqH4
- NgFGPzm/+xgntTpVCtsqBuiqmqozIOfOPByEycZWnYGIaeA8ICgCkwQEdQbP5ynYqHikt1JG71Q
- 2z3rZHyt3ESV387UNCRVbmaPXWE1Erx0hLLfIppSPltc8zNi9wz8KsnRVdaSDKZ1stl3/IHCr7V
- pPGOf9pbrMW4J55FC7s8KbxiTMiUNjOLFb7a24F9HBB6zfnONbPDqkJKKTp/TfeFbr090JYw8lk
- reVExDRQdz8TVr756XON8JmKFpty+iaTzNDKtz/ip7qquwfy3PrgIwtIx6ESfGWJxDRQIsKBrBp
- QcPjLoqkeYf2/HHpBGOgv+3pgBWJtKdxqyiXbp8F5sc4dAVPZm+XFcfJshWtCQ8OHMM3D8pzAxk
- dFhwp4R FAveH4jg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v1 00/13] tools header compiler.h update
+From: Ian Rogers <irogers@google.com>
+To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	David Laight <David.Laight@ACULAB.COM>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
+	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
+	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
+	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
+	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-We don't need the "out" label any more, so remove "ret" and return
-directly on error.
+Update tools/include/linux/compiler.h so that the definition of
+noinline can be updated to avoid an LLVM libc breakage. Fix build
+issues and try to synchronize other pieces on the way. For atomic.h,
+don't try to synchronize and just punt to stdatomic.h that we can
+assume is present since the move to C11.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-mm@kvack.org
-Cc: linux-fsdevel@vger.kernel.org
----
- fs/exec.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Ian Rogers (13):
+  tools bpf: Synchronize bpf.h with kernel uapi version
+  libbpf: Make __printf define conditional
+  libperf xyarray: Use correct stddef.h include
+  perf expr: Add missing stdbool.h include
+  perf expr: Tidy up header guard
+  perf debug: Add missing linux/types.h include
+  perf cacheline: Add missing linux/types.h include
+  perf arm-spe: Add missing linux/types.h include
+  tools headers: Rewrite linux/atomic.h using C11's stdatomic.h
+  asm-generic: Avoid transitive dependency for unaligned.h
+  tools headers: Sync linux/overflow.h
+  tools headers: Sync compiler.h headers
+  tools headers: Rename noinline to __noinline
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 715e1a8aa4f0..e7d9d6ad980b 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1720,7 +1720,6 @@ static int prepare_binprm(struct linux_binprm *bprm)
-  */
- int remove_arg_zero(struct linux_binprm *bprm)
- {
--	int ret = 0;
- 	unsigned long offset;
- 	char *kaddr;
- 	struct page *page;
-@@ -1731,10 +1730,8 @@ int remove_arg_zero(struct linux_binprm *bprm)
- 	do {
- 		offset = bprm->p & ~PAGE_MASK;
- 		page = get_arg_page(bprm, bprm->p, 0);
--		if (!page) {
--			ret = -EFAULT;
--			goto out;
--		}
-+		if (!page)
-+			return -EFAULT;
- 		kaddr = kmap_local_page(page);
- 
- 		for (; offset < PAGE_SIZE && kaddr[offset];
-@@ -1748,8 +1745,7 @@ int remove_arg_zero(struct linux_binprm *bprm)
- 	bprm->p++;
- 	bprm->argc--;
- 
--out:
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL(remove_arg_zero);
- 
+ include/asm-generic/unaligned.h               |   2 +
+ tools/arch/x86/include/asm/atomic.h           |  84 ----
+ tools/include/asm-generic/atomic-gcc.h        |  95 ----
+ tools/include/asm-generic/bitops/non-atomic.h |   1 +
+ tools/include/asm-generic/unaligned.h         |   2 +
+ tools/include/asm/atomic.h                    |  11 -
+ tools/include/asm/rwonce.h                    |  63 +++
+ tools/include/linux/atomic.h                  | 107 ++++-
+ tools/include/linux/compiler-clang.h          | 124 +++++
+ tools/include/linux/compiler-gcc.h            | 145 +++++-
+ tools/include/linux/compiler.h                | 221 ++-------
+ tools/include/linux/compiler_attributes.h     | 449 ++++++++++++++++++
+ tools/include/linux/compiler_types.h          | 171 ++++++-
+ tools/include/linux/overflow.h                | 331 ++++++++++---
+ tools/include/linux/rbtree.h                  |   1 +
+ tools/include/linux/string.h                  |   1 +
+ tools/include/linux/types.h                   |  17 +-
+ tools/include/uapi/linux/bpf.h                |   1 +
+ tools/lib/bpf/libbpf.c                        |   4 +-
+ tools/lib/perf/include/internal/xyarray.h     |   2 +-
+ tools/perf/arch/x86/tests/bp-modify.c         |   4 +-
+ tools/perf/bench/find-bit-bench.c             |   2 +-
+ tools/perf/check-headers.sh                   |   4 +
+ tools/perf/tests/bp_account.c                 |   2 +-
+ tools/perf/tests/bp_signal.c                  |   2 +-
+ tools/perf/tests/bp_signal_overflow.c         |   2 +-
+ tools/perf/tests/dwarf-unwind.c               |  12 +-
+ tools/perf/tests/workloads/leafloop.c         |   8 +-
+ tools/perf/tests/workloads/thloop.c           |   4 +-
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |   1 +
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     |   8 +-
+ tools/perf/util/cacheline.h                   |   1 +
+ tools/perf/util/debug.h                       |   1 +
+ tools/perf/util/expr.h                        |   8 +-
+ .../selftests/kvm/include/kvm_util_base.h     |   3 +-
+ 35 files changed, 1388 insertions(+), 506 deletions(-)
+ delete mode 100644 tools/arch/x86/include/asm/atomic.h
+ delete mode 100644 tools/include/asm-generic/atomic-gcc.h
+ delete mode 100644 tools/include/asm/atomic.h
+ create mode 100644 tools/include/asm/rwonce.h
+ create mode 100644 tools/include/linux/compiler-clang.h
+ create mode 100644 tools/include/linux/compiler_attributes.h
+
 -- 
-2.34.1
+2.44.0.278.ge034bb2e1d-goog
 
