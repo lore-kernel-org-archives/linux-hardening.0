@@ -1,96 +1,103 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCD13BBDF;
-	Sun, 10 Mar 2024 23:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F761756E;
+	Mon, 11 Mar 2024 09:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710111881; cv=none; b=fkwwtbPraPB9pDvqTG4tUpMEXxJvEHXCmrFP39H/TzGcRNk1+yief/UXA7eR2wAfs4ZwEU8kHDIoW97pQ1oBVCGVQ10yRCNNZhx/reG5ivFrNCCypRJWcchFFThcQTSzKpELI4+FSm4eApVt0/CR7IHZ1mKix7W02Jh0zqjorSM=
+	t=1710149302; cv=none; b=UjnhXsy1VReydPp4jXVnxiHIDbAn9OZjcV+5ln6TXlX1mF5I36jTZEoOZ4LrxVmVgJDh9AYeDmz5B338ZPog2cnkBozTb20b0qnoD9G6mkgmO/p04hYfuKjk8r112vI2juHidK83gh/LfuNHQMP5iQiTfsF5vg9T+CTQIV6qtVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710111881; c=relaxed/simple;
-	bh=xsSCg1gIRfOme0qklPp8Mf3tndy3KcT8aeAC76zRIw8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nUbI+2GdkjPI8soSmE8uS8gKlHRoQ2nagbMKqU8x7jsUu39B/+i/wXF2v9zkYTSgvKpbbQgQjPETtBlWp3DLPVAYiOJsVIBIEuf+O8nog7ujhz1EGEFY39HtGIkjblIWYWwuQ2NBP2GIAWEepUP0iqOnCuDiHYPpUvSCpRmxpX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LuiLPCKd; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1710149302; c=relaxed/simple;
+	bh=CZz1SStjRYa5gA+pzYzI6DScrjzAK34yLiBd3eSn7OM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=upkXqZEcGVCBSuQDPtsnWFg3ZqjJIzFyX0bL1w2Ee1EZtJfbfiV92KMiqUi1GeLboUO7lV/wr6bTzMgvsCuxJE4jCf8x06ZaZrMQ210hkVEkaQlUwfgYjRStAkjeBsMkc3zIDwhCG5HL2iXX9PyWcXO9a0LAim5d6LYicb/Tg8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjhv/Zpo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LuiLPCKd"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42AJHw3T023445;
-	Sun, 10 Mar 2024 23:04:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=f+FpPc4r1PZZdnJlL9j5cCgKyKK/ti6jzEW4uDteAb8=;
- b=LuiLPCKdYmBUX4HPpw3r+LJCreOcQHeGO0wW9hSeLGcq5yy4CcIe70CsLE315Y2AQpBG
- PNS5QWI5swQWW5FxJ9yJFUZxQ72iT76x2sqFHDMaw7LJA3nQ/1Mc4Ty8TZTukDYEjj2s
- OApGoYZ5w3uY4KDiDS5Di5L8qOCxJewF69xbJfqmcBgEJSEssVimDsh6uVVy7IiSkDm5
- uZ60B6gQL2bM1v+TwVrAc3A3zDhTPpCMYMKYIgPY+1ZxC5GONp60U4lSDwfrMCVRzgq9
- Kq60NgDOdY4QXUsQJeb2WJ8K1G/QMp9dtD9jGgMyBwSaaRsKytNMtUdWQ76Hn/S31vbV 1w== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wrej3stu8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 10 Mar 2024 23:04:31 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42AIUIgY004790;
-	Sun, 10 Mar 2024 23:04:30 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wre750ne5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 10 Mar 2024 23:04:30 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42AN4TSC006839;
-	Sun, 10 Mar 2024 23:04:30 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wre750ndq-2;
-	Sun, 10 Mar 2024 23:04:30 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Hannes Reinecke <hare@suse.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Justin Stitt <justinstitt@google.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: libfc: replace deprecated strncpy with memcpy
-Date: Sun, 10 Mar 2024 19:04:18 -0400
-Message-ID: <171010474754.3838281.7412694993720179449.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20240221-strncpy-drivers-scsi-libfc-fc_encode-h-v2-1-019a0889c5ca@google.com>
-References: <20240221-strncpy-drivers-scsi-libfc-fc_encode-h-v2-1-019a0889c5ca@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjhv/Zpo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3B3C433F1;
+	Mon, 11 Mar 2024 09:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710149302;
+	bh=CZz1SStjRYa5gA+pzYzI6DScrjzAK34yLiBd3eSn7OM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tjhv/ZpoX12XOo2I3gSu3TeIMfANUFWUOVc4WeeGSxZgUmENDriqsmt0LHKJPQahW
+	 5+cqskLul9dHqf4b/MnLh+nEYmlfzIBHSi6LBIbobzryCARnp8/7w/4y4zR2UkUCwu
+	 +3kTbnD9Egt084iRhv/Ymlzaip7ektKyhNzaLvrm2+z6Y1yrYxMxB4PTZL4bRKQCFR
+	 HYy0eP1kmXTrboVGrG8wwVY8lLnqtr21SIm6JY2LzTpZVTGXprB8FN9sX1vv3SOOrL
+	 bKm7+dwwemS/fvVDUhFInhTUWMNUKx7Tsh+Tlgzm431kz4m9jyf7U7FAytxvdXdA2F
+	 mBBiA+qZ6w0dw==
+Date: Mon, 11 Mar 2024 09:28:13 +0000
+From: Simon Horman <horms@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] overflow: Change DEFINE_FLEX to take __counted_by
+ member
+Message-ID: <20240311092813.GJ24043@kernel.org>
+References: <20240306235128.it.933-kees@kernel.org>
+ <20240308202018.GC603911@kernel.org>
+ <202403091230.ACF639521@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-10_14,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 phishscore=0 spamscore=0 suspectscore=0 mlxlogscore=809
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403100187
-X-Proofpoint-GUID: -lc6KRz5DNNYPN7JoNIakS6QpDoyRZ6q
-X-Proofpoint-ORIG-GUID: -lc6KRz5DNNYPN7JoNIakS6QpDoyRZ6q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202403091230.ACF639521@keescook>
 
-On Wed, 21 Feb 2024 23:50:26 +0000, Justin Stitt wrote:
-
-> strncpy() is deprecated [1] and as such we should use different apis to
-> copy string data.
+On Sat, Mar 09, 2024 at 12:32:45PM -0800, Kees Cook wrote:
+> On Fri, Mar 08, 2024 at 08:20:18PM +0000, Simon Horman wrote:
+> > On Wed, Mar 06, 2024 at 03:51:36PM -0800, Kees Cook wrote:
+> > > The norm should be flexible array structures with __counted_by
+> > > annotations, so DEFINE_FLEX() is updated to expect that. Rename
+> > > the non-annotated version to DEFINE_RAW_FLEX(), and update the
+> > > few existing users.
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > 
+> > Hi Kees,
+> > 
+> > I'm unclear what this is based on, as it doesn't appear to apply
+> > cleanly to net-next or the dev-queue branch of the iwl-next tree.
+> > But I manually applied it to the latter and ran some checks.
 > 
-> We can see that ct is NUL-initialized with fc_ct_hdr_fill:
-> |       ct = fc_ct_hdr_fill(fp, op, sizeof(struct fc_ns_rspn) + len,
-> ...
+> It was based on v6.8-rc2, but it no longer applies cleanly to iwl-next:
+> https://lore.kernel.org/linux-next/20240307162958.02ec485c@canb.auug.org.au/
 > 
-> [...]
+> Is this something iwl-next can take for the v6.9 merge window? I can
+> send a rebased patch if that helps?
 
-Applied to 6.9/scsi-queue, thanks!
+Thanks Kees,
 
-[1/1] scsi: libfc: replace deprecated strncpy with memcpy
-      https://git.kernel.org/mkp/scsi/c/3e24118ec185
+I think that would help in the sense that from my POV it would
+be more in fitting with the usual workflow for netdev patches.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+But if the iwl maintainers think otherwise then I have no objections.
+
+> 
+> > > @@ -396,9 +396,9 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+> > >   * @name: Name for a variable to define.
+> > >   * @member: Name of the array member.
+> > >   * @count: Number of elements in the array; must be compile-time const.
+> > > - * @initializer: initializer expression (could be empty for no init).
+> > > + * @initializer...: initializer expression (could be empty for no init).
+> > 
+> > Curiously kernel-doc --none seems happier without the line above changed.
+> 
+> I've fixed this up too:
+> https://lore.kernel.org/linux-next/202403071124.36DC2B617A@keescook/
+> 
+> -- 
+> Kees Cook
+> 
