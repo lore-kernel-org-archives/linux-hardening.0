@@ -1,151 +1,219 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C273D5467F;
-	Mon, 11 Mar 2024 17:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710179371; cv=none; b=GFYHSXQNiFhKTcDxCjfqppVooQy6UehSQY4yXQRtQTqodAB/E9juZ2Wror0ZbZM+xcN+x85DnpUWaZO33quAkap4Ch+C3Nw+xYhV05G7RW4p8683KGk1qBCoInd9BszwtufcWLhn0kk8glOCLEycZQDa9AHXToXF3OQ9Lw06y0Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710179371; c=relaxed/simple;
-	bh=FruVc137rIMV3xfiSwhivbMir0fGyRuBlxHaGRlShtM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DUF4r5YLgepXaM3UpuE/0wqOq8SJMtQw9+vHFYGrtWY+HaHQaZFg9MEpCQ8R2OUXNFm4j8eDy5l6QmSnKv9VsZYbITfbIycgAmiFsg/7KTdkjK/36VOOkjZ6XSG84FSMnkun08/7PvUYns81aI6H9UsVxEydDNfxbvKIfrCYTLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TwAZDQj7; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88003604BB;
+	Mon, 11 Mar 2024 18:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710182292; cv=fail; b=NU+ZCftVunisiztkiGAiVU+84ZZF6CcgmRwHbuw76gWGo4u5AusIrHUnNXZoewPEdYim/pfZLsQBr4xwtrvDHhepm2Gzl5f9/xLSIn/AXq+W/hrAPrv8zxsrePeO3/9YF4iG8qUm6wMX4fM3lFu/+x93KkwSM207o+TfwFrYXns=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710182292; c=relaxed/simple;
+	bh=NCrCQZogk2lXp4a07dTMNNbms+OkcMMceEwyGzU8gtI=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=m99y6UXLDpP0lyU5d6fG25chFHBNQBvgHiMoFQ6QhcM0/vW6VXhCDDy5AhOn9AYsJm91miC3IbGP0bUMlZrSx2/zg0SGaXrQ2xVUOWYWwb6nyhxujXiATq/qdZsskQXVR4WuGT1ms05iPR+wQ+O7BNRgAV1enRBhJELcLH/SghU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bosDVG6w; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwAZDQj7"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso3955923a12.3;
-        Mon, 11 Mar 2024 10:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710179369; x=1710784169; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fbU798yjoe9QW28weq/V45GGj69Gs5hSFHP5NyuJ08o=;
-        b=TwAZDQj7Ve1xAmz6j70L/UFHTlK2nwUQ54hQPjVWTnwDDu+8q0kP6A2lRBN1Z55miy
-         vN4VUcOi27egSN9NPW6olGx/2FAHl5DK/1vwdVfcLkyqaPmhpqRpRLAmLRxahsKBHWxx
-         ZtHA8ZOd1Gcq6f355xmgDdxhkeXYNObOmGjovSllT/Wf8LVv4rRhvV7tRuKxlSTIPE6r
-         c+7mJkW31ocTJ2fmMJvr5zGRLe4QxQUyLLo0WPCe4X/fgOFnVR8EffqRMZi32OGMKeX9
-         MVomS77iLHQPpz8ijBOYp8JMEpGU3JnwhBNM3ACGESZM3q8F1lVRA590jZpOMgjITEjg
-         AJxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710179369; x=1710784169;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fbU798yjoe9QW28weq/V45GGj69Gs5hSFHP5NyuJ08o=;
-        b=poGM+8RxQw27f+id7lEoDsc6dXIE94TqrV43eB9/hc9ydZujE1nlrbsm+820lmLuIS
-         LIpXM00qxgnJWJdNyDk0RXLEIOIl5oB97iYhCP+V3wtlKHK297SLOrelFF1LEc3Vciq1
-         RtTo0AGEcxHCn0XVY+z2kz6AMapDiu29R69wx65BICbdspjnjai/9sHX5hBSmYluk7Uz
-         +ADgG9R2ya5XisgIPxlocPR/MeseNVSlmQRZPZDmVVjF3arDqArsriH3UJkxOBzhpTh5
-         XGnbEtHVH30mRK1kp6wh7cKrJB8bCZk6oyIzr7PTj4Zfo8mzi2xSriptUuS3WCqdEn4k
-         rxBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/0B10mEjr2FIeKTkcn7Tup854ejATWA/e+qFEVQQivhMRlrluZYlGVweeTlsGaenuNPH+mv0lfZsRx/mHpcJ9b3uRYI7bTqqJDaSDydDCf9F5vDs3dQOeEuMGaQFAZGluMTbDAp5/E51JDCRRY+ycmNok3ve69Xxx4sUPJLbR6N8Q7q60cAM2pcrxISGynPiRCKarfXhilcaII/3ZkJ8zuLYb0n4R33O4VUaWHTEvwrEOToKvnZhvIA/UtZAb7H+PDb8T9ci4DpbE7O4eB30d4IQGY8jfMNqswi7kGYr93ACjrM18q8Ze3o/ZfeaptcbOXDHVDBQ=
-X-Gm-Message-State: AOJu0YyXNSCqfjL1S/b/feLQMTWgOnllF/oByARruJeRwX2UonpcREa2
-	qyUUoCFtZQ1ULMyuuDsqC32lvYjHax3YWXsx5iN7+KwRHVZ6BkHPZGRkrKUswLgseVOKkmcQ1c2
-	E7WglPayOkW+AlFAOAJkMpFugbXA=
-X-Google-Smtp-Source: AGHT+IFoTIEdjqsxBYqxcW2ZvSOL+ezHdwHnCQaQtLgWWppeaIwje2I36qXoDeTn1HfSnWTODh8p84OGtT7sU7h7l88=
-X-Received: by 2002:a17:90a:7563:b0:29a:d7ba:2c99 with SMTP id
- q90-20020a17090a756300b0029ad7ba2c99mr5706073pjk.10.1710179369144; Mon, 11
- Mar 2024 10:49:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bosDVG6w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710182290; x=1741718290;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=NCrCQZogk2lXp4a07dTMNNbms+OkcMMceEwyGzU8gtI=;
+  b=bosDVG6wJPURwpHK8sBToRgt16niuFVnuiSRvCTI6vL+K8FAWkVPzBg7
+   iUZB5wwPL5qCbF530Omxqga5l7lf4MoZS8LzUahagNPYkZwCQhPhmucny
+   jIR/wg4uF7YUl83TeM1WkRjDmGAdPKuw5i07BahCmZg+p9NrxgnrWmDUj
+   0QFXeOvAMDafTBQ/Qz0aPhv4SBoAfivEWf/POgv18sKrNXNLeORr354tc
+   nm3GNASI5FlzOkovkXjxr/sO94O26H55b+7okVzYbZtYoelx2RX3lsOq1
+   YfZviXCb2RD8cFZYwFNhgkcL33TsZxyU2mqf75k/zP2LrZaTEhLCWmO+s
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="8621781"
+X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
+   d="scan'208";a="8621781"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 11:38:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,117,1708416000"; 
+   d="scan'208";a="15911351"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Mar 2024 11:38:09 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 11 Mar 2024 11:38:08 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 11 Mar 2024 11:38:08 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 11 Mar 2024 11:38:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nuMez9hvp53hhWZri+GNhEBjWbuTs6HC0iLoYYzVMvLiH+QzXkIE+G7lHrTvBlIRKngg1yY679ZhAKCydnGkatzRM+VmEFO22JVeI6WrPOY9+wQHx8kIwSD2Ch/P1LK35z3lmbgHnMyknWeyzdxE0i2PqBxTjpImsOSguT+wOhTY+4LhORGaFnIrFWzE5kMV8xzbaDFY8bO8Wx5cmcHwo+xqUfGykrdhhlsu+wBmH3/9mXcbsKJwz4PgDZzAH9OUDx7elpN/vy+cVux1g7r06gMvp6BAy5jEEaFqkvksLktc36OAgOJOv9YkBKrkJjShzA1P+CeiOgP1bh27MWeKyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4MNcqMzyG+vPZdeMfebpeDVJd0gVBkUkdZPs//JWVxM=;
+ b=Jp9NhacdWAic0jE4Addk9J90M3r0fzdBPORKoMJnCFhrR6Da/kXoJ2GiHS4dph4p4JDDENMjvgY5Q8UedNVIndLWMTXJN/4COq6za2svfqo6Z2uqg/hY1yMuaFVkLu+dYpSUMu4GV99j8UimssmdED5S68t4Xm0d/zdY0HPfOcx8bFOKXj1CBA/AJQE382Bole8G/LKX0+n+SvbbZQCavZPQkGYgN2Pgg7/i1CtnhW1wfBeyvdDEF8M6su8vWymaq3dPhFmnolRwzgXAxkdEhprQJk/uOrGO2NOHLIt3pCkuptX31yp87KnkHge6izLsCngzzHl2AWurMacyKrQQ6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BL3PR11MB6435.namprd11.prod.outlook.com (2603:10b6:208:3bb::9)
+ by SA0PR11MB4752.namprd11.prod.outlook.com (2603:10b6:806:99::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.17; Mon, 11 Mar
+ 2024 18:38:06 +0000
+Received: from BL3PR11MB6435.namprd11.prod.outlook.com
+ ([fe80::9c80:a200:48a2:b308]) by BL3PR11MB6435.namprd11.prod.outlook.com
+ ([fe80::9c80:a200:48a2:b308%4]) with mapi id 15.20.7362.019; Mon, 11 Mar 2024
+ 18:38:06 +0000
+Message-ID: <97ca4f90-8468-238c-43cb-b0a64a4d6f41@intel.com>
+Date: Mon, 11 Mar 2024 11:38:02 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2] overflow: Change DEFINE_FLEX to take __counted_by
+ member
+To: Simon Horman <horms@kernel.org>, Kees Cook <keescook@chromium.org>
+CC: Przemek Kitszel <przemyslaw.kitszel@intel.com>, Jesse Brandeburg
+	<jesse.brandeburg@intel.com>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240306235128.it.933-kees@kernel.org>
+ <20240308202018.GC603911@kernel.org> <202403091230.ACF639521@keescook>
+ <20240311092813.GJ24043@kernel.org>
+Content-Language: en-US
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
+In-Reply-To: <20240311092813.GJ24043@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0353.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::28) To BL3PR11MB6435.namprd11.prod.outlook.com
+ (2603:10b6:208:3bb::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-3-irogers@google.com>
-In-Reply-To: <20240310020509.647319-3-irogers@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 11 Mar 2024 10:49:17 -0700
-Message-ID: <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com>
-Subject: Re: [PATCH v1 02/13] libbpf: Make __printf define conditional
-To: Ian Rogers <irogers@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
-	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
-	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
-	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
-	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
-	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Mar 9, 2024 at 6:05=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> libbpf depends upon linux/err.h which has a linux/compiler.h
-> dependency. In the kernel includes, as opposed to the tools version,
-> linux/compiler.h includes linux/compiler_attributes.h which defines
-> __printf. As the libbpf.c __printf definition isn't guarded by an
-> ifndef, this leads to a duplicate definition compilation error when
-> trying to update the tools/include/linux/compiler.h. Fix this by
-> adding the missing ifndef.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/bpf/libbpf.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index afd09571c482..2152360b4b18 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -66,7 +66,9 @@
->   */
->  #pragma GCC diagnostic ignored "-Wformat-nonliteral"
->
-> -#define __printf(a, b) __attribute__((format(printf, a, b)))
-> +#ifndef __printf
-> +# define __printf(a, b)        __attribute__((format(printf, a, b)))
-
-styling nit: don't add spaces between # and define, please
-
-overall LGTM
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
-Two questions, though.
-
-1. It seems like just dropping #define __printf in libbpf.c compiles
-fine (I checked both building libbpf directly, and BPF selftest, and
-perf, and bpftool directly, all of them built fine). So we can
-probably just drop this. I'll need to add __printf on Github, but
-that's fine.
-
-2. Logistics. Which tree should this patch go through? Can I land it
-in bpf-next or it's too much inconvenience for you?
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR11MB6435:EE_|SA0PR11MB4752:EE_
+X-MS-Office365-Filtering-Correlation-Id: daf72890-a5f0-48f3-9e21-08dc41fa642e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ujERMpr+SJZLocFLUGgmx+IayAp6OReLvy4iBntTONJATPsljHIqngGx3pHa/yBEUEZp7G/fKHeMs2Jj1G3Bwo885suGP/YTCiw+ja38OPcy/+81SWXJWD0aUHsq/5V7nofkmsrzrD9RYCy2A2b7ox43VJRZP1e+sgYCH3L7WyhIlRQTJXiGSuztkjwq4VlCIWErG4dqNSJJUdaCA0NcI/blirByudqnhy/lq0YZyUa+xhyFfqaaBa6Xb3jy5+HkyWzfrSNMm53Xw+34eORKjWy73QZ6A04O7lJFRkSGISxXNUWnoZTjXI+MAn085YvILM7IXVUHc6rUaZHOlTdjcWoRIaTahQjAGh5YPK3wRzTQgwwL/DiefUIai+NcVFLGcOxMCvfYJaMskcAcvfqq7gDq9fSi9y94gtel3B/IFmR4tw+2oqn3tk1wMS/1Uv8zKrJSPQpIyemUdRNJGQFtyY1C9V0jAgc8YBw1RrDnDYgK+brTV3pMiGvKH7wLIXBksHYOtlJ27xgXqoPk7OY2krurcScEOOfBq5dg6Heu6wAyOxAGOPLoyliBjLAPE0CxPDaEvX/2yX7GSf9m814KU+BQ97B06j5D7LPlOC2RBpqyTL4e7G+1LhMH7kdbqoa/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dzRla2VPdE1CcTBWVENYRGZQS0VmWWYzMkZvMkxkeGFSMzh1V2x6TU1Lai9B?=
+ =?utf-8?B?Z3JTelFYTFZkOXp4VlZGS2VOYzdubEZZa0dhTXJXY3Z2eityTEZCRnFKemRF?=
+ =?utf-8?B?bzV4UkFlU3dxTEtHRFBzM3Qwa0VOdmJsM0RkeE5LRUZpeUZTMXBYRDNHc210?=
+ =?utf-8?B?Q2libnZxWXplYlRwSkxQbmNKVGRqZVpJaTRhSGxMdXpJaWhsclczVEgrYkMy?=
+ =?utf-8?B?ZzFkbEZpL0FDT0wwMlNpWEYvMUxyN0kxNzZhamtxaytyM203aUFnc1JGTUNp?=
+ =?utf-8?B?aGdMOXQ1elIxRTJvSTUwcmExSk1QaDZVcHVVK0EzZ3VwdGJ0cnY3NkxDbXkv?=
+ =?utf-8?B?QmpLV2tSaHhCUk5RbnhFYkE4TEZvaElRRW5lVFQzMEVXb2xXTzJ1TGJld3Uz?=
+ =?utf-8?B?dFBVcm9ndnJpb3FlK1BaaW05Ni83N20wemI1a2hUQ25OSWRiMko3RWtXUXlV?=
+ =?utf-8?B?MHhJL0ZGUW8wYmRRYnRqN0crNXVwSjJITXVXeUt3a2YzSGpzWXkyY2JwSnFj?=
+ =?utf-8?B?am5nb0tNTFJCVXVmanhPMjZXbWNHQXZoUXowbmw4TWJBTFJtRjM3L1VyMUdw?=
+ =?utf-8?B?MFNrSll6dlFocFhrazVVd21Na29lVzJ1UVVnblBjV3MreXRCSWs5ZDFGbjkz?=
+ =?utf-8?B?NDFTT01rUXEyUXFwR0J3UjBkRXhTa2hnV1BuVFdzVGc1WHFWQ2hpSVl2c3hD?=
+ =?utf-8?B?a000cUJPaUJDc3BoZEFXMHRabjI4dkRFMnB2WDFTMi8xQXZBUGxmUHZXQ0hh?=
+ =?utf-8?B?OFRON2NFOXdyeXdUNVIrekZKTk9WejdPVXZIdkFwakVEZVpRY2NBYUhPOWk5?=
+ =?utf-8?B?bnpxenVFdlU1S3Z1OFExZ2oxUG4wdlc1MWwwNDhZN2t2cVp5emRYYWs2K2ZF?=
+ =?utf-8?B?eVJTSDJJRGxrMkhEWDNoT0g4NnRndXZTMHhheXRGUVY2ZkdjbHY1MkJoVVFG?=
+ =?utf-8?B?WkdkRXQ0ZUJCRFlheXFlTGJPTEVJakhSbTl6MGFWZEtsaFNjWU9GQ0dXcG5K?=
+ =?utf-8?B?TDdYc1hScVY0bnFEWGpDZlBJUm1MaWZ3ZGg5Q1JoWHcxM0t4YnJXUGIwWkZP?=
+ =?utf-8?B?QUxWWXZ0dDE1Uzdub1VjN01mMVN0YzNMOExHSXBPeWhDaS8wYTloVVh5T3Jn?=
+ =?utf-8?B?Q3hDM2hiemx2OW5Xc2ZDM2Z4aXBwMmx0TDFURTFjZmtuOW42VHl6Ym5XcWVU?=
+ =?utf-8?B?TFFVdlB4WEdRK2xlWEkrUFNGa0JqK1RWZDdPU0hZeVJyNVEwaWk2dUVZNzBJ?=
+ =?utf-8?B?VTlBUnZuM0ExSUJxYklEZmNtNVNyTFVnNHF4dXhJK0lNek5XdTQ4Nlh2ZnVj?=
+ =?utf-8?B?dDRidllFVnZXRHl1VkFIMDc0QXNSTHY3SWJvT3Y3MHc0QVZaeE1KOFE2aTU0?=
+ =?utf-8?B?OWtQVU1pMkNxVXpNOS9ybnZ2ekJLOXJZeVdPNXV6U21rWEx3YkcvQzY2N21H?=
+ =?utf-8?B?bUlWV0RGSkk1cVVwTGpwZHBKTUFIQnBBQTBrMXZ4RUNKeGpkNms3R3RDOFB5?=
+ =?utf-8?B?Q2VtMzFMNS9tZWYxejVGby9iNmlFWngrSUhqb1NZM0NWVm9oVmZwczAvekRt?=
+ =?utf-8?B?TjNUTENiSGZub2FDUy8yMzZqU3FhemN6S0tFd1RMZ0ovRmdvZWkrZ0E2RzZv?=
+ =?utf-8?B?SGphdnZGNXMxc2RpenlhRjJHajlUZGdlVGVNRkJLeUV0Y1NrMTIwSnRDL2cw?=
+ =?utf-8?B?dWN1TkxVVUM1RlB2ODFoTDdKZU1BclUwVkszRGV6c3NQS2crcTBnM05TZm5U?=
+ =?utf-8?B?OVZmM3pMWWZhaXNiNWhvbm8wb3phbXZ6eS9QYWRvS0VWejQvWUhqaDdXVG5C?=
+ =?utf-8?B?c3lOZXFDejl2dER5RmU0MFZyckdJeDFFSE9VNEIvL04xQkdwbXdGZnBYaytN?=
+ =?utf-8?B?QWpZclNmY0hwcmlIdExUZ2w5U1pWV0tId3RlRS9BemFLQmpyQVF2TExtZEV4?=
+ =?utf-8?B?RlFBMWljcDBUaU5kaldteTZHMndJVVlQUjRMdno5M0d5ckdWdU5ONU1hNENO?=
+ =?utf-8?B?MUZad0llT3l2ZzRKalVHaTJmMFRUWXJnb0JpVzNSZWJoc3RERFBaTkdpczFE?=
+ =?utf-8?B?cnZhVHlBY25jaVRCM28yTU1VeEpFUWpTMngzQzh6Y0NIcXV6Z3JPU0ozYm1F?=
+ =?utf-8?B?amUyWjk0YzhSZGN5b3hsVmcxVU1vaUNUYUxoeWdYV3dzd2hLeUFVTGthYmdL?=
+ =?utf-8?B?SEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: daf72890-a5f0-48f3-9e21-08dc41fa642e
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6435.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2024 18:38:06.0235
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zsb/NQj0JtIaJPz7NrKtYlXV0ImJsGj7LgbG9TUyEo/y5VOQ6u6VSznxT3fAaNeq3Sw+59y8wTe03JG7g5OzgwoHbaD0DSJHkIuCM9xLsAI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4752
+X-OriginatorOrg: intel.com
 
 
-> +#endif
->
->  static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
->  static bool prog_is_subprog(const struct bpf_object *obj, const struct b=
-pf_program *prog);
-> --
-> 2.44.0.278.ge034bb2e1d-goog
->
+
+On 3/11/2024 2:28 AM, Simon Horman wrote:
+> On Sat, Mar 09, 2024 at 12:32:45PM -0800, Kees Cook wrote:
+>> On Fri, Mar 08, 2024 at 08:20:18PM +0000, Simon Horman wrote:
+>>> On Wed, Mar 06, 2024 at 03:51:36PM -0800, Kees Cook wrote:
+>>>> The norm should be flexible array structures with __counted_by
+>>>> annotations, so DEFINE_FLEX() is updated to expect that. Rename
+>>>> the non-annotated version to DEFINE_RAW_FLEX(), and update the
+>>>> few existing users.
+>>>>
+>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>>
+>>> Hi Kees,
+>>>
+>>> I'm unclear what this is based on, as it doesn't appear to apply
+>>> cleanly to net-next or the dev-queue branch of the iwl-next tree.
+>>> But I manually applied it to the latter and ran some checks.
+>>
+>> It was based on v6.8-rc2, but it no longer applies cleanly to iwl-next:
+>> https://lore.kernel.org/linux-next/20240307162958.02ec485c@canb.auug.org.au/
+>>
+>> Is this something iwl-next can take for the v6.9 merge window? I can
+>> send a rebased patch if that helps?
+> 
+> Thanks Kees,
+> 
+> I think that would help in the sense that from my POV it would
+> be more in fitting with the usual workflow for netdev patches.
+> 
+> But if the iwl maintainers think otherwise then I have no objections.
+
+I can take this through iwl-next. A rebase would be great and if you 
+mark it for iwl-next ('PATCH iwl-next') so that everyone is clear on 
+target tree. Just to note since net-next is now closed, it would be 
+going to 6.10.
+
+Thanks,
+Tony
+
+>>
+>>>> @@ -396,9 +396,9 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+>>>>    * @name: Name for a variable to define.
+>>>>    * @member: Name of the array member.
+>>>>    * @count: Number of elements in the array; must be compile-time const.
+>>>> - * @initializer: initializer expression (could be empty for no init).
+>>>> + * @initializer...: initializer expression (could be empty for no init).
+>>>
+>>> Curiously kernel-doc --none seems happier without the line above changed.
+>>
+>> I've fixed this up too:
+>> https://lore.kernel.org/linux-next/202403071124.36DC2B617A@keescook/
+>>
+>> -- 
+>> Kees Cook
+>>
