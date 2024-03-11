@@ -1,69 +1,69 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17165467A
-	for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 18:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D2F54BDB
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 19:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710183286; cv=none; b=LhX3AJb031Wt6e7cHPcV9hFA5yzGey9++cvhWU9OGzbCBijUq3P7fKEt/PR3JAJrTSEIXFfBRbfpLbYdAIB4M+3V2kS389Pq8hl8PIToivqBFwqx4739H9+ny6jFC/+KZp3xQL8zalxvO/vP7omV7t4M9WuT3kTUTFq3rl0YkKg=
+	t=1710185078; cv=none; b=OWfwIk82t5z1ATjM7YYtomDZ83S/5qqrMDJfFmA62uUfhbhWP7hoCAotxreF9NKUIsCL3XgNzPNAVtmw5qerKMohjAL9rQri7nz73fwlFZ36cWjSsETd/42/lf9CDTA+XLrdQ8Qou8k+svCoWFD7V90nQhQOyV003z34LlL2qXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710183286; c=relaxed/simple;
-	bh=sg1d/ANVhdMJVWpfU8bbvkMp+uD3nzj9x9rv9aGU7ss=;
+	s=arc-20240116; t=1710185078; c=relaxed/simple;
+	bh=DgLWHcwduAxqjCigbUNUqTye02EDECmbNSNBeiAjWj8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FJqfQtHCTg9u5X4ZbBNnLngX6V90mv5ifGQ5RxAzH/WPpt3Ib+5UWTSVGNRRY5Q6cLuBRy/0gP5U6l4vPby3gRbYTWlwgMEmSx7g03klNAPjmpHm2tjj+gws5RYCmDYI5ErkF+CirtTqalqYecR3EvZt0wSLEFBoLKy+KNSeSI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xey65aa7; arc=none smtp.client-ip=209.85.166.171
+	 To:Cc:Content-Type; b=PoMh343jWjCFNF7jJfLdGkNS+ipgI2fN0lDe/FfDxwIVCopFhE2QRffBxxI1BqXbMVny49nCTdwZ+ZBc76Dje9RxhcPRwBxooTmRHW3n/x/Qrm5VJRreikTOl1ZvRmuN2ilW03IfKQ2BQ5F30I3foNufDBGsVJtM28zKQ1MouNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pxbuNjla; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xey65aa7"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3663528c0a5so15535ab.0
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 11:54:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxbuNjla"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3663528c0a5so18355ab.0
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 12:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710183284; x=1710788084; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710185075; x=1710789875; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9EWPj2I4xpYoZRjyOYAm/kocZbdOlLT2RiNEmzadKaY=;
-        b=xey65aa7VE1wIljt/ixV6xel+/R5udOqzmcbCiIrUaErlg1igTj+xHHwuQCYTzh9up
-         gwX6SRiXKyFi/2K6SzwjHRVVhUiSb/E6H1m293SMrMno++CElm7lah0vjw0nbxBPCKF1
-         1KggYhb+LqBJqmmZ+PjaihjMv1sfV3+JTNBadSbrM+lesNUkMK2Ws9704W07WK2+pPYc
-         6yNgIhKkmJeGhuWAccjBZ+gNrzM1cQggQKYtv4DqDvtm1uRcSM2laMjrvR4ONMWaJcGI
-         5Ebo4Df4MVwLcOu1UbbtZ/WX9SPh9X+w0fyq/yEgqaleOURfABAA6PjEc0YfhnymHV3M
-         re1g==
+        bh=PPemlJM4Xz0k98wRrCIdoRJ/9LZG6WhrdONiHPBnMmw=;
+        b=pxbuNjlaOnceYNWJHoUQQzhYjMPi130X9DGE9v72HGo8G2ovCj3Eyq640WR1ZIe1+A
+         sYD4B9u6vxyLeIErXplk896HlLVI0sUgi/QVDCoq6VME612+J5pLJnEEIcXhokFK+P2U
+         Nma8U98Prf+9nxVDUbGe8P0FGuAlfqC1HoT/LAUrRZD/rkskb07d49yHbfE9G0v4inZz
+         IIC7Ija2Cak7EeP3EL+xMrpHrpdG+J9Q+QkUCsAlt14OGsMVngNp4UrGF+ogSRWbUTcR
+         G17E/qzGa3/MDWceOIjZSJH04GccTuicpN3sMVxBhhiDsxWbf8Hw5tEdngiZ/qRCubZP
+         iW1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710183284; x=1710788084;
+        d=1e100.net; s=20230601; t=1710185075; x=1710789875;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9EWPj2I4xpYoZRjyOYAm/kocZbdOlLT2RiNEmzadKaY=;
-        b=l7Y5usz8O4K36mnBMQ857M46Uk7rRactLOX1AIYIIDKj3Js2XRlXsjEE1purnhJWQ8
-         VBPpey9Y6pmfDAYkxYDJOE9ZLzeqR83GR5MMg339s/S0YLOoind5naT0xGHdYpLtkqia
-         uPBTz+kqTidEJDoyqOLj6bFs20P6XbqgDOE8gO10x77VmXM2jdO3SzWtIAC91Bh8GOEf
-         SkTnV118uEbhZPzqPovFD3/qn+wSxLmZHXtjEU2vjqKa+qMXQOxQJsaDFTN8clzYWdMS
-         NF8ITpjPFmdMe3f9jvEGJBDA9v5xce9dOjGd8jpL2WhAcOWGSGm7pdnMqN7eR7cuvhZg
-         Yleg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ3H89JVyuvmhRau690aong9ukvHhUu8+3IfgSzv61BMq2AM47VTRl9D0ZOJ8/9JFqguh2tf2bb389xqqei4fqYwJKKsgwX3Gl//0+ppcI
-X-Gm-Message-State: AOJu0Yw0WgzghDLeEFxg3/0yFxnJTNLZ1NlgXbuOLTXfmM/SBQxYTt4v
-	M0OtOhgMt/4sxSctg/0dhcuND7gvOkzCAtyjexCXjG8al/SvhdE3BXUZrlV4QPwCM9zSxlihQuo
-	m8QDfDlVPC5axqbCJJclk/sQQDW0svIagRVyQ
-X-Google-Smtp-Source: AGHT+IF9Y1AJY3TwC+yrKD+SLGX6DGVejGuk9zVLbhhSZF+Z1op/fddC1zPHT7AUjYPqnvQvkBSi2u31QCO6TEveBME=
-X-Received: by 2002:a05:6e02:1648:b0:366:444b:82d6 with SMTP id
- v8-20020a056e02164800b00366444b82d6mr6714ilu.15.1710183283551; Mon, 11 Mar
- 2024 11:54:43 -0700 (PDT)
+        bh=PPemlJM4Xz0k98wRrCIdoRJ/9LZG6WhrdONiHPBnMmw=;
+        b=UaZ5uxu263nOKCbCGboxQCzwq6PcOxzNi2roqtI5//1mPnr9mGC/18qDhcQDk0FQe6
+         N2j+fGB1Eq3Oph2UefP1yrjsGTCOWaQ8Ft063x39+8n9zq5mcJ+TN4ItPmdMZ/5z5GAJ
+         aFFzIThxWHThe51ZmiUnb8Bcj1x4Rjp6IgJVaGDW66SmTU0LwyCIF+hIeRarRxHTb6Dj
+         WPwD65VHh7s5Gzl6ZrvO80EbuKKyrdTptU1kdgzbMm51fRWBbUUJ7jcg8qlbHd6NTaoS
+         +yC4yVoeAFexVVOTu54n9AYwzk/pijVFVfKQM4R0EKqa+cGUe1LeABWhP1fZM680f/Zm
+         dZlA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7AMjafOE7TN0Qw2TGhzr80hLlWNAioYE1MbLzSgqa+NI2CO0wR52+1BQeuGvMJk33vQ37uhno0lsuX3GDgyUYdBw2KYO+8s/m3hga0EU4
+X-Gm-Message-State: AOJu0YzNqZQZ1BMS6uDx7dUnMm+W34i6uhfnwlkU44oY11oijpRKZogS
+	9LjrHaja7+SH1kprouaz9HQaXKjs06SdEfR4dvwSOlnGel30FiMz9oHlAm6TnGQNWieOOa3sh/l
+	tN0a/SFrhqtiwlbSejz9iTqZA0Y2CzzZSZ9zO
+X-Google-Smtp-Source: AGHT+IHK6kjYuN+av2sRfyJ8pA7jWQvyzS6EkNDyOpNIDK07iRRVV0vswER0vA5L4Tl9BTd3XE1V8lLoEXKubRDEp18=
+X-Received: by 2002:a05:6e02:1a43:b0:366:27e0:3425 with SMTP id
+ u3-20020a056e021a4300b0036627e03425mr10947ilv.19.1710185075344; Mon, 11 Mar
+ 2024 12:24:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-3-irogers@google.com>
- <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYiH6xRRLFBdUAkjn0uJP=safZod4=1EmEwTTH9PDmVvQ@mail.gmail.com>
+References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-13-irogers@google.com>
+ <1ab20914-b6d2-fe39-7b14-c1ccebaa34f6@arm.com>
+In-Reply-To: <1ab20914-b6d2-fe39-7b14-c1ccebaa34f6@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 11 Mar 2024 11:54:32 -0700
-Message-ID: <CAP-5=fUQY=ho1OSk-wosw8=7Sjp8MB_kngggP00BXs+nVNj7Pg@mail.gmail.com>
-Subject: Re: [PATCH v1 02/13] libbpf: Make __printf define conditional
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 11 Mar 2024 12:24:24 -0700
+Message-ID: <CAP-5=fWZVrpRufO4w-S4EcSi9STXcTAN2ERLwTSN7yrSSA-otQ@mail.gmail.com>
+Subject: Re: [PATCH v1 12/13] tools headers: Sync compiler.h headers
+To: James Clark <james.clark@arm.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
@@ -82,8 +82,8 @@ Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
 	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
 	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
-	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
-	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
+	Nick Forrington <nick.forrington@arm.com>, Leo Yan <leo.yan@linux.dev>, 
+	German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
 	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
 	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
 	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
@@ -96,72 +96,73 @@ Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 10:49=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Mon, Mar 11, 2024 at 9:34=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> On Sat, Mar 9, 2024 at 6:05=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+>
+>
+> On 10/03/2024 02:05, Ian Rogers wrote:
+> > compiler.h - synced from include/linux/compiler.h, guards were
+> >  added to definitions to avoid redefinition of macros
+> >  in libc. ftrace, CONFIG_OBJTOOL and kentry logic was removed as
+> >  redundant.
 > >
-> > libbpf depends upon linux/err.h which has a linux/compiler.h
-> > dependency. In the kernel includes, as opposed to the tools version,
-> > linux/compiler.h includes linux/compiler_attributes.h which defines
-> > __printf. As the libbpf.c __printf definition isn't guarded by an
-> > ifndef, this leads to a duplicate definition compilation error when
-> > trying to update the tools/include/linux/compiler.h. Fix this by
-> > adding the missing ifndef.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/bpf/libbpf.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > index afd09571c482..2152360b4b18 100644
-> > --- a/tools/lib/bpf/libbpf.c
-> > +++ b/tools/lib/bpf/libbpf.c
-> > @@ -66,7 +66,9 @@
-> >   */
-> >  #pragma GCC diagnostic ignored "-Wformat-nonliteral"
-> >
-> > -#define __printf(a, b) __attribute__((format(printf, a, b)))
-> > +#ifndef __printf
-> > +# define __printf(a, b)        __attribute__((format(printf, a, b)))
 >
-> styling nit: don't add spaces between # and define, please
+> Hi Ian,
 >
-> overall LGTM
+> This commit breaks the Arm build (and cross compilation for Arm on x86):
 >
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+>   $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu-
 >
-> Two questions, though.
+> Something like this, but I won't paste the whole output because it's huge=
+:
 >
-> 1. It seems like just dropping #define __printf in libbpf.c compiles
-> fine (I checked both building libbpf directly, and BPF selftest, and
-> perf, and bpftool directly, all of them built fine). So we can
-> probably just drop this. I'll need to add __printf on Github, but
-> that's fine.
+> tools/include/linux/ring_buffer.h: In function =E2=80=98ring_buffer_read_=
+head=E2=80=99:
 >
-> 2. Logistics. Which tree should this patch go through? Can I land it
-> in bpf-next or it's too much inconvenience for you?
+> tools/include/asm/../../arch/arm64/include/asm/barrier.h:72:35: error:
+> =E2=80=98__u8_alias_t=E2=80=99 undeclared (first use in this function)
+>    72 |                         : "=3Dr" (*(__u8_alias_t *)__u.__c)
+>        \
+>       |                                   ^~~~~~~~~~~~
+> tools/include/linux/ring_buffer.h:59:16: note: in expansion of macro
+> =E2=80=98smp_load_acquire=E2=80=99
+>    59 |         return smp_load_acquire(&base->data_head);
+>       |                ^~~~~~~~~~~~~~~~
 
-Thanks Andrii,
+Sorry for this James, I was rushing. I'll address the issues in v2 but
+the one you highlight above doesn't look like a fun/simple issue to
+resolve :-( Tbh, I'm not sure how much value tools/include has in its
+current set up. It is weird the include order in perf prefers
+tools/include/linux over tools/include/uapi. Current tools/include
+seems to be trying to do a few different things:
 
-dropping the #define (1) sgtm but the current compiler.h will fail to
-build libbpf.c without the later compiler.h update in this series.
-This causes another logistic issue for your point 2. Presumably if
-this patch goes through bpf-next, the first patch "tools bpf:
-Synchronize bpf.h with kernel uapi version" should also go through the
-bpf-next.
+1) provide headers like list.h so programs in tools can have linux
+style lists, etc.
+2) stuff that (1) drags in .. do we really want the asm barrier code
+from arm? A sane user space program would be better using stdatomic.h,
+plus that'd give the user space program an ability to get compiled on
+to weirder targets like wasm. Plus we end up with weird type conflicts
+like bool coming from linux/types.h rather than stdbool.h.
+3) copies of kernel uapi headers that may be more up-to-date that
+those in your system, thereby exposing constants that things like
+libbpf depend upon.
+4) headers with the same name as and that resemble kernel headers but
+are really a reimplementation, like tools/include/linux/string.h
+5) headers we have just so we can use shell scripts to scrape
+constants for beautifying things in perf trace
+
+For (1) and (2) it seems a separate library would be cleaner than
+having the code in tools/include.
+(3) feels like a legit use-case, so we should hold onto
+tools/include/uapi, but do we want the asm directories?
+(4) sounds like it should be in a library, perhaps with (1) and (2).
+(5) feels like the headers should be alongside the shell scripts to
+avoid polluting tools/include.
+Not that I propose fixing any of this here.
 
 Thanks,
 Ian
 
-
-> > +#endif
-> >
-> >  static struct bpf_map *bpf_object__add_map(struct bpf_object *obj);
-> >  static bool prog_is_subprog(const struct bpf_object *obj, const struct=
- bpf_program *prog);
-> > --
-> > 2.44.0.278.ge034bb2e1d-goog
-> >
+> Thanks
+> James
