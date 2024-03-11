@@ -1,189 +1,105 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251D34AEF3;
-	Mon, 11 Mar 2024 16:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5317F138E;
+	Mon, 11 Mar 2024 16:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710174252; cv=none; b=IdZrPsrTCNbd1JGO+wO86vjg9Mczmyi21FeOEYq4uKjLzSJrWoGaOSVGRRGyqWl72B/QiwtUa3vPhM9SSOPm9gaknYvfyU5FQOq4jlH/S1XI0ynOYA78gSqlbWB1TqAPyVPu5wLDvlJjrUFBWpZ183Tvn2+hckAvYwcDa73hrtg=
+	t=1710174868; cv=none; b=I+3uuGsgLSOAOouTbufhyX+3njPNomwdBAO+bbZtlH3vtfxmIXDFLF6UlFQXdIi6H1T9XT9FPw4ebvV8xIywzRtEsrZ2FB6Tejr4iP7k/vn7F+gHYn6mUKb2DQVOHJZ2lMrZN//t4evkKn1d8u4eCt0oi1otJlwrXCNqeio0RQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710174252; c=relaxed/simple;
-	bh=56yF8ItREGrogJnMekkXuqeHvYyuZSYZRhgsK/vBcDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uiOixwMEgXn/cOcX+nwlRb5/ewme5qTQPjXcgVvTP+7ciAS2zgtw9MkzUF1K9aMwCppdwpYFsdeBAuywWAd1Ab5BGWjUQa9CU9Jnr1HDAVdcrvkiGdqSSPWWewb/N2asqwVqynHl/fGkAF0QZ+V3uFTwETTOKBAJW1Zf8vrD3U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=tK7oi/Mw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rlDwVZ60; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KsuQBzSG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jzhtDdT0; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tK7oi/Mw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rlDwVZ60";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KsuQBzSG";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jzhtDdT0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6676A5C922;
-	Mon, 11 Mar 2024 16:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710174248; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gviz5aamPw6bk1Yn/7A3J9/ubb5Bc95XhumqFeNN1XY=;
-	b=tK7oi/MwDjs5+QGIyJm895NxQuZCxk1I3xYUasuE7NieqDMvUF35GyFsnezsxvGrl+qvrc
-	Ch31f59wUdyKJ0w4F9lzbpYlCGu8bH0lg5n06h2/I40lEevzULkTgaT5zoLdNXYg7/S7UN
-	I3ZMTvcQeN9mEeewsmOz2e+vy4SHN0s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710174248;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gviz5aamPw6bk1Yn/7A3J9/ubb5Bc95XhumqFeNN1XY=;
-	b=rlDwVZ60gnNkXjgzoRpSqjKQwHVZf0C/DnFnoLKhzaW2kyJPXLVGnUOGUWwqXcDeuhJwQ3
-	qUFIhNWD5i5KjpAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1710174246; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gviz5aamPw6bk1Yn/7A3J9/ubb5Bc95XhumqFeNN1XY=;
-	b=KsuQBzSGY3fEOHsRlsOsznJCdxQICyIoKDdm8Vn+f3w8nW9qrRwT+90/WKF4gKu2+jsrPr
-	AY8JL5VPPhzyFwXyG3cHIzPRbQjjODfIG4WSZn5Y1VKdhHxcvClHIfcEzzWTWIq6tn6cIH
-	3rygFR4sJsvRTOEoQ7QV4KBtN7Jl3MQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1710174246;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gviz5aamPw6bk1Yn/7A3J9/ubb5Bc95XhumqFeNN1XY=;
-	b=jzhtDdT0N+uL90UQCPBu9X87oMs/u+fIl3ARPtRp7x4/3oZcymnuXyZVy7sbdQ2XtitIBV
-	GgZdtqq/mSUSenCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5BC711395F;
-	Mon, 11 Mar 2024 16:24:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kLtdFiYw72VwFQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 11 Mar 2024 16:24:06 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 158D6A0807; Mon, 11 Mar 2024 17:24:06 +0100 (CET)
-Date: Mon, 11 Mar 2024 17:24:06 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kees Cook <keescook@chromium.org>
-Cc: Eric Biederman <ebiederm@xmission.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] exec: Simplify remove_arg_zero() error path
-Message-ID: <20240311162406.7vc64qbta24psk3j@quack3>
-References: <20240309214826.work.449-kees@kernel.org>
+	s=arc-20240116; t=1710174868; c=relaxed/simple;
+	bh=WixOqrZR+rJh/Fbz+wWrf8dVTfQslX0GeSZNmY4xbK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=sgNdPA3bpwooKtZGLXUbTSNmXqj4NYWytNwjZUQIDTva+meTuCLnUzYVjFXodSXztS8aGozb4Svzws0v8wD6dL/4xi0A8goC6joZMPAl0oCS+EX+RbAjtZQ+SBGuR4Vd2G0MmRBSNWppn6rjs9aVJF+K2z5V6ENDfoIxYYUhL7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A7831007;
+	Mon, 11 Mar 2024 09:35:02 -0700 (PDT)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D3233F762;
+	Mon, 11 Mar 2024 09:34:12 -0700 (PDT)
+Message-ID: <1ab20914-b6d2-fe39-7b14-c1ccebaa34f6@arm.com>
+Date: Mon, 11 Mar 2024 16:34:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240309214826.work.449-kees@kernel.org>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KsuQBzSG;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=jzhtDdT0
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.78 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.77)[84.37%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,linux.org.uk:email,chromium.org:email,kvack.org:email,suse.com:email,xmission.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -1.78
-X-Rspamd-Queue-Id: 6676A5C922
-X-Spam-Flag: NO
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1 12/13] tools headers: Sync compiler.h headers
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>
+References: <20240310020509.647319-1-irogers@google.com>
+ <20240310020509.647319-13-irogers@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Liam Howlett <liam.howlett@oracle.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
+ David Laight <David.Laight@ACULAB.COM>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>,
+ Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>,
+ Nick Forrington <nick.forrington@arm.com>, Leo Yan <leo.yan@linux.dev>,
+ German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>,
+ John Garry <john.g.garry@oracle.com>, Sean Christopherson
+ <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
+ Fuad Tabba <tabba@google.com>, Andrew Jones <ajones@ventanamicro.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>, Haibo Xu <haibo1.xu@intel.com>,
+ Peter Xu <peterx@redhat.com>, Vishal Annapurve <vannapurve@google.com>,
+ linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240310020509.647319-13-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat 09-03-24 13:48:30, Kees Cook wrote:
-> We don't need the "out" label any more, so remove "ret" and return
-> directly on error.
+
+
+On 10/03/2024 02:05, Ian Rogers wrote:
+> compiler.h - synced from include/linux/compiler.h, guards were
+>  added to definitions to avoid redefinition of macros
+>  in libc. ftrace, CONFIG_OBJTOOL and kentry logic was removed as
+>  redundant.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Looks good. Feel free to add:
+Hi Ian,
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+This commit breaks the Arm build (and cross compilation for Arm on x86):
 
-								Honza
+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
 
-> ---
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-mm@kvack.org
-> Cc: linux-fsdevel@vger.kernel.org
-> ---
->  fs/exec.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 715e1a8aa4f0..e7d9d6ad980b 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1720,7 +1720,6 @@ static int prepare_binprm(struct linux_binprm *bprm)
->   */
->  int remove_arg_zero(struct linux_binprm *bprm)
->  {
-> -	int ret = 0;
->  	unsigned long offset;
->  	char *kaddr;
->  	struct page *page;
-> @@ -1731,10 +1730,8 @@ int remove_arg_zero(struct linux_binprm *bprm)
->  	do {
->  		offset = bprm->p & ~PAGE_MASK;
->  		page = get_arg_page(bprm, bprm->p, 0);
-> -		if (!page) {
-> -			ret = -EFAULT;
-> -			goto out;
-> -		}
-> +		if (!page)
-> +			return -EFAULT;
->  		kaddr = kmap_local_page(page);
->  
->  		for (; offset < PAGE_SIZE && kaddr[offset];
-> @@ -1748,8 +1745,7 @@ int remove_arg_zero(struct linux_binprm *bprm)
->  	bprm->p++;
->  	bprm->argc--;
->  
-> -out:
-> -	return ret;
-> +	return 0;
->  }
->  EXPORT_SYMBOL(remove_arg_zero);
->  
-> -- 
-> 2.34.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Something like this, but I won't paste the whole output because it's huge:
+
+tools/include/linux/ring_buffer.h: In function ‘ring_buffer_read_head’:
+
+tools/include/asm/../../arch/arm64/include/asm/barrier.h:72:35: error:
+‘__u8_alias_t’ undeclared (first use in this function)
+   72 |                         : "=r" (*(__u8_alias_t *)__u.__c)
+       \
+      |                                   ^~~~~~~~~~~~
+tools/include/linux/ring_buffer.h:59:16: note: in expansion of macro
+‘smp_load_acquire’
+   59 |         return smp_load_acquire(&base->data_head);
+      |                ^~~~~~~~~~~~~~~~
+
+Thanks
+James
