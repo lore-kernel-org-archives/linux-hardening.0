@@ -1,261 +1,119 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDC61B599;
-	Mon, 11 Mar 2024 10:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C0B446B8
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 15:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710154760; cv=none; b=A+HOnEvhxL/liMycZFMpdSeAvSwVgG9bvsRwg2dGFktOdRBJuq64412GD2IPPx91gEtEfI3Opo5RncRqvtUJ0phDEjJ2dlehORuSKq9i4Q8VZUJL73hdkhvYoedWgpFiCkcLGFi91BMsQ/cHcSPQMFMZY9hT82C6qMYEm2l485k=
+	t=1710171209; cv=none; b=Yu4w0AuB+VUjvJLm3Un/th2IOl+f+gr6acXhJZzWQqmhSJbJwMlLw5UOI4T2dvw775Y9xINfe44x9Rtn9zvOGEniegDjKUfX+V8rRDUmVseUNf379j3kRZnDx0nVBXjLGl0HIiHb/IPWiLqvF+w+nwbZRdhLzPrI4TNhNeD9K+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710154760; c=relaxed/simple;
-	bh=oXZqPOZ6YIXTm+WG3dgEh3MLHaLjbWnhRyHghOoWAP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RrzIhkU0DyA6/bxcjE/055hVZQouSDQNYK0sZzXliOAa8Haq3AbJfJnkT3lTQW5zssiQFj38v0Y8QZV6PMwxGz0Ji4LDX24paWfmx1fIyc9msqyPIlZT+ukQd92uyTGraCDdf2FdQGfKccelRU3gs9GcERXwJAgf+H0uBZkLcqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dZlizvyf; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1710171209; c=relaxed/simple;
+	bh=BgmEJ3rVgpfdYftpb1oT1hFKBsa+dHuEMI7KFS3YKKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fybh6qJ3ethfKNW7mUPhERF2gCSZ2AnK2kBwsRANCv5VhRPuaDhvKCjqcgAHuyX5jjfaqu5raz9knugyfOTIg3733zkrYwN8obYk4JVQsf31368wNZ/eU4oVLBjigwKTU1t9WxGI6O9PUO/ZSmv8NzEh2wC9BuL8w54lpoqkG8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x3GvtHSq; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dZlizvyf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710154754; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=IcfjheDQ5kV24cq9Mvp8h+viyjO4uKlMJPaqsPHtqgU=;
-	b=dZlizvyfLA2e1s/alWGuZ0mTpSw7DUtdEV/KI3y1q0K0tVdZeRMz4E4YeN3cdxtSVGcY46dg4c8MOaIbe0Pm4086Q1npZK1ykfq8SeElZjf+93i7Jes+9JWmZWmEJ5LSSXJuN4SgfV6bmzWUmzcaYzWoobamLobiokJSnWqm6bQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W2FTvzX_1710154752;
-Received: from 30.221.129.118(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W2FTvzX_1710154752)
-          by smtp.aliyun-inc.com;
-          Mon, 11 Mar 2024 18:59:13 +0800
-Message-ID: <d145d2c7-5cbd-4da5-be14-b25d00baad19@linux.alibaba.com>
-Date: Mon, 11 Mar 2024 18:59:12 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x3GvtHSq"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33d90dfe73cso2607191f8f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 08:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710171206; x=1710776006; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgmEJ3rVgpfdYftpb1oT1hFKBsa+dHuEMI7KFS3YKKE=;
+        b=x3GvtHSq0o7fqG7Js8UBDYyiGGmbvocSiat9Ce2dQlflT25D8h7ggz6S8+gASAuM0B
+         ZcNxW7gGUOVAHN4yMSq63y+F16QTnDP3FUccCaH8FkRj/LeOysSud83iQawkCcPam07W
+         9pfrThKEf4kFIKs8T5RoOYGkxT9TGmyp0FgeYQkCH/VilTVBUVi141DcdPWk/VbqOBCP
+         mBtTfCXbvdRmTTgLT1xqdMQAN2KBxsgdLgQ5GfZHFCou5QYOaupFMGHF7m14yhvyw4XD
+         mQG1UJm9T1tbfyRqvnecr48HAYdNZPG2tsPlOAd3NOT+NlM/F6RtR56tpLp1wZzvUFYz
+         FvKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710171206; x=1710776006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BgmEJ3rVgpfdYftpb1oT1hFKBsa+dHuEMI7KFS3YKKE=;
+        b=hIqPYeHP6xHPiOqLOwE7A1mO45dHIbqBhpF9zBzhlk+HLGrOX+vrKLV04fO5bM9a0h
+         Mc6BDH3HcA/S6LEUdF9yriHTbiIYaXHs0X40AE5NWDgVqx59Fm0M7mFRpEi0WxoHnokj
+         D2oKniaFeUSDcl2oFchUrgjyyZgYtajKAqY5P+9KG5cPi+9ZQVRcQyn0gUJTZuQUA4Nx
+         ANpsTfBdnNo/Oq/yrLXL//hGKqnPfnq8KChBZoh3oB42O3xeQ2NhWrJDxmeZ6S4gZ9AA
+         0mPYdl2z6xbQd8g8zqK0iBHcsOjuCc90MrKzzrL1L8qRpRcNINodJGRebUZUkBhh1hgD
+         txTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXr3v7b9cH3fNHnklCZi2/MX0/wV2Kqko0sfdGp2R22h3VaHyn6U7g8HBSmhgpKVUevsyKRWPdcdDYtHbmUEOx1ft+HubpC2jUABm6llBk
+X-Gm-Message-State: AOJu0YwBH1XUkHPMSxMJCwwZBiQwrls9/1JCP+1EEL8Sp6tF6XjBIz66
+	7qdE7uyj/LigIGyZu+KtPTdfu1Hmjf7WBzi41djj05uo1MmNPnY8fAJsww80mnSXxN+gIYqy+MG
+	Ig64RgSVlFepp4nEcZ2baja+Vwa3W4/Hj/XTq
+X-Google-Smtp-Source: AGHT+IE/th4Pg/GBs04QnTLC4gySgD/Ced3Hwsh9xlJGW37qnBqN80Ztb15KeaRy40uSPOSKwYSAYx2WXmVslFbnrPM=
+X-Received: by 2002:a5d:6751:0:b0:33e:1f2b:8cc5 with SMTP id
+ l17-20020a5d6751000000b0033e1f2b8cc5mr6816452wrw.0.1710171205375; Mon, 11 Mar
+ 2024 08:33:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] net/smc: Avoid -Wflex-array-member-not-at-end
- warnings
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Jan Karcher <jaka@linux.ibm.com>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Wenjia Zhang <wenjia@linux.ibm.com>,
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Kees Cook <keescook@chromium.org>
-References: <ZeIhOT44ON5rjPiP@neat>
- <71aa847b-2edc-44a2-beb7-3610bf744937@linux.alibaba.com>
- <1cb9a110-c877-4420-9b23-1e7980f1300a@linux.ibm.com>
- <82c1dc9e-d5b6-40e3-9d81-d18cc270724b@embeddedor.com>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <82c1dc9e-d5b6-40e3-9d81-d18cc270724b@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240310020509.647319-1-irogers@google.com> <20240310020509.647319-14-irogers@google.com>
+ <CANiq72=rgXk6oz65wb57ZP+jmSoD-a4SSVzU6s6SZLubV3cvBw@mail.gmail.com>
+In-Reply-To: <CANiq72=rgXk6oz65wb57ZP+jmSoD-a4SSVzU6s6SZLubV3cvBw@mail.gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 11 Mar 2024 08:33:10 -0700
+Message-ID: <CAKwvOdkMYnYO2hyJEFj-M_iur6BneEZjPHvsodZAGw=b7PmmzA@mail.gmail.com>
+Subject: Re: [PATCH v1 13/13] tools headers: Rename noinline to __noinline
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Liam Howlett <liam.howlett@oracle.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	David Laight <David.Laight@aculab.com>, "Michael S. Tsirkin" <mst@redhat.com>, Shunsuke Mie <mie@igel.co.jp>, 
+	Yafang Shao <laoar.shao@gmail.com>, Kui-Feng Lee <kuifeng@meta.com>, 
+	James Clark <james.clark@arm.com>, Nick Forrington <nick.forrington@arm.com>, 
+	Leo Yan <leo.yan@linux.dev>, German Gomez <german.gomez@arm.com>, Rob Herring <robh@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Sean Christopherson <seanjc@google.com>, 
+	Anup Patel <anup@brainfault.org>, Fuad Tabba <tabba@google.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Peter Xu <peterx@redhat.com>, 
+	Vishal Annapurve <vannapurve@google.com>, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev, Christopher Di Bella <cjdb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Mar 10, 2024 at 4:25=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Sun, Mar 10, 2024 at 3:06=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > [1] https://clang.llvm.org/docs/AttributeReference.html#noinline
+> > Reported-by: Christopher Di Bella <cjdb@google.com>
+>
+> Out of curiosity, was this due to the `[[gnu::noinline]]` or similar
+> in e.g. `src/string/memset_explicit.h`?
 
+Yes, and in src/__support/threads/linux/thread.cpp's definition of
+start_thread().
 
-On 2024/3/8 07:46, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 3/7/24 02:17, Jan Karcher wrote:
->>
->>
->> On 04/03/2024 10:00, Wen Gu wrote:
->>>
->>>
->>> On 2024/3/2 02:40, Gustavo A. R. Silva wrote:
->>>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->>>> ready to enable it globally.
->>>>
->>>> There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
->>>> that contain a couple of flexible structures:
->>>>
->>
->> Thank you Gustavo for the proposal.
->> I had to do some reading to better understand what's happening and how your patch solves this.
->>
->>>> struct smc_clc_msg_proposal_area {
->>>>     ...
->>>>     struct smc_clc_v2_extension             pclc_v2_ext;
->>>>     ...
->>>>     struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
->>>>     ...
->>>> };
->>>>
->>>> So, in order to avoid ending up with a couple of flexible-array members
->>>> in the middle of a struct, we use the `struct_group_tagged()` helper to
->>>> separate the flexible array from the rest of the members in the flexible
->>>> structure:
->>>>
->>>> struct smc_clc_smcd_v2_extension {
->>>>          struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
->>>>                              u8 system_eid[SMC_MAX_EID_LEN];
->>>>                              u8 reserved[16];
->>>>          );
->>>>          struct smc_clc_smcd_gid_chid gidchid[];
->>>> };
->>>>
->>>> With the change described above, we now declare objects of the type of
->>>> the tagged struct without embedding flexible arrays in the middle of
->>>> another struct:
->>>>
->>>> struct smc_clc_msg_proposal_area {
->>>>          ...
->>>>          struct smc_clc_v2_extension_hdr        pclc_v2_ext;
->>>>          ...
->>>>          struct smc_clc_smcd_v2_extension_hdr    pclc_smcd_v2_ext;
->>>>          ...
->>>> };
->>>>
->>>> We also use `container_of()` when we need to retrieve a pointer to the
->>>> flexible structures.
->>>>
->>>> So, with these changes, fix the following warnings:
->>>>
->>>> In file included from net/smc/af_smc.c:42:
->>>> net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another 
->>>> structure [-Wflex-array-member-not-at-end]
->>>>    186 |         struct smc_clc_v2_extension             pclc_v2_ext;
->>>>        |                                                 ^~~~~~~~~~~
->>>> net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another 
->>>> structure [-Wflex-array-member-not-at-end]
->>>>    188 |         struct smc_clc_smcd_v2_extension pclc_smcd_v2_ext;
->>>>        |                                                 ^~~~~~~~~~~~~~~~
->>>>
->>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>> ---
->>>>   net/smc/smc_clc.c |  5 +++--
->>>>   net/smc/smc_clc.h | 24 ++++++++++++++----------
->>>>   2 files changed, 17 insertions(+), 12 deletions(-)
->>>>
->>>> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
->>>> index e55026c7529c..3094cfa1c458 100644
->>>> --- a/net/smc/smc_clc.c
->>>> +++ b/net/smc/smc_clc.c
->>>> @@ -853,8 +853,9 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
->>>>       pclc_smcd = &pclc->pclc_smcd;
->>>>       pclc_prfx = &pclc->pclc_prfx;
->>>>       ipv6_prfx = pclc->pclc_prfx_ipv6;
->>>> -    v2_ext = &pclc->pclc_v2_ext;
->>>> -    smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
->>>> +    v2_ext = container_of(&pclc->pclc_v2_ext, struct smc_clc_v2_extension, _hdr);
->>>> +    smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
->>>> +                   struct smc_clc_smcd_v2_extension, hdr);
->>>>       gidchids = pclc->pclc_gidchids;
->>>>       trl = &pclc->pclc_trl;
->>>> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
->>>> index 7cc7070b9772..5b91a1947078 100644
->>>> --- a/net/smc/smc_clc.h
->>>> +++ b/net/smc/smc_clc.h
->>>> @@ -134,12 +134,14 @@ struct smc_clc_smcd_gid_chid {
->>>>                */
->>>>   struct smc_clc_v2_extension {
->>>> -    struct smc_clnt_opts_area_hdr hdr;
->>>> -    u8 roce[16];        /* RoCEv2 GID */
->>>> -    u8 max_conns;
->>>> -    u8 max_links;
->>>> -    __be16 feature_mask;
->>>> -    u8 reserved[12];
->>>> +    struct_group_tagged(smc_clc_v2_extension_hdr, _hdr,
->>>> +        struct smc_clnt_opts_area_hdr hdr;
->>>> +        u8 roce[16];        /* RoCEv2 GID */
->>>> +        u8 max_conns;
->>>> +        u8 max_links;
->>>> +        __be16 feature_mask;
->>>> +        u8 reserved[12];
->>>> +    );
->>>>       u8 user_eids[][SMC_MAX_EID_LEN];
->>>>   };
->>>> @@ -159,8 +161,10 @@ struct smc_clc_msg_smcd {    /* SMC-D GID information */
->>>>   };
->>>>   struct smc_clc_smcd_v2_extension {
->>>> -    u8 system_eid[SMC_MAX_EID_LEN];
->>>> -    u8 reserved[16];
->>>> +    struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
->>>> +        u8 system_eid[SMC_MAX_EID_LEN];
->>>> +        u8 reserved[16];
->>>> +    );
->>>>       struct smc_clc_smcd_gid_chid gidchid[];
->>>>   };
->>>> @@ -183,9 +187,9 @@ struct smc_clc_msg_proposal_area {
->>>>       struct smc_clc_msg_smcd            pclc_smcd;
->>>>       struct smc_clc_msg_proposal_prefix    pclc_prfx;
->>>>       struct smc_clc_ipv6_prefix pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
->>>> -    struct smc_clc_v2_extension        pclc_v2_ext;
->>>> +    struct smc_clc_v2_extension_hdr        pclc_v2_ext;
->>>>       u8            user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
->>>> -    struct smc_clc_smcd_v2_extension    pclc_smcd_v2_ext;
->>>> +    struct smc_clc_smcd_v2_extension_hdr    pclc_smcd_v2_ext;
->>>>       struct smc_clc_smcd_gid_chid
->>>>                   pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
->>>>       struct smc_clc_msg_trail        pclc_trl;
->>>
->>> Thank you! Gustavo. This patch can fix this warning well, just the name
->>> '*_hdr' might not be very accurate, but I don't have a good idea ATM.
->>
->> I agree. Should we chose this option we should come up for a better name.
->>
->>>
->>> Besides, I am wondering if this can be fixed by moving
->>> user_eids of smc_clc_msg_proposal_area into smc_clc_v2_extension,
->>> and
->>> pclc_gidchids of smc_clc_msg_proposal_area into smc_clc_smcd_v2_extension.
->>>
->>> so that we can avoid to use the flexible-array in smc_clc_v2_extension
->>> and smc_clc_smcd_v2_extension.
->>
->> I like the idea and put some thought into it. The only thing that is not perfectly clean IMO is the following:
->> By the current definition it is easily visible that we are dealing with a variable sized array. If we move them into 
->> the structs one could think they are always at their MAX size which they are not.
->> E.g.: An incoming proposal can have 0 UEIDs indicated by the eid_cnt.
->> That said nothing a comment can't fix.
->>
->>  From what i have seen the offset and length calculations regarding the "real" size of those structs is fine with your 
->> proposal.
->>
->> Can you verify that your changes also resolve the warnings?
-> 
-> I can confirm that the changes Wen Gu is proposing also resolve the warnings.
-> 
-> Wen,
-> 
-> If you send a proper patch, you can include the following tags:
-> 
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Build-tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
+Thanks for the patch!
 
-Hi Gustavo, thank you for the confirmation that my proposal can fix the warning.
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
-But I found that I may have something missed in my proposal when I think further.
-My proposal changed the sizes of struct smc_clc_v2_extension and smc_clc_smcd_v2_extension,
-and some places in SMC need them, such as the fill of kvec in smc_clc_send_proposal().
-
-So my proposal may involve more changes to current SMC code, and I think it is
-not as clean as your solution. So I perfer yours now.
-
-And as for the name, I think maybe we can use '*_elems' as a suffix, at least it
-is unambiguous. So it will be smc_clc_v2_extension_elems and smc_clc_smcd_v2_extension_elems.
-
-
-Jan, what do you think of the name '*_elems' ?
-
-Thanks!
-
-> Thanks!
-> -- 
-> Gustavo
-> 
->>
->> [...]
->>
->>>   };
->>>
->>>
->>> Thanks!
->>> Wen Gu
->>
->> Thanks you
->> - Jan
+--=20
+Thanks,
+~Nick Desaulniers
