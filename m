@@ -1,63 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DCA14565F;
-	Tue, 12 Mar 2024 22:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B8946447;
+	Tue, 12 Mar 2024 23:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710282251; cv=none; b=nZWSqAu7fkNHA8QfuOtE3h+Y5rjdINzso6AOEhEU5Gyn7QIT/zcWh/AO0HxpN4WSTScwuM9oASmfc57vrmhLDTK3+2LS0vwstxvV2xwCKMrisT2BNSZgDM/13BGEpe63xmzVNUO0lFEziJCv3ujTz8qUyoUUcPaOnNtG21voijg=
+	t=1710285412; cv=none; b=Mu89EE8/IwovUkuA4kPL5uW4yEZRtJ4zFDJtQbWVcslr/x1oQtZwiJKXK5Dob5hBeGtfkZSSuFOkLj4p+oaFx03ErZHha4eMvMzc4CYn2ydnchsCxazcCS0WXHoWK0yIhuT1Hux+oeR1apQDBS6Sz+I+Cens0+fXoRuP14LMyCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710282251; c=relaxed/simple;
-	bh=xKvvt/Jokl5ZXKNDoMYoXH2piFip0VPz1QwlDxztxRw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=gQReo4PeDEaRkWEmW++753cuG7FMFPzqXmeJJ+LNydmnZFCcAAKbHTXP3V/KC2xyJF47Pub2g9G26AbvTDiQrXw7PynpUCSO6K7slSrLHrqkXE7/aLGJ/fXNT+wC6BAYi17xSNrkegtBYwzlBYZAZCXN1tSILfClN2LeeJ0x/EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTCDTcC6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710285412; c=relaxed/simple;
+	bh=oaPJDLki3A3HqO5AiIrDHVFKQWx9bMTXxeJGXgBQDE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZEZ8ngmjjxaT87xT/uzwIBGrBtdVf9GF8Wh/TX3C07ZVtak097ePnEwfu0sOyCcUZQanlPM+XCMNruquQ8URoQuHJoBnLGCHlZRVmE4r8Iljt9JTIWQIzCBCkrFkAzWjmYO9SnSISNibQYOmuC137ixVGD8io5FkBRxyfvfT2Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWrnTYyG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTCDTcC6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D4ACC433C7;
-	Tue, 12 Mar 2024 22:24:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWrnTYyG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF90C433F1;
+	Tue, 12 Mar 2024 23:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710282251;
-	bh=xKvvt/Jokl5ZXKNDoMYoXH2piFip0VPz1QwlDxztxRw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=gTCDTcC6Rh0RReNj6pj4vkbP9QUsiS3xVVo69HobRtusydWKRBGToaEPiqqswED87
-	 fbmil62MB5L9y9jQsToYKCxoYC0A07SRsaeh3o4SEBYJmJwfBzyB8xy3dpS7oA2C+s
-	 A17JSLhD1Zuygnx5ORMmGqHktHB2PIKYwgrjgHNHMGi8zQ13UN500nlVT7etZ5jREn
-	 CvsUNP/jPIGAUGZME1mPaXAr4SzRk3m5E1UZno06OdZ+NdBcJv8F+2n6rWkdmsJykv
-	 jQb6ZdSc8vurDOqxx7M+d6DLB1JucM+wbzIdqBw9Rz7ZxDOtNEe+eL3nWp6hebU/0h
-	 /TIMTokli1HOg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 586FAD95057;
-	Tue, 12 Mar 2024 22:24:11 +0000 (UTC)
-Subject: Re: [GIT PULL] pstore updates for v6.9-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202403111631.BB91A2422@keescook>
-References: <202403111631.BB91A2422@keescook>
-X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202403111631.BB91A2422@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.9-rc1
-X-PR-Tracked-Commit-Id: c8d25d696f526a42ad8cf615dc1131c0b00c662e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 41cb8c332bb904cd2108250075d195e060e1fdc7
-Message-Id: <171028225135.16151.3795744581975381053.pr-tracker-bot@kernel.org>
-Date: Tue, 12 Mar 2024 22:24:11 +0000
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, David Heidelberg <david@ixit.cz>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Kees Cook <keescook@chromium.org>, Kunwu Chan <chentao@kylinos.cn>, linux-hardening@vger.kernel.org, =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>, Tony Luck <tony.luck@intel.com>
+	s=k20201202; t=1710285412;
+	bh=oaPJDLki3A3HqO5AiIrDHVFKQWx9bMTXxeJGXgBQDE0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RWrnTYyG6x4Kw84+kFFPVSxbR5imBb6tHgJVsTSmrLk3pD4Do1gZKlvg+Cw3jKnV0
+	 QOKGp8/QeZWwOubiWWj3zcSauxI7n2XGDRwzbAvJSUm967+WoON/Kw3ubZsxYas/rR
+	 uTEL0ocMIO0F/J3LbgC4SqgMUSgg6Uc3K8nxQLTpo0C9BqLbOLTxQrYYQS5/DzMEVr
+	 ohmF6cFhoQlYvk1UDfG8CQhOCVfApH7/3m94SVf/BQWBlY3W1n/jqAT7AwfxxI0ZHJ
+	 AocgUaxbs1Oi3tq+/9oytzxfdL71r6SZn/ZvPmQA6vmxtbFkUB6aSts3qgrw6UL+Pl
+	 ybPuvDNRawbAw==
+Date: Tue, 12 Mar 2024 16:16:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees Cook
+ <keescook@chromium.org>
+Subject: Re: [PATCH v2][next] net/smc: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <20240312161650.2799f6be@kernel.org>
+In-Reply-To: <ZfCXBykRw5XqBvf0@neat>
+References: <ZfCXBykRw5XqBvf0@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Mon, 11 Mar 2024 16:32:30 -0700:
+On Tue, 12 Mar 2024 11:55:19 -0600 Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.9-rc1
+## Form letter - net-next-closed
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/41cb8c332bb904cd2108250075d195e060e1fdc7
+The merge window for v6.9 has begun and we have already posted our pull
+request. Therefore net-next is closed for new drivers, features, code
+refactoring and optimizations. We are currently accepting bug fixes only.
 
-Thank you!
+Please repost when net-next reopens after March 25th.
 
+RFC patches sent for review only are obviously welcome at any time.
+
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+pw-bot: defer
+
