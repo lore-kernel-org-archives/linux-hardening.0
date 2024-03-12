@@ -1,319 +1,355 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947BEC8DE
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 05:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C049C69D00;
+	Tue, 12 Mar 2024 07:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710219952; cv=none; b=pWSiKeWXYRxUQ0eCU9dDKnGxSlk++JB0mV6OdZqXLdY6fqPjMATwjjLAlEnKxoGcaq+zcSMCXQRuLWDle8GHa5NhnphvnkVL5cwvoizoNbFsSFejcwv6HQuAUS15uFSjdROsDi2ir0KmxFrEaidCSaoz2AMSZfAokm5jl3D2F+g=
+	t=1710230112; cv=none; b=IWL6cmYSUMLfGvIPCWwzmOfvNXx9vjSNf7A2HXr/jTNIsRIAXdlVSueBT24kKInQ8umqkgHZ4QkJ5Fp1COfhpy2x5PU+nvAyuOGPNzkfyhcEaQD5/YK7HLixEYgKGp2glZdrx0yXhy0EhTRB117VTQ//RSW8OMYANtMIAFnqDqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710219952; c=relaxed/simple;
-	bh=K2lG1hmJJMDaRwTDAmSg7l3U1dISAuSUjSl9gceKyaw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m8aAr6PgEz1cQrlkm6sGJIF8pFx/JCS5hoo+uk0DiGX+mKHbjSMnC9hAJwQAb7Wl5ZlYrw5x3Z4F+nf3lueES9lqi4wzyfnH7SyA1uFIsG9oP/2flo6s8mD9SodzZPz2p3PtxIExjrDSz6nYPuXuVT9/MTN5vkLt+5fq4PPAN64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DWo0WF8E; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710230112; c=relaxed/simple;
+	bh=nW54QLvxLUE86tN4pbBK4afc+iEkoEeu461+c2/5ZnA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mzcz/bVlXGNh2483Ff2d3HgoK5NqUjitepLWpFpvo6413JQNYR1V7hG5mqMNXyKBCFdL7y3wKwoVPAoIG4eoBmm/+Lt3ZxkXIFHIbgA1u2Ip4bxTB/fefecT1aAwvotLJxVRaLxeZMkLnOf1XelXDm5LZ2XNT8NrmKOxywPQQso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mqT7zjqC; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DWo0WF8E"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-568251882d7so10213a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 22:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710219949; x=1710824749; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h+pc/4aU7zUEGntOPrkdZBHauX9oO5el6lFm1qHRIWU=;
-        b=DWo0WF8E1tsdOiQuAOIa6YxeobP2R/U1jWCZRhf9tqz54A8S9XcZQ89k/GejapMX70
-         FY03FEd+nk3kaQYIg/uV0kHqkxGCcgLovfHs5pkzq6c+izhE+oGLi9LtqG2i7M943Mw8
-         dqpHPy9fG49fo8GtSRAC65WLmBIXHzoRrFnw0tZ73W4V5nnl5ZVYIQGO6kNoFs3vgppC
-         IKuJhdZyhzS4OOwlvrYxGxIwda0xA+qIS9wweAnHqYv4kItTblMhS3oIaVQ3H0vicgP9
-         BJmPeaQ5svXF9huGn7M7EtOE7DYK08kbkjcXvcpfKjFOs7Nqrg9vedxv+2YxkkwEYUrI
-         ApQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710219949; x=1710824749;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h+pc/4aU7zUEGntOPrkdZBHauX9oO5el6lFm1qHRIWU=;
-        b=eMbnF00pRPEjz9HXuAvmIZfjscJ0Nqz0b5FqG3gju/Ra6rzRakF89oswrrLyGYXuy7
-         kMwGcTcSjm/u62OxtikIvtrTiyCwJ/Z6MfbgMcgKI25UgGvfezpSt+WXyPRhuMqtws0L
-         rCWj2iRW9m0j3LR/Dmatry1lm+942b2zf+IO7Qd2RaSlsH9VTDjUnAPa3PbgmKWM9i2O
-         /xZAVtw4S3qkcJLTeV/d5pCvOPehpIOynhjWO19Y5Rbr/Df7ycacEkAfCMkknfmTHMAR
-         ZIddVuL7jsoNuE+Nz0Et5tnKYDGZ4cjqDcRnZGkM6i2aqeTz4NvBe89jMvfaxlv+bRZu
-         4JNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaGLZolUfnsaSZOhPlXZpGksc78VSsy+3sIGH4O3FdgwxHegRIeGcZ1iTqi54u3JJkR91EQNbwJZQ++HFvINpby2xmUKF13BWJTvfKJ6Yo
-X-Gm-Message-State: AOJu0Yxgtui++bJ+JxFCNduYPLoQ42K3YUWdoljRljtnU3Lc4ZyjLH7E
-	qrnPgJ0NXTS1ZzippDSER3LEFwXLWLBom+xnT4Yr8nMkXuZ086spsmnui1D4BYYT2cFriF57htb
-	nxeuMZ0F7ejx52cxiowvPMnkHZWy2M+XB4j4I
-X-Google-Smtp-Source: AGHT+IGRElbVD0Y6B6qmm2ZO+w6/salLKCB0NWwCiMf7AWYvsPywYoNQYDET87p1th+nlq1sLCVVSvrfXFG40uKoRWg=
-X-Received: by 2002:aa7:c2d9:0:b0:568:5e6c:a3c4 with SMTP id
- m25-20020aa7c2d9000000b005685e6ca3c4mr110847edp.0.1710219948786; Mon, 11 Mar
- 2024 22:05:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mqT7zjqC"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42C7lMZ4027833;
+	Tue, 12 Mar 2024 07:54:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=o7LxOeWqm1j/kchabVECauOS2s34gMo+ClRG1T94Dwo=;
+ b=mqT7zjqCnyR2F08mJRj3tzxGfRCrVj4L3FM1d2i6gzwTjPUy4bEG9G50YVV8/aNgFS+T
+ H1unTaQFp+UWHYAXu2mMmL2ixhiDeW9VPKY61UPlsPtbOgumwzGr1dgexv8b1YOnAkDs
+ /VmVU+QKGfxTx67IbXceE7EIa+uADjCMQd51rkcS+wCwhLd7T1gcm0Lgj0gWKKNYpEfL
+ vq9sEZ+kXTC0OdK8EATFbes4Co9ToVLU5kgdV1H9098Q66pjjNbz7x8dvsMMrVDKZylI
+ 9xx5OS5NHWnIDVABxq6ufvLQ4R1Fa3EgKPNIgOpkal1F+Ssv9RoT6TagitDzV5KKTFi2 oA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wtjyag3eu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 07:54:53 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42C7nPaf003131;
+	Tue, 12 Mar 2024 07:54:53 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wtjyag3ea-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 07:54:52 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42C6qVFJ020437;
+	Tue, 12 Mar 2024 07:54:51 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws3kkwj8h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 07:54:51 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42C7slMM37486896
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Mar 2024 07:54:49 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 78A3A2004D;
+	Tue, 12 Mar 2024 07:54:47 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 370F52004B;
+	Tue, 12 Mar 2024 07:54:47 +0000 (GMT)
+Received: from [9.152.224.118] (unknown [9.152.224.118])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 12 Mar 2024 07:54:47 +0000 (GMT)
+Message-ID: <fd7e4c2f-0d8f-4b1c-86af-9bf472cb7d0f@linux.ibm.com>
+Date: Tue, 12 Mar 2024 08:54:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-5-mic@digikod.net>
-In-Reply-To: <20240301194037.532117-5-mic@digikod.net>
-From: David Gow <davidgow@google.com>
-Date: Tue, 12 Mar 2024 13:05:37 +0800
-Message-ID: <CABVgOSnzaO7EUdSW_xTZd22oc-q_yT9uVoSwTm2jn5pw5pP8Eg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] kunit: Handle test faults
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@chromium.org>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-um@lists.infradead.org, x86@kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000090b5f006136f9c61"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] net/smc: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Wen Gu <guwen@linux.alibaba.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Wenjia Zhang <wenjia@linux.ibm.com>,
+        "D. Wythe" <alibuda@linux.alibaba.com>,
+        Tony Lu <tonylu@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <ZeIhOT44ON5rjPiP@neat>
+ <71aa847b-2edc-44a2-beb7-3610bf744937@linux.alibaba.com>
+ <1cb9a110-c877-4420-9b23-1e7980f1300a@linux.ibm.com>
+ <82c1dc9e-d5b6-40e3-9d81-d18cc270724b@embeddedor.com>
+ <d145d2c7-5cbd-4da5-be14-b25d00baad19@linux.alibaba.com>
+From: Jan Karcher <jaka@linux.ibm.com>
+Organization: IBM - Network Linux on Z
+In-Reply-To: <d145d2c7-5cbd-4da5-be14-b25d00baad19@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NByB9XodbPGvXpdRdzVkkLmBTagFQ-jG
+X-Proofpoint-GUID: qXaI_Ah3RyMXBY4DUhIKKhqD2zXuQRoa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_06,2024-03-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403120060
 
---00000000000090b5f006136f9c61
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2 Mar 2024 at 03:40, Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> wro=
-te:
->
-> Previously, when a kernel test thread crashed (e.g. NULL pointer
-> dereference, general protection fault), the KUnit test hanged for 30
-> seconds and exited with a timeout error.
->
-> Fix this issue by waiting on task_struct->vfork_done instead of the
-> custom kunit_try_catch.try_completion, and track the execution state by
-> initially setting try_result with -EFAULT and only setting it to 0 if
-> the test passed.
->
-> Fix kunit_generic_run_threadfn_adapter() signature by returning 0
-> instead of calling kthread_complete_and_exit().  Because thread's exit
-> code is never checked, always set it to 0 to make it clear.
->
-> Fix the -EINTR error message, which couldn't be reached until now.
->
-> This is tested with a following patch.
->
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: David Gow <davidgow@google.com>
-> Cc: Rae Moar <rmoar@google.com>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240301194037.532117-5-mic@digikod.net
-> ---
 
-This works fine here, and looks good.
+On 11/03/2024 11:59, Wen Gu wrote:
+> 
+> 
+> On 2024/3/8 07:46, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 3/7/24 02:17, Jan Karcher wrote:
+>>>
+>>>
+>>> On 04/03/2024 10:00, Wen Gu wrote:
+>>>>
+>>>>
+>>>> On 2024/3/2 02:40, Gustavo A. R. Silva wrote:
+>>>>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+>>>>> ready to enable it globally.
+>>>>>
+>>>>> There are currently a couple of objects in `struct 
+>>>>> smc_clc_msg_proposal_area`
+>>>>> that contain a couple of flexible structures:
+>>>>>
+>>>
+>>> Thank you Gustavo for the proposal.
+>>> I had to do some reading to better understand what's happening and 
+>>> how your patch solves this.
+>>>
+>>>>> struct smc_clc_msg_proposal_area {
+>>>>>     ...
+>>>>>     struct smc_clc_v2_extension             pclc_v2_ext;
+>>>>>     ...
+>>>>>     struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
+>>>>>     ...
+>>>>> };
+>>>>>
+>>>>> So, in order to avoid ending up with a couple of flexible-array 
+>>>>> members
+>>>>> in the middle of a struct, we use the `struct_group_tagged()` 
+>>>>> helper to
+>>>>> separate the flexible array from the rest of the members in the 
+>>>>> flexible
+>>>>> structure:
+>>>>>
+>>>>> struct smc_clc_smcd_v2_extension {
+>>>>>          struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
+>>>>>                              u8 system_eid[SMC_MAX_EID_LEN];
+>>>>>                              u8 reserved[16];
+>>>>>          );
+>>>>>          struct smc_clc_smcd_gid_chid gidchid[];
+>>>>> };
+>>>>>
+>>>>> With the change described above, we now declare objects of the type of
+>>>>> the tagged struct without embedding flexible arrays in the middle of
+>>>>> another struct:
+>>>>>
+>>>>> struct smc_clc_msg_proposal_area {
+>>>>>          ...
+>>>>>          struct smc_clc_v2_extension_hdr        pclc_v2_ext;
+>>>>>          ...
+>>>>>          struct smc_clc_smcd_v2_extension_hdr    pclc_smcd_v2_ext;
+>>>>>          ...
+>>>>> };
+>>>>>
+>>>>> We also use `container_of()` when we need to retrieve a pointer to the
+>>>>> flexible structures.
+>>>>>
+>>>>> So, with these changes, fix the following warnings:
+>>>>>
+>>>>> In file included from net/smc/af_smc.c:42:
+>>>>> net/smc/smc_clc.h:186:49: warning: structure containing a flexible 
+>>>>> array member is not at the end of another structure 
+>>>>> [-Wflex-array-member-not-at-end]
+>>>>>    186 |         struct smc_clc_v2_extension             pclc_v2_ext;
+>>>>>        |                                                 ^~~~~~~~~~~
+>>>>> net/smc/smc_clc.h:188:49: warning: structure containing a flexible 
+>>>>> array member is not at the end of another structure 
+>>>>> [-Wflex-array-member-not-at-end]
+>>>>>    188 |         struct smc_clc_smcd_v2_extension pclc_smcd_v2_ext;
+>>>>>        |                                                 
+>>>>> ^~~~~~~~~~~~~~~~
+>>>>>
+>>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>>> ---
+>>>>>   net/smc/smc_clc.c |  5 +++--
+>>>>>   net/smc/smc_clc.h | 24 ++++++++++++++----------
+>>>>>   2 files changed, 17 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+>>>>> index e55026c7529c..3094cfa1c458 100644
+>>>>> --- a/net/smc/smc_clc.c
+>>>>> +++ b/net/smc/smc_clc.c
+>>>>> @@ -853,8 +853,9 @@ int smc_clc_send_proposal(struct smc_sock *smc, 
+>>>>> struct smc_init_info *ini)
+>>>>>       pclc_smcd = &pclc->pclc_smcd;
+>>>>>       pclc_prfx = &pclc->pclc_prfx;
+>>>>>       ipv6_prfx = pclc->pclc_prfx_ipv6;
+>>>>> -    v2_ext = &pclc->pclc_v2_ext;
+>>>>> -    smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
+>>>>> +    v2_ext = container_of(&pclc->pclc_v2_ext, struct 
+>>>>> smc_clc_v2_extension, _hdr);
+>>>>> +    smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
+>>>>> +                   struct smc_clc_smcd_v2_extension, hdr);
+>>>>>       gidchids = pclc->pclc_gidchids;
+>>>>>       trl = &pclc->pclc_trl;
+>>>>> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
+>>>>> index 7cc7070b9772..5b91a1947078 100644
+>>>>> --- a/net/smc/smc_clc.h
+>>>>> +++ b/net/smc/smc_clc.h
+>>>>> @@ -134,12 +134,14 @@ struct smc_clc_smcd_gid_chid {
+>>>>>                */
+>>>>>   struct smc_clc_v2_extension {
+>>>>> -    struct smc_clnt_opts_area_hdr hdr;
+>>>>> -    u8 roce[16];        /* RoCEv2 GID */
+>>>>> -    u8 max_conns;
+>>>>> -    u8 max_links;
+>>>>> -    __be16 feature_mask;
+>>>>> -    u8 reserved[12];
+>>>>> +    struct_group_tagged(smc_clc_v2_extension_hdr, _hdr,
+>>>>> +        struct smc_clnt_opts_area_hdr hdr;
+>>>>> +        u8 roce[16];        /* RoCEv2 GID */
+>>>>> +        u8 max_conns;
+>>>>> +        u8 max_links;
+>>>>> +        __be16 feature_mask;
+>>>>> +        u8 reserved[12];
+>>>>> +    );
+>>>>>       u8 user_eids[][SMC_MAX_EID_LEN];
+>>>>>   };
+>>>>> @@ -159,8 +161,10 @@ struct smc_clc_msg_smcd {    /* SMC-D GID 
+>>>>> information */
+>>>>>   };
+>>>>>   struct smc_clc_smcd_v2_extension {
+>>>>> -    u8 system_eid[SMC_MAX_EID_LEN];
+>>>>> -    u8 reserved[16];
+>>>>> +    struct_group_tagged(smc_clc_smcd_v2_extension_hdr, hdr,
+>>>>> +        u8 system_eid[SMC_MAX_EID_LEN];
+>>>>> +        u8 reserved[16];
+>>>>> +    );
+>>>>>       struct smc_clc_smcd_gid_chid gidchid[];
+>>>>>   };
+>>>>> @@ -183,9 +187,9 @@ struct smc_clc_msg_proposal_area {
+>>>>>       struct smc_clc_msg_smcd            pclc_smcd;
+>>>>>       struct smc_clc_msg_proposal_prefix    pclc_prfx;
+>>>>>       struct smc_clc_ipv6_prefix 
+>>>>> pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
+>>>>> -    struct smc_clc_v2_extension        pclc_v2_ext;
+>>>>> +    struct smc_clc_v2_extension_hdr        pclc_v2_ext;
+>>>>>       u8            user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
+>>>>> -    struct smc_clc_smcd_v2_extension    pclc_smcd_v2_ext;
+>>>>> +    struct smc_clc_smcd_v2_extension_hdr    pclc_smcd_v2_ext;
+>>>>>       struct smc_clc_smcd_gid_chid
+>>>>>                   pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
+>>>>>       struct smc_clc_msg_trail        pclc_trl;
+>>>>
+>>>> Thank you! Gustavo. This patch can fix this warning well, just the name
+>>>> '*_hdr' might not be very accurate, but I don't have a good idea ATM.
+>>>
+>>> I agree. Should we chose this option we should come up for a better 
+>>> name.
+>>>
+>>>>
+>>>> Besides, I am wondering if this can be fixed by moving
+>>>> user_eids of smc_clc_msg_proposal_area into smc_clc_v2_extension,
+>>>> and
+>>>> pclc_gidchids of smc_clc_msg_proposal_area into 
+>>>> smc_clc_smcd_v2_extension.
+>>>>
+>>>> so that we can avoid to use the flexible-array in smc_clc_v2_extension
+>>>> and smc_clc_smcd_v2_extension.
+>>>
+>>> I like the idea and put some thought into it. The only thing that is 
+>>> not perfectly clean IMO is the following:
+>>> By the current definition it is easily visible that we are dealing 
+>>> with a variable sized array. If we move them into the structs one 
+>>> could think they are always at their MAX size which they are not.
+>>> E.g.: An incoming proposal can have 0 UEIDs indicated by the eid_cnt.
+>>> That said nothing a comment can't fix.
+>>>
+>>>  From what i have seen the offset and length calculations regarding 
+>>> the "real" size of those structs is fine with your proposal.
+>>>
+>>> Can you verify that your changes also resolve the warnings?
+>>
+>> I can confirm that the changes Wen Gu is proposing also resolve the 
+>> warnings.
+>>
+>> Wen,
+>>
+>> If you send a proper patch, you can include the following tags:
+>>
+>> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> Build-tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>
+> 
+> Hi Gustavo, thank you for the confirmation that my proposal can fix the 
+> warning.
+> 
+> But I found that I may have something missed in my proposal when I think 
+> further.
+> My proposal changed the sizes of struct smc_clc_v2_extension and 
+> smc_clc_smcd_v2_extension,
+> and some places in SMC need them, such as the fill of kvec in 
+> smc_clc_send_proposal().
+> 
+> So my proposal may involve more changes to current SMC code, and I think 
+> it is
+> not as clean as your solution. So I perfer yours now.
 
-The use of task_struct->vfork_done is a bit confusing, as there's no
-documentation (that I could find) about what vfork_done means for
-kthreads. From the code, it looks to just be a copy of
-kthread->exited, which is much more obvious a name.
+Hi Wen Gu,
 
-Would it make sense to either (a) replace this with a call to
-to_kthread(), and kthread->exited, or (b) add a comment explaining
-what vfork_done means here. kthread_stop() itself is using
-to_kthread() and kthread->exited -- even though task_struct is also
-there -- so I'd feel a bit more comfortable with that option.
+you're right. I missed that the offset calculation is broken with your 
+proposal since the full size of the array is already included in this 
+case which means we would have to subtract the empty slots instead of 
+adding the full ones.
+My bad. Thinking about adding a testcase to sxplicit check the size of 
+the CLC Messages send in the future.
 
-Otherwise,
-Reviewed-by: David Gow <davidgow@google.com>
+> 
+> And as for the name, I think maybe we can use '*_elems' as a suffix, at 
+> least it
+> is unambiguous. So it will be smc_clc_v2_extension_elems and 
+> smc_clc_smcd_v2_extension_elems.
+> 
+> 
+> Jan, what do you think of the name '*_elems' ?
 
-Cheers,
--- David
+Hmm... I think it is way better than priv. One more proposal from my 
+side would be *_fixed since this is the fixed content and not variable. 
+I'm open for both.
 
->
-> Changes since v1:
-> * Added Kees's Reviewed-by.
-> ---
->  include/kunit/try-catch.h |  3 ---
->  lib/kunit/try-catch.c     | 14 +++++++-------
->  2 files changed, 7 insertions(+), 10 deletions(-)
->
-> diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-> index c507dd43119d..7c966a1adbd3 100644
-> --- a/include/kunit/try-catch.h
-> +++ b/include/kunit/try-catch.h
-> @@ -14,13 +14,11 @@
->
->  typedef void (*kunit_try_catch_func_t)(void *);
->
-> -struct completion;
->  struct kunit;
->
->  /**
->   * struct kunit_try_catch - provides a generic way to run code which mig=
-ht fail.
->   * @test: The test case that is currently being executed.
-> - * @try_completion: Completion that the control thread waits on while te=
-st runs.
->   * @try_result: Contains any errno obtained while running test case.
->   * @try: The function, the test case, to attempt to run.
->   * @catch: The function called if @try bails out.
-> @@ -46,7 +44,6 @@ struct kunit;
->  struct kunit_try_catch {
->         /* private: internal use only. */
->         struct kunit *test;
-> -       struct completion *try_completion;
->         int try_result;
->         kunit_try_catch_func_t try;
->         kunit_try_catch_func_t catch;
-> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index cab8b24b5d5a..c6ee4db0b3bd 100644
-> --- a/lib/kunit/try-catch.c
-> +++ b/lib/kunit/try-catch.c
-> @@ -18,7 +18,7 @@
->  void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
->  {
->         try_catch->try_result =3D -EFAULT;
-> -       kthread_complete_and_exit(try_catch->try_completion, -EFAULT);
-> +       kthread_exit(0);
->  }
->  EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
->
-> @@ -26,9 +26,12 @@ static int kunit_generic_run_threadfn_adapter(void *da=
-ta)
->  {
->         struct kunit_try_catch *try_catch =3D data;
->
-> +       try_catch->try_result =3D -EINTR;
->         try_catch->try(try_catch->context);
-> +       if (try_catch->try_result =3D=3D -EINTR)
-> +               try_catch->try_result =3D 0;
->
-> -       kthread_complete_and_exit(try_catch->try_completion, 0);
-> +       return 0;
->  }
->
->  static unsigned long kunit_test_timeout(void)
-> @@ -58,13 +61,11 @@ static unsigned long kunit_test_timeout(void)
->
->  void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *contex=
-t)
->  {
-> -       DECLARE_COMPLETION_ONSTACK(try_completion);
->         struct kunit *test =3D try_catch->test;
->         struct task_struct *task_struct;
->         int exit_code, time_remaining;
->
->         try_catch->context =3D context;
-> -       try_catch->try_completion =3D &try_completion;
->         try_catch->try_result =3D 0;
->         task_struct =3D kthread_create(kunit_generic_run_threadfn_adapter=
-,
->                                      try_catch, "kunit_try_catch_thread")=
-;
-> @@ -75,8 +76,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->         }
->         get_task_struct(task_struct);
->         wake_up_process(task_struct);
-> -
-> -       time_remaining =3D wait_for_completion_timeout(&try_completion,
-> +       time_remaining =3D wait_for_completion_timeout(task_struct->vfork=
-_done,
->                                                      kunit_test_timeout()=
-);
->         if (time_remaining =3D=3D 0) {
->                 try_catch->try_result =3D -ETIMEDOUT;
-> @@ -92,7 +92,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->         if (exit_code =3D=3D -EFAULT)
->                 try_catch->try_result =3D 0;
->         else if (exit_code =3D=3D -EINTR)
-> -               kunit_err(test, "wake_up_process() was never called\n");
-> +               kunit_err(test, "try faulted\n");
->         else if (exit_code =3D=3D -ETIMEDOUT)
->                 kunit_err(test, "try timed out\n");
->         else if (exit_code)
-> --
-> 2.44.0
->
+Which one would you prefer more?
 
---00000000000090b5f006136f9c61
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
-mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
-wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
-5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
-ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIJfI7FFT1hk5kEePurOKEQopyEMAeRpCSPqaHED/OhmeMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMxMjA1MDU0OVowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQA7KrbG
-1GQCdjphAh9ZYbU3FD6k+ZQb4U/vtZduRXTlviunKYY7u767bxtj3dSk1V8GNy/r3MMMqpLOoZK4
-HvkmStF3b3Reh+b0qUpRoUcXtSmgmbbyNsxWIk74PQhyOshB152wbRjRGkr1K1u0J0Cfm9HXBjQV
-Il58pJqeb71jRcZgF7UUhiffPnfjyD160gpe0vEsh6mPV+WncXB85rBPYxWeZrI61iD5UdIVPdAW
-pUvKKpvQIjTugbeHa7TM3a+G0YTRAIw4jp8X+FVDlQkXObD5qyWvhnyTs/G9Mp9GERVLI+Foclle
-gUIAJJtr29mJC48jpgKxFE2OFyskpD0g
---00000000000090b5f006136f9c61--
+> 
+> Thanks!
+> 
+>> Thanks!
+>> -- 
+>> Gustavo
+>>
+>>>
+>>> [...]
+>>>
+>>>>   };
+>>>>
+>>>>
+>>>> Thanks!
+>>>> Wen Gu
+>>>
+>>> Thanks you
+>>> - Jan
