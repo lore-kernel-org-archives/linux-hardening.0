@@ -1,378 +1,214 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D550117CD
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 01:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AC4BE6D
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 04:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710206315; cv=none; b=P8HP002YG6zTNJ9EJ9tP7ZooYof2IovKOLsNiOzz19QDooQoxWfxksiJhZSLFyRyLLLlAXbfIw44BC4Msay/+XOrnpO8Y6dG455M3eG+Un7IWkEJGNXKTa+ojEQu9YsYn2XfEILAp+DBJb7jb2DKd4my9VfaVtuXX3YDv1XHBwg=
+	t=1710219207; cv=none; b=m8ngrPXUBExHOaPO/hWKvrqLY1kXmqZrGQdtAfurMBM0w5svnIk0/LC3ezrOwsgOd8Bc9K0S2QFravaH3mj/f7OxkLDfHqvSQVVJKMI1InU/98zGNXOdEOVcgic1jTqPwk+1akLZuzDGNmrOGOxrHooeWMkpe5KXgHSNfb5OAXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710206315; c=relaxed/simple;
-	bh=LlDPdGUSuEysW+0IelyZlJYvm8m/D/jWNozdLA6bZqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ofQ1/sHbvn9YF/E6zc6QSp6s+XgNLDiUEkR4Ks76mWKshZxZ9f6iVxax2VYygeRtmzAxR1SssUpadp/1UXLJaeTZ1IpuQUxTvk5s7qg7OoUvtXgCwos77oe+V6PcwwDJvpkgCMmUmc0hFoASeaJVg6USYf44Y+CQRuwLeOP+CoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=P1yz4TxU; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710219207; c=relaxed/simple;
+	bh=LF5UX9pQuo6LiHis1I7UYvX7SOMlmmIsZk20WvFxRLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k8UPXv2xFsidS82Jp/zdr2vjw4bu3mZ8IgjqgwbHX5xO4uhnO6RrPU8VbFbi0JjzCAKwfD+bpkVKBwoIvoIg1Gg11D/I4RYRITr09S2SIGESoCBxTLTGMb0Sc73vMexgX7wcg7j61z/mUeIh556RKYbOKAXoCA8LBSa0jfatybo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0oGDLNcj; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P1yz4TxU"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-221ffba5c8bso801014fac.1
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 18:18:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0oGDLNcj"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-566b160f6eeso3717a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 21:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710206313; x=1710811113; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nTIpAV28U7eYXX05YBdvGn20WGUMvQJYSHzcZsEDIko=;
-        b=P1yz4TxUTPj+ml8I7flaiDTqPx9Vceff+s+vxdZSc44lQ5LYoy51TFutSm7+gBuXOU
-         G7Wfx2UUIF86EG/VA2wPi25v2dTsLsub2yHOyZ2PD7viIvdRErzm9tQakR6ap7nkbAqx
-         6SylJUy01ktCzLDxq6GiIIxEmbl4OeYyHTxEw=
+        d=google.com; s=20230601; t=1710219204; x=1710824004; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XKC2wwrmwC+1IJq4OVqjCb5MeOZDEr75Livc7ZCyZRY=;
+        b=0oGDLNcjTheDprObCllGlNPkqrHIIsjU0Hp7RMwgqgNhNygW+MMphqW5DuIqAXqGNu
+         KeYOML9I3UwCh9eShUjAXb2iOBEZeKESfsyWUX7fmZK30EN2FctbtnssO+VbOnNw6vwy
+         mPIEUGzO6uLNe/Em+rWfJzpeW4+gVjwFx44LZmzW7X2XdIQvk+1+fmeKQmUEYImHSENX
+         CjJYNTqR/ia1M5og7B1x6PxCfIsaspib9O9ei2mHULzq4oP99VDt1kquQk7dqdqdM7Qv
+         58atJVfW0S3W6Ntxz2DOrM6SNyL9dBkTFx8w5k2Fn0OOS1K/UPzxElVvFGBaXGAB81lh
+         kdIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710206313; x=1710811113;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nTIpAV28U7eYXX05YBdvGn20WGUMvQJYSHzcZsEDIko=;
-        b=u31RfkGz9w8YuOONIGAO6uMdvrMa4fAPpgWyP3y1QTpF0OvmJNQHSoHoShgIEyTSMS
-         JdQGztkhsRzbIssEJu6m74kxPzrvClCDyJjEVvrIdoOMvNqEkwTCdM1Lprh6oP5/kCP/
-         rqhTyhcVzUMo6Ey15VShEUhpyPRVVPGDKunDutQv76fg+Xrmb2ukUKCX1s0s3ZAD8D1f
-         yDhwoXOlUpOtY0T5wS6JQfZ2hkCT8GSYgsTvCNMG90Add4n28c223rT9DMmJjHSjnpCy
-         USrMkXtVCSp8whADGRk9IwLvEXKfDr5hmPxli7AZTLY7aXvtMhLit/QgdRiO+VlV+f/T
-         rNdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzBoPTISLq9of4gkIChjVmOdQznSLTuiITcRL2/vep8LbIf+m31RVJHDUjvoJge7iS/RtHq9PxTnYeoUTBRYZNfv+uxLkaTh6/yIpfWzMZ
-X-Gm-Message-State: AOJu0Yxw8d2JIKcDKtabV74s5Q6sLF7FHYa1HsZEBPP/oVAkgCX4G+XN
-	5tCG/pIKonLEtq6zV0lewmWecxE8lIzDUY0NV98eLLaopq1THQtXOHHsToZFeg==
-X-Google-Smtp-Source: AGHT+IGa2+n/kL5yHpIt+c14VdLJqa5M0PfowwbIe6llPlKW5ygTTklzFdMVZkC5IAHXYgOfOSzKgg==
-X-Received: by 2002:a05:6870:a110:b0:220:dc43:f9f2 with SMTP id m16-20020a056870a11000b00220dc43f9f2mr9272891oae.38.1710206312947;
-        Mon, 11 Mar 2024 18:18:32 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u13-20020a056a00124d00b006e58663dd0asm4944826pfi.110.2024.03.11.18.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 18:18:32 -0700 (PDT)
-Date: Mon, 11 Mar 2024 18:18:31 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bill Wendling <morbo@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Fangrui Song <maskray@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Guixiong Wei <guixiongwei@gmail.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Jingzi Meng <mengjingzi@iie.ac.cn>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <keescook@chromium.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	kernel test robot <lkp@intel.com>, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
-	llvm@lists.linux.dev, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Wajdeczko <michal.wajdeczko@intel.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Nicolas Schier <n.schier@avm.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>,
-	Sachin Sant <sachinp@linux.ibm.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	syzkaller <syzkaller@googlegroups.com>,
-	Tanzir Hasan <tanzirh@google.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Vasiliy Kovalev <kovalev@altlinux.org>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [GIT PULL] hardening updates for v6.9-rc1
-Message-ID: <202403111702.828C918E55@keescook>
+        d=1e100.net; s=20230601; t=1710219204; x=1710824004;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XKC2wwrmwC+1IJq4OVqjCb5MeOZDEr75Livc7ZCyZRY=;
+        b=VFQ5vsxfS+t2NrUodrd2vNCs4VV/UDLLZipUILK3ydI3R1w8Zkxxncc5Avqzh15xXy
+         a9A7XJ9fE12gpB1wZE9spNAtcu+CMrQY7JYVsNNfp0GGuHDNSXamhoaRvQeAR+p4sepN
+         r6bsH0vMpej1lEO8GyK0NpPfrA5l6X1DnzPtv4mPhkVDG6N4wl7Md6pswFY73J706fCs
+         /+k2itfvurjweN+gseR4UKKVKg57TMni5aWNHNL2wMZYowzKQRlsK7D+p8RcOtz6qzIa
+         2VJGAQ6ercZ+v5vcu25n/rzhPPf9TskIrJuq867Ib3zgaSBAmXtXveiXxcl/vvY2zB9j
+         Tppg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcyVJz+kr0R7NDZbue8MJyY8bh9+Vwm6Qz1+33AdZpo4ak+stbK+sHo+LQclfDo/KjV4Mxx/qnniTFfTyykBw5Xy1+1LrlnABEwCS8SAUR
+X-Gm-Message-State: AOJu0YytTPkMyfAz/XKyz1Q0DaXMLZ5pfh8G1tVFvfhwtvPiBuzSySf2
+	WqUr8Cf9H1dPVvA4l9e4rqh9la0ZW4/oO8nrRq4wzmFci4zVHFFhBBGtzOQpaZbnQQqBSiax1Cb
+	xyrspds1CE5j0Y6We1wY57wvEraBmudYYwxYP
+X-Google-Smtp-Source: AGHT+IH+eRjk4kWn4zCzKyXtEzK8QgDBUlPe7kpZgNL6bj5mJsRgXBZltTcTULwT4749I6vLJYbVLoaaEbdgMditABE=
+X-Received: by 2002:aa7:da44:0:b0:568:55db:8c69 with SMTP id
+ w4-20020aa7da44000000b0056855db8c69mr107780eds.4.1710219204196; Mon, 11 Mar
+ 2024 21:53:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-2-mic@digikod.net>
+In-Reply-To: <20240301194037.532117-2-mic@digikod.net>
+From: David Gow <davidgow@google.com>
+Date: Tue, 12 Mar 2024 12:53:10 +0800
+Message-ID: <CABVgOS=MHQbDH83s-PP2dPtxeDDoNr9K37kvUsTxaZVxDeVq6g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] kunit: Handle thread creation error
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@chromium.org>, 
+	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-um@lists.infradead.org, x86@kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000002ef5f206136f7063"
 
-Hi Linus,
+--0000000000002ef5f206136f7063
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please pull these kernel hardening updates for v6.9-rc1. As is pretty
-normal for this tree, there are changes all over the place, especially
-for small fixes, selftest improvements, and improved macro usability.
-Some header changes ended up landing via this tree as they depended on
-the string header cleanups. Also, a notable set of changes is the work
-for the reintroduction of the UBSAN signed integer overflow sanitizer
-so that we can continue to make improvements on the compiler side to
-make this sanitizer a more viable future security hardening option.
+On Sat, 2 Mar 2024 at 03:40, Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> wro=
+te:
+>
+> Previously, if a thread creation failed (e.g. -ENOMEM), the function was
+> called (kunit_catch_run_case or kunit_catch_run_case_cleanup) without
+> marking the test as failed.  Instead, fill try_result with the error
+> code returned by kthread_run(), which will mark the test as failed and
+> print "internal error occurred...".
+>
+> Cc: Brendan Higgins <brendanhiggins@google.com>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> Link: https://lore.kernel.org/r/20240301194037.532117-2-mic@digikod.net
+> ---
+>
+> Changes since v1:
+> * Added Kees's Reviewed-by.
+> ---
 
-Everything has been in -next for a while, but there are a couple small
-merge conflicts to deal with:
+Thanks for catching this!
 
-kbuild tree:
-	https://lore.kernel.org/linux-next/20240226165811.56f71171@canb.auug.org.au/
+Reviewed-by: David Gow <davidgow@google.com>
 
-bcachefs tree:
-	https://lore.kernel.org/linux-next/20240301154351.1d097566@canb.auug.org.au/
+Thanks,
+-- David
 
-Later in the merge window I intend to send some macro adjustment
-collateral changes, but since they're mechanical, I figured it would be
-simpler to wait for the end of -rc1.
 
-Thanks!
+-- David
+>  lib/kunit/try-catch.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+> index f7825991d576..a5cb2ef70a25 100644
+> --- a/lib/kunit/try-catch.c
+> +++ b/lib/kunit/try-catch.c
+> @@ -69,6 +69,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
+>                                   try_catch,
+>                                   "kunit_try_catch_thread");
+>         if (IS_ERR(task_struct)) {
+> +               try_catch->try_result =3D PTR_ERR(task_struct);
+>                 try_catch->catch(try_catch->context);
+>                 return;
+>         }
+> --
+> 2.44.0
+>
 
--Kees
+--0000000000002ef5f206136f7063
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-The following changes since commit 41bccc98fb7931d63d03f326a746ac4d429c1dd3:
-
-  Linux 6.8-rc2 (2024-01-28 17:01:12 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.9-rc1
-
-for you to fetch changes up to 3fe1eb4dd2e4b872ffb7b9b081b34ffcfa934ba7:
-
-  selftests/powerpc: Fix load_unaligned_zeropad build failure (2024-03-05 10:29:15 -0800)
-
-----------------------------------------------------------------
-hardening updates for v6.9-rc1
-
-- string.h and related header cleanups (Tanzir Hasan, Andy Shevchenko)
-
-- VMCI memcpy() usage and struct_size() cleanups (Vasiliy Kovalev, Harshit
-  Mogalapalli)
-
-- selftests/powerpc: Fix load_unaligned_zeropad build failure (Michael
-  Ellerman)
-
-- hardened Kconfig fragment updates (Marco Elver, Lukas Bulwahn)
-
-- Handle tail call optimization better in LKDTM (Douglas Anderson)
-
-- Use long form types in overflow.h (Andy Shevchenko)
-
-- Add flags param to string_get_size() (Andy Shevchenko)
-
-- Add Coccinelle script for potential struct_size() use (Jacob Keller)
-
-- Fix objtool corner case under KCFI (Josh Poimboeuf)
-
-- Drop 13 year old backward compat CAP_SYS_ADMIN check (Jingzi Meng)
-
-- Add str_plural() helper (Michal Wajdeczko, Kees Cook)
-
-- Ignore relocations in .notes section
-
-- Add comments to explain how __is_constexpr() works
-
-- Fix m68k stack alignment expectations in stackinit Kunit test
-
-- Convert string selftests to KUnit
-
-- Add KUnit tests for fortified string functions
-
-- Improve reporting during fortified string warnings
-
-- Allow non-type arg to type_max() and type_min()
-
-- Allow strscpy() to be called with only 2 arguments
-
-- Add binary mode to leaking_addresses scanner
-
-- Various small cleanups to leaking_addresses scanner
-
-- Adding wrapping_*() arithmetic helper
-
-- Annotate initial signed integer wrap-around in refcount_t
-
-- Add explicit UBSAN section to MAINTAINERS
-
-- Fix UBSAN self-test warnings
-
-- Simplify UBSAN build via removal of CONFIG_UBSAN_SANITIZE_ALL
-
-- Reintroduce UBSAN's signed overflow sanitizer
-
-----------------------------------------------------------------
-Andy Shevchenko (4):
-      kernel.h: Move upper_*_bits() and lower_*_bits() to wordpart.h
-      kernel.h: Move lib/cmdline.c prototypes to string.h
-      overflow: Use POD in check_shl_overflow()
-      lib/string_helpers: Add flags param to string_get_size()
-
-Douglas Anderson (3):
-      lkdtm: Make lkdtm_do_action() return to avoid tail call optimization
-      lkdtm/bugs: Adjust lkdtm_HUNG_TASK() to avoid tail call optimization
-      lkdtm/bugs: In lkdtm_HUNG_TASK() use BUG(), not BUG_ON(1)
-
-Harshit Mogalapalli (2):
-      VMCI: Use struct_size() in kmalloc()
-      VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
-
-Jacob Keller (1):
-      coccinelle: semantic patch to check for potential struct_size calls
-
-Jingzi Meng (1):
-      cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
-
-Josh Poimboeuf (1):
-      objtool: Fix UNWIND_HINT_{SAVE,RESTORE} across basic blocks
-
-Kees Cook (31):
-      MAINTAINERS: Add UBSAN section
-      ubsan: Use Clang's -fsanitize-trap=undefined option
-      ubsan: Silence W=1 warnings in self-test
-      ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL
-      ubsan: Reintroduce signed overflow sanitizer
-      string: Redefine strscpy_pad() as a macro
-      string: Allow 2-argument strscpy()
-      string: Allow 2-argument strscpy_pad()
-      um: Convert strscpy() usage to 2-argument style
-      overflow: Adjust check_*_overflow() kern-doc to reflect results
-      overflow: Introduce wrapping_add(), wrapping_sub(), and wrapping_mul()
-      overflow: Introduce wrapping_assign_add() and wrapping_assign_sub()
-      coccinelle: Add rules to find str_plural() replacements
-      refcount: Annotated intentional signed integer wrap-around
-      fortify: Split reporting and avoid passing string pointer
-      fortify: Allow KUnit test to build without FORTIFY
-      fortify: Provide KUnit counters for failure testing
-      fortify: Add KUnit tests for runtime overflows
-      fortify: Improve buffer overflow reporting
-      MAINTAINERS: Update LEAKING_ADDRESSES details
-      leaking_addresses: Use File::Temp for /tmp files
-      leaking_addresses: Ignore input device status lines
-      leaking_addresses: Provide mechanism to scan binary files
-      sparc: vdso: Disable UBSAN instrumentation
-      lib: stackinit: Adjust target string to 8 bytes for m68k
-      x86, relocs: Ignore relocations in .notes section
-      overflow: Allow non-type arg to type_max() and type_min()
-      compiler.h: Explain how __is_constexpr() works
-      sh: Fix build with CONFIG_UBSAN=y
-      string: Convert selftest to KUnit
-      string: Convert helpers selftest to KUnit
-
-Lukas Bulwahn (2):
-      hardening: drop obsolete UBSAN_SANITIZE_ALL from config fragment
-      hardening: drop obsolete DRM_LEGACY from config fragment
-
-Marco Elver (1):
-      hardening: Enable KFENCE in the hardening config
-
-Michael Ellerman (1):
-      selftests/powerpc: Fix load_unaligned_zeropad build failure
-
-Michal Wajdeczko (1):
-      lib/string_choices: Add str_plural() helper
-
-Tanzir Hasan (2):
-      kernel.h: removed REPEAT_BYTE from kernel.h
-      lib/string: shrink lib/string.i via IWYU
-
-Vasiliy Kovalev (1):
-      VMCI: Fix possible memcpy() run-time warning in vmci_datagram_invoke_guest_handler()
-
- Documentation/dev-tools/ubsan.rst                  |  28 +-
- MAINTAINERS                                        |  26 +-
- arch/arm/Kconfig                                   |   2 +-
- arch/arm/boot/compressed/misc.c                    |   2 +-
- arch/arm/boot/compressed/misc.h                    |   2 +-
- arch/arm/include/asm/word-at-a-time.h              |   3 +-
- arch/arm64/Kconfig                                 |   2 +-
- arch/arm64/include/asm/word-at-a-time.h            |   3 +-
- arch/mips/Kconfig                                  |   2 +-
- arch/parisc/Kconfig                                |   2 +-
- arch/powerpc/Kconfig                               |   2 +-
- arch/powerpc/include/asm/word-at-a-time.h          |   4 +-
- arch/riscv/Kconfig                                 |   2 +-
- arch/riscv/include/asm/word-at-a-time.h            |   3 +-
- arch/s390/Kconfig                                  |   2 +-
- arch/s390/include/asm/word-at-a-time.h             |   3 +-
- arch/sh/boot/compressed/Makefile                   |   1 +
- arch/sh/include/asm/word-at-a-time.h               |   2 +
- arch/sparc/vdso/Makefile                           |   1 +
- arch/um/drivers/net_kern.c                         |   2 +-
- arch/um/drivers/vector_kern.c                      |   2 +-
- arch/um/drivers/vector_user.c                      |   4 +-
- arch/um/include/shared/user.h                      |   3 +-
- arch/um/os-Linux/drivers/ethertap_user.c           |   2 +-
- arch/um/os-Linux/drivers/tuntap_user.c             |   2 +-
- arch/um/os-Linux/umid.c                            |   6 +-
- arch/x86/Kconfig                                   |   2 +-
- arch/x86/boot/compressed/misc.c                    |   2 +-
- arch/x86/include/asm/word-at-a-time.h              |   3 +-
- arch/x86/kvm/mmu/mmu.c                             |   1 +
- arch/x86/tools/relocs.c                            |   8 +
- drivers/misc/lkdtm/bugs.c                          |   3 +-
- drivers/misc/lkdtm/core.c                          |  22 +-
- drivers/misc/vmw_vmci/vmci_datagram.c              |  10 +-
- fs/namei.c                                         |   2 +-
- include/asm-generic/word-at-a-time.h               |   3 +-
- include/linux/compiler.h                           |  39 ++
- include/linux/compiler_types.h                     |   9 +-
- include/linux/fortify-string.h                     | 122 ++--
- include/linux/kernel.h                             |  44 +-
- include/linux/overflow.h                           | 115 +++-
- include/linux/refcount.h                           |   9 +-
- include/linux/string.h                             |  86 ++-
- include/linux/string_choices.h                     |  11 +
- include/linux/string_helpers.h                     |  10 +-
- include/linux/wordpart.h                           |  42 ++
- kernel/configs/hardening.config                    |   7 +-
- kernel/printk/printk.c                             |  11 -
- lib/Kconfig.debug                                  |  14 +-
- lib/Kconfig.ubsan                                  |  28 +-
- lib/Makefile                                       |   7 +-
- lib/fortify_kunit.c                                | 662 ++++++++++++++++++++-
- lib/overflow_kunit.c                               |  67 ++-
- lib/stackinit_kunit.c                              |  19 +-
- lib/string.c                                       |  23 +-
- lib/string_helpers.c                               |  89 ++-
- ...est-string_helpers.c => string_helpers_kunit.c} | 255 ++++----
- lib/string_kunit.c                                 | 199 +++++++
- lib/test_string.c                                  | 257 --------
- lib/test_ubsan.c                                   |  41 +-
- lib/ubsan.c                                        |  68 +++
- lib/ubsan.h                                        |   4 +
- scripts/Makefile.lib                               |   5 +-
- scripts/Makefile.ubsan                             |   5 +-
- scripts/coccinelle/api/string_choices.cocci        |  41 ++
- scripts/coccinelle/misc/struct_size.cocci          |  74 +++
- scripts/leaking_addresses.pl                       |  90 ++-
- tools/objtool/check.c                              |  12 +
- tools/objtool/noreturns.h                          |   2 +-
- .../selftests/powerpc/primitives/linux/bitops.h    |   0
- .../selftests/powerpc/primitives/linux/wordpart.h  |   1 +
- 71 files changed, 1949 insertions(+), 688 deletions(-)
- create mode 100644 include/linux/wordpart.h
- rename lib/{test-string_helpers.c => string_helpers_kunit.c} (67%)
- create mode 100644 lib/string_kunit.c
- delete mode 100644 lib/test_string.c
- create mode 100644 scripts/coccinelle/api/string_choices.cocci
- create mode 100644 scripts/coccinelle/misc/struct_size.cocci
- create mode 100644 tools/testing/selftests/powerpc/primitives/linux/bitops.h
- create mode 120000 tools/testing/selftests/powerpc/primitives/linux/wordpart.h
-
--- 
-Kees Cook
+MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
+BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
+BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
+Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
+Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
+FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
+YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
+AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
+mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
+wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
+5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
+ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
+MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
+IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
+hvcNAQkEMSIEIL/yVJViF7lzzYUKtD5/T+GT76dxmtQmVrwe2o2WoeGDMBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMxMjA0NTMyNFowaQYJKoZIhvcNAQkPMVww
+WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBTIWOo
+amdrznSm376sckH83fVT4hBnYNRI/7GOcDs1vVQ6Cjwd7O1hkfhddLBR06vnlP2vqREnmUMAI11o
+oUQzB0paSwtygNDgZ5pEYhl4aYRxb8sN80U0yVkDyFWMdahwBKGNgIctZhdwnuOjP2DTuj/UB2I1
+KBhxSjyhJI8oRLTv38SW2paZ4OE2BX8xwqLWJp6rukfI2DGodaCoYPwLXd+YUkfh9U9vWeB6eZto
+PlVFFUSQ3qcGNPHBu+2wbSTU56FYWcwqyAMhplt/SWhtudv3d9xkMqvJcv+yNBQBnNpTgip87PbW
+vv+lZGdk7nkZLDSKviYL9QktSmYbemD4
+--0000000000002ef5f206136f7063--
