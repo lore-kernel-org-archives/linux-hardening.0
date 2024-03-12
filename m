@@ -1,66 +1,66 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1943033996
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 04:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783D4383A9
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 04:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710219227; cv=none; b=h6yxB/XsQxEkHgx+lk1wR/s9VtyOanfz5H7GxH8iqvgo4QZF09kv1bHgJx6R1zDnlDv3Y+9VrgC4wrpuUMioXtoEsXq+vZQUTbIpYxQHAxqYFiXO3FLfU86ggRJA+GiS6Lc9p0HZXd+YqkqCAeik8VQcjWQnjGY8imtKt2xdlq0=
+	t=1710219236; cv=none; b=kkIPWDUdCJXAF8JIJi/S6IK9z6ZH4lgzSTH9FNX6c2ywqMBitQID91RKwIiVeYUhOSpYKI1Y9xvxM+H9iUY6mQo1CQJRbdnEUhPPBOjk6l0xhYm59IHRsg3rpLV1RPkrdCVG+WLzNfS9yW1pVYpip4+umERp/LxxmcHkmEQ3KAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710219227; c=relaxed/simple;
-	bh=WZ9j5fMNOMPuoRPRSwvuy+yQo3LLfPQdfoD/3X0rO9M=;
+	s=arc-20240116; t=1710219236; c=relaxed/simple;
+	bh=cXXy4cmxG5guaWgiqx/ow6zkHtI4oA0Dk9Mj2FqCzf0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hWdKuoPh4/QCMoricSX0e4a7igV9I+Gv0GhvMKsJreAZ0Vlal4YBywjSvmwy9NnDxXyp4U2tHzsEng1MMB5/9rfMULed6N+qPQow35AUc5vKfyI6L/NiIfqLDiGMNhIppYmmxcFZCdDZnAXWV55aOZSR7LY0JVBbgZ6YDaGvqAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S5JaYlk1; arc=none smtp.client-ip=209.85.208.46
+	 To:Cc:Content-Type; b=dHccg3b72H6SrBBETk4u2dY6xeRmuxSl0PvqOo++X2VK2EWEwaFcsn715qG3FlYh01J3f8NCWjBhhJW98xG3QU9mHKRqh/hWHLpfPZfyTUVoqEIaCKa9kDwdvpkMSgJTL4W3/uTjg9WfQGj1Z7EqvuirACczpg2IV4jp/FjxNZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DdUiC//5; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S5JaYlk1"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-568251882d7so10121a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 21:53:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DdUiC//5"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412f81fd561so25685e9.1
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 21:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710219224; x=1710824024; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710219232; x=1710824032; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gZXiYCSeCLCplXsti9jlyahg9Ay51Lhj51vbQysSP+E=;
-        b=S5JaYlk1LnH46RFn3NmWfrt/RsiMFXbBTlplmOZd/bB2EXgP6WYo1Hs7ElIQNN1tt9
-         12SfdPzzOtho/WOmv1JK4wBzhU+RvI5gkAvyHuuNrPGH4QRdY8rCi6aMtagnc0BRbzZ1
-         jifraYqv679RVdlQM8rKXjVZXOBRNeOK9Rfx0MLSFmMK60l1EGhIZFumaEMNJ9k0nVhK
-         tYvgq5+eVMQwTN3gUrIO2D3BKRgsf6miTcYSvba90RFTIED2KgM3UVk97gtBOzzoK4Hm
-         Uu9JYY8G8BsHpm0XnWt79IpSUEbA3v46o8Q3JmAK+lrpXLUtCzMsbSDdRkRNrfihuW5Q
-         N9Ew==
+        bh=V9rd5VvPSL8NLzocn+8lF6n5+ve0Ktg7prqA02kjAis=;
+        b=DdUiC//52dOOtLqgzR+LlbJ19VcfeUsyzmnfNL5ES/Fi9Tus5cpgsqauW+/aDr+lED
+         t0sSvU04gKjWaIXbR53fUFZC+GGMGpPWmycYWxBTr4TzZIdGrJPh6MVwMPGzUmj1Ub57
+         3U39TSnFXqmtg1Jd3e2i0bnrVfh9uSjKjAkP+voFIQGYEcLarVRqWusJZxKuWiUYiNF9
+         XkQtScRmuP1kAKebkOqbcsNLWku9mSTbmYYWz9rRUMpZ5C0Px8cln2O35gAaHM1MWkeI
+         62CeLgRW7+ouNzMEHgGuWnPb+WQX8wfLl/P2GtUjLzlN7iZZsL19cioH8Riv9VfzfzsD
+         A4XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710219224; x=1710824024;
+        d=1e100.net; s=20230601; t=1710219232; x=1710824032;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gZXiYCSeCLCplXsti9jlyahg9Ay51Lhj51vbQysSP+E=;
-        b=pGy218GHmL+aRQnfsxRaQGxb6EC7Q8xKm7t2IS8n2GEs7IdCIQNJDfYgWazs8LOQE9
-         Oc7ZNoydr1IMlzxKmvmkl2dFz5SIlumFyMxxT0URrlzjFbMuMipOBE3SYSKNfMVW8noi
-         TOnw9j3Ix33Ag4cgY2yzqyorzoSoomFjzzhnd6augVyrwzXnqdpeNCm4bDr+rnMBiC0H
-         jpackP/3drdWB5JY0C/TohEOTSyVXe9lL5yZiqUpqcY/mknk10bvNrtEJ82UXMjEqF9T
-         +JSjJDKsaXfC5F+j1aOGDwCaHekqeXWP3aq5LOBf79ctC3e20tWwCYOC7MNYTx1+RXkV
-         saaA==
-X-Forwarded-Encrypted: i=1; AJvYcCViAhGq72LtX9fc4N8OU2Dk7nJ25RMYJ4ckCA7gLePN1u4HQpkQwlsId0svy1wjVZ/wzOLT1BjmsTVnT7XHPpmrbiJNLaqZvVKnAAfSJdCo
-X-Gm-Message-State: AOJu0Yytj4LRoUUKJw793bq70UEwfZKTwkLtBk7AzG/S3MYsaVPMkphj
-	6SKqb4e+zBa0O4UohEgWoeMCvr671Q6KduFKF41zkm4vNNrQ7CGp3w9shtUxUu0CLot1Er560sv
-	UaAERxM6yOhXXefoMZDD7ngJfmE3EJKVnGYjS
-X-Google-Smtp-Source: AGHT+IHDyL7/kwgr/0FC8GfwKZO4dzMG+0nGwiUgO+KM0lSe1OBVxz/fJ1q0orM6NTZxI9cNT/o09ctwDuxQhsewYqc=
-X-Received: by 2002:aa7:c31a:0:b0:568:5606:71f9 with SMTP id
- l26-20020aa7c31a000000b00568560671f9mr56360edq.5.1710219224544; Mon, 11 Mar
- 2024 21:53:44 -0700 (PDT)
+        bh=V9rd5VvPSL8NLzocn+8lF6n5+ve0Ktg7prqA02kjAis=;
+        b=ELgx8NC6pz5h10UDvrixOjRQLilTTnNHBT4ic3gP/mnRWYVlgWFiex/3WYJ+Ae0gPc
+         13fMUethK3OmlyYrJzchoKj/w4dBXAP48t9pNBH5XhK8nKN9/64EvTvIXIhCCOat4zKD
+         exAbHzuGLfrHUTEPAhxWcHBjwbvw9Om7bBfmxWEHdsEXGafsRAOH65ex+vsMl/n1PWyr
+         /cYKCE+p3w1IxftPwNoiWqDIp2dWLnQZ4pGbS4M8UsATGqzeu0R1zbRq448tTvfMdyuh
+         5GBqisa1mEpRxGLdhwG4LkPb/ly7Zl3dA5YuaRHU7Icj+4Cu2vJ1KtwZAQS9z/q1VjKs
+         WbFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYB3cuvMpySkqZ4ZYmb15lRPqRPX6yw4AFftubw7HOMCsZR8nmszOvnXqmeZ0vF4M0OOI38yaEk0xdYvtNggBOLm1eDzLwoEXuComTgHlg
+X-Gm-Message-State: AOJu0YzZDAJZ6vUFjlNmLYk0yRc1s/kEnfqMcRESGA5TdeyP/45UalF9
+	T3jItIx0jaZRIgVTiotSGT683eEefX0Q1QTq/ZdyRNi0Y4r/ilx/90VFqyys++12Qdn8oYQ8gu3
+	Durzn46vVKnRYqO9wh4VaCl7AliOkAXZYFxqc
+X-Google-Smtp-Source: AGHT+IH6+m5w8TGGzuwdUpiEXcJqv00NfGEP/ve9y5SjfQ9XDC9z4o16zHLoCUxftJDTzGASqpMs5DoDZfsu+kGAcvM=
+X-Received: by 2002:a05:600c:a007:b0:413:4d2c:91de with SMTP id
+ jg7-20020a05600ca00700b004134d2c91demr12632wmb.0.1710219231893; Mon, 11 Mar
+ 2024 21:53:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-3-mic@digikod.net>
-In-Reply-To: <20240301194037.532117-3-mic@digikod.net>
+References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-4-mic@digikod.net>
+In-Reply-To: <20240301194037.532117-4-mic@digikod.net>
 From: David Gow <davidgow@google.com>
-Date: Tue, 12 Mar 2024 12:53:33 +0800
-Message-ID: <CABVgOS=WjRuFLbJt5DgJv7X7ouFOXXOvXeRUSFSSfi=m5iYD+A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] kunit: Fix kthread reference
+Date: Tue, 12 Mar 2024 12:53:40 +0800
+Message-ID: <CABVgOSkwfis8rUHFZQ41NGEWritwZGf4+4704FzBREb2Y-G3Zw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] kunit: Fix timeout message
 To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
 Cc: Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@chromium.org>, 
 	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -77,17 +77,17 @@ Cc: Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@chromium.or
 	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
 	linux-um@lists.infradead.org, x86@kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000632bad06136f7124"
+	boundary="000000000000d277a406136f71cc"
 
---000000000000632bad06136f7124
+--000000000000d277a406136f71cc
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Sat, 2 Mar 2024 at 03:40, Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> wro=
 te:
 >
-> There is a race condition when a kthread finishes after the deadline and
-> before the call to kthread_stop(), which may lead to use after free.
+> The exit code is always checked, so let's properly handle the -ETIMEDOUT
+> error code.
 >
 > Cc: Brendan Higgins <brendanhiggins@google.com>
 > Cc: David Gow <davidgow@google.com>
@@ -95,76 +95,55 @@ te:
 > Cc: Shuah Khan <skhan@linuxfoundation.org>
 > Reviewed-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240301194037.532117-3-mic@digikod.net
+> Link: https://lore.kernel.org/r/20240301194037.532117-4-mic@digikod.net
 > ---
 
-Thanks: I've never been unlucky enough to hit this, but it's definitely a b=
-ug.
-We should ideally mark it with a fixes tag:
-Fixes: adf505457032 ("kunit: fix UAF when run kfence test case test_gfpzero=
-")
+This looks good to me. It might make sense to use a switch statement
+rather than a change of else-ifs if we end up handling more errors in
+the future, but this is fine for now.
 
 Reviewed-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
+
 >
 > Changes since v1:
 > * Added Kees's Reviewed-by.
 > ---
->  lib/kunit/try-catch.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  lib/kunit/try-catch.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
 > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index a5cb2ef70a25..73f5007f20ea 100644
+> index 73f5007f20ea..cab8b24b5d5a 100644
 > --- a/lib/kunit/try-catch.c
 > +++ b/lib/kunit/try-catch.c
-> @@ -11,6 +11,7 @@
->  #include <linux/completion.h>
->  #include <linux/kernel.h>
->  #include <linux/kthread.h>
-> +#include <linux/sched/task.h>
->
->  #include "try-catch-impl.h"
->
-> @@ -65,14 +66,15 @@ void kunit_try_catch_run(struct kunit_try_catch *try_=
-catch, void *context)
->         try_catch->context =3D context;
->         try_catch->try_completion =3D &try_completion;
->         try_catch->try_result =3D 0;
-> -       task_struct =3D kthread_run(kunit_generic_run_threadfn_adapter,
-> -                                 try_catch,
-> -                                 "kunit_try_catch_thread");
-> +       task_struct =3D kthread_create(kunit_generic_run_threadfn_adapter=
-,
-> +                                    try_catch, "kunit_try_catch_thread")=
-;
->         if (IS_ERR(task_struct)) {
->                 try_catch->try_result =3D PTR_ERR(task_struct);
->                 try_catch->catch(try_catch->context);
->                 return;
->         }
-> +       get_task_struct(task_struct);
-> +       wake_up_process(task_struct);
->
+> @@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
 >         time_remaining =3D wait_for_completion_timeout(&try_completion,
 >                                                      kunit_test_timeout()=
 );
-> @@ -82,6 +84,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
+>         if (time_remaining =3D=3D 0) {
+> -               kunit_err(test, "try timed out\n");
+>                 try_catch->try_result =3D -ETIMEDOUT;
 >                 kthread_stop(task_struct);
 >         }
+> @@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
+tch, void *context)
+>                 try_catch->try_result =3D 0;
+>         else if (exit_code =3D=3D -EINTR)
+>                 kunit_err(test, "wake_up_process() was never called\n");
+> +       else if (exit_code =3D=3D -ETIMEDOUT)
+> +               kunit_err(test, "try timed out\n");
+>         else if (exit_code)
+>                 kunit_err(test, "Unknown error: %d\n", exit_code);
 >
-> +       put_task_struct(task_struct);
->         exit_code =3D try_catch->try_result;
->
->         if (!exit_code)
 > --
 > 2.44.0
 >
 
---000000000000632bad06136f7124
+--000000000000d277a406136f71cc
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -232,13 +211,13 @@ wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
 ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
 MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
 IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIA+Iivc9sGB5XvNfiEsi2BqxDoDHSaxYzcQTh0ZrrlQqMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMxMjA0NTM0NFowaQYJKoZIhvcNAQkPMVww
+hvcNAQkEMSIEIIRwYpLx+UFgLCJwnaN23WnpzIUS6mZGqq9hDDaszYkwMBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMxMjA0NTM1MlowaQYJKoZIhvcNAQkPMVww
 WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAQq/La
-jnnImYcqOuobgr7Ddfs5z7pagFP0+FuKyz5kC29UICH0HmdekGhlRUK8I5eLevWfGP+Ag0gzdtZg
-a5wlxP1bF19ygUNNLLHRiJI8d6eONS+4vZBOECrTnX1BR/WqhyVHwAjQ7cV1ucBwUEjFSyZDPnOT
-HZmXHENaa8CGIEYI8dLMNAoN4RKM2PWHOXBkpeD1MZcA+y8mgbW1OLsH8XSiwqW3JP/h21zR6dUd
-4vONLq6K7HB/tTffOqOU6tWZQx/QREhco3obrAdS4FgtrxCmkwr6eBZb82fri99WBnuBjIN+v5rO
-9WDBQVi4woq62YIE91oUaSF5bqRlv2Z7
---000000000000632bad06136f7124--
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAtLDUz
+GSm8/FzLAdaZmcdDM5iXD38aJNkLoFKluOH5QTlfL+y0wIfpUNZnKn8umG9UTtQSRq8+AWbSsv77
+5Ub71Y1LS0zS/sQUsAm7JFFfX5ssbQmLfsT12ZraDe63s2nK9eG2MJLmjkLXvdT6+wkxQ3xvuzNk
+skEvt5hRoESacPBfeQlJZrYcDyQWuPHiXytxsj+U6AwR21DztlpKaoh0CZAK5OWLi2+3++ZNIRVF
+4W7CbKpJdbNi+udW42lPRnw2EyI4zCcsb7FzZITeowt8CPHa6KQWp/mXO0UcWUbHk6vqJUjefo4g
+/r6ZLy9d5v7uhJy4gc/99uY/pmHvqpFw
+--000000000000d277a406136f71cc--
