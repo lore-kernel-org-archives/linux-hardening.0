@@ -1,66 +1,66 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783D4383A9
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 04:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ABB2E3F9
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Mar 2024 04:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710219236; cv=none; b=kkIPWDUdCJXAF8JIJi/S6IK9z6ZH4lgzSTH9FNX6c2ywqMBitQID91RKwIiVeYUhOSpYKI1Y9xvxM+H9iUY6mQo1CQJRbdnEUhPPBOjk6l0xhYm59IHRsg3rpLV1RPkrdCVG+WLzNfS9yW1pVYpip4+umERp/LxxmcHkmEQ3KAk=
+	t=1710219287; cv=none; b=PgGBWcV9U5NQ4EBJ7iglksUC6jjwD9uZWVAKmkrlgdeoH2ZMf0e4ijVVFAXDNSpRLve0PJBs4cN9rdnxNa9+ieqewJuFHohOgSFElA3/mtAqgbWlZRzYECI0Ea8J5V0UpDF9sCNs8zQYUq6Z8/mvTWJBoFfwFjxZmJq68AlARcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710219236; c=relaxed/simple;
-	bh=cXXy4cmxG5guaWgiqx/ow6zkHtI4oA0Dk9Mj2FqCzf0=;
+	s=arc-20240116; t=1710219287; c=relaxed/simple;
+	bh=Y8aF86eNWg6PzOhBS1K7VjVIzgXmV5HOdHnOCyzujjk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dHccg3b72H6SrBBETk4u2dY6xeRmuxSl0PvqOo++X2VK2EWEwaFcsn715qG3FlYh01J3f8NCWjBhhJW98xG3QU9mHKRqh/hWHLpfPZfyTUVoqEIaCKa9kDwdvpkMSgJTL4W3/uTjg9WfQGj1Z7EqvuirACczpg2IV4jp/FjxNZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DdUiC//5; arc=none smtp.client-ip=209.85.128.54
+	 To:Cc:Content-Type; b=X+yr1l0UPtY/yc8QuUW4hGpJqUisvFg/oynMGHj5hTcCzInRaPuDodqs/Q4JKUUbo7QcawT6CrMBhHAe5acQQM/W67kOtGnRHggouUEsHP4pVKfBZexn4tEIsZgcRahRTo3PeEcvxZbvqZYZp6zD3H6RVOiexazNleobN+4uNWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u1k4Zei6; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DdUiC//5"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412f81fd561so25685e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 21:53:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u1k4Zei6"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-566b160f6eeso3748a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Mar 2024 21:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710219232; x=1710824032; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710219284; x=1710824084; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9rd5VvPSL8NLzocn+8lF6n5+ve0Ktg7prqA02kjAis=;
-        b=DdUiC//52dOOtLqgzR+LlbJ19VcfeUsyzmnfNL5ES/Fi9Tus5cpgsqauW+/aDr+lED
-         t0sSvU04gKjWaIXbR53fUFZC+GGMGpPWmycYWxBTr4TzZIdGrJPh6MVwMPGzUmj1Ub57
-         3U39TSnFXqmtg1Jd3e2i0bnrVfh9uSjKjAkP+voFIQGYEcLarVRqWusJZxKuWiUYiNF9
-         XkQtScRmuP1kAKebkOqbcsNLWku9mSTbmYYWz9rRUMpZ5C0Px8cln2O35gAaHM1MWkeI
-         62CeLgRW7+ouNzMEHgGuWnPb+WQX8wfLl/P2GtUjLzlN7iZZsL19cioH8Riv9VfzfzsD
-         A4XA==
+        bh=/uEF26ntQVZEhH/Di+NaJTFVOwS692NsumOtC77QPAI=;
+        b=u1k4Zei63ON8rrOA8tjFWEdOgDzUawvW1wmS/hngMd0lFbH0dgZgVNa1kgCji8Cgb5
+         LL1JSGpnx0Pw6YHw3ZFobUJTTc/GZRMEHuve+FtyxbTR4nmJfSrvRDsie9/crhcGtWxd
+         PGa6gZDK82KV6A69sxeOSIp1lSsvFSQi7huF2C/U8xQzFGdZm7VvbsbB3HPAgzC2eAC0
+         a175+5tNtXG4xLwUGKU51DG6xPgkdlUOWqwve3lrRudEHwxX2zh0B4aNLXFKLNLSLmqG
+         4VyJzc+7RJa1yweVFGtdcUUmRbQCm4OaYXoWVsUPIs72Rhmj23mlkZHjqOhAz4YblEUp
+         5I2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710219232; x=1710824032;
+        d=1e100.net; s=20230601; t=1710219284; x=1710824084;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V9rd5VvPSL8NLzocn+8lF6n5+ve0Ktg7prqA02kjAis=;
-        b=ELgx8NC6pz5h10UDvrixOjRQLilTTnNHBT4ic3gP/mnRWYVlgWFiex/3WYJ+Ae0gPc
-         13fMUethK3OmlyYrJzchoKj/w4dBXAP48t9pNBH5XhK8nKN9/64EvTvIXIhCCOat4zKD
-         exAbHzuGLfrHUTEPAhxWcHBjwbvw9Om7bBfmxWEHdsEXGafsRAOH65ex+vsMl/n1PWyr
-         /cYKCE+p3w1IxftPwNoiWqDIp2dWLnQZ4pGbS4M8UsATGqzeu0R1zbRq448tTvfMdyuh
-         5GBqisa1mEpRxGLdhwG4LkPb/ly7Zl3dA5YuaRHU7Icj+4Cu2vJ1KtwZAQS9z/q1VjKs
-         WbFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYB3cuvMpySkqZ4ZYmb15lRPqRPX6yw4AFftubw7HOMCsZR8nmszOvnXqmeZ0vF4M0OOI38yaEk0xdYvtNggBOLm1eDzLwoEXuComTgHlg
-X-Gm-Message-State: AOJu0YzZDAJZ6vUFjlNmLYk0yRc1s/kEnfqMcRESGA5TdeyP/45UalF9
-	T3jItIx0jaZRIgVTiotSGT683eEefX0Q1QTq/ZdyRNi0Y4r/ilx/90VFqyys++12Qdn8oYQ8gu3
-	Durzn46vVKnRYqO9wh4VaCl7AliOkAXZYFxqc
-X-Google-Smtp-Source: AGHT+IH6+m5w8TGGzuwdUpiEXcJqv00NfGEP/ve9y5SjfQ9XDC9z4o16zHLoCUxftJDTzGASqpMs5DoDZfsu+kGAcvM=
-X-Received: by 2002:a05:600c:a007:b0:413:4d2c:91de with SMTP id
- jg7-20020a05600ca00700b004134d2c91demr12632wmb.0.1710219231893; Mon, 11 Mar
- 2024 21:53:51 -0700 (PDT)
+        bh=/uEF26ntQVZEhH/Di+NaJTFVOwS692NsumOtC77QPAI=;
+        b=V3UR8wMrLVtGARs4EQdWlUwrt0G+a8ZHeBO93GdhpqoO+fEX8u4IlYMLm2lOICJ0fk
+         w1lNlSgpEEcSP1yW0d2Bpu6aGwkjGocJSeWcu5bPMIIlrfYgdIlx//HfJd4NS1NTpMn8
+         iEDlRsBUwNH71T3Yp1ASMapE6yCLHBvVJQFanH8LyZza/ELcEJDjBxC+iR5HTDh/F2TR
+         ZsP66X1eMLAhyuZV8yLl844e/ub6+m3nKyNUmKtqzcCbiAKTvskvnlT4Ovqm+i3LnGuN
+         91qX2BYNXC3VpQ2a+g1MDONNsDTPbubEp2eLe1DcOwCeSK+3AH+n789b3jpsvR8Qic2e
+         wgHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWPTE31GlUYpXJdvcaoJQ+HpbPiFEiGXgZMvb+QDQF60UxZzrbbyNJS4orRVaZS2uM+Brbf7sfNMBmkN3YIl7IyP41CB1SjRdCcbxoFnjv
+X-Gm-Message-State: AOJu0YxLccAen0MtbORx5aUjlLWfcEaquF/O7iCekeI3JesARR4G8TD2
+	ARW5tIOMLMU+V2SQokpR4cIAgxFnwzTnJX5Unz03x5/ERZEfxNbAg0opll2uprka8wYusCwnVdd
+	M8o6vmbiOWK5GBwvrzpLKdpERgbpvSNkmzlCV
+X-Google-Smtp-Source: AGHT+IHMvpeCp94H9+CQpRLnJE1D5gDLC9RFj181IDRLKbMYyc3PKjlVy1+AZvJ+pPL6yiwer/hG6jBTxxW66UEzA90=
+X-Received: by 2002:a05:6402:8c5:b0:568:7767:14fd with SMTP id
+ d5-20020a05640208c500b00568776714fdmr12186edz.7.1710219283993; Mon, 11 Mar
+ 2024 21:54:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-4-mic@digikod.net>
-In-Reply-To: <20240301194037.532117-4-mic@digikod.net>
+References: <20240301194037.532117-1-mic@digikod.net> <20240301194037.532117-6-mic@digikod.net>
+In-Reply-To: <20240301194037.532117-6-mic@digikod.net>
 From: David Gow <davidgow@google.com>
-Date: Tue, 12 Mar 2024 12:53:40 +0800
-Message-ID: <CABVgOSkwfis8rUHFZQ41NGEWritwZGf4+4704FzBREb2Y-G3Zw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] kunit: Fix timeout message
+Date: Tue, 12 Mar 2024 12:54:32 +0800
+Message-ID: <CABVgOS=AkKYjEuzrTGEh_AwMYZ0kmYz-uXsNKW--ExSCae6pVw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
 To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
 Cc: Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@chromium.org>, 
 	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -77,17 +77,19 @@ Cc: Brendan Higgins <brendanhiggins@google.com>, Kees Cook <keescook@chromium.or
 	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
 	linux-um@lists.infradead.org, x86@kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d277a406136f71cc"
+	boundary="000000000000f0572706136f74d0"
 
---000000000000d277a406136f71cc
+--000000000000f0572706136f74d0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Sat, 2 Mar 2024 at 03:40, Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> wro=
 te:
 >
-> The exit code is always checked, so let's properly handle the -ETIMEDOUT
-> error code.
+> Fix KUNIT_SUCCESS() calls to pass a test argument.
+>
+> This is a no-op for now because this macro does nothing, but it will be
+> required for the next commit.
 >
 > Cc: Brendan Higgins <brendanhiggins@google.com>
 > Cc: David Gow <davidgow@google.com>
@@ -95,16 +97,20 @@ te:
 > Cc: Shuah Khan <skhan@linuxfoundation.org>
 > Reviewed-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240301194037.532117-4-mic@digikod.net
+> Link: https://lore.kernel.org/r/20240301194037.532117-6-mic@digikod.net
 > ---
 
-This looks good to me. It might make sense to use a switch statement
-rather than a change of else-ifs if we end up handling more errors in
-the future, but this is fine for now.
+This is a pretty straightforward fix.
+
+I'm actually a bit surprised how many tests were actually using
+KUNIT_SUCCEEDED().
 
 Reviewed-by: David Gow <davidgow@google.com>
 
-Cheers,
+Thanks,
+-- David
+
+
 -- David
 
 
@@ -112,38 +118,108 @@ Cheers,
 > Changes since v1:
 > * Added Kees's Reviewed-by.
 > ---
->  lib/kunit/try-catch.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  lib/kunit_iov_iter.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 >
-> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index 73f5007f20ea..cab8b24b5d5a 100644
-> --- a/lib/kunit/try-catch.c
-> +++ b/lib/kunit/try-catch.c
-> @@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->         time_remaining =3D wait_for_completion_timeout(&try_completion,
->                                                      kunit_test_timeout()=
-);
->         if (time_remaining =3D=3D 0) {
-> -               kunit_err(test, "try timed out\n");
->                 try_catch->try_result =3D -ETIMEDOUT;
->                 kthread_stop(task_struct);
+> diff --git a/lib/kunit_iov_iter.c b/lib/kunit_iov_iter.c
+> index 859b67c4d697..27e0c8ee71d8 100644
+> --- a/lib/kunit_iov_iter.c
+> +++ b/lib/kunit_iov_iter.c
+> @@ -139,7 +139,7 @@ static void __init iov_kunit_copy_to_kvec(struct kuni=
+t *test)
+>                         return;
 >         }
-> @@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->                 try_catch->try_result =3D 0;
->         else if (exit_code =3D=3D -EINTR)
->                 kunit_err(test, "wake_up_process() was never called\n");
-> +       else if (exit_code =3D=3D -ETIMEDOUT)
-> +               kunit_err(test, "try timed out\n");
->         else if (exit_code)
->                 kunit_err(test, "Unknown error: %d\n", exit_code);
 >
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  /*
+> @@ -194,7 +194,7 @@ static void __init iov_kunit_copy_from_kvec(struct ku=
+nit *test)
+>                         return;
+>         }
+>
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  struct bvec_test_range {
+> @@ -302,7 +302,7 @@ static void __init iov_kunit_copy_to_bvec(struct kuni=
+t *test)
+>                         return;
+>         }
+>
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  /*
+> @@ -359,7 +359,7 @@ static void __init iov_kunit_copy_from_bvec(struct ku=
+nit *test)
+>                         return;
+>         }
+>
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  static void iov_kunit_destroy_xarray(void *data)
+> @@ -453,7 +453,7 @@ static void __init iov_kunit_copy_to_xarray(struct ku=
+nit *test)
+>                         return;
+>         }
+>
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  /*
+> @@ -516,7 +516,7 @@ static void __init iov_kunit_copy_from_xarray(struct =
+kunit *test)
+>                         return;
+>         }
+>
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  /*
+> @@ -596,7 +596,7 @@ static void __init iov_kunit_extract_pages_kvec(struc=
+t kunit *test)
+>  stop:
+>         KUNIT_EXPECT_EQ(test, size, 0);
+>         KUNIT_EXPECT_EQ(test, iter.count, 0);
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  /*
+> @@ -674,7 +674,7 @@ static void __init iov_kunit_extract_pages_bvec(struc=
+t kunit *test)
+>  stop:
+>         KUNIT_EXPECT_EQ(test, size, 0);
+>         KUNIT_EXPECT_EQ(test, iter.count, 0);
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  /*
+> @@ -753,7 +753,7 @@ static void __init iov_kunit_extract_pages_xarray(str=
+uct kunit *test)
+>         }
+>
+>  stop:
+> -       KUNIT_SUCCEED();
+> +       KUNIT_SUCCEED(test);
+>  }
+>
+>  static struct kunit_case __refdata iov_kunit_cases[] =3D {
 > --
 > 2.44.0
 >
 
---000000000000d277a406136f71cc
+--000000000000f0572706136f74d0
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -211,13 +287,13 @@ wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
 ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
 MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
 IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIIRwYpLx+UFgLCJwnaN23WnpzIUS6mZGqq9hDDaszYkwMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMxMjA0NTM1MlowaQYJKoZIhvcNAQkPMVww
+hvcNAQkEMSIEIAwntcAOUrRJsRZBbycG7e3AU2cSN+1k0xuF7otav2ZJMBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMxMjA0NTQ0NFowaQYJKoZIhvcNAQkPMVww
 WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAtLDUz
-GSm8/FzLAdaZmcdDM5iXD38aJNkLoFKluOH5QTlfL+y0wIfpUNZnKn8umG9UTtQSRq8+AWbSsv77
-5Ub71Y1LS0zS/sQUsAm7JFFfX5ssbQmLfsT12ZraDe63s2nK9eG2MJLmjkLXvdT6+wkxQ3xvuzNk
-skEvt5hRoESacPBfeQlJZrYcDyQWuPHiXytxsj+U6AwR21DztlpKaoh0CZAK5OWLi2+3++ZNIRVF
-4W7CbKpJdbNi+udW42lPRnw2EyI4zCcsb7FzZITeowt8CPHa6KQWp/mXO0UcWUbHk6vqJUjefo4g
-/r6ZLy9d5v7uhJy4gc/99uY/pmHvqpFw
---000000000000d277a406136f71cc--
+hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQC0xxcO
+XomfL4QL28VwieN1Zwu6fNNGL2lKjrw5Ic+ujk7USwQ8l44k8mf3ALzeWRTC+6XIUgALpIBBgcY7
+zxL8qJ4S88QxYxLaR1OXTbvCHLzLTK+/otuiVhDObaPmLJfwjXLJdOuWkMpdUXSeHq3nBTtfCPCK
+SzuXKTwChdfVEtfYHnoO8hAkeOrvQkYMbKF4P9XfcDbwjwOWc4+im09Dt0TsrgEer7zhKgZTfOJk
+JUzlCIlFbO2oMwSBWLhKYSljBy0orUOM4yj497a18ncWzsNLHWUW57bQA88lvPrcN3brR1ZWd+Xn
+1q+/SpjDK4YFoH/sNKy+M/DAo1VeBFFR
+--000000000000f0572706136f74d0--
