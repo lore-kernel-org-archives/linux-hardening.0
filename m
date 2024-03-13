@@ -1,112 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DB44409;
-	Wed, 13 Mar 2024 14:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AF7605C2
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 18:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710340940; cv=none; b=W1j7eU45MoqGZI+d8TCIb7Q8KTJRh+iHy+D/MTavSolkL3PAjwf1aHKujr9P0iWFI+1pfKNJx8LmhgYHwV3iXyixJicncRRnZi8j/+uti6dDX0Os7PyiYxAD79cxb2+Q8OyWo5KdTAuJBWpCUIHqN6zLMaV9cTtNOPkdMfJzDi4=
+	t=1710353545; cv=none; b=mvI9h20ItUDIXmOBXANOBKukFDIl3B2OpN478PfLy5oD66WC2hmBT9MO3yMjLENCSsDoj9AhS6nsnVRxqz0TDcpFyAJI4QZN5jQhU15r4TNpyevD7P/in1MjYoAkm4GpO/m1zoEJ6JgIoN+pBJhytskiCtFMCNNr5UthgppWh2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710340940; c=relaxed/simple;
-	bh=U5c5j9lYX0V5EhN9W9NhQsGKnW1C1zrts03VpAiVNg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTZso5yBGZ42NVgMn2jzfAV2AUkSAxTeLGvFdbE2rCDcuC9TJ7biDtglGmGuY9mWeCTBM+ua1qk9KNdBs2Ht5d50jKqY1oN8B3f1AsnIQn15tWS2wYlQHe4pAsWlyDcAS3REROu95sN78r+bxDwhmXvUIvU+TE2JdH+mRVwT8xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VW3FX9Ns; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yJF0v230; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710353545; c=relaxed/simple;
+	bh=Juz30sNn9Vm/o0qmgqL6ej/+Db1FXC/0PH8XbJPugnI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mT0QvRPsadeQ13TfveLFmG2H/YMegXsoWUjJ57jiMXJDgQIC3OrNBPWRKQBlZK7OpNGds0fMyzBa9lgE2XOulpWowAMQrUeG3nLQqw6g8g25bVBASqIOceSWdkreCZ/wrT/ZEsIwhs4BjEYrLf+lOK7rgmizOPqxlF5m7mG488A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TjODz66q; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VW3FX9Ns";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yJF0v230"
-Date: Wed, 13 Mar 2024 15:42:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710340937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s56+A8op/q+HdIVsDoLHkIGjaMoZ34ZrAuFSbXAA8e8=;
-	b=VW3FX9Nszwew+ZNsV7lgDshx2B+dlyawq7UgJUNk0Ze3vwPeQ7rHGLQTw/Qw860mUSTaI8
-	P+QUfJETXssHsJeBeZDkYBazeM16XBd98PYxMObxCBV7FBkVNgbDdmZMPLCjKv4PM2bV+u
-	mr+3h9U+ugtJEBtZtlNVVVcZX/rIjQ8ml0QspNnZPm76EDN0KHVuc3STWS40Qe0blCvlAR
-	u0sqxMSEzaj0MdFus/PVMhYagX7QSO4gDP5Bf3EQ6x1zB/1ZNOHfJqL6u3DRmxNDwX7ghx
-	HvhaRxr5iskQXcW9fq+oOcIDoC9LyoHQVpu6F/dS6+EugIc7T8hVMACdwmB5Sw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710340937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s56+A8op/q+HdIVsDoLHkIGjaMoZ34ZrAuFSbXAA8e8=;
-	b=yJF0v230JK9QRq95rjjeV7q+BlD834eJebMVfmXKyXIA6T5x/UcdXTnBBtvrRFh0x4oNEs
-	xq/BYZE2Iq3+3RAQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 2/2] gcc-plugins: disable plugins when gmp.h is
- unavailable
-Message-ID: <20240313154111-53729221-b8fb-4969-ac4d-ea74861f6c84@linutronix.de>
-References: <20240312-gcc-plugins-gmp-v1-0-c5e082437b9e@linutronix.de>
- <20240312-gcc-plugins-gmp-v1-2-c5e082437b9e@linutronix.de>
- <202403121452.701C91AF6E@keescook>
- <CAK7LNAQ=aSqUUStN_M8QVqeS9R1QVM5CPq7=kzpY0z060XJFDA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TjODz66q"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dd10ae77d8so902415ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 11:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710353543; x=1710958343; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zH16D+dx0oQl5CujF1HkbTVT0zJku0/wsGqqINARPF0=;
+        b=TjODz66qwSw9FCbT7aXlAYxoSRj85qdomQp2Nzrvnuxhu4DKNXcKTBbQ8MoR0d5VcO
+         N99SZPeUYeRI4Ihpt2ZKj/Ks2NnI9szyD/xgXbyMF1bzBB9JB/0l5kN3P4qlYC6MrxNX
+         qU4spN/SOHu1FlLyY3pm5HLgrBI7kaIplfJ6Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710353543; x=1710958343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zH16D+dx0oQl5CujF1HkbTVT0zJku0/wsGqqINARPF0=;
+        b=V/vvdbMbvXBy/Yj+dNtcNUjxLnD/v14t9WKT+BkxbdVnKy5bfdRRc4+sx8ZOCDBxZv
+         NV6jDCj/vEIaEjeYWM2trEg4U/3Yxzqtw3woMYNajOXK4833QymWdhaGGKp1kvFwFULz
+         I2k0P++kK4/p6tIxIKzu19WnydqJxC9p1s7IRSghZFdQfUa2MMtlwb/xmWrU08Cymo8t
+         CiN7syiaD5i84Y8VHUGG1ANY32P91t1NPIml7/iHZB3jHaMD2Iovw8sJmiWEn6W0+W0b
+         4yh0KIp2QoF09RceLphRcjm5tUUGOwBnZbYbfxv3vTNOMCSHSLQQMMvlWNfM+lm84epU
+         qgBw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4c87KKHXYgKHKk4lglsPfHGOL/GSE5zFYlfvHSaFWpyYMe9m8fkQL13X40Bv5UeqEaYAfiEhg6ajFnsfDzXlmttjPD4ezYrGc+JvnxvsA
+X-Gm-Message-State: AOJu0YzlYuVDW94OzFX6A1F5AGcSUWdezyWOjNkwnIvtHabdVFbprwKj
+	aF94L28jjyNLQK8FQmNtLpKXuE7zmRoiObtR3db5Hr0eFCGiyqUdYdEb1UnsNQ==
+X-Google-Smtp-Source: AGHT+IF4D9+0QB6a94Q1UTugK4FIN2Jw3/2SUxLiLcnoVm4wN+52lZO/YIzJAWgk6SC0iB7flOhkNw==
+X-Received: by 2002:a17:902:e849:b0:1dd:5ba0:e0ee with SMTP id t9-20020a170902e84900b001dd5ba0e0eemr6961805plg.9.1710353542738;
+        Wed, 13 Mar 2024 11:12:22 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p10-20020a170902e74a00b001dda1e9f510sm6006486plf.92.2024.03.13.11.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 11:12:22 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ubsan: Disable signed integer overflow sanitizer on GCC < 8
+Date: Wed, 13 Mar 2024 11:12:20 -0700
+Message-Id: <20240313181217.work.263-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1242; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Juz30sNn9Vm/o0qmgqL6ej/+Db1FXC/0PH8XbJPugnI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl8eyE9J4yYHWBRmDSdvgZpqfXhVx4eTZnYonIO
+ C2r7NDdWBeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZfHshAAKCRCJcvTf3G3A
+ JrdUD/9PrK3mREHrrRuyLF4jhJgBAkp5b4PysQdaAjPjzZYkJbyTnujbjqdj8HsfbcKdySR+sQ5
+ onBvzW2mCRKGIevgEPgGaRJC+9qZWmUP/EBSa0kkQJAhA/WkPe297pALLimV0ipGDra9dQnJaR9
+ AvQE/QiFBgiUxzrnIEwLqsVsdHIjudciaLu4aWyg+CwfuW06MV82wAfjptQQiKIr95CuFOJ4ykm
+ lF7cpXA5NH/v5B+wjfh4iJ4r2/zjaDi8TpGU4HQ+oqYCTNH6A3+x6qEXwuOdzPSO4kcJ3AvfOis
+ UW7pd7rW8+O25WJaEyMo0Npxvs+3gKMwDx6G/DgM+PcE5swxdcPHZAqIX1UnL+T0KeQdIBEdgKt
+ KqopeblJVpbLxic2Okx2HQDLQQXTec0V3igxfc5msTovLOhTkdlprYSH1pwYC7/Mriht7U+TTUj
+ cDewZRRncSAgwMs/EMALchw3L1ZtdIYMifMrnHMMpQ8PwPsptTatZ+WxpQ9T7fAezSb5jgNJCgy
+ edDaC8i9zMq3eQHCZcP8W9ej8H3sJ4ywMbbnRUTqD0VF9hE5yBQrwo818Rh3+sU3VvaueK3fVV7
+ +j/OFiy6wrf5XSH/dPltWckYZlHgYO1pxaoskP/k/XZiTJUOpJY+DN7ISRH6KiOOBmk8gXBvTgg
+ 88J3E9H MDnG3kmA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNAQ=aSqUUStN_M8QVqeS9R1QVM5CPq7=kzpY0z060XJFDA@mail.gmail.com>
 
-On Wed, Mar 13, 2024 at 12:47:59PM +0900, Masahiro Yamada wrote:
-> On Wed, Mar 13, 2024 at 6:53 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, Mar 12, 2024 at 04:03:30PM +0100, Thomas Weißschuh wrote:
-> > > The header gmp.h is meant to be picked up from the host system.
-> > >
-> > > When it is unavailable the plugin build fails:
-> > >
-> > > In file included from ../crosstools/gcc-13.2.0-nolibc/i386-linux/bin/../lib/gcc/i386-linux/13.2.0/plugin/include/gcc-plugin.h:28,
-> > >                  from ../scripts/gcc-plugins/gcc-common.h:7,
-> > >                  from ../scripts/gcc-plugins/stackleak_plugin.c:30:
-> > > ../crosstools/gcc-13.2.0-nolibc/i386-linux/bin/../lib/gcc/i386-linux/13.2.0/plugin/include/system.h:703:10: fatal error: gmp.h: No such file or directory
-> > >   703 | #include <gmp.h>
-> > >       |          ^~~~~~~
-> > >
-> > > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> > > ---
-> > >  scripts/gcc-plugins/Kconfig | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> > > index e383cda05367..a664fb5cdde5 100644
-> > > --- a/scripts/gcc-plugins/Kconfig
-> > > +++ b/scripts/gcc-plugins/Kconfig
-> > > @@ -10,6 +10,7 @@ menuconfig GCC_PLUGINS
-> > >       depends on HAVE_GCC_PLUGINS
-> > >       depends on CC_IS_GCC
-> > >       depends on $(success,test -e $(shell,$(CC) -print-file-name=plugin)/include/plugin-version.h)
-> > > +     depends on $(host-cc-option,-include gmp.h)
-> >
-> > Why does the prior depends not fail? That's where plugin detection is
-> > happening.
-> >
-> > --
-> > Kees Cook
-> 
-> This patch set should be rejected.
-> 
-> 
-> It was already discussed in the past.
-> Just install a proper package, then gcc-plugin will work.
-> 
-> https://lore.kernel.org/all/CAHk-=wjjiYjCp61gdAMpDOsUBU-A2hFFKJoVx5VAC7yV4K6WYg@mail.gmail.com/
+For opting functions out of sanitizer coverage, the "no_sanitize"
+attribute is used, but in GCC this wasn't introduced until GCC 8.
+Disable the sanitizer unless we're not using GCC, or it is GCC
+version 8 or higher.
 
-Thanks for the pointer.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202403110643.27JXEVCI-lkp@intel.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Marco Elver <elver@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: kasan-dev@googlegroups.com
+Cc: linux-hardening@vger.kernel.org
+---
+ lib/Kconfig.ubsan | 2 ++
+ 1 file changed, 2 insertions(+)
 
-As there is already consensus I agree that the patches should not be used.
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 48a67058f84e..e81e1ac4a919 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -119,6 +119,8 @@ config UBSAN_SIGNED_WRAP
+ 	bool "Perform checking for signed arithmetic wrap-around"
+ 	default UBSAN
+ 	depends on !COMPILE_TEST
++	# The no_sanitize attribute was introduced in GCC with version 8.
++	depends on !CC_IS_GCC || GCC_VERSION >= 80000
+ 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
+ 	help
+ 	  This option enables -fsanitize=signed-integer-overflow which checks
+-- 
+2.34.1
 
-Thomas
