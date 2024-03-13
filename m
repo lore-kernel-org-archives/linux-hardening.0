@@ -1,117 +1,139 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FCE6F50A
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 18:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3E356B6C
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 18:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710354005; cv=none; b=X652U0GNd7f7ZXQDCdXTHwDZRS2E3XPH0Xm5IKZr60ctCgZcYHp50niKR4WCa4Th9eg4p19+WdWxNervqlmKae11ga9vlFvM3NiKrlf2LmwUUobHpjux4EMDWqecLfXSZgfU3TjFxrgpa1Q2uovvzNOsWoAggZzBxzmWaooA7RI=
+	t=1710356177; cv=none; b=ScZvK5FSQLPMkBaWJ53Av7JJuu4kd2rlKlbAT7Nvg83gEKhOlbHBfYkHk88VSZ8pU0RoAPQWI3tzCK3JdEKuoJ6A9PcSHYGUvhFOSjEcvqr6hdyN18KGqFMofb9Moob5DbHcb9bGpRiFmV24cNKVlG6lom8PZciOr8l5V489m8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710354005; c=relaxed/simple;
-	bh=L0TUJUEe3F3S4BPPtNOK8X+sljmeLdwYmEqhwB1kg0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aeY4ue+muf9qKGgdu7AzMLKe3onKjQLKP1uGCzLCrGdNCHUpiPo5JL0W8M0jmBlGcLDd/rLT+RkOHCk0g066XwyCEOXChadMN/1bAQVObf+558yzFM3oBE0NRn2a9IuJLbXvB9Vpw8miobSIIeJVybl83CQk7v0dHYI3/Zo2Ny4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1ZmY8SJs; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710356177; c=relaxed/simple;
+	bh=SQS+ov8yIW6DEKRzVTZuSjdygsQnSqtlsD90R8giz/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UC8z5Wqlci5LZdSPSQMw+FDY+wOCNPdqQlNGH+r8sMdRZzdC9eaZF8TBAHTodK3gvcDOGn4bTlyOjb7/59ThhPTCDoJqh3hDrB6qig8jD5yrK92fcmG7ykci5oJIvGtCHUQOVSR2Yxj8X97RB/r2BpAqqjiFPmh834gTMrHGA0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lNilWqOq; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1ZmY8SJs"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4d40f702d67so27823e0c.3
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 11:20:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lNilWqOq"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6b22af648so1067960b3a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 11:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710354002; x=1710958802; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NwvnBQtlcUyRAyfwaWKEGU4GgQpA6zLF0Jl2IAoI3iM=;
-        b=1ZmY8SJsSlw3bxJHMmmrKmIbgDEq6dfanv9pWRN/crzc0VD2LEXH6IejUMaYG3qJU5
-         byVKPfNX9HqJHPXkK2p/CHIR3JwLYNm9fNv/lkzE9X3b4cN21vAGCV4mZPSqtdvctpMb
-         bHJBe1y3h3mv+itxwBmPzOTWBlKLoiRpHaxFwk6V5ZjRvpal9nb/LMIFDjw+/vZPnYIT
-         snkXGVYLRPN3r84UNqfDqh9FAwsJGacIWF8XtVet9cV7P83/1VgxqFtIt00ABiXrU0zS
-         Zm+xN/ONLXRhcv+blDEr8f6GsAHKVVfcLPNCPIXpILw00R7MjrFMINR0yoQHJVtPFo/Y
-         h9aQ==
+        d=chromium.org; s=google; t=1710356175; x=1710960975; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5XAsXiIDC6OwZ+FdvxFgNYuLvw56oPhd3QbM/5nEMps=;
+        b=lNilWqOq79hDVuTSXdXMCtyCBN5Y44x1C3HI1ZG5tM+vaIi/TovEVpgV4HgpMyXMCq
+         rFfPx/UcBaonZNS+uqlgFkL8ha9R7ZOsPDz2gF848r/N/IoyVNZBBjYlJNIeSARrqWqu
+         AMpnOaqHZi3QhH9hVOU2sw6HRaSJmCE5Avrew=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710354002; x=1710958802;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1710356175; x=1710960975;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NwvnBQtlcUyRAyfwaWKEGU4GgQpA6zLF0Jl2IAoI3iM=;
-        b=AW0xOMaVJ9Klu2xa6XpcAw21ovJOBIHGaQDia2wIXPMXi4FNeyFpuLm+NAfvoMgMsb
-         SF95BMull7coXNjBbXHzjpYBwGVIcrXaYQb2eDynmyRBrdELekNH5AfN/w2NUYi9K1bF
-         WFhfF/DciX0ZC2xNidCsB/b9b6oDx+T3uRWh/SrFCNgQcn0GkI/v+dML0sG7qKYjpuVK
-         Dc9DO7OjBPXQXxjJ6ksirdgXVXzktrNUekC+SWGaZQUNCCAKvkKNilaqg/SRFPE/vVxa
-         2Cq+bGZZ7bYtikaoBXtZYwac8IiXz78PdvOOmXmRHTKAe6sKVWMhx5usb6xLgc3GOIpn
-         5Gfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJZZ3cFEVXxlVNlKOLSzFX1S0NSbpoahQp9hWczqfC4/z/X75tsSLSh6yH3hkbVlI91lc2YaDxAfzn+uQiBnrV5xUJm5kI09p6y66TKnGx
-X-Gm-Message-State: AOJu0Yy/4460EsP+/T02IacqxdZOoJkLxVdqQHfWiMrwbwYfHLG0oXA2
-	4G6NaSw7wb1+lbSum4lKiRtrMA07qZiwSdsGH6mrqdeQXPoB6MOlFkhhbcfjUvsq+bYmK1iyW3a
-	gCAbAnuHDhkobLAMWF5ayUbpKRwtiC/Uy/NvI
-X-Google-Smtp-Source: AGHT+IENq4+fLNjOtsp1KLmTSShOf6STqsSNv6/Z8z3t15lTEvNjAKcpCW1lEH3moZzUh6HKi5go/EepN5L2gekJQfc=
-X-Received: by 2002:a05:6122:3d13:b0:4d4:5b5:5287 with SMTP id
- ga19-20020a0561223d1300b004d405b55287mr977068vkb.7.1710354002256; Wed, 13 Mar
- 2024 11:20:02 -0700 (PDT)
+        bh=5XAsXiIDC6OwZ+FdvxFgNYuLvw56oPhd3QbM/5nEMps=;
+        b=h+w/hf1pb5chLlFrSap/UHdW/Zq7TeuwADE7a/sA77jyq8MNQD6aQ96SlQnq9n78JY
+         FgkoOWpgNSGnep/HEnVSlCexegi0r3xbO8jURE8RlLBdCPNcpTIjugPlcig9CNHxsvcH
+         f2yTFSANmcDybxiOx4WQwuhyN6jjJmdFjWVV/aGL54mfpxOS/WVqmNMM8q4KTIvxgdFR
+         Ms2KKmgwUQ4WoAANwrdWBp4/aPLQU8e5rw7yJI9EWUQkZvLNrUkJlE43zuzI04sW1xm0
+         ozWUiGHyfuB95HYnJsMKtQQDJDrmiRNYIsLP+qNsJNKemPN7QhgznOBR6SDIpxDliZAp
+         xnTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWi3ZcjxgJBf/aZQtN2cZ7DMBgKOHnEY6nFWoX6MBUR/D5y90zWhJ391CGylX5FtUlE+gEc57TOiTAiejmrLFZrA94KxZ+/oNxiZD+hk6UK
+X-Gm-Message-State: AOJu0YzQVqkidK3hGyIU5ZS9odJq6WKxLuokvM+i2hqbDXCtXPvAlsfs
+	LCXg9Mjn5C13KWHbvyFWyVR4odM1ksDiJKT+e65IVsAzpUTfZP8y2VOCuyxHmg==
+X-Google-Smtp-Source: AGHT+IGA4JGKwWWNLHCxq7izlVfvB2QGsE/36UJ5ZjuTNx2RCIULRNshQCd+NPhnH7MmJe3JVpwZYA==
+X-Received: by 2002:a05:6a20:12c5:b0:1a1:87b5:4b28 with SMTP id v5-20020a056a2012c500b001a187b54b28mr4995408pzg.0.1710356175280;
+        Wed, 13 Mar 2024 11:56:15 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id z3-20020aa79903000000b006e6b959b636sm1615689pff.53.2024.03.13.11.56.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Mar 2024 11:56:14 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] selftests/exec: execveat: Improve debug reporting
+Date: Wed, 13 Mar 2024 11:56:10 -0700
+Message-Id: <20240313185606.work.073-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313181217.work.263-kees@kernel.org>
-In-Reply-To: <20240313181217.work.263-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 13 Mar 2024 19:19:23 +0100
-Message-ID: <CANpmjNPxHkSe6iG+=D84Zk8=d6tTwTxDgR=nX+4QWirv4avS_A@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: Disable signed integer overflow sanitizer on GCC < 8
-To: Kees Cook <keescook@chromium.org>
-Cc: kernel test robot <lkp@intel.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1980; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=SQS+ov8yIW6DEKRzVTZuSjdygsQnSqtlsD90R8giz/g=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl8fbKt7Aicr2v1jL2D5Cbtq5T6AALRK5Ut0QjW
+ yJY662adQiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZfH2ygAKCRCJcvTf3G3A
+ JhdZEACO826i+YbxlErFkdeBoatgCSeytNdOJhvq9RSnhz1h6CSrIOdrAzqhfHWtRFO1b/4Q4k/
+ bfZpBWeYDrreNjcB4+axQl0dBlBLpcvZD/XhhZWF/q2qXA8G4R8sL+IQgxvbC1SfY43m4voENz/
+ S11w3mMf4mhfsGrUCfSLJXUhkRSrw/uqmjZ2/158F5SiTU+x8c2QpqpXfd5nujAZQcLQefx3oji
+ k68TQcM3f3oQeiAO0p011Bh9gHe92BSnjZB2Pfh3JJWeEOCOxR5/BEAQGF+Xwstsdc1gf5W2x47
+ maW249sTvbIujyJMudbFe6ADnOxYZzMxcNzsg8f7Xm67xyv/pUv3PMMisH/FC5a5xDuOcuM56NJ
+ M7qkV5lAuGdGpFWQgrZ9vrPqSWsnE/fl0u44X6E9CTRaboDIU0if+uAm24IYm/e4HaXu5L31l+1
+ 7OWMd0275j+zKuT5THdsQOMFsiP/Kl0jIChgbDt7IoViRJPOIsK2zLa6yzTrWCl85krYW/a2Gj5
+ YetE0h8hI10kXC8d/ynnF3syoaeTcRxOOd/CYVx6MfouycA3E5sMntsQGGqDvnxnQLh+ZoSDoaJ
+ zqDad87A49h4QoM2nZYN1m5WfK4xlatrRK0ZHnPBwQYV8X7BzT8LEGyHaT6OCqDmfVsCdSPNfE3
+ cjjEus9 TFgxnctA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, 13 Mar 2024 at 19:12, Kees Cook <keescook@chromium.org> wrote:
->
-> For opting functions out of sanitizer coverage, the "no_sanitize"
-> attribute is used, but in GCC this wasn't introduced until GCC 8.
-> Disable the sanitizer unless we're not using GCC, or it is GCC
-> version 8 or higher.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403110643.27JXEVCI-lkp@intel.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Children processes were reporting their status, duplicating the
+parent's. Remove that, and add some additional details about the test
+execution.
 
-Looks reasonable:
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-mm@kvack.org
+Cc: linux-kselftest@vger.kernel.org
+---
+ tools/testing/selftests/exec/execveat.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Reviewed-by: Marco Elver <elver@google.com>
+diff --git a/tools/testing/selftests/exec/execveat.c b/tools/testing/selftests/exec/execveat.c
+index 0546ca24f2b2..6418ded40bdd 100644
+--- a/tools/testing/selftests/exec/execveat.c
++++ b/tools/testing/selftests/exec/execveat.c
+@@ -98,10 +98,9 @@ static int check_execveat_invoked_rc(int fd, const char *path, int flags,
+ 	if (child == 0) {
+ 		/* Child: do execveat(). */
+ 		rc = execveat_(fd, path, argv, envp, flags);
+-		ksft_print_msg("execveat() failed, rc=%d errno=%d (%s)\n",
++		ksft_print_msg("child execveat() failed, rc=%d errno=%d (%s)\n",
+ 			       rc, errno, strerror(errno));
+-		ksft_test_result_fail("%s\n", test_name);
+-		exit(1);  /* should not reach here */
++		exit(errno);
+ 	}
+ 	/* Parent: wait for & check child's exit status. */
+ 	rc = waitpid(child, &status, 0);
+@@ -226,11 +225,14 @@ static int check_execveat_pathmax(int root_dfd, const char *src, int is_script)
+ 	 * "If the command name is found, but it is not an executable utility,
+ 	 * the exit status shall be 126."), so allow either.
+ 	 */
+-	if (is_script)
++	if (is_script) {
++		ksft_print_msg("Invoke script via root_dfd and relative filename\n");
+ 		fail += check_execveat_invoked_rc(root_dfd, longpath + 1, 0,
+ 						  127, 126);
+-	else
++	} else {
++		ksft_print_msg("Invoke exec via root_dfd and relative filename\n");
+ 		fail += check_execveat(root_dfd, longpath + 1, 0);
++	}
+ 
+ 	return fail;
+ }
+-- 
+2.34.1
 
-Thanks,
--- Marco
-
-> ---
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-hardening@vger.kernel.org
-> ---
->  lib/Kconfig.ubsan | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 48a67058f84e..e81e1ac4a919 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -119,6 +119,8 @@ config UBSAN_SIGNED_WRAP
->         bool "Perform checking for signed arithmetic wrap-around"
->         default UBSAN
->         depends on !COMPILE_TEST
-> +       # The no_sanitize attribute was introduced in GCC with version 8.
-> +       depends on !CC_IS_GCC || GCC_VERSION >= 80000
->         depends on $(cc-option,-fsanitize=signed-integer-overflow)
->         help
->           This option enables -fsanitize=signed-integer-overflow which checks
-> --
-> 2.34.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20240313181217.work.263-kees%40kernel.org.
