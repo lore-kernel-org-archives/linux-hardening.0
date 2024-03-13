@@ -1,119 +1,117 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AF7605C2
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 18:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FCE6F50A
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 18:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710353545; cv=none; b=mvI9h20ItUDIXmOBXANOBKukFDIl3B2OpN478PfLy5oD66WC2hmBT9MO3yMjLENCSsDoj9AhS6nsnVRxqz0TDcpFyAJI4QZN5jQhU15r4TNpyevD7P/in1MjYoAkm4GpO/m1zoEJ6JgIoN+pBJhytskiCtFMCNNr5UthgppWh2E=
+	t=1710354005; cv=none; b=X652U0GNd7f7ZXQDCdXTHwDZRS2E3XPH0Xm5IKZr60ctCgZcYHp50niKR4WCa4Th9eg4p19+WdWxNervqlmKae11ga9vlFvM3NiKrlf2LmwUUobHpjux4EMDWqecLfXSZgfU3TjFxrgpa1Q2uovvzNOsWoAggZzBxzmWaooA7RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710353545; c=relaxed/simple;
-	bh=Juz30sNn9Vm/o0qmgqL6ej/+Db1FXC/0PH8XbJPugnI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mT0QvRPsadeQ13TfveLFmG2H/YMegXsoWUjJ57jiMXJDgQIC3OrNBPWRKQBlZK7OpNGds0fMyzBa9lgE2XOulpWowAMQrUeG3nLQqw6g8g25bVBASqIOceSWdkreCZ/wrT/ZEsIwhs4BjEYrLf+lOK7rgmizOPqxlF5m7mG488A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TjODz66q; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710354005; c=relaxed/simple;
+	bh=L0TUJUEe3F3S4BPPtNOK8X+sljmeLdwYmEqhwB1kg0E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aeY4ue+muf9qKGgdu7AzMLKe3onKjQLKP1uGCzLCrGdNCHUpiPo5JL0W8M0jmBlGcLDd/rLT+RkOHCk0g066XwyCEOXChadMN/1bAQVObf+558yzFM3oBE0NRn2a9IuJLbXvB9Vpw8miobSIIeJVybl83CQk7v0dHYI3/Zo2Ny4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1ZmY8SJs; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TjODz66q"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dd10ae77d8so902415ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 11:12:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1ZmY8SJs"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4d40f702d67so27823e0c.3
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Mar 2024 11:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710353543; x=1710958343; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zH16D+dx0oQl5CujF1HkbTVT0zJku0/wsGqqINARPF0=;
-        b=TjODz66qwSw9FCbT7aXlAYxoSRj85qdomQp2Nzrvnuxhu4DKNXcKTBbQ8MoR0d5VcO
-         N99SZPeUYeRI4Ihpt2ZKj/Ks2NnI9szyD/xgXbyMF1bzBB9JB/0l5kN3P4qlYC6MrxNX
-         qU4spN/SOHu1FlLyY3pm5HLgrBI7kaIplfJ6Q=
+        d=google.com; s=20230601; t=1710354002; x=1710958802; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NwvnBQtlcUyRAyfwaWKEGU4GgQpA6zLF0Jl2IAoI3iM=;
+        b=1ZmY8SJsSlw3bxJHMmmrKmIbgDEq6dfanv9pWRN/crzc0VD2LEXH6IejUMaYG3qJU5
+         byVKPfNX9HqJHPXkK2p/CHIR3JwLYNm9fNv/lkzE9X3b4cN21vAGCV4mZPSqtdvctpMb
+         bHJBe1y3h3mv+itxwBmPzOTWBlKLoiRpHaxFwk6V5ZjRvpal9nb/LMIFDjw+/vZPnYIT
+         snkXGVYLRPN3r84UNqfDqh9FAwsJGacIWF8XtVet9cV7P83/1VgxqFtIt00ABiXrU0zS
+         Zm+xN/ONLXRhcv+blDEr8f6GsAHKVVfcLPNCPIXpILw00R7MjrFMINR0yoQHJVtPFo/Y
+         h9aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710353543; x=1710958343;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1710354002; x=1710958802;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zH16D+dx0oQl5CujF1HkbTVT0zJku0/wsGqqINARPF0=;
-        b=V/vvdbMbvXBy/Yj+dNtcNUjxLnD/v14t9WKT+BkxbdVnKy5bfdRRc4+sx8ZOCDBxZv
-         NV6jDCj/vEIaEjeYWM2trEg4U/3Yxzqtw3woMYNajOXK4833QymWdhaGGKp1kvFwFULz
-         I2k0P++kK4/p6tIxIKzu19WnydqJxC9p1s7IRSghZFdQfUa2MMtlwb/xmWrU08Cymo8t
-         CiN7syiaD5i84Y8VHUGG1ANY32P91t1NPIml7/iHZB3jHaMD2Iovw8sJmiWEn6W0+W0b
-         4yh0KIp2QoF09RceLphRcjm5tUUGOwBnZbYbfxv3vTNOMCSHSLQQMMvlWNfM+lm84epU
-         qgBw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4c87KKHXYgKHKk4lglsPfHGOL/GSE5zFYlfvHSaFWpyYMe9m8fkQL13X40Bv5UeqEaYAfiEhg6ajFnsfDzXlmttjPD4ezYrGc+JvnxvsA
-X-Gm-Message-State: AOJu0YzlYuVDW94OzFX6A1F5AGcSUWdezyWOjNkwnIvtHabdVFbprwKj
-	aF94L28jjyNLQK8FQmNtLpKXuE7zmRoiObtR3db5Hr0eFCGiyqUdYdEb1UnsNQ==
-X-Google-Smtp-Source: AGHT+IF4D9+0QB6a94Q1UTugK4FIN2Jw3/2SUxLiLcnoVm4wN+52lZO/YIzJAWgk6SC0iB7flOhkNw==
-X-Received: by 2002:a17:902:e849:b0:1dd:5ba0:e0ee with SMTP id t9-20020a170902e84900b001dd5ba0e0eemr6961805plg.9.1710353542738;
-        Wed, 13 Mar 2024 11:12:22 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p10-20020a170902e74a00b001dda1e9f510sm6006486plf.92.2024.03.13.11.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 11:12:22 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Marco Elver <elver@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	kernel test robot <lkp@intel.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ubsan: Disable signed integer overflow sanitizer on GCC < 8
-Date: Wed, 13 Mar 2024 11:12:20 -0700
-Message-Id: <20240313181217.work.263-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        bh=NwvnBQtlcUyRAyfwaWKEGU4GgQpA6zLF0Jl2IAoI3iM=;
+        b=AW0xOMaVJ9Klu2xa6XpcAw21ovJOBIHGaQDia2wIXPMXi4FNeyFpuLm+NAfvoMgMsb
+         SF95BMull7coXNjBbXHzjpYBwGVIcrXaYQb2eDynmyRBrdELekNH5AfN/w2NUYi9K1bF
+         WFhfF/DciX0ZC2xNidCsB/b9b6oDx+T3uRWh/SrFCNgQcn0GkI/v+dML0sG7qKYjpuVK
+         Dc9DO7OjBPXQXxjJ6ksirdgXVXzktrNUekC+SWGaZQUNCCAKvkKNilaqg/SRFPE/vVxa
+         2Cq+bGZZ7bYtikaoBXtZYwac8IiXz78PdvOOmXmRHTKAe6sKVWMhx5usb6xLgc3GOIpn
+         5Gfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJZZ3cFEVXxlVNlKOLSzFX1S0NSbpoahQp9hWczqfC4/z/X75tsSLSh6yH3hkbVlI91lc2YaDxAfzn+uQiBnrV5xUJm5kI09p6y66TKnGx
+X-Gm-Message-State: AOJu0Yy/4460EsP+/T02IacqxdZOoJkLxVdqQHfWiMrwbwYfHLG0oXA2
+	4G6NaSw7wb1+lbSum4lKiRtrMA07qZiwSdsGH6mrqdeQXPoB6MOlFkhhbcfjUvsq+bYmK1iyW3a
+	gCAbAnuHDhkobLAMWF5ayUbpKRwtiC/Uy/NvI
+X-Google-Smtp-Source: AGHT+IENq4+fLNjOtsp1KLmTSShOf6STqsSNv6/Z8z3t15lTEvNjAKcpCW1lEH3moZzUh6HKi5go/EepN5L2gekJQfc=
+X-Received: by 2002:a05:6122:3d13:b0:4d4:5b5:5287 with SMTP id
+ ga19-20020a0561223d1300b004d405b55287mr977068vkb.7.1710354002256; Wed, 13 Mar
+ 2024 11:20:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1242; i=keescook@chromium.org;
- h=from:subject:message-id; bh=Juz30sNn9Vm/o0qmgqL6ej/+Db1FXC/0PH8XbJPugnI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl8eyE9J4yYHWBRmDSdvgZpqfXhVx4eTZnYonIO
- C2r7NDdWBeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZfHshAAKCRCJcvTf3G3A
- JrdUD/9PrK3mREHrrRuyLF4jhJgBAkp5b4PysQdaAjPjzZYkJbyTnujbjqdj8HsfbcKdySR+sQ5
- onBvzW2mCRKGIevgEPgGaRJC+9qZWmUP/EBSa0kkQJAhA/WkPe297pALLimV0ipGDra9dQnJaR9
- AvQE/QiFBgiUxzrnIEwLqsVsdHIjudciaLu4aWyg+CwfuW06MV82wAfjptQQiKIr95CuFOJ4ykm
- lF7cpXA5NH/v5B+wjfh4iJ4r2/zjaDi8TpGU4HQ+oqYCTNH6A3+x6qEXwuOdzPSO4kcJ3AvfOis
- UW7pd7rW8+O25WJaEyMo0Npxvs+3gKMwDx6G/DgM+PcE5swxdcPHZAqIX1UnL+T0KeQdIBEdgKt
- KqopeblJVpbLxic2Okx2HQDLQQXTec0V3igxfc5msTovLOhTkdlprYSH1pwYC7/Mriht7U+TTUj
- cDewZRRncSAgwMs/EMALchw3L1ZtdIYMifMrnHMMpQ8PwPsptTatZ+WxpQ9T7fAezSb5jgNJCgy
- edDaC8i9zMq3eQHCZcP8W9ej8H3sJ4ywMbbnRUTqD0VF9hE5yBQrwo818Rh3+sU3VvaueK3fVV7
- +j/OFiy6wrf5XSH/dPltWckYZlHgYO1pxaoskP/k/XZiTJUOpJY+DN7ISRH6KiOOBmk8gXBvTgg
- 88J3E9H MDnG3kmA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20240313181217.work.263-kees@kernel.org>
+In-Reply-To: <20240313181217.work.263-kees@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Wed, 13 Mar 2024 19:19:23 +0100
+Message-ID: <CANpmjNPxHkSe6iG+=D84Zk8=d6tTwTxDgR=nX+4QWirv4avS_A@mail.gmail.com>
+Subject: Re: [PATCH] ubsan: Disable signed integer overflow sanitizer on GCC < 8
+To: Kees Cook <keescook@chromium.org>
+Cc: kernel test robot <lkp@intel.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-For opting functions out of sanitizer coverage, the "no_sanitize"
-attribute is used, but in GCC this wasn't introduced until GCC 8.
-Disable the sanitizer unless we're not using GCC, or it is GCC
-version 8 or higher.
+On Wed, 13 Mar 2024 at 19:12, Kees Cook <keescook@chromium.org> wrote:
+>
+> For opting functions out of sanitizer coverage, the "no_sanitize"
+> attribute is used, but in GCC this wasn't introduced until GCC 8.
+> Disable the sanitizer unless we're not using GCC, or it is GCC
+> version 8 or higher.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202403110643.27JXEVCI-lkp@intel.com/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202403110643.27JXEVCI-lkp@intel.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Marco Elver <elver@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-hardening@vger.kernel.org
----
- lib/Kconfig.ubsan | 2 ++
- 1 file changed, 2 insertions(+)
+Looks reasonable:
 
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 48a67058f84e..e81e1ac4a919 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -119,6 +119,8 @@ config UBSAN_SIGNED_WRAP
- 	bool "Perform checking for signed arithmetic wrap-around"
- 	default UBSAN
- 	depends on !COMPILE_TEST
-+	# The no_sanitize attribute was introduced in GCC with version 8.
-+	depends on !CC_IS_GCC || GCC_VERSION >= 80000
- 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
- 	help
- 	  This option enables -fsanitize=signed-integer-overflow which checks
--- 
-2.34.1
+Reviewed-by: Marco Elver <elver@google.com>
 
+Thanks,
+-- Marco
+
+> ---
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: kasan-dev@googlegroups.com
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>  lib/Kconfig.ubsan | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index 48a67058f84e..e81e1ac4a919 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -119,6 +119,8 @@ config UBSAN_SIGNED_WRAP
+>         bool "Perform checking for signed arithmetic wrap-around"
+>         default UBSAN
+>         depends on !COMPILE_TEST
+> +       # The no_sanitize attribute was introduced in GCC with version 8.
+> +       depends on !CC_IS_GCC || GCC_VERSION >= 80000
+>         depends on $(cc-option,-fsanitize=signed-integer-overflow)
+>         help
+>           This option enables -fsanitize=signed-integer-overflow which checks
+> --
+> 2.34.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20240313181217.work.263-kees%40kernel.org.
