@@ -1,78 +1,128 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C516CDB5;
-	Thu, 14 Mar 2024 11:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5788BDDD9;
+	Thu, 14 Mar 2024 15:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710417567; cv=none; b=a4tZlKwRkReUpYmBPjXt5ZzyCUYxjoDm5ue3CK6Uv75Q/rkobmXi7Gjl/YjWsVEHuvxCUgTNzDdNj3J68IThPmVJo7QYPmZK1JEgEMQY4t4FPQr0CzC3+DGK3NOFhwqOlz+UK9mJB6EtF62pzWe8D8zX7bhavnug2OYKDc5xThg=
+	t=1710429125; cv=none; b=YJB0PW1QqOPIRLfdJJp06tzzen0g6sKN89fQeTl7bzMstep2VkwyKpfOGf0+jrgsxNmUCQQZTrORBM/fY+SWgEv+V0xMkfWbCuzh64F61yoQ6AmlwuDMbR4ADxrrF6MDV+QnxbFRU1DL4yCyCMXvVc6QQwPE+BXImzQ8Ly7KieU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710417567; c=relaxed/simple;
-	bh=wQwLX5+joQVY/m52drETTB0dGlfxt5LT0ob6q9kKAlI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VKrra1J1RMT4zdszuUZvrVV+muAJ43zUmaJZdVAr/R7wVkK/1hL9LCdvt3tzmNzUVLkGC5khbssX/M9nEnAu/oIJOKyjpKOtBdVs4zQErfG/5ohrvKHPf5hC7ke1NtxYW7rnFGqFuIc8w+qr7ZFHq/6EH3ALfBgQNmvZp75WwEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DHhSGuJ+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RdeWtq1a; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710429125; c=relaxed/simple;
+	bh=nDsvYD5yEk/gy9N+HJ0QOM2iZUP4AcamRw/unfpE3no=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EwdvDNEOzbnT6b3vJBq0C/J7F2odDL4Dwez19sa68XXcg8eSWYA/0JLUKQmRUMCo5KigpRk5GIvnrDrXQBrnnOM+LQVr9OyyV3OUwEhmMSVm3q+j8n/en5o+Fxf9k1oalkeC5qk5mRGN6EOrTsxwHx8fiz7E5dOdz8fSp4IfVFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJvdN6A4; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DHhSGuJ+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RdeWtq1a"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710417563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wQwLX5+joQVY/m52drETTB0dGlfxt5LT0ob6q9kKAlI=;
-	b=DHhSGuJ+8KCXSw7X2523QenpsCZ7mXPH/H1HQ6qU/KlhLuGfjxDfXEUTWBXdsHmRNwA9vT
-	4y7V/QvhsQum10C7a8n+sYALDKwtjRCephX7Mc1xN/qbJGTHhJV97TEKJ1EDeeLW4H25Jz
-	HCaTxqEPj0mSo4Oaxf0eh7zhCcavMqagYHdGTZopHPh42+i2YUj+tPvh3L/4geLxbMI5zc
-	2QOKu9UxgbnydN1V8JXHm7EUOfOGboSkeV4q7Pixn5kjT2PZWe2uHsvZQ5UKspDdRQLGeW
-	09Ico1OzR7/5N7FrejS+clhIywW68zpqPEmobPukp9WB/WFLSmNk6IRXak1M7A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710417563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wQwLX5+joQVY/m52drETTB0dGlfxt5LT0ob6q9kKAlI=;
-	b=RdeWtq1aQOXVaoLQFxXLgobT9t7lVTMhsFcevWw2nDxIg5NlBykRLyUr54ZHtH1Kmm3W84
-	6Z4mLqoQRpLHw2Aw==
-To: Enlin Mu <enlinmu@gmail.com>
-Cc: Enlin Mu <enlin.mu@outlook.com>, linux-kernel@vger.kernel.org,
- enlin.mu@unisoc.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hrtimer:Add get_hrtimer_cpu_base()
-In-Reply-To: <CAAfh-jOu0hG1hfWX9kL_gOXkSLXEVGNkddP-azO=pjNAKsRGhA@mail.gmail.com>
-References: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
- <87cyrxm7ua.ffs@tglx>
- <CAAfh-jOu0hG1hfWX9kL_gOXkSLXEVGNkddP-azO=pjNAKsRGhA@mail.gmail.com>
-Date: Thu, 14 Mar 2024 12:59:23 +0100
-Message-ID: <877ci5m3c4.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJvdN6A4"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e5760eeb7aso664187b3a.1;
+        Thu, 14 Mar 2024 08:12:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710429123; x=1711033923; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=fxoX3q50e92OYO+T5SP4tCKLkh072V2ITmpE4k5g1Zw=;
+        b=GJvdN6A4xq0odly/PFFmpEQ3OirDyswOVJSS+cD4Mp/fLV8FrGZyLENVZ/BQN8wZwa
+         qe+58QDua+o0REjJwX0Hk1g9yIwuh9xHb7BmXfBYQlPrv5rYNKtfmKYOIuvLFww1ZrDZ
+         JA9mw4RReIN8Eekvg/UpSxp0B1Mqqq3kRvvrAjpu8kKQpCpizjjuAGn9VbgFliqToR8g
+         TTDnzirVaWagyRKIu78dLKWbr3ZvoxUi3xzP0oPCn3fkDMjjdHppU1S54h699GjaQRlK
+         RHOWxIynRFSWnvXuCjomDTQZdUmlI+wTnHGPeh6+cnK+P/U6ZzgB+GEhHMJGqVkHUCn2
+         s80Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710429123; x=1711033923;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fxoX3q50e92OYO+T5SP4tCKLkh072V2ITmpE4k5g1Zw=;
+        b=jzXPKzYz04pXxj/kEQoKWHTFqoAiWyW87/tW+vCmShZyCi9QpWa+u5LM6uLwqeDeza
+         9w5tvULJPH6GOUkZNKXDDOoaAAlFM2MH7SREzGqAr6Rn8WuqjUyFmNtBZaUzZbUWRmP3
+         7WrFT9YPeQM7tnWEjEgatld4tj7eUVXHxKnPJXskWucRmk0rCYWOQi4zzzLI7fOPP49L
+         aeDErsLZAZ45MGvP0ryuY7VNIs+J8ioXHDIgZA0HioPqY1ZvKmbQmLWfn6qzjmFNLy8+
+         EOMnHj3jkqZZkOA4oDP4F/HMfm89y2pyuIM0twYWyRVFUHA0SI1JQPpXtuXFF0tEShP0
+         OlFA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2qYGewciAA7sAArgqOltcu8uBx6uCHpZ8Uc/gPohzIUpiQQBK67Cjd9qb8nf5ggCq5vRSQY/GB1k/o1gUPf9Vq8NliPFNsV/js0hetw4uTn1iJMrPuXv5q+t4Yqh+z5IQXpeNw+qzjyd+i3N+
+X-Gm-Message-State: AOJu0YwqboBg7fUAtBxZqYgaizZnSwg7pj8n2uNjhT3VLTvmh9jwkP3v
+	LPvrZsuRSi7VFJyYXFnwlC8XVFLksLnzRYa2pHsWFxoyUN8SdbNdJodi7o/e
+X-Google-Smtp-Source: AGHT+IHZjJprxxmVQW8SpPTgG8HyHqVBV86iFSh3yVuG9QvKGx2x29469/lU/aouW0JA0j/YriRUnw==
+X-Received: by 2002:a05:6a00:2d91:b0:6e6:9ff1:31b7 with SMTP id fb17-20020a056a002d9100b006e69ff131b7mr2344954pfb.16.1710429123351;
+        Thu, 14 Mar 2024 08:12:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i20-20020aa787d4000000b006e57247f4e5sm1593768pfo.8.2024.03.14.08.12.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 08:12:02 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	David Gow <davidgow@google.com>
+Subject: [PATCH] Revert "kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST"
+Date: Thu, 14 Mar 2024 08:12:00 -0700
+Message-Id: <20240314151200.2285314-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 14 2024 at 18:45, Enlin Mu wrote:
-> Thomas Gleixner <tglx@linutronix.de> =E4=BA=8E2024=E5=B9=B43=E6=9C=8814=
-=E6=97=A5=E5=91=A8=E5=9B=9B 18:22=E5=86=99=E9=81=93=EF=BC=9A
->>
->> On Wed, Mar 13 2024 at 05:30, Enlin Mu wrote:
->> > From: Enlin Mu <enlin.mu@unisoc.com>
->> >
->> > On the Arm platform,arch_timer may occur irq strom,
->> > By using the next_timer of hrtimer_cpu_base, it is
->> > possible to quickly locate abnormal timers.
->> > As it is an out of tree modules,the function needs
->> > to be exproted.
->>
->> No. We are not exporting for out of tree code.
-> Can you explain it?
+This reverts commit 4acf1de35f41549e60c3c02a8defa7cb95eabdf2.
 
-Exporting functions or variables requires an in tree usecase.
+Commit d055c6a2cc16 ("kunit: memcpy: Mark tests as slow using test
+attributes") marks slow memcpy unit tests as slow. Since this commit,
+the tests can be disabled with a module parameter, and the configuration
+option to skip the slow tests is no longer needed. Revert the patch
+introducing it.
+
+Cc: David Gow <davidgow@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ lib/Kconfig.debug  | 12 ------------
+ lib/memcpy_kunit.c |  3 ---
+ 2 files changed, 15 deletions(-)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 2164f066e7b6..eccbc4764f3d 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2703,18 +2703,6 @@ config MEMCPY_KUNIT_TEST
+ 
+ 	  If unsure, say N.
+ 
+-config MEMCPY_SLOW_KUNIT_TEST
+-	bool "Include exhaustive memcpy tests"
+-	depends on MEMCPY_KUNIT_TEST
+-	default y
+-	help
+-	  Some memcpy tests are quite exhaustive in checking for overlaps
+-	  and bit ranges. These can be very slow, so they are split out
+-	  as a separate config, in case they need to be disabled.
+-
+-	  Note this config option will be replaced by the use of KUnit test
+-	  attributes.
+-
+ config IS_SIGNED_TYPE_KUNIT_TEST
+ 	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+index 30e00ef0bf2e..fd16e6ce53d1 100644
+--- a/lib/memcpy_kunit.c
++++ b/lib/memcpy_kunit.c
+@@ -309,9 +309,6 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+ 
+ static void init_large(struct kunit *test)
+ {
+-	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST))
+-		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+-
+ 	/* Get many bit patterns. */
+ 	get_random_bytes(large_src, ARRAY_SIZE(large_src));
+ 
+-- 
+2.39.2
 
