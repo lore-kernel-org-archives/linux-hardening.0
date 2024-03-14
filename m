@@ -1,128 +1,88 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5788BDDD9;
-	Thu, 14 Mar 2024 15:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339B87351B
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Mar 2024 16:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710429125; cv=none; b=YJB0PW1QqOPIRLfdJJp06tzzen0g6sKN89fQeTl7bzMstep2VkwyKpfOGf0+jrgsxNmUCQQZTrORBM/fY+SWgEv+V0xMkfWbCuzh64F61yoQ6AmlwuDMbR4ADxrrF6MDV+QnxbFRU1DL4yCyCMXvVc6QQwPE+BXImzQ8Ly7KieU=
+	t=1710433673; cv=none; b=ZowsN1shIYOoExAKpHrX6eSNeRKf1DuucNfZt3qhrmdcoU/cmbvrfbYC950AHfP1+I++/WwmsaTVhg1k2zajQDtkE5KKav+V4StkYgzulQXI1AjL0RyGjPIiMfGWlukMaD4A/ch3phpOzL52FOmYbVwCYhp8KFHlFEf8GPp/Y7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710429125; c=relaxed/simple;
-	bh=nDsvYD5yEk/gy9N+HJ0QOM2iZUP4AcamRw/unfpE3no=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EwdvDNEOzbnT6b3vJBq0C/J7F2odDL4Dwez19sa68XXcg8eSWYA/0JLUKQmRUMCo5KigpRk5GIvnrDrXQBrnnOM+LQVr9OyyV3OUwEhmMSVm3q+j8n/en5o+Fxf9k1oalkeC5qk5mRGN6EOrTsxwHx8fiz7E5dOdz8fSp4IfVFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJvdN6A4; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710433673; c=relaxed/simple;
+	bh=YdPCr4InfP4OG9EGwglXBYsVX4V6BqWttPeipUoQlMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2bdeAsvNt1a8Js+vjziKQiw9WPLPWq74G7MQlSGYotolH8bHkk+bLUSeeL9KGgw/AWj5a7i8PhvBTyCQrL8/EHZO6jp+G789IyzX4qd0jVF20vMz9dF8GnkmvHDGVRQbWU+Xv7TA4TF6jQB6kw181ne8UDU+2YSrpOC3jK5/L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fDhOua8E; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJvdN6A4"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e5760eeb7aso664187b3a.1;
-        Thu, 14 Mar 2024 08:12:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fDhOua8E"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dde2c0f769so6768555ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Mar 2024 09:27:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710429123; x=1711033923; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=fxoX3q50e92OYO+T5SP4tCKLkh072V2ITmpE4k5g1Zw=;
-        b=GJvdN6A4xq0odly/PFFmpEQ3OirDyswOVJSS+cD4Mp/fLV8FrGZyLENVZ/BQN8wZwa
-         qe+58QDua+o0REjJwX0Hk1g9yIwuh9xHb7BmXfBYQlPrv5rYNKtfmKYOIuvLFww1ZrDZ
-         JA9mw4RReIN8Eekvg/UpSxp0B1Mqqq3kRvvrAjpu8kKQpCpizjjuAGn9VbgFliqToR8g
-         TTDnzirVaWagyRKIu78dLKWbr3ZvoxUi3xzP0oPCn3fkDMjjdHppU1S54h699GjaQRlK
-         RHOWxIynRFSWnvXuCjomDTQZdUmlI+wTnHGPeh6+cnK+P/U6ZzgB+GEhHMJGqVkHUCn2
-         s80Q==
+        d=chromium.org; s=google; t=1710433671; x=1711038471; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gCqqyqrVd1ZT9AtcPC9C9BzKjRf2o6CGP4oxyF2PKO0=;
+        b=fDhOua8Eu+PW0yD3MV/CXyR5+OISMCiN68d1b3VNgrGTJ/EBLqmgmPUxUcp0mPucZB
+         mK8cfuBuH52L2LxgVQw/9l3LIl9uwBrmwblJcZN88NKRAdu5jNXJDiHqQRaCXS4nPA9B
+         lM+54Nct4E+snumZJEjw65k/zzN36bZyp2GW4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710429123; x=1711033923;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1710433671; x=1711038471;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fxoX3q50e92OYO+T5SP4tCKLkh072V2ITmpE4k5g1Zw=;
-        b=jzXPKzYz04pXxj/kEQoKWHTFqoAiWyW87/tW+vCmShZyCi9QpWa+u5LM6uLwqeDeza
-         9w5tvULJPH6GOUkZNKXDDOoaAAlFM2MH7SREzGqAr6Rn8WuqjUyFmNtBZaUzZbUWRmP3
-         7WrFT9YPeQM7tnWEjEgatld4tj7eUVXHxKnPJXskWucRmk0rCYWOQi4zzzLI7fOPP49L
-         aeDErsLZAZ45MGvP0ryuY7VNIs+J8ioXHDIgZA0HioPqY1ZvKmbQmLWfn6qzjmFNLy8+
-         EOMnHj3jkqZZkOA4oDP4F/HMfm89y2pyuIM0twYWyRVFUHA0SI1JQPpXtuXFF0tEShP0
-         OlFA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2qYGewciAA7sAArgqOltcu8uBx6uCHpZ8Uc/gPohzIUpiQQBK67Cjd9qb8nf5ggCq5vRSQY/GB1k/o1gUPf9Vq8NliPFNsV/js0hetw4uTn1iJMrPuXv5q+t4Yqh+z5IQXpeNw+qzjyd+i3N+
-X-Gm-Message-State: AOJu0YwqboBg7fUAtBxZqYgaizZnSwg7pj8n2uNjhT3VLTvmh9jwkP3v
-	LPvrZsuRSi7VFJyYXFnwlC8XVFLksLnzRYa2pHsWFxoyUN8SdbNdJodi7o/e
-X-Google-Smtp-Source: AGHT+IHZjJprxxmVQW8SpPTgG8HyHqVBV86iFSh3yVuG9QvKGx2x29469/lU/aouW0JA0j/YriRUnw==
-X-Received: by 2002:a05:6a00:2d91:b0:6e6:9ff1:31b7 with SMTP id fb17-20020a056a002d9100b006e69ff131b7mr2344954pfb.16.1710429123351;
-        Thu, 14 Mar 2024 08:12:03 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i20-20020aa787d4000000b006e57247f4e5sm1593768pfo.8.2024.03.14.08.12.02
+        bh=gCqqyqrVd1ZT9AtcPC9C9BzKjRf2o6CGP4oxyF2PKO0=;
+        b=FH5oQKr0LQ2qf+OtYbv2iyPMdFkRGpCR9+aKRHvbB+T2Io0i+ZeiAoB4ic8e5A50IF
+         OyL8LQgf+o1tHoquguEQUL7EEKhMYpvrqavYIJVFNPA8cARyQLSzSc6PeD7yAmwhwOj0
+         BoU1VYmS+tBeW5C39qSfb2AVYm6BK2X16xxPlQaGpLyyBtcE5lUMy2C7kKflGK37ZFCe
+         HiG2PeOzuVdpUqphd9q0pMW836RMF+jrqeWffeJxjP2+gH4ce1d00vNp1twZmun+1Ob3
+         B73DBYHp3c6QZlOUmXWUgIs+GMTcoxluMO09ktaNq83AEzjDvi2V9CAOjL8CavJpIF9k
+         d+UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVN8lsDFZV7/6t2acYtakR/dxaxyqNCRMQHYSXVXM5/k6gUjB0lSvoiyPRFRdG4V3Z9+PUyg04FY27a5nHsWUGKvWjj4uRVLVzuWH1ZZLfw
+X-Gm-Message-State: AOJu0YyLe0lgudovLm0nR7OxGz4fU33jxpUAHMozSw13F7Z/cn5CazkX
+	S/fIy89XELbxChwTT3hL2GqTLxj4GROaCPIOSaGdgVXbBEezrgZxaNyAw1iSeQ==
+X-Google-Smtp-Source: AGHT+IGB+4KsUsZtAt2GEhKCBD82Z12NV2ggL3N9c8FAaT23sfhQfhvx2qsrcS+ssYSXM7KAVvrcSw==
+X-Received: by 2002:a17:902:ba8c:b0:1dd:916d:771f with SMTP id k12-20020a170902ba8c00b001dd916d771fmr1835572pls.39.1710433671438;
+        Thu, 14 Mar 2024 09:27:51 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f14-20020a170902ce8e00b001dbae7b85b1sm1893090plg.237.2024.03.14.09.27.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 08:12:02 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-kernel@vger.kernel.org,
+        Thu, 14 Mar 2024 09:27:50 -0700 (PDT)
+Date: Thu, 14 Mar 2024 09:27:50 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: dave.hansen@intel.com, luto@kernel.org, peterz@infradead.org,
+	x86@kernel.org, akpm@linux-foundation.org, shakeelb@google.com,
+	vbabka@suse.cz, rppt@kernel.org, linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	David Gow <davidgow@google.com>
-Subject: [PATCH] Revert "kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST"
-Date: Thu, 14 Mar 2024 08:12:00 -0700
-Message-Id: <20240314151200.2285314-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
+	kernel-hardening@lists.openwall.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+	ardb@google.com
+Subject: Re: [RFC PATCH v2 00/19] PKS write protected page tables
+Message-ID: <202403140927.5A5F290@keescook>
+References: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
 
-This reverts commit 4acf1de35f41549e60c3c02a8defa7cb95eabdf2.
+On Mon, Aug 30, 2021 at 04:59:08PM -0700, Rick Edgecombe wrote:
+> This is a second RFC for the PKS write protected tables concept. I'm sharing to
+> show the progress to interested people. I'd also appreciate any comments,
+> especially on the direct map page table protection solution (patch 17).
 
-Commit d055c6a2cc16 ("kunit: memcpy: Mark tests as slow using test
-attributes") marks slow memcpy unit tests as slow. Since this commit,
-the tests can be disabled with a module parameter, and the configuration
-option to skip the slow tests is no longer needed. Revert the patch
-introducing it.
+*thread necromancy*
 
-Cc: David Gow <davidgow@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- lib/Kconfig.debug  | 12 ------------
- lib/memcpy_kunit.c |  3 ---
- 2 files changed, 15 deletions(-)
+Hi,
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 2164f066e7b6..eccbc4764f3d 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2703,18 +2703,6 @@ config MEMCPY_KUNIT_TEST
- 
- 	  If unsure, say N.
- 
--config MEMCPY_SLOW_KUNIT_TEST
--	bool "Include exhaustive memcpy tests"
--	depends on MEMCPY_KUNIT_TEST
--	default y
--	help
--	  Some memcpy tests are quite exhaustive in checking for overlaps
--	  and bit ranges. These can be very slow, so they are split out
--	  as a separate config, in case they need to be disabled.
--
--	  Note this config option will be replaced by the use of KUnit test
--	  attributes.
--
- config IS_SIGNED_TYPE_KUNIT_TEST
- 	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-index 30e00ef0bf2e..fd16e6ce53d1 100644
---- a/lib/memcpy_kunit.c
-+++ b/lib/memcpy_kunit.c
-@@ -309,9 +309,6 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
- 
- static void init_large(struct kunit *test)
- {
--	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST))
--		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
--
- 	/* Get many bit patterns. */
- 	get_random_bytes(large_src, ARRAY_SIZE(large_src));
- 
+Where does this series stand? I don't think it ever got merged?
+
+-Kees
+
 -- 
-2.39.2
-
+Kees Cook
