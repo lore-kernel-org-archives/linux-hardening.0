@@ -1,114 +1,65 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3977643ADD;
-	Thu, 14 Mar 2024 08:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778506BB37;
+	Thu, 14 Mar 2024 10:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710406466; cv=none; b=TlZJBwbR9+zzxo9V64H3bc0kbveW0KdBQPV3j+yhYnsJTztwirXzCFOOZQxHGl+Gm8nxGzyzbDQEcAO5+cVsTWKar6TUucWm6E8wHyGBik9NW9oBPo2vE9ZcmslfL/UZtzpqRXuvx3s6pMl1HvaJlEfA5bydMcYJrJ3beXUQF3c=
+	t=1710411729; cv=none; b=NI+SyEQ///fxdMPwhuDJzr4u2v7NJzaERUHLmFcUCsIpjNARtFnPFS3gIMmmbBHzYMaCnL8946n4i0oZ4UG3+OzYgTdHreMOr99gcAP8fB88A6dKIwd7Ywv7SPkYqso1PE3crZg6FOqhANr6XMejgaM7AezGv3ey1IPG7CYx9+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710406466; c=relaxed/simple;
-	bh=Hug4VpcwNwwqAOdVuGR3r5w2hzLyi1ZErcpgeoCjrpg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fUl2A7YaQiDns87HUAseqBWL60d1SO2gYY7//Gsun6APKFSqTCfAFi1f7GZkfuAcgJJia1kauwPR6WYUJ7E/cK8ABfcYr8aW4ZcmPQbWCj1jRhr70MjlSOlvWqkjFPND1VezyxpQxMEJY1BJumC4Q5Qab8Q4LqEB7nHbi9k7p4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kZVhG8GF; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710411729; c=relaxed/simple;
+	bh=1W+h1GqxXgOrrG99ZPrDvoA6zLpNgyRNT1se9nehkzo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WwOSqZmiOnqg+QaAaFDAR7gVmliXg8jKAY2Sag1XxpV+F374pJTXEwwIJnDTG8QJCCYH9eeRBJ0rygHH3qPRuF0/oYIyWJfBEUmuXBXEYzSUHxq9W1X98WanKFK2ovJ8sO8rhgGASCzy36T/Kw0UvOt+ENBiVMJngJ3/7EsDRJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q0Td9r92; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KVDSoewy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kZVhG8GF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710406462;
-	bh=Hug4VpcwNwwqAOdVuGR3r5w2hzLyi1ZErcpgeoCjrpg=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=kZVhG8GFZYYC3OAzSAy08JnBI7ueSsyszQUf5fEmjQ2II8WGNRD/wgTbcyAhltdca
-	 MhX/nATboCzW2kCOzEjw200OyBhiHWNi28f+Fd+CF34xT/cGtMpvxqs/HpBWXPzb5Y
-	 qxiBfmUXTOs078rdLjOkbZ3cRZYX9bGtVSx5svoldhVQ6/3Bh0AL+rblWfyAAQpfWZ
-	 gPtW+AA3MdPR0h8MwGVzD7p2bORCWGQ2kq+cYRnrCemV5qYCWemsZpFJGCXNrrZZDO
-	 glDgKLSjJjuhnhYBKNjVFoCvbhaj+BZUq8o7TqrhP48UsGCGqdi4+LuVbzRJwLhi9p
-	 R8ea4uLifDcRw==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A3105378105A;
-	Thu, 14 Mar 2024 08:54:19 +0000 (UTC)
-Message-ID: <1dd87e89-2306-4669-844f-ffe9e56523b6@collabora.com>
-Date: Thu, 14 Mar 2024 13:54:50 +0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q0Td9r92";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KVDSoewy"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1710411725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1W+h1GqxXgOrrG99ZPrDvoA6zLpNgyRNT1se9nehkzo=;
+	b=q0Td9r9210fJGk/PUWAQUs5Pa8uhqh04NdZ3wWMc30egCrkyyYGBcTDgJ099kkGmmhekIc
+	1f19Nr4NFDipIN8lJyICxO0RWOIQFayk++p4aGoBzUAgYLatrFRyaeFHAacIHU/88s1Gh0
+	eJB0oWHWytojJjFNfO0hXb3zJ/W5EasdlQs9ro85Ofqr9lNePuqTXzdPAjpwUmIZZK5sIa
+	3C/e9HN1m+2RbB9wCnERfl9fPjUOZF4wYNBvzYU1cmgL1OtU571pG9g1Og+NHxU/FAIHnd
+	Lc2Dhn/EgTz3EPgwBrsev4pbvswMWWLtqKfa8lKjA3xhi89c1pHgXYLXRMSATQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1710411725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1W+h1GqxXgOrrG99ZPrDvoA6zLpNgyRNT1se9nehkzo=;
+	b=KVDSoewy1R+7GEICR/m8T5A5RGMBbl6QBsJc3/2CLK+dfXK8n9Pkoj2BqnK/JSd9XwjQLy
+	CguijQrXvksFOjCw==
+To: Enlin Mu <enlin.mu@outlook.com>, linux-kernel@vger.kernel.org,
+ enlin.mu@unisoc.com, enlinmu@gmail.com
+Cc: linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] hrtimer:Add get_hrtimer_cpu_base()
+In-Reply-To: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
+References: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
+Date: Thu, 14 Mar 2024 11:22:05 +0100
+Message-ID: <87cyrxm7ua.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <shuah@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] selftests/exec: execveat: Improve debug reporting
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>
-References: <20240313185606.work.073-kees@kernel.org>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240313185606.work.073-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 3/13/24 11:56 PM, Kees Cook wrote:
-> Children processes were reporting their status, duplicating the
-> parent's. Remove that, and add some additional details about the test
-> execution.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kselftest@vger.kernel.org
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+On Wed, Mar 13 2024 at 05:30, Enlin Mu wrote:
+> From: Enlin Mu <enlin.mu@unisoc.com>
+>
+> On the Arm platform,arch_timer may occur irq strom,
+> By using the next_timer of hrtimer_cpu_base, it is
+> possible to quickly locate abnormal timers.
+> As it is an out of tree modules,the function needs
+> to be exproted.
 
-> ---
->  tools/testing/selftests/exec/execveat.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/exec/execveat.c b/tools/testing/selftests/exec/execveat.c
-> index 0546ca24f2b2..6418ded40bdd 100644
-> --- a/tools/testing/selftests/exec/execveat.c
-> +++ b/tools/testing/selftests/exec/execveat.c
-> @@ -98,10 +98,9 @@ static int check_execveat_invoked_rc(int fd, const char *path, int flags,
->  	if (child == 0) {
->  		/* Child: do execveat(). */
->  		rc = execveat_(fd, path, argv, envp, flags);
-> -		ksft_print_msg("execveat() failed, rc=%d errno=%d (%s)\n",
-> +		ksft_print_msg("child execveat() failed, rc=%d errno=%d (%s)\n",
->  			       rc, errno, strerror(errno));
-> -		ksft_test_result_fail("%s\n", test_name);
-> -		exit(1);  /* should not reach here */
-> +		exit(errno);
->  	}
->  	/* Parent: wait for & check child's exit status. */
->  	rc = waitpid(child, &status, 0);
-> @@ -226,11 +225,14 @@ static int check_execveat_pathmax(int root_dfd, const char *src, int is_script)
->  	 * "If the command name is found, but it is not an executable utility,
->  	 * the exit status shall be 126."), so allow either.
->  	 */
-> -	if (is_script)
-> +	if (is_script) {
-> +		ksft_print_msg("Invoke script via root_dfd and relative filename\n");
->  		fail += check_execveat_invoked_rc(root_dfd, longpath + 1, 0,
->  						  127, 126);
-> -	else
-> +	} else {
-> +		ksft_print_msg("Invoke exec via root_dfd and relative filename\n");
->  		fail += check_execveat(root_dfd, longpath + 1, 0);
-> +	}
->  
->  	return fail;
->  }
-
--- 
-BR,
-Muhammad Usama Anjum
+No. We are not exporting for out of tree code.
