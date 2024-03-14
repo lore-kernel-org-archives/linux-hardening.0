@@ -1,65 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778506BB37;
-	Thu, 14 Mar 2024 10:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7975A0F8;
+	Thu, 14 Mar 2024 10:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710411729; cv=none; b=NI+SyEQ///fxdMPwhuDJzr4u2v7NJzaERUHLmFcUCsIpjNARtFnPFS3gIMmmbBHzYMaCnL8946n4i0oZ4UG3+OzYgTdHreMOr99gcAP8fB88A6dKIwd7Ywv7SPkYqso1PE3crZg6FOqhANr6XMejgaM7AezGv3ey1IPG7CYx9+U=
+	t=1710413184; cv=none; b=CgQB0QbUEAOn+5516S3eVV2Y7uTHYvbe3k8knqO9wDPoeY6f9BqPv2oTF3+UWd2ElAY37raS4nKAClTw5PCyp/xBt8vJCRt6mRXcnD+/yCrXptZ6sVMMVFU10Du1iF1F1TeVVhBKxfl+65gfx+u3R56cy+3dJHCganEkowwxBUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710411729; c=relaxed/simple;
-	bh=1W+h1GqxXgOrrG99ZPrDvoA6zLpNgyRNT1se9nehkzo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WwOSqZmiOnqg+QaAaFDAR7gVmliXg8jKAY2Sag1XxpV+F374pJTXEwwIJnDTG8QJCCYH9eeRBJ0rygHH3qPRuF0/oYIyWJfBEUmuXBXEYzSUHxq9W1X98WanKFK2ovJ8sO8rhgGASCzy36T/Kw0UvOt+ENBiVMJngJ3/7EsDRJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q0Td9r92; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KVDSoewy; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1710413184; c=relaxed/simple;
+	bh=buQnea26j+8dhh6vgk5dGfI3tbGChwwJ0eYVzH6CwK4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DXgSfVHQ9x05qxkOhi13pOjihlTtEvPXzZNafCK59q7w4YAWyAkH4gfZgJwMCdC/sWTKscN2XXFoZmliZ0tJjtaFLVUAeNYJ3Qb5R186Lqnqln3XDtD5ELqLNC1y0/rmszAbDHjiNTH+UJ55aedRsFp5O3wZbjCzXCJVlg4vMCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KF6XUeDt; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q0Td9r92";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KVDSoewy"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1710411725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1W+h1GqxXgOrrG99ZPrDvoA6zLpNgyRNT1se9nehkzo=;
-	b=q0Td9r9210fJGk/PUWAQUs5Pa8uhqh04NdZ3wWMc30egCrkyyYGBcTDgJ099kkGmmhekIc
-	1f19Nr4NFDipIN8lJyICxO0RWOIQFayk++p4aGoBzUAgYLatrFRyaeFHAacIHU/88s1Gh0
-	eJB0oWHWytojJjFNfO0hXb3zJ/W5EasdlQs9ro85Ofqr9lNePuqTXzdPAjpwUmIZZK5sIa
-	3C/e9HN1m+2RbB9wCnERfl9fPjUOZF4wYNBvzYU1cmgL1OtU571pG9g1Og+NHxU/FAIHnd
-	Lc2Dhn/EgTz3EPgwBrsev4pbvswMWWLtqKfa8lKjA3xhi89c1pHgXYLXRMSATQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1710411725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1W+h1GqxXgOrrG99ZPrDvoA6zLpNgyRNT1se9nehkzo=;
-	b=KVDSoewy1R+7GEICR/m8T5A5RGMBbl6QBsJc3/2CLK+dfXK8n9Pkoj2BqnK/JSd9XwjQLy
-	CguijQrXvksFOjCw==
-To: Enlin Mu <enlin.mu@outlook.com>, linux-kernel@vger.kernel.org,
- enlin.mu@unisoc.com, enlinmu@gmail.com
-Cc: linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hrtimer:Add get_hrtimer_cpu_base()
-In-Reply-To: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
-References: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
-Date: Thu, 14 Mar 2024 11:22:05 +0100
-Message-ID: <87cyrxm7ua.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KF6XUeDt"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513c53ed3d8so1166096e87.3;
+        Thu, 14 Mar 2024 03:46:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710413181; x=1711017981; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=buQnea26j+8dhh6vgk5dGfI3tbGChwwJ0eYVzH6CwK4=;
+        b=KF6XUeDt++qu+gdEmPbPgS1WcAaDC/i5hvMEaIOAPU9dsv8z9g5z4p2kR7YNsWjVH9
+         5hV1riqNRanOfCGfDvsV4p6TN0BhU1/8iovbkmlqWlV8kUd0L63jQdeJVM7RmdW+uq9s
+         Vz9kzlztHQzI7+WdkkgIOlioM6TygI5eTg1IwbfyCBa6xqU6biGFkBG/HgEnqBehZnN0
+         +1Ib488TLu3VNHsDHasslUBTGyk9gtHGnjvQXTWPKV822fN7RyXzeT/POKpg70bfIXzX
+         0ZhMdYWAbj6l2cEA5UD/bKMeLkXcwUUkdggxJjKp4yayHVEvV/9ttKVNwo4LoM0JH9sK
+         pdZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710413181; x=1711017981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=buQnea26j+8dhh6vgk5dGfI3tbGChwwJ0eYVzH6CwK4=;
+        b=WJSat3xqfx+pESsdUsus9rW3bA33DWpeN3t5mFySRIKOy1PkSf0C3GGkVn15t5bGJn
+         OKPctbBwjD5ofEGIpBEm5Z9pUCCe6dUCOj8zuIFJpuHXQrDUkg3tGGzhDYvUc6WzCHAW
+         HNM520S6oQ+MfT9J4ktILGXP3PBT+w61OpPi2vAoKlOTuo2gpPZuxhCGxQm17cUy5GTc
+         DvdTDFgGozqoLbWmFVQeWSBYpITNaJvhw6Ujt/pLkQ5mWAY2TQs6lTSdJI0vzxIbDTW9
+         yuB8kTMkyuWduYYZalBweyd+ZNdV9+fDyL/bw9ndTSZ/6xRf/4Rng4EzWDNfxgMfAH4N
+         pFgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBqLymo3o2N6/z2DnwZUnCkXqWH/xctjQz7uCOxxDfHPlG3GpKEWq6sk2lTWSczNuAvMXmhi5GmBdqQ7CVj/pugbGiqcYtKw9ejLyAFz6QzEmc06O6lF/uq+/ZVZYwxiG87g4rwV6auhj9XQ+b
+X-Gm-Message-State: AOJu0Yw/V/7iP+RsCxwH7+53pRKxhcseR9PVRs0QE3zLAAwNwT4BcAFr
+	+0GODUoZfhokt6HLMNT+YY3HwXCwnGOhA+ZsdVHvtZ2zAyUUmcepDWuzcJuGm+zt3ze2TD5jv+T
+	tJOeSFMh+c5HXuqqkBGEuF6Lyrno=
+X-Google-Smtp-Source: AGHT+IHGe7qL489UBBQrSWBp+4/FcTTXyNvb4IcbV2nB6rNI2vsN7vBawglg3ZWbzqt8LH8y/i14Ba8kOJ8TZPelQ6E=
+X-Received: by 2002:a19:6914:0:b0:513:d101:b965 with SMTP id
+ e20-20020a196914000000b00513d101b965mr831706lfc.63.1710413180952; Thu, 14 Mar
+ 2024 03:46:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <TYSPR04MB7084FCAF74B4CFA30D386B698A2A2@TYSPR04MB7084.apcprd04.prod.outlook.com>
+ <87cyrxm7ua.ffs@tglx>
+In-Reply-To: <87cyrxm7ua.ffs@tglx>
+From: Enlin Mu <enlinmu@gmail.com>
+Date: Thu, 14 Mar 2024 18:45:54 +0800
+Message-ID: <CAAfh-jOu0hG1hfWX9kL_gOXkSLXEVGNkddP-azO=pjNAKsRGhA@mail.gmail.com>
+Subject: Re: [PATCH] hrtimer:Add get_hrtimer_cpu_base()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Enlin Mu <enlin.mu@outlook.com>, linux-kernel@vger.kernel.org, enlin.mu@unisoc.com, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13 2024 at 05:30, Enlin Mu wrote:
-> From: Enlin Mu <enlin.mu@unisoc.com>
+Thomas Gleixner <tglx@linutronix.de> =E4=BA=8E2024=E5=B9=B43=E6=9C=8814=E6=
+=97=A5=E5=91=A8=E5=9B=9B 18:22=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On the Arm platform,arch_timer may occur irq strom,
-> By using the next_timer of hrtimer_cpu_base, it is
-> possible to quickly locate abnormal timers.
-> As it is an out of tree modules,the function needs
-> to be exproted.
-
-No. We are not exporting for out of tree code.
+> On Wed, Mar 13 2024 at 05:30, Enlin Mu wrote:
+> > From: Enlin Mu <enlin.mu@unisoc.com>
+> >
+> > On the Arm platform,arch_timer may occur irq strom,
+> > By using the next_timer of hrtimer_cpu_base, it is
+> > possible to quickly locate abnormal timers.
+> > As it is an out of tree modules,the function needs
+> > to be exproted.
+>
+> No. We are not exporting for out of tree code.
+Can you explain it?
