@@ -1,112 +1,73 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967164EB22;
-	Fri, 15 Mar 2024 19:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B4F5336A;
+	Fri, 15 Mar 2024 19:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710529354; cv=none; b=oig1EdKIshKboCodohgy1DwaWYzfzUBkvz2tUKyY1LTulNfVfX/qbnYeo8g0+/0zlw6wvrtU/9yc5OAVLQW24gUHeSCWkdYxs3WuTUJSMnsjSQlIjG06s/wf/qKJG+j7el9t4c6CAGiFuITdwVYGZjSOIAD0Zrp6RTb3G/P2Yjk=
+	t=1710531975; cv=none; b=GNa6Iu47ncYl3Ypk9sCmXG7XezNaYSBrpXp2KhARVOo+6uAa79jkCzSGjFhjW2FRUnGf7GYv/BTpPZCJ3DcPMZ4G/op1dY9Q0NhvJ2BnX8AZNyisAdgLfa7fTQi07EXQkx8/nsGQC3Ghe9Wq5PKeHB7TO2LGUDioqR5YzIZTR8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710529354; c=relaxed/simple;
-	bh=14+WauOWXoOMY8/Umh0tPKXDfWDItRSRHJsgpXhl9fw=;
+	s=arc-20240116; t=1710531975; c=relaxed/simple;
+	bh=CyO55Dw7XsuAhmq2UFNdyZkwG7l+VK8tbtJ7oWv5oJg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iHbIL0liGppoG7LB3mMwjLlK9zSbi4ehgh8vb58uceN1Z+qTR3GEYzv7BJPnt7Ybr6zRB1HWjWOEQ8vX1dRmaBHA4Pxr5B5ggeLd1hJ4Dnh/c7lbXb0xa/Wyi2yuoqi4nCLBh/3RlVS148GfsbGoOF+e9Ih5fZrdh6MtcoUqRqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b=aQeMNv04; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=qrpbP9kR69g3jY4rkLKbSxecBxfP/u8kQv9OfRIRwtjqTcQuc2xX1oXPqWTEsKKWEiEmbBS0D3xpCQ62WUTQI3Crn32/SzmHO2f/5gyY3CIHY2kx/P7hL//g+htv17YYw0lvRLUk6P5+T2aUe72yqqaXazWXJHAmJdZkcSQFXD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KoVCMDkw; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b="aQeMNv04"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1710529333; x=1711134133; i=timschumi@gmx.de;
-	bh=14+WauOWXoOMY8/Umh0tPKXDfWDItRSRHJsgpXhl9fw=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=aQeMNv041j9k2ediu598ICp/JPbI8xMURvTz0UYiRigW3hftoKTWigyifw2OB9jh
-	 TKiaQdk9qheYCtxxYjv18wTKQILYwBNojjKfMg/211Spi90Pxy+z+UjjUhW0FK/Oc
-	 /8NfCKLET4L4a0f7cARWhMpMu7toBkbA2adOM/8AzAUv1vw+ujFSpeg0IQX0kndKb
-	 LWJon/5HuiBwKU4zv+17Q4oG0R44v7lLY6Q9BGojoFmRmZFEnPqsAtJxXj2nd79RC
-	 jBI9ckqeEf36lx3AYAVKh2nlWm1SjdqDnDf6JdJfwVxiGPyL+AhQ8Cwal+NCU8hP6
-	 4G4YNWwHJiRO2Qi7vw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.222.0.4] ([93.218.98.241]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MY68T-1rHraL3y6n-00YTaR; Fri, 15
- Mar 2024 20:02:13 +0100
-Message-ID: <43bd1a71-8b4a-4edc-827e-6845e173e82d@gmx.de>
-Date: Fri, 15 Mar 2024 20:02:09 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KoVCMDkw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CyO55Dw7XsuAhmq2UFNdyZkwG7l+VK8tbtJ7oWv5oJg=; b=KoVCMDkwcTzZ2TVlK0TuGbIFLH
+	0ZGDBIl7uNfV912TShCkOCakhWsRklU8BVXnTLYe1VboyhtfiG9M4Xo8ozL35t2cRTX2NSzj/87cN
+	6JeUDd0DKUwyTAuU9nfaeLjRPq2EdDOTSegazssCX3PNd+nUYZd4R3wfDoZG30Jp/spkuVgvFyrZ7
+	k0nSVX9FYrJ0r14eTtd+WAxlbsxJvLsdzr7avXu7dPPPNBUrVlOeBSfbauG/qxuNC0pxg55Fhq+Fa
+	pFxDJV8GJ6wyauQW75TgBLXY0u0NNdNDpzjh4TUcfLGKZecS0lhXKPXQ5Dh6M2gO/VbC05CUs/Dab
+	hdsyZyXw==;
+Received: from [186.209.63.98] (helo=[172.17.1.0])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rlDVB-00Aw9K-T5; Fri, 15 Mar 2024 20:46:02 +0100
+Message-ID: <2a500ade-a91d-15f2-e5ae-7f261e6a84b4@igalia.com>
+Date: Fri, 15 Mar 2024 16:45:56 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
 Subject: Re: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable
  names
 Content-Language: en-US
 To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ linux-hardening@vger.kernel.org
 References: <20240315002616.422802-1-timschumi@gmx.de>
  <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
-From: Tim Schumacher <timschumi@gmx.de>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 In-Reply-To: <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UfFVw9gMwa9lM1hwYPwo6YIZsnDR5Bo2Tsz8hKXkZmfFZYzPE3F
- K2CKh9u44jsPvmaVaz+0aftt9neX7oAB9nL9IXzkKnNfc8BAWevpMmtKWzV4HAuUmnC+IOn
- 541AhSIZ1DQ/Yz/GjBvKdyBuBsMIBRucsgW/u/pU3a+DSrfZ3qkSQklVFvrZRfDncpAn7d1
- p1NrzzzuCzlIeHd+Dg2MQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wjgQz1qpYEQ=;zD0+u+qL942l3xaCQpXhuG3yRIg
- mfwp4KczKu369hZHXY8zYdWjeAmDqm0uwbSnYCi+rrMbEuK6Rn+EqDSHQ4oQcWIDtnCCM0eb5
- wJC0TktYfgElAe1uaFFvhwbAuI/r3g/Grj/BFDPWSyyIvO6udHZHP7KkKPCRP9xCi14QqSN92
- FNFCrcjHSdQRaq8o5cGAT3NNSPJvhHwZG4nu1SFJAaRi8MpLQd9TTdB3vsxbDKGwoWnP9xg29
- BHokxoiEh3tn5ofpUAuyWGTU+tlJ0AAt59Hjc4isWGV7phFyZ0gOv0oJ57ZAlDCZJH2mPGBRr
- Qp8H18UfgxJi95XfcqX/KoUWji+JOV7/nDUFwjloQ20rXImSPFh2kP+Lu8CTEAX+TUl607Dfs
- TB5IxioH58yLhOk90r/ZLD26cvIoy2TZJHAL1rey7uKeR3MJz4L2zxBhr4A4oP724gWj+EI9m
- OYYh7dfDDXu0fOJt1NwKgkl32kG8ENLegfcmLgmLFDqn/04KeB1t4gWYfRxactLXBFXXiRZF1
- xtoeDOhbB/zvHodhZ92NeAcBVOYwP6h392aprtTFduK5JbtHTn4Aur8r1veDx4lma0PoOKsTf
- Ue1ILVVwkO4DpvMXsV1lLl5cIitlCVcOZUPxgzqK+dQbciqTHlMxZxQbD+apwN/qmKAli+N4L
- +U1ABoG72TU/42rUIToDGrn1l2W3fWwTZMmQhhWNxqBxDllG983g4HF7arANY2tywpfcvJ9hH
- 38ecIpGLVFmrFEdbpZGWi5U4N5pKg6iB5QLVusbpdsYJFYOU9aOe7QTZDill0nzID7LXbIgLv
- 2GR3HKFdykvDiFREir/QzHv2jldsnLU3gtRl96IdRLQSQ=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 15.03.24 10:16, Ard Biesheuvel wrote:
-> Hi Tim,
->
-> On Fri, 15 Mar 2024 at 01:27, Tim Schumacher <timschumi@gmx.de> wrote:
->>
->> Work around a quirk in a few old (2011-ish) UEFI implementations, where
->> a call to `GetNextVariableName` with a buffer size larger than 512 byte=
-s
->> will always return EFI_INVALID_PARAMETER.
->>
->> This was already done to efivarfs in f45812cc23fb ("efivarfs: Request a=
-t
->> most 512 bytes for variable names"), but the second copy of the variabl=
-e
->> iteration implementation was overlooked.
->>
->> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
->
-> Thanks for the patch. I'll take it as a fix.
->
+On 15/03/2024 06:16, Ard Biesheuvel wrote:
+> [...]
 > As an aside, you really want to avoid EFI pstore in general, and
 > specifically on such old systems with quirky UEFI implementations.
 >
-I found this by chance while looking for appearances of the magic value of
-1024, and decided to split it out because this would have been the only ch=
-ange
-that modifies behavior.
 
-I didn't intend to actually use it after fixing it up, although I did make=
- sure
-that it now does more than it did previously. If we can save someone a con=
-fused
-"Why is this done differently here?" (and have a reason to boil down the c=
-ode to
-a single implementation in the future), then that is probably good enough =
-on its
-own.
+Hi Ard, this comment made me very curious; apart from old quirky UEFI
+implementations, what's the reason you see to avoid using efi-pstore in
+general ?
 
+Thanks in advance for your insights!
+Cheers,
+
+
+Guilherme
