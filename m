@@ -1,118 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03867175AA;
-	Fri, 15 Mar 2024 09:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C31118639;
+	Fri, 15 Mar 2024 10:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710494233; cv=none; b=EY9I2qhtGF3GCiNCDanUVxW5bGtkYPB6En/IaGevolsewk5raTtCcoQtuII3RHH2HFa3tawpZ0XpMh6K6LoHNdgkk/cWn3xkk+l4zoeRQobzS8QxXuQnuxxXW3y0+CjLD8k3Sg4d9yAFQMZ5R6z2H3DbtBG8rD97JTh7x3FSR4s=
+	t=1710498493; cv=none; b=roC6U6HQuMc3oOeJpuro438jd5PJ+PrQYmfjb9esMLF9Q9Y9TGJY0T9Fke5zHuDx01fDlAuHSD2KeBfnbtJPQrBUF5g0WLxkJ+cHZAGN3GOC6LmUuPfai8GyHvOxLvhynUs7glGFvLsx3a/qlcDZr89jEEVWjZfkP5iGdMiW+PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710494233; c=relaxed/simple;
-	bh=w/EAdnTZd2O/JcwSzVr2SXDVg04KJAxDQ1+bGadkR4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=enHIZ8iGXwkjy0cyAre/WrF+fuErzgi0nldZq7GzjUqT8J4iOLHJ1Vprx1VWoSTmIO00WY3/EuA1yfbGeEn0xsa4Bso1aHOSPZ5andeR5T8hRPekoyQLgeKuzc0ilOR36ERzzUWiOnZcI+F+VP1052lG+MRGmA+QH9Bs1LMS+JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHhRvMUW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHhRvMUW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D82BC43394;
-	Fri, 15 Mar 2024 09:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710494232;
-	bh=w/EAdnTZd2O/JcwSzVr2SXDVg04KJAxDQ1+bGadkR4Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JHhRvMUW74EIlu7QM/eX98Xfd2GjiiIYlYmdse0oiWR7xhkLFzkWN8ddHltOJCwG5
-	 7fYEuavhGbmOO/HMBRhSlugYLaFknOcAb7wCSjmJbq/0N59zj57+uHOEwGiv1aRQ9b
-	 RNXs7idaDJfSzKSsZ9y87moSftNwJmMzy6Cor4d/4oFIqUP1plNJY35GFL75e/fuHW
-	 cDEw6qAc2zzY17CYN8M564sAfVu1ie73M1b0gTjqRUSac2mC9QylPbA6Jj9ot1pye/
-	 6s/VAvP6gTi19aUuP227cNTZhZoIVzlda7ANK2kylVAyXnm1iQvIg2dMrc6JwT6n87
-	 hn5RWorT49Xew==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d2505352e6so20911771fa.3;
-        Fri, 15 Mar 2024 02:17:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVnVLR8hgm0hdUWGQCPPy1C/p6gDcFbJbeJmsNjn5BX16IrjNIo/psW/83mgZ9X57Jl49vhUX+3Ke848h7N/ndkZ1zLf/eD58YKCorSbmfJ
-X-Gm-Message-State: AOJu0Yz6aT2pHs2XlKkeIy+QVPRyUk+ewYzqPROman/XiEuLh5PQ+NoK
-	GZ0NTiPhFLVxqdV0fIxB8yIQeVsP0wzmbD4iWhGXHnDO3HLUP9IeXyNWJ1J67FamdxbsQM8X8wW
-	rmE6S7QBtgqCdCnYvr/gIpgIrwzM=
-X-Google-Smtp-Source: AGHT+IHIyVHLfhfOboxgjvvwdwQMuIYw2O+imOPAoasCJ9Yc7xk9MybqlpGrsLSbnVb/d2DG4Si8FGmbE5pE6GBXOkE=
-X-Received: by 2002:a2e:8806:0:b0:2d4:3c32:814d with SMTP id
- x6-20020a2e8806000000b002d43c32814dmr3049000ljh.26.1710494230930; Fri, 15 Mar
- 2024 02:17:10 -0700 (PDT)
+	s=arc-20240116; t=1710498493; c=relaxed/simple;
+	bh=Iv0x2jG6fkJKU7Yp76qxZKkJ2e7AMpTyhB8i6Zc2IcM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YOWSWn0FYjXEfNTA6DdGjzUYPA5BUS6r2ObH/yxb0xsZni+W1dHOELklzNvlaURX9jbV4hLDMzfnob40XHMrSsLhClsGjOFaJ62U6maBGWjQ+Ts8CNmNCR/ouFT0HMuFVk2SoksFHeybfwZRB5LUyoOEKz7OSYWNUUBWsTxgR20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tx0nW4NnSz4f3khP;
+	Fri, 15 Mar 2024 18:27:59 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 647841A0EA9;
+	Fri, 15 Mar 2024 18:28:05 +0800 (CST)
+Received: from [10.67.110.48] (unknown [10.67.110.48])
+	by APP1 (Coremail) with SMTP id cCh0CgCHoguxIvRlMGMUHA--.35833S2;
+	Fri, 15 Mar 2024 18:28:05 +0800 (CST)
+Message-ID: <65f4c948-06fd-4c15-b9b8-0c8d23568e13@huaweicloud.com>
+Date: Fri, 15 Mar 2024 18:28:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315002616.422802-1-timschumi@gmx.de>
-In-Reply-To: <20240315002616.422802-1-timschumi@gmx.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 15 Mar 2024 10:16:59 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
-Message-ID: <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable names
-To: Tim Schumacher <timschumi@gmx.de>
-Cc: linux-efi@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Tim,
-
-On Fri, 15 Mar 2024 at 01:27, Tim Schumacher <timschumi@gmx.de> wrote:
->
-> Work around a quirk in a few old (2011-ish) UEFI implementations, where
-> a call to `GetNextVariableName` with a buffer size larger than 512 bytes
-> will always return EFI_INVALID_PARAMETER.
->
-> This was already done to efivarfs in f45812cc23fb ("efivarfs: Request at
-> most 512 bytes for variable names"), but the second copy of the variable
-> iteration implementation was overlooked.
->
-> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-
-Thanks for the patch. I'll take it as a fix.
-
-As an aside, you really want to avoid EFI pstore in general, and
-specifically on such old systems with quirky UEFI implementations.
-
-> ---
-> I CC'd the pstore people and linux-hardening mailing list because
-> get_maintainer.pl suggested to do so. Apologies in case this was the
-> incorrect decision, this is a very non-pstore-specific patch after all.
->
-
-If any of the linux-hardening/pstore people give you grief, just send
-them to me :-)
-
-(I am part of the linux-hardening group myself, and work closely with Kees)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
+ Matteo Rizzo <matteorizzo@google.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20240305100933.it.923-kees@kernel.org>
+ <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
+ <202403071227.D29DE5F8C4@keescook>
+From: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+In-Reply-To: <202403071227.D29DE5F8C4@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgCHoguxIvRlMGMUHA--.35833S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXryxCF1UJFW5tr4xWF15Jwb_yoW5Aw17pr
+	WrXF92ya1UJr1UAFyvvw18Wr1F9a1SgF45J3s0gw1rZrnIyw1Ivr1jy343ZF97CryDta1U
+	XrWqy3Wfuwn8AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
 
 
-> I have taken the liberty of adding a TODO for the future, the actual
-> refactor can follow at some point down the line.
-> ---
->  drivers/firmware/efi/efi-pstore.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-> index e7b9ec6f8a86..f0ceb5702d21 100644
-> --- a/drivers/firmware/efi/efi-pstore.c
-> +++ b/drivers/firmware/efi/efi-pstore.c
-> @@ -135,7 +135,15 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
->         efi_status_t status;
->
->         for (;;) {
-> -               varname_size = 1024;
-> +               /*
-> +                * A small set of old UEFI implementations reject sizes
-> +                * above a certain threshold, the lowest seen in the wild
-> +                * is 512.
-> +                *
-> +                * TODO: Commonize with the iteration implementation in
-> +                *       fs/efivarfs to keep all the quirks in one place.
-> +                */
-> +               varname_size = 512;
->
->                 /*
->                  * If this is the first read() call in the pstore enumeration,
-> --
-> 2.44.0
->
+
+On 2024/03/08 4:31, Kees Cook wrote:
+> On Wed, Mar 06, 2024 at 09:47:36AM +0800, GONG, Ruiqi wrote:
+>>
+>>
+>> On 2024/03/05 18:10, Kees Cook wrote:
+>>> Hi,
+>>>
+>>> Repeating the commit logs for patch 4 here:
+>>>
+>>>     Dedicated caches are available For fixed size allocations via
+>>>     kmem_cache_alloc(), but for dynamically sized allocations there is only
+>>>     the global kmalloc API's set of buckets available. This means it isn't
+>>>     possible to separate specific sets of dynamically sized allocations into
+>>>     a separate collection of caches.
+>>>
+>>>     This leads to a use-after-free exploitation weakness in the Linux
+>>>     kernel since many heap memory spraying/grooming attacks depend on using
+>>>     userspace-controllable dynamically sized allocations to collide with
+>>>     fixed size allocations that end up in same cache.
+>>>
+>>>     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+>>>     against these kinds of "type confusion" attacks, including for fixed
+>>>     same-size heap objects, we can create a complementary deterministic
+>>>     defense for dynamically sized allocations.
+>>>
+>>>     In order to isolate user-controllable sized allocations from system
+>>>     allocations, introduce kmem_buckets_create(), which behaves like
+>>>     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+>>>     which behaves like kmem_cache_alloc().)
+>>
+>> So can I say the vision here would be to make all the kernel interfaces
+>> that handles user space input to use separated caches? Which looks like
+>> creating a "grey zone" in the middle of kernel space (trusted) and user
+>> space (untrusted) memory. I've also thought that maybe hardening on the
+>> "border" could be more efficient and targeted than a mitigation that
+>> affects globally, e.g. CONFIG_RANDOM_KMALLOC_CACHES.
+> 
+> I think it ends up having a similar effect, yes. The more copies that
+> move to memdup_user(), the more coverage is created. The main point is to
+> just not share caches between different kinds of allocations. The most
+> abused version of this is the userspace size-controllable allocations,
+> which this targets. 
+
+I agree. Currently if we want to fulfill a more strict separation
+between user-space manageable memory and other memory in kernel space,
+technically speaking for fixed size allocations we could transform them
+into using dedicated caches (i.e. kmem_cache_create()), but for dynamic
+size allocations I don't think of any solution. With the APIs provided
+by this patch set, we've got something that works.
+
+
+> ... The existing caches (which could still be used for
+> type confusion attacks when the sizes are sufficiently similar) have a
+> good chance of being mitigated by CONFIG_RANDOM_KMALLOC_CACHES already,
+> so this proposed change is just complementary, IMO.
+
+Maybe in the future we could require that all user-kernel interfaces
+that make use of SLAB caches should use either kmem_cache_create() or
+kmem_buckets_create()? ;)
+
+> 
+> -Kees
+> 
+
