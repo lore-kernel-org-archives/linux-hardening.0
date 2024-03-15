@@ -1,30 +1,38 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C31118639;
-	Fri, 15 Mar 2024 10:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967164EB22;
+	Fri, 15 Mar 2024 19:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710498493; cv=none; b=roC6U6HQuMc3oOeJpuro438jd5PJ+PrQYmfjb9esMLF9Q9Y9TGJY0T9Fke5zHuDx01fDlAuHSD2KeBfnbtJPQrBUF5g0WLxkJ+cHZAGN3GOC6LmUuPfai8GyHvOxLvhynUs7glGFvLsx3a/qlcDZr89jEEVWjZfkP5iGdMiW+PU=
+	t=1710529354; cv=none; b=oig1EdKIshKboCodohgy1DwaWYzfzUBkvz2tUKyY1LTulNfVfX/qbnYeo8g0+/0zlw6wvrtU/9yc5OAVLQW24gUHeSCWkdYxs3WuTUJSMnsjSQlIjG06s/wf/qKJG+j7el9t4c6CAGiFuITdwVYGZjSOIAD0Zrp6RTb3G/P2Yjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710498493; c=relaxed/simple;
-	bh=Iv0x2jG6fkJKU7Yp76qxZKkJ2e7AMpTyhB8i6Zc2IcM=;
+	s=arc-20240116; t=1710529354; c=relaxed/simple;
+	bh=14+WauOWXoOMY8/Umh0tPKXDfWDItRSRHJsgpXhl9fw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YOWSWn0FYjXEfNTA6DdGjzUYPA5BUS6r2ObH/yxb0xsZni+W1dHOELklzNvlaURX9jbV4hLDMzfnob40XHMrSsLhClsGjOFaJ62U6maBGWjQ+Ts8CNmNCR/ouFT0HMuFVk2SoksFHeybfwZRB5LUyoOEKz7OSYWNUUBWsTxgR20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tx0nW4NnSz4f3khP;
-	Fri, 15 Mar 2024 18:27:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 647841A0EA9;
-	Fri, 15 Mar 2024 18:28:05 +0800 (CST)
-Received: from [10.67.110.48] (unknown [10.67.110.48])
-	by APP1 (Coremail) with SMTP id cCh0CgCHoguxIvRlMGMUHA--.35833S2;
-	Fri, 15 Mar 2024 18:28:05 +0800 (CST)
-Message-ID: <65f4c948-06fd-4c15-b9b8-0c8d23568e13@huaweicloud.com>
-Date: Fri, 15 Mar 2024 18:28:01 +0800
+	 In-Reply-To:Content-Type; b=iHbIL0liGppoG7LB3mMwjLlK9zSbi4ehgh8vb58uceN1Z+qTR3GEYzv7BJPnt7Ybr6zRB1HWjWOEQ8vX1dRmaBHA4Pxr5B5ggeLd1hJ4Dnh/c7lbXb0xa/Wyi2yuoqi4nCLBh/3RlVS148GfsbGoOF+e9Ih5fZrdh6MtcoUqRqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b=aQeMNv04; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b="aQeMNv04"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1710529333; x=1711134133; i=timschumi@gmx.de;
+	bh=14+WauOWXoOMY8/Umh0tPKXDfWDItRSRHJsgpXhl9fw=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=aQeMNv041j9k2ediu598ICp/JPbI8xMURvTz0UYiRigW3hftoKTWigyifw2OB9jh
+	 TKiaQdk9qheYCtxxYjv18wTKQILYwBNojjKfMg/211Spi90Pxy+z+UjjUhW0FK/Oc
+	 /8NfCKLET4L4a0f7cARWhMpMu7toBkbA2adOM/8AzAUv1vw+ujFSpeg0IQX0kndKb
+	 LWJon/5HuiBwKU4zv+17Q4oG0R44v7lLY6Q9BGojoFmRmZFEnPqsAtJxXj2nd79RC
+	 jBI9ckqeEf36lx3AYAVKh2nlWm1SjdqDnDf6JdJfwVxiGPyL+AhQ8Cwal+NCU8hP6
+	 4G4YNWwHJiRO2Qi7vw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.222.0.4] ([93.218.98.241]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MY68T-1rHraL3y6n-00YTaR; Fri, 15
+ Mar 2024 20:02:13 +0100
+Message-ID: <43bd1a71-8b4a-4edc-827e-6845e173e82d@gmx.de>
+Date: Fri, 15 Mar 2024 20:02:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -32,107 +40,73 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Subject: Re: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable
+ names
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
- Matteo Rizzo <matteorizzo@google.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20240305100933.it.923-kees@kernel.org>
- <b5f9f094-51d3-445a-b19b-99fc1cd7cac1@huaweicloud.com>
- <202403071227.D29DE5F8C4@keescook>
-From: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-In-Reply-To: <202403071227.D29DE5F8C4@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCHoguxIvRlMGMUHA--.35833S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXryxCF1UJFW5tr4xWF15Jwb_yoW5Aw17pr
-	WrXF92ya1UJr1UAFyvvw18Wr1F9a1SgF45J3s0gw1rZrnIyw1Ivr1jy343ZF97CryDta1U
-	XrWqy3Wfuwn8AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
-X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
+ <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+References: <20240315002616.422802-1-timschumi@gmx.de>
+ <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
+From: Tim Schumacher <timschumi@gmx.de>
+In-Reply-To: <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:UfFVw9gMwa9lM1hwYPwo6YIZsnDR5Bo2Tsz8hKXkZmfFZYzPE3F
+ K2CKh9u44jsPvmaVaz+0aftt9neX7oAB9nL9IXzkKnNfc8BAWevpMmtKWzV4HAuUmnC+IOn
+ 541AhSIZ1DQ/Yz/GjBvKdyBuBsMIBRucsgW/u/pU3a+DSrfZ3qkSQklVFvrZRfDncpAn7d1
+ p1NrzzzuCzlIeHd+Dg2MQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wjgQz1qpYEQ=;zD0+u+qL942l3xaCQpXhuG3yRIg
+ mfwp4KczKu369hZHXY8zYdWjeAmDqm0uwbSnYCi+rrMbEuK6Rn+EqDSHQ4oQcWIDtnCCM0eb5
+ wJC0TktYfgElAe1uaFFvhwbAuI/r3g/Grj/BFDPWSyyIvO6udHZHP7KkKPCRP9xCi14QqSN92
+ FNFCrcjHSdQRaq8o5cGAT3NNSPJvhHwZG4nu1SFJAaRi8MpLQd9TTdB3vsxbDKGwoWnP9xg29
+ BHokxoiEh3tn5ofpUAuyWGTU+tlJ0AAt59Hjc4isWGV7phFyZ0gOv0oJ57ZAlDCZJH2mPGBRr
+ Qp8H18UfgxJi95XfcqX/KoUWji+JOV7/nDUFwjloQ20rXImSPFh2kP+Lu8CTEAX+TUl607Dfs
+ TB5IxioH58yLhOk90r/ZLD26cvIoy2TZJHAL1rey7uKeR3MJz4L2zxBhr4A4oP724gWj+EI9m
+ OYYh7dfDDXu0fOJt1NwKgkl32kG8ENLegfcmLgmLFDqn/04KeB1t4gWYfRxactLXBFXXiRZF1
+ xtoeDOhbB/zvHodhZ92NeAcBVOYwP6h392aprtTFduK5JbtHTn4Aur8r1veDx4lma0PoOKsTf
+ Ue1ILVVwkO4DpvMXsV1lLl5cIitlCVcOZUPxgzqK+dQbciqTHlMxZxQbD+apwN/qmKAli+N4L
+ +U1ABoG72TU/42rUIToDGrn1l2W3fWwTZMmQhhWNxqBxDllG983g4HF7arANY2tywpfcvJ9hH
+ 38ecIpGLVFmrFEdbpZGWi5U4N5pKg6iB5QLVusbpdsYJFYOU9aOe7QTZDill0nzID7LXbIgLv
+ 2GR3HKFdykvDiFREir/QzHv2jldsnLU3gtRl96IdRLQSQ=
 
-
-
-On 2024/03/08 4:31, Kees Cook wrote:
-> On Wed, Mar 06, 2024 at 09:47:36AM +0800, GONG, Ruiqi wrote:
+On 15.03.24 10:16, Ard Biesheuvel wrote:
+> Hi Tim,
+>
+> On Fri, 15 Mar 2024 at 01:27, Tim Schumacher <timschumi@gmx.de> wrote:
 >>
+>> Work around a quirk in a few old (2011-ish) UEFI implementations, where
+>> a call to `GetNextVariableName` with a buffer size larger than 512 byte=
+s
+>> will always return EFI_INVALID_PARAMETER.
 >>
->> On 2024/03/05 18:10, Kees Cook wrote:
->>> Hi,
->>>
->>> Repeating the commit logs for patch 4 here:
->>>
->>>     Dedicated caches are available For fixed size allocations via
->>>     kmem_cache_alloc(), but for dynamically sized allocations there is only
->>>     the global kmalloc API's set of buckets available. This means it isn't
->>>     possible to separate specific sets of dynamically sized allocations into
->>>     a separate collection of caches.
->>>
->>>     This leads to a use-after-free exploitation weakness in the Linux
->>>     kernel since many heap memory spraying/grooming attacks depend on using
->>>     userspace-controllable dynamically sized allocations to collide with
->>>     fixed size allocations that end up in same cache.
->>>
->>>     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
->>>     against these kinds of "type confusion" attacks, including for fixed
->>>     same-size heap objects, we can create a complementary deterministic
->>>     defense for dynamically sized allocations.
->>>
->>>     In order to isolate user-controllable sized allocations from system
->>>     allocations, introduce kmem_buckets_create(), which behaves like
->>>     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
->>>     which behaves like kmem_cache_alloc().)
+>> This was already done to efivarfs in f45812cc23fb ("efivarfs: Request a=
+t
+>> most 512 bytes for variable names"), but the second copy of the variabl=
+e
+>> iteration implementation was overlooked.
 >>
->> So can I say the vision here would be to make all the kernel interfaces
->> that handles user space input to use separated caches? Which looks like
->> creating a "grey zone" in the middle of kernel space (trusted) and user
->> space (untrusted) memory. I've also thought that maybe hardening on the
->> "border" could be more efficient and targeted than a mitigation that
->> affects globally, e.g. CONFIG_RANDOM_KMALLOC_CACHES.
-> 
-> I think it ends up having a similar effect, yes. The more copies that
-> move to memdup_user(), the more coverage is created. The main point is to
-> just not share caches between different kinds of allocations. The most
-> abused version of this is the userspace size-controllable allocations,
-> which this targets. 
+>> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+>
+> Thanks for the patch. I'll take it as a fix.
+>
+> As an aside, you really want to avoid EFI pstore in general, and
+> specifically on such old systems with quirky UEFI implementations.
+>
+I found this by chance while looking for appearances of the magic value of
+1024, and decided to split it out because this would have been the only ch=
+ange
+that modifies behavior.
 
-I agree. Currently if we want to fulfill a more strict separation
-between user-space manageable memory and other memory in kernel space,
-technically speaking for fixed size allocations we could transform them
-into using dedicated caches (i.e. kmem_cache_create()), but for dynamic
-size allocations I don't think of any solution. With the APIs provided
-by this patch set, we've got something that works.
-
-
-> ... The existing caches (which could still be used for
-> type confusion attacks when the sizes are sufficiently similar) have a
-> good chance of being mitigated by CONFIG_RANDOM_KMALLOC_CACHES already,
-> so this proposed change is just complementary, IMO.
-
-Maybe in the future we could require that all user-kernel interfaces
-that make use of SLAB caches should use either kmem_cache_create() or
-kmem_buckets_create()? ;)
-
-> 
-> -Kees
-> 
+I didn't intend to actually use it after fixing it up, although I did make=
+ sure
+that it now does more than it did previously. If we can save someone a con=
+fused
+"Why is this done differently here?" (and have a reason to boil down the c=
+ode to
+a single implementation in the future), then that is probably good enough =
+on its
+own.
 
