@@ -1,131 +1,115 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D5676C6D
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Mar 2024 22:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52E7635;
+	Fri, 15 Mar 2024 00:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710455383; cv=none; b=HDqeTBVOEW/x4so81HMzPNABsyqZH75qtbQE6gRPtOCs/OW1I+siyaTyb89OVboiAXKfP5uVqPhrMPI4HzXCc8D9G7ilz2NbMqjPErj3h03WVPYZbLzHXXVK/evcWVckyvYrDTcSt5x0R0oh20wTG6A4X+IT7mPca83sOr+NBTs=
+	t=1710462449; cv=none; b=JOoEx0tFWlb99FyjT9L9T8NcTEhwnsI9uN1TY759E8DigR2ytUYdutQ+lqxGbGjWb4QhIsTw8poSqutfgF+2YhMwJeTiCd5juzP8q/F4LP/SWDDxiYe/CMsxjE8n/6FweE3n2oThO6/ENrnMi2eFcn9n0tVRrCcM5h/m7KpdEsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710455383; c=relaxed/simple;
-	bh=0y7oXfa2G7iiYQcQPwa5O+JgaheSC4GaExlqqlUSBEg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CM6P3wbA/SUo5x8x7GhNxjPSamuGnFfxSXEcoOvbZ4meU/TkuI/f4kyBMCuFcW37+Pa1l3S1QyO9GN/SIvs+wsohvLwwMLPLlpNv8MXI/nbbGycYxCNKQinyySIebM89eTKMbVrwm2iCsY4HPVUywa4G35zOzC17cgUsBaoJH/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jh4WruTJ; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1710462449; c=relaxed/simple;
+	bh=f8E8aUsLYhx+wLVyVfWO0R+ZhEJFEDlP2NW5WWjxZjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZwjF/KopP4tXVk+GC2oPIr5gaGV6vfgSSDc5mfK7KJ3X8wnKDW2fwO1aqFTQq4K34fjMLwgjsMr+PkzKf7bIgR7Fpwb/wKTHtflG7FhUWEqgXorerh3lbaZqi9s31dtlc3FRZiI9t+EDhYrobM5R4RyOAbbdBZmNTSsnvGGd2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b=N8MKBEZv; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jh4WruTJ"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcd94cc48a1so2089803276.3
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Mar 2024 15:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710455380; x=1711060180; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Bw7VM9ED7eVgs2yIUEIDaex+hm93Iedl3Ou3zhuMvJ0=;
-        b=jh4WruTJe/uxBEeLsVinELNd+Ty7vyVKRcPDN4JNhwwVfz+ylcOvDKWAvK0owwcTFE
-         lyuTuHx6m/qx6kj22mgQPOLyI6ZwGfzF8kWtmmH9ZfBB1CpWKcdFFFCfXlCbqYIh+ydC
-         7aYCkg6nAzU5TmhTzEfH+fGtt+aX7XR8vlv3v9FyRuXJDtoi7k86wPwNkOmZwMTMwlqd
-         Uj9fHYbxlH4BtTgTOwHK+1ilQlcSgBcG2pwDxXriuwRNweES2FqpC/tk+KxQ8ZjJdKMm
-         w5M8fZaDpMchuBYiQ0x58W6oh/ushO4C2oPpMh6q/L2hpTZrUwSklQaH3bZ8Bpy4Kkdp
-         vLpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710455380; x=1711060180;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Bw7VM9ED7eVgs2yIUEIDaex+hm93Iedl3Ou3zhuMvJ0=;
-        b=s2oPRq95AaMHXiEN0FTT0h+iaKxsrWlpscfaQ2gG/LAg8Oea4P26+KPcAWYk8Sej3o
-         h/NLH70BTwoWSKVaqY2/oYQ3rfUhZ62gYMdFS5S0WGw9TJHvKij9OLO2KFRtXaTo9u0q
-         YGBpMUOrjMmBE8ei1pIcvf3qRotFXCWyqgQ5a0MW+2kaeHcWhk8m/eb2yXQtCEhiym+Z
-         XcErF0DpUOfH4WJkrvIcIVILkrIYYB/x/9iIeUHJepSbBBC+5zQmo8MIkpkyR63Mf33b
-         I163lWGdzJqP2i6e+lx9hTVnJgbJ6crNzHONLV/B3llRv8HSA/dEc8wWCxkRvAdzF3Bm
-         wnaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaFER2m+CzTIRCnsAx9XNOMUFt1hrwNqZi0Yw9RmpQxAtw2xncmL8rbRGCPu4NQVxc77Llf9YGmKiIzhUHuRU2FSfkXbjDoZw6m+kbbkpR
-X-Gm-Message-State: AOJu0YyHAD0cl/6wdBwSd1fQG9c+AaAtwl0NcxC7PxcMWVD1p7Dym9uL
-	Xj9ELpZYB/K2DpurLRzVqFGqwkbQVCGUaJYwnhREX6w97oRlqgNtnwpnuo/+AT+PcUH0FRANdD0
-	BfxdZuEt4xivG/AQpsYptuA==
-X-Google-Smtp-Source: AGHT+IFMyiMRVKv43irpw3uNDU30O1gPYqgcBLyY5YZq+gtOE4zxefR0vaZAt5AtUEE0rcq9mTQo1J4kYtP8mw3sAA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:72e:b0:dc6:e8a7:fdba with
- SMTP id l14-20020a056902072e00b00dc6e8a7fdbamr895492ybt.4.1710455380548; Thu,
- 14 Mar 2024 15:29:40 -0700 (PDT)
-Date: Thu, 14 Mar 2024 22:29:37 +0000
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b="N8MKBEZv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1710462429; x=1711067229; i=timschumi@gmx.de;
+	bh=B52cazKgtP+V6ttkF6KV1d6LbmJl83GGXxXlPh901dI=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=N8MKBEZvdC4W5nNstoYGkCyuOmxOJdZgM5b1WznJH0flqyCuaDj3ZTg0+o1eLSgf
+	 sLlphXSEcjXv49bqP8urm4QaI8t0aYpeEZMDXC7muIQeYIfbPKBeCV0DOswQpDYuN
+	 QmQxb2hdle4n00W4zvDaazJBusiD3j7Vs+XPB3tjz+0ht27tL7KK8J5+hPApqBWk0
+	 XhgFs8tHLoJn2gteeK5U1/ygc7gwqTuuf8ynALBu0kXcr9DtpmDjod+X0yeTT2zIM
+	 wX50ADp1RokSbAYVOggN1E3BZBCOG2SNR76/AVQUNad9x1PHREqI3iC8phPFaFy+p
+	 yYEMkbC4bC0ig7Hh8g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([93.218.98.241]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MpDJd-1r0t5W0CdT-00qhX4; Fri, 15 Mar 2024 01:27:09 +0100
+From: Tim Schumacher <timschumi@gmx.de>
+To: linux-efi@vger.kernel.org
+Cc: Tim Schumacher <timschumi@gmx.de>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable names
+Date: Fri, 15 Mar 2024 01:25:58 +0100
+Message-ID: <20240315002616.422802-1-timschumi@gmx.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFB682UC/x3NMQ6DMAxA0asgz7UESQbUq1QdEse0HkioXSEQ4
- u5EjG/5/wBjFTZ4dgcor2JSS8Pw6IC+sXwYJTeD613o/RDQ/lpo2TGrrKyGVgl/VGekOWNOSOj GMPmYYkxphNZZlCfZ7sfrfZ4XL31WkXMAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710455379; l=2127;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=0y7oXfa2G7iiYQcQPwa5O+JgaheSC4GaExlqqlUSBEg=; b=ZQp+RyhuScBoaTsu2jjwQLQsgukHp/8xtup+g9tOpnSLLlPtyydTcv55z32T4I3acEXFRlQvs
- 1+0UFseQiZ7Cp3BuEy9U8rQC0rlBKfIM4BQvhY1+A20BFSYYI6A1FYx
-X-Mailer: b4 0.12.3
-Message-ID: <20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com>
-Subject: [PATCH] soc: qcom: cmd-db: replace deprecated strncpy with memcpy
-From: Justin Stitt <justinstitt@google.com>
-To: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:BdGRQjVfhDgGvU6FYHwpw57XdbVkpjF/zzzddOP3cnpwcRXYO0q
+ clEaraNK1RntHRqD8lNxHJlWXyNEu9tTt0fDol+Mk/9Jgi5S9F/iUVVSHnvUhVz53n0dWJg
+ l3XW6+Y08xisQMHGbEMPmGD5j6ilbS9VNaZy4Y2VHEYujorXsdA/bmgXNDZOsobewuBsDh3
+ k3mdefY7OxBLkyE6MwaAA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Oj7maLOLCHk=;IYDuQlWqLMVRi5Wi3A8fBgRJ9Ai
+ /cYPPkmA3/S74JFkCcTOo1e0cjcshIXXE/2Z4Jd8oTu3vwqXdOw01rExio41yNuZwN98qucvJ
+ tnr1Zv7Ghq4gOO6J9xIck7vk6VEcydg7ufQVJfhEx8NrmuUqBU4Qj4y+9ec8vVAJ+qbmKChY6
+ K7BFdRPwo7nb3KAcEbulP6Aq23xh6rnzGzSaMPdI6l4Iv7KvHRkrrMTlQD+bk/76j8rBFRIg4
+ AZLPt/eeoWA8jSOF0uZQe3l/a5euMm4ncoHkBnZ+xPLwFYsoeSVZ6SIxERrqOIhP+v+qcKYGs
+ GONuSd89AXvjy16ZDC6KA0WL7Kgx6mOty5YqUgOrmZx3QnW20kWdsNwkX8NY6JiPKqtswHh6e
+ OueC9t8Scdox8g/AQ0SNgnGrDx/pntwcKiJyO4z+WBj1zY8CNGyz1d8K9Xdr6ojupvNeqYrDZ
+ G+y7u1QfD1WKaKeKp4VWNLnYGaw7LT9VWGo4AafO58d0QOLcvCni0g3dmMfOoTQaAhfrC893+
+ f9uWwYl6Ufv0c69EgH6Sm+IbT7/v13vzt/QRPRHMKHQFgHi9vdWPkwkSbPlOs2zhZA/EzXk91
+ EHkXxPf0gQ79KlPIDL3FFsi/KGqefibZSneqN2mNwI8GNl/22OUkdGCv7mqteLCokSFtPZaRL
+ K/mLHZ05BpAGvKI8KUAAs20UswcG7NrSPi1pA0/XtzofYrILFXezZ1GlEdkmRj7LCZBw9Ue6/
+ zwEiJsaJHVfKfmjYn/KCsUMfN/pQUjq12Yy6Olc6N03xxeT3dIsrEpnuKplsiiJhGUTYgCXbB
+ wAoSgA4IeDkadqh1nzWli6rveHHXDnGPuAUocLSCXJvVk=
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Work around a quirk in a few old (2011-ish) UEFI implementations, where
+a call to `GetNextVariableName` with a buffer size larger than 512 bytes
+will always return EFI_INVALID_PARAMETER.
 
-@query is already marked as __nonstring and doesn't need to be
-NUL-terminated. Due to this, we don't need to use a string API here
-(especially a deprecated one). Let's have our stack allocation also
-zero-initialize so that we can just perform a standard memcpy. Since the
-code now speaks for itself we can drop the comment. A memcpy on a
-__nonstring buffer explains everything that this comment talks about.
+This was already done to efivarfs in f45812cc23fb ("efivarfs: Request at
+most 512 bytes for variable names"), but the second copy of the variable
+iteration implementation was overlooked.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+=2D--
+I CC'd the pstore people and linux-hardening mailing list because
+get_maintainer.pl suggested to do so. Apologies in case this was the
+incorrect decision, this is a very non-pstore-specific patch after all.
 
-Found with: $ rg "strncpy\("
----
- drivers/soc/qcom/cmd-db.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+I have taken the liberty of adding a TODO for the future, the actual
+refactor can follow at some point down the line.
+=2D--
+ drivers/firmware/efi/efi-pstore.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index a5fd68411bed..512556366a3e 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -141,18 +141,13 @@ static int cmd_db_get_header(const char *id, const struct entry_header **eh,
- 	const struct rsc_hdr *rsc_hdr;
- 	const struct entry_header *ent;
- 	int ret, i, j;
--	u8 query[sizeof(ent->id)] __nonstring;
-+	u8 query[sizeof(ent->id)] __nonstring = { 0 };
- 
- 	ret = cmd_db_ready();
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Pad out query string to same length as in DB. NOTE: the output
--	 * query string is not necessarily '\0' terminated if it bumps up
--	 * against the max size. That's OK and expected.
--	 */
--	strncpy(query, id, sizeof(query));
-+	memcpy(query, id, sizeof(query));
- 
- 	for (i = 0; i < MAX_SLV_ID; i++) {
- 		rsc_hdr = &cmd_db_header->header[i];
+diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-=
+pstore.c
+index e7b9ec6f8a86..f0ceb5702d21 100644
+=2D-- a/drivers/firmware/efi/efi-pstore.c
++++ b/drivers/firmware/efi/efi-pstore.c
+@@ -135,7 +135,15 @@ static ssize_t efi_pstore_read(struct pstore_record *=
+record)
+ 	efi_status_t status;
 
----
-base-commit: fe46a7dd189e25604716c03576d05ac8a5209743
-change-id: 20240314-strncpy-drivers-soc-qcom-cmd-db-c-284f3abaabb8
+ 	for (;;) {
+-		varname_size =3D 1024;
++		/*
++		 * A small set of old UEFI implementations reject sizes
++		 * above a certain threshold, the lowest seen in the wild
++		 * is 512.
++		 *
++		 * TODO: Commonize with the iteration implementation in
++		 *       fs/efivarfs to keep all the quirks in one place.
++		 */
++		varname_size =3D 512;
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+ 		/*
+ 		 * If this is the first read() call in the pstore enumeration,
+=2D-
+2.44.0
 
