@@ -1,115 +1,80 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52E7635;
-	Fri, 15 Mar 2024 00:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAB74C91;
+	Fri, 15 Mar 2024 01:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710462449; cv=none; b=JOoEx0tFWlb99FyjT9L9T8NcTEhwnsI9uN1TY759E8DigR2ytUYdutQ+lqxGbGjWb4QhIsTw8poSqutfgF+2YhMwJeTiCd5juzP8q/F4LP/SWDDxiYe/CMsxjE8n/6FweE3n2oThO6/ENrnMi2eFcn9n0tVRrCcM5h/m7KpdEsI=
+	t=1710467651; cv=none; b=ALkU/MjLbtRA68IEcnRjlacIFqojE3EcuItLH818gT5f4p9JH7rRy6Asv+d5tCRx1536/90AzKxfxV+8pTAY6qBjgCNPHTrVR0FlwCyp5wcsZrvTTqsIRsKrFnLkP9xeObjGuIw9jnUKOxgsKVkUQt23kBgKV+olIY1f3bw7uZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710462449; c=relaxed/simple;
-	bh=f8E8aUsLYhx+wLVyVfWO0R+ZhEJFEDlP2NW5WWjxZjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZwjF/KopP4tXVk+GC2oPIr5gaGV6vfgSSDc5mfK7KJ3X8wnKDW2fwO1aqFTQq4K34fjMLwgjsMr+PkzKf7bIgR7Fpwb/wKTHtflG7FhUWEqgXorerh3lbaZqi9s31dtlc3FRZiI9t+EDhYrobM5R4RyOAbbdBZmNTSsnvGGd2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b=N8MKBEZv; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1710467651; c=relaxed/simple;
+	bh=ruOgGDUL1x1bYYko096jvBmMwxvl0FULlZFFHrqtuuY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uEk0FDESBI+36avHHUAhNb0xtOHpsCArSGy0PPxFgMwAYe4byhzo5zm87EWHWCaHxc+IXgiKKVNT6k5X/fS3f9HyFcD1XWblC5qhGl6VbHvLZIHOEy691zClB33mLfCmDCZA0qZhCxbnpm2Y+sV4gsQtLkYgLDbxkfuTZ9/10H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=U6Bi/ROI; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b="N8MKBEZv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1710462429; x=1711067229; i=timschumi@gmx.de;
-	bh=B52cazKgtP+V6ttkF6KV1d6LbmJl83GGXxXlPh901dI=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=N8MKBEZvdC4W5nNstoYGkCyuOmxOJdZgM5b1WznJH0flqyCuaDj3ZTg0+o1eLSgf
-	 sLlphXSEcjXv49bqP8urm4QaI8t0aYpeEZMDXC7muIQeYIfbPKBeCV0DOswQpDYuN
-	 QmQxb2hdle4n00W4zvDaazJBusiD3j7Vs+XPB3tjz+0ht27tL7KK8J5+hPApqBWk0
-	 XhgFs8tHLoJn2gteeK5U1/ygc7gwqTuuf8ynALBu0kXcr9DtpmDjod+X0yeTT2zIM
-	 wX50ADp1RokSbAYVOggN1E3BZBCOG2SNR76/AVQUNad9x1PHREqI3iC8phPFaFy+p
-	 yYEMkbC4bC0ig7Hh8g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([93.218.98.241]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MpDJd-1r0t5W0CdT-00qhX4; Fri, 15 Mar 2024 01:27:09 +0100
-From: Tim Schumacher <timschumi@gmx.de>
-To: linux-efi@vger.kernel.org
-Cc: Tim Schumacher <timschumi@gmx.de>,
-	Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable names
-Date: Fri, 15 Mar 2024 01:25:58 +0100
-Message-ID: <20240315002616.422802-1-timschumi@gmx.de>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="U6Bi/ROI"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1710467641; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=px9N44gO4i927LMckVeMvo+Wb1vg+vgE8QfX2H4P0og=;
+	b=U6Bi/ROICx1kenEr4vIPjsBsSGnb+7jd6z6ayNZxCtX0+xPB7CuQ85zkD9bhfcVQZkR38gZULJtKRbu9iJFQjZ3RGjvC/KGas2urcd5TMtFb5fWiNtB7TjUfD9a6ZugOwpvUCNbP3f2dYaomMvVzzyUfNmnmPPMM6JotP/S46y8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W2UCwML_1710467629;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W2UCwML_1710467629)
+          by smtp.aliyun-inc.com;
+          Fri, 15 Mar 2024 09:54:00 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: keescook@chromium.org
+Cc: elver@google.com,
+	andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com,
+	akpm@linux-foundation.org,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] ubsan: Remove unused function
+Date: Fri, 15 Mar 2024 09:53:47 +0800
+Message-Id: <20240315015347.2259-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BdGRQjVfhDgGvU6FYHwpw57XdbVkpjF/zzzddOP3cnpwcRXYO0q
- clEaraNK1RntHRqD8lNxHJlWXyNEu9tTt0fDol+Mk/9Jgi5S9F/iUVVSHnvUhVz53n0dWJg
- l3XW6+Y08xisQMHGbEMPmGD5j6ilbS9VNaZy4Y2VHEYujorXsdA/bmgXNDZOsobewuBsDh3
- k3mdefY7OxBLkyE6MwaAA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Oj7maLOLCHk=;IYDuQlWqLMVRi5Wi3A8fBgRJ9Ai
- /cYPPkmA3/S74JFkCcTOo1e0cjcshIXXE/2Z4Jd8oTu3vwqXdOw01rExio41yNuZwN98qucvJ
- tnr1Zv7Ghq4gOO6J9xIck7vk6VEcydg7ufQVJfhEx8NrmuUqBU4Qj4y+9ec8vVAJ+qbmKChY6
- K7BFdRPwo7nb3KAcEbulP6Aq23xh6rnzGzSaMPdI6l4Iv7KvHRkrrMTlQD+bk/76j8rBFRIg4
- AZLPt/eeoWA8jSOF0uZQe3l/a5euMm4ncoHkBnZ+xPLwFYsoeSVZ6SIxERrqOIhP+v+qcKYGs
- GONuSd89AXvjy16ZDC6KA0WL7Kgx6mOty5YqUgOrmZx3QnW20kWdsNwkX8NY6JiPKqtswHh6e
- OueC9t8Scdox8g/AQ0SNgnGrDx/pntwcKiJyO4z+WBj1zY8CNGyz1d8K9Xdr6ojupvNeqYrDZ
- G+y7u1QfD1WKaKeKp4VWNLnYGaw7LT9VWGo4AafO58d0QOLcvCni0g3dmMfOoTQaAhfrC893+
- f9uWwYl6Ufv0c69EgH6Sm+IbT7/v13vzt/QRPRHMKHQFgHi9vdWPkwkSbPlOs2zhZA/EzXk91
- EHkXxPf0gQ79KlPIDL3FFsi/KGqefibZSneqN2mNwI8GNl/22OUkdGCv7mqteLCokSFtPZaRL
- K/mLHZ05BpAGvKI8KUAAs20UswcG7NrSPi1pA0/XtzofYrILFXezZ1GlEdkmRj7LCZBw9Ue6/
- zwEiJsaJHVfKfmjYn/KCsUMfN/pQUjq12Yy6Olc6N03xxeT3dIsrEpnuKplsiiJhGUTYgCXbB
- wAoSgA4IeDkadqh1nzWli6rveHHXDnGPuAUocLSCXJvVk=
+Content-Transfer-Encoding: 8bit
 
-Work around a quirk in a few old (2011-ish) UEFI implementations, where
-a call to `GetNextVariableName` with a buffer size larger than 512 bytes
-will always return EFI_INVALID_PARAMETER.
+The function are defined in the test_ubsan.c file, but not called
+elsewhere, so delete the unused function.
 
-This was already done to efivarfs in f45812cc23fb ("efivarfs: Request at
-most 512 bytes for variable names"), but the second copy of the variable
-iteration implementation was overlooked.
+lib/test_ubsan.c:137:28: warning: unused variable 'skip_ubsan_array'.
 
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-=2D--
-I CC'd the pstore people and linux-hardening mailing list because
-get_maintainer.pl suggested to do so. Apologies in case this was the
-incorrect decision, this is a very non-pstore-specific patch after all.
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8541
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ lib/test_ubsan.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-I have taken the liberty of adding a TODO for the future, the actual
-refactor can follow at some point down the line.
-=2D--
- drivers/firmware/efi/efi-pstore.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-=
-pstore.c
-index e7b9ec6f8a86..f0ceb5702d21 100644
-=2D-- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -135,7 +135,15 @@ static ssize_t efi_pstore_read(struct pstore_record *=
-record)
- 	efi_status_t status;
-
- 	for (;;) {
--		varname_size =3D 1024;
-+		/*
-+		 * A small set of old UEFI implementations reject sizes
-+		 * above a certain threshold, the lowest seen in the wild
-+		 * is 512.
-+		 *
-+		 * TODO: Commonize with the iteration implementation in
-+		 *       fs/efivarfs to keep all the quirks in one place.
-+		 */
-+		varname_size =3D 512;
-
- 		/*
- 		 * If this is the first read() call in the pstore enumeration,
-=2D-
-2.44.0
+diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
+index 276c12140ee2..be335a93224f 100644
+--- a/lib/test_ubsan.c
++++ b/lib/test_ubsan.c
+@@ -133,11 +133,6 @@ static const test_ubsan_fp test_ubsan_array[] = {
+ 	test_ubsan_misaligned_access,
+ };
+ 
+-/* Excluded because they Oops the module. */
+-static const test_ubsan_fp skip_ubsan_array[] = {
+-	test_ubsan_divrem_overflow,
+-};
+-
+ static int __init test_ubsan_init(void)
+ {
+ 	unsigned int i;
+-- 
+2.20.1.7.g153144c
 
