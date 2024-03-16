@@ -1,379 +1,200 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4EC23D0
-	for <linux-hardening@vger.kernel.org>; Sat, 16 Mar 2024 02:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8C11FBB
+	for <linux-hardening@vger.kernel.org>; Sat, 16 Mar 2024 03:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710557576; cv=none; b=qaZ+fca7Q9+4GCcGmK0arIOGwSmplyhDN/rXjXk4d/szSnV/LTL01usl3v/I0BKg/018dCTRQhkvK93Emm39w3L/T8S8Auqb+W3Qz0ZuJT/EsjopRB6bPd34YoQUl7ZRsMKZ4+l6Rbhi3QJ8gLEguAECiW11Ociu/a4BKZtzPTo=
+	t=1710558863; cv=none; b=U0Zp8FPuWQ59SNFWMwzDNJyMHDoL/HfDU3qrwMGE72F5RtAj9dMjgvQHtCYGq9NY9ej/1ZeIbvI0OBxMnWKJO2P6x0ooK/SVeaD55xl4w4l3/l4gOErZdObRGiVzECEibBPatx76PCXOdTsghJaIOzs+z3+VKYudpUt5/EFlAuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710557576; c=relaxed/simple;
-	bh=ONoYL4XYOrO/6V38FWRzOpd8quw8P9OYCw818URL5SI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g03Q3KkahoP8M51VG/bK5wOdz1Bfef8AthiUcL/97jQQzBsi9e8rPqLOaBja82KLzrslM3NqlF50nwfY5rgUGCl5JOOBJGhQzM74p490AoRC1NDMYtvTfekP204qEBZbUY+xVomO+AVK8YbLC3k1/HIGmcbA8Ekbx1QTD72kZXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=OS38TBQX; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1710558863; c=relaxed/simple;
+	bh=6eLdmh8za8M9SlO1/FdsHENEjex9kkHmDzLpfZLWkEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qUB4YHPCT6vi+9LqmJ057BsqELVkGB4vIA4oMc+Krr6g5z7GBDJYA1Y6fnbK+r8fu9lnrX5Stbq5jRsoYhhikRdHdYKSeK59qHGWyXGPdlUHBD5+9J2rTzIbwuRG7x/gckJoLKZcME+Zj43EruYvsrgStpQ+18B+SgLNLlznpaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sempervictus.com; spf=pass smtp.mailfrom=sempervictus.com; dkim=pass (2048-bit key) header.d=sempervictus-com.20230601.gappssmtp.com header.i=@sempervictus-com.20230601.gappssmtp.com header.b=xjP0N31B; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sempervictus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sempervictus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="OS38TBQX"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso2115030a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Mar 2024 19:52:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sempervictus-com.20230601.gappssmtp.com header.i=@sempervictus-com.20230601.gappssmtp.com header.b="xjP0N31B"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso2681370276.3
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Mar 2024 20:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710557573; x=1711162373; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bBoX08MQ+GnGsn3Ys1XDLWs0vSpU6QZ104y6JQ1iJRA=;
-        b=OS38TBQXdJvmCPcBqtVgseCBD92KPMKjZB5CNB1A04ssBRuxFtzhRPn1GciuiaZp/t
-         ZH5bJFCL/HpWMw666xaF9ceynO1+jhCFyauCWBZUGDOD1jkHbl+xoO/jG6Zp360GwjSj
-         i66QeBxSRG87tkQkjPc2WA1M6sUtCwvS7DgrAnPORxwYyGeQf+wuJHESEF51ACE4d88K
-         v4nAXQtE+CrgRNknVt8a/+cuKu8aypzYeDig59JPHUtRYsAH3lqkfrJopeugL+PkOFJP
-         r/+/nAs2w8rmwShkaEIQMuFTq7jUIHueDrkctHW9aB3EK7WEeQJ4EnyrT3UmzNQXv8kk
-         1a+A==
+        d=sempervictus-com.20230601.gappssmtp.com; s=20230601; t=1710558860; x=1711163660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GE8ReMJXOBRMOJPX+O2xrNy0SwcxcCJ3CQ8iZfhs2B0=;
+        b=xjP0N31BkJwoKbJEJt0kWT/kayz9V6eWPX0oORv4CR3MVspQgOCP/n9FrRvXwO1QWI
+         MC2rZh9x8GWjdROgsozPc/dtajhrFCfW8XS1904C41whGnxljMwyIPs0m7PC3TrUkfSS
+         xcNx558/luvYipEuPvzdCdr6ZGBc9jpcrrY1M2vtuto8cc3Bm8htuqCLQbyie5Rhi5iW
+         noyeIKz2KJR1OZd/bjw++JXxGjTALnA753LvJrV09HDRWzLNVj1noFWkEjn83NgWfZaX
+         icw+mRck1J/Fqrnk4hsKW2A1ktjw50FuxhCVJLml2OP8cQzXfauUQNM5onLTxPWsxr3B
+         Q22A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710557573; x=1711162373;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bBoX08MQ+GnGsn3Ys1XDLWs0vSpU6QZ104y6JQ1iJRA=;
-        b=H7TsaunGQPlQKR5dD4qY3KvO7LzCeCG8fOAkkQeRgn5lpirRcJoIuhL6ttZucg1xec
-         xnfHgFOB9y/zp56sq2j469O2nWattZmg/CQZUmdmwWnVXl4BTvOTYYopTPPKXUsVKSMU
-         2nrtxIdf960UXJdCqXgjntBesT56wcFUSibksnWtNHJ0PaNcYT2gwUZWhpHIsakZXjrm
-         R+jupn9BS8+ZeI31ad12YvUDrj61O5ZZ8IR+9T58SJth3tQEyzXT5sTtFwzFZnBLOfTK
-         6PQEmEsA5E/EQhV0YwDSiyiO7/CDJ6suC0yj21ioILFz8P3dsuZDetEVatGdODEzfc35
-         8JCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXC3LG2jJ2bwC0L+C3XYPKJuDbfhoPN9+Vty9TMpMPoe4h3OPKCBDyF/BiHnNi/cWQPjdJw/iYpHbSJbFiQJgFna/KgPgPPyMLp+UlnZJRr
-X-Gm-Message-State: AOJu0Yzl6qIfYcfYgG5sH1DBtSXR6PvxuBEKRgAVrmePSz8CsW03ub3q
-	yZI9rs0gv9HabLViV8/+68NlzovV6PVG1oCn+rRBtmzyahaSaWZriokqFiEzxwg=
-X-Google-Smtp-Source: AGHT+IF+mhHYlAObRzpfXYn3IGnPDczeVjZaH7QVUqvtIq9UdyOULCBCqzY79zAwu/GemLxZ182Fng==
-X-Received: by 2002:a17:903:2446:b0:1dd:9cb3:8f96 with SMTP id l6-20020a170903244600b001dd9cb38f96mr6055795pls.42.1710557572964;
-        Fri, 15 Mar 2024 19:52:52 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-185-123.pa.nsw.optusnet.com.au. [49.180.185.123])
-        by smtp.gmail.com with ESMTPSA id f5-20020a170902684500b001dddbb58d5esm4736209pln.109.2024.03.15.19.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 19:52:52 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rlKAC-002Wnj-2F;
-	Sat, 16 Mar 2024 13:52:48 +1100
-Date: Sat, 16 Mar 2024 13:52:48 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>, Simon Horman <horms@verge.net.au>,
-	Julian Anastasov <ja@ssi.bg>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Phillip Potter <phil@philpotter.co.uk>,
-	Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Balbir Singh <bsingharora@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Alexander Popov <alex.popov@linux.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
-	lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, linux-fsdevel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kexec@lists.infradead.org,
-	bridge@lists.linux.dev, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 11/11] sysctl: treewide: constify the ctl_table argument
- of handlers
-Message-ID: <ZfUJgML8tk6RWqOC@dread.disaster.area>
-References: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
- <20240315-sysctl-const-handler-v1-11-1322ac7cb03d@weissschuh.net>
+        d=1e100.net; s=20230601; t=1710558860; x=1711163660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GE8ReMJXOBRMOJPX+O2xrNy0SwcxcCJ3CQ8iZfhs2B0=;
+        b=PkqeyrBzBonZuqeSfSXLGnCJ4RUG6FTqhFtsX7bJw9LeBwx+FiuGJyaunYpfwN13gK
+         WSL9++6TgLQda7DyNOFoFo2p8hSWV1i3WjkomvkfTnJnC1BBtcp534Vr4Nvou2GqKTo6
+         UlUlJEEIBYzYYFoSQ/Z22ptBRdXz21LczIx8rNVYpRgPh6ugU5KWHuSEwxcsQXx8OOWY
+         PxZ8xHTbXLYSNRHAE+TnDWfFp+S1njEjUzycNll5Z8A+wcJpLmWsK7Xfbl2u/gXt82T9
+         GQ9npjhUdkv4aqVJ7LgEm+eRmWbgIazYcenFiA1Tu9K4b9vFAG78z5YNEA568w9Wr7B2
+         htaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAuf/qV0Sh4FHkwJoNvPrhv+g2TDujf/b3lu3gM2iGgiuJ7k/1sxIxgt/TbeYxuK2CV4fUYa0yN5vFKSZ6PH8pQeiVJfeo9yBIy0wxLHi/
+X-Gm-Message-State: AOJu0YwsiuZMeGr3bNeAFKXxIjpl2deKQoji7H2uzgcoiOrgK0v3B3Ea
+	mUCfkMcl4IEewh0Aof0lC1SOTF3qH2l12S4k4xpu5QqziSxTYWFkO9hiNL/i7kiG4+WRZBBh8A9
+	qKutrpRE/ZKxJvg0PY4qOxS49wVE40BA4sp7PjQ==
+X-Google-Smtp-Source: AGHT+IFyhoPSc7JGdV+oe6psqd2uVvvZN4Som/ELZ4Ld8+Wk1xchMqIF+Bg6WUGCWLR3cdz5i24uA4aJxYVCqEJ29MI=
+X-Received: by 2002:a5b:a90:0:b0:dcc:84ae:9469 with SMTP id
+ h16-20020a5b0a90000000b00dcc84ae9469mr5780484ybq.64.1710558860175; Fri, 15
+ Mar 2024 20:14:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240315-sysctl-const-handler-v1-11-1322ac7cb03d@weissschuh.net>
+References: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
+In-Reply-To: <20210830235927.6443-1-rick.p.edgecombe@intel.com>
+From: Boris Lukashev <blukashev@sempervictus.com>
+Date: Fri, 15 Mar 2024 23:14:09 -0400
+Message-ID: <CAFUG7Cfy6nmWk9xmTD4rp80i4_RA12V7SA6851BvD=JaWRZeyA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/19] PKS write protected page tables
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: dave.hansen@intel.com, luto@kernel.org, peterz@infradead.org, 
+	x86@kernel.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	shakeelb@google.com, vbabka@suse.cz, rppt@kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, kernel-hardening@lists.openwall.com, 
+	ira.weiny@intel.com, dan.j.williams@intel.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 15, 2024 at 09:48:09PM +0100, Thomas Weißschuh wrote:
-> Adapt the proc_hander function signature to make it clear that handlers
-> are not supposed to modify their ctl_table argument.
-> 
-> This is a prerequisite to moving the static ctl_table structs into
-> .rodata.
-> By migrating all handlers at once a lengthy transition can be avoided.
-> 
-> The patch was mostly generated by coccinelle with the following script:
-> 
->     @@
->     identifier func, ctl, write, buffer, lenp, ppos;
->     @@
-> 
->     int func(
->     - struct ctl_table *ctl,
->     + const struct ctl_table *ctl,
->       int write, void *buffer, size_t *lenp, loff_t *ppos)
->     { ... }
+IIRC shoot-downs are one of the reasons for using per-cpu PGDs, which
+can in-turn enable/underpin other hardening functions... presuming the
+churn of recent years has softened attitudes toward such core MM
+changes.
+https://forum.osdev.org/viewtopic.php?f=3D15&t=3D29661
 
-Which seems to have screwed up the formatting of the XFS code...
+-Boris
 
-> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
-> index a191f6560f98..a3ca192eca79 100644
-> --- a/fs/xfs/xfs_sysctl.c
-> +++ b/fs/xfs/xfs_sysctl.c
-> @@ -10,12 +10,11 @@ static struct ctl_table_header *xfs_table_header;
->  
->  #ifdef CONFIG_PROC_FS
->  STATIC int
-> -xfs_stats_clear_proc_handler(
-> -	struct ctl_table	*ctl,
-> -	int			write,
-> -	void			*buffer,
-> -	size_t			*lenp,
-> -	loff_t			*ppos)
-> +xfs_stats_clear_proc_handler(const struct ctl_table *ctl,
-> +			     int			write,
-> +			     void			*buffer,
-> +			     size_t			*lenp,
-> +			     loff_t			*ppos)
 
-... because this doesn't match any format I've ever seen in the
-kernel. The diff for this change shold be just:
+On Mon, Aug 30, 2021 at 8:02=E2=80=AFPM Rick Edgecombe
+<rick.p.edgecombe@intel.com> wrote:
+>
+> Hi,
+>
+> This is a second RFC for the PKS write protected tables concept. I'm shar=
+ing to
+> show the progress to interested people. I'd also appreciate any comments,
+> especially on the direct map page table protection solution (patch 17).
+>
+> Since v1[1], the improvements are:
+>  - Fully handle direct map page tables, and handle hotplug/unplug path.
+>  - Create a debug time checker that scans page tables and verifies
+>    their protection.
+>  - Fix odds-and-ends kernel page tables that showed up with debug
+>    checker. At this point all of the typical normal page tables should be
+>    protected.
+>  - Fix toggling of writablility for odds-and-ends page table modification=
+s found
+>    that don't use the normal helpers.
+>  - Create atomic context grouped page allocator, after finding some page =
+table
+>    allocations that are passing GFP_ATOMIC.
+>  - Create "soft" mode that warns and disables protection on violation ins=
+tead
+>    of oopsing.
+>  - Boot parameters for disabling pks tables
+>  - Change PageTable set clear to ctor/dtor (peterz)
+>  - Remove VM_BUG_ON_PAGE in alloc_table() (Shakeel Butt)
+>  - PeterZ/Vlastimil had suggested to also build a non-PKS mode for use in
+>    debugging. I skipped it for now because the series was too big.
+>  - Rebased to latest PKS core v7 [2]
+>
+> Also, Mike Rapoport has been experimenting[3] with this usage to work on =
+how to
+> share caches of permissioned/broken pages between use cases. This RFCv2 s=
+till
+> uses the "grouped pages" concept, where each usage would maintain its own
+> cache, but should be able to integrate with a central solution if somethi=
+ng is
+> developed.
+>
+> Next I was planning to look into characterizing/tuning the performance, a=
+lthough
+> what page allocation scheme is ultimately used will probably impact that.
+>
+> This applies on top of the PKS core v7 series[2] and this patch[4]. Testi=
+ng is
+> still pretty light.
+>
+> This RFC has been acked by Dave Hansen.
+>
+> [1] https://lore.kernel.org/lkml/20210505003032.489164-1-rick.p.edgecombe=
+@intel.com/
+> [2] https://lore.kernel.org/lkml/20210804043231.2655537-1-ira.weiny@intel=
+.com/
+> [3] https://lore.kernel.org/lkml/20210823132513.15836-1-rppt@kernel.org/
+> [4] https://lore.kernel.org/lkml/20210818221026.10794-1-rick.p.edgecombe@=
+intel.com/
+>
+> Rick Edgecombe (19):
+>   list: Support getting most recent element in list_lru
+>   list: Support list head not in object for list_lru
+>   x86/mm/cpa: Add grouped page allocations
+>   mm: Explicitly zero page table lock ptr
+>   x86, mm: Use cache of page tables
+>   x86/mm/cpa: Add perm callbacks to grouped pages
+>   x86/cpufeatures: Add feature for pks tables
+>   x86/mm/cpa: Add get_grouped_page_atomic()
+>   x86/mm: Support GFP_ATOMIC in alloc_table_node()
+>   x86/mm: Use alloc_table() for fill_pte(), etc
+>   mm/sparsemem: Use alloc_table() for table allocations
+>   x86/mm: Use free_table in unmap path
+>   mm/debug_vm_page_table: Use setters instead of WRITE_ONCE
+>   x86/efi: Toggle table protections when copying
+>   x86/mm/cpa: Add set_memory_pks()
+>   x86/mm: Protect page tables with PKS
+>   x86/mm/cpa: PKS protect direct map page tables
+>   x86/mm: Add PKS table soft mode
+>   x86/mm: Add PKS table debug checking
+>
+>  .../admin-guide/kernel-parameters.txt         |   4 +
+>  arch/x86/boot/compressed/ident_map_64.c       |   5 +
+>  arch/x86/include/asm/cpufeatures.h            |   2 +-
+>  arch/x86/include/asm/pgalloc.h                |   6 +-
+>  arch/x86/include/asm/pgtable.h                |  31 +-
+>  arch/x86/include/asm/pgtable_64.h             |  33 +-
+>  arch/x86/include/asm/pkeys_common.h           |   1 -
+>  arch/x86/include/asm/set_memory.h             |  24 +
+>  arch/x86/mm/init.c                            |  90 +++
+>  arch/x86/mm/init_64.c                         |  29 +-
+>  arch/x86/mm/pat/set_memory.c                  | 527 +++++++++++++++++-
+>  arch/x86/mm/pgtable.c                         | 183 +++++-
+>  arch/x86/mm/pkeys.c                           |   4 +
+>  arch/x86/platform/efi/efi_64.c                |   8 +
+>  include/asm-generic/pgalloc.h                 |  46 +-
+>  include/linux/list_lru.h                      |  26 +
+>  include/linux/mm.h                            |  16 +-
+>  include/linux/pkeys.h                         |   1 +
+>  mm/Kconfig                                    |  23 +
+>  mm/debug_vm_pgtable.c                         |  36 +-
+>  mm/list_lru.c                                 |  38 +-
+>  mm/memory.c                                   |   1 +
+>  mm/sparse-vmemmap.c                           |  22 +-
+>  mm/swap.c                                     |   6 +
+>  mm/swap_state.c                               |   5 +
+>  .../arch/x86/include/asm/disabled-features.h  |   8 +-
+>  26 files changed, 1123 insertions(+), 52 deletions(-)
+>
+> --
+> 2.17.1
+>
 
-@@ -10,7 +10,7 @@ static struct ctl_table_header *xfs_table_header;
- #ifdef CONFIG_PROC_FS
- STATIC int
- xfs_stats_clear_proc_handler(
--	struct ctl_table	*ctl,
-+	const struct ctl_table	*ctl,
- 	int			write,
- 	void			*buffer,
- 	size_t			*lenp,
 
->  {
->  	int		ret, *valp = ctl->data;
->  
-> @@ -30,12 +29,11 @@ xfs_stats_clear_proc_handler(
->  }
->  
->  STATIC int
-> -xfs_panic_mask_proc_handler(
-> -	struct ctl_table	*ctl,
-> -	int			write,
-> -	void			*buffer,
-> -	size_t			*lenp,
-> -	loff_t			*ppos)
-> +xfs_panic_mask_proc_handler(const struct ctl_table *ctl,
-> +			    int			write,
-> +			    void			*buffer,
-> +			    size_t			*lenp,
-> +			    loff_t			*ppos)
->  {
->  	int		ret, *valp = ctl->data;
->  
-> @@ -51,12 +49,11 @@ xfs_panic_mask_proc_handler(
->  #endif /* CONFIG_PROC_FS */
->  
->  STATIC int
-> -xfs_deprecated_dointvec_minmax(
-> -	struct ctl_table	*ctl,
-> -	int			write,
-> -	void			*buffer,
-> -	size_t			*lenp,
-> -	loff_t			*ppos)
-> +xfs_deprecated_dointvec_minmax(const struct ctl_table *ctl,
-> +			       int			write,
-> +			       void			*buffer,
-> +			       size_t			*lenp,
-> +			       loff_t			*ppos)
->  {
->  	if (write) {
->  		printk_ratelimited(KERN_WARNING
-
-And these need fixing as well.
-
-A further quick glance at the patch reveals that there are other
-similar screwed up conversions as well.
-
-> diff --git a/kernel/delayacct.c b/kernel/delayacct.c
-> index 6f0c358e73d8..513791ef573d 100644
-> --- a/kernel/delayacct.c
-> +++ b/kernel/delayacct.c
-> @@ -44,8 +44,9 @@ void delayacct_init(void)
->  }
->  
->  #ifdef CONFIG_PROC_SYSCTL
-> -static int sysctl_delayacct(struct ctl_table *table, int write, void *buffer,
-> -		     size_t *lenp, loff_t *ppos)
-> +static int sysctl_delayacct(const struct ctl_table *table, int write,
-> +			    void *buffer,
-> +			    size_t *lenp, loff_t *ppos)
->  {
->  	int state = delayacct_on;
->  	struct ctl_table t;
-
-Like this.
-
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 724e6d7e128f..e2955e0d9f44 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -450,7 +450,8 @@ static void update_perf_cpu_limits(void)
->  
->  static bool perf_rotate_context(struct perf_cpu_pmu_context *cpc);
->  
-> -int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
-> +int perf_event_max_sample_rate_handler(const struct ctl_table *table,
-> +				       int write,
->  				       void *buffer, size_t *lenp, loff_t *ppos)
->  {
->  	int ret;
-
-And this.
-
-> @@ -474,8 +475,10 @@ int perf_event_max_sample_rate_handler(struct ctl_table *table, int write,
->  
->  int sysctl_perf_cpu_time_max_percent __read_mostly = DEFAULT_CPU_TIME_MAX_PERCENT;
->  
-> -int perf_cpu_time_max_percent_handler(struct ctl_table *table, int write,
-> -		void *buffer, size_t *lenp, loff_t *ppos)
-> +int perf_cpu_time_max_percent_handler(const struct ctl_table *table,
-> +				      int write,
-> +				      void *buffer, size_t *lenp,
-> +				      loff_t *ppos)
->  {
->  	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
->  
-
-And this.
-
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index b2fc2727d654..003f0f5cb111 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -239,9 +239,10 @@ static long hung_timeout_jiffies(unsigned long last_checked,
->  /*
->   * Process updating of timeout sysctl
->   */
-> -static int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
-> -				  void *buffer,
-> -				  size_t *lenp, loff_t *ppos)
-> +static int proc_dohung_task_timeout_secs(const struct ctl_table *table,
-> +					 int write,
-> +					 void *buffer,
-> +					 size_t *lenp, loff_t *ppos)
->  {
->  	int ret;
->  
-
-And this.
-
-> diff --git a/kernel/latencytop.c b/kernel/latencytop.c
-> index 781249098cb6..0a5c22b19821 100644
-> --- a/kernel/latencytop.c
-> +++ b/kernel/latencytop.c
-> @@ -65,8 +65,9 @@ static struct latency_record latency_record[MAXLR];
->  int latencytop_enabled;
->  
->  #ifdef CONFIG_SYSCTL
-> -static int sysctl_latencytop(struct ctl_table *table, int write, void *buffer,
-> -		size_t *lenp, loff_t *ppos)
-> +static int sysctl_latencytop(const struct ctl_table *table, int write,
-> +			     void *buffer,
-> +			     size_t *lenp, loff_t *ppos)
->  {
->  	int err;
->  
-
-And this.
-
-I could go on, but there are so many examples of this in the patch
-that I think that it needs to be toosed away and regenerated in a
-way that doesn't trash the existing function parameter formatting.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--=20
+Boris Lukashev
+Systems Architect
+Semper Victus
