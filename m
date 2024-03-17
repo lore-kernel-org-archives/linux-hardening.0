@@ -1,173 +1,117 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C181AAC9
-	for <linux-hardening@vger.kernel.org>; Sun, 17 Mar 2024 10:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923101C288
+	for <linux-hardening@vger.kernel.org>; Sun, 17 Mar 2024 15:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710672061; cv=none; b=N7UeCge99bPJALfVIxenMIt1LaRlXKoz1xWap6djZnorFW78Qf0iIOEf1tiNn/jog+QlfQlJUNMuW+Sv3uIYexKrANdNEDNWqhkAo6OYfRYS+VC/W3IAgA0EMXwHjRleE7HnLN4D/YScOXU2KCqMrdJXVHp12d3AzRDxmTX7SJk=
+	t=1710688057; cv=none; b=ZoFFuWrNU5h/fwWIS2khcambiWxNazeFXulX6fy61ieJVy0uaFnmJl5HkchX+Z+hBt7rmTTRM9HfsWNcEmfoCXPGS4ONaB7AZ1JIksQrsYTgTqzwnqnXtiMRT4QnnkPj4EQjLXmITCNSiMzSiN452TbzInmRWKxVNPCLmHF82kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710672061; c=relaxed/simple;
-	bh=3iAzp1ws+1+KRud5kZGHie5Ypdb7+MOT5gVokChZ+ak=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tTsRNlGsRfAz3u0Hvb8McsTmTcGuybsaJFFhpcEaLZNP6YrvGOAHAMPOaw3MARfYL4lJaj+uCkYZX/z4psw5jnRz7IIeovX8DAynYVyeGH1zDVHAK+nwYRSm95rIpQtYbCI9kSDn30vypsacEKP2BIDhTMQ/MklK6rwhdB9wGok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rlnwe-0002A1-Cn; Sun, 17 Mar 2024 11:40:48 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rlnwe-006rfu-09; Sun, 17 Mar 2024 11:40:48 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rlnwd-007aDB-2z;
-	Sun, 17 Mar 2024 11:40:47 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	kernel@pengutronix.de,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 4/8] pwm: Ensure a struct pwm has the same lifetime as its pwm_chip
-Date: Sun, 17 Mar 2024 11:40:35 +0100
-Message-ID:  <7e9e958841f049026c0023b309cc9deecf0ab61d.1710670958.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1710688057; c=relaxed/simple;
+	bh=IacdikwGeETM03FPof7cc/AY/6hLvnXxuleazQHPrek=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ByH8M0kxocDFC9BGSEVJnMGoDBp7PKGM1X2x9pruuBJCDBVv3VROsTig9LDvZkDoIAbUPf0t3gHqiS0p6OMayXPmX6bIlby40UgjHVNNsdvoS/YvJmVBE5encg8GneR0Uszmfug3tBfvhw0Rn8oEgcPXjkispCCqVV5Y+1AlTL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=WkP7kOSc; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="WkP7kOSc"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cedfc32250so2601796a12.0
+        for <linux-hardening@vger.kernel.org>; Sun, 17 Mar 2024 08:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1710688055; x=1711292855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hhICYYV1g+oDZFsBzqUaHWt+HsbjmOKz1L+K4AX4MSo=;
+        b=WkP7kOScHjvBNLENFHPG5gu08Tqur8WJkPXrh32gHq2lAvVkiQXUK/QrAk0k7grmHy
+         neqFxiSIHO5TRr3Nqo1pTiMZCrrZsK/DC4DzXY6Nh1yEaezEfnyI5EY9L513wj1QgVk6
+         ntyTcR/H5zM2njrlHTq/RZ15vgYJgMAExe0wMA12Kjpo/gGM0HydbumrzQtAzMbQsI/v
+         U+XEmZsWjLYf9q4VPtSMZ+qAqNz8i2Qn6P5lhfVpUJYzrYVkCGz9lc7hfyZxL1gYQm0J
+         f0QW2DY0f20YZDrpmVtR9Smt/uHG0U1QMwEaQA3DJvrgr773ZLluCazWC7BAkKiXNq1Z
+         YvCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710688055; x=1711292855;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hhICYYV1g+oDZFsBzqUaHWt+HsbjmOKz1L+K4AX4MSo=;
+        b=UC0zyIyb1+v6BO3o4a0xnfPAuiwiljgLwFEIpBhitORrNfcLSJCzbSovDGSlmMfnsr
+         4WKC656cesri4c4jWJ/ylvDDep4fx+WG9f2YHjwBsYebSnnTVEctBPYxfpQBTmP7tSmh
+         +ZNEHMYpQ+zOhd84k6pOxvLS+JnucG6OeIJbDn6li80IlKWASsBOpUkcJ4Fh2wjCHS//
+         ZpNH5GbPI/cFiTTvUTzwda8pxjg1mK+Mt3YS78N3PQi3Xu70RIhXrN7pmVQF6JJhGVu0
+         +1YAPhkUBU81zBQtfqHVMTqVhaJsImdCA32xCvd+AVl2qFmKWmmwEUEDmHtpdyG8+bZd
+         KbOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8M87kDJzzKXKG5nSSQ5A3OKYeEgTw2bNng5aTLFsthf4klscJXH7H24+dOXDMmqWkzghMYFGOY+Mevy4/s5pFpO/WoU0A3rh2euUcAfg2
+X-Gm-Message-State: AOJu0YywcV+/ldpsuBEog3ftMMIbDknl9AvcCTbUaE7oDuS9qOHbDzbb
+	h0iy3fzoGvrv7oeS4XgiG2nKBxuetBBBYm+5agma56HWUfcyDjgQ9S4FkKN9Pes=
+X-Google-Smtp-Source: AGHT+IHxGaa6Pn6062Ac3witWXSLzJOmdl6pedhlmppjiYLrKqco1HzUbQZ8yF7evP2SNB9JcqLheg==
+X-Received: by 2002:a17:903:264e:b0:1dd:e13d:6834 with SMTP id je14-20020a170903264e00b001dde13d6834mr6845647plb.41.1710688054845;
+        Sun, 17 Mar 2024 08:07:34 -0700 (PDT)
+Received: from C02FG0GJMD6V.bytedance.net ([139.177.225.247])
+        by smtp.gmail.com with ESMTPSA id d4-20020a170903230400b001db5ecd115bsm5921296plh.276.2024.03.17.08.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Mar 2024 08:07:34 -0700 (PDT)
+From: Guixiong Wei <weiguixiong@bytedance.com>
+To: keescook@chromium.org,
+	tglx@linutronix.de
+Cc: jgross@suse.com,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	peterz@infradead.org,
+	gregkh@linuxfoundation.org,
+	tony.luck@intel.com,
+	adobriyan@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	weiguixiong@bytedance.com
+Subject: [PATCH] x86, relocs: Ignore relocations in .notes section on walk_relocs
+Date: Sun, 17 Mar 2024 23:05:47 +0800
+Message-Id: <20240317150547.24910-1-weiguixiong@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3539; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=3iAzp1ws+1+KRud5kZGHie5Ypdb7+MOT5gVokChZ+ak=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl9silpBrxn1YDcJGgxKm3zimSVOS/q1RjyN92m +i3EWaKWtuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZfbIpQAKCRCPgPtYfRL+ TkJTB/96lbU/JRj/NFTUYhdqSYcI5fBZUt2AZ7odkhFI/dPJs5FCBi9nydUK6nvip1JWimDbLkR L9P1my5NqgOa5a4rkvxlkqeuvidit6w5a7kCakqqYHL7Yr2xl1h4BKb1tlduDfvX2YYDmMHJDxr 1rmjQntkubKX80l5fEBSD7XC3B+IvmSb/7GLgrduxb7NYSVWiqjrAP7FxNEvLPTj/IjXX69AlyR 0zMPpha9zXqR7rQz0j9jvW4k+khq/BBQARAtXAHIscOBMvDjPFJmCAV8nrO0NYSvBXoh6WWjG2A BBkbxJl36Sd8vjxzVZeT7n9u9+qn7Mqk95k4tyheB6qIREsV
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
-It's required to not free the memory underlying a requested PWM
-while a consumer still has a reference to it. While currently a pwm_chip
-doesn't life long enough in all cases, linking the struct pwm to the
-pwm_chip results in the right lifetime as soon as the pwmchip is living
-long enough. This happens with the following commits.
+The commit aaa8736370db ("x86, relocs: Ignore relocations in
+.notes section") only ignore .note section on print_absolute_relocs,
+but it also need to add on walk_relocs to avoid relocations in .note
+section.
 
-Note this is a breaking change for all pwm drivers that don't use
-pwmchip_alloc().
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org> # for struct_size() and __counted_by()
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Fixes: aaa8736370db ("x86, relocs: Ignore relocations in .notes section")
+Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
+Fixes: da1a679cde9b ("Add /sys/kernel/notes")
+Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
 ---
- drivers/pwm/core.c  | 27 ++++++++++-----------------
- include/linux/pwm.h |  2 +-
- 2 files changed, 11 insertions(+), 18 deletions(-)
+ arch/x86/tools/relocs.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 69af8123455a..8ed4c93cd0ce 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -987,7 +987,7 @@ static void pwmchip_sysfs_unexport(struct pwm_chip *chip)
- 
- static void *pwmchip_priv(struct pwm_chip *chip)
- {
--	return (void *)chip + ALIGN(sizeof(*chip), PWMCHIP_ALIGN);
-+	return (void *)chip + ALIGN(struct_size(chip, pwms, chip->npwm), PWMCHIP_ALIGN);
- }
- 
- /* This is the counterpart to pwmchip_alloc() */
-@@ -1001,8 +1001,10 @@ struct pwm_chip *pwmchip_alloc(struct device *parent, unsigned int npwm, size_t
- {
- 	struct pwm_chip *chip;
- 	size_t alloc_size;
-+	unsigned int i;
- 
--	alloc_size = size_add(ALIGN(sizeof(*chip), PWMCHIP_ALIGN), sizeof_priv);
-+	alloc_size = size_add(ALIGN(struct_size(chip, pwms, npwm), PWMCHIP_ALIGN),
-+			      sizeof_priv);
- 
- 	chip = kzalloc(alloc_size, GFP_KERNEL);
- 	if (!chip)
-@@ -1014,6 +1016,12 @@ struct pwm_chip *pwmchip_alloc(struct device *parent, unsigned int npwm, size_t
- 
- 	pwmchip_set_drvdata(chip, pwmchip_priv(chip));
- 
-+	for (i = 0; i < chip->npwm; i++) {
-+		struct pwm_device *pwm = &chip->pwms[i];
-+		pwm->chip = chip;
-+		pwm->hwpwm = i;
-+	}
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index b029fb81ebee..33844b33b8b9 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -746,6 +746,16 @@ static void walk_relocs(int (*process)(struct section *sec, Elf_Rel *rel,
+ 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+ 			continue;
+ 		}
 +
- 	return chip;
- }
- EXPORT_SYMBOL_GPL(pwmchip_alloc);
-@@ -1085,7 +1093,6 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
-  */
- int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
- {
--	unsigned int i;
- 	int ret;
- 
- 	if (!chip || !pwmchip_parent(chip) || !chip->ops || !chip->npwm)
-@@ -1105,28 +1112,16 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
- 
- 	chip->owner = owner;
- 
--	chip->pwms = kcalloc(chip->npwm, sizeof(*chip->pwms), GFP_KERNEL);
--	if (!chip->pwms)
--		return -ENOMEM;
--
- 	mutex_lock(&pwm_lock);
- 
- 	ret = idr_alloc(&pwm_chips, chip, 0, 0, GFP_KERNEL);
- 	if (ret < 0) {
- 		mutex_unlock(&pwm_lock);
--		kfree(chip->pwms);
- 		return ret;
- 	}
- 
- 	chip->id = ret;
- 
--	for (i = 0; i < chip->npwm; i++) {
--		struct pwm_device *pwm = &chip->pwms[i];
--
--		pwm->chip = chip;
--		pwm->hwpwm = i;
--	}
--
- 	mutex_unlock(&pwm_lock);
- 
- 	if (IS_ENABLED(CONFIG_OF))
-@@ -1156,8 +1151,6 @@ void pwmchip_remove(struct pwm_chip *chip)
- 	idr_remove(&pwm_chips, chip->id);
- 
- 	mutex_unlock(&pwm_lock);
--
--	kfree(chip->pwms);
- }
- EXPORT_SYMBOL_GPL(pwmchip_remove);
- 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 17e45d8413ed..78b9061572ff 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -290,7 +290,7 @@ struct pwm_chip {
- 	/* only used internally by the PWM framework */
- 	bool uses_pwmchip_alloc;
- 	void *driver_data;
--	struct pwm_device *pwms;
-+	struct pwm_device pwms[] __counted_by(npwm);
- };
- 
- static inline struct device *pwmchip_parent(const struct pwm_chip *chip)
++		/*
++		 * Do not perform relocations in .notes section; any
++		 * values there are meant for pre-boot consumption (e.g.
++		 * startup_xen).
++		 */
++		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++			continue;
++		}
++
+ 		sh_symtab = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
+ 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
 -- 
-2.43.0
+2.24.3 (Apple Git-128)
 
