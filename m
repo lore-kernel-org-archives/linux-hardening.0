@@ -1,128 +1,105 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEA91CA87;
-	Sun, 17 Mar 2024 16:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2186C1EB2D
+	for <linux-hardening@vger.kernel.org>; Sun, 17 Mar 2024 20:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710693950; cv=none; b=cZJ6lfVQABPEtgDhsz3othHGq57wiyU2VwaqZGPd52r7zInfqia+IfUy4/B6Hv7oAlRTMtq7A5Yh5RF5q2tVXo8onZqW0y66DfkjNTlenN0MrhMpYgVvSRwVF7ru9VkOExToPQJItymSwGwTVnTaY2No4zk2EAHDWuFYb9MK7+s=
+	t=1710706042; cv=none; b=L6J16eUwEFbXXYhKW4L/FpjfToPdQJu+EFFYoZ0flPjb5uNs7AhoSkjCSy6xQCV8rzUv8vbkSjtjrXFwOZUYe6o8sSdgoYwXRCWmQYM+zqN+v5CPZHT5b6cINrjtqqYRbMTIF8jdEQhWstfTPswFCqI9IBe5QVrprnhJsKHaOWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710693950; c=relaxed/simple;
-	bh=JmyfqcZ9rveURC80934OGXTc1tUYHDkAD0mq8Ba4PUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UFCZrCnxqelry/O2Xl2FOoRSbigJqyuV/tp+PLLAbDGZJUbLCP+G5omDGzT4xK9rD5iC7MapR86zUsqQU2BjtAfLE9mkY/S56iQQ4xsM3KhBqpJlaEFFF34IaaDJaU9maW6snGlOfaqSc9A2Tn9J7VnTKqE0ZZVrjumebrnTb6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=DysYbDhZ; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1710706042; c=relaxed/simple;
+	bh=e1fAaQ1BnGo0n5TgxuvIOkjN1kKDYARzhfblmTAoYr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aK2Ngc+qTj0bQXxU0JFC94/al0aSxZAQnrVHrXvUkqlRY1qovLrDiMWaOs9vG7BCr3Yl31gTGNuOtAiUxzBvJ3U7z3/ewQiW12qXBB6PbfaVoqCNhVsULSvG5oA8hQ7L3iQW4fphs1txgtG+CC5i3qDhyqR7vuGnEIuTJkn6IBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=LSsc4gL0; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="DysYbDhZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1710693896; x=1711298696; i=erick.archer@gmx.com;
-	bh=9dENW7lkC02jCQmaFHSQpWO0QOH344xVEESWeXRZM2M=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=DysYbDhZlkaU8t1lblTQfQPsTsQWjmeYw4nw2Bl3YOFq4c2gCWVP4PSrdvqbYkOZ
-	 8x/DUiCmr2M9fRNGEgv+7d9Iq7qH1U5AbPuKWiC6/7DhwASbuEbL04mI/rR7TetVr
-	 V1jIRBtC7YydgBabDG5Lc9naIIS94b9IWcrQjUyanL3w154diu/K7UIn0QKaJG8sD
-	 OuyDgJkkDgWGvEaXpELvaHPXEetPdUwOA76QEUuBRZO+8wX2M23tvOf+f/Nbdd+6q
-	 mU0wYZjIBJ7NqZ2RCMCLSGJ3Kxyh+gBLqfRxsBCiUVv6AnUPKMNuTP4QN5m3UVux4
-	 j73vyVdXP6cd0+jnVA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MSt8W-1rM8W93TCg-00UIsL; Sun, 17 Mar 2024 17:44:56 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] perf/x86/rapl: Prefer struct_size over open coded arithmetic
-Date: Sun, 17 Mar 2024 17:44:42 +0100
-Message-Id: <20240317164442.6729-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LSsc4gL0"
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTPS
+	id ltwsrHUlDl9dRlwmmrxH3N; Sun, 17 Mar 2024 20:07:12 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id lwmjr4CZxqxL8lwmjrylzr; Sun, 17 Mar 2024 20:07:09 +0000
+X-Authority-Analysis: v=2.4 cv=bPoQIu+Z c=1 sm=1 tr=0 ts=65f74d6d
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10
+ a=fZdvlV4EY4FlDATLirAA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=e1fAaQ1BnGo0n5TgxuvIOkjN1kKDYARzhfblmTAoYr8=; b=LSsc4gL0gwHtAPiIOgy3QVhhBj
+	V7JLeP72AEugq+dHJ2Cc8br4ROlHOEh5M8DGtttdN6JVt1iRbobx11Phhv9TvpT47BGG0dcM920wj
+	TGoNoFEovgExAgkNOdrro7ExI/L98xr3k3hoNv88KtOIDeErKDT5FdyIUaldEJaotBkjHW5kvJA7c
+	Rf4D0JdTJzpWGqFLeTGteqFjfsSImRaExP8gwiJeuNmUdBWOlIV15rPLZX7v4N0vMzYk5q/qBRBly
+	6o0Qu7SR9HH0iVD6Dcwa7VjQuP34re33CD3BXpkPhRhr4R06TaeweNaNz5i9sC46fN2Vsr8VMwzWF
+	Na1VnW4A==;
+Received: from [201.172.174.229] (port=50598 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rlwmi-004BoJ-2I;
+	Sun, 17 Mar 2024 15:07:08 -0500
+Message-ID: <264f7b4c-d711-4f47-9297-79a9ab60999c@embeddedor.com>
+Date: Sun, 17 Mar 2024 14:07:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ajPSlJa+WR0Lwl/WFfEBfTaAzg0kY5ItjAZ4jUMUfFOTkZ//Ic7
- moGQkxW4F04mwQLljWIOQZGS8HJN/Uv/rWK6mGOper/373x05kACNGae16MPsnk5oMMvUiU
- eyMIQLXfAzhhOUin4A89fynazI2HtP49mmpPSDMGMeiIOp9dLG3zLkfGaORwdThnuLvFc+8
- HOTMRykgcp3oU7UHsGcKg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MMkSt5BKAXA=;fKog5R4YDcS7MPlrkxrnA2VT54/
- mpNlQxxU+/lPTHlhUXww7M7kWgPGZje8YVqRYzN1vbnb2sJ3cGTJs4kiKXBXZN8lcWnYb7wDX
- UIj2WTsilaLsXQgTiq6c2kBLUnBp/xpIO27hp+nxpVLI7TUnWOKB9TotWU/MW+i3N2Yx5sfvT
- lF016C7mVDq2LpQhacPJlKB/tvlaz/pC0ToDxi8v213TJvdXdruK5oDRK6FzS85JDXOzxVumY
- FBxfMhwShgGrKkrX+p3385wJ8Y0VXKArN56aVdiqn3rOdg6CsnLufgwtFEt5w4ZUgR1cp4Q/G
- 5AuemfszEOVS6mBlI0XtHtW4jKen16ZRr4KtYnSdtUQlJhfuG9xYW10GYfqFjhINEcrueFqMH
- /SMSnRTmom31e+wdNQV1mxhsGzb1nZtWva5Vno/8FQIAApAcydl6NWfXyFnpnsYdfkc+EIVYj
- sYNxvppJF6A3BIID/X/T7zOmxv6X3SLubPug5oebaRIZonBDJlEiXM4aDD7pHoLzaitwA2PWv
- mdNeH3APg0oelZX52JTPRp2jsiwXpLYFkEneHx3FR6RNxY9MWBbffCzTj0v9AUJ99tqpEEmrX
- Y2oL7tMd0E5tNcvqAVgVr7ZUGTH9c7LC2v8DYcK7aaHBr9mgkhV7mPfUKMOW3vfrVRdgdHMJR
- wRTKMgfWDi78EuuRvWV14m4B+yWJ4r5/D4sCuzh7iyWwUEGzkuUHgqr392bceXEZGNWg+Nd0U
- yGdNBTrffxjzFaXy1iqckgFgMtIvp66sM2BHVeywD9zQyda/TMGiF1xHJMRMGfmVHCOq0zc+X
- dYwD1CWOf0LcTwsGp22HF5Nu6ZDV9OG6MFV4njcA3Dzhk=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mwl8k: Avoid overlapping composite structs that contain
+ flex-arrays
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>,
+ Kees Cook <keescook@chromium.org>, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240316150712.4633-1-erick.archer@gmx.com>
+ <cfc4c4c0-83f8-437c-8146-6b86968db67b@embeddedor.com>
+ <20240317152225.GA2850@titan>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240317152225.GA2850@titan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.229
+X-Source-L: No
+X-Exim-ID: 1rlwmi-004BoJ-2I
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:50598
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfM2a/VI56fQyI3Xlj1dYPLn3wq2HisJ2id2942moPrhGOUIk2CdOvMh+ZFyHifnLbLSspg59yL0NQG9inroglZUDKMKcddqto2HSRqlZuxVxEdmKVS2r
+ m8WBJF4GvpdJ3usGlMsM4C/mtglaDUUxX0gP+z4cZzBAh4FrHvITTvd0aj2e3LqvM8SLhjSmb1W9vsREae4AlykjufOrJ7b6K272OQxQHu0hL2F8zHKsB4Wf
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1][2].
 
-As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
-this structure ends in a flexible array:
+> So, are you working in a patch for the "mwl8k"? Or do you prefer
+> a v2 of this patch based on your proposal?
 
-struct rapl_pmus {
-	[...]
-	struct rapl_pmu *pmus[] __counted_by(maxdie);
-};
+I'm working on multiple different patches to address the whole thing
+across the kernel.
 
-the preferred way in the kernel is to use the struct_size() helper to
-do the arithmetic instead of the calculation "size + count * size" in
-the kzalloc() function.
+I think it's wise for you to wait and see how those patches are received.
+Once the best approach to fix these issues becomes clear and widely accepted,
+it will be easier for you to join us and help address the rest. Meanwhile,
+we want to avoid any possible overlap or stepping on each other's toes.
 
-This way, the code is more readable and safer.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-=
-coded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/160 [2]
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- arch/x86/events/rapl.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index fb2b1961e5a3..8ef08b5d55a7 100644
-=2D-- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -675,10 +675,8 @@ static const struct attribute_group *rapl_attr_update=
-[] =3D {
- static int __init init_rapl_pmus(void)
- {
- 	int maxdie =3D topology_max_packages() * topology_max_dies_per_package()=
-;
--	size_t size;
-
--	size =3D sizeof(*rapl_pmus) + maxdie * sizeof(struct rapl_pmu *);
--	rapl_pmus =3D kzalloc(size, GFP_KERNEL);
-+	rapl_pmus =3D kzalloc(struct_size(rapl_pmus, pmus, maxdie), GFP_KERNEL);
- 	if (!rapl_pmus)
- 		return -ENOMEM;
-
-=2D-
-2.25.1
-
+Thanks
+--
+Gustavo
