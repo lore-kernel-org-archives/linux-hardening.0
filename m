@@ -1,159 +1,123 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CFC14F7F
-	for <linux-hardening@vger.kernel.org>; Sat, 16 Mar 2024 18:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FDF1AAA5
+	for <linux-hardening@vger.kernel.org>; Sun, 17 Mar 2024 10:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710615562; cv=none; b=NEwgwuWN/0Jw4v1da+xS02qdpjDImDCiRFgZhUtQWanFdK9H59E/hSyRxCgl6vM/bj7PQfgtDFejtd3isMmUc/k2kgIDe8v8QHHItfRysfoDx6+IVdn6RdxzXbQvL1zcPgULbdQlN5O9/WbJw09zzZXx2jNBk9nJfc1ajqLOIYE=
+	t=1710672061; cv=none; b=cdq4qlLNUs4F9AGQ9yGibJxWLOgPQJ2v/nxrjMUFxD3+CGPW6SDmWul3Joiu2AvrBV4DEpFIkUw5c0wZmEOn1bJz3hdMKkEa21ARiVISjglqOaXEAwzxAgIgo/fsG7ev5hxxBE3PuZliCR+s5TBXh+uyvimcdYhl7YMHjOFvLt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710615562; c=relaxed/simple;
-	bh=UaBIRXmICBdYqq7e7oTf77ZP4e7SfSf7lVmL7cq9gOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hsT2tgzUct84ma0+jEvr8emf6VOcVGBc3hCoC5//lcbFHbKq00u6yN/7RE2fJhgAmLuWDrRaDmWX1F+Fs8SSSQZMsVVVkuXUllmCf7SSRcHtEyNU8/29AE9GEPLdEupAx29m2ejt9qqrI2P+hy3p66n/r6z2mJJ0NOYxznVAtA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=wevPgso2; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wevPgso2"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id lYhirDXQel9dRlZFWrps8F; Sat, 16 Mar 2024 18:59:19 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id lZFWrqOP5ogxNlZFWrhtj5; Sat, 16 Mar 2024 18:59:18 +0000
-X-Authority-Analysis: v=2.4 cv=G/MaEck5 c=1 sm=1 tr=0 ts=65f5ec06
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=7YfXLusrAAAA:8 a=GHxNDdVd_46DcYOc0x4A:9 a=QEXdDO2ut3YA:10
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eI2igFSMoMgGwV+GQ0CiFXFR47TjD/v6V+k+ICTNe+0=; b=wevPgso2IGgJVqRnHCsH+jTtht
-	/fvVibwPPB5J/OH88rwhaoNKg33NtVSE8ox40WAypeiCafMWiIyhS1rx7J8Ei0hvkzVMyXv5DeyOR
-	REN45azO0qHulKDe4hZo/UPzdWYMBj4cGYZ+5T4GyOe+qIpIrw5bqyfnBLznToKXaeN0D5XZQhwx8
-	sUqVn0YmekN09fFLK+jzjnsHhtX8Sm2QFhnLMeUfoZJyPyUZsmkj9BjOFs7MXNGiVvpRhWLd+4vGR
-	m2NalmLLO7oMdTt/TOccHpMQAEH8GQqDjK52HOKmZ/y/Lr6kgbQ7zk46G4lwN+KPHIi6U48GywcYD
-	M+8tc3Cg==;
-Received: from [201.172.174.229] (port=41890 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rlZFV-001MV9-1q;
-	Sat, 16 Mar 2024 13:59:17 -0500
-Message-ID: <cfc4c4c0-83f8-437c-8146-6b86968db67b@embeddedor.com>
-Date: Sat, 16 Mar 2024 12:59:11 -0600
+	s=arc-20240116; t=1710672061; c=relaxed/simple;
+	bh=fs59cnUdx6Lj37sKccMDB1aCfsDJsVT37Vt+S8/sLfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j0AHSdhGrTQmECRMkgwbuDlrNon5dzyZAcdIADpwbMwWNFMUVVb2L65TUm/y22DAt73OBdfYwAQ8c+lZLYi7JRdGZ2oQl8DHybenzCyv4g/5yphJB9PQYWEF6b5m4xrQ3a8fGkf4T8zXy1yJOJwJ5r1v0YCnsqQxUOG9Bb9gdjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rlnwd-00029Q-HI; Sun, 17 Mar 2024 11:40:47 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rlnwc-006rff-RP; Sun, 17 Mar 2024 11:40:46 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rlnwc-007aCv-2T;
+	Sun, 17 Mar 2024 11:40:46 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org
+Cc: kernel@pengutronix.de,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/8] pwm: Add support for character devices
+Date: Sun, 17 Mar 2024 11:40:31 +0100
+Message-ID: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mwl8k: Avoid overlapping composite structs that contain
- flex-arrays
-To: Erick Archer <erick.archer@gmx.com>, Kalle Valo <kvalo@kernel.org>,
- Johannes Berg <johannes.berg@intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kees Cook <keescook@chromium.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240316150712.4633-1-erick.archer@gmx.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240316150712.4633-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rlZFV-001MV9-1q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:41890
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIOEuJpJqanLbKol8jtG3+Us8KVEORg3upnPHedUv66fF65m/AVSerYWg+oFVS2nuBaG/CniJJnpv0otx1KCKGRtLr5GcVoBobLouC0SJazMBHGpUkJ+
- hN/pi8ITsEtrnB1hinal5OE7sCYdu5TVoiPUjWx8JQr6H1boFQQ3jMxeWz1SnX0HN4JDbxiFo3veY4yJHQLwAOR9W/WdJqqqqn6wiiXxBo5/L0MpKyeCI+yS
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2528; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=fs59cnUdx6Lj37sKccMDB1aCfsDJsVT37Vt+S8/sLfQ=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtRvJxYsaufN39XgfXrBvIQF1e6v41KZjC8+TmOfnTX5e 9fxnD/5nYzGLAyMXAyyYoos9o1rMq2q5CI71/67DDOIlQlkCgMXpwBM5FwYB8M28/f5NyNsN0gI cMfs7cq6/9WWXbL4p1vVpVJOuxaz6yc8TEpVk6PPcmyV8bVbYr331V6zxH28DHu5dmiG7Y8O9L2 S0eDOF142LTFn+6nvx3Tk+t9o3a0zlWcvf/gm+JVO9dmPho8u2ey6UuJzWa6ij9XNp65b5nbylp mzFVeHh2YrPatabVtQfqlBLNK0ar05T0x60XUn71VTXdTdGk5pOs+p3S2TaLakK0LuS97WQhOTA pWVjwsu1ga++PktSlCNoXVLeMy9qI3Tg55bru8/9nU50x2LDw8YBRjfZn7ekcQTNcfbXu422/Tz fq65Kwoy5j8Q7pz376uZeEIB6/1n1zJnZc6ua5U46P4UAA==
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
+Hello,
 
-[..]
+After the necessary changes to the lowlevel drivers got in for v6.9-rc1
+here come some changes to the core to implement /dev/pwmchipX character
+devices.
 
-> 
-> Link: https://github.com/KSPP/linux/issues/202 [1]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
-> Hi everyone,
-> 
-> This patch is based on my understanding of the code. Any comments would
-> be greatly appreciated.
+In my tests on an ARM STM32MP1 programming a PWM using the character
+device is ~4 times faster than just changing duty_cycle via the sysfs
+API. It also has the advantage that (similar to pwm_apply_*) the target
+state is provided to the kernel with a single call, instead of having to
+program the individual settings one after another via sysfs (in the
+right order to not cross states not supported by the driver). 
 
-Thanks for looking into this. :)
+Note the representation of a PWM waveform is different here compared to
+the in-kernel representation. A PWM waveform is represented using:
 
-I'm currently in the process of trying a general solution for all these
-composite structures without having to use two separate structs, avoid too
-much code churn, and continue allowing for __counted_by() annotations at
-the same time.
+	period
+	duty_cycle
+	duty_offset
 
-I'll be sending a bunch of patches once the merge window closes. So, for
-now, I think it's wise to wait for those patches.
+A disabled PWM is represented by period = 0. For an inversed wave use:
 
-More comments below.
+	duty_offset = duty_cycle
+	duty_cycle = period - duty_cycle;
 
-[..]
+. However there are some difficulties yet that make it hard to provide a
+consistent API to userspace and so for now duty_offset isn't (fully)
+supported yet. That needs some more consideration and can be added
+later.
 
-> diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
-> index ce8fea76dbb2..57de32ba4efc 100644
-> --- a/drivers/net/wireless/marvell/mwl8k.c
-> +++ b/drivers/net/wireless/marvell/mwl8k.c
-> @@ -586,13 +586,17 @@ static int mwl8k_request_firmware(struct mwl8k_priv *priv, char *fw_image,
->   	return 0;
->   }
-> 
-> -struct mwl8k_cmd_pkt {
-> +struct mwl8k_cmd_pkt_hdr {
->   	__le16	code;
->   	__le16	length;
->   	__u8	seq_num;
->   	__u8	macid;
->   	__le16	result;
-> -	char	payload[];
-> +} __packed;
-> +
-> +struct mwl8k_cmd_pkt {
-> +	struct mwl8k_cmd_pkt_hdr header;
-> +	char payload[];
->   } __packed;
+A userspace lib together with some simple test programs making use of
+this new API can be found at
 
-One of the problems with this is that `struct mwl8k_cmd_pkt` is candidate for a
-`__counted_by()` annotation:
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git
 
-@@ -592,7 +592,7 @@ struct mwl8k_cmd_pkt {
-         __u8    seq_num;
-         __u8    macid;
-         __le16  result;
--       char    payload[];
-+       char    payload[] __counted_by(length);
-  } __packed;
+.
 
-and with the changes you propose, that is not possible anymore because the counter
-member must be at the same level or in an anonymous struct also at the same level
-as `payload`.
+The start of the series is some cleanup and preparation. The lifetime
+and locking patches are needed to not crash the kernel when a character
+device is open while a lowlevel driver goes away.
 
-Thanks
---
-Gustavo
+I look forward to feedback,
+Uwe
+
+Uwe Kleine-König (8):
+  pwm: Ensure that pwm_chips are allocated using pwmchip_alloc()
+  pwm: Give some sysfs related variables and functions better names
+  pwm: Move contents of sysfs.c into core.c
+  pwm: Ensure a struct pwm has the same lifetime as its pwm_chip
+  pwm: Add a struct device to struct pwm_chip
+  pwm: Make pwmchip_[sg]et_drvdata() a wrapper around dev_set_drvdata()
+  pwm: Add more locking
+  pwm: Add support for pwmchip devices for faster and easier userspace
+    access
+
+ drivers/pwm/Kconfig      |   4 -
+ drivers/pwm/Makefile     |   1 -
+ drivers/pwm/core.c       | 988 +++++++++++++++++++++++++++++++++++++--
+ drivers/pwm/sysfs.c      | 545 ---------------------
+ include/linux/pwm.h      |  51 +-
+ include/uapi/linux/pwm.h |  23 +
+ 6 files changed, 993 insertions(+), 619 deletions(-)
+ delete mode 100644 drivers/pwm/sysfs.c
+ create mode 100644 include/uapi/linux/pwm.h
+
+base-commit: dd6c6d57ab61d496f6ff7d6ca38611062af142a1
+-- 
+2.43.0
 
