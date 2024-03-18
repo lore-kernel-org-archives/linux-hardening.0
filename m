@@ -1,222 +1,219 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CBE1E866;
-	Mon, 18 Mar 2024 04:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05342D029;
+	Mon, 18 Mar 2024 09:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710734500; cv=none; b=ICxuaTsTDO/bfCBYrhH821mVmOy6fJCJNJ93jK4wjJH4XwXCVO5Xuj3uQ2QBZQUSahvTAyZ8GWHvKSUWXFYXUKLO9nnyvvSEwY7VBcUsjjZvbSURwpVXWsvUUy0dH9VHatfoW0qcl+NOblZwY0f0eL1cXmU9qVw6gAgkvWHkcBU=
+	t=1710755459; cv=none; b=NnUS4vbaou9b4HLYbDpG2DgYhsXnzyn0uydd3XoSdj2nVFPmL+UbEhnzmMkiEsdxaq6VCzmLC58xjIwuFIw6rBz2VAZ5Kf97bk63P+aVWG4bE4nYx0J+QZNjvZRDmwueb8myirxfNm1u4Awq0T/QWJ27GFj140+gDWegTUNmalE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710734500; c=relaxed/simple;
-	bh=eKge9M4i6lPpOTMUeCuYsdxpZrceAb6IaDSCK7EFZAo=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ckDoVBRVfhoWF0uFgtfuqlhtbC1fQs0gNzgj4NsuzNGB8X4qDf2CygbbSRZO72lwdfY1OwNpLTouj5psJywHNGsa1F4GG85NqB8w+AzzQ62zvvbPzPZFSoiP0lmDevYZ866FCAEatvTrUxKAt/PwKjV7SSmkhQJjTyIEdnivAyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Tyh1K5L67z1QBmM;
-	Mon, 18 Mar 2024 11:59:01 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7D15C1A016F;
-	Mon, 18 Mar 2024 12:01:33 +0800 (CST)
-Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 18 Mar
- 2024 12:01:33 +0800
-Subject: Re: [PATCH] usercopy: delete __noreturn from usercopy_abort
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <CAG48ez1h9X7Qv-5OR6hAhwnSOng6_PSXBaR6cT7xrk2Wzu39Yg@mail.gmail.com>
- <202403040938.D770633@keescook>
- <77bb0d81-f496-7726-9495-57088a4c0bfc@huawei.com>
- <202403050129.5B72ACAA0D@keescook>
- <b274b545-9439-7ff8-e3ed-604a9ac81f65@huawei.com>
- <20240305175846.qnyiru7uaa7itqba@treble>
-CC: Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-	<gustavoars@kernel.org>, <akpm@linux-foundation.org>, <peterz@infradead.org>,
-	<dave.hansen@linux.intel.com>, <kirill.shutemov@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<linux-mm@kvack.org>, <nixiaoming@huawei.com>, <kepler.chenxin@huawei.com>,
-	<wangbing6@huawei.com>, <wangfangpeng1@huawei.com>, <douzhaolei@huawei.com>,
-	Russell King <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Message-ID: <d6281777-dc1b-a72c-79e2-b1f561472523@huawei.com>
-Date: Mon, 18 Mar 2024 12:01:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1710755459; c=relaxed/simple;
+	bh=GtiAsryJiIMLKj1emvBm1jrA0Ny409Z6CRr5ZugckOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gKqGibSF0WuV4iAjZBe/IOw0OifWRVrtzeQMWM8xcSB0W0tucolz8Dj/gQRE9fz1Heb2BIrl8eDaaRGVwQ3gV4hBoLHmRP8YBCaSyJ0bVOZSpd1WseeoIGmbBV4tisbspdczUAtu0sGAXchali89Vg4M68H/YrJM0y1dpPg7XF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DA9dHlB5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DA9dHlB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A03DC433F1;
+	Mon, 18 Mar 2024 09:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710755459;
+	bh=GtiAsryJiIMLKj1emvBm1jrA0Ny409Z6CRr5ZugckOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DA9dHlB5p7ohUneVhqHFIENoif6fuYu7DFC1HDuAjN7aPmSlAd0eV0a28SDFA4NAt
+	 HqR+UiYy3HGL5LJXGIn4oOVNxrDq/DHQUKoLn2k61aJ0fkoUzKNcXcMHpu+9WKxKjp
+	 y+c15lq/8gxstTVx9ckmPTDI/znWLJfB1/r1gL2M1qrwY5nI0bLoiy4+AybuQCCnNI
+	 muLqkWk5MsiyysDSYsfolRQ+aaFHUyoLc+QlvxlTUTANxwYFbXr1/ZyX+1Qd1Rf2m4
+	 AHryrQU71AL+B+h6XK1If5k8odLHWDMtnFJJjQcc7usTvqAuzXFxXY8O2oLa0xXUpH
+	 DkEfIZn5h+OIg==
+Date: Mon, 18 Mar 2024 10:50:42 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
+Message-ID: <ZfgOf2dHBVT4WUcp@debian>
+References: <20240227110550.3702236-1-mic@digikod.net>
+ <Zd4OlL1G3t1D3TgC@google.com>
+ <20240307.oxQuab5tho0u@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240305175846.qnyiru7uaa7itqba@treble>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500010.china.huawei.com (7.192.105.118)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t2wrf6PLaMqwtsDi"
+Content-Disposition: inline
+In-Reply-To: <20240307.oxQuab5tho0u@digikod.net>
 
 
+--t2wrf6PLaMqwtsDi
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 Mar 2024 10:50:42 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Shervin Oloumi <enlightened@chromium.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
 
-On 2024/3/6 1:58, Josh Poimboeuf wrote:
+Hi Micka=C3=ABl, G=C3=BCnther,
 
-> Adding ARM folks -- see
-> https://lkml.kernel.org/lkml/1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com
-> for the original bug report.
-> 
-> This is an off-by-one bug which is common in unwinders, due to the fact
-> that the address on the stack points to the return address rather than
-> the call address.
-> 
-> So, for example, when the last instruction of a function is a function
-> call (e.g., to a noreturn function), it can cause the unwinder to
-> incorrectly try to unwind from the function *after* the callee.
-> 
-> For ORC (x86), we fixed this by decrementing the PC for call frames (but
-> not exception frames).  I've seen user space unwinders do similar, for
-> non-signal frames.
-> 
-> Something like the following might fix your issue (completely untested):
-> 
+Sorry for the delay!
 
-Thank you very much. I have verified that your patch can fix my issue.
-But I have some little questions.
+On Thu, Mar 07, 2024 at 11:21:57AM +0100, Micka=C3=ABl Sala=C3=BCn wrote:
+> CCing Alejandro
+>=20
+> On Tue, Feb 27, 2024 at 05:32:20PM +0100, G=C3=BCnther Noack wrote:
+> > On Tue, Feb 27, 2024 at 12:05:49PM +0100, Micka=C3=ABl Sala=C3=BCn wrot=
+e:
+> > > Extend the kernel support section with one subsection for build time
+> > > configuration and another for boot time configuration.
+> > >=20
+> > > Extend the boot time subsection with a concrete example.
+> > >=20
+> > > Update the journalctl command to include the boot option.
+> > >=20
+> > > Cc: G=C3=BCnther Noack <gnoack@google.com>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> > > ---
+> > >=20
+> > > Changes since v1:
+> > > * New patch, suggested by Kees Cook.
+> > > ---
+> > >  Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++-=
+--
+> > >  1 file changed, 51 insertions(+), 6 deletions(-)
 
-> diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
-> index 360f0d2406bf..4891e38cdc1f 100644
-> --- a/arch/arm/include/asm/stacktrace.h
-> +++ b/arch/arm/include/asm/stacktrace.h
-> @@ -21,9 +21,7 @@ struct stackframe {
->  	struct llist_node *kr_cur;
->  	struct task_struct *tsk;
->  #endif
-> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
->  	bool ex_frame;
-> -#endif
->  };
->  
->  static __always_inline
-> @@ -37,9 +35,8 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
->  		frame->kr_cur = NULL;
->  		frame->tsk = current;
->  #endif
-> -#ifdef CONFIG_UNWINDER_FRAME_POINTER
-> -		frame->ex_frame = in_entry_text(frame->pc);
-> -#endif
-> +		frame->ex_frame = !!regs;
-> +
+[...]
 
-'regs' must not be NULL, frame->ex_frame will always be TRUE.
-So I think we just need to remove CONFIG_UNWINDER_FRAME_POINTER here.
-We don't need to change the frame->ex_frame assignment statement.
+> > > +
+> > > +  lsm=3Dlandlock,lockdown,yama,integrity,apparmor
+> > > +
+> > > +After a reboot, we can check that Landlock is up and running by look=
+ing at
+> > > +kernel logs:
+> > > +
+> > > +.. code-block:: console
+> > > +
+> > > +    # dmesg | grep landlock || journalctl -kb -g landlock
+> > > +    [    0.000000] Command line: [...] lsm=3Dlandlock,lockdown,yama,=
+integrity,apparmor
+> > > +    [    0.000000] Kernel command line: [...] lsm=3Dlandlock,lockdow=
+n,yama,integrity,apparmor
+> > > +    [    0.000000] LSM: initializing lsm=3Dlockdown,capability,landl=
+ock,yama,integrity,apparmor
+> > > +    [    0.000000] landlock: Up and running.
+> > > +
+> > > +Note that according to the built time kernel configuration,
+> >=20
+> > s/built time/build time/
+> >                  ^
+>=20
+> OK
 
+Here, this should actually be "build-time" since it works as an
+adjective.
 
-> diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-> index 9d2192156087..99ded32196af 100644
-> --- a/arch/arm/kernel/unwind.c
-> +++ b/arch/arm/kernel/unwind.c
-> @@ -407,7 +407,7 @@ int unwind_frame(struct stackframe *frame)
->  {
->  	const struct unwind_idx *idx;
->  	struct unwind_ctrl_block ctrl;
-> -	unsigned long sp_low;
-> +	unsigned long sp_low, pc;
->  
->  	/* store the highest address on the stack to avoid crossing it*/
->  	sp_low = frame->sp;
-> @@ -417,19 +417,22 @@ int unwind_frame(struct stackframe *frame)
->  	pr_debug("%s(pc = %08lx lr = %08lx sp = %08lx)\n", __func__,
->  		 frame->pc, frame->lr, frame->sp);
->  
-> -	idx = unwind_find_idx(frame->pc);
-> +	pc = frame->ex_frame ? frame->pc : frame->pc - 4;
+>=20
+> >=20
+> > It feels like the phrase "according to" could be slightly more specific=
+ here.
+> >=20
+> > To paraphrase Alejandro Colomar, "Note that" is usually redundant.
+> > https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gmail.=
+com/
+> >=20
+> > I'd suggest:
+> >=20
+> >   The kernel may be configured at build time to always load the ``lockd=
+own`` and
+> >   ``capability`` LSMs.  In that case, these LSMs will appear at the beg=
+inning of
+> >   the ``LSM: initializing`` log line as well, even if they are not conf=
+igured in
+> >   the boot loader.
 
-For details, see the unwind_next_frame function in the unwind_orc.c.
-Why subtract 4 here instead of 1?
-`pc = frame->ex_frame ? frame->pc : frame->pc - 1`
-Is it more appropriate?
+LGTM
 
-> +
-> +	idx = unwind_find_idx(pc);
->  	if (!idx) {
-> -		if (frame->pc && kernel_text_address(frame->pc)) {
-> -			if (in_module_plt(frame->pc) && frame->pc != frame->lr) {
-> +		if (kernel_text_address(pc)) {
-> +			if (in_module_plt(pc) && frame->pc != frame->lr) {
->  				/*
->  				 * Quoting Ard: Veneers only set PC using a
->  				 * PC+immediate LDR, and so they don't affect
->  				 * the state of the stack or the register file
->  				 */
->  				frame->pc = frame->lr;
-> +				frame->ex_frame = false;
->  				return URC_OK;
->  			}
-> -			pr_warn("unwind: Index not found %08lx\n", frame->pc);
-> +			pr_warn("unwind: Index not found %08lx\n", pc);
->  		}
->  		return -URC_FAILURE;
->  	}
-> @@ -442,7 +445,7 @@ int unwind_frame(struct stackframe *frame)
->  	if (idx->insn == 1)
->  		/* can't unwind */
->  		return -URC_FAILURE;
-> -	else if (frame->pc == prel31_to_addr(&idx->addr_offset)) {
-> +	else if (frame->ex_frame && pc == prel31_to_addr(&idx->addr_offset)) {
->  		/*
->  		 * Unwinding is tricky when we're halfway through the prologue,
->  		 * since the stack frame that the unwinder expects may not be
-> @@ -451,9 +454,10 @@ int unwind_frame(struct stackframe *frame)
->  		 * a function, we are still effectively in the stack frame of
->  		 * the caller, and the unwind info has no relevance yet.
->  		 */
-> -		if (frame->pc == frame->lr)
-> +		if (pc == frame->lr)
->  			return -URC_FAILURE;
->  		frame->pc = frame->lr;
-> +		frame->ex_frame = false;
->  		return URC_OK;
->  	} else if ((idx->insn & 0x80000000) == 0)
->  		/* prel31 to the unwind table */
-> @@ -515,6 +519,7 @@ int unwind_frame(struct stackframe *frame)
->  	frame->lr = ctrl.vrs[LR];
->  	frame->pc = ctrl.vrs[PC];
->  	frame->lr_addr = ctrl.lr_addr;
-> +	frame->ex_frame = false;
+>=20
+> OK, I integrated your suggestion.  I guess `capability` is not really
+> considered an LSM but it would be too confusing and out of scope for an
+> user documentation to explain that.
+>=20
+> >=20
+> > > +``lockdown,capability,`` may always stay at the beginning of the ``L=
+SM:
+> > > +initializing lsm=3D`` list even if they are not configured with the =
+bootloader,
+> >=20
+> > Nit: The man pages spell this in two words as "boot loader".
+>=20
+> OK, I'll use "boot loader" too.
+>=20
+> >=20
+> >=20
+> > > +which is OK.
+> > > +
+> > > +Network support
+> > > +---------------
+> > > +
+> > >  To be able to explicitly allow TCP operations (e.g., adding a networ=
+k rule with
+> > >  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
+> > >  (``CONFIG_INET=3Dy``).  Otherwise, sys_landlock_add_rule() returns an
+> > >=20
+> > > base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
+> > > --=20
+> > > 2.44.0
+> > >=20
+> >=20
+> > Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
+>=20
+> Thanks!
 
-Why is the value of `frame->ex_frame` directly set to false?
-Why is the value not determined based on `frame->pc`?
-That is, `frame->ex_frame = in_entry_text(frame->pc)`
+Reviewed-by: Alejandro Colomar <alx@kernel.org>
 
->  
->  	return URC_OK;
->  }
-> @@ -544,6 +549,7 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
->  		 */
->  here:
->  		frame.pc = (unsigned long)&&here;
-> +		frame.ex_frame = false;
->  	} else {
->  		/* task blocked in __switch_to */
->  		frame.fp = thread_saved_fp(tsk);
-> @@ -554,11 +560,12 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
->  		 */
->  		frame.lr = 0;
->  		frame.pc = thread_saved_pc(tsk);
-> +		frame.ex_frame = false;
->  	}
->  
->  	while (1) {
->  		int urc;
-> -		unsigned long where = frame.pc;
-> +		unsigned long where = frame.ex_frame ? frame.pc : frame.pc - 4;
->  
->  		urc = unwind_frame(&frame);
->  		if (urc < 0)
-> .
-> 
+Have a lovely day!
+Alex
 
-If I refer to your demo patch and submit a new bugfix patch,
-can I mark you as "Co-developed-by" in this new bugfix patch?
+--=20
+<https://www.alejandro-colomar.es/>
+Looking for a remote C programming job at the moment.
+
+--t2wrf6PLaMqwtsDi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmX4DnIACgkQnowa+77/
+2zJdTA//d7J8aVihMiGfZiCLI9GhosQmnzKqxH6nxyShkAcHLDoJYZfAPDpXfqwM
+DlQAXbMmO+WWQrBXMQ97vYvNE4g6ldl53CAb5X2R96KBhR8vXToXkm/DfvxIeeEF
+Gc+B20PgyRtWqs1fWwZ6kBpIOEv4vhi2+KSky1FQUmTp7tUQXUNd8IaB8/8pXxzY
+YP04T18MMZ8qOMVnC4PnfJm2gij39i45YG7m3OT6hiFwh+AztlK3fFAZdIBM1X1O
+HTq36UG3E2Zog6kE7SjIUeRXcN+GG/9XraeQkyjBuiAR+4EmA9Z6fOcz41j9pu7w
+1fGpZ2i/19wTRkyAvzMZGjVUrCcItur/dkGuXAfzEvuuqsgLuLcabKqvz3EbLTme
++DBSaB+Q9FIx3ema9i/X1k098GLgDrlwS755Q2whV2LnUXfhor2r+OT22kDVedby
+xpxdkOWTTkBjwsnApw0QVw75xEh+ozGmVhfqi8sSwwZ5NS3I3EzAEVNjMOJJvVZS
+UUbooDUYC1YUuBDlhZfWl3HcSPFseBx/BT9YBGs9qq30dGC2Rv8LGmxSXRRo4zYJ
++cw9OJ9iCyogF9M4wcRK8WgzCVQ3Al6LlyAS42D+WiBJcmKXS+pFRzodb+HwtxBG
+X3G5U8RdRDbVhz/YaNx1Q9IZ0A4CW6WcYi5/G45RvN8LPH4M42o=
+=XEON
+-----END PGP SIGNATURE-----
+
+--t2wrf6PLaMqwtsDi--
