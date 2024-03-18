@@ -1,63 +1,64 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CDE59175
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A645A781
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710798176; cv=none; b=VsPQGB1HtkaUN+STndA1jVrWhnNJ80VQ4q7wp3vqcy1BDO9PyoYnrXpfqkXt8kPZF4txQJzfQXTDxoFeXn5MtNZBesPmnZYyGC5MJ3PwTNqKkJys0wL6Q6sUjI+VPLtym40QetOXTW0mMNdN1FD8wX6Gdy7qctxsh4EPlE2jMvs=
+	t=1710798743; cv=none; b=MZMufcf8AKojUVC6IvKVvGZWwkIdaT/9lFih7qkzzvg5ZMmu+w67xOdbzjTrVKkKiV7ajZZV8AS2l41dHHioKWMuDupGpnrtZXzrrcReDryGUZKzElwmkh6lzvAx+JDxnr9hgpCrMu/wfqN7p/kZr7pAz7u0AAIMsO5p64WGPdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710798176; c=relaxed/simple;
-	bh=iVcACEXJ7ByPQf/VBR4On2mYZO1me0Bq9PH9vIqjwdk=;
+	s=arc-20240116; t=1710798743; c=relaxed/simple;
+	bh=Zoh/plVRzNX+mESj2AyesuzyFZDwEPVf/5TgNhPjGPk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HOpcHbtxjkF51QmGP54MxVkXyx/hPusfG08XF5754WFHmaj4uWiUjAASgcEOSXuuOfUvYNSP0r9kSHat9FPjCz/uz9WEQxQiip46vFKClvInKHo/7L/d1K1PyC3hdPUAjiL3w/qt/t7pyZk5rJN9srJ1OpRyssW1EUyeUGLst6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=P07bGrcU; arc=none smtp.client-ip=209.85.216.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9Sf9DZ9mH6tIBNKedSjfxRjhJhD4FvMLiQwKCZsYL7eKjIcCT/PjKnaRTX2byvgRP52ichzFhXoGW3EVF5xBZOvj4uKZIWjOOtamz+IphJcDs6FcalwTsgBEaSJR6U57Ot4eQDFycu27a02m8zMXnklkkBxoix4tkopmddNsT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jAd8nIVH; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P07bGrcU"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29df0ca87d1so3134565a91.2
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:42:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jAd8nIVH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dee27acf7aso31113685ad.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710798174; x=1711402974; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1710798741; x=1711403541; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7ZT3rXspzzYF/8VZb3BdJDfiIw9byhNvhoKVVNwzolw=;
-        b=P07bGrcUbCkl6Na9Jht1T9n59gwomnTOspdHFH4AvL0VyCoWGjuVN+oomoYbTJ9bb7
-         fu7UXDwbSHJSVNwg459j90QJNN+DhZZWPys+hiNv9JCxeXHTow89eMr95249LnQ6t1m0
-         QmTny9xaFOK5tYK8tagQBQpBytPOIXgZ/HNZ4=
+        bh=phAwglOrC+GzhgRWH4s2HaB4VQhNtprYIKXp99X9Uc4=;
+        b=jAd8nIVHTsJd3mAUtB1mIVX+O/1XR0yVyu1V/Jqq/7zHe6ywtFaJ5uEEenYFsUycUF
+         +/coFaLIZiEXAEdqUwG/yDAw+gzybaNDy5dh+Qg6jWe8SK9U3gexOao+bUyeidhr81tg
+         /d6aGHp5nem58SlUCyfvjRxwbHY6aKXQyztKI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710798174; x=1711402974;
+        d=1e100.net; s=20230601; t=1710798741; x=1711403541;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7ZT3rXspzzYF/8VZb3BdJDfiIw9byhNvhoKVVNwzolw=;
-        b=OrGq61GVX/HsHhsHC2dvRLFku06has7ScQe96HVrnLteWQJZIUl+7omdDG0Bqh9GRj
-         dwAUjus/a8golvFiOL6TfdtbyaMeoo/zSHxxiVrw/v7g/rGJo/F56vQAfVPXtWqnhQKT
-         2OGXcr7cHtxCgtidd9BXwpb/5jYnbc+t1MR3zFQ9GYRo9olWW8gysiKYlfCsiad+8flB
-         dAaRM2n0+/jSbla1cAg4D4ncnA3xo6mekDT8r7x9SJEkH9BNj65x4RPQbsQZPfeDngF3
-         UkiJ7tVpnhQNL5zdBiUtTjc+2XGuh7psOPRRX1cRdV0b6TMfQ1HZ5FUFdI4x0jC4jeko
-         gCjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfG00EGFyCltKdtfwdxR10x7DhlVCJE5qYwk452VqezZX4/rMyVHgZ9foGfzUQLz/8wB+7lr8wyUOGEcYFgXKBezAy/YvYuJsKxkGGV+Uw
-X-Gm-Message-State: AOJu0Yzp5dYu4v1gLAlbG0ncGfwXOJixo/HggktXrybyhVoxCEfGDsgE
-	E7EUE79mQlnIw5OKOvFufnMidIEq+y+x94mawdF+IHq4R1AmfSc5pefZYsWAV/Iv5rLc2Ft9rEg
+        bh=phAwglOrC+GzhgRWH4s2HaB4VQhNtprYIKXp99X9Uc4=;
+        b=wxxwmAs7QyQL8SN1GPXJ6VNVHx4alOKxGBu+AjCjP10IEu7/C44aGRsWRjCIWy12Cq
+         saYSsYZWHeQyz2grhAJioCM+wx1urFYazq8y/dqxYf5nZHJRUBBLD7rXRtY13X+sR792
+         84aFv2474w/buxF4psgfoFXGIleZ1LbukyW5oJljBFMTzx+AQUCBl6u1JLVm7iuzZ0O/
+         g2cPMllNTGb7K9bPp1LkObcIp28qNzWmfw1r/u7ADGwmwxwzR1UdMqIJTKtE70aFHJp5
+         kG9b7h4hBivLIzSqT/gCmMz9jJXq4h4KwRpJObs35ntHvfquh+KNXFQf3QBvNOgRK8oM
+         mNEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWR0WVccTuz6A7rvrVkMG2bWka76iXaXik2ePyueaK06nMu5QMg7jcEL09aK+/QfeMtaZOiLs4wMQ59W2FZ+qtR/8oxQvCuQWKnHBGvSP9R
+X-Gm-Message-State: AOJu0YxpIkFnpMeO7Tqg3FLQyhL+Iz3LKlKYSTsP+PhKEZlnhUMwzVDb
+	sAgl8x/6Lw//E0RIaiUaft/HgHTw6fnaeu26IKSZ6k3FESw37Sp0ZN2e3L79+13I/PF488HBn+k
 	=
-X-Google-Smtp-Source: AGHT+IGg9l6bZmeO7Ny5acljZFDqRjc8/N34eF9u08DQc0aZry14iz4qSdvaqNwuhzR5e/Zliea6fQ==
-X-Received: by 2002:a17:90a:8044:b0:29c:7931:87f8 with SMTP id e4-20020a17090a804400b0029c793187f8mr10092454pjw.43.1710798174286;
-        Mon, 18 Mar 2024 14:42:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFvpUkb4zb8ZV5cxUcrGzuH2I+SCgZ2wa3Oc3Y3SsPXQEkBAX3UGe71imR/kKil5/jxQnWJw==
+X-Received: by 2002:a17:902:c952:b0:1de:e278:cb95 with SMTP id i18-20020a170902c95200b001dee278cb95mr15968411pla.50.1710798741455;
+        Mon, 18 Mar 2024 14:52:21 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l23-20020a17090a3f1700b0029bce05b7dfsm9004860pjc.32.2024.03.18.14.42.53
+        by smtp.gmail.com with ESMTPSA id mm14-20020a1709030a0e00b001dd2b965a8esm9823069plb.163.2024.03.18.14.52.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 14:42:53 -0700 (PDT)
-Date: Mon, 18 Mar 2024 14:42:53 -0700
+        Mon, 18 Mar 2024 14:52:20 -0700 (PDT)
+Date: Mon, 18 Mar 2024 14:52:20 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: target: replace deprecated strncpy with strscpy
-Message-ID: <202403181442.1E78DAA4@keescook>
-References: <20240318-strncpy-drivers-target-target_core_configfs-c-v1-1-dc319e85fe45@google.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: cmd-db: replace deprecated strncpy with memcpy
+Message-ID: <202403181443.F4021C9F63@keescook>
+References: <20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,42 +67,79 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240318-strncpy-drivers-target-target_core_configfs-c-v1-1-dc319e85fe45@google.com>
+In-Reply-To: <20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com>
 
-On Mon, Mar 18, 2024 at 09:32:01PM +0000, Justin Stitt wrote:
+On Thu, Mar 14, 2024 at 10:29:37PM +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> We expect db_root and db_root_stage to be NUL-terminated based on its
-> immediate use with pr_debug which expects a C-string argument (%s).
-> Moreover, it seems NUL-padding is not required.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> Additionally, we should also change snprintf() to scnprintf().
-> `read_bytes` may be improperly assigned as snprintf() does NOT return
-> the number of bytes written into the destination buffer, rather it
-> returns the number of bytes that COULD have been written to that buffer
-> if it had ample space. Conversely, scnprintf() returns the actual number
-> of bytes written into the destination buffer (except the NUL-byte). This
-> essentially means the ``if (!read_bytes)`` was probably never a possible
-> branch.
-> 
-> After these changes, this code is more self-describing since it uses
-> string APIs that more accurately match the desired behavior.
+> @query is already marked as __nonstring and doesn't need to be
+> NUL-terminated. Due to this, we don't need to use a string API here
+> (especially a deprecated one). Let's have our stack allocation also
+> zero-initialize so that we can just perform a standard memcpy. Since the
+> code now speaks for itself we can drop the comment. A memcpy on a
+> __nonstring buffer explains everything that this comment talks about.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/soc/qcom/cmd-db.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
+> index a5fd68411bed..512556366a3e 100644
+> --- a/drivers/soc/qcom/cmd-db.c
+> +++ b/drivers/soc/qcom/cmd-db.c
+> @@ -141,18 +141,13 @@ static int cmd_db_get_header(const char *id, const struct entry_header **eh,
+>  	const struct rsc_hdr *rsc_hdr;
+>  	const struct entry_header *ent;
+>  	int ret, i, j;
+> -	u8 query[sizeof(ent->id)] __nonstring;
+> +	u8 query[sizeof(ent->id)] __nonstring = { 0 };
+>  
+>  	ret = cmd_db_ready();
+>  	if (ret)
+>  		return ret;
+>  
+> -	/*
+> -	 * Pad out query string to same length as in DB. NOTE: the output
+> -	 * query string is not necessarily '\0' terminated if it bumps up
+> -	 * against the max size. That's OK and expected.
+> -	 */
+> -	strncpy(query, id, sizeof(query));
+> +	memcpy(query, id, sizeof(query));
 
-Good catch on "read_bytes"!
+Hm, no, this isn't right. We do want to stop copying at the first NUL
+character, but we don't care about truncation. e.g. imagine if "id" was
+a 3 character string followed by other bytes in memory. We'd copy beyond
+the end of "id" into query, and the later memcmp()s would start failing.
+I think what you want here is:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+	strtomem(query, id);
+
+-Kees
+
+>  
+>  	for (i = 0; i < MAX_SLV_ID; i++) {
+>  		rsc_hdr = &cmd_db_header->header[i];
+> 
+> ---
+> base-commit: fe46a7dd189e25604716c03576d05ac8a5209743
+> change-id: 20240314-strncpy-drivers-soc-qcom-cmd-db-c-284f3abaabb8
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
 
 -- 
 Kees Cook
