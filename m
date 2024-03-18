@@ -1,127 +1,160 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30B756444
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 18:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CE058ACA
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710785807; cv=none; b=KRhitceeUY3gTIiksnmrP0sRM78BSnAVYuXVG4QWCkpPojM4mVBW0g1BxgyNkwp0d1puffpSv84XdvemWjBN6LI+2omcXKxReLI9gcObNUPLY84vhOq6ZFT8hHmrTXUemxO10Lx0Hf7lrZS6fICmTOWPXKUZSeYv+K0E7aP6XSs=
+	t=1710797526; cv=none; b=C4zx8YvXLP/0JYojSVyXWCLn+YobSEQBJNqmKnh5A2uNAxVAatk8mhzMuC7m1Pr2kMnzfRUXAljppwdzGG1QD81+scq8nqRSW6yNsFOEI/9ii0blNEh1tl9FKKpEHTGOrYpB6j5Z30TjxB05xoxZoZQMwn1MTgBC1x1zFSM5Gd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710785807; c=relaxed/simple;
-	bh=aK42RSRjeC9IKLretkq6K3mOb1utL1EABlZm0R0jL/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JUQOz3MwXQWxd84W+cHSP7XOXv+5OqN9WVTg3IOVBfbjUppWAeZcVf6FMkd61TRo3h6L48OIDOjDD9yL+kEs4seDhIpVYwTpUVtSm444xPFNky2URf4U81Hmui4JhV97usuf0eayqI0Oc82FN1e9Eoz8oD+sJDsZfP+7fHUDI8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ARZ9MwKY; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1710797526; c=relaxed/simple;
+	bh=ucCmelMyvR8B8A4YhhLHaWy73dAoGtvG0I0P2JPd3j0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cPgcxYn+7RSCSSuX+LxTe1KOV9UUvKs0TrBQdcnwp3m3j36wlN44zU4ZHgThbSri+cuvOroreE98EOY0uHzx8q78qc2Kls3VWiteFuhahfDX29LF9L5SZj7h5DRfZe3rRxU0qQ7gkSIo2/FdBjvsnxjkMS3TMOh5lvzFJCziAKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y9hibkYd; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ARZ9MwKY"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29dedcd244dso2953276a91.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 11:16:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y9hibkYd"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a4ee41269so88856027b3.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:32:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710785805; x=1711390605; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TutCVyAsBBig1tZFwFrMfle0rB3gxmbA8WbdKdW3GIk=;
-        b=ARZ9MwKYKqfwMotgwXhfN0L71CEOcemJaTm1tgNV7bwsGUqRUZKFKyzRzFN2s8j9el
-         RpGOhzxblG2mg0TPfT8g8dpHlWa4xzhMH0AXR0NL/WFrtQAUJPei63zFghw87PYRWIeE
-         NEzRus7BQqQDYMIpGII5wYwud02uWh4iLNLiw=
+        d=google.com; s=20230601; t=1710797523; x=1711402323; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QGU+lR1DQdP6tUDzCuW1XO/1wByAXmJNEyDZZfUNtA8=;
+        b=Y9hibkYdRK/UkswX6Q5t1ynlhtWNtojpaKP99LJHvzrrdccri4DRMydVrYARhlBZt4
+         V+e/RfpfEsnYMeFBepA3n/M3SR+dNcCl3LybSM7jY0TgqmBwJqjXamteczdF0nJ04BrM
+         +Di/5/f5V2JEIto0M0uUDXhJMUmDwDJO+Ui6OtZefRQohRhBQv1AQowur2OrC7BzeHGo
+         +bo01MNw8P4GQzxPg6cjl+vT9LmMRDLYK77FBzW0LZjCoeMJAPS0ZVypnIluAgJIePLQ
+         pRd/qPk0Vt69L1dHEGjR8XkNqdQpZhB60J62Ue1oCTqmXdMOKgYjZfjcg9ylUq3oSerO
+         tvUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710785805; x=1711390605;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TutCVyAsBBig1tZFwFrMfle0rB3gxmbA8WbdKdW3GIk=;
-        b=ezEZNsCeX/S3ovfYFL0shvR1GZnS7YvJIbJquXe3IxFJ1uhyw1W1ETeYw782e48r3K
-         R+lzn4L6Po8QWnBOmWWCp1AVw32q0785MBZ7c3HBMGkviWcxqDbfmHq3rKD4iJeTaWro
-         cKu8Cz+TJmLhm6RBdgEdOIS+x2fmQKqvwqU1ub10ltr+FmXGv2gXuGQelOq6DFgEV0Bw
-         efnrreq+Utmp1srpKi688R+jpeBPs0kWs7Jkk5HAjXQ95rrqcCivTgv8tB8b5swgKYoV
-         EmFnQ3tAlIkCv4lXSXv7RneH3mdzXM3Z9LIKWa79wZkmI3ooMUTJ0uR/MHgs85nY6Xnm
-         UqAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVY/9l4K4p0UUQqB/qgqoAIrppLsx7RaXt1KfHPCHr/2S+YhwiGYiZ5/AN/XulWGCm7SeNnA8I45odEj2izd1yCGB9gloFrCzGFTpwBV0pE
-X-Gm-Message-State: AOJu0Yy6k6XpCC0+SGvLmcNHCi080oTtYxy8NjIApttieFQ6B1d/ayGT
-	NE99WbOQt/ZqMkx0IZNgYofw4J7VLbbQSYKsOzWdgWZa5goqHKAdLsPtAYzKJA==
-X-Google-Smtp-Source: AGHT+IHL5dp9Je1qIRv0vv1+wAHaevvUv1aqzEk0ER5ggoxg/Bp/e00oDihoqfX4JSsOZSNsvbPZPQ==
-X-Received: by 2002:a17:90b:3901:b0:29f:c286:d439 with SMTP id ob1-20020a17090b390100b0029fc286d439mr1818686pjb.35.1710785805001;
-        Mon, 18 Mar 2024 11:16:45 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id sw11-20020a17090b2c8b00b0029bcaaf2baasm8092296pjb.3.2024.03.18.11.16.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 11:16:44 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Shuah Khan <shuah@kernel.org>,
-	"kernelci.org bot" <bot@kernelci.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] selftests/exec: Convert remaining /bin/sh to /bin/bash
-Date: Mon, 18 Mar 2024 11:16:42 -0700
-Message-Id: <20240318181638.work.575-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1710797523; x=1711402323;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QGU+lR1DQdP6tUDzCuW1XO/1wByAXmJNEyDZZfUNtA8=;
+        b=lg51JLPouS3AE+zZ2WVRPUJ1xs8sqK48lMlEyCgi4uQ5bZSVxT403efG/x2dzOz5fQ
+         Z551mV0GCuaYnVnk1ommzZg+1MB9DP0h5HGELq/xhPQ6v0YT91qskIdW9HsuUsQt84Kr
+         4bU+bRJyiYUrSjLPNx0PjMPNuA6E3iuPD3zvU40WfYPiIVuHu2a/T25BeikXivQgMSWm
+         hTlVVTijbvy0YyS0WLaPHoyDl4lnY96clVn2/K1rQk1/5sgAH1Nf4f7jHEUpC7rrWdMB
+         +yBTy0DHFgV35ZneMl8r6G7DOnASgc8ZfBTvTp8UOFMDBhkoyrKzbVcbGSJqVd2VG+cC
+         h5oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQc94CIY/UaX70pum/IcTDEOUPW2D6ILsBnxUNHtZ9s+pDZQCTJrzETWLnMQL7JpwkGRNY2EPc155jOFQEVjOsmSHubLNVYKMhK6z9R2Hi
+X-Gm-Message-State: AOJu0YySCTPmgGh6/bOIrZ444N/e19GPoa5BP0sLaSs5RdGBlYqIiD1+
+	k9z0VwR3PsAzrenNjWiGC9rH6ZgP9bwfRfmGvqAeTjD4LkYlxKacgPm+Qr91P+YGbGevBZk7jSS
+	KG6n/a+iuTgzwEusLbjMjJw==
+X-Google-Smtp-Source: AGHT+IFF9ZVPbTZJCRAJN5ywjUYOtG5Avz/nf0ggwdYTo8nfoHH0biyCithjlhBYk7bRu5uYV2r/Gc+4wD5vJ8d5eQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:100a:b0:dd9:3143:577a with
+ SMTP id w10-20020a056902100a00b00dd93143577amr86321ybt.0.1710797523740; Mon,
+ 18 Mar 2024 14:32:03 -0700 (PDT)
+Date: Mon, 18 Mar 2024 21:32:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1469; i=keescook@chromium.org;
- h=from:subject:message-id; bh=aK42RSRjeC9IKLretkq6K3mOb1utL1EABlZm0R0jL/Q=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl+IUK90DszRxhMIIEkqPYLiLsWPFbVU218DUmi
- cRdTt7eIb2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZfiFCgAKCRCJcvTf3G3A
- JhL4D/98Q/UMkZ6mihjAYLaGdP9nozm50w8mti8CjE1+3V4lGLcP/fN787DQ0T4/Vlhr62YxZzW
- arKmNIeHxt4qqOgbztjGxKx2oaIXOoAslLTRTX3oD29Jf1BaWzfgB6gihYrhwaa1RroIcMdhpeh
- SmJgkZNubnQPgOzDRIbBB26JWcEKn2xNO2cBePzQWY2bCNDkV2pfBVui16V79jyYWFEl9oLvc0l
- PLUoqGnwRjaN7owt/aIbEGS4yPpNLkCK3/r4mPnFjE22gBt8hYIiu+Tp08fI/0WOMvYlUR/lHkJ
- JfYZ8WzbqZYj/RhnRs29Z0yixEJQO9aqR91ITJUJaFY5Z9ibebtCjUEgK/AWUq/Hq4ZrumVDwGl
- 6N8yUiD4cE6vDog6YvggkDZcK0PuuasP9smEHFVmy+qjW51qw9xprEcbcncm1FdQyl4L36dDAWJ
- nIBreYuBDIHQgXtwldB0msRTmUGCMmTZZDb3xfpYdOs6F4VaH4YETb6f9JMZHWwicrGJB1SIS2B
- zVqcdb960hKGlfm80/5GYj2wuxscfgjET8yxFXRh5pfZfSmn1snv0U7j/zEBYaisVIL28oe2tVo
- PrGXRgvNWJYSe73k9eWBIJBEh/lKuHNlUFoH5tIRhdAbdv300T8IP7Jtiq4lbroM5e48UPzsZMK
- XJkcOSG Zpxt901A==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIANCy+GUC/y2NQQqDMBBFryKzdiCmtVSvIqXEOJPOJspMkBbx7
+ g2lm/d5m/8OMFIhg7E5QGkXkzVX6doG4ivkRChLdfDOX92l69GK5rh9cFHZSQ1L0ETlP8+4KlV klsSGEXmm+83PPPQuQP3clFjev970OM8v/0hmjX8AAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710797522; l=3305;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=ucCmelMyvR8B8A4YhhLHaWy73dAoGtvG0I0P2JPd3j0=; b=cxBzFAJknOPLMzKwp30JtiedqAp/exwKy/UHOrHkzoxhsyu7imVK6mW94Y8EnNjK9NUt7E/5+
+ PMgMlQwNNcCBXXkS+Zelm+YA6MXLrjirE2R7Xap16oClMSlDcX7fJSq
+X-Mailer: b4 0.12.3
+Message-ID: <20240318-strncpy-drivers-target-target_core_configfs-c-v1-1-dc319e85fe45@google.com>
+Subject: [PATCH] scsi: target: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-As was intended with commit 17107429947b ("selftests/exec: Perform script
-checks with /bin/bash"), convert the other instance of /bin/sh to
-/bin/bash. It appears that at least Debian Bookworm's /bin/sh (dash)
-does not conform to POSIX's "return 127 when script not found"
-requirement.
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Fixes: 17107429947b ("selftests/exec: Perform script checks with /bin/bash")
-Reported-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Closes: https://lore.kernel.org/lkml/02c8bf8e-1934-44ab-a886-e065b37366a7@collabora.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
+We expect db_root and db_root_stage to be NUL-terminated based on its
+immediate use with pr_debug which expects a C-string argument (%s).
+Moreover, it seems NUL-padding is not required.
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
+
+Additionally, we should also change snprintf() to scnprintf().
+`read_bytes` may be improperly assigned as snprintf() does NOT return
+the number of bytes written into the destination buffer, rather it
+returns the number of bytes that COULD have been written to that buffer
+if it had ample space. Conversely, scnprintf() returns the actual number
+of bytes written into the destination buffer (except the NUL-byte). This
+essentially means the ``if (!read_bytes)`` was probably never a possible
+branch.
+
+After these changes, this code is more self-describing since it uses
+string APIs that more accurately match the desired behavior.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: "kernelci.org bot" <bot@kernelci.org>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kselftest@vger.kernel.org
----
- tools/testing/selftests/exec/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Note: build-tested only.
 
-diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-index a0b8688b0836..fb4472ddffd8 100644
---- a/tools/testing/selftests/exec/Makefile
-+++ b/tools/testing/selftests/exec/Makefile
-@@ -19,8 +19,8 @@ include ../lib.mk
+Found with: $ rg "strncpy\("
+---
+ drivers/target/target_core_configfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
+index c1fbcdd16182..d78647e4f6c5 100644
+--- a/drivers/target/target_core_configfs.c
++++ b/drivers/target/target_core_configfs.c
+@@ -123,7 +123,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
+ 		goto unlock;
+ 	}
  
- $(OUTPUT)/subdir:
- 	mkdir -p $@
--$(OUTPUT)/script:
--	echo '#!/bin/sh' > $@
-+$(OUTPUT)/script: Makefile
-+	echo '#!/bin/bash' > $@
- 	echo 'exit $$*' >> $@
- 	chmod +x $@
- $(OUTPUT)/execveat.symlink: $(OUTPUT)/execveat
--- 
-2.34.1
+-	read_bytes = snprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
++	read_bytes = scnprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
+ 	if (!read_bytes)
+ 		goto unlock;
+ 
+@@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
+ 	}
+ 	filp_close(fp, NULL);
+ 
+-	strncpy(db_root, db_root_stage, read_bytes);
++	strscpy(db_root, db_root_stage, sizeof(db_root));
+ 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+ 
+ 	r = read_bytes;
+@@ -3651,7 +3651,7 @@ static void target_init_dbroot(void)
+ {
+ 	struct file *fp;
+ 
+-	snprintf(db_root_stage, DB_ROOT_LEN, DB_ROOT_PREFERRED);
++	scnprintf(db_root_stage, DB_ROOT_LEN, DB_ROOT_PREFERRED);
+ 	fp = filp_open(db_root_stage, O_RDONLY, 0);
+ 	if (IS_ERR(fp)) {
+ 		pr_err("db_root: cannot open: %s\n", db_root_stage);
+@@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
+ 	}
+ 	filp_close(fp, NULL);
+ 
+-	strncpy(db_root, db_root_stage, DB_ROOT_LEN);
++	strscpy(db_root, db_root_stage, sizeof(db_root));
+ 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+ }
+ 
+
+---
+base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
+change-id: 20240315-strncpy-drivers-target-target_core_configfs-c-fbe862bf950a
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
