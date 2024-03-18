@@ -1,64 +1,64 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A645A781
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5705659B4C
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710798743; cv=none; b=MZMufcf8AKojUVC6IvKVvGZWwkIdaT/9lFih7qkzzvg5ZMmu+w67xOdbzjTrVKkKiV7ajZZV8AS2l41dHHioKWMuDupGpnrtZXzrrcReDryGUZKzElwmkh6lzvAx+JDxnr9hgpCrMu/wfqN7p/kZr7pAz7u0AAIMsO5p64WGPdY=
+	t=1710798792; cv=none; b=owIj5WTssZjK38fgm1dGFneLM2WsrycUNldqg4QS3Zc44qfuBFCHeuV+GR9tRd4k0Qg/gh9Ig3XlOfkF/Hzu3FeAI0fOzvOl1CVio0fiqoHyXtVORFk7UpF+ECbPOijt8Amr2aN97fFwMlbx8r/3bP6bQaw/SBZ3S2jxQuddrAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710798743; c=relaxed/simple;
-	bh=Zoh/plVRzNX+mESj2AyesuzyFZDwEPVf/5TgNhPjGPk=;
+	s=arc-20240116; t=1710798792; c=relaxed/simple;
+	bh=JizSFbjtx2htSyk8SkATyClTMTliTcHMUD9iIRdZRdA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9Sf9DZ9mH6tIBNKedSjfxRjhJhD4FvMLiQwKCZsYL7eKjIcCT/PjKnaRTX2byvgRP52ichzFhXoGW3EVF5xBZOvj4uKZIWjOOtamz+IphJcDs6FcalwTsgBEaSJR6U57Ot4eQDFycu27a02m8zMXnklkkBxoix4tkopmddNsT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jAd8nIVH; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=D0iz+EFcs3leXTI2PgXl+uzBay1NgHrKG3aTm96FZ2enkPrtMt2Uhrb6lw0egAbCQE9pGljwsou0INucH8xfum/ZSqha4ncMTxEBAvfyPI58aEgCVm02Rw46N2zU+Jk0jCoIHAXNuPZ4knvH1R7Bk3ctGRO2wfgLQUl4YozleqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iaNzDjOa; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jAd8nIVH"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dee27acf7aso31113685ad.2
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:52:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iaNzDjOa"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29e0229d6b5so2379534a91.3
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710798741; x=1711403541; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1710798791; x=1711403591; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=phAwglOrC+GzhgRWH4s2HaB4VQhNtprYIKXp99X9Uc4=;
-        b=jAd8nIVHTsJd3mAUtB1mIVX+O/1XR0yVyu1V/Jqq/7zHe6ywtFaJ5uEEenYFsUycUF
-         +/coFaLIZiEXAEdqUwG/yDAw+gzybaNDy5dh+Qg6jWe8SK9U3gexOao+bUyeidhr81tg
-         /d6aGHp5nem58SlUCyfvjRxwbHY6aKXQyztKI=
+        bh=BtzX3B0TpCLSG/r678eRw7F3f4FGYZRbRXL/8dQddU4=;
+        b=iaNzDjOa64gmGV/i244zGJQEMiRulP5z1WVeu3Sqi6F00DCy2hmOmXQJ0EXDxMY8vi
+         TwC5aZP9PumCTH7f40WJRSYJI5+Qb3XtGRUNxNoVIF7d9I0ZIEarXWX13A/g8qbXeGlX
+         Pu/lETOdVlYDMxuaIKLb/v9yiy6nVJOd4ZB/o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710798741; x=1711403541;
+        d=1e100.net; s=20230601; t=1710798791; x=1711403591;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=phAwglOrC+GzhgRWH4s2HaB4VQhNtprYIKXp99X9Uc4=;
-        b=wxxwmAs7QyQL8SN1GPXJ6VNVHx4alOKxGBu+AjCjP10IEu7/C44aGRsWRjCIWy12Cq
-         saYSsYZWHeQyz2grhAJioCM+wx1urFYazq8y/dqxYf5nZHJRUBBLD7rXRtY13X+sR792
-         84aFv2474w/buxF4psgfoFXGIleZ1LbukyW5oJljBFMTzx+AQUCBl6u1JLVm7iuzZ0O/
-         g2cPMllNTGb7K9bPp1LkObcIp28qNzWmfw1r/u7ADGwmwxwzR1UdMqIJTKtE70aFHJp5
-         kG9b7h4hBivLIzSqT/gCmMz9jJXq4h4KwRpJObs35ntHvfquh+KNXFQf3QBvNOgRK8oM
-         mNEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWR0WVccTuz6A7rvrVkMG2bWka76iXaXik2ePyueaK06nMu5QMg7jcEL09aK+/QfeMtaZOiLs4wMQ59W2FZ+qtR/8oxQvCuQWKnHBGvSP9R
-X-Gm-Message-State: AOJu0YxpIkFnpMeO7Tqg3FLQyhL+Iz3LKlKYSTsP+PhKEZlnhUMwzVDb
-	sAgl8x/6Lw//E0RIaiUaft/HgHTw6fnaeu26IKSZ6k3FESw37Sp0ZN2e3L79+13I/PF488HBn+k
+        bh=BtzX3B0TpCLSG/r678eRw7F3f4FGYZRbRXL/8dQddU4=;
+        b=t4F9Qsq8ke1zU0P4GVOC355UuhYwoZDsxKoSh4JISEPCGwaOLQqpiMCJhf+tQIYtf6
+         wseoYVkoB5EhCjpfRlF1PQI4uKpCyBA0DultRQVm6fXMwcAMCBF8aLAsXl/Vdmpx+NoN
+         BwzQqRBhysD1DpEfBntm0fiJmQSEX+NpMiiJT+A4qL7TmFL47RbZ9Q3G/yajR/FRTH2j
+         s93+FHOFertY6Ub6P3aYeth1BunVe3fVqUNkbNR9Hh7h3nfEkOsGe4obssNK3k6PX7OP
+         Hsmp7NyhQjGF2DQMZgrMQVZOr9I+FunGOxJUQ6tj2YIV0Kc3szkmPwVTTHRMQKCTwNlX
+         TJ7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWmu2XN9lo6Ztz1oGvoZu0TvO0XTF2n3CfkAG+LXJBFGndYADWT4ylu3lkVt/e98oVKBMCjzEhpdCL8IsSON1/85b6Ns7iF7sz0waKSYm+B
+X-Gm-Message-State: AOJu0YyYvpu5krv1u9SGh+AyL0ooTR/7W8D3QitQ3K302D67aW6HVcdr
+	mvt9pqNZbOEqfzDhCH1Tyu42vB6HDZ/rS1HoASWSz8eala4GzfK8CGwWi7ceRnotgHcGl0gOeas
 	=
-X-Google-Smtp-Source: AGHT+IGFvpUkb4zb8ZV5cxUcrGzuH2I+SCgZ2wa3Oc3Y3SsPXQEkBAX3UGe71imR/kKil5/jxQnWJw==
-X-Received: by 2002:a17:902:c952:b0:1de:e278:cb95 with SMTP id i18-20020a170902c95200b001dee278cb95mr15968411pla.50.1710798741455;
-        Mon, 18 Mar 2024 14:52:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGv4Kqn7atIxrIijFKf64/vFsVwStmAQMvmLnWKqPS6XvTIKQsbJnzlt/yktHSLuH3RG7+/jA==
+X-Received: by 2002:a17:90a:12ca:b0:29d:f086:9e44 with SMTP id b10-20020a17090a12ca00b0029df0869e44mr8248526pjg.46.1710798790706;
+        Mon, 18 Mar 2024 14:53:10 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mm14-20020a1709030a0e00b001dd2b965a8esm9823069plb.163.2024.03.18.14.52.20
+        by smtp.gmail.com with ESMTPSA id ok5-20020a17090b1d4500b0029df9355e79sm6731928pjb.13.2024.03.18.14.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 14:52:20 -0700 (PDT)
-Date: Mon, 18 Mar 2024 14:52:20 -0700
+        Mon, 18 Mar 2024 14:53:10 -0700 (PDT)
+Date: Mon, 18 Mar 2024 14:53:09 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: cmd-db: replace deprecated strncpy with memcpy
-Message-ID: <202403181443.F4021C9F63@keescook>
-References: <20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
+	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH] ubsan: Remove unused function
+Message-ID: <202403181452.500EF35300@keescook>
+References: <20240315015347.2259-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,78 +67,45 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com>
+In-Reply-To: <20240315015347.2259-1-jiapeng.chong@linux.alibaba.com>
 
-On Thu, Mar 14, 2024 at 10:29:37PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Fri, Mar 15, 2024 at 09:53:47AM +0800, Jiapeng Chong wrote:
+> The function are defined in the test_ubsan.c file, but not called
+> elsewhere, so delete the unused function.
 > 
-> @query is already marked as __nonstring and doesn't need to be
-> NUL-terminated. Due to this, we don't need to use a string API here
-> (especially a deprecated one). Let's have our stack allocation also
-> zero-initialize so that we can just perform a standard memcpy. Since the
-> code now speaks for itself we can drop the comment. A memcpy on a
-> __nonstring buffer explains everything that this comment talks about.
+> lib/test_ubsan.c:137:28: warning: unused variable 'skip_ubsan_array'.
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8541
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 > ---
-> Note: build-tested only.
+>  lib/test_ubsan.c | 5 -----
+>  1 file changed, 5 deletions(-)
 > 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/soc/qcom/cmd-db.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-> index a5fd68411bed..512556366a3e 100644
-> --- a/drivers/soc/qcom/cmd-db.c
-> +++ b/drivers/soc/qcom/cmd-db.c
-> @@ -141,18 +141,13 @@ static int cmd_db_get_header(const char *id, const struct entry_header **eh,
->  	const struct rsc_hdr *rsc_hdr;
->  	const struct entry_header *ent;
->  	int ret, i, j;
-> -	u8 query[sizeof(ent->id)] __nonstring;
-> +	u8 query[sizeof(ent->id)] __nonstring = { 0 };
+> diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
+> index 276c12140ee2..be335a93224f 100644
+> --- a/lib/test_ubsan.c
+> +++ b/lib/test_ubsan.c
+> @@ -133,11 +133,6 @@ static const test_ubsan_fp test_ubsan_array[] = {
+>  	test_ubsan_misaligned_access,
+>  };
 >  
->  	ret = cmd_db_ready();
->  	if (ret)
->  		return ret;
->  
-> -	/*
-> -	 * Pad out query string to same length as in DB. NOTE: the output
-> -	 * query string is not necessarily '\0' terminated if it bumps up
-> -	 * against the max size. That's OK and expected.
-> -	 */
-> -	strncpy(query, id, sizeof(query));
-> +	memcpy(query, id, sizeof(query));
+> -/* Excluded because they Oops the module. */
+> -static const test_ubsan_fp skip_ubsan_array[] = {
+> -	test_ubsan_divrem_overflow,
+> -};
 
-Hm, no, this isn't right. We do want to stop copying at the first NUL
-character, but we don't care about truncation. e.g. imagine if "id" was
-a 3 character string followed by other bytes in memory. We'd copy beyond
-the end of "id" into query, and the later memcmp()s would start failing.
-I think what you want here is:
-
-	strtomem(query, id);
+But then I'll get warnings about test_ubsan_divrem_overflow() being
+defined and not used. :)
 
 -Kees
 
->  
->  	for (i = 0; i < MAX_SLV_ID; i++) {
->  		rsc_hdr = &cmd_db_header->header[i];
-> 
-> ---
-> base-commit: fe46a7dd189e25604716c03576d05ac8a5209743
-> change-id: 20240314-strncpy-drivers-soc-qcom-cmd-db-c-284f3abaabb8
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+> -
+>  static int __init test_ubsan_init(void)
+>  {
+>  	unsigned int i;
+> -- 
+> 2.20.1.7.g153144c
 > 
 
 -- 
