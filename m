@@ -1,83 +1,161 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA14C5A780;
-	Mon, 18 Mar 2024 21:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8097959B77
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 22:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710799001; cv=none; b=ATn49NQYipb28XPX687hkEhQ2PO5D3/e08Jx2Bf82Wjx7aL8Wx8gaIfckzHbL7Y27d5YX96TybKkB5uV1/2QPuafc0EWr5cc27nraM5KyjYXQ20JAI5k6pj2XibeDzv3Qwo7ZBFaPad096gNkWdlTcFHacKDQmSzFU1sQ1J/xGQ=
+	t=1710799687; cv=none; b=quDNx8gwuBw/zAIZh3dL1zecaSrpuSbSHvcNkXVgJ77HNtsXSGpY79ubYkfvR+cPdi+TwzW/F3TZva48gI5ngDO9dzFHhuUj0RYodFnbF6McFrIM+Yf6MijgSytzo2gmsKC/2p0wdZL5wjxgrrEyDf6X6ujBefGj3pLBffWRg/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710799001; c=relaxed/simple;
-	bh=LQlzSO4jZlu/R9+d49B7PtAsfF5y5LqIkz99iZPabwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qxCvNyLL6igzRwQZHCZlUv+bYySePU/4+qh0K9bUnjmT3BTuSG920iSAnyEwlwQdOd9oI0ZAdJazFfgrXLHSg9MHoj0wRtAiCvbmXGAy2ttnJdvXohxr/fVzQULHRLzwcBmkBNk4mWLB0q+Qc7tL7Zm/Y7DR6HGRLndPta26s04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=TuuVIu/V; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1710799687; c=relaxed/simple;
+	bh=8sSU/nXOVaTUrxt2iL4oXf9XEJw7qJGFB8M6brZiaUI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nJ4Byy4sRipEY2Pep2dOnB1cvi8FU7/qiaSXiiyi50onqe/GIUMqjV29dfXjVH+TzWzTnZaEvq5VPQ5N59NGqSPX6ZV3fnQOG6NAtxljwAVVfTo/pkmDU4ILxlqf0G/NJGBuM470W28tIh37CNx82Hs8d0Res0kkNtep+ZDjKnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wp3ntPOD; arc=none smtp.client-ip=209.85.166.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="TuuVIu/V"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EC09B40E01A0;
-	Mon, 18 Mar 2024 21:56:35 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id muw0ZI-tpOYL; Mon, 18 Mar 2024 21:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1710798992; bh=jL6oALm6oz0AQpaMLGBefs2+N863KTZI8rUXH8fplhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TuuVIu/VjejpM4svNOmmHKQdYto5WHI/9saJoUPQVqSfPoObky2M5V1s/hgeA7Vce
-	 N40oqibOVXXCBYXlgvKlEFF/7t1qEWRo8un6fMp9q2NUYICIawYJJm9de3LBelD5K6
-	 iR/TfxamB2mIo/c5kog7hsUZtAwpG0KeUvMpIJAfn5Xp9xxZGuDmTvI9qmDslrn+Tj
-	 ELdkJ6IjanZdG9AZ7hojjE2fTCou7dkGvJUPPk4f5EvFLxJl9N/rZJwdKIbuFiYTfT
-	 iUuqVTR84w2WGbEOTpra9GFQ7tei+Cm/gXKoPCEntv1OpLNS+tBZWp6Vt7i1fegy6t
-	 I2JFq8m+AjNbxF1GJwRaYqTwsHk/myjw8RCmQl9G6qwNWsbjqQmWG7laHJSi9tALwt
-	 Rnvb/LrvxpvmHCunisN8lPH0XdeVSzdvMAOTn8L6aR7XjgRasRkVRExvD3Ro8g0msC
-	 JS5dTfJzMeK9l1jyunXa19eTaWz6M/MU8AlGSMH6VfA2aR+5KuKCPplO4sfzsiq0WS
-	 U10qrhXw2DD1vtT8pGt1irPwvV3yq6ILy3BhdSE0OoTjgnigLQdnBElrZZHZ3Oqhlq
-	 c2T2mwdCUO7QFcbqoeqR2tB+O1Ae4FYzwElEJQD8qidmY1iq/xQM0Kq5Uu5rPauewf
-	 gLNSAB/d9+7fwjqHcENvVuPI=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C41FC40E00B2;
-	Mon, 18 Mar 2024 21:56:17 +0000 (UTC)
-Date: Mon, 18 Mar 2024 22:56:12 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
-	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	gregkh@linuxfoundation.org, tony.luck@intel.com,
-	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
- walk_relocs
-Message-ID: <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
-References: <20240317150547.24910-1-weiguixiong@bytedance.com>
- <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wp3ntPOD"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-7cbfd9f04e3so231378139f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 15:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710799683; x=1711404483; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Wl+YEObNF5jUVaY8QBV97LtH6p2YMlOabTAyUwaF4rY=;
+        b=Wp3ntPODHkyF5Jl1wxhGV35ctcYLm2wbSzgW97Gku5uHIssx5h7tJ6JfimYKDFIdG4
+         B1J55vZ8h0knTrvWugaerSD6dO1o8qxXOGIPKxWgxcScdeiDDogyPAG+AekCthBgmpRp
+         cB+AHgmiBVfW4yFFQvDJsB7FupuPWRSWwM6eyZZveV+L4MkAhvL+qRtK/SMVa3LsJ0uI
+         lymyrM8WV7JU42+0W34/OaL5gfhKoGK2W3vc/8/Fk/XwvqpMpgAcNvoL3VMuz0NdT+bg
+         cqbthnrsJTlAwqwDAk/MTGlhXlPuqXzx5rWIbTf5IA446jYkvg9QMgkKPMnoehcu/WGH
+         7HiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710799683; x=1711404483;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wl+YEObNF5jUVaY8QBV97LtH6p2YMlOabTAyUwaF4rY=;
+        b=n4femliEPahw0ZqHsLoXum4MBJsk34yF/gQdjZ+0uLW5sc2k63Uv7njJPA6k9pzwMA
+         ymjpr1+Lb5f+jYqvguLSMkQ6ftml68lm8Oees+J9znN5l43eNk5bXAatfwLtlwVBjCJH
+         nrzqmkXfOJWG/GVByV9vw6tq2itYF7bqsSwfXB/7z9zy3t1nP2hlz/O5OTfQ7ZwwCa4x
+         SxyApKsr8I9IQKRK3Nrj1zbBusW3soblWbpLTl4qXqhXKyZYN4tpzM8MMDZGVT8XgG4h
+         9xMBitSTpAbcbO/EeG38U1TX5zMUWxpORVPN0uT0olY18K4mb9LaPtcpmkMS20Cp6VDe
+         h8oA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUzSbauClTGnHhsgcjr73DsgM/o2ODgajpie3KRJpQ0yusT4f6+FFhV3CQoiE9qE4W37nQMdxLej/FaaoqAJbS/kNUkVE9Z/3nBUfsMFpD
+X-Gm-Message-State: AOJu0YwGJOF1JDyvWhhaFePdcgkpUl4K9Ad4o3ZJlI3+GyE/1In1pQha
+	g0xJuaLe/meUbaLFt0pbzgeswZtXD3UgmIuJBy55Gb7S0dyR3MP2Ev919zwOcwzkwva6vdp2mrX
+	lU/Psa2lCumQ365VtihH+nQ==
+X-Google-Smtp-Source: AGHT+IGPo1ty8ABBFYT2U90iQtfMKa/TblLUJSl5kNLDYgsFtkX4DwwFNIMofYowsjLzN/AITEX2RoloAWykuDWUuQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6602:1491:b0:7c8:264d:5e98 with
+ SMTP id a17-20020a056602149100b007c8264d5e98mr41333iow.0.1710799683679; Mon,
+ 18 Mar 2024 15:08:03 -0700 (PDT)
+Date: Mon, 18 Mar 2024 22:07:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADW7+GUC/y2NQQrCMBAAv1L27EJSE1C/IlJCum33koTdpSilf
+ zeIp2EuMwcoCZPCYzhAaGflWrr4ywB5S2Ul5Lk7jG4M7upvqCYltw/OwjuJoiVZyf6YchWaTFL RVsUwo79HF2Og7AJBjzahhd+/4fN1nl+qx69CgAAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710799682; l=2858;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=8sSU/nXOVaTUrxt2iL4oXf9XEJw7qJGFB8M6brZiaUI=; b=OEbAyG7DwUzX78dcvhoYXw1WfM1MXn+uwhR8Pl5NHBMijevu9EXe1FKB6bvnpLFpfTyBfs256
+ hAZDn/EmeRfCJENhPedcD67Xu1m0s2MWz/3odklFXGzJYmRuB/0rAM7
+X-Mailer: b4 0.12.3
+Message-ID: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
+Subject: [PATCH] scsi: target: core: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Mar 18, 2024 at 02:40:50PM -0700, Kees Cook wrote:
-> Applied to for-next/hardening
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Why?
+We expect p_buf to be NUL-terminated based on the callsites using these
+transport_dump_* methods because they use the destination buf with C-string
+APIs like strlen() and sprintf().
 
-This is a patch that should go through the tip tree, if at all.
+		memset(buf, 0, VPD_TMP_BUF_SIZE);			\
+		transport_dump_vpd_ident_type(vpd, buf, VPD_TMP_BUF_SIZE); \
+		if (len + strlen(buf) >= PAGE_SIZE)			\
+			break;						\
+		len += sprintf(page+len, "%s", buf);			\
 
--- 
-Regards/Gruss,
-    Boris.
+We also do not require the NUL-padding behavior that strncpy() provides
+because we are manually setting the entire buffer to NUL, rendering any
+future padding redundant.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Let's use strscpy() as it guarantees NUL-termination and doesn't
+NUL-pad ( and isn't deprecated :>] ). Note that we can't use the more
+idiomatic strscpy() usage of strscpy(dest, src, sizeof(dest)) because
+the size of the destination buffer is not known to the compiler. We also
+can't use the new 2-arg version of strscpy() from Commit e6584c3964f2f
+("string: Allow 2-argument strscpy()")
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/target/target_core_transport.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
+index 73d0d6133ac8..3311eb87df6d 100644
+--- a/drivers/target/target_core_transport.c
++++ b/drivers/target/target_core_transport.c
+@@ -1112,7 +1112,7 @@ void transport_dump_vpd_proto_id(
+ 	}
+ 
+ 	if (p_buf)
+-		strncpy(p_buf, buf, p_buf_len);
++		strscpy(p_buf, buf, p_buf_len);
+ 	else
+ 		pr_debug("%s", buf);
+ }
+@@ -1162,7 +1162,7 @@ int transport_dump_vpd_assoc(
+ 	}
+ 
+ 	if (p_buf)
+-		strncpy(p_buf, buf, p_buf_len);
++		strscpy(p_buf, buf, p_buf_len);
+ 	else
+ 		pr_debug("%s", buf);
+ 
+@@ -1222,7 +1222,7 @@ int transport_dump_vpd_ident_type(
+ 	if (p_buf) {
+ 		if (p_buf_len < strlen(buf)+1)
+ 			return -EINVAL;
+-		strncpy(p_buf, buf, p_buf_len);
++		strscpy(p_buf, buf, p_buf_len);
+ 	} else {
+ 		pr_debug("%s", buf);
+ 	}
+@@ -1276,7 +1276,7 @@ int transport_dump_vpd_ident(
+ 	}
+ 
+ 	if (p_buf)
+-		strncpy(p_buf, buf, p_buf_len);
++		strscpy(p_buf, buf, p_buf_len);
+ 	else
+ 		pr_debug("%s", buf);
+ 
+
+---
+base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
+change-id: 20240318-strncpy-drivers-target-target_core_transport-c-1950554ec04e
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
