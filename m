@@ -1,74 +1,68 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8325F85C
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11495F859
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710805234; cv=none; b=bgZskU+xSHcsy3tMaVCmn2dskM982f0aKMe1HJBw17OeIdgUFwY148i3hvCQjoRYrBMZrmSdGb+JURocbpTk940q6I+FudqHsY4L4fSIf/qXjZIGNQ9Vd8hsEeJgICe0OPkbqLQ0pyWz3arB9ws+oq8sgsARhb8bEVvh/OkrC68=
+	t=1710805549; cv=none; b=GdMNQm5sFSZ69MGUBu5fJkF+wJkPRDwmgM7eLqfA5Mab2YCBChJJwK4RB6JG636elwW0aGlUzN0XO+li4EfutT2NIVYT3nGddDWfdENiFxNxHqrmqMqCLer/HBd1dZ6h2X5wjzyIJ2hs1tpXimyCOojjQirKhZF+5WSVHJF0ygQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710805234; c=relaxed/simple;
-	bh=Yijpf6hdcX9Zz+at/Pl05PNPDv5yz2KSyc2hARlGVyA=;
+	s=arc-20240116; t=1710805549; c=relaxed/simple;
+	bh=ddIX1pX8PUKYlrEFSGxj4dp81Coz+WVwDW5gqZgq2IY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BS1WJA0FL24wNK9aYcCpGTw7K2hoCvIzurLpFNC/IFu18PwYGBbBUn7fTEhj1EUOgLFF1d/QpvUrCqBq8pafG7XtGOemhwlhvweDOOCdGLQLTrS3oxEwz5m0kDQacRIHugXL5Rs9rMtkmJzrRYfvdfB4iTCTYiADUWZ3V7H60nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LCWzjlg+; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=acaePTSfetzeNVI9DyxAhRGljJL5uR7drXCXPH5cOSLt5MvTsFiBSfrYYDi1OnaIWuAyO04BljIkRGKsQNnfCik+u6ouj0ZzJQ8mInOXNs9WDdySUoidIS8ycjiNvG+hMUgXrBxHmLGmsJptQ1tBV/YdD39ljWroMFaS9UBm52s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UP+WJbvt; arc=none smtp.client-ip=209.85.160.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LCWzjlg+"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1def3340682so29149645ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 16:40:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UP+WJbvt"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-221e6bf537dso3430459fac.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 16:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710805232; x=1711410032; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1710805547; x=1711410347; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qGVjXx+j07fAtzWyhzuz39ABH1ricioExB9tBdSnz3U=;
-        b=LCWzjlg+zokALRFDsK+PmKtA9cJKjFrbsPh5Q76Wk+vIfEd3TCLdznZ4ulGLVJRVke
-         IVY0QTj71Q4/89HFogbjEJVNrVwm5+1/7u0ilJJD/KTFAu0ytxpDmJmhu1PyfZFl39mM
-         0OOH+UAkCncaOGAYAPcnA11gKT0DIOXlP/36U=
+        bh=EyNKKJaFo0RNnDw1cX76A1V9oBiLwk9MCVF82VfEr8Q=;
+        b=UP+WJbvt4DkTE/aSDfcB2mZPHNKGKPI21xQbR4yaLTSXHLgFLohjYywOc1ESA/2dDW
+         eUGQWwXJqlBMmtf8kuDJvvyrYKtErkTttlhTVESunE6AEFIkFFNv6YaFtLzmjpFyP8x2
+         e1FWvDbKSQ8KM4wciG+pl3yMNLU8Ga6Swmcsc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710805232; x=1711410032;
+        d=1e100.net; s=20230601; t=1710805547; x=1711410347;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qGVjXx+j07fAtzWyhzuz39ABH1ricioExB9tBdSnz3U=;
-        b=R1QVkFuEygnpm5IrC6jZdI97BGSuPPbaV6herjHZW0AjBjomL1ElQ8JeR96E9DDuNO
-         IpyuKZ/og1MTg8lsdo+Ej45RmaxXbhJuMPMZ6J4FsJ+lblwP0EtpsgPYZN4yj4rKf0tr
-         seI2SHHM2xDwdll/AnNYENPvz2eawsi9nJsPiwr8OcFlGWe8wQL3h64zcK7KA2nNHq/9
-         z75nWqApL+LbOSjP6G9Iz8ZKjB3H1luwL/v8FQVvbK/VL2DHdI+ihLMbYFlB86rqMija
-         p/6onJAteFlE6/buLOoYq3reskTluZYjXMtMlHdEfnaweNPfFWpQmWsBWdH4zwJFKbwL
-         Vdfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmK4Tubt0XZAcInHcAClf+rIkVwgG2rvbmjFzButjhbpm6+5SL4WnDH5cCLxffekW/iR9G1kqUV4bz09tvn6CzSYZQCgJkYSAaOmjgHILS
-X-Gm-Message-State: AOJu0YzYo1iMuMWBPK2yyGlrW3XYdeTQItyHXykOXsyiPTVmhhX6HyPE
-	VFVpmaDJ98BpTZylPz+tI8+IHDgUALz19z5Loxx/jG3ZnKnH65W9lTxXTU6wlQ==
-X-Google-Smtp-Source: AGHT+IE6ZJkwZUoHdQ1XKk7dfD4fL/GhYshEq7O4lP3zklm4arTM8pnOn3Dx/fJ9+Pp6EnYJuQnZ2g==
-X-Received: by 2002:a17:902:b68e:b0:1e0:f8:17ca with SMTP id c14-20020a170902b68e00b001e000f817camr1076507pls.39.1710805231878;
-        Mon, 18 Mar 2024 16:40:31 -0700 (PDT)
+        bh=EyNKKJaFo0RNnDw1cX76A1V9oBiLwk9MCVF82VfEr8Q=;
+        b=J6h0UV/lnX8iuOn0d1Dxf44ogR7RTjwBXBZiasKKP0Ngs6zAE1VkSoPesMGZg5s8ij
+         ogXqRbYQz366Mf02FO94aeLt2GHgmZz6ttdwC6dAL342wrZIF28c3Kk6c4i1BRjAK/QB
+         PUIWosQll+zCWUKfeajYXAB9WVpRrvfDiENMq2GTkCcJXyV87EvGguXR/rSPjD3uX6x4
+         8QmQjYVPp/JCzW8vfAwpxsoeDiVZdvkX9qtmK9yfWRqewJAapUaa1jW6XpVCL+7Q8D9T
+         /J88EY92j9J2041v12MmwtSftKWaG2Zaug+9ng4LMH68rnZPQplREPAezDNpopGiZ3nA
+         W6IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMz2sgGaX9Ipek9gSmCfddcK5XhbdHdUilq/kmWu08hwwc14F2uzO2ch5UMKQM6DwUb0/e81epsV02z3U+6sY3QIKKILGY3raJIjp9t69/
+X-Gm-Message-State: AOJu0YzTtYCTD7RfRK1OWXN+jUy2GVjMyh7ME45ZujEiHGPsTdb03KJu
+	ZZxtO4ilFgeEdQHtprhDLUdcaFCdLmyZ8CaNEHPsuvolpPd2lEJHIGu9LbKh7w==
+X-Google-Smtp-Source: AGHT+IHuGsFZKeGKS+5IfIvaZGbwZxy1NkSSfWwS6FkEclzsGrRPwV1rjWc4/CqC4usYaEiXM+0A2w==
+X-Received: by 2002:a05:6870:3926:b0:220:9f8c:b97b with SMTP id b38-20020a056870392600b002209f8cb97bmr16205988oap.4.1710805547072;
+        Mon, 18 Mar 2024 16:45:47 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s7-20020a170902a50700b001e0287592casm2566226plq.295.2024.03.18.16.40.31
+        by smtp.gmail.com with ESMTPSA id q20-20020a62ae14000000b006e6c38cbe96sm8493254pff.29.2024.03.18.16.45.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 16:40:31 -0700 (PDT)
-Date: Mon, 18 Mar 2024 16:40:30 -0700
+        Mon, 18 Mar 2024 16:45:46 -0700 (PDT)
+Date: Mon, 18 Mar 2024 16:45:45 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Borislav Petkov <bp@alien8.de>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	gregkh@linuxfoundation.org, tony.luck@intel.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/rapl: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202403181635.46CBABD994@keescook>
-References: <20240317164442.6729-1-erick.archer@gmx.com>
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <202403181644.690285D3@keescook>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+ <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -77,106 +71,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240317164442.6729-1-erick.archer@gmx.com>
+In-Reply-To: <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
 
-On Sun, Mar 17, 2024 at 05:44:42PM +0100, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
+On Mon, Mar 18, 2024 at 10:56:12PM +0100, Borislav Petkov wrote:
+> On Mon, Mar 18, 2024 at 02:40:50PM -0700, Kees Cook wrote:
+> > Applied to for-next/hardening
 > 
-> As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
-> this structure ends in a flexible array:
+> Why?
 > 
-> struct rapl_pmus {
-> 	[...]
-> 	struct rapl_pmu *pmus[] __counted_by(maxdie);
-> };
-> 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the calculation "size + count * size" in
-> the kzalloc() function.
-> 
-> This way, the code is more readable and safer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> This is a patch that should go through the tip tree, if at all.
 
-Thanks!
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-I was inspired to come up with a Coccinelle script to find this pattern.
-This seems to do it, though it also removes the blank line. I'm not sure
-how to stop it from doing that. I'm running this treewide to see if I
-can find others...
-
-// Options: --no-includes --include-headers
-
-@allocation@
-type SIZE_TYPE;
-identifier SIZE;
-type PTR_TYPE;
-PTR_TYPE *PTR;
-identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
-@@
-
-	SIZE_TYPE SIZE;
-	...
-	PTR = ALLOC(..., SIZE, ...)
-
-@structure@
-type allocation.PTR_TYPE;
-type FLEX_TYPE;
-identifier FLEX;
-@@
-
-	PTR_TYPE {
-		...
- 		FLEX_TYPE FLEX[];
-		...
-	};
-
-@single_shot_sizing@
-type allocation.SIZE_TYPE;
-identifier allocation.SIZE;
-type allocation.PTR_TYPE;
-PTR_TYPE *allocation.PTR;
-identifier allocation.ALLOC;
-type structure.FLEX_TYPE;
-identifier structure.FLEX;
-expression COUNT;
-@@
-
-- 	SIZE_TYPE SIZE;
- 	... when != SIZE
--	SIZE = (\(sizeof(*PTR)\|sizeof(PTR_TYPE)\) + ((COUNT) * \(sizeof(*PTR->FLEX)\|sizeof(PTR->FLEX[0])\|sizeof(FLEX_TYPE)\)));
- 	... when != SIZE
- 	PTR = ALLOC(...,
--			SIZE
-+			struct_size(PTR, FLEX, COUNT)
- 			, ...)
- 	... when != SIZE
-
-@reused_sizing@
-type allocation.SIZE_TYPE;
-identifier allocation.SIZE;
-type allocation.PTR_TYPE;
-PTR_TYPE *allocation.PTR;
-identifier allocation.ALLOC;
-type structure.FLEX_TYPE;
-identifier structure.FLEX;
-expression COUNT;
-@@
-
-  	SIZE_TYPE SIZE;
- 	...
-	SIZE =
--		(\(sizeof(*PTR)\|sizeof(PTR_TYPE)\) + ((COUNT) * \(sizeof(*PTR->FLEX)\|sizeof(PTR->FLEX[0])\|sizeof(FLEX_TYPE)\)))
-+		struct_size(PTR, FLEX, COUNT)
-	;
- 	... when != SIZE
- 	PTR = ALLOC(..., SIZE , ...)
-
+The commit it refs to landed via -hardening, so I was taking the
+responsibility of landing this fix too. But it's fine to go via
+-tip if you prefer?
 
 -- 
 Kees Cook
