@@ -1,133 +1,98 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CC25B5A1
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 22:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0735B5B2;
+	Mon, 18 Mar 2024 23:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710802166; cv=none; b=DdlJsmEmdh1qeulABdvqAON01kWjE/AOvqIarF45AmDxm+CnL3gPHNd+TFm+thFhJ6iury+Xeu7pU9js3vHNgpxQz38/al6v/+WPg+DaVRZuoCT6oAfNWrZ6Hi2PdOITEf38LwKBWa3GBkpPan66aPWqvPTnTp10t3+dL3usN5c=
+	t=1710802836; cv=none; b=g6VEpKEAFGWCpAzVPtNr2t1+UpF3ws1z3tnGMYmREmye2bGog7B1D2WXgtSUTKOEc5oTrwcqx815wGFL6mf3fC/idVWR8X9uBwWoG0slmvY/ai/GONIzsQBnkfiXAoeGOCx4dQctJKrfaI3kAS+ZbMrspWNTeKFv71foPPdNwXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710802166; c=relaxed/simple;
-	bh=7ElkExln+LzH1qJsWL78fTMZuik1BMBe40sUEK3gv20=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=G0RKm9BVxqy8ciCn+sY3qtj/h9IIH/u4NerVqEC8lZyQzYGkYQYimYe6Af+dxKs8YBeVmb3szI6Y2JZ6CRw1DltcpjqBGh+rbEI9CgduWwqnehSFIqtEI0ypK6tE2mBzUaQcZ/W5ZtAJmwC95ndR9BAbNHXF8KbZhxd0VjiqeCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pI569OBW; arc=none smtp.client-ip=209.85.166.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1710802836; c=relaxed/simple;
+	bh=2aJSw72TDhJJtJGSi3sZZ5tt6V0h7mkTLli9U+Gg7Xw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UsBo/Ab/BzkZu4oBFsj4iMAxUDa6L5QcEc6qjigya+RwqtTdZD5Sxo2XMgja7fYNN8bkeisxxFvaZ3yYCcKYjVDGMPNBF65k6omARgNtcyohGhcA+Znbm7mSosbMA/fKVHYYpSiakL3jF6ZZnF2KewgW3qNPxZ83AWHgf6UMrpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnvTf2qb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pI569OBW"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7cc764c885bso160086839f.3
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 15:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710802164; x=1711406964; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LgDnfik+9/3BsUysoVFP/f8YdrJMDhMQegoRsxaj0Vk=;
-        b=pI569OBWIUrwNnT0xtrOqGhiJ5cHoBK5UsHqayDzmLdnr2MVNCQrS76zR+B3jZgqDe
-         Uc1qf2I4vh6+/9oNv6d3bOQh9XN+5iEqGmHVdliPkSCFtlNMJi7t5/h97BLdyI7o0Puj
-         4gFAGYUENkqJhKfQJ9szC4zM9mMuhel8xYVa7YdITgjO+XEwRySuhcK+cOp0BDkmxrLt
-         sIm42wKLGwDURitoDoDCIP6oCtNGByHr4rMtNvHjqihWrz3zug0ASEWjOrnE6F2YoWI7
-         GE3UVqGNEoomi3e6ZhlS/QMdqvvOeoPuHztfzAImMeAnhduxacwbyNeM+vLzSLTLRO8N
-         OUKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710802164; x=1711406964;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LgDnfik+9/3BsUysoVFP/f8YdrJMDhMQegoRsxaj0Vk=;
-        b=LjvGZiAfEqVxK5pZUvKup6+LtkbdImnNUpZS0msTa4BKGw/VAe1NmRZfmLoSI9Q5cI
-         9VpzJOS4T4pU/11E1Ro2YV+gWUbbZS4OiML5ixy/QvGpwejen69h3FRfeKG33FxoVwzf
-         h0RSRQPaRzYC98Ued31q6njdbJmJS+ZPF1PZ/MnWa+hxmVl9g5wmv72oADmMYnD8JMyN
-         0U9DTswMElvjeUcdGbyKoULiiTtruZTwf5u2j/bulyT1oxyQBzTHMk8i2Fr4L5mQm+tw
-         LBf/SlHV0VUBrpbDE1VgaQKKHj0+Ev2xVYNNtlfzHHd2xzzG4pUHchCcCy+V3AhnwwGv
-         tLoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCk7tPLxE4uq2ckjOuivx8+8r4K8qJ4rjVcwGuLfk8ej44bSCKS1MafwkTfo0ZP6qEItSEb3IT+j20T6IXqzYsetphmDll9tOkwXlIJZV2
-X-Gm-Message-State: AOJu0YxpXqhv5mdYzw5RwNwNMn0AO+Ti3kOsyf9TojeqCiHZpwY5wS9Z
-	cml6Rcd/Y5O+GZOTd9LjP3gNqzc5cdHoIn0t8bFCfrxvaWE3uFT/Ht3tEL/xFCWnkUGx3Nfb9M+
-	NFH2v+b421DFhv+NWF3E7kg==
-X-Google-Smtp-Source: AGHT+IHMpcJoXZdyrHjAYr1x0gAOLz6kDbg2aET0fcmbxdiALkUs3IYlBcuQW5IgSRdlf2q80a1jpzftzVuiOykGvg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6602:2c94:b0:7cc:342:72f9 with
- SMTP id i20-20020a0566022c9400b007cc034272f9mr230571iow.2.1710802164523; Mon,
- 18 Mar 2024 15:49:24 -0700 (PDT)
-Date: Mon, 18 Mar 2024 22:49:23 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnvTf2qb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3001C433B2;
+	Mon, 18 Mar 2024 23:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710802836;
+	bh=2aJSw72TDhJJtJGSi3sZZ5tt6V0h7mkTLli9U+Gg7Xw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FnvTf2qbmOzydEu8kJi0fDnXWES0yeHfdDlw1N0PDEUrcA1Nqt4ix6hw7W+N++ahX
+	 ZkkJcjzvM90XpxwcE8dKfSlKreG0c46NTd5n4oTvl3jvps310/VEQNFpsRlLq5MffY
+	 /5iN0SvaDXu1j9dZ4yfRx8N6VAswzwyaRrx7b5iaxYd9jfls1xBNv/O2z6Hd/0KA8v
+	 1Ctz/9cvdl5GsMyLdvQ/A2yr2eT++XNH0lDVq6Z7WdmfguRFE4W60qJHIhykfWp3qv
+	 HoJrYVHnUUujRRqZb4C7xDNs1IGUSEZqHgmcqoWYYODpaUb6kVPQ0S61y3BpJ/6DnX
+	 cOBznMF0W+cMw==
+Date: Mon, 18 Mar 2024 17:00:33 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] stddef: Introduce struct_group_tagged_attr() helper
+ macro
+Message-ID: <ZfjHkXJWg12rARKU@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAPLE+GUC/5WNTQqDMBBGryJZd0oSFaWr3qO4yM+oA9VoRkJFv
- HtTb9Dl+/h47xCMkZDFozhExERMYc6gb4Vwo5kHBPKZhZa6kqWqgLc4u2UHHylhZODgYHVhAjd
- 58BYc6LbqS2ONsbYV2bNE7OlzNV5d5pF4C3G/kkn91n/sSYGCRva1r7GRTamfQwjDG+/5JbrzP L/AnnN60wAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710802163; l=2041;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=7ElkExln+LzH1qJsWL78fTMZuik1BMBe40sUEK3gv20=; b=2o9Mfp5OBit8WuRHJkby3WD6RzVls4Keg34t/5M2jalSBs/dZ3Qys4mmBx2jYrJLKgBnHKO3H
- B6IiMtq77BiA691RdJp1BUVkGirAZymbUYDAEZ4NAKMlveJamKnqRhn
-X-Mailer: b4 0.12.3
-Message-ID: <20240318-strncpy-drivers-soc-qcom-cmd-db-c-v2-1-8f6ebf1bd891@google.com>
-Subject: [PATCH v2] soc: qcom: cmd-db: replace deprecated strncpy with strtomem
-From: Justin Stitt <justinstitt@google.com>
-To: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+We need a new `struct_group()` helper that allows for both having the
+struct be tagged, and specifying struct attributes like `__packed`
+or `__align(x)`.
 
-@query is already marked as __nonstring and doesn't need to be
-NUL-terminated. Since @id is a string, we can use the self-describing
-string API strtomem().
+This new helper will initially be used to address
+-Wflex-array-member-not-at-end warnings, where a tagged struct is used
+to separate the flexible-array member from the rest of the members in
+the flexible structure [1]. There are some scenarios in which those
+members need to be packed, as well.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
+So, `struct_group_tagged_attr()` is introduced for this.
+
+Link: https://lore.kernel.org/linux-hardening/ZeIgeZ5Sb0IZTOyt@neat/ [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes in v2:
-- use strtomem instead of memcpy (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com
----
-Note: build-tested only.
+ include/linux/stddef.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Found with: $ rg "strncpy\("
----
- drivers/soc/qcom/cmd-db.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index a5fd68411bed..d05f35d175bd 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -141,18 +141,13 @@ static int cmd_db_get_header(const char *id, const struct entry_header **eh,
- 	const struct rsc_hdr *rsc_hdr;
- 	const struct entry_header *ent;
- 	int ret, i, j;
--	u8 query[sizeof(ent->id)] __nonstring;
-+	u8 query[sizeof(ent->id)] __nonstring = { 0 };
+diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+index 929d67710cc5..919df9453257 100644
+--- a/include/linux/stddef.h
++++ b/include/linux/stddef.h
+@@ -80,6 +80,26 @@ enum {
+ #define struct_group_tagged(TAG, NAME, MEMBERS...) \
+ 	__struct_group(TAG, NAME, /* no attrs */, MEMBERS)
  
- 	ret = cmd_db_ready();
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Pad out query string to same length as in DB. NOTE: the output
--	 * query string is not necessarily '\0' terminated if it bumps up
--	 * against the max size. That's OK and expected.
--	 */
--	strncpy(query, id, sizeof(query));
-+	strtomem(query, id);
- 
- 	for (i = 0; i < MAX_SLV_ID; i++) {
- 		rsc_hdr = &cmd_db_header->header[i];
-
----
-base-commit: fe46a7dd189e25604716c03576d05ac8a5209743
-change-id: 20240314-strncpy-drivers-soc-qcom-cmd-db-c-284f3abaabb8
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
++/**
++ * struct_group_tagged_attr() - Create a struct_group with a reusable
++ * tag and trailing attributes.
++ *
++ * @TAG: The tag name for the named sub-struct
++ * @NAME: The identifier name of the mirrored sub-struct
++ * @ATTRS: Any struct attributes to apply
++ * @MEMBERS: The member declarations for the mirrored structs
++ *
++ * Used to create an anonymous union of two structs with identical
++ * layout and size: one anonymous and one named. The former can be
++ * used normally without sub-struct naming, and the latter can be
++ * used to reason about the start, end, and size of the group of
++ * struct members. Includes struct tag argument for the named copy,
++ * so the specified layout can be reused later. Also includes
++ * structure attributes argument.
++ */
++#define struct_group_tagged_attr(TAG, NAME, ATTRS, MEMBERS...) \
++	__struct_group(TAG, NAME, ATTRS, MEMBERS)
++
+ /**
+  * DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
+  *
+-- 
+2.34.1
 
