@@ -1,101 +1,95 @@
-Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8097959B77
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 22:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5295D5A4CC
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 22:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710799687; cv=none; b=quDNx8gwuBw/zAIZh3dL1zecaSrpuSbSHvcNkXVgJ77HNtsXSGpY79ubYkfvR+cPdi+TwzW/F3TZva48gI5ngDO9dzFHhuUj0RYodFnbF6McFrIM+Yf6MijgSytzo2gmsKC/2p0wdZL5wjxgrrEyDf6X6ujBefGj3pLBffWRg/s=
+	t=1710801373; cv=none; b=LGoSU/2HJH1IQHRX8G+fMZNQAu54QeaW6Y6avgi2ahX3AQD3izoeCExg/NdrOBMspjrFiHI3t0oBiu3MktTbBdZ6j6t1Bvwh8M0rDqSg6PLZvXrmseu1BNDZFXYeYK9Zlgg77pgEwU08OoxXFj4xsjpdfLDPp3vts3YnpbVJF6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710799687; c=relaxed/simple;
-	bh=8sSU/nXOVaTUrxt2iL4oXf9XEJw7qJGFB8M6brZiaUI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nJ4Byy4sRipEY2Pep2dOnB1cvi8FU7/qiaSXiiyi50onqe/GIUMqjV29dfXjVH+TzWzTnZaEvq5VPQ5N59NGqSPX6ZV3fnQOG6NAtxljwAVVfTo/pkmDU4ILxlqf0G/NJGBuM470W28tIh37CNx82Hs8d0Res0kkNtep+ZDjKnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wp3ntPOD; arc=none smtp.client-ip=209.85.166.73
+	s=arc-20240116; t=1710801373; c=relaxed/simple;
+	bh=idLQG0Kr6yCd5IwGaKvpKO3VhPnelbfggT+hRhuZhCo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JJinLfyZM3ezvPAb8dqPlvrHnf8iDCh4ZiI767OM3Y6ZN6onvbXTn6q/zJ4GnzQ41IohgNjz+EJqjUejMVgbbDbHLLiMhkjuCGcR+SH03o8x5Nj29I6NnkhtGPAwj3vFf59Sazkabcxqzd6C2MLZw6s4s6YJFWJn+2IzG0thEn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eVag+b1G; arc=none smtp.client-ip=209.85.166.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wp3ntPOD"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-7cbfd9f04e3so231378139f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 15:08:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eVag+b1G"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7c8742bedd4so434246239f.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 15:36:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710799683; x=1711404483; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710801371; x=1711406171; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Wl+YEObNF5jUVaY8QBV97LtH6p2YMlOabTAyUwaF4rY=;
-        b=Wp3ntPODHkyF5Jl1wxhGV35ctcYLm2wbSzgW97Gku5uHIssx5h7tJ6JfimYKDFIdG4
-         B1J55vZ8h0knTrvWugaerSD6dO1o8qxXOGIPKxWgxcScdeiDDogyPAG+AekCthBgmpRp
-         cB+AHgmiBVfW4yFFQvDJsB7FupuPWRSWwM6eyZZveV+L4MkAhvL+qRtK/SMVa3LsJ0uI
-         lymyrM8WV7JU42+0W34/OaL5gfhKoGK2W3vc/8/Fk/XwvqpMpgAcNvoL3VMuz0NdT+bg
-         cqbthnrsJTlAwqwDAk/MTGlhXlPuqXzx5rWIbTf5IA446jYkvg9QMgkKPMnoehcu/WGH
-         7HiA==
+        bh=QFNImd0Mua9KCTvHqQYaKAK0qurjGIisgRUAJ+l3grg=;
+        b=eVag+b1GKJedkBBNZlW2rtvYKXx0NRe6cJhBMa4jzvNFb1SREmsHKCh+jcMPbeUtR7
+         0YGlY+dp4NaFUaV8KSFYznAqYZVRhgaIqw2TGqlGQUW8DHWAozSIxApdcQXuUNQymxvp
+         hWgx6DQBVkrVl10KtK59PCu38Gqvoh19nCuNJuY4dTcFLhBvgCFVJXj4nFJp0TgEWbAD
+         L26tR9aWqW3zXvYRgnYq6/k/Gu8x15BdUqnGbQVBIctHXey2Oli26+uc27bpHsZjzdSU
+         MvUc7QUNU4cRqJ0f0+Qs/kwAcEDZS93A47JQVu88dS5CYzRoKEWDTCXVtBsN7y0FNVtW
+         3qGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710799683; x=1711404483;
+        d=1e100.net; s=20230601; t=1710801371; x=1711406171;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wl+YEObNF5jUVaY8QBV97LtH6p2YMlOabTAyUwaF4rY=;
-        b=n4femliEPahw0ZqHsLoXum4MBJsk34yF/gQdjZ+0uLW5sc2k63Uv7njJPA6k9pzwMA
-         ymjpr1+Lb5f+jYqvguLSMkQ6ftml68lm8Oees+J9znN5l43eNk5bXAatfwLtlwVBjCJH
-         nrzqmkXfOJWG/GVByV9vw6tq2itYF7bqsSwfXB/7z9zy3t1nP2hlz/O5OTfQ7ZwwCa4x
-         SxyApKsr8I9IQKRK3Nrj1zbBusW3soblWbpLTl4qXqhXKyZYN4tpzM8MMDZGVT8XgG4h
-         9xMBitSTpAbcbO/EeG38U1TX5zMUWxpORVPN0uT0olY18K4mb9LaPtcpmkMS20Cp6VDe
-         h8oA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUzSbauClTGnHhsgcjr73DsgM/o2ODgajpie3KRJpQ0yusT4f6+FFhV3CQoiE9qE4W37nQMdxLej/FaaoqAJbS/kNUkVE9Z/3nBUfsMFpD
-X-Gm-Message-State: AOJu0YwGJOF1JDyvWhhaFePdcgkpUl4K9Ad4o3ZJlI3+GyE/1In1pQha
-	g0xJuaLe/meUbaLFt0pbzgeswZtXD3UgmIuJBy55Gb7S0dyR3MP2Ev919zwOcwzkwva6vdp2mrX
-	lU/Psa2lCumQ365VtihH+nQ==
-X-Google-Smtp-Source: AGHT+IGPo1ty8ABBFYT2U90iQtfMKa/TblLUJSl5kNLDYgsFtkX4DwwFNIMofYowsjLzN/AITEX2RoloAWykuDWUuQ==
+        bh=QFNImd0Mua9KCTvHqQYaKAK0qurjGIisgRUAJ+l3grg=;
+        b=R4RpuP8e+Ham4HvQu0/jAFjZpfdbKEq97NAZSW+2+6ZnTFEobbKkEmULrO0qIzcW7O
+         45yNRr508zZOnHlXmt7ROZ0LLZ4f8poT2uGpz83XkWnGpIv6G8V39O2dilFvtwU/4t8B
+         sN/VPG+jMvdkP4ZWVLKJ3Vb78iPnS7PYD3aig8SKrf5A7o9n7DFQl8k9Q3b/sUCa50t3
+         qjl+LQCAw2HhE0acmaYQdenHReOrQNPUyU3BwLEOgBz0CWxp+T8fx1sldxONtid3Vq+N
+         /X2HG9396csaDMfD9HKKRJLEvo1k/xApOLd19NuYqAhK3oF/6afvZ7z/kwlXPEKfBh0G
+         dSfg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7tj3t8nTB0gJB58dLogo4is0oCNYfsnZlzjakXpxFiXE/4do9yoNNAGwfuH/2xEQ6CNFtkam9F68xklkEV2nLwIcFAr4NXBoROktc42X0
+X-Gm-Message-State: AOJu0YztA441etYbS9qz8qdppV8aZ7bWQD603ljfA2c1VERaU0mPVbWS
+	MykjKHR5OZqRo1Z4LpisurrWc4FF9QT5fGX/pj71x0PEQXpvOVddcForSNN4X5CRLFl4IUshJd9
+	sjNJc7bkiSe+5+qT5jAbcnA==
+X-Google-Smtp-Source: AGHT+IETbi8KX4eWggvtR8wvzN+qPch/c/mKDS3lve+lL8DnNm4inZBonEvIJPIsNh8alSISBfzToKCHwe7G/+Esfg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6602:1491:b0:7c8:264d:5e98 with
- SMTP id a17-20020a056602149100b007c8264d5e98mr41333iow.0.1710799683679; Mon,
- 18 Mar 2024 15:08:03 -0700 (PDT)
-Date: Mon, 18 Mar 2024 22:07:50 +0000
+ (user=justinstitt job=sendgmr) by 2002:a92:d68e:0:b0:366:a780:5cb2 with SMTP
+ id p14-20020a92d68e000000b00366a7805cb2mr8306iln.2.1710801371403; Mon, 18 Mar
+ 2024 15:36:11 -0700 (PDT)
+Date: Mon, 18 Mar 2024 22:36:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIADW7+GUC/y2NQQrCMBAAv1L27EJSE1C/IlJCum33koTdpSilf
- zeIp2EuMwcoCZPCYzhAaGflWrr4ywB5S2Ul5Lk7jG4M7upvqCYltw/OwjuJoiVZyf6YchWaTFL RVsUwo79HF2Og7AJBjzahhd+/4fN1nl+qx69CgAAAAA==
+X-B4-Tracking: v=1; b=H4sIANnB+GUC/zWO2wqDMBBEf0X2uQu5gaW/UoqEda0LbRo2QRTx3
+ xsEXwbOcGBmh8IqXODR7aC8SJFfamBvHdAc05tRxsbgjAvG2zuWqonyhqPKwlqwzqzf+EFJlc/ 0wazD1UbKcsGgTSC0vekNWQ5u8tBmsvIk63nh+TqOP7za5QuSAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710799682; l=2858;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710801370; l=2621;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=8sSU/nXOVaTUrxt2iL4oXf9XEJw7qJGFB8M6brZiaUI=; b=OEbAyG7DwUzX78dcvhoYXw1WfM1MXn+uwhR8Pl5NHBMijevu9EXe1FKB6bvnpLFpfTyBfs256
- hAZDn/EmeRfCJENhPedcD67Xu1m0s2MWz/3odklFXGzJYmRuB/0rAM7
+ bh=idLQG0Kr6yCd5IwGaKvpKO3VhPnelbfggT+hRhuZhCo=; b=+HXAnO3jukdE7ZFNa382FaAh2WDE9BnHodEf/wlzTo0fxNc6RJaEx+xFSV5aC0t4hXJSjrzfF
+ 7wkRpBum/gAB2Evhh4ej0JRMWcC31tyDBUFqUe/bafGVYiWfQDB5PQ1
 X-Mailer: b4 0.12.3
-Message-ID: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
-Subject: [PATCH] scsi: target: core: replace deprecated strncpy with strscpy
+Message-ID: <20240318-strncpy-drivers-thermal-intel-int340x_thermal-acpi_thermal_rel-c-v1-1-08839fbf737a@google.com>
+Subject: [PATCH] thermal: intel: int340x_thermal: replace deprecated strncpy
+ with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We expect p_buf to be NUL-terminated based on the callsites using these
-transport_dump_* methods because they use the destination buf with C-string
-APIs like strlen() and sprintf().
+psvt->limit.string can only be 8 bytes so let's use the appropriate size
+macro ACPI_LIMIT_STR_MAX_LEN.
 
-		memset(buf, 0, VPD_TMP_BUF_SIZE);			\
-		transport_dump_vpd_ident_type(vpd, buf, VPD_TMP_BUF_SIZE); \
-		if (len + strlen(buf) >= PAGE_SIZE)			\
-			break;						\
-		len += sprintf(page+len, "%s", buf);			\
+Neither psvt->limit.string or psvt_user[i].limit.string requires the
+NUL-padding behavior that strncpy() provides as they have both been
+filled with NUL-bytes prior to the string operation.
+|	memset(&psvt->limit, 0, sizeof(u64));
+and
+| 	psvt_user = kzalloc(psvt_len, GFP_KERNEL);
 
-We also do not require the NUL-padding behavior that strncpy() provides
-because we are manually setting the entire buffer to NUL, rendering any
-future padding redundant.
-
-Let's use strscpy() as it guarantees NUL-termination and doesn't
-NUL-pad ( and isn't deprecated :>] ). Note that we can't use the more
-idiomatic strscpy() usage of strscpy(dest, src, sizeof(dest)) because
-the size of the destination buffer is not known to the compiler. We also
-can't use the new 2-arg version of strscpy() from Commit e6584c3964f2f
-("string: Allow 2-argument strscpy()")
+Let's use `strscpy` [2] due to the fact that it guarantees
+NUL-termination on the destination buffer without unnecessarily
+NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -107,53 +101,35 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/target/target_core_transport.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
-index 73d0d6133ac8..3311eb87df6d 100644
---- a/drivers/target/target_core_transport.c
-+++ b/drivers/target/target_core_transport.c
-@@ -1112,7 +1112,7 @@ void transport_dump_vpd_proto_id(
- 	}
+diff --git a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+index dc519a665c18..4b4a4d63e61f 100644
+--- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
++++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+@@ -309,7 +309,7 @@ static int acpi_parse_psvt(acpi_handle handle, int *psvt_count, struct psvt **ps
  
- 	if (p_buf)
--		strncpy(p_buf, buf, p_buf_len);
-+		strscpy(p_buf, buf, p_buf_len);
- 	else
- 		pr_debug("%s", buf);
- }
-@@ -1162,7 +1162,7 @@ int transport_dump_vpd_assoc(
- 	}
- 
- 	if (p_buf)
--		strncpy(p_buf, buf, p_buf_len);
-+		strscpy(p_buf, buf, p_buf_len);
- 	else
- 		pr_debug("%s", buf);
- 
-@@ -1222,7 +1222,7 @@ int transport_dump_vpd_ident_type(
- 	if (p_buf) {
- 		if (p_buf_len < strlen(buf)+1)
- 			return -EINVAL;
--		strncpy(p_buf, buf, p_buf_len);
-+		strscpy(p_buf, buf, p_buf_len);
- 	} else {
- 		pr_debug("%s", buf);
- 	}
-@@ -1276,7 +1276,7 @@ int transport_dump_vpd_ident(
- 	}
- 
- 	if (p_buf)
--		strncpy(p_buf, buf, p_buf_len);
-+		strscpy(p_buf, buf, p_buf_len);
- 	else
- 		pr_debug("%s", buf);
- 
+ 		if (knob->type == ACPI_TYPE_STRING) {
+ 			memset(&psvt->limit, 0, sizeof(u64));
+-			strncpy(psvt->limit.string, psvt_ptr->limit.str_ptr, knob->string.length);
++			strscpy(psvt->limit.string, psvt_ptr->limit.str_ptr, ACPI_LIMIT_STR_MAX_LEN);
+ 		} else {
+ 			psvt->limit.integer = psvt_ptr->limit.integer;
+ 		}
+@@ -468,7 +468,7 @@ static int fill_psvt(char __user *ubuf)
+ 		psvt_user[i].unlimit_coeff = psvts[i].unlimit_coeff;
+ 		psvt_user[i].control_knob_type = psvts[i].control_knob_type;
+ 		if (psvt_user[i].control_knob_type == ACPI_TYPE_STRING)
+-			strncpy(psvt_user[i].limit.string, psvts[i].limit.string,
++			strscpy(psvt_user[i].limit.string, psvts[i].limit.string,
+ 				ACPI_LIMIT_STR_MAX_LEN);
+ 		else
+ 			psvt_user[i].limit.integer = psvts[i].limit.integer;
 
 ---
 base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
-change-id: 20240318-strncpy-drivers-target-target_core_transport-c-1950554ec04e
+change-id: 20240318-strncpy-drivers-thermal-intel-int340x_thermal-acpi_thermal_rel-c-17070c1e42f3
 
 Best regards,
 --
