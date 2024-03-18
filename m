@@ -1,127 +1,182 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FB35F859
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8325F85C
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804718; cv=none; b=NfcsiuDVewNWVs7sPgUPMfyi5CXWeYs1ueB5sW7K0d1jbOcbULAuLzSEU/KiqjVbJGkdHGxIrHem2GKKcBx0k5CUG4TYemLcbuU4DD7LWU5FTrnhhlxD3rSnUuvDxq8Ch39kJp3Id/PD0EcmAwGUH3cbC4s4VMqqxX7y60K6CbM=
+	t=1710805234; cv=none; b=bgZskU+xSHcsy3tMaVCmn2dskM982f0aKMe1HJBw17OeIdgUFwY148i3hvCQjoRYrBMZrmSdGb+JURocbpTk940q6I+FudqHsY4L4fSIf/qXjZIGNQ9Vd8hsEeJgICe0OPkbqLQ0pyWz3arB9ws+oq8sgsARhb8bEVvh/OkrC68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804718; c=relaxed/simple;
-	bh=G8PXI75wyQJnt2jt/Qu4uZ0MJ2bX8a6fiwFYVwQxj54=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sIUQpxl01zIo5MWSidpeG/ys5o70dbksMjYJSW3YEMx99srkIInfF9SD7eKxGTd3tE1hrCqlnryKlhsEBo/M6Zlm3+y2a1EvXWOHZujXMAcb0sPy9Q8Yvw1dt/V2ZRHYe65rIUxemc2SJpJQgwQcode/JBw2Obp0NmlmDwwdRpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g312OvpS; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1710805234; c=relaxed/simple;
+	bh=Yijpf6hdcX9Zz+at/Pl05PNPDv5yz2KSyc2hARlGVyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BS1WJA0FL24wNK9aYcCpGTw7K2hoCvIzurLpFNC/IFu18PwYGBbBUn7fTEhj1EUOgLFF1d/QpvUrCqBq8pafG7XtGOemhwlhvweDOOCdGLQLTrS3oxEwz5m0kDQacRIHugXL5Rs9rMtkmJzrRYfvdfB4iTCTYiADUWZ3V7H60nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LCWzjlg+; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g312OvpS"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc3645a6790so7901189276.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 16:31:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LCWzjlg+"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1def3340682so29149645ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 16:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710804714; x=1711409514; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/hYA0yVMfoXQX/tkABnkiVaF9F5w17dveHRWbK7K11I=;
-        b=g312OvpSjuJfepmmeO/udfNfk+GkHNuEYN4qSpOB8eCCEfIV5Dpya11fRrUQ6GOpmb
-         jICcI55fNhFIgRHHL/3z7KhgnEDd8pVBysMy6XBO+zOx84nwtzTb2VtT4ci+Yu6vpWMA
-         Li5giSBYl/gtym+/kbcDtOte79YprYHwRkxfCRjga2dCXfFVBY4geTm0Vcvv9hUnwtf1
-         RA7QzxzZdBB2I0fGtK9vcCN91NdHW5iGQV4QcnZEKRxg0bB4kg+UYuVYUwBT3W45fLfT
-         ZIkJfbX5ZdMjaa09rT/I/gtiPWcXeIdxhKZpxBV8IpNoVPLSekPqATaplXCoc0kpwsap
-         zHGw==
+        d=chromium.org; s=google; t=1710805232; x=1711410032; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qGVjXx+j07fAtzWyhzuz39ABH1ricioExB9tBdSnz3U=;
+        b=LCWzjlg+zokALRFDsK+PmKtA9cJKjFrbsPh5Q76Wk+vIfEd3TCLdznZ4ulGLVJRVke
+         IVY0QTj71Q4/89HFogbjEJVNrVwm5+1/7u0ilJJD/KTFAu0ytxpDmJmhu1PyfZFl39mM
+         0OOH+UAkCncaOGAYAPcnA11gKT0DIOXlP/36U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710804714; x=1711409514;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/hYA0yVMfoXQX/tkABnkiVaF9F5w17dveHRWbK7K11I=;
-        b=HRoq91Ax007wJdvFxwqiL8porsq+jmcGOeY+z/Y9aFfDAQlQJFCaV69RAWzzqPguku
-         +KQuHiH3eGAPT3+7Beoj2lB0VNlt2tHd+aSw6vJgUpDKGYIigBKQt/qf5AYn2R+g+p2T
-         4dtrPg69seB7EI2SlK7XMhzCwkZb+MxzQJTI/rYgx0FmYG2Rjjq/g9zg7FkUEeQ+tYZt
-         u8bZRfgRKC9YH0Bga1JsQt02Yc8T04SAkKqHYlq8vGl5qmLiRU/fChnaen49FgZRxdps
-         Mv0xmTN/KDjLzo1fQmMcuvWrkThul3xKD0KUuzh4Y/ra+DFW0N1p5XuGQdzYQiq76DLh
-         HoNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuzLdKnXB84pzxhwsYuQ2TYf0QA6bZmWIppPZuzGPDs2KS36XY0Rvmu2nW9rqB5umaCFBeWhuOilDZGGUDSwmsAbyvD3Ixfd/Bl//blj0+
-X-Gm-Message-State: AOJu0Yy/aCAyN9euLRm4zsCg/mqhyCi2847O97oirO8qVWen60FpTDlK
-	r2GXwShUQEWqEKzbu5LE3Y4GzLdDilOETuvYV/UctvVZMC0LnBD9pqFjdKgz9OW19EP16o9HFQU
-	4FJEny6V1w36cNvxZp0e+yg==
-X-Google-Smtp-Source: AGHT+IEcyEAm6+e1Tg0ayOlUnAb8GesMaSFK451Mqcd23PrLdQzWt457SqIzUIwgEynyMrhJc0UBWt78TjqL2Zdx7A==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:e09:b0:dc6:dfd9:d431 with
- SMTP id df9-20020a0569020e0900b00dc6dfd9d431mr147939ybb.1.1710804714301; Mon,
- 18 Mar 2024 16:31:54 -0700 (PDT)
-Date: Mon, 18 Mar 2024 23:31:53 +0000
+        d=1e100.net; s=20230601; t=1710805232; x=1711410032;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qGVjXx+j07fAtzWyhzuz39ABH1ricioExB9tBdSnz3U=;
+        b=R1QVkFuEygnpm5IrC6jZdI97BGSuPPbaV6herjHZW0AjBjomL1ElQ8JeR96E9DDuNO
+         IpyuKZ/og1MTg8lsdo+Ej45RmaxXbhJuMPMZ6J4FsJ+lblwP0EtpsgPYZN4yj4rKf0tr
+         seI2SHHM2xDwdll/AnNYENPvz2eawsi9nJsPiwr8OcFlGWe8wQL3h64zcK7KA2nNHq/9
+         z75nWqApL+LbOSjP6G9Iz8ZKjB3H1luwL/v8FQVvbK/VL2DHdI+ihLMbYFlB86rqMija
+         p/6onJAteFlE6/buLOoYq3reskTluZYjXMtMlHdEfnaweNPfFWpQmWsBWdH4zwJFKbwL
+         Vdfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmK4Tubt0XZAcInHcAClf+rIkVwgG2rvbmjFzButjhbpm6+5SL4WnDH5cCLxffekW/iR9G1kqUV4bz09tvn6CzSYZQCgJkYSAaOmjgHILS
+X-Gm-Message-State: AOJu0YzYo1iMuMWBPK2yyGlrW3XYdeTQItyHXykOXsyiPTVmhhX6HyPE
+	VFVpmaDJ98BpTZylPz+tI8+IHDgUALz19z5Loxx/jG3ZnKnH65W9lTxXTU6wlQ==
+X-Google-Smtp-Source: AGHT+IE6ZJkwZUoHdQ1XKk7dfD4fL/GhYshEq7O4lP3zklm4arTM8pnOn3Dx/fJ9+Pp6EnYJuQnZ2g==
+X-Received: by 2002:a17:902:b68e:b0:1e0:f8:17ca with SMTP id c14-20020a170902b68e00b001e000f817camr1076507pls.39.1710805231878;
+        Mon, 18 Mar 2024 16:40:31 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902a50700b001e0287592casm2566226plq.295.2024.03.18.16.40.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 16:40:31 -0700 (PDT)
+Date: Mon, 18 Mar 2024 16:40:30 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/rapl: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <202403181635.46CBABD994@keescook>
+References: <20240317164442.6729-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOjO+GUC/x3NTQrCMBBA4auUWTuQn4riVURKnIwxC9My04RK6
- d0NLr/NezsoS2aF27CDcMua59JhTwPQO5TEmGM3OONG4+0VdZVCyxej5MaiWPWJKcTEK9ZI+Gl T9XGiWRgJz4bDZXTOW0vQk4vwK2//3f1xHD/Njti4fgAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710804713; l=1939;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=G8PXI75wyQJnt2jt/Qu4uZ0MJ2bX8a6fiwFYVwQxj54=; b=SMrdYSJzX+MnSMD6sDqSBZWTY/HYEMo0XCaDfBfrmOfM9iiDJ5YOsiltw5Ae6VKsEq2hKUaoK
- nbWYum1TQMPCB9YQhj00veQ+IrIgkGxFZd78icvbRcCsqYhL2pjR+Dz
-X-Mailer: b4 0.12.3
-Message-ID: <20240318-strncpy-drivers-usb-gadget-udc-mv_u3d_core-c-v1-1-64f8dcdb7c07@google.com>
-Subject: [PATCH] usb: gadget: mv_u3d: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240317164442.6729-1-erick.archer@gmx.com>
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Sun, Mar 17, 2024 at 05:44:42PM +0100, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+> 
+> As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
+> this structure ends in a flexible array:
+> 
+> struct rapl_pmus {
+> 	[...]
+> 	struct rapl_pmu *pmus[] __counted_by(maxdie);
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + count * size" in
+> the kzalloc() function.
+> 
+> This way, the code is more readable and safer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-Let's opt for the new 2-argument version of strscpy() which guarantees
-NUL-termination on the destination buffer and simplifies snytax. The
-NUL-padding behavior that strncpy() provides is not required as u3d->eps
-is already zero-allocated:
-|	u3d->eps = kzalloc(size, GFP_KERNEL);
+Thanks!
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Found with: $ rg "strncpy\("
----
- drivers/usb/gadget/udc/mv_u3d_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I was inspired to come up with a Coccinelle script to find this pattern.
+This seems to do it, though it also removes the blank line. I'm not sure
+how to stop it from doing that. I'm running this treewide to see if I
+can find others...
 
-diff --git a/drivers/usb/gadget/udc/mv_u3d_core.c b/drivers/usb/gadget/udc/mv_u3d_core.c
-index 2a421f0ff931..e1dd5cf25d08 100644
---- a/drivers/usb/gadget/udc/mv_u3d_core.c
-+++ b/drivers/usb/gadget/udc/mv_u3d_core.c
-@@ -1307,7 +1307,7 @@ static int mv_u3d_eps_init(struct mv_u3d *u3d)
- 	/* initialize ep0, ep0 in/out use eps[1] */
- 	ep = &u3d->eps[1];
- 	ep->u3d = u3d;
--	strncpy(ep->name, "ep0", sizeof(ep->name));
-+	strscpy(ep->name, "ep0");
- 	ep->ep.name = ep->name;
- 	ep->ep.ops = &mv_u3d_ep_ops;
- 	ep->wedge = 0;
-@@ -1337,7 +1337,7 @@ static int mv_u3d_eps_init(struct mv_u3d *u3d)
- 			ep->ep.caps.dir_out = true;
- 		}
- 		ep->u3d = u3d;
--		strncpy(ep->name, name, sizeof(ep->name));
-+		strscpy(ep->name, name);
- 		ep->ep.name = ep->name;
- 
- 		ep->ep.caps.type_iso = true;
+// Options: --no-includes --include-headers
 
----
-base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
-change-id: 20240318-strncpy-drivers-usb-gadget-udc-mv_u3d_core-c-50ea7422311c
+@allocation@
+type SIZE_TYPE;
+identifier SIZE;
+type PTR_TYPE;
+PTR_TYPE *PTR;
+identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
+@@
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+	SIZE_TYPE SIZE;
+	...
+	PTR = ALLOC(..., SIZE, ...)
 
+@structure@
+type allocation.PTR_TYPE;
+type FLEX_TYPE;
+identifier FLEX;
+@@
+
+	PTR_TYPE {
+		...
+ 		FLEX_TYPE FLEX[];
+		...
+	};
+
+@single_shot_sizing@
+type allocation.SIZE_TYPE;
+identifier allocation.SIZE;
+type allocation.PTR_TYPE;
+PTR_TYPE *allocation.PTR;
+identifier allocation.ALLOC;
+type structure.FLEX_TYPE;
+identifier structure.FLEX;
+expression COUNT;
+@@
+
+- 	SIZE_TYPE SIZE;
+ 	... when != SIZE
+-	SIZE = (\(sizeof(*PTR)\|sizeof(PTR_TYPE)\) + ((COUNT) * \(sizeof(*PTR->FLEX)\|sizeof(PTR->FLEX[0])\|sizeof(FLEX_TYPE)\)));
+ 	... when != SIZE
+ 	PTR = ALLOC(...,
+-			SIZE
++			struct_size(PTR, FLEX, COUNT)
+ 			, ...)
+ 	... when != SIZE
+
+@reused_sizing@
+type allocation.SIZE_TYPE;
+identifier allocation.SIZE;
+type allocation.PTR_TYPE;
+PTR_TYPE *allocation.PTR;
+identifier allocation.ALLOC;
+type structure.FLEX_TYPE;
+identifier structure.FLEX;
+expression COUNT;
+@@
+
+  	SIZE_TYPE SIZE;
+ 	...
+	SIZE =
+-		(\(sizeof(*PTR)\|sizeof(PTR_TYPE)\) + ((COUNT) * \(sizeof(*PTR->FLEX)\|sizeof(PTR->FLEX[0])\|sizeof(FLEX_TYPE)\)))
++		struct_size(PTR, FLEX, COUNT)
+	;
+ 	... when != SIZE
+ 	PTR = ALLOC(..., SIZE , ...)
+
+
+-- 
+Kees Cook
