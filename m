@@ -1,78 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2545931A76;
-	Mon, 18 Mar 2024 12:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BD537711;
+	Mon, 18 Mar 2024 13:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710766249; cv=none; b=Xcx+gWxyBlWrtfZJsi3qdmGd5BvvgA1WQIx5nZ7Ryr28RQscgW1zT1HvbLA8cnVWiVk52GenVtv01iiKceDklZBySsB9pWttMOyouIDvUS5V9nJtrtHQNtkH/rmWdZKYWMmpCMBYhwF7o2fy1JMJhKVpxHtczxJnEnyG2n9ZWFc=
+	t=1710767056; cv=none; b=kR1568kmfgMFmmnCma+c42nYcT0TF4DkSTCdy7l9NZ01+KAf7PzJJvPl35grcZch5Am8CnZCLwsrAieqtEWWdd1naHrJnAgGmId/BX/qK0bGE56SQIMSL4VC/0sVkC/NWsbAup41pxHc0k43aEV58/38jTb6pd+gLlu2mOGO7N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710766249; c=relaxed/simple;
-	bh=FfpEdy/3DfxIs0rtGzH0FTeKiUqpKUCFyzXPxPdRWd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWlcdgynXyK6PfnP0AoctqO2WJKF2FYcXgVNfBONjXxYRktWV8G5bH5o+XDhXeoduniOYhuJ8cdeKEQom79824/teouk8srkvpi1PCcK2f53rmd+i6bTZL0jEgSKJJDgM8xR+fsBkadG3o9fZ57XEDy/dZbcboJ+TQGu0LnZyEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWTkPGmy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710767056; c=relaxed/simple;
+	bh=CYdWZsOzq1pnl9m/WNdRLA7plSjBlkbbLINFudwQ8gA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iP2O6rCjATCcR/A28PFFVcMGILxdigxOhqz4A6fxqAIso7RqVNmRFx9BO6ax7Wei1oSlnYGQG9SpG2G0+1qXV1y6wPnmw5sKOZp9jvgY5wHK0g/0XSi8cQhSdtXUTTlP8qNNT5dbWsED+bknGTiuQUidue2LPAfgju3Tte3g8C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFVwYSq+; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWTkPGmy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DD7C433F1;
-	Mon, 18 Mar 2024 12:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710766248;
-	bh=FfpEdy/3DfxIs0rtGzH0FTeKiUqpKUCFyzXPxPdRWd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sWTkPGmy6BQ44hg0M96PgJXfYQwjAD9eR5uH3uUjIQ/uPz2JeIkfDbpUOi6AMV77A
-	 GduQMpgQAA1sKSoO5FZCgyigsOni8QFKBbUF2BVXabYFQWR/WYUkcei3sHMMGhKPSS
-	 2KULh1eX3ip5jvz5//eSLL2tC8/6dhz3eJP3pLUgYr6fWqed/wGWtRSe6T78RNL/px
-	 9aRGeL/UnfQ3Whs6Gcf4pwZIaeDxLjpcBUjtmBHsR2TiccKl9DHw3c21z2L5i9B8Zr
-	 uoyjw4CcwxrjvDfZYfcNoCPT2qlBF6di7zX5UU4FMsZ5qQysO+5J/3Gp2dLydR1X+p
-	 jap3C0GEQUOJA==
-Date: Mon, 18 Mar 2024 08:50:46 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFVwYSq+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710767054; x=1742303054;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CYdWZsOzq1pnl9m/WNdRLA7plSjBlkbbLINFudwQ8gA=;
+  b=MFVwYSq+NEL5KfkIr14tQutnzR59AXXdMdD4fAUojjqzuMUOFiyBk+fn
+   MfDrC0SC51ycLQKfGbA+GP9c+linI93gZjWhS4crrFNsL5DV46gM+QZ0u
+   tNaELut0MRZqwvfmayno+KE2FpSXLtnU9MgJqWCDnDGz7NEGhFsIofSXF
+   +z/O6XM5fLV4FiM8VFWW1qtYzMFaSRFwdp6kZUk5BJN/KZovsFSrKYzhC
+   FXBhPCGhuF6yTgzomHb9dSfbxUhu1/ZWId1Y5Y9m0pd//Zk0kGoiK4udC
+   IdLa9TKYXGDovWlg61w10kpeV1VZZ6k8vODfOqyxdrJGILazgEp4Nvmd+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="5707133"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="5707133"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 06:04:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="44392842"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by orviesa002.jf.intel.com with ESMTP; 18 Mar 2024 06:04:11 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: linux-hardening@vger.kernel.org
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	Kees Cook <keescook@chromium.org>,
-	"David S . Miller" <davem@davemloft.net>, benve@cisco.com,
-	satishkh@cisco.com, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.1 10/12] enic: Avoid false positive under
- FORTIFY_SOURCE
-Message-ID: <Zfg4ppen73m7XCNf@sashalap>
-References: <20240229204039.2861519-1-sashal@kernel.org>
- <20240229204039.2861519-10-sashal@kernel.org>
- <Ze9xpwnt/54DkIOM@duo.ucw.cz>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RFC kspp-next 0/3] compiler_types: add Endianness-dependent __counted_by_{le,be}
+Date: Mon, 18 Mar 2024 14:03:51 +0100
+Message-ID: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Ze9xpwnt/54DkIOM@duo.ucw.cz>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 11, 2024 at 10:03:35PM +0100, Pavel Machek wrote:
->Hi!
->
->> From: Kees Cook <keescook@chromium.org>
->>
->> [ Upstream commit 40b9385dd8e6a0515e1c9cd06a277483556b7286 ]
->>
->> FORTIFY_SOURCE has been ignoring 0-sized destinations while the kernel
->> code base has been converted to flexible arrays. In order to enforce
->> the 0-sized destinations (e.g. with __counted_by), the remaining 0-sized
->> destinations need to be handled. Unfortunately, struct vic_provinfo
->> resists full conversion, as it contains a flexible array of flexible
->> arrays, which is only possible with the 0-sized fake flexible array.
->>
->> Use unsafe_memcpy() to avoid future false positives under
->> CONFIG_FORTIFY_SOURCE.
->
->This prepares for future chagnes, but I don't believe we'll port them
->to stable.
+Some structures contain flexible arrays at the end and the counter for
+them, but the counter has explicit Endianness and thus __counted_by()
+can't be used directly.
 
-Dropped, thanks.
+To increase test coverage for potential problems without breaking
+anything, introduce __counted_by_{le,be} defined depending on platform's
+Endianness to either __counted_by() when applicable or noop otherwise.
+The first user will be virtchnl2.h from idpf just as example with 9 flex
+structures having Little Endian counters.
+
+Maybe it would be a good idea to introduce such attributes on compiler
+level if possible, but for now let's stop on what we have.
+
+Alexander Lobakin (3):
+  compiler_types: add Endianness-dependent __counted_by_{le,be}
+  idpf: make virtchnl2.h self-contained
+  idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
+
+ include/linux/compiler_types.h              | 11 ++++++++++
+ drivers/net/ethernet/intel/idpf/virtchnl2.h | 24 ++++++++++-----------
+ 2 files changed, 23 insertions(+), 12 deletions(-)
 
 -- 
-Thanks,
-Sasha
+2.44.0
+
