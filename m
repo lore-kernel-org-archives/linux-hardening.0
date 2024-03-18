@@ -1,160 +1,100 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CE058ACA
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724015915E
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 21:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710797526; cv=none; b=C4zx8YvXLP/0JYojSVyXWCLn+YobSEQBJNqmKnh5A2uNAxVAatk8mhzMuC7m1Pr2kMnzfRUXAljppwdzGG1QD81+scq8nqRSW6yNsFOEI/9ii0blNEh1tl9FKKpEHTGOrYpB6j5Z30TjxB05xoxZoZQMwn1MTgBC1x1zFSM5Gd4=
+	t=1710798056; cv=none; b=MTa2x85brfO0RIlWgliOkDRNsTW4BzaUG9AIJc8wy8rl3Tr6GT3Jb1Bw27Vl/B0Ns9gozmL+ATYvxq3u2sjKaFjpFwBx6716x88CQh8DXH7gospqguf07INKkPN80rTOlv4QynvbFJioFOa28NQa0+44tzY5p6QB/Iw37kv085g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710797526; c=relaxed/simple;
-	bh=ucCmelMyvR8B8A4YhhLHaWy73dAoGtvG0I0P2JPd3j0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cPgcxYn+7RSCSSuX+LxTe1KOV9UUvKs0TrBQdcnwp3m3j36wlN44zU4ZHgThbSri+cuvOroreE98EOY0uHzx8q78qc2Kls3VWiteFuhahfDX29LF9L5SZj7h5DRfZe3rRxU0qQ7gkSIo2/FdBjvsnxjkMS3TMOh5lvzFJCziAKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y9hibkYd; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1710798056; c=relaxed/simple;
+	bh=J+IhkS5/3GB8AkkrIEaDcDuTxZrz47RTosu+l4UPPvA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OiL1LQhCaleEZg3e7XaiADEsFah8zUvHX0dQzd5DkAPf4o4dVP76K/YNLNCHNQqZ5thIQF8eH0z48byvKW/cHQjJQn1jzwOYOWfPQDNOoIXZEICri1QGdHxXDdDcbocZyEtkGcvTIaMxiAcLe+7d+prP+k4HuM0wEr1XD3xLO3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IdRQZEnJ; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y9hibkYd"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a4ee41269so88856027b3.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:32:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IdRQZEnJ"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e704078860so2148753b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 14:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710797523; x=1711402323; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QGU+lR1DQdP6tUDzCuW1XO/1wByAXmJNEyDZZfUNtA8=;
-        b=Y9hibkYdRK/UkswX6Q5t1ynlhtWNtojpaKP99LJHvzrrdccri4DRMydVrYARhlBZt4
-         V+e/RfpfEsnYMeFBepA3n/M3SR+dNcCl3LybSM7jY0TgqmBwJqjXamteczdF0nJ04BrM
-         +Di/5/f5V2JEIto0M0uUDXhJMUmDwDJO+Ui6OtZefRQohRhBQv1AQowur2OrC7BzeHGo
-         +bo01MNw8P4GQzxPg6cjl+vT9LmMRDLYK77FBzW0LZjCoeMJAPS0ZVypnIluAgJIePLQ
-         pRd/qPk0Vt69L1dHEGjR8XkNqdQpZhB60J62Ue1oCTqmXdMOKgYjZfjcg9ylUq3oSerO
-         tvUQ==
+        d=chromium.org; s=google; t=1710798055; x=1711402855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ox9bH+gD2CktkBBcZmuumQXprDslbo3R8UFvF8ORQTk=;
+        b=IdRQZEnJvNQ0SHwxPQ2UqtPuNNu/c0KjC9U3eHh0jLLvlDXfwCo9WCG1GKeURR41Um
+         wjwGQ3PzRuPHkEHVkuzI7d0mPOwaZtKCbFUfSeH90Ef5wkMELumCnN11Gf/jvZ6mG9Hn
+         URRD43gGj9de3/hvLkZ/xYinZNw1PcbnD04Ms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710797523; x=1711402323;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QGU+lR1DQdP6tUDzCuW1XO/1wByAXmJNEyDZZfUNtA8=;
-        b=lg51JLPouS3AE+zZ2WVRPUJ1xs8sqK48lMlEyCgi4uQ5bZSVxT403efG/x2dzOz5fQ
-         Z551mV0GCuaYnVnk1ommzZg+1MB9DP0h5HGELq/xhPQ6v0YT91qskIdW9HsuUsQt84Kr
-         4bU+bRJyiYUrSjLPNx0PjMPNuA6E3iuPD3zvU40WfYPiIVuHu2a/T25BeikXivQgMSWm
-         hTlVVTijbvy0YyS0WLaPHoyDl4lnY96clVn2/K1rQk1/5sgAH1Nf4f7jHEUpC7rrWdMB
-         +yBTy0DHFgV35ZneMl8r6G7DOnASgc8ZfBTvTp8UOFMDBhkoyrKzbVcbGSJqVd2VG+cC
-         h5oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQc94CIY/UaX70pum/IcTDEOUPW2D6ILsBnxUNHtZ9s+pDZQCTJrzETWLnMQL7JpwkGRNY2EPc155jOFQEVjOsmSHubLNVYKMhK6z9R2Hi
-X-Gm-Message-State: AOJu0YySCTPmgGh6/bOIrZ444N/e19GPoa5BP0sLaSs5RdGBlYqIiD1+
-	k9z0VwR3PsAzrenNjWiGC9rH6ZgP9bwfRfmGvqAeTjD4LkYlxKacgPm+Qr91P+YGbGevBZk7jSS
-	KG6n/a+iuTgzwEusLbjMjJw==
-X-Google-Smtp-Source: AGHT+IFF9ZVPbTZJCRAJN5ywjUYOtG5Avz/nf0ggwdYTo8nfoHH0biyCithjlhBYk7bRu5uYV2r/Gc+4wD5vJ8d5eQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:100a:b0:dd9:3143:577a with
- SMTP id w10-20020a056902100a00b00dd93143577amr86321ybt.0.1710797523740; Mon,
- 18 Mar 2024 14:32:03 -0700 (PDT)
-Date: Mon, 18 Mar 2024 21:32:01 +0000
+        d=1e100.net; s=20230601; t=1710798055; x=1711402855;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ox9bH+gD2CktkBBcZmuumQXprDslbo3R8UFvF8ORQTk=;
+        b=N2JY3IhEfF9VNiR7ZywnbmvGkoAVQCLVknWSidNgOJFtf7Yrlu3i3Sa63ROeI5ySYH
+         8dj8vjbbU7Yxm05t60qx92ID1AAggPhpx+9FeKTMPIPLFZAjjUgqgkhcSOzRi11up6XB
+         AZug50w+Au5HTZab14a+2S1PjJI1rlHLba/HxRTMs0CUy/BGzIUQ8z+A9GdQk6+O1As6
+         IuHW7IfLqWas6GCKr6ouAvRrGKXeQ5FAmDsAk0BRwlYtp/2SUmsUEcdejDBm1Hsn1Kkx
+         ErF+XyTA/a7Xkks0idPvjnOW8nB0cioWnYDgpJE3P5SIwq1Pj9P1HoWStPEPvK9cByP7
+         wzkg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+caP0r2RHrHfzxoa3AZfN8KaoO5BcwpulzsfEhoXnIdreWO5juN/YIP8I4OWQTXmQ+2vt6WNRw9G4v8Z2GBHPVVk5jsBVFAUjkRn7Veuj
+X-Gm-Message-State: AOJu0YyLAiHCiIq7B4BIaDO/rZC9F6eBOAeE8qxkFopVFeHlMxzy7Bzn
+	Is14i68fbzC3D5XQ3nFN1+D2eFB+3Ba0tzFPrI2EkG1xI778m0LB1FR0ejbMqA==
+X-Google-Smtp-Source: AGHT+IFe6QahzPvTukwCFb5ZRJ89e5PnJMyxdpOlFYZOabfXqy0xcp90SRTv9mIL4Cxopz1dwnGsiQ==
+X-Received: by 2002:a05:6a21:3a48:b0:1a3:5e13:6922 with SMTP id zu8-20020a056a213a4800b001a35e136922mr5593119pzb.20.1710798054851;
+        Mon, 18 Mar 2024 14:40:54 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b19-20020a639313000000b005dcc075d5edsm7365705pge.60.2024.03.18.14.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 14:40:53 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: tglx@linutronix.de,
+	Guixiong Wei <weiguixiong@bytedance.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	jgross@suse.com,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	peterz@infradead.org,
+	gregkh@linuxfoundation.org,
+	tony.luck@intel.com,
+	adobriyan@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on walk_relocs
+Date: Mon, 18 Mar 2024 14:40:50 -0700
+Message-Id: <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240317150547.24910-1-weiguixiong@bytedance.com>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANCy+GUC/y2NQQqDMBBFryKzdiCmtVSvIqXEOJPOJspMkBbx7
- g2lm/d5m/8OMFIhg7E5QGkXkzVX6doG4ivkRChLdfDOX92l69GK5rh9cFHZSQ1L0ETlP8+4KlV klsSGEXmm+83PPPQuQP3clFjev970OM8v/0hmjX8AAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710797522; l=3305;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=ucCmelMyvR8B8A4YhhLHaWy73dAoGtvG0I0P2JPd3j0=; b=cxBzFAJknOPLMzKwp30JtiedqAp/exwKy/UHOrHkzoxhsyu7imVK6mW94Y8EnNjK9NUt7E/5+
- PMgMlQwNNcCBXXkS+Zelm+YA6MXLrjirE2R7Xap16oClMSlDcX7fJSq
-X-Mailer: b4 0.12.3
-Message-ID: <20240318-strncpy-drivers-target-target_core_configfs-c-v1-1-dc319e85fe45@google.com>
-Subject: [PATCH] scsi: target: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Sun, 17 Mar 2024 23:05:47 +0800, Guixiong Wei wrote:
+> The commit aaa8736370db ("x86, relocs: Ignore relocations in
+> .notes section") only ignore .note section on print_absolute_relocs,
+> but it also need to add on walk_relocs to avoid relocations in .note
+> section.
+> 
+> 
 
-We expect db_root and db_root_stage to be NUL-terminated based on its
-immediate use with pr_debug which expects a C-string argument (%s).
-Moreover, it seems NUL-padding is not required.
+Applied to for-next/hardening, thanks!
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+[1/1] x86, relocs: Ignore relocations in .notes section on walk_relocs
+      https://git.kernel.org/kees/c/6ba438a29b5d
 
-Additionally, we should also change snprintf() to scnprintf().
-`read_bytes` may be improperly assigned as snprintf() does NOT return
-the number of bytes written into the destination buffer, rather it
-returns the number of bytes that COULD have been written to that buffer
-if it had ample space. Conversely, scnprintf() returns the actual number
-of bytes written into the destination buffer (except the NUL-byte). This
-essentially means the ``if (!read_bytes)`` was probably never a possible
-branch.
+Take care,
 
-After these changes, this code is more self-describing since it uses
-string APIs that more accurately match the desired behavior.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/target/target_core_configfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-index c1fbcdd16182..d78647e4f6c5 100644
---- a/drivers/target/target_core_configfs.c
-+++ b/drivers/target/target_core_configfs.c
-@@ -123,7 +123,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
- 		goto unlock;
- 	}
- 
--	read_bytes = snprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
-+	read_bytes = scnprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
- 	if (!read_bytes)
- 		goto unlock;
- 
-@@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
- 	}
- 	filp_close(fp, NULL);
- 
--	strncpy(db_root, db_root_stage, read_bytes);
-+	strscpy(db_root, db_root_stage, sizeof(db_root));
- 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
- 
- 	r = read_bytes;
-@@ -3651,7 +3651,7 @@ static void target_init_dbroot(void)
- {
- 	struct file *fp;
- 
--	snprintf(db_root_stage, DB_ROOT_LEN, DB_ROOT_PREFERRED);
-+	scnprintf(db_root_stage, DB_ROOT_LEN, DB_ROOT_PREFERRED);
- 	fp = filp_open(db_root_stage, O_RDONLY, 0);
- 	if (IS_ERR(fp)) {
- 		pr_err("db_root: cannot open: %s\n", db_root_stage);
-@@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
- 	}
- 	filp_close(fp, NULL);
- 
--	strncpy(db_root, db_root_stage, DB_ROOT_LEN);
-+	strscpy(db_root, db_root_stage, sizeof(db_root));
- 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
- }
- 
-
----
-base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
-change-id: 20240315-strncpy-drivers-target-target_core_configfs-c-fbe862bf950a
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+-- 
+Kees Cook
 
