@@ -1,70 +1,70 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E5B5D475
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FB35F859
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710803439; cv=none; b=LO/jLir4yh51XizpPa5AC7iU4ytRPlEA9DS+omTiDPTmbEgNNR37zGld/FGLpHhprM88Y/rctI+JW0tP2oJRVPQ667rpgnUCKuvSB5GJTx+/4/wTWEyJNVVbXoQ/aBdBq42Co2VTvH29QfQk7uGf2C64fzzRjZVf2o32VoB9dts=
+	t=1710804718; cv=none; b=NfcsiuDVewNWVs7sPgUPMfyi5CXWeYs1ueB5sW7K0d1jbOcbULAuLzSEU/KiqjVbJGkdHGxIrHem2GKKcBx0k5CUG4TYemLcbuU4DD7LWU5FTrnhhlxD3rSnUuvDxq8Ch39kJp3Id/PD0EcmAwGUH3cbC4s4VMqqxX7y60K6CbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710803439; c=relaxed/simple;
-	bh=6jYhW6ydpdVij+ItUl9+t6eOIBUYAlhnMEs4srqkJUA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dH8Zr4uXGoclNe2GQO+nf4caIZWotXRFkP1gSIqpthcWkbIAyhPpCnpCaZkKeuYLlhROeKiFdjh0HtXbdOav9HEJAr88KPVxn4CnUIWIkiRwaXdw5GXbuJeHL4sLR8TaL7S/x7hKWXZfJZmBWnD8haxJyhIqOflSyVpL2BBhBEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PHlA5CWV; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1710804718; c=relaxed/simple;
+	bh=G8PXI75wyQJnt2jt/Qu4uZ0MJ2bX8a6fiwFYVwQxj54=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sIUQpxl01zIo5MWSidpeG/ys5o70dbksMjYJSW3YEMx99srkIInfF9SD7eKxGTd3tE1hrCqlnryKlhsEBo/M6Zlm3+y2a1EvXWOHZujXMAcb0sPy9Q8Yvw1dt/V2ZRHYe65rIUxemc2SJpJQgwQcode/JBw2Obp0NmlmDwwdRpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g312OvpS; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PHlA5CWV"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ceade361so8044632276.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 16:10:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g312OvpS"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc3645a6790so7901189276.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 16:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710803435; x=1711408235; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710804714; x=1711409514; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=tZvJyHjjeZb/3QPL6MnqU7na7/zPGmCJPMlCf4GgcJU=;
-        b=PHlA5CWV0mAZt501cGC2jwcO0KzOhIqWh1tuZOPXl7P3MbBZtaJqNnGEqODNDADgTG
-         T0okeAnLunL17DrsS6pU2wWwHYx62XFI+b6BCrApDloNEUW+VKANVM5blOmqZm1u0Xp9
-         hwv04WEQwJYuNvEeD6tDSAgGpnF/M2WrzVfR4GCdwcUa/Iszz/9ctOMx91KwFoF58wdG
-         EiYoTHDQEPDKLanYijik0uZqVMv9zpWZ3dNwbgSRsZY2alaSFE6N2OcyGkyd8iOxQPeV
-         lcVb7A80OBmdupy9jf7z/eLV49r0yXhFSUk6NyPrR0PzSgKSkB9fzMio3EqNF8IHMFUn
-         crCw==
+        bh=/hYA0yVMfoXQX/tkABnkiVaF9F5w17dveHRWbK7K11I=;
+        b=g312OvpSjuJfepmmeO/udfNfk+GkHNuEYN4qSpOB8eCCEfIV5Dpya11fRrUQ6GOpmb
+         jICcI55fNhFIgRHHL/3z7KhgnEDd8pVBysMy6XBO+zOx84nwtzTb2VtT4ci+Yu6vpWMA
+         Li5giSBYl/gtym+/kbcDtOte79YprYHwRkxfCRjga2dCXfFVBY4geTm0Vcvv9hUnwtf1
+         RA7QzxzZdBB2I0fGtK9vcCN91NdHW5iGQV4QcnZEKRxg0bB4kg+UYuVYUwBT3W45fLfT
+         ZIkJfbX5ZdMjaa09rT/I/gtiPWcXeIdxhKZpxBV8IpNoVPLSekPqATaplXCoc0kpwsap
+         zHGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710803435; x=1711408235;
+        d=1e100.net; s=20230601; t=1710804714; x=1711409514;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tZvJyHjjeZb/3QPL6MnqU7na7/zPGmCJPMlCf4GgcJU=;
-        b=ovwwzQFemJmMDR+csXYWT2VVey0PJZhK3xVvY0INbF+oFjJSLxWBLeLVtlnzseciYd
-         fBP285x/Uhic3GKjO+lb0SBYo/mTjMg6RsCMsqYqtnfZ0yuYgcDiVSk5cTcNPZJxtR+N
-         Rq2/x2Z3TDtMZDNRP5NvfkVg9sPWAPVZWX7Z0xwUK0GwiDJSeMyaI6LLN5slJFNvbcZ/
-         nG0rKZjCWXlgpGi3ykDBL+0h39GuFLUx+rce+FwX+V9dKngF4a/i/oOXBO3bj+cXh63s
-         LH9A1M7F87jkJbroIUz1XYNcXSwqFfll5y7rbaCGwH3d1drY3F87ksXDU3IifV4ZtMGV
-         w64Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXTtVu73QKkO1d/FeEkzZU7FdGNLE5Ou040dWl8nli1I6wG2mGIHKQcJmqNFEkBiV2Qf1MmJTD/atbhZBNzG6VxeDUI2B8f61Cj18t45Jg+
-X-Gm-Message-State: AOJu0YzNT3mfYyIgFvS19xud6soPmLDXf0b3UfwEVVfcNID+fjzFkvU8
-	J65FHwn9Q5u5B4Zv+0ZLZhuV0Tx/WRHrGE7m/FJL9I2yyo9KuDyy1/2Dcp4aA/Ab1l1OyWcwYds
-	F5BZWQZ9U3SEdTQHnPzbv+A==
-X-Google-Smtp-Source: AGHT+IH73euqwF5jsoW328dNXM4qo380w3n37T5C8C32Ee+aaxPoawVFf4Jq8fPb3fV89pWUL7velSZ6dS5y+RcQpA==
+        bh=/hYA0yVMfoXQX/tkABnkiVaF9F5w17dveHRWbK7K11I=;
+        b=HRoq91Ax007wJdvFxwqiL8porsq+jmcGOeY+z/Y9aFfDAQlQJFCaV69RAWzzqPguku
+         +KQuHiH3eGAPT3+7Beoj2lB0VNlt2tHd+aSw6vJgUpDKGYIigBKQt/qf5AYn2R+g+p2T
+         4dtrPg69seB7EI2SlK7XMhzCwkZb+MxzQJTI/rYgx0FmYG2Rjjq/g9zg7FkUEeQ+tYZt
+         u8bZRfgRKC9YH0Bga1JsQt02Yc8T04SAkKqHYlq8vGl5qmLiRU/fChnaen49FgZRxdps
+         Mv0xmTN/KDjLzo1fQmMcuvWrkThul3xKD0KUuzh4Y/ra+DFW0N1p5XuGQdzYQiq76DLh
+         HoNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuzLdKnXB84pzxhwsYuQ2TYf0QA6bZmWIppPZuzGPDs2KS36XY0Rvmu2nW9rqB5umaCFBeWhuOilDZGGUDSwmsAbyvD3Ixfd/Bl//blj0+
+X-Gm-Message-State: AOJu0Yy/aCAyN9euLRm4zsCg/mqhyCi2847O97oirO8qVWen60FpTDlK
+	r2GXwShUQEWqEKzbu5LE3Y4GzLdDilOETuvYV/UctvVZMC0LnBD9pqFjdKgz9OW19EP16o9HFQU
+	4FJEny6V1w36cNvxZp0e+yg==
+X-Google-Smtp-Source: AGHT+IEcyEAm6+e1Tg0ayOlUnAb8GesMaSFK451Mqcd23PrLdQzWt457SqIzUIwgEynyMrhJc0UBWt78TjqL2Zdx7A==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:248e:b0:dcc:54d0:85e0 with
- SMTP id ds14-20020a056902248e00b00dcc54d085e0mr3417030ybb.11.1710803435207;
- Mon, 18 Mar 2024 16:10:35 -0700 (PDT)
-Date: Mon, 18 Mar 2024 23:10:34 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:e09:b0:dc6:dfd9:d431 with
+ SMTP id df9-20020a0569020e0900b00dc6dfd9d431mr147939ybb.1.1710804714301; Mon,
+ 18 Mar 2024 16:31:54 -0700 (PDT)
+Date: Mon, 18 Mar 2024 23:31:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOnJ+GUC/x2NQQqDMBAAvyJ77oJJapF+pRSJyRr3kspuIi3i3
- w09zmFmDlASJoVnd4DQzsqf3MDcOgirz4mQY2Owvb33zoyoRXLYfhiFdxLFqjMmHxMVXGoOpfl YJyorCQY0dqA4OvcIfoDW3IQW/v5/r/d5Xl1slzl/AAAA
+X-B4-Tracking: v=1; b=H4sIAOjO+GUC/x3NTQrCMBBA4auUWTuQn4riVURKnIwxC9My04RK6
+ d0NLr/NezsoS2aF27CDcMua59JhTwPQO5TEmGM3OONG4+0VdZVCyxej5MaiWPWJKcTEK9ZI+Gl T9XGiWRgJz4bDZXTOW0vQk4vwK2//3f1xHD/Njti4fgAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710803434; l=1534;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710804713; l=1939;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=6jYhW6ydpdVij+ItUl9+t6eOIBUYAlhnMEs4srqkJUA=; b=2ohvlrMEBBX4ty5GbUeu3anF0rb8vduud1G67Tjv5hvf0EarSHFWyMTU9rL5VEZPl79Lgy2nS
- N6K7HTiaa3DDlnd/w9onbZxW3Jlp56TX9ziuk4/QBAAVfrLI5YdAjuP
+ bh=G8PXI75wyQJnt2jt/Qu4uZ0MJ2bX8a6fiwFYVwQxj54=; b=SMrdYSJzX+MnSMD6sDqSBZWTY/HYEMo0XCaDfBfrmOfM9iiDJ5YOsiltw5Ae6VKsEq2hKUaoK
+ nbWYum1TQMPCB9YQhj00veQ+IrIgkGxFZd78icvbRcCsqYhL2pjR+Dz
 X-Mailer: b4 0.12.3
-Message-ID: <20240318-strncpy-drivers-usb-gadget-function-u_ether-c-v1-1-e8543a1db24a@google.com>
-Subject: [PATCH] usb: gadget: u_ether: replace deprecated strncpy with strscpy
+Message-ID: <20240318-strncpy-drivers-usb-gadget-udc-mv_u3d_core-c-v1-1-64f8dcdb7c07@google.com>
+Subject: [PATCH] usb: gadget: mv_u3d: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -75,9 +75,11 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Let's use the new 2-argument strscpy() as this guarantees
-NUL-termination on the destination buffer and also uses the destination
-buffer's size to bound the operation.
+Let's opt for the new 2-argument version of strscpy() which guarantees
+NUL-termination on the destination buffer and simplifies snytax. The
+NUL-padding behavior that strncpy() provides is not required as u3d->eps
+is already zero-allocated:
+|	u3d->eps = kzalloc(size, GFP_KERNEL);
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -89,26 +91,35 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/usb/gadget/function/u_ether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/mv_u3d_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/u_ether.c b/drivers/usb/gadget/function/u_ether.c
-index 3c5a6f6ac341..6e4ff64532c2 100644
---- a/drivers/usb/gadget/function/u_ether.c
-+++ b/drivers/usb/gadget/function/u_ether.c
-@@ -1032,7 +1032,7 @@ int gether_set_ifname(struct net_device *net, const char *name, int len)
- 	if (!p || p[1] != 'd' || strchr(p + 2, '%'))
- 		return -EINVAL;
+diff --git a/drivers/usb/gadget/udc/mv_u3d_core.c b/drivers/usb/gadget/udc/mv_u3d_core.c
+index 2a421f0ff931..e1dd5cf25d08 100644
+--- a/drivers/usb/gadget/udc/mv_u3d_core.c
++++ b/drivers/usb/gadget/udc/mv_u3d_core.c
+@@ -1307,7 +1307,7 @@ static int mv_u3d_eps_init(struct mv_u3d *u3d)
+ 	/* initialize ep0, ep0 in/out use eps[1] */
+ 	ep = &u3d->eps[1];
+ 	ep->u3d = u3d;
+-	strncpy(ep->name, "ep0", sizeof(ep->name));
++	strscpy(ep->name, "ep0");
+ 	ep->ep.name = ep->name;
+ 	ep->ep.ops = &mv_u3d_ep_ops;
+ 	ep->wedge = 0;
+@@ -1337,7 +1337,7 @@ static int mv_u3d_eps_init(struct mv_u3d *u3d)
+ 			ep->ep.caps.dir_out = true;
+ 		}
+ 		ep->u3d = u3d;
+-		strncpy(ep->name, name, sizeof(ep->name));
++		strscpy(ep->name, name);
+ 		ep->ep.name = ep->name;
  
--	strncpy(net->name, tmp, sizeof(net->name));
-+	strscpy(net->name, tmp);
- 	dev->ifname_set = true;
- 
- 	return 0;
+ 		ep->ep.caps.type_iso = true;
 
 ---
 base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
-change-id: 20240318-strncpy-drivers-usb-gadget-function-u_ether-c-125ed8336ca5
+change-id: 20240318-strncpy-drivers-usb-gadget-udc-mv_u3d_core-c-50ea7422311c
 
 Best regards,
 --
