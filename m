@@ -1,146 +1,134 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE765F861
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Mar 2024 23:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A880657A9;
+	Tue, 19 Mar 2024 03:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710806394; cv=none; b=BcGI2N+zR0VYsXFAAMh65ybMYOk/GoFC3geph4+/FuRZs7RQYBDDmEgY2rSS8Fy5hzJ8Sh5unxFRX1XSZMR3J8ofPf9UAXvCSOXT6toxk1OE0pu98cHeIIpVhr8PSMOlnH0DIgbh/7F33IWljl6G8ODRfEuaHxcF5rJ0vv6LrXQ=
+	t=1710819472; cv=none; b=FywetHd60b8je637klfH2bEM0jDRE/SBRda//jU+IolLtQi8aw5rLD9N4wjFmG7N+ZTr/k01rGnGX1Z8sejO/bkVO2XREgv2jM2p/FC8IS33VvzGK57RWDXhkJZ0uj7DkQE6bFPuwJiIyGTMb3heDcyEbnkU4+9GApAosb48YhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710806394; c=relaxed/simple;
-	bh=ElLiTVxcmJle7UtLKCTpM6rcHrJP3m3DslckjAJ+o2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MUaXgTKl6koDgsTAQncNaeey1rUrnaMaRmgQFgA3wjLvE1LK/Cmlt1QH6UQdC1gzaUArmuitwPQkYI9jeZg1JyYQMWolAF1XmPwrwOSDHo2NBdOnvv8xA6BaYVBBvZK2JhcKB/QtoVJFPtPNanU53pG9/P/IuQaBGrWf+wVV0uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=sidolu/g; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1710819472; c=relaxed/simple;
+	bh=VebSyVF5bHPrPRjmNRIpWZO5EROr4cyAn3m11V+qwRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtZnBFf8keMcyXzn81yZNL2DcvFgt6X0vp/xfMbQIQH/WKmvjHNBN9GWs3M/1YxGfZLW+6Z3rlWgmZSyrc0ys22hFXpB+H4zNuieZA5m7+W61G/9Yw70XK5lZ+PHjYnyNheYwq1REEliSqUOFwIVjHnGwBtVnPbE7lXv4M5j/Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaxrcT7n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="sidolu/g"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id mLF2rOoCbl9dRmMtNrBIb5; Mon, 18 Mar 2024 23:59:45 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id mMtMrVNXFHHoAmMtMrGkdj; Mon, 18 Mar 2024 23:59:44 +0000
-X-Authority-Analysis: v=2.4 cv=dskQCEg4 c=1 sm=1 tr=0 ts=65f8d570
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=zL1ebxPFBZ_Ilvq-UgQA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=z3Vya20dY0mWdmCkQilYCaqVfInKVcnxM24ENtjMVvs=; b=sidolu/gK1+hPsSXqvNuJY/TZ1
-	6fqRopQ3PFN2NHqq8Vg7oiEn+0/ZeSQLeluey3K66la59ajHf/7BnFXN8ricrHesma6c8IgSIIpG6
-	smse2ekSWlyukeFykHLs/YamC+MVy1lMW077IiR8dokcvBtV6crY/bQRhVftblpoCfJpYyrD2EtW8
-	bLJQ5mNChVW8Y7znDSO/z9JRSxuCbAHufnpXXU8U2k4TmiMTI+aixhUVQLzIOLW6L3UYFr1cUK+R4
-	Pli8YtXjxD9uKbXoqrzZ0n13Q+EiMqusXEu4clNFUOZsEyDmGVX4nVbq19kaJAHNW+Q3rbTUoK3FP
-	WKvXHyPQ==;
-Received: from [201.172.174.229] (port=45042 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rmMtL-001CBX-2Y;
-	Mon, 18 Mar 2024 18:59:43 -0500
-Message-ID: <1c05cba3-41c9-4862-b126-4ec6a79876d6@embeddedor.com>
-Date: Mon, 18 Mar 2024 17:59:38 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaxrcT7n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35FA8C433F1;
+	Tue, 19 Mar 2024 03:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710819471;
+	bh=VebSyVF5bHPrPRjmNRIpWZO5EROr4cyAn3m11V+qwRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eaxrcT7no+9PDOYRe21156WwnGaYAKx1nj7+f47W+Rb6taX7Xpn/0D5OmVonT1FY8
+	 c8SqFNBOM2kMltEOe2PAUzSH6qY3BZZf0ljF6epCaOSbCyfX/p05Nr6fDX+lGoqRED
+	 b9HeD4Vh90uJC2LhEaWXcCCmGwiBRm9y5oMoJlyFe8woGhYv420N1jK1/gwlMqdQk4
+	 rw/im6Q7h2r9KjabYQ/vHyoF0cGOsLrCvOM0lRa1jSUEh5vAX3EZl7pM+TwKJi4SkH
+	 +vrf924R64pr3WVzAiPaAm6wqXT0ala6mqgoGu7WF8BfR3+7UOzh72I/mlxQKxSKNJ
+	 hp5lXNyLBC05w==
+Date: Mon, 18 Mar 2024 22:37:49 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] soc: qcom: cmd-db: replace deprecated strncpy with
+ strtomem
+Message-ID: <ag7oslzfcuiyuehxq5n5jth4adrhel4xafby5whxsvyybbm6dc@6rtwaolbmm45>
+References: <20240318-strncpy-drivers-soc-qcom-cmd-db-c-v2-1-8f6ebf1bd891@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] stddef: Introduce struct_group_tagged_attr() helper
- macro
-To: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZfjHkXJWg12rARKU@neat> <202403181652.B8787FB288@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202403181652.B8787FB288@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rmMtL-001CBX-2Y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:45042
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfONsiCrgD/QKam1vCzGOQN9Af/KLA4vfOAWlaTVRTnTduZexuh/NsuPu0uG8nmh7y3phVV2FAM9jOeHDGn4SRA/LJ8hBpX2dIV41hJ3S6yAnWUJIuMtM
- k9+S7WUAdaMcwu1hSkyHdHgxI+GP/FnKKS3scdiUARoGqaz7ez4ZmzfMVVQnBAiNO0YXUKzWxSpmYmgFVY3478aJtJWrgt8jpBDsucblks4QnSkDRqsmEJD1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318-strncpy-drivers-soc-qcom-cmd-db-c-v2-1-8f6ebf1bd891@google.com>
 
-
-
-On 3/18/24 17:53, Kees Cook wrote:
-> On Mon, Mar 18, 2024 at 05:00:33PM -0600, Gustavo A. R. Silva wrote:
->> We need a new `struct_group()` helper that allows for both having the
->> struct be tagged, and specifying struct attributes like `__packed`
->> or `__align(x)`.
->>
->> This new helper will initially be used to address
->> -Wflex-array-member-not-at-end warnings, where a tagged struct is used
->> to separate the flexible-array member from the rest of the members in
->> the flexible structure [1]. There are some scenarios in which those
->> members need to be packed, as well.
->>
->> So, `struct_group_tagged_attr()` is introduced for this.
->>
->> Link: https://lore.kernel.org/linux-hardening/ZeIgeZ5Sb0IZTOyt@neat/ [1]
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   include/linux/stddef.h | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/include/linux/stddef.h b/include/linux/stddef.h
->> index 929d67710cc5..919df9453257 100644
->> --- a/include/linux/stddef.h
->> +++ b/include/linux/stddef.h
->> @@ -80,6 +80,26 @@ enum {
->>   #define struct_group_tagged(TAG, NAME, MEMBERS...) \
->>   	__struct_group(TAG, NAME, /* no attrs */, MEMBERS)
->>   
->> +/**
->> + * struct_group_tagged_attr() - Create a struct_group with a reusable
->> + * tag and trailing attributes.
->> + *
->> + * @TAG: The tag name for the named sub-struct
->> + * @NAME: The identifier name of the mirrored sub-struct
->> + * @ATTRS: Any struct attributes to apply
->> + * @MEMBERS: The member declarations for the mirrored structs
->> + *
->> + * Used to create an anonymous union of two structs with identical
->> + * layout and size: one anonymous and one named. The former can be
->> + * used normally without sub-struct naming, and the latter can be
->> + * used to reason about the start, end, and size of the group of
->> + * struct members. Includes struct tag argument for the named copy,
->> + * so the specified layout can be reused later. Also includes
->> + * structure attributes argument.
->> + */
->> +#define struct_group_tagged_attr(TAG, NAME, ATTRS, MEMBERS...) \
->> +	__struct_group(TAG, NAME, ATTRS, MEMBERS)
-> 
-> This is the same as __struct_group() only with a longer name? Why not
-> just use __struct_group() directly?
+On Mon, Mar 18, 2024 at 10:49:23PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
 
-Mmmh, the rest of the helpers in the struct_group() family fall in this
-same category, can we use __struct_group() indistinctly?
+I don't mind changing the strncpy() in this function, but I don't think
+this problem description adequately describes the problem you're
+solving.
 
---
-Gustavo
+If the motivation is that we want 0 users of strncpy() in the kernel,
+then say so.
+
+> @query is already marked as __nonstring and doesn't need to be
+> NUL-terminated.
+
+You're not wrong, but in the event that strlen(id) < sizeof(ent->id) the
+destination should be NUL-padded - exactly one of the well known,
+normally unwanted, effects of strncpy(). strtomem() does explicitly not
+do this.
+
+> Since @id is a string, we can use the self-describing
+> string API strtomem().
+
+"self-describing"?
+
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - use strtomem instead of memcpy (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/soc/qcom/cmd-db.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
+> index a5fd68411bed..d05f35d175bd 100644
+> --- a/drivers/soc/qcom/cmd-db.c
+> +++ b/drivers/soc/qcom/cmd-db.c
+> @@ -141,18 +141,13 @@ static int cmd_db_get_header(const char *id, const struct entry_header **eh,
+>  	const struct rsc_hdr *rsc_hdr;
+>  	const struct entry_header *ent;
+>  	int ret, i, j;
+> -	u8 query[sizeof(ent->id)] __nonstring;
+> +	u8 query[sizeof(ent->id)] __nonstring = { 0 };
+>  
+>  	ret = cmd_db_ready();
+>  	if (ret)
+>  		return ret;
+>  
+> -	/*
+> -	 * Pad out query string to same length as in DB. NOTE: the output
+> -	 * query string is not necessarily '\0' terminated if it bumps up
+> -	 * against the max size. That's OK and expected.
+> -	 */
+> -	strncpy(query, id, sizeof(query));
+> +	strtomem(query, id);
+
+query needs to be NUL-padded to sizeof(ent->id) bytes (like strncpy
+does), something you recognized by adding the zero-initialization above.
+But why split this requirement across two non-adjacent lines? Isn't this
+what strtomem_pad() is supposed to do?
+
+Regards,
+Bjorn
+
+>  
+>  	for (i = 0; i < MAX_SLV_ID; i++) {
+>  		rsc_hdr = &cmd_db_header->header[i];
+> 
+> ---
+> base-commit: fe46a7dd189e25604716c03576d05ac8a5209743
+> change-id: 20240314-strncpy-drivers-soc-qcom-cmd-db-c-284f3abaabb8
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
