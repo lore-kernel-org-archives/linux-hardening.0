@@ -1,33 +1,32 @@
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7703D7E571
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 10:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE607EF00
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 11:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845738; cv=none; b=XBoGfguprqjpuMGmpCoLSd+NMFh37EaG4eebinzqbm/oCZebd+hUuaYVgglQukg35zxHSja88rnxXURCkNgGxdM0c/GROYi6mqbqwjfnNavkgEvznmij5RjKMpiushHMzZrGwtVM3PZ7sw1NYzB5mhkT0pGio9C7M/81eeeZYkI=
+	t=1710847518; cv=none; b=Dhm5cwgkmjulNFMKQwqmZ8ZAaTxz+nhT4Bt3ua1A4+0yy6FTeeic0e2bYm6S5XNIdstT/s24X/t9Gv2MGeRSiuOHkddFuqm1ETsPX2ilngGqgP+16qEVNdau2pMw/tMPJ6e6FJdf5K2haFEeC7Q3V4hz6uaDB12zfFYGwHsk488=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710845738; c=relaxed/simple;
-	bh=b6/DRUF/Rej8WDS7Bj3R2nQv56pPXANLpZULDArZAX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rd1aZMnttiR1h7AmTNNItf18psUk444iLk3mMgk8CD1eSsgIxiw5XiFH/K8iUdG6JfMYMlDlEqj7US0exKew1ql5zxhOK/F+ZBCUSmNkrbZyOQSJG6JE34GnGOqCf4oUcvGYoNQWA4xaWWCDGzyoRztjjxq0+zX8ErEGltHcZ+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=dt6Wd9v9; arc=none smtp.client-ip=84.16.66.175
+	s=arc-20240116; t=1710847518; c=relaxed/simple;
+	bh=titjicsS13zyLYpwVbjFKzsdWlMZsZ9iAVihS7vtrRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KZx68YOAFbGPRy++XebgqZ7nvxKO2P1Y76U0KibgWaGxt/e0WJBPG6EJfRaPazhUxCLmNTmrggn7yQJeKs5UlHpE/ABk9UrlXR2nsrE0GILDMetlAUpfj0+dSbvmCLSy+Fd/S//P8/N9zTu4gOiAyTpFBcbo2so1NgalnzaRqgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Q7tT/TcJ; arc=none smtp.client-ip=185.125.25.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="dt6Wd9v9"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4N1nM1zKyh;
-	Tue, 19 Mar 2024 11:49:24 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4M2rN3zMppDq;
-	Tue, 19 Mar 2024 11:49:23 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Q7tT/TcJ"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4G1GLBzMq3Gc;
+	Tue, 19 Mar 2024 11:49:18 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4D5thVzvGg;
+	Tue, 19 Mar 2024 11:49:16 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710845364;
-	bh=b6/DRUF/Rej8WDS7Bj3R2nQv56pPXANLpZULDArZAX8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dt6Wd9v9s7y2a0+SICu9bRRW5ZYPFD8oy+ZMCaCtsDYCSZ772nsFkAmsLbvW9vagO
-	 +DYD6TNXy2wutdveoSRAxgdxsaIN64tLPy9SgQkojHLXaCU6C93LMlilcvWuZ8zKuk
-	 fiHo+SHrG/SK0M1I8pU7gd8w30m8uUqDYk5YZ4CM=
+	s=20191114; t=1710845358;
+	bh=titjicsS13zyLYpwVbjFKzsdWlMZsZ9iAVihS7vtrRU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q7tT/TcJvK7xnZ0yNnH8RKseTWW7HMLg8r+H4B7xE+inCtDOxMj/yIS0gmUAS574p
+	 d1VT8nzN0WuOf/YgPmyMQPrKaMGUA+ZhjzVHME00J/VthdkIqwsIZEFZc80GJoFmyR
+	 cBePVO0WziY1W198OVLF5Mx5uDP8hjU07byNStJ4=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Brendan Higgins <brendanhiggins@google.com>,
 	David Gow <davidgow@google.com>,
@@ -59,11 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	x86@kernel.org
-Subject: [PATCH v3 5/7] kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
-Date: Tue, 19 Mar 2024 11:48:55 +0100
-Message-ID: <20240319104857.70783-6-mic@digikod.net>
-In-Reply-To: <20240319104857.70783-1-mic@digikod.net>
-References: <20240319104857.70783-1-mic@digikod.net>
+Subject: [PATCH v3 0/7] Handle faults in KUnit tests
+Date: Tue, 19 Mar 2024 11:48:50 +0100
+Message-ID: <20240319104857.70783-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,114 +71,52 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Fix KUNIT_SUCCESS() calls to pass a test argument.
+Hi,
 
-This is a no-op for now because this macro does nothing, but it will be
-required for the next commit.
+This patch series teaches KUnit to handle kthread faults as errors, and
+it brings a few related fixes and improvements.
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: David Gow <davidgow@google.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240319104857.70783-6-mic@digikod.net
----
+Shuah, everything should be OK now, could you please merge this series?
 
-Changes since v2:
-* Add David's Reviewed-by.
+All these tests pass (on top of v6.8):
+./tools/testing/kunit/kunit.py run --alltests
+./tools/testing/kunit/kunit.py run --alltests --arch x86_64
+./tools/testing/kunit/kunit.py run --alltests --arch arm64 \
+  --cross_compile=aarch64-linux-gnu-
 
-Changes since v1:
-* Add Kees's Reviewed-by.
----
- lib/kunit_iov_iter.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+I added Reviewed-by, Tested-by and Fixes tags according to previous
+review.  I improved a commit message and added a comment.
 
-diff --git a/lib/kunit_iov_iter.c b/lib/kunit_iov_iter.c
-index 859b67c4d697..27e0c8ee71d8 100644
---- a/lib/kunit_iov_iter.c
-+++ b/lib/kunit_iov_iter.c
-@@ -139,7 +139,7 @@ static void __init iov_kunit_copy_to_kvec(struct kunit *test)
- 			return;
- 	}
- 
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- /*
-@@ -194,7 +194,7 @@ static void __init iov_kunit_copy_from_kvec(struct kunit *test)
- 			return;
- 	}
- 
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- struct bvec_test_range {
-@@ -302,7 +302,7 @@ static void __init iov_kunit_copy_to_bvec(struct kunit *test)
- 			return;
- 	}
- 
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- /*
-@@ -359,7 +359,7 @@ static void __init iov_kunit_copy_from_bvec(struct kunit *test)
- 			return;
- 	}
- 
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- static void iov_kunit_destroy_xarray(void *data)
-@@ -453,7 +453,7 @@ static void __init iov_kunit_copy_to_xarray(struct kunit *test)
- 			return;
- 	}
- 
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- /*
-@@ -516,7 +516,7 @@ static void __init iov_kunit_copy_from_xarray(struct kunit *test)
- 			return;
- 	}
- 
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- /*
-@@ -596,7 +596,7 @@ static void __init iov_kunit_extract_pages_kvec(struct kunit *test)
- stop:
- 	KUNIT_EXPECT_EQ(test, size, 0);
- 	KUNIT_EXPECT_EQ(test, iter.count, 0);
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- /*
-@@ -674,7 +674,7 @@ static void __init iov_kunit_extract_pages_bvec(struct kunit *test)
- stop:
- 	KUNIT_EXPECT_EQ(test, size, 0);
- 	KUNIT_EXPECT_EQ(test, iter.count, 0);
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- /*
-@@ -753,7 +753,7 @@ static void __init iov_kunit_extract_pages_xarray(struct kunit *test)
- 	}
- 
- stop:
--	KUNIT_SUCCEED();
-+	KUNIT_SUCCEED(test);
- }
- 
- static struct kunit_case __refdata iov_kunit_cases[] = {
+A new test case check NULL pointer dereference, which wasn't possible
+before.
+
+This is useful to test current kernel self-protection mechanisms or
+future ones such as Heki: https://github.com/heki-linux
+
+Previous version:
+v2: https://lore.kernel.org/r/20240301194037.532117-1-mic@digikod.net
+v1: https://lore.kernel.org/r/20240229170409.365386-1-mic@digikod.net
+
+Regards,
+
+Mickaël Salaün (7):
+  kunit: Handle thread creation error
+  kunit: Fix kthread reference
+  kunit: Fix timeout message
+  kunit: Handle test faults
+  kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
+  kunit: Print last test location on fault
+  kunit: Add tests for fault
+
+ include/kunit/test.h      | 24 ++++++++++++++++++---
+ include/kunit/try-catch.h |  3 ---
+ lib/kunit/kunit-test.c    | 45 ++++++++++++++++++++++++++++++++++++++-
+ lib/kunit/try-catch.c     | 38 ++++++++++++++++++++++-----------
+ lib/kunit_iov_iter.c      | 18 ++++++++--------
+ 5 files changed, 100 insertions(+), 28 deletions(-)
+
+
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
 -- 
 2.44.0
 
