@@ -1,163 +1,98 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EBF7BB13
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 03:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522A81D540;
+	Tue, 19 Mar 2024 08:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710820202; cv=none; b=HvyXcL2uwJnBn+EExGqUW4kGTSOh+IcxO1C3TAPLD8/+vuACLQyTTFXEIDBBxtS9HyMat6ACr2XZja4j8xv1BxKoq9OHJmG76ryNl4mk5uUx4267wP+A9PsoJ7r17rwdc0Mz6HEZ4sDEEdVN/xeGox/WzeatLhAVxXqEzE54B9M=
+	t=1710836230; cv=none; b=nUlLMa/0Ra9zHLPwMrq+JmzQOB14qJdMQHqOafthO462BWVFTKYKE0xX/Ff4Dx7eDNDVHPRzHhOuowDYN7cZQRgXSrpyCDwRVtDqFn7skHHgryCnVssZGiOljwSX4SI8hThMa1upB/MNyCUhwPNDRnz219ixGcCz0h5E9YB6xGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710820202; c=relaxed/simple;
-	bh=hNPVXYOhJcoLVTEV4WarZkDlgxg2epWF1bGQ17SmhQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MamirDahJUv1HwMOI3LXmCaqlyywOa1lQtedPChTu9QXkk1iuQNnuxasPjnzpg29kidW1lVCWQBuPc8k9xcUl4tI4uHpXUEDw1xelz/kh/DKwe74snMFZFSlv9lgr1eYi8ntPtkVobi0DiNqm2shtcaOHcGST0bGwvIK9aoeuh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=jEicmtQt; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1710836230; c=relaxed/simple;
+	bh=JX3TriMRwDRg/XX7TCeoNIZ9bpm+iVQCqeDjayF+/Ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msyYHuZ9nfCVWQDUWo6QZu3qD/kEQeF42CdsHXhustRuI2GjOAVdvrPtiRuWQFv3gXW5Fx6RgJa3NJSHvyrCQV39y8pjelMabl8TqKJEkh7ePkKgxpZpbaO9+I3YP7h75lvYzgvUlqsy3ULmjipLVNZfOiY4I0I1zCQ8B0250nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=WBIvI8xE; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jEicmtQt"
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
-	by cmsmtp with ESMTPS
-	id mKBorGLPJuh6smQU5rQNKm; Tue, 19 Mar 2024 03:49:53 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id mQTyrWb5GkpnxmQTyrfjYJ; Tue, 19 Mar 2024 03:49:46 +0000
-X-Authority-Analysis: v=2.4 cv=Y4D+sAeN c=1 sm=1 tr=0 ts=65f90b5a
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=cm27Pg_UAAAA:8 a=VRTBL-XNDjFAICBfogcA:9
- a=QEXdDO2ut3YA:10 a=1F1461vogZIA:10 a=5kKzt1m56AEA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=SLz71HocmBbuEhFRYD3r:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=W2zZsoQWdc3rKe29I0hrlQr5HJTS/IblWppWq5S0AJA=; b=jEicmtQts4e0AtILeFpXWu2//o
-	XkPK7qH3ksyoQlXvWjiqhJJ0D37F5LNTRknSJacYIF0CgkjjBKpCi42DTexuHIfvpD9mvCMTBAoNa
-	5l/7bZr58+hPt6kxjNYFLNM3OqYGgnDaXZ1NLYFcDlT5odz0e5fzgugptaq1/IxIpgNoR8fnVtLoS
-	IXXJBZnfV01ZEWQJlPxtfLIVSkNHBdosWCBLIx5YeTdglM774IuqpNDgf/mjEM9O6ZvwDoo7D0rtL
-	/7d1J8NzTLTqQQgxuzGunUlyKabpg3CBetfp23D4WAgrHGKU6zZYiI2j52zCBkfgYSZFsoOoaECMU
-	FpRAC2IQ==;
-Received: from [201.172.174.229] (port=34604 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rmQTs-004HQs-1n;
-	Mon, 18 Mar 2024 22:49:40 -0500
-Message-ID: <38c7e956-9161-41d0-94a1-5f55481fd8a3@embeddedor.com>
-Date: Mon, 18 Mar 2024 21:49:37 -0600
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="WBIvI8xE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6227740E0140;
+	Tue, 19 Mar 2024 08:17:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id y4YoWliEx1cB; Tue, 19 Mar 2024 08:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1710836220; bh=TlIidKXcofu8c4qhUsOCY438rBz+o9WrRYuZUIXu0+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WBIvI8xE9xXpGjNkgg3pL631YJcDaHfif+Ior2ssGtclusabrdKjm1+E9mxujNlyR
+	 L86PYRwCsETYPQ3ZAgYWOAo/KdXlHbltax60TVCMeMeDPb+t9R4iZFGAzIf+hnt+KC
+	 Lvy11KY2B9lLo9z0urPMXOM2l6+kMwGgH9bYVItXLiTuw3p8fYUDKXboju+Gn46wpI
+	 iHF1O3bQLjcFwzouWBNBAW10hxoLRH5Ol7o8FQplGx+G/JWpGy9ReBj1Sjj5o7SwRR
+	 CBx4/luprWk6o265foQa4D6RyMPUIiS/ztadCZlEVLAfFOfjZauyBHVXe4kRPAw5SR
+	 JOk9/H2yCYM8IQwvbnsiWJkRXjLQ78XTqLSy4+7nDsdbEexGMXlFcDpqM5RE7IK1QD
+	 4GeNc2mUTFOPh0TkAgQmmdxalCcF1aKAN5ZOAfdn4XuFKt81vUi7rFHlrCvJvg6/LX
+	 6qGSPeKkoFa2muEL0PE0d6xGvjrknvG04v4XJedkuOgblhChTz7r9JULtlw4LWi45O
+	 fn0zFQUMOJTuhtsDscqx+iERrlif9Wubq3ML7OZpZu1hH9eubiwLsckfOdnteg0d45
+	 CLUzhRlDo/9x4bxs7GZg1tdkOy6mCXzy8c5KCW8Yqo+1h/hhDSnLVJWfOQYteylhXg
+	 CyDGdzngsLcXUn+qoLSk/Mr8=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 755FC40E016B;
+	Tue, 19 Mar 2024 08:16:46 +0000 (UTC)
+Date: Tue, 19 Mar 2024 09:16:40 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	gregkh@linuxfoundation.org, tony.luck@intel.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+ <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
+ <202403181644.690285D3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/rapl: Prefer struct_size over open coded
- arithmetic
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Erick Archer <erick.archer@gmx.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240317164442.6729-1-erick.archer@gmx.com>
- <202403181635.46CBABD994@keescook>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202403181635.46CBABD994@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rmQTs-004HQs-1n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.174.229]:34604
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfB1C2FtHEXpnGRRC5rGpB852Oj9NS164GSeP/MXgEOhwaLPuAbMj/5zE7/GNo7ZgyK7BVD+smSn0YuqPyTrNRaZ12H8DZ4OVSbPldEccBvqAMXvRx0Tk
- pjmgkmu5S6X25+toKS4JNp80UUGnxW4napOOqxqQwp96aRpO5Z0+odotMfPbq+RpBWyV9e+7cGPUJ8DhqE6x4ZvevVmxoxj3zgu+UXBgHaOy/YXQLRYMEuGz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202403181644.690285D3@keescook>
 
+On Mon, Mar 18, 2024 at 04:45:45PM -0700, Kees Cook wrote:
+> The commit it refs to landed via -hardening,
 
+Yap, saw that. It should've gone through tip too as it is clearly a tip
+tree patch.
 
-On 18/03/24 17:40, Kees Cook wrote:
-> On Sun, Mar 17, 2024 at 05:44:42PM +0100, Erick Archer wrote:
->> This is an effort to get rid of all multiplications from allocation
->> functions in order to prevent integer overflows [1][2].
->>
->> As the "rapl_pmus" variable is a pointer to "struct rapl_pmus" and
->> this structure ends in a flexible array:
->>
->> struct rapl_pmus {
->> 	[...]
->> 	struct rapl_pmu *pmus[] __counted_by(maxdie);
->> };
->>
->> the preferred way in the kernel is to use the struct_size() helper to
->> do the arithmetic instead of the calculation "size + count * size" in
->> the kzalloc() function.
->>
->> This way, the code is more readable and safer.
->>
->> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
->> Link: https://github.com/KSPP/linux/issues/160 [2]
->> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> 
-> Thanks!
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> I was inspired to come up with a Coccinelle script to find this pattern.
-> This seems to do it, though it also removes the blank line. I'm not sure
-> how to stop it from doing that. I'm running this treewide to see if I
-> can find others...
-> 
-> // Options: --no-includes --include-headers
+> responsibility of landing this fix too. But it's fine to go via -tip
+> if you prefer?
 
-with --no-includes this one is missed in arch/x86/events/:
+Yes, please. Just send a Reviewed-by and it'll get picked up.
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 258e2cdf28fa..213fe48f9391 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -350,12 +350,11 @@ static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
-  static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
-                                                  int node)
-  {
--       int i, size, numshared = type->num_shared_regs ;
-+       int i, numshared = type->num_shared_regs ;
-         struct intel_uncore_box *box;
+Btw, while looking at that second patch, why does it have *three* Fixes:
+tags? I think it wants to fix only your
 
--       size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
--
--       box = kzalloc_node(size, GFP_KERNEL, node);
-+       box = kzalloc_node(struct_size(box, shared_regs, numshared),
-+                          GFP_KERNEL, node);
-         if (!box)
-                 return NULL;
+aaa8736370db ("x86, relocs: Ignore relocations in .notes section")
 
-Funny thing is that in this case it's quite convenient that the script removes
-the blank like. :P
+?
 
---
-Gustavo
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
