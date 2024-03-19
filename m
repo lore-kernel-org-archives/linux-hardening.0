@@ -1,122 +1,139 @@
-Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE607EF00
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 11:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D11CD13;
+	Tue, 19 Mar 2024 11:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710847518; cv=none; b=Dhm5cwgkmjulNFMKQwqmZ8ZAaTxz+nhT4Bt3ua1A4+0yy6FTeeic0e2bYm6S5XNIdstT/s24X/t9Gv2MGeRSiuOHkddFuqm1ETsPX2ilngGqgP+16qEVNdau2pMw/tMPJ6e6FJdf5K2haFEeC7Q3V4hz6uaDB12zfFYGwHsk488=
+	t=1710848374; cv=none; b=gbktZ1Cq7o582/w/6e3sGFUS/KMBhXcr4Fwm9QjI6DNgSbeI3hag5xRvPtFTftQCwagqNwQ0TFJC4NQLLWyy869/dzLEDSrzNOLKZTG9pcGph0RAruDxfT43pTmNPLsOTHGajf1RQJj0wzW97foWiJSySW0qF5lbPftWzCXnAD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710847518; c=relaxed/simple;
-	bh=titjicsS13zyLYpwVbjFKzsdWlMZsZ9iAVihS7vtrRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KZx68YOAFbGPRy++XebgqZ7nvxKO2P1Y76U0KibgWaGxt/e0WJBPG6EJfRaPazhUxCLmNTmrggn7yQJeKs5UlHpE/ABk9UrlXR2nsrE0GILDMetlAUpfj0+dSbvmCLSy+Fd/S//P8/N9zTu4gOiAyTpFBcbo2so1NgalnzaRqgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Q7tT/TcJ; arc=none smtp.client-ip=185.125.25.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Q7tT/TcJ"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4G1GLBzMq3Gc;
-	Tue, 19 Mar 2024 11:49:18 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4D5thVzvGg;
-	Tue, 19 Mar 2024 11:49:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710845358;
-	bh=titjicsS13zyLYpwVbjFKzsdWlMZsZ9iAVihS7vtrRU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Q7tT/TcJvK7xnZ0yNnH8RKseTWW7HMLg8r+H4B7xE+inCtDOxMj/yIS0gmUAS574p
-	 d1VT8nzN0WuOf/YgPmyMQPrKaMGUA+ZhjzVHME00J/VthdkIqwsIZEFZc80GJoFmyR
-	 cBePVO0WziY1W198OVLF5Mx5uDP8hjU07byNStJ4=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v3 0/7] Handle faults in KUnit tests
-Date: Tue, 19 Mar 2024 11:48:50 +0100
-Message-ID: <20240319104857.70783-1-mic@digikod.net>
+	s=arc-20240116; t=1710848374; c=relaxed/simple;
+	bh=vojRu5Rt8UyQxGZBpl02LUieDOrevQoQb1W9TGD1xVQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=llcabuvunPE4K25xl88rL7LauSQ3h7EVBRgEtZnbHoEyeAbYKqPGF3lIM3bFPJJSi46BJc+sZ5/rhVHhAMfo4IHaoHSCYmt6T8pWr/7m/nRTYHjGRFoD5hh3Fupw2S1Q7S7th/N9oqOV3/Pl/ufyNUXePAtvC2cYIfDASYqXC9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5a46ad0d981so1201508eaf.1;
+        Tue, 19 Mar 2024 04:39:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710848372; x=1711453172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fGDMdE/ubpMSGXQdDQ2jOzVWvsK6WIp+rG4bdzH3AV8=;
+        b=TMzdexX1XYjzjQ/30A5VK5ToZ4+tsT6c4GLnFe/ScTDy2VKKMkuXT0VuvS/UH1sONC
+         uYFfmZzjNh1OGdy1yTBYQJy5A0wJ7fJUnRRPlOweTP0S67eaqUqDAiMIKjhC80C6vijX
+         y41LvQwvss5wkVuWpw2tz8MxhdDEKSS5o9GbfNCnDJ2deno/xeHUIUf47aQRxk8xPWnE
+         ST7PWHSpn3zreP0d9km1H/21NH5oLEE91m6VEp61HWBB/h+DaMd32LY9ItKyc4hxAkmi
+         ezE+hZU6pYmOqJfCLbY+E7GZHj1EzHKHpDVpuf9w677EM1JHjwuO040EKJwUelJEpjDC
+         iy8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUh/qnDbNThdUe+55KxkoETcBGGT4sKZHy8c5zd+A+2G6o6ApgA9gkIl49387H53WNEJsWjqYexUmfsvy7OklNPpuEGPZDsbAL60RJlXpVMxEwelbnxVgkx832grIqjtIR3p2t9zScMSsUYCkZ1gBLkFpabo/U6FkS61cyfNVZpN3w3gfR21rM=
+X-Gm-Message-State: AOJu0Yw3AmnDFPERLdbreZQZ1L9hJxedN/9ztWhhBQTqC7KPB3tpq2K2
+	fy3pR50l9s885jkYMvNmwV6s8MCbhgHGuls4rjuGAGZ1fPnXrqfEWrEFTqLjqrfw5rC+Rum4M6K
+	8HQ3Oi+NCrlXmi/FBVSvrlyMJWWs=
+X-Google-Smtp-Source: AGHT+IGHZCsOkNMXpc8xdHuAUf+zixo9CgVbeU12ShhxJpSf+PUXcFlR5MZ54F+q9rYGC8+OAMRFvhgllN6VNMvyUtI=
+X-Received: by 2002:a05:6870:8a08:b0:229:848e:b7ea with SMTP id
+ p8-20020a0568708a0800b00229848eb7eamr1177280oaq.4.1710848372151; Tue, 19 Mar
+ 2024 04:39:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+References: <20240318-strncpy-drivers-thermal-intel-int340x_thermal-acpi_thermal_rel-c-v1-1-08839fbf737a@google.com>
+In-Reply-To: <20240318-strncpy-drivers-thermal-intel-int340x_thermal-acpi_thermal_rel-c-v1-1-08839fbf737a@google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 19 Mar 2024 12:39:20 +0100
+Message-ID: <CAJZ5v0j=cYbqyfi6y45hnu+Y_tvMGYb9p6d=kpsOA0AsxBoy3g@mail.gmail.com>
+Subject: Re: [PATCH] thermal: intel: int340x_thermal: replace deprecated
+ strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Mar 18, 2024 at 11:36=E2=80=AFPM Justin Stitt <justinstitt@google.c=
+om> wrote:
+>
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+>
+> psvt->limit.string can only be 8 bytes so let's use the appropriate size
+> macro ACPI_LIMIT_STR_MAX_LEN.
+>
+> Neither psvt->limit.string or psvt_user[i].limit.string requires the
+> NUL-padding behavior that strncpy() provides as they have both been
+> filled with NUL-bytes prior to the string operation.
+> |       memset(&psvt->limit, 0, sizeof(u64));
+> and
+> |       psvt_user =3D kzalloc(psvt_len, GFP_KERNEL);
+>
+> Let's use `strscpy` [2] due to the fact that it guarantees
+> NUL-termination on the destination buffer without unnecessarily
+> NUL-padding.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
+cpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
+tml [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-This patch series teaches KUnit to handle kthread faults as errors, and
-it brings a few related fixes and improvements.
+Srinivas, any objections?
 
-Shuah, everything should be OK now, could you please merge this series?
-
-All these tests pass (on top of v6.8):
-./tools/testing/kunit/kunit.py run --alltests
-./tools/testing/kunit/kunit.py run --alltests --arch x86_64
-./tools/testing/kunit/kunit.py run --alltests --arch arm64 \
-  --cross_compile=aarch64-linux-gnu-
-
-I added Reviewed-by, Tested-by and Fixes tags according to previous
-review.  I improved a commit message and added a comment.
-
-A new test case check NULL pointer dereference, which wasn't possible
-before.
-
-This is useful to test current kernel self-protection mechanisms or
-future ones such as Heki: https://github.com/heki-linux
-
-Previous version:
-v2: https://lore.kernel.org/r/20240301194037.532117-1-mic@digikod.net
-v1: https://lore.kernel.org/r/20240229170409.365386-1-mic@digikod.net
-
-Regards,
-
-Mickaël Salaün (7):
-  kunit: Handle thread creation error
-  kunit: Fix kthread reference
-  kunit: Fix timeout message
-  kunit: Handle test faults
-  kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
-  kunit: Print last test location on fault
-  kunit: Add tests for fault
-
- include/kunit/test.h      | 24 ++++++++++++++++++---
- include/kunit/try-catch.h |  3 ---
- lib/kunit/kunit-test.c    | 45 ++++++++++++++++++++++++++++++++++++++-
- lib/kunit/try-catch.c     | 38 ++++++++++++++++++++++-----------
- lib/kunit_iov_iter.c      | 18 ++++++++--------
- 5 files changed, 100 insertions(+), 28 deletions(-)
-
-
-base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
--- 
-2.44.0
-
+> ---
+> Note: build-tested only.
+>
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c b/d=
+rivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> index dc519a665c18..4b4a4d63e61f 100644
+> --- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> +++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> @@ -309,7 +309,7 @@ static int acpi_parse_psvt(acpi_handle handle, int *p=
+svt_count, struct psvt **ps
+>
+>                 if (knob->type =3D=3D ACPI_TYPE_STRING) {
+>                         memset(&psvt->limit, 0, sizeof(u64));
+> -                       strncpy(psvt->limit.string, psvt_ptr->limit.str_p=
+tr, knob->string.length);
+> +                       strscpy(psvt->limit.string, psvt_ptr->limit.str_p=
+tr, ACPI_LIMIT_STR_MAX_LEN);
+>                 } else {
+>                         psvt->limit.integer =3D psvt_ptr->limit.integer;
+>                 }
+> @@ -468,7 +468,7 @@ static int fill_psvt(char __user *ubuf)
+>                 psvt_user[i].unlimit_coeff =3D psvts[i].unlimit_coeff;
+>                 psvt_user[i].control_knob_type =3D psvts[i].control_knob_=
+type;
+>                 if (psvt_user[i].control_knob_type =3D=3D ACPI_TYPE_STRIN=
+G)
+> -                       strncpy(psvt_user[i].limit.string, psvts[i].limit=
+.string,
+> +                       strscpy(psvt_user[i].limit.string, psvts[i].limit=
+.string,
+>                                 ACPI_LIMIT_STR_MAX_LEN);
+>                 else
+>                         psvt_user[i].limit.integer =3D psvts[i].limit.int=
+eger;
+>
+> ---
+> base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
+> change-id: 20240318-strncpy-drivers-thermal-intel-int340x_thermal-acpi_th=
+ermal_rel-c-17070c1e42f3
+>
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+>
