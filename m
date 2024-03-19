@@ -1,136 +1,115 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C964F1F9
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 21:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A284EB5D
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710883202; cv=none; b=hsVY2hvWKwzZL9SmmACPwaPZeXnIQWko/nymG5nH6bU7wy27ze4UFvknlDFPE7ixpj+QsqFS+JlwhmGoFvUnZoTaA6LO2wJoitCbc0RHshCZETWwzJ6y4tA0+vByU7E4vVjMIK54O4yU3Vhz/ttwtUFtL6JeGCXie2Uvr9vjDMw=
+	t=1710884581; cv=none; b=WtGwAxRYvDSMSc45gBqciMSAsFMeYXQnvZXlCnY46jHKjrSBLVVLJUYynPgbGzPQ/XJYMQpFd8/Jy+NCGot+WDET2kRNzJVulqYFCY+OIQBtJ5u30vhPqOqCdIYYsGNUMnngaejo0DeTf55TmlcFGBh1/wQW8XKnGMjge2rNIzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710883202; c=relaxed/simple;
-	bh=Mdg4v+gVR1XXoJ7LDiKyb/js1DlYqwa9cvruL0+pdyw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZhkIlF5+vrPLoO7UXtdY+UkEx2o70b4+iyMrphumSJ0h7QUeSzZoP3YBw0fOTjFL7JgZQ/kahJdxzgbnbXTioPzNZg4Ip+T673JEB46ybU+GtyaitCiImax2zrpgJ69ypZwrNO63Eba4WTUnqXGp3Sry7C6bYT7rdvo7JqCmw7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RmfLCLnL; arc=none smtp.client-ip=209.85.166.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1710884581; c=relaxed/simple;
+	bh=Rf/ZzLSJq+0hJEqJURHe/+XcImyRbdPUlA55Jcwz3ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RT5fxfcC2RyK22wZBvHk51YvWplh5T+ImV8THaPElyw9o0wzqiNnNOQ25GhILVDn9c60qYqxByBIPb2LtPZbzZycSQCEV9CSkesvdAsW/8xPK4zcshT3D8RGDmYpSITBYYcqpZRUY4ahw09dmsEkKlhQ5/s82oRqqMgkOaGmTYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kIRPm1Cy; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmfLCLnL"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7cc044e7456so282908539f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 14:20:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kIRPm1Cy"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1def2a1aafaso30976175ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 14:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710883200; x=1711488000; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+P2giq0KAVuF343w/p3qlKL7+PcOe1+28vHCwGD1ebk=;
-        b=RmfLCLnLmsR9mhY3CO9C4W3I/PUHsHFJIbovRwyI0rs07KY/tcsHC4cZ4XccrlHgEs
-         bBxJ0/3MZRMDkwD6WLAOpWnEDY4FSoATZf7xbBASfMyIeuVRhgdJ/8XgsApTVqBZRB4F
-         CFALffKel050sCsHst0biguvm7miVHy326nF1baL0hXUHXy1Noe5XZmOBrVVOSkMnozR
-         bHAazkPyloya5GSO3CLap49iqRCi7SlXXd5VwEanCwkc43MjbxK/zKoF3EIBVY5M8px+
-         JAJrXReqNYOshyNx0+6a34AN2kcDaMawlOUPHRi3jLFys8nkAfpsw90wQsgcRWzGf5bV
-         CCYw==
+        d=chromium.org; s=google; t=1710884579; x=1711489379; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gn2BuHzN3nlK8aoPb0dO7Dxpaiy8FETIFCqPc6ZVPEI=;
+        b=kIRPm1Cyxf/2+6Zh+03W/13X0ixZhx2/XQWYgWH9eJej9jr5J7KOybWM5hPZz2lyQr
+         Jn8ELsRW9sUmKGZTzzgBao4tu5P8x9uUTE4akk1tVHLhisWhczjFCsWIbxB+P3yToHsJ
+         Z6zuxYZ2/cVYOVO7gHeKtzGzS87ZSG+cEnAVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710883200; x=1711488000;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+P2giq0KAVuF343w/p3qlKL7+PcOe1+28vHCwGD1ebk=;
-        b=mscXRkDjPJ+Ztu/oqEQyLMY4XujknG9GCRm9Jp4SJijoJ/zPqKIQSFkmUZL24xlSU1
-         ovTi9Vp7ofqvPThljsbdOEenrkC455MWVVV5SFlXJxxYo9sj5u2N/OYr+hB6yNqPWpCl
-         SNcd9Xd4KTuaMvo44Wo9atmolCS6AhnWzkv70kPHsHcBhUJqSHVBjvIHMiYMK406RZUg
-         BpOPE6XxngNSW+wi2/ugnBdG7LJF8KBUiwmEC0tIx+9HSRiMXiGtnzKXlFupzRUQx2T8
-         aA9wMaj3/d5ZhCoBWTlUgbDlV1LLqnWx0plFYKwCAu3wKUiOgAZSV0NM3PGW9fqhX+8K
-         2G0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVtG9R/peahplx9m9VSwQXZ5+jV9xMxlpTusxa3MrjPoGjPkFsqYCdk404sOW0SZ8afEB5pEpnONMmUDZ931HlZNWSJRc2PjggZ/1ITr/UP
-X-Gm-Message-State: AOJu0Yww0UxI4qQYFttGmhFjzAlkdUmLz7I+E3LNgVHzc+Ox5LCJ9rF2
-	TWHJbvRq35zeQqbGqEgqQSw50M1VuCxnX3RBx7gKtGNQmctlt3bxDyLnBmpHmm6vdrCyq1a/5TO
-	q6G4k/nWDc+f7WpAUjPTNUQ==
-X-Google-Smtp-Source: AGHT+IEjYa8XAuzaZ3QDjFc+CmwpKb+B2fiaTFJKL46VazLIXLWNGSzFGXrx+jPM3IbTpLMVy06PiFtlUIAyiHMl5Q==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6602:2c94:b0:7cc:342:72f9 with
- SMTP id i20-20020a0566022c9400b007cc034272f9mr297570iow.2.1710883200494; Tue,
- 19 Mar 2024 14:20:00 -0700 (PDT)
-Date: Tue, 19 Mar 2024 21:19:59 +0000
+        d=1e100.net; s=20230601; t=1710884579; x=1711489379;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gn2BuHzN3nlK8aoPb0dO7Dxpaiy8FETIFCqPc6ZVPEI=;
+        b=rE2+D8KAgru44sJWLEnipc86fEXOqviXFt5myHi2d103S+ZbuMsZ3Amix+6XpYIiIJ
+         o5QrouqZje9DVbGVeqz7FI/OvCAfoQPG9X7lAfqoMy9jJwEm2FuQxVOjcvEsMEoZfXAq
+         MkYCBuaZNLiwBdV/ly0DlHWQhQ6bltLJ+zBfS8EXvy68l+i/U8STUNAtrFbmcNcaWkd3
+         A4TG0MIr5W4VxFKod+nmm10bHPWIbcxgHzRsgplH8tR04clfvZsF48/6ym4jmJlR24OA
+         je+3hpgs1HPgsSc8Rw2+eBmXtw+fz4siL5+ZrfpLC7TpyehiOGq5hJZPKV/f5rCvs9X2
+         EAbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCGVYS3B6T7J0lCRZ8i8GFEavvP0EJapYohgrggoC3AuHj2Cz6pKjISmiYDvogMxfXwZqGb7GCLjXaDgOfO2N6cGvS/I5lT2h0RD6Bij7E
+X-Gm-Message-State: AOJu0YwrvvuHiUxgT+zCaXemYJNA3teHpHSuINwQuFeZoEiRPxRUwOiy
+	YSXJV2ErNwNILk0QXn3Gflqryp2HfBQp+p2VXPdIhKyZ53QiFIBDtlIClIFi7Q==
+X-Google-Smtp-Source: AGHT+IHAZohXacaLJK6W6ePcVrSro2gO3VNsbfNh2CzbM77yQ3dVP31W+F8koj1yMP3uswTLgaW1lA==
+X-Received: by 2002:a17:903:32cd:b0:1e0:444:5f6c with SMTP id i13-20020a17090332cd00b001e004445f6cmr8749688plr.64.1710884578802;
+        Tue, 19 Mar 2024 14:42:58 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k10-20020a170902c40a00b001defa97c6basm8707287plk.235.2024.03.19.14.42.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 14:42:57 -0700 (PDT)
+Date: Tue, 19 Mar 2024 14:42:56 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>, Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC kspp-next 3/3] idpf: sprinkle __counted_by{,_le}() in
+ the virtchnl2 header
+Message-ID: <202403191442.219F77E672@keescook>
+References: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
+ <20240318130354.2713265-4-aleksander.lobakin@intel.com>
+ <20240319185718.GO185808@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAH8B+mUC/5XNTQ6CMBCG4auQrh1DW5DqynsYF/2ZQhOh2JJGQ
- ri7hZXudPlOJs+3kIjBYSSXYiEBk4vODzn4oSC6k0OL4ExuwkpWlZxWEKcw6HEGE1zCECF6DU/
- te9C9AaNAAxOV5VJJqZQg2RkDWvfaN2733J2Lkw/zPpnodv1HTxQoNKWtTY1N2XB2bb1vH3jMX 2TjE/skxS8ky6SwJ1SWKiPO9Itc1/UNgE518iYBAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710883199; l=2271;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=Mdg4v+gVR1XXoJ7LDiKyb/js1DlYqwa9cvruL0+pdyw=; b=Fu5AbgciDR7kyPaRIoo73doyAxlV6sVzOVwcGzj5a0Hjq/yMcTBMrykb+d+ZRRZdAIphvOzje
- LT65OpzS84VCMIjD2l5Sw4sVwE+biQfYsuW0wkHVZ0og9OiNliktfT7
-X-Mailer: b4 0.12.3
-Message-ID: <20240319-strncpy-drivers-soc-qcom-cmd-db-c-v3-1-aeb5c5180c32@google.com>
-Subject: [PATCH v3] soc: qcom: cmd-db: replace deprecated strncpy with strtomem
-From: Justin Stitt <justinstitt@google.com>
-To: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319185718.GO185808@kernel.org>
 
-strncpy() is an ambiguous and potentially dangerous interface [1]. We
-should prefer more robust and less ambiguous alternatives.
+On Tue, Mar 19, 2024 at 06:57:18PM +0000, Simon Horman wrote:
+> On Mon, Mar 18, 2024 at 02:03:54PM +0100, Alexander Lobakin wrote:
+> > Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
+> > There are 10 structures with flexible arrays at the end, but 9 of them
+> > has flex member counter in Little Endian.
+> > Make the code a bit more robust by applying __counted_by_le() to those
+> > 9. LE platforms is the main target for this driver, so they would
+> > receive additional protection.
+> > While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
+> > its counter is `u8` regardless of the Endianness.
+> > Compile test on x86_64 (LE) didn't reveal any new issues after applying
+> > the attributes.
+> > 
+> > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> 
+> Hi Alexander,
+> 
+> with this patch applied ./scripts/kernel-doc -none reports the following.
+> I think that this means that the kernel-doc needs to be taught
+> about __counted_by_le (and __counted_by_be).
 
-@query is marked as __nonstring and doesn't need to be NUL-terminated.
+Oh, yes, I should have remembered that need. Sorry! It should be
+addressed by adding them where __counted_by is already listed in
+Documentation/conf.py.
 
-Since we are doing a string to memory copy, we can use the aptly named
-"strtomem" -- specifically, the "pad" variant to also ensure NUL-padding
-throughout the destination buffer.
+-Kees
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v3:
-- Prefer strtomem_pad (thanks Bjorn)
-- Reword commit message (thanks Bjorn)
-- Carry over Kees' RB as this new version is functionally the same and
-  matches the same spirit of v2
-- Link to v2: https://lore.kernel.org/r/20240318-strncpy-drivers-soc-qcom-cmd-db-c-v2-1-8f6ebf1bd891@google.com
+> 
+> .../virtchnl2.h:559: warning: Excess struct member 'chunks' description in 'virtchnl2_queue_reg_chunks'
+> .../virtchnl2.h:707: warning: Excess struct member 'qinfo' description in 'virtchnl2_config_tx_queues'
+> .../virtchnl2.h:786: warning: Excess struct member 'qinfo' description in 'virtchnl2_config_rx_queues'
+> .../virtchnl2.h:872: warning: Excess struct member 'vchunks' description in 'virtchnl2_vector_chunks'
+> .../virtchnl2.h:916: warning: Excess struct member 'lut' description in 'virtchnl2_rss_lut'
+> .../virtchnl2.h:1108: warning: Excess struct member 'key_flex' description in 'virtchnl2_rss_key'
+> .../virtchnl2.h:1199: warning: Excess struct member 'qv_maps' description in 'virtchnl2_queue_vector_maps'
+> .../virtchnl2.h:1251: warning: Excess struct member 'mac_addr_list' description in 'virtchnl2_mac_addr_list'
+> 
+> ...
 
-Changes in v2:
-- use strtomem instead of memcpy (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20240314-strncpy-drivers-soc-qcom-cmd-db-c-v1-1-70f5d5e70732@google.com
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/soc/qcom/cmd-db.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index a5fd68411bed..d51ae99d9c02 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -147,12 +147,7 @@ static int cmd_db_get_header(const char *id, const struct entry_header **eh,
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Pad out query string to same length as in DB. NOTE: the output
--	 * query string is not necessarily '\0' terminated if it bumps up
--	 * against the max size. That's OK and expected.
--	 */
--	strncpy(query, id, sizeof(query));
-+	strtomem_pad(query, id, 0);
- 
- 	for (i = 0; i < MAX_SLV_ID; i++) {
- 		rsc_hdr = &cmd_db_header->header[i];
-
----
-base-commit: fe46a7dd189e25604716c03576d05ac8a5209743
-change-id: 20240314-strncpy-drivers-soc-qcom-cmd-db-c-284f3abaabb8
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
