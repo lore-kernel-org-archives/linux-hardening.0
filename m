@@ -1,80 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344A13A1A0;
-	Tue, 19 Mar 2024 18:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1A03FB90
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 21:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710874643; cv=none; b=eJxkz4/a8GgqqUJ193G8kOl4h1UxzbMm9ywhnGUtJN1ne8QZ/4PzpG2TrXD2IARpPvaww458hud2GrVKWElOeqhQoTQVMGB15rRro/xQrQUbp2j3ri1uS9QSxz2pCuJmne4AYCct0TTCXiCvEh3oLCC5qEYxNrjoOa0kaMWjORg=
+	t=1710882021; cv=none; b=DYDdT7MMAOZxc4ylHSsTWJIweya4aCvUxt9IMde+imZyksSkTs136t1TVSKi97oZMTwgbDvEivd4Ps/D+Gq7VcnoahFJfHfqE2N9GHR3QHK3xprZY593SkujMZjF2qiJXoj60ejLvCocDw48qXbM89qmhU3B0m0ZoHMm2m4JORc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710874643; c=relaxed/simple;
-	bh=DohZWk5SdjMZAo5MvMKcWFKm/CihtRTRKj5i8fvpu/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6faNXSyfiVl0ehLxzTWhxbkUSI1tQeq6LX6YJtBolyLcim8+Mb2/AEbgU5mvTvwueDEeorKjAFLgrCSOanqty4CWZIK5CHt4KPz7sEHke8Qooc+ixLfb/lmDxnnC/iLXYYA1dD2/Ym8FZDKrWlnWZbeGyDpiDXthDGz8OOFH30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htL7sS/v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710882021; c=relaxed/simple;
+	bh=wpmJb/vawcr/bgZTTTWypOk/KxnH3sCIe+53p9+QArc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ShDGamOy7uxM7L4cbBrRgBXNTeYgRnCcuyM80yqZ6Jl4ksfnOxerB1qiU2k48HHQD3PZij/1C2XQwg1kOXvQaRsa4bmVvGoCNexZ831aoOIpr+3TgsTb6r8sew/AIct9G/ubRxLkoLQmxAQ4bc/lnU7Ja2LE9pzfvnH1Ef/eX7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lScGxJFz; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htL7sS/v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D0FC433C7;
-	Tue, 19 Mar 2024 18:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710874642;
-	bh=DohZWk5SdjMZAo5MvMKcWFKm/CihtRTRKj5i8fvpu/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=htL7sS/vHj8iZVyw0dlzwOo2Jwwqt0Vh1gs3NX6alrD/V7o9xavNBnsuqISHfJ4IO
-	 VY/dAJVm9DRVsYjRY+7pup1mnlrhHUIHAqAKNIU4tYb3MKgTP/V67X7Xacm3jqfdRw
-	 H4WColn29j5lMBALyUbviVFk9ZCtDnDnfBUfwmzLP6Bh5xqtuiA6Y0vL8MqCYnkNFV
-	 c6FxrJLK5+vLde9OoHV9x4QKmEwDdqMmEVxrrv6SKmc9pfxHD00qqIaGThhNNdTFjQ
-	 +Rc3fL6Q0LSCIotbuvDIvkbXpHfguqqc+zLWR/VzJur2xd3eGrL0dTCWWnSDbOuEFV
-	 nKJqbeuM34l9A==
-Date: Tue, 19 Mar 2024 18:57:18 +0000
-From: Simon Horman <horms@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marco Elver <elver@google.com>, Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC kspp-next 3/3] idpf: sprinkle __counted_by{,_le}() in
- the virtchnl2 header
-Message-ID: <20240319185718.GO185808@kernel.org>
-References: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
- <20240318130354.2713265-4-aleksander.lobakin@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lScGxJFz"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56bab906859so120330a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 14:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1710882018; x=1711486818; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XiHFjOZrEM4sT036lCzm+As9FCgL6wQXfthUNkxfzew=;
+        b=lScGxJFzdPXAS2VhAKigrNtZft+Ev/Vy/cvRAqhcW/ItpNMKPe8tSuGLOrfBs4e5As
+         l8bRZeCMo2j6c7ALIYNoMCkJe8Z5OYEgl0XjztCusoK/9s9QneU4nolmhQvGIUqKs5cA
+         H60zI5r2cUbKZ6GtZ1vvF2aoEDfiAKijulthMD6afY69TbytbS9FfIg8iqle9JauAg/6
+         FlI0UsFeIEppMIN6sa36GRONAdRtBAuH9KDShbMy4PKzvuHRf2/2O+hX/ykw7vmYXp+L
+         jlMuoSxPZV7+hKiiM0witkDycah52qUJGwEGHb/6cNN9a+KRy7y1QtmYhxrrKxpDu35n
+         5/Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710882018; x=1711486818;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XiHFjOZrEM4sT036lCzm+As9FCgL6wQXfthUNkxfzew=;
+        b=fQQAOczllZTiFUf3lWScI4iow7qsO9+8zKVVjCpPqY8GEvcSlqc+e1P62Dy1tHx7Aa
+         HnexITpWH2j0YAREcGH4z/pP0VedBY4UfNS/VBxpQCWxrpiHIBobVW+BSwvPhL3TZ37t
+         GTDNNzxCOfaKrMXBDpP8b5bPxU5oPCIkjq71D+0eGbe60lbuhWxUM1v+ijv4hnc+Bdqh
+         4VLFuRGKOyyh8H9+zrjkMNysB5rJdoesH7qKGmjx3OW+ICz47SaaA3Sp72pKbInwZUL3
+         kVWs/h7LQGMYrq8Rk1MfJmqsvSvPxrvT8WjTuyg+439f/AWxRDH0mi+TvQthFF5oC5a7
+         Gsfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOstxsocInI+noPQ8HWo3lDd0s4LSOwrJpYhwQkcK27lIwIMDb5sT8DDqHS58lraHeavrz5EC4w8QxdBG8k6AUutl2UhPAJ+fJcOV5MkFO
+X-Gm-Message-State: AOJu0YytYXKIg3djq6QpcAhe+9By7eknxencpDJLCGx9nhWWcGOALAQ6
+	3lg6/TpJbDDMcsrWL9oJr1EmyxBcfMrKFHOuZ3G/qwtAGZXkaRSlOWN7YfJ/FM+/mMhk4ZzO6Ha
+	+QKfAeot6299oQdM6TJrMlZdEUqW38hOKsjXJ
+X-Google-Smtp-Source: AGHT+IGsCM7wuFKHn5ZhX2dMOIOSw8LutGxSmqkY9l0OFvWbZ/BAMaVK+Mi+Tr26DwvFctw8kZL19/iVtdSMVZfhoHs=
+X-Received: by 2002:a05:6402:1f8c:b0:568:9b15:112e with SMTP id
+ c12-20020a0564021f8c00b005689b15112emr11012930edc.19.1710882017946; Tue, 19
+ Mar 2024 14:00:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318130354.2713265-4-aleksander.lobakin@intel.com>
+References: <9bba38df-5881-43f7-b1b3-f77e7b57bbe7.6c628ed6-0c2a-48f7-ba62-bcb23589b41f.60196f95-e445-4678-a450-875badf86498@emailsignatures365.codetwo.com>
+ <20240318-strncpy-drivers-tty-n_gsm-c-v1-1-da37a07c642e@google.com> <AS8PR05MB9810B8AC6B5033FD6660EC69832C2@AS8PR05MB9810.eurprd05.prod.outlook.com>
+In-Reply-To: <AS8PR05MB9810B8AC6B5033FD6660EC69832C2@AS8PR05MB9810.eurprd05.prod.outlook.com>
+From: Justin Stitt <justinstitt@google.com>
+Date: Tue, 19 Mar 2024 14:00:05 -0700
+Message-ID: <CAFhGd8rBd7_7apXF9XTtBHkUG4FSmfa4YLkiQVow_pA05-9mSw@mail.gmail.com>
+Subject: Re: [PATCH] tty: n_gsm: replace deprecated strncpy with strscpy
+To: Maarten Brock <Maarten.Brock@sttls.nl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2024 at 02:03:54PM +0100, Alexander Lobakin wrote:
-> Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
-> There are 10 structures with flexible arrays at the end, but 9 of them
-> has flex member counter in Little Endian.
-> Make the code a bit more robust by applying __counted_by_le() to those
-> 9. LE platforms is the main target for this driver, so they would
-> receive additional protection.
-> While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
-> its counter is `u8` regardless of the Endianness.
-> Compile test on x86_64 (LE) didn't reveal any new issues after applying
-> the attributes.
-> 
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Hi,
 
-Hi Alexander,
+On Tue, Mar 19, 2024 at 2:11=E2=80=AFAM Maarten Brock <Maarten.Brock@sttls.=
+nl> wrote:
+>
+> Hi Justin,
+>
+> > ---
+> > Note: build-tested only.
+>
+> Really? Without warnings?
+>
+> > --- a/drivers/tty/n_gsm.c
+> > +++ b/drivers/tty/n_gsm.c
+> > @@ -4010,7 +4010,7 @@ static int gsm_create_network(struct gsm_dlci *dl=
+ci,
+> > struct gsm_netconfig *nc)
+> >       mux_net =3D netdev_priv(net);
+> >       mux_net->dlci =3D dlci;
+> >       kref_init(&mux_net->ref);
+> > -     strncpy(nc->if_name, net->name, IFNAMSIZ); /* return net name */
+> > +     strscpy(nc->if_name, net->name); /* return net name */
+>
+> Where did IFNAMSIZ go?
 
-with this patch applied ./scripts/kernel-doc -none reports the following.
-I think that this means that the kernel-doc needs to be taught
-about __counted_by_le (and __counted_by_be).
+There's a new 2-argument strscpy introduced in Commit e6584c3964f2f
+("string: Allow 2-argument strscpy()"). Since the compiler can find
+nc->if_name's size (which is =3D=3D IFNAMSIZ) it should be A-OK to swap to
+this new form.
 
-.../virtchnl2.h:559: warning: Excess struct member 'chunks' description in 'virtchnl2_queue_reg_chunks'
-.../virtchnl2.h:707: warning: Excess struct member 'qinfo' description in 'virtchnl2_config_tx_queues'
-.../virtchnl2.h:786: warning: Excess struct member 'qinfo' description in 'virtchnl2_config_rx_queues'
-.../virtchnl2.h:872: warning: Excess struct member 'vchunks' description in 'virtchnl2_vector_chunks'
-.../virtchnl2.h:916: warning: Excess struct member 'lut' description in 'virtchnl2_rss_lut'
-.../virtchnl2.h:1108: warning: Excess struct member 'key_flex' description in 'virtchnl2_rss_key'
-.../virtchnl2.h:1199: warning: Excess struct member 'qv_maps' description in 'virtchnl2_queue_vector_maps'
-.../virtchnl2.h:1251: warning: Excess struct member 'mac_addr_list' description in 'virtchnl2_mac_addr_list'
+>
+> Kind regards,
+> Maarten Brock
+>
 
-...
+Thanks
+Justin
