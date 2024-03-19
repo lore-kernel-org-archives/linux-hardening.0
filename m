@@ -1,33 +1,33 @@
 Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A8C7E564
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BCA5BAF0
 	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 10:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710845738; cv=none; b=OiNX16NV2PNPmVPO6Im+EYCgPsYP/L1dHbUwKrZ341tR/KiNHkhrN5Lk23xlgJ5Tl1FYMAkQklIdTq3568HXp1I6zPecD06UhuGzJzjEg/arLcgeJSivvvcIS/ZYAp/Mqtlwq/nXq3XAbmZ1CGRxaKH95OTNOwgOriL3uhU+Dro=
+	t=1710845738; cv=none; b=a1IbwA1QUI9WX/4xikkEH/VKp1kTYdHSXOs0PZw/Kr6K4+jnFHhzOJN/xGzWMIZv/fSeqJ6as+gipsNbIjilIQOZWKhnrMMvK7yl5VuvTnlZH7FI3woj57bJINHiAH4YLave52OOsdzBgyFCejKbQPl07lUGv9XTA9BURVUQ9E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710845738; c=relaxed/simple;
-	bh=Y7LFLz2yHd9yIyVMMmNOIi+K+sOwaMQ2yNDvGWc72JM=;
+	bh=VFIAoPFw8iRKxMDKZ2/MD2MsGRalbcnhLwKdWYCmtC4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a+44M2iYY7z3CNSZ/fmO6etW2B2B48bPDfMyQTCXI00vac2ZZdgBR2olUMgjmg9q0+3Yw9pC/vAQu7HODiObtjG/9/oYrX1JlYzpAFYjw3uM34TakBhQ0E5DQ2DBKrVwGxxVDEiBP9unOn/B9Xg1+3sbU3g4ek00blDL5VBjG0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=TePPjuqL; arc=none smtp.client-ip=185.125.25.9
+	 MIME-Version:Content-Type; b=kq7lH7uyZKC09oHuoeJ5rsvQZr99Rh5h5pOk4mTruVn6ObtRb0jy+/87Suu5jAeaPdVK17bUXnyFQLCfA6cwgDb4logn7CXBRKwMTd7BdUvDG5ej+KeEoLnnU1eOK25O49566RNKOQBLh8ootb6z6xDco7o7X1pDmQc+BF+wSzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=PqOA92V9; arc=none smtp.client-ip=185.125.25.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="TePPjuqL"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="PqOA92V9"
 Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4P3th8zMZ7;
-	Tue, 19 Mar 2024 11:49:25 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4N4spgzMpnPc;
-	Tue, 19 Mar 2024 11:49:24 +0100 (CET)
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TzT4K6JXSzKTy;
+	Tue, 19 Mar 2024 11:49:21 +0100 (CET)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TzT4J75LKzMppDS;
+	Tue, 19 Mar 2024 11:49:20 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1710845365;
-	bh=Y7LFLz2yHd9yIyVMMmNOIi+K+sOwaMQ2yNDvGWc72JM=;
+	s=20191114; t=1710845361;
+	bh=VFIAoPFw8iRKxMDKZ2/MD2MsGRalbcnhLwKdWYCmtC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TePPjuqLC0xBIEbGy6Z1xt0ZB9ximrtLx/5QCewjGn/21CT19iJrOHPjeJJcGFBzk
-	 eSXUz8nNDlsgAzA6EMU+PVtlrIO60Kp81l/DqdVb8z6QUxahUJeJ+p+LFoQpM+hMG0
-	 b8C/ungtLOe4nlLJoXcf8eHZFHxSt0XXyNyiwYoE=
+	b=PqOA92V9b9sCkFbRQ2WA//0GfIlsr9soZVL2+2vOwKMqBrE5OxhRQIu/9gIR4tquZ
+	 PgQ1cVBOKvEI0uPM3ehtoQQhCTRssWXB1+V7Srq0mfkstGVT1ZaC6rvDXlpxqNiNmC
+	 /N8XVio2oxqUo9l63PhYzIWQovYeDN8VRhoPOEs0=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Brendan Higgins <brendanhiggins@google.com>,
 	David Gow <davidgow@google.com>,
@@ -59,9 +59,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	x86@kernel.org
-Subject: [PATCH v3 6/7] kunit: Print last test location on fault
-Date: Tue, 19 Mar 2024 11:48:56 +0100
-Message-ID: <20240319104857.70783-7-mic@digikod.net>
+Subject: [PATCH v3 3/7] kunit: Fix timeout message
+Date: Tue, 19 Mar 2024 11:48:53 +0100
+Message-ID: <20240319104857.70783-4-mic@digikod.net>
 In-Reply-To: <20240319104857.70783-1-mic@digikod.net>
 References: <20240319104857.70783-1-mic@digikod.net>
 Precedence: bulk
@@ -74,148 +74,48 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-This helps identify the location of test faults with opportunistic calls
-to _KUNIT_SAVE_LOC().  This can be useful while writing tests or
-debugging them.  It is possible to call KUNIT_SUCCESS() to explicit save
-last location.
+The exit code is always checked, so let's properly handle the -ETIMEDOUT
+error code.
 
 Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>
 Cc: Shuah Khan <skhan@linuxfoundation.org>
 Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: David Gow <davidgow@google.com>
+Reviewed-by: Rae Moar <rmoar@google.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240319104857.70783-7-mic@digikod.net
+Link: https://lore.kernel.org/r/20240319104857.70783-4-mic@digikod.net
 ---
 
 Changes since v2:
-* Extend the commit message according to discussion with David.
+* Add Rae's and David's Reviewed-by.
 
 Changes since v1:
 * Add Kees's Reviewed-by.
 ---
- include/kunit/test.h  | 24 +++++++++++++++++++++---
- lib/kunit/try-catch.c | 10 +++++++---
- 2 files changed, 28 insertions(+), 6 deletions(-)
+ lib/kunit/try-catch.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index fcb4a4940ace..f3aa66eb0087 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -301,6 +301,8 @@ struct kunit {
- 	struct list_head resources; /* Protected by lock. */
- 
- 	char status_comment[KUNIT_STATUS_COMMENT_SIZE];
-+	/* Saves the last seen test. Useful to help with faults. */
-+	struct kunit_loc last_seen;
- };
- 
- static inline void kunit_set_failure(struct kunit *test)
-@@ -567,6 +569,15 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
- #define kunit_err(test, fmt, ...) \
- 	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
- 
-+/*
-+ * Must be called at the beginning of each KUNIT_*_ASSERTION().
-+ * Cf. KUNIT_CURRENT_LOC.
-+ */
-+#define _KUNIT_SAVE_LOC(test) do {					       \
-+	WRITE_ONCE(test->last_seen.file, __FILE__);			       \
-+	WRITE_ONCE(test->last_seen.line, __LINE__);			       \
-+} while (0)
-+
- /**
-  * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-  * @test: The test context object.
-@@ -575,7 +586,7 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
-  * words, it does nothing and only exists for code clarity. See
-  * KUNIT_EXPECT_TRUE() for more information.
-  */
--#define KUNIT_SUCCEED(test) do {} while (0)
-+#define KUNIT_SUCCEED(test) _KUNIT_SAVE_LOC(test)
- 
- void __noreturn __kunit_abort(struct kunit *test);
- 
-@@ -601,14 +612,16 @@ void __kunit_do_failed_assertion(struct kunit *test,
- } while (0)
- 
- 
--#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...)		       \
-+#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...) do {		       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	_KUNIT_FAILED(test,						       \
- 		      assert_type,					       \
- 		      kunit_fail_assert,				       \
- 		      kunit_fail_assert_format,				       \
- 		      {},						       \
- 		      fmt,						       \
--		      ##__VA_ARGS__)
-+		      ##__VA_ARGS__);					       \
-+} while (0)
- 
- /**
-  * KUNIT_FAIL() - Always causes a test to fail when evaluated.
-@@ -637,6 +650,7 @@ void __kunit_do_failed_assertion(struct kunit *test,
- 			      fmt,					       \
- 			      ...)					       \
- do {									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(!!(condition_) == !!expected_true_))			       \
- 		break;							       \
- 									       \
-@@ -698,6 +712,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left op __right))					       \
- 		break;							       \
- 									       \
-@@ -758,6 +773,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely((__left) && (__right) && (strcmp(__left, __right) op 0)))   \
- 		break;							       \
- 									       \
-@@ -791,6 +807,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left && __right))					       \
- 		if (likely(memcmp(__left, __right, __size) op 0))	       \
- 			break;						       \
-@@ -815,6 +832,7 @@ do {									       \
- do {									       \
- 	const typeof(ptr) __ptr = (ptr);				       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (!IS_ERR_OR_NULL(__ptr))					       \
- 		break;							       \
- 									       \
 diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 7a3910dd78a6..d36e78095fdc 100644
+index 73f5007f20ea..cab8b24b5d5a 100644
 --- a/lib/kunit/try-catch.c
 +++ b/lib/kunit/try-catch.c
-@@ -96,9 +96,13 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 
- 	if (exit_code == -EFAULT)
+@@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 	time_remaining = wait_for_completion_timeout(&try_completion,
+ 						     kunit_test_timeout());
+ 	if (time_remaining == 0) {
+-		kunit_err(test, "try timed out\n");
+ 		try_catch->try_result = -ETIMEDOUT;
+ 		kthread_stop(task_struct);
+ 	}
+@@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
  		try_catch->try_result = 0;
--	else if (exit_code == -EINTR)
--		kunit_err(test, "try faulted\n");
--	else if (exit_code == -ETIMEDOUT)
-+	else if (exit_code == -EINTR) {
-+		if (test->last_seen.file)
-+			kunit_err(test, "try faulted after %s:%d\n",
-+				  test->last_seen.file, test->last_seen.line);
-+		else
-+			kunit_err(test, "try faulted before the first test\n");
-+	} else if (exit_code == -ETIMEDOUT)
- 		kunit_err(test, "try timed out\n");
+ 	else if (exit_code == -EINTR)
+ 		kunit_err(test, "wake_up_process() was never called\n");
++	else if (exit_code == -ETIMEDOUT)
++		kunit_err(test, "try timed out\n");
  	else if (exit_code)
  		kunit_err(test, "Unknown error: %d\n", exit_code);
+ 
 -- 
 2.44.0
 
