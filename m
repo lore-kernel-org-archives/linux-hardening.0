@@ -1,67 +1,62 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A284EB5D
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 21:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3363FE2A
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 21:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710884581; cv=none; b=WtGwAxRYvDSMSc45gBqciMSAsFMeYXQnvZXlCnY46jHKjrSBLVVLJUYynPgbGzPQ/XJYMQpFd8/Jy+NCGot+WDET2kRNzJVulqYFCY+OIQBtJ5u30vhPqOqCdIYYsGNUMnngaejo0DeTf55TmlcFGBh1/wQW8XKnGMjge2rNIzA=
+	t=1710884689; cv=none; b=uwZrf4coRNsMqIsF7uLxuJNCcSejgwphr30yNQyKnmUV6rfcfwtMq87YKq65TahWFEU8th6GDTwKxDTEFvbBqs5gltb6sIBw4yM1wDJ0mqNhym4LB/tfWifsfziiMcxxO+eflhIUnjmzUmRs1V5nXknyUlDN82JkOl1fN2A3wwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710884581; c=relaxed/simple;
-	bh=Rf/ZzLSJq+0hJEqJURHe/+XcImyRbdPUlA55Jcwz3ME=;
+	s=arc-20240116; t=1710884689; c=relaxed/simple;
+	bh=eBhcJkjdIZMXWCWXz9E2KeEXBdZhRhMUhqzS5PYUx28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RT5fxfcC2RyK22wZBvHk51YvWplh5T+ImV8THaPElyw9o0wzqiNnNOQ25GhILVDn9c60qYqxByBIPb2LtPZbzZycSQCEV9CSkesvdAsW/8xPK4zcshT3D8RGDmYpSITBYYcqpZRUY4ahw09dmsEkKlhQ5/s82oRqqMgkOaGmTYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kIRPm1Cy; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=gzrTy3rjnnDwdYC4k1divh7zXN2LpXdMyJfImVCLGMQx9rt42NA3g1M0wmsRCikuv2dA14yL4CJ50yL+OecgNTyr9b1Xe1okN1quQhjFr4K2BbjEP9Brj9xEo9dfDt8+Ew4k5fLrS/QEhrCYY15+sEPJBBfno5mbMufld0z+Gpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YzKnAYJy; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kIRPm1Cy"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1def2a1aafaso30976175ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 14:42:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YzKnAYJy"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e0411c0a52so12698365ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 14:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1710884579; x=1711489379; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1710884687; x=1711489487; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gn2BuHzN3nlK8aoPb0dO7Dxpaiy8FETIFCqPc6ZVPEI=;
-        b=kIRPm1Cyxf/2+6Zh+03W/13X0ixZhx2/XQWYgWH9eJej9jr5J7KOybWM5hPZz2lyQr
-         Jn8ELsRW9sUmKGZTzzgBao4tu5P8x9uUTE4akk1tVHLhisWhczjFCsWIbxB+P3yToHsJ
-         Z6zuxYZ2/cVYOVO7gHeKtzGzS87ZSG+cEnAVQ=
+        bh=b4jDMTaEh9Tmc/RAOO1DLFWKOQOj35T+6qA1lIMjBb0=;
+        b=YzKnAYJyPyVU1ZCnmtblJF0iSVjoOegMvXZv5uJdE5tGlCUpSq9fSosZODrT0BrFtA
+         BNJyDJ3ZRFeM7tOEc8yYO9Ri3BmzEOG24FlyszeEf52QJnOnY0yV9p+ufjFkeyCLckHT
+         R5mETtg1wGOQD2d1RoqrZRjoabeT5gxDbM5wY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710884579; x=1711489379;
+        d=1e100.net; s=20230601; t=1710884687; x=1711489487;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gn2BuHzN3nlK8aoPb0dO7Dxpaiy8FETIFCqPc6ZVPEI=;
-        b=rE2+D8KAgru44sJWLEnipc86fEXOqviXFt5myHi2d103S+ZbuMsZ3Amix+6XpYIiIJ
-         o5QrouqZje9DVbGVeqz7FI/OvCAfoQPG9X7lAfqoMy9jJwEm2FuQxVOjcvEsMEoZfXAq
-         MkYCBuaZNLiwBdV/ly0DlHWQhQ6bltLJ+zBfS8EXvy68l+i/U8STUNAtrFbmcNcaWkd3
-         A4TG0MIr5W4VxFKod+nmm10bHPWIbcxgHzRsgplH8tR04clfvZsF48/6ym4jmJlR24OA
-         je+3hpgs1HPgsSc8Rw2+eBmXtw+fz4siL5+ZrfpLC7TpyehiOGq5hJZPKV/f5rCvs9X2
-         EAbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCGVYS3B6T7J0lCRZ8i8GFEavvP0EJapYohgrggoC3AuHj2Cz6pKjISmiYDvogMxfXwZqGb7GCLjXaDgOfO2N6cGvS/I5lT2h0RD6Bij7E
-X-Gm-Message-State: AOJu0YwrvvuHiUxgT+zCaXemYJNA3teHpHSuINwQuFeZoEiRPxRUwOiy
-	YSXJV2ErNwNILk0QXn3Gflqryp2HfBQp+p2VXPdIhKyZ53QiFIBDtlIClIFi7Q==
-X-Google-Smtp-Source: AGHT+IHAZohXacaLJK6W6ePcVrSro2gO3VNsbfNh2CzbM77yQ3dVP31W+F8koj1yMP3uswTLgaW1lA==
-X-Received: by 2002:a17:903:32cd:b0:1e0:444:5f6c with SMTP id i13-20020a17090332cd00b001e004445f6cmr8749688plr.64.1710884578802;
-        Tue, 19 Mar 2024 14:42:58 -0700 (PDT)
+        bh=b4jDMTaEh9Tmc/RAOO1DLFWKOQOj35T+6qA1lIMjBb0=;
+        b=nR4AhGLz0qc3E7NwjApuIFG5CNb1U6gDkhushDvKuQUii8pWPVaLfs+rTuzpnPDRQ6
+         hPRNR+vScDY6ceOGOOOyfOCZH7O/v4VewPkD0MDgbeipEpEw6qMOo2UugmLjNmiu4oxG
+         LPLOP+fp6DhN6bZfm414s3nFqlyMyjTZmOheMI2xAYrGS8EDw9XNhOT0/NFe+wIs2tll
+         bNv9c6PwcPYfyzIKQmCUIT8N31YsXtQQoiRAIrmAmLHutoERw0jCekbTTbvMhfHuez0x
+         MnB5hVsoCisdsTGtKG9Uj6IAvHMtMqoRpX6T/bHvu20UHLmqYy37Dy9Ojhz6lCa74TdV
+         Gu5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWjMFf0bUqufyVzulcLJeDhvwk//yL1W1mm55GEJrl0MLLzYAQBi4RfimmKGbGOnVajtdTkrkZt8bZqVMKgcH6BnDOTmIxa8bcHHwYYH5RI
+X-Gm-Message-State: AOJu0YzJnMuyljZNyoTqWfSuSPXqW9nuM/lLua2j/YjK+SGyXKlkOjKC
+	xWcRY386t8V9CVqf6TVkhEWZ/69Ffq7xZi00YU6BdEYtaIIsXwjE0aXS1VIkog==
+X-Google-Smtp-Source: AGHT+IE5OC8LzVRzLn5nTU5QYo7UeQmmxs9m35kXMJwGMfexxRccoDwLT4tRF8BNtoPmHD0tgyYoGg==
+X-Received: by 2002:a17:902:d549:b0:1e0:4aac:e543 with SMTP id z9-20020a170902d54900b001e04aace543mr2800312plf.38.1710884686935;
+        Tue, 19 Mar 2024 14:44:46 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k10-20020a170902c40a00b001defa97c6basm8707287plk.235.2024.03.19.14.42.57
+        by smtp.gmail.com with ESMTPSA id 13-20020a170902ee4d00b001dd7d66aa18sm11873034plo.67.2024.03.19.14.44.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 14:42:57 -0700 (PDT)
-Date: Tue, 19 Mar 2024 14:42:56 -0700
+        Tue, 19 Mar 2024 14:44:46 -0700 (PDT)
+Date: Tue, 19 Mar 2024 14:44:45 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Simon Horman <horms@kernel.org>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	linux-hardening@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marco Elver <elver@google.com>, Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC kspp-next 3/3] idpf: sprinkle __counted_by{,_le}() in
- the virtchnl2 header
-Message-ID: <202403191442.219F77E672@keescook>
-References: <20240318130354.2713265-1-aleksander.lobakin@intel.com>
- <20240318130354.2713265-4-aleksander.lobakin@intel.com>
- <20240319185718.GO185808@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tty: n_gsm: replace deprecated strncpy with strscpy
+Message-ID: <202403191443.0E396FCA@keescook>
+References: <20240318-strncpy-drivers-tty-n_gsm-c-v1-1-da37a07c642e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,46 +65,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319185718.GO185808@kernel.org>
+In-Reply-To: <20240318-strncpy-drivers-tty-n_gsm-c-v1-1-da37a07c642e@google.com>
 
-On Tue, Mar 19, 2024 at 06:57:18PM +0000, Simon Horman wrote:
-> On Mon, Mar 18, 2024 at 02:03:54PM +0100, Alexander Lobakin wrote:
-> > Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
-> > There are 10 structures with flexible arrays at the end, but 9 of them
-> > has flex member counter in Little Endian.
-> > Make the code a bit more robust by applying __counted_by_le() to those
-> > 9. LE platforms is the main target for this driver, so they would
-> > receive additional protection.
-> > While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
-> > its counter is `u8` regardless of the Endianness.
-> > Compile test on x86_64 (LE) didn't reveal any new issues after applying
-> > the attributes.
-> > 
-> > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+On Mon, Mar 18, 2024 at 11:02:12PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Hi Alexander,
+> We expect nc->if_name to be NUL-terminated based on existing manual
+> NUL-byte assignments and checks:
+> |	nc.if_name[IFNAMSIZ-1] = '\0';
+> ...
+> | 	if (nc->if_name[0] != '\0')
 > 
-> with this patch applied ./scripts/kernel-doc -none reports the following.
-> I think that this means that the kernel-doc needs to be taught
-> about __counted_by_le (and __counted_by_be).
+> Let's use the new 2-argument strscpy() since it guarantees
+> NUL-termination on the destination buffer while correctly using the
+> destination buffers size to bound the operation.
 
-Oh, yes, I should have remembered that need. Sorry! It should be
-addressed by adding them where __counted_by is already listed in
-Documentation/conf.py.
+We may need for -rc1 (or -rc2), depending on when subsystem tree re-open
+for landing patches to use the 2-arg versio, but, regardless, it looks
+right:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
 > 
-> .../virtchnl2.h:559: warning: Excess struct member 'chunks' description in 'virtchnl2_queue_reg_chunks'
-> .../virtchnl2.h:707: warning: Excess struct member 'qinfo' description in 'virtchnl2_config_tx_queues'
-> .../virtchnl2.h:786: warning: Excess struct member 'qinfo' description in 'virtchnl2_config_rx_queues'
-> .../virtchnl2.h:872: warning: Excess struct member 'vchunks' description in 'virtchnl2_vector_chunks'
-> .../virtchnl2.h:916: warning: Excess struct member 'lut' description in 'virtchnl2_rss_lut'
-> .../virtchnl2.h:1108: warning: Excess struct member 'key_flex' description in 'virtchnl2_rss_key'
-> .../virtchnl2.h:1199: warning: Excess struct member 'qv_maps' description in 'virtchnl2_queue_vector_maps'
-> .../virtchnl2.h:1251: warning: Excess struct member 'mac_addr_list' description in 'virtchnl2_mac_addr_list'
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
 > 
-> ...
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/tty/n_gsm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+> index 4036566febcb..f5b0d91d32a7 100644
+> --- a/drivers/tty/n_gsm.c
+> +++ b/drivers/tty/n_gsm.c
+> @@ -4010,7 +4010,7 @@ static int gsm_create_network(struct gsm_dlci *dlci, struct gsm_netconfig *nc)
+>  	mux_net = netdev_priv(net);
+>  	mux_net->dlci = dlci;
+>  	kref_init(&mux_net->ref);
+> -	strncpy(nc->if_name, net->name, IFNAMSIZ); /* return net name */
+> +	strscpy(nc->if_name, net->name); /* return net name */
+>  
+>  	/* reconfigure dlci for network */
+>  	dlci->prev_adaption = dlci->adaption;
+> 
+> ---
+> base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
+> change-id: 20240318-strncpy-drivers-tty-n_gsm-c-ab1336e0e196
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
 
 -- 
 Kees Cook
