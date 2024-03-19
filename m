@@ -1,253 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6961CD13;
-	Tue, 19 Mar 2024 11:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9897657C3;
+	Tue, 19 Mar 2024 16:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710848421; cv=none; b=VLOrs1xA8ddAa9GisPltFMUzQc4XtuDfursFLVW939m4cD/oxSkUJZso+QpCQG6DDRpUvUKupK4i1uQJj67T4q9GN3yeiqtLJAXbuf+9RwVh26HpxT+g5aqpx78VfDOAtP0vn9r8kw4Fgi5ENQLTZfUAhVKMjDihu7xq+k0PRXA=
+	t=1710865246; cv=none; b=VB4LXfhc2QvbLkj/Lb5X6nlkxJ4wM/TU3aUYj0ppnjVJElNXOXtkij9Sses/kw7kYQ3KTJc6LVzAI1aGdqWj3CTJxrW6hA1qMlPY37nDt9ZSER3VbCyvymP754PNNLlNW/5ENHiuH1OKo263f3lOyVCSgOEneJJJXoxX4i2cuUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710848421; c=relaxed/simple;
-	bh=8H1N8IVK0aMrxHwTIAJImeJ74R0FI5ahgx9a7aRkzlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ap8sRU5WhOGtsLBMYnlWBjEceirnxBzME7PvF2obaKETXSdfVzP2uNN0huRS9lMYBQWHDXzd8WIAAFh9hY0w9KF6nJLlyJrldkuXFwWFWkHvMfH2/yv/suDegClIcCVHGcWpZk2BSsN9b4SlCzlIM5WDcEkC1vWhMOQdTTbE/EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr0g4cOT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710865246; c=relaxed/simple;
+	bh=maiGrk6h7z4RLEGDRsY+uLsYguYLp2lmoogaMSSzcK4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=btI3sn9z3Hqzz37pevIRHTFeM2Htx+iFVQEFHQKdCF0cpAR/Tbh+cBPNh5Z7Eu40cwbMvLV+qcBdISfkHI6fi0I0bkHL5bFWXJbpSWUNL38y+B/9zNPMD/vLAhM3ZTr0+TVuBnWsattfYmvfxXGZB/4xlhvpuPTYhi8Dii1OnKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jvEmWCxW; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr0g4cOT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D2CAC43390;
-	Tue, 19 Mar 2024 11:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710848421;
-	bh=8H1N8IVK0aMrxHwTIAJImeJ74R0FI5ahgx9a7aRkzlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rr0g4cOTM/CSNGme7kyGe9YRJCgDiU5moZndh7++L++nc2cojq3Ce2hRPMiA1iN/D
-	 hEv/OD8FeLqvCY1YCJCNcmhSvje+Gyoi2993zSyR40lIj6LY4AZDD55M4w9VIs3p7l
-	 ODgW5swUhQQoPf81DpKji4GDxGSvdnCkDxdfyjdjradptmAhw3EUhD1Nq9VVwaYYd8
-	 m71+oBXPUO9QT5uSeqpCUJ76Z208X8JJy1g86iFBrEyvbtIWXOfEH7uSjRddyq6jpR
-	 lS726NFVZn3RntMrxSz8EnN8K+3c4eLPELPWi25qWIo/xJ2o0PpTBDH5NFkCcJNNDD
-	 YWbwuHRvGPGSQ==
-Date: Tue, 19 Mar 2024 12:40:17 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Shervin Oloumi <enlightened@chromium.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
-Message-ID: <Zfl5oT1amymvxjjL@debian>
-References: <20240227110550.3702236-1-mic@digikod.net>
- <Zd4OlL1G3t1D3TgC@google.com>
- <20240307.oxQuab5tho0u@digikod.net>
- <ZfgOf2dHBVT4WUcp@debian>
- <20240319.eeb8tajeiPee@digikod.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jvEmWCxW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710865245; x=1742401245;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=maiGrk6h7z4RLEGDRsY+uLsYguYLp2lmoogaMSSzcK4=;
+  b=jvEmWCxWDLA2FYvd841i/F0tdGJFgcr+pKpnglxwLPzevD3scOPVp++W
+   l7RYlsYvU2IAAMtv80SlxIaYbD7qi7yE1B3HX0iNX+QEclHaDmtnYe34+
+   /PW7lEqqR5/fhtBMc+WnYSXWVPCkqFWZrEsPkM7C6+b/MU2AMAjilkvRc
+   5txhVAwdqK26ozGRZeWmyjMFeU92khsUbmeRzcMn3L9p6GaMctOsUUHne
+   8Oghanri+SsIAOMeBKHL9l8cZ2gmSd+xpXo8Xg0MEAzZaziNfu35Aiw1z
+   Ro3fsMHZCTXChPtJ/ry574VqZLlugOcP+PTuQSpTP7/ApuYapC7kVf7G/
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="5958745"
+X-IronPort-AV: E=Sophos;i="6.07,137,1708416000"; 
+   d="scan'208";a="5958745"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 09:20:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,137,1708416000"; 
+   d="scan'208";a="13925891"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.209.55.117])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 09:20:43 -0700
+Message-ID: <a2bdac6a8914a76ed122438547f3697611299c0f.camel@linux.intel.com>
+Subject: Re: [PATCH] thermal: intel: int340x_thermal: replace deprecated
+ strncpy with strscpy
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Justin Stitt
+	 <justinstitt@google.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
+ <rui.zhang@intel.com>,  Lukasz Luba <lukasz.luba@arm.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+Date: Tue, 19 Mar 2024 09:20:26 -0700
+In-Reply-To: <CAJZ5v0j=cYbqyfi6y45hnu+Y_tvMGYb9p6d=kpsOA0AsxBoy3g@mail.gmail.com>
+References: 
+	<20240318-strncpy-drivers-thermal-intel-int340x_thermal-acpi_thermal_rel-c-v1-1-08839fbf737a@google.com>
+	 <CAJZ5v0j=cYbqyfi6y45hnu+Y_tvMGYb9p6d=kpsOA0AsxBoy3g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lVXM4NhaC2HReP5T"
-Content-Disposition: inline
-In-Reply-To: <20240319.eeb8tajeiPee@digikod.net>
 
-
---lVXM4NhaC2HReP5T
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 19 Mar 2024 12:40:17 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Shervin Oloumi <enlightened@chromium.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
-
-Hi Micka=C3=ABl!
-
-On Tue, Mar 19, 2024 at 11:46:34AM +0100, Micka=C3=ABl Sala=C3=BCn wrote:
-> On Mon, Mar 18, 2024 at 10:50:42AM +0100, Alejandro Colomar wrote:
-> > Hi Micka=C3=ABl, G=C3=BCnther,
+On Tue, 2024-03-19 at 12:39 +0100, Rafael J. Wysocki wrote:
+> On Mon, Mar 18, 2024 at 11:36=E2=80=AFPM Justin Stitt
+> <justinstitt@google.com> wrote:
 > >=20
-> > Sorry for the delay!
+> > strncpy() is deprecated for use on NUL-terminated destination
+> > strings
+> > [1] and as such we should prefer more robust and less ambiguous
+> > string
+> > interfaces.
 > >=20
-> > On Thu, Mar 07, 2024 at 11:21:57AM +0100, Micka=C3=ABl Sala=C3=BCn wrot=
-e:
-> > > CCing Alejandro
-> > >=20
-> > > On Tue, Feb 27, 2024 at 05:32:20PM +0100, G=C3=BCnther Noack wrote:
-> > > > On Tue, Feb 27, 2024 at 12:05:49PM +0100, Micka=C3=ABl Sala=C3=BCn =
-wrote:
-> > > > > Extend the kernel support section with one subsection for build t=
-ime
-> > > > > configuration and another for boot time configuration.
-> > > > >=20
-> > > > > Extend the boot time subsection with a concrete example.
-> > > > >=20
-> > > > > Update the journalctl command to include the boot option.
-> > > > >=20
-> > > > > Cc: G=C3=BCnther Noack <gnoack@google.com>
-> > > > > Cc: Kees Cook <keescook@chromium.org>
-> > > > > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> > > > > ---
-> > > > >=20
-> > > > > Changes since v1:
-> > > > > * New patch, suggested by Kees Cook.
-> > > > > ---
-> > > > >  Documentation/userspace-api/landlock.rst | 57 ++++++++++++++++++=
-+++---
-> > > > >  1 file changed, 51 insertions(+), 6 deletions(-)
+> > psvt->limit.string can only be 8 bytes so let's use the appropriate
+> > size
+> > macro ACPI_LIMIT_STR_MAX_LEN.
 > >=20
-> > [...]
+> > Neither psvt->limit.string or psvt_user[i].limit.string requires
+> > the
+> > NUL-padding behavior that strncpy() provides as they have both been
+> > filled with NUL-bytes prior to the string operation.
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memset(&psvt->limit, 0, sizeof(u64));
+> > and
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 psvt_user =3D kzalloc(psvt_len, GFP_KE=
+RNEL);
 > >=20
-> > > > > +
-> > > > > +  lsm=3Dlandlock,lockdown,yama,integrity,apparmor
-> > > > > +
-> > > > > +After a reboot, we can check that Landlock is up and running by =
-looking at
-> > > > > +kernel logs:
-> > > > > +
-> > > > > +.. code-block:: console
-> > > > > +
-> > > > > +    # dmesg | grep landlock || journalctl -kb -g landlock
-> > > > > +    [    0.000000] Command line: [...] lsm=3Dlandlock,lockdown,y=
-ama,integrity,apparmor
-> > > > > +    [    0.000000] Kernel command line: [...] lsm=3Dlandlock,loc=
-kdown,yama,integrity,apparmor
-> > > > > +    [    0.000000] LSM: initializing lsm=3Dlockdown,capability,l=
-andlock,yama,integrity,apparmor
-> > > > > +    [    0.000000] landlock: Up and running.
-> > > > > +
-> > > > > +Note that according to the built time kernel configuration,
-> > > >=20
-> > > > s/built time/build time/
-> > > >                  ^
-> > >=20
-> > > OK
+> > Let's use `strscpy` [2] due to the fact that it guarantees
+> > NUL-termination on the destination buffer without unnecessarily
+> > NUL-padding.
 > >=20
-> > Here, this should actually be "build-time" since it works as an
-> > adjective.
+> > Link:
+> > https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-=
+on-nul-terminated-strings
+> > =C2=A0[1]
+> > Link:
+> > https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+> > =C2=A0[2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
 >=20
-> Thanks Alex but this was already merged:
-> https://git.kernel.org/torvalds/c/35e886e88c803920644c9d3abb45a9ecb7f1e761
->=20
-> Because I picked G=C3=BCnther's below suggestion, it should be good right?
+> Srinivas, any objections?
+No
 
-Yeah, it's a minor grammar mistake that is widespread elsewhere.  If you
-want to patch it, go ahead, if you want to keep it until next time you
-revise this text, it's not something that will significantly hurt the
-understanding of the text.
-
-See also: <https://www.grammar-monster.com/lessons/hyphens_in_compound_adje=
-ctives.htm>
-
-Have a lovely day!
-Alex
+Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
 >=20
+> > ---
+> > Note: build-tested only.
 > >=20
-> > >=20
-> > > >=20
-> > > > It feels like the phrase "according to" could be slightly more spec=
-ific here.
-> > > >=20
-> > > > To paraphrase Alejandro Colomar, "Note that" is usually redundant.
-> > > > https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gm=
-ail.com/
-> > > >=20
-> > > > I'd suggest:
-> > > >=20
-> > > >   The kernel may be configured at build time to always load the ``l=
-ockdown`` and
-> > > >   ``capability`` LSMs.  In that case, these LSMs will appear at the=
- beginning of
-> > > >   the ``LSM: initializing`` log line as well, even if they are not =
-configured in
-> > > >   the boot loader.
+> > Found with: $ rg "strncpy\("
+> > ---
+> > =C2=A0drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c | 4 ++--
+> > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
 > >=20
-> > LGTM
+> > diff --git
+> > a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> > b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> > index dc519a665c18..4b4a4d63e61f 100644
+> > --- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> > +++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+> > @@ -309,7 +309,7 @@ static int acpi_parse_psvt(acpi_handle handle,
+> > int *psvt_count, struct psvt **ps
 > >=20
-> > >=20
-> > > OK, I integrated your suggestion.  I guess `capability` is not really
-> > > considered an LSM but it would be too confusing and out of scope for =
-an
-> > > user documentation to explain that.
-> > >=20
-> > > >=20
-> > > > > +``lockdown,capability,`` may always stay at the beginning of the=
- ``LSM:
-> > > > > +initializing lsm=3D`` list even if they are not configured with =
-the bootloader,
-> > > >=20
-> > > > Nit: The man pages spell this in two words as "boot loader".
-> > >=20
-> > > OK, I'll use "boot loader" too.
-> > >=20
-> > > >=20
-> > > >=20
-> > > > > +which is OK.
-> > > > > +
-> > > > > +Network support
-> > > > > +---------------
-> > > > > +
-> > > > >  To be able to explicitly allow TCP operations (e.g., adding a ne=
-twork rule with
-> > > > >  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
-> > > > >  (``CONFIG_INET=3Dy``).  Otherwise, sys_landlock_add_rule() retur=
-ns an
-> > > > >=20
-> > > > > base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
-> > > > > --=20
-> > > > > 2.44.0
-> > > > >=20
-> > > >=20
-> > > > Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
-> > >=20
-> > > Thanks!
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if (knob->type =3D=3D ACPI_TYPE_STRING) {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memse=
+t(&psvt->limit, 0, sizeof(u64));
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 strncpy(psv=
+t->limit.string, psvt_ptr-
+> > >limit.str_ptr, knob->string.length);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 strscpy(psv=
+t->limit.string, psvt_ptr-
+> > >limit.str_ptr, ACPI_LIMIT_STR_MAX_LEN);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 } else {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 psvt-=
+>limit.integer =3D psvt_ptr-
+> > >limit.integer;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 }
+> > @@ -468,7 +468,7 @@ static int fill_psvt(char __user *ubuf)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 psvt_user[i].unlimit_coeff =3D
+> > psvts[i].unlimit_coeff;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 psvt_user[i].control_knob_type =3D
+> > psvts[i].control_knob_type;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 if (psvt_user[i].control_knob_type =3D=3D
+> > ACPI_TYPE_STRING)
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 strncpy(psv=
+t_user[i].limit.string,
+> > psvts[i].limit.string,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 strscpy(psv=
+t_user[i].limit.string,
+> > psvts[i].limit.string,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ACPI_LIMIT_STR_MAX_LEN);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 else
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 psvt_=
+user[i].limit.integer =3D
+> > psvts[i].limit.integer;
 > >=20
-> > Reviewed-by: Alejandro Colomar <alx@kernel.org>
+> > ---
+> > base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
+> > change-id: 20240318-strncpy-drivers-thermal-intel-int340x_thermal-
+> > acpi_thermal_rel-c-17070c1e42f3
 > >=20
-> > Have a lovely day!
-> > Alex
+> > Best regards,
+> > --
+> > Justin Stitt <justinstitt@google.com>
 > >=20
-> > --=20
-> > <https://www.alejandro-colomar.es/>
-> > Looking for a remote C programming job at the moment.
->=20
->=20
 
---=20
-<https://www.alejandro-colomar.es/>
-Looking for a remote C programming job at the moment.
-
---lVXM4NhaC2HReP5T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmX5eaEACgkQnowa+77/
-2zLeYxAAnJTAbKLQYz/5DxQmedRvL+W3k/fnLGakyKe+gmMvXAFsrAPRdPJqx+B/
-IrnjIXRGN9heqRpBuuq8BTxAFfnlapd5zatjGNMxD3f2VhlFjsH5WYj0fDj59+9d
-w8unSYIMyd/pvhxiSl9NvIzu/O7zWPFmDJ+mY+tLVzHkaQmZ/SO2X6U2DRW2d6F2
-25iJujYtmp6hQtANfVzJY7Qmufbp7GB4s83KuKd/IXqExlzLS7sG0H9mxHi0Ii3w
-2OOGZ7lVTk8yCCqAxlr9gNwgbbeHZ55DKPwUobBllhQr4tvbrbE09QXm6WgLK+Hk
-Tgsdw/MsviWRuWUztcSJjnqiEkAwSREB5EZXP/+QQqWCrbiTsdfJoVYvdz4uIUvg
-78/eE6vIW/iSliJe9MnXv8nCH3vJ3QsENV6S3HgeXAx6dlvy2r3gMul5VklSfztR
-4BWP3Usx42rOs33ielFDVPncJFYbFjIaNGvaraa6gWlott6YoYzaLetGK0pnUs78
-gTD1ZECDe2UuQGcoiEEH47U7Hg9uLYnAEfahXpE60kf555p4exQWoXs1r2pMmEzm
-ylWrd2TfmWV15CVCNpR1bK4AgAIiOel5FU+nYjAq9GoBeqThqjbwZlGhGWXY/Nlp
-cnJAH59ziEI8YPqdKq3BRglpzWldmGwCLQXvR1hQuyc1Dq6I6Bc=
-=5omu
------END PGP SIGNATURE-----
-
---lVXM4NhaC2HReP5T--
