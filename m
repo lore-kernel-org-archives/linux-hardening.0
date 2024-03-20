@@ -1,171 +1,210 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A791A64C
-	for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 00:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449FE748E
+	for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 02:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710895338; cv=none; b=hdP9EzsLwRrO7tksWFjyWeZZTmE35awQEFtoyKBC6VKWfWmluVmOYxy3+tLA6k0q2JPVVUGnuByjgo7Tg201AmW4bRxwkjFOUDfXqgjiCmWZTvisl6ZUexnzEQ6+UEu1VguNoxaSKTRD3VkdFZjySh82N10VvNLgMjWFlV/Z7N4=
+	t=1710901428; cv=none; b=rA1bz9bTIJ9fuk4Nqi0ujolpOew92Fem5shSunw6KlobDkswvbqbNkEk21o/4i3GJiqU20zfGmqQj975uzAas91F2pEjJT14OFWnKE/OcXjf1yxs/vmPmqrYOr8sLeyWIcgRuQGVy3xUod0/og7dRbFLJrF2kgYNAPv1j1bhTpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710895338; c=relaxed/simple;
-	bh=eDCCyrEIxjjXZjmAOHkJjwnDrF9aFnzlqxo6rUPKKHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=og0M8+0gu2yl625HgQ4S+4AFubZnQ9aLrXlYarpXcx6X63N6+2qPWjGk0BKKGZkXIt5sku8G8/mRZf4ClTIuSjYy3fHZxs2T+uKXqvBzRG0ApE/gNTYU6A1ytWHdKK2YKaIl0re9qWaIS/yjUVzAr/72aRCBJB5bNGwFBMdK3r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=jQKvwGNZ; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1710901428; c=relaxed/simple;
+	bh=CrQnqMvDrnyVSQPS+ineAuhvgXfu0NjUynu4z2aN4AE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JIGVPOZ0yG79vLiD5Cac1ruvoBWtqmpnL4QCAvEqtn2mREF+G0FFwUwtpPEyTdSO+Fmt81xnX9UQCPCCEvS5F6gE3uFakDI5gEiaMne4mWdfJH3PWuM1rymvfrB9rFyNCsIO5QYdGyHsZmyN/hQonEsF3COQ7FQ8DSHNtGxDGGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K7CsGyc3; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jQKvwGNZ"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id md6yrgW9Ls4yTmk23rr4Ug; Wed, 20 Mar 2024 00:42:15 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id mk22r7aFsuv6Xmk22rt7Fb; Wed, 20 Mar 2024 00:42:14 +0000
-X-Authority-Analysis: v=2.4 cv=YbZ25BRf c=1 sm=1 tr=0 ts=65fa30e6
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10
- a=9MzSDiJ5aBsJ5ggNAYYA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=C0e07c7tUncIYZeoirLLjhFyd9DWTwguNB6M2w9ToKU=; b=jQKvwGNZ137+7vtiHui2rYOKmH
-	IgMmALF64IXqM6Z2nVNyKnAcL+hVI3EWGatWtCNanCTX61DCV9PXSVFo9SoLFMrKHF7XKzWq8LKuZ
-	+IwONtjEoxW+zyTHi1Ig8e6Ja++CqLtVMVh6Q9tW3KIOdY35h0SW/a9Sj1P1E4mRgBA8aw/pjJukf
-	Y1A869t84U3xD4fFrpSmtZrxx0wju/JBoblRK2I+QvHaE4+8/5cPvJcdvPw20n7E9czzLdNp2AP8p
-	r0KpuT6KDH28Dld990MzI5+fZ/PfdZ1JYGQuVuQbUebFHjAnybKPWB0HHCre86GkV76epczsO8gpr
-	7bq/2Udg==;
-Received: from [201.172.174.229] (port=43928 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rmk21-003lXB-2i;
-	Tue, 19 Mar 2024 19:42:13 -0500
-Message-ID: <483362b8-ea79-4036-89eb-d6ab737e1e96@embeddedor.com>
-Date: Tue, 19 Mar 2024 18:42:12 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K7CsGyc3"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c39177fea4so1332872b6e.2
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Mar 2024 19:23:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1710901425; x=1711506225; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kSoI/pMAjXfzjKvOOwcZSweV3DuyNeX7z58Nwuw7Wpw=;
+        b=K7CsGyc3aYxi0sOmgM/BWzDnZeGgeV9gh5fpahqhAhzr1XOiy/j8CM89T/mbV2SZwt
+         LpM0PBMuzXaw6bA5Alw6J69PS5s7BBbTdKgfySoVSG8cupZCj6JXhz9kEqsC/ANwgURj
+         fgLUraLgdF0BmNRt7/Y/CKcwq8ABNUHzArcmE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710901425; x=1711506225;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kSoI/pMAjXfzjKvOOwcZSweV3DuyNeX7z58Nwuw7Wpw=;
+        b=JD8tCLHRne0EH//4ujemhAgwU79+F0FcwqFCOhAPLNH3st7zBDKvZnwwzrnSKMS2JS
+         K5h93+pkx3oIqVPDeX790tpUvswUroG5tkAe1xrSwbVvITKrz5WcXubNRqv3V8sfpNDu
+         butWNEOwpxRSgwRQ/bBw1jDRqCspulS3HqGZl6/5RW15dX8MmKAJ/fa35SFPsQiVZ8zH
+         WtK/aXumrQpkMGrh0XZK+Z8xeL/zCWxjqRpo1zSFEbmfDpGbPzlSrwF/jwJ0D6lN8wnf
+         7QQITKlvH0wkRzXCo6JzLLs0rOWEv10r4+y9pQfDQnhQW5W8Of9zGpo7d0qv5xMtJvWQ
+         ZK2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUP/4/Nq6cTMjm90pqLyT5TbbWUywdNcJWug7SXehfLymcit/pN9QTzZX0Opp47TobFw0kDPsA+SNSuqv3p4XoJcQJj28CryUeIm9OMcCm4
+X-Gm-Message-State: AOJu0YwfjUiLSU0yH5OHf5JwH78zs+WNKuDVIVF9+LnPp6a5sTUGweQK
+	lNnR4zt1KNJlkXcW4vbMzkrj4y7Cag1YtD/31DLPFnfOUAXTxGxkV4qJ7iC0Nw==
+X-Google-Smtp-Source: AGHT+IGfIzj94Z+izVHNRIFrqtFeuAGI7P+/V72cDrVR393SoALZgULeL61JOX8n8bdJC1wE8P/cYQ==
+X-Received: by 2002:a05:6808:3998:b0:3c3:84a5:468c with SMTP id gq24-20020a056808399800b003c384a5468cmr1296827oib.33.1710901425362;
+        Tue, 19 Mar 2024 19:23:45 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x28-20020a056a000bdc00b006e78124ad83sm401940pfu.110.2024.03.19.19.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 19:23:44 -0700 (PDT)
+Date: Tue, 19 Mar 2024 19:23:43 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: target: core: replace deprecated strncpy with
+ strscpy
+Message-ID: <202403191908.1B6BBA3@keescook>
+References: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] wireless: ti: Can we just remove this flexible array?
-Content-Language: en-US
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux-hardening@vger.kernel.org
-References: <3a531d5b-9bf6-4e88-ba8c-a76cfa95be20@embeddedor.com>
- <328306d9-953f-482b-bf9a-a753d7d4e2ed@quicinc.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <328306d9-953f-482b-bf9a-a753d7d4e2ed@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rmk21-003lXB-2i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:43928
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJ938srOJrp6f7b3Ncq3SUGB1zQtscPSJHBHsBmDS/+U1KRYaUVc1llz0j/W/25H1Y1fx3Go+9GLoAmi4hanbW6LroEPz0RLq+75IqURFIwoQHkXq5Nj
- JFiEd2tWsVkHhYfYEeC0p82UUVay28U4nBHDEy62IZsx7ANGr0lFXWHwCNaUMZ2mqcWoCyoeaScu2CcKoa6bxUkD5zPErGWRkNcE5qZQ27+9RT4QFt5dFeFE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318-strncpy-drivers-target-target_core_transport-c-v1-1-a086b9a0d639@google.com>
 
-
-
-On 3/19/24 16:54, Jeff Johnson wrote:
-> On 3/19/2024 2:59 PM, Gustavo A. R. Silva wrote:
->> Hi!
->>
->> `struct wl1271_cmd_header` is currently embedded in multiple other
->> structs, and it's causing many `-Wflex-array-member-not-at-end` warnings.
->>
->> Has this flexible-array member been used in the past or is it intended
->> for future use?
->>
->> Otherwise, I think we could just remove it.
->>
->> diff --git a/drivers/net/wireless/ti/wlcore/cmd.h b/drivers/net/wireless/ti/wlcore/cmd.h
->> index f2609d5b6bf7..4c2f2608ef3b 100644
->> --- a/drivers/net/wireless/ti/wlcore/cmd.h
->> +++ b/drivers/net/wireless/ti/wlcore/cmd.h
->> @@ -208,8 +208,6 @@ enum cmd_templ {
->>    struct wl1271_cmd_header {
->>           __le16 id;
->>           __le16 status;
->> -       /* payload */
->> -       u8 data[];
->>    } __packed;
+On Mon, Mar 18, 2024 at 10:07:50PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> I'd think you should just remove it
+> We expect p_buf to be NUL-terminated based on the callsites using these
+> transport_dump_* methods because they use the destination buf with C-string
+> APIs like strlen() and sprintf().
+> 
+> 		memset(buf, 0, VPD_TMP_BUF_SIZE);			\
+> 		transport_dump_vpd_ident_type(vpd, buf, VPD_TMP_BUF_SIZE); \
+> 		if (len + strlen(buf) >= PAGE_SIZE)			\
+> 			break;						\
+> 		len += sprintf(page+len, "%s", buf);			\
+> 
+> We also do not require the NUL-padding behavior that strncpy() provides
+> because we are manually setting the entire buffer to NUL, rendering any
+> future padding redundant.
+> 
+> Let's use strscpy() as it guarantees NUL-termination and doesn't
+> NUL-pad ( and isn't deprecated :>] ). Note that we can't use the more
+> idiomatic strscpy() usage of strscpy(dest, src, sizeof(dest)) because
+> the size of the destination buffer is not known to the compiler. We also
+> can't use the new 2-arg version of strscpy() from Commit e6584c3964f2f
+> ("string: Allow 2-argument strscpy()")
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+Hm, this actually fixes potential over-reads and potential memory content
+exposures (in the face of malicious/weird hardware) since p_buf_len
+appears to always be sizeof(p_buf) in callers, which means the old use
+of strncpy() could have left the string unterminated.
+
+In practice I would assume it's not a problem, but, for example, here's
+a place where the 254 p_buf_len could run out when doing the sprintf:
+
+#define VPD_TMP_BUF_SIZE                      254
+...
+#define INQUIRY_VPD_DEVICE_IDENTIFIER_LEN       254
+...
+struct t10_vpd {
+        unsigned char device_identifier[INQUIRY_VPD_DEVICE_IDENTIFIER_LEN];
+	...
+};
+...
+int transport_dump_vpd_ident(..., unsigned char *p_buf, int p_buf_len)
+{
+	...
+        unsigned char buf[VPD_TMP_BUF_SIZE];
+	...
+                snprintf(buf, sizeof(buf),
+                        "T10 VPD ASCII Device Identifier: %s\n",
+                        &vpd->device_identifier[0]);
+	...
+        if (p_buf)
+                strncpy(p_buf, buf, p_buf_len);	// may write 254 chars and no NUL
+	...
+}
+...
+        unsigned char buf[VPD_TMP_BUF_SIZE];
+	...
+	memset(buf, 0, VPD_TMP_BUF_SIZE);
+        transport_dump_vpd_ident_type(vpd, buf, VPD_TMP_BUF_SIZE);
+        if (len + strlen(buf) >= PAGE_SIZE)
+		break;
+	len += sprintf(page+len, "%s", buf);	// may expose stack memory following "buf"
+
+
+So, yes, please!
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/target/target_core_transport.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
+> index 73d0d6133ac8..3311eb87df6d 100644
+> --- a/drivers/target/target_core_transport.c
+> +++ b/drivers/target/target_core_transport.c
+> @@ -1112,7 +1112,7 @@ void transport_dump_vpd_proto_id(
+>  	}
+>  
+>  	if (p_buf)
+> -		strncpy(p_buf, buf, p_buf_len);
+> +		strscpy(p_buf, buf, p_buf_len);
+>  	else
+>  		pr_debug("%s", buf);
+>  }
+> @@ -1162,7 +1162,7 @@ int transport_dump_vpd_assoc(
+>  	}
+>  
+>  	if (p_buf)
+> -		strncpy(p_buf, buf, p_buf_len);
+> +		strscpy(p_buf, buf, p_buf_len);
+>  	else
+>  		pr_debug("%s", buf);
+>  
+> @@ -1222,7 +1222,7 @@ int transport_dump_vpd_ident_type(
+>  	if (p_buf) {
+>  		if (p_buf_len < strlen(buf)+1)
+>  			return -EINVAL;
+> -		strncpy(p_buf, buf, p_buf_len);
+> +		strscpy(p_buf, buf, p_buf_len);
+
+>  	} else {
+>  		pr_debug("%s", buf);
+>  	}
+> @@ -1276,7 +1276,7 @@ int transport_dump_vpd_ident(
+>  	}
+>  
+>  	if (p_buf)
+> -		strncpy(p_buf, buf, p_buf_len);
+> +		strscpy(p_buf, buf, p_buf_len);
+>  	else
+>  		pr_debug("%s", buf);
+>  
+> 
+> ---
+> base-commit: bf3a69c6861ff4dc7892d895c87074af7bc1c400
+> change-id: 20240318-strncpy-drivers-target-target_core_transport-c-1950554ec04e
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 > 
 
-Yep, I think I'm actually going to remove a few more:
-
-diff --git a/drivers/net/wireless/ti/wl1251/cmd.h b/drivers/net/wireless/ti/wl1251/cmd.h
-index e5874186f9d7..39159201b97e 100644
---- a/drivers/net/wireless/ti/wl1251/cmd.h
-+++ b/drivers/net/wireless/ti/wl1251/cmd.h
-@@ -89,8 +89,6 @@ enum wl1251_commands {
-  struct wl1251_cmd_header {
-         u16 id;
-         u16 status;
--       /* payload */
--       u8 data[];
-  } __packed;
-
-  struct  wl1251_command {
-diff --git a/drivers/net/wireless/ti/wl1251/wl12xx_80211.h b/drivers/net/wireless/ti/wl1251/wl12xx_80211.h
-index 7e28fe435b43..3d5b0df5b231 100644
---- a/drivers/net/wireless/ti/wl1251/wl12xx_80211.h
-+++ b/drivers/net/wireless/ti/wl1251/wl12xx_80211.h
-@@ -65,7 +65,6 @@ struct ieee80211_header {
-         u8 sa[ETH_ALEN];
-         u8 bssid[ETH_ALEN];
-         __le16 seq_ctl;
--       u8 payload[];
-  } __packed;
-
-  struct wl12xx_ie_header {
-diff --git a/drivers/net/wireless/ti/wlcore/cmd.h b/drivers/net/wireless/ti/wlcore/cmd.h
-index f2609d5b6bf7..4c2f2608ef3b 100644
---- a/drivers/net/wireless/ti/wlcore/cmd.h
-+++ b/drivers/net/wireless/ti/wlcore/cmd.h
-@@ -208,8 +208,6 @@ enum cmd_templ {
-  struct wl1271_cmd_header {
-         __le16 id;
-         __le16 status;
--       /* payload */
--       u8 data[];
-  } __packed;
-
-  #define WL1271_CMD_MAX_PARAMS 572
-diff --git a/drivers/net/wireless/ti/wlcore/wl12xx_80211.h b/drivers/net/wireless/ti/wlcore/wl12xx_80211.h
-index 1dd7ecc11f86..602915c4da26 100644
---- a/drivers/net/wireless/ti/wlcore/wl12xx_80211.h
-+++ b/drivers/net/wireless/ti/wlcore/wl12xx_80211.h
-@@ -66,7 +66,6 @@ struct ieee80211_header {
-         u8 sa[ETH_ALEN];
-         u8 bssid[ETH_ALEN];
-         __le16 seq_ctl;
--       u8 payload[];
-  } __packed;
-
-  struct wl12xx_ie_header {
-
---
-Gustavo
+-- 
+Kees Cook
