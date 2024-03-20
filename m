@@ -1,48 +1,48 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B031769DEF;
-	Wed, 20 Mar 2024 17:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08CA524B7;
+	Wed, 20 Mar 2024 17:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710954532; cv=none; b=QC8y7HIPeCXFHEnKvxmqRG7hkKt3Lg2rHj2PgN+nvHHVDOGOEkc+RId06SblzSaod+1luLbHBfJQDkEYBjs8XCPd6RWIufbuAPA0pDm6DothoyNG1BXVuO7MCKc9drwICL+4Ej1quG6XxFeqUClmpwhLAsQ1GWwc/PZZc1MkffE=
+	t=1710954662; cv=none; b=IrjADqT8QvBL4ZPtRB4dqoREA8b1lppvrAYT6hjGcrR9jXb3Lh4Gjz1baUllXgAEIfPAkihvNAXoRhVBfbG72oern2Tz88WS0mF+hFR5NyAzh9kEutTwa8giE5k4ZMMeu2ZABaRu+FTjuMlNvC2ap5Cfawk9NOSAv35hn8/8Fu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710954532; c=relaxed/simple;
-	bh=8kJjEg5oZzMxRIneLopSxQOQPEokcxyAnvhzEeygCH0=;
+	s=arc-20240116; t=1710954662; c=relaxed/simple;
+	bh=758yDZKiS5NaJTvUE6Sej2pKrpl0pDcf5eSdOjc74PQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XXm/gpvlIXuMEa/BlUNRhlJ/1RqaqnXYTfJLpcLduKlttoXiQAudAbtXRZbCk7jQ3D51hwzcQ5B+YEk7BJqYvUStxkXiFz6f+m8ccw1TsRztZTwoY2bbOZkcovqX34hbjPbKyZNF+zKK4qbtWCQBUahpKWpXFLg0PKbJxsCl4IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hxcmjFpS; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=uYzipQEaRV46bQQcBSZAWx1WbvWpXdL/RDoiqKcni4dzzv6KzU86odSTUyPMyN4plLOMfjIBlR77rc2OLq8S96dd+FIdncm69KXmjeDA3wWDH4wjB+8AySbd8hmxMO6JF9/TVLFWCm9YBSeHxvr4pBWpEuUkDS8gcJOAH+ttWxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eeIBqa5g; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hxcmjFpS"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KGHFuG011885;
-	Wed, 20 Mar 2024 17:08:39 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eeIBqa5g"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KF9oON020300;
+	Wed, 20 Mar 2024 17:10:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=W3c2Ki/rrQQbC0kKjrOLvX5JTBp+FdNp6TjIx/lPAT4=; b=hx
-	cmjFpSmlPEIU/E+iYVNzojH7nZAZ9E3VMaBO2tJQK6km7K1BgDgXSSD7Qqs9vYbw
-	8aUOqQfaZ7xXouYiTriBoHPyB0kAI9bAAhslTzJZeFaChNmDadlcDC6ChQpGPAmo
-	PiRjYfKcRPdddHJhdjAe/VpXSBUrw0HIoX9lOZZBPc9ZrZgI/lV7GcaW/Xb3kRA0
-	OoANaQ+cpUtqOcGID5Go1M3CHuxcEcvr94YQPmBJRKbU8MbO9gk5IRQqZBd2dIl6
-	tTGpVXlmU06p6bVFCdyeZ4sChvXq8rQPjoWWgYHUii06/P8RDCMlBWLIKIYCPgbZ
-	zuV0DIL3PEaeF3cAGy/g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyq60ss5k-1
+	qcppdkim1; bh=pdLpiI9b9nBDFs8TZQQCkNJrT1iuZX4mOpgogUQwDa4=; b=ee
+	IBqa5gt3CDUQD4L6h3OxM9qzj1tIrmPABt4vyilW07MqULeNd5jerOKPQX2wyVEM
+	Or8I2PM+qDdYMBDAVGpLNv4PMwKG71Lkc11hxbjOf3FN14VkxxnayE9A6dpjYWbK
+	UtRNb9YqXZ8xDyc9QqB6jRfXNqdmkrJzh/99ms8m9VJlUeYcgxg69AV7mBDtHmzR
+	jxoib4ze/4irUt6XQ7qoa57E7DekYMHWZ0Lb0lVQYrOrhxnRKky3s7Grz982dO0W
+	9U9vgTUYbWuxPFTRCNIQ/MnIc4bWaIkurJBdaDVAcAEU483VNz4EfkkMdEMrmW8Q
+	NKOGqkZ0Q0lpsi3Xu0Xw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x01br8ey9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 17:08:39 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KH8cop021480
+	Wed, 20 Mar 2024 17:10:39 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KHAcR3001806
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Mar 2024 17:08:39 GMT
-Received: from [10.50.49.240] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 20 Mar 2024 17:10:38 GMT
+Received: from [10.110.120.226] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 20 Mar
- 2024 10:08:33 -0700
-Message-ID: <69364c99-9b99-4727-812b-209bb82254a7@quicinc.com>
-Date: Wed, 20 Mar 2024 22:38:29 +0530
+ 2024 10:10:38 -0700
+Message-ID: <6ddf112f-29d7-42b6-8d80-b8ed8fd987ba@quicinc.com>
+Date: Wed, 20 Mar 2024 10:10:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,115 +50,48 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] dt-bindings: interconnect: add clock property to
- enable QOS on SC7280
+Subject: Re: [RFC] wireless: ti: Can we just remove this flexible array?
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Georgi
- Djakov" <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
-        <quic_mdtipton@quicinc.com>
-References: <20240306073016.2163-1-quic_okukatla@quicinc.com>
- <20240306073016.2163-4-quic_okukatla@quicinc.com>
- <7ccb838b-f548-4ca4-9859-051689935eb7@linaro.org>
-From: Odelu Kukatla <quic_okukatla@quicinc.com>
-In-Reply-To: <7ccb838b-f548-4ca4-9859-051689935eb7@linaro.org>
+To: Johannes Berg <johannes@sipsolutions.net>,
+        "Gustavo A. R. Silva"
+	<gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <3a531d5b-9bf6-4e88-ba8c-a76cfa95be20@embeddedor.com>
+ <328306d9-953f-482b-bf9a-a753d7d4e2ed@quicinc.com>
+ <483362b8-ea79-4036-89eb-d6ab737e1e96@embeddedor.com>
+ <e7204512f71e9232572fced208899f7b6baa920d.camel@sipsolutions.net>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <e7204512f71e9232572fced208899f7b6baa920d.camel@sipsolutions.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VPPrqXpNbPfX2C93aomTgHO54xrA78C4
-X-Proofpoint-GUID: VPPrqXpNbPfX2C93aomTgHO54xrA78C4
+X-Proofpoint-GUID: VBF4b4NDxXiCL6u_BdQoatlKZFDHzLP3
+X-Proofpoint-ORIG-GUID: VBF4b4NDxXiCL6u_BdQoatlKZFDHzLP3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-20_10,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 spamscore=0
- clxscore=1011 phishscore=0 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2403140001 definitions=main-2403200137
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 mlxlogscore=371 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403200138
 
-
-
-On 3/6/2024 1:56 PM, Krzysztof Kozlowski wrote:
-> On 06/03/2024 08:30, Odelu Kukatla wrote:
->> Added clock property to enable clocks required for accessing
->> qos registers.
+On 3/20/2024 2:03 AM, Johannes Berg wrote:
+> On Tue, 2024-03-19 at 18:42 -0600, Gustavo A. R. Silva wrote:
 >>
->> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
->> ---
->>  .../interconnect/qcom,sc7280-rpmh.yaml        | 49 +++++++++++++++++++
->>  1 file changed, 49 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
->> index b135597d9489..758a6e924037 100644
->> --- a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
->> @@ -53,10 +53,50 @@ allOf:
->>        required:
->>          - reg
->>  
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,sc7280-aggre1-noc
->> +    then:
->> +      properties:
->> +        clocks:
+>>>> -       /* payload */
+>>>> -       u8 data[];
+>>>>    } __packed;
+>>>
 > 
-> All properties must be defined in top-level.
-> 
+> Why not keep (or even add in the cases where it's not) the comment
+> though?
 
-I will address this in v4, "clocks" property could be optional.
+For something called <foo>_header isn't it implicit that something will
+probably follow?
 
->> +          items:
->> +            - description: aggre UFS PHY AXI clock
->> +            - description: aggre USB3 PRIM AXI clock
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,sc7280-aggre2-noc
->> +    then:
->> +      properties:
->> +        clocks:
->> +          items:
->> +            - description: RPMH CC IPA clock
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,sc7280-aggre1-noc
->> +              - qcom,sc7280-aggre2-noc
->> +    then:
->> +      required:
->> +        - clocks
-> 
-> That's an ABI break without reason. This is a stable and already used
-> platform, so clear NAK.
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Thanks,
-Odelu
