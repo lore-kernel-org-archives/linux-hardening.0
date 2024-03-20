@@ -1,103 +1,79 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF5953E2C;
-	Wed, 20 Mar 2024 19:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70A48594C;
+	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710963784; cv=none; b=GxmdADSO5fs00iitlY17FCkd2Q0a5edXMzc8KIpnn4CcNEJDdP6koJQdm+X0LuwyFjfqC3+J8Itd8blQg+eN1AN1dv1OTYMlyUPlOZZOFXy44jGY+TC2hTqQrancoJJM2qD8Ei3GqhuAafMY0rVYDVROCdDebIFGn/CAEJdI9Mg=
+	t=1710967839; cv=none; b=O0PbG+vyZWMDC5gC65svDpc4e+OICCATw2PCNiTvMMCGF2nbQ7On8gvG+MmlROITIeYT+Zloh3aSMWt4iUtZL9gW36EhI6vRcuvTKLxMdvrqAPjdoQxmKQWjNdC8oqnY3CinJC/efuosBHsLrNflGrjAztS8GIn8EHFm6xTlV9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710963784; c=relaxed/simple;
-	bh=MDKqTwIIurD45hwLmu/lsiu5Ez8SLeE3iiSVsv+IrC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JLajqpSN8IJa4a74OixMr/LBTPjPBm176y9EuLGSsQYIpDSSFXKTpGWEpQi0tQh5AYTVoJp7q6fcYB1HbDXEyVCHhe0XfVbx/BXvPv/pxWFAxLweXrDXfT3SL5uXNVpHfKmsEEEWx8o8c5FO0l4KH60etIjppOupD1hmUDaZwlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=zwIOU/N2; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1710967839; c=relaxed/simple;
+	bh=btAeiZEcxlPc+5rjYdZBbRGASbJnixxCwyL87/+mmOo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ibXl7DyzfHYajXqd65+nij8/f6WKAv4ot8iq6MPYJZIVNKhkXS08qpKQiFTWGh3JnaK9bMNPZEMKix2hI3N9r91naYg23Fjtrei7E2EOQ4tyYALWyW5I2L5uqZ17CTReAGuZD5MF3FqgysV/6iaITh5el/lFcHz47ub2w9UDTQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JN/d0Foc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zwIOU/N2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JpvMIN5sLRmpewvvELoDaUedbJXpt4XMYlW/TmEfGUQ=; b=zwIOU/N2ME1TIeKU9BmL5bQgzW
-	pnW2dx0WfF9yZeI84CfZ/Qdfz/bLGlrK+DxOUcGoWkfbrkHOKnJt9X46vVCPhpu+LnwG7/K01nBrb
-	0kEQGUrq9MZgohrf9pmDfLcAslQCwZMR9ehetlAJIrIpvb+wIfYlL743kA4vzPASsblIlF57F64XL
-	rUCvoxS0GJbvSTW6ED3BpDsKIwaSGSJv57XNtTlB0Yce6SMKN58fZVlwnTafh3I0I/s1INk74AV1k
-	mwbNIyd6OB7oKHs2jQtl3mkbbuDytE+O5gowXIRpgk1YdwEGdUzq1/dP9jnUD6RMYPH6e/MabCDB5
-	sWd9CfJA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35138)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rn1pm-0006qG-0E;
-	Wed, 20 Mar 2024 19:42:46 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rn1pk-0002w4-Le; Wed, 20 Mar 2024 19:42:44 +0000
-Date: Wed, 20 Mar 2024 19:42:44 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Cc: linus.walleij@linaro.org, arnd@arndb.de, keescook@chromium.org,
-	haibo.li@mediatek.com, angelogioacchino.delregno@collabora.com,
-	amergnat@baylibre.com, akpm@linux-foundation.org,
-	dave.hansen@linux.intel.com, douzhaolei@huawei.com,
-	gustavoars@kernel.org, jpoimboe@kernel.org,
-	kepler.chenxin@huawei.com, kirill.shutemov@linux.intel.com,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-	nixiaoming@huawei.com, peterz@infradead.org, wangbing6@huawei.com,
-	wangfangpeng1@huawei.com, jannh@google.com, willy@infradead.org,
-	David.Laight@aculab.com
-Subject: Re: [PATCH v3] ARM: unwind: improve unwinders for noreturn case
-Message-ID: <Zfs8NNlAwF3+LYZ/@shell.armlinux.org.uk>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
- <1710949294-29287-1-git-send-email-xiaojiangfeng@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JN/d0Foc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 57AADC43142;
+	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710967839;
+	bh=btAeiZEcxlPc+5rjYdZBbRGASbJnixxCwyL87/+mmOo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=JN/d0FocPRzqdLlU5VONUvcBZvnw9D4YRv8Y3S5UurFmfqHDO7Sqn0paBjrkfe+Qj
+	 e/UDyZU3WH3eIoBQRu2Z4rHSTGvWyGxZOYGSeGXRYN2r9a0mx/YfyL8tyLYED5iQxU
+	 BSUtRnwhMtjbjXw5qX9tBgugPTbOUEZhLJ+g60ruK3nVWm7kB6JG8kqdEo7Nwuo0P2
+	 yQXBRtKyme+0ak27W6kGkJ02ncA95rZvSQpkLXoohaVPRZ5ET0drm0UCoKA2Vx85nH
+	 fWxULX7R8Lg8zokts8jPRZq4aOoNRY6cHsZT/X3fr2mCowtqrWEAuju+2l5s1bOWCh
+	 bVl1azAGYztTw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4A960D84BB0;
+	Wed, 20 Mar 2024 20:50:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1710949294-29287-1-git-send-email-xiaojiangfeng@huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] riscv: Use kcalloc() instead of kzalloc()
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171096783930.6804.853209401745501176.git-patchwork-notify@kernel.org>
+Date: Wed, 20 Mar 2024 20:50:39 +0000
+References: <20240120135400.4710-1-erick.archer@gmx.com>
+In-Reply-To: <20240120135400.4710-1-erick.archer@gmx.com>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, conor.dooley@microchip.com,
+ ajones@ventanamicro.com, evan@rivosinc.com, cleger@rivosinc.com,
+ jszhang@kernel.org, charlie@rivosinc.com, gustavoars@kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-On Wed, Mar 20, 2024 at 11:41:34PM +0800, Jiangfeng Xiao wrote:
-> This is an off-by-one bug which is common in unwinders,
-> due to the fact that the address on the stack points
-> to the return address rather than the call address.
-> 
-> So, for example, when the last instruction of a function
-> is a function call (e.g., to a noreturn function), it can
-> cause the unwinder to incorrectly try to unwind from
-> the function after the callee.
-> 
-> foo:
-> ...
->     bl      bar
-> ... end of function and thus next function ...
-> 
-> which results in LR pointing into the next function.
-> 
-> Fixed this by subtracting 1 from frmae->pc in the call frame
-> like ORC on x86 does.
-> 
-> Refer to the unwind_next_frame function in the unwind_orc.c
+Hello:
 
-This came in while I was still replying to your previous reply, so
-I'm going to ignore this. Please allow at least 24 hours between
-postings, and please allow discussion to finish before posting a
-new version - give your reviewers adequate time to compose a reply
-bearing in mind that timezones might get in the way, but also making
-supper (as is the case in this instance) may cause several hour delay
-in reply.
+This patch was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-Thanks.
+On Sat, 20 Jan 2024 14:54:00 +0100 you wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> [...]
 
+Here is the summary with links:
+  - riscv: Use kcalloc() instead of kzalloc()
+    https://git.kernel.org/riscv/c/28e4748e5e3d
+
+You are awesome, thank you!
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
