@@ -1,112 +1,164 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FABE54744;
-	Wed, 20 Mar 2024 16:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B031769DEF;
+	Wed, 20 Mar 2024 17:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710950745; cv=none; b=nGiGsVOiqAIf/Z+KDJ5Q/JDbR8as+zpR8oajtaFI8zPSl97ZXGVa0GiPL//UMC3dEYaxn2nAbVkhrjyFmxJVEbVXO+PB0jV/LU9ICG13CVqbe/7OkbdCxqzAG4kDnL805ptlKJYiRZLKUxDtLkE8r+vcRiBF5h/kxBHbeOVfR/Q=
+	t=1710954532; cv=none; b=QC8y7HIPeCXFHEnKvxmqRG7hkKt3Lg2rHj2PgN+nvHHVDOGOEkc+RId06SblzSaod+1luLbHBfJQDkEYBjs8XCPd6RWIufbuAPA0pDm6DothoyNG1BXVuO7MCKc9drwICL+4Ej1quG6XxFeqUClmpwhLAsQ1GWwc/PZZc1MkffE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710950745; c=relaxed/simple;
-	bh=/IfiUa26qG6YiQu8AKOCfYA2x46Rjq20kX1gZ1TFB8o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VHaofabC8q3N7D7OP+ZRkWuKL6Wy5y5TbWuV8M1nmO2Sx01k2MkoUO73VAcWkZURya4r38jr6Ljbi/TqV5x1vo9dda1Q0HqSx3dxJe7+Oui6dVVokID/fnYv5Zwoe5eVjEqQCzXCrxUhO0I2VzjRxIFCr7xxHcacD0Lt7OYH1ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4V0D1W2jdvz1vxBr;
-	Thu, 21 Mar 2024 00:04:31 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id B91A41A0172;
-	Thu, 21 Mar 2024 00:05:17 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 21 Mar
- 2024 00:05:17 +0800
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To: <linux@armlinux.org.uk>, <linus.walleij@linaro.org>, <arnd@arndb.de>,
-	<keescook@chromium.org>, <rmk+kernel@armlinux.org.uk>,
-	<haibo.li@mediatek.com>, <angelogioacchino.delregno@collabora.com>,
-	<amergnat@baylibre.com>, <xiaojiangfeng@huawei.com>
-CC: <akpm@linux-foundation.org>, <dave.hansen@linux.intel.com>,
-	<douzhaolei@huawei.com>, <gustavoars@kernel.org>, <jpoimboe@kernel.org>,
-	<kepler.chenxin@huawei.com>, <kirill.shutemov@linux.intel.com>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-	<nixiaoming@huawei.com>, <peterz@infradead.org>, <wangbing6@huawei.com>,
-	<wangfangpeng1@huawei.com>, <jannh@google.com>, <willy@infradead.org>,
-	<David.Laight@ACULAB.COM>
-Subject: [PATCH v3] ARM: unwind: improve unwinders for noreturn case
-Date: Wed, 20 Mar 2024 23:41:34 +0800
-Message-ID: <1710949294-29287-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
-References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+	s=arc-20240116; t=1710954532; c=relaxed/simple;
+	bh=8kJjEg5oZzMxRIneLopSxQOQPEokcxyAnvhzEeygCH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XXm/gpvlIXuMEa/BlUNRhlJ/1RqaqnXYTfJLpcLduKlttoXiQAudAbtXRZbCk7jQ3D51hwzcQ5B+YEk7BJqYvUStxkXiFz6f+m8ccw1TsRztZTwoY2bbOZkcovqX34hbjPbKyZNF+zKK4qbtWCQBUahpKWpXFLg0PKbJxsCl4IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hxcmjFpS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hxcmjFpS"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42KGHFuG011885;
+	Wed, 20 Mar 2024 17:08:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=W3c2Ki/rrQQbC0kKjrOLvX5JTBp+FdNp6TjIx/lPAT4=; b=hx
+	cmjFpSmlPEIU/E+iYVNzojH7nZAZ9E3VMaBO2tJQK6km7K1BgDgXSSD7Qqs9vYbw
+	8aUOqQfaZ7xXouYiTriBoHPyB0kAI9bAAhslTzJZeFaChNmDadlcDC6ChQpGPAmo
+	PiRjYfKcRPdddHJhdjAe/VpXSBUrw0HIoX9lOZZBPc9ZrZgI/lV7GcaW/Xb3kRA0
+	OoANaQ+cpUtqOcGID5Go1M3CHuxcEcvr94YQPmBJRKbU8MbO9gk5IRQqZBd2dIl6
+	tTGpVXlmU06p6bVFCdyeZ4sChvXq8rQPjoWWgYHUii06/P8RDCMlBWLIKIYCPgbZ
+	zuV0DIL3PEaeF3cAGy/g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wyq60ss5k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 17:08:39 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42KH8cop021480
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 Mar 2024 17:08:39 GMT
+Received: from [10.50.49.240] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 20 Mar
+ 2024 10:08:33 -0700
+Message-ID: <69364c99-9b99-4727-812b-209bb82254a7@quicinc.com>
+Date: Wed, 20 Mar 2024 22:38:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500010.china.huawei.com (7.192.105.118)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] dt-bindings: interconnect: add clock property to
+ enable QOS on SC7280
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Georgi
+ Djakov" <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
+        <quic_mdtipton@quicinc.com>
+References: <20240306073016.2163-1-quic_okukatla@quicinc.com>
+ <20240306073016.2163-4-quic_okukatla@quicinc.com>
+ <7ccb838b-f548-4ca4-9859-051689935eb7@linaro.org>
+From: Odelu Kukatla <quic_okukatla@quicinc.com>
+In-Reply-To: <7ccb838b-f548-4ca4-9859-051689935eb7@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VPPrqXpNbPfX2C93aomTgHO54xrA78C4
+X-Proofpoint-GUID: VPPrqXpNbPfX2C93aomTgHO54xrA78C4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-20_10,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ clxscore=1011 phishscore=0 lowpriorityscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2403140001 definitions=main-2403200137
 
-This is an off-by-one bug which is common in unwinders,
-due to the fact that the address on the stack points
-to the return address rather than the call address.
 
-So, for example, when the last instruction of a function
-is a function call (e.g., to a noreturn function), it can
-cause the unwinder to incorrectly try to unwind from
-the function after the callee.
 
-foo:
-...
-    bl      bar
-... end of function and thus next function ...
+On 3/6/2024 1:56 PM, Krzysztof Kozlowski wrote:
+> On 06/03/2024 08:30, Odelu Kukatla wrote:
+>> Added clock property to enable clocks required for accessing
+>> qos registers.
+>>
+>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>> ---
+>>  .../interconnect/qcom,sc7280-rpmh.yaml        | 49 +++++++++++++++++++
+>>  1 file changed, 49 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
+>> index b135597d9489..758a6e924037 100644
+>> --- a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
+>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
+>> @@ -53,10 +53,50 @@ allOf:
+>>        required:
+>>          - reg
+>>  
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,sc7280-aggre1-noc
+>> +    then:
+>> +      properties:
+>> +        clocks:
+> 
+> All properties must be defined in top-level.
+> 
 
-which results in LR pointing into the next function.
+I will address this in v4, "clocks" property could be optional.
 
-Fixed this by subtracting 1 from frmae->pc in the call frame
-like ORC on x86 does.
+>> +          items:
+>> +            - description: aggre UFS PHY AXI clock
+>> +            - description: aggre USB3 PRIM AXI clock
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,sc7280-aggre2-noc
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          items:
+>> +            - description: RPMH CC IPA clock
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,sc7280-aggre1-noc
+>> +              - qcom,sc7280-aggre2-noc
+>> +    then:
+>> +      required:
+>> +        - clocks
+> 
+> That's an ABI break without reason. This is a stable and already used
+> platform, so clear NAK.
+> 
+> Best regards,
+> Krzysztof
+> 
 
-Refer to the unwind_next_frame function in the unwind_orc.c
-
-Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lkml.kernel.org/lkml/20240305175846.qnyiru7uaa7itqba@treble/
-Suggested-by: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Link: https://lkml.kernel.org/lkml/Zeg8wRYFemMjcCxG@shell.armlinux.org.uk/
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
-ChangeLog v1->v2
-- stay printk("%s...", loglvl, ...)
-ChangeLog v2->v3
-- Redundant code is deleted to simplify the code
----
- arch/arm/kernel/unwind.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index 9d21921..abfa8e9 100644
---- a/arch/arm/kernel/unwind.c
-+++ b/arch/arm/kernel/unwind.c
-@@ -514,6 +514,14 @@ int unwind_frame(struct stackframe *frame)
- 	frame->sp = ctrl.vrs[SP];
- 	frame->lr = ctrl.vrs[LR];
- 	frame->pc = ctrl.vrs[PC];
-+	/*
-+	 * When the last instruction of a function is a function call
-+	 * (e.g., to a noreturn function), it can cause the unwinder
-+	 * incorrectly try to unwind from the function after the callee,
-+	 * fixed this by subtracting 1 from frame->pc in the call frame
-+	 * like ORC on x86 does.
-+	 */
-+	frame->pc = frame->pc - 1;
- 	frame->lr_addr = ctrl.lr_addr;
- 
- 	return URC_OK;
--- 
-1.8.5.6
-
+Thanks,
+Odelu
