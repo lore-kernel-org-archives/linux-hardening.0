@@ -1,161 +1,149 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610741272C9
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 15:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D1724A11;
+	Thu, 21 Mar 2024 16:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711036569; cv=none; b=h0mewnODMEoQOyVVUdDEuiyTSChWIDXL0SufXhmVb6m7JaqyNNY/wxtqpvw2lCyyQvzR5n85JM9UCvIFHzlp6uFVgRXCpGW9uVitoTYM8m8EErqrwfeu2CND6B5Q2hQpeHYNvX8qaLgoRdOb86ynYwPYTMe0uh5V/bgPoPWG9mc=
+	t=1711039643; cv=none; b=Tqq/Uxv/8Q+PzjYlWTBsJJVOMu3JfohWTyGzYJNXmi4k+qs0CPxVRXdodc6HEdg+d5BPBIr+lJNVbzWjJZ9Dc/p2ly379roUCqiUNWWVkHl81S70k9MlsbDNCSPuHEC1P8SxQnQ/NqFCnkscDCxca6Jp1bh0IFyZv8uJ7QTLh6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711036569; c=relaxed/simple;
-	bh=oUSS9WbWUjleqESpW9c98IHhFOzKOgqmvwrILKrh0+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZloRguYPVOrv6ALQNeUXjQ9aSXPy+zvDlE6MAdGILRKdC5NYeKJB9Yw9MWIVmMF0u1Gse8amC2AEsZCVe/VczbdkbQhEMGecC/1T+vtUdJXPMNOCUwQSfEccKW+I9EJyaHLWKXh1LTTutj+EKf8mRuutwOloL0+Ug+TLbB3BlFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=M9uj0aWz; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="M9uj0aWz"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id myjcrebHLtf2QnKlyr2pzX; Thu, 21 Mar 2024 15:56:06 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id nKlsreaOH9zHMnKlsrHFQv; Thu, 21 Mar 2024 15:56:00 +0000
-X-Authority-Analysis: v=2.4 cv=fo4XZ04f c=1 sm=1 tr=0 ts=65fc5890
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10
- a=pzMpKnHA-g9QxEOb-IoA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=A+WmTPuzkgZDSVrrCRyuXerhZHil+NNsnP3DC6nYWLs=; b=M9uj0aWzYqMtuCLokuF8MmFkPb
-	EJ0Xg5HQdoz3H03McPCY1gKkd+rX2+3UUt6BetiYwYq6SAu2IFYyzWA1LYQWZqHUG3kqVYH8cKI9O
-	c/QHrrUZDxdTFaoq21I6FdsAVX5N5n4gKzD3l3FAHCLG3lko4HdID3R/v+gw4xGsVydK6vSQbvwPT
-	FAraZMHsUIJ+XuF2/GyqgS0NWSitOp/SOR0Oh/P7AF+5jhangUPumjvU46aJvHN1BvxquFDHG7ZS4
-	rjwnDHCL4xgB+cYqwTpUn3OGbmCxib97UU9+IgPtUvDon8YxACiRAtdQJEAXC8gNSXT1LUNeZp3uM
-	GgboiAPg==;
-Received: from [201.172.174.229] (port=45852 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rnKfa-003VSS-2i;
-	Thu, 21 Mar 2024 10:49:30 -0500
-Message-ID: <afa0afb7-f756-45d0-97ab-44205e984199@embeddedor.com>
-Date: Thu, 21 Mar 2024 09:49:29 -0600
+	s=arc-20240116; t=1711039643; c=relaxed/simple;
+	bh=HLVAmMCpgsC0QELrLic5koFr8nwDxNfHSRgxtVBvamw=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=SAhvtdoN4TNHDX6H14ZnxM5RXQ0jrb4pV7WWWv+/EvrvIcVAeqQ2JvjycCfder1loC9uNtVI5/UOG6MOQ2HfAiG14h/vBLVGE3ywHyVUkxMP9n3qOyWjdZKTj/zm7ZdwcRfjX++5EEP2AHYaD7CHkbilLrl8yHnngV2/n4l/D1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:50958)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rnLCf-004Jao-FF; Thu, 21 Mar 2024 10:23:41 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:60220 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rnLCe-000QNJ-Dr; Thu, 21 Mar 2024 10:23:41 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,  Christian Brauner
+ <brauner@kernel.org>,  Jan Kara <jack@suse.cz>,  Kees Cook
+ <keescook@chromium.org>,  linux-fsdevel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
+  linux-hardening@vger.kernel.org
+References: <20240321-strncpy-fs-binfmt_elf_fdpic-c-v1-1-fdde26c8989e@google.com>
+Date: Thu, 21 Mar 2024 11:23:34 -0500
+In-Reply-To: <20240321-strncpy-fs-binfmt_elf_fdpic-c-v1-1-fdde26c8989e@google.com>
+	(Justin Stitt's message of "Thu, 21 Mar 2024 00:10:59 +0000")
+Message-ID: <871q83eepl.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] integrity: Avoid -Wflex-array-member-not-at-end
- warnings
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZfuzWku+ip4fsZrb@neat>
- <267f340e1b309cff2fab01f83a141ee465296907.camel@linux.ibm.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <267f340e1b309cff2fab01f83a141ee465296907.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rnKfa-003VSS-2i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:45852
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfB77vivteZvDz5SAPBvA9AooHarDfOy5bi4qDpSK55oAyctbSeHLfWyo/i8sr4Wc2NOaY30Jc4zXsel2401taR6ReiZOObXqq79zyq6Xk1I4gOLwqlnz
- DHbbuH+rHyEdBB/4fNHl8nTvDRuQ05HYpiqjiD8DqZitvekU3Z4dDkqxtJb/DKLhAhZl2T6itDM6r8oovLrXZ5rVMexup5SSuzEMy/qSXziTsdK4fNLvKyxF
+Content-Type: text/plain
+X-XM-SPF: eid=1rnLCe-000QNJ-Dr;;;mid=<871q83eepl.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/OG1LEXI8jC5HSB4g9jn0q4xs9g3G9J4M=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: *
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	*  1.2 XM_Multi_Part_URI URI: Long-Multi-Part URIs
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa04 1397; Body=1 Fuz1=1 Fuz2=1]
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-DCC: XMission; sa04 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: *;Justin Stitt <justinstitt@google.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 450 ms - load_scoreonly_sql: 0.06 (0.0%),
+	signal_user_changed: 11 (2.4%), b_tie_ro: 9 (2.1%), parse: 0.96 (0.2%),
+	 extract_message_metadata: 4.2 (0.9%), get_uri_detail_list: 1.93
+	(0.4%), tests_pri_-2000: 3.4 (0.8%), tests_pri_-1000: 2.5 (0.5%),
+	tests_pri_-950: 1.38 (0.3%), tests_pri_-900: 0.90 (0.2%),
+	tests_pri_-90: 182 (40.3%), check_bayes: 180 (40.0%), b_tokenize: 8
+	(1.7%), b_tok_get_all: 9 (1.9%), b_comp_prob: 3.4 (0.8%),
+	b_tok_touch_all: 157 (34.8%), b_finish: 0.94 (0.2%), tests_pri_0: 226
+	(50.2%), check_dkim_signature: 0.58 (0.1%), check_dkim_adsp: 2.8
+	(0.6%), poll_dns_idle: 1.08 (0.2%), tests_pri_10: 2.0 (0.5%),
+	tests_pri_500: 8 (1.9%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] binfmt: replace deprecated strncpy with strscpy_pad
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+
+Justin Stitt <justinstitt@google.com> writes:
+
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+>
+> In every other location psinfo->pr_fname is used, it's with strscpy_pad.
+> It's clear that this field needs to be NUL-terminated and potentially
+> NUL-padded as well.
+> binfmt_elf.c +1545:
+> |	char *__get_task_comm(char *buf, size_t buf_size, struct task_struct *tsk)
+> |	{
+> |		task_lock(tsk);
+> |		/* Always NUL terminated and zero-padded */
+> |		strscpy_pad(buf, tsk->comm, buf_size);
+> |		task_unlock(tsk);
+> |		return buf;
+> |	}
+>
+> Note that this patch relies on the _new_ 2-argument versions of
+> strscpy() and strscpy_pad() introduced in Commit e6584c3964f2f ("string:
+> Allow 2-argument strscpy()").
+
+I am perplexed.  Why not use get_task_comm fill_psinfo like binfmt_elf
+does?
+
+It seems very silly to copy half the function without locking and then
+not copy it's locking as well.
+
+Given that the more highly tested binfmt_elf uses get_task_comm I can't
+imagine a reason why binfmt_elf_fdpic can't use it as well.
+
+Eric
 
 
 
-On 3/21/24 07:58, Mimi Zohar wrote:
-> On Wed, 2024-03-20 at 22:11 -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->> ready to enable it globally.
->>
->> There is currently an object (`hdr)` in `struct ima_max_digest_data`
->> that contains a flexible structure (`struct ima_digest_data`):
->>
->>   struct ima_max_digest_data {
->> 	struct ima_digest_data hdr;
->>          u8 digest[HASH_MAX_DIGESTSIZE];
->>   } __packed;
->>
->> So, in order to avoid ending up with a flexible-array member in the
->> middle of a struct, we use the `__struct_group()` helper to separate
->> the flexible array from the rest of the members in the flexible
->> structure:
->>
->> struct ima_digest_data {
->>          __struct_group(ima_digest_data_hdr, hdr, __packed,
->>
->> 	... the rest of the members
->>
->>          );
->>          u8 digest[];
->> } __packed;
->>
->> With the change described above, we can now declare an object of the
->> type of the tagged `struct ima_digest_data_hdr`, without embedding the
->> flexible array in the middle of another struct:
->>
->>   struct ima_max_digest_data {
->>          struct ima_digest_data_hdr hdr;
->>          u8 digest[HASH_MAX_DIGESTSIZE];
->>   } __packed;
->>
-> 
-> And similarly for 'struct evm_digest'.
-
-Yes. :)
-
-> 
-> 
->> We also use `container_of()` whenever we need to retrieve a pointer to
->> the flexible structure.
->>
->> So, with these changes, fix the following warnings:
->>
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
->> security/integrity/evm/evm.h:45:32: warning: structure containing a flexible
->> array member is not at the end of another structure [-Wflex-array-member-not-
->> at-end]
-> 
-> I assume these messages are gone.
-
-Yes. :)
-
-Thanks
---
-Gustavo
-
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+>
+> Found with: $ rg "strncpy\("
+> ---
+>  fs/binfmt_elf_fdpic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+> index 1920ed69279b..0365f14f18fc 100644
+> --- a/fs/binfmt_elf_fdpic.c
+> +++ b/fs/binfmt_elf_fdpic.c
+> @@ -1359,7 +1359,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
+>  	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
+>  	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
+>  	rcu_read_unlock();
+> -	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
+> +	strscpy_pad(psinfo->pr_fname, p->comm);
+>  
+>  	return 0;
+>  }
+>
+> ---
+> base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
+> change-id: 20240320-strncpy-fs-binfmt_elf_fdpic-c-828286d76310
+>
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
