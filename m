@@ -1,114 +1,108 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ACA56451
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 10:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A4B58228;
+	Thu, 21 Mar 2024 11:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711016586; cv=none; b=NfD2KYcdNRS53IJLCwNlOUA5qRQK3a96gFWqhhWN6kJNWTo1gO7JDuoOe1D5Z5Y1ceaE56hW9zEWPZG6VpXXwNE0nsLD07JPKsm/Bu3yCFnPpsb6Cynmy/YCHxEuhkoQE939suK9ep4p/k5JnZYMosn95l65hTRra0g0iK8KjCs=
+	t=1711020278; cv=none; b=DqdoqsmPZX8AEG55T29y3qqsU/yNyr6TNBUjOKDLbp/S87LGp7OQI3DytqW/3Z7zgOG1/IymVdS2eMzpiErvOXFZT2Njxfkh5yONZzVLehPx2mnZ5ny7NbOMjUm8iLkBURpD6neluPfpjiw3Z4CKre+4Ixh4Uts1f2SN5X6tAA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711016586; c=relaxed/simple;
-	bh=5JPCZ+qBJS79Nz0MHkbWXC6seLKtP4tznYnQqpZf1HQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=O8EbWDAcX7/VoDPD3yoXJkTQ7ouE+3TQz2jdKzulknCAELsRISR7YEQBj/sWOYsPDNMkzXBR9gCA8H90fcpa1G8sY7P0YuUNZ+qbnTeMDlln6yEZEv3++aIbqLnoI6X0+SO1ienoWohIdUhFUlmNkGqgYZZTAfKcyQpatKjcDpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-212-p3JOoYAWPBWRUG8sgCg1aA-1; Thu, 21 Mar 2024 10:22:55 +0000
-X-MC-Unique: p3JOoYAWPBWRUG8sgCg1aA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
- 2024 10:22:30 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 21 Mar 2024 10:22:30 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>, "Russell King (Oracle)"
-	<linux@armlinux.org.uk>
-CC: "arnd@arndb.de" <arnd@arndb.de>, "keescook@chromium.org"
-	<keescook@chromium.org>, "haibo.li@mediatek.com" <haibo.li@mediatek.com>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
-	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
-	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
-	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
-	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
-	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
+	s=arc-20240116; t=1711020278; c=relaxed/simple;
+	bh=2xmJIUpAnX0WoR/2adOWV/CSntMFENrOlMHHKXNqdjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fED/qPVSN663kh3X01UD4mHGXbN1+s2GuOFYFw1oC09Azgh2t34Ri9IHvKZL0N2is1gi5CY+HsUCkU98AJnVKAbMaP4da3oTul/Qm3sfWMI79DDR7gCHmp0SYCkzNSwr0U/dLrvzneUmg3cLX+6EXuZ2Zzcr1H6LK8qOiAOySLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=W99tkOqB; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="W99tkOqB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/68CR4f0azvzcAmAfC291AOl4wS99r8FrcRejyLq6xM=; b=W99tkOqBejY893YpC1mtzh9mSp
+	gSa43/zdRcQpaebucrIyVrHxRsSIDRvVgZnItXAPDixGHUB5u4//H27eDTOTj5newSQixHC6+jynm
+	r5qETHV1Ogr4iSiXWxS3zADgqkER/fq/MSBqvSy/GOvGWWlzeV+SY1pG5MjPt9mOY5lligJmN3UIf
+	yDp2jMybyFbaLB866k7EJlMFVUhcd0byz9JSyy+ds6mo4HUA1IBkeXoaAVNobNqzOepGc56fHbhct
+	zKUDDEkpK0iAbRYRuCslUcOC/6KBZycr2Okkdz1t+aI3TOKfG5SePHOuDK5s5Tw7nf21CYpdbDkyk
+	AQVn5l7g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46498)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rnGWd-0007UH-2y;
+	Thu, 21 Mar 2024 11:24:01 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rnGWW-0003bL-0S; Thu, 21 Mar 2024 11:23:52 +0000
+Date: Thu, 21 Mar 2024 11:23:51 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: David Laight <David.Laight@aculab.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: 'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"keescook@chromium.org" <keescook@chromium.org>,
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"amergnat@baylibre.com" <amergnat@baylibre.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
+	"gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>,
+	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
+	"jannh@google.com" <jannh@google.com>,
 	"willy@infradead.org" <willy@infradead.org>
-Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHA
-Date: Thu, 21 Mar 2024 10:22:30 +0000
-Message-ID: <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Message-ID: <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
 References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
  <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
  <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
  <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
  <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
  <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
-In-Reply-To: <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-How aggressively does the compiler optimise 'noreturn' functions?
-Consider:
-void f(...)
-{
-=09...
-=09if () {
-=09=09...
-=09=09noreturn(...);
-=09}
-}
+On Thu, Mar 21, 2024 at 10:22:30AM +0000, David Laight wrote:
+> How aggressively does the compiler optimise 'noreturn' functions?
 
-Without the noreturn() call it is a leaf function.
-So the compiler doesn't need to save 'lr' on stack
-(or the save could be deferred to inside the conditional).
-Since noreturn() doesn't return it can be jumped to.
-Additionally 'lr' can be used as a scratch register prior to
-the noreturn() call.
+I've seen cases where the compiler emits a BL instruction as the very
+last thing in the function, and nothing after it.
 
-So it is likely that inside noreturn() (and anything it
-might call) you don't have a valid 'lr' chain at all.
-No amount of picking between 'pc' and 'pc-1' is going to fix that.
-The only way you can find a return address is by searching the
-stack and hoping to find something that works.
+This is where the problem lies - because the link register value
+created by the BL instruction will point to the instruction after the
+BL which will _not_ part of the function that invoked the BL. That
+will probably cause issues for the ELF unwinder, which means this
+issue probably goes beyond _just_ printing the function name.
 
-So you need the compiler to 'not believe' the 'noreturn' attribute.
-Setup a normal call frame and put a faulting instruction after the
-call in case it returns.
-That would give you half a chance of generating a backtrace.
+I have vague memories that Ard has been involved in the unwinder,
+maybe he could comment on this problem? Maybe we need the unwinder
+itself to do the correction? I also wonder whether we should only
+do the correction if we detect that we're pointing at the first
+instruction of a function, and the previous instruction in the
+text segment was a BL.
 
-Without that I suspect you are playing whack-a-mole.
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
