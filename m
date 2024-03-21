@@ -1,201 +1,114 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948FE53384;
-	Thu, 21 Mar 2024 09:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ACA56451
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 10:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711014259; cv=none; b=fERYQJks0jZCzMtOQrf359UofY84YgAIW5FFAkdCWb6Osg0MMHwR8wSTw7/IHhH3NMQiVCNekZSLNd1vRCjODYaYHQd7TkUjCIhX/bn1oUT6g+UaXqb+RvMbIIPgops8IBHtpgeDfwHrTKJYD1RlIse/2iRnV8j0Jg4hFJNlJTs=
+	t=1711016586; cv=none; b=NfD2KYcdNRS53IJLCwNlOUA5qRQK3a96gFWqhhWN6kJNWTo1gO7JDuoOe1D5Z5Y1ceaE56hW9zEWPZG6VpXXwNE0nsLD07JPKsm/Bu3yCFnPpsb6Cynmy/YCHxEuhkoQE939suK9ep4p/k5JnZYMosn95l65hTRra0g0iK8KjCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711014259; c=relaxed/simple;
-	bh=nC4zC/ekvm31nkrj1AOh27fmuR8c5ikECCO9VZEASp4=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Q+sIBKMBhheq52xcBM/pTNdV8qW0Cx8/vy3+Txk/ldBRgcysthnOON6UyBDoLpym6ofCO3CCPe8Y0wUggefk8BUaAIOaBUDlY+yij29lxJRyx1V/GahFxq/QJYV+Mi/8xyRDduP94AhSvu1F3Uapu+uqj2dX5nsIifDZ+Iuhvug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4V0gTH1hZzz1R7hs;
-	Thu, 21 Mar 2024 17:41:39 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id CD0C81A0188;
-	Thu, 21 Mar 2024 17:44:13 +0800 (CST)
-Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 21 Mar
- 2024 17:44:13 +0800
-Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+	s=arc-20240116; t=1711016586; c=relaxed/simple;
+	bh=5JPCZ+qBJS79Nz0MHkbWXC6seLKtP4tznYnQqpZf1HQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=O8EbWDAcX7/VoDPD3yoXJkTQ7ouE+3TQz2jdKzulknCAELsRISR7YEQBj/sWOYsPDNMkzXBR9gCA8H90fcpa1G8sY7P0YuUNZ+qbnTeMDlln6yEZEv3++aIbqLnoI6X0+SO1ienoWohIdUhFUlmNkGqgYZZTAfKcyQpatKjcDpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-212-p3JOoYAWPBWRUG8sgCg1aA-1; Thu, 21 Mar 2024 10:22:55 +0000
+X-MC-Unique: p3JOoYAWPBWRUG8sgCg1aA-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
+ 2024 10:22:30 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 21 Mar 2024 10:22:30 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>, "Russell King (Oracle)"
+	<linux@armlinux.org.uk>
+CC: "arnd@arndb.de" <arnd@arndb.de>, "keescook@chromium.org"
+	<keescook@chromium.org>, "haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
+	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
+	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
+	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
+	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
+	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHA
+Date: Thu, 21 Mar 2024 10:22:30 +0000
+Message-ID: <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
 References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
  <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
  <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
  <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
  <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
-CC: <arnd@arndb.de>, <keescook@chromium.org>, <haibo.li@mediatek.com>,
-	<angelogioacchino.delregno@collabora.com>, <amergnat@baylibre.com>,
-	<akpm@linux-foundation.org>, <dave.hansen@linux.intel.com>,
-	<douzhaolei@huawei.com>, <gustavoars@kernel.org>, <jpoimboe@kernel.org>,
-	<kepler.chenxin@huawei.com>, <kirill.shutemov@linux.intel.com>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-	<nixiaoming@huawei.com>, <peterz@infradead.org>, <wangbing6@huawei.com>,
-	<wangfangpeng1@huawei.com>, <jannh@google.com>, <willy@infradead.org>,
-	<David.Laight@aculab.com>
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Message-ID: <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
-Date: Thu, 21 Mar 2024 17:44:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+In-Reply-To: <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500010.china.huawei.com (7.192.105.118)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+How aggressively does the compiler optimise 'noreturn' functions?
+Consider:
+void f(...)
+{
+=09...
+=09if () {
+=09=09...
+=09=09noreturn(...);
+=09}
+}
 
+Without the noreturn() call it is a leaf function.
+So the compiler doesn't need to save 'lr' on stack
+(or the save could be deferred to inside the conditional).
+Since noreturn() doesn't return it can be jumped to.
+Additionally 'lr' can be used as a scratch register prior to
+the noreturn() call.
 
-On 2024/3/21 3:40, Russell King (Oracle) wrote:
-> On Wed, Mar 20, 2024 at 11:30:05PM +0800, Jiangfeng Xiao wrote:
->>
->>
->> On 2024/3/20 16:45, Russell King (Oracle) wrote:
->>> On Wed, Mar 20, 2024 at 11:44:38AM +0800, Jiangfeng Xiao wrote:
->>>> This is an off-by-one bug which is common in unwinders,
->>>> due to the fact that the address on the stack points
->>>> to the return address rather than the call address.
->>>>
->>>> So, for example, when the last instruction of a function
->>>> is a function call (e.g., to a noreturn function), it can
->>>> cause the unwinder to incorrectly try to unwind from
->>>> the function after the callee.
->>>>
->>>> foo:
->>>> ...
->>>> 	bl	bar
->>>> ... end of function and thus next function ...
->>>>
->>>> which results in LR pointing into the next function.
->>>>
->>>> Fixed this by subtracting 1 from frmae->pc in the call frame
->>>> (but not exception frames) like ORC on x86 does.
->>>
->>> The reason that I'm not accepting this patch is because the above says
->>> that it fixes it by subtracting 1 from the PC value, but the patch is
->>> *way* more complicated than that and there's no explanation why.
->>>
->>> For example, the following are unexplained:
->>>
->>> - Why do we always need ex_frame
->>
->> ```
->> bar:
->> ...
->> ... end of function bar ...
->>
->> foo:
->>     BUG();
->> ... end of function foo ...
->> ```
->>
->> For example, when the first instruction of function 'foo'
->> is a undefined instruction, after function 'foo' is executed
->> to trigger an exception, 'arm_get_current_stackframe' assigns
->> 'regs->ARM_pc' to 'frame.pc'.
->>
->> If we always decrement frame.pc by 1, unwinder will incorrectly
->> try to unwind from the function 'bar' before the function 'foo'.
->>
->> So we need to 'ext_frame' to distinguish this case
->> where we don't need to subtract 1.
-> 
-> This just sounds wrong to me. We have two different cases:
-> 
-> 1) we're unwinding a frame where PC points at the offending instruction.
->    This may or may not be in the exception text.
-> 2) we're unwinding a frame that has been created because of a branch,
->    where the PC points at the next instruction _after_ that callsite.
-> 
-> While we're unwinding, we will mostly hit the second type of frames, but
-> we'll only hit the first type on the initial frame. Some exception
-> entries will have the PC pointing at the next instruction to be
-> executed, others will have it pointing at the offending instruction
-> (e.g. if it needs to be retried.)
+So it is likely that inside noreturn() (and anything it
+might call) you don't have a valid 'lr' chain at all.
+No amount of picking between 'pc' and 'pc-1' is going to fix that.
+The only way you can find a return address is by searching the
+stack and hoping to find something that works.
 
+So you need the compiler to 'not believe' the 'noreturn' attribute.
+Setup a normal call frame and put a faulting instruction after the
+call in case it returns.
+That would give you half a chance of generating a backtrace.
 
-Thank you for your summary.
+Without that I suspect you are playing whack-a-mole.
 
-Now we try to enumerate all cases:
+=09David
 
-1) When we hit the first type of frames
-
-1.1) If the pc pointing at the next instruction
-     of the offending instruction
-
-1.1.1) If the offending instruction is the first instruction
-       of the function
-       pc:   cause to unwind from current function
-       pc-1: casue to unwind from current function
-
-1.1.2) If the offending instruction is neither the first
-       instruction nor the last instruction of the function
-       pc:   cause to unwind from current function
-       pc-1: casue to unwind from current function
-
-1.1.3) If the offending instruction is the last instruction
-       of the function
-       pc:   cause to unwind from next    function
-       pc-1: casue to unwind from current function
-
-1.2) If the pc pointing at the offending instruction
-
-1.2.1) If the offending instruction is the first instruction
-       of the function
-       pc:   cause to unwind from current  function
-       pc-1: casue to unwind from previous function
-
-1.2.2) If the offending instruction is neither the first
-       instruction nor the last instruction of the function
-       pc:   cause to unwind from current function
-       pc-1: casue to unwind from current function
-
-1.2.3) If the offending instruction is the last instruction
-       of the function
-       pc:   cause to unwind from current function
-       pc-1: casue to unwind from current function
-
-2) When we hit the second type of frames
-2.1) pc always pointing at the next instruction after that callsite
-2.1.1) If the callsite is the first instruction
-       pc:   cause to unwind from current function
-       pc-1: casue to unwind from current function
-
-2.1.2) If the callsite is neither the first nor last instruction
-       pc:   cause to unwind from current function
-       pc-1: casue to unwind from current function
-
-2.1.3) If the callsite is the last instruction
-       pc:   cause to unwind from next    function
-       pc-1: casue to unwind from current function
-
-
-All in all, I think you are right.
-
-In case 2), We can always unwind by 'pc-1'.
-
-In case 1), If we unwind by 'pc', case 1.1.3) is problematic.
-If we unwind by 'pc-1', 1.2.1) is problematic.
-
-
-> 
-> So, I don't see what being in the exception/entry text really has much
-> to do with any decision making here. I think you've found that it works
-> for your case, but it won't _always_ work and you're just shifting the
-> "bug" with how these traces work from one issue to a different but
-> similar issue.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
