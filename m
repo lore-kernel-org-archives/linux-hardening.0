@@ -1,101 +1,106 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5873622
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 00:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718E97EC
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 01:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710981538; cv=none; b=Og0vzA01b2o/X1aNJoNLp2fQKn1A+iXpzio4CqeOvSEw7CYw+JbPNEsb8C70A9dC3tzg/+QDIjt6YDxfouzeGYqRgG9721wY4MfJoOnaj3h4sH5KA3IJDtsyxI5608CkIkup0zBRkXNbe+RqcZcUcrDBESkbpQepWioDPK3WJ/8=
+	t=1710982995; cv=none; b=iMrBD7EW//o7ckxhbBX/GVvp90/r7c4Er4jc/5/b2AqraesmFwCzwVF/pLVXGc0ysUbsRDMrm7tTJDpPfiFSI9L3GlCFEixNn2cDlXfZseM8jJjLDa5j+48qwK19EDIU+ZsImjOQqkIrn6BcC2tajNDcY5TAEXYSTfyoZzgvWas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710981538; c=relaxed/simple;
-	bh=XWwaocKABQ9jnViAkbtIF/KvUYPFqVLENRHRK/iFWVw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qbcFE60lKepwW37YULrqqEyrySJbvsqbd8wTY73s0QFGJ1yonZ4CPXoc11VRIGm03GUKphHAr/NVLs93bQpTGSxacoZBF9KEw+L3VbvVJEzORB84/8JVzxQD3QCxL613GydkanwzDuQJlYkXYtP8Y9R5ixZi74k+7JRQRdzblwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0GtVs/JL; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1710982995; c=relaxed/simple;
+	bh=oTZLVjNj17G16khWhcjX8a2LOmunfa42yGhPvLY/2zI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rggh/ifhD4PIZqs7WqCGXYYTM6Nd8YxPG/x990qkhck5RSVRtRJM0mbyuG2G75qhWnbvCuB8Taks138EKJ5KleCUK917IOy/K5cOwWxYXu6tr4NufE7v3KsSkHILieO9IMoTD9WczWQRs1CKQAee21XoEbEPabjCA9H5vNs7Yds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e+IIVEOT; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0GtVs/JL"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd944567b6cso527211276.2
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 17:38:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e+IIVEOT"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-607838c0800so16999737b3.1
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 18:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710981535; x=1711586335; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710982992; x=1711587792; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=xiemHHBtoyDT5DKRZLV0lQm6JsJHIMbODJolPo371hM=;
-        b=0GtVs/JLnLnnGCIDQ2qGKDedgaMNKmIQH7DjYxwn9Id400GFYwtuK6MZOwUORA115W
-         NNkdpHF4H22iB0Ok0g/Lxk6IC1f+C8Dfjv8NRYiLS0ZNBRAz9rH7XNKtPhz7/lDNXay4
-         fV16qY/90Zze9qPCZnq2ciWtyoLC8wHUv/DpVM7YGqq6Oahj5t3In26GN9+H280uCO1I
-         f9zgtM1TaVhA54TUqNv8Dv6CoMPOncDUKymwBB1bJcwGrE+mAwuuxPQvkRblk6FrXJFb
-         jSfIe5u7UFc1qqGMsfVi0CesYaz1Zokprb//zr95dEkWNitTCFNwEs1jKy8CQePh6ZkL
-         LIqw==
+        bh=X9UkrgQLCeoQxnShQdyI3KFgUp01eLLicq3jxlpdxXQ=;
+        b=e+IIVEOT4IEhaHk0W8j2WhnjagK0CJJYTGebGpmveOtSu7/bZk2g2vuO1xOKqGS3rV
+         bWB3+kRb8SG+PAWcxFextdpOuiFcbdgB/kbUJFeIdsFK85DD9zFcP0XucJJWhCDTXcFd
+         yhlAzz8vr3ptTihmieNAgzqG8L4WE+nGZgyXO762G0gjVQ7kAAY680WWbZ+KImNAECzm
+         eGlPTQdhhBIEAt/arj+8M5IsC4Y7cLyfQXUlODeEy/TGAauHi7C9eO8dTUHDY2qOyctc
+         WnK2mT111BQmLvU3v7JGUE4iAICfUFFrjAV2RdlslcUsA0/PAWNY7OYLjoLbyFkdSAEU
+         JYsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710981535; x=1711586335;
+        d=1e100.net; s=20230601; t=1710982992; x=1711587792;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xiemHHBtoyDT5DKRZLV0lQm6JsJHIMbODJolPo371hM=;
-        b=sB1h++w6Edh16i5oo6to0KxDB02OLudxMS6Ix9tHirw/TSAzPF27KUvsSur42g4gae
-         jZPFCO+5FyS2mjXopRsHQby4kM1X0faul6/ri9D23Q0yq51trlXI0o+Vo1cAtFcmfukC
-         Xi6bRzYRpkGQXVY/gQDCGXsER6XjjX28N9L+My0bLoL/CJsnCyvKdacRu0JXZBWfs613
-         lQXHtI8w1VBcTjTsDCtLZmPCOzkd006UGGxwrmE+On/uw/VqwPsczGQA61sfnNtE5iIr
-         8LSr4/6g0m3Tak+6XOpQQJXwrunNtAx1CR7BWuOpRuK8teJCDMndRK/DwmdK5/9lExJW
-         scLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXeKt1Ij4xBEx2YeSKm4H7JXaUW4JMdAnDA/TKSPj0/MF5XPcylUlfRx+zd88FNPX/VPVtvdL7/Y+czo7oUdmyA8owowAmBk9dIA1WNx+I0
-X-Gm-Message-State: AOJu0YzyD+GveXYavS6IcrpOsYI38Q8i0N222yGSdnJyPzBRufMrqqW6
-	w+udLjpQld30rGhmu7a5SeNwzeUSEpGgh5I3/h5vHWFu2pal3s0+mTlfWKFmXD3OWWtsYcNL/uF
-	hz6ncinDHdz+oktV0cVp/Jw==
-X-Google-Smtp-Source: AGHT+IEyZS/GnFbBPsZmSMZkiLLZnAAkx4UzmIWqrQdpodEes9mL4Gqf1zabfr+eMBwIO+azPp4WMHvsfJ63gPdLdQ==
+        bh=X9UkrgQLCeoQxnShQdyI3KFgUp01eLLicq3jxlpdxXQ=;
+        b=bMMj40WcxlI7+LIod+ot29wCCAtgDJ7wNY4FSVljdc0TxocA2nVjVxyOqSb3vObX/s
+         /7Rk8mtYP24dfFic/FSr5IaWL9e1KUyFwvSkyjihw4AiYi82S/QgpqiZhWiyT7FTQzvy
+         hS1tfj7wP2oDAo5zIDrDhTjvUO5UChCLt+DnX2ma5gGcSEyZ15xsaN4ZHRaLm1Jtni3Y
+         C4p68vI6B3L/UXFUYbSNLnZpMwEOeCmXhSqILkCo/Wy71uKFcs3bBhMbsumz4i01FbWQ
+         Wb0abiR2VJpesHCT7FexMFXt5d6G+gA73eRmpXGuuG/uk3DIt87NzwIuh91gGTuWNkbh
+         KV+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVbaI3mc51qZ725JtXc3AIRFWue2VqZKwKMd4qZa2zM8oOoVISdEfywbAbBQDX4Cu681CG0QTkVIJwoBMzTScQW88TN3aV2hep4LTuEop+3
+X-Gm-Message-State: AOJu0YyjSn1mZ20pEqUiZmFXROOWJkMIOZN9LUAOmkGt0EJSeGFNAlPt
+	8TPNNa9II5dBHlXJQG9LHif5QEvoyUMgjmW5UHuZKW6s389vvsm7D1f5Nyac+nxqlJ4g7np3Ga6
+	EFsgnI3eO5woJQXMi9aW/GQ==
+X-Google-Smtp-Source: AGHT+IE26tgzkFs6yzMeeU33NVWXFc7CfaXTUXg+jhQNMeuLKHy8zJRlSWhSQxENXr7wEEyR+2qjAQb42Q5ysyMWyg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:160c:b0:dd9:20fb:20a1 with
- SMTP id bw12-20020a056902160c00b00dd920fb20a1mr563186ybb.10.1710981535047;
- Wed, 20 Mar 2024 17:38:55 -0700 (PDT)
-Date: Thu, 21 Mar 2024 00:38:54 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:a1d2:0:b0:610:e44b:acc3 with SMTP
+ id y201-20020a81a1d2000000b00610e44bacc3mr343747ywg.4.1710982992619; Wed, 20
+ Mar 2024 18:03:12 -0700 (PDT)
+Date: Thu, 21 Mar 2024 01:03:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJ2B+2UC/x2Muw6DMAwAfwV5rqU8YCi/gjqkxqFekshGVRHi3
- xsx3d1yJxirsME8nKD8FZNaevjHAPRJZWOUtTcEF0YXg0fbtVA7MBsy6dH2LjcrEqbp+Y6UXYp E0BdNOcvv3i+v6/oDnEyEKm4AAAA=
+X-B4-Tracking: v=1; b=H4sIAE2H+2UC/x3MQQqAIBBA0avErBsodZFdJVqEjjUQJk5EId09a
+ fkW/xcQykwCY1Mg08XCR6zo2wbctsSVkH01qE6ZTqse5czRpQeDIN2nwcA7oUNnB+2tUd5rCzV OmQLf/3ia3/cDFc2C12gAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710981534; l=4760;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710982991; l=4190;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=XWwaocKABQ9jnViAkbtIF/KvUYPFqVLENRHRK/iFWVw=; b=ZcTTtdciSPEfO0FzGxDVut7rB4NJpxOIDpSNKacGuqw0E9oZmdCWm78ES7wtKmtQt5C/hBbkh
- Fj1g6RGbhumCW9AxyrArhailPRTKc7ssmywSffs/q8IMdUh7wG3Yxvk
+ bh=oTZLVjNj17G16khWhcjX8a2LOmunfa42yGhPvLY/2zI=; b=FDrS1Z+rRYNAN9Hvua7Fhm1vLmLL2RLx+PbkpeT/Mq6hV4/TKwK4xrvpNBoB4OPqqnaEx39WD
+ /rzcJA7pozRDDXcsK3tJMLKlCTm+3bPS7Cpucf0hoMXbyI1J8vgCvra
 X-Mailer: b4 0.12.3
-Message-ID: <20240321-strncpy-fs-ecryptfs-crypto-c-v1-1-d78b74c214ac@google.com>
-Subject: [PATCH] fs: ecryptfs: replace deprecated strncpy with strscpy
+Message-ID: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
+Subject: [PATCH] ext4: replace deprecated strncpy with alternatives
 From: Justin Stitt <justinstitt@google.com>
-To: Tyler Hicks <code@tyhicks.com>
-Cc: ecryptfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: "Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
-interfaces. A good alternative is strscpy() as it guarantees
-NUL-termination on the destination buffer.
+interfaces.
 
-In crypto.c:
-We expect cipher_name to be NUL-terminated based on its use with
-the C-string format specifier %s and with other string apis like
-strlen():
-|	printk(KERN_ERR "Error attempting to initialize key TFM "
-|		"cipher with name = [%s]; rc = [%d]\n",
-|		tmp_tfm->cipher_name, rc);
-and
-|	int cipher_name_len = strlen(cipher_name);
+in file.c:
+s_last_mounted is marked as __nonstring meaning it does not need to be
+NUL-terminated. Let's instead use strtomem_pad() to copy bytes from the
+string source to the byte array destination -- while also ensuring to
+pad with zeroes.
 
-In main.c:
-We can remove the manual NUL-byte assignments as well as the pointers to
-destinations (which I assume only existed to trim down on line length?)
-in favor of directly using the destination buffer which allows the
-compiler to get size information -- enabling the usage of the new
-2-argument strscpy().
+in ioctl.c:
+We can drop the memset and size argument in favor of using the new
+2-argument version of strscpy_pad() -- which was introduced with Commit
+e6584c3964f2f ("string: Allow 2-argument strscpy()"). This guarantees
+NUL-termination and NUL-padding on the destination buffer -- which seems
+to be a requirement judging from this comment:
 
-Note that this patch relies on the _new_ 2-argument versions of
-strscpy() and strscpy_pad() introduced in Commit e6584c3964f2f ("string:
-Allow 2-argument strscpy()").
+|	static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label)
+|	{
+|		char label[EXT4_LABEL_MAX + 1];
+|
+|		/*
+|		 * EXT4_LABEL_MAX must always be smaller than FSLABEL_MAX because
+|		 * FSLABEL_MAX must include terminating null byte, while s_volume_name
+|		 * does not have to.
+|		 */
+
+in super.c:
+s_first_error_func is marked as __nonstring meaning we can take the same
+approach as in file.c; just use strtomem_pad()
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -107,89 +112,69 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- fs/ecryptfs/crypto.c |  4 +---
- fs/ecryptfs/main.c   | 26 ++++++--------------------
- 2 files changed, 7 insertions(+), 23 deletions(-)
+ fs/ext4/file.c  | 3 +--
+ fs/ext4/ioctl.c | 3 +--
+ fs/ext4/super.c | 7 +++----
+ 3 files changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
-index 2fe0f3af1a08..d39a1a69fecc 100644
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -1606,9 +1606,7 @@ ecryptfs_add_new_key_tfm(struct ecryptfs_key_tfm **key_tfm, char *cipher_name,
- 		goto out;
- 	}
- 	mutex_init(&tmp_tfm->key_tfm_mutex);
--	strncpy(tmp_tfm->cipher_name, cipher_name,
--		ECRYPTFS_MAX_CIPHER_NAME_SIZE);
--	tmp_tfm->cipher_name[ECRYPTFS_MAX_CIPHER_NAME_SIZE] = '\0';
-+	strscpy(tmp_tfm->cipher_name, cipher_name);
- 	tmp_tfm->key_size = key_size;
- 	rc = ecryptfs_process_key_cipher(&tmp_tfm->key_tfm,
- 					 tmp_tfm->cipher_name,
-diff --git a/fs/ecryptfs/main.c b/fs/ecryptfs/main.c
-index 2dc927ba067f..577c56302314 100644
---- a/fs/ecryptfs/main.c
-+++ b/fs/ecryptfs/main.c
-@@ -256,11 +256,8 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
- 	substring_t args[MAX_OPT_ARGS];
- 	int token;
- 	char *sig_src;
--	char *cipher_name_dst;
- 	char *cipher_name_src;
--	char *fn_cipher_name_dst;
- 	char *fn_cipher_name_src;
--	char *fnek_dst;
- 	char *fnek_src;
- 	char *cipher_key_bytes_src;
- 	char *fn_cipher_key_bytes_src;
-@@ -293,12 +290,8 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
- 		case ecryptfs_opt_cipher:
- 		case ecryptfs_opt_ecryptfs_cipher:
- 			cipher_name_src = args[0].from;
--			cipher_name_dst =
--				mount_crypt_stat->
--				global_default_cipher_name;
--			strncpy(cipher_name_dst, cipher_name_src,
--				ECRYPTFS_MAX_CIPHER_NAME_SIZE);
--			cipher_name_dst[ECRYPTFS_MAX_CIPHER_NAME_SIZE] = '\0';
-+			strscpy(mount_crypt_stat->global_default_cipher_name,
-+				cipher_name_src);
- 			cipher_name_set = 1;
- 			break;
- 		case ecryptfs_opt_ecryptfs_key_bytes:
-@@ -326,11 +319,8 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
- 			break;
- 		case ecryptfs_opt_fnek_sig:
- 			fnek_src = args[0].from;
--			fnek_dst =
--				mount_crypt_stat->global_default_fnek_sig;
--			strncpy(fnek_dst, fnek_src, ECRYPTFS_SIG_SIZE_HEX);
--			mount_crypt_stat->global_default_fnek_sig[
--				ECRYPTFS_SIG_SIZE_HEX] = '\0';
-+			strscpy(mount_crypt_stat->global_default_fnek_sig,
-+				fnek_src);
- 			rc = ecryptfs_add_global_auth_tok(
- 				mount_crypt_stat,
- 				mount_crypt_stat->global_default_fnek_sig,
-@@ -348,12 +338,8 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
- 			break;
- 		case ecryptfs_opt_fn_cipher:
- 			fn_cipher_name_src = args[0].from;
--			fn_cipher_name_dst =
--				mount_crypt_stat->global_default_fn_cipher_name;
--			strncpy(fn_cipher_name_dst, fn_cipher_name_src,
--				ECRYPTFS_MAX_CIPHER_NAME_SIZE);
--			mount_crypt_stat->global_default_fn_cipher_name[
--				ECRYPTFS_MAX_CIPHER_NAME_SIZE] = '\0';
-+			strscpy(mount_crypt_stat->global_default_fn_cipher_name,
-+				fn_cipher_name_src);
- 			fn_cipher_name_set = 1;
- 			break;
- 		case ecryptfs_opt_fn_cipher_key_bytes:
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index 54d6ff22585c..c675c0eb5f7e 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -844,8 +844,7 @@ static int ext4_sample_last_mounted(struct super_block *sb,
+ 	if (err)
+ 		goto out_journal;
+ 	lock_buffer(sbi->s_sbh);
+-	strncpy(sbi->s_es->s_last_mounted, cp,
+-		sizeof(sbi->s_es->s_last_mounted));
++	strtomem_pad(sbi->s_es->s_last_mounted, cp, 0);
+ 	ext4_superblock_csum_set(sb);
+ 	unlock_buffer(sbi->s_sbh);
+ 	ext4_handle_dirty_metadata(handle, NULL, sbi->s_sbh);
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index 7160a71044c8..dab7acd49709 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -1150,9 +1150,8 @@ static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label
+ 	 */
+ 	BUILD_BUG_ON(EXT4_LABEL_MAX >= FSLABEL_MAX);
+ 
+-	memset(label, 0, sizeof(label));
+ 	lock_buffer(sbi->s_sbh);
+-	strncpy(label, sbi->s_es->s_volume_name, EXT4_LABEL_MAX);
++	strscpy_pad(label, sbi->s_es->s_volume_name);
+ 	unlock_buffer(sbi->s_sbh);
+ 
+ 	if (copy_to_user(user_label, label, sizeof(label)))
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index cfb8449c731f..de16d045ca05 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -6130,8 +6130,8 @@ static void ext4_update_super(struct super_block *sb)
+ 			__ext4_update_tstamp(&es->s_first_error_time,
+ 					     &es->s_first_error_time_hi,
+ 					     sbi->s_first_error_time);
+-			strncpy(es->s_first_error_func, sbi->s_first_error_func,
+-				sizeof(es->s_first_error_func));
++			strtomem_pad(es->s_first_error_func,
++				     sbi->s_first_error_func, 0);
+ 			es->s_first_error_line =
+ 				cpu_to_le32(sbi->s_first_error_line);
+ 			es->s_first_error_ino =
+@@ -6144,8 +6144,7 @@ static void ext4_update_super(struct super_block *sb)
+ 		__ext4_update_tstamp(&es->s_last_error_time,
+ 				     &es->s_last_error_time_hi,
+ 				     sbi->s_last_error_time);
+-		strncpy(es->s_last_error_func, sbi->s_last_error_func,
+-			sizeof(es->s_last_error_func));
++		strtomem_pad(es->s_last_error_func, sbi->s_last_error_func, 0);
+ 		es->s_last_error_line = cpu_to_le32(sbi->s_last_error_line);
+ 		es->s_last_error_ino = cpu_to_le32(sbi->s_last_error_ino);
+ 		es->s_last_error_block = cpu_to_le64(sbi->s_last_error_block);
 
 ---
 base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
-change-id: 20240321-strncpy-fs-ecryptfs-crypto-c-a59b3cf0a3cc
+change-id: 20240321-strncpy-fs-ext4-file-c-c983d942dd39
 
 Best regards,
 --
