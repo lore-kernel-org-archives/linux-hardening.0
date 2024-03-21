@@ -1,73 +1,75 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7CC85C73
-	for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 23:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FF565F
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 00:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710977232; cv=none; b=nMl7nUm/B361SDdz+csPtOKPx+lN1Ng5VCl/VJYVxmAPGXafTCtf4OGCOfvPSi6XXMbmQFthmC0wv3Yh1B8HCjM4Hqe0X0yZnKIQVzKGWhI/MxklQZw33VPpbJwUQFn13DVK+XoWhvrwgx3YsbsescBSCRgj2d7AMz9d+y7qDWI=
+	t=1710979862; cv=none; b=KCQE+OArgCksf/IKf8ObOh3oG6ECNT9oVNgilVMX4vBCB25hpELOyZeI6yzm+RNv0fqc96gRgg6y1WHvnd/MH+V6DVeEO19VZjS9PcReBBR+eMvand5NciE/bfmxmzG2Mvx2zjVfLVl8pq5l4pkHRLLDlpOjx78qCgsQxnfyI+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710977232; c=relaxed/simple;
-	bh=vYKzzse+hsxrCLrxZ00MkHClgVeFa8yh0cRD/lbNsc0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OTAEe14SyK5k4qBfs5PwzueP51KEVl/O52y3YYawltdfEf6lX+MzETjBL6kO2D7HRVKSurkFUR91SQ1sx2aGb/Qt8tQ/pzZqWwCWAQVCdD3pUy3f8HaZqqKfAs12S1Q9aPUiy3oRlGiJKBcWBViRkPrQNbxE+bPGVTgVZa8Q2u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mbOu97p1; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1710979862; c=relaxed/simple;
+	bh=qLFMjKBHWBbdNmXG9Gp9YCIsExWfJWYt/CixfHOVoOs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CSpAitCAMbtSN+424t7Ny1iZTvmG8Wx8uk5qyHtWPEg2ZH1MUQQdZYkas30d214oTqT0ojJcxzzlfy89o7gaEjMPAQuOqTWCmq/zFZGy+UIswr+ALVDdmE3jclGROa1onvnEdmeUO8r6OQueC7VsQg2k/+FXquU55u+MLgDQEF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oYhXo7Ut; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mbOu97p1"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd944567b6cso453285276.2
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 16:27:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oYhXo7Ut"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbfe1a42a4so672851276.2
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Mar 2024 17:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710977230; x=1711582030; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1710979860; x=1711584660; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=AKP8GbnuNaUxisIiiCc/HvCd/U76hXx8XgrXiVPpGRg=;
-        b=mbOu97p1p0S1VxmokEH49hJg04X4G+yTVss3asgF3kK00Lgs++BSGfWPBfLv4dI/LV
-         zuNOJJyRCBjZa5bWAqepwFZdKx4zCLUraCx8Vl1Bvlu6u7M8voEv8pR1xnkGCF8dMOLU
-         xWk5oSJHGOzaKqm9ud+vqAgNuqImPjXtJ9bjyVeElFeyGAsptkQe/EWUc5NOlhGJTr7O
-         E5MusuGm9EaBtmYWUJAMFj86iO4PDgUnzaFCGt3EAUKsbBFjQ5sCnRvPpg2A8dL1P5pq
-         NVXvBccnZyusXkJMMm4HqQiPSF+2eQoaEaaG2PDDw6LZ20RvC6e71QXGql9yBrIpI8Iv
-         Bphg==
+        bh=+Y/++eaKr1uF0F/QMSpfiG9X2bG1rR6plkUxL7VYSLI=;
+        b=oYhXo7Ute7KFBr2Zi8bcJfQXt3gOUz/tvphMtlqgbKK/qHZyfRJsGnTJHPf0TZeyDv
+         ZB+FMnuKMe02AZn/9zhFb7hfQvP2lyL/o0VvwxAaOyPrKGI1IjJxNgVmnOnAEeARndNL
+         sOoNbKkEOyJFaLn0JWemQXn3doQj/G8ejtqGpz0cE6CGQ00u5j1w/51WfxiIdVAOp4VC
+         VUZWnrAtTYvCIEeg5PtV+xdrRhFVfMHcpo5qMGlWG98Us1mAk1xFGtacVT8ewtzzXv+p
+         Qld+FPV+uSpGCR8t6uVBt3MNo07i+St0XZvUNKHEvdiwT8tBGTIWt37r8kD16UmRiGTh
+         q41g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710977230; x=1711582030;
+        d=1e100.net; s=20230601; t=1710979860; x=1711584660;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AKP8GbnuNaUxisIiiCc/HvCd/U76hXx8XgrXiVPpGRg=;
-        b=MuZICfSmfhBwYVPvXl+FlT4VM3fl+iDFzgdVlx3o7BC8tBXQm0pWHzFKaRqOKX+2bT
-         GsDLUdXOZKcbKxJQpAhSqcMmqFg2QzdNDSkukmDy2pOmSz5RoLWt3+AV172l3D+/WDRS
-         D77Y6kCiutVZGIBaQhrFjZyCwe98ho5NZbIZ0aaIazgN3GsrNnyDS5dHXx5/DWCSeQw+
-         U3n8UVSCqI8OgGK0JupIE2J1Hvj7o31ydOLVo0gxaRqtuTKJXFunwmk0MAy6SaBLKF8P
-         WP7AMUhVLr6g0iYb1oruRi8+ARlCWOoxy4nRj2QgIjTJ/o68s0YZaeGhD0g9BGckUTCw
-         b35g==
-X-Forwarded-Encrypted: i=1; AJvYcCXOoPlhx03g0d7dz++5mgVoo0FKwF7xwXBqd6GrRuG31NS8mlUWQ6CV4+nNPs1P/jwvi8uARoHmmoYcSYUrkpc7l9adOTv0Wzjcxjdoy8xo
-X-Gm-Message-State: AOJu0Yyv5dSteUx88bi6qTieyOWP5KKU388LBMJMd2j9PuNzmQM8Q83W
-	j0bvHZ6povrwWIkXUDyqQ5V980bjgu3pf5fQAe5X9wIvCpIRkkiF5kjfm4mOqdQLHmkwl5qxFBE
-	CEyZn8GhCP2Vfa9BptEVq3Q==
-X-Google-Smtp-Source: AGHT+IEuSmkCZM+fjgO3sC5hsajCVr+cxjjEsGe7D1X4qeRsyT+mZfU7+wBSjMa/445hoCIZHlZQh85KK91nKegMSg==
+        bh=+Y/++eaKr1uF0F/QMSpfiG9X2bG1rR6plkUxL7VYSLI=;
+        b=QvOM82qgsStiXyuo+dkJugqRk9/NvzIS9Oa8OoYLYfLiy5g72tf6f36rG7wm5WWDD8
+         GmQIbxj1MAh2oBqGu7Eq+mznO9DnXf9mgSOzQep6cjNdbdMIMRmRy9r9vJ35muoCVMPc
+         Wb7t5n2cgh5Cnca8IR1VpgOgSKjeOqODi7/tYCsLZmtX+mCrYKqHyFfSGsLZ7yP1biha
+         38oAcy616PM5OSVb9Sck1rRk6CMJxz8ZxOu/0PI393tUMSnhM2xGI5vK7gAmpDTLaxD7
+         AtqI9R7SzDM4SZx3x6P9b8iNoYC6SuoiJ1G4BZ0Fz49ejW19Gr98GJkOIAleVMilcWam
+         LpnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoQ3r2p1Svb3VsP/Xn7IidTAJGNsL6Mfej3oySyvMwBv9tuowdg3QQ6Beu4Mo8gTlz5sAmyBRlTCItM+rMMSwXUmx09UAPRlFAuqAUbCcn
+X-Gm-Message-State: AOJu0YwIWCbU7IVE/e8JABPUeQn0dZdcCQ9pMEQVXgJIKE4yWqMfFCb+
+	v7AwNN7ykL0Nxloi62VyRuu2zspzP99tnzIpSqetPRcIzc3MLQywalCJqAwy2SGEa9z1wpFFsD/
+	od3n7Y+Cs38IAgayBSt6P6Q==
+X-Google-Smtp-Source: AGHT+IGf505ZVazw6jjUV6V9zvF2/vHvzzK6R5KLbh0GdIFxY2g4V4MVPW/wlAhrkwOVCVplbt5u8DMwwFADJQzvxg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:2305:b0:dc6:b768:2994 with
- SMTP id do5-20020a056902230500b00dc6b7682994mr918835ybb.0.1710977229829; Wed,
- 20 Mar 2024 16:27:09 -0700 (PDT)
-Date: Wed, 20 Mar 2024 23:27:09 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1b91:b0:dcc:6065:2b3d with
+ SMTP id ei17-20020a0569021b9100b00dcc60652b3dmr4933165ybb.8.1710979860466;
+ Wed, 20 Mar 2024 17:11:00 -0700 (PDT)
+Date: Thu, 21 Mar 2024 00:10:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAMxw+2UC/x3NQQ6CQAxG4auQrm0yDGCCVzEuxlK0mwH/kgmGc
- HcnLr/Newe5wtTp1hwELea25Ir20pC8U34p21RNMcQ+dDGwb8iyfnmCFYVzMWycBJltgX5YeBz bLg1y1ficqXZW6Gz7/3F/nOcPhdn3TnMAAAA=
+X-B4-Tracking: v=1; b=H4sIABN7+2UC/x3MQQqDMBBA0avIrB2IUaz0KiLSJjN2wMaQCVIR7
+ 94gf/U2/wSlJKTwrE5ItIvKFgqaugL3eYWFUHwxWGM701qDmlNw8UBWfEvgb55p5Zl9FIcOB1v q/aNvGwPlEROx/O7/OF3XHyjMQ/hvAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1710977229; l=2043;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710979859; l=1970;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=vYKzzse+hsxrCLrxZ00MkHClgVeFa8yh0cRD/lbNsc0=; b=JC/x3li3W2pIluLdOmvQqlnTTHJNWulUTgz/kp1a57t3nVdHtwUTqdlFRVQV3tPE7LOa++mOB
- w6h6FYYjPdHD9R8HrU1SqQwcvixMX5Pj/cSMx/32f0OMzmjUZDgR8Jf
+ bh=qLFMjKBHWBbdNmXG9Gp9YCIsExWfJWYt/CixfHOVoOs=; b=Y9r+dN0unQvQHHcwvbxTa+ghrDkz84FfNC4ehnh5o5e+cMt0sywA8r4Lzk0cBi+LdcSfrlgRj
+ +FLMm+BPNOZBHvfDKNPhK/wDxJMzw04FfOepyTH+/VSwi9grFbpRaRm
 X-Mailer: b4 0.12.3
-Message-ID: <20240320-strncpy-drivers-virt-acrn-ioreq-c-v1-1-db6996770341@google.com>
-Subject: [PATCH] virt: acrn: replace deprecated strncpy with strscpy
+Message-ID: <20240321-strncpy-fs-binfmt_elf_fdpic-c-v1-1-fdde26c8989e@google.com>
+Subject: [PATCH] binfmt: replace deprecated strncpy with strscpy_pad
 From: Justin Stitt <justinstitt@google.com>
-To: Fei Li <fei1.li@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
@@ -75,21 +77,22 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We can see that client->name should be NUL-terminated based on its usage
-with a %s C-string format specifier.
-|	client->thread = kthread_run(ioreq_task, client, "VM%u-%s",
-|					client->vm->vmid, client->name);
+In every other location psinfo->pr_fname is used, it's with strscpy_pad.
+It's clear that this field needs to be NUL-terminated and potentially
+NUL-padded as well.
+binfmt_elf.c +1545:
+|	char *__get_task_comm(char *buf, size_t buf_size, struct task_struct *tsk)
+|	{
+|		task_lock(tsk);
+|		/* Always NUL terminated and zero-padded */
+|		strscpy_pad(buf, tsk->comm, buf_size);
+|		task_unlock(tsk);
+|		return buf;
+|	}
 
-NUL-padding is not required as client is already zero-allocated:
-|	client = kzalloc(sizeof(*client), GFP_KERNEL);
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Note that this patch relies on the _new_ 2-argument version of strscpy()
-introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-strscpy()").
+Note that this patch relies on the _new_ 2-argument versions of
+strscpy() and strscpy_pad() introduced in Commit e6584c3964f2f ("string:
+Allow 2-argument strscpy()").
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -101,26 +104,26 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/virt/acrn/ioreq.c | 2 +-
+ fs/binfmt_elf_fdpic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virt/acrn/ioreq.c b/drivers/virt/acrn/ioreq.c
-index 29e1ef1915fd..e94358239a4b 100644
---- a/drivers/virt/acrn/ioreq.c
-+++ b/drivers/virt/acrn/ioreq.c
-@@ -433,7 +433,7 @@ struct acrn_ioreq_client *acrn_ioreq_client_create(struct acrn_vm *vm,
- 	client->priv = priv;
- 	client->is_default = is_default;
- 	if (name)
--		strncpy(client->name, name, sizeof(client->name) - 1);
-+		strscpy(client->name, name);
- 	rwlock_init(&client->range_lock);
- 	INIT_LIST_HEAD(&client->range_list);
- 	init_waitqueue_head(&client->wq);
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 1920ed69279b..0365f14f18fc 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -1359,7 +1359,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
+ 	SET_UID(psinfo->pr_uid, from_kuid_munged(cred->user_ns, cred->uid));
+ 	SET_GID(psinfo->pr_gid, from_kgid_munged(cred->user_ns, cred->gid));
+ 	rcu_read_unlock();
+-	strncpy(psinfo->pr_fname, p->comm, sizeof(psinfo->pr_fname));
++	strscpy_pad(psinfo->pr_fname, p->comm);
+ 
+ 	return 0;
+ }
 
 ---
 base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
-change-id: 20240320-strncpy-drivers-virt-acrn-ioreq-c-9913a5c6e2bf
+change-id: 20240320-strncpy-fs-binfmt_elf_fdpic-c-828286d76310
 
 Best regards,
 --
