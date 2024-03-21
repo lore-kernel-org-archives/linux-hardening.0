@@ -1,128 +1,125 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C687D134432
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 20:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B1115CB;
+	Thu, 21 Mar 2024 22:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711053293; cv=none; b=N+h92fjhSVzlhsOUcZB3O8pa4xqy0IL8Dhkv51Au8YuiU9J65lyyLR4Cuf/47VUNckt1DM54XQPt/r2QQSJrI1vNjf3WzQlqffHnFYDZknjQ/TUPT46lBqevA7InXFzS3N4E9QOv1HuAHtx9KOFoUReZzSlfAkXdnIk0h6ouF90=
+	t=1711061034; cv=none; b=GtpOKvRl0O5irkhcvaAxnLkQzneFuhTofeSl65MQ/PIT1LWlC3OB+oWb1sSSqJpZsqNHJfpOhWnuJgzrbAFNa8xkk+Tz3ZCD+jO76Wvj2HkvlI/mUlLdxLEw5A73JLyZkEoO+PIwcDLK4ZmZAmR6FSksD92/IegBbTcDeGk8/g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711053293; c=relaxed/simple;
-	bh=KhaMIPegfJcr5L/8X1gkyHdQvQ/vHv8OxYKXLm+yhds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LfJC4+mh4+ydIhaov+9mYwriyfdWdW6cDYx4u/MdOmqqnLlA3F5HjDlAucMLQpFjcp7Ckujc0tmFhw/kT+kRR57w6E/k7QLozT83I21d+BoTIIzrmlv/LCUq0FG1gLM81q9V/s1ROdQ7Uj4wPHJDkOynNP6ElOnH1iuoyfO5p6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=iXfzVLb9; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711061034; c=relaxed/simple;
+	bh=9YLEvPVut+aEhkwjdQYiPaE9xdwsFeRs7v8R3ObEQmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CPizfZHo/vYQzn76Lkss6CPaZkNdq95vco2qZ3Xg1OJUcRnPWHAodCdDgnUAlVFpqd0UklbtZzOBRjDjTMMjQOV8W9f0DSE2xLuOgNxR4rPokjclecyACBmMSabEJWbP/ptMFoxRE4NRi+kfO6uFYkVRh+7z4TGGgWyCRmqvLfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUdJn0ad; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iXfzVLb9"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id nLrZr0jpGDI6fnP7jrEzxe; Thu, 21 Mar 2024 20:34:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id nP7irjE4AHHoAnP7ir9dt6; Thu, 21 Mar 2024 20:34:50 +0000
-X-Authority-Analysis: v=2.4 cv=dskQCEg4 c=1 sm=1 tr=0 ts=65fc99ea
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=yrvdi-8N2rkvx8MjwWYA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Zpm7JfKyRSFiMuxy4RrheBAGaV77rGxXhF8Tc15ZkFo=; b=iXfzVLb9ipzSWrxpO+QaMhqTqb
-	t28vKXvfKfORiO20yaQxPXMX18Xh6+A247y1NDjxJPmcTVy6JHgqqa67W8zrdAuxHMw04o+tVWlax
-	xFyT73gvu3rl8vjUGaIBFMKc/LxiLtIhQLwVpI7RgJgMABhqvc1JVXNWrU9w178E3C0EwDsP5q8vi
-	S8Ml6xim9UZ2zZt3Vuqlg6ZKKkBdE1kwX6FpKQoqL9dCpjiiIrYu8IActGeiCQqmJzMKJmpG8sQdp
-	cwW/Qt3yC5HgAuPaxVHvqfQoLLkgc6zZfPYJtnifCuX52taStHfj+9bQqGjJFySx/9bGpZzQ/v1B3
-	mhPwaavA==;
-Received: from [201.172.174.229] (port=60044 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rnP7h-0038oh-2X;
-	Thu, 21 Mar 2024 15:34:49 -0500
-Message-ID: <25c1ffe7-c141-43e3-b5d2-2dd10808711d@embeddedor.com>
-Date: Thu, 21 Mar 2024 14:34:48 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUdJn0ad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506BCC4166C;
+	Thu, 21 Mar 2024 22:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711061034;
+	bh=9YLEvPVut+aEhkwjdQYiPaE9xdwsFeRs7v8R3ObEQmA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VUdJn0adZJJQHfherYOceG2h1ETcDR1bhdhtJsUxs9wVLJSsBcSTZ+/1ksbxDTDSq
+	 u3BLCFckXqhRyGjAHy7B00ZhHsoJ84oxk+VivG6HA85k4002ivBPtLrPFttalcOTHb
+	 MxgdenyKDhWltvBzPmylYbn6xIbdV7oHVeZSqEykOsiVZlknfmP+a2tbc92B/5GGtb
+	 8bTelp6jMGCN6wblwCuHNnmIcYOVb04Q5kB3NjlZsONvFWRg+5msMIp8DTnB4krI/q
+	 sGlUOSSGCIcblL7b0fpCtaVG2xywFwgRG453BreOhmaPKhHT3qXl1ypQF4Zc0Xv9ro
+	 1igrJ9OYG6U8A==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-514ba4e5640so2458776e87.1;
+        Thu, 21 Mar 2024 15:43:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWiQS2JKp8OzSNY1t5GdGYlPFVIMPmdpoCY04e/w41vSwgxzC3Qu3PxAsBDYC4VYUJPDb85INVD2ddLct/nSNtUlePFebEH7wlPkJRnSULaqBVUaAOganHIlCAJCVjMGGoYeKH3199Karv5DRpR
+X-Gm-Message-State: AOJu0YwF0z/ctPHIt0BoQOVVYjdb1kNwdFFebFH3fg9QRMT4zdnVDB+p
+	MQ8AEK2/w9q5Th41Ty1kYemQ3Lr9bkWSHWWSIXnrVwm131SZKe3ZcgiH2Q2AGFcKOeXyrUFowFZ
+	SLsGkpiQg7awj2uNsR0xqoZXPUHk=
+X-Google-Smtp-Source: AGHT+IFEt+m2d6qmvyuzhfq9miPm16KRAZyNPzt4/1WPHVMW64H38oH9/SsT+7om4AyuYaPbm+lS1yoJfQEihUk7sDQ=
+X-Received: by 2002:a05:6512:249:b0:515:8d79:1b37 with SMTP id
+ b9-20020a056512024900b005158d791b37mr108001lfo.4.1711061032487; Thu, 21 Mar
+ 2024 15:43:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] lkdtm/bugs: Improve warning message for compilers without
- counted_by support
-Content-Language: en-US
-To: Nathan Chancellor <nathan@kernel.org>, keescook@chromium.org
-Cc: gustavoars@kernel.org, linux-hardening@vger.kernel.org,
- patches@lists.linux.dev
-References: <20240321-lkdtm-improve-lack-of-counted_by-msg-v1-1-0fbf7481a29c@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240321-lkdtm-improve-lack-of-counted_by-msg-v1-1-0fbf7481a29c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rnP7h-0038oh-2X
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:60044
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJBE5EY4Pq0KQuVV03deHnmRQa1Mx6RQAxqFfYdv41AiEgSv8u10c6cJS6DGTb4FGRiO4aq99G775kdIGr0ZRvlHW+sQjyweNd8KuqY59odktAfOMXEY
- 1BNU954q2vItHC3IFns+v5ko6d77m+EUUswAH0PDAbolw/pJus4VueMsdaJrjJVnjLHJeLwW5LvJOR759GNmWTz71VjvUEE7trIq7cbNHtBW+6SgMa7KAXRB
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk> <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk> <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com> <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+In-Reply-To: <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 21 Mar 2024 23:43:41 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
+Message-ID: <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: David Laight <David.Laight@aculab.com>, Jiangfeng Xiao <xiaojiangfeng@huawei.com>, 
+	"arnd@arndb.de" <arnd@arndb.de>, "keescook@chromium.org" <keescook@chromium.org>, 
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>, 
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>, 
+	"amergnat@baylibre.com" <amergnat@baylibre.com>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"douzhaolei@huawei.com" <douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>, 
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
+	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>, 
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"nixiaoming@huawei.com" <nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>, 
+	"wangbing6@huawei.com" <wangbing6@huawei.com>, 
+	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>, 
+	"willy@infradead.org" <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 21 Mar 2024 at 12:24, Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Mar 21, 2024 at 10:22:30AM +0000, David Laight wrote:
+> > How aggressively does the compiler optimise 'noreturn' functions?
+>
+> I've seen cases where the compiler emits a BL instruction as the very
+> last thing in the function, and nothing after it.
+>
+> This is where the problem lies - because the link register value
+> created by the BL instruction will point to the instruction after the
+> BL which will _not_ part of the function that invoked the BL. That
+> will probably cause issues for the ELF unwinder, which means this
+> issue probably goes beyond _just_ printing the function name.
+>
+> I have vague memories that Ard has been involved in the unwinder,
+> maybe he could comment on this problem? Maybe we need the unwinder
+> itself to do the correction? I also wonder whether we should only
+> do the correction if we detect that we're pointing at the first
+> instruction of a function, and the previous instruction in the
+> text segment was a BL.
+>
 
+First of all, I consider this to be a defect in the toolchain. Given
+that the compiler knows that the BL is not going to return, it should
+simply emit a BRK instruction or similar after it. This would catch
+inadvertent returns as well as eliminate this kind of confusion.
 
-On 3/21/24 14:18, Nathan Chancellor wrote:
-> The current message for telling the user that their compiler does not
-> support the counted_by attribute in the FAM_BOUNDS test does not make
-> much sense either grammatically or semantically. Fix it to make it
-> correct in both aspects.
-> 
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+The ARM unwind format is not really suitable for asynchronous
+unwinding, so unwinding across exceptions is always going to be hit
+and miss. Also, we should consider what the unwind information
+actually tells us: for debugging, it is useful to understand where we
+came from, i.e., how we ended up in the situation where the backtrace
+was triggered, but what it actually tells us is where we would have
+gone next had execution not been interrupted. The latter notion is
+important for things like reliable stacktrace and live patch, which
+need to know where a task might be returning to.
 
-Looks good to me :)
+Returning to the first instruction of a function is unusual, but in
+the light of the above, I don't think we can assume that it means that
+the call originated from the preceding function, even when it ends in
+a BL instruction (although it would be highly likely, of course). The
+tracers and other instrumentation might insert probes in the return
+path, and I suspect that this may result in a similar situation in
+some cases.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
---
-Gustavo
-
-> ---
->   drivers/misc/lkdtm/bugs.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-> index b92767d6bdd2..5178c02b21eb 100644
-> --- a/drivers/misc/lkdtm/bugs.c
-> +++ b/drivers/misc/lkdtm/bugs.c
-> @@ -417,7 +417,7 @@ static void lkdtm_FAM_BOUNDS(void)
->   	pr_err("FAIL: survived access of invalid flexible array member index!\n");
->   
->   	if (!__has_attribute(__counted_by__))
-> -		pr_warn("This is expected since this %s was built a compiler supporting __counted_by\n",
-> +		pr_warn("This is expected since this %s was built with a compiler that does not support __counted_by\n",
->   			lkdtm_kernel_info);
->   	else if (IS_ENABLED(CONFIG_UBSAN_BOUNDS))
->   		pr_expected_config(CONFIG_UBSAN_TRAP);
-> 
-> ---
-> base-commit: 8d8b79685237b15f4bb676781f6bf241beb068a8
-> change-id: 20240321-lkdtm-improve-lack-of-counted_by-msg-d3b9006bd6e3
-> 
-> Best regards,
+Given that this particular issue would just disappear if the compiler
+would just insert a BRK after the BL, I'd prefer to explore first
+whether we can get this fixed on the compiler side.
