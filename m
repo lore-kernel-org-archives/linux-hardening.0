@@ -1,71 +1,56 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A0075811;
-	Thu, 21 Mar 2024 12:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF3B83CB0
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 12:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711023814; cv=none; b=KhrTgrYQDM0y/BwqRcth7s5vrxvSydjUbwAUojUBhFETCMP2gfVBuGdlk5ygJJSjfBmMxmmlj7S1slIhX4uZPeL7+/nuKIxPCCHalDN//2lsIHBIGwmhWj1avN8kPrykYaK3G4y9owvuvHFESmxA4OBnxzBapWg/4w37o6n1hm4=
+	t=1711025858; cv=none; b=bN8C1N+Rm4Ly9Xio2mbGoc6fH2Ze4j8uCz2W0PfN9JB61pONW9sA2oZS7rCQoSpFIa9sPE2BtZi32Ah/4ehz/8pKxAOkzi2I7IAL89yyZZ0cgLwzcguiEWanX6wRKs2M6JVTU8K+Rp9shelpn0HW8tQm78oBpHjudIusbSl4GOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711023814; c=relaxed/simple;
-	bh=z0N29RLfNcOGlvR4fveRMkFS5KdyxhdBZ5rmI2uvv4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5kIvSFcAiXkph14S3ucStB2VCRWLOflNqI052aSxEPPuIay+KR4iBQ+GQTJ1hlYlZjPkPxgeWpd7oFThb3orbxELJb7X/ogwlL5RIcwvpEblFCwRgRUGRLtGtHXF+4lzkUYLn+5qeuJsTBj3JYF4wTWwNRFRzIBkBWoEdzO4Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Lkj3c18Y; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Lkj3c18Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bv5iaIHPCtllbUdTBibdobMZ0uFxV6D8XvDh1qKAPRc=; b=Lkj3c18YRRBepAzzJc64myDSZ6
-	vTbXteiIViBqHGeU6E9lDwpYqA0nDPgbUdpNDKiKND3D3T7kC05v3NOAPvITBZ8sQH/gZ/oYjHuR0
-	Jr9QRYKBkKGYOSs1J56y0aTRsIsA7gFEzzc4ioVpgPvb96lA+eVHPF27AqqLR96jTwaTeYsmli5DK
-	6lHemPYIN4ZXJrAQ8ki1duGAs00GxSlSMT5x5tqU7qxB7/sU9bKdNQuB3hXCxVSDzBg5CdCm9aXGM
-	t7xvvUgoUj6DAWZuSdv/CrgjYFfm8lenv+szEn2gueWVKhEgXbVFPfutWDZd7VNTtqWD43wt/75rk
-	5W9R5S2w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55568)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rnHRo-0007XB-0R;
-	Thu, 21 Mar 2024 12:23:04 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rnHRi-0003dh-TB; Thu, 21 Mar 2024 12:22:58 +0000
-Date: Thu, 21 Mar 2024 12:22:58 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: David Laight <David.Laight@aculab.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	'Jiangfeng Xiao' <xiaojiangfeng@huawei.com>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"amergnat@baylibre.com" <amergnat@baylibre.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
-	"gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>,
-	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
-	"jannh@google.com" <jannh@google.com>,
+	s=arc-20240116; t=1711025858; c=relaxed/simple;
+	bh=Ugs/LBHQ17TVRz8+/1tX85sJb3QOcQv7xVKlpf6dBWE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=C3B7dG+HB/hriZy8KBv8bL05YEA5IB+LDbhB9jx/lkyRy8ND9m/mVLZ2bCBfPvv7Ac9rxdgBXTG2Y9ZJvlDCJwO3z1/8PNIWDfB7TI44vcsGe1IT+/7CumZBlQ9RMLz+LHAWVQ0ZECONWj88+f7wkOhqvnCHb2JaZRki4+7LNPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-199-xgFlFvyBPmuyMshxla-1pg-1; Thu, 21 Mar 2024 12:57:33 +0000
+X-MC-Unique: xgFlFvyBPmuyMshxla-1pg-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Mar
+ 2024 12:57:07 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 21 Mar 2024 12:57:07 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Russell King' <linux@armlinux.org.uk>
+CC: Ard Biesheuvel <ardb@kernel.org>, 'Jiangfeng Xiao'
+	<xiaojiangfeng@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"keescook@chromium.org" <keescook@chromium.org>, "haibo.li@mediatek.com"
+	<haibo.li@mediatek.com>, "angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
+	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
+	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
+	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
+	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
+	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
 	"willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Message-ID: <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
+Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgAAWtoCAAAVW8IAACy4AgAADrmA=
+Date: Thu, 21 Mar 2024 12:57:07 +0000
+Message-ID: <0fd55e156195440bb1d815dd8300894b@AcuMS.aculab.com>
 References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
  <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
  <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
@@ -75,56 +60,77 @@ References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
  <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
  <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
  <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
+ <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
+In-Reply-To: <ZfwmomjUwQdCefzh@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db930076c837456f999daee5cb76735f@AcuMS.aculab.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 21, 2024 at 12:07:51PM +0000, David Laight wrote:
-> From: Russell King
-> > Sent: 21 March 2024 11:24
-> > 
-> > On Thu, Mar 21, 2024 at 10:22:30AM +0000, David Laight wrote:
-> > > How aggressively does the compiler optimise 'noreturn' functions?
-> > 
-> > I've seen cases where the compiler emits a BL instruction as the very
-> > last thing in the function, and nothing after it.
-> 
-> I've also seen the compiler defer generating a stack frame until
-> after an initial conditional.
+From: Russell King
+> Sent: 21 March 2024 12:23
+...
+> > That might mean you can get the BL in the middle of a function
+> > but where the following instruction is for the 'no stack frame'
+> > side of the branch.
+> > That is very likely to break any stack offset calculations.
+>=20
+> No it can't. At any one point in the function, the stack has to be in
+> a well defined state, so that access to local variables can work, and
+> also the stack can be correctly unwound. If there exists a point in
+> the function body which can be reached where the stack could be in two
+> different states, then the stack can't be restored to the parent
+> context.
 
-.. which is why we pass -mno-sched-prolog to GCC.
+Actually you can get there with a function that has a lot of args.
+So you can have:
+=09if (...) {
+=09=09push x
+=09=09bl func
+=09=09add %sp, #8
+=09}
+=09code;
+which is fine.
+But if 'func' is 'noreturn' then the 'add %sp, #8' can be discarded
+and then the saved LR is that of 'code' - but the stack offset is wrong.
 
-> That might mean you can get the BL in the middle of a function
-> but where the following instruction is for the 'no stack frame'
-> side of the branch.
-> That is very likely to break any stack offset calculations. 
+> > > This is where the problem lies - because the link register value
+> > > created by the BL instruction will point to the instruction after the
+> > > BL which will _not_ part of the function that invoked the BL. That
+> > > will probably cause issues for the ELF unwinder, which means this
+> > > issue probably goes beyond _just_ printing the function name.
+> >
+> > Isn't this already in the unwinder?
+> > A BL itself isn't going to fault with PC =3D next-instruction.
+>=20
+> You are missing the fact that the PC can be the saved LR, and thus
+> can very well be the next instruction.
 
-No it can't. At any one point in the function, the stack has to be in
-a well defined state, so that access to local variables can work, and
-also the stack can be correctly unwound. If there exists a point in
-the function body which can be reached where the stack could be in two
-different states, then the stack can't be restored to the parent
-context.
+A PC from LR will always be the next instruction.
+It is only the PC from a fault frame that is the current one.
+The unwinder probably need to be told which one it has.
+(Or add 4 the fault frame PC so that the unwinder can subtract
+4 from it.)
 
-> > This is where the problem lies - because the link register value
-> > created by the BL instruction will point to the instruction after the
-> > BL which will _not_ part of the function that invoked the BL. That
-> > will probably cause issues for the ELF unwinder, which means this
-> > issue probably goes beyond _just_ printing the function name.
-> 
-> Isn't this already in the unwinder?
-> A BL itself isn't going to fault with PC = next-instruction.
+At least (I don't think) there are any functions where the
+called code is responsible for removing arguments.
+That is a whole different bag of worms.
 
-You are missing the fact that the PC can be the saved LR, and thus
-can very well be the next instruction.
+=09David
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
