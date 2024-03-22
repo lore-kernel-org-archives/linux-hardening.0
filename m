@@ -1,119 +1,109 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20418F4FA;
-	Fri, 22 Mar 2024 08:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39B61B943
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 09:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711097119; cv=none; b=p4GIwa6GYYRWO5fdaETkqJNt132AJQXiyywbmSqvaC3PqvhNU/gIAXBXEOxbsSGzr+9m4NcjxqcsDy9szMEcbjqv4s8hpnMfTB5HlbezSyFTODQIRZ6gNWRVJ68Q1b1p15pnITlcn7nrHC1DgCLsZcxjhFWAGfiTRmJ5+cPEp8U=
+	t=1711099491; cv=none; b=i7BsSBTSSy+RuXxoGkSphxqhZNCHsaxbiqrtT1FrxK/Jgm+4ii8AC+EWsXzVWeDR9MLbNxfk36RTDLdPPZMKD2uXxkT1Jv7dagD2Gru+sU8C2yXu5Dk2BlBx81DR+6g5QliZqb4+OSnxGaZAo8nHiVUVxYpk3uIwtWwkx1CGh9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711097119; c=relaxed/simple;
-	bh=ffZPhfs8D27xRgmcskKdyiYjUqpVTZr1aOvEyUA6vso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lPqoFgbadgTpsyCfzDiRfy9itdwePWPDr53GpGXCETUN59JSAD2GuPA7yBU2eckCyXs4C31bmcpB2peClaJ7uYGsLxkgU6HCsbLhl99A3lULiO0+Ugma/wMKa+kjWCdSOy2QKqa/8ZZNHV1IODiVYUPTH9tzjcV/71OXRXt9GOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbaKmzLl; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbaKmzLl"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41468f6d584so13689865e9.0;
-        Fri, 22 Mar 2024 01:45:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711097116; x=1711701916; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aB/vJcbosEWR8zB5L3DEigEI/JurQaOSkuKB+JwQ5ns=;
-        b=lbaKmzLlg2nu0ustifOqbb41eN4HhadLsNURw5rct8JP0Y4iM0/+mlAPI/XDSrm04N
-         uMzAFClP3s5Meuesrk4MTsbBUc9hRu03my5izW2KQ9LachCZq8V9fh2ChAvqkdOOh8DZ
-         rkQrfCR8mUFperhhyrngtOw/zY11yqEpCYp9jOr2pvXWnWiCxpV3gqqw47YL0E6+xugJ
-         51Ol8pIMg2GDEifFqRu0lYta41D5DjPvyrDdBAZM5u7xCSFVG/Hm1IlY4xsfS+gkt27u
-         UggpdkwlbaVYEs2odsgmDoD+BvXSVWV6AVm0XUG0bA6A1XJAhnOWgGd2u1JJ19r8jeGG
-         jhcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711097116; x=1711701916;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aB/vJcbosEWR8zB5L3DEigEI/JurQaOSkuKB+JwQ5ns=;
-        b=I2VXxpuF40cbIeHSRTOqxDJt1RRmsiAWftMdkLX/arsZ/Ek0BKW//5FHoLoPd6ZlDY
-         kDzg0P3Kg4GRwZaRm/L2zRlTEHiewYsLKYMgKzSMUe69uyhCPHvkFeKZfzsAeys4gwYJ
-         K5dYBpULQDveZVZflU1YTVdc5kxrkULXbR8AkqN+M0HlJwSPXoG9Ud3lEOBS+B+oyl4u
-         BrERqSsE1fG76olCcDzQlQwLBtPNMK+qMQ7eif5nlmAlo3bs28PfUIdjvfnEqQj5dB2E
-         xSpcA5L3p6CaSgNRLwYAbtrrvkpIP/EXhTuSlJNykWAbZO6QPd2EfspQ4rGysgCm3NEU
-         hGzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVs170dzwEu5HXuqziu+f6nWrit+qUug+woGg6koKqycoz1bR+n4znoOELmf0bBPgJ7TuXHZGuRn7x2E6uz8OXrnSDbYOFI8EerwyCUdS4XyeIHpTWRSz8uuOJ5C4Cbu87ahO39k1Vn2IxVzCsV
-X-Gm-Message-State: AOJu0YwAcGIJ1gS/+Vq9jegl9suKf7j3uZcU1cZifuUz5MmHpWDbQNeM
-	N2PHDu5SHtNIt+x6R6CFRMw837usECRYc2/rsHBAY6V2XDz1JEjB
-X-Google-Smtp-Source: AGHT+IGNWGu79l5+n6UgalfjdRlSwKK4IUXhGbq63EVCwDx1ijXrLMW6zfg8Zyp7LMklbqsnyP5bpw==
-X-Received: by 2002:a05:600c:3ca8:b0:413:fea7:bd19 with SMTP id bg40-20020a05600c3ca800b00413fea7bd19mr1024404wmb.15.1711097115824;
-        Fri, 22 Mar 2024 01:45:15 -0700 (PDT)
-Received: from gmail.com (1F2EF04C.nat.pool.telekom.hu. [31.46.240.76])
-        by smtp.gmail.com with ESMTPSA id p21-20020a05600c359500b00414038b4d64sm2387878wmq.27.2024.03.22.01.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 01:45:15 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 22 Mar 2024 09:45:12 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
-	jgross@suse.com, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, gregkh@linuxfoundation.org,
-	tony.luck@intel.com, adobriyan@gmail.com,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
- walk_relocs
-Message-ID: <Zf1FGI6E3wStJSQT@gmail.com>
-References: <20240317150547.24910-1-weiguixiong@bytedance.com>
- <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+	s=arc-20240116; t=1711099491; c=relaxed/simple;
+	bh=I8uHjlu16AjqAEeseHfO0a200Pi5aGA00Cly8jsvsTU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=sdnvNPgVE5NxvANDvvgT21SOfzXnBuxdH4fxbrVs5DG8G4WXabiOu6fxFXpgnvOJFjKhqqsKZS9DH+XyuyEKlwvIjBneVsGvLp7uLbLWSc7ma6iix31bYItSlfT0mepv10qGk/Qb7XPpY3AS6ec7ERj7nJVv11Ks71D6xwyVOkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-79-v95uIj2DP4yt8BN4J_ZXpQ-1; Fri, 22 Mar 2024 09:24:46 +0000
+X-MC-Unique: v95uIj2DP4yt8BN4J_ZXpQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 22 Mar
+ 2024 09:24:21 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 22 Mar 2024 09:24:21 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Russell King' <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>
+CC: Jiangfeng Xiao <xiaojiangfeng@huawei.com>, "arnd@arndb.de"
+	<arnd@arndb.de>, "keescook@chromium.org" <keescook@chromium.org>,
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
+	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
+	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
+	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
+	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
+	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
+	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgADsd8GAAJnLsA==
+Date: Fri, 22 Mar 2024 09:24:20 +0000
+Message-ID: <2b2993fb215c4a5abd7d77ff1c984113@AcuMS.aculab.com>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+ <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+ <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
+ <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
+In-Reply-To: <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+From: Russell King
+> Sent: 22 March 2024 00:09
+>=20
+> On Thu, Mar 21, 2024 at 11:43:41PM +0100, Ard Biesheuvel wrote:
+> > Given that this particular issue would just disappear if the compiler
+> > would just insert a BRK after the BL, I'd prefer to explore first
+> > whether we can get this fixed on the compiler side.
+>=20
+> Arm32 doesn't have a BRK instruction. What would be appropriate after
+> the no-return BL would be OS specific.
 
-* Kees Cook <keescook@chromium.org> wrote:
+It would need to depend on what was being compiled.
+For the kernel it could be much the same as BUG().
+(Probably without any extra data.)
+I suspect that arm32 could use 'swi' in kernel space,
+but you wouldn't want to use that in userspace.
 
-> On Sun, 17 Mar 2024 23:05:47 +0800, Guixiong Wei wrote:
-> > The commit aaa8736370db ("x86, relocs: Ignore relocations in
-> > .notes section") only ignore .note section on print_absolute_relocs,
-> > but it also need to add on walk_relocs to avoid relocations in .note
-> > section.
-> > 
-> > 
-> 
-> Applied to for-next/hardening, thanks!
-> 
-> [1/1] x86, relocs: Ignore relocations in .notes section on walk_relocs
->       https://git.kernel.org/kees/c/6ba438a29b5d
+Looks like armv5 has a bkpt instruction - could that be used?
+Or does the kernel need to support armv4?
 
-Please don't - these are x86 patches, plus it contains an eyesore - see 
-below ...
+The last arm I wrote anything for was a strongarm.
 
-Thanks,
+=09David
 
-	Ingo
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
- relocs.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-Index: tip/arch/x86/tools/relocs.c
-===================================================================
---- tip.orig/arch/x86/tools/relocs.c
-+++ tip/arch/x86/tools/relocs.c
-@@ -752,9 +752,8 @@ static void walk_relocs(int (*process)(s
- 		 * values there are meant for pre-boot consumption (e.g.
- 		 * startup_xen).
- 		 */
--		if (sec_applies->shdr.sh_type == SHT_NOTE) {
-+		if (sec_applies->shdr.sh_type == SHT_NOTE)
- 			continue;
--		}
- 
- 		sh_symtab = sec_symtab->symtab;
- 		sym_strtab = sec_symtab->link->strtab;
