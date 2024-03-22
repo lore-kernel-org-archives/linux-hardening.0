@@ -1,165 +1,101 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D37EF516
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 23:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35735382;
+	Fri, 22 Mar 2024 00:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711064794; cv=none; b=W6bnKdUdVKu5G3VHX658/araEkTECLbymRk8NEqM2OaqXBCgYaxCdJ2aPni4T7WCxFCntSCzIg9EjEHL3SlUUcQOVma394G4CX2xNJiTR+wum2X8jNgH+XkBBNFCuQbKLtsCY7yCWeG5pE1wILGV2txRsPIP1yQ2etVxZlqq0K4=
+	t=1711066179; cv=none; b=sLddYT33m/bE7xt6l01tdQ6c902zlQXa9IKCDB+n7y/FrBmF/TwFG4ybRiQCFzZjzh9b9CGDxEcxUrZOkPx8SUSAFByGa+blUPVCnwhGc3ppdr615kIvWa2AYDc3StsbT8k3r6qT5x/8uE6PwCI74E5vT6oSU+RXdyyV54LfMrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711064794; c=relaxed/simple;
-	bh=GBp117Rw9ou09bC9vlczg3WmwjqjNQ4BV42hmHgOAGM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Eud1qnJRLCPs4pUJvtotLk1FjWQBLe0coattIhbf9nYbHnXddd3bqOpTA7TLo1hJ/fdKYQRv6PpOaALmk3ZR1YUT84d1bg0x3orZUS9kkRbbHKw6Pi9B1YmeGe4NuHHOnudBM6o/P630FnWV6eIY6AVeNmJuBetsE7qKiVgqap4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VsCJse60; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1711066179; c=relaxed/simple;
+	bh=SgBVhDiLkqvj5heInVCpMQ/vA9DTmHwhTXsUN08CHaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXrMb0Mb2Wc1Q3FO6QO0Fz2jxfmOPYxnT5YSX/4hMmMHmSjN4GTnB834sPHr/TyT1yS82ehSnxF2jh4s1+YDG+Zf6I2o6Dtg7L/3nU3247kwg2WGePzC4NdvxVUogjrEgEmqPpkZsPk6esHdZFSY5PHUO7RkXMjxmA7+Lvoo8sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=aXkMMI0j; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VsCJse60"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcd1779adbeso2408585276.3
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 16:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711064791; x=1711669591; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TKcHHCSWCqgul2AOMbuKphpbCV9drtQafSH0+0DTZms=;
-        b=VsCJse60j86WLf2PNMFujVaQX/q9AyhsHXmv/C09+wPlP+I0eZpkWyVD2nuHIr3e2w
-         NsGGQJV5cM/vpLFlHwltfelhumVPrZR13P5ANwKcFg82SeZY9ULvH/FytwRXQTwCrYOI
-         q8sitGGwDRXrgrziLBI6tJGwsJe3E13S4xFCW1BPRfOrawWEkh95DkZ1fmFUelM0zJj9
-         g9fjDuAjILXtG7hGSbDt0wodKzHspkM/8kb3Ic/wV0fvs4U5UozufWb/ndF9eyK0GbY8
-         gckRVGUM09dqaPOSPeL9t1MJZ+Nu093QYtukD/aDnHaX+VfZjnKRwbzFKF3n5ZHfoj7d
-         CxNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711064791; x=1711669591;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TKcHHCSWCqgul2AOMbuKphpbCV9drtQafSH0+0DTZms=;
-        b=XRHxfRyyOYr+bIFAyWthfwne9y386k/omuNmNT/O+b/Yo9S8O3qLdBs6Ue4PPSkf1a
-         NUL4vTDwsIQAXEpxJh0FSYiUPhLEHoDcze6Nqckm5bjHcBFV1pbyXA+NkqdtevR2l3No
-         sny5DbEGkWywhAcaTl5kPBMiLpz+BDNgh0W4ilYFeUhdcgzXryvqiTkHG8x0uYPpnJjN
-         SF47e12wb73NRkWVlTqFClN4yb1rs/sCnb7Gvfn3F9eh/B2YAQ8uR0CMV7ok/evA6eYe
-         6revCuHoaIszYBro7qwOITTZw8WXl6RejpWHcXtbHTUN4sAKpb8Hwp1iVZsBMSXtUJwo
-         oIpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHsrbwr3fG1UUGDcKPZcq+21C8xHLJm28nwaCafrL8aCumiVGara2emRFd34fOgZKOFS6Vvur5JbjiWn1BoXqrW3THn97NO8q//TqAVkRG
-X-Gm-Message-State: AOJu0Yx7smt2T6MQPL5OZXsMgyLJZyw1yTOCCyAMqKO+PnnmmG3Thexi
-	rwXRj0D6MjVO8aPzSVtURiC5f7usctV5/FIiIXq3oN0AAPfViyTlkT29ozTkglXAOwtPCVrcdMx
-	FNQc3+WMDqiW/Za5GH/Gu/A==
-X-Google-Smtp-Source: AGHT+IGslFJ7I58NprLlYtxvFu8RungPyoqKiB8iuMyQ7S0Xf45CcMjYFnGLqEJkvq/9SAAdc0Ta5veeJ5B3mcEUmw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:100a:b0:dc6:ff2b:7e1b with
- SMTP id w10-20020a056902100a00b00dc6ff2b7e1bmr196400ybt.4.1711064791522; Thu,
- 21 Mar 2024 16:46:31 -0700 (PDT)
-Date: Thu, 21 Mar 2024 23:46:27 +0000
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="aXkMMI0j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=2moEpAismjcawN+PGW1bmLh6TrJn1P653kp5rgnCLkg=; b=aXkMMI0ja+5UEUhZLzxrAJrkpo
+	OggZC2nCb+f2Fc6/hgyq/dQ94GWFA01LJDDP2/qY/PfR0cOEEIRO7rDEZOR4X/evTYWr484x/xhO3
+	47CbPRUUvktN9l7IXCMsnWhcklfjWOYuw0E9d92IWt5TWXUCJkQDKh03JS9U77CcNYcMHVghXmFFu
+	2t4mOBimVFjY+Dib9ePoRuVpnTqqQ61NKl5z1snJ7I9je9VFA/RF6dHv7EuRNfac5ZN52xWm/ySPu
+	Nb6YpH4MMb2hjDYG5OrQtutMpquZ7gmQOTxdeOUBXqEoAoqtZcYcCC66Uvr72DpXZJUlgnF69G1wf
+	Ybls5MUA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44658)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rnST0-0008AS-2e;
+	Fri, 22 Mar 2024 00:09:02 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rnSSs-00049Z-Vr; Fri, 22 Mar 2024 00:08:55 +0000
+Date: Fri, 22 Mar 2024 00:08:54 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: David Laight <David.Laight@aculab.com>,
+	Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"keescook@chromium.org" <keescook@chromium.org>,
+	"haibo.li@mediatek.com" <haibo.li@mediatek.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"amergnat@baylibre.com" <amergnat@baylibre.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"douzhaolei@huawei.com" <douzhaolei@huawei.com>,
+	"gustavoars@kernel.org" <gustavoars@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"kepler.chenxin@huawei.com" <kepler.chenxin@huawei.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"nixiaoming@huawei.com" <nixiaoming@huawei.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"wangbing6@huawei.com" <wangbing6@huawei.com>,
+	"wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
+	"jannh@google.com" <jannh@google.com>,
+	"willy@infradead.org" <willy@infradead.org>
+Subject: Re: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
+Message-ID: <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
+References: <1709516385-7778-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
+ <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
+ <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
+ <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
+ <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
+ <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
+ <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANLG/GUC/x3MwQqDMAwA0F+RnA1oLQr+ytjB1WQGpJakikP8d
- 8uO7/IuMFIhg7G6QOkQky0WtHUFYZnil1DmYnCN803nWrSsMaQfsuHCltbd8JxyVgzo6cPUD+x DP0MJkhLL+c9f7/t+AA3Ex21sAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711064790; l=3560;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=GBp117Rw9ou09bC9vlczg3WmwjqjNQ4BV42hmHgOAGM=; b=7eliCTZlOhrbirCoWB7C+nw7yQJFi+JZPUgfpGG0LQzr9Zvxig7qUqczMOmzK471p6Oo4nxWE
- EZp5nx2evR3AhFnqMtbF8E/P5IbKnWIgUu8C3qx4/qaT1i9Z166dvrZ
-X-Mailer: b4 0.12.3
-Message-ID: <20240321-strncpy-fs-hfsplus-xattr-c-v1-1-0c6385a10251@google.com>
-Subject: [PATCH] hfsplus: refactor copy_name to not use strncpy
-From: Justin Stitt <justinstitt@google.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-strncpy() is deprecated with NUL-terminated destination strings [1].
+On Thu, Mar 21, 2024 at 11:43:41PM +0100, Ard Biesheuvel wrote:
+> Given that this particular issue would just disappear if the compiler
+> would just insert a BRK after the BL, I'd prefer to explore first
+> whether we can get this fixed on the compiler side.
 
-The copy_name() method does a lot of manual buffer manipulation to
-eventually arrive with its desired string. If we don't know the
-namespace this attr has or belongs to we want to prepend "osx." to our
-final string. Following this, we're copying xattr_name and doing a
-bizarre manual NUL-byte assignment with a memset where n=1.
+Arm32 doesn't have a BRK instruction. What would be appropriate after
+the no-return BL would be OS specific.
 
-Really, we can use some more obvious string APIs to acomplish this,
-improving readability and security. Following the same control flow as
-before: if we don't know the namespace let's use scnprintf() to form our
-prefix + xattr_name pairing (while NUL-terminating too!). Otherwise, use
-strscpy() to return the number of bytes copied into our buffer.
+Maybe a branch to "abort" would be a good idea though.
 
-Note that strscpy() _can_ return -E2BIG but this is already handled by
-all callsites:
-
-In both hfsplus_listxattr_finder_info() and hfsplus_listxattr(), ret is
-already type ssize_t so we can change the return type of copy_name() to
-match (understanding that scnprintf()'s return type is different yet
-fully representable by ssize_t). Furthermore, listxattr() in fs/xattr.c
-is well-equipped to handle a potential -E2BIG return result from
-vfs_listxattr():
-|	ssize_t error;
-...
-|	error = vfs_listxattr(d, klist, size);
-|	if (error > 0) {
-|		if (size && copy_to_user(list, klist, error))
-|			error = -EFAULT;
-|	} else if (error == -ERANGE && size >= XATTR_LIST_MAX) {
-|		/* The file system tried to returned a list bigger
-|			than XATTR_LIST_MAX bytes. Not possible. */
-|		error = -E2BIG;
-|	}
-... our error can potentially already be -E2BIG, skipping this else-if
-and ending up at the same state as other errors.
-
-This whole copy_name() function could really be a one-line with some
-ternary statements embedded into a scnprintf() arg-list but I've opted
-to maintain some semblance of readability.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
----
- fs/hfsplus/xattr.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
-
-diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-index 9c9ff6b8c6f7..00351f566e9f 100644
---- a/fs/hfsplus/xattr.c
-+++ b/fs/hfsplus/xattr.c
-@@ -400,22 +400,13 @@ static int name_len(const char *xattr_name, int xattr_name_len)
- 	return len;
- }
- 
--static int copy_name(char *buffer, const char *xattr_name, int name_len)
-+static ssize_t copy_name(char *buffer, const char *xattr_name, int name_len)
- {
--	int len = name_len;
--	int offset = 0;
--
--	if (!is_known_namespace(xattr_name)) {
--		memcpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
--		offset += XATTR_MAC_OSX_PREFIX_LEN;
--		len += XATTR_MAC_OSX_PREFIX_LEN;
--	}
--
--	strncpy(buffer + offset, xattr_name, name_len);
--	memset(buffer + offset + name_len, 0, 1);
--	len += 1;
-+	if (!is_known_namespace(xattr_name))
-+		return scnprintf(buffer, name_len + XATTR_MAC_OSX_PREFIX_LEN,
-+				 "%s%s", XATTR_MAC_OSX_PREFIX, xattr_name);
- 
--	return len;
-+	return strscpy(buffer, xattr_name, name_len + 1);
- }
- 
- int hfsplus_setxattr(struct inode *inode, const char *name,
-
----
-base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
-change-id: 20240321-strncpy-fs-hfsplus-xattr-c-4ebfe67f4c6d
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
