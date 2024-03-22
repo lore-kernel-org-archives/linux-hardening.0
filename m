@@ -1,90 +1,119 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5074436
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 03:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20418F4FA;
+	Fri, 22 Mar 2024 08:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711078646; cv=none; b=nZyGVjtyyeBZKshhEsIkefAcV5a12d/vlkspZQ2u9PS9lPIjyArSbG774JDdaJznaxEiSbFUbC1REvly2FdlZlZDXbGeR/9YLUFvdXS23xB90s69kk7PW36HtrB1sCk5c8ajC5Uvn/Ks7WD6diJRwHmoT5YS17qSzRy8Mmeo2nk=
+	t=1711097119; cv=none; b=p4GIwa6GYYRWO5fdaETkqJNt132AJQXiyywbmSqvaC3PqvhNU/gIAXBXEOxbsSGzr+9m4NcjxqcsDy9szMEcbjqv4s8hpnMfTB5HlbezSyFTODQIRZ6gNWRVJ68Q1b1p15pnITlcn7nrHC1DgCLsZcxjhFWAGfiTRmJ5+cPEp8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711078646; c=relaxed/simple;
-	bh=YLj8/fFB3iR2BgqCqbaPVZ2Al9MIRcsccJSes/QGmTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YodQb4yPWzbGAzztqS+/kUTCFtC1f54bY476KA6GDv5XaCy7gDWa2iAO3gy2g/qyEnprmNCvEo0+yK+J9Ol431B0C7UMgdEMstlqHYC2MAtmso0fFqFqxMjaJqzmnfvnfJn8lDaY5QhG/2cN7YsNZ92g2P/uXuAX1/pHikfnKGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EzIwNX8G; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711097119; c=relaxed/simple;
+	bh=ffZPhfs8D27xRgmcskKdyiYjUqpVTZr1aOvEyUA6vso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lPqoFgbadgTpsyCfzDiRfy9itdwePWPDr53GpGXCETUN59JSAD2GuPA7yBU2eckCyXs4C31bmcpB2peClaJ7uYGsLxkgU6HCsbLhl99A3lULiO0+Ugma/wMKa+kjWCdSOy2QKqa/8ZZNHV1IODiVYUPTH9tzjcV/71OXRXt9GOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbaKmzLl; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EzIwNX8G"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6b54a28d0so1131533b3a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Mar 2024 20:37:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbaKmzLl"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41468f6d584so13689865e9.0;
+        Fri, 22 Mar 2024 01:45:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711078644; x=1711683444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bvbUMoqrd/dJEgf6JJhj0Yfu88Qiuvr2XtDQQz6GOro=;
-        b=EzIwNX8GeiJcJ1hOUdqmtPP4V2x8q4rPGfpOiVp/Z90eQbhuZjPYBCKzLE3wPg1nxH
-         5fB0yVZrwkFeT7ULTEa7Uc85r7/0BYEESnYIJb78rzA/1hIHDdtsnuHt362WGVHW9hBi
-         ndinLS/AXQLUtqzLo1C83Jo7P8GhyCJCfUHho=
+        d=gmail.com; s=20230601; t=1711097116; x=1711701916; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aB/vJcbosEWR8zB5L3DEigEI/JurQaOSkuKB+JwQ5ns=;
+        b=lbaKmzLlg2nu0ustifOqbb41eN4HhadLsNURw5rct8JP0Y4iM0/+mlAPI/XDSrm04N
+         uMzAFClP3s5Meuesrk4MTsbBUc9hRu03my5izW2KQ9LachCZq8V9fh2ChAvqkdOOh8DZ
+         rkQrfCR8mUFperhhyrngtOw/zY11yqEpCYp9jOr2pvXWnWiCxpV3gqqw47YL0E6+xugJ
+         51Ol8pIMg2GDEifFqRu0lYta41D5DjPvyrDdBAZM5u7xCSFVG/Hm1IlY4xsfS+gkt27u
+         UggpdkwlbaVYEs2odsgmDoD+BvXSVWV6AVm0XUG0bA6A1XJAhnOWgGd2u1JJ19r8jeGG
+         jhcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711078644; x=1711683444;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711097116; x=1711701916;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bvbUMoqrd/dJEgf6JJhj0Yfu88Qiuvr2XtDQQz6GOro=;
-        b=LNAwuQ94VLyeZDGs+K3TbpKcqVmebQSqphDH2afh++XkhB394zzgNJQFyKMcCrcaJ6
-         vIhOXSJgagIzO8a4xGLR5zLGeUxMbERtD+8BvIOuB/mSbv9/R0w27cpkq/9GlImZyz0g
-         A7dr/jJZXkQRivJdWpxvKE3AcU+fWjxW0KfG0gVoVJnoXrvHCUCDGCkOmri517M3QJB4
-         FKMUMy28r4MbNhmN/oOYoIApmBa1VDC9+7NTy/mPRHASywXRBTSD2Q+TynF5H5SbX7bI
-         9TJiUC1E5EdmPYu+lOVPLa1mTInxY8RbaZD+gt2T3YRAocD8lngD0FBKnrRXXp8cOnjx
-         CJGw==
-X-Forwarded-Encrypted: i=1; AJvYcCW34/6QBzWfsMyvBJO37S/n+DSSyqLkCRhllhzn5zXeIWiFapjnBLsSEXLzAxvyqqKswoRZfNyT9B67I7Ny3BTOqvoRwAg1tDtpFxB6AKs+
-X-Gm-Message-State: AOJu0YxCZTboIsITPaMSCmd8Y4bUI9dcbDPIPb3XxfpeDUmpWX3FI0yP
-	wfUv6v2S8hHWvtAYN7QmmS/pLpRRBp3rUkfg7YRMDq5Lm68fStt4rwep9DhC0Q==
-X-Google-Smtp-Source: AGHT+IG41XfP3twX3J+wXXnzuFUXhIFR5UFLmItPjSV3U1CEAEfvhq2txMf23N39MxgUbU8aWibB5g==
-X-Received: by 2002:a05:6a00:3cd3:b0:6e6:d018:4a91 with SMTP id ln19-20020a056a003cd300b006e6d0184a91mr1487397pfb.29.1711078644420;
-        Thu, 21 Mar 2024 20:37:24 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fn1-20020a056a002fc100b006e64ddfa71asm632078pfb.170.2024.03.21.20.37.23
+        bh=aB/vJcbosEWR8zB5L3DEigEI/JurQaOSkuKB+JwQ5ns=;
+        b=I2VXxpuF40cbIeHSRTOqxDJt1RRmsiAWftMdkLX/arsZ/Ek0BKW//5FHoLoPd6ZlDY
+         kDzg0P3Kg4GRwZaRm/L2zRlTEHiewYsLKYMgKzSMUe69uyhCPHvkFeKZfzsAeys4gwYJ
+         K5dYBpULQDveZVZflU1YTVdc5kxrkULXbR8AkqN+M0HlJwSPXoG9Ud3lEOBS+B+oyl4u
+         BrERqSsE1fG76olCcDzQlQwLBtPNMK+qMQ7eif5nlmAlo3bs28PfUIdjvfnEqQj5dB2E
+         xSpcA5L3p6CaSgNRLwYAbtrrvkpIP/EXhTuSlJNykWAbZO6QPd2EfspQ4rGysgCm3NEU
+         hGzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs170dzwEu5HXuqziu+f6nWrit+qUug+woGg6koKqycoz1bR+n4znoOELmf0bBPgJ7TuXHZGuRn7x2E6uz8OXrnSDbYOFI8EerwyCUdS4XyeIHpTWRSz8uuOJ5C4Cbu87ahO39k1Vn2IxVzCsV
+X-Gm-Message-State: AOJu0YwAcGIJ1gS/+Vq9jegl9suKf7j3uZcU1cZifuUz5MmHpWDbQNeM
+	N2PHDu5SHtNIt+x6R6CFRMw837usECRYc2/rsHBAY6V2XDz1JEjB
+X-Google-Smtp-Source: AGHT+IGNWGu79l5+n6UgalfjdRlSwKK4IUXhGbq63EVCwDx1ijXrLMW6zfg8Zyp7LMklbqsnyP5bpw==
+X-Received: by 2002:a05:600c:3ca8:b0:413:fea7:bd19 with SMTP id bg40-20020a05600c3ca800b00413fea7bd19mr1024404wmb.15.1711097115824;
+        Fri, 22 Mar 2024 01:45:15 -0700 (PDT)
+Received: from gmail.com (1F2EF04C.nat.pool.telekom.hu. [31.46.240.76])
+        by smtp.gmail.com with ESMTPSA id p21-20020a05600c359500b00414038b4d64sm2387878wmq.27.2024.03.22.01.45.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 20:37:23 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	gustavoars@kernel.org,
-	linux-hardening@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH] lkdtm/bugs: Improve warning message for compilers without counted_by support
-Date: Thu, 21 Mar 2024 20:37:19 -0700
-Message-Id: <171107863807.467843.12325988326531946471.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240321-lkdtm-improve-lack-of-counted_by-msg-v1-1-0fbf7481a29c@kernel.org>
-References: <20240321-lkdtm-improve-lack-of-counted_by-msg-v1-1-0fbf7481a29c@kernel.org>
+        Fri, 22 Mar 2024 01:45:15 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 22 Mar 2024 09:45:12 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	peterz@infradead.org, gregkh@linuxfoundation.org,
+	tony.luck@intel.com, adobriyan@gmail.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <Zf1FGI6E3wStJSQT@gmail.com>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
 
-On Thu, 21 Mar 2024 13:18:17 -0700, Nathan Chancellor wrote:
-> The current message for telling the user that their compiler does not
-> support the counted_by attribute in the FAM_BOUNDS test does not make
-> much sense either grammatically or semantically. Fix it to make it
-> correct in both aspects.
+
+* Kees Cook <keescook@chromium.org> wrote:
+
+> On Sun, 17 Mar 2024 23:05:47 +0800, Guixiong Wei wrote:
+> > The commit aaa8736370db ("x86, relocs: Ignore relocations in
+> > .notes section") only ignore .note section on print_absolute_relocs,
+> > but it also need to add on walk_relocs to avoid relocations in .note
+> > section.
+> > 
+> > 
 > 
+> Applied to for-next/hardening, thanks!
 > 
+> [1/1] x86, relocs: Ignore relocations in .notes section on walk_relocs
+>       https://git.kernel.org/kees/c/6ba438a29b5d
 
-Applied to for-next/hardening, thanks!
+Please don't - these are x86 patches, plus it contains an eyesore - see 
+below ...
 
-[1/1] lkdtm/bugs: Improve warning message for compilers without counted_by support
-      https://git.kernel.org/kees/c/8b93450af173
+Thanks,
 
-Take care,
+	Ingo
 
--- 
-Kees Cook
-
+ relocs.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+Index: tip/arch/x86/tools/relocs.c
+===================================================================
+--- tip.orig/arch/x86/tools/relocs.c
++++ tip/arch/x86/tools/relocs.c
+@@ -752,9 +752,8 @@ static void walk_relocs(int (*process)(s
+ 		 * values there are meant for pre-boot consumption (e.g.
+ 		 * startup_xen).
+ 		 */
+-		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++		if (sec_applies->shdr.sh_type == SHT_NOTE)
+ 			continue;
+-		}
+ 
+ 		sh_symtab = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
