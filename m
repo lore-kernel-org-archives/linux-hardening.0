@@ -1,172 +1,259 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3805C745C0;
-	Fri, 22 Mar 2024 19:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47A454789
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 21:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711136849; cv=none; b=DtwwojI1uD4v8f3DKgrr35s76zJC/Ao2HXP0Cs+dAw634ASWSEIan2EUpaserULDf8TabkWWjhGzdfqBo5hPelr4esiMfReMjdreumWdnVk9dBajeICEiA3AZs8pgUZyZU9tc5l8edKdfnO9ePMIwsDQmUDDHHwGvnTPxfr8feg=
+	t=1711143682; cv=none; b=uM+GgZ7GsoZHPKtDFNHkitUEo+IUR6NfLpi8qMWl+u32kSQwprxT45Ae4AOwuTJRmfDTgG5xnfi2XG8vGP5q6yB3Va3ggbjqMbA00Yvm2a5t3i2j6g50D+LpTxN6lAJzoBqZxV/6tf42L3Qz7EnZ7auHjkBy20J6Ll9sO/FbVFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711136849; c=relaxed/simple;
-	bh=nxEGXVhNhN4RVfE3d1n+2+C+HEvgFuhkK+1tNpRSEbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KoBldVl8oLJHSJy8zzlgj89x/5P1TibY5V2be6nfn4P8RmTt2dcUTd8orsDAygizjO3ZB6rkikbbUSgjDIfnfbel8+R8PZnouSWamnu9veFcPrcvErjFmjLxqzlO5TxLR0dzXvnv5sjGlUQP1wCcrsY6NDqB4D1Bi4fW4lsdk+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ckpGz2m1; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711143682; c=relaxed/simple;
+	bh=kCrIrLnYkyAUgNslNwqkr4zJyZbl2lNoyftR8tSDdlI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=k15wW0RfED8+UeVzYbPGUCoV0Apph4VyfY02OoMjAIzSzwwfqaIvrn1ujwWPiv4sAmLLp0yA6hO8+CYySAAzN20VuqVSk09eZxbCb2lrzCC+/M1TFflrUvh4A8fU5PDyKbSmwC2HDRe+GDts0LDwMdRHf4bM5/fms8WhBL/P5+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ICE2PxMJ; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ckpGz2m1"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9257640E01B5;
-	Fri, 22 Mar 2024 19:47:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kApiESXmhvFM; Fri, 22 Mar 2024 19:47:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711136839; bh=DmmHov9qZK91tSR+f8HXIJGfm9hhKvVNviRTerX3QXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ckpGz2m1aGeUUEDfnOnKk9xVdwdmhnREG+tzE5h8RE7AfMrFLNlH8UrsEgn3tJsWw
-	 fwHwEDhhLhMClv7vG/qKyFfIkAj9ywkLmCo9EtW74crm+v/Su7Q2aiVOdTLki0e13J
-	 rD37/jrKQKcQhccrjftN3UaozrDvndrCkf1MVmHmBtsuVtTcZjKSTopfG8m59coe/8
-	 fviSpb614HLGADaxdL8UNAfMQGeZ4Us5XO30RnkrH5mRO4Fbpnhg3leKvlVQCynmBq
-	 PBWjsyv0yQ3U49VWA/KoD1Xm9nInT6eYoCLpeY3HhpgOniBH8thYfd537GpzefKz9P
-	 ritHXTamlK42Zj4g3JB5gnuGA0oyKwKSORrQ7ZR0jSjERcD1ABzTT3jTYlCB5tFn7v
-	 oz/Mm1eSu511R0eO3TA4qAQjevxtDXIQAA9S0lzt153p9Le8SEmua6MDsP/Jx0Xtc0
-	 HBhEkxAuiYoywM446zI2Aimu6lYj2x92lrfm3Lyxn71emU55NuVvOaaEK08GltA1cN
-	 zNrHbN/oDiKz6PE8/KsWr0f34JXlgW2lRyVd19krBGdUDBrGGIY435NPP84Lv/pOmv
-	 wWa0MXIsFqi/ELXTRXAFXCDF2KL2umRKCi45DGWJlSmf1cZtYqsR64HI6DG22ULa/a
-	 wAxDiyGY+fVZpW/FlVazaCcs=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1637840E00B2;
-	Fri, 22 Mar 2024 19:47:05 +0000 (UTC)
-Date: Fri, 22 Mar 2024 20:46:58 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
-	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	gregkh@linuxfoundation.org, tony.luck@intel.com,
-	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
- walk_relocs
-Message-ID: <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
-References: <20240317150547.24910-1-weiguixiong@bytedance.com>
- <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
- <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
- <202403181644.690285D3@keescook>
- <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
- <202403190955.25E5E03E6@keescook>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ICE2PxMJ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso4288792276.1
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 14:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711143679; x=1711748479; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+/cK4VrLmTWPA6318VKJ4yfhkh1wxnx4NftuUd7wmwI=;
+        b=ICE2PxMJ0pRRE9X1RSeIBdCDt6WSzDrtld+1akYqJWklKvcRnOmDOFypiomn+wU9L/
+         txklE3jYvhd2Of7Yc6eIcNBb+HAeBqwoxf8sSpW+CjywW/V9/EM5OZ/sU/5IE4sJ89Ju
+         D1XgdHK/LBPqSyWr5ggtD4GDqCm8F2JsXJpMYi/RQPPcrEuhGpbXXIg83e1w+jm12iCC
+         2+A4BYxC+r/s4tpV7/soZQ1ZSiSW6gALAizaqUQ+uRtfIm7dXvwnHxmDp+wur6wJuhKI
+         KSr+2HIYZPaekav7/CZvlWg8UXf9TyNfm9Zq4hpxEKS/qDLGvbSrI0DkyBIFpPduZvJs
+         IFXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711143679; x=1711748479;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+/cK4VrLmTWPA6318VKJ4yfhkh1wxnx4NftuUd7wmwI=;
+        b=csX9npvUv5qZYO36eqq+R/ZZkA3UmS/7lUFAL+RHuCMcGDA3FJtqICJGzgO/YTIyyz
+         MRBctycP0TfX93gI9vO5W9Ffby5GhUDxJwXSAhuwXGpPpPmPwG0J+AKoS8yXtye9ndKb
+         F1Klw2pyyGCqVq268di5eywo4dOKu4Op8XUI+gmV3SOmBZxSSV5+JJjc1I1iOb4CowDc
+         FZUJLG5n9YaiF+379wME0ktWXy/jTNjiM163HF9st74/tghyK1R+LX05hUQW/3vUQ0XL
+         FRKSlTDP8F265bs7UV4Z1JLMwfsoU/CVtE0raPB+MJMFmXZKc0F6cH02IqsFJGodvqjL
+         TPWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWB567VS0pT3Wp3pUp18/+T1Ah0LHNkZTU9I2lz/CYepvIDyvMUasi1vSb0EOXhAX1TcxuRXywA9detopWIZETI+gPaEZj5axGt2uwcvZ7n
+X-Gm-Message-State: AOJu0YzzjdSlfXH0mAbURioy5GIOLZnsK96r1gjBsN6+WQjES40uVB9E
+	8gMHBUe7zKF6+ITxFBRLNPQK/r7A6PHBTRu0eJzpF3CGzCwJ2IFVFsJOfOXfRRusXQS7oq2IH2i
+	JPg51HX9tPqQg8hc64NxmOQ==
+X-Google-Smtp-Source: AGHT+IGV3RX2MGf0rzvIY2wtaSmKEHIRi46fd9KyFEpKIZfmeQmn0ftN16HAHO5u/WowlKQbiF7dNJQp8ZxVbYBPTA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:110c:b0:dc6:53c3:bcbd with
+ SMTP id o12-20020a056902110c00b00dc653c3bcbdmr191960ybu.7.1711143679706; Fri,
+ 22 Mar 2024 14:41:19 -0700 (PDT)
+Date: Fri, 22 Mar 2024 21:41:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202403190955.25E5E03E6@keescook>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAP76/WUC/x2MMQrDMAwAvxI0R+CoXdqvlAxGlhsttpFKSAj5e
+ 5xud3DcAS6m4vAeDjBZ1bWWLtM4AC+xfAU1dQcK9AwPIvSfFW47Zsdqd9AhceRFkPEVA2dKRCk K9EUzybr995/5PC+VZxzObgAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711143678; l=7412;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=kCrIrLnYkyAUgNslNwqkr4zJyZbl2lNoyftR8tSDdlI=; b=7c4BR7I5R869dYN+qXFqT6r2bEMyf5ENyhGKnZH0/dZJUA5NivWjOyavzCgNTjbK/3UXliywE
+ iH9vsjf384CC/WP6HVr6QX5YXoufyvayyHWPCuooJeA1MpLZu4LsnGo
+X-Mailer: b4 0.12.3
+Message-ID: <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
+Subject: [PATCH] orangefs: cleanup uses of strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>
+Cc: devel@lists.orangefs.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Mar 19, 2024 at 09:56:29AM -0700, Kees Cook wrote:
-> > Yes, please. Just send a Reviewed-by and it'll get picked up.
-> 
-> Okay, thanks!
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Dammit, how did this commit land upstream and in stable?!
+There is some care taken to ensure these destination buffers are
+NUL-terminated by bounding the strncpy()'s by ORANGEFS_NAME_MAX - 1 or
+ORANGEFS_MAX_SERVER_ADDR_LEN - 1. Instead, we can use the new 2-argument
+version of strscpy() to guarantee NUL-termination on the destination
+buffers while simplifying the code.
 
-Forgot to zap it from your tree and sent the branch to Linus anyway?
+Based on usage with printf-likes, we can see these buffers are expected
+to be NUL-terminated:
+|	gossip_debug(GOSSIP_NAME_DEBUG,
+|			"%s: doing lookup on %s under %pU,%d\n",
+|			__func__,
+|			new_op->upcall.req.lookup.d_name,
+|			&new_op->upcall.req.lookup.parent_refn.khandle,
+|			new_op->upcall.req.lookup.parent_refn.fs_id);
+...
+|	gossip_debug(GOSSIP_SUPER_DEBUG,
+|			"Attempting ORANGEFS Remount via host %s\n",
+|			new_op->upcall.req.fs_mount.orangefs_config_server);
 
-Kees, please refrain from taking tip patches in the future. You know how
-this works - get_maintainers.pl.
+NUL-padding isn't required for any of these destination buffers as
+they've all been zero-allocated with op_alloc() or kzalloc().
 
-Thx.
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
 
-Date: Fri, 22 Mar 2024 14:47:05 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: stable-commits@vger.kernel.org, keescook@chromium.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Patch "x86, relocs: Ignore relocations in .notes section" has been
- added to the 5.4-stable tree
-X-Mailer: git-send-email 2.43.0
-Message-ID: <20240322184705.144463-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Found with: $ rg "strncpy\("
+---
+ fs/orangefs/dcache.c |  4 +---
+ fs/orangefs/namei.c  | 26 ++++++++------------------
+ fs/orangefs/super.c  | 17 ++++++-----------
+ 3 files changed, 15 insertions(+), 32 deletions(-)
 
-This is a note to let you know that I've just added the patch titled
+diff --git a/fs/orangefs/dcache.c b/fs/orangefs/dcache.c
+index 8bbe9486e3a6..395a00ed8ac7 100644
+--- a/fs/orangefs/dcache.c
++++ b/fs/orangefs/dcache.c
+@@ -33,9 +33,7 @@ static int orangefs_revalidate_lookup(struct dentry *dentry)
+ 
+ 	new_op->upcall.req.lookup.sym_follow = ORANGEFS_LOOKUP_LINK_NO_FOLLOW;
+ 	new_op->upcall.req.lookup.parent_refn = parent->refn;
+-	strncpy(new_op->upcall.req.lookup.d_name,
+-		dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name);
+ 
+ 	gossip_debug(GOSSIP_DCACHE_DEBUG,
+ 		     "%s:%s:%d interrupt flag [%d]\n",
+diff --git a/fs/orangefs/namei.c b/fs/orangefs/namei.c
+index c9dfd5c6a097..200558ec72f0 100644
+--- a/fs/orangefs/namei.c
++++ b/fs/orangefs/namei.c
+@@ -41,8 +41,7 @@ static int orangefs_create(struct mnt_idmap *idmap,
+ 	fill_default_sys_attrs(new_op->upcall.req.create.attributes,
+ 			       ORANGEFS_TYPE_METAFILE, mode);
+ 
+-	strncpy(new_op->upcall.req.create.d_name,
+-		dentry->d_name.name, ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.create.d_name, dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+ 
+@@ -137,8 +136,7 @@ static struct dentry *orangefs_lookup(struct inode *dir, struct dentry *dentry,
+ 		     &parent->refn.khandle);
+ 	new_op->upcall.req.lookup.parent_refn = parent->refn;
+ 
+-	strncpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name);
+ 
+ 	gossip_debug(GOSSIP_NAME_DEBUG,
+ 		     "%s: doing lookup on %s under %pU,%d\n",
+@@ -192,8 +190,7 @@ static int orangefs_unlink(struct inode *dir, struct dentry *dentry)
+ 		return -ENOMEM;
+ 
+ 	new_op->upcall.req.remove.parent_refn = parent->refn;
+-	strncpy(new_op->upcall.req.remove.d_name, dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.remove.d_name, dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op, "orangefs_unlink",
+ 				get_interruptible_flag(inode));
+@@ -247,10 +244,8 @@ static int orangefs_symlink(struct mnt_idmap *idmap,
+ 			       ORANGEFS_TYPE_SYMLINK,
+ 			       mode);
+ 
+-	strncpy(new_op->upcall.req.sym.entry_name,
+-		dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
+-	strncpy(new_op->upcall.req.sym.target, symname, ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.sym.entry_name, dentry->d_name.name);
++	strscpy(new_op->upcall.req.sym.target, symname);
+ 
+ 	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+ 
+@@ -324,8 +319,7 @@ static int orangefs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+ 	fill_default_sys_attrs(new_op->upcall.req.mkdir.attributes,
+ 			      ORANGEFS_TYPE_DIRECTORY, mode);
+ 
+-	strncpy(new_op->upcall.req.mkdir.d_name,
+-		dentry->d_name.name, ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.mkdir.d_name, dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+ 
+@@ -405,12 +399,8 @@ static int orangefs_rename(struct mnt_idmap *idmap,
+ 	new_op->upcall.req.rename.old_parent_refn = ORANGEFS_I(old_dir)->refn;
+ 	new_op->upcall.req.rename.new_parent_refn = ORANGEFS_I(new_dir)->refn;
+ 
+-	strncpy(new_op->upcall.req.rename.d_old_name,
+-		old_dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
+-	strncpy(new_op->upcall.req.rename.d_new_name,
+-		new_dentry->d_name.name,
+-		ORANGEFS_NAME_MAX - 1);
++	strscpy(new_op->upcall.req.rename.d_old_name, old_dentry->d_name.name);
++	strscpy(new_op->upcall.req.rename.d_new_name, new_dentry->d_name.name);
+ 
+ 	ret = service_operation(new_op,
+ 				"orangefs_rename",
+diff --git a/fs/orangefs/super.c b/fs/orangefs/super.c
+index 34849b4a3243..fb4d09c2f531 100644
+--- a/fs/orangefs/super.c
++++ b/fs/orangefs/super.c
+@@ -253,9 +253,8 @@ int orangefs_remount(struct orangefs_sb_info_s *orangefs_sb)
+ 	new_op = op_alloc(ORANGEFS_VFS_OP_FS_MOUNT);
+ 	if (!new_op)
+ 		return -ENOMEM;
+-	strncpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+-		orangefs_sb->devname,
+-		ORANGEFS_MAX_SERVER_ADDR_LEN);
++	strscpy(new_op->upcall.req.fs_mount.orangefs_config_server,
++		orangefs_sb->devname);
+ 
+ 	gossip_debug(GOSSIP_SUPER_DEBUG,
+ 		     "Attempting ORANGEFS Remount via host %s\n",
+@@ -400,8 +399,7 @@ static int orangefs_unmount(int id, __s32 fs_id, const char *devname)
+ 		return -ENOMEM;
+ 	op->upcall.req.fs_umount.id = id;
+ 	op->upcall.req.fs_umount.fs_id = fs_id;
+-	strncpy(op->upcall.req.fs_umount.orangefs_config_server,
+-	    devname, ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
++	strscpy(op->upcall.req.fs_umount.orangefs_config_server, devname);
+ 	r = service_operation(op, "orangefs_fs_umount", 0);
+ 	/* Not much to do about an error here. */
+ 	if (r)
+@@ -494,9 +492,7 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
+ 	if (!new_op)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	strncpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+-		devname,
+-		ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
++	strscpy(new_op->upcall.req.fs_mount.orangefs_config_server, devname);
+ 
+ 	gossip_debug(GOSSIP_SUPER_DEBUG,
+ 		     "Attempting ORANGEFS Mount via host %s\n",
+@@ -543,9 +539,8 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
+ 	 * on successful mount, store the devname and data
+ 	 * used
+ 	 */
+-	strncpy(ORANGEFS_SB(sb)->devname,
+-		devname,
+-		ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
++	strscpy(ORANGEFS_SB(sb)->devname, devname);
++
+ 
+ 	/* mount_pending must be cleared */
+ 	ORANGEFS_SB(sb)->mount_pending = 0;
 
-    x86, relocs: Ignore relocations in .notes section
+---
+base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
+change-id: 20240322-strncpy-fs-orangefs-dcache-c-9a0cf2d22dae
 
-to the 5.4-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-The filename of the patch is:
-     x86-relocs-ignore-relocations-in-.notes-section.patch
-and it can be found in the queue-5.4 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-
-commit 91aa857ccbd1212a23cd80bb45f71715f2db7144
-Author: Kees Cook <keescook@chromium.org>
-Date:   Tue Feb 27 09:51:12 2024 -0800
-
-    x86, relocs: Ignore relocations in .notes section
-    
-    [ Upstream commit aaa8736370db1a78f0e8434344a484f9fd20be3b ]
-    
-    When building with CONFIG_XEN_PV=y, .text symbols are emitted into
-    the .notes section so that Xen can find the "startup_xen" entry point.
-    This information is used prior to booting the kernel, so relocations
-    are not useful. In fact, performing relocations against the .notes
-    section means that the KASLR base is exposed since /sys/kernel/notes
-    is world-readable.
-    
-    To avoid leaking the KASLR base without breaking unprivileged tools that
-    are expecting to read /sys/kernel/notes, skip performing relocations in
-    the .notes section. The values readable in .notes are then identical to
-    those found in System.map.
-    
-    Reported-by: Guixiong Wei <guixiongwei@gmail.com>
-    Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
-    Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
-    Fixes: da1a679cde9b ("Add /sys/kernel/notes")
-    Reviewed-by: Juergen Gross <jgross@suse.com>
-    Signed-off-by: Kees Cook <keescook@chromium.org>
-    Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index 1c3a1962cade6..0043fd374a62f 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -596,6 +596,14 @@ static void print_absolute_relocs(void)
- 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
- 			continue;
- 		}
-+		/*
-+		 * Do not perform relocations in .notes section; any
-+		 * values there are meant for pre-boot consumption (e.g.
-+		 * startup_xen).
-+		 */
-+		if (sec_applies->shdr.sh_type == SHT_NOTE) {
-+			continue;
-+		}
- 		sh_symtab  = sec_symtab->symtab;
- 		sym_strtab = sec_symtab->link->strtab;
- 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
