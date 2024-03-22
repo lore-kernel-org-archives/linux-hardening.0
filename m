@@ -1,112 +1,95 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECD882C67
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 23:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ED2782C67;
+	Fri, 22 Mar 2024 23:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711150816; cv=none; b=baorSkZ2VcYZmKDhd/diw0CXHrijuUK+YrBPl+LVLKcNLdMnU4pGu55agymAxTtL7DvMM1jplS4PJjwiKcrB0g2DCdcqPK2ahsLf/kNAcpruDuXEPYVlQSOANsNxSUscUoPUX/Ryv/igncicxOjNbliz6XHY3vfWSruBLRLvHzY=
+	t=1711150860; cv=none; b=dcJGmi1KgqoBx4QRskqK4lllgSfd1/Pqrp6yqV8jbFejS73PLN7aM+xayUcdWVBWBEcCM/xV2iEtqHN1dWURZsi6+vKl3Os2Ntz9L/olr6w6JrU6BqLEmxPvfCkwu6PEj3HTAkjts2my7uqUS4+SEw/+JwbZqhgz8B1p+6udEYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711150816; c=relaxed/simple;
-	bh=eH0fgxAZoZKG2nG1if5jwZQ6PXT1CXjSRf2Ajj7jhHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yta18KXSkXYL1ZZhkHf80Fr5jgeMjesq0YEITXggN8iPhhWcgU403yjQpmlNBM93CWnELBW+og9SHhWvy4ahFr82t+znL48Wat0caZwDXrfuAOzA8TTDFB75rusf48MBztD0ITdhyEg52jzc9aCUNBBn20gbqi34WqydywWdFm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NgDXZcnd; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NgDXZcnd"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e8f76f18d3so1966842b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 16:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711150814; x=1711755614; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=01sC/xb6KwRYYgbeCF1XVs83Gl9AibN3LKeqo3B8YE0=;
-        b=NgDXZcndmcTAqMjNZ8pZI5hhEanPOYZuuxwMQPLgril8EPJ+JCIQ2bu040ZgWjHGBU
-         m6z6Kn0w0oS9MLsLzwVthTYOYHikywiY/AZOFSf5SJpGFzTBIll+SEBMjMCUUf+N2oE3
-         A4RrnIhz6lV+lHq+9ow5WAE27r9QLWk6ktpDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711150814; x=1711755614;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=01sC/xb6KwRYYgbeCF1XVs83Gl9AibN3LKeqo3B8YE0=;
-        b=fEWwrT0Q+KBx/76v3bcgHiREMjdUSq7aNOHIOJBFKcjKY86EKwKEy1NJBfEkCFIDzd
-         +zIEsx2EdsmPTZSpiw/Lt4Uug74yoTpjcp/ZHJbHi4Lf808hs0U8bpWGYQuGsnGPYJ8k
-         PYTCg7NQnAiJO0Z+WERvRW9+gz2ep9Zm2462QIbhpqfjI7n7OkJUQyd1IX1FvlxPZGlg
-         w3mFFPNQ3Wz7/E6/jrxPxmrQa/h1D+UsEEcn9OZJNK1Aii2qNj8XaOXYhRR2LSRkT6HI
-         Fnn/e8hpqbh3JPvHGtwOzNstodn5zwSbpRnFnTeXVC1X+7BbOybtpL1Aq0bjhCnOzt49
-         HF4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUaVnOKwM8uU7JZQ6NAZYcUIl7eu+VAV9BeDM+tqVMe5K0j1t1nat+PYO/rd/Wmz4b1MlSHXGz4RW7OBQUQSbBeyKNrxQCNn9vQWMjiua0C
-X-Gm-Message-State: AOJu0Yx/xhqztPKd7KdjTZn+e/e2kPQ+/pb7TnJy/a+aXsSnz/Vo5ISG
-	NODT69JSBabPd8YrNpApCs1JeJBKotSh+CWMvUR1ehdrAlyXxRVhSOPNa7iXE56QZYiWtVhmnsw
-	=
-X-Google-Smtp-Source: AGHT+IEO+1pDKccyjXXftW8MfSWlcPCA31OAxKRwJX85EE5gxj3s3ysAHiqZdwAdKfFcLHWDAhqeiw==
-X-Received: by 2002:a05:6a00:4b13:b0:6e7:1cd9:c032 with SMTP id kq19-20020a056a004b1300b006e71cd9c032mr592380pfb.6.1711150813958;
-        Fri, 22 Mar 2024 16:40:13 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q18-20020a62e112000000b006e8f75d3b07sm310517pfh.181.2024.03.22.16.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 16:40:12 -0700 (PDT)
-Date: Fri, 22 Mar 2024 16:40:11 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
-	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	gregkh@linuxfoundation.org, tony.luck@intel.com,
-	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
- walk_relocs
-Message-ID: <202403221622.6EA43547F@keescook>
-References: <20240317150547.24910-1-weiguixiong@bytedance.com>
- <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
- <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
- <202403181644.690285D3@keescook>
- <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
- <202403190955.25E5E03E6@keescook>
- <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
+	s=arc-20240116; t=1711150860; c=relaxed/simple;
+	bh=zuvDOu0/rlT7v5UCGQJmr8VHmsa8qBfwFGOMkQvldK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E5ka5Jz0iMw55ZTDdlCaqqx561BVZE2BSn1i0dXMGuQgiC3ix4pJgj5ET1UghlqM9tM6uTUD6nfl2jgw0W9iHtnIF+02psFtusY4b0FvqtawxuxlVdJd1SyUSFnOjeVxC1pohf03lAi7N2zXSVUmN3LUydbEPKcdMNmYPJLGtqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56537DA7;
+	Fri, 22 Mar 2024 16:41:30 -0700 (PDT)
+Received: from [172.27.42.98] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 202903F762;
+	Fri, 22 Mar 2024 16:40:55 -0700 (PDT)
+Message-ID: <2ebe2ea5-b107-4020-8e60-ff8cf43a3aab@arm.com>
+Date: Fri, 22 Mar 2024 18:40:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Mark Brown <broonie@kernel.org>, Guo Hui <guohui@uniontech.com>,
+ Manoj.Iyer@arm.com, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, James Yang <james.yang@arm.com>,
+ Shiyou Huang <shiyou.huang@arm.com>
+References: <20240305221824.3300322-1-jeremy.linton@arm.com>
+ <20240305221824.3300322-2-jeremy.linton@arm.com>
+ <202403051526.0BE26F99E@keescook>
+ <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
+ <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
+ <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
+ <db7dfa2d-c7c6-4b10-981a-a7ecc87c8541@arm.com>
+ <acfc522a-5162-4b33-9d6c-1e25d0c44a71@app.fastmail.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <acfc522a-5162-4b33-9d6c-1e25d0c44a71@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 22, 2024 at 08:46:58PM +0100, Borislav Petkov wrote:
-> On Tue, Mar 19, 2024 at 09:56:29AM -0700, Kees Cook wrote:
-> > > Yes, please. Just send a Reviewed-by and it'll get picked up.
-> > 
-> > Okay, thanks!
+Hi,
+
+Sorry about the delay here, PTO and I actually wanted to verify my 
+assumptions.
+
+On 3/8/24 14:29, Arnd Bergmann wrote:
+> On Fri, Mar 8, 2024, at 17:49, Jeremy Linton wrote:
+>> On 3/7/24 05:10, Arnd Bergmann wrote:
+>>>
+>>> I'm not sure I understand the logic. Do you mean that accessing
+>>> CNTVCT itself is slow, or that reseeding based on CNTVCT is slow
+>>> because of the overhead of reseeding?
+>>
+>> Slow, as in, its running at a much lower frequency than a cycle counter.
 > 
-> Dammit, how did this commit land upstream and in stable?!
+> Ok, I see. Would it be possible to use PMEVCNTR0 instead?
 
-There are 2 related commits. This one ("... on walk_relocs") isn't in
-Linus's tree nor stable.
+So, I presume you actually mean PMCCNTR_EL0 because I don't see the 
+point of a dedicated event, although maybe...
 
-(Thank you Ingo for taking it now.)
+So, the first and maybe largest problem is the PMxxx registers are all 
+optional because the PMU is optional! Although, they are strongly 
+recommended and most (AFAIK) machines do implement them. So, maybe if 
+its just using a cycle counter to dump some entropy into rnd_state it 
+becomes a statement that kstack randomization is slower or unsupported 
+if there isn't a PMU?
 
-> Forgot to zap it from your tree and sent the branch to Linus anyway?
-> 
-> Kees, please refrain from taking tip patches in the future. You know how
-> this works - get_maintainers.pl.
+But then we have to basically enable the PMU cycle counter globally, 
+which requires reworking how it works, because the cycle counter is 
+enabled/disabled and reset on the fly depending on whether the user is 
+trying to profile something. So, I have hacked that up, and it appears 
+to be working, although i'm not sure what kind of interaction will 
+happen with KVM yet.
 
-The earlier patch, commit aaa8736370db ("x86, relocs: Ignore relocations
-in .notes section"), landed via my tree. It was sent out on Feb 22nd
-(v1[1]) and got a suggestion from HPA and a Review from Juergen Gross.
-I sent v2 Feb 27th[2] and it sat ignored for two weeks. Since it was a
-10 year old kernel address exposure, I sent it to Linus on Mar 12th[3].
+But I guess the larger question is whether its worth changing the PMU 
+behavior for this?
 
--Kees
 
-[1] https://lore.kernel.org/all/20240222171840.work.027-kees@kernel.org/
-[2] https://lore.kernel.org/all/20240227175746.it.649-kees@kernel.org/
-[3] https://lore.kernel.org/lkml/202403111702.828C918E55@keescook/
+Thanks,
 
--- 
-Kees Cook
+
