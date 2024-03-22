@@ -1,109 +1,172 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C4D47796
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Mar 2024 14:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3805C745C0;
+	Fri, 22 Mar 2024 19:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711117013; cv=none; b=f+hH2hDRGe/kTM/Leiq4o8b6qT5egrSDrWP72Q7hQxE19DznLRRQnVgIykdqOJwLHMqCppx4NoTQ6VqcJ9pTSQPeKB6a0qtv+ABDv3D2yc9nkS4O7zTgTFz3sG739sF6q2Cnz9KHKuSD3ya2ZU7QgDh5bFK2MQzJiwgAyOt1/dA=
+	t=1711136849; cv=none; b=DtwwojI1uD4v8f3DKgrr35s76zJC/Ao2HXP0Cs+dAw634ASWSEIan2EUpaserULDf8TabkWWjhGzdfqBo5hPelr4esiMfReMjdreumWdnVk9dBajeICEiA3AZs8pgUZyZU9tc5l8edKdfnO9ePMIwsDQmUDDHHwGvnTPxfr8feg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711117013; c=relaxed/simple;
-	bh=gTQrp4Js3OxUcPX+M7h8O2IyGN5Wup3eAf2X2EQJk+g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=p4BqrkHgrxQjJiwvFGe9qcbHqG+cpgoDUts7+Hi1jDB8RXgUnxYsjJ8E4XBwTfpZDRq9Fw28gLx2+B0/ybBk8e3Vy1gOxQNlQ0ijHdfxfZaQSar2gFjk5vh3JhQivgAOav4QyUnjYm1U+TWX0093uYUDiZBdBsoJK4sqMM2buJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-11-17hD1aE4NWuU9zNj5esXGg-1; Fri, 22 Mar 2024 14:16:41 +0000
-X-MC-Unique: 17hD1aE4NWuU9zNj5esXGg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 22 Mar
- 2024 14:16:15 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 22 Mar 2024 14:16:15 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Russell King' <linux@armlinux.org.uk>
-CC: Ard Biesheuvel <ardb@kernel.org>, Jiangfeng Xiao
-	<xiaojiangfeng@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"keescook@chromium.org" <keescook@chromium.org>, "haibo.li@mediatek.com"
-	<haibo.li@mediatek.com>, "angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "amergnat@baylibre.com"
-	<amergnat@baylibre.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "douzhaolei@huawei.com"
-	<douzhaolei@huawei.com>, "gustavoars@kernel.org" <gustavoars@kernel.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "kepler.chenxin@huawei.com"
-	<kepler.chenxin@huawei.com>, "kirill.shutemov@linux.intel.com"
-	<kirill.shutemov@linux.intel.com>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "nixiaoming@huawei.com"
-	<nixiaoming@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"wangbing6@huawei.com" <wangbing6@huawei.com>, "wangfangpeng1@huawei.com"
-	<wangfangpeng1@huawei.com>, "jannh@google.com" <jannh@google.com>,
-	"willy@infradead.org" <willy@infradead.org>
-Subject: RE: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Topic: [PATCH v2] ARM: unwind: improve unwinders for noreturn case
-Thread-Index: AQHae3ROEuI+AaCprEesIWGaAOB7ebFB9uHAgADsd8GAAJnLsIAACSyAgABHz+A=
-Date: Fri, 22 Mar 2024 14:16:15 +0000
-Message-ID: <8f12147ee3cf4bbd8fc980821ae1deac@AcuMS.aculab.com>
-References: <1710906278-23851-1-git-send-email-xiaojiangfeng@huawei.com>
- <ZfqiD8Yw0oOVHW/p@shell.armlinux.org.uk>
- <84a57ca8-8963-ca24-8bd1-ddc5c33bf4da@huawei.com>
- <Zfs7sT6Pxy5yjnPC@shell.armlinux.org.uk>
- <bad25937-fc98-8e11-4279-ab6b3a727c1f@huawei.com>
- <bbcca1e205384cf0b42236e17f3969f7@AcuMS.aculab.com>
- <ZfwYx/8k8FVONg6+@shell.armlinux.org.uk>
- <CAMj1kXG2EGvgGuV-K7h5qDVJeLMd5hkq8GzigzCRzh9Z8cgyWw@mail.gmail.com>
- <ZfzMFv3zmYY36l9u@shell.armlinux.org.uk>
- <2b2993fb215c4a5abd7d77ff1c984113@AcuMS.aculab.com>
- <Zf1UyxlDf/oCjXxr@shell.armlinux.org.uk>
-In-Reply-To: <Zf1UyxlDf/oCjXxr@shell.armlinux.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1711136849; c=relaxed/simple;
+	bh=nxEGXVhNhN4RVfE3d1n+2+C+HEvgFuhkK+1tNpRSEbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KoBldVl8oLJHSJy8zzlgj89x/5P1TibY5V2be6nfn4P8RmTt2dcUTd8orsDAygizjO3ZB6rkikbbUSgjDIfnfbel8+R8PZnouSWamnu9veFcPrcvErjFmjLxqzlO5TxLR0dzXvnv5sjGlUQP1wCcrsY6NDqB4D1Bi4fW4lsdk+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ckpGz2m1; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ckpGz2m1"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9257640E01B5;
+	Fri, 22 Mar 2024 19:47:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kApiESXmhvFM; Fri, 22 Mar 2024 19:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1711136839; bh=DmmHov9qZK91tSR+f8HXIJGfm9hhKvVNviRTerX3QXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ckpGz2m1aGeUUEDfnOnKk9xVdwdmhnREG+tzE5h8RE7AfMrFLNlH8UrsEgn3tJsWw
+	 fwHwEDhhLhMClv7vG/qKyFfIkAj9ywkLmCo9EtW74crm+v/Su7Q2aiVOdTLki0e13J
+	 rD37/jrKQKcQhccrjftN3UaozrDvndrCkf1MVmHmBtsuVtTcZjKSTopfG8m59coe/8
+	 fviSpb614HLGADaxdL8UNAfMQGeZ4Us5XO30RnkrH5mRO4Fbpnhg3leKvlVQCynmBq
+	 PBWjsyv0yQ3U49VWA/KoD1Xm9nInT6eYoCLpeY3HhpgOniBH8thYfd537GpzefKz9P
+	 ritHXTamlK42Zj4g3JB5gnuGA0oyKwKSORrQ7ZR0jSjERcD1ABzTT3jTYlCB5tFn7v
+	 oz/Mm1eSu511R0eO3TA4qAQjevxtDXIQAA9S0lzt153p9Le8SEmua6MDsP/Jx0Xtc0
+	 HBhEkxAuiYoywM446zI2Aimu6lYj2x92lrfm3Lyxn71emU55NuVvOaaEK08GltA1cN
+	 zNrHbN/oDiKz6PE8/KsWr0f34JXlgW2lRyVd19krBGdUDBrGGIY435NPP84Lv/pOmv
+	 wWa0MXIsFqi/ELXTRXAFXCDF2KL2umRKCi45DGWJlSmf1cZtYqsR64HI6DG22ULa/a
+	 wAxDiyGY+fVZpW/FlVazaCcs=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1637840E00B2;
+	Fri, 22 Mar 2024 19:47:05 +0000 (UTC)
+Date: Fri, 22 Mar 2024 20:46:58 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	gregkh@linuxfoundation.org, tony.luck@intel.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+ <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
+ <202403181644.690285D3@keescook>
+ <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+ <202403190955.25E5E03E6@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202403190955.25E5E03E6@keescook>
 
-...
-> Whereas we already provide an abort() function because iirc the
-> compiler used to emit branches to that due to noreturn functions. If
-> correct, there's previous convention for doing this - and abort() is
-> still exists in the kernel and in userspace since it's part of ANSI
-> C. This would be a more reliable and portable solution, but probably
-> not for embedded platforms - and that's probably why it got removed.
+On Tue, Mar 19, 2024 at 09:56:29AM -0700, Kees Cook wrote:
+> > Yes, please. Just send a Reviewed-by and it'll get picked up.
+> 
+> Okay, thanks!
 
-Wouldn't you want it to do a 'bl abort' so that you could do a backtrace
-to find out which 'noreturn' function had returned?
+Dammit, how did this commit land upstream and in stable?!
 
-But that leaves you with another 'noreturn' function that you have
-difficulty generating a backtrace from.
+Forgot to zap it from your tree and sent the branch to Linus anyway?
 
-So you'd need a compiler option to specify what to put there.
-I'd suspect linux would like something that generates an 'undefined
-instruction' trap - since that would be expected to fault with the
-saved PC pointing to the instruction itself (but architectures may vary).
+Kees, please refrain from taking tip patches in the future. You know how
+this works - get_maintainers.pl.
 
-'One size' definitely doesn't 'fit all' :-)
+Thx.
 
-=09David
+Date: Fri, 22 Mar 2024 14:47:05 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: stable-commits@vger.kernel.org, keescook@chromium.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Patch "x86, relocs: Ignore relocations in .notes section" has been
+ added to the 5.4-stable tree
+X-Mailer: git-send-email 2.43.0
+Message-ID: <20240322184705.144463-1-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+This is a note to let you know that I've just added the patch titled
 
+    x86, relocs: Ignore relocations in .notes section
+
+to the 5.4-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     x86-relocs-ignore-relocations-in-.notes-section.patch
+and it can be found in the queue-5.4 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+
+commit 91aa857ccbd1212a23cd80bb45f71715f2db7144
+Author: Kees Cook <keescook@chromium.org>
+Date:   Tue Feb 27 09:51:12 2024 -0800
+
+    x86, relocs: Ignore relocations in .notes section
+    
+    [ Upstream commit aaa8736370db1a78f0e8434344a484f9fd20be3b ]
+    
+    When building with CONFIG_XEN_PV=y, .text symbols are emitted into
+    the .notes section so that Xen can find the "startup_xen" entry point.
+    This information is used prior to booting the kernel, so relocations
+    are not useful. In fact, performing relocations against the .notes
+    section means that the KASLR base is exposed since /sys/kernel/notes
+    is world-readable.
+    
+    To avoid leaking the KASLR base without breaking unprivileged tools that
+    are expecting to read /sys/kernel/notes, skip performing relocations in
+    the .notes section. The values readable in .notes are then identical to
+    those found in System.map.
+    
+    Reported-by: Guixiong Wei <guixiongwei@gmail.com>
+    Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
+    Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
+    Fixes: da1a679cde9b ("Add /sys/kernel/notes")
+    Reviewed-by: Juergen Gross <jgross@suse.com>
+    Signed-off-by: Kees Cook <keescook@chromium.org>
+    Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 1c3a1962cade6..0043fd374a62f 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -596,6 +596,14 @@ static void print_absolute_relocs(void)
+ 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+ 			continue;
+ 		}
++		/*
++		 * Do not perform relocations in .notes section; any
++		 * values there are meant for pre-boot consumption (e.g.
++		 * startup_xen).
++		 */
++		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++			continue;
++		}
+ 		sh_symtab  = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
+ 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
