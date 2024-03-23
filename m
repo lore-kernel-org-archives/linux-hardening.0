@@ -1,325 +1,104 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99E9C129
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Mar 2024 07:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CE9DDC5;
+	Sat, 23 Mar 2024 10:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711179460; cv=none; b=K0dAolXhYkiNuLndoahzmFQ9HvOGyPDoI2IfPTCan2WNdCnDPYshoIacrHMWRPSETUZ2zD4z/FkMSQpJ851idkKS6v8lXFp5MtWOjxcsZLto5Hdn2qhU1OqFIOeBO7vLZw4XvSrQ9Kjfd7c2roiV9f6zltPG9qOMCNu+ZSaBQ/s=
+	t=1711190337; cv=none; b=N9/mcA30u+GTGya8aKhPSZTWNv1Ewen+djEDbT3fimw2x1Io1+J5Zqml+T8ivKXK7A3uA9/QKDpYl8CFYxyZXPjnBImtKDMX+rI1oJ/GgIGd3duZ9P5UreIqF6cVu4CtIwLE2pzFVkh8ZBoHfonmccvoNqtH6LEAeZhz/xMxAZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711179460; c=relaxed/simple;
-	bh=Bd3WPaparUNyt8tsTWkBFYGOmkart9gRuZklHmhgyOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LaWhagFTpBXh1ioJEZJfEn5qSgL1yslVhs2k6V0/NPPzym5KSi9GLIUB1LRgK9vDaqSJ++9IazzSYoXnPQE7I+MjkayM4/HSY+NPoylFp8FtyFLPVQhfh0QXF4N2zafXYxVmuRug0x+kWJReIB8GXQ8owUVmG2z7JKYPO2DW794=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h8NzQyRw; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711190337; c=relaxed/simple;
+	bh=418qgCaLlXO3MPU6Ka6LiclNSXYM4S3ZOWBDZXvKklI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FYLqlSRUl5XkeCjOz8MZIhtcdPQshNyGsDNdZyK8AeL2UCPfGL53p323D1XgNcyTGE1hcKJ9Xlqs6GBVcbhhCVRGcD/mIaDcVzc+nPMJNUkwN3jJ55CSVCrmAGb/yAh1L1Qy7fcGfwyJu6K81dNmLVfnv9W2cBkW/zbpYone2+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=L4VqmnLZ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h8NzQyRw"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56bb5b9ab89so3026a12.1
-        for <linux-hardening@vger.kernel.org>; Sat, 23 Mar 2024 00:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711179456; x=1711784256; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kWoiVgdx/8Q3C9gU6CmqabIMg6RA9o7dW0nFfO/GTfU=;
-        b=h8NzQyRwj5BRniATnaeXZ5cYtEBK8ybWT8jH7hdMXJDkyut6wSjIud+9B3VaH1xLe6
-         ZmKfACrHkx48RDw95QyaG5CbwdQORBbuys4sI8e1tjwWROM0iswWISLMrSGX0W4KWyn/
-         GOroKp8DhPTP3uUUo2AgwQhyRmUZwbRKf4WRLQ/DvnWAV5C6XImxbRunTppCpthITOl0
-         aa/UasJq5KfbFsiymS/R0kWOfpBt75CcsALn5Uw01Dv76GEK1pnMFoU0uBtvM7QchcvU
-         pexhONvdsYqlAJEAIqugrs8QZAe82trg+MlgHzskmjRXKkfi2iuzHbkeazS6PEXIZjUu
-         AU4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711179456; x=1711784256;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kWoiVgdx/8Q3C9gU6CmqabIMg6RA9o7dW0nFfO/GTfU=;
-        b=kpucq9WRmNScZoj0YLKE9rVnljnFkG0tjruW2YduBW1sa/nl0tsj+qUWLZZFVkLmgO
-         ptsyu8ReAvhoBJkACigkDnZBfoGJwxaci6dGIuR9CGBSY5vPjI3sAO/VrdY9SNYRtKs8
-         OoqXck5NCKkNubUMYE5C+ErWWy7ZZKodCnucQjak4Y3pHiFTRsd4NaPWiNCp+c22Aw0O
-         v8O1rmi5ibjrhkMbdJKBFmx6YOsvtAvDqY+Wsd+V+axkbi4ocd5B9Rfx/7HM3nRl2Oqr
-         PePsQvb6mY9IwL6zgaban3ONab7IWrZWCgn0EmC0Gh2sreji3NnkotQ0ISLZIn6WSiD+
-         z5CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7vrg0P5eqVmBtF/CxbYUskLPUzNwrTYWq3Xk0mb/6+tkLJ1dIJckC3eo8F9kV1fGwx5+ictx9lfS3sluRQwrJ01IeNkbsjUs8mSGVq7Hj
-X-Gm-Message-State: AOJu0Yxk775F88VhML7MpkjlxLlbR7t27vjx5C+d3wj2pv3lueE4NQlD
-	yqw2emwLWCSC9DZSTImBPQuLNhcFu+XEJ3mtOruIImVxnDkEjA9n895R/Y4xPvRHmmASnTJcXes
-	HQwSJJDR9n56d4h36NJXUv9UcWtS7OAMVFsmF
-X-Google-Smtp-Source: AGHT+IHoSCOy0iQP/pMF3d7tGchN3NXJm8dNECET/DoxfxKmnGUQPfY7JLX3nKLMol3Kg4hkIRlrgYhoFRIcHE3aVjY=
-X-Received: by 2002:a05:6402:612:b0:56b:fc63:5558 with SMTP id
- n18-20020a056402061200b0056bfc635558mr8005edv.5.1711179455724; Sat, 23 Mar
- 2024 00:37:35 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="L4VqmnLZ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7E99040E01A0;
+	Sat, 23 Mar 2024 10:38:51 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fPnPB3Hhg2o7; Sat, 23 Mar 2024 10:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1711190328; bh=4sdIsH0QNiHyOSUq6kRcc10Kjsh94zZ4I2nRDHEZGmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L4VqmnLZZQqifJ3JvA4Su9QTQ77V+YKprG/yEukB4Xrd7hQWBbatbb+rwDYl8oZ/j
+	 Q2xP2ugqGOjdmLlTwPmbUwDP7zF8ZHVWTW+bxbqwSydb/Ma3engeoIBNhbhmhnmVWk
+	 CME+qb5JBIyPX1sUgNaKpZ9h0AxQTsSROOEJmoz0i3tIqhDkOLrmFDKB/cNPwhglZf
+	 4OjxamkJEjCxy/5ZnAXUAwrcMj95ej7uwxQXxPmqi9ux0UHUEmbN8bcwIbDsrOqren
+	 IpkheAdNIJGqdat5vMVazzS6GwdfCFgGONLMZx8Cw65m4n/UkaOz1Q7pAVZmfmMTui
+	 uGvpXUx+No2PxkgCZeB7qS0ZtTdf+R5v8xckiW8CtV/TSe5Nim42PSrBTDoUIul32C
+	 iEyVPKEo/WJj9epmMWtCqanvyXcJ4m+ME823hfoqf4OFON2Lay1ej7lD6ZWC+MZxfr
+	 OIv6B3/+1oP+03zuSN5EInIX3Eu4BBFhysrzDHYkce1x1ljOwygWHBsmJpMAOC/dcC
+	 oerTRO4C0r54XidaO6FiSe2rO7BBvDadjyfvWEmujdS+rMM4xTJZ6xexQjB94Y6i7n
+	 As07goRTST1T3mqiWMLnFE4K/0Dpmid75kefFyU6AvG19UENOQ5BOZCBxI4H3uwCaa
+	 Tz2wWWFR7JbRibHGltcNAxOY=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C667140E0140;
+	Sat, 23 Mar 2024 10:38:33 +0000 (UTC)
+Date: Sat, 23 Mar 2024 11:38:27 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	gregkh@linuxfoundation.org, tony.luck@intel.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <20240323103827.GAZf6xI94u8F9LGBIL@fat_crate.local>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+ <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
+ <202403181644.690285D3@keescook>
+ <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+ <202403190955.25E5E03E6@keescook>
+ <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
+ <202403221622.6EA43547F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319104857.70783-1-mic@digikod.net> <20240319104857.70783-5-mic@digikod.net>
-In-Reply-To: <20240319104857.70783-5-mic@digikod.net>
-From: David Gow <davidgow@google.com>
-Date: Sat, 23 Mar 2024 15:37:21 +0800
-Message-ID: <CABVgOSksVq5_AeObEBZFAezZpiQ41C7ZHWEtRBR_1d2UQQYXbw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] kunit: Handle test faults
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Morris <jamorris@linux.microsoft.com>, Kees Cook <keescook@chromium.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Thara Gopinath <tgopinath@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-um@lists.infradead.org, x86@kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000a2f4d106144f03dc"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202403221622.6EA43547F@keescook>
 
---000000000000a2f4d106144f03dc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 22, 2024 at 04:40:11PM -0700, Kees Cook wrote:
+> The earlier patch, commit aaa8736370db ("x86, relocs: Ignore relocations
+> in .notes section"), landed via my tree. It was sent out on Feb 22nd
+> (v1[1]) and got a suggestion from HPA and a Review from Juergen Gross.
+> I sent v2 Feb 27th[2] and it sat ignored for two weeks.
 
-On Tue, 19 Mar 2024 at 18:49, Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> wr=
-ote:
->
-> Previously, when a kernel test thread crashed (e.g. NULL pointer
-> dereference, general protection fault), the KUnit test hanged for 30
-> seconds and exited with a timeout error.
->
-> Fix this issue by waiting on task_struct->vfork_done instead of the
-> custom kunit_try_catch.try_completion, and track the execution state by
-> initially setting try_result with -EINTR and only setting it to 0 if
-> the test passed.
->
-> Fix kunit_generic_run_threadfn_adapter() signature by returning 0
-> instead of calling kthread_complete_and_exit().  Because thread's exit
-> code is never checked, always set it to 0 to make it clear.
->
-> Fix the -EINTR error message, which couldn't be reached until now.
->
-> This is tested with a following patch.
->
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Shuah Khan <skhan@linuxfoundation.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: David Gow <davidgow@google.com>
-> Tested-by: Rae Moar <rmoar@google.com>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> Link: https://lore.kernel.org/r/20240319104857.70783-5-mic@digikod.net
-> ---
->
-> Changes since v2:
-> * s/-EFAULT/-EINTR/ in commit message as spotted by Rae.
-> * Add a comment explaining vfork_done as suggested by David.
-> * Add David's Reviewed-by.
-> * Add Rae's Tested-by.
->
-> Changes since v1:
-> * Add Kees's Reviewed-by.
-> ---
->  include/kunit/try-catch.h |  3 ---
->  lib/kunit/try-catch.c     | 19 ++++++++++++-------
->  2 files changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-> index c507dd43119d..7c966a1adbd3 100644
-> --- a/include/kunit/try-catch.h
-> +++ b/include/kunit/try-catch.h
-> @@ -14,13 +14,11 @@
->
->  typedef void (*kunit_try_catch_func_t)(void *);
->
-> -struct completion;
->  struct kunit;
->
->  /**
->   * struct kunit_try_catch - provides a generic way to run code which mig=
-ht fail.
->   * @test: The test case that is currently being executed.
-> - * @try_completion: Completion that the control thread waits on while te=
-st runs.
->   * @try_result: Contains any errno obtained while running test case.
->   * @try: The function, the test case, to attempt to run.
->   * @catch: The function called if @try bails out.
-> @@ -46,7 +44,6 @@ struct kunit;
->  struct kunit_try_catch {
->         /* private: internal use only. */
->         struct kunit *test;
-> -       struct completion *try_completion;
->         int try_result;
->         kunit_try_catch_func_t try;
->         kunit_try_catch_func_t catch;
-> diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> index cab8b24b5d5a..7a3910dd78a6 100644
-> --- a/lib/kunit/try-catch.c
-> +++ b/lib/kunit/try-catch.c
-> @@ -18,7 +18,7 @@
->  void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
->  {
->         try_catch->try_result =3D -EFAULT;
-> -       kthread_complete_and_exit(try_catch->try_completion, -EFAULT);
-> +       kthread_exit(0);
+s/ignored for two weeks/missed in the avalance of patches/
 
-It turns out kthread_exit() is not exported, so this doesn't work if
-KUnit is built as a module.
+> Since it was a 10 year old kernel address exposure, I sent it to Linus
+> on Mar 12th[3].
 
-I think the options we have are:
-- Add EXPORT_SYMBOL(kthread_exit).
-- Keep using out own completion, and kthread_complete_and_exit()
-- try_get_module() before spawning the thread, and use
-module_put_and_kthread_exit().
+So is there some unwritten understanding somewhere which says that you
+should take tip patches through your tree?
 
-I think all of these would be okay, but I could've missed something.
+Maybe I've missed it.
 
--- David
+If there isn't, should we agree on something?
 
->  }
->  EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
->
-> @@ -26,9 +26,12 @@ static int kunit_generic_run_threadfn_adapter(void *da=
-ta)
->  {
->         struct kunit_try_catch *try_catch =3D data;
->
-> +       try_catch->try_result =3D -EINTR;
->         try_catch->try(try_catch->context);
-> +       if (try_catch->try_result =3D=3D -EINTR)
-> +               try_catch->try_result =3D 0;
->
-> -       kthread_complete_and_exit(try_catch->try_completion, 0);
-> +       return 0;
->  }
->
->  static unsigned long kunit_test_timeout(void)
-> @@ -58,13 +61,11 @@ static unsigned long kunit_test_timeout(void)
->
->  void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *contex=
-t)
->  {
-> -       DECLARE_COMPLETION_ONSTACK(try_completion);
->         struct kunit *test =3D try_catch->test;
->         struct task_struct *task_struct;
->         int exit_code, time_remaining;
->
->         try_catch->context =3D context;
-> -       try_catch->try_completion =3D &try_completion;
->         try_catch->try_result =3D 0;
->         task_struct =3D kthread_create(kunit_generic_run_threadfn_adapter=
-,
->                                      try_catch, "kunit_try_catch_thread")=
-;
-> @@ -75,8 +76,12 @@ void kunit_try_catch_run(struct kunit_try_catch *try_c=
-atch, void *context)
->         }
->         get_task_struct(task_struct);
->         wake_up_process(task_struct);
-> -
-> -       time_remaining =3D wait_for_completion_timeout(&try_completion,
-> +       /*
-> +        * As for a vfork(2), task_struct->vfork_done (pointing to the
-> +        * underlying kthread->exited) can be used to wait for the end of=
- a
-> +        * kernel thread.
-> +        */
-> +       time_remaining =3D wait_for_completion_timeout(task_struct->vfork=
-_done,
->                                                      kunit_test_timeout()=
-);
->         if (time_remaining =3D=3D 0) {
->                 try_catch->try_result =3D -ETIMEDOUT;
-> @@ -92,7 +97,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_ca=
-tch, void *context)
->         if (exit_code =3D=3D -EFAULT)
->                 try_catch->try_result =3D 0;
->         else if (exit_code =3D=3D -EINTR)
-> -               kunit_err(test, "wake_up_process() was never called\n");
-> +               kunit_err(test, "try faulted\n");
->         else if (exit_code =3D=3D -ETIMEDOUT)
->                 kunit_err(test, "try timed out\n");
->         else if (exit_code)
-> --
-> 2.44.0
->
+Because there clearly is a need for clarification here...
 
---000000000000a2f4d106144f03dc
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Thx.
 
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-7xDrOPfX3COqq162RFg/MFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AK0lDd6/eSh3qHmXaw1YUfIFy07B25BEcTvWgOdla99gF1O7sOsdYaTz/DFkZI5ghjgaPJCovgla
-mRMfNcxZCfoBtsB7mAS6iOYjuwFOZxi9cv6jhfiON6b89QWdMaPeDddg/F2Q0bxZ9Z2ZEBxyT34G
-wlDp+1p6RAqlDpHifQJW16h5jWIIwYisvm5QyfxQEVc+XH1lt+taSzCfiBT0ZLgjB9Sg+zAo8ys6
-5PHxFaT2a5Td/fj5yJ5hRSrqy/nj/hjT14w3/ZdX5uWg+cus6VjiiR/5qGSZRjHt8JoApD6t6/tg
-ITv8ZEy6ByumbU23nkHTMOzzQSxczHkT+0q10/MxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAHS+TgZvH/tCq5FcDC0n9IwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIJvt7h5o12z8IiD0t5jRS/DC8KtWReNf4h1gSZ0qRHv7MBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDMyMzA3MzczNlowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBMTp5b
-Td1xJx+p44tCgJ0yL8S6nZE2lo5pXW1B1GdQtEXo9I2vKE9YysMJlUqVOOvMUtDJp2Kx5yZTqHPM
-GGkVnOZs8j7XrB9/G4FjLNsu/729mAgQe+7+1xYQGSzHuPEfXXj2Yh6DNVg7Vzp3Fnw7WgmNtL2Z
-XnCn0ezoSBk+76eTUX4Sox2U/QsZxeGT2tZNt370NDICs+QqCJMADye7y4balXahUPfOcsCjvV/S
-b5Ok+sXchNr05gJlfldWTsgAgl8IcCsL1duBN/2bU/sU2xR35XZyXQtH/lKVtxLh1fVCg4ne/MaU
-Q7KiSn5c0eY1Q/T3GmPMFYChhCiWnJ2Y
---000000000000a2f4d106144f03dc--
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
