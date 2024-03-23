@@ -1,104 +1,153 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CE9DDC5;
-	Sat, 23 Mar 2024 10:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498501DDC9;
+	Sat, 23 Mar 2024 12:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711190337; cv=none; b=N9/mcA30u+GTGya8aKhPSZTWNv1Ewen+djEDbT3fimw2x1Io1+J5Zqml+T8ivKXK7A3uA9/QKDpYl8CFYxyZXPjnBImtKDMX+rI1oJ/GgIGd3duZ9P5UreIqF6cVu4CtIwLE2pzFVkh8ZBoHfonmccvoNqtH6LEAeZhz/xMxAZE=
+	t=1711198075; cv=none; b=liZpDy2fHbUuua86gQKcF09V8g7K/qKITe6nXQIWMjrT5AjOfYC9yaNVFpQRUF0dZb1U2pSek52Ctx8lZU2oL09xcFYoD1cwyqsOX64Y/wE5uMk9JLA1vJy++ID3QExddUr0h1wUoBhlFGQOCd3pVyR6u598cUMJDODFblaviMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711190337; c=relaxed/simple;
-	bh=418qgCaLlXO3MPU6Ka6LiclNSXYM4S3ZOWBDZXvKklI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FYLqlSRUl5XkeCjOz8MZIhtcdPQshNyGsDNdZyK8AeL2UCPfGL53p323D1XgNcyTGE1hcKJ9Xlqs6GBVcbhhCVRGcD/mIaDcVzc+nPMJNUkwN3jJ55CSVCrmAGb/yAh1L1Qy7fcGfwyJu6K81dNmLVfnv9W2cBkW/zbpYone2+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=L4VqmnLZ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711198075; c=relaxed/simple;
+	bh=DK8kn31nMc4vLLNkopTWFlKbbvyPKPiFHunCkcXMieQ=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=K8xSfujddaxRiySNtUpQDm1JzursNXXEHIlF4+/JzcUvvJZoaEZTK0nUmPMbqDC6aB8C9NhvflgHZ4/bLzO+hCXsG+S9IIFJuZSD4GRZdFe5kMwefYEzlbMKRMK2JLnRi9D+Cr570wyvBxvCRNO/xel3NIxWAhU+QIYceaYCwfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=epygnKxe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rWHPG+dj; arc=none smtp.client-ip=64.147.123.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="L4VqmnLZ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7E99040E01A0;
-	Sat, 23 Mar 2024 10:38:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fPnPB3Hhg2o7; Sat, 23 Mar 2024 10:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711190328; bh=4sdIsH0QNiHyOSUq6kRcc10Kjsh94zZ4I2nRDHEZGmI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L4VqmnLZZQqifJ3JvA4Su9QTQ77V+YKprG/yEukB4Xrd7hQWBbatbb+rwDYl8oZ/j
-	 Q2xP2ugqGOjdmLlTwPmbUwDP7zF8ZHVWTW+bxbqwSydb/Ma3engeoIBNhbhmhnmVWk
-	 CME+qb5JBIyPX1sUgNaKpZ9h0AxQTsSROOEJmoz0i3tIqhDkOLrmFDKB/cNPwhglZf
-	 4OjxamkJEjCxy/5ZnAXUAwrcMj95ej7uwxQXxPmqi9ux0UHUEmbN8bcwIbDsrOqren
-	 IpkheAdNIJGqdat5vMVazzS6GwdfCFgGONLMZx8Cw65m4n/UkaOz1Q7pAVZmfmMTui
-	 uGvpXUx+No2PxkgCZeB7qS0ZtTdf+R5v8xckiW8CtV/TSe5Nim42PSrBTDoUIul32C
-	 iEyVPKEo/WJj9epmMWtCqanvyXcJ4m+ME823hfoqf4OFON2Lay1ej7lD6ZWC+MZxfr
-	 OIv6B3/+1oP+03zuSN5EInIX3Eu4BBFhysrzDHYkce1x1ljOwygWHBsmJpMAOC/dcC
-	 oerTRO4C0r54XidaO6FiSe2rO7BBvDadjyfvWEmujdS+rMM4xTJZ6xexQjB94Y6i7n
-	 As07goRTST1T3mqiWMLnFE4K/0Dpmid75kefFyU6AvG19UENOQ5BOZCBxI4H3uwCaa
-	 Tz2wWWFR7JbRibHGltcNAxOY=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C667140E0140;
-	Sat, 23 Mar 2024 10:38:33 +0000 (UTC)
-Date: Sat, 23 Mar 2024 11:38:27 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
-	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	gregkh@linuxfoundation.org, tony.luck@intel.com,
-	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
- walk_relocs
-Message-ID: <20240323103827.GAZf6xI94u8F9LGBIL@fat_crate.local>
-References: <20240317150547.24910-1-weiguixiong@bytedance.com>
- <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
- <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
- <202403181644.690285D3@keescook>
- <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
- <202403190955.25E5E03E6@keescook>
- <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
- <202403221622.6EA43547F@keescook>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="epygnKxe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rWHPG+dj"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id DF3811C000A7;
+	Sat, 23 Mar 2024 08:47:50 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Sat, 23 Mar 2024 08:47:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1711198070; x=1711284470; bh=no3SxpIrjY
+	uNJG9JdLGwJceQHSCubNomtZhDzLJ/D4o=; b=epygnKxeUHDKv/1k8Tp6dWRUzA
+	QjRORAIJdjyi+4voAuYw3zil0q9w2xtCJLqnqIIltzo9zW/INN5mfqU28X9ykelU
+	uXDHsrwuHNXk5/IRa1SprNynh+6h4ca7nzjox4+tgdxd1kX3O8KX2Nut7Qy0Q2SU
+	aXcerVaYPHRjijlcAJZEM2jc1e9kgg3ASmI6RgCGwjOPaN8x+8Z10AtrWfo43Bl8
+	JTvSirUgRSD+Y4mNngF61z69NorJvRLPtzgfPUIewhr9q8JS9BdlrdwOcWZiwCd5
+	HW3ONw2gveusbmHYoMUWtZekbt63Pnq74V7hV6cgzjCLdYaXo6xQveGXrg8w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1711198070; x=1711284470; bh=no3SxpIrjYuNJG9JdLGwJceQHSCu
+	bNomtZhDzLJ/D4o=; b=rWHPG+djIQkMTy7dtpYCukU5eXVYdVF5nJEwLAmtIyyx
+	YM+oSx2HAHvNEEORhOTWM3rFSj6opLGuLMjidwamWbdwG53Luv690zsJciwnNARl
+	xinbwufK1SVOY48KBufE9ZxdfgwJ3WcE4vpyr6ksu0KQahLl+EvjoDInVQEoMwDi
+	x2wPgy9v86CCvmWFMeeq9yROkRmtupo/0G7o07xkQN9Jv3xxx2abC0KzgPzJU4Gh
+	oKEZ7+u4Q1OYiI7NlJv3yGLIkJ6B0zOsKqbR6SuclltnHI1uEbmOTSKmVFi/OACl
+	nYwUl3O1XBZNLIbjvKXdlJfKeun386Wt1muNfoTuIQ==
+X-ME-Sender: <xms:dc_-ZQ4gwCN1jJ0xu5uLIMaaWJhffwOGRKdeAOztL7kqV5RtwTUPfg>
+    <xme:dc_-ZR5WeM5wrJ2DRRIIAcv59iD2m5SxaFrJwkuIvqaX4vlZqKOB49jrMaG9DBxoO
+    XDXbwWVQpORj2_xLkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtgedggeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:dc_-Zff2o2V8MTNE4RremOsZn7Dy_Ia-JJMGAIwzgyveD9CnI-MrVA>
+    <xmx:dc_-ZVJ9Sbm1Rn6BzzZO2rKZ7l99487NeNWBupmjtR9jwu4pQX89gQ>
+    <xmx:dc_-ZULMvcrmDFTm8YLv1sKqam6W6iXv5UblEwUu_iaEtr_oQpukzQ>
+    <xmx:dc_-ZWzgEeLX_I2iwKUfqOlpibMl0A5a2TNpy1fPFSzUkVhU8FVbIA>
+    <xmx:ds_-ZV5-uap66XGLQza-C4SRX_Nj60UZXJGFt8P0zYkQBOTvyWEOvMMsk-g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 8DE76B6008D; Sat, 23 Mar 2024 08:47:49 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202403221622.6EA43547F@keescook>
+Message-Id: <a4a8e28d-ab9b-41cd-92e2-7ef111efd5a3@app.fastmail.com>
+In-Reply-To: <2ebe2ea5-b107-4020-8e60-ff8cf43a3aab@arm.com>
+References: <20240305221824.3300322-1-jeremy.linton@arm.com>
+ <20240305221824.3300322-2-jeremy.linton@arm.com>
+ <202403051526.0BE26F99E@keescook>
+ <34351804-ad1d-498f-932a-c1844b78589f@app.fastmail.com>
+ <38f9541b-dd88-4d49-af3b-bc7880a4e2f4@arm.com>
+ <f1dd15ce-69af-4315-8d7c-b7a480e541aa@app.fastmail.com>
+ <db7dfa2d-c7c6-4b10-981a-a7ecc87c8541@arm.com>
+ <acfc522a-5162-4b33-9d6c-1e25d0c44a71@app.fastmail.com>
+ <2ebe2ea5-b107-4020-8e60-ff8cf43a3aab@arm.com>
+Date: Sat, 23 Mar 2024 13:47:29 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jeremy Linton" <jeremy.linton@arm.com>,
+ "Kees Cook" <keescook@chromium.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Mark Brown" <broonie@kernel.org>,
+ "Guo Hui" <guohui@uniontech.com>, Manoj.Iyer@arm.com,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ "James Yang" <james.yang@arm.com>, "Shiyou Huang" <shiyou.huang@arm.com>
+Subject: Re: [PATCH 1/1] arm64: syscall: Direct PRNG kstack randomization
+Content-Type: text/plain
 
-On Fri, Mar 22, 2024 at 04:40:11PM -0700, Kees Cook wrote:
-> The earlier patch, commit aaa8736370db ("x86, relocs: Ignore relocations
-> in .notes section"), landed via my tree. It was sent out on Feb 22nd
-> (v1[1]) and got a suggestion from HPA and a Review from Juergen Gross.
-> I sent v2 Feb 27th[2] and it sat ignored for two weeks.
+On Sat, Mar 23, 2024, at 00:40, Jeremy Linton wrote:
+> On 3/8/24 14:29, Arnd Bergmann wrote:
+>> On Fri, Mar 8, 2024, at 17:49, Jeremy Linton wrote:
+>>> On 3/7/24 05:10, Arnd Bergmann wrote:
+>>>>
+>>>> I'm not sure I understand the logic. Do you mean that accessing
+>>>> CNTVCT itself is slow, or that reseeding based on CNTVCT is slow
+>>>> because of the overhead of reseeding?
+>>>
+>>> Slow, as in, its running at a much lower frequency than a cycle counter.
+>> 
+>> Ok, I see. Would it be possible to use PMEVCNTR0 instead?
+>
+> So, I presume you actually mean PMCCNTR_EL0 because I don't see the 
+> point of a dedicated event, although maybe...
 
-s/ignored for two weeks/missed in the avalance of patches/
+Right, that would make more sense.
 
-> Since it was a 10 year old kernel address exposure, I sent it to Linus
-> on Mar 12th[3].
+> So, the first and maybe largest problem is the PMxxx registers are all 
+> optional because the PMU is optional! Although, they are strongly 
+> recommended and most (AFAIK) machines do implement them. So, maybe if 
+> its just using a cycle counter to dump some entropy into rnd_state it 
+> becomes a statement that kstack randomization is slower or unsupported 
+> if there isn't a PMU?
 
-So is there some unwritten understanding somewhere which says that you
-should take tip patches through your tree?
+I think that sounds workable, especially as there is already
+the randomize_kstack_offset=on/off conditional at boot time, it
+could fall back to just not randomizing and print a warning
+if the feature is enabled but unavailable at boot time.
 
-Maybe I've missed it.
+> But then we have to basically enable the PMU cycle counter globally, 
+> which requires reworking how it works, because the cycle counter is 
+> enabled/disabled and reset on the fly depending on whether the user is 
+> trying to profile something. So, I have hacked that up, and it appears 
+> to be working, although i'm not sure what kind of interaction will 
+> happen with KVM yet.
+>
+> But I guess the larger question is whether its worth changing the PMU 
+> behavior for this?
 
-If there isn't, should we agree on something?
+I don't know too much about how the PMU works in detail, but I'm
+also worried about two possible issues that end up preventing us
+from using it in practice:
 
-Because there clearly is a need for clarification here...
+- if enabling PMCCNTR_EL0 takes away one of the limited number
+  of available counters, we probably don't want to go there
 
-Thx.
+- similarly, I would expect it to have a nonzero power
+  consumption if the default is to have the clock disabled
+  and non-counting. Probably not a big deal for server machines,
+  but could be an issue on battery powered embedded devices.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+     Arnd
