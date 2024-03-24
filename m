@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3ABF1DF117;
-	Sun, 24 Mar 2024 22:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018EA1474D2;
+	Sun, 24 Mar 2024 23:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711320746; cv=none; b=fLNl5/8enoqHes4V64B+OJzystkAKG+I8V+6jS7TQSaPNg5eDb1xbsCcKqtwG0JhpoI3oTwhZ9TtZNW1bgaC4uZkQlIlGv6N4XPmEq/7xvdfCpefBMjY92JSWZQx5CCFMVaoqBPGXvXLuDhoYuHNGqaz/Yoc1xLbSs6f3VfkWAM=
+	t=1711322099; cv=none; b=ov7fDeB0tJSbFwJeTahu4DT3vSIQ+Qc6Rc1TrvcIgATtU8PZYeemPy6ww9dL6dco+vFIt4lJJ/R99CIMmyfsXkdnR7/ql36TCNTFbfqE9+K0lSAvQw0ShQ67XT8/6R2C39zl4cSMk8aq7rK/gD316ZPohC+AhR+FeFu/WqzmHvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711320746; c=relaxed/simple;
-	bh=Ou0E6vWtPrzFTnqADnt3d4DBQVXvW1/QfnLtXIX9/go=;
+	s=arc-20240116; t=1711322099; c=relaxed/simple;
+	bh=Qyuobp+byJ3Y79nA5NuOS/aQthqGT+jDXOp+vWh5wXg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PAgR1JU+/JmMXuw5x6W0ntZpW20qJdDx/hWZ5IsG/OJ2i08nQDtcWT78+4Jc1PJ5NMKw3w+7i7G4B5Ax3GLmLmKzRWS2/nv/aGeIxgr3euk2Isu5VhyyzEEe8BAZLfBh5Pgx9aIXvXmjatP4+V4O2Qf0AefvzRK9y9DNNc1a64Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rqa0HSiX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gZQiS34/qX2jHZpllbjIZIAWz6dzhrrx7z14wyt9T1JwPc3f4co0n0rTWWnE+jYQprHzYWsyTGRT7mK5+FquhJcHQnMPrbUUswxuTFNQGrt1OaCyFeeg/mOnVK9Gb32LS1gcjoCaCWJWI5yBAYez6Dq9TnEN8n4Y2e4lgZ4BxTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Noj5UU92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rqa0HSiX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E05C43390;
-	Sun, 24 Mar 2024 22:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Noj5UU92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09433C433C7;
+	Sun, 24 Mar 2024 23:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711320745;
-	bh=Ou0E6vWtPrzFTnqADnt3d4DBQVXvW1/QfnLtXIX9/go=;
+	s=k20201202; t=1711322098;
+	bh=Qyuobp+byJ3Y79nA5NuOS/aQthqGT+jDXOp+vWh5wXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rqa0HSiX9hdl8svdH9KLLiHfz4uOzaoUKPtTm0aQJCxjlw7Ek1bm2MTsMr0zn+VQU
-	 BrsB1zz9IBsw+tskX8oVi9TtNeSYNCz+J1xGIyW7gEJZY4fmLu+2pbiCqBhnsqzEKf
-	 x6/9Ms9N+d58FUCu5pN/TqCyfr2stDlxlMwccqEpQoJJeJ1Ak8MGlsVwpRIG/Wt1uZ
-	 qpS82aqC1mrKEgaKp+Qj8ZBJ9kYkK3X6pyXv4qVdGj7I0JpgUYCEPxilVXyTE1OMJl
-	 YJA40Q4piVYMMv4elez12arULMoy5a1wjH/DORW+EPaJQNYH3DUVs6pN8BuSeYIK12
-	 Y5o7aNcCeN7Vg==
+	b=Noj5UU92HUBlm+NZqV4e7tAiwrS5si5F2Fy15NCRBGr63HNruZYp5fCIwpENPfOO/
+	 lN4tK7L9bFmsT2p9KBSEJ9/vVLGG5qBgYlqgeG2m3Jms7tY10wyl1DrCgqa+I8XDMR
+	 pNGZ04BL2F4bfXStGTBM2vFhOl0wv7cRFFUOnauifjv5PKigwkoBR+8f9TvJS2z+zV
+	 NJLMdyIySrRfL0OIAxMcj/PKa0o6/O5/xetzBCP39T/zEGVpa1NvcZ0oYec17ciq5r
+	 FJ/1GGa7IehWfF2ICbo1uTP+Ilj2Rs+zvScK6irvsX2NvyiAmlNnU8gz1dHLi9cu6w
+	 Z+euXM7IOUkpA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Tony Luck <tony.luck@intel.com>,
 	linux-hardening@vger.kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 309/713] pstore: inode: Convert mutex usage to guard(mutex)
-Date: Sun, 24 Mar 2024 18:40:35 -0400
-Message-ID: <20240324224720.1345309-310-sashal@kernel.org>
+Subject: [PATCH 6.1 173/451] pstore: inode: Convert mutex usage to guard(mutex)
+Date: Sun, 24 Mar 2024 19:07:29 -0400
+Message-ID: <20240324231207.1351418-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324224720.1345309-1-sashal@kernel.org>
-References: <20240324224720.1345309-1-sashal@kernel.org>
+In-Reply-To: <20240324231207.1351418-1-sashal@kernel.org>
+References: <20240324231207.1351418-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 31 insertions(+), 45 deletions(-)
 
 diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index d41c20d1b5e82..4b4686c593996 100644
+index ffbadb8b3032d..05ddfb37b15e1 100644
 --- a/fs/pstore/inode.c
 +++ b/fs/pstore/inode.c
 @@ -182,25 +182,21 @@ static int pstore_unlink(struct inode *dir, struct dentry *dentry)
@@ -186,7 +186,7 @@ index d41c20d1b5e82..4b4686c593996 100644
  	inode->i_mode = S_IFREG | 0444;
  	inode->i_fop = &pstore_file_operations;
  	scnprintf(name, sizeof(name), "%s-%s-%llu%s",
-@@ -396,7 +389,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+@@ -395,7 +388,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
  	d_add(dentry, inode);
  
  	list_add(&private->list, &records_list);
@@ -194,7 +194,7 @@ index d41c20d1b5e82..4b4686c593996 100644
  
  	return 0;
  
-@@ -404,8 +396,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+@@ -403,8 +395,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
  	free_pstore_private(private);
  fail_inode:
  	iput(inode);
@@ -203,7 +203,7 @@ index d41c20d1b5e82..4b4686c593996 100644
  	return rc;
  }
  
-@@ -451,9 +441,8 @@ static int pstore_fill_super(struct super_block *sb, void *data, int silent)
+@@ -450,9 +440,8 @@ static int pstore_fill_super(struct super_block *sb, void *data, int silent)
  	if (!sb->s_root)
  		return -ENOMEM;
  
@@ -215,7 +215,7 @@ index d41c20d1b5e82..4b4686c593996 100644
  
  	pstore_get_records(0);
  
-@@ -468,17 +457,14 @@ static struct dentry *pstore_mount(struct file_system_type *fs_type,
+@@ -467,17 +456,14 @@ static struct dentry *pstore_mount(struct file_system_type *fs_type,
  
  static void pstore_kill_sb(struct super_block *sb)
  {
