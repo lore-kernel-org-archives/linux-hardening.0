@@ -1,116 +1,222 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFC4128836;
-	Mon, 25 Mar 2024 18:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5774575815
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Mar 2024 18:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711390638; cv=none; b=Nbmba2qX2f7kNdgSiHjwatxmIvHnVGvIaBSgwVvHRhk6cDYbbkq18MxOUxj9tUa798HRmzPKcuQcgXEEXGLhwwOzqoDTnEeW92uBEwXnecOcFxWKQMmos50S+ZcmJipGuxYcasl7Fp1s3jrNwwclf6fqK7YqjasPYwxz5gHKi3k=
+	t=1711391061; cv=none; b=AuxtuTCOFZ8WOc1PWMdIvPqL1M6AYc+AyqskAt57a88+Gts8NiqMcJT6CAvPJEBqPMT/A3Yv8+cuQW+rdjQ8tN3aKArlXN9/EeFjjwu4l+0qmr1LvHf4qtf0zPueWxQ30DkrPedkSO9wdhqz6SYjapBouX0BzjA5lLkJ1Wxs/dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711390638; c=relaxed/simple;
-	bh=bt605nCebDtgxsxpVybVsIf1PZRWEuFTtQ9mjuWYnLk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bXVWLJkfOi2IHf4ZA3OhgvLuKkDniUIZtxUDAMn1kM3XXl7JZ/vTf2wKG8en0DazTJOyjFCSoPnG2FHmsXEjW/65i9Ns5uromzr955aVI9nWMLJvLBvR8K93j4rVqLP9vGasdnjXdllCax9sAu4KK4uh2onGQZdYiqPZDGjMHWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dMEbxDLv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711391061; c=relaxed/simple;
+	bh=YsfVTzmPLYWYdgmBjM8zx6lSgYBT13jCl/idN/vK9KU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nxecE2eJFUKovy4ul51Xtv5VVH0hsxS3OAIsJ7kdTMrGsmi8ZmcFBek5GFMcfSCOhiO0NKcgKjofSGTkUCfdKHrXCmoeltBTZxmfA1nZqRf0/0QSX4EczyERL3u7eE8mhUVNB1r593OBsNnEva0oT9RyRNAsq7j3HlOYWuAXXco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xutm/JGK; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dMEbxDLv"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42PIBeq9003315;
-	Mon, 25 Mar 2024 18:17:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=H0txKNlY/ulNqwjtmNUw
-	yFVi7rSzw1l52qKD0CZVQL8=; b=dMEbxDLvy+3OpxvZojATkhhY27jZuvj9njS8
-	wZtGizMdcxnNRZcElO3p+ewW9VGcQEXolUp+svMCp2EHluspDyGCD2w1KXjhVynt
-	x48/9xpgCcSsvmWohN4l17t3Lh0TKtb141EtMKw/fjSdZC4V7PUCgEm41XinL632
-	/I8iAW95umi9JkOQ32MgcKU2STS9OerY20ZlYg64SiNWxy7w6lbP7B9i0ooElMq8
-	dYOEOWePDRHTPsv+8g5jbmHRfFc/r80qVukmh9ZMpgs1Ssr36+uEsus+TojXWMWu
-	V//6wde8HcuGRiC7BVppNwFpLB5UDbvHzgJKBj1RQQDWi/0RqQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x34c2ska7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 18:17:12 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42PIHBta028653
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 18:17:11 GMT
-Received: from hu-okukatla-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 25 Mar 2024 11:17:07 -0700
-From: Odelu Kukatla <quic_okukatla@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Georgi Djakov <djakov@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
-        <quic_mdtipton@quicinc.com>
-Subject: [PATCH v4 4/4] arm64: dts: qcom: sc7280: Add clocks for QOS configuration
-Date: Mon, 25 Mar 2024 23:46:28 +0530
-Message-ID: <20240325181628.9407-5-quic_okukatla@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240325181628.9407-1-quic_okukatla@quicinc.com>
-References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xutm/JGK"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5e152c757a5so2278986a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Mar 2024 11:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711391058; x=1711995858; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xwJ6aw89XG6ag1cAMAye4X3OlKaivOSj4AMu57dyHZA=;
+        b=Xutm/JGKCTiAPiiMg9ak9mk6bcX664ZItPrIx1GK5WjNt/oyaVPHO1payKrV6jpag7
+         gy5Kza5XdE1vuu58BX9JWZ9cLmG+WfRDoT8pUJ7CipuGSiw017DuAr2ymRD+e+QwxjKP
+         RgmboUr2498kR8zDrnZf89PaSvgnENxT4SRPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711391058; x=1711995858;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xwJ6aw89XG6ag1cAMAye4X3OlKaivOSj4AMu57dyHZA=;
+        b=PukgRUOFrhrjhgOIZMqHqh2HqfjYut3yj5rqHtjdTkcvfxj4khcrdEEyeg5qG1jzbK
+         6+iAk0ZtO067uDPQWKXn81M3huK4NilzVDMRKV2JrLWMfkEIJ1WhcskGAgKgCjBE9BYT
+         T1h41ZoQHSkN3nEA5PIKAiX2vf8bnPS9QYiYSMh/S8f3A/rFR0YeTc6CfBGIdcBG8B/y
+         aoaG7Q9VDU50Ljax6KMewXwD79twmgDI3rRwHhrXla7rkal9NR4pY+qymsneWMg1gxGw
+         J6a+rL/1xncCHAGHcIITFEKhUBDE+hxDJ4FB/L72w/GUXGtSP+vWxIitLjskUfOPuG9C
+         5jYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEK1T/qFxs/OEfLRvI2oEmetK3K5Mv7jV9cLK76TPU+uuGoRqd7PbfpgxHYrDX8mShCkKJqSOZ0BZLfxPfYB+Tw9sq6mSNvUmU1NeBVX4s
+X-Gm-Message-State: AOJu0YzJ7keOSETHiyhZCYhg1qjxrAszn5+MTubatPf0H4dvGxzDfb3V
+	KTrpmLmKKaijOi3CQgtH6sek8tQSIUKDstvPBf0f79rHx0rpsuPig5PikveYaQ==
+X-Google-Smtp-Source: AGHT+IHNRBPKz7IkJD3yJgMjJGAVIzlGXkznLyu7qd+9aDITzPOvbPJuNphM2uFoaTabaqgGZ3ou/w==
+X-Received: by 2002:a17:90a:f285:b0:2a0:390e:f072 with SMTP id fs5-20020a17090af28500b002a0390ef072mr5691880pjb.40.1711391058608;
+        Mon, 25 Mar 2024 11:24:18 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id qa14-20020a17090b4fce00b002a04f430937sm4349793pjb.43.2024.03.25.11.24.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 11:24:18 -0700 (PDT)
+Date: Mon, 25 Mar 2024 11:24:17 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Vlastimil Babka <vbabka@suse.cz>, Julien Voisin <jvoisin@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, jvoisin <julien.voisin@dustri.org>
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Message-ID: <202403250958.DAFA70CC@keescook>
+References: <20240305100933.it.923-kees@kernel.org>
+ <5e1571de-2c5a-4be4-93f4-01582094ee96@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: swI1NVnYdfpNkupkF5WqmpiWdWn-OUpv
-X-Proofpoint-ORIG-GUID: swI1NVnYdfpNkupkF5WqmpiWdWn-OUpv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_16,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 lowpriorityscore=0
- adultscore=0 impostorscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403250107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e1571de-2c5a-4be4-93f4-01582094ee96@suse.cz>
 
-Add handles for required clocks to be enabled for configuring
-QoS on sc7280.
+On Mon, Mar 25, 2024 at 10:03:23AM +0100, Vlastimil Babka wrote:
+> On 3/5/24 11:10 AM, Kees Cook wrote:
+> > Hi,
+> > 
+> > Repeating the commit logs for patch 4 here:
+> > 
+> >     Dedicated caches are available For fixed size allocations via
+> >     kmem_cache_alloc(), but for dynamically sized allocations there is only
+> >     the global kmalloc API's set of buckets available. This means it isn't
+> >     possible to separate specific sets of dynamically sized allocations into
+> >     a separate collection of caches.
+> > 
+> >     This leads to a use-after-free exploitation weakness in the Linux
+> >     kernel since many heap memory spraying/grooming attacks depend on using
+> >     userspace-controllable dynamically sized allocations to collide with
+> >     fixed size allocations that end up in same cache.
+> > 
+> >     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> >     against these kinds of "type confusion" attacks, including for fixed
+> >     same-size heap objects, we can create a complementary deterministic
+> >     defense for dynamically sized allocations.
+> > 
+> >     In order to isolate user-controllable sized allocations from system
+> >     allocations, introduce kmem_buckets_create(), which behaves like
+> >     kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+> >     which behaves like kmem_cache_alloc().)
+> > 
+> >     Allows for confining allocations to a dedicated set of sized caches
+> >     (which have the same layout as the kmalloc caches).
+> > 
+> >     This can also be used in the future once codetag allocation annotations
+> >     exist to implement per-caller allocation cache isolation[0] even for
+> >     dynamic allocations.
+> > 
+> >     Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [0]
+> > 
+> > After the implemetation are 2 example patches of how this could be used
+> > for some repeat "offenders" that get used in exploits. There are more to
+> > be isolated beyond just these. Repeating the commit log for patch 8 here:
+> > 
+> >     The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
+> >     use-after-free type confusion flaws in the kernel for both read and
+> >     write primitives. Avoid having a user-controlled size cache share the
+> >     global kmalloc allocator by using a separate set of kmalloc buckets.
+> > 
+> >     Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
+> >     Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
+> >     Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
+> >     Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
+> >     Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
+> >     Link: https://zplin.me/papers/ELOISE.pdf [6]
+> 
+> Hi Kees,
+> 
+> after reading [1] I think the points should be addressed, mainly about the
+> feasibility of converting users manually.
 
-Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+Sure, I can do that.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 41f51d326111..981f66a88967 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -2129,6 +2129,8 @@
- 			reg = <0 0x016e0000 0 0x1c080>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
-+			clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
- 		};
- 
- 		aggre2_noc: interconnect@1700000 {
-@@ -2136,6 +2138,7 @@
- 			compatible = "qcom,sc7280-aggre2-noc";
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
-+			clocks = <&rpmhcc RPMH_IPA_CLK>;
- 		};
- 
- 		mmss_noc: interconnect@1740000 {
+Adding Julien to this thread... Julien can you please respond to LKML
+patches in email? It's much easier to keep things in a single thread. :)
+
+] This is playing wack-a-mole
+
+Kind of, but not really. These patches provide a mechanism for having
+dedicated dynamically-sized slab caches (to match kmem_cache_create(),
+which only works for fixed-size allocations). This is needed to expand
+the codetag work into doing per-call-site allocations, as I detailed
+here[1].
+
+Also, adding uses manually isn't very difficult, as can be seen in the
+examples I included. In fact, my examples between v1 and v2 collapsed
+from 3 to 2, because covering memdup_user() actually covered 2 known
+allocation paths (attrs and vma names), and given its usage pattern,
+will cover more in the future without changes.
+
+] something like AUTOSLAB would be better
+
+Yes, that's the goal of [1]. This is a prerequisite for that, as
+mentioned in the cover letter.
+
+] The slabs needs to be pinned
+
+Yes, and this is a general problem[2] with all kmalloc allocations, though.
+This isn't unique to to this patch series. SLAB_VIRTUAL solves it, and
+is under development.
+
+] Lacks guard pages
+
+Yes, and again, this is a general problem with all kmalloc allocations.
+Solving it, like SLAB_VIRTUAL, would be a complementary hardening
+improvement to the allocator generally.
+
+] PAX_USERCOPY has been marking these sites since 2012
+
+Either it's whack-a-mole or it's not. :) PAX_USERCOPY shows that it _is_
+possible to mark all sites. Regardless, like AUTOSLAB, PAX_USERCOPY isn't
+upstream, and its current implementation is an unpublished modification
+to a GPL project. I look forward to someone proposing it for inclusion
+in Linux, but for now we can work with the patches where an effort _has_
+been made to upstream them for the benefit of the entire ecosystem.
+
+] What about CONFIG_KMALLOC_SPLIT_VARSIZE
+
+This proposed improvement is hampered by not having dedicated
+_dynamically_ sized kmem caches, which this series provides. And with
+codetag-split allocations[1], the goals of CONFIG_KMALLOC_SPLIT_VARSIZE
+are more fully realized, providing much more complete coverage.
+
+] I have no idea how the community around the Linux kernel works with
+] their email-based workflows
+
+Step 1: reply to the proposal in email instead of (or perhaps in
+addition to) making blog posts. :)
+
+> On a related technical note I
+> worry what will become of /proc/slabinfo when we convert non-trivial amounts
+> of users.
+
+It gets longer. :) And potentially makes the codetag /proc file
+redundant. All that said, there are very few APIs in the kernel where
+userspace can control both the size and contents of an allocation.
+
+> Also would interested to hear Jann Horn et al.'s opinion, and whether the
+> SLAB_VIRTUAL effort will continue?
+
+SLAB_VIRTUAL is needed to address the reclamation UAF gap, and is
+still being developed. I don't intend to let it fall off the radar.
+(Which is why I included Jann and Matteo in CC originally.)
+
+In the meantime, adding this series as-is kills two long-standing
+exploitation methodologies, and paves the way to providing very
+fine-grained caches using codetags (which I imagine would be entirely
+optional and trivial to control with a boot param).
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook/
+[2] https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html
+
 -- 
-2.17.1
-
+Kees Cook
