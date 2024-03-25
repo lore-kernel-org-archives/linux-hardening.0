@@ -1,41 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C733398B;
-	Mon, 25 Mar 2024 20:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2382CFC01
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Mar 2024 20:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711396886; cv=none; b=JHfvZboqsM88V2XWzuWxrPyIQU5kWtNPaDNQibq1T/Ixlm1jHGbo5zDS45pJkMFDwIe8EGsm6RXCEumBWzuO40k3OkqruCX+zYQis+hSNlOU7K/L1aKw9DWWoiSN1jWeyzpXNqA+AT7zXk3HyQl7p51JX4RAaBu63+0Np+wG7Cs=
+	t=1711398215; cv=none; b=YGH/6XuFUX3suFR22Bh3y04gOOOjmSdy9Rnye64o9fWt6TRVng/MEqgOM32IS0bDgcRcky7VzrvNYzwz88zvnUrHEmtvcFb9AY1ShajoJ0+lKxAP6/SzfAsdibfkOCw3XGc1iuuFaQVdt1GXBA+I8c176GwWuvxHsaBCr7L/F4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711396886; c=relaxed/simple;
-	bh=RDu+3qkQrCCwfcQEWQKn4nJs8kpWiXDh/iTW0K2LxJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kOicU1pIEzfKnZTE+xqnW1smWiG+siPfLSVo8jd/7Fw9pzFy3tWZ1B3+iojRm6L1Svm3CwLCalAHkKmkvALYTBnuwAlHPXIPvc7zGJ+BKJ5newi2rh078P6y2c6N+s6BiLDVFW8QLuVqz+IbzV+FF7q2QxIBRisPqdDYfdsFNJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kw+xeenf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711398215; c=relaxed/simple;
+	bh=djlD7tau3k00wMX+dK31hRg61bxmwmEQAIExPL8zNcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NeJ/CWQvyeZZJViUXnnl1FJkUwEdgEqJkigOsmx7M47uFRmU0G7GiLsiKznnuIy2F475C/7tcyK/nAmwCnoAw2vExH4qa3mul+hFA+BHaiwiFPQ0ja4PAgoLBdk5E+M9RDoDTNg2rHDYUz/Gu8Uo3Lk0FEoVDQZxCsHdY2l/JM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L+RWwUSs; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kw+xeenf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0E9C433F1;
-	Mon, 25 Mar 2024 20:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711396886;
-	bh=RDu+3qkQrCCwfcQEWQKn4nJs8kpWiXDh/iTW0K2LxJ4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Kw+xeenfF0K7imoo3GDkECAC3ZAd8equPHmCLm5TguelNgMHPLBeOyu/b+ClogqY5
-	 AOEWQdIXjGPE0i+thrg4uVg8fE2hSc0qdnOeyeMa8PdJYZJALvQoW2nMioFeq1PBSG
-	 bYmcxrHLK6OAEamvNsl3AGd/dykKV18KwP7vyqo7Ahl5s+6W9dmpx7nv0yuC8qbNpw
-	 C3c327Kr/0MCSNAng5tNezmrLxRrYti8ch5ysilt+s3fwSVOM02IUTMERikqg1RwR9
-	 FcUvxor7Pu461IDzJu0Q2yhKBYpP1Fox64GNFGIM0VuZsVDkb6yqGHOW+TWR2RoMut
-	 RqQCNKY7pK0kA==
-Date: Mon, 25 Mar 2024 14:01:23 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Tomas Winkler <tomas.winkler@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L+RWwUSs"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29c731ba369so3447673a91.3
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Mar 2024 13:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711398213; x=1712003013; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dM3EPEaKQfGkhSj0Etyez8qPrSpeJ3+UqIPmySxZhp0=;
+        b=L+RWwUSsyNMEqkcu+B1y1TWbc6N8k3asGKBTd3jSvcVSWaWh5QHmzNnRh4JLtZ4xfV
+         EXO84RL21FM3LQB4tlp6DH8PWJ/DvMSSRx44JC8tzlWW2yCT+QtgAXEKZR+hvPXHsMnU
+         xggX5F4Q4odPv/gOZQ+qD3Sdqlixb/GKRGH2I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711398213; x=1712003013;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dM3EPEaKQfGkhSj0Etyez8qPrSpeJ3+UqIPmySxZhp0=;
+        b=ui2T/2lWRnJrZ/bSayEgwbSmg8eywdC+x+ggOqRYRUwSKGStob+lkU+K1+kTGBRObS
+         g9n4Do2yOQUbxzhZUpAkEANFFbBtq2lzzTt1eQNJ7nJRHb4Zt0zjVAJNpFx2d+5F/jaC
+         sDD/3urS8CmmOBDeDq6dP+InX9lhdlkh9LfQKu+yVOQZjTCOU4DCzbmKdTgZYVo2mJRi
+         FRcXOkYXa0S04r6GJyFaxIPqElUGwmZteR7Lo3gKyT2TVNcKjLdyYNAKDuuHTpAWX4ja
+         MNxqeS1D3/hiuEqbcUm3kY01Co9dTM6rNWCNCWAy6cQoFBo+SrLiAM8NF2zVcaHIKSFw
+         u/aA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYtJrysO8hNmfQopXDJ8zdusHYCckZ8YwQzPH3fK+unNFcBkiH9ZjvZpE4SADAJtJ/T/b5aVoSAWP0N0BUEgyGILhYQKhL3B3cAboHUVCw
+X-Gm-Message-State: AOJu0YxxYBSVXBUlOOHyAstBN8zfQJyEEiFD3JAN+TT9p00un+Zkcg/J
+	sWvnide9dNFErQHfA8LO3SX5Zl6NDM2urAklGLMvY2FVtN/tJkf9wS/xPMAjoA==
+X-Google-Smtp-Source: AGHT+IHFt/Mv8XMPx3PmeNEQzhnSPIf0PbzFwS8Yi41rpSzdwhBsUhVQrNgbrGh4nSZ3MPE2PseKBQ==
+X-Received: by 2002:a17:90a:dc06:b0:29f:ef34:3004 with SMTP id i6-20020a17090adc0600b0029fef343004mr5745538pjv.43.1711398213361;
+        Mon, 25 Mar 2024 13:23:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ph13-20020a17090b3bcd00b0029951d04dc4sm6840886pjb.54.2024.03.25.13.23.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 13:23:32 -0700 (PDT)
+Date: Mon, 25 Mar 2024 13:23:31 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: tglx@linutronix.de, Guixiong Wei <weiguixiong@bytedance.com>,
+	jgross@suse.com, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	gregkh@linuxfoundation.org, tony.luck@intel.com,
+	adobriyan@gmail.com, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] mei: Avoid a bunch of -Wflex-array-member-not-at-end
- warnings
-Message-ID: <ZgHYE2s5kBGlv1cw@neat>
+Subject: Re: [PATCH] x86, relocs: Ignore relocations in .notes section on
+ walk_relocs
+Message-ID: <202403251318.EA2603C8@keescook>
+References: <20240317150547.24910-1-weiguixiong@bytedance.com>
+ <171079804927.224083.15609364452504732018.b4-ty@chromium.org>
+ <20240318215612.GDZfi4fG52DTgra51p@fat_crate.local>
+ <202403181644.690285D3@keescook>
+ <20240319081640.GAZflJ6IBQ7TEKD2Ll@fat_crate.local>
+ <202403190955.25E5E03E6@keescook>
+ <20240322194658.GCZf3gMphnWeR9upN6@fat_crate.local>
+ <202403221622.6EA43547F@keescook>
+ <20240323103827.GAZf6xI94u8F9LGBIL@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,41 +77,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240323103827.GAZf6xI94u8F9LGBIL@fat_crate.local>
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+On Sat, Mar 23, 2024 at 11:38:27AM +0100, Borislav Petkov wrote:
+> On Fri, Mar 22, 2024 at 04:40:11PM -0700, Kees Cook wrote:
+> > The earlier patch, commit aaa8736370db ("x86, relocs: Ignore relocations
+> > in .notes section"), landed via my tree. It was sent out on Feb 22nd
+> > (v1[1]) and got a suggestion from HPA and a Review from Juergen Gross.
+> > I sent v2 Feb 27th[2] and it sat ignored for two weeks.
+> 
+> s/ignored for two weeks/missed in the avalance of patches/
+> 
+> > Since it was a 10 year old kernel address exposure, I sent it to Linus
+> > on Mar 12th[3].
+> 
+> So is there some unwritten understanding somewhere which says that you
+> should take tip patches through your tree?
+> 
+> Maybe I've missed it.
+> 
+> If there isn't, should we agree on something?
+> 
+> Because there clearly is a need for clarification here...
 
-After commit 40292383640a ("mei: revamp mei extension header structure layout.")
-it seems that flexible-array member `data` in `struct mei_ext_hdr` is no longer
-needed. So, remove it and, with that, fix 45 of the following
--Wflex-array-member-not-at-end warnings[1] in drivers/misc/mei/:
+Yeah, happy to figure this out. How should I handle x86 patches that
+maintainers haven't responded to when they have security bug fix
+implications? For all the security hardening stuff I usually just ping
+every few weeks, but those don't usually tend to be urgent.
 
-drivers/misc/mei/hw.h:280:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+In this case, I felt like since it was a trivial fix, HPA had already
+implied it was a sensible change, and Juergen had reviewed it, it seemed
+like it wouldn't be disruptive to take it, given the timing of the merge
+window, etc.
 
-Link: https://gist.github.com/GustavoARSilva/62dcc235555a6b29b506269edb83da0b [1] 
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/misc/mei/hw.h | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h
-index eb800a07a84b..2e9cf6f4efb6 100644
---- a/drivers/misc/mei/hw.h
-+++ b/drivers/misc/mei/hw.h
-@@ -247,12 +247,10 @@ enum mei_ext_hdr_type {
-  * struct mei_ext_hdr - extend header descriptor (TLV)
-  * @type: enum mei_ext_hdr_type
-  * @length: length excluding descriptor
-- * @data: the extended header payload
-  */
- struct mei_ext_hdr {
- 	u8 type;
- 	u8 length;
--	u8 data[];
- } __packed;
- 
- /**
 -- 
-2.34.1
-
+Kees Cook
