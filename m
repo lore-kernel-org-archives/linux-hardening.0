@@ -1,31 +1,31 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B2B1C2A8
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 17:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0B01C2A8
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 17:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711472627; cv=none; b=civARanetCE2ElhHvB7lb/GbSHnRlHhps2FFMvTeo7GUIIPjp++w6zHGlkoQhrXUT8DHyaqsK2kPl33eiMjH5DKoLKRORGoniczDhRfyWHnJ5uBCcIBLTO+e31feE/q9uGBXeK5yWZ4mfRAAXCaZE0u3wnys+lLmGcign0v/VSA=
+	t=1711472648; cv=none; b=GrhJi7mwiK4QwV01rYYVtyqTfjtHT6AFFWAHe5GI2dMjBd12On6iIrkLKA5qptvL6txnOS4ay/TrbfKxd7eP7MF4ErirKckY/m4VxiaMTm6CggTsaG6q0P3XawFUnisiuySCEtoh0uLoNJtNyp/NILO0UFMdqo1QQxyPh6KGFss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711472627; c=relaxed/simple;
-	bh=TqvAoicy0PYb4UF0R6/Cx1/0SjfPKX1Rg3iR3agHsQo=;
+	s=arc-20240116; t=1711472648; c=relaxed/simple;
+	bh=Yz0WYqolMnvLJC5i8aR7bo15fCEbWsCkVWmWBYrTGZ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F4wHQbpb/ZohficHtkRdhgZhdWyvc4YpX0psyvycQIvOrqHY+TAOvZA+XXlNsnQqOdMttGHPdDTKXOG+zOcoH0wY8yTfAmRyXVoLdZgVNrUKmiS6lJPbFmH53JM7a8Xt46Y7/v8NWOxaw2Ep0HKEPhZFJKNnYzzZzjEsa7PTt3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=qYEHpAGv; arc=none smtp.client-ip=35.89.44.37
+	 In-Reply-To:Content-Type; b=TvsXydgQU605yVGLDGwMUtBoUe88cj3IKe7vGd6edbpcYFW3+dJbXagEgKl5I28/Kx6Hklfu7z06yP5Ac0mvRjqV+Xh/e1fv8vbTfviIs5LkG71uhlAtRvROdiwOXDHAfd8VA4gaa+BlmuoARiPZ3Fq+WKmWqal14ypm9UbSYkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=kK8daU+p; arc=none smtp.client-ip=35.89.44.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="qYEHpAGv"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kK8daU+p"
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
 	by cmsmtp with ESMTPS
-	id p9gkrcSvkDI6fpAD7rzLJe; Tue, 26 Mar 2024 17:03:41 +0000
+	id ocRvr5Oa1tf2QpADSrqMro; Tue, 26 Mar 2024 17:04:02 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id pACbrWjwq3g73pACbrcdlb; Tue, 26 Mar 2024 17:03:10 +0000
-X-Authority-Analysis: v=2.4 cv=esUUzZpX c=1 sm=1 tr=0 ts=6602ffce
+	id pADJrXJPsybtzpADKrEcfD; Tue, 26 Mar 2024 17:03:54 +0000
+X-Authority-Analysis: v=2.4 cv=RsAOLzmK c=1 sm=1 tr=0 ts=6602fffa
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
  a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=WFmGiULL8WMXhObYpVMA:9 a=QEXdDO2ut3YA:10
+ a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=lPTLYKuCpi3VH0QkE-kA:9 a=QEXdDO2ut3YA:10
  a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -33,20 +33,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rFF3IEv1pQkVliIlfBa5Tw/0KDEQACYRpeKK2HhiYeY=; b=qYEHpAGvILy9Vl9Ea56ZcsQpyp
-	5d1O12jQAdIGi1w7Xrqw62FzGswWZxmT2PVF7Csv1Oaic02tq+Dw5jWbGdtwDxpW6AMjzrjMDzdIX
-	+6cEfQ/fj0fb5N4QLa1Dr0OF9AjqoO1XtiYRC7tQPvv+ThlFXcX7RYWEJ96NGi9E23LEOQe7HnjCw
-	y7f3FAxvRaKtJjlgZjQ9VGjcqg1Xs2BzrBZITc7HE+Z2Gibi25Tk682p5eSQf999TCh1g74rwisUm
-	5IQiCmg7p1mPjkPeF5xdwdiVrY4fkoPRbXj2y/mfCPCMglN0D7XXhvQhCdfSISEiJtgHHvPrdZLB+
-	dUX4mstA==;
+	bh=NrE7Vt2pNurTp9Y0mAxOJgCgwBMGZJicbQxramXY6P8=; b=kK8daU+pLWX9/an16K0GdT02OK
+	kgUgx85xu2TUmkImlc0GpPPyoWXw5stddVx3gGeQAfszsoL+Qj1Po3jKsm3UAVLseRTNJ3AF7fIFQ
+	mdQUTfh3yEb/6RgkoV5EnzXTrRTVvDmY7m52TVhBWbUvXgwR/aa0xyXfsyP9QYsNs/fTXRk1T2M96
+	9314CyobTBVyp2HOtWljrGglwQQrYZK2vfUnZ2wU6XF158Xhp2Kc4x4SC8yrnTnW1jc+b4zbBkLAM
+	fz6cXS9SC6uNyG+CSlr1sj5yqHy4CIt0+kos2zb2j+xnF+cQONUPLhtvZjDYCGOhEeKRsezL0Pa+9
+	d3+8erhQ==;
 Received: from [201.172.173.147] (port=44416 helo=[192.168.15.10])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpACR-001bkE-26;
-	Tue, 26 Mar 2024 12:02:59 -0500
-Message-ID: <8d2c9cb1-6f2e-4ad4-a1b7-25e6ae953a65@embeddedor.com>
-Date: Tue, 26 Mar 2024 11:02:57 -0600
+	id 1rpADC-001bkE-0E;
+	Tue, 26 Mar 2024 12:03:46 -0500
+Message-ID: <de9a1396-7793-4420-8d3e-1c634059cfe0@embeddedor.com>
+Date: Tue, 26 Mar 2024 11:03:44 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,8 +54,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 1/3] compiler_types: add Endianness-dependent
- __counted_by_{le,be}
+Subject: Re: [PATCH net-next 3/3] idpf: sprinkle __counted_by{,_le}() in the
+ virtchnl2 header
 Content-Language: en-US
 To: Alexander Lobakin <aleksander.lobakin@intel.com>,
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
@@ -67,9 +67,9 @@ Cc: Kees Cook <keescook@chromium.org>,
  intel-wired-lan@lists.osuosl.org, linux-hardening@vger.kernel.org,
  netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20240326164116.645718-1-aleksander.lobakin@intel.com>
- <20240326164116.645718-2-aleksander.lobakin@intel.com>
+ <20240326164116.645718-4-aleksander.lobakin@intel.com>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240326164116.645718-2-aleksander.lobakin@intel.com>
+In-Reply-To: <20240326164116.645718-4-aleksander.lobakin@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -80,32 +80,32 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.172.173.147
 X-Source-L: No
-X-Exim-ID: 1rpACR-001bkE-26
+X-Exim-ID: 1rpADC-001bkE-0E
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:44416
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
+X-Email-Count: 17
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKZkTF8vCaSg9bh3PAVz6oZRTlSiwutKgO7X94yeV4RgRAuDg8K60Q76OmsdBq9MYk/hI38iTHrtN+gQFqoE4iLyukr6yxo07ISui2iZBooxIsvblIF+
- Py946BxrAqLfp3txFROhA+UD1V/0kjn7g1VOeS51k3uUbAX8YMhO2bis1CkZ407yqMzDFgfJxwRE/+gBpf5oTFVf3W877r1vllcvjiLtcLG5rhvlDQ2nsCP0
+X-CMAE-Envelope: MS4xfJTFTtkAEsNKSu4aa63umNhTxm+F1ZVPecFPsPn8YQtxUKTl4brT62rgFMnPHMEKSIGo58PZQNMK4vl9X+Q9boSaDbAUWeFhdMDxyR0Hw1Qh4NZ7zSvn
+ fgT9CQU931w4iaacg6nHGoKdgtgS+iYbOHZs3aFhMTmLFukGlpi6tnC6Va7Xu70ylDhA9LCqKPMNa+pFDzNyj9y/O7wwf/L72HfunFe7n1PTASzeHlwrg/8t
 
 
 
 On 3/26/24 10:41, Alexander Lobakin wrote:
-> Some structures contain flexible arrays at the end and the counter for
-> them, but the counter has explicit Endianness and thus __counted_by()
-> can't be used directly.
-> 
-> To increase test coverage for potential problems without breaking
-> anything, introduce __counted_by_{le,be}() defined depending on
-> platform's Endianness to either __counted_by() when applicable or noop
-> otherwise.
-> Maybe it would be a good idea to introduce such attributes on compiler
-> level if possible, but for now let's stop on what we have.
+> Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
+> There are 10 structures with flexible arrays at the end, but 9 of them
+> has flex member counter in Little Endian.
+> Make the code a bit more robust by applying __counted_by_le() to those
+> 9. LE platforms is the main target for this driver, so they would
+> receive additional protection.
+> While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
+> its counter is `u8` regardless of the Endianness.
+> Compile test on x86_64 (LE) didn't reveal any new issues after applying
+> the attributes.
 > 
 > Acked-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
@@ -115,59 +115,104 @@ LGTM:
 Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Thanks
---
+-- 
 Gustavo
 
 > ---
->   Documentation/conf.py          |  2 ++
->   scripts/kernel-doc             |  1 +
->   include/linux/compiler_types.h | 11 +++++++++++
->   3 files changed, 14 insertions(+)
+>   drivers/net/ethernet/intel/idpf/virtchnl2.h | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index d148f3e8dd57..0c2205d536b3 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -75,6 +75,8 @@ if major >= 3:
->               "__rcu",
->               "__user",
->               "__force",
-> +            "__counted_by_le",
-> +            "__counted_by_be",
+> diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+> index 29419211b3d9..63deb120359c 100644
+> --- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
+> +++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+> @@ -555,7 +555,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_queue_reg_chunk);
+>   struct virtchnl2_queue_reg_chunks {
+>   	__le16 num_chunks;
+>   	u8 pad[6];
+> -	struct virtchnl2_queue_reg_chunk chunks[];
+> +	struct virtchnl2_queue_reg_chunk chunks[] __counted_by_le(num_chunks);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_reg_chunks);
 >   
->               # include/linux/compiler_attributes.h:
->               "__alias",
-> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-> index 967f1abb0edb..1474e95dbe4f 100755
-> --- a/scripts/kernel-doc
-> +++ b/scripts/kernel-doc
-> @@ -1143,6 +1143,7 @@ sub dump_struct($$) {
->           $members =~ s/\s*$attribute/ /gi;
->           $members =~ s/\s*__aligned\s*\([^;]*\)/ /gos;
->           $members =~ s/\s*__counted_by\s*\([^;]*\)/ /gos;
-> +        $members =~ s/\s*__counted_by_(le|be)\s*\([^;]*\)/ /gos;
->           $members =~ s/\s*__packed\s*/ /gos;
->           $members =~ s/\s*CRYPTO_MINALIGN_ATTR/ /gos;
->           $members =~ s/\s*____cacheline_aligned_in_smp/ /gos;
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 2abaa3a825a9..a29ba6ef1e27 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -282,6 +282,17 @@ struct ftrace_likely_data {
->   #define __no_sanitize_or_inline __always_inline
->   #endif
+> @@ -703,7 +703,7 @@ struct virtchnl2_config_tx_queues {
+>   	__le32 vport_id;
+>   	__le16 num_qinfo;
+>   	u8 pad[10];
+> -	struct virtchnl2_txq_info qinfo[];
+> +	struct virtchnl2_txq_info qinfo[] __counted_by_le(num_qinfo);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_config_tx_queues);
 >   
-> +/*
-> + * Apply __counted_by() when the Endianness matches to increase test coverage.
-> + */
-> +#ifdef __LITTLE_ENDIAN
-> +#define __counted_by_le(member)	__counted_by(member)
-> +#define __counted_by_be(member)
-> +#else
-> +#define __counted_by_le(member)
-> +#define __counted_by_be(member)	__counted_by(member)
-> +#endif
-> +
->   /* Do not trap wrapping arithmetic within an annotated function. */
->   #ifdef CONFIG_UBSAN_SIGNED_WRAP
->   # define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
+> @@ -782,7 +782,7 @@ struct virtchnl2_config_rx_queues {
+>   	__le32 vport_id;
+>   	__le16 num_qinfo;
+>   	u8 pad[18];
+> -	struct virtchnl2_rxq_info qinfo[];
+> +	struct virtchnl2_rxq_info qinfo[] __counted_by_le(num_qinfo);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_config_rx_queues);
+>   
+> @@ -868,7 +868,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_vector_chunk);
+>   struct virtchnl2_vector_chunks {
+>   	__le16 num_vchunks;
+>   	u8 pad[14];
+> -	struct virtchnl2_vector_chunk vchunks[];
+> +	struct virtchnl2_vector_chunk vchunks[] __counted_by_le(num_vchunks);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_vector_chunks);
+>   
+> @@ -912,7 +912,7 @@ struct virtchnl2_rss_lut {
+>   	__le16 lut_entries_start;
+>   	__le16 lut_entries;
+>   	u8 pad[4];
+> -	__le32 lut[];
+> +	__le32 lut[] __counted_by_le(lut_entries);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(12, virtchnl2_rss_lut);
+>   
+> @@ -977,7 +977,7 @@ struct virtchnl2_ptype {
+>   	u8 ptype_id_8;
+>   	u8 proto_id_count;
+>   	__le16 pad;
+> -	__le16 proto_id[];
+> +	__le16 proto_id[] __counted_by(proto_id_count);
+>   } __packed __aligned(2);
+>   VIRTCHNL2_CHECK_STRUCT_LEN(6, virtchnl2_ptype);
+>   
+> @@ -1104,7 +1104,7 @@ struct virtchnl2_rss_key {
+>   	__le32 vport_id;
+>   	__le16 key_len;
+>   	u8 pad;
+> -	u8 key_flex[];
+> +	u8 key_flex[] __counted_by_le(key_len);
+>   } __packed;
+>   VIRTCHNL2_CHECK_STRUCT_LEN(7, virtchnl2_rss_key);
+>   
+> @@ -1131,7 +1131,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_chunk);
+>   struct virtchnl2_queue_chunks {
+>   	__le16 num_chunks;
+>   	u8 pad[6];
+> -	struct virtchnl2_queue_chunk chunks[];
+> +	struct virtchnl2_queue_chunk chunks[] __counted_by_le(num_chunks);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_chunks);
+>   
+> @@ -1195,7 +1195,7 @@ struct virtchnl2_queue_vector_maps {
+>   	__le32 vport_id;
+>   	__le16 num_qv_maps;
+>   	u8 pad[10];
+> -	struct virtchnl2_queue_vector qv_maps[];
+> +	struct virtchnl2_queue_vector qv_maps[] __counted_by_le(num_qv_maps);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_vector_maps);
+>   
+> @@ -1247,7 +1247,7 @@ struct virtchnl2_mac_addr_list {
+>   	__le32 vport_id;
+>   	__le16 num_mac_addr;
+>   	u8 pad[2];
+> -	struct virtchnl2_mac_addr mac_addr_list[];
+> +	struct virtchnl2_mac_addr mac_addr_list[] __counted_by_le(num_mac_addr);
+>   };
+>   VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_mac_addr_list);
+>   
