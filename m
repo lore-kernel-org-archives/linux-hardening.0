@@ -1,178 +1,203 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04C3130A75
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 07:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558C418B04;
+	Tue, 26 Mar 2024 08:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711438214; cv=none; b=YxCj4F2khkHvuT5RCc8KbSVyFmz6VUq+EW4Wz+RrW2/Jxa6Lrquf+Xw9Birufgw5eEI6dtMbKB+72o5NIm+u0b93z608DvcOHmOyKJkiSMcXCIp5vOw/DE+LjsUH3y+EG8yMsOXrLHWoR3KCXV0KAWioQhYBtu7tXIylgm9wcWk=
+	t=1711443483; cv=none; b=bFo5bMHs4zQ3NzZo2lVcgHkEwdiDuBizbtwIUW0XdMKWlnnq/Uc80GLz2YGWu0XFuJiWT3izlb7/kki0lNiwc34h4ZuwmLHzduWPEZAUVwbv27cIZNm9q2ixBw9fkPRX/QYLBECtkgGva/lQzNeRzZ1rQUOb+ZXIWhW8E4sI+LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711438214; c=relaxed/simple;
-	bh=qlXHSjD4oRu6T1ULa+mNDp9G2uRL5HO5IKVjGUSBBEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XHfGwJAokUAfY15rA/Zy7mvK0IzNsq3eVBecfkKI/PA3DzShcdCVRBnHnTGeduCj/Y5RpOUAiKlo1jIOplSCxTZhb6wCndBbMaOVam6Wjw3/njvi4DUQVocWjDRHOtZbBajgWSZBQdtte1y4ODP76qdAx/t9SmZDVNIF5M5k2XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gzWsWrn8; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711443483; c=relaxed/simple;
+	bh=XFozoUL6QcyIGXvMLCIL84POaBLp8oklHsXjyBmeZK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxL/vtJw0s4ePWUzJb2cQ1HoTEeJje65p1imx4/xojo/Gjyn6WluZ/Mbi1HQg23yND2i+E7ScKZ9w4zkFwxioMK3DdN9+DnIi39DqQe+2kGN2vwrn3qALSEBNr44uh8LAklZ1ITAjzp5WAmZJaz6qjviq7VzVOtwYICgrqNkc3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MGNb0moR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jg9rN1Go; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DxHO4eZX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=j1QiegTh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gzWsWrn8"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56c147205b9so2631068a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 00:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711438211; x=1712043011; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=NS0LFbGO6Diz+O55zW1kIhPFuGDQKse20XAQBsjLplY=;
-        b=gzWsWrn8dAydMAjU7M5cDpcTBdcnHaVjoRdketV9VXwlSsGTNdQIkXLPdc4CEpb+7f
-         sHmRPLiArI51m4RlbuIjbwDb4vQ49AXZK28cTkQ+FbE8Ta9flaCfHb2gyWVbI5/gmqL5
-         RxLekNHaBbwq7/zmwTaWnCUwg5oNL1SxgFBiQ+oJdnxloqbPJyk/0EArPNIbtvagRrOG
-         une/vVqWHx4gyrNATboIKL03rAqhUd9Rh4E1ZOQtxxj0tOrbcIyOREf4wp1zm3O1LM1b
-         Fuaw4wyNd1bHBPI5RhGTuuJT8ueh4sdL6lvMsyJJV/cLgBM3AauOthFrcxR2usx8SpOn
-         BJ7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711438211; x=1712043011;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NS0LFbGO6Diz+O55zW1kIhPFuGDQKse20XAQBsjLplY=;
-        b=iIVeOVO3mK0ni+Rl1K1IKha+vNkQ/8WtI7LVfn0Yy6MwxQVKz/IfNUCf1N6lpb01Lt
-         bU3woQV4BvbEK1aq+P7sgwcFRvNjdw/ud7OQVASE+a1MxZRFomPB8sgBLpUAz7LkTrna
-         JgiP5T9QmsJKS8lX864Fh2XDJG6mKtsXc1q0X/eke915KRVSlceoiGwYE7UySy2m+ISf
-         UU/IIn+yZqFPt+hvvHKnAW+t8drRkmVPWKwK1+W1UyE49+aWOT6W7mXiArvpXOdK2U+J
-         FSCn4XhxrSZ9wBl/O2YBFSYvH+rQU67up2eFzv1MEzRpmMjM9ZEeW1ZLPO6Hn6zlV/Ru
-         NK9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVmU6MkMNzMAtMKV1eStYaLuPLdlRZLqKnG73AEGtqAlVgie+pMBjCn3XS73NNayWEdfoVPRJgyIGzATK5d5zl0VSMf2FHUfFThy7yTSU8f
-X-Gm-Message-State: AOJu0YwF3EfzYMlMzt83riOa8dzApQBcSsxkOaJndDslZOOWXrFjVKb2
-	ll4pfYxws05FXpI5XeCOYboAyrbFiphFDIdZZEEIbn36XO/XEepUuvvSZvNzicU=
-X-Google-Smtp-Source: AGHT+IHiCRE6k1Cpx73jh67er/H6/gp+YnVuWHmlblCeMCWF2i9jddFGIkvdgtlrEQ0uNnrlDzqI/A==
-X-Received: by 2002:a50:9343:0:b0:566:59a2:7a10 with SMTP id n3-20020a509343000000b0056659a27a10mr696876eda.1.1711438211145;
-        Tue, 26 Mar 2024 00:30:11 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id r1-20020aa7cb81000000b0056c052f9fafsm2969290edt.53.2024.03.26.00.30.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 00:30:10 -0700 (PDT)
-Message-ID: <a259fa95-bfc3-4959-a159-8683df473e66@linaro.org>
-Date: Tue, 26 Mar 2024 08:30:08 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MGNb0moR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jg9rN1Go";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DxHO4eZX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="j1QiegTh"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 00A565D373;
+	Tue, 26 Mar 2024 08:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711443479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=MGNb0moRA53dW6wUQ2O20+FMhlKGOX7mELBApC3UVSwNaErXcil5mNl/xl32/tj+CaRGpc
+	Xvfer1Kn5C5CXVdM+Fattj5d2hDohzEeav/NyK3NbNd18z2cCMYCh7Ff805uHKj6pXJVhf
+	zfilAsLDhY0t73mc6xERs+7CGCJ1hGA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711443479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=Jg9rN1GovWLt8oQk0a6YrNgWJUPm+WBZTHAayYnosZ+EtU8vMJa6kiVtbNPXyXkPU+gzju
+	AaqJ0p3nY4AwQNCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711443478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=DxHO4eZXm8E/qPp37cl0l0IzKSgS7IeKCI105UsLFseKxOF/b80Vs7eDMaZfvEXN6FLRC2
+	0QZJsEsYCJILQi2FZC7J1ILXeWNYyenmyG12+J7MbbuYt6JPgJOAbBdU2GfDl3IILO5LG3
+	xdkaXXTyujLwVkAIDH2u+Q6ABSa+xrE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711443478;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=j1QiegTh9G0rmPZx3qgi/w9TVuCocHvuAmMl99dKQnhVrzwQAPHTdqhdi3x8JDecAChNq8
+	RYy2S4d0oBwJ/qBw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id EA83613215;
+	Tue, 26 Mar 2024 08:57:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id SxQ5ORWOAmZCfQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 26 Mar 2024 08:57:57 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 94944A0812; Tue, 26 Mar 2024 09:57:53 +0100 (CET)
+Date: Tue, 26 Mar 2024 09:57:53 +0100
+From: Jan Kara <jack@suse.cz>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] fs: Annotate struct file_handle with
+ __counted_by() and use struct_size()
+Message-ID: <20240326085753.dh6fj7skdzddkdva@quack3>
+References: <ZgImCXTdGDTeBvSS@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] dt-bindings: interconnect: add clock property to
- enable QOS on SC7280
-To: Odelu Kukatla <quic_okukatla@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Georgi Djakov <djakov@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
- quic_mdtipton@quicinc.com
-References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
- <20240325181628.9407-4-quic_okukatla@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240325181628.9407-4-quic_okukatla@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgImCXTdGDTeBvSS@neat>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Flag: NO
 
-On 25/03/2024 19:16, Odelu Kukatla wrote:
-> Added clock property to enable clocks required for accessing
-> qos registers.
+On Mon 25-03-24 19:34:01, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+> While there, use struct_size() helper, instead of the open-coded
+> version.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  .../bindings/interconnect/qcom,sc7280-rpmh.yaml    | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  fs/fhandle.c       | 8 ++++----
+>  include/linux/fs.h | 2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
-> index b135597d9489..950ecdd5252e 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7280-rpmh.yaml
-> @@ -35,6 +35,10 @@ properties:
->    reg:
->      maxItems: 1
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 57a12614addf..53ed54711cd2 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -36,7 +36,7 @@ static long do_sys_name_to_handle(const struct path *path,
+>  	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
+>  		return -EINVAL;
 >  
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-
-Why is this flexible? Nothing in commit msg explains that. I gave the
-same talk twice, gave there examples, yet it is not enough...
-
-https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml#L132
-
-> +
->  required:
->    - compatible
+> -	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+> +	handle = kzalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
+>  			 GFP_KERNEL);
+>  	if (!handle)
+>  		return -ENOMEM;
+> @@ -71,7 +71,7 @@ static long do_sys_name_to_handle(const struct path *path,
+>  	/* copy the mount id */
+>  	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
+>  	    copy_to_user(ufh, handle,
+> -			 sizeof(struct file_handle) + handle_bytes))
+> +			 struct_size(handle, f_handle, handle_bytes)))
+>  		retval = -EFAULT;
+>  	kfree(handle);
+>  	return retval;
+> @@ -192,7 +192,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+>  		retval = -EINVAL;
+>  		goto out_err;
+>  	}
+> -	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+> +	handle = kmalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
+>  			 GFP_KERNEL);
+>  	if (!handle) {
+>  		retval = -ENOMEM;
+> @@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+>  	*handle = f_handle;
+>  	if (copy_from_user(&handle->f_handle,
+>  			   &ufh->f_handle,
+> -			   f_handle.handle_bytes)) {
+> +			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
+>  		retval = -EFAULT;
+>  		goto out_handle;
+>  	}
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 034f0c918eea..1540e28d10d7 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1033,7 +1033,7 @@ struct file_handle {
+>  	__u32 handle_bytes;
+>  	int handle_type;
+>  	/* file identifier */
+> -	unsigned char f_handle[];
+> +	unsigned char f_handle[] __counted_by(handle_bytes);
+>  };
 >  
-> @@ -57,6 +61,7 @@ unevaluatedProperties: false
->  
->  examples:
->    - |
-> +    #include <dt-bindings/clock/qcom,gcc-sc7280.h>
->      interconnect {
->          compatible = "qcom,sc7280-clk-virt";
->          #interconnect-cells = <2>;
-> @@ -69,3 +74,12 @@ examples:
->          #interconnect-cells = <2>;
->          qcom,bcm-voters = <&apps_bcm_voter>;
-
-If all devices have clocks, then you could add them here. It seems not
-all of them have clocks...
-
-Best regards,
-Krzysztof
-
+>  static inline struct file *get_file(struct file *f)
+> -- 
+> 2.34.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
