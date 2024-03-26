@@ -1,159 +1,121 @@
-Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0338141A85
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 09:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145864C60B
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 09:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444240; cv=none; b=it0SwQYzBgnB6MU/v5r4WB8z8cygwQ7IxSdKiVWKkerb0rsytFzIrNY6E0OIo5onuvHJ7WBgQNQ2CW1c+rmRRQKLh68ZEH8xMR0/z0XFNplYXfcWCbmzeA3XSvgWazvpwTdhrKaGeIb9CnESjvE5KJRATfk+wj1xwwiEQspricY=
+	t=1711446704; cv=none; b=lZ+3E21U+iZHc7PY2r/Tuj8otWJsUV3VN2gVKqTve4hYJKK1+jAQryFszkf31Yxoy5VcvR8A1kezRFIjTJSETyyWhfYTTiMOnUuho7nCswPPzwXtAhkHTz6pa1PSrhPh0/kOEoDFOFzMIXKuuHJS/Mtqk+VBNGCb5i+0TrkF/0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711444240; c=relaxed/simple;
-	bh=aG1FdaTbcKd3XGgGWnmx/xvaQsHHK4Rz/c5f2D3Q9m0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUkqXrVmOWOtO59+yZ2c+6hGwz9uT+JOhMjog1dA0r4OzH5ACB+2pu7gMhAND2OLC8aLBzKSdimpZbKHrBDnvQ4765LbRqt9oxZOPrQEaxLESePG48YEZt5pQeF2Yqh1zNToXGn6slZI479Bw2cfkp2ZZIEMvUqPiO8/wYqQ3n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=IZBmrADh; arc=none smtp.client-ip=185.125.25.11
+	s=arc-20240116; t=1711446704; c=relaxed/simple;
+	bh=/U6ehYBQXcnrObcNkQuqkpo5gBGsRNrPqQ0nV96fJPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UqcdAZiXFKWMD13GgWAvO8T3crSgbQLg+f9Ry7T2vXcHWgjtVLW/1Z46SAJpxnPCivhVrvYUSL7dWOF53zhLLEa5w+NAos3ol4rLDdsRlYpuzLxAxtuMN/fK6fIbs9KmcXQTv5ISPFyjCoVItcfF75c9U5MqWK2nIt+71HnVnU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=bK1gxeww; arc=none smtp.client-ip=45.157.188.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="IZBmrADh"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V3kNF53NkzZBV;
-	Tue, 26 Mar 2024 10:02:53 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4V3kND05yKzMppKc;
-	Tue, 26 Mar 2024 10:02:52 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="bK1gxeww"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V3lSV3Xh4zd0D;
+	Tue, 26 Mar 2024 10:51:38 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4V3lST4szDz2xp;
+	Tue, 26 Mar 2024 10:51:37 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1711443773;
-	bh=aG1FdaTbcKd3XGgGWnmx/xvaQsHHK4Rz/c5f2D3Q9m0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IZBmrADhOaPt+S5+Ai5jbfmQE6NDEfhlQ7oPI5KvdxY6OFxpZqdyc/bT9FtkXBfR6
-	 aF4p1CvP1HyDpI7noNPncdLGg4YV1hCzZZ9kkE16vyFVLnQKlUCxqBlsP+0Vj3fgyL
-	 h1vzPtWDDxEvqYWWo+GxoH+jFFPSjPNKofKIbZeA=
-Date: Tue, 26 Mar 2024 10:02:51 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: David Gow <davidgow@google.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Morris <jamorris@linux.microsoft.com>, 
-	Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marco Pagani <marpagan@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v3 4/7] kunit: Handle test faults
-Message-ID: <20240326.ieB8Phit1Ob8@digikod.net>
-References: <20240319104857.70783-1-mic@digikod.net>
- <20240319104857.70783-5-mic@digikod.net>
- <CABVgOSksVq5_AeObEBZFAezZpiQ41C7ZHWEtRBR_1d2UQQYXbw@mail.gmail.com>
+	s=20191114; t=1711446698;
+	bh=/U6ehYBQXcnrObcNkQuqkpo5gBGsRNrPqQ0nV96fJPs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bK1gxeww/uTEzVNw0ciXTKlhEtagIgU52+cHPMFu9FdI2oNTNKNkmoQEFnGk7Q4K+
+	 r6+VEAFLwq5euuWGBE25RV0OYahm4ocVf//B9IbYwEzfiNU5U409AFdXxeevhCjTmf
+	 UaEXjXohshVp1vqvsMZ5EEvQTKN9FUBxBesB20Xg=
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	Kees Cook <keescook@chromium.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>,
+	kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH v4 3/7] kunit: Fix timeout message
+Date: Tue, 26 Mar 2024 10:51:14 +0100
+Message-ID: <20240326095118.126696-4-mic@digikod.net>
+In-Reply-To: <20240326095118.126696-1-mic@digikod.net>
+References: <20240326095118.126696-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABVgOSksVq5_AeObEBZFAezZpiQ41C7ZHWEtRBR_1d2UQQYXbw@mail.gmail.com>
 X-Infomaniak-Routing: alpha
 
-On Sat, Mar 23, 2024 at 03:37:21PM +0800, David Gow wrote:
-> On Tue, 19 Mar 2024 at 18:49, Mickaël Salaün <mic@digikod.net> wrote:
-> >
-> > Previously, when a kernel test thread crashed (e.g. NULL pointer
-> > dereference, general protection fault), the KUnit test hanged for 30
-> > seconds and exited with a timeout error.
-> >
-> > Fix this issue by waiting on task_struct->vfork_done instead of the
-> > custom kunit_try_catch.try_completion, and track the execution state by
-> > initially setting try_result with -EINTR and only setting it to 0 if
-> > the test passed.
-> >
-> > Fix kunit_generic_run_threadfn_adapter() signature by returning 0
-> > instead of calling kthread_complete_and_exit().  Because thread's exit
-> > code is never checked, always set it to 0 to make it clear.
-> >
-> > Fix the -EINTR error message, which couldn't be reached until now.
-> >
-> > This is tested with a following patch.
-> >
-> > Cc: Brendan Higgins <brendanhiggins@google.com>
-> > Cc: Shuah Khan <skhan@linuxfoundation.org>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Reviewed-by: David Gow <davidgow@google.com>
-> > Tested-by: Rae Moar <rmoar@google.com>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > Link: https://lore.kernel.org/r/20240319104857.70783-5-mic@digikod.net
-> > ---
-> >
-> > Changes since v2:
-> > * s/-EFAULT/-EINTR/ in commit message as spotted by Rae.
-> > * Add a comment explaining vfork_done as suggested by David.
-> > * Add David's Reviewed-by.
-> > * Add Rae's Tested-by.
-> >
-> > Changes since v1:
-> > * Add Kees's Reviewed-by.
-> > ---
-> >  include/kunit/try-catch.h |  3 ---
-> >  lib/kunit/try-catch.c     | 19 ++++++++++++-------
-> >  2 files changed, 12 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-> > index c507dd43119d..7c966a1adbd3 100644
-> > --- a/include/kunit/try-catch.h
-> > +++ b/include/kunit/try-catch.h
-> > @@ -14,13 +14,11 @@
-> >
-> >  typedef void (*kunit_try_catch_func_t)(void *);
-> >
-> > -struct completion;
-> >  struct kunit;
-> >
-> >  /**
-> >   * struct kunit_try_catch - provides a generic way to run code which might fail.
-> >   * @test: The test case that is currently being executed.
-> > - * @try_completion: Completion that the control thread waits on while test runs.
-> >   * @try_result: Contains any errno obtained while running test case.
-> >   * @try: The function, the test case, to attempt to run.
-> >   * @catch: The function called if @try bails out.
-> > @@ -46,7 +44,6 @@ struct kunit;
-> >  struct kunit_try_catch {
-> >         /* private: internal use only. */
-> >         struct kunit *test;
-> > -       struct completion *try_completion;
-> >         int try_result;
-> >         kunit_try_catch_func_t try;
-> >         kunit_try_catch_func_t catch;
-> > diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-> > index cab8b24b5d5a..7a3910dd78a6 100644
-> > --- a/lib/kunit/try-catch.c
-> > +++ b/lib/kunit/try-catch.c
-> > @@ -18,7 +18,7 @@
-> >  void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
-> >  {
-> >         try_catch->try_result = -EFAULT;
-> > -       kthread_complete_and_exit(try_catch->try_completion, -EFAULT);
-> > +       kthread_exit(0);
-> 
-> It turns out kthread_exit() is not exported, so this doesn't work if
-> KUnit is built as a module.
-> 
-> I think the options we have are:
-> - Add EXPORT_SYMBOL(kthread_exit).
+The exit code is always checked, so let's properly handle the -ETIMEDOUT
+error code.
 
-I'll go this way. This should not be an issue because
-kthread_complete_and_exit() can already (only) call kthread_exit() if
-the completion is NULL, but directly calling kthread_exit() is cleaner.
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: David Gow <davidgow@google.com>
+Reviewed-by: Rae Moar <rmoar@google.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240326095118.126696-4-mic@digikod.net
+---
 
-> - Keep using out own completion, and kthread_complete_and_exit()
-> - try_get_module() before spawning the thread, and use
-> module_put_and_kthread_exit().
-> 
-> I think all of these would be okay, but I could've missed something.
-> 
-> -- David
+Changes since v2:
+* Add Rae's and David's Reviewed-by.
+
+Changes since v1:
+* Add Kees's Reviewed-by.
+---
+ lib/kunit/try-catch.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+index 73f5007f20ea..cab8b24b5d5a 100644
+--- a/lib/kunit/try-catch.c
++++ b/lib/kunit/try-catch.c
+@@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 	time_remaining = wait_for_completion_timeout(&try_completion,
+ 						     kunit_test_timeout());
+ 	if (time_remaining == 0) {
+-		kunit_err(test, "try timed out\n");
+ 		try_catch->try_result = -ETIMEDOUT;
+ 		kthread_stop(task_struct);
+ 	}
+@@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 		try_catch->try_result = 0;
+ 	else if (exit_code == -EINTR)
+ 		kunit_err(test, "wake_up_process() was never called\n");
++	else if (exit_code == -ETIMEDOUT)
++		kunit_err(test, "try timed out\n");
+ 	else if (exit_code)
+ 		kunit_err(test, "Unknown error: %d\n", exit_code);
+ 
+-- 
+2.44.0
+
