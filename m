@@ -1,123 +1,86 @@
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261E55D49E
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 10:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3F15C89;
+	Tue, 26 Mar 2024 10:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711447238; cv=none; b=qGtOZ+mI4fWHSpnOiCkRTVbnPskvqq+W82QEPSOxXUUJkBO4qjcO5Bd9zmqW0UVsfn6FIVqErSEb62yvarsE8yvREHZIghHM8gVWL4zoqY6FdzUmG5OsT66ZUsvC0uaprlf6F5z2gfmG5ObPKUhXZn/eQS+pFD6E+S906kq2Do8=
+	t=1711450105; cv=none; b=dIEkTpGGT5a2bw5OjRGXkRs2ZX21hfhFUTP6hIt1Q/nwgxD9UfmvwkltQH6z/o8Zx6+tUMcRoHL390/eus/HcLTHzIJaF05J+apYh+vxZPSnFyfnPRNVSitO68G1D9oJK4uJ84kWiE4ajA9emk6JEOjkzuuYYbY+OoCz6mBiaNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711447238; c=relaxed/simple;
-	bh=Yw7gXVy/DL5VfiZ97miPEyVcUDPjJaMAJFbpu/mcTYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kMLP3dsYslFuVd6ulV0YE1xcJkvrKeLFA/7zJDwV8Wn92g76WrTnG1HR8/XxSYkbhCq0/dCt/Oqt3UPgyatEEkwGFupRVFJ/aW8snTM1ikSRiyOyeRyFRNhN4bl1oyYciOEmGsgE9/ZdLFnrzkwf0bLRioCOaM0lcBQtcSZBTtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=i86c2MNc; arc=none smtp.client-ip=185.125.25.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1711450105; c=relaxed/simple;
+	bh=ItD4cQ9/T2Lbjdnw5EA900Xzkb3YwHbPekHFYEjw/bk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aDO0QxIwGHJ1R65gdfFGYftT7zZXdH77b3hrd2TK64d9xcaqRvgsFOSZGfAW7/RpTB+lltFILtiFSKr8TR5qjx/Hdh/6QXhTW1Kn6afKBoIPfWXrwpEapGLb4psXEmgGnDNbQUQk4wBO+xbq3FMk08hqsVF5Pwa8X/wPczDp7nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0erkZwc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="i86c2MNc"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V3lSR0KsWzfNp;
-	Tue, 26 Mar 2024 10:51:35 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4V3lSL1PnJzr3;
-	Tue, 26 Mar 2024 10:51:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1711446694;
-	bh=Yw7gXVy/DL5VfiZ97miPEyVcUDPjJaMAJFbpu/mcTYE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i86c2MNcWhiGwgGVEbjabP59wToLSKeSCaSIWMqbCFLQCt664qe3uZxImx4wWAaLy
-	 JoHopq+YsGtBfJMgzCR9dpPgnYuJLI1QfHTgcFXwc1BbUOqzSMd6oBs9Ky3a55+P+e
-	 peXAzoer/H8q92XzDYW7LwoJnVX0flBfuuAR1yvc=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0erkZwc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1367C433C7;
+	Tue, 26 Mar 2024 10:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711450104;
+	bh=ItD4cQ9/T2Lbjdnw5EA900Xzkb3YwHbPekHFYEjw/bk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=o0erkZwcejRAAkYW76kntsUngRhDYzXvc7hnjtn2mV+QMff9yChh3gREXkmvEjoHs
+	 Zdbd/ng1CyKBnI7E9Twpa2ZEnRpLubCVfDZt9fvcFJcZUKyISrXmctME8vaYVaw1wZ
+	 zwBxQUJkqzuweKwzx0KMO3fgwwQVaMeeTiIruiY3c9t1hhrPWB1tu5yXAIPU1uj9zn
+	 GD1QhxdYCOQ/RFwuTib6lK6tiAh/mnTx1jWDEW0cV1cagvYbS81FJnELaQGLNlsJ7C
+	 cayUn9PVEjO7Vw1pwDJm8x2IuQeZ+61ByvH25HjeZo67WijH/gf6zvGlQ2MaaqfVDm
+	 WN7o/urREB59g==
+From: Christian Brauner <brauner@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v4 0/7] Handle faults in KUnit tests
-Date: Tue, 26 Mar 2024 10:51:11 +0100
-Message-ID: <20240326095118.126696-1-mic@digikod.net>
+	linux-hardening@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [PATCH][next] fs: Annotate struct file_handle with __counted_by() and use struct_size()
+Date: Tue, 26 Mar 2024 11:48:10 +0100
+Message-ID: <20240326-sehen-flogen-52373eb09da1@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ZgImCXTdGDTeBvSS@neat>
+References: <ZgImCXTdGDTeBvSS@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1258; i=brauner@kernel.org; h=from:subject:message-id; bh=ItD4cQ9/T2Lbjdnw5EA900Xzkb3YwHbPekHFYEjw/bk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQxLX9v/LRZ6tJv0wjO1uKP82unMT8rtZNIPJ0dfCK4K iXjf9PnjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIm8c2JkuB7Itl/yisKcg0KM Z5gaTkR8F96nqLx3geQHr4V9E/ljzBj+R17fe4t3qpmaPJsGu/36bem/31rNXv1ZxCJ2+a7c9QY K3AA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
 
-Hi,
+On Mon, 25 Mar 2024 19:34:01 -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> While there, use struct_size() helper, instead of the open-coded
+> version.
+> 
+> [...]
 
-This patch series teaches KUnit to handle kthread faults as errors, and
-it brings a few related fixes and improvements.
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Shuah, everything should be OK now, could you please merge this series?
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-All these tests pass (on top of v6.8):
-./tools/testing/kunit/kunit.py run --alltests
-./tools/testing/kunit/kunit.py run --alltests --arch x86_64
-./tools/testing/kunit/kunit.py run --alltests --arch arm64 \
-  --cross_compile=aarch64-linux-gnu-
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-I also built and ran KUnit tests as a kernel module.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-A new test case check NULL pointer dereference, which wasn't possible
-before.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
 
-This is useful to test current kernel self-protection mechanisms or
-future ones such as Heki: https://github.com/heki-linux
-
-Previous versions:
-v3: https://lore.kernel.org/r/20240319104857.70783-1-mic@digikod.net
-v2: https://lore.kernel.org/r/20240301194037.532117-1-mic@digikod.net
-v1: https://lore.kernel.org/r/20240229170409.365386-1-mic@digikod.net
-
-Regards,
-
-Mickaël Salaün (7):
-  kunit: Handle thread creation error
-  kunit: Fix kthread reference
-  kunit: Fix timeout message
-  kunit: Handle test faults
-  kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
-  kunit: Print last test location on fault
-  kunit: Add tests for fault
-
- include/kunit/test.h      | 24 ++++++++++++++++++---
- include/kunit/try-catch.h |  3 ---
- kernel/kthread.c          |  1 +
- lib/kunit/kunit-test.c    | 45 ++++++++++++++++++++++++++++++++++++++-
- lib/kunit/try-catch.c     | 38 ++++++++++++++++++++++-----------
- lib/kunit_iov_iter.c      | 18 ++++++++--------
- 6 files changed, 101 insertions(+), 28 deletions(-)
-
-
-base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
--- 
-2.44.0
-
+[1/1] fs: Annotate struct file_handle with __counted_by() and use struct_size()
+      https://git.kernel.org/vfs/vfs/c/1b43c4629756
