@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320D2208C3;
-	Tue, 26 Mar 2024 01:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDED18AF4;
+	Tue, 26 Mar 2024 01:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711416965; cv=none; b=m3BfBU3rCNVVjpeOEoTg2x1hSZD6hA0x7PPaxKM0rgIxCk6YYDh9K/vfPM9AshbRaFHjkHGyjI8mxFs1S3Q66y6e/NpeWnMzC0FyMSd4/o7pGmMihzUjXlZZro0XNM7Zpo1oYUYUxjfy7ziD1hqIEVHQ2vXeboAqxd/gT02IgvU=
+	t=1711418174; cv=none; b=S7PMdFh2lSsXRo7b69xWM1rSJgoVYnBYdJkR4ublDnP/4QDStB/L5A+9/OteaDGlzJrkc5fXQICyiFr1eilrHD6ki2qEuGisLSkyOo0zU58FyKMdJHLmxJ/BIUVwnGMSTBy8knvN+iCJwnlF17YnV0AfYFacU+EFI69Thh/pdGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711416965; c=relaxed/simple;
-	bh=lWmFCW3E1cmFH4KzQVtNpNX3lS13zmnBzK7/lzOc7kI=;
+	s=arc-20240116; t=1711418174; c=relaxed/simple;
+	bh=iGZ1sN109f31IxTk+YNzxIwHJqGr0BjZR34QePejfYI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cLXg4L+H0Sv2ahcsdAKXFsdsBeBdoszaxQPxTdWvjFWh3MagLabrswfhjYlAUBJEUoi5BgEMCJD23od7xQGpor5eS1Almw+mtYfjM1HauuaccJ84SAFBVUlAFmcLWI2+osxzrH+q8DfqkKXtO8UBMDUL+zTtt2RdmwkuX6gDVAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWD8+oiW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=M3/W1col7fKsBzfJ0ZVxmwV7PYPDgFkaIeYPZXAQ7s0rYAzqDLb6nseAoPggV7nwy+ohhydSM5sZ7WPOHnxtqoVU+3FGVS7lh2p40Wty89tanffGNUGn1wv2dBgAPWeo3JhE4NGKcCvvUsh4Hooub4N9XQTy0ikyXXZO6FjBd84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNLTQWJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWD8+oiW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320E9C433F1;
-	Tue, 26 Mar 2024 01:36:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNLTQWJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02612C433F1;
+	Tue, 26 Mar 2024 01:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711416964;
-	bh=lWmFCW3E1cmFH4KzQVtNpNX3lS13zmnBzK7/lzOc7kI=;
+	s=k20201202; t=1711418173;
+	bh=iGZ1sN109f31IxTk+YNzxIwHJqGr0BjZR34QePejfYI=;
 	h=Date:From:To:Cc:Subject:From;
-	b=lWD8+oiWRHB0cipl3whT0kQ+zek0oWZCm1LSHrREIMG/OvUQ/oEV3Prwa/A6C3XQ5
-	 ufdtBPv9NwXGxCbjDsi3c0TcY/0IS5eOriqyr5+UtdmFwuHo/xPtVoMK5t4VB2i+Cl
-	 4chJpBlow3W21+s3JLjdi9TXFl2t7wYnOjoKcFB1ylieVpuWcHuAzi5WaVHkmnwLPr
-	 LoUftmF9wgzNIjq/ieAZvcNQiZYcfUaQghpmVa1JJ3myqaTHRJJu3OPLi9gDLyy1Gu
-	 oowTaUGKIdOi4NnHjNGz/E5rMaF7PnHNdlQSjSwtOAJI04EhShickJLxrMEOKJ35/n
-	 t0Tt9+d/HWR+Q==
-Date: Mon, 25 Mar 2024 19:36:02 -0600
+	b=PNLTQWJFFiL35/jUE6Mm1/bDwDU6OR7LrVQE2t/Hi7I92DvPikyN+iJsGsy4E1Mhd
+	 c/hX7mfu0Mh3EBfrZwyXzrq/lgLdJNeZTOL1sxG9Rxf9oK8RiQi/6OkOeTdjMN3CB+
+	 6Gk+osvGd2hPffDRh4LiLccPhNLFBvcpQLbZuTldKBruYwqkoPDiBuLP0Wq/SUAw2m
+	 1uiOIzT5p8akhHOCMUH82Xcmt2DvjadGZ/DzZnQ8Z47eoef3JWrD/J+nGw9UAcsNzn
+	 BdGUuBbDQnGetxNCMQBRhh1oApOoVUPw6OcJHZIlEJt+Gy66A50Fk0oxeHxN7NnJIB
+	 lor67tPc7FREg==
+Date: Mon, 25 Mar 2024 19:56:10 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] fsnotify: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <ZgImguNzJBiis9Mj@neat>
+Subject: [PATCH][next] firewire: Annotate struct fw_iso_packet with
+ __counted_by()
+Message-ID: <ZgIrOuR3JI/jzqoH@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,68 +44,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Use the `DEFINE_FLEX()` helper for an on-stack definition of a
-flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-So, with these changes, fix the following warning:
-fs/notify/fdinfo.c:45:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Link: https://github.com/KSPP/linux/issues/202
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes in v2:
- - Use DEFINE_FLEX() instead of struct_group_tagged().
+ include/linux/firewire.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZeeaRuTpuxInH6ZB@neat/
-
- fs/notify/fdinfo.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/fs/notify/fdinfo.c b/fs/notify/fdinfo.c
-index 5c430736ec12..dec553034027 100644
---- a/fs/notify/fdinfo.c
-+++ b/fs/notify/fdinfo.c
-@@ -41,29 +41,25 @@ static void show_fdinfo(struct seq_file *m, struct file *f,
- #if defined(CONFIG_EXPORTFS)
- static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
- {
--	struct {
--		struct file_handle handle;
--		u8 pad[MAX_HANDLE_SZ];
--	} f;
-+	DEFINE_FLEX(struct file_handle, f, f_handle, handle_bytes, MAX_HANDLE_SZ);
- 	int size, ret, i;
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index dd9f2d765e68..00abe0e5d602 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -463,7 +463,8 @@ struct fw_iso_packet {
+ 	u32 tag:2;		/* tx: Tag in packet header		*/
+ 	u32 sy:4;		/* tx: Sy in packet header		*/
+ 	u32 header_length:8;	/* Length of immediate header		*/
+-	u32 header[];		/* tx: Top of 1394 isoch. data_block	*/
++				/* tx: Top of 1394 isoch. data_block    */
++	u32 header[] __counted_by(header_length);
+ };
  
--	f.handle.handle_bytes = sizeof(f.pad);
--	size = f.handle.handle_bytes >> 2;
-+	size = f->handle_bytes >> 2;
- 
--	ret = exportfs_encode_fid(inode, (struct fid *)f.handle.f_handle, &size);
-+	ret = exportfs_encode_fid(inode, (struct fid *)f->f_handle, &size);
- 	if ((ret == FILEID_INVALID) || (ret < 0)) {
- 		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
- 		return;
- 	}
- 
--	f.handle.handle_type = ret;
--	f.handle.handle_bytes = size * sizeof(u32);
-+	f->handle_type = ret;
-+	f->handle_bytes = size * sizeof(u32);
- 
- 	seq_printf(m, "fhandle-bytes:%x fhandle-type:%x f_handle:",
--		   f.handle.handle_bytes, f.handle.handle_type);
-+		   f->handle_bytes, f->handle_type);
- 
--	for (i = 0; i < f.handle.handle_bytes; i++)
--		seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
-+	for (i = 0; i < f->handle_bytes; i++)
-+		seq_printf(m, "%02x", (int)f->f_handle[i]);
- }
- #else
- static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
+ #define FW_ISO_CONTEXT_TRANSMIT			0
 -- 
 2.34.1
 
