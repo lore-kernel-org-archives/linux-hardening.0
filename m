@@ -1,41 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723D513C3CD;
-	Tue, 26 Mar 2024 18:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F303DABF5
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 19:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479314; cv=none; b=s0YBKZkxLw1EBjbk3mtlUVUl4vaK6WvpHrrNNRWnZknRHx5yE2Gpvi4syK50OQO5/yOGX3joqeHI5Vh5eEJUyYlB/qdhYDiEYYu/KzRNQnR3SSb005717YupbHlwM+WV+2NgdHKOFC8/yOBUYASPffbmssczgS9ZiA/GF2AV2RY=
+	t=1711482079; cv=none; b=eh7qx9LJh9IqI/HeQKkvCR8kVYWTY66MDjdvtN+sTXtNkmaJwR6nygCRpFPk93nj2HFaa/qnXBPpSzkMqDBDriEyxALHKBff87ImROnQxw9GPOZJXCDGX2qICMRw1GJjl145QscFlbyTsroSx0fxwYsNj4v1W3tJ/cVt3kx486k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479314; c=relaxed/simple;
-	bh=eLWdTmkX6BBbodK2iLPdweL1DI0T40cTBvjP1ZxdWVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dENtc095nYgr1Vj/hka5Nt6yY+xf3Op8w7YWJgiDbbkPSkBqoZdo0nOOoQ22olhAXDQMjQhyBwhs8IdQ0gOrr2XMX5g1DTtRmfYcbtpy5G+gqzrIPPEdRh8eTQmnfum8b96JLKraM2n0khI9eyUY8bQ8LBNriAb4JNiVzNQzKdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJpjPqdN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711482079; c=relaxed/simple;
+	bh=k9ihZSdW4sVIG80LGN0KDSsBThh04pd1ppuGet9T+g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nxGKrCg4pAyl6+yaQWsonY32mrXB7EfLKuaCsxSywZaif2NDR7eGmSLh3h8AHAE7+3MoLmaRkA9y0gJ8pRmjEh+hSltRUHCLzEHVfJGzKIxhhJOx39SNj+3mC0IoMcWaSc1epGYFgoSIjbsvw2Y5Jhwc60qy387O/qy+mFL1Ewg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Qh7bLcvk; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJpjPqdN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F7DC433F1;
-	Tue, 26 Mar 2024 18:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711479314;
-	bh=eLWdTmkX6BBbodK2iLPdweL1DI0T40cTBvjP1ZxdWVg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=gJpjPqdNq3WnXv3+hUhWUVvUEF2NVYR0ZLnvkhMZ6KJ7JwzrdDRRjJkf841deUGnE
-	 tw2eZq/tSx9X2gsKS6VrjhTRfVwwuWYaQmxHIRMhpfOL3+O5i98IQtIDBxORllWLlq
-	 2kAJLNNHuUjftF90xiWDKuDzkuY/OB+KpbAyGd02iXXULptedGgYZZ5XHd2hMaaTx7
-	 eXyx/DYxp+2avG+l1fSqnrpn/hH3DtwinSf+XiYiU6wjdEWJcD61POOcG+4oEyYbC7
-	 rSapuobRYB8ansUL5Eqf/Xkq0FMgxxUk+X103J25tGliAgww+MEofAK0EPy6VOs5aw
-	 Xk362C9Qp0vqA==
-Date: Tue, 26 Mar 2024 12:55:10 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qh7bLcvk"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6b22af648so128303b3a.0
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 12:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711482077; x=1712086877; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ran6TWnpaiTaADpt6skaPDxXzFx/WGCJHW99KUEIIo=;
+        b=Qh7bLcvkwofoTDstigh0zK2nQfPKNL56BoC0DZYYNLMrqUpkWLJ6OVyeIvpXpnntrl
+         GfQGoYgzO9e3Kq2vF1D2+KtAoz7x2DYHS67/DXJuaonPubElKv8HadZSx8a9cpP97srV
+         vDZIYApj3muyYWMz6DePRIRfkJTyrj9sQmL58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711482077; x=1712086877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/ran6TWnpaiTaADpt6skaPDxXzFx/WGCJHW99KUEIIo=;
+        b=gfAlz903OIiS4aVv9+4c6ntu9q3HYJvPkLw0uWCKnEe+/OufZ4jtjU8FnpqsYgWCTy
+         HV6pPLxG2nDDNb74nWOg8MuJmcZPyhCHjFGDd+IQAgBTQpSu2wyaHn45kj5i8JyEbaA5
+         KVLKmWB/Cv0fSm/ZsI1LPZbzo7MgZdJhKTHH9LL7g/U1j08yFcpWGsqmZNeNgvWDyg6Z
+         GIIwLCTadDvGmT4nVxsHDRRt5EfnoUl0BuD+qn83wv9hauISyligOLFBxTZ9jpy+XsM8
+         4QS+GWvTbgU2/rZJSqAPBsH4fzoZTYVnLLGOUCy8XdL24VrMK6XllaKDtBLONUwqRSdq
+         Ws6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXDMrhwa7NrWbskBfnhuZGBLfw/UXmzEjE3h67h6UKmOP03XQjj3OoQOqpW/WSa79MzUKHc3qSQzikmSfeKSH9t5isv8ux8vjAVCoRhMyj2
+X-Gm-Message-State: AOJu0YyK1qer5f+u3igdoWezmlh005Fe+cZuyXozPhPX647+qR3S9uTK
+	qjt4r8q5ln0fHRlh2SfVGe4kZr1PpZz7gdv5XUP2a/1pHM2oZ26ajSvRqWWYlQ==
+X-Google-Smtp-Source: AGHT+IFRe2LZU3jx2yt0Q76ADcQvq/WjsF+NrkywBd4rPr7frESxdB3vIvTLVJtwMwVH83sbIoOlKw==
+X-Received: by 2002:a05:6a20:840d:b0:1a3:5b82:a88b with SMTP id c13-20020a056a20840d00b001a35b82a88bmr3414875pzd.18.1711482076981;
+        Tue, 26 Mar 2024 12:41:16 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b17-20020a63cf51000000b005dc4b562f6csm8041556pgj.3.2024.03.26.12.41.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 12:41:16 -0700 (PDT)
+Date: Tue, 26 Mar 2024 12:41:15 -0700
+From: Kees Cook <keescook@chromium.org>
+To: julien.voisin@dustri.org
+Cc: Vlastimil Babka <vbabka@suse.cz>, Julien Voisin <jvoisin@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec_proto: avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <ZgMaDl/of8YC445S@neat>
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+Message-ID: <202403261229.0ADF2637C@keescook>
+References: <20240305100933.it.923-kees@kernel.org>
+ <5e1571de-2c5a-4be4-93f4-01582094ee96@suse.cz>
+ <202403250958.DAFA70CC@keescook>
+ <a88362316fb00494b78859625cabe0820ca26a15@dustri.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -44,170 +79,163 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <a88362316fb00494b78859625cabe0820ca26a15@dustri.org>
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+On Tue, Mar 26, 2024 at 06:07:07PM +0000, julien.voisin@dustri.org wrote:
+> 25 March 2024 at 19:24, "Kees Cook" <keescook@chromium.org> wrote:
+> > On Mon, Mar 25, 2024 at 10:03:23AM +0100, Vlastimil Babka wrote:
+> > > On 3/5/24 11:10 AM, Kees Cook wrote:
+> > >  Hi,
+> > >  
+> > >  Repeating the commit logs for patch 4 here:
+> > >  
+> > >  Dedicated caches are available For fixed size allocations via
+> > >  kmem_cache_alloc(), but for dynamically sized allocations there is only
+> > >  the global kmalloc API's set of buckets available. This means it isn't
+> > >  possible to separate specific sets of dynamically sized allocations into
+> > >  a separate collection of caches.
+> > >  
+> > >  This leads to a use-after-free exploitation weakness in the Linux
+> > >  kernel since many heap memory spraying/grooming attacks depend on using
+> > >  userspace-controllable dynamically sized allocations to collide with
+> > >  fixed size allocations that end up in same cache.
+> > >  
+> > >  While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> > >  against these kinds of "type confusion" attacks, including for fixed
+> > >  same-size heap objects, we can create a complementary deterministic
+> > >  defense for dynamically sized allocations.
+> > >  
+> > >  In order to isolate user-controllable sized allocations from system
+> > >  allocations, introduce kmem_buckets_create(), which behaves like
+> > >  kmem_cache_create(). (The next patch will introduce kmem_buckets_alloc(),
+> > >  which behaves like kmem_cache_alloc().)
+> > >  
+> > >  Allows for confining allocations to a dedicated set of sized caches
+> > >  (which have the same layout as the kmalloc caches).
+> > >  
+> > >  This can also be used in the future once codetag allocation annotations
+> > >  exist to implement per-caller allocation cache isolation[0] even for
+> > >  dynamic allocations.
+> > >  
+> > >  Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [0]
+> > >  
+> > >  After the implemetation are 2 example patches of how this could be used
+> > >  for some repeat "offenders" that get used in exploits. There are more to
+> > >  be isolated beyond just these. Repeating the commit log for patch 8 here:
+> > >  
+> > >  The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
+> > >  use-after-free type confusion flaws in the kernel for both read and
+> > >  write primitives. Avoid having a user-controlled size cache share the
+> > >  global kmalloc allocator by using a separate set of kmalloc buckets.
+> > >  
+> > >  Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
+> > >  Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
+> > >  Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
+> > >  Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
+> > >  Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
+> > >  Link: https://zplin.me/papers/ELOISE.pdf [6]
+> > >  
+> > >  Hi Kees,
+> > >  
+> > >  after reading [1] I think the points should be addressed, mainly about the
+> > >  feasibility of converting users manually.
+> >
+> > Sure, I can do that.
+> > Adding Julien to this thread... Julien can you please respond to LKML
+> > patches in email? It's much easier to keep things in a single thread. :)
+> >
+> > ] This is playing wack-a-mole
+> > Kind of, but not really. These patches provide a mechanism for having
+> > dedicated dynamically-sized slab caches (to match kmem_cache_create(),
+> > which only works for fixed-size allocations). This is needed to expand
+> > the codetag work into doing per-call-site allocations, as I detailed
+> > here[1].
+> >
+> > Also, adding uses manually isn't very difficult, as can be seen in the
+> > examples I included. In fact, my examples between v1 and v2 collapsed
+> > from 3 to 2, because covering memdup_user() actually covered 2 known
+> > allocation paths (attrs and vma names), and given its usage pattern,
+> > will cover more in the future without changes.
+> 
+> It's not about difficulty, it's about scale. There are hundreds of interesting structures: I'm worried that no one will take the time to add a separate bucket for each of them, chase their call-sites down, and monitor every single newly added structures to check if they are "interesting" and should benefit from their own bucket as well.
 
-So, with these changes, fix the following warning:
-drivers/platform/chrome/cros_ec_proto_test.c:1547:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_proto_test.c:1607:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_proto_test.c:1645:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_proto_test.c:1668:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Very few are both: 1) dynamically sized, and 2) coming from userspace,
+so I think the scale is fine.
 
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/chrome/cros_ec_proto_test.c | 72 ++++++++------------
- 1 file changed, 30 insertions(+), 42 deletions(-)
+> > ] something like AUTOSLAB would be better
+> > Yes, that's the goal of [1]. This is a prerequisite for that, as
+> > mentioned in the cover letter.
+> 
+> This series looks unrelated to [1] to me: the former adds a mechanism to add buckets and expects developers to manually make use of them, while the latter is about adding infrastructure to automate call-site-based segregation.
 
-diff --git a/drivers/platform/chrome/cros_ec_proto_test.c b/drivers/platform/chrome/cros_ec_proto_test.c
-index b6169d6f2467..41378c2ee6a0 100644
---- a/drivers/platform/chrome/cros_ec_proto_test.c
-+++ b/drivers/platform/chrome/cros_ec_proto_test.c
-@@ -1543,21 +1543,18 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
- 	struct cros_ec_device *ec_dev = &priv->ec_dev;
- 	struct ec_xfer_mock *mock;
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		u8 data[0x100];
--	} __packed buf;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
- 
- 	ec_dev->max_request = 0xff;
- 	ec_dev->max_response = 0xee;
- 	ec_dev->max_passthru = 0xdd;
- 
--	buf.msg.version = 0;
--	buf.msg.command = EC_CMD_HELLO;
--	buf.msg.insize = 4;
--	buf.msg.outsize = 2;
--	buf.data[0] = 0x55;
--	buf.data[1] = 0xaa;
-+	buf->version = 0;
-+	buf->command = EC_CMD_HELLO;
-+	buf->insize = 4;
-+	buf->outsize = 2;
-+	buf->data[0] = 0x55;
-+	buf->data[1] = 0xaa;
- 
- 	{
- 		u8 *data;
-@@ -1572,7 +1569,7 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
- 		data[3] = 0x33;
- 	}
- 
--	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
-+	ret = cros_ec_cmd_xfer(ec_dev, buf);
- 	KUNIT_EXPECT_EQ(test, ret, 4);
- 
- 	{
-@@ -1590,10 +1587,10 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
- 		KUNIT_EXPECT_EQ(test, data[0], 0x55);
- 		KUNIT_EXPECT_EQ(test, data[1], 0xaa);
- 
--		KUNIT_EXPECT_EQ(test, buf.data[0], 0xaa);
--		KUNIT_EXPECT_EQ(test, buf.data[1], 0x55);
--		KUNIT_EXPECT_EQ(test, buf.data[2], 0xcc);
--		KUNIT_EXPECT_EQ(test, buf.data[3], 0x33);
-+		KUNIT_EXPECT_EQ(test, buf->data[0], 0xaa);
-+		KUNIT_EXPECT_EQ(test, buf->data[1], 0x55);
-+		KUNIT_EXPECT_EQ(test, buf->data[2], 0xcc);
-+		KUNIT_EXPECT_EQ(test, buf->data[3], 0x33);
- 	}
- }
- 
-@@ -1603,26 +1600,23 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_insize(struct kunit *test)
- 	struct cros_ec_device *ec_dev = &priv->ec_dev;
- 	struct ec_xfer_mock *mock;
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		u8 data[0x100];
--	} __packed buf;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
- 
- 	ec_dev->max_request = 0xff;
- 	ec_dev->max_response = 0xee;
- 	ec_dev->max_passthru = 0xdd;
- 
--	buf.msg.version = 0;
--	buf.msg.command = EC_CMD_HELLO;
--	buf.msg.insize = 0xee + 1;
--	buf.msg.outsize = 2;
-+	buf->version = 0;
-+	buf->command = EC_CMD_HELLO;
-+	buf->insize = 0xee + 1;
-+	buf->outsize = 2;
- 
- 	{
- 		mock = cros_kunit_ec_xfer_mock_add(test, 0xcc);
- 		KUNIT_ASSERT_PTR_NE(test, mock, NULL);
- 	}
- 
--	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
-+	ret = cros_ec_cmd_xfer(ec_dev, buf);
- 	KUNIT_EXPECT_EQ(test, ret, 0xcc);
- 
- 	{
-@@ -1641,21 +1635,18 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_without_passthru(stru
- 	struct cros_ec_proto_test_priv *priv = test->priv;
- 	struct cros_ec_device *ec_dev = &priv->ec_dev;
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		u8 data[0x100];
--	} __packed buf;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
- 
- 	ec_dev->max_request = 0xff;
- 	ec_dev->max_response = 0xee;
- 	ec_dev->max_passthru = 0xdd;
- 
--	buf.msg.version = 0;
--	buf.msg.command = EC_CMD_HELLO;
--	buf.msg.insize = 4;
--	buf.msg.outsize = 0xff + 1;
-+	buf->version = 0;
-+	buf->command = EC_CMD_HELLO;
-+	buf->insize = 4;
-+	buf->outsize = 0xff + 1;
- 
--	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
-+	ret = cros_ec_cmd_xfer(ec_dev, buf);
- 	KUNIT_EXPECT_EQ(test, ret, -EMSGSIZE);
- }
- 
-@@ -1664,21 +1655,18 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_with_passthru(struct
- 	struct cros_ec_proto_test_priv *priv = test->priv;
- 	struct cros_ec_device *ec_dev = &priv->ec_dev;
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		u8 data[0x100];
--	} __packed buf;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
- 
- 	ec_dev->max_request = 0xff;
- 	ec_dev->max_response = 0xee;
- 	ec_dev->max_passthru = 0xdd;
- 
--	buf.msg.version = 0;
--	buf.msg.command = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX) + EC_CMD_HELLO;
--	buf.msg.insize = 4;
--	buf.msg.outsize = 0xdd + 1;
-+	buf->version = 0;
-+	buf->command = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX) + EC_CMD_HELLO;
-+	buf->insize = 4;
-+	buf->outsize = 0xdd + 1;
- 
--	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
-+	ret = cros_ec_cmd_xfer(ec_dev, buf);
- 	KUNIT_EXPECT_EQ(test, ret, -EMSGSIZE);
- }
- 
+Right -- but for call-site-based separation, there is currently no way
+to separate _dynamically_ sized allocations; only fixed size (via
+kmem_cache_create()). This series adds the ability for call-site-based
+separation to also use kmem_bucket_create(). Call-site-based
+separation isn't possible without this series.
+
+> 
+> > ] The slabs needs to be pinned
+> > Yes, and this is a general problem[2] with all kmalloc allocations, though.
+> > This isn't unique to to this patch series. SLAB_VIRTUAL solves it, and
+> > is under development.
+> 
+> Then it would be nice to mention it in the serie, as an acknowledged limitation.
+
+Sure, I can update the cover letter.
+
+> 
+> > ] Lacks guard pages
+> > Yes, and again, this is a general problem with all kmalloc allocations.
+> > Solving it, like SLAB_VIRTUAL, would be a complementary hardening
+> > improvement to the allocator generally.
+> 
+> Then it would also be nice to mention it, because currently it's unclear that those limitations are both known and will be properly addressed.
+
+Sure. For both this and pinning, the issues are orthogonal, so it didn't
+seem useful to distract from what the series was doing, but I can
+explicitly mention them going forward.
+
+> 
+> > ] PAX_USERCOPY has been marking these sites since 2012
+> > Either it's whack-a-mole or it's not. :) 
+> 
+> This annotation was added 12 years ago in PaX, and while it was state of the art back then, I think that in 2024 we can do better than this.
+
+Agreed. Here's my series to start that. :)
+
+> > PAX_USERCOPY shows that it _is_ possible to mark all sites.
+> 
+> It shows that it's possible to annotate some sites (17 in grsecurity-3.1-4.9.9-201702122044.patch), and while it has a similar approach to your series, its annotations aren't conveying the same meaning.
+
+Sure, GFP_USERCOPY is separate.
+
+> > Regardless, like AUTOSLAB, PAX_USERCOPY isn't
+> > upstream, and its current implementation is an unpublished modification
+> > to a GPL project. I look forward to someone proposing it for inclusion
+> > in Linux, but for now we can work with the patches where an effort _has_
+> > been made to upstream them for the benefit of the entire ecosystem.
+> > ] What about CONFIG_KMALLOC_SPLIT_VARSIZE
+> > This proposed improvement is hampered by not having dedicated
+> > _dynamically_ sized kmem caches, which this series provides. And with
+> > codetag-split allocations[1], the goals of CONFIG_KMALLOC_SPLIT_VARSIZE
+> > are more fully realized, providing much more complete coverage.
+> 
+> CONFIG_KMALLOC_SPLIT_VARSIZE has been bypassed dozen of times in various ways as part of Google's kernelCTF.
+> Your series is, to my understanding, a weaker form of it. So I'm not super-convinced that it's the right approach to mitigate UAF.
+
+This series doesn't do anything that CONFIG_KMALLOC_SPLIT_VARSIZE does.
+The call-site-separation series (which would depend on this series)
+would do that work.
+
+> Do you think it would be possible for Google to add this series to its kernelCTF, so gather empirical data on how feasible/easy it is to bypass it?
+
+Sure, feel free to make that happen. :) But again, I'm less interested
+in this series as a _standalone_ solution. It's a prerequisite for
+call-site-based allocation separation. As part of it, though, we can
+plug the blatant exploitation methods that currently exist.
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
