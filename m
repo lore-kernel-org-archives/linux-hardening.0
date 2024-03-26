@@ -1,66 +1,61 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14AC7173B
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 22:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EACE1F61C
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 22:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711492838; cv=none; b=mvENIh0B4qHS+qbVJsFanQg966j+yNhhlj3YTjmarD+LJB18TDkd968GaCbuyvjCR8t99CX1CE/+aW58yZLQl5lwKmSE9t8WZ3owt4v8LuT/0SGdasP1+J7K2bdJlvY8Sqihdcu5D6bijrxqK5+Zp00wx/APmbRResmTpbTRp+c=
+	t=1711493061; cv=none; b=O/J8cG/iTG9F1YQZyNog+RM+BUCoqnzjB/noyWqjGhflLYZpgVV/KcrChMpl+gFKgiKxYZKi43xT0xdyWfHrImNwL+9+E4F20H8omdPggTgXQqips9pXcW94fhWSyJSMNM/8dhzeWzYdH1ohJ9AN/dYXij7nyVDXYCLuW+M2Ofc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711492838; c=relaxed/simple;
-	bh=yx8FqHoYQC1PWSggMb1zsMpypq8jpF4oFVsUHceinSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H361I//4Lt3beBN7w0IbGXaEAA3TysV4miSVFz+t1Jo0x1Bfh8oDa7q8lumO23usJFcXpHRSOhQhVUR0N3xAFNb3JaFiOU43Tif9SStckKiu3Q6foeD71/rWPyOsvCbt2jFO33/m4ERnnlxFGr9lZKOPWJ+Pgu7lyN7YQv290hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JyuJz1sn; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1711493061; c=relaxed/simple;
+	bh=DmzPSzaPgO5ZdYrZP/V5WrYINYntX9rvKUOE24fNeNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=F73ivZVwLwkatTvObdX53ltyHyKoLU1Y5W2s2gHDWiLv7uv6997Pp16EsDrZAmmvWQ7NiwwfTkJMJlsh2/f5mWQUCBgbt2ffqt3MKC/RHg6TX9F7l1zIaw7m8SU/KxLD0slKII4jRJnX9CCfnr7nRK5wPhAAB+lTGl80v58kQ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W+Vmormj; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JyuJz1sn"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29df3333d30so4312515a91.1
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 15:40:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W+Vmormj"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ea838bf357so3429819b3a.0
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 15:44:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711492836; x=1712097636; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MvOJt/m6EX1Fwx/utuRWvS5dkTN8eAFwRhRBD4PxWcU=;
-        b=JyuJz1snuaNpYTlA+i/4xYc+mVvynUDy9D5DDc7Eac3f7xnI0TjujQCBHvw5wOPQxO
-         ML5NJ6PRBuP3Og8FPFyyMS64OkuI/UqO05nT7P/xcBvUThiP8RHYZq+rBj72JCc5JqjG
-         VO8L+mzrTEhdt17mbJhsIHv97WsB3EHzUNcgI=
+        d=chromium.org; s=google; t=1711493059; x=1712097859; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VXI5ZdGfMORIPiIcqImDe2wXt3ueShbSXK4sRTx/QcM=;
+        b=W+Vmormjn9EU5780R1Fax53N0KdU+9zbOYFEFW/CcBsS6FaDchRjAvZhUqjZea4RfO
+         NrWHg3DqEkG8smFoAApc2NpVJicTfIzKJIhchEVtpCwm3PMg2aJUXqT3Jrh2hJIKA36D
+         U0tbOjsTlWCHN/Yysfp5msqnVdWSewEVgZJMo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711492836; x=1712097636;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MvOJt/m6EX1Fwx/utuRWvS5dkTN8eAFwRhRBD4PxWcU=;
-        b=UDu2b68jKD3nTtTpNBe7/8qvbHpxN5cbbk3+uu6sJYlb+/v8aR3AmPuwaK+O3l5YeR
-         sV8E9or9XWUHQGjRBa6tG67uZ2eAdPiMb2XqT5yKHdr1B7gwzfpliOpN3XbtHoBwbyp9
-         a16Hwc3UmWK8nwOvyfEMUVmI1cRXsp4J3OU2wig1yI2FEJ3nTPf1nckzaxQqO+RQKGvt
-         43SZ5653BLNS0rOzUHiCq2EFqApGUOT5x4e+gb/tcm+zOsaH20dVrSyc90zHgi2jMrpf
-         jnvBDwtF8+CmlxlTxWeJQnVl+d+DCJBeLWkWGzeDjJ/YSfzox8fLV8zwx2P8Dfgce43y
-         LaVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGKan2ov7GwJgDjipTnIgOtxhsK6i6cQfrb9/zp+NRan4YLofOI/+rc6+zXdWNuorHTKAPn3LGOxbvcmNyWPhAOmLPk9+TOhJGMBQwm+mP
-X-Gm-Message-State: AOJu0Yxzabx+EIHapQP2rlzB3ilMuVsU7b2ySnRT64k291EvUAvKGW+O
-	YHYIMj2KAJQxdMGUEaWKcUW20Y5XvejFZlEHvyMidaqWnw2gHyBL7kQQ2ZPNtg==
-X-Google-Smtp-Source: AGHT+IF5G3KrocdACcX+f3m+HzePkIM6XGT4hipE9Q1qTgD2Rdqr0vhVlYeGHO3NcuiylpnYgzVGcQ==
-X-Received: by 2002:a17:90a:53e4:b0:2a0:3724:6c70 with SMTP id y91-20020a17090a53e400b002a037246c70mr1191157pjh.39.1711492836017;
-        Tue, 26 Mar 2024 15:40:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711493059; x=1712097859;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VXI5ZdGfMORIPiIcqImDe2wXt3ueShbSXK4sRTx/QcM=;
+        b=bMiTQHJQi284BQ9mRhQkvMf40U7UwpVIxJo37HYPdkiGo06PKQTErwdXKb/aGepHBa
+         TyitaLEfeaNNJ5efVvJl2VOc7krbFM5GkccEriXnt8KiojtYNZKkL01QPQhWzCpxwncZ
+         /4BFmz/3Z4UCz6OuM55ncL2tcnDBCVg7qFccPyyDYlgtU5ODIJPHz8jz/SfrM1F0gLy0
+         kcbRDfdTrmpxd6TA3KH560aMHi+djSSKjFCXZMvUTwqsC9iLwGACczlEzZCs9FlnUfv9
+         lfmFC5FbM3oCAjavaNZku+MbJfr6Kb11jw+/QJOUyV/RIVCVGzdfRa/qA+pZYy8EuoCm
+         4AlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHJff3f+RmPjs1rB0fRZ1I3iw5D+/+pWvzNcNtknEBcPd9aJYzTKcrWwzxiLCUnaK0KTszQKdu1o5U0UMgHGLeHtx7KUkUhSJZHmTmdAw2
+X-Gm-Message-State: AOJu0Yx2Xb7S1ippUQqwhBeaDayWr98w9LqERP83dH5yezSRfGt9iHEA
+	0ARPTCpODqG/ePn2gd2W7KxOXxOGnVL0ywoWciqJKwondXWxEWl5szXCXfAsnA==
+X-Google-Smtp-Source: AGHT+IFYNEPpAhAP0GckgmftIJyxv28Z7U0cdsSZCG176h42q0yhHHC6B5JG435IRLzrseqndsRg+A==
+X-Received: by 2002:a05:6a00:1896:b0:6e6:9f03:6a6d with SMTP id x22-20020a056a00189600b006e69f036a6dmr1317580pfh.3.1711493059527;
+        Tue, 26 Mar 2024 15:44:19 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id sg17-20020a17090b521100b002a08ddb5bb3sm130502pjb.12.2024.03.26.15.40.35
+        by smtp.gmail.com with ESMTPSA id hy4-20020a056a006a0400b006e6a16acf85sm6550957pfb.87.2024.03.26.15.44.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 15:40:35 -0700 (PDT)
-Date: Tue, 26 Mar 2024 15:40:34 -0700
+        Tue, 26 Mar 2024 15:44:19 -0700 (PDT)
+Date: Tue, 26 Mar 2024 15:44:18 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Shuah Khan <shuah@kernel.org>, Mark Brown <broonie@kernel.org>,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] selftests/exec: execveat: Improve debug reporting
-Message-ID: <202403261540.8F0D7A0@keescook>
-References: <20240313185606.work.073-kees@kernel.org>
- <1dd87e89-2306-4669-844f-ffe9e56523b6@collabora.com>
- <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Justin Stitt <justinstitt@google.com>,
+	Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Subject: [GIT PULL] execve fixes for v6.9-rc2
+Message-ID: <202403261544.E7B2404@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,29 +64,62 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
 
-On Tue, Mar 26, 2024 at 02:46:02PM -0600, Shuah Khan wrote:
-> On 3/14/24 02:54, Muhammad Usama Anjum wrote:
-> > On 3/13/24 11:56 PM, Kees Cook wrote:
-> > > Children processes were reporting their status, duplicating the
-> > > parent's. Remove that, and add some additional details about the test
-> > > execution.
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > Cc: Eric Biederman <ebiederm@xmission.com>
-> > > Cc: Shuah Khan <shuah@kernel.org>
-> > > Cc: Mark Brown <broonie@kernel.org>
-> > > Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> > > Cc: linux-mm@kvack.org
-> > > Cc: linux-kselftest@vger.kernel.org
-> > Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> > 
-> 
-> Applied to linux-kselftest fixes for the next rc.
+Hi Linus,
 
-This is already part of the execve tree...
+Please pull these execve fixes for v6.9-rc2.
+
+Thanks!
+
+-Kees
+
+The following changes since commit 725d50261285ccf02501f2a1a6d10b31ce014597:
+
+  exec: Simplify remove_arg_zero() error path (2024-03-09 13:46:30 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.9-rc2
+
+for you to fetch changes up to 5248f4097308c1cdcf163314a6ea3c8c88c98cd9:
+
+  binfmt: replace deprecated strncpy (2024-03-21 20:20:52 -0700)
+
+----------------------------------------------------------------
+execve fixes for v6.9-rc2
+
+- Fix selftests to conform to the TAP output format (Muhammad Usama Anjum)
+
+- Fix NOMMU linux_binprm::exec pointer in auxv (Max Filippov)
+
+- Replace deprecated strncpy usage (Justin Stitt)
+
+- Replace another /bin/sh instance in selftests
+
+----------------------------------------------------------------
+Justin Stitt (1):
+      binfmt: replace deprecated strncpy
+
+Kees Cook (2):
+      selftests/exec: execveat: Improve debug reporting
+      selftests/exec: Convert remaining /bin/sh to /bin/bash
+
+Max Filippov (1):
+      exec: Fix NOMMU linux_binprm::exec in transfer_args_to_stack()
+
+Muhammad Usama Anjum (3):
+      selftests/exec: binfmt_script: Add the overall result line according to TAP
+      selftests/exec: load_address: conform test to TAP format output
+      selftests/exec: recursion-depth: conform test to TAP format output
+
+ fs/binfmt_elf_fdpic.c                          |  2 +-
+ fs/exec.c                                      |  1 +
+ tools/testing/selftests/exec/Makefile          |  4 +-
+ tools/testing/selftests/exec/binfmt_script.py  | 10 ++++-
+ tools/testing/selftests/exec/execveat.c        | 12 +++---
+ tools/testing/selftests/exec/load_address.c    | 34 ++++++++---------
+ tools/testing/selftests/exec/recursion-depth.c | 53 +++++++++++++-------------
+ 7 files changed, 61 insertions(+), 55 deletions(-)
 
 -- 
 Kees Cook
