@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFE0208A5;
-	Tue, 26 Mar 2024 01:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320D2208C3;
+	Tue, 26 Mar 2024 01:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711416845; cv=none; b=VrzDizhOJryb3shG6s3C2JHjDKFhYxKGyH9+6m2jpZ6YigKPqc6jhwpbcwINpyyD4DSxT+zkGkHEVocoWflyH8r65/F42gU0jnyZ8IojIeNh50OTnjXClmOQ9Kg2EXCghjuPMvr6tFPqxikg7yFu7ECAjv7tKWIcja5dScA9jMM=
+	t=1711416965; cv=none; b=m3BfBU3rCNVVjpeOEoTg2x1hSZD6hA0x7PPaxKM0rgIxCk6YYDh9K/vfPM9AshbRaFHjkHGyjI8mxFs1S3Q66y6e/NpeWnMzC0FyMSd4/o7pGmMihzUjXlZZro0XNM7Zpo1oYUYUxjfy7ziD1hqIEVHQ2vXeboAqxd/gT02IgvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711416845; c=relaxed/simple;
-	bh=Kld8ee53LGFCJ947l/6fXt+DcJKCtXX/9+TvSa7mnjQ=;
+	s=arc-20240116; t=1711416965; c=relaxed/simple;
+	bh=lWmFCW3E1cmFH4KzQVtNpNX3lS13zmnBzK7/lzOc7kI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nagDUTd0gWHlsiFgSNxGMyssseNqCgYyaPEOB2aUI/SDvL1+K0Zd3FV00gfsSKrl56H1NW5plLpnzy8VFulqgnN5GOsJuotLKiuTrClWgp7oHQJkQdDgMkwgcsuaWMezdMEvII+L1uML0YNAQ3Ri1BRfwfDXccyXLGdfo8I6jZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzKWX3CA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=cLXg4L+H0Sv2ahcsdAKXFsdsBeBdoszaxQPxTdWvjFWh3MagLabrswfhjYlAUBJEUoi5BgEMCJD23od7xQGpor5eS1Almw+mtYfjM1HauuaccJ84SAFBVUlAFmcLWI2+osxzrH+q8DfqkKXtO8UBMDUL+zTtt2RdmwkuX6gDVAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWD8+oiW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzKWX3CA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BAFC433F1;
-	Tue, 26 Mar 2024 01:34:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWD8+oiW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320E9C433F1;
+	Tue, 26 Mar 2024 01:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711416844;
-	bh=Kld8ee53LGFCJ947l/6fXt+DcJKCtXX/9+TvSa7mnjQ=;
+	s=k20201202; t=1711416964;
+	bh=lWmFCW3E1cmFH4KzQVtNpNX3lS13zmnBzK7/lzOc7kI=;
 	h=Date:From:To:Cc:Subject:From;
-	b=tzKWX3CAVp6lzR+NO9U/wVxg+j/9VDnYwxQauhl5F5BKOCxTnfQYWfltEcgB/WI11
-	 61diXdiwjt0DBGdZBT3+HPPR5JXaTE3cJJ8UzRQWNOXMbx6Errnhz4MWVIj23Xz2/d
-	 AuJU4jyjp+I6rMRZE07Ju2rpV9IxmZGPmDq1m91dHc3twH8pS/ZdVDDvZgVkXwGI8o
-	 YbRZdx9MIVqAqM+5V/MlbiG2h2Z+vyecdVitHkBxQucbJEPwMEwLGnB6ESwUUrIk8+
-	 ++ZRLg+Mz7kCVn0C+aE+cHZZmqqAppSa61Mda6zq33KURZxou8DEII2sLgcggnGFQM
-	 AIj1PouNR37LA==
-Date: Mon, 25 Mar 2024 19:34:01 -0600
+	b=lWD8+oiWRHB0cipl3whT0kQ+zek0oWZCm1LSHrREIMG/OvUQ/oEV3Prwa/A6C3XQ5
+	 ufdtBPv9NwXGxCbjDsi3c0TcY/0IS5eOriqyr5+UtdmFwuHo/xPtVoMK5t4VB2i+Cl
+	 4chJpBlow3W21+s3JLjdi9TXFl2t7wYnOjoKcFB1ylieVpuWcHuAzi5WaVHkmnwLPr
+	 LoUftmF9wgzNIjq/ieAZvcNQiZYcfUaQghpmVa1JJ3myqaTHRJJu3OPLi9gDLyy1Gu
+	 oowTaUGKIdOi4NnHjNGz/E5rMaF7PnHNdlQSjSwtOAJI04EhShickJLxrMEOKJ35/n
+	 t0Tt9+d/HWR+Q==
+Date: Mon, 25 Mar 2024 19:36:02 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] fs: Annotate struct file_handle with __counted_by()
- and use struct_size()
-Message-ID: <ZgImCXTdGDTeBvSS@neat>
+Subject: [PATCH v2][next] fsnotify: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <ZgImguNzJBiis9Mj@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,74 +44,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
+Use the `DEFINE_FLEX()` helper for an on-stack definition of a
+flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-While there, use struct_size() helper, instead of the open-coded
-version.
+So, with these changes, fix the following warning:
+fs/notify/fdinfo.c:45:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Link: https://github.com/KSPP/linux/issues/202
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- fs/fhandle.c       | 8 ++++----
- include/linux/fs.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+Changes in v2:
+ - Use DEFINE_FLEX() instead of struct_group_tagged().
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 57a12614addf..53ed54711cd2 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -36,7 +36,7 @@ static long do_sys_name_to_handle(const struct path *path,
- 	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
- 		return -EINVAL;
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZeeaRuTpuxInH6ZB@neat/
+
+ fs/notify/fdinfo.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/fs/notify/fdinfo.c b/fs/notify/fdinfo.c
+index 5c430736ec12..dec553034027 100644
+--- a/fs/notify/fdinfo.c
++++ b/fs/notify/fdinfo.c
+@@ -41,29 +41,25 @@ static void show_fdinfo(struct seq_file *m, struct file *f,
+ #if defined(CONFIG_EXPORTFS)
+ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
+ {
+-	struct {
+-		struct file_handle handle;
+-		u8 pad[MAX_HANDLE_SZ];
+-	} f;
++	DEFINE_FLEX(struct file_handle, f, f_handle, handle_bytes, MAX_HANDLE_SZ);
+ 	int size, ret, i;
  
--	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
-+	handle = kzalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
- 			 GFP_KERNEL);
- 	if (!handle)
- 		return -ENOMEM;
-@@ -71,7 +71,7 @@ static long do_sys_name_to_handle(const struct path *path,
- 	/* copy the mount id */
- 	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
- 	    copy_to_user(ufh, handle,
--			 sizeof(struct file_handle) + handle_bytes))
-+			 struct_size(handle, f_handle, handle_bytes)))
- 		retval = -EFAULT;
- 	kfree(handle);
- 	return retval;
-@@ -192,7 +192,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
- 		retval = -EINVAL;
- 		goto out_err;
- 	}
--	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
-+	handle = kmalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
- 			 GFP_KERNEL);
- 	if (!handle) {
- 		retval = -ENOMEM;
-@@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
- 	*handle = f_handle;
- 	if (copy_from_user(&handle->f_handle,
- 			   &ufh->f_handle,
--			   f_handle.handle_bytes)) {
-+			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
- 		retval = -EFAULT;
- 		goto out_handle;
- 	}
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 034f0c918eea..1540e28d10d7 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1033,7 +1033,7 @@ struct file_handle {
- 	__u32 handle_bytes;
- 	int handle_type;
- 	/* file identifier */
--	unsigned char f_handle[];
-+	unsigned char f_handle[] __counted_by(handle_bytes);
- };
+-	f.handle.handle_bytes = sizeof(f.pad);
+-	size = f.handle.handle_bytes >> 2;
++	size = f->handle_bytes >> 2;
  
- static inline struct file *get_file(struct file *f)
+-	ret = exportfs_encode_fid(inode, (struct fid *)f.handle.f_handle, &size);
++	ret = exportfs_encode_fid(inode, (struct fid *)f->f_handle, &size);
+ 	if ((ret == FILEID_INVALID) || (ret < 0)) {
+ 		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
+ 		return;
+ 	}
+ 
+-	f.handle.handle_type = ret;
+-	f.handle.handle_bytes = size * sizeof(u32);
++	f->handle_type = ret;
++	f->handle_bytes = size * sizeof(u32);
+ 
+ 	seq_printf(m, "fhandle-bytes:%x fhandle-type:%x f_handle:",
+-		   f.handle.handle_bytes, f.handle.handle_type);
++		   f->handle_bytes, f->handle_type);
+ 
+-	for (i = 0; i < f.handle.handle_bytes; i++)
+-		seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
++	for (i = 0; i < f->handle_bytes; i++)
++		seq_printf(m, "%02x", (int)f->f_handle[i]);
+ }
+ #else
+ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
 -- 
 2.34.1
 
