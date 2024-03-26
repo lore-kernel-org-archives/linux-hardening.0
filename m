@@ -1,102 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8FF1F16B;
-	Tue, 26 Mar 2024 01:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE92128835
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 02:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711418377; cv=none; b=aZ9GhH8vWX7ys1CJK3jE1bOYsHhU2cdGo/zIR2NcfQ5QlL68nNIidOdoqIqLLEUmZV4Y/srl1R7UMCnlgsohzk2tkQ0gbXAuEQB4G4Mx9S7zZrAgGD5URkn4Fld9RRs2Kd9RqxsRgpKqalGWbcYed2/ZmtO4NrocnYX+Gzz8XiQ=
+	t=1711421873; cv=none; b=rb7MMrJiL6W1lu1eZ4uDDxc99sZg+vYcwD1cXb5KyVPpvnuoyRHAlVAd5mR5j9rHJTtNNnwZBhusncNQsce8XeD2+j+4GPg06CsTIgrREiGuRY44NPFExDV5jcfJHmSI6slRjk7YIdypBLS2vbs/ldx+EPv+8aiSucYu2s/ZCT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711418377; c=relaxed/simple;
-	bh=godkSQKzA+faGIiVFZsDHyhNsvM15bnkQ1YACwtY2GU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sNBdJ/yzHfqykH4vU9fJpQnVlK0CL25tIedf8QxVoUw7ZfFrIm4B9quTVUO1wpZEhIVF5jSBjM7pFweaKFmlWfisJkPOB7MdVvW9OkB7LICExOJAeC336M6NAjmdj87hvR/LzCB6fOa0tvEbhVz/W+jvvl/+azxzmGzYZ9Gnolg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEseGsx9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711421873; c=relaxed/simple;
+	bh=vX3bVL1HMc4EDAaj7B3gjYlT0mkkt+c/itIyWdTv+VI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pnoUdoazDtsKYdNphc3g30nuG2gsjJNL1sJGdgQmkv7UmBUue964FVJQjSVVTqBJFdtE0abrXM2dirXGhWm/S9mZnLr531cvKJYPZpWi4Az3kHQKuipmbMLG3wSQhibdP88JPU3SMKkbfkaD3TNdcIJF6qALzL7nA7MTWFzJAOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dlh+DXZ0; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEseGsx9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E54C433C7;
-	Tue, 26 Mar 2024 01:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711418376;
-	bh=godkSQKzA+faGIiVFZsDHyhNsvM15bnkQ1YACwtY2GU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=vEseGsx9VChXF6uoxfB81/TXxABM0Tm8P30hdOtWQH6VzHSy3gSeFMON0IL7wc44r
-	 ZRdhiHS5jriNrOHhmeYJDesXljZs1Rrn17t06sM8kZvEGFgUd6iWyZjnQzoWwYImcy
-	 +DzsiGlhCkliNR+Xr9b0nQtSs9UJ9rMaf051oIcoINiPQOqLGDeKHNcKKl71ue4J0p
-	 j151q4LQNuT7XvYsSEtS0ohKksohJmPWYnKDp0sKNjrsuUE/t9xFzGQdoH/F6UMaYo
-	 +XiTX3QfRWcnP5/9rfSGKmaSBpBdtsrEY2cyPSy5VW+hJUtfn3juyvxwfaqz5wWCE2
-	 t8DSj/HZB4uwQ==
-Date: Mon, 25 Mar 2024 19:59:34 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Clemens Ladisch <clemens@ladisch.de>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] ALSA: firewire-lib: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <ZgIsBqoMb7p3fMDr@neat>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dlh+DXZ0"
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTPS
+	id omuGrSm3cHXmAox0TrcQyL; Tue, 26 Mar 2024 02:57:45 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ox0Sr7RxEQufZox0SrONIs; Tue, 26 Mar 2024 02:57:44 +0000
+X-Authority-Analysis: v=2.4 cv=eK4Vjmp1 c=1 sm=1 tr=0 ts=660239a8
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=yCkJhreVFDLjqfpo9JAA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=o90u6YTpwASH2e8B6jU5tsJiGz540jLK6rTJxZ74n1E=; b=dlh+DXZ0+HwO8YHOI59tzajiU7
+	qmQUEJvuedN+ivIXiM+FfIAcXWLstqvZG56435B6bnHtPH5bqkuJ30xQCzNyxhe/qIwjSIIJo5gAb
+	74tfMHvhcn5K+NTqhs5jPpm7P3AExBIrcQ+mR6q56+/Win8S2npzBx8uELGUPlCRcpKJsPePQFnAB
+	8uyrn8iUYbR742Q6aWCJNeDen3PvwnqLGKWY111yZWIiwASKIMAwOpUYuDcpNrJLsXrcsi3Lm3669
+	KoJPufJI4vyGkljBC2rV6wZDaFT0nw3KRh+kVgTJnuMGX6zdeWkKySinxXTUkOqJkvfxafStVBPXm
+	FoboauPg==;
+Received: from [201.172.174.229] (port=52604 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rox0R-001mui-1e;
+	Mon, 25 Mar 2024 21:57:44 -0500
+Message-ID: <5c0bb827-e5f3-4178-ad46-8ac9b99d7726@embeddedor.com>
+Date: Mon, 25 Mar 2024 20:57:08 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] RDMA/cm: Avoid -Wflex-array-member-not-at-end
+ warning
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZgHdZ15cQ7MIHsGL@neat> <20240325224706.GB8419@ziepe.ca>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240325224706.GB8419@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.229
+X-Source-L: No
+X-Exim-ID: 1rox0R-001mui-1e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:52604
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNgW08gy/BermOfdhEVhQaBNKaMlfSO+Bw+GE/gCpN7Oqx5aILsrNtD0d0Gci6pdVlcUSvXpPQ6EyhOWb213UKOKh1on7Pd/ybClZPEFa4l+9m/5mrLJ
+ ujmMn/2XZi3FdLQly7b/cmWlf6WDB7pN4+znGLAX45nep+N6GgsnDfZqRq4PpcB/CydEsBGS/5yBudP7drKA2Nn1sXn7UgyYbBcZpURH9tku5E9U+J20Mnl8
 
-Use the `DEFINE_FLEX()` helper for an on-stack definition of a
-flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
 
-So, with these changes, fix the following warning:
-sound/firewire/amdtp-stream.c:1184:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use DEFINE_FLEX() helper instead of a new tagged struct.
+On 3/25/24 16:47, Jason Gunthorpe wrote:
+> On Mon, Mar 25, 2024 at 02:24:07PM -0600, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+>> ready to enable it globally.
+>>
+>> Use the `struct_group_tagged()` helper to separate the flexible array
+>> from the rest of the members in flexible `struct cm_work`, and avoid
+>> embedding the flexible-array member in `struct cm_timewait_info`.
+>>
+>> Also, use `container_of()` to retrieve a pointer to the flexible
+>> structure.
+>>
+>> So, with these changes, fix the following warning:
+>> drivers/infiniband/core/cm.c:196:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   drivers/infiniband/core/cm.c | 21 ++++++++++++---------
+>>   1 file changed, 12 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+>> index bf0df6ee4f78..80c87085499c 100644
+>> --- a/drivers/infiniband/core/cm.c
+>> +++ b/drivers/infiniband/core/cm.c
+>> @@ -182,18 +182,21 @@ struct cm_av {
+>>   };
+>>   
+>>   struct cm_work {
+>> -	struct delayed_work work;
+>> -	struct list_head list;
+>> -	struct cm_port *port;
+>> -	struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
+>> -	__be32 local_id;			/* Established / timewait */
+>> -	__be32 remote_id;
+>> -	struct ib_cm_event cm_event;
+>> +	/* New members must be added within the struct_group() macro below. */
+>> +	struct_group_tagged(cm_work_hdr, hdr,
+>> +		struct delayed_work work;
+>> +		struct list_head list;
+>> +		struct cm_port *port;
+>> +		struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
+>> +		__be32 local_id;			/* Established / timewait */
+>> +		__be32 remote_id;
+>> +		struct ib_cm_event cm_event;
+>> +	);
+>>   	struct sa_path_rec path[];
+>>   };
+> 
+> I didn't look, but does it make more sense to break out the path side
+> into its own type and avoid the struct_group_tagged? I seem to
+> remember only one thing used it.
+> 
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/d3a764eb76909b16b8a22d9ff530e5edf0e59e6b.1709658886.git.gustavoars@kernel.org/
+I thought about that, but I'd have to change the parameter type of
+`static int cm_timewait_handler(struct cm_work *work)`, and that would
+imply also modifying the internals of function `cm_work_handler()` (and
+then I didn't look much into it). So, the `struct_group_tagged()`
+strategy is in general more cleaner and straightforward.
 
- sound/firewire/amdtp-stream.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/sound/firewire/amdtp-stream.c b/sound/firewire/amdtp-stream.c
-index c9f153f85ae6..d35d0a420ee0 100644
---- a/sound/firewire/amdtp-stream.c
-+++ b/sound/firewire/amdtp-stream.c
-@@ -1180,13 +1180,11 @@ static void process_rx_packets(struct fw_iso_context *context, u32 tstamp, size_
- 		(void)fw_card_read_cycle_time(fw_parent_device(s->unit)->card, &curr_cycle_time);
- 
- 	for (i = 0; i < packets; ++i) {
--		struct {
--			struct fw_iso_packet params;
--			__be32 header[CIP_HEADER_QUADLETS];
--		} template = { {0}, {0} };
-+		DEFINE_FLEX(struct fw_iso_packet, template, header,
-+			    header_length, CIP_HEADER_QUADLETS);
- 		bool sched_irq = false;
- 
--		build_it_pkt_header(s, desc->cycle, &template.params, pkt_header_length,
-+		build_it_pkt_header(s, desc->cycle, template, pkt_header_length,
- 				    desc->data_blocks, desc->data_block_counter,
- 				    desc->syt, i, curr_cycle_time);
- 
-@@ -1198,7 +1196,7 @@ static void process_rx_packets(struct fw_iso_context *context, u32 tstamp, size_
- 			}
- 		}
- 
--		if (queue_out_packet(s, &template.params, sched_irq) < 0) {
-+		if (queue_out_packet(s, template, sched_irq) < 0) {
- 			cancel_stream(s);
- 			return;
- 		}
--- 
-2.34.1
+--
+Gustavo
 
