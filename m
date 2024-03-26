@@ -1,388 +1,97 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4317313D89D
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 21:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14AC7173B
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 22:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711490262; cv=none; b=KtmLzYexjxNjB/cvi+WQPeec1ZLQRUF1DvoFXQLLEBjkjl2V6ldWlX8PK6dWFz6yfwsPgaCgzZNSq7S473G3vu+m1mXzaKALwzY25bQrNNNPLicksn6hXcVLItrOnGGVC8I6ZYCHV3i1VBEc5bdJ0Nu9LJ9k2VlkLq+sjPupUi4=
+	t=1711492838; cv=none; b=mvENIh0B4qHS+qbVJsFanQg966j+yNhhlj3YTjmarD+LJB18TDkd968GaCbuyvjCR8t99CX1CE/+aW58yZLQl5lwKmSE9t8WZ3owt4v8LuT/0SGdasP1+J7K2bdJlvY8Sqihdcu5D6bijrxqK5+Zp00wx/APmbRResmTpbTRp+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711490262; c=relaxed/simple;
-	bh=UoR0o32MKIvmAp1ANiKOl+9qFONvSJ8UPsF1pvgXFFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aicA/2yM6jJAX9oPrz4vOWdZjjlC4nLxdBs88ypus3lUXiE7eqkZIa05Qy04XmXC1lgKEO5VGW5pWI9H0LQBLzGjIGk6B6tIAuKc6eL+5GbFr9zJr2/FfaaYbqfmU8nPc5Gb7LIxxE5ZU0pMN+K/SOV+/sL7xBI0T+iEhhdLx0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=COQ/ROch; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711492838; c=relaxed/simple;
+	bh=yx8FqHoYQC1PWSggMb1zsMpypq8jpF4oFVsUHceinSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H361I//4Lt3beBN7w0IbGXaEAA3TysV4miSVFz+t1Jo0x1Bfh8oDa7q8lumO23usJFcXpHRSOhQhVUR0N3xAFNb3JaFiOU43Tif9SStckKiu3Q6foeD71/rWPyOsvCbt2jFO33/m4ERnnlxFGr9lZKOPWJ+Pgu7lyN7YQv290hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JyuJz1sn; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="COQ/ROch"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id omq8rUQNLDI6fpEnbr2dPb; Tue, 26 Mar 2024 21:57:39 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pEnargqVMiDnepEnarLUuS; Tue, 26 Mar 2024 21:57:38 +0000
-X-Authority-Analysis: v=2.4 cv=Cd4O5qrl c=1 sm=1 tr=0 ts=660344d2
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=XAy_j3ZW5y_KvujfpI8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6DCdr4eyAU+kRAslFEtTKuTG/6MkQfr4djJhxLPnJfE=; b=COQ/ROchJF4TuJOB4+r/1/QuSH
-	X3OzD9awPFkyrQ3YdmdmMZUF76or3NNG0Wp040P/9fI04rlK20/GlxuBfl0mbcl6Di0xHyB71GDO4
-	gVJvJyj887HRbN/aQEDqF4JCLh3OvFZ9iFiJMKHN+l1oVxOrbs3GjBpSicTCN/GCkxuDEzuXaP6r+
-	DQcKou6pkKZOjIYJRgJ3l82MPnaun4TR47SxfStouuA8Hi9S72fh42iy9n4u4bOXc3wvawD9WPOz4
-	gqC/0IjRMpEDcH6lud0T+GC2PKjGhm4/07xKE8TKTfpojAXOTOwJKVgBJxBH5hhwCYc4tMoLGqwEH
-	wxBnJRBA==;
-Received: from [201.172.173.147] (port=54206 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpEnY-001gBp-1E;
-	Tue, 26 Mar 2024 16:57:36 -0500
-Message-ID: <e583503b-6964-4ca3-bbed-2fafab54a0d8@embeddedor.com>
-Date: Tue, 26 Mar 2024 15:57:34 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JyuJz1sn"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29df3333d30so4312515a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 15:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711492836; x=1712097636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MvOJt/m6EX1Fwx/utuRWvS5dkTN8eAFwRhRBD4PxWcU=;
+        b=JyuJz1snuaNpYTlA+i/4xYc+mVvynUDy9D5DDc7Eac3f7xnI0TjujQCBHvw5wOPQxO
+         ML5NJ6PRBuP3Og8FPFyyMS64OkuI/UqO05nT7P/xcBvUThiP8RHYZq+rBj72JCc5JqjG
+         VO8L+mzrTEhdt17mbJhsIHv97WsB3EHzUNcgI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711492836; x=1712097636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MvOJt/m6EX1Fwx/utuRWvS5dkTN8eAFwRhRBD4PxWcU=;
+        b=UDu2b68jKD3nTtTpNBe7/8qvbHpxN5cbbk3+uu6sJYlb+/v8aR3AmPuwaK+O3l5YeR
+         sV8E9or9XWUHQGjRBa6tG67uZ2eAdPiMb2XqT5yKHdr1B7gwzfpliOpN3XbtHoBwbyp9
+         a16Hwc3UmWK8nwOvyfEMUVmI1cRXsp4J3OU2wig1yI2FEJ3nTPf1nckzaxQqO+RQKGvt
+         43SZ5653BLNS0rOzUHiCq2EFqApGUOT5x4e+gb/tcm+zOsaH20dVrSyc90zHgi2jMrpf
+         jnvBDwtF8+CmlxlTxWeJQnVl+d+DCJBeLWkWGzeDjJ/YSfzox8fLV8zwx2P8Dfgce43y
+         LaVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGKan2ov7GwJgDjipTnIgOtxhsK6i6cQfrb9/zp+NRan4YLofOI/+rc6+zXdWNuorHTKAPn3LGOxbvcmNyWPhAOmLPk9+TOhJGMBQwm+mP
+X-Gm-Message-State: AOJu0Yxzabx+EIHapQP2rlzB3ilMuVsU7b2ySnRT64k291EvUAvKGW+O
+	YHYIMj2KAJQxdMGUEaWKcUW20Y5XvejFZlEHvyMidaqWnw2gHyBL7kQQ2ZPNtg==
+X-Google-Smtp-Source: AGHT+IF5G3KrocdACcX+f3m+HzePkIM6XGT4hipE9Q1qTgD2Rdqr0vhVlYeGHO3NcuiylpnYgzVGcQ==
+X-Received: by 2002:a17:90a:53e4:b0:2a0:3724:6c70 with SMTP id y91-20020a17090a53e400b002a037246c70mr1191157pjh.39.1711492836017;
+        Tue, 26 Mar 2024 15:40:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id sg17-20020a17090b521100b002a08ddb5bb3sm130502pjb.12.2024.03.26.15.40.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 15:40:35 -0700 (PDT)
+Date: Tue, 26 Mar 2024 15:40:34 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Shuah Khan <shuah@kernel.org>, Mark Brown <broonie@kernel.org>,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests/exec: execveat: Improve debug reporting
+Message-ID: <202403261540.8F0D7A0@keescook>
+References: <20240313185606.work.073-kees@kernel.org>
+ <1dd87e89-2306-4669-844f-ffe9e56523b6@collabora.com>
+ <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] Bluetooth: L2CAP: Avoid
- -Wflex-array-member-not-at-end warnings
-Content-Language: en-US
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZgMpynzZ8FltPCi3@neat>
- <CABBYNZ+N5UM3pvTiMSNx-EhhTOOXwEziO7BQoYK+u8=TtSQEnw@mail.gmail.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CABBYNZ+N5UM3pvTiMSNx-EhhTOOXwEziO7BQoYK+u8=TtSQEnw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpEnY-001gBp-1E
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:54206
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfByNWdFFcISIyUIxYo+dW+Zbui+IE5LYlFFwYWR7pIVSOlym0mKnVxA0zUCmHpvm10SaKrAQ9ytX98tz6M4KbUV78F3FYUkpb0kpLLgDfhkp7Xr1Gxa5
- ibhOZGyXkUEkGxg1UcA8MLaBHJb7CW7yz5KTel0EZWAGVoEsYtn7QX5J0a4AVZxSY408KkzHOt8rjml7GZQm7HGXRqkLsDfCuIERnngNvKifYaIPNtoXW53a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
 
+On Tue, Mar 26, 2024 at 02:46:02PM -0600, Shuah Khan wrote:
+> On 3/14/24 02:54, Muhammad Usama Anjum wrote:
+> > On 3/13/24 11:56 PM, Kees Cook wrote:
+> > > Children processes were reporting their status, duplicating the
+> > > parent's. Remove that, and add some additional details about the test
+> > > execution.
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > Cc: Eric Biederman <ebiederm@xmission.com>
+> > > Cc: Shuah Khan <shuah@kernel.org>
+> > > Cc: Mark Brown <broonie@kernel.org>
+> > > Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> > > Cc: linux-mm@kvack.org
+> > > Cc: linux-kselftest@vger.kernel.org
+> > Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> > 
+> 
+> Applied to linux-kselftest fixes for the next rc.
 
+This is already part of the execve tree...
 
-On 3/26/24 15:12, Luiz Augusto von Dentz wrote:
-> Hi Gustavo,
-> 
-> On Tue, Mar 26, 2024 at 4:02 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
->>
->> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->> ready to enable it globally.
->>
->> There are currently a couple of objects (`req` and `rsp`), in a couple
->> of structures, that contain flexible structures (`struct l2cap_ecred_conn_req`
->> and `struct l2cap_ecred_conn_rsp`), for example:
->>
->> struct l2cap_ecred_rsp_data {
->>          struct {
->>                  struct l2cap_ecred_conn_rsp rsp;
->>                  __le16 scid[L2CAP_ECRED_MAX_CID];
->>          } __packed pdu;
->>          int count;
->> };
->>
->> in the struct above, `struct l2cap_ecred_conn_rsp` is a flexible
->> structure:
->>
->> struct l2cap_ecred_conn_rsp {
->>          __le16 mtu;
->>          __le16 mps;
->>          __le16 credits;
->>          __le16 result;
->>          __le16 dcid[];
->> };
->>
->> So, in order to avoid ending up with a flexible-array member in the
->> middle of another structure, we use the `struct_group_tagged()` (and
->> `__struct_group()` when the flexible structure is `__packed`) helper
->> to separate the flexible array from the rest of the members in the
->> flexible structure:
->>
->> struct l2cap_ecred_conn_rsp {
->>          struct_group_tagged(l2cap_ecred_conn_rsp_hdr, hdr,
->>
->>          ... the rest of members
->>
->>          );
->>          __le16 dcid[];
->> };
-> 
-> Wouldn't it be better, more readable at least, to not define the
-> l2cap_ecred_conn_rsp_hdr inside thought? Instead just do:
-> 
-> struct_group_tagged(l2cap_ecred_conn_rsp_hdr, hdr,
-> ...
->   };
-> 
->   struct l2cap_ecred_conn_rsp {
->          struct l2cap_ecred_conn_rsp_hdr hdr;
->           __le16 dcid[];
->   };
-> 
-> Or was this done this way in order to maintain the same fields?
-
-Exactly. But I can change it if people consider that's better.
-
-> 
->> With the change described above, we now declare objects of the type of
->> the tagged struct, in this example `struct l2cap_ecred_conn_rsp_hdr`,
->> without embedding flexible arrays in the middle of other structures:
->>
->> struct l2cap_ecred_rsp_data {
->>          struct {
->>                  struct l2cap_ecred_conn_rsp_hdr rsp;
->>                  __le16 scid[L2CAP_ECRED_MAX_CID];
->>          } __packed pdu;
->>          int count;
->> };
->>
->> Also, when the flexible-array member needs to be accessed, we use
->> `container_of()` to retrieve a pointer to the flexible structure.
->>
->> We also use the `DEFINE_RAW_FLEX()` helper for a couple of on-stack
->> definitions of a flexible structure where the size of the flexible-array
->> member is known at compile-time.
->>
->> So, with these changes, fix the following warnings:
->> net/bluetooth/l2cap_core.c:1260:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> net/bluetooth/l2cap_core.c:3740:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> net/bluetooth/l2cap_core.c:4999:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> net/bluetooth/l2cap_core.c:7116:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Link: https://github.com/KSPP/linux/issues/202
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>
->> Hi!
->>
->> I wonder if `struct l2cap_ecred_conn_rsp` should also be `__packed`.
->>
->> Thanks
->>   - Gustavo
->>
->>   include/net/bluetooth/l2cap.h | 20 +++++++++------
->>   net/bluetooth/l2cap_core.c    | 46 ++++++++++++++++-------------------
->>   2 files changed, 33 insertions(+), 33 deletions(-)
->>
->> diff --git a/include/net/bluetooth/l2cap.h b/include/net/bluetooth/l2cap.h
->> index a4278aa618ab..92a143517d83 100644
->> --- a/include/net/bluetooth/l2cap.h
->> +++ b/include/net/bluetooth/l2cap.h
->> @@ -463,18 +463,22 @@ struct l2cap_le_credits {
->>   #define L2CAP_ECRED_MAX_CID            5
->>
->>   struct l2cap_ecred_conn_req {
->> -       __le16 psm;
->> -       __le16 mtu;
->> -       __le16 mps;
->> -       __le16 credits;
->> +       __struct_group(l2cap_ecred_conn_req_hdr, hdr, __packed,
->> +               __le16 psm;
->> +               __le16 mtu;
->> +               __le16 mps;
->> +               __le16 credits;
->> +       );
->>          __le16 scid[];
->>   } __packed;
->>
->>   struct l2cap_ecred_conn_rsp {
->> -       __le16 mtu;
->> -       __le16 mps;
->> -       __le16 credits;
->> -       __le16 result;
->> +       struct_group_tagged(l2cap_ecred_conn_rsp_hdr, hdr,
->> +               __le16 mtu;
->> +               __le16 mps;
->> +               __le16 credits;
->> +               __le16 result;
->> +       );
->>          __le16 dcid[];
->>   };
->>
->> diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
->> index 467b242d8be0..bf087eca489e 100644
->> --- a/net/bluetooth/l2cap_core.c
->> +++ b/net/bluetooth/l2cap_core.c
->> @@ -1257,7 +1257,7 @@ static void l2cap_le_connect(struct l2cap_chan *chan)
->>
->>   struct l2cap_ecred_conn_data {
->>          struct {
->> -               struct l2cap_ecred_conn_req req;
->> +               struct l2cap_ecred_conn_req_hdr req;
->>                  __le16 scid[5];
->>          } __packed pdu;
-> 
-> Can't we just use DEFINE_RAW_FLEX for the pdu field above?
-
-No; DEFINE_FLEX() and DEFINE_RAW_FLEX() are for on-stack code only.
-
-Thanks
---
-Gustavo
-
-> 
->>          struct l2cap_chan *chan;
->> @@ -3737,7 +3737,7 @@ static void l2cap_ecred_list_defer(struct l2cap_chan *chan, void *data)
->>
->>   struct l2cap_ecred_rsp_data {
->>          struct {
->> -               struct l2cap_ecred_conn_rsp rsp;
->> +               struct l2cap_ecred_conn_rsp_hdr rsp;
->>                  __le16 scid[L2CAP_ECRED_MAX_CID];
->>          } __packed pdu;
-> 
-> Ditto.
-> 
->>          int count;
->> @@ -3746,6 +3746,8 @@ struct l2cap_ecred_rsp_data {
->>   static void l2cap_ecred_rsp_defer(struct l2cap_chan *chan, void *data)
->>   {
->>          struct l2cap_ecred_rsp_data *rsp = data;
->> +       struct l2cap_ecred_conn_rsp *rsp_flex =
->> +               container_of(&rsp->pdu.rsp, struct l2cap_ecred_conn_rsp, hdr);
->>
->>          if (test_bit(FLAG_ECRED_CONN_REQ_SENT, &chan->flags))
->>                  return;
->> @@ -3755,7 +3757,7 @@ static void l2cap_ecred_rsp_defer(struct l2cap_chan *chan, void *data)
->>
->>          /* Include all channels pending with the same ident */
->>          if (!rsp->pdu.rsp.result)
->> -               rsp->pdu.rsp.dcid[rsp->count++] = cpu_to_le16(chan->scid);
->> +               rsp_flex->dcid[rsp->count++] = cpu_to_le16(chan->scid);
->>          else
->>                  l2cap_chan_del(chan, ECONNRESET);
->>   }
->> @@ -4995,10 +4997,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
->>                                         u8 *data)
->>   {
->>          struct l2cap_ecred_conn_req *req = (void *) data;
->> -       struct {
->> -               struct l2cap_ecred_conn_rsp rsp;
->> -               __le16 dcid[L2CAP_ECRED_MAX_CID];
->> -       } __packed pdu;
->> +       DEFINE_RAW_FLEX(struct l2cap_ecred_conn_rsp, pdu, dcid, L2CAP_ECRED_MAX_CID);
->>          struct l2cap_chan *chan, *pchan;
->>          u16 mtu, mps;
->>          __le16 psm;
->> @@ -5017,7 +5016,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
->>          cmd_len -= sizeof(*req);
->>          num_scid = cmd_len / sizeof(u16);
->>
->> -       if (num_scid > ARRAY_SIZE(pdu.dcid)) {
->> +       if (num_scid > L2CAP_ECRED_MAX_CID) {
->>                  result = L2CAP_CR_LE_INVALID_PARAMS;
->>                  goto response;
->>          }
->> @@ -5046,7 +5045,7 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
->>
->>          BT_DBG("psm 0x%2.2x mtu %u mps %u", __le16_to_cpu(psm), mtu, mps);
->>
->> -       memset(&pdu, 0, sizeof(pdu));
->> +       memset(pdu, 0, sizeof(*pdu));
->>
->>          /* Check if we have socket listening on psm */
->>          pchan = l2cap_global_chan_by_psm(BT_LISTEN, psm, &conn->hcon->src,
->> @@ -5072,8 +5071,8 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
->>
->>                  BT_DBG("scid[%d] 0x%4.4x", i, scid);
->>
->> -               pdu.dcid[i] = 0x0000;
->> -               len += sizeof(*pdu.dcid);
->> +               pdu->dcid[i] = 0x0000;
->> +               len += sizeof(*pdu->dcid);
->>
->>                  /* Check for valid dynamic CID range */
->>                  if (scid < L2CAP_CID_DYN_START || scid > L2CAP_CID_LE_DYN_END) {
->> @@ -5107,13 +5106,13 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
->>                  l2cap_ecred_init(chan, __le16_to_cpu(req->credits));
->>
->>                  /* Init response */
->> -               if (!pdu.rsp.credits) {
->> -                       pdu.rsp.mtu = cpu_to_le16(chan->imtu);
->> -                       pdu.rsp.mps = cpu_to_le16(chan->mps);
->> -                       pdu.rsp.credits = cpu_to_le16(chan->rx_credits);
->> +               if (!pdu->credits) {
->> +                       pdu->mtu = cpu_to_le16(chan->imtu);
->> +                       pdu->mps = cpu_to_le16(chan->mps);
->> +                       pdu->credits = cpu_to_le16(chan->rx_credits);
->>                  }
->>
->> -               pdu.dcid[i] = cpu_to_le16(chan->scid);
->> +               pdu->dcid[i] = cpu_to_le16(chan->scid);
->>
->>                  __set_chan_timer(chan, chan->ops->get_sndtimeo(chan));
->>
->> @@ -5135,13 +5134,13 @@ static inline int l2cap_ecred_conn_req(struct l2cap_conn *conn,
->>          l2cap_chan_put(pchan);
->>
->>   response:
->> -       pdu.rsp.result = cpu_to_le16(result);
->> +       pdu->result = cpu_to_le16(result);
->>
->>          if (defer)
->>                  return 0;
->>
->>          l2cap_send_cmd(conn, cmd->ident, L2CAP_ECRED_CONN_RSP,
->> -                      sizeof(pdu.rsp) + len, &pdu);
->> +                      sizeof(*pdu) + len, pdu);
->>
->>          return 0;
->>   }
->> @@ -7112,14 +7111,11 @@ EXPORT_SYMBOL_GPL(l2cap_chan_connect);
->>   static void l2cap_ecred_reconfigure(struct l2cap_chan *chan)
->>   {
->>          struct l2cap_conn *conn = chan->conn;
->> -       struct {
->> -               struct l2cap_ecred_reconf_req req;
->> -               __le16 scid;
->> -       } pdu;
->> +       DEFINE_RAW_FLEX(struct l2cap_ecred_reconf_req, pdu, scid, 1);
->>
->> -       pdu.req.mtu = cpu_to_le16(chan->imtu);
->> -       pdu.req.mps = cpu_to_le16(chan->mps);
->> -       pdu.scid    = cpu_to_le16(chan->scid);
->> +       pdu->mtu = cpu_to_le16(chan->imtu);
->> +       pdu->mps = cpu_to_le16(chan->mps);
->> +       pdu->scid[0] = cpu_to_le16(chan->scid);
->>
->>          chan->ident = l2cap_get_ident(conn);
->>
->> --
->> 2.34.1
->>
-> 
-> 
+-- 
+Kees Cook
