@@ -1,138 +1,386 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B58313D617
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 17:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B351B28D
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Mar 2024 18:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711472695; cv=none; b=mjT7LJR1d4OcyZNXS7dH7xZzLA4DJueo7+uvUw4gBSzoIf/gWZ0goGzTWH+VETymk4CN7DLhEvoRBWsZdZimilNeo0X6zKFGYBUgMoaRwAgq+WV1FO3EVzrMYax+1jXj5abOIQ2OX1oWRK0uv5021QxXFCx/sOgxjb7w8ZIZbJs=
+	t=1711476435; cv=none; b=OKfniMEkYubk39Ugiqq9/u3gXoLQ8vMLHwJvzagZ5zQBfxbGdlK+t2FulxQoASEKpGtPLv36HQGLlisHPjhDgSzOJ1cqFCCkHDEB3gQe7DWEKgm1kZQ2O9AfukgoeGE9QaMuVDxoYiGIjeDOLfn3rhmnBItweAgNBwGDy6eaJNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711472695; c=relaxed/simple;
-	bh=Cpri5PjjryFGqOusLKvKrIGD54oxva3AYCd9WDfkwGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pORx/0G5UX26mdyPMoEjq07dt5aLWaXgtMvS7iS1dDeUpq2QFLrma7nOjPhONOHoVY5m//7Qfgj1213F26ZUrmdHG8Y6mT8DY9yFSnm9wc/5toFZlXhPWsl3sHAT59mSJvYljrTVEjM7PBJDQZvBmKc4AC3ezrAYCEiB3PB5Tn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=kMIvgWJ2; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711476435; c=relaxed/simple;
+	bh=7UNCW2kcIO62KpFiXK4tLLJmmCkVz+nRJw70ot9I/U0=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=YON+JJs8/yC3g/XOyXv5Yg9FTIQHRC/lyi2qRQTK8q2tyurdKjObepBrwLCqT1h7B4zpja/ETk1xZdITk224RTgv0R0a2JpezoJvHIZ3KaVT+yOSgei7xQ3t1Fw5Z5hsf4KZD4Bb1V7FR41ROLy1WokQOVIK89smjOP/WYmpS3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org; spf=pass smtp.mailfrom=dustri.org; dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b=iWujYG89; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dustri.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kMIvgWJ2"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id p9lirSFOsPM1hpAEDriYwH; Tue, 26 Mar 2024 17:04:49 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pAE7rVFJZHHoApAE7rOBAB; Tue, 26 Mar 2024 17:04:43 +0000
-X-Authority-Analysis: v=2.4 cv=dskQCEg4 c=1 sm=1 tr=0 ts=6603002b
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=ZDQiqXMRDEc8gDlBFqcA:9 a=QEXdDO2ut3YA:10
- a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bq50C7r03mnPJYQbLMi3W08WnGxg7WKBeQErjDo/ugk=; b=kMIvgWJ2boyXB4ghiNPGW96f4C
-	44Ptkhnr261b39hK52RZ0L/qFt2M4sRPsdENgHU0l4ulpRmO5WrintQqesdwraO36ZkCjzrcBByPg
-	32ZxOKEFfvrGNzVx3cNqpXgLNFq4YJJs9+9T37UHx5EdhRV8KNvkXg2h+cRMMC8qlWE2v2+1owTcv
-	fo+AeQp6kggywBVoNKGDNc3Rr0UIa0SQw0PORbzrxAGatiJjnaUqsVoo1eUNX9pjQDLNXqGqADJuJ
-	fLKX33ZUj9AP6UN+jywF/V7l3WXu+pfnHf0zuP/YpFCO29cQw6hfxflG3lI9oyCzGGOXnSg0Awa2j
-	gbayfK4Q==;
-Received: from [201.172.173.147] (port=44416 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpADz-001bkE-2T;
-	Tue, 26 Mar 2024 12:04:35 -0500
-Message-ID: <4e0980bd-2de7-470f-ad71-f7ed28bb0173@embeddedor.com>
-Date: Tue, 26 Mar 2024 11:04:34 -0600
+	dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b="iWujYG89"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 2/3] idpf: make virtchnl2.h self-contained
-Content-Language: en-US
-To: Alexander Lobakin <aleksander.lobakin@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Simon Horman <horms@kernel.org>,
- nex.sw.ncis.osdt.itp.upstreaming@intel.com,
- intel-wired-lan@lists.osuosl.org, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240326164116.645718-1-aleksander.lobakin@intel.com>
- <20240326164116.645718-3-aleksander.lobakin@intel.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240326164116.645718-3-aleksander.lobakin@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpADz-001bkE-2T
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:44416
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 31
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHXVbeFf2CIfXLq4UEgHnI6UyEl1Btn7TFnSjElCT5BQQp/RrVN53X/z9Ogloy/L66tBloJ9+9OctquXcSHuPhjpsPhmDdL2lGgGjSeUaWKvomsy2RqD
- LtHnI2D56x1xrW+YkmlMaWwgGWnK4Lj5mlHp8GrFHGrtTwtbxjlsgQ2mc9Qo149iP+9vkFiXOW4Jm5p6V3cwnkLEHZdMkKNWtUpLWJo4yF+djmNAqiheBSkZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dustri.org; s=key1;
+	t=1711476429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mp+eVPd35ANrmUHHqEeuzw+1sE1zc47DWTxwutkbno0=;
+	b=iWujYG89j5n/CEliW/PGvBdletusHp8aBgDJ2KTjukuq4UQ+Y0uQeNh+bdv+kFQ1XxsM9H
+	clSjxlFbdxHY+INP3uakNno/FjCSQegYpEtA+YKB68PJLj2dG857lrER8klma0SdBhhTCs
+	02nht8h3oMlpXP624GJIBHm39TvT+S2EN4QwDtsGvqtABPJQOhmis/lkBtQ3QGSygXQ+Kt
+	kq1AwF+y+xpC/WU06ODZR0xk8RT/MS2Qvf0iMu6xamNjb2SNSPJnwUbdvsSbb31J40Seg2
+	J78OCOJoXkoU+65uZ/lA1UtXp249T9TLJMZ/naAXGDQTBbjdDyj5XAiwlc43BQ==
+Date: Tue, 26 Mar 2024 18:07:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: julien.voisin@dustri.org
+Message-ID: <a88362316fb00494b78859625cabe0820ca26a15@dustri.org>
+TLS-Required: No
+Subject: Re: [PATCH v2 0/9] slab: Introduce dedicated bucket allocator
+To: "Kees Cook" <keescook@chromium.org>, "Vlastimil Babka" <vbabka@suse.cz>,
+ "Julien Voisin" <jvoisin@google.com>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, "Christoph Lameter"
+ <cl@linux.com>, "Pekka Enberg" <penberg@kernel.org>, "David Rientjes"
+ <rientjes@google.com>, "Joonsoo Kim" <iamjoonsoo.kim@lge.com>, "Roman
+ Gushchin" <roman.gushchin@linux.dev>, "Hyeonggon Yoo"
+ <42.hyeyoo@gmail.com>, "GONG, Ruiqi" <gongruiqi@huaweicloud.com>, "Xiu
+ Jianfeng" <xiujianfeng@huawei.com>, "Suren Baghdasaryan"
+ <surenb@google.com>, "Kent Overstreet" <kent.overstreet@linux.dev>, "Jann
+ Horn" <jannh@google.com>, "Matteo Rizzo" <matteorizzo@google.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org
+In-Reply-To: <202403250958.DAFA70CC@keescook>
+References: <20240305100933.it.923-kees@kernel.org>
+ <5e1571de-2c5a-4be4-93f4-01582094ee96@suse.cz>
+ <202403250958.DAFA70CC@keescook>
+X-Migadu-Flow: FLOW_OUT
+
+25 March 2024 at 19:24, "Kees Cook" <keescook@chromium.org> wrote:
 
 
 
-On 3/26/24 10:41, Alexander Lobakin wrote:
-> To ease maintaining of virtchnl2.h, which already is messy enough,
-> make it self-contained by adding missing if_ether.h include due to
-> %ETH_ALEN usage.
-> At the same time, virtchnl2_lan_desc.h is not used anywhere in the
-> file, so remove this include to speed up C preprocessing.
-> 
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+>=20
+>=20On Mon, Mar 25, 2024 at 10:03:23AM +0100, Vlastimil Babka wrote:
+>=20
+>=20>=20
+>=20> On 3/5/24 11:10 AM, Kees Cook wrote:
+> >=20
+>=20>  Hi,
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Repeating the commit logs for patch 4 here:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Dedicated caches are available For fixed size allocations via
+> >=20
+>=20>  kmem_cache_alloc(), but for dynamically sized allocations there is=
+ only
+> >=20
+>=20>  the global kmalloc API's set of buckets available. This means it i=
+sn't
+> >=20
+>=20>  possible to separate specific sets of dynamically sized allocation=
+s into
+> >=20
+>=20>  a separate collection of caches.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  This leads to a use-after-free exploitation weakness in the Linux
+> >=20
+>=20>  kernel since many heap memory spraying/grooming attacks depend on =
+using
+> >=20
+>=20>  userspace-controllable dynamically sized allocations to collide wi=
+th
+> >=20
+>=20>  fixed size allocations that end up in same cache.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defens=
+e
+> >=20
+>=20>  against these kinds of "type confusion" attacks, including for fix=
+ed
+> >=20
+>=20>  same-size heap objects, we can create a complementary deterministi=
+c
+> >=20
+>=20>  defense for dynamically sized allocations.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  In order to isolate user-controllable sized allocations from syste=
+m
+> >=20
+>=20>  allocations, introduce kmem_buckets_create(), which behaves like
+> >=20
+>=20>  kmem_cache_create(). (The next patch will introduce kmem_buckets_a=
+lloc(),
+> >=20
+>=20>  which behaves like kmem_cache_alloc().)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Allows for confining allocations to a dedicated set of sized cache=
+s
+> >=20
+>=20>  (which have the same layout as the kmalloc caches).
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  This can also be used in the future once codetag allocation annota=
+tions
+> >=20
+>=20>  exist to implement per-caller allocation cache isolation[0] even f=
+or
+> >=20
+>=20>  dynamic allocations.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescoo=
+k [0]
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  After the implemetation are 2 example patches of how this could be=
+ used
+> >=20
+>=20>  for some repeat "offenders" that get used in exploits. There are m=
+ore to
+> >=20
+>=20>  be isolated beyond just these. Repeating the commit log for patch =
+8 here:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  The msg subsystem is a common target for exploiting[1][2][3][4][5]=
+[6]
+> >=20
+>=20>  use-after-free type confusion flaws in the kernel for both read an=
+d
+> >=20
+>=20>  write primitives. Avoid having a user-controlled size cache share =
+the
+> >=20
+>=20>  global kmalloc allocator by using a separate set of kmalloc bucket=
+s.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux=
+-kernel-exploit-development-1day-case-study/ [1]
+> >=20
+>=20>  Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-miti=
+gation-ved/ [2]
+> >=20
+>=20>  Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvati=
+on-writeup.html [3]
+> >=20
+>=20>  Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [=
+4]
+> >=20
+>=20>  Link: https://google.github.io/security-research/pocs/linux/cve-20=
+21-22555/writeup.html [5]
+> >=20
+>=20>  Link: https://zplin.me/papers/ELOISE.pdf [6]
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Hi Kees,
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  after reading [1] I think the points should be addressed, mainly a=
+bout the
+> >=20
+>=20>  feasibility of converting users manually.
+> >=20
+>=20
+> Sure, I can do that.
+>=20
+>=20Adding Julien to this thread... Julien can you please respond to LKML
+>=20
+>=20patches in email? It's much easier to keep things in a single thread.=
+ :)
+>=20
+>=20] This is playing wack-a-mole
+>=20
+>=20Kind of, but not really. These patches provide a mechanism for having
+>=20
+>=20dedicated dynamically-sized slab caches (to match kmem_cache_create()=
+,
+>=20
+>=20which only works for fixed-size allocations). This is needed to expan=
+d
+>=20
+>=20the codetag work into doing per-call-site allocations, as I detailed
+>=20
+>=20here[1].
+>=20
+>=20Also, adding uses manually isn't very difficult, as can be seen in th=
+e
+>=20
+>=20examples I included. In fact, my examples between v1 and v2 collapsed
+>=20
+>=20from 3 to 2, because covering memdup_user() actually covered 2 known
+>=20
+>=20allocation paths (attrs and vma names), and given its usage pattern,
+>=20
+>=20will cover more in the future without changes.
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+It's not about difficulty, it's about scale. There are hundreds of intere=
+sting structures: I'm worried that no one will take the time to add a sep=
+arate bucket for each of them, chase their call-sites down, and monitor e=
+very single newly added structures to check if they are "interesting" and=
+ should benefit from their own bucket as well.
 
-Thanks
--- 
-Gustavo
+>=20
+>=20] something like AUTOSLAB would be better
+>=20
+>=20Yes, that's the goal of [1]. This is a prerequisite for that, as
+>=20
+>=20mentioned in the cover letter.
 
-> ---
->   drivers/net/ethernet/intel/idpf/virtchnl2.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-> index 4a3c4454d25a..29419211b3d9 100644
-> --- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
-> +++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-> @@ -4,6 +4,8 @@
->   #ifndef _VIRTCHNL2_H_
->   #define _VIRTCHNL2_H_
->   
-> +#include <linux/if_ether.h>
-> +
->   /* All opcodes associated with virtchnl2 are prefixed with virtchnl2 or
->    * VIRTCHNL2. Any future opcodes, offloads/capabilities, structures,
->    * and defines must be prefixed with virtchnl2 or VIRTCHNL2 to avoid confusion.
-> @@ -17,8 +19,6 @@
->    * must remain unchanged over time, so we specify explicit values for all enums.
->    */
->   
-> -#include "virtchnl2_lan_desc.h"
-> -
->   /* This macro is used to generate compilation errors if a structure
->    * is not exactly the correct length.
->    */
+This series looks unrelated to [1] to me: the former adds a mechanism to =
+add buckets and expects developers to manually make use of them, while th=
+e latter is about adding infrastructure to automate call-site-based segre=
+gation.
+
+> ] The slabs needs to be pinned
+>=20
+>=20Yes, and this is a general problem[2] with all kmalloc allocations, t=
+hough.
+>=20
+>=20This isn't unique to to this patch series. SLAB_VIRTUAL solves it, an=
+d
+>=20
+>=20is under development.
+
+Then it would be nice to mention it in the serie, as an acknowledged limi=
+tation.
+
+> ] Lacks guard pages
+>=20
+>=20Yes, and again, this is a general problem with all kmalloc allocation=
+s.
+>=20
+>=20Solving it, like SLAB_VIRTUAL, would be a complementary hardening
+>=20
+>=20improvement to the allocator generally.
+
+Then it would also be nice to mention it, because currently it's unclear =
+that those limitations are both known and will be properly addressed.
+
+>=20
+>=20] PAX_USERCOPY has been marking these sites since 2012
+>=20
+>=20Either it's whack-a-mole or it's not. :)=20
+
+This=20annotation was added 12 years ago in PaX, and while it was state o=
+f the art back then, I think that in 2024 we can do better than this.
+
+> PAX_USERCOPY shows that it _is_ possible to mark all sites.
+
+It shows that it's possible to annotate some sites (17 in grsecurity-3.1-=
+4.9.9-201702122044.patch), and while it has a similar approach to your se=
+ries, its annotations aren't conveying the same meaning.
+
+> Regardless, like AUTOSLAB, PAX_USERCOPY isn't
+>=20
+>=20upstream, and its current implementation is an unpublished modificati=
+on
+>=20
+>=20to a GPL project. I look forward to someone proposing it for inclusio=
+n
+>=20
+>=20in Linux, but for now we can work with the patches where an effort _h=
+as_
+>=20
+>=20been made to upstream them for the benefit of the entire ecosystem.
+>=20
+>=20] What about CONFIG_KMALLOC_SPLIT_VARSIZE
+>=20
+>=20This proposed improvement is hampered by not having dedicated
+>=20
+>=20_dynamically_ sized kmem caches, which this series provides. And with
+>=20
+>=20codetag-split allocations[1], the goals of CONFIG_KMALLOC_SPLIT_VARSI=
+ZE
+>=20
+>=20are more fully realized, providing much more complete coverage.
+
+CONFIG_KMALLOC_SPLIT_VARSIZE has been bypassed dozen of times in various =
+ways as part of Google's kernelCTF.
+Your series is, to my understanding, a weaker form of it. So I'm not supe=
+r-convinced that it's the right approach to mitigate UAF.
+
+Do you think it would be possible for Google to add this series to its ke=
+rnelCTF, so gather empirical data on how feasible/easy it is to bypass it=
+?
+
+>=20
+>=20] I have no idea how the community around the Linux kernel works with
+>=20
+>=20] their email-based workflows
+>=20
+>=20Step 1: reply to the proposal in email instead of (or perhaps in
+>=20
+>=20addition to) making blog posts. :)
+>=20
+>=20>=20
+>=20> On a related technical note I
+> >=20
+>=20>  worry what will become of /proc/slabinfo when we convert non-trivi=
+al amounts
+> >=20
+>=20>  of users.
+> >=20
+>=20
+> It gets longer. :) And potentially makes the codetag /proc file
+>=20
+>=20redundant. All that said, there are very few APIs in the kernel where
+>=20
+>=20userspace can control both the size and contents of an allocation.
+>=20
+>=20>=20
+>=20> Also would interested to hear Jann Horn et al.'s opinion, and wheth=
+er the
+> >=20
+>=20>  SLAB_VIRTUAL effort will continue?
+> >=20
+>=20
+> SLAB_VIRTUAL is needed to address the reclamation UAF gap, and is
+>=20
+>=20still being developed. I don't intend to let it fall off the radar.
+>=20
+>=20(Which is why I included Jann and Matteo in CC originally.)
+>=20
+>=20In the meantime, adding this series as-is kills two long-standing
+>=20
+>=20exploitation methodologies, and paves the way to providing very
+>=20
+>=20fine-grained caches using codetags (which I imagine would be entirely
+>=20
+>=20optional and trivial to control with a boot param).
+>=20
+>=20-Kees
+>=20
+>=20[1] https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook/
+>=20
+>=20[2] https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-k=
+ernel-memory.html
+>=20
+>=20--=20
+>=20
+> Kees Cook
+>
