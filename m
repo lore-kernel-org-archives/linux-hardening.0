@@ -1,86 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3F15C89;
-	Tue, 26 Mar 2024 10:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F8152F9A;
+	Tue, 26 Mar 2024 11:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711450105; cv=none; b=dIEkTpGGT5a2bw5OjRGXkRs2ZX21hfhFUTP6hIt1Q/nwgxD9UfmvwkltQH6z/o8Zx6+tUMcRoHL390/eus/HcLTHzIJaF05J+apYh+vxZPSnFyfnPRNVSitO68G1D9oJK4uJ84kWiE4ajA9emk6JEOjkzuuYYbY+OoCz6mBiaNs=
+	t=1711452012; cv=none; b=bWIXRkLEK8Ahx95scb1H/GiKu+Wwqd9F26sScc32GiYYHzI04fRxRM52gPBg4nWAfGSjfm2JoEs0vNzl5gYqiVvuzunsIor6RRtdyUklCGcmTwwaihpPn96hzprsL9/cI+Xk1cdkHBZVMMy0pJGNnH2gp6uw6pHas6j+8YYN+r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711450105; c=relaxed/simple;
-	bh=ItD4cQ9/T2Lbjdnw5EA900Xzkb3YwHbPekHFYEjw/bk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aDO0QxIwGHJ1R65gdfFGYftT7zZXdH77b3hrd2TK64d9xcaqRvgsFOSZGfAW7/RpTB+lltFILtiFSKr8TR5qjx/Hdh/6QXhTW1Kn6afKBoIPfWXrwpEapGLb4psXEmgGnDNbQUQk4wBO+xbq3FMk08hqsVF5Pwa8X/wPczDp7nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0erkZwc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711452012; c=relaxed/simple;
+	bh=JZJYfdkOEfrBChAlxdomlE/FMRCLxwEMSTjs1gzQjmI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DIWrA1tsvzfq/ZGLVKfIeucb57xB972ia22tQYHGCo/DtQ3QRgGjRrDid3REZrsR/gJSUH7UXChIAL20yar4Lt/Qvij7im5u8V5DooNu8oCD21lO9AS0tZ5djNcxBhufxGNmHf0qgR3GPvudS+5vdcQpPt47cciUyJxowhz7o2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qFWDvUdh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RGiqrTXZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qFWDvUdh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RGiqrTXZ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0erkZwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1367C433C7;
-	Tue, 26 Mar 2024 10:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711450104;
-	bh=ItD4cQ9/T2Lbjdnw5EA900Xzkb3YwHbPekHFYEjw/bk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o0erkZwcejRAAkYW76kntsUngRhDYzXvc7hnjtn2mV+QMff9yChh3gREXkmvEjoHs
-	 Zdbd/ng1CyKBnI7E9Twpa2ZEnRpLubCVfDZt9fvcFJcZUKyISrXmctME8vaYVaw1wZ
-	 zwBxQUJkqzuweKwzx0KMO3fgwwQVaMeeTiIruiY3c9t1hhrPWB1tu5yXAIPU1uj9zn
-	 GD1QhxdYCOQ/RFwuTib6lK6tiAh/mnTx1jWDEW0cV1cagvYbS81FJnELaQGLNlsJ7C
-	 cayUn9PVEjO7Vw1pwDJm8x2IuQeZ+61ByvH25HjeZo67WijH/gf6zvGlQ2MaaqfVDm
-	 WN7o/urREB59g==
-From: Christian Brauner <brauner@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qFWDvUdh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RGiqrTXZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qFWDvUdh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RGiqrTXZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7E50037AD9;
+	Tue, 26 Mar 2024 11:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711452007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tUTUfOoY+2SogT+OaWxxDe3rJC42MpmS4UtIqhLd8AA=;
+	b=qFWDvUdhEw+1w/36ez/ULmEshiSbU5BLtgbDEF5s7BImFrCk9b0FDVTJDah6rEIFcP+GDv
+	1tKvqWfah85kRk1vM3jHpa66iHIuxUF0xWPPxWdWbTDHPxRbl4bYf6kuD+FcICqI/jIQdT
+	LFo/4EeF93yBxknPJXIF9twrAR84Y0s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711452007;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tUTUfOoY+2SogT+OaWxxDe3rJC42MpmS4UtIqhLd8AA=;
+	b=RGiqrTXZMmGKLYf71hZOyClLQLEXPh5KTBTWeJIWdVc50zMD57PT2M/+RVnKyF8BAcKIus
+	hrKfijCK98fmQMAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711452007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tUTUfOoY+2SogT+OaWxxDe3rJC42MpmS4UtIqhLd8AA=;
+	b=qFWDvUdhEw+1w/36ez/ULmEshiSbU5BLtgbDEF5s7BImFrCk9b0FDVTJDah6rEIFcP+GDv
+	1tKvqWfah85kRk1vM3jHpa66iHIuxUF0xWPPxWdWbTDHPxRbl4bYf6kuD+FcICqI/jIQdT
+	LFo/4EeF93yBxknPJXIF9twrAR84Y0s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711452007;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tUTUfOoY+2SogT+OaWxxDe3rJC42MpmS4UtIqhLd8AA=;
+	b=RGiqrTXZMmGKLYf71hZOyClLQLEXPh5KTBTWeJIWdVc50zMD57PT2M/+RVnKyF8BAcKIus
+	hrKfijCK98fmQMAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2737D13306;
+	Tue, 26 Mar 2024 11:20:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id n7DQB2evAmb6DgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 26 Mar 2024 11:20:07 +0000
+Date: Tue, 26 Mar 2024 12:20:08 +0100
+Message-ID: <87le65utnb.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
+Cc: Clemens Ladisch <clemens@ladisch.de>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH][next] fs: Annotate struct file_handle with __counted_by() and use struct_size()
-Date: Tue, 26 Mar 2024 11:48:10 +0100
-Message-ID: <20240326-sehen-flogen-52373eb09da1@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZgImCXTdGDTeBvSS@neat>
-References: <ZgImCXTdGDTeBvSS@neat>
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] ALSA: firewire-lib: Avoid -Wflex-array-member-not-at-end warning
+In-Reply-To: <ZgIsBqoMb7p3fMDr@neat>
+References: <ZgIsBqoMb7p3fMDr@neat>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1258; i=brauner@kernel.org; h=from:subject:message-id; bh=ItD4cQ9/T2Lbjdnw5EA900Xzkb3YwHbPekHFYEjw/bk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQxLX9v/LRZ6tJv0wjO1uKP82unMT8rtZNIPJ0dfCK4K iXjf9PnjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIm8c2JkuB7Itl/yisKcg0KM Z5gaTkR8F96nqLx3geQHr4V9E/ljzBj+R17fe4t3qpmaPJsGu/36bem/31rNXv1ZxCJ2+a7c9QY K3AA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.29
+X-Spamd-Result: default: False [-3.29 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.99)[99.97%]
+X-Spam-Flag: NO
 
-On Mon, 25 Mar 2024 19:34:01 -0600, Gustavo A. R. Silva wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Tue, 26 Mar 2024 02:59:34 +0100,
+Gustavo A. R. Silva wrote:
 > 
-> While there, use struct_size() helper, instead of the open-coded
-> version.
+> Use the `DEFINE_FLEX()` helper for an on-stack definition of a
+> flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> [...]
+> So, with these changes, fix the following warning:
+> sound/firewire/amdtp-stream.c:1184:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Link: https://github.com/KSPP/linux/issues/202
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Use DEFINE_FLEX() helper instead of a new tagged struct.
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/d3a764eb76909b16b8a22d9ff530e5edf0e59e6b.1709658886.git.gustavoars@kernel.org/
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+Applied now.  Thanks.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] fs: Annotate struct file_handle with __counted_by() and use struct_size()
-      https://git.kernel.org/vfs/vfs/c/1b43c4629756
+Takashi
