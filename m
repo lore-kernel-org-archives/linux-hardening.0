@@ -1,126 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9973914E2CB;
-	Wed, 27 Mar 2024 18:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339D212EBC4
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 19:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711565986; cv=none; b=OAOIaFLWhhC6o85rJD6Wv1+g+GsdMMuO18+K0yukcVeaYxXZ+W4R+SZHaHkBZJP5F2KqioPfiD1N16byngfB7RXvJPoVPFY/inScPLwdGspUzBf0c/ieQJUMl+Vu5fXdJWJ6vtc+u1Q34KrJ77i+jIWMj4dMtSrgnWXG9NRaR98=
+	t=1711566148; cv=none; b=QHliG+oXPkQ2P2BMBSCzn6tbbO3psuSgBoc6a0G40QV/xBX1SfMSN3JJ2ocemRnw898nhPOrrDKl+TtOS2VWjMoyYIZw69jwdj9YfO+OSvYHbNc/0XhzWnqizywHSNQ6ZenD2Hf8Pua0qkRo2vJi58Dk3ecrYWoX/23ZGPjpcrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711565986; c=relaxed/simple;
-	bh=cXrwspHU/V3K7TasxHTuJGZaWysuCjg28RanyamMKIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Qyn710ZW59CFrMt+8hIcri9Fe8JY+3e4lF9BhOibUmcZXSRHGFa6Oi22O+DqTsA+6OaWiYDic3lfdFhL/h+PRifoXm6HoTZwya3ie/WXkUFYmc/2J0cuw1sECcefVnmPgS3n2ECt5939JUKgmUwyqx8lblgJ+kdZ1JZV5/YyuhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9g2nfQj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711566148; c=relaxed/simple;
+	bh=tY/kYlCKTZM1U9At1f8pcyF1C2M3Gx00Kx1VbgRTDBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gezXdccZg11oM+rqDoDX0LU1PeKRs+15waqG/JUy3fRJW+hHXlfVjqb5nVlrF09zloPkZqzO0us/vbxpXucmc/cTEsAth4MczmzBaLdd5Z2vSrxTdiLwkxsdU05vyDLgUPWZ7zsVtmeU/Wt+nY+yNfjl2FN+COZiWU/xfSe90sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=o6i/ckCN; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9g2nfQj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8220C433F1;
-	Wed, 27 Mar 2024 18:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711565986;
-	bh=cXrwspHU/V3K7TasxHTuJGZaWysuCjg28RanyamMKIo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=m9g2nfQj70CkWHkSnTxGX2mPs71CmEF2LQKeyyxu6J3k8h3YnDcPM4vUvPRk2syMI
-	 O3RBJW7aWbXkYTpbh3WeKc6pwP4e+1PzfaK4/rlCduY1q6Ew97Vd1NwtoN2rWVLrvl
-	 Qlm8OyJyFQV5hYl6rBh3Ey3KHGut5KHEZ2Ol6AeKnejLOweH8wJMv6tqCBetaIuN4J
-	 a5ZpEiQyJ63Fygy2Qy2s6dSwA920KX1zGj114u6VdRou7BcS7cWyZBJS/tVHS77YPZ
-	 kXjZrLteebLhUqzwOL7vQN40VjhnKB2IqdEs7/ZZBzhvRuZ6y0cQkz62iB1FgH/qIV
-	 TuUf5tdqVjtjw==
-Date: Wed, 27 Mar 2024 12:59:43 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: wil6210: wmi: Use __counted_by() in struct
- wmi_set_link_monitor_cmd and avoid -Wfamnae warning
-Message-ID: <ZgRsn72WkHzfCUsa@neat>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="o6i/ckCN"
+Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
+	by cmsmtp with ESMTPS
+	id pWKkrg01gHXmApYXWrx5aJ; Wed, 27 Mar 2024 19:02:22 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id pYXVrzsF6sdAjpYXVr6n20; Wed, 27 Mar 2024 19:02:21 +0000
+X-Authority-Analysis: v=2.4 cv=C9LvyxP+ c=1 sm=1 tr=0 ts=66046d3d
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=ne6NSq1Het56kcJAOLIA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eTo6rPqoE3ht4O7ovAkyYWoWGnFdaNMGQPNuK9WIyCE=; b=o6i/ckCNzyuwFrbMgNPhUV/iIK
+	3PM/clgmp92OTK7km9UWKK3UqAH4hrt0zx3XEjFdYpYEzsTUFIGpyaKdCQjAVv6bva63+teWqnhJu
+	EqhtVByQ8opkoxvV8VUDOJzxjOcK3voxKJIVhB24rVrVtFxXGvPCibvIf57k521jiBgy6fK+jAK3Z
+	PuWiqTAcBnkQSx19vahiRxSAxWW/3xnVciMPfGXJ4+N3+kkI0Aai4sfkGZ2AIzdIA5XXRYz/T+dmj
+	9I36Qcxjft97TligGxtyiww4umuSa1NyaE7DSpOpi3TMaFp05MzOkMf4UxAgGVTzi3Ly/3IiNP6RB
+	IsZNowbw==;
+Received: from [201.172.173.147] (port=58918 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rpYXU-003fPc-23;
+	Wed, 27 Mar 2024 14:02:20 -0500
+Message-ID: <29be66cd-e752-4c5e-a660-7b668e49ff9e@embeddedor.com>
+Date: Wed, 27 Mar 2024 13:02:19 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] wifi: wil6210: Avoid -Wflex-array-member-not-at-end
+ warning
+Content-Language: en-US
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZgOEoCWguq3n1OqQ@neat>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <ZgOEoCWguq3n1OqQ@neat>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.147
+X-Source-L: No
+X-Exim-ID: 1rpYXU-003fPc-23
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:58918
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIaDA3/dAwyeCqefeDYMp04fWIhJOPMCoT/rd05+oA0eE8foobnibb3Fl//gPkr35AlhUZX53VMLnCqzIPNOmmo0lz6SNTuW+XLI6ootBO8Xdp1g0joy
+ SfD2Q102zpkeTk0X8KEXfNyhkWqn/l3Rcc3IZj1sB13DqMIycKK4cQUOF3QMYBC24jWtrgyAPnwJ3kYT5pAQKtNpEuyOgExlN1Pw/rmkhwJCra3eMWN5a9EW
 
-Prepare for the coming implementation by GCC and Clang of the
-__counted_by attribute. Flexible array members annotated with
-__counted_by can have their accesses bounds-checked at run-time
-via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-(for strcpy/memcpy-family functions).
+Hi all,
 
-Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-getting ready to enable it globally.
+Please, drop this.
 
-So, use the `DEFINE_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+The following patch replaces it:
 
-So, with these changes, fix the following warning:
-drivers/net/wireless/ath/wil6210/wmi.c:4018:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+https://lore.kernel.org/linux-hardening/ZgRsn72WkHzfCUsa@neat/
 
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/ath/wil6210/wmi.c | 19 +++++++------------
- drivers/net/wireless/ath/wil6210/wmi.h |  2 +-
- 2 files changed, 8 insertions(+), 13 deletions(-)
+Thanks
+--
+Gustavo
 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 6fdb77d4c59e..cc0ad70f0d01 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -4014,28 +4014,23 @@ int wmi_set_cqm_rssi_config(struct wil6210_priv *wil,
- 	struct net_device *ndev = wil->main_ndev;
- 	struct wil6210_vif *vif = ndev_to_vif(ndev);
- 	int rc;
--	struct {
--		struct wmi_set_link_monitor_cmd cmd;
--		s8 rssi_thold;
--	} __packed cmd = {
--		.cmd = {
--			.rssi_hyst = rssi_hyst,
--			.rssi_thresholds_list_size = 1,
--		},
--		.rssi_thold = rssi_thold,
--	};
- 	struct {
- 		struct wmi_cmd_hdr hdr;
- 		struct wmi_set_link_monitor_event evt;
- 	} __packed reply = {
- 		.evt = {.status = WMI_FW_STATUS_FAILURE},
- 	};
-+	DEFINE_FLEX(struct wmi_set_link_monitor_cmd, cmd,
-+		    rssi_thresholds_list, rssi_thresholds_list_size, 1);
-+
-+	cmd->rssi_hyst = rssi_hyst;
-+	cmd->rssi_thresholds_list[0] = rssi_thold;
- 
- 	if (rssi_thold > S8_MAX || rssi_thold < S8_MIN || rssi_hyst > U8_MAX)
- 		return -EINVAL;
- 
--	rc = wmi_call(wil, WMI_SET_LINK_MONITOR_CMDID, vif->mid, &cmd,
--		      sizeof(cmd), WMI_SET_LINK_MONITOR_EVENTID,
-+	rc = wmi_call(wil, WMI_SET_LINK_MONITOR_CMDID, vif->mid, cmd,
-+		      sizeof(*cmd), WMI_SET_LINK_MONITOR_EVENTID,
- 		      &reply, sizeof(reply), WIL_WMI_CALL_GENERAL_TO_MS);
- 	if (rc) {
- 		wil_err(wil, "WMI_SET_LINK_MONITOR_CMDID failed, rc %d\n", rc);
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
-index b47606d9068c..38f64524019e 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.h
-+++ b/drivers/net/wireless/ath/wil6210/wmi.h
-@@ -3320,7 +3320,7 @@ struct wmi_set_link_monitor_cmd {
- 	u8 rssi_hyst;
- 	u8 reserved[12];
- 	u8 rssi_thresholds_list_size;
--	s8 rssi_thresholds_list[];
-+	s8 rssi_thresholds_list[] __counted_by(rssi_thresholds_list_size);
- } __packed;
- 
- /* wmi_link_monitor_event_type */
--- 
-2.34.1
-
+On 3/26/24 20:29, Gustavo A. R. Silva wrote:
+> Use the `DEFINE_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> drivers/net/wireless/ath/wil6210/wmi.c:4018:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Link: https://github.com/KSPP/linux/issues/202
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   drivers/net/wireless/ath/wil6210/wmi.c | 19 +++++++------------
+>   1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+> index 6fdb77d4c59e..cc0ad70f0d01 100644
+> --- a/drivers/net/wireless/ath/wil6210/wmi.c
+> +++ b/drivers/net/wireless/ath/wil6210/wmi.c
+> @@ -4014,28 +4014,23 @@ int wmi_set_cqm_rssi_config(struct wil6210_priv *wil,
+>   	struct net_device *ndev = wil->main_ndev;
+>   	struct wil6210_vif *vif = ndev_to_vif(ndev);
+>   	int rc;
+> -	struct {
+> -		struct wmi_set_link_monitor_cmd cmd;
+> -		s8 rssi_thold;
+> -	} __packed cmd = {
+> -		.cmd = {
+> -			.rssi_hyst = rssi_hyst,
+> -			.rssi_thresholds_list_size = 1,
+> -		},
+> -		.rssi_thold = rssi_thold,
+> -	};
+>   	struct {
+>   		struct wmi_cmd_hdr hdr;
+>   		struct wmi_set_link_monitor_event evt;
+>   	} __packed reply = {
+>   		.evt = {.status = WMI_FW_STATUS_FAILURE},
+>   	};
+> +	DEFINE_FLEX(struct wmi_set_link_monitor_cmd, cmd,
+> +		    rssi_thresholds_list, rssi_thresholds_list_size, 1);
+> +
+> +	cmd->rssi_hyst = rssi_hyst;
+> +	cmd->rssi_thresholds_list[0] = rssi_thold;
+>   
+>   	if (rssi_thold > S8_MAX || rssi_thold < S8_MIN || rssi_hyst > U8_MAX)
+>   		return -EINVAL;
+>   
+> -	rc = wmi_call(wil, WMI_SET_LINK_MONITOR_CMDID, vif->mid, &cmd,
+> -		      sizeof(cmd), WMI_SET_LINK_MONITOR_EVENTID,
+> +	rc = wmi_call(wil, WMI_SET_LINK_MONITOR_CMDID, vif->mid, cmd,
+> +		      sizeof(*cmd), WMI_SET_LINK_MONITOR_EVENTID,
+>   		      &reply, sizeof(reply), WIL_WMI_CALL_GENERAL_TO_MS);
+>   	if (rc) {
+>   		wil_err(wil, "WMI_SET_LINK_MONITOR_CMDID failed, rc %d\n", rc);
