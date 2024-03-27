@@ -1,143 +1,146 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88923A8E4
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 18:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087A12A144;
+	Wed, 27 Mar 2024 18:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711564799; cv=none; b=X53sq0cDt87WbaK+8+7lkoXXUWpNY5Mku9ateJgo7iXtaP0gYME95aXXG4paNvvwHliAhCt67kJmbYUWKYgVX71/04I6PRxniL4QnDBGa9L0Va54mdnoXDOZeied5X5tGVn15xpHGzM3Z5epw4sMydWYJBewhq1Yt78PNa+DRaQ=
+	t=1711565456; cv=none; b=PLVhESmaZnBS+5k5lePMyoN5X73x2tYeQBUcutPt66S6zj21x2VWbZ3GjjNVB+jNCFJGj9TeUNQlqTA5G2yQFTI3F6CAZJAZZ9eUTN4fSioQebZE3HN2bCenlSnI5qHaKQZBfE1uWOPIAlSPXk6WaENG2gZJeOIw10vVgD/yB0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711564799; c=relaxed/simple;
-	bh=wWGHjeDpZavQDjtU7nfyce/8Gzr5lFSubbp9E1BsPb4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=iZbVdNqPI7gMOyfYojiA9u9MU02Ae1AsG6f8tK/CLlaCfEUM9EPYmZyy0Ih1BJ9C0lLSEqHptW80jS8b2/GhVixuQubxYiyD+1RDcj+RfuvU+rN3rcw3dRsY+CnJRtQogk3wDSHLxINbIAN5bYKbmeVEpsHzAiO+SvkrpwhKUTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=nxDsV4CO; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711565456; c=relaxed/simple;
+	bh=qpmpb6mRaGuhJK5sjkD5qbyw9yG7+XNJ/p3wzxWXdp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Pez9bN5cyhtTzrUUSeWQuRfnVhbAOGpgZFybg9HSi258IjDgc62RbiBA0t1C1RiekjPgkurKv2X5ZYFiipYCLGC0Y12wvMqlRM/rRd8hoMG12ddDxOuJJRJevfK6fw6ppD/fVOsAYL4wLcyyofcjbCqPc+NyNHChNk1Jxtc1LXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlbUqpRC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nxDsV4CO"
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id pWKkrl3JyDI6fpYBprCgyt; Wed, 27 Mar 2024 18:39:57 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pYBnrP1vUeXgGpYBorWkJZ; Wed, 27 Mar 2024 18:39:56 +0000
-X-Authority-Analysis: v=2.4 cv=Q/PU4Z2a c=1 sm=1 tr=0 ts=660467fc
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=v8LEnFnaCG9JqxBWnZgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FhDtWBwKqrP+NfoVTgkUPYrjUuTaeWvHamIeomR7TP8=; b=nxDsV4COKwzy/QvEUoQXdXPYYa
-	B2ZhbypKNVqUDaJzVjIe4F6zqVBrrfR2TVf5cRu5p2foSZh9qpfii0BAUzyoXr21OnTzhVCJCACW5
-	/RpePPrhJwvz7DstKvZfD9oqJh38oK7Lpa6yulSGhmEiKhwmXTmNvvss3uWswDiCcFSNW2EcSNHbJ
-	fyCFs2YIaFBX4ELZklgIoekEV9bzy7GgKT49bm0qF9uHU3GhygN1YolFobABcHKSdZgC4qLYzQ5nd
-	5BA6s9z+w/E2OCqBusMSSQEVBjToo+3IJEkUMqw168R1CuKZTe1cijlv57+GqnuKil0fh3PUm8SqR
-	e5qTmU1w==;
-Received: from [201.172.173.147] (port=49700 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpYBn-003LDL-1K;
-	Wed, 27 Mar 2024 13:39:55 -0500
-Message-ID: <4e1261a7-25a9-4193-a9e9-9bc137893f08@embeddedor.com>
-Date: Wed, 27 Mar 2024 12:39:54 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlbUqpRC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03846C433F1;
+	Wed, 27 Mar 2024 18:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711565455;
+	bh=qpmpb6mRaGuhJK5sjkD5qbyw9yG7+XNJ/p3wzxWXdp4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JlbUqpRCa0HYhHCaPC01tZxS1z3riWCuuqj0Gj5voTcCiRcnkO6npEAZhB5cYr16S
+	 ZN5CvTgdrZ3sy35aJ/dPqwZ259M5fRAVol3IH5FabkQvuksxwks99Un/DpNB8SpNTk
+	 BJE3iQwA1wK6GaLB+he1Z+SeoKNqKjrbrKkV0ziANrof44oTWv1mABDVwn6c3A5+H2
+	 li/AInDIe0O20xgfbu4L6hA/HABidjyxvJktEZ5kJ4EQuMwoZmMVAkh303x0jzvGeU
+	 ROwCTJiB7e3qYiTD1XACxAG/tpWBEUprWf9t1VyKWrz2IXOe5f/HEcUqKWFUatyyVh
+	 22TDrIykc0wAg==
+Date: Wed, 27 Mar 2024 12:50:52 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: cfg80211: Use __counted_by() in struct
+ wmi_start_scan_cmd and avoid -Wfamnae warning
+Message-ID: <ZgRqjGShTl3y5FFB@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] wifi: wil6210: Annotate a couple of structs with
- __counted_by()
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZgRayuCJ0gQinMvr@neat>
- <3f19627e-4472-4ed1-9e2e-b0b427682910@quicinc.com>
- <5a6bdbc6-b37e-4c6b-9bff-470fd560663b@embeddedor.com>
-In-Reply-To: <5a6bdbc6-b37e-4c6b-9bff-470fd560663b@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpYBn-003LDL-1K
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:49700
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDGs/HfAXffM4wlkDfunllOOEzln0YMkBg4I7c6bdT3CSdaih+dwIyVIpsO1Nybkm479JuGZlL5J0uWzkc8CnA3NlsMRn9T+Q4DtgacWJERuGkdS9h84
- w81PV6YMJ2F5Mx4Oz8UXAvaD2aKfek/DpmyK0E+lOcXKSTV8kbgKm4bncKUrknEC0RWe2YUU3x/udwTjrKXiwYjM2oe3CScO3NX1R6kAzX8FX9RYdvqTNiAC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Prepare for the coming implementation by GCC and Clang of the
+__counted_by attribute. Flexible array members annotated with
+__counted_by can have their accesses bounds-checked at run-time
+via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+(for strcpy/memcpy-family functions).
 
->>>   #define WMI_MAX_PNO_SSID_NUM    (16)
->>> @@ -3320,7 +3320,7 @@ struct wmi_set_link_monitor_cmd {
->>>       u8 rssi_hyst;
->>>       u8 reserved[12];
->>>       u8 rssi_thresholds_list_size;
->>> -    s8 rssi_thresholds_list[];
->>> +    s8 rssi_thresholds_list[] __counted_by(rssi_thresholds_list_size);
->>>   } __packed;
->>
->> this looks ok to me, although I think there is another issue associated with
->> this, namely the way the code populates the rssi_thresholds_list is by
->> defining a separate anonymous struct:
->>     struct {
->>         struct wmi_set_link_monitor_cmd cmd;
->>         s8 rssi_thold;
->>     } __packed cmd = {
->>         .cmd = {
->>             .rssi_hyst = rssi_hyst,
->>             .rssi_thresholds_list_size = 1,
->>         },
->>         .rssi_thold = rssi_thold,
->>     };
->>
->> I would expect gcc and clang to both complain about that s8 rssi_thold comes
->> after a flexible array (even though its purpose is to be the value of
->> rssi_thresholds_list[0])
->>
+Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+getting ready to enable it globally.
 
-I will merge these two patches together:
+So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-https://lore.kernel.org/linux-hardening/ZgODZOB4fOBvKl7R@neat/
-https://lore.kernel.org/linux-hardening/ZgOEoCWguq3n1OqQ@neat/
+So, with these changes, fix the following warning:
+drivers/net/wireless/ath/wil6210/cfg80211.c:896:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-and send these changes together with the DEFINE_FLEX() transformation
-in drivers/net/wireless/ath/wil6210/cfg80211.c
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/ath/wil6210/cfg80211.c | 22 ++++++++++-----------
+ drivers/net/wireless/ath/wil6210/wmi.h      |  2 +-
+ 2 files changed, 11 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index dbe4b3478f03..836b49954171 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -892,10 +892,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 	struct wil6210_priv *wil = wiphy_to_wil(wiphy);
+ 	struct wireless_dev *wdev = request->wdev;
+ 	struct wil6210_vif *vif = wdev_to_vif(wil, wdev);
+-	struct {
+-		struct wmi_start_scan_cmd cmd;
+-		u16 chnl[4];
+-	} __packed cmd;
++	DEFINE_FLEX(struct wmi_start_scan_cmd, cmd,
++		    channel_list, num_channels, 4);
+ 	uint i, n;
+ 	int rc;
+ 
+@@ -977,9 +975,9 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 	vif->scan_request = request;
+ 	mod_timer(&vif->scan_timer, jiffies + WIL6210_SCAN_TO);
+ 
+-	memset(&cmd, 0, sizeof(cmd));
+-	cmd.cmd.scan_type = WMI_ACTIVE_SCAN;
+-	cmd.cmd.num_channels = 0;
++	memset(cmd, 0, sizeof(*cmd));
++	cmd->scan_type = WMI_ACTIVE_SCAN;
++	cmd->num_channels = 0;
+ 	n = min(request->n_channels, 4U);
+ 	for (i = 0; i < n; i++) {
+ 		int ch = request->channels[i]->hw_value;
+@@ -991,7 +989,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 			continue;
+ 		}
+ 		/* 0-based channel indexes */
+-		cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
++		cmd->num_channels++;
++		cmd->channel_list[cmd->num_channels - 1].channel = ch - 1;
+ 		wil_dbg_misc(wil, "Scan for ch %d  : %d MHz\n", ch,
+ 			     request->channels[i]->center_freq);
+ 	}
+@@ -1007,16 +1006,15 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 	if (rc)
+ 		goto out_restore;
+ 
+-	if (wil->discovery_mode && cmd.cmd.scan_type == WMI_ACTIVE_SCAN) {
+-		cmd.cmd.discovery_mode = 1;
++	if (wil->discovery_mode && cmd->scan_type == WMI_ACTIVE_SCAN) {
++		cmd->discovery_mode = 1;
+ 		wil_dbg_misc(wil, "active scan with discovery_mode=1\n");
+ 	}
+ 
+ 	if (vif->mid == 0)
+ 		wil->radio_wdev = wdev;
+ 	rc = wmi_send(wil, WMI_START_SCAN_CMDID, vif->mid,
+-		      &cmd, sizeof(cmd.cmd) +
+-		      cmd.cmd.num_channels * sizeof(cmd.cmd.channel_list[0]));
++		      cmd, struct_size(cmd, channel_list, cmd->num_channels));
+ 
+ out_restore:
+ 	if (rc) {
 diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
-index 71bf2ae27a98..38f64524019e 100644
+index 71bf2ae27a98..b47606d9068c 100644
 --- a/drivers/net/wireless/ath/wil6210/wmi.h
 +++ b/drivers/net/wireless/ath/wil6210/wmi.h
 @@ -474,7 +474,7 @@ struct wmi_start_scan_cmd {
-       struct {
-           u8 channel;
-           u8 reserved;
--    } channel_list[];
-+    } channel_list[] __counted_by(num_channels);
-   } __packed;
+ 	struct {
+ 		u8 channel;
+ 		u8 reserved;
+-	} channel_list[];
++	} channel_list[] __counted_by(num_channels);
+ } __packed;
+ 
+ #define WMI_MAX_PNO_SSID_NUM	(16)
+-- 
+2.34.1
 
-Thanks
---
-Gustavo
