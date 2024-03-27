@@ -1,81 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3031849;
-	Wed, 27 Mar 2024 04:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BDF33993
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 08:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711514888; cv=none; b=J50XKCcXejKfgZNVXSXHFY8gz+xdjPw0yX5MXJd0vo0cBXxDjXbcUIsdR8P6ivJHShGe5w8y7QLveZe9T5Y6Lre/++KIH227r1OuhoXUwOi0DRsTFmviw7ur6IDWzju0v+LpaJTQvxyAlJJSM7qSpwVlKkpGyeGK9DFCFwEw2Vc=
+	t=1711529067; cv=none; b=Fd2kjqRZGlIAzqOr/g/BB1PrV60NT065X/fTIgl4NTl3WjoFuvhxCLCEvfXb6TrFkTy6isEot0ouseB9+SavXSxvv2a/R65Z4JZPc9Hc88jBleEjkhmFvGfZDFrz6wxPMqk20+fOaRqKomO8sugQmfWL+UIWk022Nu4ZCRC0VQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711514888; c=relaxed/simple;
-	bh=amR80G+fWUvqxS+sCOmX8ddrgfYtW+7QXa6cvF1GKWo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jepGdNc/f/YLVlk+KD/i4zbS9da65hzsZzK53UJTbYzb5C7zrl+Ip9ffamOCn8eNOlk41CJxTW1YfXeGkLTpU7h6gz7Qe/voiEqwfGoH9V/gVQ6fsitDwEOEDJm8wS3nPwjtK7VndZsVC00nHGn4z7CmUJqZ2xGkMCIfv0e4PvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyZXtotP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711529067; c=relaxed/simple;
+	bh=5jgLagnXQ6xhAkEIJNUbHLhU7RMCem4VEiLbv9YJlRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q+fBk09KTa6mcXelwCfigSdQ0spim3kdOUDN2k9idjSGdhCpi7b2xfF9JVKjiZ/eF9utgBHb6pPJWj20LQNGKiA0mF0DWa3iD8ejFp+20Itv8EoIfPbOLif8k/ACor0gUUu+OOhw4ZFPNBTOaswkLu2wTb2w5E73/O18ln++O9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fiBW8ccN; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyZXtotP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 232FEC433F1;
-	Wed, 27 Mar 2024 04:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711514888;
-	bh=amR80G+fWUvqxS+sCOmX8ddrgfYtW+7QXa6cvF1GKWo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hyZXtotPoyQmlKERlSCQx+Xekly6BsW2qnLoz1TfiHfxRLir++wEx6hMthVQA7uDZ
-	 XEqVTL22mHmJzP/8BTpe7ybD8xtFZfJr2hJIGX/OSiYMRWBwyTPKXzInXTMV9SY0o5
-	 2T5/GcrzvwIvuvkM2LVhL7M2O3JkFLzjN3FiIispLtwm5ayC2f3BbBdhuWQkXkDs+T
-	 GgfcjeM7XeAaS6ECGMonZKf8zA00/QtFfXR4u+OoicoIZurw0bOzN9iQsWzMutn9zt
-	 vN47UxgxGsSuDM+NV/jj2kVyy20pBGENM3UFEKPrrmK/BYYIUxAMyeOKeWi5H3SdRP
-	 FDpbFEjAs9J3A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 11546D2D0EB;
-	Wed, 27 Mar 2024 04:48:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fiBW8ccN"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a466e53f8c0so845269566b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 01:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711529064; x=1712133864; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rFw5oadwcyNPA68+IoBOiw7o2WmetNa9KlFx7gAlFDI=;
+        b=fiBW8ccNTHG4mf/VZ6LuIhIF1ytsAXzaK9vh1+FZZYs3iek4jRIJ3Zsz+OrEee3/3d
+         Oh26ZMp79eEMTn1FBIGSm3R0GnpN3Xu8z05CImFqjjzVAJ0JshA8hkvExgI/GDVR3DlQ
+         HxHfZ0KKciw9FrRpADs/JcvznE9uuu7n3UzES5pQgydkMYkYcqMBSVJ9VCy0vWSBnmWc
+         19+0dYerF1788VcWf++thzeMN6XXx1TtiUlW6habOsPcxhGsNTU5ryFztitFo7v1Q1NQ
+         UFDhCujoF3Iq5ObXku/eQlYEwQ8hT1vF/6jRzZNGLihcLh6Yqfpi8osR1SOtwSxF4jU6
+         ESlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711529064; x=1712133864;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rFw5oadwcyNPA68+IoBOiw7o2WmetNa9KlFx7gAlFDI=;
+        b=vgr8w1SEVHE9BQZpS3B14XErVv9eddKRfHJsoggtmkrni1lZrYDHBO0FI97BmZyWP4
+         5OF+neLRCqwMGDFZcKtsmmkDTUn/oc8bo2k1ee6tNO6FDAg18ZhRh0MCyBn/W9MrBORr
+         Ltud5HPlkV6gW73EVJV7006c/hz4KLAxVNOxRaO9tY0hsOXS1GyfIX3Hvl+m5fw23CC1
+         naSIAT2dQCpZbamQJvxJmTNUk65S/03zISY2v8u69nlND9OmTXLp7bLRZx+FoK3J+ZWY
+         qrYLtMnIBgrzzUCiYR6RCF2ZPRYDHkovMPjcytcq/6q67uvMUV92RvqbJdGB7qFM44Hq
+         P2Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwTvcefmvKjXR7kHPTjXO2EGGymXQ4HQX5KRWABk9E9HQKB8yIajXrTy+7AeSE3IYBlioUn1KZdqU5fWcfAZe8NqcT6vlw+DcPiA7v4nBu
+X-Gm-Message-State: AOJu0YxQHHADpf/Vp6Bt6JVAwD1Ygnj9tpiBulFMge9qMecBMwpzJpIB
+	8FtUDouDfDe+Zm7NNBlDLtvoCYuDqtH/QRSliTfxFSK6QiMADb0gGYaSuWaqHqc=
+X-Google-Smtp-Source: AGHT+IGCW+el7emQ1/+oO1zg6ptwcHdw8/EJLjhWGE+dnvBCHkRrn/RhO1OxEXI/8C2Qt3RPc5EAZA==
+X-Received: by 2002:a17:906:798:b0:a4a:3441:2e2a with SMTP id l24-20020a170906079800b00a4a34412e2amr440215ejc.55.1711529064259;
+        Wed, 27 Mar 2024 01:44:24 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.206.205])
+        by smtp.gmail.com with ESMTPSA id n19-20020a170906119300b00a4660b63502sm5196946eja.12.2024.03.27.01.44.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 01:44:23 -0700 (PDT)
+Message-ID: <73e5a697-2eb4-45d3-84eb-60401ea10cc1@linaro.org>
+Date: Wed, 27 Mar 2024 09:44:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] platform/chrome: cros_ec_proto: avoid
- -Wflex-array-member-not-at-end warnings
-From: patchwork-bot+chrome-platform@kernel.org
-Message-Id: 
- <171151488806.812.14417613721582434618.git-patchwork-notify@kernel.org>
-Date: Wed, 27 Mar 2024 04:48:08 +0000
-References: <ZgMaDl/of8YC445S@neat>
-In-Reply-To: <ZgMaDl/of8YC445S@neat>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: bleung@chromium.org, tzungbi@kernel.org, groeck@chromium.org,
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+ <20240325181628.9407-2-quic_okukatla@quicinc.com>
+ <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to chrome-platform/linux.git (for-kernelci)
-by Tzung-Bi Shih <tzungbi@kernel.org>:
-
-On Tue, 26 Mar 2024 12:55:10 -0600 you wrote:
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> drivers/platform/chrome/cros_ec_proto_test.c:1547:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/platform/chrome/cros_ec_proto_test.c:1607:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/platform/chrome/cros_ec_proto_test.c:1645:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/platform/chrome/cros_ec_proto_test.c:1668:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+On 26/03/2024 21:56, Konrad Dybcio wrote:
+> On 25.03.2024 7:16 PM, Odelu Kukatla wrote:
+>> It adds QoS support for QNOC device and includes support for
+>> configuring priority, priority forward disable, urgency forwarding.
+>> This helps in priortizing the traffic originating from different
+>> interconnect masters at NoC(Network On Chip).
+>>
+>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>> ---
 > 
 > [...]
+> 
+>>  
+>> +	if (desc->config) {
+>> +		struct resource *res;
+>> +		void __iomem *base;
+>> +
+>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +		if (!res)
+>> +			goto skip_qos_config;
+>> +
+>> +		base = devm_ioremap_resource(dev, res);
+> 
+> You were asked to substitute this call like 3 times already..
+> 
+> devm_platform_get_and_ioremap_resource
+> 
+> or even better, devm_platform_ioremap_resource
 
-Here is the summary with links:
-  - [next] platform/chrome: cros_ec_proto: avoid -Wflex-array-member-not-at-end warnings
-    https://git.kernel.org/chrome-platform/c/6c85a13b133f
+Yeah, I wonder what else from my feedback got ignored :(
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
 
+Best regards,
+Krzysztof
 
