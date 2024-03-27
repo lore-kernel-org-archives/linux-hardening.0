@@ -1,141 +1,84 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508A71514E0
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 18:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015511509BC;
+	Wed, 27 Mar 2024 18:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711565620; cv=none; b=DuzmUONPnuvorKu4C0dJkGX+7tTBvb/zo0Xs4Cf8ctPyLyiKaYaZal+9aRe6ZtFrUsXKZiSuKhcP2A74Si7k8oSFsXFvjlGTqJ9xBZPfudIU74ITWWsJqFNutLCUop1EmeZOBGBU4JPkh5ej7rd2YwJx6dumXC+pK1T6RDloZrk=
+	t=1711565868; cv=none; b=sOt25esHaIKMUiWs8EhVUK9PC9Jh9BERkdIvR4NUIBBEViUJo5Y1N1VcSfr73GuAONg0lEGFKIDv9Ky85HzJyqN7gs5TB8Ey1kg9vAbxY337EE+9nDJfTobsUlE+9gbBspAxwsDkLvi7dYQWxG/+nwzr9tRfZIBQCN6aeFadi/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711565620; c=relaxed/simple;
-	bh=DRriF96XBdtDbA0stDmuq0Ozvtm/4dViy+piu1EqTFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pyb76jVpjTyIV+YCkaP1MHMI8DjfR3/9PigchRmYhm/OE5wqMPTejy3jpJryEZcZXCd1MtCYfOXnKb5IaR00l5AvTN/ODfPfJMIcSTLFH9Pj3tECqc79IY+I+zl+TWLRLs6kjn43ghHoHaKHxfnoFimQXzzEc/31gL56rtX7U6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Tf0ipOtp; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711565868; c=relaxed/simple;
+	bh=EC6Lhxkjvx1RpPe8rDFDyBQQQkJxJTIgY5bGiM+h7Xw=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=taolIKfuO8g8we1k/8V6b4S9D9NOVivL49Nj6N1bWrS+6AoCBPi8Vsr5mlwV3CZ6u93ODYz0CIxO4pmKtvjSlS5Gjt1UprESaEohAnbtNfZY2qbM6+IPai6XnpHvKL+Ad6/tdqvKjKV/ovh0Kj3H64eEBWLJrruI2vL7u+yg9+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tF3JRb8K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Tf0ipOtp"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id pWKkrzz1dQr4SpYP4riWRl; Wed, 27 Mar 2024 18:53:38 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pYP3rt4mlsT9BpYP3rnuFb; Wed, 27 Mar 2024 18:53:37 +0000
-X-Authority-Analysis: v=2.4 cv=LIutQ4W9 c=1 sm=1 tr=0 ts=66046b31
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=0yL73Cyy68KADmUz8mEA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gdIFR+CqW2Hj2dXzDKpIE02t+3L7EdU4qxKK93B9/Fo=; b=Tf0ipOtpi0jeAMo4neqo5oMZiS
-	ATSJyTc5sBz7hKoQdpI8on6+u7RfGRaI8vKMNAKx9ceiayArBeevctN7FVjjs6ls5K4ktPWNGCMjm
-	Fq6Nd8R63PrT6CZC9bzR4cVyUs1qe14QkX8fsg9/4RND+GG/1vGWHLB/17yFZXcTlV4D8Jme1UssB
-	J3z/Ukd0wr3JkRgkDf9yzX0CXWofYVCqWPwLXIZpWXat3J/pPrTY4ZJKLGlfo1Pcuw26KaX6H1ykU
-	zaRsPG6fURPbfDEcePieD07SDhCFdVdImb6qph1AamMkZwYh0GLtMuote+aUg4pgrkdQG0onCuoKn
-	Ne4umHSQ==;
-Received: from [201.172.173.147] (port=36948 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpYP2-003XoZ-2f;
-	Wed, 27 Mar 2024 13:53:36 -0500
-Message-ID: <d34e1ab7-bed6-4721-98fc-0288eb314de6@embeddedor.com>
-Date: Wed, 27 Mar 2024 12:53:35 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tF3JRb8K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB5CC43390;
+	Wed, 27 Mar 2024 18:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711565867;
+	bh=EC6Lhxkjvx1RpPe8rDFDyBQQQkJxJTIgY5bGiM+h7Xw=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=tF3JRb8K0zVTMpTpEUINfK+CRCiKDrrRZ5kQLkb0BVenivWSPFCRLdve5w+h+93Xi
+	 iJw147g4OWCBX4pTW+AmkcfeD55W5Aj4V0HHjt+6YScU5f3z2bVyhoPS+NXr4E1D0b
+	 tc1Vpgiok1EwSVNyiioQnJyL5xxC6WrfpCMYmdAe8i6nSQhqqAUbW4GKJOtpH8ETYH
+	 z5K/yMe5sV7UERNL6DRbl9gO0SsgkBbzcepH9gABgkx4C4u0IMQ8TWZPuQNXiDpuZv
+	 HkSyX/5+9hkz5vFoYB9/Gwm59PlzoW5RXEIhX9VR/cS+yGr+W1mtH5mTRmDflGq8O0
+	 2yDSlN55MBqjw==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
+  linux-wireless@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: cfg80211: Use __counted_by() in struct
+ wmi_start_scan_cmd and avoid -Wfamnae warning
+References: <ZgRqjGShTl3y5FFB@neat>
+Date: Wed, 27 Mar 2024 20:57:44 +0200
+In-Reply-To: <ZgRqjGShTl3y5FFB@neat> (Gustavo A. R. Silva's message of "Wed,
+	27 Mar 2024 12:50:52 -0600")
+Message-ID: <87edbv7b9z.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] wifi: wil6210: Annotate a couple of structs with
- __counted_by()
-Content-Language: en-US
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZgRayuCJ0gQinMvr@neat>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZgRayuCJ0gQinMvr@neat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpYP2-003XoZ-2f
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:36948
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPY4F22j2Sflfa8cko4eTrruhO903BbThEabyE1Im9g2AieC9UAxrVa9QDKOojPMo5BDOZaAM8ZeK1RUdZu2QaNwx90ivZSV2DI/WIkXKu9IKWRgR+Za
- OwruiGsOYy9iTm6wCePB0M3YXufeGb3Z1+Ptb0cWSZPkei3PtgIe+CJJo8bfYYxIfLp3jZRwokRHYYXoaksZweNHvAIxEK0JwZcrr+BP0pA4MDa/+DbluNMP
+Content-Type: text/plain
 
-Hi all,
+"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
 
-Please, drop this.
-
-The following patches replaces it:
-
-https://lore.kernel.org/linux-hardening/ZgRqjGShTl3y5FFB@neat/
-
-Thanks
---
-Gustavo
-
-On 3/27/24 11:43, Gustavo A. R. Silva wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
+> Prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time
+> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+> (for strcpy/memcpy-family functions).
+>
+> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+> getting ready to enable it globally.
+>
+> So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+>
+> So, with these changes, fix the following warning:
+> drivers/net/wireless/ath/wil6210/cfg80211.c:896:43: warning: structure
+> containing a flexible array member is not at the end of another
+> structure [-Wflex-array-member-not-at-end]
+>
+> Link: https://github.com/KSPP/linux/issues/202
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> Changes in v2:
->   - Annotate one more struct.
->   - Update Subject line.
-> 
-> v1:
->   - Link: https://lore.kernel.org/linux-hardening/ZgODZOB4fOBvKl7R@neat/
-> 
->   drivers/net/wireless/ath/wil6210/wmi.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
-> index 71bf2ae27a98..38f64524019e 100644
-> --- a/drivers/net/wireless/ath/wil6210/wmi.h
-> +++ b/drivers/net/wireless/ath/wil6210/wmi.h
-> @@ -474,7 +474,7 @@ struct wmi_start_scan_cmd {
->   	struct {
->   		u8 channel;
->   		u8 reserved;
-> -	} channel_list[];
-> +	} channel_list[] __counted_by(num_channels);
->   } __packed;
->   
->   #define WMI_MAX_PNO_SSID_NUM	(16)
-> @@ -3320,7 +3320,7 @@ struct wmi_set_link_monitor_cmd {
->   	u8 rssi_hyst;
->   	u8 reserved[12];
->   	u8 rssi_thresholds_list_size;
-> -	s8 rssi_thresholds_list[];
-> +	s8 rssi_thresholds_list[] __counted_by(rssi_thresholds_list_size);
->   } __packed;
->   
->   /* wmi_link_monitor_event_type */
+>  drivers/net/wireless/ath/wil6210/cfg80211.c | 22 ++++++++++-----------
+>  drivers/net/wireless/ath/wil6210/wmi.h      |  2 +-
+>  2 files changed, 11 insertions(+), 13 deletions(-)
+
+The subject should being with "wifi: wil6210:", I can fix that. (Didn't
+review the rest yet.)
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
