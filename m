@@ -1,101 +1,146 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6908152DE1
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 21:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C115216E
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 21:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711573586; cv=none; b=tcFsgSZWTC7OEvpXr35XyYxmpHnfbzMP5meWv2YtOEfsfGqbTmv0UyGpPAJhCGGMQ0x8Jy/sIJT88EHHmZow9x3SPn6Y4nzwX+5RHZiqheQvYmXPeNpRzxAWoki/lW8A0iTEmNcyvIVL1xIcaAr57lTuji0Vhz0dw+20xeqLZ74=
+	t=1711573857; cv=none; b=TSgya+sx3KA/ud76q8yS9OUcpfLXkKPW01MXyUhCt/zYrl91hjZr6bEnk2y9umtZoG+7umxkjxCp+Wd8SJC5EnCCEJdUoEaRRPKWxbw6KBvDIAx8P8WUc7WjcicAfMt15Ii10uvng4xRB2fZegCDTMFeI89GCyOQlQ8xj97e6Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711573586; c=relaxed/simple;
-	bh=Xx5MpaWvy5522jqTooimseYw/Jm8R5vpweYD4JwX7nk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DGJBneDet2L6PH91nfgZ6Q/8xlkoTM5e08yTWYgWeibWuiEzwaHLFX//Gx/UrE8ax649wR4KhYB/itXt8/GoGLo3zSB7x9y6PsyYy8sE+6iSSDwf3vxGck1wLqFwaoaKuEP16mGQNWON2jz/cMXBT5ux6nk03nVrvnU369CyWKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=plXN80LV; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711573857; c=relaxed/simple;
+	bh=c05JlIhAAX9+Wj5KD5xjyuKpqsfoj6wU7p1hNY3Smz4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OkmLUajPxpwK2fL97XJsS2A5PSlPSjEKkyVy/qrHM9OJAQIBgTeXysGGkU7xshmXLWo7lW0J84TvJ+jlWSRWqBUfZdOb4OeFtiRbH7afR+CvyRNchc50Yj5Bt2iqhjO1JxXJz1YXo3X9pKnJvFa+2jHKacQPruJOb58RZ696Tps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zCC4+8dH; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="plXN80LV"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-	by cmsmtp with ESMTPS
-	id p9gkrcSvtDI6fpaTXrEKgc; Wed, 27 Mar 2024 21:06:24 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id paTWr2fD93g73paTWrzc49; Wed, 27 Mar 2024 21:06:23 +0000
-X-Authority-Analysis: v=2.4 cv=esUUzZpX c=1 sm=1 tr=0 ts=66048a4f
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=COk6AnOGAAAA:8
- a=1VVxQOVvkDxVd9r07kAA:9 a=QEXdDO2ut3YA:10 a=oeCWIyVaUf8A:10
- a=TjNXssC_j7lpFel5tvFf:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0qCww4XnuD7HGbcNfioDP3N0BucgDEPTS/31Ql+x+hY=; b=plXN80LVUebjbHVxO2SjTlb2ZP
-	djrrZWoC1bsw6SEGq6k3t9zjtKqgwNe/Ar5RJEb63BpWKG94ofEC1ykvpXutIVLCWNudFi93KhSPo
-	e1gR0hIpWIhz1HAcu1yUhOAXVT4Ov0s3AN8SgLUMjwc6UOHF25Q8u9OJMQpC/haQXmFwZWxY+zt5X
-	Ns9lq514ralTgD+uTDwdfGLN9IMU3pCOSCAKRuwBdAb5XAuRNqH/IA0WeiI08bzMGGQQ1dR1mt6TD
-	+X+GLKIMb0E9G11nD9RGUtKs6W7lDwW7giEmnLVgwAnq77cp6Ub51D4HGZvNtIyt9sHNd1TiT2fR4
-	VOxkTrbA==;
-Received: from [201.172.173.147] (port=56048 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpaTW-001BZU-0M;
-	Wed, 27 Mar 2024 16:06:22 -0500
-Message-ID: <0abb2673-1c60-4374-8c88-b5f0eaa3be33@embeddedor.com>
-Date: Wed, 27 Mar 2024 15:06:20 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zCC4+8dH"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a54004e9fso5413117b3.3
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 14:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711573854; x=1712178654; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+lkMVelOezh/ZlXJ0pLzE+PWawOJ1uDpRCeivCwpFfI=;
+        b=zCC4+8dHmu7g+yxnAfrpQsbDO5BHPpXJUZ/FK2Ram9W0bPkgiy6lD/F8KpefMF9lSy
+         h+v9xECyTVaZpsgaKtt5OUDBdU6rmh9dM8aioG/g1oMTuBMCAAunVmijbTgBRZ/B0pII
+         xZJ29flVen8ogc1E3pr3oGyMs5YIOm8qAk8t82nyaOHcVsdV0mmMrFKz/T9yrDdxRSuB
+         ZyFkoXxuVP21iK5fK+vQVMEbD3QBsVQ0eTjhe8b47waFEp0kwjd6O1mIt+lUa04D+w1z
+         +79sCD06feWD7N8ghE+r2f5QwbkybVfcjaMJkIhWum3pAi58UjHzoQ/1qaldiDJ0KxX6
+         OR5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711573854; x=1712178654;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+lkMVelOezh/ZlXJ0pLzE+PWawOJ1uDpRCeivCwpFfI=;
+        b=Iw6ZTG9jdfJ1J8nbq82pKk/nPI3NyrtSNnMazNTFBwJJxzGtDvtqSTdvylVhEXqFDv
+         cNOD7IcaioV6xSBtELUc1iA8f63aoOaaogEsJ3AvqiG0i0Im7FfMELfby8phMQUWG6So
+         xr9Tmzix0ua3sz3lT8GYeNunJ6szjCN/SPom8/Leh08IUsonFiyId7rSiEvmm5Tw4zs8
+         2bLshkE4KQqVPbAPKh86qJcrK4uf5BdEGddmZffup9ihPp1tXH18bS03KW9A0RWbQz1z
+         VH5l66p+mr7eXBx8IMmw+HP56ePjkXtRuzq8MzI8jfkoivUqf4NRyXTUjqg/59qvoTzf
+         Wylg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8lI/ogr7cEoMKBy78JBsevGKViE636DMvCWBkP4W5f9IsqUCJ9DU1fSNu+w4Ev/QtSbnXqRuQ72z1QLj/H2KnWFNQbsnB9/LyfbYnJXfc
+X-Gm-Message-State: AOJu0YzrfizJGWKKk+6WgPsoEnEpeeJK/lGDu3Uj1/hxR43TBQ1chBEC
+	MuSbhsWoFYDMeQiGl6dlm4aCMm7zLarlEwBElCifLt8sMc/r1M+UEpPtIsjFBk13h3zLxoWWS3a
+	/Yu9sk6f35RmOUcIWYTmG9A==
+X-Google-Smtp-Source: AGHT+IF2W4CfyY1W2KI8dpvyaTKLJ22XNKhwxs5DcbfYiSRg/rNYQ2xBm+UlXjsQKvrjcxKStDc5WbID/PhFU2jObA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1009:b0:dc6:ff2b:7e1b with
+ SMTP id w9-20020a056902100900b00dc6ff2b7e1bmr325202ybt.4.1711573854514; Wed,
+ 27 Mar 2024 14:10:54 -0700 (PDT)
+Date: Wed, 27 Mar 2024 21:10:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: wil6210: wmi: Use __counted_by() in struct
- wmi_set_link_monitor_cmd and avoid -Wfamnae warning
-Content-Language: en-US
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZgRsn72WkHzfCUsa@neat>
- <dc556824-d499-430c-850e-fb0ca55dd5fe@quicinc.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <dc556824-d499-430c-850e-fb0ca55dd5fe@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpaTW-001BZU-0M
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:56048
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCY/YJHcazXoY+SJEk4+c+olChnEtGlC6XgLDIzZCzwNpLnMEOspmrKKal6+Ffpy4uuRLPoIo+Fae3tygBd9WWamtBHbZT6WYZUMsl1T7eg7q6AF0RBY
- +FNHQBY+ycQUJDEWlPE8kzfQERcC5xb1ZYJeVxTMpIafubyc33lcydM6vlSHfbeLuq7PVGYeovjcNtmeK9lo7L7kS4JgA/z+cvHPXdOO4aUD4J4A/zomvj31
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAFuLBGYC/x3MwQqDMAyA4VeRnA3YTqb4KuLBxXTLYW1JpCjiu
+ 6/s+B3+/wJjFTaYmguUi5ikWOHaBuizxjejbNXgO993Dz+g7RopnxgMsybC8qWkjIQvN27D0wV eOUDNs3KQ47+el/v+AZI+IAhqAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711573853; l=2631;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=c05JlIhAAX9+Wj5KD5xjyuKpqsfoj6wU7p1hNY3Smz4=; b=dvoo077PNzidPJkbn13FOfdETuWck8T+nbUCWDn79wP+pUbOIiqdMGPeDBqCc5kqKPcrChbca
+ T5lNI9lENkhAMdr88HffzjhBqJSvVobkKfzQHKHkcprOU1eF+49l098
+X-Mailer: b4 0.12.3
+Message-ID: <20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com>
+Subject: [PATCH] vmcore: replace strncpy with strtomem
+From: Justin Stitt <justinstitt@google.com>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
+strncpy() is in the process of being replaced as it is deprecated in
+some situations [1]. While the specific use of strncpy that this patch
+targets is not exactly deprecated, the real mission is to rid the kernel
+of all its uses.
 
-> That DEFINE_FLEX() macro takes a bit of time to understand! But I finally
-> digested it so...
-> 
-> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> 
+Looking at vmcoredd_header's definition:
+|	struct vmcoredd_header {
+|		__u32 n_namesz; /* Name size */
+|		__u32 n_descsz; /* Content size */
+|		__u32 n_type;   /* NT_VMCOREDD */
+|		__u8 name[8];   /* LINUX\0\0\0 */
+|		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
+|	};
+... we can see that both `name` and `dump_name` are u8s. It seems `name`
+wants to be NUL-padded (based on the comment above), but for the sake of
+symmetry lets NUL-pad both of these.
 
-Thanks for your time and RB tag!
+Mark these buffers as __nonstring and use strtomem_pad.
 
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ fs/proc/vmcore.c            | 5 ++---
+ include/uapi/linux/vmcore.h | 4 ++--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 1fb213f379a5..5d7ecf3b75e8 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
+ 	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
+ 	vdd_hdr->n_type = NT_VMCOREDD;
+ 
+-	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
+-		sizeof(vdd_hdr->name));
+-	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
++	strtomem_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME, 0);
++	strtomem_pad(vdd_hdr->dump_name, data->dump_name, 0);
+ }
+ 
+ /**
+diff --git a/include/uapi/linux/vmcore.h b/include/uapi/linux/vmcore.h
+index 3e9da91866ff..7053e2b62fa0 100644
+--- a/include/uapi/linux/vmcore.h
++++ b/include/uapi/linux/vmcore.h
+@@ -11,8 +11,8 @@ struct vmcoredd_header {
+ 	__u32 n_namesz; /* Name size */
+ 	__u32 n_descsz; /* Content size */
+ 	__u32 n_type;   /* NT_VMCOREDD */
+-	__u8 name[8];   /* LINUX\0\0\0 */
+-	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
++	__u8 name[8] __nonstring;   /* LINUX\0\0\0 */
++	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES] __nonstring; /* Device dump's name */
+ };
+ 
+ #endif /* _UAPI_VMCORE_H */
+
+---
+base-commit: 928a87efa42302a23bb9554be081a28058495f22
+change-id: 20240327-strncpy-fs-proc-vmcore-c-b18d761feaef
+
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
+
