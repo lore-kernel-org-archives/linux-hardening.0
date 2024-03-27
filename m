@@ -1,62 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FEE22F00;
-	Wed, 27 Mar 2024 04:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2D3639;
+	Wed, 27 Mar 2024 04:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711512254; cv=none; b=tLMx3he8UoS+wpQl9c0DwehmTBRg7t4/7J6R4kIiLD+/q6LW0JqvPAu4aFUnB2h3qXZ3EtbwsOlzgVMZlqQEZ15RrSVSBlCjViNa/a2GqRpN4Kc4SkwLLjYfZpW2YawaflfmdO66dYG/f+lke3jdUqJIZtLG9lJNfGTqvynva3g=
+	t=1711514888; cv=none; b=TJHrzNOFWz4xozHGtc7YrswaJ9l/q5JRlFYXqW365w8FG2ZYi4Tg3cegKPzAVqlo7uE8m7A91563FkPKqcsBdhLX2ycPaJHULc9/z9ozmoqcGKeVJ9bhW6ESZWEieB0hIwa/53RuRfw7+tdNi8t2XvedlFTKnTkRfOYUvGgHjEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711512254; c=relaxed/simple;
-	bh=lZ9YORRD2cjb6H23mT2QiMkZ3f+zO7pgeUMUfeQKOD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HuWvEKs4sTxu3TftVQH50iuUYz64peKGZGIPS7ny3QC+VEJiNahbQI6amQVE4PTrijfEHvLBICYD1+N+Tcp5Lp4RTybiBRi2EgZ3Znj8cDcF59WoPq3rg7zbXI6MVnm9qkiRAQCHu1OIoxIFmqC9Y1st9N5jKx6rCM/37i0sVSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5LYzJS6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711514888; c=relaxed/simple;
+	bh=uWAuppfKIv+6QPjw6eP0ZldkO7CbP2+7dJhYWeKcAwg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=WwpujaZBM53IA1wEhsBajj6Y3VnzZdGh3aiUTXF7BRS3vJhNK8iyJKeBAav3Z4G1M8DXJG8OwIQJDubzegk9mN2vCycqDttfK073Q3oIDGcMlD30pPrPxAN/cl6lwMmy8NfQFLz6Y2s/O0en+x/47XCoG0oBBf5GblL6hF8jLIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nq+fPVfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5LYzJS6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 344F3C433F1;
-	Wed, 27 Mar 2024 04:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nq+fPVfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4736AC433B1;
+	Wed, 27 Mar 2024 04:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711512253;
-	bh=lZ9YORRD2cjb6H23mT2QiMkZ3f+zO7pgeUMUfeQKOD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e5LYzJS6xKvz7rl3C2Ix6ObippjF4zUUh12ri0KJTjZlxyG+0T4Jxy5dU2zugFIZR
-	 B8LaDyn8b/stXUN/SVxdZomS2g0x8UPpjUaT/lBcixqNZ0tTAiAPLdSDsAF+IhWG25
-	 IJApIYpyORp9gzqRyyfvKrfQ2JH+WGHvksj/nGwvYPy5RVw+xBNp1RvFSoPG4aRMtK
-	 Cr712R0HlFeL6sMJCv6xngCYxBNu3+FCucZhS3jMjjN78y4JG1odDpU8X+phHOA9jw
-	 Ai0pija9g3vZoK9FQgiRJkejxfnRmTLLY7hxgkFKg9+wD64pEtTlJa85Rano8faeP6
-	 Y340++hKyHJXg==
-Date: Tue, 26 Mar 2024 21:04:12 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Kees Cook
- <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Simon Horman <horms@kernel.org>,
- nex.sw.ncis.osdt.itp.upstreaming@intel.com,
- intel-wired-lan@lists.osuosl.org, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/3] idpf: make virtchnl2.h self-contained
-Message-ID: <20240326210412.1bfce311@kernel.org>
-In-Reply-To: <20240326164116.645718-3-aleksander.lobakin@intel.com>
-References: <20240326164116.645718-1-aleksander.lobakin@intel.com>
-	<20240326164116.645718-3-aleksander.lobakin@intel.com>
+	s=k20201202; t=1711514888;
+	bh=uWAuppfKIv+6QPjw6eP0ZldkO7CbP2+7dJhYWeKcAwg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nq+fPVfjlUx2zeMIapvrYl7TVkDJz8bJcwhxeBSr/WWIdYd9AcGXw4FkzEa0UCG+s
+	 pT/GU5Jb6XJS488ZLmcT1ZyfBVs2rI4ALg56S9EfU0hn0aEP4MOu1lRqsHT6XEYLTh
+	 W5ihMTLqxfh5FuaoujVyPk4n565x64o1NsNm2QswCKdLn7o/3kVxlz2QXEHJXrmtYu
+	 z6KZyf0YWcs1ZYT9CzeVWaLhp0q9B6F0GwMArvzcogAubuoNfXT8TI4zWCUgyQ4o5p
+	 G1TGw9WQLI5an4ekcUfi0NBgLsrIZqUPCQBcWws13gwb3dMxnRC+fzEBt+G7+2o+rQ
+	 YuLxPgncbF9og==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3D6E1D2D0EC;
+	Wed, 27 Mar 2024 04:48:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] platform/chrome: cros_ec_proto: avoid
+ -Wflex-array-member-not-at-end warnings
+From: patchwork-bot+chrome-platform@kernel.org
+Message-Id: 
+ <171151488824.812.5983218096761719498.git-patchwork-notify@kernel.org>
+Date: Wed, 27 Mar 2024 04:48:08 +0000
+References: <ZgMaDl/of8YC445S@neat>
+In-Reply-To: <ZgMaDl/of8YC445S@neat>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: bleung@chromium.org, tzungbi@kernel.org, groeck@chromium.org,
+ chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-On Tue, 26 Mar 2024 17:41:15 +0100 Alexander Lobakin wrote:
-> To ease maintaining of virtchnl2.h, which already is messy enough,
-> make it self-contained by adding missing if_ether.h include due to
-> %ETH_ALEN usage.
-> At the same time, virtchnl2_lan_desc.h is not used anywhere in the
-> file, so remove this include to speed up C preprocessing.
+Hello:
 
-Breaks allmodconfig, it seems..
+This patch was applied to chrome-platform/linux.git (for-next)
+by Tzung-Bi Shih <tzungbi@kernel.org>:
+
+On Tue, 26 Mar 2024 12:55:10 -0600 you wrote:
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> drivers/platform/chrome/cros_ec_proto_test.c:1547:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/platform/chrome/cros_ec_proto_test.c:1607:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/platform/chrome/cros_ec_proto_test.c:1645:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/platform/chrome/cros_ec_proto_test.c:1668:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> [...]
+
+Here is the summary with links:
+  - [next] platform/chrome: cros_ec_proto: avoid -Wflex-array-member-not-at-end warnings
+    https://git.kernel.org/chrome-platform/c/6c85a13b133f
+
+You are awesome, thank you!
 -- 
-pw-bot: cr
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
