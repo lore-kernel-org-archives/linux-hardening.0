@@ -1,63 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC241DFFB;
-	Wed, 27 Mar 2024 17:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE50A14E2E6
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 17:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711559151; cv=none; b=NXT7ziokIIXcaPl+95WG++aM33WJ0tp6twOoPZQMr1XG9Pbb5AMi+EfixzEgOuTt+KnY5+HDapCFUKJ1zYiHYXg/Ha/Uld+c/3nLUXAP8a1P5V+CqozK+eBIQU+AztUgAfrnXev0yr+9qkXW4WFf/eiO+1jLfA9fQjrHDcmSMSo=
+	t=1711559340; cv=none; b=V55C8eKTAw7kkL2M51LFO2dLZwGLFJ6PNUYekGySJDHsDgIRN2SzwFQih9/bsaaoptNcR2jqmYDAvbu+fuCqnFxiQBzVtFGFwffSEQY9eNk61/XanpsdbQLzXRAkZrdJexxmcHh5E6F6wKjNfaECUufmYjz96MCdUtB+FTigskE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711559151; c=relaxed/simple;
-	bh=WXf82O0sES9oPoOJyA/fZUpvP5TUDXvRNOgtA3CYGt0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=W531qllydY1TaHUgtv09bepAQ07WrGC/9hZfL3ZUdUYS5EIDQlEftMBH5W6SUvIrg2Onjq5FBW/C+eSrwVYjTbzhMyR0U9t64llMSTsT2643okqwJSwpHAqi/u1uv9lb0rcWNrQAaevz8Q1FWzUphOKt4PCUcIcIGhT6cRlSnjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7bi6ts/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711559340; c=relaxed/simple;
+	bh=gMN/vy1OEAGkXDYuiqVo7/hP63UcoJ3uKwb/j9S4MrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RpmRjq7PGE4060Z+cWOGTqzymJ5rjLGpogZtFx3BTE7uya8qb3sCpD0vB2v5O4KAlV3VvppduOoI0dgF8JJQRKjRmtuS04nCRHfj6JJlYdokm6bXi0HPHD8P5xodisZ+wht65PT0Sk0krawHANmxbeyPzWsFfJr/smgoO8HbJ1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=VTizb/8e; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7bi6ts/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F3661C433F1;
-	Wed, 27 Mar 2024 17:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711559151;
-	bh=WXf82O0sES9oPoOJyA/fZUpvP5TUDXvRNOgtA3CYGt0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=B7bi6ts/HS84u49z8sPu4+UhYE3qwLU5zpvrkXt8Mr8yf9P+j811AhOkR+rjsOGbd
-	 ROzzUMHjAHYWH+nkyidVdIv60iYUCdhtfeQ40E/4z0sxc1g0y5ZW4C8H5J46B1tfcS
-	 5SWZnyD92GgMX+yUSEpelH8/yAzm9EsPRz7Aa2NT4BWXj0qwf9WjNA1WBVHcWBN2Wd
-	 Q+4VdxT7CPgfX4jEWvQQWjfKeuYl0Vh1EV6dPzX0Rrn7uOvu94fh4Wf+353hvj5/qV
-	 pFeK19CJOMwsL3unL4T0iZHlyyWqT0nmh24BwPLNUYxnJuVH9j20IaJk+zsXjEcoZk
-	 MWfX6jue2T3HA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EA854D2D0EB;
-	Wed, 27 Mar 2024 17:05:50 +0000 (UTC)
-Subject: Re: [GIT PULL] execve fixes for v6.9-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202403261544.E7B2404@keescook>
-References: <202403261544.E7B2404@keescook>
-X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202403261544.E7B2404@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.9-rc2
-X-PR-Tracked-Commit-Id: 5248f4097308c1cdcf163314a6ea3c8c88c98cd9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f4a432914af728be2c149934295f337351aa774c
-Message-Id: <171155915095.9372.2833118791775948007.pr-tracker-bot@kernel.org>
-Date: Wed, 27 Mar 2024 17:05:50 +0000
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Muhammad Usama Anjum <usama.anjum@collabora.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VTizb/8e"
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+	by cmsmtp with ESMTPS
+	id pWKmrzz94Qr4SpWlfrhNcp; Wed, 27 Mar 2024 17:08:52 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id pWlWrx2mS9zHMpWlWrstCB; Wed, 27 Mar 2024 17:08:42 +0000
+X-Authority-Analysis: v=2.4 cv=fo4XZ04f c=1 sm=1 tr=0 ts=6604529a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=94brYO8VEXWNUbGmlHcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lSCdqTkx1RljbiqDMVW8JxneDk+aNzMqtkDooNcx1vQ=; b=VTizb/8erBSeOHgRDK4TOCBTbK
+	MNAbyEO8E8ekOM4tvOVc9aqjXSOPBiWwcfNJTHM3i5qI8apQrHoPJv8/ZvjKd/DQ5CvS+TLX7CuwU
+	/VOXsNIWvAEI66e1BdhRuZoPh/dEVY5+S9VgOx8UJ6jvXf1fU9xdddpkbi5UndS9i921mPdD5XgDp
+	XOQmvJ8ng1eNr9C7n8kXwmLbE/cnu832gPvDETyWYKgWV/2uk90nuYcB0AjMOqFZniGx4WB1x/eWF
+	wDIYk3l03cUgta1YH/XWXc/Q+O2YPHQaoev7Vis4cp83P67f4lvN6dHEBpto3KjtukxfjtmlVMj+R
+	eAlTG9Nw==;
+Received: from [201.172.173.147] (port=54120 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rpWlP-001nk2-05;
+	Wed, 27 Mar 2024 12:08:35 -0500
+Message-ID: <d5b0c70e-8369-4b99-9a42-9a4a93098251@embeddedor.com>
+Date: Wed, 27 Mar 2024 11:08:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] Bluetooth: L2CAP: Avoid
+ -Wflex-array-member-not-at-end warnings
+Content-Language: en-US
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZgRIF1bkXlZlaK22@neat>
+ <CABBYNZLi_PCbRB6CVYxwOG04917tDudMvuVT1NU3LVth=xpCtw@mail.gmail.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CABBYNZLi_PCbRB6CVYxwOG04917tDudMvuVT1NU3LVth=xpCtw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.147
+X-Source-L: No
+X-Exim-ID: 1rpWlP-001nk2-05
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:54120
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfB5Z5w0DMhDY+BHd1kvQdERSF8yuL2FroXhcJ6hvjcUmj7fvlCyWuU7Ama40bR1tdnlhblZazBNzgYAT2JsUu3Qc34ChF5cEd7N+krTCwQMe2mKtAaCq
+ OnuInfyYfD+S6ta4h+4cIW3qyFBa42UO3P+tBqZvcbkdci+0uvVgMvLR5pqBWxicR4FFmM4CLm9SUT9dhtNRhQ4InljcfyV4IqvdaLR7DAJmWWH2JPJqRKPc
 
-The pull request you sent on Tue, 26 Mar 2024 15:44:18 -0700:
+Hi!
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.9-rc2
+On 3/27/24 10:55, Luiz Augusto von Dentz wrote:
+> Hi Gustavo,
+> 
+> On Wed, Mar 27, 2024 at 12:23 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+>>
+>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+>> ready to enable it globally.
+> 
+> Which tree is this base on, I just rebased bluetooth-next on top of
+> net-next but it looks like CI is still failing to build it, so either
+> we don't have all the dependencies already in net-next or perhaps you
+> had it submit while the tree had not been updated.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f4a432914af728be2c149934295f337351aa774c
+This is based off of linux-next.
 
-Thank you!
+I think net-next is missing this commit in v6.9-rc1:
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+d8e45f2929b9 "overflow: Change DEFINE_FLEX to take __counted_by member")
+
+https://git.kernel.org/linus/d8e45f2929b9
+
+Thanks
+--
+Gustavo
