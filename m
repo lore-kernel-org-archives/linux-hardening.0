@@ -1,187 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234EC14535D;
-	Wed, 27 Mar 2024 14:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8006B4F890
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 16:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549403; cv=none; b=FJcq0pOg8Em11fhfT5CMI28sfcVcv5f2q848QYNZFSunG6NCSqwTgTLKi59gsuxZlQTXNHHZDBx6FsxX+PX4zoD7bzqGzesuERAFToDMltz+qO2ykPpKqiffKjAEiacJijY1rzTdW7nCcK6HT+2e/TPi8NRgvGIdZPigYVWwXNc=
+	t=1711556363; cv=none; b=d5WieA3Gmio6xZPybFFRXTqBJMgksUjhLxtsUkGpjuwQVJ4PXXBpwbI4uKcdOEehGm++BoVrLV7vr7UP5igOVNN7Oe7ucA1ZO/TCLGnu2lk3JiW0fOhhezosAw64CF+zuNFgX2ropqnf0vlDItQ0kZiWHupyZnrRuSx/Ly9M8B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549403; c=relaxed/simple;
-	bh=iiy+IT/DztQVWAIWT58TrPOTIu+zB11vMHnxpdfkMvE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LJ3F9gajsFs9EzblkevWEl3RFBYefPN7EhCrKs/pF4f5vzy+FW3nueP558hK2qujiRMlLH4gzPYfMMP+HybLjLhZQyaTAtxBpOSYtb3O6POO3kAS4iW/5DuyNB+QdRRGnRsIpeI08uoWsok8Mf56gPE1r0BHEqtnVVL1RRO5Qnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Re0GYhPS; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711556363; c=relaxed/simple;
+	bh=OrY2sRkMGUSl5qS4bbQVcCvtD+x52pQ3Jvu2+0Cf6vg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nx3Ep3ob4tm/tYinklGa48WfKIROY2rwiQF26Jf1wq4afCm8qyxHg16stu5Rs2m5cadIgSn/CzqweQ5pmhH7fW4EcrLccm0/l4drShF6nu6GL9yI3yu9Nzn5uNVZ3Svi3YWTDKj+qpTyPZDdoTh29k/N4FhhOIh4v+c/FNidTp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gZhVMWfq; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Re0GYhPS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711549402; x=1743085402;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iiy+IT/DztQVWAIWT58TrPOTIu+zB11vMHnxpdfkMvE=;
-  b=Re0GYhPSRqT+9Ck2LNl0UyFzSs2cvMof5Z9Vs4DhFSUNC6OdadPEVdBx
-   rAEcLO88pJdCL7NcNU29PWXArvw6IpXyZaPEPWK8oq5Ia1gbiYXjg8KGA
-   4pFsLInmr5AYIAR+S9xveDcwA+/TmfAOkTAbQ0KfZkkJKtaRxPEQ9GjjV
-   OATr3mFLrpGRjwbWK/IWoskZOcGC5rgjgTSQqgutYa3CgQKOhFypJx/wO
-   Vgq8M4dvbst6rjFDLj2Ouw8K92EQHZU/LNO6uc35J7bX7dQ/drfTJdHZh
-   vzNapZC+SN4aCFcf3ibZVV8muDfNBUsKswUI9ipVYCsZVlENzRLmd9MZs
-   A==;
-X-CSE-ConnectionGUID: s+OdSvCbQfqTnGeh9JKTEA==
-X-CSE-MsgGUID: C55Xa0mNTsCIpPmqOskaKw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6592551"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="6592551"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 07:23:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="20973106"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Mar 2024 07:23:19 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	intel-wired-lan@lists.osuosl.org,
-	linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 3/3] idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
-Date: Wed, 27 Mar 2024 15:22:41 +0100
-Message-ID: <20240327142241.1745989-4-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
-References: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gZhVMWfq"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7cb9dd46babso48501639f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 09:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1711556361; x=1712161161; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H+EwpnV1TovlT/K7a9fk3BdjFCSuIGfXvPuki/X3eHY=;
+        b=gZhVMWfq39SffqUOh9P6lBRApIrh8XpYkurdi2D+KF3nEw7MBy51+59j0MvYKOePJc
+         H2YUxrE25zne1efGXlWgibB405807+6BjNjnPKLdyZTXkhKNenMQZPFGpA33yeaQb2Bt
+         anGyHmi7kCo/YVSVVKUUl+9Olcs0i6KF2ys5Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711556361; x=1712161161;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+EwpnV1TovlT/K7a9fk3BdjFCSuIGfXvPuki/X3eHY=;
+        b=KnankFXB6biBuN9LJZr3I0jKbHxwg4n656mRipZsrB4nz8g7RWaWr8TbdE8XxWmfFG
+         BlCU3XIpPp44wdo8LwUw02H6afrR7vM+wm9rCMft7rt5EXWdN2lgL/QEHC34DV32bikp
+         YfuugQFd04vLd2Pn9SaauuZvqcCo51YA6el8lTBYP+XNr9BNeK1QUaQs0nzNsCcsCFWX
+         SbnhD0KTDTUXUaGFSweQcRZq9PuOddT657N/gNJyAyF8c21e3kaNsZzMhBtt8939JgjB
+         yWn6lPoM9Spkk0Flvue0TTNP9TYF7BxTf7ur/jjOmQppnStya8Nbufhm3znqyTxNcRad
+         hZaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUhOpK52knMOU6OGgG4cVabNXU0GpxjkucDIHbpm9ijK8gl9WA14OeJhz97+J2RGcQD3bnEx+o7LmHpLYt+/fYoRLSZ/LV/UueGuiasy7e
+X-Gm-Message-State: AOJu0YwV5jW9I9OvDZbXKYDRg7UyNCo4RROK9HHtEBlLozNjcazsadXv
+	2UxYd8eOuApsbxsEHbhilpekFvqHC/gSYjMEE6vqQTMsoHEztGGLhGojRsHg9Po=
+X-Google-Smtp-Source: AGHT+IGFTq5dd597zpcFVDKJzVe2QfZkJrAeL8dZzhpz4JfDnNyVSDojkp6US9cbLAxZzL7lqBXjxg==
+X-Received: by 2002:a5e:9402:0:b0:7d0:3d2c:5987 with SMTP id q2-20020a5e9402000000b007d03d2c5987mr672625ioj.0.1711556360742;
+        Wed, 27 Mar 2024 09:19:20 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id q16-20020a02c8d0000000b0047c17c664fbsm2007031jao.115.2024.03.27.09.19.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 09:19:20 -0700 (PDT)
+Message-ID: <cfa1ee01-1480-4869-9ea8-daaff0ce3ac9@linuxfoundation.org>
+Date: Wed, 27 Mar 2024 10:19:19 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/exec: execveat: Improve debug reporting
+To: Kees Cook <keescook@chromium.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Eric Biederman <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>,
+ Mark Brown <broonie@kernel.org>, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240313185606.work.073-kees@kernel.org>
+ <1dd87e89-2306-4669-844f-ffe9e56523b6@collabora.com>
+ <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
+ <202403261540.8F0D7A0@keescook>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <202403261540.8F0D7A0@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
-There are 10 structures with flexible arrays at the end, but 9 of them
-has flex member counter in Little Endian.
-Make the code a bit more robust by applying __counted_by_le() to those
-9. LE platforms is the main target for this driver, so they would
-receive additional protection.
-While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
-its counter is `u8` regardless of the Endianness.
-Compile test on x86_64 (LE) didn't reveal any new issues after applying
-the attributes.
+On 3/26/24 16:40, Kees Cook wrote:
+> On Tue, Mar 26, 2024 at 02:46:02PM -0600, Shuah Khan wrote:
+>> On 3/14/24 02:54, Muhammad Usama Anjum wrote:
+>>> On 3/13/24 11:56 PM, Kees Cook wrote:
+>>>> Children processes were reporting their status, duplicating the
+>>>> parent's. Remove that, and add some additional details about the test
+>>>> execution.
+>>>>
+>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>>> ---
+>>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>>> Cc: Shuah Khan <shuah@kernel.org>
+>>>> Cc: Mark Brown <broonie@kernel.org>
+>>>> Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>>> Cc: linux-mm@kvack.org
+>>>> Cc: linux-kselftest@vger.kernel.org
+>>> Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>>
+>>
+>> Applied to linux-kselftest fixes for the next rc.
+> 
+> This is already part of the execve tree...
+> 
 
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- drivers/net/ethernet/intel/idpf/virtchnl2.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Thanks. I will go drop it.
 
-diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-index 29419211b3d9..63deb120359c 100644
---- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
-+++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
-@@ -555,7 +555,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_queue_reg_chunk);
- struct virtchnl2_queue_reg_chunks {
- 	__le16 num_chunks;
- 	u8 pad[6];
--	struct virtchnl2_queue_reg_chunk chunks[];
-+	struct virtchnl2_queue_reg_chunk chunks[] __counted_by_le(num_chunks);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_reg_chunks);
- 
-@@ -703,7 +703,7 @@ struct virtchnl2_config_tx_queues {
- 	__le32 vport_id;
- 	__le16 num_qinfo;
- 	u8 pad[10];
--	struct virtchnl2_txq_info qinfo[];
-+	struct virtchnl2_txq_info qinfo[] __counted_by_le(num_qinfo);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_config_tx_queues);
- 
-@@ -782,7 +782,7 @@ struct virtchnl2_config_rx_queues {
- 	__le32 vport_id;
- 	__le16 num_qinfo;
- 	u8 pad[18];
--	struct virtchnl2_rxq_info qinfo[];
-+	struct virtchnl2_rxq_info qinfo[] __counted_by_le(num_qinfo);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_config_rx_queues);
- 
-@@ -868,7 +868,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_vector_chunk);
- struct virtchnl2_vector_chunks {
- 	__le16 num_vchunks;
- 	u8 pad[14];
--	struct virtchnl2_vector_chunk vchunks[];
-+	struct virtchnl2_vector_chunk vchunks[] __counted_by_le(num_vchunks);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_vector_chunks);
- 
-@@ -912,7 +912,7 @@ struct virtchnl2_rss_lut {
- 	__le16 lut_entries_start;
- 	__le16 lut_entries;
- 	u8 pad[4];
--	__le32 lut[];
-+	__le32 lut[] __counted_by_le(lut_entries);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(12, virtchnl2_rss_lut);
- 
-@@ -977,7 +977,7 @@ struct virtchnl2_ptype {
- 	u8 ptype_id_8;
- 	u8 proto_id_count;
- 	__le16 pad;
--	__le16 proto_id[];
-+	__le16 proto_id[] __counted_by(proto_id_count);
- } __packed __aligned(2);
- VIRTCHNL2_CHECK_STRUCT_LEN(6, virtchnl2_ptype);
- 
-@@ -1104,7 +1104,7 @@ struct virtchnl2_rss_key {
- 	__le32 vport_id;
- 	__le16 key_len;
- 	u8 pad;
--	u8 key_flex[];
-+	u8 key_flex[] __counted_by_le(key_len);
- } __packed;
- VIRTCHNL2_CHECK_STRUCT_LEN(7, virtchnl2_rss_key);
- 
-@@ -1131,7 +1131,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_chunk);
- struct virtchnl2_queue_chunks {
- 	__le16 num_chunks;
- 	u8 pad[6];
--	struct virtchnl2_queue_chunk chunks[];
-+	struct virtchnl2_queue_chunk chunks[] __counted_by_le(num_chunks);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_chunks);
- 
-@@ -1195,7 +1195,7 @@ struct virtchnl2_queue_vector_maps {
- 	__le32 vport_id;
- 	__le16 num_qv_maps;
- 	u8 pad[10];
--	struct virtchnl2_queue_vector qv_maps[];
-+	struct virtchnl2_queue_vector qv_maps[] __counted_by_le(num_qv_maps);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_vector_maps);
- 
-@@ -1247,7 +1247,7 @@ struct virtchnl2_mac_addr_list {
- 	__le32 vport_id;
- 	__le16 num_mac_addr;
- 	u8 pad[2];
--	struct virtchnl2_mac_addr mac_addr_list[];
-+	struct virtchnl2_mac_addr mac_addr_list[] __counted_by_le(num_mac_addr);
- };
- VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_mac_addr_list);
- 
--- 
-2.44.0
-
+thanks,
+-- Shuah
