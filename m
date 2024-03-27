@@ -1,146 +1,190 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C115216E
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 21:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AB04CB38;
+	Wed, 27 Mar 2024 21:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711573857; cv=none; b=TSgya+sx3KA/ud76q8yS9OUcpfLXkKPW01MXyUhCt/zYrl91hjZr6bEnk2y9umtZoG+7umxkjxCp+Wd8SJC5EnCCEJdUoEaRRPKWxbw6KBvDIAx8P8WUc7WjcicAfMt15Ii10uvng4xRB2fZegCDTMFeI89GCyOQlQ8xj97e6Yo=
+	t=1711574306; cv=none; b=hnlS8KXiEYSA3R9GNg0U+IMcDtmyhK4rPkH3+kVqZINhOTkIeSHsPGf0V7TEy1QsabhAXWxZinCA2EzWLrh7bB/TZmmA8ySQyVRR9MFczaVW5nx6mHT0KLMoXlJe58flxIsFk3E1Tfz3vcbNLiuJF2MeVSwn/fpUgjCdEpcjd4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711573857; c=relaxed/simple;
-	bh=c05JlIhAAX9+Wj5KD5xjyuKpqsfoj6wU7p1hNY3Smz4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OkmLUajPxpwK2fL97XJsS2A5PSlPSjEKkyVy/qrHM9OJAQIBgTeXysGGkU7xshmXLWo7lW0J84TvJ+jlWSRWqBUfZdOb4OeFtiRbH7afR+CvyRNchc50Yj5Bt2iqhjO1JxXJz1YXo3X9pKnJvFa+2jHKacQPruJOb58RZ696Tps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zCC4+8dH; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1711574306; c=relaxed/simple;
+	bh=ipR9hzWi9zOw+0dtltYaJnP36cAh8+wgGS76t0QXEmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MOTQANzB/PTpLicc6yDwkqxIzFZ4kLvzaCXxrQMubZAI5Pp3oHltb0x4DTSBaaXx8/EjVRt8t1bnLyX5ebev31QpEs+QwKZAtbxsfj1Mf3S7vr78aDRT807cB+Lk9CC4eu9FGmp5EDhAHgd8pvEKPQCAc9czBl1M1KhRbPMRZ/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JFTmVSZP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zCC4+8dH"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a54004e9fso5413117b3.3
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 14:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711573854; x=1712178654; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+lkMVelOezh/ZlXJ0pLzE+PWawOJ1uDpRCeivCwpFfI=;
-        b=zCC4+8dHmu7g+yxnAfrpQsbDO5BHPpXJUZ/FK2Ram9W0bPkgiy6lD/F8KpefMF9lSy
-         h+v9xECyTVaZpsgaKtt5OUDBdU6rmh9dM8aioG/g1oMTuBMCAAunVmijbTgBRZ/B0pII
-         xZJ29flVen8ogc1E3pr3oGyMs5YIOm8qAk8t82nyaOHcVsdV0mmMrFKz/T9yrDdxRSuB
-         ZyFkoXxuVP21iK5fK+vQVMEbD3QBsVQ0eTjhe8b47waFEp0kwjd6O1mIt+lUa04D+w1z
-         +79sCD06feWD7N8ghE+r2f5QwbkybVfcjaMJkIhWum3pAi58UjHzoQ/1qaldiDJ0KxX6
-         OR5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711573854; x=1712178654;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+lkMVelOezh/ZlXJ0pLzE+PWawOJ1uDpRCeivCwpFfI=;
-        b=Iw6ZTG9jdfJ1J8nbq82pKk/nPI3NyrtSNnMazNTFBwJJxzGtDvtqSTdvylVhEXqFDv
-         cNOD7IcaioV6xSBtELUc1iA8f63aoOaaogEsJ3AvqiG0i0Im7FfMELfby8phMQUWG6So
-         xr9Tmzix0ua3sz3lT8GYeNunJ6szjCN/SPom8/Leh08IUsonFiyId7rSiEvmm5Tw4zs8
-         2bLshkE4KQqVPbAPKh86qJcrK4uf5BdEGddmZffup9ihPp1tXH18bS03KW9A0RWbQz1z
-         VH5l66p+mr7eXBx8IMmw+HP56ePjkXtRuzq8MzI8jfkoivUqf4NRyXTUjqg/59qvoTzf
-         Wylg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8lI/ogr7cEoMKBy78JBsevGKViE636DMvCWBkP4W5f9IsqUCJ9DU1fSNu+w4Ev/QtSbnXqRuQ72z1QLj/H2KnWFNQbsnB9/LyfbYnJXfc
-X-Gm-Message-State: AOJu0YzrfizJGWKKk+6WgPsoEnEpeeJK/lGDu3Uj1/hxR43TBQ1chBEC
-	MuSbhsWoFYDMeQiGl6dlm4aCMm7zLarlEwBElCifLt8sMc/r1M+UEpPtIsjFBk13h3zLxoWWS3a
-	/Yu9sk6f35RmOUcIWYTmG9A==
-X-Google-Smtp-Source: AGHT+IF2W4CfyY1W2KI8dpvyaTKLJ22XNKhwxs5DcbfYiSRg/rNYQ2xBm+UlXjsQKvrjcxKStDc5WbID/PhFU2jObA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1009:b0:dc6:ff2b:7e1b with
- SMTP id w9-20020a056902100900b00dc6ff2b7e1bmr325202ybt.4.1711573854514; Wed,
- 27 Mar 2024 14:10:54 -0700 (PDT)
-Date: Wed, 27 Mar 2024 21:10:52 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JFTmVSZP"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42RLEeJT013323;
+	Wed, 27 Mar 2024 21:18:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=5odMItVmcOfOMhCJL0bB7D3uH/Ex4aUfIXFkrQuBSoI=; b=JF
+	TmVSZPz493vFHJYMBdxskWf8HTu0AE5M/KHCEFtBaQ4bMEtGTl3aR/qzmREsZ6pm
+	SSJi4o5kpyrDR97J+rKavntKImyb7AWN+f95C92bQ+I1bI02GAf3cUaLq4jMkvBy
+	CKwQ/8jUZlnY+S16hGnKUD6w0RpkBXWr2XXbR67W79+6/Bn6BLgGVCz7jjdzwIFQ
+	1lNN1IRFV6vbSTABSXG9Ocmn2sbNdKOQbRmO8/SUaQYatvOo6ood+JE0s+kk1OZz
+	TVmQEiEQL+jp0mt1P/EIXYV/2tVmn8tgvqw3+gRNalo0B3q2E+tGHVcLGJMumw9D
+	vAMSa/EHia/Q3od4AKGA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x4u1yr0wx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Mar 2024 21:18:21 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42RLIKYc024990
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Mar 2024 21:18:20 GMT
+Received: from [10.227.110.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 27 Mar
+ 2024 14:18:20 -0700
+Message-ID: <3670c9af-3266-4b9b-928e-e91a68db7123@quicinc.com>
+Date: Wed, 27 Mar 2024 14:18:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFuLBGYC/x3MwQqDMAyA4VeRnA3YTqb4KuLBxXTLYW1JpCjiu
- 6/s+B3+/wJjFTaYmguUi5ikWOHaBuizxjejbNXgO993Dz+g7RopnxgMsybC8qWkjIQvN27D0wV eOUDNs3KQ47+el/v+AZI+IAhqAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711573853; l=2631;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=c05JlIhAAX9+Wj5KD5xjyuKpqsfoj6wU7p1hNY3Smz4=; b=dvoo077PNzidPJkbn13FOfdETuWck8T+nbUCWDn79wP+pUbOIiqdMGPeDBqCc5kqKPcrChbca
- T5lNI9lENkhAMdr88HffzjhBqJSvVobkKfzQHKHkcprOU1eF+49l098
-X-Mailer: b4 0.12.3
-Message-ID: <20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com>
-Subject: [PATCH] vmcore: replace strncpy with strtomem
-From: Justin Stitt <justinstitt@google.com>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] wifi: cfg80211: Use __counted_by() in struct
+ wmi_start_scan_cmd and avoid -Wfamnae warning
+Content-Language: en-US
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kalle Valo
+	<kvalo@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <ZgRqjGShTl3y5FFB@neat>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <ZgRqjGShTl3y5FFB@neat>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: avsc72lS1iUa_AjePAihMSqXGNNMmh_8
+X-Proofpoint-GUID: avsc72lS1iUa_AjePAihMSqXGNNMmh_8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_18,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403270151
 
-strncpy() is in the process of being replaced as it is deprecated in
-some situations [1]. While the specific use of strncpy that this patch
-targets is not exactly deprecated, the real mission is to rid the kernel
-of all its uses.
+On 3/27/2024 11:50 AM, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time
+> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+> (for strcpy/memcpy-family functions).
+> 
+> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+> getting ready to enable it globally.
+> 
+> So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> drivers/net/wireless/ath/wil6210/cfg80211.c:896:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Link: https://github.com/KSPP/linux/issues/202
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/wireless/ath/wil6210/cfg80211.c | 22 ++++++++++-----------
+>  drivers/net/wireless/ath/wil6210/wmi.h      |  2 +-
+>  2 files changed, 11 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+> index dbe4b3478f03..836b49954171 100644
+> --- a/drivers/net/wireless/ath/wil6210/cfg80211.c
+> +++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+> @@ -892,10 +892,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+>  	struct wil6210_priv *wil = wiphy_to_wil(wiphy);
+>  	struct wireless_dev *wdev = request->wdev;
+>  	struct wil6210_vif *vif = wdev_to_vif(wil, wdev);
+> -	struct {
+> -		struct wmi_start_scan_cmd cmd;
+> -		u16 chnl[4];
+> -	} __packed cmd;
+> +	DEFINE_FLEX(struct wmi_start_scan_cmd, cmd,
+> +		    channel_list, num_channels, 4);
+>  	uint i, n;
+>  	int rc;
+>  
+> @@ -977,9 +975,9 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+>  	vif->scan_request = request;
+>  	mod_timer(&vif->scan_timer, jiffies + WIL6210_SCAN_TO);
+>  
+> -	memset(&cmd, 0, sizeof(cmd));
+> -	cmd.cmd.scan_type = WMI_ACTIVE_SCAN;
+> -	cmd.cmd.num_channels = 0;
+> +	memset(cmd, 0, sizeof(*cmd));
 
-Looking at vmcoredd_header's definition:
-|	struct vmcoredd_header {
-|		__u32 n_namesz; /* Name size */
-|		__u32 n_descsz; /* Content size */
-|		__u32 n_type;   /* NT_VMCOREDD */
-|		__u8 name[8];   /* LINUX\0\0\0 */
-|		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
-|	};
-... we can see that both `name` and `dump_name` are u8s. It seems `name`
-wants to be NUL-padded (based on the comment above), but for the sake of
-symmetry lets NUL-pad both of these.
+Isn't this unnecessary since DEFINE_FLEX() logic "{ .obj.COUNTER = COUNT, }"
+should result in everything else being zeroed?
 
-Mark these buffers as __nonstring and use strtomem_pad.
+And if that isn't sufficient, DEFINE_FLEX() itself says we should "Use
+__struct_size(@NAME) to get compile-time size of it afterwards"
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+Note the current memset won't zero the flex array and hence if the actual
+number of channels is less than 4 then kernel stack contents could be exposed
+to firmware.
 
-Found with: $ rg "strncpy\("
----
- fs/proc/vmcore.c            | 5 ++---
- include/uapi/linux/vmcore.h | 4 ++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 1fb213f379a5..5d7ecf3b75e8 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
- 	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
- 	vdd_hdr->n_type = NT_VMCOREDD;
- 
--	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
--		sizeof(vdd_hdr->name));
--	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
-+	strtomem_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME, 0);
-+	strtomem_pad(vdd_hdr->dump_name, data->dump_name, 0);
- }
- 
- /**
-diff --git a/include/uapi/linux/vmcore.h b/include/uapi/linux/vmcore.h
-index 3e9da91866ff..7053e2b62fa0 100644
---- a/include/uapi/linux/vmcore.h
-+++ b/include/uapi/linux/vmcore.h
-@@ -11,8 +11,8 @@ struct vmcoredd_header {
- 	__u32 n_namesz; /* Name size */
- 	__u32 n_descsz; /* Content size */
- 	__u32 n_type;   /* NT_VMCOREDD */
--	__u8 name[8];   /* LINUX\0\0\0 */
--	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
-+	__u8 name[8] __nonstring;   /* LINUX\0\0\0 */
-+	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES] __nonstring; /* Device dump's name */
- };
- 
- #endif /* _UAPI_VMCORE_H */
-
----
-base-commit: 928a87efa42302a23bb9554be081a28058495f22
-change-id: 20240327-strncpy-fs-proc-vmcore-c-b18d761feaef
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+> +	cmd->scan_type = WMI_ACTIVE_SCAN;
+> +	cmd->num_channels = 0;
+>  	n = min(request->n_channels, 4U);
+>  	for (i = 0; i < n; i++) {
+>  		int ch = request->channels[i]->hw_value;
+> @@ -991,7 +989,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+>  			continue;
+>  		}
+>  		/* 0-based channel indexes */
+> -		cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
+> +		cmd->num_channels++;
+> +		cmd->channel_list[cmd->num_channels - 1].channel = ch - 1;
+>  		wil_dbg_misc(wil, "Scan for ch %d  : %d MHz\n", ch,
+>  			     request->channels[i]->center_freq);
+>  	}
+> @@ -1007,16 +1006,15 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+>  	if (rc)
+>  		goto out_restore;
+>  
+> -	if (wil->discovery_mode && cmd.cmd.scan_type == WMI_ACTIVE_SCAN) {
+> -		cmd.cmd.discovery_mode = 1;
+> +	if (wil->discovery_mode && cmd->scan_type == WMI_ACTIVE_SCAN) {
+> +		cmd->discovery_mode = 1;
+>  		wil_dbg_misc(wil, "active scan with discovery_mode=1\n");
+>  	}
+>  
+>  	if (vif->mid == 0)
+>  		wil->radio_wdev = wdev;
+>  	rc = wmi_send(wil, WMI_START_SCAN_CMDID, vif->mid,
+> -		      &cmd, sizeof(cmd.cmd) +
+> -		      cmd.cmd.num_channels * sizeof(cmd.cmd.channel_list[0]));
+> +		      cmd, struct_size(cmd, channel_list, cmd->num_channels));
+>  
+>  out_restore:
+>  	if (rc) {
+> diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
+> index 71bf2ae27a98..b47606d9068c 100644
+> --- a/drivers/net/wireless/ath/wil6210/wmi.h
+> +++ b/drivers/net/wireless/ath/wil6210/wmi.h
+> @@ -474,7 +474,7 @@ struct wmi_start_scan_cmd {
+>  	struct {
+>  		u8 channel;
+>  		u8 reserved;
+> -	} channel_list[];
+> +	} channel_list[] __counted_by(num_channels);
+>  } __packed;
+>  
+>  #define WMI_MAX_PNO_SSID_NUM	(16)
 
