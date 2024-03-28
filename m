@@ -1,89 +1,106 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB1181752
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5845213B58C
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660616; cv=none; b=NnZce22c5tE/wJ1p7gdrPHITGsVdqZiXv81I0Y2yxOqwZR3icKVX3p6Elhw0bfn0EFn+0/hP4rsh3YL6F0AB90vQGO82DCJRzDYAmP8UAM9CVOxtm7WHRFCMv3DAOdGLvfE/5SpyVdVW2GEFq1jl4q/92xihhMSAMYTwweM6vNk=
+	t=1711662290; cv=none; b=e8UlGcdevkydkh1vxse1FHDQ3bNjyITI/QTbdFEEfyMrs2n3VncDMPUoXAr2qfCughj7AFqYcBWLVx4ojeRwOulC/JB8MHyAuNnoSWNxtzC/2ECmaB0yBWLeFlX2NUTlS7USmcR+vAaM/mkoNVeye+oGWFBlhBWmeDRas4k5+u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660616; c=relaxed/simple;
-	bh=0VFh+DzMRQfIVgNlRT9ESQZjjQsBuArYH0hQL1mAk+4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ruoKEF7/4vE/imMLj/POLGgUyX7I6P/khshnYofXvPUVC+lGHwIo1fIyux6334CeetGmqX1hEDbtcQfePFRZIChUZdz1ujl6zLbZQ3FsjcIccsrUtGX5av6Dm/Kj32/X+j3iJAS81RQafF6EU49NSc4vD5mTDgtCFxyaJIq1vD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vwoKR0iP; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1711662290; c=relaxed/simple;
+	bh=k417LjfbcYWy0JXyEndKeFzdq4t+prtqtds4CmFz9lE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=b2vvxMrJ3atr4UutZ7g7irHt8clUU3CylC3GajNfUtVI4xLmw4spLWOE1tJe87WVKQraRCyvUxb/UZJdkk9tOzYhYHp7bq4192LbBbtEvC5flAjCcwb0GfehGdLYTNJIUq5SQxDCaIvmjE6GMXm0D8gixXGBq+P3ZtRBznmMWTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C87+PYin; arc=none smtp.client-ip=209.85.166.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vwoKR0iP"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so2099642276.3
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 14:16:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C87+PYin"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-7cbfd9f04e3so109092839f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 14:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711660613; x=1712265413; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711662288; x=1712267088; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=3wUCiSEEQ5+XeQyXhRHLnb6mP5do/bu/MSL5lZRDfe4=;
-        b=vwoKR0iP88Hs5iLGW31XIPmDcCBG4EiIZdLGEziBQxGHYFTmtRrxAB6OnAMCnRFiY3
-         Bg4Wb0+EHaKSSFK685rTUC+XM3HrF8w9LBQbUCD4wV/OuNEurxHQHuZZz0zPDAIgQU7i
-         hBD8K1xZOYMnzbZX96PFbHrTzSHeOvJTpk8edssrHCll+VBM24JA9H4ncxMgBVBqAKF9
-         kMNkb6AiVyEbQWVVGskzfWKsC88vDvEpT4hojFJ3y97NBx8KCd6vBV33OSxZsfOuaas0
-         870UbctzEhVHalFw0ZNn/wRCkMmxRve3aez4sTK4+tMWLsOrd4wIXvZdq/Ag3xWYrQk8
-         J/KQ==
+        bh=m8BVyTkvcpkdc/ycYElDg1m9Vq8tBHX5OsniS3ei5tA=;
+        b=C87+PYinwTUxSG3O4WrFydQ9PYWRDKSDVy3mgH1X2/khg6p+I19wYXY+rsKwMMpR+K
+         ScJsj3l8hJAlkhU8WbTanrBTuY7cO37qF05nmBvjlnZ0cv2CKgUgiS4mp2gAZnjijdiT
+         8k72Ksm2g2V+ndriDDK1WvHzXyMf/D6tSe7Ob2XZ3VptH716JUiUHLuhy6edf2TcrN0w
+         gZ4l2EPbZ+RcIfxYaxkJspq9znv7cpYGbBiiuW4vs1OniMMgFFREj3x/4pBPQDB4bmq6
+         W5qnb9p988Qvwy9b9QZQrkGbNkhIV475uig4r7tpwJ0vNC3bow5UFJepE363xp2lfyQp
+         UkIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711660613; x=1712265413;
+        d=1e100.net; s=20230601; t=1711662288; x=1712267088;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3wUCiSEEQ5+XeQyXhRHLnb6mP5do/bu/MSL5lZRDfe4=;
-        b=fBUVMKm59ekYg/RZ0bTxb4bTjlfi82Xtuwb/e+dbEUQOAVMQArF2wlzAT1Pxc9lvAo
-         DIrAKJVgckDucdgh3bXlaQXm1/p9zJP1BrgL73s/YEggPt84UWSMOa0yCh5ihdc1w+cJ
-         YZ4ajkAAmmKoI2vsR3jzAaWh5Fax8OY9qAs8bdOVR5M++SImzaZLQVC7/HRzntUQKMCS
-         e5CkRcBvr94FfGjjdXXDH+TJDuW3ax4wfNAuSofwHNi+yN0SHa8pbuA1O35E/8cynQ/7
-         4pyV9l0law/FX5ZPTDOsCsXtrsOweHulMwKqcQzIsYK6Mq1Os4kaKkas+9XKsuUeoA32
-         pscA==
-X-Gm-Message-State: AOJu0Yxc3kROzqy4KRnuojyhE4PrS+N/MV/RfWiRb/rW+rKz6aCaZv56
-	ie5jKqhQU3G73icwPfrKt+ycNzUrtnLMHZcoKrq5wVrnrGli/RwqhsG8aEg4bzT5XIX+HiLsuSw
-	t8iTe/M3PstfHyeZl+eiMMg==
-X-Google-Smtp-Source: AGHT+IHWVCzMVtKrCw+i/PgALiAhU6zu7AOqpmDI80m0d7V9U062paVMiqBTNANBcEsgy0fO2PJsSHanRiBsp+zw8w==
+        bh=m8BVyTkvcpkdc/ycYElDg1m9Vq8tBHX5OsniS3ei5tA=;
+        b=HadPRVawOHwV68DSVX9VbuySlFjR4dfaTMzCRzjqcH6e1XrptbtOoCWkqpVtQhKnqw
+         tInnogm4axL+zjb8k/KAWBbSQSBOuX1aSEXlaoOfJfsfsoBa41K2b7fpJCEqfFQE+mud
+         ECzGHP1qu4JtDQwVphAH0UWIA4gJy4YGCcyXShoRqen1p03mYJ3va3mknkqDBLmP6RbH
+         Fm0XJ3a/cjsASJETgvLOw0ktk+9/2hvRL/pN0Ddi2nL8I7kSiiOjCfTz38/VQgaGdynD
+         +zC/s76ZmcVhR9iaV/a/J7HI+JuvkZw72EDRsUeZgKr7hCiVVGQsTmt4W45CB72NQul/
+         uYig==
+X-Forwarded-Encrypted: i=1; AJvYcCWZBSzgfUtNhbvQkDaPHEw0yi8KB5R8ZGKveMij3Mz3fquv6f5LXvikknmRogbwxGeL5KkRTNh7IDHLeoTtJ3haZO9qKldRqaCtQx/lPEfA
+X-Gm-Message-State: AOJu0Yw6uXJN81nhf4w76tLyIhhBo2F2PA+1w3/nBUCJ93Jdviw/cf5l
+	VrjnB9vy5DlbQ1GXPVKZwsaVmm0b6h9rmyDHgYJ1O6/+RG/CRopR8WIzSQ3WaHSxQGIhO8zgayo
+	DDCiW/T6GJZbAWfxbMHhI0Q==
+X-Google-Smtp-Source: AGHT+IGt8XSLYloCCppsDFqJ6G9dM4iBlGVghi+slCBAPOgnEl+xOyRUg/wCIxYaj1VgEnfBPy7G2XJRgzqDI/LHZQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:72e:b0:dbd:73bd:e55a with
- SMTP id l14-20020a056902072e00b00dbd73bde55amr50248ybt.4.1711660612864; Thu,
- 28 Mar 2024 14:16:52 -0700 (PDT)
-Date: Thu, 28 Mar 2024 21:16:52 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6602:641c:b0:7c8:264d:5e98 with
+ SMTP id gn28-20020a056602641c00b007c8264d5e98mr23317iob.0.1711662288634; Thu,
+ 28 Mar 2024 14:44:48 -0700 (PDT)
+Date: Thu, 28 Mar 2024 21:44:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAEPeBWYC/x2NQQqDQAxFryJZN6CjiO1VSikaM5pFxyGRooh3N
- 7h7b/H+P8BYhQ1exQHKfzFZkkv1KIDmPk2MMrpDKENT1qFDWzVR3jEaKovXDrLy77tkQ0IK8Tl 0fUtVrMFHsnKU7T54f87zAthmjXxwAAAA
+X-B4-Tracking: v=1; b=H4sIAM/kBWYC/x3NTQ5AMBBA4avIrE1S9RNcRSxop0xCSUeEiLtrL
+ L/New8IBSaBNnkg0MnCm4/I0gTMPPiJkG00aKULlesa5Qje7Dc6QVlHNAuTP9Cwk5/YlNoW+eB UZWuIlT2Q4+s/dP37fr5tDypxAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711660611; l=2620;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711662288; l=3778;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=0VFh+DzMRQfIVgNlRT9ESQZjjQsBuArYH0hQL1mAk+4=; b=HFewU5nleyNYPIyFIUV1iK/w5aBXTqbW1KWUH47mJcq1k49eGfL+HqOzDVNTt0ToRWdUqAWoS
- hOrCspVs2CXC8b6UktjDgyOp0Zr6suyWPPwacdh7cLHBNmuoVB5OHgT
+ bh=k417LjfbcYWy0JXyEndKeFzdq4t+prtqtds4CmFz9lE=; b=bUcsODvsW82HxT9AF59CYkfSTLvtdhYAG5vjykdkAa5z+oe8P7sr0n7b1jPq1t6KP4WOaNtpP
+ 7pqRhlsI2tvAWt+TDwXo1Bb97u3nl2QZdF+inSPrhT9m62JS+221OM8
 X-Mailer: b4 0.12.3
-Message-ID: <20240328-strncpy-fs-reiserfs-item_ops-c-v1-1-2dab6d22a996@google.com>
-Subject: [PATCH] reiserfs: replace deprecated strncpy with scnprintf
+Message-ID: <20240328-strncpy-fs-smb-client-cifssmb-c-v1-1-30d12bcf500d@google.com>
+Subject: [PATCH] smb: client: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>
+Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Our goal here is to get @namebuf populated with @name's contents but
-surrounded with quotes. There is some careful handling done to ensure we
-properly truncate @name so that we have room for a literal quote as well
-as a NUL-term. All this careful handling can be done with scnprintf
-using the dynamic string width specifier %.*s which allows us to pass in
-the max size for a source string. Doing this, we can put literal quotes
-in our format specifier and ensure @name is truncated to fit inbetween
-these quotes (-3 is from 2 quotes + 1 NUL-byte).
+In cifssmb.c:
+Using strncpy with a length argument equal to strlen(src) is generally
+dangerous because it can cause string buffers to not be NUL-terminated.
+In this case, however, there was extra effort made to ensure the buffer
+was NUL-terminated via a manual NUL-byte assignment. In an effort to rid
+the kernel of strncpy() use, let's swap over to using strscpy() which
+guarantees NUL-termination on the destination buffer.
 
-All in all, we get to remove a deprecated use of strncpy and clean up
-this code nicely!
+To handle the case where ea_name is NULL, let's use the ?: operator to
+substitute in an empty string, thereby allowing strscpy to still
+NUL-terminate the destintation string.
+
+Interesting note: this flex array buffer may go on to also have some
+value encoded after the NUL-termination:
+|	if (ea_value_len)
+|		memcpy(parm_data->list.name + name_len + 1,
+|			ea_value, ea_value_len);
+
+Now for smb2ops.c and smb2transport.c:
+Both of these cases are simple, strncpy() is used to copy string
+literals which have a length less than the destination buffer's size. We
+can simply swap in the new 2-argument version of strscpy() introduced in
+Commit e6584c3964f2f ("string: Allow 2-argument strscpy()").
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -91,43 +108,58 @@ Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-I realize this file has been marked as "obsolete" as told by checkpatch:
-|	WARNING: fs/reiserfs/item_ops.c is marked as 'obsolete' in the MAINTAINERS hierarchy.  No unnecessary modifications please.
+ fs/smb/client/cifssmb.c       | 6 ++----
+ fs/smb/client/smb2ops.c       | 2 +-
+ fs/smb/client/smb2transport.c | 2 +-
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
-... but I really want to remove ALL instances of strncpy so we can rip
-it out of the kernel as per: https://github.com/KSPP/linux/issues/90.
----
- fs/reiserfs/item_ops.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/fs/reiserfs/item_ops.c b/fs/reiserfs/item_ops.c
-index 3a5a752d96c7..5011c10287c6 100644
---- a/fs/reiserfs/item_ops.c
-+++ b/fs/reiserfs/item_ops.c
-@@ -389,16 +389,9 @@ static void direntry_print_item(struct item_head *ih, char *item)
- 		name = item + deh_location(deh);
- 		if (name[namelen - 1] == 0)
- 			namelen = strlen(name);
--		namebuf[0] = '"';
--		if (namelen > sizeof(namebuf) - 3) {
--			strncpy(namebuf + 1, name, sizeof(namebuf) - 3);
--			namebuf[sizeof(namebuf) - 2] = '"';
--			namebuf[sizeof(namebuf) - 1] = 0;
--		} else {
--			memcpy(namebuf + 1, name, namelen);
--			namebuf[namelen + 1] = '"';
--			namebuf[namelen + 2] = 0;
--		}
-+
-+		scnprintf(namebuf, sizeof(namebuf), "\"%.*s\"",
-+			  (int)sizeof(namebuf)-3, name);
+diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
+index 5aee55551573..23b5709ddc31 100644
+--- a/fs/smb/client/cifssmb.c
++++ b/fs/smb/client/cifssmb.c
+@@ -5854,10 +5854,8 @@ CIFSSMBSetEA(const unsigned int xid, struct cifs_tcon *tcon,
+ 	parm_data->list.EA_flags = 0;
+ 	/* we checked above that name len is less than 255 */
+ 	parm_data->list.name_len = (__u8)name_len;
+-	/* EA names are always ASCII */
+-	if (ea_name)
+-		strncpy(parm_data->list.name, ea_name, name_len);
+-	parm_data->list.name[name_len] = '\0';
++	/* EA names are always ASCII and NUL-terminated */
++	strscpy(parm_data->list.name, ea_name ?: "", name_len + 1);
+ 	parm_data->list.value_len = cpu_to_le16(ea_value_len);
+ 	/* caller ensures that ea_value_len is less than 64K but
+ 	we need to ensure that it fits within the smb */
+diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
+index 2ed456948f34..35bf7eb315cd 100644
+--- a/fs/smb/client/smb2ops.c
++++ b/fs/smb/client/smb2ops.c
+@@ -3913,7 +3913,7 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
+ 		strcat(message, "W");
+ 	}
+ 	if (!new_oplock)
+-		strncpy(message, "None", sizeof(message));
++		strscpy(message, "None");
  
- 		printk("%d:  %-15s%-15d%-15d%-15lld%-15lld(%s)\n",
- 		       i, namebuf,
+ 	cinode->oplock = new_oplock;
+ 	cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
+diff --git a/fs/smb/client/smb2transport.c b/fs/smb/client/smb2transport.c
+index 5a3ca62d2f07..1d6e54f7879e 100644
+--- a/fs/smb/client/smb2transport.c
++++ b/fs/smb/client/smb2transport.c
+@@ -659,7 +659,7 @@ smb2_sign_rqst(struct smb_rqst *rqst, struct TCP_Server_Info *server)
+ 	}
+ 	spin_unlock(&server->srv_lock);
+ 	if (!is_binding && !server->session_estab) {
+-		strncpy(shdr->Signature, "BSRSPYL", 8);
++		strscpy(shdr->Signature, "BSRSPYL");
+ 		return 0;
+ 	}
+ 
 
 ---
 base-commit: 928a87efa42302a23bb9554be081a28058495f22
-change-id: 20240328-strncpy-fs-reiserfs-item_ops-c-c2f9b8a6c1f3
+change-id: 20240328-strncpy-fs-smb-client-cifssmb-c-952d43af06d8
 
 Best regards,
 --
