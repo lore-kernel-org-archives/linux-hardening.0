@@ -1,108 +1,69 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250DA65191;
-	Thu, 28 Mar 2024 10:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B4C5FB99;
+	Thu, 28 Mar 2024 12:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711622799; cv=none; b=QXzlRdC0tqBRhV3HAdhhRytfihx0Ho0xMFwQ4Pm5OQjaLsYxICF3mErJsA8TQzbIsa6/NN4FtueerrPlr+FJEU7mXido+rXFdIiJR2HYuUC2Hi82KIjiFmASleGzTGsTmv4oKXMgkaIsANDEHBSFiT3cfdQJIQe0DS7ytJfSrq4=
+	t=1711630653; cv=none; b=DIsjIs6KB80P6WYgNvkMpqq8FFA+exfHXm0q1dgBRlwTT+2lNJNGw4FPiR2NgxxY24/9kXleT2HMqh6dOUUOFUV9A/JRGQLNMYZWy2O2gN6UsD+2gnxclgFAUn+lZXk6FQV2Xl2LBqDWSt8iwY46jUalUvR1xXXbyuyiVTtz/uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711622799; c=relaxed/simple;
-	bh=rKu1tsv5K7dEoAL7vdn4WAgQFMagRaTK7+berfHVyo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a9vzmGrauiP0gyzzepT0UGPwFIzSjl4vVON+a3rTSo3VLkpYraZCE4qvOYt9/U9N2sLn/OQy+3bJ522yL30DjUigcopsDp2TZQougKHfMoyr2rQIeN3G9RKTkkkGS28zpBW6yHz1mj3+LpuHkkuFpa0Lo7cbk+Tu77+bMSeTxKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rpnGx-00C8E0-FJ; Thu, 28 Mar 2024 18:46:16 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 28 Mar 2024 18:46:32 +0800
-Date: Thu, 28 Mar 2024 18:46:32 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Haren Myneni <haren@us.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH][next] crypto/nx: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <ZgVKiK2A+of/+vGr@gondor.apana.org.au>
-References: <Zed5RIGqPgxUt/9T@neat>
+	s=arc-20240116; t=1711630653; c=relaxed/simple;
+	bh=NqFtcA01L6YHAkspYOeRJlzOjy89j+1aJ2esOXYp47g=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=bhQ+6sH0hTyAR9dp04JldtSJe+HoLa2NNaZIDpYpGkmigpD8T6TVnJ69KiL1lqq6hzF47dTMuo0kbfhUZP9afZkyYZMfqrKCU+BI2bkQnuGvfDi2Ubnaj2E+uQs93UfxBE5oVMzyfZ+sGzmsO/+QSnIyvg4eQS0+w5DMlAFNgWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ak1sbqmT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ak1sbqmT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDCCC433F1;
+	Thu, 28 Mar 2024 12:57:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711630653;
+	bh=NqFtcA01L6YHAkspYOeRJlzOjy89j+1aJ2esOXYp47g=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=ak1sbqmT2oNRt2EEk/n1QfSYg2WTASl9KJskAVfH+qD+2kE8i8hvY7xBI78j5G1oV
+	 Hk2dx1IBkSVNDqcq+IVUX6KLJf1GWo+5y7jrDiRq7yS/MbUSXeiJ17T2j2oVDLNXdB
+	 HnA/lleZY/E1rKdpZxlEMNETzRGMSfRg1gSo+yblcsGF14hiRgwpr+JnFpZw6BKYsB
+	 CPyLcVHrySf9uqFqZr10T1fJ5vb4FNYSr7N2G4ZskQGK67A9Ss1eMiqroPSOnFUs4A
+	 04JQSvDMUjbYmw5mZM5rq8KhlpG+6Ed1thYeof4fpTEwiYlZugDxIqi59Bue6RtfOM
+	 shK49zMqFYc1A==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zed5RIGqPgxUt/9T@neat>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wifi: wil6210: Annotate struct
+ wmi_set_link_monitor_cmd with __counted_by()
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <ZgODZOB4fOBvKl7R@neat>
+References: <ZgODZOB4fOBvKl7R@neat>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171163065000.129280.2362402378382558964.kvalo@kernel.org>
+Date: Thu, 28 Mar 2024 12:57:31 +0000 (UTC)
 
-On Tue, Mar 05, 2024 at 01:57:56PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally. So, we are deprecating flexible-array
-> members in the middle of another structure.
-> 
-> There is currently an object (`header`) in `struct nx842_crypto_ctx`
-> that contains a flexible structure (`struct nx842_crypto_header`):
-> 
-> struct nx842_crypto_ctx {
-> 	...
->         struct nx842_crypto_header header;
->         struct nx842_crypto_header_group group[NX842_CRYPTO_GROUP_MAX];
-> 	...
-> };
-> 
-> So, in order to avoid ending up with a flexible-array member in the
-> middle of another struct, we use the `struct_group_tagged()` helper to
-> separate the flexible array from the rest of the members in the flexible
-> structure:
-> 
-> struct nx842_crypto_header {
-> 	struct_group_tagged(nx842_crypto_header_hdr, hdr,
-> 
-> 		... the rest of the members
-> 
-> 	);
->         struct nx842_crypto_header_group group[];
-> } __packed;
-> 
-> With the change described above, we can now declare an object of the
-> type of the tagged struct, without embedding the flexible array in the
-> middle of another struct:
-> 
-> struct nx842_crypto_ctx {
-> 	...
->         struct nx842_crypto_header_hdr header;
->         struct nx842_crypto_header_group group[NX842_CRYPTO_GROUP_MAX];
-> 	...
->  } __packed;
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure, through which we can access the flexible
-> array if needed.
-> 
-> So, with these changes, fix the following warning:
-> 
-> In file included from drivers/crypto/nx/nx-842.c:55:
-> drivers/crypto/nx/nx-842.h:174:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->   174 |         struct nx842_crypto_header header;
->       |                                    ^~~~~~
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/crypto/nx/nx-842.c |  6 ++++--
->  drivers/crypto/nx/nx-842.h | 10 ++++++----
->  2 files changed, 10 insertions(+), 6 deletions(-)
 
-Patch applied.  Thanks.
+I'm dropping this because it looks like you sent a different patch, but
+it's quite hard to know for sure.
+
+Patch set to Superseded.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+https://patchwork.kernel.org/project/linux-wireless/patch/ZgODZOB4fOBvKl7R@neat/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
