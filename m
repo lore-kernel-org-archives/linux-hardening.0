@@ -1,47 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729DC40852;
-	Thu, 28 Mar 2024 21:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DD813A256
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711662372; cv=none; b=oPu2SfoD+LB3rkSexg0fMi9L/+tO11rF5H3TS4r++ZKRxNH6n5QgpRLNOrLwv+VcP/N68YUA8T90jml3KMaa5evVeR9Oou81I2F0Aw6CnsA3uiO5Z11dyGgbuZsBfSQkWStJMEgrHM7qq12L24RLOlwuUZIiYeGmhejhYJy5dnw=
+	t=1711662652; cv=none; b=be9J56Tlawt1R13wFx9QvzAayGOuD1BOb0Nw4oMXUhZWtMsHhRUkPIcdnvsmQ3ePsDsLPPlk9BzcSjIdtJ8x/4kKfb+L/WCURs+hE5eFzlRaxUnZKAc1kYs7z0VwCvYiCF1GwJBMQL+LV0TVKaxa96cpKmuesQk6SQXyV8xyyxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711662372; c=relaxed/simple;
-	bh=BUuK9Y3a97hKqqVxYQHw0k12luY8EW9jyYTqhMIgmkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=egrCuFvGDoN2dTR7pbxF8GdPjg9w60E6lITZr66cRnF54C5v8emOvLH4pRKGWU9lb6Luq03Mz+zUHcboDlOOTybZvrFu9V2kYbahJDP5rP4HU7WqZOHDXkUlSj41eCmdz1xB5duRN159pcNZlgo7jIzddOiKDUVGQ0BF9PU+92I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAe6Uqtf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711662652; c=relaxed/simple;
+	bh=AaG/JQ942744By6JWnpn1/mB71bmQP7Qf4tM7JpBi3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VsgFOidEM9bhzsYxIN/BAGnXBGIcsjtZfZpOikr8SpIIoc1kKC8RZQchXJ8Qal8d862IOwhTr8OorFGBE7APkJ8lnS0m9aDpuD9LRKXS3cMA3t2/5QbVSuQaDeYQff5e6IGoq2E6VEvieH/Y5nt6YffJvOdLKel72SiVEZYJT4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BVFisEnO; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAe6Uqtf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D55E5C433F1;
-	Thu, 28 Mar 2024 21:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711662372;
-	bh=BUuK9Y3a97hKqqVxYQHw0k12luY8EW9jyYTqhMIgmkM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=EAe6Uqtf8Cj1vU1undhD6AgFufnJX8YBReXNOF+4VK8dhd3e+yOaSqblSu5RRkRNn
-	 xfk1qjmzJ8JhDfq0DsLtIVKqQQvuTlALY/QzFDxdgIQkHSnqflSpgl97hjbgBf54ej
-	 4Kr7TezJMQ5A1cbWFZF49yqNtyMvghdjWXohOkuet19tM2aazs3lg5slPopEh6n4ki
-	 AntoItZr56N8bLxByB8iMJTqIE7PqgijkEC6Lrx/4qRdfUcNq44bGUjWlKl9jie+Hn
-	 Z4VOzPjfR/BG/mjqd2yUzEpp7oEX5u4HZDOqPMd0BkQr4OMWqd+UlaMY7tKqU4fAKM
-	 eAcEYPAOEXWQg==
-Date: Thu, 28 Mar 2024 15:46:08 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Subject: [PATCH v3][next] net/smc: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <ZgXlIADfiXSyRz8d@neat>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BVFisEnO"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a480985625so849318eaf.0
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 14:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711662649; x=1712267449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c9VNKqIZeu5aRMq+EcvLmL1iZpaTvAUz76/b2Q6IYI4=;
+        b=BVFisEnOj6o3zIgtDl2rkZ1dNUmJESvVH14PV41cPjpWHSi/XaQ2rmvr0WSlsLg350
+         s6iSJalUYEJlHpfj1QZ3s8O1eiJ7bG9obOEy00gw13Km7mDNbq266NdZGAPoZXL7t80d
+         mtj2BVvwIM4xI942JI0YWH+0lDsKpNUhpxKu4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711662649; x=1712267449;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c9VNKqIZeu5aRMq+EcvLmL1iZpaTvAUz76/b2Q6IYI4=;
+        b=uuTwBHHn8szjORO7RTSVkjpwYOO7OITytyIJs1XVbgszJiSMnwWc18Lcanbxy23zgD
+         yNJWWSoMJCDKaFqyspq1ccCtmde6wu/OB8HRiqaHJ2YDNDFigiuPjoHaEV54d641FCq2
+         35rKkv0yiA/0SlFM2adCYzMNZsmPEJnwH78OY5PvU6VBCOGWxMwShTi1fCQwDqYerPR4
+         a0Cw/FzmUw4SHq/9qyvDBsXtyIqg6YpIr+Eai4pjvqiCiQE7fpztn1iWSi7lNNGCBE40
+         0aJdkvRjB1yNiHi451Pp702IBbvuLhMMGsUUQN/hsOoFE9TpdpwqwJFOD6WJj4J3Eb1B
+         FIRw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMyUj0oJ468PN8F5psHrlfxyWvpx7adPQbVwBIR6FOJBbBopE08Q7aneV+mF6jKyWefi+z9MR9Jf1yL46hqkzmUMyr6dZpNgtwPsYibkmx
+X-Gm-Message-State: AOJu0YyCnNe9TXg/nqZt/dggeOz9rOs4g06hdjJfhQ21IqaZxhB9dC6J
+	nrv/dB+5s6RrPicOr/mKDL6pF0XPc0tmsBcewlPXfEV+s3xvS7q/R1GZx6hxwg==
+X-Google-Smtp-Source: AGHT+IGJ/A8B+g2+nP/nK7KddniHxRqwqdU/PivvhTlgMDDkbuncjn3iau7BevP2DI44v43cswmPHg==
+X-Received: by 2002:a05:6359:4594:b0:17e:9c8c:2c25 with SMTP id no20-20020a056359459400b0017e9c8c2c25mr728796rwb.7.1711662648877;
+        Thu, 28 Mar 2024 14:50:48 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t62-20020a632d41000000b005dc85821c80sm1739857pgt.12.2024.03.28.14.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 14:50:48 -0700 (PDT)
+Date: Thu, 28 Mar 2024 14:50:47 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
+	linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Hancheng Yang <hyang@freebox.fr>, Remi Pommarel <repk@triplefau.lt>,
+	Johannes Berg <johannes.berg@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] wifi: ath9k: work around memset overflow warning
+Message-ID: <202403281450.CAD08A9B@keescook>
+References: <20240328135509.3755090-1-arnd@kernel.org>
+ <20240328135509.3755090-3-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,147 +72,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240328135509.3755090-3-arnd@kernel.org>
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
-
-There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
-that contain a couple of flexible structures:
-
-struct smc_clc_msg_proposal_area {
-	...
-	struct smc_clc_v2_extension             pclc_v2_ext;
-	...
-	struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-	...
-};
-
-So, in order to avoid ending up with a couple of flexible-array members
-in the middle of a struct, we use the `struct_group_tagged()` helper to
-separate the flexible array from the rest of the members in the flexible
-structure:
-
-struct smc_clc_smcd_v2_extension {
-        struct_group_tagged(smc_clc_smcd_v2_extension_fixed, fixed,
-                            u8 system_eid[SMC_MAX_EID_LEN];
-                            u8 reserved[16];
-        );
-        struct smc_clc_smcd_gid_chid gidchid[];
-};
-
-With the change described above, we now declare objects of the type of
-the tagged struct without embedding flexible arrays in the middle of
-another struct:
-
-struct smc_clc_msg_proposal_area {
-        ...
-        struct smc_clc_v2_extension_fixed	pclc_v2_ext;
-        ...
-        struct smc_clc_smcd_v2_extension_fixed	pclc_smcd_v2_ext;
-        ...
-};
-
-We also use `container_of()` when we need to retrieve a pointer to the
-flexible structures.
-
-So, with these changes, fix the following warnings:
-
-In file included from net/smc/af_smc.c:42:
-net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-  186 |         struct smc_clc_v2_extension             pclc_v2_ext;
-      |                                                 ^~~~~~~~~~~
-net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-  188 |         struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-      |                                                 ^~~~~~~~~~~~~~~~
+On Thu, Mar 28, 2024 at 02:55:05PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> gcc-9 and some other older versions produce a false-positive warning
+> for zeroing two fields
+> 
+> In file included from include/linux/string.h:369,
+>                  from drivers/net/wireless/ath/ath9k/main.c:18:
+> In function 'fortify_memset_chk',
+>     inlined from 'ath9k_ps_wakeup' at drivers/net/wireless/ath/ath9k/main.c:140:3:
+> include/linux/fortify-string.h:462:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>   462 |                         __write_overflow_field(p_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Using a struct_group seems to reliably avoid the warning and
+> not make the code much uglier. The combined memset() should even
+> save a couple of cpu cycles.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Adjust code to 80 columns. (Wen Gu)
- - Add a couple of code comments.
 
-Changes in v2:
- - Name the tagged struct *_fixed instead of *_hdr.
- - Add Kees' RB tag.
- - Link: https://lore.kernel.org/linux-hardening/ZfCXBykRw5XqBvf0@neat/
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZeIhOT44ON5rjPiP@neat/
-
- net/smc/smc_clc.c |  6 ++++--
- net/smc/smc_clc.h | 26 ++++++++++++++++----------
- 2 files changed, 20 insertions(+), 12 deletions(-)
-
-diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
-index e55026c7529c..33fa787c28eb 100644
---- a/net/smc/smc_clc.c
-+++ b/net/smc/smc_clc.c
-@@ -853,8 +853,10 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
- 	pclc_smcd = &pclc->pclc_smcd;
- 	pclc_prfx = &pclc->pclc_prfx;
- 	ipv6_prfx = pclc->pclc_prfx_ipv6;
--	v2_ext = &pclc->pclc_v2_ext;
--	smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
-+	v2_ext = container_of(&pclc->pclc_v2_ext,
-+			      struct smc_clc_v2_extension, fixed);
-+	smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
-+				   struct smc_clc_smcd_v2_extension, fixed);
- 	gidchids = pclc->pclc_gidchids;
- 	trl = &pclc->pclc_trl;
- 
-diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
-index 7cc7070b9772..f37d9a72b635 100644
---- a/net/smc/smc_clc.h
-+++ b/net/smc/smc_clc.h
-@@ -134,12 +134,15 @@ struct smc_clc_smcd_gid_chid {
- 			 */
- 
- struct smc_clc_v2_extension {
--	struct smc_clnt_opts_area_hdr hdr;
--	u8 roce[16];		/* RoCEv2 GID */
--	u8 max_conns;
--	u8 max_links;
--	__be16 feature_mask;
--	u8 reserved[12];
-+	/* New members must be added within the __struct_group() macro below. */
-+	struct_group_tagged(smc_clc_v2_extension_fixed, fixed,
-+		struct smc_clnt_opts_area_hdr hdr;
-+		u8 roce[16];		/* RoCEv2 GID */
-+		u8 max_conns;
-+		u8 max_links;
-+		__be16 feature_mask;
-+		u8 reserved[12];
-+	);
- 	u8 user_eids[][SMC_MAX_EID_LEN];
- };
- 
-@@ -159,8 +162,11 @@ struct smc_clc_msg_smcd {	/* SMC-D GID information */
- };
- 
- struct smc_clc_smcd_v2_extension {
--	u8 system_eid[SMC_MAX_EID_LEN];
--	u8 reserved[16];
-+	/* New members must be added within the __struct_group() macro below. */
-+	struct_group_tagged(smc_clc_smcd_v2_extension_fixed, fixed,
-+		u8 system_eid[SMC_MAX_EID_LEN];
-+		u8 reserved[16];
-+	);
- 	struct smc_clc_smcd_gid_chid gidchid[];
- };
- 
-@@ -183,9 +189,9 @@ struct smc_clc_msg_proposal_area {
- 	struct smc_clc_msg_smcd			pclc_smcd;
- 	struct smc_clc_msg_proposal_prefix	pclc_prfx;
- 	struct smc_clc_ipv6_prefix	pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
--	struct smc_clc_v2_extension		pclc_v2_ext;
-+	struct smc_clc_v2_extension_fixed	pclc_v2_ext;
- 	u8			user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
--	struct smc_clc_smcd_v2_extension	pclc_smcd_v2_ext;
-+	struct smc_clc_smcd_v2_extension_fixed	pclc_smcd_v2_ext;
- 	struct smc_clc_smcd_gid_chid
- 				pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
- 	struct smc_clc_msg_trail		pclc_trl;
 -- 
-2.34.1
-
+Kees Cook
