@@ -1,137 +1,104 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C654C3D0
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 05:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FB42B9A8
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 06:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711605119; cv=none; b=cH4NSNV6F8gbWy00ggRXI7ePYhUqyDPzE/oU9dCdrOPkHiKvXgn4c8Z1BmkiCRrusQssODiLdHT6z+5b1vB3i2NhzMINGArpTbq10dgPk4tDjHzwdYPZcwED/sQYD04RY+ruOElB2Dvp+lx7cUPT/F+MnKwdmWrm8Xi+tld2/0o=
+	t=1711608188; cv=none; b=BosaddXFnF4l8Hl5YM8uHRMkM0h3XiUlCT8PbxoNSCvX/Hq48gdh26LmejBui2XzLY/4fYrtnSRwxDU4l/e7ciRJFSVt0JSpunNb9q2qBs4UbQOcRJStuaUBKVDM8p3QXhMARerWNZ2CMsEqGIQv+E5z3m1U8gyzmHPK4eGLCj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711605119; c=relaxed/simple;
-	bh=XzUh4e+GUGrMcXpbZTUiag+z5Q0W3vzGlRM1MWSPvVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hEKvnIkT6A+OlRjO3TkSwelpG1yf1wfpu23J5Rw1KXvDW5uympDQkgvMupnRk/WJykP82kCivF9Tg5fSOHPdJdBMXZnrB7anA/ObIMKi2W8Bb7+uvTVSq3Nf3wkSjDQIATXQqtipET0fwCLi6v3H9KiH1wIfQUTq1A2O6Dm+aMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Oc5M9ecH; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711608188; c=relaxed/simple;
+	bh=6hpZTtVg7DBigESi1cAJtwT8SmxuOgbugRw5UvIMzsw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aR2QEltzk+g0LL57u7ovKwu0Ru9wpInL9xVbzhVNj+/BNkKP56+Hdr/oGUvu9sR4CKVCjyonVz/PtBNACBdBtBVdQkx56MR1kwL1imOZy6yR5GPBasaIIEAO+TIvSQWBAdAs4R8AEh/2SLAFH50Xru8Pyr31vLouYQyEzFa7s/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1njjI6LS; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Oc5M9ecH"
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-	by cmsmtp with ESMTPS
-	id pWKmrI1JQl9dRpig8rosL8; Thu, 28 Mar 2024 05:51:56 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pig7rwJkbELAWpig8rBv6h; Thu, 28 Mar 2024 05:51:56 +0000
-X-Authority-Analysis: v=2.4 cv=EfzOQumC c=1 sm=1 tr=0 ts=6605057c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=_Wotqz80AAAA:8
- a=VwQbUJbxAAAA:8 a=ig1jn5DGqgWrHlYdm24A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=buJP51TR1BpY-zbLSsyS:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=OcyKQZGGVgXeDvPpM0FzUWGtl7ItivqUfJysf/GnhwY=; b=Oc5M9ecHzFYA7FQzOy/2hKZgz/
-	v7+B98xURL/wvmkDwRhiolfQGFH2gbMZr9FVDZV1Z2UzeubH2VbS0VAHDZolh/TjEqt74o0tSnUNa
-	uoMaH+biF4r1ZK9hFJV5BZdpYn9A2LiXNBdimeeWMa5yeAcEu3imYTd30bbeWscSZQdgYVU9OLbx9
-	0LwpRJXh5G4Yl2qOb86kA0MOeLn+kcgzCr8uOWzeaDu5E1qeZDHGp8PAn+bUOutiexX11tLcbLlaW
-	q06PUqQVIWmJDIgUISU9c9FSDuG0BV4aulTOvlaGvMnk4/zVd6MYFRHXff+685NrPm2LbvSFGKtk+
-	3yC2tTNA==;
-Received: from [201.172.173.147] (port=46938 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpig5-0000I1-2n;
-	Thu, 28 Mar 2024 00:51:53 -0500
-Message-ID: <ceb2091f-d36f-419e-8ed6-2165b6842d96@embeddedor.com>
-Date: Wed, 27 Mar 2024 23:51:50 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1njjI6LS"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso1038023276.1
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Mar 2024 23:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711608186; x=1712212986; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pmZRfwQqC0r+PYK2LVYGrEcGN9aIJWj03b1dC2yPLlE=;
+        b=1njjI6LSRrdqz7cHUm/9i60QScoMeA2OWQUkheomigOZHyHSDFcZF5n7ekgK80unJG
+         Hcu8EsL8oSWzmOfJyT4BEHgFASf/4p9EkO3xDuJEAC23okpUR7KoxfWT7atMdXzWi5L/
+         kVhqCFcFFM8wUqak6yxBywfV0xpfMusnjWFS5qYsjuLDBbgB5o9dxF6QwxhmO1yDHsF/
+         hqKG5683z2sJvp9wE5QSpP0aNaAwGVqStiIX+6dkMFT+vAtpJL3fJPJ6k7GMQLV244pZ
+         ajhkIE/H7x+C5qP1QmdtUcxa2PyH9zBXr3UDFSZu2seXAa2wknc9aFDfAUruyDxYVYYE
+         wjxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711608186; x=1712212986;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pmZRfwQqC0r+PYK2LVYGrEcGN9aIJWj03b1dC2yPLlE=;
+        b=OM4JzJot07+Yb8yMs3fx5J+rDiEsGH1MdQPD1OTsqxjAdIZAD8idjykeswK8RstUpj
+         365HkLOmPAcW9h6PlUOINni+RUa0OJd14Lt6SX3kwN7WXKElvE7CeaIrGG6zWatjeccL
+         NFYfD/X29jJRzjffAnnc2DrcU/nzALWQRUN1/+ehU0TP4E35xjro/6G17RNWoefvccO3
+         qrFtLZNIKmvtfUWjLn1tWcvfeJcHvbWPa8DCQrx4JKUQuMKamChefI2Hnwo73Bl8YdAw
+         Lprwici2xe+W3l7gLu7FqD9gc08XeWn1HR766ItILWSOIzcLPh0b23Gfyvbny3XbHe/o
+         AtPQ==
+X-Gm-Message-State: AOJu0Ywd/pS5MU4sbgL9DHheH+saMVIZBFkjzuOSfSTa7W0qP2B+J9eL
+	mmwk6I7MyDMHWrjo7NFgvaoE/LNtd96ZorbV7A5O38hNPnhNqPfa0MQax+aiK2aNfcvZjMpEAU3
+	bOa5pVzr/wNestD6oBcEZ5j45q24IW9WXIHftdBBFWxDtmQPiV+BEiltPndyeUvhDO4htotH1Rz
+	3scKg1OCm9sgv8G1mZtq0varvTEiAtmvvn9w==
+X-Google-Smtp-Source: AGHT+IEIWxqsw6aZUc5toAwEr6h8i4YlzAtlPm6RiOTheZrZZ/liER36onbNeqtuRC3ksBNvRBMSjoCz
+X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
+ (user=ardb job=sendgmr) by 2002:a05:6902:702:b0:dcd:88e9:e508 with SMTP id
+ k2-20020a056902070200b00dcd88e9e508mr653277ybt.5.1711608186267; Wed, 27 Mar
+ 2024 23:43:06 -0700 (PDT)
+Date: Thu, 28 Mar 2024 07:42:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] Bluetooth: L2CAP: Avoid
- -Wflex-array-member-not-at-end warnings
-To: Kees Cook <kees@kernel.org>, Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZgRIF1bkXlZlaK22@neat>
- <CABBYNZLi_PCbRB6CVYxwOG04917tDudMvuVT1NU3LVth=xpCtw@mail.gmail.com>
- <d5b0c70e-8369-4b99-9a42-9a4a93098251@embeddedor.com>
- <E3E65D27-9A43-4D99-8AF7-C857A169D8E2@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <E3E65D27-9A43-4D99-8AF7-C857A169D8E2@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpig5-0000I1-2n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.147]:46938
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfC93nHjOVylDmU3IacslU+t/ODg65vBC0tqRYXb0rWbEOuSv/j8I83hfGmn1LtZ5wpKIfZskrTXKJ7Q1jmRpcPp94OEnMXnKgLPgsZOj1wqQaZD1eD7C
- V8oGoEi3G//FWo9S71mtllrXDJhGbXG7gcpujDZs3sAPjZhtIjUzHVMeW5oaT3XF7UMKY5v9An5D9Cj61bCc1JIfm3T0xXUOUl3hzpduzokPHXn/Qc7ltbsF
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1140; i=ardb@kernel.org;
+ h=from:subject; bh=cIGqJV3rxKfieDaf+vcIrdgAd6gKVSXsQlf65gRhojA=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIY1VsHDpuTnqi7JC+oSXr9c8w39AeV6F8hWB2+oqIhUhE
+ UsDLtV3lLIwiHEwyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIn4LmdkeGq8Kicl5kryR06V
+ xzr33/y9za3xUb1XsCHI57PZxG0HNzL8Yj5/2FPAcNms+c5RFc02woFm5VKhdf8/Ssza5iHHe1S SHQA=
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240328064256.2358634-2-ardb+git@google.com>
+Subject: [PATCH] gcc-plugins/stackleak: Avoid .head.text section
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-hardening@vger.kernel.org
+Cc: keescook@chromium.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	kevinloughlin@google.com, thomas.lendacky@amd.com, 
+	Ard Biesheuvel <ardb@kernel.org>, kernel test robot <oliver.sang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
+From: Ard Biesheuvel <ardb@kernel.org>
 
+The .head.text section carries the startup code that runs with the MMU
+off or with a translation of memory that deviates from the ordinary one.
+So avoid instrumentation with the stackleak plugin, which already avoids
+.init.text and .noinstr.text entirely.
 
-On 27/03/24 23:28, Kees Cook wrote:
-> 
-> 
-> On March 27, 2024 11:08:33 AM MDT, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
->> Hi!
->>
->> On 3/27/24 10:55, Luiz Augusto von Dentz wrote:
->>> Hi Gustavo,
->>>
->>> On Wed, Mar 27, 2024 at 12:23 PM Gustavo A. R. Silva
->>> <gustavoars@kernel.org> wrote:
->>>>
->>>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->>>> ready to enable it globally.
->>>
->>> Which tree is this base on, I just rebased bluetooth-next on top of
->>> net-next but it looks like CI is still failing to build it, so either
->>> we don't have all the dependencies already in net-next or perhaps you
->>> had it submit while the tree had not been updated.
->>
->> This is based off of linux-next.
->>
->> I think net-next is missing this commit in v6.9-rc1:
->>
->> d8e45f2929b9 "overflow: Change DEFINE_FLEX to take __counted_by member")
->>
->> https://git.kernel.org/linus/d8e45f2929b9
-> 
-> Just FYI, that is in rc1. (I sent it late to avoid a netdev collision.)
-> 
+Fixes: 48204aba801f1b51 ("x86/sme: Move early SME kernel encryption handling into .head.text")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202403221630.2692c998-oliver.sang@intel.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ scripts/gcc-plugins/stackleak_plugin.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yep.
+diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+index c5c2ce113c92..d20c47d21ad8 100644
+--- a/scripts/gcc-plugins/stackleak_plugin.c
++++ b/scripts/gcc-plugins/stackleak_plugin.c
+@@ -467,6 +467,8 @@ static bool stackleak_gate(void)
+ 			return false;
+ 		if (STRING_EQUAL(section, ".entry.text"))
+ 			return false;
++		if (STRING_EQUAL(section, ".head.text"))
++			return false;
+ 	}
+ 
+ 	return track_frame_size >= 0;
+-- 
+2.44.0.396.g6e790dbe36-goog
 
-They haven't pulled all the changes from mainline up to -rc1, yet:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/log/
-
---
-Gustavo
