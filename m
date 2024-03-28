@@ -1,113 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B2F7F488;
-	Thu, 28 Mar 2024 13:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6678582D70;
+	Thu, 28 Mar 2024 13:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711631297; cv=none; b=kDvuIf1nZ/07VHUV4ymiEtrb0ZiriSmWGCOTbekox+myatvTsVssEXg9seh4DLFeOXUuXSRCPdndH86dQi8Asfjn0sX1DCTzwID6L+vyKaYzHP+WNMzFWS4f/aBMi8U1SODHPnzJarZu67W2BX5B2gMaIHeAXIO9daLIMB5YdmU=
+	t=1711634120; cv=none; b=r139ocJZI2A/xRAHSiyKHW5JhoZirX0Byreg/dmB6XcszCn37+zbKpaJlqM4lvlLCxlHEh4f/i33uO68T4KfV0p46OT43JXj9usAh8X1gYD4J6r0LSx94X9RWKpCuNqmfjuGJ8vwOTdiRBvcTaC4v0/qufYuAFwQyyUH2sWIzBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711631297; c=relaxed/simple;
-	bh=nShQvEWBHWFkHeUvTXhbDAYLvFW0P8doKSZGdt8MvuI=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=AN+B38ojtv3Ujho8R+2H2ShpcG2e92/oriDFEeRbbLlNnyqqQ3OVhdcjWDUC5obwmoE5sBNOTOz05mze7DKPbopsbSjo/AQaEg1spUXis0Ey5+tuNpIRIuKrf3eUwUGA7zL2km0ib/PDNKdZgPpAqz0KycHseqEvuSIvoOIj7Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjkKoVwQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711634120; c=relaxed/simple;
+	bh=n9F22yWXtFRcU1WijjOVkHTPFMA69fbrjNvPBUneSRg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cZlYtpt680sW6d7lPq3f+azKZgcURIh2VazskmTFgJVppKrDLlqesxEtMlYaSh1qiiyG2AQFIWNCTDxaGBaaPWEtAANB+yXEGDHo5UERtMjA723Qbwo8WR3Ra8FZDG6+J6exigZsjYfaDV3OJCg54Y6Ts9lelXYqhAtzHRXFH6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jp1kbEs4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjkKoVwQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0484C433F1;
-	Thu, 28 Mar 2024 13:08:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jp1kbEs4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 687E4C433F1;
+	Thu, 28 Mar 2024 13:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711631296;
-	bh=nShQvEWBHWFkHeUvTXhbDAYLvFW0P8doKSZGdt8MvuI=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=UjkKoVwQrROwSq73YwDIuiTrCSQZORLenJpjokIRrD+XNzf3/uY7PHRmSYY1ZSn6T
-	 12IOGyhNLap82s6+lHGUDUSUrFP+0B/+y5nXKiAuV0D+KCAeptqdKxdqZMNpWDiqCY
-	 sHxZK6L4XBO350+Z+l4t4Vgh3B8hqB0GO9fjJRmfswFYO1rNM/5aiKD1dfCFkvIUIU
-	 jHCaYGFeZjE1tNoypMRBvuvWqIEzADfty3RXOBCkZn2XRrwl35A0QqthJjsHJhYISU
-	 hccPxmrYw/QdBp9kTbxlmqfrkeak/6Bs4To9Mis8+JhsYb7nGoUP5QUne1xf1bTq1+
-	 bSNYo1WaqVmhg==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1711634119;
+	bh=n9F22yWXtFRcU1WijjOVkHTPFMA69fbrjNvPBUneSRg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jp1kbEs4a4vnFZMw8A9BeJ7bpwUxPTuL4fTUovZjJxt+wUIue6cu99IQujLUs/WoO
+	 BAtafn6P7JMnZ3b6dKqXEi6M2PnX6S2OfUKegIwHAjMnIOFH4Spf7xstFlNg/unqcK
+	 unSOPJynwPOawKMFpF+JiBXw2VeGzZRlv5q68rL2cJTBAepkrMz+USRhLnIaYoswP4
+	 1/LLIH78onUjnBlpYS7jdJgHoQKWBTGRXBZtLdAY8sPameepOAL2u7Jr3M3CHxQaq+
+	 Hh8aQRtBv5noWOZh23j5fSLN7z2fzvMIAwl319HwkqHHx47b9Z9vm/zMEXEVD8w+hr
+	 epdLckIlnXz9w==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	linux-wireless@vger.kernel.org,
+	Kalle Valo <kvalo@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 0/2] wifi: ath: false-positive fortified-memset warnings
+Date: Thu, 28 Mar 2024 14:55:03 +0100
+Message-Id: <20240328135509.3755090-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wifi: mwl8k: Avoid -Wflex-array-member-not-at-end
- warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZgDrhe5pbV/WvDiZ@neat>
-References: <ZgDrhe5pbV/WvDiZ@neat>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <171163129374.129280.17590412225670656069.kvalo@kernel.org>
-Date: Thu, 28 Mar 2024 13:08:15 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
-> 
-> There is currently an object (`header`), at the beginning of multiple
-> structures, that contains a flexible structure (`struct mwl8k_cmd_pkt`),
-> for example:
-> 
-> struct mwl8k_cmd_get_hw_spec_sta {
->         struct mwl8k_cmd_pkt header;
-> 
-> 	...
-> 
-> 	__le32 num_tx_desc_per_queue;
->         __le32 total_rxd;
-> } __packed;
-> 
-> So, in order to avoid ending up with flexible-array members in the
-> middle of multiple other structs, we use the `__struct_group()` helper
-> to separate the flexible array from the rest of the members in the
-> flexible structure:
-> 
-> struct mwl8k_cmd_pkt {
->         __struct_group(mwl8k_cmd_pkt_hdr, hdr, __packed,
-> 
-> 	... the rest of the members
-> 
->         );
->         char payload[];
-> } __packed;
-> 
-> With the change described above, we now declare objects of the type of
-> the tagged struct, in this case `struct mwl8k_cmd_pkt_hdr`, without
-> embedding flexible arrays in the middle of another struct:
-> 
-> struct mwl8k_cmd_get_hw_spec_sta {
->         struct mwl8k_cmd_pkt_hdr header;
-> 
->         ...
-> 
->         __le32 num_tx_desc_per_queue;
->         __le32 total_rxd;
-> } __packed;
-> 
-> Also, update the type of a couple of variables and function parameters
-> from `struct mwl8k_cmd_pkt` to `struct mwl8k_cmd_pkt_hdr`.
-> 
-> So, with these changes, fix 33 of the following warnings[1]:
-> drivers/net/wireless/marvell/mwl8k.c:2353:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Link: https://gist.github.com/GustavoARSilva/7a841a92c0f24e5efdb30ce02b601eb8 [1]
-> Link: https://github.com/KSPP/linux/issues/202
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+While testing some other patch series I worked on across gcc versions, I found
+a couple of stringop warnings that only show up with some toolchains but not
+others. The warnings I both seem to be false positive.
 
-Patch applied to wireless-next.git, thanks.
+I have also not found an explanation why both of these happen in atheros
+wireless drivers, as I don't see this in other drivers.
 
-5c4250092fad wifi: mwl8k: Avoid -Wflex-array-member-not-at-end warnings
+Maybe Kees can work out what is going on here.
+
+Arnd Bergmann (2):
+  [RESEND] carl9170: re-fix fortified-memset warning
+  ath9k: work around memset overflow warning
+
+ drivers/net/wireless/ath/ath.h         | 6 ++++--
+ drivers/net/wireless/ath/ath9k/main.c  | 3 +--
+ drivers/net/wireless/ath/carl9170/tx.c | 3 ++-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZgDrhe5pbV/WvDiZ@neat/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.39.2
 
