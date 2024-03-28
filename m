@@ -1,105 +1,115 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B59713AA5F
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 20:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0116F13A250;
+	Thu, 28 Mar 2024 20:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658550; cv=none; b=d33DKhrPfeFHNaPEXQJeIqUqIBBbyHLmS6RTaLab9OVDJL3hkoWfEkBfn1Ihb03ykBUaKO56Ak1Fn8qJ4Dn3KyQy6oe5+ueb+X5egDOXmsI97DtAvGceoeBoST/CHeJeQ8HLinxB0HRle4ce9oPFCMAyHK3nmn7oZliUGF8xrKM=
+	t=1711659083; cv=none; b=eHb3ptQ755f5+BnUHp/kVfsXZse6EGLkER5MXdc45Zn/JBm9pnzsKH2Lf2eEqwCAeu7tY1Fa3aBFKofzEUcsWuMN8Eti/jUxbSYxMYi7LL8n0fqDRHorVdxrc9oc4/WJBsbzKgqxgQCcrlRgXazHkMPd47X10Z6iI67E+X6jtDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658550; c=relaxed/simple;
-	bh=Xvp2uzp/QTshAzSCZHYKZUXilg18C3KOX1kGmd5mi/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vu65K2cEwtTTHHhvA3WX/IrpDtaFdPyMT7tCkgtEJQYdJxLapltzeySXvgvYXdpncK8M2UsGs25Mgc9ihJhq7d3XNi4o0O4FmGWbF8Ugj5Q6GwwHSE52p1rx9Jl+jrVoOvwPkzwIFm723LoOvhupu1KS+L3BHCRIuGGx0PMXIng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vUxXwm9o; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711659083; c=relaxed/simple;
+	bh=kEP8nmkOk4QJmLgse+4tccjONBlM45t9m0YZSjoDuGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rgOdXsVoyZUJ8szNk7Hpi2YRYDsGYK9fqIpTlAD/dRtuBp5JjQiypN1XvPgPlD+eVrrayBopxbZxWzvvJTjb1MhNgoixZbWf3sck7qqsIQODjCnD/jPwQuODkEYIhWoa6Xkzf/ugrE5G2CvOGN9J5DPwJuOLHOUTpLNk0QLH8nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b=Sgaaa3RK; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vUxXwm9o"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4e1742d3a3so177810066b.1
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 13:42:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711658547; x=1712263347; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xvp2uzp/QTshAzSCZHYKZUXilg18C3KOX1kGmd5mi/k=;
-        b=vUxXwm9oJsnXRK86vLRxRSCc8vaNnRtf5+2D6eOe01lrXh8yQq7frJWjr7debMq6al
-         LS76w0JG256Zxn7GgaQXYrlPhwD7O9sq0czcbsIu7ny8RSp3UbAGsepCS8ysppufD55s
-         3muCOk9S53P7+K/cfzP3jzF8lSQDSD1DakmAGdGlMPAvcdrk1x1enhsBylWCVwMqD13j
-         DDIM1A4VHUwCgFqoX403FF8xTSpUfYOxuLXaY5NsG//MLxmqPAfTZGeJThe7TkKudYDq
-         WGm4lG/k1U4QMeiqhjzkYcw2ylF/0bONGrmQWUkT9mHpbrCB1PLtuKxS3GkglzpGMkHz
-         KfHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711658547; x=1712263347;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xvp2uzp/QTshAzSCZHYKZUXilg18C3KOX1kGmd5mi/k=;
-        b=L13VW656IbPR3n+GANdtqfV9ZX+2mEgHq2wlhz7FAQLJmErYEROD8C2GcoSXhBmf8r
-         D9tmYkit2o/Z51BiPAseZhjWEC0EVAB+5hF/bwFHjFDlNiaatcYMcKdV4iSxBeTRFPMR
-         ww1GIYP8/GUbCfPynTTNwJ02YGiZk5ypT/bw5qQVTY/u/ofo+G3DwdBMRJw1ov+3wVzQ
-         10eSUc+2pEsS2e82Q2eEJwTNEv+BD1rPhxNF9n4EmrAAcGOMO0aq3qnl9J7eH+5gro8M
-         wGKL+P7Vzs9H4symQqmI/A1Y/nwPdo4cPoqmNdAjUr1yUFwe1ZthSKkvQ78xmJZcGvVE
-         692g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPuqTar9V9biqdP9sk/6t3v3cWPAkO2T8VkSHaQMbmMFqnMq1qsTgy958RjwOR4KYEOc7xD/PIKVmw9fWx61+uyamRV9pXELi0fy0VNIxD
-X-Gm-Message-State: AOJu0YzIhK46/XhrjSYvaYhQAbaPZPL2W/+c8NchW45WgOWVaDZbg9jK
-	ahhDG1XRfovWyTExajGkDWQ8p3r8wEkjJmgnCiOs2w1h90P0gAiMp+rxhlt5fgfsLzZ4ojqNRLf
-	Su4uO9fAu9KWiZRV52nhMBDshqVg7ZNOIlg8N
-X-Google-Smtp-Source: AGHT+IH8/usAUioO+qTpOeTXvg7l2hto6OnlgP6NOT2Q0qO008pCvTP/WT/jXd9Z+X+Kqw0CBmjAO9+FEscgo7LRR4o=
-X-Received: by 2002:a17:906:594:b0:a47:32b3:18c5 with SMTP id
- 20-20020a170906059400b00a4732b318c5mr203139ejn.68.1711658547456; Thu, 28 Mar
- 2024 13:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=timschumi@gmx.de header.b="Sgaaa3RK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711659061; x=1712263861; i=timschumi@gmx.de;
+	bh=HJHQk3LZIdKlpZNpET9Lr1IlYEfzNZsX8njffaK3JXs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=Sgaaa3RKB2SPP3FiuDghk9nZ9/qZ0oXxK055369YgkIonrSCvwHNVuaOJP/5IuZO
+	 /+suq0pdlJhVW6tdfwa+1b/stJh2C5UNCQsOpjgw6+lVc8X9kQtwN9+X0AJPE3GYy
+	 Z/VIWnJeg9r8Vq8IlsfUQ6bN2WIfrditCeDEqmksBr/rBm45yM/OJ1bXRppGkt0VY
+	 fsOu1GzVZuaWQpxZZMlrTDbHxMViqbag1/TOyIM4K6S4MVk7Y9BwQEs+UjpKqwWrG
+	 ditb8ulPoEpbwGpnQGJKlCvitMgBA7ln/bvf9SPQIeFm4tedpg/XBfKqjH9xDEyVC
+	 Z0RkMrxzASAWrPT+pg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([93.218.98.241]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MAwbp-1s0hHI1C01-00BLok; Thu, 28 Mar 2024 21:51:01 +0100
+From: Tim Schumacher <timschumi@gmx.de>
+To: linux-efi@vger.kernel.org
+Cc: Tim Schumacher <timschumi@gmx.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH v2 1/4] efi: pstore: Request at most 512 bytes for variable names
+Date: Thu, 28 Mar 2024 21:50:30 +0100
+Message-ID: <20240328205041.76812-1-timschumi@gmx.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240315002616.422802-1-timschumi@gmx.de>
+References: <20240315002616.422802-1-timschumi@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com> <ZgTMZ1HYheBMDbei@MiWiFi-R3L-srv>
-In-Reply-To: <ZgTMZ1HYheBMDbei@MiWiFi-R3L-srv>
-From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 28 Mar 2024 13:42:15 -0700
-Message-ID: <CAFhGd8pU-utbgHhU5s_20pC_aNK7xtsJDbf+Ayg4Dck2K=4kag@mail.gmail.com>
-Subject: Re: [PATCH] vmcore: replace strncpy with strtomem
-To: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:F1wxBJQKy4dnK5cIOi8lgWEi4TGqi9qGOVLBCK8sYoCD1nUQ4uE
+ DuNt93KLDs4rSSeGOcUZigEytD/dTHBDKN06qQou9PUUFswfxyB8b4wYSshfxbjl4PnYEnS
+ RudB5zriVpRpncv1MFfkRYrh2fDLarPrDlMPJVCog+awg4uoVB+BO5wsbCq6tIOirZdWwJt
+ QG9oNfeb8qAYaoS0dzFOw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:LpIuViflScA=;LHZQv8hTCInRamLh3u9+E4LIQLA
+ 8NaHLDXxZf1fr7uNiDOwNBPvAO3lumKbpoo7/XvY+JcfEbaMEhhyuUDiJoe+F8o6K9fcHAwVW
+ ClJB9Qf3KedfGLH5xoKkCLDdjCiD3WQTnVVLHkeoRBrom2X+1oyDKQ9PHt7qe3CgQ/fq6dL6m
+ SZ6Cx/z+ps8+OmhlYZPu/ngT0LI3DYCN9J9DGdqBxj9eIQUMMsZ+h1h6OcnmhsrWVcDuS5eAa
+ lfHKLU+8SMO2UKpaEvQYF2rVmGwXJNqFpTuei/MZ+RdAD5sYpqFvZ5nuHPr/P0qMmrf2ovuQt
+ lmHg+U+1cdKwdSSZwrLWaG7PJ5Qo15/1YKlAFpHeArqwA8iqG+TZMUnBzD2ScPUEEvQuHtHDY
+ kL6MedULDyLZSd2DdPePjBdxEor2noPwlVx2OFWCQKWYl7vQtGs/P7VDTWPiQRnjDD6xhMEtz
+ Hf3tjQw0B/132uNRotR7JCrfsQkKYm5mc0zlk0TB043WIS5RChyORqpxLEOqQxyF8gtRenvwU
+ fDMeUT0vjz9QzYtd96CBM1AupH/zkeytRdtldMmksRblSPJjI+n7GAiu9ApmnzYKxqSL8R2bD
+ BJ4YfEf9nC/O95TYfpXGHQdIjbFoQOego0+CzMJnwhwTKiYrlhb1GkCnaYaoQq7fXmO04suuu
+ JWTAuytwDkxfw3ByvlA4iVuLtKCG4S+MEKYq69TGjLV/DDB27TB3RLHPI08bLir6Xuc/1Z8lh
+ Kbwo9RQRGLVmWzlpxopNlBKhn4l+MbmKLcNAgw8B07IMSJdvZA3MTug3oO9Rjimo4J39XwBap
+ w5yZZ/kxSeHDeyQ5y123XkHZ3A3ODb5h1xwd3gNtwBCnU=
 
-Hi,
+Work around a quirk in a few old (2011-ish) UEFI implementations, where
+a call to `GetNextVariableName` with a buffer size larger than 512 bytes
+will always return EFI_INVALID_PARAMETER.
 
-On Wed, Mar 27, 2024 at 6:48=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
-> > Mark these buffers as __nonstring and use strtomem_pad.
->
-> Thanks.
->
-> I didn't build, wondering if '__nonstring' has to be set so that
-> strtomem_pad() can be used.
+This was already done to efivarfs in commit f45812cc23fb ("efivarfs:
+Request at most 512 bytes for variable names"), but the second copy of
+the variable iteration implementation was overlooked.
 
-I do not believe marking buffers as __nonstring is strictly a
-requirement. However, the documentation from string.h +302 says we
-should do it:
-/**
- * strtomem_pad - Copy NUL-terminated string to non-NUL-terminated buffer
- *
- * @dest: Pointer of destination character array (marked as __nonstring)
-...
+Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+=2D--
+Changes from v1:
+ - None, resubmitted as a part of a chain.
+=2D--
+ drivers/firmware/efi/efi-pstore.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-and so does [1] ... "mark the destination buffer variable (or
-structure member) with the __nonstring attribute..."
+diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-=
+pstore.c
+index 833cbb995dd3f..5b9dc26e6bcb9 100644
+=2D-- a/drivers/firmware/efi/efi-pstore.c
++++ b/drivers/firmware/efi/efi-pstore.c
+@@ -162,7 +162,15 @@ static ssize_t efi_pstore_read(struct pstore_record *=
+record)
+ 	efi_status_t status;
 
-FWIW, this builds just fine without the __nonstring attribute but we
-should use it :)
+ 	for (;;) {
+-		varname_size =3D 1024;
++		/*
++		 * A small set of old UEFI implementations reject sizes
++		 * above a certain threshold, the lowest seen in the wild
++		 * is 512.
++		 *
++		 * TODO: Commonize with the iteration implementation in
++		 *       fs/efivarfs to keep all the quirks in one place.
++		 */
++		varname_size =3D 512;
 
->
-> Thanks
-> Baoquan
->
+ 		/*
+ 		 * If this is the first read() call in the pstore enumeration,
+=2D-
+2.44.0
 
-[1] https://github.com/KSPP/linux/issues/90
-
-Thanks
-Justin
