@@ -1,112 +1,105 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10D1137928
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 19:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B59713AA5F
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 20:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653618; cv=none; b=Qqa0cLTqNGLUXUJnRNzjCk7joUsl4M7dfit7gOSpa8c3JvPLVEgmPSmwcgISIuVO3y2HHeHgdCoVWqzJMEpSs0Grlf8uUGB6fvgOcDODpnXsES4TarwUUb21edi5B4VdY+ZwlbofAZYrUhgsXXbyDmqi+PDoMiz7XUZX2bnNgiQ=
+	t=1711658550; cv=none; b=d33DKhrPfeFHNaPEXQJeIqUqIBBbyHLmS6RTaLab9OVDJL3hkoWfEkBfn1Ihb03ykBUaKO56Ak1Fn8qJ4Dn3KyQy6oe5+ueb+X5egDOXmsI97DtAvGceoeBoST/CHeJeQ8HLinxB0HRle4ce9oPFCMAyHK3nmn7oZliUGF8xrKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653618; c=relaxed/simple;
-	bh=jlKX/71Rl4LteIviSrCFAPH8SPdylApgi56PoMqwqis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r5QOmnhjTKuutW/lqoCHLN5OzOvPBeFOHelVjJT9cjAZL0UMXUR7ecZkEyaS/6GgCCmUqLDkvhS7PUHHHfI3WHEvpDZcnSzdBxx3lipjal0mCRTBg5vLYiX9khQJOkwt3F1d8JrGbCPqjafTeo3WJWmDgL4rH6uY8m+IL7fA0jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=IwjaLNsI; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1711658550; c=relaxed/simple;
+	bh=Xvp2uzp/QTshAzSCZHYKZUXilg18C3KOX1kGmd5mi/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vu65K2cEwtTTHHhvA3WX/IrpDtaFdPyMT7tCkgtEJQYdJxLapltzeySXvgvYXdpncK8M2UsGs25Mgc9ihJhq7d3XNi4o0O4FmGWbF8Ugj5Q6GwwHSE52p1rx9Jl+jrVoOvwPkzwIFm723LoOvhupu1KS+L3BHCRIuGGx0PMXIng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vUxXwm9o; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IwjaLNsI"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id pWKmr95oYuh6spvIHr9PU8; Thu, 28 Mar 2024 19:20:09 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pvIGrB9XVGDo0pvIGrN40R; Thu, 28 Mar 2024 19:20:09 +0000
-X-Authority-Analysis: v=2.4 cv=I+uuR8gg c=1 sm=1 tr=0 ts=6605c2e9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=l-0SYlq0ot4ByQFz_X4A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eT7vaZHHjEMxhRKG/6gsWxmfF8xNUtEbKXpbgQbV3qw=; b=IwjaLNsI6Y7EXjAPREVGB0BwxR
-	/uuAa5Y+CvEpx0kpNiHwvmWF3IlM+6z1DF0j/a2yEDijMI1EiN5O5jwyXlBPqDDEym2TqEDSVyMpg
-	YTCtYUabqYNXD0flDzstbAQUgMz0z1Uax5EfYnKVTDq2o0bhK1qthJDRs2xVRUVoNlj+jGooQBaTS
-	/P7UvqyKzRNJO9uZ89ob/BESxZujmY9o+UUlCGVSlmKYvczBH9QEgbzjjZ0JFDRCqqfFQRLiBoOHZ
-	KKVrPeuaspGWeF06Gmx3726VpOc1l0WS9oSR2qq4D73FeCHPY8Osy+j+OK7Q5WIjsIh1XdicIhAF1
-	ZsYFAYHQ==;
-Received: from [201.172.173.147] (port=37368 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rpvIG-003u8l-0S;
-	Thu, 28 Mar 2024 14:20:08 -0500
-Message-ID: <5f91acad-23c5-4e0c-b468-8aab56b0ff7a@embeddedor.com>
-Date: Thu, 28 Mar 2024 13:20:06 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vUxXwm9o"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4e1742d3a3so177810066b.1
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 13:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711658547; x=1712263347; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xvp2uzp/QTshAzSCZHYKZUXilg18C3KOX1kGmd5mi/k=;
+        b=vUxXwm9oJsnXRK86vLRxRSCc8vaNnRtf5+2D6eOe01lrXh8yQq7frJWjr7debMq6al
+         LS76w0JG256Zxn7GgaQXYrlPhwD7O9sq0czcbsIu7ny8RSp3UbAGsepCS8ysppufD55s
+         3muCOk9S53P7+K/cfzP3jzF8lSQDSD1DakmAGdGlMPAvcdrk1x1enhsBylWCVwMqD13j
+         DDIM1A4VHUwCgFqoX403FF8xTSpUfYOxuLXaY5NsG//MLxmqPAfTZGeJThe7TkKudYDq
+         WGm4lG/k1U4QMeiqhjzkYcw2ylF/0bONGrmQWUkT9mHpbrCB1PLtuKxS3GkglzpGMkHz
+         KfHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711658547; x=1712263347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xvp2uzp/QTshAzSCZHYKZUXilg18C3KOX1kGmd5mi/k=;
+        b=L13VW656IbPR3n+GANdtqfV9ZX+2mEgHq2wlhz7FAQLJmErYEROD8C2GcoSXhBmf8r
+         D9tmYkit2o/Z51BiPAseZhjWEC0EVAB+5hF/bwFHjFDlNiaatcYMcKdV4iSxBeTRFPMR
+         ww1GIYP8/GUbCfPynTTNwJ02YGiZk5ypT/bw5qQVTY/u/ofo+G3DwdBMRJw1ov+3wVzQ
+         10eSUc+2pEsS2e82Q2eEJwTNEv+BD1rPhxNF9n4EmrAAcGOMO0aq3qnl9J7eH+5gro8M
+         wGKL+P7Vzs9H4symQqmI/A1Y/nwPdo4cPoqmNdAjUr1yUFwe1ZthSKkvQ78xmJZcGvVE
+         692g==
+X-Forwarded-Encrypted: i=1; AJvYcCXPuqTar9V9biqdP9sk/6t3v3cWPAkO2T8VkSHaQMbmMFqnMq1qsTgy958RjwOR4KYEOc7xD/PIKVmw9fWx61+uyamRV9pXELi0fy0VNIxD
+X-Gm-Message-State: AOJu0YzIhK46/XhrjSYvaYhQAbaPZPL2W/+c8NchW45WgOWVaDZbg9jK
+	ahhDG1XRfovWyTExajGkDWQ8p3r8wEkjJmgnCiOs2w1h90P0gAiMp+rxhlt5fgfsLzZ4ojqNRLf
+	Su4uO9fAu9KWiZRV52nhMBDshqVg7ZNOIlg8N
+X-Google-Smtp-Source: AGHT+IH8/usAUioO+qTpOeTXvg7l2hto6OnlgP6NOT2Q0qO008pCvTP/WT/jXd9Z+X+Kqw0CBmjAO9+FEscgo7LRR4o=
+X-Received: by 2002:a17:906:594:b0:a47:32b3:18c5 with SMTP id
+ 20-20020a170906059400b00a4732b318c5mr203139ejn.68.1711658547456; Thu, 28 Mar
+ 2024 13:42:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] wifi: wil6210: Annotate struct
- wmi_set_link_monitor_cmd with __counted_by()
-Content-Language: en-US
-To: Kalle Valo <kvalo@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZgODZOB4fOBvKl7R@neat>
- <171163065000.129280.2362402378382558964.kvalo@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <171163065000.129280.2362402378382558964.kvalo@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rpvIG-003u8l-0S
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:37368
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOfx2FFTZ1KZjQHJXhHer4Nl+ksSHgpmNU+dK73G56+nKaBwdFqQ8uHL1wT37VvsWs6eLpBq2HeI9rQnF5wMi9DQtuCd0vdei6mXpJmFYPBsmWUsG+DW
- NumHwNUVKVHDhA7+wCd529U6YFbkVh/Lg3J2DWlVEwWRRv4tvOyBgbg+U5nj3r1T3N1ONyH0sMfhu2g2RzwojJCjZrWnL75Cx5AP0/3buooqfpHelrumRSPU
+References: <20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com> <ZgTMZ1HYheBMDbei@MiWiFi-R3L-srv>
+In-Reply-To: <ZgTMZ1HYheBMDbei@MiWiFi-R3L-srv>
+From: Justin Stitt <justinstitt@google.com>
+Date: Thu, 28 Mar 2024 13:42:15 -0700
+Message-ID: <CAFhGd8pU-utbgHhU5s_20pC_aNK7xtsJDbf+Ayg4Dck2K=4kag@mail.gmail.com>
+Subject: Re: [PATCH] vmcore: replace strncpy with strtomem
+To: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
+On Wed, Mar 27, 2024 at 6:48=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
+> > Mark these buffers as __nonstring and use strtomem_pad.
+>
+> Thanks.
+>
+> I didn't build, wondering if '__nonstring' has to be set so that
+> strtomem_pad() can be used.
 
-On 3/28/24 06:57, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-> 
->> Prepare for the coming implementation by GCC and Clang of the __counted_by
->> attribute. Flexible array members annotated with __counted_by can have
->> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
->> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
->> functions).
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> I'm dropping this because it looks like you sent a different patch, but
-> it's quite hard to know for sure.
+I do not believe marking buffers as __nonstring is strictly a
+requirement. However, the documentation from string.h +302 says we
+should do it:
+/**
+ * strtomem_pad - Copy NUL-terminated string to non-NUL-terminated buffer
+ *
+ * @dest: Pointer of destination character array (marked as __nonstring)
+...
 
-Ah yes, sorry, this was replaced by the following patch:
+and so does [1] ... "mark the destination buffer variable (or
+structure member) with the __nonstring attribute..."
 
-https://lore.kernel.org/linux-hardening/ZgSTCmdP+omePvWg@neat/
+FWIW, this builds just fine without the __nonstring attribute but we
+should use it :)
 
-Thanks!
---
-Gustavo
+>
+> Thanks
+> Baoquan
+>
+
+[1] https://github.com/KSPP/linux/issues/90
+
+Thanks
+Justin
