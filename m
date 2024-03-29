@@ -1,142 +1,78 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EBA8564C;
-	Fri, 29 Mar 2024 12:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EBB38FAD;
+	Fri, 29 Mar 2024 21:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716979; cv=none; b=i8F1IsfBWq+B7xjFCJq3mIapxFXnGLhuFitnHiJlUjDpoCwrAOiLOV1l49YXyQmesx5tTni8d/w5oPv3hBOaanKWxavoAs9Pbds6qGP8OihIeVPYjEvGLMCo/l+CagtMBKzfmfd1Vr3hfDPvrbP4hy8msKc10bh78TK4P5xpbbA=
+	t=1711747946; cv=none; b=qtD8R4iMjzQrvkbLwtXs6OkpbkTFaVY8LW90+5laViqwbttwPwefuS/vbsk10PXLq7WzR77ptbhkWv6KjYlW5Xrbt7aVpHmYYOYW6ULBkgJcXjQia6jgZA3nQ/kTg9mSQYqsBqxu8JqF7g1DpClyWte9b2Ahz8/g5olyDsIRVnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716979; c=relaxed/simple;
-	bh=giiR5PK117e80LYqQREc6Pn73ncvElpx/Bps6tfm1ho=;
+	s=arc-20240116; t=1711747946; c=relaxed/simple;
+	bh=03k3/MoIFh20kQtGBfrG86YnFtiVqYH7W4PbBw36ROQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SuyiPfEl2lqcqFcWKTieczZg5wTISqqS+FoT3PWGid1KJ9xuG5kYQCwhYwJL+IcfvQhWmBGfQu3v15IWcqpoKau7AjLoPbuAX9rHdFLqdGCKmuoARGM+3U44NQPAnOBbJ7QNoRQQ6Jq856e8HT5VOsgdF5jusqAAEHNi8GMJBxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSKZFmf3; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=DZHe6ic/YTaBiP87rm3cddpkT7UufUSIt4W+nFMjzOYq9pX9ZI4qUbI5DR0rixTZMHLbwPQX+zxy/XFqIUvojlJE3xjuVbOgPHRG3P98VrPKAcO+ZJv7MWHOr8bmA8eb13/+pOf/caaqf8S/fBHyFP+UFn4DET7oON/9Rf5xjGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ba6mIC6T; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSKZFmf3"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56c441e66a5so2579533a12.0;
-        Fri, 29 Mar 2024 05:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711716976; x=1712321776; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jhb/ZNVtFOVdFjvoqvyjgcThge4E4KdOyihLh4rO7KA=;
-        b=jSKZFmf31y/X6uPdyGVth2KstcFd+zd92rkDJxWjOvucWf5RVlZv/WJGRIjic90V/z
-         LPR1sVI8et9iBwaHxv+2LbInAi3MtjutUehiUJMCbG4hBiwmnnvcelYUqSlbPs5EvAIA
-         Acs0ZnTt5GP+85fLYJ5hC4izNKkesxlPkx3LMNHmBJg7DKnwLwcWEPjqbYlKQxZ9YZ2F
-         6uww1C1ko93mQz81gJC9Uo52icbDqtKlB2u0J43P+SjCZJvdaZpAxtW1aGTNXEAx8ruP
-         Pn1ekzC7zN2mt9bNZCckGJZWK0jNMXIU4askJfIKuaT/Nsmd7aieTIX6fRrMeYMletWK
-         2R4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711716976; x=1712321776;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jhb/ZNVtFOVdFjvoqvyjgcThge4E4KdOyihLh4rO7KA=;
-        b=vtSqTkJgmYn/N3cG32kNXUfWoOD7hPDhkUPjx6GLpW+DNYDETtpY0rP8tu2zxQPtSU
-         W7GUM9E9jsYOVv5sh9sYEf6C2+mqZQMuCCkwq/hDpPxAey5asOi9ikObJarT+p2TtwyV
-         jV+wi11HSso+pbsSyM5vIa+mEnaNXIy1fdMzvvZLhk9iWHEqmJyVmOHFr/V0uI2Tp8E7
-         Rh5xqDb0xGjByNJwMt9mlMqtPFYUhHDgeXYcH6AY2TaM1z14DAFEfv96k/EKFxz8Dhdf
-         iYqf4wijkiwWPg1kplZWd5+DYowi/osVYvMePkCLmZJAyJ8fqrYtWLF+2+WHUUMhX4En
-         9+XA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3FlUTz6d3TCtcTJUUUxb58WGpblIMLt5ktnMzyAlOb9fpGvKXe+9NKw69QsqVN/o5A2BOeEnsFVC7RU5tbGb3+6jeXvK1FDMHzmLWMv6GbRsHIE0G7hWLLNBWQfZ/B4n6GZ6u/LvYyL4xgK0=
-X-Gm-Message-State: AOJu0YwuRO2Y923+s9H47itvK1PMt0zQLKp1ALqYe7gtDGMnhslGPp0d
-	gx3QacBZ/fh2/tfRkuD9BTkEsaB8lYuUxKa19BjIDIsoG175HiqV
-X-Google-Smtp-Source: AGHT+IHGPWvOGzQDAj+fZIR/IrGdh825/Sa8pgKD31+sRZhZp4d9wY2dHrBfikuf39Ic1r/fig0JGw==
-X-Received: by 2002:a17:906:a3d6:b0:a4e:360:c979 with SMTP id ca22-20020a170906a3d600b00a4e0360c979mr1425731ejb.48.1711716976038;
-        Fri, 29 Mar 2024 05:56:16 -0700 (PDT)
-Received: from shift.daheim (p200300d5ff0d9a0050f496fffe46beef.dip0.t-ipconnect.de. [2003:d5:ff0d:9a00:50f4:96ff:fe46:beef])
-        by smtp.gmail.com with ESMTPSA id wr1-20020a170907700100b00a473a0f3384sm1916914ejb.16.2024.03.29.05.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 05:56:15 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1])
-	by shift.daheim with esmtp (Exim 4.97)
-	(envelope-from <chunkeey@gmail.com>)
-	id 1rqBgA-0000000023J-2lZ6;
-	Fri, 29 Mar 2024 13:56:15 +0100
-Message-ID: <74f9afdc-6227-4daa-b501-640b701e2c8b@gmail.com>
-Date: Fri, 29 Mar 2024 13:56:15 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ba6mIC6T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8dH4O4z+/RT4LVfi/suZsrGaL+23+8UZ0hz47CF7NNQ=; b=ba6mIC6TKKXVH+seYPfBtBkpoW
+	Nnd8NycmJb4NqNVriO5DU0gBLuz8SWPPA8cdWVRDzECz6WFHJytH8oAibrT0YMnqPeQGdUhuxAk+P
+	IUGgTw9XovMtYInSDRuoCVYv2DljRoBGb+9GdltFN405lHq+LyidyI/E575M4F5M2WtwCT7HXJGbZ
+	z4cbLT2LP4NoQHv/sjFY+6C2G8Ino0qsO8p+ALrWCQ/Bv/qDMl9GIHPDVFk4j6T+Q7O8DGe6Os+tq
+	pND4MkNzRcf9W8IFJMrOhyJCIZHvS1fenecUwDcN6Fz/oqdpjDRRCfSqz1AxvWGt+IuNytANrdMVz
+	CeM2YYzw==;
+Received: from 187-26-72-49.3g.claro.net.br ([187.26.72.49] helo=[192.168.224.24])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rqJpi-00Gm6d-MD; Fri, 29 Mar 2024 22:32:19 +0100
+Message-ID: <d7561279-0372-d630-3c81-d6bad965a511@igalia.com>
+Date: Fri, 29 Mar 2024 18:32:09 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] [RESEND] wifi: carl9170: re-fix fortified-memset
- warning
-To: Arnd Bergmann <arnd@kernel.org>, Kees Cook <keescook@chromium.org>,
- Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>
-Cc: linux-hardening@vger.kernel.org, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vu?=
- =?UTF-8?Q?sen?= <toke@toke.dk>, linux-wireless@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>, Colin Ian King <colin.i.king@gmail.com>,
- linux-kernel@vger.kernel.org
-References: <20240328135509.3755090-1-arnd@kernel.org>
- <20240328135509.3755090-2-arnd@kernel.org>
-Content-Language: de-DE
-From: Christian Lamparter <chunkeey@gmail.com>
-In-Reply-To: <20240328135509.3755090-2-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable
+ names
+Content-Language: en-US
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ linux-hardening@vger.kernel.org
+References: <20240315002616.422802-1-timschumi@gmx.de>
+ <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
+ <2a500ade-a91d-15f2-e5ae-7f261e6a84b4@igalia.com>
+ <CAMj1kXHEzDzFk+6jo0UNFQ9RptRS==88XjnvxLiZThZAm6pF-A@mail.gmail.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <CAMj1kXHEzDzFk+6jo0UNFQ9RptRS==88XjnvxLiZThZAm6pF-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/28/24 2:55 PM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 29/03/2024 04:34, Ard Biesheuvel wrote:
+> [...]
 > 
-> The carl9170_tx_release() function sometimes triggers a fortified-memset
-> warning in my randconfig builds:
+> I'm just not impressed by the general quality of implementations -
+> relying on this when the system is going down is a reasonable last
+> resort, perhaps, but if other options are available, I'd prioritize
+> those.
 > 
-> In file included from include/linux/string.h:254,
->                   from drivers/net/wireless/ath/carl9170/tx.c:40:
-> In function 'fortify_memset_chk',
->      inlined from 'carl9170_tx_release' at drivers/net/wireless/ath/carl9170/tx.c:283:2,
->      inlined from 'kref_put' at include/linux/kref.h:65:3,
->      inlined from 'carl9170_tx_put_skb' at drivers/net/wireless/ath/carl9170/tx.c:342:9:
-> include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->    493 |                         __write_overflow_field(p_size_field, size);
-> 
-> Kees previously tried to avoid this by using memset_after(), but it seems
-> this does not fully address the problem. I noticed that the memset_after()
-> here is done on a different part of the union (status) than the original
-> cast was from (rate_driver_data), which may confuse the compiler.
-> 
-> Unfortunately, the memset_after() trick does not work on driver_rates[]
-> because that is part of an anonymous struct, and I could not get
-> struct_group() to do this either. Using two separate memset() calls
-> on the two members does address the warning though.
-> 
-> Fixes: fb5f6a0e8063b ("mac80211: Use memset_after() to clear tx status")
-> Link: https://lore.kernel.org/lkml/20230623152443.2296825-1-arnd@kernel.org/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> And this is for the oops/panic logs only - other uses of pstore seem
+> better served with ordinary file based persistence.
 
-Sure... though I think AI-supported compilers will in the future nag about
-this again. Oh well!
-
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
+OK, I understand now.
+Thanks,
 
 
-> ---
-> I found this while testing randconfig builds, a .config that shows this
-> for me is at https://pastebin.com/yWFKvZYu
-> 
-> Sorry I failed to follow up to Kees' request for a reproducer when
-> I posted this last year.
-> ---
->   drivers/net/wireless/ath/carl9170/tx.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/carl9170/tx.c b/drivers/net/wireless/ath/carl9170/tx.c
-> index e902ca80eba7..0226c31a6cae 100644
-> --- a/drivers/net/wireless/ath/carl9170/tx.c
-> +++ b/drivers/net/wireless/ath/carl9170/tx.c
-> @@ -280,7 +280,8 @@ static void carl9170_tx_release(struct kref *ref)
->   	 * carl9170_tx_fill_rateinfo() has filled the rate information
->   	 * before we get to this point.
->   	 */
-> -	memset_after(&txinfo->status, 0, rates);
-> +	memset(&txinfo->pad, 0, sizeof(txinfo->pad));
-> +	memset(&txinfo->rate_driver_data, 0, sizeof(txinfo->rate_driver_data));
+Guilherme
 
 
