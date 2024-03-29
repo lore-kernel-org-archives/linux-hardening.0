@@ -1,87 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C769225A8;
-	Fri, 29 Mar 2024 02:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8823C37165
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 03:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711678832; cv=none; b=TItej8WkShHyFhp/+D0JpO+ggkKH2IXeTMRjoKrN9lY8xWEKWo7ItK74I7w1icWzYReSNJCIsDQUKzQz5PHV9uqt3bzXg8L/QXnQ4501qx6DJthSIw6F/Sq1W13JmkflInZWu2ExzA5ELFeFfB36/2yNJVtiF7GqyGPFnt/wS+I=
+	t=1711683851; cv=none; b=QFD89L+4GxT3GXP6641OUtHJj7EtH0KzheVGGGeHgqb3HL6Yy8Iuv52g1uQfvw0ArA5jF2Y7FbbMaXfeaa1AbKlV3S7Fuaxsc6EcrpxLSBArubzWx7R3Ki3I6PwgQ69TapKPIvGpS5j1UWjFiWwhU+Z7Q0g/Y6T0+pHEIoSVIcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711678832; c=relaxed/simple;
-	bh=scq+zhfqrpSEmaQVeGCdzdWPMSoFu4I0JJu2jmYEKVA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MPzffhpd1exm9l0x/rqmkp31yIekgXXwzrLkIG1XD1URaRKnf1fxsw/4EO6ah0zDVABi8Yx64XD7RkwiDhDSyMHwOYKalsHQOqM2dIBgn59sMwLnn1hveh4gJzCWUXJoMTWD9u7yW4IBzsiDTMuDv8uGawK8OqIVZLljUHKaLiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxN7uau/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711683851; c=relaxed/simple;
+	bh=Hn6PBrUxtM9PEhALDsKdQiFNiP/Av1s0kzCsSuzmZlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzWhIIAqtE4NDxRdG1YDnF6+SLd19wwn6iYqSafnm/eo2TD2gnD8K17TJGfLoaCjBos09YLiHG7v4vjAPU/yDd3lxx3y/QcThBTQ/JS7oAcUBzSGc8q4KfBMMnGCG/HulgJjKojHTD7UoCap7MnQnFfz3uA4sUjXGwjYGOv8/i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U3xGBqgq; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxN7uau/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EEBD5C433B1;
-	Fri, 29 Mar 2024 02:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711678832;
-	bh=scq+zhfqrpSEmaQVeGCdzdWPMSoFu4I0JJu2jmYEKVA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UxN7uau/0swIpwP1Gpd4TqeL1OK7pHUj2QWM2Y5U9HDikHfmdEz5BSItnmI3CWuBS
-	 JoD4eFjjP0PiYfv14912z+N136MzmkhUCtfN5T9jPjDrsgy+gEU+m4p0rZ1Mm78Qn7
-	 Ug0z7zeExywdsB5z2WO/EkV/WFy8ARvLttW82sTwVY9dyoyamRuDcy3kLuOaEyy3UJ
-	 htPl1jbR9hZI9DnJtQJM7+a2FRnG2Ovb3weLX1ys0qtapMQwKsbWgQEeS3nXaFRn25
-	 CZ2p4nRK1MMx29QUwcjTdQ9vYot/isqRgLfj1bP+Kay4QcNL/C8k5yw2Q2/GxljYNp
-	 zPYGp3uVobJlQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E2D31D8BCE9;
-	Fri, 29 Mar 2024 02:20:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U3xGBqgq"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso1152048a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 20:44:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711683850; x=1712288650; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iYyfCUJffNflR102beFTLmybYVFgFGdBqWkYnepitbw=;
+        b=U3xGBqgq1ai8g4wb/Amvm1W3TYvkHCDNlrMoNffhbPLkSzf8Fi4qrgqw5BpIlhXdjE
+         UZyNEANF+YOh5wqDiaYdZF9+eCEeLx9WVsxlp6rn4ehMMcIX7gwFfmBfNIqXHbcGmAk9
+         3eu+JXp8asy/RvUufdSlg+PhAZvAPP3Tv8eSk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711683850; x=1712288650;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iYyfCUJffNflR102beFTLmybYVFgFGdBqWkYnepitbw=;
+        b=ddctGXF4clPxgwZOeAAbOgQAy4sQmx02tttrFPQ7DFhvx+P4BZ7yybaXlZqvUWJ+Om
+         DzRny998NZrhn2HqsZ5qkgIQQKHN6nnBOHwZwqemhgykdm3J4V479o59L8Z62irCo9fx
+         0lCAL2f+lFQ88DXg6L/LXDlruiJ/AJ/ZgYiZbHt9ZofkGTaMqMAPfoqJazqtbOmETjJu
+         5WFkA7dTb6EoqlM/KrgVlnMt9Ci9CHAoipl4kKkdN4DHkhweWTq3VWDfpe3ydw323cQn
+         +2thT7zEdVrT3Awt+Lxo+OAIItiI8VZxY7dof9mb5hR1xItMmZf2t0kwqmgl6Knz3lP/
+         BjsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPOQIrB2uplIsb8Z5xsc+Jjf8pVh0HixEPb21gOFFDxScHheg51kIAu7yplB9akWSESmSrqtdM3gFv/FFZkZoxcqOnaSUWCGxLUTekFHto
+X-Gm-Message-State: AOJu0YxVBLiaMisE2IsOPqfIs8g/OD1WVtWXFJ0l9gDyuLTga2sjs609
+	JRWSAaLl1S9IwamwqGnKc20NtOQWjGOHFoCvo4L6kA7otKLdm/3NNN058SZ7Mg==
+X-Google-Smtp-Source: AGHT+IE8eyoGTomKTbjdPTc2Vxuix7uawStOkJXkGHwVk/D4ySfj8KPf9WMW6IKR4qVjgWBaLvkZpw==
+X-Received: by 2002:a05:6a20:1595:b0:1a3:8984:b334 with SMTP id h21-20020a056a20159500b001a38984b334mr1223944pzj.22.1711683849766;
+        Thu, 28 Mar 2024 20:44:09 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s1-20020a17090a074100b0029c3bac0aa8sm4691791pje.4.2024.03.28.20.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 20:44:09 -0700 (PDT)
+Date: Thu, 28 Mar 2024 20:44:08 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] smb: client: replace deprecated strncpy with strscpy
+Message-ID: <202403282041.6A4E12EA@keescook>
+References: <20240328-strncpy-fs-smb-client-cifssmb-c-v1-1-30d12bcf500d@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/3] compiler_types: add Endianness-dependent
- __counted_by_{le,be}
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171167883192.31897.5391383378639622485.git-patchwork-notify@kernel.org>
-Date: Fri, 29 Mar 2024 02:20:31 +0000
-References: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
-In-Reply-To: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, keescook@chromium.org, gustavoars@kernel.org,
- nathan@kernel.org, horms@kernel.org,
- nex.sw.ncis.osdt.itp.upstreaming@intel.com, intel-wired-lan@lists.osuosl.org,
- linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328-strncpy-fs-smb-client-cifssmb-c-v1-1-30d12bcf500d@google.com>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 27 Mar 2024 15:22:38 +0100 you wrote:
-> Some structures contain flexible arrays at the end and the counter for
-> them, but the counter has explicit Endianness and thus __counted_by()
-> can't be used directly.
+On Thu, Mar 28, 2024 at 09:44:48PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> To increase test coverage for potential problems without breaking
-> anything, introduce __counted_by_{le,be} defined depending on platform's
-> Endianness to either __counted_by() when applicable or noop otherwise.
-> The first user will be virtchnl2.h from idpf just as example with 9 flex
-> structures having Little Endian counters.
+> In cifssmb.c:
+> Using strncpy with a length argument equal to strlen(src) is generally
+> dangerous because it can cause string buffers to not be NUL-terminated.
+> In this case, however, there was extra effort made to ensure the buffer
+> was NUL-terminated via a manual NUL-byte assignment. In an effort to rid
+> the kernel of strncpy() use, let's swap over to using strscpy() which
+> guarantees NUL-termination on the destination buffer.
 > 
-> [...]
+> To handle the case where ea_name is NULL, let's use the ?: operator to
+> substitute in an empty string, thereby allowing strscpy to still
+> NUL-terminate the destintation string.
 
-Here is the summary with links:
-  - [net-next,v2,1/3] compiler_types: add Endianness-dependent __counted_by_{le,be}
-    https://git.kernel.org/netdev/net-next/c/ca7e324e8ad3
-  - [net-next,v2,2/3] idpf: make virtchnl2.h self-contained
-    https://git.kernel.org/netdev/net-next/c/c00d33f1fc79
-  - [net-next,v2,3/3] idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
-    https://git.kernel.org/netdev/net-next/c/93d24acfa05e
+Yeah. And for the non-NULL case, namelen is 0-255. And 255 comes from
+strnlen() as the limit of characters, so namelen + 1 will include the NUL
+terminator.
 
-You are awesome, thank you!
+> Interesting note: this flex array buffer may go on to also have some
+> value encoded after the NUL-termination:
+> |	if (ea_value_len)
+> |		memcpy(parm_data->list.name + name_len + 1,
+> |			ea_value, ea_value_len);
+> 
+> Now for smb2ops.c and smb2transport.c:
+> Both of these cases are simple, strncpy() is used to copy string
+> literals which have a length less than the destination buffer's size. We
+> can simply swap in the new 2-argument version of strscpy() introduced in
+> Commit e6584c3964f2f ("string: Allow 2-argument strscpy()").
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Kees Cook
