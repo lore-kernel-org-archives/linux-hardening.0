@@ -1,61 +1,63 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EB039FDD
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 04:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E0C3B289
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 04:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711685007; cv=none; b=Cqkwb+TtjSWBAoG9lX6c0O4BS4D+PLvFPBytY+CVER0KSdhOyjakTbgLytCRk2BtQPnZ5789YQpAjXy5ff4e3Ka0r0jcukdxMkzpOkTOU85c4KpasujswiB+sfU/Xb8jID2ZqcPJDD98CsQWnIh9ZWjOA+GjnAItUhe4s56MRX8=
+	t=1711685093; cv=none; b=UmiAyNF+SEJoxij2YC1RsfJLSg9iQi2lBBqLVcR0oZbnQ916Fg1FNsMAGmNXjv4pECdHVmV/CKC/ouvkh2RZtEbKBozi5RrcsoCTkCxLbslDieykaSNg5nZgRcWEaaRsE2LkukLpEobOvkvEv6h1AdDGl9QlQTk5/BTmCad2FzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711685007; c=relaxed/simple;
-	bh=ZhXVjNEvBrgbNRdwLYIFSvFQti2uWpnpeF3sRR/SqRU=;
+	s=arc-20240116; t=1711685093; c=relaxed/simple;
+	bh=fx75aDeb//DCFTHJW3dMQvi5gnKmJfUkKWLKThTPR94=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xy7rrNaySrkqyFgkF3G6Y2qsnHjYIeqTZQdijLGm+h/YR/sZS7MrkPxg/ZfM7HXytl9CRJv8yrIyIiGgfgG18IdNSRW6NyWWwkrib6S2LKlLH9FUFRywaZhO9LkFuCIBggZKBy+/6VHY2EPvrLrTYWi4/BcyLt1jqNVsy4oV6WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HXwlVJ53; arc=none smtp.client-ip=209.85.160.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=orJcPK0vyAECBXa+lBuSZqXBQqJwpfwUC/RX5R8d2Tg6ltGQkTUHOxFfEcEdQSvTjz9H4GZ0ElbfcPT8e8qqMtGL4AUHhK4xpuCXBXH9h338bjyWGSEvhS8HeuXXAXpRu3j87aCttE0ZyWF7XK7YuwrSsY6pbaBkYL4YJnB9XRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ARKkytZx; arc=none smtp.client-ip=209.85.161.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXwlVJ53"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-22a8df1df8fso933448fac.2
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:03:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ARKkytZx"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5a550ce1a41so954550eaf.0
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711685004; x=1712289804; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1711685091; x=1712289891; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZyIL4ZyXQu4gCc0zxFPA1WjlBqcdHOravdVHYGFWCwU=;
-        b=HXwlVJ53T9MTB66zKYaDvHBLtBBkaxhnUaSdJ0POIo5wPiL0YFwED3yDO4QRbC0bQR
-         sn5II1Rmsa1Pte5musCfW0aJgKc/8hYaU/7mP/agyw9mNoLiyDMYqHJ/l1WHGRsDLaaj
-         QNCuXyKflXjmmkRh97KbiEbgVbz2f3v9LbNdk=
+        bh=69VUW1JBrC64hXBRbspWF21+J8tNtsC9yt2uIqIg1HQ=;
+        b=ARKkytZx7biCoF4FdX911rnJCexBt0iG+IlY+ojHC5xM8lHiSpUIq2CG8gJaeSlMWT
+         nsPMe9VyQDwpIYZliclOQHQOr8os5bQJU+hkKiu5pDe0HCp7R83QzE1+NtEO/eFNqPUG
+         JPNX8VuAh1HeKMTvaQyumwnHeGervw7jYlD3Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711685004; x=1712289804;
+        d=1e100.net; s=20230601; t=1711685091; x=1712289891;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZyIL4ZyXQu4gCc0zxFPA1WjlBqcdHOravdVHYGFWCwU=;
-        b=tkMF0sXbtxZw0C2j5QfGpNCIekxC22jcnl79fSvJlk2bRx6xnDyF6a5tHgpH+wEHXP
-         0JtvLkkIvDB/A8iM7MoJdMRdKGSjry9/rFe6dOpndSofZZuotc0vQD66bijWZuevva3r
-         vGtivt20olpY3XS0WqgjyYq7ZVyfS7M5C6H9zXBtQ3Tdwg1OmQM0t0bCxs+cVTus+4BF
-         8HEGjJwbVQw/r1etJKfS9iUlJwTx2YwntBAUt4IRtg1XIC6ktYBlqzK6vEJ2cdP+K4oL
-         B5iUXVpFDFlYNVkVE8NqsKid8u1KRbE/Rq5sd9BQsu35A3OwZdNb3AAv00BKzxPzdbwo
-         dOAw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7zUYOEwr6I3018eY2I6/JFty+TOrPs3kcKS92K9Yy1XR2TUNIUJP/4ejh6rAVPHs6l+2lUky5Jo5SeyZst+rlazmTfDpe5aQDfDaMc0n2
-X-Gm-Message-State: AOJu0Yw5x88CMY3rJST+9Yo3hqaCMP1bXRSbGE6OcpOuAIRhuVTa3lae
-	ddfOudfRaGQguEBrxRdP5pMBqLAlA1svDR0dIiYMNRUrr6Drqa2b0c31iOEuXQ==
-X-Google-Smtp-Source: AGHT+IHvluku9U7jr6mQlg+iTXEmMv+9Y2Nee8Oul+9ay/ks9RgGFoU1n/SfTSlXuaMelIbrLW8M8w==
-X-Received: by 2002:a05:6871:7999:b0:222:619f:9510 with SMTP id pb25-20020a056871799900b00222619f9510mr1247237oac.27.1711685004736;
-        Thu, 28 Mar 2024 21:03:24 -0700 (PDT)
+        bh=69VUW1JBrC64hXBRbspWF21+J8tNtsC9yt2uIqIg1HQ=;
+        b=PI/UYeOvhK96//bZilUuBfC+dHIFieaFDFoOmiKBfzIz8Ifb5c0zSuU8BoswHjpvKC
+         cCgNQZlf68vaRYwoMMc/nwXkEpLekdT33ErR4yoKNKJOvupmXzox5O/rxXvMY3KG+E2E
+         VxAiv+9+BF0YrUJkk3SWB7u2CM9lwO30/6VfgqAVvBoNA60VStfj6osMgmeMNxObw6P3
+         E09nhAB9O7EWKG0VxE/ORpFHTUBMoTq7PwxTWpkbbxkCtef9zpS+hJ4szlMT8/WKx6cc
+         QG/8mwQEYae2YoCZ8AYANPoePxay6cycPsMiqex769gHyvgnK3fO5HUMT6y6OKbMBWz4
+         4o6g==
+X-Forwarded-Encrypted: i=1; AJvYcCW42DclH2CFaoKzly4qNHmG/ZlJrnIA+SiioCjI+SJ8rXfCCBRP3SeN14icPWNsSmGqBrSIFtDaVgw/QVNimHmbFqYt2AL9UtdSY42hXkoF
+X-Gm-Message-State: AOJu0Yz9V+YXli2f78JvHdHlciX5d2ZSdC5wZesXiam/jrj+pE7uETMb
+	z6dVF56PtJbUWL/IEHhytXjQe7QGeJdOJHok3zDKpfou8MNluTs0TCYSigR/Iw==
+X-Google-Smtp-Source: AGHT+IFvNh8aPME+bk9MigIg8cgiL4SPF+c4/TssLm62fUGeJU6j/Ecq0WtTIJm48S6HEzmuuKfGsA==
+X-Received: by 2002:a05:6870:c34f:b0:229:c1d4:83bf with SMTP id e15-20020a056870c34f00b00229c1d483bfmr1130237oak.8.1711685091224;
+        Thu, 28 Mar 2024 21:04:51 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k7-20020aa792c7000000b006eab9ef5d4esm2174614pfa.50.2024.03.28.21.03.24
+        by smtp.gmail.com with ESMTPSA id q14-20020aa7982e000000b006e73508485bsm2159777pfl.100.2024.03.28.21.04.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 21:03:24 -0700 (PDT)
-Date: Thu, 28 Mar 2024 21:03:23 -0700
+        Thu, 28 Mar 2024 21:04:50 -0700 (PDT)
+Date: Thu, 28 Mar 2024 21:04:50 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc: Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hfsplus: refactor copy_name to not use strncpy
-Message-ID: <202403282059.37BA0B8E20@keescook>
-References: <20240321-strncpy-fs-hfsplus-xattr-c-v1-1-0c6385a10251@google.com>
+Subject: Re: [PATCH] video/hdmi: prefer length specifier in format over
+ string copying
+Message-ID: <202403282104.CC17451@keescook>
+References: <20240320-strncpy-drivers-video-hdmi-c-v1-1-f9a08168cdaf@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,122 +66,25 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240321-strncpy-fs-hfsplus-xattr-c-v1-1-0c6385a10251@google.com>
+In-Reply-To: <20240320-strncpy-drivers-video-hdmi-c-v1-1-f9a08168cdaf@google.com>
 
-On Thu, Mar 21, 2024 at 11:46:27PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated with NUL-terminated destination strings [1].
+On Wed, Mar 20, 2024 at 11:22:02PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> The copy_name() method does a lot of manual buffer manipulation to
-> eventually arrive with its desired string. If we don't know the
-> namespace this attr has or belongs to we want to prepend "osx." to our
-> final string. Following this, we're copying xattr_name and doing a
-> bizarre manual NUL-byte assignment with a memset where n=1.
-> 
-> Really, we can use some more obvious string APIs to acomplish this,
-> improving readability and security. Following the same control flow as
-> before: if we don't know the namespace let's use scnprintf() to form our
-> prefix + xattr_name pairing (while NUL-terminating too!). Otherwise, use
-> strscpy() to return the number of bytes copied into our buffer.
-> 
-> Note that strscpy() _can_ return -E2BIG but this is already handled by
-> all callsites:
-> 
-> In both hfsplus_listxattr_finder_info() and hfsplus_listxattr(), ret is
-> already type ssize_t so we can change the return type of copy_name() to
-> match (understanding that scnprintf()'s return type is different yet
-> fully representable by ssize_t). Furthermore, listxattr() in fs/xattr.c
-> is well-equipped to handle a potential -E2BIG return result from
-> vfs_listxattr():
-> |	ssize_t error;
-> ...
-> |	error = vfs_listxattr(d, klist, size);
-> |	if (error > 0) {
-> |		if (size && copy_to_user(list, klist, error))
-> |			error = -EFAULT;
-> |	} else if (error == -ERANGE && size >= XATTR_LIST_MAX) {
-> |		/* The file system tried to returned a list bigger
-> |			than XATTR_LIST_MAX bytes. Not possible. */
-> |		error = -E2BIG;
-> |	}
-> ... our error can potentially already be -E2BIG, skipping this else-if
-> and ending up at the same state as other errors.
-> 
-> This whole copy_name() function could really be a one-line with some
-> ternary statements embedded into a scnprintf() arg-list but I've opted
-> to maintain some semblance of readability.
+> It looks like the main use of strncpy() here is to limit the amount of
+> bytes printed from hdmi_log() by using a tmp buffer and limiting the
+> number of bytes copied. Really, we should use the %.<len>s format
+> qualifier to achieve this.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> ---
->  fs/hfsplus/xattr.c | 19 +++++--------------
->  1 file changed, 5 insertions(+), 14 deletions(-)
-> 
-> diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-> index 9c9ff6b8c6f7..00351f566e9f 100644
-> --- a/fs/hfsplus/xattr.c
-> +++ b/fs/hfsplus/xattr.c
-> @@ -400,22 +400,13 @@ static int name_len(const char *xattr_name, int xattr_name_len)
->  	return len;
->  }
->  
-> -static int copy_name(char *buffer, const char *xattr_name, int name_len)
-> +static ssize_t copy_name(char *buffer, const char *xattr_name, int name_len)
->  {
-> -	int len = name_len;
-> -	int offset = 0;
-> -
-> -	if (!is_known_namespace(xattr_name)) {
-> -		memcpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
-> -		offset += XATTR_MAC_OSX_PREFIX_LEN;
-> -		len += XATTR_MAC_OSX_PREFIX_LEN;
-> -	}
-> -
-> -	strncpy(buffer + offset, xattr_name, name_len);
-> -	memset(buffer + offset + name_len, 0, 1);
-> -	len += 1;
 
-The old code appears to include the NUL in the count of bytes written.
-
-> +	if (!is_known_namespace(xattr_name))
-> +		return scnprintf(buffer, name_len + XATTR_MAC_OSX_PREFIX_LEN,
-> +				 "%s%s", XATTR_MAC_OSX_PREFIX, xattr_name);
->  
-> -	return len;
-> +	return strscpy(buffer, xattr_name, name_len + 1);
-
-Neither scnprintf nor strscpy include the NUL in their return value, so
-I think special handling is needed here. Perhaps:
-
-	ssize_t len;
-	...
-	if (!is_known_namespace(xattr_name))
-		len = scnprintf(buffer, name_len + XATTR_MAC_OSX_PREFIX_LEN,
-				 "%s%s", XATTR_MAC_OSX_PREFIX, xattr_name);
-	else
-		len = strscpy(buffer, xattr_name, name_len + 1);
-
-	if (len >= 0)
-		len++;
-	return len;
-
--Kees
-
->  }
->  
->  int hfsplus_setxattr(struct inode *inode, const char *name,
-> 
-> ---
-> base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
-> change-id: 20240321-strncpy-fs-hfsplus-xattr-c-4ebfe67f4c6d
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
