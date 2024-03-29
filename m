@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D464181338;
-	Fri, 29 Mar 2024 12:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F0D187E76;
+	Fri, 29 Mar 2024 12:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716103; cv=none; b=fu60G3LB/dgCDwggaL+pn7wgk4j9oOSoccpYmleWcUjSiQKuSsXyETPg7Hk6CSTyfsbE4JaTM0ycIYcQMMOeXGYoBAcCxXSbgnjqQiYzfcK73J3JlkKkpt6NA/jCLkLdKZWxqjLZaJLEcjB0tqGDpmTrfN7wt5E8sXe+rzPxRac=
+	t=1711716136; cv=none; b=ex5vmLhJXujY+TxWUwaGeUnoDyJj0CyCiS94epfCBQhFgrXtBgixQuDXFFp1iYp0J0z8kIf+bc/YsOkn5yt/45twTsrSy/A06EvLIPVt19vC3sB4rcAeJ71IoS/sf9MncWoLKkyy47cJfod36ErIBCrSADu+BsRlEd55c9QRcms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716103; c=relaxed/simple;
-	bh=tPEViQjo1qr7FojiB4E3SuTTfzc9SXQ7WNdOd9cbvoA=;
+	s=arc-20240116; t=1711716136; c=relaxed/simple;
+	bh=yFrxUrCxr4nCVz5WlYcMp85OB4SzOnEQNJZ80EpWwjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HTqxU3T53mW+J8SnNRxgHWJwpEVkFFCTvNnT3rRV8RYsZUI7Vk9eyLX5JgRKFewkvN+EvdKFGT8DJ1HJG6YhR5vS4EMrP46WkKQvoc+BDkXj17dejRJSIifCQnaglxzGxOpKSZEfQ+gny3dtf7unkF15vckJ70B9wuDiAWdaYGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbJdQhVK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X7Ji0/xx+T5Z3eiEHa5J2TqYAe1SSBcQtQqKZVRuKcXVPE2B1CPOgxNwVHZNeAV0r0jFosixKH/CX5XpaHRaLPNT49eOQsmVbsb3QxGr/nCMVBlR66tnHvniT8t263Y9jNftOW7CGHQBHiOuSaOufb6Wu+9Zxbj7I4+y1UNBGBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NL2ppa1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbJdQhVK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 397B5C43399;
-	Fri, 29 Mar 2024 12:41:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NL2ppa1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89165C433C7;
+	Fri, 29 Mar 2024 12:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716102;
-	bh=tPEViQjo1qr7FojiB4E3SuTTfzc9SXQ7WNdOd9cbvoA=;
+	s=k20201202; t=1711716136;
+	bh=yFrxUrCxr4nCVz5WlYcMp85OB4SzOnEQNJZ80EpWwjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SbJdQhVKoCwSoDC2GrvNs2ukVT1NQ6SkXgVnY5RGzE/yMmyLlordTj9oWiKiyZS1G
-	 PKQ6bUeICyzINAhG7dUvWgPN2bhTCaKqarDxUuBRixhIA/ubMAeWtHuojZLUXra9fk
-	 dnGYXUk3pEtjUxVrgUu3GMDHGljYy6bBtq/StKuaC5GHgTwW4DfBS5P/uRSM4LJtPG
-	 Y92FlGUrudb195X6oAVDL64CA4Z/wans0AYbfNtPRq9SKJ2HJmAjuV0YzmqBQtuqtQ
-	 B1azTWoWqtDDe1NoR8w0lubyeKro/tJxcGqdf3+3WOKDlEOCpHCy1tRCCTRXYnzcuT
-	 DtXMR7DbZBjvA==
+	b=NL2ppa1MANHS7QW6IJ8ZhaStVnXIKMEe+0M5QYCpi1ZN0vcAmnPIk4kiQSHVzFsAi
+	 iYmZFRjQmnfQRvoQqhnoMo+Al4prpcJ1yberzl5uXELKT1lhbMl3lUeYvrsL2m8Gak
+	 2ByO9H13u/Q7/hfyjs9wb4Kep5ZplAO/5x8RpuI6MUw4dP7lli8+4Lgw3E2cwiEobo
+	 umZZ/BkyXN+w+I7sDYKSN/58GAwjwXJ/Zv7w03QrROtwq9Ji5hn0jqXq2tLpK98W9w
+	 u4HhSHAuNCAOyBt3BXKpGlsKPJ4SQtVZb8axRgaiO4oXjuv7w3UfpLFB6eVcMdBl7K
+	 uw1+kyK4Jna6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kunwu Chan <chentao@kylinos.cn>,
-	Kees Cook <keescook@chromium.org>,
+Cc: Kees Cook <keescook@chromium.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 55/98] pstore/zone: Add a null pointer check to the psz_kmsg_read
-Date: Fri, 29 Mar 2024 08:37:26 -0400
-Message-ID: <20240329123919.3087149-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.8 74/98] overflow: Allow non-type arg to type_max() and type_min()
+Date: Fri, 29 Mar 2024 08:37:45 -0400
+Message-ID: <20240329123919.3087149-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329123919.3087149-1-sashal@kernel.org>
 References: <20240329123919.3087149-1-sashal@kernel.org>
@@ -50,35 +49,59 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.8.2
 Content-Transfer-Encoding: 8bit
 
-From: Kunwu Chan <chentao@kylinos.cn>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 98bc7e26e14fbb26a6abf97603d59532475e97f8 ]
+[ Upstream commit bd1ebf2467f9c5d157bec7b025e83f8ffdae1318 ]
 
-kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+A common use of type_max() is to find the max for the type of a
+variable. Using the pattern type_max(typeof(var)) is needlessly
+verbose. Instead, since typeof(type) == type we can just explicitly
+call typeof() on the argument to type_max() and type_min(). Add
+wrappers for readability.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-Link: https://lore.kernel.org/r/20240118100206.213928-1-chentao@kylinos.cn
+We can do some replacements right away:
+
+$ git grep '\btype_\(min\|max\)(typeof' | wc -l
+11
+
+Link: https://lore.kernel.org/r/20240301062221.work.840-kees@kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/zone.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/overflow.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index 2770746bb7aa1..abca117725c81 100644
---- a/fs/pstore/zone.c
-+++ b/fs/pstore/zone.c
-@@ -973,6 +973,8 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone,
- 		char *buf = kasprintf(GFP_KERNEL, "%s: Total %d times\n",
- 				      kmsg_dump_reason_str(record->reason),
- 				      record->count);
-+		if (!buf)
-+			return -ENOMEM;
- 		hlen = strlen(buf);
- 		record->buf = krealloc(buf, hlen + size, GFP_KERNEL);
- 		if (!record->buf) {
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 7b5cf4a5cd191..51af56522915e 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -31,8 +31,10 @@
+  * credit to Christian Biere.
+  */
+ #define __type_half_max(type) ((type)1 << (8*sizeof(type) - 1 - is_signed_type(type)))
+-#define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
+-#define type_min(T) ((T)((T)-type_max(T)-(T)1))
++#define __type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
++#define type_max(t)	__type_max(typeof(t))
++#define __type_min(T) ((T)((T)-type_max(T)-(T)1))
++#define type_min(t)	__type_min(typeof(t))
+ 
+ /*
+  * Avoids triggering -Wtype-limits compilation warning,
+@@ -130,10 +132,10 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+ 
+ #define __overflows_type_constexpr(x, T) (			\
+ 	is_unsigned_type(typeof(x)) ?				\
+-		(x) > type_max(typeof(T)) :			\
++		(x) > type_max(T) :				\
+ 	is_unsigned_type(typeof(T)) ?				\
+-		(x) < 0 || (x) > type_max(typeof(T)) :		\
+-	(x) < type_min(typeof(T)) || (x) > type_max(typeof(T)))
++		(x) < 0 || (x) > type_max(T) :			\
++	(x) < type_min(T) || (x) > type_max(T))
+ 
+ #define __overflows_type(x, T)		({	\
+ 	typeof(T) v = 0;			\
 -- 
 2.43.0
 
