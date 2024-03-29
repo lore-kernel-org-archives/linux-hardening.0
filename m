@@ -1,153 +1,79 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8A53A1A1
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 04:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD36140852;
+	Fri, 29 Mar 2024 07:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711685467; cv=none; b=DJKQ8TaVh8/MyRy8cMF3bGlQv4boH/h0pSQPPHM/r6sarMv5Y0MqUEP3hz702U6vhM4Pf1cif3BMXWOZPcrMiy5+5ulZ05w23QdWwmEO1CNPLLo6ix8WTR0jmml+BIyFIe8cgWVv/XPUgZEclOz5k1lO3OgS6avsb+LA+ueen7c=
+	t=1711697682; cv=none; b=ikwOSE1fgGbG0RZtF+H8JCqvglQtJdaRmJS0bPNW3/3f3PImbDeHAa6MF45iKnGVk0L2QojAyv2Tbcd5Jctiik5k3YcDmq1pyT4CmEHjhJrg6O0DlAtH1/R/l2U8KMa4pYuoPFxz7GWtCqIxK7P189NYkJ6Ub05FaFmf8ed1AZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711685467; c=relaxed/simple;
-	bh=Sej1B+KPaAd1YJSUCEcu/2wZgvFA6dEVc0yLCqlWKKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XOJ3inSSdfNBNA90Ul5qHTGakTkhOo6MnObJonIYforNCZE1IcnjSphEWhCJ10fuzszLzbPk3eT5LAKZamkecXxHQe4+523Ghib1FjKUKe4Kc7VYxT8lBTJFhAma+dmoZVv1kpmpFWQoa97awrqbBz82OWy/pEJ1rGHUCG1sDAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Bsc6whB1; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711697682; c=relaxed/simple;
+	bh=6FG3wosaxtyLrhKBe6+/jrm0xfxaIALs5W2/r51MfkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FzGKElpSL6QyKGPDSnjq2/pnfBQ92YY/V9Sg5GZMQHwini6pCUOFoXRfRDS2NZcBLyG8C1QPNU2HGZc84FcNHgbO3O6BYiVVe4WA3HDYDxrrR5PcRG9IN9TgYnIvt/OWGbLR614FppPg4SeHRYFPVPdcldoFurR6GFHwjrjvCP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjKSfDUl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bsc6whB1"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dddbe47ac1so18068435ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711685465; x=1712290265; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bUIGGacJ5zX9tZrBNytRyyuYA7UqfnaLQvQzbVYvhP4=;
-        b=Bsc6whB1aT4BfVf2DYDvvXHdKALklrXOeLkXkrHf34upWS1iCcvc6AAISo9LKFWhsO
-         8lXeGDDPpfXbS8Thj6efTHMD9vImhs4EFze6Ek8JpC2MksAythzgnyOd97cOh+1Gwup0
-         lSGn8Z5ESeQZk11+HXsYWo94aZqhiZmqL1Kjc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711685465; x=1712290265;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bUIGGacJ5zX9tZrBNytRyyuYA7UqfnaLQvQzbVYvhP4=;
-        b=b+kqDiB1StEajjxLgoTZC0U3bscqEtBGQm+jb0E0yXbpY4u8WghifO1K+S2RenaNcJ
-         VLNfj9y4JF8CiU9/Q4h154kGiL3gX0Q1M476JoQshrfgTuBl5AtMNlzi/Dtylv0xdZOV
-         ywMywBvAL2Lqqb0JvtFJbLSvOyjUjJw7SDXJjIRewq+10n3uGPpLOcPiSHv6QudAyebC
-         Wq/oaGBjUzcqsGYUBbfKYhBcBD1jQ4ChKcqU40XFWKVjZE1dgdqI5j+Zd9gaYn+e/S2b
-         KF87dpPg/B2hX57SIQivoVgbBauyNUO0j4ylQJw7D3WZE813i9HDhYFxkCtozNKI88/s
-         SWGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8MS8d8/dmF6khIiWNxr+AUIlOspXAb72WclnHbeuDpEHI5Ke9oZby3efQnbuosD8tzLvT3URCCgJff3UkVPabzmpKHjVu9f2gbN4xbU/T
-X-Gm-Message-State: AOJu0YzDo8ldhKlKoOnzYqwCiY9tG6kZslN+wrIWpvFGqo9WXqsCABf5
-	CmYSAYKrPfsXltOTlwrvyRememyrz2vLqMyp5n0RUuBv6NcXiAUkrnndFNOTfA==
-X-Google-Smtp-Source: AGHT+IF11IWkI0TTAlwnE00yKbuCp0K/lKMT2EevXSIyOW0sCRAJmY0MqvYYhF8S0cgcHj6ziGPeig==
-X-Received: by 2002:a17:902:cf04:b0:1e0:137e:cd66 with SMTP id i4-20020a170902cf0400b001e0137ecd66mr2022268plg.30.1711685465594;
-        Thu, 28 Mar 2024 21:11:05 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s2-20020a170902c64200b001e0e8e4f7e3sm2474716pls.206.2024.03.28.21.11.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 21:11:05 -0700 (PDT)
-Date: Thu, 28 Mar 2024 21:11:04 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ext4: replace deprecated strncpy with alternatives
-Message-ID: <202403282109.D174F1CE@keescook>
-References: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjKSfDUl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5740DC433C7;
+	Fri, 29 Mar 2024 07:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711697682;
+	bh=6FG3wosaxtyLrhKBe6+/jrm0xfxaIALs5W2/r51MfkA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kjKSfDUlrcS0CpZtobwMc+OiCCECbiyslJkYRNNtRJDXSbFngdqFe2odOAuFpVBDf
+	 nfEOFqdSw3budycquk0WG4QgdG3kf50nNL5/+FUWipmjlibJAgQx0rSinFhXbpppJd
+	 NkKrUYWUhU+TlS1NYLAQqdm2Wi0AerI4PUYnIqYg/kdTNQmqMpODNylKtccbg1lteO
+	 tZsfvmvAXMhciiD1uS5T5u23Z0RFyQ7J8OkhFVW+eoXaTXxDP6IxUxpHvoqziMR8L8
+	 sYgRRw4dCFkjevwzKBR1PjKGB64E/D2M9KNGjrjVO+f6VPaTB+p0kiT6foeZbOxqxr
+	 XoxpsLIpsB4YQ==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d4a8bddc21so22262981fa.0;
+        Fri, 29 Mar 2024 00:34:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWIMcRBZrWx6Ppfiwex+JfOyTwY4NfdETmpcX4/KvGPuDGQqy3/4O0KofVjCNfThQ2s3joWoD8WllfhiK+bbG/CvkFphgDcjbzVrXlInhFK
+X-Gm-Message-State: AOJu0YwKS3BSuSans2F7vjaOm9kdcoAHiUe7dm0yrWYgYu4Lq/YOPdiN
+	tAd1i1/F8A0hPDEfQK/e40XnmOONlkRzsGnFIIfpkfrB1/s8m/bMu9p0N3hzV/aakfm84jt8K7N
+	FI/JeKZEonRx10N671xBJaLdvnuA=
+X-Google-Smtp-Source: AGHT+IGOW+lpZSdg3nT58nShezLxHTQjE5g07mxmSQjt/giLHqglxYnQv7B5tT0rjUtg1S2PYRzoPu++OKH1xt2irgY=
+X-Received: by 2002:a2e:9e58:0:b0:2d6:f698:7ecf with SMTP id
+ g24-20020a2e9e58000000b002d6f6987ecfmr875392ljk.9.1711697680655; Fri, 29 Mar
+ 2024 00:34:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
+References: <20240315002616.422802-1-timschumi@gmx.de> <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
+ <2a500ade-a91d-15f2-e5ae-7f261e6a84b4@igalia.com>
+In-Reply-To: <2a500ade-a91d-15f2-e5ae-7f261e6a84b4@igalia.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 29 Mar 2024 09:34:29 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHEzDzFk+6jo0UNFQ9RptRS==88XjnvxLiZThZAm6pF-A@mail.gmail.com>
+Message-ID: <CAMj1kXHEzDzFk+6jo0UNFQ9RptRS==88XjnvxLiZThZAm6pF-A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable names
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-efi@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>, 
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 21, 2024 at 01:03:10AM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> in file.c:
-> s_last_mounted is marked as __nonstring meaning it does not need to be
-> NUL-terminated. Let's instead use strtomem_pad() to copy bytes from the
-> string source to the byte array destination -- while also ensuring to
-> pad with zeroes.
-> 
-> in ioctl.c:
-> We can drop the memset and size argument in favor of using the new
-> 2-argument version of strscpy_pad() -- which was introduced with Commit
-> e6584c3964f2f ("string: Allow 2-argument strscpy()"). This guarantees
-> NUL-termination and NUL-padding on the destination buffer -- which seems
-> to be a requirement judging from this comment:
-> 
-> |	static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label)
-> |	{
-> |		char label[EXT4_LABEL_MAX + 1];
-> |
-> |		/*
-> |		 * EXT4_LABEL_MAX must always be smaller than FSLABEL_MAX because
-> |		 * FSLABEL_MAX must include terminating null byte, while s_volume_name
-> |		 * does not have to.
-> |		 */
-> 
-> in super.c:
-> s_first_error_func is marked as __nonstring meaning we can take the same
-> approach as in file.c; just use strtomem_pad()
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  fs/ext4/file.c  | 3 +--
->  fs/ext4/ioctl.c | 3 +--
->  fs/ext4/super.c | 7 +++----
->  3 files changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index 54d6ff22585c..c675c0eb5f7e 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -844,8 +844,7 @@ static int ext4_sample_last_mounted(struct super_block *sb,
->  	if (err)
->  		goto out_journal;
->  	lock_buffer(sbi->s_sbh);
-> -	strncpy(sbi->s_es->s_last_mounted, cp,
-> -		sizeof(sbi->s_es->s_last_mounted));
-> +	strtomem_pad(sbi->s_es->s_last_mounted, cp, 0);
->  	ext4_superblock_csum_set(sb);
->  	unlock_buffer(sbi->s_sbh);
->  	ext4_handle_dirty_metadata(handle, NULL, sbi->s_sbh);
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 7160a71044c8..dab7acd49709 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -1150,9 +1150,8 @@ static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label
->  	 */
->  	BUILD_BUG_ON(EXT4_LABEL_MAX >= FSLABEL_MAX);
->  
-> -	memset(label, 0, sizeof(label));
->  	lock_buffer(sbi->s_sbh);
-> -	strncpy(label, sbi->s_es->s_volume_name, EXT4_LABEL_MAX);
-> +	strscpy_pad(label, sbi->s_es->s_volume_name);
->  	unlock_buffer(sbi->s_sbh);
+On Fri, 15 Mar 2024 at 21:46, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
+>
+> On 15/03/2024 06:16, Ard Biesheuvel wrote:
+> > [...]
+> > As an aside, you really want to avoid EFI pstore in general, and
+> > specifically on such old systems with quirky UEFI implementations.
+> >
+>
+> Hi Ard, this comment made me very curious; apart from old quirky UEFI
+> implementations, what's the reason you see to avoid using efi-pstore in
+> general ?
+>
+> Thanks in advance for your insights!
 
-The only reason I can imagine the memset() being split here is to keep
-it out of the spinlock. For a non-fast-path ioctl, I can't imagine this
-being a meaningful reduction in lock contention, though.
+I'm just not impressed by the general quality of implementations -
+relying on this when the system is going down is a reasonable last
+resort, perhaps, but if other options are available, I'd prioritize
+those.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+And this is for the oops/panic logs only - other uses of pstore seem
+better served with ordinary file based persistence.
