@@ -1,79 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD36140852;
-	Fri, 29 Mar 2024 07:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10C7146D74;
+	Fri, 29 Mar 2024 12:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697682; cv=none; b=ikwOSE1fgGbG0RZtF+H8JCqvglQtJdaRmJS0bPNW3/3f3PImbDeHAa6MF45iKnGVk0L2QojAyv2Tbcd5Jctiik5k3YcDmq1pyT4CmEHjhJrg6O0DlAtH1/R/l2U8KMa4pYuoPFxz7GWtCqIxK7P189NYkJ6Ub05FaFmf8ed1AZc=
+	t=1711715313; cv=none; b=n3UPaiF7fsb9b+i6fnSpp7QjoDjnL/kpwGJPNVLf4piVzKFTssDnaEI84xP9gTJvEWk8W4gQeL+E5usW0rlwxXdRYrR+R3JCxlFH1ictpX4igyhTzYF+WiE4Z6g2tXv+pAeiBzk7utQ0RwFf3WV0gH+W0BlYf2P+6N/ajJfoeLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697682; c=relaxed/simple;
-	bh=6FG3wosaxtyLrhKBe6+/jrm0xfxaIALs5W2/r51MfkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FzGKElpSL6QyKGPDSnjq2/pnfBQ92YY/V9Sg5GZMQHwini6pCUOFoXRfRDS2NZcBLyG8C1QPNU2HGZc84FcNHgbO3O6BYiVVe4WA3HDYDxrrR5PcRG9IN9TgYnIvt/OWGbLR614FppPg4SeHRYFPVPdcldoFurR6GFHwjrjvCP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjKSfDUl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711715313; c=relaxed/simple;
+	bh=tPEViQjo1qr7FojiB4E3SuTTfzc9SXQ7WNdOd9cbvoA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PEJtRoC48SXf+eFMsa2PElKx6iXXRcnA8JbXvqps0gMHJLV9FvHyVY5ScYkG07moAz/5wFvrDBv7zBcn3WbgjnskU9dS1Q+cztiAUJsn3PsngF1CWTTqhwYnZP7kf3r2GpQdJqpqwfkepU6gIZnInVkw/Ciu6pmhckDKEW1dkRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZl23VhP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjKSfDUl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5740DC433C7;
-	Fri, 29 Mar 2024 07:34:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZl23VhP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BDFC433C7;
+	Fri, 29 Mar 2024 12:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711697682;
-	bh=6FG3wosaxtyLrhKBe6+/jrm0xfxaIALs5W2/r51MfkA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kjKSfDUlrcS0CpZtobwMc+OiCCECbiyslJkYRNNtRJDXSbFngdqFe2odOAuFpVBDf
-	 nfEOFqdSw3budycquk0WG4QgdG3kf50nNL5/+FUWipmjlibJAgQx0rSinFhXbpppJd
-	 NkKrUYWUhU+TlS1NYLAQqdm2Wi0AerI4PUYnIqYg/kdTNQmqMpODNylKtccbg1lteO
-	 tZsfvmvAXMhciiD1uS5T5u23Z0RFyQ7J8OkhFVW+eoXaTXxDP6IxUxpHvoqziMR8L8
-	 sYgRRw4dCFkjevwzKBR1PjKGB64E/D2M9KNGjrjVO+f6VPaTB+p0kiT6foeZbOxqxr
-	 XoxpsLIpsB4YQ==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d4a8bddc21so22262981fa.0;
-        Fri, 29 Mar 2024 00:34:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIMcRBZrWx6Ppfiwex+JfOyTwY4NfdETmpcX4/KvGPuDGQqy3/4O0KofVjCNfThQ2s3joWoD8WllfhiK+bbG/CvkFphgDcjbzVrXlInhFK
-X-Gm-Message-State: AOJu0YwKS3BSuSans2F7vjaOm9kdcoAHiUe7dm0yrWYgYu4Lq/YOPdiN
-	tAd1i1/F8A0hPDEfQK/e40XnmOONlkRzsGnFIIfpkfrB1/s8m/bMu9p0N3hzV/aakfm84jt8K7N
-	FI/JeKZEonRx10N671xBJaLdvnuA=
-X-Google-Smtp-Source: AGHT+IGOW+lpZSdg3nT58nShezLxHTQjE5g07mxmSQjt/giLHqglxYnQv7B5tT0rjUtg1S2PYRzoPu++OKH1xt2irgY=
-X-Received: by 2002:a2e:9e58:0:b0:2d6:f698:7ecf with SMTP id
- g24-20020a2e9e58000000b002d6f6987ecfmr875392ljk.9.1711697680655; Fri, 29 Mar
- 2024 00:34:40 -0700 (PDT)
+	s=k20201202; t=1711715313;
+	bh=tPEViQjo1qr7FojiB4E3SuTTfzc9SXQ7WNdOd9cbvoA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uZl23VhPQEpFnzjuEmHL4PBju5IYlfeIcexHU77ZvHY9Vquz/Emv6mxsMn/tg0TRA
+	 FKtwCejpI46dORWI9s6Zmj3cXW1XXV1mRHd5axIFzUm0aOkj8g0aciadoR+02wLmsl
+	 DCOMGQZeEnUWfgT16RFiYfLO3QcR19SaigWYyiOgJKuVcI4bDzILKxjZEKAGbw61l/
+	 mXxk4OT7nontkkQizLmPRTF+BmeR9lAp/WR4KhQnUdrSbqLrbPQKq/p9yhn3g612Pu
+	 5w/azMzxHeGXwGjfCufbb29xtspJNEUGXMS1ysF7LmVQrPUQf+W547VGljZw5xu4qN
+	 FAdxK4nRuTS3Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kunwu Chan <chentao@kylinos.cn>,
+	Kees Cook <keescook@chromium.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 47/68] pstore/zone: Add a null pointer check to the psz_kmsg_read
+Date: Fri, 29 Mar 2024 08:25:43 -0400
+Message-ID: <20240329122652.3082296-47-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240329122652.3082296-1-sashal@kernel.org>
+References: <20240329122652.3082296-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315002616.422802-1-timschumi@gmx.de> <CAMj1kXEvQS8e95A55po-nKn8cGou8Dn9nNhidt_QSqL02WawpQ@mail.gmail.com>
- <2a500ade-a91d-15f2-e5ae-7f261e6a84b4@igalia.com>
-In-Reply-To: <2a500ade-a91d-15f2-e5ae-7f261e6a84b4@igalia.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 29 Mar 2024 09:34:29 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHEzDzFk+6jo0UNFQ9RptRS==88XjnvxLiZThZAm6pF-A@mail.gmail.com>
-Message-ID: <CAMj1kXHEzDzFk+6jo0UNFQ9RptRS==88XjnvxLiZThZAm6pF-A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] efi: pstore: Request at most 512 bytes for variable names
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-efi@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>, 
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.2
+Content-Transfer-Encoding: 8bit
 
-On Fri, 15 Mar 2024 at 21:46, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
->
-> On 15/03/2024 06:16, Ard Biesheuvel wrote:
-> > [...]
-> > As an aside, you really want to avoid EFI pstore in general, and
-> > specifically on such old systems with quirky UEFI implementations.
-> >
->
-> Hi Ard, this comment made me very curious; apart from old quirky UEFI
-> implementations, what's the reason you see to avoid using efi-pstore in
-> general ?
->
-> Thanks in advance for your insights!
+From: Kunwu Chan <chentao@kylinos.cn>
 
-I'm just not impressed by the general quality of implementations -
-relying on this when the system is going down is a reasonable last
-resort, perhaps, but if other options are available, I'd prioritize
-those.
+[ Upstream commit 98bc7e26e14fbb26a6abf97603d59532475e97f8 ]
 
-And this is for the oops/panic logs only - other uses of pstore seem
-better served with ordinary file based persistence.
+kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure. Ensure the allocation was successful
+by checking the pointer validity.
+
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Link: https://lore.kernel.org/r/20240118100206.213928-1-chentao@kylinos.cn
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/pstore/zone.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index 2770746bb7aa1..abca117725c81 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -973,6 +973,8 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone,
+ 		char *buf = kasprintf(GFP_KERNEL, "%s: Total %d times\n",
+ 				      kmsg_dump_reason_str(record->reason),
+ 				      record->count);
++		if (!buf)
++			return -ENOMEM;
+ 		hlen = strlen(buf);
+ 		record->buf = krealloc(buf, hlen + size, GFP_KERNEL);
+ 		if (!record->buf) {
+-- 
+2.43.0
+
