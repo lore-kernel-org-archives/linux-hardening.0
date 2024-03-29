@@ -1,62 +1,43 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E04213A266
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 22:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879E9182A1;
+	Fri, 29 Mar 2024 01:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711663566; cv=none; b=jRbJmgVsyyRW6QzQG0IH8yLEcq4n5yFaKtVMwZrVCDI2+E3t++PxprQypJPkhHYYxg053T6LEe9dWqTEbsya3FstW6FZOQGav+0AaH1f6PhckPM1q4jUQu5iLgTbvnyjJDsA6Gnd01QYSeNJRFBVTQAi9JomjgJzqyWOLLPjjuM=
+	t=1711675033; cv=none; b=o3MMisr/ySLX4dquHPvWy/wT+GZ0oXRlLSPd47N4hsC7hpA/1z8PkXVLNIuHOxeT05Yf5mz7bcxaDHfeMQ5FKgy2lrwQlHgMs5XwJV20YGZf3jOqVARRanj2nGAuvPF/ko/MDU/DbzXn03M820dSnfgOw9qLk/IYPmweVG3CfsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711663566; c=relaxed/simple;
-	bh=BMVe5w6WOEXTcXCCqr7XwIN6WHhygsRAlRjfU3X7bhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mCAy1rzV1T7jx21SdMvxnMDN6IBZeOn1dhwYfkxcgYQ7AcJLldqicPxvDYASH/kB6K1Lbtp0OWF5bUHxq9yWwesQhRvZgc16XY/X7IT2D51z3oJQOaYh18e/zr3dTadtHGqt2G9LX79XdNDoyRX7KtaYjJ+FiHgj3Q2WOYIk5YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D87S6gOX; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711675033; c=relaxed/simple;
+	bh=FQOJmc3RP5qo7PvSrDXdOr1t0lGnOQ2RBwsLYcYqg0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SgNySf0ToJ5J+w5JfJ+wEU6PzMcrWqK24sRORDP4heGb6dH8jUjwlbSCtkFPUtxh/beRscNLp2sb/P/WLAFBqqw8mR6oK0jgcvERRbfa3wJPMr+HAQLT63wO1PIRSvNPQAZ04XgaayloJYi4akwdcw/QrwFah0EeUiXSpTZD0TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0YWHh//; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D87S6gOX"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e6b6f86975so996528b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 15:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711663564; x=1712268364; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ulFT2YtYHRUyQ2m0L9C0dai4nEzKGQhAD0pMYhyoW8=;
-        b=D87S6gOX1X8YYp1S+39cRqkjIoufWeL7TSIWKdYownLn/P0FLhPF43SGJ/9hMeBd32
-         MkKwSzcJCEL6sudRqtwG94OTZJWRwg4j5pvbVH7O+w+6MufzwOS8RMaXLeZeukxJRoKB
-         PEu1p+qG97hMrUpvyuVGRSZFY/gPahbDogvXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711663564; x=1712268364;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ulFT2YtYHRUyQ2m0L9C0dai4nEzKGQhAD0pMYhyoW8=;
-        b=oOXime+19JAut3BTq7UVXuxkuaVBLHxRRXQn7ouYRoMw5Zz4AnUkng+il9+h7g+/v7
-         HBnls/boujPdV1U+vchjnhpLDLKKhSY8FsRazLin7vsYmpKjQwF7M2UF/Xnu0ZAKTKko
-         1J69Nj42KIShCtGUyJHwFUrXPQ0T5g6piMfQfM3miHvF4OB90eSlYaWHsAG9bCTs6m6A
-         kSqQvRsv83L7TQ7ZefAgDIPylXrIv/R4lXjwiJPnKFH8/T/3Ah+clDLAT5AqxZattKBU
-         t4uDU9WD74dhsHl0Q/m5Dkf0ZgQ3dwyHgLffAqEu+UpbYKNF8iMCF94OCnvQQgR7vN3w
-         HrBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVa5zzLhlEQlWJjYmDj8+mvALPe5LLZVcRBK+wSsQabdhhjvR5KRtMGnAeY/SjUU3Hht18u/Wiaw42T41IxSF/Lcf4pjLAmY4fIaepAhYds
-X-Gm-Message-State: AOJu0Yx0wy6AS5u3Cn18RUz4/08E2uGMQ7WOLKfcZofvFPTg25o/lkC4
-	V0u7dpfDZGI0z/R0IGwnc3hJdOjQCFm4HHtKP820msOt0kURfjA9H6JldKY0P7d+7UrZtgf/uZA
-	=
-X-Google-Smtp-Source: AGHT+IHMcpSW028XxTQvmxpihDQRd+NUVdxm2dqXDSvZsx+g48XAeL0IeezbbE3UA8t48l295BDITQ==
-X-Received: by 2002:a05:6a00:a90:b0:6ea:7647:282d with SMTP id b16-20020a056a000a9000b006ea7647282dmr715662pfl.29.1711663564040;
-        Thu, 28 Mar 2024 15:06:04 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n19-20020aa78a53000000b006e6c16179dbsm1876305pfa.24.2024.03.28.15.06.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 15:06:03 -0700 (PDT)
-Date: Thu, 28 Mar 2024 15:06:03 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0YWHh//"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D286C433C7;
+	Fri, 29 Mar 2024 01:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711675033;
+	bh=FQOJmc3RP5qo7PvSrDXdOr1t0lGnOQ2RBwsLYcYqg0Y=;
+	h=Date:From:To:Cc:Subject:From;
+	b=q0YWHh//0/72nkgadlyiqYPLVgH5OM8r6mEfFSrhhir7OM+B3mHpRaCGtxzcoqEyw
+	 uwUHKH7lXZ0iQrbr538QPbWCAB6NISIJwvYr1TjJ3JDoOPZnDuCQMWpvNukAIUfNyS
+	 y9OvwhpgDVgrkvx0Y47mmKCooR0C5zrzYY68oOS71XU96OWMcCClzJ0ci+Eaqy9NGg
+	 KCy3KDFQ4kRoJESMOdl3Q0Du2z4G5tJPj5ulrBXsnoV1NPt9tMedVwJOw8Z88bFyJs
+	 h4uk17bgVXAuWa9mGezjANAQscXUVFoqjQ+2AcZ9xxoPCUZ+f6NYC+QFiAH42bel95
+	 NEcDRsKFnOGsQ==
+Date: Thu, 28 Mar 2024 19:17:10 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Louis Peens <louis.peens@corigine.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Cc: oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] reiserfs: replace deprecated strncpy with scnprintf
-Message-ID: <202403281505.C5C8691@keescook>
-References: <20240328-strncpy-fs-reiserfs-item_ops-c-v1-1-2dab6d22a996@google.com>
+Subject: [PATCH][next] nfp: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <ZgYWlkxdrrieDYIu@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,34 +46,221 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240328-strncpy-fs-reiserfs-item_ops-c-v1-1-2dab6d22a996@google.com>
 
-On Thu, Mar 28, 2024 at 09:16:52PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> Our goal here is to get @namebuf populated with @name's contents but
-> surrounded with quotes. There is some careful handling done to ensure we
-> properly truncate @name so that we have room for a literal quote as well
-> as a NUL-term. All this careful handling can be done with scnprintf
-> using the dynamic string width specifier %.*s which allows us to pass in
-> the max size for a source string. Doing this, we can put literal quotes
-> in our format specifier and ensure @name is truncated to fit inbetween
-> these quotes (-3 is from 2 quotes + 1 NUL-byte).
-> 
-> All in all, we get to remove a deprecated use of strncpy and clean up
-> this code nicely!
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally.
 
-Yeah, I like the use of %.*s here. This is much more clear now I think.
+There is currently an object (`tl`), at the beginning of multiple
+structures, that contains a flexible structure (`struct nfp_dump_tl`),
+for example:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+struct nfp_dumpspec_csr {
+        struct nfp_dump_tl tl;
 
+        ...
+
+        __be32 register_width;  /* in bits */
+};
+
+So, in order to avoid ending up with flexible-array members in the
+middle of multiple other structs, we use the `struct_group_tagged()`
+helper to separate the flexible array from the rest of the members
+in the flexible structure:
+
+struct nfp_dump_tl {
+	struct_group_tagged(nfp_dump_tl_hdr, hdr,
+
+	... the rest of members
+
+	);
+        char data[];
+};
+
+With the change described above, we now declare objects of the type of
+the tagged struct, in this case `struct nfp_dump_tl_hdr`, without
+embedding flexible arrays in the middle of another struct:
+
+struct nfp_dumpspec_csr {
+        struct nfp_dump_tl_hdr tl;
+
+	...
+
+        __be32 register_width;  /* in bits */
+};
+
+Also, use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which we can access the flexible
+array if needed.
+
+So, with these changes, fix 33 of the following warnings:
+drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c:58:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c:64:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c:70:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c:78:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c:87:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c:92:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ .../netronome/nfp/nfp_net_debugdump.c         | 41 +++++++++++--------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c b/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
+index a614df095b08..2dd37557185e 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
+@@ -34,8 +34,11 @@ enum nfp_dumpspec_type {
+ 
+ /* generic type plus length */
+ struct nfp_dump_tl {
+-	__be32 type;
+-	__be32 length;	/* chunk length to follow, aligned to 8 bytes */
++	/* New members must be added within the struct_group() macro below. */
++	struct_group_tagged(nfp_dump_tl_hdr, hdr,
++		__be32 type;
++		__be32 length;	/* chunk length to follow, aligned to 8 bytes */
++	);
+ 	char data[];
+ };
+ 
+@@ -55,19 +58,19 @@ struct nfp_dump_common_cpp {
+ 
+ /* CSR dumpables */
+ struct nfp_dumpspec_csr {
+-	struct nfp_dump_tl tl;
++	struct nfp_dump_tl_hdr tl;
+ 	struct nfp_dump_common_cpp cpp;
+ 	__be32 register_width;	/* in bits */
+ };
+ 
+ struct nfp_dumpspec_rtsym {
+-	struct nfp_dump_tl tl;
++	struct nfp_dump_tl_hdr tl;
+ 	char rtsym[];
+ };
+ 
+ /* header for register dumpable */
+ struct nfp_dump_csr {
+-	struct nfp_dump_tl tl;
++	struct nfp_dump_tl_hdr tl;
+ 	struct nfp_dump_common_cpp cpp;
+ 	__be32 register_width;	/* in bits */
+ 	__be32 error;		/* error code encountered while reading */
+@@ -75,7 +78,7 @@ struct nfp_dump_csr {
+ };
+ 
+ struct nfp_dump_rtsym {
+-	struct nfp_dump_tl tl;
++	struct nfp_dump_tl_hdr tl;
+ 	struct nfp_dump_common_cpp cpp;
+ 	__be32 error;		/* error code encountered while reading */
+ 	u8 padded_name_length;	/* pad so data starts at 8 byte boundary */
+@@ -84,12 +87,12 @@ struct nfp_dump_rtsym {
+ };
+ 
+ struct nfp_dump_prolog {
+-	struct nfp_dump_tl tl;
++	struct nfp_dump_tl_hdr tl;
+ 	__be32 dump_level;
+ };
+ 
+ struct nfp_dump_error {
+-	struct nfp_dump_tl tl;
++	struct nfp_dump_tl_hdr tl;
+ 	__be32 error;
+ 	char padding[4];
+ 	char spec[];
+@@ -449,6 +452,8 @@ static int
+ nfp_dump_csr_range(struct nfp_pf *pf, struct nfp_dumpspec_csr *spec_csr,
+ 		   struct nfp_dump_state *dump)
+ {
++	struct nfp_dump_tl *spec_csr_tl =
++			container_of(&spec_csr->tl, struct nfp_dump_tl, hdr);
+ 	struct nfp_dump_csr *dump_header = dump->p;
+ 	u32 reg_sz, header_size, total_size;
+ 	u32 cpp_rd_addr, max_rd_addr;
+@@ -458,7 +463,7 @@ nfp_dump_csr_range(struct nfp_pf *pf, struct nfp_dumpspec_csr *spec_csr,
+ 	int err;
+ 
+ 	if (!nfp_csr_spec_valid(spec_csr))
+-		return nfp_dump_error_tlv(&spec_csr->tl, -EINVAL, dump);
++		return nfp_dump_error_tlv(spec_csr_tl, -EINVAL, dump);
+ 
+ 	reg_sz = be32_to_cpu(spec_csr->register_width) / BITS_PER_BYTE;
+ 	header_size = ALIGN8(sizeof(*dump_header));
+@@ -466,7 +471,7 @@ nfp_dump_csr_range(struct nfp_pf *pf, struct nfp_dumpspec_csr *spec_csr,
+ 		     ALIGN8(be32_to_cpu(spec_csr->cpp.dump_length));
+ 	dest = dump->p + header_size;
+ 
+-	err = nfp_add_tlv(be32_to_cpu(spec_csr->tl.type), total_size, dump);
++	err = nfp_add_tlv(be32_to_cpu(spec_csr_tl->type), total_size, dump);
+ 	if (err)
+ 		return err;
+ 
+@@ -552,6 +557,8 @@ nfp_dump_indirect_csr_range(struct nfp_pf *pf,
+ 			    struct nfp_dumpspec_csr *spec_csr,
+ 			    struct nfp_dump_state *dump)
+ {
++	struct nfp_dump_tl *spec_csr_tl =
++			container_of(&spec_csr->tl, struct nfp_dump_tl, hdr);
+ 	struct nfp_dump_csr *dump_header = dump->p;
+ 	u32 reg_sz, header_size, total_size;
+ 	u32 cpp_rd_addr, max_rd_addr;
+@@ -560,7 +567,7 @@ nfp_dump_indirect_csr_range(struct nfp_pf *pf,
+ 	int err;
+ 
+ 	if (!nfp_csr_spec_valid(spec_csr))
+-		return nfp_dump_error_tlv(&spec_csr->tl, -EINVAL, dump);
++		return nfp_dump_error_tlv(spec_csr_tl, -EINVAL, dump);
+ 
+ 	reg_sz = be32_to_cpu(spec_csr->register_width) / BITS_PER_BYTE;
+ 	header_size = ALIGN8(sizeof(*dump_header));
+@@ -569,7 +576,7 @@ nfp_dump_indirect_csr_range(struct nfp_pf *pf,
+ 	total_size = header_size + ALIGN8(reg_data_length);
+ 	dest = dump->p + header_size;
+ 
+-	err = nfp_add_tlv(be32_to_cpu(spec_csr->tl.type), total_size, dump);
++	err = nfp_add_tlv(be32_to_cpu(spec_csr_tl->type), total_size, dump);
+ 	if (err)
+ 		return err;
+ 
+@@ -597,6 +604,8 @@ static int
+ nfp_dump_single_rtsym(struct nfp_pf *pf, struct nfp_dumpspec_rtsym *spec,
+ 		      struct nfp_dump_state *dump)
+ {
++	struct nfp_dump_tl *spec_tl =
++			container_of(&spec->tl, struct nfp_dump_tl, hdr);
+ 	struct nfp_dump_rtsym *dump_header = dump->p;
+ 	struct nfp_dumpspec_cpp_isl_id cpp_params;
+ 	struct nfp_rtsym_table *rtbl = pf->rtbl;
+@@ -607,14 +616,14 @@ nfp_dump_single_rtsym(struct nfp_pf *pf, struct nfp_dumpspec_rtsym *spec,
+ 	void *dest;
+ 	int err;
+ 
+-	tl_len = be32_to_cpu(spec->tl.length);
++	tl_len = be32_to_cpu(spec_tl->length);
+ 	key_len = strnlen(spec->rtsym, tl_len);
+ 	if (key_len == tl_len)
+-		return nfp_dump_error_tlv(&spec->tl, -EINVAL, dump);
++		return nfp_dump_error_tlv(spec_tl, -EINVAL, dump);
+ 
+ 	sym = nfp_rtsym_lookup(rtbl, spec->rtsym);
+ 	if (!sym)
+-		return nfp_dump_error_tlv(&spec->tl, -ENOENT, dump);
++		return nfp_dump_error_tlv(spec_tl, -ENOENT, dump);
+ 
+ 	sym_size = nfp_rtsym_size(sym);
+ 	header_size =
+@@ -622,7 +631,7 @@ nfp_dump_single_rtsym(struct nfp_pf *pf, struct nfp_dumpspec_rtsym *spec,
+ 	total_size = header_size + ALIGN8(sym_size);
+ 	dest = dump->p + header_size;
+ 
+-	err = nfp_add_tlv(be32_to_cpu(spec->tl.type), total_size, dump);
++	err = nfp_add_tlv(be32_to_cpu(spec_tl->type), total_size, dump);
+ 	if (err)
+ 		return err;
+ 
 -- 
-Kees Cook
+2.34.1
+
