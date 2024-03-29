@@ -1,61 +1,63 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEFB1DA4D
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 04:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8A53A1A1
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 04:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711685342; cv=none; b=iMIwBzxuo+aPV0tsNM7JGm4dLG1aCDLOUHFB2Dke7PMedJ4Af6mWQCp/LaFkH2Vg3gsMjFiVz9wdWkAFdvFkxxTaVdkjw55eDqsPd7n38DlFMw5LfIZGkNLmSkQ9yBc8PXXNOYGO8eaPEibEHmkIoATtfOyHv6jIVIvEoOs+R5A=
+	t=1711685467; cv=none; b=DJKQ8TaVh8/MyRy8cMF3bGlQv4boH/h0pSQPPHM/r6sarMv5Y0MqUEP3hz702U6vhM4Pf1cif3BMXWOZPcrMiy5+5ulZ05w23QdWwmEO1CNPLLo6ix8WTR0jmml+BIyFIe8cgWVv/XPUgZEclOz5k1lO3OgS6avsb+LA+ueen7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711685342; c=relaxed/simple;
-	bh=AIXz6hFwPMo/63AZqDwu1il7uoR6aFXlxyvNoJ9wDyc=;
+	s=arc-20240116; t=1711685467; c=relaxed/simple;
+	bh=Sej1B+KPaAd1YJSUCEcu/2wZgvFA6dEVc0yLCqlWKKc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWtbPXEgoIe3crcY3UXca/t5zu11c00SZJVnOUVW87ZC5Jn+hQzhIVjSGnd1P1NUIbOFm7NLfQoPa03vPG9KfEFlN1fljRM+GioPppQ6xUhQNqGyuh+QXF+LhLWan/Ojwi4Sycu4LU8JqRpbPvyBjShMlK8FXJTXMKFAi4TeKMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aBzFRUOc; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOJ3inSSdfNBNA90Ul5qHTGakTkhOo6MnObJonIYforNCZE1IcnjSphEWhCJ10fuzszLzbPk3eT5LAKZamkecXxHQe4+523Ghib1FjKUKe4Kc7VYxT8lBTJFhAma+dmoZVv1kpmpFWQoa97awrqbBz82OWy/pEJ1rGHUCG1sDAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Bsc6whB1; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aBzFRUOc"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e6c0098328so1399804b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:09:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bsc6whB1"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dddbe47ac1so18068435ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 21:11:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711685340; x=1712290140; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1711685465; x=1712290265; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8GSIx6Wus4ZS9m3axSqWoJpxC8q7r1Pna+YZvaf3a1g=;
-        b=aBzFRUOc9XA1X8SoUnr+RreRFORyhYpIxnJyOAkGVi4acPKUgigblZlQTB+bKaL3zU
-         ir/Qqaf5GdrzALbB+cQ8GOFTmyP636z/jLTGdrAPa7asCIXU1CmI/V/1U2fwfqK6nS5s
-         WfhWet3OoHiyMbd0mCLdeZKSqkjNLhkISwsdw=
+        bh=bUIGGacJ5zX9tZrBNytRyyuYA7UqfnaLQvQzbVYvhP4=;
+        b=Bsc6whB1aT4BfVf2DYDvvXHdKALklrXOeLkXkrHf34upWS1iCcvc6AAISo9LKFWhsO
+         8lXeGDDPpfXbS8Thj6efTHMD9vImhs4EFze6Ek8JpC2MksAythzgnyOd97cOh+1Gwup0
+         lSGn8Z5ESeQZk11+HXsYWo94aZqhiZmqL1Kjc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711685340; x=1712290140;
+        d=1e100.net; s=20230601; t=1711685465; x=1712290265;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8GSIx6Wus4ZS9m3axSqWoJpxC8q7r1Pna+YZvaf3a1g=;
-        b=u4MwnsIfpbJgg70CXef1K8szLdv8A/3kXoVsUnow8ywjE9rVzLwJdv8eTBT582OIY8
-         CrAk8eEib9gH6zTb59Sh1zSQaiX/pLCz4ShtZ6huDzB9HQeIBNUKyhB0dDOeXROUuQ6e
-         wELA2i4DwqW5FS10tI1mDUbF+eQHJdGZaoUkGo35oiVd1oJjl4SbklElyvM57qzs3hen
-         EVnqjCmuxc+kl5AEcgH8lqACFoXOtzZBTYfUarjCC9ABONbENTK5xw7cO8qB3801Lq+d
-         46Kdq13ILTvWvFAOLbVN367DRMjzlYALpVCuh82vsz930RGq6j2nS28EJFG77wWdVBbn
-         QBrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6cLSu2iOjYG87jeluRWwRm2M1FqEhClasCnDx1ZrjJbzpOThzTvZKTnxMy0+JFI6mcsJh/g8MedWS/0yC/ZhAwfUbNP3rXayOatGIqOey
-X-Gm-Message-State: AOJu0YyE4uetf3h0qH51dwHp6xZ/O+2BFJWe42Asi/qumj8/sMYMuH0r
-	beSH5gZ2y+ThN0Hqh4f5vCAG2A3J2hHVqZG1Vz8LJfmlM33lZl/xJyu5s0aOOw==
-X-Google-Smtp-Source: AGHT+IGtrlqVd6FuifQbwlZNv3KdJx69MDDJ9nmnLRznOiLaCbnCwVY+yNnQYSAVDdPJK8/Q04vNkQ==
-X-Received: by 2002:a05:6a21:a59a:b0:1a3:ac89:d478 with SMTP id gd26-20020a056a21a59a00b001a3ac89d478mr1468090pzc.1.1711685339835;
-        Thu, 28 Mar 2024 21:08:59 -0700 (PDT)
+        bh=bUIGGacJ5zX9tZrBNytRyyuYA7UqfnaLQvQzbVYvhP4=;
+        b=b+kqDiB1StEajjxLgoTZC0U3bscqEtBGQm+jb0E0yXbpY4u8WghifO1K+S2RenaNcJ
+         VLNfj9y4JF8CiU9/Q4h154kGiL3gX0Q1M476JoQshrfgTuBl5AtMNlzi/Dtylv0xdZOV
+         ywMywBvAL2Lqqb0JvtFJbLSvOyjUjJw7SDXJjIRewq+10n3uGPpLOcPiSHv6QudAyebC
+         Wq/oaGBjUzcqsGYUBbfKYhBcBD1jQ4ChKcqU40XFWKVjZE1dgdqI5j+Zd9gaYn+e/S2b
+         KF87dpPg/B2hX57SIQivoVgbBauyNUO0j4ylQJw7D3WZE813i9HDhYFxkCtozNKI88/s
+         SWGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8MS8d8/dmF6khIiWNxr+AUIlOspXAb72WclnHbeuDpEHI5Ke9oZby3efQnbuosD8tzLvT3URCCgJff3UkVPabzmpKHjVu9f2gbN4xbU/T
+X-Gm-Message-State: AOJu0YzDo8ldhKlKoOnzYqwCiY9tG6kZslN+wrIWpvFGqo9WXqsCABf5
+	CmYSAYKrPfsXltOTlwrvyRememyrz2vLqMyp5n0RUuBv6NcXiAUkrnndFNOTfA==
+X-Google-Smtp-Source: AGHT+IF11IWkI0TTAlwnE00yKbuCp0K/lKMT2EevXSIyOW0sCRAJmY0MqvYYhF8S0cgcHj6ziGPeig==
+X-Received: by 2002:a17:902:cf04:b0:1e0:137e:cd66 with SMTP id i4-20020a170902cf0400b001e0137ecd66mr2022268plg.30.1711685465594;
+        Thu, 28 Mar 2024 21:11:05 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001da15580ca8sm2516369plb.52.2024.03.28.21.08.59
+        by smtp.gmail.com with ESMTPSA id s2-20020a170902c64200b001e0e8e4f7e3sm2474716pls.206.2024.03.28.21.11.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 21:08:59 -0700 (PDT)
-Date: Thu, 28 Mar 2024 21:08:58 -0700
+        Thu, 28 Mar 2024 21:11:05 -0700 (PDT)
+Date: Thu, 28 Mar 2024 21:11:04 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Tyler Hicks <code@tyhicks.com>, ecryptfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fs: ecryptfs: replace deprecated strncpy with strscpy
-Message-ID: <202403282108.7FF7CE596C@keescook>
-References: <20240321-strncpy-fs-ecryptfs-crypto-c-v1-1-d78b74c214ac@google.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ext4: replace deprecated strncpy with alternatives
+Message-ID: <202403282109.D174F1CE@keescook>
+References: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,42 +66,86 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240321-strncpy-fs-ecryptfs-crypto-c-v1-1-d78b74c214ac@google.com>
+In-Reply-To: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
 
-On Thu, Mar 21, 2024 at 12:38:54AM +0000, Justin Stitt wrote:
+On Thu, Mar 21, 2024 at 01:03:10AM +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
-> interfaces. A good alternative is strscpy() as it guarantees
-> NUL-termination on the destination buffer.
+> interfaces.
 > 
-> In crypto.c:
-> We expect cipher_name to be NUL-terminated based on its use with
-> the C-string format specifier %s and with other string apis like
-> strlen():
-> |	printk(KERN_ERR "Error attempting to initialize key TFM "
-> |		"cipher with name = [%s]; rc = [%d]\n",
-> |		tmp_tfm->cipher_name, rc);
-> and
-> |	int cipher_name_len = strlen(cipher_name);
+> in file.c:
+> s_last_mounted is marked as __nonstring meaning it does not need to be
+> NUL-terminated. Let's instead use strtomem_pad() to copy bytes from the
+> string source to the byte array destination -- while also ensuring to
+> pad with zeroes.
 > 
-> In main.c:
-> We can remove the manual NUL-byte assignments as well as the pointers to
-> destinations (which I assume only existed to trim down on line length?)
-> in favor of directly using the destination buffer which allows the
-> compiler to get size information -- enabling the usage of the new
-> 2-argument strscpy().
+> in ioctl.c:
+> We can drop the memset and size argument in favor of using the new
+> 2-argument version of strscpy_pad() -- which was introduced with Commit
+> e6584c3964f2f ("string: Allow 2-argument strscpy()"). This guarantees
+> NUL-termination and NUL-padding on the destination buffer -- which seems
+> to be a requirement judging from this comment:
 > 
-> Note that this patch relies on the _new_ 2-argument versions of
-> strscpy() and strscpy_pad() introduced in Commit e6584c3964f2f ("string:
-> Allow 2-argument strscpy()").
+> |	static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label)
+> |	{
+> |		char label[EXT4_LABEL_MAX + 1];
+> |
+> |		/*
+> |		 * EXT4_LABEL_MAX must always be smaller than FSLABEL_MAX because
+> |		 * FSLABEL_MAX must include terminating null byte, while s_volume_name
+> |		 * does not have to.
+> |		 */
+> 
+> in super.c:
+> s_first_error_func is marked as __nonstring meaning we can take the same
+> approach as in file.c; just use strtomem_pad()
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  fs/ext4/file.c  | 3 +--
+>  fs/ext4/ioctl.c | 3 +--
+>  fs/ext4/super.c | 7 +++----
+>  3 files changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+> index 54d6ff22585c..c675c0eb5f7e 100644
+> --- a/fs/ext4/file.c
+> +++ b/fs/ext4/file.c
+> @@ -844,8 +844,7 @@ static int ext4_sample_last_mounted(struct super_block *sb,
+>  	if (err)
+>  		goto out_journal;
+>  	lock_buffer(sbi->s_sbh);
+> -	strncpy(sbi->s_es->s_last_mounted, cp,
+> -		sizeof(sbi->s_es->s_last_mounted));
+> +	strtomem_pad(sbi->s_es->s_last_mounted, cp, 0);
+>  	ext4_superblock_csum_set(sb);
+>  	unlock_buffer(sbi->s_sbh);
+>  	ext4_handle_dirty_metadata(handle, NULL, sbi->s_sbh);
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index 7160a71044c8..dab7acd49709 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -1150,9 +1150,8 @@ static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label
+>  	 */
+>  	BUILD_BUG_ON(EXT4_LABEL_MAX >= FSLABEL_MAX);
+>  
+> -	memset(label, 0, sizeof(label));
+>  	lock_buffer(sbi->s_sbh);
+> -	strncpy(label, sbi->s_es->s_volume_name, EXT4_LABEL_MAX);
+> +	strscpy_pad(label, sbi->s_es->s_volume_name);
+>  	unlock_buffer(sbi->s_sbh);
 
-Looks correct. I don't see any need for padding.
+The only reason I can imagine the memset() being split here is to keep
+it out of the spinlock. For a non-fast-path ioctl, I can't imagine this
+being a meaningful reduction in lock contention, though.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
