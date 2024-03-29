@@ -1,61 +1,62 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510621DA4D
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 03:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CED38384
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Mar 2024 03:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711684140; cv=none; b=Y8ml09k1YzXAtbtQ8ydpUxVTAuVrGL+FTV/XsFLlEkuLTcN4/MW3F84bKbcmma0J/tJwffwINV2uSx/stodIQrIIp6npDUbiWckQuU5Dy7Z7hWMGLR+KtnmSdM5kgiKeSTnx54vFQAxXwIQ8K2/AwCKan4/JDnGevStJltXgPIU=
+	t=1711684469; cv=none; b=pfeHb1UxyrdoKa+HJ2LK2wie0ZQR2irI22OHOrwGup/eSYch6AhYexnVfhg9KxoplFSeouPCTJRGi3rssgWqBktuH6voE+MIjqq93tpiOuktf0dTME2zg3N38foqaaEkt0mJa/DGz92EP4iBL9a2ATm/1w/fQWcTntrzl2TwCIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711684140; c=relaxed/simple;
-	bh=iYpyGSKz67JfOWGPXQAIeOlsiBo0FH9Kf4YBYEJJw6Q=;
+	s=arc-20240116; t=1711684469; c=relaxed/simple;
+	bh=uuhBNiEPA5BGYC6HFspVOkMf/5FcVuYvwXDlLIMLIjA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p8Le0x8FxjNL2pTabW+Ka6Bi0bEFOL1Gaezi09OYrNu8piLcoC5cHLp7mp24K0IWCOzivV/IvDMZ1Zd1oKlH9SUo9L7wjFWxW93E+CcEWTC0JtcYtmHLPphZ6J2ZlQSN+klWOR5Ylm8f69BszWd315V6jLYP/TG6xAUyuJLpf4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MDx+ur1e; arc=none smtp.client-ip=209.85.160.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=BXKKuzkxXHebPNz+aAphPbmnupSs9cbBXSi3tBaGeUiQSE5WkvTSEemWdBuT4OPFiITRTwyTKRV3UxjKe91NuEo0VdzgxwElXyL1/xK5iiPR1zTZ3aexyxxu/KaDeBVJEk8bvDyNWGBeAqaeZEgkbQwcc2cCfQlwtvF9PFr8mrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hdhNm1UL; arc=none smtp.client-ip=209.85.167.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MDx+ur1e"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2228c3ffcbdso773282fac.2
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 20:48:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hdhNm1UL"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bbbc6b4ed1so1000847b6e.2
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Mar 2024 20:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711684138; x=1712288938; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1711684466; x=1712289266; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NF1vh87Z3mwXJDlnEmyzUpBERWIz9npu85xKfyBrrY=;
-        b=MDx+ur1eKD3xF2h3SIYuVNRbtsDEGxYhTiQbkOEOaV2LbF6U643n16NIkJ/gVbxr6E
-         WDbAfrYJXqFdgaJRFOXNYK5KYJObGOOsxtj0VHKuRGqAdqlspkW4iKeab6PfE9nDFD5n
-         Vy6wf58oc00JtCbTGVxOViVEIgFRMQDGJ4fZ8=
+        bh=3C41foMJwldN7lF7HFYV1LcCmv7iReonWo3nmflCe4k=;
+        b=hdhNm1ULJNFZa3/awq+NvK7GM55brRVbg2WH+ovGpJM7zMK61ffZHD3kxZZ/pnATVe
+         yYgnpP/HlBNlml26ryo8GjPuRP8/2qh5z/UmXGS7L6fZmKZ/Qb+Ymd73OBrinN6d+eZ1
+         QoLf14TksO1NtgWSkrPnWrrU1Xcfnf20AP67Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711684138; x=1712288938;
+        d=1e100.net; s=20230601; t=1711684466; x=1712289266;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9NF1vh87Z3mwXJDlnEmyzUpBERWIz9npu85xKfyBrrY=;
-        b=KIRkSpWD8VW9np+bELOaMwhUTnxOg+3WOnAXvX0D7SMuMbhDGhZXsa5QqdfBDNH4HZ
-         rvcK93Y9UMxX8s0JfH/jCIOlOCXBUFl1v7L8RV4TVKg5Oef0RoIIadaIdhMrS0Bqiheo
-         vH66xMxFmnvZ0RdIC2Gwx1MBJpcIInJQUoqyW+hG9T2UVowyJn9b4+qBuQ3+SuZeK/sJ
-         mRZwubdY4Ivc+VJXnfQLAWZFd1LksQd9yx1iP3ukeCzKC8wWtPz5YaF2ll+iDh8OF+gy
-         x9orx44r2crBzaF8H7DpyZPGfNOWJW2gVu3SL8POgNVIlJ1xo0NshObnAJjNWxHbcab7
-         76wA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBwGoG6t6kZt42/WTgoMW4ArdnjRqc3xc9ETIihVIwSkPw307316BvkvtopQjKhC6MdAtE5/QUqdoGRl4XdeJHKCmr6w6MDlyyHAN6w/q/
-X-Gm-Message-State: AOJu0YyAfuCxad1LPavbqpqLnEXFivKL0Ul7lsbNCS7frz4/kg3T06O8
-	G5zJ5AUlpr3JEfrGMFkTRAvqXO+OJTWtkBpNZ0Q4x/NuM4guNqPQrb5I4rKMNA==
-X-Google-Smtp-Source: AGHT+IGQs8fjf0+Vmp4A35QFugKx0uuEDSNICTAyKaS9T2G734eBLS/S51FKX5YTQJDDiK+jnuUQ8Q==
-X-Received: by 2002:a05:6870:42:b0:22a:8443:45bb with SMTP id 2-20020a056870004200b0022a844345bbmr873513oaz.47.1711684138431;
-        Thu, 28 Mar 2024 20:48:58 -0700 (PDT)
+        bh=3C41foMJwldN7lF7HFYV1LcCmv7iReonWo3nmflCe4k=;
+        b=vGoEfqjg0VvIz80RSuKipn13eUOt6dECRpw1z56uR3spHqGNkI/tZH2ABk7/7Ae1iW
+         imOewCHAmf3FPyjIr//TRHC+pHLToNHAKKvdHIZgh+2sYr7jq1Ph3xoP32ztjuRwNbAj
+         M0iXEqS5GrxJQkRBgDckmEzAP8Fm9bLdiaxOdLoDNdPHqKwBe9VPyp5l14qfqYdpuau8
+         u8tA7q2bFum+BALTCJI0KwKlw+ZvdX8fSFAyUOeVZQkgO1FtodCYCA56znkFwTrjOGnK
+         yaIf8mbqjD1FhsI0OogPPPvYCmDNktjPabKgd+XAw94BvAxE26r8mF6t1MGfEBlutnkI
+         TRng==
+X-Forwarded-Encrypted: i=1; AJvYcCVZrycXOU3irG1CeZ0Ld3wGiNmDg3pqQBhOuDyZ26VTevRDm4EphJYAmyWgXzFtZ/v/K1Brum6PhMh0Vg2nKO91mahStLYqHQ0GYc91Lre4
+X-Gm-Message-State: AOJu0YznkEzpnvKZ9l+Uh0UiYfrt14OXNOF2IU3zNEROySdXvcfRoJxf
+	r5PsrF01a9CcplezZc1AbdpDNpD9WLz3Qgx4eMxVZQZFSxKhS8dl7aIcuJrAOQ==
+X-Google-Smtp-Source: AGHT+IFV3d5fwIBqU/c65R9zyRZ6WnFPmpDPlKpZ+gaG3pHS3NaZQMCL4vMAzkEhEWb9x4Q42+Papg==
+X-Received: by 2002:a05:6808:1821:b0:3c3:de8e:5411 with SMTP id bh33-20020a056808182100b003c3de8e5411mr1349524oib.38.1711684466464;
+        Thu, 28 Mar 2024 20:54:26 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y12-20020aa7804c000000b006e6b41511fdsm2221794pfm.94.2024.03.28.20.48.57
+        by smtp.gmail.com with ESMTPSA id z9-20020a63e549000000b005cd8044c6fesm2075211pgj.23.2024.03.28.20.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 20:48:57 -0700 (PDT)
-Date: Thu, 28 Mar 2024 20:48:57 -0700
+        Thu, 28 Mar 2024 20:54:25 -0700 (PDT)
+Date: Thu, 28 Mar 2024 20:54:25 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Phillip Lougher <phillip@squashfs.org.uk>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Squashfs: replace deprecated strncpy with strscpy
-Message-ID: <202403282044.30A82BA37@keescook>
-References: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+Cc: Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>, devel@lists.orangefs.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] orangefs: cleanup uses of strncpy
+Message-ID: <202403282053.78C952AC@keescook>
+References: <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,26 +65,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+In-Reply-To: <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
 
-On Thu, Mar 28, 2024 at 09:52:59PM +0000, Justin Stitt wrote:
+On Fri, Mar 22, 2024 at 09:41:18PM +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> The previous code took special care of NUL-terminating the destination
-> buffer via a manual assignment. As such, there is no bug in the current
-> implementation. However, in an effort to rid the kernel of strscpy()
-
-typo: rid kernel of strncpy. :)
-
-> [2], Let's instead use strscpy() which guarantees this behavior [3]. To
-> ensure we can copy the same number of bytes as before, add 1 to the
-> length argument provided to strscpy().
+> There is some care taken to ensure these destination buffers are
+> NUL-terminated by bounding the strncpy()'s by ORANGEFS_NAME_MAX - 1 or
+> ORANGEFS_MAX_SERVER_ADDR_LEN - 1. Instead, we can use the new 2-argument
+> version of strscpy() to guarantee NUL-termination on the destination
+> buffers while simplifying the code.
+> 
+> Based on usage with printf-likes, we can see these buffers are expected
+> to be NUL-terminated:
+> |	gossip_debug(GOSSIP_NAME_DEBUG,
+> |			"%s: doing lookup on %s under %pU,%d\n",
+> |			__func__,
+> |			new_op->upcall.req.lookup.d_name,
+> |			&new_op->upcall.req.lookup.parent_refn.khandle,
+> |			new_op->upcall.req.lookup.parent_refn.fs_id);
+> ...
+> |	gossip_debug(GOSSIP_SUPER_DEBUG,
+> |			"Attempting ORANGEFS Remount via host %s\n",
+> |			new_op->upcall.req.fs_mount.orangefs_config_server);
+> 
+> NUL-padding isn't required for any of these destination buffers as
+> they've all been zero-allocated with op_alloc() or kzalloc().
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html  [3]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
@@ -91,34 +104,159 @@ typo: rid kernel of strncpy. :)
 > 
 > Found with: $ rg "strncpy\("
 > ---
->  fs/squashfs/namei.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  fs/orangefs/dcache.c |  4 +---
+>  fs/orangefs/namei.c  | 26 ++++++++------------------
+>  fs/orangefs/super.c  | 17 ++++++-----------
+>  3 files changed, 15 insertions(+), 32 deletions(-)
 > 
-> diff --git a/fs/squashfs/namei.c b/fs/squashfs/namei.c
-> index 11e4539b9eae..6c4704ba8f42 100644
-> --- a/fs/squashfs/namei.c
-> +++ b/fs/squashfs/namei.c
-> @@ -80,8 +80,7 @@ static int get_dir_index_using_name(struct super_block *sb,
->  	}
+> diff --git a/fs/orangefs/dcache.c b/fs/orangefs/dcache.c
+> index 8bbe9486e3a6..395a00ed8ac7 100644
+> --- a/fs/orangefs/dcache.c
+> +++ b/fs/orangefs/dcache.c
+> @@ -33,9 +33,7 @@ static int orangefs_revalidate_lookup(struct dentry *dentry)
 >  
->  	str = &index->name[SQUASHFS_NAME_LEN + 1];
-> -	strncpy(str, name, len);
-> -	str[len] = '\0';
-> +	strscpy(str, name, len + 1);
+>  	new_op->upcall.req.lookup.sym_follow = ORANGEFS_LOOKUP_LINK_NO_FOLLOW;
+>  	new_op->upcall.req.lookup.parent_refn = parent->refn;
+> -	strncpy(new_op->upcall.req.lookup.d_name,
+> -		dentry->d_name.name,
+> -		ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name);
+>  
+>  	gossip_debug(GOSSIP_DCACHE_DEBUG,
+>  		     "%s:%s:%d interrupt flag [%d]\n",
+> diff --git a/fs/orangefs/namei.c b/fs/orangefs/namei.c
+> index c9dfd5c6a097..200558ec72f0 100644
+> --- a/fs/orangefs/namei.c
+> +++ b/fs/orangefs/namei.c
+> @@ -41,8 +41,7 @@ static int orangefs_create(struct mnt_idmap *idmap,
+>  	fill_default_sys_attrs(new_op->upcall.req.create.attributes,
+>  			       ORANGEFS_TYPE_METAFILE, mode);
+>  
+> -	strncpy(new_op->upcall.req.create.d_name,
+> -		dentry->d_name.name, ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.create.d_name, dentry->d_name.name);
+>  
+>  	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+>  
+> @@ -137,8 +136,7 @@ static struct dentry *orangefs_lookup(struct inode *dir, struct dentry *dentry,
+>  		     &parent->refn.khandle);
+>  	new_op->upcall.req.lookup.parent_refn = parent->refn;
+>  
+> -	strncpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name,
+> -		ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.lookup.d_name, dentry->d_name.name);
+>  
+>  	gossip_debug(GOSSIP_NAME_DEBUG,
+>  		     "%s: doing lookup on %s under %pU,%d\n",
+> @@ -192,8 +190,7 @@ static int orangefs_unlink(struct inode *dir, struct dentry *dentry)
+>  		return -ENOMEM;
+>  
+>  	new_op->upcall.req.remove.parent_refn = parent->refn;
+> -	strncpy(new_op->upcall.req.remove.d_name, dentry->d_name.name,
+> -		ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.remove.d_name, dentry->d_name.name);
+>  
+>  	ret = service_operation(new_op, "orangefs_unlink",
+>  				get_interruptible_flag(inode));
+> @@ -247,10 +244,8 @@ static int orangefs_symlink(struct mnt_idmap *idmap,
+>  			       ORANGEFS_TYPE_SYMLINK,
+>  			       mode);
+>  
+> -	strncpy(new_op->upcall.req.sym.entry_name,
+> -		dentry->d_name.name,
+> -		ORANGEFS_NAME_MAX - 1);
+> -	strncpy(new_op->upcall.req.sym.target, symname, ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.sym.entry_name, dentry->d_name.name);
+> +	strscpy(new_op->upcall.req.sym.target, symname);
+>  
+>  	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+>  
+> @@ -324,8 +319,7 @@ static int orangefs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+>  	fill_default_sys_attrs(new_op->upcall.req.mkdir.attributes,
+>  			      ORANGEFS_TYPE_DIRECTORY, mode);
+>  
+> -	strncpy(new_op->upcall.req.mkdir.d_name,
+> -		dentry->d_name.name, ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.mkdir.d_name, dentry->d_name.name);
+>  
+>  	ret = service_operation(new_op, __func__, get_interruptible_flag(dir));
+>  
+> @@ -405,12 +399,8 @@ static int orangefs_rename(struct mnt_idmap *idmap,
+>  	new_op->upcall.req.rename.old_parent_refn = ORANGEFS_I(old_dir)->refn;
+>  	new_op->upcall.req.rename.new_parent_refn = ORANGEFS_I(new_dir)->refn;
+>  
+> -	strncpy(new_op->upcall.req.rename.d_old_name,
+> -		old_dentry->d_name.name,
+> -		ORANGEFS_NAME_MAX - 1);
+> -	strncpy(new_op->upcall.req.rename.d_new_name,
+> -		new_dentry->d_name.name,
+> -		ORANGEFS_NAME_MAX - 1);
+> +	strscpy(new_op->upcall.req.rename.d_old_name, old_dentry->d_name.name);
+> +	strscpy(new_op->upcall.req.rename.d_new_name, new_dentry->d_name.name);
+>  
+>  	ret = service_operation(new_op,
+>  				"orangefs_rename",
+> diff --git a/fs/orangefs/super.c b/fs/orangefs/super.c
+> index 34849b4a3243..fb4d09c2f531 100644
+> --- a/fs/orangefs/super.c
+> +++ b/fs/orangefs/super.c
+> @@ -253,9 +253,8 @@ int orangefs_remount(struct orangefs_sb_info_s *orangefs_sb)
+>  	new_op = op_alloc(ORANGEFS_VFS_OP_FS_MOUNT);
+>  	if (!new_op)
+>  		return -ENOMEM;
+> -	strncpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+> -		orangefs_sb->devname,
+> -		ORANGEFS_MAX_SERVER_ADDR_LEN);
+> +	strscpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+> +		orangefs_sb->devname);
 
-Otherwise, yeah, looks right.
+This one place doesn't use "ORANGEFS_MAX_SERVER_ADDR_LEN - 1", but this
+appears to be an existing (likely unreachable) bug.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
 >  
->  	for (i = 0; i < i_count; i++) {
->  		err = squashfs_read_metadata(sb, index, &index_start,
+>  	gossip_debug(GOSSIP_SUPER_DEBUG,
+>  		     "Attempting ORANGEFS Remount via host %s\n",
+> @@ -400,8 +399,7 @@ static int orangefs_unmount(int id, __s32 fs_id, const char *devname)
+>  		return -ENOMEM;
+>  	op->upcall.req.fs_umount.id = id;
+>  	op->upcall.req.fs_umount.fs_id = fs_id;
+> -	strncpy(op->upcall.req.fs_umount.orangefs_config_server,
+> -	    devname, ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
+> +	strscpy(op->upcall.req.fs_umount.orangefs_config_server, devname);
+>  	r = service_operation(op, "orangefs_fs_umount", 0);
+>  	/* Not much to do about an error here. */
+>  	if (r)
+> @@ -494,9 +492,7 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
+>  	if (!new_op)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	strncpy(new_op->upcall.req.fs_mount.orangefs_config_server,
+> -		devname,
+> -		ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
+> +	strscpy(new_op->upcall.req.fs_mount.orangefs_config_server, devname);
+>  
+>  	gossip_debug(GOSSIP_SUPER_DEBUG,
+>  		     "Attempting ORANGEFS Mount via host %s\n",
+> @@ -543,9 +539,8 @@ struct dentry *orangefs_mount(struct file_system_type *fst,
+>  	 * on successful mount, store the devname and data
+>  	 * used
+>  	 */
+> -	strncpy(ORANGEFS_SB(sb)->devname,
+> -		devname,
+> -		ORANGEFS_MAX_SERVER_ADDR_LEN - 1);
+> +	strscpy(ORANGEFS_SB(sb)->devname, devname);
+> +
+>  
+>  	/* mount_pending must be cleared */
+>  	ORANGEFS_SB(sb)->mount_pending = 0;
 > 
 > ---
-> base-commit: 928a87efa42302a23bb9554be081a28058495f22
-> change-id: 20240328-strncpy-fs-squashfs-namei-c-9d01b8975e53
+> base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
+> change-id: 20240322-strncpy-fs-orangefs-dcache-c-9a0cf2d22dae
 > 
 > Best regards,
 > --
