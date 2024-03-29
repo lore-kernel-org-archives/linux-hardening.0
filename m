@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F92B161322;
-	Fri, 29 Mar 2024 12:33:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A373B16F831;
+	Fri, 29 Mar 2024 12:34:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715617; cv=none; b=sGIO1v8yfFFJsZzX7+rWcHs/vmwMbkNE5VuXCyPwhhup29hb2zuMJ84dDa2B6g/IsrHHtSl5SozEEi87bmuttT8rPnOoBinJ5uSGtGPz/+eC0/+iMFvEvo72TZwZORuKEvvOMOm8AYKP7gLqIZQxe+guS45s6JQlYsMoceJbKrM=
+	t=1711715663; cv=none; b=kNKmYBAWZq5iGtySsAehOZPTkQF8byXhMB0QP1GAZOQBuEKh7OVki7ubSqrhdRUdD0JWZUkTp6OJjaB5574eLrMogeZdVUNI/vrAnZ/5UX8Kgd8SXFGkej5KY0CvK0njSGrVdXKaaGC3wNi3HbMI/oDVRxNVCgTa3Dcg1YcYsao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715617; c=relaxed/simple;
-	bh=atLbCrAFF/AvlcWQ0EJKEUSz3x7UDvnUlEl5LvVKMzI=;
+	s=arc-20240116; t=1711715663; c=relaxed/simple;
+	bh=XkMSNJUMOTJuZGUL+5hhs5kGZDVM5ajOrVYbFeTufcw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fYvk+4j5wKbzE5Z43GlJ5ZVzUX1RZ92mbS56TN2O+dObGiy+C45zAv/16ZQOackoMLG1S/GwtHagZaCsT0cLx1d+zSddOWAA9zouIK7VH/fsmm5lo0lmGLqxGJm4MvcwMxHCVkNAz7HhHCidtDYMYXNPUxJ752crIM4WeLAxH9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1fBPTtj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UBStQCbUFhFUE30VEDJVfQPJTB0cfT/8lHYuK71vNKnhijpeUtsnS9BUXfNyT8oj8PFv8tHOTQcMg2itKKpyCrt7AggU+pLoSNCF6PnufC70+JuLAv5uTHAwLYjsZdBZh9UnWqZ0DUbo6y0bRdgsIk0tnOrYyq/7NDJ9d9Cxzb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbpqi4I4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1fBPTtj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D1DAC43399;
-	Fri, 29 Mar 2024 12:33:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbpqi4I4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B7CFC43390;
+	Fri, 29 Mar 2024 12:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715617;
-	bh=atLbCrAFF/AvlcWQ0EJKEUSz3x7UDvnUlEl5LvVKMzI=;
+	s=k20201202; t=1711715663;
+	bh=XkMSNJUMOTJuZGUL+5hhs5kGZDVM5ajOrVYbFeTufcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i1fBPTtjhZ4GQKE0GQy7eZPfrohYcVz4ZEpiSbp7wvZii3USczUipEc0NwnRTeKsT
-	 MPnUjaCkr8FsGQz/AMM1XmcDO+u+0QiP8c6aFohC4JuYbVGeK/mp2jZWZVVjEOpr+I
-	 STAb3Mmkc+VXPuaqAXPgGCTl0uNIz64EasK2Vw3ld4dBk9U0ZV4/FOzs6r3+4ZXaSf
-	 TejRLnWeYqrmbMM18aJAJAfn12dk8dnKvCscqx1t3JrIbF8O+mnVB2g5/5VrKBrhT3
-	 qzwcTB5Sat6jS9UeEAKImkzefmLIsmx6uHj580d0KTCOt4yd2GurDp659n6zb9qlT5
-	 gaAFwl/Tpu+Ng==
+	b=lbpqi4I4IJZ0aCm+LD33d3QA8id/PZprlL1PBuwx4VWIeX4AVjZ1xgh2RuiKQOTx6
+	 YTzWOoSGBklIKjpv+XW2Zx+4yt52duLMGwtKxhxMlzbA1cYfC1FvuHOi4ZNH9ueSFw
+	 iQpnzIBHLtFTGCfKUp/wmeeh1ZxLemqgTrSsehyQ2Lg0F623paPPh7je5KG4Z57Zn5
+	 OArjdzpADBT8rfhVays9y9Gm3rT3XuX28AbTTe1HgLkHiBk/3oETp14Sc6CymiLKxM
+	 NuUcmBVwodHUQdtRT90NGrsUidCJCtMXRwfqQTLTrKQ96f64EThzUp5gEt8lyceO1m
+	 TvWB1iZAkFDmg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -33,12 +33,12 @@ Cc: Kunwu Chan <chentao@kylinos.cn>,
 	Kees Cook <keescook@chromium.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 10/20] pstore/zone: Add a null pointer check to the psz_kmsg_read
-Date: Fri, 29 Mar 2024 08:32:58 -0400
-Message-ID: <20240329123316.3085691-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 09/17] pstore/zone: Add a null pointer check to the psz_kmsg_read
+Date: Fri, 29 Mar 2024 08:33:48 -0400
+Message-ID: <20240329123405.3086155-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329123316.3085691-1-sashal@kernel.org>
-References: <20240329123316.3085691-1-sashal@kernel.org>
+In-Reply-To: <20240329123405.3086155-1-sashal@kernel.org>
+References: <20240329123405.3086155-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.153
+X-stable-base: Linux 5.10.214
 Content-Transfer-Encoding: 8bit
 
 From: Kunwu Chan <chentao@kylinos.cn>
@@ -67,7 +67,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index 5d3f944f60185..295040c249d91 100644
+index b50fc33f2ab29..2426fb6794fd3 100644
 --- a/fs/pstore/zone.c
 +++ b/fs/pstore/zone.c
 @@ -973,6 +973,8 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone,
