@@ -1,66 +1,69 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04olkn2099.outbound.protection.outlook.com [40.92.73.99])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2057.outbound.protection.outlook.com [40.92.74.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B4C3A1C2;
-	Sat, 30 Mar 2024 16:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.73.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A851E878;
+	Sat, 30 Mar 2024 16:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711815510; cv=fail; b=XC1Fjb9u+dwnaxyJEJljuOFmns+vF3JL3tRNyjApJMHrWTTFXJJzCL1PnV511pSgg6RWGvoxy84JLXK22hzmDuh07yer6UJBkRiqIPQgSvndbieYKwvthNStZ8B6XSbi5mx8ekZ2dvU28jKoBstNRv5ELEJzEdmrHmSusKP09h4=
+	t=1711816516; cv=fail; b=b69rv26DMaRcVjbYw4bdlNeMc6PzdIrZA89/7H0RBL4721U1dTcgCP4DtVbOTsrx4RRIFrTXnd0QPxbuMVZRNT1aGU2MO7FIJC268lGydRCKF25aTqLieTpP4lT0eGdnK9IY4eOByGj7HLGdXn0tUxdXfvlPdJTvtEIIzJxBBnA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711815510; c=relaxed/simple;
-	bh=BrwvvaqUhQoYod2amy4sMfKCE3MWXfb1c95SCBYMQQg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XtPBlfctWwplPrVwF117gFqrz+YKJeH8W49SJLSRzcERhMoWqO2T4j7JvIW15XUdnzYRa4AcuGijI+mDmvY/ZNnBKcQUmPtfrHMw//fAbVQQyMBYsxVMtAIZPsOct2B8p0e1UkJaL26kvoTAEimRpla3QNm5PI0oE6d9ZuX9418=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gXBsHxHn; arc=fail smtp.client-ip=40.92.73.99
+	s=arc-20240116; t=1711816516; c=relaxed/simple;
+	bh=VdzvQmAICSZ29WbYZ9+rlSYW2KmpJLTwUX2K9EE+Kn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=sj3Qvokqt7cVXb5PdNHlS9TpBQTRe4o3bFn6uPg4UNjW/rGukZIAuFfTZq/91lXxB2LkJ1CC0+da0kk5xwFvDmrHDTkbz64va/5SKHqfze5ph5avjiwmkxbii6ceK8jubqkd7dHNaY1IxsDv1JHQbGdV8ZOszvcE0Yhww8WF+fA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=SqpdaoP5; arc=fail smtp.client-ip=40.92.74.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gXBsHxHn"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="SqpdaoP5"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EelJ8kWwGsNqbW/1khq/bHIcVYeNumQYIKYBPESfDDBPHcCzPvwZVFWjqri6OmOoE8LNYzF3Onz6T2aoyW6WtdRHE3A8T4oarhF761f2LCpjo3AC9mclnyxmflgyGDNPp/LxZRz3DhLJZrPl0eE1CpnPkE6YvWDEcjoLy5Cjye0ARpDoTXAAOrUNkZrGLkXqbu/dS+J15K5V6l9rhHD0QLP15J4Cs2WGih2GQxg7MJAGZy2mZApuQXNM+qD77NvCkZ7OzuSeQh9/w3Db5MSuFn4Fb/lJszJuLAGt0KttBwwr421FuTFxfs3Me3+oFmo0gFKqX4KmopnCuUj+5GcPeg==
+ b=gX8wtlpmnw23sMdsJ8WOWYW3ScJXbWmAQLvGIu2/6X9Urn/pUcuWXYuXgisEk3GHGuuA/pG591Kw3j4rdUKmZ65okK4xuDTGNSCjeKcC3yBJiddFexQ6m00v0H4lMDzWPa4eG0qjGHeDJ9yHac1xqdK6rmlYMExru3scWrDBmRBusmHkJsPvjtHZ+d8omEL+ugdBqx+4C2T935xqkOjlmqSa30DO444PIvHxA8r+KXNeKYQ1M9FxdB7xhslQNnVie3oBn0pzVyOOYuNonKoRMbdkR3gSR+xCVMs+iY7exSu8cQ0QrXBXwKIHfgJWJxtwJExg53Ib0dPnGX6ZWEClgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yj5VHautEvJPR79SefN7908PN5XyalBexEOF+G39SOA=;
- b=TAy3UgyVLDHIuEpgr/SkPd5SJhbGCw36+qE06DRSCbmP0CSTg4qPNMsnrVC92tDFO6qQ3kyJz5GT2TdNNU6cC9AWXJY5RyQODzbvAf361rwhY4fq3Y0zFrcILT4pITyYjppl+NDtmqplGPHX3n5XZZALOv7Md/oxupPKgOqVY1/gaJQ/UPgJoyS+C7d6drjxRRYMqD0AY+x5Q0AFAYIDfSLfa8Pnm0CVYmU1cw0O1TQrTs42nWvtED0WeAFlUmdicnY81mnbbI5p41CB2ah5iugjrw/aTpupSfm63j50pEZUf8meKDddQQXV0I7amhrIW2ygj7SaZtdZBfRDBnaDzg==
+ bh=ZN8tft0hq98f6J07/bNT5fdSxXERJq8lr2qv7F8FdbE=;
+ b=BACbACj5DJPJZwQrmPK/XXXqlCHOaKbAHf5pfUQFlTyt2OYqNe98FLzoTYqD7cO6gf9t0VQhg5ZSL/WpAU49hW27QpPAZV2+tyOfGI1eCy1HARiVOcU99DcWdVLrAZGZsH3xhVYv9LnO8SFDRiWTaKTcsD9gUa2VjNYKO95XPZvJ/73Ih/YsSNuSzdmaTfSX1wwDL4pb2QwUARYRCqdFzpYgh06X1yk64hD1xSy6bg1WX7DP5IVXLEBSmWMvCiLP6jbjm2J4M3yPph2aVPICXGyVoR/0rmPqIykV+uylBuY9/ejN/4UA6nVi6r1WQkddMpOZOPQ4VP4gIIKOFc5G6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yj5VHautEvJPR79SefN7908PN5XyalBexEOF+G39SOA=;
- b=gXBsHxHnKtltzFWCp/sMnkdCnf/BzYPPe46dXlbLICE9RNP6MRFa22A4Eko51NodCq9mdDD9mx2Dle8fbjmtvoufV3+e4hMialwACXs0aRLGUEy2fMN4iQqkP6NL04nWlbp58Q3i0fJA9ZQvBZdvASEIqvXUvv0Rks+ZU14bJKE5a66NelHLX4eCnvQTTsPH2d068loIBl+xu1ZiKcA3zZ+roh9sk00zPWN9CP/UVt/2IdOu9YzBH0ICK2li3VFiWV+xgm75SvxpcEuAT8RP9E2mnUhe30L7uf/CcQrNqBsK2wDmwgs86FGE0vvOlbQeHsDlMdwhTztNvXLni7j6Mw==
+ bh=ZN8tft0hq98f6J07/bNT5fdSxXERJq8lr2qv7F8FdbE=;
+ b=SqpdaoP5B3U1LCKl30OjUbTUCP3a3wpK5xmzYIu2e8NLX01keOsv+apIxcMt1pLguXtjKb5RNqRR278YxE4pzI/pT9yozzoZ/+GU/DKtGebyJqp6WBpuEpRIutcFfNVflaEh6Lvxzp06asL40fXAtS70RzjYSfmxknYmWyeDU7EQlMmdYLXBDoDbgrt+d58nGR/QaxMs5sKk6me2eN/uhLgXXF5Di9TZVlGbxVKG3Yvqt5tmerxU8jvm+WnmNf76MDG2uT1XcjrLMKxRqqdXncbk2+BUiGnxRd3o8y4xdFCjSJk9+foK2V0TiWjlb5T6UDh+ZtzaG2HMAqNZL9FROQ==
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AS8PR02MB9388.eurprd02.prod.outlook.com (2603:10a6:20b:5a3::6) with
+ by AM9PR02MB6804.eurprd02.prod.outlook.com (2603:10a6:20b:2c1::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.42; Sat, 30 Mar
- 2024 16:18:25 +0000
+ 2024 16:35:12 +0000
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::9817:eaf5:e2a7:e486]) by AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::9817:eaf5:e2a7:e486%4]) with mapi id 15.20.7409.042; Sat, 30 Mar 2024
- 16:18:25 +0000
+ 16:35:12 +0000
 From: Erick Archer <erick.archer@outlook.com>
-To: "James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Justin Stitt <justinstitt@google.com>,
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Kees Cook <keescook@chromium.org>
 Cc: Erick Archer <erick.archer@outlook.com>,
-	linux-scsi@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
-Date: Sat, 30 Mar 2024 17:17:53 +0100
+Subject: [PATCH v2] drm/radeon/radeon_display: Decrease the size of allocated memory
+Date: Sat, 30 Mar 2024 17:34:47 +0100
 Message-ID:
- <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <AS8PR02MB723799AFF24E7524364F66708B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [WkGdBAgg2j+eOVC9WsD27Qpi9XrT0oGV]
-X-ClientProxiedBy: MA2P292CA0021.ESPP292.PROD.OUTLOOK.COM (2603:10a6:250::13)
- To AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+X-TMN: [udE1yCGk+kyixDinNhbF5wr7HQOChlOW]
+X-ClientProxiedBy: MA4P292CA0006.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2d::16) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
 X-Microsoft-Original-Message-ID:
- <20240330161753.8684-1-erick.archer@outlook.com>
+ <20240330163447.10688-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,137 +72,122 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AS8PR02MB9388:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f910549-649a-4726-0886-08dc50d506f3
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AM9PR02MB6804:EE_
+X-MS-Office365-Filtering-Correlation-Id: 238f528d-c2d5-4729-3f14-08dc50d75f20
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	38WQunt9qLzjo3S2vOV/DdNnJUnxCT9xgvKV5fygIh8KIEqZp00KwVNASyaZpUWsRkq5xrAkOUJX9JS6b+fzzHf3wWzrWTCjqgxu6s0y3UgrQdXgWRW6rgQ5ul2gVzgt3qOb1nJYFCEcPW7bZq6a1XHj90UELEmq5OrUaiuSjZ1/y80FLCdjsFdNFmGT/VeMDJYr/skmpujiQhEQcHD2mdDnRo9z1n8NIy2/llXE63PEPkvXwP8MF7aTe5jNCBZJ6CaALb7Shw1xhIXlqmcv092WvsOsDqD7vP46bEG48QGGY46pc1hCc8jyQWNxdkgy3BObf6r43k6hYO8k9JSGDTvD6Hw52JmpePmWW1v2xfStXaZ4Hh9JAkv+E73+KzQJWXz/llTwaMOAazIP9hRZppDnE1aaTK3BjuPq6Nuw97DNiSoTL57rZzGWFKZCXrrxMguspLZtuly4hQRpQXwjkXeV8hW20fTePVQWnh4UuLiJi+bfcTnpynzUvMWvIIVH+Wqly8x/GI9tO00/Tn3DlFcjqyE+fRBBM3naehqS6YXq26iHwSHmrPt4pKiGa8gbl1EmVQaSRRoM4IQr/W+RiRgld2dCi0HBGqhzSo2b4tstNsbLNGeFqwagVUk6/LAsAAMKojyF1/EmCIfyieHNJHTTj4mW8KVwsLBu/dFcpbonSK0+O/H7zwgcmCpNklSV3YP/PMHV+OMwpiFYvMW86A==
+	QSuRjmnIH9Uj0ilCV5GOZAJpwovuoemVyOCK08SE9LlbKzBsI2uhyV8Wdzxb7RuzNzH2/DLIvXhgpk6Dz5GgHdX8QlLyUg4T29iMwUlsdJV4ThMAxfX4Ao0Z+R5VvcanYy2ruCMfccx5/c8Iw39ttOeLmYy0h17yRXUMqURGF6kaym0TASwFBhiTfFLrcimWUONz2CvYF+0UWOY8lMJ4ManGxoriYETLrlmKE19WXHuCTAIfpYgXGvlxEYXEjL/3TR/zymTgu1bZaLRg5x/CT4IYN4iknb/084WGXCL/b/65I2ut3JLeyvtJe/zPmvEdKNRyRzP16wJAi8wnIjvvh4APu+eVm9MZp13qAfhNgxCqX4nFzNlqZXtPlF0UCoevVb8ARHHGGIoX+9q8SouVZYrD9rN3b/4dlSEdCf+7J39yG2XqclupYBLM05dzlXey9Dlawqf7Xu/PguDM1mx6SQkj7PDaGW6aA8Wi9o5gwRAJv2eKrnkV/94ni7W1D7mygQ1Y6q1JR1Cv5G6dbdvQ/qh+t5bbpbMWo5lJQEKWMZ2pIFKYxuYN7BDhTVll/LUCOycj6GdCZFPhOV9/B3veOtCDaGDfCbqPLTiDYft+TbTQntAFrY+mUCNtaKNMJmoudI9Z+PGcX3X8Ihw4sGTI2p3zoo0LBpNwNm8+p65b/u0pxQ8nh9h5/BoXZCU44LLjIuZEEIHAKMauEhaHAq9qdQ==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MpjNrmbZIZA7uJo6VMARrTr4tk+ud6+CAhQwo9AtpPDl9n2cZW/XUs8le7fA?=
- =?us-ascii?Q?hJjRG6HScshHqX2UkbsiCWxOiKbCtdJNhEV0LS9ahoup2MfJ6sp/gCh6dUZJ?=
- =?us-ascii?Q?mFwrCaLqB2Te3cnjJuB8GqmKGzsUvuZIzSs52qMvlDKw+vxqLMhqyZzpTFl/?=
- =?us-ascii?Q?CKPx5c1JO4l4940DPlgsJPemVDplUPv+LoJLaO07oITDOjdtj/MMlSIxT98W?=
- =?us-ascii?Q?Gru/0X7EawLAkTje+Eua0iJgZlaL3SdGOy/cQ0cTLb7ATGVonc0cLyWh9Sbz?=
- =?us-ascii?Q?remt3ROqDE2LdPgU41M/BuSH8g/vTjmN4csl89BtAY3C6LP8MZ/4Fj7M1ABr?=
- =?us-ascii?Q?zQxSAd5ydfBzHJ4GnPR3SnCrM2+oIB5Q54xNvPD/6gqmf8qfXDtmihnIEUUD?=
- =?us-ascii?Q?4IOIC/bG+FsehFwL54WGRG0QA6Vgg/27SF9yTOSwF+UcRyT0K9FRI22VpsNk?=
- =?us-ascii?Q?+pfivLd8EmmP2jUqSW/7v/QyDMCb26g9If7hguTObCSwKuXsTCJkL2tB0179?=
- =?us-ascii?Q?lrv+sj8IryrYEKzOOYFWmFEXTXyet3LCP7UfsfTi8NpzBZx/2II3LD368AOn?=
- =?us-ascii?Q?HbtL8ZuwfalpTrORHn9XZEUL3vk8yeYXnUwJ9UsugXZfrxLG0THEEhfILy2o?=
- =?us-ascii?Q?0Lena/NTNqnmNu2bbRns3SukKO5mS3tH5aD4GyHIyHZm5rI5OVec8Yl5roVp?=
- =?us-ascii?Q?C2hXaCWOWLWDiRqULKMvKbQl4tXsZnB1dnwZrfkXxQqkWhKENNMoAy5nETS9?=
- =?us-ascii?Q?X3ILKiaQKbmo0tYxFLl+5d8oBOSbvPODGT1R94Xab5IdT4U8/cqLAXBEyB1r?=
- =?us-ascii?Q?7hcTSE5PGGJ9WXAOnbUeo++ctloj7tYOi9r04ImH3zNMxBMsL/YJLr1qRQMC?=
- =?us-ascii?Q?GlAFhBqZ5di9/UJDSlHMSCUAnzWNUg6DDvI5apKC3T2YgT8pXj25p7SLxwfH?=
- =?us-ascii?Q?SykOjy8kW8RPVvqWp2V2EfOQgVt/OQV/tNCpdBcKzGFtTSj4saidhbk1s/YD?=
- =?us-ascii?Q?zFBOF+B9l8DaQ/oyYiC9U/cHYvwQMIlpY0PV3NyHz9gyBQ7JLuS8f6uv3a4Q?=
- =?us-ascii?Q?9hkc6oaR70ihTmvQyf8TgkBebI1i9xzCKWVSe+mPXNmLuGGTk263eixiD7im?=
- =?us-ascii?Q?ykdPYKQtW7XAnVHDOyjRG/jW4PFb3TjarIWQLHMsA6oiL2fT0dhL+IZANIVy?=
- =?us-ascii?Q?LvNEvHhtOqWOK09OaUk+KuXPC/NslbDM2WMf6lofBgP3KAzd0XPyaEZva54h?=
- =?us-ascii?Q?bGdEoUluYDxJjVBFoMcd?=
+	=?us-ascii?Q?4NJclBQVdsKx0sCFFCebi1WuCsj8ESu1O1q+hwUCQmYfk3742ZFAm3BOSfT4?=
+ =?us-ascii?Q?1QW7CgUKGaRVcQPJq8MJpMs6L2MFtY55rc2tJrgTffJ3T2EHR4bXlQE6rXWi?=
+ =?us-ascii?Q?nj4zL+RztS5cKrCCAEMhoDXFNRL0Te6ish3DqH3pzXIz+3ABOPLMfUp3t5CN?=
+ =?us-ascii?Q?V7vLx3Abus/HAqDpEn/xzVV1KEst5JIJdJr0Gs4umTLnC7rESIE9hQxdrF/j?=
+ =?us-ascii?Q?BbDi34SdF7B3/YmvYqdPTTuEljTM1TJ2aa09NP6+TKLBt69ckAUwNq5IL3Fm?=
+ =?us-ascii?Q?6DsLoOwybOuaICzsAkTQhzK6eI/MxbkTiARJQk0WJNRRbp+/ZEPacNFTmlkT?=
+ =?us-ascii?Q?L9WSDnpIL0IU47QN5c66xw971FQiXg73NG5yG5FVSgWo4K+EeV0GcDlbcisx?=
+ =?us-ascii?Q?E5b7FDWw7OKLHOvRC3Fzm2jf/clllcfRwV5AiHczCvkwuwmLVn18V4xSMIXD?=
+ =?us-ascii?Q?45bxjT4X+TPtUXdNUd8w7IpmvdNhHBYFddJpl73YpQUfe0lHHuc6IDoTxK4a?=
+ =?us-ascii?Q?LyJPF534TmK9OVNivUZnXIcSrknYS/LjkkIUM3kpBdOaLEy92lVZW4iZNGyP?=
+ =?us-ascii?Q?CJYqNc+YnAbs+xR5qG0809FZaYBIqOjRkNqSfk4p8hqFk+5VPiJWzB2oMpbH?=
+ =?us-ascii?Q?D3YWgDRFBtddtzHxiequRc2Ga8zhGHRPuzo/IhUrXj+/KyK2bx/s0Zupltc/?=
+ =?us-ascii?Q?O/lSb6YxJ1apZgz+cmMavd49oL5feZTfZVoKFyD+TTRqyDawJfFIJVfqJcnJ?=
+ =?us-ascii?Q?kTiSMaKg5MiJZnEbmo/iV8s/Q5msYUtWfg3wg5DuxW5qt33vGjqSNw6pLptu?=
+ =?us-ascii?Q?4SpL8yjIT2w5vXGdic9+ABpEwRuawKppq/sJ4eZrayUcH5qbv/E9gbtGKU3A?=
+ =?us-ascii?Q?VQN5pFHgyij/zYe7u78oc5+iieV3mKh46vdEzuAqcsdSs/SjacXGpVfnGpi8?=
+ =?us-ascii?Q?Mneb6IJiTQddoJjxaBY2qz7bqe5NwkAJ2bfFtDKDIyCbGugO4tuHTmczJ+o0?=
+ =?us-ascii?Q?2Kza+noQeOMnCDtyK8OXOwr7qP0jTzSrusvipCcsf2qAGMu9b6qyO7Wo11wn?=
+ =?us-ascii?Q?HZKnpFehJJZs1jVKTQ7iee5OxZgt+uP+jBRAZljgc1iMV3Rc6eVJZTFl2B1r?=
+ =?us-ascii?Q?H7uSZSUfrL4XJkyy7jAHcE3/jBWQoevePBWA8TujaEv4QnV6folpADXbHKE+?=
+ =?us-ascii?Q?B6rHLZqPAfI56pfC1QTwijd2Fni+0cYbxEfsphlYbneIGeljo3PZK3TFRMBr?=
+ =?us-ascii?Q?ezNGy7vPeSVumK1sgCmp?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f910549-649a-4726-0886-08dc50d506f3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 238f528d-c2d5-4729-3f14-08dc50d75f20
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2024 16:18:25.6783
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2024 16:35:12.5244
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB9388
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB6804
 
-Use 2-factor multiplication argument form kcalloc() instead
-of kzalloc().
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1] [2].
 
-Also, it is preferred to use sizeof(*pointer) instead of
-sizeof(type) due to the type of the variable can change and
+In this case, the memory allocated to store RADEONFB_CONN_LIMIT pointers
+to "drm_connector" structures can be avoided. This is because this
+memory area is never accessed.
+
+Also, in the kzalloc function, it is preferred to use sizeof(*pointer)
+instead of sizeof(type) due to the type of the variable can change and
 one needs not change the former (unlike the latter).
 
-Link: https://github.com/KSPP/linux/issues/162
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+At the same time take advantage to remove the "#if 0" block, the code
+where the removed memory area was accessed, and the RADEONFB_CONN_LIMIT
+constant due to now is never used.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
 Signed-off-by: Erick Archer <erick.archer@outlook.com>
 ---
 Changes in v2:
-- Update the changelog text describing the sizeof()
-  changes (Gustavo A. R. Silva)
-
-Changes in v3:
-- Add the "Reviewed-by:" tag.
 - Rebase against linux-next.
 
-Version 1:
-Link: https://lore.kernel.org/linux-hardening/20240112182603.11048-1-erick.archer@gmx.com/
-
-Version 2:
-Link: https://lore.kernel.org/linux-hardening/20240114102400.3816-1-erick.archer@gmx.com/
+Previous versions:
+v1 -> https://lore.kernel.org/linux-hardening/20240222180431.7451-1-erick.archer@gmx.com/
 
 Hi everyone,
 
-This patch seems to be lost. Gustavo reviewed it on January 15, 2024
-but the patch has not been applied since.
+Any comments would be greatly appreciated. The first version was
+not commented.
 
 Thanks,
 Erick
 ---
- drivers/scsi/csiostor/csio_init.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/radeon/radeon.h         | 1 -
+ drivers/gpu/drm/radeon/radeon_display.c | 8 +-------
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-index d649b7a2a879..d72892e44fd1 100644
---- a/drivers/scsi/csiostor/csio_init.c
-+++ b/drivers/scsi/csiostor/csio_init.c
-@@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt = 0, ii;
+diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/radeon.h
+index 3e5ff17e3caf..0999c8eaae94 100644
+--- a/drivers/gpu/drm/radeon/radeon.h
++++ b/drivers/gpu/drm/radeon/radeon.h
+@@ -132,7 +132,6 @@ extern int radeon_cik_support;
+ /* RADEON_IB_POOL_SIZE must be a power of 2 */
+ #define RADEON_IB_POOL_SIZE			16
+ #define RADEON_DEBUGFS_MAX_COMPONENTS		32
+-#define RADEONFB_CONN_LIMIT			4
+ #define RADEON_BIOS_NUM_SCRATCH			8
  
--	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -737,8 +736,7 @@ csio_lnodes_unblock_request(struct csio_hw *hw)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt = 0, ii;
+ /* internal ring indices */
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index efd18c8d84c8..5f1d24d3120c 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -683,7 +683,7 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+ 	struct radeon_device *rdev = dev->dev_private;
+ 	struct radeon_crtc *radeon_crtc;
  
--	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
+-	radeon_crtc = kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CONN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
++	radeon_crtc = kzalloc(sizeof(*radeon_crtc), GFP_KERNEL);
+ 	if (radeon_crtc == NULL)
  		return;
-@@ -775,8 +773,7 @@ csio_lnodes_block_by_port(struct csio_hw *hw, uint8_t portid)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt = 0, ii;
  
--	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -816,8 +813,7 @@ csio_lnodes_unblock_by_port(struct csio_hw *hw, uint8_t portid)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt = 0, ii;
+@@ -709,12 +709,6 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+ 	dev->mode_config.cursor_width = radeon_crtc->max_cursor_width;
+ 	dev->mode_config.cursor_height = radeon_crtc->max_cursor_height;
  
--	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -855,8 +851,7 @@ csio_lnodes_exit(struct csio_hw *hw, bool npiv)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt = 0, ii;
- 
--	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "lnodes_exit: Failed to allocate lnodes_list.\n");
- 		return;
+-#if 0
+-	radeon_crtc->mode_set.crtc = &radeon_crtc->base;
+-	radeon_crtc->mode_set.connectors = (struct drm_connector **)(radeon_crtc + 1);
+-	radeon_crtc->mode_set.num_connectors = 0;
+-#endif
+-
+ 	if (rdev->is_atom_bios && (ASIC_IS_AVIVO(rdev) || radeon_r4xx_atom))
+ 		radeon_atombios_init_crtc(dev, radeon_crtc);
+ 	else
 -- 
 2.25.1
 
