@@ -1,229 +1,211 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04olkn2078.outbound.protection.outlook.com [40.92.75.78])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A7B2628C;
-	Sun, 31 Mar 2024 15:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.75.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711897526; cv=fail; b=cKx+l4SnOBrfC9inKSqxsPrXgaKrc3y3/EhqV+mxKfx60MZqA5MB+dXh3dcNOiWCyo352qdjRQEPv7g5Eps0R9oH2k3YdCMGJeGXazUzL18plSOxEEsQLN/mQ+e7qq8heSHNnYzzDKvnY/PP6TYOTsWb6gG8O7hPXEOfmjjEM/U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711897526; c=relaxed/simple;
-	bh=B3OGipwb+0sVeBg2LNsYHRRypUheYKwyXM86w1Nyujk=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=afiRfxXEiZUnYbD2JlR68VYSJD3MD/B1RcGc92qoek++ZIl7veAuUdGQPWKtPinNb6CQmXYpVMnZFy/3WsXxtww3BQKX5aOA3lKVXIbePbhKImuCiY+ObmyZCx/D1p3j2HmmmwagMki+GpZk7u+oWy0K/iRs2XSLvAG3ENjh0wI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ieCGqDyH; arc=fail smtp.client-ip=40.92.75.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0C0A48
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 02:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711940002; cv=none; b=S07hOvHeksdN4lJ1nf6ol7ERCS246P5BlVC3oLzys7d51ruGLkvtXpyrPBPurKzrQjjwNoaxXeq7osPUpr+oS6/iK8taLi2L4gxwwEU1ZnvUFXC19zMKqgCfjyAXWO+4fw7RUIlv49AlsPl6AAvq5W2ep5HOyupfP31eNA7g7L0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711940002; c=relaxed/simple;
+	bh=NItB/iOyW385ke3Wb64kZWH68badp87GEEAzPho8s4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SfovvYk3l0puvRJNjsfbQpN3A6n7/88HC4Z0eDs4K6JR+ryJxLkGK9TzHO1fHfcJEwP7VoE4bVbFbti0jWR3Ia8GJW5oexBAG26ZouefyoHN3fokRIbuN8gUphgJ+QciJlPmfvP4BHnpF6kQ4s5kiMwi3+LyubOxhvkjjU26+WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DgKaBX8A; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ieCGqDyH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OlO3PJ8M1wQi6oakfmortGMTjxaRT+K0uqGzMGDSgG5IpcBkWu40ShGYEp1kFnkEFuaCZukmcRvTSDVgfJ1gNvs/GBneuzU7tbMfzTPGWAWkOeFWkBfERvq22aj9QvI5bc2QJmEOADSqI3NAlqT4E24jYp20Z5t2aLzWkYE1QODH+Y0shjBv1Cy5U5yTo9xPkz7e6Lem0QMZ7pS2WM0kRWdeBQK8g7FdavAY39enYKJ5XQ7szFLkE5d++8pezeviUKX3UkRmXUFWyh1hXIwKzGUKBu0pIVhrbLSSyvptauLi6lgP9XcEnjLp66DkeJ64bUbwRfeEL2Owzf7GDkvm9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lzE0RtM1Zo7qthW93kAZAngHg9wpx8iF5BRNORZhF4c=;
- b=H+iMcCenIgzSAem3Cny/5npZ6639K3nW7bUFe/az9kN/knuXWWkr3un4f1wdbKPoap3tOqPJhRIlf7lHdmwpzXRzQSvOJFS6Pu+vFhttNhsQOVghCfH5S2AsH4vnoKOZtyLIWLSeij+I7D4rPnSv4uA8LQXZMzl7OBjUmTbvjhxznlaGWg1GTlLK7u4a6FNRoOlShBVoD0biwKKIZqve6Ylb6mdy3Rx8poVmBAYO0AIe23txJPSVgB1wKiRcy/REKzbtvVe0VUak5rc7SCsXDJvV/YJPL66bhJ0k1ztR28LZPsEuNHemqkYQ8X/Pd+NSRAvgfNUhOHPZqR4pnPS/qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lzE0RtM1Zo7qthW93kAZAngHg9wpx8iF5BRNORZhF4c=;
- b=ieCGqDyHIQy8aDxva7JsLFcgG8TCVTrk12Fu48OXLcC5vJ8RCwDlzhmmiMf2m7qVOnPFKB3WaXRVJY1CHkakX06XVkq1NuY29zCw80wfJT5ZizIpWQ19T79FjB/WbgP5XexvIx0DxucOqMPiWjx74JK7/szNibKGpJPeYe66OEQvP4kL2zatl90wk5Z6PA9UM8dJK++elXVvWhhBejj4HHndAjn3hNVPEKgxRpwB/BBVknIrZW1rUfNldvaB0tj3gxygwMwUNZLNM0LAGNGEWJcBlX7ibf3DwCpeJvuQZvj2KwEDXsyyi6Kc30y9203CtmKwYTq9d78Du4vUIqlOSw==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by DU0PR02MB8690.eurprd02.prod.outlook.com (2603:10a6:10:3ed::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sun, 31 Mar
- 2024 15:05:20 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::9817:eaf5:e2a7:e486]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::9817:eaf5:e2a7:e486%4]) with mapi id 15.20.7409.042; Sun, 31 Mar 2024
- 15:05:20 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] RDMA/mana_ib: Add flex array to struct mana_cfg_rx_steer_req_v2
-Date: Sun, 31 Mar 2024 17:04:53 +0200
-Message-ID:
- <AS8PR02MB7237974EF1B9BAFA618166C38B382@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [ax2AMivpXtObadqhPIRt7GSws6HmSCa/]
-X-ClientProxiedBy: MA3P292CA0015.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2c::11) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240331150453.5432-1-erick.archer@outlook.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DgKaBX8A"
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+	by cmsmtp with ESMTPS
+	id qy5YrFVKNDI6fr7nOrmiO8; Mon, 01 Apr 2024 02:53:14 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id r7nNrAJ3v9zHMr7nOruAWO; Mon, 01 Apr 2024 02:53:14 +0000
+X-Authority-Analysis: v=2.4 cv=fo4XZ04f c=1 sm=1 tr=0 ts=660a219a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=UqCG9HQmAAAA:8 a=ULve-GQanhtCPmNiPXUA:9 a=QEXdDO2ut3YA:10 a=9cHFzqQdt-sA:10
+ a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=75BIkSv+82gmLssfiqp91Yj+hWnhvj/bJubjcKhhBFk=; b=DgKaBX8A+Dm2oX7EOhaSTi1lmR
+	hWHL+0p8srhxDq5zJQWqdLDjTjOPM6z77Gqz6MVMNf2KEXhJsLn0PQy+NzuxUrfDOBA097Ybve3ZM
+	R9AS/hexPTxq+TALHm7b0kru/WJTI2Ui2wDg5WDFx1ID4AiJA609AjVovFB+/xfgk1a/qGifZs6yq
+	SuwKXmIxr3SSnfbK+dPb42SaGqS2CJam276LwoawYLqdYwJ5f38SYUmK7zT9zgx9opfgdWexToFGH
+	zgpBz0Q4ZFTsfpHT3M/FbOvQrqV5o9dFhu0EUfj8QirhVBlsxB7TFTB3j6cIvbprUUiJEJblTZ34X
+	eYJBRcUQ==;
+Received: from [201.172.173.147] (port=40326 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rr7nK-0045H6-2R;
+	Sun, 31 Mar 2024 21:53:10 -0500
+Message-ID: <1be10e9c-e521-4974-b2ed-808a2e3a1a9d@embeddedor.com>
+Date: Sun, 31 Mar 2024 20:53:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DU0PR02MB8690:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2725dda3-38b9-4383-539a-08dc5193fb94
-X-MS-Exchange-SLBlob-MailProps:
-	qdrM8TqeFBsbamEakaZu1wFzLqU5ubB8EJuublZ4zULzY+Y+3WPTzZFjw0UTpAp5bJxoxVy7oJxCgKwEEr8MAOmSCvzSUbAx2Oz7j6tth9ThI4qv9rAc8i5s0UOIOu2krBdLVjUcaTosnES15mEPD5EWyBgwFliEJy73mQDRVrzJRgJ06jjDNpvgmitzplvQNPXOuOGcDcORQzq0iPohPkazZVNI+xvZomA9Csahf9LgUTR8Df9k6fhALVDkESwc6E1bJCpix2LM2aZvAHOk27Fn/iGkH/NKTKrKvH3X+UoLnHJdjGDkECaxN/cIPaTXu2TbEvODCEY1Gou9kFeirhR/GmzBkUMOrd+huc4E+eWaJVO5l8rO8eXamfTyRQlYIHZkV73xUwlONmSlDHAjo5pYyVQ4fIRzpS7bjzouS5yfGnxTwUNG7hp8QSQ38HDkL16HHb4vBymQs11MSme9T8ROU7mgcTw1OSO7Temhuwin+LQKnHYjGa2aBSZLFXtGHKQ7bgRCalmoSHDn/V4oWHA3/f0a5qZht7yviw+m7TZjSSS5x8BTGcGYfOmtJhHjhSN3pKoQIYT9BFwRWzjcSFetcwXw8SppwwsuSldjA1NyCpOm6vof5VCKbU+wAXGF27eIZLgGqpJU/ja7GxhAd12ds07nRF4EheiUqyUdVhU8BWNDjMjZf/oA2MgkbHgp/2IXSHlxybZPP1hNd7PkX/+r62Hc32SCwT8eUoYK6lbdbFpy0vEV+k1Hv8W2o/k6MsZD3+5kMGCeJwwk+9AW/SKufCvKjoeG
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	XyUYUnDC+fEiim2xlTA//XPjLZpg84E1IaSysCt7WxY4iHw1ZvDSUGkOarebfnPwi15yigOAgyFApFdim9Rmw0Jf418paEctIhOQO388lkfjZ7QDe+AbUzy/HBuw2zg1rDFzFaOyl40Q/PVCxtFTJfyeMniPZ59J0Uk55CecsU5BmIKa55V+MAa+c2ZOKpqRgC0oeUFtAbvlHsxmpAD+bZ7/I0pd8UgMhOrdNksKiHO6emwtUb53kckDcoA2F6hINPbLKN5VH+4hF/L2+tcsAFTuCanGoYn7O2IChPwjfofEdXuyvSVFUv2GgQDjkHtydWqpLosJvNkUzJeIesUK1kd5QTvSyVrnne+72dXmYLfHi/nOH07hN/hqKCbE6hLRKWYOFYWkm8htNv3WFrV4kQr1JO3dmj2n3yiYhGqumUp9UKet79S0V8jyBrfK9pAvo82MeTa/CbeC80BWrcyBcm/+dS2PEJskIN6S/v2WitpXpt52NYKZxFVmPGRGapKuNtBlddW6ywHWVRGLp6i79qXmc1eTTHMTQBZZZpkY9rszpcrEr+TvbOa8mjiEgt0fpN8tPkb7ayZDhbxN869y3VLm+e5A5sMaEKF039gesjPv7YBJ/bHTstqbw/+z6xUNJYFkXh55UWHz4h9nxs8HeJsAJLBXrXK5qGD6Vw8mVfJuc1iHfvMG5nLcNqd7BMZI
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qJhDBq/GG/JiMVVX3Nq2evRaBJRNNGIUMYeeL9/ZxBW0eXTBt//q2wWn05jU?=
- =?us-ascii?Q?7qznjmlI7PH4ql1Tjo64uUhMdQfxsBkqm5tn762WcPF0ffLjz3D5xX7fuHOD?=
- =?us-ascii?Q?TcqA0Gg1ZjzlVOuUn+093VCUHSuKUE+8BvMQMvFDaJTbRK5R2nl/Rx4d/OFE?=
- =?us-ascii?Q?TC/JabyEtTIyhEjs4R1l5aUIpwVg1eUZxZJbS3Kl/PpaYv61uYURCDRlWbNF?=
- =?us-ascii?Q?9wjbrMTVJ0u0e//EPM7QxkwqYpO9UTfmSe5EkcrBtudYWyKtws2O4S+Dfoy+?=
- =?us-ascii?Q?4smmuU4pew+RLMFAnH/dE3zMOaZScfvuPMZyI/nlFR+FUmopwkoCspMpq4/Z?=
- =?us-ascii?Q?i605RMwx31Yv62MoCxVkJbDX24tbX+8b2aN0Htz/cjPdEweTeO8cc16rQZMC?=
- =?us-ascii?Q?mvfFR54FvBDi1ie7relhgVG+Lj6b8wWGx+Jsb5z8DebzWTTQ0JY9cbSLcBJu?=
- =?us-ascii?Q?2/+gIG6FL4yYcUIVqfHJu99MC6oKwsBb1aGur9+gW9oPfIKv8lPvtgtM+yzL?=
- =?us-ascii?Q?G2+FjyzH3kLU5OVdmP5NlaT9SJNblXlGPy5TVX/G+iop/3iD/zxTOMX6scJI?=
- =?us-ascii?Q?h/a3Mk6hKiHzSUgst1QNc3LVf4HgWplNut8C+L8HrwuUFIs2LFdb5fCLal3o?=
- =?us-ascii?Q?6vWtP6w7xdP4oimrMa6+NVPy/F3gjToBF+kt5Dv0rEhXMPTe2kFCfcS+vJ03?=
- =?us-ascii?Q?wpC7MvizUB9IOrA43YMS6EBC3qGpIOSxx+hn1Y2bC0z4lSZRC7CXMnBUbKm7?=
- =?us-ascii?Q?wBaAvy/twYYbHn1Vz0fhKbbAqk8MP22hI0u2XzaBXjyyvZEcKec40HZsJk7x?=
- =?us-ascii?Q?JmL7xHmeusGOfBTllRz4Y4/Fpng8TKA6edZSV0CGBBBJjOLWR9GmwuXI3b+M?=
- =?us-ascii?Q?B7FzWQO7j5MNyU1S8bX91Il8RoOswbNRRNHMbJNVIQN5Jo6qlNVXiQlahwbC?=
- =?us-ascii?Q?OdiLhBEP4gBkpP0hHTrVJfHQQxa0kBdSFhjk9kX+CBULsJL+Qsh75mkd0uzC?=
- =?us-ascii?Q?OgaZSHSyZii2IG1QIabskF/NKjzsvSX+1R9IE+2tuZlFLFobHB9GcHb0IYKT?=
- =?us-ascii?Q?mBU+ZadFTKFPQEOvTty3PU/X2nWwiq9Op4SuswGwrKp+BNvE06YmDeD7AkSv?=
- =?us-ascii?Q?bd/k74m1SJFJQtntZgZnjKQX6FAFV/E9lDGp5amHDgsvDtK2aR3enmuAE/DJ?=
- =?us-ascii?Q?L0rBcIvaBDUzQp2QAr02XJGsF4YzVRo0rW0yh0+1ffFj+Epvzbe3Mn4YL+pG?=
- =?us-ascii?Q?rtYig0buB88VQueXs+eI?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2725dda3-38b9-4383-539a-08dc5193fb94
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2024 15:05:20.4865
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB8690
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] RDMA/mana_ib: Add flex array to struct
+ mana_cfg_rx_steer_req_v2
+To: Erick Archer <erick.archer@outlook.com>, Long Li <longli@microsoft.com>,
+ Ajay Sharma <sharmaajay@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Shradha Gupta <shradhagupta@linux.microsoft.com>,
+ Konstantin Taranov <kotaranov@microsoft.com>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <AS8PR02MB7237974EF1B9BAFA618166C38B382@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <AS8PR02MB7237974EF1B9BAFA618166C38B382@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.147
+X-Source-L: No
+X-Exim-ID: 1rr7nK-0045H6-2R
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.173.147]:40326
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBouodP+wAGMT15mKgUTPM7AItvBusDLkL832jKZE4pKOHlqL9ZAOaYDlmeSDsBlOrTa/M1L3YzgIa9OMowqcQx7LoImXoF5NGr0qWs0uX8Q2UyogLKt
+ MOrMDPWpCpdlo+iR2IWIraRR50LXLn5ZLUOJnwHSG2i3iobQnsO8hThA626lSmVs8HDKx5aQqDMtTBXlq0fdc4njCpFbY4pgqAFBf3tniC3ERwTWC52vbk2b
 
-The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of
-trailing elements. Specifically, it uses a "mana_handle_t" array. So,
-use the preferred way in the kernel declaring a flexible array [1].
 
-Also, avoid the open-coded arithmetic in the memory allocator functions
-[2] using the "struct_size" macro.
 
-Moreover, use the "offsetof" helper to get the indirect table offset
-instead of the "sizeof" operator and avoid the open-coded arithmetic in
-pointers using the new flex member.
+On 31/03/24 09:04, Erick Archer wrote:
+> The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of
+> trailing elements. Specifically, it uses a "mana_handle_t" array. So,
+> use the preferred way in the kernel declaring a flexible array [1].
+> 
+> Also, avoid the open-coded arithmetic in the memory allocator functions
+> [2] using the "struct_size" macro.
+> 
+> Moreover, use the "offsetof" helper to get the indirect table offset
+> instead of the "sizeof" operator and avoid the open-coded arithmetic in
+> pointers using the new flex member.
+> 
+> Now, it is also possible to use the "flex_array_size" helper to compute
+> the size of these trailing elements in the "memcpy" function.
+> 
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+>   drivers/infiniband/hw/mana/qp.c               | 8 ++++----
+>   drivers/net/ethernet/microsoft/mana/mana_en.c | 9 +++++----
+>   include/net/mana/mana.h                       | 1 +
+>   3 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+> index 6e7627745c95..c2a39db8ef92 100644
+> --- a/drivers/infiniband/hw/mana/qp.c
+> +++ b/drivers/infiniband/hw/mana/qp.c
+> @@ -22,8 +22,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+>   
+>   	gc = mdev_to_gc(dev);
+>   
+> -	req_buf_size =
+> -		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
+> +	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
+>   	req = kzalloc(req_buf_size, GFP_KERNEL);
+>   	if (!req)
+>   		return -ENOMEM;
+> @@ -44,11 +43,12 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+>   		req->rss_enable = true;
+>   
+>   	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
+> -	req->indir_tab_offset = sizeof(*req);
+> +	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
+> +					 indir_tab);
+>   	req->update_indir_tab = true;
+>   	req->cqe_coalescing_enable = 1;
+>   
+> -	req_indir_tab = (mana_handle_t *)(req + 1);
+> +	req_indir_tab = req->indir_tab;
 
-Now, it is also possible to use the "flex_array_size" helper to compute
-the size of these trailing elements in the "memcpy" function.
+It seems that `req_indir_tab` can be removed, and `req->indir_tab` be directly used.
 
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
- drivers/infiniband/hw/mana/qp.c               | 8 ++++----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 9 +++++----
- include/net/mana/mana.h                       | 1 +
- 3 files changed, 10 insertions(+), 8 deletions(-)
+>   	/* The ind table passed to the hardware must have
+>   	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
+>   	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 59287c6e6cee..04aa096c6cc4 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1062,7 +1062,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+>   	u32 req_buf_size;
+>   	int err;
+>   
+> -	req_buf_size = sizeof(*req) + sizeof(mana_handle_t) * num_entries;
+> +	req_buf_size = struct_size(req, indir_tab, num_entries);
+>   	req = kzalloc(req_buf_size, GFP_KERNEL);
+>   	if (!req)
+>   		return -ENOMEM;
+> @@ -1074,7 +1074,8 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+>   
+>   	req->vport = apc->port_handle;
+>   	req->num_indir_entries = num_entries;
+> -	req->indir_tab_offset = sizeof(*req);
+> +	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
+> +					 indir_tab);
+>   	req->rx_enable = rx;
+>   	req->rss_enable = apc->rss_state;
+>   	req->update_default_rxobj = update_default_rxobj;
+> @@ -1087,9 +1088,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+>   		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
+>   
+>   	if (update_tab) {
+> -		req_indir_tab = (mana_handle_t *)(req + 1);
+> +		req_indir_tab = req->indir_tab;
 
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index 6e7627745c95..c2a39db8ef92 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -22,8 +22,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 
- 	gc = mdev_to_gc(dev);
- 
--	req_buf_size =
--		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
-+	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
- 	req = kzalloc(req_buf_size, GFP_KERNEL);
- 	if (!req)
- 		return -ENOMEM;
-@@ -44,11 +43,12 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 		req->rss_enable = true;
- 
- 	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
--	req->indir_tab_offset = sizeof(*req);
-+	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
-+					 indir_tab);
- 	req->update_indir_tab = true;
- 	req->cqe_coalescing_enable = 1;
- 
--	req_indir_tab = (mana_handle_t *)(req + 1);
-+	req_indir_tab = req->indir_tab;
- 	/* The ind table passed to the hardware must have
- 	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
- 	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 59287c6e6cee..04aa096c6cc4 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1062,7 +1062,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 	u32 req_buf_size;
- 	int err;
- 
--	req_buf_size = sizeof(*req) + sizeof(mana_handle_t) * num_entries;
-+	req_buf_size = struct_size(req, indir_tab, num_entries);
- 	req = kzalloc(req_buf_size, GFP_KERNEL);
- 	if (!req)
- 		return -ENOMEM;
-@@ -1074,7 +1074,8 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 
- 	req->vport = apc->port_handle;
- 	req->num_indir_entries = num_entries;
--	req->indir_tab_offset = sizeof(*req);
-+	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
-+					 indir_tab);
- 	req->rx_enable = rx;
- 	req->rss_enable = apc->rss_state;
- 	req->update_default_rxobj = update_default_rxobj;
-@@ -1087,9 +1088,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
- 
- 	if (update_tab) {
--		req_indir_tab = (mana_handle_t *)(req + 1);
-+		req_indir_tab = req->indir_tab;
- 		memcpy(req_indir_tab, apc->rxobj_table,
--		       req->num_indir_entries * sizeof(mana_handle_t));
-+		       flex_array_size(req, indir_tab, req->num_indir_entries));
- 	}
- 
- 	err = mana_send_request(apc->ac, req, req_buf_size, &resp,
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 76147feb0d10..20ffcae29e1e 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -671,6 +671,7 @@ struct mana_cfg_rx_steer_req_v2 {
- 	u8 hashkey[MANA_HASH_KEY_SIZE];
- 	u8 cqe_coalescing_enable;
- 	u8 reserved2[7];
-+	mana_handle_t indir_tab[];
- }; /* HW DATA */
- 
- struct mana_cfg_rx_steer_resp {
--- 
-2.25.1
+Ditto.
 
+Thanks
+--
+Gustavo
+
+>   		memcpy(req_indir_tab, apc->rxobj_table,
+> -		       req->num_indir_entries * sizeof(mana_handle_t));
+> +		       flex_array_size(req, indir_tab, req->num_indir_entries));
+>   	}
+>   
+>   	err = mana_send_request(apc->ac, req, req_buf_size, &resp,
+> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+> index 76147feb0d10..20ffcae29e1e 100644
+> --- a/include/net/mana/mana.h
+> +++ b/include/net/mana/mana.h
+> @@ -671,6 +671,7 @@ struct mana_cfg_rx_steer_req_v2 {
+>   	u8 hashkey[MANA_HASH_KEY_SIZE];
+>   	u8 cqe_coalescing_enable;
+>   	u8 reserved2[7];
+> +	mana_handle_t indir_tab[];
+>   }; /* HW DATA */
+>   
+>   struct mana_cfg_rx_steer_resp {
