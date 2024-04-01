@@ -1,52 +1,32 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0C0A48
-	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 02:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8470522E;
+	Mon,  1 Apr 2024 03:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711940002; cv=none; b=S07hOvHeksdN4lJ1nf6ol7ERCS246P5BlVC3oLzys7d51ruGLkvtXpyrPBPurKzrQjjwNoaxXeq7osPUpr+oS6/iK8taLi2L4gxwwEU1ZnvUFXC19zMKqgCfjyAXWO+4fw7RUIlv49AlsPl6AAvq5W2ep5HOyupfP31eNA7g7L0=
+	t=1711942483; cv=none; b=aJLvaLHSAObTSj86iOQoVdxErZA+BC0+3fiBllTgQQC7UxQLvG3jkWmvXYhqgILvZjDxYAHBEzu8t9RxC3ynLbfXVKFVpCZDbLgG8OFVQmJmduhvCF/8h56AUHMR/Smgq9ygP66HL+Fl8h+zjaKi9MdrDJNKRrBM86HEFJxHLs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711940002; c=relaxed/simple;
-	bh=NItB/iOyW385ke3Wb64kZWH68badp87GEEAzPho8s4Q=;
+	s=arc-20240116; t=1711942483; c=relaxed/simple;
+	bh=TrJcj01Er00eAvFKR0jzYuUqobdc2zMMASuC79JwpO0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SfovvYk3l0puvRJNjsfbQpN3A6n7/88HC4Z0eDs4K6JR+ryJxLkGK9TzHO1fHfcJEwP7VoE4bVbFbti0jWR3Ia8GJW5oexBAG26ZouefyoHN3fokRIbuN8gUphgJ+QciJlPmfvP4BHnpF6kQ4s5kiMwi3+LyubOxhvkjjU26+WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DgKaBX8A; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=TaSBJlFInsLcxtPVY3mbmKjqlz0xmKoklnBEfqHieo06goLveeHSZoErymNPUDTmpxh8SW0BSuPGkuW++wvjmmKl/ZrbqwUgYorGLT/WxYSHRCzpEVkaS5QBNBYE7hqEhAnqOJ1xZx1H829dTHvgcOEDLiXszMwrzcTP6/P+Xro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tpa4oVSa; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DgKaBX8A"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id qy5YrFVKNDI6fr7nOrmiO8; Mon, 01 Apr 2024 02:53:14 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id r7nNrAJ3v9zHMr7nOruAWO; Mon, 01 Apr 2024 02:53:14 +0000
-X-Authority-Analysis: v=2.4 cv=fo4XZ04f c=1 sm=1 tr=0 ts=660a219a
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=UqCG9HQmAAAA:8 a=ULve-GQanhtCPmNiPXUA:9 a=QEXdDO2ut3YA:10 a=9cHFzqQdt-sA:10
- a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=75BIkSv+82gmLssfiqp91Yj+hWnhvj/bJubjcKhhBFk=; b=DgKaBX8A+Dm2oX7EOhaSTi1lmR
-	hWHL+0p8srhxDq5zJQWqdLDjTjOPM6z77Gqz6MVMNf2KEXhJsLn0PQy+NzuxUrfDOBA097Ybve3ZM
-	R9AS/hexPTxq+TALHm7b0kru/WJTI2Ui2wDg5WDFx1ID4AiJA609AjVovFB+/xfgk1a/qGifZs6yq
-	SuwKXmIxr3SSnfbK+dPb42SaGqS2CJam276LwoawYLqdYwJ5f38SYUmK7zT9zgx9opfgdWexToFGH
-	zgpBz0Q4ZFTsfpHT3M/FbOvQrqV5o9dFhu0EUfj8QirhVBlsxB7TFTB3j6cIvbprUUiJEJblTZ34X
-	eYJBRcUQ==;
-Received: from [201.172.173.147] (port=40326 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rr7nK-0045H6-2R;
-	Sun, 31 Mar 2024 21:53:10 -0500
-Message-ID: <1be10e9c-e521-4974-b2ed-808a2e3a1a9d@embeddedor.com>
-Date: Sun, 31 Mar 2024 20:53:07 -0600
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tpa4oVSa"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711942477; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=u6JtRxYTExUsoUZBmyKeockMJYiorsrS2DZFcMH0Xu4=;
+	b=tpa4oVSavKsoHQk2vDb6yBGWJ1VNgesGA+7BZzau0Tr8qCAvUFM/VjSBl/dbbXeRjX1CY3Sipv3HrM5Ym/EZ1ZrV3XldwJiA9IytTdSpXeF8qhaQWEwEJzAIhka4BW5GGbwcdI68GwbRMDqXxWyrCQXk2ajb41VyQoBT3oF/F9o=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W3e3cIV_1711942465;
+Received: from 30.221.128.183(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W3e3cIV_1711942465)
+          by smtp.aliyun-inc.com;
+          Mon, 01 Apr 2024 11:34:37 +0800
+Message-ID: <45c3042b-4446-40f2-af70-52b8c0f4b108@linux.alibaba.com>
+Date: Mon, 1 Apr 2024 11:34:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,158 +34,170 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RDMA/mana_ib: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-To: Erick Archer <erick.archer@outlook.com>, Long Li <longli@microsoft.com>,
- Ajay Sharma <sharmaajay@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Konstantin Taranov <kotaranov@microsoft.com>,
- Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <AS8PR02MB7237974EF1B9BAFA618166C38B382@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <AS8PR02MB7237974EF1B9BAFA618166C38B382@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Subject: Re: [PATCH v4][next] net/smc: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZgXmscAd6Y2iQQ6O@neat>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <ZgXmscAd6Y2iQQ6O@neat>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1rr7nK-0045H6-2R
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.147]:40326
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBouodP+wAGMT15mKgUTPM7AItvBusDLkL832jKZE4pKOHlqL9ZAOaYDlmeSDsBlOrTa/M1L3YzgIa9OMowqcQx7LoImXoF5NGr0qWs0uX8Q2UyogLKt
- MOrMDPWpCpdlo+iR2IWIraRR50LXLn5ZLUOJnwHSG2i3iobQnsO8hThA626lSmVs8HDKx5aQqDMtTBXlq0fdc4njCpFbY4pgqAFBf3tniC3ERwTWC52vbk2b
 
 
 
-On 31/03/24 09:04, Erick Archer wrote:
-> The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of
-> trailing elements. Specifically, it uses a "mana_handle_t" array. So,
-> use the preferred way in the kernel declaring a flexible array [1].
+On 2024/3/29 05:52, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
 > 
-> Also, avoid the open-coded arithmetic in the memory allocator functions
-> [2] using the "struct_size" macro.
+> There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
+> that contain a couple of flexible structures:
 > 
-> Moreover, use the "offsetof" helper to get the indirect table offset
-> instead of the "sizeof" operator and avoid the open-coded arithmetic in
-> pointers using the new flex member.
+> struct smc_clc_msg_proposal_area {
+> 	...
+> 	struct smc_clc_v2_extension             pclc_v2_ext;
+> 	...
+> 	struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
+> 	...
+> };
 > 
-> Now, it is also possible to use the "flex_array_size" helper to compute
-> the size of these trailing elements in the "memcpy" function.
+> So, in order to avoid ending up with a couple of flexible-array members
+> in the middle of a struct, we use the `struct_group_tagged()` helper to
+> separate the flexible array from the rest of the members in the flexible
+> structure:
 > 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> struct smc_clc_smcd_v2_extension {
+>          struct_group_tagged(smc_clc_smcd_v2_extension_fixed, fixed,
+>                              u8 system_eid[SMC_MAX_EID_LEN];
+>                              u8 reserved[16];
+>          );
+>          struct smc_clc_smcd_gid_chid gidchid[];
+> };
+> 
+> With the change described above, we now declare objects of the type of
+> the tagged struct without embedding flexible arrays in the middle of
+> another struct:
+> 
+> struct smc_clc_msg_proposal_area {
+>          ...
+>          struct smc_clc_v2_extension_fixed	pclc_v2_ext;
+>          ...
+>          struct smc_clc_smcd_v2_extension_fixed	pclc_smcd_v2_ext;
+>          ...
+> };
+> 
+> We also use `container_of()` when we need to retrieve a pointer to the
+> flexible structures.
+> 
+> So, with these changes, fix the following warnings:
+> 
+> In file included from net/smc/af_smc.c:42:
+> net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>    186 |         struct smc_clc_v2_extension             pclc_v2_ext;
+>        |                                                 ^~~~~~~~~~~
+> net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>    188 |         struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
+>        |                                                 ^~~~~~~~~~~~~~~~
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thank you, Gustavo.
+
+Reviewed-by: Wen Gu <guwen@linux.alibaba.com>
+
 > ---
->   drivers/infiniband/hw/mana/qp.c               | 8 ++++----
->   drivers/net/ethernet/microsoft/mana/mana_en.c | 9 +++++----
->   include/net/mana/mana.h                       | 1 +
->   3 files changed, 10 insertions(+), 8 deletions(-)
+> Changes v4:
+>   - Fix code comments (due to copy/paste error, aghhh).
 > 
-> diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-> index 6e7627745c95..c2a39db8ef92 100644
-> --- a/drivers/infiniband/hw/mana/qp.c
-> +++ b/drivers/infiniband/hw/mana/qp.c
-> @@ -22,8 +22,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+> Changes in v3:
+>   - Adjust code to 80 columns. (Wen Gu)
+>   - Add a couple of code comments.
+>   - Link: https://lore.kernel.org/linux-hardening/ZgXlIADfiXSyRz8d@neat/
+> 
+> Changes in v2:
+>   - Name the tagged struct *_fixed instead of *_hdr.
+>   - Add Kees' RB tag.
+>   - Link: https://lore.kernel.org/linux-hardening/ZfCXBykRw5XqBvf0@neat/
+> 
+> v1:
+>   - Link: https://lore.kernel.org/linux-hardening/ZeIhOT44ON5rjPiP@neat/
+> 
+>   net/smc/smc_clc.c |  6 ++++--
+>   net/smc/smc_clc.h | 26 ++++++++++++++++----------
+>   2 files changed, 20 insertions(+), 12 deletions(-)
+> 
+> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+> index e55026c7529c..33fa787c28eb 100644
+> --- a/net/smc/smc_clc.c
+> +++ b/net/smc/smc_clc.c
+> @@ -853,8 +853,10 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+>   	pclc_smcd = &pclc->pclc_smcd;
+>   	pclc_prfx = &pclc->pclc_prfx;
+>   	ipv6_prfx = pclc->pclc_prfx_ipv6;
+> -	v2_ext = &pclc->pclc_v2_ext;
+> -	smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
+> +	v2_ext = container_of(&pclc->pclc_v2_ext,
+> +			      struct smc_clc_v2_extension, fixed);
+> +	smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
+> +				   struct smc_clc_smcd_v2_extension, fixed);
+>   	gidchids = pclc->pclc_gidchids;
+>   	trl = &pclc->pclc_trl;
 >   
->   	gc = mdev_to_gc(dev);
+> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
+> index 7cc7070b9772..467effb50cd6 100644
+> --- a/net/smc/smc_clc.h
+> +++ b/net/smc/smc_clc.h
+> @@ -134,12 +134,15 @@ struct smc_clc_smcd_gid_chid {
+>   			 */
 >   
-> -	req_buf_size =
-> -		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
-> +	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
->   	req = kzalloc(req_buf_size, GFP_KERNEL);
->   	if (!req)
->   		return -ENOMEM;
-> @@ -44,11 +43,12 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
->   		req->rss_enable = true;
+>   struct smc_clc_v2_extension {
+> -	struct smc_clnt_opts_area_hdr hdr;
+> -	u8 roce[16];		/* RoCEv2 GID */
+> -	u8 max_conns;
+> -	u8 max_links;
+> -	__be16 feature_mask;
+> -	u8 reserved[12];
+> +	/* New members must be added within the struct_group() macro below. */
+> +	struct_group_tagged(smc_clc_v2_extension_fixed, fixed,
+> +		struct smc_clnt_opts_area_hdr hdr;
+> +		u8 roce[16];		/* RoCEv2 GID */
+> +		u8 max_conns;
+> +		u8 max_links;
+> +		__be16 feature_mask;
+> +		u8 reserved[12];
+> +	);
+>   	u8 user_eids[][SMC_MAX_EID_LEN];
+>   };
 >   
->   	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
-> -	req->indir_tab_offset = sizeof(*req);
-> +	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
-> +					 indir_tab);
->   	req->update_indir_tab = true;
->   	req->cqe_coalescing_enable = 1;
+> @@ -159,8 +162,11 @@ struct smc_clc_msg_smcd {	/* SMC-D GID information */
+>   };
 >   
-> -	req_indir_tab = (mana_handle_t *)(req + 1);
-> +	req_indir_tab = req->indir_tab;
-
-It seems that `req_indir_tab` can be removed, and `req->indir_tab` be directly used.
-
->   	/* The ind table passed to the hardware must have
->   	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
->   	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 59287c6e6cee..04aa096c6cc4 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1062,7 +1062,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
->   	u32 req_buf_size;
->   	int err;
+>   struct smc_clc_smcd_v2_extension {
+> -	u8 system_eid[SMC_MAX_EID_LEN];
+> -	u8 reserved[16];
+> +	/* New members must be added within the struct_group() macro below. */
+> +	struct_group_tagged(smc_clc_smcd_v2_extension_fixed, fixed,
+> +		u8 system_eid[SMC_MAX_EID_LEN];
+> +		u8 reserved[16];
+> +	);
+>   	struct smc_clc_smcd_gid_chid gidchid[];
+>   };
 >   
-> -	req_buf_size = sizeof(*req) + sizeof(mana_handle_t) * num_entries;
-> +	req_buf_size = struct_size(req, indir_tab, num_entries);
->   	req = kzalloc(req_buf_size, GFP_KERNEL);
->   	if (!req)
->   		return -ENOMEM;
-> @@ -1074,7 +1074,8 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
->   
->   	req->vport = apc->port_handle;
->   	req->num_indir_entries = num_entries;
-> -	req->indir_tab_offset = sizeof(*req);
-> +	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
-> +					 indir_tab);
->   	req->rx_enable = rx;
->   	req->rss_enable = apc->rss_state;
->   	req->update_default_rxobj = update_default_rxobj;
-> @@ -1087,9 +1088,9 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
->   		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
->   
->   	if (update_tab) {
-> -		req_indir_tab = (mana_handle_t *)(req + 1);
-> +		req_indir_tab = req->indir_tab;
-
-Ditto.
-
-Thanks
---
-Gustavo
-
->   		memcpy(req_indir_tab, apc->rxobj_table,
-> -		       req->num_indir_entries * sizeof(mana_handle_t));
-> +		       flex_array_size(req, indir_tab, req->num_indir_entries));
->   	}
->   
->   	err = mana_send_request(apc->ac, req, req_buf_size, &resp,
-> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-> index 76147feb0d10..20ffcae29e1e 100644
-> --- a/include/net/mana/mana.h
-> +++ b/include/net/mana/mana.h
-> @@ -671,6 +671,7 @@ struct mana_cfg_rx_steer_req_v2 {
->   	u8 hashkey[MANA_HASH_KEY_SIZE];
->   	u8 cqe_coalescing_enable;
->   	u8 reserved2[7];
-> +	mana_handle_t indir_tab[];
->   }; /* HW DATA */
->   
->   struct mana_cfg_rx_steer_resp {
+> @@ -183,9 +189,9 @@ struct smc_clc_msg_proposal_area {
+>   	struct smc_clc_msg_smcd			pclc_smcd;
+>   	struct smc_clc_msg_proposal_prefix	pclc_prfx;
+>   	struct smc_clc_ipv6_prefix	pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
+> -	struct smc_clc_v2_extension		pclc_v2_ext;
+> +	struct smc_clc_v2_extension_fixed	pclc_v2_ext;
+>   	u8			user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
+> -	struct smc_clc_smcd_v2_extension	pclc_smcd_v2_ext;
+> +	struct smc_clc_smcd_v2_extension_fixed	pclc_smcd_v2_ext;
+>   	struct smc_clc_smcd_gid_chid
+>   				pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
+>   	struct smc_clc_msg_trail		pclc_trl;
