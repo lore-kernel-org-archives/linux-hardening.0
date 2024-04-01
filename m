@@ -1,203 +1,87 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8470522E;
-	Mon,  1 Apr 2024 03:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150BE2F55;
+	Mon,  1 Apr 2024 08:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711942483; cv=none; b=aJLvaLHSAObTSj86iOQoVdxErZA+BC0+3fiBllTgQQC7UxQLvG3jkWmvXYhqgILvZjDxYAHBEzu8t9RxC3ynLbfXVKFVpCZDbLgG8OFVQmJmduhvCF/8h56AUHMR/Smgq9ygP66HL+Fl8h+zjaKi9MdrDJNKRrBM86HEFJxHLs0=
+	t=1711961634; cv=none; b=WEt9djM7hluvemzbDVUG9LVjK1aJUcTMpQ9wtlpZu6jh0WNOsHyNxfQuJo17d+layrIFa6W1qT8xau4OoBWRYz6/MmsWAG7VOL4YeAvr/xiVdRPFpF7Xt/E2OBLmMOEkqwsR70NnUiA63RIHqzuwPAYqByeow47l3/FDCOyjIy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711942483; c=relaxed/simple;
-	bh=TrJcj01Er00eAvFKR0jzYuUqobdc2zMMASuC79JwpO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TaSBJlFInsLcxtPVY3mbmKjqlz0xmKoklnBEfqHieo06goLveeHSZoErymNPUDTmpxh8SW0BSuPGkuW++wvjmmKl/ZrbqwUgYorGLT/WxYSHRCzpEVkaS5QBNBYE7hqEhAnqOJ1xZx1H829dTHvgcOEDLiXszMwrzcTP6/P+Xro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tpa4oVSa; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1711961634; c=relaxed/simple;
+	bh=NX+uQ8uxVKNPnLm6VhOCJCE4GYlVkhpX+M9DMjah1Fk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TVfn82GPb3jv5raoiAKOKr19TAiuudgMKyXCCa3pEqpNYH4LXmaaJR/188c3FuRsBWzMPLNSxRlaHdZRObhDplG49w8OU5I6YMptUoM2o9p807aP4eUS+mjhkfDHTErH/2r5hVDwepCCCkdeNsjyvGx4A+GOGFWd+Q9Em3PXihM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPBfuewt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tpa4oVSa"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711942477; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=u6JtRxYTExUsoUZBmyKeockMJYiorsrS2DZFcMH0Xu4=;
-	b=tpa4oVSavKsoHQk2vDb6yBGWJ1VNgesGA+7BZzau0Tr8qCAvUFM/VjSBl/dbbXeRjX1CY3Sipv3HrM5Ym/EZ1ZrV3XldwJiA9IytTdSpXeF8qhaQWEwEJzAIhka4BW5GGbwcdI68GwbRMDqXxWyrCQXk2ajb41VyQoBT3oF/F9o=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W3e3cIV_1711942465;
-Received: from 30.221.128.183(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W3e3cIV_1711942465)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Apr 2024 11:34:37 +0800
-Message-ID: <45c3042b-4446-40f2-af70-52b8c0f4b108@linux.alibaba.com>
-Date: Mon, 1 Apr 2024 11:34:25 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPBfuewt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A30C433F1;
+	Mon,  1 Apr 2024 08:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711961633;
+	bh=NX+uQ8uxVKNPnLm6VhOCJCE4GYlVkhpX+M9DMjah1Fk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kPBfuewtT3WxLpbXZPKdLBLXKpqvhSndMIYLWSQTYy/3BMH81KkonMs1eWViCi4c0
+	 Ftnl36OrDwgiCxdNodl7IqvWNby8sIoNCAay3Xfq/scg3tvgBeLof7L7s5gxLyw1Ci
+	 h7xFxVD6LWw04f0sElycSv/JZZWlHCs1Xjk0Kxq17LUyzZ4uvbfeYfzbowMjPntXWi
+	 cxFR0946yVLLQgDj7L7Rn67KtDEzWOoXsP6/arWB37bCGDURxRx80zWtUGxfyD7BFE
+	 d0USOvfGlTZPA4/bR5JObOb6sYm6+p+ZXH/P1MQ2LOQXOrL9o+LolUB4JoNQFTvVsC
+	 nSg5pMX1PRVRw==
+From: Christian Brauner <brauner@kernel.org>
+To: Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	devel@lists.orangefs.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] orangefs: cleanup uses of strncpy
+Date: Mon,  1 Apr 2024 10:52:57 +0200
+Message-ID: <20240401-redewendung-retten-132ff0ea272d@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To:  <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
+References:  <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4][next] net/smc: Avoid -Wflex-array-member-not-at-end
- warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZgXmscAd6Y2iQQ6O@neat>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <ZgXmscAd6Y2iQQ6O@neat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1383; i=brauner@kernel.org; h=from:subject:message-id; bh=NX+uQ8uxVKNPnLm6VhOCJCE4GYlVkhpX+M9DMjah1Fk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRxlUk5cUr8WO6+emV/YeOVbT0ZzWo6Pmd/LNEtU99X5 pWg+US/o5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCIBTQx/+Oaa5x25m57HtjXy zJu+udnhm7comgR4b+e54e43/8P0Fwz/7Pm+rX+6iGeZSfeUBY8y6/3MLP61PQtrYPnOdfHCTg4 jFgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
+On Fri, 22 Mar 2024 21:41:18 +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> There is some care taken to ensure these destination buffers are
+> NUL-terminated by bounding the strncpy()'s by ORANGEFS_NAME_MAX - 1 or
+> ORANGEFS_MAX_SERVER_ADDR_LEN - 1. Instead, we can use the new 2-argument
+> version of strscpy() to guarantee NUL-termination on the destination
+> buffers while simplifying the code.
+> 
+> [...]
 
+If this needs to go separately from the vfs trees let me know.
 
-On 2024/3/29 05:52, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
-> 
-> There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
-> that contain a couple of flexible structures:
-> 
-> struct smc_clc_msg_proposal_area {
-> 	...
-> 	struct smc_clc_v2_extension             pclc_v2_ext;
-> 	...
-> 	struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-> 	...
-> };
-> 
-> So, in order to avoid ending up with a couple of flexible-array members
-> in the middle of a struct, we use the `struct_group_tagged()` helper to
-> separate the flexible array from the rest of the members in the flexible
-> structure:
-> 
-> struct smc_clc_smcd_v2_extension {
->          struct_group_tagged(smc_clc_smcd_v2_extension_fixed, fixed,
->                              u8 system_eid[SMC_MAX_EID_LEN];
->                              u8 reserved[16];
->          );
->          struct smc_clc_smcd_gid_chid gidchid[];
-> };
-> 
-> With the change described above, we now declare objects of the type of
-> the tagged struct without embedding flexible arrays in the middle of
-> another struct:
-> 
-> struct smc_clc_msg_proposal_area {
->          ...
->          struct smc_clc_v2_extension_fixed	pclc_v2_ext;
->          ...
->          struct smc_clc_smcd_v2_extension_fixed	pclc_smcd_v2_ext;
->          ...
-> };
-> 
-> We also use `container_of()` when we need to retrieve a pointer to the
-> flexible structures.
-> 
-> So, with these changes, fix the following warnings:
-> 
-> In file included from net/smc/af_smc.c:42:
-> net/smc/smc_clc.h:186:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->    186 |         struct smc_clc_v2_extension             pclc_v2_ext;
->        |                                                 ^~~~~~~~~~~
-> net/smc/smc_clc.h:188:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->    188 |         struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
->        |                                                 ^~~~~~~~~~~~~~~~
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
 
-Thank you, Gustavo.
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Reviewed-by: Wen Gu <guwen@linux.alibaba.com>
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> ---
-> Changes v4:
->   - Fix code comments (due to copy/paste error, aghhh).
-> 
-> Changes in v3:
->   - Adjust code to 80 columns. (Wen Gu)
->   - Add a couple of code comments.
->   - Link: https://lore.kernel.org/linux-hardening/ZgXlIADfiXSyRz8d@neat/
-> 
-> Changes in v2:
->   - Name the tagged struct *_fixed instead of *_hdr.
->   - Add Kees' RB tag.
->   - Link: https://lore.kernel.org/linux-hardening/ZfCXBykRw5XqBvf0@neat/
-> 
-> v1:
->   - Link: https://lore.kernel.org/linux-hardening/ZeIhOT44ON5rjPiP@neat/
-> 
->   net/smc/smc_clc.c |  6 ++++--
->   net/smc/smc_clc.h | 26 ++++++++++++++++----------
->   2 files changed, 20 insertions(+), 12 deletions(-)
-> 
-> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
-> index e55026c7529c..33fa787c28eb 100644
-> --- a/net/smc/smc_clc.c
-> +++ b/net/smc/smc_clc.c
-> @@ -853,8 +853,10 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
->   	pclc_smcd = &pclc->pclc_smcd;
->   	pclc_prfx = &pclc->pclc_prfx;
->   	ipv6_prfx = pclc->pclc_prfx_ipv6;
-> -	v2_ext = &pclc->pclc_v2_ext;
-> -	smcd_v2_ext = &pclc->pclc_smcd_v2_ext;
-> +	v2_ext = container_of(&pclc->pclc_v2_ext,
-> +			      struct smc_clc_v2_extension, fixed);
-> +	smcd_v2_ext = container_of(&pclc->pclc_smcd_v2_ext,
-> +				   struct smc_clc_smcd_v2_extension, fixed);
->   	gidchids = pclc->pclc_gidchids;
->   	trl = &pclc->pclc_trl;
->   
-> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
-> index 7cc7070b9772..467effb50cd6 100644
-> --- a/net/smc/smc_clc.h
-> +++ b/net/smc/smc_clc.h
-> @@ -134,12 +134,15 @@ struct smc_clc_smcd_gid_chid {
->   			 */
->   
->   struct smc_clc_v2_extension {
-> -	struct smc_clnt_opts_area_hdr hdr;
-> -	u8 roce[16];		/* RoCEv2 GID */
-> -	u8 max_conns;
-> -	u8 max_links;
-> -	__be16 feature_mask;
-> -	u8 reserved[12];
-> +	/* New members must be added within the struct_group() macro below. */
-> +	struct_group_tagged(smc_clc_v2_extension_fixed, fixed,
-> +		struct smc_clnt_opts_area_hdr hdr;
-> +		u8 roce[16];		/* RoCEv2 GID */
-> +		u8 max_conns;
-> +		u8 max_links;
-> +		__be16 feature_mask;
-> +		u8 reserved[12];
-> +	);
->   	u8 user_eids[][SMC_MAX_EID_LEN];
->   };
->   
-> @@ -159,8 +162,11 @@ struct smc_clc_msg_smcd {	/* SMC-D GID information */
->   };
->   
->   struct smc_clc_smcd_v2_extension {
-> -	u8 system_eid[SMC_MAX_EID_LEN];
-> -	u8 reserved[16];
-> +	/* New members must be added within the struct_group() macro below. */
-> +	struct_group_tagged(smc_clc_smcd_v2_extension_fixed, fixed,
-> +		u8 system_eid[SMC_MAX_EID_LEN];
-> +		u8 reserved[16];
-> +	);
->   	struct smc_clc_smcd_gid_chid gidchid[];
->   };
->   
-> @@ -183,9 +189,9 @@ struct smc_clc_msg_proposal_area {
->   	struct smc_clc_msg_smcd			pclc_smcd;
->   	struct smc_clc_msg_proposal_prefix	pclc_prfx;
->   	struct smc_clc_ipv6_prefix	pclc_prfx_ipv6[SMC_CLC_MAX_V6_PREFIX];
-> -	struct smc_clc_v2_extension		pclc_v2_ext;
-> +	struct smc_clc_v2_extension_fixed	pclc_v2_ext;
->   	u8			user_eids[SMC_CLC_MAX_UEID][SMC_MAX_EID_LEN];
-> -	struct smc_clc_smcd_v2_extension	pclc_smcd_v2_ext;
-> +	struct smc_clc_smcd_v2_extension_fixed	pclc_smcd_v2_ext;
->   	struct smc_clc_smcd_gid_chid
->   				pclc_gidchids[SMCD_CLC_MAX_V2_GID_ENTRIES];
->   	struct smc_clc_msg_trail		pclc_trl;
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] orangefs: cleanup uses of strncpy
+      https://git.kernel.org/vfs/vfs/c/fc10fed37526
