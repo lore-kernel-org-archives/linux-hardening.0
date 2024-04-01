@@ -1,87 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150BE2F55;
-	Mon,  1 Apr 2024 08:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C542B10799;
+	Mon,  1 Apr 2024 09:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711961634; cv=none; b=WEt9djM7hluvemzbDVUG9LVjK1aJUcTMpQ9wtlpZu6jh0WNOsHyNxfQuJo17d+layrIFa6W1qT8xau4OoBWRYz6/MmsWAG7VOL4YeAvr/xiVdRPFpF7Xt/E2OBLmMOEkqwsR70NnUiA63RIHqzuwPAYqByeow47l3/FDCOyjIy8=
+	t=1711964361; cv=none; b=MUjdOM6UY+aoqB2cE1yDguoJvYglL3sJP0SX10sdE2pw2JQCGJg4MmBznSmWC8p25hQKKWYbJmGJSKpIfn80/+gOvcNxXOZDNc/KInSTnLT2LvP1rP8hFRPGQz7LMU9fRumpbOLtiUsjBQYfApO+hEbpMHMy/D6rCHBoLpMz0Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711961634; c=relaxed/simple;
-	bh=NX+uQ8uxVKNPnLm6VhOCJCE4GYlVkhpX+M9DMjah1Fk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TVfn82GPb3jv5raoiAKOKr19TAiuudgMKyXCCa3pEqpNYH4LXmaaJR/188c3FuRsBWzMPLNSxRlaHdZRObhDplG49w8OU5I6YMptUoM2o9p807aP4eUS+mjhkfDHTErH/2r5hVDwepCCCkdeNsjyvGx4A+GOGFWd+Q9Em3PXihM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPBfuewt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711964361; c=relaxed/simple;
+	bh=GDkJaI2NiV2yD5bGEtjzSyb61VjKRzyf5ADCDUWbmSw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UyMe/WuvrLpW7vyoihEt4Lj1sGhKhCWN62lKs61YDsV2Ji+IjFyZP0mQndAILhkYWbiQJiKoN3LRSsLQtCFUU/vbGRd+7tNW+KWnQ+FJLOIDYWloGGWFzCx7XaxgL3lcK4iGi97Kh1lHbkstd1d7qBDXQut7YVYf+Vxh+2I5350=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QkU7b6/q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPBfuewt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A30C433F1;
-	Mon,  1 Apr 2024 08:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711961633;
-	bh=NX+uQ8uxVKNPnLm6VhOCJCE4GYlVkhpX+M9DMjah1Fk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kPBfuewtT3WxLpbXZPKdLBLXKpqvhSndMIYLWSQTYy/3BMH81KkonMs1eWViCi4c0
-	 Ftnl36OrDwgiCxdNodl7IqvWNby8sIoNCAay3Xfq/scg3tvgBeLof7L7s5gxLyw1Ci
-	 h7xFxVD6LWw04f0sElycSv/JZZWlHCs1Xjk0Kxq17LUyzZ4uvbfeYfzbowMjPntXWi
-	 cxFR0946yVLLQgDj7L7Rn67KtDEzWOoXsP6/arWB37bCGDURxRx80zWtUGxfyD7BFE
-	 d0USOvfGlTZPA4/bR5JObOb6sYm6+p+ZXH/P1MQ2LOQXOrL9o+LolUB4JoNQFTvVsC
-	 nSg5pMX1PRVRw==
-From: Christian Brauner <brauner@kernel.org>
-To: Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	devel@lists.orangefs.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] orangefs: cleanup uses of strncpy
-Date: Mon,  1 Apr 2024 10:52:57 +0200
-Message-ID: <20240401-redewendung-retten-132ff0ea272d@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To:  <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
-References:  <20240322-strncpy-fs-orangefs-dcache-c-v1-1-15d12debbf38@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QkU7b6/q"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4316NYdc007999;
+	Mon, 1 Apr 2024 09:39:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=9BsDXd1
+	MG4iwSsj0EEVJv6vlxpdFNHE3d7mp0aKDrK8=; b=QkU7b6/qGcOz8iVogrscTts
+	nnyMZM/LtZTizyiMrix+Eue9UNAiR4feAvsDfHelI3OwJ4E/rrkdecrJCdlywvri
+	Xi8/J/kU9m72cQs8sS2Fu2mBluto87nhOgu6lcd04hV9m1w51tGsMLorOWp25SKd
+	kr001PK6x67ieabzqKFnbJmjOafMufnH0bU/xroM6M4b5RWXQZkiKpxk+TgGDBQW
+	fileg4SjrMhQWamsivZ5qnJaiCMNnCSTltHdd7YWqa4NwVTVdFn/fI/Fph5BAoKA
+	PTX854198YWhxgCvXX6nbe6VSAZrYCxwRd1e3h6IN0u37dh818W3AgbENDQ4/Vg=
+	=
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x7maggpgg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 09:39:04 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4319d45J001896
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 1 Apr 2024 09:39:04 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 1 Apr 2024 02:38:57 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v6 RESEND 0/4] arm64: qcom: add AIM300 AIoT board support
+Date: Mon, 1 Apr 2024 17:38:39 +0800
+Message-ID: <20240401093843.2591147-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1383; i=brauner@kernel.org; h=from:subject:message-id; bh=NX+uQ8uxVKNPnLm6VhOCJCE4GYlVkhpX+M9DMjah1Fk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRxlUk5cUr8WO6+emV/YeOVbT0ZzWo6Pmd/LNEtU99X5 pWg+US/o5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCIBTQx/+Oaa5x25m57HtjXy zJu+udnhm7comgR4b+e54e43/8P0Fwz/7Pm+rX+6iGeZSfeUBY8y6/3MLP61PQtrYPnOdfHCTg4 jFgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 1PabHd1YX6K_e6_H84-mPeo4_NfVZ9oa
+X-Proofpoint-ORIG-GUID: 1PabHd1YX6K_e6_H84-mPeo4_NfVZ9oa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_06,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999
+ suspectscore=0 spamscore=0 malwarescore=0 phishscore=0 adultscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2404010068
 
-On Fri, 22 Mar 2024 21:41:18 +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> There is some care taken to ensure these destination buffers are
-> NUL-terminated by bounding the strncpy()'s by ORANGEFS_NAME_MAX - 1 or
-> ORANGEFS_MAX_SERVER_ADDR_LEN - 1. Instead, we can use the new 2-argument
-> version of strscpy() to guarantee NUL-termination on the destination
-> buffers while simplifying the code.
-> 
-> [...]
+Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
+and PMIC functions.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
+chip etc.
+Here is a diagram of AIM300 AIoT Carrie Board and SoM
+ +--------------------------------------------------+
+ |             AIM300 AIOT Carrie Board             |
+ |                                                  |
+ |           +-----------------+                    |
+ |power----->| Fixed regulator |---------+          |
+ |           +-----------------+         |          |
+ |                                       |          |
+ |                                       v VPH_PWR  |
+ | +----------------------------------------------+ |
+ | |                          AIM300 SOM |        | |
+ | |                                     |VPH_PWR | |
+ | |                                     v        | |
+ | |   +-------+       +--------+     +------+    | |
+ | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+ | |   +-------+       +--------+     +------+    | |
+ | |                                              | |
+ | +----------------------------------------------+ |
+ |                                                  |
+ |                    +----+          +------+      |
+ |                    |USB |          | UART |      |
+ |                    +----+          +------+      |
+ +--------------------------------------------------+
+The following functions have been verified:
+  - uart
+  - usb
+  - ufs
+  - PCIe
+  - PMIC
+  - display
+  - adsp
+  - cdsp
+  - tlmm
 
-If this needs to go separately from the vfs trees let me know.
+Documentation for qcs8550[1] and sm8550[2]
+[1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+[2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
 
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+v5 -> v6:
+  - move qcs8550 board info bebind sm8550 boards info in qcom.yaml
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+v4 -> v5:
+  - "2023-2024" instead of "2023~2024" for License
+  - update patch commit message to previous comments and with an updated
+    board diagram
+  - use qcs8550.dtsi instead of qcm8550.dtsi
+  - remove the reserved memory regions which will be handled by
+    bootloader
+  - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
+    remoteproc_mpss function node, audio sound DTS node, new patch will
+    be updated after respective team's end to end full verification
+  - address comments to vph_pwr, move vph_pwr node and related
+    references to qcs8550-aim300-aiot.dts
+  - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
+  - add pcie0I AND pcie1 support together
+  - the following patches were applied, so remove these patches from new
+    patch series:
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
+  - verified with dtb check, and result is expected, because those
+    warnings are not introduced by current patch series.
+    DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
+    arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
+    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+    #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+v3 -> v4:
+  - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
+    of qcm8550, another board with qcm8550 will be added later
+  - add AIM300 AIoT board string in qcom.yaml file
+  - add sm8550 and qcm8550 fallback compatible
+  - add qcm8550 SoC id
+  - add reserved memory map codes in qcm8550.dtsi
+  - pm8010 and pmr73d are splited into carrier board DTS file. Because
+    the regulators which in pm8550, pm8550ve and pm8550vs are present
+    on the SoM. The regulators which in pm8010 and pmr73d are present
+    on the carrier board.
+  - stay VPH_PWR at qcs8550-aim300.dtsi file
+      VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
+      with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
+      SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+v2 -> v3:
+  - introduce qcs8550.dtsi
+  - separate fix dtc W=1 warning patch to another patch series
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
+v1 -> v2:
+  - merge the splited dts patches into one patch
+  - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
+  - drop PCIe1 dts node due to it is not enabled
+  - update display node name for drop sde characters
 
-[1/1] orangefs: cleanup uses of strncpy
-      https://git.kernel.org/vfs/vfs/c/fc10fed37526
+previous discussion here:
+[1] v5: https://lore.kernel.org/linux-arm-msm/20240301134113.14423-1-quic_tengfan@quicinc.com
+[2] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
+[3] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
+[4] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
+[5] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
+
+
+
+Tengfei Fan (4):
+  dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+  arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+  arm64: dts: qcom: add base AIM300 dtsi
+  arm64: dts: qcom: aim300: add AIM300 AIoT
+
+ .../devicetree/bindings/arm/qcom.yaml         |   8 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 384 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 345 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 169 ++++++++
+ 5 files changed, 907 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+
+
+base-commit: a6bd6c9333397f5a0e2667d4d82fef8c970108f2
+-- 
+2.25.1
+
