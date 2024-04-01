@@ -1,348 +1,316 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A4D31A94;
-	Mon,  1 Apr 2024 18:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692EC20DE7
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 19:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711996954; cv=none; b=mCRSW0kG65aP/pv9cUuk/YUvwHxffaYqux2nfGoW7a4aaSMCJfmHcRkyP+8CBYlWPb9tsZcq9GHDpnIlJpFYHDOssw6YbNg1IMEqfbeXkHRd7x4ND1sHPfOvvQYEH0OoXZezc7jbIlg+1ztgeXsFMWAU3OhdJXCzdl5d8g90GDs=
+	t=1711998822; cv=none; b=hVQGHwVNIqOqpj+pSOWogdgAE/LX1UphYjPTVm3dPIkCiks+YiZitSoaNsH8tTeWR61cpzI/CO+3TC+N5xmyab96wxSBwf92jK3CupvvKelDxyHD4HVtyUOHGyoOo1eIJihejvOQqX/f4+4yKglyciZnplOTxXcOtJIumhka36c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711996954; c=relaxed/simple;
-	bh=dwqxGUGTnX38kdEUpATPahVGeG1pIReessVg0QtXNMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rCygH8HXXdibasRVrVZeSswF/fas9uNdRBwilDmVABU8qXfWYaCKCVmEeXr+3pPy1SKVyWlJ8bSHAVmcFi0Q+71977FzXA0hA0tOBDC+IYJXFkimVVaA3DNn1gk0kN+nXG2WVEHSbV/Th6AfiXT+L+SKRQ01HiCW9Edg7/nLvJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLwHG32J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711998822; c=relaxed/simple;
+	bh=xRA2kVWdLsLw32UwgsjnRYu7M6yDHMhVPmZxCGwEJAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZESUjDr2Atfc4NS/kCsf//9IFQ7YbPURAT9xjM0UOspdn8C+Jz+kk/YnfXdmnk/lM57YK5FrdTJpYuocZBVXa1Oec6TLhWGkL9Dqc+nCHAfMuh4lB2ek6HtZlfQFjtqI3HKtHGqcwNldsAK2gNZFDHwWj3Q0WdkJuU3rcNnFMEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GEQjp8BQ; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLwHG32J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E179FC433F1;
-	Mon,  1 Apr 2024 18:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711996953;
-	bh=dwqxGUGTnX38kdEUpATPahVGeG1pIReessVg0QtXNMI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=HLwHG32J2xiQsfvHaMJtM+ftN7QpgCtJGf60A+m/ur8/ozIRq/EUybEQXecZVEBVW
-	 Utb/S3EC/Sj/WDu5IOJ9yCTxahDYqumRV5AzsFxPpuJSec2i5caDXML6fJVqOeyH5q
-	 pkzZMr9Lm4e3hyWzWxMdLs5qDclAOn1DOoZl2xSN/Mm2AtMdCP6icYByl9KxE3Fnwl
-	 b2JH3JuzEymu0kushsLyqO9brGO01hxVArY5v33MeTWhmiTtOPOgKhsxggMmTPauO3
-	 N+yg2rpbYEXPsqLMh9n4cpYPB7urxmoNMHaiMmj9U1q3O0tAis+IfadldKN+JRIYJe
-	 opojUOncM1LkQ==
-Date: Mon, 1 Apr 2024 12:42:30 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4][next] integrity: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <ZgsAFhl90kecIR00@neat>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GEQjp8BQ"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so3169323276.1
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Apr 2024 12:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711998819; x=1712603619; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Prq1QJJnQQU7u1iRcjMVZrhCj4xAy2Si6lydnwZRhuc=;
+        b=GEQjp8BQBHTGx4Qk+SOSFx59tIEZtTXojY3K60hTjWTtjeal0ufWWkq8d11UUYpTWI
+         2VpJ+Nv6l/7atUUN4KfB5UXjf3jz8ZvhVadbnqsbFpS7ItA3eeMi7pOeFGsEOFyYDwfx
+         S6GU0rhJDKVHiTslt0bTykbKbsYVWNxz5wqlwJcXpOlg5iarMgSijaSlRfIHSv9USLpx
+         MlYHPCNgBADoIje+h9ODRnirUS0GauxgWtYhnyHc+XfEDNWfxRtZOWvOW+ysdvvQZ28J
+         FqPLFjklrUGBVU1YQxiYMXEP3RkCb1NYKtM/Z72qV5sN37AeORdpu2opsIx6uRRovjD8
+         d00w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711998819; x=1712603619;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Prq1QJJnQQU7u1iRcjMVZrhCj4xAy2Si6lydnwZRhuc=;
+        b=AVO+5+Y/n7v+haH/SjCNeQsq+mOcvadRLRYvKhixtFgbEz/GAcyeQm6B2CDFJ3OTNc
+         w3qpl4MQ5jqCmknr5MRCqT4mUcUySmn74ulnEEYPEFzKxzXR7aLPc95yznlA7WHFJSoF
+         mcGUKI1joe/e9/PjaMUhMti5VsLo9XKX2qWtt/dN8SMykBWzipfGkZ8tVgTEt1WQgaV3
+         /rARcTTIDMpy3xm3w+gA2vpAKAgLdpQpZV5WhAAXPDLbQfQRLNIKe7blk26rjl5Fv2Ef
+         fOWvjmXM+See1t1uDsf9IF2weotArrIwn0jcevRTrMHBRve/owU93/houHSpV76DhQHL
+         q7uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTuHJahsaQ42gGijt4NZMRh0pbmpiNuEQ7C/Up4vKOOXFkPtHXvscToqrVcDIFalh2uoVlms6TUpFXJfTjiQbNpxXnHuseKKcts8shtvCJ
+X-Gm-Message-State: AOJu0YwxAcW01lBftJVynD1GYAH/rkfpjgv3HS5MxGg8JqHL2zzuSmAG
+	XhVVUmg5zU8yOWlmzC5ZQGrs2Nh/v0ij1rVWPDBPP6C+dfjNariaiAjPciuycAKpYi2y4QnbTLd
+	qpqOarNpdUW4m7ypsvOEV+YQLYxgtSdkxES2Waw==
+X-Google-Smtp-Source: AGHT+IH0/B1ZK59cE+3njkExu1/oK/oKfgca8fZUN4erCCFS3DlhCeWUIs/BPU37DZOaYWWikalNTl6N1DBcONTXIVM=
+X-Received: by 2002:a25:820d:0:b0:dcb:df38:1c20 with SMTP id
+ q13-20020a25820d000000b00dcbdf381c20mr7122644ybk.24.1711998819458; Mon, 01
+ Apr 2024 12:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240401093843.2591147-1-quic_tengfan@quicinc.com> <20240401093843.2591147-3-quic_tengfan@quicinc.com>
+In-Reply-To: <20240401093843.2591147-3-quic_tengfan@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 1 Apr 2024 22:13:28 +0300
+Message-ID: <CAA8EJpqddAsgVGMfVi8A+cqCq9w5fDBfNuhiLK2t-q=6gBpy+Q@mail.gmail.com>
+Subject: Re: [PATCH v6 RESEND 2/4] arm64: dts: qcom: qcs8550: introduce
+ qcs8550 dtsi
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, keescook@chromium.org, 
+	tony.luck@intel.com, gpiccoli@igalia.com, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kernel@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+On Mon, 1 Apr 2024 at 12:40, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>
+> QCS8550 is derived from SM8550. The differnece between SM8550 and
+> QCS8550 is QCS8550 doesn't have modem RF system. QCS8550 is mainly used
+> in IoT scenarios.
+> QCS8550 firmware has different memory map with SM8550 firmware. The
+> memory map will be runtime added through bootloader.
+> There are 3 types of reserved memory regions here:
+> 1. Firmware related regions which aren't shared with kernel.
+>     The device tree source in kernel doesn't need to have node to indicate
+> the firmware related reserved information. OS bootloader conveys the
+> information by update device tree in runtime.
+>     This will be described as: UEFI saves the physical address of the
+> UEFI System Table to dts file's chosen node. Kernel read this table and
+> add reserved memory regions to efi config table. Current reserved memory
+> region may have reserved region which was not yet used, release note of
+> the firmware have such kind of information.
+> 2. Firmware related memory regions which are shared with Kernel
+>     Each region has a specific node with specific label name for later
+> phandle reference from other driver dt node.
+> 3. PIL regions.
+>     PIL regions will be reserved and then assigned to subsystem firmware
+> later.
+> Here is a reserved memory map for this platform:
+> 0x100000000 +------------------+
+>             |                  |
+>             | Firmware Related |
+>             |                  |
+>  0xd4d00000 +------------------+
+>             |                  |
+>             | Kernel Available |
+>             |                  |
+>  0xa7000000 +------------------+
+>             |                  |
+>             |    PIL Region    |
+>             |                  |
+>  0x8a800000 +------------------+
+>             |                  |
+>             | Firmware Related |
+>             |                  |
+>  0x80000000 +------------------+
+> Note that:
+> 0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
+> it is available for kernel usage. This region is not suggested to be
+> used by kernel features like ramoops, suspend resume etc.
+>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs8550.dtsi | 169 ++++++++++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
 
-There is currently an object (`hdr)` in `struct ima_max_digest_data`
-that contains a flexible structure (`struct ima_digest_data`):
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
- struct ima_max_digest_data {
-	struct ima_digest_data hdr;
-        u8 digest[HASH_MAX_DIGESTSIZE];
- } __packed;
+Minor nit below.
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of a struct, we use the `__struct_group()` helper to separate
-the flexible array from the rest of the members in the flexible
-structure:
+>
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8550.dtsi b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
+> new file mode 100644
+> index 000000000000..a3ebf3d4e16d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include "sm8550.dtsi"
+> +
+> +/delete-node/ &reserved_memory;
+> +
+> +/ {
+> +       reserved_memory: reserved-memory {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +
+> +               /* These are 3 types of reserved memory regions here:
+> +                * 1. Firmware related regions which aren't shared with kernel.
+> +                *     The device tree source in kernel doesn't need to have node to
+> +                * indicate the firmware related reserved information. OS bootloader
+> +                * conveys the information by update device tree in runtime.
+> +                *     This will be described as: UEFI saves the physical address of
+> +                * the UEFI System Table to dts file's chosen node. Kernel read this
+> +                * table and add reserved memory regions to efi config table. Current
+> +                * reserved memory region may have reserved region which was not yet
+> +                * used, release note of the firmware have such kind of information.
+> +                * 2. Firmware related memory regions which are shared with Kernel.
+> +                *     Each region has a specific node with specific label name for
+> +                * later phandle reference from other driver dt node.
+> +                * 3. PIL regions.
+> +                *     PIL regions will be reserved and then assigned to subsystem
+> +                * firmware later.
+> +                * Here is a reserved memory map for this platform:
+> +                * 0x100000000 +------------------+
+> +                *             |                  |
+> +                *             | Firmware Related |
+> +                *             |                  |
+> +                *  0xd4d00000 +------------------+
+> +                *             |                  |
+> +                *             | Kernel Available |
+> +                *             |                  |
+> +                *  0xa7000000 +------------------+
+> +                *             |                  |
+> +                *             |    PIL Region    |
+> +                *             |                  |
+> +                *  0x8a800000 +------------------+
+> +                *             |                  |
+> +                *             | Firmware Related |
+> +                *             |                  |
+> +                *  0x80000000 +------------------+
+> +                * Note that:
+> +                * 0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
+> +                * it is available for kernel usage. This region is not suggested to
+> +                * be used by kernel features like ramoops, suspend resume etc.
+> +                */
+> +
+> +               /*
+> +                * Firmware related regions, bootlader will possible reserve parts of
+> +                * region from 0x80000000..0x8a800000.
+> +                */
+> +               aop_image_mem: aop-image-region@81c00000 {
+> +                       reg = <0x0 0x81c00000 0x0 0x60000>;
+> +                       no-map;
+> +               };
+> +
+> +               aop_cmd_db_mem: aop-cmd-db-region@81c60000 {
+> +                       compatible = "qcom,cmd-db";
+> +                       reg = <0x0 0x81c60000 0x0 0x20000>;
+> +                       no-map;
+> +               };
+> +
+> +               aop_config_mem: aop-config-region@81c80000 {
+> +                       no-map;
+> +                       reg = <0x0 0x81c80000 0x0 0x20000>;
+> +               };
+> +
+> +               smem_mem: smem-region@81d00000 {
+> +                       compatible = "qcom,smem";
+> +                       reg = <0x0 0x81d00000 0x0 0x200000>;
+> +                       hwlocks = <&tcsr_mutex 3>;
+> +                       no-map;
+> +               };
+> +
+> +               adsp_mhi_mem: adsp-mhi-region@81f00000 {
+> +                       reg = <0x0 0x81f00000 0x0 0x20000>;
+> +                       no-map;
+> +               };
+> +
+> +               /* PIL region */
+> +               mpss_mem: mpss-region@8a800000 {
+> +                       reg = <0x0 0x8a800000 0x0 0x10800000>;
+> +                       no-map;
+> +               };
+> +
+> +               q6_mpss_dtb_mem: q6-mpss-dtb-region@9b000000 {
+> +                       reg = <0x0 0x9b000000 0x0 0x80000>;
+> +                       no-map;
+> +               };
+> +
+> +               ipa_fw_mem: ipa-fw-region@9b080000 {
+> +                       reg = <0x0 0x9b080000 0x0 0x10000>;
+> +                       no-map;
+> +               };
+> +
+> +               ipa_gsi_mem: ipa-gsi-region@9b090000 {
+> +                       reg = <0x0 0x9b090000 0x0 0xa000>;
+> +                       no-map;
+> +               };
+> +
+> +               gpu_micro_code_mem: gpu-micro-code-region@9b09a000 {
+> +                       reg = <0x0 0x9b09a000 0x0 0x2000>;
+> +                       no-map;
+> +               };
+> +
+> +               spss_region_mem: spss-region@9b100000 {
+> +                       reg = <0x0 0x9b100000 0x0 0x180000>;
+> +                       no-map;
+> +               };
+> +
+> +               spu_secure_shared_memory_mem: spu-secure-shared-memory-region@9b280000 {
+> +                       reg = <0x0 0x9b280000 0x0 0x80000>;
+> +                       no-map;
+> +               };
+> +
+> +               camera_mem: camera-region@9b300000 {
+> +                       reg = <0x0 0x9b300000 0x0 0x800000>;
+> +                       no-map;
+> +               };
+> +
+> +               video_mem: video-region@9bb00000 {
+> +                       reg = <0x0 0x9bb00000 0x0 0x700000>;
+> +                       no-map;
+> +               };
+> +
+> +               cvp_mem: cvp-region@9c200000 {
+> +                       reg = <0x0 0x9c200000 0x0 0x700000>;
+> +                       no-map;
+> +               };
+> +
+> +               cdsp_mem: cdsp-region@9c900000 {
+> +                       reg = <0x0 0x9c900000 0x0 0x2000000>;
+> +                       no-map;
+> +               };
+> +
+> +               q6_cdsp_dtb_mem: q6-cdsp-dtb-region@9e900000 {
+> +                       reg = <0x0 0x9e900000 0x0 0x80000>;
+> +                       no-map;
+> +               };
+> +
+> +               q6_adsp_dtb_mem: q6-adsp-dtb-region@9e980000 {
+> +                       reg = <0x0 0x9e980000 0x0 0x80000>;
+> +                       no-map;
+> +               };
+> +
+> +               adspslpi_mem: adspslpi-region@9ea00000 {
+> +                       reg = <0x0 0x9ea00000 0x0 0x4080000>;
+> +                       no-map;
+> +               };
+> +
+> +               /*
+> +                * Firmware related regions, bootlader will possible reserve parts of
 
-struct ima_digest_data {
-        __struct_group(ima_digest_data_hdr, hdr, __packed,
+Nit: bootloader will possibly...
 
-	... the rest of the members
+> +                * region from 0xd8000000..0x100000000.
+> +                */
+> +               mpss_dsm_mem: mpss_dsm_region@d4d00000 {
+> +                       reg = <0x0 0xd4d00000 0x0 0x3300000>;
+> +                       no-map;
+> +               };
+> +       };
+> +};
+> --
+> 2.25.1
+>
+>
 
-        );
-        u8 digest[];
-} __packed;
 
-And similarly for `struct evm_ima_xattr_data`.
-
-With the change described above, we can now declare an object of the
-type of the tagged `struct ima_digest_data_hdr`, without embedding the
-flexible array in the middle of another struct:
-
- struct ima_max_digest_data {
-        struct ima_digest_data_hdr hdr;
-        u8 digest[HASH_MAX_DIGESTSIZE];
- } __packed;
-
-And similarly for `struct evm_digest` and `struct evm_xattr`.
-
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure.
-
-So, with these changes, fix the following warnings:
-
-security/integrity/evm/evm.h:64:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/evm/../integrity.h:40:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/evm/../integrity.h:68:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/ima/../integrity.h:40:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/ima/../integrity.h:68:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/integrity.h:40:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/integrity.h:68:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/platform_certs/../integrity.h:40:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-security/integrity/platform_certs/../integrity.h:68:32: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v4:
- - Update changelog text. (Mimi Zohar)
- - Include changes for `struct evm_ima_xattr_data` and `struct evm_xattr`.
- - Add a couple of code comments.
-
-Changes in v3:
- - struct ima_digest_data is a packed structure. So, to keep things
-   consistent, use the attribute __packed on the tagged struct 
-   ima_digest_data_hdr. For this, we use __struct_group() instead of
-   struct_group_tagged(). Update the changelog text, accordingly.
- - Link: https://lore.kernel.org/linux-hardening/ZfuzWku+ip4fsZrb@neat/ 
-
-Changes in v2:
- - Include changes for `struct evm_digest` (Mimi Zohar)
- - Link: https://lore.kernel.org/linux-hardening/ZfuvoIj+AJHjCdTs@neat/
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZeYKWrXvACBBrAP8@neat/
-
- security/integrity/evm/evm.h              |  2 +-
- security/integrity/ima/ima_api.c          |  6 ++++--
- security/integrity/ima/ima_appraise.c     |  4 +++-
- security/integrity/ima/ima_init.c         |  6 ++++--
- security/integrity/ima/ima_main.c         |  6 ++++--
- security/integrity/ima/ima_template_lib.c | 10 ++++++----
- security/integrity/integrity.h            | 12 +++++++++---
- 7 files changed, 31 insertions(+), 15 deletions(-)
-
-diff --git a/security/integrity/evm/evm.h b/security/integrity/evm/evm.h
-index eb1a2c343bd7..72e3341ae6f7 100644
---- a/security/integrity/evm/evm.h
-+++ b/security/integrity/evm/evm.h
-@@ -61,7 +61,7 @@ extern int evm_hmac_attrs;
- extern struct list_head evm_config_xattrnames;
- 
- struct evm_digest {
--	struct ima_digest_data hdr;
-+	struct ima_digest_data_hdr hdr;
- 	char digest[IMA_MAX_DIGEST_SIZE];
- } __packed;
- 
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index b37d043d5748..c7c8d1bffb17 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -247,6 +247,8 @@ int ima_collect_measurement(struct ima_iint_cache *iint, struct file *file,
- 	struct inode *real_inode = d_real_inode(file_dentry(file));
- 	const char *filename = file->f_path.dentry->d_name.name;
- 	struct ima_max_digest_data hash;
-+	struct ima_digest_data *hash_hdr = container_of(&hash.hdr,
-+						struct ima_digest_data, hdr);
- 	struct kstat stat;
- 	int result = 0;
- 	int length;
-@@ -286,9 +288,9 @@ int ima_collect_measurement(struct ima_iint_cache *iint, struct file *file,
- 			result = -ENODATA;
- 		}
- 	} else if (buf) {
--		result = ima_calc_buffer_hash(buf, size, &hash.hdr);
-+		result = ima_calc_buffer_hash(buf, size, hash_hdr);
- 	} else {
--		result = ima_calc_file_hash(file, &hash.hdr);
-+		result = ima_calc_file_hash(file, hash_hdr);
- 	}
- 
- 	if (result && result != -EBADF && result != -EINVAL)
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 3497741caea9..656c709b974f 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -378,7 +378,9 @@ static int xattr_verify(enum ima_hooks func, struct ima_iint_cache *iint,
- 		}
- 
- 		rc = calc_file_id_hash(IMA_VERITY_DIGSIG, iint->ima_hash->algo,
--				       iint->ima_hash->digest, &hash.hdr);
-+				       iint->ima_hash->digest,
-+				       container_of(&hash.hdr,
-+					       struct ima_digest_data, hdr));
- 		if (rc) {
- 			*cause = "sigv3-hashing-error";
- 			*status = INTEGRITY_FAIL;
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 393f5c7912d5..4e208239a40e 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -48,12 +48,14 @@ static int __init ima_add_boot_aggregate(void)
- 	struct ima_event_data event_data = { .iint = iint,
- 					     .filename = boot_aggregate_name };
- 	struct ima_max_digest_data hash;
-+	struct ima_digest_data *hash_hdr = container_of(&hash.hdr,
-+						struct ima_digest_data, hdr);
- 	int result = -ENOMEM;
- 	int violation = 0;
- 
- 	memset(iint, 0, sizeof(*iint));
- 	memset(&hash, 0, sizeof(hash));
--	iint->ima_hash = &hash.hdr;
-+	iint->ima_hash = hash_hdr;
- 	iint->ima_hash->algo = ima_hash_algo;
- 	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
- 
-@@ -70,7 +72,7 @@ static int __init ima_add_boot_aggregate(void)
- 	 * is not found.
- 	 */
- 	if (ima_tpm_chip) {
--		result = ima_calc_boot_aggregate(&hash.hdr);
-+		result = ima_calc_boot_aggregate(hash_hdr);
- 		if (result < 0) {
- 			audit_cause = "hashing_error";
- 			goto err_out;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c84e8c55333d..0d3a7c864fd4 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -941,6 +941,8 @@ int process_buffer_measurement(struct mnt_idmap *idmap,
- 					    .buf_len = size};
- 	struct ima_template_desc *template;
- 	struct ima_max_digest_data hash;
-+	struct ima_digest_data *hash_hdr = container_of(&hash.hdr,
-+						struct ima_digest_data, hdr);
- 	char digest_hash[IMA_MAX_DIGEST_SIZE];
- 	int digest_hash_len = hash_digest_size[ima_hash_algo];
- 	int violation = 0;
-@@ -979,7 +981,7 @@ int process_buffer_measurement(struct mnt_idmap *idmap,
- 	if (!pcr)
- 		pcr = CONFIG_IMA_MEASURE_PCR_IDX;
- 
--	iint.ima_hash = &hash.hdr;
-+	iint.ima_hash = hash_hdr;
- 	iint.ima_hash->algo = ima_hash_algo;
- 	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
- 
-@@ -990,7 +992,7 @@ int process_buffer_measurement(struct mnt_idmap *idmap,
- 	}
- 
- 	if (buf_hash) {
--		memcpy(digest_hash, hash.hdr.digest, digest_hash_len);
-+		memcpy(digest_hash, hash_hdr->digest, digest_hash_len);
- 
- 		ret = ima_calc_buffer_hash(digest_hash, digest_hash_len,
- 					   iint.ima_hash);
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 6cd0add524cd..74198d7619da 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -339,6 +339,8 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
- 			 struct ima_field_data *field_data)
- {
- 	struct ima_max_digest_data hash;
-+	struct ima_digest_data *hash_hdr = container_of(&hash.hdr,
-+						struct ima_digest_data, hdr);
- 	u8 *cur_digest = NULL;
- 	u32 cur_digestsize = 0;
- 	struct inode *inode;
-@@ -358,7 +360,7 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
- 	if ((const char *)event_data->filename == boot_aggregate_name) {
- 		if (ima_tpm_chip) {
- 			hash.hdr.algo = HASH_ALGO_SHA1;
--			result = ima_calc_boot_aggregate(&hash.hdr);
-+			result = ima_calc_boot_aggregate(hash_hdr);
- 
- 			/* algo can change depending on available PCR banks */
- 			if (!result && hash.hdr.algo != HASH_ALGO_SHA1)
-@@ -368,7 +370,7 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
- 				memset(&hash, 0, sizeof(hash));
- 		}
- 
--		cur_digest = hash.hdr.digest;
-+		cur_digest = hash_hdr->digest;
- 		cur_digestsize = hash_digest_size[HASH_ALGO_SHA1];
- 		goto out;
- 	}
-@@ -379,14 +381,14 @@ int ima_eventdigest_init(struct ima_event_data *event_data,
- 	inode = file_inode(event_data->file);
- 	hash.hdr.algo = ima_template_hash_algo_allowed(ima_hash_algo) ?
- 	    ima_hash_algo : HASH_ALGO_SHA1;
--	result = ima_calc_file_hash(event_data->file, &hash.hdr);
-+	result = ima_calc_file_hash(event_data->file, hash_hdr);
- 	if (result) {
- 		integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
- 				    event_data->filename, "collect_data",
- 				    "failed", result, 0);
- 		return result;
- 	}
--	cur_digest = hash.hdr.digest;
-+	cur_digest = hash_hdr->digest;
- 	cur_digestsize = hash.hdr.length;
- out:
- 	return ima_eventdigest_init_common(cur_digest, cur_digestsize,
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 50d6f798e613..660f76cb69d3 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -31,19 +31,24 @@ enum evm_ima_xattr_type {
- };
- 
- struct evm_ima_xattr_data {
--	u8 type;
-+	/* New members must be added within the __struct_group() macro below. */
-+	__struct_group(evm_ima_xattr_data_hdr, hdr, __packed,
-+		u8 type;
-+	);
- 	u8 data[];
- } __packed;
- 
- /* Only used in the EVM HMAC code. */
- struct evm_xattr {
--	struct evm_ima_xattr_data data;
-+	struct evm_ima_xattr_data_hdr data;
- 	u8 digest[SHA1_DIGEST_SIZE];
- } __packed;
- 
- #define IMA_MAX_DIGEST_SIZE	HASH_MAX_DIGESTSIZE
- 
- struct ima_digest_data {
-+	/* New members must be added within the __struct_group() macro below. */
-+	__struct_group(ima_digest_data_hdr, hdr, __packed,
- 	u8 algo;
- 	u8 length;
- 	union {
-@@ -57,6 +62,7 @@ struct ima_digest_data {
- 		} ng;
- 		u8 data[2];
- 	} xattr;
-+	);
- 	u8 digest[];
- } __packed;
- 
-@@ -65,7 +71,7 @@ struct ima_digest_data {
-  * with the maximum hash size, define ima_max_digest_data struct.
-  */
- struct ima_max_digest_data {
--	struct ima_digest_data hdr;
-+	struct ima_digest_data_hdr hdr;
- 	u8 digest[HASH_MAX_DIGESTSIZE];
- } __packed;
- 
 -- 
-2.34.1
-
+With best wishes
+Dmitry
