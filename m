@@ -1,171 +1,137 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FEE4DA13
-	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 18:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E5F286AC
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 18:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711995052; cv=none; b=FInYCDfdDyIbI8dTxjwK5BtTOWkkW7F04yRfq0yh536gznZOvhzgvIJ14J+L6MLK4AfxjHjEWp8AhXPeqq2hl83rissmpDd2Jroh9dnC69AtA2GSFQyY9fADjwvPI/LWInnDpmBTzKsFIBkaHRiJFFGCUaDcUM0p/xwEAA9Q8zs=
+	t=1711996800; cv=none; b=MJBBKApRwMmnA2WVankxC2BoMf1VjDGuR+KlLozdZS92U1UXjWt4q96TNFftx7u09ZDLANmBcc9nL1q3hVhv35ipxO40ztpZanvcs1wLOXM+z3JhEfO+/MlCmAcv1C6dSF1fR9ED+B6T5VVSLStzG4HCGR/Zwm3pv62GEC2FH90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711995052; c=relaxed/simple;
-	bh=z2HNaLW7w9QpZHWGF0jaA9MyMN6bCQ1kVStq5aF7W4M=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CnuyB4BBZmcr1wZ8Hy3vQcf/z/jukAjH6S33esI2991gdVgb7cquQVJG14L4/IKmYHX/Ag7a/+D0ZwtTN4o+nTMNMCnSFSWwVB0Ov4xHIz8jqXVJ3O3jo0H0/KpyCn0ewBVfIqO2RzMyfqVSRvyPDViIXVgU0yGuU4nz9DweFjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rHMkJeSL; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1711996800; c=relaxed/simple;
+	bh=2MbhgQj8cVkDP038ndgOY503dVX+Ax4mZCM7tpCQcQA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=W2IEAkuO+mICDbwNKqYwWcWatnNe2I8G4+Th1vUGXOebXGI+LXRuyrOUeclBbTivJewhiGgNbkGjP1mViGCNIieaWhR1i4oJltALspB5Dk54HD4GDbssZjxe4S8B8qsylQ1JsjGKfAidUGjOtH4cxKJ4frqVsBApYS8QeNbZQ0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=youQA+fI; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rHMkJeSL"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf216080f5so7149079276.1
-        for <linux-hardening@vger.kernel.org>; Mon, 01 Apr 2024 11:10:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="youQA+fI"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc693399655so7552321276.1
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Apr 2024 11:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711995049; x=1712599849; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711996797; x=1712601597; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=sw2vY2M4CeKEyqj973cP6PJDE6m3drwFn3wvpEExDXs=;
-        b=rHMkJeSLIwbDSDjhAaUaHbGeo9ua3hm9of4MyQaLy0zZMvNGtvYEnEdula2es1QbPW
-         pY4QSMRWt+1t/WE9SNVbgzlEVlFj8GGjMIaO0tar77U8CEsd/4yT+PIfWJYbsXsvAvbV
-         uCCvztO/lH1qProrX3SxFuT+O/4ldTN1OWLZdVfhqgcxMvNAnVBKnxhFPFv6H2jgvOJ0
-         8FJLuRFXQwdPA7pnbfjNsj+s//nuXBraiIeZpaypwBXn5cbliWpVG+myT90fLVRhK9Ag
-         SMgGj7StrbdgJVpr6fkS2+lUtNxDv0JNJq5Qmi0r1Mjk/99ISZ+LSOWL44a+iDi/OlYR
-         6Kzg==
+        bh=JgMheuDZ9q8sO5WzCyu4uSNRV4Oc3mqdwzajDlVhWIU=;
+        b=youQA+fIeC+hyV6lUUv/206egygjVkPcYGWVXG4m10SlukXEvQFM6C2A5hFBXSTSBy
+         IxZ+bLgQIa81ZR4kGbolVbBmoMEcuNoVZ/PEcsXecYc4YSFw9/4dJzbEYKglP3PjIr8M
+         CSQkbrOx5jnRpXJbQrf7xGItkOWMWrvxcEquj4+Ib3OzKN0ozldmsidB3Sntftj20WHH
+         AVHfo8VKmRUIutBh7TZXa4JZWL9loGV2pXxv1Iikb8WzzTN2dRSZZhn+CJeX7MLndXhk
+         9nPnQ0m898l/TmLGJCFsrCbaJf+Req5LaAAHdFWzLh2uH2ULWlHJ5sDGM4SNjVQooa9q
+         l3aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711995049; x=1712599849;
+        d=1e100.net; s=20230601; t=1711996797; x=1712601597;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=sw2vY2M4CeKEyqj973cP6PJDE6m3drwFn3wvpEExDXs=;
-        b=mfiQr6l23krhaVX0aUl2azZ4SmOCTtebp++PdG4rIwzyhtOM/hlDhvG7tUqpSWpruM
-         XcP6rx6b/ev4r+cBqOEMeEboiFXwZCM6zygUp/KaAEkvBEyewsH09XB70s2Eaalw9Y0w
-         uSxtL66C/qC03vei8YcJok8BZaCun+qVjzypUXhbA66gBJhVY9oyoGOOJ5DT1U3p72jL
-         y5+ibZ1Urcf7n1amYH7fQyMRG0AI7dNaBdrOW9gNldmIm2WR0F10lhn8uUI1ry+/h/xk
-         DxzH/OaR7pb6Xz0/orVgNng1NEQb9TC5a4YAarw1qobF646MItLcDvi4XM/B1U0TMLlB
-         xe9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWyZHHm2KbkQf9rWDugo03IkH6AZktqVZ9WPbo55KbCXDCib9/T+0qgUtac0W5x4JGaQDOGBtLjofP00zCU/3ZHFD/RDLpPnOwEZIe7sNiC
-X-Gm-Message-State: AOJu0YyZDZUHfMQB7XhfuMUC2ElwVFgOZ6yJhPIHT6XocOc5/Rau4YS+
-	+TKZyTwPVMPWyFsECy7DpffqoAlxy9GGwbYHQVtWtxlRsoZna1WNitjiRTG2GBur/o/JPKQSvig
-	nYKPlSQXqsLcq+orlSN8RLA==
-X-Google-Smtp-Source: AGHT+IFAZ8Se8nHA0Of3hEysmza4VRg6qbci7e1TG3olLS+L6R1D++n7SLB99RNTps6QkAlE7iFc8jPZQ89cC3NRtQ==
+        bh=JgMheuDZ9q8sO5WzCyu4uSNRV4Oc3mqdwzajDlVhWIU=;
+        b=vWnvEm88NsoFo5dQOe35ox83N5BDJjg2RUQi1JI4qzOuBtmw7y5Zd++ysZjaTeNC71
+         XyRoECr04J9mdzXdgEXIfSMVXBTXsz9awQ6qcLDlO6SG/dEpkFZkLK+Lm1/Fz3R7zA4D
+         1a7GbsssyopJsu+4ajjQUX1GcO4JpJE3r3mS8V00ZLLpozJgQrUfFLEYNuGD3H/DU+iU
+         dPonvljYUVkWxfvYDCdZc728ND+5PvSA0HmFVCkItqx79wKEput4DXeWxmQL9+BaCOFc
+         aZ9OFVzZGq2zxeXPRcU7VFRMq4jWQGWlVw5jUrlnXzRb9mSPkoIZoyOOSMmWjJiuEYQQ
+         se0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUg57Qp+HEpquicFAOS+gkVgAaxEl40Z1r1WKNgF8++m4+wO6DFvc3I3/1rrSECHAF3O8lLuRhtek1F6UQuMsBC0jCGAEua6z20THRjb5eC
+X-Gm-Message-State: AOJu0Yyl4CPdAJp2Yj3PcY1xQCN60094t1pT1LIoz/9eDh9wv+RlAa96
+	1DZi/rUxyi0R0eSv+jrrEPAcGpH9j/XItv/YR+r0wD2hOi2+muOYY2pOxf7sp3h/nJUWXkeaSZH
+	OsJGJTtdwSvWvDMKsg9o1jg==
+X-Google-Smtp-Source: AGHT+IHSmFegPY5LrkmIhHmV2aW8Fujix6RmCEZ5xbkPgSlx7/Qdn60CtjV4+JrWRC8OnVdY8bMiErkNetC/FspRww==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:2313:b0:ddd:7581:1237 with
- SMTP id do19-20020a056902231300b00ddd75811237mr3279498ybb.3.1711995049368;
- Mon, 01 Apr 2024 11:10:49 -0700 (PDT)
-Date: Mon, 01 Apr 2024 18:10:48 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1893:b0:dc6:fec4:1c26 with
+ SMTP id cj19-20020a056902189300b00dc6fec41c26mr3327875ybb.1.1711996797754;
+ Mon, 01 Apr 2024 11:39:57 -0700 (PDT)
+Date: Mon, 01 Apr 2024 18:39:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKf4CmYC/43NQQ6CMBCF4auQWTumLQWNK+5hWGCZQhOkpFMJh
- PTuVk7g8nuL/x3AFBwxPIoDAq2OnZ8z1KUAM3bzQOj6bFBCaVEqiRzDbJYdLeNoeZk+jFsXY0C
- Dml6W6pvVpu4hB5ZA1m1n/Nlmj46jD/v5tcrf+ld2lShRmLq8V50UqpLN4P0w0dX4N7QppS9rB YvIxQAAAA==
+X-B4-Tracking: v=1; b=H4sIAHr/CmYC/42NTQqDMBBGryKz7pQk/VG66j2KCxMnMVAdmUioi
+ Hdv6gm6fA++922QSCIleFQbCOWYIk8FzKkCN3RTIIx9YTDKXNXF1JgWmdy8ok84CzvMo2MhdGh
+ 109d37akjD2U+C/n4OdKvtvAQ08KyHk9Z/+wf0axRIylzo141Vlv1DMzhTWfHI7T7vn8BS8M/5 cEAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711995048; l=3756;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711996796; l=2314;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=z2HNaLW7w9QpZHWGF0jaA9MyMN6bCQ1kVStq5aF7W4M=; b=kU6IxVx3/F03byPgQEL8DLNLMSnWNCYWY3e9y+7keVoKq+5hvMV5hXsypcquKgXyj0ecnWlJ8
- lvja9jJqSVCAxSvYraO/3hVEpDYa2ynuZ0XmjXrTG7v0QdUj3JsrDWG
+ bh=2MbhgQj8cVkDP038ndgOY503dVX+Ax4mZCM7tpCQcQA=; b=QK8nLukocBQU9jplQm8cs3ucevtjDWazF2fw9lAMxYf+e9BuLtUEVXrqzKXK3RvJsRteZolGw
+ XJfs74WA4giCbUveTWR8xEsOJ1EhMVcg46SafcYUkIELkNIvOLYJBFW
 X-Mailer: b4 0.12.3
-Message-ID: <20240401-strncpy-fs-hfsplus-xattr-c-v2-1-6e089999355e@google.com>
-Subject: [PATCH v2] hfsplus: refactor copy_name to not use strncpy
+Message-ID: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
+Subject: [PATCH v2] vmcore: replace strncpy with strscpy_pad
 From: Justin Stitt <justinstitt@google.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-strncpy() is deprecated with NUL-terminated destination strings [1].
+strncpy() is in the process of being replaced as it is deprecated [1].
+We should move towards safer and less ambiguous string interfaces.
 
-The copy_name() method does a lot of manual buffer manipulation to
-eventually arrive with its desired string. If we don't know the
-namespace this attr has or belongs to we want to prepend "osx." to our
-final string. Following this, we're copying xattr_name and doing a
-bizarre manual NUL-byte assignment with a memset where n=1.
+Looking at vmcoredd_header's definition:
+|	struct vmcoredd_header {
+|		__u32 n_namesz; /* Name size */
+|		__u32 n_descsz; /* Content size */
+|		__u32 n_type;   /* NT_VMCOREDD */
+|		__u8 name[8];   /* LINUX\0\0\0 */
+|		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
+|	};
+... we see that @name wants to be NUL-padded.
 
-Really, we can use some more obvious string APIs to acomplish this,
-improving readability and security. Following the same control flow as
-before: if we don't know the namespace let's use scnprintf() to form our
-prefix + xattr_name pairing (while NUL-terminating too!). Otherwise, use
-strscpy() to return the number of bytes copied into our buffer.
-Additionally, for non-empty strings, include the NUL-byte in the length
--- matching the behavior of the previous implementation.
+We're copying data->dump_name which is defined as:
+|	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
+... which shares the same size as vdd_hdr->dump_name. Let's make sure we
+NUL-pad this as well.
 
-Note that strscpy() _can_ return -E2BIG but this is already handled by
-all callsites:
-
-In both hfsplus_listxattr_finder_info() and hfsplus_listxattr(), ret is
-already type ssize_t so we can change the return type of copy_name() to
-match (understanding that scnprintf()'s return type is different yet
-fully representable by ssize_t). Furthermore, listxattr() in fs/xattr.c
-is well-equipped to handle a potential -E2BIG return result from
-vfs_listxattr():
-|	ssize_t error;
-...
-|	error = vfs_listxattr(d, klist, size);
-|	if (error > 0) {
-|		if (size && copy_to_user(list, klist, error))
-|			error = -EFAULT;
-|	} else if (error == -ERANGE && size >= XATTR_LIST_MAX) {
-|		/* The file system tried to returned a list bigger
-|			than XATTR_LIST_MAX bytes. Not possible. */
-|		error = -E2BIG;
-|	}
-... the error can potentially already be -E2BIG, skipping this else-if
-and ending up at the same state as other errors.
+Use strscpy_pad() which NUL-terminates and NUL-pads its destination
+buffers. Specifically, use the new 2-argument version of strscpy_pad
+introduced in Commit e6584c3964f2f ("string: Allow 2-argument
+strscpy()").
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Changes in v2:
-- include NUL-byte in length (thanks Kees)
-- reword commit message slightly
-- Link to v1: https://lore.kernel.org/r/20240321-strncpy-fs-hfsplus-xattr-c-v1-1-0c6385a10251@google.com
+- don't mark buffers as __nonstring, instead use a string API (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com
 ---
----
- fs/hfsplus/xattr.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+Note: build-tested only.
 
-diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-index 9c9ff6b8c6f7..5a400259ae74 100644
---- a/fs/hfsplus/xattr.c
-+++ b/fs/hfsplus/xattr.c
-@@ -400,21 +400,19 @@ static int name_len(const char *xattr_name, int xattr_name_len)
- 	return len;
+Found with: $ rg "strncpy\("
+---
+ fs/proc/vmcore.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 1fb213f379a5..5d08d4d159d3 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
+ 	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
+ 	vdd_hdr->n_type = NT_VMCOREDD;
+ 
+-	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
+-		sizeof(vdd_hdr->name));
+-	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
++	strscpy_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME);
++	strscpy_pad(vdd_hdr->dump_name, data->dump_name);
  }
  
--static int copy_name(char *buffer, const char *xattr_name, int name_len)
-+static ssize_t copy_name(char *buffer, const char *xattr_name, int name_len)
- {
--	int len = name_len;
--	int offset = 0;
-+	ssize_t len;
- 
--	if (!is_known_namespace(xattr_name)) {
--		memcpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
--		offset += XATTR_MAC_OSX_PREFIX_LEN;
--		len += XATTR_MAC_OSX_PREFIX_LEN;
--	}
--
--	strncpy(buffer + offset, xattr_name, name_len);
--	memset(buffer + offset + name_len, 0, 1);
--	len += 1;
-+	if (!is_known_namespace(xattr_name))
-+		len = scnprintf(buffer, name_len + XATTR_MAC_OSX_PREFIX_LEN,
-+				 "%s%s", XATTR_MAC_OSX_PREFIX, xattr_name);
-+	else
-+		len = strscpy(buffer, xattr_name, name_len + 1);
- 
-+	/* include NUL-byte in length for non-empty name */
-+	if (len >= 0)
-+		len++;
- 	return len;
- }
- 
+ /**
 
 ---
-base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
-change-id: 20240321-strncpy-fs-hfsplus-xattr-c-4ebfe67f4c6d
+base-commit: 928a87efa42302a23bb9554be081a28058495f22
+change-id: 20240327-strncpy-fs-proc-vmcore-c-b18d761feaef
 
 Best regards,
 --
