@@ -1,94 +1,173 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068D4481DB;
-	Mon,  1 Apr 2024 15:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FEE4DA13
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 18:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711986879; cv=none; b=pvxuSv7d6PTiXzBFkq9RDafZmr1GqLi9czLSI3bU0JhdbeQxbh2mrl2SVLQgwMOIHA3QOc+qAT0AwJTb2eFmPnJq0KCyz5y5geY0wwUm6VTx7A9DRLUbuw82wvhp0dXxc91MVZxoMRrfczwpB5EiFijMoP1+MeVUrE4o5c8s0HY=
+	t=1711995052; cv=none; b=FInYCDfdDyIbI8dTxjwK5BtTOWkkW7F04yRfq0yh536gznZOvhzgvIJ14J+L6MLK4AfxjHjEWp8AhXPeqq2hl83rissmpDd2Jroh9dnC69AtA2GSFQyY9fADjwvPI/LWInnDpmBTzKsFIBkaHRiJFFGCUaDcUM0p/xwEAA9Q8zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711986879; c=relaxed/simple;
-	bh=m7eoAdTO/BKzFu9Jl2RbaqPrtSBW0xXzh2n8+x+UQdQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H8IOYwE59TtzGgup6LHQUDi83jZ6Dx1c3fp8PifQonZYrI3Wf87eQ/Pv1GV+zsgZFy5SRhvBVU1stuAbbVEHPklLWYv8Vx1O/5PV/QIYIZfDu4eavyFJ5gmdg38UcwaY8XeVU+aYeE+jrdjsGUiWfG7ySSDXpnxlWeogbHlS1oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L8i+EQ+I; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711995052; c=relaxed/simple;
+	bh=z2HNaLW7w9QpZHWGF0jaA9MyMN6bCQ1kVStq5aF7W4M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=CnuyB4BBZmcr1wZ8Hy3vQcf/z/jukAjH6S33esI2991gdVgb7cquQVJG14L4/IKmYHX/Ag7a/+D0ZwtTN4o+nTMNMCnSFSWwVB0Ov4xHIz8jqXVJ3O3jo0H0/KpyCn0ewBVfIqO2RzMyfqVSRvyPDViIXVgU0yGuU4nz9DweFjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rHMkJeSL; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L8i+EQ+I"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 431A6c8T015307;
-	Mon, 1 Apr 2024 15:54:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=VcChgHfKeOYZ2vjgkmVzNAEWknG0rYWnKYsVIbgSYH8=; b=L8
-	i+EQ+INglfkpH1O4FOKUYlylaYVs3SmZf15aM6E+0nrzpjvY588U3yiBfJXmK1/z
-	PlqNgslNLemjuWO0Cr8QhpJQvxZBWBuMWOKKPEwvxnQKflIKD63NI80KGwqSFagB
-	F+tMEjZJ6JMsOm+KI8ENbzYdFCCs78+ciQKkZnptoUsP9JhC1htj0cBGY/0t51er
-	iMyezYNuDatjZhLHxQ6nwviBg8yG0mndyK+8EbC75Hwwg57arTFL4mIdLTkVKHtp
-	pH8nSIImQbEEITMAw35aOwIVh8ds9GoRkeFXtVVzrxdQpehM4uaIE1RYXxIB6G2F
-	PR/qjfr+bXElJOZm8Qtg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x7tgqrqba-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 15:54:21 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 431FsKfc014013
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 1 Apr 2024 15:54:20 GMT
-Received: from [10.110.91.214] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 1 Apr
- 2024 08:54:15 -0700
-Message-ID: <31f0b5d2-5b92-cc74-68bd-94fd42527a22@quicinc.com>
-Date: Mon, 1 Apr 2024 08:54:14 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rHMkJeSL"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbf216080f5so7149079276.1
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Apr 2024 11:10:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711995049; x=1712599849; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sw2vY2M4CeKEyqj973cP6PJDE6m3drwFn3wvpEExDXs=;
+        b=rHMkJeSLIwbDSDjhAaUaHbGeo9ua3hm9of4MyQaLy0zZMvNGtvYEnEdula2es1QbPW
+         pY4QSMRWt+1t/WE9SNVbgzlEVlFj8GGjMIaO0tar77U8CEsd/4yT+PIfWJYbsXsvAvbV
+         uCCvztO/lH1qProrX3SxFuT+O/4ldTN1OWLZdVfhqgcxMvNAnVBKnxhFPFv6H2jgvOJ0
+         8FJLuRFXQwdPA7pnbfjNsj+s//nuXBraiIeZpaypwBXn5cbliWpVG+myT90fLVRhK9Ag
+         SMgGj7StrbdgJVpr6fkS2+lUtNxDv0JNJq5Qmi0r1Mjk/99ISZ+LSOWL44a+iDi/OlYR
+         6Kzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711995049; x=1712599849;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sw2vY2M4CeKEyqj973cP6PJDE6m3drwFn3wvpEExDXs=;
+        b=mfiQr6l23krhaVX0aUl2azZ4SmOCTtebp++PdG4rIwzyhtOM/hlDhvG7tUqpSWpruM
+         XcP6rx6b/ev4r+cBqOEMeEboiFXwZCM6zygUp/KaAEkvBEyewsH09XB70s2Eaalw9Y0w
+         uSxtL66C/qC03vei8YcJok8BZaCun+qVjzypUXhbA66gBJhVY9oyoGOOJ5DT1U3p72jL
+         y5+ibZ1Urcf7n1amYH7fQyMRG0AI7dNaBdrOW9gNldmIm2WR0F10lhn8uUI1ry+/h/xk
+         DxzH/OaR7pb6Xz0/orVgNng1NEQb9TC5a4YAarw1qobF646MItLcDvi4XM/B1U0TMLlB
+         xe9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWyZHHm2KbkQf9rWDugo03IkH6AZktqVZ9WPbo55KbCXDCib9/T+0qgUtac0W5x4JGaQDOGBtLjofP00zCU/3ZHFD/RDLpPnOwEZIe7sNiC
+X-Gm-Message-State: AOJu0YyZDZUHfMQB7XhfuMUC2ElwVFgOZ6yJhPIHT6XocOc5/Rau4YS+
+	+TKZyTwPVMPWyFsECy7DpffqoAlxy9GGwbYHQVtWtxlRsoZna1WNitjiRTG2GBur/o/JPKQSvig
+	nYKPlSQXqsLcq+orlSN8RLA==
+X-Google-Smtp-Source: AGHT+IFAZ8Se8nHA0Of3hEysmza4VRg6qbci7e1TG3olLS+L6R1D++n7SLB99RNTps6QkAlE7iFc8jPZQ89cC3NRtQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:2313:b0:ddd:7581:1237 with
+ SMTP id do19-20020a056902231300b00ddd75811237mr3279498ybb.3.1711995049368;
+ Mon, 01 Apr 2024 11:10:49 -0700 (PDT)
+Date: Mon, 01 Apr 2024 18:10:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 RESEND 0/4] arm64: qcom: add AIM300 AIoT board support
-To: Tengfei Fan <quic_tengfan@quicinc.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <20240401093843.2591147-1-quic_tengfan@quicinc.com>
-Content-Language: en-US
-From: Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <20240401093843.2591147-1-quic_tengfan@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: WMHuqxjh4wI1g-PgDNttw0KXqsQaFEp4
-X-Proofpoint-GUID: WMHuqxjh4wI1g-PgDNttw0KXqsQaFEp4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_10,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 clxscore=1011 suspectscore=0 mlxlogscore=757
- lowpriorityscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2403210001 definitions=main-2404010112
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAKf4CmYC/43NQQ6CMBCF4auQWTumLQWNK+5hWGCZQhOkpFMJh
+ PTuVk7g8nuL/x3AFBwxPIoDAq2OnZ8z1KUAM3bzQOj6bFBCaVEqiRzDbJYdLeNoeZk+jFsXY0C
+ Dml6W6pvVpu4hB5ZA1m1n/Nlmj46jD/v5tcrf+ld2lShRmLq8V50UqpLN4P0w0dX4N7QppS9rB YvIxQAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711995048; l=3756;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=z2HNaLW7w9QpZHWGF0jaA9MyMN6bCQ1kVStq5aF7W4M=; b=kU6IxVx3/F03byPgQEL8DLNLMSnWNCYWY3e9y+7keVoKq+5hvMV5hXsypcquKgXyj0ecnWlJ8
+ lvja9jJqSVCAxSvYraO/3hVEpDYa2ynuZ0XmjXrTG7v0QdUj3JsrDWG
+X-Mailer: b4 0.12.3
+Message-ID: <20240401-strncpy-fs-hfsplus-xattr-c-v2-1-6e089999355e@google.com>
+Subject: [PATCH v2] hfsplus: refactor copy_name to not use strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 4/1/2024 2:38 AM, Tengfei Fan wrote:
-> Here is a diagram of AIM300 AIoT Carrie Board and SoM
->  +--------------------------------------------------+
->  |             AIM300 AIOT Carrie Board             |
+strncpy() is deprecated with NUL-terminated destination strings [1].
 
-spellcheck
+The copy_name() method does a lot of manual buffer manipulation to
+eventually arrive with its desired string. If we don't know the
+namespace this attr has or belongs to we want to prepend "osx." to our
+final string. Following this, we're copying xattr_name and doing a
+bizarre manual NUL-byte assignment with a memset where n=1.
 
-s/Carrie/Carrier ? 
+Really, we can use some more obvious string APIs to acomplish this,
+improving readability and security. Following the same control flow as
+before: if we don't know the namespace let's use scnprintf() to form our
+prefix + xattr_name pairing (while NUL-terminating too!). Otherwise, use
+strscpy() to return the number of bytes copied into our buffer.
+Additionally, for non-empty strings, include the NUL-byte in the length
+-- matching the behavior of the previous implementation.
 
--- 
----Trilok Soni
+Note that strscpy() _can_ return -E2BIG but this is already handled by
+all callsites:
+
+In both hfsplus_listxattr_finder_info() and hfsplus_listxattr(), ret is
+already type ssize_t so we can change the return type of copy_name() to
+match (understanding that scnprintf()'s return type is different yet
+fully representable by ssize_t). Furthermore, listxattr() in fs/xattr.c
+is well-equipped to handle a potential -E2BIG return result from
+vfs_listxattr():
+|	ssize_t error;
+...
+|	error = vfs_listxattr(d, klist, size);
+|	if (error > 0) {
+|		if (size && copy_to_user(list, klist, error))
+|			error = -EFAULT;
+|	} else if (error == -ERANGE && size >= XATTR_LIST_MAX) {
+|		/* The file system tried to returned a list bigger
+|			than XATTR_LIST_MAX bytes. Not possible. */
+|		error = -E2BIG;
+|	}
+... the error can potentially already be -E2BIG, skipping this else-if
+and ending up at the same state as other errors.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- include NUL-byte in length (thanks Kees)
+- reword commit message slightly
+- Link to v1: https://lore.kernel.org/r/20240321-strncpy-fs-hfsplus-xattr-c-v1-1-0c6385a10251@google.com
+---
+---
+ fs/hfsplus/xattr.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 9c9ff6b8c6f7..5a400259ae74 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -400,21 +400,19 @@ static int name_len(const char *xattr_name, int xattr_name_len)
+ 	return len;
+ }
+ 
+-static int copy_name(char *buffer, const char *xattr_name, int name_len)
++static ssize_t copy_name(char *buffer, const char *xattr_name, int name_len)
+ {
+-	int len = name_len;
+-	int offset = 0;
++	ssize_t len;
+ 
+-	if (!is_known_namespace(xattr_name)) {
+-		memcpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
+-		offset += XATTR_MAC_OSX_PREFIX_LEN;
+-		len += XATTR_MAC_OSX_PREFIX_LEN;
+-	}
+-
+-	strncpy(buffer + offset, xattr_name, name_len);
+-	memset(buffer + offset + name_len, 0, 1);
+-	len += 1;
++	if (!is_known_namespace(xattr_name))
++		len = scnprintf(buffer, name_len + XATTR_MAC_OSX_PREFIX_LEN,
++				 "%s%s", XATTR_MAC_OSX_PREFIX, xattr_name);
++	else
++		len = strscpy(buffer, xattr_name, name_len + 1);
+ 
++	/* include NUL-byte in length for non-empty name */
++	if (len >= 0)
++		len++;
+ 	return len;
+ }
+ 
+
+---
+base-commit: 241590e5a1d1b6219c8d3045c167f2fbcc076cbb
+change-id: 20240321-strncpy-fs-hfsplus-xattr-c-4ebfe67f4c6d
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
