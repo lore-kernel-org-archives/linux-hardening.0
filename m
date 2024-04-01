@@ -1,73 +1,78 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D581C2E
-	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 23:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3021056B8E
+	for <linux-hardening@vger.kernel.org>; Mon,  1 Apr 2024 23:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712012500; cv=none; b=U5exMo4q+d6QDx+sbxvxS7S0VyS1i7xHntvaAnItDm9LSpaAkg5Q4MP0AiTC5SfH+Drg8JMu1F/L+BWKKqSqWw7Vz+0OryYyeSQM9pDx9bx5JW9PUSw1j4Dk/b/HC2AVZyJ2Ux/YsAASicqVdIvS8VOQEl7T9HxqnFpOYx8tJ9Q=
+	t=1712015340; cv=none; b=GS3Dt8snmncp0wZyB5KpCyGK1lq44CFEbeWArYZOZCcMHMNuBhNT3w9fSBiEws1shKd/tiEbjMHuY0ptmlaK9jINQ3t/V4X2R56ncbU6dyIcebUwOCgcm50rdZcpzcs9+R+fgjp2V64LPEkThCK12knOhxeXqa1SafSU4ZlotO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712012500; c=relaxed/simple;
-	bh=Sw17VZ2rI5t1U7w6lSBn7Tgm6w53GtT34jTTgkY57jY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GvUgH4zdJE6vbF2Hl8se61cmDUesIzishEuwDcd/5pkcXQgYiD+LoSNoGYU3DNpfmfkUhjjabOGNLIv3jYBMit1n1zokdb99QWBZu1Eeq1L4M3RJWo/8Bf+FGej02RPNNh5+E212ZBUVGptUC5OGNy2uB8JpDiOSwSeN/C2P+M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UZ59IzDo; arc=none smtp.client-ip=209.85.166.74
+	s=arc-20240116; t=1712015340; c=relaxed/simple;
+	bh=4JhNkEpOiWMttmklKDS6dB8Whz9xSe93GiSKkFueDRI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=f+Vuso6tfW6pZLalsVhlYVz1uCJljVqxB6Q1YJrqShb8CZrXHjF0AEpNHiLPzOT8vB/RUJwD8WagcZVKN7WIMGYPsjYnsVDKzinjRsY7L5DI26buIzvxLq9uHIrcsNvvOgRttxPgIyIi+Xkdm4+ztMe0TptzfaP2cMOJkA+uSZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vfaAFvG+; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UZ59IzDo"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7d04135eb47so478936139f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 01 Apr 2024 16:01:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vfaAFvG+"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd169dd4183so5085811276.3
+        for <linux-hardening@vger.kernel.org>; Mon, 01 Apr 2024 16:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712012498; x=1712617298; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712015336; x=1712620136; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=4UCTUqrCfJ+dpmdPP9hi+yGQv3LbBnFi/puoG4yXu+A=;
-        b=UZ59IzDo+aVZhpLdXkaFdWKK6akcV6wBQsTeuS7s1T6vOJpeIFm24kKSMEUt/XNqFV
-         LckB/5FOUU1VrAROUZ3Ec4Rc7Dwt/IoiX552eMZhXr/hlf8RytRoc5qAm7fePh60MwhK
-         i+nHMTtFtyZjWQO9tM95SS0E3mYrw2Sha2RFNwSJmmNQ6QytgMZs7E5GR8opaMAOQmEg
-         Hl+4K+aagSid0gPJawo3GvntPWHBnigdJfIK+aRivaF/d96c3ayhMha/yBiPjx63n0zj
-         Y4SXbyPYTt2ZogvOde3r5SUYbWdHWVb6JgPxikeFv4FuywDzzlhLRuyRJ6JBKhJPbY2+
-         mJ+g==
+        bh=BeCArdFCgR6hPIyqHhpmGoh9zohrxgi2vCDzv1Uvsng=;
+        b=vfaAFvG+mOqrKjbH9Ge0oDljZh/cSXm67PclGL+fcN/avO/woLbSPb5FLBQg6uXzLD
+         dSp0OBr2PDyfRibpQSC9Pf+upEsj7RNSFzbFreM7ZqaVhqlhTrQT1xiu2arpA14YTk/u
+         B6i6l0MZe+oOAzJEVDR5uwn+9Si+qJtNHjFZADP9xSHIz8a7epD4LZxRVqqN3WQTw+hc
+         jTptohz3JTm6T1N4n2nnQoH2VXzgbD5gTZmanjnieO1HNHHgLDv+dEVqaLe4025qShDl
+         Fh5+f7Ib09HcHAXUA3IaZB8LaCS/nqGZwikS8+sOb2Zm1mW7SinOyKRevnhJdYOBqSP3
+         S5xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712012498; x=1712617298;
+        d=1e100.net; s=20230601; t=1712015336; x=1712620136;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4UCTUqrCfJ+dpmdPP9hi+yGQv3LbBnFi/puoG4yXu+A=;
-        b=eKQT0YnNQ/G3yitSbPN7VhfSYQGTj0TcGSqDOVu3mvvtWMUlS2nNxGZsjkMxu5lBSj
-         RlSfnLAOrkeC26fx2XqkCih8ciTK6LHhXzepExx+ayrBGgHnAg4j3KvR7wMKEZnfv/En
-         4Et4A35sRXm7DbbX+RVP9v65jNBqbfRt1QAWVp3zTPWuMwIe6EfgLOZTzC4p8koQTvS5
-         EYwWk2wYSQsisixm/sARtaL53jf2facEqxcEpwp9nlud3yJgCl1VOwP7+adpk19ZJSx8
-         RqmBxxraFIoIVnq6LpOmbl1llw4bAjyH3iUkwTaSRALNKqs05xFenSMWc2x4VU2XTFIA
-         0r/g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/Xkjx4lJhhbpfg6UmvNlh45oYjIYbac/XOQP2CypQwu01M1Ks/VAgQB/TZmdNofd3dv+XrYG/KpIyjyoSmTVwfkJ0IA/rQmSz5VUeA8ZF
-X-Gm-Message-State: AOJu0YzmZFKQh+gHfy2Dc2oSdBigJ+0ioxjMSVlbhlS7dpGclADGMS/3
-	UR3uEHNk8frhnxDpHEFp/+2l1nrd2lQSiReOE1pvhHTxBbX8Jd259h/83cW0yVsO9Rs47AxGwTz
-	ViONb0C/ckMic9IhzvQXHJg==
-X-Google-Smtp-Source: AGHT+IFxVfAigFgMJYj0MK1XEtlxuguR9QWg4M5wW3cmX+ehlPJHICAdqbQsd1MUKQyprqYyiz7tRJ0CYxKiBQl4pg==
+        bh=BeCArdFCgR6hPIyqHhpmGoh9zohrxgi2vCDzv1Uvsng=;
+        b=gGO9nxstvwGbrCX2YpxZSj0RRo5CiKHxTNmjze8t9aZtChrpVJBC7cdIYeGnXYxF6s
+         03nrg5RxNwuq/E5uUoujY5y3ze+1W5xGMtdHO8pwe1R18U/wusYqfkFrxG7CWyTqk1rV
+         y8zCg8mghFPrFTyxTP1BjRnkXEDv108SIEVTTF0DuLNAEtvD8sEEsq8sfPk/Nb7NDWSH
+         b11BHcmyv2e8RcuSTqVlux6ksXlDyDxvGwrJPr8mp1odMvZeEy2WX49qF8K6VVdKeHne
+         GHcXLkngWoi00OO2J79EZiIWPVB4rEwc/AgUiYwj/8J/LbQDDLb2vLOxYhc7N0+h8gcr
+         6EGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVig1jrfNCsVXYolOIoUKiJaYBENtgWEfMM1TwR/KS92QaB4wSx5k/JP4kzJu1fWN8CxEVMq4JN8sNxlYSX9j+b9VSKJLI9mUnjTP+TCi/M
+X-Gm-Message-State: AOJu0YzE2Lfawu6AwCd/w8vUcKskhiISrRhZH7slJiBu2CVmZ6nkH9Tv
+	wY3CsdXWIh17a4wuc9pSpm3Ox5z18rXa+DRf7c06jrhoUkaqS4EElTGoNqrL9eY84q9d/5yaTTX
+	KnDfVHeBlxLnQx8o/WjKcAA==
+X-Google-Smtp-Source: AGHT+IENg/l0w7lJnqGpT/qHSwpQYol/8NlTdFPuRBHCAciA1BzQJQzDQqMPR1/kH8jhEkZOGWe/9UtkbBomwoKlsA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6602:6b84:b0:7cc:39c:143d with
- SMTP id ii4-20020a0566026b8400b007cc039c143dmr390494iob.0.1712012498421; Mon,
- 01 Apr 2024 16:01:38 -0700 (PDT)
-Date: Mon, 01 Apr 2024 23:01:38 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1006:b0:dcc:94b7:a7a3 with
+ SMTP id w6-20020a056902100600b00dcc94b7a7a3mr769132ybt.12.1712015336258; Mon,
+ 01 Apr 2024 16:48:56 -0700 (PDT)
+Date: Mon, 01 Apr 2024 23:48:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANE8C2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDEwND3eKSorzkgkrdtGLdCgiOz8xPLsnRTda1SEwzT7SwNE1KSzNQAhp QUJSallkBNjw6trYWANLq9zZsAAAA
+X-B4-Tracking: v=1; b=H4sIAONHC2YC/x3NwQrCMAyA4VcZORvoaq3iq4iHro0uoNlI6nCMv
+ bvF43f5/w2MlMng2m2gtLDxJA39oYM8JnkScmkG73xwwfVoVSXPK7Lk16cQVk2ZkBaSavguPOG ILh39KZ7jEOIFWmlWevD3f7nd9/0HcnYlG3UAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712012497; l=2623;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712015335; l=3378;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=Sw17VZ2rI5t1U7w6lSBn7Tgm6w53GtT34jTTgkY57jY=; b=Je+3bNOSl7VFFOi8HXFh39huAOtiEkqd6rPxUqiwOM0mvuBTBLcnq2KhywdxKIOo4cLT9pfWn
- V/SkR0/wmEZCC2e2cJMcsHJHf83GS2EdKd0Xp+fXHoZtq8eOB+5DclX
+ bh=4JhNkEpOiWMttmklKDS6dB8Whz9xSe93GiSKkFueDRI=; b=NKg6XG8BN99gUBI3M2EOxgxK+kUU1xCXzro+M6vtMFE/7+A6dbh9K6zgb0yyqbNaih+k6ztsO
+ bX+IDfR2tSbBc3Hz4yHOB8t7lA0pR91YNefcOSR+Ppvq3Y+FZM5/PuR
 X-Mailer: b4 0.12.3
-Message-ID: <20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com>
-Subject: [PATCH] xfs: cleanup deprecated uses of strncpy
+Message-ID: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
+Subject: [PATCH] trace: events: cleanup deprecated strncpy uses
 From: Justin Stitt <justinstitt@google.com>
-To: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
@@ -75,21 +80,24 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-In xfs_ioctl.c:
-The current code has taken care NUL-termination by memset()'ing @label.
-This is followed by a strncpy() to perform the string copy.
+For 2 out of 3 of these changes we can simply swap in strscpy() as it
+guarantess NUL-termination which is needed for the following trace
+print.
 
-Use strscpy_pad() to get both 1) NUL-termination and 2) NUL-padding
-which may be needed as this is copied out to userspace.
+trace_rpcgss_context() should use memcpy as its format specifier %.*s
+allows for the length to be specifier (__entry->len). Due to this,
+acceptor does not technically need to be NUL-terminated. Moreover,
+swapping in strscpy() and keeping everything else the same could result
+in truncation of the source string by one byte. To remedy this, we could
+use `len + 1` but I am unsure of the size of the destination buffer so a
+simple memcpy should suffice.
+|	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
+|		__entry->window_size, __entry->expiry, __entry->now,
+|		__entry->timeout, __entry->len, __get_str(acceptor))
 
-Note that this patch uses the new 2-argument version of strscpy_pad
-introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-strscpy()").
-
-In xfs_xattr.c:
-There's a lot of manual memory management to get a prefix and name into
-a string. Let's use an easier to understand and more robust interface in
-scnprintf() to accomplish the same task.
+I suspect acceptor not to naturally be a NUL-terminated string due to
+the presence of some stringify methods.
+|	.crstringify_acceptor	= gss_stringify_acceptor,
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -101,47 +109,54 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- fs/xfs/xfs_ioctl.c | 4 +---
- fs/xfs/xfs_xattr.c | 6 +-----
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ include/trace/events/mdio.h   | 2 +-
+ include/trace/events/rpcgss.h | 2 +-
+ include/trace/events/sock.h   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d0e2cec6210d..abef9707a433 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1755,10 +1755,8 @@ xfs_ioc_getlabel(
- 	/* Paranoia */
- 	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
+diff --git a/include/trace/events/mdio.h b/include/trace/events/mdio.h
+index 0f241cbe00ab..285b3e4f83ba 100644
+--- a/include/trace/events/mdio.h
++++ b/include/trace/events/mdio.h
+@@ -25,7 +25,7 @@ TRACE_EVENT_CONDITION(mdio_access,
+ 	),
  
--	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
--	memset(label, 0, sizeof(label));
- 	spin_lock(&mp->m_sb_lock);
--	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-+	strscpy_pad(label, sbp->sb_fname);
- 	spin_unlock(&mp->m_sb_lock);
+ 	TP_fast_assign(
+-		strncpy(__entry->busid, bus->id, MII_BUS_ID_SIZE);
++		strscpy(__entry->busid, bus->id, MII_BUS_ID_SIZE);
+ 		__entry->read = read;
+ 		__entry->addr = addr;
+ 		__entry->regnum = regnum;
+diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
+index ba2d96a1bc2f..274c297f1b15 100644
+--- a/include/trace/events/rpcgss.h
++++ b/include/trace/events/rpcgss.h
+@@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
+ 		__entry->timeout = timeout;
+ 		__entry->window_size = window_size;
+ 		__entry->len = len;
+-		strncpy(__get_str(acceptor), data, len);
++		memcpy(__get_str(acceptor), data, len);
+ 	),
  
- 	if (copy_to_user(user_label, label, sizeof(label)))
-diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
-index 364104e1b38a..b9256988830f 100644
---- a/fs/xfs/xfs_xattr.c
-+++ b/fs/xfs/xfs_xattr.c
-@@ -220,11 +220,7 @@ __xfs_xattr_put_listent(
- 		return;
- 	}
- 	offset = context->buffer + context->count;
--	memcpy(offset, prefix, prefix_len);
--	offset += prefix_len;
--	strncpy(offset, (char *)name, namelen);			/* real name */
--	offset += namelen;
--	*offset = '\0';
-+	scnprintf(offset, prefix_len + namelen + 1, "%s%s", prefix, name);
+ 	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
+diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
+index fd206a6ab5b8..1d0b98e6b2cc 100644
+--- a/include/trace/events/sock.h
++++ b/include/trace/events/sock.h
+@@ -109,7 +109,7 @@ TRACE_EVENT(sock_exceed_buf_limit,
+ 	),
  
- compute_size:
- 	context->count += prefix_len + namelen + 1;
+ 	TP_fast_assign(
+-		strncpy(__entry->name, prot->name, 32);
++		strscpy(__entry->name, prot->name, 32);
+ 		__entry->sysctl_mem[0] = READ_ONCE(prot->sysctl_mem[0]);
+ 		__entry->sysctl_mem[1] = READ_ONCE(prot->sysctl_mem[1]);
+ 		__entry->sysctl_mem[2] = READ_ONCE(prot->sysctl_mem[2]);
 
 ---
 base-commit: 928a87efa42302a23bb9554be081a28058495f22
-change-id: 20240401-strncpy-fs-xfs-xfs_ioctl-c-8af7a895bff0
+change-id: 20240401-strncpy-include-trace-events-mdio-h-0a325676b468
 
 Best regards,
 --
