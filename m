@@ -1,185 +1,68 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FB579B8A;
-	Tue,  2 Apr 2024 13:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF5D7A724;
+	Tue,  2 Apr 2024 16:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712064268; cv=none; b=HbA/EtkMSeo/mLhYxS/9Mcsxc9Ed7DyW5KOtgecJL0bSJBrqDp3R/xEizkCNkIM+IbJdN0nnsSp5oOp2fIOw/iUDwQcHVIxKui+w+5bsg5HRMNM2AaGjHAfqf7Db/KvJ3ue+hc1OyvyN+q6JG0tSqqH5v8tsjBAn2h+eeEJwEKY=
+	t=1712074965; cv=none; b=as3lIYekEBzfDUxAXXo+vHAWH3lPqTgz1o49uiPyySV2mseN582U3K+HpSedrxvuXvuKHGQypra09KCYVR3JPs0LpQvoJ8aNMgUCkmEM8A82AqEJNQYp8bcKGFRd7p1GN1UPoBAID4M78vAW8p2HTjwEOdrd/rDn/EEMeoHidKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712064268; c=relaxed/simple;
-	bh=UO4Yb9K+WHem662Te0gbQHrrV/ItyTh5+Qd8mo2HYyg=;
+	s=arc-20240116; t=1712074965; c=relaxed/simple;
+	bh=TTK9Ecf0wm/vTr19oRkExfQrntAv/w6u+rTBVzSrC0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHgt0el1bL3b+qNJfDErG2F6C83z0wKEESlwflFmGD729vNfg9OYDVH2g+dO74/yxL6bP8NN8UhRa8qrZMivj6E2xV7ay5g6/sJkCpT3mXEYEK8OulBvQj8TYp7xPIVA7FsxevhU2eRpf0apM3stg9Sp7c+Gf/kDfXdccpLHMp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wpYbP2fo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vx2/6CT+; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=iokVEWeo8AqFlWVPmyOa5HOJwDcR/HBnbzOphLsgm/7cKejL01NQot3uJbuj5lU4m5IH56qQiCpcbFNClsxaA650/GhVSAvduMVK0H+DeuPCJDayIDAigJFD/G/jvP6mtHohQ7bZwtmcuH1LdfhFMGWc97MCb5x7TcbMGrIAGXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkQzNcao; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wpYbP2fo";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vx2/6CT+"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C9F3F5BD95;
-	Tue,  2 Apr 2024 13:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712064264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqQrv6p2RHX9SoLgiAL2BNS+D1Lo/BrgmUFz9f4akNI=;
-	b=wpYbP2fojUCriw+8NYvT1Ok486w3JXJLfmIuvgdV0C11fqZrt8yvykw3Wo+98C12XOe1bP
-	wYVbqd0yPaqz8d6sFf0VGaMHxJxyH0cmEse8V2PJzTxb81EFTOBNDD5CUktCAfgFgnjtKy
-	J5IOnzVT3oLZQHVSxWNvW3e0PXdUISQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712064264;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SqQrv6p2RHX9SoLgiAL2BNS+D1Lo/BrgmUFz9f4akNI=;
-	b=vx2/6CT+3ciz4j9z6pm3HjxW1JUtQL3bUpYiNw1Vn8qkoQtjxByU2uOw/v7gnpHDvccmhu
-	KNks6au704AgIdBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id B5A5813357;
-	Tue,  2 Apr 2024 13:24:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id CFZWLAgHDGaUUwAAn2gu4w
-	(envelope-from <jack@suse.cz>); Tue, 02 Apr 2024 13:24:24 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3663DA0813; Tue,  2 Apr 2024 15:24:20 +0200 (CEST)
-Date: Tue, 2 Apr 2024 15:24:20 +0200
-From: Jan Kara <jack@suse.cz>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] udf: replace deprecated strncpy/strcpy with strscpy
-Message-ID: <20240402132420.aalwgi6gdnmrj3ep@quack3>
-References: <20240401-strncpy-fs-udf-super-c-v1-1-80cddab7a281@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkQzNcao"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 011B0C433F1;
+	Tue,  2 Apr 2024 16:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712074965;
+	bh=TTK9Ecf0wm/vTr19oRkExfQrntAv/w6u+rTBVzSrC0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jkQzNcaoCwevoUeoCLg4BigA8IMxCym7HiDT863zs7+Pii441q8F35tDtduy0ntgy
+	 OR3v9fQ2dWUHIO6KDEaXsVRIq4tB+k89JgOa4cvaeKsHPsvMn+CRYv2xSIpTTYXqdM
+	 PCfraHV8VszI12uB8TzuR+1mgJY2ZaYcm+1jzCihNBCc4h3PAHCKcUqdeJvH7l3oTg
+	 d2Ui3/vaHlSo010byYBDrGruOgLSKbKZXXo2aWgg6B+1OrX9LQJjM9nbQ73/Ljew62
+	 mCeOWqsU2ePllVu3Xf2ABoO9bwdcC8B03yzuxUQU+9m3QhbELg1VI58BjrKi5zxxhz
+	 ghOi+Qlloj8YA==
+Date: Tue, 2 Apr 2024 11:22:42 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+Cc: phone-devel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-leds@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lee Jones <lee@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 1/3] dt-bindings: leds: Add Silergy SY7802 flash LED
+Message-ID: <171207496054.248936.15074257911967114651.robh@kernel.org>
+References: <20240401-sy7802-v2-0-1138190a7448@apitzsch.eu>
+ <20240401-sy7802-v2-1-1138190a7448@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240401-strncpy-fs-udf-super-c-v1-1-80cddab7a281@google.com>
-X-Spam-Score: -1.61
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.61 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-3.00)[99.99%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Spam-Level: 
-X-Rspamd-Queue-Id: C9F3F5BD95
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240401-sy7802-v2-1-1138190a7448@apitzsch.eu>
 
-On Mon 01-04-24 20:01:51, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces. Also replace an instance of strcpy() which is also
-> deprecated.
-> 
-> s_volume_ident is a NUL-terminated string which is evident from its
-> usage in udf_debug:
-> |	udf_debug("volIdent[] = '%s'\n", UDF_SB(sb)->s_volume_ident);
-> 
-> s_volume_ident should also be NUL-padded as it is copied out to
-> userspace:
-> |	if (copy_to_user((char __user *)arg,
-> |				UDF_SB(inode->i_sb)->s_volume_ident, 32))
-> |		return -EFAULT;
-> 
-> Considering the above, a suitable replacement is `strscpy_pad` [2] due
-> to the fact that it guarantees both NUL-termination and NUL-padding on
-> the destination buffer.
-> 
-> To simplify the code, let's use the new 2-argument version of
-> strscpy_pad() introduced in Commit e6584c3964f2f ("string: Allow
-> 2-argument strscpy()"). Also zero-allocate @outstr so we can safely use
-> a non-@ret length argument. This is just in case udf_dstrCS0toChar()
-> doesn't include the NUL-byte in its return length, we won't truncate
-> @outstr or write garbage bytes either.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Thanks! Added to my tree.
-
-								Honza
-
+On Mon, 01 Apr 2024 23:23:55 +0200, André Apitzsch wrote:
+> Document Silergy SY7802 flash LED driver devicetree bindings.
+> 
+> Signed-off-by: André Apitzsch <git@apitzsch.eu>
 > ---
-> Note: build-tested only.
+>  .../devicetree/bindings/leds/silergy,sy7802.yaml   | 100 +++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
 > 
-> Found with: $ rg "strncpy\("
-> ---
->  fs/udf/super.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/udf/super.c b/fs/udf/super.c
-> index 2217f7ed7a49..77d32fe14434 100644
-> --- a/fs/udf/super.c
-> +++ b/fs/udf/super.c
-> @@ -895,7 +895,7 @@ static int udf_load_pvoldesc(struct super_block *sb, sector_t block)
->  	int ret;
->  	struct timestamp *ts;
->  
-> -	outstr = kmalloc(128, GFP_KERNEL);
-> +	outstr = kzalloc(128, GFP_KERNEL);
->  	if (!outstr)
->  		return -ENOMEM;
->  
-> @@ -921,11 +921,11 @@ static int udf_load_pvoldesc(struct super_block *sb, sector_t block)
->  
->  	ret = udf_dstrCS0toChar(sb, outstr, 31, pvoldesc->volIdent, 32);
->  	if (ret < 0) {
-> -		strcpy(UDF_SB(sb)->s_volume_ident, "InvalidName");
-> +		strscpy_pad(UDF_SB(sb)->s_volume_ident, "InvalidName");
->  		pr_warn("incorrect volume identification, setting to "
->  			"'InvalidName'\n");
->  	} else {
-> -		strncpy(UDF_SB(sb)->s_volume_ident, outstr, ret);
-> +		strscpy_pad(UDF_SB(sb)->s_volume_ident, outstr);
->  	}
->  	udf_debug("volIdent[] = '%s'\n", UDF_SB(sb)->s_volume_ident);
->  
-> 
-> ---
-> base-commit: 928a87efa42302a23bb9554be081a28058495f22
-> change-id: 20240401-strncpy-fs-udf-super-c-983457eb4ac3
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
