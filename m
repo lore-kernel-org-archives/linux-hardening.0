@@ -1,176 +1,116 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20E12C9D;
-	Tue,  2 Apr 2024 19:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF492B9D8
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Apr 2024 20:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712085373; cv=none; b=lmH21WdVLTXHZr4pdPdB02FQtLfE3sdBc4KBqlM77ZfgWfXr8qr72KkCXzyEGcQp9T0Y2EkxNnJ4sFes6c8Le3otvDAQ90V4nolzCqtQlP3l9mZGyUxi8lAORnyQrm7+LofV6MgWsDBXsydSZp5DbsHpJ9eQoyomrPn9wj66aqM=
+	t=1712090398; cv=none; b=aGXQYYK8TmHT7Ib+RLYIppEPoGOLY3Eye1FkdJo6JR2pUIxqvLxusxkN5UXX0ODNN57k5L6a8XVd16kNmmjK0bcf6FBQwl0i9W0fkjk+8bgTuQeIGdvA0ZP//4kUjUOqTaDgcF26NYF3uk7kJZrIGk/6KakuFb88Gg5Fd4Lx/9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712085373; c=relaxed/simple;
-	bh=9JIPjNr0peSxZTcP+6cQZbMtmxMOiiyJXzs2wV8FEds=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uk0QIBZzwzaaG+3EwFxoyRy7xp2kC0TOn/xytMQaXKusPrRFPc1HympfxPRXr1hA7/7jeLz1lyFiZTVD+CQxtEfZdjWQbPnHp5Ypwj59W6zI2wFiFoQucrj/kZoEozoIrA6dEo30wP/UNECHgvaml7JYVmnhJ5uyQzC2j7yGE84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=1cQ1X5a9; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1712090398; c=relaxed/simple;
+	bh=tjg4x5e3PlDUqq2WuUJ3+ChpV/LB7ZJ2PHMkeIF7ESs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KFceP3ysBTVyk25wrpLVKb76qg8WHb++ym5ifvItcdiJnuB1RslZ+z+0u8yIXJa8eydSZ5r63ZZGwzIJXBg/cMMmq6ZFDBDTBcouR1N5faDPWuyK5IehZ8mFXhgBfckveHsCF59cMfDgqkbsToNKX4Xn9D9ljwN8c6Aie6FpR1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ag979f8a; arc=none smtp.client-ip=209.85.166.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="1cQ1X5a9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1712084798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8YOkmEuC9pUsK+tk/6J60XipwO318aL0a2KtV/Z5R7c=;
-	b=1cQ1X5a9FEnn7pUky3k2RC1MLWAVUsKjHvXV+ap0gIexfmavkuZDqhuJ1HK0vnBpvWmjhB
-	GwucBct323m5dXolJ/m+ZkFKfFNvdKgC/Laa7Zj59EKZWfHYEmnVuO7JS+isgTu2Xf0pWS
-	oABPA6SEHeL4iEo/8WK4zGw1cJ+c8Vk=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <mareklindner@neomailbox.ch>,
- Simon Wunderlich <sw@simonwunderlich.de>, Antonio Quartulli <a@unstable.cc>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Erick Archer <erick.archer@outlook.com>
-Cc: Erick Archer <erick.archer@outlook.com>, b.a.t.m.a.n@lists.open-mesh.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] batman-adv: Add flex array to struct batadv_tvlv_tt_data
-Date: Tue, 02 Apr 2024 21:06:35 +0200
-Message-ID: <5466543.Sb9uPGUboI@sven-l14>
-In-Reply-To:
- <AS8PR02MB7237987BF9DFCA030B330F658B3E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References:
- <AS8PR02MB7237987BF9DFCA030B330F658B3E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ag979f8a"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7cc01445f6bso654079439f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Apr 2024 13:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712090396; x=1712695196; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5VM22ZLPwCtsIw+jd1nTqxgUKJwdnIyjGn6t0jOkoy0=;
+        b=Ag979f8abBT6DlUaCi1RaZnycttckxA6YLSwyv9z6XIDvol7pa3atZJAVl1V0Df/dD
+         t5rjQNfe6xN/mYrvsNIazYvVeg1tTUkgFjC7hnN9+L9DQm1Nm9/0E3RFuACahkAtlJN7
+         V4rVM3swXjd0Sp+Kf4myk9n1gyqptSh5qT6+nbFqJVezrUyJSX4u1jTgMLg5gni5pDKy
+         eepjuHMejaVO4szhFHWX1voEVThsHhrnRXZyox5eeJentP5Rl07wRanSTW1jui/HKJi9
+         Z2V0+io5bvqYA1XViCYJAdlw2rQffFKuqUUoJ1dStFk8XGc57Vf6jMLtdVhtlqGflml5
+         u+ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712090396; x=1712695196;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5VM22ZLPwCtsIw+jd1nTqxgUKJwdnIyjGn6t0jOkoy0=;
+        b=T5nQOS9lmFEG3cWXKq1A3IIdl+61KueiMRNA6jjO/fNPcSG4tJepgdBPgLCKNM5Gfc
+         Nz1fVEn8iMT6I6XiWzectOkMtDrHDtvZswwcb+ZB80tTELXT9tKdeF+T8NUhBWPaan20
+         4VPTdbi6bdQS8EDh0Ri1M2CnBnpTPe8wmfDMUodFjdQxyNik36b8OFLp1BhWtJcE530A
+         +WYMLUDMgZxRtarqoQWa2ARQfmEK0XtySvf24zeoQCxSoD+dQRy7cNVvLmLpk9bnObuA
+         j6DX6iToDc4AkpBuTzPDDSKS2eYMSgf+9f2eFOP2XNgiNZwHCX0yot9NGxEah8a93GwA
+         xeGA==
+X-Gm-Message-State: AOJu0YwXU8a3RaFy3dYw93TOxWU5bBRPm/AlzFTf+QMdVBDFuGiBZ7BK
+	WkF8OrtjgLo4bS7qC/EcIBSM7L0DnhM0va+AroczRaw7PLkzqqiZNqOxRVSbnJ7Fj9VB0xNpDY0
+	v3757UZUvig2eNtOf7ydEdw==
+X-Google-Smtp-Source: AGHT+IETt606vn4lNHDW0WE2X2CYGTAwbZHxQnN51d+Fg1HVMdUJfWlJGaaEMQ8RBw0bMJQMIrKbATkWStefspoEyg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6602:3422:b0:7cc:ea7:4f0f with
+ SMTP id n34-20020a056602342200b007cc0ea74f0fmr705482ioz.3.1712090396564; Tue,
+ 02 Apr 2024 13:39:56 -0700 (PDT)
+Date: Tue, 02 Apr 2024 20:39:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1984222.yKVeVyVuyW";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIABRtDGYC/x3MQQqDMBBA0avIrDsQY8DYq5Qikow6CyeSidIi3
+ r2hy7f4/wKlzKTwbC7IdLJykor20UBYJ1kIOVaDNdYZZyxqyRL2L7JwwZjGLR1SFANSG7veB++ NG6Dme6aZP//1633fPwhSQSRqAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712090395; l=1551;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=tjg4x5e3PlDUqq2WuUJ3+ChpV/LB7ZJ2PHMkeIF7ESs=; b=hxAr8s4jOllI37g6nd6bnWHNTlJmle/4ReN2d9pG0fwRgSqJNmD7gevfUKm+eOTcGaS+Foga9
+ Wl/BSJBSpDDAEzH6WgKhVZY/42+Q5I+j/O92HrtY2JrImnsHtOykUky
+X-Mailer: b4 0.12.3
+Message-ID: <20240402-strncpy-init-do_mounts-c-v1-1-e16d7bc20974@google.com>
+Subject: [PATCH] init: replace deprecated strncpy with strscpy_pad
+From: Justin Stitt <justinstitt@google.com>
+To: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
---nextPart1984222.yKVeVyVuyW
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Tue, 02 Apr 2024 21:06:35 +0200
-Message-ID: <5466543.Sb9uPGUboI@sven-l14>
-MIME-Version: 1.0
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-On Tuesday, 2 April 2024 19:23:01 CEST Erick Archer wrote:
-> The "struct batadv_tvlv_tt_data" uses a dynamically sized set of
-> trailing elements. Specifically, it uses an array of structures of type
-> "batadv_tvlv_tt_vlan_data". So, use the preferred way in the kernel
-> declaring a flexible array [1].
-> 
-> The order in which the structure batadv_tvlv_tt_data and the structure
-> batadv_tvlv_tt_vlan_data are defined must be swap to avoid an incomplete
-> type error.
-> 
-> Also, avoid the open-coded arithmetic in memory allocator functions [2]
-> using the "struct_size" macro and use the "flex_array_size" helper to
-> clarify some calculations, when possible.
-> 
-> Moreover, the new structure member also allow us to avoid the open-coded
-> arithmetic on pointers in some situations. Take advantage of this.
-> 
-> This code was detected with the help of Coccinelle, and audited and
-> modified manually.
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+data_page wants to be NUL-terminated and NUL-padded, use strscpy_pad to
+provide both of these. data_page no longer awkwardly relies on
+init_mount to perform its NUL-termination, although that sanity check is
+left unchanged.
 
-> ---
-> Hi,
-> 
-> I would like to add the "__counted_by(num_vlan)" tag to the new flex member
-> but I don't know if this line can affect it.
-> 
-> ntohs(tt_data->num_vlan)
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
 
+Found with: $ rg "strncpy\("
+---
+ init/do_mounts.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Yes, num_vlan is a __be16. I could only identify the kernel-doc related 
-scripts as consumer. But maybe they are more - so I would defer this question 
-to kernel-hardening.
+diff --git a/init/do_mounts.c b/init/do_mounts.c
+index 3c5fd993bc7e..6af29da8889e 100644
+--- a/init/do_mounts.c
++++ b/init/do_mounts.c
+@@ -159,8 +159,7 @@ static int __init do_mount_root(const char *name, const char *fs,
+ 		if (!p)
+ 			return -ENOMEM;
+ 		data_page = page_address(p);
+-		/* zero-pad. init_mount() will make sure it's terminated */
+-		strncpy(data_page, data, PAGE_SIZE);
++		strscpy_pad(data_page, data, PAGE_SIZE);
+ 	}
+ 
+ 	ret = init_mount(name, "/root", fs, flags, data_page);
 
+---
+base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
+change-id: 20240402-strncpy-init-do_mounts-c-e1d378c88049
 
-And with this change, I get a lot of additional warnings (-Wsparse-all)
-
-
-cfg: BLA=n DAT=y DEBUG=y TRACING=n NC=y MCAST=n BATMAN_V=n
-    net/batman-adv/translation-table.c:574:21: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:859:25: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:859:25: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:938:25: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:938:25: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:2932:16: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:2932:16: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:3378:21: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:3378:21: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:3982:30: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:3986:27: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:4026:30: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:4030:27: warning: using sizeof on a flexible structure
-    net/batman-adv/translation-table.c:4032:23: warning: cast from restricted __be16
-    net/batman-adv/translation-table.c:4032:23: warning: restricted __be16 degrades to integer
-    net/batman-adv/translation-table.c:4032:23: warning: incorrect type in argument 1 (different base types)
-    net/batman-adv/translation-table.c:4032:23:    expected unsigned long [usertype] factor1
-    net/batman-adv/translation-table.c:4032:23:    got restricted __be16 [usertype] num_vlan
-
-[...]
->  	num_vlan = ntohs(tt_data->num_vlan);
->  
-> -	if (tvlv_value_len < sizeof(*tt_vlan) * num_vlan)
-> +	flex_size = flex_array_size(tt_data, vlan_data, num_vlan);
-> +	if (tvlv_value_len < flex_size)
->  		return;
-
-This helper would need an #include of <linux/overflow.h> in 
-net/batman-adv/translation-table.c
-
-[....]
->  /**
-> @@ -4039,8 +4029,7 @@ static int batadv_tt_tvlv_unicast_handler_v1(struct batadv_priv *bat_priv,
->  	tt_data = tvlv_value;
->  	tvlv_value_len -= sizeof(*tt_data);
->  
-> -	tt_vlan_len = sizeof(struct batadv_tvlv_tt_vlan_data);
-> -	tt_vlan_len *= ntohs(tt_data->num_vlan);
-> +	tt_vlan_len = flex_array_size(tt_data, vlan_data, tt_data->num_vlan);
-
-This is definitely wrong on little endian systems. You first need to convert 
-num_vlan from network (big endian) to host order.
-
-Kind regards,
-	Sven
-
---nextPart1984222.yKVeVyVuyW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAmYMVzsACgkQXYcKB8Em
-e0aCQBAAj3anzJhaGazYsoqA2U/5qDV64DoNdrlYz34rT3lYX3DTJKcA11cuSvN+
-aDVUaOi8G7Gn4sE+Ql8FGsBmXoCMvwyLJ/eQ6mrr1MGSWLodaZbvmjRxwPRzFbou
-wAK5ZE25usWliJxf2ds7gpSjm6TBFnsNIRAtQ2zz7b8dAhXOe79ASRsrl0P9QBiE
-fM8QeT6hB0gLY5RXmsugrRUfCpqQOfTS44b9siyICMN+mKbRG7GpDj4Ruf/6koNo
-Qy1Unmm+qhyuPUtoYBASGVzC/Gm3pDh7UXuiptY0vgU/o0yjyTHi683cFBtmD30V
-d+pNZDCa2YS0+j0N8Nh/oS3fOWb36I/eKiEaCdmgx9awQ4dO3CxZE5TsLeohNNUO
-OpTdwucSLW8gEo+r+BQI0G2y3+TPCtGv8vLRIXF1frSWjE7EPbXH3BjbcvoDaaYO
-uO1a7tyAAbZ4zZO9wO6qIcRjz1q3E0V8Dx9LRolzC5EA4IvnNa+WQ7OZdTGe8zu3
-GRlIYG/sedhar8Wla+bh8wi8oeInErE4k4pDFI6o1AS5GHTcpTR7Plp/vpnrAEPF
-LAjEHTQT1LOIRLIrzvGBWC/KNnjXd3q2TluOKRBxsNYAnn+nHL3aBmYSp8gCOg9g
-Sta4U5Vrs2QpAT3mk8CoAhQSujqZaOkM+fy63PcaWrhCMDh9mGo=
-=CYsH
------END PGP SIGNATURE-----
-
---nextPart1984222.yKVeVyVuyW--
-
-
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
