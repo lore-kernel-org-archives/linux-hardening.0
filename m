@@ -1,87 +1,109 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sxb1plsmtpa01-01.prod.sxb1.secureserver.net (sxb1plsmtpa01-01.prod.sxb1.secureserver.net [188.121.53.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276DE152DE8
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 17:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E67154BE8
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 19:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712166426; cv=none; b=Y5kCrHJv3qLwxlCOWcrnt3EW4sqSNwnUOaVOsTtEKcuhKxiU+sZxkuzfvxJUyzLjVB1op0DeMS93yR5QELe+K/EutIzI1j0xdYe7yK6+KtpP8B9DpZjUrOFic1CsZqZdHw49Y9oTNGVlKswYVOunWwRQ/GY5sFU/XRaZxM3ts0U=
+	t=1712173869; cv=none; b=cvY4z6Nysu72XoWrm6DB6vAxFYWkhSlh2vKhbNzru/5hPml3laaiyBQGseLgqPGm2xrOfK7mgxuY1AiOWdF6+KXOogXaJo/tQAJJPGRRKph4jH4uL41LXy/U4fJOaTHulZgkS66DuMyvYXjfGwfFq0s0EOdPu4S5r/vCIsvo/Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712166426; c=relaxed/simple;
-	bh=2JeOLqt6iFkrlIcYwbpDrQbQoAoYiMHND8+3QmCr6qo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CyJRRj6gESwwrGzw72bfMIcU8i+Y1gjTJrwSKQSAFk/hoDJQ874JNhA7+lxNlFefUv0aIjv9KNELkpY2ZGozIFdG2wQCHhVwf09BHLgcedozcAP1GJml67GqEl0YKVb7VNpp/S6HueAOmAvQC8ZuJnBvhb/wynHSWm1leb2YkV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OGC9k7vD; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OGC9k7vD"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a450bedffdfso15973766b.3
-        for <linux-hardening@vger.kernel.org>; Wed, 03 Apr 2024 10:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712166423; x=1712771223; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JqrURadVh6bfrB2uLbLqnbQWG9RW9Mp6NnYEctBPd/0=;
-        b=OGC9k7vD778aAa5ZsyGKYQntGnNcYoEoBo0bLXUPQh+y8Q24/HMc+w/8cVM46cO3cp
-         ugV0wo+hwY99pD2rNxKVxO6+bcs3uRDkgzAr/4Rv2VFZ8ZLaviYJNaAYgmgSPJwIHHbq
-         R2oeNe1n01wScP3PJp1fxu/ALO09Z4tZDg0+ESDcpP9TcQHxEY/21lBiuPTi8vZVoR1U
-         9JLDo4ZKLEBhAy7oWG9vxkFnlVRSa6nEBQ8eZFC7DFdjQFcvyZ2jJvdtxCt0QyfkzUhc
-         rb0tTcLeUi8xHnUGE8vRogTTwYBTe5yRV6NfFj0IqqpI6F646Kb0ov8zcvsz4+prUnKd
-         64WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712166423; x=1712771223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JqrURadVh6bfrB2uLbLqnbQWG9RW9Mp6NnYEctBPd/0=;
-        b=FKiWv7h8HAQQESxr2SjcsQOKfoKIaY98F61kgWJtaFqcCfSsx5vRmf0T8rjJDKzrMo
-         giscmjqCXjgLlmldP4cS3yWdgjD0Ypii/Ys9r0TCVcXww7Du7dfUNaCdUwKFWIJ25GRZ
-         G8+emztBLeIohL+0X4N/3dfShRjGJ67FUbunvMtjs1969lEJ9AjpY83xqb8YquUPFiJI
-         CCCpCuXMYvUjGHZIFHTMJ3LANzjO0jQ4HbMThyKCt1ssGzCqujsI0SZZeT38qwTg2KnV
-         Xd9QPJfPHYr+RY3VEKl5rGT0jxffQ1F5fxgNFEOEmSizrTiUXATilwrBtuxLW0wWstrz
-         Px7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXsWdfbHJFgwtk568YoNWE4qkvO9XaMtXRNDFzvHBPHhs0Ye6E482sviuJDW06qQyVAY//NdDErXn2EbLU9fAorB5VCZn0aN0/eX+hqRncy
-X-Gm-Message-State: AOJu0YzBGzaAdRvQwawvKK2YMPmZxXiC+mlbWMfGMxdBh2nuQ3C0OMKW
-	f3RV/bDJajWDoQHcn1yYt+nw9fIYVmsmfXjfu5zDBPhzdmos41z3/3utF8LjSqNTFNU2fY+Vg9O
-	CMbCrJVx001++4OJwW7PaNG6UuiEkoUrIajDZ
-X-Google-Smtp-Source: AGHT+IGSZh3cGZaqkR61KLJvDstkfMIgQgaXFfkZwJhOF9eaxuv59oIjbf/wbWZywUuB5lPZKadWGDHsD804an1EBCw=
-X-Received: by 2002:a17:906:aadb:b0:a4d:ffcb:1f4e with SMTP id
- kt27-20020a170906aadb00b00a4dffcb1f4emr11402ejb.75.1712166423477; Wed, 03 Apr
- 2024 10:47:03 -0700 (PDT)
+	s=arc-20240116; t=1712173869; c=relaxed/simple;
+	bh=Gra+M5CB4uOQynVC1KnQiQy8k+PPo+HZFGgQ020BswM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RwHcuG1IDc3JARks7bhi6a5GfzYnaLE8rdPXaInMz0lZb6L7B+4xjEuEUBp1sWMZtgq2qbfKtkLU3oW8Wy8NGN7rnlcFyMVmQ9FiACwrmRXJs1hGd/LXjqF9ktQv+eLvbn4CWJVWdzlsmpsW5chqOWyjsLMtfHdamaiDKISj254=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from [192.168.178.90] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPA
+	id s6L2rzWS7NGvls6L4rKxRo; Wed, 03 Apr 2024 12:32:03 -0700
+X-CMAE-Analysis: v=2.4 cv=b5F54cGx c=1 sm=1 tr=0 ts=660daeb4
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=FXvPX3liAAAA:8 a=NEAV23lmAAAA:8
+ a=xNf9USuDAAAA:8 a=1XWaLZrsAAAA:8 a=U6Lr9aP-yIEcLLY-FxMA:9 a=QEXdDO2ut3YA:10
+ a=1F1461vogZIA:10 a=wSuxAcp8fc4A:10 a=5kKzt1m56AEA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=UObqyxdv-6Yh2QiB9mM_:22 a=SEwjQc04WA-l_NiBhQ7s:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <594a6365-5cc6-4778-aec5-c5ad2a4b2930@squashfs.org.uk>
+Date: Wed, 3 Apr 2024 20:31:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
- <20240403112336.GD25200@aspen.lan>
-In-Reply-To: <20240403112336.GD25200@aspen.lan>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 3 Apr 2024 10:46:50 -0700
-Message-ID: <CAFhGd8rjDRTY8JjWx_zt8xBHGcJYzp5VpFf_sN+s-kRcr1JKBw@mail.gmail.com>
-Subject: Re: [PATCH] kdb: replace deprecated strncpy
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jason Wessel <jason.wessel@windriver.com>, Douglas Anderson <dianders@chromium.org>, 
-	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Squashfs: replace deprecated strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+Content-Language: en-GB
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfJJxit0+HRHsEUq/5aS2mkZDiwx38H+++8a4oMEZ6Huc+oyQckaWaErbke77kwdsmlfnzXmOch6vzOYPQY8XJnCBmTxmRnUEZ3JbR0QwEuqOvW6GQ0HT
+ D/wiQojzLZxkhr84Q7jz4fksvWkUfDlNMVux9D1dg6IDRli+Yu0O8RT9YPKz7g/H5pU4QbAPkRgvqIAF8YPGybv7PMsVj4sGHUQ7W6chU6wQ7cg1kqD4ceWU
+ NhO9gHJVo1/ZojmK0/y0Ninxvc/cb8EuGFH1v/DwaTqoP4I2BB5bZ3/pD3KJ86a8
 
-On Wed, Apr 3, 2024 at 4:23=E2=80=AFAM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
-> > -                     strncpy(cp, p_tmp+len, len_tmp-len + 1);
-> > +                     memcpy(cp, p_tmp+len, len_tmp-len + 1);
->
-> Roughly the same question here. The original coded is obviously wrong
-> so trusting it did the boundary checks properly seems unwise.
->
-> Are you sure it is OK to make this copy with checking against bufend?
->
+On 28/03/2024 21:52, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> The previous code took special care of NUL-terminating the destination
+> buffer via a manual assignment. As such, there is no bug in the current
+> implementation. However, in an effort to rid the kernel of strscpy()
+> [2], Let's instead use strscpy() which guarantees this behavior [3]. To
+> ensure we can copy the same number of bytes as before, add 1 to the
+> length argument provided to strscpy().
+> 
 
-I am going to revisit this and find a better solution. Thanks Daniel.
+Squashfs copies the passed string into a temporary buffer to ensure it
+is NUL-terminated.  This however is completely unnecessary as the
+string is already NUL-terminated.
 
->
-> Daniel.
+A better way to remove the strncpy() is to remove the unnecessary string
+copy, which I have done in this patch here:
+
+https://lore.kernel.org/lkml/20240403183352.391308-1-phillip@squashfs.org.uk/T/#u
+
+Phillip
+
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html  [3]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>   fs/squashfs/namei.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/squashfs/namei.c b/fs/squashfs/namei.c
+> index 11e4539b9eae..6c4704ba8f42 100644
+> --- a/fs/squashfs/namei.c
+> +++ b/fs/squashfs/namei.c
+> @@ -80,8 +80,7 @@ static int get_dir_index_using_name(struct super_block *sb,
+>   	}
+>   
+>   	str = &index->name[SQUASHFS_NAME_LEN + 1];
+> -	strncpy(str, name, len);
+> -	str[len] = '\0';
+> +	strscpy(str, name, len + 1);
+>   
+>   	for (i = 0; i < i_count; i++) {
+>   		err = squashfs_read_metadata(sb, index, &index_start,
+> 
+> ---
+> base-commit: 928a87efa42302a23bb9554be081a28058495f22
+> change-id: 20240328-strncpy-fs-squashfs-namei-c-9d01b8975e53
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+
