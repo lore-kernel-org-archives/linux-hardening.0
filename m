@@ -1,117 +1,77 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE4FD527
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 00:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2746101EE;
+	Wed,  3 Apr 2024 01:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712105559; cv=none; b=gpJ03qOpflJ1FtLT08y9pWivAXsT5+A53+dvbNuWLwpGTwOhWlD7EDv+t6+0uTJjD1ZifwpJ19rEoOJGxdlrrNhNStoPtezhMCJMzExPTuNSZJ6ZSC5v5PWMcX2ci5IhRVpQ8NBtZhnUMkW4WDgKyxKlvVEpM2zzWEKxFb62XDs=
+	t=1712106627; cv=none; b=PFGBsOrfH319zFj34qRUFDmmOpJ5ItWM6aum9Fju0VcRpeLUNXHAaiLAs0x92ch6qTqNqLqmBbQXZOQUlm+nXT1jn7phiFpmYPSzYgF4Jgb0WKCpEnoqXxalmWsN9sFy7HXOjGrp+BC7UgxUUgUcbBvi+zMc84jH2zrm/FQCnlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712105559; c=relaxed/simple;
-	bh=AMBZZucRDLbkCBnpUsFkHT1Acvq2JW3K7G/CZEuEqfE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=q/3e6D3ElwHFPbxkY9XcY47PhldbUwCIs1dx1Ixvja1LLP6Dys9cP1sHfjcCYq8GgcbMPX9GscpADM8EcUMRrdDQ9+zeEbl3+Eoi0Pu/N3aApUIdPyfp1r8yWSuAk/kWJ/21NmmPH3KNMDwvfUSd4Ds79QFzloNGp7G7K6DcvmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V1NdzGZW; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1712106627; c=relaxed/simple;
+	bh=6R+jUnyz2+y+hPbGs7voORqnWJIakb6nMaNT0Qn4hfw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IG7FIr+LTNP+R7JHKaxvPWcRGLNffFsX3Y1ahdJALEszWPXbYmQ53Sl9v02x2fNSlWUEb69LprussqkTX62rBu6u+nOboy68lRTWpTnlHzAcQgExz7W/Vekjw8ldNRlZdDh8Lyqpx/kD0tg2hUOuqrmIK7k8QHip8++fI0Y0WKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcFDyErx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V1NdzGZW"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6152135cd23so18634517b3.0
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Apr 2024 17:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712105557; x=1712710357; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2LtWRlkSNk32zYyNyz1b834Pph06BPJDWHucHrmrXSY=;
-        b=V1NdzGZWloPXuLxDqb/B8tmJQPVGQnQmw+bKqLVmL7rOtFACzymWsvAwnP7tIVfkLD
-         s4IwLwXfAK8T4p3EeJCPxDJ8lNkAYVvcAFSmbpOh1vfeui2rZSMtQF0yIUPCBeJkmN7x
-         SmxzA4mE6X/kCFH7OClcwbzIuAfY2agibcTt6Wzm2cDm+f63LoOxvrvKdVwK/5Ab7SmV
-         PZPEvKWT68Vk0t+ruOoFQOO7nHvAIoh9W8gR3R3Pffy+aA4dii2G/YQCIFDfYU5MKRLN
-         Y0SfQ0Sta0PmbjnNqcOF736arowuF99YZE5eF/+BWbVUWomluW9EcbPoBkNp56EfjclF
-         kY7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712105557; x=1712710357;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2LtWRlkSNk32zYyNyz1b834Pph06BPJDWHucHrmrXSY=;
-        b=ukK0qGbll20SIYKfVUgLw49Ygpks124wqic6mYWkd4N+5WCslFpMJzKojH8oyxVIyc
-         Vudy+sDUOg0Rg4XHPIr3YSXD7vfOwBENUTrpixbW0ZpAIIIfOiggJHg0d+uZDNk/hvFp
-         FCjSUbu9/1N3XINtGFjgDn2kSOYj/BJfDYMexmuhXbmFEHx8o7Pdj3DmbEiJG0wxkP/j
-         FaslLL7vpslZIeHdqN5qS+v86aXsptUKGB8/DdPv/DjieCmMnmQsDTWKTrIz6UmQbOf+
-         FlTojLxbkA8deKol180zH14KfzP8jqhcpGplkUHDJ1TuaGfq/neJLu/kvF+Ofwa7JBVh
-         7wAw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2JD4VGP9C1FXBrQb5hZA7tGpWvWOiQhcg/Bk5lG3Y40VEKHcBqMjf7rWjdv0kQ0JoMkVctvu3khJBXd2r1bQtYMIeasWt5nzWP50tckHC
-X-Gm-Message-State: AOJu0Yzf5GjQ2zH1KvplLZWiYEdbgTzFrKuwEiph2JJTOfNAAU1noxxt
-	evFGsl4J26EZ7blWe3dciucO0oGyuSWDMScc9hVIVSLZmnm8JZek6kKXDGw9j39eJgf99+m+3Ir
-	IrII9zPaw15nZmQLsKdtp1w==
-X-Google-Smtp-Source: AGHT+IENHtMGTKiMA0s2/kOwugq4yr4dOndu0KnzLEY/2IVlh0JUmWjmdLHBkuswQWDSDEhDP1VdBsuAqxFROrPxgA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1b09:b0:dc6:c94e:fb85 with
- SMTP id eh9-20020a0569021b0900b00dc6c94efb85mr980999ybb.2.1712105557231; Tue,
- 02 Apr 2024 17:52:37 -0700 (PDT)
-Date: Wed, 03 Apr 2024 00:52:36 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcFDyErx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A7A07C43601;
+	Wed,  3 Apr 2024 01:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712106627;
+	bh=6R+jUnyz2+y+hPbGs7voORqnWJIakb6nMaNT0Qn4hfw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BcFDyErxgfhqfZMb4Gh4EQxLmxqMwhivRwPgTGflGShrawooxzJOre/dCy+FRExal
+	 3+K33JLJwkcykIP12oGHs4X7108txvRu9UXlBOewZlNa3jWGQL5ebO983wRKAKVVEg
+	 x2QOjXOnkPXODD5+PFRqeG8j3AX+CdC74pJzjfyivuO2f2D5ZEyK/Y4/mzbUzPMBn/
+	 gyIiZMGXp7SvlpcNpDyqv8+UKoLsSdVSHn2W20KrX5z4d52LYQj6qnQppt3CQ1IW6X
+	 Fa0XfO9VvzEgRSSli9dQ9ewjJlos6KEwgFiPHG+si0ispzGVDHGxW3CRn97cdj9UeE
+	 VOX7xbnl/AVfg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E290D9A155;
+	Wed,  3 Apr 2024 01:10:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFOoDGYC/x2NwQ6CMBAFf4Xs2U1qAQ/+CjEGuk/cQArZKoEQ/
- p3qYQ5zmdkpwRSJ7sVOhkWTTjHL9VJQeLexB6tkJ+985SrnOX0shnnjARYxsqD79jxI9+OpEwe uS9QQf5O2FMqd2fDS9f9oHsdxAlV4hjpzAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712105556; l=1581;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=AMBZZucRDLbkCBnpUsFkHT1Acvq2JW3K7G/CZEuEqfE=; b=5vCiLZjVHanyhM6gz89NkA5pyYDVG+O71KYpStpAjblh7KSvarGbuKYfVC5QMLNwXCs/IhIuP
- Rq24m4eV/t/B4SeYnsudISx/x6NQCQ+38VqG8fIE7d7TQ8vT8eU4wBo
-X-Mailer: b4 0.12.3
-Message-ID: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
-Subject: [PATCH] kdb: replace deprecated strncpy
-From: Justin Stitt <justinstitt@google.com>
-To: Jason Wessel <jason.wessel@windriver.com>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, Douglas Anderson <dianders@chromium.org>
-Cc: kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] nfp: Avoid -Wflex-array-member-not-at-end warnings
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171210662764.30217.3683603150178258009.git-patchwork-notify@kernel.org>
+Date: Wed, 03 Apr 2024 01:10:27 +0000
+References: <ZgYWlkxdrrieDYIu@neat>
+In-Reply-To: <ZgYWlkxdrrieDYIu@neat>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: louis.peens@corigine.com, kuba@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, oss-drivers@corigine.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-All the other cases in this big switch statement use memcpy or other
-methods for copying string data. Since the lengths are handled manually
-and carefully, using strncpy() is may be misleading. It doesn't
-guarantee any sort of NUL-termination on its destination buffer. At any
-rate, it's deprecated [1] and we want to remove all its uses [2].
+Hello:
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90 [2]
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Found with: $ rg "strncpy\("
----
- kernel/debug/kdb/kdb_io.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, 28 Mar 2024 19:17:10 -0600 you wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
+> 
+> There is currently an object (`tl`), at the beginning of multiple
+> structures, that contains a flexible structure (`struct nfp_dump_tl`),
+> for example:
+> 
+> [...]
 
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 9443bc63c5a2..8bba77b4a39c 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
- 			kdb_printf("%s", buffer);
- 		} else if (tab != 2 && count > 0) {
- 			len_tmp = strlen(p_tmp);
--			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
-+			memcpy(p_tmp+len_tmp, cp, lastchar-cp+1);
- 			len_tmp = strlen(p_tmp);
--			strncpy(cp, p_tmp+len, len_tmp-len + 1);
-+			memcpy(cp, p_tmp+len, len_tmp-len + 1);
- 			len = len_tmp - len;
- 			kdb_printf("%s", cp);
- 			cp += len;
+Here is the summary with links:
+  - [next] nfp: Avoid -Wflex-array-member-not-at-end warnings
+    https://git.kernel.org/netdev/net-next/c/d88cabfd9abc
 
----
-base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
-change-id: 20240402-strncpy-kernel-debug-kdb-kdb_io-c-53e5ed26da3d
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
 
