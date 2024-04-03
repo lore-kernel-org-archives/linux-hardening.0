@@ -1,83 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D314F81207;
-	Wed,  3 Apr 2024 08:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B21A6CDBD;
+	Wed,  3 Apr 2024 08:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131675; cv=none; b=ZglCYLtslRlE+2Zg203LJuq7kPaXF7cxxmUdtb3nbsxZWLk8PrwkalJNqlxYktQUKID3fKmKahDZdSLFHMajysd6QyEfFFE07ZDKC1+iLIdwMajJQ3x0VyfIpSvEtRJmfyO23oDMS40CA0T2+WCPn8br6qE5K4xsMrsO0C4/3TA=
+	t=1712133935; cv=none; b=nhioSGH2cn98gs8FgmF0xa1iF+gsAWtZqNsvEOGOz3FZM7PtZ7XXNCTNRDgQ3mhJwiZ5xxfy8KtEnmmIUhw9Ck8g6KxMSfeGharwMnevqWkv3uMQQLVfroNUN/UJ5yyMZTLUSi0hPXRKrma5f7lR/OX9ww1GCwu1RaCohsiMGEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131675; c=relaxed/simple;
-	bh=i2kwREvJagmflXYpUvDxkKnpylOun/MjosG4Ff0VeyU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dsKjkbm8W2L8ag+vIIFvIMZAOpjJxruTd6LLy0ZWn8tjXFTQ0JHv1oQp51XLNWWobrzQPKA5V9sjeKOTyJvWr/PaPwT29GMCvU5j4nKf69gWIEO4kPJpYWE0PbR0g4MzL/XEGbrmJvYSEzZKrLhC9PhgijrBukFizJ0QC539H7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIwfgNho; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712133935; c=relaxed/simple;
+	bh=HgxNMS/FN0Nk6FUWFDTk9f7rXSrv/Mx0j1/PjJ7OXSo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PFbWr+/OhqVEE5FQrO28oFXmzybgvmRdf5WIJGq19xf+RI8gxMTLdZ+YWOK4TkfJNwMnZzH3iR5KonhOT28VmD0KTV/LsIxAl3po9wyAkDsUHq3aGHqV9jTAgdocYueXeoorPP22ZVex7FyS0Tr1DO4QHLpMvA6T5hmGNdwWtK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hd8sqYaF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIwfgNho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C107C43330;
-	Wed,  3 Apr 2024 08:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712131673;
-	bh=i2kwREvJagmflXYpUvDxkKnpylOun/MjosG4Ff0VeyU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iIwfgNhoK4uO99gGZSx/4AtuVr5J0+ILk77OBxquuSiIuRfxua0kwS5ZHLif5eNFK
-	 Xiwlt9yeTpBRhXGlXbXwwHy3FGxNmF/kbPC6bpAQPsWi5aLQEkG8jAiciY3TSvcEds
-	 2x7mp557Sf6hrfOqNsybrYTk55PdyuFDHv74h9gxE7BH5qNt83P2kSCn6r+/pfGQwu
-	 Qz/sLLA3y28X6bUTadkVRMd7GFVGelJrLkmJWcf3N8rAqOfz0Vb+cTIotRUwSh69Rk
-	 G+bpOo4zdRzXll2Q7I3jBh8x0oqTjEqUM9/PS9zuRJn01ez5Rg0yvl6X2szE/sSueT
-	 jJPzh+CAjCubw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 02/34] ubsan: fix unused variable warning in test module
-Date: Wed,  3 Apr 2024 10:06:20 +0200
-Message-Id: <20240403080702.3509288-3-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hd8sqYaF"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43385mMS013800;
+	Wed, 3 Apr 2024 08:45:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=U2835gZws67kNh8mPFrnxxRKQzJT+emLe1Ex3spc8EM=; b=Hd
+	8sqYaFSJ89RDAavwHo35b/6Wzz3aBUViApZG2E0bAa/CUSPqN7lq8ExRM1IONGIP
+	A0vq2KFOsv0rvCeMaFSRlsRQcH1f3f/eY5ihvYjnQxJ5s2nvm6gM7X2WLzgqF8G6
+	ZdNzw6CTdTtMBMPgA6zfUqAgeMBFchhgYZ7iF2Z/cL8p310AqmUQXKd1CplYwQgK
+	zWx7VeaLHnm5mezlzdCRhq6UrK/0YiMRbE/715SLq0cUaXaat8L2LH3zEB3XR9sT
+	BLEUA2fXfq+5wLPkb3keG581StOIiKjXjMvH1dC28hwQq28eAIv0dko8NnTcTB2N
+	IxqsVhiRIr0CGdbnvhAQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x93a5g34g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 08:45:29 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4338jTjA028371
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Apr 2024 08:45:29 GMT
+Received: from [10.50.19.131] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 3 Apr 2024
+ 01:45:23 -0700
+Message-ID: <91f59477-1799-4db6-bcc2-3f0c5225d1c8@quicinc.com>
+Date: Wed, 3 Apr 2024 14:15:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Georgi Djakov <djakov@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
+        <quic_mdtipton@quicinc.com>
+References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+ <20240325181628.9407-2-quic_okukatla@quicinc.com>
+ <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+Content-Language: en-US
+From: Odelu Kukatla <quic_okukatla@quicinc.com>
+In-Reply-To: <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Fm8W6r0cBbMxBDjwmb2VUgfbVnbKZ-N2
+X-Proofpoint-ORIG-GUID: Fm8W6r0cBbMxBDjwmb2VUgfbVnbKZ-N2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_08,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 suspectscore=0 mlxlogscore=900
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2404030060
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-This is one of the drivers with an unused variable that is marked 'const'.
-Adding a __used annotation here avoids the warning and lets us enable
-the option by default:
 
-lib/test_ubsan.c:137:28: error: unused variable 'skip_ubsan_array' [-Werror,-Wunused-const-variable]
+On 3/27/2024 2:26 AM, Konrad Dybcio wrote:
+> On 25.03.2024 7:16 PM, Odelu Kukatla wrote:
+>> It adds QoS support for QNOC device and includes support for
+>> configuring priority, priority forward disable, urgency forwarding.
+>> This helps in priortizing the traffic originating from different
+>> interconnect masters at NoC(Network On Chip).
+>>
+>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>> ---
+> 
+> [...]
+> 
+>>  
+>> +	if (desc->config) {
+>> +		struct resource *res;
+>> +		void __iomem *base;
+>> +
+>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +		if (!res)
+>> +			goto skip_qos_config;
+>> +
+>> +		base = devm_ioremap_resource(dev, res);
+> 
+> You were asked to substitute this call like 3 times already..
+> 
+> devm_platform_get_and_ioremap_resource
+> 
+> or even better, devm_platform_ioremap_resource
+> 
+> [...]
+> 
+>> @@ -70,6 +102,7 @@ struct qcom_icc_node {
+>>  	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+>>  	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
+>>  	size_t num_bcms;
+>> +	const struct qcom_icc_qosbox *qosbox;
+> 
+> I believe I came up with a better approach for storing this.. see [1]
+> 
+> Konrad
+> 
+> [1] https://lore.kernel.org/linux-arm-msm/20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org/
+> 
 
-Fixes: 4a26f49b7b3d ("ubsan: expand tests and reporting")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- lib/test_ubsan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I see in this series, QoS parameters are moved into struct qcom_icc_desc. 
+Even though we program QoS at Provider/Bus level, it is property of the node/master connected to a Bus/NoC.
+It will be easier later to know which master's QoS we are programming if we add in node data.
+Readability point of view,  it might be good to keep QoS parameters in node data.  
 
-diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
-index 276c12140ee2..c288df9372ed 100644
---- a/lib/test_ubsan.c
-+++ b/lib/test_ubsan.c
-@@ -134,7 +134,7 @@ static const test_ubsan_fp test_ubsan_array[] = {
- };
- 
- /* Excluded because they Oops the module. */
--static const test_ubsan_fp skip_ubsan_array[] = {
-+static __used const test_ubsan_fp skip_ubsan_array[] = {
- 	test_ubsan_divrem_overflow,
- };
- 
--- 
-2.39.2
+Thanks,
+Odelu
+
+
 
