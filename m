@@ -1,163 +1,117 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0CC522A
-	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 00:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE4FD527
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 00:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712105387; cv=none; b=DJts0Yk2DDR15Tf0Abjrb69mkqva76F+QSzZMgcJMIXJECKAP2dyWySRF1fplGyfhhwkgy5u/FO0bedpEqXKMpJ7J8gmRiJt0jjFPmR64OHNQ3nLMAu7+LAr8GoDTLXzdIv8KzFy8s5O7bITB1RkjG9WlEmjZ09MZI0DVjI1+bE=
+	t=1712105559; cv=none; b=gpJ03qOpflJ1FtLT08y9pWivAXsT5+A53+dvbNuWLwpGTwOhWlD7EDv+t6+0uTJjD1ZifwpJ19rEoOJGxdlrrNhNStoPtezhMCJMzExPTuNSZJ6ZSC5v5PWMcX2ci5IhRVpQ8NBtZhnUMkW4WDgKyxKlvVEpM2zzWEKxFb62XDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712105387; c=relaxed/simple;
-	bh=4dK7C/kJTg/Koy+Ep9OVvmuPGFqFUCucC4exXTmjsvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TEXTQpEkKLWwy2L6EEsK9V/MGo4hDTpyFXYwFX5wvU69idlz66hc/UQH27rVt14QzhnICm6ZrjnrLtveTjaSf+x2o28dW6ago9lWFksciL6nzwlpU0iSyvQhSMSpTE6IAQsuY3Igezc62oApPO5Ivo9YDr3Lw/VaoS6425vlmyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DcBqJ7oG; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1712105559; c=relaxed/simple;
+	bh=AMBZZucRDLbkCBnpUsFkHT1Acvq2JW3K7G/CZEuEqfE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=q/3e6D3ElwHFPbxkY9XcY47PhldbUwCIs1dx1Ixvja1LLP6Dys9cP1sHfjcCYq8GgcbMPX9GscpADM8EcUMRrdDQ9+zeEbl3+Eoi0Pu/N3aApUIdPyfp1r8yWSuAk/kWJ/21NmmPH3KNMDwvfUSd4Ds79QFzloNGp7G7K6DcvmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V1NdzGZW; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DcBqJ7oG"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id rJpVrM82rDI6frooxrBTL7; Wed, 03 Apr 2024 00:49:43 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id roowrszoIVdenroowrUJ31; Wed, 03 Apr 2024 00:49:43 +0000
-X-Authority-Analysis: v=2.4 cv=M4FLKTws c=1 sm=1 tr=0 ts=660ca7a7
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=g72bLlCj1y9NqcwAG1Fglw==:17
- a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10
- a=WFhDUUEJ9-S_0BG-ZiwA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VqSzRgQgO9eTxbwoLbmir62oY7qQGk+N1QEYVP7K5rY=; b=DcBqJ7oGhUHVJmv1gPsIUQNAl7
-	TGhTZ2d1xTlXKI8l3Mm2gs3S/F5o+kIMdeV6abMB7a7Yx/uKDpG9HAPmPA3K9oN0m43/BxV7GidmZ
-	Mw+F8REthGPeIG4NMLZfwyY7T9bJTCdh2uLGEB6aFqWtk3v7JwaKAhvMWu5g7X5tr8ND1zZ24N0bI
-	qqxAN3Spy41t6YxDI8VpccTFlvYmBbao3C5+GRqB5d1hRdC+VKm6vjvWOQFna/i4qN62mXPSSlCbs
-	Xp0tjswCddJsaWsbR1n2L733wO1wh/AuSHxuV5S1gmZgr6g0txUzbUj+E8lDLz/vjtbfOPowrOJeB
-	FINiheUw==;
-Received: from [201.162.240.213] (port=29677 helo=[192.168.166.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rroov-00178Y-2X;
-	Tue, 02 Apr 2024 19:49:42 -0500
-Message-ID: <d572be26-0217-4522-8cc4-b9c6a62e6f7c@embeddedor.com>
-Date: Tue, 2 Apr 2024 18:49:34 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V1NdzGZW"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6152135cd23so18634517b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Apr 2024 17:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712105557; x=1712710357; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2LtWRlkSNk32zYyNyz1b834Pph06BPJDWHucHrmrXSY=;
+        b=V1NdzGZWloPXuLxDqb/B8tmJQPVGQnQmw+bKqLVmL7rOtFACzymWsvAwnP7tIVfkLD
+         s4IwLwXfAK8T4p3EeJCPxDJ8lNkAYVvcAFSmbpOh1vfeui2rZSMtQF0yIUPCBeJkmN7x
+         SmxzA4mE6X/kCFH7OClcwbzIuAfY2agibcTt6Wzm2cDm+f63LoOxvrvKdVwK/5Ab7SmV
+         PZPEvKWT68Vk0t+ruOoFQOO7nHvAIoh9W8gR3R3Pffy+aA4dii2G/YQCIFDfYU5MKRLN
+         Y0SfQ0Sta0PmbjnNqcOF736arowuF99YZE5eF/+BWbVUWomluW9EcbPoBkNp56EfjclF
+         kY7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712105557; x=1712710357;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2LtWRlkSNk32zYyNyz1b834Pph06BPJDWHucHrmrXSY=;
+        b=ukK0qGbll20SIYKfVUgLw49Ygpks124wqic6mYWkd4N+5WCslFpMJzKojH8oyxVIyc
+         Vudy+sDUOg0Rg4XHPIr3YSXD7vfOwBENUTrpixbW0ZpAIIIfOiggJHg0d+uZDNk/hvFp
+         FCjSUbu9/1N3XINtGFjgDn2kSOYj/BJfDYMexmuhXbmFEHx8o7Pdj3DmbEiJG0wxkP/j
+         FaslLL7vpslZIeHdqN5qS+v86aXsptUKGB8/DdPv/DjieCmMnmQsDTWKTrIz6UmQbOf+
+         FlTojLxbkA8deKol180zH14KfzP8jqhcpGplkUHDJ1TuaGfq/neJLu/kvF+Ofwa7JBVh
+         7wAw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2JD4VGP9C1FXBrQb5hZA7tGpWvWOiQhcg/Bk5lG3Y40VEKHcBqMjf7rWjdv0kQ0JoMkVctvu3khJBXd2r1bQtYMIeasWt5nzWP50tckHC
+X-Gm-Message-State: AOJu0Yzf5GjQ2zH1KvplLZWiYEdbgTzFrKuwEiph2JJTOfNAAU1noxxt
+	evFGsl4J26EZ7blWe3dciucO0oGyuSWDMScc9hVIVSLZmnm8JZek6kKXDGw9j39eJgf99+m+3Ir
+	IrII9zPaw15nZmQLsKdtp1w==
+X-Google-Smtp-Source: AGHT+IENHtMGTKiMA0s2/kOwugq4yr4dOndu0KnzLEY/2IVlh0JUmWjmdLHBkuswQWDSDEhDP1VdBsuAqxFROrPxgA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1b09:b0:dc6:c94e:fb85 with
+ SMTP id eh9-20020a0569021b0900b00dc6c94efb85mr980999ybb.2.1712105557231; Tue,
+ 02 Apr 2024 17:52:37 -0700 (PDT)
+Date: Wed, 03 Apr 2024 00:52:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] nfp: Avoid -Wflex-array-member-not-at-end warnings
-To: Jakub Kicinski <kuba@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Louis Peens <louis.peens@corigine.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, oss-drivers@corigine.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZgYWlkxdrrieDYIu@neat> <20240401212424.34a9a9cd@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240401212424.34a9a9cd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.213
-X-Source-L: No
-X-Exim-ID: 1rroov-00178Y-2X
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.166.44]) [201.162.240.213]:29677
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBorOI4qHPzMKkAQQv6u+nPbOIlNyauuNHz3qbAENzgrTAqfF0FN3FMa59vw2obxEK19H000KOA8o2f3rR6sb8UY0Mk+XC0A3shs8KuswZPMgT9h9fbb
- FQ/pBFjaInM6H+Ib7TVSAHagDPvmnf65o7jptktKk1FIlEVbVnrcPxQVEgdUamPYKTMrzweQ98ye1aPNqdHaSG4F25Lvmz816SfWUunDHcOc10b9e6jqO9rs
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAFOoDGYC/x2NwQ6CMBAFf4Xs2U1qAQ/+CjEGuk/cQArZKoEQ/
+ p3qYQ5zmdkpwRSJ7sVOhkWTTjHL9VJQeLexB6tkJ+985SrnOX0shnnjARYxsqD79jxI9+OpEwe uS9QQf5O2FMqd2fDS9f9oHsdxAlV4hjpzAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712105556; l=1581;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=AMBZZucRDLbkCBnpUsFkHT1Acvq2JW3K7G/CZEuEqfE=; b=5vCiLZjVHanyhM6gz89NkA5pyYDVG+O71KYpStpAjblh7KSvarGbuKYfVC5QMLNwXCs/IhIuP
+ Rq24m4eV/t/B4SeYnsudISx/x6NQCQ+38VqG8fIE7d7TQ8vT8eU4wBo
+X-Mailer: b4 0.12.3
+Message-ID: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
+Subject: [PATCH] kdb: replace deprecated strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Jason Wessel <jason.wessel@windriver.com>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Douglas Anderson <dianders@chromium.org>
+Cc: kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
+All the other cases in this big switch statement use memcpy or other
+methods for copying string data. Since the lengths are handled manually
+and carefully, using strncpy() is may be misleading. It doesn't
+guarantee any sort of NUL-termination on its destination buffer. At any
+rate, it's deprecated [1] and we want to remove all its uses [2].
 
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90 [2]
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
 
-On 01/04/24 22:24, Jakub Kicinski wrote:
-> On Thu, 28 Mar 2024 19:17:10 -0600 Gustavo A. R. Silva wrote:
->> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
->> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
->> @@ -34,8 +34,11 @@ enum nfp_dumpspec_type {
->>   
->>   /* generic type plus length */
->>   struct nfp_dump_tl {
->> -	__be32 type;
->> -	__be32 length;	/* chunk length to follow, aligned to 8 bytes */
->> +	/* New members must be added within the struct_group() macro below. */
->> +	struct_group_tagged(nfp_dump_tl_hdr, hdr,
->> +		__be32 type;
->> +		__be32 length;	/* chunk length to follow, aligned to 8 bytes */
->> +	);
->>   	char data[];
->>   };
-> 
-> I counted 9 references to nfp_dump_tl->data.
-> Better to add:
-> 
-> static void *nfp_dump_tl_data(struct nfp_dump_tl *spec)
-> {
-> 	return &spec[1];
-> }
+Found with: $ rg "strncpy\("
+---
+ kernel/debug/kdb/kdb_io.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Unfortunately, that's out-of-bounds for the compiler, and well, basically
-the reason why flex-array members were created in the first place.
+diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+index 9443bc63c5a2..8bba77b4a39c 100644
+--- a/kernel/debug/kdb/kdb_io.c
++++ b/kernel/debug/kdb/kdb_io.c
+@@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
+ 			kdb_printf("%s", buffer);
+ 		} else if (tab != 2 && count > 0) {
+ 			len_tmp = strlen(p_tmp);
+-			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
++			memcpy(p_tmp+len_tmp, cp, lastchar-cp+1);
+ 			len_tmp = strlen(p_tmp);
+-			strncpy(cp, p_tmp+len, len_tmp-len + 1);
++			memcpy(cp, p_tmp+len, len_tmp-len + 1);
+ 			len = len_tmp - len;
+ 			kdb_printf("%s", cp);
+ 			cp += len;
 
-I was looking into implementing two separate structs:
+---
+base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
+change-id: 20240402-strncpy-kernel-debug-kdb-kdb_io-c-53e5ed26da3d
 
-struct nfp_dump_tl_hdr {
-         __be32 type;
-         __be32 length;  /* chunk length to follow, aligned to 8 bytes */
-};
-
-struct nfp_dump_tl {
-         __be32 type;
-         __be32 length;  /* chunk length to follow, aligned to 8 bytes */
-	char data[];
-};
-
-and at least for structs nfp_dumpspec_csr, nfp_dumpspec_rtsym, nfp_dump_csr, and
-nfp_dump_rtsym it'd be a clean change (no need for container_of()), but not for
-structs nfp_dumpspec_csr and nfp_dumpspec_rtsym because of some casts from
-the flex struct:
-
-nfp_add_tlv_size():
-         case NFP_DUMPSPEC_TYPE_ME_CSR:
-                 spec_csr = (struct nfp_dumpspec_csr *)tl;
-                 if (!nfp_csr_spec_valid(spec_csr))
-		...
-
-         case NFP_DUMPSPEC_TYPE_INDIRECT_ME_CSR:
-                 spec_csr = (struct nfp_dumpspec_csr *)tl;
-                 if (!nfp_csr_spec_valid(spec_csr))
-		...
-
-	case NFP_DUMPSPEC_TYPE_RTSYM:
-                 spec_rtsym = (struct nfp_dumpspec_rtsym *)tl;
-                 err = nfp_dump_single_rtsym(pf, spec_rtsym, dump);
-
-nfp_calc_rtsym_dump_sz():
-         spec_rtsym = (struct nfp_dumpspec_rtsym *)spec;
-
-
-At least for those two structs, it's probably more straightforward to use
-struct_group_tagged() and container_of().
-
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
+
