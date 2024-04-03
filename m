@@ -1,86 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D7613B587;
-	Wed,  3 Apr 2024 10:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9AA141987
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 11:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712139029; cv=none; b=Kn2JEzvpnj7G9UlaEqxXXcFsja79KMUprPrz6C56V0T3OBs5sxdnIka/nLkY9oAaDbBxgzDBWnInKjXo2E7BKkvSJBtg47PyepZ2GY0qnkilXpr037cprPFp+EgsLr9cZDUOoG2CxpCKZv4cUD6uyd7aotm5YPVG25SdPu020Wc=
+	t=1712143423; cv=none; b=rRIFl3b1YQYvGx9xz2VWOJ22Y/MQ9yKMLvNAFopxn/M8B7YaLqlmx7VMvFp4o3YbyLbZrFfOoerZ0UN4lNi01I+y9IFMr9K2kmQ61kIfKwWsS17scC6/fgxNKSR+1Evn6/4kP2nhgiVfeL6lsZ3kUOQ74/sKY2a15n6twS4E12U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712139029; c=relaxed/simple;
-	bh=8X0qRYwm8y4DjExx4iOfuaA9BKNaLtM2/LhmpI9xN7o=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gsv+LOWFesD+pLn1jNWrdAK0Ec2sMrpOx5hSFy3hS1i71yUAFQqpa9HHCbhmyGVR328TqrS0sXmS5v8NtsQZSHynoswAghBnGtp8FDmVA6Nyfv+EfvvKAs5awLXheUntxaTzn/HP/tWxqLcm+UYRvjUKrxAa8+8jG5HqZ7jOOqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYpQMVyl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712143423; c=relaxed/simple;
+	bh=qlbIaZmjqq0figKmIY11feeW5X4Q6m2nbl5U2l0zQJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pqC/gFnvtT+7LKEtkfz+BAEWAK4kD/ey5VBKJWp3BYI48BZaGxvYScqwMWCA30Jd4qHnuKtqsZzT16dbybQni6ZwpyDWNVkHvntN53/I03JkYwCrrxtLj8yqv1nux0MevBqpQMEXvJl5DTf7E2HCXMBDDMqheI6H2Xmkkm1mFWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lSVHkoUB; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYpQMVyl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B9AAC433F1;
-	Wed,  3 Apr 2024 10:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712139029;
-	bh=8X0qRYwm8y4DjExx4iOfuaA9BKNaLtM2/LhmpI9xN7o=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=HYpQMVylRafHU5iGeUi5QjZwoOMcXupbL2hmzXVo/i5bfy4NMUPpLsrBTHog+RQfX
-	 Rv1JdP9DcW+UaY6TQXI2pvmnpTsqErCGWrpkhsf1jeOkIMW01ZCUegQC+0qGPzjadI
-	 QlZX7nqikA4vsvSqXn32av6VivssSThdnxcp7YKLgtqdoY5mjjyZWmeDb44hdzUIEN
-	 2e6s8HZWqqghRSNl0OZgSityOZF4jVwdnfoLHqoR7zlLCe8ID8VvVEeVgXPNoeMqyd
-	 Kbucl7RmYUApwqvuwr6yDcZQDy7wx8AYR/05m8w8zeExZsFjfwbmzlSiLC/xGO2qs5
-	 3fF5zJCYoVKkQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 60275D9A158;
-	Wed,  3 Apr 2024 10:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSVHkoUB"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-34356c24701so992476f8f.1
+        for <linux-hardening@vger.kernel.org>; Wed, 03 Apr 2024 04:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712143419; x=1712748219; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c6hgwRkGrrS3Oweenekzl9fFYfPnVmMeLqWDsvPrY+Q=;
+        b=lSVHkoUBtf3duAA0NFtoNWId73Dm3E5d742poLvJelI3O+zsm5EflN2KfjDCg7V5yg
+         qLY7MVdRpG8SoYphwyqXWK50vtpUADh+bWYxPHFc9B1dzhfNEJKvgN7bxa3Yy5iAMqa9
+         wmD24cDh9k4SDwwlesM5CALaCt2QmeJecnzUfDC3YamUAatZdZFlMKUieJ+FaQqvbt0Q
+         fOn78kSrnAnwHneKThEzPVRG88S2yFcgunFyNcQvM7f72Bk3xxEUDfbq3eMM01c4EfoQ
+         tWHGK5VBrW++e2R7rWC/9knxTkjy4pQTJ2t9ToUgTeUG2dtS7fq7KoS3ZDzSGFTpASDv
+         0FJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712143419; x=1712748219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c6hgwRkGrrS3Oweenekzl9fFYfPnVmMeLqWDsvPrY+Q=;
+        b=uYlp5hheLygcaG3D4cm90A6Z6gs5IWcR327WEvDJj+K/J+MPxE5dMh8bZWvl1fuO3H
+         4RdrAgYYFKdIWMrNQZbDT1i31TpLNLzbEeXmgTJMfAcIfUu8lEDhIDIbA6eTkQIqBKKL
+         4brDoxvDBGfpYACJo25Z363dHR041jNhbJokIWm4IxmvEd3idEdhDdLo1wPWhxDD4qtF
+         sKNb0Xot2M38hLW2q4JcrKsXlpPrngEqXV+rSSAjycRCO8IyqCkA883QO6kCkx74XY8Q
+         VbrpBlm28p8WYs6rTOPGMoi/hOU3J92NfOoWkBVo+r67yKyu6vVz6qff1cS8mf6lmR1O
+         YHUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWT9zQnWIkhzXXz5gk0Ncd7CW1Jjpjzr4NNzLVYRDLZGKbWzQszaN9r3NcmlbwTV4aXt1thHn22M2XDC6/iI15ePDCQL8wb+kTEOTCy0rrd
+X-Gm-Message-State: AOJu0YzVMPoJrSzFlTqcihuSwmFdUDl0B+XRbUfS0Ij62aa/PZLx+NZh
+	GqfwLwCSrX1BIjKGQSgDwRW1gdQiDs/B5MqCDYxXiD6MddXn/r3kALAum41CS6I=
+X-Google-Smtp-Source: AGHT+IHFWDpW0FUgymW8ITy3D3BYi7HZ6Y+HFH0zEcYWOyQNBbE0az1s+xAWdV24ThLFPPOYx/db0g==
+X-Received: by 2002:a5d:678d:0:b0:343:2d43:2b00 with SMTP id v13-20020a5d678d000000b003432d432b00mr9887182wru.62.1712143419223;
+        Wed, 03 Apr 2024 04:23:39 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id o18-20020adfca12000000b0033ec81ec4aesm17057586wrh.78.2024.04.03.04.23.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 04:23:38 -0700 (PDT)
+Date: Wed, 3 Apr 2024 12:23:36 +0100
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kdb: replace deprecated strncpy
+Message-ID: <20240403112336.GD25200@aspen.lan>
+References: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4][next] net/smc: Avoid -Wflex-array-member-not-at-end
- warnings
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171213902938.4996.5946401642859225175.git-patchwork-notify@kernel.org>
-Date: Wed, 03 Apr 2024 10:10:29 +0000
-References: <ZgXmscAd6Y2iQQ6O@neat>
-In-Reply-To: <ZgXmscAd6Y2iQQ6O@neat>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: wenjia@linux.ibm.com, jaka@linux.ibm.com, alibuda@linux.alibaba.com,
- tonylu@linux.alibaba.com, guwen@linux.alibaba.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
 
-Hello:
+On Wed, Apr 03, 2024 at 12:52:36AM +0000, Justin Stitt wrote:
+> All the other cases in this big switch statement use memcpy or other
+> methods for copying string data. Since the lengths are handled manually
+> and carefully, using strncpy() is may be misleading. It doesn't
+> guarantee any sort of NUL-termination on its destination buffer. At any
+> rate, it's deprecated [1] and we want to remove all its uses [2].
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+>
+> Found with: $ rg "strncpy\("
+> ---
+>  kernel/debug/kdb/kdb_io.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 9443bc63c5a2..8bba77b4a39c 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
+>  			kdb_printf("%s", buffer);
+>  		} else if (tab != 2 && count > 0) {
+>  			len_tmp = strlen(p_tmp);
+> -			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
+> +			memcpy(p_tmp+len_tmp, cp, lastchar-cp+1);
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+The strncpy() here is obviously wrong because it passes the size of the
+source not the destination.
 
-On Thu, 28 Mar 2024 15:52:49 -0600 you wrote:
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
-> 
-> There are currently a couple of objects in `struct smc_clc_msg_proposal_area`
-> that contain a couple of flexible structures:
-> 
-> struct smc_clc_msg_proposal_area {
-> 	...
-> 	struct smc_clc_v2_extension             pclc_v2_ext;
-> 	...
-> 	struct smc_clc_smcd_v2_extension        pclc_smcd_v2_ext;
-> 	...
-> };
-> 
-> [...]
+For that reason I'm not clear that memcpy() is the correct approach
+here. It's probably not more wrong than what was there before but,
+as mentioned, what was there before is already obviously wrong that
+should provoke a bit of code review ;-) .
 
-Here is the summary with links:
-  - [v4,next] net/smc: Avoid -Wflex-array-member-not-at-end warnings
-    https://git.kernel.org/netdev/net-next/c/9748dbc9f265
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+In particular are you sure lastchar-cp+1 can never larger than
+buf_size-len_tmp (which is what I think is the remaining space
+at p_tmp+len_tmp)?
 
 
+>  			len_tmp = strlen(p_tmp);
+> -			strncpy(cp, p_tmp+len, len_tmp-len + 1);
+> +			memcpy(cp, p_tmp+len, len_tmp-len + 1);
+
+Roughly the same question here. The original coded is obviously wrong
+so trusting it did the boundary checks properly seems unwise.
+
+Are you sure it is OK to make this copy with checking against bufend?
+
+
+Daniel.
