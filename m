@@ -1,121 +1,70 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09E01B950;
-	Wed,  3 Apr 2024 03:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C8D5235;
+	Wed,  3 Apr 2024 04:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712113649; cv=none; b=b+e5vIlpE/a5dl4FjhxbV2nPf1tqQuRW2h+yqeCqmgb7XzN7fwpd3UxOSdIK3z16Xm6m9G273ylnHJ9umsR9zMNjMLkEDhlHk3daLfrFNE1uucIxtcSMOI30b7nWOV6oCslqr2fPwPBrnd0jTSvre0+bXZpt1xqdl3MQMW3FRO4=
+	t=1712117461; cv=none; b=cjmCKAAwAq5ytihICiHlSslOFYLKnAOVz4KiXiR58ey0kG8KVN7tMiUvBwDU/vy80/NzwJY9nBFIBJBPY7cYWzujQs3mf6dHIQ6r39faMJGO7/m8m2Qp+W2/QgIVD5ln/8ppYL3n3TbkM37tre5OIxLnwbORntSQE3JtjWzHYMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712113649; c=relaxed/simple;
-	bh=ROtb/TdhEhS14cmCDYhPnEoNJ0jX0mNNsCCUwMkC5ks=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcteU3FEEj2phViZHqXmQCJfBK9DsewYTggSaLHB+WwyOJevjxVS85F9Y32dZOvI/8q1JtYNl/8MVT1VRI7P9izTXriUyOAElqZbKC2gVx0jkfLdEeu8U8ZiiCASt21jxAfhI7ZZZnu3+jhASjsUrWl/fppiZ876i//A5qXkrMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Y8m7nmA3; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1712117461; c=relaxed/simple;
+	bh=H45nGWOPuI7LoZ/AO3xadw9naJQhXiS9zxu8lyEyAGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MK6AfZZByPIaEWYhnvS+50h4p6GFClencI2OnWHFYlcmHey0kT1FBZ9JMo6PEWLpDRc3pwC60Co+p05vb0NO5AgfBBNjq4OvE+tlRO5AiCd51dccgyb/xRZLIojAUQR+l5cJRlS+cM2KnhFHNfWM8HffaGf3tuOV1E70PiZC8nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5cOOgqz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Y8m7nmA3"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 432K39iQ029137;
-	Tue, 2 Apr 2024 20:06:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pfpt0220; bh=cIxSFpufY5nRKyMlIffzzC
-	ralxEiy0TVlswlh++OQgg=; b=Y8m7nmA30w8NYNhiX4YIbCGNGlGZX7dT/8zPJv
-	HlIxSC+6YMvHY21sG5K/WUMfk4V0GdHxba7suvb+SEIHVp3WY+s5BXMLo9KG/s8u
-	mHmnkUyrhTxGHoPLOFUYCaVJJ6nZ4F7q6CLGmCERuXheUKkO202W8HOrFh4owbAV
-	AbV9Db6FzRW0MiP6yruMsD5gxz2bBygAZzpkJaJaQOS6aVlCiOSRY1aYjzjlF3E4
-	Rs9KjqOA0OX2ulNkcVLM6pC+QKUap67aLihgPW69+jx4m5d1kSCR00rZtXs8wptT
-	guwL1M6SCfKq10J/1rFt91BJ+Ez1g+1obP+hbdbT35k4BTLw==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x809fx510-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Apr 2024 20:06:51 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 2 Apr 2024 20:06:49 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 2 Apr 2024 20:06:49 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id 134265B694C;
-	Tue,  2 Apr 2024 20:06:43 -0700 (PDT)
-Date: Wed, 3 Apr 2024 08:36:42 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5cOOgqz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE4EC433C7;
+	Wed,  3 Apr 2024 04:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712117461;
+	bh=H45nGWOPuI7LoZ/AO3xadw9naJQhXiS9zxu8lyEyAGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A5cOOgqzeZTVhgi+J8oKU2tClKmR5x98VGD13CodzcshhKAaajlI32qkosA+Zvo+0
+	 hjYwnbZHxBKvvnzlpyLYZulzfkFXUAObJET/dzoBoYlgkJdA9UXtHuszyaIRqH73F3
+	 lbp51pNxqD9mzo9KzhGDbZkQMtJZOXrNu3E0ytM7tpsfpnv2vT2O6SecPElxfsjvto
+	 IcYIOOr3o6MTH3Z4kJsAb0oZG4Rlup22z9dIiUE2U0UcN56FTaOAp1cYhXaTjtTKoq
+	 JeWjmfkmZ0/HKejqEt+tE8N9lFz81xpMmjMygCnh1wI9SHYbvJx0od8wHqX7VA00g3
+	 PENqr2YBcIh7A==
+Date: Tue, 2 Apr 2024 21:11:00 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
 To: Justin Stitt <justinstitt@google.com>
-CC: Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann
-	<daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii
- Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard
- Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song
-	<yonghong.song@linux.dev>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers
-	<ndesaulniers@google.com>,
-        Bill Wendling <morbo@google.com>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] bpf: replace deprecated strncpy with strscpy
-Message-ID: <20240403030642.GA1652044@maili.marvell.com>
-References: <20240402-strncpy-kernel-bpf-core-c-v1-1-7cb07a426e78@google.com>
+Cc: Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] xfs: cleanup deprecated uses of strncpy
+Message-ID: <20240403041100.GQ6390@frogsfrogsfrogs>
+References: <20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240402-strncpy-kernel-bpf-core-c-v1-1-7cb07a426e78@google.com>
-X-Proofpoint-GUID: QmRE6pvh5nsQpJLoK1ntZVKZA9QB3BtZ
-X-Proofpoint-ORIG-GUID: QmRE6pvh5nsQpJLoK1ntZVKZA9QB3BtZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_02,2024-04-01_01,2023-05-22_02
+In-Reply-To: <20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com>
 
-On 2024-04-03 at 05:22:50, Justin Stitt (justinstitt@google.com) wrote:
+On Mon, Apr 01, 2024 at 11:01:38PM +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
->
-> bpf sym names get looked up and compared/cleaned with various string
-> apis. This suggests they need to be NUL-terminated (strncpy() suggests
-> this but does not guarantee it).
->
-> |	static int compare_symbol_name(const char *name, char *namebuf)
-> |	{
-> |		cleanup_symbol_name(namebuf);
-> |		return strcmp(name, namebuf);
-> |	}
->
-> |	static void cleanup_symbol_name(char *s)
-> |	{
-> |		...
-> |		res = strstr(s, ".llvm.");
-> |		...
-> |	}
->
-> Use strscpy() as this method guarantees NUL-termination on the
-> destination buffer.
->
-> This patch also replaces two uses of strncpy() used in log.c. These are
-> simple replacements as postfix has been zero-initialized on the stack
-> and has source arguments with a size less than the destination's size.
->
-> Note that this patch uses the new 2-argument version of strscpy
+> 
+> In xfs_ioctl.c:
+> The current code has taken care NUL-termination by memset()'ing @label.
+> This is followed by a strncpy() to perform the string copy.
+> 
+> Use strscpy_pad() to get both 1) NUL-termination and 2) NUL-padding
+> which may be needed as this is copied out to userspace.
+> 
+> Note that this patch uses the new 2-argument version of strscpy_pad
 > introduced in Commit e6584c3964f2f ("string: Allow 2-argument
 > strscpy()").
->
+> 
+> In xfs_xattr.c:
+> There's a lot of manual memory management to get a prefix and name into
+> a string. Let's use an easier to understand and more robust interface in
+> scnprintf() to accomplish the same task.
+> 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
@@ -123,59 +72,61 @@ On 2024-04-03 at 05:22:50, Justin Stitt (justinstitt@google.com) wrote:
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
 > Note: build-tested only.
->
+
+fstested would be better. ;)
+
+Anyway I guess that looks ok so let's find out:
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+> 
 > Found with: $ rg "strncpy\("
 > ---
->  kernel/bpf/core.c | 4 ++--
->  kernel/bpf/log.c  | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 696bc55de8e8..8c9078f4549c 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -747,7 +747,7 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
->  		unsigned long symbol_start = ksym->start;
->  		unsigned long symbol_end = ksym->end;
->
-> -		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-> +		strscpy(sym, ksym->name, KSYM_NAME_LEN);
-You dont have to check return value of strscpy for errors ?
-
->
->  		ret = sym;
->  		if (size)
-> @@ -813,7 +813,7 @@ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
->  		if (it++ != symnum)
->  			continue;
->
-> -		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-> +		strscpy(sym, ksym->name, KSYM_NAME_LEN);
->
->  		*value = ksym->start;
->  		*type  = BPF_SYM_ELF_TYPE;
-> diff --git a/kernel/bpf/log.c b/kernel/bpf/log.c
-> index 2a243cf37c60..4bd8f17a9f24 100644
-> --- a/kernel/bpf/log.c
-> +++ b/kernel/bpf/log.c
-> @@ -467,9 +467,9 @@ const char *reg_type_str(struct bpf_verifier_env *env, enum bpf_reg_type type)
->
->  	if (type & PTR_MAYBE_NULL) {
->  		if (base_type(type) == PTR_TO_BTF_ID)
-> -			strncpy(postfix, "or_null_", 16);
-> +			strscpy(postfix, "or_null_");
->  		else
-> -			strncpy(postfix, "_or_null", 16);
-> +			strscpy(postfix, "_or_null");
+>  fs/xfs/xfs_ioctl.c | 4 +---
+>  fs/xfs/xfs_xattr.c | 6 +-----
+>  2 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index d0e2cec6210d..abef9707a433 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1755,10 +1755,8 @@ xfs_ioc_getlabel(
+>  	/* Paranoia */
+>  	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
+>  
+> -	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
+> -	memset(label, 0, sizeof(label));
+>  	spin_lock(&mp->m_sb_lock);
+> -	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> +	strscpy_pad(label, sbp->sb_fname);
+>  	spin_unlock(&mp->m_sb_lock);
+>  
+>  	if (copy_to_user(user_label, label, sizeof(label)))
+> diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+> index 364104e1b38a..b9256988830f 100644
+> --- a/fs/xfs/xfs_xattr.c
+> +++ b/fs/xfs/xfs_xattr.c
+> @@ -220,11 +220,7 @@ __xfs_xattr_put_listent(
+>  		return;
 >  	}
->
->  	snprintf(prefix, sizeof(prefix), "%s%s%s%s%s%s%s",
->
+>  	offset = context->buffer + context->count;
+> -	memcpy(offset, prefix, prefix_len);
+> -	offset += prefix_len;
+> -	strncpy(offset, (char *)name, namelen);			/* real name */
+> -	offset += namelen;
+> -	*offset = '\0';
+> +	scnprintf(offset, prefix_len + namelen + 1, "%s%s", prefix, name);
+>  
+>  compute_size:
+>  	context->count += prefix_len + namelen + 1;
+> 
 > ---
-> base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
-> change-id: 20240402-strncpy-kernel-bpf-core-c-4d8297f95e18
->
+> base-commit: 928a87efa42302a23bb9554be081a28058495f22
+> change-id: 20240401-strncpy-fs-xfs-xfs_ioctl-c-8af7a895bff0
+> 
 > Best regards,
 > --
 > Justin Stitt <justinstitt@google.com>
->
+> 
+> 
