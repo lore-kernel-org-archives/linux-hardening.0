@@ -1,172 +1,163 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCE05BAD7
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Apr 2024 23:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0CC522A
+	for <linux-hardening@vger.kernel.org>; Wed,  3 Apr 2024 00:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712101977; cv=none; b=RCBg4dyflAxm8Mz/VI/k4o6T4yqtSzg9I4fLeSexLsOTPNCIeYHYT57z3/PfnfsvOPCvYKvdCRDxxBV+6zVwkkwWNd3gHC4EhrKa1U5jIPMpA0pF5cMBd/KIaMoOoKKsRJMAfE5r+T+jizF+52Pun0DUWv7jb+rPnKDqvHOtKzY=
+	t=1712105387; cv=none; b=DJts0Yk2DDR15Tf0Abjrb69mkqva76F+QSzZMgcJMIXJECKAP2dyWySRF1fplGyfhhwkgy5u/FO0bedpEqXKMpJ7J8gmRiJt0jjFPmR64OHNQ3nLMAu7+LAr8GoDTLXzdIv8KzFy8s5O7bITB1RkjG9WlEmjZ09MZI0DVjI1+bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712101977; c=relaxed/simple;
-	bh=9LtQU8UiOsgDWvjTc1/6rw/QlwvMZqMAcV47wDqmoxI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=oGUhvuib0amK3X3GlPMzUtrugVIXkqQ8xYCQfOhqRZ3eq+DCmfHZ/9/VLbhT4sjz+AjcXU8zPtcEt6eSoDEgxZG/xaVrz+5S2WWQAvxwXAmGZ+MnEwz0OTmr/0KVA5mYTscGHAP5VPZODeeWQrRRQ4xOwt9t1qBVwfSzl3rky/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oRz2Ao/X; arc=none smtp.client-ip=209.85.166.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1712105387; c=relaxed/simple;
+	bh=4dK7C/kJTg/Koy+Ep9OVvmuPGFqFUCucC4exXTmjsvg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TEXTQpEkKLWwy2L6EEsK9V/MGo4hDTpyFXYwFX5wvU69idlz66hc/UQH27rVt14QzhnICm6ZrjnrLtveTjaSf+x2o28dW6ago9lWFksciL6nzwlpU0iSyvQhSMSpTE6IAQsuY3Igezc62oApPO5Ivo9YDr3Lw/VaoS6425vlmyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DcBqJ7oG; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oRz2Ao/X"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7d022d0c76aso592597139f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Apr 2024 16:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712101974; x=1712706774; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Tvk0aVaJ4x37W0/x3VCM6LH3wJVHl8Qg2TqljtL5b2o=;
-        b=oRz2Ao/XoQ7glDcZCVLaAH99iMHnihwaiXmPLUjnpCJzsmrJj9QPLgP2RH/LqNS2V0
-         zJnvdXYjQG1dX+8VXDEK7UHbJvTmqUX/v0gm7XAlvrVLT91RmVfT/EMQGjpJJJZnUo9L
-         /6ZScogHwW9Ki2feNrKoMu1q5wBmASCw2lqCZTZiHBPLXetiQLdq8afsFjg2rN0ScgMi
-         cMaxEh+bXAP2mK2oi2VrewM9b1BVKFSceKO+tav6xS/xy0HGUIPlCD9LzapevdwZyINl
-         6Le4hRPF3mmO0c40jvMWcGzq2bxfJt2L0bS4s8QwLP7KVbePFsQISGOriRjIgUAUVcAY
-         zcRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712101974; x=1712706774;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Tvk0aVaJ4x37W0/x3VCM6LH3wJVHl8Qg2TqljtL5b2o=;
-        b=WIpmCz9wWS7xp0li3Q8k51G+BdZmFQ+mSEtoOTWomVf6bbaOb7YpfBCrzeqOrYgK20
-         m/masMxlRAxgr2Fdl010Mb/Jaf9d1L/71/2VL30uFP4HpB+Qt3iev8prx52agAbMf36B
-         V+rv1eXRXmNPrrwPgBnaOo3bVHz+KVR/UYDSeJ7j9Q/SO6DvQHpxlPWdZkUp6U052Rjt
-         9Kj5cGdUHv6ZIZmbNcnvgBGbSRWCV5nImSC9HtZS/3G7a/T4iditssioGGiSC4u9mpZZ
-         5LvxujV2bnD46gTpKfzNEuHxYTx9k2lWElKDF/tMzG0o+Anz8QiXsxboAhuRx4kcJogB
-         foig==
-X-Forwarded-Encrypted: i=1; AJvYcCWBL1HWcfUzKv51ScR3ttOSqRI2egf0tMHtsxRrELySC33bnqemfYXYX2hDPrmsHP42r8OMGlTHODK7IW4WgdTVUoxeyIW9XSXMukJsLl8a
-X-Gm-Message-State: AOJu0YxhIy2up/KjgtXJcIdMYJjNp/zKkIZxma5OU2N0oG587rJSGDE4
-	+pbuAWU06R7gEHUEq/T2nVmvXS13g3RyIbN5D/1WW8qzPeQhLlvlyOXPlx52F9bng/Npg8oOL1j
-	M6OhFMF1EhgPu8SJf8dQ3eA==
-X-Google-Smtp-Source: AGHT+IHqfntMZvEh1IDSUP5f1hWGOYNSwBw+18ziFh0WsvD10M9EC1a4tUtqLDDJLrDg+I4iAyRRGaMZVfbPd0kinA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6602:2c09:b0:7d0:3aa9:94db with
- SMTP id w9-20020a0566022c0900b007d03aa994dbmr603145iov.3.1712101974132; Tue,
- 02 Apr 2024 16:52:54 -0700 (PDT)
-Date: Tue, 02 Apr 2024 23:52:50 +0000
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DcBqJ7oG"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id rJpVrM82rDI6frooxrBTL7; Wed, 03 Apr 2024 00:49:43 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id roowrszoIVdenroowrUJ31; Wed, 03 Apr 2024 00:49:43 +0000
+X-Authority-Analysis: v=2.4 cv=M4FLKTws c=1 sm=1 tr=0 ts=660ca7a7
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=g72bLlCj1y9NqcwAG1Fglw==:17
+ a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10
+ a=WFhDUUEJ9-S_0BG-ZiwA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VqSzRgQgO9eTxbwoLbmir62oY7qQGk+N1QEYVP7K5rY=; b=DcBqJ7oGhUHVJmv1gPsIUQNAl7
+	TGhTZ2d1xTlXKI8l3Mm2gs3S/F5o+kIMdeV6abMB7a7Yx/uKDpG9HAPmPA3K9oN0m43/BxV7GidmZ
+	Mw+F8REthGPeIG4NMLZfwyY7T9bJTCdh2uLGEB6aFqWtk3v7JwaKAhvMWu5g7X5tr8ND1zZ24N0bI
+	qqxAN3Spy41t6YxDI8VpccTFlvYmBbao3C5+GRqB5d1hRdC+VKm6vjvWOQFna/i4qN62mXPSSlCbs
+	Xp0tjswCddJsaWsbR1n2L733wO1wh/AuSHxuV5S1gmZgr6g0txUzbUj+E8lDLz/vjtbfOPowrOJeB
+	FINiheUw==;
+Received: from [201.162.240.213] (port=29677 helo=[192.168.166.44])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rroov-00178Y-2X;
+	Tue, 02 Apr 2024 19:49:42 -0500
+Message-ID: <d572be26-0217-4522-8cc4-b9c6a62e6f7c@embeddedor.com>
+Date: Tue, 2 Apr 2024 18:49:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFGaDGYC/x3MywqDMBBG4VeRWXcghoiXV5EuavzTDi0xTEQq4
- rsbXH6Lcw7KUEGmoTpIsUmWJRbUj4r85xXfYJmLyRrrjDOW86rRp52/0IgfTymwXxTs2c2d7dv QN6g7Kn1SBPnf7/F5nhfph1hDawAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712101973; l=2998;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=9LtQU8UiOsgDWvjTc1/6rw/QlwvMZqMAcV47wDqmoxI=; b=9eawufW76cipSSrsORhJnGqUMNurLvEpfUyoII8eluIWnnZohNwLUI4Ga3x/2S39PDuLyAWM7
- vhLFRLTK1VuAkgtgTTd42TrWoz+DfOiAW/9po4OuSCw0r10GMfSFmV4
-X-Mailer: b4 0.12.3
-Message-ID: <20240402-strncpy-kernel-bpf-core-c-v1-1-7cb07a426e78@google.com>
-Subject: [PATCH] bpf: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] nfp: Avoid -Wflex-array-member-not-at-end warnings
+To: Jakub Kicinski <kuba@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Louis Peens <louis.peens@corigine.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, oss-drivers@corigine.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZgYWlkxdrrieDYIu@neat> <20240401212424.34a9a9cd@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240401212424.34a9a9cd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.213
+X-Source-L: No
+X-Exim-ID: 1rroov-00178Y-2X
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.166.44]) [201.162.240.213]:29677
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBorOI4qHPzMKkAQQv6u+nPbOIlNyauuNHz3qbAENzgrTAqfF0FN3FMa59vw2obxEK19H000KOA8o2f3rR6sb8UY0Mk+XC0A3shs8KuswZPMgT9h9fbb
+ FQ/pBFjaInM6H+Ib7TVSAHagDPvmnf65o7jptktKk1FIlEVbVnrcPxQVEgdUamPYKTMrzweQ98ye1aPNqdHaSG4F25Lvmz816SfWUunDHcOc10b9e6jqO9rs
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
 
-bpf sym names get looked up and compared/cleaned with various string
-apis. This suggests they need to be NUL-terminated (strncpy() suggests
-this but does not guarantee it).
 
-|	static int compare_symbol_name(const char *name, char *namebuf)
-|	{
-|		cleanup_symbol_name(namebuf);
-|		return strcmp(name, namebuf);
-|	}
+On 01/04/24 22:24, Jakub Kicinski wrote:
+> On Thu, 28 Mar 2024 19:17:10 -0600 Gustavo A. R. Silva wrote:
+>> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
+>> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_debugdump.c
+>> @@ -34,8 +34,11 @@ enum nfp_dumpspec_type {
+>>   
+>>   /* generic type plus length */
+>>   struct nfp_dump_tl {
+>> -	__be32 type;
+>> -	__be32 length;	/* chunk length to follow, aligned to 8 bytes */
+>> +	/* New members must be added within the struct_group() macro below. */
+>> +	struct_group_tagged(nfp_dump_tl_hdr, hdr,
+>> +		__be32 type;
+>> +		__be32 length;	/* chunk length to follow, aligned to 8 bytes */
+>> +	);
+>>   	char data[];
+>>   };
+> 
+> I counted 9 references to nfp_dump_tl->data.
+> Better to add:
+> 
+> static void *nfp_dump_tl_data(struct nfp_dump_tl *spec)
+> {
+> 	return &spec[1];
+> }
 
-|	static void cleanup_symbol_name(char *s)
-|	{
-|		...
-|		res = strstr(s, ".llvm.");
-|		...
-|	}
+Unfortunately, that's out-of-bounds for the compiler, and well, basically
+the reason why flex-array members were created in the first place.
 
-Use strscpy() as this method guarantees NUL-termination on the
-destination buffer.
+I was looking into implementing two separate structs:
 
-This patch also replaces two uses of strncpy() used in log.c. These are
-simple replacements as postfix has been zero-initialized on the stack
-and has source arguments with a size less than the destination's size.
+struct nfp_dump_tl_hdr {
+         __be32 type;
+         __be32 length;  /* chunk length to follow, aligned to 8 bytes */
+};
 
-Note that this patch uses the new 2-argument version of strscpy
-introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-strscpy()").
+struct nfp_dump_tl {
+         __be32 type;
+         __be32 length;  /* chunk length to follow, aligned to 8 bytes */
+	char data[];
+};
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+and at least for structs nfp_dumpspec_csr, nfp_dumpspec_rtsym, nfp_dump_csr, and
+nfp_dump_rtsym it'd be a clean change (no need for container_of()), but not for
+structs nfp_dumpspec_csr and nfp_dumpspec_rtsym because of some casts from
+the flex struct:
 
-Found with: $ rg "strncpy\("
----
- kernel/bpf/core.c | 4 ++--
- kernel/bpf/log.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+nfp_add_tlv_size():
+         case NFP_DUMPSPEC_TYPE_ME_CSR:
+                 spec_csr = (struct nfp_dumpspec_csr *)tl;
+                 if (!nfp_csr_spec_valid(spec_csr))
+		...
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 696bc55de8e8..8c9078f4549c 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -747,7 +747,7 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
- 		unsigned long symbol_start = ksym->start;
- 		unsigned long symbol_end = ksym->end;
- 
--		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-+		strscpy(sym, ksym->name, KSYM_NAME_LEN);
- 
- 		ret = sym;
- 		if (size)
-@@ -813,7 +813,7 @@ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
- 		if (it++ != symnum)
- 			continue;
- 
--		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-+		strscpy(sym, ksym->name, KSYM_NAME_LEN);
- 
- 		*value = ksym->start;
- 		*type  = BPF_SYM_ELF_TYPE;
-diff --git a/kernel/bpf/log.c b/kernel/bpf/log.c
-index 2a243cf37c60..4bd8f17a9f24 100644
---- a/kernel/bpf/log.c
-+++ b/kernel/bpf/log.c
-@@ -467,9 +467,9 @@ const char *reg_type_str(struct bpf_verifier_env *env, enum bpf_reg_type type)
- 
- 	if (type & PTR_MAYBE_NULL) {
- 		if (base_type(type) == PTR_TO_BTF_ID)
--			strncpy(postfix, "or_null_", 16);
-+			strscpy(postfix, "or_null_");
- 		else
--			strncpy(postfix, "_or_null", 16);
-+			strscpy(postfix, "_or_null");
- 	}
- 
- 	snprintf(prefix, sizeof(prefix), "%s%s%s%s%s%s%s",
+         case NFP_DUMPSPEC_TYPE_INDIRECT_ME_CSR:
+                 spec_csr = (struct nfp_dumpspec_csr *)tl;
+                 if (!nfp_csr_spec_valid(spec_csr))
+		...
 
----
-base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
-change-id: 20240402-strncpy-kernel-bpf-core-c-4d8297f95e18
+	case NFP_DUMPSPEC_TYPE_RTSYM:
+                 spec_rtsym = (struct nfp_dumpspec_rtsym *)tl;
+                 err = nfp_dump_single_rtsym(pf, spec_rtsym, dump);
 
-Best regards,
+nfp_calc_rtsym_dump_sz():
+         spec_rtsym = (struct nfp_dumpspec_rtsym *)spec;
+
+
+At least for those two structs, it's probably more straightforward to use
+struct_group_tagged() and container_of().
+
 --
-Justin Stitt <justinstitt@google.com>
-
+Gustavo
