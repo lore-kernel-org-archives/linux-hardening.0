@@ -1,58 +1,120 @@
-Received: from sxb1plsmtpa01-11.prod.sxb1.secureserver.net (sxb1plsmtpa01-11.prod.sxb1.secureserver.net [188.121.53.121])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF1D182BB
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Apr 2024 02:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D051CF9B
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Apr 2024 04:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712197251; cv=none; b=TQ7BfsNBhnv+mKGohhGXI+h3AJugq9vQyoYvyWweXXsI8v3TQKHebMOqa6sQPIclQNVd6lXXyoeRt2/kdHBzq7XDMJD+BEyF8Z6Esg0x1jZah+jmYkuYpbvqZlo4vptWcd1MXrDQySwth2/Z2kEtDoOXDL/7RKGAfsofUazvRec=
+	t=1712203682; cv=none; b=kzvstbUEIDXnSnXj1CWci0VKP1wOGjBG+RYyl7B1qloZMqmgWa+tz4xS8uvjcrBtq0AgzT+CNPa2KzuUuOEmtYJa3iCeSBnb19XyrXKT5OYD0MstdBsuY/t6Hc85g6AosZtKfw0ZvVnH1CVtpTt4FOJHHc6nahr2rhZsRe3ZyTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712197251; c=relaxed/simple;
-	bh=wkVVPzfd0UQTkvZ8xc/BmRhj+WUj2Lu/IgPhkOElz1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oc8JvM2oAOK39b/RzcDAcuIjrRbudkC2LuaHgk30HXPJwvDrIdIlPoJwVl0PZ+VhjQEdPlBmpgGwf0qwH/Mu3WsLQ+tZ2z8q9Kv6pLyddKZAELu61A1fcAaH+d+Q7hZiqzWykFwMK7N8ljAutQUqHnD54W/nxrm9Y3Eu1YCjGfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from [192.168.178.90] ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPA
-	id sB7er3FFsvAPUsB7frsYBM; Wed, 03 Apr 2024 17:38:32 -0700
-X-CMAE-Analysis: v=2.4 cv=R+XIGsRX c=1 sm=1 tr=0 ts=660df688
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=IkcTkHD0fZMA:10 a=FXvPX3liAAAA:8 a=W08pmZW3enM1sLpWauQA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=UObqyxdv-6Yh2QiB9mM_:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-Message-ID: <356bd1ed-9877-461d-9593-bbf1b23b3d8c@squashfs.org.uk>
-Date: Thu, 4 Apr 2024 01:38:30 +0100
+	s=arc-20240116; t=1712203682; c=relaxed/simple;
+	bh=cG0Z/Q8Vd/6CIRdn/7mt96uH+81CK7mUItk43ieg5Pg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUyTYqWkg2C/ZLP40o4PST7vVQQHMySQEilejfIHe0x3BXERS4aMy4KBEWurW5V+qDcdvgsiDShfHlYnAUIwRYD7fkaITKdMKW/G0Cl9qYCTELqpXRZQaRKh66AGIz3eH+lcsh9mKazESDGJKrPS9DNmX9TSx2kr98qPyHBR3lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B0dVQptS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B0dVQptS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712203679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Tnf/JqmvOIZtBLVJwY7VQErV1KE6NDkwVDWid6kh50=;
+	b=B0dVQptSTzzVXOVtfIvYrZTOmM6Hfoqaj8V3yMAwqIzqEWYeUo5u0fGHtPzKfywpd9bTYw
+	uNz2tMlBT4g4EDV1y6/pcPtd7xDEFwnDzxi21rPbd0+N4toESGlQeTSfJ1e3h7cpWtUx5P
+	sJVStcgsq/hC19o0WCsOIs6A3/QY2TQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-604-6qohKH8hNYix2r2mMKHUzQ-1; Thu, 04 Apr 2024 00:07:55 -0400
+X-MC-Unique: 6qohKH8hNYix2r2mMKHUzQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9445185A782;
+	Thu,  4 Apr 2024 04:07:54 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.50])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F31448173;
+	Thu,  4 Apr 2024 04:07:53 +0000 (UTC)
+Date: Thu, 4 Apr 2024 12:07:46 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] vmcore: replace strncpy with strscpy_pad
+Message-ID: <Zg4nkkXYySZT6ZdE@MiWiFi-R3L-srv>
+References: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Squashfs: replace deprecated strncpy with strscpy
-To: Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
- <594a6365-5cc6-4778-aec5-c5ad2a4b2930@squashfs.org.uk>
- <CAFhGd8pCE11Xm219Pc8uyJnsDkSqaTM6gpY8Tpa2fWmHg4OnCA@mail.gmail.com>
-Content-Language: en-GB
-From: Phillip Lougher <phillip@squashfs.org.uk>
-In-Reply-To: <CAFhGd8pCE11Xm219Pc8uyJnsDkSqaTM6gpY8Tpa2fWmHg4OnCA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfBq20SukAjsHUGUSD81ZufCFLj2kOVSbjtsHJxDyR/RYet6SRJVmHlsADOcDUkZyYBBOFeMIBvOVZLXPTw3bitAkOGgGp0utu0wfwHWSvsgYAQt41tz9
- /gBKeMmU2ckl8QthIAXK4vuu+psXeUDL+R2kANNGLtgpszVHStA8bIKFxZcjOlgv7peYlopIw2CUMrOCHOZ5t8fkGohWUhYUIef3W6G5kgEJBaCvrehEtVzl
- Rpv0g2bmmvbqrpH8cnYkHl2y3QXBw/i4t0ANDDMvMAXWsw0UtE7tAxoo5kS0YO88
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On 04/04/2024 01:30, Justin Stitt wrote:
-> On Wed, Apr 3, 2024 at 12:32 PM Phillip Lougher <phillip@squashfs.org.uk> wrote:
->> A better way to remove the strncpy() is to remove the unnecessary string
->> copy, which I have done in this patch here:
+On 04/01/24 at 06:39pm, Justin Stitt wrote:
+> strncpy() is in the process of being replaced as it is deprecated [1].
+> We should move towards safer and less ambiguous string interfaces.
 > 
-> Great! Cleaning up this code while removing strncpy() is a two for one.
+> Looking at vmcoredd_header's definition:
+> |	struct vmcoredd_header {
+> |		__u32 n_namesz; /* Name size */
+> |		__u32 n_descsz; /* Content size */
+> |		__u32 n_type;   /* NT_VMCOREDD */
+> |		__u8 name[8];   /* LINUX\0\0\0 */
+> |		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
+> |	};
+> ... we see that @name wants to be NUL-padded.
+> 
+> We're copying data->dump_name which is defined as:
+> |	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
+> ... which shares the same size as vdd_hdr->dump_name. Let's make sure we
+> NUL-pad this as well.
+> 
+> Use strscpy_pad() which NUL-terminates and NUL-pads its destination
+> buffers. Specifically, use the new 2-argument version of strscpy_pad
+> introduced in Commit e6584c3964f2f ("string: Allow 2-argument
+> strscpy()").
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - don't mark buffers as __nonstring, instead use a string API (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  fs/proc/vmcore.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 1fb213f379a5..5d08d4d159d3 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
+>  	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
+>  	vdd_hdr->n_type = NT_VMCOREDD;
+>  
+> -	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
+> -		sizeof(vdd_hdr->name));
+> -	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
+> +	strscpy_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME);
+> +	strscpy_pad(vdd_hdr->dump_name, data->dump_name);
 
-Yes - thanks for your reply.
+LGTM, thx
 
-Phillip
+Acked-by: Baoquan He <bhe@redhat.com>
+
