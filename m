@@ -1,54 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D051CF9B
-	for <linux-hardening@vger.kernel.org>; Thu,  4 Apr 2024 04:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDBB5E07E;
+	Thu,  4 Apr 2024 09:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712203682; cv=none; b=kzvstbUEIDXnSnXj1CWci0VKP1wOGjBG+RYyl7B1qloZMqmgWa+tz4xS8uvjcrBtq0AgzT+CNPa2KzuUuOEmtYJa3iCeSBnb19XyrXKT5OYD0MstdBsuY/t6Hc85g6AosZtKfw0ZvVnH1CVtpTt4FOJHHc6nahr2rhZsRe3ZyTA=
+	t=1712222349; cv=none; b=X9A9NTNjbLo6ng/e97pmzRXgJdLqiJ8UEUt8z5susZihAcXaTkxcW5g7SIgeYlyw9D15/Bq+66PUT4sKUQkbayJSx73uqcF+AKPBYP8PXAFkhtS0FEoo/3qSZOWC6QvUJhzjZ2ANj5SNYWCSZ28HqP9cDbF0ud2jPG3haQQDEWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712203682; c=relaxed/simple;
-	bh=cG0Z/Q8Vd/6CIRdn/7mt96uH+81CK7mUItk43ieg5Pg=;
+	s=arc-20240116; t=1712222349; c=relaxed/simple;
+	bh=QYcy8FlXFMLr0LYgckTAxPjA/WLT+e3mJ8K4S1U3/j4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QUyTYqWkg2C/ZLP40o4PST7vVQQHMySQEilejfIHe0x3BXERS4aMy4KBEWurW5V+qDcdvgsiDShfHlYnAUIwRYD7fkaITKdMKW/G0Cl9qYCTELqpXRZQaRKh66AGIz3eH+lcsh9mKazESDGJKrPS9DNmX9TSx2kr98qPyHBR3lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B0dVQptS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ISdFPeQOaVgU9Q3A9AjRFpqbYGHXNJCQIqVPsWBQYHzU6U2YOOypEt4fHK4dM3wYZERJjAG0gh9Kw8lMspWDCcK9hmtNWKOVvvRDR34XyQ+oQKby9+i6HK78yQ2669PQWgopq4Gug1Bjca4FhhEkadgU9ajBFQ+yJafiT8xuM4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rhNiLeBW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GdXeHOPa; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B0dVQptS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712203679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Tnf/JqmvOIZtBLVJwY7VQErV1KE6NDkwVDWid6kh50=;
-	b=B0dVQptSTzzVXOVtfIvYrZTOmM6Hfoqaj8V3yMAwqIzqEWYeUo5u0fGHtPzKfywpd9bTYw
-	uNz2tMlBT4g4EDV1y6/pcPtd7xDEFwnDzxi21rPbd0+N4toESGlQeTSfJ1e3h7cpWtUx5P
-	sJVStcgsq/hC19o0WCsOIs6A3/QY2TQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-604-6qohKH8hNYix2r2mMKHUzQ-1; Thu, 04 Apr 2024 00:07:55 -0400
-X-MC-Unique: 6qohKH8hNYix2r2mMKHUzQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rhNiLeBW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GdXeHOPa"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9445185A782;
-	Thu,  4 Apr 2024 04:07:54 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.50])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id F31448173;
-	Thu,  4 Apr 2024 04:07:53 +0000 (UTC)
-Date: Thu, 4 Apr 2024 12:07:46 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] vmcore: replace strncpy with strscpy_pad
-Message-ID: <Zg4nkkXYySZT6ZdE@MiWiFi-R3L-srv>
-References: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 324F55D7AC;
+	Thu,  4 Apr 2024 09:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712222345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bWJK0SE/XFBDZ4vQTfHP0Qc1oDLZBXxgZ4+fPFvJof8=;
+	b=rhNiLeBWFxwwhRPZ9RLpw08LzRgszGVajbvbiNzKyBw8Oj5jNuKgIa0LPQ20EJgOIv99Kk
+	QM91F1Ezy2Qqnz5ce+DacsycImRyHZjiEA2kl9MWZSzKLqkNowhN3ooDq0yMHe8tq+MGjX
+	OG71jYJLIeL2q3wojo8bZa11jw9AaHY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712222345;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bWJK0SE/XFBDZ4vQTfHP0Qc1oDLZBXxgZ4+fPFvJof8=;
+	b=GdXeHOPasNjcnARsL2Ip5kUceDl6ZOBIJm00lBgQM19NbBmdWMAA3YHpmv1cYvfu1ug3aK
+	nNlRY85YI4+CJICQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 249F4139E8;
+	Thu,  4 Apr 2024 09:19:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id wg7sCIlwDmZLIQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Thu, 04 Apr 2024 09:19:05 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C6AE2A0816; Thu,  4 Apr 2024 11:19:00 +0200 (CEST)
+Date: Thu, 4 Apr 2024 11:19:00 +0200
+From: Jan Kara <jack@suse.cz>
+To: Kees Cook <keescook@chromium.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: Set file_handle::handle_bytes before referencing
+ file_handle::f_handle
+Message-ID: <20240404091900.woh6y2a52o7uo5vx@quack3>
+References: <20240403215358.work.365-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,64 +76,81 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+In-Reply-To: <20240403215358.work.365-kees@kernel.org>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-0.998];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.com:email,chromium.org:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,suse.cz,oracle.com,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On 04/01/24 at 06:39pm, Justin Stitt wrote:
-> strncpy() is in the process of being replaced as it is deprecated [1].
-> We should move towards safer and less ambiguous string interfaces.
+On Wed 03-04-24 14:54:03, Kees Cook wrote:
+> With adding __counted_by(handle_bytes) to struct file_handle, we need
+> to explicitly set it in the one place it wasn't yet happening prior to
+> accessing the flex array "f_handle".
 > 
-> Looking at vmcoredd_header's definition:
-> |	struct vmcoredd_header {
-> |		__u32 n_namesz; /* Name size */
-> |		__u32 n_descsz; /* Content size */
-> |		__u32 n_type;   /* NT_VMCOREDD */
-> |		__u8 name[8];   /* LINUX\0\0\0 */
-> |		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
-> |	};
-> ... we see that @name wants to be NUL-padded.
-> 
-> We're copying data->dump_name which is defined as:
-> |	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
-> ... which shares the same size as vdd_hdr->dump_name. Let's make sure we
-> NUL-pad this as well.
-> 
-> Use strscpy_pad() which NUL-terminates and NUL-pads its destination
-> buffers. Specifically, use the new 2-argument version of strscpy_pad
-> introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-> strscpy()").
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
+> Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+OK, so this isn't really a functional bug AFAIU but the compiler will
+wrongly complain we are accessing handle->f_handle beyond claimed array
+size (because handle->handle_bytes == 0 at that point). Am I right? If
+that's the case, please add a short comment explaining this (because it
+looks odd we set handle->handle_bytes and then reset it a few lines later).
+With the comment feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-nfs@vger.kernel.org
 > Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
-> Changes in v2:
-> - don't mark buffers as __nonstring, instead use a string API (thanks Kees)
-> - Link to v1: https://lore.kernel.org/r/20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com
-> ---
-> Note: build-tested only.
+>  fs/fhandle.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Found with: $ rg "strncpy\("
-> ---
->  fs/proc/vmcore.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 1fb213f379a5..5d08d4d159d3 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
->  	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
->  	vdd_hdr->n_type = NT_VMCOREDD;
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 53ed54711cd2..08ec2340dd22 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -40,6 +40,7 @@ static long do_sys_name_to_handle(const struct path *path,
+>  			 GFP_KERNEL);
+>  	if (!handle)
+>  		return -ENOMEM;
+> +	handle->handle_bytes = f_handle.handle_bytes;
 >  
-> -	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
-> -		sizeof(vdd_hdr->name));
-> -	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
-> +	strscpy_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME);
-> +	strscpy_pad(vdd_hdr->dump_name, data->dump_name);
-
-LGTM, thx
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
+>  	/* convert handle size to multiple of sizeof(u32) */
+>  	handle_dwords = f_handle.handle_bytes >> 2;
+> -- 
+> 2.34.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
