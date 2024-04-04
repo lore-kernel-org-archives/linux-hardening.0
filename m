@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE1E8F7D;
-	Thu,  4 Apr 2024 10:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3DF3D96B;
+	Thu,  4 Apr 2024 10:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712225403; cv=none; b=jBrfotwFT9G895WVGYAp9Ck/TYPMqBLz5sB6wU9wRI3as52D58a3Ea394aM4UDTqm33rH49BUP+byUCr+A2tWY6NR/eLCZ03bKK5f9EbyRaz7pukhj1+6tEleLjIugUpTNjsg8xUNTpvAcmRDkjhjabdM6LcBOIgEW2e95IhwBs=
+	t=1712225521; cv=none; b=jYAd99hdfaP256y+/c0ZNEkAlTVkWKsX79EvsmntBoKXnjm9gY/VCKeDDP1rEnPd86DJvZvgcM1hZCFZXXperdcQUL5upPk3jcDG49q/etKlqhwbfPclTsxH5+G6PNYdwW5rkiPnPV9O0W7dLr6HpK+avGzJENva0rwhWWwGKkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712225403; c=relaxed/simple;
-	bh=7ku57jYBMU3f3GFHQDbWobp23rUfjoEc/FmJNJWQa0Y=;
+	s=arc-20240116; t=1712225521; c=relaxed/simple;
+	bh=+lFGWUK2A8+AE0BNEahXmc50uDsxFP64dSIEEtTABKk=;
 	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=bxb3wKRIifDHxGPVBNQfAP1IRnjJLcVt0JH6THGnV4EB1dw8JiXlCUDqJPuRfy7B0ZZLcQI3COQroo4SGKgJxPvXSeifSjTs+HO1z95rkpE2NsiK956eBQCDegofHw/oYdAEgk3D3L8ebEB6crBrG/MRHkz8bbknxujMiqkKY3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/8I5Ko0; arc=none smtp.client-ip=10.30.226.201
+	 Cc:Message-ID:Date; b=MwpWOeb67In3lIGYsiMLd8D0aG1FCho3S8M/c2Vwt8vNH+qBkCi8rERNCOwqwohTtugD2KugborYxdBaM/SodUEu7vPG3+V0PItO1JN0VrzvTVV8t4aICFZNKVEsjkmTBBt4XuhTBZtvMSpy7/yffHy2rnLVctTYxBuim5bLWJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKH2h3jI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/8I5Ko0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DE7C433C7;
-	Thu,  4 Apr 2024 10:10:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKH2h3jI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80D0BC433F1;
+	Thu,  4 Apr 2024 10:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712225402;
-	bh=7ku57jYBMU3f3GFHQDbWobp23rUfjoEc/FmJNJWQa0Y=;
+	s=k20201202; t=1712225520;
+	bh=+lFGWUK2A8+AE0BNEahXmc50uDsxFP64dSIEEtTABKk=;
 	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=j/8I5Ko0CkW1KY/op4sNJeVizsbfMrmE09fQnLFh0GU+rosQR68skwVr0SeLQgA3o
-	 o9dKeJ9ld5JF9vzVxiHpWOCm8f+KRvJvDSqu6w+WybTWRRAU26hDBX/HjrSLJovncg
-	 73704cHi/arCBR/pdtHFPkLLaFwsiRDCtSV03kFJn8AKF3oqv8rxKrFqH0276r2jp4
-	 HbUVPJJiofZ7opnPSvlrPKqx/t3FO0PUvEeF2zl7Y/ZbFLyrqDVGMMZX29cnGKTNHz
-	 iHobXrZVwcvp2uLEYVRjlUfK3OQnaPKVwISj2fX2AfRanKXM6bUOYGJAt/jLuVweu1
-	 MC4lpat7jeoSw==
+	b=WKH2h3jITiaB4V+Poz2Io74wXrCiEo++JJk+Pu/qYTvn8UOART5NBdRtozL031SUj
+	 3sV5pplFjGIMc5Car6Pk7k/3UysJI51GkeMJDfs3JwK5jK2FP8AAmeH052uHK/Ous4
+	 BPGPqQMRn+LVmbmxS1VgY8PSQEKJ9eG/jvPgNC0+1DoIfmMXf3tlg6kH69wu1VIbE0
+	 NULMcBqkYOMnJn4HEj5bVrhxCWxAFMzmtWjxq9DI085E7Gli8pkhTTzwQ1EktqfWTP
+	 E4ZtMW//ZqSbpGGZ1Ar54DUhjTZnl1uMyTimNochYeJ5yKcCsD2+ng8cg5v+i5lYSb
+	 Izb9GciaUYa6w==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -34,61 +34,49 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/2] [RESEND] wifi: carl9170: re-fix fortified-memset
- warning
+Subject: Re: [PATCH v2][next] wifi: wil6210: cfg80211: Use __counted_by() in
+ struct wmi_start_scan_cmd and avoid some -Wfamnae warnings
 From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20240328135509.3755090-2-arnd@kernel.org>
-References: <20240328135509.3755090-2-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
- Christian Lamparter <chunkeey@googlemail.com>,
- Johannes Berg <johannes.berg@intel.com>, linux-hardening@vger.kernel.org,
- =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgen?=
-	=?utf-8?q?sen?= <toke@toke.dk>, linux-wireless@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>, Colin Ian King <colin.i.king@gmail.com>,
- linux-kernel@vger.kernel.org
+In-Reply-To: <ZgSP/CMSVfr68R2u@neat>
+References: <ZgSP/CMSVfr68R2u@neat>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
 User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <171222539868.1806092.7724292391480667322.kvalo@kernel.org>
-Date: Thu,  4 Apr 2024 10:10:00 +0000 (UTC)
+Message-ID: <171222551750.1806092.12183763425108574151.kvalo@kernel.org>
+Date: Thu,  4 Apr 2024 10:11:59 +0000 (UTC)
 
-Arnd Bergmann <arnd@kernel.org> wrote:
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-> The carl9170_tx_release() function sometimes triggers a fortified-memset
-> warning in my randconfig builds:
+> Prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time
+> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+> (for strcpy/memcpy-family functions).
 > 
-> In file included from include/linux/string.h:254,
->                  from drivers/net/wireless/ath/carl9170/tx.c:40:
-> In function 'fortify_memset_chk',
->     inlined from 'carl9170_tx_release' at drivers/net/wireless/ath/carl9170/tx.c:283:2,
->     inlined from 'kref_put' at include/linux/kref.h:65:3,
->     inlined from 'carl9170_tx_put_skb' at drivers/net/wireless/ath/carl9170/tx.c:342:9:
-> include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->   493 |                         __write_overflow_field(p_size_field, size);
+> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+> getting ready to enable it globally.
 > 
-> Kees previously tried to avoid this by using memset_after(), but it seems
-> this does not fully address the problem. I noticed that the memset_after()
-> here is done on a different part of the union (status) than the original
-> cast was from (rate_driver_data), which may confuse the compiler.
+> So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> Unfortunately, the memset_after() trick does not work on driver_rates[]
-> because that is part of an anonymous struct, and I could not get
-> struct_group() to do this either. Using two separate memset() calls
-> on the two members does address the warning though.
+> So, with these changes, fix the following warning:
+> drivers/net/wireless/ath/wil6210/cfg80211.c:896:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 > 
-> Fixes: fb5f6a0e8063b ("mac80211: Use memset_after() to clear tx status")
-> Link: https://lore.kernel.org/lkml/20230623152443.2296825-1-arnd@kernel.org/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+> Link: https://github.com/KSPP/linux/issues/202
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-2 patches applied to ath-next branch of ath.git, thanks.
+Patch applied to ath-next branch of ath.git, thanks.
 
-066afafc10c9 wifi: carl9170: re-fix fortified-memset warning
-61752ac69b69 wifi: ath9k: work around memset overflow warning
+34c34c242a1b wifi: wil6210: cfg80211: Use __counted_by() in struct wmi_start_scan_cmd and avoid some -Wfamnae warnings
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20240328135509.3755090-2-arnd@kernel.org/
+https://patchwork.kernel.org/project/linux-wireless/patch/ZgSP/CMSVfr68R2u@neat/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
