@@ -1,52 +1,56 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B84171E47
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 18:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A7D17167F
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 18:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712341300; cv=none; b=hXcQylVO57l8tKBFovgn5v3bFjofEw6e/9F/mp7vX8nlEWLFpAkDoIsYqEBIxMuNVNN83K+r5wzYknVnIypl0l/KGhwuUVe3WxB9JxBYnp9YqcCajJT+bowxzTh+1n6I7hAh+AM8Eek4ZAysoKrmviihWuetZ7UJTNFfn5la/Ek=
+	t=1712342107; cv=none; b=i6fL1vFOyD47ky5MN0wwohNRyDTaP60eRXRlBVpgaIcKIj0ZFCzI308ptN0pj1MQ9kFHrYWBhpIN51mXuJYL3wbATagsbvKI6o/eYE7x6ZdgYXo4mTAruOqYtek7NdiZVWekqA+1DFQT1l1KqkiWZGfIbVhHk1Q38AzCQ/bFfV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712341300; c=relaxed/simple;
-	bh=dGQ9L9Gqb7CW2OtaU8Wy3RHDhaPbUhgR+jApHhmerTI=;
+	s=arc-20240116; t=1712342107; c=relaxed/simple;
+	bh=6ZjefErhMfmeYuBEs1nM6MSn4jNdNTdaFy6x1mnwXpQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LVIXjQjlcTQGWBoI8oXlP5xLF7HEmtF7qUuhDYB1+vlEeTKzd3CNdYt9f1xywXyhe1d2rzYaC6T5rxQoKnUfPMVWy12BuW/mtC59CgHKGLtNz278Bk/+OuH4wvBt4HHfmE/OjEVEqiEwNpfLK+EW98zay7W7lHVnOUEy6fo8VTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=yYNUPDj/; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=iR0IZ9GPmsYYSqgV8zW3FSSL1BEyqI7EMvOWdVHPrxXPPt0aWSJuYvJ69jetgk/Z9pMX4tS8E34Y2K2nlA0ZAwa+IAKcQKI9w/myg/+KHk4vCS/vDK3GUargkJBDr8lQt/8G1GnmLMKL/nqhypA9KP9lciUZeRR1FDeR6Y3JiGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y+5Eg3rt; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yYNUPDj/"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id sm2krT1s7s4yTsoC0rjGUn; Fri, 05 Apr 2024 18:21:36 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id soBzrGjSad4oesoBzrrEhm; Fri, 05 Apr 2024 18:21:35 +0000
-X-Authority-Analysis: v=2.4 cv=aYKqngot c=1 sm=1 tr=0 ts=6610412f
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=r+LGvmNWHIxDfVLo7hoBkw==:17
- a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=dZbOZ2KzAAAA:8 a=kNg_QPtJy2UKAXtLnxAA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
- a=zZCYzV9kfG8A:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VIFZ+bWm8IsLbE/ymrmq2FfEB7EmgRKFm77/qFhUpCs=; b=yYNUPDj/Bu3kjYD9Nf7Fz79er4
-	1xlAZ09tehwne4pXgnv5ErbsQv/UsMaDgmsVISMlQHhcslf73DiP7IL37i1V2knBGp+ZbJdtqOODx
-	TliSpjI2q/o7AoeaZnMP1M96Nx3uarVEp2gHGEblwtdjXboEc/Y6n0t+2XnYCIkmcVgLeZAJTNcZS
-	etIDo/hprsgvpw3ltr95SmJvphUNIYyKE71T/FG/272/07G2J79GG6OMfqTcVyR73OnqV1YDPTrzQ
-	Dj5DhaVdXg1RWFcGvJjamxboUjuzmCbB+DgzperhuYd8yGFU98vROwcmKgwuMCvh1hLZXn4onr+WN
-	MIhE8pwg==;
-Received: from [187.184.159.58] (port=60722 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rsoBy-001e05-2b;
-	Fri, 05 Apr 2024 13:21:35 -0500
-Message-ID: <48fe7b01-8cc4-477b-8f74-a5d662a76bfb@embeddedor.com>
-Date: Fri, 5 Apr 2024 12:21:31 -0600
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y+5Eg3rt"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c86e6f649aso24726139f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 11:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712342105; x=1712946905; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qa9OWgSGHy86iFLsGhob6bEBoogAWHpT07UAtRblqpQ=;
+        b=Y+5Eg3rtIe7VMYHiZr4x9lRDOR5iCv6ylQgOlmdxWHA1TFq634s31mPcYCe3pHO50U
+         +y7Ym+WSNMZtaeUSuJYS0UipUs1FPTTt8HyWAhAfYqksxGn7chdP3M579DhWbFOFcWiH
+         ziHV9/x0j8R4Nbfl60wkU5xzg/0E3n4vzq1DA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712342105; x=1712946905;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qa9OWgSGHy86iFLsGhob6bEBoogAWHpT07UAtRblqpQ=;
+        b=Hbx3JiEyZOvj754GpFiyyk9dg80BfgL3186WnlEMX2VPI6kHuvTN8zTagPVHSj4ulj
+         O6n3X3xEAfOxyi70GNuGL0FPjQwk7pRWueSChgHtucV0BHK8AvQVHdYUtst9T5b2p8VE
+         irvV6dq45CcWGLjJWH1snQjV5E6B3woAFaRbiRTcSkTgIwrZoXvTEnC4t2hnbXxO7dwQ
+         z6RNWY9zDZc7BhIvvPmxzaXeWTHN+2sa2Dbbdyh1OF+RSM2LDGPZvFU+ESpf9J0u4c+z
+         5RYevr846X00luoJhWsvFkopUkGy22kUBYC0p0dvYKkabprbxOkQj0ZiycJuQdSh055Q
+         wI9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXHv3Tg24I+Iiv7u6aRZuEGL11Qtioh+zT/s4PVT7BSZfu7b0gWkkPdHvQ66eHtyl/dZ/nQpNGnWHwrEo4y3TcpQp4L+CgFjfdtJV7xVYJt
+X-Gm-Message-State: AOJu0Yx5ky46QlXS59xsmD5PEonlaZejo9TX4rO0oGzGys+W2ka8GtSg
+	MS2cLCOZXkDGnXs1v67wPuyDCUfgfcBz/YBNBg0mfRELz5M63ssROzYhxWIOdng=
+X-Google-Smtp-Source: AGHT+IGtByH7WDW3n0zir30+zDOgj0SA2esTzdcEHOquB4Tj3nh/EzZ8FEfaoZ2efToARrGR3C666w==
+X-Received: by 2002:a92:dd0a:0:b0:36a:d81:6f35 with SMTP id n10-20020a92dd0a000000b0036a0d816f35mr2112409ilm.2.1712342105467;
+        Fri, 05 Apr 2024 11:35:05 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id m15-20020a92c52f000000b003684d4f6b44sm574171ili.4.2024.04.05.11.35.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Apr 2024 11:35:05 -0700 (PDT)
+Message-ID: <040f65b0-5484-47f9-8e43-af5316988c5a@linuxfoundation.org>
+Date: Fri, 5 Apr 2024 12:35:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,57 +58,54 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] [hardening?] BUG: bad usercopy in do_handle_open
-To: Andrew Morton <akpm@linux-foundation.org>,
- syzbot <syzbot+4372e026c95b0e36d0ee@syzkaller.appspotmail.com>
-Cc: gustavoars@kernel.org, keescook@chromium.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
- Aneesh Kumar <aneesh.kumar@kernel.org>
-References: <000000000000b8974d06155cf3a2@google.com>
- <20240405110940.e787791b7d53aff7f216a168@linux-foundation.org>
+Subject: Re: [PATCH v4 0/7] Handle faults in KUnit tests
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>,
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+ Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+ Marco Pagani <marpagan@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov
+ <vkuznets@redhat.com>, Zahra Tarkhani <ztarkhani@microsoft.com>,
+ kvm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
+ x86@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240326095118.126696-1-mic@digikod.net>
+ <60d96894-a146-4ebb-b6d0-e1988a048c64@linuxfoundation.org>
+ <20240405.pahc6aiX9ahx@digikod.net>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240405110940.e787791b7d53aff7f216a168@linux-foundation.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240405.pahc6aiX9ahx@digikod.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.159.58
-X-Source-L: No
-X-Exim-ID: 1rsoBy-001e05-2b
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [187.184.159.58]:60722
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCCQkP4jFJCy2ir9cQAd94awkYnhJTm8INBq935D3OtPDjbsU4HsMyDKXHUOY4iYgWYja/WNn1o/1+a0mayAgGsY3viJFofSee5ZtoqV+u/+hikwKT6K
- 9OyOrR/rDFXcm4j/wQva5NUSF/+T2kntiIsIZTM+ZoFF1EBVo9g0WdWqgmeak3NqYVbbnFunVfnIwJ7GoEpnurPUIucp52vOka/AD7KK8soqGUKVGKxgWe4i
+Content-Transfer-Encoding: 8bit
 
-
->> usercopy: Kernel memory overwrite attempt detected to SLUB object 'kmalloc-16' (offset 8, size 9)!
+On 4/5/24 12:07, Mickaël Salaün wrote:
+> On Fri, Apr 05, 2024 at 10:08:00AM -0600, Shuah Khan wrote:
+>> On 3/26/24 03:51, Mickaël Salaün wrote:
+>>> Hi,
+>>>
+>>> This patch series teaches KUnit to handle kthread faults as errors, and
+>>> it brings a few related fixes and improvements.
+>>>
+>>> Shuah, everything should be OK now, could you please merge this series?
+>>
+>> Please cc linux-kselftest and kunit mailing lists. You got the world cc'ed
+>> except for the important ones. :)
 > 
-> We tried to copy 9 bytes into the f_handle[] array.
+> Indeed, I don't know how I missed that... Do you want me to send it
+> again?
 > 
-> But from my reading of the reproducer, f_handle.handle_bytes was set to 1.
-> 
-> Aneesh, any thoughts on this?
 
-This was previously reported:
+Yes please resend. I will pull these right away.
 
-https://lore.kernel.org/linux-nfs/tencent_A7845DD769577306D813742365E976E3A205@qq.com/
+thanks,
+-- Shuah
 
-and it's fixed in linux-next already:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=02426828cde24cd5b6cf5f30467cea085118f657
-
---
-Gustavo
