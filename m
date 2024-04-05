@@ -1,141 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BD9219E4
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 16:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C76D17276A
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 17:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712335057; cv=none; b=AH4STwiQrSfMEomtg5NA5As+CgJDvECDlqUAkZV1DGgj2y5p0ztRejXjZXFp3sCzmnLy1J+qYmf7EhYeiYd78tkL9zu02NU/EgsqhwuQ5VdOd3QImGTGrWkIDKeS/Ct61rsHI/tMPSvYIhFAtmsxvxMWkgmWEX69iZTJWf/AvdU=
+	t=1712338832; cv=none; b=CwTBQkj+mzlO9csM+BlxZHuAa6wVXunkzgYvA53FZkuQupDQsp1CqSpEMFn0Bc2c87Y84iNuCwbIBhmZO5rr4qVX2MIWNKYQgpltTVgil3ZvlN6b0EcwJCVR7gr4B5kJP5fz4Uess2Vkzupgij8Hcl1zDqd2qI5y8P9L9l/zEcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712335057; c=relaxed/simple;
-	bh=TwC7u7kRLVrvNcf6B/odAd8Zu0CBkmKdy6vVGMGRGnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZeP5QUSO8x5CgsSDZVtKElqVm+I97mKQD/ODA5+0jzCGe0FhbMoUnX+9SE7BAHjNncq4i15JeHFRHGLpDJxoWDZulBSihK5VqMb8GeVPYKUuAUsgzxjnbNIyDL5f5+zzgEGIBklZeSXFzUtpDAUfRosfVtELPIEh2RJJvR4W4g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rbf24eoC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rbf24eoC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712335054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HhqXEsjcQfRnbT+Watd5B6B0qa6OPofOH0VzzxL2RKw=;
-	b=Rbf24eoCLCCZ6vI1g2jlsUNPJriVqLxF6KAAtu4aQEDpwnsW6jXo38qJ6u92J6P3RXrv0S
-	1lp4BIWfwEkMukyuQ5E2ZFzQkbd/qHydz4I0CLuWWrJ2tVpQaVPombg4TPlfKM4nKRFR6z
-	W5Kt8nR0q3p5I7Y1O6SGQP8Gijl/k0E=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-30-M6jxGgzAMR-cWZbyhOFW-w-1; Fri, 05 Apr 2024 12:37:32 -0400
-X-MC-Unique: M6jxGgzAMR-cWZbyhOFW-w-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41545bc8962so12115145e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 09:37:32 -0700 (PDT)
+	s=arc-20240116; t=1712338832; c=relaxed/simple;
+	bh=YSGCjNsngubo/Jl1dYAgPO8aCFH9ns4tj/o/yF+A/N4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZqzoLxHdHsxke3rbAsiy8IAdyBDBb9nrkF9alb/OX+eyCG0opQ5MAp9kYpSSrpkMNKS0pVPuWfkwF9gopumtWPvSKTFbPRv5mUWl4uGoggF7junceiklMByg0fVqab2IDLuFyF4H6tDnPWengiV7f1qDE7xJhnfAbIpug+sYgZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36a0a33c1bbso12750815ab.2
+        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 10:40:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712335051; x=1712939851;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HhqXEsjcQfRnbT+Watd5B6B0qa6OPofOH0VzzxL2RKw=;
-        b=CEoj1BM4DXMnNBB/0OSvhq4IhBW61XuY7VjY3bXpb6aDmYG9nxzdcEtur6NDJigcX/
-         yGT5siRrtdUq+XVuLpVzBvxApwPvlUM4SToSMK6tVCA1SUCxlPgdXi8DfjjMbZntXeP4
-         0gtCVh5ErnfhnRkrELEVX8HndEL+WUW0IVtYTJtwaPyJCD2NyaQsZ/RNsoOSFfZqVqZV
-         BeoKa2Uf036K+NEGfdi0yoUpt64Ig84aOMlq8fKDIPszaG3VYFcQGvowi8BvzsDAuGZp
-         mFgu91SfRsFBLHaP09OgT9YwytCgebDryaMXoMEgdL6tCwmXBFIOIK1tXsWsMKkglDT2
-         PYPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGBt7uVbgvsBtgUWgIvhvHNOoI8swLzylaFvNwdjrBxzfG4vaOU3lUh3OQJE/fqTdAoqVdDinnMgL6UG13iN4r6ZTmnIzV4i11yjqJwJ6m
-X-Gm-Message-State: AOJu0YyisQAqddy9aJZVUrYl019F3AkB3o6UBSCPwmaKLvH4NQxW/f5F
-	YrpNX8aCxDxk/2KjoCcOEqppykH1oDu5GE+Vg87IrSoAO/XbfDvedsdvzh4+mlMlnUSWmNDpT5Q
-	/a8UQI6ZzxWL72021pf/3ukIYlAs6ZiPsPT52lMfePocFKrTMJqzqDmprO1msOgoC8w==
-X-Received: by 2002:a05:600c:4510:b0:414:767e:6e76 with SMTP id t16-20020a05600c451000b00414767e6e76mr1596288wmo.21.1712335051637;
-        Fri, 05 Apr 2024 09:37:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDPCc0VTMBhL7MNqvTz5tlRMoWQPFY1L2zr/0sqh9d3YOQmi5yQiu02UsFqppTmlfZ8bZ/Jg==
-X-Received: by 2002:a05:600c:4510:b0:414:767e:6e76 with SMTP id t16-20020a05600c451000b00414767e6e76mr1596272wmo.21.1712335051297;
-        Fri, 05 Apr 2024 09:37:31 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b00416306c17basm2328956wmn.14.2024.04.05.09.37.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 09:37:29 -0700 (PDT)
-Message-ID: <593a8479-741a-44de-a52c-8d34810bfb3e@redhat.com>
-Date: Fri, 5 Apr 2024 18:37:26 +0200
+        d=1e100.net; s=20230601; t=1712338830; x=1712943630;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ah/hZ2yJ0TwcfFp3XWyXAJ/KFmBkEoLcHbO6pknimo8=;
+        b=S7rjfKC49ly0bXdQlSWnLiRBENUxFBmiux9OPbSRZ/CMHn+qKNRHaivPlMVthuM4jX
+         mnhP5Sg5tkBLs71DFhYXmLbIIcazFvTCWyF97GTPEo9CystAIBnF44B0ZB2FE+GVyXZm
+         gNZwwxDAS3BZBeSWfCzNmjG9qqh295lgRwVyTnYt+2fuuUFsQe19ARRI0XmE0ZJaucNL
+         TQMDvwEmZiBy9XZaVe0XEMVbOks3xZW7IFoWLHMKevHmtCqU467aX4ZS7mvCiavSYj1e
+         Gp+7tMmAjgeo6u+e+DcjQfJ5Ny89XfjkWM9KuKYp8kuXLa2d/bH2deffhwJXdWhRukqj
+         fodg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXt04cBpIxutSK71vOoccKsQK3i0VRm2Jc8LhPTbeKo8qZs9/Sj9gImBsP6j13W4z9QsW8cRBDpnSTY3mvz1cLo5dcPzgz2l19l2Wqp+SF
+X-Gm-Message-State: AOJu0YwPfuSrtB89qi4UKxp8DfttoGfZMxCcUS9JVz/cSMSNzAtHvDnZ
+	suGSMXidw9WfyFLcWtT8IkElaOAgmRycU99cRY8Tz0wxAHArgugZROeZ+KPVxYf7XYDPkOXKhdG
+	wWuLSYeIVo/XR75whGEk2mE+i47S3blBAV4VHimxKbuJJuOg80bHcx2g=
+X-Google-Smtp-Source: AGHT+IEa8ErI5FgU8ll+UtLrtt9fRtswGqcbjZC30844W8V4aUKoP5b0lwmlVyIv3bBsaEffu2BV5Iwtgb/xfl7/x8BopX03/sjL
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nouveau/gsp: Avoid addressing beyond end of rpc->entries
-To: Kees Cook <keescook@chromium.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@redhat.com>,
- Ben Skeggs <bskeggs@redhat.com>, Timur Tabi <ttabi@nvidia.com>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Karol Herbst <kherbst@redhat.com>
-References: <20240330141159.work.063-kees@kernel.org>
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <20240330141159.work.063-kees@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:156f:b0:369:ac5f:9a10 with SMTP id
+ k15-20020a056e02156f00b00369ac5f9a10mr142998ilu.1.1712338830394; Fri, 05 Apr
+ 2024 10:40:30 -0700 (PDT)
+Date: Fri, 05 Apr 2024 10:40:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b8974d06155cf3a2@google.com>
+Subject: [syzbot] [mm?] [hardening?] BUG: bad usercopy in do_handle_open
+From: syzbot <syzbot+4372e026c95b0e36d0ee@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, gustavoars@kernel.org, keescook@chromium.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/30/24 15:12, Kees Cook wrote:
-> Using the end of rpc->entries[] for addressing runs into both compile-time
-> and run-time detection of accessing beyond the end of the array. Use the
-> base pointer instead, since was allocated with the additional bytes for
-> storing the strings. Avoids the following warning in future GCC releases
-> with support for __counted_by:
-> 
-> In function 'fortify_memcpy_chk',
->      inlined from 'r535_gsp_rpc_set_registry' at ../drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1123:3:
-> ../include/linux/fortify-string.h:553:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->    553 |                         __write_overflow_field(p_size_field, size);
->        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> for this code:
-> 
-> 	strings = (char *)&rpc->entries[NV_GSP_REG_NUM_ENTRIES];
-> 	...
->                  memcpy(strings, r535_registry_entries[i].name, name_len);
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hello,
 
-Applied to drm-misc-fixes, thanks!
+syzbot found the following issue on:
 
-> ---
-> Cc: Karol Herbst <kherbst@redhat.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Danilo Krummrich <dakr@redhat.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> Cc: Timur Tabi <ttabi@nvidia.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> ---
->   drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> index 9994cbd6f1c4..9858c1438aa7 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> @@ -1112,7 +1112,7 @@ r535_gsp_rpc_set_registry(struct nvkm_gsp *gsp)
->   	rpc->numEntries = NV_GSP_REG_NUM_ENTRIES;
->   
->   	str_offset = offsetof(typeof(*rpc), entries[NV_GSP_REG_NUM_ENTRIES]);
-> -	strings = (char *)&rpc->entries[NV_GSP_REG_NUM_ENTRIES];
-> +	strings = (char *)rpc + str_offset;
->   	for (i = 0; i < NV_GSP_REG_NUM_ENTRIES; i++) {
->   		int name_len = strlen(r535_registry_entries[i].name) + 1;
->   
+HEAD commit:    c0b832517f62 Add linux-next specific files for 20240402
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=13a5c3b1180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=afcaf46d374cec8c
+dashboard link: https://syzkaller.appspot.com/bug?extid=4372e026c95b0e36d0ee
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ed9d29180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161ab3c6180000
 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0d36ec76edc7/disk-c0b83251.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6f9bb4e37dd0/vmlinux-c0b83251.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2349287b14b7/bzImage-c0b83251.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4372e026c95b0e36d0ee@syzkaller.appspotmail.com
+
+usercopy: Kernel memory overwrite attempt detected to SLUB object 'kmalloc-16' (offset 8, size 9)!
+------------[ cut here ]------------
+kernel BUG at mm/usercopy.c:102!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 5081 Comm: syz-executor249 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:usercopy_abort+0x84/0x90 mm/usercopy.c:102
+Code: 49 89 ce 48 c7 c3 e0 27 d8 8b 48 0f 44 de 48 c7 c7 80 26 d8 8b 4c 89 de 48 89 c1 41 52 41 56 53 e8 b1 6f 75 09 48 83 c4 18 90 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90003dbfd78 EFLAGS: 00010286
+RAX: 0000000000000062 RBX: ffffffff8bd827e0 RCX: 2b2ecef8eabe4800
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000008 R08: ffffffff81760b9c R09: 1ffff920007b7f4c
+R10: dffffc0000000000 R11: fffff520007b7f4d R12: ffffea00008fe840
+R13: 0000000000000009 R14: 0000000000000008 R15: 0000000000000009
+FS:  000055556aa78380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000040 CR3: 0000000076e74000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __check_heap_object+0xb1/0x100 mm/slub.c:5461
+ check_heap_object mm/usercopy.c:196 [inline]
+ __check_object_size+0x1e3/0x900 mm/usercopy.c:251
+ check_object_size include/linux/thread_info.h:215 [inline]
+ check_copy_size include/linux/thread_info.h:251 [inline]
+ copy_from_user include/linux/uaccess.h:182 [inline]
+ handle_to_path fs/fhandle.c:203 [inline]
+ do_handle_open+0x1f6/0x660 fs/fhandle.c:226
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+RIP: 0033:0x7f27665352a9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe7e4589d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000130
+RAX: ffffffffffffffda RBX: 00007ffe7e458bb8 RCX: 00007f27665352a9
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 00000000ffffffff
+RBP: 00007f27665a8610 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffe7e458ba8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:usercopy_abort+0x84/0x90 mm/usercopy.c:102
+Code: 49 89 ce 48 c7 c3 e0 27 d8 8b 48 0f 44 de 48 c7 c7 80 26 d8 8b 4c 89 de 48 89 c1 41 52 41 56 53 e8 b1 6f 75 09 48 83 c4 18 90 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90003dbfd78 EFLAGS: 00010286
+RAX: 0000000000000062 RBX: ffffffff8bd827e0 RCX: 2b2ecef8eabe4800
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: 0000000000000008 R08: ffffffff81760b9c R09: 1ffff920007b7f4c
+R10: dffffc0000000000 R11: fffff520007b7f4d R12: ffffea00008fe840
+R13: 0000000000000009 R14: 0000000000000008 R15: 0000000000000009
+FS:  000055556aa78380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000040 CR3: 0000000076e74000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
