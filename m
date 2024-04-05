@@ -1,164 +1,159 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AC31422D5
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 07:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5DF15FA85
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 09:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712303684; cv=none; b=qZ3ycxGQk3evnxEP2Cyw2pi9tX/awgTVk8tSFKAsNZeiOHe9c8S6ee8lTvutKfZ9z7TYhWHBAVkazl1fQnvO+M6E4IWK+PuqIUSxMr6A/XK7TcgUmNrG9T1C/H/6mOkZI492HlLd8ZDqYlU5mVa0Dgh0ZUvlvG3bV95fp8CbOEA=
+	t=1712310711; cv=none; b=otFiJ6OdPcxnnndzaFP3GH0Kacctf48ynnX0uQfQ4ic7CS/HxmskwEjaqI5p1krVYu4xk0WUIAZG+LY5t9PmFfv9iK19SlNvqezZvxiOpGZxjocLpQ6bEvuPVSp2ihYIX9HqKdCy5EiDgntECeQE9S7C0kuOhl1C2sQ/tXF1M8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712303684; c=relaxed/simple;
-	bh=oMZnFnjAx4DFtc8QSzozkHjcSyZizqklmKEOQxaJMSU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=u7rqYy8vimZ7Zj51cLqTucGSqXgDy8w3W3vWPAQkx+pIpMHAmyrgBJGG2MuM1X9afxjdw8NGJU3nZVX5y01zF8WNObbY4/Gtw19p4tcILOxLIC+hGrnDQtPRLqPToB5yXSNiHqvPA/K9CGGlrIqk0z6AiWnEwfF7Qwj6I8JezDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FP0ssAL8; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1712310711; c=relaxed/simple;
+	bh=9z7NXciC8Z8/xPDHcNCTcqyOvDYKe+Q//7hKlc2E1fw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UecPtUEQQEKkMlFkEBjbrx6DHNeuhjnCS3P8mvI6I+oD+UbORDBDro75kbKplpfpFZelBysSNX1Rtld6WWKvIeb/YqCdCG0OLc6dLRtUk6lJ9YKGpCeEJSLXSvhGe+yyX6MNlCz7ZndwGUyBnaiF0ZoPrtYVtihx3Yoq3uto4wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JbrVApFv; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FP0ssAL8"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4162e8210b6so3480655e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 00:54:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbrVApFv"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516ab4b3251so2301407e87.0
+        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 02:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712303681; x=1712908481; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GPTsDTaZWEDZD5eXOx+IgyDot64aAbYjUOhbFNZJJt8=;
-        b=FP0ssAL8UDZf7JoRXOHW3J4ttYXtKLQmBGKrs+c3XY6pVdQ3J5xVh9COQLHNQIRbRq
-         dGXNQoFnYBSR9AXl4D0zzWBQPdN0hyk6NTXwneOtBEHfKyIx+Sglg8yZNfCudjoKnjZb
-         wuRT0oCLEh582Zeluvm4p/J+naZ3BaWpCd5v9CA7wXdINYWn5QpIJmRQNsZybGTST9/T
-         cWZXR8ymjrDEpaEw9bp/B7qOW5LFIqXlB0hr/VhXhiosjqWrDnwqo9LExa7DSOcrbBdW
-         XgJPOY+yLp/j2vYQXZS7rkczeeRo0zbTCaSYq4sl1356Y9Q48RuiCt5XShtMwk1u1Gj9
-         t1xg==
+        d=linaro.org; s=google; t=1712310707; x=1712915507; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XznLbi2Z1SKvx8bRj0+Hw75ngrOt6iwbmtsVcIRJxZA=;
+        b=JbrVApFvipQKIx68+/9lcIy+ybhZTcBFyUjgjy2xBmPRu4qMbBzM6rAcCU+E8d5FPo
+         VoUCbGKNK+ADHf0MtrP7kwdtCj4V3MNTMV8zYJonX0uKLekbHAIV+GCQXfix/qeFmSPb
+         YzchkGUk/SJ6/w7o+EPq327QeNW5H/GeuzcYgYB/CYhJ8CJ4Z6gMlp23vJ/rtlcZ864x
+         jEHLOW2EAUekATvZoNevH6dqjWd9B7tIWTJv5OmjVZfqTSdjfzkum7BAQmWKT0QPX4Qs
+         1LijJde4lV6ObRX3g621WBOHxMJJj+DyJVol/10XapQyhtdKqBQQvH8hgEulcsMEMK94
+         eOMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712303681; x=1712908481;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GPTsDTaZWEDZD5eXOx+IgyDot64aAbYjUOhbFNZJJt8=;
-        b=lsjKOSkX6m4P/EEPz/Is2PKvbGf5e5cwhTVBOjSLIRSrr4QceZUVp8a8OqtiswxDVK
-         t6nhfvTVbh21AfJLlpJIrv8oewf23G+ulHwbmVl6uAzeAh1ShidRZ/5TESSAwFHOVyW0
-         twhZ9Uic+OB145V5IRvXudMD3lDBkEl96pqG0bZRnROX/NsDNwysxfjenO14DcUltefY
-         y63+DrsywJzrHToTT1smRl89r57znE/IXsTFYRlr5zy9Na0iYjolX53kQ8R8pS+HwEJ7
-         4Th/H31SEmZ7nngj+2MZZgw8TeMRNXUFjHqTTMJMsiMtuGFLUImn5HPkr0t4odkLBmcj
-         m/Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4IVbXkeFv1umiRDnEwX3ugqm/fd7qHx23oiBcB4Yigqn7Spmk3wEqeLkjlQAa0RhEL4JbCCS5g1VpVM8QYRQL/Hm4JSI8Z5NURmAK/LbZ
-X-Gm-Message-State: AOJu0Yw4UPlNDOD4RHza8qfQpD/RA9Q46p9qNKtUhChOKtOQNjbavSsC
-	xysKsjkQ9C2mPuEfAaQU+KcbHE/EWpc+O99Pmjf/asXzT+OOoy837/gPtFpyYOI=
-X-Google-Smtp-Source: AGHT+IE8OwWcCvoSNoRbTbgfpm6Z2mGwUHjAwWZsIEDD4PBil+AaWyEv7bLgb2wawJDMc2KNFFUC3A==
-X-Received: by 2002:adf:f592:0:b0:33e:d448:e48c with SMTP id f18-20020adff592000000b0033ed448e48cmr475898wro.15.1712303681268;
-        Fri, 05 Apr 2024 00:54:41 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:8e64:fc77:aa3a:87a? ([2a01:e0a:982:cbb0:8e64:fc77:aa3a:87a])
-        by smtp.gmail.com with ESMTPSA id p1-20020a5d59a1000000b00341e24a586fsm1362739wrr.93.2024.04.05.00.54.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 00:54:40 -0700 (PDT)
-Message-ID: <15a31bf1-e0be-45e0-897b-d29a1af6d357@linaro.org>
-Date: Fri, 5 Apr 2024 09:54:38 +0200
+        d=1e100.net; s=20230601; t=1712310707; x=1712915507;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XznLbi2Z1SKvx8bRj0+Hw75ngrOt6iwbmtsVcIRJxZA=;
+        b=rs2ioD/owMMqHPa7NVcoOr3jrO9ChJoH3D8uJ9qfiqUdJKFDhwynODsDqHyqpbpMv4
+         a4ZgmQuiws+weyBWg14hMMG0kvGRziMdZ+wJU7UBf6cuB0DFgtJqSEl2D4Cq39NDKF+B
+         k0RDTTLN5WiScb50eeX2GD08BT8tJR7Tzu3GlHtUorUdUftHCkVw2pGkQoyKCFwDPg8V
+         ztrt7GIr4/O0wqWPdYHRc+FXVY85a2Wlcy3c5/B/0XylhhkdD+uYs66HGvlWj17DdJNc
+         A+QECw6/QLfNHCrlUHKxLv9yytW4MC1HaK1LK/FvV4OmzST0HBl0XW00cP6hFU/YLp0V
+         X9ow==
+X-Forwarded-Encrypted: i=1; AJvYcCW3KPEiPclI8AGUbSwxrcw4NkmTb/AdfNPXq1QpVX5/HruVGgejYLwdrpinfnokuUVyeO3DuvPFsHQEjLvBAMIf71MMb/KxB6slZsQbrmTL
+X-Gm-Message-State: AOJu0Yw276gJQL2/Dt/DKDLxZoFdkplyJHcobWV0pix1qbHK35a5BMUV
+	WjiPwF/wlmbvb1RVj8fryBnIXKm/WyToVUzs41f6wIM3wtvEgWGA+O9TwdEHcK7Tc90nmFMiada
+	6
+X-Google-Smtp-Source: AGHT+IFuRBcasfkE1HoHSCQ7OdWv+EtlpW9OQz09tguqfMAKrRd1NUyHNpjIOZuZmN0l9ZISYTgUFw==
+X-Received: by 2002:ac2:5ddb:0:b0:516:d2eb:6edd with SMTP id x27-20020ac25ddb000000b00516d2eb6eddmr735020lfq.26.1712310706830;
+        Fri, 05 Apr 2024 02:51:46 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id e28-20020adfa45c000000b00343e1c3298asm1428854wra.0.2024.04.05.02.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 02:51:46 -0700 (PDT)
+Date: Fri, 5 Apr 2024 10:51:44 +0100
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] kdb: replace deprecated strncpy
+Message-ID: <20240405095144.GB2890893@aspen.lan>
+References: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: Add SM8550 Xperia 1 V
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- James Schulman <james.schulman@cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Ricardo Rivera-Matos <rriveram@opensource.cirrus.com>,
- Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
- Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
- Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
- <20240210-topic-1v-v1-7-fda0db38e29b@linaro.org>
- <05e6f92c-388c-4bc6-a4cd-e9d981166d1c@linaro.org>
- <8f6236db-0692-44c9-b136-8e0dff714c55@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <8f6236db-0692-44c9-b136-8e0dff714c55@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
 
-On 04/04/2024 21:41, Konrad Dybcio wrote:
-> 
-> 
-> On 2/12/24 18:26, Neil Armstrong wrote:
->> On 12/02/2024 14:10, Konrad Dybcio wrote:
->>> Add support for Sony Xperia 1 V, a.k.a PDX234. This device is a part
->>> of the SoMC SM8550 Yodo platform.
->>>
-> 
-> [...]
-> 
->>> +/* TODO: Only one SID of PMR735D seems accessible? */
->>
->>
->> What's reported by the cpuinfo pmic array  ?
-> 
-> PMK8550 2.1
-> PM8550 2.0
-> PM8550VS 2.0
-> PM8550VS 2.0
-> PM8550VS 2.0
-> PM8550VE 2.0
-> PM8550VS 2.0
-> PM8550B 2.0
-> PMR735D 2.0
-> PM8010 1.1
-> PM8010 1.1
-> 
-> Not sure if there's only one or the other one is secure?
-> 
->>
->> <snip>
->>
->> With the pcie thing fixed:
->> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> 
-> It's gonna be fine with the recent aux clock additions. If you
-> have no further comments, I'll happily ask for this to be merged ;)
+On Fri, Apr 05, 2024 at 02:33:58AM +0000, Justin Stitt wrote:
+> We should move away from using strncpy because it is deprecated [1].
+>
+> Since these buffers want to be NUL-terminated, let's use strscpy() which
+> guarantees this behavior.
+>
+> The code in question enables the visual autocomplete when using kdb tab
+> completion. After pressing tab a couple times when sitting on a partial
+> symbol it will attempt to fill it in.
 
-Sure LGTM
+FWIW the code that this patch changes is only executed when tab is
+pressed once.
 
-> 
-> Konrad
 
+> In my testing, strscpy() provides
+> the exact same autocomplete behavior that strncpy() provides here (i.e:
+> it fills in the same number of characters for the user).
+>
+> You can confirm this by enabling kdb [3] and booting up the kernel. I
+> performed my tests with qemu with this incantation (wow these get long):
+>
+> $ /usr/bin/qemu-system-x86_64 -display none -nodefaults -cpu Nehalem
+> -append 'console=ttyS0,115200 earlycon=uart8250,io,0x3f8 rdinit=/bin/sh
+> kgdboc=ttyS0,115200 nokaslr' -kernel $BUILD_DIR/arch/x86/boot/bzImage
+> -initrd $REPOS/boot-utils/images/x86_64/rootfs.cpio -m 512m -serial
+> mon:stdio
+>
+> ... then you can type some symbols and see that autocomplete still kicks
+> in and performs exactly the same.
+>
+> For example:
+> tes <tab><tab> gives you "test",
+> then "test_ap" <tab><tab> gives you "test_aperfmperf"
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://www.kernel.org/doc/html/v5.0/dev-tools/kgdb.html#using-kdb [3]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - use strscpy over memcpy (thanks Daniel T.)
+> - Link to v1: https://lore.kernel.org/r/20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com
+> ---
+> ---
+>  kernel/debug/kdb/kdb_io.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 9443bc63c5a2..60be22132020 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
+>  			kdb_printf("%s", buffer);
+>  		} else if (tab != 2 && count > 0) {
+>  			len_tmp = strlen(p_tmp);
+> -			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
+> +			strscpy(p_tmp+len_tmp, cp, lastchar-cp+1);
+
+This still looks like it is reproducing the obvious[1] error in
+the original strncpy() call. The third argument does *not* provide the
+number of characters in the destination buffer.
+
+Just to be really clear, I think this patch and your original memcpy()
+conversion is mechanically correct, in that the new code is equivalent
+to the original strncpy(). The problem is that neither patch acts
+on the warning signs that the original code is broken.
+
+
+[1] I know that this code is hard to read so "obvious" is a relative
+    term. However just looking at one line tells us that the source
+    pointer is part of a two pointer calculation that purports to
+    give the length of the destination string! Such code is almost
+    always going to be wrong.
+
+
+>  			len_tmp = strlen(p_tmp);
+> -			strncpy(cp, p_tmp+len, len_tmp-len + 1);
+> +			strscpy(cp, p_tmp+len, len_tmp-len + 1);
+
+Again, I really don't think the third argument provides the number of
+characters in the destination buffer.
+
+
+Daniel.
