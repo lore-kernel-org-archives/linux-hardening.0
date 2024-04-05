@@ -1,130 +1,118 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EC813BACF;
-	Thu,  4 Apr 2024 21:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D920A5695
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 00:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712266165; cv=none; b=B9uwEs7oU4nGLGx+6/JrdS/s+og0nPtC15ZFquFGz7/SIZiv3QB74TXFdguVsz67pCg36SKXzX21EKPHqEEmFJPigp/np0wqxO6om0D5+FfSkqF95w0CvVJkvsXvbPvhNyUB0UXqnWdiP1PmQtt9Ko9JU3Ox1WCqqG8uIt9dQK4=
+	t=1712278587; cv=none; b=nO0NPD0vBmh/sLG2rSueRtptTpk5RS2LeYj8UDUzLAyzAhSMnRYh02Iuf+H3ZgNQuixn4h9DcvlqqgrPwXmcYxG3bjiC1zi03BfRM/s9k7XATUR12O+aAChFDRXtd0oa8WOiatYyC4Ii6/c3XVtp8IzXNNFZ4nuKVlsYw2R26G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712266165; c=relaxed/simple;
-	bh=Utj8g5kSIY2oZzcEMi6QXW1D/5gc1CLBmlqTBBy6/AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUlgkdjk/HlF00OSdbkpWs3XMJxNbiAFUWUv2D8E+Q6zKljZNBcRpaXfv9UXckj2USTSNtmNeA0BMnDivzGXhypZUXFhf2rcxJGcjozU8wv0kAJ6vkEIP5txtc1s2JT67+upBK/d4l2SHUJ45BVacJVuIlNxV/UE3C4PLxXKy6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d1g8oWeT; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712278587; c=relaxed/simple;
+	bh=d2QTWIhRLklitVHu2Oh2ADoKsDCo73AL3mTjsvV9E/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HEdSrowoVT3vf6NzgR4l6K1xi5IBW3JGrax8Ts4Yw4gQq+2/ROzzK1TnaExxGBPB8FuPLMg68CwD6JNAIkrspdBHuRSjbRlQ+96WaFEBnf7SukmwnIffCzNU+8/gXjlkvY6AWFksjg/gr8GK1vx+VPL6oLttjqD+fivLofuMMkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cdHf16/q; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d1g8oWeT"
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cdHf16/q"
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+	by cmsmtp with ESMTPS
+	id rsitrn51muh6ssXsUrLwek; Fri, 05 Apr 2024 00:56:23 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id sXsTruB0ouv6XsXsUrJReN; Fri, 05 Apr 2024 00:56:22 +0000
+X-Authority-Analysis: v=2.4 cv=YbZ25BRf c=1 sm=1 tr=0 ts=660f4c36
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4VnFru8p6tJF5H7f7NqpSA==:17
+ a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10
+ a=LXjggWPQbdiaP0PAf5wA:9 a=QEXdDO2ut3YA:10
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Zyi7AEcYnfqB6wuIN5C5labJ5TkiPsioxAOKz/6Fbqs=; b=d1g8oWeT9rYHBlZuF9xsTFDFHG
-	4lSJo/KGw64j3qekI4UzOPIXJ1k3xqp49kuQDsjI3KWu1PeNyrvAx32gduojBtJnubIYbpR8ATH9/
-	iHi0XgwD4MRWgBREvdk6kwWIJMIJufuG2rvsYSbhZahYCtFlqfUHZoB/9OG3i+HKLm5pf24AQ/JN2
-	9SFsSEsuALRsGWBL8WIAgLr6AWItvY3OcojGDkbhHZsDqZ1XuYyScYDs1+aUQs9aWl8qV9+jLJ+tV
-	tJCk+/43dla/bl5lv45MJp+W8A/geOJcFQ8gjN3XZ0JwVqHcOjoTgz3o0Y9HJuAjDwX2Jd5ldJTru
-	2h94r9pw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsUe5-00000008veN-2BP2;
-	Thu, 04 Apr 2024 21:29:17 +0000
-Date: Thu, 4 Apr 2024 22:29:17 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fs: Set file_handle::handle_bytes before referencing
- file_handle::f_handle
-Message-ID: <Zg8brYRFHlS1qaJC@casper.infradead.org>
-References: <20240404211212.it.297-kees@kernel.org>
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=dMo9+qC7khZWpqLef3na1COCT0ZhcpCRolgSVK3QXHY=; b=cdHf16/qhI8JTbGUioMN8W8jaW
+	TvWWbeDUNvI3jTbCp3P2ae2UdUHz78etxP0SVcLI+RTpVsBZGEceCq2O4WbiTBJWK9LjcD0HBTy5c
+	NCCtcQK38GdT5ArT4AYsL/44ilwrMrw9O8qFqDXWgxMg+Romwx75T9MTOgDO15EjlyJuXEHU24deO
+	+R09I1L1c5hehvYvogtOY82yP5XAemE06FC8fLoO5btjE6L1Z/BeVrGcJSPQAzrqx41HnY5iH0k/k
+	40K3GeOl1mtqvcSNChRFr0UNtvLPP9bgbISuXJaVdoLy0c7ktrWr7SWBYV0FEEo941Av+pfxFThuW
+	ImhVp4PA==;
+Received: from [187.184.159.122] (port=19621 helo=[192.168.0.27])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rsXsR-004J8b-2u;
+	Thu, 04 Apr 2024 19:56:20 -0500
+Message-ID: <d6c9a04e-66e3-4010-9a35-fb5efc3f1af0@embeddedor.com>
+Date: Thu, 4 Apr 2024 18:56:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404211212.it.297-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5][next] integrity: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Mimi Zohar <zohar@linux.ibm.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Zg7AoOh7CL5ZD/fe@neat>
+ <27d36ec8e0539c5d6bc760de7305299a2142f9f1.camel@linux.ibm.com>
+ <b3956fd36307d33ebbf0e4633e0d2389860cf720.camel@linux.ibm.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <b3956fd36307d33ebbf0e4633e0d2389860cf720.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.159.122
+X-Source-L: No
+X-Exim-ID: 1rsXsR-004J8b-2u
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.27]) [187.184.159.122]:19621
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIBqR2RUlxMfH1D8VlB6PyOFtllE4QbgQRYVkr7Z1QD7pSzUmvRqgKLnlVr155jE4tuILJ1UVA4tabTTvYeqgKmlQYMEix4GYL/VIr2zEnxFqIF/UmL/
+ WdFOKJIFcCFV1pioUoyG9cKDKUKfN+yVCHVRqk1xuWBWAFVUX3gCM+6QKM+buzBUagy1n55LlO7cKS7BnUGtSGgcCsZkofFiPdowgc4Q1LBiruqpfZ9AK0I8
 
-On Thu, Apr 04, 2024 at 02:12:15PM -0700, Kees Cook wrote:
-> Since __counted_by(handle_bytes) was added to struct file_handle, we need
-> to explicitly set it in the one place it wasn't yet happening prior to
-> accessing the flex array "f_handle". For robustness also check for a
-> negative value for handle_bytes, which is possible for an "int", but
-> nothing appears to set.
 
-Why not change handle_bytes from an int to a u32?
+> "checkpatch.pl --strict" complains "CHECK: Alignment should match open
+> parenthesis".  I'll queue the patch, but how about teaching checkpatch.pl to
+> ignore __struct_group()?
 
-Also, what a grotty function.
+I think this would do it:
 
-        handle_dwords = f_handle.handle_bytes >> 2;
-...
-        handle_bytes = handle_dwords * sizeof(u32);
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c4c4a61bc83..e229b97f17f6 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3958,7 +3958,7 @@ sub process {
+                         my $rest = $2;
 
-> Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-nfs@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
->  v2: more bounds checking, add comments, dropped reviews since logic changed
->  v1: https://lore.kernel.org/all/20240403215358.work.365-kees@kernel.org/
-> ---
->  fs/fhandle.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 8a7f86c2139a..854f866eaad2 100644
-> --- a/fs/fhandle.c
-> +++ b/fs/fhandle.c
-> @@ -40,6 +40,11 @@ static long do_sys_name_to_handle(const struct path *path,
->  			 GFP_KERNEL);
->  	if (!handle)
->  		return -ENOMEM;
-> +	/*
-> +	 * Since handle->f_handle is about to be written, make sure the
-> +	 * associated __counted_by(handle_bytes) variable is correct.
-> +	 */
-> +	handle->handle_bytes = f_handle.handle_bytes;
->  
->  	/* convert handle size to multiple of sizeof(u32) */
->  	handle_dwords = f_handle.handle_bytes >> 2;
-> @@ -51,8 +56,8 @@ static long do_sys_name_to_handle(const struct path *path,
->  	handle->handle_type = retval;
->  	/* convert handle size to bytes */
->  	handle_bytes = handle_dwords * sizeof(u32);
-> -	handle->handle_bytes = handle_bytes;
-> -	if ((handle->handle_bytes > f_handle.handle_bytes) ||
-> +	/* check if handle_bytes would have exceeded the allocation */
-> +	if ((handle_bytes < 0) || (handle_bytes > f_handle.handle_bytes) ||
->  	    (retval == FILEID_INVALID) || (retval < 0)) {
->  		/* As per old exportfs_encode_fh documentation
->  		 * we could return ENOSPC to indicate overflow
-> @@ -68,6 +73,8 @@ static long do_sys_name_to_handle(const struct path *path,
->  		handle_bytes = 0;
->  	} else
->  		retval = 0;
-> +	/* the "valid" number of bytes may fewer than originally allocated */
-> +	handle->handle_bytes = handle_bytes;
->  	/* copy the mount id */
->  	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
->  	    copy_to_user(ufh, handle,
-> -- 
-> 2.34.1
-> 
-> 
+                         my $pos = pos_last_openparen($rest);
+-                       if ($pos >= 0) {
++                       if ($pos >= 0 && $rest !~ /(__)?struct_group(_(tagged|attr))?(\()/) {
+                                 $line =~ /^(\+| )([ \t]*)/;
+                                 my $newindent = $2;
+
+I'll send a proper patch. Thanks for the suggestion, Mimi.
+
+--
+Gustavo
