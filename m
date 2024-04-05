@@ -1,111 +1,136 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A7D17167F
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 18:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C78F172BA8
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 19:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712342107; cv=none; b=i6fL1vFOyD47ky5MN0wwohNRyDTaP60eRXRlBVpgaIcKIj0ZFCzI308ptN0pj1MQ9kFHrYWBhpIN51mXuJYL3wbATagsbvKI6o/eYE7x6ZdgYXo4mTAruOqYtek7NdiZVWekqA+1DFQT1l1KqkiWZGfIbVhHk1Q38AzCQ/bFfV0=
+	t=1712346311; cv=none; b=sS/RU/ebroqUBSXRb6BMqg+ej/9bgR6iEAAvCr1KFlFT67nYhUgh/nOjWAlMmtfOb+rTVU4yaW1tk7gNgYKgN7rKAuxSzHGjSEYaYr/vWjLFb5eRKOLlgU6gMkFmXiooIdHEcdR5eHFdfVi2ZKOA3S4Mj0gGrpM5dtty3gpB18U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712342107; c=relaxed/simple;
-	bh=6ZjefErhMfmeYuBEs1nM6MSn4jNdNTdaFy6x1mnwXpQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iR0IZ9GPmsYYSqgV8zW3FSSL1BEyqI7EMvOWdVHPrxXPPt0aWSJuYvJ69jetgk/Z9pMX4tS8E34Y2K2nlA0ZAwa+IAKcQKI9w/myg/+KHk4vCS/vDK3GUargkJBDr8lQt/8G1GnmLMKL/nqhypA9KP9lciUZeRR1FDeR6Y3JiGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y+5Eg3rt; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712346311; c=relaxed/simple;
+	bh=T3ejxbb56c+nrn15llqrQ7RzaittgP9efQjwG4WBQuo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Mf0Xpitr+MR2QroBuNRSzkoVtx6HsHnMo/V7Zt7ZI9eI4KHbNnBszmP1uIkCthHcU7OrhS7IfIhjD4LE9HWdPuQH5SapopeiqTlMIMqMK/JBnOcDjVqrF9An0UCNnX0rh9ID/iVxjTTtMPRc8do1SNTaVoJ8gIjSU+SOgMNLxLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4Pmp957s; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y+5Eg3rt"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c86e6f649aso24726139f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 11:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4Pmp957s"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc693399655so4486620276.1
+        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 12:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712342105; x=1712946905; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qa9OWgSGHy86iFLsGhob6bEBoogAWHpT07UAtRblqpQ=;
-        b=Y+5Eg3rtIe7VMYHiZr4x9lRDOR5iCv6ylQgOlmdxWHA1TFq634s31mPcYCe3pHO50U
-         +y7Ym+WSNMZtaeUSuJYS0UipUs1FPTTt8HyWAhAfYqksxGn7chdP3M579DhWbFOFcWiH
-         ziHV9/x0j8R4Nbfl60wkU5xzg/0E3n4vzq1DA=
+        d=google.com; s=20230601; t=1712346308; x=1712951108; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2vtixN1wtkWuNV0Qa4mXNUhaVbrMuwdt0CR0qhCTFhg=;
+        b=4Pmp957sWq/92GZ0Wc/xV8rICwS0Nq62eLltef3DLe1QSq61I/W+yCR7PyyG+LSZ0p
+         68WXe2aczCWywL8r5EH4EORFAldWfoTizAyc4vGQVjX7fPmXFHZYpE634xw0UVmcr28e
+         RrChrp6TiatQgaKYwoUw05BGCfSqIsSH120KbgvAVZOOROjKobAS/n4KVTA85wcmyHm1
+         GEMLhg20PRXl+ZZOs+vRb4XIsFs54a3HTkz5XrGs/0jSVPEuP2Q/T1P29n07Ofaw15kg
+         84bEEbqSaJ8TJq/MJ5hM/ahj2lTpcfGYXY+wyBMR3okvki2I9diPt9gIAVzsaINdYjiS
+         51vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712342105; x=1712946905;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qa9OWgSGHy86iFLsGhob6bEBoogAWHpT07UAtRblqpQ=;
-        b=Hbx3JiEyZOvj754GpFiyyk9dg80BfgL3186WnlEMX2VPI6kHuvTN8zTagPVHSj4ulj
-         O6n3X3xEAfOxyi70GNuGL0FPjQwk7pRWueSChgHtucV0BHK8AvQVHdYUtst9T5b2p8VE
-         irvV6dq45CcWGLjJWH1snQjV5E6B3woAFaRbiRTcSkTgIwrZoXvTEnC4t2hnbXxO7dwQ
-         z6RNWY9zDZc7BhIvvPmxzaXeWTHN+2sa2Dbbdyh1OF+RSM2LDGPZvFU+ESpf9J0u4c+z
-         5RYevr846X00luoJhWsvFkopUkGy22kUBYC0p0dvYKkabprbxOkQj0ZiycJuQdSh055Q
-         wI9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXHv3Tg24I+Iiv7u6aRZuEGL11Qtioh+zT/s4PVT7BSZfu7b0gWkkPdHvQ66eHtyl/dZ/nQpNGnWHwrEo4y3TcpQp4L+CgFjfdtJV7xVYJt
-X-Gm-Message-State: AOJu0Yx5ky46QlXS59xsmD5PEonlaZejo9TX4rO0oGzGys+W2ka8GtSg
-	MS2cLCOZXkDGnXs1v67wPuyDCUfgfcBz/YBNBg0mfRELz5M63ssROzYhxWIOdng=
-X-Google-Smtp-Source: AGHT+IGtByH7WDW3n0zir30+zDOgj0SA2esTzdcEHOquB4Tj3nh/EzZ8FEfaoZ2efToARrGR3C666w==
-X-Received: by 2002:a92:dd0a:0:b0:36a:d81:6f35 with SMTP id n10-20020a92dd0a000000b0036a0d816f35mr2112409ilm.2.1712342105467;
-        Fri, 05 Apr 2024 11:35:05 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id m15-20020a92c52f000000b003684d4f6b44sm574171ili.4.2024.04.05.11.35.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 11:35:05 -0700 (PDT)
-Message-ID: <040f65b0-5484-47f9-8e43-af5316988c5a@linuxfoundation.org>
-Date: Fri, 5 Apr 2024 12:35:03 -0600
+        d=1e100.net; s=20230601; t=1712346308; x=1712951108;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2vtixN1wtkWuNV0Qa4mXNUhaVbrMuwdt0CR0qhCTFhg=;
+        b=xBNdJzM6/3lbdLMdpam+hEukQQuNTwTGFbeu0vkaaxeLvDYnQxGqzVw/6PoYmcpwMQ
+         zwttwxzdnpjj/WiIyIH1brBf67u0pPowzgWl98z2oTyISgYCR+arzoFwc5VyiJqifHd8
+         9RuARNC9s/jkASBT7XOG5PcbfNk9Eo/Ti8HDgu9Z/74ZQ4QEqZ9PXObM1O+4FDFgVgAF
+         u1RSTF7eY6gYKmM9i9fAsau1aoSJ5GIGOS118B/v5J+yWfR0BrPkkcK6hzEvOXGpeEii
+         QmAX25tz4jy3R6r0nXRBln2UKpnhKZwUCTx100bsUEx8/Nkodsyywoios+p1/kkrJ4MI
+         RhUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNY6q/Hc257upyUKCFQCtTsuOkm5c42GLA0AV+ZDlRgTgIscddcddc2jfQGnHfmQCjioOZ5jdR2PMoEh9VqvrHsgflWIv9BXYmgFigpBzj
+X-Gm-Message-State: AOJu0YwgUp04GvpAPsaQXiAeBl4XGO3wRNf852Mk4zoJYhciJ2Ny2Fgi
+	oOcj9ic5KsWQrVuLI/GDJGjE83e1MgdvY3hDhPqDzUDYl/j/Ubd/oETQzK8BBDY1sl+aDTwhpaG
+	mZz3bAbebCEtuLRlYYTlcHQ==
+X-Google-Smtp-Source: AGHT+IGQaWsEMLLYQanS2Lwqb6aaiWTFAVRKofb23kbm/JtMo/+pr+L8fTYQOVjDpYmss57BpRnWpLm22Llm8Gso7A==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:8411:0:b0:dcd:5e5d:458b with SMTP
+ id u17-20020a258411000000b00dcd5e5d458bmr602236ybk.3.1712346308719; Fri, 05
+ Apr 2024 12:45:08 -0700 (PDT)
+Date: Fri, 05 Apr 2024 19:45:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] Handle faults in KUnit tests
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: Brendan Higgins <brendanhiggins@google.com>,
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
- Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
- James Morris <jamorris@linux.microsoft.com>,
- Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>,
- "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
- Marco Pagani <marpagan@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>,
- Thara Gopinath <tgopinath@microsoft.com>,
- Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov
- <vkuznets@redhat.com>, Zahra Tarkhani <ztarkhani@microsoft.com>,
- kvm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
- x86@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240326095118.126696-1-mic@digikod.net>
- <60d96894-a146-4ebb-b6d0-e1988a048c64@linuxfoundation.org>
- <20240405.pahc6aiX9ahx@digikod.net>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240405.pahc6aiX9ahx@digikod.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAMNUEGYC/x3MwQqDMAyA4VeRnBeIVXfYqwwPoaYaGF1JylDEd
+ 1/x+B3+/wQXU3F4dSeY/NT1mxv6Rwdx47wK6tIMgcJII03o1XIsB+5cq6GXj9aAxAOnRPHJgaC lxSTpfm/f83X9AQuPS9JmAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712346307; l=2126;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=T3ejxbb56c+nrn15llqrQ7RzaittgP9efQjwG4WBQuo=; b=vM4znULoH125X+4VZ0HIeV+udu59Elb7Dpzi4RgxOBcA1cIaWxOo2FSqK8bf9iocWinmC32eH
+ FxLPTDU2wM/BbG0Jq6CPnD7D5QkYleqzvrhLT8U2VTYV8JrH2frfGaa
+X-Mailer: b4 0.12.3
+Message-ID: <20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com>
+Subject: [PATCH] xfs: xattr: replace strncpy and check for truncation
+From: Justin Stitt <justinstitt@google.com>
+To: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 4/5/24 12:07, Mickaël Salaün wrote:
-> On Fri, Apr 05, 2024 at 10:08:00AM -0600, Shuah Khan wrote:
->> On 3/26/24 03:51, Mickaël Salaün wrote:
->>> Hi,
->>>
->>> This patch series teaches KUnit to handle kthread faults as errors, and
->>> it brings a few related fixes and improvements.
->>>
->>> Shuah, everything should be OK now, could you please merge this series?
->>
->> Please cc linux-kselftest and kunit mailing lists. You got the world cc'ed
->> except for the important ones. :)
-> 
-> Indeed, I don't know how I missed that... Do you want me to send it
-> again?
-> 
+strncpy is deprecated and as such we should prefer less ambiguous and
+more robust string interfaces [1].
 
-Yes please resend. I will pull these right away.
+There's a lot of manual memory management to get a prefix and name into
+a string. Let's use an easier to understand and more robust interface in
+scnprintf() to accomplish the same task while enabling us to check for
+possible truncation, resulting in a soft warning.
 
-thanks,
--- Shuah
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Split from https://lore.kernel.org/all/20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com/
+with feedback from Christoph H.
+---
+ fs/xfs/xfs_xattr.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 364104e1b38a..bc7246eaebdd 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -206,6 +206,7 @@ __xfs_xattr_put_listent(
+ {
+ 	char *offset;
+ 	int arraytop;
++	size_t combined_len, actual_len;
+ 
+ 	if (context->count < 0 || context->seen_enough)
+ 		return;
+@@ -220,11 +221,16 @@ __xfs_xattr_put_listent(
+ 		return;
+ 	}
+ 	offset = context->buffer + context->count;
+-	memcpy(offset, prefix, prefix_len);
+-	offset += prefix_len;
+-	strncpy(offset, (char *)name, namelen);			/* real name */
+-	offset += namelen;
+-	*offset = '\0';
++
++	combined_len = prefix_len + namelen;
++
++	/* plus one byte for \0 */
++	actual_len = scnprintf(offset, combined_len + 1, "%s%s", prefix, name);
++
++	if (actual_len < combined_len)
++		xfs_warn(context->dp->i_mount,
++	"cannot completely copy %s%s to context buffer resulting in truncation",
++			prefix, name);
+ 
+ compute_size:
+ 	context->count += prefix_len + namelen + 1;
+
+---
+base-commit: c85af715cac0a951eea97393378e84bb49384734
+change-id: 20240405-strncpy-xattr-split2-0a3aff0c6a20
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
