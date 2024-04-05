@@ -1,118 +1,141 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D920A5695
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 00:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AE37484
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 02:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712278587; cv=none; b=nO0NPD0vBmh/sLG2rSueRtptTpk5RS2LeYj8UDUzLAyzAhSMnRYh02Iuf+H3ZgNQuixn4h9DcvlqqgrPwXmcYxG3bjiC1zi03BfRM/s9k7XATUR12O+aAChFDRXtd0oa8WOiatYyC4Ii6/c3XVtp8IzXNNFZ4nuKVlsYw2R26G8=
+	t=1712284442; cv=none; b=dY2KWMlvs9I1A1NT3FnzV+zwJ6qdAp1v6Dx//YGDkscG7PMIQGkBKga+9f9eG/tNsUnoIM7gGi8hEUsYvJMvVu0OYgql/hfnISvLYQyHpnFHUY6YJxvAzaMlSx4aEyRT7FtZD3pf7c919UsuKAPgh8wL/sbEgnVQx43zpVDtaag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712278587; c=relaxed/simple;
-	bh=d2QTWIhRLklitVHu2Oh2ADoKsDCo73AL3mTjsvV9E/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HEdSrowoVT3vf6NzgR4l6K1xi5IBW3JGrax8Ts4Yw4gQq+2/ROzzK1TnaExxGBPB8FuPLMg68CwD6JNAIkrspdBHuRSjbRlQ+96WaFEBnf7SukmwnIffCzNU+8/gXjlkvY6AWFksjg/gr8GK1vx+VPL6oLttjqD+fivLofuMMkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=cdHf16/q; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1712284442; c=relaxed/simple;
+	bh=wO+X3saS4uyVLQDMRU+NaQhCLOWmvrK0q75shb6+LmM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ougXhMlxGheCv3XsOj1pAdNjPctJB8BriQ/A0rQEDPQSq0BjbGtBZC8eFZlvxtjJHe/ATKDCiAU+i5zvgmMqr8fWRWSb6Ud8yP8Nel714w37Z6e4QyHavmFV9QOtz7t7GIsjDxPTuuNpFCb+zfdlcqQ3BbA5jlMz7AisxoIuoFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CPDL28pS; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cdHf16/q"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id rsitrn51muh6ssXsUrLwek; Fri, 05 Apr 2024 00:56:23 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id sXsTruB0ouv6XsXsUrJReN; Fri, 05 Apr 2024 00:56:22 +0000
-X-Authority-Analysis: v=2.4 cv=YbZ25BRf c=1 sm=1 tr=0 ts=660f4c36
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=4VnFru8p6tJF5H7f7NqpSA==:17
- a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10
- a=LXjggWPQbdiaP0PAf5wA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dMo9+qC7khZWpqLef3na1COCT0ZhcpCRolgSVK3QXHY=; b=cdHf16/qhI8JTbGUioMN8W8jaW
-	TvWWbeDUNvI3jTbCp3P2ae2UdUHz78etxP0SVcLI+RTpVsBZGEceCq2O4WbiTBJWK9LjcD0HBTy5c
-	NCCtcQK38GdT5ArT4AYsL/44ilwrMrw9O8qFqDXWgxMg+Romwx75T9MTOgDO15EjlyJuXEHU24deO
-	+R09I1L1c5hehvYvogtOY82yP5XAemE06FC8fLoO5btjE6L1Z/BeVrGcJSPQAzrqx41HnY5iH0k/k
-	40K3GeOl1mtqvcSNChRFr0UNtvLPP9bgbISuXJaVdoLy0c7ktrWr7SWBYV0FEEo941Av+pfxFThuW
-	ImhVp4PA==;
-Received: from [187.184.159.122] (port=19621 helo=[192.168.0.27])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rsXsR-004J8b-2u;
-	Thu, 04 Apr 2024 19:56:20 -0500
-Message-ID: <d6c9a04e-66e3-4010-9a35-fb5efc3f1af0@embeddedor.com>
-Date: Thu, 4 Apr 2024 18:56:15 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CPDL28pS"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6144244c60cso25332367b3.2
+        for <linux-hardening@vger.kernel.org>; Thu, 04 Apr 2024 19:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712284439; x=1712889239; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iwbHBqeRFEUfVJ+3aD1i4LMY2bXuO8BYqPMFzWHirHE=;
+        b=CPDL28pSutYnXXeiACDcwD0Q7V8wI6yNVIzL617Zopvjo2fbyTRb/LtVKdbt8SggTV
+         iRmSR39VVZZ5xPRkVLITTlYesBFrtWTfdkeWukVJwM2c/wOrrcfg2dnRr3XetxCArnJv
+         V3j/89FQ7AclXucc7gkuBSnRvqTaScCRvtzpHjeE7Kf/ordpUJmRw0AdSDCN84eYH9C9
+         e9TXPjtHsHdS+K7SKUqlNS0Sr0LHydZ9IzveHF9ZwbaU1Mh8H+EVfN2kVzI3jYOLP7SO
+         M1Xk4clbXAvK55WbZ0qMM/JiOwhxK7PV1ScIw0HdtPe/hLCHjq/KwOaGDdsJX/LM3Juf
+         xa3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712284439; x=1712889239;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iwbHBqeRFEUfVJ+3aD1i4LMY2bXuO8BYqPMFzWHirHE=;
+        b=Hoh681R/DMdy6tKyNPiJuCmmtGh+iidRnemwg4IfO0KuJsbbyGI4cqsLay8U6Ics0P
+         EggWm58712A2IAHP8TfThZEJorbaNDIC9XKLkJZQc7ExzdfK2orGF9WA07Pqu1WEksCj
+         Kdekpvi4Yej00ZRy44keTos7gjOEL0lE7WQHxYGZc6Fqs3u2XpENom24Zxed9PQZEd9A
+         nkhK+kplnBz9m9It4tCgRjD99XUgW5Vvf5yKJEARtFWNVkpBwTzuYDGL1rLcFntD8X9t
+         21d6YJYcqaI7+25Q5AbalOZRZbSgL6HS/0PiBibP+LbajRTZZG9SVhjO0KiBbfBK+p2J
+         IjHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqj/9oqfw7bbQvOs65v/cGf7kZnpWJyH81o4R0gLcZVBT203dyjnJ9Af4GhAi1wp+RYX2GvJIBgKSfzjP22UpVBR3hmG6/ZJM1X7QBA7lO
+X-Gm-Message-State: AOJu0YzpN7nqHNx2KnvkA5ouVQ6W5W+U01bun/75K6J6UNzbRngeikNd
+	CtvnBlPAxPOx+vVvS5jAkppMX3YGf+1NITddDQWwHjsgla4ERtxNzOI0D1hCw5+NzJuvqNGxWRB
+	Lgq0GhlcZ33Zu2gTBBp7IFw==
+X-Google-Smtp-Source: AGHT+IEZvT3gn3hf4hHPSv3p3Ssos4Ig8JcIIIdsmab32//XdptkM2Ej7aJXeeyV6n+4mylECLbx+EvZkt8mAqr8xw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:100a:b0:dc6:c94e:fb85 with
+ SMTP id w10-20020a056902100a00b00dc6c94efb85mr476ybt.2.1712284439335; Thu, 04
+ Apr 2024 19:33:59 -0700 (PDT)
+Date: Fri, 05 Apr 2024 02:33:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5][next] integrity: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Mimi Zohar <zohar@linux.ibm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Zg7AoOh7CL5ZD/fe@neat>
- <27d36ec8e0539c5d6bc760de7305299a2142f9f1.camel@linux.ibm.com>
- <b3956fd36307d33ebbf0e4633e0d2389860cf720.camel@linux.ibm.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <b3956fd36307d33ebbf0e4633e0d2389860cf720.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.159.122
-X-Source-L: No
-X-Exim-ID: 1rsXsR-004J8b-2u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.27]) [187.184.159.122]:19621
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIBqR2RUlxMfH1D8VlB6PyOFtllE4QbgQRYVkr7Z1QD7pSzUmvRqgKLnlVr155jE4tuILJ1UVA4tabTTvYeqgKmlQYMEix4GYL/VIr2zEnxFqIF/UmL/
- WdFOKJIFcCFV1pioUoyG9cKDKUKfN+yVCHVRqk1xuWBWAFVUX3gCM+6QKM+buzBUagy1n55LlO7cKS7BnUGtSGgcCsZkofFiPdowgc4Q1LBiruqpfZ9AK0I8
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIABVjD2YC/42NwQ6CMBAFf4X07JpSQNCT/2GIgXZbNmBLWiQSw
+ r9bSLx7eId5h5mVBfSEgd2SlXmcKZCzEcQpYbJrrEEgFZkJLnKecwFh8laOC/ToLQ6gsH0b6FW
+ 770kOJBQZFqjERTWZYtEzetT0ORqPOnJHYXJ+OZJzur8/e/aHfU4hhVKXVcMrvGqd341zZsCzd C9Wb9v2BejKJwHTAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712284438; l=2619;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=wO+X3saS4uyVLQDMRU+NaQhCLOWmvrK0q75shb6+LmM=; b=uqRBHljMePkjFgGA0deBKFCE5V0apxMiuEMkeOwlan7tyHSjXUKzCeg0mE+95hPCVFwwbSokl
+ ESs9XgcTc+DDjmV0K//0Bq6uIuu5zDuqfFSrMH8KvRmXFvYxKVLM0j2
+X-Mailer: b4 0.12.3
+Message-ID: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
+Subject: [PATCH v2] kdb: replace deprecated strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Jason Wessel <jason.wessel@windriver.com>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Douglas Anderson <dianders@chromium.org>
+Cc: kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
+We should move away from using strncpy because it is deprecated [1].
 
-> "checkpatch.pl --strict" complains "CHECK: Alignment should match open
-> parenthesis".  I'll queue the patch, but how about teaching checkpatch.pl to
-> ignore __struct_group()?
+Since these buffers want to be NUL-terminated, let's use strscpy() which
+guarantees this behavior.
 
-I think this would do it:
+The code in question enables the visual autocomplete when using kdb tab
+completion. After pressing tab a couple times when sitting on a partial
+symbol it will attempt to fill it in. In my testing, strscpy() provides
+the exact same autocomplete behavior that strncpy() provides here (i.e:
+it fills in the same number of characters for the user).
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9c4c4a61bc83..e229b97f17f6 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3958,7 +3958,7 @@ sub process {
-                         my $rest = $2;
+You can confirm this by enabling kdb [3] and booting up the kernel. I
+performed my tests with qemu with this incantation (wow these get long):
 
-                         my $pos = pos_last_openparen($rest);
--                       if ($pos >= 0) {
-+                       if ($pos >= 0 && $rest !~ /(__)?struct_group(_(tagged|attr))?(\()/) {
-                                 $line =~ /^(\+| )([ \t]*)/;
-                                 my $newindent = $2;
+$ /usr/bin/qemu-system-x86_64 -display none -nodefaults -cpu Nehalem
+-append 'console=ttyS0,115200 earlycon=uart8250,io,0x3f8 rdinit=/bin/sh
+kgdboc=ttyS0,115200 nokaslr' -kernel $BUILD_DIR/arch/x86/boot/bzImage
+-initrd $REPOS/boot-utils/images/x86_64/rootfs.cpio -m 512m -serial
+mon:stdio
 
-I'll send a proper patch. Thanks for the suggestion, Mimi.
+... then you can type some symbols and see that autocomplete still kicks
+in and performs exactly the same.
 
+For example:
+tes <tab><tab> gives you "test",
+then "test_ap" <tab><tab> gives you "test_aperfmperf"
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90 [2]
+Link: https://www.kernel.org/doc/html/v5.0/dev-tools/kgdb.html#using-kdb [3]
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- use strscpy over memcpy (thanks Daniel T.)
+- Link to v1: https://lore.kernel.org/r/20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com
+---
+---
+ kernel/debug/kdb/kdb_io.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+index 9443bc63c5a2..60be22132020 100644
+--- a/kernel/debug/kdb/kdb_io.c
++++ b/kernel/debug/kdb/kdb_io.c
+@@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
+ 			kdb_printf("%s", buffer);
+ 		} else if (tab != 2 && count > 0) {
+ 			len_tmp = strlen(p_tmp);
+-			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
++			strscpy(p_tmp+len_tmp, cp, lastchar-cp+1);
+ 			len_tmp = strlen(p_tmp);
+-			strncpy(cp, p_tmp+len, len_tmp-len + 1);
++			strscpy(cp, p_tmp+len, len_tmp-len + 1);
+ 			len = len_tmp - len;
+ 			kdb_printf("%s", cp);
+ 			cp += len;
+
+---
+base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
+change-id: 20240402-strncpy-kernel-debug-kdb-kdb_io-c-53e5ed26da3d
+
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
+
