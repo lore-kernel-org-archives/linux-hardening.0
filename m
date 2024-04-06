@@ -1,131 +1,124 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9B9173338
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Apr 2024 19:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EB218E02;
+	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712346751; cv=none; b=F8cneeWeJa180nr6nMPayEIQBPZaOWG3Fb9Ga1rb5LKULXoGRdWjzHx4U20E6/BU2RB8M2OnOi86FXPmRtaCm43YLX0J612dy2uLsfNzBcR4kMGELH6zjB7D7HGjWSMX68ATP4uFovK1b4YssJExRR5jcHpRU3g9ASTUjAuq36s=
+	t=1712380829; cv=none; b=YzbEaLpkY1uVjsGwaQO1u+GcmshnUnFAxY+GcJB8z7/W6G5GIZGCcfBcDEjXLvGBv0crdz8VkQIxs2kmrhvOykKr6zmbeQjKDQT+1V+GgFc8+UV9n4BO280BecUa/nF1cCe8vrCw/5HIHacvrFdeEATQ6v+RiMCvinEcdNzAKq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712346751; c=relaxed/simple;
-	bh=vYvlobC0IDZBVBOa7YOXs1X5Fi3hYHEaAkBcmMYioy0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nS1WAmVhtjFd8OIFnXPqkpI50bouXkgrX2PsV+j/h+fHblTM3tpVjUNSFQmeElS+6UT0XcnMEbTNjgIc0+xxJ/SIilc4sa2q1GRst1QqTpodtPq0fx8iCPStGLZLPD39qbGkxFz3iy8lupput1KVc0ug64GrwwlPpP/Z3JeCJIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wiV/V0Aq; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1712380829; c=relaxed/simple;
+	bh=TBj/hcnPrvS19ZOluMZ12evt8AeDaDrUTBeM5kaTuKY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CZ8xfNFOwOwbOw+X7MQ2mypw2+89BHGbOVaiv57GMPQkzoP+kTI3Of0iGuMzFOUzREJ/5HG1uwWjOnb/738qFydKIOLZPWRcq+fRpVC2c83ScQZah+i6XKs06F3D3U/JknTPeBdxqgBUOHgAXMUknabfbbQJoG8FBKB5p8UrXSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYazYNyp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wiV/V0Aq"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd0ae66422fso4815846276.0
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Apr 2024 12:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712346748; x=1712951548; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BLLJ3cI5n31IjZX+orm1PoAy1NOT9LFeskEoaayxLEw=;
-        b=wiV/V0AqKJvZ5tfzZe0+mA5svkjycZIJqbxyDR+9yD3xgz0Zax0grKHLJQP90rrOeo
-         Uob5ocw5up39cjmw3VpkaKDnIJhcwhDJb5sgbPKV95ul6aSqIRw26gxcNJDpnvl0KrsW
-         JeQu1R9KXAUy5qCZj/m6RnyaHvErzNYx9TmzYJidMHlWWn5fcQtiu8e35lijJs8DuQn0
-         vu8ZuVNExVFLtokf73UPPyJtAX8mASOQENgEj079KST8Ac65XcGvGnQftAHe4p9VWk+r
-         LT0+ev+/FNjt5CHwscryvKQ03hhA9dHA9AP+g5KYZ2fDFfLmDbzhFDrTbqtaONGoxqf+
-         D6Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712346748; x=1712951548;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BLLJ3cI5n31IjZX+orm1PoAy1NOT9LFeskEoaayxLEw=;
-        b=dO3FB3kbGkXnLU8kX6ZB6IP1/R9GWpbAM1otARLhR6Segu1LQo0qMVrC2d1IzTYD0u
-         WP6T4CxiQuC4t5JC3m0L7ePDYQI+ad/XGHeXbgvjLWK6nD4BJVRIajpz4Ap0rLs4x+cX
-         vMHDb+hZOqoWsCi6DBrG4w9HZvk4P6aj92B+P+dm+gv3mUJsLgbAkxtG/1qUbz96hj7z
-         HoLN7p5S7aXzoKGMskHPQ+MhISNdbYWF4yn5/759ln+xjTvRTUunRJpaspUzfE0qXga2
-         D/ANR+KjUIVyPpI8xj2LrTQV26sq9VApmCVb58ijswpUFZ6haf8OWLs2RFumZbAHPe66
-         qA7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWNl50lcZxhAOPuQIaECD5ZtF7po8Bxidu2qYv0nRhtjoGMX6jkEsyYjax1UwsYOAUeZaPHCJx5SJxj5SE8DeJv10l95wrTJtA/PMzMwMve
-X-Gm-Message-State: AOJu0YzaEMpvwgQz2+36bae4zfxvlg+pBMqUhHl3g+hbCr8Uc6uRJXdz
-	pbwmPmfIAIF6IqGMc+abn+FriZrLfdSc83MD4YmpeThZoEx3/hW2Aptj6hAU4QFMIbZ+aujIwjz
-	Q/s+AtdFBPXB2YqtCQiHk/g==
-X-Google-Smtp-Source: AGHT+IFrf+0Q+RKxYR88LmacrwQBohGh6afFQV57l8KEQEbm00Iur/rM9hcf7VoWKLuIVrPhKmQ6d0cvQBc2OXcndg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:2b8e:b0:dd9:2782:d1c6 with
- SMTP id fj14-20020a0569022b8e00b00dd92782d1c6mr831468ybb.1.1712346748349;
- Fri, 05 Apr 2024 12:52:28 -0700 (PDT)
-Date: Fri, 05 Apr 2024 19:52:27 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYazYNyp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C5A9C433C7;
+	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712380828;
+	bh=TBj/hcnPrvS19ZOluMZ12evt8AeDaDrUTBeM5kaTuKY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=HYazYNypOS+iPe/PmwIZVgrP0OAjOmuWcCZaXmQBd5/DF3DU2Cm7HK1KTLKVM8W2j
+	 EfdrhznuDsHvbEh7NeV1r2EDMVkxTqo+hmKt5MdFIcqj68UTB4u7gvHG6geAe3ArfV
+	 cYxb7yc2nqhO3pPj8ToTFIgL78NntzPlzi3tNk1u8F7N5z7SqSGJ1Z/QhHbUaQaR1j
+	 GTv/7bDPNNXqFXoXNMGCl3bjIAtmML/lX++bgYkRjXumLNf6dEzpQPrpxdPeyVgSKh
+	 czfxRuHIWxcuBJ6wGSXEzVfHmRCYmRJdToESEDFulu3u4HF5IZUSSU3tkxxLhyQRAI
+	 TbkNIwkM8MMRA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 19C9BD84BAC;
+	Sat,  6 Apr 2024 05:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAHpWEGYC/x3MQQ5AMBBA0avIrE1SVYKriAU1mESq6TRCxN01l
- m/x/wNCgUmgyx4IdLLw4RKKPAO7jW4l5DkZtNJGGVWhxOCsv/FaBMXvHAsctTWqmdrS2BpS6AM tfP3TfnjfDwka6btkAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712346747; l=2056;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=vYvlobC0IDZBVBOa7YOXs1X5Fi3hYHEaAkBcmMYioy0=; b=4rabEFihQGgrT9i4tCWotZawQeByWYwd6mONPL4Qi8FFBEQ0cnToIfpharV2nq/9OKdtArjxD
- vbgQj4qA8poBnnKHzrz0nWkPWkSKokPN2egccLZ+4bP6npPrh+gfvxl
-X-Mailer: b4 0.12.3
-Message-ID: <20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com>
-Subject: [PATCH] xfs: replace deprecated strncpy with strscpy_pad
-From: Justin Stitt <justinstitt@google.com>
-To: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/34] address all -Wunused-const warnings
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171238082809.31617.17365732495689756509.git-patchwork-notify@kernel.org>
+Date: Sat, 06 Apr 2024 05:20:28 +0000
+References: <20240403080702.3509288-1-arnd@kernel.org>
+In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, mpe@ellerman.id.au,
+ christophe.leroy@csgroup.eu, dlemoal@kernel.org, jikos@kernel.org,
+ gregkh@linuxfoundation.org, minyard@acm.org, peterhuewe@gmx.de,
+ jarkko@kernel.org, kristo@kernel.org, sboyd@kernel.org, abbotti@mev.co.uk,
+ hsweeten@visionengravers.com, srinivas.pandruvada@linux.intel.com,
+ lenb@kernel.org, rafael@kernel.org, john.allen@amd.com,
+ herbert@gondor.apana.org.au, vkoul@kernel.org, ardb@kernel.org,
+ andersson@kernel.org, mdf@kernel.org, liviu.dudau@arm.com,
+ benjamin.tissoires@redhat.com, andi.shyti@kernel.org,
+ michael.hennerich@analog.com, peda@axentia.se, lars@metafoo.de,
+ jic23@kernel.org, dmitry.torokhov@gmail.com, markuss.broks@gmail.com,
+ alexandre.torgue@foss.st.com, lee@kernel.org, kuba@kernel.org,
+ Shyam-sundar.S-k@amd.com, iyappan@os.amperecomputing.com,
+ yisen.zhuang@huawei.com, stf_xl@wp.pl, kvalo@kernel.org, sre@kernel.org,
+ tony@atomide.com, broonie@kernel.org, alexandre.belloni@bootlin.com,
+ chenxiang66@hisilicon.com, martin.petersen@oracle.com,
+ neil.armstrong@linaro.org, heiko@sntech.de, krzysztof.kozlowski@linaro.org,
+ hvaibhav.linux@gmail.com, elder@kernel.org, jirislaby@kernel.org,
+ ychuang3@nuvoton.com, deller@gmx.de, hch@lst.de, robin.murphy@arm.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, akpm@linux-foundation.org,
+ keescook@chromium.org, trond.myklebust@hammerspace.com, anna@kernel.org,
+ masahiroy@kernel.org, nathan@kernel.org, tiwai@suse.com,
+ linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-fpga@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, iommu@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+ linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Hello:
 
-The current code has taken care of NUL-termination by memset()'ing
-@label. This is followed by a strncpy() to perform the string copy.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Instead, use strscpy_pad() to get both 1) NUL-termination and 2)
-NUL-padding which is needed as this is copied out to userspace.
+On Wed,  3 Apr 2024 10:06:18 +0200 you wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Compilers traditionally warn for unused 'static' variables, but not
+> if they are constant. The reason here is a custom for C++ programmers
+> to define named constants as 'static const' variables in header files
+> instead of using macros or enums.
+> 
+> [...]
 
-Note that this patch uses the new 2-argument version of strscpy_pad
-introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-strscpy()").
+Here is the summary with links:
+  - [05/34] 3c515: remove unused 'mtu' variable
+    https://git.kernel.org/netdev/net-next/c/17b35355c2c6
+  - [19/34] sunrpc: suppress warnings for unused procfs functions
+    (no matching commit)
+  - [26/34] isdn: kcapi: don't build unused procfs code
+    https://git.kernel.org/netdev/net-next/c/91188544af06
+  - [28/34] net: xgbe: remove extraneous #ifdef checks
+    https://git.kernel.org/netdev/net-next/c/0ef416e045ad
+  - [33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR annotations
+    (no matching commit)
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Split from https://lore.kernel.org/all/20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com/
-with feedback from Christoph H.
----
- fs/xfs/xfs_ioctl.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d0e2cec6210d..a1156a8b1e15 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1750,15 +1750,14 @@ xfs_ioc_getlabel(
- 	char			__user *user_label)
- {
- 	struct xfs_sb		*sbp = &mp->m_sb;
-+	/* 1 larger than sb_fname, for a trailing NUL char */
- 	char			label[XFSLABEL_MAX + 1];
- 
- 	/* Paranoia */
- 	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
- 
--	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
--	memset(label, 0, sizeof(label));
- 	spin_lock(&mp->m_sb_lock);
--	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-+	strscpy_pad(label, sbp->sb_fname);
- 	spin_unlock(&mp->m_sb_lock);
- 
- 	if (copy_to_user(user_label, label, sizeof(label)))
-
----
-base-commit: c85af715cac0a951eea97393378e84bb49384734
-change-id: 20240405-strncpy-xfs-split1-a2c408b934c6
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
 
