@@ -1,184 +1,185 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11020003.outbound.protection.outlook.com [52.101.85.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D9A145FE6;
-	Mon,  8 Apr 2024 19:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712605375; cv=fail; b=M1dbzhg232iIgrLlE5UnU+262DeqPBjeW/k4PeIS1F9QMlC/v4KpPjFnGR8Exd6DHMUCM3A7tslYOXpoBhFpuUxJdiFrOX2t2KPK1wBM4IdPaOTcX6/PXmD7eOzM2u5BIzAbQqcyJuzPfomiV2i0u/yDNkoO8pM0P/d8botBwmg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712605375; c=relaxed/simple;
-	bh=9Ub22+ldcMvokOxRFgxXTjWOx2Im+r5I4KhfCGCXaf0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=boMDbOaA7Z38T4Ll7spnK8vI2ieVU7EdEovy15GyWyAMXryqX9yHr+HrQnNk9zoPmMNjGqQxLB/wf7lsNrgD3hWM/dq68UJGEFsCvlgm0vGMRQceqTNj7MLGoDD8fbIccvYpKTTT3suvEK5BLkPPVuMcwLQcO3PH+q5igEFTsVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=OUANTQeM; arc=fail smtp.client-ip=52.101.85.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680E71272C4;
+	Mon,  8 Apr 2024 20:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712606758; cv=none; b=PaJQqs14WDRHn3BHOXV/03lo/wyjRMfM+GwwiT6AQX8K/00uCY2o5NazP+4/7ba4HwCrAMU7mEBrNJlPx3VlCFCm1anTbLSlwFt+UXCFLDMvrWX27ipTOcV9K3Vsd6TzKysFLyYSHMyNNQ3hIuOyOyaYOyv5Fcqh39W8kRjfl5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712606758; c=relaxed/simple;
+	bh=pVXHma8GB5nPGZYYofUMQJ8v7dv/BJbF1EuZWYwNEPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rPjxWrkr9W/TYJPdrtTmFnVmBttZ7m4FUHzjPTKkgaoYnNmuiFbpWCoHeki2qV9xxad5pKQJbATyQiPIbfVfFEU/2WW9/owzIZlzB8f36OOXa/1cEYApl+Yzk38MMysTcYOByivPejJq9qxS73cZssIWPDCPE1dTwlvxsQkGSd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YiqYlKfN; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OUANTQeM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xhp0R3Bvd98DS7jrIdEbx7uxGzWY5IDgGHrZZZRXTeAUOor3449/dW/LpNgVgx5tH6gO+yXQsrG580w1xgzk75Jw5PiXjVJXP5bNHAn7Criv4eCwUJkI1xVBRty/OnhUBsXd48z5FkGjDXf+o4QEUtrQ0Re/QADZthGgO/rUJI0fheSHS8i1D8k2HQC2y5lsgOr5ivjjJyYdQOVzmSzOcz4wCIq0phWGfkZiu+eaHBkbgXcUas5PIPRCx//l1Xxq/VIslbzVApoaf6cdCv43a1hiDJnqx7Sqs1bJITzczk5d/9W0Jd4H6YxAaIXCvPSjhV4o6qUIZ8PPMfvEb830Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PzJs73rluC2b3xVS7oqEjzxQXigEB9CqXzyENuCNVFs=;
- b=DUcDSjxTv/KBV8qHdFlcsKskzu1Fk+10GZDFWj+jcw4iRP2uKsgZIQ0v/u5xyTYVLugNfxuJSolY7c8Ak2W5QVvBzNgVFugpHQcKSZo7jkn774Xr4x710jQDFKcTlXo5o5nme+J4Me9v785zttXD8xZjzrMLYUCCG+3Q1A2zWCbOI40e2mGgMWLtqJbQ3toG8yFv55/lkWTuKUZ8ft7fQcjY9WgD49qMUX+nRk6LhJT7zd7WMtEHK/r3RAquEebi24yz/ejK30ZvEYtqfceKf9lETSV1R6xb6UZEwO7dNzNGCDnK0/Z+2J3IcGL8pNldAE6MJE9rGNTQsne2daJTNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PzJs73rluC2b3xVS7oqEjzxQXigEB9CqXzyENuCNVFs=;
- b=OUANTQeMvjapibSE0cj3D7iWAfWEwRez7CkBhhddr9aR/zPXAeSxWneZMnNy/y8AZixCqGXd6AYMUy2j/CfGKFpo4zhY/PLVlF7xxwsi5GgKZelXLC2NijtOtKdXZVuPa/eKheXUX+Sqx6Hw/wuMNypaw+2Gd/G0xHqCCvFpP5I=
-Received: from SJ1PR21MB3457.namprd21.prod.outlook.com (2603:10b6:a03:453::5)
- by CH2PR21MB1527.namprd21.prod.outlook.com (2603:10b6:610:8d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.10; Mon, 8 Apr
- 2024 19:42:49 +0000
-Received: from SJ1PR21MB3457.namprd21.prod.outlook.com
- ([fe80::70f:687e:92e6:45b7]) by SJ1PR21MB3457.namprd21.prod.outlook.com
- ([fe80::70f:687e:92e6:45b7%4]) with mapi id 15.20.7472.007; Mon, 8 Apr 2024
- 19:42:49 +0000
-From: Long Li <longli@microsoft.com>
-To: Erick Archer <erick.archer@outlook.com>, Ajay Sharma
-	<sharmaajay@microsoft.com>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon
- Romanovsky <leon@kernel.org>, Shradha Gupta
-	<shradhagupta@linux.microsoft.com>, Konstantin Taranov
-	<kotaranov@microsoft.com>
-CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: RE: [PATCH v3 1/3] net: mana: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-Thread-Topic: [PATCH v3 1/3] net: mana: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-Thread-Index: AQHaiDOxmehv1Adolku0sGiR7pmhV7FeyWFg
-Date: Mon, 8 Apr 2024 19:42:49 +0000
-Message-ID:
- <SJ1PR21MB3457B14701CEEEA83BAB7789CE002@SJ1PR21MB3457.namprd21.prod.outlook.com>
-References: <20240406142337.16241-1-erick.archer@outlook.com>
- <AS8PR02MB7237E2900247571C9CB84C678B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
-In-Reply-To:
- <AS8PR02MB7237E2900247571C9CB84C678B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=73069a5c-b5d0-42c9-95bd-e1385007e102;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-04-08T19:42:29Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR21MB3457:EE_|CH2PR21MB1527:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- msV32u9Y9BDShc5t6IpgRb/ElFlTny3ERiljEj7pPAcHUqdoVBk9ZPuFL4Wckw6t4UadgkMrj+jj5LSDvp1ZnbD+VNHwMHV99Ks6w4yb3B9qiSIXDU7+u7crMY0FFdFxgjFSG0THVS4bSr3mZBe6bzA34kBJ+Qm+iKaPDXr56aIwrP6JQpHJpFLXneY8Dvpw3/I/yI8zDt2e8mHWvGviB7UM2V9dwk4Y7KpxYE1S/H2iOX4sXMcJaxWvJBOKypsxHDjKzfJH/h0WGLdMXaMCr2WiMNj0aE4eXcOPsAEqXhczWp3az0Ty+rYzk/zCel6xb5ewtL1Fj7TXaZ1577ngPvgbJeWw2UJcD81ktgJE95dy1NTgOpHV66TlYp1L/KhX+vqgSJLlJYhWFl1LOECz2gPWXWpuzmUjkWi0BQAoYcs+5D+7yQZi+TWH3umXJqlDQaRrDV7waN9J9IPLejmQILFFUBiYW8WDGZWY1XPOVSyqHLqrN4ZPnqYnejs7tcQzekaMl1dtgfkg0VqOmnlrtMpDa+gzEVpm/quPjT/mlmEb09qLZ2eB8Ue4SOTwW/H8ApZPkpDYwk8v81YBOU7+1HTGF1iOPjZEmcEmh1WwJNF0e4J9bin9n3o6477JoDWRSTOE+V9D+Rsr4olnJqa7RA==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR21MB3457.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007)(921011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?/qQHSgTtR4Ld1HC0B64jelX/CwmnrBU5sokhSWW6eP4P4PxWnRsmGKDdkSHx?=
- =?us-ascii?Q?gPcaN1d1khhfg4feEeOo1TWBYPwjWIr4nNBFqyo3APReyGj3FWmA1bMPW/8+?=
- =?us-ascii?Q?W66BuHt4j691gdRpHsgdsCiYmCutFbb+SR0QuSmVfyxlt0Xn6TIUEfm5Ddmv?=
- =?us-ascii?Q?Rsv22UF7TLL/rhx0xuXrZrJYwT4HBkx+EAqyPoYWqHlS2g3dqnZ6C+1dyZ61?=
- =?us-ascii?Q?TN9vxGhrg661NIJ4HWpweMHDd/JEjIBvYaDNdBUWvrfV5Ox0z7BzN73+UHVu?=
- =?us-ascii?Q?H7Xq5ZKlKeGTa6SIrTwPA+vNjedLw90S6/zrg2NuAM9UBJ1XKoSvX41U5Yzz?=
- =?us-ascii?Q?S4+scgY0r1wpRJA/SZowZFw2orphXqVtzu1PHqp9AW8D1WzzZpHJMUZT6U+g?=
- =?us-ascii?Q?fj3pW37CaCd2Axhy+zg4q/bNpWVioA5KzI4NNy4f6RRBHGkRRjEtnSGyQ6wL?=
- =?us-ascii?Q?ZlrjMwQ/1OuNK7Os2ACHOFmjgrxWz+NKxkzd1jK8TpAGJ0TExuOdzRKhLjQi?=
- =?us-ascii?Q?UpIV/MjED3a1qyAF7ujSrUkMKOH9mlRs0TTn3nbLPykQqiz4RTP5z4mP4HRh?=
- =?us-ascii?Q?mwhk6rztNcIpvxcn6Oj9eNa0o/chrwbg45DxOh+WY6sz6CN+HN2SlUpdfSId?=
- =?us-ascii?Q?FyfMC8SUa+7Lq6f3ejdjtDEa+mhvev7bZxwuhO4KIxbnZV2RvsuX01lGSH1O?=
- =?us-ascii?Q?dd4ETqCI0NW3Oa/rNeroGBJr5eCRgPEC9SXQQ2yhZ7Ongqxd9GC/yRt6swoU?=
- =?us-ascii?Q?pvL7nqXYV+JiGE9w38tsLKtCYVh/EA9afaiB7Pa/KmluJ5aIaa1w4sAUJ3nn?=
- =?us-ascii?Q?5w5wgtymr8uDILAfrx+P2YSDu/SQSq1nrdr73Pvk67blP9PVODJ99W0m68mS?=
- =?us-ascii?Q?ABhs8YbLs5BPuvjqHi70v+JAguEyDn3a2fyzTybqR2WrCrQhsmyf3KOcFHOE?=
- =?us-ascii?Q?9gTB791y/XcnthuF21yC9Piuk6S2HhR83dklykdzvoqdlgOFvfLOGHcl237D?=
- =?us-ascii?Q?eMEMGUSJVkWr0WTaql+JKcrYE19Vs+QXoa7cjtKrL/AJJ8EBFGB15HYqBrfs?=
- =?us-ascii?Q?4GCe+ePdDhgiyCmlp8JpHqpDJsQS4eahi5dWd3P+EjGzNSbQZj14ze1BhsPz?=
- =?us-ascii?Q?AD/FBO4AJCr08ZEyWmwkb1AnR0FCd961eEXGyT18uI5271jEyVgoH6tSzg0e?=
- =?us-ascii?Q?xfvX9FksZJU/2/qhyB2ecP+6dYgYrZj0xgXiw4u76e7VxYKUUgndrLG5v3UG?=
- =?us-ascii?Q?nPGzK5kHDa4aYD0WU7uKsKXHG6/3QOEeY6gpOEymTTljKFP6BQ3GkTkkgEk4?=
- =?us-ascii?Q?o/jBPexkIRhnkMpDIq6dDUWfpWUKVzIuYyvGRmMKNVAlpPcFdQ/VXao4uKqF?=
- =?us-ascii?Q?y2MeE011dImXBvnufDtoACrMrxjzUmmiJR2kj+R1hxUNRpG0uI6//NdbdfZ7?=
- =?us-ascii?Q?oQjZaHTFHxhg2zON17EDX6SmG1Q3GVmZIwgQ7ghzXf6hL7pXx/7Z8e0ORNm4?=
- =?us-ascii?Q?JOREIXLycBVrZ+Ni86qxYgqzuUBjHuDRDpF5kCvc/gXDFkg1FVqYtt0wF4J0?=
- =?us-ascii?Q?JpAGwCMUIEQADQmdE4wI7XDbWt+t1wjuIQPCIiZM?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiqYlKfN"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2a5215314a4so872510a91.0;
+        Mon, 08 Apr 2024 13:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712606756; x=1713211556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NUqdZE6kzzC+YTBzuDMEGCl6gVl6Zy5qnlm5WmWCMEw=;
+        b=YiqYlKfN5gKogfswbEB69LAS+nAfr3smmNRHSuwvcP1EAFDrzCEc218AsCXrAg4mgC
+         y9JYfjHeEYRNNpFATqNZD61TrVQdEFMnGIKjrOI8QfDTYBVycxnO7haoYX64sZr3kLJR
+         4mgb0h7mgDrsPdxXKp2ok18oWuT3flGrg7F1whnOhW+qRx406CnRdKc2+wTVW7WM4iiI
+         U6v2N7pspF5EsCMy0z3l9EHWkYx0cIwLAKhiNb1CYwvvXuIwpBHANN1bUq02FY/JxW0g
+         FuajHVGUWJ8GIgBH3aa2PCPiGrH1Lf6zQtB8AIUz5DW78u9ix8b4CD9o3OXVU/qCemWM
+         lu/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712606756; x=1713211556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NUqdZE6kzzC+YTBzuDMEGCl6gVl6Zy5qnlm5WmWCMEw=;
+        b=UgKDaF8TEKULg7wUExm+zTL8fScyeZNIZNeCaJ9HWgbfiWE3/dLSowafAlR4jgjCUR
+         ekUlkgatIRma/ku5nldUFqf829bFiDpwDuc3ouhNl7HTLnLGVjMIlNvxxwech5gN5pMa
+         KX52QqOrt80ahcQ5p+0AtvrbJbe4n2UKLHNwwjfEadYuy89X1fBO/23LCs2mhT3dLgWH
+         8hktvj+2LUTnwC97AR9LGllCHz36d7rMAd8LFTN1Rcq+wde1wpRsj3XMbBBu44PJXSuk
+         o7y0V5hGs3oN2Cg/h/J3ZO5DTwnnWikUYW3xGGSAxhTjlPfP70B7tXe4RIHTiOexiCLi
+         CJjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFEzrrIymN3+d3qgeN9fbl5vVMKcR+bUardhrj1YbJ3TN2HHJt4AvE4z5TnkTinsw98dLEb/RkJWMmVa6Da9gqd4OvN3/Q1fIAkyQ+U2vQLJgqDYXeca1tKLKARD3ktYJYs7dj0Z91yuz5UbXF
+X-Gm-Message-State: AOJu0YxnJizXv9SNRcMbZIKIXfpC8dL8jYbb85i/eBKZk+ST6FunVtMK
+	DcKEfRDonN02OKkGWyC8XMgyfERr6xGtLj0JO8PiOUKHXJ2JWn70yP//oHLCPDLj8lmqZ4xHHaz
+	TnfYf3h+7enGwx8vp8A+VByRu6Gk=
+X-Google-Smtp-Source: AGHT+IFAsAW5Q31/Vc72tX8MYJxjAXGXGJkMw6FDJT5agkQzF72ip3OaPkCp8oywDbR6fsOAlW6JqIPz8LjboQowH2U=
+X-Received: by 2002:a17:90a:a38a:b0:2a2:7693:399e with SMTP id
+ x10-20020a17090aa38a00b002a27693399emr7380737pjp.4.1712606755689; Mon, 08 Apr
+ 2024 13:05:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR21MB3457.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea468511-08ff-4016-fd12-08dc58041292
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2024 19:42:49.4198
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xQaKimi4sQ9lTkcTfhMhbAkhlSKK2rc5I9mTbKj4GcC9SyhcUbnslKSpatMCgCE1LGvdRWfkg1T+UGSdApEb+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1527
+References: <AS8PR02MB723799AFF24E7524364F66708B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <c2182ac1-368c-441b-b6ed-b5d15a8f9f38@amd.com>
+In-Reply-To: <c2182ac1-368c-441b-b6ed-b5d15a8f9f38@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 8 Apr 2024 16:05:43 -0400
+Message-ID: <CADnq5_OsJ+VxY9z_iqOscvWAoRqK2hZ0thUOHtBzhfo3De4EoA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/radeon/radeon_display: Decrease the size of
+ allocated memory
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Erick Archer <erick.archer@outlook.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Subject: [PATCH v3 1/3] net: mana: Add flex array to struct
-> mana_cfg_rx_steer_req_v2
+On Mon, Apr 1, 2024 at 8:35=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
+ig@amd.com> wrote:
 >
-> The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of tra=
-iling
-> elements. Specifically, it uses a "mana_handle_t" array. So, use the pref=
-erred way
-> in the kernel declaring a flexible array [1].
+> Am 30.03.24 um 17:34 schrieb Erick Archer:
+> > This is an effort to get rid of all multiplications from allocation
+> > functions in order to prevent integer overflows [1] [2].
+> >
+> > In this case, the memory allocated to store RADEONFB_CONN_LIMIT pointer=
+s
+> > to "drm_connector" structures can be avoided. This is because this
+> > memory area is never accessed.
+> >
+> > Also, in the kzalloc function, it is preferred to use sizeof(*pointer)
+> > instead of sizeof(type) due to the type of the variable can change and
+> > one needs not change the former (unlike the latter).
+> >
+> > At the same time take advantage to remove the "#if 0" block, the code
+> > where the removed memory area was accessed, and the RADEONFB_CONN_LIMIT
+> > constant due to now is never used.
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#op=
+en-coded-arithmetic-in-allocator-arguments [1]
+> > Link: https://github.com/KSPP/linux/issues/160 [2]
+> > Signed-off-by: Erick Archer <erick.archer@outlook.com>
 >
-> At the same time, prepare for the coming implementation by GCC and Clang =
-of
-> the __counted_by attribute. Flexible array members annotated with
-> __counted_by can have their accesses bounds-checked at run-time via
-> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-> (for strcpy/memcpy-family functions).
+> Well in general we don't do any new feature development any more for the
+> radeon driver.
 >
-> This is a previous step to refactor the two consumers of this structure.
+> But this cleanup looks so straight forward that the risk of breaking
+> something is probably very low.
 >
->  drivers/infiniband/hw/mana/qp.c
->  drivers/net/ethernet/microsoft/mana/mana_en.c
->
-> The ultimate goal is to avoid the open-coded arithmetic in the memory all=
-ocator
-> functions [2] using the "struct_size" macro.
->
-> Link:
-> https://www.ker/
-> nel.org%2Fdoc%2Fhtml%2Fnext%2Fprocess%2Fdeprecated.html%23zero-length-
-> and-one-element-
-> arrays&data=3D05%7C02%7Clongli%40microsoft.com%7Ce75134553ebf4bca87bd0
-> 8dc564acf8e%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63848012
-> 6558204741%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV
-> 2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=3D%2B8k08
-> SWrKXJiDfQ2cal65b1K1sElRB8x0oA5EFeUqbw%3D&reserved=3D0 [1]
-> Link:
-> https://www.ker/
-> nel.org%2Fdoc%2Fhtml%2Fnext%2Fprocess%2Fdeprecated.html%23open-coded-
-> arithmetic-in-allocator-
-> arguments&data=3D05%7C02%7Clongli%40microsoft.com%7Ce75134553ebf4bca8
-> 7bd08dc564acf8e%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6384
-> 80126558211762%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJ
-> QIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=3Dh0
-> wsUICWnJwn1Nd5fr%2B0z8SXZIqXQrNWKTEbVlB%2BNI0%3D&reserved=3D0 [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> Acked-by from my side, but Alex should probably take a look as well.
 
-Reviewed-by: Long Li <longli@microsoft.com>
+I can't remember why that was done that way.  Maybe some leftover from
+the early KMS days before we finalized the fbdev interactions?
+Anyway, patch applied.  Thanks.
 
+Alex
+
+>
+> Regards,
+> Christian.
+>
+> > ---
+> > Changes in v2:
+> > - Rebase against linux-next.
+> >
+> > Previous versions:
+> > v1 -> https://lore.kernel.org/linux-hardening/20240222180431.7451-1-eri=
+ck.archer@gmx.com/
+> >
+> > Hi everyone,
+> >
+> > Any comments would be greatly appreciated. The first version was
+> > not commented.
+> >
+> > Thanks,
+> > Erick
+> > ---
+> >   drivers/gpu/drm/radeon/radeon.h         | 1 -
+> >   drivers/gpu/drm/radeon/radeon_display.c | 8 +-------
+> >   2 files changed, 1 insertion(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/r=
+adeon.h
+> > index 3e5ff17e3caf..0999c8eaae94 100644
+> > --- a/drivers/gpu/drm/radeon/radeon.h
+> > +++ b/drivers/gpu/drm/radeon/radeon.h
+> > @@ -132,7 +132,6 @@ extern int radeon_cik_support;
+> >   /* RADEON_IB_POOL_SIZE must be a power of 2 */
+> >   #define RADEON_IB_POOL_SIZE                 16
+> >   #define RADEON_DEBUGFS_MAX_COMPONENTS               32
+> > -#define RADEONFB_CONN_LIMIT                  4
+> >   #define RADEON_BIOS_NUM_SCRATCH                     8
+> >
+> >   /* internal ring indices */
+> > diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/=
+radeon/radeon_display.c
+> > index efd18c8d84c8..5f1d24d3120c 100644
+> > --- a/drivers/gpu/drm/radeon/radeon_display.c
+> > +++ b/drivers/gpu/drm/radeon/radeon_display.c
+> > @@ -683,7 +683,7 @@ static void radeon_crtc_init(struct drm_device *dev=
+, int index)
+> >       struct radeon_device *rdev =3D dev->dev_private;
+> >       struct radeon_crtc *radeon_crtc;
+> >
+> > -     radeon_crtc =3D kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CO=
+NN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
+> > +     radeon_crtc =3D kzalloc(sizeof(*radeon_crtc), GFP_KERNEL);
+> >       if (radeon_crtc =3D=3D NULL)
+> >               return;
+> >
+> > @@ -709,12 +709,6 @@ static void radeon_crtc_init(struct drm_device *de=
+v, int index)
+> >       dev->mode_config.cursor_width =3D radeon_crtc->max_cursor_width;
+> >       dev->mode_config.cursor_height =3D radeon_crtc->max_cursor_height=
+;
+> >
+> > -#if 0
+> > -     radeon_crtc->mode_set.crtc =3D &radeon_crtc->base;
+> > -     radeon_crtc->mode_set.connectors =3D (struct drm_connector **)(ra=
+deon_crtc + 1);
+> > -     radeon_crtc->mode_set.num_connectors =3D 0;
+> > -#endif
+> > -
+> >       if (rdev->is_atom_bios && (ASIC_IS_AVIVO(rdev) || radeon_r4xx_ato=
+m))
+> >               radeon_atombios_init_crtc(dev, radeon_crtc);
+> >       else
+>
