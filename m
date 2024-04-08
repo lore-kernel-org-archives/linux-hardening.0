@@ -1,185 +1,141 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680E71272C4;
-	Mon,  8 Apr 2024 20:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DE5433BD
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Apr 2024 20:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712606758; cv=none; b=PaJQqs14WDRHn3BHOXV/03lo/wyjRMfM+GwwiT6AQX8K/00uCY2o5NazP+4/7ba4HwCrAMU7mEBrNJlPx3VlCFCm1anTbLSlwFt+UXCFLDMvrWX27ipTOcV9K3Vsd6TzKysFLyYSHMyNNQ3hIuOyOyaYOyv5Fcqh39W8kRjfl5A=
+	t=1712609623; cv=none; b=lrdkcgl+hJLlYWbFSCgcj5JSn/UFOzalpEdjajugbINiZNBYYoNIO+DclfBdc/YiuqL6ISs5S7NfiIofv82ucBonBQXaEUYEZgyjpJL46MWrO16n5wgLzq7yKRSvCFJYWsu1mZ7FqIqYvc9w3cv5SEjuWY43RThpatDoWr33P0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712606758; c=relaxed/simple;
-	bh=pVXHma8GB5nPGZYYofUMQJ8v7dv/BJbF1EuZWYwNEPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rPjxWrkr9W/TYJPdrtTmFnVmBttZ7m4FUHzjPTKkgaoYnNmuiFbpWCoHeki2qV9xxad5pKQJbATyQiPIbfVfFEU/2WW9/owzIZlzB8f36OOXa/1cEYApl+Yzk38MMysTcYOByivPejJq9qxS73cZssIWPDCPE1dTwlvxsQkGSd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YiqYlKfN; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712609623; c=relaxed/simple;
+	bh=DOqZq8kuJzYUPOSgaA5tk+PTqcOohixHy8k/tyKf4YY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HDgUGAuaMxzoRCbhpcOMX10dVlkjwMBlW/3cN1u8q6icL82Tjzv3ZAq32iRB7ZgEvZMCdanS4IxXecVuRDU9W7yVwk9Ahqu8yyw2KueiNmYa0N4UBat3/3dWWdnkGLjsDb4ElL2QUKwbdUhl6rmFvjJCTX7Tj+VYIavKcyPvVX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xf61bhPo; arc=none smtp.client-ip=209.85.166.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YiqYlKfN"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2a5215314a4so872510a91.0;
-        Mon, 08 Apr 2024 13:05:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xf61bhPo"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so540613739f.1
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Apr 2024 13:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712606756; x=1713211556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NUqdZE6kzzC+YTBzuDMEGCl6gVl6Zy5qnlm5WmWCMEw=;
-        b=YiqYlKfN5gKogfswbEB69LAS+nAfr3smmNRHSuwvcP1EAFDrzCEc218AsCXrAg4mgC
-         y9JYfjHeEYRNNpFATqNZD61TrVQdEFMnGIKjrOI8QfDTYBVycxnO7haoYX64sZr3kLJR
-         4mgb0h7mgDrsPdxXKp2ok18oWuT3flGrg7F1whnOhW+qRx406CnRdKc2+wTVW7WM4iiI
-         U6v2N7pspF5EsCMy0z3l9EHWkYx0cIwLAKhiNb1CYwvvXuIwpBHANN1bUq02FY/JxW0g
-         FuajHVGUWJ8GIgBH3aa2PCPiGrH1Lf6zQtB8AIUz5DW78u9ix8b4CD9o3OXVU/qCemWM
-         lu/g==
+        d=google.com; s=20230601; t=1712609620; x=1713214420; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NBGsS2/S3Mj7HXkZYf1Aj0lD7GM30KGEteH+N54+L68=;
+        b=Xf61bhPo8YhJG2NkUoPFcLs9vVUIBIJUMZ2fwF0gY0zAltdKMmVxu8ZWusQ8c19pP+
+         3K0otW3DRshFZxr05CT7drLL2tfpL0zzTSHvcPfy4FHjG4d8sQNxJNx3hGPvQzhQLUZm
+         UzrwznSfaTCjDD9gF0TNgMXSU6Zad8vjhnqLjCJpZnrs+8uQvI9Zp5ck2/sHEYSJJkzF
+         pRCh+lHtLG3Ujwxh4tFb/hrQmQVWAWbKfSH0EM+j0rzg24x6wveUrQpt/q3YsPP2Ahmq
+         ZsTeSdJJnKF0bJ/aPFBBjKbTupV+FK6bcLR45uQUXTYNwf1BBIMJYeKezBRtOrMVmfrR
+         CtlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712606756; x=1713211556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NUqdZE6kzzC+YTBzuDMEGCl6gVl6Zy5qnlm5WmWCMEw=;
-        b=UgKDaF8TEKULg7wUExm+zTL8fScyeZNIZNeCaJ9HWgbfiWE3/dLSowafAlR4jgjCUR
-         ekUlkgatIRma/ku5nldUFqf829bFiDpwDuc3ouhNl7HTLnLGVjMIlNvxxwech5gN5pMa
-         KX52QqOrt80ahcQ5p+0AtvrbJbe4n2UKLHNwwjfEadYuy89X1fBO/23LCs2mhT3dLgWH
-         8hktvj+2LUTnwC97AR9LGllCHz36d7rMAd8LFTN1Rcq+wde1wpRsj3XMbBBu44PJXSuk
-         o7y0V5hGs3oN2Cg/h/J3ZO5DTwnnWikUYW3xGGSAxhTjlPfP70B7tXe4RIHTiOexiCLi
-         CJjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFEzrrIymN3+d3qgeN9fbl5vVMKcR+bUardhrj1YbJ3TN2HHJt4AvE4z5TnkTinsw98dLEb/RkJWMmVa6Da9gqd4OvN3/Q1fIAkyQ+U2vQLJgqDYXeca1tKLKARD3ktYJYs7dj0Z91yuz5UbXF
-X-Gm-Message-State: AOJu0YxnJizXv9SNRcMbZIKIXfpC8dL8jYbb85i/eBKZk+ST6FunVtMK
-	DcKEfRDonN02OKkGWyC8XMgyfERr6xGtLj0JO8PiOUKHXJ2JWn70yP//oHLCPDLj8lmqZ4xHHaz
-	TnfYf3h+7enGwx8vp8A+VByRu6Gk=
-X-Google-Smtp-Source: AGHT+IFAsAW5Q31/Vc72tX8MYJxjAXGXGJkMw6FDJT5agkQzF72ip3OaPkCp8oywDbR6fsOAlW6JqIPz8LjboQowH2U=
-X-Received: by 2002:a17:90a:a38a:b0:2a2:7693:399e with SMTP id
- x10-20020a17090aa38a00b002a27693399emr7380737pjp.4.1712606755689; Mon, 08 Apr
- 2024 13:05:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712609620; x=1713214420;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NBGsS2/S3Mj7HXkZYf1Aj0lD7GM30KGEteH+N54+L68=;
+        b=l2WJkzXaoD/UCoQ0kmb9jj+DlN7mEiulCiEwWNr7TfjDMAyngFlQJO90vnf3RzEQiz
+         TJS2ga92GBZL3h//NEiAlWvFhOnrL0Xy20vrK4SP3GFJ5u348quQMIeP/3avVDeUyFLP
+         aDPnNAUJr5cBy+BYYGuFUAp4b4Kkii90LrUgVbmd4G3EgIde2SZLFqh7xQpfmR6MOzIV
+         OK9otv4DePL34YV4A2CsO8CPhKAkq73CsL8gloZ+lq9k33AjcztnbPdQ67RiETX2lnLw
+         8BiGsMHyo633M4cMEreFlb1+dzFbUjdOf6nTrocYCKgheClE52d03vfBvd1MGXsLvBTR
+         Bi+w==
+X-Forwarded-Encrypted: i=1; AJvYcCW0ZeleLYm3QWpuGWCTog216WuzgZvr5kXCyEW8fhsdZVqu1dDv09PCJsmHnVBuXrV4HI4eiQ+pTaP8LpnWHLKIdyaJI+8B3FnNN68zQSur
+X-Gm-Message-State: AOJu0YznCzLv5AompGOuTwUeFbOJwshhAL9+pV63WoSTYi26MXVLR8os
+	ZTejAAd5ZyZkLBG3gByiN0ccblQP+u3IFFoPqGC7I+PPBKHfYgx7MzSGBt9zJw6VbXiw3eGMG/D
+	WrVzxRzKZUqJeM+6E6ABn3g==
+X-Google-Smtp-Source: AGHT+IGRqybDplhDDdFYGn2qkod05B1D1siyL1k2PvY5mOUnlsBqs0hUzmP+PXLNZi79lfQ+W2tZotf8sNlVmwoj8Q==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6638:2656:b0:47f:bbce:999f with
+ SMTP id n22-20020a056638265600b0047fbbce999fmr679656jat.0.1712609619830; Mon,
+ 08 Apr 2024 13:53:39 -0700 (PDT)
+Date: Mon, 08 Apr 2024 20:53:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <AS8PR02MB723799AFF24E7524364F66708B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <c2182ac1-368c-441b-b6ed-b5d15a8f9f38@amd.com>
-In-Reply-To: <c2182ac1-368c-441b-b6ed-b5d15a8f9f38@amd.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 8 Apr 2024 16:05:43 -0400
-Message-ID: <CADnq5_OsJ+VxY9z_iqOscvWAoRqK2hZ0thUOHtBzhfo3De4EoA@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/radeon/radeon_display: Decrease the size of
- allocated memory
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Erick Archer <erick.archer@outlook.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAExZFGYC/43NTQrCMBCG4auUrI3kv9aV9xAXaTK2QU1KUoJSe
+ nfTbkQUcfl+MM9MKEF0kNC+mlCE7JILvoTYVMj02neAnS2NGGGCMEZx8kN0fjxj04O5DHo0PdY
+ 7JcCqGlpLULkcIpzdfVWPp9K9S2OIj/VJpsv628sUU8y1kYTJVjaKHroQuitsTbihBczsD4QVp Gk1FMFq4OQD4S+EU/kd4QXRQlKolRKcqDdknucnAVcEUUEBAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712609618; l=2547;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=DOqZq8kuJzYUPOSgaA5tk+PTqcOohixHy8k/tyKf4YY=; b=ZnsbFijeEdgYz9BOFIR2GqN3ptuzZxowhptyWoqNfINIUmFZ4hWGfE6dfmHlgeF4sNWgP2qQa
+ +PFy/geJjS0DBnBPsefZ27ki+zSu9bTY64xmBx4okvBLiKmC5a7BhaN
+X-Mailer: b4 0.12.3
+Message-ID: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
+Subject: [PATCH v4] checkpatch: add check for snprintf to scnprintf
+From: Justin Stitt <justinstitt@google.com>
+To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Finn Thain <fthain@linux-m68k.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Apr 1, 2024 at 8:35=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
-ig@amd.com> wrote:
->
-> Am 30.03.24 um 17:34 schrieb Erick Archer:
-> > This is an effort to get rid of all multiplications from allocation
-> > functions in order to prevent integer overflows [1] [2].
-> >
-> > In this case, the memory allocated to store RADEONFB_CONN_LIMIT pointer=
-s
-> > to "drm_connector" structures can be avoided. This is because this
-> > memory area is never accessed.
-> >
-> > Also, in the kzalloc function, it is preferred to use sizeof(*pointer)
-> > instead of sizeof(type) due to the type of the variable can change and
-> > one needs not change the former (unlike the latter).
-> >
-> > At the same time take advantage to remove the "#if 0" block, the code
-> > where the removed memory area was accessed, and the RADEONFB_CONN_LIMIT
-> > constant due to now is never used.
-> >
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#op=
-en-coded-arithmetic-in-allocator-arguments [1]
-> > Link: https://github.com/KSPP/linux/issues/160 [2]
-> > Signed-off-by: Erick Archer <erick.archer@outlook.com>
->
-> Well in general we don't do any new feature development any more for the
-> radeon driver.
->
-> But this cleanup looks so straight forward that the risk of breaking
-> something is probably very low.
->
-> Acked-by from my side, but Alex should probably take a look as well.
+I am going to quote Lee Jones who has been doing some snprintf ->
+scnprintf refactorings:
 
-I can't remember why that was done that way.  Maybe some leftover from
-the early KMS days before we finalized the fbdev interactions?
-Anyway, patch applied.  Thanks.
+"There is a general misunderstanding amongst engineers that
+{v}snprintf() returns the length of the data *actually* encoded into the
+destination array.  However, as per the C99 standard {v}snprintf()
+really returns the length of the data that *would have been* written if
+there were enough space for it.  This misunderstanding has led to
+buffer-overruns in the past.  It's generally considered safer to use the
+{v}scnprintf() variants in their place (or even sprintf() in simple
+cases).  So let's do that."
 
-Alex
+To help prevent new instances of snprintf() from popping up, let's add a
+check to checkpatch.pl.
 
->
-> Regards,
-> Christian.
->
-> > ---
-> > Changes in v2:
-> > - Rebase against linux-next.
-> >
-> > Previous versions:
-> > v1 -> https://lore.kernel.org/linux-hardening/20240222180431.7451-1-eri=
-ck.archer@gmx.com/
-> >
-> > Hi everyone,
-> >
-> > Any comments would be greatly appreciated. The first version was
-> > not commented.
-> >
-> > Thanks,
-> > Erick
-> > ---
-> >   drivers/gpu/drm/radeon/radeon.h         | 1 -
-> >   drivers/gpu/drm/radeon/radeon_display.c | 8 +-------
-> >   2 files changed, 1 insertion(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/radeon/radeon.h b/drivers/gpu/drm/radeon/r=
-adeon.h
-> > index 3e5ff17e3caf..0999c8eaae94 100644
-> > --- a/drivers/gpu/drm/radeon/radeon.h
-> > +++ b/drivers/gpu/drm/radeon/radeon.h
-> > @@ -132,7 +132,6 @@ extern int radeon_cik_support;
-> >   /* RADEON_IB_POOL_SIZE must be a power of 2 */
-> >   #define RADEON_IB_POOL_SIZE                 16
-> >   #define RADEON_DEBUGFS_MAX_COMPONENTS               32
-> > -#define RADEONFB_CONN_LIMIT                  4
-> >   #define RADEON_BIOS_NUM_SCRATCH                     8
-> >
-> >   /* internal ring indices */
-> > diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/=
-radeon/radeon_display.c
-> > index efd18c8d84c8..5f1d24d3120c 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_display.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_display.c
-> > @@ -683,7 +683,7 @@ static void radeon_crtc_init(struct drm_device *dev=
-, int index)
-> >       struct radeon_device *rdev =3D dev->dev_private;
-> >       struct radeon_crtc *radeon_crtc;
-> >
-> > -     radeon_crtc =3D kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CO=
-NN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
-> > +     radeon_crtc =3D kzalloc(sizeof(*radeon_crtc), GFP_KERNEL);
-> >       if (radeon_crtc =3D=3D NULL)
-> >               return;
-> >
-> > @@ -709,12 +709,6 @@ static void radeon_crtc_init(struct drm_device *de=
-v, int index)
-> >       dev->mode_config.cursor_width =3D radeon_crtc->max_cursor_width;
-> >       dev->mode_config.cursor_height =3D radeon_crtc->max_cursor_height=
-;
-> >
-> > -#if 0
-> > -     radeon_crtc->mode_set.crtc =3D &radeon_crtc->base;
-> > -     radeon_crtc->mode_set.connectors =3D (struct drm_connector **)(ra=
-deon_crtc + 1);
-> > -     radeon_crtc->mode_set.num_connectors =3D 0;
-> > -#endif
-> > -
-> >       if (rdev->is_atom_bios && (ASIC_IS_AVIVO(rdev) || radeon_r4xx_ato=
-m))
-> >               radeon_atombios_init_crtc(dev, radeon_crtc);
-> >       else
->
+Suggested-by: Finn Thain <fthain@linux-m68k.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v4:
+- also check for vsnprintf variant (thanks Bill)
+- Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3-1-a451e7664306@google.com
+
+Changes in v3:
+- fix indentation
+- add reference link (https://github.com/KSPP/linux/issues/105) (thanks Joe)
+- Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com
+
+Changes in v2:
+- Had a vim moment and deleted a character before sending the patch.
+- Replaced the character :)
+- Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
+---
+From a discussion here [1].
+
+[1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+---
+ scripts/checkpatch.pl | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c4c4a61bc83..a0fd681ea837 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7012,6 +7012,12 @@ sub process {
+ 			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+ 		}
+ 
++# {v}snprintf uses that should likely be {v}scnprintf
++		if ($line =~ /\b(v|)snprintf\s*\(\s*/) {
++			WARN("SNPRINTF",
++			     "Prefer {v}scnprintf over {v}snprintf - see: https://github.com/KSPP/linux/issues/105\n" . $herecurr);
++		}
++
+ # ethtool_sprintf uses that should likely be ethtool_puts
+ 		if ($line =~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/) {
+ 			if (WARN("PREFER_ETHTOOL_PUTS",
+
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240221-snprintf-checkpatch-a864ed67ebd0
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
