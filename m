@@ -1,78 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FC9146A74;
-	Mon,  8 Apr 2024 22:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894891DA5E
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Apr 2024 23:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712614283; cv=none; b=Bxhki92fi/+RC8ptq8BJ/wmhYWav51w5IP5pU3SPDIkxa7oOK+Iisp/Ys6m7x1mmCcfUDoSEWgcM4IlUbgHa1Og6v3iFvxsccO6MbMziXzt1eCZEVFHuwPLdRxgTPEbbB80RI+JdwvbDzWyhH84KFkoGSv6mATbpuTWcczf+4Vg=
+	t=1712618436; cv=none; b=c5WtybGry5sku/WeV4uJYz79IQsXkHhOnlbInpvuHNIx2XY5msZ6wY5i7w24vfpm6r4CyWc+w/lO+ouUhz6j8As8pwaQzTV/6h0CxhaegeMEwWkldCJAqgiXPZCTSeZKntQxPlBdzPY5zyY5Uvi0/rwivvLsA9VT03JhoVcdOXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712614283; c=relaxed/simple;
-	bh=lW11RI+KDUxz+R1JazYwSEvVHMXg9ftxGnF6AdTgkjo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=T4G4iY9gqGcPRbB3n5uxFjEsgBJddVvOK8VyNpxVtOC7Jv0iP+CyTf7YZx+rlDXixUUkUiUPyXra11FbcuVAsz4pldHXQd0e61b0aSxg/9S0M6qWBzRTVbdQpPlwMqoRa2+FesDWB4yk/WCfhe9n0pEPiHw33JAgGYPVuFhDS2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZpzjLU0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712618436; c=relaxed/simple;
+	bh=R0vbJw/BDBrD1C3Wb0cjCIKzALfO3U+u/MPT5lmUcrY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jYqUzY5zQ3MsgYcARY9eS6/8I6ktwEqK7eeOQU4otkoNdCHiWgiXalY0OiZKh10meSgtdhbYWe4ZeLw+JBcqXCUQ9+/zHNgRCTNKBruD4C2GO9jkw1PNQyjKKZvQFYFl1dBzKNtxVkxmhQ6/hJQPtGdzGRxaVCxz8gb+ABxGPVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V1fUp2g+; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZpzjLU0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CAAA2C433F1;
-	Mon,  8 Apr 2024 22:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712614282;
-	bh=lW11RI+KDUxz+R1JazYwSEvVHMXg9ftxGnF6AdTgkjo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oZpzjLU04UMqo3DHGNXPncnDOgiUKHS8aSf8pL34SWiBTw0MJJbQ5e4igv7PF8D69
-	 biNOVVfC6nyaMXtDZoT9W+oyqE6kJVglUBhuVeECJBAxqoaUK5ue7I44nGof7+Ir1L
-	 nH6WldASjQ/sFfzYbQWd5IWSGrDUo4EYAXcntX32hjJZCGmNYqu90RNKwIW+2Ykobb
-	 myYl9PStsHQGp/NDFPwgRsmX4GhIJY5t36Z1T5tRQGpiG1yQ0OL/hbntQuPXR4K7t1
-	 EukB9azhaYEvwnUDFEE+zhDqg6xJOCbmySeXle4+K91Zbm1rQF/kDYzDYpeqKIhpeV
-	 VcvUp4CzpGppw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B3B58C54BD6;
-	Mon,  8 Apr 2024 22:11:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V1fUp2g+"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so1079755a91.0
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Apr 2024 16:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712618434; x=1713223234; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iGfzW3KSWciZlgCPg70ValvXebgWwF9Br7yRSrVmJ8Y=;
+        b=V1fUp2g+b7qKJEiXATTj3FznZF+WdNt+AtO6VyvLMvHxOmtkuDnmjOo2U4LR9nLjiv
+         RjSSNGCQsNt1CbjKNwSoXpfQwjwLgdVvHBc60lnilbtasvP02TIckI6oCjoegQQoMS54
+         FjBu2yDrfJftb0uz/aoOZw2vfkzy4SAoi3ybo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712618434; x=1713223234;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iGfzW3KSWciZlgCPg70ValvXebgWwF9Br7yRSrVmJ8Y=;
+        b=XnlBwzSAuMsix6g9y7HhOLDgYuveV64IXsIo/f4KUrTpG5tdFO32Z3HYipXkqYDrgS
+         mq6DqScnNMLRo6cvEzSkUNu7a/4851JCANbRc/z95behVhT8tXn6HwO+j16w4yGu1pv/
+         mUSYqfmG1A9ZDyldb2JMSVmRxo37s36r1I+paF918zgEwqrPg9KiD93r/s+EO7E4rSn9
+         jXDvkb4/p9EWsdmxA6o2Rh8Ac9LWGBo5Q2A87SyB2emtJ2SFmQj19SZ8F/sjwOOBUp5O
+         chr3mCLsFNDQm4rndUePU5xUGoY8dS0zwfTiD3DMvznoddqlHoOTcgNgWipF2h7eJr/D
+         DXUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzMlDmykO7ObH+wSLMFbFZbe2xHU17qTZaKgiOxqEYe7ZxlqPrchtK1py8tDB9wsAv/wvOeO1D8hus7rIr+FrmV+nCQQ0qUHTe/3/1z96B
+X-Gm-Message-State: AOJu0Yz+0HIOyLrsLNvU72A93Cn8lZjhg7FNKWep4aXK4tahrwPgeUdG
+	knJ2ekpS2v+gXCUHdvC/PHaU7EYxxRyEXv59n/gIuzUAo52+kzCEPsJKMhhRFg==
+X-Google-Smtp-Source: AGHT+IHagw1kJFyHr7aumQ6VVYFpyQcraFdxbmvsNxzzJN/4xkU5PmluPOJ0qvhBBB6jr79Q6fO2fg==
+X-Received: by 2002:a17:90a:7286:b0:2a2:d41d:2258 with SMTP id e6-20020a17090a728600b002a2d41d2258mr8360479pjg.28.1712618433895;
+        Mon, 08 Apr 2024 16:20:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id fz7-20020a17090b024700b0029facfb3f25sm7026022pjb.45.2024.04.08.16.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 16:20:33 -0700 (PDT)
+Date: Mon, 8 Apr 2024 16:20:32 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
+Subject: Re: [PATCH v4] checkpatch: add check for snprintf to scnprintf
+Message-ID: <202404081620.551120F8EC@keescook>
+References: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2][next] Bluetooth: L2CAP: Avoid
- -Wflex-array-member-not-at-end warnings
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <171261428272.29448.1603633433425207397.git-patchwork-notify@kernel.org>
-Date: Mon, 08 Apr 2024 22:11:22 +0000
-References: <ZgRIF1bkXlZlaK22@neat>
-In-Reply-To: <ZgRIF1bkXlZlaK22@neat>
-To: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
 
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Wed, 27 Mar 2024 10:23:51 -0600 you wrote:
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
+On Mon, Apr 08, 2024 at 08:53:33PM +0000, Justin Stitt wrote:
+> I am going to quote Lee Jones who has been doing some snprintf ->
+> scnprintf refactorings:
 > 
-> There are currently a couple of objects (`req` and `rsp`), in a couple
-> of structures, that contain flexible structures (`struct l2cap_ecred_conn_req`
-> and `struct l2cap_ecred_conn_rsp`), for example:
+> "There is a general misunderstanding amongst engineers that
+> {v}snprintf() returns the length of the data *actually* encoded into the
+> destination array.  However, as per the C99 standard {v}snprintf()
+> really returns the length of the data that *would have been* written if
+> there were enough space for it.  This misunderstanding has led to
+> buffer-overruns in the past.  It's generally considered safer to use the
+> {v}scnprintf() variants in their place (or even sprintf() in simple
+> cases).  So let's do that."
 > 
-> [...]
+> To help prevent new instances of snprintf() from popping up, let's add a
+> check to checkpatch.pl.
+> 
+> Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Here is the summary with links:
-  - [v2,next] Bluetooth: L2CAP: Avoid -Wflex-array-member-not-at-end warnings
-    https://git.kernel.org/bluetooth/bluetooth-next/c/215c4704208b
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Kees Cook
