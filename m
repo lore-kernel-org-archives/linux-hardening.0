@@ -1,54 +1,54 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BD8158D77
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Apr 2024 22:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BFF12BE9C
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Apr 2024 22:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712701129; cv=none; b=d8UeohZI3gPpe9o3RQUH2SQUqsbUz3Z/JMs/VGsNa3yP3ufq265odKxrjzRmhR/szlgQmthfYX9jVT8PA824XU2+haxMivsUACO0o/+sYTlnl9p95mvYM28sRBeloGhy2IWXPhbAzrmtIYymQwEY4T1NSlEvPpumcI5+5XaIpbA=
+	t=1712701191; cv=none; b=ut+tx2wQ69iUv2TZ3wBq0GZqamCQSUuj4U3bJAqxXY/kGKgR3bc9Yo2BSGxwDeepKbCuW7Svb4Xci/0ow8I3XX4zgcFgJ3klAVRnwYIGgdTPwkVECO4e22U9E0ih2TVyra/wFJNEbuw7MCXG0/EEzHVuDfxfd+kJbuTFf3Sl6wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712701129; c=relaxed/simple;
-	bh=kQp/hvyGHh1SkSZ5gklhCTfn7rhxx+OeQkDZRYp1Nug=;
+	s=arc-20240116; t=1712701191; c=relaxed/simple;
+	bh=EYMsqegjT4OXpgUDL/2KYBA7Xq+Ay65w52yrQrkbRj4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MXdoCzzigtftYoI5moU3hk7hImQq3k0CxHd/uxt1YCou1gBH9c2lQgxv/sd2Bd+ecGDLT6xJ3o5uOqA1gFBKcep4LwRzyDAh7mEXZyQuIOSbJsv/tv+ZCagwXKiLu7jsL9cflewHOCQrFA8pKggRh/B+axnMj/cURtvDMun0eLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OquFZMZg; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=E3T3gt+kVHvQz/iP8FsjAUnFF9KaNF6Mz0AEN5FYaRFFKkMRBRvmQwd6EvMX6sFbLAdPTm9l728Di/Mm0cvapzQJdgMu4Nqth4lBxIHCK0VfR4bqwf2rfJI+kD0G2M7Uxs/NN7ioWTH/RpAfrCAZhE0RpaZm9Vd3LZc7RaPRXDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EkS3kAfm; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OquFZMZg"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so2088933b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Apr 2024 15:18:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EkS3kAfm"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so39404875ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Apr 2024 15:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712701127; x=1713305927; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1712701190; x=1713305990; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F+JyR7XVHoRHZc6sojXb4+4iOMxV4P55AJcvcX75Hlk=;
-        b=OquFZMZgTvKCVYELZbko8eqib+KvBGjts8jqA9LaDx87nJ2YlobYqxdYlxzsKAG5ze
-         8UbeUbiV8s7AIJ+n0O3HVeeBpGD+xiMDRHkXdaTIqndXq0uH3itZu1/WFBi9TfiuTv9n
-         fBG9TYqEliAZDgHjxtrvoK2BzHb/P0Z5b9hI8=
+        bh=dVGaEP7K5QMj4iEVzjXOSGPdsEqHFt6Mr5ict+7OkIA=;
+        b=EkS3kAfm3b4tg5R0ENXz6MqqojkQDmkTIcn+4G7j29Pd4leFC1THFYzfl2xRFSAJyo
+         vQINOf6H+q+RnxTUIFRcHdB994UNjBTgi1guHuCJtwc5Ae60hdlBcx6hbEhwOO8X95o5
+         g7r/zckXU3zj6QMeb4UlyzHTbz9rAuLUJPI10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712701127; x=1713305927;
+        d=1e100.net; s=20230601; t=1712701190; x=1713305990;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F+JyR7XVHoRHZc6sojXb4+4iOMxV4P55AJcvcX75Hlk=;
-        b=TZEY8jdq9xDiwOBxYhcnNqVUi9+n2B699li0lrnB/LVfuPc7HfHMHXik3l4fYeIr3F
-         lKmXxhZ88O7+GMDPMnxO1/ngY2YyQQ4QiVCEYc9KercbjEQSqxYutVOoNaJPARjUkWM+
-         BLjisYgvZszYlR384UNhuUiD22GoSBunGHpOxbF0Dd+3OAUojsbgQ071qezbU1uP9CcF
-         HrUXn3IVYlDInJJYPgqJxjophJuPoJ+YcGYrG2cOX27/fMVMIx0KICY3fBLdtJVqko1t
-         r1vRF8xKGQG7s1WTFNFjPGg0cz3Dzcd9DtFOALMbnFbEJdHXq4b3pPHU8FU5+nckOOsw
-         PziQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmY3SlVXg0olFKo9tpPO/RJcrgPFLb6IF8NEF+MFROEaYvqKgttXjUbnuubJQvQg3u5tsPTUvP7COQm5xmCQTRO+yLt/I1PosNmQPh2Fjj
-X-Gm-Message-State: AOJu0Yxnzw1CmJtsoXOiMsvYVsplEHtCMMv/OsEaPFhcu07gtkYyykDw
-	RJbLk4pWv1kz91c1C9CEooEc/XYTPK/wq4/22qxw0kAEB5x4LOOPFXPltjVWXA==
-X-Google-Smtp-Source: AGHT+IENZctdg8MkUuUiVzh50tzQyi+yJOAszWlX5nLtc5XoQbPa9E+CgbKpF8Y3/gmyeJNYOs1OWw==
-X-Received: by 2002:a17:902:d4c1:b0:1e4:1873:843c with SMTP id o1-20020a170902d4c100b001e41873843cmr1191665plg.62.1712701127333;
-        Tue, 09 Apr 2024 15:18:47 -0700 (PDT)
+        bh=dVGaEP7K5QMj4iEVzjXOSGPdsEqHFt6Mr5ict+7OkIA=;
+        b=CIF48wkjFarrNobrP7hsveOIBefiW9S5qpnM4w3z+ORp/Ge3R9VsLi8B0ZCv59/j/a
+         1n6loGOhEkiU7E2hwODDmmSa9s3s+9tksds9WIZ2jGZn89Y12QcBdARNE6LxxIQP3Lw4
+         TYnwYk65QmZtyw7lprZUsDEDCjwFPjJ4gFpRUaCLnEpJz9eU55+jKxLgeVG2HjeCgkXj
+         f6a8E/MerrYdD0JgXff08a62Q6YotZ7KvChCA2jIxzXMb/t6wa+d2kA6krcnUeVS/lm5
+         oXT1Il6JZNfJ3tAdIcMbdngef0/QqrXnKvEA8XtgKft0usOZSEiRmxy1AbT9FMWmI/mj
+         uciQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVe1+E5EGWQa2rhFYFeUR41fw74I3CXLYdfeA1s6cq44pj42zlg3E0mLKDajwSUooURSC0RYSz9DAFAPim1GlYrKQqn/XvYL4vaFZboBN0o
+X-Gm-Message-State: AOJu0YwJZ2X5/C6AvCuY0h5y+xexMUGhjf4q1y8EbA04DojoNSrCAo1B
+	1qzcMI8jg10p/5bQiY9PjMT+IeLm8JkFnIz7auXQIe7b+8kUYrV7+OIh7hTcDQ==
+X-Google-Smtp-Source: AGHT+IEGUmXhtGH19b1H/WgCD2Rpis8vZRMumjN97SwnqzVkgy1CeZDYsMWyzkA9riCGUi1oxXbPcg==
+X-Received: by 2002:a17:903:2441:b0:1e4:1fb8:3216 with SMTP id l1-20020a170903244100b001e41fb83216mr1246750pls.52.1712701189791;
+        Tue, 09 Apr 2024 15:19:49 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q12-20020a17090311cc00b001e223b9eb25sm9416376plh.153.2024.04.09.15.18.46
+        by smtp.gmail.com with ESMTPSA id b3-20020a170902650300b001e4ea358407sm205887plk.46.2024.04.09.15.19.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 15:18:46 -0700 (PDT)
-Date: Tue, 9 Apr 2024 15:18:45 -0700
+        Tue, 09 Apr 2024 15:19:49 -0700 (PDT)
+Date: Tue, 9 Apr 2024 15:19:48 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -74,11 +74,11 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	Linus Torvalds <torvalds@linuxfoundation.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 2/2] pstore/ramoops: Add ramoops.mem_name=
- command line option
-Message-ID: <202404091514.B97720B8@keescook>
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+Message-ID: <202404091519.B7B2221@keescook>
 References: <20240409210254.660888920@goodmis.org>
- <20240409211351.234897475@goodmis.org>
+ <20240409172358.34ea19f0@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -87,69 +87,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240409211351.234897475@goodmis.org>
+In-Reply-To: <20240409172358.34ea19f0@gandalf.local.home>
 
-On Tue, Apr 09, 2024 at 05:02:56PM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, Apr 09, 2024 at 05:23:58PM -0400, Steven Rostedt wrote:
+> On Tue, 09 Apr 2024 17:02:54 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Add a method to find a region specified by memmap=nn*align:name for
-> ramoops. Adding a kernel command line parameter:
+> >   memmap=12M*4096:oops   ramoops.mem_name=oops
 > 
->   memmap=12M*4096:oops ramoops.mem_name=oops
+> I forgot to mention that this makes it trivial for any machine that doesn't
+> clear memory on soft-reboot, to enable console ramoops (to have access to
+> the last boot dmesg without needing serial).
 > 
-> Will use the size and location defined by the memmap parameter where it
-> finds the memory and labels it "oops". The "oops" in the ramoops option
-> is used to search for it.
-> 
-> This allows for arbitrary RAM to be used for ramoops if it is known that
-> the memory is not cleared on kernel crashes or soft reboots.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  fs/pstore/ram.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index b1a455f42e93..c200388399fb 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -50,6 +50,11 @@ module_param_hw(mem_address, ullong, other, 0400);
->  MODULE_PARM_DESC(mem_address,
->  		"start of reserved RAM used to store oops/panic logs");
->  
-> +static char *mem_name;
-> +module_param_named(mem_name, mem_name, charp, 0400);
-> +MODULE_PARM_DESC(mem_name,
-> +		"name of kernel param that holds addr (builtin only)");
-> +
->  static ulong mem_size;
->  module_param(mem_size, ulong, 0400);
->  MODULE_PARM_DESC(mem_size,
-> @@ -914,6 +919,19 @@ static void __init ramoops_register_dummy(void)
->  {
->  	struct ramoops_platform_data pdata;
->  
-> +#ifndef MODULE
-> +	/* Only allowed when builtin */
+> I tested this on a couple of my test boxes and on QEMU, and it works rather
+> well.
 
-Why only when builtin?
-
-> +	if (mem_name) {
-> +		u64 start;
-> +		u64 size;
-> +
-> +		if (memmap_named(mem_name, &start, &size)) {
-> +			mem_address = start;
-> +			mem_size = size;
-> +		}
-> +	}
-> +#endif
-
-Otherwise this looks good, though I'd prefer some comments about what's
-happening here.
-
-(And in retrospect, separately, I probably need to rename "dummy" to
-"commandline" or something, since it's gathering valid settings here...)
+I've long wanted a "stable for this machine and kernel" memory region
+like this for pstore. It would make testing much easier.
 
 -- 
 Kees Cook
