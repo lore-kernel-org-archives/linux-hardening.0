@@ -1,59 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EA67F478;
-	Tue,  9 Apr 2024 09:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652CB7FBD3;
+	Tue,  9 Apr 2024 13:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654197; cv=none; b=dwIhxsaSaXgZF5lus1qcSnE4SxTvENU/8ZBK57rsp8R42V8FAyIHDKXZ41+eMezesplgrTel1I+lKBO4xilZ8ztQ3NYWc97HfSajIPXWG9WKZNGmdIZfWYafDAbPL296URrrirn5vSMCSjvcuVEvn9K0xYIurJSQNWRIMoA7xxI=
+	t=1712669571; cv=none; b=mJ883A1doDz4FmgO1WTRtTMwE3A3w44gb/VRvcCJPyJ+P+ROSQFbKIgnZE2qsXULkqEwAXNeurV/PxLTjjCVy45vRqawLmuszWBghP3PMUJbsar7ta4hh16xgH/wM4q53jYz/SqaeYL46nYvTFNnUb/59tazddH7ybuGAmL6mOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654197; c=relaxed/simple;
-	bh=eD1sSl1LC2w+iXUBFJovazhs1iLnydCk/NsupckT0aA=;
+	s=arc-20240116; t=1712669571; c=relaxed/simple;
+	bh=RiIwGLCd0WmHcv9dwUh7ZyBlB74tyvzcwHjtFnzVHoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ArGXpPthGlY6NZ8fVqFCm/u9dPEeoRnrsO0Ni1PLGg8H94uqQ7CGuN/oNkXXx4zCCMMscTNLFOubg6wWRjJrqX3UHalbive4d2Qe9F1bL+Qf3vJAbLlYo0Gsd4ur2+X/V3yGRqrRXgpEbvMtJ6uHgNoLg8wdqVF+2LrbbAs8yzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkxWqbQb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nb3sBpqh1/R2t40gbQnDGfflTjzNJtJ8Tik6WaXmPRS4tul8Iz2yTPE1ekEnixefEzCLBONVz7MwpFsJL7WYpQTN/n4EQF05StnuiAQtrBjQpY+NF/JNBCRscy2PW0CIe6Gyuz1xcxCbPhxw6e0N5zw87tqJQNFIRlRtOenLdGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xKkGsbU4; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkxWqbQb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96CFBC433F1;
-	Tue,  9 Apr 2024 09:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712654197;
-	bh=eD1sSl1LC2w+iXUBFJovazhs1iLnydCk/NsupckT0aA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fkxWqbQb9tHTw4XeMFVjdPuQJghz65DBJErAO9tKG2/fT6EdGB4LPn4HWSqdyRxFk
-	 KDEK3Ex1GHmRB4oYsGlkqOyn+xtZQI1GVQo7mqMedb7ggHTr4/nGLZriJXyEHgq1wn
-	 yuKRuKU4p+YNyQHSv+30LX9wuzmCcvLENKNoN8Lb+0MhSPd4gKva7KVkCqEj7dofPa
-	 wLSA0nE97w5t+XmQoR1bDHHbqOrTRfjPaBBWIwoQnpwdirUEcSbYfQv19z3Naf/qm/
-	 UQ4oWp/E7wzChrn8GXazfFEyxsiOc24YWfnc9bHn1sM48W9YQi/A0Lv9xp36obg6dz
-	 oBLidi4Zcq1wA==
-Date: Tue, 9 Apr 2024 12:16:32 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-Message-ID: <20240409091632.GF4195@unreal>
-References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240408110730.GE8764@unreal>
- <20240408183657.7fb6cc35@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xKkGsbU4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tEIbor9pEQA30BeptpyPyxQfeq6lHOGOFBBdte10kwc=; b=xKkGsbU4yDo8cQiMtUTZFLfVV6
+	EW1omNWvMb2sqkmhkizSWTq8vqEdToNCE5w2vIYW8cS5nXnm9oMx6dCTElFXWKGQFX5Z/Vcyhg3wB
+	/OBCRuVg3bplmpxTN6qRTJqTVIKD575IWhWsYooFihI9r4OHKSMrCe2u2tlYc15jhXJDy8mtJVFqD
+	cdBkrkOk9F67cSdr46++B4aVEq6YPdNkgTBxZKKtKpc5V3xVpwQBMOz0P4aUb8/qYtsfR7yHMn0lT
+	rwv0X0L3PPhKw5mGSkHQhaLUtDVeI8asmrM1/99gk6iYF7hSrnEJeZuaumcZSGlbeYXCbDOpLO9ST
+	M485Stbw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ruBaj-000000028qr-3OZQ;
+	Tue, 09 Apr 2024 13:32:49 +0000
+Date: Tue, 9 Apr 2024 06:32:49 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] xfs: xattr: replace strncpy and check for truncation
+Message-ID: <ZhVDgbRoF9X7JSdt@infradead.org>
+References: <20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,17 +46,28 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240408183657.7fb6cc35@kernel.org>
+In-Reply-To: <20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Apr 08, 2024 at 06:36:57PM -0700, Jakub Kicinski wrote:
-> On Mon, 8 Apr 2024 14:07:30 +0300 Leon Romanovsky wrote:
-> > Jakub, do you want shared branch for this series or should I take
-> > everything through RDMA tree as netdev part is small enough?
-> 
-> Shared branch would be good. Ed has some outstanding patches 
-> to refactor the ethtool RSS API.
+On Fri, Apr 05, 2024 at 07:45:08PM +0000, Justin Stitt wrote:
+> -	memcpy(offset, prefix, prefix_len);
+> -	offset += prefix_len;
+> -	strncpy(offset, (char *)name, namelen);			/* real name */
+> -	offset += namelen;
+> -	*offset = '\0';
+> +
+> +	combined_len = prefix_len + namelen;
+> +
+> +	/* plus one byte for \0 */
+> +	actual_len = scnprintf(offset, combined_len + 1, "%s%s", prefix, name);
+> +
+> +	if (actual_len < combined_len)
 
-Great, I'll wait for a day or two to give people time to review and
-then I'll create a shared branch.
+Shouldn't this be a != ?
 
-Thanks
+That being said I think this is actually wrong - the attr names are
+not NULL-terminated on disk, which is why we have the explicit
+zero terminataion above.
+
+How was this tested?
+
