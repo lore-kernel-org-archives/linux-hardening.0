@@ -1,66 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC12C79CC;
-	Tue,  9 Apr 2024 01:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC8031A66;
+	Tue,  9 Apr 2024 06:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712626620; cv=none; b=pQ2cUbhvIzUVI209GVbmKPAg46jqUBQfKORs+b/4BCLU/yGmpXtLRaGQsiDppGofdOVc78CYhxPwPFahN6b/DEwUYHQirxKiEiibhyWqZtgGyi1XJ6LsDzrqW1kKe5WlIHiQKACTSUI2QcCbYAihWWZ83/R0quJ5Pv0/ckLVWTM=
+	t=1712644860; cv=none; b=V+H/4so7/71J5dy13CL6L5zMC9uYYXrzpIp/IORuQ3JiuN4ykBfbJZUUcmM/LD3lROOxACEayDPPUxUeuROz/sp9OeQuFWGWHo9oIQzfajpj/fn9vw8HJ4pqdqROBAL1D9o9KH5+r6BV8jtZYvnhcylQaGmfbWtgTAjlckpDTMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712626620; c=relaxed/simple;
-	bh=QiC3HcFltPSH+8IPm65nID/AeFgYSMHRNQTGacGvZOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OlPqDd7RN0xVGYqCyLckxZdSrBruv7BJqGjA5gzZYl0lhggzNEGg6kQw1XhVPIc/gehyogbbjW6BMZcEFRZABnOSTrNU//o3hjpm3bnxDMD0M2/lereEiUP0sMev4hyeV/Rog7edsb/pGGxWrtXDZvYbNP8bFYBSy4lF85yVdo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hd2hHsiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712644860; c=relaxed/simple;
+	bh=GZxSAXRKtbGww5a6qfLWU9cez/PQgMG8rq5k8imZh/8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eNu4TEsBkXatl3OkaB5cI/x3k+QIb3g7kuC2Q6/Tws/Yk8mWAId3iqgupjbvfboYKWItkYhxIQjfSFmN8N+Xj+sKY33vYy7KWNvLFQig7RA4FWmzvzAoLyHPUcaaof5NDxV5+IdJTAW+rcQ+TMD5GaH4+VrqOHpq4vW4ade6Wmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XH5Ev4Go; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hd2hHsiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4070C433F1;
-	Tue,  9 Apr 2024 01:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712626620;
-	bh=QiC3HcFltPSH+8IPm65nID/AeFgYSMHRNQTGacGvZOE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hd2hHsiKY2UEOVT1Qo8Is9fP+8NlV9vFq1pFkwShK1QSb4PyHre9do08np2q02862
-	 9enyc9/neSjA2H8IQzUSAIuI0Jg9bInVlMeeSkFbjKLFEkKfXYH3E23E8aaf0Mgc47
-	 aozIVu8MqpYNnSRp5AIC7reAeGwKCQsOGD/kFGd3AOSu/uGW82z66dTTQ8ERoCjF1O
-	 8ALULnvzgVnkSN/RrFC3K/qe6yD1Ze5FMw/FCgYVYiAX7yZ+1ldaqB21TVvl3/CHzv
-	 C6fWmup12uvWZv2IePJduWEJq1PkVuk2mlhVheHPL97CX/t0wZPBdkIeeQp4C3mDsX
-	 Uuok8x4qQIcNQ==
-Date: Mon, 8 Apr 2024 18:36:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Long Li <longli@microsoft.com>,
- Ajay Sharma <sharmaajay@microsoft.com>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Kees Cook <keescook@chromium.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>, Konstantin Taranov
- <kotaranov@microsoft.com>, linux-rdma@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-Message-ID: <20240408183657.7fb6cc35@kernel.org>
-In-Reply-To: <20240408110730.GE8764@unreal>
-References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
-	<20240408110730.GE8764@unreal>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XH5Ev4Go"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DD3C91C0006;
+	Tue,  9 Apr 2024 06:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712644855;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0jM/2z26pHl1ahZGM5qsx5eHbqGHFWgwdLhCwXDhXfU=;
+	b=XH5Ev4GoCWiNGeuljZR2mZAVid1756rDIx9BMDPGPJEPuz/AnpYxKPJM5z4XBXWaP8nema
+	Yoi+rYt/q0fY3akBTuLWmv1cxWW07fpVH1EIhtEyXQWB+rVPB+HzeMmvcMseHZwBPJIO6G
+	P3fKNhH2aeb9DBvtR4t7LTO78ZhXyewJegqV4ze33Xtmwo0+DdHWcnju35j4Wtd2IdP8Bq
+	BQycnPZP0DNTe7cpvXpFNUc+bXfxp36lrm23IXP88OOU4zzrBiur6rZTdAcy9JVi/j8NZO
+	BC49GccZpVP6CKy5JtO8Hmca6lIrXkqwUlokzBzQ8P2iLNB5gFJiZokID1zF3g==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Erick Archer <erick.archer@outlook.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	=?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mtd: maps: sa1100-flash: Prefer struct_size over open coded arithmetic
+Date: Tue,  9 Apr 2024 08:40:51 +0200
+Message-Id: <20240409064051.91775-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To:  <AS8PR02MB7237AC633B0D1D2EBD3C40E98B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: b'3ef4600f12269d489933b3835fe8d43621e4ee6c'
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, 8 Apr 2024 14:07:30 +0300 Leon Romanovsky wrote:
-> Jakub, do you want shared branch for this series or should I take
-> everything through RDMA tree as netdev part is small enough?
+On Sat, 2024-03-30 at 17:55:35 UTC, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+> 
+> As the "info" variable is a pointer to "struct sa_info" and this
+> structure ends in a flexible array:
+> 
+> struct sa_info {
+> 	[...]
+> 	struct sa_subdev_info	subdev[];
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + size * count" in
+> the kzalloc() function.
+> 
+> This way, the code is more readable and safer.
+> 
+> This code was detected with the help of Coccinelle, and audited and
+> modified manually.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
 
-Shared branch would be good. Ed has some outstanding patches 
-to refactor the ethtool RSS API.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
+
+Miquel
