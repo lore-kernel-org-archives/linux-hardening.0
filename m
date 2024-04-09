@@ -1,104 +1,66 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76770A937
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Apr 2024 00:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC12C79CC;
+	Tue,  9 Apr 2024 01:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712623618; cv=none; b=mucwIoSQRZnq2PT7vRFk1v4fCmTJUAkG+AS7Rk8heLeIn7Wq9yIGz78iUBUHkZ/9RcoFLZH4k6/i3GENWE+4X77GU42wTMSb+MPUsSELXI2tY33SVvAcFSLEJzAxlaexCl2NdxDURb3XjFwx8e7s6hQ9xRyvUAd3lz+1ytRn9a0=
+	t=1712626620; cv=none; b=pQ2cUbhvIzUVI209GVbmKPAg46jqUBQfKORs+b/4BCLU/yGmpXtLRaGQsiDppGofdOVc78CYhxPwPFahN6b/DEwUYHQirxKiEiibhyWqZtgGyi1XJ6LsDzrqW1kKe5WlIHiQKACTSUI2QcCbYAihWWZ83/R0quJ5Pv0/ckLVWTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712623618; c=relaxed/simple;
-	bh=kYHCxsBP2vuDTar4fjz9a47pwunjrRYe1uOFuXyMrX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iMLUUXuuwjZoPHazlYV+JYJaTz5BlbXmKuenPRKE0odghiRoC5r9KyEWBSGmprS1Aj0TYoCNELnXRhBmEFjtSgrHpHAell9fHofpO2PX5qU24346gbeHdhPMIlcaz3wKvgYC+tzLURZ+ktmOc6XwkTciL3V9sx3d5eEuvHVICrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QIt39QWc; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712626620; c=relaxed/simple;
+	bh=QiC3HcFltPSH+8IPm65nID/AeFgYSMHRNQTGacGvZOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OlPqDd7RN0xVGYqCyLckxZdSrBruv7BJqGjA5gzZYl0lhggzNEGg6kQw1XhVPIc/gehyogbbjW6BMZcEFRZABnOSTrNU//o3hjpm3bnxDMD0M2/lereEiUP0sMev4hyeV/Rog7edsb/pGGxWrtXDZvYbNP8bFYBSy4lF85yVdo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hd2hHsiK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QIt39QWc"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e6e08d328so692440a12.2
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Apr 2024 17:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712623615; x=1713228415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IAaOrnh08gDDN4c+q0l1+Xwj6sb8iH6us+XtwUqPkIo=;
-        b=QIt39QWcJQWCcbPLAwJAhCqsfgpuCNRof7Jk0m50sxl3dSWRBaM2B9C4NZGZiIjWzy
-         JIM+IM7b3RnZbKBhtvySShO4nye9a7qVxhemKkzUUVEwwCFRXUZtHOP1RktqTaGqLN17
-         5d+mSjREPNcUhCkDxgK1IK/CB6w/i0rUpmsq7FYDEYSdhZs0aYwmA2VwcspjMsMuLUcp
-         LKCyl8FG59HOLunCavSRxjqo+RLYkh51WHU1co1YVKplDKC2aftnExYFkEE8QguGTUfW
-         yNv+USglhaPSPNRMJf0rsQzY2jvhx0RGuTtr2bcsCUSG4GgOwT/XqITftfMoAQTQU43V
-         DNvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712623615; x=1713228415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IAaOrnh08gDDN4c+q0l1+Xwj6sb8iH6us+XtwUqPkIo=;
-        b=pdOigtfvxORYZWZlEZ6NIh+VZBvThq5vgnn2kQ3f3LEsFKN/7zwtvuIoJzXn744G8p
-         zp6csD+pQEY0kdyDkbm554PVSVOJgM3r4mioELNIOAz92lk8JE6Fz5FOYPHcU1Oqw/Hv
-         fhaVD6UoYyD5NWgCRmdTirSO7n9zAk71xroQeEy05joUWmWDjcsaQpmG8Ja6S5s5wFqr
-         XDaLFOcqtkswquaiZwG/1bXgfUTaO6yGbYQrKui44PG/lngumy2ng7GDXwdCtXiKbIHR
-         2JpljFhcaU8ccSOaberbx/yM+QKfZOrNtL3uuRd3Oaf49H9F3Zi52QWGwm/DM9Gaayae
-         Ab0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzVT77ZRxNJdbCweWokKY04MzwNW85pfunx3uEBDFrOlmB2N9QHnGz/xjuMB9jlfl8VAwZs8VmbWQllvby4HZxPmfkZz3go3l6OY/gVVnu
-X-Gm-Message-State: AOJu0YyCKjbYqMPUtD6DSQ+pNzgNcHklnc2T0D/3n6WXfJj3SRXLk1Dt
-	ZbQ6CDIFfZxefml9uxaravUsvXgj6wm5d8Yx85inPXZIbKfx20xcsGhxKUDCLeqeH6iwiL4M+h8
-	yLxz0J+5/kibe0yKC6zZ4+7a6HroJdMEnMr0JlSB3hfM9KGYBhVlW
-X-Google-Smtp-Source: AGHT+IGc0lj+fiC2sXIjuliZLsfp/BjTYjGSVXvVjzrsIb1sivcbJfZxakLmiUfgp5f/pckL+Y6vnZ7DHo+6jCgBIfk=
-X-Received: by 2002:a50:d796:0:b0:56e:2ebc:5c4 with SMTP id
- w22-20020a50d796000000b0056e2ebc05c4mr7572527edi.20.1712623614748; Mon, 08
- Apr 2024 17:46:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hd2hHsiK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4070C433F1;
+	Tue,  9 Apr 2024 01:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712626620;
+	bh=QiC3HcFltPSH+8IPm65nID/AeFgYSMHRNQTGacGvZOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hd2hHsiKY2UEOVT1Qo8Is9fP+8NlV9vFq1pFkwShK1QSb4PyHre9do08np2q02862
+	 9enyc9/neSjA2H8IQzUSAIuI0Jg9bInVlMeeSkFbjKLFEkKfXYH3E23E8aaf0Mgc47
+	 aozIVu8MqpYNnSRp5AIC7reAeGwKCQsOGD/kFGd3AOSu/uGW82z66dTTQ8ERoCjF1O
+	 8ALULnvzgVnkSN/RrFC3K/qe6yD1Ze5FMw/FCgYVYiAX7yZ+1ldaqB21TVvl3/CHzv
+	 C6fWmup12uvWZv2IePJduWEJq1PkVuk2mlhVheHPL97CX/t0wZPBdkIeeQp4C3mDsX
+	 Uuok8x4qQIcNQ==
+Date: Mon, 8 Apr 2024 18:36:57 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Long Li <longli@microsoft.com>,
+ Ajay Sharma <sharmaajay@microsoft.com>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Kees Cook <keescook@chromium.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Shradha Gupta <shradhagupta@linux.microsoft.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, linux-rdma@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
+ mana_cfg_rx_steer_req_v2
+Message-ID: <20240408183657.7fb6cc35@kernel.org>
+In-Reply-To: <20240408110730.GE8764@unreal>
+References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	<20240408110730.GE8764@unreal>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
- <20240405095144.GB2890893@aspen.lan>
-In-Reply-To: <20240405095144.GB2890893@aspen.lan>
-From: Justin Stitt <justinstitt@google.com>
-Date: Mon, 8 Apr 2024 17:46:42 -0700
-Message-ID: <CAFhGd8q99emm1SFJSs=L7Pn0A79vCtDHtTD5XUbVCNh=DDadaQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kdb: replace deprecated strncpy
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jason Wessel <jason.wessel@windriver.com>, Douglas Anderson <dianders@chromium.org>, 
-	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 5, 2024 at 2:51=E2=80=AFAM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> >                       len_tmp =3D strlen(p_tmp);
-> > -                     strncpy(cp, p_tmp+len, len_tmp-len + 1);
-> > +                     strscpy(cp, p_tmp+len, len_tmp-len + 1);
->
-> Again, I really don't think the third argument provides the number of
-> characters in the destination buffer.
->
+On Mon, 8 Apr 2024 14:07:30 +0300 Leon Romanovsky wrote:
+> Jakub, do you want shared branch for this series or should I take
+> everything through RDMA tree as netdev part is small enough?
 
-Right, the third argument is the length of the "remaining" characters
-from the completion point.
-
-if you type "tes" and press tab then kallsyms_symbol_complete() will
-populate p_tmp with "test". Prior to rendering to the user, @cp points
-to "s", we need to catch the user up and print the rest of the symbol
-name since they've already typed "tes" we only need to print out "t".
-
-len_tmp is the length of the entire symbol part as returned by
-kallsyms_symbol_complete() and len is the length of only the
-user-typed symbol. Therefore, the amount of remaining characters to
-print is given by len_tmp-len (and +1 for a NUL-byte).
-
-So, yeah, you're right. This isn't the length of the destination but I
-don't see why we can't use memcpy() (or strscpy()) and have this not
-be considered "broken". The pointer arithmetic checks out.
-
-I tested out strcat and other alternatives and they all seem less readable.
-
->
-> Daniel.
+Shared branch would be good. Ed has some outstanding patches 
+to refactor the ethtool RSS API.
