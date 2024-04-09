@@ -1,93 +1,104 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA74762CD
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Apr 2024 23:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76770A937
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Apr 2024 00:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712618455; cv=none; b=Es9Bl1T1MmZa0XMX9Ib/BNR+dPPREnNo5NkUTWeiqWBBtpu3RY0+R3A5M2L8kxPSkL2ELFeZbngEX73cbiwmflKzNobjG8ygd8na7uF8KC4yrxiz/CHAmiHbe77G4YOyJV1Pal+TVnvZ0+2TDnMMGP6n9wC0V5fe419GJ+1zjWI=
+	t=1712623618; cv=none; b=mucwIoSQRZnq2PT7vRFk1v4fCmTJUAkG+AS7Rk8heLeIn7Wq9yIGz78iUBUHkZ/9RcoFLZH4k6/i3GENWE+4X77GU42wTMSb+MPUsSELXI2tY33SVvAcFSLEJzAxlaexCl2NdxDURb3XjFwx8e7s6hQ9xRyvUAd3lz+1ytRn9a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712618455; c=relaxed/simple;
-	bh=ABYWepUPTpNOjIti27XRT5vSfcJbPAQWDlfjw/lOhZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IQKvEP4LCb2s9rW+3+tbgTUwDF9o5uqvLP4g/oMGX/DmiJevxHEtJUDeJ+iFkbbLhgluMntyfDSfrM+b2A8jtQGYw2SlRnN1ZDUhKLx3WGk2opPi2v0ChRD1o7e9kgmmFLXc8+yEWREiCEn87zzBisto3nB/F4SX1H25DDM/iME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=A7tfDht1; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712623618; c=relaxed/simple;
+	bh=kYHCxsBP2vuDTar4fjz9a47pwunjrRYe1uOFuXyMrX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iMLUUXuuwjZoPHazlYV+JYJaTz5BlbXmKuenPRKE0odghiRoC5r9KyEWBSGmprS1Aj0TYoCNELnXRhBmEFjtSgrHpHAell9fHofpO2PX5qU24346gbeHdhPMIlcaz3wKvgYC+tzLURZ+ktmOc6XwkTciL3V9sx3d5eEuvHVICrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QIt39QWc; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A7tfDht1"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ecee5c08e6so4649734b3a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Apr 2024 16:20:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QIt39QWc"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e6e08d328so692440a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Apr 2024 17:46:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712618454; x=1713223254; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=k+SiT5TlstlnW48g/wuVm80XsJWvG2bQ8P1YkCxCZTo=;
-        b=A7tfDht1QiAasrAarWgQBcp8WjrM0U9g0mZZ4NCgvzol+70SMfDqbCwOKj9bkiy3aN
-         3zM/9kN7bm71kuIetoUPLapxRZOM9Rb0mmWODp0EpDPVy/MbcHOrIrKVRMRe48AKCxmJ
-         GqhxoZFqH0naH8qdkMPcGDY6ABkAGir+Zwq1w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712618454; x=1713223254;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1712623615; x=1713228415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k+SiT5TlstlnW48g/wuVm80XsJWvG2bQ8P1YkCxCZTo=;
-        b=RMFSW8cT9V5qeB1ujdrE/raReyZMknBttp2HyT66WbQHtjSgxgguYcqRLmOkX9LdNp
-         D/fbRaR0t5HVE2D0c/t0+2o/n2k9pKqD52aqD6brIeyi3g0PtDID+BjXWe6Wy+wsVo9t
-         19xlTNEVOLVAtPBpv/cfNEHSxQtZR1TzhC2jfiqsg6AsKGCNvq9Yk8e5RngZkRNJJ/Ct
-         IfSCzXKt1zJ6jwAMQl0HrSrvUTaCa3Ov4jSlwOuo+T7DlBXVGDygO8DrAE0V7M6QldsZ
-         gL7D9x3D6BZkLB9n9FP/L4tf41EQilXrOI53BibRBWoFEBThU3CdxSw93LrDrAjnVNJ8
-         lOnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJL49DUQXkikY334I/EKYLmecBeYRUHJanoGYNJAVDumjT1uI4anhBc0YOi4b40NTZ0+aoty77LJouExrANmk1rbagJVH8xX+r5NEzPAZy
-X-Gm-Message-State: AOJu0YwnzFhYonl73j3NLshilWnTNWF7mEDHxGGw5DXVx8iLCM0+K+Tt
-	sLdlNNz5EGtC3DhThlh7dQr2vGJo+thd3+rY1/nfWhaT4GJddZUJkbjTKbXGfQ==
-X-Google-Smtp-Source: AGHT+IFKJzLp05fcugYDvokyR1XjAmUqpeqvOeGNr/xDGBIzmxdVQH9EoFRUIn9jOHtI4yO1H7vVRA==
-X-Received: by 2002:a05:6300:8085:b0:1a7:3365:d8ed with SMTP id ap5-20020a056300808500b001a73365d8edmr9271766pzc.29.1712618453799;
-        Mon, 08 Apr 2024 16:20:53 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 12-20020a170902e9cc00b001defa97c6basm7517122plk.235.2024.04.08.16.20.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 16:20:53 -0700 (PDT)
-Date: Mon, 8 Apr 2024 16:20:52 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>
-Subject: Re: [PATCH v3] net: dsa: lan9303: use ethtool_puts() for
- lan9303_get_strings()
-Message-ID: <202404081620.D050527@keescook>
-References: <20240408-strncpy-drivers-net-dsa-lan9303-core-c-v3-1-0c313694d25b@google.com>
+        bh=IAaOrnh08gDDN4c+q0l1+Xwj6sb8iH6us+XtwUqPkIo=;
+        b=QIt39QWcJQWCcbPLAwJAhCqsfgpuCNRof7Jk0m50sxl3dSWRBaM2B9C4NZGZiIjWzy
+         JIM+IM7b3RnZbKBhtvySShO4nye9a7qVxhemKkzUUVEwwCFRXUZtHOP1RktqTaGqLN17
+         5d+mSjREPNcUhCkDxgK1IK/CB6w/i0rUpmsq7FYDEYSdhZs0aYwmA2VwcspjMsMuLUcp
+         LKCyl8FG59HOLunCavSRxjqo+RLYkh51WHU1co1YVKplDKC2aftnExYFkEE8QguGTUfW
+         yNv+USglhaPSPNRMJf0rsQzY2jvhx0RGuTtr2bcsCUSG4GgOwT/XqITftfMoAQTQU43V
+         DNvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712623615; x=1713228415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IAaOrnh08gDDN4c+q0l1+Xwj6sb8iH6us+XtwUqPkIo=;
+        b=pdOigtfvxORYZWZlEZ6NIh+VZBvThq5vgnn2kQ3f3LEsFKN/7zwtvuIoJzXn744G8p
+         zp6csD+pQEY0kdyDkbm554PVSVOJgM3r4mioELNIOAz92lk8JE6Fz5FOYPHcU1Oqw/Hv
+         fhaVD6UoYyD5NWgCRmdTirSO7n9zAk71xroQeEy05joUWmWDjcsaQpmG8Ja6S5s5wFqr
+         XDaLFOcqtkswquaiZwG/1bXgfUTaO6yGbYQrKui44PG/lngumy2ng7GDXwdCtXiKbIHR
+         2JpljFhcaU8ccSOaberbx/yM+QKfZOrNtL3uuRd3Oaf49H9F3Zi52QWGwm/DM9Gaayae
+         Ab0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUzVT77ZRxNJdbCweWokKY04MzwNW85pfunx3uEBDFrOlmB2N9QHnGz/xjuMB9jlfl8VAwZs8VmbWQllvby4HZxPmfkZz3go3l6OY/gVVnu
+X-Gm-Message-State: AOJu0YyCKjbYqMPUtD6DSQ+pNzgNcHklnc2T0D/3n6WXfJj3SRXLk1Dt
+	ZbQ6CDIFfZxefml9uxaravUsvXgj6wm5d8Yx85inPXZIbKfx20xcsGhxKUDCLeqeH6iwiL4M+h8
+	yLxz0J+5/kibe0yKC6zZ4+7a6HroJdMEnMr0JlSB3hfM9KGYBhVlW
+X-Google-Smtp-Source: AGHT+IGc0lj+fiC2sXIjuliZLsfp/BjTYjGSVXvVjzrsIb1sivcbJfZxakLmiUfgp5f/pckL+Y6vnZ7DHo+6jCgBIfk=
+X-Received: by 2002:a50:d796:0:b0:56e:2ebc:5c4 with SMTP id
+ w22-20020a50d796000000b0056e2ebc05c4mr7572527edi.20.1712623614748; Mon, 08
+ Apr 2024 17:46:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240408-strncpy-drivers-net-dsa-lan9303-core-c-v3-1-0c313694d25b@google.com>
+References: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
+ <20240405095144.GB2890893@aspen.lan>
+In-Reply-To: <20240405095144.GB2890893@aspen.lan>
+From: Justin Stitt <justinstitt@google.com>
+Date: Mon, 8 Apr 2024 17:46:42 -0700
+Message-ID: <CAFhGd8q99emm1SFJSs=L7Pn0A79vCtDHtTD5XUbVCNh=DDadaQ@mail.gmail.com>
+Subject: Re: [PATCH v2] kdb: replace deprecated strncpy
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jason Wessel <jason.wessel@windriver.com>, Douglas Anderson <dianders@chromium.org>, 
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 08, 2024 at 09:01:57PM +0000, Justin Stitt wrote:
-> This pattern of strncpy with some pointer arithmetic setting fixed-sized
-> intervals with string literal data is a bit weird so let's use
-> ethtool_puts() as this has more obvious behavior and is less-error
-> prone.
-> 
-> Nicely, we also get to drop a usage of the now deprecated strncpy() [1].
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+On Fri, Apr 5, 2024 at 2:51=E2=80=AFAM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> >                       len_tmp =3D strlen(p_tmp);
+> > -                     strncpy(cp, p_tmp+len, len_tmp-len + 1);
+> > +                     strscpy(cp, p_tmp+len, len_tmp-len + 1);
+>
+> Again, I really don't think the third argument provides the number of
+> characters in the destination buffer.
+>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Right, the third argument is the length of the "remaining" characters
+from the completion point.
 
--- 
-Kees Cook
+if you type "tes" and press tab then kallsyms_symbol_complete() will
+populate p_tmp with "test". Prior to rendering to the user, @cp points
+to "s", we need to catch the user up and print the rest of the symbol
+name since they've already typed "tes" we only need to print out "t".
+
+len_tmp is the length of the entire symbol part as returned by
+kallsyms_symbol_complete() and len is the length of only the
+user-typed symbol. Therefore, the amount of remaining characters to
+print is given by len_tmp-len (and +1 for a NUL-byte).
+
+So, yeah, you're right. This isn't the length of the destination but I
+don't see why we can't use memcpy() (or strscpy()) and have this not
+be considered "broken". The pointer arithmetic checks out.
+
+I tested out strcat and other alternatives and they all seem less readable.
+
+>
+> Daniel.
