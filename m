@@ -1,44 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9D938DC9;
-	Tue,  9 Apr 2024 21:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9C412F381;
+	Tue,  9 Apr 2024 21:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712697687; cv=none; b=W97BRZZUDq1iRATssq1sLryU7ITN28Udp9K5WlmWnAfyUg8gRFqewc4FkYXEEldjAVxROvrQf8NJNQV18bX6vw2dTt0FwjYMqAQH/JlCqmOuqdBKSmdZ2vtsAR1j5IdmK6nsRvCSw5cNHMAFztOHQcJ20tSfDMWxHt+hFcQDfR8=
+	t=1712699062; cv=none; b=pR3SkwVmediL7WE7q3Ps9KTQoqUd0Vr2M8+lKwUUNVfMGWQTlL0KHcEip6MaS9ciF8XCtO7BNEl/kGX8i/qx5WsXmZSv0S8ZLuqVP2JmAG2u3EBdrE+j76X2ju3+MevjM2wiL0wn/fInYQtvrSuMXCqdV7Jf8RIUdRhl77iTzEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712697687; c=relaxed/simple;
-	bh=eqOTlSxbGZgE/xs+yZM0Bgc6tICu1cceOLKGt81zjRg=;
+	s=arc-20240116; t=1712699062; c=relaxed/simple;
+	bh=gmPhoEZQy7H8+eEDT13YM1nQeRhuIBur3SEMSC6wVTg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rV2A9tRCQ8f+sGg4laFVspAogO1jNf1CX61PZ59QrfxIN/wVJK7H1yD0IOirFCMad/dMqP5CyW3Mp2blaOoFHew09UQjr1hnPArrq8dOtRBbvhccpO9yqJF9zGkycWqwcvpX2H6APhSD/Vn3aKWS2JvcXAzA9j294EQjhOgQ+nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4725C433C7;
-	Tue,  9 Apr 2024 21:21:23 +0000 (UTC)
-Date: Tue, 9 Apr 2024 17:23:58 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Lorenzo
- Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
- <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
- <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <20240409172358.34ea19f0@gandalf.local.home>
-In-Reply-To: <20240409210254.660888920@goodmis.org>
-References: <20240409210254.660888920@goodmis.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=slKe03b1UeHzx4cD3a2XZMdVAQINfWIKxLEnq2lnnR2IHQTqq/qSc/Pgrwa/wkX4qfKqVGmQi3pYsbiUVJjki/2QlaPZVT7EOM5zY+9hZHGTg+rc3Us0djRpUe+snQSU2YxG1/MGGhueq0NUUl5LeyMWige/BP3BV2YhYS0yRG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBeC0vs6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBeC0vs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51721C433F1;
+	Tue,  9 Apr 2024 21:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712699061;
+	bh=gmPhoEZQy7H8+eEDT13YM1nQeRhuIBur3SEMSC6wVTg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kBeC0vs6D2fvf+lsS/n8G0lta7BNfZAuk1/4mf/TRvmI4GVp05cmjiZ96zfT2IRvz
+	 XMzlzbe1pUq4KXjae9qBQivng6f+ciojwBrNToODd/XXXE2LiQLs12GREzh5sZPhfY
+	 7rvi8THMxQKfLg+xdwQDMh9YyfjT0wLMmpmfeyRwvnsd4942DAMDc5drnu3st4ATr4
+	 6Qp+B7XtXqjl/a9Elw14myYvdSHMvbMft5p3W3K33PqcXWHTA4MIGLoSDQKtGHPCU1
+	 2qohVAGUHihmNDPFH0Dy+XSeGTWdSWT8KA4X3jJLzQL8Or8pRD8UqZIexkxTgCqKPG
+	 b9AkuzVskncag==
+Date: Tue, 9 Apr 2024 14:44:19 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Edward Cree <ecree.xilinx@gmail.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Erick Archer
+ <erick.archer@outlook.com>, Long Li <longli@microsoft.com>, Ajay Sharma
+ <sharmaajay@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Kees Cook
+ <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shradha Gupta
+ <shradhagupta@linux.microsoft.com>, Konstantin Taranov
+ <kotaranov@microsoft.com>, linux-rdma@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
+ mana_cfg_rx_steer_req_v2
+Message-ID: <20240409144419.6dc12ebb@kernel.org>
+In-Reply-To: <ca8a0df8-b178-31ff-026f-b2d298f3aa84@gmail.com>
+References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	<20240408110730.GE8764@unreal>
+	<20240408183657.7fb6cc35@kernel.org>
+	<ca8a0df8-b178-31ff-026f-b2d298f3aa84@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,16 +61,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 09 Apr 2024 17:02:54 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 9 Apr 2024 18:01:40 +0100 Edward Cree wrote:
+> > Shared branch would be good. Ed has some outstanding patches 
+> > to refactor the ethtool RSS API.  
+> 
+> For the record I am extremely unlikely to have time to get those
+>  done this cycle :(
+> Though in any case fwiw it doesn't look like this series touches
+>  anything that would conflict; mana doesn't appear to support
+>  custom RSS contexts and besides the changes are well away from
+>  the ethtool API handling.
 
->   memmap=12M*4096:oops   ramoops.mem_name=oops
-
-I forgot to mention that this makes it trivial for any machine that doesn't
-clear memory on soft-reboot, to enable console ramoops (to have access to
-the last boot dmesg without needing serial).
-
-I tested this on a couple of my test boxes and on QEMU, and it works rather
-well.
-
--- Steve
+Better safe than sorry, since the change applies cleanly on an -rc tag
+having it applied to both trees should be very little extra work.
