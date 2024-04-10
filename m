@@ -1,82 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97781156C67;
-	Wed, 10 Apr 2024 15:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6D5CB5
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 18:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712764422; cv=none; b=X7MjGwJ3nW87M/fh0Iu7JnpcCedf1kOUKN6z0W2qEOpGJqHiKIwvNS0yi5suUC3d0qAzaCoIju7RpYjhwPf3XfRNaHMj8cwPlj3YWku6zbgzhAWMU3SRs8s6wSYIn3MZDbpTB16b47yfM0ubgWHMzec5QB9eOajroCxCmJZxqws=
+	t=1712774033; cv=none; b=hSvyyPzIJY1pkbMVOypYV8TmNgK/Wo+vdvkd3hMzC1ZKT+VryUlUX4Br3wsXgxHbvNG1k3NfrZUrS5YiCns0v2IefaK421+RGI2fwBitgKFKW3sd79b358/ZrNT/MgNxaMFbB+hwSUGds/tCMfKUU8U+/K9+VW+Sjln3i9EB3zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712764422; c=relaxed/simple;
-	bh=Yj2mjB7xGY/t85UZ8jq4NsVg3CMycDTWl975T4rbgkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZwmWoZmQFVDAGO02ysKpSCNcLuR3WNGqdqZ3QCAKXEIK+iFbbAtW4fUYGwJ1ejXV+jPXX6qxgWqJComEEoe0hp2a324sv9lsqxsaiAFZgk6NWBTWIRMskoAw6aI+DpRK7Ng2l/jebs/LFKffHHXV+L044vfxFo8cSlcwvx6ONis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E3CC433F1;
-	Wed, 10 Apr 2024 15:53:40 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:56:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Jeff Layton
- <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
-Message-ID: <20240410115617.14804133@gandalf.local.home>
-In-Reply-To: <ZhazHrz4SxBs+BFD@tissot.1015granger.net>
-References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-	<20240410113614.39b61b0d@gandalf.local.home>
-	<ZhazHrz4SxBs+BFD@tissot.1015granger.net>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712774033; c=relaxed/simple;
+	bh=AXG6RJVXKDt+/DjwiwTtJ2dE7tTZOrDLGSw7IO1r/+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J4zTCoDoJzHeyCBS81ya6bs/cFhpKdkG4iy8rz09snBGoXcUeZgQvGGuHkEyZodFtKS4FEicUAcxoYXj8Q9YiIXYecwrXEB8S07Z2M2qGn5Ef4kFePZd71yZ+1YohQGPqK3oWY1/BOjZQC5d9uY6EkS8N9ATYDpPGKiWTo9Zq0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VWR5Y3wJ; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VWR5Y3wJ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso2417151b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 11:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712774032; x=1713378832; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hVCerfmQhkum0yIRABrdvwqbTpQW1aJkY1zYTHRoGBE=;
+        b=VWR5Y3wJ+xp9jDf40vXWpj/h8dt6K5tZdr21vslB207blGuHt5PyaFDsFCfao1D9PG
+         EWmb3J+ghTxgfG89ERErGbi4a/nYPxm/eevNkvDqQ9k5blgGqbgJHNUMQ97ujRBo/Fnp
+         7guhFJAuHPUKUWnZvjmaL501yFemF8vc8eYZM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712774032; x=1713378832;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hVCerfmQhkum0yIRABrdvwqbTpQW1aJkY1zYTHRoGBE=;
+        b=cdh9odJZhFrZvObSjZaUheSOng1Fd9QDd75qfz5fwYig5Z14LCN1/n5KkGXMRfXIDs
+         11MGo64Y3kj6FMPJdotK1xNSYIlpTcd9Q6m8JMdIu+4urF07kCFsAH0mlIbdTfge2dj9
+         dJzlRbzwjsa+2TkXzD2/B0QjjqUCtvgkVmKPKarjZYuAeefowDi475ke6bixVUdNMkHs
+         eE0QGHWZEIkD5EGkeg+hUeZVYKP4EjnqtFMFcXCXDeb8/tL8sgpa0J2S86qkmIm8XIc8
+         z9B0fsDuUn4QjTKiOH85G0OVJRUtjr7H0LGLatNPnSG0+USSs9XuR/xwdndYqZ4jT/gT
+         PUAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMeuxigkCspQ8DzBqAqD3pnUe4gahgvLJd5h62Svyznnn2EMSRVjUvyZupM2uY7Tk1t5ak26+YpAlIP9fHDTWPBloLDofuBBmzV+AHje30
+X-Gm-Message-State: AOJu0YyEZw+4Jo+ZZ50opSJHvm6B8+TdDSbkdhzybhcN2ZytrVdK1zM/
+	bQtCD9Dr+CdYC95snweWlKcqY2rwX7dn6BQelt/VugcJDSf0LLmhzsPiEOGbGg==
+X-Google-Smtp-Source: AGHT+IG7MfM1fYKWn8ghxeYU/65fuLZA+NPjkKP9uCGydgjLdCYH2Vdfb9Q7ZcXytxDQ7da1w5ozew==
+X-Received: by 2002:a05:6a00:9288:b0:6ea:d794:ccee with SMTP id jw8-20020a056a00928800b006ead794cceemr3862401pfb.17.1712774031421;
+        Wed, 10 Apr 2024 11:33:51 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i6-20020a056a00004600b006ead618c010sm10352691pfk.192.2024.04.10.11.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 11:33:50 -0700 (PDT)
+Date: Wed, 10 Apr 2024 11:33:50 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	Charles Bertsch <cbertsch@cox.net>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Sathya Prakash <sathya.prakash@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Nilesh Javali <njavali@marvell.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Himanshu Madhani <himanshu.madhani@oracle.com>,
+	linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH 1/5] string.h: Introduce memtostr() and memtostr_pad()
+Message-ID: <202404101132.7D845EF323@keescook>
+References: <20240410021833.work.750-kees@kernel.org>
+ <20240410023155.2100422-1-keescook@chromium.org>
+ <CAHp75VeOQ+x3WgFeG89X=kGUo=w=ztkdBkA3_K6yy+2mWV83AA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeOQ+x3WgFeG89X=kGUo=w=ztkdBkA3_K6yy+2mWV83AA@mail.gmail.com>
 
-On Wed, 10 Apr 2024 11:41:18 -0400
-Chuck Lever <chuck.lever@oracle.com> wrote:
-
-> > If anything, it needs to be:
-> > 
-> > 		__string_len(acceptor, data, len)
-> > 
-> > as the macro code has changed recently, and the current code will crash!  
+On Wed, Apr 10, 2024 at 07:08:10AM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 10, 2024 at 5:31 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Another ambiguous use of strncpy() is to copy from strings that may not
+> > be NUL-terminated. These cases depend on having the destination buffer
+> > be explicitly larger than the source buffer's maximum size, having
+> > the size of the copy exactly match the source buffer's maximum size,
+> > and for the destination buffer to get explicitly NUL terminated.
+> >
+> > This usually happens when parsing protocols or hardware character arrays
+> > that are not guaranteed to be NUL-terminated. The code pattern is
+> > effectively this:
+> >
+> >         char dest[sizeof(src) + 1];
+> >
+> >         strncpy(dest, src, sizeof(src));
+> >         dest[sizeof(dest) - 1] = '\0';
+> >
+> > In practice it usually looks like:
+> >
+> > struct from_hardware {
+> >         ...
+> >         char name[HW_NAME_SIZE] __nonstring;
+> >         ...
+> > };
+> >
+> >         struct from_hardware *p = ...;
+> >         char name[HW_NAME_SIZE + 1];
+> >
+> >         strncpy(name, p->name, HW_NAME_SIZE);
+> >         name[NW_NAME_SIZE] = '\0';
+> >
+> > This cannot be replaced with:
+> >
+> >         strscpy(name, p->name, sizeof(name));
+> >
+> > because p->name is smaller and not NUL-terminated, so FORTIFY will
+> > trigger when strnlen(p->name, sizeof(name)) is used. And it cannot be
+> > replaced with:
+> >
+> >         strscpy(name, p->name, sizeof(p->name));
+> >
+> > because then "name" may contain a 1 character early truncation of
+> > p->name.
+> >
+> > Provide an unambiguous interface for converting a maybe not-NUL-terminated
+> > string to a NUL-terminated string, with compile-time buffer size checking
+> > so that it can never fail at runtime: memtostr() and memtostr_pad(). Also
+> > add KUnit tests for both.
 > 
-> A general question:
-> 
-> Is there a test suite we should run regularly to build some
-> confidence in the kernel's observability apparatus? We're building
-> a menagerie of tests around kdevops, and one area where we know
-> there is a testing gap is the tracepoints in NFSD and SunRPC.
+> Obvious question, why can't strscpy() be fixed for this corner case?
 
-I try to add self tests within the macros. As __assign_str() is going to
-turn into just __assign_str(field) (instead of __assign_str(field, src)), I
-added a test to make sure what was passed to __string() is also what
-__assign_str() gets. But using strcpy() in place of __assign_str() really
-is doing something that one should not be doing.
+We would lose the ability to detect normal out-of-bounds reads, or at
+least make them ambiguous. I really want these APIs to have distinct and
+dependable semantics/behaviors.
 
-There's checks in the tracepoint code as well for things like referencing a
-pointer that was not saved in the event, and other things. But a generic
-test on a custom trace event, I don't really have.
-
-Note, you could enable CONFIG_TRACE_EVENT_INJECT where an "inject" file is
-created, and you can write into it:
-
- # cd /sys/kernel/tracing
- # echo 1 > events/rpcgss/rpcgss_context/enable
- # echo 'expiry=123456 now=222' > events/rpcgss/rpcgss_context/inject
- # cat trace
-bash-843     [001] .....   720.083189: rpcgss_context: win_size=0 expiry=123456 now=222 timeout=0 acceptor=
-
-And you could use that for testing.
-
--- Steve
+-- 
+Kees Cook
