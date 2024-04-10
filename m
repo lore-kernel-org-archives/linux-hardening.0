@@ -1,145 +1,147 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6D5CB5
-	for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 18:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955A5180A9F
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 20:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712774033; cv=none; b=hSvyyPzIJY1pkbMVOypYV8TmNgK/Wo+vdvkd3hMzC1ZKT+VryUlUX4Br3wsXgxHbvNG1k3NfrZUrS5YiCns0v2IefaK421+RGI2fwBitgKFKW3sd79b358/ZrNT/MgNxaMFbB+hwSUGds/tCMfKUU8U+/K9+VW+Sjln3i9EB3zM=
+	t=1712780067; cv=none; b=nLRBIHmKkybO479YOT7x93Zy/I7rWrZyIuAK8lMndZBKZgCdO4EG83OVTPYtHlE+KThAxEEjZ1LrOO6Hf/cLhL7XiV/XWtzyqJFNst4Ie/Pyg9sNohvbK7gQvN2ZatlL4gt+AnZftdl/Bbo9TwOOEZ2zqxxg3SoKvoqeUXNjhTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712774033; c=relaxed/simple;
-	bh=AXG6RJVXKDt+/DjwiwTtJ2dE7tTZOrDLGSw7IO1r/+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J4zTCoDoJzHeyCBS81ya6bs/cFhpKdkG4iy8rz09snBGoXcUeZgQvGGuHkEyZodFtKS4FEicUAcxoYXj8Q9YiIXYecwrXEB8S07Z2M2qGn5Ef4kFePZd71yZ+1YohQGPqK3oWY1/BOjZQC5d9uY6EkS8N9ATYDpPGKiWTo9Zq0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VWR5Y3wJ; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712780067; c=relaxed/simple;
+	bh=1WH+WjNKIPoW9LpNzdvZ48+fexOkK0Angcb6mkMyhY8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZyAaVTskaCn/oAeeJ62ScmAhOyxuda3n8rruT5awdbsdUuDmj3t/S80dxluvhsQWu1wm44z3krmBwyQveU63887GYPuUkr+j9Lp8+wWFuS4A6Dgk0JjyDCq56xErHa6M4/u//TZyOu44LsmZD0AmlpgAM/YQhDbJK/gvrFZDICc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EDJ5AWgD; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VWR5Y3wJ"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso2417151b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 11:33:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDJ5AWgD"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6dbdcfd39so12393405276.2
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 13:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712774032; x=1713378832; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hVCerfmQhkum0yIRABrdvwqbTpQW1aJkY1zYTHRoGBE=;
-        b=VWR5Y3wJ+xp9jDf40vXWpj/h8dt6K5tZdr21vslB207blGuHt5PyaFDsFCfao1D9PG
-         EWmb3J+ghTxgfG89ERErGbi4a/nYPxm/eevNkvDqQ9k5blgGqbgJHNUMQ97ujRBo/Fnp
-         7guhFJAuHPUKUWnZvjmaL501yFemF8vc8eYZM=
+        d=google.com; s=20230601; t=1712780064; x=1713384864; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VObyo2wyvz3H1owllIXU/4cuDgtcb197tJY3OggHujs=;
+        b=EDJ5AWgD1aZ/49AHlPUuaiyIcy+IGZUSmEqLffp0/YYukvcK5zZIUcIu0CILOuTe+f
+         EmaYP5hfpAQJZruHxx0+A1FzO7KZdAPkiJLAnLwvawbXAg8lSWu8aDu7y2NPnHncCpmT
+         RFU6Dq6KSyytx+xwxHgjR2nDsOyGxHZb3hrejPtm7DA/7OY4mwGsmZ7P+EzEry/fZuvH
+         PYANxbe45Q3flJR2dw9NH+NvCHUR1mzb8crMqPBKHfzVmNKsbLauKsVxCUBRK+SSAn5r
+         54oIO+K27tW+5ONi6/+q7XBeOm9Sv+55Ujq7GO87htTZSR35Q+n8SrkCTwQ7WlUDt5Ah
+         0eXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712774032; x=1713378832;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hVCerfmQhkum0yIRABrdvwqbTpQW1aJkY1zYTHRoGBE=;
-        b=cdh9odJZhFrZvObSjZaUheSOng1Fd9QDd75qfz5fwYig5Z14LCN1/n5KkGXMRfXIDs
-         11MGo64Y3kj6FMPJdotK1xNSYIlpTcd9Q6m8JMdIu+4urF07kCFsAH0mlIbdTfge2dj9
-         dJzlRbzwjsa+2TkXzD2/B0QjjqUCtvgkVmKPKarjZYuAeefowDi475ke6bixVUdNMkHs
-         eE0QGHWZEIkD5EGkeg+hUeZVYKP4EjnqtFMFcXCXDeb8/tL8sgpa0J2S86qkmIm8XIc8
-         z9B0fsDuUn4QjTKiOH85G0OVJRUtjr7H0LGLatNPnSG0+USSs9XuR/xwdndYqZ4jT/gT
-         PUAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMeuxigkCspQ8DzBqAqD3pnUe4gahgvLJd5h62Svyznnn2EMSRVjUvyZupM2uY7Tk1t5ak26+YpAlIP9fHDTWPBloLDofuBBmzV+AHje30
-X-Gm-Message-State: AOJu0YyEZw+4Jo+ZZ50opSJHvm6B8+TdDSbkdhzybhcN2ZytrVdK1zM/
-	bQtCD9Dr+CdYC95snweWlKcqY2rwX7dn6BQelt/VugcJDSf0LLmhzsPiEOGbGg==
-X-Google-Smtp-Source: AGHT+IG7MfM1fYKWn8ghxeYU/65fuLZA+NPjkKP9uCGydgjLdCYH2Vdfb9Q7ZcXytxDQ7da1w5ozew==
-X-Received: by 2002:a05:6a00:9288:b0:6ea:d794:ccee with SMTP id jw8-20020a056a00928800b006ead794cceemr3862401pfb.17.1712774031421;
-        Wed, 10 Apr 2024 11:33:51 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i6-20020a056a00004600b006ead618c010sm10352691pfk.192.2024.04.10.11.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 11:33:50 -0700 (PDT)
-Date: Wed, 10 Apr 2024 11:33:50 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	Charles Bertsch <cbertsch@cox.net>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Nilesh Javali <njavali@marvell.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Himanshu Madhani <himanshu.madhani@oracle.com>,
-	linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH 1/5] string.h: Introduce memtostr() and memtostr_pad()
-Message-ID: <202404101132.7D845EF323@keescook>
-References: <20240410021833.work.750-kees@kernel.org>
- <20240410023155.2100422-1-keescook@chromium.org>
- <CAHp75VeOQ+x3WgFeG89X=kGUo=w=ztkdBkA3_K6yy+2mWV83AA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1712780064; x=1713384864;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VObyo2wyvz3H1owllIXU/4cuDgtcb197tJY3OggHujs=;
+        b=EYsgeS8ZOC6lg/HTxAfdcADr7M83+q9jtsnA5ZnSg6LgVlCcJaQlzsGaVTrci9ypsD
+         MPJDpATGq40eaes3XvbnotrAbHhNFeE0zHMQyBZ8INDOW3KJMDKtDmbR+WAODiu0nNEX
+         R+yzSwVfJ2R8fjzyQaDf1JxeERSL62elHoop70YCfK9iT0M/KownzWs4jgmdp1/HUl1c
+         pYUXMlwlgBcVTXDRLjf4Gx7wG7+c56DA0UGlJkYkeomvj+8qdM0Ym2TaJruzlVXWA8WN
+         Rx2xLk2/zK3VSsGfka3rbvf8F7lPu+rBVoP/q72W+42zdlnBeq9OOYTgjZgKRHMZL1Mf
+         qiMw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPWJsEOhwHtYFqbkNewkPPZHmr3/iQKXvZTIDMLY/F4/deFJTIiN6K85/x5XDi8A0dIRjFWuOA1cC/CgvscEA9PN5HKnI3msowCRwfngZT
+X-Gm-Message-State: AOJu0Yzsr+q0+jGIs/Yd6qp7eaMbkXk7qwYsRwJgdOdDZvYbDx//k390
+	E262agSBaT+KjLIsgGSVxNScWU3ycFI2dSos0gsPX3S1yhYg9Ua71yc2monfbDouVMIJ9h7v4uh
+	rucPt00JYApPJ3WM0n153zA==
+X-Google-Smtp-Source: AGHT+IHa45ZNDiclIsv5Sga0Hjq5bIte66tVL8HHIr9d2dNOeh9g96p0pD1RhZHeJDymW9OZnE7gm7oheZV8TTMcyQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:2b12:b0:dda:c57c:b69b with
+ SMTP id fi18-20020a0569022b1200b00ddac57cb69bmr1133895ybb.0.1712780064614;
+ Wed, 10 Apr 2024 13:14:24 -0700 (PDT)
+Date: Wed, 10 Apr 2024 20:14:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeOQ+x3WgFeG89X=kGUo=w=ztkdBkA3_K6yy+2mWV83AA@mail.gmail.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIABPzFmYC/4WNTQ6DIBCFr2Jm3WkGtL+r3qNxQSngJBYMEKIx3
+ r3UC3T5vbz3vRWSiWwS3JsVoimcOPgK8tCAHpR3BvldGSTJjjo6YcrR62nBWeUcMU0jZ4mkWmU
+ t6bOSBHU6RWN53rXPvvLAKYe47C9F/NI/wiJQ4I3US1xlW4uXhwvBjeaowwf6bdu+YhMt37kAA AA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712780063; l=2553;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=1WH+WjNKIPoW9LpNzdvZ48+fexOkK0Angcb6mkMyhY8=; b=3iIZtw/QRxaTt6QPXeP2E9uQENXAhZX40wZW58IkOJgGmBYfzOVD5l3bUeBuJS5NdjDHhCjWW
+ XDjbGw120zZC4Yb/cDVW/a18g6TEjYIZBObC2bY0IzsXrphsOxMl2Cy
+X-Mailer: b4 0.12.3
+Message-ID: <20240410-strncpy-xattr-split2-v2-1-e6e03ebaeb65@google.com>
+Subject: [PATCH v2] xfs: xattr: replace strncpy and check for truncation
+From: Justin Stitt <justinstitt@google.com>
+To: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Apr 10, 2024 at 07:08:10AM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 10, 2024 at 5:31 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Another ambiguous use of strncpy() is to copy from strings that may not
-> > be NUL-terminated. These cases depend on having the destination buffer
-> > be explicitly larger than the source buffer's maximum size, having
-> > the size of the copy exactly match the source buffer's maximum size,
-> > and for the destination buffer to get explicitly NUL terminated.
-> >
-> > This usually happens when parsing protocols or hardware character arrays
-> > that are not guaranteed to be NUL-terminated. The code pattern is
-> > effectively this:
-> >
-> >         char dest[sizeof(src) + 1];
-> >
-> >         strncpy(dest, src, sizeof(src));
-> >         dest[sizeof(dest) - 1] = '\0';
-> >
-> > In practice it usually looks like:
-> >
-> > struct from_hardware {
-> >         ...
-> >         char name[HW_NAME_SIZE] __nonstring;
-> >         ...
-> > };
-> >
-> >         struct from_hardware *p = ...;
-> >         char name[HW_NAME_SIZE + 1];
-> >
-> >         strncpy(name, p->name, HW_NAME_SIZE);
-> >         name[NW_NAME_SIZE] = '\0';
-> >
-> > This cannot be replaced with:
-> >
-> >         strscpy(name, p->name, sizeof(name));
-> >
-> > because p->name is smaller and not NUL-terminated, so FORTIFY will
-> > trigger when strnlen(p->name, sizeof(name)) is used. And it cannot be
-> > replaced with:
-> >
-> >         strscpy(name, p->name, sizeof(p->name));
-> >
-> > because then "name" may contain a 1 character early truncation of
-> > p->name.
-> >
-> > Provide an unambiguous interface for converting a maybe not-NUL-terminated
-> > string to a NUL-terminated string, with compile-time buffer size checking
-> > so that it can never fail at runtime: memtostr() and memtostr_pad(). Also
-> > add KUnit tests for both.
-> 
-> Obvious question, why can't strscpy() be fixed for this corner case?
+strncpy is deprecated and as such we should prefer less ambiguous and
+more robust string interfaces [1].
 
-We would lose the ability to detect normal out-of-bounds reads, or at
-least make them ambiguous. I really want these APIs to have distinct and
-dependable semantics/behaviors.
+There's a lot of manual memory management to get a prefix and name into
+a string. Let's use an easier to understand and more robust interface in
+scnprintf() to accomplish the same task while enabling us to check for
+possible truncation, resulting in a soft warning.
 
--- 
-Kees Cook
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- use "%.*s" format specifier
+- use != instead of < to check for truncation (Christoph H.)
+- Link to v1: https://lore.kernel.org/r/20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com
+---
+Tested with https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+but using scripts + image from: https://github.com/tytso/xfstests-bld
+
+test results: https://pastebin.com/44bjhpCp (no failures)
+
+Split from https://lore.kernel.org/all/20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com/
+with feedback from Christoph H.
+---
+ fs/xfs/xfs_xattr.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 364104e1b38a..54e7e7d24ce9 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -206,6 +206,7 @@ __xfs_xattr_put_listent(
+ {
+ 	char *offset;
+ 	int arraytop;
++	size_t combined_len, actual_len;
+ 
+ 	if (context->count < 0 || context->seen_enough)
+ 		return;
+@@ -220,11 +221,16 @@ __xfs_xattr_put_listent(
+ 		return;
+ 	}
+ 	offset = context->buffer + context->count;
+-	memcpy(offset, prefix, prefix_len);
+-	offset += prefix_len;
+-	strncpy(offset, (char *)name, namelen);			/* real name */
+-	offset += namelen;
+-	*offset = '\0';
++
++	combined_len = prefix_len + namelen;
++
++	/* plus one byte for \0 */
++	actual_len = scnprintf(offset, combined_len + 1, "%.*s%.*s",
++			       prefix_len, prefix, namelen, name);
++
++	if (actual_len != combined_len)
++		xfs_warn(context->dp->i_mount,
++	"cannot completely copy context buffer resulting in truncation");
+ 
+ compute_size:
+ 	context->count += prefix_len + namelen + 1;
+
+---
+base-commit: c85af715cac0a951eea97393378e84bb49384734
+change-id: 20240405-strncpy-xattr-split2-0a3aff0c6a20
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
