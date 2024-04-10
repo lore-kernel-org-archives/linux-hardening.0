@@ -1,120 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C136613D505;
-	Wed, 10 Apr 2024 08:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F316EBE4;
+	Wed, 10 Apr 2024 15:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736157; cv=none; b=nj/+XoOjnt/sStNX6gfPlRLy8FTwBCskCz30eSIsVqUodK36V209VjYYOJi5V2aZ6Zj9dQtWPi+X3Ja6/aJDWJWci3Id2lZkkUrr0XpNx1CbblCfphl+dhgBfkzTZ3lfCQOr3hTTA9hf372bgjVMkEX/rizVMYq3g1EvhPUutvY=
+	t=1712763220; cv=none; b=UtQIH4EOPcWFxD7STJgNk3kITCA39X/7Mb/0BBUV5vKtnUzBzMfgWLZJq34PzZgXSAEYKv/eDSXHLKcCAJjbrR4cev93+Muy4BOnjoRttj1OYej6UhR2Tzn7f9AS/yF+t7aw35m6Kt1D0IUM6mkkVkSBTj870l/ImWG0Dsfv0VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736157; c=relaxed/simple;
-	bh=KElYbch9PwjyMMyu6DqQ19Q1q06S1GdiKB4kYIvJsOA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bBAtC04DaDVwHEUOOiFSRuslrl4QmXJkNwIxlynnpCJTLQoVrWUVTlO89Clpnhd/aF12w6oTjHuxnvrJymhY+Q8tm+0OxOvE8XUv/x2Dczi3ELoLd/y8qIsK+MyeonrFwSjZ3eR5Bs0oaVVpccWwZSXhKQxXPM80iFWgxUzQYEU=
+	s=arc-20240116; t=1712763220; c=relaxed/simple;
+	bh=92ZRImfzi1uBmz5wPYU8Kbhx0TjrM28aNmBdmI8IclA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XWv2xAQMoBUGG4DOEnd/bI3AF+K+3MlVZM+mjtNX6XSgx8Vtt5peScEBb/+dKvS7RkkGxNNl5plx3PO5yjrFanPf9GQjzMWuUrp3J+gfnGxywrSLuGQrWxZGcPo/fxwXspG7Hw6s9OB9GVFNpRb/FdpNB6dvrc4Eg56tnLbnwZA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDFDC43390;
-	Wed, 10 Apr 2024 08:02:36 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 324081063262; Wed, 10 Apr 2024 10:02:32 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Damien Le Moal <dlemoal@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Corey Minyard <minyard@acm.org>, Peter Huewe <peterhuewe@gmx.de>, 
- Jarkko Sakkinen <jarkko@kernel.org>, Tero Kristo <kristo@kernel.org>, 
- Stephen Boyd <sboyd@kernel.org>, Ian Abbott <abbotti@mev.co.uk>, 
- H Hartley Sweeten <hsweeten@visionengravers.com>, 
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- John Allen <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
- Vinod Koul <vkoul@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, Moritz Fischer <mdf@kernel.org>, 
- Liviu Dudau <liviu.dudau@arm.com>, 
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
- Andi Shyti <andi.shyti@kernel.org>, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- Peter Rosin <peda@axentia.se>, Lars-Peter Clausen <lars@metafoo.de>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Markuss Broks <markuss.broks@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Lee Jones <lee@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Iyappan Subramanian <iyappan@os.amperecomputing.com>, 
- Yisen Zhuang <yisen.zhuang@huawei.com>, Stanislaw Gruszka <stf_xl@wp.pl>, 
- Kalle Valo <kvalo@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Xiang Chen <chenxiang66@hisilicon.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Vaibhav Hiremath <hvaibhav.linux@gmail.com>, Alex Elder <elder@kernel.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Jacky Huang <ychuang3@nuvoton.com>, 
- Helge Deller <deller@gmx.de>, Christoph Hellwig <hch@lst.de>, 
- Robin Murphy <robin.murphy@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Kees Cook <keescook@chromium.org>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Takashi Iwai <tiwai@suse.com>, 
- linuxppc-dev@lists.ozlabs.org, linux-ide@vger.kernel.org, 
- openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-fpga@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
- linux-leds@vger.kernel.org, linux-wireless@vger.kernel.org, 
- linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev, 
- linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-fbdev@vger.kernel.org, iommu@lists.linux.dev, 
- linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
- linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, alsa-devel@alsa-project.org, 
- linux-sound@vger.kernel.org
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
-Subject: Re: (subset) [PATCH 00/34] address all -Wunused-const warnings
-Message-Id: <171273615213.1094883.18382201508159771859.b4-ty@collabora.com>
-Date: Wed, 10 Apr 2024 10:02:32 +0200
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9A4C433F1;
+	Wed, 10 Apr 2024 15:33:37 +0000 (UTC)
+Date: Wed, 10 Apr 2024 11:36:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
+Message-ID: <20240410113614.39b61b0d@gandalf.local.home>
+In-Reply-To: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
+References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
+On Mon, 01 Apr 2024 23:48:52 +0000
+Justin Stitt <justinstitt@google.com> wrote:
 
-On Wed, 03 Apr 2024 10:06:18 +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
+> index ba2d96a1bc2f..274c297f1b15 100644
+> --- a/include/trace/events/rpcgss.h
+> +++ b/include/trace/events/rpcgss.h
+> @@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
+>  		__entry->timeout = timeout;
+>  		__entry->window_size = window_size;
+>  		__entry->len = len;
+> -		strncpy(__get_str(acceptor), data, len);
+> +		memcpy(__get_str(acceptor), data, len);
+>  	),
+>  
+>  	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
+
+WTF, that code is just buggy. Looking at the rpcgss_context event we have:
+
+> TRACE_EVENT(rpcgss_context,
+>         TP_PROTO(
+>                 u32 window_size,
+>                 unsigned long expiry,
+>                 unsigned long now,
+>                 unsigned int timeout,
+>                 unsigned int len,
+>                 const u8 *data
+>         ),
 > 
-> Compilers traditionally warn for unused 'static' variables, but not
-> if they are constant. The reason here is a custom for C++ programmers
-> to define named constants as 'static const' variables in header files
-> instead of using macros or enums.
+>         TP_ARGS(window_size, expiry, now, timeout, len, data),
 > 
-> [...]
+>         TP_STRUCT__entry(
+>                 __field(unsigned long, expiry)
+>                 __field(unsigned long, now)
+>                 __field(unsigned int, timeout)
+>                 __field(u32, window_size)
+>                 __field(int, len)
+>                 __string(acceptor, data)
 
-Applied, thanks!
+The __string() macro expects "data" to be a string and does *not* check
+length when copying.
 
-[09/34] power: rt9455: hide unused rt9455_boost_voltage_values
-        commit: 452d8950db3e839aba1bb13bc5378f4bac11fa04
+If anything, it needs to be:
 
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
+		__string_len(acceptor, data, len)
 
+as the macro code has changed recently, and the current code will crash!
+
+>         ),
+> 
+>         TP_fast_assign(
+>                 __entry->expiry = expiry;
+>                 __entry->now = now;
+>                 __entry->timeout = timeout;
+>                 __entry->window_size = window_size;
+>                 __entry->len = len;
+>                 strncpy(__get_str(acceptor), data, len);
+
+Then this needs to be:
+
+		__assign_str(acceptor, data);
+
+Note, the length is now saved via __string_len() and not needed here.
+
+I'll go send a patch to fix this.
+
+-- Steve
+
+
+>         ),
