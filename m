@@ -1,62 +1,59 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3118F44
-	for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 02:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4830D944D
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 02:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712716319; cv=none; b=DTvPtX00v5F0MTpAqPHNo6ERF0q7DvMeiGJ5AA1adqBlBE89IwI2qMjdrNtTbCaQYRbkCzAENBef5RZM4Rd7HMgwejL40sYnK2I0KkEKyuPnMfufxfuvcfFzN9b+92W/bz5HFeck3HM93qcZrAYHRiSc6SL+lzTbAB2lRYVcODg=
+	t=1712716321; cv=none; b=F2WlcHHq4kgKP4aYF70S3Vols5cGNt06JghDquawK3Sfpf5U0IvOmI9hPClQDqq9bLpLizUOsCskHJOncQZGy+ZiqwnBpQtSxzzDB69KsrGLjoCtrHPjffVWb5xQr56kCi04a8+wY9X0f2hZRA3IjSjHqGbc9LkWxUpPPTADaLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712716319; c=relaxed/simple;
-	bh=qYbI18yUD5HzoNjKR0lGr4s6EGttBI6+PzDO8Wigddw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NZUySC5mAIPZd5DthFQsDJb52w53xaJ/yKgmXIDSRJOweuvOB4LvwhSvCzNX3lG3blOMZNul/DfVd6vDWtpJ/JyWbEjGe+2wSvdrJ1dQJ05mSljC2JW1qo1Pz/yYCiNI68lsywT08LhP7TWzevAMWASTd4BgUiLR06y+nQPCl7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SIMSFdFr; arc=none smtp.client-ip=209.85.210.43
+	s=arc-20240116; t=1712716321; c=relaxed/simple;
+	bh=KszawLlCfqBX5u3rVG0NvzmvK/754HFncGX7jVg0qxY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnqSbsn7Ib1SMRyuzTo6Nw925OGmrME6/IjxdwUZI9X5jWdBirgYbRbeuZ9Ij6bgMJbJ7TvSp+UqqaQ9/k32lBhV5XRlegk26M/ngFwdwVDS1XO5/xZJAilKFK7BylHn+L1G6VW9SfMCpmnzIcJaFfehnTtnbZ3kfUjBgkGdjHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H7CD6fRB; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SIMSFdFr"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6ea0f0ba3a5so1305762a34.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Apr 2024 19:31:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H7CD6fRB"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e3f17c6491so27103465ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Apr 2024 19:31:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712716317; x=1713321117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oDjOHXgs0t5VffxEwXD7O3lIN0U2S1tp9J0ba2VzLZ8=;
-        b=SIMSFdFrpV24Dh4osCye8cAKO24bfcBL8ygq21+sqtVuoIQGv5yo0hhV5V+g+mf8h2
-         QHxa1uxV19PVOlS4jjce98p+XTgSPYeZAdoX02Rf/caMvnDsUcvniIF0frD42hEsFs1U
-         0o31dhrpeqoSPjURsMSuuKH6kJ0Z/OMb5xSPY=
+        d=chromium.org; s=google; t=1712716318; x=1713321118; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7sJB/mea+ne4UFf8C44UTKqaf9B7A57oFQubr1xCfoI=;
+        b=H7CD6fRBN5qrbJARl/fzdCmRnD3qqryKyynhwWbYSIxuVcnNMcgu2LivLl1N38rfVk
+         NJ6jVxygQ8pdSmMwk71ejOKTyBbFlIodb1fPNNHLSenGTReTqGzvM1n70V8LHZu7WBJF
+         W6HEEhhaFhKHNBjQZd8419vUqgIbmQC10u5Pc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712716317; x=1713321117;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oDjOHXgs0t5VffxEwXD7O3lIN0U2S1tp9J0ba2VzLZ8=;
-        b=vs/d7AjiOnlHUgaWcMGL5NGwbp9VwcMjM94dMyQ++q87WvSrfX6162HSTE/Sl65kdq
-         8gmlf/JFvWpWC2kQ+n+ynM0tSCwN7izQ6alNX3Ayne1zafvx1qh02ko540ohA23Q38iq
-         hR2TiCiZZuFyn1B1EeP/rUI8cRRj8EEC54er2dVg4JiLvaEcIxgCokftkRFFNcZr0wVk
-         K4j2pseqtbHHDK5k6UqQ4duPep6B3gEApfQqQ/zrmgNL7MweTwIskcjR5dnjfhreJZ/K
-         aFHbE8TtSpNBB2xKyAjYYelV5VW6dn7xDZbp4d+k1/UM7gAwLNBPGF9NEMKR+bzM2NVq
-         MNpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVn35nYnHEHpf6lGRyKiTjzJtmrikmecYkjiASw7ZsY8AX3evf/gNXfPerp90vruPcGSqNc0Lqz6fk+c5fTv/Q2t1PFzWgyrngS4rLa5jjs
-X-Gm-Message-State: AOJu0YwIfqnK1XKbUH0dxUyvQLiGlIhh8LuYRQNBjy9toUNNDaXBHa+u
-	et2Qa2cpsEgKfLGX04PatdYaqa89BIB5WXtPgcRtHlQWIVgyNsSB4B1Y0o2fTg==
-X-Google-Smtp-Source: AGHT+IEdVhbRhVxvlZGEV8PD92wXU0c32qZIHbZHZuV68VzxpmadMn0ygTyKEdkj2djHOvXGtGGRJw==
-X-Received: by 2002:a05:6871:e414:b0:22d:fcf9:f771 with SMTP id py20-20020a056871e41400b0022dfcf9f771mr1454166oac.25.1712716317026;
-        Tue, 09 Apr 2024 19:31:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712716318; x=1713321118;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7sJB/mea+ne4UFf8C44UTKqaf9B7A57oFQubr1xCfoI=;
+        b=jRO2Vt/Oy4m/Wrodh1xorSi2eMCaf1Hba1FDLNd/8yiQsoZIZ4w5NN17R5nmv7focv
+         LFg4loHHLHo9xe+0GZ0rKVr1GHC0Gg4nZ4fM11qVe5ZOhDVHYRWEtjCn0tGozLZooJeu
+         GkGrschploZszRN1187dv9kDJJFU9WdD8dipPBxBPYIzMOFgak6+VuAegxEklOYmkMiD
+         9vu/X1BAC+tJKs4XKaxmClrhLDz2O+pH72gpGhc5LSu3ZNqv/DqeOaj8wWJghDoVYVYu
+         WhenggxTemdaObN5yzdQNnNdMjxDGa25KpsL8qATS9CEhLrVFJ3VV4eG4i9J2l9TmxPA
+         KT7A==
+X-Forwarded-Encrypted: i=1; AJvYcCV/sDECsutF6moax/TXVWV8MwKVR30m9eanCDs3RoxTzu+EEG/0cdLmtxi6J+XKw7iOxBf1H3KXRHsAqqnP+3xRnbWR4yhs5f0DSUvsznc9
+X-Gm-Message-State: AOJu0YyK8KKzo5WxaB6gvnzFvu0LwcWoxxAHX8JpqHkcsypUohqOwbDr
+	xZLAZVRU2/OQCjGo4XxqSIz+UOJie43t4kPH7J89/2wD16a4m+jWk7gRWTAK3g==
+X-Google-Smtp-Source: AGHT+IHClp98RNXSKgnfnzn46Mc2LDj/wf+Cyy5uZfzjLtUAplxwmqUCk9V8CgCGYNbpysszUmj2iw==
+X-Received: by 2002:a17:902:7008:b0:1e4:3ad5:b6d6 with SMTP id y8-20020a170902700800b001e43ad5b6d6mr1512978plk.37.1712716318594;
+        Tue, 09 Apr 2024 19:31:58 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x6-20020a634a06000000b005dc491ccdcesm8687444pga.14.2024.04.09.19.31.56
+        by smtp.gmail.com with ESMTPSA id b7-20020a170902d50700b001e3ee552999sm6406385plg.291.2024.04.09.19.31.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 19:31:56 -0700 (PDT)
+        Tue, 09 Apr 2024 19:31:58 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-hardening@vger.kernel.org,
 	Charles Bertsch <cbertsch@cox.net>,
+	Justin Stitt <justinstitt@google.com>,
 	Bart Van Assche <bvanassche@acm.org>,
+	Andy Shevchenko <andy@kernel.org>,
 	Sathya Prakash <sathya.prakash@broadcom.com>,
 	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
 	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
@@ -67,194 +64,82 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Himanshu Madhani <himanshu.madhani@oracle.com>,
 	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
 	MPT-FusionLinux.pdl@broadcom.com,
 	linux-scsi@vger.kernel.org,
 	mpi3mr-linuxdrv.pdl@broadcom.com,
 	GR-QLogic-Storage-Upstream@marvell.com
-Subject: [PATCH 1/5] string.h: Introduce memtostr() and memtostr_pad()
-Date: Tue,  9 Apr 2024 19:31:50 -0700
-Message-Id: <20240410023155.2100422-1-keescook@chromium.org>
+Subject: [PATCH 0/5] scsi: Avoid possible run-time warning with long manufacturer strings
+Date: Tue,  9 Apr 2024 19:31:49 -0700
+Message-Id: <20240410021833.work.750-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240410021833.work.750-kees@kernel.org>
-References: <20240410021833.work.750-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5667; i=keescook@chromium.org;
- h=from:subject; bh=qYbI18yUD5HzoNjKR0lGr4s6EGttBI6+PzDO8Wigddw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmFfoaWcXhAXAR6w2spjXqaHGKBlcFEUONxSERz
- FNEYkxToeaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZhX6GgAKCRCJcvTf3G3A
- JvUID/4kTVp7HimIZ7tPMOmwhBcYn3WrBON4y0CkYzZF0SQ+9kN7HWBLvgWaXqggaohXQvhnpmk
- 6MUOm4FVqA0KREKxu5e5YJguWsoxoa373Zzo8h6cFGBiPB8flDpyfNNCIp1oS4YZb0YpbJrEOw8
- 19NcJ/+IyMO31sMnB0PyTCohzwwZvNK2gte6sNtQ2gIXwMrBRcYBuULnrx06FamvNCK9fxG5lCO
- SUcYif1jkyrQWMyeq22IkN5My6M9I78KQzakBeL0fPfGLfgCZLdC5JGxWXZn8wysSuCsKeY5zxP
- 5qmlP3Fox+NU59rrSOU2bI1Rz1JarVbDI2mMM5a6usTbjYaO3YEdaOSxVpn3rgoJwcw0Ph/95Ur
- rliHIyJdE7v11/RmAeZ9lnh4CPK7I0PUBwvIhu45VQpgrPe9MV0hp2Glh6J0APUZSOPMc4cYsGR
- R7Wi8KtAWxA5IXiaEJC04jnxDbtllWUipnZ8MZGr6HOvDaoqwzX2XGIW+uzfNCH8VfZiEcpws1X
- 535CbiDDpbwF6YoRYunW1Q41Fs7yi6MPdcloKlqQ8rC8NIW35j/JWgwa6bLMbb5sPEpDejRcqiK
- XMvwfsy+yQOOoAf+LYUwOFxNAKauXCOHobRw29Q60nTmUYZIIMpd5jphYrMihQqcP5BHRIEpoSl a4Lgz+lLrPXu7NQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1911; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=KszawLlCfqBX5u3rVG0NvzmvK/754HFncGX7jVg0qxY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmFfoZGm+w5zIvLCsYnaFCm1zKDHNOj0+xiwYgY
+ QCyzpvIZWGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZhX6GQAKCRCJcvTf3G3A
+ Jo6wD/0QQk0StqwBxMN5hxnRxuq1LlsSW6z1VwPSQbvxTQhHewhbKVcSmede+va3JiKcOFnm8db
+ Z5tyz10tEr4E1gWXWMfMZvp3HtZQNej83u3OZdrdgfrHNr06E5twCcfmS/LEFwwqdsVSr1AsN6k
+ 8soxXZSYHKsCEyiYQGYGBIv/yTn91kepLo3oP6UE2sF0YF9th4p+yYovtTDtcVI06xFTPTimcOA
+ b4yivDJtG0MuKjJPtWCEeUSHRv7I55eY7Um9YoRMh6AwkgE6Sq4FuogJQjcQ0/cADCB9UiFMUmL
+ 5aQR30QXfusAOfgG4b8M/PJtfFHv0zf8gd8gYYiSxiR5DQ8eNKp4h4CdLEcHDYkpMOsW4J/mygX
+ 7jEPX/+3EiWE72P4eYnfnzhw5Gb28anIEI4gCcVOIGQT25H2FgFN/7srJ440W9vmlGOm/alkpBP
+ zMo4aorHp0hSy85xDtvmFbFM8tKG4tj5hOh5U4VPLVUlwzk8OH6sGJ0waSHdNIsQBScGBRk3kXG
+ MP+jzndBxOoaWnXkHrK1b3/wIPPlcYG5BkXxqALuRo63UucckCttvJcNPF75urxyQ/1nfgGfwNU
+ JJqca5Pli5JfQqGyfV+y32MEwpMfCj6JqHDwe4WUQDJfpZnS91bEvOepX7jB03lPrx+7ZrJ7Z7I
+ Dp8Y9D/ WtLzpPwA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Another ambiguous use of strncpy() is to copy from strings that may not
-be NUL-terminated. These cases depend on having the destination buffer
-be explicitly larger than the source buffer's maximum size, having
-the size of the copy exactly match the source buffer's maximum size,
-and for the destination buffer to get explicitly NUL terminated.
+Hi,
 
-This usually happens when parsing protocols or hardware character arrays
-that are not guaranteed to be NUL-terminated. The code pattern is
-effectively this:
+Another code pattern using the gloriously ambiguous strncpy() function was
+turning maybe not-NUL-terminated character arrays into NUL-terminated
+strings. In these cases, when strncpy() is replaced with strscpy()
+it creates a situation where if the non-terminated string takes up the
+entire character array (i.e. it is not terminated) run-time warnings
+from CONFIG_FORTIFY_SOURCE will trip, since strscpy() was expecting to
+find a NUL-terminated source but checking for the NUL would walk off
+the end of the source buffer.
 
-	char dest[sizeof(src) + 1];
+In doing an instrumented build of the kernel to find these cases, it
+seems it was almost entirely a code pattern used in the SCSI subsystem,
+so the creation of the new helper, memtostr(), can land via the SCSI
+tree. And, as it turns out, inappropriate conversions have been happening
+for several years now, some of which even moved through strlcpy() first
+(and were never noticed either).
 
-	strncpy(dest, src, sizeof(src));
-	dest[sizeof(dest) - 1] = '\0';
+This series fixes all 4 of the instances I could find in the SCSI
+subsystem.
 
-In practice it usually looks like:
+Thanks,
 
-struct from_hardware {
-	...
-	char name[HW_NAME_SIZE] __nonstring;
-	...
-};
+-Kees
 
-	struct from_hardware *p = ...;
-	char name[HW_NAME_SIZE + 1];
+Kees Cook (5):
+  string.h: Introduce memtostr() and memtostr_pad()
+  scsi: mptfusion: Avoid possible run-time warning with long
+    manufacturer strings
+  scsi: mpt3sas: Avoid possible run-time warning with long manufacturer
+    strings
+  scsi: mpi3mr: Avoid possible run-time warning with long manufacturer
+    strings
+  scsi: qla2xxx: Avoid possible run-time warning with long model_num
 
-	strncpy(name, p->name, HW_NAME_SIZE);
-	name[NW_NAME_SIZE] = '\0';
+ drivers/message/fusion/mptsas.c          | 14 +++----
+ drivers/scsi/mpi3mr/mpi3mr_transport.c   | 14 +++----
+ drivers/scsi/mpt3sas/mpt3sas_base.c      |  2 +-
+ drivers/scsi/mpt3sas/mpt3sas_transport.c | 14 +++----
+ drivers/scsi/qla2xxx/qla_mr.c            |  6 +--
+ include/linux/string.h                   | 49 ++++++++++++++++++++++++
+ lib/strscpy_kunit.c                      | 26 +++++++++++++
+ 7 files changed, 93 insertions(+), 32 deletions(-)
 
-This cannot be replaced with:
-
-	strscpy(name, p->name, sizeof(name));
-
-because p->name is smaller and not NUL-terminated, so FORTIFY will
-trigger when strnlen(p->name, sizeof(name)) is used. And it cannot be
-replaced with:
-
-	strscpy(name, p->name, sizeof(p->name));
-
-because then "name" may contain a 1 character early truncation of
-p->name.
-
-Provide an unambiguous interface for converting a maybe not-NUL-terminated
-string to a NUL-terminated string, with compile-time buffer size checking
-so that it can never fail at runtime: memtostr() and memtostr_pad(). Also
-add KUnit tests for both.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org
----
- include/linux/string.h | 49 ++++++++++++++++++++++++++++++++++++++++++
- lib/strscpy_kunit.c    | 26 ++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 793c27ad7c0d..bd42cf85a95b 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -424,6 +424,55 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
- 	memcpy(dest, src, strnlen(src, min(_src_len, _dest_len)));	\
- } while (0)
- 
-+/**
-+ * memtostr - Copy a possibly non-NUL-term string to a NUL-term string
-+ * @dest: Pointer to destination NUL-terminates string
-+ * @src: Pointer to character array (likely marked as __nonstring)
-+ *
-+ * This is a replacement for strncpy() uses where the source is not
-+ * a NUL-terminated string.
-+ *
-+ * Note that sizes of @dest and @src must be known at compile-time.
-+ */
-+#define memtostr(dest, src)	do {					\
-+	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _src_len = __builtin_object_size(src, 1);		\
-+	const size_t _src_chars = strnlen(src, _src_len);		\
-+	const size_t _copy_len = min(_dest_len - 1, _src_chars);	\
-+									\
-+	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
-+		     !__builtin_constant_p(_src_len) ||			\
-+		     _dest_len == 0 || _dest_len == (size_t)-1 ||	\
-+		     _src_len == 0 || _src_len == (size_t)-1);		\
-+	memcpy(dest, src, _copy_len);					\
-+	dest[_copy_len] = '\0';						\
-+} while (0)
-+
-+/**
-+ * memtostr_pad - Copy a possibly non-NUL-term string to a NUL-term string
-+ *                with NUL padding in the destination
-+ * @dest: Pointer to destination NUL-terminates string
-+ * @src: Pointer to character array (likely marked as __nonstring)
-+ *
-+ * This is a replacement for strncpy() uses where the source is not
-+ * a NUL-terminated string.
-+ *
-+ * Note that sizes of @dest and @src must be known at compile-time.
-+ */
-+#define memtostr_pad(dest, src)		do {				\
-+	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _src_len = __builtin_object_size(src, 1);		\
-+	const size_t _src_chars = strnlen(src, _src_len);		\
-+	const size_t _copy_len = min(_dest_len - 1, _src_chars);	\
-+									\
-+	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
-+		     !__builtin_constant_p(_src_len) ||			\
-+		     _dest_len == 0 || _dest_len == (size_t)-1 ||	\
-+		     _src_len == 0 || _src_len == (size_t)-1);		\
-+	memcpy(dest, src, _copy_len);					\
-+	memset(&dest[_copy_len], 0, _dest_len - _copy_len);		\
-+} while (0)
-+
- /**
-  * memset_after - Set a value after a struct member to the end of a struct
-  *
-diff --git a/lib/strscpy_kunit.c b/lib/strscpy_kunit.c
-index a6b6344354ed..ac0b5d1678b3 100644
---- a/lib/strscpy_kunit.c
-+++ b/lib/strscpy_kunit.c
-@@ -126,8 +126,34 @@ static void strscpy_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, strscpy(dest, "This is too long", ARRAY_SIZE(dest)), -E2BIG);
- }
- 
-+static void memtostr_test(struct kunit *test)
-+{
-+	char nonstring[7] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-+	char nonstring_small[3] = { 'a', 'b', 'c' };
-+	char dest[sizeof(nonstring) + 1];
-+
-+	/* Copy in a non-NUL-terminated string into exactly right-sized dest. */
-+	KUNIT_EXPECT_EQ(test, sizeof(dest), sizeof(nonstring) + 1);
-+	memset(dest, 'X', sizeof(dest));
-+	memtostr(dest, nonstring);
-+	KUNIT_EXPECT_STREQ(test, dest, "abcdefg");
-+	memset(dest, 'X', sizeof(dest));
-+	memtostr(dest, nonstring_small);
-+	KUNIT_EXPECT_STREQ(test, dest, "abc");
-+	KUNIT_EXPECT_EQ(test, dest[7], 'X');
-+
-+	memset(dest, 'X', sizeof(dest));
-+	memtostr_pad(dest, nonstring);
-+	KUNIT_EXPECT_STREQ(test, dest, "abcdefg");
-+	memset(dest, 'X', sizeof(dest));
-+	memtostr_pad(dest, nonstring_small);
-+	KUNIT_EXPECT_STREQ(test, dest, "abc");
-+	KUNIT_EXPECT_EQ(test, dest[7], '\0');
-+}
-+
- static struct kunit_case strscpy_test_cases[] = {
- 	KUNIT_CASE(strscpy_test),
-+	KUNIT_CASE(memtostr_test),
- 	{}
- };
- 
 -- 
 2.34.1
 
