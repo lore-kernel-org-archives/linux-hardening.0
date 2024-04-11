@@ -1,95 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5808A13A244;
-	Thu, 11 Apr 2024 18:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D78417559;
+	Thu, 11 Apr 2024 19:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712859076; cv=none; b=AHW5qa73kENJjABnUB/2hMKBD0Igxgd6x08eqhtYSZH6Sj9NaNeur6CpK609GoBKKWKsKplIAtciv3+qFYhDuX5xF9D0oDu+qNSBPCDINycf1VrmGIgQqgJQNkucwAUDJC2jl3hqKiqTOlbjxSbcUAfsNwjB9IFAmyMwnrq3+kM=
+	t=1712864145; cv=none; b=HQExBJoWoRY5eRuBKM12FPutgKlMWHSz/GoVdpEFC4HyIMduNWtwx1qxdlWcDzl6Kv3PnVtWo8XVcHn/x99VgYkrmngJcqPgzwyJChkTh5MTbPBqUVe3y3Jirs0D0fpdrorUAsJ59047JYZa/X268pwmrLqbFv8MXmABSMGlUn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712859076; c=relaxed/simple;
-	bh=XOsbqvr4AZyPNMl9xo6AYH1X+oIS2bOvRQecWxU5VBs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kF37v50IffiVeqotxQyafl+Tin8CKVm0HyNP04BcotI0LszZrE70LTsv03GgLXzqRgL0p05BMyrPa6r6oqcpbW1vSagY0fyk7amIbpYusYrtSo6yK5folcrZoE5FADBLq+TVq5mHrTWdzWTHAFvHYDOI/dl5ZvY9qNmwxyMMz7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMq3nxWc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712864145; c=relaxed/simple;
+	bh=hCrHI3N1KKEbZ9Ju9XCvyw4U1X4GrngN7equ1CZR5RQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dBYadDCbOrpHX64Alr+pAKCsndwYr4iB+HbG5WWTyw5HnbDgXFgTKnCrN92uUfJezFqjZaHYK08rpvwez/w5exDMDZfHYPWoo4w4uKB4UryphE3mOh4rpWvUiO6TX7iF2FbgiX5DjnT1Ts+1f462/TCkJfDqAU1BzSd3+aAE4Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=RaPvBAkF; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMq3nxWc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D7DC072AA;
-	Thu, 11 Apr 2024 18:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712859075;
-	bh=XOsbqvr4AZyPNMl9xo6AYH1X+oIS2bOvRQecWxU5VBs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pMq3nxWcOhM7YCNikVsaCBGoXvGnWEw5InSBj+ROEoeNvztIi43HNr4gaMPj0vFTb
-	 n9UrmrmsiOGWdg2ONr099nwNYFFcJEnLFqT9OTBdNG3Qq7jGGC1OEhaXsOFDp9bNnp
-	 zZrw6BNa8yIsTBg2LJuntvkcKumLqMTBWRKPE555QZ0sdBICgTEOC6Vn+lgsbuRdBh
-	 hxMxgZgsaT5bx5fc1a7kavUvYnbRczIqS2NCUpGbTwIf+YBpQAtZFsphr7tnBEqdaR
-	 rTpkNB5T2MsEGokIQfcQjM2fOxkPAO5x3IKoLpqF9OPM/7FqlVrFHHFNRsGuEROUYg
-	 R6EJKsMDCwMJQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Thu, 11 Apr 2024 11:11:07 -0700
-Subject: [PATCH 2/2] configs/hardening: Disable CONFIG_UBSAN_SIGNED_WRAP
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="RaPvBAkF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fZ3fmdT9oUgO2wmrYEOWhcDcwgmf7m8Sawtw85kAd7M=; b=RaPvBAkFj96SS8PNgIcab5bNln
+	3MSQA3IrTG4mjLcalN1p4H35xpSgRoOH8L3SuVARRMo9Q003N7Mib3bUjFLFEcwYXSti+ZhXsbU96
+	MVNJ4chMCGpxKX57ohtCn6HvvvHaZnn5mHAdauSGAJMVDUNciWMBXKr0OZH4/IqTNTV6S6wri8aZq
+	FsHSb5lxoaV0gtog+4ARjnfeEgD12MOWIyqo9RAS634XncuQCIdxWUDGfW7/C/mTo3Zag10UnUaWD
+	YmNliruWvoTA2d9kXnCXM8DpWeIoclQqaaS9nkDsNeersLgA0I0+uYPKAVBvS6N1HfBqHsRQsO29t
+	6aK39wcQ==;
+Received: from [189.111.43.233] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1ruzqC-003fQg-MV; Thu, 11 Apr 2024 21:12:08 +0200
+Message-ID: <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
+Date: Thu, 11 Apr 2024 16:11:55 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+To: "Luck, Tony" <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Joel Fernandes <joel@joelfernandes.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+ Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ "wklin@google.com" <wklin@google.com>,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409172358.34ea19f0@gandalf.local.home> <202404091519.B7B2221@keescook>
+ <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240411-fix-ubsan-in-hardening-config-v1-2-e0177c80ffaa@kernel.org>
-References: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
-In-Reply-To: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
-To: keescook@chromium.org
-Cc: gustavoars@kernel.org, justinstitt@google.com, 
- linux-hardening@vger.kernel.org, patches@lists.linux.dev, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1703; i=nathan@kernel.org;
- h=from:subject:message-id; bh=XOsbqvr4AZyPNMl9xo6AYH1X+oIS2bOvRQecWxU5VBs=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDGkS6oe+cb9t1p6iICB+7o5jsNTjuYtabtp8df8kap2yY
- rq00nGtjlIWBjEuBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjCR/puMDEe+HCq4/fw6y9eM
- bz+u1F//5/Rg5exFac6bV6THXtVmDZ3CyLDx9vO4i4/2BETv/FlXeMPLMbt5y9M0g7x359/HHe2
- N8uEAAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-kernel/configs/hardening.config turns on UBSAN for the bounds sanitizer,
-as that in combination with trapping can stop the exploitation of buffer
-overflows within the kernel. At the same time, hardening.config turns
-off every other UBSAN sanitizer because trapping means all UBSAN reports
-will be fatal and the problems brought up by other sanitizers generally
-do not have security implications.
+On 09/04/2024 19:25, Luck, Tony wrote:
+>>> I forgot to mention that this makes it trivial for any machine that doesn't
+>>> clear memory on soft-reboot, to enable console ramoops (to have access to
+>>> the last boot dmesg without needing serial).
+>>>
+>>> I tested this on a couple of my test boxes and on QEMU, and it works rather
+>>> well.
+>>
+>> I've long wanted a "stable for this machine and kernel" memory region
+>> like this for pstore. It would make testing much easier.
+> 
+> Which systems does this work on? I'd assume that servers (and anything
+> else with ECC memory) would nuke contents while resetting ECC to clean
+> state.
+> 
+> -Tony
 
-The signed integer overflow sanitizer was recently added back to the
-kernel and it is default on with just CONFIG_UBSAN=y, meaning that it
-gets enabled when merging hardening.config into another configuration.
-While this sanitizer does have security implications like the array
-bounds sanitizer, work to clean up enough instances to allow this to run
-in production environments is still ramping up, which means regular
-users and testers may be broken by these instances with
-CONFIG_UBSAN_TRAP=y. Disable CONFIG_UBSAN_SIGNED_WRAP in
-hardening.config to avoid this situation.
+Thanks Steve! Like Kees, I've been wanting a consistent way of mapping
+some RAM for pstore for a while, without resorting to platform drivers
+like Chromebooks do...
 
-Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- kernel/configs/hardening.config | 1 +
- 1 file changed, 1 insertion(+)
+The idea seems very interesting and helpful, I'll test it here. My only
+concern / "complain" is that it's currently only implemented for builtin
+ramoops, which is not the default in many distros (like Arch, Ubuntu,
+Debian). I read patch 2 (and discussion), so I think would be good to
+have that builtin helper implemented upfront to allow modular usage of
+ramoops.
 
-diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
-index d6f6dc45628a..4b4cfcba3190 100644
---- a/kernel/configs/hardening.config
-+++ b/kernel/configs/hardening.config
-@@ -41,6 +41,7 @@ CONFIG_UBSAN_BOUNDS=y
- # CONFIG_UBSAN_SHIFT is not set
- # CONFIG_UBSAN_DIV_ZERO is not set
- # CONFIG_UBSAN_UNREACHABLE is not set
-+# CONFIG_UBSAN_SIGNED_WRAP is not set
- # CONFIG_UBSAN_BOOL is not set
- # CONFIG_UBSAN_ENUM is not set
- # CONFIG_UBSAN_ALIGNMENT is not set
+Now, responding to Tony: Steam Deck also uses pstore/ram to store logs,
+and I've tested in my AMD desktop, it does work. Seems disabling memory
+retraining in BIOS (to speedup boot?) is somewhat common, not sure for
+servers though. As Joel mentioned as well, quite common to use
+pstore/ram in ARM embedded world.
 
--- 
-2.44.0
+Cheers,
 
+
+Guilherme
