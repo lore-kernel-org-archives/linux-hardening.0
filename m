@@ -1,93 +1,96 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEAC181322
-	for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 20:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D3413C9D9;
+	Thu, 11 Apr 2024 06:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712781937; cv=none; b=Czmtu1yJZM7vqclnVVXY8HlCA1ma3N1DORobBJFMTmD4Tpbgtmei6IV+tCk0atYcoJ4V7hLe8DvU94o2cZcrwwvcluXQbtyZoTvGL7d911DIvlJVwz12VAOJtPCtxCc9TsijOQ59oem0W/GaXfCaAG3XowCTUq4jNmXNB3/dUbY=
+	t=1712818674; cv=none; b=THB2GS4SWHPQqbqADoY0wpHh3CwRpFxDXO9YAEltgaM4f5SOQstRpp3XTgpwa/igvnL4CJ5mvuevfghOAJ0PxbHIhy01TGeTbNwicrn4BsUlqC8BTV2Rfge5E3+OKfcF16kJueFMf2pcTggQlB4uputxj7FVWv+M8F/lRHDs3Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712781937; c=relaxed/simple;
-	bh=Sy/3n97bkylo2eylcSw3DIwMa8fASnqo3q+J98wrEpE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TJIYOMC4q5w/fUK7+DNFXj7lGIw8O/CgmlVsfmdH6ZcadezoxGoESufflKAipWs5uJRzblDtzMPa2+DMdromCrlfkW3dVvxibpquwbi3KqvaITCwCH3ygFQ0ijCxMa4w9CE6TNvbBHgvRmoEHtDUtqnTMWqrsXIQoIxv5tiOBt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=heQAV+oy; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712818674; c=relaxed/simple;
+	bh=YPEdfjTIPRIr7w6eCXFcj1Ndiu2d1XBq7Iuc7yuFymA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eYXTVJgTnmsTqfiuxg4srXen0KrzqdFeTmK6dlLktjMrD4UcE5eJre5ARGxJo1iquOLgja8hoB+MHlJRw5TGnDROQ8wV5M4f+ZbonV/R4siOkp1KZYqUaHRgQ1ypvo/9zSE8RQ0z5RxNpRFV9ZcdTEJOUdtM/6sC3TRsChCovAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNb3LzaZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="heQAV+oy"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso5756725a12.2
-        for <linux-hardening@vger.kernel.org>; Wed, 10 Apr 2024 13:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712781934; x=1713386734; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0FpPTUKrctxgqUBZXGaV/dKz7xcwvMQQhwEMsCpGXfs=;
-        b=heQAV+oyQseVhgH63oyWgmp0WZhI+e8PaKUSNqhS2gq5orPDuuvVGIy5rsZYMOMMW7
-         CqluC5pAB76gyqN3zfWm+YKGvB2VMz0PV4uf02PHGcdoRDnP+b2aA0IjqVmBUEghLZ2D
-         /CNIH1jqAnKC4j1aUtB9bN82JwWtTC/Fd9++2AuvL6i6UJlDnZh9Y64NElDkXFJmo5j0
-         gfB5VXvQjCFUKjwp3tIIHAIIlKCZ3Xzfap7RS1ZrrksDRPdLuY9Yw0UjZjUn3dWl1Yos
-         /4ud1qASFPdeTEvSklsck7SbvaYeKFzchNNraKXpNZ01nMfUd2uBj57q80EekeFfC19A
-         ps7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712781934; x=1713386734;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0FpPTUKrctxgqUBZXGaV/dKz7xcwvMQQhwEMsCpGXfs=;
-        b=oNhBf2wJuArBeERvycIVRj12EPZQfn7sw6eNQqGOm4EKOlw55jSVNWR3MYoUU5oXyM
-         RMroO03MsIzFwgGvNn8RDunIKm0un7ANUlrrxGjQZ9dIkkaX96VC3XMjJprXHvzLq+S/
-         wRfQvnF+Aa+z1QFRWjNYBefpHfrQRqYlvoClLdneZAJihEEH+zPElkIdFpFVKADKk1CL
-         fYuFjR5gdzcj+F4sxCP0ujw4CcqVx1/eGOTxA8n0+3NeyyrBHDhkfI8JswJJtj4wAlYX
-         eIyeSq3SULRrhhdJDDjDyqrT3j+0QKpW6gBVgAR1n4FUEiNc3t+hojBQtMScJBXgUz7W
-         aIww==
-X-Forwarded-Encrypted: i=1; AJvYcCW1nKs0qq55+iCDh2Xqpvj0evj7yDGjaecTLubcWLiavMHrj5YJs30r8Br6M26fBvBiBo6NUvHeRRpsX0TypDBa1bMeADNYPErSo6RJaQHB
-X-Gm-Message-State: AOJu0Yw4N1+4lOpaCTZcJCITh+jOphyPvuqAaN5pjusuLtA00Ru9W6KJ
-	GeB50rJ3n8+RfLSEt951LD2vyACwY28WPzMayca5a4kQb4bcnAZl8AN+dYp4OmcRz5OMX6ot9SR
-	toz27a5jB3ehxzWex0Obt120vp+cvPYaHt80W
-X-Google-Smtp-Source: AGHT+IGfm5SKHc8x1Z8MOzxbf2eCje55T11TlY72Op320UlYL+PXjp/rDhREz7tGSwdmUtZx2sXVhYyqBWZ86FXOxZ4=
-X-Received: by 2002:a50:d603:0:b0:56b:b6a2:2048 with SMTP id
- x3-20020a50d603000000b0056bb6a22048mr2808188edi.24.1712781934025; Wed, 10 Apr
- 2024 13:45:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNb3LzaZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C266C433F1;
+	Thu, 11 Apr 2024 06:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712818674;
+	bh=YPEdfjTIPRIr7w6eCXFcj1Ndiu2d1XBq7Iuc7yuFymA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mNb3LzaZRLK6iHC2zAK3jT7Xh9oAFIlEXycqHUgR+uA8IOfj6xnEf0TqKGsKwXcPI
+	 pMI7GUPV9PD16LrnT9s7avRzr4hqZJmTwt/fz+9utJI5xV060/ZPEztDP0mcQs09Bd
+	 +Uv0HnNksGzz0bKwxEOdudKs3K//gdfMxukALtsDGex2vmJEKjBDwfX8cM0jfWguy0
+	 xzv3zgG6fT3grwhD7Wf5EtiTxUgzRYDgvyz6zGqUZ0OGvWJvvb7E4QiEpsqLKboNHz
+	 FjY2RoPz9c9UqWIOz9u0fN9JeUAXBIZ8MVvjDElXp4QY/0DAhUMEQQ4nBLawTAVjfh
+	 doRC0xq4+xh2g==
+Date: Thu, 11 Apr 2024 07:57:49 +0100
+From: Lee Jones <lee@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Finn Thain <fthain@linux-m68k.org>
+Subject: Re: [PATCH v4] checkpatch: add check for snprintf to scnprintf
+Message-ID: <20240411065749.GC6194@google.com>
+References: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com> <202404090921.A203626A@keescook>
-In-Reply-To: <202404090921.A203626A@keescook>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 10 Apr 2024 13:45:21 -0700
-Message-ID: <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
-Subject: Re: [PATCH] xfs: replace deprecated strncpy with strscpy_pad
-To: Kees Cook <keescook@chromium.org>
-Cc: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
 
-On Tue, Apr 9, 2024 at 9:22=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
-> >
-> > -     /* 1 larger than sb_fname, so this ensures a trailing NUL char */
-> > -     memset(label, 0, sizeof(label));
-> >       spin_lock(&mp->m_sb_lock);
-> > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-> > +     strscpy_pad(label, sbp->sb_fname);
->
-> Is sbp->sb_fname itself NUL-terminated? This looks like another case of
-> needing the memtostr() helper?
->
+On Mon, 08 Apr 2024, Justin Stitt wrote:
 
-I sent a patch [1].
+> I am going to quote Lee Jones who has been doing some snprintf ->
+> scnprintf refactorings:
+> 
+> "There is a general misunderstanding amongst engineers that
+> {v}snprintf() returns the length of the data *actually* encoded into the
+> destination array.  However, as per the C99 standard {v}snprintf()
+> really returns the length of the data that *would have been* written if
+> there were enough space for it.  This misunderstanding has led to
+> buffer-overruns in the past.  It's generally considered safer to use the
+> {v}scnprintf() variants in their place (or even sprintf() in simple
+> cases).  So let's do that."
+> 
+> To help prevent new instances of snprintf() from popping up, let's add a
+> check to checkpatch.pl.
+> 
+> Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v4:
+> - also check for vsnprintf variant (thanks Bill)
+> - Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3-1-a451e7664306@google.com
+> 
+> Changes in v3:
+> - fix indentation
+> - add reference link (https://github.com/KSPP/linux/issues/105) (thanks Joe)
+> - Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com
+> 
+> Changes in v2:
+> - Had a vim moment and deleted a character before sending the patch.
+> - Replaced the character :)
+> - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
+> ---
+> From a discussion here [1].
+> 
+> [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+> ---
+>  scripts/checkpatch.pl | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Obviously it depends on your implementation patch landing first; what
-tree should it go to?
+Reviewed-by: Lee Jones <lee@kernel.org>
 
-> Kees Cook
-
-[1]: https://lore.kernel.org/r/20240410-strncpy-xfs-split1-v2-1-7c651502bcb=
-0@google.com
+-- 
+Lee Jones [李琼斯]
