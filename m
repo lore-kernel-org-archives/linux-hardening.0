@@ -1,91 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA68D534;
-	Thu, 11 Apr 2024 14:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C52175A5
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Apr 2024 15:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712847028; cv=none; b=r5/4x9E0dBNrteonZqQuuDLp+wB2wuyXFYxsx95dqCuAucfEatRSaBv8atQWmeFMl0QTAXMLm1yP8ou8tWhqJXl93pWaaKh3aZDV269H/aJ3zKY/NByf5F7f79H5La5UaiEZlmptzXtPi7HSE4Ww4/BUXcK3yxBS4JmpuOLbT9Y=
+	t=1712849498; cv=none; b=Udug9RhaCT2B3NmhOHerCg4OCzuIrPtKft08jLXD+uj306EtiXOTD+Ak6ugyEEhFj6wjXG3rBZ3cJ5kMCUAYivQuEqwR6EASXY5hbSGxtJbIbaC23fDWayVnDrjWGRMyWvMZOfkmjxm2i8TabeiDTkTPRf/N65rH/mQCbI+hjDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712847028; c=relaxed/simple;
-	bh=RK8HPzL73Quew+tMOrVpkfmMzV4s5rg6BXSQRmSLg8w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Y7rQJEkNKqSqQSAvRxrF3OAGKcJ6Y0lvnWjpyca7CS8VpIbYMZHGcPq03PYzGMgIIS0+w/LS+opr8IbIp5R7srIobXGX3Nd15efnvswQLdlbGG8HwMVtczSxgK3U5fwFKVtqulleMSaPPGaCyT1NC8g3Yw1IcphwAg7EnXHrcjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jd5AQd9c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712849498; c=relaxed/simple;
+	bh=1F8FDCWi7kV0VWLSz4mlwqNZHS3BzwqFKom/1e6MPAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhcmkywuvYeReIX9O3w4BFjjBc99jD0kcLrkeDYp1BYmmISbJg8S7eCVsPxoqht1jzXNEIhd0qihVXNN+FfuYPDSg5qEKnqKAC3luvN9ASwjTW9cwIr0Z6TxLUzM/lO6kB+R+vJ/NnOtpYXMPZmgj4UE76UiuRWgC8tXOz4gxeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R3YY2n/0; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jd5AQd9c"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B9A01C113CE;
-	Thu, 11 Apr 2024 14:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712847027;
-	bh=RK8HPzL73Quew+tMOrVpkfmMzV4s5rg6BXSQRmSLg8w=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Jd5AQd9c+Y+DVjeZhRA51xRwPAFPk6ny9Nly0y/GGIhczEKr22hWMYCjS18dsAbcm
-	 SBvNIG6yngZiZjIFrzq3yM41dxSy5YvzBJXVyvpgBMrdFVf4EVKS2K5cLuPVkNWung
-	 3eC9SvbTIAM9/ksLbXoQE93t6AUsWvQTZWbiF1VYooRD0dy7gqU101QW9cCW9oEOnT
-	 +MK0xXDmbSEY0Co6guBWZukqGhMkwOSoBhUulamUCMO/9z7fm0RfxIlgXKSB2znv97
-	 TSy7J79SVgJFcl5MaxOCfihWDsIeZky6uT++YnsTeenQO7oUvKaNdBFXYujUjq7RDJ
-	 Kz6gFOWlrbORg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A465FC4339F;
-	Thu, 11 Apr 2024 14:50:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3YY2n/0"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e220e40998so52767335ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Apr 2024 08:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712849496; x=1713454296; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
+        b=R3YY2n/0VwUwWve61b5CZ3IBPO30oLs/f2nMFH8EREXjpTHIHlEmK6get3jv1H+7Nr
+         LzLwT/KT3I9cYPiTYeAtKbFQ6f901IeroZqNTuKDBaW3EylhQBA8i1SXI31oI+p33vMs
+         5VvKi8iWLhGCK22xr7AnHWH+fsEQ0KNWXvrlI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712849496; x=1713454296;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
+        b=k9LCLnAGOlcMnzNd9ILM690LESRlJ9fzGXr5WNQERxdr568j6FRK3KVxwaBf/jB2Y7
+         UqkS8nEE+V7iF1QS9t19ohEhpB0BwkyJmezPsehIVGQWmw2IjXvuwkNsGNyHZeA987kN
+         C8ajekvIxA7V02zYzgsOeJe7UhCWISMgEOiaetq6+cbMbWPEE06gOf2wFo7BLv095boF
+         krErVIfPHsea4hxGkKg0RltPPL/lPuHalv+s2ej9+g68ZU8PMgMvzssPHiEHKGQAaK5U
+         l7JoqWcqfZMFn0jUqBLNK4+S+LeKU6s9bl18sO/qfwyBYI53Gho9TVhIOxjJNgEmQvFu
+         8pHA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+h136rpZvaY3X/LDoRWPc61sUQUAR1LM9IVdj5aFW2ZDepVHmfu4hwMWIQxiU/x0OIzPRaK/fvHdg+GD1HZXQKRf31o/DNRDc11FlBJCf
+X-Gm-Message-State: AOJu0YwdZbkl3DV3O+fCPv26u3F6e+9TyEixLQKn936f6gg5Yi6rlFZ/
+	04TShhn1Jq0llNInEmxSJwtUeAalSsmAI4qO3ccoREES/G2Y8k/tePLE4C7jH0EtcFDRWcMsVY0
+	=
+X-Google-Smtp-Source: AGHT+IEejten/fI5yIJ4OdU9ANzlh7kmTzwwsMRkhZrYGCJfDgxUgiz8KKlY5DuuhFAg3kagyyJlHw==
+X-Received: by 2002:a17:902:e80f:b0:1e3:e0a2:ccc3 with SMTP id u15-20020a170902e80f00b001e3e0a2ccc3mr6911262plg.30.1712849495918;
+        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l5-20020a170902d34500b001e26191b9c2sm1304039plk.67.2024.04.11.08.31.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
+Date: Thu, 11 Apr 2024 08:31:34 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] xfs: replace deprecated strncpy with strscpy_pad
+Message-ID: <202404110829.D3A5A56@keescook>
+References: <20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com>
+ <202404090921.A203626A@keescook>
+ <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171284702766.5792.6538200625585720132.git-patchwork-notify@kernel.org>
-Date: Thu, 11 Apr 2024 14:50:27 +0000
-References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
-In-Reply-To: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: longli@microsoft.com, sharmaajay@microsoft.com, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- keescook@chromium.org, gustavoars@kernel.org, nathan@kernel.org,
- ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
- jgg@ziepe.ca, leon@kernel.org, shradhagupta@linux.microsoft.com,
- kotaranov@microsoft.com, linux-rdma@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
+In-Reply-To: <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Leon Romanovsky <leon@kernel.org>:
-
-On Sat,  6 Apr 2024 16:23:34 +0200 you wrote:
-> The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of
-> trailing elements. Specifically, it uses a "mana_handle_t" array. So,
-> use the preferred way in the kernel declaring a flexible array [1].
+On Wed, Apr 10, 2024 at 01:45:21PM -0700, Justin Stitt wrote:
+> On Tue, Apr 9, 2024 at 9:22 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > -     /* 1 larger than sb_fname, so this ensures a trailing NUL char */
+> > > -     memset(label, 0, sizeof(label));
+> > >       spin_lock(&mp->m_sb_lock);
+> > > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> > > +     strscpy_pad(label, sbp->sb_fname);
+> >
+> > Is sbp->sb_fname itself NUL-terminated? This looks like another case of
+> > needing the memtostr() helper?
+> >
 > 
-> At the same time, prepare for the coming implementation by GCC and Clang
-> of the __counted_by attribute. Flexible array members annotated with
-> __counted_by can have their accesses bounds-checked at run-time via
-> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-> strcpy/memcpy-family functions).
+> I sent a patch [1].
 > 
-> [...]
+> Obviously it depends on your implementation patch landing first; what
+> tree should it go to?
 
-Here is the summary with links:
-  - [v3,1/3] net: mana: Add flex array to struct mana_cfg_rx_steer_req_v2
-    https://git.kernel.org/netdev/net-next/c/bfec4e18f943
-  - [v3,2/3] RDMA/mana_ib: Prefer struct_size over open coded arithmetic
-    https://git.kernel.org/netdev/net-next/c/29b8e13a8b4c
-  - [v3,3/3] net: mana: Avoid open coded arithmetic
-    https://git.kernel.org/netdev/net-next/c/a68292eb4316
+This "flavor" of conversion may need to wait a release? There's no
+urgency on the conversion, and there are plenty more to do for this
+cycle. ;)
 
-You are awesome, thank you!
+-Kees
+
+> [1]: https://lore.kernel.org/r/20240410-strncpy-xfs-split1-v2-1-7c651502bcb0@google.com
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Kees Cook
