@@ -1,102 +1,317 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C52175A5
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Apr 2024 15:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC851649D3;
+	Thu, 11 Apr 2024 15:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849498; cv=none; b=Udug9RhaCT2B3NmhOHerCg4OCzuIrPtKft08jLXD+uj306EtiXOTD+Ak6ugyEEhFj6wjXG3rBZ3cJ5kMCUAYivQuEqwR6EASXY5hbSGxtJbIbaC23fDWayVnDrjWGRMyWvMZOfkmjxm2i8TabeiDTkTPRf/N65rH/mQCbI+hjDo=
+	t=1712849746; cv=none; b=cLsOanCzh+gc9KR8k2YL+AToBqsLrutxw5vErkzj5ACYeNMnpOWidDHJQE9GvH5nz86XaoJ9VmOAevw41N5n1Mte8O+//KH3fdu3URMggjj4TWltb9HrpOYwLvrVSa8pEcn6oC4sWJU9I3mLh+oqNeHAV+Ts7paqyJrw9iQEXZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849498; c=relaxed/simple;
-	bh=1F8FDCWi7kV0VWLSz4mlwqNZHS3BzwqFKom/1e6MPAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DhcmkywuvYeReIX9O3w4BFjjBc99jD0kcLrkeDYp1BYmmISbJg8S7eCVsPxoqht1jzXNEIhd0qihVXNN+FfuYPDSg5qEKnqKAC3luvN9ASwjTW9cwIr0Z6TxLUzM/lO6kB+R+vJ/NnOtpYXMPZmgj4UE76UiuRWgC8tXOz4gxeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R3YY2n/0; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712849746; c=relaxed/simple;
+	bh=BkVLzO5ab9hdqdrtlid2lBANXaXcdaYaXGzsDD/ESxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hCO1X9NHk7cpu6kyXx4o5UOLQWaFSrxmZ6eUVd0iwAyn6BDn2d/PMuKBubJ4FB/AVJ3KSFtq14anxxkd6pxZZnAdZfR2DmXYwET7vbISvkZkZ3qm2hJYM4Vx1A/lHQXLDKETz7uY8YVU6C6/y9RR0z4L78H0HdqP4gTMm8gmCFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIvBX9cz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3YY2n/0"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e220e40998so52767335ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Apr 2024 08:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712849496; x=1713454296; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
-        b=R3YY2n/0VwUwWve61b5CZ3IBPO30oLs/f2nMFH8EREXjpTHIHlEmK6get3jv1H+7Nr
-         LzLwT/KT3I9cYPiTYeAtKbFQ6f901IeroZqNTuKDBaW3EylhQBA8i1SXI31oI+p33vMs
-         5VvKi8iWLhGCK22xr7AnHWH+fsEQ0KNWXvrlI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849496; x=1713454296;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
-        b=k9LCLnAGOlcMnzNd9ILM690LESRlJ9fzGXr5WNQERxdr568j6FRK3KVxwaBf/jB2Y7
-         UqkS8nEE+V7iF1QS9t19ohEhpB0BwkyJmezPsehIVGQWmw2IjXvuwkNsGNyHZeA987kN
-         C8ajekvIxA7V02zYzgsOeJe7UhCWISMgEOiaetq6+cbMbWPEE06gOf2wFo7BLv095boF
-         krErVIfPHsea4hxGkKg0RltPPL/lPuHalv+s2ej9+g68ZU8PMgMvzssPHiEHKGQAaK5U
-         l7JoqWcqfZMFn0jUqBLNK4+S+LeKU6s9bl18sO/qfwyBYI53Gho9TVhIOxjJNgEmQvFu
-         8pHA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+h136rpZvaY3X/LDoRWPc61sUQUAR1LM9IVdj5aFW2ZDepVHmfu4hwMWIQxiU/x0OIzPRaK/fvHdg+GD1HZXQKRf31o/DNRDc11FlBJCf
-X-Gm-Message-State: AOJu0YwdZbkl3DV3O+fCPv26u3F6e+9TyEixLQKn936f6gg5Yi6rlFZ/
-	04TShhn1Jq0llNInEmxSJwtUeAalSsmAI4qO3ccoREES/G2Y8k/tePLE4C7jH0EtcFDRWcMsVY0
-	=
-X-Google-Smtp-Source: AGHT+IEejten/fI5yIJ4OdU9ANzlh7kmTzwwsMRkhZrYGCJfDgxUgiz8KKlY5DuuhFAg3kagyyJlHw==
-X-Received: by 2002:a17:902:e80f:b0:1e3:e0a2:ccc3 with SMTP id u15-20020a170902e80f00b001e3e0a2ccc3mr6911262plg.30.1712849495918;
-        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l5-20020a170902d34500b001e26191b9c2sm1304039plk.67.2024.04.11.08.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
-Date: Thu, 11 Apr 2024 08:31:34 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] xfs: replace deprecated strncpy with strscpy_pad
-Message-ID: <202404110829.D3A5A56@keescook>
-References: <20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com>
- <202404090921.A203626A@keescook>
- <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIvBX9cz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BAAC072AA;
+	Thu, 11 Apr 2024 15:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712849745;
+	bh=BkVLzO5ab9hdqdrtlid2lBANXaXcdaYaXGzsDD/ESxY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DIvBX9czkfrLh7m/HK/UjJH61NULoTIeAeWLYc5bn9LpZvbCmboTIDNHxNheNzwlo
+	 AssMoufN2ujwMpdkzLmYIHYeAf78UGopCO9csScJvxvKy0DGvtwEyQbzIAvvPX4PIz
+	 fmLw4ioeRL3p/lq4SIKjZoQ1Oeep9Ksa/wsFpft5jNPSusA9y0e/gGTdeeDrAzY96s
+	 7y+N5frso/yEJQre3G6QiYydrzDeapMo+2PNQ3LapJ4sHpc4mYVCWjJXd5cpmClc9e
+	 XO3TOmJLoX74helwu+LHdvu9aWOlTy5PLWahVY4xQE9/ycefb7sMlowdyH5YOFrDpQ
+	 /mRNM5U/8JOqw==
+Date: Thu, 11 Apr 2024 09:35:42 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] smb: smb2pdu.h: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <ZhgDTj1nwLEtSd9h@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
 
-On Wed, Apr 10, 2024 at 01:45:21PM -0700, Justin Stitt wrote:
-> On Tue, Apr 9, 2024 at 9:22 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > -     /* 1 larger than sb_fname, so this ensures a trailing NUL char */
-> > > -     memset(label, 0, sizeof(label));
-> > >       spin_lock(&mp->m_sb_lock);
-> > > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-> > > +     strscpy_pad(label, sbp->sb_fname);
-> >
-> > Is sbp->sb_fname itself NUL-terminated? This looks like another case of
-> > needing the memtostr() helper?
-> >
-> 
-> I sent a patch [1].
-> 
-> Obviously it depends on your implementation patch landing first; what
-> tree should it go to?
+-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally.
 
-This "flavor" of conversion may need to wait a release? There's no
-urgency on the conversion, and there are plenty more to do for this
-cycle. ;)
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `__struct_group()` helper
+to separate the flexible array from the rest of the members in the
+flexible structure, and use the tagged `struct create_context_hdr`
+instead of `struct create_context`.
 
--Kees
+So, with these changes, fix 51 of the following warnings[1]:
 
-> [1]: https://lore.kernel.org/r/20240410-strncpy-xfs-split1-v2-1-7c651502bcb0@google.com
+fs/smb/client/../common/smb2pdu.h:1225:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Link: https://gist.github.com/GustavoARSilva/772526a39be3dd4db39e71497f0a9893 [1]
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/smb/client/smb2pdu.h | 12 ++++++------
+ fs/smb/common/smb2pdu.h | 33 ++++++++++++++++++---------------
+ fs/smb/server/smb2pdu.h | 18 +++++++++---------
+ 3 files changed, 33 insertions(+), 30 deletions(-)
+
+diff --git a/fs/smb/client/smb2pdu.h b/fs/smb/client/smb2pdu.h
+index c72a3b2886b7..1a02bd9e0c00 100644
+--- a/fs/smb/client/smb2pdu.h
++++ b/fs/smb/client/smb2pdu.h
+@@ -145,7 +145,7 @@ struct durable_context_v2 {
+ } __packed;
+ 
+ struct create_durable_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct durable_context_v2 dcontext;
+ } __packed;
+@@ -167,7 +167,7 @@ struct durable_reconnect_context_v2_rsp {
+ } __packed;
+ 
+ struct create_durable_handle_reconnect_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct durable_reconnect_context_v2 dcontext;
+ 	__u8   Pad[4];
+@@ -175,7 +175,7 @@ struct create_durable_handle_reconnect_v2 {
+ 
+ /* See MS-SMB2 2.2.13.2.5 */
+ struct crt_twarp_ctxt {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8	Name[8];
+ 	__le64	Timestamp;
+ 
+@@ -183,12 +183,12 @@ struct crt_twarp_ctxt {
+ 
+ /* See MS-SMB2 2.2.13.2.9 */
+ struct crt_query_id_ctxt {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8	Name[8];
+ } __packed;
+ 
+ struct crt_sd_ctxt {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8	Name[8];
+ 	struct smb3_sd sd;
+ } __packed;
+@@ -415,7 +415,7 @@ struct smb2_posix_info_parsed {
+ };
+ 
+ struct smb2_create_ea_ctx {
+-	struct create_context ctx;
++	struct create_context_hdr ctx;
+ 	__u8 name[8];
+ 	struct smb2_file_full_ea_info ea;
+ } __packed;
+diff --git a/fs/smb/common/smb2pdu.h b/fs/smb/common/smb2pdu.h
+index 1b594307c9d5..eab9d49c63ba 100644
+--- a/fs/smb/common/smb2pdu.h
++++ b/fs/smb/common/smb2pdu.h
+@@ -1171,12 +1171,15 @@ struct smb2_server_client_notification {
+ #define SMB2_CREATE_FLAG_REPARSEPOINT 0x01
+ 
+ struct create_context {
+-	__le32 Next;
+-	__le16 NameOffset;
+-	__le16 NameLength;
+-	__le16 Reserved;
+-	__le16 DataOffset;
+-	__le32 DataLength;
++	/* New members must be added within the struct_group() macro below. */
++	__struct_group(create_context_hdr, hdr, __packed,
++		__le32 Next;
++		__le16 NameOffset;
++		__le16 NameLength;
++		__le16 Reserved;
++		__le16 DataOffset;
++		__le32 DataLength;
++	);
+ 	__u8 Buffer[];
+ } __packed;
+ 
+@@ -1222,7 +1225,7 @@ struct smb2_create_rsp {
+ } __packed;
+ 
+ struct create_posix {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8    Name[16];
+ 	__le32  Mode;
+ 	__u32   Reserved;
+@@ -1230,7 +1233,7 @@ struct create_posix {
+ 
+ /* See MS-SMB2 2.2.13.2.3 and MS-SMB2 2.2.13.2.4 */
+ struct create_durable {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	union {
+ 		__u8  Reserved[16];
+@@ -1243,14 +1246,14 @@ struct create_durable {
+ 
+ /* See MS-SMB2 2.2.13.2.5 */
+ struct create_mxac_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le64 Timestamp;
+ } __packed;
+ 
+ /* See MS-SMB2 2.2.14.2.5 */
+ struct create_mxac_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le32 QueryStatus;
+ 	__le32 MaximalAccess;
+@@ -1286,13 +1289,13 @@ struct lease_context_v2 {
+ } __packed;
+ 
+ struct create_lease {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct lease_context lcontext;
+ } __packed;
+ 
+ struct create_lease_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct lease_context_v2 lcontext;
+ 	__u8   Pad[4];
+@@ -1300,7 +1303,7 @@ struct create_lease_v2 {
+ 
+ /* See MS-SMB2 2.2.14.2.9 */
+ struct create_disk_id_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le64 DiskFileId;
+ 	__le64 VolumeId;
+@@ -1309,7 +1312,7 @@ struct create_disk_id_rsp {
+ 
+ /* See MS-SMB2 2.2.13.2.13 */
+ struct create_app_inst_id {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8 Name[16];
+ 	__le32 StructureSize; /* Must be 20 */
+ 	__u16 Reserved;
+@@ -1318,7 +1321,7 @@ struct create_app_inst_id {
+ 
+ /* See MS-SMB2 2.2.13.2.15 */
+ struct create_app_inst_id_vers {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8 Name[16];
+ 	__le32 StructureSize; /* Must be 24 */
+ 	__u16 Reserved;
+diff --git a/fs/smb/server/smb2pdu.h b/fs/smb/server/smb2pdu.h
+index bd1d2a0e9203..643f5e1cfe35 100644
+--- a/fs/smb/server/smb2pdu.h
++++ b/fs/smb/server/smb2pdu.h
+@@ -64,7 +64,7 @@ struct preauth_integrity_info {
+ #define SMB2_SESSION_TIMEOUT		(10 * HZ)
+ 
+ struct create_durable_req_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le32 Timeout;
+ 	__le32 Flags;
+@@ -73,7 +73,7 @@ struct create_durable_req_v2 {
+ } __packed;
+ 
+ struct create_durable_reconn_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	union {
+ 		__u8  Reserved[16];
+@@ -85,7 +85,7 @@ struct create_durable_reconn_req {
+ } __packed;
+ 
+ struct create_durable_reconn_v2_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct {
+ 		__u64 PersistentFileId;
+@@ -96,13 +96,13 @@ struct create_durable_reconn_v2_req {
+ } __packed;
+ 
+ struct create_alloc_size_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le64 AllocationSize;
+ } __packed;
+ 
+ struct create_durable_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	union {
+ 		__u8  Reserved[8];
+@@ -114,7 +114,7 @@ struct create_durable_rsp {
+ /* Flags */
+ #define SMB2_DHANDLE_FLAG_PERSISTENT	0x00000002
+ struct create_durable_v2_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le32 Timeout;
+ 	__le32 Flags;
+@@ -122,7 +122,7 @@ struct create_durable_v2_rsp {
+ 
+ /* equivalent of the contents of SMB3.1.1 POSIX open context response */
+ struct create_posix_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8    Name[16];
+ 	__le32 nlink;
+ 	__le32 reparse_tag;
+@@ -381,13 +381,13 @@ struct smb2_ea_info {
+ } __packed; /* level 15 Query */
+ 
+ struct create_ea_buf_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct smb2_ea_info ea;
+ } __packed;
+ 
+ struct create_sd_buf_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct smb_ntsd ntsd;
+ } __packed;
 -- 
-Kees Cook
+2.34.1
+
