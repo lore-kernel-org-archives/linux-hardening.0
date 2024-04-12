@@ -1,45 +1,66 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E3C14A091;
-	Fri, 12 Apr 2024 20:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299EB3D0B8;
+	Fri, 12 Apr 2024 21:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712953250; cv=none; b=b0Ok1ZZV37suVQCqax4XPd5E9mZb3nfF3A3EkG/F3WRLy91Qb/lcwwojuJMKIAdtiXzV1oBRb9C9nau6KAkU0dP1rvQCtMapoL0cjrqrEQnwH4UtzWQwbHe0AuXJznDVpLiEPtHpC2Dh+bWyQGsKsgAeb4+xk+z8w1YCYJBi8CM=
+	t=1712955618; cv=none; b=GRTKeQjVFdOHfekDtVLW5wX0/tYQ+rfzhW+SnUkanIaJJZRE1f7a39OLa4BPy2fQ0pg1sYuRhmk3Pfx06cRuwSNVG11tD14/QAwDmMYMDiTEw/sU4F8wBdx5fv8vkKuAgXH317c/jAPZGAxyAzw9mNAunHPvCBHnfbb1RCzrP7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712953250; c=relaxed/simple;
-	bh=4xLHEQcQ1V8eybg8jbVcylscrNjj4X7QeUnaQO5RvwA=;
+	s=arc-20240116; t=1712955618; c=relaxed/simple;
+	bh=ufExrA51nJyDuRZXOc6Zqlx89622UOkI5PEpjDpkuFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LtebS1eWiJ9npnH+1/mDqKqAAHm2y+PrBbR4qtebBZQ/vX8CLRAc5fudzcNJHeFcPPD8WdOcL4ZvxzZPrfm1cbd9oYDUg+X612j8H0gul1dS9dcHSEqj7uASbBgpdyw9rmLJgvaHNq66YSRDznZ3Le1ULdW2ObW9pTb+aXt2yaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tVcUfZGX; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cp8emQNQyaC95k2tdM88XmneZPbgxjmGNcYoEHWcWPFT3qHMLZLkVAAaB0tfjAt0C9y3UdJml4hRGHPqFj4KvVIR1b02cj8ynpDAbGR8HA+UQT3f17D574QvPKn41HRSLILR0nIC+tpBfkDwDIj920mzUl1XRQf+66nhOcjuJi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFsV9t9s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tVcUfZGX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=V1ruHJWRhf9traik+clLxlyBbZ44QWr1+mb3lIChcXg=; b=tVcUfZGXCKsFcNpkt+aEDu9t3Y
-	jPqsuKJ9q72BDW1DhXj91fBpPaEe9KiTfpBSIKkmUw9sdkO0ugrN/z9l1viJj027h8ykD8nx8Ob08
-	IZM7kfWn53Oxo4lXAB0LHC9yViVMMXJfaO6iOxXOCVPYiisFhGib5Wg5WIGdUbORp5xCqco7CMu7N
-	0CpG25SDEufzlILmoYXKO003r8Nu98HHs8azBbeljcsZ0su/xw9GtVrvJfgykzwAQPoERVtsH26f6
-	moWp5BiaEQraIkhpAgr+Mgd7GiP8SZL+negT14TpvvukRZm6iuN9xMh/K/3yNZBgSFjWM75uvUdWH
-	MIt+cqgg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rvNO9-00000001B6L-1DtP;
-	Fri, 12 Apr 2024 20:20:48 +0000
-Date: Fri, 12 Apr 2024 13:20:43 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>, linux-modules@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: replace deprecated strncpy with strscpy
-Message-ID: <ZhmXm4xVMY5QPEGn@bombadil.infradead.org>
-References: <20240412-strncpy-kernel-module-kallsyms-c-v1-1-ba3f0fc16163@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFsV9t9s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6111BC2BD11;
+	Fri, 12 Apr 2024 21:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712955617;
+	bh=ufExrA51nJyDuRZXOc6Zqlx89622UOkI5PEpjDpkuFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lFsV9t9s6+jpzEwEmP+dIWWBhZTPFt/rJGzOY6NZzVIQABiZruk5OcirG5RfZyaI9
+	 27ZctoEN1U22XtTW9xZ5n2pIr06PaWb7bBC0Ni0SuZ0eaMoA79uJvs+gZCbYIrBCxU
+	 TNq6G2mAbVIwDgOLIvHsBPwMzdFHb9/8gYHG+Oo2gPoaqHB1W2zpKXBMA/95RDgTtM
+	 eNEGMhpqyDatnIsgX649O4JJVbadReziMgJhiahKHqaIvlVFPd5G0Qg9iQLKZTcdiE
+	 4a4Z0QCDgYqvDj1lB6ZUvihWCdBiervg3/7lJMb7zUF2FgPIlc6qipDc4Qe9sQMnTy
+	 xlxJ/gPTg75BQ==
+Date: Fri, 12 Apr 2024 23:59:07 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
+ memmap=nn*align:name
+Message-ID: <Zhmgm86tzpanoweB@kernel.org>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409211351.075320273@goodmis.org>
+ <202404091521.B63E85D@keescook>
+ <20240409191156.5f92a15c@gandalf.local.home>
+ <202404091638.2F98764A41@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,35 +69,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240412-strncpy-kernel-module-kallsyms-c-v1-1-ba3f0fc16163@google.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <202404091638.2F98764A41@keescook>
 
-On Fri, Apr 12, 2024 at 06:53:47PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces. The goal is to remove its use completely [2].
+On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
+> On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:
+> > On Tue, 9 Apr 2024 15:23:07 -0700
+> > Kees Cook <keescook@chromium.org> wrote:
+> > 
+> > > Do we need to involve e820 at all? I think it might be possible to just
+> > > have pstore call request_mem_region() very early? Or does KASLR make
+> > > that unstable?
+> > 
+> > Yeah, would that give the same physical memory each boot, and can we
+> > guarantee that KASLR will not map the kernel over the previous location?
 > 
-> namebuf is eventually cleaned of any trailing llvm suffixes using
-> strstr(). This hints that namebuf should be NUL-terminated.
-> 
-> static void cleanup_symbol_name(char *s)
-> {
-> 	char *res;
-> 	...
-> 	res = strstr(s, ".llvm.");
-> 	...
-> }
-> 
-> Due to this, use strscpy() over strncpy() as it guarantees
-> NUL-termination on the destination buffer. Drop the -1 from the length
-> calculation as it is no longer needed to ensure NUL-termination.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Hm, no, for physical memory it needs to get excluded very early, which
+> means e820.
 
-Thanks! Queued up on modules-next.
+Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
+kaslr, so to begin with, a new memmap parameter should be also added to
+parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
+physical address will be available after KASLR.
 
-  Luis
+More generally, memmap= is x86 specific and a bit of a hack.
+Why won't you add a new kernel parameter that will be parsed in, say, 
+mm/mm_init.c and will create the mmap_map (or whatever it will be named)
+and reserve that memory in memblock rather than in e820?
+
+This still will require update to arch/x86/boot/compressed/kaslr.c of
+course.
+
+> So, yeah, your proposal makes sense. I'm not super excited
+> about this be x86-only though. What does arm64 for for memmap?
+> 
+> -- 
+> Kees Cook
+> 
+
+-- 
+Sincerely yours,
+Mike.
