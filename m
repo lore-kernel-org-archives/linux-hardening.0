@@ -1,300 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A83C1E53A;
-	Fri, 12 Apr 2024 17:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1393A14C593;
+	Fri, 12 Apr 2024 17:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712942568; cv=none; b=dJabSdDKL63Wq4w7UKKkUU1k6RBekcXX45Gx4PJMaMIBeVSpNddoqlMjQK9BQpLiFRyhCmopylLxrRS43DP48/+vv/iPEYqkdWC48dOV7xWGDwieSXwmcJWvXUil3HaFGU5FIERMrkFfkAFJPTImLCfoajc7nF/6T+QYUSxIjaA=
+	t=1712943034; cv=none; b=V7qHexrnaclAaYN3433gCIG2AxS/hV+2UhiVspm6e8+EgZCjtOG0n53pOu3ZyYUkt+SpV/6furg4tFRPP/dAaPA3ZngVrh8tGXTCZ8TdjdQmIqG+eEloncmBSUCmDiIDHAALDrLTxp6483DCaMmoDNSvGTPKdl6mDWEeqanC/PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712942568; c=relaxed/simple;
-	bh=O92YTgEoikgZ6iz+Dkm9PvGOpbulKCx8UBawRe5N7iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QlN1Gzcon8ig3UODl8UBUX2hPZFcbp4672Q2EIUCHfuoe8rrz4/Fs4hseKDER7a1pEK40qP66CcX1T63z+AZlMu9HCUVIuaezzxsaaRrPWwIjjGbC/6DXulblMkECeiawTKWTtHMiOtKDXfgibtx4NGauIscoO7w0j2uAIzPUDs=
+	s=arc-20240116; t=1712943034; c=relaxed/simple;
+	bh=Kq4lrOrNh1hYJL8fRJfQOOuOPnNOpM61pSMoxRf+tBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZaXu34zOlRFQdhtxUI/d4f/WwWC4mSyWkt0k/wpbsYYbFI+HbXnUM+zZQRiCd/ssCo25cMLpDFaJuaA9FjviZPHYLAHMKdfue+ozY6gyhdQIVYXLelYGq/E7AyPi33tnG28DvHbKCizyE8U2imOUrHycJVmAXdUyP9JXJHQRmc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF76AC2BD11;
-	Fri, 12 Apr 2024 17:22:44 +0000 (UTC)
-Date: Fri, 12 Apr 2024 13:22:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>,
- Joel Fernandes <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
- <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <20240412132243.053ad096@gandalf.local.home>
-In-Reply-To: <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-References: <20240409210254.660888920@goodmis.org>
-	<20240409172358.34ea19f0@gandalf.local.home>
-	<202404091519.B7B2221@keescook>
-	<SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
-	<20240411154007.5bdf8d95@gandalf.local.home>
-	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 642CAC113CC;
+	Fri, 12 Apr 2024 17:30:30 +0000 (UTC)
+Date: Fri, 12 Apr 2024 18:30:27 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Yaxiong Tian <13327272236@163.com>
+Cc: will@kernel.org, keescook@chromium.org, tianyaxiong@kylinos.cn,
+	xiongxin@kylinos.cn, rppt@kernel.org, tony.luck@intel.com,
+	gpiccoli@igalia.com, songshuaishuai@tinylab.org,
+	wangkefeng.wang@huawei.com, akpm@linux-foundation.org,
+	ardb@kernel.org, david@redhat.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: hibernate: Fix level3 translation fault in
+ swsusp_save()
+Message-ID: <Zhlvs2ol7Va1r1Mr@arm.com>
+References: <ZeBRfxQ8WTEVzpfL@kernel.org>
+ <20240301021924.33210-1-13327272236@163.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240301021924.33210-1-13327272236@163.com>
 
-On Fri, 12 Apr 2024 09:17:18 -0300
-"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+For some reason I missed the updated patch.
 
-> Thanks Steve, seems a good idea. With that, I could test on kdumpst (the
-> tool used on Steam Deck), since it relies on modular pstore/ram.
+On Fri, Mar 01, 2024 at 10:19:24AM +0800, Yaxiong Tian wrote:
+> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> 
+> On ARM64 machines using UEFI, if can_set_direct_map() return false by
+> setting some CONFIGS in kernel build or grub,such as
+> NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
+> NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
+> debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+> swsusp_save() will fail due to can't finding the map table under the 
+> nomap memory.such as:
+[...]
+> [   48.532162] Call trace:
+> [   48.532162]  swsusp_save+0x280/0x538
+> [   48.532162]  swsusp_arch_suspend+0x148/0x190
+> [   48.532162]  hibernation_snapshot+0x240/0x39c
+> [   48.532162]  hibernate+0xc4/0x378
+> [   48.532162]  state_store+0xf0/0x10c
+> [   48.532162]  kobj_attr_store+0x14/0x24
+> 
+> This issue can be reproduced in QEMU using UEFI when booting with 
+> rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+> 
+> This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
+> kernel_page_present() presumes that a page is present when can_set_direct_map()
+> returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
+> cause level3 translation fault in this pages.
 
-Something like this could work.
+I can see how kernel_page_present() ended up returning true if
+!can_set_direct_map(), though based on the function naming only, it
+feels a bit unintuitive. Is arm64 the only architecture making use of
+MEMBLOCK_NOMAP? Or is it the only one where kernel_page_present() also
+returns true if !can_set_direct_map()?
 
--- Steve
+> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> index 02870beb271e..d90005de1d26 100644
+> --- a/arch/arm64/kernel/hibernate.c
+> +++ b/arch/arm64/kernel/hibernate.c
+> @@ -94,7 +94,7 @@ int pfn_is_nosave(unsigned long pfn)
+>  	unsigned long nosave_end_pfn = sym_to_pfn(&__nosave_end - 1);
+>  
+>  	return ((pfn >= nosave_begin_pfn) && (pfn <= nosave_end_pfn)) ||
+> -		crash_is_nosave(pfn);
+> +		crash_is_nosave(pfn) || !pfn_is_map_memory(pfn);
+>  }
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index a8831ef30c73..878aee8b2399 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -16,6 +16,7 @@
- #include <linux/firmware-map.h>
- #include <linux/sort.h>
- #include <linux/memory_hotplug.h>
-+#include <linux/mm.h>
- 
- #include <asm/e820/api.h>
- #include <asm/setup.h>
-@@ -64,61 +65,6 @@ struct e820_table *e820_table __refdata			= &e820_table_init;
- struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
- struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
- 
--/* For wildcard memory requests, have a table to find them later */
--#define E820_MAX_MAPS		8
--#define E820_MAP_NAME_SIZE	16
--struct e820_mmap_map {
--	char			name[E820_MAP_NAME_SIZE];
--	u64			start;
--	u64			size;
--};
--static struct e820_mmap_map e820_mmap_list[E820_MAX_MAPS] __initdata;
--static int e820_mmap_size				__initdata;
--
--/* Add wildcard region with a lookup name */
--static int __init e820_add_mmap(u64 start, u64 size, const char *name)
--{
--	struct e820_mmap_map *map;
--
--	if (!name || !name[0] || strlen(name) >= E820_MAP_NAME_SIZE)
--		return -EINVAL;
--
--	if (e820_mmap_size >= E820_MAX_MAPS)
--		return -1;
--
--	map = &e820_mmap_list[e820_mmap_size++];
--	map->start = start;
--	map->size = size;
--	strcpy(map->name, name);
--	return 0;
--}
--
--/**
-- * memmap_named - Find a wildcard region with a given name
-- * @name: The name that is attached to a wildcard region
-- * @start: If found, holds the start address
-- * @size: If found, holds the size of the address.
-- *
-- * Returns: 1 if found or 0 if not found.
-- */
--int __init memmap_named(const char *name, u64 *start, u64 *size)
--{
--	struct e820_mmap_map *map;
--	int i;
--
--	for (i = 0; i < e820_mmap_size; i++) {
--		map = &e820_mmap_list[i];
--		if (!map->size)
--			continue;
--		if (strcmp(name, map->name) == 0) {
--			*start = map->start;
--			*size = map->size;
--			return 1;
--		}
--	}
--	return 0;
--}
--
- /* For PCI or other memory-mapped resources */
- unsigned long pci_mem_start = 0xaeedbabe;
- #ifdef CONFIG_PCI
-@@ -1024,6 +970,8 @@ static int __init parse_memmap_one(char *p)
- 		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
- 	} else if (*p == '*') {
- 		u64 align;
-+		int ret;
-+
- 		/* Followed by alignment and ':' then the name */
- 		align = memparse(p+1, &p);
- 		start_at = e820__region(mem_size, align);
-@@ -1032,9 +980,10 @@ static int __init parse_memmap_one(char *p)
- 		if (*p != ':')
- 			return -EINVAL;
- 		p++;
--		e820_add_mmap(start_at, mem_size, p);
-+		ret = memmap_add(start_at, mem_size, p);
- 		p += strlen(p);
--		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
-+		if (!ret)
-+			e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
- 	} else if (*p == '!') {
- 		start_at = memparse(p+1, &p);
- 		e820__range_add(start_at, mem_size, E820_TYPE_PRAM);
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index c200388399fb..22d2e2731dc2 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -919,7 +919,6 @@ static void __init ramoops_register_dummy(void)
- {
- 	struct ramoops_platform_data pdata;
- 
--#ifndef MODULE
- 	/* Only allowed when builtin */
- 	if (mem_name) {
- 		u64 start;
-@@ -930,7 +929,6 @@ static void __init ramoops_register_dummy(void)
- 			mem_size = size;
- 		}
- 	}
--#endif
- 
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cf9b34454c6f..6ce1c6929d1f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4203,5 +4203,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- }
- 
- int memmap_named(const char *name, u64 *start, u64 *size);
-+int memmap_add(long start, long size, const char *name);
- 
- #endif /* _LINUX_MM_H */
-diff --git a/mm/memory.c b/mm/memory.c
-index 7a29f17df7c1..fe054e1bb678 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -120,12 +120,6 @@ static bool vmf_orig_pte_uffd_wp(struct vm_fault *vmf)
- 	return pte_marker_uffd_wp(vmf->orig_pte);
- }
- 
--int __init __weak memmap_named(const char *name, u64 *start, u64 *size)
--{
--	pr_info("Kernel command line: memmap=nn*align:name not supported on this kernel");
--	/* zero means not found */
--	return 0;
--}
- 
- /*
-  * A number of key systems in x86 including ioremap() rely on the assumption
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 549e76af8f82..e5b729b83fdc 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -154,6 +154,77 @@ static __init int set_mminit_loglevel(char *str)
- early_param("mminit_loglevel", set_mminit_loglevel);
- #endif /* CONFIG_DEBUG_MEMORY_INIT */
- 
-+/* For wildcard memory requests, have a table to find them later */
-+#define MAX_MAPS		8
-+#define MAP_NAME_SIZE	16
-+struct mmap_map {
-+	char			name[MAP_NAME_SIZE];
-+	long			start;
-+	long			size;
-+};
-+static struct mmap_map early_mmap_list[MAX_MAPS] __initdata;
-+static int early_mmap_size			__initdata;
-+static struct mmap_map *mmap_list;
-+
-+/* Add wildcard region with a lookup name */
-+int memmap_add(long start, long size, const char *name)
-+{
-+	struct mmap_map *map;
-+
-+	if (!name || !name[0] || strlen(name) >= MAP_NAME_SIZE)
-+		return -EINVAL;
-+
-+	if (early_mmap_size >= MAX_MAPS)
-+		return -1;
-+
-+	map = &early_mmap_list[early_mmap_size++];
-+	map->start = start;
-+	map->size = size;
-+	strcpy(map->name, name);
-+	return 0;
-+}
-+
-+static void __init memmap_copy(void)
-+{
-+	if (!early_mmap_size)
-+		return;
-+
-+	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);
-+	if (!mmap_list)
-+		return;
-+
-+	for (int i = 0; i < early_mmap_size; i++)
-+		mmap_list[i] = early_mmap_list[i];
-+}
-+
-+/**
-+ * memmap_named - Find a wildcard region with a given name
-+ * @name: The name that is attached to a wildcard region
-+ * @start: If found, holds the start address
-+ * @size: If found, holds the size of the address.
-+ *
-+ * Returns: 1 if found or 0 if not found.
-+ */
-+int memmap_named(const char *name, u64 *start, u64 *size)
-+{
-+	struct mmap_map *map;
-+
-+	if (!mmap_list)
-+		return 0;
-+
-+	for (int i = 0; mmap_list[i].name[0]; i++) {
-+		map = &mmap_list[i];
-+		if (!map->size)
-+			continue;
-+		if (strcmp(name, map->name) == 0) {
-+			*start = map->start;
-+			*size = map->size;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
- struct kobject *mm_kobj;
- 
- #ifdef CONFIG_SMP
-@@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
- 	pti_init();
- 	kmsan_init_runtime();
- 	mm_cache_init();
-+	memmap_copy();
- }
+This indeed fixes the problem but it looks like an arm64-specific
+workaround. I can see at least arm, loongarch and riscv making use of
+memblock_is_map_memory() (which is what pfn_is_map_memory() calls). Do
+they not have the same problem? On riscv, for example,
+kernel_page_present() does not depend on any ARCH_HAS_SET_DIRECT_MAP
+related options/conditions (neither does x86 though not sure it cares
+about MEMBLOCK_NOMAP). Should we do the same for arm64 and drop the
+!can_set_direct_map() condition in kernel_page_present()?
+
+-- 
+Catalin
