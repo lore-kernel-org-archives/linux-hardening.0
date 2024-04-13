@@ -1,159 +1,165 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77FC14265
-	for <linux-hardening@vger.kernel.org>; Sat, 13 Apr 2024 09:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A28A4C637
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Apr 2024 19:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713000161; cv=none; b=k55EUG1/YTmF2cWrTHgypbZVoCVIOnyVit2Q8qMnRIkuWfy5lzfTjyC2AjFGjARBUxtpFKUgVJZlZfIqgR5+TVOApgrqRdhcRwSre0AB5xf0YRXuEKsp+JT9dYMSFMZ4+o9VNDrhsPQRfGTY0E6dWgUtSOPQZB52vyPcRRgJrIM=
+	t=1713036715; cv=none; b=LOMoXh0eXCghJsS43FpmC64R6w7dJUkJtMf0pOQyKJM212fPCa+tRSB/1h5/Udu6t58iTNEY+7KFEGXwq0u8KjT4pW802tT9JOmQZ5X9Kr4eU8KULhJrfdnkIHUI0FgLnzyXaBok1JMxp/Rhdxv2KcWJ7CFTUbynYquVgCRznjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713000161; c=relaxed/simple;
-	bh=NhoRlOub3hGY2Wr6gMKhXt1Pu/YNnisEixCIxNzqyqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKobtkkwMXl8vu5i4pvRd6Y4ZGnxw+wEjQXulEj4Ju06Mpl/+g/mIhQi9vhhtnU5yvoOsAS2ty1rh8/fzfYz6cK6JP5TLibIzpQouctLqtpj6WDZtzsIIFEq1SeHbMT3FdaX3C0kV/w1hnKQQBcR7dOSPzeGmVMBAVTTB+V/XhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZam-0003nZ-JX; Sat, 13 Apr 2024 11:22:36 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZaj-00C2Nu-NT; Sat, 13 Apr 2024 11:22:33 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZaj-000hEY-23;
-	Sat, 13 Apr 2024 11:22:33 +0200
-Date: Sat, 13 Apr 2024 11:22:33 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	kernel@pengutronix.de, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	John Ernberg <john.ernberg@actia.se>, Thorsten Scherer <T.Scherer@eckelmann.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
-	David Lechner <dlechner@baylibre.com>
-Subject: Re: [PATCH 0/8] pwm: Add support for character devices
-Message-ID: <ywvi3wqcte5wfwq7twg26smtu7rgjv5z2tbdu6mz5cehjlxf72@2h77sey4xsv2>
-References: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1713036715; c=relaxed/simple;
+	bh=YJ6jDS8SjWnTuVP9uJ1ghT1sfqZX9ES30YU+dQqnSYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XVozEtrcDiKAsZY9+pFu/mnSQBvbTqOmbGQxSzLmlGj+dRMfUGt7yqiKrmW9qO6Hd51mKfiTbOxGw5XdWXxxEi7p41VsaVXMDo06aAfYxMoIIQToqxWtLSrebXJh87IuroervvYbVKhv6wgygRyxoxz9TyH7otH+VFD8B6Wi2l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OmD4fAKY; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OmD4fAKY"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5252e5aa01so58394266b.1
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Apr 2024 12:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713036712; x=1713641512; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=hoM0XAEUpRVPIeinoPGbPpP3Hh4hNSukUOnMJ2HLsSE=;
+        b=OmD4fAKYGHCGIqNRpTYDFLuil6ZKAfwxtzKkm8uPW44ZA8iUPtu6wfi5VaDFis3c0P
+         wA0rZdvUxoG6aC3W1T1z8crx20hZ0ecZo1U2f7BtBf4mwHF63veKU/Q8tNe5LMA7cMnO
+         VU8nw2C+VWqmkApVK2d6vdjGcqQnGKYlNd0+OQh3aZhvPadjLZ5f9DRvjCnGmq0Uo5Wm
+         fjwGAWsPC22ELrzLVSdeFIfl4ZWMS4c9s2I3JpgZFsFA9+kn1Evgm8CdYgT08Fsd5qfV
+         ctFSgkDPayLPP+Z5epQa1YRmkemdm9xvwLNbV13lswtHIMmVQgdzQBn5VgFkAExPQzjQ
+         4xmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713036712; x=1713641512;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hoM0XAEUpRVPIeinoPGbPpP3Hh4hNSukUOnMJ2HLsSE=;
+        b=lByTfTNMNKaM1ahFvmNb8tH8vgIpGFpALYIkwD0pm2ssx3ns7KtvaE2iRInC6vlSHg
+         qWMmWxBTatbDf9VN/PEbBtCTaZrmznzUqUkIqKdyhRtM18qALELFs9augUzpkyKz7kpR
+         u/+waT2UhWCEdJUNpMaqZS7176hBc7HIgpgrD4UsYcpFh2kKgC11LR8VOGgygA+EiiYe
+         8QGGv5sFC6FG5isGEes+ruiQSi4T2/KqKaa3+VO7bIkx9beavdy0h4pDFZsSUwLwhu+H
+         sdiYngG04Up+qCPMNuwARgeJd3JwmRz1yPHxm0WIRCgBAkiZgHrMNulJENrnyyqQCk8J
+         GyTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQsj6nlHvU6h5oK893cjPpJZoHimUWbjEQBvEZX40IlMwyzNPKXUdu2+O7XsZLBZaS2ZaI5obkdNBmBdTgeMJUVIk+xGs1o+XdSW0mFuFG
+X-Gm-Message-State: AOJu0YwCNtkT6TfTv8rmabtMr7Pp879N8/phNfJLcyZQerjM7mXZz9o+
+	PnSGVBhExJnIDRxxxXNGDqn/d0+Q1wGgkmE2BUp11b8YuXbZHFM6jpFzJG+9HX4=
+X-Google-Smtp-Source: AGHT+IHWPDhTqchT37eSS3hl4fS80ZHtZAxMHWMIjAccLluFFcknTGFsE11xDHgQYFR0iSEAVhIR3Q==
+X-Received: by 2002:a17:907:94c1:b0:a51:e5c7:55b7 with SMTP id dn1-20020a17090794c100b00a51e5c755b7mr4208196ejc.47.1713036711430;
+        Sat, 13 Apr 2024 12:31:51 -0700 (PDT)
+Received: from [192.168.45.55] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id oz16-20020a170906cd1000b00a51bf5932aesm3319727ejb.28.2024.04.13.12.31.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 Apr 2024 12:31:50 -0700 (PDT)
+Message-ID: <0a58e05a-7bf5-459a-b202-66d88c095b45@linaro.org>
+Date: Sat, 13 Apr 2024 21:31:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zj47uaeekg2t34wy"
-Content-Disposition: inline
-In-Reply-To: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+To: Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+ <20240325181628.9407-2-quic_okukatla@quicinc.com>
+ <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+ <91f59477-1799-4db6-bcc2-3f0c5225d1c8@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <91f59477-1799-4db6-bcc2-3f0c5225d1c8@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3.04.2024 10:45 AM, Odelu Kukatla wrote:
+> 
+> 
+> On 3/27/2024 2:26 AM, Konrad Dybcio wrote:
+>> On 25.03.2024 7:16 PM, Odelu Kukatla wrote:
+>>> It adds QoS support for QNOC device and includes support for
+>>> configuring priority, priority forward disable, urgency forwarding.
+>>> This helps in priortizing the traffic originating from different
+>>> interconnect masters at NoC(Network On Chip).
+>>>
+>>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>>> ---
 
---zj47uaeekg2t34wy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-Hello,
+>>> @@ -70,6 +102,7 @@ struct qcom_icc_node {
+>>>  	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+>>>  	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
+>>>  	size_t num_bcms;
+>>> +	const struct qcom_icc_qosbox *qosbox;
+>>
+>> I believe I came up with a better approach for storing this.. see [1]
+>>
+>> Konrad
+>>
+>> [1] https://lore.kernel.org/linux-arm-msm/20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org/
+>>
+> 
+> I see in this series, QoS parameters are moved into struct qcom_icc_desc. 
+> Even though we program QoS at Provider/Bus level, it is property of the node/master connected to a Bus/NoC.
 
-On Sun, Mar 17, 2024 at 11:40:31AM +0100, Uwe Kleine-K=F6nig wrote:
-> After the necessary changes to the lowlevel drivers got in for v6.9-rc1
-> here come some changes to the core to implement /dev/pwmchipX character
-> devices.
->=20
-> In my tests on an ARM STM32MP1 programming a PWM using the character
-> device is ~4 times faster than just changing duty_cycle via the sysfs
-> API. It also has the advantage that (similar to pwm_apply_*) the target
-> state is provided to the kernel with a single call, instead of having to
-> program the individual settings one after another via sysfs (in the
-> right order to not cross states not supported by the driver).=20
->=20
-> Note the representation of a PWM waveform is different here compared to
-> the in-kernel representation. A PWM waveform is represented using:
->=20
-> 	period
-> 	duty_cycle
-> 	duty_offset
->=20
-> A disabled PWM is represented by period =3D 0. For an inversed wave use:
->=20
-> 	duty_offset =3D duty_cycle
-> 	duty_cycle =3D period - duty_cycle;
->=20
-> . However there are some difficulties yet that make it hard to provide a
-> consistent API to userspace and so for now duty_offset isn't (fully)
-> supported yet. That needs some more consideration and can be added
-> later.
->=20
-> A userspace lib together with some simple test programs making use of
-> this new API can be found at
->=20
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git
->=20
-> .
->=20
-> The start of the series is some cleanup and preparation. The lifetime
-> and locking patches are needed to not crash the kernel when a character
-> device is open while a lowlevel driver goes away.
+I don't see how it could be the case, we're obviously telling the controller which
+endpoints have priority over others, not telling nodes whether the data they
+transfer can omit the queue.
 
-This series is already in next for some time, but I'm not sure that I
-want to really send it to Linus in the next merge window as there are a
-few issues with it:
+> It will be easier later to know which master's QoS we are programming if we add in node data.
+> Readability point of view,  it might be good to keep QoS parameters in node data.  
 
- - A (false positive) lockdep warning reported by Marek Szyprowski.
-   See https://lore.kernel.org/all/5a49cadd-21b7-4384-9e7d-9105ccc288b3@sam=
-sung.com
+I don't agree here either, with the current approach we've made countless mistakes
+when converting the downstream data (I have already submitted some fixes with more
+in flight), as there's tons of jumping around the code to find what goes where.
 
- - A speculation warning flagged by smatch that I don't understand
-   completely yet (and failed to attract attention by people that know
-   more about about it)
-   See https://lore.kernel.org/all/1e3dc81d-dcd4-4b04-85b1-23937e2f0acd@mor=
-oto.mountain
-
- - I'm a bit unhappy about the rounding behaviour. Actually I'd like to
-   only provide userspace access via the character device to drivers
-   that adhere to the rounding rules for new drivers (that is: First
-   pick the maximal period that isn't bigger than the requested period.
-   Then for the chosen period pick the maximal duty_cycle that isn't
-   bigger than the requested one) to give a consistent behaviour. This
-   is further complicated by the fact that the character device exposes
-   a more flexible API (involving a duty_offset instead of polarity) and
-   the natural extension for the rounding rules with duty_offset is
-   different than for inverted polarity configurations.
-
-I currently consider introducing a new callback that in the long run
-should replace .apply() and that properly implements the duty_offset
-stuff. Then the character device could only be provided for the drivers
-implementing .apply2().
-
-I'm open for feedback, e.g. suggestions for a better name for .apply2().
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---zj47uaeekg2t34wy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYaTtgACgkQj4D7WH0S
-/k41GggArwCz04UM8XYP40a2/xPS4R0IFZU9g8hFxLKfZke42KtDgVJp84tyvxRk
-Ce74eLiOxvzP9iMUB30qYalIWscFxabpizkVnXXVYOrKGrrCb4vKW/x2/LYYy3My
-9UDrF5YndTxX3Y9wI8TH6YXn6nKN14Lwr5iw3lrbhH3T3g4XODyiRJuaVgbcgn81
-Xz3mwGljML/9wV2dYN5gNQPuhi/1h1KgMCE5m7Hz3LNmNp0GAwxYE3CM+sAaaEVE
-PG9uJSi+tFUv9lscozE9qWjD7NbN9ZZ6LoA+fBeHOnM0rU5Z0IUbu1/p6U0MoVTF
-zJxMjSxvnSYNUkBzCfjLeej3Spk+pQ==
-=QS8z
------END PGP SIGNATURE-----
-
---zj47uaeekg2t34wy--
+Konrad
