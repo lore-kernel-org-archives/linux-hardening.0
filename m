@@ -1,126 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F546CDAD;
-	Mon, 15 Apr 2024 18:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE6E155A3C
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 19:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713206097; cv=none; b=b6YAQ6C57U5KSY5j3gNr9NRXHLVpbqG4mzoOv+WTq9ke7w3xF/g0j6yBJDB2EsG6M/vga9m5Z7ikJ2b4yUSMQvXS/ykKUcZdDXz0qiNySzWKnU8lZ9N8rTDcHLF0Wfc6iGsYdadZ0DBahcQwr8LZVpf8z9X+hrTd1+F+g7igtZc=
+	t=1713207997; cv=none; b=KZ4Nk3abhlDtrgk7cK0XKsU+cY7Wf9+X0aNO0YNhRLeOqNz5yr5nZdAtwm8mWkAuDtIpuPhHse6X6pB8py+s7xa0RYxd8eZBt1v0Dtz7tClPQZHIpZ8yAaMWGelszAO6ykIGAdTFUkyuSLX5T5uWpAueWJYuwva0w0AKZWJjFcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713206097; c=relaxed/simple;
-	bh=YZH/atVIAYwOgZAv0EyU2gQHng+Fq0POPGoznJw55LU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rC/tdCfHjYfM9LOBrYvNa/TXQ4OsM0i6FJRKwE+yA9jYcBkKhD7n+ud8ddp5shPTQzKKDrDsvkQX967mtN9BuWsde8B0Ru1mqJ08Wm1q3eRdo+McSXlk5k5z7+qAshshD/8fjpUyZzDaWhxBXr++Wafmy1LK6oGQTvGsvgHJE+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kx9jaLbp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713207997; c=relaxed/simple;
+	bh=m0cv+vQ4FxsfF8+H/JsI6f1Z4BEinsqnnKmlS1cGG5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RE2v6Z62jK2bf13uBS2O2GHPgKQ3rKgp2jeFQ0QbjN9h1NW3Aum5HLywAA2UcfKeTXW7dhBAs9TrUnVDNhQ7PCwLULtgJRVLROsuecYtWWs5yO7HbMsx/+oaRqwhCZML4pKzH8r1yvcY6jCCMffeR4bGYvyxfHH8hehwS7FbkoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f7WPDdUE; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kx9jaLbp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68BBEC113CC;
-	Mon, 15 Apr 2024 18:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713206097;
-	bh=YZH/atVIAYwOgZAv0EyU2gQHng+Fq0POPGoznJw55LU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kx9jaLbpgTmXlDRddFpH5Cqez/VbrskyTYinmQ6kzQl1Yt1UbPLMYCtAYmNiu6+OK
-	 fvtEd3RpFM2tua6vm7bMbwnoUSYuxJq51uEvllGSUuXbX47VtFbjJAUPRuIiHwI6E1
-	 g+hcntAT6c5nHMJEcy0Y40tmKSa8wN748M5SwIiplQjTgeGtSRc1wDMiLnfQDlrSGX
-	 3NlTZVUSUt/pExK17d1NgtsZGLN+szbIXsxc+f8QkfsM2IukKblooLx6OedYnW1jrZ
-	 ghDjnaN9donwfKk7UGkeEo7MGg8lkLWHSvcUDvRGGwfSEo4QzcyQvkHdFdggDo4MSq
-	 /AxJtyAJP8gWw==
-Date: Mon, 15 Apr 2024 11:34:54 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Marco Elver <elver@google.com>, Justin Stitt <justinstitt@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] ubsan: Add awareness of signed integer overflow traps
-Message-ID: <20240415183454.GB1011455@dev-arch.thelio-3990X>
-References: <20240415182832.work.932-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f7WPDdUE"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-23333ef4a02so2536284fac.1
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 12:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713207995; x=1713812795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5+R/ybS65h0q9J8q+4GnE188fVdCairXnx6GTX1PC9g=;
+        b=f7WPDdUEMQ9/mrxAdxUVprhRElk7OuaHb0kE6X3Fs8T/bRw0Rn6tlLGxDeYlZSt/hs
+         5cU55log9yZMPbz+Cbaa6sMVjhO3xmYIjvsZd+5slrUk9sqZDxTvkh0e8T42E33Y7/SM
+         LgTrBQ48Zs1nHvc4sSPvD8Ay9/Bv7b66EvyyQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713207995; x=1713812795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5+R/ybS65h0q9J8q+4GnE188fVdCairXnx6GTX1PC9g=;
+        b=jIG4cV5s4NeNIdt37sC+aXsfcAld4nGDoofUORDtBVo1kQORb8DOaOVDoC/Tl7+wDO
+         kB3lr7KNtHhRsya+Z5YXRgphh2dklQ2geORakYnCz96lV+C0dIzhO4GSTS9tA821j8mH
+         XhlCohk0pq6SJDVD55IWGbTIsG4Yux17/Ftci7AN33E8XLLNon189tIFOkmqx7UAgr+Z
+         CbZqhrQL76vwzHcXmVOdT3KmwDXFweZT/TEf9gj/t3lvyPE3be3VZzyKmVJBq9vWDor2
+         u8ZiBjQB8yhc+zCkfBRi7/vaBKrYremlN2usOHluCIM7Sx3rRInJj2bc/cVNn1irOpNJ
+         cuxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPbb1VVSEwSU/hS8ansBhAQVJbTTUFh2QUXPwGxdTV0pC2s443oKKBMOy5gYYAZStfTLU0SVv8F1J/W2IBYuElBcc3JgOl/zhKNiDeXfUU
+X-Gm-Message-State: AOJu0YzES9ykFIpSGPKMJacI3Z8Dxx2xteXrFdLOzy5ggHOSeUS9Nh8O
+	kAml6CztnV/XxUeu+7hl/9dmt1d0Ni0d+YKV6buJrX1a5lkeI6E5UnEYpq1CfbQZmhtQI7yAfU7
+	DZW0/qOwSosAeaeh1YlG3VAIjT+Mg9TW9sERy
+X-Google-Smtp-Source: AGHT+IFeZVlFC3hebTTY0W9m7/2weeINMaNykhc3VQBObIAt9ccZjDkiZxllqsbIVZX9tMYAc1TB6JHY+I3uT3kYIW0=
+X-Received: by 2002:a05:6871:58aa:b0:222:8943:df2b with SMTP id
+ ok42-20020a05687158aa00b002228943df2bmr12366733oac.16.1713207995078; Mon, 15
+ Apr 2024 12:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415182832.work.932-kees@kernel.org>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-2-jeffxu@chromium.org>
+ <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com> <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+In-Reply-To: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 15 Apr 2024 12:06:24 -0700
+Message-ID: <CABi2SkW+X4+m2odCHKVDzYYWPgvebxX_mr97NsKCRfkx641sHA@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] mseal: Wire up mseal syscall
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
+	willy@infradead.org, gregkh@linuxfoundation.org, corbet@lwn.net, 
+	Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com, 
+	rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2024 at 11:28:35AM -0700, Kees Cook wrote:
-> On arm64, UBSAN traps can be decoded from the trap instruction. Add the
-> add, sub, and mul overflow trap codes now that CONFIG_UBSAN_SIGNED_WRAP
-> exists. Seen under clang 19:
-> 
->   Internal error: UBSAN: unrecognized failure code: 00000000f2005515 [#1] PREEMPT SMP
-> 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Closes: https://lore.kernel.org/lkml/20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org
-> Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Mon, Apr 15, 2024 at 11:21=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Mon, 15 Apr 2024 at 11:11, Muhammad Usama Anjum
+> <usama.anjum@collabora.com> wrote:
+> >
+> > It isn't logical to wire up something which isn't present
+>
+> Actually, with system calls, the rules end up being almost opposite.
+>
+> There's no point in adding the code if it's not reachable. So adding
+> the system call code before adding the wiring makes no sense.
+>
+> So you have two cases: add the stubs first, or add the code first.
+> Neither does anything without the other.
+>
+> So then you go "add both in the same commit" option, which ends up
+> being horrible from a "review the code" standpoint. The two parts are
+> entirely different and mixing them up makes the patch very unclear
+> (and has very different target audiences for reviewing it - the MM
+> people really shouldn't have to look at the architecture wiring
+> parts).
+>
+> End result: there are no "this is the logical ordering" cases.
+>
+> But the "wire up system calls" part actually has some reasons to be first=
+:
+>
+>  - it reserves the system call number
+>
+>  - it adds the "when system call isn't enabled, return -ENOSYS"
+> conditional system call logic
+>
+> so I actually tend prefer this ordering when it comes to system calls.
+>
+I confirm that the wire up change can be merged by its own, i.e. build
+will pass, and  -ENOSYS will be returned at runtime.
 
-As I mentioned, CONFIG_UBSAN_SIGNED_INTEGER_WRAP needs to be
-CONFIG_UBSAN_SIGNED_WRAP. I applied this change with that fix up and the
-warning now becomes:
+Thanks Linus for clarifying this.
+-Jeff
 
-  Internal error: UBSAN: integer subtraction overflow: 00000000f2005515 [#1] PREEMPT SMP
 
-So:
-
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-
-> ---
-> Cc: Marco Elver <elver@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-hardening@vger.kernel.org
-> ---
->  lib/ubsan.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index 5fc107f61934..ad32beb8c058 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -44,9 +44,10 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
->  	case ubsan_shift_out_of_bounds:
->  		return "UBSAN: shift out of bounds";
->  #endif
-> -#ifdef CONFIG_UBSAN_DIV_ZERO
-> +#if defined(CONFIG_UBSAN_DIV_ZERO) || defined(CONFIG_UBSAN_SIGNED_INTEGER_WRAP)
->  	/*
-> -	 * SanitizerKind::IntegerDivideByZero emits
-> +	 * SanitizerKind::IntegerDivideByZero and
-> +	 * SanitizerKind::SignedIntegerOverflow emit
->  	 * SanitizerHandler::DivremOverflow.
->  	 */
->  	case ubsan_divrem_overflow:
-> @@ -77,6 +78,19 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
->  		return "UBSAN: alignment assumption";
->  	case ubsan_type_mismatch:
->  		return "UBSAN: type mismatch";
-> +#endif
-> +#ifdef CONFIG_UBSAN_SIGNED_INTEGER_WRAP
-> +	/*
-> +	 * SanitizerKind::SignedIntegerOverflow emits
-> +	 * SanitizerHandler::AddOverflow, SanitizerHandler::SubOverflow,
-> +	 * or SanitizerHandler::MulOverflow.
-> +	 */
-> +	case ubsan_add_overflow:
-> +		return "UBSAN: integer addition overflow";
-> +	case ubsan_sub_overflow:
-> +		return "UBSAN: integer subtraction overflow";
-> +	case ubsan_mul_overflow:
-> +		return "UBSAN: integer multiplication overflow";
->  #endif
->  	default:
->  		return "UBSAN: unrecognized failure code";
-> -- 
-> 2.34.1
-> 
+>                 Linus
