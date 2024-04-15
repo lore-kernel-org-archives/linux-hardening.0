@@ -1,106 +1,115 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DAF139CEE
-	for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C8713A89C
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 18:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713204908; cv=none; b=dDQMFhI02zDmUSNt5GCiQTI5OONNOyIC5dB7lRYc/QNv6LSvU2Hf9BG/tuFZ7nnsL2hqJqPgdhIjoMPuOSmte13JX0GtDJH3i8UJTIYpkz/y/3d+bfiVwbuD97WjXAIfWmGnFV/sqrbxjXMEsLN2QKDP6UncqCRdKMwbXeDKJHQ=
+	t=1713205314; cv=none; b=r6/9Pggi5CRQEJqheOcI50dgnSoeu1UE0EABlwW9ACpw5WmtSeVfbhiBtiu+T06OG8axDaM8NKdbIulF47yHpKbDdtXY4DNvW7oG8RflZtHbOMPZ5W79sdFCJ8kSRMLJoHOuQJN79o0dBasugnsn0YmI3T9QqO6/KmDeQ6WIcqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713204908; c=relaxed/simple;
-	bh=xJlCsH2KZxgfJnrn70p96Pp5me2d5wgAhY70zdBr8Zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTza+r6D8Mlt4WRZ33ODw0Y1EBhPFXuCV2hAOFg6fdnKx5S2EF4kzd2WVHI9jBMQMx4F0xAFhknS/Dy3zmIWztsGJyWCbSraAEYuqODvdD7FsHaxJUdqRyJYa/IOKq2G//WxGcEVLEhxtaT9rZziMEfzj1xgEXeSY3nbQZWr9/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lIBMSq1N; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713205314; c=relaxed/simple;
+	bh=umxCZeWTQDH3zMqqM6T6ZP1c8rPGI3duZNpIriEi1gA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J0V1aijt+iKMqa9noEpBzurzXD4QYniTjPgQPWvXjk6/BTtH+bvQf890NhYMA6DtBUL3x9ezrb4RnLZgHoPhbjBUqnAsKr6BscbWj0QI/Wk4lWO1gFbfBeSVfuUIWN5FJMYeeNUEIVQvu/pKV8I2ES/SZ19397Z8T8KrQOlR3GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=N0sjVTh8; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lIBMSq1N"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e2178b2cf2so32758435ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 11:15:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="N0sjVTh8"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a46a7208eedso503561666b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 11:21:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713204906; x=1713809706; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z81tdQav+LyTu/btyN96bE62/fspTSImr1x25zqZPAw=;
-        b=lIBMSq1Nq0Yrb19R3RmsHiqq50iAPDmXhhEFKxVW1Wb56/Z8G/Y8eKMuyyeJeav3cq
-         dIWzZt4iEq1xar1UsIEjJ006ZGBR0nSap6EgK9GM74h23/Yw6Yk1vlsBIHFID55s+o6/
-         ZCrKuHHnVHlMcR2V9Yaq3rKi+lw7mreH/Or7U=
+        d=linux-foundation.org; s=google; t=1713205311; x=1713810111; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yXQXQf6BkxnxREYjP8+VxnnUlawTjdMp0f5jlbh5Zh4=;
+        b=N0sjVTh8hVSUrH0ksW3s6BU/zmJsqAJPjbFxBmbpjfDgNo2MaXVLv/L9UDwlWx/VLU
+         BeM9bGCS0IYSsidRUf0STMJGhCWvnU0orvN5COtKGO/hKGF175+U7gYKpaJfCQTbUuBG
+         Z7Fx92aNansBwOmagvaH7qz58u9eLSn+Ai/rE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713204906; x=1713809706;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z81tdQav+LyTu/btyN96bE62/fspTSImr1x25zqZPAw=;
-        b=NPTS03kyHlM4GksbL54PugI9QxEIO1Q12Fns6aSIQeICQhErX3sYlUTEtsZVElZ+Wc
-         27Je8HN7Lo2rsSqgEwrTt/z21/k054cq/p3lHsfBIoYiMuTh/T8mshgvR0yCN3smkLAt
-         lZ0R1n6KHFoXCxLucN/JbdPQ8dx8xNcOysgNcyAmCS305vyL5k4uomNi1Uitjr5G5zuS
-         4SVwIu8SvEJcIBLwXom8/XnkkEDV9tGJYc0weTwTu6yH2nHf5SjhRspk7fDMiLebNuht
-         ra/zPUWEDAyl8GQifIn7K3DOatBMpFADSfIHYHAQAWDr7FIqPWhX7p0aTdAiTCwWMJtM
-         x6ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVBMCT8D8xjp+9aq4JFj6PS434mWV7TOURh9nKEhSAnadOCblizP4iC+ELtPdW2MvMS1KsxajP3E8PcEUPZe7WivdpkX5IM6zYb3IoLX8tD
-X-Gm-Message-State: AOJu0Yzpxvq6+/YBg5ywGYb7VQ9Fr0aTCeqOk2+SUV+4mu04GGemt2oZ
-	Rqnvk8ajbrnQqxPcJdi3dw5yU5netBr4pIe57y5IyERAaR7y+fQiAGM+UlaNGQ==
-X-Google-Smtp-Source: AGHT+IG1vvF/zfZ558hmDrGr0zzfkFPMPanPF557a7a1vjYonvdL55LMMeNOeGjFW4f1Tl7++mOqtQ==
-X-Received: by 2002:a17:902:f685:b0:1e3:e093:b5f0 with SMTP id l5-20020a170902f68500b001e3e093b5f0mr13784066plg.8.1713204906345;
-        Mon, 15 Apr 2024 11:15:06 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u9-20020a170902e80900b001e2a7fb9441sm8193736plg.51.2024.04.15.11.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 11:15:06 -0700 (PDT)
-Date: Mon, 15 Apr 2024 11:15:05 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: gustavoars@kernel.org, justinstitt@google.com,
-	linux-hardening@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH 0/2] configs/hardening: Some fixes for UBSAN
-Message-ID: <202404151110.8D4AD8E@keescook>
-References: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
+        d=1e100.net; s=20230601; t=1713205311; x=1713810111;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yXQXQf6BkxnxREYjP8+VxnnUlawTjdMp0f5jlbh5Zh4=;
+        b=PVczqXYobT4A76IMgx8Xy/a2nhAGDC9Ijl48ZbKUhlW7VbPKOMueLEftlL7EsDNF78
+         tPwvV0GsYtsO0gwikOmC/r41xgDVV9m6VIUyKwh61ik5dEhLwtYy8OhjjBg/j4pFI95N
+         SAy25XMjzHeTHWZ0kcQLOuuPyyGCwjDUgF2dqXIWuCjqbmf2RFYimzFW72kyXi8kkdwk
+         JDLsvxzdgWrkchMY/TVDsWxrb9G2bKNG381k1RvhU5Wd72AmIokKi5+1j6aGL8FmO1Ou
+         CgCj7zbCSfCLjsmbhwZV/xpC0oahiWvGImWjO3AfO3ev+WXyYzP1GONZrwfO7e4ANePu
+         9Wbg==
+X-Forwarded-Encrypted: i=1; AJvYcCV033UJ5z1m+y7RRLGfXDFI/yaauvejop80tSDZXq+VyAjYzw/4YMhtMbcffiIW18P/6pZKhZSUhJIc7H2/R41mPVOqL2APoOL8DNOabIqa
+X-Gm-Message-State: AOJu0Yz9fo52U65lCepL7YW2xt5m0Jt4Rx0J3eA5SHmwoRdGGNTMRDr5
+	odVm0SaPk5KPv+PYnc+4CpRC9e+N//zcJEfhO67ZOvY8CmsE3m6qSs0lgfEh/i4n4oI7r3AsYFG
+	fVm4oFw==
+X-Google-Smtp-Source: AGHT+IE8pfDWckSwYIdmJk8mO2h0OzeBwHtCgtuw8B55lKf0mqOCAMKHCYJMQavWyYDO55Y0pBt8Jw==
+X-Received: by 2002:a17:906:1851:b0:a52:5fcc:2573 with SMTP id w17-20020a170906185100b00a525fcc2573mr2790829eje.13.1713205311150;
+        Mon, 15 Apr 2024 11:21:51 -0700 (PDT)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id n5-20020a170906724500b00a47423b4c33sm5766178ejk.128.2024.04.15.11.21.50
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 11:21:50 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4187981999fso5239865e9.1
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 11:21:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/oEaLlSRNKVIh1ciloUJN33K3AWlvMoIT+3s3Ofufxz5JMZ5pUwbv/jd/saNqh/oOwNiBWdETBkuJl6bXfXC0Z2YNwKjr9GSkcsD+qMhC
+X-Received: by 2002:a17:906:110e:b0:a52:320a:6320 with SMTP id
+ h14-20020a170906110e00b00a52320a6320mr6421452eja.51.1713205289339; Mon, 15
+ Apr 2024 11:21:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-2-jeffxu@chromium.org>
+ <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com>
+In-Reply-To: <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 15 Apr 2024 11:21:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+Message-ID: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] mseal: Wire up mseal syscall
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, corbet@lwn.net, Liam.Howlett@oracle.com, 
+	surenb@google.com, merimus@google.com, rdunlap@infradead.org, 
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 11, 2024 at 11:11:05AM -0700, Nathan Chancellor wrote:
->   [    0.189542] Internal error: UBSAN: unrecognized failure code: 00000000f2005515 [#1] PREEMPT SMP
+On Mon, 15 Apr 2024 at 11:11, Muhammad Usama Anjum
+<usama.anjum@collabora.com> wrote:
+>
+> It isn't logical to wire up something which isn't present
 
-Oops! Yes, I didn't update the (arm64) trap handler to notice integer
-overflows. I think I need something like:
+Actually, with system calls, the rules end up being almost opposite.
 
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index 5fc107f61934..a2fb19f75825 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -77,6 +77,14 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
- 		return "UBSAN: alignment assumption";
- 	case ubsan_type_mismatch:
- 		return "UBSAN: type mismatch";
-+#endif
-+#ifdef CONFIG_UBSAN_SIGNED_INTEGER_WRAP
-+	case ubsan_add_overflow:
-+		return "UBSAN: integer addition overflow";
-+	case ubsan_sub_overflow:
-+		return "UBSAN: integer subtraction overflow";
-+	case ubsan_mul_overflow:
-+		return "UBSAN: integer multiplication overflow";
- #endif
- 	default:
- 		return "UBSAN: unrecognized failure code";
+There's no point in adding the code if it's not reachable. So adding
+the system call code before adding the wiring makes no sense.
 
->   [    0.198326] Call trace:
->   [    0.198544]  cancel_delayed_work+0x54/0x94
->   [    0.198810]  deferred_probe_extend_timeout+0x20/0x6c
->   [    0.198988]  driver_register+0xa8/0x10c
->   [    0.199122]  __platform_driver_register+0x28/0x38
->   [    0.199258]  tegra194_cbb_init+0x24/0x34
+So you have two cases: add the stubs first, or add the code first.
+Neither does anything without the other.
 
-Justin, does this trace match anything you found running syzkaller
-against SIO? (I assume not -- this seems to be a tegra code path...)
+So then you go "add both in the same commit" option, which ends up
+being horrible from a "review the code" standpoint. The two parts are
+entirely different and mixing them up makes the patch very unclear
+(and has very different target audiences for reviewing it - the MM
+people really shouldn't have to look at the architecture wiring
+parts).
 
--- 
-Kees Cook
+End result: there are no "this is the logical ordering" cases.
+
+But the "wire up system calls" part actually has some reasons to be first:
+
+ - it reserves the system call number
+
+ - it adds the "when system call isn't enabled, return -ENOSYS"
+conditional system call logic
+
+so I actually tend prefer this ordering when it comes to system calls.
+
+                Linus
