@@ -1,272 +1,170 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F6153BF8;
-	Mon, 15 Apr 2024 18:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0591553A2;
+	Mon, 15 Apr 2024 18:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205938; cv=none; b=UqbHviE4gaeZRESii6o9CDEo38m/4gd1tIHJzpQDab58l6oR5sVs0s39WJep96vwNf7KRtPiOxjmPWzqNqibQV0OdlEFbBJohExjCVgk3B1pBKH2rWgkbUvsx9M7UtDo0HTBPnG7NL0iiCzW5uqHxPMFdbRCpp/U/dIwigcNVWs=
+	t=1713205953; cv=none; b=CrNsQVLM5if+VEy35yfmydXdWauQD2G8s7MVeHhMkNysz3W+l9USV9dOf9mHsB6S6SgqBAQD/ws6u3rVUzPzT4VnmRyEaRI9n7wpH189iB8CDj3nHRcB8Dq/kvG9wRgbdoc8WIZnJuAnjmcTXSo6A2ajhDPKAtUNbglo4Iy26VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205938; c=relaxed/simple;
-	bh=p8eY082JkC3KPLbfUGfr481x8SEdz/YLHgqGEpwKKdg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ixAOZ7jSpCoWPk5LyE3PGkoufqhZEWgpiEgPlVjQEouqMD7QmVaCY42vPRgPW5GyaI5j7WUwseTxZhECnAtUSbRgZ/Y8W43FPOZQcQB1SToXJnwZVBjBAMZhWk1pPAZrV0a82Ye9TImamiSfi1FBQfN1t71ZDmN7boa0VSIYzLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XJAvGcDq; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713205953; c=relaxed/simple;
+	bh=CG7UrxiclCzOT3p6JpR2Gw4yfNeQuA+CZtiI3k6cX/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQ978oRxpaaL76xGCB8ZGf52YGZH/WrM7Fgn0KRZ7ZfRVw/BtCVZ6i+MnNDsMhLTZitkE8yfnobeun2GoguGWTK770PNdnUe7Q7m4jskIthZGk0FMt7iCZSUXKgrsWGuAOmmL32iJaY+AflJgM4TyUP3+B6kTn3gaF4gHJjcpA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kweOLtnr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XJAvGcDq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713205934;
-	bh=p8eY082JkC3KPLbfUGfr481x8SEdz/YLHgqGEpwKKdg=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=XJAvGcDqP0Vt+/a6ZRFb0h5+g8hgOaGIveEs1cMbQRBl/HGMq09mRCyIdSRVXp2t+
-	 ENn77R12rxPJQ/Lb1mz+StEHb9MNSEq/dKH8XjzyPhuTDEGURTxML/th7/UrMJpv5N
-	 jX4BXGtF7O9UOaonMufXeo96KpZwpGcA3tOBMX12eh98k/mNS1T+0kPZJX6BZlwUSm
-	 xNqyrnvQBvgej7aS79D0qvlyIUIA0umXkTxHgOdPVb0Ml2RJwPYZhQnWt0ubIwFPw4
-	 olR+R5Fozy0rTDurjH2xfpAJCea2xY20ILGEmSZJekpk/oLkal5DidGr4FkWHItcMZ
-	 R0Mq7SKaJherw==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 73D9937810F1;
-	Mon, 15 Apr 2024 18:32:09 +0000 (UTC)
-Message-ID: <e1744539-a843-468a-9101-ce7a08669394@collabora.com>
-Date: Mon, 15 Apr 2024 23:32:41 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kweOLtnr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BEAAC113CC;
+	Mon, 15 Apr 2024 18:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713205952;
+	bh=CG7UrxiclCzOT3p6JpR2Gw4yfNeQuA+CZtiI3k6cX/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kweOLtnrZS6ULiNjjAANs5MyE9uTN5M0jQptaSd//PDOWqmlDXJnXgNx4MO+zwuD9
+	 XC+cIi8gqj17tpAuiHjiPQF3TLM74nHgWY4Tgm8IusYk1801wQc3M0kA3Z8/m6nSkm
+	 UuXob0JKWkylhbqgeE9qgODJOXkLStCfPDEz6ihHyhHBen/EA+qtpDxOeF2+yzWNn9
+	 DyLjNSNa1VRC+oOXhPM4hSf4vhoqU/jwAZkmMCutnkdPt4xE9H8C+RN7TPrBOw9GO2
+	 elpLxDWmER/GtUYjmuqFX0vX2H8TcXUd6s4uKScsfbv6XMljTVbwjYVplj9NiHzWp+
+	 bbq03jdmkqMMw==
+Date: Mon, 15 Apr 2024 11:32:30 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: gustavoars@kernel.org, justinstitt@google.com,
+	linux-hardening@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH 0/2] configs/hardening: Some fixes for UBSAN
+Message-ID: <20240415183230.GA1011455@dev-arch.thelio-3990X>
+References: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
+ <202404151110.8D4AD8E@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, jeffxu@google.com,
- jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Subject: Re: [PATCH v10 3/5] selftest mm/mseal memory sealing
-To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
- jannh@google.com, sroettger@google.com, willy@infradead.org,
- gregkh@linuxfoundation.org, torvalds@linux-foundation.org, corbet@lwn.net,
- Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
- rdunlap@infradead.org
-References: <20240415163527.626541-1-jeffxu@chromium.org>
- <20240415163527.626541-4-jeffxu@chromium.org>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240415163527.626541-4-jeffxu@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404151110.8D4AD8E@keescook>
 
-Please fix following for this and fifth patch as well:
-
---> checkpatch.pl --codespell tools/testing/selftests/mm/mseal_test.c
-
-WARNING: Macros with flow control statements should be avoided
-#42: FILE: tools/testing/selftests/mm/mseal_test.c:42:
-+#define FAIL_TEST_IF_FALSE(c) do {\
-+               if (!(c)) {\
-+                       ksft_test_result_fail("%s, line:%d\n", __func__,
-__LINE__);\
-+                       goto test_end;\
-+               } \
-+       } \
-+       while (0)
-
-WARNING: Macros with flow control statements should be avoided
-#50: FILE: tools/testing/selftests/mm/mseal_test.c:50:
-+#define SKIP_TEST_IF_FALSE(c) do {\
-+               if (!(c)) {\
-+                       ksft_test_result_skip("%s, line:%d\n", __func__,
-__LINE__);\
-+                       goto test_end;\
-+               } \
-+       } \
-+       while (0)
-
-WARNING: Macros with flow control statements should be avoided
-#59: FILE: tools/testing/selftests/mm/mseal_test.c:59:
-+#define TEST_END_CHECK() {\
-+               ksft_test_result_pass("%s\n", __func__);\
-+               return;\
-+test_end:\
-+               return;\
-+}
-
-
-On 4/15/24 9:35 PM, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
+On Mon, Apr 15, 2024 at 11:15:05AM -0700, Kees Cook wrote:
+> On Thu, Apr 11, 2024 at 11:11:05AM -0700, Nathan Chancellor wrote:
+> >   [    0.189542] Internal error: UBSAN: unrecognized failure code: 00000000f2005515 [#1] PREEMPT SMP
 > 
-> selftest for memory sealing change in mmap() and mseal().
+> Oops! Yes, I didn't update the (arm64) trap handler to notice integer
+> overflows. I think I need something like:
 > 
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> ---
->  tools/testing/selftests/mm/.gitignore   |    1 +
->  tools/testing/selftests/mm/Makefile     |    1 +
->  tools/testing/selftests/mm/mseal_test.c | 1836 +++++++++++++++++++++++
->  3 files changed, 1838 insertions(+)
->  create mode 100644 tools/testing/selftests/mm/mseal_test.c
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index 5fc107f61934..a2fb19f75825 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -77,6 +77,14 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
+>  		return "UBSAN: alignment assumption";
+>  	case ubsan_type_mismatch:
+>  		return "UBSAN: type mismatch";
+> +#endif
+> +#ifdef CONFIG_UBSAN_SIGNED_INTEGER_WRAP
+
+This should be CONFIG_UBSAN_SIGNED_WRAP
+
+> +	case ubsan_add_overflow:
+> +		return "UBSAN: integer addition overflow";
+> +	case ubsan_sub_overflow:
+> +		return "UBSAN: integer subtraction overflow";
+> +	case ubsan_mul_overflow:
+> +		return "UBSAN: integer multiplication overflow";
+>  #endif
+>  	default:
+>  		return "UBSAN: unrecognized failure code";
+
+but with that fixed, it becomes
+
+  [    0.208004] Internal error: UBSAN: integer subtraction overflow: 00000000f2005515 [#1] PREEMPT SMP
+
+so LGTM.
+
+> >   [    0.198326] Call trace:
+> >   [    0.198544]  cancel_delayed_work+0x54/0x94
+> >   [    0.198810]  deferred_probe_extend_timeout+0x20/0x6c
+> >   [    0.198988]  driver_register+0xa8/0x10c
+> >   [    0.199122]  __platform_driver_register+0x28/0x38
+> >   [    0.199258]  tegra194_cbb_init+0x24/0x34
 > 
-> diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-> index d26e962f2ac4..98eaa4590f11 100644
-> --- a/tools/testing/selftests/mm/.gitignore
-> +++ b/tools/testing/selftests/mm/.gitignore
-> @@ -47,3 +47,4 @@ mkdirty
->  va_high_addr_switch
->  hugetlb_fault_after_madv
->  hugetlb_madv_vs_map
-> +mseal_test
-> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-> index eb5f39a2668b..95d10fe1b3c1 100644
-> --- a/tools/testing/selftests/mm/Makefile
-> +++ b/tools/testing/selftests/mm/Makefile
-> @@ -59,6 +59,7 @@ TEST_GEN_FILES += mlock2-tests
->  TEST_GEN_FILES += mrelease_test
->  TEST_GEN_FILES += mremap_dontunmap
->  TEST_GEN_FILES += mremap_test
-> +TEST_GEN_FILES += mseal_test
->  TEST_GEN_FILES += on-fault-limit
->  TEST_GEN_FILES += pagemap_ioctl
->  TEST_GEN_FILES += thuge-gen
-> diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
-> new file mode 100644
-> index 000000000000..06c780d1d8e5
-> --- /dev/null
-> +++ b/tools/testing/selftests/mm/mseal_test.
-> +static void __write_pkey_reg(u64 pkey_reg)
-> +{
-> +#if defined(__i386__) || defined(__x86_64__) /* arch */
-> +	unsigned int eax = pkey_reg;
-> +	unsigned int ecx = 0;
-> +	unsigned int edx = 0;
-> +
-> +	asm volatile(".byte 0x0f,0x01,0xef\n\t"
-> +			: : "a" (eax), "c" (ecx), "d" (edx));
-> +	assert(pkey_reg == __read_pkey_reg());
-Use ksft_exit_fail_msg instead of assert to stay inside TAP format if
-condition is false and error is generated.
+> Justin, does this trace match anything you found running syzkaller
+> against SIO? (I assume not -- this seems to be a tegra code path...)
 
-> +int main(int argc, char **argv)
-> +{
-> +	bool test_seal = seal_support();
-> +
-> +	ksft_print_header();
-> +
-> +	if (!test_seal)
-> +		ksft_exit_skip("sealing not supported, check CONFIG_64BIT\n");
-> +
-> +	if (!pkey_supported())
-> +		ksft_print_msg("PKEY not supported\n");
-> +
-> +	ksft_set_plan(80);
-> +
-> +	test_seal_addseal();
-> +	test_seal_unmapped_start();
-> +	test_seal_unmapped_middle();
-> +	test_seal_unmapped_end();
-> +	test_seal_multiple_vmas();
-> +	test_seal_split_start();
-> +	test_seal_split_end();
-> +	test_seal_invalid_input();
-> +	test_seal_zero_length();
-> +	test_seal_twice();
-> +
-> +	test_seal_mprotect(false);
-> +	test_seal_mprotect(true);
-> +
-> +	test_seal_start_mprotect(false);
-> +	test_seal_start_mprotect(true);
-> +
-> +	test_seal_end_mprotect(false);
-> +	test_seal_end_mprotect(true);
-> +
-> +	test_seal_mprotect_unalign_len(false);
-> +	test_seal_mprotect_unalign_len(true);
-> +
-> +	test_seal_mprotect_unalign_len_variant_2(false);
-> +	test_seal_mprotect_unalign_len_variant_2(true);
-> +
-> +	test_seal_mprotect_two_vma(false);
-> +	test_seal_mprotect_two_vma(true);
-> +
-> +	test_seal_mprotect_two_vma_with_split(false);
-> +	test_seal_mprotect_two_vma_with_split(true);
-> +
-> +	test_seal_mprotect_partial_mprotect(false);
-> +	test_seal_mprotect_partial_mprotect(true);
-> +
-> +	test_seal_mprotect_two_vma_with_gap(false);
-> +	test_seal_mprotect_two_vma_with_gap(true);
-> +
-> +	test_seal_mprotect_merge(false);
-> +	test_seal_mprotect_merge(true);
-> +
-> +	test_seal_mprotect_split(false);
-> +	test_seal_mprotect_split(true);
-> +
-> +	test_seal_munmap(false);
-> +	test_seal_munmap(true);
-> +	test_seal_munmap_two_vma(false);
-> +	test_seal_munmap_two_vma(true);
-> +	test_seal_munmap_vma_with_gap(false);
-> +	test_seal_munmap_vma_with_gap(true);
-> +
-> +	test_munmap_start_freed(false);
-> +	test_munmap_start_freed(true);
-> +	test_munmap_middle_freed(false);
-> +	test_munmap_middle_freed(true);
-> +	test_munmap_end_freed(false);
-> +	test_munmap_end_freed(true);
-> +
-> +	test_seal_mremap_shrink(false);
-> +	test_seal_mremap_shrink(true);
-> +	test_seal_mremap_expand(false);
-> +	test_seal_mremap_expand(true);
-> +	test_seal_mremap_move(false);
-> +	test_seal_mremap_move(true);
-> +
-> +	test_seal_mremap_shrink_fixed(false);
-> +	test_seal_mremap_shrink_fixed(true);
-> +	test_seal_mremap_expand_fixed(false);
-> +	test_seal_mremap_expand_fixed(true);
-> +	test_seal_mremap_move_fixed(false);
-> +	test_seal_mremap_move_fixed(true);
-> +	test_seal_mremap_move_dontunmap(false);
-> +	test_seal_mremap_move_dontunmap(true);
-> +	test_seal_mremap_move_fixed_zero(false);
-> +	test_seal_mremap_move_fixed_zero(true);
-> +	test_seal_mremap_move_dontunmap_anyaddr(false);
-> +	test_seal_mremap_move_dontunmap_anyaddr(true);
-> +	test_seal_discard_ro_anon(false);
-> +	test_seal_discard_ro_anon(true);
-> +	test_seal_discard_ro_anon_on_rw(false);
-> +	test_seal_discard_ro_anon_on_rw(true);
-> +	test_seal_discard_ro_anon_on_shared(false);
-> +	test_seal_discard_ro_anon_on_shared(true);
-> +	test_seal_discard_ro_anon_on_filebacked(false);
-> +	test_seal_discard_ro_anon_on_filebacked(true);
-> +	test_seal_mmap_overwrite_prot(false);
-> +	test_seal_mmap_overwrite_prot(true);
-> +	test_seal_mmap_expand(false);
-> +	test_seal_mmap_expand(true);
-> +	test_seal_mmap_shrink(false);
-> +	test_seal_mmap_shrink(true);
-> +
-> +	test_seal_merge_and_split();
-> +	test_seal_zero_address();
-> +
-> +	test_seal_discard_ro_anon_on_pkey(false);
-> +	test_seal_discard_ro_anon_on_pkey(true);
-> +
-> +	ksft_finished();
-> +	return 0;
-The return isn't needed as ksft_finished() calls exit() with right exit code.
+FWIW, it is also visible with x86_64 in some other driver, so it is
+likely not a driver specific issue (at least not to one driver).
 
-> +}
+[    0.219560] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+[    0.220441] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc4-next-20240415-dirty #1
+[    0.220441] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[    0.220441] RIP: 0010:cancel_delayed_work+0x23/0x40
+[    0.220441] Code: 90 90 90 90 90 90 90 f3 0f 1e fa 53 50 48 89 fb 48 c7 04 24 00 00 00 00 48 89 e2 be 01 00 00 00 e8 02 eb ff ff f6 03 04 75 05 <67> 0f b9 40 15 90 0f 0b 90 67 0f b9 40 15 66 66 66 66 66 66 2e 0f
+[    0.220441] RSP: 0018:ffffa51600017b30 EFLAGS: 00010046
+[    0.220441] RAX: 0000000000000000 RBX: ffffffff997db830 RCX: 6da351d27a629a00
+[    0.220441] RDX: ffffa51600017b01 RSI: 0000000000000000 RDI: ffffffff997db850
+[    0.220441] RBP: ffffa51600017ea8 R08: 0000000000000001 R09: 000000000000000a
+[    0.220441] R10: 0000410110000001 R11: 0000000000000000 R12: 0000000000000000
+[    0.220441] R13: 0000000000000000 R14: ffffffff99f2e474 R15: 0000000000000000
+[    0.220441] FS:  0000000000000000(0000) GS:ffff8c485d200000(0000) knlGS:0000000000000000
+[    0.220441] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.220441] CR2: ffff8c4854401000 CR3: 000000001382a000 CR4: 0000000000350ef0
+[    0.220441] Call Trace:
+[    0.220441]  <TASK>
+[    0.220441]  ? __die_body+0x65/0xb0
+[    0.220441]  ? die+0xa5/0xd0
+[    0.220441]  ? do_trap+0xa1/0x170
+[    0.220441]  ? cancel_delayed_work+0x23/0x40
+[    0.220441]  ? cancel_delayed_work+0x23/0x40
+[    0.220441]  ? handle_invalid_op+0x65/0x80
+[    0.220441]  ? cancel_delayed_work+0x23/0x40
+[    0.220441]  ? exc_invalid_op+0x39/0x50
+[    0.220441]  ? asm_exc_invalid_op+0x1a/0x20
+[    0.220441]  ? cancel_delayed_work+0x23/0x40
+[    0.220441]  deferred_probe_extend_timeout+0x10/0x50
+[    0.220441]  driver_register+0xa9/0x110
+[    0.220441]  i2c_register_driver+0x40/0xa0
+[    0.220441]  i2c_init+0x8b/0xe0
+[    0.220441]  ? __pfx_i2c_init+0x10/0x10
+[    0.220441]  do_one_initcall+0x110/0x350
+[    0.220441]  ? kernfs_xattr_get+0x34/0x70
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? __alloc_pages_noprof+0x186/0x320
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? __get_random_u32_below+0xe/0x60
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? new_slab+0x1d6/0x710
+[    0.220441]  ? new_slab+0x1d6/0x710
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? number+0x166/0x530
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? ida_alloc_range+0x459/0x4a0
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? parameq+0x12/0x90
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? srso_return_thunk+0x5/0x5f
+[    0.220441]  ? parse_args+0x137/0x340
+[    0.220441]  do_initcall_level+0x85/0x100
+[    0.220441]  do_initcalls+0x54/0x90
+[    0.220441]  kernel_init_freeable+0xf2/0x160
+[    0.220441]  ? __pfx_kernel_init+0x10/0x10
+[    0.220441]  kernel_init+0x15/0x1b0
+[    0.220441]  ret_from_fork+0x35/0x40
+[    0.220441]  ? __pfx_kernel_init+0x10/0x10
+[    0.220441]  ret_from_fork_asm+0x1a/0x30
+[    0.220441]  </TASK>
+[    0.220441] Modules linked in:
+[    0.220441] ---[ end trace 0000000000000000 ]---
+[    0.220441] RIP: 0010:cancel_delayed_work+0x23/0x40
+[    0.220441] Code: 90 90 90 90 90 90 90 f3 0f 1e fa 53 50 48 89 fb 48 c7 04 24 00 00 00 00 48 89 e2 be 01 00 00 00 e8 02 eb ff ff f6 03 04 75 05 <67> 0f b9 40 15 90 0f 0b 90 67 0f b9 40 15 66 66 66 66 66 66 2e 0f
+[    0.220441] RSP: 0018:ffffa51600017b30 EFLAGS: 00010046
+[    0.220441] RAX: 0000000000000000 RBX: ffffffff997db830 RCX: 6da351d27a629a00
+[    0.220441] RDX: ffffa51600017b01 RSI: 0000000000000000 RDI: ffffffff997db850
+[    0.220441] RBP: ffffa51600017ea8 R08: 0000000000000001 R09: 000000000000000a
+[    0.220441] R10: 0000410110000001 R11: 0000000000000000 R12: 0000000000000000
+[    0.220441] R13: 0000000000000000 R14: ffffffff99f2e474 R15: 0000000000000000
+[    0.220441] FS:  0000000000000000(0000) GS:ffff8c485d200000(0000) knlGS:0000000000000000
+[    0.220441] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.220441] CR2: ffff8c4854401000 CR3: 000000001382a000 CR4: 0000000000350ef0
 
--- 
-BR,
-Muhammad Usama Anjum
+Cheers,
+Nathan
