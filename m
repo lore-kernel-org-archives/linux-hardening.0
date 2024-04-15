@@ -1,153 +1,272 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D2813A895
-	for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 18:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F6153BF8;
+	Mon, 15 Apr 2024 18:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205720; cv=none; b=jO4W00RyFUVTdwMx+6COlRhLlaEXBHY1sHR+IEsBHtZAqYeUhqY1nqaDbXEOQDAoZOjbBPwMf+Lkc/htgczV2Xx1O+qMs07+1QoX7LJy32mmrpP6qp3IjsoxgFg+m2PLd5zZpUlJj3D9hfFZkCpy4D9aSGX996YSqLNvAj/1a2Y=
+	t=1713205938; cv=none; b=UqbHviE4gaeZRESii6o9CDEo38m/4gd1tIHJzpQDab58l6oR5sVs0s39WJep96vwNf7KRtPiOxjmPWzqNqibQV0OdlEFbBJohExjCVgk3B1pBKH2rWgkbUvsx9M7UtDo0HTBPnG7NL0iiCzW5uqHxPMFdbRCpp/U/dIwigcNVWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205720; c=relaxed/simple;
-	bh=4IaXarYUXpxYCg+9pmqyG/50QxJWM9J7LtrSTXLIMJA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eZDWr7LbXkzL2lhxnVqy4Nn+CW18YC2eraRucouJsfFFDlObQ/NoNZ+eBvAIWbUNU4unNlyBT8VChqVVC8AH1hz8HEZ93MtwplUILM6WjAQA8eatmvDctS3X+3vE7+bgBy+Uk0GguIdBVKH6keFlm2GgQlRrP1zR8mLhm6d5ps0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PwFqBZ/6; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713205938; c=relaxed/simple;
+	bh=p8eY082JkC3KPLbfUGfr481x8SEdz/YLHgqGEpwKKdg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ixAOZ7jSpCoWPk5LyE3PGkoufqhZEWgpiEgPlVjQEouqMD7QmVaCY42vPRgPW5GyaI5j7WUwseTxZhECnAtUSbRgZ/Y8W43FPOZQcQB1SToXJnwZVBjBAMZhWk1pPAZrV0a82Ye9TImamiSfi1FBQfN1t71ZDmN7boa0VSIYzLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XJAvGcDq; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PwFqBZ/6"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2a484f772e2so1980050a91.3
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 11:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713205718; x=1713810518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yAq4RH8QyUKSZD7HeQ0W2c2SC+MgWA2yhvwhd1FAErE=;
-        b=PwFqBZ/6a6Q3QXMzqCM42I38gX6xtUSXs+aFtkvTIuajQXALCqFMyn6jq392fgC7eO
-         hzf+LizncwHDt17B574GGbWgAiSPar2lHu1Ldi4m7TEnY99m2r/3CSTA6cCGhV3WrYjZ
-         4FzMR9o5ZCCc6FydJbgh3SYUEALYQq2jS+vPI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713205718; x=1713810518;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yAq4RH8QyUKSZD7HeQ0W2c2SC+MgWA2yhvwhd1FAErE=;
-        b=RD4XiaCw28sBAUaT2gKPvM+6+zEx+WuR7j52VrXvmTYziVIyqpTTZM5gyqQsFqdvWo
-         zMtsrjWTHdiDcox+35fDBQr9AIqS/fRgG9jlJ9DvFOYuLNJkxy9/y7xhkR+YARhL35qR
-         tbS4LPI/Eqm5D3AiR8Blo5F59z/aDow96fnj0AgKtqfNx6oXkfYcevjcO+LrWtcRlKC0
-         zg0zDVngWTlXa+bUXIOBmKMgOdNxtH+LaeLSrpleXxB4Wllx51yUxbMKVbFy9ZiYOoD2
-         XstnfHHA3WVMOSLS7OxCjZOzFhnl/axAjXJshqcSUN45r0+CIMlT4aDwNdz6TGxsbN3B
-         xfsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5G2y4RLddLGB9/k4GST+0/cbynjzVKkhumgdzJaUjlMkXZpGxg4AFG0x5KsUuXmKZoEWdQQSGY6BtLaCY9N+MSimb16PZ7ARQdlh5W3/x
-X-Gm-Message-State: AOJu0YyM8k9aG2StMr+qdTm7t6aWfa/qE8iIX0+Zr3SuwUy/tCGGpEwC
-	BxCy7jqOwoRZmy9EI06zUH/JJQuBa5qKQJQzWV9VdU4pbEiQaVPUqU1/QrBseW16Cw4o06uOxfU
-	=
-X-Google-Smtp-Source: AGHT+IEYFs7fnXkSELd0hZrVih1BisoxrSCEEdxjz9aIBiqqyuW6IhT9v58YdP08kVYsR/hIWnkrIQ==
-X-Received: by 2002:a17:90a:a014:b0:2a2:37ed:24d5 with SMTP id q20-20020a17090aa01400b002a237ed24d5mr9504791pjp.2.1713205717610;
-        Mon, 15 Apr 2024 11:28:37 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o7-20020a17090a3d4700b002aa783c7749sm225542pjf.41.2024.04.15.11.28.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 11:28:37 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Marco Elver <elver@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] ubsan: Add awareness of signed integer overflow traps
-Date: Mon, 15 Apr 2024 11:28:35 -0700
-Message-Id: <20240415182832.work.932-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XJAvGcDq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713205934;
+	bh=p8eY082JkC3KPLbfUGfr481x8SEdz/YLHgqGEpwKKdg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=XJAvGcDqP0Vt+/a6ZRFb0h5+g8hgOaGIveEs1cMbQRBl/HGMq09mRCyIdSRVXp2t+
+	 ENn77R12rxPJQ/Lb1mz+StEHb9MNSEq/dKH8XjzyPhuTDEGURTxML/th7/UrMJpv5N
+	 jX4BXGtF7O9UOaonMufXeo96KpZwpGcA3tOBMX12eh98k/mNS1T+0kPZJX6BZlwUSm
+	 xNqyrnvQBvgej7aS79D0qvlyIUIA0umXkTxHgOdPVb0Ml2RJwPYZhQnWt0ubIwFPw4
+	 olR+R5Fozy0rTDurjH2xfpAJCea2xY20ILGEmSZJekpk/oLkal5DidGr4FkWHItcMZ
+	 R0Mq7SKaJherw==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 73D9937810F1;
+	Mon, 15 Apr 2024 18:32:09 +0000 (UTC)
+Message-ID: <e1744539-a843-468a-9101-ce7a08669394@collabora.com>
+Date: Mon, 15 Apr 2024 23:32:41 +0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2297; i=keescook@chromium.org;
- h=from:subject:message-id; bh=4IaXarYUXpxYCg+9pmqyG/50QxJWM9J7LtrSTXLIMJA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmHXHTHDcH/rU4DwAuIfF+PqCgsKiEy9TvwjM08
- XaKWEaXez6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZh1x0wAKCRCJcvTf3G3A
- Jl3xD/45m2S6t9LECpdwfjbODqtOouLN0wH8zb51Op56fbm9xeMQ7e80mdvP9yjErlwPLyih6Nq
- WfX0zqyYp/Gw0CjTr1zZjJogFYt4k333uYlpI6JCqDJhZllXGNRInNm/dGGBADxaV7X0Mco9ATn
- u1gG/Q44QaBb2Knh1jm/NJ0fp1SdQe5NlYnx7lGJ4CpDwrugHDoxhJSEMyuW4IVcfMEENgEm3dy
- VvCXyvJlBwu7CbYMiP7RQP/n8libLaaZGbEbuf1NvtUdTBh5VSe+ZHyijtjWHzd/6idddE9Lhze
- Eu3oEPod5bbwDi/hBLQGpUNs2hdz2cryApPLcojSwYjOFxey2dzxr7bXv3SPXhXwQikMYB8nIKt
- DhLJgg9T+HsQyPnWVR9a3eTKSvJHKlzrGEaGGLiruPfM2CTPaWNnjpjSCw3xLVS/OprkO8xYwCY
- +JDjW4Yz4coVscDJMVx8JtEpxa3a3XefNYfvSlSBLpe0VUkkuO77Des8sdKZ5H2kVBr1YC7RVsu
- 7zd6Lwv25OlcbntxMxul7cqG8NL8jo1CYaIIly768LWa0eDPEWB5VWTbErLWxYnZ65TmBzCUdvL
- YTAAneczLiTe+5u0Ga/AQUDykSyQPvWgaEpnR3boeAtTqqqgyFPlxN33mThPUwoh6qMbGBa8XEk
- E/kf3ER sCidHZYA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, jeffxu@google.com,
+ jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ pedro.falcato@gmail.com, dave.hansen@intel.com,
+ linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Subject: Re: [PATCH v10 3/5] selftest mm/mseal memory sealing
+To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
+ jannh@google.com, sroettger@google.com, willy@infradead.org,
+ gregkh@linuxfoundation.org, torvalds@linux-foundation.org, corbet@lwn.net,
+ Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
+ rdunlap@infradead.org
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+ <20240415163527.626541-4-jeffxu@chromium.org>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240415163527.626541-4-jeffxu@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On arm64, UBSAN traps can be decoded from the trap instruction. Add the
-add, sub, and mul overflow trap codes now that CONFIG_UBSAN_SIGNED_WRAP
-exists. Seen under clang 19:
+Please fix following for this and fifth patch as well:
 
-  Internal error: UBSAN: unrecognized failure code: 00000000f2005515 [#1] PREEMPT SMP
+--> checkpatch.pl --codespell tools/testing/selftests/mm/mseal_test.c
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/lkml/20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org
-Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Marco Elver <elver@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-hardening@vger.kernel.org
----
- lib/ubsan.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+WARNING: Macros with flow control statements should be avoided
+#42: FILE: tools/testing/selftests/mm/mseal_test.c:42:
++#define FAIL_TEST_IF_FALSE(c) do {\
++               if (!(c)) {\
++                       ksft_test_result_fail("%s, line:%d\n", __func__,
+__LINE__);\
++                       goto test_end;\
++               } \
++       } \
++       while (0)
 
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index 5fc107f61934..ad32beb8c058 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -44,9 +44,10 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
- 	case ubsan_shift_out_of_bounds:
- 		return "UBSAN: shift out of bounds";
- #endif
--#ifdef CONFIG_UBSAN_DIV_ZERO
-+#if defined(CONFIG_UBSAN_DIV_ZERO) || defined(CONFIG_UBSAN_SIGNED_INTEGER_WRAP)
- 	/*
--	 * SanitizerKind::IntegerDivideByZero emits
-+	 * SanitizerKind::IntegerDivideByZero and
-+	 * SanitizerKind::SignedIntegerOverflow emit
- 	 * SanitizerHandler::DivremOverflow.
- 	 */
- 	case ubsan_divrem_overflow:
-@@ -77,6 +78,19 @@ const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
- 		return "UBSAN: alignment assumption";
- 	case ubsan_type_mismatch:
- 		return "UBSAN: type mismatch";
-+#endif
-+#ifdef CONFIG_UBSAN_SIGNED_INTEGER_WRAP
-+	/*
-+	 * SanitizerKind::SignedIntegerOverflow emits
-+	 * SanitizerHandler::AddOverflow, SanitizerHandler::SubOverflow,
-+	 * or SanitizerHandler::MulOverflow.
-+	 */
-+	case ubsan_add_overflow:
-+		return "UBSAN: integer addition overflow";
-+	case ubsan_sub_overflow:
-+		return "UBSAN: integer subtraction overflow";
-+	case ubsan_mul_overflow:
-+		return "UBSAN: integer multiplication overflow";
- #endif
- 	default:
- 		return "UBSAN: unrecognized failure code";
+WARNING: Macros with flow control statements should be avoided
+#50: FILE: tools/testing/selftests/mm/mseal_test.c:50:
++#define SKIP_TEST_IF_FALSE(c) do {\
++               if (!(c)) {\
++                       ksft_test_result_skip("%s, line:%d\n", __func__,
+__LINE__);\
++                       goto test_end;\
++               } \
++       } \
++       while (0)
+
+WARNING: Macros with flow control statements should be avoided
+#59: FILE: tools/testing/selftests/mm/mseal_test.c:59:
++#define TEST_END_CHECK() {\
++               ksft_test_result_pass("%s\n", __func__);\
++               return;\
++test_end:\
++               return;\
++}
+
+
+On 4/15/24 9:35 PM, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
+> 
+> selftest for memory sealing change in mmap() and mseal().
+> 
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> ---
+>  tools/testing/selftests/mm/.gitignore   |    1 +
+>  tools/testing/selftests/mm/Makefile     |    1 +
+>  tools/testing/selftests/mm/mseal_test.c | 1836 +++++++++++++++++++++++
+>  3 files changed, 1838 insertions(+)
+>  create mode 100644 tools/testing/selftests/mm/mseal_test.c
+> 
+> diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
+> index d26e962f2ac4..98eaa4590f11 100644
+> --- a/tools/testing/selftests/mm/.gitignore
+> +++ b/tools/testing/selftests/mm/.gitignore
+> @@ -47,3 +47,4 @@ mkdirty
+>  va_high_addr_switch
+>  hugetlb_fault_after_madv
+>  hugetlb_madv_vs_map
+> +mseal_test
+> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+> index eb5f39a2668b..95d10fe1b3c1 100644
+> --- a/tools/testing/selftests/mm/Makefile
+> +++ b/tools/testing/selftests/mm/Makefile
+> @@ -59,6 +59,7 @@ TEST_GEN_FILES += mlock2-tests
+>  TEST_GEN_FILES += mrelease_test
+>  TEST_GEN_FILES += mremap_dontunmap
+>  TEST_GEN_FILES += mremap_test
+> +TEST_GEN_FILES += mseal_test
+>  TEST_GEN_FILES += on-fault-limit
+>  TEST_GEN_FILES += pagemap_ioctl
+>  TEST_GEN_FILES += thuge-gen
+> diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+> new file mode 100644
+> index 000000000000..06c780d1d8e5
+> --- /dev/null
+> +++ b/tools/testing/selftests/mm/mseal_test.
+> +static void __write_pkey_reg(u64 pkey_reg)
+> +{
+> +#if defined(__i386__) || defined(__x86_64__) /* arch */
+> +	unsigned int eax = pkey_reg;
+> +	unsigned int ecx = 0;
+> +	unsigned int edx = 0;
+> +
+> +	asm volatile(".byte 0x0f,0x01,0xef\n\t"
+> +			: : "a" (eax), "c" (ecx), "d" (edx));
+> +	assert(pkey_reg == __read_pkey_reg());
+Use ksft_exit_fail_msg instead of assert to stay inside TAP format if
+condition is false and error is generated.
+
+> +int main(int argc, char **argv)
+> +{
+> +	bool test_seal = seal_support();
+> +
+> +	ksft_print_header();
+> +
+> +	if (!test_seal)
+> +		ksft_exit_skip("sealing not supported, check CONFIG_64BIT\n");
+> +
+> +	if (!pkey_supported())
+> +		ksft_print_msg("PKEY not supported\n");
+> +
+> +	ksft_set_plan(80);
+> +
+> +	test_seal_addseal();
+> +	test_seal_unmapped_start();
+> +	test_seal_unmapped_middle();
+> +	test_seal_unmapped_end();
+> +	test_seal_multiple_vmas();
+> +	test_seal_split_start();
+> +	test_seal_split_end();
+> +	test_seal_invalid_input();
+> +	test_seal_zero_length();
+> +	test_seal_twice();
+> +
+> +	test_seal_mprotect(false);
+> +	test_seal_mprotect(true);
+> +
+> +	test_seal_start_mprotect(false);
+> +	test_seal_start_mprotect(true);
+> +
+> +	test_seal_end_mprotect(false);
+> +	test_seal_end_mprotect(true);
+> +
+> +	test_seal_mprotect_unalign_len(false);
+> +	test_seal_mprotect_unalign_len(true);
+> +
+> +	test_seal_mprotect_unalign_len_variant_2(false);
+> +	test_seal_mprotect_unalign_len_variant_2(true);
+> +
+> +	test_seal_mprotect_two_vma(false);
+> +	test_seal_mprotect_two_vma(true);
+> +
+> +	test_seal_mprotect_two_vma_with_split(false);
+> +	test_seal_mprotect_two_vma_with_split(true);
+> +
+> +	test_seal_mprotect_partial_mprotect(false);
+> +	test_seal_mprotect_partial_mprotect(true);
+> +
+> +	test_seal_mprotect_two_vma_with_gap(false);
+> +	test_seal_mprotect_two_vma_with_gap(true);
+> +
+> +	test_seal_mprotect_merge(false);
+> +	test_seal_mprotect_merge(true);
+> +
+> +	test_seal_mprotect_split(false);
+> +	test_seal_mprotect_split(true);
+> +
+> +	test_seal_munmap(false);
+> +	test_seal_munmap(true);
+> +	test_seal_munmap_two_vma(false);
+> +	test_seal_munmap_two_vma(true);
+> +	test_seal_munmap_vma_with_gap(false);
+> +	test_seal_munmap_vma_with_gap(true);
+> +
+> +	test_munmap_start_freed(false);
+> +	test_munmap_start_freed(true);
+> +	test_munmap_middle_freed(false);
+> +	test_munmap_middle_freed(true);
+> +	test_munmap_end_freed(false);
+> +	test_munmap_end_freed(true);
+> +
+> +	test_seal_mremap_shrink(false);
+> +	test_seal_mremap_shrink(true);
+> +	test_seal_mremap_expand(false);
+> +	test_seal_mremap_expand(true);
+> +	test_seal_mremap_move(false);
+> +	test_seal_mremap_move(true);
+> +
+> +	test_seal_mremap_shrink_fixed(false);
+> +	test_seal_mremap_shrink_fixed(true);
+> +	test_seal_mremap_expand_fixed(false);
+> +	test_seal_mremap_expand_fixed(true);
+> +	test_seal_mremap_move_fixed(false);
+> +	test_seal_mremap_move_fixed(true);
+> +	test_seal_mremap_move_dontunmap(false);
+> +	test_seal_mremap_move_dontunmap(true);
+> +	test_seal_mremap_move_fixed_zero(false);
+> +	test_seal_mremap_move_fixed_zero(true);
+> +	test_seal_mremap_move_dontunmap_anyaddr(false);
+> +	test_seal_mremap_move_dontunmap_anyaddr(true);
+> +	test_seal_discard_ro_anon(false);
+> +	test_seal_discard_ro_anon(true);
+> +	test_seal_discard_ro_anon_on_rw(false);
+> +	test_seal_discard_ro_anon_on_rw(true);
+> +	test_seal_discard_ro_anon_on_shared(false);
+> +	test_seal_discard_ro_anon_on_shared(true);
+> +	test_seal_discard_ro_anon_on_filebacked(false);
+> +	test_seal_discard_ro_anon_on_filebacked(true);
+> +	test_seal_mmap_overwrite_prot(false);
+> +	test_seal_mmap_overwrite_prot(true);
+> +	test_seal_mmap_expand(false);
+> +	test_seal_mmap_expand(true);
+> +	test_seal_mmap_shrink(false);
+> +	test_seal_mmap_shrink(true);
+> +
+> +	test_seal_merge_and_split();
+> +	test_seal_zero_address();
+> +
+> +	test_seal_discard_ro_anon_on_pkey(false);
+> +	test_seal_discard_ro_anon_on_pkey(true);
+> +
+> +	ksft_finished();
+> +	return 0;
+The return isn't needed as ksft_finished() calls exit() with right exit code.
+
+> +}
+
 -- 
-2.34.1
-
+BR,
+Muhammad Usama Anjum
