@@ -1,107 +1,96 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8151F824B7
-	for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 18:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33FF71B50
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 18:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713204421; cv=none; b=qzB0ZGi598nXNjB6r5KN1V6PmxUAJPfaVvK845B9hEe3pbUaoB1esBljSbX3l6SYN3Nb9FsDU4hQVvwXjueZ7kG8svpmyum5VO9hoslTzA7pCa1e3fGT5NBcPn9Rx/VKDjDp6I0aoDy+z38imKR3apnoOIaJ5vMd5Hfih2SSMYg=
+	t=1713204564; cv=none; b=oQbYfNVs82y2ewPelylyRQSglg3eGdg96FE+v3MKDbwkRBysIJrdNcmCjZPHCh+Q7Vt80QdVMyt6bdeZnqpCs19P1355pJzEjxsloaOGK0AAYt41BG14e2X1IbcshqtpDMNgfe8fjn9WcLN8feboe3fbwJxvb260z61Eu6tUzoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713204421; c=relaxed/simple;
-	bh=xj1SBpac8RAPPa4cYnNvnA8NLdzOnlNHsZUECbeclDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PTys4djVRJugIRqUyfC6tW9AaG/W+/fcVSKjkfd8/RDW+/87kSlj17fK5kX7lmpZgbx7ouTearDfyeMMO7TvMVVjq8V/T4r7Tv3KBlXk+LypMwFXuUXkPI/JZuUiIj7mQSeTGi49945VeHGHzdraSrNJfAqTzuNNBKKv64V8+d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iX6e8Xt0; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1713204564; c=relaxed/simple;
+	bh=eb7RuqxydoFas47SsFIwZX7CmFPluv80e4R8SoHBr5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M/fx22DzspyczTs8NObNGCv0PUkysQZVEdrGuefzMwUeaz8y1WUuSqaxkPd4crsba/+NNxWUeMJmxI0Tp+JdQEwa7xAQK0kRjAx0nhU0NubGt9NOGshQ3REzI1AwbnFydiVsJrlHU/Bqj+Cad7gtHomxWg7vsCgwA2XMixP0FpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eZIE2D+f; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iX6e8Xt0"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e65a1370b7so13811165ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 11:07:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eZIE2D+f"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e504f58230so27997645ad.2
+        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 11:09:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713204420; x=1713809220; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hkvNj0SDmFhhMkw0sRd1k/aPAqSYVAFYS0V+mjg1+Ys=;
-        b=iX6e8Xt0Yu6OZ5FskbjoVWf5iLkystLO54c8DKnns6S/V6xNDjhly/cI6KuybJFvd4
-         1OOvpoHigs9r1kvP2OV+TrW9OG2k7mXxBel27CFwiKDoYOKUAIdh7VlqOkRg2ntIWPke
-         rsbGB+guFt2tTzsvDNPkd6m07blcl4iBB0tBs=
+        d=chromium.org; s=google; t=1713204563; x=1713809363; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZkTZc6XkL8FeYCjPFrO6bTJgIQx6kLh5TdHD7a6mqxs=;
+        b=eZIE2D+f8QekrpuWay/zdAZ1k80EfFgZtMi2g5JVTs8ykKpA4OcCADFYU6yDCsW88g
+         S3gkek8CnMg/uvrv8p1Voy7T+KHW4VE4BxBAXFT6JgO/x1w1oUEKS0/jNelCHhUrKVUG
+         4Zco1gWOzb+PnVGE4MsHT0ogO65gvXeXtu5vQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713204420; x=1713809220;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkvNj0SDmFhhMkw0sRd1k/aPAqSYVAFYS0V+mjg1+Ys=;
-        b=fuqcH+Fo/rGTChjz+jQCzUNGVZD2vuc58cjs2lS4F7meWw1FD03wIR+7EpNeoPy/w3
-         hVnxCGh7A/0jz9p6V7iq5mY7D01a3a8wFhdHn10EzyCoehxAQYr+uP0CaeZ/O2RvWKIL
-         15qPvEfNkd1i4EhTpXBF/lzsFSsSDiGYNQmFDvQX6P0SdGK6ni7zsqsFYdWh9zkb02Rf
-         o3OksvYW7O0Qva3JtCboBD6gKEfP9/GVg9CKXtXNbztdGn0Jdwg91pDo+rwO0JJAa5OM
-         xcLnNm0qJqYEom0lET9CIo24CdVB5ZPq05FtZ3HOtyUvnNa2LTLoj0GQcrlXis+drxgV
-         OGUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvJbEBgSH3Dq1CeHXLfQ+/mblkAD2Obe2PEjRTuaSiKTJmgnk7T1JEKVK9HwDTRp2PqTIB2/b0+v2CFJVcKERm7Ot8hX+2ujtlk3WqMcEj
-X-Gm-Message-State: AOJu0Yxh4H1+im8f8stDQlpl1aEkKD+Y84tkO98+47JLNXGE0p7hZzJ3
-	n3dwxnEEqMlVx7j5pqdGhv7+tfefuW1Ye3oH0LxKfsxTmT3S+iU2o8sWYqrliQ==
-X-Google-Smtp-Source: AGHT+IEoSmiqVWll+WGGtai5I1QgX+KNmvNJiMmUzgaHJwAdK89iBoCnt3jFLPWk0W0gCtqyQ9HIoQ==
-X-Received: by 2002:a17:902:a3c5:b0:1e2:bd7d:5609 with SMTP id q5-20020a170902a3c500b001e2bd7d5609mr11793136plb.20.1713204419874;
-        Mon, 15 Apr 2024 11:06:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713204563; x=1713809363;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZkTZc6XkL8FeYCjPFrO6bTJgIQx6kLh5TdHD7a6mqxs=;
+        b=f1huygNhJTtpwB2BFDr9LCPaFDblAK5dWN1wwMFUTzkCKRksMd4QNp+ZG/2ZIB4xZe
+         Vo+WOX+4PSQGM9skJMBQpOSB4RIs0rNlQObzmN2WIhtzz/EHpO1wY9owcE4qjI4vZqMr
+         PDbZKlZoUNPSMXuwbOxwfy5vak7LFYZNa6iH2E/W4K1mEh9a3/h38TzEsiO8Y5rzf/wf
+         MgvAz6www7ynvcuZjjKjCUn2XXXG8iVJGXokwCQuoWqAyHGZdq9e6JDqFU/a6wNcRknI
+         iWzGjCQNk19tWCRl/EpPo0YDwzTiDS+17vjIEVCdjnAhZ7HNufi9/bPBuEay8kk1VjxW
+         rQ0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXcvZjAdRcIfuLV9eDc9woAiXFGVx27HVQctkstoErLsg7gItgY9kNzYD6fJ8U7NS7TdOJOq2g3VsAe0jYOJeNTMIdaw0Shh0mgh4AKDsz/
+X-Gm-Message-State: AOJu0YxVhY4pzZlcHHQyYGnue5XIQZF6Vm05li0AjRTc/0q4VoaWStqB
+	FnOKLgTJw1TSDunGwjvf/Sezz3N49Imd5zQZF5tLVymbmmQw7sxw/rp2xMArgg==
+X-Google-Smtp-Source: AGHT+IEe6B6Ws6berlSTBcbjruG3i3BTWWCbetQgyGWw3sCNk24j27rJc7E8j3Ld5qUo912GTxv16Q==
+X-Received: by 2002:a17:902:9a4b:b0:1e5:5c8c:67ec with SMTP id x11-20020a1709029a4b00b001e55c8c67ecmr8090687plv.5.1713204562991;
+        Mon, 15 Apr 2024 11:09:22 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b11-20020a170902650b00b001e509d4d6ddsm8398013plk.1.2024.04.15.11.06.59
+        by smtp.gmail.com with ESMTPSA id jz5-20020a170903430500b001e41f1dda43sm8263797plb.75.2024.04.15.11.09.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 11:06:59 -0700 (PDT)
-Date: Mon, 15 Apr 2024 11:06:58 -0700
+        Mon, 15 Apr 2024 11:09:22 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Joe Perches <joe@perches.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
-Subject: Re: [PATCH v4] checkpatch: add check for snprintf to scnprintf
-Message-ID: <202404151105.54B9DEABE8@keescook>
-References: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
- <48d593c1-c706-4af3-aacf-d1329a8b0d4b@wanadoo.fr>
- <1a4554d39229c790c98bebb213bc9f2423cd32de.camel@perches.com>
- <CAFhGd8rUz_wG+jkW=+17RpG2BQxaRMmZVk=g=G1FogMSeAD7jA@mail.gmail.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	gustavoars@kernel.org,
+	justinstitt@google.com,
+	linux-hardening@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 0/2] configs/hardening: Some fixes for UBSAN
+Date: Mon, 15 Apr 2024 11:09:19 -0700
+Message-Id: <171320455703.253555.575256453738819068.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
+References: <20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8rUz_wG+jkW=+17RpG2BQxaRMmZVk=g=G1FogMSeAD7jA@mail.gmail.com>
 
-On Thu, Apr 11, 2024 at 03:10:57PM -0700, Justin Stitt wrote:
-> On Thu, Apr 11, 2024 at 1:56 PM Joe Perches <joe@perches.com> wrote:
-> > It could.
-> >
-> > # {v}snprintf uses that should likely be {v}scnprintf
-> >                 if ($line =~ /\b((v?)snprintf)\s*\(/) {
-> >                         WARN("SNPRINTF",
-> >                              "Prefer ${2}scnprintf over $1 - see: https://github.com/KSPP/linux/issues/105\n" . $herecurr);
-> >                 }
-> >
-> >
-> >
-> > Though I also think it's better to use lore rather than github
+On Thu, 11 Apr 2024 11:11:05 -0700, Nathan Chancellor wrote:
+> This series was spurred by a couple of recent UBSAN reports in our
+> continuous integration that appear to be related to
+> CONFIG_UBSAN_SIGNED_WRAP (which gets enabled with hardening.config due
+> to 'default UBSAN'), as they only appear with clang-19 and newer:
 > 
-> I am fine with making the UX change in v5 regarding using ${2} and $1
-> but I wish someone could have said something about the Github links
-> earlier, we already have a pattern going with these string api
-> changes:
+>   https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/8646488985/job/23709324479#step:6:500
+>   https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/8646488985/job/23709330815#step:6:651
 > 
->      "Prefer strscpy over strcpy - see:
-> https://github.com/KSPP/linux/issues/88\n" . $herecurr);
-> }
+> [...]
 
-KSPP isn't going anywhere -- we've used these links before and we can
-use them here too. I don't see any good reason to duplicate stuff into
-lore, etc.
+Applied to for-next/hardening, thanks!
+
+[1/2] configs/hardening: Fix disabling UBSAN configurations
+      https://git.kernel.org/kees/c/e048d668f296
+[2/2] configs/hardening: Disable CONFIG_UBSAN_SIGNED_WRAP
+      https://git.kernel.org/kees/c/7fcb91d94e89
+
+Take care,
 
 -- 
 Kees Cook
+
