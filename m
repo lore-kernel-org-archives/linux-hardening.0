@@ -1,169 +1,113 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD6C2943C
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Apr 2024 19:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7A45D8F6
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Apr 2024 22:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713296439; cv=none; b=TsS94LwgC701zERqz7OVrkIWXeh5OWGIBd8FrL1gGDa89Xoq1nK8VPrh/dLM6tpKx4GQ4OPKVyAKK5O/xng5BQfGP90s0+gLa2ctdp5bZ8O9fJ5DJbuD06EyRbZVkLW5J1k1q/TD0EtS+VluzsXWSkXYotyeGOkpzLVVz3UjI1s=
+	t=1713305409; cv=none; b=ld9MbcbOwJZx4+JyvZ73W0jvmDZjew83CTAvdT8npQezvGN5eZqKzXo9yyUgRBvfeiOU86yo6pldkbcnc/W+I5GqoNZ4QSlFV/TvCYtN+w6l3VNUhPXNsGJ5BNHAEbu8t0Smb4+bsTW/9OKO1aPOg7MfEsW7cnPxsmrmL9VGgfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713296439; c=relaxed/simple;
-	bh=RvR6Qs/XmUof5Nbp59FmfgdsMMPaxV8slV+aC7LWifg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=KXwnm8zq/lEfdsLmrp1c9+c5ZC/pcsCcY7IfvYcwChPOxNlg9dPzN+8f0dRKeDlyvrT/+tHCP6BcTA/J0dDT3aXe8ufBApMFD9lLKgE5xw6qYETH89HME7qj6NEwKhEGHKlE2bI4WPf9MPhBfl9bWqxNg0x/irmBMjTYYQ+LjTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gIPnfds+; arc=none smtp.client-ip=209.85.160.54
+	s=arc-20240116; t=1713305409; c=relaxed/simple;
+	bh=WRfn/cAsNNMRbBq4GuWQdlT1whoo5mgh0SJ91YMp45M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AMHlB9kKku0bx5dZCbCxmH/rfcL8mjmM2DSnyAGDxW4LvxZS0btXb3m1mU4xhLIKOReAVtdma1nQa9crtego/aZpQ32SLSYk6388EHA5JYL5Bm9jPgHFEWKvPuFxipBbgMXvYj5rT2zU/yCMFTJbKfRoSCfISkGor/cFTTRSwb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mZFsERtc; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gIPnfds+"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-23319017c4cso3223722fac.2
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Apr 2024 12:40:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mZFsERtc"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso3023782a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Apr 2024 15:10:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713296437; x=1713901237; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KwEv4Z/MXON03xxjjs3as0fX96oGOhkKVq/HAbUMzow=;
-        b=gIPnfds+AZmqgVlPcM05vY2KMGCvBFfZX+tCc4fa3kNhn9OmFIDYBvKWgmrN9p3LWl
-         KmOkk74I4nLya8fELsVfokSYibTpF0NjFRsKW9m1cKQ+qDP4smksUnQvgbp1ayHnsoBn
-         OX/556GWj6ENvVZEM4uqvtskjAUpcN9ZtZSAE=
+        d=chromium.org; s=google; t=1713305406; x=1713910206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kWpnbwrols/HFksVXx6/pFTtlVbtQF7yySAM3VjY0NM=;
+        b=mZFsERtcoeR+yD6q+ecfyS+3pRFu1IrSUxDCgnESXNVP2gX3duOq02JoBYd6onKPkO
+         QCzTDUlGVfwb63i9R7CsdkZqM9YWeTQnyYrKVvFV29f6SbA56cKAk3yKRQzaaY+bjogJ
+         jBhp5wjwY3vGVkiE62AQ3mbu5JxPW3bDGs7Z0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713296437; x=1713901237;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KwEv4Z/MXON03xxjjs3as0fX96oGOhkKVq/HAbUMzow=;
-        b=JNBwJr5hJU5ZN2ANB3jiG4YPffdl80b8iuhgOzKZ0/UNZjssPrDobEpwMWwFfr3XU0
-         bAkCv5XW9vFEfhZd9XJ5SXaOlhnLjfapZPlbmdHIRzbib/ewfzq6JfhFmupBTwl1J1Hb
-         UVY9WVKiwLMcCp/nVCwXNYKMJBh5zGgxa8eUFd7R9iSiQ4aLUmkUKwSR8oGhI7KlJdTv
-         /CBcZBtRLet0LZQ0RK6G4fRo6Al7GYvEWlbzhJK7BCl1FQFkbTSuEjyI/LZNPwst6/R0
-         Y5rBj8uIEXXByHnovpHiSaHXv4SRTr5PwUP6Z/BRC/APucwTTF0PtjaNO5FAexnpAOnN
-         ciSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4aShClCSPsEOrbEQmywph/dbAyaiSqxd1vW5WAHAnx9H2ekSW+IXTJENRZB3O6SveIUcTV50Dl3L99Il0gpc3WmEtSH67wkgsBPZsLm5V
-X-Gm-Message-State: AOJu0YyLX6JhjFha7mamAqtFguq9agQs6oJ7kXfO9CtUND6m2g9BjmsM
-	LC8LBGbGpma3T78vtfrDTSVRTGed9QuoNk3V+b+B+Wg/xfZ5U99LHDvGj1PzB2OciRfZw4+4J0k
-	1jDuECFEk2KCDGeRO/l4EpSlW6Ho1Lj+DAhUB
-X-Google-Smtp-Source: AGHT+IFpMnnuBnQ5Arki390SOLtA3w0Zzb02W+aYx36dAai5mD00AOXWCVWabXOS8NOrnI69HIi0pttIqRN879o1qMk=
-X-Received: by 2002:a05:6870:d14d:b0:22a:4249:f409 with SMTP id
- f13-20020a056870d14d00b0022a4249f409mr16854617oac.4.1713296437395; Tue, 16
- Apr 2024 12:40:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713305406; x=1713910206;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kWpnbwrols/HFksVXx6/pFTtlVbtQF7yySAM3VjY0NM=;
+        b=l8uL+axBq7XeW85nXUVujqmvjDkxpQMeq+THFjaNiMQa/y4wzPOKgecrxwmTNs/zwI
+         bsgvq1zOM8gmdFiUCyNoYNqMBVq0uOGgk8xoF6JTqVInx2KsCmb9xfEmxhYXR3/uPCPW
+         Wzffz3ErAK1OCqoxZ/BgtMAfHLG2tEdZJPgM0HEvZ92AvzqoFUeGh+I01BmhvsthcrCk
+         pqX/dSVHf6Y9ra2c1Kq6Lg6C9iGuVAId+/2UZcFeNCEbtR3Q6rCGkiKZChrw8ZIwJQ8a
+         1E7X1wIAQhUan8o94JN+krLN0BOD592HnzitK1aYaFFM0mn3TQNsFr2UtxVXiZx4XllR
+         xwGA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6HgDl7AueIxMA+dlsMAXOEXSkn1mzgyB64SzQIWdzGk5asbEQDB5Gbhoq0vEPD8j2Bzms6nhdA/oCe+/5E4gzfhKDMM4FWQ51VuBYwRe8
+X-Gm-Message-State: AOJu0YxE0/9Ub03hZ2ofFqCouxq+NYHx6Sb8DvrTpibgEtLVe3heRBIx
+	aq7b6AqOmTtT1vnxdfhGBUfUDUm8Dn5RU9zKHWB6CqPE9o+TRvoZLk08viboEg==
+X-Google-Smtp-Source: AGHT+IFXzTOtdhmzkFf7kvRjs/2yOBCu6yaN7ivsHMPoTYcwF1gpR1l+bDIYrHHeInvIb0cUfNNPvg==
+X-Received: by 2002:a05:6a20:9f86:b0:1a9:db37:bef3 with SMTP id mm6-20020a056a209f8600b001a9db37bef3mr8840834pzb.12.1713305406053;
+        Tue, 16 Apr 2024 15:10:06 -0700 (PDT)
+Received: from localhost (15.4.198.104.bc.googleusercontent.com. [104.198.4.15])
+        by smtp.gmail.com with UTF8SMTPSA id q4-20020a656244000000b005dc4fc80b21sm8032266pgv.70.2024.04.16.15.10.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 15:10:05 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	usama.anjum@collabora.com
+Cc: jeffxu@google.com,
+	jorgelo@chromium.org,
+	groeck@chromium.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	jannh@google.com,
+	sroettger@google.com,
+	pedro.falcato@gmail.com,
+	dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org,
+	willy@infradead.org,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	deraadt@openbsd.org,
+	corbet@lwn.net,
+	Liam.Howlett@oracle.com,
+	surenb@google.com,
+	merimus@google.com,
+	rdunlap@infradead.org,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH 0/1] selftest mm/mseal: style change
+Date: Tue, 16 Apr 2024 22:09:43 +0000
+Message-ID: <20240416220944.2481203-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415163527.626541-1-jeffxu@chromium.org> <znrbeb744774vre5dkeg7kjnnt7uuifs6xw63udcyupwj3veqh@rpcqs7dmoxi6>
-In-Reply-To: <znrbeb744774vre5dkeg7kjnnt7uuifs6xw63udcyupwj3veqh@rpcqs7dmoxi6>
+Content-Transfer-Encoding: 8bit
+
 From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 16 Apr 2024 12:40:26 -0700
-Message-ID: <CABi2SkU8B27O28jjTDajFpENgUHhntuRAMKFUMXr6A6AxZeyiQ@mail.gmail.com>
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
-	willy@infradead.org, gregkh@linuxfoundation.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
-	surenb@google.com, merimus@google.com, rdunlap@infradead.org, 
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 8:13=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * jeffxu@chromium.org <jeffxu@chromium.org> [240415 12:35]:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > This is V10 version, it rebases v9 patch to 6.9.rc3.
-> > We also applied and tested mseal() in chrome and chromebook.
-> >
-> > ------------------------------------------------------------------
-> ...
->
-> > MM perf benchmarks
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > This patch adds a loop in the mprotect/munmap/madvise(DONTNEED) to
-> > check the VMAs=E2=80=99 sealing flag, so that no partial update can be =
-made,
-> > when any segment within the given memory range is sealed.
-> >
-> > To measure the performance impact of this loop, two tests are developed=
-.
-> > [8]
-> >
-> > The first is measuring the time taken for a particular system call,
-> > by using clock_gettime(CLOCK_MONOTONIC). The second is using
-> > PERF_COUNT_HW_REF_CPU_CYCLES (exclude user space). Both tests have
-> > similar results.
-> >
-> > The tests have roughly below sequence:
-> > for (i =3D 0; i < 1000, i++)
-> >     create 1000 mappings (1 page per VMA)
-> >     start the sampling
-> >     for (j =3D 0; j < 1000, j++)
-> >         mprotect one mapping
-> >     stop and save the sample
-> >     delete 1000 mappings
-> > calculates all samples.
->
->
-> Thank you for doing this performance testing.
->
-> >
-> > Below tests are performed on Intel(R) Pentium(R) Gold 7505 @ 2.00GHz,
-> > 4G memory, Chromebook.
-> >
-> > Based on the latest upstream code:
-> > The first test (measuring time)
-> > syscall__     vmas    t       t_mseal delta_ns        per_vma %
-> > munmap__      1       909     944     35      35      104%
-> > munmap__      2       1398    1502    104     52      107%
-> > munmap__      4       2444    2594    149     37      106%
-> > munmap__      8       4029    4323    293     37      107%
-> > munmap__      16      6647    6935    288     18      104%
-> > munmap__      32      11811   12398   587     18      105%
-> > mprotect      1       439     465     26      26      106%
-> > mprotect      2       1659    1745    86      43      105%
-> > mprotect      4       3747    3889    142     36      104%
-> > mprotect      8       6755    6969    215     27      103%
-> > mprotect      16      13748   14144   396     25      103%
-> > mprotect      32      27827   28969   1142    36      104%
-> > madvise_      1       240     262     22      22      109%
-> > madvise_      2       366     442     76      38      121%
-> > madvise_      4       623     751     128     32      121%
-> > madvise_      8       1110    1324    215     27      119%
-> > madvise_      16      2127    2451    324     20      115%
-> > madvise_      32      4109    4642    534     17      113%
-> >
-> > The second test (measuring cpu cycle)
-> > syscall__     vmas    cpu     cmseal  delta_cpu       per_vma %
-> > munmap__      1       1790    1890    100     100     106%
-> > munmap__      2       2819    3033    214     107     108%
-> > munmap__      4       4959    5271    312     78      106%
-> > munmap__      8       8262    8745    483     60      106%
-> > munmap__      16      13099   14116   1017    64      108%
-> > munmap__      32      23221   24785   1565    49      107%
-> > mprotect      1       906     967     62      62      107%
-> > mprotect      2       3019    3203    184     92      106%
-> > mprotect      4       6149    6569    420     105     107%
-> > mprotect      8       9978    10524   545     68      105%
-> > mprotect      16      20448   21427   979     61      105%
-> > mprotect      32      40972   42935   1963    61      105%
-> > madvise_      1       434     497     63      63      115%
-> > madvise_      2       752     899     147     74      120%
-> > madvise_      4       1313    1513    200     50      115%
-> > madvise_      8       2271    2627    356     44      116%
-> > madvise_      16      4312    4883    571     36      113%
-> > madvise_      32      8376    9319    943     29      111%
-> >
->
-> If I am reading this right, madvise() is affected more than the other
-> calls?  Is that expected or do we need to have a closer look?
->
-The madvise() has a bigger percentage (per_vma %), but it also has a
-smaller base value (cpu).
+This patch is a follow up to the comments [1] on test code during
+mseal discussion. This is style only change to the selftest code, not to
+test code logic.
 
--Jeff
+Please apply on top of mseal v10 patch [2]
+
+[1] 
+https://lore.kernel.org/all/e1744539-a843-468a-9101-ce7a08669394@collabora.com/
+
+[2]
+https://lore.kernel.org/all/20240415163527.626541-1-jeffxu@chromium.org/
+
+Thanks
+
+
+Jeff Xu (1):
+  selftest mm/mseal: style change
+
+ tools/testing/selftests/mm/mseal_test.c | 124 +++++++++++++++++-------
+ tools/testing/selftests/mm/seal_elf.c   |   3 -
+ 2 files changed, 91 insertions(+), 36 deletions(-)
+
+-- 
+2.44.0.683.g7961c838ac-goog
+
