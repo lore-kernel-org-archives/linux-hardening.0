@@ -1,107 +1,95 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4536D185E
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Apr 2024 00:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC08E545;
+	Tue, 16 Apr 2024 02:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713228391; cv=none; b=JGs2bmrz4vSBierjgayVtShp/gVb7mUXn/2jsyE2DeakUKrM+U360ZATAZtcOROB022/WyqTTVYwfqs7Z2zTaGdZbhBqcNCvJEWH8MGaZxPiMqkChTTu+kf5on3vEa84yb1N1rUJ3HcJARlwg6f1DE9PBTbASLBIrz6Jl4OkqDg=
+	t=1713235017; cv=none; b=qggtZTcpGZhl+MiyLQh3VsnDwXW/oK7wihd0ohjvQHxpD1Lx7DWq21O52lyeQgwS5DUoT1dFWqinUlvutwn9dYT0d13iMTEWUIQZW9uqAv1/Bmh5Pe5XysAq9nP+UtyGP/dvsTcJlx/bRlmFnQQcbm+/8vMsOkpTb9l2XFTzSJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713228391; c=relaxed/simple;
-	bh=015eEwhLzWafHkc0BsCRogWYfs3SqoEKVTXAAy/Fhf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DruyvkaX1L94L/qxE3IZFLq1Crs4yQzFxfYDlRs90TqVIZoGZ10Al6vSD24XGfDRuEhqLSVk7S0sggGjwqi3ribXgjMNWwnwo/XN09f5eJvrAE9V492ea0RZBoFz+T8658OMriwmVc55xJ8pWFn9fykwIfs2xF5pON4lKkI0LJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=P0gwi6j9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713235017; c=relaxed/simple;
+	bh=peXN1Y3UTbxhL5DXVIpUyA5+Cwu3ZFb+d4Y1g3j1jog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iCH/rFLctLpANOewLS9Zq5/3/h3O2EhROaZT+edlXM6t3DuVlFEy3jaM9sbjyALMnPoFWYNAXIsJehKCqKxkWkqbVOGKOyZQypDnJhdhyLvQ/OPg922XLg0r6hROLF0TYN2Vvif4/Jx2d0sEIrTM35JWO/Gnl+VgbQJsfc85Y9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sa8+G+iF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P0gwi6j9"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e424bd30fbso29862225ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 15 Apr 2024 17:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713228388; x=1713833188; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SarbV9gzd7Ext5uREk+cO+VjFEa4L7Rs/CELnpCJsv8=;
-        b=P0gwi6j9oLI/Dwi5h7eAZTZi3aI00LBxvktANtbgHKKzHAFmz68iLfOWl05rx1bfUA
-         ldfTKzej5CEwBxGW74Sf6f2U2kl01+mMPBmpYzmOQhl9oYWn35vpzvak3m1jaTylVs+c
-         Ceq5Habm015Kj15goXxJKgXLhBfEglQax9Wl8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713228388; x=1713833188;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SarbV9gzd7Ext5uREk+cO+VjFEa4L7Rs/CELnpCJsv8=;
-        b=RRsOqvqTYeU2zYWXsLVJGos/ffbG18Gu5u54h7lFnU5qBGRuBZjzsSs9OEr2SS/Xep
-         qY14ADgl91epHiXuKnz727elhw2IZgqX0Qt+Gl4lkIM9kltorwmlZsJoSaMe9vCnte/h
-         sA8CSYBo21UJcBky/yYuqCTgZZ6i7cLeuylUkZFaEmWQH4/2ovkBfKOpKKl9ISz9tReP
-         d4kv7pTaq3sHvmQhCTXJrh9sSQUFAJqjOY+jnblBBdRO1U0GCw5OtPbmgu5pldb10c7J
-         96CQcjOe6P0ybW5v4LSV0MBRsDSf2EQsssKuJrMVv97pOM4Ia9wq99fxh+6FPvGD0m3E
-         /lhA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0eQ99jQN6dT1iNS+ob3nKZMqOwnPq8VncKT185TlD9J3cSXM1TBg/4ituIky/7qHzfiaiM/Mu5KAvEeEJNNxwacoCx2sWw+Pps6M2O07S
-X-Gm-Message-State: AOJu0YzyNnRpBcvrryPl9k3n6e05QxQ3ccNsT47AtySVqdq3ISFeMuWe
-	PjvrUlfVfJ6K608R4ejvqUHHVnt6zbXGUJWWBjlVI9ZO2q1y1xerXSfWsKU1/Q==
-X-Google-Smtp-Source: AGHT+IHX1mELGRta6OeQsH8t8lp3e5H1mp/8L3cNAf/ZlRUnfUwX1Jl3r6/rRS9SAEK7dC+5kIawkw==
-X-Received: by 2002:a17:902:82c4:b0:1e4:b4f5:5cfa with SMTP id u4-20020a17090282c400b001e4b4f55cfamr11411241plz.27.1713228388653;
-        Mon, 15 Apr 2024 17:46:28 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id im22-20020a170902bb1600b001e3d2314f4bsm8688355plb.132.2024.04.15.17.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 17:46:28 -0700 (PDT)
-Date: Mon, 15 Apr 2024 17:46:27 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Marco Elver <elver@google.com>, Justin Stitt <justinstitt@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] ubsan: Add awareness of signed integer overflow traps
-Message-ID: <202404151738.AC6F6C210@keescook>
-References: <20240415182832.work.932-kees@kernel.org>
- <20240415183454.GB1011455@dev-arch.thelio-3990X>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sa8+G+iF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A84FC113CC;
+	Tue, 16 Apr 2024 02:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713235016;
+	bh=peXN1Y3UTbxhL5DXVIpUyA5+Cwu3ZFb+d4Y1g3j1jog=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Sa8+G+iFhBQ2A/8agFVKgaPwlRMuIxDa1TwYHlSuojIKgYua/IHWbM9PceBGhZHU7
+	 0P/NkOXqkDFfMVZCKtlTAYGfAV/6jjMHwBRe3TaaRZ5+tHWuKC7ivTAUARsLFIkdVr
+	 ywOiUvLHG2gCrlxLUNM5q6mkbLQJwV0WAXlfhZcRksZT8EYm4RY0aikPjkGGtiRV6z
+	 o1KzNu3cO78hug2Siy1Q/yQbWVR2bS7PuPglTc3d6obj+DqLYT//heDcwpbJmA64Kx
+	 9R8vimREFoxGC4GOZCSYUru+dOvbGkYwYDjBgtAvUbZhULCM95quA/8cyAxgcewYM6
+	 2Eqa+YQwzGshQ==
+From: Bjorn Andersson <andersson@kernel.org>
+To: James Schulman <james.schulman@cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ricardo Rivera-Matos <rriveram@opensource.cirrus.com>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+	alsa-devel@alsa-project.org,
+	patches@opensource.cirrus.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/7] Xperia 1 V support
+Date: Mon, 15 Apr 2024 21:36:53 -0500
+Message-ID: <171323501053.861898.18063006393453475946.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
+References: <20240210-topic-1v-v1-0-fda0db38e29b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415183454.GB1011455@dev-arch.thelio-3990X>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 15, 2024 at 11:34:54AM -0700, Nathan Chancellor wrote:
-> On Mon, Apr 15, 2024 at 11:28:35AM -0700, Kees Cook wrote:
-> > On arm64, UBSAN traps can be decoded from the trap instruction. Add the
-> > add, sub, and mul overflow trap codes now that CONFIG_UBSAN_SIGNED_WRAP
-> > exists. Seen under clang 19:
-> > 
-> >   Internal error: UBSAN: unrecognized failure code: 00000000f2005515 [#1] PREEMPT SMP
-> > 
-> > Reported-by: Nathan Chancellor <nathan@kernel.org>
-> > Closes: https://lore.kernel.org/lkml/20240411-fix-ubsan-in-hardening-config-v1-0-e0177c80ffaa@kernel.org
-> > Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+On Mon, 12 Feb 2024 14:10:08 +0100, Konrad Dybcio wrote:
+> DTS for the phone and some fly-by fixes
 > 
-> As I mentioned, CONFIG_UBSAN_SIGNED_INTEGER_WRAP needs to be
-> CONFIG_UBSAN_SIGNED_WRAP. I applied this change with that fix up and the
-
-Whoops; thanks!
-
-> warning now becomes:
+> Patch 1 for Mark/sound
+> Rest for qcom
 > 
->   Internal error: UBSAN: integer subtraction overflow: 00000000f2005515 [#1] PREEMPT SMP
-
-Perfecto. :)
-
-> So:
 > 
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Thanks!
+Applied, thanks!
 
+[2/7] dt-bindings: arm: qcom: Add Xperia 1 V
+      commit: 212729551c4186a1a1cbd80379375b1b54488369
+[3/7] arm64: dts: qcom: sm8550: Mark QUPs and GPI dma-coherent
+      commit: 91fc74458d833dbc999aa04ca34c2a197711a0b6
+[4/7] arm64: dts: qcom: sm8550: Mark APPS SMMU as dma-coherent
+      commit: 93395f9a8d52b89868d75e278adaf002f99dec22
+[5/7] arm64: dts: qcom: sm8550: Add missing DWC3 quirks
+      commit: d18b5477dcea7775a562b3ba7aaa68772c8980ba
+[6/7] arm64: dts: qcom: sm8550: Mark DWC3 as dma-coherent
+      commit: 6e4f7e53991ca7e70dc7d5d9d66c833091e1f6ae
+[7/7] arm64: dts: qcom: Add SM8550 Xperia 1 V
+      commit: 39c596304e44781c1950ea0cbf178d6433ff9c71
+
+Best regards,
 -- 
-Kees Cook
+Bjorn Andersson <andersson@kernel.org>
