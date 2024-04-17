@@ -1,124 +1,172 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4E5187F;
-	Wed, 17 Apr 2024 02:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620E5394;
+	Wed, 17 Apr 2024 02:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713320139; cv=none; b=JwHna9MXxFHaZHghinRF/KV9TkzJnbabBNSb59E2RtNI/vqUOSuLyXAj5+cfVRqu0cC5zxdEgsGhGBIkd48fZglTElqxiooxuRubP0JQ0vbPOuxGAKbmJ00AExy4j0JXk80FrcXp7UdSyy9PxmoCl4ltS/h9oqcQO1uHce9g/pg=
+	t=1713322716; cv=none; b=ZWv//iWBMIzk9wZLbcAQNwZf/TOgDsniZP0GvEeUjKRZuAYRJsk4u52Vtn0v9AbQoKbZytaHj3s3STpTDiw8o+ixErNofSekIPtpDxNeDHPLvnpKUKnjdU9Cgu3y588zl45ryquzrB5ePsd/d0hjNU/K5ZCU8af2zdMUhDt4/sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713320139; c=relaxed/simple;
-	bh=omV0IA49HoXwT0kyGj7AZ71R/UujjbWkNeetXSdxGdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uNJHA6k/kqU8nv4gteLZEvsmjxDqNE5gwxoYfTrSdLFmCrrvRIu9LTCEx3yqzbPjupq5cDjqpBPMOY2HiKXo+xNI6U2AlIOiLBoBbwRfKFVrdEV1/jJRskEYFC5MKjIrVTgbws0RhNh5OTq09TrUgOrHvB9injXHUhjoU0vsNHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=S2zYhIQq; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S2zYhIQq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=u0IYFiNnZuPAYt7tDNRGy4tT9L7GKEy8U8Q+P2ys8oI=;
-	b=S2zYhIQqqgGHRmyhkGTkoYj8R3cou2mv6Rj0ba7g9icKNHxbI79V2zcC2yDZJB
-	PY+O2UVUvUoZhLxqxNRuEKs/ZCHuHtN/aKMSXxTZejuVbkNsvW8z2lQb3xFxv/hG
-	uez93caOs/03ITI7yvDLDYrw1pIQY4onmRSVkwOlGzL6k=
-Received: from [192.168.38.19] (unknown [124.232.57.198])
-	by gzga-smtp-mta-g1-1 (Coremail) with SMTP id _____wD3X1w9MB9mfsJ_BQ--.14588S2;
-	Wed, 17 Apr 2024 10:13:17 +0800 (CST)
-Message-ID: <6b847511-cc5d-4a55-a764-48461209fe53@163.com>
-Date: Wed, 17 Apr 2024 10:13:16 +0800
+	s=arc-20240116; t=1713322716; c=relaxed/simple;
+	bh=Gj57y4DEJZXM6RahWTXAxrkEjxXLIt6EopYgzwFzygg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fh3XR32DO/pNYh6St6d9Y1JAi6E1BBmtk3MfkcdBna7fVO5BOktZDav73CBCxTj69zlEbCoRypWGuaQF3pnky1agEm+Cn7CjyhZ33wmSjQY3CiFZJM4dP+ABDYmNYeUKy+SyWJ3QEVG9Q2ZP25S10OXP7O0cQNr3Mig9XGDw0Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 9b3ac116fc6511ee9305a59a3cc225df-20240417
+X-CID-UNFAMILIAR: 1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:fa87ce5d-9d3d-4ad2-8569-f389b266c00d,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:12,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-3
+X-CID-INFO: VERSION:1.1.37,REQID:fa87ce5d-9d3d-4ad2-8569-f389b266c00d,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:12,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-3
+X-CID-META: VersionHash:6f543d0,CLOUDID:70be5267b51096b2a158101af600ca09,BulkI
+	D:240417105304FRVF15SB,BulkQuantity:0,Recheck:0,SF:66|38|25|16|19|44|102,T
+	C:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULN
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_TRUSTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-UUID: 9b3ac116fc6511ee9305a59a3cc225df-20240417
+X-User: tianyaxiong@kylinos.cn
+Received: from tian-thinkpad-x390.. [(116.128.244.169)] by mailgw.kylinos.cn
+	(envelope-from <tianyaxiong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 637547585; Wed, 17 Apr 2024 10:53:02 +0800
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	rppt@kernel.org
+Cc: keescook@chromium.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	akpm@linux-foundation.org,
+	ryan.roberts@arm.com,
+	wangkefeng.wang@huawei.com,
+	ardb@kernel.org,
+	david@redhat.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>,
+	xiongxin <xiongxin@kylinos.cn>
+Subject: [PATCH v3] arm64: hibernate: Fix level3 translation fault in swsusp_save()
+Date: Wed, 17 Apr 2024 10:52:48 +0800
+Message-Id: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: hibernate: Fix level3 translation fault in
- swsusp_save()
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: will@kernel.org, keescook@chromium.org, tianyaxiong@kylinos.cn,
- xiongxin@kylinos.cn, rppt@kernel.org, tony.luck@intel.com,
- gpiccoli@igalia.com, songshuaishuai@tinylab.org, wangkefeng.wang@huawei.com,
- akpm@linux-foundation.org, ardb@kernel.org, david@redhat.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZeBRfxQ8WTEVzpfL@kernel.org>
- <20240301021924.33210-1-13327272236@163.com> <Zhlvs2ol7Va1r1Mr@arm.com>
-Content-Language: en-US
-From: Yaxiong Tian <13327272236@163.com>
-In-Reply-To: <Zhlvs2ol7Va1r1Mr@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3X1w9MB9mfsJ_BQ--.14588S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWr17tr1fZF43WF4rCFy7GFg_yoW5tr4kpr
-	W7WrWFyw1DAFnYv393Xan5urn3A3sYgr45JF1DArn7ZF4ayFZ5Kr45Kry29Fyqqrn5Cr4F
-	qFWUKwnayFn0ga7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UeUDXUUUUU=
-X-CM-SenderInfo: jprtjjaxsxjjitw6il2tof0z/1tbiYh-DJWV4HPYA2AAAs0
 
+On ARM64 machines using UEFI, if can_set_direct_map() return false by
+setting some CONFIGS in kernel build or grub,such as
+NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
+NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
+debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+swsusp_save() will fail due to can't finding the map table under the
+nomap memory.such as:
 
-在 2024/4/13 01:30, Catalin Marinas 写道:
-> For some reason I missed the updated patch.
->
-> On Fri, Mar 01, 2024 at 10:19:24AM +0800, Yaxiong Tian wrote:
->> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>
->> On ARM64 machines using UEFI, if can_set_direct_map() return false by
->> setting some CONFIGS in kernel build or grub,such as
->> NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
->> NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
->> debug_pagealloc=off in grub and NO CONFIG_KFENCE.
->> swsusp_save() will fail due to can't finding the map table under the
->> nomap memory.such as:
-> [...]
->> [   48.532162] Call trace:
->> [   48.532162]  swsusp_save+0x280/0x538
->> [   48.532162]  swsusp_arch_suspend+0x148/0x190
->> [   48.532162]  hibernation_snapshot+0x240/0x39c
->> [   48.532162]  hibernate+0xc4/0x378
->> [   48.532162]  state_store+0xf0/0x10c
->> [   48.532162]  kobj_attr_store+0x14/0x24
->>
->> This issue can be reproduced in QEMU using UEFI when booting with
->> rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
->>
->> This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
->> kernel_page_present() presumes that a page is present when can_set_direct_map()
->> returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
->> cause level3 translation fault in this pages.
-> I can see how kernel_page_present() ended up returning true if
-> !can_set_direct_map(), though based on the function naming only, it
-> feels a bit unintuitive. Is arm64 the only architecture making use of
-> MEMBLOCK_NOMAP? Or is it the only one where kernel_page_present() also
-> returns true if !can_set_direct_map()?
-It looks like ARM64 is only one where kernel_page_present() also returns
-true if  !can_set_direct_map(). I remember that on x86 models  there are
-no NOMAP regions, on ARM64 machines these NOMAP regions are set with uefi.
-Other details are too old to remember.
->> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
->> index 02870beb271e..d90005de1d26 100644
->> --- a/arch/arm64/kernel/hibernate.c
->> +++ b/arch/arm64/kernel/hibernate.c
->> @@ -94,7 +94,7 @@ int pfn_is_nosave(unsigned long pfn)
->>   	unsigned long nosave_end_pfn = sym_to_pfn(&__nosave_end - 1);
->>   
->>   	return ((pfn >= nosave_begin_pfn) && (pfn <= nosave_end_pfn)) ||
->> -		crash_is_nosave(pfn);
->> +		crash_is_nosave(pfn) || !pfn_is_map_memory(pfn);
->>   }
-> This indeed fixes the problem but it looks like an arm64-specific
-> workaround. I can see at least arm, loongarch and riscv making use of
-> memblock_is_map_memory() (which is what pfn_is_map_memory() calls). Do
-> they not have the same problem? On riscv, for example,
-> kernel_page_present() does not depend on any ARCH_HAS_SET_DIRECT_MAP
-> related options/conditions (neither does x86 though not sure it cares
-> about MEMBLOCK_NOMAP). Should we do the same for arm64 and drop the
-> !can_set_direct_map() condition in kernel_page_present()?
-I drop the  !can_set_direct_map() condition in kernel_page_present(). And
-test it. The test was passed. I use kretprobe to inspect in 
-kernel_page_present()
-find that the NOMAP pages  will reture false. So in saveable_page() 
-these page
-will skip. The final logic for processing these pages is the same as 
-before (v5.4).
-I think it is good way.
+[   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
+[   48.532162] Mem abort info:
+[   48.532162]   ESR = 0x0000000096000007
+[   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   48.532162]   SET = 0, FnV = 0
+[   48.532162]   EA = 0, S1PTW = 0
+[   48.532162]   FSC = 0x07: level 3 translation fault
+[   48.532162] Data abort info:
+[   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+[   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
+[   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
+[   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+[   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+[   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
+[   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
+[   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
+[   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
+[   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   48.532162] pc : swsusp_save+0x280/0x538
+[   48.532162] lr : swsusp_save+0x280/0x538
+[   48.532162] sp : ffffffa034a3fa40
+[   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
+[   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
+[   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
+[   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
+[   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
+[   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
+[   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
+[   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
+[   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
+[   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
+[   48.532162] Call trace:
+[   48.532162]  swsusp_save+0x280/0x538
+[   48.532162]  swsusp_arch_suspend+0x148/0x190
+[   48.532162]  hibernation_snapshot+0x240/0x39c
+[   48.532162]  hibernate+0xc4/0x378
+[   48.532162]  state_store+0xf0/0x10c
+[   48.532162]  kobj_attr_store+0x14/0x24
+
+This issue can be reproduced in QEMU using UEFI when booting with
+rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+
+This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
+kernel_page_present() presumes that a page is present when can_set_direct_map()
+returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
+cause level3 translation fault in this pages.
+
+Since the NOMAP regions are now marked as PageReserved(), pfn walkers
+and the rest of core mm will treat them as unusable memory. So this
+regions should not saved in hibernation.
+
+This problem may cause by changes to pfn_valid() logic in commit
+a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
+
+Reference ohter arch architecture,drop the !can_set_direct_map() condition
+in kernel_page_present().So in page_is_savable(),these page will skiped.
+
+Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
+
+Suggested-by: Mike Rapoport <rppt@kernel.org>
+Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+---
+ arch/arm64/mm/pageattr.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 0c4e3ecf989d..0e270a1c51e6 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -219,9 +219,6 @@ bool kernel_page_present(struct page *page)
+ 	pte_t *ptep;
+ 	unsigned long addr = (unsigned long)page_address(page);
+ 
+-	if (!can_set_direct_map())
+-		return true;
+-
+ 	pgdp = pgd_offset_k(addr);
+ 	if (pgd_none(READ_ONCE(*pgdp)))
+ 		return false;
+-- 
+2.34.1
 
