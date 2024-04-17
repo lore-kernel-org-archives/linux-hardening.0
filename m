@@ -1,103 +1,143 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC4F13959C;
-	Wed, 17 Apr 2024 15:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFA5171672
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Apr 2024 17:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366771; cv=none; b=lanSa5Tb4QifFOrTCp5y0OEkD8RazuNL4dJh6lWiGB1nc3SF1o/cThF961XZI9zFi00bO+m07c6JjjVMJy21RSH5uE3K5C+QSex+zbHhx4kLf3SgyByXhIKhICmQ/B2TlmOIxBNKE6L6/hgoR0JINp8XDLBVJ3428VjgGEQMHo8=
+	t=1713375351; cv=none; b=uuwS1+/HDI9PiWTowaR09itWRu/qdYDGxxinezcl10LtqrVMxm3C+HkkLTcLnYxQ35l1JFR5/SrCLHE+ZILZH4XLpfGx+qAosb20Z3MOOyvAmo2LegVVv8nrqY+97LHgCMX4u8PLZBvFGwWL6o2Z8M7lG4yH38IW/dGPVzS6fVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366771; c=relaxed/simple;
-	bh=SbS9sbvUTV9VYHCOQgg59EfOF3qI1Jv3FdNGo46zwRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eD//omjM9wHONeIOAFBRxTqDanNcxpTepkW7Zh4rRwrgPa5nbl6whHbzRQGEKVsgXgoyEFt1+gZNTlMJ0wZUq/mtQ6a88eJ7taFy+h/gUKNIIx/xtIzK1z1XMaHLmcYVBIRhRjYFu1lRo5vzLrR63s5kfcDSywB2+Z7G3cdbJ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iya0By3K; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713375351; c=relaxed/simple;
+	bh=EUEq5eCikvb1PA+1pE5jT5oLwrFNWhGgWfY9hb71rBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sSgu61zjTGubS3ahTCx767nVjRKRq9TAXhGLTRGdfh2bFtvIwRBugTXiugL3nkluibiPcaixdpjCJfM0iDZfWfd34ZMe1f315L8AKHYq+gZ8jC2+0SYOiiktZiyEWOMfgI1SiE95zGy2JO3ee7I4cPHzNyqF52cwFI3qnmjLR40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NsJKJOXw; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iya0By3K"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-78f00cd23bbso15377885a.3;
-        Wed, 17 Apr 2024 08:12:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NsJKJOXw"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so48087b3a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Apr 2024 10:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713366769; x=1713971569; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i/Kqg25OD7el4VbnET2f/iEY4sym/XMc8MT/TsAp6ro=;
-        b=Iya0By3KJnFwOCE+Qd3wqGOZicyzPVjH39i+LzX9C7Q/ggqAhyZ8VhgHyZ/hANtkQ4
-         9O+s8jpjAptQA/otJNCrx3YLKmpn5osJUNBhvGGMh3BpMBYbYMynaqUBZ4bhy2kWYTb6
-         BhVt/WEIMXV8nUq/W5yL3ayw/8WJFSNXCfIm4YQRzEDvHzFmzfgXyO+dUi3z0TUoEyzm
-         CVllldA1C2Glbz35w/mqDj7LdxgZJAtM/XKOUB4WTcKk1a7zUCOpt5VppCehIiIGAqCC
-         hAOPJMNvbtrnKu6AugrXJc1sF/dwNEasOjuFEGk2AB/B8C9S+P2YQGJ+QD4x325T0WFl
-         /+xg==
+        d=chromium.org; s=google; t=1713375349; x=1713980149; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pBJiH4urg4DBG6eZbcNPwgnZOdXfIaMFo9RuiRFHB0E=;
+        b=NsJKJOXwccHJwQ85rjFYE5qWw9ab4sPiSFGsQinb/nv07xhBj94Ty+ttoygJ0Ayekz
+         IIgZxNprKvMkfksYKhW89s9hAPPiknzK/5deAJu7lU0fzVuUuzZEBlx/o2LjL3ZEwbWS
+         JOzOo19mCKfQko9dmQUoQpDC+YeeC3P/p0bH4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713366769; x=1713971569;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/Kqg25OD7el4VbnET2f/iEY4sym/XMc8MT/TsAp6ro=;
-        b=jFy644Acr/nHdFKsPkrKR7itdtKIEjFNitlxDzCKktNt48k66X0W4y8PNcHKsJR2p5
-         U6jUbz/2njsk10GzabPNe85ykILVLD0Ry0sclUzR49hi1jv4RZZB7PxSw3Y1xvGDDGtF
-         Cnf6Vp4Vs/e3MOdIqkJ5xax8BcsFlDQAswEMbYJQ6vxskWShjaFqhrJok9VggW3opsvK
-         yMgg5g3qgpq1PzIwyfbK9ZFm99nfViAr5JgRNA5JOuW5M0fsLPd23SiuDJzqF8gZrXFi
-         IDb9Gt75eLeC5JbzvenSbJK0Qfi/UO9FSCQfH+2CemRZCe51F7ZtaEX/67DfbnugmUFq
-         8YrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1KOfyo5i1aKjjBc/8MJd7DOzAbhS17/alavndWy+fnKC+uGkKlkS+xug+Sk8gMRRTHCdaZO7h5T7U/ApUXHZ9NBeK3QIQpUX9HnIUkiy8OqxnUw28qqpjWRmWI4vdu4f7IHKt44GCwX2qmhlg
-X-Gm-Message-State: AOJu0Yz7LSr09WsMa5bi5Ope+iEn7w+vDkJ6sWkzgQ9MmonfzZGU9Occ
-	evRXT3oqZscEgihPsXlst3WsN+N62Xt+Eyb5sX4eKRgkhnwZrzBhDcHMrA==
-X-Google-Smtp-Source: AGHT+IGgXCPX4SFSX0LoPWrYdzcEVAKN1ayBc3HBTx/9RXK9xl8obu1EohtRCQkoPreDBhZGQsQyDQ==
-X-Received: by 2002:a05:622a:58f:b0:436:7545:50f3 with SMTP id c15-20020a05622a058f00b00436754550f3mr18868247qtb.2.1713366768865;
-        Wed, 17 Apr 2024 08:12:48 -0700 (PDT)
-Received: from [172.16.102.219] ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id d19-20020ac86693000000b00434f6c1458bsm8142169qtp.17.2024.04.17.08.12.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Apr 2024 08:12:48 -0700 (PDT)
-Message-ID: <9f6d22cb-2170-4b80-912a-cfee18381b43@gmail.com>
-Date: Wed, 17 Apr 2024 16:12:45 +0100
+        d=1e100.net; s=20230601; t=1713375349; x=1713980149;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pBJiH4urg4DBG6eZbcNPwgnZOdXfIaMFo9RuiRFHB0E=;
+        b=u1lwKtGIxrq8CevnVQtRCGrXzOAHy/Qk5Hz8/yHsNxPbEpX57UtIF9NPrO9hxR3ese
+         CcRQuH2Ss2MMDM+9nz5ZZyE+2WXLTUOfCjrlOw6UuUwXzmk+CUB50DwjAc+m+n1/xDTi
+         rFfW97cjVK7ndaMV0NPWV1YiBx6BSrwxIBJprkZ9SrNZ89m7EZ1MUsSTKrgY/zCICBMp
+         jbVR7l1OJaJGaTYxW7js89I47D+p+hI9xGcoJIXZojuiIzePAJrIJFYyRYCY9uhR+sJk
+         JrLsX4Gd9zIJYHSJuycDO6cYHJkjhBDKOrC0bZcK9gyYzV3FG0bwyLNzxq46akSYUOAt
+         LZBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpjpp4R4vEIBvOuG3ubZAnF5N5iSe5a4E+DqW10594LS/Hjda9VkriSyLKt9JrN8Yvxy2cyBqyUvgPIK4sraBi8KO1RKuqUUZH73vuX3DF
+X-Gm-Message-State: AOJu0YyPt739HPnFk3hxXtp5kGy8s6beBXPEvpuj5gowxfDrJSWksUCD
+	9vTTbrB82SciQKfKtVh2opoWlDqT1ZZN8pFX5n8Uug+c4HHlQg9s/Qb3xIeHPw==
+X-Google-Smtp-Source: AGHT+IGRhXAn8BnFec3OXIieh95t6IYTWzPHJKZQXAIRwjXtFeTGFo/I0JMHxUAOWhgdyp8JVnjm6A==
+X-Received: by 2002:a05:6a00:22c4:b0:6ec:ec8f:d588 with SMTP id f4-20020a056a0022c400b006ecec8fd588mr281477pfj.16.1713375349095;
+        Wed, 17 Apr 2024 10:35:49 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id gx15-20020a056a001e0f00b006e71aec34a8sm10927754pfb.167.2024.04.17.10.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 10:35:48 -0700 (PDT)
+Date: Wed, 17 Apr 2024 10:35:47 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Charles Bertsch <cbertsch@cox.net>,
+	Justin Stitt <justinstitt@google.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Sathya Prakash <sathya.prakash@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Nilesh Javali <njavali@marvell.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Himanshu Madhani <himanshu.madhani@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+	mpi3mr-linuxdrv.pdl@broadcom.com,
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH 0/5] scsi: Avoid possible run-time warning with long
+ manufacturer strings
+Message-ID: <202404171035.BDFF28D@keescook>
+References: <20240410021833.work.750-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] string: Implement KUnit test for str*cmp functions
-To: Andy Shevchenko <andy@kernel.org>
-Cc: keescook@chromium.org, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- skhan@linuxfoundation.org
-References: <20240417135415.614284-1-ivan.orlov0322@gmail.com>
- <Zh_cgnMOFHuP-lKu@smile.fi.intel.com>
- <10085ec8-0109-444c-bce4-d0b0ef1a4164@gmail.com>
- <Zh_ibi_Y6xogktg-@smile.fi.intel.com>
-Content-Language: en-US
-From: Ivan Orlov <ivan.orlov0322@gmail.com>
-In-Reply-To: <Zh_ibi_Y6xogktg-@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410021833.work.750-kees@kernel.org>
 
-On 4/17/24 15:53, Andy Shevchenko wrote:
->> There are already 2 other KUnit tests in `lib/` covering different groups of
->> string functions separately (lib/strscpy_kunit.c, lib/strcat_kunit.c), so
->> this patch just follows this pattern. I believe it makes sense: the tests
->> are separated to cover one specific group of string functions with a similar
->> purpose
+On Tue, Apr 09, 2024 at 07:31:49PM -0700, Kees Cook wrote:
+> Hi,
 > 
-> We have handful of the string functions, are you going to have a file per
-> function? Isn't it way too many?
+> Another code pattern using the gloriously ambiguous strncpy() function was
+> turning maybe not-NUL-terminated character arrays into NUL-terminated
+> strings. In these cases, when strncpy() is replaced with strscpy()
+> it creates a situation where if the non-terminated string takes up the
+> entire character array (i.e. it is not terminated) run-time warnings
+> from CONFIG_FORTIFY_SOURCE will trip, since strscpy() was expecting to
+> find a NUL-terminated source but checking for the NUL would walk off
+> the end of the source buffer.
 > 
-> P.S>
-> Having those does not prove it's a correct approach. I would rather expect
-> somebody to incorporate those into string_kunit.c.
+> In doing an instrumented build of the kernel to find these cases, it
+> seems it was almost entirely a code pattern used in the SCSI subsystem,
+> so the creation of the new helper, memtostr(), can land via the SCSI
+> tree. And, as it turns out, inappropriate conversions have been happening
+> for several years now, some of which even moved through strlcpy() first
+> (and were never noticed either).
 > 
+> This series fixes all 4 of the instances I could find in the SCSI
+> subsystem.
 
-Makes sense. Also, probably having all of them in `string_kunit.c` would 
-fit better into the KUnit test style guidelines.
+Friendly ping. Can the SCSI tree pick this up, or should I take it
+through the hardening tree?
 
-I'll merge this strcmp test into `string_kunit.c` in V2 of this patch, 
-thank you for the review.
+Thanks!
+
+-Kees
+
+> 
+> Thanks,
+> 
+> -Kees
+> 
+> Kees Cook (5):
+>   string.h: Introduce memtostr() and memtostr_pad()
+>   scsi: mptfusion: Avoid possible run-time warning with long
+>     manufacturer strings
+>   scsi: mpt3sas: Avoid possible run-time warning with long manufacturer
+>     strings
+>   scsi: mpi3mr: Avoid possible run-time warning with long manufacturer
+>     strings
+>   scsi: qla2xxx: Avoid possible run-time warning with long model_num
+> 
+>  drivers/message/fusion/mptsas.c          | 14 +++----
+>  drivers/scsi/mpi3mr/mpi3mr_transport.c   | 14 +++----
+>  drivers/scsi/mpt3sas/mpt3sas_base.c      |  2 +-
+>  drivers/scsi/mpt3sas/mpt3sas_transport.c | 14 +++----
+>  drivers/scsi/qla2xxx/qla_mr.c            |  6 +--
+>  include/linux/string.h                   | 49 ++++++++++++++++++++++++
+>  lib/strscpy_kunit.c                      | 26 +++++++++++++
+>  7 files changed, 93 insertions(+), 32 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
 
 -- 
-Kind regards,
-Ivan Orlov
-
+Kees Cook
