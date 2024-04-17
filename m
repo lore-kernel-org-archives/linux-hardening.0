@@ -1,143 +1,290 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFA5171672
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Apr 2024 17:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7712385643;
+	Wed, 17 Apr 2024 23:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713375351; cv=none; b=uuwS1+/HDI9PiWTowaR09itWRu/qdYDGxxinezcl10LtqrVMxm3C+HkkLTcLnYxQ35l1JFR5/SrCLHE+ZILZH4XLpfGx+qAosb20Z3MOOyvAmo2LegVVv8nrqY+97LHgCMX4u8PLZBvFGwWL6o2Z8M7lG4yH38IW/dGPVzS6fVY=
+	t=1713396640; cv=none; b=Wk7ql/KUH/hpIK+WWe9cCU+zGltD/+8bEpuOCo982YnYnbs63Tke98ZE+O9RLJlgMbtGNmbIvS1Omb4lYWKxvSKJBh/b2IHBQrEE6Z+nXlJZWZ6mJPuGcMtpuFv9ucMZgvRhIgf1imgoYKWX38w+O55h1eWdXIGi2wxjMxWwJiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713375351; c=relaxed/simple;
-	bh=EUEq5eCikvb1PA+1pE5jT5oLwrFNWhGgWfY9hb71rBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSgu61zjTGubS3ahTCx767nVjRKRq9TAXhGLTRGdfh2bFtvIwRBugTXiugL3nkluibiPcaixdpjCJfM0iDZfWfd34ZMe1f315L8AKHYq+gZ8jC2+0SYOiiktZiyEWOMfgI1SiE95zGy2JO3ee7I4cPHzNyqF52cwFI3qnmjLR40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NsJKJOXw; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713396640; c=relaxed/simple;
+	bh=Q55/y/Py6wGAEkNsAoVRPheNiQ6NXdeUvjSJ8BZePr8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=REObSQ5Sxza5DLWw+lOJRIsUoLzvmX2BU1AN6iOtvr4c/c+YIukTKCpeDpEsR5bTa+SGmgALb1fM3rFBs3ZPlwQUnwrOWe4VYqqJcHDl1x/1x8uqKSWP73v9nfmpsQUZ+PoMmzeHM7A4h29QMdPOsDp5DnJWljuG+fPsM+UM6t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZplvNQh; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NsJKJOXw"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so48087b3a.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Apr 2024 10:35:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZplvNQh"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-349fd1d3723so42101f8f.0;
+        Wed, 17 Apr 2024 16:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713375349; x=1713980149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pBJiH4urg4DBG6eZbcNPwgnZOdXfIaMFo9RuiRFHB0E=;
-        b=NsJKJOXwccHJwQ85rjFYE5qWw9ab4sPiSFGsQinb/nv07xhBj94Ty+ttoygJ0Ayekz
-         IIgZxNprKvMkfksYKhW89s9hAPPiknzK/5deAJu7lU0fzVuUuzZEBlx/o2LjL3ZEwbWS
-         JOzOo19mCKfQko9dmQUoQpDC+YeeC3P/p0bH4=
+        d=gmail.com; s=20230601; t=1713396637; x=1714001437; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ygRTexVbFwrX95qfvQ7K6N90wEiHzCEHw2SfjvfjGAA=;
+        b=YZplvNQheCURxo7b1YpxaTZLOwMui0587h8phEeNYxAE9O4clE1QmBnOvJoi1OCAYT
+         o8tF35v2V1OHyWr9sdFLoPLvWY+mbm5UuLEz6kCCOZW6ft2BKIBpT44UcBhOpihURJpz
+         JTnTXaQtrUehfe1RPpbifF+g89pgRyLCuHcWl/EctyCEmJaMEW963ZUL6ZKEHcNFZUVU
+         diLj7KfrQf1ro/WBxlVQxLkg1eKREfvfJkx4TMhegs/bqlK4d04Hv9bOLIVlU/aauPA+
+         MTmPGihX2oAU9GciTIubbK5SixAp+221Y1mTNbIfn0qiqP9j70pgQxA4irAonW8EKvsM
+         R0nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713375349; x=1713980149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pBJiH4urg4DBG6eZbcNPwgnZOdXfIaMFo9RuiRFHB0E=;
-        b=u1lwKtGIxrq8CevnVQtRCGrXzOAHy/Qk5Hz8/yHsNxPbEpX57UtIF9NPrO9hxR3ese
-         CcRQuH2Ss2MMDM+9nz5ZZyE+2WXLTUOfCjrlOw6UuUwXzmk+CUB50DwjAc+m+n1/xDTi
-         rFfW97cjVK7ndaMV0NPWV1YiBx6BSrwxIBJprkZ9SrNZ89m7EZ1MUsSTKrgY/zCICBMp
-         jbVR7l1OJaJGaTYxW7js89I47D+p+hI9xGcoJIXZojuiIzePAJrIJFYyRYCY9uhR+sJk
-         JrLsX4Gd9zIJYHSJuycDO6cYHJkjhBDKOrC0bZcK9gyYzV3FG0bwyLNzxq46akSYUOAt
-         LZBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpjpp4R4vEIBvOuG3ubZAnF5N5iSe5a4E+DqW10594LS/Hjda9VkriSyLKt9JrN8Yvxy2cyBqyUvgPIK4sraBi8KO1RKuqUUZH73vuX3DF
-X-Gm-Message-State: AOJu0YyPt739HPnFk3hxXtp5kGy8s6beBXPEvpuj5gowxfDrJSWksUCD
-	9vTTbrB82SciQKfKtVh2opoWlDqT1ZZN8pFX5n8Uug+c4HHlQg9s/Qb3xIeHPw==
-X-Google-Smtp-Source: AGHT+IGRhXAn8BnFec3OXIieh95t6IYTWzPHJKZQXAIRwjXtFeTGFo/I0JMHxUAOWhgdyp8JVnjm6A==
-X-Received: by 2002:a05:6a00:22c4:b0:6ec:ec8f:d588 with SMTP id f4-20020a056a0022c400b006ecec8fd588mr281477pfj.16.1713375349095;
-        Wed, 17 Apr 2024 10:35:49 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id gx15-20020a056a001e0f00b006e71aec34a8sm10927754pfb.167.2024.04.17.10.35.48
+        d=1e100.net; s=20230601; t=1713396637; x=1714001437;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ygRTexVbFwrX95qfvQ7K6N90wEiHzCEHw2SfjvfjGAA=;
+        b=Fw0bijktSLQQP6lDoUx9PNyOofcwykN+Jt70zWMUYifjIBFHFtOCBlrsu/GabkcvKg
+         fzSEQm7vvbn4FByrQEvhKFgXciKO72aR0CizllERKVMBrJsFQ45N0bWfeJaXBk4N9sa6
+         UQ5GrdoM9KGJ9q0MU8s90DqEPymbT0HicBocVnlZEGQD9H5SdtWB0OaG03yryfOMqWXd
+         BXK6HP8RAb10Lw/oBMceWIz98trP1OagD/5sLKXY8orT2XMNg8fOiIt2NjVzZ5WhZrsU
+         ynbbcnqg4HgG/RgAPQidDCj7YBQwEEYo4RHLu7aMyg2cXH4S0I3cg1DmOXD1b4vSM0gv
+         mXWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVywf7JAvPTXN40Oa1lvBvwcRnEYOeq3/uxUlIravw9VEF1J0bzDQ4OPkVFYtUgMr1XBETrWLwYMce86PBLLO/6FBZtPe4Ltac09r1YABRrmmjbjuLfBcETnqgQV5J4wi2mnsQ3rByhP76yGkKt
+X-Gm-Message-State: AOJu0YxxrEbuQ2h7Fo6ql1MoWEEJIJ0Nx47e8xPRCub1HcMIXqyzmUE6
+	JMNy9uoN2HIKQfewPjrvxLW93YONTrXh3QxcgboRrgg8W0eClIt+
+X-Google-Smtp-Source: AGHT+IHReswB6rKWrUhG9JDmbLoVK5JbqzOSFJfGxTY+jILtBXGHg1widcm9TXs5WkdMKh5itRRZnQ==
+X-Received: by 2002:a05:600c:1c91:b0:418:9a5b:d51 with SMTP id k17-20020a05600c1c9100b004189a5b0d51mr732600wms.0.1713396636363;
+        Wed, 17 Apr 2024 16:30:36 -0700 (PDT)
+Received: from ivan-HLYL-WXX9.. ([2a01:4b00:d20e:7300:84f3:c12a:44bb:b4a5])
+        by smtp.gmail.com with ESMTPSA id s9-20020a05600c45c900b004163703fd6asm5849936wmo.1.2024.04.17.16.30.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 10:35:48 -0700 (PDT)
-Date: Wed, 17 Apr 2024 10:35:47 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Charles Bertsch <cbertsch@cox.net>,
-	Justin Stitt <justinstitt@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Nilesh Javali <njavali@marvell.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Himanshu Madhani <himanshu.madhani@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-	mpi3mr-linuxdrv.pdl@broadcom.com,
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH 0/5] scsi: Avoid possible run-time warning with long
- manufacturer strings
-Message-ID: <202404171035.BDFF28D@keescook>
-References: <20240410021833.work.750-kees@kernel.org>
+        Wed, 17 Apr 2024 16:30:35 -0700 (PDT)
+From: Ivan Orlov <ivan.orlov0322@gmail.com>
+To: keescook@chromium.org,
+	andy@kernel.org,
+	akpm@linux-foundation.org
+Cc: Ivan Orlov <ivan.orlov0322@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH v2] string_kunit: Add test cases for str*cmp functions
+Date: Thu, 18 Apr 2024 00:30:33 +0100
+Message-Id: <20240417233033.717596-1-ivan.orlov0322@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410021833.work.750-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 09, 2024 at 07:31:49PM -0700, Kees Cook wrote:
-> Hi,
-> 
-> Another code pattern using the gloriously ambiguous strncpy() function was
-> turning maybe not-NUL-terminated character arrays into NUL-terminated
-> strings. In these cases, when strncpy() is replaced with strscpy()
-> it creates a situation where if the non-terminated string takes up the
-> entire character array (i.e. it is not terminated) run-time warnings
-> from CONFIG_FORTIFY_SOURCE will trip, since strscpy() was expecting to
-> find a NUL-terminated source but checking for the NUL would walk off
-> the end of the source buffer.
-> 
-> In doing an instrumented build of the kernel to find these cases, it
-> seems it was almost entirely a code pattern used in the SCSI subsystem,
-> so the creation of the new helper, memtostr(), can land via the SCSI
-> tree. And, as it turns out, inappropriate conversions have been happening
-> for several years now, some of which even moved through strlcpy() first
-> (and were never noticed either).
-> 
-> This series fixes all 4 of the instances I could find in the SCSI
-> subsystem.
+Currently, str*cmp functions (strcmp, strncmp, strcasecmp and
+strncasecmp) are not covered with tests. Extend the `string_kunit.c`
+test by adding the test cases for them.
 
-Friendly ping. Can the SCSI tree pick this up, or should I take it
-through the hardening tree?
+This patch adds 8 more test cases:
 
-Thanks!
+1) strcmp test
+2) strcmp test on long strings (2048 chars)
+3) strncmp test
+4) strncmp test on long strings (2048 chars)
+5) strcasecmp test
+6) strcasecmp test on long strings
+7) strncasecmp test
+8) strncasecmp test on long strings
 
--Kees
+These test cases aim at covering as many edge cases as possible,
+including the tests on empty strings, situations when the different
+symbol is placed at the end of one of the strings, etc.
 
-> 
-> Thanks,
-> 
-> -Kees
-> 
-> Kees Cook (5):
->   string.h: Introduce memtostr() and memtostr_pad()
->   scsi: mptfusion: Avoid possible run-time warning with long
->     manufacturer strings
->   scsi: mpt3sas: Avoid possible run-time warning with long manufacturer
->     strings
->   scsi: mpi3mr: Avoid possible run-time warning with long manufacturer
->     strings
->   scsi: qla2xxx: Avoid possible run-time warning with long model_num
-> 
->  drivers/message/fusion/mptsas.c          | 14 +++----
->  drivers/scsi/mpi3mr/mpi3mr_transport.c   | 14 +++----
->  drivers/scsi/mpt3sas/mpt3sas_base.c      |  2 +-
->  drivers/scsi/mpt3sas/mpt3sas_transport.c | 14 +++----
->  drivers/scsi/qla2xxx/qla_mr.c            |  6 +--
->  include/linux/string.h                   | 49 ++++++++++++++++++++++++
->  lib/strscpy_kunit.c                      | 26 +++++++++++++
->  7 files changed, 93 insertions(+), 32 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+---
+V1 -> V2:
+- Extend the `string_kunit.c` test instead of creating the separate
+KUnit test module for the strcmp function, as it was suggested by
+Andy Shevchenko <andy@kernel.org>
+- Add prefix to all of the macros to emphasize that they are related
+to the strcmp test.
+- Add 'strcmp_' prefix to the function which fills the buffers
+- Rename the test cases to follow the pattern 'test_<function>', which
+is used in other test cases of this module.
 
+ lib/string_kunit.c | 155 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+
+diff --git a/lib/string_kunit.c b/lib/string_kunit.c
+index eabf025cf77c..dd19bd7748aa 100644
+--- a/lib/string_kunit.c
++++ b/lib/string_kunit.c
+@@ -11,6 +11,12 @@
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ 
++#define STRCMP_LARGE_BUF_LEN 2048
++#define STRCMP_CHANGE_POINT 1337
++#define STRCMP_TEST_EXPECT_EQUAL(test, fn, ...) KUNIT_EXPECT_EQ(test, fn(__VA_ARGS__), 0)
++#define STRCMP_TEST_EXPECT_LOWER(test, fn, ...) KUNIT_EXPECT_LT(test, fn(__VA_ARGS__), 0)
++#define STRCMP_TEST_EXPECT_GREATER(test, fn, ...) KUNIT_EXPECT_GT(test, fn(__VA_ARGS__), 0)
++
+ static void test_memset16(struct kunit *test)
+ {
+ 	unsigned i, j, k;
+@@ -179,6 +185,147 @@ static void test_strspn(struct kunit *test)
+ 	}
+ }
+ 
++static char strcmp_buffer1[STRCMP_LARGE_BUF_LEN];
++static char strcmp_buffer2[STRCMP_LARGE_BUF_LEN];
++
++static void strcmp_fill_buffers(char fill1, char fill2)
++{
++	memset(strcmp_buffer1, fill1, STRCMP_LARGE_BUF_LEN);
++	memset(strcmp_buffer2, fill2, STRCMP_LARGE_BUF_LEN);
++	strcmp_buffer1[STRCMP_LARGE_BUF_LEN - 1] = 0;
++	strcmp_buffer2[STRCMP_LARGE_BUF_LEN - 1] = 0;
++}
++
++static void test_strcmp(struct kunit *test)
++{
++	/* Equal strings */
++	STRCMP_TEST_EXPECT_EQUAL(test, strcmp, "Hello, Kernel!", "Hello, Kernel!");
++	/* First string is lexicographically less than the second */
++	STRCMP_TEST_EXPECT_LOWER(test, strcmp, "Hello, KUnit!", "Hello, Kernel!");
++	/* First string is lexicographically larger than the second */
++	STRCMP_TEST_EXPECT_GREATER(test, strcmp, "Hello, Kernel!", "Hello, KUnit!");
++	/* Empty string is always lexicographically less than any non-empty string */
++	STRCMP_TEST_EXPECT_LOWER(test, strcmp, "", "Non-empty string");
++	/* Two empty strings should be equal */
++	STRCMP_TEST_EXPECT_EQUAL(test, strcmp, "", "");
++	/* Compare two strings which have only one char difference */
++	STRCMP_TEST_EXPECT_LOWER(test, strcmp, "Abacaba", "Abadaba");
++	/* Compare two strings which have the same prefix*/
++	STRCMP_TEST_EXPECT_LOWER(test, strcmp, "Just a string", "Just a string and something else");
++}
++
++static void test_strcmp_long_strings(struct kunit *test)
++{
++	strcmp_fill_buffers('B', 'B');
++	STRCMP_TEST_EXPECT_EQUAL(test, strcmp, strcmp_buffer1, strcmp_buffer2);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'A';
++	STRCMP_TEST_EXPECT_LOWER(test, strcmp, strcmp_buffer1, strcmp_buffer2);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'C';
++	STRCMP_TEST_EXPECT_GREATER(test, strcmp, strcmp_buffer1, strcmp_buffer2);
++}
++
++static void test_strncmp(struct kunit *test)
++{
++	/* Equal strings */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, "Hello, KUnit!", "Hello, KUnit!", 13);
++	/* First string is lexicographically less than the second */
++	STRCMP_TEST_EXPECT_LOWER(test, strncmp, "Hello, KUnit!", "Hello, Kernel!", 13);
++	/* Result is always 'equal' when count = 0 */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, "Hello, Kernel!", "Hello, KUnit!", 0);
++	/* Strings with common prefix are equal if count = length of prefix */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, "Abacaba", "Abadaba", 3);
++	/* Strings with common prefix are not equal when count = length of prefix + 1 */
++	STRCMP_TEST_EXPECT_LOWER(test, strncmp, "Abacaba", "Abadaba", 4);
++	/* If one string is a prefix of another, the shorter string is lexicographically smaller */
++	STRCMP_TEST_EXPECT_LOWER(test, strncmp, "Just a string", "Just a string and something else",
++				 strlen("Just a string and something else"));
++	/*
++	 * If one string is a prefix of another, and we check first length
++	 * of prefix chars, the result is 'equal'
++	 */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, "Just a string", "Just a string and something else",
++				 strlen("Just a string"));
++}
++
++static void test_strncmp_long_strings(struct kunit *test)
++{
++	strcmp_fill_buffers('B', 'B');
++	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, strcmp_buffer1,
++				 strcmp_buffer2, STRCMP_LARGE_BUF_LEN);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'A';
++	STRCMP_TEST_EXPECT_LOWER(test, strncmp, strcmp_buffer1,
++				 strcmp_buffer2, STRCMP_LARGE_BUF_LEN);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'C';
++	STRCMP_TEST_EXPECT_GREATER(test, strncmp, strcmp_buffer1,
++				   strcmp_buffer2, STRCMP_LARGE_BUF_LEN);
++	/* the strings are equal up to STRCMP_CHANGE_POINT */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, strcmp_buffer1,
++				 strcmp_buffer2, STRCMP_CHANGE_POINT);
++	STRCMP_TEST_EXPECT_GREATER(test, strncmp, strcmp_buffer1,
++				   strcmp_buffer2, STRCMP_CHANGE_POINT + 1);
++}
++
++static void test_strcasecmp(struct kunit *test)
++{
++	/* Same strings in different case should be equal */
++	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, "Hello, Kernel!", "HeLLO, KErNeL!");
++	/* Empty strings should be equal */
++	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, "", "");
++	/* Despite ascii code for 'a' is larger than ascii code for 'B', 'a' < 'B' */
++	STRCMP_TEST_EXPECT_LOWER(test, strcasecmp, "a", "B");
++	STRCMP_TEST_EXPECT_GREATER(test, strcasecmp, "B", "a");
++	/* Special symbols and numbers should be processed correctly */
++	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, "-+**.1230ghTTT~^", "-+**.1230Ghttt~^");
++}
++
++static void test_strcasecmp_long_strings(struct kunit *test)
++{
++	strcmp_fill_buffers('b', 'B');
++	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, strcmp_buffer1, strcmp_buffer2);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'a';
++	STRCMP_TEST_EXPECT_LOWER(test, strcasecmp, strcmp_buffer1, strcmp_buffer2);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'C';
++	STRCMP_TEST_EXPECT_GREATER(test, strcasecmp, strcmp_buffer1, strcmp_buffer2);
++}
++
++static void test_strncasecmp(struct kunit *test)
++{
++	/* Same strings in different case should be equal */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, "AbAcAbA", "Abacaba", strlen("Abacaba"));
++	/* strncasecmp should check 'count' chars only */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, "AbaCaBa", "abaCaDa", 5);
++	STRCMP_TEST_EXPECT_LOWER(test, strncasecmp, "a", "B", 1);
++	STRCMP_TEST_EXPECT_GREATER(test, strncasecmp, "B", "a", 1);
++	/* Result is always 'equal' when count = 0 */
++	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, "Abacaba", "Not abacaba", 0);
++}
++
++static void test_strncasecmp_long_strings(struct kunit *test)
++{
++	strcmp_fill_buffers('b', 'B');
++	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, strcmp_buffer1,
++				 strcmp_buffer2, STRCMP_LARGE_BUF_LEN);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'a';
++	STRCMP_TEST_EXPECT_LOWER(test, strncasecmp, strcmp_buffer1,
++				 strcmp_buffer2, STRCMP_LARGE_BUF_LEN);
++
++	strcmp_buffer1[STRCMP_CHANGE_POINT] = 'C';
++	STRCMP_TEST_EXPECT_GREATER(test, strncasecmp, strcmp_buffer1,
++				   strcmp_buffer2, STRCMP_LARGE_BUF_LEN);
++
++	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, strcmp_buffer1,
++				 strcmp_buffer2, STRCMP_CHANGE_POINT);
++	STRCMP_TEST_EXPECT_GREATER(test, strncasecmp, strcmp_buffer1,
++				   strcmp_buffer2, STRCMP_CHANGE_POINT + 1);
++}
++
+ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(test_memset16),
+ 	KUNIT_CASE(test_memset32),
+@@ -186,6 +333,14 @@ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(test_strchr),
+ 	KUNIT_CASE(test_strnchr),
+ 	KUNIT_CASE(test_strspn),
++	KUNIT_CASE(test_strcmp),
++	KUNIT_CASE(test_strcmp_long_strings),
++	KUNIT_CASE(test_strncmp),
++	KUNIT_CASE(test_strncmp_long_strings),
++	KUNIT_CASE(test_strcasecmp),
++	KUNIT_CASE(test_strcasecmp_long_strings),
++	KUNIT_CASE(test_strncasecmp),
++	KUNIT_CASE(test_strncasecmp_long_strings),
+ 	{}
+ };
+ 
 -- 
-Kees Cook
+2.34.1
+
