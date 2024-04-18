@@ -1,45 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903A015ECD6;
-	Thu, 18 Apr 2024 11:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4D6171E6C
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Apr 2024 17:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713441056; cv=none; b=VmEp2bL3165keBDed0IQNKipjkcFaoYx00PjuAAAIv/5TV7L4OPPiis6oB9lxBAwU12HJ28YQ1e4F1/va0c54sOA2j4e5sQ3adqCMv4cgGHK3xCPiZOlwB02c92nmaFOSi10QUnHpZptz+Y+qs1CL+uCuPWSMommWjTElXHX/SE=
+	t=1713460595; cv=none; b=Foh85OUNpqvUAPG257LgItBf3acLvSYPkiI57tT5czDmsNDF0MZUBuPtUHDM+2Pb+6s7t9uJbaD2PPUo2lxUAF4mGzRYzBJtLJY9jKNuDf7jbuRCkj2b4y0i79lgL8GtjETLbvLiiGuS4xZbaQse+gnGx96jEMm9BQMZ8AiAZdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713441056; c=relaxed/simple;
-	bh=iRiAat630poaw1gRyOPsyjy2tdPc/RBRRifnHPmcN/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMWACTV5Or2vkObVklfIyWRz5IiPPyv9mHULBzqMWVB2KHx/OcNljOX7dSSNiQ58e/fJEobi0WJ/0ZS9Sb1ZJmMkM8nZYbB6yQWq80uX/sd77K+2T+vecA443tHshPy2umsUrgRgRy1eGPfIBCRFvrXMyC+koskc3r6X7AVCsXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: nF0AIfHgS3mPorslAnQQgg==
-X-CSE-MsgGUID: cBAvAHS8S+i5ApmxoF7nXw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19589353"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="19589353"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:50:55 -0700
-X-CSE-ConnectionGUID: FMRnUkbkQqO57fbuMPTBwQ==
-X-CSE-MsgGUID: QscAwcbsSYi9UxaYK13N0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="27590374"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:50:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rxQHy-00000000JbL-1fNd;
-	Thu, 18 Apr 2024 14:50:50 +0300
-Date: Thu, 18 Apr 2024 14:50:50 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ivan Orlov <ivan.orlov0322@gmail.com>
-Cc: keescook@chromium.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kunit-dev@googlegroups.com, skhan@linuxfoundation.org
+	s=arc-20240116; t=1713460595; c=relaxed/simple;
+	bh=Qe4POCSHxjWm3wFsaHCsEFxKNuqKh7otgYlk3HiwZ1s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gZ3WennP08uz2T9Wgy2BIKjML3wNPIMOHaQVxpO25ftNjDn7QIi3PifZoSQmiFcuB9RVSc5XauXu25hvhR7mkdomnBjqBCYuQzUXnfX1C7Ht33M0B+1I2cTbyi1x8nLUScmYCIPQplm4EC/268lGbeGMc/rgmMI9DoqMUmJfH/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kc6Dekqb; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kc6Dekqb"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2a53a4a283eso973097a91.0
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Apr 2024 10:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713460593; x=1714065393; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F/uD81xAZaCWFwuTc9j81/JSG6jiqzchn2BejnWerUc=;
+        b=kc6DekqbChvvM6wPjR4T2XsTqs37gQa42JpU5Ch5an7MX7VSIgK6yfLLbEON8oAlCq
+         v3zNKiCocudZsU9ATzOJL96UOg6JW3vyRyIXBlcKFZSUOKF5sM1Q0AcwmkEYt3CSpjuI
+         eHlwGMOZCKwSCI2S05iKxCD8hNMzgw2yJ4kxU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713460593; x=1714065393;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F/uD81xAZaCWFwuTc9j81/JSG6jiqzchn2BejnWerUc=;
+        b=i30FK3VHNpKwdxNHjBmQPiS5lHGmQyJYxAbqnckLoMfgUmw6B/yoykMLLMO5TGJL8b
+         xZ0l4ltuP/Inh3csForz1q4/WoUL8iHAo1sWOk8q5G6NwHXJ0q+CcceBb0bIFAm0xFGl
+         KW0/xSOh+kemZe2m0qeR9xnyK0V0QFz9v0yPlG1UlHtsmnhwMoFzJBJv/K7t+4GIbO4p
+         //wPBHSg6umAUylHNJCjj3NyMTl8qi8Zr/9X8fEqvA4nPEL6cBbp5/55BIDTIyCYaIoV
+         kOv48DFb+2Zt+pzVWc3lsWK8oMiPw6idFdPeJPWmLW4AMI6ezfvbAx6wdbdOFiCj6CrT
+         NvZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAjj2jkqTQYn7Fo19n1SlRnOLAoeMjsXS1Y/luYWUzRDOjhpe2eoUU7VHYuc3jtj8sVmR8a1LZxLvbG0t5DMa3PNNJSPmpVtp8IjCtktlm
+X-Gm-Message-State: AOJu0YzcH53BLpTfYzAtIRe7RQe/xtOyyGJLvsYHgJnVswMvvsTIx3hz
+	PC0wrlMlYTVmVCxDm76XqukIpPx3IBPvOILme8Y9uVwAOfHFex/pJSkz6d8ciQ==
+X-Google-Smtp-Source: AGHT+IF4PJgI0BdB8W3UuYRsvVhssCDWMQrlZJDq6Ju6m2xTCnHYPSN2BvrH3mRx6EOdyhF6OdVi3Q==
+X-Received: by 2002:a17:90a:f40f:b0:2aa:9738:ad2f with SMTP id ch15-20020a17090af40f00b002aa9738ad2fmr3697941pjb.6.1713460593351;
+        Thu, 18 Apr 2024 10:16:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u23-20020a17090ae01700b002a219f8079fsm1698092pjy.33.2024.04.18.10.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 10:16:32 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: andy@kernel.org,
+	akpm@linux-foundation.org,
+	Ivan Orlov <ivan.orlov0322@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	skhan@linuxfoundation.org
 Subject: Re: [PATCH v2] string_kunit: Add test cases for str*cmp functions
-Message-ID: <ZiEJGtpj1KIK1riW@smile.fi.intel.com>
+Date: Thu, 18 Apr 2024 10:16:28 -0700
+Message-Id: <171346058636.2400104.10410975122158438453.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240417233033.717596-1-ivan.orlov0322@gmail.com>
 References: <20240417233033.717596-1-ivan.orlov0322@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -47,12 +70,10 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417233033.717596-1-ivan.orlov0322@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 12:30:33AM +0100, Ivan Orlov wrote:
+On Thu, 18 Apr 2024 00:30:33 +0100, Ivan Orlov wrote:
 > Currently, str*cmp functions (strcmp, strncmp, strcasecmp and
 > strncasecmp) are not covered with tests. Extend the `string_kunit.c`
 > test by adding the test cases for them.
@@ -68,17 +89,15 @@ On Thu, Apr 18, 2024 at 12:30:33AM +0100, Ivan Orlov wrote:
 > 7) strncasecmp test
 > 8) strncasecmp test on long strings
 > 
-> These test cases aim at covering as many edge cases as possible,
-> including the tests on empty strings, situations when the different
-> symbol is placed at the end of one of the strings, etc.
+> [...]
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Applied to for-linus/hardening, thanks!
 
-Thanks!
+[1/1] string_kunit: Add test cases for str*cmp functions
+      (no commit info)
+
+Take care,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Kees Cook
 
