@@ -1,71 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7994F651B1;
-	Thu, 18 Apr 2024 05:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903A015ECD6;
+	Thu, 18 Apr 2024 11:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713417207; cv=none; b=StrG/AX7QOodxSwth+Y+m3F4QeGc0pdM2iFZuclmMH+7hfxJibPYFNEavBSpx+ENjoRRxg2jBFgHvR9bwXrP+me2JDU52NGb7vkBRHbB++wjGEEPkOx2trqwlxz7OY87ZUE10TWKeJ2l/CTeFsdmES0VA+cqGbmXQkuIzbARqfY=
+	t=1713441056; cv=none; b=VmEp2bL3165keBDed0IQNKipjkcFaoYx00PjuAAAIv/5TV7L4OPPiis6oB9lxBAwU12HJ28YQ1e4F1/va0c54sOA2j4e5sQ3adqCMv4cgGHK3xCPiZOlwB02c92nmaFOSi10QUnHpZptz+Y+qs1CL+uCuPWSMommWjTElXHX/SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713417207; c=relaxed/simple;
-	bh=gW1mGJDzIE0PdWXkGTdRMnEL0jMbvEIBiO9qTSGudOI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QfaKClcIFuLTxihWKAgWb+H1/uxzjIfvLmAcK8M3RIOMa3FwLVz8THbYgE5t6hi2T0r2Idjt3aSSlLFaZn2VMBaYgyIKPgjqCVRUmaUnHyHizG39PKZROHpmBnTod4iqZcraUI5PP0U09ggyE8F9H1WwkQ59tZRmrW5qYccTO7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMb7TUzJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMb7TUzJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A5AC32782;
-	Thu, 18 Apr 2024 05:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713417207;
-	bh=gW1mGJDzIE0PdWXkGTdRMnEL0jMbvEIBiO9qTSGudOI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=sMb7TUzJQdA2Je+ck2wHeLIF6agHcjGlZHqELfQ0STL4V0G1sir0kpor2z2zE9oSl
-	 qgV64QJfHFqPUZ5IQPNNaYxm/T9xZoZAR/954drGewmn3aWnBFXhU1Vtfgydh+0brQ
-	 QvON4NuHtpE7/97s2dThhVFVr5mGDUnG9v9LFsZZz69GgIcYYKZJnkysdQIdErhLDi
-	 bCjKhSPN0E0bVo225dj1665RVuLYou/JW1cX+ryzwmmlkV+nA0zKBtOy3oD/mwXDyO
-	 bY4JiHKKAl/bwixOSoVr0gk3Y9uo9V+TjURuAkCNElIQCa/svm2sS9UzXrVNk4SzaI
-	 ADJ+YgXgRT0AA==
-From: Vinod Koul <vkoul@kernel.org>
-To: Kees Cook <keescook@chromium.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Erick Archer <erick.archer@outlook.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <AS8PR02MB72373D9261B3B166048A8E218B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References: <AS8PR02MB72373D9261B3B166048A8E218B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Subject: Re: [PATCH v2] dmaengine: pl08x: Use kcalloc() instead of
- kzalloc()
-Message-Id: <171341720530.758041.12615273224606101090.b4-ty@kernel.org>
-Date: Thu, 18 Apr 2024 10:43:25 +0530
+	s=arc-20240116; t=1713441056; c=relaxed/simple;
+	bh=iRiAat630poaw1gRyOPsyjy2tdPc/RBRRifnHPmcN/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FMWACTV5Or2vkObVklfIyWRz5IiPPyv9mHULBzqMWVB2KHx/OcNljOX7dSSNiQ58e/fJEobi0WJ/0ZS9Sb1ZJmMkM8nZYbB6yQWq80uX/sd77K+2T+vecA443tHshPy2umsUrgRgRy1eGPfIBCRFvrXMyC+koskc3r6X7AVCsXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: nF0AIfHgS3mPorslAnQQgg==
+X-CSE-MsgGUID: cBAvAHS8S+i5ApmxoF7nXw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19589353"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="19589353"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:50:55 -0700
+X-CSE-ConnectionGUID: FMRnUkbkQqO57fbuMPTBwQ==
+X-CSE-MsgGUID: QscAwcbsSYi9UxaYK13N0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="27590374"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:50:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rxQHy-00000000JbL-1fNd;
+	Thu, 18 Apr 2024 14:50:50 +0300
+Date: Thu, 18 Apr 2024 14:50:50 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ivan Orlov <ivan.orlov0322@gmail.com>
+Cc: keescook@chromium.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kunit-dev@googlegroups.com, skhan@linuxfoundation.org
+Subject: Re: [PATCH v2] string_kunit: Add test cases for str*cmp functions
+Message-ID: <ZiEJGtpj1KIK1riW@smile.fi.intel.com>
+References: <20240417233033.717596-1-ivan.orlov0322@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417233033.717596-1-ivan.orlov0322@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Sat, 30 Mar 2024 16:23:23 +0100, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1].
+On Thu, Apr 18, 2024 at 12:30:33AM +0100, Ivan Orlov wrote:
+> Currently, str*cmp functions (strcmp, strncmp, strcasecmp and
+> strncasecmp) are not covered with tests. Extend the `string_kunit.c`
+> test by adding the test cases for them.
 > 
-> Here the multiplication is obviously safe because the "channels"
-> member can only be 8 or 2. This value is set when the "vendor_data"
-> structs are initialized.
+> This patch adds 8 more test cases:
 > 
-> [...]
+> 1) strcmp test
+> 2) strcmp test on long strings (2048 chars)
+> 3) strncmp test
+> 4) strncmp test on long strings (2048 chars)
+> 5) strcasecmp test
+> 6) strcasecmp test on long strings
+> 7) strncasecmp test
+> 8) strncasecmp test on long strings
+> 
+> These test cases aim at covering as many edge cases as possible,
+> including the tests on empty strings, situations when the different
+> symbol is placed at the end of one of the strings, etc.
 
-Applied, thanks!
+LGTM,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-[1/1] dmaengine: pl08x: Use kcalloc() instead of kzalloc()
-      commit: 98f2233a5c20ca567b2db1147278fd110681b9ed
+Thanks!
 
-Best regards,
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
 
 
