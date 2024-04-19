@@ -1,64 +1,64 @@
 Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B47E12DD90
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 14:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D41D12F386
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 14:02:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535320; cv=none; b=u0WVgTCgOhgqornH+nEHGyML0TW2gHIHx4m3EIHV785YQXFX1VrDDQzGBOeR4ucJoNIB72cVTE0HXXVrLemBq8Q4EECJanKPPbHtxAnoPhUTWhU7+N14VtZMbRcHXWd0Fi2kR8gq2tIyuAbGtSSl+2HOZKOOQoe/LALethW/H0s=
+	t=1713535322; cv=none; b=UCE8QoHDB/knhbwCLOIV6HrVvfh43WkRSsiFb26SxewnCqfXlXVROYHbfuyyC72lL4vDs989SvYtkdfaawqp43G/gQXc9jv+UJ6voe2gExWSIT5RCTHYqyfwsrJMz3u5t14TZZyscS7E03M3l0C5YkFLQXuaiGVEtoiVXFqcAdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535320; c=relaxed/simple;
-	bh=SOokn6hAfXRfXzM8wtwZF973hyHYm8001yb/KucN+yA=;
+	s=arc-20240116; t=1713535322; c=relaxed/simple;
+	bh=7IyPCd/IlqNLChXRCOCFkpN3SWykrDEomkSKWSd5dtA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uGTpg2GoCqsLQ6/nvyizevgnFVCHhPjkg7CVXPCQdcKz6ZTdQaFwS1/sYx/FvOyFwXcRaxoOiDWxO3J/Z9Uc2h+m9DeTxRnP9IHCfG+k2h9DOdNJwaoQlulY1AtwxMu21fDn1acizLmRtWAgskSEM8/8EWj1D6d8FuPfEOPUpxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bgeDXqXf; arc=none smtp.client-ip=209.85.214.181
+	 MIME-Version; b=GWFpGfpmB/W3ewy6LJuxCIOlfew8VEMlIVn7Fpn6m+4Tx59LECigrLlm0o3WAUP96uuktBPYx9idZNM9N9iryRZ30yah76apXcu+J+Xe3y4rPEVZ/D5QIQ/eYVSe+mTVB0TTTB7t+w1Q1QDKUjOXvmTRGWsjzTN0nIRR0M4fqDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nrWaMdci; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bgeDXqXf"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e0bec01232so17249945ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 07:01:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nrWaMdci"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e3ca546d40so17290005ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 07:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713535317; x=1714140117; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1713535320; x=1714140120; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=60bj08fNOYkyzGjFmyldnZhisQMFjo0YMqTtaPxORRQ=;
-        b=bgeDXqXfN1uesqpIYgPTOCg9HwUKDMNUPjTcuVeYbshVLThDQb3rqo5EdeT4zH2has
-         0YQuvYzjuObhlAvYUCYq58pXYzoNJ9taFs7X4NuMtuziljM3KEHmMzA6yz0Lcq86seLO
-         VuX21HEcTE0FrBsx8osyoCksQEs7rySRpznzk=
+        bh=X7YZZdCjQz9hWJpo9/lD9tjkwJaEcXHf2TvVvmg/KzA=;
+        b=nrWaMdci6q66g5LVZGmmqg5/rkRX659/WGcn2KiUP3o/H/gEUSu/RCMnY0yhGijil0
+         g2XnutHXeTjl9NLlObIDhVcaE9jqMmYF/J72cU/2Gsi7H8aOX8qHaR9Yhld0Sj5I3o0a
+         Iqt8j7qPNVxOFYNn2vhqw/jVh2qqROzb0xiOQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713535317; x=1714140117;
+        d=1e100.net; s=20230601; t=1713535320; x=1714140120;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=60bj08fNOYkyzGjFmyldnZhisQMFjo0YMqTtaPxORRQ=;
-        b=R0Ida+E3njmXQjwlSZEyb/ecluJWuE6eYz73G3w5hBisR70z2Vk2wkNJSxalVB6ODA
-         wMV9ulMXV1qNIqrfGCLwZA3nNA6onK/d6bhiAyZ794BVP5N1F6OZGw59WiEbxbX7cTa0
-         FenHAQ6GFCmYc98uVLjR5g7DlqcA2NgIPTG54Ht0miBiaknBg13QVqg3ztDKDliyp9Op
-         nhbYsliQEgMEpNIyvh4jJwnA0YMD0hoV9JLhGqSYCYfgSJqI1wFFeLhJpi1MDMxW3VyX
-         mSS3XTIuQ7GI5lXgNDbfS2M0aMKBZS3UoES9zhPdcJt4t1G8JdEsU7cje6Pma5151YpJ
-         Uu2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWgJS3uSlYSCYHA/J5C92SpTRRjxlPztGthiHXitQl8/zs334Rua3YGNjLIaekYPxZmqTIkd5dsZ8+rvpmdAsPgTA22EB8wTtpB0/nClLHM
-X-Gm-Message-State: AOJu0YwGcGZS6YGzZ5OJ3HpumDGKucWa9+H6jAqIfUCTvirY25R2PEwj
-	gI8KVQ14eVoRYGV2DJrHvmm45jigy0h9Tz+OUBxdTKL22Y6BEKmbtdNrF/mvbtQuud5yya06dfk
+        bh=X7YZZdCjQz9hWJpo9/lD9tjkwJaEcXHf2TvVvmg/KzA=;
+        b=dfqDrfqhrJ6vteWdloK9nmnZ+ZaI+JoHAZqqxGKn/n5ut+m3GEhIBfsYrwQYBOeIPp
+         9emyZQNyM4obAfmcABmGxauSLYlfh4uGaxbKkG/RJO0PY3oDs0ASR46YQFbc9nsM36yP
+         uUOq8mh+QwguD06ETQw35q2eRkiCvfJo7pyCtpxl8NBe7vmCIWZ7T3BaI9mk8v3F/hmq
+         IXiG6+oP5IhUr/MxSXFDoo65wcrAwI0QPqLV+qYbzlxeZZ2+2Dys4g/vUJ2Mt840dtyN
+         cRVj44HTKcgOXomGrZ4D/8RC4nkViTdTNS+BkreZCyGk79LZtFfSWZW4AvRbRzDG0hNc
+         pcMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHz3KB7VZ68NvjnjdlRiIPWHOmBV0BCFPb8fTbm9g99C1xmKhfwPKsfls3bs2GeBL57T5ev2l1DIOFlmuBPoMgmprcN1SdO+zWiqDlEZSl
+X-Gm-Message-State: AOJu0Yy5XM0voFJJUbCP+fe539npA5yVwhJP5ItwhdVnty0ilEQD6ZB9
+	pV3fm/ucsQcXVeh7Ii8JZlNkSRe8MPyUhau2KqOjgmKUCM8ga2JfYa/UBWJBEf/i5Bthf4Xi3pA
 	=
-X-Google-Smtp-Source: AGHT+IFxKIaiTQQnHHvaeNar935ymXBnwNgd3CdnYSm3XwjOGr+DFuZ5d0WL0a9FfnSo5+zx+j7sMg==
-X-Received: by 2002:a17:902:b486:b0:1e2:718d:f290 with SMTP id y6-20020a170902b48600b001e2718df290mr2175867plr.67.1713535317611;
-        Fri, 19 Apr 2024 07:01:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHfm3vjj0w/4WFkFLVFA8P3SlF4h6GTKa95SeBReMH3BoiG3dYkBaqOIc9hDnYdcp3A/qzqAA==
+X-Received: by 2002:a17:902:db04:b0:1e2:c8f9:4cd7 with SMTP id m4-20020a170902db0400b001e2c8f94cd7mr2492007plx.64.1713535320016;
+        Fri, 19 Apr 2024 07:02:00 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f12-20020a170902684c00b001e284b9b28asm3410545pln.129.2024.04.19.07.01.56
+        by smtp.gmail.com with ESMTPSA id h10-20020a170902f54a00b001e61d87e4aasm3362122plf.185.2024.04.19.07.01.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 07:01:56 -0700 (PDT)
+        Fri, 19 Apr 2024 07:01:59 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Andy Shevchenko <andy@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
 	Ivan Orlov <ivan.orlov0322@gmail.com>,
 	linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] string: Prepare to merge strcat KUnit tests into string_kunit.c
-Date: Fri, 19 Apr 2024 07:01:52 -0700
-Message-Id: <20240419140155.3028912-3-keescook@chromium.org>
+Subject: [PATCH 5/5] string: Convert KUnit test names to standard convention
+Date: Fri, 19 Apr 2024 07:01:54 -0700
+Message-Id: <20240419140155.3028912-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240419140017.work.012-kees@kernel.org>
 References: <20240419140017.work.012-kees@kernel.org>
@@ -68,24 +68,24 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1549; i=keescook@chromium.org;
- h=from:subject; bh=SOokn6hAfXRfXzM8wtwZF973hyHYm8001yb/KucN+yA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmInlS+imGbP3YLDk5RSzjCVBlFhXpXtJzQQJGm
- h0NyeIBVWGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZiJ5UgAKCRCJcvTf3G3A
- JkPcD/9hwNQiymaqHA9VWj14VNEZE4Km6N9feNZHjDYp+2MAxj8NUXO81sPxxv/w2XR7erfCHMP
- 4SbtoE+nGHXRDbSioIkyVAsSJDQlZbqngPnPLgUQ1a3NQh4BjcA05Tf8Z/nqFE+3VLydiEA3u+3
- nEnON5PZEO7MJa4g2DXBGhonjgRXeQDl5WNdcUfQpUFJw92KDfV485RnQfHHGwV9iDSmmdBo6GY
- QOzU2WbovxDaNTXHQ21Ssj7sQBDH9uHCfSU2p+50nPtyRV86sXi0DxVRAWxOZ1FhGFWRk57h0Js
- tPxMRojOAdzBhiP9uYcZY+C6dFXwOCyx9yfq1UQZx0h7gMAnVX31bzRq79eoEiUQ1aU3V7Wl5Ta
- a1bn/Wu28FsrUuNecO7kgJKb5C3aVkN0J7ibAd7outSSPcJmZoTLFPVh+pvOSJXxYlZK5gqZyjB
- Df5EzAsWhnqD8FTXVSGc4/8b+1MvTzFvDfRiBZz9T+eiM7esjtiTqDxTzUOxTRdZ1bAgkanAo0k
- 4jr5uy8WnrwVw+tDV0V7LvNr+VA8C8DopWurfl2UvPZg/qA8PpB1cssFyFAX0OyCI8engzk69mZ
- kzm1SjnJC/DDEs6jvqMk2HhyuSJQF1BUCfsWaJvZABj8yHZgozyTzOyyemz9lg5ZVMus2r+apiR Wrz7TD5G/7dJ8qA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7670; i=keescook@chromium.org;
+ h=from:subject; bh=7IyPCd/IlqNLChXRCOCFkpN3SWykrDEomkSKWSd5dtA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmInlSXJhJLGlM4vLUJ65OHluVqz3q6Q0PhsGPZ
+ CCgVfp3eaqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZiJ5UgAKCRCJcvTf3G3A
+ Jsy4EACTTMxVuGa4JzV6Yr0v3/2N0V1MAVIosTzb8TNWXkoqd+HRXw72hnVSlo6++gdE6eO4FF0
+ kXHYppA7wHd/QN8F4BRRCgxSpDkwZIm6q/q+WTfNhmbqYd6WqYoJMKiijtfxk3M5FOzuwCvDGej
+ xA4V4Xxur1H28ndlw9S4fB6d7l+oCZUM0ijjVf1lQjKOSNaQp0TrjzvsLLt+XD784aWC4QG3Hek
+ n3lm5+2FK1r2KG/D1/sL1aO8YIZG0wbALIo7nlBveF0T5YEpltEAud9UZOE4OPPEytYXRFGYBGf
+ 4Lw71uCeovmuc7awK16MpYTYJq92Z9Knubm87J/u/6xhV9iMK9L6evsDV86LWlChbb6pzXRxGUo
+ GHKfCdrpyeaHFrppTVqHVJYnDEEk/cI3O4LRwtUG2BlahLcHi2dtX5j8lY8n6shSHQCsIH7PUqW
+ ZIptf1FAciUTtmNW5Ce/00NB34IMDRP9F27AatzHaQPsMDyK98tJNhTHQbmaGWsNFzXeWoHcCBJ
+ /VsX8TVf1jdZo6hAIk6trlpdnFHznJt/eKmUDpIgTP4odI6TyxmtZjkViWtgJ+GE4XY5Th8WxEM
+ kqCQKhyMWXmlAtub9sRewaYMUit6lTKE8uxAIkYn+pmdCK3WSIyJIPdW9wSvp9XWVxrmBXnDkei Esd+1+Bc6TRfxwg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The test naming convention differs between string_kunit.c and
-strcat_kunit.c. Move "test" to the beginning of the function name.
+The KUnit convention for test names is AREA_test_WHAT. Adjust the string
+test names to follow this pattern.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
@@ -93,50 +93,215 @@ Cc: Andy Shevchenko <andy@kernel.org>
 Cc: Ivan Orlov <ivan.orlov0322@gmail.com>
 Cc: linux-hardening@vger.kernel.org
 ---
- lib/strcat_kunit.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ lib/string_kunit.c | 72 +++++++++++++++++++++++-----------------------
+ 1 file changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/lib/strcat_kunit.c b/lib/strcat_kunit.c
-index e21be95514af..ca09f7f0e6a2 100644
---- a/lib/strcat_kunit.c
-+++ b/lib/strcat_kunit.c
-@@ -10,7 +10,7 @@
+diff --git a/lib/string_kunit.c b/lib/string_kunit.c
+index 48752ed19d56..de4eae91403f 100644
+--- a/lib/string_kunit.c
++++ b/lib/string_kunit.c
+@@ -17,7 +17,7 @@
+ #define STRCMP_TEST_EXPECT_LOWER(test, fn, ...) KUNIT_EXPECT_LT(test, fn(__VA_ARGS__), 0)
+ #define STRCMP_TEST_EXPECT_GREATER(test, fn, ...) KUNIT_EXPECT_GT(test, fn(__VA_ARGS__), 0)
+ 
+-static void test_memset16(struct kunit *test)
++static void string_test_memset16(struct kunit *test)
+ {
+ 	unsigned i, j, k;
+ 	u16 v, *p;
+@@ -46,7 +46,7 @@ static void test_memset16(struct kunit *test)
+ 	}
+ }
+ 
+-static void test_memset32(struct kunit *test)
++static void string_test_memset32(struct kunit *test)
+ {
+ 	unsigned i, j, k;
+ 	u32 v, *p;
+@@ -75,7 +75,7 @@ static void test_memset32(struct kunit *test)
+ 	}
+ }
+ 
+-static void test_memset64(struct kunit *test)
++static void string_test_memset64(struct kunit *test)
+ {
+ 	unsigned i, j, k;
+ 	u64 v, *p;
+@@ -104,7 +104,7 @@ static void test_memset64(struct kunit *test)
+ 	}
+ }
+ 
+-static void test_strchr(struct kunit *test)
++static void string_test_strchr(struct kunit *test)
+ {
+ 	const char *test_string = "abcdefghijkl";
+ 	const char *empty_string = "";
+@@ -127,7 +127,7 @@ static void test_strchr(struct kunit *test)
+ 	KUNIT_ASSERT_NULL(test, result);
+ }
+ 
+-static void test_strnchr(struct kunit *test)
++static void string_test_strnchr(struct kunit *test)
+ {
+ 	const char *test_string = "abcdefghijkl";
+ 	const char *empty_string = "";
+@@ -160,7 +160,7 @@ static void test_strnchr(struct kunit *test)
+ 	KUNIT_ASSERT_NULL(test, result);
+ }
+ 
+-static void test_strspn(struct kunit *test)
++static void string_test_strspn(struct kunit *test)
+ {
+ 	static const struct strspn_test {
+ 		const char str[16];
+@@ -196,7 +196,7 @@ static void strcmp_fill_buffers(char fill1, char fill2)
+ 	strcmp_buffer2[STRCMP_LARGE_BUF_LEN - 1] = 0;
+ }
+ 
+-static void test_strcmp(struct kunit *test)
++static void string_test_strcmp(struct kunit *test)
+ {
+ 	/* Equal strings */
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strcmp, "Hello, Kernel!", "Hello, Kernel!");
+@@ -214,7 +214,7 @@ static void test_strcmp(struct kunit *test)
+ 	STRCMP_TEST_EXPECT_LOWER(test, strcmp, "Just a string", "Just a string and something else");
+ }
+ 
+-static void test_strcmp_long_strings(struct kunit *test)
++static void string_test_strcmp_long_strings(struct kunit *test)
+ {
+ 	strcmp_fill_buffers('B', 'B');
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strcmp, strcmp_buffer1, strcmp_buffer2);
+@@ -226,7 +226,7 @@ static void test_strcmp_long_strings(struct kunit *test)
+ 	STRCMP_TEST_EXPECT_GREATER(test, strcmp, strcmp_buffer1, strcmp_buffer2);
+ }
+ 
+-static void test_strncmp(struct kunit *test)
++static void string_test_strncmp(struct kunit *test)
+ {
+ 	/* Equal strings */
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, "Hello, KUnit!", "Hello, KUnit!", 13);
+@@ -249,7 +249,7 @@ static void test_strncmp(struct kunit *test)
+ 				 strlen("Just a string"));
+ }
+ 
+-static void test_strncmp_long_strings(struct kunit *test)
++static void string_test_strncmp_long_strings(struct kunit *test)
+ {
+ 	strcmp_fill_buffers('B', 'B');
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strncmp, strcmp_buffer1,
+@@ -269,7 +269,7 @@ static void test_strncmp_long_strings(struct kunit *test)
+ 				   strcmp_buffer2, STRCMP_CHANGE_POINT + 1);
+ }
+ 
+-static void test_strcasecmp(struct kunit *test)
++static void string_test_strcasecmp(struct kunit *test)
+ {
+ 	/* Same strings in different case should be equal */
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, "Hello, Kernel!", "HeLLO, KErNeL!");
+@@ -282,7 +282,7 @@ static void test_strcasecmp(struct kunit *test)
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, "-+**.1230ghTTT~^", "-+**.1230Ghttt~^");
+ }
+ 
+-static void test_strcasecmp_long_strings(struct kunit *test)
++static void string_test_strcasecmp_long_strings(struct kunit *test)
+ {
+ 	strcmp_fill_buffers('b', 'B');
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strcasecmp, strcmp_buffer1, strcmp_buffer2);
+@@ -294,7 +294,7 @@ static void test_strcasecmp_long_strings(struct kunit *test)
+ 	STRCMP_TEST_EXPECT_GREATER(test, strcasecmp, strcmp_buffer1, strcmp_buffer2);
+ }
+ 
+-static void test_strncasecmp(struct kunit *test)
++static void string_test_strncasecmp(struct kunit *test)
+ {
+ 	/* Same strings in different case should be equal */
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, "AbAcAbA", "Abacaba", strlen("Abacaba"));
+@@ -306,7 +306,7 @@ static void test_strncasecmp(struct kunit *test)
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, "Abacaba", "Not abacaba", 0);
+ }
+ 
+-static void test_strncasecmp_long_strings(struct kunit *test)
++static void string_test_strncasecmp_long_strings(struct kunit *test)
+ {
+ 	strcmp_fill_buffers('b', 'B');
+ 	STRCMP_TEST_EXPECT_EQUAL(test, strncasecmp, strcmp_buffer1,
+@@ -398,7 +398,7 @@ static void strscpy_check(struct kunit *test, char *src, int count,
+ 	}
+ }
+ 
+-static void test_strscpy(struct kunit *test)
++static void string_test_strscpy(struct kunit *test)
+ {
+ 	char dest[8];
+ 
+@@ -447,7 +447,7 @@ static void test_strscpy(struct kunit *test)
  
  static volatile int unconst;
  
--static void strcat_test(struct kunit *test)
-+static void test_strcat(struct kunit *test)
+-static void test_strcat(struct kunit *test)
++static void string_test_strcat(struct kunit *test)
  {
  	char dest[8];
  
-@@ -29,7 +29,7 @@ static void strcat_test(struct kunit *test)
+@@ -466,7 +466,7 @@ static void test_strcat(struct kunit *test)
  	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
  }
  
--static void strncat_test(struct kunit *test)
-+static void test_strncat(struct kunit *test)
+-static void test_strncat(struct kunit *test)
++static void string_test_strncat(struct kunit *test)
  {
  	char dest[8];
  
-@@ -56,7 +56,7 @@ static void strncat_test(struct kunit *test)
+@@ -493,7 +493,7 @@ static void test_strncat(struct kunit *test)
  	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
  }
  
--static void strlcat_test(struct kunit *test)
-+static void test_strlcat(struct kunit *test)
+-static void test_strlcat(struct kunit *test)
++static void string_test_strlcat(struct kunit *test)
  {
  	char dest[8] = "";
  	int len = sizeof(dest) + unconst;
-@@ -88,9 +88,9 @@ static void strlcat_test(struct kunit *test)
+@@ -525,24 +525,24 @@ static void test_strlcat(struct kunit *test)
  }
  
- static struct kunit_case strcat_test_cases[] = {
--	KUNIT_CASE(strcat_test),
--	KUNIT_CASE(strncat_test),
--	KUNIT_CASE(strlcat_test),
-+	KUNIT_CASE(test_strcat),
-+	KUNIT_CASE(test_strncat),
-+	KUNIT_CASE(test_strlcat),
+ static struct kunit_case string_test_cases[] = {
+-	KUNIT_CASE(test_memset16),
+-	KUNIT_CASE(test_memset32),
+-	KUNIT_CASE(test_memset64),
+-	KUNIT_CASE(test_strchr),
+-	KUNIT_CASE(test_strnchr),
+-	KUNIT_CASE(test_strspn),
+-	KUNIT_CASE(test_strcmp),
+-	KUNIT_CASE(test_strcmp_long_strings),
+-	KUNIT_CASE(test_strncmp),
+-	KUNIT_CASE(test_strncmp_long_strings),
+-	KUNIT_CASE(test_strcasecmp),
+-	KUNIT_CASE(test_strcasecmp_long_strings),
+-	KUNIT_CASE(test_strncasecmp),
+-	KUNIT_CASE(test_strncasecmp_long_strings),
+-	KUNIT_CASE(test_strscpy),
+-	KUNIT_CASE(test_strcat),
+-	KUNIT_CASE(test_strncat),
+-	KUNIT_CASE(test_strlcat),
++	KUNIT_CASE(string_test_memset16),
++	KUNIT_CASE(string_test_memset32),
++	KUNIT_CASE(string_test_memset64),
++	KUNIT_CASE(string_test_strchr),
++	KUNIT_CASE(string_test_strnchr),
++	KUNIT_CASE(string_test_strspn),
++	KUNIT_CASE(string_test_strcmp),
++	KUNIT_CASE(string_test_strcmp_long_strings),
++	KUNIT_CASE(string_test_strncmp),
++	KUNIT_CASE(string_test_strncmp_long_strings),
++	KUNIT_CASE(string_test_strcasecmp),
++	KUNIT_CASE(string_test_strcasecmp_long_strings),
++	KUNIT_CASE(string_test_strncasecmp),
++	KUNIT_CASE(string_test_strncasecmp_long_strings),
++	KUNIT_CASE(string_test_strscpy),
++	KUNIT_CASE(string_test_strcat),
++	KUNIT_CASE(string_test_strncat),
++	KUNIT_CASE(string_test_strlcat),
  	{}
  };
  
