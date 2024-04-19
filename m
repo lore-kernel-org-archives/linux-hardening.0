@@ -1,155 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D3612F599;
-	Fri, 19 Apr 2024 15:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B2312F39C
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 15:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713538944; cv=none; b=ICmycMjkoQkNdOT9GNHs8UDAkIVxhktusfvvYpT0KDMOhbAsMUl+ktN2nG6MKL7UWw0YuEJRag9XfZuSVV1GG9plhQTwEPxqvj5XB3/oTTjfOvsV4iJcjw4mZ/JorTl3MdUuIxEYak4h9H8FAIBkCTND/o/VAIYPCXX0nJuSHR4=
+	t=1713539712; cv=none; b=Mo5V1MS8S6YsVnoATyUtWacYPgV6wYoM4MEjqYZuAmtiR4A7BPHEnSOX/903kOEPJsUsTHvpKdocq44z7aChEwNgbnwfG7XCFeSwq0LPTdkGuZKWhMhKPaiqgyjNNYPj8X6ZBA+/GtvMZqku55tG1b927P4WwFh87VZrFGErtd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713538944; c=relaxed/simple;
-	bh=UA06SqKY53ZluOyFgnipAQL6i+7psWEVH9E0CMAEG4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dbxD6ziuFD0Ad612qzq/txBXQJeonvdT8tkYpQd6kyQlCjDG94qYiIhxRU/RwTz4SaJwVBfD7pVk0UKqFuvZVgxL/ZhbHGA51TtJj/seA1kQ1SU5nfQvHK8Epjx5aGMUdI4lBQkD0A3tdcaxXIMcrl05px4TKG/L4QGwdZCWzGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWTmSMIA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713539712; c=relaxed/simple;
+	bh=9BwsgmRoellsSlnwHRY/L+avdeLAFGbR+E+vni+Rffk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VcIi0jHxPIEHRrynm0nhNXFIqaREU5p1Winke5OKTYBLh6iBJF4xtsJ7vSdnjzfGZZTVdReEYUZro6p7OmWqKeAM4Vgk88i+YyqfXuEkMQfsQ1UqXA2uGQ1RRYGg53VXFrJpVs5B0MYw0ZMIMF1UQ9ZZ6xF49X0P0+zYGCaWBT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AWy+8c1v; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWTmSMIA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0A2C072AA;
-	Fri, 19 Apr 2024 15:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713538944;
-	bh=UA06SqKY53ZluOyFgnipAQL6i+7psWEVH9E0CMAEG4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KWTmSMIAyQ/fmJBt+lKvpMxwiAysYXpUJ3T6prpJhXUA2rwNICZUJUfFtaLtyvmWQ
-	 alxcY5Q/Sy24Cvv7KcvxIL+X3djnPGLhxZS9S6n5ymUWcsbT0uEKtMpe7Xib7kVtMF
-	 m8ptSs0i9EF2d2TAruySnOiKPgSIYDIeYeL/exIyUfjtNv3ATLcCXJ5N/e1V/VAFov
-	 A50/1kX02IU/CXZRcJshE5zuYNVvjMiTIFZCeuGY8RjQKSnF7+BgvNC9JB3HmxO7mW
-	 1+QMCfM/+ksH4uu9X/KDM10hW1LOtCv9cpApfOW5Psz21AaEEiTw1u9+tD+V46kfLU
-	 P8AT37Ym1VZ9w==
-Date: Fri, 19 Apr 2024 18:01:10 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Yaxiong Tian <tianyaxiong@kylinos.cn>
-Cc: catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
-	tony.luck@intel.com, gpiccoli@igalia.com, akpm@linux-foundation.org,
-	ryan.roberts@arm.com, wangkefeng.wang@huawei.com, ardb@kernel.org,
-	david@redhat.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	xiongxin <xiongxin@kylinos.cn>
-Subject: Re: [PATCH v3] arm64: hibernate: Fix level3 translation fault in
- swsusp_save()
-Message-ID: <ZiKHNh0hHIAFT80N@kernel.org>
-References: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWy+8c1v"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-23489b56559so1167757fac.1
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 08:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713539710; x=1714144510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HEgNKLbZoEckSudwAQVqNp3+oLRHBSm8rIiQDAC0My0=;
+        b=AWy+8c1vr5cirJwdzs5hWZ8G0ld/TGgYfqUACuxQQX9Ap2ZG701JEGnZ5cnHfPa/Pw
+         0FMkrwRpYUePBA3cyBHMppwspu7i/avbUH5GXdLQ3iC3kIKw2DZxAX9wO2b0LcXn5WnE
+         LCl0YULWzvwfv/EHTymQJKxOXnTCrPR2Evf60=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713539710; x=1714144510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HEgNKLbZoEckSudwAQVqNp3+oLRHBSm8rIiQDAC0My0=;
+        b=nnqD5i8l7wJYHMrZb+MFskStuhGxsYgacUNIAhG6n1sMCwszksfW4TbmhxUT0fH9i9
+         AkP1mbAwWJsKJfYJvAlKqqNvvKCP16C6mvsjeUsbIUNZWKOnf7pso1tJnqun8Y25PzSt
+         49rBU8/fIpII2vwCMySxAAt6VJRged+ZvzueO6rff6A7mcIG18b0PcBzFH+MaG4fYnWG
+         1JjNyHCbvH+v0J27Xyis73BgrnVUH+aA1BiQPceJEY0Cl4evByKnj6KN9n+1aYb+Ota8
+         PKaHAn40ngQImSAaT23XBGVDKyuHCv2D0/tn6Dc1bUS/9lYHO++OmRIw5kUSShMdlA3D
+         dKqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBXsjaqGD/96p7F1H3hKnQBCaDJNNmoSkPrp5iqWDvs7tC8UM+Xp2wqkdTxpW1qquHOFEGHGdiy9a3VRHZfm8uvEJpWlbj1FzDKuPQiSVm
+X-Gm-Message-State: AOJu0YwZuCuRJthW+mV70oPX+b7JNcnvZ9riJD9zoVVGaSygS/Rui39o
+	x8cefggqmSbDbYAPLRL/OhDT4OeAjW+SRQhXb5ZCw3jrqYJYvjcu18IrRejgOV0mXXoowse6zTm
+	+97UoyhewE1gQ5ZkcryaAtqsuBEJqixp/vcH5
+X-Google-Smtp-Source: AGHT+IEci/VyiWTbXG7rGLqxUebtYkv2OnV0Wqvi15X+7XyZPRlkIXZ0Sb7gRR5KGjmK4XwASZ6eghotMgLv8vvXQUI=
+X-Received: by 2002:a05:6870:1d0a:b0:233:abab:6d6c with SMTP id
+ pa10-20020a0568701d0a00b00233abab6d6cmr2926542oab.7.1713539709864; Fri, 19
+ Apr 2024 08:15:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <znrbeb744774vre5dkeg7kjnnt7uuifs6xw63udcyupwj3veqh@rpcqs7dmoxi6>
+ <CABi2SkU8B27O28jjTDajFpENgUHhntuRAMKFUMXr6A6AxZeyiQ@mail.gmail.com>
+ <CAJuCfpFLwJg4n7wPpT+u9vC4XHoLE_BPPZ0tDKf7W45hGky4_Q@mail.gmail.com>
+ <CABi2SkXCC8tvuHTiZ=tYcZw0sQ2SswQqDuFuQi5bKArW9+Nbaw@mail.gmail.com> <CAJuCfpEM0b-_gCbMqcUVvKedqXsSE4di7oqzeQGofVNsHRAqCg@mail.gmail.com>
+In-Reply-To: <CAJuCfpEM0b-_gCbMqcUVvKedqXsSE4di7oqzeQGofVNsHRAqCg@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 19 Apr 2024 08:14:58 -0700
+Message-ID: <CABi2SkVk-9gQXtWKWs-1pf=Jnm=hNC04-z7qS95sJeCVrEra1Q@mail.gmail.com>
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
+	willy@infradead.org, gregkh@linuxfoundation.org, 
+	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
+	merimus@google.com, rdunlap@infradead.org, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 10:52:48AM +0800, Yaxiong Tian wrote:
-> On ARM64 machines using UEFI, if can_set_direct_map() return false by
-> setting some CONFIGS in kernel build or grub,such as
-> NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
-> NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
-> debug_pagealloc=off in grub and NO CONFIG_KFENCE.
-> swsusp_save() will fail due to can't finding the map table under the
-> nomap memory.such as:
-> 
-> [   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
-> [   48.532162] Mem abort info:
-> [   48.532162]   ESR = 0x0000000096000007
-> [   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   48.532162]   SET = 0, FnV = 0
-> [   48.532162]   EA = 0, S1PTW = 0
-> [   48.532162]   FSC = 0x07: level 3 translation fault
-> [   48.532162] Data abort info:
-> [   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
-> [   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
-> [   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
-> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
-> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
-> [   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
-> [   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
-> [   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
-> [   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
-> [   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   48.532162] pc : swsusp_save+0x280/0x538
-> [   48.532162] lr : swsusp_save+0x280/0x538
-> [   48.532162] sp : ffffffa034a3fa40
-> [   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
-> [   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
-> [   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
-> [   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
-> [   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
-> [   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
-> [   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
-> [   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
-> [   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
-> [   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
-> [   48.532162] Call trace:
-> [   48.532162]  swsusp_save+0x280/0x538
-> [   48.532162]  swsusp_arch_suspend+0x148/0x190
-> [   48.532162]  hibernation_snapshot+0x240/0x39c
-> [   48.532162]  hibernate+0xc4/0x378
-> [   48.532162]  state_store+0xf0/0x10c
-> [   48.532162]  kobj_attr_store+0x14/0x24
-> 
-> This issue can be reproduced in QEMU using UEFI when booting with
-> rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
-> 
-> This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
-> kernel_page_present() presumes that a page is present when can_set_direct_map()
-> returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
-> cause level3 translation fault in this pages.
-> 
-> Since the NOMAP regions are now marked as PageReserved(), pfn walkers
-> and the rest of core mm will treat them as unusable memory. So this
-> regions should not saved in hibernation.
-> 
-> This problem may cause by changes to pfn_valid() logic in commit
-> a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
-> 
-> Reference ohter arch architecture,drop the !can_set_direct_map() condition
-> in kernel_page_present().So in page_is_savable(),these page will skiped.
-> 
-> Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
-> 
-> Suggested-by: Mike Rapoport <rppt@kernel.org>
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Co-developed-by: xiongxin <xiongxin@kylinos.cn>
-> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
-> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+On Fri, Apr 19, 2024 at 7:57=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Thu, Apr 18, 2024 at 6:22=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wro=
+te:
+> >
+> > On Thu, Apr 18, 2024 at 1:19=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > >
+> > > On Tue, Apr 16, 2024 at 12:40=E2=80=AFPM Jeff Xu <jeffxu@chromium.org=
+> wrote:
+> > > >
+> > > > On Tue, Apr 16, 2024 at 8:13=E2=80=AFAM Liam R. Howlett <Liam.Howle=
+tt@oracle.com> wrote:
+> > > > >
+> > > > > * jeffxu@chromium.org <jeffxu@chromium.org> [240415 12:35]:
+> > > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > > >
+> > > > > > This is V10 version, it rebases v9 patch to 6.9.rc3.
+> > > > > > We also applied and tested mseal() in chrome and chromebook.
+> > > > > >
+> > > > > > ---------------------------------------------------------------=
+---
+> > > > > ...
+> > > > >
+> > > > > > MM perf benchmarks
+> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > > This patch adds a loop in the mprotect/munmap/madvise(DONTNEED)=
+ to
+> > > > > > check the VMAs=E2=80=99 sealing flag, so that no partial update=
+ can be made,
+> > > > > > when any segment within the given memory range is sealed.
+> > > > > >
+> > > > > > To measure the performance impact of this loop, two tests are d=
+eveloped.
+> > > > > > [8]
+> > > > > >
+> > > > > > The first is measuring the time taken for a particular system c=
+all,
+> > > > > > by using clock_gettime(CLOCK_MONOTONIC). The second is using
+> > > > > > PERF_COUNT_HW_REF_CPU_CYCLES (exclude user space). Both tests h=
+ave
+> > > > > > similar results.
+> > > > > >
+> > > > > > The tests have roughly below sequence:
+> > > > > > for (i =3D 0; i < 1000, i++)
+> > > > > >     create 1000 mappings (1 page per VMA)
+> > > > > >     start the sampling
+> > > > > >     for (j =3D 0; j < 1000, j++)
+> > > > > >         mprotect one mapping
+> > > > > >     stop and save the sample
+> > > > > >     delete 1000 mappings
+> > > > > > calculates all samples.
+> > > > >
+> > > > >
+> > > > > Thank you for doing this performance testing.
+> > > > >
+> > > > > >
+> > > > > > Below tests are performed on Intel(R) Pentium(R) Gold 7505 @ 2.=
+00GHz,
+> > > > > > 4G memory, Chromebook.
+> > > > > >
+> > > > > > Based on the latest upstream code:
+> > > > > > The first test (measuring time)
+> > > > > > syscall__     vmas    t       t_mseal delta_ns        per_vma %
+> > > > > > munmap__      1       909     944     35      35      104%
+> > > > > > munmap__      2       1398    1502    104     52      107%
+> > > > > > munmap__      4       2444    2594    149     37      106%
+> > > > > > munmap__      8       4029    4323    293     37      107%
+> > > > > > munmap__      16      6647    6935    288     18      104%
+> > > > > > munmap__      32      11811   12398   587     18      105%
+> > > > > > mprotect      1       439     465     26      26      106%
+> > > > > > mprotect      2       1659    1745    86      43      105%
+> > > > > > mprotect      4       3747    3889    142     36      104%
+> > > > > > mprotect      8       6755    6969    215     27      103%
+> > > > > > mprotect      16      13748   14144   396     25      103%
+> > > > > > mprotect      32      27827   28969   1142    36      104%
+> > > > > > madvise_      1       240     262     22      22      109%
+> > > > > > madvise_      2       366     442     76      38      121%
+> > > > > > madvise_      4       623     751     128     32      121%
+> > > > > > madvise_      8       1110    1324    215     27      119%
+> > > > > > madvise_      16      2127    2451    324     20      115%
+> > > > > > madvise_      32      4109    4642    534     17      113%
+> > > > > >
+> > > > > > The second test (measuring cpu cycle)
+> > > > > > syscall__     vmas    cpu     cmseal  delta_cpu       per_vma %
+> > > > > > munmap__      1       1790    1890    100     100     106%
+> > > > > > munmap__      2       2819    3033    214     107     108%
+> > > > > > munmap__      4       4959    5271    312     78      106%
+> > > > > > munmap__      8       8262    8745    483     60      106%
+> > > > > > munmap__      16      13099   14116   1017    64      108%
+> > > > > > munmap__      32      23221   24785   1565    49      107%
+> > > > > > mprotect      1       906     967     62      62      107%
+> > > > > > mprotect      2       3019    3203    184     92      106%
+> > > > > > mprotect      4       6149    6569    420     105     107%
+> > > > > > mprotect      8       9978    10524   545     68      105%
+> > > > > > mprotect      16      20448   21427   979     61      105%
+> > > > > > mprotect      32      40972   42935   1963    61      105%
+> > > > > > madvise_      1       434     497     63      63      115%
+> > > > > > madvise_      2       752     899     147     74      120%
+> > > > > > madvise_      4       1313    1513    200     50      115%
+> > > > > > madvise_      8       2271    2627    356     44      116%
+> > > > > > madvise_      16      4312    4883    571     36      113%
+> > > > > > madvise_      32      8376    9319    943     29      111%
+> > > > > >
+> > > > >
+> > > > > If I am reading this right, madvise() is affected more than the o=
+ther
+> > > > > calls?  Is that expected or do we need to have a closer look?
+> > > > >
+> > > > The madvise() has a bigger percentage (per_vma %), but it also has =
+a
+> > > > smaller base value (cpu).
+> > >
+> > > Sorry, it's unclear to me what the "vmas" column denotes. Is that how
+> > > many VMAs were created before timing the syscall? If so, then 32 is
+> > > the max that you show here while you seem to have tested with 1000
+> > > VMAs. What is the overhead with 1000 VMAs?
+> >
+> > The vmas column is the number of VMA used in one call.
+> >
+> > For example: for 32 and mprotect(ptr,size), the memory range used in
+> > mprotect has 32 VMAs.
+>
+> Ok, so the 32 here denotes how many VMAs one mprotect() call spans?
+>
+Yes.
 
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> >
+> > It also matters how many memory ranges are in-use at the time of the
+> > test, This is where 1000 comes in. The test creates 1000 memory
+> > ranges, each memory range has 32 vmas, then calls mprotect on the 1000
+> > memory range. (the pseudocode was included in the original email)
+>
+> So, if each range has 32 vmas and you have 1000 ranges then you are
+> creating 32000 vmas? Sorry, your pseudocode does not clarify that. My
+> current understanding is this:
+>
+> for (i =3D 0; i < 1000, i++)
+>     mmap N*1000 areas (N=3D[1-32])
+>     start the sampling
+>     for (j =3D 0; j < 1000, j++)
+>         mprotect N areas with one syscall
+>     stop and save the sample
+>     munmap N*1000 areas
+> calculates all samples.
+>
+> Is that correct?
+>
+Yes, There will be 32000 VMA in the system.
 
-> ---
->  arch/arm64/mm/pageattr.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 0c4e3ecf989d..0e270a1c51e6 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -219,9 +219,6 @@ bool kernel_page_present(struct page *page)
->  	pte_t *ptep;
->  	unsigned long addr = (unsigned long)page_address(page);
->  
-> -	if (!can_set_direct_map())
-> -		return true;
-> -
->  	pgdp = pgd_offset_k(addr);
->  	if (pgd_none(READ_ONCE(*pgdp)))
->  		return false;
-> -- 
-> 2.34.1
-> 
+The pseudocode is correct in concept.
+The test implementation is slightly different, it uses mprotect to
+split the memory and make sure the VMAs  doesn't merge. For detail,
+the reference [8]  of the original email link to the test code.
 
--- 
-Sincerely yours,
-Mike.
+-Jeff
