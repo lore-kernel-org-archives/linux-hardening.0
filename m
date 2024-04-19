@@ -1,233 +1,110 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B2312F39C
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 15:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEA313118B;
+	Fri, 19 Apr 2024 16:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713539712; cv=none; b=Mo5V1MS8S6YsVnoATyUtWacYPgV6wYoM4MEjqYZuAmtiR4A7BPHEnSOX/903kOEPJsUsTHvpKdocq44z7aChEwNgbnwfG7XCFeSwq0LPTdkGuZKWhMhKPaiqgyjNNYPj8X6ZBA+/GtvMZqku55tG1b927P4WwFh87VZrFGErtd4=
+	t=1713544096; cv=none; b=C6XazGlR/s7h5sPTkRMJKbQ+QuylALro08VEwvJ2Szvm9BG/s16SfZEo8oo1U0XuksKp1dp81oKufQIbzNhL6eUp0F5TfQyCLlzcARo3ue67voJFHnRGicnZ+p4IBVVJyy00tPg1RUVfW+yMMCCXx/yHvwd+4aohh6qWv6vtrA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713539712; c=relaxed/simple;
-	bh=9BwsgmRoellsSlnwHRY/L+avdeLAFGbR+E+vni+Rffk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VcIi0jHxPIEHRrynm0nhNXFIqaREU5p1Winke5OKTYBLh6iBJF4xtsJ7vSdnjzfGZZTVdReEYUZro6p7OmWqKeAM4Vgk88i+YyqfXuEkMQfsQ1UqXA2uGQ1RRYGg53VXFrJpVs5B0MYw0ZMIMF1UQ9ZZ6xF49X0P0+zYGCaWBT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AWy+8c1v; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713544096; c=relaxed/simple;
+	bh=QvlnKcfUXd9ghJBIsUKXVa09unyUXlbufFJu5bfaDws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fCpqYzaQoeb1Hr27sxPIEQb0EO1r73jHBgU72XX9GaKsw0msOGntVV75lQ1Tzm/QfaQiNZfpCxnF/NYqxR5+Uvgd6GU9pUOFcQMFopEciRPkHberNQXjc0WFUa/j+LLcFm0YTPaWbTEQ+31dzVODBLq8885jEdqkGxSGkKW8PE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GUxiIJAm; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWy+8c1v"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-23489b56559so1167757fac.1
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Apr 2024 08:15:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUxiIJAm"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-349a33a9667so329299f8f.3;
+        Fri, 19 Apr 2024 09:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713539710; x=1714144510; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HEgNKLbZoEckSudwAQVqNp3+oLRHBSm8rIiQDAC0My0=;
-        b=AWy+8c1vr5cirJwdzs5hWZ8G0ld/TGgYfqUACuxQQX9Ap2ZG701JEGnZ5cnHfPa/Pw
-         0FMkrwRpYUePBA3cyBHMppwspu7i/avbUH5GXdLQ3iC3kIKw2DZxAX9wO2b0LcXn5WnE
-         LCl0YULWzvwfv/EHTymQJKxOXnTCrPR2Evf60=
+        d=gmail.com; s=20230601; t=1713544092; x=1714148892; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NKvBaK8IulYDHeht15hMBBpdCFxjrVh7TLjc+u1RIOQ=;
+        b=GUxiIJAmU+vbLM9hbkiBDczV56cKLMu8me74VA1Lkth5jxwXjM11eCucCNUqolrsGO
+         oqpLdGdAqk4ela3IX9y7RGhHRBvRzqr1aBM5+g7NS3cbPJEcBBLkx9gmXdhLOcaACwrT
+         pHHx1k/tNLNQJDHuPbQEuriK1c0NjR3TKJyNJEpoWVzu4NF/WX2P0j/Ex/V/bWI0JEm+
+         R2eXw2FVTxBKh5WVTdLlEBY7yUePdGmyba6CGe3FTJy/HQB52l2ZO9y6/k9zIfpKI5L1
+         l2H5+MsZyRxy7Kpn6BvO5nn6pkqdn+w/DXyk2X9VUwNXCYEMMrvVx3E7XF4skvg/i5Y7
+         RUkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713539710; x=1714144510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HEgNKLbZoEckSudwAQVqNp3+oLRHBSm8rIiQDAC0My0=;
-        b=nnqD5i8l7wJYHMrZb+MFskStuhGxsYgacUNIAhG6n1sMCwszksfW4TbmhxUT0fH9i9
-         AkP1mbAwWJsKJfYJvAlKqqNvvKCP16C6mvsjeUsbIUNZWKOnf7pso1tJnqun8Y25PzSt
-         49rBU8/fIpII2vwCMySxAAt6VJRged+ZvzueO6rff6A7mcIG18b0PcBzFH+MaG4fYnWG
-         1JjNyHCbvH+v0J27Xyis73BgrnVUH+aA1BiQPceJEY0Cl4evByKnj6KN9n+1aYb+Ota8
-         PKaHAn40ngQImSAaT23XBGVDKyuHCv2D0/tn6Dc1bUS/9lYHO++OmRIw5kUSShMdlA3D
-         dKqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBXsjaqGD/96p7F1H3hKnQBCaDJNNmoSkPrp5iqWDvs7tC8UM+Xp2wqkdTxpW1qquHOFEGHGdiy9a3VRHZfm8uvEJpWlbj1FzDKuPQiSVm
-X-Gm-Message-State: AOJu0YwZuCuRJthW+mV70oPX+b7JNcnvZ9riJD9zoVVGaSygS/Rui39o
-	x8cefggqmSbDbYAPLRL/OhDT4OeAjW+SRQhXb5ZCw3jrqYJYvjcu18IrRejgOV0mXXoowse6zTm
-	+97UoyhewE1gQ5ZkcryaAtqsuBEJqixp/vcH5
-X-Google-Smtp-Source: AGHT+IEci/VyiWTbXG7rGLqxUebtYkv2OnV0Wqvi15X+7XyZPRlkIXZ0Sb7gRR5KGjmK4XwASZ6eghotMgLv8vvXQUI=
-X-Received: by 2002:a05:6870:1d0a:b0:233:abab:6d6c with SMTP id
- pa10-20020a0568701d0a00b00233abab6d6cmr2926542oab.7.1713539709864; Fri, 19
- Apr 2024 08:15:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713544092; x=1714148892;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NKvBaK8IulYDHeht15hMBBpdCFxjrVh7TLjc+u1RIOQ=;
+        b=ubJfyrq8IxFu1nkVab49BvmrFWU1h9r+sATxZGCGvIW8eOBMZ//Arag7QJ7mepOkdM
+         Lng2LOpdaDmoMigtAwna+XhwkSgvgTGvU9rgmn9vsdrawjjbivwmmyTDPw2kg10Yxahi
+         NnfdTDT/y/iMmFdzsH5V/7cJPDyFNz/nO3bSxGnpRg2GCVRx8d1pFZ9v9kLQLrgX1Q0V
+         keO1/FKzyv5YzJDX7xZk4nkwmWv5LsHhR0Zl/WCmyI3lJv5eOuGHg4JOhS03wOc2DdfN
+         e/zuZkZvIZysLr9UEvCeWmXL9k5zlZypAus39xy9v5Py26ZTDBIOs8CI8z0Lgm/6XKe9
+         v5SA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTf0FX5CJ153qiQl1yeWv5sgHTjW+oP9wEjhfr+DUxyUNY7/Y+KfKfcblKZtzaCIcJos1tZAq8+eDcGg6m2Qj2Lg8YVSpQEeT1fez/+Dlv
+X-Gm-Message-State: AOJu0YzMJW9WipI6CMZMZAp9xyfP3mdhSVnTorRqF0KkIxp6vDPb8flq
+	9vBfdrvHJQtQx9bQFVyKFbBDoDZajcBFRV+7QlusLbfpqJPhjbeeswgLhA==
+X-Google-Smtp-Source: AGHT+IGxBbMeD6JeHgbcoxTwOlr8/cHIKrumJiQ8lj5PZ20CNcGeGXoJHXDV0DoRchV6zbdmfc41sw==
+X-Received: by 2002:a05:600c:1c9c:b0:418:ef65:4b5f with SMTP id k28-20020a05600c1c9c00b00418ef654b5fmr1848314wms.3.1713544092302;
+        Fri, 19 Apr 2024 09:28:12 -0700 (PDT)
+Received: from [172.16.102.219] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id j1-20020a05600c1c0100b0041895d1c7bfsm10900543wms.42.2024.04.19.09.28.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 09:28:11 -0700 (PDT)
+Message-ID: <cff8eeeb-ae4c-42b8-8a85-4838959c1e28@gmail.com>
+Date: Fri, 19 Apr 2024 17:28:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415163527.626541-1-jeffxu@chromium.org> <znrbeb744774vre5dkeg7kjnnt7uuifs6xw63udcyupwj3veqh@rpcqs7dmoxi6>
- <CABi2SkU8B27O28jjTDajFpENgUHhntuRAMKFUMXr6A6AxZeyiQ@mail.gmail.com>
- <CAJuCfpFLwJg4n7wPpT+u9vC4XHoLE_BPPZ0tDKf7W45hGky4_Q@mail.gmail.com>
- <CABi2SkXCC8tvuHTiZ=tYcZw0sQ2SswQqDuFuQi5bKArW9+Nbaw@mail.gmail.com> <CAJuCfpEM0b-_gCbMqcUVvKedqXsSE4di7oqzeQGofVNsHRAqCg@mail.gmail.com>
-In-Reply-To: <CAJuCfpEM0b-_gCbMqcUVvKedqXsSE4di7oqzeQGofVNsHRAqCg@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 19 Apr 2024 08:14:58 -0700
-Message-ID: <CABi2SkVk-9gQXtWKWs-1pf=Jnm=hNC04-z7qS95sJeCVrEra1Q@mail.gmail.com>
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
-	willy@infradead.org, gregkh@linuxfoundation.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net, 
-	merimus@google.com, rdunlap@infradead.org, jeffxu@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] string: Merge separate tests into string_kunit.c
+To: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240419140017.work.012-kees@kernel.org>
+Content-Language: en-US
+From: Ivan Orlov <ivan.orlov0322@gmail.com>
+In-Reply-To: <20240419140017.work.012-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 19, 2024 at 7:57=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Thu, Apr 18, 2024 at 6:22=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> wro=
-te:
-> >
-> > On Thu, Apr 18, 2024 at 1:19=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Tue, Apr 16, 2024 at 12:40=E2=80=AFPM Jeff Xu <jeffxu@chromium.org=
-> wrote:
-> > > >
-> > > > On Tue, Apr 16, 2024 at 8:13=E2=80=AFAM Liam R. Howlett <Liam.Howle=
-tt@oracle.com> wrote:
-> > > > >
-> > > > > * jeffxu@chromium.org <jeffxu@chromium.org> [240415 12:35]:
-> > > > > > From: Jeff Xu <jeffxu@chromium.org>
-> > > > > >
-> > > > > > This is V10 version, it rebases v9 patch to 6.9.rc3.
-> > > > > > We also applied and tested mseal() in chrome and chromebook.
-> > > > > >
-> > > > > > ---------------------------------------------------------------=
----
-> > > > > ...
-> > > > >
-> > > > > > MM perf benchmarks
-> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > > This patch adds a loop in the mprotect/munmap/madvise(DONTNEED)=
- to
-> > > > > > check the VMAs=E2=80=99 sealing flag, so that no partial update=
- can be made,
-> > > > > > when any segment within the given memory range is sealed.
-> > > > > >
-> > > > > > To measure the performance impact of this loop, two tests are d=
-eveloped.
-> > > > > > [8]
-> > > > > >
-> > > > > > The first is measuring the time taken for a particular system c=
-all,
-> > > > > > by using clock_gettime(CLOCK_MONOTONIC). The second is using
-> > > > > > PERF_COUNT_HW_REF_CPU_CYCLES (exclude user space). Both tests h=
-ave
-> > > > > > similar results.
-> > > > > >
-> > > > > > The tests have roughly below sequence:
-> > > > > > for (i =3D 0; i < 1000, i++)
-> > > > > >     create 1000 mappings (1 page per VMA)
-> > > > > >     start the sampling
-> > > > > >     for (j =3D 0; j < 1000, j++)
-> > > > > >         mprotect one mapping
-> > > > > >     stop and save the sample
-> > > > > >     delete 1000 mappings
-> > > > > > calculates all samples.
-> > > > >
-> > > > >
-> > > > > Thank you for doing this performance testing.
-> > > > >
-> > > > > >
-> > > > > > Below tests are performed on Intel(R) Pentium(R) Gold 7505 @ 2.=
-00GHz,
-> > > > > > 4G memory, Chromebook.
-> > > > > >
-> > > > > > Based on the latest upstream code:
-> > > > > > The first test (measuring time)
-> > > > > > syscall__     vmas    t       t_mseal delta_ns        per_vma %
-> > > > > > munmap__      1       909     944     35      35      104%
-> > > > > > munmap__      2       1398    1502    104     52      107%
-> > > > > > munmap__      4       2444    2594    149     37      106%
-> > > > > > munmap__      8       4029    4323    293     37      107%
-> > > > > > munmap__      16      6647    6935    288     18      104%
-> > > > > > munmap__      32      11811   12398   587     18      105%
-> > > > > > mprotect      1       439     465     26      26      106%
-> > > > > > mprotect      2       1659    1745    86      43      105%
-> > > > > > mprotect      4       3747    3889    142     36      104%
-> > > > > > mprotect      8       6755    6969    215     27      103%
-> > > > > > mprotect      16      13748   14144   396     25      103%
-> > > > > > mprotect      32      27827   28969   1142    36      104%
-> > > > > > madvise_      1       240     262     22      22      109%
-> > > > > > madvise_      2       366     442     76      38      121%
-> > > > > > madvise_      4       623     751     128     32      121%
-> > > > > > madvise_      8       1110    1324    215     27      119%
-> > > > > > madvise_      16      2127    2451    324     20      115%
-> > > > > > madvise_      32      4109    4642    534     17      113%
-> > > > > >
-> > > > > > The second test (measuring cpu cycle)
-> > > > > > syscall__     vmas    cpu     cmseal  delta_cpu       per_vma %
-> > > > > > munmap__      1       1790    1890    100     100     106%
-> > > > > > munmap__      2       2819    3033    214     107     108%
-> > > > > > munmap__      4       4959    5271    312     78      106%
-> > > > > > munmap__      8       8262    8745    483     60      106%
-> > > > > > munmap__      16      13099   14116   1017    64      108%
-> > > > > > munmap__      32      23221   24785   1565    49      107%
-> > > > > > mprotect      1       906     967     62      62      107%
-> > > > > > mprotect      2       3019    3203    184     92      106%
-> > > > > > mprotect      4       6149    6569    420     105     107%
-> > > > > > mprotect      8       9978    10524   545     68      105%
-> > > > > > mprotect      16      20448   21427   979     61      105%
-> > > > > > mprotect      32      40972   42935   1963    61      105%
-> > > > > > madvise_      1       434     497     63      63      115%
-> > > > > > madvise_      2       752     899     147     74      120%
-> > > > > > madvise_      4       1313    1513    200     50      115%
-> > > > > > madvise_      8       2271    2627    356     44      116%
-> > > > > > madvise_      16      4312    4883    571     36      113%
-> > > > > > madvise_      32      8376    9319    943     29      111%
-> > > > > >
-> > > > >
-> > > > > If I am reading this right, madvise() is affected more than the o=
-ther
-> > > > > calls?  Is that expected or do we need to have a closer look?
-> > > > >
-> > > > The madvise() has a bigger percentage (per_vma %), but it also has =
-a
-> > > > smaller base value (cpu).
-> > >
-> > > Sorry, it's unclear to me what the "vmas" column denotes. Is that how
-> > > many VMAs were created before timing the syscall? If so, then 32 is
-> > > the max that you show here while you seem to have tested with 1000
-> > > VMAs. What is the overhead with 1000 VMAs?
-> >
-> > The vmas column is the number of VMA used in one call.
-> >
-> > For example: for 32 and mprotect(ptr,size), the memory range used in
-> > mprotect has 32 VMAs.
->
-> Ok, so the 32 here denotes how many VMAs one mprotect() call spans?
->
-Yes.
+On 4/19/24 15:01, Kees Cook wrote:
+> Hi,
+> 
+> We have a few lone function tests (strscpy and strcat) that are better
+> collected into the common string_kunit.c test suite. Perform various
+> renamings, merge everything, and clean up after them.
+> 
+> -Kees
+> 
+> Kees Cook (5):
+>    string: Prepare to merge strscpy_kunit.c into string_kunit.c
+>    string: Merge strscpy KUnit tests into string_kunit.c
+>    string: Prepare to merge strcat KUnit tests into string_kunit.c
+>    string: Merge strcat KUnit tests into string_kunit.c
+>    string: Convert KUnit test names to standard convention
+> 
+>   MAINTAINERS         |   2 -
+>   lib/Kconfig.debug   |  10 --
+>   lib/Makefile        |   2 -
+>   lib/strcat_kunit.c  | 104 ------------------
+>   lib/string_kunit.c  | 258 +++++++++++++++++++++++++++++++++++++++-----
+>   lib/strscpy_kunit.c | 142 ------------------------
+>   6 files changed, 230 insertions(+), 288 deletions(-)
+>   delete mode 100644 lib/strcat_kunit.c
+>   delete mode 100644 lib/strscpy_kunit.c
+> 
 
-> >
-> > It also matters how many memory ranges are in-use at the time of the
-> > test, This is where 1000 comes in. The test creates 1000 memory
-> > ranges, each memory range has 32 vmas, then calls mprotect on the 1000
-> > memory range. (the pseudocode was included in the original email)
->
-> So, if each range has 32 vmas and you have 1000 ranges then you are
-> creating 32000 vmas? Sorry, your pseudocode does not clarify that. My
-> current understanding is this:
->
-> for (i =3D 0; i < 1000, i++)
->     mmap N*1000 areas (N=3D[1-32])
->     start the sampling
->     for (j =3D 0; j < 1000, j++)
->         mprotect N areas with one syscall
->     stop and save the sample
->     munmap N*1000 areas
-> calculates all samples.
->
-> Is that correct?
->
-Yes, There will be 32000 VMA in the system.
+I tested all of the patches in the series with kunit_tool, and 
+everything works correctly.
 
-The pseudocode is correct in concept.
-The test implementation is slightly different, it uses mprotect to
-split the memory and make sure the VMAs  doesn't merge. For detail,
-the reference [8]  of the original email link to the test code.
+Thank you for doing this!
 
--Jeff
+Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+-- 
+Kind regards,
+Ivan Orlov
+
