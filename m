@@ -1,157 +1,146 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25032154C16
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Apr 2024 19:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8827C1BC44
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Apr 2024 21:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713812407; cv=none; b=jsBCki1owmORRfvA/rPgRfE0fnGbrqg/niK22/bGysqzAJwDJ8wFUlhA3QsgW8D72JKtS5uKY1U+bMzk7ZZzGnH29TFz9AaOuslo0uIrGe0RmtRRAKj+aagV336cvtg6PYcIFXZHIw0EoKptV77Ch+vTmZOtkzdEyBrNCiZ97O4=
+	t=1713821616; cv=none; b=OLbh9GOHRyJsWG4qsESitn/xGOtA6eL7taz1MgtIkh784msVcrUriamr4WXkdrRcOy9dkKF2ifRqG3TByJt05/3r56bfmzQbmxTMYa8a9PzUeOM44W5Q5J+yBx2m1cfFNCzXk3FnZ7wHt0bskVCu7Q2W8MMOynYM18UU6bVvAjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713812407; c=relaxed/simple;
-	bh=R/k9GeuVsqRfJQNhvmY+sjzEjnrvbvRFyBayzV/tSS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QbTKDgm6MQRHb4M6NiPFRdJ7SqNJzA99TnW6EjasE8tsDapxuRbcgQEwZ4ljEa+pzGuOLZOXL3ZMCNVElfkhTBFhUJlHnS/szbUrNp+06ayYf8Az1fZwud7D9FVm2sPo2gMQHSD0x1tAblNESwDiTfKUZTY2+1MfDOR6I+dKPb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Rjkre8mY; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1713821616; c=relaxed/simple;
+	bh=KoGkjBaET7UqkuHSu4yCulVlOdC9PQQ8/g3x+7MJQF4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pyFHIe9KKGsW3bWJpUMm4R1Snn53nU0atz4pHMnzmHDZw3ypdzODl7AGLmlliTbjCyCwxr6wnjOioLnJcUGQXCYfrAZ1mGWBHrHJ+SKScbybNFmn+6/G5c0Ap80jMZ/wqXWB0+s3fdca8kbi1xaeiPaitYV522XzP24C9EtG9F0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S6sxRn7M; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Rjkre8mY"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2dd19c29c41so28125981fa.3
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Apr 2024 12:00:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S6sxRn7M"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de46f4eacd3so9314902276.3
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Apr 2024 14:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713812403; x=1714417203; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z9SemwtON7A98la+Ke9Xhy0bzXzNwzzzRJNIbd9rrBw=;
-        b=Rjkre8mYpErGOpPgmXEiR9wH/4O8NPYxcnMCnFiNjjvAxzjAkfUCtSbQMghutMvevn
-         bdj4oMh6szwqlQoUfnQvCC2FfVPtAtdrmAayGvqPIH/nHeOlk41pob9q00syVbJ1xm9j
-         RYmqaO/qcvNl0Gj/bnotVD1VGTTzetJVsXp0b+yitbPu03ZLP/VYhh4lDzArcFofOKCk
-         qBz2YYdpxWcrCldtY8+PrZK30ZNnkaQJLFFIo6aGJPm54iPYZVyiNQfdU7+4et8B3mt5
-         H4dNyMSFl4Y05oFdhPs9hCl8HTVo+iJ9B/yjZ2VZtMrnWfBq7QfrimZmCt3+hswYik/M
-         ofEg==
+        d=google.com; s=20230601; t=1713821614; x=1714426414; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JWL/zGxv/3TQuwEboaVdGnhbzcGjgPZ6QRFC5NUsRRk=;
+        b=S6sxRn7MOuvkZTZTkos4vBLsGLmq30wjJSbNbrjUYnR+wL02BwolKj6igH9N7zIAiQ
+         HBmkfvBCWghWgybR4xyPJlYcWFQnNW/+r8WsTUm40e9exdTnBxREdC+2UXYUxm7tlZTp
+         bT5vAjZg8+rt298xICgNgM+xQunylvlFB5EnfBwdT8aAHnW7F7V3kX5WY08IeVceEuJa
+         Gy+QcKvKydtSLsqFW+Yan37oWO9iUbpWTz+XVd5Xkpce+Ya08Mbc2JupMhATh9zGyMKt
+         2k6imtFImzbRujx2adQzEqo3Xw3RKYLOQbItCDdjwPmvG8/wiGP2HRv+MM7ZeNHckU5p
+         nD+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713812403; x=1714417203;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z9SemwtON7A98la+Ke9Xhy0bzXzNwzzzRJNIbd9rrBw=;
-        b=pwGwhpQB/4E+p9egJXwB3UvPjVg4Cj6ZockHjKw0CC5Ss4eSDexywFeS2kweSjztSY
-         xHsX59x8biXwTVy2yfXZ8rkv56QalJFbMr4afHqCN8Plnwy2251cjLj5vfuuHTY9cnrl
-         J/5LtUsi1Eg/kIlkmnH+C9vqwMrDYfqe0e7MZJHdFSE7fj6Zry7h+KKlOs6TCoCIncNM
-         Y8haY097VR50LruMYWCpa2BH8zliQH2tmJZ+lpddmAIIz2dRilKa+TWToCWkCf7/Ur5H
-         kMBn7ZG/uQNCrTCeNpMatUK6RcBgcPsxQU9R+KVU8jPZeXH39hEegTBg0+S9vmv5vMQv
-         HszQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5pDN8O7LoQ52XtnEM8WsrLcS0NNJ9GIrho2nvQ3fDrwsYVbUn04DqJ2qERhbCsxzADtmXyEQ8B4ZR5VWmMqVaTTvA4EtuEPPZlCPC32Fu
-X-Gm-Message-State: AOJu0YysVLBW2A2mmljfe88czK7zaW0Zniq9Ajr8XUnSwXPhkQUVYpI9
-	02FHv7/pCZU9Uz5saDBqTMHMbZE+17ZV2vMeVhUWaWzfdxMYGLHIc1Goj9blPMG4Qj9VFjGSLGu
-	/nVIrsPE65AaCY+PJerL4ac5haKhlwwJ1JsetcA==
-X-Google-Smtp-Source: AGHT+IEnCuHxcQSRNOWbQ2Dz0Mc1O47603xiH5CBs7TFK19Jt5ZVAeGit7g/5ax+OSHEdGypKtc79+37uJN1rw3iklA=
-X-Received: by 2002:a2e:b712:0:b0:2d7:7c0:b077 with SMTP id
- j18-20020a2eb712000000b002d707c0b077mr6756289ljo.43.1713812403192; Mon, 22
- Apr 2024 12:00:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713821614; x=1714426414;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JWL/zGxv/3TQuwEboaVdGnhbzcGjgPZ6QRFC5NUsRRk=;
+        b=hoNYaRbrmUGYYXGLZB0Y/LH1QWCbYUu9alQ/LrmI+ndL23rmevYXAweluAXHJCGmcz
+         MnqL6KUYVY0ErIC+OqLkjB8Yiw+pN1JyRK1qSKox1+1SoFFELiofqskCQ5RQjWnobzdU
+         q8iDps3BI7YJqTq2i5SOXWQUDNq1HtVyX4c44YO9CFPDhlV6zdJpX3WHuIpUhdLFlf7C
+         XQpJ+rjHGZb5QMfoKMj5GYJsto3USxuXun0ddD5FN+rAAIvM4iRjO8xL4+s7QbKQjmt3
+         w5JDcWJixACamX4XhEUCyhyeKg8Wr41ZLW1WDXLYrO46j8oQfCikXq5s0MoamnZ3SANV
+         5aWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrnV82x8/AuiqQz+YfY95L34A1XZs3OnCj8y9AHd5PDOaI1pjIUnHp47LGfqMaHqDa9svcrPAyPM8w6Wr+FcScn9ed2WdPr6qry+vbd+3E
+X-Gm-Message-State: AOJu0Yy1bbsUGBi43P9p4zLhCOHH8CIVshPOj1iK3H3/nzoeOxAj+mWt
+	PCyvCIkTfDApzfZZsduxyIdfu94EXFAVpi1v3Ccg7wwuwDlrBF0kioPGcp+hE2scXCKnbhVxYQ2
+	hAyegyXwC98mNHSEA9cjbKw==
+X-Google-Smtp-Source: AGHT+IHRAYjODQvhZMAVdTut8PSJ03XnA8BSy2cwdXJaeLIsfBRt7ySYzs4u6FV72DEdNS6LhMHGPpJLStfRiO35lg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1148:b0:de4:7bae:3333 with
+ SMTP id p8-20020a056902114800b00de47bae3333mr3637771ybu.3.1713821614629; Mon,
+ 22 Apr 2024 14:33:34 -0700 (PDT)
+Date: Mon, 22 Apr 2024 21:33:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1710670958.git.u.kleine-koenig@pengutronix.de> <ywvi3wqcte5wfwq7twg26smtu7rgjv5z2tbdu6mz5cehjlxf72@2h77sey4xsv2>
-In-Reply-To: <ywvi3wqcte5wfwq7twg26smtu7rgjv5z2tbdu6mz5cehjlxf72@2h77sey4xsv2>
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 22 Apr 2024 13:59:51 -0500
-Message-ID: <CAMknhBHdmvyw8zeYRUrqBj7jchgtGBPw5FEmNwXbjTmoHWUdYA@mail.gmail.com>
-Subject: Re: [PATCH 0/8] pwm: Add support for character devices
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, kernel@pengutronix.de, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, John Ernberg <john.ernberg@actia.se>, 
-	Thorsten Scherer <T.Scherer@eckelmann.de>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Trevor Gamblin <tgamblin@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAKrXJmYC/43NTQ6CMBCG4auYrq3pP9SV9zAuShmgUSlpCdEQ7
+ m5hQwzEuHy/ZJ4ZUYTgIKLzYUQBBhedb1PI4wHZxrQ1YFemRowwQRijOLZdcG1fYduAvXemtw0
+ 2uRJQqgyKkqB02QWo3GtRr7fUjYu9D+/lyUDn9bc3UEwxN1YSJgupFb3U3tcPOFn/RDM4sD8Ql
+ hBdGEhCaYCTDcJXhFO5j/CEGCEpZEoJTtQGESsiSL6PiITkSmdWK2O1KL6QaZo+4tp3ZIYBAAA =
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713821613; l=2724;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=KoGkjBaET7UqkuHSu4yCulVlOdC9PQQ8/g3x+7MJQF4=; b=ZZ4+o+IWJCMGEUu2xSN3K1eKCmtXxDDP5ygJn55HSjNFh6F5YsTicn2RWjMXOJO1gRqkE3i5E
+ WZXZFNi1azVA+R/VkoSwsJ1XC/uVhmYYv2D4Q1xE1I8qFADgrxkbbu/
+X-Mailer: b4 0.12.3
+Message-ID: <20240422-snprintf-checkpatch-v5-1-f1e90bf7164e@google.com>
+Subject: [PATCH v5] checkpatch: add check for snprintf to scnprintf
+From: Justin Stitt <justinstitt@google.com>
+To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Finn Thain <fthain@linux-m68k.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, Apr 13, 2024 at 4:22=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> On Sun, Mar 17, 2024 at 11:40:31AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > After the necessary changes to the lowlevel drivers got in for v6.9-rc1
-> > here come some changes to the core to implement /dev/pwmchipX character
-> > devices.
-> >
-> > In my tests on an ARM STM32MP1 programming a PWM using the character
-> > device is ~4 times faster than just changing duty_cycle via the sysfs
-> > API. It also has the advantage that (similar to pwm_apply_*) the target
-> > state is provided to the kernel with a single call, instead of having t=
-o
-> > program the individual settings one after another via sysfs (in the
-> > right order to not cross states not supported by the driver).
-> >
-> > Note the representation of a PWM waveform is different here compared to
-> > the in-kernel representation. A PWM waveform is represented using:
-> >
-> >       period
-> >       duty_cycle
-> >       duty_offset
-> >
-> > A disabled PWM is represented by period =3D 0. For an inversed wave use=
-:
-> >
-> >       duty_offset =3D duty_cycle
-> >       duty_cycle =3D period - duty_cycle;
-> >
-> > . However there are some difficulties yet that make it hard to provide =
-a
-> > consistent API to userspace and so for now duty_offset isn't (fully)
-> > supported yet. That needs some more consideration and can be added
-> > later.
-> >
-> > A userspace lib together with some simple test programs making use of
-> > this new API can be found at
-> >
-> >       https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.g=
-it
-> >
-> > .
-> >
-> > The start of the series is some cleanup and preparation. The lifetime
-> > and locking patches are needed to not crash the kernel when a character
-> > device is open while a lowlevel driver goes away.
->
-> This series is already in next for some time, but I'm not sure that I
-> want to really send it to Linus in the next merge window as there are a
-> few issues with it:
->
->  - A (false positive) lockdep warning reported by Marek Szyprowski.
->    See https://lore.kernel.org/all/5a49cadd-21b7-4384-9e7d-9105ccc288b3@s=
-amsung.com
->
->  - A speculation warning flagged by smatch that I don't understand
->    completely yet (and failed to attract attention by people that know
->    more about about it)
->    See https://lore.kernel.org/all/1e3dc81d-dcd4-4b04-85b1-23937e2f0acd@m=
-oroto.mountain
->
->  - I'm a bit unhappy about the rounding behaviour. Actually I'd like to
->    only provide userspace access via the character device to drivers
->    that adhere to the rounding rules for new drivers (that is: First
->    pick the maximal period that isn't bigger than the requested period.
->    Then for the chosen period pick the maximal duty_cycle that isn't
->    bigger than the requested one) to give a consistent behaviour. This
->    is further complicated by the fact that the character device exposes
->    a more flexible API (involving a duty_offset instead of polarity) and
->    the natural extension for the rounding rules with duty_offset is
->    different than for inverted polarity configurations.
->
-> I currently consider introducing a new callback that in the long run
-> should replace .apply() and that properly implements the duty_offset
-> stuff. Then the character device could only be provided for the drivers
-> implementing .apply2().
->
-> I'm open for feedback, e.g. suggestions for a better name for .apply2().
->
+I am going to quote Lee Jones who has been doing some snprintf ->
+scnprintf refactorings:
 
-Waiting to merge this and giving this some more thought first does
-seem like a wise idea.
+"There is a general misunderstanding amongst engineers that
+{v}snprintf() returns the length of the data *actually* encoded into the
+destination array.  However, as per the C99 standard {v}snprintf()
+really returns the length of the data that *would have been* written if
+there were enough space for it.  This misunderstanding has led to
+buffer-overruns in the past.  It's generally considered safer to use the
+{v}scnprintf() variants in their place (or even sprintf() in simple
+cases).  So let's do that."
+
+To help prevent new instances of snprintf() from popping up, let's add a
+check to checkpatch.pl.
+
+Suggested-by: Finn Thain <fthain@linux-m68k.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v5:
+- use capture groups to let the user know which variation they used
+- Link to v4: https://lore.kernel.org/r/20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com
+
+Changes in v4:
+- also check for vsnprintf variant (thanks Bill)
+- Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3-1-a451e7664306@google.com
+
+Changes in v3:
+- fix indentation
+- add reference link (https://github.com/KSPP/linux/issues/105) (thanks Joe)
+- Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com
+
+Changes in v2:
+- Had a vim moment and deleted a character before sending the patch.
+- Replaced the character :)
+- Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
+---
+From a discussion here [1].
+
+[1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+---
+ scripts/checkpatch.pl | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9c4c4a61bc83..b7404e53c554 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7012,6 +7012,12 @@ sub process {
+ 			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+ 		}
+ 
++# {v}snprintf uses that should likely be {v}scnprintf
++		if ($line =~ /\b((v|)snprintf\s*\()/) {
++			WARN("SNPRINTF",
++			     "Prefer ${2}scnprintf over $1 - see: https://github.com/KSPP/linux/issues/105\n" . $herecurr);
++		}
++
+ # ethtool_sprintf uses that should likely be ethtool_puts
+ 		if ($line =~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/) {
+ 			if (WARN("PREFER_ETHTOOL_PUTS",
+
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240221-snprintf-checkpatch-a864ed67ebd0
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
