@@ -1,176 +1,94 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7230913665A;
-	Tue, 23 Apr 2024 12:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1223136E38;
+	Tue, 23 Apr 2024 13:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713875798; cv=none; b=mOSJBalOr/rwsdW563guk8yEIYBvN+uedhLVuWh0DuJw486v8x1xp4jm74AkK9jzc2u+70YHKwlDOtMtsNNkhne6Dh0Je3u15DdJ9znHhkIDonSL9RAZiat0B7doxa4qV/Ov9aVRJrotev0Bp3FjkjQn2iBKIvIeb4VnjM8Z7QI=
+	t=1713880243; cv=none; b=adeTs/X7gdMN4GeTjj4Eo/qZc3Nbep0J0K3x29L3FP2BtBCjIgnsNCeL2o3EhpHkVJ0DR8yUqsjAlbxZYFClG2zfhj4FLh+cSMoD4V6dbIqFCf+duUPd7q1gPM4JmcgHqQt69tFnW6SMUhMI7ntp/TgFD3AWD9u7o0CcUcPIcPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713875798; c=relaxed/simple;
-	bh=qad6qskwZYQn+D5N1xzwJq/c78GJYvm0C1sRMaB+DyM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RuKKczl1pvC4UiBkSQZoa938b40H+uE2gjSbQcy0BdElMm7zJgt3/0atz4tltdrlzEvvhZpuBIsCIIESLI7gAoU3pnaFl6nYLyI2Hd8ETzCFP9DCyk8ofyxTkLqlCc6uwjydY2fBF1IZUAgm0Li0LRJWvcauj1wZg6fc0TmBcX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=D6pzTGWn; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1713880243; c=relaxed/simple;
+	bh=69xKIHYi9IlkPeRLSshR5Kkz2te6ObXlX0YWGXKs98A=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=h6TLAngWpctKYdE2NtzMP90csgkM24/T0Z5CfB5/vbv5rp+00gQv3/YLYk8EcF86P7pznTuRtQ9MjTo2XCecmXxyLD22AbVZ+E30HKO/89hpG3FkMgwjreitm8QDyKKqBzXABaX0ulsdXpZlIf568NE+XIq2ai8aMfTu2BBCVxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJRvjvv+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="D6pzTGWn"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43NCZWmm004567;
-	Tue, 23 Apr 2024 14:36:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=IOYWpx+7FTJlYFtMjUGlHKbBuJPgpevIoZcXKDKHnVE=; b=D6
-	pzTGWnLf0s08uSL6JGSu6xikkz1epDxEEJ/LnCFpIl9xcBVwn764+59bOld5VEA7
-	a4yFRSA6uXIoD2tOJWeys9F10zz+ZdqOn5Gp2S8LgUkThA1zJVHmTv09wK3lM4Ff
-	eaq6lriMAK+7fljf3tkPuGyUzU+HzMszSfc4S0IpzL1+B8mqVoDmFhyWgx1O8MGM
-	hLibMtOMODf0RcoVYNXRHMc6HHuEOF6Lt2pc48Fq7eDZHAjbn7F52MMLMsu2ULME
-	WDbCxbOUqvcwuntqaRgfyzXEsX2hStV15pj3m8uOY2+oShlPqnpFNHNinl/Zmr31
-	AoInkhPwP5F1gCRWbmXw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xm4cnbvn3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 14:36:21 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 74BA140048;
-	Tue, 23 Apr 2024 14:36:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1459217B6B;
-	Tue, 23 Apr 2024 14:35:31 +0200 (CEST)
-Received: from localhost (10.48.86.143) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
- 2024 14:35:31 +0200
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>
-CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        Amelie Delaunay
-	<amelie.delaunay@foss.st.com>
-Subject: [PATCH 10/12] dmaengine: add channel device name to channel registration
-Date: Tue, 23 Apr 2024 14:33:00 +0200
-Message-ID: <20240423123302.1550592-11-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
-References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJRvjvv+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE67C32783;
+	Tue, 23 Apr 2024 13:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713880242;
+	bh=69xKIHYi9IlkPeRLSshR5Kkz2te6ObXlX0YWGXKs98A=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=uJRvjvv+NskakdFYTyFSA8LvJusLkXDk85F1TIbbT6zb04rUFmlCmdZJbPRZJctwv
+	 fyLDEgsPmHdVYnqa2irO5oOhhnc5gVEkb7KmGBIk56+RYNRZkav5cWgxyhlm87IzXv
+	 eMLCy4fXhtNLZMVGt+GkXPnTWQhHykIclEoBLxur9mMYJrWv3ogAdZNM/s6/AOWn3D
+	 rNbNtLZ7nabTNi6EpZ/FlU4ArW1RKkoFtp7sw93audwp4THtxqn3012OrZBEY7bVbJ
+	 eBaXyZ7FeBe0vj/3yDjC6u53Q47gvgIAMXDYt3R/cNRL+LkE3JLlIoHPHTq+xh57y0
+	 8W4EMtW3zYA3A==
+Date: Tue, 23 Apr 2024 08:50:41 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_11,2024-04-23_01,2023-05-22_02
+From: Rob Herring <robh@kernel.org>
+To: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, dmaengine@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Vinod Koul <vkoul@kernel.org>, linux-hardening@vger.kernel.org, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240423123302.1550592-2-amelie.delaunay@foss.st.com>
+References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
+ <20240423123302.1550592-2-amelie.delaunay@foss.st.com>
+Message-Id: <171388024017.101826.4338039717721212935.robh@kernel.org>
+Subject: Re: [PATCH 01/12] dt-bindings: dma: New directory for STM32 DMA
+ controllers bindings
 
-Channel device name is used for sysfs, but also by dmatest filter function.
 
-With dynamic channel registration, channels can be registered after dma
-controller registration. Users may want to have specific channel names.
+On Tue, 23 Apr 2024 14:32:51 +0200, Amelie Delaunay wrote:
+> Gather the STM32 DMA controllers bindings under ./dma/stm32/
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+> ---
+>  .../devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml     | 4 ++--
+>  .../devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml  | 4 ++--
+>  .../devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml    | 4 ++--
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+>  rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml (97%)
+>  rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml (89%)
+>  rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml (96%)
+> 
 
-If name is NULL, the channel name relies on previous implementation,
-dma<controller_device_id>chan<channel_device_id>.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- drivers/dma/dmaengine.c   | 16 ++++++++++------
- drivers/dma/idxd/dma.c    |  2 +-
- include/linux/dmaengine.h |  3 ++-
- 3 files changed, 13 insertions(+), 8 deletions(-)
+yamllint warnings/errors:
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 491b22240221..c380a4dda77a 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1037,7 +1037,8 @@ static int get_dma_id(struct dma_device *device)
- }
- 
- static int __dma_async_device_channel_register(struct dma_device *device,
--					       struct dma_chan *chan)
-+					       struct dma_chan *chan,
-+					       const char *name)
- {
- 	int rc;
- 
-@@ -1066,8 +1067,10 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- 	chan->dev->device.parent = device->dev;
- 	chan->dev->chan = chan;
- 	chan->dev->dev_id = device->dev_id;
--	dev_set_name(&chan->dev->device, "dma%dchan%d",
--		     device->dev_id, chan->chan_id);
-+	if (!name)
-+		dev_set_name(&chan->dev->device, "dma%dchan%d", device->dev_id, chan->chan_id);
-+	else
-+		dev_set_name(&chan->dev->device, name);
- 	rc = device_register(&chan->dev->device);
- 	if (rc)
- 		goto err_out_ida;
-@@ -1087,11 +1090,12 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- }
- 
- int dma_async_device_channel_register(struct dma_device *device,
--				      struct dma_chan *chan)
-+				      struct dma_chan *chan,
-+				      const char *name)
- {
- 	int rc;
- 
--	rc = __dma_async_device_channel_register(device, chan);
-+	rc = __dma_async_device_channel_register(device, chan, name);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -1203,7 +1207,7 @@ int dma_async_device_register(struct dma_device *device)
- 
- 	/* represent channels in sysfs. Probably want devs too */
- 	list_for_each_entry(chan, &device->channels, device_node) {
--		rc = __dma_async_device_channel_register(device, chan);
-+		rc = __dma_async_device_channel_register(device, chan, NULL);
- 		if (rc < 0)
- 			goto err_out;
- 	}
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index cd835eabd31b..dbecd699237e 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -269,7 +269,7 @@ static int idxd_register_dma_channel(struct idxd_wq *wq)
- 		desc->txd.tx_submit = idxd_dma_tx_submit;
- 	}
- 
--	rc = dma_async_device_channel_register(dma, chan);
-+	rc = dma_async_device_channel_register(dma, chan, NULL);
- 	if (rc < 0) {
- 		kfree(idxd_chan);
- 		return rc;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 752dbde4cec1..73537fddbb52 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1575,7 +1575,8 @@ int dma_async_device_register(struct dma_device *device);
- int dmaenginem_async_device_register(struct dma_device *device);
- void dma_async_device_unregister(struct dma_device *device);
- int dma_async_device_channel_register(struct dma_device *device,
--				      struct dma_chan *chan);
-+				      struct dma_chan *chan,
-+				      const char *name);
- void dma_async_device_channel_unregister(struct dma_device *device,
- 					 struct dma_chan *chan);
- void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
--- 
-2.25.1
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/spi/st,stm32-spi.yaml references a file that doesn't exist: Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+Documentation/devicetree/bindings/spi/st,stm32-spi.yaml: Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240423123302.1550592-2-amelie.delaunay@foss.st.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
