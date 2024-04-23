@@ -1,94 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1223136E38;
-	Tue, 23 Apr 2024 13:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727508593A;
+	Tue, 23 Apr 2024 14:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880243; cv=none; b=adeTs/X7gdMN4GeTjj4Eo/qZc3Nbep0J0K3x29L3FP2BtBCjIgnsNCeL2o3EhpHkVJ0DR8yUqsjAlbxZYFClG2zfhj4FLh+cSMoD4V6dbIqFCf+duUPd7q1gPM4JmcgHqQt69tFnW6SMUhMI7ntp/TgFD3AWD9u7o0CcUcPIcPI=
+	t=1713883675; cv=none; b=gjuNTMUNUuZbcxUkhRWBsjmDWIGC7E/eJnJhkFarRS6HZVZzDXfmS8zSyC/A41OlkZoxvj0KlRTC7TO6dNDkSpJCsyRfuATXN7mGZnb3UKGPyTWURMi1axuCdhadVXLDeTtMe0zHZ4WVBDdz7jgtvduoeYtK9Abj863TFfhQQtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880243; c=relaxed/simple;
-	bh=69xKIHYi9IlkPeRLSshR5Kkz2te6ObXlX0YWGXKs98A=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=h6TLAngWpctKYdE2NtzMP90csgkM24/T0Z5CfB5/vbv5rp+00gQv3/YLYk8EcF86P7pznTuRtQ9MjTo2XCecmXxyLD22AbVZ+E30HKO/89hpG3FkMgwjreitm8QDyKKqBzXABaX0ulsdXpZlIf568NE+XIq2ai8aMfTu2BBCVxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJRvjvv+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713883675; c=relaxed/simple;
+	bh=KbeP9FpbZs/zotQl9j7iRdG5MtyUxbPN6+XNceuQL5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=slWTqYcV71u84X/kIm+z6njCeX8JoLrpoND0l6+Qke8mY1ScNm31MGdGYRPgckLn4AmuxQmSut3F3WusmS3XCWs/ayLjxOwvhf54x4kfBxgjk8n1oMf5/1QBTxe+ecquQ0uhf0reptTYuu6i/fDrfC423IP96CmLdMEDpdlZ8BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=miK2/966; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJRvjvv+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE67C32783;
-	Tue, 23 Apr 2024 13:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713880242;
-	bh=69xKIHYi9IlkPeRLSshR5Kkz2te6ObXlX0YWGXKs98A=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=uJRvjvv+NskakdFYTyFSA8LvJusLkXDk85F1TIbbT6zb04rUFmlCmdZJbPRZJctwv
-	 fyLDEgsPmHdVYnqa2irO5oOhhnc5gVEkb7KmGBIk56+RYNRZkav5cWgxyhlm87IzXv
-	 eMLCy4fXhtNLZMVGt+GkXPnTWQhHykIclEoBLxur9mMYJrWv3ogAdZNM/s6/AOWn3D
-	 rNbNtLZ7nabTNi6EpZ/FlU4ArW1RKkoFtp7sw93audwp4THtxqn3012OrZBEY7bVbJ
-	 eBaXyZ7FeBe0vj/3yDjC6u53Q47gvgIAMXDYt3R/cNRL+LkE3JLlIoHPHTq+xh57y0
-	 8W4EMtW3zYA3A==
-Date: Tue, 23 Apr 2024 08:50:41 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="miK2/966"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43ND6DeN029735;
+	Tue, 23 Apr 2024 16:47:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=tsJ3O9D5pmdcFP8aKelU9b9B12GbBogw1A8qeP8d7fU=; b=mi
+	K2/9667VUERmzU2kC2m6eT0JPhU/vPE5POVystv72OjeoVs0OUxykrpdZpcJKHJA
+	i9srr2let0ZDydK5fY2jjxVNCjv1Jw4PBzTZhiH2dic2QvXIX3ejP6pN9585HyMk
+	gel1ZgTd5oPw/crxJ8iD9PDFiS0wDSlqkKZo12bPh+rkbNzi7ZFGvrL6OS5zr0iJ
+	ESTEUcj90Amq5fPCsSqCjEsjanNRPUA8tw3q94/gdjNoKI/g9onuf9iiPl88C8Ti
+	ovFrwG/8hFVRg5192XIaiLni8RK0O6z84I6JwkqoEsGseePZluRWLeeFE03q6P/i
+	nxliQfiePYWMS2S7TAWQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xmq90j1m9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Apr 2024 16:47:40 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6586940044;
+	Tue, 23 Apr 2024 16:47:35 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 88B6A2085D9;
+	Tue, 23 Apr 2024 16:46:45 +0200 (CEST)
+Received: from [10.48.86.143] (10.48.86.143) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
+ 2024 16:46:44 +0200
+Message-ID: <19d55a2c-791a-4681-96ca-eb1137913e94@foss.st.com>
+Date: Tue, 23 Apr 2024 16:46:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- Vinod Koul <vkoul@kernel.org>, linux-hardening@vger.kernel.org, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20240423123302.1550592-2-amelie.delaunay@foss.st.com>
-References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
- <20240423123302.1550592-2-amelie.delaunay@foss.st.com>
-Message-Id: <171388024017.101826.4338039717721212935.robh@kernel.org>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 01/12] dt-bindings: dma: New directory for STM32 DMA
  controllers bindings
+To: Rob Herring <robh@kernel.org>
+CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Vinod Koul <vkoul@kernel.org>, <linux-hardening@vger.kernel.org>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
+ <20240423123302.1550592-2-amelie.delaunay@foss.st.com>
+ <171388024017.101826.4338039717721212935.robh@kernel.org>
+Content-Language: en-US
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <171388024017.101826.4338039717721212935.robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_12,2024-04-23_02,2023-05-22_02
 
+Hi Rob,
 
-On Tue, 23 Apr 2024 14:32:51 +0200, Amelie Delaunay wrote:
-> Gather the STM32 DMA controllers bindings under ./dma/stm32/
+On 4/23/24 15:50, Rob Herring wrote:
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
->  .../devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml     | 4 ++--
->  .../devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml  | 4 ++--
->  .../devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml    | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
->  rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml (97%)
->  rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml (89%)
->  rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml (96%)
+> On Tue, 23 Apr 2024 14:32:51 +0200, Amelie Delaunay wrote:
+>> Gather the STM32 DMA controllers bindings under ./dma/stm32/
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+>> ---
+>>   .../devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml     | 4 ++--
+>>   .../devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml  | 4 ++--
+>>   .../devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml    | 4 ++--
+>>   3 files changed, 6 insertions(+), 6 deletions(-)
+>>   rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml (97%)
+>>   rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml (89%)
+>>   rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml (96%)
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> 
+> 
+> doc reference errors (make refcheckdocs):
+> Warning: Documentation/devicetree/bindings/spi/st,stm32-spi.yaml references a file that doesn't exist: Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+> Documentation/devicetree/bindings/spi/st,stm32-spi.yaml: Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240423123302.1550592-2-amelie.delaunay@foss.st.com
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Indeed. I'll wait for reviews of the whole series before sending a v2 
+fixing this warning.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/spi/st,stm32-spi.yaml references a file that doesn't exist: Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
-Documentation/devicetree/bindings/spi/st,stm32-spi.yaml: Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240423123302.1550592-2-amelie.delaunay@foss.st.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Regards,
+Amelie
