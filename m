@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A8136E0E;
-	Tue, 23 Apr 2024 11:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D09313D8B1;
+	Tue, 23 Apr 2024 11:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872426; cv=none; b=dkwp/GAwWQb8cYal/eu7tyVIz7uRnOss1ql5UXdOLELW7k9sZtBjv2/ZxfCt7joV8DiVdmJGEgL0eivFLhR4gVYfF6nzMd1sssHiMnV48uzuYhUsJWB/Mn/MfDMqqswkeQAauOZ8Ew44djSQX9aXHd+CFk1OCIWEGLQbpSNy1iQ=
+	t=1713872453; cv=none; b=ZpUL09OffylU7V65wQ8zDDCm+Jjz0A7zMCk4xkKHQ98pmYudm6WqSRN3O/rXfuJeukUhX/rN9j4T+lUZXlHpMudHIR9EGoQamtqCe0Q0Y9Kerm2/dBCHg2kxkNWJMFfi+p2wNLx0lf60WH4dhtdbdF1mJP+lmgfXNm7SpHUP/zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872426; c=relaxed/simple;
-	bh=j7L54d9WUWPSsPM8HcAhEmP8NtCCzciLBHdJr/eBWGE=;
+	s=arc-20240116; t=1713872453; c=relaxed/simple;
+	bh=F5YyWvdNkv8DKw0T3YI20djvYl+RtxbGRqQQS14nsNI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JXkYkJVlKrBie9h6SbhLF8I5o2chFhbbGC8oNZo7vdRQZNESIRbZfwwquf94MuHxAYITn4BEp0u1jclD3YYv+fInNca9B/ELRc9uTFEnjK02ENaCrudhmrdjzYUErrSgDfPAWmDav7xE7VotlIoUa9lfmV+7uiEWqu/WQdAjqAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EU4AIK/O; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=k/E+puHQvaJUfKY/izN2qo22oP/zDDQ2TXOvSt0iDFIIocC0ZDY30hi4gVpGOwvbP6CQXF10tOlayPpiJVOFIKjw3yLAEv0JGVxmzTpc8JFFUDE4DrKmcD1Q0xzcXHnClsXSH2z0louZgo5k+Co45F3AhMzlQxNO0oHcJPIh/GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kckn1+TF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EU4AIK/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F7FC116B1;
-	Tue, 23 Apr 2024 11:40:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kckn1+TF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCEA9C2BD11;
+	Tue, 23 Apr 2024 11:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713872426;
-	bh=j7L54d9WUWPSsPM8HcAhEmP8NtCCzciLBHdJr/eBWGE=;
+	s=k20201202; t=1713872453;
+	bh=F5YyWvdNkv8DKw0T3YI20djvYl+RtxbGRqQQS14nsNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EU4AIK/O+ohldd2vZZ6C2S05M5YdUvaRMVlnF1mVseyhfq1kCu8lEFYeYb/DhKDwG
-	 ivJon5hiZPXnRJNg7qvVuI8ezQlZ66AHyIdXAPWYGSIirFfMzqocj1Fl+jCHHVDR8r
-	 /BXHQfaUK/okTmmU5YbDj5c2y/5tsdRLGSOBf6vIn+0a86OLA9rgAFjUWkKDt9hItE
-	 fkg2qn/RH0u6+8ZLRzRRPapjKUoaqZWiqJ2P6ztRpuI1DETleOCHwCLmHBaAhsNl0t
-	 pjBT03ii/gW5giUgsiJclcWPnDok0bA3OUvV/lYihyMh3hhox60tGzYQrcVPe1HVk+
-	 c6HMGVZu8MdWA==
+	b=Kckn1+TFznkwbzHSn9b8SEuqXxSUHLdCFJ9DIckD1Nm1ln/ymm9jEuKPhZVPqXG+8
+	 XeDgiFxUnCqZiFAPle8jA05j9u5CMTcCj4V6u87+T6kMSCqoTA5nNgP0u0EDjXi/VG
+	 dJWmRaLM5Rai0oUjrWD3ZGLQlPcUAdkv/+g/rA6rvokQsRCexIaW8kxBYZVMvf1Bt4
+	 50zuvGxXgGixmhHfqcN6yq3TAN5kRk1cD+uVmoPDMwv4dKsuXz43sunD8YQ/mnvQg6
+	 c7He5CodDZ7cQFQl9YInAJII1+DlPKNsVx974nK/PjfooQvc0vMTemPtvEFcsgmG9t
+	 te02n4pBHNomw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -40,12 +40,12 @@ Cc: Alex Deucher <alexander.deucher@amd.com>,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 16/18] drm/radeon: silence UBSAN warning (v3)
-Date: Tue, 23 Apr 2024 07:01:12 -0400
-Message-ID: <20240423110118.1652940-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 14/16] drm/radeon: silence UBSAN warning (v3)
+Date: Tue, 23 Apr 2024 07:01:47 -0400
+Message-ID: <20240423110151.1658546-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423110118.1652940-1-sashal@kernel.org>
-References: <20240423110118.1652940-1-sashal@kernel.org>
+In-Reply-To: <20240423110151.1658546-1-sashal@kernel.org>
+References: <20240423110151.1658546-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,7 +55,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.7
+X-stable-base: Linux 6.6.28
 Content-Transfer-Encoding: 8bit
 
 From: Alex Deucher <alexander.deucher@amd.com>
@@ -78,7 +78,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpu/drm/radeon/pptable.h b/drivers/gpu/drm/radeon/pptable.h
-index 94947229888ba..b7f22597ee95e 100644
+index 4c2eec49dadc9..844f0490bf31f 100644
 --- a/drivers/gpu/drm/radeon/pptable.h
 +++ b/drivers/gpu/drm/radeon/pptable.h
 @@ -424,7 +424,7 @@ typedef struct _ATOM_PPLIB_SUMO_CLOCK_INFO{
