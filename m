@@ -1,216 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD8F5820E;
-	Tue, 23 Apr 2024 15:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA751DDC5;
+	Tue, 23 Apr 2024 18:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885732; cv=none; b=mnsdgZfeZHtS0j4ma6xdcQbHBZNXlIeLhh8RrkdbSbvYZslXYcwATdwmTaZVyC5Ri1sVih9b9P+EsoSCsofenbWh1ou52nlvMVQhdh0p9xxv8AHhWdjEaxfwpd6i0A+yLexbpojxzeeNsCdEe5lAJcDKbB5VVbfKu489kfsEKJY=
+	t=1713897108; cv=none; b=na4g+41QcKKUfAUVIVfgS47Xqo5jjlr+WdTFRhS9vKR6s+5mQb7nBMLxbUPDiyj1X604PH0Vh9cxVnLkBSuH6OceENWw5B7DCxC7fxEsRhL7/x0cB+QCvMHW3y7I5V/XNtj+ySeyhr0cf2xY2Oen+mjYV9nH9mrTZQjPtxonWao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885732; c=relaxed/simple;
-	bh=ckdRXGNIvwKMnyRaf5FG0K/hkMCAzdQEnbjUWTuh2Sg=;
+	s=arc-20240116; t=1713897108; c=relaxed/simple;
+	bh=zCEHlyKJhhK4MvhJVSRGGSCDG0oxF0tC8ADUk82NkVk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvT6bKXTQrTgiD2YoM9dOvZPWHoJ0lPGaSOuOMedjXK2m5So0oXCX4bX9EDcTzsX/iDT44BD3uV/Q3xIZVrsOtYRJcW026rBC6xFaVmyvsxKHHCZIzxMOqOQYtGqxE53WC1YLaB+0luL4IalZiM5w7o/VIrEHh7g3tRpBXOVK/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrUlTSEm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bfRq5v77AOHR8aaGY6eV8O+t4obBkrmNNQ7UZr5mkx1KRud0on5EW8Th/1x6gZNv4CIsmrcPxMemhMvacMK0q4VuGTyc0tyiFQ6k3WkB1jtv5bpJZZWCSoec0Z418b+IwL4cLm2rxS+fXaHMUM/K6XuSCnm8GJ3Tp8SKroRPu+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WfiCVzYk; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrUlTSEm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6652C116B1;
-	Tue, 23 Apr 2024 15:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713885732;
-	bh=ckdRXGNIvwKMnyRaf5FG0K/hkMCAzdQEnbjUWTuh2Sg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SrUlTSEmO7wAG1Vx7ILRzfbopP2BCS5ofCH7r/97jibToM3DYik0p4RbpC+YTeiP2
-	 yShsobB/4JGfSEeMXW44RxaMz8tOiwiIkeawcScoAt+Lodw8AeLpxeiLDvopx7EnNA
-	 TVy6q7D4MVmbs3QwbEovo285A6w0nYYUhO3cr5betQa92hWZtH68L43IzkgO39F6d7
-	 XMrDAArdQL6zRp/F4vDFPJcv9wedtrjhGU4Lt81bZbQ+ABjbjKr4Yr5EQxtVFy1/f6
-	 w5oX720ri04WNyNvEEbfQa1c4SB6+vX6C+YnteZVfHhSzNlsewAbyWIXHkUTdzqX21
-	 VQHaXTzy2VHHQ==
-Date: Tue, 23 Apr 2024 10:22:09 -0500
-From: Rob Herring <robh@kernel.org>
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 04/12] dt-bindings: dma: Document STM32 DMA3 controller
- bindings
-Message-ID: <20240423152209.GA318680-robh@kernel.org>
-References: <20240423123302.1550592-1-amelie.delaunay@foss.st.com>
- <20240423123302.1550592-5-amelie.delaunay@foss.st.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WfiCVzYk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=Rogg05ztOu4aP2/pn8CD75vsgL5H5uwqaxXujjk6r6E=; b=WfiCVzYkyj37KGe/1NcuIa1Hgk
+	I9gAfHu6MCMw7NSXSor84TLrOU+mUG0ndyfzjVt0moZbaiRHo/8L+p3QYdcySteGNhcAPGJCKkoWj
+	g/687Hepcmtf5PZKpuZ7znbxvUnMDD43qnPnbu67zfXVJS8SML5AtXvgw73tSyJkv3Nhg5awIIQnq
+	1JNMkoOZN3LoUHS53IUhOaxE7wP++2K6T0ediCLJbAhO11cNq5v9xJzhveqww2JPt0aKNdvm5A/Y5
+	rB55b5NewsYDat/UO4lQuhE8Q3txZ3JjdTGVGjV+Hgo05PhOwNnuMGRbC0LVs1cOtEcnZeCVZdr0F
+	79Ap4ebA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzKvd-000000018V6-22Td;
+	Tue, 23 Apr 2024 18:31:41 +0000
+Date: Tue, 23 Apr 2024 11:31:41 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Joel Granados <j.granados@samsung.com>,
+	Kees Cook <keescook@chromium.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
+	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <Zif-jf8Takojtq7x@bombadil.infradead.org>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240423123302.1550592-5-amelie.delaunay@foss.st.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Tue, Apr 23, 2024 at 02:32:54PM +0200, Amelie Delaunay wrote:
-> The STM32 DMA3 is a Direct Memory Access controller with different features
-> depending on its hardware configuration.
-> The channels have not the same capabilities, some have a larger FIFO, so
-> their performance is higher.
-> This patch describes STM32 DMA3 bindings, used to select a channel that
-> fits client requirements, and to pre-configure the channel depending on
-> the client needs.
+On Tue, Apr 23, 2024 at 09:54:35AM +0200, Thomas Weiﬂschuh wrote:
+> * Patch 1 is a bugfix for the stack_erasing sysctl handler
+> * Patches 2-10 change various helper functions throughout the kernel to
+>   be able to handle 'const ctl_table'.
+> * Patch 11 changes the signatures of all proc handlers through the tree.
+>   Some other signatures are also adapted, for details see the commit
+>   message.
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
->  .../bindings/dma/stm32/st,stm32-dma3.yaml     | 125 ++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+> Only patch 1 changes any code at all.
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
-> new file mode 100644
-> index 000000000000..ea4f8f6add3c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
-> @@ -0,0 +1,125 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/stm32/st,stm32-dma3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 DMA3 Controller
-> +
-> +description: |
-> +  The STM32 DMA3 is a direct memory access controller with different features
-> +  depending on its hardware configuration.
-> +  It is either called LPDMA (Low Power), GPDMA (General Purpose) or
-> +  HPDMA (High Performance).
-> +  Its hardware configuration registers allow to dynamically expose its features.
-> +
-> +  GPDMA and HPDMA support 16 independent DMA channels, while only 4 for LPDMA.
-> +  GPDMA and HPDMA support 256 DMA requests from peripherals, 8 for LPDMA.
-> +
-> +  Bindings are generic for these 3 STM32 DMA3 configurations.
-> +
-> +  DMA clients connected to the STM32 DMA3 controller must use the format described
-> +  in the ../dma.txt file, using a four-cell specifier for each channel.
-> +  A phandle to the DMA controller plus the following three integer cells:
-
-This description should be part of #dma-cells.
-
-> +    1. The request line number
-> +    2. A 32-bit mask specifying the DMA channel requirements
-> +      -bit 0-1: The priority level
-> +        0x0: low priority, low weight
-> +        0x1: low priority, mid weight
-> +        0x2: low priority, high weight
-> +        0x3: high priority
-> +      -bit 4-7: The FIFO requirement for queuing source and destination transfers
-> +        0x0: no FIFO requirement/any channel can fit
-> +        0x2: FIFO of 8 bytes (2^2+1)
-> +        0x4: FIFO of 32 bytes (2^4+1)
-> +        0x6: FIFO of 128 bytes (2^6+1)
-> +        0x7: FIFO of 256 bytes (2^7+1)
-> +    3. A 32-bit mask specifying the DMA transfer requirements
-> +      -bit 0: The source incrementing burst
-> +        0x0: fixed burst
-> +        0x1: contiguously incremented burst
-> +      -bit 1: The source allocated port
-> +        0x0: port 0 is allocated to the source transfer
-> +        0x1: port 1 is allocated to the source transfer
-> +      -bit 4: The destination incrementing burst
-> +        0x0: fixed burst
-> +        0x1: contiguously incremented burst
-> +      -bit 5: The destination allocated port
-> +        0x0: port 0 is allocated to the destination transfer
-> +        0x1: port 1 is allocated to the destination transfer
-> +      -bit 8: The type of hardware request
-> +        0x0: burst
-> +        0x1: block
-> +      -bit 9: The control mode
-> +        0x0: DMA controller control mode
-> +        0x1: peripheral control mode
-> +      -bit 12-13: The transfer complete event mode
-> +        0x0: at block level, transfer complete event is generated at the end of a block
-> +        0x2: at LLI level, the transfer complete event is generated at the end of the LLI transfer,
-> +             including the update of the LLI if any
-> +        0x3: at channel level, the transfer complete event is generated at the end of the last LLI
-> +
-> +maintainers:
-> +  - Amelie Delaunay <amelie.delaunay@foss.st.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/dma/dma-controller.yaml#
-> +
-> +properties:
-> +  "#dma-cells":
-> +    const: 3
-> +
-> +  compatible:
-> +    const: st,stm32-dma3
-
-SoC specific compatible needed.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 4
-> +    maxItems: 16
-
-I assume this is 1 interrupt per channel? But I shouldn't have to 
-assume. Either you need to list every interrupt out or you can keep this 
-adding some description if they are all the type of interrupt (e.g. per 
-channel).
-
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
-> +    dma-controller@40400000 {
-> +      compatible = "st,stm32-dma3";
-> +      reg = <0x40400000 0x1000>;
-> +      interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&rcc CK_BUS_HPDMA1>;
-> +      #dma-cells = <3>;
-> +    };
-> +...
-> -- 
-> 2.25.1
+> The series was compile-tested on top of next-20230423 for
+> i386, x86_64, arm, arm64, riscv, loongarch, s390 and m68k.
 > 
+> The series was split from my larger series sysctl-const series [0].
+> It only focusses on the proc_handlers but is an important step to be
+> able to move all static definitions of ctl_table into .rodata.
+> 
+> [0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+
+Cover letters don't need SOBS we only use them for patches.
+
+But anyway:
+
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+
+  Luis
