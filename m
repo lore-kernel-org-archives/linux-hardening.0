@@ -1,54 +1,54 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D1316F0C3
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 23:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF6D1E86F
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 23:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714000824; cv=none; b=LBvskEHD1NNyWhohTW/MHsdZrP4c0yzzo6+/h5Ubs/9nfs1AJY6EUU4faD8im5eUoE/yS8+A1i1nStMT9GwwJrR95dNZQgrOz0zW228UlVClPLB+8RufFi58k5mD/3JJARhLZfXLNLAEat3SwXfrivnKnV8alNzeVaswGgi/tTQ=
+	t=1714001455; cv=none; b=ZNIC4uyqHPhw1lQyIucvIRR0orgd2n59k53r9rMv18KbMvq7nVqYDLOh02DiSAUW3DpT5lLAXpcP/RmS+Sdz6YQnBlao+bkiNQUIe2NCKLLIQzkVVdehyleGjFq/cF8C6+lWGETsv3mbttZkknoDCAs4+FF+359KnPfrqR/VI6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714000824; c=relaxed/simple;
-	bh=xMdC6gPfhPx0eqt9pE8Cf6dx1C6F38ZaVJBhnbPRa2E=;
+	s=arc-20240116; t=1714001455; c=relaxed/simple;
+	bh=oH09D5zkFXRFNfU7QJiNFf+gIh+lrRtBdFHPc4eg0Ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bgg3RQpMwiwzIlOfw7KMiCd7m0jpavobDOm+Upi/xyY4pLe71GquWKWM5/F2TcAUB27a/l3VkrRpMjOSidccUk760nZtBtzT0UDkl0fw7HsXagAE+ksCgeNxcDgA8opSpChg/eZQfsir2Yy7oIicRd51BI0vNRPYtn0J4m2HMpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YjOkppfY; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCSWHTVJ7LlQ3wuZLsR+1EC9LNJpkSQzHtBX9NtCRE48Jue1DWCcE7D2cIRcee5OuVnH7mGvNmT79maeh8wJpwFurpm81j/DFCcNXM2gxf3SIedQO+oDwFId3IP0+YEJVr847Yp8VLMlsUtOAYx5bXT5bKZRXe/IzgSBYUrIzgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PuaOvteq; arc=none smtp.client-ip=209.85.210.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YjOkppfY"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e5715a9ebdso2933295ad.2
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 16:20:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuaOvteq"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6eb7d1a5d39so252471a34.2
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 16:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714000821; x=1714605621; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714001452; x=1714606252; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=53galFO5b9NlY6rYFvZBx1xxKB41abzyybNlJJlu7mM=;
-        b=YjOkppfYENLsgSowL4ZSX3/HwEPO/rWaGdecpkQt5gyw/H5ZATAG+gW+W2tC+ojKok
-         MDqG3tof6H/HtrbSwsMYkIbwjtGjzCmmqvw2O5Sw6eFYjDC33lZoOHsxxzCcHM0elPT6
-         YEf1+Ieh2UUWDqca+ScK4hNpsq1jjUD6IVZak=
+        bh=pwtnqARf0+6Z9GG1dv72c6Df9XT02q1HeJoWwzmw6v8=;
+        b=PuaOvteq0mMRgO3Jlb2dgmiCdAPFB3Btc8zIHX74LLL3fcOxKUNDdejxB4uqBY5JPG
+         gzeSqc5Q6og7ag+mA85KLwOLD2cgygAFMqFSk4UJczXMpWloJJYfcMV9Dq0DpY7UpbE3
+         IpKBWIDyFj1vZDAhupVMhZaYLMQxGDePYUc5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714000821; x=1714605621;
+        d=1e100.net; s=20230601; t=1714001452; x=1714606252;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=53galFO5b9NlY6rYFvZBx1xxKB41abzyybNlJJlu7mM=;
-        b=VaXG0WNAWkbxi/ZT0N3GPtHLBrNecZGAJGrrZZfAp0t2kfxogQSEbSFvUBMHU5Dr3Q
-         26UQsJL0kClqOxHlH6AGNgRvY5FlpkQtZYLxDHII86Fg3AsI5yIFQJzQi4xkrWV0DVBO
-         SKfLSKHLA1N8IWvqGu3PXRk/KHu/47XkpLDYq2yj3dRNfK1aOcfOI47SY9kpbr+TBBJB
-         kKLErBCP/W27sT2zJaECWOcHIF46OjvI3KPG1zXjxrTTo1JvsDBmmq40vO5iB8AKlRp6
-         UQP95123dHEzBmTs8XaqdHiWBosm94RJsdl+69Ws0nhLdd4O1dg/BAG6EVA2RtzwP4CC
-         IMxw==
-X-Forwarded-Encrypted: i=1; AJvYcCV58H5hBZHHdixaMC+70HXmRnSNzN0qE0n9lfkcIn8Zx0RPokpbMVcCKV7v0vf5lQc29ZMMC2GhhxZi1BJ+rTZdS4l7Ftn+AuIl1M2FJlpn
-X-Gm-Message-State: AOJu0YzBslRZru/W383CYaX9W2kwgsXPfcLIg64cghU7mV4aoK87UpM+
-	ruu+Ya9RUPjc3G0/wmWFXiHuWeBzOL3FrfE13hvBrytimFU12F2GyJ96dax87w==
-X-Google-Smtp-Source: AGHT+IFMkYJNAfNLSmk4oPnPeYVule+RDiUbFbapsmqTHjfPM7QXarEC91Pvng6lRM//0u2jQSClHg==
-X-Received: by 2002:a17:902:868f:b0:1dd:2eed:52a5 with SMTP id g15-20020a170902868f00b001dd2eed52a5mr3803324plo.37.1714000821414;
-        Wed, 24 Apr 2024 16:20:21 -0700 (PDT)
+        bh=pwtnqARf0+6Z9GG1dv72c6Df9XT02q1HeJoWwzmw6v8=;
+        b=uOaa0uF8F+ke0oYEvy/EIDwpIPGc0kO5YzV4PSBMWtHs1pQHu6A7pbPLKzREd1ZasW
+         cnB5wuXpNfaTV/fheOvHgEhRT2nmWf4jonWm/HGVYg3K30ySGLa0ATgwksMqzvvF6B9L
+         LelRjFBgI8VOQ1GWPhSssB9qT+bviNDBANbFiEcIuJEtklKEp8gKmM4plhJzzIYpiBxu
+         Z/NWYEHGoRLJApGIjR8HpfietzZYa5KO03B07dOG94Q+8KR9M0w4/NH5rk3CBfjE4A0g
+         A9l5sXc5X44+Q4mFvwHDc/MKFICgCn6cDyDDBQT8tYn1vIjPJsL1TsmykyjspMW+uhx2
+         IOlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFzbil4JmKbkSwPvGkzvNtMiogxWHLItmBFAbSkXhYPQIXrfvpziN4Pb+AkypWbQPgpsjdQr+j7emJtFVwnSL5YdrkYy2WuAigwJBaRLqr
+X-Gm-Message-State: AOJu0YxRc/N6m9f9EcOaa6QzOW7vOT/dd8O5vF09PeMvCjZX3xJWk9Y2
+	Mt85+3GlzUSHKSgHG7wi0zFF+kdq0R4IEUHHJKMRY266BSgl5iIipOMLJMkv4Q==
+X-Google-Smtp-Source: AGHT+IG1ie+7N7gLAuYGp0jXBUvNN0VNl/qnLnqCCnwse0PJuc/S/QdeclEgnM1MgF3ysfsWuiww9g==
+X-Received: by 2002:a05:6871:7410:b0:233:56e5:ff99 with SMTP id nw16-20020a056871741000b0023356e5ff99mr4180313oac.23.1714001451762;
+        Wed, 24 Apr 2024 16:30:51 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c10-20020a170902d48a00b001dd0c5d5227sm12448914plg.193.2024.04.24.16.20.20
+        by smtp.gmail.com with ESMTPSA id k73-20020a636f4c000000b005df41b00ee9sm600140pgc.68.2024.04.24.16.30.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 16:20:20 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:20:20 -0700
+        Wed, 24 Apr 2024 16:30:51 -0700 (PDT)
+Date: Wed, 24 Apr 2024 16:30:50 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
@@ -69,12 +69,13 @@ Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
 	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
  addition
-Message-ID: <202404241602.276D4ADA@keescook>
+Message-ID: <202404241621.8286B8A@keescook>
 References: <20240424191225.work.780-kees@kernel.org>
  <20240424191740.3088894-1-keescook@chromium.org>
  <20240424224141.GX40213@noisy.programming.kicks-ass.net>
  <202404241542.6AFC3042C1@keescook>
  <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+ <20240424230500.GG12673@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,67 +84,65 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240424230500.GG12673@noisy.programming.kicks-ass.net>
 
-On Thu, Apr 25, 2024 at 12:54:36AM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 24, 2024 at 03:45:07PM -0700, Kees Cook wrote:
-> > On Thu, Apr 25, 2024 at 12:41:41AM +0200, Peter Zijlstra wrote:
-> > > On Wed, Apr 24, 2024 at 12:17:34PM -0700, Kees Cook wrote:
+On Thu, Apr 25, 2024 at 01:05:00AM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 25, 2024 at 12:54:36AM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 24, 2024 at 03:45:07PM -0700, Kees Cook wrote:
+> > > On Thu, Apr 25, 2024 at 12:41:41AM +0200, Peter Zijlstra wrote:
+> > > > On Wed, Apr 24, 2024 at 12:17:34PM -0700, Kees Cook wrote:
+> > > > 
+> > > > > @@ -82,7 +83,7 @@ static __always_inline bool arch_atomic_add_negative(int i, atomic_t *v)
+> > > > >  
+> > > > >  static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
+> > > > >  {
+> > > > > -	return i + xadd(&v->counter, i);
+> > > > > +	return wrapping_add(int, i, xadd(&v->counter, i));
+> > > > >  }
+> > > > >  #define arch_atomic_add_return arch_atomic_add_return
+> > > > 
+> > > > this is going to get old *real* quick :-/
+> > > > 
+> > > > This must be the ugliest possible way to annotate all this, and then
+> > > > litter the kernel with all this... urgh.
 > > > 
-> > > > @@ -82,7 +83,7 @@ static __always_inline bool arch_atomic_add_negative(int i, atomic_t *v)
-> > > >  
-> > > >  static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
-> > > >  {
-> > > > -	return i + xadd(&v->counter, i);
-> > > > +	return wrapping_add(int, i, xadd(&v->counter, i));
-> > > >  }
-> > > >  #define arch_atomic_add_return arch_atomic_add_return
+> > > I'm expecting to have explicit wrapping type annotations soon[1], but for
+> > > the atomics, it's kind of a wash on how intrusive the annotations get. I
+> > > had originally wanted to mark the function (as I did in other cases)
+> > > rather than using the helper, but Mark preferred it this way. I'm happy
+> > > to do whatever! :)
 > > > 
-> > > this is going to get old *real* quick :-/
+> > > -Kees
 > > > 
-> > > This must be the ugliest possible way to annotate all this, and then
-> > > litter the kernel with all this... urgh.
+> > > [1] https://github.com/llvm/llvm-project/pull/86618
 > > 
-> > I'm expecting to have explicit wrapping type annotations soon[1], but for
-> > the atomics, it's kind of a wash on how intrusive the annotations get. I
-> > had originally wanted to mark the function (as I did in other cases)
-> > rather than using the helper, but Mark preferred it this way. I'm happy
-> > to do whatever! :)
+> > This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
+> > We've been writing code for years under that assumption.
 > > 
-> > -Kees
-> > 
-> > [1] https://github.com/llvm/llvm-project/pull/86618
+> > You want to mark the non-wrapping case.
 > 
-> This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
-> We've been writing code for years under that assumption.
+> That is, anything that actively warns about signed overflow when build
+> with -fno-strict-overflow is a bug. If you want this warning you have to
+> explicitly mark things.
 
-Right, which is why this is going to take time to roll out. :) What we
-were really doing with -fno-strict-overflow was getting rid of undefined
-behavior. That was really really horrible; we don't need the compiler
-hallucinating.
+This is confusing UB with "overflow detection". We're doing the latter.
 
-> You want to mark the non-wrapping case.
+> Signed overflow is not UB, is not a bug.
+> 
+> Now, it might be unexpected in some places, but fundamentally we run on
+> 2s complement and expect 2s complement. If you want more, mark it so.
 
-What we want is lack of ambiguity. Having done these kinds of things in
-the kernel for a while now, I have strong evidence that we get much better
-results with the "fail safe" approach, but start by making it non-fatal.
-That way we get full coverage, but we don't melt the world for anyone
-that doesn't want it, and we can shake things out over a few years. For
-example, it has worked well for CONFIG_FORTIFY, CONFIG_UBSAN_BOUNDS,
-KCFI, etc.
+Regular C never provided us with enough choice in types to be able to
+select the overflow resolution strategy. :( So we're stuck mixing
+expectations into our types. (One early defense you were involved in
+touched on this too: refcount_t uses a saturating overflow strategy, as
+that works best for how it gets used.)
 
-The riskier condition is having something wrap when it wasn't expected
-(e.g. allocations, pointer offsets, etc), so we start by defining our
-regular types as non-wrapping, and annotate the wrapping types (or
-specific calculations or functions).
-
-For signed types in particular, wrapping is overwhelmingly the
-uncommon case, so from a purely "how much annotations is needed"
-perspective, marking wrapping is also easiest. Yes, there are cases of
-expected wrapping, but we'll track them all down and get them marked
-unambiguously. One thing on the short list is atomics, so here we are. :)
-
--Kees
+Regardless, yes, someone intent on wrapping gets their expected 2s
+complement results, but in the cases were a few values started collecting
+in some dark corner of protocol handling, having a calculation wrap around
+is at best a behavioral bug and at worst a total system compromise.
+Wrapping is the uncommon case here, so we mark those.
 
 -- 
 Kees Cook
