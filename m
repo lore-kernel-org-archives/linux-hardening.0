@@ -1,266 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83CA29429;
-	Wed, 24 Apr 2024 02:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9606986254;
+	Wed, 24 Apr 2024 02:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713926486; cv=none; b=XjTALdhppeMsmwVUjrK8yFKmigGxlJ9slWbYWTokwlWBsdhYx/NGhX+STEpQyD6OxqGHAvH8C5RMhqxvvct3NI1g8uCSlC+7Yw9tXFpqIlCUpiHEGRUlLM9Imxl1myv6O7GYMlXdIw0PuCccvMdIUAReNVD4vYDxt0pEwNPfKw0=
+	t=1713926805; cv=none; b=hZebW3C7Fx5vYrSBL5TXCgWUyNr8/qpI3oMHrrcmkEnJz9cSeR269ZclbdeS5v+eEJw/E9aFJuu114Sq7YT/83JaQwF+16YwGt5cZWKXb2Rv0srGmfYD+LZHEfQ6wCinSZkj05r82ibZc6HUcW9T2iZUOsTk2m9E9FlPVTXnyww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713926486; c=relaxed/simple;
-	bh=cM21uIYga7OOJDL9MRldxEYsagtKqU6T2kRjdYuzQec=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N4VzwWlpqpmjtPBc3KtEGq6oPz9/08Z/wjMiacBeaYftOxM87/U7I0H5AkyzYh/zoR+5f5IXBAyQ+/iG0rRRU7ggbNSidOa+7YecIECPEOWqHnGI5iiFA6MJcTGPX3ITs94SyqDNBwwmv1FUfv3MQzwPV67R8gW7PcrL+3dSc3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kzprxf8W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713926805; c=relaxed/simple;
+	bh=B+Pn0gOtxhGeCEHnNekUBZjSFIs4P8XCtSNIQ6xwPIg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YOjx5A4VVbl+FWt18+xYxaQgkkcLoPHSuBECgjOGf312n5SUMsPnVZOM27q5YQzSY0T/IK4BOkpILEA5FIsBAsfkB22NpEQ/l9Z2/QPE2hx58sI6hgGe5fi/XnXKQmEYIDon+vA9ZE+hqIGSzJFCm/hh4mfyZpnNvzk8YFLP660=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c94bLqho; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kzprxf8W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A84C116B1;
-	Wed, 24 Apr 2024 02:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713926485;
-	bh=cM21uIYga7OOJDL9MRldxEYsagtKqU6T2kRjdYuzQec=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Kzprxf8WVblGZ4b+hqz0o2ImgizI8i3CnAtNPB36ufBPfqhcNFTJaJ3QzXrSM/Sgu
-	 pDXKuD9qjk/jiu6Nb9mP/4MItueYqfFd+ipDzJZga2LpmaH+uw6SMAnbFXPnv/zUhS
-	 TOxfdruG0wWM4riVD2nXuVDLUfa9z9f9pFr8Unj1UTb3vO3uIK/z2h+VU8KGs8xLLz
-	 WBjpnVcgR8ySFBr+VBRX45ZDiFcF1ro1irHLZB09acyHOtdHIHL4yQuRCDh58tPPoT
-	 MxlLUtBf0REi533tRvKIhDjWFBWV4mL+A+TP+iVw0hX17mrtttLCaMJDo97S8x1YOq
-	 0QjBCd8J4UdYA==
-Date: Tue, 23 Apr 2024 20:41:22 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] smb: client: Fix struct_group() usage in __packed
- structs
-Message-ID: <ZihxUuQOkZ6Zz363@neat>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c94bLqho"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43O0jU81032028;
+	Wed, 24 Apr 2024 02:46:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=F8dBvrR
+	T5yNcZEShq0vi19neAkhbVLY5pR1KfJgS0uc=; b=c94bLqhoSVAHD4JGuFkjBWa
+	Cso9SMO9BHZtQbsef57Ya/XXKNAxn2oyvuhG5Z8DsTM8dxvo65lJyIWGuAiqHzgg
+	9smGAQW/I19Ho6dtkNkASLYyBB5+icmsjXvbIhBqAl0Ho5PC06ClH361r11+sPLF
+	/edkLSmxWlqvq417uF7DE6sbuVLlKbidvxHlhWCHoVpnsv2sU45m0lvweCbsJjmC
+	TOot+G2MGUC9PUsgjcuSIFQkymMuvNqolnEH6cGnQZ69I0NlkKUWIP1mauebS7M3
+	0rRy4MFytc/b2rBv4bHsJhRhaUfi65Gh2w3ODhDbtS4IdJsSOBxxe9pQIZ5UReQ=
+	=
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xp978txju-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 02:46:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43O2kRUY028884
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Apr 2024 02:46:27 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 23 Apr 2024 19:46:21 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v7 0/4] arm64: qcom: add AIM300 AIoT board support
+Date: Wed, 24 Apr 2024 10:45:04 +0800
+Message-ID: <20240424024508.3857602-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lbnOJrSONMIP5zb8s4LY8hDxYuTJ0fBI
+X-Proofpoint-GUID: lbnOJrSONMIP5zb8s4LY8hDxYuTJ0fBI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_20,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=999 adultscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404240011
 
-Use struct_group_attr() in __packed structs, instead of struct_group().
+Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
+and PMIC functions.
+AIM300 Series is a highly optimized family of modules designed to
+support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
+chip etc.
+Here is a diagram of AIM300 AIoT Carrie Board and SoM
+ +--------------------------------------------------+
+ |             AIM300 AIOT Carrier Board            |
+ |                                                  |
+ |           +-----------------+                    |
+ |power----->| Fixed regulator |---------+          |
+ |           +-----------------+         |          |
+ |                                       |          |
+ |                                       v VPH_PWR  |
+ | +----------------------------------------------+ |
+ | |                          AIM300 SOM |        | |
+ | |                                     |VPH_PWR | |
+ | |                                     v        | |
+ | |   +-------+       +--------+     +------+    | |
+ | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+ | |   +-------+       +--------+     +------+    | |
+ | |                                              | |
+ | +----------------------------------------------+ |
+ |                                                  |
+ |                    +----+          +------+      |
+ |                    |USB |          | UART |      |
+ |                    +----+          +------+      |
+ +--------------------------------------------------+
+The following functions have been verified:
+  - uart
+  - usb
+  - ufs
+  - PCIe
+  - PMIC
+  - display
+  - adsp
+  - cdsp
+  - tlmm
 
-Below you can see the pahole output before/after changes:
+Documentation for qcs8550[1] and sm8550[2]
+[1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+[2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
 
-pahole -C smb2_file_network_open_info fs/smb/client/smb2ops.o
-struct smb2_file_network_open_info {
-	union {
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le64     AllocationSize;       /*    32     8 */
-			__le64     EndOfFile;            /*    40     8 */
-			__le32     Attributes;           /*    48     4 */
-		};                                       /*     0    56 */
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le64     AllocationSize;       /*    32     8 */
-			__le64     EndOfFile;            /*    40     8 */
-			__le32     Attributes;           /*    48     4 */
-		} network_open_info;                     /*     0    56 */
-	};                                               /*     0    56 */
-	__le32                     Reserved;             /*    56     4 */
-
-	/* size: 60, cachelines: 1, members: 2 */
-	/* last cacheline: 60 bytes */
-} __attribute__((__packed__));
-
-pahole -C smb2_file_network_open_info fs/smb/client/smb2ops.o
-struct smb2_file_network_open_info {
-	union {
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le64     AllocationSize;       /*    32     8 */
-			__le64     EndOfFile;            /*    40     8 */
-			__le32     Attributes;           /*    48     4 */
-		} __attribute__((__packed__));           /*     0    52 */
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le64     AllocationSize;       /*    32     8 */
-			__le64     EndOfFile;            /*    40     8 */
-			__le32     Attributes;           /*    48     4 */
-		} __attribute__((__packed__)) network_open_info;       /*     0    52 */
-	};                                               /*     0    52 */
-	__le32                     Reserved;             /*    52     4 */
-
-	/* size: 56, cachelines: 1, members: 2 */
-	/* last cacheline: 56 bytes */
-};
-
-pahole -C smb_com_open_rsp fs/smb/client/cifssmb.o
-struct smb_com_open_rsp {
-	...
-
-	union {
-		struct {
-			__le64     CreationTime;         /*    48     8 */
-			__le64     LastAccessTime;       /*    56     8 */
-			/* --- cacheline 1 boundary (64 bytes) --- */
-			__le64     LastWriteTime;        /*    64     8 */
-			__le64     ChangeTime;           /*    72     8 */
-			__le32     FileAttributes;       /*    80     4 */
-		};                                       /*    48    40 */
-		struct {
-			__le64     CreationTime;         /*    48     8 */
-			__le64     LastAccessTime;       /*    56     8 */
-			/* --- cacheline 1 boundary (64 bytes) --- */
-			__le64     LastWriteTime;        /*    64     8 */
-			__le64     ChangeTime;           /*    72     8 */
-			__le32     FileAttributes;       /*    80     4 */
-		} common_attributes;                     /*    48    40 */
-	};                                               /*    48    40 */
-
-	...
-
-	/* size: 111, cachelines: 2, members: 14 */
-	/* last cacheline: 47 bytes */
-} __attribute__((__packed__));
-
-pahole -C smb_com_open_rsp fs/smb/client/cifssmb.o
-struct smb_com_open_rsp {
-	...
-
-	union {
-		struct {
-			__le64     CreationTime;         /*    48     8 */
-			__le64     LastAccessTime;       /*    56     8 */
-			/* --- cacheline 1 boundary (64 bytes) --- */
-			__le64     LastWriteTime;        /*    64     8 */
-			__le64     ChangeTime;           /*    72     8 */
-			__le32     FileAttributes;       /*    80     4 */
-		} __attribute__((__packed__));           /*    48    36 */
-		struct {
-			__le64     CreationTime;         /*    48     8 */
-			__le64     LastAccessTime;       /*    56     8 */
-			/* --- cacheline 1 boundary (64 bytes) --- */
-			__le64     LastWriteTime;        /*    64     8 */
-			__le64     ChangeTime;           /*    72     8 */
-			__le32     FileAttributes;       /*    80     4 */
-		} __attribute__((__packed__)) common_attributes;       /*    48    36 */
-	};                                               /*    48    36 */
-
-	...
-
-	/* size: 107, cachelines: 2, members: 14 */
-	/* last cacheline: 43 bytes */
-} __attribute__((__packed__));
-
-pahole -C FILE_ALL_INFO fs/smb/client/cifssmb.o
-typedef struct {
-	union {
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le32     Attributes;           /*    32     4 */
-		};                                       /*     0    40 */
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le32     Attributes;           /*    32     4 */
-		} common_attributes;                     /*     0    40 */
-	};                                               /*     0    40 */
-
-	...
-
-	/* size: 113, cachelines: 2, members: 17 */
-	/* last cacheline: 49 bytes */
-} __attribute__((__packed__)) FILE_ALL_INFO;
-
-pahole -C FILE_ALL_INFO fs/smb/client/cifssmb.o
-typedef struct {
-	union {
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le32     Attributes;           /*    32     4 */
-		} __attribute__((__packed__));           /*     0    36 */
-		struct {
-			__le64     CreationTime;         /*     0     8 */
-			__le64     LastAccessTime;       /*     8     8 */
-			__le64     LastWriteTime;        /*    16     8 */
-			__le64     ChangeTime;           /*    24     8 */
-			__le32     Attributes;           /*    32     4 */
-		} __attribute__((__packed__)) common_attributes;       /*     0    36 */
-	};                                               /*     0    36 */
-
-	...
-
-	/* size: 109, cachelines: 2, members: 17 */
-	/* last cacheline: 45 bytes */
-} __attribute__((__packed__)) FILE_ALL_INFO;
-
-Fixes: 0015eb6e1238 ("smb: client, common: fix fortify warnings")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- fs/smb/client/cifspdu.h | 4 ++--
- fs/smb/client/smb2pdu.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/smb/client/cifspdu.h b/fs/smb/client/cifspdu.h
-index c0513fbb8a59..c46d418c1c0c 100644
---- a/fs/smb/client/cifspdu.h
-+++ b/fs/smb/client/cifspdu.h
-@@ -882,7 +882,7 @@ typedef struct smb_com_open_rsp {
- 	__u8 OplockLevel;
- 	__u16 Fid;
- 	__le32 CreateAction;
--	struct_group(common_attributes,
-+	struct_group_attr(common_attributes, __packed,
- 		__le64 CreationTime;
- 		__le64 LastAccessTime;
- 		__le64 LastWriteTime;
-@@ -2266,7 +2266,7 @@ typedef struct {
- /* QueryFileInfo/QueryPathinfo (also for SetPath/SetFile) data buffer formats */
- /******************************************************************************/
- typedef struct { /* data block encoding of response to level 263 QPathInfo */
--	struct_group(common_attributes,
-+	struct_group_attr(common_attributes, __packed,
- 		__le64 CreationTime;
- 		__le64 LastAccessTime;
- 		__le64 LastWriteTime;
-diff --git a/fs/smb/client/smb2pdu.h b/fs/smb/client/smb2pdu.h
-index c72a3b2886b7..2fccf0d4f53d 100644
---- a/fs/smb/client/smb2pdu.h
-+++ b/fs/smb/client/smb2pdu.h
-@@ -320,7 +320,7 @@ struct smb2_file_reparse_point_info {
- } __packed;
- 
- struct smb2_file_network_open_info {
--	struct_group(network_open_info,
-+	struct_group_attr(network_open_info, __packed,
- 		__le64 CreationTime;
- 		__le64 LastAccessTime;
- 		__le64 LastWriteTime;
+v6 -> v7:
+  - correct typos in the commit message
+  - move mdss_dsi0, mdss_dsi0_phy, pcie0_phy, pcie1_phy and usb_dp_qmpphy
+    vdda supply to qcs8550-aim300.dtsi
+  - move the perst and wake gpio settings of pcie0 and pcie1 to
+    qcs8550-aim300.dtsi
+  - move the clock frequency settings of pcie_1_phy_aux_clk, sleep_clk
+    and xo_board to qcs8550-aim300.dtsi
+  - verified with dtb check, and result is expected, because those
+    warnings are not introduced by current patch series.
+    arch/arm64/boot/dts/qcom/sm8550.dtsi:3037.27-3092.6: Warning
+    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+    #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    phy@1c0e000: clock-output-names: ['pcie1_pipe_clk'] is too short
+        from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb: phy@1c0e000: #clock-cells:0:0: 1 was expected
+        from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+
+v5 -> v6:
+  - move qcs8550 board info bebind sm8550 boards info in qcom.yaml
+
+v4 -> v5:
+  - "2023-2024" instead of "2023~2024" for License
+  - update patch commit message to previous comments and with an updated
+    board diagram
+  - use qcs8550.dtsi instead of qcm8550.dtsi
+  - remove the reserved memory regions which will be handled by
+    bootloader
+  - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
+    remoteproc_mpss function node, audio sound DTS node, new patch will
+    be updated after respective team's end to end full verification
+  - address comments to vph_pwr, move vph_pwr node and related
+    references to qcs8550-aim300-aiot.dts
+  - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
+  - add pcie0I AND pcie1 support together
+  - the following patches were applied, so remove these patches from new
+    patch series:
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
+      - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
+  - verified with dtb check, and result is expected, because those
+    warnings are not introduced by current patch series.
+    DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
+    arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
+    (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+    #address-cells/#size-cells without "ranges" or child "reg" property
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+    arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+    opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
+        from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+
+v3 -> v4:
+  - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
+    of qcm8550, another board with qcm8550 will be added later
+  - add AIM300 AIoT board string in qcom.yaml file
+  - add sm8550 and qcm8550 fallback compatible
+  - add qcm8550 SoC id
+  - add reserved memory map codes in qcm8550.dtsi
+  - pm8010 and pmr73d are splited into carrier board DTS file. Because
+    the regulators which in pm8550, pm8550ve and pm8550vs are present
+    on the SoM. The regulators which in pm8010 and pmr73d are present
+    on the carrier board.
+  - stay VPH_PWR at qcs8550-aim300.dtsi file
+      VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
+      with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
+      SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
+
+v2 -> v3:
+  - introduce qcs8550.dtsi
+  - separate fix dtc W=1 warning patch to another patch series
+
+v1 -> v2:
+  - merge the splited dts patches into one patch
+  - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
+  - drop PCIe1 dts node due to it is not enabled
+  - update display node name for drop sde characters
+
+previous discussion here:
+[1] v6 RESEND: https://lore.kernel.org/linux-arm-msm/20240401093843.2591147-1-quic_tengfan@quicinc.com
+[2] v6: https://lore.kernel.org/linux-arm-msm/20240308070432.28195-1-quic_tengfan@quicinc.com
+[3] v5: https://lore.kernel.org/linux-arm-msm/20240301134113.14423-1-quic_tengfan@quicinc.com
+[4] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
+[5] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
+[6] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
+[7] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
+
+Tengfei Fan (4):
+  dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+  arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+  arm64: dts: qcom: add base AIM300 dtsi
+  arm64: dts: qcom: aim300: add AIM300 AIoT
+
+ .../devicetree/bindings/arm/qcom.yaml         |   8 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 343 +++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 403 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 169 ++++++++
+ 5 files changed, 924 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+
+
+base-commit: a59668a9397e7245b26e9be85d23f242ff757ae8
 -- 
-2.34.1
+2.25.1
 
