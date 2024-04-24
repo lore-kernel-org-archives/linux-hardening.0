@@ -1,152 +1,495 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19AB16F0FB
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 23:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C4B16F261
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 23:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714002585; cv=none; b=Tmh2TltAhu++FokfGRdqpD9ZJ7+X3r79ztd0EPWssWayqZeHdyJ238VZ8KJeMYm/tPIxi+CYTg9BcZ+wmOYHC525EGVzLbuR86bABrOzU8PaLNDPd8RO5ggmznoJFjRe180oCTqB4Xaq/YOhMTJU3lGkh/jMnMSHl8GVrhvc9s8=
+	t=1714002623; cv=none; b=fhsq51zFSyVbLUrNjCeWQgfH0V8NInfJ2eITh/NObGwSvDbUSJYLT4FmpZEWNSzSW0FRF5Xtfyu74hGMl52fl9wPZj1rFVwiCnDJ+S7DF/wmuGnGicboEeE5E2uCNPkj8VAa0cC2rOZs8K0zL3VtZ+letRN4gONAhv+XCYKfdSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714002585; c=relaxed/simple;
-	bh=3TMMHB8yCzPTh/CRK0mHUYStaXtqMrUWVeSzdA+ZFTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Quy8od24bfEQMdGs6hNou4ASJowgpKj0vQsPx2DdBhB/ctDQE2S2G6GsnVW4LpbZTkG/CquFbQjJ8B+at1lrmT8tDjUpIxOo0ii+HCtxcBenIrF72GIp/9u16H6lNrbomYkDZerVp6oH97vzKrSrGRvOqbtp78X6p9b4MaRruCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nWr2005j; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714002623; c=relaxed/simple;
+	bh=a+78WLXzL5brPFIIHLVMK6SobctLn60Y0rFRT1lqYoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nPoUA0sXKwvf5+i3NP9SysTn1g0OLBMi9xcJI6Aez70ZV8+8lEF/m8/G2j91NqPgIk9p6VKHKayFLniKBod1R3WvSv1m3MQXH82NgpYYYYVaf/bvy12MrqfkxQUpyh28EtX4BDpAYsP/BG2mfievb5bA5gUB97tM10sQw1eRhEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p1pwovRm; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nWr2005j"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso398882b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 16:49:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p1pwovRm"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-de54b28c3b7so443510276.1
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 16:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714002583; x=1714607383; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5Ln4ozbltMQ1gS/VWFP66dxI6mY0+jL0XYSMnzOQX84=;
-        b=nWr2005jax/MnjKdDJwFPeefrTf1MUBf2gYlWic/oYc26vdybgBIaRepxo6mHVA1k/
-         XYDNZSvuLHWeZqXARnURRvY+b/7FbMjdjHDZFvsrl1M9VQIGpSqEO/e6AN1gr0S0ErRf
-         cAGmK0hE8YidPXWbpicRATA2V7/hlYqzg2Z3o=
+        d=linaro.org; s=google; t=1714002621; x=1714607421; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TKixhZx64p8gqjHZGvKvvDIbH18aQ6pIL/VlQRUhdko=;
+        b=p1pwovRmdqZrM3ljKE9m1/HCbYIH9W0ZW89p87+t0OrYStq+gHpXJthtaKxr6WRlKX
+         oBSVvC0HBBWdX8GoMkUd5GCykbI/Ufy1E6d5R0at25aRpk0P714Yz1De0Af2Oa4JTQ/K
+         wBF85429grJVHvLAZfWozZf18xri/Zrhhj1rT5pXcTFbjmfm/IFhdiuW8nyB5QQ9EY4I
+         HneDjN5JGUFg3A+k5SnUG/rkYRhlm92X145yrqgSf56qLyRCWtW/Le78tl1HFs5gGrWO
+         2DKo5y45mU6qS8moykI7NS0ZCf/hPagmpKp62SilSsuwIBRzFh+1t/3WuUqZ6BERbE2I
+         G2vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714002583; x=1714607383;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Ln4ozbltMQ1gS/VWFP66dxI6mY0+jL0XYSMnzOQX84=;
-        b=RmFjt4rfZO2YM2ydQOwvuYM2hMmOCg7Ocy1SaEiQ964JtgT6kqMrobnzIny/c4jebW
-         XDyBEMz5V1OhHrk2k2ByXYmXQ2/jhZJjnCgueOFdOMgXHSz9VLmL02aM8vDZOn06dtqO
-         6beUsuUTT93mGMDXIIA8IBXybLc5NNRwMzeW/QHr0a429yklXLFSCpEirc5Uf0D2baTr
-         J5sBoHIXtiAP2uQl00wjJtRkMpGx9eZYc9ARceP+P1eu4ml5PAFqNVdmVBgpDnPjHcPW
-         HTpdLBYT1fjTJZLH7cIiq31QeUqyBVqWh6uBwGuMaxjubItE31y2W9eV7wnxuw+oVDzE
-         V8+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWITyUPtxHrSgTu98FVgog9slpyw68FUbyKU74iLhMaK2GePb0kKlZF3nz7heTltGmBUsPa+7uqiJMfWA8yce/kdKYCVNcLEEBad7tXNPjC
-X-Gm-Message-State: AOJu0YxHLhGThWKgDdcu3rvLBsS9Vu5NcKx3GGMx/YozCdkv9Hkn+169
-	WQqESoK3OkuAj75zFZQo4SWxXFyXRcULytcjFqi5F4QsgKS2wI4ovtoy2hPiuA==
-X-Google-Smtp-Source: AGHT+IFO8Ea4GR9fA+qYZG0KzcyI34jDzQm839FmGziVMLbFiO7Z04WwSyAKCKIv8DYuS0frG1SRdw==
-X-Received: by 2002:a05:6a21:4982:b0:1a7:4b40:96db with SMTP id ax2-20020a056a21498200b001a74b4096dbmr4391151pzc.10.1714002583218;
-        Wed, 24 Apr 2024 16:49:43 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f12-20020a170902ce8c00b001e1071cf0bbsm12498516plg.302.2024.04.24.16.49.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 16:49:42 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:49:42 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Helge Deller <deller@gmx.de>
-Cc: Justin Stitt <justinstitt@google.com>, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] video: fbdev: au1200fb: replace deprecated strncpy with
- strscpy
-Message-ID: <202404241647.E1DE1D9@keescook>
-References: <20240318-strncpy-drivers-video-fbdev-au1200fb-c-v1-1-680802a9f10a@google.com>
- <53670007-edbc-4762-9e57-0b3c29220d9e@gmx.de>
- <CAFhGd8ppVq9aGbfFLeL30jQ15KHS=FoLh0c1udXo=Z+pCfXL1g@mail.gmail.com>
- <49ba1e7d-d256-4644-beb9-c84b9feb0052@gmx.de>
+        d=1e100.net; s=20230601; t=1714002621; x=1714607421;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TKixhZx64p8gqjHZGvKvvDIbH18aQ6pIL/VlQRUhdko=;
+        b=beB1zfPFC1/NDrNqsO+jtr35KQDkUYubmCFfoWe/d6/ZLEFPOi5w0loRYLdDCs2suz
+         dXbYU392M9APZZBUJ7pI/qRe+YjcSiC/2gW2GgySC8x0R2HWXHRqjf513cXNcpSB+5DW
+         Cp02RLOmOmGjPj9rWguT/oeagUxMLGp/39V/fL+tcGcZ+P6TkHxwBGf1NoaWv4/wYvTl
+         vcWEkCfodgOZfzSWQ7Lo54LcrZq3LgF2W7aOw1CgAWHmV4BYsOG0UsE3PzSikpdavSjh
+         pqiOACkt3dOVyq+IvtkUerBprSS5E0faaDqApRPUcYfSrDjqJXIIJUT35bcReTcNx2yQ
+         wyiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDyVtiPAOQiMmV+VhvgK1BnbeT7UuxNY1+ETi1zvZd8msbPmbKfUe6kvM2hS03WYOaXmntl4Q/03TFkqSLXWbHFUnVT9WUvmKyw7fKewnL
+X-Gm-Message-State: AOJu0Yy0pGm9WdnV253OUJcHNM415h0XgZzTwQkUyBMIDplM9eORdunK
+	Lkyc/pWK4KTaUyDdpaq3LFFvGJ72AQO1cY2P9p8rPSD1ZWgyXg4Crgg/BT9DOce+xdlAWzRziXz
+	+5FAO4EM6+/1Aomj0dYl/UBZA9ABkpjRNDuLi4Q==
+X-Google-Smtp-Source: AGHT+IHePKYcMj0QvGccyjtLAEuaCQAIHGfhXWx7wv6Qwqj+4hazwa2K6I3o4VEE9TS56PCBzdL78NLgRpHZXkjdZbk=
+X-Received: by 2002:a25:d846:0:b0:dcc:9e88:b15 with SMTP id
+ p67-20020a25d846000000b00dcc9e880b15mr4041268ybg.41.1714002621096; Wed, 24
+ Apr 2024 16:50:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <49ba1e7d-d256-4644-beb9-c84b9feb0052@gmx.de>
+References: <20240424024508.3857602-1-quic_tengfan@quicinc.com> <20240424024508.3857602-5-quic_tengfan@quicinc.com>
+In-Reply-To: <20240424024508.3857602-5-quic_tengfan@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 25 Apr 2024 02:50:10 +0300
+Message-ID: <CAA8EJpqAkxy9aXw=nr-H0iguD8zRdkviWvMn-h==v1qzeRXc1Q@mail.gmail.com>
+Subject: Re: [PATCH v7 4/4] arm64: dts: qcom: aim300: add AIM300 AIoT
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, keescook@chromium.org, 
+	tony.luck@intel.com, gpiccoli@igalia.com, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, kernel@quicinc.com, 
+	Qiang Yu <quic_qianyu@quicinc.com>, Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 20, 2024 at 11:48:52PM +0100, Helge Deller wrote:
-> On 3/20/24 23:35, Justin Stitt wrote:
-> > Hi,
-> > 
-> > On Wed, Mar 20, 2024 at 12:56 AM Helge Deller <deller@gmx.de> wrote:
-> > > 
-> > > On 3/19/24 00:46, Justin Stitt wrote:
-> > > > strncpy() is deprecated for use on NUL-terminated destination strings
-> > > > [1] and as such we should prefer more robust and less ambiguous string
-> > > > interfaces.
-> > > > 
-> > > > Let's use the new 2-argument strscpy() which guarantees NUL-termination
-> > > > on the destination buffer while also simplifying the syntax. Note that
-> > > > strscpy() will not NUL-pad the destination buffer like strncpy() does.
-> > > > 
-> > > > However, the NUL-padding behavior of strncpy() is not required since
-> > > > fbdev is already NUL-allocated from au1200fb_drv_probe() ->
-> > > > frameuffer_alloc(), rendering any additional NUL-padding redundant.
-> > > > |     p = kzalloc(fb_info_size + size, GFP_KERNEL);
-> > > > 
-> > > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > > > Link: https://github.com/KSPP/linux/issues/90
-> > > > Cc: linux-hardening@vger.kernel.org
-> > > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > > ---
-> > > > Note: build-tested only.
-> > > > 
-> > > > Found with: $ rg "strncpy\("
-> > > > ---
-> > > >    drivers/video/fbdev/au1200fb.c | 2 +-
-> > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/video/fbdev/au1200fb.c b/drivers/video/fbdev/au1200fb.c
-> > > > index 6f20efc663d7..e718fea63662 100644
-> > > > --- a/drivers/video/fbdev/au1200fb.c
-> > > > +++ b/drivers/video/fbdev/au1200fb.c
-> > > > @@ -1557,7 +1557,7 @@ static int au1200fb_init_fbinfo(struct au1200fb_device *fbdev)
-> > > >                return ret;
-> > > >        }
-> > > > 
-> > > > -     strncpy(fbi->fix.id, "AU1200", sizeof(fbi->fix.id));
-> > > > +     strscpy(fbi->fix.id, "AU1200");
-> > > 
-> > > I wonder if you really build-tested this, as this driver is for the mips architecture...
-> > > And I don't see a strscpy() function which takes just 2 arguments.
-> > > But I might be wrong....
-> > 
-> > I did build successfully :thumbs_up:
-> > 
-> > Commit e6584c3964f2f ("string: Allow 2-argument strscpy()") introduced
-> > this new strscpy() form; it is present in string.h on Linus' tree.
-> 
-> Interesting patch.
-> Might give compile problems if patches like yours gets automatically
-> picked up to stable series as long as Kees patch hasn't been backported yet...
-> Anyway, thanks for the pointer!
-> I'll apply your patch in the next round for fbdev.
+On Wed, 24 Apr 2024 at 05:46, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>
+> Add AIM300 AIoT Carrier board DTS support, including usb, UART, PCIe,
+> I2C functions support.
+> Here is a diagram of AIM300 AIoT Carrie Board and SoM
+>  +--------------------------------------------------+
+>  |             AIM300 AIOT Carrier Board            |
+>  |                                                  |
+>  |           +-----------------+                    |
+>  |power----->| Fixed regulator |---------+          |
+>  |           +-----------------+         |          |
+>  |                                       |          |
+>  |                                       v VPH_PWR  |
+>  | +----------------------------------------------+ |
+>  | |                          AIM300 SOM |        | |
+>  | |                                     |VPH_PWR | |
+>  | |                                     v        | |
+>  | |   +-------+       +--------+     +------+    | |
+>  | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+>  | |   +-------+       +--------+     +------+    | |
+>  | |                                              | |
+>  | +----------------------------------------------+ |
+>  |                                                  |
+>  |                    +----+          +------+      |
+>  |                    |USB |          | UART |      |
+>  |                    +----+          +------+      |
+>  +--------------------------------------------------+
+>
+> Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Co-developed-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 343 ++++++++++++++++++
+>  2 files changed, 344 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+>
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index f63abb43e9fe..c46c10d85697 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -96,6 +96,7 @@ dtb-$(CONFIG_ARCH_QCOM)       += qcm6490-idp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-4000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs6490-rb3gen2.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += qcs8550-aim300-aiot.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qdu1000-idp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qrb2210-rb1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qrb4210-rb2.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+> new file mode 100644
+> index 000000000000..146bf6ea9e6a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+> @@ -0,0 +1,343 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/leds/common.h>
+> +#include "qcs8550-aim300.dtsi"
+> +#include "pm8010.dtsi"
+> +#include "pmr735d_a.dtsi"
+> +#include "pmr735d_b.dtsi"
+> +
+> +/ {
+> +       model = "Qualcomm Technologies, Inc. QCS8550 AIM300 AIOT";
+> +       compatible = "qcom,qcs8550-aim300-aiot", "qcom,qcs8550-aim300", "qcom,qcs8550",
+> +                    "qcom,sm8550";
+> +
+> +       aliases {
+> +               serial0 = &uart7;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +
+> +               pinctrl-0 = <&volume_up_n>;
+> +               pinctrl-names = "default";
+> +
+> +               key-volume-up {
+> +                       label = "Volume Up";
+> +                       debounce-interval = <15>;
+> +                       gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
+> +                       linux,code = <KEY_VOLUMEUP>;
+> +                       linux,can-disable;
+> +                       wakeup-source;
+> +               };
+> +       };
+> +
+> +       pmic-glink {
+> +               compatible = "qcom,sm8550-pmic-glink", "qcom,pmic-glink";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               orientation-gpios = <&tlmm 11 GPIO_ACTIVE_HIGH>;
+> +
+> +               connector@0 {
+> +                       compatible = "usb-c-connector";
+> +                       reg = <0>;
+> +                       power-role = "dual";
+> +                       data-role = "dual";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@0 {
+> +                                       reg = <0>;
+> +
+> +                                       pmic_glink_hs_in: endpoint {
+> +                                               remote-endpoint = <&usb_1_dwc3_hs>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +
+> +                                       pmic_glink_ss_in: endpoint {
+> +                                               remote-endpoint = <&redriver_ss_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <2>;
+> +
+> +                                       pmic_glink_sbu: endpoint {
+> +                                               remote-endpoint = <&fsa4480_sbu_mux>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       vph_pwr: regulator-vph-pwr {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vph_pwr";
+> +               regulator-min-microvolt = <3700000>;
+> +               regulator-max-microvolt = <3700000>;
+> +
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +       };
+> +};
+> +
+> +&apps_rsc {
+> +       regulators-0 {
+> +               vdd-bob1-supply = <&vph_pwr>;
+> +               vdd-bob2-supply = <&vph_pwr>;
+> +       };
+> +
+> +       regulators-3 {
+> +               vdd-s4-supply = <&vph_pwr>;
+> +               vdd-s5-supply = <&vph_pwr>;
+> +       };
+> +
+> +       regulators-4 {
+> +               vdd-s4-supply = <&vph_pwr>;
+> +       };
+> +
+> +       regulators-5 {
+> +               vdd-s1-supply = <&vph_pwr>;
+> +               vdd-s2-supply = <&vph_pwr>;
+> +               vdd-s3-supply = <&vph_pwr>;
+> +               vdd-s4-supply = <&vph_pwr>;
+> +               vdd-s5-supply = <&vph_pwr>;
+> +               vdd-s6-supply = <&vph_pwr>;
+> +       };
+> +};
+> +
+> +&i2c_hub_2 {
+> +       status = "okay";
+> +
+> +       typec-mux@42 {
+> +               compatible = "fcs,fsa4480";
+> +               reg = <0x42>;
+> +
+> +               vcc-supply = <&vreg_bob1>;
+> +
+> +               mode-switch;
+> +               orientation-switch;
+> +
+> +               port {
+> +                       fsa4480_sbu_mux: endpoint {
+> +                               remote-endpoint = <&pmic_glink_sbu>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       typec-retimer@1c {
+> +               compatible = "onnn,nb7vpq904m";
+> +               reg = <0x1c>;
+> +
+> +               vcc-supply = <&vreg_l15b_1p8>;
+> +
+> +               orientation-switch;
+> +               retimer-switch;
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +
+> +                               redriver_ss_out: endpoint {
+> +                                       remote-endpoint = <&pmic_glink_ss_in>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +
+> +                               redriver_ss_in: endpoint {
+> +                                       data-lanes = <3 2 1 0>;
+> +                                       remote-endpoint = <&usb_dp_qmpphy_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&mdss_dsi0 {
+> +       status = "okay";
+> +
+> +       panel@0 {
+> +               compatible = "visionox,vtdr6130";
+> +               reg = <0>;
+> +
+> +               pinctrl-0 = <&dsi_active>, <&te_active>;
+> +               pinctrl-1 = <&dsi_suspend>, <&te_suspend>;
+> +               pinctrl-names = "default", "sleep";
+> +
+> +               reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
+> +
+> +               vci-supply = <&vreg_l13b_3p0>;
+> +               vdd-supply = <&vreg_l11b_1p2>;
+> +               vddio-supply = <&vreg_l12b_1p8>;
+> +
+> +               port {
+> +                       panel0_in: endpoint {
+> +                               remote-endpoint = <&mdss_dsi0_out>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&mdss_dsi0_out {
+> +       remote-endpoint = <&panel0_in>;
+> +       data-lanes = <0 1 2 3>;
+> +};
+> +
+> +&mdss_dsi0_phy {
+> +       status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +       pinctrl-0 = <&pcie0_default_state>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +};
+> +
+> +&pcie0_phy {
+> +       status = "okay";
+> +};
+> +
+> +&pcie1 {
+> +       pinctrl-0 = <&pcie1_default_state>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +};
+> +
+> +&pcie1_phy {
+> +       status = "okay";
+> +};
+> +
+> +&pm8550_gpios {
+> +       volume_up_n: volume-up-n-state {
+> +               pins = "gpio6";
+> +               function = "normal";
+> +               power-source = <1>;
+> +               bias-pull-up;
+> +               input-enable;
+> +       };
+> +};
+> +
+> +&pon_pwrkey {
+> +       status = "okay";
+> +};
+> +
+> +&pon_resin {
+> +       linux,code = <KEY_VOLUMEDOWN>;
+> +
+> +       status = "okay";
+> +};
+> +
+> +&qupv3_id_0 {
+> +       status = "okay";
+> +};
+> +
+> +&remoteproc_adsp {
+> +       firmware-name = "qcom/qcs8550/adsp.mbn",
+> +                       "qcom/qcs8550/adsp_dtbs.elf";
+> +       status = "okay";
+> +};
+> +
+> +&remoteproc_cdsp {
+> +       firmware-name = "qcom/qcs8550/cdsp.mbn",
+> +                       "qcom/qcs8550/cdsp_dtbs.elf";
+> +       status = "okay";
+> +};
+> +
+> +&swr1 {
+> +       status = "okay";
+> +};
+> +
+> +&swr2 {
+> +       status = "okay";
+> +};
+> +
+> +&tlmm {
+> +       gpio-reserved-ranges = <32 8>;
+> +
+> +       dsi_active: dsi-active-state {
+> +               pins = "gpio133";
+> +               function = "gpio";
+> +               drive-strength = <8>;
+> +               bias-disable;
+> +       };
+> +
+> +       dsi_suspend: dsi-suspend-state {
+> +               pins = "gpio133";
+> +               function = "gpio";
+> +               drive-strength = <2>;
+> +               bias-pull-down;
+> +       };
+> +
+> +       te_active: te-active-state {
+> +               pins = "gpio86";
+> +               function = "mdp_vsync";
+> +               drive-strength = <2>;
+> +               bias-pull-down;
+> +       };
+> +
+> +       te_suspend: te-suspend-state {
+> +               pins = "gpio86";
+> +               function = "mdp_vsync";
+> +               drive-strength = <2>;
+> +               bias-pull-down;
+> +       };
+> +};
+> +
+> +&uart7 {
+> +       status = "okay";
+> +};
+> +
+> +&usb_1 {
+> +       status = "okay";
+> +};
+> +
+> +&usb_1_dwc3 {
+> +       dr_mode = "otg";
 
-Hi! I haven't seen this show up in -next yet. Have you had a chance to
-pick it up?
+OTG is default and can be dropped.
 
-There are also these too:
+> +       usb-role-switch;
 
-https://lore.kernel.org/all/20240320-strncpy-drivers-video-fbdev-fsl-diu-fb-c-v1-1-3cd3c012fa8c@google.com/
-https://patchwork.kernel.org/project/linux-hardening/patch/20240320-strncpy-drivers-video-fbdev-uvesafb-c-v1-1-fd6af3766c80@google.com/
-https://patchwork.kernel.org/project/linux-hardening/patch/20240320-strncpy-drivers-video-hdmi-c-v1-1-f9a08168cdaf@google.com/
+Please move to SoC dtsi and drop from board files.
 
-I can toss all of these into the hardening tree if that makes it easier
-for you?
+> +};
+> +
+> +&usb_1_dwc3_hs {
+> +       remote-endpoint = <&pmic_glink_hs_in>;
+> +};
+> +
+> +&usb_1_dwc3_ss {
+> +       remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
 
-Thanks!
+This too.
 
--Kees
+> +};
+> +
+> +&usb_1_hsphy {
+> +       status = "okay";
+> +};
+> +
+> +&usb_dp_qmpphy {
+> +       orientation-switch;
+
+This too
+
+> +
+> +       status = "okay";
+> +};
+> +
+> +&usb_dp_qmpphy_out {
+> +       remote-endpoint = <&redriver_ss_in>;
+> +};
+> +
+> +&usb_dp_qmpphy_usb_ss_in {
+> +       remote-endpoint = <&usb_1_dwc3_ss>;
+
+And this.
+
+> +};
+> --
+> 2.25.1
+>
+
 
 -- 
-Kees Cook
+With best wishes
+Dmitry
