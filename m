@@ -1,329 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F27C28EB;
-	Wed, 24 Apr 2024 04:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319DD15AD85;
+	Wed, 24 Apr 2024 10:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713933407; cv=none; b=mdXWdiRGrUh0mpWrVHfnwKXVlAdH4+CT6QjGrki/1QXQA8vMqGVqBL/WMPiSaQrtUpwXLltjzcW3mO7D9dDNTo2OE7LTEu64LR9nzBlX9GwynBdoBOj7QrTDNoDFKsyTK43RKz+T548plDaUrF6H1TUqJebCOAvax8FAlArwFa0=
+	t=1713954144; cv=none; b=oBocAeV+aHXQOimhmLrz26pA3Ooxss1s/u4GepQPgvusQHqMQyplGXcoFP6vJdaWII2UKAAYctKwWCuJCKzKo0eYjXXcqV0HU0tOeHk0xF+Q4zWMUq5kBXZL1R9JayWPgIALfmcrnBvxt/Ip2jOgOaasrFSzalLzPiKa+jnFNmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713933407; c=relaxed/simple;
-	bh=tuSpJeVelX2QtRfHSrv0QUZCsOHtMcWqiSaVBdtewZI=;
+	s=arc-20240116; t=1713954144; c=relaxed/simple;
+	bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zy3WeB0cToJm4J7IG2g+J4A7SaosMUfeod+EuZAtNOhDI7HzIKtMdDjnHAeqkSK+BQMWzKn5b7Us/x0Y1nNPCTV3+jiYLEkLtNECVSaiO6Qop5V4zatx1mEblz6DeO5O+r0Z9xdCHD8n+x+i5g8UedtUmunY9+pSFlrmwXnvNf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2MSAfj3; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=M+/HlMZB8Q5kzkH429VQN/ctkyP7lvqBHi2xwdrIlersxRP41SM7qlc/zqEy3ZJwgwHB5oI47Pa3aDQe0QisImcimE2XVAmi2oUD1I0FTj11weUXDN1Rt3WAY/iYV9BA3WaPblf/1RIkuFmIMZl0EjEo2O5ZYGaeRDGofk2DijE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8PcaHkJ; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2MSAfj3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3D0C32781;
-	Wed, 24 Apr 2024 04:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713933406;
-	bh=tuSpJeVelX2QtRfHSrv0QUZCsOHtMcWqiSaVBdtewZI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q2MSAfj3yxayUF9+Oz8+JlsgGXN7IugQC+IWyMJW76V4XmJwGE6Y6RXp5Q9CDGMZC
-	 UngAqVu0X04kCxtyWogsQidX1VMkPGQqV8ccMEo5A64U6sd1a5a0EzgIfXDKTNWCMR
-	 XzUsIn31WgWGCj1y4OzP+Iiux5QHbIofabX27g6k+IC+HjxGJICiqSOBUsxggec+Zk
-	 +41oKkeyQe9RV01ZdXuy/o1y4g/ooHMDQjVAzIe5GySSXb0Sebm8nSj37voIq2SZP+
-	 h6V7Nc8sKOehDY0hi/HNFSC0XrYq7xsv+6Mr6xx06bpiIkj5DjgfODuEo8jkOQJLWO
-	 1/fQ4w8raZANA==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5af2358c7e5so1550172eaf.0;
-        Tue, 23 Apr 2024 21:36:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWHmwBXA1N/b5ptKpsNMqDyFfCUG56YYdB3HPDSQ4hLUxyPDDtRtubNnzxXyUNMGBnOYY9osU4K3STTCo/jeQ+imjp16hkV9GXxSu5Sx4e4Pqzm/si/EGul1eQZGcsVRIhRX607Y9XapjEfMvjxX+WhF5TrHEBc8C5d2agA2FZObRYozuOenemUpQ==
-X-Gm-Message-State: AOJu0YydQk2IBcGjuN62zBDr4rNjFe4V6sjDLK2yOYA9Gmy/Sy7W85vY
-	x8DX+X+0aMC3matQrnEGW0NKzGV4XP2a0XI0V9jfZLoMFwHl3mtrV+EaY0pZt1xWHo86XSqrgV1
-	Vdi9o7147ZbxnQ7tunlEu9QN6Ybw=
-X-Google-Smtp-Source: AGHT+IEg0W5Eme7ZwqVBNJB+djHMHMyVJwSm+D3dx88b5Z7CAy1prCkiEaSrwPv8JwvaqQt/nWjqOmAvcDEiczmpQmc=
-X-Received: by 2002:a4a:987:0:b0:5ac:9efc:3b02 with SMTP id
- 129-20020a4a0987000000b005ac9efc3b02mr1251950ooa.8.1713933405856; Tue, 23 Apr
- 2024 21:36:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8PcaHkJ"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e4266673bbso60337655ad.2;
+        Wed, 24 Apr 2024 03:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713954142; x=1714558942; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
+        b=f8PcaHkJvylxU45mFSJw/sgm/eZfaBgSntsy2xR0nsbykasEugVumgN2hTfVgaT2Rn
+         63iRZlngv2LeaI3fincElrVWvYRkoOkKNUjvaIqOtRU1AbI1wyyB1jrcDWaMaBZtuSw6
+         tXXDEHZEZqccTwaDPkj7u308VTUUxtbFoVs94//C6rKddmI1azTqB65t+bLRq5/GRI5i
+         o6efSKFJIo2k5zGIsbPNR0pqYSrPgUTsu4m0YV/4GloYlteMuqXhejeVMLAoFBZ+rEvf
+         lNvtsHX2MbZSCmyKVAVA3eLMUcIoDkn+aj9M7+RZbFzS60ID6Oz3J3j2Iej1dWFGbOk+
+         KKVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713954142; x=1714558942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
+        b=FyBqU4+O4k0q+elFY+2nYPyTllCWoWcH9a4Dtz/FG2jLm7iKJLAzhUlhV+0liybmSI
+         zVbxH/tTCLDzDGVbhb8DIuwEOrBpTpc/mtutyKSztilRpgztSRTyn38RrHFt1swqpgGK
+         qNLnm2BhdSGahKFj8muf8DmKFTcSdlfv3ZI96dIWmRto+oZh4+9M5aZUQvLfqQzI1v6/
+         s9/EItPaEqnXV4TDdhSIkiKKS3D+pXyumbOjjmgawKYdca1sN4ZtHKjkEdES9hLYwXrz
+         8Tf98W4SeIxPJctxUc45QtmzLJr3dJVrRMwfVIPfHHPJ66abt4/5LMXOH8eD0VVRNMnM
+         Qsug==
+X-Forwarded-Encrypted: i=1; AJvYcCWPVLKTZmweVe/0D9OWzWicQISSpfo/OIZXPKsRDt3iOB4N5pAjcjaDZha0vVBs3bEBwfQWsjUeQbDxOS4NRL1jSUWBR5xsyvP7URdyR5M7JRLke4Pc4qgawce5Ag3VhmHMx36LVir3SaRLc3F1RXhPx/oaPBT/R1O4ApcLj4455uHViGnCCXs/H2vNrXc=
+X-Gm-Message-State: AOJu0Ywca4KgZQ4fkNLP+oAVX8RAi053tcRPTi1Mm4Os8y9DK66xKL+Z
+	WK0E3bHo2L17fvN84OxVlz/TfrwyU9+JApdQRqkr3QQ06OmaipsG5odkUsmCLt1iHBoFFDFT9dQ
+	1geImbWrVhCdZJZhboYj49NBuG/M=
+X-Google-Smtp-Source: AGHT+IFt2St6wHWhK22oY3M0RR6agHbyWHYxda14P1ZzXBZfwWjGE3d2lbLSjANPq9S34w9kUxjrty7xUxLmEsWzXXk=
+X-Received: by 2002:a17:90a:4963:b0:2a6:d064:15d5 with SMTP id
+ c90-20020a17090a496300b002a6d06415d5mr1794602pjh.18.1713954142403; Wed, 24
+ Apr 2024 03:22:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZihxUuQOkZ6Zz363@neat>
-In-Reply-To: <ZihxUuQOkZ6Zz363@neat>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Wed, 24 Apr 2024 13:36:34 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd-i3Fjv-7JmQa8bSrWD69yFfi8jqfBJV51JgyseA-yXFQ@mail.gmail.com>
-Message-ID: <CAKYAXd-i3Fjv-7JmQa8bSrWD69yFfi8jqfBJV51JgyseA-yXFQ@mail.gmail.com>
-Subject: Re: [PATCH][next] smb: client: Fix struct_group() usage in __packed structs
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Dmitry Antipov <dmantipov@yandex.ru>, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
+References: <20240411230801.1504496-1-boqun.feng@gmail.com>
+ <20240411230801.1504496-3-boqun.feng@gmail.com> <Zigj-lY5lnBSKuib@boqun-archlinux>
+ <202404231630.20B2693D@keescook>
+In-Reply-To: <202404231630.20B2693D@keescook>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 24 Apr 2024 12:21:17 +0200
+Message-ID: <CANiq72kU+rXsw7SOtw=-fGmDyxWXjYY3zB2Kiixvn-o22BJKzA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
+To: Kees Cook <keescook@chromium.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Miguel Ojeda <ojeda@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	bjorn3_gh@protonmail.com, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, justinstitt@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-2024=EB=85=84 4=EC=9B=94 24=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 11:41, =
-Gustavo A. R. Silva <gustavoars@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=
-=84=B1:
+On Wed, Apr 24, 2024 at 1:37=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
 >
-> Use struct_group_attr() in __packed structs, instead of struct_group().
->
-> Below you can see the pahole output before/after changes:
->
-> pahole -C smb2_file_network_open_info fs/smb/client/smb2ops.o
-> struct smb2_file_network_open_info {
->         union {
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le64     AllocationSize;       /*    32     8 *=
-/
->                         __le64     EndOfFile;            /*    40     8 *=
-/
->                         __le32     Attributes;           /*    48     4 *=
-/
->                 };                                       /*     0    56 *=
-/
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le64     AllocationSize;       /*    32     8 *=
-/
->                         __le64     EndOfFile;            /*    40     8 *=
-/
->                         __le32     Attributes;           /*    48     4 *=
-/
->                 } network_open_info;                     /*     0    56 *=
-/
->         };                                               /*     0    56 *=
-/
->         __le32                     Reserved;             /*    56     4 *=
-/
->
->         /* size: 60, cachelines: 1, members: 2 */
->         /* last cacheline: 60 bytes */
-> } __attribute__((__packed__));
->
-> pahole -C smb2_file_network_open_info fs/smb/client/smb2ops.o
-> struct smb2_file_network_open_info {
->         union {
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le64     AllocationSize;       /*    32     8 *=
-/
->                         __le64     EndOfFile;            /*    40     8 *=
-/
->                         __le32     Attributes;           /*    48     4 *=
-/
->                 } __attribute__((__packed__));           /*     0    52 *=
-/
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le64     AllocationSize;       /*    32     8 *=
-/
->                         __le64     EndOfFile;            /*    40     8 *=
-/
->                         __le32     Attributes;           /*    48     4 *=
-/
->                 } __attribute__((__packed__)) network_open_info;       /*=
-     0    52 */
->         };                                               /*     0    52 *=
-/
->         __le32                     Reserved;             /*    52     4 *=
-/
->
->         /* size: 56, cachelines: 1, members: 2 */
->         /* last cacheline: 56 bytes */
-> };
->
-> pahole -C smb_com_open_rsp fs/smb/client/cifssmb.o
-> struct smb_com_open_rsp {
->         ...
->
->         union {
->                 struct {
->                         __le64     CreationTime;         /*    48     8 *=
-/
->                         __le64     LastAccessTime;       /*    56     8 *=
-/
->                         /* --- cacheline 1 boundary (64 bytes) --- */
->                         __le64     LastWriteTime;        /*    64     8 *=
-/
->                         __le64     ChangeTime;           /*    72     8 *=
-/
->                         __le32     FileAttributes;       /*    80     4 *=
-/
->                 };                                       /*    48    40 *=
-/
->                 struct {
->                         __le64     CreationTime;         /*    48     8 *=
-/
->                         __le64     LastAccessTime;       /*    56     8 *=
-/
->                         /* --- cacheline 1 boundary (64 bytes) --- */
->                         __le64     LastWriteTime;        /*    64     8 *=
-/
->                         __le64     ChangeTime;           /*    72     8 *=
-/
->                         __le32     FileAttributes;       /*    80     4 *=
-/
->                 } common_attributes;                     /*    48    40 *=
-/
->         };                                               /*    48    40 *=
-/
->
->         ...
->
->         /* size: 111, cachelines: 2, members: 14 */
->         /* last cacheline: 47 bytes */
-> } __attribute__((__packed__));
->
-> pahole -C smb_com_open_rsp fs/smb/client/cifssmb.o
-> struct smb_com_open_rsp {
->         ...
->
->         union {
->                 struct {
->                         __le64     CreationTime;         /*    48     8 *=
-/
->                         __le64     LastAccessTime;       /*    56     8 *=
-/
->                         /* --- cacheline 1 boundary (64 bytes) --- */
->                         __le64     LastWriteTime;        /*    64     8 *=
-/
->                         __le64     ChangeTime;           /*    72     8 *=
-/
->                         __le32     FileAttributes;       /*    80     4 *=
-/
->                 } __attribute__((__packed__));           /*    48    36 *=
-/
->                 struct {
->                         __le64     CreationTime;         /*    48     8 *=
-/
->                         __le64     LastAccessTime;       /*    56     8 *=
-/
->                         /* --- cacheline 1 boundary (64 bytes) --- */
->                         __le64     LastWriteTime;        /*    64     8 *=
-/
->                         __le64     ChangeTime;           /*    72     8 *=
-/
->                         __le32     FileAttributes;       /*    80     4 *=
-/
->                 } __attribute__((__packed__)) common_attributes;       /*=
-    48    36 */
->         };                                               /*    48    36 *=
-/
->
->         ...
->
->         /* size: 107, cachelines: 2, members: 14 */
->         /* last cacheline: 43 bytes */
-> } __attribute__((__packed__));
->
-> pahole -C FILE_ALL_INFO fs/smb/client/cifssmb.o
-> typedef struct {
->         union {
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le32     Attributes;           /*    32     4 *=
-/
->                 };                                       /*     0    40 *=
-/
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le32     Attributes;           /*    32     4 *=
-/
->                 } common_attributes;                     /*     0    40 *=
-/
->         };                                               /*     0    40 *=
-/
->
->         ...
->
->         /* size: 113, cachelines: 2, members: 17 */
->         /* last cacheline: 49 bytes */
-> } __attribute__((__packed__)) FILE_ALL_INFO;
->
-> pahole -C FILE_ALL_INFO fs/smb/client/cifssmb.o
-> typedef struct {
->         union {
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le32     Attributes;           /*    32     4 *=
-/
->                 } __attribute__((__packed__));           /*     0    36 *=
-/
->                 struct {
->                         __le64     CreationTime;         /*     0     8 *=
-/
->                         __le64     LastAccessTime;       /*     8     8 *=
-/
->                         __le64     LastWriteTime;        /*    16     8 *=
-/
->                         __le64     ChangeTime;           /*    24     8 *=
-/
->                         __le32     Attributes;           /*    32     4 *=
-/
->                 } __attribute__((__packed__)) common_attributes;       /*=
-     0    36 */
->         };                                               /*     0    36 *=
-/
->
->         ...
->
->         /* size: 109, cachelines: 2, members: 17 */
->         /* last
+> While working on the signed (and unsigned) integer overflow sanitizer
+> support on the C side for the kernel, I've also run into timekeeping
+> being a questionable area[1]. I *think* from what I can tell, it's always
+> expected to have wrapping behavior.
 
-cacheline: 45 bytes */
-> } __attribute__((__packed__)) FILE_ALL_INFO;
->
-> Fixes: 0015eb6e1238 ("smb: client, common: fix fortify warnings")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Looks good to me:)
-Reviewed-by: Namjae Jeon <linkinjeon@kernel.org>
-Thanks!
+Thanks, that is useful. In that branch you link, since it is about
+unsigned, I imagine you could have hit issues with
+`ktime_add_unsafe()` -- after all, callers are expecting overflow
+there. But there is a single user (which is `ktime_add_safe()`), and I
+don't see that one annotated in your branch.
+
+In any case, if `ktime_add()` is supposed to always be wrapping like
+the other functions in the area as you mention, then I think
+`ktime_add_unsafe()` (i.e. wrapping one) should be renamed into
+`ktime_add()` and the existing one removed. And then we can discuss
+whether to do (or not) that in Rust too (see below).
+
+However, if the `ktime_add()` / `ktime_add_unsafe()` /
+`ktime_add_safe()` split is there for a good reason (see [1] -- sorry,
+you were not in Cc in that particular one), and callers are already
+expected to respect it, then I think we should document it in the C
+side better and we should just start with that approach in the Rust
+side too.
+
+> Can we define the type itself to be wrapping? (This has been my plan on
+> the C side, but we're still waiting on a finalized implementation of the
+> "wraps" attribute.[2])
+
+Yeah, we can make that the "default", so to speak (i.e. what the
+operators will do). But we can also have different methods with
+different expectations too if needed (i.e. the usual "access" vs.
+"type" discussion).
+
+And given the different variations that exist in C (see [1]), it
+seemed to me that `ktime_t` operations there may not be expected to
+actually wrap, and thus that would be an argument for trying to be
+explicit in Rust.
+
+So for the Rust side, what we need here is the expectation of how
+`ktime_t` is supposed to be used. Or, even better, how one would
+ideally design `ktime_t` today if there were no worry about callers,
+because we have the chance to improve here over the C side before we
+have those callers.
+
+If the answer is "everyone assumes those to be wrapping, and there are
+almost no use cases where the callers know it is not supposed to wrap,
+and we don't care about whether they wrap" etc., then yeah, we should
+go with wrapping default semantics and accept that we will not gain
+that information and thus not catch mistakes easily in the future.
+
+But if the answer is "we would have liked that `ktime_t` was more
+explicit, and that is why we have the `ktime_add{,_safe,_unsafe}()`
+variations, but nobody uses them because everybody assumes wrapping"
+or "we actually assume no wrapping in `ktime_t`, which is why
+`ktime_add_*()` exist", then I think we should definitely try to be
+explicit on the Rust side from the onset so that we can catch more
+bugs in the future.
+
+(I know you know all this, but I was trying to summarize and clarify
+the discussion :)
+
+[1] https://lore.kernel.org/rust-for-linux/CANiq72ka4UvJzb4dN12fpA1WirgDHXc=
+vPurvc7B9t+iPUfWnew@mail.gmail.com/
+
+Cheers,
+Miguel
