@@ -1,146 +1,241 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319DD15AD85;
-	Wed, 24 Apr 2024 10:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2F81422AF;
+	Wed, 24 Apr 2024 13:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713954144; cv=none; b=oBocAeV+aHXQOimhmLrz26pA3Ooxss1s/u4GepQPgvusQHqMQyplGXcoFP6vJdaWII2UKAAYctKwWCuJCKzKo0eYjXXcqV0HU0tOeHk0xF+Q4zWMUq5kBXZL1R9JayWPgIALfmcrnBvxt/Ip2jOgOaasrFSzalLzPiKa+jnFNmE=
+	t=1713964459; cv=none; b=WjLN3e+L+/QNTgtxmtsGkXpEKp2RGYa73Dh5N8nBCPI+9ywEltuj9DpFl9CJlsRVWycHch4wL88JW9Ddjmeo+lrr3H6R3yPcKIAm+lR9mpWBpc3RSRqpaBcu3k/zruo1Km5rBI9tje2ggFcUsLuCVYtmbqih7hsn4fftAKw05Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713954144; c=relaxed/simple;
-	bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M+/HlMZB8Q5kzkH429VQN/ctkyP7lvqBHi2xwdrIlersxRP41SM7qlc/zqEy3ZJwgwHB5oI47Pa3aDQe0QisImcimE2XVAmi2oUD1I0FTj11weUXDN1Rt3WAY/iYV9BA3WaPblf/1RIkuFmIMZl0EjEo2O5ZYGaeRDGofk2DijE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8PcaHkJ; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713964459; c=relaxed/simple;
+	bh=XtltZntB1etOusP2DWgtGRu0qbOZFrTiglf7SrOR+cM=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=FHYEkgXp9389dqif9KIlDpAvD7h2+j2EGXDY1eqPmaizQSt/U2EAmijp5GY0LE10vhKkxyzrK35aOq0FwCLcneNs8j2BL9QGokUL+RGC0hQM2PjBDmhpPDHADGrZTKYWXcQ5a7QKokyoT3TpS5wwy2q7RGBXWB0mB8F/tIfDWw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpGRqQry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8PcaHkJ"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e4266673bbso60337655ad.2;
-        Wed, 24 Apr 2024 03:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713954142; x=1714558942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
-        b=f8PcaHkJvylxU45mFSJw/sgm/eZfaBgSntsy2xR0nsbykasEugVumgN2hTfVgaT2Rn
-         63iRZlngv2LeaI3fincElrVWvYRkoOkKNUjvaIqOtRU1AbI1wyyB1jrcDWaMaBZtuSw6
-         tXXDEHZEZqccTwaDPkj7u308VTUUxtbFoVs94//C6rKddmI1azTqB65t+bLRq5/GRI5i
-         o6efSKFJIo2k5zGIsbPNR0pqYSrPgUTsu4m0YV/4GloYlteMuqXhejeVMLAoFBZ+rEvf
-         lNvtsHX2MbZSCmyKVAVA3eLMUcIoDkn+aj9M7+RZbFzS60ID6Oz3J3j2Iej1dWFGbOk+
-         KKVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713954142; x=1714558942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RzmmoBga2Obe9acwUPhvYC4BPYcVPH14BtKNDCtLHKU=;
-        b=FyBqU4+O4k0q+elFY+2nYPyTllCWoWcH9a4Dtz/FG2jLm7iKJLAzhUlhV+0liybmSI
-         zVbxH/tTCLDzDGVbhb8DIuwEOrBpTpc/mtutyKSztilRpgztSRTyn38RrHFt1swqpgGK
-         qNLnm2BhdSGahKFj8muf8DmKFTcSdlfv3ZI96dIWmRto+oZh4+9M5aZUQvLfqQzI1v6/
-         s9/EItPaEqnXV4TDdhSIkiKKS3D+pXyumbOjjmgawKYdca1sN4ZtHKjkEdES9hLYwXrz
-         8Tf98W4SeIxPJctxUc45QtmzLJr3dJVrRMwfVIPfHHPJ66abt4/5LMXOH8eD0VVRNMnM
-         Qsug==
-X-Forwarded-Encrypted: i=1; AJvYcCWPVLKTZmweVe/0D9OWzWicQISSpfo/OIZXPKsRDt3iOB4N5pAjcjaDZha0vVBs3bEBwfQWsjUeQbDxOS4NRL1jSUWBR5xsyvP7URdyR5M7JRLke4Pc4qgawce5Ag3VhmHMx36LVir3SaRLc3F1RXhPx/oaPBT/R1O4ApcLj4455uHViGnCCXs/H2vNrXc=
-X-Gm-Message-State: AOJu0Ywca4KgZQ4fkNLP+oAVX8RAi053tcRPTi1Mm4Os8y9DK66xKL+Z
-	WK0E3bHo2L17fvN84OxVlz/TfrwyU9+JApdQRqkr3QQ06OmaipsG5odkUsmCLt1iHBoFFDFT9dQ
-	1geImbWrVhCdZJZhboYj49NBuG/M=
-X-Google-Smtp-Source: AGHT+IFt2St6wHWhK22oY3M0RR6agHbyWHYxda14P1ZzXBZfwWjGE3d2lbLSjANPq9S34w9kUxjrty7xUxLmEsWzXXk=
-X-Received: by 2002:a17:90a:4963:b0:2a6:d064:15d5 with SMTP id
- c90-20020a17090a496300b002a6d06415d5mr1794602pjh.18.1713954142403; Wed, 24
- Apr 2024 03:22:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpGRqQry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD74C2BD10;
+	Wed, 24 Apr 2024 13:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713964458;
+	bh=XtltZntB1etOusP2DWgtGRu0qbOZFrTiglf7SrOR+cM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=rpGRqQrya3omzukyfXsX62UfCBwawA3sdH3sVpkJgATjCnbbPieRHDz2LU7xD7zLX
+	 AbD5WJnDzZagHaAvgDVXsMKV4yAKqHyIPc5DyjCPn9B7jTzYSrV1Nz+qGMT8mn/9Mw
+	 Rbcn3KLVegC7HwURdRld27FWgMqS0MRn96/8Joky07nNrRcyVFP4Mg6MQjr00IoxQv
+	 UwuXiwCOUeH5czNVqG2ony6vnV9B8l8NH4H5oJ8TTCu5FjY3NRmOcQKjLNR6ea96C6
+	 tHhA2cSnk2MgXp9+Cgbq5wu7Wi60CccAqxhwjuh1g32ysNK3XAvAvKbEvfhGfYD8po
+	 EA5g8LwOrwe4w==
+Date: Wed, 24 Apr 2024 08:14:17 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411230801.1504496-1-boqun.feng@gmail.com>
- <20240411230801.1504496-3-boqun.feng@gmail.com> <Zigj-lY5lnBSKuib@boqun-archlinux>
- <202404231630.20B2693D@keescook>
-In-Reply-To: <202404231630.20B2693D@keescook>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 24 Apr 2024 12:21:17 +0200
-Message-ID: <CANiq72kU+rXsw7SOtw=-fGmDyxWXjYY3zB2Kiixvn-o22BJKzA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
-To: Kees Cook <keescook@chromium.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Miguel Ojeda <ojeda@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	bjorn3_gh@protonmail.com, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, justinstitt@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Rob Herring <robh@kernel.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: konrad.dybcio@linaro.org, linux-kernel@vger.kernel.org, 
+ gpiccoli@igalia.com, linux-hardening@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, conor+dt@kernel.org, kernel@quicinc.com, 
+ krzk+dt@kernel.org, devicetree@vger.kernel.org, tony.luck@intel.com, 
+ andersson@kernel.org, dmitry.baryshkov@linaro.org, keescook@chromium.org
+In-Reply-To: <20240424024508.3857602-1-quic_tengfan@quicinc.com>
+References: <20240424024508.3857602-1-quic_tengfan@quicinc.com>
+Message-Id: <171396420131.3426982.6670175970780393669.robh@kernel.org>
+Subject: Re: [PATCH v7 0/4] arm64: qcom: add AIM300 AIoT board support
 
-On Wed, Apr 24, 2024 at 1:37=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> While working on the signed (and unsigned) integer overflow sanitizer
-> support on the C side for the kernel, I've also run into timekeeping
-> being a questionable area[1]. I *think* from what I can tell, it's always
-> expected to have wrapping behavior.
 
-Thanks, that is useful. In that branch you link, since it is about
-unsigned, I imagine you could have hit issues with
-`ktime_add_unsafe()` -- after all, callers are expecting overflow
-there. But there is a single user (which is `ktime_add_safe()`), and I
-don't see that one annotated in your branch.
+On Wed, 24 Apr 2024 10:45:04 +0800, Tengfei Fan wrote:
+> Add AIM300 AIoT support along with usb, ufs, regulators, serial, PCIe,
+> and PMIC functions.
+> AIM300 Series is a highly optimized family of modules designed to
+> support AIoT applications. It integrates QCS8550 SoC, UFS and PMIC
+> chip etc.
+> Here is a diagram of AIM300 AIoT Carrie Board and SoM
+>  +--------------------------------------------------+
+>  |             AIM300 AIOT Carrier Board            |
+>  |                                                  |
+>  |           +-----------------+                    |
+>  |power----->| Fixed regulator |---------+          |
+>  |           +-----------------+         |          |
+>  |                                       |          |
+>  |                                       v VPH_PWR  |
+>  | +----------------------------------------------+ |
+>  | |                          AIM300 SOM |        | |
+>  | |                                     |VPH_PWR | |
+>  | |                                     v        | |
+>  | |   +-------+       +--------+     +------+    | |
+>  | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+>  | |   +-------+       +--------+     +------+    | |
+>  | |                                              | |
+>  | +----------------------------------------------+ |
+>  |                                                  |
+>  |                    +----+          +------+      |
+>  |                    |USB |          | UART |      |
+>  |                    +----+          +------+      |
+>  +--------------------------------------------------+
+> The following functions have been verified:
+>   - uart
+>   - usb
+>   - ufs
+>   - PCIe
+>   - PMIC
+>   - display
+>   - adsp
+>   - cdsp
+>   - tlmm
+> 
+> Documentation for qcs8550[1] and sm8550[2]
+> [1] https://docs.qualcomm.com/bundle/publicresource/87-61717-1_REV_A_Qualcomm_QCS8550_QCM8550_Processors_Product_Brief.pdf
+> [2] https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/Snapdragon-8-Gen-2-Product-Brief.pdf
+> 
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+> 
+> v6 -> v7:
+>   - correct typos in the commit message
+>   - move mdss_dsi0, mdss_dsi0_phy, pcie0_phy, pcie1_phy and usb_dp_qmpphy
+>     vdda supply to qcs8550-aim300.dtsi
+>   - move the perst and wake gpio settings of pcie0 and pcie1 to
+>     qcs8550-aim300.dtsi
+>   - move the clock frequency settings of pcie_1_phy_aux_clk, sleep_clk
+>     and xo_board to qcs8550-aim300.dtsi
+>   - verified with dtb check, and result is expected, because those
+>     warnings are not introduced by current patch series.
+>     arch/arm64/boot/dts/qcom/sm8550.dtsi:3037.27-3092.6: Warning
+>     (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+>     #address-cells/#size-cells without "ranges" or child "reg" property
+>     arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+>     phy@1c0e000: clock-output-names: ['pcie1_pipe_clk'] is too short
+>         from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+>     arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb: phy@1c0e000: #clock-cells:0:0: 1 was expected
+>         from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+> 
+> v5 -> v6:
+>   - move qcs8550 board info bebind sm8550 boards info in qcom.yaml
+> 
+> v4 -> v5:
+>   - "2023-2024" instead of "2023~2024" for License
+>   - update patch commit message to previous comments and with an updated
+>     board diagram
+>   - use qcs8550.dtsi instead of qcm8550.dtsi
+>   - remove the reserved memory regions which will be handled by
+>     bootloader
+>   - remove pm8550_flash, pm8550_pwm nodes, Type-C USB/DP function node,
+>     remoteproc_mpss function node, audio sound DTS node, new patch will
+>     be updated after respective team's end to end full verification
+>   - address comments to vph_pwr, move vph_pwr node and related
+>     references to qcs8550-aim300-aiot.dts
+>   - use "regulator-vph-pwr" instead of "vph_pwr_regulator"
+>   - add pcie0I AND pcie1 support together
+>   - the following patches were applied, so remove these patches from new
+>     patch series:
+>       - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-3-quic_tengfan@quicinc.com
+>       - https://lore.kernel.org/linux-arm-msm/20240119100621.11788-4-quic_tengfan@quicinc.com
+>   - verified with dtb check, and result is expected, because those
+>     warnings are not introduced by current patch series.
+>     DTC_CHK arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb
+>     arch/arm64/boot/dts/qcom/sm8550.dtsi:3015.27-3070.6: Warning
+>     (avoid_unnecessary_addr_size): /soc@0/display-subsystem@ae00000/dsi@ae96000: unnecessary
+>     #address-cells/#size-cells without "ranges" or child "reg" property
+>     arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+>     opp-table: opp-75000000:opp-hz:0: [75000000, 0, 0, 75000000, 0, 0, 0, 0] is too long
+>         from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+>     arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+>     opp-table: opp-150000000:opp-hz:0: [150000000, 0, 0, 150000000, 0, 0, 0, 0] is too long
+>         from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+>     arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+>     opp-table: opp-300000000:opp-hz:0: [300000000, 0, 0, 300000000, 0, 0, 0, 0] is too long
+>         from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+>     arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb:
+>     opp-table: Unevaluated properties are not allowed ('opp-150000000', 'opp-300000000', 'opp-75000000' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/opp/opp-v2.yaml#
+> 
+> v3 -> v4:
+>   - use qcm8550.dtsi instead of qcs8550.dtsi, qcs8550 is a QCS version
+>     of qcm8550, another board with qcm8550 will be added later
+>   - add AIM300 AIoT board string in qcom.yaml file
+>   - add sm8550 and qcm8550 fallback compatible
+>   - add qcm8550 SoC id
+>   - add reserved memory map codes in qcm8550.dtsi
+>   - pm8010 and pmr73d are splited into carrier board DTS file. Because
+>     the regulators which in pm8550, pm8550ve and pm8550vs are present
+>     on the SoM. The regulators which in pm8010 and pmr73d are present
+>     on the carrier board.
+>   - stay VPH_PWR at qcs8550-aim300.dtsi file
+>       VPH_PWR is obtained by vonverting 12v voltage into 3.7 voltage
+>       with a 3.7v buck. VPH_PWR is power supply for regulators in AIM300
+>       SOM. VPH_PWR regulator is defined in AIM300 SOM dtsi file.
+> 
+> v2 -> v3:
+>   - introduce qcs8550.dtsi
+>   - separate fix dtc W=1 warning patch to another patch series
+> 
+> v1 -> v2:
+>   - merge the splited dts patches into one patch
+>   - update dts file name from qcom8550-aim300.dts to qcs8550-aim300 dts
+>   - drop PCIe1 dts node due to it is not enabled
+>   - update display node name for drop sde characters
+> 
+> previous discussion here:
+> [1] v6 RESEND: https://lore.kernel.org/linux-arm-msm/20240401093843.2591147-1-quic_tengfan@quicinc.com
+> [2] v6: https://lore.kernel.org/linux-arm-msm/20240308070432.28195-1-quic_tengfan@quicinc.com
+> [3] v5: https://lore.kernel.org/linux-arm-msm/20240301134113.14423-1-quic_tengfan@quicinc.com
+> [4] v4: https://lore.kernel.org/linux-arm-msm/20240119100621.11788-1-quic_tengfan@quicinc.com
+> [5] v3: https://lore.kernel.org/linux-arm-msm/20231219005007.11644-1-quic_tengfan@quicinc.com
+> [6] v2: https://lore.kernel.org/linux-arm-msm/20231207092801.7506-1-quic_tengfan@quicinc.com
+> [7] v1: https://lore.kernel.org/linux-arm-msm/20231117101817.4401-1-quic_tengfan@quicinc.com
+> 
+> Tengfei Fan (4):
+>   dt-bindings: arm: qcom: Document QCS8550 SoC and the AIM300 AIoT board
+>   arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+>   arm64: dts: qcom: add base AIM300 dtsi
+>   arm64: dts: qcom: aim300: add AIM300 AIoT
+> 
+>  .../devicetree/bindings/arm/qcom.yaml         |   8 +
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 343 +++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi  | 403 ++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs8550.dtsi         | 169 ++++++++
+>  5 files changed, 924 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+> 
+> 
+> base-commit: a59668a9397e7245b26e9be85d23f242ff757ae8
+> --
+> 2.25.1
+> 
+> 
+> 
 
-In any case, if `ktime_add()` is supposed to always be wrapping like
-the other functions in the area as you mention, then I think
-`ktime_add_unsafe()` (i.e. wrapping one) should be renamed into
-`ktime_add()` and the existing one removed. And then we can discuss
-whether to do (or not) that in Rust too (see below).
 
-However, if the `ktime_add()` / `ktime_add_unsafe()` /
-`ktime_add_safe()` split is there for a good reason (see [1] -- sorry,
-you were not in Cc in that particular one), and callers are already
-expected to respect it, then I think we should document it in the C
-side better and we should just start with that approach in the Rust
-side too.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-> Can we define the type itself to be wrapping? (This has been my plan on
-> the C side, but we're still waiting on a finalized implementation of the
-> "wraps" attribute.[2])
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-Yeah, we can make that the "default", so to speak (i.e. what the
-operators will do). But we can also have different methods with
-different expectations too if needed (i.e. the usual "access" vs.
-"type" discussion).
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-And given the different variations that exist in C (see [1]), it
-seemed to me that `ktime_t` operations there may not be expected to
-actually wrap, and thus that would be an argument for trying to be
-explicit in Rust.
+  pip3 install dtschema --upgrade
 
-So for the Rust side, what we need here is the expectation of how
-`ktime_t` is supposed to be used. Or, even better, how one would
-ideally design `ktime_t` today if there were no worry about callers,
-because we have the chance to improve here over the C side before we
-have those callers.
 
-If the answer is "everyone assumes those to be wrapping, and there are
-almost no use cases where the callers know it is not supposed to wrap,
-and we don't care about whether they wrap" etc., then yeah, we should
-go with wrapping default semantics and accept that we will not gain
-that information and thus not catch mistakes easily in the future.
+New warnings running 'make CHECK_DTBS=y qcom/qcs8550-aim300-aiot.dtb' for 20240424024508.3857602-1-quic_tengfan@quicinc.com:
 
-But if the answer is "we would have liked that `ktime_t` was more
-explicit, and that is why we have the `ktime_add{,_safe,_unsafe}()`
-variations, but nobody uses them because everybody assumes wrapping"
-or "we actually assume no wrapping in `ktime_t`, which is why
-`ktime_add_*()` exist", then I think we should definitely try to be
-explicit on the Rust side from the onset so that we can catch more
-bugs in the future.
+arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb: phy@1c0e000: clock-output-names: ['pcie1_pipe_clk'] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dtb: phy@1c0e000: #clock-cells:0:0: 1 was expected
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
 
-(I know you know all this, but I was trying to summarize and clarify
-the discussion :)
 
-[1] https://lore.kernel.org/rust-for-linux/CANiq72ka4UvJzb4dN12fpA1WirgDHXc=
-vPurvc7B9t+iPUfWnew@mail.gmail.com/
 
-Cheers,
-Miguel
+
+
