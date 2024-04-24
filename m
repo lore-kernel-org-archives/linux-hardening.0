@@ -1,150 +1,117 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA6377F08
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 19:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBFD75818
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 19:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713986266; cv=none; b=WoREyEpKjMLbkTuvcG3vC8kwKk/DnrFR6tuxcC0fsgcXPQk/DM/FrUiESmAKrbKyQXbQ1BC+h1kS8je1RK4hc07zy5krl4YD9Da0Q995AlAXx6i0URQph5TXMmw55ZHKG/f53cfsDI60/K7eiV4NwmuiuLn3Msf2ylApeWH8QMk=
+	t=1713986499; cv=none; b=f+Z1CFE367O10nGrduO3x6iKW5dt3VaUPkSXmeum8YpwKm35jE18GmBJMvCocXwE8/j/m9rkYoiUXRw+/WHtqjkywPqLllxcZ4CPnS77PFalFLIzjVGbr/hlesap27x7cmIc4U9TQpJjA4piKEyGpHFZYo6kBE1fPaTmZgJG37o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713986266; c=relaxed/simple;
-	bh=thTGd+hT/FhiSvmm/b+nzZnBJHdZOOvS+xvizd9J118=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kAogWvjZxuC8ifZHuVF/laxY5VlTyYNXLNnbTviUHVyEfSgqpXYzbozVJKu2POqugmX6hGlO6tI39xy0EdhJ0oTNFN/SnQOh4ItLnViBqwDK4yPJCVs8Poir11y0e5ire1KeOi/BxyJ9ZxiqYCkd9fTBhQTx2AnimKqcXVlppRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IYRsND8u; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1713986499; c=relaxed/simple;
+	bh=tTJKTCZK+7MUJMSSp7o23DoKoVGNAUDPQk8v0lL9B64=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XDCXOZ3G3FWWQIL/vx44uVUQdqBEliFFibM1uXFsNgpi16JSIDZlEWXXEkUdafIw2qmjThM9d/VjfrST8ODScC/Jn2UEDX7pqrIiHFtHUl5dfPh2aOhPnpR7zTZf7jLLaRJC1DT6g4tx+y9icO3YjDpLmp2xDzKCtYd4RgSXXJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Roi+baR/; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IYRsND8u"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ed627829e6so297622b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 12:17:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Roi+baR/"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6ea26393116so178306a34.0
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 12:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713986263; x=1714591063; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lK6fStXdfyST1TlQT33JqKtHmOFdPx874FRFgnYIMq0=;
-        b=IYRsND8uQ96L1jlx7gNztx15PlfSOZxdGMQnXuWVc7/687Pj6VHBBlNwL2kN+4CKIZ
-         uPS/q/DcSnIVHMgUYJj+JbEOwvH23RKAnxXnsakI9Ui/mhHMcQgCj7Gpum/KxJqEoWWx
-         lak2LNuFSU8TuLFE2hdPq5yk+k7/2csP6zYw4=
+        d=chromium.org; s=google; t=1713986497; x=1714591297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rNHLJopld4jqnJrZ1oiAAgxTAlpul98lFx9bY2o4kLg=;
+        b=Roi+baR/9NehB/DEa7wTeBDHVdkwYBUdQYGWKE5QRbrth+AMF2nWrsHrwAOPUtMjN6
+         dEV4o6+6Z08gitDVs6x8SErCBK0EEn7JB7nS296WtxFqv7bnukDlnUAbMCzG0P2YHNTt
+         tj92DpS9LgbMAGdRbsioaSu2w9rlMenjpHbjE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713986263; x=1714591063;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lK6fStXdfyST1TlQT33JqKtHmOFdPx874FRFgnYIMq0=;
-        b=Q64mwrp7Wk8Iit1a0zeBCBdcVpkSHbbNU8YdXrNqvOWB06N9PNxDsPswBUwSXGt6/G
-         g9hFdTFFeEMndqgMNnyyaMRb7DmPgCRVifmAGRoO6yxbTGwF2Cwp0MdId0h8a9i6e2Wp
-         izMYaxmG7mZbk9p+IMtDbL9I3g4qg8suf1kvRVnv4Vq8mODHvntgBErpeEb7fsMirtJg
-         2fIWA842XCWwb78G+LAfgUmPGArWqE72p1v2xzQmgNsP6KUvNwFjpbCcxgFVgd+2GVZd
-         rwBaByO02IQM3+Hy3ZrTwuWHwsKdw3n5gC3Jjc5IsgE97CwpS83ZkUPpajdgzSo7bjt6
-         g3Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBGtI+Lat8l9LnNuBL/cbsQaJ0YmjM5wljeFfXUGpyQSrYrEqDBOKJ/HmjVAlRiqPEuRSlllTc8QRexZtXvzQBUJL6GIByXTlqCenS5UoV
-X-Gm-Message-State: AOJu0Yw3Z62VYseq4l0u2Fs4bvihEx/QEfe30PcaYBHBgXpEX2rkxpZC
-	4kWBHsDlWW8BDS/HIpG1aJUy0lWclCdlSZ3JA3k4Y7ANdodcM0BphJDR5GGc9g==
-X-Google-Smtp-Source: AGHT+IGJLxaAQi7YYyI9XbiHvHbGRPs5if1SJBeA9ajOFNVl3JLCYaCGsqMFSmevBkhPO0HvlcVaaQ==
-X-Received: by 2002:a05:6a20:3c94:b0:1ac:e379:5548 with SMTP id b20-20020a056a203c9400b001ace3795548mr3896074pzj.45.1713986263198;
-        Wed, 24 Apr 2024 12:17:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713986497; x=1714591297;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rNHLJopld4jqnJrZ1oiAAgxTAlpul98lFx9bY2o4kLg=;
+        b=MnWCt2GrBp32y/53HMD48uAt8EH6eb/QBNOF3UnfNBs/co+nTOSR9TFHKqLB810MZ1
+         ECtmEV+/lWC5QDOcafTR/smqdmBbfgEA5Uubrh4YFo7yZe6K17Rws2yxgX8aDVauy3m2
+         kboM9Gd6vEusl4rAMhSKqGQ24V/nB5r1pulbDA6J4nPz0n6X143NQHjlYqrWpwAihBfJ
+         wEH4GT9UhM0B/09EyMI+io1Dxm/3Jo64UjthjN3QfxOIOiKZx4+mPe5/de9KXPf/5zBt
+         0/rFSm68E72CKObc09LJ4myYP4AbkMbBhhCE1MMLdKBGPRlYcBku/831gIL2ZgRz7j5z
+         x8pg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfsvyAHrcZncAnNTSoHrn38xyRP5Wism/t6yDHKQRaR5aTT7QMZZYutoylCP01Hq04J3RB3ZWUptbxSOCK+Sotbze25I2u4Fbi4X4McSqu
+X-Gm-Message-State: AOJu0YzRcuRr9yZzEcvYgH7VASX+AWquP+FOt6FPMBOhTs7Yz1Ocxvfq
+	L/UdYz8TtNYMmaZRTlnVB2XXFW/9eqJrhVv7FHkAeRdaPdMDgzkFyrYuAmnlWw==
+X-Google-Smtp-Source: AGHT+IFuqgGNw1ep4y54aPm4dQmLi99sxiEQ9YbOo91SW07Q3tBMI8FSl2WHIOI7cdyQhNEZyiSynw==
+X-Received: by 2002:a05:6830:1d6f:b0:6eb:7685:b00 with SMTP id l15-20020a0568301d6f00b006eb76850b00mr4093982oti.28.1713986497681;
+        Wed, 24 Apr 2024 12:21:37 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id km18-20020a056a003c5200b006efbc365de9sm11772738pfb.121.2024.04.24.12.17.40
+        by smtp.gmail.com with ESMTPSA id l26-20020a65681a000000b00606506a95bbsm1425110pgt.13.2024.04.24.12.21.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 12:17:40 -0700 (PDT)
+        Wed, 24 Apr 2024 12:21:37 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
+To: Jiri Kosina <jikos@kernel.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: y0un9n132@gmail.com,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Battersby <tonyb@cybernetics.com>,
 	linux-kernel@vger.kernel.org,
 	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	netdev@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/4] Annotate atomics for signed integer wrap-around
-Date: Wed, 24 Apr 2024 12:17:33 -0700
-Message-Id: <20240424191225.work.780-kees@kernel.org>
+Subject: Re: (subset) [PATCH 2/2] binfmt_elf: Leave a gap between .bss and brk
+Date: Wed, 24 Apr 2024 12:20:58 -0700
+Message-Id: <171398645483.3089364.2691527690120638755.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240217062545.1631668-2-keescook@chromium.org>
+References: <20240217062035.work.493-kees@kernel.org> <20240217062545.1631668-2-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1984; i=keescook@chromium.org;
- h=from:subject:message-id; bh=thTGd+hT/FhiSvmm/b+nzZnBJHdZOOvS+xvizd9J118=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmKVrQ9CtzJNlSzJGvLo6MaPqAU2ghmpei4/WPg
- q/q196TYOWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZila0AAKCRCJcvTf3G3A
- Jk/MD/9b08KF50tco7aDBOr3+0y32I2X/aj83XHW9qi8joeu8U8WCW+0yQp0s09qE1TvMVnDUsS
- EmaaBlYOva9kFzL63LQCuJl4n83UUm5u/bZNye8GJpH/NDD6lIpip+WZC53FIZx55YclzxrknXa
- 7mu4138bls6ycciUIlHSFTrGcjphUCaw//r6fzm2MX78GftZKNCtURzKpPKCYivqGDAHaVKwego
- wHYUvRSi5QJCtIheikvkR2OTaScKZeZCAaWCokTIBhfJW5y+HZEpIBm9g23TIIb3AlQR7zO/SBg
- EMSdjJXPqeqfNVfWyP6QZo8ljWyXUh1ZcF68EriCKbaBWpd6Dwe7cwUwLeYuQr05KBTeJxqJ/4E
- A4VDBN+MQ+H5y68uRWT32gvAenZHYoIy84wLnukKJHtl55cBw7em3LxDyzApDUFoO0A7luGMnvf
- XLZ7RFzf7vX2Tjz4qQk0WfmujcwpCgiLtkrKY7pa97e2k9Be230TyBG9mhHnVgiZnnce3hAvzMc
- g100s4qtOfFkQub38z8Rb5f7Khr1uUDKdzDAnGpFG2nPDs5BmqNBL3dJW5hw1Or8MP6E08bQhdu
- 7RpghTVeiCyYB1WgF7c691itQEBxSBTDz3jZ959PdEaIVu77HU5Xf6kIoWBJVWjiKW1LcaILhIm
- 5OE1koy Q41ty9nA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+On Fri, 16 Feb 2024 22:25:44 -0800, Kees Cook wrote:
+> Currently the brk starts its randomization immediately after .bss,
+> which means there is a chance that when the random offset is 0, linear
+> overflows from .bss can reach into the brk area. Leave at least a single
+> page gap between .bss and brk (when it has not already been explicitly
+> relocated into the mmap range).
+> 
+> 
+> [...]
 
-As part of enabling the signed integer overflow sanitizer for production
-use, we have to annotated the atomics which expect to use wrapping signed
-values. Do this for x86, arm64, and the fallbacks. Additionally annotate
-the first place anyone will trip over signed integer wrap-around: ipv4,
-which has traditionally included the comment hint about how to debug
-sanitizer issues.
+Patch 1/2 was already applied via x86 tip, so I'll grab this one for the execve/binfmt tree.
 
-Since this touches 2 architectures and netdev, I think it might be
-easiest if I carry this in the hardening tree, or maybe via the netdev
-tree. Thoughts?
+Applied to for-next/execve.
 
-Thanks!
+[2/2] binfmt_elf: Leave a gap between .bss and brk
+      https://git.kernel.org/kees/c/2a5eb9995528
 
--Kees
-
-Kees Cook (4):
-  locking/atomic/x86: Silence intentional wrapping addition
-  arm64: atomics: lse: Silence intentional wrapping addition
-  locking/atomic: Annotate generic atomics with wrapping
-  ipv4: Silence intentional wrapping addition
-
- arch/arm64/include/asm/atomic_lse.h          | 10 ++++++----
- arch/x86/include/asm/atomic.h                |  3 ++-
- arch/x86/include/asm/atomic64_32.h           |  2 +-
- arch/x86/include/asm/atomic64_64.h           |  2 +-
- include/asm-generic/atomic.h                 |  6 +++---
- include/asm-generic/atomic64.h               |  6 +++---
- include/linux/atomic/atomic-arch-fallback.h  | 19 ++++++++++---------
- include/linux/atomic/atomic-instrumented.h   |  3 ++-
- include/linux/atomic/atomic-long.h           |  3 ++-
- include/net/ip.h                             |  4 ++--
- lib/atomic64.c                               | 10 +++++-----
- net/ipv4/route.c                             | 10 +++++-----
- scripts/atomic/fallbacks/dec_if_positive     |  2 +-
- scripts/atomic/fallbacks/dec_unless_positive |  2 +-
- scripts/atomic/fallbacks/fetch_add_unless    |  2 +-
- scripts/atomic/fallbacks/inc_unless_negative |  2 +-
- scripts/atomic/gen-atomic-fallback.sh        |  1 +
- scripts/atomic/gen-atomic-instrumented.sh    |  1 +
- scripts/atomic/gen-atomic-long.sh            |  1 +
- 19 files changed, 49 insertions(+), 40 deletions(-)
+Take care,
 
 -- 
-2.34.1
+Kees Cook
 
