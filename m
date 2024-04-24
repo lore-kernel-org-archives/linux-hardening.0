@@ -1,175 +1,84 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9772116D9C7
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 22:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0210016DEDE;
+	Wed, 24 Apr 2024 22:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713998436; cv=none; b=odXylzJh8iZW7OztWWc58hkdWxHz1FiRHO3Ym91B13IA9/z9x8hAbdX7+antv3TKhcKj/TmkwmnH6Fl4Df/yMhO7+UiIm2Jjc2kld84ugpBg0yCXFy0WDa91+LVJp5H7hQP8jgf20dmMxd9aC25Sxh3B29aKywt5kbxdOVsSuXg=
+	t=1713998522; cv=none; b=XhdVhszAlzSDuyAF8KXvf/DFc+RF2Tzky2/pFOOBblIl5DDeEzBbxa2ud8DF5qpMjBJOtq/3CDeXz0TIt3Ro2PZoO9wy9Z6XE7CeKMYspHWCAMC4X6HPR+uzUPPzSQjZ/q4xzqgGI7+IjoOE8oN//y9N3elbZSjQCzoSA6lV5rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713998436; c=relaxed/simple;
-	bh=S6pSKGU1vZkqsA6JyZACfXvcQXgSDSwKOAh1iNHOK7k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p5a9jITpHGG6wYFdh/frzGvEiVceE4KMYP4UvR4KxiSNzrYyqpeBu6pshJxOAPp8sZlSGEtiPTeMjs38FYtSm0af8bMKB3zr8Zk7E7pSaFjhi5ocYQBHUPEqv298HREdPeIKngxWTB/+xOAdF2SeVJKRBu7oQAEqk513on7vnGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=O1FuGrwt; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713998522; c=relaxed/simple;
+	bh=I84fytRW8RAO4I14CXSokqeSS4YK/44PsOPnBAk8gSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKjUgaJbbGtENhLimanAVBRWF5df5VgW642bC9afqejF55RyIRjNvYQ5Gx2zBlZzSBop6uzQZEzreJtk25xcb0bspnw03jHGd9VMTI7r51qG5vOZncTgC8bjW4UXKjdF0dTluoVTXO92YOhaF9Km5GfdxSJKCuRNf7fxwJY9cgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RE5QUlyV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O1FuGrwt"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3c70999ff96so286075b6e.2
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 15:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713998432; x=1714603232; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JTbZyDAE7D1exiHp1TgfWwHZGetvSM17QuiylPP4Ugo=;
-        b=O1FuGrwtRT0RviEQPEKMMtCTfdkWwKjJgui3CTASEiMrxNvjcbcw3lHRu9nBb4v01f
-         kAAweSheuJzEimkKudKidPqbJ8j8xlNKbtGSmEVrfD2F2E86tbn2M7jMnc1pMyv7F821
-         mfEgundW/uGCaV40is91NqFBTijPN7ZFLNd6I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713998432; x=1714603232;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JTbZyDAE7D1exiHp1TgfWwHZGetvSM17QuiylPP4Ugo=;
-        b=GoOyd3GCN3ozCo0kuntFu3ADo2ON9OHcm+MpOYOwm+dnbFkTTzCT6kCG4O7OecKpdu
-         kaYvds1+B3sA8WOfjU0Kx16mzG9ncpf1uUzFYB78qbKyV8O7J7Cov5BAKYJtcf11pfhn
-         nnTk+NkTUHH9DtGloehShWizLL1On7rrbj4+5oQmIik9wshNN0ZvoWy2DS8+7mX0/VEQ
-         sd71ONcXw/3uVb0bB5xjeR7s/i/JSdUjdmo0lKFIxtn/gF7yc9+n/aaDRLk1mjy1Y4QT
-         BP/hlXMKzltTE1TNl+3+89meuCanxX3nnwnXF9a81cRV9pkv2E+xmMQ3wQBDBDRwrhUu
-         Nt5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXd/oKohCyX33TRDIyVUIxiGGBQfXo6lmcfORGiGveTdzuaMnOsSR8ZYDEFYO8wIdPi8N0Yo62tKJ7EGe+mPlahoCbAdCG2HiHat2VczG2g
-X-Gm-Message-State: AOJu0Yz3RnOC2YUIIyNc9czL9Yuf2/iprKi11w/1d8wGGshKwdaxT+Fs
-	rO5hHPkvYuDQ+5akZFy9F+cBmugEQ9y+v1kLjjhj77aAVv/rn+voHdm3Kgn1Ew==
-X-Google-Smtp-Source: AGHT+IGFUXgAb57/n0ajo0YDZLiplfyraBU1xymIQJvWPzgD5RmxHj274JJqj/jUT26O6h41iVbSbg==
-X-Received: by 2002:a05:6808:6146:b0:3c5:e81a:b5b6 with SMTP id dl6-20020a056808614600b003c5e81ab5b6mr3457731oib.59.1713998432715;
-        Wed, 24 Apr 2024 15:40:32 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q24-20020a637518000000b005dc4b562f6csm11655715pgc.3.2024.04.24.15.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 15:40:32 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Marco Elver <elver@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Erhard Furtner <erhard_f@mailbox.org>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RE5QUlyV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WC01BChjfLiCxvTf81kaHLBrwZI8ocIBxX8N7T/Yecw=; b=RE5QUlyV3i854Efn5mgdt2iDsf
+	RB5NXVlzPmUD48spV4HYj2oJcTLmI4QMgCIFURVCuSD2pxnQjesnzLaFUBrUgfUce/3Hf8EMSDkS/
+	UeBYFNSok9xOOKBwDK1svwGsSzphKFrGZCFSuwqYip4nDqtTW0cZ9Np+6TWxcGMMR0legu/kfk4G9
+	EZ1TcCVeCPKK2ffgaPOw151PEwE+jPlNWWC7c1Vq8Lvm2W7LYvz9zLNmAZ0Qq5zsa5XRUe23so/aC
+	G5JDnadmOnznrDXzoDYEWoZmD4ek1OAo/6u3JxrFXPXTRG7Ay8HrgUUXj1rAfGGrAj2wbTrDM6BtN
+	Ol+D4lxQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzlJ8-00000001pU6-173r;
+	Wed, 24 Apr 2024 22:41:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D0FE330043E; Thu, 25 Apr 2024 00:41:41 +0200 (CEST)
+Date: Thu, 25 Apr 2024 00:41:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ubsan: Avoid i386 UBSAN handler crashes with Clang
-Date: Wed, 24 Apr 2024 15:40:29 -0700
-Message-Id: <20240424224026.it.216-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
+ addition
+Message-ID: <20240424224141.GX40213@noisy.programming.kicks-ass.net>
+References: <20240424191225.work.780-kees@kernel.org>
+ <20240424191740.3088894-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3862; i=keescook@chromium.org;
- h=from:subject:message-id; bh=S6pSKGU1vZkqsA6JyZACfXvcQXgSDSwKOAh1iNHOK7k=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmKYpdOvL4ycJZMfmelPH56Xu+0zUCHN/li7yDD
- JlCQAIXtpKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZimKXQAKCRCJcvTf3G3A
- JsthD/4qvBqX1FE7+CepCN/bUSsdc70zA3IoR9J74pMA+cDoufvy18SuqrI0QlPCbAV5PeKztge
- gzibb8xd36rAisAJKA0utmRkVAydrRwbmjUFVD79yBBujbfyNlK8mqPsmCr12I9QlHdXgxxmzxE
- A5WfXC0Mbp3BegjRlKorI0bVF+zZWYjG97ThyMxlUrdcabHqXdWFd9SG1iQ97Ee0Za9QRRRyTbn
- YdM2Zslm2eF4PHkTiUJkeJphrHtXmEVaC14vmKIcjDJ2QneeeP+Pg84whwO6ACNLtMWA9Gd3/F4
- h2zrUXv0HRIS/0lxYFm9jJyRfUndtgLpAA5jHq8vVuwYFys9z0e/TRGt3HNdbXmZzqJLkd3lW7U
- A13vTr2W7Btz+q7N23001OYIcFSqsnNpu8njFOauxcB/Pc9iNywTi03uFpjYQUyy/mfTp1bgV7x
- Hk4rNT49RY+kiA3pt5TZ9+aT9n+raRjt80v/j8TD4x1zi6/p0nT/0EG6ObbiJv2GdzF9a/AcgDB
- 3Um3HWzzyCD2aL/HebIwG30sZZ2gbPO8cGU7REXohAIk7OWKGavgZLd1ggwZoNGk5dhd0V03o0K
- zn98pxzl3fqDdXgn1zZXrpNUj7pk2e4a/s0FsZNdqV2jYJ1Khhu7Ncyqsjkelvd9ho56XocxX4e
- fljUYFZ Og7QZA1w==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424191740.3088894-1-keescook@chromium.org>
 
-When generating Runtime Calls, Clang doesn't respect the -mregparm=3
-option used on i386. Hopefully this will be fixed correctly in Clang 19:
-https://github.com/llvm/llvm-project/pull/89707
-but we need to fix this for earlier Clang versions today. Force the
-calling convention to use non-register arguments.
+On Wed, Apr 24, 2024 at 12:17:34PM -0700, Kees Cook wrote:
 
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Closes: https://github.com/KSPP/linux/issues/350
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Marco Elver <elver@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: llvm@lists.linux.dev
-Cc: kasan-dev@googlegroups.com
-Cc: linux-hardening@vger.kernel.org
- v2:
-   - use email address in Reported-by
-   - link to upstream llvm bug in ubsan.h comment
-   - drop needless /**/
-   - explicitly test Clang version
- v1: https://lore.kernel.org/lkml/20240424162942.work.341-kees@kernel.org/
----
- lib/ubsan.h | 41 +++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+> @@ -82,7 +83,7 @@ static __always_inline bool arch_atomic_add_negative(int i, atomic_t *v)
+>  
+>  static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
+>  {
+> -	return i + xadd(&v->counter, i);
+> +	return wrapping_add(int, i, xadd(&v->counter, i));
+>  }
+>  #define arch_atomic_add_return arch_atomic_add_return
 
-diff --git a/lib/ubsan.h b/lib/ubsan.h
-index 50ef50811b7c..07e37d4429b4 100644
---- a/lib/ubsan.h
-+++ b/lib/ubsan.h
-@@ -124,19 +124,32 @@ typedef s64 s_max;
- typedef u64 u_max;
- #endif
- 
--void __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
--void __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
--void __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
--void __ubsan_handle_negate_overflow(void *_data, void *old_val);
--void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
--void __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
--void __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
--void __ubsan_handle_out_of_bounds(void *_data, void *index);
--void __ubsan_handle_shift_out_of_bounds(void *_data, void *lhs, void *rhs);
--void __ubsan_handle_builtin_unreachable(void *_data);
--void __ubsan_handle_load_invalid_value(void *_data, void *val);
--void __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
--					 unsigned long align,
--					 unsigned long offset);
-+/*
-+ * When generating Runtime Calls, Clang doesn't respect the -mregparm=3
-+ * option used on i386: https://github.com/llvm/llvm-project/issues/89670
-+ * Fix this for earlier Clang versions by forcing the calling convention
-+ * to use non-register arguments.
-+ */
-+#if defined(CONFIG_X86_32) && \
-+    defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 190000
-+# define ubsan_linkage asmlinkage
-+#else
-+# define ubsan_linkage
-+#endif
-+
-+void ubsan_linkage __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
-+void ubsan_linkage __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
-+void ubsan_linkage __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
-+void ubsan_linkage __ubsan_handle_negate_overflow(void *_data, void *old_val);
-+void ubsan_linkage __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
-+void ubsan_linkage __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
-+void ubsan_linkage __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
-+void ubsan_linkage __ubsan_handle_out_of_bounds(void *_data, void *index);
-+void ubsan_linkage __ubsan_handle_shift_out_of_bounds(void *_data, void *lhs, void *rhs);
-+void ubsan_linkage __ubsan_handle_builtin_unreachable(void *_data);
-+void ubsan_linkage __ubsan_handle_load_invalid_value(void *_data, void *val);
-+void ubsan_linkage __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
-+						       unsigned long align,
-+						       unsigned long offset);
- 
- #endif
--- 
-2.34.1
+this is going to get old *real* quick :-/
+
+This must be the ugliest possible way to annotate all this, and then
+litter the kernel with all this... urgh.
 
