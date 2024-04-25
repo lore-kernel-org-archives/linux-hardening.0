@@ -1,155 +1,88 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90F1153811
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 20:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247B514BF9B
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 20:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714078527; cv=none; b=edNL1KhNKQgPFxeN8ZleygUuquoaevYHyCTKYYHjOUpO10HBP1mjTIXzySFO2ZCCbCvG0hMiIGO4qIajObTX3cVpLGI6dxDbEWq/0AqzLZTlCV7wEVBeShIa+py7YCVChMoPskB0+EjnDA3N9FWttzFqojmUFJMMIKpK65KtAkk=
+	t=1714078680; cv=none; b=QGx26o7ELIvXL/dzucoMF/tW/GCI7Rt3Ble64lKpB6nNDIYIAH7wnF0WNA2gnzV2Zh0rQFDHNGRf43W/6vs9BaoC3e5cD5z9tA8MOETMkAhWDz8myB7rBNYOMVzth4eLYAs75/OTYDXUlx2Ki4+jGcYAROEhQekwKha0g93A1eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714078527; c=relaxed/simple;
-	bh=wgzxsbZYA35UmV3+kDlEwfXFaeOy97jxAsm3UECTe0s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rfCSqK17xTQ1i7xIJfAGYiNNqqHJ5IjIRqwg52icpegO6wHwHssC448V52exwyOLfQnCraFlGdzA2FKMHtUaeIQpzmndFUj2rUQCXnknk9faAQYdiRaJvJB/GfaMPlOGr8LyoQOuBK8qvlADmeSrs6ppyDHHWsAu/aScf01VCWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CaJ1lSq+; arc=none smtp.client-ip=209.85.215.175
+	s=arc-20240116; t=1714078680; c=relaxed/simple;
+	bh=5oNgEmljdB6NKphOsBQ2rXcl0qZAFG/RxtdNV0s6mYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LdU0g262NE4rvzco2RZwRhgPtubNy8uou7d0TgdoIv94YXK/k7VITpb6AJYrz2ppV6cQSulkFCsej1k4sC0yorAylt/FMePbTqLMsVS1GyPO3sfV/f9LRt2Ml2BMvUEwBgBAfzgW//DColET1Z2CCXuO3YZFBpwVsh7MiZGtG64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FCTssiGF; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CaJ1lSq+"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso1198916a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 13:55:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FCTssiGF"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so1173139a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 13:57:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714078525; x=1714683325; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ISz6479faSwg2T6S4jx3WNpGT6tzmgyY9eqAE3NqtuI=;
-        b=CaJ1lSq+Gqzw4/LuxmkVsFvpwIdsIGo9M6Yf+Bd92mSxeEjrBMyh3e6Q69/BHMCeY4
-         hgMpb4ZlKGaWJuhxt5Zr+6hPR4SBa++Wz5AZlui54vm5NCMdtfDA1NGvCvTLTWiyPHI6
-         gDMq5majUry4ndbAJwiZ5t+ulVVeOmjJBVCnU=
+        d=chromium.org; s=google; t=1714078678; x=1714683478; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gZcutr+DBU8+7Q1m43Njo0i1Yp7GDDxZafFN7u9zRq8=;
+        b=FCTssiGFEiHsTjRsr84PBt+Or5GPUv7EZ8Y9DroxVfP2ckogf2pbChiFcPYFxelt5J
+         xqxWIp7T2F87TH/eF4NoDfaEHIOgLrlE25sN1Su6EcCkY8lQWNwsOY8o1y+B4UJFXUFS
+         JJmFK7U4ZoTgCl7D9lDhGakrVLifM9kgORAdc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714078525; x=1714683325;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ISz6479faSwg2T6S4jx3WNpGT6tzmgyY9eqAE3NqtuI=;
-        b=MPbJqvAhlrsGWuV3NPeS3NhDrvUmqX8pCf8GQm+IWf/jSuwI7vPwcoHVsOzPOie1VW
-         e+1FAKEt1ZPNcgrWCAbkr6IgQK9WLKpU9jLF5BnP+w1MvOve3XrU4uvVsciqj/xWhp7n
-         cYdakOINdtTE0A7Q07Zu9lecmaBluFzStZmn12EHlzJL0UrpgV6XVRZVFqAn2Hr+0Ag9
-         Ylp1LUtJtkhVwRmDbqj5qQ3LSJkxeg1nM9GSEXpV/y1UAOt5giHrZdkAG6vgi54O1su5
-         lStbDt57cuzzmEsciQRgFH2eiKrC4dAHzms565aZNmHmcti3PuWa1S4l5I/a4Tm6f6gX
-         adxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZXCInvQ+CskRHkEkCODpvFRxtd//Byq9HpgOcLUG6hLIdLR4NTe1zfL197eo/7X8f0Akli8nRbnEocA48iqS9F1sQtK02Am+bkIu7E81x
-X-Gm-Message-State: AOJu0YynSubAJcRlTN/4vcUzQ+XBLJMpw07xiEoFYtrXpXI8ocnfYpUL
-	BoT5jWM4OKpFhESXj4K0X3FcrTrvBgWyA6Ol14zF4j+F0u0wynEfrhto/dkZ/A==
-X-Google-Smtp-Source: AGHT+IGuak1A5s4buRECAohF0iWefXrhA28ayIjCoI5pRSndED0RKVF3MGtMAQ81PA5K/hyZWPPbQg==
-X-Received: by 2002:a17:90a:654c:b0:2ac:dbec:2d6f with SMTP id f12-20020a17090a654c00b002acdbec2d6fmr783550pjs.39.1714078525060;
-        Thu, 25 Apr 2024 13:55:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714078678; x=1714683478;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gZcutr+DBU8+7Q1m43Njo0i1Yp7GDDxZafFN7u9zRq8=;
+        b=h8nwdBYZt55fB2bzjOfyy8ybbUTYn5gNZp6D/MXUIzlaGcPm06297MQKfao2izvx6F
+         afR/cKOValeZlxXV5LD2ke9R8I1sAU9G4stwloafPfSokcL37R/v7e2Mz9AGL/LSfivp
+         ZXMFA70Byr5JZorP6EB6yGjHA7MwxK9OfpHbaPznO5Z0OaxOYolmQZd72ow3t5SRwaB2
+         iMuMXJBYk419x18byU3jYwKV6sAY3dVoLkjHYs5YALW1IwIW9rwz3y5El9gyMleW0AJv
+         QawH2y0/uHttf1jKx9WJbfmzV8Dueocpz1u41nt7CPAFyHFYDajUO6xE3dC+H9YcQcXr
+         vSOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFHohih1x8meGyIMYMCcSSNPx6PKP2km46qMRZ2yjrGX2IT6gMYtmPwQNfCeWOY2PCJOFYyAe7nVIiDLYRUwB+eWFV5Uod7HM/kUDNqAHc
+X-Gm-Message-State: AOJu0YxvUEXhF46vlYGYERwAAHFRdETr93jDhXbSoz9KmgrcUwVOFZZr
+	hcZl+eqCCcJ/sThpvcJ2qer+l+srOfppcAwLV0KAhZt0H6UqSop5b7u6/Jh1GA==
+X-Google-Smtp-Source: AGHT+IGfz5Rebw0b1ZhwK2xIUu+dXp0C650WMXHqzg55TZk2O1Ojuq+nNXtUUs8X9rCbcPWJ63x3NA==
+X-Received: by 2002:a05:6a20:1581:b0:1a3:ca86:be8a with SMTP id h1-20020a056a20158100b001a3ca86be8amr1084537pzj.57.1714078678515;
+        Thu, 25 Apr 2024 13:57:58 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id cn19-20020a17090af09300b002a2b06ce909sm14996316pjb.17.2024.04.25.13.55.24
+        by smtp.gmail.com with ESMTPSA id ix19-20020a170902f81300b001e895c9ec6asm13735852plb.152.2024.04.25.13.57.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 13:55:24 -0700 (PDT)
+        Thu, 25 Apr 2024 13:57:58 -0700 (PDT)
+Date: Thu, 25 Apr 2024 13:57:57 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] mm/slub: Avoid recursive loop with kmemleak
-Date: Thu, 25 Apr 2024 13:55:23 -0700
-Message-Id: <20240425205516.work.220-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
+Message-ID: <202404251356.F694909C63@keescook>
+References: <20240425200844.work.184-kees@kernel.org>
+ <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2235; i=keescook@chromium.org;
- h=from:subject:message-id; bh=wgzxsbZYA35UmV3+kDlEwfXFaeOy97jxAsm3UECTe0s=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmKsM6HVptwlfHLpIq5pI6IWcjLcoSkU3RtMyDq
- ARbu9SC/s2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZirDOgAKCRCJcvTf3G3A
- JuDSEAC0l2PUgYlxj4pnnLraH/55sLfoMFhtLob3K/MWGueyTyye50pQtaI15ClOF/OhkH+MqSK
- rzq16NGHmNk78CCUeoVXnLRz9PDmsolxQD9MigPFQP6eKHIK5hFcWhPCR5ijm7oZf9bPp1jTOYa
- dlVKyNyeuZek6H1+X90JoyTdyg7UT9ls3CRTTRV8aGcBUtxlG+QsWB6atAvQRpPggUqSovoR/CJ
- 8Y6GBikQb/3K85EQNcSwFF1cL63srGhveek31TGCFAF24rPFhbzyH4qS58OOW0R7tBjnESSQJTr
- XXmlqcmRWv/eWjNtTjcJD7R4Fw6iBhUelgzjDMsXw6wtGiV89VGe5wXxC8KheuUfihbSGwQAVdZ
- EH2koc3B9KhvYljNjnUQroDA3BASbFktma2rYYcScRfDi80Vnpt8/1OYjtqFj9wOLx4RF23WfXQ
- dOBKxl+1oxl4icrWM9Fw7jfXr4w00CMTwXYDYqrKRm4AQ3pl8gYFEwDUiPDxKpoHs0j5OKrGGNA
- aK3HASaKRX7fb6aMPPqsfg3fdiCk/rhiLzVCk7KbjibPt1r4nhpPwTe3Giu31YIdYbYKFCji2ZP
- plrAm71N0FQ2N/FetOqaIoPsvbc2H4NzOu8ysPNslnEFA7Z+Fp+MnCYzu/VJi0jjB7mSIN9ZynJ
- +ysUJzG Op1iR2+w==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
 
-The system will immediate fill up stack and crash when both
-CONFIG_DEBUG_KMEMLEAK and CONFIG_MEM_ALLOC_PROFILING are enabled.
-Avoid allocation tagging of kmemleak caches, otherwise recursive
-allocation tracking occurs.
+On Thu, Apr 25, 2024 at 04:45:51PM -0400, Kent Overstreet wrote:
+> On Thu, Apr 25, 2024 at 01:08:50PM -0700, Kees Cook wrote:
+> > The /proc/allocinfo file exposes a tremendous about of information about
+> > kernel build details, memory allocations (obviously), and potentially
+> > even image layout (due to ordering). As this is intended to be consumed
+> > by system owners (like /proc/slabinfo), use the same file permissions as
+> > there: 0400.
+> 
+> The side effect of locking down more and more reporting interfaces is
+> that programs that consume those interfaces now have to run as root.
 
-Fixes: 279bb991b4d9 ("mm/slab: add allocation accounting into slab allocation and free paths")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: linux-mm@kvack.org
----
- mm/kmemleak.c | 4 ++--
- mm/slub.c     | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+I'm fine if you want to tie it to some existing capability, but it
+shouldn't be world-readable. Also, plenty of diagnostic tools already
+either run as root or open whatever files they need to before dropping
+privs.
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index c55c2cbb6837..fdcf01f62202 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -463,7 +463,7 @@ static struct kmemleak_object *mem_pool_alloc(gfp_t gfp)
- 
- 	/* try the slab allocator first */
- 	if (object_cache) {
--		object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
-+		object = kmem_cache_alloc_noprof(object_cache, gfp_kmemleak_mask(gfp));
- 		if (object)
- 			return object;
- 	}
-@@ -947,7 +947,7 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
- 	untagged_objp = (unsigned long)kasan_reset_tag((void *)object->pointer);
- 
- 	if (scan_area_cache)
--		area = kmem_cache_alloc(scan_area_cache, gfp_kmemleak_mask(gfp));
-+		area = kmem_cache_alloc_noprof(scan_area_cache, gfp_kmemleak_mask(gfp));
- 
- 	raw_spin_lock_irqsave(&object->lock, flags);
- 	if (!area) {
-diff --git a/mm/slub.c b/mm/slub.c
-index a94a0507e19c..9ae032ed17ed 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2016,7 +2016,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
- 	if (!p)
- 		return NULL;
- 
--	if (s->flags & SLAB_NO_OBJ_EXT)
-+	if (s->flags & (SLAB_NO_OBJ_EXT | SLAB_NOLEAKTRACE))
- 		return NULL;
- 
- 	if (flags & __GFP_NO_OBJ_EXT)
 -- 
-2.34.1
-
+Kees Cook
