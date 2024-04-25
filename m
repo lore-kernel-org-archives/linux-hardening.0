@@ -1,56 +1,56 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61C714D705
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 21:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D0E155742
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 21:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714080374; cv=none; b=b2qAnHqxwKum8bMYs0WXaEnE9qlQgyB8qUbCpPxLKWWxssYwwFbclreUgffAKS76h80+dCBqBDHZTnPAzYZqGNb84Q6m+8bLIxhArcuK5nlzG1IHb3/BrAq4l8QbvIwge0XTtmpjIUsbLhEIDhFbHonJcGhuENl36qo83FAlOUQ=
+	t=1714080397; cv=none; b=oqzUzrpXYZ4MFvkJje1yJbJ7y/WM6WMBKbAEtUJCnOkLkdyHryoQgdG288hddtLxhPVYVR9+l9FdPEUAaLJ4FbwxUnzrcTddSylI+mOJS+hGDxdSfRUvS1XJz44jy6JZbzXBUVIDV3tOWd7lLr0/eGO9k9U/zRCbjmP5MB+mJas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714080374; c=relaxed/simple;
-	bh=jtQ0utn5mmBpvoklJIoy3eToZPzZ7Bp1iO3PoLk3+rM=;
+	s=arc-20240116; t=1714080397; c=relaxed/simple;
+	bh=jlB0K/JtzYbUgdlAFkanJ2JfjezhRIKQX33YzIeNRi8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UXzl85rX7E1UU2JYbj1+dWbhEPX4em4nAn88pX5CKJoJaTu2FdbT7io4JuA1sdybMVRcUdeld36Dmvj+3KExAaXh4FWszEh9sy0NDko+sMjyXJ1EUEsquatW1kYourrDIF7AQsY41m3fkgHeS6P7lPsofIf9hJVp+4YWWDjeH50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Pi1ppadD; arc=none smtp.client-ip=209.85.160.170
+	 In-Reply-To:Content-Type; b=hxlWDkuXY5l7qoeuQFCCYPmVIQSYczCM5acfvmAC9ut+5zrciooJMNRw1k44mg56wCv6Kk7pe7u7QBepBEToU1UaXE4sez7MpqMD5F3/jn3obAdKC4RboDhnnIj+XFtLtdHJNQeOqul5Atlawf3mH31VQLNy5uNcCeUEoYYxgAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=am7Zdxac; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Pi1ppadD"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4376157292fso9593651cf.0
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 14:26:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="am7Zdxac"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-69b514d3cf4so15288836d6.0
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 14:26:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1714080371; x=1714685171; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1714080393; x=1714685193; darn=vger.kernel.org;
         h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rtS10f2rJtSUYEqaBaFDWeQFH0dfmHZiAPLg+MLZ0C4=;
-        b=Pi1ppadD82T3Nnt7apQdycyUzlUYojVp2gy3zoJnouridW+9cAuAoTTAzWPJsjbPip
-         78/q/00pzaSQNrb7B008M+HUPK/rggE0b2jGmgNwjijAeAewJOFQd68cPlYpswiFoG89
-         EgBwR/pUj1ozAo6B01aZYy5TegPZTeNLMEIu0=
+        bh=j0mmglColGM5ROpqDdaAi8DThkMTheDUq2j6KkFWe04=;
+        b=am7Zdxac725H3DceMRllhcxYxCv4nJZ9O1QxlubbcShSFJAaUlrypCRxqdsUclta8G
+         +RFLA6p4EIxJI5BSAm13OmD7i68e28G/ZXTrOH/qpWh5DMUlWOHH/krnEZsk1K7DEoer
+         8hDLNFbSz9gzTH+H+gDTdfGcU4ruFGD73naKE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714080371; x=1714685171;
+        d=1e100.net; s=20230601; t=1714080393; x=1714685193;
         h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rtS10f2rJtSUYEqaBaFDWeQFH0dfmHZiAPLg+MLZ0C4=;
-        b=HQT4mv/hcG7yHXHkCRYg80r2d//tkU4BxnCHQmFwp2t/RlqdsAz2fYETaIaJU5/rVD
-         Q4ZdjOLFLdWcoH9vI3tR31kZ0a8A5X4tfDjaiq2sVlO0qMvexnr0exbCmD49CrOb2lLH
-         9S2G2eBsE69q+eUqE0Ifyrf6kzRYXmaO19bZJ1LvTBaUgkiKyLoU9qrZy4pCgKSlLcyu
-         V1EYSAHS+O4c8nC9Xc+mtZbtFO+p76t4eGPGVrvZAEgEiY/gpA3zrHQC4DFevEqRQYPS
-         5SYkCG74xhk2AqBvlUUQBMQ9jqfDf+RDalNzMnLNRIx5Y74Is2ZUQmJAgEc9qkVeQIKA
-         QNCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWO8WHF0v9LOy1X+LrjWhrhPKOt/SkQssOWUhpDmUTurZhO8TawJ7TrcYs68NT6RnVKWxzv64TdmkWPF0BYFL6xWapxbisny9x6EEn6ZxBO
-X-Gm-Message-State: AOJu0YzDHQGdIHRgtfrf5tS6Kej0o9wwDF3jAiqGtYfSu1usRuOOqARi
-	N9CMhHA+KUCKXlVZrzkILIwKe16/yR6KUerL3NEn7LR5WcazQLUBkij2KTxyQg==
-X-Google-Smtp-Source: AGHT+IHVkRUlXpIoBCnmRsjNwdAxJOUNnT4nLYqTiINPWIm3BCvWPUKwcip0SME2q6dYDhR4wEfShA==
-X-Received: by 2002:a05:622a:11c8:b0:43a:7484:d66e with SMTP id n8-20020a05622a11c800b0043a7484d66emr14917qtk.37.1714080370640;
-        Thu, 25 Apr 2024 14:26:10 -0700 (PDT)
+        bh=j0mmglColGM5ROpqDdaAi8DThkMTheDUq2j6KkFWe04=;
+        b=WPcRxIs8grUk1JU1LMtadlgEVkWqXDU/Ol6dZl9ycF2cvYrxy7+QtNHCiPa/e/Izon
+         B7GYQSnkHJ0xcRaa4x394JsyWNTPovKpTiEg5ZBqzAIua0kb9ptsNlhb3bjTA0n8OcTe
+         WlK6P4VHgVHUCZwx5z6eO9bXvQNWTjwP0aLkbQD1LRk1SdjuCZBBg38wK4a6qQ/P67iz
+         qFxosxC/YT30gnr8qgcgRCASJAZe3qrVJvdfmjnLAElluWFjEsl6Oy9bmAjUENPbXBn+
+         k1zr1j8KSdHDq+2fH/BvFq+NYymiPJK4CJVoGnA2SWtxrGDDU/qRiHiOBBQOAvn5u2Z/
+         xSWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcyrMdiKZh2/TE2nTtmiTHeHc2/6tD1yFIDam7fSICRxcmqNqvm2w8dw5y0ij0eTkhajY+veh0Mmork/6DkuyLIiwlZ4TPyhicC/zumUgx
+X-Gm-Message-State: AOJu0Yz25LkaKjpKY6dwK6NytGot9tIYDfZK7qvbjKR5/vlQaVZLzuk/
+	4R3QmLxCLn4aa/7JiXbiYySIm7MfstIDnf5U73gXY2zTKSGmYk2YMbzxve8lsQ==
+X-Google-Smtp-Source: AGHT+IGyPWZWvDFOWPXs5zONJ5jZNE8C7BDorr7QvJCSv/LD/fJkVQmIJ9NpqNvEfkGXmviteDtLGw==
+X-Received: by 2002:ad4:5748:0:b0:6a0:85df:3506 with SMTP id q8-20020ad45748000000b006a085df3506mr1302099qvx.23.1714080393157;
+        Thu, 25 Apr 2024 14:26:33 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id jt56-20020a05622aa03800b00434ec509ce9sm7352146qtb.46.2024.04.25.14.26.07
+        by smtp.gmail.com with ESMTPSA id i18-20020a0cf392000000b0069b65ce60f2sm7328545qvk.55.2024.04.25.14.26.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 14:26:09 -0700 (PDT)
-Message-ID: <112f8951-9df9-46e9-9e31-f856a2aa8f89@broadcom.com>
-Date: Thu, 25 Apr 2024 14:26:06 -0700
+        Thu, 25 Apr 2024 14:26:32 -0700 (PDT)
+Message-ID: <caba838a-35cd-4cf7-a3e3-429275ac76cb@broadcom.com>
+Date: Thu, 25 Apr 2024 14:26:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] clk: bcm: dvp: Assign ->num before accessing ->hws
+Subject: Re: [PATCH 2/2] clk: bcm: rpi: Assign ->num before accessing ->hws
 To: Nathan Chancellor <nathan@kernel.org>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
@@ -68,7 +68,7 @@ Cc: Kees Cook <keescook@chromium.org>,
  linux-hardening@vger.kernel.org, patches@lists.linux.dev,
  llvm@lists.linux.dev, stable@vger.kernel.org
 References: <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-0-e2db3b82d5ef@kernel.org>
- <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-1-e2db3b82d5ef@kernel.org>
+ <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-2-e2db3b82d5ef@kernel.org>
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
@@ -102,11 +102,11 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-1-e2db3b82d5ef@kernel.org>
+In-Reply-To: <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-2-e2db3b82d5ef@kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000a165800616f26f24"
+	boundary="000000000000f905e90616f27055"
 
---000000000000a165800616f26f24
+--000000000000f905e90616f27055
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -120,11 +120,11 @@ On 4/25/24 09:55, Nathan Chancellor wrote:
 > initialized with the number of elements before the first array access
 > happens, otherwise there will be a warning from each access prior to the
 > initialization because the number of elements is zero. This occurs in
-> clk_dvp_probe() due to ->num being assigned after ->hws has been
-> accessed:
+> raspberrypi_discover_clocks() due to ->num being assigned after ->hws
+> has been accessed:
 > 
->    UBSAN: array-index-out-of-bounds in drivers/clk/bcm/clk-bcm2711-dvp.c:59:2
->    index 0 is out of range for type 'struct clk_hw *[] __counted_by(num)' (aka 'struct clk_hw *[]')
+>    UBSAN: array-index-out-of-bounds in drivers/clk/bcm/clk-raspberrypi.c:374:4
+>    index 3 is out of range for type 'struct clk_hw *[] __counted_by(num)' (aka 'struct clk_hw *[]')
 > 
 > Move the ->num initialization to before the first access of ->hws, which
 > clears up the warning.
@@ -138,7 +138,7 @@ Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 Florian
 
 
---000000000000a165800616f26f24
+--000000000000f905e90616f27055
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -209,14 +209,14 @@ kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
 NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
 AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
 LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIAUKYWrzgXgq849s
-IJbpvwLnEyTambbP8FkrJ9OUfDvaMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTI0MDQyNTIxMjYxMVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIFMtGABPfsbXTHg9
+RQeMU6fJonaJPS3JX+8MoNdYc4QLMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQyNTIxMjYzM1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
 AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCCkT2YOHWZStTkE1Hl1y/BiHpjBW38nlXW
-1dJQoej8W8jEjH3qXqKLL8NxJnYuHX4D3+26jqD/KtypmOCMY83aY0YiMxCPF61m6s3kk9XEM9Eh
-6uNIsVdhu2oixFd2Tb+D2DN5mOANPZs9SBa/+E44oJodeosFNAvdAbn7iJsqyBVw5nX/PJx4D8FH
-AnTp2S7lwmwU1/5WyLgaWA21XcL79qIWUUU8BrTPZOv+0eqyJOuz9FhjoSbneF/UHtWD01ULrgJm
-ENgtx3/yOix6C7q9UXdsvyLTHyAKl+vqyAPy2WFDB7ilqjg+KzlaJaO4ALuaod0ohwR6kqhRBsHG
-V4M+
---000000000000a165800616f26f24--
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCK0YBP/3IjVDfLsa3wVgMh5v2uU2ptpCUW
+WTnU/W912nzkRiogE25et61Xt3tZJrCX4/gZWZQfXiwwiCcDf8pOQGZZSirKogdi1+yZ2+RshKax
+V+tjoaw9KhHf5nsBLokCd56WB1kl4h6PLoi8okxETWNjXad7KYx7SRlfGiuiAmHDL4B7TF6E6D8d
+vKsPSCFNpM38BkA5zVdRhXIpn0v/s2t7kFbnzHR0YOFnkxOGzgWZQ/yzkpUw9QclcmkU2+xw0BWn
+xWFIhPQhxQ9mYxdj8Z6Muo98BbsrDaR+xJAIRPCBOULQHcoMo02Dv/u8XhImuE8BGaMazazOUmh0
+ZDrj
+--000000000000f905e90616f27055--
