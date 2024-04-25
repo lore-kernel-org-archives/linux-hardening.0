@@ -1,66 +1,44 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37A180BFF
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 22:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7B85B697
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 23:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714084953; cv=none; b=TDUC2FVN9P6XwUSQmcrB/m5ftYgBd3pTPHmxuDq/pcDUaYPyod8xVkhVKw7UfbecpOLWChRrh6Xl9RcK42MPHGy2sTa3Z/Us1bEqZP+UI2MD+f+eCs6obaowVW0ShWfKMXVTx6TSQPSaRgsLcRxfjgDjy+hRN5qzvS5mWYlSjnw=
+	t=1714086139; cv=none; b=VivdVnmG92rbrR4wlYqvF2s7OL9X5x8JsIH44KHiuXe3dGSIZ/+ya5vkfj8/ExiTQqBlcO4BSpPIwwFSObSwJqBJ6aPQ4Oor6YBgvH6p4jrruH/HOdmaZhxqHnw59PyIYUMMp1sw1Tz0UErYVttmbzEo9M9JPLF74I+GNlS+8Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714084953; c=relaxed/simple;
-	bh=9T//zdrVT2iC9sOT7glYkzNaiJH5cSL6j4l+XgJxSAI=;
+	s=arc-20240116; t=1714086139; c=relaxed/simple;
+	bh=uxeztvRb3eyrZP9bERk3uZ+o+Kjfa0S++tnI3Se96Ss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rnxl6xvh0++5TwbFSNy5hfHJyL2aWwnB4MZWDhUeoAHMDtkNdgZkUtSA4vExz4aZaIzC0W2IEEDoSzueJnraRjhVdx34Q+GriwaFXIZvEZiHWiSJSFomi6vYGlMVrl9vJsTNnx7LUx8F1yJ/WF5fMwqz18bX7xoU+gOllATHkq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jgnOyFgs; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mU5b86erxKh2vb9YANOJBE4rfTgfrjTfqzjcl200ekfOf4MAnvIyBwg/mt1ZnCLmoGKm8wtV1DorHr8G1nWU13AxxaNiC7DxkhoyK1JZAUS5Zjp5W+soYpWtsmYmR0hZOeK2LZB0MeTz0cDAo+iDfAM6yowyvX0PPZyC1Rbm784=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LQzwav1f; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jgnOyFgs"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2af800ff18dso1321991a91.1
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 15:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714084952; x=1714689752; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQMgEUshXi0n6VyMw97AYUenmOeWDaHW3E9fbmg8+bo=;
-        b=jgnOyFgsUPn5I+rh5olPuIruOLXL4kHp0WHC96sW0KkJ9IFARKk0ABaNPBjprHBUOj
-         b9gCOFUYD3Soelx6j3i3jijw3xzNkDIz/NLXtQkC0T3D6mEfGdtv9KLZ3DajaAZX01Xe
-         14WssIXvPDQNZIiR5NhHTay3r5DmSnMokWjA4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714084952; x=1714689752;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XQMgEUshXi0n6VyMw97AYUenmOeWDaHW3E9fbmg8+bo=;
-        b=aeCpBlnXlSNYIgCnoNEg6nMFr/rwQJPUGJqQKxTDQtli4Mc9hA/O73qUiN7E9V71YL
-         +ubMU7XkQXrCnr6dmgVl59oalbXgVZYUZb/vQ62DjQ/gsGZ5dTIiLq7admyfiyT8Sj8k
-         t41uSkXZkZsgeyk2koI5YfFaxTyLwWBA4J696I3OOtglR0IMLFI5hBPFde3Rb4HN584m
-         07Z1SjcG8a/N/nCGz2rctnjlGkK0/lo8+TsoLmX4CePLsIMQdW3izPiRiLYW0WtMwkSk
-         6iKhO4aRQfPTDf7v4FzyHH+bB3kHzQHE41A966vmxY7Cv4ZibvBPa2pDGFLkZ+wH835R
-         0Tug==
-X-Forwarded-Encrypted: i=1; AJvYcCUi2+SYi0ROhu9zomBQoCZsCBuXnaPYNCG41rfO2sRHDPzQE2B/dJHEtIPXf/PtKcrjjrmG5wNYgUzMugGHDa8fezIkL8v2iVjtFp8g045R
-X-Gm-Message-State: AOJu0Yx6cqYTgvv+AEQ80tzzpmfk9DjvHSYyw62sxtbE9T1yVhF0esVc
-	Uu4Kuyf7UD5tjD3vp7nYxnu2Y3YLyZB7RfGdScX7ru+oJ54dwY/j4v1sxUuyFA==
-X-Google-Smtp-Source: AGHT+IGiOwEiR2ZvU3hCBIL/uaLOVZwKzUQaJqt9cMHM0i4zfElGPrIWI4AiHuO056FHOxcHNtXevQ==
-X-Received: by 2002:a17:90b:4f8f:b0:2ae:b8df:89e7 with SMTP id qe15-20020a17090b4f8f00b002aeb8df89e7mr1054767pjb.38.1714084951948;
-        Thu, 25 Apr 2024 15:42:31 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x16-20020a17090a531000b002a537abb536sm15111032pjh.57.2024.04.25.15.42.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 15:42:31 -0700 (PDT)
-Date: Thu, 25 Apr 2024 15:42:30 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LQzwav1f"
+Date: Thu, 25 Apr 2024 19:02:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714086135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LpJuczygft6uvJ+kYNy8tIrOLm/I4V/OfFghGJXmUzs=;
+	b=LQzwav1fL9PD/8a5F5OK4YdA/1WGV37oPGjaeIagx/UcWmWYJHI6tFClAzGPd7XLZgc9h1
+	6B4wXL4pMttVtzjuMT6PYu36DxMgw0y0IOHVrDSfWeNE9zKzur2UBVWiTeG1CCxfY7Vazr
+	u6FJ3NL7tXgCbHLGrDbC/zj5zODZADg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
-Message-ID: <202404251532.F8860056AE@keescook>
+Message-ID: <fofcw327c7cqa6vxlfiat6mrrjx6rgnhe6ylhqbfw4qngamhjg@6wkh6rcosqfp>
 References: <20240425200844.work.184-kees@kernel.org>
  <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
  <ZirCbPR1XwX2WJSX@casper.infradead.org>
  <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+ <202404251532.F8860056AE@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,67 +47,112 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+In-Reply-To: <202404251532.F8860056AE@keescook>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 25, 2024 at 05:04:47PM -0400, Kent Overstreet wrote:
-> On Thu, Apr 25, 2024 at 09:51:56PM +0100, Matthew Wilcox wrote:
-> > On Thu, Apr 25, 2024 at 04:45:51PM -0400, Kent Overstreet wrote:
-> > > On Thu, Apr 25, 2024 at 01:08:50PM -0700, Kees Cook wrote:
-> > > > The /proc/allocinfo file exposes a tremendous about of information about
-> > > > kernel build details, memory allocations (obviously), and potentially
-> > > > even image layout (due to ordering). As this is intended to be consumed
-> > > > by system owners (like /proc/slabinfo), use the same file permissions as
-> > > > there: 0400.
+On Thu, Apr 25, 2024 at 03:42:30PM -0700, Kees Cook wrote:
+> On Thu, Apr 25, 2024 at 05:04:47PM -0400, Kent Overstreet wrote:
+> > On Thu, Apr 25, 2024 at 09:51:56PM +0100, Matthew Wilcox wrote:
+> > > On Thu, Apr 25, 2024 at 04:45:51PM -0400, Kent Overstreet wrote:
+> > > > On Thu, Apr 25, 2024 at 01:08:50PM -0700, Kees Cook wrote:
+> > > > > The /proc/allocinfo file exposes a tremendous about of information about
+> > > > > kernel build details, memory allocations (obviously), and potentially
+> > > > > even image layout (due to ordering). As this is intended to be consumed
+> > > > > by system owners (like /proc/slabinfo), use the same file permissions as
+> > > > > there: 0400.
+> > > > 
+> > > > Err...
+> > > > 
+> > > > The side effect of locking down more and more reporting interfaces is
+> > > > that programs that consume those interfaces now have to run as root.
 > > > 
-> > > Err...
-> > > 
-> > > The side effect of locking down more and more reporting interfaces is
-> > > that programs that consume those interfaces now have to run as root.
+> > > sudo cat /proc/allocinfo | analyse-that-fie
 > > 
-> > sudo cat /proc/allocinfo | analyse-that-fie
+> > Even that is still an annoyance, but I'm thinking more about a future
+> > daemon to collect this every n seconds - that really shouldn't need to
+> > be root.
 > 
-> Even that is still an annoyance, but I'm thinking more about a future
-> daemon to collect this every n seconds - that really shouldn't need to
-> be root.
+> Open it once and rewind? But regardless, see the end about changing
+> ownership/perms/etc.
+> 
+> > And the "lock everything down" approach really feels like paranoia gone
+> > too far - what's next, /proc/cpuinfo? Do we really want to go the
+> > Windows approach of UAC pop ups for everything? I'd rather be going the
+> > opposite direction, of making it as easy as possible for users to see
+> > what's going on with their machine.
+> 
+> Not unless there's something in /proc/cpuinfo that can't be extracted
+> in other methods. :) Anyway, you're offering a slippery-slope argument,
+> I just want to avoid new interfaces from having needlessly permissive
+> default access permissions.
 
-Open it once and rewind? But regardless, see the end about changing
-ownership/perms/etc.
+No, I'm asking where the line is and how we decide what we want to
+restrict. I hope you agree that it shouldn't be everything?
 
-> And the "lock everything down" approach really feels like paranoia gone
-> too far - what's next, /proc/cpuinfo? Do we really want to go the
-> Windows approach of UAC pop ups for everything? I'd rather be going the
-> opposite direction, of making it as easy as possible for users to see
-> what's going on with their machine.
+I'm pushing hard for making things easier to debug, and making it easier
+for normal users to poke around and see what their system is doing.
+Simpler, easier to understand tools, tools that teach users how the
+system works. In my book, anything that lowers that barrier to entry is
+a good thing.
 
-Not unless there's something in /proc/cpuinfo that can't be extracted
-in other methods. :) Anyway, you're offering a slippery-slope argument,
-I just want to avoid new interfaces from having needlessly permissive
-default access permissions.
+I've had a lot of positive, useful interactions from this, and by
+talking with users about what they see (I'm _always_ on IRC, and my
+channel is pretty active). I can't overstate how useful this sort of
+thing is, because there's only so many of us developers and users will
+notice things that we don't - sometimes quite significant things! and if
+we focus on making the system easy to debug, often times they'll do a
+lot of that debugging for us.
 
-I expect this to be enabled by default in distros, etc, so I'd like
-to make sure it's not giving attackers more information than they
-had before. Even reporting how much has been allocated at a specific
-location means an attacker ends up with extremely accurate information
-when attempting heap grooming, etc. Even the low granularity of slabinfo
-is sufficient to improve attacks. (Which is why it's 0400 by default too.)
+Feeding user's curiosity pays great dividends in the long run.
 
-> Instead, why not a sysctl, like we already have for perf?
+And on the usability side, we've done a lot over the years to nudge
+people away from running as root; if we set things up so that prefixing
+every command with 'sudo' becomes the default, then we really lose out
+on much of the benefit of that.
 
-perf is a whole other beast, including syscalls, etc.
+> I expect this to be enabled by default in distros, etc, so I'd like
+> to make sure it's not giving attackers more information than they
+> had before. Even reporting how much has been allocated at a specific
+> location means an attacker ends up with extremely accurate information
+> when attempting heap grooming, etc. Even the low granularity of slabinfo
+> is sufficient to improve attacks. (Which is why it's 0400 by default too.)
 
-> The concern about leaking image layout could be addressed by sorting the
-> output before returning to userspace.
+This is pretty esoteric stuff to me; what users should be remotely
+concerned about heap grooming attacks on their personal machines?
 
-It's trivial to change permissions from the default 0400 at boot time.
-It can even have groups and ownership changed, etc. This is why we have
-per-mount-namespace /proc instances:
+When we let the memory-unsafety of C (as well as spectre/meltdown)
+dominate system design, the result is... not good. Those are things that
+need to be fixed at the root (and, thank Rust, _are_), so let's maybe
+not go _too_ overboard otherwise it's going to take another couple
+decades to unwind all the resulting stockholm syndrome.
 
-# chgrp sysmonitor /proc/allocinfo
-# chmod 0440 /proc/allocinfo
+> > Instead, why not a sysctl, like we already have for perf?
+> 
+> perf is a whole other beast, including syscalls, etc.
 
-Poof, instant role-based access control. :)
+But semantically it's the exact same thing. With perf we've got a knob
+to say "I'm not paranoid on this machine, I don't want users to have to
+be able to root to do basic debugging" - why not lean into that?
 
-I'm just trying to make the _default_ safe.
+Have a global knob that's more than just for perf, so single user and
+desktop machines can probably leave it loose (or even expose it in the
+distro installer) and servers can have it on.
 
--- 
-Kees Cook
+Give users a way to say what they want.
+
+> > The concern about leaking image layout could be addressed by sorting the
+> > output before returning to userspace.
+> 
+> It's trivial to change permissions from the default 0400 at boot time.
+> It can even have groups and ownership changed, etc. This is why we have
+> per-mount-namespace /proc instances:
+> 
+> # chgrp sysmonitor /proc/allocinfo
+> # chmod 0440 /proc/allocinfo
+> 
+> Poof, instant role-based access control. :)
+
+The trouble is that the average user isn't going to know what reporting
+interfaces it's safe to do that with; we don't want to encourage that
+kind of mucking around by the unsuspecting. We really should have a
+knob.
