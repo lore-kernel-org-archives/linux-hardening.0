@@ -1,120 +1,113 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D04E155356
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 21:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934D214F9ED
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 21:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714079391; cv=none; b=fCMblqLE5dySDxtJLMBwN93jBBtExfSBUN/ckp9VIbF5Qch4rXNqL+Ot+KoYk7uyvEcBO8ko9Tsh4kda2WVwTsTLys0JIY3fCNsUeF+sjrmhQoeNx+M3Ch/d4NmgS4eSxbU+hOLe5i8hSRMk4J0isc3CgBOYSS4QFFME+y9fFH4=
+	t=1714080116; cv=none; b=kCMqMmWvnuA22bOHDmIN2+/z1Uk+3+lHmi0Nu4PlkuZOj1PeeThylbtYei4fm8IkYLBFaQeB8Dr26UcFFJeZorENF1PO3LhFtuGlLuJrwbbbxQzxt48WbYo5tOLNdzTJZiROAOt3fMZSQ0UpDWbM0cYQILCP7N1Dc8vr/YxMaZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714079391; c=relaxed/simple;
-	bh=hwNZS76oWiIdn5n+tWivvlFReYO7EbPFLIBPF+1gTq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X5I2dQhoqnn3JMplqaJ3FU+u4vQnTZ2YDwEUl9K8yLKBgb+8hFeEf5Qx/Clnj7PFWrQgfYtcRPD2ci2sniG+PydnsHkX3Cg4n72tJbjcQUSkUQlTck/8v/be2K4/jXo50nZ+HegE0Q7nTKosUnZjNXqpbTAh/mGi1y+N1dhvElE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fwaSUXof; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1714080116; c=relaxed/simple;
+	bh=EtyD5p99BjrJVApkdHs/OLSBEw2UhzUQPdUV6pMX96A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sUJdKmpsfROGdT7huOU1qLGm4GtGeZps1oNs5pwst3JPKNA06r89akOq4H6nJ2rEg9iSv/b4P5VCKJwJW4yStl4SyHU8Lv2ea7LfKEYUfaWDqWnvZOYRGVzdJ7nVDGYEU7ErQ+/5i9K4oz4S5y1iGu+dGBNl5ZlMHCK1AtUQ1k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F+Nkbu5j; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fwaSUXof"
-Date: Thu, 25 Apr 2024 17:09:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714079387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5BQT9j7sLQeMY/YB9pvp7PU2WrrBXiYonNuoxwRbYFE=;
-	b=fwaSUXof6osVkLcezsvOOJo5sLF5ZSkRYS1kXifZw1N2Vj/4pQtg/ZlD5zdSf1ljvSMJep
-	OdgD2AYS62LPpd7OvgZ0L0m4jlDBwGfoPtkapcid80whwL/WAsVsILYrNJzMMk943mhMza
-	Y3FdBiDc37FhEeTKP2s+gBH5ZetXbNg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm/slub: Avoid recursive loop with kmemleak
-Message-ID: <ebc6pcoq4cle3ge526ch6q5hz2vvphmgwu2yqdveypjm24pa3b@cwsggjnoepaq>
-References: <20240425205516.work.220-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F+Nkbu5j"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-de469a634fbso1824276276.2
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 14:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714080113; x=1714684913; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EtyD5p99BjrJVApkdHs/OLSBEw2UhzUQPdUV6pMX96A=;
+        b=F+Nkbu5jzLtxQh5LXBTgmBP/y15qUeT3AaBpM7Ior41a80quLB2bUKC7vlhI6iVQ8p
+         G3LYGQkKWHvUP+7Ea1A92SLf+Yu5raisfuGUisESiII1QjvLqoBK3zjBa/rjLmo1eJT4
+         X6nXT6VP/RjrBH+4XmHxvmFKZ7AeBslB3qSorVtBKlTyOfA9Fyb7dCp4KJExgRXL0eao
+         PHhOw7oL6GjdP0qdmDI9/v4vxr/X2z/6EX/MxXz4VjT0AiW1tomOmLTeemTn+IlYQUbU
+         2CuZfPiILWyNQFHorkCVDsF9LUHFxRLyAXZTuoTru0Yhzz0Q2sXy/oW1iLJIA0z6xP2Z
+         ATXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714080113; x=1714684913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EtyD5p99BjrJVApkdHs/OLSBEw2UhzUQPdUV6pMX96A=;
+        b=aLAc1+lAQOSZAy9IZzNUFZ8y0iPIx8gASo00Zkpc1t22PJ0uQR/1PKClSxueucI0AR
+         LtX2XBBPB1IEmWpwsxKOUCpvF5ry7XtvYI9rNgRlqD6bB0PaJuZgC4Yzg58Rw93wd37V
+         RX3JMksMoNtwTlLOY7aQO83QZOV3N4esfaIc5LThSZZbfcZldQivrhDRFjZ97ytih0EF
+         WofoxDTK4gMTsYevsVZjzkCr2dvt3f0BUh45GjtTnJ33afm7UqZ0raX7JVXXM85qxW/x
+         J6+WBgh2noYXwzmSrRgcdrBBBUIBxnrBzZFZMtETYki5hGA005yOkeQBePR+zEGyKXav
+         CknQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPPlDRDiSJYj2aJVgUXXNOqpEjDDKcVSg2cmgrG0q2Pvj3BReK5vZVBXgRL/BkuScpRkRl5kgrZ5d7jeYRsJ+GC/GxnfYL9e8tVA0WS6W2
+X-Gm-Message-State: AOJu0YyHY23QUpFDEd8kD+ZxyEOGJhZ7kZYw6/x3mBdN4QbReu7KC4k8
+	zpgyjmIutGt7RkBtwXh67yGirEnY9wi0mUUpCzF+gmvWjeqt2pjvGO/EW53ugqdErxqW5EDC5kZ
+	yFN+AGuIZ6nBbEJkHyfgIrKT5shzOdx9rn4go
+X-Google-Smtp-Source: AGHT+IGgCMvL26KqQgwefwP8N/EfjWTlXm02yahkb/MjrhIhNHaqD5Cu7Uq//LTHtb9KBj8fMiXuAXpow+tVDMKdSG8=
+X-Received: by 2002:a5b:8d:0:b0:dcc:56b6:6606 with SMTP id b13-20020a5b008d000000b00dcc56b66606mr905731ybp.40.1714080113218;
+ Thu, 25 Apr 2024 14:21:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240425205516.work.220-kees@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+References: <20240425200844.work.184-kees@kernel.org> <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
+ <ZirCbPR1XwX2WJSX@casper.infradead.org> <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+In-Reply-To: <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 25 Apr 2024 14:21:39 -0700
+Message-ID: <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
+Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Matthew Wilcox <willy@infradead.org>, Kees Cook <keescook@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 25, 2024 at 01:55:23PM -0700, Kees Cook wrote:
-> The system will immediate fill up stack and crash when both
-> CONFIG_DEBUG_KMEMLEAK and CONFIG_MEM_ALLOC_PROFILING are enabled.
-> Avoid allocation tagging of kmemleak caches, otherwise recursive
-> allocation tracking occurs.
-> 
-> Fixes: 279bb991b4d9 ("mm/slab: add allocation accounting into slab allocation and free paths")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Cc: linux-mm@kvack.org
-> ---
->  mm/kmemleak.c | 4 ++--
->  mm/slub.c     | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-> index c55c2cbb6837..fdcf01f62202 100644
-> --- a/mm/kmemleak.c
-> +++ b/mm/kmemleak.c
-> @@ -463,7 +463,7 @@ static struct kmemleak_object *mem_pool_alloc(gfp_t gfp)
->  
->  	/* try the slab allocator first */
->  	if (object_cache) {
-> -		object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
-> +		object = kmem_cache_alloc_noprof(object_cache, gfp_kmemleak_mask(gfp));
+On Thu, Apr 25, 2024 at 2:04=E2=80=AFPM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Thu, Apr 25, 2024 at 09:51:56PM +0100, Matthew Wilcox wrote:
+> > On Thu, Apr 25, 2024 at 04:45:51PM -0400, Kent Overstreet wrote:
+> > > On Thu, Apr 25, 2024 at 01:08:50PM -0700, Kees Cook wrote:
+> > > > The /proc/allocinfo file exposes a tremendous about of information =
+about
+> > > > kernel build details, memory allocations (obviously), and potential=
+ly
+> > > > even image layout (due to ordering). As this is intended to be cons=
+umed
+> > > > by system owners (like /proc/slabinfo), use the same file permissio=
+ns as
+> > > > there: 0400.
+> > >
+> > > Err...
+> > >
+> > > The side effect of locking down more and more reporting interfaces is
+> > > that programs that consume those interfaces now have to run as root.
+> >
+> > sudo cat /proc/allocinfo | analyse-that-fie
+>
+> Even that is still an annoyance, but I'm thinking more about a future
+> daemon to collect this every n seconds - that really shouldn't need to
+> be root.
 
-What do these get accounted to, or does this now pop a warning with
-CONFIG_MEM_ALLOC_PROFILING_DEBUG?
+Yeah, that would preclude some nice usecases. Could we maybe use
+CAP_SYS_ADMIN checks instead? That way we can still use it from a
+non-root process?
 
->  		if (object)
->  			return object;
->  	}
-> @@ -947,7 +947,7 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
->  	untagged_objp = (unsigned long)kasan_reset_tag((void *)object->pointer);
->  
->  	if (scan_area_cache)
-> -		area = kmem_cache_alloc(scan_area_cache, gfp_kmemleak_mask(gfp));
-> +		area = kmem_cache_alloc_noprof(scan_area_cache, gfp_kmemleak_mask(gfp));
->  
->  	raw_spin_lock_irqsave(&object->lock, flags);
->  	if (!area) {
-> diff --git a/mm/slub.c b/mm/slub.c
-> index a94a0507e19c..9ae032ed17ed 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2016,7 +2016,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
->  	if (!p)
->  		return NULL;
->  
-> -	if (s->flags & SLAB_NO_OBJ_EXT)
-> +	if (s->flags & (SLAB_NO_OBJ_EXT | SLAB_NOLEAKTRACE))
->  		return NULL;
->  
->  	if (flags & __GFP_NO_OBJ_EXT)
-> -- 
-> 2.34.1
-> 
+>
+> And the "lock everything down" approach really feels like paranoia gone
+> too far - what's next, /proc/cpuinfo? Do we really want to go the
+> Windows approach of UAC pop ups for everything? I'd rather be going the
+> opposite direction, of making it as easy as possible for users to see
+> what's going on with their machine.
+>
+> Instead, why not a sysctl, like we already have for perf?
+>
+> The concern about leaking image layout could be addressed by sorting the
+> output before returning to userspace.
