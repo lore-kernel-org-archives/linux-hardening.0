@@ -1,82 +1,46 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5833B14E2DF
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 17:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE1A14D457;
+	Thu, 25 Apr 2024 18:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714066763; cv=none; b=jhXCTAF2zSFKKAi4crQjT8eE7mTRvuHWRyxFWgFGv8Guedm+EXJW7prg3sR5hrURk44GU0KRlUJlmWmvQoJTCgKeJ79dvQ6ouWkmsnkxXD67V3VOAery1vhv0qVi1FzB1yaHusVofw4o9E58sONGIPZ0N/ZxhCfprw/25yiB3fY=
+	t=1714068825; cv=none; b=mCjujPIbcto8YbFR533NDsdaC6fGK1enDHHAGCNZPRp0rfUUoujOYxepeVIEUF538IENhnGW+NzJlHL0iavS1J/E5BbmUtjT2jjF5nDGVMrhqQgw+j8uniSmUfzD8FxJgy7DbLFUKN2Gv0lb3+SlqHhAHa3kfRR06Zy5+cUeis8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714066763; c=relaxed/simple;
-	bh=kB9KMA3DcvNtLyh0bj0IRDkpYiWpOT4msDbmbXW4p7g=;
+	s=arc-20240116; t=1714068825; c=relaxed/simple;
+	bh=3jpA0jxtOrM/Uqkdg7yxRM62YlSKAnUiGdGNzloi//4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KYSFlxkAxRHXD/ILMsmVmBI3KkE79GDtL+EDnaKuwdkvWkUnb3FR3whMH0sEgQEOub5HqqiiQemQx5cR/Hi6aCGrF3/lSsozF3K5OLoLaeLs/zRNXucciARQ/i01Tr2Rn9oyn4IlHQ8VdcXJHD56Mmbt2gqeEVyXnCni+CUedP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=daInXeQu; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=i3gt/I003tbSU4c3OB4nrLMQI0GWd5zDUp1YIE0wBfgrsJlF1sAbksm982dS6PKDqq2nGV46IyOGrJgs493CRLOCD0gbf6Fgn/AkfV0kQhPe1Z2Lqd/Yr6wFK+Dn3o2+SPRR7dDKw65k4Ni484iIOZXh65NAOH8IiLF2sm7GIqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppFh1xjW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="daInXeQu"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6eff9dc1821so1281346b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 10:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714066762; x=1714671562; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xGRp4J8KaAZoR1Iq7v17JFw6BNoCDdtd2vscqG11gNs=;
-        b=daInXeQuKW7uLwE9YPmL2yzFp19SkUFqvF4AsQMUS7hgBUtAKgAe5ExqLSbb6Ih3V6
-         05WwXwd0OAJzAKtJ1J7iYMQVqQMnYvaCbzqEyRMLaZoeCJ5/QppEjegzasyVYmGkPxWQ
-         R6iiHgLLuxtsP53/QLHAmxttdefaZe0SYKuo8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714066762; x=1714671562;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xGRp4J8KaAZoR1Iq7v17JFw6BNoCDdtd2vscqG11gNs=;
-        b=lwhtvRzVYENG9+wnI3pqcIKbUPoFEccGLbVgJlJSVQTjsh26c5YOru7RtD8z5eCdQg
-         Ev6umfXq84ZE4mXr6NG8jydLPmlaUrnMzEWEEACMwWzFB+FR0OTB5YblFNQyqwKtLUXN
-         3SS7EtHWCDeLL0Ztu52d6wb97EcUZ1oCYKoDe9a7vsCkM9WFpDBdT0LSpehtr0gr7wDV
-         5GwEauSTEgJyEDnKDQNropk8wRJd4/CkGwyq5vvU9xyPjhEcHYxhrHsyBZWEEJ6YemTI
-         MCwgphxQAK9d9LdsdVlnasuzYWkWQ0eUQZbVrNDnriSmHdah4EpOnebhGn3Tc7zbCjWY
-         CzpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURQ7BxkvtqJsBoP9q4UkJES/NnpvKPLwUdOs0Fso2++hsqASXuUzdFIuBvrF+eUes7WpdT3WtE+D72gV1CQn0fRC8wghlbXfogp47uxfSx
-X-Gm-Message-State: AOJu0Yz4+FjzLsnR+CFCTg+1kNf7ocrNaFCLSPI9gxQTN8yKNN5XWv3T
-	Ty900C5mskDRky7l0NIout+C9Wx2K18dVV3kqHzL53OV7vGpMWQVi8jqQLcajQ==
-X-Google-Smtp-Source: AGHT+IHo6ruBh+6PnC5lx4dAR90eGtu9va6/DL9++gNNA1zkeY3/L32beujc9vp0VhFbPkSwUX9WUg==
-X-Received: by 2002:a05:6a20:5b12:b0:1ad:3d93:b71e with SMTP id kl18-20020a056a205b1200b001ad3d93b71emr347251pzb.59.1714066761597;
-        Thu, 25 Apr 2024 10:39:21 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ck16-20020a17090afe1000b002a2f6da006csm13262979pjb.52.2024.04.25.10.39.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 10:39:21 -0700 (PDT)
-Date: Thu, 25 Apr 2024 10:39:20 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppFh1xjW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A35C113CC;
+	Thu, 25 Apr 2024 18:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714068824;
+	bh=3jpA0jxtOrM/Uqkdg7yxRM62YlSKAnUiGdGNzloi//4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ppFh1xjWf2kci1FJhtjIrbEINq9USZ4fYIi8a+kYjfczOXkx3LmJ6AXUDy51ynuwK
+	 tgpzVirWkM798pCefQbee4sl4FkDYdAO0m8qjX0LdrdaAfzvKuECTIj/7KqePQNbyR
+	 4XeC64zewqCWapZ14rt/FdWJIi3JIFJlGyqQvHC5STJiqWAqtKz8fjVh5UPOBvVsI9
+	 UrmtHG+oFGXaAvna5kjygKMn9LLDOQ7FlelZTFh/es67PFyUd7PVvUv44hYdqNnyEr
+	 ECF6rv66wFKaPb3KolI2i1AvRNTHe5FwMoyqudb2k+1pd7uoPBqegjb3Adxk4dAIH1
+	 ObHdNUgyXjhmg==
+Date: Thu, 25 Apr 2024 11:13:42 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
 	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
- addition
-Message-ID: <202404251019.2DF0A48@keescook>
-References: <20240424191225.work.780-kees@kernel.org>
- <20240424191740.3088894-1-keescook@chromium.org>
- <20240424224141.GX40213@noisy.programming.kicks-ass.net>
- <202404241542.6AFC3042C1@keescook>
- <20240424225436.GY40213@noisy.programming.kicks-ass.net>
- <202404241602.276D4ADA@keescook>
- <20240425091752.GA21980@noisy.programming.kicks-ass.net>
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] wifi: nl80211: Avoid address calculations via out of
+ bounds array indexing
+Message-ID: <20240425181342.GA657080@dev-arch.thelio-3990X>
+References: <20240424220057.work.819-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -85,98 +49,73 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240425091752.GA21980@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240424220057.work.819-kees@kernel.org>
 
-On Thu, Apr 25, 2024 at 11:17:52AM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 24, 2024 at 04:20:20PM -0700, Kees Cook wrote:
+On Wed, Apr 24, 2024 at 03:01:01PM -0700, Kees Cook wrote:
+> Before request->channels[] can be used, request->n_channels must be set.
+> Additionally, address calculations for memory after the "channels" array
+> need to be calculated from the allocation base ("request") rather than
+> via the first "out of bounds" index of "channels", otherwise run-time
+> bounds checking will throw a warning.
 > 
-> > > This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
-> > > We've been writing code for years under that assumption.
-> > 
-> > Right, which is why this is going to take time to roll out. :) What we
-> > were really doing with -fno-strict-overflow was getting rid of undefined
-> > behavior. That was really really horrible; we don't need the compiler
-> > hallucinating.
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+> ---
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> ---
+>  net/wireless/nl80211.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
-> Right, but that then got us well defined semantics for signed overflow.
-
-Yes, and this gets us to the next step: disambiguation for general
-users. It's good that we have a well-defined overflow resolution strategy,
-but our decades of persistent wrap-around flaws in the kernel show
-that many devs (even experienced ones) produce code with unexpected and
-unwanted (to the logic of the code) wrap-around. So we have to find a
-way to distinguish wrapping and non-wrapping operations or types up
-front and in a clear way.
-
+> diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+> index f391b4055944..f1ed0981147e 100644
+> --- a/net/wireless/nl80211.c
+> +++ b/net/wireless/nl80211.c
+> @@ -9163,6 +9163,7 @@ static int nl80211_trigger_scan(struct sk_buff *skb, struct genl_info *info)
+>  	struct wiphy *wiphy;
+>  	int err, tmp, n_ssids = 0, n_channels, i;
+>  	size_t ie_len, size;
+> +	size_t ssids_offset, ie_offset;
+>  
+>  	wiphy = &rdev->wiphy;
+>  
+> @@ -9208,21 +9209,20 @@ static int nl80211_trigger_scan(struct sk_buff *skb, struct genl_info *info)
+>  		return -EINVAL;
+>  
+>  	size = struct_size(request, channels, n_channels);
+> +	ssids_offset = size;
+>  	size = size_add(size, array_size(sizeof(*request->ssids), n_ssids));
+> +	ie_offset = size;
+>  	size = size_add(size, ie_len);
+>  	request = kzalloc(size, GFP_KERNEL);
+>  	if (!request)
+>  		return -ENOMEM;
+> +	request->n_channels = n_channels;
+>  
+>  	if (n_ssids)
+> -		request->ssids = (void *)&request->channels[n_channels];
+> +		request->ssids = (void *)request + ssids_offset;
+>  	request->n_ssids = n_ssids;
+> -	if (ie_len) {
+> -		if (n_ssids)
+> -			request->ie = (void *)(request->ssids + n_ssids);
+> -		else
+> -			request->ie = (void *)(request->channels + n_channels);
+> -	}
+> +	if (ie_len)
+> +		request->ie = (void *)request + ie_offset;
+>  
+>  	i = 0;
+>  	if (scan_freqs) {
+> -- 
+> 2.34.1
 > 
-> > > You want to mark the non-wrapping case.
-> > 
-> > What we want is lack of ambiguity. Having done these kinds of things in
-> > the kernel for a while now, I have strong evidence that we get much better
-> > results with the "fail safe" approach, but start by making it non-fatal.
-> > That way we get full coverage, but we don't melt the world for anyone
-> > that doesn't want it, and we can shake things out over a few years. For
-> > example, it has worked well for CONFIG_FORTIFY, CONFIG_UBSAN_BOUNDS,
-> > KCFI, etc.
-> 
-> The non-fatal argument doesn't have bearing on the mark warp or mark
-> non-wrap argument though.
-
-This gets at the strategy of refactoring our code to gain our unambiguous
-coverage. Since we can't sanely have a flag-day, we have to go piecemeal,
-and there will continue to be places where the coverage was missed, and
-so we want to progress through marking wrapping cases without BUGing the
-kernel. (We don't care about catching non-wrapping -- the exceptional
-condition is hitting an overflow.)
-
-> > The riskier condition is having something wrap when it wasn't expected
-> > (e.g. allocations, pointer offsets, etc), so we start by defining our
-> > regular types as non-wrapping, and annotate the wrapping types (or
-> > specific calculations or functions).
-> 
-> But but most of those you mention are unsigned. Are you saying you're
-> making all unsigned variables non-wrap by default too? That's bloody
-> insane.
-
-We have a mix (and a regular confusion even in core code) where "int"
-gets passed around even though at one end or another of a call chain
-it's actually u32 or u16 or whatever. Regardless, yes, the next step
-after signed overflow mitigation would be unsigned overflow mitigation,
-and as you suggest, it's much more tricky.
-
-> > For signed types in particular, wrapping is overwhelmingly the
-> > uncommon case, so from a purely "how much annotations is needed"
-> > perspective, marking wrapping is also easiest. Yes, there are cases of
-> > expected wrapping, but we'll track them all down and get them marked
-> > unambiguously. 
-> 
-> But I am confused now, because above you seem to imply you're making
-> unsigned non-wrap too, and there wrapping is *far* more common, and I
-> must say I hate this wrapping_add() thing with a passion.
-
-Yes, most people are not a fan of the wrapping_*() helpers, which is why
-I'm trying to get a typedef attribute created. But again, to gain the
-"fail safe by default" coverage, we have to start with the assumption
-that the default is non-wrapping, and mark those that aren't. (Otherwise
-we're not actually catching unexpected cases.) And no, it's not going
-to be over-night. It's taken almost 5 years to disambiguate array bounds
-and we're still not done. :)
-
-> > One thing on the short list is atomics, so here we are. :)
-> 
-> Well, there are wrapping and non-wrapping users of atomic. If only C had
-> generics etc.. (and yeah, _Generic doesn't really count).
-
-Non-wrapping users of atomics should be using refcount_t, which is
-our non-wrapping atomic type. But regardless, atomics are internally
-wrapping, yes?
-
-Anyway, I suspect this whole plan needs wider discussion. I will write
-up a more complete RFC that covers my plans, including the rationale for
-why we should adopt this in a certain way. (These kinds of strategic RFCs
-don't usually get much traction since our development style is much more
-"show the patches", so that's why I have been just sending patches. But
-since it's a pretty big topic, I'll give it a shot...)
-
--- 
-Kees Cook
