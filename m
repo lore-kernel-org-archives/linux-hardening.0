@@ -1,191 +1,140 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E8416F271
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 23:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175C96AB9
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 01:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714003178; cv=none; b=Fe452LQPoTkSDR9/a3VfOmnAO5bSZbDRCbP2q+DpX8uMl3HNYau2tDtcG1I4KZx+RuPjUEWOBSgPjYKZITAKXBcQu0EfgbDJzujHQWufZZy1vFwsKvFWRE//AvxyzUPum18AwEIqFlu1F6a88z9Pc3IEK97xsbP6KzMqNY4QYN4=
+	t=1714007957; cv=none; b=QOtdj85Bani2mTih7O7PlGvtwJ2dZUpH8AGgrTf8qonwaUr2RRL2ExIE/eQQTbSrd97VN3fcfHLeA4reMhp6tpKtxv/rsWpMrHZoGXrdwBITAra4s0KCDoPwcw4s4yyPpWpvreU++0wwKhe7Ig2czMOQFdi+sUj7Ob4s9G5fu0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714003178; c=relaxed/simple;
-	bh=Uzop+8nHAYmdh8DmhRqPSaymG2Yn4AxmfS9aV6Tem4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dj3mgXw8BXOycwwO6Y1X/3gHp35kulkyzV7z+JJg7Uz8Bcnlgz+DiNG5o9mb4j2jxFLHPSS7gGFiv70Jd5xD70V31QRQSsnw+KU95bV0E0qYXALS6J66xN1h+Se1pUTfKW/t/gXohZTHuGOGYiqfD84FGUt+bZ0oYYPsAAL6bhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=X33Hq1IQ; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714007957; c=relaxed/simple;
+	bh=uLT8FYB0z9hpMnlQW6hKjbJMmTUuyZlRXmjjQNhJGwU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jLInamnD1uF/umNT/AoXO5xHxAo0TzjJk0+TOxVLCm7zqOqIqCuuH6jNicE/tTRC3dO8PMeNLgg+Lj4MktU5pwRRvErAhpDJD+Ew7/XYyLVobTn7cFbr3AyakAwG2UuVPpYl+Lu3A6b/FGcLbqKnc0tS6aBGX1Oc2frwEnvI3iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fWZwQRki; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X33Hq1IQ"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1eab16dcfd8so1562195ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 16:59:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fWZwQRki"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6156b93c768so7917127b3.1
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Apr 2024 18:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714003176; x=1714607976; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RCTonMb076AQlhzsCPqQ1hCXHyvjA1NeoSKo3KByWoA=;
-        b=X33Hq1IQzOICmGTYIjPJPy3NJcsMLvLP6BF0lVRWo2t0lityPVZWuUHC44FngdY7Gn
-         ZRJ9UAssKOY7m8s/NibWsWXfZvg7mVXjvLJbgmH7JCRnzQlQKMYG8GbtXBrjc/NHjVyX
-         2alyDuLOKvey549zk+KvXWfDaWd62/5X5K8DU=
+        d=google.com; s=20230601; t=1714007955; x=1714612755; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fhtSrAi+//xuc+I8DI7Sfszz5H0fgzv1dQ1F/lNIbLU=;
+        b=fWZwQRkiXoY/CeWe6theD4Bl5iRjc0MB39xrBtIJEZ+eNmL3w6Wwr1rk6YqH6hcY05
+         8NUVxTmo5x6TFqbdPeDTIR0TDYURb8b42kevm629CV81PSLRz1PGjpSiKBiWuMAPo9He
+         QrBOUaJx5NWPnZpiqIlyO3vhX8csX+wFwEpsZcY6RAVYTHaY9U/6xN9wMqBQT/572cxD
+         VsMUXWF+/dKUwRgynAcOOufqIJrIWy+3eUzNfHWTK5HJtyGqSEwRuxWodUXuKb4v1xdw
+         Pu96x59JTEXsipO26B6Sm0j41e+LbcCDYuCTQN2Vhyz+UTywmbcPpHT8rQxRs97vzwej
+         AGsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714003176; x=1714607976;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RCTonMb076AQlhzsCPqQ1hCXHyvjA1NeoSKo3KByWoA=;
-        b=mtkoA0MZ9F5Av31AL0gS+HOukxfcSm7yUm8ctMv0xnZEfpvRXaWxLeKN6WXTRAMjiP
-         eJWoonnHnqVsS/3kwVaYGuuV74JDdK8cIE7Irg3ex2iW4JyZLw0pg+PhGjCNKNWnHOAu
-         rDYWGXhLdZOX5t7NO9QdRyUfBqjyJ/DBLHoqcvuRwmyF87Y/+aaD79Wemgb6xmKtsR0v
-         JtNmU4UX7prk5bd2Lq9DwmM3eJx9VeZpdsXHwp26u453BonEPtB6hvaHejxHGhRWyHd6
-         dUbyLuWhUFag2qxW399V57FGH+d8VHeFBRltnMU3/bRbu7i0rIa+DfLpYbqnbjArof8x
-         N5Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLSEFynWT5b0+IiiRjO4z8tqnfA/2WCuxv+Kon5o/g5gSbAuFJCRLt7Fh3TggjoYBB03AXUm7rzGGy3RtnTPQMNkd7xctyxFdg3w69ttXD
-X-Gm-Message-State: AOJu0YxpbSwx98QllTEePZv+P38pHUm4v4Mpq9QQjGkn0GfRu7OIH9mP
-	Ta+2rYrWFA8DZEv1UklKBWAGqCeJhj/9YaG4/WK+/S8/EeHrZhAEFEiwZ+Brvg==
-X-Google-Smtp-Source: AGHT+IHKqaR8hPRcwls+numOGMFqe07vfLrEj7Bd42CbrHC0kpIWlHWWHQMzzOVPRn+FCg+DWi9LVQ==
-X-Received: by 2002:a17:902:d486:b0:1e5:8175:4968 with SMTP id c6-20020a170902d48600b001e581754968mr5306181plg.9.1714003175958;
-        Wed, 24 Apr 2024 16:59:35 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170902da8c00b001e27557050dsm12540139plx.178.2024.04.24.16.59.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 16:59:35 -0700 (PDT)
-Date: Wed, 24 Apr 2024 16:59:35 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ext4: replace deprecated strncpy with alternatives
-Message-ID: <202404241658.E0A17DE2E@keescook>
-References: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
+        d=1e100.net; s=20230601; t=1714007955; x=1714612755;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fhtSrAi+//xuc+I8DI7Sfszz5H0fgzv1dQ1F/lNIbLU=;
+        b=iBXd/qRwSs9gtt38OVU4i5++K/A772NUj7u4pKR5rrOr5FLT2r7wPn4ZYZlYpp+mrK
+         9y5M2kVHohwMxz+hSsLiGWVGHp60nMygYbSHSHviJf95sHqOi6Jpasd0Rfmr1yt83nQs
+         pgvWXutO+o3bbAWmPWAzH7KMo0vQwOc0ZByM4tD5z+T0A/RcnOtEA/GjQbMPWwunkVKa
+         bAP9HZogD+9UGw1BmnCC//FQIkaNc5HsvBKEfsdjNSa/eIdTFwXX/xQ6EGep8ZsbW+AQ
+         6sNpk+fVr1FnypHdznIZ8bnCiMpiMX4Z5v4cQboR9dNzNaNZDjSaNb54MrF0peyLuRE5
+         TChw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNzhaGCLO6TZJfqG5Yl79lfZdW5kB0nTBm8fdwyWFXC2+PRaqPEfcbyK4gf7VURvwfB2crIFvYBicPcZfe0CkoGqOM7XYDHe20I1m/GCYH
+X-Gm-Message-State: AOJu0Yxx/Xedrnv0tt4cjDIpdLcBzVr3LYDZfzQdQ0UM4BA8MWlTB/78
+	C+M95ySzeEjSLHiTwPiZmamIdlydD9XLeq508KkU8IbGVPvlgRq7yCeLvqQyH5Z1dt5XwuvV2xJ
+	ZZRERKrGi8f8aFyK0Q10nHg==
+X-Google-Smtp-Source: AGHT+IGjyJXrIQ/HPFqodscDOz8YvnLkg3hYnAsGcpKNSDsZzEE8YFhfmdMCjhCj4C6Cs8vE34OjReb+sQ9JNy71xw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:2b05:b0:dc6:d233:ffdd with
+ SMTP id fi5-20020a0569022b0500b00dc6d233ffddmr1437183ybb.0.1714007955020;
+ Wed, 24 Apr 2024 18:19:15 -0700 (PDT)
+Date: Thu, 25 Apr 2024 01:19:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321-strncpy-fs-ext4-file-c-v1-1-36a6a09fef0c@google.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJGvKWYC/53NwW5CIRCF4VcxrB0DM0Cxq75H4wJhvJIoGLghN
+ ea+u2jSReOm7fKcxfffROOauIn31U1U7qmlksfQ65UIR58nhhTHFiiRlJQG2lxzuFwh1tS5Nsg
+ 8Q2weTj5vSRKEUhkCWHLWGccmIIqBXSof0tcz9Lkb+5jaXOr12e3q8f450RUoMN7aYMgp/cYfU ynTiTehnMWj0fF/Lg73wHtt0BvCuH9x6dvVUkv3a5eGKwMpslsd0fx0l2W5Ax9tpi2NAQAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714007954; l=2356;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=uLT8FYB0z9hpMnlQW6hKjbJMmTUuyZlRXmjjQNhJGwU=; b=CRkKkJ86IKr54dqqwbv7Lx0P+RGq3++z6F1qmKPSqj6SJ3t9Okv6f+h2SHOs+EFklHCfanqqy
+ FLsGsHXWMXvCrfYcSeRJ0xUvYgFHj4oPOrqUanyaT2k/vnHJ8Y2ovY3
+X-Mailer: b4 0.12.3
+Message-ID: <20240425-strncpy-drivers-net-dsa-lan9303-core-c-v4-1-9fafd419d7bb@google.com>
+Subject: [PATCH v4] net: dsa: lan9303: use ethtool_puts() for lan9303_get_strings()
+From: Justin Stitt <justinstitt@google.com>
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Mar 21, 2024 at 01:03:10AM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> in file.c:
-> s_last_mounted is marked as __nonstring meaning it does not need to be
-> NUL-terminated. Let's instead use strtomem_pad() to copy bytes from the
-> string source to the byte array destination -- while also ensuring to
-> pad with zeroes.
-> 
-> in ioctl.c:
-> We can drop the memset and size argument in favor of using the new
-> 2-argument version of strscpy_pad() -- which was introduced with Commit
-> e6584c3964f2f ("string: Allow 2-argument strscpy()"). This guarantees
-> NUL-termination and NUL-padding on the destination buffer -- which seems
-> to be a requirement judging from this comment:
-> 
-> |	static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label)
-> |	{
-> |		char label[EXT4_LABEL_MAX + 1];
-> |
-> |		/*
-> |		 * EXT4_LABEL_MAX must always be smaller than FSLABEL_MAX because
-> |		 * FSLABEL_MAX must include terminating null byte, while s_volume_name
-> |		 * does not have to.
-> |		 */
-> 
-> in super.c:
-> s_first_error_func is marked as __nonstring meaning we can take the same
-> approach as in file.c; just use strtomem_pad()
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+This pattern of strncpy with some pointer arithmetic setting fixed-sized
+intervals with string literal data is a bit weird so let's use
+ethtool_puts() as this has more obvious behavior and is less-error
+prone.
 
-Hi Ted, are you able to pick this up for the ext4 tree? If it makes it
-easier, I can carry it in my tree instead...
+Nicely, we also get to drop a usage of the now deprecated strncpy() [1].
 
-Thanks!
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Suggested-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v4:
+- drop unnecessary { } (thanks Alexander L.)
+- carry Kees' RB because of trivial change
+- Link to v3: https://lore.kernel.org/r/20240408-strncpy-drivers-net-dsa-lan9303-core-c-v3-1-0c313694d25b@google.com
 
--Kees
+Changes in v3:
+- use ethtool_puts over ethtool_sprintf
+- Link to v2: https://lore.kernel.org/r/20231005-strncpy-drivers-net-dsa-lan9303-core-c-v2-1-feb452a532db@google.com
 
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  fs/ext4/file.c  | 3 +--
->  fs/ext4/ioctl.c | 3 +--
->  fs/ext4/super.c | 7 +++----
->  3 files changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index 54d6ff22585c..c675c0eb5f7e 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -844,8 +844,7 @@ static int ext4_sample_last_mounted(struct super_block *sb,
->  	if (err)
->  		goto out_journal;
->  	lock_buffer(sbi->s_sbh);
-> -	strncpy(sbi->s_es->s_last_mounted, cp,
-> -		sizeof(sbi->s_es->s_last_mounted));
-> +	strtomem_pad(sbi->s_es->s_last_mounted, cp, 0);
->  	ext4_superblock_csum_set(sb);
->  	unlock_buffer(sbi->s_sbh);
->  	ext4_handle_dirty_metadata(handle, NULL, sbi->s_sbh);
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 7160a71044c8..dab7acd49709 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -1150,9 +1150,8 @@ static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label
->  	 */
->  	BUILD_BUG_ON(EXT4_LABEL_MAX >= FSLABEL_MAX);
->  
-> -	memset(label, 0, sizeof(label));
->  	lock_buffer(sbi->s_sbh);
-> -	strncpy(label, sbi->s_es->s_volume_name, EXT4_LABEL_MAX);
-> +	strscpy_pad(label, sbi->s_es->s_volume_name);
->  	unlock_buffer(sbi->s_sbh);
->  
->  	if (copy_to_user(user_label, label, sizeof(label)))
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index cfb8449c731f..de16d045ca05 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -6130,8 +6130,8 @@ static void ext4_update_super(struct super_block *sb)
->  			__ext4_update_tstamp(&es->s_first_error_time,
->  					     &es->s_first_error_time_hi,
->  					     sbi->s_first_error_time);
-> -			strncpy(es->s_first_error_func, sbi->s_first_error_func,
-> -				sizeof(es->s_first_error_func));
-> +			strtomem_pad(es->s_first_error_func,
-> +				     sbi->s_first_error_func, 0);
->  			es->s_first_error_line =
->  				cpu_to_le32(sbi->s_first_error_line);
->  			es->s_first_error_ino =
-> @@ -6144,8 +6144,7 @@ static void ext4_update_super(struct super_block *sb)
->  		__ext4_update_tstamp(&es->s_last_error_time,
->  				     &es->s_last_error_time_hi,
->  				     sbi->s_last_error_time);
-> -		strncpy(es->s_last_error_func, sbi->s_last_error_func,
-> -			sizeof(es->s_last_error_func));
-> +		strtomem_pad(es->s_last_error_func, sbi->s_last_error_func, 0);
->  		es->s_last_error_line = cpu_to_le32(sbi->s_last_error_line);
->  		es->s_last_error_ino = cpu_to_le32(sbi->s_last_error_ino);
->  		es->s_last_error_block = cpu_to_le64(sbi->s_last_error_block);
-> 
-> ---
-> base-commit: a4145ce1e7bc247fd6f2846e8699473448717b37
-> change-id: 20240321-strncpy-fs-ext4-file-c-c983d942dd39
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Changes in v2:
+- use ethtool_sprintf (thanks Alexander)
+- Link to v1: https://lore.kernel.org/r/20231005-strncpy-drivers-net-dsa-lan9303-core-c-v1-1-5a66c538147e@google.com
+---
+ drivers/net/dsa/lan9303-core.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
--- 
-Kees Cook
+diff --git a/drivers/net/dsa/lan9303-core.c b/drivers/net/dsa/lan9303-core.c
+index fcb20eac332a..f3b50adae865 100644
+--- a/drivers/net/dsa/lan9303-core.c
++++ b/drivers/net/dsa/lan9303-core.c
+@@ -1007,15 +1007,14 @@ static const struct lan9303_mib_desc lan9303_mib[] = {
+ static void lan9303_get_strings(struct dsa_switch *ds, int port,
+ 				u32 stringset, uint8_t *data)
+ {
++	u8 *buf = data;
+ 	unsigned int u;
+ 
+ 	if (stringset != ETH_SS_STATS)
+ 		return;
+ 
+-	for (u = 0; u < ARRAY_SIZE(lan9303_mib); u++) {
+-		strncpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
+-			ETH_GSTRING_LEN);
+-	}
++	for (u = 0; u < ARRAY_SIZE(lan9303_mib); u++)
++		ethtool_puts(&buf, lan9303_mib[u].name);
+ }
+ 
+ static void lan9303_get_ethtool_stats(struct dsa_switch *ds, int port,
+
+---
+base-commit: c85af715cac0a951eea97393378e84bb49384734
+change-id: 20231005-strncpy-drivers-net-dsa-lan9303-core-c-6386858e5c22
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
