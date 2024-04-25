@@ -1,89 +1,120 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265FC6CDA5;
-	Thu, 25 Apr 2024 07:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F89B839E5;
+	Thu, 25 Apr 2024 09:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714029040; cv=none; b=uZlhU/LfITufdr6wUyubmn7V68w/ZlTtzgNBBFxXy8bUwO01JD1et/nSI0mp7VLDgueIne3fITim+YnlqFAhs+pEgdNN6rxk/Zj2zxO9lJq1zbr3218wWdisDtRsno2+CyirAzvAvpVOwdFPn2Nmhvjdz3kt18Hz7V5BGdSQI2o=
+	t=1714036712; cv=none; b=GMJVU3AzpUVH/WZPbyC91g6WvoTcaGOmWLXU1yHy03mlCZSUez9EG++vKg18CP+N+nAL9R4CIzSg3gjIEj0YNAUJH1egpww8t58JO50oFFYmiWtSTG8ZmRxDOURsUcPVQPgrhuP3Dv/sh9ZXm2pz81JMO5gEU3hWHAzi07pVz7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714029040; c=relaxed/simple;
-	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
+	s=arc-20240116; t=1714036712; c=relaxed/simple;
+	bh=WJcbJq6LPOWVruhsjLEhcR+OLsCXSYTfrE6Km6Lfsek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gieOt1pLr+D0qMK4OYcfBKCyFuFyZJ7Do7RWMt3ayutKnlctUSr2Giaov9NdiRm4Za70PQzA3qkWCBKWf1/H9AA4Nu5ldrBgQ/XdgGVcB+r1Ht+ee3gDsTp/K9jbn607DyqrWZKqMU3wvsVD4YOAM1Fwrm2yuESrIdV3F2KqHVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MmasBUph; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKRpwcyPCcB/VqnttHK9kKbVaaAQ0iQp2PaAlPgtnM5FnAOwtEC86eBTPMYRWBO6FDPjiP+AVtdu7I6RQjmCEaFxvz29azQIEo9J8ywj3imD4UUyaZW6oxmkXIfWglf+LgZuruFZQMmSvZsePjys+szr3TMtnNdrGFw816jnW4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cUfaqNiQ; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MmasBUph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714029027;
-	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MmasBUphC0hDmcDselWsqNDchcFNLbtyyIXYaTEfQv4BLOsVbY80KeyHb5BvHn9uV
-	 mXfX+53b9fklgAHnv4JHOlIL0SSIIXm5AmCALLJVlcCrmQacW/Cc+9xB5aBl8A7Dwb
-	 B9LRLV8RKBn3hp3tvoCofURazzoY7NMe3hrGTd84=
-Date: Thu, 25 Apr 2024 09:10:27 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, 
-	Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, 
-	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	kexec@lists.infradead.org, linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, 
-	linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cUfaqNiQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jlPcJXkfaMmGAq8OZN68om84KUfyIjul/ITuXAN1MVw=; b=cUfaqNiQ1wHARDkNj7QYMhforS
+	oUBl99r29hGkUAx0ATQXOmidPsrbimAcpWld3NxErjYM+LG1bGal2QMllDh8Qo+YJh/byUx73lQcx
+	T9U064kALKGeNkvlWmHEYXJpp0/TnSoJiZl0lE6JLfitzsmNHVmkedxIJEUCzwBI+K0Wyc1mc/xAn
+	NkmIaqNeXf1zjcqNHbHl5q1iGmBz96CD9vvn0D3Pekz7DQtrKCIpBuDOYUfGyRfIstn3+qHMPdGDQ
+	wCLTiSQMnlvCroykbX41A+4lHANWK6RwM43Itb3tjEngRxTVWe47uz4Y6AlwWgnrjM92HpeWPK6Dc
+	TiTAk90Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzvEn-0000000EoTr-1G9l;
+	Thu, 25 Apr 2024 09:17:59 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 623D4300439; Thu, 25 Apr 2024 11:17:52 +0200 (CEST)
+Date: Thu, 25 Apr 2024 11:17:52 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
+ addition
+Message-ID: <20240425091752.GA21980@noisy.programming.kicks-ass.net>
+References: <20240424191225.work.780-kees@kernel.org>
+ <20240424191740.3088894-1-keescook@chromium.org>
+ <20240424224141.GX40213@noisy.programming.kicks-ass.net>
+ <202404241542.6AFC3042C1@keescook>
+ <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+ <202404241602.276D4ADA@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424201234.3cc2b509@kernel.org>
+In-Reply-To: <202404241602.276D4ADA@keescook>
 
-On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
-> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > The series was split from my larger series sysctl-const series [0].
-> > It only focusses on the proc_handlers but is an important step to be
-> > able to move all static definitions of ctl_table into .rodata.
+On Wed, Apr 24, 2024 at 04:20:20PM -0700, Kees Cook wrote:
+
+> > This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
+> > We've been writing code for years under that assumption.
 > 
-> Split this per subsystem, please.
+> Right, which is why this is going to take time to roll out. :) What we
+> were really doing with -fno-strict-overflow was getting rid of undefined
+> behavior. That was really really horrible; we don't need the compiler
+> hallucinating.
 
-Unfortunately this would introduce an enormous amount of code churn.
+Right, but that then got us well defined semantics for signed overflow.
 
-The function prototypes for each callback have to stay consistent.
-So a another callback member ("proc_handler_new") is needed and users
-would be migrated to it gradually.
+> > You want to mark the non-wrapping case.
+> 
+> What we want is lack of ambiguity. Having done these kinds of things in
+> the kernel for a while now, I have strong evidence that we get much better
+> results with the "fail safe" approach, but start by making it non-fatal.
+> That way we get full coverage, but we don't melt the world for anyone
+> that doesn't want it, and we can shake things out over a few years. For
+> example, it has worked well for CONFIG_FORTIFY, CONFIG_UBSAN_BOUNDS,
+> KCFI, etc.
 
-But then *all* definitions of "struct ctl_table" throughout the tree need to
-be touched.
-In contrast, the proposed series only needs to change the handler
-implementations, not their usage sites.
+The non-fatal argument doesn't have bearing on the mark warp or mark
+non-wrap argument though.
 
-There are many, many more usage sites than handler implementations.
+> The riskier condition is having something wrap when it wasn't expected
+> (e.g. allocations, pointer offsets, etc), so we start by defining our
+> regular types as non-wrapping, and annotate the wrapping types (or
+> specific calculations or functions).
 
-Especially, as the majority of sysctl tables use the standard handlers
-(proc_dostring, proc_dobool, ...) and are not affected by the proposed
-aproach at all.
+But but most of those you mention are unsigned. Are you saying you're
+making all unsigned variables non-wrap by default too? That's bloody
+insane.
 
-And then we would have introduced a new handler name "proc_handler_new"
-and maybe have to do the whole thing again to rename it back to
-the original and well-known "proc_handler".
+> For signed types in particular, wrapping is overwhelmingly the
+> uncommon case, so from a purely "how much annotations is needed"
+> perspective, marking wrapping is also easiest. Yes, there are cases of
+> expected wrapping, but we'll track them all down and get them marked
+> unambiguously. 
 
+But I am confused now, because above you seem to imply you're making
+unsigned non-wrap too, and there wrapping is *far* more common, and I
+must say I hate this wrapping_add() thing with a passion.
 
-Of course if somebody has a better aproach, I'm all ears.
+> One thing on the short list is atomics, so here we are. :)
 
-
-Thomas
+Well, there are wrapping and non-wrapping users of atomic. If only C had
+generics etc.. (and yeah, _Generic doesn't really count).
