@@ -1,57 +1,57 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FED14E2E1
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 17:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5833B14E2DF
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 17:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714065568; cv=none; b=baVHABgHmE6JRRrdX5hidcV8bKm+RyoeKPuMaFD3QbMO/PVS8XgAwA7kGCFFMjoImv/sdIT9/CXq8S7dJLbrRqllg7t2T2xXhoQod5R4ULhP0WEt45pqYgu4CVIsGApeF+wBVyBjhnkpFGoDNwJaihcwuOxFSej5tX/0rVbBbjs=
+	t=1714066763; cv=none; b=jhXCTAF2zSFKKAi4crQjT8eE7mTRvuHWRyxFWgFGv8Guedm+EXJW7prg3sR5hrURk44GU0KRlUJlmWmvQoJTCgKeJ79dvQ6ouWkmsnkxXD67V3VOAery1vhv0qVi1FzB1yaHusVofw4o9E58sONGIPZ0N/ZxhCfprw/25yiB3fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714065568; c=relaxed/simple;
-	bh=47qf1VJfN1htPuzwcBHn7Dk8utfEzpjninPu15D1DHo=;
+	s=arc-20240116; t=1714066763; c=relaxed/simple;
+	bh=kB9KMA3DcvNtLyh0bj0IRDkpYiWpOT4msDbmbXW4p7g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OY5S6CHT7U0LE08CUYembgOn6LPeHxCF2PiuzMMcmo8avJjZZSoTdmi6RbN+SgpAdQ0lYsqtp9oiFTMox49Fdlp1RvY0SVgAMVpT2cV3zY29TbszXKfvtwxL676IkUVOEbAneIDr69A8L/x2//A+ZUTtSGA3lafJkBX2KR3bimw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bUhsoazE; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=KYSFlxkAxRHXD/ILMsmVmBI3KkE79GDtL+EDnaKuwdkvWkUnb3FR3whMH0sEgQEOub5HqqiiQemQx5cR/Hi6aCGrF3/lSsozF3K5OLoLaeLs/zRNXucciARQ/i01Tr2Rn9oyn4IlHQ8VdcXJHD56Mmbt2gqeEVyXnCni+CUedP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=daInXeQu; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bUhsoazE"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f28bb6d747so1164083b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 10:19:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="daInXeQu"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6eff9dc1821so1281346b3a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Apr 2024 10:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714065565; x=1714670365; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714066762; x=1714671562; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aEArpaPdCkeLMM8e+oCYdabZOyUvDXBNvCNCU3D6sx8=;
-        b=bUhsoazEiKVsAiQqTGzXYanKMj8Pzq27+Zql8Qk9Qqme1aSDIVMMwmgYh2aPydQizn
-         AV5AHN02njPVBwXTqrzFkC2cWU/XmgTZaoMCHDV5drBzA0NZOxv/Xs7I/CXYRjktLV1g
-         TT5g9O0I0JuLSa4mUeRACWnJoMNveeifZgPBU=
+        bh=xGRp4J8KaAZoR1Iq7v17JFw6BNoCDdtd2vscqG11gNs=;
+        b=daInXeQuKW7uLwE9YPmL2yzFp19SkUFqvF4AsQMUS7hgBUtAKgAe5ExqLSbb6Ih3V6
+         05WwXwd0OAJzAKtJ1J7iYMQVqQMnYvaCbzqEyRMLaZoeCJ5/QppEjegzasyVYmGkPxWQ
+         R6iiHgLLuxtsP53/QLHAmxttdefaZe0SYKuo8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714065565; x=1714670365;
+        d=1e100.net; s=20230601; t=1714066762; x=1714671562;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aEArpaPdCkeLMM8e+oCYdabZOyUvDXBNvCNCU3D6sx8=;
-        b=jAWmSb8fZlQd9JqWTfgnU9hcmpfYrITTP0wblhhgUqb0xf8CrMc8fgqX985+vYwpo8
-         44OFrT/kFhnFy0KWFz19eGXz4I9bLcvOFjX3I/N7wF8wY7UmeoszNMGlsor80A9ktPim
-         iCZF8Og0QKpvzb+Zzfqsh7iHni2ChfCCcJeWqHXpxACaw2FHSDz2chxFTo/+QRnV3YwL
-         RZUaC3T5TpzKtrwht2jNN3/0Dd0cAghmm9vxIecApzatOZ8A+oIa2usqKuraA6xtDe6B
-         9gpv2wrGApnYm8tmeQaiPd6oLQ2HIvBKsNOtD8N3avWKVr4OlZyZVqbp472JYI3Spd7H
-         nAWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxo/S2gKWOuB3uRn6ZhvY8Qrkh4FOI1/gZmYrybCALO5DrZKdK/waxl35WroZFhcMy5h6oO7/NZfgAvcasoq0aetnNqK60/zMeQgA+VhIg
-X-Gm-Message-State: AOJu0Yzlfg/wVE3jUSVDwbKE/kmK3qrX2JcgSjSKIAxXxwNKf6gMPvJa
-	KpUeLutcv/Sm1slHvRvlU+6JFWRKLKMEr8gZzsPCSkYEmet0lqZVD9aB5fnrIg==
-X-Google-Smtp-Source: AGHT+IGSQtc03FJYmN67TcOlJEb4jjwUjOrO3E0QvJYydq58tzeFvCMVkx0opll0cr92togJ9vRyLg==
-X-Received: by 2002:a05:6a00:1941:b0:6ea:f05d:d2e9 with SMTP id s1-20020a056a00194100b006eaf05dd2e9mr507849pfk.15.1714065565180;
-        Thu, 25 Apr 2024 10:19:25 -0700 (PDT)
+        bh=xGRp4J8KaAZoR1Iq7v17JFw6BNoCDdtd2vscqG11gNs=;
+        b=lwhtvRzVYENG9+wnI3pqcIKbUPoFEccGLbVgJlJSVQTjsh26c5YOru7RtD8z5eCdQg
+         Ev6umfXq84ZE4mXr6NG8jydLPmlaUrnMzEWEEACMwWzFB+FR0OTB5YblFNQyqwKtLUXN
+         3SS7EtHWCDeLL0Ztu52d6wb97EcUZ1oCYKoDe9a7vsCkM9WFpDBdT0LSpehtr0gr7wDV
+         5GwEauSTEgJyEDnKDQNropk8wRJd4/CkGwyq5vvU9xyPjhEcHYxhrHsyBZWEEJ6YemTI
+         MCwgphxQAK9d9LdsdVlnasuzYWkWQ0eUQZbVrNDnriSmHdah4EpOnebhGn3Tc7zbCjWY
+         CzpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURQ7BxkvtqJsBoP9q4UkJES/NnpvKPLwUdOs0Fso2++hsqASXuUzdFIuBvrF+eUes7WpdT3WtE+D72gV1CQn0fRC8wghlbXfogp47uxfSx
+X-Gm-Message-State: AOJu0Yz4+FjzLsnR+CFCTg+1kNf7ocrNaFCLSPI9gxQTN8yKNN5XWv3T
+	Ty900C5mskDRky7l0NIout+C9Wx2K18dVV3kqHzL53OV7vGpMWQVi8jqQLcajQ==
+X-Google-Smtp-Source: AGHT+IHo6ruBh+6PnC5lx4dAR90eGtu9va6/DL9++gNNA1zkeY3/L32beujc9vp0VhFbPkSwUX9WUg==
+X-Received: by 2002:a05:6a20:5b12:b0:1ad:3d93:b71e with SMTP id kl18-20020a056a205b1200b001ad3d93b71emr347251pzb.59.1714066761597;
+        Thu, 25 Apr 2024 10:39:21 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n56-20020a056a000d7800b006e6b7124b33sm13379389pfv.209.2024.04.25.10.19.24
+        by smtp.gmail.com with ESMTPSA id ck16-20020a17090afe1000b002a2f6da006csm13262979pjb.52.2024.04.25.10.39.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 10:19:24 -0700 (PDT)
-Date: Thu, 25 Apr 2024 10:19:24 -0700
+        Thu, 25 Apr 2024 10:39:21 -0700 (PDT)
+Date: Thu, 25 Apr 2024 10:39:20 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -69,12 +69,14 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>,
 	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping
  addition
-Message-ID: <202404251018.C12E9F23@keescook>
+Message-ID: <202404251019.2DF0A48@keescook>
 References: <20240424191225.work.780-kees@kernel.org>
  <20240424191740.3088894-1-keescook@chromium.org>
  <20240424224141.GX40213@noisy.programming.kicks-ass.net>
  <202404241542.6AFC3042C1@keescook>
- <ZiotNVLD3ek-9Lwj@FVFF77S0Q05N>
+ <20240424225436.GY40213@noisy.programming.kicks-ass.net>
+ <202404241602.276D4ADA@keescook>
+ <20240425091752.GA21980@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,23 +85,98 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZiotNVLD3ek-9Lwj@FVFF77S0Q05N>
+In-Reply-To: <20240425091752.GA21980@noisy.programming.kicks-ass.net>
 
-On Thu, Apr 25, 2024 at 11:15:17AM +0100, Mark Rutland wrote:
-> To be clear, I dislike the function annotation because then it applies to
-> *everything* within the function, which is overly broad and the intent becomes
-> unclear. That makes it painful to refactor the code (since e.g. if we want to
-> add another operation to the function which *should not* wrap, that gets
-> silenced too).
+On Thu, Apr 25, 2024 at 11:17:52AM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 24, 2024 at 04:20:20PM -0700, Kees Cook wrote:
+> 
+> > > This is arse-about-face. Signed stuff wraps per -fno-strict-overflow.
+> > > We've been writing code for years under that assumption.
+> > 
+> > Right, which is why this is going to take time to roll out. :) What we
+> > were really doing with -fno-strict-overflow was getting rid of undefined
+> > behavior. That was really really horrible; we don't need the compiler
+> > hallucinating.
+> 
+> Right, but that then got us well defined semantics for signed overflow.
 
-Yeah, I find that a convincing argument for larger functions, but it
-seemed to me that for these 1-line implementations it was okay. But
-regardless, yup, no function-level annotation here.
+Yes, and this gets us to the next step: disambiguation for general
+users. It's good that we have a well-defined overflow resolution strategy,
+but our decades of persistent wrap-around flaws in the kernel show
+that many devs (even experienced ones) produce code with unexpected and
+unwanted (to the logic of the code) wrap-around. So we have to find a
+way to distinguish wrapping and non-wrapping operations or types up
+front and in a clear way.
 
-> I'm happy with something that applies to specific types/variables or specific
-> operations (which is what these patches do).
+> 
+> > > You want to mark the non-wrapping case.
+> > 
+> > What we want is lack of ambiguity. Having done these kinds of things in
+> > the kernel for a while now, I have strong evidence that we get much better
+> > results with the "fail safe" approach, but start by making it non-fatal.
+> > That way we get full coverage, but we don't melt the world for anyone
+> > that doesn't want it, and we can shake things out over a few years. For
+> > example, it has worked well for CONFIG_FORTIFY, CONFIG_UBSAN_BOUNDS,
+> > KCFI, etc.
+> 
+> The non-fatal argument doesn't have bearing on the mark warp or mark
+> non-wrap argument though.
 
-Thanks!
+This gets at the strategy of refactoring our code to gain our unambiguous
+coverage. Since we can't sanely have a flag-day, we have to go piecemeal,
+and there will continue to be places where the coverage was missed, and
+so we want to progress through marking wrapping cases without BUGing the
+kernel. (We don't care about catching non-wrapping -- the exceptional
+condition is hitting an overflow.)
+
+> > The riskier condition is having something wrap when it wasn't expected
+> > (e.g. allocations, pointer offsets, etc), so we start by defining our
+> > regular types as non-wrapping, and annotate the wrapping types (or
+> > specific calculations or functions).
+> 
+> But but most of those you mention are unsigned. Are you saying you're
+> making all unsigned variables non-wrap by default too? That's bloody
+> insane.
+
+We have a mix (and a regular confusion even in core code) where "int"
+gets passed around even though at one end or another of a call chain
+it's actually u32 or u16 or whatever. Regardless, yes, the next step
+after signed overflow mitigation would be unsigned overflow mitigation,
+and as you suggest, it's much more tricky.
+
+> > For signed types in particular, wrapping is overwhelmingly the
+> > uncommon case, so from a purely "how much annotations is needed"
+> > perspective, marking wrapping is also easiest. Yes, there are cases of
+> > expected wrapping, but we'll track them all down and get them marked
+> > unambiguously. 
+> 
+> But I am confused now, because above you seem to imply you're making
+> unsigned non-wrap too, and there wrapping is *far* more common, and I
+> must say I hate this wrapping_add() thing with a passion.
+
+Yes, most people are not a fan of the wrapping_*() helpers, which is why
+I'm trying to get a typedef attribute created. But again, to gain the
+"fail safe by default" coverage, we have to start with the assumption
+that the default is non-wrapping, and mark those that aren't. (Otherwise
+we're not actually catching unexpected cases.) And no, it's not going
+to be over-night. It's taken almost 5 years to disambiguate array bounds
+and we're still not done. :)
+
+> > One thing on the short list is atomics, so here we are. :)
+> 
+> Well, there are wrapping and non-wrapping users of atomic. If only C had
+> generics etc.. (and yeah, _Generic doesn't really count).
+
+Non-wrapping users of atomics should be using refcount_t, which is
+our non-wrapping atomic type. But regardless, atomics are internally
+wrapping, yes?
+
+Anyway, I suspect this whole plan needs wider discussion. I will write
+up a more complete RFC that covers my plans, including the rationale for
+why we should adopt this in a certain way. (These kinds of strategic RFCs
+don't usually get much traction since our development style is much more
+"show the patches", so that's why I have been just sending patches. But
+since it's a pretty big topic, I'll give it a shot...)
 
 -- 
 Kees Cook
