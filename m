@@ -1,360 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EF7364A0;
-	Fri, 26 Apr 2024 22:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2855383B1
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 22:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714170540; cv=none; b=TnghySVUfe7BlOP8YQ9pEWdNVvUlpiQj7nBZYOE1JjybMPj7EW4teSWZfUnk2mSKT1Y5vhv78+eUVqSsYxvhlBUWStcXQJygSNuhuvUorVU2+nadprXW1tsJSYzhDoZD+21QZ/BijNP6espeB1YKDvPX3MyZ18QtjRP4AyZq7cM=
+	t=1714170588; cv=none; b=c0QBHtLp236kcdtDKjJRLs6Sk8BzvFJFtDNc1tFmRD6HyW78WeysdHOPkxXzY9YEYwcmJegCObhN3JbKvNHOqW/rzYs9ZbOMQuNnmb9grqfPAn79r7BU56WA0sueE7+H6AYEPPioFg6cfJ5RymQU9x8bwcm43inpDXldHBmPEqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714170540; c=relaxed/simple;
-	bh=ELJHySFUSowC2UOJqdXHpOw3chABBbzFVeQLrdq5PXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ESTurIC2NpCbgDkpR+n2mUwySBDgfbzfHcVGS1aieyurNY1pyi418Ncl4SV3sSnoEWku6UA4v1Y32gURpSE1G9oXRYQV5ZIOCYwGOhFPSxOTGYPlM8aTxGo8xohjbxP/liBOR3CsZsbpZlv6qJxVO7pdntRfxTVR8JHOb8dYOvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nC5mFa7Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714170588; c=relaxed/simple;
+	bh=/JAZTw8Az0ztBUDk0sA4JmrZ5DFUfKzaFS+/N6fB7wg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MuNTHhSGcbWhv3UTOqBle1G+mLnWYyLaaBQ/sQe4j+QwPIIjVNh9Ap8K/2st+RdnjJTh5dpBhW4e68xLJiTvk8hHYzc7D4ODns6UGX6hlaTYD/S9D9OEeIAa0EfwylYHHCK5W6JVXdL+pjWKdVtwnVzT84Iv8Mq1gZwNeCFhRxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NX7egTYo; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nC5mFa7Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF19C32781;
-	Fri, 26 Apr 2024 22:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714170540;
-	bh=ELJHySFUSowC2UOJqdXHpOw3chABBbzFVeQLrdq5PXg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=nC5mFa7Q5ogHzSx3A4Ap/Z5255P+7ZS93HjWyIudIq5bb6xlgr9+EEHC3SNfiZjlp
-	 Jt5A1azu8HAv+yRBi1GVDVTAXJI+1XZCCZDkomrpU5hzkllXpWvsipQXCL7z1CA1wy
-	 5+gh8nq4LF5WI433zni9zKp0gHvooIZlwC7VXJv8QvF0k9s1QErDK2SSOqlPAMv+Rq
-	 UckxSsqeXZ7UtiU3+KZXMIZsoplfkrfww65/2R/suYSrb9Ty7xYK2OqUlvUqOs/Vhm
-	 LTFHGCx6TQi/ENLieFjYhKRlLM8Jlp9Ky5vhrfPh4XYtVhgNZmk3CEJcXJ+oHTC0c4
-	 GRm00MsUxJG0A==
-Date: Fri, 26 Apr 2024 16:28:57 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] Bluetooth: hci_sync, hci_event: Use __counted_by() in
- multiple structs and avoid -Wfamnae warnings
-Message-ID: <ZiwqqZCa7PK9bzCX@neat>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NX7egTYo"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5f807d941c4so2112746a12.0
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 15:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714170586; x=1714775386; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zTG05S8dcgv/sc7Li2lyTqnr2la76aTbmug3Zcxgoi8=;
+        b=NX7egTYogfmlVqPKr8MLsSrWx7LE1NGVL6k+lPC1oeMCxBptu8ii0etQe9jmGc06gn
+         jwK5Y9IZmLFB6MZgETEtlyXt2eEZ6LQxdSQ84h+3DJ0U7IOFg3VMG9KRC38BJidczKYU
+         M+Y99OWGDgp2a2rDXYx7C2TnJq+SPv3d7zV1k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714170586; x=1714775386;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zTG05S8dcgv/sc7Li2lyTqnr2la76aTbmug3Zcxgoi8=;
+        b=KMnlUQovR+b94WZE8C7mqQFyYAdo9H94Cuz6QsbcRrVHM8YMnLnhYkRBqRKdue/Chu
+         S18VUMtfMwcbj2eXWA9LB/XzKAJeTbes/aNY1X09zsEl8ZHH0HfMqDu+/gwFZJGII9AA
+         uLZ0YkCyaF76QYgfzK8lmYQpXcWAkXC5i8OtPCfJ+6samJ6+fFGlLNIULljnGQKCueB7
+         d/HzH0kOOjqi6xfcyCO+tLeHwXEzjf/d23ke5qy2niV45MLZauVF04cGA7Y3hCBNz58M
+         JezcloWyYdgUHZN1/AKZFpvezEcUN4PwiP6xZTX35EiwocGHhpQErRaFD9IAtnuaXHIN
+         SgNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbIR+RNAVuxfxyjPpebrnLPHRFVn94vs5Nlb1X7yzyndwkuzJUsKRni7gXxhcJMmok1IwsHd/GgmIznGC5wn7ljeR9V8ojXiKhik9NF8H3
+X-Gm-Message-State: AOJu0YzN01fENqbQalbaocqz8EtuhsRapi0mqkFEsL1HcGrbAxu9/fAY
+	ewGaLSkHcq7dziO7A/L81HrpDouszSLkOaSzn+En3hPQkcGCbzf8X5N7ciznRg==
+X-Google-Smtp-Source: AGHT+IH8I81rI/UYedWPzxdcow5LQXZWeOzoAWeMJFfXQml/lLZDlyAtRk5OTEESinibkaS3ST7vqQ==
+X-Received: by 2002:a05:6a21:3942:b0:1ae:426a:b53b with SMTP id ac2-20020a056a21394200b001ae426ab53bmr3809062pzc.1.1714170585921;
+        Fri, 26 Apr 2024 15:29:45 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k14-20020aa79d0e000000b006ecd942161fsm15290328pfp.190.2024.04.26.15.29.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 15:29:45 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] hardening: Refresh KCFI options, add some more
+Date: Fri, 26 Apr 2024 15:29:44 -0700
+Message-Id: <20240426222940.work.884-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3198; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=/JAZTw8Az0ztBUDk0sA4JmrZ5DFUfKzaFS+/N6fB7wg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmLCrX8Y9C46/LOVocPQD+qsoHgG7tK3cJ+oBHy
+ rHReedMZSOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZiwq1wAKCRCJcvTf3G3A
+ JsqaD/sHGOQsjFazK/JXw46/Wv4E4bcBtjgtHgo9OCskfnXNqnz0P4c9gHMNMWYw/p4ub+t4+bx
+ wzzstZOSmhYV811Gx0vJ2ulo0jPPnh8y6/2x9nkGkvWgrtWxiNlHvOmJMSv9fGi8vP3exHn6CCG
+ BUaxsodIlWT5neJdhD58ePBffk+31Og+gHc5/WD2Gng3env+B/4okSiDxsAqA1hgMmrvYbzFX3d
+ EnzewxsoW2SV8Bwt/QP8QajLjiSy11N8sRwXD+rBRzJ/ay1lBJh9iGNMwRi+/b4yI3/tEiYfU1U
+ FFwrNDQcr4zsU0LxFHx2PRjc44yfRrYYAJ3cp5gwpD6LpP8XcYyoio9gbIbe3wpTAcgIu1fsOQK
+ d7mdnmP+1D6CNCQAOpVIk51N72SSC3cT7HTxCY/LjXycHo27tMZYehu6xV5ePlB75cUWq8bM4rC
+ tGP/LbmOiQf9tg9vYWOSBi3Iyxu1sktbYrjp9HMToikeKYnbLz/5yVklefYALIS+z6RoQJPg3Ho
+ vqV4lSwin4S08KSoVpJuAPdWTdt4XhpYTLl2avGVt0gsmcZpF2RQc6LdYIHIPq3A68lpxRztPRQ
+ aRsWgfhBD2CTUhRRZjeJU4RwzGYeE27Orz5Ygo65aJqqmcuvlCIWtSVbc5Ns9QexMHAHLhzASPj
+ hgh8L94 FruAYSaQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Prepare for the coming implementation by GCC and Clang of the
-__counted_by attribute. Flexible array members annotated with
-__counted_by can have their accesses bounds-checked at run-time
-via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-(for strcpy/memcpy-family functions).
+Add some stuff that got missed along the way:
 
-Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-getting ready to enable it globally.
+- CONFIG_UNWIND_PATCH_PAC_INTO_SCS=y so SCS vs PAC is hardware
+  selectable.
 
-So, use the `DEFINE_FLEX()` helper for multiple on-stack definitions
-of a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+- CONFIG_X86_KERNEL_IBT=y while a default, just be sure.
 
-Notice that, due to the use of `__counted_by()` in `struct
-hci_cp_le_create_cis`, the for loop in function `hci_cs_le_create_cis()`
-had to be modified. Once the index `i`, through which `cp->cis[i]` is
-accessed, falls in the interval [0, cp->num_cis), `cp->num_cis` cannot
-be decremented all the way down to zero while accessing `cp->cis[]`:
+- CONFIG_CFI_CLANG=y for x86 and arm64. (And disable FINEIBT since
+  it isn't as secure as straight KCFI.)
 
-net/bluetooth/hci_event.c:4310:
-4310	for (i = 0; cp->num_cis; cp->num_cis--, i++) {
-		...
-4314		handle = __le16_to_cpu(cp->cis[i].cis_handle);
+- CONFIG_PAGE_TABLE_CHECK=y for userspace mapping sanity.
 
-otherwise, only half (one iteration before `cp->num_cis == i`) or half
-plus one (one iteration before `cp->num_cis < i`) of the items in the
-array will be accessed before running into an out-of-bounds issue. So,
-in order to avoid this, set `cp->num_cis` to zero just after the for
-loop.
-
-With these changes, fix the following warnings:
-net/bluetooth/hci_sync.c:1239:56: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-net/bluetooth/hci_sync.c:1415:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-net/bluetooth/hci_sync.c:1731:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-net/bluetooth/hci_sync.c:6497:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/net/bluetooth/hci.h |  8 ++--
- net/bluetooth/hci_event.c   |  3 +-
- net/bluetooth/hci_sync.c    | 83 +++++++++++++++----------------------
- 3 files changed, 39 insertions(+), 55 deletions(-)
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: llvm@lists.linux.dev
+---
+ arch/arm64/configs/hardening.config | 5 +++++
+ arch/x86/configs/hardening.config   | 9 +++++++++
+ kernel/configs/hardening.config     | 4 ++++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index fe23e862921d..c4c6b8810701 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -2026,7 +2026,7 @@ struct hci_cp_le_set_ext_adv_data {
- 	__u8  operation;
- 	__u8  frag_pref;
- 	__u8  length;
--	__u8  data[];
-+	__u8  data[] __counted_by(length);
- } __packed;
+diff --git a/arch/arm64/configs/hardening.config b/arch/arm64/configs/hardening.config
+index b0e795208998..e8a18fec7a3e 100644
+--- a/arch/arm64/configs/hardening.config
++++ b/arch/arm64/configs/hardening.config
+@@ -5,6 +5,7 @@ CONFIG_ARM64_SW_TTBR0_PAN=y
  
- #define HCI_OP_LE_SET_EXT_SCAN_RSP_DATA		0x2038
-@@ -2035,7 +2035,7 @@ struct hci_cp_le_set_ext_scan_rsp_data {
- 	__u8  operation;
- 	__u8  frag_pref;
- 	__u8  length;
--	__u8  data[];
-+	__u8  data[] __counted_by(length);
- } __packed;
+ # Software Shadow Stack or PAC
+ CONFIG_SHADOW_CALL_STACK=y
++CONFIG_UNWIND_PATCH_PAC_INTO_SCS=y
  
- #define HCI_OP_LE_SET_EXT_ADV_ENABLE		0x2039
-@@ -2061,7 +2061,7 @@ struct hci_cp_le_set_per_adv_data {
- 	__u8  handle;
- 	__u8  operation;
- 	__u8  length;
--	__u8  data[];
-+	__u8  data[] __counted_by(length);
- } __packed;
+ # Pointer authentication (ARMv8.3 and later). If hardware actually supports
+ # it, one can turn off CONFIG_STACKPROTECTOR_STRONG with this enabled.
+@@ -20,3 +21,7 @@ CONFIG_ARM64_E0PD=y
  
- #define HCI_OP_LE_SET_PER_ADV_ENABLE		0x2040
-@@ -2162,7 +2162,7 @@ struct hci_cis {
+ # Available in ARMv8.7 and later.
+ CONFIG_ARM64_EPAN=y
++
++# Enable Kernel Control Flow Integrity (currently Clang only).
++CONFIG_CFI_CLANG=y
++# CONFIG_CFI_PERMISSIVE is not set
+diff --git a/arch/x86/configs/hardening.config b/arch/x86/configs/hardening.config
+index 7b497f3b7bc3..b47e5f411dd3 100644
+--- a/arch/x86/configs/hardening.config
++++ b/arch/x86/configs/hardening.config
+@@ -10,5 +10,14 @@ CONFIG_INTEL_IOMMU_DEFAULT_ON=y
+ CONFIG_INTEL_IOMMU_SVM=y
+ CONFIG_AMD_IOMMU=y
  
- struct hci_cp_le_create_cis {
- 	__u8    num_cis;
--	struct hci_cis cis[];
-+	struct hci_cis cis[] __counted_by(num_cis);
- } __packed;
++# Enforce CET Indirect Branch Tracking in the kernel.
++CONFIG_X86_KERNEL_IBT=y
++
++# Enable Kernel Control Flow Integrity (currently Clang only), but disable
++# weaker FINEIBT landing pads.
++CONFIG_CFI_CLANG=y
++# CONFIG_CFI_PERMISSIVE is not set
++# CONFIG_FINEIBT is not set
++
+ # Enable CET Shadow Stack for userspace.
+ CONFIG_X86_USER_SHADOW_STACK=y
+diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
+index 7a5bbfc024b7..4be0de1f085c 100644
+--- a/kernel/configs/hardening.config
++++ b/kernel/configs/hardening.config
+@@ -23,6 +23,10 @@ CONFIG_SLAB_FREELIST_HARDENED=y
+ CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+ CONFIG_RANDOM_KMALLOC_CACHES=y
  
- #define HCI_OP_LE_REMOVE_CIG			0x2065
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 9a38e155537e..9a7ca084302e 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4307,7 +4307,7 @@ static void hci_cs_le_create_cis(struct hci_dev *hdev, u8 status)
- 	hci_dev_lock(hdev);
- 
- 	/* Remove connection if command failed */
--	for (i = 0; cp->num_cis; cp->num_cis--, i++) {
-+	for (i = 0; i < cp->num_cis; i++) {
- 		struct hci_conn *conn;
- 		u16 handle;
- 
-@@ -4323,6 +4323,7 @@ static void hci_cs_le_create_cis(struct hci_dev *hdev, u8 status)
- 			hci_conn_del(conn);
- 		}
- 	}
-+	cp->num_cis = 0;
- 
- 	if (pending)
- 		hci_le_create_cis_pending(hdev);
-diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-index 9092b4d59545..c9e602d7b246 100644
---- a/net/bluetooth/hci_sync.c
-+++ b/net/bluetooth/hci_sync.c
-@@ -1235,31 +1235,27 @@ int hci_setup_ext_adv_instance_sync(struct hci_dev *hdev, u8 instance)
- 
- static int hci_set_ext_scan_rsp_data_sync(struct hci_dev *hdev, u8 instance)
- {
--	struct {
--		struct hci_cp_le_set_ext_scan_rsp_data cp;
--		u8 data[HCI_MAX_EXT_AD_LENGTH];
--	} pdu;
-+	DEFINE_FLEX(struct hci_cp_le_set_ext_scan_rsp_data, pdu, data, length,
-+		    HCI_MAX_EXT_AD_LENGTH);
- 	u8 len;
- 	struct adv_info *adv = NULL;
- 	int err;
- 
--	memset(&pdu, 0, sizeof(pdu));
--
- 	if (instance) {
- 		adv = hci_find_adv_instance(hdev, instance);
- 		if (!adv || !adv->scan_rsp_changed)
- 			return 0;
- 	}
- 
--	len = eir_create_scan_rsp(hdev, instance, pdu.data);
-+	len = eir_create_scan_rsp(hdev, instance, pdu->data);
- 
--	pdu.cp.handle = instance;
--	pdu.cp.length = len;
--	pdu.cp.operation = LE_SET_ADV_DATA_OP_COMPLETE;
--	pdu.cp.frag_pref = LE_SET_ADV_DATA_NO_FRAG;
-+	pdu->handle = instance;
-+	pdu->length = len;
-+	pdu->operation = LE_SET_ADV_DATA_OP_COMPLETE;
-+	pdu->frag_pref = LE_SET_ADV_DATA_NO_FRAG;
- 
- 	err = __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_EXT_SCAN_RSP_DATA,
--				    sizeof(pdu.cp) + len, &pdu.cp,
-+				    struct_size(pdu, data, len), pdu,
- 				    HCI_CMD_TIMEOUT);
- 	if (err)
- 		return err;
-@@ -1267,7 +1263,7 @@ static int hci_set_ext_scan_rsp_data_sync(struct hci_dev *hdev, u8 instance)
- 	if (adv) {
- 		adv->scan_rsp_changed = false;
- 	} else {
--		memcpy(hdev->scan_rsp_data, pdu.data, len);
-+		memcpy(hdev->scan_rsp_data, pdu->data, len);
- 		hdev->scan_rsp_data_len = len;
- 	}
- 
-@@ -1411,14 +1407,10 @@ static int hci_set_per_adv_params_sync(struct hci_dev *hdev, u8 instance,
- 
- static int hci_set_per_adv_data_sync(struct hci_dev *hdev, u8 instance)
- {
--	struct {
--		struct hci_cp_le_set_per_adv_data cp;
--		u8 data[HCI_MAX_PER_AD_LENGTH];
--	} pdu;
-+	DEFINE_FLEX(struct hci_cp_le_set_per_adv_data, pdu, data, length,
-+		    HCI_MAX_PER_AD_LENGTH);
- 	u8 len;
- 
--	memset(&pdu, 0, sizeof(pdu));
--
- 	if (instance) {
- 		struct adv_info *adv = hci_find_adv_instance(hdev, instance);
- 
-@@ -1426,14 +1418,14 @@ static int hci_set_per_adv_data_sync(struct hci_dev *hdev, u8 instance)
- 			return 0;
- 	}
- 
--	len = eir_create_per_adv_data(hdev, instance, pdu.data);
-+	len = eir_create_per_adv_data(hdev, instance, pdu->data);
- 
--	pdu.cp.length = len;
--	pdu.cp.handle = instance;
--	pdu.cp.operation = LE_SET_ADV_DATA_OP_COMPLETE;
-+	pdu->length = len;
-+	pdu->handle = instance;
-+	pdu->operation = LE_SET_ADV_DATA_OP_COMPLETE;
- 
- 	return __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_PER_ADV_DATA,
--				     sizeof(pdu.cp) + len, &pdu,
-+				     struct_size(pdu, data, len), pdu,
- 				     HCI_CMD_TIMEOUT);
- }
- 
-@@ -1727,31 +1719,27 @@ int hci_le_terminate_big_sync(struct hci_dev *hdev, u8 handle, u8 reason)
- 
- static int hci_set_ext_adv_data_sync(struct hci_dev *hdev, u8 instance)
- {
--	struct {
--		struct hci_cp_le_set_ext_adv_data cp;
--		u8 data[HCI_MAX_EXT_AD_LENGTH];
--	} pdu;
-+	DEFINE_FLEX(struct hci_cp_le_set_ext_adv_data, pdu, data, length,
-+		    HCI_MAX_EXT_AD_LENGTH);
- 	u8 len;
- 	struct adv_info *adv = NULL;
- 	int err;
- 
--	memset(&pdu, 0, sizeof(pdu));
--
- 	if (instance) {
- 		adv = hci_find_adv_instance(hdev, instance);
- 		if (!adv || !adv->adv_data_changed)
- 			return 0;
- 	}
- 
--	len = eir_create_adv_data(hdev, instance, pdu.data);
-+	len = eir_create_adv_data(hdev, instance, pdu->data);
- 
--	pdu.cp.length = len;
--	pdu.cp.handle = instance;
--	pdu.cp.operation = LE_SET_ADV_DATA_OP_COMPLETE;
--	pdu.cp.frag_pref = LE_SET_ADV_DATA_NO_FRAG;
-+	pdu->length = len;
-+	pdu->handle = instance;
-+	pdu->operation = LE_SET_ADV_DATA_OP_COMPLETE;
-+	pdu->frag_pref = LE_SET_ADV_DATA_NO_FRAG;
- 
- 	err = __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_EXT_ADV_DATA,
--				    sizeof(pdu.cp) + len, &pdu.cp,
-+				    struct_size(pdu, data, len), pdu,
- 				    HCI_CMD_TIMEOUT);
- 	if (err)
- 		return err;
-@@ -1760,7 +1748,7 @@ static int hci_set_ext_adv_data_sync(struct hci_dev *hdev, u8 instance)
- 	if (adv) {
- 		adv->adv_data_changed = false;
- 	} else {
--		memcpy(hdev->adv_data, pdu.data, len);
-+		memcpy(hdev->adv_data, pdu->data, len);
- 		hdev->adv_data_len = len;
- 	}
- 
-@@ -6496,10 +6484,8 @@ static int hci_le_create_conn_sync(struct hci_dev *hdev, void *data)
- 
- int hci_le_create_cis_sync(struct hci_dev *hdev)
- {
--	struct {
--		struct hci_cp_le_create_cis cp;
--		struct hci_cis cis[0x1f];
--	} cmd;
-+	DEFINE_FLEX(struct hci_cp_le_create_cis, cmd, cis, num_cis, 0x1f);
-+	size_t aux_num_cis = 0;
- 	struct hci_conn *conn;
- 	u8 cig = BT_ISO_QOS_CIG_UNSET;
- 
-@@ -6526,8 +6512,6 @@ int hci_le_create_cis_sync(struct hci_dev *hdev)
- 	 * remains pending.
- 	 */
- 
--	memset(&cmd, 0, sizeof(cmd));
--
- 	hci_dev_lock(hdev);
- 
- 	rcu_read_lock();
-@@ -6564,7 +6548,7 @@ int hci_le_create_cis_sync(struct hci_dev *hdev)
- 		goto done;
- 
- 	list_for_each_entry_rcu(conn, &hdev->conn_hash.list, list) {
--		struct hci_cis *cis = &cmd.cis[cmd.cp.num_cis];
-+		struct hci_cis *cis = &cmd->cis[aux_num_cis];
- 
- 		if (hci_conn_check_create_cis(conn) ||
- 		    conn->iso_qos.ucast.cig != cig)
-@@ -6573,9 +6557,9 @@ int hci_le_create_cis_sync(struct hci_dev *hdev)
- 		set_bit(HCI_CONN_CREATE_CIS, &conn->flags);
- 		cis->acl_handle = cpu_to_le16(conn->parent->handle);
- 		cis->cis_handle = cpu_to_le16(conn->handle);
--		cmd.cp.num_cis++;
-+		cmd->num_cis = ++aux_num_cis;
- 
--		if (cmd.cp.num_cis >= ARRAY_SIZE(cmd.cis))
-+		if (cmd->num_cis >= 0x1f)
- 			break;
- 	}
- 
-@@ -6584,14 +6568,13 @@ int hci_le_create_cis_sync(struct hci_dev *hdev)
- 
- 	hci_dev_unlock(hdev);
- 
--	if (!cmd.cp.num_cis)
-+	if (!aux_num_cis)
- 		return 0;
- 
- 	/* Wait for HCI_LE_CIS_Established */
- 	return __hci_cmd_sync_status_sk(hdev, HCI_OP_LE_CREATE_CIS,
--					sizeof(cmd.cp) + sizeof(cmd.cis[0]) *
--					cmd.cp.num_cis, &cmd,
--					HCI_EVT_LE_CIS_ESTABLISHED,
-+					struct_size(cmd, cis, cmd->num_cis),
-+					cmd, HCI_EVT_LE_CIS_ESTABLISHED,
- 					conn->conn_timeout, NULL);
- }
++# Sanity check userspace page table mappings.
++CONFIG_PAGE_TABLE_CHECK=y
++CONFIG_PAGE_TABLE_CHECK_ENFORCED=y
++
+ # Randomize kernel stack offset on syscall entry.
+ CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
  
 -- 
 2.34.1
