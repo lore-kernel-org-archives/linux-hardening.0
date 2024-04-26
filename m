@@ -1,39 +1,43 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66A7F8
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 00:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5D82BAE2;
+	Fri, 26 Apr 2024 03:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714093122; cv=none; b=mcKwGm8TM/378qpWJ6Q7dvyYDutHQHRwyxnJ+LcqDqK55VCxoDjzZw0C062HgKsIs+ulUr4/oNp+BzQOk3p2I085lQ4M90zRAUBQHYyq3as0Sl3Uvrq1K/jxe3A679pEj/MwzAbVlaTiCwUjQItsNuDln8p/srYLJ2u7RUDn8kI=
+	t=1714101949; cv=none; b=OGKQFQWLQV3omE139f569PU4cqvwZ1JSrIlBavzTtf0jxI2OvVMwYFYawF8M1CszCUz1pVQ8bgKYZ86QFkJCq8Ulr2a7JP87pkwDqSUkrfWJxXJVFgZO44do4jeYBT2nAoOFXXpgyYh59hEIAHkYFMbegSamIMA/Xn0Qp43vWpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714093122; c=relaxed/simple;
-	bh=lvobPQOIiNfw0n12EkvEBH57AhWUFxbFDYcvxGJw4Hk=;
+	s=arc-20240116; t=1714101949; c=relaxed/simple;
+	bh=7OgY3E4OhSB7qgee85Fgr8Gin0wCc0ruVkh618+fd2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gOydVosqQDTqJMLW7/yIZUp7k3nv43g12AYMsh8gYEVYENiyJc+kHFIs6E05C0YbscQ9iTDSm13UYw6IDWzyEMkPIDbCCATwWr+3OZRktM4Vd2ZLfEOYxQfmRhT6iIKFznNUpvtgeO3QrcXU1kthxC84pB5vsfE/+x7k9VchOvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MIYMK39u; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zi7SdkjwUWESgh/Ax5PebyejRYS+/4PptgnRu2rY4i4IMTtLBLXOyEcDnoAQSodvBqBLHS3GmeijCxMb6M4PSK/ztN/D1WDj+rVfilotr17juV8VJPoTk+Ou1Ttf2oTeBfsWNfC6/2zmYhMstFAKJ7CTN7NYTQjRuQGYuutQ10M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fPLNukjc; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MIYMK39u"
-Date: Thu, 25 Apr 2024 20:58:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714093118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pW2nVZcsWCTaWzRE1USWg5C8N+QQoR9xikgyDPIEVfg=;
-	b=MIYMK39u8yqpjVgHB3ze+cLWiWdTjBb7/6od4z7JDRizvyBKuLEo9FWHdzw1M9O9DGD7Vc
-	YQZTYCuXdgW7U3efY7Eb43U+WsAe7thXCkRpi21BS2IcQbM306ApwpLrgYjNUqVkZhPg6e
-	ClBbl9sDKx/xOj87h6WiPC+Y7Hvb21M=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Matthew Wilcox <willy@infradead.org>, Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fPLNukjc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=C7BGuFax2sLW1Ikgo6D4h4Axnj+rfKZZEdQqdqRze5Y=; b=fPLNukjc5FsxCc70iHDy4iKbYu
+	qUXxEUOVlz5cmhqdpUUaoH7msVoRMATiKpcaEniAdqHIqEmEv4O25Piq6Na4zW9oHP4dJgoCEBNm5
+	h/zgiXWli/nRJQ6kR4VQg9yX6EVZaBOvg/7uZI2Sw9YWCidSA71hc4XDrrINPkl1XA1NTXrAeoI54
+	rAAxHaee1UY5h4r1kbxEyZgSeNfVw3NjsC1UnAybUGFoeExyQ/iZKNWHvfeKsf+yUx7qVFELtvtv0
+	TqrlwZ1UkKAalxlBZFGnuiAbFbDTpvNnKpUQTHeR/icMuTerpH+wBinj9w4QLmhyWjD+sy1Fvfb6p
+	A3XRtMMw==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s0CDU-00000004NaV-0r81;
+	Fri, 26 Apr 2024 03:25:40 +0000
+Date: Fri, 26 Apr 2024 04:25:40 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
-Message-ID: <qzi5ss4h4ou6yfbzadoamqocvvzviuh3eeefpv5qfkcvrrejfo@qptmu2y6u7qj>
+Message-ID: <ZisetKVI2Lnzucm9@casper.infradead.org>
 References: <20240425200844.work.184-kees@kernel.org>
  <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
  <ZirCbPR1XwX2WJSX@casper.infradead.org>
@@ -42,6 +46,7 @@ References: <20240425200844.work.184-kees@kernel.org>
  <20240425164718.e8e187dd0c5b0a87371d8316@linux-foundation.org>
  <sxcyj2gif2avyx2disz62sfe3hot24w4rtszgl2dtqadegtnek@xjkozdbd6yzp>
  <202404251740.81F21E54@keescook>
+ <qzi5ss4h4ou6yfbzadoamqocvvzviuh3eeefpv5qfkcvrrejfo@qptmu2y6u7qj>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,49 +55,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202404251740.81F21E54@keescook>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <qzi5ss4h4ou6yfbzadoamqocvvzviuh3eeefpv5qfkcvrrejfo@qptmu2y6u7qj>
 
-On Thu, Apr 25, 2024 at 05:43:33PM -0700, Kees Cook wrote:
-> On Thu, Apr 25, 2024 at 08:27:05PM -0400, Kent Overstreet wrote:
-> > On Thu, Apr 25, 2024 at 04:47:18PM -0700, Andrew Morton wrote:
-> > > On Thu, 25 Apr 2024 15:42:30 -0700 Kees Cook <keescook@chromium.org> wrote:
-> > > 
-> > > > > The concern about leaking image layout could be addressed by sorting the
-> > > > > output before returning to userspace.
-> > > > 
-> > > > It's trivial to change permissions from the default 0400 at boot time.
-> > > > It can even have groups and ownership changed, etc. This is why we have
-> > > > per-mount-namespace /proc instances:
-> > > > 
-> > > > # chgrp sysmonitor /proc/allocinfo
-> > > > # chmod 0440 /proc/allocinfo
-> > > > 
-> > > > Poof, instant role-based access control. :)
-> > > 
-> > > Conversely, the paranoid could set it to 0400 at boot also.
-> > > 
-> > > > I'm just trying to make the _default_ safe.
-> > > 
-> > > Agree with this.
-> > > 
-> > > Semi-seriously, how about we set the permissions to 0000 and force
-> > > distributors/users to make a decision.
-> > 
-> > I'm ok with 0400 for now since it's consistent with slabinfo, but I'd
-> > really like to see a sysctl for debug info paranoia. We shouldn't be
-> > leaving this to the distros; we're the ones with the expertise to say
-> > what would be covered by that sysctl.
+On Thu, Apr 25, 2024 at 08:58:34PM -0400, Kent Overstreet wrote:
+> On Thu, Apr 25, 2024 at 05:43:33PM -0700, Kees Cook wrote:
+> > All this said, I'm still not excited about any of these files living
+> > in /proc at all -- we were supposed to use /sys for this kind of thing,
+> > but its interface wasn't great for this kind of more "free-form" data,
+> > and debugfs isn't good for production interfaces. /proc really should
+> > only have pid information -- we end up exposing these top-level files to
+> > every mount namespace with a /proc mount. :( But that's a yet-to-be-solved
+> > problem...
 > 
-> We've not had great luck with sysctls (see userns sysctl discussions)
-> since they don't provide sufficient granularity.
-> 
-> All this said, I'm still not excited about any of these files living
-> in /proc at all -- we were supposed to use /sys for this kind of thing,
-> but its interface wasn't great for this kind of more "free-form" data,
-> and debugfs isn't good for production interfaces. /proc really should
-> only have pid information -- we end up exposing these top-level files to
-> every mount namespace with a /proc mount. :( But that's a yet-to-be-solved
-> problem...
+> It really wouldn't be that hard to relax the 4k file limit in sysfs.
 
-It really wouldn't be that hard to relax the 4k file limit in sysfs.
+It's a lot harder to relax the GregKH opposition to multiple values per
+file in sysfs.
