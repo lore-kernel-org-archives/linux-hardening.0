@@ -1,46 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C0C2B9AF;
-	Fri, 26 Apr 2024 16:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605F02F874
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 17:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714149921; cv=none; b=C4k2j9xUPAOr4NhhyCaQA+HfyPp8GM8sS3KaR9LLV7TXs5FshKMNm2+VDB1Iu+PTA6fSIhnXf87dlt/jmYB3kcKG5ibow1pyoJRcHdTojwSHJ1RTp872Ly+XatD2jsoa99uWiS9ENEcr8qZMSsrvtCBsrwPsx6raCl2Onqylhqg=
+	t=1714151181; cv=none; b=VeyfdfMB54JhfCG8EDhOUSrqxrlfeSPW6c8sSeo+SqI/reZzK6DxZb3XpxRnAhzwDD1ebUh+wfobGVyuoH98UhF9rYqrZA0qUUhmZpXBQ6AubByjn5uj1+b8KtitFbLNHU75cTIW2js8gTD50wjxckyD+GNYn54Sfi42I0aVm5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714149921; c=relaxed/simple;
-	bh=gPXudTVXPzAYk/IBuGVv5BUulrSGwKA4k/IvdqMV+jI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XcIns9jGwnwj++uSlzgq1tb3Cb7ZreTylcm/7c3a395M8KJOpOAdzNEhxUl4LIyOXBMwik5xsafh/pJvQ+DzHHhmfMJDmLe+x1FPZTvPPFrxaE0BJlRwYkt4XY5TvfZ5TfzZDY5piUsh5HO2vFotsTKuy7hvknUbqlJAvp/bMs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FT0QMFye; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714151181; c=relaxed/simple;
+	bh=rUgSrXh/kUp2ce5vjmf3tVk45NuHCMnuJRWXof5A6Yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQaMl/igPCBqXMA2pe/GP6eCKUic2sEP6s483cbQiXBoqahuR/kBExxhg2dMtO/RxP2qxffkyCCAA1x/2bq2uU7ZIB2fpzDH9Ysn6A5Su+uN6jnlVKh8p0VxR6rRq7f6s2JJfqNwXyqNnmJ9z49fW1Z3+1oZZkif3tc0Y3kCbmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oCk4ARU4; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FT0QMFye"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D726AC113CD;
-	Fri, 26 Apr 2024 16:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714149921;
-	bh=gPXudTVXPzAYk/IBuGVv5BUulrSGwKA4k/IvdqMV+jI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FT0QMFyeSVc2Lx2CmRk7crSVNfJaB0pkKTvk5aoG+2MGabFQBQ5HqlIp6LG8pX/pV
-	 NmgQiygFd+jDSleYF6/O1OL+bfbUBxu3DsNubI1LEN5RaN/5u/KtTxMhosLM/VzxJP
-	 nxsk+KBjNop6Zenc6VqkwdEeZ3Wt8C80RH1l/ycne0OHmUMxy74B0MEJwzxPKMTfhk
-	 bdfZvWNdzoseDHsOAtrYU6v2VFZLTXV4ag9Z+Xgtol26uVtpTUI5IteVk5z3uhntaj
-	 7s6C4QJ8HedVi03aEmUPc9oNTUGeGx8OU1HnsionPFDfnJKqPiUF5bdRCje2+yfm77
-	 KtuxRii81zOtQ==
-Date: Fri, 26 Apr 2024 10:45:17 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] Bluetooth: hci_conn: Use __counted_by() in struct
- hci_cp_le_big_create_sync and avoid -Wfamnae warning
-Message-ID: <ZivaHUQyDDK9fXEk@neat>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oCk4ARU4"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6eff2be3b33so2305807b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 10:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714151180; x=1714755980; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SgX9HQcRhIm4KtQdq9GYft3Q0ZiwCuQWZ5JhWxXdoTI=;
+        b=oCk4ARU4a263ukrUlQUorV9/Jrw9YVzOGIG7ZkRWBCRko955Oeb1b7Zh1JH3kcyKNM
+         mhRkw7Fj945f+RcI/wgXfi2JspbrYbxbxqoBr5Zu5DUqRCJHNslnIiSsLOstE0ImIvRK
+         GW0SOGwybzdag5Rq46fkqIvBzCOV9f/+N4ZH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714151180; x=1714755980;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SgX9HQcRhIm4KtQdq9GYft3Q0ZiwCuQWZ5JhWxXdoTI=;
+        b=pitHu9UozqCbmuQFugKj4c54Au85oQaAHzllNBQmwbvsPu6PM6zg4zU9vmleuDimXc
+         h5S74N8ExtdUCGFsQM7ECk0UnmvetnzUh++kZ+OZaiLBg65ZDJHzYL+OEy/e2Hqq3nVV
+         ovAhMAXczFCEVxthoukWSxQXDHFZZT+ZrXURmQIw3LEAbeRAp2CyovmVYCtoixGfRMs7
+         VxiFcr77oBcmh5jf7Fk8OiYTFXnGN1LFYhS/EePTHAR0vXvQhtbJiCjb2d2jjW2Nchl+
+         Is0sIYfdbd7Rzl6hoqTWflSjhjyvylC4BSHPdilpjtRb5edx4bc3c1f5nnBQCAAGWTDK
+         n8oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8kPpLW04GgdfqSa51Q/7aoq/nIFdo7qxgRND4BCpz4Bpcz5dj4+hOg3x1krqsfTfUUNthZEA18h8v0RyJbfI1jHdqKozyWvye6vlh97Gh
+X-Gm-Message-State: AOJu0YxTjrT24Wgflpm+V/OLMQJEINrLWDOQolk3+Vwu7wjhXzVTECj8
+	U2HD/fmvqgItGZLbz3DaP+tZCnqyQxsWwOVMLh+hFZ7pOteh6zSXFWqJn8hmMA==
+X-Google-Smtp-Source: AGHT+IFRuONJTBeF5jWTd1Z1iUSFqM7Mlp2kx8AS+7oOD8Od6nCZUNw8lqItcPq8AJeYMewLdxXOFA==
+X-Received: by 2002:a05:6a20:9703:b0:1ad:92e0:f5d7 with SMTP id hr3-20020a056a20970300b001ad92e0f5d7mr3368882pzc.46.1714151179677;
+        Fri, 26 Apr 2024 10:06:19 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jw37-20020a056a0092a500b006ecf0ad97bbsm15541913pfb.17.2024.04.26.10.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 10:06:18 -0700 (PDT)
+Date: Fri, 26 Apr 2024 10:06:17 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mm/slub: Avoid recursive loop with kmemleak
+Message-ID: <202404261005.F7393F558@keescook>
+References: <20240425205516.work.220-kees@kernel.org>
+ <Ziu_qOmgnWRdAByp@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,98 +73,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Ziu_qOmgnWRdAByp@arm.com>
 
-Prepare for the coming implementation by GCC and Clang of the
-__counted_by attribute. Flexible array members annotated with
-__counted_by can have their accesses bounds-checked at run-time
-via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-(for strcpy/memcpy-family functions).
+On Fri, Apr 26, 2024 at 03:52:24PM +0100, Catalin Marinas wrote:
+> On Thu, Apr 25, 2024 at 01:55:23PM -0700, Kees Cook wrote:
+> > The system will immediate fill up stack and crash when both
 
-Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-getting ready to enable it globally.
+Oops, typo from me: "immediately". You'd never guess I'm a native English
+speaker! :)
 
-So, use the `DEFINE_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+> > CONFIG_DEBUG_KMEMLEAK and CONFIG_MEM_ALLOC_PROFILING are enabled.
+> > Avoid allocation tagging of kmemleak caches, otherwise recursive
+> > allocation tracking occurs.
+> > 
+> > Fixes: 279bb991b4d9 ("mm/slab: add allocation accounting into slab allocation and free paths")
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> For the kmemleak bits:
+> 
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
-With these changes, fix the following warning:
-net/bluetooth/hci_conn.c:2116:50: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Thanks!
 
-Link: https://github.com/KSPP/linux/issues/202
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use `sizeof(*pdu) + num_bis` instead of `__struct_size(pdu)`
+-Kees
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZivYcpzZsc7aIFZ5@neat/
-
- include/net/bluetooth/hci.h |  2 +-
- net/bluetooth/hci_conn.c    | 26 +++++++++++---------------
- 2 files changed, 12 insertions(+), 16 deletions(-)
-
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 5c12761cbc0e..fe23e862921d 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -2216,7 +2216,7 @@ struct hci_cp_le_big_create_sync {
- 	__u8    mse;
- 	__le16  timeout;
- 	__u8    num_bis;
--	__u8    bis[];
-+	__u8    bis[] __counted_by(num_bis);
- } __packed;
- 
- #define HCI_OP_LE_BIG_TERM_SYNC			0x206c
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 81166a5bc034..d6daf55f0307 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -2112,13 +2112,10 @@ int hci_le_big_create_sync(struct hci_dev *hdev, struct hci_conn *hcon,
- 			   struct bt_iso_qos *qos,
- 			   __u16 sync_handle, __u8 num_bis, __u8 bis[])
- {
--	struct _packed {
--		struct hci_cp_le_big_create_sync cp;
--		__u8  bis[0x11];
--	} pdu;
-+	DEFINE_FLEX(struct hci_cp_le_big_create_sync, pdu, bis, num_bis, 0x11);
- 	int err;
- 
--	if (num_bis < 0x01 || num_bis > sizeof(pdu.bis))
-+	if (num_bis < 0x01 || num_bis > pdu->num_bis)
- 		return -EINVAL;
- 
- 	err = qos_set_big(hdev, qos);
-@@ -2128,18 +2125,17 @@ int hci_le_big_create_sync(struct hci_dev *hdev, struct hci_conn *hcon,
- 	if (hcon)
- 		hcon->iso_qos.bcast.big = qos->bcast.big;
- 
--	memset(&pdu, 0, sizeof(pdu));
--	pdu.cp.handle = qos->bcast.big;
--	pdu.cp.sync_handle = cpu_to_le16(sync_handle);
--	pdu.cp.encryption = qos->bcast.encryption;
--	memcpy(pdu.cp.bcode, qos->bcast.bcode, sizeof(pdu.cp.bcode));
--	pdu.cp.mse = qos->bcast.mse;
--	pdu.cp.timeout = cpu_to_le16(qos->bcast.timeout);
--	pdu.cp.num_bis = num_bis;
--	memcpy(pdu.bis, bis, num_bis);
-+	pdu->handle = qos->bcast.big;
-+	pdu->sync_handle = cpu_to_le16(sync_handle);
-+	pdu->encryption = qos->bcast.encryption;
-+	memcpy(pdu->bcode, qos->bcast.bcode, sizeof(pdu->bcode));
-+	pdu->mse = qos->bcast.mse;
-+	pdu->timeout = cpu_to_le16(qos->bcast.timeout);
-+	pdu->num_bis = num_bis;
-+	memcpy(pdu->bis, bis, num_bis);
- 
- 	return hci_send_cmd(hdev, HCI_OP_LE_BIG_CREATE_SYNC,
--			    sizeof(pdu.cp) + num_bis, &pdu);
-+			    sizeof(*pdu) + num_bis, pdu);
- }
- 
- static void create_big_complete(struct hci_dev *hdev, void *data, int err)
 -- 
-2.34.1
-
+Kees Cook
