@@ -1,54 +1,54 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD43E38F86
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 23:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EA93BBF7
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 23:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714173053; cv=none; b=q3MIkV/ivX6iNy04h6NZAXkqDPCIM7LIdhttWFw2Pq4tfYXlYhytcGUZ5WlbL9vSTEx4gXa7u2/SfbMxWyIFPRKZl+tUfL42Dz0NoqsMW9n4IdAtakMj+jgWqKFkdKmXA+de8FhNYSHGpY37LkusOJq+UIGE3fluCXUOniJoebY=
+	t=1714173398; cv=none; b=R5iOVQOdFTLJmT4PgqV+t9yrP0Fr5tMKWQhnASIpTLeYDZGGJjfbpvedp709KV0yUjqLvurfTXgYqVCV0yRlaXtoTw60k0rs47XvMqlCn3Z6hdpa/IOKhP2ZK1OkhaAidUVT3NB3U3ILovOFJ27Kj0oDHUguk0kScK3Brp75Yo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714173053; c=relaxed/simple;
-	bh=TCphrKjYXxlWEN2NCob2dqtLGwdv432OtjOv0XccxHE=;
+	s=arc-20240116; t=1714173398; c=relaxed/simple;
+	bh=7AjVYx3bCX4Fww04LykaNFtcTPbI6xC5fT6cTYYHebs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=shM0CiZnn/Xeee+3bqFtdgloyDnks1nJsp2RvShWZeWJy6lUDGsrpVnr8qP7AuH9ArIfdtH1b24Rn8o3+I7ndHisxloQbWef7HPgm88CFcVqrXf02Qa7CiLLy4lsNh0oQ7yOA6DqRx6dVRsC4+bI0X/qlDq3UW9Z1HkdNZE8w7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kf2jLahA; arc=none smtp.client-ip=209.85.214.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxp7NM62wTt0YhguFFAXzl1YnihI561viKQgQ5GAmSHpphDVkHXBZyRgAmUfQcUOij/hJEpieO4TYEBNrmjSC48MwE9/7PkKjfijiTjlx6qkwH9XgjfH15frgdbioKLMzljRxQ7/7aGKhL//9hx94B1ix1V9y2H6kocCQRUanHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z8E1dV9m; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kf2jLahA"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so20269765ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 16:10:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z8E1dV9m"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso1710641b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 16:16:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714173051; x=1714777851; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714173396; x=1714778196; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CuTV6L1jExGCcwF2zmpAZoA6sTDj9zYxjotoZnSctqo=;
-        b=kf2jLahAR1XsQN6k9Sh/7uL2j5v5uZQZbYdsoAv3JKx+KmQTv6WoMgOZRK5bCRo7Be
-         vv8uFOf/M7/nL6PVxZ4ehFg/YWvHjwWjn01XOJ3gnGgyBEtkESyCJk95Vt4kwL0PnbVL
-         XG5y0u2Q/kQ61S75cwHGn9K7PDgQrLXJ5GObs=
+        bh=opWos3IruaB/4qZIdM96XOJaiq9zI0XzG7sSYPn525M=;
+        b=Z8E1dV9mb3tTWT4KgQ8DL2hwBRk2TNIKp9LkJT1hOTmjEC5zKyq87plkvcRt5CdQIK
+         b1IerMfAci6GPtSJP1VARkdGceH+2i4KBjLWGHi7awh7SwvQo8cn+Rgh3pzfx4jh7AlM
+         9jkyqXu4x/Py7bmXZvQ8dXO9B5HS7zYV9qUpo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714173051; x=1714777851;
+        d=1e100.net; s=20230601; t=1714173396; x=1714778196;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CuTV6L1jExGCcwF2zmpAZoA6sTDj9zYxjotoZnSctqo=;
-        b=nheDSZMofOhWCj1wE11WE27/Z7RjH1mguRXgJel2XGeGU5Z+Grz8IXL08uB/ddVIOe
-         U/kZDJEkhyTPIHefJntirnB+zUpTC/Ltd1Q26+/RhRsg8Sh6S+wFi7LJFTvwsXjnSJ0v
-         i9acjS5UkVeINOShd9dwSmwLEnvVyKLuCNxzCRLcXcvYfzfpKP6URICjgZsXsmspzNIi
-         A2M+8dfZQlQ/ACVpy7ohG/r+p3+S9sjOcsI6Xd1KFPup9kmRfihllCpTiYUeAfAOS1x6
-         KFrtP8MFLfQGw2M9Md2fvFjVdq7BkgMLNEONzHSk36JahY3GH4n9EyuHCa5KX7wacBg7
-         ndzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVksR2RDIrrWTbPYHuHsdSm3Q/WvhT8HRLBVceqcsODLef5zy+d4Me7Jc65h6c5qOZKbEIY8a4i/d5gzhJSMa9iktV41nF1iAV3sIEQy/TX
-X-Gm-Message-State: AOJu0YxmZ44pJirfUXQVtgHfZ5bsj/qSaPsNOU0m6XKe9bYdlYPBTeel
-	ap6nSlC+fAz6hz/rF2DqZ9MVa9c6y0c9SWi6PWiZ797Q7SoL5WW89Y3LCrcAmg==
-X-Google-Smtp-Source: AGHT+IHvlg5mqByql/F13nvO+nwouYvcS5j7UFiqkzAiirbFHxbFstdLbzBG8pR5gIz6aKQ6TXjGaQ==
-X-Received: by 2002:a17:902:ec8b:b0:1eb:527e:a89e with SMTP id x11-20020a170902ec8b00b001eb527ea89emr670236plg.26.1714173051036;
-        Fri, 26 Apr 2024 16:10:51 -0700 (PDT)
+        bh=opWos3IruaB/4qZIdM96XOJaiq9zI0XzG7sSYPn525M=;
+        b=tzyFdob1qJRaaQcv/ZXz1x1YbPCU6IHNHJbCQxceveN0c9Jphbdovo4Z8YB4i3AonX
+         a5AdeGvn70IJ5LqtydNM98kSLN9p0xn7DEh1Ng1Mu+E9fwtp6RIvULAJVqceHgydPD7w
+         jY4GMnyCToXWeCfbGo+hbJOsDRVOIV0/CSGqd95jx3FtNDWSc5H4d9yzBZLCRjmmILG0
+         OYI58MlRPz42UedtL+UmHyvm8xJi88SfPIJuP63HXgsMGsGHXmBw4KZBAhgWtuJ8u16f
+         X7YGgtVEMUGde0BVEKdvLHQIolkKsyshd8N5w+rj8POtAuzr7yCVkaWpgPVTMzwB1Jn4
+         8hAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWX4y7i2DytKGArgay61OnB91uu1kvs4vuL5jcwPJ1ndnwuWbXrbG0jqy0VNgaGVDY472FQrH7GG7x9Kk+1WQFfIBXj7A1gKflhRT0CYYZ
+X-Gm-Message-State: AOJu0YxbZdiBAspJvXq7ERrBZhGn9P2+P+2msFD4MpTR22ZM8xUxw7fv
+	Qdm/98dL8/8YmqupHav0TaPTdY61XtI1K1Z//oB3A/HLja+0TCMgsigoXJPm3w==
+X-Google-Smtp-Source: AGHT+IEUZubJL4QUSK6pyzCdpuqFqY/W/ty9RvrLZCDN36NO8wZyv7NW/a7U0iQN/0uUIh4tnO/xbw==
+X-Received: by 2002:a05:6a20:d48c:b0:1ae:a5bf:341b with SMTP id im12-20020a056a20d48c00b001aea5bf341bmr2506303pzb.6.1714173396083;
+        Fri, 26 Apr 2024 16:16:36 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k4-20020a170902760400b001e2936705b4sm15998521pll.243.2024.04.26.16.10.50
+        by smtp.gmail.com with ESMTPSA id s3-20020a056a00194300b006e6ae26625asm15345740pfk.68.2024.04.26.16.16.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 16:10:50 -0700 (PDT)
-Date: Fri, 26 Apr 2024 16:10:49 -0700
+        Fri, 26 Apr 2024 16:16:35 -0700 (PDT)
+Date: Fri, 26 Apr 2024 16:16:34 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Adrian Ratiu <adrian.ratiu@collabora.com>
 Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
@@ -59,12 +59,12 @@ Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
 	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Mike Frysinger <vapier@chromium.org>
-Subject: Re: [PATCH v3 1/2] proc: restrict /proc/pid/mem access via param
- knobs
-Message-ID: <202404261544.1EAD63D@keescook>
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v3 2/2] proc: add Kconfigs to restrict /proc/pid/mem
+ access
+Message-ID: <202404261611.958FEB4@keescook>
 References: <20240409175750.206445-1-adrian.ratiu@collabora.com>
+ <20240409175750.206445-2-adrian.ratiu@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,86 +73,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240409175750.206445-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20240409175750.206445-2-adrian.ratiu@collabora.com>
 
-On Tue, Apr 09, 2024 at 08:57:49PM +0300, Adrian Ratiu wrote:
-> Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
-> after which it got allowed in commit 198214a7ee50 ("proc: enable
-> writing to /proc/pid/mem"). Famous last words from that patch:
-> "no longer a security hazard". :)
+On Tue, Apr 09, 2024 at 08:57:50PM +0300, Adrian Ratiu wrote:
+> Some systems might have difficulty changing their bootloaders
+> to enable the newly added restrict_proc_mem* params, for e.g.
+> remote embedded doing OTA updates, so this provides a set of
+> Kconfigs to set /proc/pid/mem restrictions at build-time.
 > 
-> Afterwards exploits started causing drama like [1]. The exploits
-> using /proc/*/mem can be rather sophisticated like [2] which
-> installed an arbitrary payload from noexec storage into a running
-> process then exec'd it, which itself could include an ELF loader
-> to run arbitrary code off noexec storage.
+> The boot params take precedence over the Kconfig values. This
+> can be reversed, but doing it this way I think makes sense.
 > 
-> One of the well-known problems with /proc/*/mem writes is they
-> ignore page permissions via FOLL_FORCE, as opposed to writes via
-> process_vm_writev which respect page permissions. These writes can
-> also be used to bypass mode bits.
+> Another idea is to have a global bool Kconfig which can enable
+> or disable this mechanism in its entirety, however it does not
+> seem necessary since all three knobs default to off, the branch
+> logic overhead is rather minimal and I assume most of systems
+> will want to restrict at least the use of FOLL_FORCE.
 > 
-> To harden against these types of attacks, distrbutions might want
-> to restrict /proc/pid/mem accesses, either entirely or partially,
-> for eg. to restrict FOLL_FORCE usage.
-> 
-> Known valid use-cases which still need these accesses are:
-> 
-> * Debuggers which also have ptrace permissions, so they can access
-> memory anyway via PTRACE_POKEDATA & co. Some debuggers like GDB
-> are designed to write /proc/pid/mem for basic functionality.
-> 
-> * Container supervisors using the seccomp notifier to intercept
-> syscalls and rewrite memory of calling processes by passing
-> around /proc/pid/mem file descriptors.
-> 
-> There might be more, that's why these params default to disabled.
-> 
-> Regarding other mechanisms which can block these accesses:
-> 
-> * seccomp filters can be used to block mmap/mprotect calls with W|X
-> perms, but they often can't block open calls as daemons want to
-> read/write their runtime state and seccomp filters cannot check
-> file paths, so plain write calls can't be easily blocked.
-> 
-> * Since the mem file is part of the dynamic /proc/<pid>/ space, we
-> can't run chmod once at boot to restrict it (and trying to react
-> to every process and run chmod doesn't scale, and the kernel no
-> longer allows chmod on any of these paths).
-> 
-> * SELinux could be used with a rule to cover all /proc/*/mem files,
-> but even then having multiple ways to deny an attack is useful in
-> case one layer fails.
-> 
-> Thus we introduce three kernel parameters to restrict /proc/*/mem
-> access: read, write and foll_force. All three can be independently
-> set to the following values:
-> 
-> all     => restrict all access unconditionally.
-> ptracer => restrict all access except for ptracer processes.
-> 
-> If left unset, the existing behaviour is preserved, i.e. access
-> is governed by basic file permissions.
-> 
-> Examples which can be passed by bootloaders:
-> 
-> restrict_proc_mem_foll_force=all
-> restrict_proc_mem_write=ptracer
-> restrict_proc_mem_read=ptracer
-> 
-> Each distribution needs to decide what restrictions to apply,
-> depending on its use-cases. Embedded systems might want to do
-> more, while general-purpouse distros might want a more relaxed
-> policy, because for e.g. foll_force=all and write=all both break
-> break GDB, so it might be a bit excessive.
-> 
-> Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
-
-Thanks for this new version!
-
-> 
-> Link: https://lwn.net/Articles/476947/ [1]
-> Link: https://issues.chromium.org/issues/40089045 [2]
 > Cc: Guenter Roeck <groeck@chromium.org>
 > Cc: Doug Anderson <dianders@chromium.org>
 > Cc: Kees Cook <keescook@chromium.org>
@@ -160,277 +97,45 @@ Thanks for this new version!
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Randy Dunlap <rdunlap@infradead.org>
 > Cc: Christian Brauner <brauner@kernel.org>
-> Co-developed-by: Mike Frysinger <vapier@chromium.org>
-> Signed-off-by: Mike Frysinger <vapier@chromium.org>
 > Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 > ---
->  .../admin-guide/kernel-parameters.txt         |  27 +++++
->  fs/proc/base.c                                | 103 +++++++++++++++++-
->  include/linux/jump_label.h                    |   5 +
->  3 files changed, 133 insertions(+), 2 deletions(-)
+>  fs/proc/base.c   | 33 +++++++++++++++++++++++++++++++++
+>  security/Kconfig | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 75 insertions(+)
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 6e62b8cb19c8d..d7f7db41369c7 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5665,6 +5665,33 @@
->  	reset_devices	[KNL] Force drivers to reset the underlying device
->  			during initialization.
->  
-> +	restrict_proc_mem_read= [KNL]
-> +			Format: {all | ptracer}
-> +			Allows restricting read access to /proc/*/mem files.
-> +			Depending on restriction level, open for reads return -EACCESS.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, then basic file permissions continue to apply.
-> +
-> +	restrict_proc_mem_write= [KNL]
-> +			Format: {all | ptracer}
-> +			Allows restricting write access to /proc/*/mem files.
-> +			Depending on restriction level, open for writes return -EACCESS.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, then basic file permissions continue to apply.
-> +
-> +	restrict_proc_mem_foll_force= [KNL]
-> +			Format: {all | ptracer}
-> +			Restricts the use of the FOLL_FORCE flag for /proc/*/mem access.
-> +			If restricted, the FOLL_FORCE flag will not be added to vm accesses.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, FOLL_FORCE is always used.
-
-bike shedding: I wonder if this should be a fake namespace (adding a dot
-just to break it up for reading more easily), and have words reordered
-to the kernel's more common subject-verb-object: proc_mem.restrict_read=...
-
-> +
->  	resume=		[SWSUSP]
->  			Specify the partition device for software suspend
->  			Format:
 > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 18550c071d71c..c733836c42a65 100644
+> index c733836c42a65..e8ee848fc4a98 100644
 > --- a/fs/proc/base.c
 > +++ b/fs/proc/base.c
-> @@ -152,6 +152,41 @@ struct pid_entry {
->  		NULL, &proc_pid_attr_operations,	\
->  		{ .lsmid = LSMID })
+> @@ -889,6 +889,17 @@ static int __mem_open_check_access_restriction(struct file *file)
+>  		    !__mem_open_current_is_ptracer(file))
+>  			return -EACCES;
 >  
-> +/*
-> + * each restrict_proc_mem_* param controls the following static branches:
-> + * key[0] = restrict all writes
-> + * key[1] = restrict writes except for ptracers
-> + * key[2] = restrict all reads
-> + * key[3] = restrict reads except for ptracers
-> + * key[4] = restrict all FOLL_FORCE usage
-> + * key[5] = restrict FOLL_FORCE usage except for ptracers
-> + */
-> +DEFINE_STATIC_KEY_ARRAY_FALSE_RO(restrict_proc_mem, 6);
+> +#ifdef CONFIG_SECURITY_PROC_MEM_WRITE_RESTRICT
 
-So, I don't like having open-coded numbers. And I'm not sure there's a
-benefit to stuffing these all into an array? So:
+No, please. :)
 
-DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_read);
-DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_write);
-DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_foll_force);
+Just use use the _MAYBE/_maybe variants of the static branch DECLAREs and
+branches, and make Kconfigs for:
 
-> +
-> +static int __init early_restrict_proc_mem(char *buf, int offset)
-> +{
-> +	if (!buf)
-> +		return -EINVAL;
-> +
-> +	if (strncmp(buf, "all", 3) == 0)
+CONFIG_PROC_MEM_RESTRICT_READ_DEFAULT
+CONFIG_PROC_MEM_RESTRICT_WRITE_DEFAULT
+CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_DEFAULT
 
-I'd use strcmp() to get exact matches. That way "allalksdjflas" doesn't
-match. :)
+Like:
 
-> +		static_branch_enable(&restrict_proc_mem[offset]);
-> +	else if (strncmp(buf, "ptracer", 7) == 0)
-> +		static_branch_enable(&restrict_proc_mem[offset + 1]);
-> +
-> +	return 0;
-> +}
+DECLARE_STATIC_KEY_MAYBE(CONFIG_PROC_MEM_RESTRICT_READ_DEFAULT, proc_mem_restrict_read);
 
-Then don't bother with a common helper since you've got a macro, and
-it'll all get tossed after __init anyway.
+and then later:
 
-> +
-> +#define DEFINE_EARLY_RESTRICT_PROC_MEM(name, offset)			\
-> +static int __init early_restrict_proc_mem_##name(char *buf)		\
-> +{									\
-> +	return early_restrict_proc_mem(buf, offset);			\
-> +}									\
-> +early_param("restrict_proc_mem_" #name, early_restrict_proc_mem_##name)
-> +
-> +DEFINE_EARLY_RESTRICT_PROC_MEM(write, 0);
-> +DEFINE_EARLY_RESTRICT_PROC_MEM(read, 2);
-> +DEFINE_EARLY_RESTRICT_PROC_MEM(foll_force, 4);
-
-#define DEFINE_EARLY_PROC_MEM_RESTRICT(name)				\
-static int __init early_proc_mem_restrict_##name(char *buf)		\
-{									\
-	if (!buf)							\
-		return -EINVAL;						\
-									\
-	if (strcmp(buf, "all") == 0)					\
-		static_branch_enable(&proc_mem_restrict_##name);	\
-	else if (strcmp(buf, "ptracer") == 0)				\
-		static_branch_enable(&proc_mem_restrict_##name);	\
-									\
-	return 0;							\
-}									\
-early_param("proc_mem_restrict_" #name, early_proc_mem_restrict_##name)
+	if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_READ_DEFAULT,
+				&proc_mem_restrict_read))
+		...
 
 
-> +
->  /*
->   * Count the number of hardlinks for the pid_entry table, excluding the .
->   * and .. links.
-> @@ -825,9 +860,58 @@ static int __mem_open(struct inode *inode, struct file *file, unsigned int mode)
->  	return 0;
->  }
->  
-> +static bool __mem_open_current_is_ptracer(struct file *file)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	struct task_struct *task = get_proc_task(inode);
-> +	int ret = false;
-> +
-> +	if (task) {
-> +		rcu_read_lock();
-> +		if (current == ptrace_parent(task))
-> +			ret = true;
-> +		rcu_read_unlock();
-> +		put_task_struct(task);
-> +	}
-
-This creates a ToCToU race between this check (which releases the task)
-and the later memopen which make get a different task (and mm).
-
-To deal with this, I think you need to add a new mode flag for
-proc_mem_open(), and add the checking there.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int __mem_open_check_access_restriction(struct file *file)
-> +{
-> +	if (file->f_mode & FMODE_WRITE) {
-> +		/* Deny if writes are unconditionally disabled via param */
-> +		if (static_branch_unlikely(&restrict_proc_mem[0]))
-> +			return -EACCES;
-> +
-> +		/* Deny if writes are allowed only for ptracers via param */
-> +		if (static_branch_unlikely(&restrict_proc_mem[1]) &&
-> +		    !__mem_open_current_is_ptracer(file))
-> +			return -EACCES;
-> +
-> +	} else if (file->f_mode & FMODE_READ) {
-
-I think this "else" means that O_RDWR opens will only check the write
-flag, so drop the "else".
-
-> +		/* Deny if reads are unconditionally disabled via param */
-> +		if (static_branch_unlikely(&restrict_proc_mem[2]))
-> +			return -EACCES;
-> +
-> +		/* Deny if reads are allowed only for ptracers via param */
-> +		if (static_branch_unlikely(&restrict_proc_mem[3]) &&
-> +		    !__mem_open_current_is_ptracer(file))
-> +			return -EACCES;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int mem_open(struct inode *inode, struct file *file)
->  {
-> -	int ret = __mem_open(inode, file, PTRACE_MODE_ATTACH);
-> +	int ret;
-> +
-> +	ret = __mem_open_check_access_restriction(file);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = __mem_open(inode, file, PTRACE_MODE_ATTACH);
->  
->  	/* OK to pass negative loff_t, we can catch out-of-range */
->  	file->f_mode |= FMODE_UNSIGNED_OFFSET;
-> @@ -835,6 +919,20 @@ static int mem_open(struct inode *inode, struct file *file)
->  	return ret;
->  }
->  
-> +static unsigned int __mem_rw_get_foll_force_flag(struct file *file)
-> +{
-> +	/* Deny if FOLL_FORCE is disabled via param */
-> +	if (static_branch_unlikely(&restrict_proc_mem[4]))
-> +		return 0;
-> +
-> +	/* Deny if FOLL_FORCE is allowed only for ptracers via param */
-> +	if (static_branch_unlikely(&restrict_proc_mem[5]) &&
-> +	    !__mem_open_current_is_ptracer(file))
-
-This is like the ToCToU: the task may have changed out from under us
-between the open the read/write.
-
-I'm not sure how to store this during "open" though... Hmmm
-
-> +		return 0;
-> +
-> +	return FOLL_FORCE;
-> +}
-> +
->  static ssize_t mem_rw(struct file *file, char __user *buf,
->  			size_t count, loff_t *ppos, int write)
->  {
-> @@ -855,7 +953,8 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
->  	if (!mmget_not_zero(mm))
->  		goto free;
->  
-> -	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
-> +	flags = (write ? FOLL_WRITE : 0);
-> +	flags |= __mem_rw_get_foll_force_flag(file);
-
-I wonder if we need some way to track openers in the mm? That sounds
-not-fun.
-
->  
->  	while (count > 0) {
->  		size_t this_len = min_t(size_t, count, PAGE_SIZE);
-> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-> index f5a2727ca4a9a..ba2460fe878c5 100644
-> --- a/include/linux/jump_label.h
-> +++ b/include/linux/jump_label.h
-> @@ -398,6 +398,11 @@ struct static_key_false {
->  		[0 ... (count) - 1] = STATIC_KEY_FALSE_INIT,	\
->  	}
->  
-> +#define DEFINE_STATIC_KEY_ARRAY_FALSE_RO(name, count)		\
-> +	struct static_key_false name[count] __ro_after_init = {	\
-> +		[0 ... (count) - 1] = STATIC_KEY_FALSE_INIT,	\
-> +	}
-
-Let's not add this. :)
-
-> +
->  #define _DEFINE_STATIC_KEY_1(name)	DEFINE_STATIC_KEY_TRUE(name)
->  #define _DEFINE_STATIC_KEY_0(name)	DEFINE_STATIC_KEY_FALSE(name)
->  #define DEFINE_STATIC_KEY_MAYBE(cfg, name)			\
-
-So, yes, conceptually, I really like this -- we've got some good
-granularity now, and wow do I love being able to turn off FOLL_FORCE.  :)
-
-Safely checking for ptracer is tricky, though. I wonder how we could
-store the foll_force state in the private_data somehow. Seems a bit
-painful to allocate a struct for it. We could do some really horrid
-hacks like store it in the low bit of the mm address that gets stored to
-private_data and mask it out when used, but that's really ugly too...
+Then all builds of the kernel will have it available, but system
+builders who want it enabled by default will get a slightly more
+optimized "if".
 
 -Kees
 
