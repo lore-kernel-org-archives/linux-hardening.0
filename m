@@ -1,47 +1,52 @@
 Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C8B21379;
-	Fri, 26 Apr 2024 08:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4847176026;
+	Fri, 26 Apr 2024 08:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714120359; cv=none; b=XkiC70+udWbPx1TdHkiXZ5Gl85enj1IED1xmY1XRLem+UmVcNvSTvPbDClX3Zhpe+oy/Zq+8OqNgIzSiWUKutUjsM9VLf0IVzClGY6xV534Q0a6oZvgou4wTNG/DDcTMHbc4DoQGAaa98PFhDz7jKDEe/sIpbvzraQvP1da7UiQ=
+	t=1714120448; cv=none; b=mh+vi8SPfhhijcASN0TyKunV8EZlSZss5mkA8bYtbLsrKvvXmHOidtRuLxl1vZP4oyfb//N3mapLr75ztO5tgtJXbxdPbnGjAPpLCHh8k/xe9Oh0bryMCHmznup3udIF/1gTwe13adZNI3CehqImyKRxiJrtfsf6jT4Yu3eCiks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714120359; c=relaxed/simple;
-	bh=JPzmIyrTXDfjqDAST+PV0hnEHHxODh7jJkm7vCutels=;
+	s=arc-20240116; t=1714120448; c=relaxed/simple;
+	bh=yCu8QgIgIudWIoFUBIgiPgM1UQ4NtIrnev8l9GHrxR8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUmrTHcvubFmjPw+9FA3RDuovt7w9P5Jf3ouB19yQtno2WW2dTWgeK6pMBiJIXZbBq4b9JEYSzJxC+SBxJKCiE6aQ/3KNioI+5ukatzoTBQpbcqvPZfO6Id7wpBD4u1gPPHEx/G1lBG/7vNOnWnL6YFqsyi6luvzOjWP5cw9/4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=b7ZatGXx; arc=none smtp.client-ip=46.255.230.98
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFyAG2VQoln5DQnXnYO355//rmTsyGL7pvqnxAIt35uoeZ+I4nRi/Yc2UHWDFXkyfaoAczxJaaHjpvvPVQcV3wyIuoXUuFFUAJ695omzX8z5WErZnWqMUN5AuELf6blZSFtnkXbS2rJwOTiE2XCLuK0fXVHqk77qif2v7YGVe04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=r1+96Ook; arc=none smtp.client-ip=46.255.230.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="b7ZatGXx"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="r1+96Ook"
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 776511C0080; Fri, 26 Apr 2024 10:32:28 +0200 (CEST)
+	id 0EC6F1C0081; Fri, 26 Apr 2024 10:34:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1714120348;
+	t=1714120444;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y0dysf36aM5avB8c3yAupwYZYTudX4kjUfayQHr8SSA=;
-	b=b7ZatGXxsSYhR8l8hZJRyGFW+LOr6qOGfutf+6Zm1P93RkDEUXMhKbTq6Vb+4x8qd1/MSK
-	vozQMYgkGMFXitwkhVsSrNpvzMaOIobS45adwv4yKpTz8zordqplMkYEwt7hX30h5lSRJ6
-	F1ESRL67V725AzzD/gtl2JuSFrK6Uz4=
-Date: Fri, 26 Apr 2024 10:32:27 +0200
+	bh=QvibUhHYADzPBz5EC0L11wDXL1jTgRw8iSeBq8eHVAM=;
+	b=r1+96OokA5XnKcE0vuf1HJX1Ft1NJRMVXB5Y6SoF6NZ+LhN73MJbxf6L6vZMvey5Kjcj0e
+	9cOjaBw82DXwSN7HFQyB9TyKY1Q/O16uAIueJST+3SO64nnoP8t+r5PZ+EVeT1RVPuI9a7
+	2Vj+jc1gpnbG7eTWMr9PAYK0TEF4RsA=
+Date: Fri, 26 Apr 2024 10:34:03 +0200
 From: Pavel Machek <pavel@ucw.cz>
-To: Suren Baghdasaryan <surenb@google.com>
+To: Matthew Wilcox <willy@infradead.org>
 Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>,
 	Kees Cook <keescook@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
-Message-ID: <Zitmm2SWucJA1Bdb@duo.ucw.cz>
+Message-ID: <Zitm+xB1zFmqVQiC@duo.ucw.cz>
 References: <20240425200844.work.184-kees@kernel.org>
  <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
  <ZirCbPR1XwX2WJSX@casper.infradead.org>
  <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
- <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
+ <202404251532.F8860056AE@keescook>
+ <20240425164718.e8e187dd0c5b0a87371d8316@linux-foundation.org>
+ <sxcyj2gif2avyx2disz62sfe3hot24w4rtszgl2dtqadegtnek@xjkozdbd6yzp>
+ <202404251740.81F21E54@keescook>
+ <qzi5ss4h4ou6yfbzadoamqocvvzviuh3eeefpv5qfkcvrrejfo@qptmu2y6u7qj>
+ <ZisetKVI2Lnzucm9@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,60 +54,53 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="b3R0spGM4QxycKkW"
+	protocol="application/pgp-signature"; boundary="Hfd8D8Tcgbk/y9Re"
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
+In-Reply-To: <ZisetKVI2Lnzucm9@casper.infradead.org>
 
 
---b3R0spGM4QxycKkW
+--Hfd8D8Tcgbk/y9Re
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> > > > > The /proc/allocinfo file exposes a tremendous about of informatio=
-n about
-> > > > > kernel build details, memory allocations (obviously), and potenti=
-ally
-> > > > > even image layout (due to ordering). As this is intended to be co=
-nsumed
-> > > > > by system owners (like /proc/slabinfo), use the same file permiss=
-ions as
-> > > > > there: 0400.
-> > > >
-> > > > Err...
-> > > >
-> > > > The side effect of locking down more and more reporting interfaces =
-is
-> > > > that programs that consume those interfaces now have to run as root.
-> > >
-> > > sudo cat /proc/allocinfo | analyse-that-fie
-> >
-> > Even that is still an annoyance, but I'm thinking more about a future
-> > daemon to collect this every n seconds - that really shouldn't need to
-> > be root.
+On Fri 2024-04-26 04:25:40, Matthew Wilcox wrote:
+> On Thu, Apr 25, 2024 at 08:58:34PM -0400, Kent Overstreet wrote:
+> > On Thu, Apr 25, 2024 at 05:43:33PM -0700, Kees Cook wrote:
+> > > All this said, I'm still not excited about any of these files living
+> > > in /proc at all -- we were supposed to use /sys for this kind of thin=
+g,
+> > > but its interface wasn't great for this kind of more "free-form" data,
+> > > and debugfs isn't good for production interfaces. /proc really should
+> > > only have pid information -- we end up exposing these top-level files=
+ to
+> > > every mount namespace with a /proc mount. :( But that's a yet-to-be-s=
+olved
+> > > problem...
+> >=20
+> > It really wouldn't be that hard to relax the 4k file limit in sysfs.
 >=20
-> Yeah, that would preclude some nice usecases. Could we maybe use
-> CAP_SYS_ADMIN checks instead? That way we can still use it from a
-> non-root process?
+> It's a lot harder to relax the GregKH opposition to multiple values per
+> file in sysfs.
 
-CAP_SYS_ADMIN is really not suitable, as it can do changes to the
-system. On working system, allocinfo is really not dangerous, it just
-may make exploits harder. CAP_KERNEL_OBSERVER or something...
+With all the "vulnerability" files including multiple-files with
+english text, you may be able to renegotiate that :-).
 
-								Pavel
+Joking, really the vulnerability files should be fixed.
+
+									Pavel
+
 --=20
 People of Russia, stop Putin before his war on Ukraine escalates.
 
---b3R0spGM4QxycKkW
+--Hfd8D8Tcgbk/y9Re
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZitmmwAKCRAw5/Bqldv6
-8iSqAKCKKro6xd8WHDcLsDlqyKCPFqd44gCfZhN+HF+SZvKopvK94yJ3xCHoKGY=
-=VeNA
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZitm+wAKCRAw5/Bqldv6
+8ll4AJ9jdqA72f4HoYEdP44jUJtvFz4NiwCfS7dHjbTz44v8yKIi6pQk9qVCu6s=
+=C7Pf
 -----END PGP SIGNATURE-----
 
---b3R0spGM4QxycKkW--
+--Hfd8D8Tcgbk/y9Re--
