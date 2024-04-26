@@ -1,100 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3C513C3E2
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 07:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C8B21379;
+	Fri, 26 Apr 2024 08:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714117263; cv=none; b=gLAmnpE38XcqXXiisTVZkhEeHKnMFbpjhEomtZ7lANoDYcheofiMd0ETNMwK08m85s30vWlDA9+qfDidLFYpITxRgf51zOLo0XYGdXQHmtDl1O+aATwmN9SVGbVk8xGfUPh9rlisDP70wqqbj0OT43IvalIWMoMBf6ScOsXaFLk=
+	t=1714120359; cv=none; b=XkiC70+udWbPx1TdHkiXZ5Gl85enj1IED1xmY1XRLem+UmVcNvSTvPbDClX3Zhpe+oy/Zq+8OqNgIzSiWUKutUjsM9VLf0IVzClGY6xV534Q0a6oZvgou4wTNG/DDcTMHbc4DoQGAaa98PFhDz7jKDEe/sIpbvzraQvP1da7UiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714117263; c=relaxed/simple;
-	bh=a33sSvhsy7w8Kh3QHnL7F3iWxGtqcRtc9AZE85+hn7Q=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=iwlNk4vGyw1puzqhbhjZSPgQYG8JpXZhaHDhZDRVnF5pg9LZ3Zck1OQ8QRE3XhdR/03Hx01pH/Fy/ymBWO+WxFGy4K2X8oHIfA6rXnPcB3kcyDSVdWg1w6VLBAN+rkHzhsUHWLO0J0E7T5m+4fAnySJVX82qU2341ptbFYDwfQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OhDo7d13; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714120359; c=relaxed/simple;
+	bh=JPzmIyrTXDfjqDAST+PV0hnEHHxODh7jJkm7vCutels=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUmrTHcvubFmjPw+9FA3RDuovt7w9P5Jf3ouB19yQtno2WW2dTWgeK6pMBiJIXZbBq4b9JEYSzJxC+SBxJKCiE6aQ/3KNioI+5ukatzoTBQpbcqvPZfO6Id7wpBD4u1gPPHEx/G1lBG/7vNOnWnL6YFqsyi6luvzOjWP5cw9/4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=b7ZatGXx; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OhDo7d13"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714117261;
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="b7ZatGXx"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 776511C0080; Fri, 26 Apr 2024 10:32:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1714120348;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8ckphtQtVPyzmtTEJZjcavjTJN2bI8fj5SZ69O4ugW4=;
-	b=OhDo7d13dVnZN6Wj2CivFup0zHVM8A8amLGsFTLPVCS9q6EU0mN02oi8eA9vUD0xZdyypx
-	R7epW+TxI0bUawCJCVYlKUXN+Pd1KG4PaNUoN6r5RbcehET3polI5tK3I+SPE06T3VPjER
-	iiRnaRnkqsaxxNbCrjiHvNANSAbOOxU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-Pdjurq_MNPGagr7Tk27mhQ-1; Fri,
- 26 Apr 2024 03:40:55 -0400
-X-MC-Unique: Pdjurq_MNPGagr7Tk27mhQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 993BE3C025B3;
-	Fri, 26 Apr 2024 07:40:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 11903C26A4D;
-	Fri, 26 Apr 2024 07:40:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240424191740.3088894-1-keescook@chromium.org>
-References: <20240424191740.3088894-1-keescook@chromium.org> <20240424191225.work.780-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: dhowells@redhat.com, Mark Rutland <mark.rutland@arm.com>,
-    Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-    Boqun Feng <boqun.feng@gmail.com>,
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-    Borislav Petkov <bp@alien8.de>,
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-    "H. Peter Anvin" <hpa@zytor.com>, Jakub Kicinski <kuba@kernel.org>,
-    Catalin Marinas <catalin.marinas@arm.com>,
-    Arnd Bergmann <arnd@arndb.de>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    "David S. Miller" <davem@davemloft.net>,
-    David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
-    Paolo Abeni <pabeni@redhat.com>,
-    "Paul E. McKenney" <paulmck@kernel.org>,
-    Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-    linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-    netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/4] locking/atomic/x86: Silence intentional wrapping addition
+	bh=Y0dysf36aM5avB8c3yAupwYZYTudX4kjUfayQHr8SSA=;
+	b=b7ZatGXxsSYhR8l8hZJRyGFW+LOr6qOGfutf+6Zm1P93RkDEUXMhKbTq6Vb+4x8qd1/MSK
+	vozQMYgkGMFXitwkhVsSrNpvzMaOIobS45adwv4yKpTz8zordqplMkYEwt7hX30h5lSRJ6
+	F1ESRL67V725AzzD/gtl2JuSFrK6Uz4=
+Date: Fri, 26 Apr 2024 10:32:27 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Matthew Wilcox <willy@infradead.org>,
+	Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: Tighten file permissions on /proc/allocinfo
+Message-ID: <Zitmm2SWucJA1Bdb@duo.ucw.cz>
+References: <20240425200844.work.184-kees@kernel.org>
+ <w6nbxvxt3itugrvtcvnayj5ducoxifwbffd7qh6vcastw77mse@2ugphwusgttz>
+ <ZirCbPR1XwX2WJSX@casper.infradead.org>
+ <64cngpnwyav4odustofs6hgsh7htpc5nu23tx4lb3vxaltmqf2@sxn63f2gg4gu>
+ <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2100616.1714117250.1@warthog.procyon.org.uk>
-Date: Fri, 26 Apr 2024 08:40:50 +0100
-Message-ID: <2100617.1714117250@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b3R0spGM4QxycKkW"
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpGiRFAOp-aqpVk6GRpG=4LEF3XyuV_LijzwDYRHKqHWWg@mail.gmail.com>
 
-Kees Cook <keescook@chromium.org> wrote:
 
-> -	return i + xadd(&v->counter, i);
-> +	return wrapping_add(int, i, xadd(&v->counter, i));
+--b3R0spGM4QxycKkW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ewww.  Can't you just mark the variable as wrapping in some way, either by:
+Hi!
 
-	unsigned int __cyclic counter;
+> > > > > The /proc/allocinfo file exposes a tremendous about of informatio=
+n about
+> > > > > kernel build details, memory allocations (obviously), and potenti=
+ally
+> > > > > even image layout (due to ordering). As this is intended to be co=
+nsumed
+> > > > > by system owners (like /proc/slabinfo), use the same file permiss=
+ions as
+> > > > > there: 0400.
+> > > >
+> > > > Err...
+> > > >
+> > > > The side effect of locking down more and more reporting interfaces =
+is
+> > > > that programs that consume those interfaces now have to run as root.
+> > >
+> > > sudo cat /proc/allocinfo | analyse-that-fie
+> >
+> > Even that is still an annoyance, but I'm thinking more about a future
+> > daemon to collect this every n seconds - that really shouldn't need to
+> > be root.
+>=20
+> Yeah, that would preclude some nice usecases. Could we maybe use
+> CAP_SYS_ADMIN checks instead? That way we can still use it from a
+> non-root process?
 
-or, to use rxrpc packet sequence numbers as an example:
+CAP_SYS_ADMIN is really not suitable, as it can do changes to the
+system. On working system, allocinfo is really not dangerous, it just
+may make exploits harder. CAP_KERNEL_OBSERVER or something...
 
-	typedef unsigned int __cyclic rxrpc_seq_t;
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
-	rxrpc_seq_t	tx_top;
+--b3R0spGM4QxycKkW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Then you can get the compiler to spit out a warning if you use <, <=, > or >=
-on the numbers as an added bonus.  (You should use before() and after()
-instead).
+-----BEGIN PGP SIGNATURE-----
 
-David
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZitmmwAKCRAw5/Bqldv6
+8iSqAKCKKro6xd8WHDcLsDlqyKCPFqd44gCfZhN+HF+SZvKopvK94yJ3xCHoKGY=
+=VeNA
+-----END PGP SIGNATURE-----
 
+--b3R0spGM4QxycKkW--
