@@ -1,68 +1,46 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C94516FF5C
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 17:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8311C145B0F;
+	Fri, 26 Apr 2024 17:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714152310; cv=none; b=rrG+5oOtKC1pWxIWP0g0jUNyIJUXZdXeo5Ucz2yNgSBHMDtCG+n9waksmT3za6CkNKzyyv3VDsSTgr1mZxQygnCe8w0RCEAhC+leIyL6bPPz7OAkBBPLaT2A99bsWRCauh/0Hrw6aXttdRebVE2eOBEXzWT14gx+oaUZSKXDKsU=
+	t=1714153120; cv=none; b=QNdbrQ0TJKQkpTb2y1JSKp8GKW6duRZB/o8pBmvJVp/A/tLl8Q6VQInG5B53CMiSML+4m5fyUhIWdVxnb5wO6FshD0vTr1j8M0jFIFYx70MAT2ANCjXYpmR1WKGp6lqDf1btkNR1lzCue9N5k3IZzMfS/YEY7q4CzawEyjZ5SjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714152310; c=relaxed/simple;
-	bh=oPkhpvPbCU1Wv33arOnKXSw2XoCJOquEb8duMbQ4dZ4=;
+	s=arc-20240116; t=1714153120; c=relaxed/simple;
+	bh=9dYAdp7FYAzvqo+YtXaejtQOOLyFel2BTjwOXrzYgIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JCvOojrnKImEp+SNGR9d0BteR06hw4pWKde0jb/Dgiw8FocxDhPY2sdv3TDDaHAMaW3H6PE7fGxzdMU4rCe1Efd2R1Bb2zqEpsF0hZK/KPthUDAAprdbv1ZBPW3x/rbXLwiZ53o+MuoLevgWgrQir27Ejw/bVhTm2DTG2jyq+3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bTEsCjWA; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQSibZ66ciQAilhFvuY7ufDmGH6N6grlNT4Szej1MdOeB1BVVzNqEo+XIU3yzG62FWt9IIqz4XQRvnJM9fvKsGLPcVwhLnMGid/1R4CUgcNsUdinBjrr+odtAQzTSyxZn8XBXlg1Zl3cvaLAzuk6J2+moRyG6BfZjQSr0nnmBQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3MiS9GB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bTEsCjWA"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e4266673bbso21237295ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Apr 2024 10:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714152308; x=1714757108; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eIBGyKq1rfo9Eo8YNJRz2sicy53y3cFznRkoeYMePvs=;
-        b=bTEsCjWA1QAmutxnUZ8MaLRya78f06eH6Qb1Q6vVGAjj5GYFyAGHtmmOs3ZkegOCzt
-         gvAvbwIzEWadzyy+m3B4GYfkLOJy9fjQHQFck4z5R3Y1azt+2dJNbCiiizhNtwy05urZ
-         4zGWc0duOTjaU2PoDeMtb9c3cgWGu50SDdGUo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714152308; x=1714757108;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eIBGyKq1rfo9Eo8YNJRz2sicy53y3cFznRkoeYMePvs=;
-        b=q6N9gkRB5H2zpy9rns8EZ/w5X+nr1pXC1p6x0PuYZSvAIeKqOz7rb3huFX6IDICzzq
-         KOuzPbsGdzAblSmARWf8m0AgsRpnG7fQaiTRVajY+DhmchsdDJb4uXn06TFfEeaQXaLk
-         U4LYB85KLfV3UWUVJ4vTx3eWrBm1AjB7uk3qaCJc7dfCU8p33tK1666h0JBS+R/2Ajg8
-         xJxDr81va8hskXP000lAd+MAzlVvKQBFrYzYM3sd883LEm3gmVe86q5Luv5F4c8/pC/7
-         fAfh98lQAUpjQ9P8f8ptgrvFzzepiFeZgcxsEF0+LRJfqXanlw0sVAgbAFkWfPuUNKFD
-         zXMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOnFEq4P16xSr6KSw5HYyv/jvVdgVCRoPvatoqXlqW7Ojzif4GKXt4Er0zt/DtzB+zj4ul6/PyjlrR2ZE3DG8eH4ZJ3B8iKa4Qd+l+YpSX
-X-Gm-Message-State: AOJu0Yx9/g4d7tzcLy59Yf4QjsKmgfrevEhZe/6fknK8zH5eqE8xsMel
-	ZKJyUQE4QxrQfPRzr8JbxGPvSlVXJZlxTEJea3AAl5sh+OeRdNWe7L+RnSG9pQ==
-X-Google-Smtp-Source: AGHT+IG0E5Z74FVbDWrRnuadfoaxsxXmigsr6NiBRtQVcDuOGGVB5BQLKeI6EmE850Ti68uW3W5ELg==
-X-Received: by 2002:a17:902:ce84:b0:1e9:5fd6:2b01 with SMTP id f4-20020a170902ce8400b001e95fd62b01mr3798663plg.3.1714152307934;
-        Fri, 26 Apr 2024 10:25:07 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y1-20020a17090322c100b001e503c555afsm10044542plg.97.2024.04.26.10.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 10:25:07 -0700 (PDT)
-Date: Fri, 26 Apr 2024 10:25:06 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] Bluetooth: hci_conn: Use __counted_by() in
- struct hci_cp_le_big_create_sync and avoid -Wfamnae warning
-Message-ID: <202404261024.1F22CC68@keescook>
-References: <ZivaHUQyDDK9fXEk@neat>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3MiS9GB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FFB6C113CD;
+	Fri, 26 Apr 2024 17:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714153120;
+	bh=9dYAdp7FYAzvqo+YtXaejtQOOLyFel2BTjwOXrzYgIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d3MiS9GBcE02pQF/hUdEhcY8Jrd3HjPDJRoRZYM6P24EiFsuIAlMOpyye+SRee4Ww
+	 mSziF0M5DhgCyyzXRVUSVPAWnWpelqzXho4mmPWelGSkT3dDNGSNo9/UW9P8/KASl6
+	 jpnXzHmxxWNMqFobWEa51GqcyCOVyiT4dGpw1fqVEyDGn+HFeTylDNX03aodoKyjga
+	 YHetRVFCnjAPx5TnX2qspH6JwukVUsje2SucvO/9eh499tT5uwfdz49o5oXuBufQVI
+	 V/O9+R7BBMX7iBbT0AizMdVQUG+/85y0RrS2o2Zs59BXis/FYbD1SHXJPhFh3NdJkJ
+	 EgF6ntP1Q3lhA==
+Date: Fri, 26 Apr 2024 10:38:37 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Marco Elver <elver@google.com>, Erhard Furtner <erhard_f@mailbox.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev,
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ubsan: Avoid i386 UBSAN handler crashes with Clang
+Message-ID: <20240426173837.GA2744190@dev-arch.thelio-3990X>
+References: <20240424224026.it.216-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,32 +49,93 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZivaHUQyDDK9fXEk@neat>
+In-Reply-To: <20240424224026.it.216-kees@kernel.org>
 
-On Fri, Apr 26, 2024 at 10:45:17AM -0600, Gustavo A. R. Silva wrote:
-> Prepare for the coming implementation by GCC and Clang of the
-> __counted_by attribute. Flexible array members annotated with
-> __counted_by can have their accesses bounds-checked at run-time
-> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-> (for strcpy/memcpy-family functions).
+On Wed, Apr 24, 2024 at 03:40:29PM -0700, Kees Cook wrote:
+> When generating Runtime Calls, Clang doesn't respect the -mregparm=3
+> option used on i386. Hopefully this will be fixed correctly in Clang 19:
+> https://github.com/llvm/llvm-project/pull/89707
+> but we need to fix this for earlier Clang versions today. Force the
+> calling convention to use non-register arguments.
 > 
-> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-> getting ready to enable it globally.
-> 
-> So, use the `DEFINE_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> With these changes, fix the following warning:
-> net/bluetooth/hci_conn.c:2116:50: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Link: https://github.com/KSPP/linux/issues/202
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+> Closes: https://github.com/KSPP/linux/issues/350
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Looks right to me. Yay for DEFINE_FLEX(). :)
+Acked-by: Nathan Chancellor <nathan@kernel.org>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+> ---
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Justin Stitt <justinstitt@google.com>
+> Cc: llvm@lists.linux.dev
+> Cc: kasan-dev@googlegroups.com
+> Cc: linux-hardening@vger.kernel.org
+>  v2:
+>    - use email address in Reported-by
+>    - link to upstream llvm bug in ubsan.h comment
+>    - drop needless /**/
+>    - explicitly test Clang version
+>  v1: https://lore.kernel.org/lkml/20240424162942.work.341-kees@kernel.org/
+> ---
+>  lib/ubsan.h | 41 +++++++++++++++++++++++++++--------------
+>  1 file changed, 27 insertions(+), 14 deletions(-)
+> 
+> diff --git a/lib/ubsan.h b/lib/ubsan.h
+> index 50ef50811b7c..07e37d4429b4 100644
+> --- a/lib/ubsan.h
+> +++ b/lib/ubsan.h
+> @@ -124,19 +124,32 @@ typedef s64 s_max;
+>  typedef u64 u_max;
+>  #endif
+>  
+> -void __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
+> -void __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
+> -void __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
+> -void __ubsan_handle_negate_overflow(void *_data, void *old_val);
+> -void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
+> -void __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
+> -void __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
+> -void __ubsan_handle_out_of_bounds(void *_data, void *index);
+> -void __ubsan_handle_shift_out_of_bounds(void *_data, void *lhs, void *rhs);
+> -void __ubsan_handle_builtin_unreachable(void *_data);
+> -void __ubsan_handle_load_invalid_value(void *_data, void *val);
+> -void __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
+> -					 unsigned long align,
+> -					 unsigned long offset);
+> +/*
+> + * When generating Runtime Calls, Clang doesn't respect the -mregparm=3
+> + * option used on i386: https://github.com/llvm/llvm-project/issues/89670
+> + * Fix this for earlier Clang versions by forcing the calling convention
+> + * to use non-register arguments.
+> + */
+> +#if defined(CONFIG_X86_32) && \
+> +    defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 190000
+> +# define ubsan_linkage asmlinkage
+> +#else
+> +# define ubsan_linkage
+> +#endif
+> +
+> +void ubsan_linkage __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
+> +void ubsan_linkage __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
+> +void ubsan_linkage __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
+> +void ubsan_linkage __ubsan_handle_negate_overflow(void *_data, void *old_val);
+> +void ubsan_linkage __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
+> +void ubsan_linkage __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
+> +void ubsan_linkage __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
+> +void ubsan_linkage __ubsan_handle_out_of_bounds(void *_data, void *index);
+> +void ubsan_linkage __ubsan_handle_shift_out_of_bounds(void *_data, void *lhs, void *rhs);
+> +void ubsan_linkage __ubsan_handle_builtin_unreachable(void *_data);
+> +void ubsan_linkage __ubsan_handle_load_invalid_value(void *_data, void *val);
+> +void ubsan_linkage __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
+> +						       unsigned long align,
+> +						       unsigned long offset);
+>  
+>  #endif
+> -- 
+> 2.34.1
+> 
