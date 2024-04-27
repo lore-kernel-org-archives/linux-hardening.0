@@ -1,66 +1,64 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05olkn2084.outbound.protection.outlook.com [40.92.89.84])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2045.outbound.protection.outlook.com [40.92.91.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E6244377;
-	Sat, 27 Apr 2024 13:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.89.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF53E817;
+	Sat, 27 Apr 2024 15:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714225950; cv=fail; b=f53MGHGvMD+elhEXOaRMKze2mu2SOEt35G1X6Fhs0nEg3jpVj8TYPFtFwZLJ8xDuoeserGRxxJ6kXCEZicmyHQMAtnN4zXbwZpH73rrVGBL6LttWcwmGaEdqfjir6WASBB0AB50WYCy/mXG1dhrC3p6vbLHDV2q8LV1xxrllM5Q=
+	t=1714230385; cv=fail; b=TqIi6mrZaSA177KGOeu72PSKfYKLC7yT0WRMcifGd8Yp69t4w7DeexcLjzVB8RZ0oBsLoSxE8Ih+P+So50N/fKzTPpg0biEal97Sjvgvm4ndK9h54tJH9h0lo/yVcf65T2QxyO8Lf7A3MCihnQlGcKb0pMxTLf4Zx5p6WtVe1v4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714225950; c=relaxed/simple;
-	bh=AD0Q0EFjh63Tm346UD3xQROme9sfAi3fOOCNcZM7k4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=goC89vw5ONDIFdXVHaxXI8h9qwwOh6bDRI/dfA0kBU9+8BOm4J20C11JLwtZSflnyMzD2g2bxsZbdVQsla2b5DQyGYz0bXMuF7hOgZZ7oWmpXb0adnxRK7cjFlJQgFtx7TbCgQYGwFWqpGhq1Ef7/Kb9aW1fMp8hnPgvqHbQgg8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=r1Ti42JI; arc=fail smtp.client-ip=40.92.89.84
+	s=arc-20240116; t=1714230385; c=relaxed/simple;
+	bh=Bg/aayAHjh+58y3AIhu2Jxl0578idrchmIo8sc5GMbc=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=RFyNNnjwGoAN7l140VEJ6X2ShxR+5Ut6ZlQFQddoza2i6dzwk8O4Q4zFqqGkQ2pteRSn6eYge61t0ER/EFnu/lAKUgImPfARSnkVGly597C7ldDJ2xrPnjkcoqIKoBOdOq2mKU99lckF+VFQOETNO43n/T6/ceN8VYNa6/mLLnU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DFSYnL4B; arc=fail smtp.client-ip=40.92.91.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="r1Ti42JI"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DFSYnL4B"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q6lAMRdaGWx93TvkCfwvI15Le4LU20/mfE9PISYolmeZC5hIq4y/ZYC8esfJ42rgUkHvHu+gLSinbKLzJQ7+nOuPrjED4SrneXciYNFnVtN79XsASZYur625KOCbcn3FbYDiu/XdZHlxWz2xGFjQhZK7eFcAaV+88if1GnFweM69zAd7Rx2Zql3MCXeRXozl85ZdlIBQlUhstw2ulMNqow18/VpS/8eBusPU0wvEqs09T/2mlQFlabqwl8T5BCjzCY0VX2b5AYYGeGA4ifO9PDLs4uqKNjoyQCBIKlAI3ku1hjhmUo/oeOUnvgk94lCJP/FFt3JdB6XECIj5qhrheA==
+ b=hWBYYdaMoKrl6e9kcc9iE7RpukS8Q/dkZbkw0orVffZLN1figR69l7qMtbIW6ParaLZFivXgEpL5dFXj2J+6dQyzSqQuznHofk3knI6am8Cua7l89ylhauIAb65t967YsuVumAvqPfA46fcVD+xn+XP0v8o+le/G3bW62C0vQRwabu2HTOMUKI3qi+gxu5WNNevNKe2oSGHyt6dlWdRYMTkQVCNvuqT3cnOIdkGrf5TRrNM9NL6vS/PcldkvJd0g4LLdtT0kliw2poayK/MWhhnRFo1vjIfdlkStBRaZfHX4UBZYB7cfsCOD+y+fyl3QVaasCL1nCuljPlyq6A5EPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NUTTs2vEF6DR95KtLa8AIDXC4PlB7/XCmK4qwx6rjQ0=;
- b=oWEmV7Dg4/d+rzbDrU8gBBUIkeYIXh8C5ppiz6bTSogrnyXH1GcsRRn2p10Eq5ApsMXbb/7fomsVP1nE7eEPTn5XbMaI35V0qRtWQdtYDAlv0yhsCxMLF3sEcTOH/cH8jJfAxO9JFXSjNvaZNCpOLfhlFMy1f2IoBAQErWqPWUdTY+Lb8zt+QCcWUWglhrWdLlvQadkJPO18nGFpwf7gt9QNC5Bu42IHEa1rCvR5/jggxnR2gxRVFtX/ZIGZne2Qx2RhrF/575pN4DQQvhBszV3tmdwlaxe8zAACCCVmanD3sUp3MVymMCYO1iED3otziBtDyRgNaBfSP+eg+fHGIQ==
+ bh=H6DodiOXLR/LP1sokdvP0euRCk5iA/Zyl+3XhZVz9ag=;
+ b=XhgRyLTkMqcFF3XclJeMMNJoSM7AilHx4eyd2AfRFRvQlmxJ3ksN/7r2wFyY+d2ba67379qeFhV2KXx5sBfuhbdBi6HKqp+An/2FwTT1n6GgsWc0n8KEPP5rxxnoJiKgxyUWTyKMHwl9ad+0Go1ELgbnybKnggupk6BN+eXCiug/To1qvf/gfq3Y40U5bKGEq77LHeHzcmcUl5eHlK6GNZZCYQ8XH7Hv5q+xD91VXZTILWmb1eqm+stpnyxEdbQSAFFh6ge6P+TsS114iPP2IfygmypQCsP2NItcyL3tLxpN1dEkHj4o3X8fD7kP/RtORqYQ98gK+37T1ZqSq3q3dQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NUTTs2vEF6DR95KtLa8AIDXC4PlB7/XCmK4qwx6rjQ0=;
- b=r1Ti42JI8pj3c+1++R60nvq1Vh1mKQV1iKCByR7n/PqDeeFzU+G8gTaoWeWNCgIKmHm20qIsGMOWfM9dHgmwFiYjOWQX9NTMGdX1Eojv2kGmzx2C7a925a7yKKiEJ2HK4N1TECSKWXUW3UrlKl1aTuTuEIkma0kKoQHTnYoPq8I7dxlAjdYjJWwNe6BNRJzJR8zoREwvc16WiEmtsZT61/KIVz127GfIOf+FooRRugBe4SK0BMIoNAQYYS4IwYsgHRhlAmfsrEMBqyRSeMcOCStbNsKoh/E1Hm+MZFKyUsdTndfgVaRTNkxT8kaDd139/lFz2eNH/YcZqRuVfAxQpw==
+ bh=H6DodiOXLR/LP1sokdvP0euRCk5iA/Zyl+3XhZVz9ag=;
+ b=DFSYnL4BtQ+/oX6aa4EoCAEQkeTty5VH28Q2xjBD2BZ5UulR8l5hQzitO6vPNuCe7O9Y60v58RxzL+qdAVXDz04Og0H3g/F7E9egYwTw0ZpQgIIGYuvLQrr1No0n0XumsH9aAXG6Kg4gfAiTRVR+H9p7v0uSSpDUqOOORBFbGbiMjZzuao1sT1hfRwux1wHENELoFJGb1AqRiH0KBh+2BUPMv0otw9FYCuP1cyifMSgXmsx86TEVAw51GjHBEzDgIIwfqc7o5BOEkm3aYV2zdbJrgIw0OLWlfyoFrPPvyyD4HvGt+rfMgToAkOgPZ8zSSnj2IX+EzztEee3zWLu8Gg==
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AM7PR02MB5784.eurprd02.prod.outlook.com (2603:10a6:20b:de::15) with
+ by DB9PR02MB6780.eurprd02.prod.outlook.com (2603:10a6:10:217::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.31; Sat, 27 Apr
- 2024 13:52:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.32; Sat, 27 Apr
+ 2024 15:06:20 +0000
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7519.030; Sat, 27 Apr 2024
- 13:52:26 +0000
-Date: Sat, 27 Apr 2024 15:52:24 +0200
+ 15:06:13 +0000
 From: Erick Archer <erick.archer@outlook.com>
-To: "James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: Erick Archer <erick.archer@outlook.com>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Input: ff-core - prefer struct_size over open coded arithmetic
+Date: Sat, 27 Apr 2024 17:05:56 +0200
 Message-ID:
- <AS8PR02MB723700E21C64258BFFD4CBDE8B152@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-TMN: [PMoAlUzBUnr3yZAESm/SePWQzISMx7YF]
-X-ClientProxiedBy: MA3P292CA0007.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2c::13) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ <AS8PR02MB72371E646714BAE2E51A6A378B152@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [IHjNrb9xaWlw7D6/bwybrFFh+NMkoZNi]
+X-ClientProxiedBy: MA4P292CA0003.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2d::15) To AS8PR02MB7237.eurprd02.prod.outlook.com
  (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID: <20240427135224.GB2476@titan>
+X-Microsoft-Original-Message-ID:
+ <20240427150556.8440-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,61 +67,135 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AM7PR02MB5784:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35880fa2-f564-4e44-f91d-08dc66c145cc
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB9PR02MB6780:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c85e9c9-0fec-4849-64ef-08dc66cb942f
 X-Microsoft-Antispam:
 	BCL:0;ARA:14566002|461199019|440099019|3412199016|1602099003|1710799017;
 X-Microsoft-Antispam-Message-Info:
-	W4AG6SOMMs3M2NTu9SGbtLAVeJ8OEjgWhGytp3ShRL5oH9P4AWC6dHMviQ/iM23gwg5p6Yg/ItBylu3iMOs/uFWrkX8QOVg/gka6l+MO72CqgyW6sDjKvLm9jjj1ygbQZCXCl7eO01czA3NQVNzSRBLdPZQrUcz7GeKkcJwGo4l2WxT2Mb1w94l0/jAED2+gx/Yfd1KAFjnpC6wIjBFgEF0hZkAfSS0z3HZ6q/jV1dd2UYHttYfRKmyB8Mcge1JSSEVo3F63o7PvixduVuwBQ4/Bkat07ru4fgg13+1x5r6ImSf26vI5oFmUEprNQ7LLY3A3cOdCyE+uszdYg3d63WdzaPDY3qzDoVSlaHXnlB+sWju3ntJ+Me2lB6tSeAcxIwu0CsPX3yRnCT1/YfTKaW6mibr2m5Am4BCE5uZMdG/hSdUj4shmWm/aByeg6EXXkypk+PP3Qb9riqmj5zONx4HhePoCB0M3u/fX8TQqi2EWuLuBVm5j45otFdJ7t9kCwV7hnQDmLnU0TfY/Is1BxTB49R4c8PrciY4lANto3RfXC/R9AElYLkRpDAtACcAzWtEfSkMDKvQyj7hmjI+HsaNX8+zhoUx+1MwSjy+6E7KQ5Mb9ldvWmbWtAvZ8WaziF0KhmECyQ/kI6IzRK5kq26qy5d1nizwBTxIsQOemvdFtZfm9RWtHTc+vHNA36P9W
+	vhhjigx7RfxPnm7B8V1ypjH6kHYXpWlPkar2CV1ZPi7z3MgFrLcrRXmeDXSh3twOHH/Urq+PLudppMlH4mxJafFVnUcPcrmyHYBGYAHTMqw2xF4V+FGK1A/lBNTElWRKL+menLXzJLhmrpUNECv+V/Hs2bFcDUoXjG1+rLzwn1MLqBctjTNzztT9Kw4BtnZQ4XXzepWrPg4qnZSiWWO+WCGDQ3pDX/GSUbqP8Jw2JH5YrrJGhHI7v24T9FDsPlGsZQqJiAljgHDTRAshpOjcCIKrBWEyyAVHd0Gs98Tb8GGmXJJ2jFEguhZLStUjLy4KHdGtUk+yi+YtADV6bgeVwzNwh1k7/aW3gX5twbdSiRGsCqPDwYCkpzOLfN8KMz7G1g+I8OOspMxJjmXFzUIh3WorSg0K/ghKLL3GETRRdoRadzu6ZUY36EzExxwGVoB07VUxtFhaP8dHUHWdpfB7GC58WXqYMBwEwvXorqqynPT3O8Iq3BiCJY/euy6lXFRQtLVo1dxpSq7mkvvPXLpWvXLtaVIMZ+mWhXNIuwOjaZDpDs/6i9C5bvzAtNo3cjS3uxhSffZa8B4gzGehxd4IQGl/DGjwB3UGHZQKKLz/8ivsi7NhgHaMICiPcFeII9KyLECrOxleqe5VLrWu6ZielvddtUy9OwKuZ5V3N7j7qK10dr7ZDW4QUyrBK01HfR1xZjMLSVvFfvygRDOM+aBEUg==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pZ2iNSUgkp2hTz7u4Qna+fnsd6KIAy23nUmp6yh01ySbfz4EqqpHJpOlpPdf?=
- =?us-ascii?Q?T7a/fBGQkG+uWnVdTe5YsZ2L714QHohpcGTe56/6Nb1wRTGe5WBF1nCmB5OD?=
- =?us-ascii?Q?N+Ar0/cKR4PbPxDIS2vAVYEXACSKCw8C/i7drzhAaaDLqx939JfFm0bNT9Kb?=
- =?us-ascii?Q?fTE8KAL3bXVKHDF3N9gnXRkymGNL3PBJDOhox1mDvexbVIsZRXo3f+vHvIIV?=
- =?us-ascii?Q?SgPgV9FnR8eE9uvjjVHBSUw9Qz0Ty6gWxjbrQvk3aShJM4/pgotIhN38yMrH?=
- =?us-ascii?Q?g4pWmQm0FJAVBNX0MRaGNBIoIJ7mJVWh69H5eXDTxmz9me/xf469/k5+uFMW?=
- =?us-ascii?Q?yqqmqC7BluXfhW3fA6n6Gp+nWSh242hztrzK6qdjBlM6PFlu3ZmotLFWXztp?=
- =?us-ascii?Q?a2N8B7hTcTdvfJ6Hru4tdCvx7wPP11kCeIZVRGI5RIyFgibQpFAHlpmbLoE+?=
- =?us-ascii?Q?5TbgVda1y4AdCsP8CgEB/w5cektI7acCO1dEeiQf9YF/JvcphV7JPZ/hINWW?=
- =?us-ascii?Q?bFRhCNxPjJoJM/Nk/3x4mPxD4VLEui0RGDP+EUSs7v32xiNEErCHgKfRk8Is?=
- =?us-ascii?Q?XpFlIfCFDR/u4Ew9Im+4WWNL6ymcvSNrYRJRq/Fda4bgFAK407AuWzVv86S0?=
- =?us-ascii?Q?4WoCyZOM02Z1D754rTLXdIqTB6FEXFiYudeT28h+6tu1LH2A2knaw7nuHSYL?=
- =?us-ascii?Q?sm7tAbEsxSyYWDG7YFhRFFUuajxHBxo+dmfoFyaiPDt98gtSL/90eo0UW6LR?=
- =?us-ascii?Q?vcmwSM5zYL1kDQQbfSgJaUh6J9ewgbwr/2pIQrXjKSlLktDeuq/2j6SxQpev?=
- =?us-ascii?Q?DiX9CEni6+w+Bpwj+5CIexAXrQK3n0U6mZ0dnUfQGjy7XCz89WwgNtG/y6FA?=
- =?us-ascii?Q?AZSkf7EaHODFEK36cP2PG+k9cv07Rktu0pbfjl8lPIPVca24gINe1xwQ2tSo?=
- =?us-ascii?Q?RNFT1iSvAN73q/BQRzhsCQso1+5FtIrUdtPjR6TgeWMzNzc3OZCXwdtuanJb?=
- =?us-ascii?Q?pmWcM5EXGTNslgjL/FEjircaYFOeOO7V3AuuyGzB3egi8OOhDOk/9SlxMoMZ?=
- =?us-ascii?Q?++IeCz512BgpBZboBZsKyZbtzDUPtvK+UKknlzxkHk0ufG3nwKjL3vFK3OZJ?=
- =?us-ascii?Q?cVhKtp3wA1WqjMieTD6RcJNkctCrbbCVZUSkL+aL8GXYoDvPTIuEf8rBOElo?=
- =?us-ascii?Q?UljepjUrXh4fd5ZX+3Xwwo0kXokoIPFJ0CRUOp5wQv1q/PXnB0nFJ6twU3aI?=
- =?us-ascii?Q?R35IdAdTdvdxHt+kzM87?=
+	=?us-ascii?Q?XkOIhrISAXDsi/X5nKBXFHK2XRnEMei8O14ADKY+5fnL2gQ2LBXUSB0mPvnq?=
+ =?us-ascii?Q?ooo3s6vfNtj636sidnYwfVCt4BzJqZditIdnGjYOiOQ7iTG9+/eCE4U5Vbq8?=
+ =?us-ascii?Q?t8mq7LNwGDr4dOoj5CERMQhOhwUDkceDj6u5OuXrO4HIzC4jRyqACVoNXK4i?=
+ =?us-ascii?Q?Fdz1QDrxOUGKD6YDCp5m1JVaVwlsOSC/u83jCuCpdQ3CdfL2Qm+YNCDEvSKq?=
+ =?us-ascii?Q?+pk4J3U4YTqoV1B1Zc9XupefFwOKQwyKmHOdiWWzqnF0bb4826VXHSkmiMde?=
+ =?us-ascii?Q?ZnvfUdXIRblgFWaZruqrEYmMuZswr27YixoXsHFsnDWeHV1mJ0dRcymHV+D5?=
+ =?us-ascii?Q?txH4YrSuHQm7GyVzNn0TXJPZjWlxMCG7lHSWw13ioCGNxqZribxvmELk1x4/?=
+ =?us-ascii?Q?ecv+de0EgZSoOIV1psbDkqfY4LAXqTvBLNzDltPkGGoOJWaKWNsJ9o0Gfpen?=
+ =?us-ascii?Q?txCEsBPOBhxENIF/dsf5AjwUQtayJQf83el6z6XpBXRjzCHyt1TJPAPEP5ip?=
+ =?us-ascii?Q?H1PTYvKHvrhXzvh/MPNV6dd9D0Ai1PG+VsuEXZVSbWIOJFdtllGM93jG646R?=
+ =?us-ascii?Q?V7tN2rOGs4wpfeTr12SaNRLAEi4P8BQc88PycZ1/PgCkQ9pa6vGS6ZnfOlQW?=
+ =?us-ascii?Q?YAoP/lPgC0uPbyvb5LnHTp5vJ4jNtWCutbOKV973hIpW6wp/AEKD/XiWlAug?=
+ =?us-ascii?Q?BNha2xsC00H4tA1UycdElbvc7U8idePr1xFqz+ZESljSbX9/8WLdoM9suu5U?=
+ =?us-ascii?Q?2D322lpCUfz9Gs9S/YpG/SEEZLqRHSF4lE5Rln0x3IQRHEOs+XEvTbcWGDmz?=
+ =?us-ascii?Q?WDFKn7AnSWSYUWeKHIirq3McVWiXVTuTASv87lvuuaI+sgj+9ZzLxkalz9Hk?=
+ =?us-ascii?Q?+vbd7vewcVw7g22GGPblFBRTkhB+dYP18xapnjwB0KUQJclxONLe+oB8j2mH?=
+ =?us-ascii?Q?lG7NPQDMIIPTQ/REQl00zgnKxptcc5i5qmmr5n5zHiFClgxDFrSJCo4KD7h+?=
+ =?us-ascii?Q?vWotDtEIvFX6CDbvuuW2tlJ+lcV7npoNN2ekOLVaqaVCr2Er7zhT7SoRN3fO?=
+ =?us-ascii?Q?IwpIMljRWCmq+MUPVSN5ME5o1O6jRCG00ccDL5d9/FNwBAEso9APYu06FoGt?=
+ =?us-ascii?Q?x6TZdUy8pDv4ZPtGSzg8WIwUxluZ4eWx3LRQ8v+qULt/bKgIslDIOX1PtLcd?=
+ =?us-ascii?Q?7dQ2JdP2yWhn6x5QKHrXwNko4wGoQYu/Muev3gzYadncqqBPPsMhc9RlfyAv?=
+ =?us-ascii?Q?90SnFRb6G1ECNB1/WBd2?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35880fa2-f564-4e44-f91d-08dc66c145cc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c85e9c9-0fec-4849-64ef-08dc66cb942f
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2024 13:52:26.6740
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2024 15:06:13.2206
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB5784
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB6780
 
-On Sat, Mar 30, 2024 at 05:17:53PM +0100, Erick Archer wrote:
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
-> 
-> Also, it is preferred to use sizeof(*pointer) instead of
-> sizeof(type) due to the type of the variable can change and
-> one needs not change the former (unlike the latter).
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1][2].
 
-Friendly ping. Any comments?
+As the "ff" variable is a pointer to "struct ff_device" and this
+structure ends in a flexible array:
+
+struct ff_device {
+	[...]
+	struct file *effect_owners[] __counted_by(max_effects);
+};
+
+the preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the calculation "size + count * size" in
+the kzalloc() function.
+
+The struct_size() helper returns SIZE_MAX on overflow. So, refactor
+the comparison to take advantage of this.
+
+This way, the code is more readable and safer.
+
+This code was detected with the help of Coccinelle, and audited and
+modified manually.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
+---
+Hi,
+
+The Coccinelle script used to detect this code pattern is the following:
+
+virtual report
+
+@rule1@
+type t1;
+type t2;
+identifier i0;
+identifier i1;
+identifier i2;
+identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
+position p1;
+@@
+
+i0 = sizeof(t1) + sizeof(t2) * i1;
+...
+i2 = ALLOC@p1(..., i0, ...);
+
+@script:python depends on report@
+p1 << rule1.p1;
+@@
+
+msg = "WARNING: verify allocation on line %s" % (p1[0].line)
+coccilib.report.print_report(p1[0],msg)
 
 Regards,
 Erick
+---
+ drivers/input/ff-core.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/input/ff-core.c b/drivers/input/ff-core.c
+index 16231fe080b0..609a5f01761b 100644
+--- a/drivers/input/ff-core.c
++++ b/drivers/input/ff-core.c
+@@ -9,8 +9,10 @@
+ /* #define DEBUG */
+ 
+ #include <linux/input.h>
++#include <linux/limits.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/overflow.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ 
+@@ -315,9 +317,8 @@ int input_ff_create(struct input_dev *dev, unsigned int max_effects)
+ 		return -EINVAL;
+ 	}
+ 
+-	ff_dev_size = sizeof(struct ff_device) +
+-				max_effects * sizeof(struct file *);
+-	if (ff_dev_size < max_effects) /* overflow */
++	ff_dev_size = struct_size(ff, effect_owners, max_effects);
++	if (ff_dev_size == SIZE_MAX) /* overflow */
+ 		return -EINVAL;
+ 
+ 	ff = kzalloc(ff_dev_size, GFP_KERNEL);
+-- 
+2.25.1
+
