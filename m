@@ -1,245 +1,151 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBB9524AD
-	for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 11:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8056B67
+	for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 13:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714302177; cv=none; b=LrlBvMCMx/Q98QNY2v59eVOLMKXnM9p7Pt9P2R70DsEpTSwtZmSAaz1G0gjeGhI1FHAxg6XWabY5l6OAij96mDq6s7goPNAdRzdb1d3LszQnfjeEVWVsfBMBcRrHcQ9/gE6B3lKc/wW+3OyUdJCeloLl47RctCelQHdGsu6sYZ8=
+	t=1714309934; cv=none; b=LCEVrIaBHYNprhZbtUB383wl7QlyljWBQVAZKsCHcdMNCyeVnqn8z+77Tm0rR7OAFPB1qbHAt8wqpWjMu4cNScxHHimXMNa9v/9APmJ5ze4LdeQbajxeBY4gBFiWl1T0HyVfIJALbSX1E4Zvpb5WmRB70n0OV4jrlGM5n38snrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714302177; c=relaxed/simple;
-	bh=2b6gYCoJF9gtM5xiJ8Jd3+6VlpnCIEJEXN4AknJPzHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=efi8UxD+9kXpAchmPbjmTDVh72Xbqqn8lyC/c2pOj5BOxdJRyjkw8nSueenLPeRwK+5bPIlFzHswfATB9syQhrUDpAQLFB02k704qX6mCA1Ga3PWf7g/fO5Bc8C0NbBmgHLGi4cTD655zb2CMmc1UbZJzrmWQ9I/iCm0SPG+M98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org; spf=pass smtp.mailfrom=dustri.org; dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b=LJ0ZG0CV; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dustri.org
+	s=arc-20240116; t=1714309934; c=relaxed/simple;
+	bh=KLxM9YkdCvUGN0XvVsZ2GkkSmsruBVL2Lgf+5mm+kSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=U+7R15PwuLktRHmG/nUtLaTqKcZ1sWvlQiSGQUY6WjKFDTTevP8j/DljAFId2FaBjYl2T/M5LRQHQVdmqsn4jwb8v+B0VkNBy8f/2P+2dU3R3Ya4q+lEgrgarC0GbzaPWBESa9VTRjfcIWnsQQ/4CxddfTW/XuPeS8NIDDUal0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xas8rZSs; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b="LJ0ZG0CV"
-Message-ID: <d0a65407-d3ae-46d5-800f-415ce7efcf22@dustri.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dustri.org; s=key1;
-	t=1714302171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pVVFme9IGZxZcwcArhmhbXXpkSUt5435Tn6KlathRfY=;
-	b=LJ0ZG0CVcsv9NBeC7oXAVzCp8DNIyDjzDzpmJwgI+ywplahcnxaBpn6DOV4eAcdYC803TS
-	6ctEcHggsNJkFsxrmE5eu64AmZ3nLKIJw+j0pv1hHuEKlLiDww4vPfXxFcUiSDv75SXONE
-	6vLeQEjumyb6fpYAZ6b96TTa1c04BazYBfIcUkKEUoJiYKSAd5NJWLBHvT2HSaAfwEQaSB
-	+lfODkoOzH0jfX/Vu8glrcTLMn1mT5upZel7u3B7iqMd6PJGU1WxlRn1SkXfMKrp/YdXsD
-	7cSjyKQcAd338B5vRoSE8fJhRocVcVH7CE2+fPrpiZA4uAkYhWeC79hXJcOhmQ==
-Date: Sun, 28 Apr 2024 13:02:36 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xas8rZSs"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d8a24f8a3cso43229591fa.1
+        for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 06:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714309931; x=1714914731; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ek36Ely/+scMwi7ZAeRLEtew44ioNM5oYhC6FNlT0xI=;
+        b=xas8rZSsSj/HhmtpeurAT3P01Nkosba76wVlawilikfATBjLV9nGGFSx0rN5rXFVSK
+         rdCN/tq+Tu7Ln+vQFWFZw7z/wkAmDw0BpxiXwmCLKSce6BDCzXDjWCorRmTef97gN/H7
+         eMbwHmEmrTcUqGjlnUUZ6NBvim7KBGNn1PJhj2eAaL8gadVkZK1pjyaB5KX4Jyo0gcNn
+         9cvElR3CX1gm4NUNcVGTbv30iHbC1msZ/a4s695H3udPDQs9D79Npj3PUUa9k0w2mVwU
+         L77H9qj6yjh1ebC6lhEggvf4nk4cjZSt10saBX7nbgk75P+ccZBxZhuPYe7Do0/Ell34
+         di7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714309931; x=1714914731;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ek36Ely/+scMwi7ZAeRLEtew44ioNM5oYhC6FNlT0xI=;
+        b=sJfTxMK0oaibiykm9SmbuL+n6dpqu/9WO3qw+SVmMEHjZAPCmdwZFY05efmVecSh4m
+         9uNGGtZZGBRrX3q8hlLWRkubT4W5KCPGCFj6ff9D0EgJ1HQwqKzTO9slnyGkzOupL5wO
+         8Kvjb+9M8KMOjKka4VFnJ282IEGOlCeBQCSEYyURDuYwrNgkUnVfS/gaIHgdrP1RHHPY
+         BfNdIA2P69HB+k1sSiMveKOW5HpG9ycMYvl3Y/GD6CuvaUt3q/hNK7LqtRkkEgftDiQ0
+         6cSnanr1mZMIJnelH4Nflq7zQodVi4RVUCZHLmK00ZQyUO71gVd2oSRKu7lpjH2+l9vh
+         sS7Q==
+X-Gm-Message-State: AOJu0YxQnwc/v0fUwtBaH9la/uu7zF3g1AA2x9NxcfRF69kuy6BFogwW
+	RSSdy8egUfVj1y3tOa61Du2vIX6FwzylZYe5WWjq4zkZxaNnUZhgFbL7NlfCEjc=
+X-Google-Smtp-Source: AGHT+IF/TZNLcxN+Q75lqk7glUXfuSVex5fY5hbQREJfj2J4DwYtYJ0ssqTgpuPBH5gZNETuxfo20Q==
+X-Received: by 2002:a05:6512:2001:b0:51d:910b:4acb with SMTP id a1-20020a056512200100b0051d910b4acbmr642083lfb.59.1714309930836;
+        Sun, 28 Apr 2024 06:12:10 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id q13-20020a5085cd000000b005726b83071esm1735966edh.4.2024.04.28.06.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 06:12:10 -0700 (PDT)
+Date: Sun, 28 Apr 2024 16:12:07 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: dm-devel@lists.linux.dev
+Cc: linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [bug report] dm ioctl: harden copy_params()'s copy_from_user() from
+ malicious users
+Message-ID: <f84a96d7-2df4-4f79-8c27-83a1d9574412@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/6] slab: Introduce dedicated bucket allocator
-To: Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, "GONG, Ruiqi"
- <gongruiqi@huaweicloud.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
- Matteo Rizzo <matteorizzo@google.com>, Thomas Graf <tgraf@suug.ch>,
- Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20240424213019.make.366-kees@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: jvoisin <julien.voisin@dustri.org>
-Autocrypt: addr=julien.voisin@dustri.org; keydata=
- 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
- 766VTOg4l2PTPCnIdNFy1Os=
-In-Reply-To: <20240424213019.make.366-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 4/24/24 23:40, Kees Cook wrote:
-> Hi,
-> 
-> Series change history:
-> 
->  v3:
->   - clarify rationale and purpose in commit log
->   - rebase to -next (CONFIG_CODE_TAGGING)
->   - simplify calling styles and split out bucket plumbing more cleanly
->   - consolidate kmem_buckets_*() family introduction patches
->  v2: https://lore.kernel.org/lkml/20240305100933.it.923-kees@kernel.org/
->  v1: https://lore.kernel.org/lkml/20240304184252.work.496-kees@kernel.org/
-> 
-> For the cover letter, I'm repeating commit log for patch 4 here, which has
-> additional clarifications and rationale since v2:
-> 
->     Dedicated caches are available for fixed size allocations via
->     kmem_cache_alloc(), but for dynamically sized allocations there is only
->     the global kmalloc API's set of buckets available. This means it isn't
->     possible to separate specific sets of dynamically sized allocations into
->     a separate collection of caches.
->     
->     This leads to a use-after-free exploitation weakness in the Linux
->     kernel since many heap memory spraying/grooming attacks depend on using
->     userspace-controllable dynamically sized allocations to collide with
->     fixed size allocations that end up in same cache.
->     
->     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
->     against these kinds of "type confusion" attacks, including for fixed
->     same-size heap objects, we can create a complementary deterministic
->     defense for dynamically sized allocations that are directly user
->     controlled. Addressing these cases is limited in scope, so isolation these
->     kinds of interfaces will not become an unbounded game of whack-a-mole. For
->     example, pass through memdup_user(), making isolation there very
->     effective.
+Hi DM Maintainers and kernel hardenning people,
 
-What does "Addressing these cases is limited in scope, so isolation
-these kinds of interfaces will not become an unbounded game of
-whack-a-mole." mean exactly?
+drivers/md/dm-ioctl.c
+    1931 static int copy_params(struct dm_ioctl __user *user, struct dm_ioctl *param_kernel,
+    1932                        int ioctl_flags, struct dm_ioctl **param, int *param_flags)
+    1933 {
+    1934         struct dm_ioctl *dmi;
+    1935         int secure_data;
+    1936         const size_t minimum_data_size = offsetof(struct dm_ioctl, data);
+    1937 
+    1938         /* check_version() already copied version from userspace, avoid TOCTOU */
+    1939         if (copy_from_user((char *)param_kernel + sizeof(param_kernel->version),
+    1940                            (char __user *)user + sizeof(param_kernel->version),
+    1941                            minimum_data_size - sizeof(param_kernel->version)))
+    1942                 return -EFAULT;
+    1943 
+    1944         if (unlikely(param_kernel->data_size < minimum_data_size) ||
+    1945             unlikely(param_kernel->data_size > DM_MAX_TARGETS * DM_MAX_TARGET_PARAMS)) {
 
->     
->     In order to isolate user-controllable sized allocations from system
->     allocations, introduce kmem_buckets_create(), which behaves like
->     kmem_cache_create(). Introduce kmem_buckets_alloc(), which behaves like
->     kmem_cache_alloc(). Introduce kmem_buckets_alloc_track_caller() for
->     where caller tracking is needed. Introduce kmem_buckets_valloc() for
->     cases where vmalloc callback is needed.
->     
->     Allows for confining allocations to a dedicated set of sized caches
->     (which have the same layout as the kmalloc caches).
->     
->     This can also be used in the future to extend codetag allocation
->     annotations to implement per-caller allocation cache isolation[1] even
->     for dynamic allocations.
-Having per-caller allocation cache isolation looks like something that
-has already been done in
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3c6152940584290668b35fa0800026f6a1ae05fe
-albeit in a randomized way. Why not piggy-back on the infra added by
-this patch, instead of adding a new API?
+So what's happening here is that struct dm_ioctl->data[] is declared as
+a 7 byte array, but it's actually a variable size array which could be
+more or less than 7 bytes.
 
->     Memory allocation pinning[2] is still needed to plug the Use-After-Free
->     cross-allocator weakness, but that is an existing and separate issue
->     which is complementary to this improvement. Development continues for
->     that feature via the SLAB_VIRTUAL[3] series (which could also provide
->     guard pages -- another complementary improvement).
->     
->     Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
->     Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
->     Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
+    1946                 DMERR("Invalid data size in the ioctl structure: %u",
+    1947                       param_kernel->data_size);
+    1948                 return -EINVAL;
+    1949         }
+    1950 
+    1951         secure_data = param_kernel->flags & DM_SECURE_DATA_FLAG;
+    1952 
+    1953         *param_flags = secure_data ? DM_WIPE_BUFFER : 0;
+    1954 
+    1955         if (ioctl_flags & IOCTL_FLAGS_NO_PARAMS) {
+    1956                 dmi = param_kernel;
+    1957                 dmi->data_size = minimum_data_size;
+    1958                 goto data_copied;
+    1959         }
+    1960 
+    1961         /*
+    1962          * Use __GFP_HIGH to avoid low memory issues when a device is
+    1963          * suspended and the ioctl is needed to resume it.
+    1964          * Use kmalloc() rather than vmalloc() when we can.
+    1965          */
+    1966         dmi = NULL;
+    1967         dmi = kvmalloc(param_kernel->data_size, GFP_NOIO | __GFP_HIGH);
 
-To be honest, I think this series is close to useless without allocation
-pinning. And even with pinning, it's still routinely bypassed in the
-KernelCTF
-(https://github.com/google/security-research/tree/master/pocs/linux/kernelctf).
+We allocate the correct size of the variable element array.
 
-Do you have some particular exploits in mind that would be completely
-mitigated by your series?
+    1968 
+    1969         if (!dmi) {
+    1970                 if (secure_data && clear_user(user, param_kernel->data_size))
+    1971                         return -EFAULT;
+    1972                 return -ENOMEM;
+    1973         }
+    1974 
+    1975         *param_flags |= DM_PARAMS_MALLOC;
+    1976 
+    1977         /* Copy from param_kernel (which was already copied from user) */
+    1978         memcpy(dmi, param_kernel, minimum_data_size);
+    1979 
+--> 1980         if (copy_from_user(&dmi->data, (char __user *)user + minimum_data_size,
+    1981                            param_kernel->data_size - minimum_data_size))
 
-Moreover, I'm not aware of any ongoing development of the SLAB_VIRTUAL
-series: the last sign of life on its thread is from 7 months ago.
+Doesn't the kernel hardenning stuff have run time checks for if we
+write beyond the end of a 7 byte array?  Why not just declare it as a
+zero element array?
 
-> 
-> After the core implementation are 2 patches that cover the most heavily
-> abused "repeat offenders" used in exploits. Repeating those details here:
-> 
->     The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
->     use-after-free type confusion flaws in the kernel for both read and
->     write primitives. Avoid having a user-controlled size cache share the
->     global kmalloc allocator by using a separate set of kmalloc buckets.
->     
->     Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
->     Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
->     Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
->     Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
->     Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
->     Link: https://zplin.me/papers/ELOISE.pdf [6]
->     Link: https://syst3mfailure.io/wall-of-perdition/ [7]
-> 
->     Both memdup_user() and vmemdup_user() handle allocations that are
->     regularly used for exploiting use-after-free type confusion flaws in
->     the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
->     respectively).
->     
->     Since both are designed for contents coming from userspace, it allows
->     for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
->     buckets so these allocations do not share caches with the global kmalloc
->     buckets.
->     
->     Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
->     Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
->     Link: https://etenal.me/archives/1336 [3]
->     Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
+    1982                 goto bad;
+    1983 data_copied:
+    1984         /* Wipe the user buffer so we do not return it to userspace */
+    1985         if (secure_data && clear_user(user, param_kernel->data_size))
+    1986                 goto bad;
+    1987 
+    1988         *param = dmi;
+    1989         return 0;
+    1990 
+    1991 bad:
+    1992         free_params(dmi, param_kernel->data_size, *param_flags);
+    1993 
+    1994         return -EFAULT;
+    1995 }
 
-What's the performance impact of this series? Did you run some benchmarks?
-
-> 
-> Thanks!
-> 
-> -Kees
-> 
-> 
-> Kees Cook (6):
->   mm/slab: Introduce kmem_buckets typedef
->   mm/slab: Plumb kmem_buckets into __do_kmalloc_node()
->   mm/slab: Introduce __kvmalloc_node() that can take kmem_buckets
->     argument
->   mm/slab: Introduce kmem_buckets_create() and family
->   ipc, msg: Use dedicated slab buckets for alloc_msg()
->   mm/util: Use dedicated slab buckets for memdup_user()
-> 
->  include/linux/slab.h | 44 ++++++++++++++++--------
->  ipc/msgutil.c        | 13 +++++++-
->  lib/fortify_kunit.c  |  2 +-
->  lib/rhashtable.c     |  2 +-
->  mm/slab.h            |  6 ++--
->  mm/slab_common.c     | 79 +++++++++++++++++++++++++++++++++++++++++---
->  mm/slub.c            | 14 ++++----
->  mm/util.c            | 21 +++++++++---
->  8 files changed, 146 insertions(+), 35 deletions(-)
-> 
-
+regards,
+dan carpenter
