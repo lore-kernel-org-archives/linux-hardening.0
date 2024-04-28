@@ -1,177 +1,245 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2046.outbound.protection.outlook.com [40.92.53.46])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4BC33C8;
-	Sun, 28 Apr 2024 09:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714295875; cv=fail; b=fVNEcRjwgSspM9hGODSw319Uda0pf8PJ0qB2nu/R8KbofQhclW5yEykdah5g6KNztCcS9t2OG1577hbv6MRO6LWA1U3yBngQ7fsp9aaz3m+xkU1QQVBWMLRiwxlOOITvU2YoXwN57L1feVMFOeP8eBi7LDKimuQjCQmAW4eE64Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714295875; c=relaxed/simple;
-	bh=IRIRa2UZls0FWfzts0BH4sQXW+M+hVrbotHHaUkLIRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=gnhztS7UzrAYuqssQuoZmcaHtDlaz+U0S+FAjzNI01HWkn1xZh2PjFjl447yWLIQrvEu/7LhiVm9P1xapHKHagLxGz2XFf5i0PwOLNQ3kSpeEek4Ud1a1ZQyoZr1DaSDSbBkd8sJ4XBvr3nGXdo6BYCfHDG52fME0wbjs1raLKs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LqKZuXh3; arc=fail smtp.client-ip=40.92.53.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBB9524AD
+	for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 11:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714302177; cv=none; b=LrlBvMCMx/Q98QNY2v59eVOLMKXnM9p7Pt9P2R70DsEpTSwtZmSAaz1G0gjeGhI1FHAxg6XWabY5l6OAij96mDq6s7goPNAdRzdb1d3LszQnfjeEVWVsfBMBcRrHcQ9/gE6B3lKc/wW+3OyUdJCeloLl47RctCelQHdGsu6sYZ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714302177; c=relaxed/simple;
+	bh=2b6gYCoJF9gtM5xiJ8Jd3+6VlpnCIEJEXN4AknJPzHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=efi8UxD+9kXpAchmPbjmTDVh72Xbqqn8lyC/c2pOj5BOxdJRyjkw8nSueenLPeRwK+5bPIlFzHswfATB9syQhrUDpAQLFB02k704qX6mCA1Ga3PWf7g/fO5Bc8C0NbBmgHLGi4cTD655zb2CMmc1UbZJzrmWQ9I/iCm0SPG+M98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org; spf=pass smtp.mailfrom=dustri.org; dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b=LJ0ZG0CV; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dustri.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LqKZuXh3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aM2E8iiBb/0ZDmw9ggwo7eO0GgXwH1GPThrCfmw/29gmeywH59umVb4Em9GCVqRQZvV0Q7ShzH+T0aaKMMV5SAKYNwpMsdHgAsx5xjzAfy/vIpEakks2Zpy5AGwr2Q/sdBEBalTEN9vulNp96kpk0ARAEqZke4lxtmlYpTX++Wuc/176I69id1w2weolUtOWs2d2GU8kuTLTiWhZYJauoJ+RlbWvYVQhL8K3Q811hwsv7659E3RgmDZz9Is3eUhwre5aPzy3MyKqsH4AZAGejan48sfFX0XRGAfQ7w4qWQljHv+R4/5mb7HgFI33VW7YBQkpLQ95rNuWRYKjLryYng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wVgfvMCI/8UFp3WIhk676005RQilYEc4uHacvIfwnVM=;
- b=fdoV/VNZiz/M247kK7yaOTccVLuYMTgS08lCe6NhbRuPYm/ymA3DHkVA1R/vCuPceXUS6W54V3cMdCqQflZxB/lylKuTi/IX12tfKQUqwD+JFVNVCWp8l5Cs4Rlonpp104ByLu+JwECTipex9B6vT7PO0eGbw9VHEJbrnPhepgP6pthvN1UJ5ViJHog/aNVLmaLii8zl2/xpzg4UdXpmYIPQg0GnpJs7ceaWcbSHxWTemH+HbyoqYD9ImPqSXKWIJaDac4hLGxI/LSIoE+D/1R46250th8B92WCbdD53JJ7+nXBjaFOUeikifS3dgS1mlZVq+wvAZeH9xqIPKZX5SQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wVgfvMCI/8UFp3WIhk676005RQilYEc4uHacvIfwnVM=;
- b=LqKZuXh3Z1CBMmkG6W39a483n82yVVwsgnHLFV1KnaZcwC6pJRKj1iFprjUWvlvgGKVofXzKUJYahyiSDf+xdw4rofdLOG7NPerHk9B07nWCAt80JV0OFTbDhKBGUTz7vaaawhb3QN7k9yJGYlviOrt3SXAcUYTOwC0ePJUUZJ0TjDH5FwdA4vNqisV0qeUwFcgOhf41R/GK7T36NHZHmkSYJNFsFkWlGiyw4WBxIeNXrrV6xIjsvngQKZwojDcvYMNWu6umJsXtZc9KKTsO/naXwZzpTT0SS95tXno5oMxa1LHvSDE4fX8IXrBhQs0nrUzEA6hRk9ClUndB7xzfBg==
-Received: from TYSPR04MB7084.apcprd04.prod.outlook.com (2603:1096:400:47a::10)
- by OSQPR04MB7825.apcprd04.prod.outlook.com (2603:1096:604:27f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.32; Sun, 28 Apr
- 2024 09:17:48 +0000
-Received: from TYSPR04MB7084.apcprd04.prod.outlook.com
- ([fe80::e19a:45cb:fc9e:b6af]) by TYSPR04MB7084.apcprd04.prod.outlook.com
- ([fe80::e19a:45cb:fc9e:b6af%6]) with mapi id 15.20.7519.031; Sun, 28 Apr 2024
- 09:17:48 +0000
-From: Enlin Mu <enlin.mu@outlook.com>
-To: manivannan.sadhasivam@linaro.org,
-	daniel.lezcano@linaro.org,
-	tglx@linutronix.de,
-	inux-arm-kernel@lists.infradead.org,
-	linux-unisoc@lists.infradead.org,
-	enlin.mu@unisoc.com,
-	enlinmu@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] clocksource/drivers/rda: Add sched_clock_register   for RDA8810PL SoC
-Date: Sun, 28 Apr 2024 10:17:38 +0100
-Message-ID:
- <TYSPR04MB7084133A983DD3EBE69F4A808A142@TYSPR04MB7084.apcprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.39.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN:
- [EAJzKbQU0+HBTwNCpRU+dw9hd+SU/smIHi0P79kYqqduwmXj6WS1Rch56LuI7FV+UdJYuC78j6Y=]
-X-ClientProxiedBy: SI2P153CA0013.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::12) To TYSPR04MB7084.apcprd04.prod.outlook.com
- (2603:1096:400:47a::10)
-X-Microsoft-Original-Message-ID: <20240428091738.9838-1-enlin.mu@outlook.com>
+	dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b="LJ0ZG0CV"
+Message-ID: <d0a65407-d3ae-46d5-800f-415ce7efcf22@dustri.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dustri.org; s=key1;
+	t=1714302171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=pVVFme9IGZxZcwcArhmhbXXpkSUt5435Tn6KlathRfY=;
+	b=LJ0ZG0CVcsv9NBeC7oXAVzCp8DNIyDjzDzpmJwgI+ywplahcnxaBpn6DOV4eAcdYC803TS
+	6ctEcHggsNJkFsxrmE5eu64AmZ3nLKIJw+j0pv1hHuEKlLiDww4vPfXxFcUiSDv75SXONE
+	6vLeQEjumyb6fpYAZ6b96TTa1c04BazYBfIcUkKEUoJiYKSAd5NJWLBHvT2HSaAfwEQaSB
+	+lfODkoOzH0jfX/Vu8glrcTLMn1mT5upZel7u3B7iqMd6PJGU1WxlRn1SkXfMKrp/YdXsD
+	7cSjyKQcAd338B5vRoSE8fJhRocVcVH7CE2+fPrpiZA4uAkYhWeC79hXJcOhmQ==
+Date: Sun, 28 Apr 2024 13:02:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYSPR04MB7084:EE_|OSQPR04MB7825:EE_
-X-MS-Office365-Filtering-Correlation-Id: 683bdf06-15b4-4db2-9d14-08dc676411ea
-X-Microsoft-Antispam: BCL:0;ARA:14566002|461199019|440099019|3412199016;
-X-Microsoft-Antispam-Message-Info:
-	YiXAS5iG0Um+8iWv2hsBarjKOx2snVIEdPEDZd6GsyTrUWNw+XA+cxfpqn953rgybTwvSLw9DhBL8XAG1hNKhMQRzuf/FfZ5PfBg4CIB/l5g96t+y9vwQEuVUlaRnvj7pPE8mpM0pA3vf2clxydorc9x7+QKkvtcRIu0IuHEH044QUKp2NzEV3wb0GEHJYjRhF8EGI+Pq0uFt6KXT9gOdlS7a967kZR4OCTikq/kbx4Z82im0GXBUOCVOxPGO/zRwVlJhtNIR5z7t2YxmPk07kIksZTbHIy8o4L3f47aMbKRsb491RKpz3PN9af1pYeS5Nqt8PRny9s1DTsePC3e7QffgqzjrrCGF01r4e5kaoSxwAwk4V/ZCDlltbWAUaSi4O9he2P2bwwqURjm3v7C9sJCqHVj8epADBfnxqhwbqZN084A+8kCJw3dSsUbNoYCOxsvjq8brJ8hXp8wgEaJW8OPB+4igIzu5tSjwWqFTIPstdl4wyPGU3hgp2zEZB5KwBtnwzC3LSwSD/M57aehyFZ5C2BYlj6Yw8866DJFWFIUdMUaK0611PVqrznXiJDD
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lVMyneIiW+xX8GyQIUBPdoGl5J75XmxGRg6rp9KovZH7MmOnCWUi4YiezZqh?=
- =?us-ascii?Q?89Rsu4Pu4CYTNG0M5FB9fpV4XxFTVoa5CkCgl93530lK+4su/4O7hhWyhhlH?=
- =?us-ascii?Q?EFJz3cJ+1CKQcHfK1YImLgvcdd32lkGTab7ZzoQCt5yW9JpxUvm5hMGY+pzQ?=
- =?us-ascii?Q?9UvCusBT9n+CPik7V0m3a2jFsJBFuhzqxnI4Dap96r7iFPXOAgt5fT3tCESY?=
- =?us-ascii?Q?9t6l7a07wqKtfG7fY7FkzyEBSaK5Ykd2eGKAQQtEHtChrXb49GiKMtOdwujE?=
- =?us-ascii?Q?vGszKyPA/q89/J8ZYG/qdOBbeEYu2KnzgW+SrAeRIYQPdACAwIPGSI+8JCSL?=
- =?us-ascii?Q?wfXcF9i2AOTtjvmhyZbuZH47vX+4kLjM0R2a4uUU4YW9pDPmg9s5tJhnqPnu?=
- =?us-ascii?Q?Bvi992rQSHbpCCbeBDUax+RMt+GwJvJeXHdZTYW3JZVrM16VtPiPGJCDD0pY?=
- =?us-ascii?Q?bNjovMBdmxMz7m+W1IfrN2A6YYWdamc4Ot3ac0Np/7YZE4LKUPwS+il/c6wy?=
- =?us-ascii?Q?JCbVafvHrbazc2BMXi+VrjmNnakqboEVk8URlhNGAkmhpS6sBCpvpZnzr1ox?=
- =?us-ascii?Q?cEeTBBPG3OFawcyNZ+aYSUK33TwASQQ/vTBC9YxWz+aXQBUt3sri15G/TQP9?=
- =?us-ascii?Q?WCQd1XCJur6mxHh3ywcx9mAxtcqj+2tQdHb8z1lJO/0VMHG7XK5pxzZW1031?=
- =?us-ascii?Q?zZiv1Y8a4oNZcJFsC9OAIIZBJKpDGTgC/IrBEA8hqZVtuOe1PtTTbBsYNxD6?=
- =?us-ascii?Q?LkUSC7PKq1pjI4yrmmbV9MIBzNpV6YgaGwIpfyFFYdPAQ3RlbYFA/lBpcklz?=
- =?us-ascii?Q?FcCHR0R8G93ynip0ROpxUn8CsFzVH+2Di2rLI/VBHEnXWR1fLnw9h1Y5wq4u?=
- =?us-ascii?Q?BMuOM7iBIqOJLQEgZrdi3mQp5bjj2YnR4BWKmkho5BCFje4XpO+d+UgFkGTo?=
- =?us-ascii?Q?fkzOmDJv1tcBik4zeBGZ8kxDHZ7I7gYZuOztWz4BVNhG3adPyMh5K6lsujVV?=
- =?us-ascii?Q?owrbkh7VRdtE92/k1aS1i5VC0/8Kw1MnNtGIm3pHIdk/OGYiV+XzQ0l4OvZY?=
- =?us-ascii?Q?mmAJr3xvyns2AT4m+gvmFCl+A5Tkgym+yXkn9oFFxH1eAoT5fTe6ZEThet9+?=
- =?us-ascii?Q?fKMZEBGukU1pTlhdGhP+GyKaD7Yb38g2Vzd6Gd6dC0T+NUTGeAWC90pBS1W4?=
- =?us-ascii?Q?FwW7fAHqdC0LP9PhVfVp2yBu7adjpxndR64dhslFW/FV50zi2T7XLBTKdtlc?=
- =?us-ascii?Q?TcA6RriuUcEwhLwK+fnkigBBKokiFvM4kibBqGXO0mwq7VPGWeQ+0Q+UEraz?=
- =?us-ascii?Q?t08s6T5yj9/Pk6eYJDT7Dwbrf838kRgHtTmSfJm7zeE85Q=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 683bdf06-15b4-4db2-9d14-08dc676411ea
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR04MB7084.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2024 09:17:47.9660
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR04MB7825
+Subject: Re: [PATCH v3 0/6] slab: Introduce dedicated bucket allocator
+To: Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, "GONG, Ruiqi"
+ <gongruiqi@huaweicloud.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
+ Matteo Rizzo <matteorizzo@google.com>, Thomas Graf <tgraf@suug.ch>,
+ Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20240424213019.make.366-kees@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: jvoisin <julien.voisin@dustri.org>
+Autocrypt: addr=julien.voisin@dustri.org; keydata=
+ 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
+ 766VTOg4l2PTPCnIdNFy1Os=
+In-Reply-To: <20240424213019.make.366-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Enlin Mu <enlin.mu@unisoc.com>
+On 4/24/24 23:40, Kees Cook wrote:
+> Hi,
+> 
+> Series change history:
+> 
+>  v3:
+>   - clarify rationale and purpose in commit log
+>   - rebase to -next (CONFIG_CODE_TAGGING)
+>   - simplify calling styles and split out bucket plumbing more cleanly
+>   - consolidate kmem_buckets_*() family introduction patches
+>  v2: https://lore.kernel.org/lkml/20240305100933.it.923-kees@kernel.org/
+>  v1: https://lore.kernel.org/lkml/20240304184252.work.496-kees@kernel.org/
+> 
+> For the cover letter, I'm repeating commit log for patch 4 here, which has
+> additional clarifications and rationale since v2:
+> 
+>     Dedicated caches are available for fixed size allocations via
+>     kmem_cache_alloc(), but for dynamically sized allocations there is only
+>     the global kmalloc API's set of buckets available. This means it isn't
+>     possible to separate specific sets of dynamically sized allocations into
+>     a separate collection of caches.
+>     
+>     This leads to a use-after-free exploitation weakness in the Linux
+>     kernel since many heap memory spraying/grooming attacks depend on using
+>     userspace-controllable dynamically sized allocations to collide with
+>     fixed size allocations that end up in same cache.
+>     
+>     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+>     against these kinds of "type confusion" attacks, including for fixed
+>     same-size heap objects, we can create a complementary deterministic
+>     defense for dynamically sized allocations that are directly user
+>     controlled. Addressing these cases is limited in scope, so isolation these
+>     kinds of interfaces will not become an unbounded game of whack-a-mole. For
+>     example, pass through memdup_user(), making isolation there very
+>     effective.
 
-Add sched_clock_register  during init
-bootup log before this patch:
-[    8.044000] UBIFS (ubi0:4): Mounting in unauthenticated mode
-[    8.044000] UBIFS error (ubi0:4 pid 176): ubifs_read_superblock: bad superblock, error 4
-[    8.048000]  magic          0x6101831
-[    8.048000]  crc            0x68cacdd8
+What does "Addressing these cases is limited in scope, so isolation
+these kinds of interfaces will not become an unbounded game of
+whack-a-mole." mean exactly?
 
-bootup log after this patch:
-[    8.131116] UBIFS (ubi0:4): Mounting in unauthenticated mode
-[    8.132096] UBIFS error (ubi0:4 pid 176): ubifs_read_superblock: bad superblock, error 4
-[    8.133352]  magic          0x6101831
-[    8.133905]  crc            0x68cacdd8
+>     
+>     In order to isolate user-controllable sized allocations from system
+>     allocations, introduce kmem_buckets_create(), which behaves like
+>     kmem_cache_create(). Introduce kmem_buckets_alloc(), which behaves like
+>     kmem_cache_alloc(). Introduce kmem_buckets_alloc_track_caller() for
+>     where caller tracking is needed. Introduce kmem_buckets_valloc() for
+>     cases where vmalloc callback is needed.
+>     
+>     Allows for confining allocations to a dedicated set of sized caches
+>     (which have the same layout as the kmalloc caches).
+>     
+>     This can also be used in the future to extend codetag allocation
+>     annotations to implement per-caller allocation cache isolation[1] even
+>     for dynamic allocations.
+Having per-caller allocation cache isolation looks like something that
+has already been done in
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3c6152940584290668b35fa0800026f6a1ae05fe
+albeit in a randomized way. Why not piggy-back on the infra added by
+this patch, instead of adding a new API?
 
-Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
----
- drivers/clocksource/timer-rda.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+>     Memory allocation pinning[2] is still needed to plug the Use-After-Free
+>     cross-allocator weakness, but that is an existing and separate issue
+>     which is complementary to this improvement. Development continues for
+>     that feature via the SLAB_VIRTUAL[3] series (which could also provide
+>     guard pages -- another complementary improvement).
+>     
+>     Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
+>     Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
+>     Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
 
-diff --git a/drivers/clocksource/timer-rda.c b/drivers/clocksource/timer-rda.c
-index fd1199c189bf..0be8e05970e2 100644
---- a/drivers/clocksource/timer-rda.c
-+++ b/drivers/clocksource/timer-rda.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/sched_clock.h>
- 
- #include "timer-of.h"
- 
-@@ -153,7 +154,7 @@ static struct timer_of rda_ostimer_of = {
- 	},
- };
- 
--static u64 rda_hwtimer_read(struct clocksource *cs)
-+static u64 rda_hwtimer_clocksource_read(void)
- {
- 	void __iomem *base = timer_of_base(&rda_ostimer_of);
- 	u32 lo, hi;
-@@ -167,6 +168,11 @@ static u64 rda_hwtimer_read(struct clocksource *cs)
- 	return ((u64)hi << 32) | lo;
- }
- 
-+static u64 rda_hwtimer_read(struct clocksource *cs)
-+{
-+	return rda_hwtimer_clocksource_read();
-+}
-+
- static struct clocksource rda_hwtimer_clocksource = {
- 	.name           = "rda-timer",
- 	.rating         = 400,
-@@ -185,6 +191,7 @@ static int __init rda_timer_init(struct device_node *np)
- 		return ret;
- 
- 	clocksource_register_hz(&rda_hwtimer_clocksource, rate);
-+	sched_clock_register(rda_hwtimer_clocksource_read, 64, rate);
- 
- 	clockevents_config_and_register(&rda_ostimer_of.clkevt, rate,
- 					0x2, UINT_MAX);
--- 
-2.39.2
+To be honest, I think this series is close to useless without allocation
+pinning. And even with pinning, it's still routinely bypassed in the
+KernelCTF
+(https://github.com/google/security-research/tree/master/pocs/linux/kernelctf).
+
+Do you have some particular exploits in mind that would be completely
+mitigated by your series?
+
+Moreover, I'm not aware of any ongoing development of the SLAB_VIRTUAL
+series: the last sign of life on its thread is from 7 months ago.
+
+> 
+> After the core implementation are 2 patches that cover the most heavily
+> abused "repeat offenders" used in exploits. Repeating those details here:
+> 
+>     The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
+>     use-after-free type confusion flaws in the kernel for both read and
+>     write primitives. Avoid having a user-controlled size cache share the
+>     global kmalloc allocator by using a separate set of kmalloc buckets.
+>     
+>     Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
+>     Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
+>     Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
+>     Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
+>     Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
+>     Link: https://zplin.me/papers/ELOISE.pdf [6]
+>     Link: https://syst3mfailure.io/wall-of-perdition/ [7]
+> 
+>     Both memdup_user() and vmemdup_user() handle allocations that are
+>     regularly used for exploiting use-after-free type confusion flaws in
+>     the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
+>     respectively).
+>     
+>     Since both are designed for contents coming from userspace, it allows
+>     for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
+>     buckets so these allocations do not share caches with the global kmalloc
+>     buckets.
+>     
+>     Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
+>     Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
+>     Link: https://etenal.me/archives/1336 [3]
+>     Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
+
+What's the performance impact of this series? Did you run some benchmarks?
+
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> 
+> Kees Cook (6):
+>   mm/slab: Introduce kmem_buckets typedef
+>   mm/slab: Plumb kmem_buckets into __do_kmalloc_node()
+>   mm/slab: Introduce __kvmalloc_node() that can take kmem_buckets
+>     argument
+>   mm/slab: Introduce kmem_buckets_create() and family
+>   ipc, msg: Use dedicated slab buckets for alloc_msg()
+>   mm/util: Use dedicated slab buckets for memdup_user()
+> 
+>  include/linux/slab.h | 44 ++++++++++++++++--------
+>  ipc/msgutil.c        | 13 +++++++-
+>  lib/fortify_kunit.c  |  2 +-
+>  lib/rhashtable.c     |  2 +-
+>  mm/slab.h            |  6 ++--
+>  mm/slab_common.c     | 79 +++++++++++++++++++++++++++++++++++++++++---
+>  mm/slub.c            | 14 ++++----
+>  mm/util.c            | 21 +++++++++---
+>  8 files changed, 146 insertions(+), 35 deletions(-)
+> 
 
