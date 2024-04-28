@@ -1,151 +1,213 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2014.outbound.protection.outlook.com [40.92.74.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8056B67
-	for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 13:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714309934; cv=none; b=LCEVrIaBHYNprhZbtUB383wl7QlyljWBQVAZKsCHcdMNCyeVnqn8z+77Tm0rR7OAFPB1qbHAt8wqpWjMu4cNScxHHimXMNa9v/9APmJ5ze4LdeQbajxeBY4gBFiWl1T0HyVfIJALbSX1E4Zvpb5WmRB70n0OV4jrlGM5n38snrE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714309934; c=relaxed/simple;
-	bh=KLxM9YkdCvUGN0XvVsZ2GkkSmsruBVL2Lgf+5mm+kSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=U+7R15PwuLktRHmG/nUtLaTqKcZ1sWvlQiSGQUY6WjKFDTTevP8j/DljAFId2FaBjYl2T/M5LRQHQVdmqsn4jwb8v+B0VkNBy8f/2P+2dU3R3Ya4q+lEgrgarC0GbzaPWBESa9VTRjfcIWnsQQ/4CxddfTW/XuPeS8NIDDUal0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xas8rZSs; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584203A1DA;
+	Sun, 28 Apr 2024 13:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714310996; cv=fail; b=guJ2O/KnvKkyXk0fgESCaSpZGASLgJIbQuXo1fFl21ZHwQ6n1p5DACNXH7eFqKacECYU69/xkiuwG17DWwKrcun5k4GYKR4/bnwqNwJHY45nYX4FcPv9v1Cx+Qh8g9lfunwX7Qb7RqnxxqsHQlIzUL//F/GFInI7lE9bkwZWP+g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714310996; c=relaxed/simple;
+	bh=2GdtkHHfs3fQ7RyxlHn4MvnJa5Q3HyDRyxq83kBBU5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Yb+ayNmAU2Z1xZVB0eIUkHuuDjfxeAmrGzPtTZUP78v8z2z+1rjflryOlkeaRnj44YATVj4SDq6vrQTqnhHiYE/XcHrxZwiSCBqgzVHnSuvaDTZS6BThiOzMvVfCIQSthgzjplwDRYv5VGmWZ5L33F5XdBzBCrNCPJASGquJ90U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Zdc8RS37; arc=fail smtp.client-ip=40.92.74.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xas8rZSs"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d8a24f8a3cso43229591fa.1
-        for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 06:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714309931; x=1714914731; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ek36Ely/+scMwi7ZAeRLEtew44ioNM5oYhC6FNlT0xI=;
-        b=xas8rZSsSj/HhmtpeurAT3P01Nkosba76wVlawilikfATBjLV9nGGFSx0rN5rXFVSK
-         rdCN/tq+Tu7Ln+vQFWFZw7z/wkAmDw0BpxiXwmCLKSce6BDCzXDjWCorRmTef97gN/H7
-         eMbwHmEmrTcUqGjlnUUZ6NBvim7KBGNn1PJhj2eAaL8gadVkZK1pjyaB5KX4Jyo0gcNn
-         9cvElR3CX1gm4NUNcVGTbv30iHbC1msZ/a4s695H3udPDQs9D79Npj3PUUa9k0w2mVwU
-         L77H9qj6yjh1ebC6lhEggvf4nk4cjZSt10saBX7nbgk75P+ccZBxZhuPYe7Do0/Ell34
-         di7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714309931; x=1714914731;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ek36Ely/+scMwi7ZAeRLEtew44ioNM5oYhC6FNlT0xI=;
-        b=sJfTxMK0oaibiykm9SmbuL+n6dpqu/9WO3qw+SVmMEHjZAPCmdwZFY05efmVecSh4m
-         9uNGGtZZGBRrX3q8hlLWRkubT4W5KCPGCFj6ff9D0EgJ1HQwqKzTO9slnyGkzOupL5wO
-         8Kvjb+9M8KMOjKka4VFnJ282IEGOlCeBQCSEYyURDuYwrNgkUnVfS/gaIHgdrP1RHHPY
-         BfNdIA2P69HB+k1sSiMveKOW5HpG9ycMYvl3Y/GD6CuvaUt3q/hNK7LqtRkkEgftDiQ0
-         6cSnanr1mZMIJnelH4Nflq7zQodVi4RVUCZHLmK00ZQyUO71gVd2oSRKu7lpjH2+l9vh
-         sS7Q==
-X-Gm-Message-State: AOJu0YxQnwc/v0fUwtBaH9la/uu7zF3g1AA2x9NxcfRF69kuy6BFogwW
-	RSSdy8egUfVj1y3tOa61Du2vIX6FwzylZYe5WWjq4zkZxaNnUZhgFbL7NlfCEjc=
-X-Google-Smtp-Source: AGHT+IF/TZNLcxN+Q75lqk7glUXfuSVex5fY5hbQREJfj2J4DwYtYJ0ssqTgpuPBH5gZNETuxfo20Q==
-X-Received: by 2002:a05:6512:2001:b0:51d:910b:4acb with SMTP id a1-20020a056512200100b0051d910b4acbmr642083lfb.59.1714309930836;
-        Sun, 28 Apr 2024 06:12:10 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id q13-20020a5085cd000000b005726b83071esm1735966edh.4.2024.04.28.06.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 06:12:10 -0700 (PDT)
-Date: Sun, 28 Apr 2024 16:12:07 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: dm-devel@lists.linux.dev
-Cc: linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [bug report] dm ioctl: harden copy_params()'s copy_from_user() from
- malicious users
-Message-ID: <f84a96d7-2df4-4f79-8c27-83a1d9574412@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Zdc8RS37"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DZ5Jz9Cth8JdbWumcCHXW8igXf9zZwameAltdIduqCAInqU6UQmubHRzOQBba162SbBa4IBwzZT1JTqjPZElQefs1SdcF5fpDgyvEHslgdFLt2mVRUhI8r/9U45DcUtRlVNKqNC5n8cYQY8SiMIRrHM5qgsQbiLilequ4X+h4N348Aw7Dwad9YkIkhB84JHA6tgsuDOd5SqJ9Q30OA8zu+qwMJNvnB1DWsUKgUgVo2QpRQC2haEuMWLBBcKaaUeIzLKyg7ghioVkup0wC2J47YPWQawt+5Fk6e7Cj7jliMNmWfpiTJx4YkW/6Yeb/m6coSn4RfuoC0ABARzGprqIxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S9T3Nttw6v2pB7HfhuJuOBEYWpUI8RZlV2rDfkkEoJY=;
+ b=R/g/E77YCT4uIxCSrQ2fL+n/bI96DB5xpP4saWtl0lhoa5iDysPbf0D3Ko6ixyjOL/W7aezE+LDh4u9igzwJLBuJ7J7IgWrAu00djBAhKF90B0RX/Nd26q8zUrpytJ8ei82lx5/qB8abo7NUid+yXRyj4f3s3u3vuGnO6Gc6oAWxcnu/3hLYUutZXBcQF/v41hXN5DEuAV6UR0IBisH3SMeKMY3SafQrb6+0pl40PTARVBJ64f6vCnmTjOpnBqTLBa6ZJYMrjdXoeryzl4/pRzZIv3p9SW83NqG+mqBztCCOuSgjiIgq3vDQxjU8jsQdMxOCRK4p84ng+6sYTDJzcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S9T3Nttw6v2pB7HfhuJuOBEYWpUI8RZlV2rDfkkEoJY=;
+ b=Zdc8RS37hvQtGimxfyeB7fQUB8PTd19CCJNGYmukvt+tPggdMiSOghppiSwlacVaE+WGSNyZ3gqUSPX0BuqS5TAs6KcbxlEVSfs+zDfZANTYAhnNY6jKWiZ3+/NKzfEuu1z2+DYfgylGqR89nSms+gnxpSRAaFq9+Rha7BVEoq07l92zWWLUO34YxEY2CHZnWTWJHkCbRiWL3w6MKOlzZeAijPbx5gtcMGKj2CigKpBou0ToBpKem2oLhWlSDb+29UkwgtipdqO5INpRSKLdbok8jhWnl1JPGmgcEhJzpjTo3x90s18rUHnYD+pmVugdyY1kcBFEHjzxQiPUryo3Jg==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by DB8PR02MB5881.eurprd02.prod.outlook.com (2603:10a6:10:112::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Sun, 28 Apr
+ 2024 13:29:51 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7519.031; Sun, 28 Apr 2024
+ 13:29:51 +0000
+From: Erick Archer <erick.archer@outlook.com>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Erick Archer <erick.archer@outlook.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] tty: rfcomm: prefer struct_size over open coded arithmetic
+Date: Sun, 28 Apr 2024 15:29:34 +0200
+Message-ID:
+ <AS8PR02MB723725E0069F7AE8F64E876E8B142@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [8VR3A6dZ/Zsj5Bzsu8twxvGEjUH9I3wJ]
+X-ClientProxiedBy: MA4P292CA0007.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2d::12) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID:
+ <20240428132935.7030-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB8PR02MB5881:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9dc2b8d6-612b-4473-bd15-08dc67874877
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1602099003|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	Y3foDXSVctMrVnFx0Y9YAcKO/4yvkGpf8dyhFBSYFdbyCRgaaI7mlkajAUNj2uvISKDn2bblkK82iJTqrCkHe+ypi/xoftUZztXA7k9Q5SpJimnkEvBtS8vRTN/5VPrvOPgeF/kjRVszsiKtihgMjZGu1rzgR2vk9lBcBNxk7LxNjrAagIhfHJidxfaUh+70hSMYbMw6k1AReL4bsu+y83uCHihj1Ew72k4PkDOHNSrUdfSuNhfz3yyX9prxr0B9Z3ttFVvpFbzKp0NvGgjbSfEjIFMOXE4PrqtxJIV5i7vWxAEO/0w0VLnyXc4F/nDXAv83Kl2TJJmbCd5sggOEoloPB7kjLLX4+JjxDkB40ohTR/LsVk+CelFXdXDjKvXXzAYHQYLxUpejBoTtEjJQq1G6ZyUINES6WP1Y3bli4QsK8BX6X6h7g9I3WIE1CHJE7yRQ5n75wJHZ72fhDQFIswQx+i1V4Io6RaFwhAz9RLjAHEpTfyXMdXwtWfnaY0rmEU5xpNF00kgatM4f/3GiKRVNgiOIjrLO9rZBeKsnF3C1ATlXKJwQFqordKukk3tgL70cPrjsGgprLlyi+etT9Vpxyt5BJ2kf28reShELtVPiCUQupxbf9nLvlRtJQx01gjkpPeZ3enQDIBQJK7Q7wxt4bZ5Bsd7M4arMuippwLsAZJXUyq/Uw1lSP2rdOJ52+ApYUJlw//0WOapM7zSEJA==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IIyKyu0jI7GEp/QsFRaid2zvm2OcKj+h/1FO0JUExzI4gk3mAf49Hby3B649?=
+ =?us-ascii?Q?cxxwCM0fBmdDJdoqXGrMjDRaHWGcgoU0+qV0wnJTszjStGGkFtcpU5GRqs2r?=
+ =?us-ascii?Q?/qzXm710DLLUoJHI4ICWNKMdFD/UB47YFPdivO5ONGMrY1pwtFaf2zbOT67H?=
+ =?us-ascii?Q?uaVA1WyuaNQqMOlQFMAFALWjIlcl0kWneFbxRKXOO3LSkFy5lwNlv581wFyQ?=
+ =?us-ascii?Q?Js40HE0irWdVFywTi0chNZb8nUbFGdHjORUejXgE4/E5uhARU0jx/RAs6RL1?=
+ =?us-ascii?Q?hhYsklvnoIITTUd6N5cp9nZWs7Qv50cEAfavM+xdLH7ItLmWDMMRQrDB0+rN?=
+ =?us-ascii?Q?1rnXlg0fQLH2BQEXg9O1Gs+Ibq8L4n75/XDPka/C0BY6vwSUQH/JWX8/gWxr?=
+ =?us-ascii?Q?EpO12/Uldbo5j9ZoCvGZnNo61SNmoeRBfDw+VZTdg+9vrXj690qBOf8LUFyO?=
+ =?us-ascii?Q?iBcxpqGcXAArFyVLZm4/ZFl9PAzS+7744d0JvzG9gdawbiA2jlmG1nZSIzs8?=
+ =?us-ascii?Q?PgeJvdaXIWYtkFag0/OwQcXpDbeB1kivAgQlRrfnQNFtrBvYXnNk8VWKTGSs?=
+ =?us-ascii?Q?hpp0znjkI/GuHQcPtXJKSuMrs1fw1ty3m0IAJcaPOQCHj1Kw9afWfjfDcA/O?=
+ =?us-ascii?Q?xA/MtplpiNAl1AXjatBH07bT8K6XhDQyrtQkH0/GcuQxf8Gs9e3CKIxuHi93?=
+ =?us-ascii?Q?QJkqBcUXBU0PCPHCRCgwKJDMwbcuF8rk47oeJfUSPEyvJu0sKK3d0L4Uu54c?=
+ =?us-ascii?Q?EEz1xV7ZVkzzHjea8noQM4XpDEiB5jH2G+egfa9WnT8CUojqrmxxvVdj8EoZ?=
+ =?us-ascii?Q?zZDg3fdiPUOGK5n5dx+1pzKwj+aHCfORzHDyMlF/aRRXVpSA+hwyaZi/ATTu?=
+ =?us-ascii?Q?xMcPNe1GBou3eHLOT+ycU1xvsJkJq6Fy5MX7Pfnv2CFT9mGDRKa0CiixYpEV?=
+ =?us-ascii?Q?1ocaMdh/N0irs/rq2MHjgcCK/rVNtVfMBMuGkHMNEJyO5iAIosQRlOhcqiDY?=
+ =?us-ascii?Q?agsue3Zsyz82ZNB024C2zGcdDOQCOE6hJsLU84HDHcwartLE+LRJr+cociNf?=
+ =?us-ascii?Q?9Ghtir97Maz6i1kHFkyy6CG6GuEo8NoNzeLJb49fbBjhud6boLA1804pM4DO?=
+ =?us-ascii?Q?u5pK6z1+xHzJf9werMsTDZyNsamH0YHhxysZxe6YXlpowVAv0Jm20KqxHE4N?=
+ =?us-ascii?Q?X65ERSVkxCKog/BxpXVxjOD9ej4Mjz3p29dZpp0zjNCnGmoy22legTDWtOc7?=
+ =?us-ascii?Q?uM55ksEOMFHBf7GZjXS7?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc2b8d6-612b-4473-bd15-08dc67874877
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2024 13:29:51.6722
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5881
 
-Hi DM Maintainers and kernel hardenning people,
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1][2].
 
-drivers/md/dm-ioctl.c
-    1931 static int copy_params(struct dm_ioctl __user *user, struct dm_ioctl *param_kernel,
-    1932                        int ioctl_flags, struct dm_ioctl **param, int *param_flags)
-    1933 {
-    1934         struct dm_ioctl *dmi;
-    1935         int secure_data;
-    1936         const size_t minimum_data_size = offsetof(struct dm_ioctl, data);
-    1937 
-    1938         /* check_version() already copied version from userspace, avoid TOCTOU */
-    1939         if (copy_from_user((char *)param_kernel + sizeof(param_kernel->version),
-    1940                            (char __user *)user + sizeof(param_kernel->version),
-    1941                            minimum_data_size - sizeof(param_kernel->version)))
-    1942                 return -EFAULT;
-    1943 
-    1944         if (unlikely(param_kernel->data_size < minimum_data_size) ||
-    1945             unlikely(param_kernel->data_size > DM_MAX_TARGETS * DM_MAX_TARGET_PARAMS)) {
+As the "dl" variable is a pointer to "struct rfcomm_dev_list_req" and
+this structure ends in a flexible array:
 
-So what's happening here is that struct dm_ioctl->data[] is declared as
-a 7 byte array, but it's actually a variable size array which could be
-more or less than 7 bytes.
+struct rfcomm_dev_list_req {
+	[...]
+	struct   rfcomm_dev_info dev_info[];
+};
 
-    1946                 DMERR("Invalid data size in the ioctl structure: %u",
-    1947                       param_kernel->data_size);
-    1948                 return -EINVAL;
-    1949         }
-    1950 
-    1951         secure_data = param_kernel->flags & DM_SECURE_DATA_FLAG;
-    1952 
-    1953         *param_flags = secure_data ? DM_WIPE_BUFFER : 0;
-    1954 
-    1955         if (ioctl_flags & IOCTL_FLAGS_NO_PARAMS) {
-    1956                 dmi = param_kernel;
-    1957                 dmi->data_size = minimum_data_size;
-    1958                 goto data_copied;
-    1959         }
-    1960 
-    1961         /*
-    1962          * Use __GFP_HIGH to avoid low memory issues when a device is
-    1963          * suspended and the ioctl is needed to resume it.
-    1964          * Use kmalloc() rather than vmalloc() when we can.
-    1965          */
-    1966         dmi = NULL;
-    1967         dmi = kvmalloc(param_kernel->data_size, GFP_NOIO | __GFP_HIGH);
+the preferred way in the kernel is to use the struct_size() helper to
+do the arithmetic instead of the calculation "size + count * size" in
+the kzalloc() and copy_to_user() functions.
 
-We allocate the correct size of the variable element array.
+At the same time remove the "size" variable as it is no longer needed.
+This way, the code is more readable and safer.
 
-    1968 
-    1969         if (!dmi) {
-    1970                 if (secure_data && clear_user(user, param_kernel->data_size))
-    1971                         return -EFAULT;
-    1972                 return -ENOMEM;
-    1973         }
-    1974 
-    1975         *param_flags |= DM_PARAMS_MALLOC;
-    1976 
-    1977         /* Copy from param_kernel (which was already copied from user) */
-    1978         memcpy(dmi, param_kernel, minimum_data_size);
-    1979 
---> 1980         if (copy_from_user(&dmi->data, (char __user *)user + minimum_data_size,
-    1981                            param_kernel->data_size - minimum_data_size))
+This code was detected with the help of Coccinelle, and audited and
+modified manually.
 
-Doesn't the kernel hardenning stuff have run time checks for if we
-write beyond the end of a 7 byte array?  Why not just declare it as a
-zero element array?
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
+---
+Hi,
 
-    1982                 goto bad;
-    1983 data_copied:
-    1984         /* Wipe the user buffer so we do not return it to userspace */
-    1985         if (secure_data && clear_user(user, param_kernel->data_size))
-    1986                 goto bad;
-    1987 
-    1988         *param = dmi;
-    1989         return 0;
-    1990 
-    1991 bad:
-    1992         free_params(dmi, param_kernel->data_size, *param_flags);
-    1993 
-    1994         return -EFAULT;
-    1995 }
+The Coccinelle script used to detect this code pattern is the following:
 
-regards,
-dan carpenter
+virtual report
+
+@rule1@
+type t1;
+type t2;
+identifier i0;
+identifier i1;
+identifier i2;
+identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
+position p1;
+@@
+
+i0 = sizeof(t1) + sizeof(t2) * i1;
+...
+i2 = ALLOC@p1(..., i0, ...);
+
+@script:python depends on report@
+p1 << rule1.p1;
+@@
+
+msg = "WARNING: verify allocation on line %s" % (p1[0].line)
+coccilib.report.print_report(p1[0],msg)
+
+Regards,
+Erick
+---
+ net/bluetooth/rfcomm/tty.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+index 69c75c041fe1..bdc64c8fb85b 100644
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -504,7 +504,7 @@ static int rfcomm_get_dev_list(void __user *arg)
+ 	struct rfcomm_dev *dev;
+ 	struct rfcomm_dev_list_req *dl;
+ 	struct rfcomm_dev_info *di;
+-	int n = 0, size, err;
++	int n = 0, err;
+ 	u16 dev_num;
+ 
+ 	BT_DBG("");
+@@ -515,9 +515,7 @@ static int rfcomm_get_dev_list(void __user *arg)
+ 	if (!dev_num || dev_num > (PAGE_SIZE * 4) / sizeof(*di))
+ 		return -EINVAL;
+ 
+-	size = sizeof(*dl) + dev_num * sizeof(*di);
+-
+-	dl = kzalloc(size, GFP_KERNEL);
++	dl = kzalloc(struct_size(dl, dev_info, dev_num), GFP_KERNEL);
+ 	if (!dl)
+ 		return -ENOMEM;
+ 
+@@ -542,9 +540,7 @@ static int rfcomm_get_dev_list(void __user *arg)
+ 	mutex_unlock(&rfcomm_dev_lock);
+ 
+ 	dl->dev_num = n;
+-	size = sizeof(*dl) + n * sizeof(*di);
+-
+-	err = copy_to_user(arg, dl, size);
++	err = copy_to_user(arg, dl, struct_size(dl, dev_info, n));
+ 	kfree(dl);
+ 
+ 	return err ? -EFAULT : 0;
+-- 
+2.25.1
+
