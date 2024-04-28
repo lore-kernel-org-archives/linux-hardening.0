@@ -1,260 +1,173 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD8B71B47
-	for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 17:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FD98F59;
+	Sun, 28 Apr 2024 23:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714323782; cv=none; b=ji60Wg6c07uDDkKtkPAs1MdUMtz3dYC2LqGo5vqNXm+gzm3yrV7Ph4nd6e3Fkh2BXNWRKmcwDM+5K+cjKG/LBUIFngbSOAIMil8feS09ISewdpGxOudBGZ8mLj4JvPc1Qfnz1U1YHQLyec/Ji4qJbaq45bqsCwEOlK7tFpIId9c=
+	t=1714347199; cv=none; b=S9wEqZkRUgNERSo52v11FSRr9IwO8o0tbjV3r/qFlK7svYecy07fpCyuycp05t6l/FEuFqV1mTXKOrKWgBi5fmqQ+5eIVYdyJ+hRWsF6Uul9QubljJG+hO2m/UG2cO0fZ1cRrTuui669PJe686NXDQOWqOat9pLPSQUvGcRAo0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714323782; c=relaxed/simple;
-	bh=MmeFR06x7fh+/qtTYyu9q36cOU2EyiK1+9pSQ5Art7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QDCWoy1wXL9P4ldfmSZ1qXhBWhGvmI9IG7GtLM7n7fEs0O5uc5hZxq2SC5fLevm8bckRpBWybG2aQ3JxoVhVkNrRRREwF9eiN0Vl0Pg7s6sb1xYHBvYb/g1g6zlPAtBT6iY8YupQHDgE2IhB3ESKsPVWIQ2hQIf+APc+e1oSeVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OE65phJ7; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714347199; c=relaxed/simple;
+	bh=xDaba65KckNGBSBw/5AkYIu31Tz1T5W9rXAMjCi+Wyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gMsl+3uZYjHfot8kyAawb5qQG5pPYCZeQ43XT/NlHyr9N+3tOIuh1odvrMJo8Uj4pz7SrH+qyCYVvqR03JAqI3aZIoMjNfUjfQlnzGMqEvfaaY2grEA/2tqoOJgq8Tf6s1AJLOGi+uppbnLmJQTFZyk8lMjqa/EH/oUFLE2iP4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIdA54SQ; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OE65phJ7"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ee0642f718so3529356b3a.0
-        for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 10:02:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIdA54SQ"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7decd9851dfso30234239f.3;
+        Sun, 28 Apr 2024 16:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714323779; x=1714928579; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y2qJzM1aoYHicoc68EH18vvTtbMF+7vJm0oFHLDSG8g=;
-        b=OE65phJ7/jHPdgqTX3dyQk9bm0HT5aJP+q5+9aVktI4oSaaSR01dgJkeKRQXdTHJTa
-         MYNkfvsxGREuODPw8f3kZgwKjWcMi13L9yC+ld/hlhKrtsX+teyGbtGFt8iE1ymeFnRx
-         1xtmJ40ciZ3Ec3ToZkkeC/xiGPNbsK7W9EEoA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714323779; x=1714928579;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1714347197; x=1714951997; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y2qJzM1aoYHicoc68EH18vvTtbMF+7vJm0oFHLDSG8g=;
-        b=VL18BzIlvZIRfUYzpq5sdlVCwI/GmjY5lBuGWbYdApXZfIPyUiPQvC9AY6Ic1gQwhL
-         MrxXXYT6Wxwbwvn0AjYZBw0ICOXkAMIf6RKKJtxDEJnNvEOXas3eM5cyyjLaBBXzFgeV
-         lqr4M9SEsP9Nv1vASFKyFYoHXlEcFz0RliV+KljQd6pNcQ2IJAXK+b/ZosnWSRHb8Pxx
-         J4LQqZ1spWwKGq6QPQsPS8B8KqpsVbIta2gFZ2BfjTN/Bgn6vXxaBRhVyAwb5FTVG54x
-         6vkPCGo1D1S1uTDMeuyX4vrsOBAHdpJ/91qqyeU5xd4LffJmCsLSgs0ONFEArH3JYj5z
-         p/7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVTtQCWmA/NCEUxn3WmdNLjCsfk6kCLS91xYOY4NVvO0pv8W3J6c4Xl1gU6vTCrGzCpI7ALhRtvbum3jm4dXPrPxFnfVDylpMW5HO7YJkkW
-X-Gm-Message-State: AOJu0YxDDIBI5uedsgJVnDHt+HevbKVLwqUqVDl9gu1UFxxTixEV1fp2
-	mEw7OcGVh4VeTVxgkc80U3pXlr/ggFcv6JeGQ1qQ47yaPnsE333wnNykQwNO2Q==
-X-Google-Smtp-Source: AGHT+IHWWLQe2VynRuCx9igwEYpj8htea8REIW4foTlkiwAx1Ts/UbQSNMIiZJhRd0vlw2foXOGzlw==
-X-Received: by 2002:a17:902:e88a:b0:1e2:bdef:3973 with SMTP id w10-20020a170902e88a00b001e2bdef3973mr10803402plg.33.1714323778924;
-        Sun, 28 Apr 2024 10:02:58 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u9-20020a170903124900b001e3f4f1a2aasm18663059plh.23.2024.04.28.10.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 10:02:57 -0700 (PDT)
-Date: Sun, 28 Apr 2024 10:02:56 -0700
-From: Kees Cook <keescook@chromium.org>
-To: jvoisin <julien.voisin@dustri.org>,
-	Matteo Rizzo <matteorizzo@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>, Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] slab: Introduce dedicated bucket allocator
-Message-ID: <202404280921.A7683D511@keescook>
-References: <20240424213019.make.366-kees@kernel.org>
- <d0a65407-d3ae-46d5-800f-415ce7efcf22@dustri.org>
+        bh=Ctrf2NTRu/52wNcPKKuuzrfv0/JstMQrnj9zQHxr5yI=;
+        b=VIdA54SQYLagKzpI1tW5MneGbuNCZYOzdcmoosBW4Ctom37oflgfop9u3B6L7kuUq5
+         70lYiP3JAP/Tpaiksmw5uE56shJIkaucYJ/PK53ztJ8fiptW86gM/Sk+qEPuBMf6TiZR
+         TmCWTb+4Qv7sV42UydImv7IhtnQR08VDEUVy42R5vyewUKcHG/LhTxgfLxN408zlL8Wu
+         XOt08+dImLfW++QvDoT7XMYpzSbwEdQAPsf8vj/YQanSmEVBjGHi0ugGFO022HZdOIff
+         QoU2SVBblUoLWdEe7Yt3amDLv2zOxD/KSScjogPiZD8liuc1KES7ZBPVZtqasJrXkPG7
+         g8pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714347197; x=1714951997;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ctrf2NTRu/52wNcPKKuuzrfv0/JstMQrnj9zQHxr5yI=;
+        b=urapqv+JcYnLG7ZtTAUR3OQXopp0SkiM2rK81oUE7b6dWMAMSYDXvTkjoW5C7nvGMD
+         c8PfyqmxMPe4nzR+dzI5m37nLZim4/86K7UJS3HUgyhVG5q3nGEP7bOMZR0G2R1NrG/n
+         DDsRiDICGtTVxNH4aEGfsLqvUiQ5WD0XYYSdGowCZva8ntA8n/1xnbq9NO352wW5R3VX
+         0u7nw81EXsBsYB6Ca4t8kfJI9IRF4o4r7vyIt7R1qBxOKy4L/M9lAcTNNutRNUhI3WIs
+         APK+XhsHIrPVhqmJKUsTlAo5WdDEuySqn/qjCzB8Fsdxn2nWT6gQTbpWEaXqeqIfKPmV
+         7h4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWkLT/3PzdPd94B15HiXZK0XmqAygCSPY4X/7GeS1kg3UdGt3ywqy+h1GZbndlygan2wKagUAAAwv6zyGYPr1bJLx2Ga+/mOhLWo8n78wC0TWEGU1/howCsKSwBfbnX79yDM93pJGFfrWctYhW1vCN9Xq4RjR4iUmYRGmkVZ0hfFkUzx86x6d9qMpke8VcXUTMjOp532Fb6caWaSRrYJp15YA==
+X-Gm-Message-State: AOJu0YyjFl1xbUEfBLmAmUCWzAc+WDfEp939ZYLI4UJ9xhzlN/jJ6rol
+	L+MAW6AMqC63nJncBSaNq2doluJxpI01T/q3lVCqhjn/2hKCvSaKOXvdq6VuxdYwAOi66aG5Tuc
+	k4arHz5Y2DgXfLIDgsljoTLUXdXw=
+X-Google-Smtp-Source: AGHT+IHHboIpq9hG3uegI72AijSqf6Woq7uvAYi4N65G/zY61OPhRDfGRaFbk5fCPCiiBTciWRN+CiBfumCTX0cJvRQ=
+X-Received: by 2002:a05:6e02:1aaf:b0:36c:4c5b:cd3 with SMTP id
+ l15-20020a056e021aaf00b0036c4c5b0cd3mr2471381ilv.11.1714347196843; Sun, 28
+ Apr 2024 16:33:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0a65407-d3ae-46d5-800f-415ce7efcf22@dustri.org>
+References: <PAXPR02MB724871DB78375AB06B5171C88B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+In-Reply-To: <PAXPR02MB724871DB78375AB06B5171C88B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+From: Xin Long <lucien.xin@gmail.com>
+Date: Sun, 28 Apr 2024 19:33:05 -0400
+Message-ID: <CADvbK_fzB3z-f-SJz+E6Q6hac5UyyqDPMB4r8GnCwYK8N8f=2g@mail.gmail.com>
+Subject: Re: [PATCH] sctp: prefer struct_size over open coded arithmetic
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Justin Stitt <justinstitt@google.com>, linux-sctp@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 28, 2024 at 01:02:36PM +0200, jvoisin wrote:
-> On 4/24/24 23:40, Kees Cook wrote:
-> > Hi,
-> > 
-> > Series change history:
-> > 
-> >  v3:
-> >   - clarify rationale and purpose in commit log
-> >   - rebase to -next (CONFIG_CODE_TAGGING)
-> >   - simplify calling styles and split out bucket plumbing more cleanly
-> >   - consolidate kmem_buckets_*() family introduction patches
-> >  v2: https://lore.kernel.org/lkml/20240305100933.it.923-kees@kernel.org/
-> >  v1: https://lore.kernel.org/lkml/20240304184252.work.496-kees@kernel.org/
-> > 
-> > For the cover letter, I'm repeating commit log for patch 4 here, which has
-> > additional clarifications and rationale since v2:
-> > 
-> >     Dedicated caches are available for fixed size allocations via
-> >     kmem_cache_alloc(), but for dynamically sized allocations there is only
-> >     the global kmalloc API's set of buckets available. This means it isn't
-> >     possible to separate specific sets of dynamically sized allocations into
-> >     a separate collection of caches.
-> >     
-> >     This leads to a use-after-free exploitation weakness in the Linux
-> >     kernel since many heap memory spraying/grooming attacks depend on using
-> >     userspace-controllable dynamically sized allocations to collide with
-> >     fixed size allocations that end up in same cache.
-> >     
-> >     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-> >     against these kinds of "type confusion" attacks, including for fixed
-> >     same-size heap objects, we can create a complementary deterministic
-> >     defense for dynamically sized allocations that are directly user
-> >     controlled. Addressing these cases is limited in scope, so isolation these
-> >     kinds of interfaces will not become an unbounded game of whack-a-mole. For
-> >     example, pass through memdup_user(), making isolation there very
-> >     effective.
-> 
-> What does "Addressing these cases is limited in scope, so isolation
-> these kinds of interfaces will not become an unbounded game of
-> whack-a-mole." mean exactly?
-
-The number of cases where there is a user/kernel API for size-controlled
-allocations is limited. They don't get added very often, and most are
-(correctly) using kmemdup_user() as the basis of their allocations. This
-means we have a relatively well defined set of criteria for finding
-places where this is needed, and most newly added interfaces will use
-the existing (kmemdup_user()) infrastructure that will already be covered.
-
-> >     In order to isolate user-controllable sized allocations from system
-> >     allocations, introduce kmem_buckets_create(), which behaves like
-> >     kmem_cache_create(). Introduce kmem_buckets_alloc(), which behaves like
-> >     kmem_cache_alloc(). Introduce kmem_buckets_alloc_track_caller() for
-> >     where caller tracking is needed. Introduce kmem_buckets_valloc() for
-> >     cases where vmalloc callback is needed.
-> >     
-> >     Allows for confining allocations to a dedicated set of sized caches
-> >     (which have the same layout as the kmalloc caches).
-> >     
-> >     This can also be used in the future to extend codetag allocation
-> >     annotations to implement per-caller allocation cache isolation[1] even
-> >     for dynamic allocations.
-> Having per-caller allocation cache isolation looks like something that
-> has already been done in
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3c6152940584290668b35fa0800026f6a1ae05fe
-> albeit in a randomized way. Why not piggy-back on the infra added by
-> this patch, instead of adding a new API?
-
-It's not sufficient because it is a static set of buckets. It cannot be
-adjusted dynamically (which is not a problem kmem_buckets_create() has).
-I had asked[1], in an earlier version of CONFIG_RANDOM_KMALLOC_CACHES, for
-exactly the API that is provided in this series, because that would be
-much more flexible.
-
-And for systems that use allocation profiling, the next step
-would be to provide per-call-site isolation (which would supersede
-CONFIG_RANDOM_KMALLOC_CACHES, which we'd keep for the non-alloc-prof
-cases).
-
-> >     Memory allocation pinning[2] is still needed to plug the Use-After-Free
-> >     cross-allocator weakness, but that is an existing and separate issue
-> >     which is complementary to this improvement. Development continues for
-> >     that feature via the SLAB_VIRTUAL[3] series (which could also provide
-> >     guard pages -- another complementary improvement).
-> >     
-> >     Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
-> >     Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
-> >     Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
-> 
-> To be honest, I think this series is close to useless without allocation
-> pinning. And even with pinning, it's still routinely bypassed in the
-> KernelCTF
-> (https://github.com/google/security-research/tree/master/pocs/linux/kernelctf).
-
-Sure, I can understand why you might think that, but I disagree. This
-adds the building blocks we need for better allocation isolation
-control, and stops existing (and similar) attacks today.
-
-But yes, given attackers with sufficient control over the entire system,
-all mitigations get weaker. We can't fall into the trap of "perfect
-security"; real-world experience shows that incremental improvements
-like this can strongly impact the difficulty of mounting attacks. Not
-all flaws are created equal; not everything is exploitable to the same
-degree.
-
-> Do you have some particular exploits in mind that would be completely
-> mitigated by your series?
-
-I link to like a dozen in the last two patches. :P
-
-This series immediately closes 3 well used exploit methodologies.
-Attackers exploiting new flaws that could have used the killed methods
-must now choose methods that have greater complexity, and this drives
-them towards cross-allocator attacks. Robust exploits there are more
-costly to develop as we narrow the scope of methods.
-
-Bad analogy: we're locking the doors of a house. Yes, some windows may
-still be unlocked, but now they'll need a ladder. And it doesn't make
-sense to lock the windows if we didn't lock the doors first. This is
-what I mean by complementary defenses, and comes back to what I mentioned
-earlier: "perfect security" is a myth, but incremental security works.
-
-> Moreover, I'm not aware of any ongoing development of the SLAB_VIRTUAL
-> series: the last sign of life on its thread is from 7 months ago.
-
-Yeah, I know, but sometimes other things get in the way. Matteo assures
-me it's still coming.
-
-Since you're interested in seeing SLAB_VIRTUAL land, please join the
-development efforts. Reach out to Matteo (you, he, and I all work for
-the same company) and see where you can assist. Surely this can be
-something you can contribute to while "on the clock"?
-
-> > After the core implementation are 2 patches that cover the most heavily
-> > abused "repeat offenders" used in exploits. Repeating those details here:
-> > 
-> >     The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
-> >     use-after-free type confusion flaws in the kernel for both read and
-> >     write primitives. Avoid having a user-controlled size cache share the
-> >     global kmalloc allocator by using a separate set of kmalloc buckets.
-> >     
-> >     Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
-> >     Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
-> >     Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
-> >     Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
-> >     Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
-> >     Link: https://zplin.me/papers/ELOISE.pdf [6]
-> >     Link: https://syst3mfailure.io/wall-of-perdition/ [7]
-> > 
-> >     Both memdup_user() and vmemdup_user() handle allocations that are
-> >     regularly used for exploiting use-after-free type confusion flaws in
-> >     the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
-> >     respectively).
-> >     
-> >     Since both are designed for contents coming from userspace, it allows
-> >     for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
-> >     buckets so these allocations do not share caches with the global kmalloc
-> >     buckets.
-> >     
-> >     Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
-> >     Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
-> >     Link: https://etenal.me/archives/1336 [3]
-> >     Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
-> 
-> What's the performance impact of this series? Did you run some benchmarks?
-
-I wasn't able to measure any performance impact at all. It does add a
-small bit of memory overhead, but it's on the order of a dozen pages
-used for the 2 extra sets of buckets. (E.g. it's well below the overhead
-introduced by CONFIG_RANDOM_KMALLOC_CACHES, which adds 16 extra sets
-of buckets.)
-
--Kees
-
-[1] https://lore.kernel.org/lkml/202305161204.CB4A87C13@keescook/
-
--- 
-Kees Cook
+On Sat, Apr 27, 2024 at 1:23=E2=80=AFPM Erick Archer <erick.archer@outlook.=
+com> wrote:
+>
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+>
+> As the "ids" variable is a pointer to "struct sctp_assoc_ids" and this
+> structure ends in a flexible array:
+>
+> struct sctp_assoc_ids {
+>         [...]
+>         sctp_assoc_t    gaids_assoc_id[];
+> };
+>
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + size * count" in
+> the kmalloc() function.
+>
+> Also, refactor the code adding the "ids_size" variable to avoid sizing
+> twice.
+>
+> This way, the code is more readable and safer.
+>
+> This code was detected with the help of Coccinelle, and audited and
+> modified manually.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open=
+-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Hi,
+>
+> The Coccinelle script used to detect this code pattern is the following:
+>
+> virtual report
+>
+> @rule1@
+> type t1;
+> type t2;
+> identifier i0;
+> identifier i1;
+> identifier i2;
+> identifier ALLOC =3D~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|=
+vzalloc|kvmalloc|kvzalloc";
+> position p1;
+> @@
+>
+> i0 =3D sizeof(t1) + sizeof(t2) * i1;
+> ...
+> i2 =3D ALLOC@p1(..., i0, ...);
+>
+> @script:python depends on report@
+> p1 << rule1.p1;
+> @@
+>
+> msg =3D "WARNING: verify allocation on line %s" % (p1[0].line)
+> coccilib.report.print_report(p1[0],msg)
+>
+> Regards,
+> Erick
+> ---
+>  net/sctp/socket.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> index e416b6d3d270..64196b1dce1d 100644
+> --- a/net/sctp/socket.c
+> +++ b/net/sctp/socket.c
+> @@ -7119,6 +7119,7 @@ static int sctp_getsockopt_assoc_ids(struct sock *s=
+k, int len,
+>         struct sctp_sock *sp =3D sctp_sk(sk);
+>         struct sctp_association *asoc;
+>         struct sctp_assoc_ids *ids;
+> +       size_t ids_size;
+>         u32 num =3D 0;
+>
+>         if (sctp_style(sk, TCP))
+> @@ -7131,11 +7132,11 @@ static int sctp_getsockopt_assoc_ids(struct sock =
+*sk, int len,
+>                 num++;
+>         }
+>
+> -       if (len < sizeof(struct sctp_assoc_ids) + sizeof(sctp_assoc_t) * =
+num)
+> +       ids_size =3D struct_size(ids, gaids_assoc_id, num);
+> +       if (len < ids_size)
+>                 return -EINVAL;
+>
+> -       len =3D sizeof(struct sctp_assoc_ids) + sizeof(sctp_assoc_t) * nu=
+m;
+> -
+> +       len =3D ids_size;
+>         ids =3D kmalloc(len, GFP_USER | __GFP_NOWARN);
+>         if (unlikely(!ids))
+>                 return -ENOMEM;
+> --
+> 2.25.1
+>
+Acked-by: Xin Long <lucien.xin@gmail.com>
