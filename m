@@ -1,117 +1,119 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE241350FD
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 18:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE9012B73;
+	Mon, 29 Apr 2024 19:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714416160; cv=none; b=YcBkX1bSQIdBygnVf9eGi1IkHcusGHVmBwBdg7xavJGtHP/v8e1EAlbJxD1rSuVRKPZBmb2y90g5iU02yBxuXDC4q3Rj0sUEMhpwcS5me++bocjiVdKanglm3dBiE/g5gzhH4Q4MnqUT0e3DqN9i7ByAX56j22bRxcg0GMw1El4=
+	t=1714418496; cv=none; b=lvZJ5CwUEjJYo7WOh6O/F1pmQZWUIZ/5BfsYOHuKFxPvhDDr0OpZXcD21k4hYO+egFQJWwC1goHepvcwH8WEAWrfw4K973LCzaeyeAiKnuMC2lhCzib9fdvOSUKyHbuqvIdGAu5hmDF5Hf22GoVjLDF4SZHdjlsinjSeD++T/08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714416160; c=relaxed/simple;
-	bh=o7Rzh6vzHe9kqHnyh0XzcOChBzUGpfd9DHW4G5UZ8Eg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gj5bXCttEeXbywiRAU3UvmQBTKYZTCjdPJay5KwuknN/qatgWVxSg+muknlDgKy8I4L4LNPMo1z/bzY2cKqqNzGJJ8iA8Hb1/UzM26c0bEaJrHGbbvu0jamP6Jq//gTmFJKf+TwGA5BeN7jJb7DFXmlBs8fYUx1Oxj+Wu7NlWxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=mQMOePvc; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1714418496; c=relaxed/simple;
+	bh=vOAjXkqV/BW5BFMy/FugtkSomI+lCtbQeeOuE8DfZRM=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=o7M6vKzttgiUZ2NiTYYY2BbTwhmAeBvbC+rkkoNY6DMw0kvSHOBeV+AIhHfxzzMvCx5hP39HMwt31Eo094rkLxCPLiYrsG6s7SBRpfQlKlctQTDsFUlOkfbZOMqIerkcUPqvxT00dHtPcTCxMYwUKRwvUpa9/6nSXpJ0vSMCsOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0RFfydn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mQMOePvc"
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTPS
-	id 1TRosQIKnxs4F1VxPs7esM; Mon, 29 Apr 2024 18:42:31 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1VxOsQS40YakK1VxOsJYH2; Mon, 29 Apr 2024 18:42:30 +0000
-X-Authority-Analysis: v=2.4 cv=a4T79lSF c=1 sm=1 tr=0 ts=662fea16
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
- a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=v1GTFQr46au9FOpdLhIA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7R8iOZZv1UeQk5saLx+Pr9H4OJPkevAvXI2B0KeGlbY=; b=mQMOePvckb+lme1Q4LIcIVB07P
-	vApm5UCTHavk75lmlhzQw6NYVve7lvc2S8gFrW+bstGZeHJBHz2quTQp2ZrmkJhapCcZ1jDOx5dWL
-	eqDz94RZfiB0uBPKs9LciR4tw4ZpyN1j31WWOJJCSxH+pMlM9tzvQld8CxTql6R6PCPbajVa8yw8Y
-	dGvZI5VNhSc9s2+sQeL3/gCgMBq1yABRHIa+UhBFqb5eaRsYfwPcZoedGpuhhbRNDHOHEf3YdV0/j
-	ha/cRMnszSG69sF+d8fQvy1yfqJ0N3Aygz6iT+GOnveQIg/5RyyPAEaCDJGwORAbzRWiEyoh2vNT6
-	wDjKAcCQ==;
-Received: from [201.172.173.147] (port=36178 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1s1VxN-002n1Z-1F;
-	Mon, 29 Apr 2024 13:42:29 -0500
-Message-ID: <90ddce3b-1ad5-49be-89f9-2f3e48d73e19@embeddedor.com>
-Date: Mon, 29 Apr 2024 12:42:23 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0RFfydn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4AEC4AF1A;
+	Mon, 29 Apr 2024 19:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714418495;
+	bh=vOAjXkqV/BW5BFMy/FugtkSomI+lCtbQeeOuE8DfZRM=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=c0RFfydnB/AYsCs+tTB8U2TfsP/SkMCXDKAFCcdiWgHbk9DVIikiajKo42GI80Bzb
+	 /QcXx4KflBBZyWAeym9CEbXh/qGHPhuo7Kco+c4KcJOVSQfcjg8guWhTHkP6/XUAcE
+	 +a+iNmYng8SmHShJOR9wjrONK4D8wB0vcsl9QKtk40PyINjGLtMMfZA0nnwOvNc/sd
+	 QYzzm5UP/ZEykBARAwTm9RqCCMl878CnBECYblsWQUZQ9P92P/3v2fri6fLCQ+OMqM
+	 +9Hs6zv0xovtrYn/RH8NSfiX3dOsovbAgZeZB7xrY/KI1Uji9+RKNjMW96pmwxovVL
+	 0cQwguLbnWKUw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,  Jeff Johnson
+ <quic_jjohnson@quicinc.com>,  linux-wireless@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] wifi: wil6210: wmi: Use __counted_by() in
+ struct wmi_set_link_monitor_cmd and avoid -Wfamnae warning
+References: <ZgSTCmdP+omePvWg@neat>
+	<171222554691.1806092.8730005090791383928.kvalo@kernel.org>
+	<202404291008.51DB333F@keescook> <877cggqdwb.fsf@kernel.org>
+	<202404291109.331E1704@keescook>
+Date: Mon, 29 Apr 2024 22:21:32 +0300
+In-Reply-To: <202404291109.331E1704@keescook> (Kees Cook's message of "Mon, 29
+	Apr 2024 11:09:43 -0700")
+Message-ID: <87bk5sf003.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2][next] firewire: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, linux1394-devel@lists.sourceforge.net
-References: <cover.1709658886.git.gustavoars@kernel.org>
- <20240306011030.GA71684@workstation.local>
- <6a7854af-a183-4db2-8400-4d9eb0cc4308@embeddedor.com>
- <202404291129.F261DEA21F@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202404291129.F261DEA21F@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.147
-X-Source-L: No
-X-Exim-ID: 1s1VxN-002n1Z-1F
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:36178
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOL1rqCTvPL0Wyzs2AtpxqYXB2kwpNeinFSXIUHaGvFGzfxToF9tpq6cPHBE+ePUahhU16DRYMv0OiKVqeNjgaGjIZO2nmFcc1cUZXyUinkXu5MfQrnz
- PrbNTD6WhgFb4g/KAYjUjyltInKbGR8eKn9dLIp34jF218d+UW1SQ/kJVeLMql10kjyTO40LaeWK2hOIL6smzCS+KvbqGIJ9HCXiyRc5mgrqUhFF7WBH/t2a
+Content-Type: text/plain
 
+Kees Cook <keescook@chromium.org> writes:
 
+> On Mon, Apr 29, 2024 at 08:25:56PM +0300, Kalle Valo wrote:
+>
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > On Thu, Apr 04, 2024 at 10:12:28AM +0000, Kalle Valo wrote:
+>> >
+>> >> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+>> >> 
+>> >> > Prepare for the coming implementation by GCC and Clang of the
+>> >> > __counted_by attribute. Flexible array members annotated with
+>> >> > __counted_by can have their accesses bounds-checked at run-time
+>> >> > via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+>> >> > (for strcpy/memcpy-family functions).
+>> >> > 
+>> >> > Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+>> >> > getting ready to enable it globally.
+>> >> > 
+>> >> > So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+>> >> > a flexible structure where the size of the flexible-array member
+>> >> > is known at compile-time, and refactor the rest of the code,
+>> >> > accordingly.
+>> >> > 
+>> >> > So, with these changes, fix the following warning:
+>> >> > drivers/net/wireless/ath/wil6210/wmi.c:4018:49: warning: structure
+>> >> > containing a flexible array member is not at the end of another
+>> >> > structure [-Wflex-array-member-not-at-end]
+>> >> > 
+>> >> > Link: https://github.com/KSPP/linux/issues/202
+>> >> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> >> > Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> >> > Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+>> >> 
+>> >> Patch applied to ath-next branch of ath.git, thanks.
+>> >> 
+>> >> cbb0697e0ded wifi: wil6210: wmi: Use __counted_by() in struct
+>> >> wmi_set_link_monitor_cmd and avoid -Wfamnae warning
+>> >
+>> > Hi,
+>> >
+>> > I was just walking through our patch tracker and noticed that I don't
+>> > see this patch include in -next yet (as of next-20240429). Is there a
+>> > flush of the ath-next queue planned soon? Or did I miss some change?
+>> 
+>> Yeah, wireless-next was pulled last week so most likely we will create
+>> ath-next pull request this week.
+>> 
+>> BTW we are planning to move ath.git to a new location, rename branches
+>> etc. I think we'll see if we can also setup it so that it can be pulled
+>> to linux-next, so that you don't need to ask this every time ;)
+>> 
+>> (Just joking of course, there a lot of benefits from having the tree in
+>> linux-next)
+>
+> Ah-ha! Thanks. Yeah, sorry if I keep asking about that. It's different
+> from other trees, so it doesn't stick in my head. :) I should keep
+> better notes!
 
-On 4/29/24 12:30, Kees Cook wrote:
-> On Wed, Mar 06, 2024 at 10:18:59AM -0600, Gustavo A. R. Silva wrote:
->>
->>> Thanks for the improvements, however we are mostly at the end of
->>> development period for v6.8 kernel. Let me postpone applying the patches
->>> until closing the next merge window (for v6.9), since we need the term to
->>> evaluate the change. I mean that it goes to v6.10 kernel.
->>
->> Sure, no problem.
->>
->> Actually, I'll send a v2 with DEFINE_FLEX(), instead.
-> 
-> I was just going through the patch tracker to make sure stuff got
-> handled -- did a v2 of these ever get posted? I don't see anything in
-> the tracker nor changes here in -next.
+BTW I think all vendor specific wireless driver trees are not pulled to
+linux-next: iwlwifi, mt76, rtw (Realtek) and ath. So with all of these it will
+take a while before the commit is in linux-next.
 
-Yes, it's in linux-next already:
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1d717123bb1a7555a432e51a41709badf8545dba
-
---
-Gustavo
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
