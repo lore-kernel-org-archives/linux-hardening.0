@@ -1,173 +1,139 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FD98F59;
-	Sun, 28 Apr 2024 23:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBC38BE2
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 05:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714347199; cv=none; b=S9wEqZkRUgNERSo52v11FSRr9IwO8o0tbjV3r/qFlK7svYecy07fpCyuycp05t6l/FEuFqV1mTXKOrKWgBi5fmqQ+5eIVYdyJ+hRWsF6Uul9QubljJG+hO2m/UG2cO0fZ1cRrTuui669PJe686NXDQOWqOat9pLPSQUvGcRAo0g=
+	t=1714369804; cv=none; b=C/xDaT+VcksObbI4D4RhB+443oZd35YGDMzeaBNxY3jpgvk9P3/M0gtwYnjvbR17VFjmrFcAlaB47v7TRRcY3dF6hhaSMCa4sv7ESs42ersYxeV/pkjezfowqiDZKpa04v/8nu3FvvCzHH9Jg1MfjYhbpBXU0yfxwTXW87U46lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714347199; c=relaxed/simple;
-	bh=xDaba65KckNGBSBw/5AkYIu31Tz1T5W9rXAMjCi+Wyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gMsl+3uZYjHfot8kyAawb5qQG5pPYCZeQ43XT/NlHyr9N+3tOIuh1odvrMJo8Uj4pz7SrH+qyCYVvqR03JAqI3aZIoMjNfUjfQlnzGMqEvfaaY2grEA/2tqoOJgq8Tf6s1AJLOGi+uppbnLmJQTFZyk8lMjqa/EH/oUFLE2iP4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIdA54SQ; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714369804; c=relaxed/simple;
+	bh=IZ0pCnE6LGKSv1BY8600SAA+8YX35szUvdWSAvdru5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=faXqGGOgvFGZOjTqXhRphCprBWJf+6jAWDyiU4OddwNYjwGG4sDQAi5l/RETbuFpBCsqJUGlQvSS5tqOxBFAQOSUpafmApusA2c15zyzuplJLuWRSXLMAE+4lKLGHf+V/3c+ErWpqbImeV8WqiiEOWo1a9mqtBcwPVU2DhY2iN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YlXb6sS3; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIdA54SQ"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7decd9851dfso30234239f.3;
-        Sun, 28 Apr 2024 16:33:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YlXb6sS3"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-572250b7704so4071209a12.2
+        for <linux-hardening@vger.kernel.org>; Sun, 28 Apr 2024 22:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714347197; x=1714951997; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ctrf2NTRu/52wNcPKKuuzrfv0/JstMQrnj9zQHxr5yI=;
-        b=VIdA54SQYLagKzpI1tW5MneGbuNCZYOzdcmoosBW4Ctom37oflgfop9u3B6L7kuUq5
-         70lYiP3JAP/Tpaiksmw5uE56shJIkaucYJ/PK53ztJ8fiptW86gM/Sk+qEPuBMf6TiZR
-         TmCWTb+4Qv7sV42UydImv7IhtnQR08VDEUVy42R5vyewUKcHG/LhTxgfLxN408zlL8Wu
-         XOt08+dImLfW++QvDoT7XMYpzSbwEdQAPsf8vj/YQanSmEVBjGHi0ugGFO022HZdOIff
-         QoU2SVBblUoLWdEe7Yt3amDLv2zOxD/KSScjogPiZD8liuc1KES7ZBPVZtqasJrXkPG7
-         g8pA==
+        d=linaro.org; s=google; t=1714369801; x=1714974601; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fBC8NsME8FDQrSM2a9ldWs4Dp8svNoY8pDm9JIJNDxs=;
+        b=YlXb6sS3ujwm+o9a9CDceLI2kkPoWBbUL5c2obP8o5INol/ZRukYIxrUyCkYbI0JX6
+         kLHZmP2y/9/EECjoHqrvIZQGtjs/mh2k4M7EVE3forys27IarOnjUXC6fzDgq5k/jA0n
+         LA5JeLu9Y+swpOwHRG1S0ncas+cgNPceLI0I9qJpAfANzCXPI73Nxz8eQyGnh41aqRM6
+         R7VV12KxttPfxu6lBnQokCBDQ15gO7tgc8plIs7ASYjB15JRegeQ0cbhPJSGENg85M85
+         dDvv4kputOh2lIU3oK5x9QcRnfILZD6cPmxrjRaU37os68tBx2EkRnuvhDxklHeMe4rV
+         WxZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714347197; x=1714951997;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ctrf2NTRu/52wNcPKKuuzrfv0/JstMQrnj9zQHxr5yI=;
-        b=urapqv+JcYnLG7ZtTAUR3OQXopp0SkiM2rK81oUE7b6dWMAMSYDXvTkjoW5C7nvGMD
-         c8PfyqmxMPe4nzR+dzI5m37nLZim4/86K7UJS3HUgyhVG5q3nGEP7bOMZR0G2R1NrG/n
-         DDsRiDICGtTVxNH4aEGfsLqvUiQ5WD0XYYSdGowCZva8ntA8n/1xnbq9NO352wW5R3VX
-         0u7nw81EXsBsYB6Ca4t8kfJI9IRF4o4r7vyIt7R1qBxOKy4L/M9lAcTNNutRNUhI3WIs
-         APK+XhsHIrPVhqmJKUsTlAo5WdDEuySqn/qjCzB8Fsdxn2nWT6gQTbpWEaXqeqIfKPmV
-         7h4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWkLT/3PzdPd94B15HiXZK0XmqAygCSPY4X/7GeS1kg3UdGt3ywqy+h1GZbndlygan2wKagUAAAwv6zyGYPr1bJLx2Ga+/mOhLWo8n78wC0TWEGU1/howCsKSwBfbnX79yDM93pJGFfrWctYhW1vCN9Xq4RjR4iUmYRGmkVZ0hfFkUzx86x6d9qMpke8VcXUTMjOp532Fb6caWaSRrYJp15YA==
-X-Gm-Message-State: AOJu0YyjFl1xbUEfBLmAmUCWzAc+WDfEp939ZYLI4UJ9xhzlN/jJ6rol
-	L+MAW6AMqC63nJncBSaNq2doluJxpI01T/q3lVCqhjn/2hKCvSaKOXvdq6VuxdYwAOi66aG5Tuc
-	k4arHz5Y2DgXfLIDgsljoTLUXdXw=
-X-Google-Smtp-Source: AGHT+IHHboIpq9hG3uegI72AijSqf6Woq7uvAYi4N65G/zY61OPhRDfGRaFbk5fCPCiiBTciWRN+CiBfumCTX0cJvRQ=
-X-Received: by 2002:a05:6e02:1aaf:b0:36c:4c5b:cd3 with SMTP id
- l15-20020a056e021aaf00b0036c4c5b0cd3mr2471381ilv.11.1714347196843; Sun, 28
- Apr 2024 16:33:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714369801; x=1714974601;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fBC8NsME8FDQrSM2a9ldWs4Dp8svNoY8pDm9JIJNDxs=;
+        b=MFzdXa8BNNVa5M7OYMkRXgxFiuKOrYwEmFZTeGPl/GHLyuNk/fcm92pqKIjLrLVFD9
+         GlPxpMWgGrakFaW4MJLTIc9Nny0igpHRbzdgMOUcreoynxdxvYH8qwh7Oq3e8KH0tHfA
+         yvkzi2/TZCJn0VV3R6loFDI5FOQpwpmiSHRq+FfMgwrOEQMJbFaRQX6Irs3prGKAVNcZ
+         k9OdiCz5CVSJsnWU+LR0aOTuJeMvMRbBwRmMH0xy/wWML7R8gmolLXtbg2ptqn9jXuaL
+         q9el+nDq62TtQXEuIUGjqSsfcZ2LMjTZ7Rr30As/so4fT+nnupaCWGXNv8nceE2iiNe8
+         JRvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRrcPgEfPNhw03hBtpaZ/7u5EL7n3IWBRjxviITw7NHCitl6DqzXhfpk+yjMv4CN0jcYfbw+ynLEaEawVE7Ls4YzbdZCKj8Vp6oSigN6V2
+X-Gm-Message-State: AOJu0Yy88R2YGJvq2ncd38XoBrbY8bucFunvdecVKoOuKI0rAL+A2JQx
+	otKHmKuo9XzLunSvr+5jV5jnGtFKNh0AbQTMruWKTzgZxa849TNREoCgkWs2nHY=
+X-Google-Smtp-Source: AGHT+IHz+gH2i2CuUvU4/lWr2eFTF6pfN39+7821KdJqT1JXS0SoRmi+x1kCqWIvwpXfweuET6tjKA==
+X-Received: by 2002:a17:907:1b27:b0:a55:b592:7e0a with SMTP id mp39-20020a1709071b2700b00a55b5927e0amr7295555ejc.48.1714369801217;
+        Sun, 28 Apr 2024 22:50:01 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id z13-20020a17090655cd00b00a4739efd7cesm13602468ejp.60.2024.04.28.22.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Apr 2024 22:50:00 -0700 (PDT)
+Date: Mon, 29 Apr 2024 08:49:55 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: dm-devel@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [bug report] dm ioctl: harden copy_params()'s copy_from_user()
+ from malicious users
+Message-ID: <5cde5d51-a8f2-4c30-a016-1fd8e34212e0@moroto.mountain>
+References: <f84a96d7-2df4-4f79-8c27-83a1d9574412@moroto.mountain>
+ <202404280901.96E2E1AD9@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PAXPR02MB724871DB78375AB06B5171C88B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
-In-Reply-To: <PAXPR02MB724871DB78375AB06B5171C88B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
-From: Xin Long <lucien.xin@gmail.com>
-Date: Sun, 28 Apr 2024 19:33:05 -0400
-Message-ID: <CADvbK_fzB3z-f-SJz+E6Q6hac5UyyqDPMB4r8GnCwYK8N8f=2g@mail.gmail.com>
-Subject: Re: [PATCH] sctp: prefer struct_size over open coded arithmetic
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Justin Stitt <justinstitt@google.com>, linux-sctp@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404280901.96E2E1AD9@keescook>
 
-On Sat, Apr 27, 2024 at 1:23=E2=80=AFPM Erick Archer <erick.archer@outlook.=
-com> wrote:
->
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
->
-> As the "ids" variable is a pointer to "struct sctp_assoc_ids" and this
-> structure ends in a flexible array:
->
-> struct sctp_assoc_ids {
->         [...]
->         sctp_assoc_t    gaids_assoc_id[];
-> };
->
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the calculation "size + size * count" in
-> the kmalloc() function.
->
-> Also, refactor the code adding the "ids_size" variable to avoid sizing
-> twice.
->
-> This way, the code is more readable and safer.
->
-> This code was detected with the help of Coccinelle, and audited and
-> modified manually.
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open=
--coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
-> ---
-> Hi,
->
-> The Coccinelle script used to detect this code pattern is the following:
->
-> virtual report
->
-> @rule1@
-> type t1;
-> type t2;
-> identifier i0;
-> identifier i1;
-> identifier i2;
-> identifier ALLOC =3D~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|=
-vzalloc|kvmalloc|kvzalloc";
-> position p1;
-> @@
->
-> i0 =3D sizeof(t1) + sizeof(t2) * i1;
+On Sun, Apr 28, 2024 at 09:20:35AM -0700, Kees Cook wrote:
+> On Sun, Apr 28, 2024 at 04:12:07PM +0300, Dan Carpenter wrote:
+> > Hi DM Maintainers and kernel hardenning people,
+> 
+> Hello! :)
+> 
+> > drivers/md/dm-ioctl.c
+> >     1931 static int copy_params(struct dm_ioctl __user *user, struct dm_ioctl *param_kernel,
+> >     1932                        int ioctl_flags, struct dm_ioctl **param, int *param_flags)
+> >     1933 {
+> >     1934         struct dm_ioctl *dmi;
+> >     1935         int secure_data;
+> >     1936         const size_t minimum_data_size = offsetof(struct dm_ioctl, data);
+> >     1937 
+> >     1938         /* check_version() already copied version from userspace, avoid TOCTOU */
+> >     1939         if (copy_from_user((char *)param_kernel + sizeof(param_kernel->version),
+> >     1940                            (char __user *)user + sizeof(param_kernel->version),
+> >     1941                            minimum_data_size - sizeof(param_kernel->version)))
+> >     1942                 return -EFAULT;
+> >     1943 
+> >     1944         if (unlikely(param_kernel->data_size < minimum_data_size) ||
+> >     1945             unlikely(param_kernel->data_size > DM_MAX_TARGETS * DM_MAX_TARGET_PARAMS)) {
+> > 
+> > So what's happening here is that struct dm_ioctl->data[] is declared as
+> > a 7 byte array, but it's actually a variable size array which could be
+> > more or less than 7 bytes.
+> 
+> Repeating from include/uapi/linux/dm-ioctl.h:
+> 
+> struct dm_ioctl {
 > ...
-> i2 =3D ALLOC@p1(..., i0, ...);
->
-> @script:python depends on report@
-> p1 << rule1.p1;
-> @@
->
-> msg =3D "WARNING: verify allocation on line %s" % (p1[0].line)
-> coccilib.report.print_report(p1[0],msg)
->
-> Regards,
-> Erick
-> ---
->  net/sctp/socket.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index e416b6d3d270..64196b1dce1d 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -7119,6 +7119,7 @@ static int sctp_getsockopt_assoc_ids(struct sock *s=
-k, int len,
->         struct sctp_sock *sp =3D sctp_sk(sk);
->         struct sctp_association *asoc;
->         struct sctp_assoc_ids *ids;
-> +       size_t ids_size;
->         u32 num =3D 0;
->
->         if (sctp_style(sk, TCP))
-> @@ -7131,11 +7132,11 @@ static int sctp_getsockopt_assoc_ids(struct sock =
-*sk, int len,
->                 num++;
->         }
->
-> -       if (len < sizeof(struct sctp_assoc_ids) + sizeof(sctp_assoc_t) * =
-num)
-> +       ids_size =3D struct_size(ids, gaids_assoc_id, num);
-> +       if (len < ids_size)
->                 return -EINVAL;
->
-> -       len =3D sizeof(struct sctp_assoc_ids) + sizeof(sctp_assoc_t) * nu=
-m;
-> -
-> +       len =3D ids_size;
->         ids =3D kmalloc(len, GFP_USER | __GFP_NOWARN);
->         if (unlikely(!ids))
->                 return -ENOMEM;
-> --
-> 2.25.1
->
-Acked-by: Xin Long <lucien.xin@gmail.com>
+>         __u32 data_size;        /* total size of data passed in
+>                                  * including this struct */
+> 
+>         __u32 data_start;       /* offset to start of data
+>                                  * relative to start of this struct */
+> ...
+>         char data[7];           /* padding or data */
+> };
+> 
+
+Ugh...  Those comments are out of date.
+
+What happened was that back in the day we added padding to make the
+struct the same size on both 32 bit and 64 bit so that we could do
+pointer math like "param + 1" and it would work on both arches.
+But they couldn't call it "padding" because there was already a struct
+member with that name so it was called "data".
+
+And then people started using it for data and made it a variable length
+array.  When it's a variable length array obviously "param + 1" is not
+going to work.  So the original purpose of the padding is now gone.
+
+So now to calculate the real, allocated size of the struct we take
+the sizeof() of the struct, subtract 7, and add the number of bytes in
+->data[].  #LOL
+
+
+> The Subject in the email is "bug report", though. Is there something
+> here that is breaking?
+> 
+
+I was going to send an automated email but then I changed it.
+
+regards,
+dan carpenter
+
