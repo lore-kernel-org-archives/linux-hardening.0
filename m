@@ -1,104 +1,123 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0824113FD9C
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 19:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB1413FD6F
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 19:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420227; cv=none; b=E3xzlBojXEPn3GEkGoyerEP9CnZ5R9keTxSZthTQA3//VCW0dhoHZM3O1leREStJqscGeFaQrcuv8UZ+lAA9UMzWaRGOEQifdfYMpP07c2gOQVqA3Nygd21GWEayhsekDLj1tko7HBlJtKiWVr4f7QzaTv8I+Nbg3dMBbkk8E8U=
+	t=1714420253; cv=none; b=LELh5WLvmXWvvP6jIPNyv0ThP64QZwYO+M6ULnF8DS7SXDfDILdbyqlzYGZbbTxp/e9T1VTPWYQ8iC9wpmyR6LCrWZeUk2W5rw8CTKGZnwMzk2WWH6D/X+tV63oWZsh3QB63oLCUI+8afWuzE73hU3aBqnaAMkJWqvrTa7Xf874=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420227; c=relaxed/simple;
-	bh=eVY5B9TKSEJHZydMdH45kMqzzeNFXqTEx/rOwKxe4KM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WRN8p9iEbPCYsVh4M7/EQ/+15My70K/Xt5poPI8oSHwUxOC7tQPZVZmU3z0J/b2bu6lTe78TNWFuG92eLZgPo20jDcoRBwXnjwORzqcqAfiLJX0PE/LVAkzjlBI2c+VMfGkqH3/PRotk3nm0bijktqQUPxoSqpjauN7JbUbwg7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=X1iLXXi0; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714420253; c=relaxed/simple;
+	bh=ajQDmJ0WWFzPXvoP2mmAy+LuxbIewe2/xsExrL6XISQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e39hD09B7kIy8cGxs/h5ri5DDhdL2KPun+Xim5HoAcEw6z7fXzDLPphLin7X+KhDRDTwRlBHGCB9EHP6ls4Zh6U91pyylsjtc6tnCsMSXzixfdkd6vfrwMg35wc5ePifNwcMoPNCsAFVI+IuHsu9bSR4Pw07TQycd9Am6hGDRm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=rEuAK03c; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X1iLXXi0"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1eac92f7c74so38072265ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 12:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714420225; x=1715025025; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t66m2yC6w51sUPxTLrw0e9BFXrR1zy7lTroSpOOOXcU=;
-        b=X1iLXXi0MX+8PwCMrN2iN7K9/Zl3V4KsI6RzyNa1mvlctnAycjOzFwib9SZsHVb1UP
-         QLtypdBLTJK4UZzKpctrh6L5HXRV9C2gDBRqq0KbQscfWvoS5iUc29+uFewm3eh5nnXP
-         6KOiXLVpCOx6cgtmo+8The9Sebsi0EHwKJhks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420225; x=1715025025;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t66m2yC6w51sUPxTLrw0e9BFXrR1zy7lTroSpOOOXcU=;
-        b=qz3lwhoR9F51v09EoVB4mhPpt0QaIGy60MF5a91C2C8taeld6QSa0GpX8ssUL0QHbi
-         mdhBCi/09J6pK8ztYgha6/kIIZeBaOpXqcJh2tSSOeNieFjn9CtZ3Ntm7RWetv2WfInD
-         /PcfnVuuDSYtgeyFUGI/cXmqc7ZMjlwlVf9+/pyOW0HlEC95A/sK/+xFo7s2tIHm11qc
-         ht3A+Zrh1OMupUa7OAN6M1WCIWYJFAC/Ksz6HZNWNuo7pD5DP4Gix4JmevYO2jLIq3zn
-         RNQOSjHBkW85PR2FDkXe3NWBjpfG37GwwmmNy/N03voSkS07HMejY0MVGAU29lmBb3HW
-         d0RA==
-X-Forwarded-Encrypted: i=1; AJvYcCUa4gZjPNB9yOkezGO+dx2XPRMOdjqBb66QloqtczDYXFxVOo0Y3QoDQNK2TR8+bJ/24qn34QEqaaPYmckLYt64v1vJEMnweL9lzVJDt09k
-X-Gm-Message-State: AOJu0Yw5VBaIG9uUFAg94IokpmnkxN931iWLkAPlFJo7YsL0585rklyg
-	D0r2vaYz3/z3F5+z9WdmfpV05/ev+LpvLcNYdWjciLEgeDe0FtvpYtoCb4987g==
-X-Google-Smtp-Source: AGHT+IE+SteDEJUNTAb7/nI8MNDpW/XVg8ijQNerSCdwLAPwwr/v5RyMt4I/w7vZ1LzWcXiblxshPA==
-X-Received: by 2002:a17:902:f7d4:b0:1eb:5b59:fab9 with SMTP id h20-20020a170902f7d400b001eb5b59fab9mr618246plw.53.1714420225318;
-        Mon, 29 Apr 2024 12:50:25 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jj1-20020a170903048100b001e2526a5cc3sm20699547plb.307.2024.04.29.12.50.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:50:24 -0700 (PDT)
-Date: Mon, 29 Apr 2024 12:50:24 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net
-Subject: Re: [PATCH 0/2][next] firewire: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <202404291250.FA94E630@keescook>
-References: <cover.1709658886.git.gustavoars@kernel.org>
- <20240306011030.GA71684@workstation.local>
- <6a7854af-a183-4db2-8400-4d9eb0cc4308@embeddedor.com>
- <202404291129.F261DEA21F@keescook>
- <90ddce3b-1ad5-49be-89f9-2f3e48d73e19@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rEuAK03c"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id 1TK6sGdqUrtmg1X1XsN1NQ; Mon, 29 Apr 2024 19:50:51 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1X1Ws0o5jUeRw1X1WsUw7n; Mon, 29 Apr 2024 19:50:50 +0000
+X-Authority-Analysis: v=2.4 cv=B5+/0vtM c=1 sm=1 tr=0 ts=662ffa1a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
+ a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10
+ a=GnIobxVeLkNF-WZzOA8A:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=2FeBCJhrHyDzm6ziA3QCmTVmkMK5M89ts1JS18ctx0c=; b=rEuAK03cGdyk9JpPDMHFIOHuB3
+	yaa5QHKXfz1v4NbbnH5VYAiFdRJe8wZGP6b67svjvwC8epGhVqbsYNbo2zDB9C/gnDE7g1wZCuVYu
+	n6ged8xunX4hdg33PLMAOjytXZjcqByYDcHISnCcAG0G/iQp6urAu7YelT5xg803cDDGa0pVWgjxE
+	HHwq4XhBERPYHCHZQyH3liUj3xD0XytWpURKR+PGSrKtSu888+wZIYsa9+IYnhsfr8QQ3FBFeSKq9
+	W8xWkro+UYkY7lv6P0IEO2tD7pXtKmaFpwPLMeRP9Ay98xo8Rq9lBh/TEv1BXiRia2I59yO2jscy3
+	pPZdkjXA==;
+Received: from [201.172.173.147] (port=53420 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1s1X1U-003pzP-24;
+	Mon, 29 Apr 2024 14:50:48 -0500
+Message-ID: <b09450f9-c42f-41f8-a2f6-eea3515eaa2f@embeddedor.com>
+Date: Mon, 29 Apr 2024 13:50:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <90ddce3b-1ad5-49be-89f9-2f3e48d73e19@embeddedor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] Bluetooth: hci_conn, hci_sync: Use
+ __counted_by() in multiple structs and avoid -Wfamnae warnings
+To: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZiwwPmCvU25YzWek@neat> <202404291110.6159F7EA5@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202404291110.6159F7EA5@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.147
+X-Source-L: No
+X-Exim-ID: 1s1X1U-003pzP-24
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:53420
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPSYjGGUbC1gJlwZ2E1JjAZzLNXLwbUA54kAoiXv4BAanXr/HtiV0ut+3FmSuv3tSFt8CKPlj2UaE4MiscNCCMaEaG/R1gxaiCumJP4tU8ApCULL42q7
+ Q6xuWLbQrQvVgvjpomDTGSASfpoSOKrJf8Wt1dslMp9hn7aLJ9ImuOhuLH9aF710RUNH4GyLD56WcqGAyukV1FBirlYOm1oyk2fXUhDLQTYVQZx+Y5JRQNQb
 
-On Mon, Apr 29, 2024 at 12:42:23PM -0600, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 4/29/24 12:30, Kees Cook wrote:
-> > On Wed, Mar 06, 2024 at 10:18:59AM -0600, Gustavo A. R. Silva wrote:
-> > > 
-> > > > Thanks for the improvements, however we are mostly at the end of
-> > > > development period for v6.8 kernel. Let me postpone applying the patches
-> > > > until closing the next merge window (for v6.9), since we need the term to
-> > > > evaluate the change. I mean that it goes to v6.10 kernel.
-> > > 
-> > > Sure, no problem.
-> > > 
-> > > Actually, I'll send a v2 with DEFINE_FLEX(), instead.
-> > 
-> > I was just going through the patch tracker to make sure stuff got
-> > handled -- did a v2 of these ever get posted? I don't see anything in
-> > the tracker nor changes here in -next.
-> 
-> Yes, it's in linux-next already:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1d717123bb1a7555a432e51a41709badf8545dba
 
-Ah-ha! Thank you! :)
+>> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+>> index fe23e862921d..c4c6b8810701 100644
+>> --- a/include/net/bluetooth/hci.h
+>> +++ b/include/net/bluetooth/hci.h
+>> @@ -2026,7 +2026,7 @@ struct hci_cp_le_set_ext_adv_data {
+>>   	__u8  operation;
+>>   	__u8  frag_pref;
+>>   	__u8  length;
+>> -	__u8  data[];
+>> +	__u8  data[] __counted_by(length);
+>>   } __packed;
+> 
+> I noticed some of the other structs here aren't flexible arrays, so it
+> made me go take a look at these ones. I see that the only user of struct
+> hci_cp_le_set_ext_adv_data uses a fixed-size array:
+> 
+>          struct {
+>                  struct hci_cp_le_set_ext_adv_data cp;
+>                  u8 data[HCI_MAX_EXT_AD_LENGTH];
+>          } pdu;
+> 
+> Let's just change this from a flex array to a fixed-size array?
 
--- 
-Kees Cook
+mmh... not sure about this. It would basically mean reverting this commit:
+
+c9ed0a707730 ("Bluetooth: Fix Set Extended (Scan Response) Data")
+
+--
+Gustavo
