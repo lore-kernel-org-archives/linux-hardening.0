@@ -1,71 +1,68 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6624113BC0D
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 19:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9801411D8
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 20:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714420617; cv=none; b=omqSufwb1YD2bUOSqdfIhZAaYyUwZjuY/0HKVz5NdtA1HcAzZPYOcGU39hp7bHSk0p7wxVhVomLccWAFQlBeU2Wr24h5ti4WV5aqeyy6Qduti9hpRFKheL2Ve4WUYL3WOWQ4pAHcjFIg6dzcH7GFkeBi3ndOQaHX+YzVXL51YQg=
+	t=1714421604; cv=none; b=E3wKV1t+h+TOhl0bQRTxsaYEr56SkGXVHcLTVKE/bK20JOHQP0IgMzFBHnXECQZssxEo56sCbqLkKLfFTC57EOG5U+cEUTlf7UOUAfS/lZXBaWrShJw36PJ5kjt2vnmYFr5GgOMRzuGcWNAnaTCWzUQS4vphFXduUkmySbzbGgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714420617; c=relaxed/simple;
-	bh=Oz/47XesLfkXt3OtQ8v9MvqsWPB9C7AkbnLE6S4xd+0=;
+	s=arc-20240116; t=1714421604; c=relaxed/simple;
+	bh=Wpz9boe/w8KT9hr5B4n4S8JECxM9pa+bGQT6Fr8iw4g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxKtKGyvx7VDmnX8hmtW+e0qjBi4uPr5RNBxZNvnxVVcx2UgnTYnvfPWFm5U9QLRf9dfJN7pTYbVQO5G01S6MOb5zSLvWdiUmCXoaNcP4rQI8cfNWR1/Zz1sEC/r9R+0eQqVrVTRONUUTGFJJJV32dhsGpkyHCRI5mRW/5UfETE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JsvB94Cz; arc=none smtp.client-ip=209.85.161.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=aguFmXNuY/tumTRSD3kt9TJgGJAW8nQO3ofi0xiAZnU++usbiAtTfu1ARlYnk1y+zG2kDfKLsi1AY9ZuzE1Q0E8myEdSnhBSsj/5KbaCtDVso0+Btidv8Cyl001dtDeLsk+BqSWVLMyikDFm0Q9NioOXrUQi8yL/mWWm5qh+8OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OhPo1yH+; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JsvB94Cz"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5aa17c29ba0so3367611eaf.3
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 12:56:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OhPo1yH+"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6edb76d83d0so4338083b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 13:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714420615; x=1715025415; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714421603; x=1715026403; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wzh3iHAkozkq9gOCrjq5RtMClk8JbO8nQV/YvwV7pkc=;
-        b=JsvB94Cz6WnIh1RlkEGNxgEezpzne+ubUr/OV9Vpk062DbWJ3hkngLFckDrVlw/WVm
-         ubDQpwitE4Mcg2Vq8pD5ukDd8G6G4Esz5Ujb/ElSJ5NO+4FZ74gnm//727RV4lVNercC
-         MB9hVtr5/RiqrZz15WqE5FHZmnFGXXvEyjquY=
+        bh=BXjzsh/nfrNV74+/Eg/rT8Fya+BcYBRXBPB+VYkGIr8=;
+        b=OhPo1yH+CQsaHtevEsQPziFBtmiv7UnZc8xCKssikeC82GIEG5U0OnktR/nMyi9mP1
+         QeGKdnSrzfuRLR2homs1QDJQDu6Suuopgl6LgeCU6Wjfe/M8xVshT0p5mI2ItIDqPZRS
+         bTDvZnGG1pylYyK2NhR8QH4qqmGY3ZQAhk8Pg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714420615; x=1715025415;
+        d=1e100.net; s=20230601; t=1714421603; x=1715026403;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wzh3iHAkozkq9gOCrjq5RtMClk8JbO8nQV/YvwV7pkc=;
-        b=HgZhx0IB06/FBIFq7YIZkRpdN8tkurEhd2BcfNovmGMaPmQAfzeSMesXgnDi42llJ5
-         aiEVogqzkLkvncV+ydHG+KA9QZgBjb9tMfWeUl6S1RGxihPKh82T1zPptblu/C2qnonb
-         XUdhVZdyMTdnXId4NEGv4yKzOn29k+9YA6dRdJ6swST4E0dKSvvmzRJml0JXfjlpn2Z0
-         pZt5Ox3rsFEVj728k3dJwnlJY8IG1aqnXIvPrzAbmbihlw0wCWNrDMroRtaMe6Gsu2DU
-         TGOJIcUzOh7+bnLaJM9rGgYJACy8rZgjiem2sp+1fAnTUzfft94opBnvYjbF1vuKoSQ0
-         0esQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPlxCkrETTSXdfhXPNpQPF8Tg1huJhSQakeGg3+UOWQam4ifAn5edehDOulaQlJorExJ5+NSCMM3dIi3uO6T+pqBbfnOLIQxv3WZeovxWs
-X-Gm-Message-State: AOJu0YxTfarS3yV3wp+80GrMSHv2ILodEUYDLFCBDfdF1D7/5q849iek
-	epCX45kK/FDcKyarpvBnyoRD34aPDyHpqLnp/omgkO1bnDq6g12d85c08iPI3g==
-X-Google-Smtp-Source: AGHT+IGIIBDxgLzwela6Btq0sEBd7W1pqx3IiWnUloNQkWiaGW4i8tZehT+xlO6+NtB/zC3tsLMgMg==
-X-Received: by 2002:a05:6358:3916:b0:18a:62fd:b874 with SMTP id y22-20020a056358391600b0018a62fdb874mr11846383rwd.17.1714420615575;
-        Mon, 29 Apr 2024 12:56:55 -0700 (PDT)
+        bh=BXjzsh/nfrNV74+/Eg/rT8Fya+BcYBRXBPB+VYkGIr8=;
+        b=bvoHfHWOSQtlt/Hg20wq9U9gISFA8VagQ44qrc4X5nTsLL8JmNqSYb3ffHqp4+NwJ2
+         qjZSnIt0nA6S3ZQqlCLynnB79PkgtwwmmG2CpwAUVzmNIcwqm1HNCHxPXJfk9K4nz5dy
+         5CWUb3ENGpGmKPxuK/4CQwwHleDOth+pto6njB1cELghiDj6J4g7Hfe3pObw8KWwHYjf
+         ncx+J83kyfmqj+EX4L6pGvso6e46L8YBzIFNjSNpKXA5cIrNSZCB7dXzenkFJ0QKOIFh
+         RO9ajccOvPupxYr75L84yx9kFfWEyAWmGoZyS0Hd8DPfnMHcjCBZnaV6xftHQu04DW7C
+         5S6A==
+X-Forwarded-Encrypted: i=1; AJvYcCX3QiHwWSHkRAMwcXbe1lsuIcU3Lcg7pToamY8Os5iu/4PUBwPktX+dC7HUC1UU27GoUtT7TCNN2ZfRsrQ5nMhILlym/G1/c3zCmsL6Ovf3
+X-Gm-Message-State: AOJu0YxeOVB7xZQLQChUR0qMRHNCEZLKPqVHnZxWW56BC2Avtz8wlfj2
+	1egeHXMAryCq0I3rsR5+E9qrSzlByxs8pH+Yw+1rO729yRVMWgHHvVPb3BAPnA==
+X-Google-Smtp-Source: AGHT+IHx20vgzODxO0CmjBxc3eLPOcVrUqtUBQgDReCQFkXCxJwNnQAZ4SSCabovup0+fIe8uoMO0A==
+X-Received: by 2002:a05:6a20:43ab:b0:1af:597f:ffa4 with SMTP id i43-20020a056a2043ab00b001af597fffa4mr620907pzl.14.1714421602751;
+        Mon, 29 Apr 2024 13:13:22 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f13-20020a63380d000000b00615707f8078sm723421pga.17.2024.04.29.12.56.55
+        by smtp.gmail.com with ESMTPSA id b8-20020a170902d50800b001eab473021fsm6336073plg.168.2024.04.29.13.13.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 12:56:55 -0700 (PDT)
-Date: Mon, 29 Apr 2024 12:56:54 -0700
+        Mon, 29 Apr 2024 13:13:22 -0700 (PDT)
+Date: Mon, 29 Apr 2024 13:13:21 -0700
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] Bluetooth: hci_conn, hci_sync: Use
- __counted_by() in multiple structs and avoid -Wfamnae warnings
-Message-ID: <202404291253.106D020@keescook>
-References: <ZiwwPmCvU25YzWek@neat>
- <202404291110.6159F7EA5@keescook>
- <b09450f9-c42f-41f8-a2f6-eea3515eaa2f@embeddedor.com>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
+Message-ID: <202404291259.3A8EE11@keescook>
+References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202404291019.5AC903A@keescook>
+ <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,44 +71,65 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b09450f9-c42f-41f8-a2f6-eea3515eaa2f@embeddedor.com>
+In-Reply-To: <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com>
 
-On Mon, Apr 29, 2024 at 01:50:46PM -0600, Gustavo A. R. Silva wrote:
+On Mon, Apr 29, 2024 at 02:31:19PM -0400, Martin K. Petersen wrote:
 > 
-> > > diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> > > index fe23e862921d..c4c6b8810701 100644
-> > > --- a/include/net/bluetooth/hci.h
-> > > +++ b/include/net/bluetooth/hci.h
-> > > @@ -2026,7 +2026,7 @@ struct hci_cp_le_set_ext_adv_data {
-> > >   	__u8  operation;
-> > >   	__u8  frag_pref;
-> > >   	__u8  length;
-> > > -	__u8  data[];
-> > > +	__u8  data[] __counted_by(length);
-> > >   } __packed;
-> > 
-> > I noticed some of the other structs here aren't flexible arrays, so it
-> > made me go take a look at these ones. I see that the only user of struct
-> > hci_cp_le_set_ext_adv_data uses a fixed-size array:
-> > 
-> >          struct {
-> >                  struct hci_cp_le_set_ext_adv_data cp;
-> >                  u8 data[HCI_MAX_EXT_AD_LENGTH];
-> >          } pdu;
-> > 
-> > Let's just change this from a flex array to a fixed-size array?
+> Kees,
 > 
-> mmh... not sure about this. It would basically mean reverting this commit:
+> >> This patch seems to be lost. Gustavo reviewed it on January 15, 2024
+> >> but the patch has not been applied since.
+> >
+> > This looks correct to me. I can pick this up if no one else snags it?
 > 
-> c9ed0a707730 ("Bluetooth: Fix Set Extended (Scan Response) Data")
+> I guess my original reply didn't make it out, I don't see it in the
+> archives.
+> 
+> My objections were:
+> 
+>  1. The original code is more readable to me than the proposed
+>     replacement.
 
-That change doesn't seem to need to make them flex arrays, though --
-there's no savings at all (the same amount is stack allocated).
+I guess this is a style preference. I find the proposed easier to read.
+It also removes lines while doing it. :)
 
-Anyway, not a big deal, I guess. It's an improvement to be using
-__counted_by, so good! :)
+>  2. The original code has worked since introduced in 2012. Nobody has
+>     touched it since, presumably it's fine.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+The code itself is fine unless you have a 32-bit system with a malicious
+card, so yeah, near zero risk.
+
+>  3. I don't have the hardware and thus no way of validating the proposed
+>     changes.
+
+This is kind of an ongoing tension we have between driver code and
+refactoring efforts. And this isn't a case where we can show identical
+binary output, since this actively adds overflow checking via kcalloc()
+internals.
+
+> So what is the benefit of me accepting this patch? We have had several
+> regressions in these conversions. Had one just last week, almost
+> identical in nature to the one at hand.
+
+People are working through large piles of known "weak code patterns"
+with the goal of reaching 0 instances in the kernel. Usually this is for
+ongoing greater compiler flag coverage, but this particular one is
+harder for the compiler to warn on, so it's from Coccinelle patterns.
+
+> I am all for fixing code which is undergoing active use and development.
+> But I really don't see the benefit of updating a legacy driver which
+> hasn't seen updates in ages. Why risk introducing a regression?
+
+I see a common pattern where "why risk introducing a regression?" gets
+paired with "we can't test this code". I'm really not sure what to do
+about this given how much the kernel is changing all the time.
+
+In this particular case, I guess all I can say is that it is a trivially
+correct change that uses a more robust API and more idiomatic allocation
+sizeof()s (i.e. use the sizeof() of what is being allocated, not a
+potentially disconnected struct name).
+
+-Kees
 
 -- 
 Kees Cook
