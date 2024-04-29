@@ -1,66 +1,74 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435C786260
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 17:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E338626D
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 17:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714410650; cv=none; b=i4uxkJqL00nFsw4CHJn0N9EE6CH4uTtPmA5vgI/cvMOaDNXKaooeETS8UDpWdYGwh6GFKJqt6qJVg7FTJlom9C1Hd/TFTeH4r662DjpTRGE1SsbVRid/E756/dxjWWssauczc77+QSUaT4Dx4t+ZFeK73sk5AwGQPfu5j8POsxs=
+	t=1714411088; cv=none; b=Ed0cdyqh+PqTeCcZjeHBjyyooJqSHn6gNMDRbVISpWokcr0fw2ScPWKk09OJhJB7OH26lYf2uE14UtGK212aSc0bAz/oWvuUg8YHG43LJFp6/9bY8CedANVBSmGkFJQf+io57tLAhglFSMngULWsq6SqZoDadG1iFiUDfQ3EGDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714410650; c=relaxed/simple;
-	bh=0jNTl45Cs7ezsUWeAWbPmvCWgF+22Evr0a+0tU6atao=;
+	s=arc-20240116; t=1714411088; c=relaxed/simple;
+	bh=qWnvkovjN0ozqbXF/oi4B7/RPRSQlKRASO5y4VDl8Xk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4uFtuO9eC/EtjeNm9hEbg3/OcOfp2CICu/Ue7rCCwVeLAwpoycq44lJ5PIIw56/LEmCtNZaZDWaPEzzKNu8rrsc1pmsZTAOsNfRZoTtxjsI6uy1VlPwo+NxVtqsl497+5LcDJyVGk3GJ1tsxJh3gE446UH6AYADQBsiByxoGmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=frNC7ypk; arc=none smtp.client-ip=209.85.216.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=WYcug/wxiZdAZa1nIO+MNk2EzSR7dE1HsARvNq017ufie4lSpBShw+0GCqocUdmEnloQ+PBUzlm+UpBGP08tsZRcK83VH/jrOD9VSKOFALAfu4C6C8G8trT6Hb90SZyK6BaWw6Qubd4qaPdzGopXqB5w1F+FJ+EJMqoFrv4R6+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OsZGsOFi; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="frNC7ypk"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2a55a3d0b8eso3315418a91.1
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 10:10:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OsZGsOFi"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f07de6ab93so4351928b3a.2
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 10:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714410647; x=1715015447; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714411085; x=1715015885; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oZRgSAbzG7KcvdiTauEibDNnc/WC+ObXBWTvwKd5YyQ=;
-        b=frNC7ypk1oXy4cYOUkEh1xrUZaaHRoAmacK25JOYs6LaD2a0j0PVUxBhwPNtoo+kz0
-         fNI89O/2zo91YhFv3vITF6WmgBZiQLg535I5N3VbhJjbTa+ZInayKi2hMpVb9Nku4A9W
-         aCk06kZU1kUVBczu5Uddf++oFugHe8ZPo8JlI=
+        bh=0Hd/wdvdADW+smZoeTYyFDi1rtzHcyz1g8xNiBj96c8=;
+        b=OsZGsOFiPCGntUzBHC54nROZSMu/FO2UlLJ2JnFI4YZKjLidJKCP9FlZIWN8fq+0qM
+         QvTKCvHEhK/8xl/ofsigdGypjgWxIjIVWyqzc4CfpuP19bZJUs37WUmXlqPq+Dh8G+0g
+         hSwqr7O/Oi7GhHmXLVPU14q/wDX9lOVLQkWio=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714410647; x=1715015447;
+        d=1e100.net; s=20230601; t=1714411085; x=1715015885;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oZRgSAbzG7KcvdiTauEibDNnc/WC+ObXBWTvwKd5YyQ=;
-        b=UTG5KVXFU5ChkBnIRhruSSTBYjsrQ39ZD8YbxWXSlGLcoegME0ug4Mm2mdn5YUrfNT
-         ay0f9OAfmeivZfUvjpbOAxHkT4MsJB97JKq73yDpGAiMoFpWIKC+/bCXo0opXuUPkRYh
-         Zl9WqNaMK4rShj0p3bA+9W9ApRu0ywifWkzgza3OLCLL1NsV+TzdNi4iJ9TPuqsziVcv
-         Hva2IuB+E9nKpEIDW7OvFsi7C2Xr26WMvO487impH7HeJnfrBS+T3TZZCXIKsCrzT1ri
-         av3TVwOMNw1XUtz8DJHxwmTbN+fWOj/IDYvb8a3FTEdj6o5tsaR/LxB8hDfZu3O3jiNu
-         IZSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpdD6eE4Px1WZ8Bf/0IMiT4tZ6JY3Fn9i6F4TOO6o/UoPIZ2RvB9jQe5tzl08JzBRe6wBpvg5qNi/N2MBD1poGhpzY/DXtRhXbEeAypIUf
-X-Gm-Message-State: AOJu0YxZcp6swLhaWam38bOzD/FuJ9mwLsOsaeQW/b02qlhb2TmUZiZ6
-	Az/IRrh2C4+WdcxXhWEH1KGB3McrUD70C3GZ5cqgE3q6JQKix7KHBlWEZc7ED8Zz1hfVGtvbv6o
-	=
-X-Google-Smtp-Source: AGHT+IGj3Lb7QLmCDgTM2Q+YDthSN8UMWEbIVz5Z0H2XtkJT6q8gWsIvscYSHoZhP1Lgml101nzTDA==
-X-Received: by 2002:a17:90b:270d:b0:2a2:6244:32b5 with SMTP id px13-20020a17090b270d00b002a2624432b5mr368408pjb.11.1714410647531;
-        Mon, 29 Apr 2024 10:10:47 -0700 (PDT)
+        bh=0Hd/wdvdADW+smZoeTYyFDi1rtzHcyz1g8xNiBj96c8=;
+        b=PKRvFkc0LNLfMcZsyl9t2QG7IYkR2aVbTQVSxwUXUBAO49Mc5KNbndRMHGbePC9k04
+         SRqCHiWjmarv2dMFEp1t4eWbNBD4soWjCNIlfjAV5FDqp1V0jEdqvQ6xC+z/YfiA6Agm
+         kI6cfF2WhlzGDjpuIo7yzIhHkQbI9ziT3rKSCy3QDoyEp2A/9Oxb6Eu+Pyx3huBmBYRy
+         AmRiRspwWij7f5ztzQXVbEa+8vwhkfipzVU02TNZoGRPEHOHnkVs7/DWC4z4aGMHQ7Fp
+         5iQMRB0mrmfkcSBobG9ODgnpH3wDS1vI0p2pZ8nUwlkVU8xT5f089V2rNFsZnyJGQFkG
+         EMGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQFOIJKbUcn15n6F8bfqMqQnzB491XKH73e9//Fa7HCIBiv9frx2CpSWluVNMLyCE22eFrt5S0J/PFjV9nnKQQy38vE9a4EkLNudfqYPjA
+X-Gm-Message-State: AOJu0Yx67JANN6Bv7FRtG+IAYXwkr5rJnn3p+cqwLzsVkWo4yE8eNimx
+	wZcOrP/CHWct6Bc0P1o6hr8AXO0RXQen+xhj1JgbPDnGY8pA5/pEYYStMzAsPg==
+X-Google-Smtp-Source: AGHT+IE9C63YQJERIQ6wskzU4nO9p3NnPb2ovyYO3ig5u2YdgvqNsBYsWG/giRuAHKr64kV5bbKq/A==
+X-Received: by 2002:a05:6a20:9187:b0:1a7:52fa:7d6b with SMTP id v7-20020a056a20918700b001a752fa7d6bmr13417202pzd.43.1714411085239;
+        Mon, 29 Apr 2024 10:18:05 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m14-20020a17090a668e00b002a6e67e197dsm19363447pjj.45.2024.04.29.10.10.46
+        by smtp.gmail.com with ESMTPSA id a8-20020aa78648000000b006eade394613sm19515196pfo.198.2024.04.29.10.18.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 10:10:46 -0700 (PDT)
-Date: Mon, 29 Apr 2024 10:10:46 -0700
+        Mon, 29 Apr 2024 10:18:04 -0700 (PDT)
+Date: Mon, 29 Apr 2024 10:18:03 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] wifi: wil6210: wmi: Use __counted_by() in
- struct wmi_set_link_monitor_cmd and avoid -Wfamnae warning
-Message-ID: <202404291008.51DB333F@keescook>
-References: <ZgSTCmdP+omePvWg@neat>
- <171222554691.1806092.8730005090791383928.kvalo@kernel.org>
+Subject: Re: [PATCH] perf/x86/intel/uncore: Prefer struct_size over open
+ coded arithmetic
+Message-ID: <202404291013.B21EADD4F@keescook>
+References: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,46 +77,92 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171222554691.1806092.8730005090791383928.kvalo@kernel.org>
+In-Reply-To: <AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Thu, Apr 04, 2024 at 10:12:28AM +0000, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Sat, Mar 30, 2024 at 03:32:59PM +0100, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
 > 
-> > Prepare for the coming implementation by GCC and Clang of the
-> > __counted_by attribute. Flexible array members annotated with
-> > __counted_by can have their accesses bounds-checked at run-time
-> > via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-> > (for strcpy/memcpy-family functions).
-> > 
-> > Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-> > getting ready to enable it globally.
-> > 
-> > So, use the `DEFINE_FLEX()` helper for an on-stack definition of
-> > a flexible structure where the size of the flexible-array member
-> > is known at compile-time, and refactor the rest of the code,
-> > accordingly.
-> > 
-> > So, with these changes, fix the following warning:
-> > drivers/net/wireless/ath/wil6210/wmi.c:4018:49: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > 
-> > Link: https://github.com/KSPP/linux/issues/202
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> > Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+> As the "box" variable is a pointer to "struct intel_uncore_box" and
+> this structure ends in a flexible array:
 > 
-> Patch applied to ath-next branch of ath.git, thanks.
+> struct intel_uncore_box {
+> 	[...]
+> 	struct intel_uncore_extra_reg shared_regs[];
+> };
 > 
-> cbb0697e0ded wifi: wil6210: wmi: Use __counted_by() in struct wmi_set_link_monitor_cmd and avoid -Wfamnae warning
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + count * size" in
+> the kzalloc_node() function.
+> 
+> This way, the code is more readable and safer.
+> 
+> This code was detected with the help of Coccinelle, and audited and
+> modified manually.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Hi,
+> 
+> The Coccinelle script used to detect this code pattern is the following:
+> 
+> virtual report
+> 
+> @rule1@
+> type t1;
+> type t2;
+> identifier i0;
+> identifier i1;
+> identifier i2;
+> identifier ALLOC =~ "kmalloc|kzalloc|kmalloc_node|kzalloc_node|vmalloc|vzalloc|kvmalloc|kvzalloc";
+> position p1;
+> @@
+> 
+> i0 = sizeof(t1) + sizeof(t2) * i1;
+> ...
+> i2 = ALLOC@p1(..., i0, ...);
+> 
+> @script:python depends on report@
+> p1 << rule1.p1;
+> @@
+> 
+> msg = "WARNING: verify allocation on line %s" % (p1[0].line)
+> coccilib.report.print_report(p1[0],msg)
+> 
+> Regards,
+> Erick
+> ---
+>  arch/x86/events/intel/uncore.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 258e2cdf28fa..ce756d24c370 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -350,12 +350,11 @@ static void uncore_pmu_init_hrtimer(struct intel_uncore_box *box)
+>  static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
+>  						 int node)
+>  {
+> -	int i, size, numshared = type->num_shared_regs ;
+> +	int i, numshared = type->num_shared_regs;
+>  	struct intel_uncore_box *box;
+>  
+> -	size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
+> -
+> -	box = kzalloc_node(size, GFP_KERNEL, node);
+> +	box = kzalloc_node(struct_size(box, shared_regs, numshared), GFP_KERNEL,
+> +			   node);
+>  	if (!box)
+>  		return NULL;
 
-Hi,
+Thanks, yes, this looks correct to me.
 
-I was just walking through our patch tracker and noticed that I don't
-see this patch include in -next yet (as of next-20240429). Is there a
-flush of the ath-next queue planned soon? Or did I miss some change?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Thanks!
-
--Kees
+Peter and Ingo, you seem to traditionally take these changes (via -tip)?
+Can you please pick this up?
 
 -- 
 Kees Cook
