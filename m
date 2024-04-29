@@ -1,52 +1,52 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307F8839FD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CA313B28A
 	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 19:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714419826; cv=none; b=gJJKYgzy8g1TaisiUtLnE0bLw/3n86IKOWPraE1y53OvUmq4alf+JmZ0rlasdzdM9RzuNxPJXXEJwP+L0OLn3V8GzAIgmW+ohBDcFV3Vq97AfsOcBFTqYkIGlp5Mftr+tvkntzP0x4J1EL+ao+GMe74HSkR7g3RwRzgRVTYKmN4=
+	t=1714419827; cv=none; b=Dp7oD3qCfEV9uhmVxcJzar5UO0IgxHsiIgDNYVn84JhN1JLENgut5ZQuWqZNpSRoK3x60rSt78MTQRqzgMdqqlfstdcQ9Zb0MTbWH9d7P912YQYzdeitDgoBrqibMAWWEYwtq6g0cU1DMR1eC+S9Gi/Hlfr2EHRaoL18cFOkLU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714419826; c=relaxed/simple;
-	bh=GzYQquZtF8F0UCCwehYpS7+bOLrS47ikty216klT3dg=;
+	s=arc-20240116; t=1714419827; c=relaxed/simple;
+	bh=JUpgKGKNZbsX+goUd06248PhOZ+lxWWD96tmeNIMNOQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X8D/TN2luUnf3S5c2QjtnK6WjMjopCXsDpWau1+IXz782jqJdTxxhuNDX0SyzKvcQ78JLTrIhfomxkAtEbqVgAOLI+srABymy3MYLfG/ttBrPz7L+WO2nkflqNHJr6dmxMBzLt/E+YLjiYbAiYyfoSqmEUHR1ADna8hynsoPGEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TiUMKNt8; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=nRhl3uant3I4EBOmgWS/K9RdKCLmHt5yW8XIYxFNEyXOVXiIH58nHHswgvLNhpE3YbLBEzneuxoBBR9hc8iG8Qbjj5Ti8Aejr/3m00oXthr1yvyKhPwCqKwBa1bfr0o3KlELSsd92vV9uJs8l9xl36eGIuIBv0L23y7v7Xwt0tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C0G1ja+E; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TiUMKNt8"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e65b29f703so43184585ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 12:43:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C0G1ja+E"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso30478535ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 12:43:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714419824; x=1715024624; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714419825; x=1715024625; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=otPR4dXeRXWcAXnWruvS43ZNV3eS/x5LH+123jbXlqc=;
-        b=TiUMKNt8dFJ4Xv4UvBCCGcGu+YglpkPZX748+BQ0r7bO5Z8Vs/cwTYQ4ivQTIWlw6E
-         kPPPs2+QoPqZ87yPVNRhf2XrVej6xss1ZSwTFiYuneDoqQkV8Gs6mOVJwheLjMSyRuWx
-         DzkOb7VV9bLttTkTA8+RcN7U1YFmkbt750TqM=
+        bh=zRYBya/NOm9RXOTNWuX4vwtPazKcBlRxHRUkoGXSiKM=;
+        b=C0G1ja+E7piSwauJ5UZWpViKCRtkNRQ8UgPbvJW8sU3du7qPcDTigUlrn1coQw1ULU
+         Ai/seyhuX1zMFRSBXE3ura4eZr2esSTbaMbKl9gZ+OShjv5uHHLZBXQa3j0RBULVN4p9
+         +MCUIRZMP1DZUPWF/bQVGJ5esGefh9FfKACfg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714419824; x=1715024624;
+        d=1e100.net; s=20230601; t=1714419825; x=1715024625;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=otPR4dXeRXWcAXnWruvS43ZNV3eS/x5LH+123jbXlqc=;
-        b=ZrQ2CYbDP+LTHICsjqlHlsCdigyT7VR787OQm9oxdtR2by42vriExmjRFw8HqbxkG+
-         XYyXfA//hFXoj/OAYaYzuXHChjlsM8m4xLr6DbuS8CWL6RsM1QiIrHDZVDuwLWf+cUng
-         7i2K02/VubqxdEd9JaOasrp4aWMWzkiE8eKXe0yU+fRdDBHtWTSDZPLE12r7s1a8128u
-         8sWXODPPZr5m7CkLYc0/AknpKBuUMPwGLb03vWzj4E2VpM/iG59NRTWRR+Auvtdt6PkX
-         sDAhkEEmy/vex6SlkhMyLh8/imWc4BBibfvEM0Xc3UmyZGCgNsf40NvGkbRf3+X09hwm
-         GPGQ==
-X-Gm-Message-State: AOJu0YyFvn9VbqIswDL96kOqm4aojGnD9D1N0PU8zT7kmITkUv7M9lRi
-	1T5P98mjVbhqR7oHQQCpghJRD6euGKND7ZJW/uyo73n85gh3fKhjOc5r0SXokVr8YhdgTG4IKWA
+        bh=zRYBya/NOm9RXOTNWuX4vwtPazKcBlRxHRUkoGXSiKM=;
+        b=v/azcHrTBiGbuZpHZybgHWCvxwxXSM2Vljm7boPTNtJTXt1iLw6S0StFq73/4mgwA7
+         CCUSNXbvd3yTpaNnJN8Km9Hoe4JOYIKGcOmNBg+RzUpAj4jWNCWHCIf9uPbM1ENntURV
+         WZnEvP88oIsJJm+tE4TbfdANyhaTdGD3wt/tEyTZW7h1ltwYjJQM6iN2y1uUXZKj4sZO
+         viQz1VbzfN5kjP9g5RTd61cuql0as7s1OjzLUxvYav/wJtsN73aLCjFCr7Sxkid2s0pr
+         3e7OLDSFhZMcC0nRfkrSnYIpkzeIPGyHWYR7hr5clMhtQ8kZGgsj20dh4AiATM9iuzMZ
+         G0iA==
+X-Gm-Message-State: AOJu0Yxlh/pvUfbEFvDukFjg5z1pp8ynqFv06vefXiS0C6NA2aNMoywI
+	9FzxgZNd9IwBm2WgbmwSDiczXbc6/mcNMD1iuAuMqy3Z3NtvBdMivbnAx+L/bi6OYrX2rTCt3JI
 	=
-X-Google-Smtp-Source: AGHT+IHAKpP40EtJrVx6f8RKp3tg35tYjrloyE4mT5cO5VfP5jL4BJiIUxyQB6ipUGsXnskqYUja8w==
-X-Received: by 2002:a17:90a:eb02:b0:2a2:9b37:367a with SMTP id j2-20020a17090aeb0200b002a29b37367amr10075252pjz.39.1714419824483;
+X-Google-Smtp-Source: AGHT+IEyC7ogmQtpfq2jo163UzMRiI3EiBb8cTzX64dp7MosCyMenO8FJJ+ZXzfk/yzWptwVIRo+Ig==
+X-Received: by 2002:a17:903:2283:b0:1eb:152a:5a6e with SMTP id b3-20020a170903228300b001eb152a5a6emr12905147plh.3.1714419824877;
         Mon, 29 Apr 2024 12:43:44 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id em6-20020a17090b014600b002b16d9ab430sm3008510pjb.3.2024.04.29.12.43.43
+        by smtp.gmail.com with ESMTPSA id kk4-20020a170903070400b001e245d90d6fsm20746055plb.59.2024.04.29.12.43.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 29 Apr 2024 12:43:43 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
@@ -54,9 +54,9 @@ To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] kunit/fortify: Do not spam logs with fortify WARNs
-Date: Mon, 29 Apr 2024 12:43:40 -0700
-Message-Id: <20240429194342.2421639-2-keescook@chromium.org>
+Subject: [PATCH 1/3] kunit/fortify: Rename tests to use recommended conventions
+Date: Mon, 29 Apr 2024 12:43:39 -0700
+Message-Id: <20240429194342.2421639-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240429194019.work.664-kees@kernel.org>
 References: <20240429194019.work.664-kees@kernel.org>
@@ -66,56 +66,240 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1223; i=keescook@chromium.org;
- h=from:subject; bh=GzYQquZtF8F0UCCwehYpS7+bOLrS47ikty216klT3dg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmL/ht/xDIv4y4i+JPHwtNCbLZWfqsyLg6nbhjx
- IJsn9pE/y+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZi/4bQAKCRCJcvTf3G3A
- JoFoD/9172DQtDzDQxs4bjGGOYab+1EegLgpEK2YmJvABHtD2I8nNIVuRlrIdDfQGOWCqoICExJ
- zVVTUQqTc9wveXXJtHFuF9AiCt0PoNm8xefFoz/Xlh1UGHjTAJqJIyncN0NR4Xs7lpt5bgDP5d5
- Y30loWV+NGZ3X41eq9hSDpF1Q11S+FGd1HzhT74oPpSJa8W6+RxgUrosZI2JDxbKTe2ZBbkVtUb
- BvFDzEb4N1Ru+eWvHMt0aEa+07hRVy6om0J+bstBwJ+ov3lVYv99DMGFYw9qbEUfuLTZK5I6sTd
- sL+RxJhFNShnqf+Si6WumZVN/Jgvf7fSb9LRD2LE+4V4oZCR6+pVZTrw2WPpwKk2AEfmT3xavWA
- ypJJ/07cOJOz/9t8pPb0Cy/o0/rJLzU1F3au4uXWhAZruoF1LsZD81fy1G3e/XkbAy1H3H2PA99
- mglmy4of+9BT3ChwVrSXKx9ucEuww0Tw2ZaqktzHQycE2apxJVAgjWdGmeACJt5/1KLg7vIzk1b
- cNPtrKP+srnKaxWS55g8Q7o3YqYPtS2fgZYOaButrY8yiSQBpoEJyNSxuyWye46d0zTZrcc+X5u
- SRQet0ZZxCp8BZRmtQPXAhaAkiHVJ2kuKJC6EnwFnDci8OV9DalVWyJcegkApv6QWocFpWyPQnO 7vWupGNdSmBn8qQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7993; i=keescook@chromium.org;
+ h=from:subject; bh=JUpgKGKNZbsX+goUd06248PhOZ+lxWWD96tmeNIMNOQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmL/ht3kH8jQ6I7GxOBKaT2BHrhS0HCqY8ttL3e
+ N5+zsXoDrOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZi/4bQAKCRCJcvTf3G3A
+ Jjb6D/4xa6k2pRKjbWYWw+EZDTEriLKigrM+f7KCMCkw9VXD3I8Xor/2q0DK8VvwjfUloRRpMNO
+ nzPUHrgUCFPi8t65MWNmGrWnKEtFVfBAABh0gs6o3yQDVPE/ITCwqJ7uQP2V4xxwqxadJ9vPiho
+ 24+nE4GW1DDd16YnWhDSG0owW9chrw/m3uO6QhsOvVrRBOOrPN2Jry8E2fK0nEJnWcWylerHO14
+ nyVs8wIppyuyJipDGCbBkmFqQdW66F2A8DLmpXC39GY2dMM5OdZtbehGDPxxE9Dyhax2I3TaMnb
+ WWR+lNexeyPxdSOpMFGVVLdynmIqDT6pgheulUUFq7nRHBFZHMwcLk1qOHNZddih2SaH8vEjvVg
+ 8JcqyxJb9N/B+V/cv44g2Sj9Tg0gSRmIPgKGfWkVC/tj6T6mFjhMbZB0K31euPuVZAQHFK6pOe7
+ g2OKqZiMOMDGGEXJyKcEzAIO6iO4Vwu48UEQ56nX0DGpZjMR817QU28v927nYDMepndlied5+Fo
+ 8/a5tO5PoPolqjqQSAFQCyTvhHW0fcknSs0iUlxs++9t4SJIUvFa+WosoLwaz6AB572Sg7vfvzr
+ h3P013V3beqvyXumqSBYAeW8ge+Mbt9AYxtXvGj9odD81yx3ollWb0HtVi8+ptTf5+LFeiKb6AL oxlIE6tfGq0dlVg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-When running KUnit fortify tests, we're already doing precise tracking
-of which warnings are getting hit. Don't fill the logs with WARNs unless
-we've been explicitly built with DEBUG enabled.
+The recommended conventions for KUnit tests is ${module}_test_${what}.
+Adjust the fortify tests to match.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
 Cc: linux-hardening@vger.kernel.org
 ---
- lib/fortify_kunit.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ lib/fortify_kunit.c | 80 ++++++++++++++++++++++-----------------------
+ 1 file changed, 40 insertions(+), 40 deletions(-)
 
 diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index 6f9a86c94538..bbbfc2238aa9 100644
+index 493ec02dd5b3..6f9a86c94538 100644
 --- a/lib/fortify_kunit.c
 +++ b/lib/fortify_kunit.c
-@@ -15,10 +15,17 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -64,7 +64,7 @@ void fortify_add_kunit_error(int write)
+ 	kunit_put_resource(resource);
+ }
  
-+/* We don't need to fill dmesg with the fortify WARNs during testing. */
-+#ifdef DEBUG
-+# define FORTIFY_REPORT_KUNIT(x...) __fortify_report(x)
-+#else
-+# define FORTIFY_REPORT_KUNIT(x...) do { } while (0)
-+#endif
-+
- /* Redefine fortify_panic() to track failures. */
- void fortify_add_kunit_error(int write);
- #define fortify_panic(func, write, avail, size, retfail) do {		\
--	__fortify_report(FORTIFY_REASON(func, write), avail, size);	\
-+	FORTIFY_REPORT_KUNIT(FORTIFY_REASON(func, write), avail, size);	\
- 	fortify_add_kunit_error(write);					\
- 	return (retfail);						\
- } while (0)
+-static void known_sizes_test(struct kunit *test)
++static void fortify_test_known_sizes(struct kunit *test)
+ {
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_of_10), 10);
+@@ -97,7 +97,7 @@ static noinline size_t want_minus_one(int pick)
+ 	return __compiletime_strlen(str);
+ }
+ 
+-static void control_flow_split_test(struct kunit *test)
++static void fortify_test_control_flow_split(struct kunit *test)
+ {
+ 	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
+ }
+@@ -173,11 +173,11 @@ static volatile size_t unknown_size = 50;
+ #endif
+ 
+ #define DEFINE_ALLOC_SIZE_TEST_PAIR(allocator)				\
+-static void alloc_size_##allocator##_const_test(struct kunit *test)	\
++static void fortify_test_alloc_size_##allocator##_const(struct kunit *test) \
+ {									\
+ 	CONST_TEST_BODY(TEST_##allocator);				\
+ }									\
+-static void alloc_size_##allocator##_dynamic_test(struct kunit *test)	\
++static void fortify_test_alloc_size_##allocator##_dynamic(struct kunit *test) \
+ {									\
+ 	DYNAMIC_TEST_BODY(TEST_##allocator);				\
+ }
+@@ -361,7 +361,7 @@ struct fortify_padding {
+ /* Force compiler into not being able to resolve size at compile-time. */
+ static volatile int unconst;
+ 
+-static void strlen_test(struct kunit *test)
++static void fortify_test_strlen(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	int i, end = sizeof(pad.buf) - 1;
+@@ -384,7 +384,7 @@ static void strlen_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
+ }
+ 
+-static void strnlen_test(struct kunit *test)
++static void fortify_test_strnlen(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	int i, end = sizeof(pad.buf) - 1;
+@@ -422,7 +422,7 @@ static void strnlen_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+ }
+ 
+-static void strcpy_test(struct kunit *test)
++static void fortify_test_strcpy(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	char src[sizeof(pad.buf) + 1] = { };
+@@ -480,7 +480,7 @@ static void strcpy_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+ }
+ 
+-static void strncpy_test(struct kunit *test)
++static void fortify_test_strncpy(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	char src[] = "Copy me fully into a small buffer and I will overflow!";
+@@ -539,7 +539,7 @@ static void strncpy_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+ }
+ 
+-static void strscpy_test(struct kunit *test)
++static void fortify_test_strscpy(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	char src[] = "Copy me fully into a small buffer and I will overflow!";
+@@ -596,7 +596,7 @@ static void strscpy_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+ }
+ 
+-static void strcat_test(struct kunit *test)
++static void fortify_test_strcat(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	char src[sizeof(pad.buf) / 2] = { };
+@@ -653,7 +653,7 @@ static void strcat_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+ }
+ 
+-static void strncat_test(struct kunit *test)
++static void fortify_test_strncat(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	char src[sizeof(pad.buf)] = { };
+@@ -726,7 +726,7 @@ static void strncat_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+ }
+ 
+-static void strlcat_test(struct kunit *test)
++static void fortify_test_strlcat(struct kunit *test)
+ {
+ 	struct fortify_padding pad = { };
+ 	char src[sizeof(pad.buf)] = { };
+@@ -811,7 +811,7 @@ static void strlcat_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+ }
+ 
+-static void memscan_test(struct kunit *test)
++static void fortify_test_memscan(struct kunit *test)
+ {
+ 	char haystack[] = "Where oh where is my memory range?";
+ 	char *mem = haystack + strlen("Where oh where is ");
+@@ -830,7 +830,7 @@ static void memscan_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+ }
+ 
+-static void memchr_test(struct kunit *test)
++static void fortify_test_memchr(struct kunit *test)
+ {
+ 	char haystack[] = "Where oh where is my memory range?";
+ 	char *mem = haystack + strlen("Where oh where is ");
+@@ -849,7 +849,7 @@ static void memchr_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+ }
+ 
+-static void memchr_inv_test(struct kunit *test)
++static void fortify_test_memchr_inv(struct kunit *test)
+ {
+ 	char haystack[] = "Where oh where is my memory range?";
+ 	char *mem = haystack + 1;
+@@ -869,7 +869,7 @@ static void memchr_inv_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+ }
+ 
+-static void memcmp_test(struct kunit *test)
++static void fortify_test_memcmp(struct kunit *test)
+ {
+ 	char one[] = "My mind is going ...";
+ 	char two[] = "My mind is going ... I can feel it.";
+@@ -891,7 +891,7 @@ static void memcmp_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+ }
+ 
+-static void kmemdup_test(struct kunit *test)
++static void fortify_test_kmemdup(struct kunit *test)
+ {
+ 	char src[] = "I got Doom running on it!";
+ 	char *copy;
+@@ -951,31 +951,31 @@ static int fortify_test_init(struct kunit *test)
+ }
+ 
+ static struct kunit_case fortify_test_cases[] = {
+-	KUNIT_CASE(known_sizes_test),
+-	KUNIT_CASE(control_flow_split_test),
+-	KUNIT_CASE(alloc_size_kmalloc_const_test),
+-	KUNIT_CASE(alloc_size_kmalloc_dynamic_test),
+-	KUNIT_CASE(alloc_size_vmalloc_const_test),
+-	KUNIT_CASE(alloc_size_vmalloc_dynamic_test),
+-	KUNIT_CASE(alloc_size_kvmalloc_const_test),
+-	KUNIT_CASE(alloc_size_kvmalloc_dynamic_test),
+-	KUNIT_CASE(alloc_size_devm_kmalloc_const_test),
+-	KUNIT_CASE(alloc_size_devm_kmalloc_dynamic_test),
+-	KUNIT_CASE(strlen_test),
+-	KUNIT_CASE(strnlen_test),
+-	KUNIT_CASE(strcpy_test),
+-	KUNIT_CASE(strncpy_test),
+-	KUNIT_CASE(strscpy_test),
+-	KUNIT_CASE(strcat_test),
+-	KUNIT_CASE(strncat_test),
+-	KUNIT_CASE(strlcat_test),
++	KUNIT_CASE(fortify_test_known_sizes),
++	KUNIT_CASE(fortify_test_control_flow_split),
++	KUNIT_CASE(fortify_test_alloc_size_kmalloc_const),
++	KUNIT_CASE(fortify_test_alloc_size_kmalloc_dynamic),
++	KUNIT_CASE(fortify_test_alloc_size_vmalloc_const),
++	KUNIT_CASE(fortify_test_alloc_size_vmalloc_dynamic),
++	KUNIT_CASE(fortify_test_alloc_size_kvmalloc_const),
++	KUNIT_CASE(fortify_test_alloc_size_kvmalloc_dynamic),
++	KUNIT_CASE(fortify_test_alloc_size_devm_kmalloc_const),
++	KUNIT_CASE(fortify_test_alloc_size_devm_kmalloc_dynamic),
++	KUNIT_CASE(fortify_test_strlen),
++	KUNIT_CASE(fortify_test_strnlen),
++	KUNIT_CASE(fortify_test_strcpy),
++	KUNIT_CASE(fortify_test_strncpy),
++	KUNIT_CASE(fortify_test_strscpy),
++	KUNIT_CASE(fortify_test_strcat),
++	KUNIT_CASE(fortify_test_strncat),
++	KUNIT_CASE(fortify_test_strlcat),
+ 	/* skip memset: performs bounds checking on whole structs */
+ 	/* skip memcpy: still using warn-and-overwrite instead of hard-fail */
+-	KUNIT_CASE(memscan_test),
+-	KUNIT_CASE(memchr_test),
+-	KUNIT_CASE(memchr_inv_test),
+-	KUNIT_CASE(memcmp_test),
+-	KUNIT_CASE(kmemdup_test),
++	KUNIT_CASE(fortify_test_memscan),
++	KUNIT_CASE(fortify_test_memchr),
++	KUNIT_CASE(fortify_test_memchr_inv),
++	KUNIT_CASE(fortify_test_memcmp),
++	KUNIT_CASE(fortify_test_kmemdup),
+ 	{}
+ };
+ 
 -- 
 2.34.1
 
