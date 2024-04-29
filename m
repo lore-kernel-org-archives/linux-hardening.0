@@ -1,150 +1,117 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AA4128399
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 18:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE241350FD
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 18:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714415973; cv=none; b=SFWBu0R+hw9dYKN4zxo3/LzS3ktsgVRAXLHogBFV8+k81lQVQ+ErQ8w6QlOG9xkqDHD5qYK2kKrLFe1OIIw1FK6hs+7cKwdH3wJs+YwuabevAd6zHSno56u3b0Lf9jzJLl59CelfxrBT5Cx9gs8OmDbW16iMKQNsqW4FMJ0Sgsw=
+	t=1714416160; cv=none; b=YcBkX1bSQIdBygnVf9eGi1IkHcusGHVmBwBdg7xavJGtHP/v8e1EAlbJxD1rSuVRKPZBmb2y90g5iU02yBxuXDC4q3Rj0sUEMhpwcS5me++bocjiVdKanglm3dBiE/g5gzhH4Q4MnqUT0e3DqN9i7ByAX56j22bRxcg0GMw1El4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714415973; c=relaxed/simple;
-	bh=QBdZBMXCVF0uuM31zTQeK3OKrbEfxdu1leuRI7upUEs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mKxIwxGrLTl+SY7VnvLafLCnqEeEtm9iqWcJ2ls3aKJr49h1oXOUbHpEKzNzOHO+xQz2biXRFZgUh/JRsMnVRUaL6duY03fmLG5fdQRB1ryJ6TpImDTobJUiM5tD8NHihU4IvhBbq81GP2R32s3/kDTYDmi91dcYGd9xxb2wmvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dBqaOHmB; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1714416160; c=relaxed/simple;
+	bh=o7Rzh6vzHe9kqHnyh0XzcOChBzUGpfd9DHW4G5UZ8Eg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gj5bXCttEeXbywiRAU3UvmQBTKYZTCjdPJay5KwuknN/qatgWVxSg+muknlDgKy8I4L4LNPMo1z/bzY2cKqqNzGJJ8iA8Hb1/UzM26c0bEaJrHGbbvu0jamP6Jq//gTmFJKf+TwGA5BeN7jJb7DFXmlBs8fYUx1Oxj+Wu7NlWxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=mQMOePvc; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dBqaOHmB"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be325413eso6810987b3.1
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 11:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714415971; x=1715020771; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wSYJcoyaTi79NbRMVjq5HHUnz6U3D46cE4KoRFu8N2A=;
-        b=dBqaOHmBucHXMhnKlV/DCWeSaXeIXjBKTxe3/wiANSsIfjQw7HWGFT/SjVfo182qh7
-         FqlXrnA8ZbaV58nkv9CJrIIMOvViFARPDAc4i2piCrSWtRXthCTXuep3TL7P+SjMU13Z
-         8g0yJSq0lc85VBHEIZBEjVFz94aNEQyrT42HZfGa7XeHkvmQ0l/Tbfo7FS32mPlk+2Tg
-         jWzHvUIha5JMPfuN1ofLQ+AveQwiqP0CyQVtpjmWr2g/MkXNnHhq3aWpnhYcR/kTsEso
-         IkEvFTbzMlFmwrx9B8U/MLBdCcpIbWDrvIRV6Ko83WXDUsr+wZySb1YF/gN47QOh9JK0
-         ZqZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714415971; x=1715020771;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wSYJcoyaTi79NbRMVjq5HHUnz6U3D46cE4KoRFu8N2A=;
-        b=KclGW7lPReUMit6DKWh+rTxcl6OaE6gyZiZG99y86x3uypeMQuiulNwMztI0Yzwkka
-         iWMpxT9fxB2RwYNjsCoCpVQE0bvn/EU1dW71TckT3UZrV78lCCiX4ifRvmh7GqJG7HOd
-         UHoXHGQ12AU4bUJdpbF8/uxl1IgPxKF+QoyK5glSabhHc0WSpHA6oId7VgCsn56CXYUB
-         ydFfcgWLqjecOjjVofqRqFZgZIiYQ5aTJB2e5FRJwl1IdnbCB74JPB2zHL8ajA6ffwEd
-         NVXGSXVB8f6VqkLxMsBjanmBBBuJG0Bs7QiPJWa9IRRaFViZKVRurfzNnx0yPmZpwG3Z
-         27iA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7WmKhPUYKDMppV7s+/oCrffHh+Q3cgNYX7B/ts3Zccy990N1ySDlnKkmVx8yrWln+v5bvSfXyDYHoTazmEiW+JFUKTwe6xX5h6eOH+tYJ
-X-Gm-Message-State: AOJu0YwrO2fS4eubcJ7ZO5tVsBbBXxmElY9w3HO9F1QeDBPACfp3SVYM
-	NeBlMFd6xooSli3AMdfDQEAyogE4+3l3P8Re9S4401HCgm1Y8yIyjkSEj2WhUyolz5WZeTArPUd
-	AbIHEyBn1os6aWzF7VDXHpQ==
-X-Google-Smtp-Source: AGHT+IHANfFH7TFflKbRryihtyZjur78IWuaWQA8CIlpRzlcXweRhaGAdP48CqTQpxlMGfUxNSjq3zDgCuJMsX2ulA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:290a:b0:61b:6c2:392c with
- SMTP id eg10-20020a05690c290a00b0061b06c2392cmr91397ywb.0.1714415970772; Mon,
- 29 Apr 2024 11:39:30 -0700 (PDT)
-Date: Mon, 29 Apr 2024 18:39:28 +0000
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mQMOePvc"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id 1TRosQIKnxs4F1VxPs7esM; Mon, 29 Apr 2024 18:42:31 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 1VxOsQS40YakK1VxOsJYH2; Mon, 29 Apr 2024 18:42:30 +0000
+X-Authority-Analysis: v=2.4 cv=a4T79lSF c=1 sm=1 tr=0 ts=662fea16
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
+ a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=v1GTFQr46au9FOpdLhIA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7R8iOZZv1UeQk5saLx+Pr9H4OJPkevAvXI2B0KeGlbY=; b=mQMOePvckb+lme1Q4LIcIVB07P
+	vApm5UCTHavk75lmlhzQw6NYVve7lvc2S8gFrW+bstGZeHJBHz2quTQp2ZrmkJhapCcZ1jDOx5dWL
+	eqDz94RZfiB0uBPKs9LciR4tw4ZpyN1j31WWOJJCSxH+pMlM9tzvQld8CxTql6R6PCPbajVa8yw8Y
+	dGvZI5VNhSc9s2+sQeL3/gCgMBq1yABRHIa+UhBFqb5eaRsYfwPcZoedGpuhhbRNDHOHEf3YdV0/j
+	ha/cRMnszSG69sF+d8fQvy1yfqJ0N3Aygz6iT+GOnveQIg/5RyyPAEaCDJGwORAbzRWiEyoh2vNT6
+	wDjKAcCQ==;
+Received: from [201.172.173.147] (port=36178 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1s1VxN-002n1Z-1F;
+	Mon, 29 Apr 2024 13:42:29 -0500
+Message-ID: <90ddce3b-1ad5-49be-89f9-2f3e48d73e19@embeddedor.com>
+Date: Mon, 29 Apr 2024 12:42:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGDpL2YC/43QzWrDMAzA8VcpPs/Dlj8S77T3GD3YjpKYbXGwQ
- 1gpefepvXQjYez4F+gn0JVVLAkrezldWcE11ZQnCvt0YnH004A8ddQMBGgBIHmd5pKmpedxxPg
- ++yWO3LdWY2cbDJ1gtDkX7NPXXX07U4+pLrlc7kdWeZv+7a2SS658NAJMMM7K1yHn4QOfY/5kN
- 3CFfyBAiAseSeg8KrFD1ANR0hwjihCvjcTGWq2E3SH6gWjRHiOakNa6Jjrro9Nhh5gfCMAxYgj pJToR+kbSv38h27Z9A8yGVKrLAQAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714415970; l=2913;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=QBdZBMXCVF0uuM31zTQeK3OKrbEfxdu1leuRI7upUEs=; b=YWO1yUokL7cw7iVMCGuxveXQyCZ9XwuqGLpFjp5iFwgxyVtsjIrneZua/7/APlJDwqUkzDw7A
- 3S3WB1l//IrDVBY7Es6i4nZH2WMTn0MmXhislWJPUGPOueoQGl/zR+n
-X-Mailer: b4 0.12.3
-Message-ID: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
-Subject: [PATCH v6] checkpatch: add check for snprintf to scnprintf
-From: Justin Stitt <justinstitt@google.com>
-To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	Finn Thain <fthain@linux-m68k.org>, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2][next] firewire: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, linux1394-devel@lists.sourceforge.net
+References: <cover.1709658886.git.gustavoars@kernel.org>
+ <20240306011030.GA71684@workstation.local>
+ <6a7854af-a183-4db2-8400-4d9eb0cc4308@embeddedor.com>
+ <202404291129.F261DEA21F@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202404291129.F261DEA21F@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.147
+X-Source-L: No
+X-Exim-ID: 1s1VxN-002n1Z-1F
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:36178
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOL1rqCTvPL0Wyzs2AtpxqYXB2kwpNeinFSXIUHaGvFGzfxToF9tpq6cPHBE+ePUahhU16DRYMv0OiKVqeNjgaGjIZO2nmFcc1cUZXyUinkXu5MfQrnz
+ PrbNTD6WhgFb4g/KAYjUjyltInKbGR8eKn9dLIp34jF218d+UW1SQ/kJVeLMql10kjyTO40LaeWK2hOIL6smzCS+KvbqGIJ9HCXiyRc5mgrqUhFF7WBH/t2a
 
-I am going to quote Lee Jones who has been doing some snprintf ->
-scnprintf refactorings:
 
-"There is a general misunderstanding amongst engineers that
-{v}snprintf() returns the length of the data *actually* encoded into the
-destination array.  However, as per the C99 standard {v}snprintf()
-really returns the length of the data that *would have been* written if
-there were enough space for it.  This misunderstanding has led to
-buffer-overruns in the past.  It's generally considered safer to use the
-{v}scnprintf() variants in their place (or even sprintf() in simple
-cases).  So let's do that."
 
-To help prevent new instances of snprintf() from popping up, let's add a
-check to checkpatch.pl.
+On 4/29/24 12:30, Kees Cook wrote:
+> On Wed, Mar 06, 2024 at 10:18:59AM -0600, Gustavo A. R. Silva wrote:
+>>
+>>> Thanks for the improvements, however we are mostly at the end of
+>>> development period for v6.8 kernel. Let me postpone applying the patches
+>>> until closing the next merge window (for v6.9), since we need the term to
+>>> evaluate the change. I mean that it goes to v6.10 kernel.
+>>
+>> Sure, no problem.
+>>
+>> Actually, I'll send a v2 with DEFINE_FLEX(), instead.
+> 
+> I was just going through the patch tracker to make sure stuff got
+> handled -- did a v2 of these ever get posted? I don't see anything in
+> the tracker nor changes here in -next.
 
-Suggested-by: Finn Thain <fthain@linux-m68k.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v6:
-- move capture group to only include symbol name (not spaces or paren)
-- Link to v5: https://lore.kernel.org/r/20240422-snprintf-checkpatch-v5-1-f1e90bf7164e@google.com
+Yes, it's in linux-next already:
 
-Changes in v5:
-- use capture groups to let the user know which variation they used
-- Link to v4: https://lore.kernel.org/r/20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1d717123bb1a7555a432e51a41709badf8545dba
 
-Changes in v4:
-- also check for vsnprintf variant (thanks Bill)
-- Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3-1-a451e7664306@google.com
-
-Changes in v3:
-- fix indentation
-- add reference link (https://github.com/KSPP/linux/issues/105) (thanks Joe)
-- Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com
-
-Changes in v2:
-- Had a vim moment and deleted a character before sending the patch.
-- Replaced the character :)
-- Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
----
-From a discussion here [1].
-
-[1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
----
- scripts/checkpatch.pl | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9c4c4a61bc83..bdae8a7ae5ed 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -7012,6 +7012,12 @@ sub process {
- 			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
- 		}
- 
-+# {v}snprintf uses that should likely be {v}scnprintf
-+		if ($line =~ /\b((v|)snprintf)\s*\(/) {
-+			WARN("SNPRINTF",
-+			     "Prefer ${2}scnprintf over $1 - see: https://github.com/KSPP/linux/issues/105\n" . $herecurr);
-+		}
-+
- # ethtool_sprintf uses that should likely be ethtool_puts
- 		if ($line =~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/) {
- 			if (WARN("PREFER_ETHTOOL_PUTS",
-
----
-base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-change-id: 20240221-snprintf-checkpatch-a864ed67ebd0
-
-Best regards,
 --
-Justin Stitt <justinstitt@google.com>
-
+Gustavo
