@@ -1,63 +1,49 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0304F839FD
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 21:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF8017798F;
+	Mon, 29 Apr 2024 22:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714427909; cv=none; b=HLzmFdVrWuxgjAV1IK+oNZmO9FMmkYN2qwnA4f8ENEwaI1lq2W8wRG4MYt+0MhYjeqiyKv+hRpgDz37VLJnOPOD2n7GC1z3eS9r1fsdZz3LATWWAnn5jnwnGgw8WZOLJLxuW6Oy69QzFXfm1KARozkPrJq8bWp0WqkSJ/DzHuHg=
+	t=1714429014; cv=none; b=rCucBmI1BRERp1V7Yl0ZKORdv7/4LSCSEjXb7OtWvgsHLtrtsHF64h4BOtf5allvqdKGi9c3GPIohkZ4x1rKAP/xwPPkVM2cGT7iuLT3Ynz0QPtlo8hKmpTc+BDkjSCv+dgBAK81vhQVJzXJrqAzcqJCIv98GBqTmbGH/UHQVj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714427909; c=relaxed/simple;
-	bh=i6lqpid3/ifH983zglzaRmJlc7nvZzdwdzL3SlBT1GI=;
+	s=arc-20240116; t=1714429014; c=relaxed/simple;
+	bh=sM12wNpxyClzIujECU2Q2Xq0Fp03wR6ElrAkPU8LTJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uSDMls2euWv4SmRQ5T8Qi1hpKRb3WhzJAShFzx5MBi5oNIWNFCpvEueyYUNS1RSifJWrRvYyq79IJlXwpXgKdpPii2Mjczy9Hbz2gqmLj0W6U+kL9kfikvdnLiCPJ8BFgmLFUyggM5hExo0jHn1pWHBzXzZgUrEeAz9mlaT8Idg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZDD1p7Ek; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0EPSmQ5BpBtQg1zoVNxP6H1v6ZDa7yKS8SALHqOWc/IqySRPRKReQcUYWOP6knpfm9m9pRlaf25CoLHEjjnlAh1Z6qXbYRhkPQ1N+fi7OCKMm18pxkZJTW8oIjtpgdpxIL/ymneR/L92M1tOolKwMYyecX6gxj1zkuMWPI8/Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AE1ScLev; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZDD1p7Ek"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ed32341906so4628168b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 14:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714427906; x=1715032706; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pt4pmVDe1gHqk8GSYJUn0euBaNvq8Bf6JSXO1Xsdf5U=;
-        b=ZDD1p7EkJ56UE59hBbkIXdaJny5SS7tlrgfC95duBrz9Jy/R1boGAkiR3UTX8rLp3l
-         CD5bhyv129qrcu3CneUU2vuGss+Nj5M+f8MMPk3Cvu5PMnE4s1Y8FYNDfCgz2jlR1Gu6
-         MQkbj65WMSZJ2GGDsfviDw40TgIDVVVQgynXQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714427906; x=1715032706;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pt4pmVDe1gHqk8GSYJUn0euBaNvq8Bf6JSXO1Xsdf5U=;
-        b=cAAH+Ze6sb6LVRRmqJlLby4O/qtwLszftgQrUVvjEV5ATf08fg+oSpJoqtZGCrabEg
-         vjVKb+jaPdeqGrac/CM2IWM3COdSavIh9ye8EYIVIGd62Lj0tFZnWeDOhsOL2B6+1eJF
-         729y5NmX+opsgVT2ud8EhPrx/Kp+4EYf2/mqUcupHwVX3NaobmEte9uLjyQiAMpajYss
-         aCEyR470ABg4ombGVsD2bWzAUN1dlyGuc1bsj0XFQidQJnYulFU7yhXz4mVkykBOtfvD
-         L+YQbF0tvfBDJXGuau2byq8mhK3U/2EhJsQarf2dHosi/DWLYaXCfdIbsH6K4TjPRGfJ
-         WX3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVbIirbpygSoHmXujB1gRl2DR9NCwJFW+ZgxMvS2s8FyaT0lMQscjtlavRHFIW3iobgfz2Q2iaokXOqDQErp1T7GHAwPEqk9G1Xuk5SjKh1
-X-Gm-Message-State: AOJu0YxzqqDnZH15zJSBDeA+MiZL7oyIijj5G4X7rNx+ls5S6rARMFqg
-	BxvXkyDoVnhhtKjvuxX2M8b267+9qszxXu1Ek2yqiB8bGQnn6HZybhr8XeRM/w==
-X-Google-Smtp-Source: AGHT+IEsWmJgVhdteBNFpcp99zENVzWfPLc9Uvz/OFqNT+c1CKX09b/Qwv6MZ23E7a+08D6po9slVQ==
-X-Received: by 2002:a05:6a00:2315:b0:6ec:ec8f:d588 with SMTP id h21-20020a056a00231500b006ecec8fd588mr13038861pfh.16.1714427906391;
-        Mon, 29 Apr 2024 14:58:26 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ff3-20020a056a002f4300b006eab6f3d8a9sm19709557pfb.207.2024.04.29.14.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 14:58:25 -0700 (PDT)
-Date: Mon, 29 Apr 2024 14:58:25 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] PM: hibernate: replace deprecated strncpy with strscpy
-Message-ID: <202404291457.8E79DC5@keescook>
-References: <20240429-strncpy-kernel-power-hibernate-c-v1-1-8688f492d3e6@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AE1ScLev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF9AC113CD;
+	Mon, 29 Apr 2024 22:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714429013;
+	bh=sM12wNpxyClzIujECU2Q2Xq0Fp03wR6ElrAkPU8LTJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AE1ScLevghQRxQ4qCrFsi9uVrMVHe0DLu4Fi/opB2QweZCJaOCcNoj2YYHHt9thz9
+	 OcNY7C5Z3n0iQWyNGzwz56muSCRYaNXZ8oBvZSXpMnzO+MgjyRx2jIF2hB5Y/cmyTo
+	 m/wpaUuexq+73sniwy1mApDi33fXdLHpVnz03b44dFGEr9mNhZTSv7PDS69z9ySIDh
+	 jP3ikArks0EEvjdH8fM536Qivg8+lYUYPQXlFc8MlpW2w9VAKb+9rbjeSryEb4prFF
+	 PxAA0zNei5LqRS91RkxXZJGXGOUVPG4obGjO1WWzq1ErlpDec91w5ye2wl5xuAn1PH
+	 2PKJqWxdYTT4g==
+Date: Mon, 29 Apr 2024 15:16:50 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hardening: Refresh KCFI options, add some more
+Message-ID: <20240429221650.GA3666021@dev-arch.thelio-3990X>
+References: <20240426222940.work.884-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,60 +52,110 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240429-strncpy-kernel-power-hibernate-c-v1-1-8688f492d3e6@google.com>
+In-Reply-To: <20240426222940.work.884-kees@kernel.org>
 
-On Mon, Apr 29, 2024 at 08:50:30PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Fri, Apr 26, 2024 at 03:29:44PM -0700, Kees Cook wrote:
+> Add some stuff that got missed along the way:
 > 
-> This kernel config option is simply assigned with the resume_file
-> buffer. It should be NUL-terminated but not necessarily NUL-padded as
-> per its further usage with other string apis:
-> |	static int __init find_resume_device(void)
-> |	{
-> |		if (!strlen(resume_file))
-> |			return -ENOENT;
-> |
-> |		pm_pr_dbg("Checking hibernation image partition %s\n", resume_file);
+> - CONFIG_UNWIND_PATCH_PAC_INTO_SCS=y so SCS vs PAC is hardware
+>   selectable.
 > 
-> Use strscpy [2] as it guarantees NUL-termination on the destination
-> buffer. Specifically, use the new 2-argument version of strscpy()
-> introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-> strscpy()").
+> - CONFIG_X86_KERNEL_IBT=y while a default, just be sure.
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
+> - CONFIG_CFI_CLANG=y for x86 and arm64. (And disable FINEIBT since
+>   it isn't as secure as straight KCFI.)
+> 
+> - CONFIG_PAGE_TABLE_CHECK=y for userspace mapping sanity.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Seems reasonable to me.
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+
+One comment below.
+
+> ---
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Justin Stitt <justinstitt@google.com>
 > Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: llvm@lists.linux.dev
 > ---
-> Note: build-tested only.
+>  arch/arm64/configs/hardening.config | 5 +++++
+>  arch/x86/configs/hardening.config   | 9 +++++++++
+>  kernel/configs/hardening.config     | 4 ++++
+>  3 files changed, 18 insertions(+)
 > 
-> Found with: $ rg "strncpy\("
-> ---
->  kernel/power/hibernate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/arch/arm64/configs/hardening.config b/arch/arm64/configs/hardening.config
+> index b0e795208998..e8a18fec7a3e 100644
+> --- a/arch/arm64/configs/hardening.config
+> +++ b/arch/arm64/configs/hardening.config
+> @@ -5,6 +5,7 @@ CONFIG_ARM64_SW_TTBR0_PAN=y
+>  
+>  # Software Shadow Stack or PAC
+>  CONFIG_SHADOW_CALL_STACK=y
+> +CONFIG_UNWIND_PATCH_PAC_INTO_SCS=y
+>  
+>  # Pointer authentication (ARMv8.3 and later). If hardware actually supports
+>  # it, one can turn off CONFIG_STACKPROTECTOR_STRONG with this enabled.
+> @@ -20,3 +21,7 @@ CONFIG_ARM64_E0PD=y
+>  
+>  # Available in ARMv8.7 and later.
+>  CONFIG_ARM64_EPAN=y
+> +
+> +# Enable Kernel Control Flow Integrity (currently Clang only).
+> +CONFIG_CFI_CLANG=y
+> +# CONFIG_CFI_PERMISSIVE is not set
+
+Should this be a part of kernel/configs/hardening.config because RISC-V
+supports it (and 32-bit ARM will soon too)?
+
+> diff --git a/arch/x86/configs/hardening.config b/arch/x86/configs/hardening.config
+> index 7b497f3b7bc3..b47e5f411dd3 100644
+> --- a/arch/x86/configs/hardening.config
+> +++ b/arch/x86/configs/hardening.config
+> @@ -10,5 +10,14 @@ CONFIG_INTEL_IOMMU_DEFAULT_ON=y
+>  CONFIG_INTEL_IOMMU_SVM=y
+>  CONFIG_AMD_IOMMU=y
+>  
+> +# Enforce CET Indirect Branch Tracking in the kernel.
+> +CONFIG_X86_KERNEL_IBT=y
+> +
+> +# Enable Kernel Control Flow Integrity (currently Clang only), but disable
+> +# weaker FINEIBT landing pads.
+> +CONFIG_CFI_CLANG=y
+> +# CONFIG_CFI_PERMISSIVE is not set
+> +# CONFIG_FINEIBT is not set
+> +
+>  # Enable CET Shadow Stack for userspace.
+>  CONFIG_X86_USER_SHADOW_STACK=y
+> diff --git a/kernel/configs/hardening.config b/kernel/configs/hardening.config
+> index 7a5bbfc024b7..4be0de1f085c 100644
+> --- a/kernel/configs/hardening.config
+> +++ b/kernel/configs/hardening.config
+> @@ -23,6 +23,10 @@ CONFIG_SLAB_FREELIST_HARDENED=y
+>  CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+>  CONFIG_RANDOM_KMALLOC_CACHES=y
+>  
+> +# Sanity check userspace page table mappings.
+> +CONFIG_PAGE_TABLE_CHECK=y
+> +CONFIG_PAGE_TABLE_CHECK_ENFORCED=y
+> +
+>  # Randomize kernel stack offset on syscall entry.
+>  CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
+>  
+> -- 
+> 2.34.1
 > 
-> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> index 43b1a82e800c..0a213f69a9e4 100644
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -1361,7 +1361,7 @@ static int __init resume_setup(char *str)
->  	if (noresume)
->  		return 1;
->  
-> -	strncpy(resume_file, str, 255);
-> +	strscpy(resume_file, str);
->  	return 1;
->  }
->  
-
-Yup, this looks correct to me. resume_file is:
-
-static char resume_file[256] = CONFIG_PM_STD_PARTITION;
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
