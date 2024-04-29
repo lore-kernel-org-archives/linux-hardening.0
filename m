@@ -1,135 +1,157 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9801411D8
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 20:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C56412880A;
+	Mon, 29 Apr 2024 20:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714421604; cv=none; b=E3wKV1t+h+TOhl0bQRTxsaYEr56SkGXVHcLTVKE/bK20JOHQP0IgMzFBHnXECQZssxEo56sCbqLkKLfFTC57EOG5U+cEUTlf7UOUAfS/lZXBaWrShJw36PJ5kjt2vnmYFr5GgOMRzuGcWNAnaTCWzUQS4vphFXduUkmySbzbGgc=
+	t=1714423699; cv=none; b=KTf5zUdEovqXcDna7lvjLZ16mx/amamgsJnyMgrmWl9VAf6RYVUnvuvX5XopuBgsEpIfx+0AB9GOUJI0Yg9skn5JooWA4AUZk3bcPiZA+cn2YP//Jo2yX2JQ84tWmt6fTJyvxp8ID+0kZEF9qk5Dj3VTKitni+nFgyrEWfG2NF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714421604; c=relaxed/simple;
-	bh=Wpz9boe/w8KT9hr5B4n4S8JECxM9pa+bGQT6Fr8iw4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aguFmXNuY/tumTRSD3kt9TJgGJAW8nQO3ofi0xiAZnU++usbiAtTfu1ARlYnk1y+zG2kDfKLsi1AY9ZuzE1Q0E8myEdSnhBSsj/5KbaCtDVso0+Btidv8Cyl001dtDeLsk+BqSWVLMyikDFm0Q9NioOXrUQi8yL/mWWm5qh+8OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OhPo1yH+; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714423699; c=relaxed/simple;
+	bh=hi9jHuX0t+MiyHdv6bvpydi3NtTh3mzwnyovDtOhWfM=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=VLZGfyUsUVe6ggY24WDDxQCpG+Z5NQuA0ErwZ7nqGGbDAtKSrJyjooQ0JqGcOlYVz4rOZSzpcMleJmSrNZv4rFiLvbfyqoCjlLyAqX13lBLqQ+12BlBe/DO+SP3SIKzEbuz3YYdcTmJHdZ1PxVvX/dVukiqpS5ODcgvlmaEPHu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=NFT4EKyb; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OhPo1yH+"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6edb76d83d0so4338083b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 13:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714421603; x=1715026403; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BXjzsh/nfrNV74+/Eg/rT8Fya+BcYBRXBPB+VYkGIr8=;
-        b=OhPo1yH+CQsaHtevEsQPziFBtmiv7UnZc8xCKssikeC82GIEG5U0OnktR/nMyi9mP1
-         QeGKdnSrzfuRLR2homs1QDJQDu6Suuopgl6LgeCU6Wjfe/M8xVshT0p5mI2ItIDqPZRS
-         bTDvZnGG1pylYyK2NhR8QH4qqmGY3ZQAhk8Pg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714421603; x=1715026403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BXjzsh/nfrNV74+/Eg/rT8Fya+BcYBRXBPB+VYkGIr8=;
-        b=bvoHfHWOSQtlt/Hg20wq9U9gISFA8VagQ44qrc4X5nTsLL8JmNqSYb3ffHqp4+NwJ2
-         qjZSnIt0nA6S3ZQqlCLynnB79PkgtwwmmG2CpwAUVzmNIcwqm1HNCHxPXJfk9K4nz5dy
-         5CWUb3ENGpGmKPxuK/4CQwwHleDOth+pto6njB1cELghiDj6J4g7Hfe3pObw8KWwHYjf
-         ncx+J83kyfmqj+EX4L6pGvso6e46L8YBzIFNjSNpKXA5cIrNSZCB7dXzenkFJ0QKOIFh
-         RO9ajccOvPupxYr75L84yx9kFfWEyAWmGoZyS0Hd8DPfnMHcjCBZnaV6xftHQu04DW7C
-         5S6A==
-X-Forwarded-Encrypted: i=1; AJvYcCX3QiHwWSHkRAMwcXbe1lsuIcU3Lcg7pToamY8Os5iu/4PUBwPktX+dC7HUC1UU27GoUtT7TCNN2ZfRsrQ5nMhILlym/G1/c3zCmsL6Ovf3
-X-Gm-Message-State: AOJu0YxeOVB7xZQLQChUR0qMRHNCEZLKPqVHnZxWW56BC2Avtz8wlfj2
-	1egeHXMAryCq0I3rsR5+E9qrSzlByxs8pH+Yw+1rO729yRVMWgHHvVPb3BAPnA==
-X-Google-Smtp-Source: AGHT+IHx20vgzODxO0CmjBxc3eLPOcVrUqtUBQgDReCQFkXCxJwNnQAZ4SSCabovup0+fIe8uoMO0A==
-X-Received: by 2002:a05:6a20:43ab:b0:1af:597f:ffa4 with SMTP id i43-20020a056a2043ab00b001af597fffa4mr620907pzl.14.1714421602751;
-        Mon, 29 Apr 2024 13:13:22 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b8-20020a170902d50800b001eab473021fsm6336073plg.168.2024.04.29.13.13.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 13:13:22 -0700 (PDT)
-Date: Mon, 29 Apr 2024 13:13:21 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
-Message-ID: <202404291259.3A8EE11@keescook>
-References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202404291019.5AC903A@keescook>
- <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="NFT4EKyb"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 1XussKoaLoeci1XussY2eu; Mon, 29 Apr 2024 22:48:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714423687;
+	bh=2tkIHRgbihugbvQSDrnZucCqwWRA089i99j5eTq3fo4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=NFT4EKyb8uYCTdvhnoUA2B48EVqoeOgNJHp/FkjJY7eUqfcHVw5aFI8d0rgqgI9Z0
+	 4pOznp7iJq0E6E/zRrdpYP774Bf0z+yUPo94apXItBZblnlWsxW8wPqTrDzpQ0dxTS
+	 zq8Dp7NA0NHS+jEtV/VwMorBFZqk5ErBM4YEMWhTXUCUpo7XAE2k/yYMOEPSwANeps
+	 q72ShUELnyuUv2UoT4DUw40vJtVNFKXlkGsq7r6p8JpiS+yV3+YjMEJ1adZaUlZikL
+	 WU1XHWTz1ch0uhJDDoqknfchxLXOBfpL9TQgb9qTuC2+HxF0GwSo5qOm6jWg14qAdT
+	 /s7dm3fN0f1jA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 29 Apr 2024 22:48:07 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <95484936-3f63-45ab-8b60-179508c159fb@wanadoo.fr>
+Date: Mon, 29 Apr 2024 22:48:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf/x86/amd/uncore: Use kcalloc*() instead of
+ kzalloc*()
+References: <PAXPR02MB7248F46DEFA47E79677481B18B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Erick Archer <erick.archer@outlook.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Justin Stitt <justinstitt@google.com>
+Cc: x86@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <PAXPR02MB7248F46DEFA47E79677481B18B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 29, 2024 at 02:31:19PM -0400, Martin K. Petersen wrote:
+Le 27/04/2024 à 18:45, Erick Archer a écrit :
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
 > 
-> Kees,
+> Here the multiplication is obviously safe. However, using kcalloc*()
+> is more appropriate [2] and improves readability. This patch has no
+> effect on runtime behavior.
 > 
-> >> This patch seems to be lost. Gustavo reviewed it on January 15, 2024
-> >> but the patch has not been applied since.
-> >
-> > This looks correct to me. I can pick this up if no one else snags it?
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Changes in v3:
+> - Update the commit message to better explain the changes.
+> - Rebase against linux-next.
 > 
-> I guess my original reply didn't make it out, I don't see it in the
-> archives.
+> Changes in v2:
+> - Add the "Reviewed-by:" tag.
+> - Rebase against linux-next.
 > 
-> My objections were:
+> Previous versions:
+> v1 -> https://lore.kernel.org/linux-hardening/20240116125813.3754-1-erick.archer@gmx.com
+> v2 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com
 > 
->  1. The original code is more readable to me than the proposed
->     replacement.
+> Hi,
+> 
+> This is a new try. In the v2 version Ingo explained that this change
+> is nonsense since kzalloc() is a perfectly usable interface and there
+> is no real overflow here.
+> 
+> Anyway, if we have the 2-factor form of the allocator, I think it is
+> a good practice to use it.
+> 
+> In this version I have updated the commit message to explain that
+> the code is obviusly safe in contrast with the last version where the
+> impression was given that there was a real overlow bug.
+> 
+> I hope this patch can be applied this time.
+> 
+> Regards,
+> Erick
+> ---
+>   arch/x86/events/amd/uncore.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 4ccb8fa483e6..61c0a2114183 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   				goto fail;
+>   
+>   			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> +			curr->events = kcalloc_node(pmu->num_counters,
+> +						    sizeof(*curr->events),
+>   						    GFP_KERNEL, node);
 
-I guess this is a style preference. I find the proposed easier to read.
-It also removes lines while doing it. :)
+Hi,
 
->  2. The original code has worked since introduced in 2012. Nobody has
->     touched it since, presumably it's fine.
+not related to your patch, but amd_uncore_ctx looks like a good 
+candidate for a flexible array.
 
-The code itself is fine unless you have a 32-bit system with a malicious
-card, so yeah, near zero risk.
+This would simplify allocation/freeing of the memory.
 
->  3. I don't have the hardware and thus no way of validating the proposed
->     changes.
+struct amd_uncore_ctx {
+	int refcnt;
+	int cpu;
+	struct hlist_node node;
+	struct perf_event *events[];
+};
 
-This is kind of an ongoing tension we have between driver code and
-refactoring efforts. And this isn't a case where we can show identical
-binary output, since this actively adds overflow checking via kcalloc()
-internals.
+Just my 2c,
 
-> So what is the benefit of me accepting this patch? We have had several
-> regressions in these conversions. Had one just last week, almost
-> identical in nature to the one at hand.
+CJ
 
-People are working through large piles of known "weak code patterns"
-with the goal of reaching 0 instances in the kernel. Usually this is for
-ongoing greater compiler flag coverage, but this particular one is
-harder for the compiler to warn on, so it's from Coccinelle patterns.
+>   			if (!curr->events) {
+>   				kfree(curr);
+> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   		uncore->num_pmus += group_num_pmus[gid];
+>   	}
+>   
+> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
+> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+>   			       GFP_KERNEL);
+>   	if (!uncore->pmus) {
+>   		uncore->num_pmus = 0;
 
-> I am all for fixing code which is undergoing active use and development.
-> But I really don't see the benefit of updating a legacy driver which
-> hasn't seen updates in ages. Why risk introducing a regression?
-
-I see a common pattern where "why risk introducing a regression?" gets
-paired with "we can't test this code". I'm really not sure what to do
-about this given how much the kernel is changing all the time.
-
-In this particular case, I guess all I can say is that it is a trivially
-correct change that uses a more robust API and more idiomatic allocation
-sizeof()s (i.e. use the sizeof() of what is being allocated, not a
-potentially disconnected struct name).
-
--Kees
-
--- 
-Kees Cook
