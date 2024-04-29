@@ -1,68 +1,70 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E33128394
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 17:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B47127B40
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 18:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714412723; cv=none; b=TyLB9cmWRosKnZqM/C2nszVMs+/OQYglPfV/GVlcySzks4d2K3rZbdfhfrhThhLUVSfFTsDC5odFNVt8Nk1rVcTO4e3sUVoEnO2lDBE8jJ4n3IRYTIlSbllGbegkj3r0U7Z3OFv4IGinUU+dmjtsXc9JRMljRnFMhptXZIm0j/U=
+	t=1714413739; cv=none; b=WJ/9HSj31grB5Pedi9fxsIitIVqw2jyf0Hzv4bpDutNWVElZoVzMFMjzt9O2HfGeh/5QeWhdivPnb8UBEGVf9EFX8sP/d6ztVtPEauBlOgS5ilYw/oRohvZuApQ7DMUKCzGiR7mb8DMdJDQ3kJcK/U4+21sLo078KHekawxJ19g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714412723; c=relaxed/simple;
-	bh=yC65xUsXdzGIMRm3JuMM7ViqdUqr5hPlZJ/3EznCieU=;
+	s=arc-20240116; t=1714413739; c=relaxed/simple;
+	bh=gL0+tSE89ipQmrWrMcQPeqHsy334PXTO2zO/FIm0++Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCRXsmRg+d0jBfT4zwV6MVJ6zNvcP4trroMyBggNcBKOq2IRfbE5ECeWpbuFfOxyHnBZjBxbhWqzjLaNDPiDAT0otDaUiXRK7Ql8+JaxE3lvX6bM4ptcUoi0ThC3mSZmb4S0NTNq8g0Hek9t+Hg97OWAIReC0ATNtUfxAqRDw+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ov084Mox; arc=none smtp.client-ip=209.85.210.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=ayrvA1794vdbtYQ8LRFSpj7g42ZkxsEqsGe1HCtnzklkNy9/H/wsPdUU4eGl6pjjqhJtBbSkK/cDPTdCbbirj7N36It1YFjQNKueucPJ493mTkRBx4Goq85Io2+K4DcwsCbXFnFYMwmGeVy/HGcUtf+F+7CsgKMC3PSdr07Bln0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=O8Eud+ar; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ov084Mox"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ecee1f325bso4290686b3a.2
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 10:45:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O8Eud+ar"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso29694755ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 11:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714412721; x=1715017521; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714413737; x=1715018537; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7G4KfVVL57asc6jdAgtmGDhKAJMXo7zTUk6MT6QrGQs=;
-        b=Ov084MoxZwzc68hma6vAnIR8uCO0cWqnShjwT6JUQeOskaP5u9lMmSKdobwGOfKmpk
-         Z1fIXOGeRFbrIpiQPsBF/ue70oWxkCy6vS0jvX6pe2exKXlXX4Ps9KADHxR7IlOtkeui
-         hXKLKj3VJZm3nwJYb67sGOlaK5iSmBXLe9+vI=
+        bh=6x8lt/QnOXVC9VHXwmVhKmm/O95+/YfUgqH6Mk9eoek=;
+        b=O8Eud+areymLQ6RfxXaAKYQHRxQwptIhRkSw8cmzyViLIs/0kO7x6313rCCkivWKtR
+         zq7LrwpZ2qfM2Xaooj4OwGaWbrrExAknNAQp/FJDpYK5mdPuH45vWjuSAwL1g9Vqdcjs
+         l6ZfM3jonFTNh7akYf3WwKcxyM/fTotV/SYB8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714412721; x=1715017521;
+        d=1e100.net; s=20230601; t=1714413737; x=1715018537;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7G4KfVVL57asc6jdAgtmGDhKAJMXo7zTUk6MT6QrGQs=;
-        b=FjQKK+jH40/oKtKKAiaEfrlAP9VjH6ShK+f3MFCqAlJQoSrT8wSbh0HSsyLTFM1Fqn
-         VghqXRkmvr+YvL7ZfQeB3ky75RfKLMn3qzNUg+pR72xwGbbyC0diZcnV95H9xfll13ip
-         8G5E0icAzhOFkgZn0UhLPnSkMKRFN4RIX37eXwBJrRyXlYn/0SYHf0TBtVwS9F9ltw7v
-         2CJKoEG3Qg1pkef34lCnq5bC+MfP7LFZMyVXGkhZ0DeB9kUATtDyg0Opg9TZkF7qPcpt
-         309u5Y5GRLC5Fao78Mgb8a/NYWuY/obO5M0e17uZumPwhxuIeHmOJzUFmBNTO7zjK9I6
-         NfUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXP2B6dk4iQGCyglrf/csMUwc/Ru0NvAizLmkQAjZrd1IWN7Si1wP3PsO8r+0RObdzJtHBP1Mt8RxjVxn+fnIwlPK5Ch1z/th/nBl7HsrZk
-X-Gm-Message-State: AOJu0Yz7ve4Hv4Au4/b+oRM6dw8lL85nRTJkJW9OetXrePFZo9j2cjg1
-	1fNvzT3l4AJ3b/mOYFdIYY/++J+g+TB30n5UHki8VaWcIrpZQjDfeHjBUX/krw==
-X-Google-Smtp-Source: AGHT+IFGc3/kOEV9/ewwKn9tq1l3GHLYlcfc71HQx0P4bfGndPtYd6mE9UF3L0lkmhnYTfEDthuc1g==
-X-Received: by 2002:a05:6a20:6a99:b0:1a5:bc5d:3c0a with SMTP id bi25-20020a056a206a9900b001a5bc5d3c0amr12084908pzb.61.1714412721543;
-        Mon, 29 Apr 2024 10:45:21 -0700 (PDT)
+        bh=6x8lt/QnOXVC9VHXwmVhKmm/O95+/YfUgqH6Mk9eoek=;
+        b=kVkw8ePnYCYxeGKUzcRhjO8NQGzgDM699PfSMeHQFY3ROJqvJXQ1RNuvhp7dbyOdCN
+         soYeyfFx/Se2Nb5cIzy2zYVicwLLzA5nr3J3CG4CWqIFo5fQdz2mCAViFp6qh5C2MGNO
+         EJR7t4UQzAbHMn0je1ueM+VIoyJ0IK4D+etyWnmoB1Jdda33toGd9aSOowX0MH/ovtb/
+         Q7ORn1rqBGNT5DLePF0ImoW+uvrMQ026El+KPW/z/xnNkEwCHhfYru5LECw6cjcqDUy/
+         VRDJqPImlvKr9Io2XBod92tFgr/xxfYzuW4vWH6RI2TRA+/iBuPNxy6E44NbhK8cQw2X
+         XWmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdIp4bQ5nFktN/FyQbQsAW6l08DfDZDIxaB+3ta1UrqZJt7ED/QTdfYGcplkLi8dA7r6qn+r/7h5XQFcyW0hZ8wvoPsIa23SRqZ3eoBrnn
+X-Gm-Message-State: AOJu0YzJ7ZvbQFLqu/9ERUygBTbWwZHtRyZoUEz+n8A+xuvKJ+SPelcy
+	T5xXP9EDVYuGv0yg8GEJzU7Wj/2VHxSk9SZcRcdMnHn8j3sw4hqhgweLKxzJYw==
+X-Google-Smtp-Source: AGHT+IEQfk9lL1aOUOkf//WozQck3LaV69Zfa5tOr6Oj+f6mKhEF0gk04YzTIOrNwRmpzUEbItTyoQ==
+X-Received: by 2002:a17:902:d487:b0:1e2:1df:449b with SMTP id c7-20020a170902d48700b001e201df449bmr14900464plg.69.1714413736574;
+        Mon, 29 Apr 2024 11:02:16 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x5-20020a170902a38500b001e2bfd40b86sm21028740pla.47.2024.04.29.10.45.20
+        by smtp.gmail.com with ESMTPSA id ix19-20020a170902f81300b001e895c9ec6asm20207649plb.152.2024.04.29.11.02.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 10:45:21 -0700 (PDT)
-Date: Mon, 29 Apr 2024 10:45:20 -0700
+        Mon, 29 Apr 2024 11:02:16 -0700 (PDT)
+Date: Mon, 29 Apr 2024 11:02:15 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Erick Archer <erick.archer@outlook.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>, linux-sctp@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Justin Stitt <justinstitt@google.com>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sctp: prefer struct_size over open coded arithmetic
-Message-ID: <202404291044.E9A6A13@keescook>
-References: <PAXPR02MB724871DB78375AB06B5171C88B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+Subject: Re: [PATCH] tty: rfcomm: prefer struct_size over open coded
+ arithmetic
+Message-ID: <202404291047.B08E8BE759@keescook>
+References: <AS8PR02MB723725E0069F7AE8F64E876E8B142@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -71,44 +73,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PAXPR02MB724871DB78375AB06B5171C88B152@PAXPR02MB7248.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB723725E0069F7AE8F64E876E8B142@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Sat, Apr 27, 2024 at 07:23:36PM +0200, Erick Archer wrote:
+On Sun, Apr 28, 2024 at 03:29:34PM +0200, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1][2].
 > 
-> As the "ids" variable is a pointer to "struct sctp_assoc_ids" and this
-> structure ends in a flexible array:
+> As the "dl" variable is a pointer to "struct rfcomm_dev_list_req" and
+> this structure ends in a flexible array:
 > 
-> struct sctp_assoc_ids {
-        __u32           gaids_number_of_ids;
-> 	sctp_assoc_t	gaids_assoc_id[];
+> struct rfcomm_dev_list_req {
+        u16      dev_num;
+> 	struct   rfcomm_dev_info dev_info[];
 > };
 
-This could gain __counted_by:
-
-diff --git a/include/uapi/linux/sctp.h b/include/uapi/linux/sctp.h
-index b7d91d4cf0db..836173e73401 100644
---- a/include/uapi/linux/sctp.h
-+++ b/include/uapi/linux/sctp.h
-@@ -1007,7 +1007,7 @@ enum sctp_sstat_state {
-  */
- struct sctp_assoc_ids {
- 	__u32		gaids_number_of_ids;
--	sctp_assoc_t	gaids_assoc_id[];
-+	sctp_assoc_t	gaids_assoc_id[] __counted_by(gaids_number_of_ids);
- };
- 
- /*
+Similar to before, this should gain __counted_by(), and the logic using
+dev_info[] refactored slightly to gain coverage.
 
 > 
 > the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the calculation "size + size * count" in
-> the kmalloc() function.
+> do the arithmetic instead of the calculation "size + count * size" in
+> the kzalloc() and copy_to_user() functions.
 > 
-> Also, refactor the code adding the "ids_size" variable to avoid sizing
-> twice.
-> 
+> At the same time remove the "size" variable as it is no longer needed.
 > This way, the code is more readable and safer.
 > 
 > This code was detected with the help of Coccinelle, and audited and
@@ -148,40 +135,82 @@ index b7d91d4cf0db..836173e73401 100644
 > Regards,
 > Erick
 > ---
->  net/sctp/socket.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  net/bluetooth/rfcomm/tty.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
 > 
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index e416b6d3d270..64196b1dce1d 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -7119,6 +7119,7 @@ static int sctp_getsockopt_assoc_ids(struct sock *sk, int len,
->  	struct sctp_sock *sp = sctp_sk(sk);
->  	struct sctp_association *asoc;
->  	struct sctp_assoc_ids *ids;
-> +	size_t ids_size;
->  	u32 num = 0;
+> diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+> index 69c75c041fe1..bdc64c8fb85b 100644
+> --- a/net/bluetooth/rfcomm/tty.c
+> +++ b/net/bluetooth/rfcomm/tty.c
+> @@ -504,7 +504,7 @@ static int rfcomm_get_dev_list(void __user *arg)
+>  	struct rfcomm_dev *dev;
+>  	struct rfcomm_dev_list_req *dl;
+>  	struct rfcomm_dev_info *di;
+> -	int n = 0, size, err;
+> +	int n = 0, err;
+>  	u16 dev_num;
 >  
->  	if (sctp_style(sk, TCP))
-> @@ -7131,11 +7132,11 @@ static int sctp_getsockopt_assoc_ids(struct sock *sk, int len,
->  		num++;
->  	}
->  
-> -	if (len < sizeof(struct sctp_assoc_ids) + sizeof(sctp_assoc_t) * num)
-> +	ids_size = struct_size(ids, gaids_assoc_id, num);
-> +	if (len < ids_size)
+>  	BT_DBG("");
+> @@ -515,9 +515,7 @@ static int rfcomm_get_dev_list(void __user *arg)
+>  	if (!dev_num || dev_num > (PAGE_SIZE * 4) / sizeof(*di))
 >  		return -EINVAL;
 >  
-> -	len = sizeof(struct sctp_assoc_ids) + sizeof(sctp_assoc_t) * num;
+> -	size = sizeof(*dl) + dev_num * sizeof(*di);
+
+Luckily, "size" can't overflow. Max value seems to be around 1834980,
+but I'd rather this be in struct_size() as you have it below. Good!
+
 > -
-> +	len = ids_size;
->  	ids = kmalloc(len, GFP_USER | __GFP_NOWARN);
->  	if (unlikely(!ids))
+> -	dl = kzalloc(size, GFP_KERNEL);
+> +	dl = kzalloc(struct_size(dl, dev_info, dev_num), GFP_KERNEL);
+>  	if (!dl)
 >  		return -ENOMEM;
 
-But yes, this looks fine to me.
+When you add __counted_by, this will need to be added here:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+	dl->dev_num = dev_num;
+
+
+Continuing...
+
+        di = dl->dev_info;
+	...
+        list_for_each_entry(dev, &rfcomm_dev_list, list) {
+                if (!tty_port_get(&dev->port))
+                        continue;
+                (di + n)->id      = dev->id;
+                (di + n)->flags   = dev->flags;
+                (di + n)->state   = dev->dlc->state;
+                (di + n)->channel = dev->channel;
+                bacpy(&(di + n)->src, &dev->src);
+                bacpy(&(di + n)->dst, &dev->dst);
+                tty_port_put(&dev->port);
+                if (++n >= dev_num)
+                        break;
+        }
+
+Hmpf. I'd rather this code use di[n] instead of (di + n) -- that's much
+more idiomatic.
+
+> @@ -542,9 +540,7 @@ static int rfcomm_get_dev_list(void __user *arg)
+>  	mutex_unlock(&rfcomm_dev_lock);
+>  
+>  	dl->dev_num = n;
+
+And this reset of dl->dev_num can stay as-is, since it's reducing the
+number of valid entries, in can &rfcomm_dev_list is smaller than the
+dev_num count userspace offered.
+
+> -	size = sizeof(*dl) + n * sizeof(*di);
+> -
+> -	err = copy_to_user(arg, dl, size);
+> +	err = copy_to_user(arg, dl, struct_size(dl, dev_info, n));
+>  	kfree(dl);
+>  
+
+Otherwise looks good!
+
+-Kees
 
 -- 
 Kees Cook
