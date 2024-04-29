@@ -1,147 +1,172 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7CEAC2;
-	Mon, 29 Apr 2024 09:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB3B1E4BE
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 16:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714384117; cv=none; b=et4LcncpJLClI7XZP4GAY+YrXhU0IHVny5ZndivIfXoSyUhm6Hkt/CUAfqnqm0Z6znZoV8X6zMD14tvTY8JTmiGBBFsHkd9UjrdvOjfynNrR/HOa5UV2IsdowUSPQ5dVQBGBU7Hq1wCfSa7hgDrvtKJA7Dza6oJ+7e0xCUPEQic=
+	t=1714408715; cv=none; b=F/n7FpA/BGi4jhymQRrkA0nx3P0GwWRJNwmNM/94Ji0aozHPfhAsAy/WiAg/pC6nQO13VJMEIL+rN9JAZQMXcj5DOvNUkxnbgYcg4su97PuDd72l9AmIsTxOjRKIeEfy/uSxpNza6AWrATJS4H2VmxvjRFypRPDJPFOe6KKDIJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714384117; c=relaxed/simple;
-	bh=eOQoFD2Q1RfOcsu5iO/K4iGBJCStR6G+ZsM+imLU3t4=;
+	s=arc-20240116; t=1714408715; c=relaxed/simple;
+	bh=zzQLDSf8QCqzlsm92G/iDCAL1afFjJirvI3oBkxEXl8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHlOSVCRZv8lmIgFhso1S12E/Dr61l2VU/aTPZf4gjg2fg+HXs0HnJQf/w1h9/a4dnOXS3tpyNZdknwiuh9Ggl2X/4VYA8IOnvWPl808vjn6iEsau1aV0ouD5tDMq/vTMpV5BZ9+HbJFmaUJl4ISFay+mBBHXH4aUdTwTQF6/Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kg9UUvOf; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fQr7y+Fy00zhXM0hjn5QdNZCgtrqHJqMt1KFf17o+4hitm4Gmx2HKC5xO2Sa6vYA3+MqvlM/j+gjGmcsPNH8Xp4MJeI2AwGnicw8234qafjrp6ffAjAZHbygX4BwfZoRo+tx03WWyep2Wtqb75jY2HAt/ut1yTuPqwnBmYznv2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LEhubX+9; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kg9UUvOf"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43T9WcRr023175;
-	Mon, 29 Apr 2024 09:47:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=pp1;
- bh=Kn2/uMMJ4m7IZDO8WlgsPqO7vUsAlVouDdMvBgTuG6Q=;
- b=Kg9UUvOfIY+q0ndE7ZECmZZUdA61ZCkJRFtD9wLCjYzo6fe8LGiqgmj/OaQd5I/iEeGT
- h1W12UFRvhBs0Ojrxq2EVahg4SwzhBVbMh+nl7Xnt0KphpPc+1K4uJnLB1ltR+O9/J8Y
- xH2aBPNbeoLf7rIVjTmAK85pN4JRaPC9PScCooRYa7ChiJY29YfixJaL//aFd9303wQR
- GZQxdsEVeB2nF62y0IT3RUjuxSeOIjIAGLlEpPQHiihzSala+ltUzs1I4eJF+yCxcsu9
- xwGFkZf6AwHS79UZe7yymFDc9jL+Zte2Za8lJWgzOlYfHYZrwUSEHHijG4bCs204Im4A kw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:55 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43T9ltmx016519;
-	Mon, 29 Apr 2024 09:47:55 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:54 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43T7DaXf001450;
-	Mon, 29 Apr 2024 09:47:53 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsbptppem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43T9loYx26542522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 09:47:52 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0556520040;
-	Mon, 29 Apr 2024 09:47:50 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B4E6220043;
-	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.101])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
-Date: Mon, 29 Apr 2024 11:47:47 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-        Joel Granados <j.granados@samsung.com>,
-        Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>,
-        Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        bridge@lists.linux.dev, lvs-devel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org,
-        apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 11/11] sysctl: treewide: constify the ctl_table
- argument of handlers
-Message-ID: <20240429094747.29046-G-hca@linux.ibm.com>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LEhubX+9"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so25488045ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 09:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714408713; x=1715013513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oWPJdB/cSlyp73RwVZm1H6IMvyasz+OHn5rJwfM1czU=;
+        b=LEhubX+9Alqj/OCVgnQgK0olQchR1Iu6SqvPor+QeQex7v6Sffv9Dq8znnlJjqjhjt
+         Oj4XxzimahDvZ5Wx3c59dLo3ygLh6TIF8RY9EnY8xxS1wI9AbIdG303M/O4HCNMUEx8K
+         whNQprGHEib09Bl/qQdmN4q8ism14AGC3nLRk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714408713; x=1715013513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oWPJdB/cSlyp73RwVZm1H6IMvyasz+OHn5rJwfM1czU=;
+        b=vtRIPbeZNmWZ6gQaj9cq+iLjkZIhS3Pj+CwbsDzIRAxy21IYkSk8/Y6m3jzyr01lC/
+         i8W6Oh7d7WgXm1TWvrULvpoyXRK0kBhEAoPk1EW2puPZHNsHTbZRR613kpiN2PySoJkH
+         sW5tgzcvrLYjbJQg/oGMUactNoUYBavF0Sama1hvTU0VK0kbfTIluXqmcQ7cvalm7NiJ
+         qNmYEwVPo5jq6Wg/TY7IvdiUa18oCjXjQy1mwhIAOzPKCrtX1sA/D29uXlM4I+Z7sp6j
+         LFRttm6RdaT8QwrFQOowaC4v4Un7Rp0/deOjB0GO5njJW4UvqTd9CPT3WzJvKfmdl3gv
+         Dkkw==
+X-Forwarded-Encrypted: i=1; AJvYcCXR3Y6K1HDMLEcduRqYlN2JJGgK1rg5m5h/Jochl0XGSrz2+QQVUma0oB3toocWPI6PbvpIRbSlnkSRk7z+RLozT9VxVT18XmgJ5eDh/Kkr
+X-Gm-Message-State: AOJu0YyVxeYh1TJ4e6IoIi47ShvUcyoheh050CrHd5IqYl7eMN4z/kLY
+	DovuB/VQwyC198VgIwrXAwPUDnIRiEOiqSh4R+mYrDDECyii6jD4ic7wPREfKA==
+X-Google-Smtp-Source: AGHT+IH/1T9jHNNNCaTcEgyVwTWxxXD0FLNfQwEJ2iZeJ96Js8aCUDwFpJsdmhmvt08FTazyJSQEiA==
+X-Received: by 2002:a17:902:cccb:b0:1ea:f7d4:2327 with SMTP id z11-20020a170902cccb00b001eaf7d42327mr15393377ple.9.1714408713045;
+        Mon, 29 Apr 2024 09:38:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w8-20020a170902a70800b001dd82855d47sm20510893plq.265.2024.04.29.09.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 09:38:32 -0700 (PDT)
+Date: Mon, 29 Apr 2024 09:38:31 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] rpmsg: glink: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <202404290937.C22567C1@keescook>
+References: <ZgG8bbEzhmX5nGRE@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dsJabyKjD5wmo-a4UVf9qexuuOQkOoCK
-X-Proofpoint-GUID: 7SlQVN0HjcUbQBl5eVSaH1VEy2oE_0-m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_07,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404290061
+In-Reply-To: <ZgG8bbEzhmX5nGRE@neat>
 
-On Tue, Apr 23, 2024 at 09:54:46AM +0200, Thomas Weiﬂschuh wrote:
-> Adapt the proc_hander function signature to make it clear that handlers
-> are not supposed to modify their ctl_table argument.
+On Mon, Mar 25, 2024 at 12:03:25PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
 > 
-> This is a prerequisite to moving the static ctl_table structs into
-> rodata.
-> By migrating all handlers at once a lengthy transition can be avoided.
+> There is currently an object (`msg`) in multiple structures that
+> contains a flexible structure (`struct glink_msg`), for example:
 > 
-> The patch was mostly generated by coccinelle with the following script:
+> struct glink_defer_cmd {
+>         ...
 > 
->     @@
->     identifier func, ctl, write, buffer, lenp, ppos;
->     @@
+>         struct glink_msg msg;
+>         u8 data[];
+> };
 > 
->     int func(
->     - struct ctl_table *ctl,
->     + const struct ctl_table *ctl,
->       int write, void *buffer, size_t *lenp, loff_t *ppos)
->     { ... }
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of another structure, we use the `__struct_group()` helper
+> to separate the flexible array from the rest of the members in the
+> flexible structure:
 > 
-> In addition to the scripted changes some other changes are done:
+> struct glink_msg {
+>         __struct_group(glink_msg_hdr, hdr, __packed,
 > 
-> * the typedef proc_handler is adapted
+>         ... the rest of members
 > 
-> * the prototypes of non-static handler are adapted
+>         );
+>         u8 data[];
+> } __packed;
 > 
-> * kernel/seccomp.c:{read,write}_actions_logged() and
->   kernel/watchdog.c:proc_watchdog_common() are adapted as they need to
->   adapted together with the handlers for type-consistency reasons
+> With the change described above, we now declare objects of the type of
+> the tagged struct, in this case `struct glink_msg_hdr`, without
+> embedding flexible arrays in the middle of other structures:
 > 
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> struct glink_defer_cmd {
+>         ...
+> 
+>         struct glink_msg_hdr msg;
+>         u8 data[];
+> };
+> 
+> Also, use `container_of()` to retrieve a pointer to the flexible structure.
+> 
+> We also use the `DEFINE_RAW_FLEX()` helper for an in-stack definition of
+> a flexible structure where the size of the flexible-array member is known
+> at compile-time.
+> 
+> So, with these changes, fix the following warnings:
+> drivers/rpmsg/qcom_glink_native.c:51:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:459:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:846:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:968:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rpmsg/qcom_glink_native.c:1380:34: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/rpmsg/qcom_glink_native.c | 38 ++++++++++++++++---------------
+>  1 file changed, 20 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 82d460ff4777..878e3461bce1 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -30,9 +30,12 @@
+>  #define RPM_GLINK_CID_MAX	65536
+>  
+>  struct glink_msg {
+> -	__le16 cmd;
+> -	__le16 param1;
+> -	__le32 param2;
+> +	/* New members must be added within the __struct_group() macro below. */
+> +	__struct_group(glink_msg_hdr, hdr, __packed,
+> +		__le16 cmd;
+> +		__le16 param1;
+> +		__le32 param2;
+> +	);
+>  	u8 data[];
+>  } __packed;
+>  
+> @@ -48,7 +51,7 @@ struct glink_msg {
+>  struct glink_defer_cmd {
+>  	struct list_head node;
+>  
+> -	struct glink_msg msg;
+> +	struct glink_msg_hdr msg;
+>  	u8 data[];
+>  };
 
-...
+Instead of this change (and the container_of() uses below), I think you
+can just simply drop "data" here. I don't see anything using it except
+the struct_size()s which can all change their "data" argument to
+msg.data. e.g.:
 
->  arch/s390/appldata/appldata_base.c        | 10 ++---
->  arch/s390/kernel/debug.c                  |  2 +-
->  arch/s390/kernel/topology.c               |  2 +-
->  arch/s390/mm/cmm.c                        |  6 +--
+-       dcmd = kzalloc(struct_size(dcmd, data, extra), GFP_ATOMIC);
++       dcmd = kzalloc(struct_size(dcmd, msg.data, extra), GFP_ATOMIC);
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
+With those changed, I think this patch becomes more readable.
+
+-Kees
+
+-- 
+Kees Cook
