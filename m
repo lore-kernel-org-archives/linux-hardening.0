@@ -1,177 +1,93 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0A383A15
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 17:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5C08626D
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 17:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714411219; cv=none; b=uaYrfkNb45T630FDhQODNIZr/4DzmBiV/F0OGhI8667h6Od9HaKDP1XuH6Uk3ujzsaV0L8/+4Q0TLxoD5sGEdc4vJ1n+39pVAmneA4jUQJOboZTjI9ZQS8LeJ1Sg6WNiKbzIb/02a6d6JWzYPfcNH5wBf+yCijsBzFHLv2Dadg4=
+	t=1714411353; cv=none; b=H7OE5zBfOnH5lzETfJRusytz0qONVcMiAxnQmdzTQkhLamcooqePaoeH123S00sDkfp9dES2vY+L69M2JW4kxW2snSjUfkp/F70gtllAo3Cv/641I/rRmeJnpbSdwjTeg6q5805bqGKE09CPPqE1cziEtsH8RrKVrtN/xw0Q3f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714411219; c=relaxed/simple;
-	bh=PerO1u8TUFFLtW9JThabyUwyutH/yFT8/JHbZmdp7pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZq1cYs2IUZ/epsz/UXuLgn/Fhh0k+W+URdmPiD19BVhNsZOEL2qMrSO9/54v9y1jgLCj92SgnbNgB42n/1/P2viC4txcxPPPSRcBLRud/O4MRGTNIPAQW82mg72h83fcPqMzgITe84Uq2HkC+JgDkO5cgrtt04T3N5+5/9fOxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Urs14xf6; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1714411353; c=relaxed/simple;
+	bh=VLGmItW5ga3i2vucUGKN+/K2d9+so6B6J6fiy3vkgXk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TaBfIf0aZIdf0fGyZw6w32ldweauQPR8ZENNvyIoZt3YlBJ/GKrJc4b76QtroMRnYEsMcDmAWPXvqAsGuZTBN5huXV9ZBgrezu8dUWSCjYsNGdDASRhudlC6oWsmLIgAQbyCS3QoQg3UmGg8WOUqIYt9M+BAvt87sdNH1QtrVa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eVR+i43j; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Urs14xf6"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e834159f40so37807285ad.2
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 10:20:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eVR+i43j"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed5109d924so4105630b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 10:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714411217; x=1715016017; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CS/SHezQ6Pdhl4ygxfsawlJI+46WSdClgCk8/mnu0OM=;
-        b=Urs14xf60+xvQlm5oNz+3ISS6+zc0/AF7w3iBoiy19iAD5JBmFZdyrcTwEY9SrY++P
-         qw6K4Qt9CnbLwPsD+dk0uRjFT5rP2TSAFKoywG7QjeDNJc+rd6sI72/hELyNxkDZMoc1
-         rq4r19XDWuvJQO8zuecGr/6aM5cjn0iLvevTs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714411217; x=1715016017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1714411351; x=1715016151; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CS/SHezQ6Pdhl4ygxfsawlJI+46WSdClgCk8/mnu0OM=;
-        b=JKNIbTkW58/YGINoHlAulJYzBENiEhrBQYkG1t4OTXhD8+vWqibjd6/RcyLp9sUvsE
-         LbpHJwhocFXNj0oJk2cSCQCyAy42s2ZRTt6VQ80YpxC42z0drcUhulcjOySZCRrwFmtW
-         SK7TLiiMR8ymcIU3/8xpIbJMS3TfFBCsYE1rKS5NahtKggCGoSZ17at3F4ojAVySYBOr
-         XCB/+eS7cLNLsttFEepHxrXSnxAtPtvKfRpvkOfMUVADH5+76LHaZ53GNUcrqNDry00L
-         y2nVHrEsfNVa7eVVBZXLt4xCF1aOvMB5lbmpVOq77lkinpHhU4pBWPXO5BF/Jj6JIBVy
-         8MHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUB0zhAjz5lbLEVvEByPKtNs1NhippCP/f43PRZpaWGEebxe2zViJ5yLNUohse63qMcfYbcdicNrtl+IJ5N39HLhovnfKNiRsECeqbVcp/O
-X-Gm-Message-State: AOJu0YzmU4DUsdp9mcCxWAyyArQpgCLe4bdAho5G8devOEP5AdkpT16p
-	Ev9FcMxVZS6K4aONtRJmuOfQyx4nCQbcxAq/zOz+bF7qAoPXPlQR6PBi90Mfew==
-X-Google-Smtp-Source: AGHT+IGL/FwAu2x7/qu+PFVMP/cUBvweF6HoXwCVlcpRa0qZiTVDSAwktllDvjj9Gdir3XxgdpFiBA==
-X-Received: by 2002:a17:902:ecc4:b0:1e5:9da5:a799 with SMTP id a4-20020a170902ecc400b001e59da5a799mr14449796plh.6.1714411216882;
-        Mon, 29 Apr 2024 10:20:16 -0700 (PDT)
+        bh=nrsQtT6vqpidE7jqQvIsXqGG97ueXdTLbeNWZ9MIj88=;
+        b=eVR+i43jKsIETmBHxBGyttpficd1BdwjIx36z2jtTC+/CvH1x4ZV7TrQFmiYUx7Xl/
+         yCrGCr8Ia29y6zHkrwdLh4wtpNNn+J7PJWNjC0nDtX/tZaaJ6XCt8HIkvPeG/UlpEK89
+         scV6sc8TzaH/O0/VGqYjdj9ALfTNDX0KvkxnM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714411351; x=1715016151;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nrsQtT6vqpidE7jqQvIsXqGG97ueXdTLbeNWZ9MIj88=;
+        b=oqeIZ0VzQksfZi3cTEzJCyUdCH/Pk4U5IfLp/9gDje4CR8K004vlRtCUpDd5FKJKle
+         CunIucM0GGYTPbdinaEc981aFKjkRyZkkGH7vTDxuR5nP3RmBjGPrXdOqGJv7T1GY6wE
+         DSNZ0ZLLZVjgJSZmVcHSO6u/d0hvenH0DSlkKQ2qgV3ywTVhph+maiKaGJRYIGRWDMpQ
+         CQoWZiTP3u7SSLiWn4czegT5oL174IbHH3SG+3tD6Hf5/iMDW1GBnZTLCgxx0AygWWDT
+         +t528VKgc2pRN1dt+TNOgaxZoidk7vAv5HT7H0Oy0CIz2adZzkrSCNdqwDcg2STUk7nk
+         zVWA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCRoJ1XIUHYva6pVa5wsYZUd6M9wyKMcYTgGGyoHwiaoI2oV3M8tW4b7BBKgdjP+KHFK72HZ4XwBY6uAQR269cE0xgMA/5+bixzvfafMFm
+X-Gm-Message-State: AOJu0YxOFmM4czJmN0CHgvag1Aiqn6ULeMhFUx52rt/9/0BSDKQJFOrI
+	a5eyXPz//GO0vWZgjN5nutKUvscIwAtctscYPchafIWYzr1bPgQcKt/8s0YgWw==
+X-Google-Smtp-Source: AGHT+IF/wveFnNgLqoHoltkqRov7qZYoAWhi4TxR94HT+5mZ1aDoYcZO+Oavxv5LvbLOtyFNePXXJA==
+X-Received: by 2002:a05:6a20:d80f:b0:1af:3d3f:83f1 with SMTP id iv15-20020a056a20d80f00b001af3d3f83f1mr7142861pzb.44.1714411351403;
+        Mon, 29 Apr 2024 10:22:31 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e11-20020a170902784b00b001e0bae4490fsm21002042pln.154.2024.04.29.10.20.16
+        by smtp.gmail.com with ESMTPSA id s4-20020a17090aa10400b002a54632931bsm21052900pjp.23.2024.04.29.10.22.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 10:20:16 -0700 (PDT)
-Date: Mon, 29 Apr 2024 10:20:15 -0700
+        Mon, 29 Apr 2024 10:22:31 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: linux-kernel@vger.kernel.org,
+	Justin Stitt <justinstitt@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
-Message-ID: <202404291019.5AC903A@keescook>
-References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Subject: Re: [PATCH] init: replace deprecated strncpy with strscpy_pad
+Date: Mon, 29 Apr 2024 10:22:28 -0700
+Message-Id: <171441134708.2359415.3239349305778672892.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240402-strncpy-init-do_mounts-c-v1-1-e16d7bc20974@google.com>
+References: <20240402-strncpy-init-do_mounts-c-v1-1-e16d7bc20974@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 30, 2024 at 05:17:53PM +0100, Erick Archer wrote:
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
+On Tue, 02 Apr 2024 20:39:49 +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Also, it is preferred to use sizeof(*pointer) instead of
-> sizeof(type) due to the type of the variable can change and
-> one needs not change the former (unlike the latter).
+> data_page wants to be NUL-terminated and NUL-padded, use strscpy_pad to
+> provide both of these. data_page no longer awkwardly relies on
+> init_mount to perform its NUL-termination, although that sanity check is
+> left unchanged.
 > 
-> Link: https://github.com/KSPP/linux/issues/162
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
-> ---
-> Changes in v2:
-> - Update the changelog text describing the sizeof()
->   changes (Gustavo A. R. Silva)
-> 
-> Changes in v3:
-> - Add the "Reviewed-by:" tag.
-> - Rebase against linux-next.
-> 
-> Version 1:
-> Link: https://lore.kernel.org/linux-hardening/20240112182603.11048-1-erick.archer@gmx.com/
-> 
-> Version 2:
-> Link: https://lore.kernel.org/linux-hardening/20240114102400.3816-1-erick.archer@gmx.com/
-> 
-> Hi everyone,
-> 
-> This patch seems to be lost. Gustavo reviewed it on January 15, 2024
-> but the patch has not been applied since.
+> [...]
 
-This looks correct to me. I can pick this up if no one else snags it?
+Applied to for-next/hardening, thanks!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+[1/1] init: replace deprecated strncpy with strscpy_pad
+      https://git.kernel.org/kees/c/fa6475acde9a
 
--Kees
-
-> 
-> Thanks,
-> Erick
-> ---
->  drivers/scsi/csiostor/csio_init.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-> index d649b7a2a879..d72892e44fd1 100644
-> --- a/drivers/scsi/csiostor/csio_init.c
-> +++ b/drivers/scsi/csiostor/csio_init.c
-> @@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
->  	struct csio_lnode **lnode_list;
->  	int cur_cnt = 0, ii;
->  
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->  	if (!lnode_list) {
->  		csio_err(hw, "Failed to allocate lnodes_list");
->  		return;
-> @@ -737,8 +736,7 @@ csio_lnodes_unblock_request(struct csio_hw *hw)
->  	struct csio_lnode **lnode_list;
->  	int cur_cnt = 0, ii;
->  
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->  	if (!lnode_list) {
->  		csio_err(hw, "Failed to allocate lnodes_list");
->  		return;
-> @@ -775,8 +773,7 @@ csio_lnodes_block_by_port(struct csio_hw *hw, uint8_t portid)
->  	struct csio_lnode **lnode_list;
->  	int cur_cnt = 0, ii;
->  
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->  	if (!lnode_list) {
->  		csio_err(hw, "Failed to allocate lnodes_list");
->  		return;
-> @@ -816,8 +813,7 @@ csio_lnodes_unblock_by_port(struct csio_hw *hw, uint8_t portid)
->  	struct csio_lnode **lnode_list;
->  	int cur_cnt = 0, ii;
->  
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->  	if (!lnode_list) {
->  		csio_err(hw, "Failed to allocate lnodes_list");
->  		return;
-> @@ -855,8 +851,7 @@ csio_lnodes_exit(struct csio_hw *hw, bool npiv)
->  	struct csio_lnode **lnode_list;
->  	int cur_cnt = 0, ii;
->  
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->  	if (!lnode_list) {
->  		csio_err(hw, "lnodes_exit: Failed to allocate lnodes_list.\n");
->  		return;
-> -- 
-> 2.25.1
-> 
+Take care,
 
 -- 
 Kees Cook
+
