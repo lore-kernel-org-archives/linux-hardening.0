@@ -1,93 +1,106 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5C08626D
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 17:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6458595F;
+	Mon, 29 Apr 2024 17:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714411353; cv=none; b=H7OE5zBfOnH5lzETfJRusytz0qONVcMiAxnQmdzTQkhLamcooqePaoeH123S00sDkfp9dES2vY+L69M2JW4kxW2snSjUfkp/F70gtllAo3Cv/641I/rRmeJnpbSdwjTeg6q5805bqGKE09CPPqE1cziEtsH8RrKVrtN/xw0Q3f0=
+	t=1714411560; cv=none; b=A4mrSFyh7V4m78UOdEPyn8XNll9ruAbR9lgEVMpfda1nRrFBhZiWFCJQDfs7J89kBaIYq/GR03WXGOeF7R82Hrznzsxj/0bFuyHVNJuj1I5sbQpMUXj++Ax8reGo/2P8dheKRAKfJN8RwtNl4bQjdfWgAlQJabO2XtfQ5OhR65s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714411353; c=relaxed/simple;
-	bh=VLGmItW5ga3i2vucUGKN+/K2d9+so6B6J6fiy3vkgXk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TaBfIf0aZIdf0fGyZw6w32ldweauQPR8ZENNvyIoZt3YlBJ/GKrJc4b76QtroMRnYEsMcDmAWPXvqAsGuZTBN5huXV9ZBgrezu8dUWSCjYsNGdDASRhudlC6oWsmLIgAQbyCS3QoQg3UmGg8WOUqIYt9M+BAvt87sdNH1QtrVa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eVR+i43j; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714411560; c=relaxed/simple;
+	bh=yWh+/d7hvYOisNptTdkyCNIRiL/pEpjcNGp7wzwrlF4=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=BDQUZcAAJ+8sLamlicDp/2VRnByGtjkHb4SjxJqfPyXI+ur2XSoWbVQ9cX/KIzPucrurdULySObBCLdVJd+L/MzmcMYNHol/dpQHHLtsFt8afaYjgLEoVppdpf1X5I4wSe23pm7mNIeHzvKDNKhsj/wc9s3tBlD9mAOd19FJg6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmnSZgx7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eVR+i43j"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed5109d924so4105630b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 10:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714411351; x=1715016151; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nrsQtT6vqpidE7jqQvIsXqGG97ueXdTLbeNWZ9MIj88=;
-        b=eVR+i43jKsIETmBHxBGyttpficd1BdwjIx36z2jtTC+/CvH1x4ZV7TrQFmiYUx7Xl/
-         yCrGCr8Ia29y6zHkrwdLh4wtpNNn+J7PJWNjC0nDtX/tZaaJ6XCt8HIkvPeG/UlpEK89
-         scV6sc8TzaH/O0/VGqYjdj9ALfTNDX0KvkxnM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714411351; x=1715016151;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nrsQtT6vqpidE7jqQvIsXqGG97ueXdTLbeNWZ9MIj88=;
-        b=oqeIZ0VzQksfZi3cTEzJCyUdCH/Pk4U5IfLp/9gDje4CR8K004vlRtCUpDd5FKJKle
-         CunIucM0GGYTPbdinaEc981aFKjkRyZkkGH7vTDxuR5nP3RmBjGPrXdOqGJv7T1GY6wE
-         DSNZ0ZLLZVjgJSZmVcHSO6u/d0hvenH0DSlkKQ2qgV3ywTVhph+maiKaGJRYIGRWDMpQ
-         CQoWZiTP3u7SSLiWn4czegT5oL174IbHH3SG+3tD6Hf5/iMDW1GBnZTLCgxx0AygWWDT
-         +t528VKgc2pRN1dt+TNOgaxZoidk7vAv5HT7H0Oy0CIz2adZzkrSCNdqwDcg2STUk7nk
-         zVWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCRoJ1XIUHYva6pVa5wsYZUd6M9wyKMcYTgGGyoHwiaoI2oV3M8tW4b7BBKgdjP+KHFK72HZ4XwBY6uAQR269cE0xgMA/5+bixzvfafMFm
-X-Gm-Message-State: AOJu0YxOFmM4czJmN0CHgvag1Aiqn6ULeMhFUx52rt/9/0BSDKQJFOrI
-	a5eyXPz//GO0vWZgjN5nutKUvscIwAtctscYPchafIWYzr1bPgQcKt/8s0YgWw==
-X-Google-Smtp-Source: AGHT+IF/wveFnNgLqoHoltkqRov7qZYoAWhi4TxR94HT+5mZ1aDoYcZO+Oavxv5LvbLOtyFNePXXJA==
-X-Received: by 2002:a05:6a20:d80f:b0:1af:3d3f:83f1 with SMTP id iv15-20020a056a20d80f00b001af3d3f83f1mr7142861pzb.44.1714411351403;
-        Mon, 29 Apr 2024 10:22:31 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s4-20020a17090aa10400b002a54632931bsm21052900pjp.23.2024.04.29.10.22.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 10:22:31 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: linux-kernel@vger.kernel.org,
-	Justin Stitt <justinstitt@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] init: replace deprecated strncpy with strscpy_pad
-Date: Mon, 29 Apr 2024 10:22:28 -0700
-Message-Id: <171441134708.2359415.3239349305778672892.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240402-strncpy-init-do_mounts-c-v1-1-e16d7bc20974@google.com>
-References: <20240402-strncpy-init-do_mounts-c-v1-1-e16d7bc20974@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmnSZgx7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FD4C113CD;
+	Mon, 29 Apr 2024 17:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714411559;
+	bh=yWh+/d7hvYOisNptTdkyCNIRiL/pEpjcNGp7wzwrlF4=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=kmnSZgx7B6mABLxeTfo7qZPdx7Zg01FhKCmZFeq+mO65FpNtQOWF5WSyTgrt++0PH
+	 UAiI8A2ZYjX1DgKi4TXYTKBjdbNT4rHed87e/Q+zyvH3+XRYNcy/7WZm5vVt1SJRsO
+	 EROE4UE9cCw8cznhvY4S6D5jD63afzq/oSG35bcl3Ucgxd+rsJIO84Stex8WuPmGAk
+	 iKOUpFFgONj/mAxZdAswAwlc8ANXbdb0Ou3uxFQk8YMvavxTrRtFyzp819TbJCL6ci
+	 gOYMxyzxYYtKv6wuls9t6fIX4mrOFmAWqn6Ymtz4FkEnKZGaRer8MYEGWdwiHyBIgk
+	 646Y1es6OazVg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,  Jeff Johnson
+ <quic_jjohnson@quicinc.com>,  linux-wireless@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] wifi: wil6210: wmi: Use __counted_by() in
+ struct wmi_set_link_monitor_cmd and avoid -Wfamnae warning
+References: <ZgSTCmdP+omePvWg@neat>
+	<171222554691.1806092.8730005090791383928.kvalo@kernel.org>
+	<202404291008.51DB333F@keescook>
+Date: Mon, 29 Apr 2024 20:25:56 +0300
+In-Reply-To: <202404291008.51DB333F@keescook> (Kees Cook's message of "Mon, 29
+	Apr 2024 10:10:46 -0700")
+Message-ID: <877cggqdwb.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, 02 Apr 2024 20:39:49 +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> data_page wants to be NUL-terminated and NUL-padded, use strscpy_pad to
-> provide both of these. data_page no longer awkwardly relies on
-> init_mount to perform its NUL-termination, although that sanity check is
-> left unchanged.
-> 
-> [...]
+Kees Cook <keescook@chromium.org> writes:
 
-Applied to for-next/hardening, thanks!
+> On Thu, Apr 04, 2024 at 10:12:28AM +0000, Kalle Valo wrote:
+>
+>> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+>> 
+>> > Prepare for the coming implementation by GCC and Clang of the
+>> > __counted_by attribute. Flexible array members annotated with
+>> > __counted_by can have their accesses bounds-checked at run-time
+>> > via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+>> > (for strcpy/memcpy-family functions).
+>> > 
+>> > Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+>> > getting ready to enable it globally.
+>> > 
+>> > So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+>> > a flexible structure where the size of the flexible-array member
+>> > is known at compile-time, and refactor the rest of the code,
+>> > accordingly.
+>> > 
+>> > So, with these changes, fix the following warning:
+>> > drivers/net/wireless/ath/wil6210/wmi.c:4018:49: warning: structure
+>> > containing a flexible array member is not at the end of another
+>> > structure [-Wflex-array-member-not-at-end]
+>> > 
+>> > Link: https://github.com/KSPP/linux/issues/202
+>> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> > Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> > Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+>> 
+>> Patch applied to ath-next branch of ath.git, thanks.
+>> 
+>> cbb0697e0ded wifi: wil6210: wmi: Use __counted_by() in struct
+>> wmi_set_link_monitor_cmd and avoid -Wfamnae warning
+>
+> Hi,
+>
+> I was just walking through our patch tracker and noticed that I don't
+> see this patch include in -next yet (as of next-20240429). Is there a
+> flush of the ath-next queue planned soon? Or did I miss some change?
 
-[1/1] init: replace deprecated strncpy with strscpy_pad
-      https://git.kernel.org/kees/c/fa6475acde9a
+Yeah, wireless-next was pulled last week so most likely we will create
+ath-next pull request this week.
 
-Take care,
+BTW we are planning to move ath.git to a new location, rename branches
+etc. I think we'll see if we can also setup it so that it can be pulled
+to linux-next, so that you don't need to ask this every time ;)
+
+(Just joking of course, there a lot of benefits from having the tree in
+linux-next)
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
