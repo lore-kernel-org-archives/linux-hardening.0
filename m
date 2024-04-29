@@ -1,67 +1,68 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E03127E24
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 18:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654FB8614C
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 18:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714414186; cv=none; b=YkoCAWtnoAaIksaJDAN5yOlcpCZfDmPbcjql6W7OLzgJVm6Ib79N6ROJST7RjiDYXJt/+t2kS6SjOQEyAB85dHweUBOQACXw0tUyjyoCr+78f3oHP79Cl58E6mkAAH4wjbDIhOBo5SrEjjWAlfod97OKVBwpZb7q61MXwjoIDDM=
+	t=1714414574; cv=none; b=aTLsI4jNDXBbWX3SVBE1+Ol0O7HRT1Ejo0ihDNE2SmdcQ5zJQjF5ybaXvq8LYRvFuBUUsX8ZnsRTprrOvTAXH05dN47Je1mmBQj7bh8Q+EgdYs//KUHt0Cacv+R9uwV4UQ76zM/rrfCqerDZ2PUizt+68RtBueco/IWkD7xLavM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714414186; c=relaxed/simple;
-	bh=Z2LOlsSUnMgywQTJQ+7IHJraqyXovy/jnHsooFxUr2Y=;
+	s=arc-20240116; t=1714414574; c=relaxed/simple;
+	bh=WcXW/buP9MAu0vMBF5Js5v7YGSUnlUAbpElCKfwLszc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EgYpqKPQHKmMyRHvFWVq2Xx/gLPHnHWF+QOa7gzLij0BmOJ3lde0HIL4i+xah/INsYjtNGqZIibrUwRzEph/fXSxnaf9YaeNp8MSceIKY+tR2fAVCHBVS1x0KjEMdfft+gB//wabwcwU/ni2LwZIHIgu3A6u2CmGjUwcdKv4ddE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lsuajCu9; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=FIGX5nUMtPzNse0xblwLBgvRmMBFanCltxzVtZGZhOrxV6dyRKtZRKBX0kD76rZjoEpb0y7g6pd8MOZN6oRzOhMlInpKIHp1MdrYP6Fe+yOOBTSoFYNYzsQqGeYe+yWepDDT7YLzZLDgMTyifZ+toWQfUHtXzpcR+WxKS0GW150=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nl6h1rwq; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lsuajCu9"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1eab16dcfd8so40913725ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 11:09:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nl6h1rwq"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so32682825ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 11:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714414185; x=1715018985; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714414573; x=1715019373; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+37QTrLTPLr7Kc5c3JRWh1bRwAteHaqsrzK+UmsL3Bk=;
-        b=lsuajCu9lzKisZS0vlaiK3l5CfrLPvM3MsxE/vnIpIx4TJCjD5I+Hh1uo8HaxWmdTY
-         N04Wn1cCkUUmtK0GaLpxqw9x3ymfL1bVgJ3U7Yh+OCwBQN/1bMZfDiLzQDjPQOEbVE51
-         fy37YznGKXXXAyGK4sdIIr9ks+PrxxlCl64U0=
+        bh=OnZ1vLukMpdqrqD0r/VM8L5RpjpCprM81qtpwZ8cNP0=;
+        b=nl6h1rwq3iLZfIjRmHtoR1qqzAcLmll+mg0FsLNREaFSsDODhKtJ7QFSou821XFhTx
+         OwNqRW5epiElYi7zNZ6RXxyKWoEfuS6Jn/axupB5fxPOrAOloqoE+RNH+MLLTTkFpT8w
+         K8IvudBhrFEfLYsEn1LZqQ0j+KDmDoDBBPRfI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714414185; x=1715018985;
+        d=1e100.net; s=20230601; t=1714414573; x=1715019373;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+37QTrLTPLr7Kc5c3JRWh1bRwAteHaqsrzK+UmsL3Bk=;
-        b=SmuPP5SlL/TDh/EVyJMpONZ96LEJIYGcQYmPPvvbZoj/jhaZevzSwW3M0OZ6oM6VQc
-         OuUbKjg+V3smtQlWud3w3ME+SAtvoaByDxTS3oylU4ZKsxfnzjHGTb7hUPUmiu9o+4HP
-         PGgCdhkyKkS8HLpL+VjxRFVpU8HkflSYkrBFS2PVZAVNadhChj8dd5JJBm4hVGm+txdF
-         F2eAsTz90DOZQbPvv2XSCqgPw574f5nRR8UOwbrHM8oHgWj4dyK84TFdW+6D1hjF2PE1
-         r3XPdXqJ5bdiZGsHfiP91RV8T55dGhuBWISRkvkOPijEeWgidoFt+GpEFmNad+oWV2J9
-         c0Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUQGw6dDplXGnN0CRUSs1vhAEB4OHY5fw1IZxW/lxV125sYXvHOccuytTgPg2IDRpsJ+spsP28hBg5HsqT8yHJEpNqbsdDH3ZIZE+jf9Z9
-X-Gm-Message-State: AOJu0YzFTjE5XZKaQ1O3cqdqJvMMRC1+MqrwOwiKiD/N/0bMgjHQzP5V
-	tKNdPe6zK4WtUCY/UKxsE8Cp6VO0X4LMPymqj4zz+lyf0kBUnhTQBssM9StoBw==
-X-Google-Smtp-Source: AGHT+IF8MAuCWI9xQ1t4CFM/UvinhLq/MLyEW/f0X3d0CRIcumGhC4JUlpaad0Aw8KATz6oAmbvB4Q==
-X-Received: by 2002:a17:903:22c5:b0:1eb:e40:3e07 with SMTP id y5-20020a17090322c500b001eb0e403e07mr9620367plg.62.1714414184798;
-        Mon, 29 Apr 2024 11:09:44 -0700 (PDT)
+        bh=OnZ1vLukMpdqrqD0r/VM8L5RpjpCprM81qtpwZ8cNP0=;
+        b=rFFhUTs+3jjhPxsa41PSEoz5xayLUA1QmrRhacWZTGSA7/QChYCZBJryB3NENqbSp9
+         psqXrVsOZuOq6sS9R9v4qNS8ANG2YLzAK5BpKkQ59XWDaZTeeHMiL0PD53z6UffHz28n
+         oWqT6t1eptlX81W/hqTgAjXwGZ/D3f6jAuvujZmX+sBYackJOldHciHI3+XL9nhSGliO
+         Wk96yrehslgliZwTXJeHHy8a4wWceM2g4Ju7ntlZbsOw+5YCCfCSVDBQd5lYChMfUs2C
+         GsT19TpXkDt5ZRoGNWjDX7UD7oiJdAdFalLsMw7RzI0+fLT2Bwl8evGqIfPJxA4wGx5N
+         rR4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsQOfLfTiPUK9iZ+4HuYKecVoy7PJNUL8S2X9qYiUi4ezaER1ljxsok6R+eZPWxR9tr33GuJKarQUTgEzMs6/f2a+xCJZ3iG68vm1P6Qe3
+X-Gm-Message-State: AOJu0Yzhx+CuDlEYpNNPyJzfp4Aw1+qgVYGgx+KG8pl3B5VWSmur6bjK
+	k5FPWh81CKlT89t0NBwQVbRSWo0dwqLbKDdhuFehSfg10+UEPjSaEZKuhq6zhA==
+X-Google-Smtp-Source: AGHT+IFHuanPGgh9O4MDAeEUubDx/pf+02lBFuayRPoTqeON76gFZdZ04TBnnFcYIylPNzk4FROTQQ==
+X-Received: by 2002:a17:903:1c8:b0:1e4:320b:4311 with SMTP id e8-20020a17090301c800b001e4320b4311mr562818plh.34.1714414572641;
+        Mon, 29 Apr 2024 11:16:12 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h8-20020a170902704800b001e868e29fabsm20585009plt.251.2024.04.29.11.09.44
+        by smtp.gmail.com with ESMTPSA id u17-20020a17090341d100b001eb3d459143sm5154929ple.48.2024.04.29.11.16.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 11:09:44 -0700 (PDT)
-Date: Mon, 29 Apr 2024 11:09:43 -0700
+        Mon, 29 Apr 2024 11:16:11 -0700 (PDT)
+Date: Mon, 29 Apr 2024 11:16:11 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] wifi: wil6210: wmi: Use __counted_by() in
- struct wmi_set_link_monitor_cmd and avoid -Wfamnae warning
-Message-ID: <202404291109.331E1704@keescook>
-References: <ZgSTCmdP+omePvWg@neat>
- <171222554691.1806092.8730005090791383928.kvalo@kernel.org>
- <202404291008.51DB333F@keescook>
- <877cggqdwb.fsf@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] Bluetooth: hci_conn, hci_sync: Use
+ __counted_by() in multiple structs and avoid -Wfamnae warnings
+Message-ID: <202404291110.6159F7EA5@keescook>
+References: <ZiwwPmCvU25YzWek@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,63 +71,187 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <877cggqdwb.fsf@kernel.org>
+In-Reply-To: <ZiwwPmCvU25YzWek@neat>
 
-On Mon, Apr 29, 2024 at 08:25:56PM +0300, Kalle Valo wrote:
-> Kees Cook <keescook@chromium.org> writes:
+On Fri, Apr 26, 2024 at 04:52:46PM -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time
+> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+> (for strcpy/memcpy-family functions).
 > 
-> > On Thu, Apr 04, 2024 at 10:12:28AM +0000, Kalle Valo wrote:
-> >
-> >> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-> >> 
-> >> > Prepare for the coming implementation by GCC and Clang of the
-> >> > __counted_by attribute. Flexible array members annotated with
-> >> > __counted_by can have their accesses bounds-checked at run-time
-> >> > via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-> >> > (for strcpy/memcpy-family functions).
-> >> > 
-> >> > Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-> >> > getting ready to enable it globally.
-> >> > 
-> >> > So, use the `DEFINE_FLEX()` helper for an on-stack definition of
-> >> > a flexible structure where the size of the flexible-array member
-> >> > is known at compile-time, and refactor the rest of the code,
-> >> > accordingly.
-> >> > 
-> >> > So, with these changes, fix the following warning:
-> >> > drivers/net/wireless/ath/wil6210/wmi.c:4018:49: warning: structure
-> >> > containing a flexible array member is not at the end of another
-> >> > structure [-Wflex-array-member-not-at-end]
-> >> > 
-> >> > Link: https://github.com/KSPP/linux/issues/202
-> >> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >> > Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> >> > Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
-> >> 
-> >> Patch applied to ath-next branch of ath.git, thanks.
-> >> 
-> >> cbb0697e0ded wifi: wil6210: wmi: Use __counted_by() in struct
-> >> wmi_set_link_monitor_cmd and avoid -Wfamnae warning
-> >
-> > Hi,
-> >
-> > I was just walking through our patch tracker and noticed that I don't
-> > see this patch include in -next yet (as of next-20240429). Is there a
-> > flush of the ath-next queue planned soon? Or did I miss some change?
+> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+> getting ready to enable it globally.
 > 
-> Yeah, wireless-next was pulled last week so most likely we will create
-> ath-next pull request this week.
+> So, use the `DEFINE_FLEX()` helper for multiple on-stack definitions
+> of a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> BTW we are planning to move ath.git to a new location, rename branches
-> etc. I think we'll see if we can also setup it so that it can be pulled
-> to linux-next, so that you don't need to ask this every time ;)
+> Notice that, due to the use of `__counted_by()` in `struct
+> hci_cp_le_create_cis`, the for loop in function `hci_cs_le_create_cis()`
+> had to be modified. Once the index `i`, through which `cp->cis[i]` is
+> accessed, falls in the interval [0, cp->num_cis), `cp->num_cis` cannot
+> be decremented all the way down to zero while accessing `cp->cis[]`:
 > 
-> (Just joking of course, there a lot of benefits from having the tree in
-> linux-next)
+> net/bluetooth/hci_event.c:4310:
+> 4310    for (i = 0; cp->num_cis; cp->num_cis--, i++) {
+>                 ...
+> 4314            handle = __le16_to_cpu(cp->cis[i].cis_handle);
+> 
+> otherwise, only half (one iteration before `cp->num_cis == i`) or half
+> plus one (one iteration before `cp->num_cis < i`) of the items in the
+> array will be accessed before running into an out-of-bounds issue. So,
+> in order to avoid this, set `cp->num_cis` to zero just after the for
+> loop.
+> 
+> Also, make use of `aux_num_cis` variable to update `cmd->num_cis` after
+> a `list_for_each_entry_rcu()` loop.
+> 
+> With these changes, fix the following warnings:
+> net/bluetooth/hci_sync.c:1239:56: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> net/bluetooth/hci_sync.c:1415:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> net/bluetooth/hci_sync.c:1731:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> net/bluetooth/hci_sync.c:6497:45: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Link: https://github.com/KSPP/linux/issues/202
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Update `cmd->num_cis` after `list_for_each_entry_rcu()` loop.
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/ZiwqqZCa7PK9bzCX@neat/
+> 
+>  include/net/bluetooth/hci.h |  8 ++--
+>  net/bluetooth/hci_event.c   |  3 +-
+>  net/bluetooth/hci_sync.c    | 84 +++++++++++++++----------------------
+>  3 files changed, 40 insertions(+), 55 deletions(-)
+> 
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index fe23e862921d..c4c6b8810701 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -2026,7 +2026,7 @@ struct hci_cp_le_set_ext_adv_data {
+>  	__u8  operation;
+>  	__u8  frag_pref;
+>  	__u8  length;
+> -	__u8  data[];
+> +	__u8  data[] __counted_by(length);
+>  } __packed;
 
-Ah-ha! Thanks. Yeah, sorry if I keep asking about that. It's different
-from other trees, so it doesn't stick in my head. :) I should keep
-better notes!
+I noticed some of the other structs here aren't flexible arrays, so it
+made me go take a look at these ones. I see that the only user of struct
+hci_cp_le_set_ext_adv_data uses a fixed-size array:
+
+        struct {
+                struct hci_cp_le_set_ext_adv_data cp;
+                u8 data[HCI_MAX_EXT_AD_LENGTH];
+        } pdu;
+
+Let's just change this from a flex array to a fixed-size array?
+
+>  
+>  #define HCI_OP_LE_SET_EXT_SCAN_RSP_DATA		0x2038
+> @@ -2035,7 +2035,7 @@ struct hci_cp_le_set_ext_scan_rsp_data {
+>  	__u8  operation;
+>  	__u8  frag_pref;
+>  	__u8  length;
+> -	__u8  data[];
+> +	__u8  data[] __counted_by(length);
+>  } __packed;
+
+Same for this one:
+
+        struct {
+                struct hci_cp_le_set_ext_scan_rsp_data cp;
+                u8 data[HCI_MAX_EXT_AD_LENGTH];
+        } pdu;
+
+>  
+>  #define HCI_OP_LE_SET_EXT_ADV_ENABLE		0x2039
+> @@ -2061,7 +2061,7 @@ struct hci_cp_le_set_per_adv_data {
+>  	__u8  handle;
+>  	__u8  operation;
+>  	__u8  length;
+> -	__u8  data[];
+> +	__u8  data[] __counted_by(length);
+>  } __packed;
+
+And this one. :P
+
+        struct {
+                struct hci_cp_le_set_per_adv_data cp;
+                u8 data[HCI_MAX_PER_AD_LENGTH];
+        } pdu;
+
+>  
+>  #define HCI_OP_LE_SET_PER_ADV_ENABLE		0x2040
+> @@ -2162,7 +2162,7 @@ struct hci_cis {
+>  
+>  struct hci_cp_le_create_cis {
+>  	__u8    num_cis;
+> -	struct hci_cis cis[];
+> +	struct hci_cis cis[] __counted_by(num_cis);
+>  } __packed;
+
+This one isn't as obvious, so I'd say keep your changes for this one.
+
+>  
+>  #define HCI_OP_LE_REMOVE_CIG			0x2065
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 9a38e155537e..9a7ca084302e 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4307,7 +4307,7 @@ static void hci_cs_le_create_cis(struct hci_dev *hdev, u8 status)
+>  	hci_dev_lock(hdev);
+>  
+>  	/* Remove connection if command failed */
+> -	for (i = 0; cp->num_cis; cp->num_cis--, i++) {
+> +	for (i = 0; i < cp->num_cis; i++) {
+>  		struct hci_conn *conn;
+>  		u16 handle;
+>  
+> @@ -4323,6 +4323,7 @@ static void hci_cs_le_create_cis(struct hci_dev *hdev, u8 status)
+>  			hci_conn_del(conn);
+>  		}
+>  	}
+> +	cp->num_cis = 0;
+
+Yeah, this loop never leaves early, and if it did, it processing the
+array forward, so having num_cis reduced during the loop iteration
+doesn't make sense. What you have looks right to me!
+
+
+>  
+>  	if (pending)
+>  		hci_le_create_cis_pending(hdev);
+> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+> index 9092b4d59545..6e15594d3565 100644
+> --- a/net/bluetooth/hci_sync.c
+> +++ b/net/bluetooth/hci_sync.c
+> @@ -1235,31 +1235,27 @@ int hci_setup_ext_adv_instance_sync(struct hci_dev *hdev, u8 instance)
+>  
+>  static int hci_set_ext_scan_rsp_data_sync(struct hci_dev *hdev, u8 instance)
+>  {
+> -	struct {
+> -		struct hci_cp_le_set_ext_scan_rsp_data cp;
+> -		u8 data[HCI_MAX_EXT_AD_LENGTH];
+> -	} pdu;
+> +	DEFINE_FLEX(struct hci_cp_le_set_ext_scan_rsp_data, pdu, data, length,
+> +		    HCI_MAX_EXT_AD_LENGTH);
+>  	u8 len;
+>  	struct adv_info *adv = NULL;
+>  	int err;
+>  
+> -	memset(&pdu, 0, sizeof(pdu));
+
+These become much easier, just:
+
+	struct hci_cp_le_set_ext_scan_rsp_data cp = { };
+
+etc...
+
 
 -- 
 Kees Cook
