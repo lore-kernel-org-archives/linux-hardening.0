@@ -1,73 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E22B635;
-	Tue, 30 Apr 2024 00:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E089579DC;
+	Tue, 30 Apr 2024 01:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714435495; cv=none; b=JeveGRqrht/2A+w9yT+ykIf9Fxy09O0KkAnNH7V9zCbAhGf3yJ/xcqny3JcYV4uyw+ZtVtq6SKjYWU8sZP7xIgislc7B0E1wbGF9kSahIJCsJbwh1PHGIMzhnOgS2jMerWMq9o3JS62bBpHocwUO4viDvZAcWOMain9MHBBoibM=
+	t=1714442049; cv=none; b=Gg03QtywyCsxU2q+0MLxeGw3z3nrgO7LN22yKX4cy1jHVBPe1Nzk0PF9pJS9zPOy8SYpy9yqdDvpJvvLLVOrXGA5FxpMniQUiQZAlWiLVuG6Yal5Vn/it6o9w/NLupXq0ZkEocLt1q6MERh2uPtJ4pew8QnQWSvX4PwL7rM2cCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714435495; c=relaxed/simple;
-	bh=DumFO5WXPtmjUDTFNgIZT/Yv6qbcW3CwCTQCCDpM3rU=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=TrBLgiWfhPZhiaXBJKncJFdJBMnSXEdb0snyjU+W9HVX1sx/BhbnOmq1udQS1GdsN7P2eWLlYA0YDiKVo0ZvJ4nczcTvKe2hGohm9uMtoUms0GqmvX3aN4DUiwEyIH0CR8xQpTBwnTh70mNA4xLnH7VYC0qCkfIbFgHSqr8+15w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXUpDCsl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714442049; c=relaxed/simple;
+	bh=/pKumPOlfhaWlo9dOCFEE/29YIst6MSj0NpY1zurQuI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=W1+5Al46JqYdUq6DVKcZ/JPDkU4tpklu2DFCniDa5hsjo32KjGWAAG55BGyVymteaqiSMmIioifZcDylwW31HAZZnsUJ8BbEau4gljGzN/Gx0w97c6Vri9daQUwL0hjjsu8hg+s2/CAKUgyJofxoSr4yGKWGQJoV3SAdHA1O5f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R+FcX0ZK; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXUpDCsl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55CBC116B1;
-	Tue, 30 Apr 2024 00:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714435494;
-	bh=DumFO5WXPtmjUDTFNgIZT/Yv6qbcW3CwCTQCCDpM3rU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=VXUpDCsltm4bgnvWT94Gurvd8gNGKGVQOBcde1+KLzieU+7jT4LmJkIHMkTz39R8l
-	 gkJdnWSJ/f4JR0pWssFE0134TCUMKkGdPaS3gb3yxYc2qiwU2JmUUEVqeree8DSkWg
-	 DhV0E/PFtEubGpdGbsjb/TALuq0uFyROhcS9hhiITojyN+7nOm/Cwj/5ucx8YPx49s
-	 +Tku+UisUJHa3vG7OW8p/WsdKoB8cGiU0/EmKhzL7A1YeDpbsB04GN9bmSLcbT4fE/
-	 q/Y/5SbOEOQxp3/Xw5Tab/KsjKGCUp9V48/KVqulXfA0lslJ1lZhVBzKozhjD23Rg+
-	 rj/3YT6LMvGwg==
-Message-ID: <aa54224be3d2567fdb657e304c46c5b9.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R+FcX0ZK"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.west.internal (Postfix) with ESMTP id 4D9D51C00171;
+	Mon, 29 Apr 2024 21:54:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 29 Apr 2024 21:54:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714442044; x=1714528444; bh=TvQfAezCIQpgNjRX/9FITqcxG7cy
+	pBbpvMsEhvlw3CI=; b=R+FcX0ZKSCBWt1V2G4IvUL2lxCHIzkfDskXzqeUbMs1e
+	ybgch9ILFtGGF0T+KN64ac/LAC/KCaR++MwBCTpWpf2kUJi0Drc8DLLTqGVlVxyp
+	IISN/vYnjUEilbbMICs/0kcKnSUi1xp5L1ZTimSDzNIRlh22D5A/wnJ7yBn22gX0
+	B01V4CMPmJ5OaScZE3XFyEZI8kK8XssgaYBzu/PsTToJRbEOBKRN+/TuzxknyZtN
+	fh30/Wo/JglVY3BTrzGRAW4A5uzZXyMkLrDFm1b6kGtwv7uQFHqgpw03R7Gybgje
+	QuF2+amjMi0AY53qA/WE62m2RJr3zzm8BFBqvlYenA==
+X-ME-Sender: <xms:PE8wZkhsO6P6t4d9NxUY3Ismc5FW4uHt9cORQXv2sXcMBDuok9m9Fg>
+    <xme:PE8wZtDm622xwiiHW_VYSOPCuQPcjL4gqFunEyyj1dG3xZi3-WXsFC_BECCwYB8OB
+    xEJsrpWAay-N3VGuHY>
+X-ME-Received: <xmr:PE8wZsF-8N1YAlsksLftXmPMxwhLuvfavM8M1yEDKbibOlLrOfqmBtv0D_x1CAk3XlojpbFx_0RdcZhiInWPLdUaGvm3orYD1fA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduvddghedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecuhfhrohhmpefhihhnnhcu
+    vfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeelueehleehkefgueevtdevteejkefhffekfeffffdtgfejveekgeefvdeu
+    heeuleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hfthhhrghinheslhhinhhugidqmheikehkrdhorhhg
+X-ME-Proxy: <xmx:PE8wZlTKFg7wBMZZKH3xggMyM5np0dnjB9ffa_UpUxRV5gylO7-QUw>
+    <xmx:PE8wZhxiLxPPmMCOwL-ISbcMhJrTj0rQNkuVQCiIw0R77CYFu_7mcQ>
+    <xmx:PE8wZj6KCPjjBM7D9ygSuDamrmVkJC_fJyEO3zrG1JK8Fb99b_mVcg>
+    <xmx:PE8wZuwhnO-AGfQ9wb43QqRsDHa54ui2wMpuT4Z0M6aRxaHGG0x-3Q>
+    <xmx:PE8wZhcogwxLQTgjCHDHFBy31huu0HdPWkGff1fW7f2Kwzf9zK3NBOG2>
+Feedback-ID: i58a146ae:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Apr 2024 21:54:01 -0400 (EDT)
+Date: Tue, 30 Apr 2024 11:54:27 +1000 (AEST)
+From: Finn Thain <fthain@linux-m68k.org>
+To: Kees Cook <keescook@chromium.org>
+cc: "Martin K. Petersen" <martin.petersen@oracle.com>, 
+    Erick Archer <erick.archer@outlook.com>, 
+    "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Justin Stitt <justinstitt@google.com>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-scsi@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
+In-Reply-To: <202404291259.3A8EE11@keescook>
+Message-ID: <070eccee-25c1-05ae-0ae8-7c6fe2eff82f@linux-m68k.org>
+References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com> <202404291019.5AC903A@keescook> <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com> <202404291259.3A8EE11@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-2-e2db3b82d5ef@kernel.org>
-References: <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-0-e2db3b82d5ef@kernel.org> <20240425-cbl-bcm-assign-counted-by-val-before-access-v1-2-e2db3b82d5ef@kernel.org>
-Subject: Re: [PATCH 2/2] clk: bcm: rpi: Assign ->num before accessing ->hws
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Gustavo A. R. Silva <gustavoars@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, patches@lists.linux.dev, llvm@lists.linux.dev, stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
-To: Florian Fainelli <florian.fainelli@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 29 Apr 2024 17:04:52 -0700
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=US-ASCII
 
-Quoting Nathan Chancellor (2024-04-25 09:55:52)
-> Commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-> __counted_by") annotated the hws member of 'struct clk_hw_onecell_data'
-> with __counted_by, which informs the bounds sanitizer about the number
-> of elements in hws, so that it can warn when hws is accessed out of
-> bounds. As noted in that change, the __counted_by member must be
-> initialized with the number of elements before the first array access
-> happens, otherwise there will be a warning from each access prior to the
-> initialization because the number of elements is zero. This occurs in
-> raspberrypi_discover_clocks() due to ->num being assigned after ->hws
-> has been accessed:
->=20
->   UBSAN: array-index-out-of-bounds in drivers/clk/bcm/clk-raspberrypi.c:3=
-74:4
->   index 3 is out of range for type 'struct clk_hw *[] __counted_by(num)' =
-(aka 'struct clk_hw *[]')
->=20
-> Move the ->num initialization to before the first access of ->hws, which
-> clears up the warning.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with __cou=
-nted_by")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
 
-Applied to clk-next
+On Mon, 29 Apr 2024, Kees Cook wrote:
+
+> this isn't a case where we can show identical binary output, since this 
+> actively adds overflow checking via kcalloc() internals.
+> 
+> ...
+> 
+> it is a trivially correct change that uses a more robust API and more 
+> idiomatic allocation sizeof()s
+
+If a change is "trivially correct" then the proof is trivial too.
+
+Based only on what you wrote above, omitting the overflow check would give 
+binary equivalence. That validates the driver change (for hardware you 
+lack).
+
+But, since a build without the overflow check must contain a second 
+change, you must validate that change too by showing that kcalloc() 
+internals still work for every other caller. (You do this using hardware 
+you have.)
