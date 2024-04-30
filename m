@@ -1,97 +1,97 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E089579DC;
-	Tue, 30 Apr 2024 01:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8A8101C4;
+	Tue, 30 Apr 2024 03:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714442049; cv=none; b=Gg03QtywyCsxU2q+0MLxeGw3z3nrgO7LN22yKX4cy1jHVBPe1Nzk0PF9pJS9zPOy8SYpy9yqdDvpJvvLLVOrXGA5FxpMniQUiQZAlWiLVuG6Yal5Vn/it6o9w/NLupXq0ZkEocLt1q6MERh2uPtJ4pew8QnQWSvX4PwL7rM2cCQ=
+	t=1714447927; cv=none; b=TB4uosCfiTTUtBWucCLb4fQkXXRzvzExtNEpGaQBNo6zU0sdX6Gm9xQjiSiWygZqEAUYQcQSYmRrMEjMMKMgKcAsaX593TdpKE6vlGDd0vs3EWEDA0C8Tk+vNFXCNr36nDT+lEoI/V2Qn4rQCtcKXxf5KDmOOpz3gXhm6nZXVUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714442049; c=relaxed/simple;
-	bh=/pKumPOlfhaWlo9dOCFEE/29YIst6MSj0NpY1zurQuI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W1+5Al46JqYdUq6DVKcZ/JPDkU4tpklu2DFCniDa5hsjo32KjGWAAG55BGyVymteaqiSMmIioifZcDylwW31HAZZnsUJ8BbEau4gljGzN/Gx0w97c6Vri9daQUwL0hjjsu8hg+s2/CAKUgyJofxoSr4yGKWGQJoV3SAdHA1O5f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R+FcX0ZK; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R+FcX0ZK"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.west.internal (Postfix) with ESMTP id 4D9D51C00171;
-	Mon, 29 Apr 2024 21:54:05 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 29 Apr 2024 21:54:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714442044; x=1714528444; bh=TvQfAezCIQpgNjRX/9FITqcxG7cy
-	pBbpvMsEhvlw3CI=; b=R+FcX0ZKSCBWt1V2G4IvUL2lxCHIzkfDskXzqeUbMs1e
-	ybgch9ILFtGGF0T+KN64ac/LAC/KCaR++MwBCTpWpf2kUJi0Drc8DLLTqGVlVxyp
-	IISN/vYnjUEilbbMICs/0kcKnSUi1xp5L1ZTimSDzNIRlh22D5A/wnJ7yBn22gX0
-	B01V4CMPmJ5OaScZE3XFyEZI8kK8XssgaYBzu/PsTToJRbEOBKRN+/TuzxknyZtN
-	fh30/Wo/JglVY3BTrzGRAW4A5uzZXyMkLrDFm1b6kGtwv7uQFHqgpw03R7Gybgje
-	QuF2+amjMi0AY53qA/WE62m2RJr3zzm8BFBqvlYenA==
-X-ME-Sender: <xms:PE8wZkhsO6P6t4d9NxUY3Ismc5FW4uHt9cORQXv2sXcMBDuok9m9Fg>
-    <xme:PE8wZtDm622xwiiHW_VYSOPCuQPcjL4gqFunEyyj1dG3xZi3-WXsFC_BECCwYB8OB
-    xEJsrpWAay-N3VGuHY>
-X-ME-Received: <xmr:PE8wZsF-8N1YAlsksLftXmPMxwhLuvfavM8M1yEDKbibOlLrOfqmBtv0D_x1CAk3XlojpbFx_0RdcZhiInWPLdUaGvm3orYD1fA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduvddghedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecuhfhrohhmpefhihhnnhcu
-    vfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeelueehleehkefgueevtdevteejkefhffekfeffffdtgfejveekgeefvdeu
-    heeuleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hfthhhrghinheslhhinhhugidqmheikehkrdhorhhg
-X-ME-Proxy: <xmx:PE8wZlTKFg7wBMZZKH3xggMyM5np0dnjB9ffa_UpUxRV5gylO7-QUw>
-    <xmx:PE8wZhxiLxPPmMCOwL-ISbcMhJrTj0rQNkuVQCiIw0R77CYFu_7mcQ>
-    <xmx:PE8wZj6KCPjjBM7D9ygSuDamrmVkJC_fJyEO3zrG1JK8Fb99b_mVcg>
-    <xmx:PE8wZuwhnO-AGfQ9wb43QqRsDHa54ui2wMpuT4Z0M6aRxaHGG0x-3Q>
-    <xmx:PE8wZhcogwxLQTgjCHDHFBy31huu0HdPWkGff1fW7f2Kwzf9zK3NBOG2>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 29 Apr 2024 21:54:01 -0400 (EDT)
-Date: Tue, 30 Apr 2024 11:54:27 +1000 (AEST)
-From: Finn Thain <fthain@linux-m68k.org>
-To: Kees Cook <keescook@chromium.org>
-cc: "Martin K. Petersen" <martin.petersen@oracle.com>, 
-    Erick Archer <erick.archer@outlook.com>, 
-    "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Justin Stitt <justinstitt@google.com>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-scsi@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
-In-Reply-To: <202404291259.3A8EE11@keescook>
-Message-ID: <070eccee-25c1-05ae-0ae8-7c6fe2eff82f@linux-m68k.org>
-References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com> <202404291019.5AC903A@keescook> <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com> <202404291259.3A8EE11@keescook>
+	s=arc-20240116; t=1714447927; c=relaxed/simple;
+	bh=yFxV8IAL/FhTPWHJslqDdQyTJdimCkoRX51HT2h/SaE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FjLZMFAEvHr23gv8ArdghudiyPczvonUx4J5W9WaV98LH8f/8jUtQldBOLBJD7hoJH8IINOdgxJnJ9PPLiTX7zROBd1RstWVBNIw4+uHvKMsz8AQ/gF3OQcZxLi1Rza1KwsiqioofXKr9OhofQ8LglKRPlold90VELNpfIxota8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id A572B160447;
+	Tue, 30 Apr 2024 03:21:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf08.hostedemail.com (Postfix) with ESMTPA id 0D09320025;
+	Tue, 30 Apr 2024 03:21:50 +0000 (UTC)
+Message-ID: <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
+Subject: Re: [PATCH v6] checkpatch: add check for snprintf to scnprintf
+From: Joe Perches <joe@perches.com>
+To: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>,  Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+ linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
+Date: Mon, 29 Apr 2024 20:21:49 -0700
+In-Reply-To: <202404291249.078D924@keescook>
+References: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+	 <202404291249.078D924@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 0D09320025
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: g4rtr57ict5i64t7bifcqsccwbpei8by
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/11DngRJQirq2hq9jlQZ0nlQjZJQ0C1o8=
+X-HE-Tag: 1714447310-562688
+X-HE-Meta: U2FsdGVkX19VkOaOkTZywdAdJmmPdqSae8cbGjpk4uNn3d20yEfKvhS5J1o91bK7gYO6EY6HnhIqW/ZDtisg4IhGhOfiaJFkywBivrkbrygz5gwAPqx7ksErpiIAAYxbLebjzAaCphQdnYaCjpyr3xYHXqEh5avOrlLccsYN7KP/+2wT+xFatkYcUpPhZFYTHk2dCBgCJHtvs5sI4FKqVKup/zj3mJnaamWCvBWCdOWPZo8OAVLKLDPFf8UUdiHp4eCaQiSWBJc/6rzVGX7yT+SoNd2fSVaDFxrE3qJ1CUKHPYZpmJEfkGLHFund3fVXNFUOgWCYYE1FFXQd31aLWloy9x4ENKmY4btEORRz1X40ojL7CNSR6QpOdzQMl5BovDitnRcXbhKWuXu7ILjyonK86NFh30LzvYp8TOPpVlWtXynTGdNXiXj6F+D+bBi/iljj2FqQAEi/C/ZdY52W9g==
 
+On Mon, 2024-04-29 at 12:49 -0700, Kees Cook wrote:
+> On Mon, Apr 29, 2024 at 06:39:28PM +0000, Justin Stitt wrote:
+> > I am going to quote Lee Jones who has been doing some snprintf ->
+> > scnprintf refactorings:
+> >=20
+> > "There is a general misunderstanding amongst engineers that
+> > {v}snprintf() returns the length of the data *actually* encoded into th=
+e
+> > destination array.  However, as per the C99 standard {v}snprintf()
+> > really returns the length of the data that *would have been* written if
+> > there were enough space for it.  This misunderstanding has led to
+> > buffer-overruns in the past.  It's generally considered safer to use th=
+e
+> > {v}scnprintf() variants in their place (or even sprintf() in simple
+> > cases).  So let's do that."
+> >=20
+> > To help prevent new instances of snprintf() from popping up, let's add =
+a
+> > check to checkpatch.pl.
+> >=20
+> > Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+>=20
+> Thanks!
+>=20
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>=20
 
-On Mon, 29 Apr 2024, Kees Cook wrote:
+$ git grep -P '\b((v|)snprintf)\s*\(' | wc -l
+7745
+$ git grep -P '(?:return\s+|=3D\s*)\b((v|)snprintf)\s*\(' | wc -l
+1626
 
-> this isn't a case where we can show identical binary output, since this 
-> actively adds overflow checking via kcalloc() internals.
-> 
-> ...
-> 
-> it is a trivially correct change that uses a more robust API and more 
-> idiomatic allocation sizeof()s
+Given there are ~5000 uses of these that don't care
+whether or not it's snprintf or scnprintf, I think this
+is not great.
 
-If a change is "trivially correct" then the proof is trivial too.
+I'd much rather make sure the return value of the call
+is used before suggesting an alternative.
 
-Based only on what you wrote above, omitting the overflow check would give 
-binary equivalence. That validates the driver change (for hardware you 
-lack).
+$ git grep  -P '\b((v|)snprintf)\s*\(.*PAGE_SIZE' | wc -l
+515
 
-But, since a build without the overflow check must contain a second 
-change, you must validate that change too by showing that kcalloc() 
-internals still work for every other caller. (You do this using hardware 
-you have.)
+And about 1/3 of these snprintf calls are for sysfs style
+output that ideally would be converted to sysfs_emit or
+sysfs_emit_at instead.
+
