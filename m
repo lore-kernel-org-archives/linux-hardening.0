@@ -1,97 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8A8101C4;
-	Tue, 30 Apr 2024 03:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B966F1758C
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Apr 2024 05:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714447927; cv=none; b=TB4uosCfiTTUtBWucCLb4fQkXXRzvzExtNEpGaQBNo6zU0sdX6Gm9xQjiSiWygZqEAUYQcQSYmRrMEjMMKMgKcAsaX593TdpKE6vlGDd0vs3EWEDA0C8Tk+vNFXCNr36nDT+lEoI/V2Qn4rQCtcKXxf5KDmOOpz3gXhm6nZXVUA=
+	t=1714455307; cv=none; b=tHAWebZcOEP6/AKbi3iNLpdmhAVOIT1o1Sb4TY1RKY3Jp+CjPJFhKslWpJ24/y1sQPUuNhkaBLOMFet/r/N7Pl0atBXLOWaU7JNI0KGeGQCNg3lkRL38wXbYZv/Jv1shD8+6d4HR1qO4MwNyb+q/OauP5TyiyBuILrCrgPVHbis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714447927; c=relaxed/simple;
-	bh=yFxV8IAL/FhTPWHJslqDdQyTJdimCkoRX51HT2h/SaE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FjLZMFAEvHr23gv8ArdghudiyPczvonUx4J5W9WaV98LH8f/8jUtQldBOLBJD7hoJH8IINOdgxJnJ9PPLiTX7zROBd1RstWVBNIw4+uHvKMsz8AQ/gF3OQcZxLi1Rza1KwsiqioofXKr9OhofQ8LglKRPlold90VELNpfIxota8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id A572B160447;
-	Tue, 30 Apr 2024 03:21:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf08.hostedemail.com (Postfix) with ESMTPA id 0D09320025;
-	Tue, 30 Apr 2024 03:21:50 +0000 (UTC)
-Message-ID: <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
-Subject: Re: [PATCH v6] checkpatch: add check for snprintf to scnprintf
-From: Joe Perches <joe@perches.com>
-To: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
- <dwaipayanray1@gmail.com>,  Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
- linux-hardening@vger.kernel.org, Finn Thain <fthain@linux-m68k.org>
-Date: Mon, 29 Apr 2024 20:21:49 -0700
-In-Reply-To: <202404291249.078D924@keescook>
-References: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
-	 <202404291249.078D924@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1714455307; c=relaxed/simple;
+	bh=0lANZJBk2q8qyeCEkyiuDs1ISrEWT6/wJvz29MPlTds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=suvPzQsTLDis6l2TkCxJK0ROGMCRA9OpzAMH2NCWzFCm5y1+28g6nVPhoQO7LbiijYvNEpzZiRsnoy6cvToLRhmJwG5GpfHayhpPuhYcz1Mk54Xf+85Ubq7hcO+xFn+eo1v0YflhxmR/TXkvKsm/lAD1XGkLMCfb1e2Hp3ViHxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fgdPrb1f; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fgdPrb1f"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e8bbcbc2b7so47577345ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Apr 2024 22:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714455305; x=1715060105; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C86TkJMefuwLFYqPDfjsQaXZDgvqLvjIZeQbeqShpoI=;
+        b=fgdPrb1fqMg18QNi+Pibt7ddGBbLBeJTYIr+rtbLx4zjLo43ZPIOW8c9E5FGJW6+MP
+         1VxatqfLGnebt+stBICmPtKa355/tPMUFLb2jr/6oGDJshRknfbLwjWPuyrqvEXcGS3t
+         dJoSkL6kbLyXEokUdojkGlim1daRxm6Dyjo4w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714455305; x=1715060105;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C86TkJMefuwLFYqPDfjsQaXZDgvqLvjIZeQbeqShpoI=;
+        b=wDmQ5PkE6jXSfK5bV5Ke/NCBdoXIPkv/OV1w4y/0XS2nnsMsbsf4Ed25AnP44OTEOm
+         4OFmtwmf/troVifRS/qvJy8wFQpQQgcA9Iytw5QSnhULdTAqPfC8dBOi4NEJql7eCghJ
+         swXGoLutCnCa/jK9gapM3b94LAD0P6Nsiw4NkOxlXG2n9unMUB+nsynPTW0qqGQgSnlO
+         dbY3iZzRYM/yknsWHw5n5MTQ5XvvScbTdad5mKNzkF/ZOiqw7059VxB8WJJAgGXpOgqW
+         tuQ+QdVwydRTfzZ+63MA8fJpeeTS/maQaXmNQiIjkjJ4NuDn3EifM2GvnbVCoREwOhCS
+         iVhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUV2Upgh1PwMF9PdHkr4zWrat9YQvG2izcADKLMGjzxLINDrJTCy16g40FyeqGV5Nna2Ed4x+nMh0SV2cuR9V7pZAs9U8u4/nmo7Bm7wpHL
+X-Gm-Message-State: AOJu0YwyO+0HkP+2rCdGEKcMAjIozunYbf8N/1IiJtMORCUExZPYqxbr
+	gJlMyZqSAe7y5wFddpPpswDt78ZA5Db431umtndPsC3rEjs67Wh9zfvXJuJwdQ==
+X-Google-Smtp-Source: AGHT+IExYVGtME+b7bsTki80m/529C/WFpqN5LWnzvSEWxibnamEqrs4aXGKwGyaazB7ViSXdQpIYA==
+X-Received: by 2002:a17:903:41ca:b0:1eb:1240:1aea with SMTP id u10-20020a17090341ca00b001eb12401aeamr16493520ple.20.1714455305039;
+        Mon, 29 Apr 2024 22:35:05 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q4-20020a170902edc400b001e29c4b7bd2sm21410591plk.240.2024.04.29.22.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 22:35:04 -0700 (PDT)
+Date: Mon, 29 Apr 2024 22:35:03 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hardening: Refresh KCFI options, add some more
+Message-ID: <202404292233.9A98A7C@keescook>
+References: <20240426222940.work.884-kees@kernel.org>
+ <20240429221650.GA3666021@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 0D09320025
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: g4rtr57ict5i64t7bifcqsccwbpei8by
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/11DngRJQirq2hq9jlQZ0nlQjZJQ0C1o8=
-X-HE-Tag: 1714447310-562688
-X-HE-Meta: U2FsdGVkX19VkOaOkTZywdAdJmmPdqSae8cbGjpk4uNn3d20yEfKvhS5J1o91bK7gYO6EY6HnhIqW/ZDtisg4IhGhOfiaJFkywBivrkbrygz5gwAPqx7ksErpiIAAYxbLebjzAaCphQdnYaCjpyr3xYHXqEh5avOrlLccsYN7KP/+2wT+xFatkYcUpPhZFYTHk2dCBgCJHtvs5sI4FKqVKup/zj3mJnaamWCvBWCdOWPZo8OAVLKLDPFf8UUdiHp4eCaQiSWBJc/6rzVGX7yT+SoNd2fSVaDFxrE3qJ1CUKHPYZpmJEfkGLHFund3fVXNFUOgWCYYE1FFXQd31aLWloy9x4ENKmY4btEORRz1X40ojL7CNSR6QpOdzQMl5BovDitnRcXbhKWuXu7ILjyonK86NFh30LzvYp8TOPpVlWtXynTGdNXiXj6F+D+bBi/iljj2FqQAEi/C/ZdY52W9g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240429221650.GA3666021@dev-arch.thelio-3990X>
 
-On Mon, 2024-04-29 at 12:49 -0700, Kees Cook wrote:
-> On Mon, Apr 29, 2024 at 06:39:28PM +0000, Justin Stitt wrote:
-> > I am going to quote Lee Jones who has been doing some snprintf ->
-> > scnprintf refactorings:
-> >=20
-> > "There is a general misunderstanding amongst engineers that
-> > {v}snprintf() returns the length of the data *actually* encoded into th=
-e
-> > destination array.  However, as per the C99 standard {v}snprintf()
-> > really returns the length of the data that *would have been* written if
-> > there were enough space for it.  This misunderstanding has led to
-> > buffer-overruns in the past.  It's generally considered safer to use th=
-e
-> > {v}scnprintf() variants in their place (or even sprintf() in simple
-> > cases).  So let's do that."
-> >=20
-> > To help prevent new instances of snprintf() from popping up, let's add =
-a
-> > check to checkpatch.pl.
-> >=20
-> > Suggested-by: Finn Thain <fthain@linux-m68k.org>
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
->=20
-> Thanks!
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->=20
+On Mon, Apr 29, 2024 at 03:16:50PM -0700, Nathan Chancellor wrote:
+> On Fri, Apr 26, 2024 at 03:29:44PM -0700, Kees Cook wrote:
+> [...]
+> > +# Enable Kernel Control Flow Integrity (currently Clang only).
+> > +CONFIG_CFI_CLANG=y
+> > +# CONFIG_CFI_PERMISSIVE is not set
+> 
+> Should this be a part of kernel/configs/hardening.config because RISC-V
+> supports it (and 32-bit ARM will soon too)?
 
-$ git grep -P '\b((v|)snprintf)\s*\(' | wc -l
-7745
-$ git grep -P '(?:return\s+|=3D\s*)\b((v|)snprintf)\s*\(' | wc -l
-1626
+Probably yes. I was worried it might be "noisy" for archs that don't
+support it, but frankly if someone is using "make hardening.config" they
+probably want to know about unsupported options. :)
 
-Given there are ~5000 uses of these that don't care
-whether or not it's snprintf or scnprintf, I think this
-is not great.
-
-I'd much rather make sure the return value of the call
-is used before suggesting an alternative.
-
-$ git grep  -P '\b((v|)snprintf)\s*\(.*PAGE_SIZE' | wc -l
-515
-
-And about 1/3 of these snprintf calls are for sysfs style
-output that ideally would be converted to sysfs_emit or
-sysfs_emit_at instead.
-
+-- 
+Kees Cook
