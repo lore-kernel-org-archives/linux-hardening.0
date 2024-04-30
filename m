@@ -1,94 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D5A19477;
-	Tue, 30 Apr 2024 06:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FCD127B68;
+	Tue, 30 Apr 2024 09:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714459174; cv=none; b=aFBZJp4RLHZYW55VOfiK96UbIuHnDg7GACcMWK+3xdiUB+ul+XzlTrsqH+4PY6xNdEGMxxBEctoZDlVRj8s2pnScInms2PNGQk9Krv5rTnS1SYO5ydovzLDdC2lVzEybVWMlj1cCmIRiGVZ6D1erYJ/qevK00TMZZlJfjxVelAM=
+	t=1714468520; cv=none; b=KkXPciJILt7US24TFu7aQ0+ypOcywrkwOKSqpfOiVn+sPdAhaD9UQ02xwvYxfdYSyBz4R8561A1DoTGZcZa3LoKedK02lFOtEKhYxO3bJ6QOdg65wbPAgoI3H5/hgVL5/AjdZgEZVTQC+wQ3hvcjopP988GM9PH96cNsr0URJoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714459174; c=relaxed/simple;
-	bh=oqnLXrIFCIxkLdU3yGt5+mmee31pq5ZWUdGnKAC//2Y=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=ED0fxCMvgafT+GbchuNZBTTzYsSzRMGoLTUabKYSKmEdDgAU5sbq3KhuAIG76HVQFEUB3C3NFbgIva5eOJ+p83UjiEEjuGfrZsGJDOa+Y/lWUfPuLH3fduVB4El4otmZce4PZqxNncWsxZSazlssZzWvuBHLy9CTvDHpYJVWM3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9i1p07A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714468520; c=relaxed/simple;
+	bh=A5/HDxwcKe1CPVTAY+cgDukpdoaBFZ/fMspZPwQu9PA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FBZ1DLx3W9wag4CJlNOIqzbIGoz6/hLFSXX0Oscsse+SJ/wSbahaNNJ7mv+jghissMx10XIvOg9BefSGURHBKkQGEvzSOxy1lMIf/EBs/Tn7KgLQN1Ki6ORbNb93aIcJQe4Cv7Dbvzy/neKu7qvHmxmbpBl0Lbad7TjyepjVVCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QezeMGZb; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9i1p07A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FDAC2BBFC;
-	Tue, 30 Apr 2024 06:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714459173;
-	bh=oqnLXrIFCIxkLdU3yGt5+mmee31pq5ZWUdGnKAC//2Y=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=d9i1p07Aca+YWhFilcHBrCXtPHtGcJx8kthc0StbqTMZrqBtVGMJqiTBqBdbGQvRP
-	 hpl6YozRPgM604gTXkL2bWDOHwRQThwiGuQAQ+TD1HftHWCePUbzRXtD/kkAw9hl/1
-	 w6Qhlva/Rqny8+ncRVfMZ+5nlmlEobcWMNi9Dml15E+q8XUr0DMl6TcbSEFd7SHRkO
-	 9tdopBqtqwaCgjYEILSLLC/YnAeGDZKSApiRkNzxvxSABGn5UPACL3WQZTbgPk0osf
-	 zDrqMQaBKB+MDLl4qf8qOhDwo3/8ktquodGSmDosA6q4dwzKa0t8/7atnx/5nTO3rl
-	 l0F1JX1iFEpvA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,  Jeff Johnson
- <quic_jjohnson@quicinc.com>,  linux-wireless@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] wifi: wil6210: wmi: Use __counted_by() in
- struct wmi_set_link_monitor_cmd and avoid -Wfamnae warning
-References: <ZgSTCmdP+omePvWg@neat>
-	<171222554691.1806092.8730005090791383928.kvalo@kernel.org>
-	<202404291008.51DB333F@keescook> <877cggqdwb.fsf@kernel.org>
-	<202404291109.331E1704@keescook> <87bk5sf003.fsf@kernel.org>
-	<202404291251.9CBC42E481@keescook>
-Date: Tue, 30 Apr 2024 09:39:30 +0300
-In-Reply-To: <202404291251.9CBC42E481@keescook> (Kees Cook's message of "Mon,
-	29 Apr 2024 12:52:49 -0700")
-Message-ID: <87y18vpd5p.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QezeMGZb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=A5/HDxwcKe1CPVTAY+cgDukpdoaBFZ/fMspZPwQu9PA=; b=QezeMGZbL/2NWH6nP0/grm30hL
+	jMekjRq2qFRUCFMRCVKslzxjAbg9qKxnPhvTx49CL9iwrEZkwp43xFyQ0hHRqjVecoKP32EYhnlYA
+	F7dLnahlYnkHPvtIlVuNduOC/6DiIs0YE0BNWfCwjHkGa3Iepoi9C6AD95I5r4h1/DGRvLsrycMOj
+	XhG0q9cRd0XBlsKJ/npaieP0mBo/2iId1P1fa5DvQPM2vivUKoCsHcxz4syC9vcHK4oPuzkLS4zf0
+	Se759pCqFVTnwp1pXJJWiexcYhQ4XC/Lfhh/wVX2XZtGeCfqZ5RPr4C6k/6Bbbi7gZfurl8CVIIxS
+	ne8E90VA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s1jZo-0000000Gsl8-2RdT;
+	Tue, 30 Apr 2024 09:15:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3F7AD300684; Tue, 30 Apr 2024 11:15:04 +0200 (CEST)
+Date: Tue, 30 Apr 2024 11:15:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-Kees Cook <keescook@chromium.org> writes:
+On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
 
->> >> > I was just walking through our patch tracker and noticed that I don't
->> >> > see this patch include in -next yet (as of next-20240429). Is there a
->> >> > flush of the ath-next queue planned soon? Or did I miss some change?
->> >> 
->> >> Yeah, wireless-next was pulled last week so most likely we will create
->> >> ath-next pull request this week.
->> >> 
->> >> BTW we are planning to move ath.git to a new location, rename branches
->> >> etc. I think we'll see if we can also setup it so that it can be pulled
->> >> to linux-next, so that you don't need to ask this every time ;)
->> >> 
->> >> (Just joking of course, there a lot of benefits from having the tree in
->> >> linux-next)
->> >
->> > Ah-ha! Thanks. Yeah, sorry if I keep asking about that. It's different
->> > from other trees, so it doesn't stick in my head. :) I should keep
->> > better notes!
->> 
->> BTW I think all vendor specific wireless driver trees are not pulled to
->> linux-next: iwlwifi, mt76, rtw (Realtek) and ath. So with all of these it will
->> take a while before the commit is in linux-next.
->
-> How long is "a while"?
-
-The cadence can be anything from 1-4 times per release (~8 weeks).
-Depends on the maintainer, how busy we are etc.
-
-> And if the latency can be reduced for these, it'd be nice since it
-> would allow for longer bake-time in -next.
-
-Sure but our time is limited, as always :) There's extra overhead with
-linux-next, like the rule that no updates during the merge window, so I
-can understand why some maintainers have not included their tree to
-linux-next builds.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+So personally I detest struct_size() because I can never remember wtf it
+does, whereas the code it replaces is simple and straight forward :/
