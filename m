@@ -1,69 +1,100 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47D0127B68;
-	Tue, 30 Apr 2024 09:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3753FC02;
+	Tue, 30 Apr 2024 09:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714468906; cv=none; b=WYdKxHnbmVWtA5HphW/pGQwXF36az++V/rmjkhnOqUsUeh2aUr21uX1FagXMnD7tF/7T0mqzGK3Pf0WxaughC9e4/Pk9neVpomW8/4BIMi4L8t84Z2TUFTVv2BpJudE6j4YbwBdmaCxu4AUlXAc/h4oodXAI7Afk6mjGqtsQROc=
+	t=1714469805; cv=none; b=ml/gT+cxCSqEkL6lE/PVjgguobVieWhwxH+iZppBWN9FoItRQwZ0gcyJqel/HjOgsypqVGO2dI+UDLPlIjSx1G87mukvYAvnFujHbmKZZNgMKZv0hT8zJPfi8aHuhJmi0qaJuIxPfPwlCgcowEU39V2sgjS5KZERYBePTcKRsJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714468906; c=relaxed/simple;
-	bh=TdZNueaaPKLCguGskYeGbsKIkL8BHJVTSoWgSzU9fJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l3st94ESGZE1jAdpawcvEaoY3ufMgw5RhIgBBhwx/7wNx9HLup4aFKE0d4DqiYA2zqhjE1dXHaaJui0wRGOyn+EjShAlgXTHhrKMTxM91UyoSIQK9m9gV1ReKszfP8o2HRHS+oUASevOtknGD62mz0LeHx6urtuFzLwnk6E9mKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DzD4eUtc; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1714469805; c=relaxed/simple;
+	bh=/x8Zhi2ct4Y6VhAKhc287XA7fVf97CpbCo/XzJpZAe0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tDjg0sQBK6GEybxyJVEsDmvYoVmsx4te90ublrG28v9xamK6qRuOMag4GnI4btdKyfmNZdYs2LOXacFBs/wdxwZDPjTQypY8orq0qYwiqvijQ1bh3J+nVw+G6pno038Q5oXlLTQxZL3iJy+nWPcNwT118WPo/yS5fVG6RAEigEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NSF4OoFu; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DzD4eUtc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bHkTSQnGuEaomY/gWdm3ngyCLQOoVPGkYgrv4PBOIGs=; b=DzD4eUtcf8dJCc0qMaoSFOZzI2
-	9fKRjdp2FjnOVJYF70fF+0yOb5bx6/Aee66eQcrH8aJo3ykyg4XA7lIDg4Cr100P48sv3zckiG7/o
-	4LajJN1NX9hTsvzyyJPQLkg4kCLMGjxRk3f1ks4mpm2tRlECRkGnWjXAjN/BstK30FJejr0G1phAC
-	2osHNcyYnNEgHogICgVFOqb1qXicXSgvDpswTImy9O/GV9oCkeBWfb7MMR5BFk4oSkMBOFF/J0M7W
-	ZKSDmvLCwJxVfbmrJ00mzF6YJxfbxv7fXXc983QOIxCtO/jZAIH0bV3eeXo82JEj7sJ7fqEc8cDqN
-	sUojJiBw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1jgC-0000000EUWI-2fQc;
-	Tue, 30 Apr 2024 09:21:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4F726300684; Tue, 30 Apr 2024 11:21:40 +0200 (CEST)
-Date: Tue, 30 Apr 2024 11:21:40 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hardening: Refresh KCFI options, add some more
-Message-ID: <20240430092140.GE40213@noisy.programming.kicks-ass.net>
-References: <20240426222940.work.884-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NSF4OoFu"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43U9aS2v100704;
+	Tue, 30 Apr 2024 04:36:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1714469788;
+	bh=e5EcbOebBnZOxjyjMA63HIyjpRB+ieKp7VwIXBGCGR0=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=NSF4OoFuYkLd4fQOcsBbH41E8TcG8IznJNL4MIu9jBK8chMBVLSUo1NYvyaEYh5PC
+	 9DdoVCLu+Ld6QaSCZrLHt4XGncc+BgR68cdJLn/98UhQG1lxqA1UGd10oAcILhBqXI
+	 dVLHYDQ/KBB9ajKctaZ1gmlEG2l46G4+2+mkcYgU=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43U9aRNK009592
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 30 Apr 2024 04:36:27 -0500
+Received: from flwvowa02.ent.ti.com (10.64.41.53) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 30
+ Apr 2024 04:36:27 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by flwvowa02.ent.ti.com
+ (10.64.41.53) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2507.34; Tue, 30 Apr
+ 2024 04:36:27 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 30 Apr 2024 04:36:27 -0500
+Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43U9aQFp019953;
+	Tue, 30 Apr 2024 04:36:27 -0500
+Date: Tue, 30 Apr 2024 15:06:25 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Justin Stitt <justinstitt@google.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] PM: hibernate: replace deprecated strncpy with strscpy
+Message-ID: <20240430093625.qbuaxltkrmlaoiza@dhruva>
+References: <20240429-strncpy-kernel-power-hibernate-c-v1-1-8688f492d3e6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240426222940.work.884-kees@kernel.org>
+In-Reply-To: <20240429-strncpy-kernel-power-hibernate-c-v1-1-8688f492d3e6@google.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Apr 26, 2024 at 03:29:44PM -0700, Kees Cook wrote:
+On Apr 29, 2024 at 20:50:30 +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> This kernel config option is simply assigned with the resume_file
+> buffer. It should be NUL-terminated but not necessarily NUL-padded as
+> per its further usage with other string apis:
+> |	static int __init find_resume_device(void)
+> |	{
+> |		if (!strlen(resume_file))
+> |			return -ENOENT;
+> |
+> |		pm_pr_dbg("Checking hibernation image partition %s\n", resume_file);
+> 
+> Use strscpy [2] as it guarantees NUL-termination on the destination
+> buffer. Specifically, use the new 2-argument version of strscpy()
+> introduced in Commit e6584c3964f2f ("string: Allow 2-argument
+> strscpy()").
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+[...]
 
-> - CONFIG_CFI_CLANG=y for x86 and arm64. (And disable FINEIBT since
->   it isn't as secure as straight KCFI.)
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
-Oi ?
+-- 
+Best regards,
+Dhruva Gole <d-gole@ti.com>
