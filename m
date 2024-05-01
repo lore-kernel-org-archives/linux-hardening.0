@@ -1,112 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7481E481;
-	Wed,  1 May 2024 22:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB857165FAA
+	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 23:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714603301; cv=none; b=OMuCJbAcYCA88ygDKxehbbwgcC4Wwx8hzQNnT/9vbbzQ1k5d3a6VzszxmHP1NlJANbcD3x2XJ0Fuoi5ubMbcFtreSBkuE11qXwTS55eVzlrV1rD9opOVA46KFCE6MwPSAU2Fno+OFJQiRdZ2mq5orq1/l7remaOBvxozkRGJVrk=
+	t=1714605537; cv=none; b=gOSkQlrWg0iuQ2x8m3KI8R4r0TM+AnZCT9xMMyL+dlAI2Xlq0uOhWuZqhmVMC1YjpVxpHHBSFSNzXdV/9c3tfvaQLGruMKLMcxx2HiUd/wSG+Z+mCpzoj25lgd7EwmkrrLF/pWygGO+6/zXU2m1FjH1IeQYE2tQhaMiWcZ24rho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714603301; c=relaxed/simple;
-	bh=21eJgw3bVlrvg9JhkL7vGWg5gy5SSNA9yb+RC4qJH0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RwZIJH0vdvg1H+nlxH0dNqyvD869iUErtIiz5mjEZG86ruThBwAK3VfDJNF6+DqP3fkMYWVho7TzBiLmvOedTOAdpz7nuQoYlI+t4tchTkKA9mGQSa8QcNl6Ac+DR/9soLYqvtcumleeIvLqhwCvO1VqpPq0R1Hsa8BYwpmTMdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSGN62oS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714605537; c=relaxed/simple;
+	bh=7FXkbiF78yO95Ik6NVI4Nm2pb09Aq3YrAbf9O/PxWvg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MgUofAw7dnwC3voBulbg/gFozHY4DiL7fMucp//tQYKIQUKQbx6852CZNpgaf2shaiFiEhU6XpW6DEzmG2XJ6vHkrx8l3GpSFDWs1b2v1B/O21s7WUk9l3w70IPQJYUTCAH6QLJpU8tv6Cj+C9su98yWIinMGBeFzYpb5Bn+nOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PABHzP0a; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSGN62oS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B1DC072AA;
-	Wed,  1 May 2024 22:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714603301;
-	bh=21eJgw3bVlrvg9JhkL7vGWg5gy5SSNA9yb+RC4qJH0U=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aSGN62oSHnV5bTA6Cvn6RwYasu8gLbikz9Uena1xj0g3FEdeZ6cnNnzh4kCddR+tR
-	 v37PBkCHIx8DwAGrZIkOEeNj3mpeC6kEHyC5SkTqDid6Nzh7vAnHHb3el4FaV8cUMy
-	 O4FH4dVBPBA7HNWE+NOBvGiNOXOCLUGRQKRw7YnB+JlkXGMyE4R+g8hYD21mYB1PTL
-	 VQ1dl+ALcIckEWwFwuDX+vVzvowFAfJnS2h4kNHUf6YYL1OeZ12tY9J6nM8XFDA4Fg
-	 ikb+91aQjR/NRbbvCPAn0UPgtIrVROV2eHcTN3nmQmKaMtYNKxmyO7RraUoHpUtI+t
-	 axN/fW8F34JWw==
-Date: Wed, 1 May 2024 16:41:37 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: rtlwifi: Remove unused structs and avoid
- multiple -Wfamnae warnings
-Message-ID: <ZjLFIa31BGPVCGh1@neat>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PABHzP0a"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7f18331b308so684245241.0
+        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 16:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714605534; x=1715210334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7FXkbiF78yO95Ik6NVI4Nm2pb09Aq3YrAbf9O/PxWvg=;
+        b=PABHzP0aN1R0tz3YGI0Ot82xvogNHaT1Ev9Ouo+3uCM8EPMHrcpOUss16VYQNxWvsi
+         8OOQ79i2+4qIjVIpnHnRr5OVyKqRimILYjJJQnG0LMZWp29BzQrbK8DMtG+bZV5AKQD7
+         3AbDhHzu50wbRJWt5UDt6jXSVkN9wOC8Gbz05/307y+U1AgZVowEAch9cnt3gZ5B5+6s
+         xCOZYmeUfXgg4GMGQLZzxUD5uW7jVr9xzVkekqYHZnWE/bR16vv5P+tC1+By1QTNbhMo
+         RSxoFmBleOLngKt0W/Pd3qfL9tJa0KNS04H7LFfm1zgrzm5deFpL8PMNQazJ/VC6Udmp
+         /agw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714605534; x=1715210334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7FXkbiF78yO95Ik6NVI4Nm2pb09Aq3YrAbf9O/PxWvg=;
+        b=LGOOL6RW/KRT+QdY30bk0eHOiKSWNZ8PMcZbqah2Sa+6cjWYcXsoTGjMOg6+L5kjWl
+         hSg9rh5XDCaiVxlhlJYk+1Az6579HAQLIdEANUZOAlpqWWHmLxfRlPvwGpkojvMTccD+
+         VkAD2HCoc1/NAn6vMPHdfKj7pdCeoqOhyF09NSrlmmYR+SRiUVISaW8us57pQlSKilPC
+         fkFUbC0K3goKeV45IciWlDt805KPUh2A0/pq+iBKTNg0LjOwHILa50ahcMRmEh4VS3yx
+         jNH7WvS3mQ4hWFFVPAOPee5W/hJfpddWI5NCjhIwsewq0LYsmhjGqGHT0P0IHKLaatQ6
+         CXfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuinvyEDS8GkzmnzYCK/J27R2oh1isILyqHq7BMvodTE+2jpEuj7KgRD1ai9B9TrESYOJTbBVF6Rg7BQdvYeCW63MoIC8FAcCTyaVI5IkA
+X-Gm-Message-State: AOJu0YywtOlDUZt58jXHs5mjdTChbEslX+x5SsRtMC5YPl3BmKtwXMSo
+	3ah0rFbj1iEKL1cQHE6a/xS9uijkS89cyoWpKEizDD3Pmhx1mB0NtbxqufmyfWB5JGaKyobB8Uc
+	dE2Ud7f7/ZUu5IK9GjsjkzGBzguSe/aSfHAgZ
+X-Google-Smtp-Source: AGHT+IFCNhW7Sr4LWQ18lqVtEBE5i75ngQX0dGbAlyauUArqJLvaZn/QyY35oTF3T1kZyxDYj2izJDA/UYjotSrmUC4=
+X-Received: by 2002:a67:ee88:0:b0:47c:24fa:b627 with SMTP id
+ n8-20020a67ee88000000b0047c24fab627mr4315116vsp.13.1714605534362; Wed, 01 May
+ 2024 16:18:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
+ <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
+In-Reply-To: <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 1 May 2024 16:18:42 -0700
+Message-ID: <CAFhGd8rO=-DYvXi0YHvQqnhTteV+Hgeuou0X3USx61oTobj0kw@mail.gmail.com>
+Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+On Wed, May 1, 2024 at 2:39=E2=80=AFPM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+> Hi,
+>
+> Nit: The { } around each branch can now also be removed.
 
-So, remove unused structs and fix the following
--Wflex-array-member-not-at-end warnings:
+There was one line before and there's one line now.
 
-drivers/net/wireless/realtek/rtlwifi/btcoexist/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8188ee/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8192c/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ce/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8192cu/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8192de/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8192se/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8723be/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8723com/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/rtl8821ae/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/realtek/rtlwifi/wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+I'll remove the brackets but I will briefly wait to see if any other
+concerns come in.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/realtek/rtlwifi/wifi.h | 27 ---------------------
- 1 file changed, 27 deletions(-)
+Thanks
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-index 9fabf597cfd6..f4c71890b989 100644
---- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
-+++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-@@ -1043,33 +1043,6 @@ struct octet_string {
- 	u16 length;
- };
- 
--struct rtl_hdr_3addr {
--	__le16 frame_ctl;
--	__le16 duration_id;
--	u8 addr1[ETH_ALEN];
--	u8 addr2[ETH_ALEN];
--	u8 addr3[ETH_ALEN];
--	__le16 seq_ctl;
--	u8 payload[];
--} __packed;
--
--struct rtl_info_element {
--	u8 id;
--	u8 len;
--	u8 data[];
--} __packed;
--
--struct rtl_probe_rsp {
--	struct rtl_hdr_3addr header;
--	u32 time_stamp[2];
--	__le16 beacon_interval;
--	__le16 capability;
--	/*SSID, supported rates, FH params, DS params,
--	 * CF params, IBSS params, TIM (if beacon), RSN
--	 */
--	struct rtl_info_element info_element[];
--} __packed;
--
- struct rtl_led_ctl {
- 	bool led_opendrain;
- 	enum rtl_led_pin sw_led0;
--- 
-2.34.1
-
+>
+> CJ
+>
