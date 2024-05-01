@@ -1,75 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C1A12FB36;
-	Wed,  1 May 2024 16:13:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF17A14A81;
+	Wed,  1 May 2024 16:33:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714580012; cv=none; b=vFyEYVw5tVUAwtjGbkO62+HOVLa9u6eWTfzZX1AhLDJpxfMARTVXjBImTLGty+wuccwdRCDIymEp8RMg8BIf9EWlEqzcae9S5CvrYQnmb1dLT1epQCngabyiDr0qN+yozt5iiqceu5phJGaSFSDTI8/oJGN9xiaSsIWtv820vvo=
+	t=1714581198; cv=none; b=HMdSavHMr9e5MVqZfjL8lSsu4RwmJIFCoad1df9Gp3dKrrF8nRccM6mrqPqelWgEG+OO9Uj0o6mwfL5WoW0WLpOICmB9NxYRy/Fo+XWXYZLw4XrQKtsk1ATOsMyFLyDQUEK/4YPQbsPPOpALCBdvXhT+cU2pHhhgXrJMKxKZBvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714580012; c=relaxed/simple;
-	bh=dFzfiSp+K+7eC8iqd8lGaatDkcEc0b44t6mRfekFWs0=;
+	s=arc-20240116; t=1714581198; c=relaxed/simple;
+	bh=YsbiyCkWKx45NRwGZjUByWsT1FcLXkinPMoGZRzJENY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9twhZVkeCqNsk+Zo6dpz9YJSf0uuEPMPZ8BXqvlwg2G1v236yVmXHmy4vNSwoF/1RemRlHqCUgVhYOVIudzIGo3NXM6MrrhsTMT7BI686Epiu4m9UsVEMfwgtYIOD42M16oX4BQH5/aKrSgTPFFEkX7R3yzNWoVmrhy7wy8uWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SK76njsD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2wQY/cmCB6SqcgKNafKW+dGiWj0lDV92LwPG6gIsZ5YvFyP1os2Pp1dPU/55ayktpzfmxdfqHH8uuzNkjZlNeI1FHSH6r4BgYC3pnjMC4VscWBy4FXIMEzPjtshK4L0cdjkPN/A5NKdogrkr6czPj4vtVzn+oq0JoWRLg1Mx9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyJQWB/C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SK76njsD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA2DC072AA;
-	Wed,  1 May 2024 16:13:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyJQWB/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9843DC072AA;
+	Wed,  1 May 2024 16:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714580011;
-	bh=dFzfiSp+K+7eC8iqd8lGaatDkcEc0b44t6mRfekFWs0=;
+	s=k20201202; t=1714581197;
+	bh=YsbiyCkWKx45NRwGZjUByWsT1FcLXkinPMoGZRzJENY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SK76njsD/UbgyWhKEa5gdiXSDYZ7FmYrHbjk4phy4JQ/5y++dgaAoK7dFrTnpbgJm
-	 wWqEsJ5UHazwnyXBq6qImP5pWtHrNCce6zW2vPHGcBPotG1/tWoiJPC2bQ6ETPpuLD
-	 4EzW/uEvNHTm/x3mPEh/1agcO0v6woJRSKhugvfmwXAyGCT3/BtkrU9EYh/7s8n7Yc
-	 WJ4yH29ddvKTUhqJTvKmHJYADF6hgHLpuh5KVdp95Du1ZUbMx2Ry/MJLU/peSJ02Gx
-	 rJdVEZoG89TjPu1YbCz0ASGT8cme30P+XUQHFhwv9omUtihZ90EV6FDEgjt4eNqLjE
-	 7Jutct3+m0Z2Q==
-Date: Wed, 1 May 2024 19:11:58 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	"Luck, Tony" <tony.luck@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	b=kyJQWB/C/UPy4hQuJX7qWfmVqfUZv95MxBh5sX9ggF10yALKt3+gJ4E59JuVdphYn
+	 +PmVOsc9zIbTDydsLQoRwu32kcNi9awZ4m3i1xCWZsJf1guGKFWK/WTZ9s4jYZJIXS
+	 T6YNrqkcpcK0TXH8s1N4YpzOOTcTZBy0JMufDRmwywwcsqwU6Hl3roNxLh9K1KOLrz
+	 NWunAfeQyYBTe/LSnFu9WE3dg8+4WscGoLSUgRR1+C0F4me78dC07h6wx2sv6zDiD6
+	 sIcNZ1h7xp7TjjXv1LPwkarBqN2efPN0ZOUbEZbr+cpSNdsyxTu/NUc1rznKDJibJt
+	 fw65B/KbapeVg==
+Date: Wed, 1 May 2024 09:33:14 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>,
-	"wklin@google.com" <wklin@google.com>,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <ZjJpzqviUeFnV1A4@kernel.org>
-References: <202404091519.B7B2221@keescook>
- <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
- <20240411154007.5bdf8d95@gandalf.local.home>
- <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
- <20240412132243.053ad096@gandalf.local.home>
- <ZjJVnZUX3NZiGW6q@kernel.org>
- <20240501105455.42b78a0b@gandalf.local.home>
- <ZjJgIIOvvEdnisNA@kernel.org>
- <20240501120904.61c7617c@gandalf.local.home>
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Juergen Gross <jgross@suse.com>, Breno Leitao <leitao@debian.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/alternatives: Make FineIBT mode Kconfig selectable
+Message-ID: <20240501163314.GA2472577@dev-arch.thelio-3990X>
+References: <20240501000218.work.998-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -78,65 +50,112 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240501120904.61c7617c@gandalf.local.home>
+In-Reply-To: <20240501000218.work.998-kees@kernel.org>
 
-On Wed, May 01, 2024 at 12:09:04PM -0400, Steven Rostedt wrote:
-> On Wed, 1 May 2024 18:30:40 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
+On Tue, Apr 30, 2024 at 05:02:22PM -0700, Kees Cook wrote:
+> Since FineIBT performs checking at the destination, it is weaker against
+> attacks that can construct arbitrary executable memory contents. As such,
+> some system builders want to run with FineIBT disabled by default. Allow
+> the "cfi=kcfi" boot param mode to be selectable through Kconfig via the
+> newly introduced CONFIG_CFI_AUTO_DEFAULT.
 > 
-> > > > /*
-> > > >  * Parse early_reserve_mem=nn:align:name
-> > > >  */
-> > > > static int __init early_reserve_mem(char *p)
-> > > > {
-> > > > 	phys_addr_t start, size, align;
-> > > > 	char *oldp;
-> > > > 	int err;
-> > > > 
-> > > > 	if (!p)
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	oldp = p;
-> > > > 	size = memparse(p, &p);
-> > > > 	if (p == oldp)
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	if (*p != ':')
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	align = memparse(p+1, &p);
-> > > > 	if (*p != ':')
-> > > > 		return -EINVAL;
-> > > > 
-> > > > 	start = memblock_phys_alloc(size, align);  
-> > > 
-> > > So this will allocate the same physical location for every boot, if booting
-> > > the same kernel and having the same physical memory layout?  
-> > 
-> > Up to kaslr that might use that location for the kernel image.
-> > But it's the same as allocating from e820 after kaslr.
-> > 
-> > And, TBH, I don't have good ideas how to ensure the same physical location
-> > with randomization of the physical address of the kernel image.
-> 
-> I'll try it out. Looking at arch/x86/boot/compressed/kaslr.c, if I read the
-> code correctly, it creates up to a 100 slots to store the kernel.
-> 
-> The method I used was to make sure that the allocation was always done at
-> the top address of memory, which I think would in most cases never be
-> assigned by KASLR.
-> 
-> This looks to just grab the next available physical address, which KASLR
-> can most definitely mess with.
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-On x86 memblock allocates from top of the memory. As this will run later
-than e820, the allocation will be lower than from e820, but still close to
-the top of the memory.
- 
-> I would still like to get the highest address possible.
-> 
-> -- Steve
+I verified that flipping the configuration does indeed change the
+default and that 'cfi=' could still be used to override whatever choice
+was made at compile time. This patch was a perfect excuse to put my new
+CET enabled test machine to work.
 
--- 
-Sincerely yours,
-Mike.
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+CFI_DEFAULT_AUTO reads a little bit better to me personally but I am not
+looking to get into painting today :)
+
+> ---
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> ---
+>  arch/x86/Kconfig              | 9 +++++++++
+>  arch/x86/include/asm/cfi.h    | 2 +-
+>  arch/x86/kernel/alternative.c | 8 ++++----
+>  3 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 4fff6ed46e90..d5cf52d2f6a8 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2424,6 +2424,15 @@ config STRICT_SIGALTSTACK_SIZE
+>  
+>  	  Say 'N' unless you want to really enforce this check.
+>  
+> +config CFI_AUTO_DEFAULT
+> +	bool "Attempt to use FineIBT by default at boot time"
+> +	depends on FINEIBT
+> +	default y
+> +	help
+> +	  Attempt to use FineIBT by default at boot time. If enabled,
+> +	  this is the same as booting with "cfi=auto". If disabled,
+> +	  this is the same as booting with "cfi=kcfi".
+> +
+>  source "kernel/livepatch/Kconfig"
+>  
+>  endmenu
+> diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
+> index 7cd752557905..31d19c815f99 100644
+> --- a/arch/x86/include/asm/cfi.h
+> +++ b/arch/x86/include/asm/cfi.h
+> @@ -93,7 +93,7 @@
+>   *
+>   */
+>  enum cfi_mode {
+> -	CFI_DEFAULT,	/* FineIBT if hardware has IBT, otherwise kCFI */
+> +	CFI_AUTO,	/* FineIBT if hardware has IBT, otherwise kCFI */
+>  	CFI_OFF,	/* Taditional / IBT depending on .config */
+>  	CFI_KCFI,	/* Optionally CALL_PADDING, IBT, RETPOLINE */
+>  	CFI_FINEIBT,	/* see arch/x86/kernel/alternative.c */
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index 45a280f2161c..e8d0892d89cf 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -902,8 +902,8 @@ void __init_or_module apply_seal_endbr(s32 *start, s32 *end) { }
+>  
+>  #endif /* CONFIG_X86_KERNEL_IBT */
+>  
+> -#ifdef CONFIG_FINEIBT
+> -#define __CFI_DEFAULT	CFI_DEFAULT
+> +#ifdef CONFIG_CFI_AUTO_DEFAULT
+> +#define __CFI_DEFAULT	CFI_AUTO
+>  #elif defined(CONFIG_CFI_CLANG)
+>  #define __CFI_DEFAULT	CFI_KCFI
+>  #else
+> @@ -1011,7 +1011,7 @@ static __init int cfi_parse_cmdline(char *str)
+>  		}
+>  
+>  		if (!strcmp(str, "auto")) {
+> -			cfi_mode = CFI_DEFAULT;
+> +			cfi_mode = CFI_AUTO;
+>  		} else if (!strcmp(str, "off")) {
+>  			cfi_mode = CFI_OFF;
+>  			cfi_rand = false;
+> @@ -1271,7 +1271,7 @@ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
+>  		      "FineIBT preamble wrong size: %ld", fineibt_preamble_size))
+>  		return;
+>  
+> -	if (cfi_mode == CFI_DEFAULT) {
+> +	if (cfi_mode == CFI_AUTO) {
+>  		cfi_mode = CFI_KCFI;
+>  		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT))
+>  			cfi_mode = CFI_FINEIBT;
+> -- 
+> 2.34.1
+> 
