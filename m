@@ -1,89 +1,93 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161EC13956C
-	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 20:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD621635C7
+	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 20:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594761; cv=none; b=gLTpL+zzecMrLEB8+1jyHCCS44SNyZRdio6N0BAYqCKUZS4yQCzWjyDM16uB2shId5HsuklMOkufEO1gG7RyFSy41yMGGu5JOvboSMqrDZP3IlMoJuYYvPSE9QgyrYyrRNgJGLxBk/q7npXNmIgeCrcT12vAB8YRCAuH8j0zVms=
+	t=1714594905; cv=none; b=LYbq4Qz8pHwkL8EKP/MLwMl0b8sJjkCDaeTpxds9QFij+UoVShDx4Ayz59zqz479UgGaIBrMJr7wb0VpU4PxBI80SuUaB8ZF+0+OtzF0z0Vc6+bOTSP1lJwzWlFezahTR37eRNePEfSM82laM+E7JG7c5ES1rcjfBMQB5i7VIQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594761; c=relaxed/simple;
-	bh=/E3lGZnIdEvkShs7yZGABbxU5GtGlIugqdMHDWd9cxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RC/lcU7CWFJd9htRIQntKBPzjA7xsHTtGeKZxR8T7rzQxQx5cXJ/MF5mgF/KPMeOQU6CnQy4LMtnZBVZZzud2Y7aaPddymdDDicfyVQqnkka+2C1zH6lXr2voxkr6RYCliYIhT9vS5U0N8NRWLwf16e7ZqVvkUDgCxws7z0VGZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OXvTZX92; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714594905; c=relaxed/simple;
+	bh=nPUrAToma1+IWJyW4NorUHWTJxgN7XpkT+ZRrxLkDoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaTUsDoITPL/rRo1ZgSxdqRnrW+Wc4BGzR1A1w7kB2NTrcdOq0+bg8w3zojGy2l0KTArDkoSIqb8avVdNfAKbAeFivP7MF1lYIihjqP4wo6pWdNJVbAwnymLp30KKvqIwcZjb/P0MCHsP+SuNyD4soxCYaeGa6oerBvPvVs7TLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R6lC+wyy; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OXvTZX92"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7f16ec9798cso719495241.3
-        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 13:19:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6lC+wyy"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f30f69a958so6197478b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 13:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714594759; x=1715199559; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/E3lGZnIdEvkShs7yZGABbxU5GtGlIugqdMHDWd9cxQ=;
-        b=OXvTZX92uCS0NPuRidZukMI+ZLB8ENlf10vWWkfPfaLv9m0O+9XWrJAuk/tgELNntJ
-         /kZiDOZfbGGz2sKZg9vxniPUUuVQWaAxaQbh64gi0vMrIqpk77x2E1JGnmCeLqe9oQVg
-         vKFwxjf4IcNijPapYJExpQd+VNJQfjdwcesRPP+Roj8bnrkTqHLVCIMm/iBAS+f151oi
-         VjWLqqz7OOyDL3NX97RRDuJSUfREAXLeSdGimlApYAM7u6i4RLshPJ7ass4zI2SwKKPH
-         8Wb4zW5wzKViJdIm/yZWL0lxzEDzwyJthinZpep5Vium2S+5eE47JQdq5JY5mZ2baGoX
-         RKtg==
+        d=chromium.org; s=google; t=1714594903; x=1715199703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
+        b=R6lC+wyyKGv555bfAgjGaVAhVKeXMz7DYH5NnAacO7JbE3z4cYvgn7VrA7W78G9SBC
+         S7iBlI75R5bcbxhAp/NRCcdjk5sPlNqJlXepxjuhYdqashwgMIqfeWXynm6eKpV590fm
+         yZNlK1OerSDiXNTARj6eGB6JQvl7NcJ1kAGF4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714594759; x=1715199559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/E3lGZnIdEvkShs7yZGABbxU5GtGlIugqdMHDWd9cxQ=;
-        b=NYrcmIcTe0J1rpaFgtods5E7lMsCSh+I7rqwKNvciCoOkPk3TGSIDuwDakA2dn9BCh
-         MDujkbzkuAoR9S2tWLaVgxk5flc6r188sVNos3sYmSS1EpddIrvLTxYj7u1r+6tN81x6
-         JN0rZN4frIlbl9ekL+xzhhE/Oe7M6sEjlxfqluPUeiyDsDqIja87LES3Yh++MVo2HTIa
-         CetTkiyHOOJYnmmzyAR71dgvoxn59irZYOPryoLLojM4rDjD2qAiMRuaJBDFlXFN1Z30
-         r4HCkI18t3A7Tq5qC7Sq9REzhgQyWWjd5k9L1ZRWg9WKrR4gdvVmYE0ITAlqlLnQ5m/J
-         WnuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5NPHoao63ahkFxaGC79N3aHAXLh282iDR1g6Q+ks5sC7aFyX7PESQaQegG1YXNp85qnlazTxMd7OZ5eiiGJj6nEvE4M14Ltko33a8Hmqx
-X-Gm-Message-State: AOJu0Yy/T3NSjp0brAqvbuOJhd3GtunM/9SWYQAWaENXCi63rmDL78nd
-	ZcDdtO/K+wYMym4C906pxet1u6Imb0ziu2xigv0oy45eO4ucRaDmIkp41kJ1viPiQh9rx4jQ18R
-	nYVZ60YS85F+MSf3dCDjAUEzqZNX0v2uHxQYV
-X-Google-Smtp-Source: AGHT+IH3NkQ9UGD1dyq6uplD3kVG/evBVRizXuCAvmSGPGe1sTsNrxTTYgkO13Sc1leDbu/aiyFKSSX1+KnUzI7rDJc=
-X-Received: by 2002:a05:6122:2219:b0:4d4:872:c68a with SMTP id
- bb25-20020a056122221900b004d40872c68amr3932462vkb.1.1714594758784; Wed, 01
- May 2024 13:19:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714594903; x=1715199703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
+        b=XSDb1D3FNxzIpQolMderAxrPHkPfVZBnLLFs4+wLhNrq0Q+ofCkDRu7SXj500ESb+W
+         BR7EfHLuAPLbGX2AX5aG3Z8HfAHeb69YtIq/MG7HFwQlxGUR1NY26YrxI6HL32UzkkMK
+         u19SPHNjcDnGm7t1g5BQ6hpZN6IVerso+xtC1h1aTTwLxF1SVvarqqqDw3NrA49SOtsO
+         11zfee3iOXRGjylKd9BI8skvHbnE+ErSvVM0aFO7QrlEFuPgUH7HOegNvhfxfZFoHt0D
+         H3xhxu0DUkIT14YV6Yjskimn0SNlZMl+OPpqpXmHZJf16on1vM5VhSCwAzeeIR7v+/7n
+         fmCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkIxtyzfvQ8MUFT/BYmqfgJ9A1qcqYB4lt/0g8F0jTW86dW0NYbrxWIxxJNewr3M+TRIAmYU0B0G601W92+E225/dgL9ulD8M4fKEQKFRl
+X-Gm-Message-State: AOJu0YzGK9aLDFrC8/FrGAUWBWIlS/N7B4L93wLOH47j9xd9N8SNYuBl
+	T5g9J1a9oCWfmvc4R5WxI2S2ys1JC6SWjh+x5LplCgG3UCDXZvdAXEhj42fqXA==
+X-Google-Smtp-Source: AGHT+IGyvJ8Fbk39B3YR+oN/YqBuq3FvOn0WZU33SvV3xChl0KcHhy12+GnrIWpDME/qQK5QKb0o9w==
+X-Received: by 2002:a05:6a20:9f88:b0:1aa:5b05:7926 with SMTP id mm8-20020a056a209f8800b001aa5b057926mr4987182pzb.39.1714594903411;
+        Wed, 01 May 2024 13:21:43 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r13-20020aa79ecd000000b006ed045af796sm22947779pfq.88.2024.05.01.13.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 13:21:43 -0700 (PDT)
+Date: Wed, 1 May 2024 13:21:42 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+Message-ID: <202405011317.AF41B94B@keescook>
+References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <20240430091504.GC40213@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501000218.work.998-kees@kernel.org>
-In-Reply-To: <20240501000218.work.998-kees@kernel.org>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 1 May 2024 13:18:40 -0700
-Message-ID: <CABCJKufZ7zXq7-Jqdqpc-Cq8Jb3RyDTXO3p7NqZv0eRUxU9Ohg@mail.gmail.com>
-Subject: Re: [PATCH] x86/alternatives: Make FineIBT mode Kconfig selectable
-To: Kees Cook <keescook@chromium.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Alexei Starovoitov <ast@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Juergen Gross <jgross@suse.com>, Breno Leitao <leitao@debian.org>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
 
-On Tue, Apr 30, 2024 at 5:02=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Since FineIBT performs checking at the destination, it is weaker against
-> attacks that can construct arbitrary executable memory contents. As such,
-> some system builders want to run with FineIBT disabled by default. Allow
-> the "cfi=3Dkcfi" boot param mode to be selectable through Kconfig via the
-> newly introduced CONFIG_CFI_AUTO_DEFAULT.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
+> > This is an effort to get rid of all multiplications from allocation
+> > functions in order to prevent integer overflows [1][2].
+> 
+> So personally I detest struct_size() because I can never remember wtf it
+> does, whereas the code it replaces is simple and straight forward :/
 
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Sure, new APIs can involved a learning curve. If we can all handle
+container_of(), we can deal with struct_size(). :)
 
-Sami
+-- 
+Kees Cook
