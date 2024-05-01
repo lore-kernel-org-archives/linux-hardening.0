@@ -1,187 +1,112 @@
-Received: from msa.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C891D1474B9;
-	Wed,  1 May 2024 21:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7481E481;
+	Wed,  1 May 2024 22:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714599565; cv=none; b=k9cU46AVX9iwV+ROodLZy4ePKlXIZ+88JlRC4dVGVYHf9WDy9Q/7fVvrZiDkJhpGt29ZmWf37LM8+1yWoTRTIrsh3UUxL/LCn5yueugCCGJO41OdNN1S33ql61slGbePbPWmLlgvWHufyi1FrNFGhXXsTlY281X+FnjE5WqELYQ=
+	t=1714603301; cv=none; b=OMuCJbAcYCA88ygDKxehbbwgcC4Wwx8hzQNnT/9vbbzQ1k5d3a6VzszxmHP1NlJANbcD3x2XJ0Fuoi5ubMbcFtreSBkuE11qXwTS55eVzlrV1rD9opOVA46KFCE6MwPSAU2Fno+OFJQiRdZ2mq5orq1/l7remaOBvxozkRGJVrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714599565; c=relaxed/simple;
-	bh=xCX7DN4ArF6BjEHpKxCUjLo/sTx+uQ/UYj/ZWCCrQdg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fz74hdWVBMWm/KuNlK12gy9cqHsSEcnt6padWPV9nl5kiKzOYFgVMmYqJIfy4fbOz/k2VQtnE455bRqHxHYuTwbVOU/yqWxcubkX9b3oESxZgSLvhJiO2YvlCUAcAACiYDQvXSsdVqPDVbFAbNPUQslmTkHBZWzJ3VkF0zhmdQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ByewqnLA; arc=none smtp.client-ip=80.12.242.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1714603301; c=relaxed/simple;
+	bh=21eJgw3bVlrvg9JhkL7vGWg5gy5SSNA9yb+RC4qJH0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=RwZIJH0vdvg1H+nlxH0dNqyvD869iUErtIiz5mjEZG86ruThBwAK3VfDJNF6+DqP3fkMYWVho7TzBiLmvOedTOAdpz7nuQoYlI+t4tchTkKA9mGQSa8QcNl6Ac+DR/9soLYqvtcumleeIvLqhwCvO1VqpPq0R1Hsa8BYwpmTMdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSGN62oS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ByewqnLA"
-Received: from [192.168.1.37] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 2HfZsx4ATpDee2HfZs0ZRe; Wed, 01 May 2024 23:39:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1714599559;
-	bh=b/uendQadFoqJ6JUcsRVTxUOv2sgr+9vrXfQIk/X5eI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=ByewqnLAT2Hq/nsspQoWd1u5FHIvkZeGSt1pmJ2Wx5+rjP6Fx8/kvAQCMQO72OAqj
-	 MNJaRSHWXELm6vkDaxlTbPyeqQ9EaPPxTm8IQp+IxNZVmtZkOmilhhAdOTF4+kGb3Q
-	 dyg8HzRbYOIBftXHuyiuPCG4DNLX+RTzxyLZtmtloV/fti9bBu/+7kBDexWti99G+Z
-	 i6xaugiME0GA3nvrQz33lS62KFGKyDIV4gLm5LmstkcbkIkLcV8eALveny6aUWpDRh
-	 bib6knrZ1DqxDy3YbRxqaoETm2rbM+YB/fmlbzPwO5PFe+YXZsdq4CTzZSQJyn1rvE
-	 KxE3i/ZZOxbew==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 01 May 2024 23:39:19 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
-Date: Wed, 1 May 2024 23:39:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSGN62oS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B1DC072AA;
+	Wed,  1 May 2024 22:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714603301;
+	bh=21eJgw3bVlrvg9JhkL7vGWg5gy5SSNA9yb+RC4qJH0U=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aSGN62oSHnV5bTA6Cvn6RwYasu8gLbikz9Uena1xj0g3FEdeZ6cnNnzh4kCddR+tR
+	 v37PBkCHIx8DwAGrZIkOEeNj3mpeC6kEHyC5SkTqDid6Nzh7vAnHHb3el4FaV8cUMy
+	 O4FH4dVBPBA7HNWE+NOBvGiNOXOCLUGRQKRw7YnB+JlkXGMyE4R+g8hYD21mYB1PTL
+	 VQ1dl+ALcIckEWwFwuDX+vVzvowFAfJnS2h4kNHUf6YYL1OeZ12tY9J6nM8XFDA4Fg
+	 ikb+91aQjR/NRbbvCPAn0UPgtIrVROV2eHcTN3nmQmKaMtYNKxmyO7RraUoHpUtI+t
+	 axN/fW8F34JWw==
+Date: Wed, 1 May 2024 16:41:37 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: rtlwifi: Remove unused structs and avoid
+ multiple -Wfamnae warnings
+Message-ID: <ZjLFIa31BGPVCGh1@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
-To: Justin Stitt <justinstitt@google.com>, Petr Mladek <pmladek@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>, John Ogness
- <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Le 30/04/2024 à 01:06, Justin Stitt a écrit :
-> Cleanup some deprecated uses of strncpy() and strcpy() [1].
-> 
-> There doesn't seem to be any bugs with the current code but the
-> readability of this code could benefit from a quick makeover while
-> removing some deprecated stuff as a benefit.
-> 
-> The most interesting replacement made in this patch involves
-> concatenating "ttyS" with a digit-led user-supplied string. Instead of
-> doing two distinct string copies with carefully managed offsets and
-> lengths, let's use the more robust and self-explanatory scnprintf().
-> scnprintf will 1) respect the bounds of @buf, 2) null-terminate @buf, 3)
-> do the concatenation. This allows us to drop the manual NUL-byte assignment.
-> 
-> Also, since isdigit() is used about a dozen lines after the open-coded
-> version we'll replace it for uniformity's sake.
-> 
-> All the strcpy() --> strscpy() replacements are trivial as the source
-> strings are literals and much smaller than the destination size. No
-> behavioral change here.
-> 
-> Use the new 2-argument version of strscpy() introduced in Commit
-> e6584c3964f2f ("string: Allow 2-argument strscpy()"). However, to make
-> this work fully (since the size must be known at compile time), also
-> update the extern-qualified declaration to have the proper size
-> information.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> ---
->   include/linux/printk.h |  2 +-
->   kernel/printk/printk.c | 20 +++++++++-----------
->   2 files changed, 10 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index 955e31860095..b3a29c27abe9 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -71,7 +71,7 @@ extern void console_verbose(void);
->   
->   /* strlen("ratelimit") + 1 */
->   #define DEVKMSG_STR_MAX_SIZE 10
-> -extern char devkmsg_log_str[];
-> +extern char devkmsg_log_str[DEVKMSG_STR_MAX_SIZE];
->   struct ctl_table;
->   
->   extern int suppress_printk;
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index adf99c05adca..64617bcda070 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -178,9 +178,9 @@ static int __init control_devkmsg(char *str)
->   	 * Set sysctl string accordingly:
->   	 */
->   	if (devkmsg_log == DEVKMSG_LOG_MASK_ON)
-> -		strcpy(devkmsg_log_str, "on");
-> +		strscpy(devkmsg_log_str, "on");
->   	else if (devkmsg_log == DEVKMSG_LOG_MASK_OFF)
-> -		strcpy(devkmsg_log_str, "off");
-> +		strscpy(devkmsg_log_str, "off");
->   	/* else "ratelimit" which is set by default. */
->   
->   	/*
-> @@ -209,7 +209,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
->   			return -EINVAL;
->   
->   		old = devkmsg_log;
-> -		strncpy(old_str, devkmsg_log_str, DEVKMSG_STR_MAX_SIZE);
-> +		strscpy(old_str, devkmsg_log_str);
->   	}
->   
->   	err = proc_dostring(table, write, buffer, lenp, ppos);
-> @@ -227,7 +227,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
->   
->   			/* ... and restore old setting. */
->   			devkmsg_log = old;
-> -			strncpy(devkmsg_log_str, old_str, DEVKMSG_STR_MAX_SIZE);
-> +			strscpy(devkmsg_log_str, old_str);
->   
->   			return -EINVAL;
->   		}
-> @@ -2506,21 +2506,19 @@ static int __init console_setup(char *str)
->   	/*
->   	 * Decode str into name, index, options.
->   	 */
-> -	if (str[0] >= '0' && str[0] <= '9') {
-> -		strcpy(buf, "ttyS");
-> -		strncpy(buf + 4, str, sizeof(buf) - 5);
-> +	if (isdigit(str[0])) {
-> +		scnprintf(buf, sizeof(buf), "ttyS%s", str);
->   	} else {
-> -		strncpy(buf, str, sizeof(buf) - 1);
-> +		strscpy(buf, str);
->   	}
+Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally.
 
-Hi,
+So, remove unused structs and fix the following
+-Wflex-array-member-not-at-end warnings:
 
-Nit: The { } around each branch can now also be removed.
+drivers/net/wireless/realtek/rtlwifi/btcoexist/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8192c/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8192ce/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8192cu/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8192de/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8192ee/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8192se/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8723be/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8723com/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/rtl8821ae/../wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/realtek/rtlwifi/wifi.h:1063:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-CJ
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/realtek/rtlwifi/wifi.h | 27 ---------------------
+ 1 file changed, 27 deletions(-)
 
-> -	buf[sizeof(buf) - 1] = 0;
->   	options = strchr(str, ',');
->   	if (options)
->   		*(options++) = 0;
->   #ifdef __sparc__
->   	if (!strcmp(str, "ttya"))
-> -		strcpy(buf, "ttyS0");
-> +		strscpy(buf, "ttyS0");
->   	if (!strcmp(str, "ttyb"))
-> -		strcpy(buf, "ttyS1");
-> +		strscpy(buf, "ttyS1");
->   #endif
->   	for (s = buf; *s; s++)
->   		if (isdigit(*s) || *s == ',')
-> 
-> ---
-> base-commit: 9e4bc4bcae012c98964c3c2010debfbd9e5b229f
-> change-id: 20240429-strncpy-kernel-printk-printk-c-6a72fe6d0715
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
-> 
+diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+index 9fabf597cfd6..f4c71890b989 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
++++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+@@ -1043,33 +1043,6 @@ struct octet_string {
+ 	u16 length;
+ };
+ 
+-struct rtl_hdr_3addr {
+-	__le16 frame_ctl;
+-	__le16 duration_id;
+-	u8 addr1[ETH_ALEN];
+-	u8 addr2[ETH_ALEN];
+-	u8 addr3[ETH_ALEN];
+-	__le16 seq_ctl;
+-	u8 payload[];
+-} __packed;
+-
+-struct rtl_info_element {
+-	u8 id;
+-	u8 len;
+-	u8 data[];
+-} __packed;
+-
+-struct rtl_probe_rsp {
+-	struct rtl_hdr_3addr header;
+-	u32 time_stamp[2];
+-	__le16 beacon_interval;
+-	__le16 capability;
+-	/*SSID, supported rates, FH params, DS params,
+-	 * CF params, IBSS params, TIM (if beacon), RSN
+-	 */
+-	struct rtl_info_element info_element[];
+-} __packed;
+-
+ struct rtl_led_ctl {
+ 	bool led_opendrain;
+ 	enum rtl_led_pin sw_led0;
+-- 
+2.34.1
 
