@@ -1,73 +1,63 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD621635C7
-	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 20:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E771474B9
+	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 21:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594905; cv=none; b=LYbq4Qz8pHwkL8EKP/MLwMl0b8sJjkCDaeTpxds9QFij+UoVShDx4Ayz59zqz479UgGaIBrMJr7wb0VpU4PxBI80SuUaB8ZF+0+OtzF0z0Vc6+bOTSP1lJwzWlFezahTR37eRNePEfSM82laM+E7JG7c5ES1rcjfBMQB5i7VIQc=
+	t=1714597720; cv=none; b=uZCL5TUdpNvmcsMQ6vkjiXn09eb9+q2e2VzeBE61b9EfiUNiUL+J9u/i48vXAfgYOjbKloN1IwCTbFr+k8IBHSbTT3M5luM/UZJB1zovXzsSnOglHYRhAJeeVXzqdvAUJvo5dDxYFPm1kvt+M13Rr7hDmypvdnSjg2e4piuf0GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594905; c=relaxed/simple;
-	bh=nPUrAToma1+IWJyW4NorUHWTJxgN7XpkT+ZRrxLkDoU=;
+	s=arc-20240116; t=1714597720; c=relaxed/simple;
+	bh=B7qAGFGI/bxEd5Q1LPU2V/hryghMwy7cXIVEchTKrFc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CaTUsDoITPL/rRo1ZgSxdqRnrW+Wc4BGzR1A1w7kB2NTrcdOq0+bg8w3zojGy2l0KTArDkoSIqb8avVdNfAKbAeFivP7MF1lYIihjqP4wo6pWdNJVbAwnymLp30KKvqIwcZjb/P0MCHsP+SuNyD4soxCYaeGa6oerBvPvVs7TLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R6lC+wyy; arc=none smtp.client-ip=209.85.210.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=tCLNlSGFYlWdfCYdLMdbv7NsjSYTsAT8xSPPBFUcGRmikmEXXUpAfCBALHLN0yY88jj5o3yxA1mzkbeaNSCaYalbAjbvZuaszPnq26gpqL64g4cQmlpspMCTV0zkX4vxbBmVbAHgGaHQ1i2LAzfX69W8MNLxr7TQx3Lhxi02J5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L0Iy4axw; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6lC+wyy"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f30f69a958so6197478b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 13:21:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0Iy4axw"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso47994765ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 14:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714594903; x=1715199703; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714597718; x=1715202518; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
-        b=R6lC+wyyKGv555bfAgjGaVAhVKeXMz7DYH5NnAacO7JbE3z4cYvgn7VrA7W78G9SBC
-         S7iBlI75R5bcbxhAp/NRCcdjk5sPlNqJlXepxjuhYdqashwgMIqfeWXynm6eKpV590fm
-         yZNlK1OerSDiXNTARj6eGB6JQvl7NcJ1kAGF4=
+        bh=WyQVnwnxj7rjRobXy08x57R70AetlsmZRJbnEni1v7A=;
+        b=L0Iy4axw3hWe2hQRN7DiqICWh4G5XMB8OJSlCtRonnVZ25FQH/YtfXkMA+eJLg5KoJ
+         wTmhU9sjk8r4p/7ctN9wKar3PZuIrmxoRgBeyzrNCInssqNPh+anyK507F/woIjJgo2S
+         xtr9aC1GEfwnHS2cenD+UvVxY/crUlkvRFpxc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714594903; x=1715199703;
+        d=1e100.net; s=20230601; t=1714597718; x=1715202518;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x9pWF4P+vg6CtGHnRoqbJlxCPNRuZaXK34HOYWDy6qo=;
-        b=XSDb1D3FNxzIpQolMderAxrPHkPfVZBnLLFs4+wLhNrq0Q+ofCkDRu7SXj500ESb+W
-         BR7EfHLuAPLbGX2AX5aG3Z8HfAHeb69YtIq/MG7HFwQlxGUR1NY26YrxI6HL32UzkkMK
-         u19SPHNjcDnGm7t1g5BQ6hpZN6IVerso+xtC1h1aTTwLxF1SVvarqqqDw3NrA49SOtsO
-         11zfee3iOXRGjylKd9BI8skvHbnE+ErSvVM0aFO7QrlEFuPgUH7HOegNvhfxfZFoHt0D
-         H3xhxu0DUkIT14YV6Yjskimn0SNlZMl+OPpqpXmHZJf16on1vM5VhSCwAzeeIR7v+/7n
-         fmCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkIxtyzfvQ8MUFT/BYmqfgJ9A1qcqYB4lt/0g8F0jTW86dW0NYbrxWIxxJNewr3M+TRIAmYU0B0G601W92+E225/dgL9ulD8M4fKEQKFRl
-X-Gm-Message-State: AOJu0YzGK9aLDFrC8/FrGAUWBWIlS/N7B4L93wLOH47j9xd9N8SNYuBl
-	T5g9J1a9oCWfmvc4R5WxI2S2ys1JC6SWjh+x5LplCgG3UCDXZvdAXEhj42fqXA==
-X-Google-Smtp-Source: AGHT+IGyvJ8Fbk39B3YR+oN/YqBuq3FvOn0WZU33SvV3xChl0KcHhy12+GnrIWpDME/qQK5QKb0o9w==
-X-Received: by 2002:a05:6a20:9f88:b0:1aa:5b05:7926 with SMTP id mm8-20020a056a209f8800b001aa5b057926mr4987182pzb.39.1714594903411;
-        Wed, 01 May 2024 13:21:43 -0700 (PDT)
+        bh=WyQVnwnxj7rjRobXy08x57R70AetlsmZRJbnEni1v7A=;
+        b=evJbvdZ13Z2IBxmZ5PjE/kntDtX6jy7YGKJp/youNTTpohj7kiUFw5lpUWSGyFCfKI
+         6PyaKuptzFF6FDW1EjGHGSMA2ebM4q0xjugX0AzxeP7OW7Yabn8VRfw34IOqAvALr8Qv
+         87zyU2aAZG7e1hkqpqFm/0QvyPS/WCDMu1RLRMoxCbEYuwCvmEePOMpFxVPtT21gmjSF
+         WVxC2MsRyNL/x+2y9+QQ3q2zML/aIvgsD5tvPPhAWoF33/B12dnGa7mxaZMmbUIWTNFt
+         vYTFg35dyxoXwMNpmbcxW7mD+bz7h8bN03ImKcjnUNUF/RlgthDKve1n17X//n9Qhl4Q
+         uj0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWhFaeZpRK/kz3xBRG+P1N7dCEyyi7Pl+FLXxRciMe2U6I8o/4RDivkELN27r5blfxIVjxzswKJZ8uSlF6O0mgKfysVEt+ZyuuqsqbTzd5a
+X-Gm-Message-State: AOJu0YzyklqNrYzkM8r2aY0317fMZH2TC4I15hJCHzAmUe6MTal/Bj4l
+	8umoiVYHA+ydZVfNJo9/e3cgst1veC1dme2sApianLXYG+dtDN2fHQMc3GSEkA==
+X-Google-Smtp-Source: AGHT+IE9FGOHdmDg44s08H7J/PjssevGbga2XFanboUcNU/a7V5Q37yj0sflqb9URzzrmO06WsW4XQ==
+X-Received: by 2002:a17:903:32c9:b0:1ea:5aff:c8ce with SMTP id i9-20020a17090332c900b001ea5affc8cemr53337plr.29.1714597717980;
+        Wed, 01 May 2024 14:08:37 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r13-20020aa79ecd000000b006ed045af796sm22947779pfq.88.2024.05.01.13.21.42
+        by smtp.gmail.com with ESMTPSA id p5-20020a170902e74500b001eb5a81f688sm8660101plf.221.2024.05.01.14.08.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 13:21:43 -0700 (PDT)
-Date: Wed, 1 May 2024 13:21:42 -0700
+        Wed, 01 May 2024 14:08:36 -0700 (PDT)
+Date: Wed, 1 May 2024 14:08:36 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202405011317.AF41B94B@keescook>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
+Message-ID: <202405011406.E4998CB515@keescook>
+References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,18 +66,134 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240430091504.GC40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
 
-On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> > This is an effort to get rid of all multiplications from allocation
-> > functions in order to prevent integer overflows [1][2].
+On Mon, Apr 29, 2024 at 11:06:54PM +0000, Justin Stitt wrote:
+> Cleanup some deprecated uses of strncpy() and strcpy() [1].
 > 
-> So personally I detest struct_size() because I can never remember wtf it
-> does, whereas the code it replaces is simple and straight forward :/
+> There doesn't seem to be any bugs with the current code but the
+> readability of this code could benefit from a quick makeover while
+> removing some deprecated stuff as a benefit.
+> 
+> The most interesting replacement made in this patch involves
+> concatenating "ttyS" with a digit-led user-supplied string. Instead of
+> doing two distinct string copies with carefully managed offsets and
+> lengths, let's use the more robust and self-explanatory scnprintf().
+> scnprintf will 1) respect the bounds of @buf, 2) null-terminate @buf, 3)
+> do the concatenation. This allows us to drop the manual NUL-byte assignment.
+> 
+> Also, since isdigit() is used about a dozen lines after the open-coded
+> version we'll replace it for uniformity's sake.
+> 
+> All the strcpy() --> strscpy() replacements are trivial as the source
+> strings are literals and much smaller than the destination size. No
+> behavioral change here.
+> 
+> Use the new 2-argument version of strscpy() introduced in Commit
+> e6584c3964f2f ("string: Allow 2-argument strscpy()"). However, to make
+> this work fully (since the size must be known at compile time), also
+> update the extern-qualified declaration to have the proper size
+> information.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> ---
+>  include/linux/printk.h |  2 +-
+>  kernel/printk/printk.c | 20 +++++++++-----------
+>  2 files changed, 10 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 955e31860095..b3a29c27abe9 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -71,7 +71,7 @@ extern void console_verbose(void);
+>  
+>  /* strlen("ratelimit") + 1 */
+>  #define DEVKMSG_STR_MAX_SIZE 10
+> -extern char devkmsg_log_str[];
+> +extern char devkmsg_log_str[DEVKMSG_STR_MAX_SIZE];
+>  struct ctl_table;
+>  
+>  extern int suppress_printk;
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index adf99c05adca..64617bcda070 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -178,9 +178,9 @@ static int __init control_devkmsg(char *str)
+>  	 * Set sysctl string accordingly:
+>  	 */
+>  	if (devkmsg_log == DEVKMSG_LOG_MASK_ON)
+> -		strcpy(devkmsg_log_str, "on");
+> +		strscpy(devkmsg_log_str, "on");
+>  	else if (devkmsg_log == DEVKMSG_LOG_MASK_OFF)
+> -		strcpy(devkmsg_log_str, "off");
+> +		strscpy(devkmsg_log_str, "off");
+>  	/* else "ratelimit" which is set by default. */
+>  
+>  	/*
+> @@ -209,7 +209,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
+>  			return -EINVAL;
+>  
+>  		old = devkmsg_log;
+> -		strncpy(old_str, devkmsg_log_str, DEVKMSG_STR_MAX_SIZE);
+> +		strscpy(old_str, devkmsg_log_str);
+>  	}
+>  
+>  	err = proc_dostring(table, write, buffer, lenp, ppos);
+> @@ -227,7 +227,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
+>  
+>  			/* ... and restore old setting. */
+>  			devkmsg_log = old;
+> -			strncpy(devkmsg_log_str, old_str, DEVKMSG_STR_MAX_SIZE);
+> +			strscpy(devkmsg_log_str, old_str);
+>  
+>  			return -EINVAL;
+>  		}
+> @@ -2506,21 +2506,19 @@ static int __init console_setup(char *str)
+>  	/*
+>  	 * Decode str into name, index, options.
+>  	 */
+> -	if (str[0] >= '0' && str[0] <= '9') {
+> -		strcpy(buf, "ttyS");
+> -		strncpy(buf + 4, str, sizeof(buf) - 5);
+> +	if (isdigit(str[0])) {
+> +		scnprintf(buf, sizeof(buf), "ttyS%s", str);
+>  	} else {
+> -		strncpy(buf, str, sizeof(buf) - 1);
+> +		strscpy(buf, str);
+>  	}
+> -	buf[sizeof(buf) - 1] = 0;
+>  	options = strchr(str, ',');
+>  	if (options)
+>  		*(options++) = 0;
+>  #ifdef __sparc__
+>  	if (!strcmp(str, "ttya"))
+> -		strcpy(buf, "ttyS0");
+> +		strscpy(buf, "ttyS0");
+>  	if (!strcmp(str, "ttyb"))
+> -		strcpy(buf, "ttyS1");
+> +		strscpy(buf, "ttyS1");
+>  #endif
+>  	for (s = buf; *s; s++)
+>  		if (isdigit(*s) || *s == ',')
+> 
+> ---
+> base-commit: 9e4bc4bcae012c98964c3c2010debfbd9e5b229f
+> change-id: 20240429-strncpy-kernel-printk-printk-c-6a72fe6d0715
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
 
-Sure, new APIs can involved a learning curve. If we can all handle
-container_of(), we can deal with struct_size(). :)
+Yeah, everything here checks out. I had to read through the sysctl
+handler pretty carefully, but I think this is a nice readability
+improvement. Thanks!
+
+-Kees
 
 -- 
 Kees Cook
