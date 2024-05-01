@@ -1,142 +1,89 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEC112F58D
-	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 20:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161EC13956C
+	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 20:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714594639; cv=none; b=DgSXywVXL8rYFS96KRMTD6VEA3gq+KBRg0lkqxkaCfhWgY+qVON/yZ4nx2JHXLbVP809LmiNAEKXKvd/BNXtVGydMnUpkMv0ebQOv7BwMCTpK/U3HYk3H+EL0G59CnRGRDw+Cc1GxBe8KTdG1VSns9nsqdz6uYTogb/sr1KLkOg=
+	t=1714594761; cv=none; b=gLTpL+zzecMrLEB8+1jyHCCS44SNyZRdio6N0BAYqCKUZS4yQCzWjyDM16uB2shId5HsuklMOkufEO1gG7RyFSy41yMGGu5JOvboSMqrDZP3IlMoJuYYvPSE9QgyrYyrRNgJGLxBk/q7npXNmIgeCrcT12vAB8YRCAuH8j0zVms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714594639; c=relaxed/simple;
-	bh=GGpAKEpoycwjSWcYUqnZv8ZhAZUkHxo5m5D9dqJxuNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=chnG0q0b6A+bpXsoYhWiHQqR59i5NYbGD/kpwys9SiLHV01Zkc73h+q8caFV/mfBUeuXzc44P4hmUCdQdxeid96votaaEIfLugIMr9VFsP4mrDELLkT/mM/3bxiOj9AFPw1B5CZACIR6BgzQMvIjQ9Y/HnJFP2amZ81gAzMiIMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jQgW0CgZ; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714594761; c=relaxed/simple;
+	bh=/E3lGZnIdEvkShs7yZGABbxU5GtGlIugqdMHDWd9cxQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RC/lcU7CWFJd9htRIQntKBPzjA7xsHTtGeKZxR8T7rzQxQx5cXJ/MF5mgF/KPMeOQU6CnQy4LMtnZBVZZzud2Y7aaPddymdDDicfyVQqnkka+2C1zH6lXr2voxkr6RYCliYIhT9vS5U0N8NRWLwf16e7ZqVvkUDgCxws7z0VGZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OXvTZX92; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jQgW0CgZ"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6effe9c852eso6405654b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 13:17:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OXvTZX92"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7f16ec9798cso719495241.3
+        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 13:19:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714594636; x=1715199436; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TzZlykvaZE49hrAwdEmOhVJUm5xEaSWSbmXs/qt6Y88=;
-        b=jQgW0CgZjKAOEc1i32X+GqrG9yW5MdlKY2k8Efxwz8nU+RLfUYZ5CXsF9mPSY/nz/P
-         TjHq3AOx7LGAUILxHTHsBT+P9AhvIqMmLnHYQefRI1QvPuOn5+4+ESQPa0eUFQCEJ/Ur
-         kRwqbnyPYATUVSO5wbd/dd3DiAwwSK02MyjOY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714594636; x=1715199436;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1714594759; x=1715199559; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TzZlykvaZE49hrAwdEmOhVJUm5xEaSWSbmXs/qt6Y88=;
-        b=JN457J9pimTl5Rp2g1FP3prfR17ITJ11SrGVQfkXIb0pePl+qE4cCEPfReoO7SVo4T
-         Z7XUXFad5UP4DQp6+V6XG9DhkEy3/AWmcpjc1JaifVdHgigE+S5WUyOlXDcl4TTqFc0U
-         q/ZxrgerGjK2tGWklqWkeX3uPjIstegiv9dyzhgzSFi6qLZid6cplmqljalraD+iSssd
-         jsqTpn9KVdfsG568zVvyaLjmXCwSOYDbWQmvPnQMRUoNUjXyvOPNC3aXNHMQj4hsiMP6
-         67gWeTcA7+auZWbfWploeICJe02KIUaWZAQ/P0F0xDa6KLXg8X6Ia5L5erapNRg4SHpZ
-         WrAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzx1I02UpZ0Ajy8CssLzVq4l2s5C8YnJCkkUyXZ4BgnOKu9RIl8qljl29pN04tdUfuh4yS4dBOmYQ4tWSwcZ5DCmaDlI6E6xeBEv2yk0H9
-X-Gm-Message-State: AOJu0YwTqMHa5XtEUmt4xFETkpk4PLqQr8VXGYtY5L5vntNGGOkYwfrI
-	iARBrnwDKh3QXaEIxHRyt0hPDu1klX3nYR+XLm4aCZl3WXprUGXLr21HbsvjLQ==
-X-Google-Smtp-Source: AGHT+IGbzYi1d+ldsT9LN6hCvo5dwU6UWZPN8BaXQ/g+gSm91//aeds7KiSLXD8zvIV8i+uTgvZrTQ==
-X-Received: by 2002:a05:6a21:6d82:b0:1ac:d96a:4fd6 with SMTP id wl2-20020a056a216d8200b001acd96a4fd6mr4640333pzb.23.1714594636355;
-        Wed, 01 May 2024 13:17:16 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j19-20020aa783d3000000b006eaf3fd91a1sm23012143pfn.62.2024.05.01.13.17.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 13:17:16 -0700 (PDT)
-Date: Wed, 1 May 2024 13:17:15 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Marek Lindner <mareklindner@neomailbox.ch>,
-	Simon Wunderlich <sw@simonwunderlich.de>,
-	Antonio Quartulli <a@unstable.cc>,
-	Sven Eckelmann <sven@narfation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	b.a.t.m.a.n@lists.open-mesh.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3] batman-adv: Add flex array to struct
- batadv_tvlv_tt_data
-Message-ID: <202405011317.9896F210@keescook>
-References: <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
+        bh=/E3lGZnIdEvkShs7yZGABbxU5GtGlIugqdMHDWd9cxQ=;
+        b=OXvTZX92uCS0NPuRidZukMI+ZLB8ENlf10vWWkfPfaLv9m0O+9XWrJAuk/tgELNntJ
+         /kZiDOZfbGGz2sKZg9vxniPUUuVQWaAxaQbh64gi0vMrIqpk77x2E1JGnmCeLqe9oQVg
+         vKFwxjf4IcNijPapYJExpQd+VNJQfjdwcesRPP+Roj8bnrkTqHLVCIMm/iBAS+f151oi
+         VjWLqqz7OOyDL3NX97RRDuJSUfREAXLeSdGimlApYAM7u6i4RLshPJ7ass4zI2SwKKPH
+         8Wb4zW5wzKViJdIm/yZWL0lxzEDzwyJthinZpep5Vium2S+5eE47JQdq5JY5mZ2baGoX
+         RKtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714594759; x=1715199559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/E3lGZnIdEvkShs7yZGABbxU5GtGlIugqdMHDWd9cxQ=;
+        b=NYrcmIcTe0J1rpaFgtods5E7lMsCSh+I7rqwKNvciCoOkPk3TGSIDuwDakA2dn9BCh
+         MDujkbzkuAoR9S2tWLaVgxk5flc6r188sVNos3sYmSS1EpddIrvLTxYj7u1r+6tN81x6
+         JN0rZN4frIlbl9ekL+xzhhE/Oe7M6sEjlxfqluPUeiyDsDqIja87LES3Yh++MVo2HTIa
+         CetTkiyHOOJYnmmzyAR71dgvoxn59irZYOPryoLLojM4rDjD2qAiMRuaJBDFlXFN1Z30
+         r4HCkI18t3A7Tq5qC7Sq9REzhgQyWWjd5k9L1ZRWg9WKrR4gdvVmYE0ITAlqlLnQ5m/J
+         WnuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5NPHoao63ahkFxaGC79N3aHAXLh282iDR1g6Q+ks5sC7aFyX7PESQaQegG1YXNp85qnlazTxMd7OZ5eiiGJj6nEvE4M14Ltko33a8Hmqx
+X-Gm-Message-State: AOJu0Yy/T3NSjp0brAqvbuOJhd3GtunM/9SWYQAWaENXCi63rmDL78nd
+	ZcDdtO/K+wYMym4C906pxet1u6Imb0ziu2xigv0oy45eO4ucRaDmIkp41kJ1viPiQh9rx4jQ18R
+	nYVZ60YS85F+MSf3dCDjAUEzqZNX0v2uHxQYV
+X-Google-Smtp-Source: AGHT+IH3NkQ9UGD1dyq6uplD3kVG/evBVRizXuCAvmSGPGe1sTsNrxTTYgkO13Sc1leDbu/aiyFKSSX1+KnUzI7rDJc=
+X-Received: by 2002:a05:6122:2219:b0:4d4:872:c68a with SMTP id
+ bb25-20020a056122221900b004d40872c68amr3932462vkb.1.1714594758784; Wed, 01
+ May 2024 13:19:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: <20240501000218.work.998-kees@kernel.org>
+In-Reply-To: <20240501000218.work.998-kees@kernel.org>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Wed, 1 May 2024 13:18:40 -0700
+Message-ID: <CABCJKufZ7zXq7-Jqdqpc-Cq8Jb3RyDTXO3p7NqZv0eRUxU9Ohg@mail.gmail.com>
+Subject: Re: [PATCH] x86/alternatives: Make FineIBT mode Kconfig selectable
+To: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Alexei Starovoitov <ast@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Juergen Gross <jgross@suse.com>, Breno Leitao <leitao@debian.org>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 01, 2024 at 05:02:42PM +0200, Erick Archer wrote:
-> The "struct batadv_tvlv_tt_data" uses a dynamically sized set of
-> trailing elements. Specifically, it uses an array of structures of type
-> "batadv_tvlv_tt_vlan_data". So, use the preferred way in the kernel
-> declaring a flexible array [1].
-> 
-> At the same time, prepare for the coming implementation by GCC and Clang
-> of the __counted_by attribute. Flexible array members annotated with
-> __counted_by can have their accesses bounds-checked at run-time via
-> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-> strcpy/memcpy-family functions). In this case, it is important to note
-> that the attribute used is specifically __counted_by_be since variable
-> "num_vlan" is of type __be16.
-> 
-> The following change to the "batadv_tt_tvlv_ogm_handler_v1" function:
-> 
-> -	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(tt_data + 1);
-> -	tt_change = (struct batadv_tvlv_tt_change *)(tt_vlan + num_vlan);
-> 
-> +	tt_change = (struct batadv_tvlv_tt_change *)((void *)tt_data
-> +						     + flex_size);
-> 
-> is intended to prevent the compiler from generating an "out-of-bounds"
-> notification due to the __counted_by attribute. The compiler can do a
-> pointer calculation using the vlan_data flexible array memory, or in
-> other words, this may be calculated as an array offset, since it is the
-> same as:
-> 
->         &tt_data->vlan_data[num_vlan]
-> 
-> Therefore, we go past the end of the array. In other "multiple trailing
-> flexible array" situations, this has been solved by addressing from the
-> base pointer, since the compiler either knows the full allocation size
-> or it knows nothing about it (this case, since it came from a "void *"
-> function argument).
-> 
-> The order in which the structure batadv_tvlv_tt_data and the structure
-> batadv_tvlv_tt_vlan_data are defined must be swap to avoid an incomplete
-> type error.
-> 
-> Also, avoid the open-coded arithmetic in memory allocator functions [2]
-> using the "struct_size" macro and use the "flex_array_size" helper to
-> clarify some calculations, when possible.
-> 
-> Moreover, the new structure member also allow us to avoid the open-coded
-> arithmetic on pointers in some situations. Take advantage of this.
-> 
-> This code was detected with the help of Coccinelle, and audited and
-> modified manually.
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+On Tue, Apr 30, 2024 at 5:02=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> Since FineIBT performs checking at the destination, it is weaker against
+> attacks that can construct arbitrary executable memory contents. As such,
+> some system builders want to run with FineIBT disabled by default. Allow
+> the "cfi=3Dkcfi" boot param mode to be selectable through Kconfig via the
+> newly introduced CONFIG_CFI_AUTO_DEFAULT.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-Thanks for the tweak!
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Sami
