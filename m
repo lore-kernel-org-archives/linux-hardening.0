@@ -1,65 +1,75 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0171A1474B9
-	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 19:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05431EAF6
+	for <linux-hardening@vger.kernel.org>; Wed,  1 May 2024 19:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714590934; cv=none; b=Or45qq2uV+STaiR9Ixou4XnYuJI0jjiBHV1C+W0LxKAQeBSOqI/pQRDG7VAcgfFameJiPNrMpzsn7oLnnOBQLv9yzbPlrjyPs1eYNsacfKZVL7jrFc3vo7n5tRRuc4xcthvl4yseu6lJU+mSh73YP9+5gK8OsqfAOMO3FtSPUCY=
+	t=1714591661; cv=none; b=S9IKSVFgHdgaOdshWnYRE+QTGY5BG21QXt/uEUc07Z4g/icWO+o1ZhRfg9l3GCj5hQlhbMX/3MaOA3/wD6sqsQMxOLoYBwu1wbm0ByIQ1Enx5uLM13SbOS2bL/JNBYVBrHSOIV5QL5Sp4Gt/1w9UqjwEPfOb/wrOI1m1iPhc7zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714590934; c=relaxed/simple;
-	bh=FjDFufbsvnrKVpq/d3f57SbbkDccuVf6Mo7zLPWNI0A=;
+	s=arc-20240116; t=1714591661; c=relaxed/simple;
+	bh=oQTD5dOBPZRoT6/0eImWZ1AIIrVNNjtcFO1mwR0zuCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IXAatIXNGwFEJ7rQKS2EPmB8BuJ4kKjsr2lAYE58VY1cUu9jxRy6e1+wsaMsCLsHwdaKxSlItRhVVgPIbV5O0PC/muAiWEbp0zYPTtoINPcKaR1MZcMv6Dl8nG+09JpDI87AcSGau7gVi5lcHqSVhvkKdXSZxXNJxo9z8YvwaXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JmhrKOGP; arc=none smtp.client-ip=209.85.210.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKaD/W9tEKJYUiQOEJv8BXFmIpTqDGSzJd7KTlEfc1URaYrXrU+rQW2iLlD3JcUWpmBrU4OSnFXnVgnYIC2g/3yvsQGHG8mKBSrZhCo7uJRFmb7UbTc3ubiMo2vobiUOzr8KYOtW5FpClj9hFwUjXtwJML9udldVLAmoG8isUWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QzBNm+f7; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JmhrKOGP"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ecec796323so6814826b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 12:15:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QzBNm+f7"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1ec4b2400b6so18709445ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 12:27:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714590932; x=1715195732; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1714591659; x=1715196459; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrKZAQFL0Kmixa3h9nt3N8Wwlmo9DHZavjvoHsUvpdY=;
-        b=JmhrKOGPNOqzHr8k2ATuVWV9FcWJ5q0nf6hFu8OGHjzWNdlwoQZs60KS6TQCNuqRw3
-         iNooqKTSGhjXNpn+4/uw5iJgXQe6vOLFZXXxa9eZHKE/FB6B2PCYJ/tlvS+mnB0mGtV2
-         ca2z7FQT16EvzATAzO0PKBAfY6PFOlohuX2D4=
+        bh=9+gDh6NM77cGHfdw7r6TvXLTNq5DARX9/1cTJfxUhiI=;
+        b=QzBNm+f7EAwTJeoYOtqxnK/LV+AvKLZsTD1uMJc9KHzfD8pEJfwjeVhFHK9M0dpuvr
+         FR5QbhYpNrYaa0wFzDxQ+P7YIk+9Vt+uNXws/pFQIaGjnUR33oKN0Tl0EPgXT0J3Mkfc
+         6+R9q7InsxIOrHfmnUDKOXSwLVV5h/PQ3T2vc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714590932; x=1715195732;
+        d=1e100.net; s=20230601; t=1714591659; x=1715196459;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZrKZAQFL0Kmixa3h9nt3N8Wwlmo9DHZavjvoHsUvpdY=;
-        b=cQpaPdgh7JcsvmJXDaEGzqxCWwZ/RI7vHDFly/EEL42GvHCGdlEoeEtoIkNJuiaw3/
-         qSJYhC41lgUM5fZVEA6fB1AqG4AL2u36zaS9tD+6TAShknGnjlA85Ee8NPpMpQaVhl3Q
-         aJdqN/z/wmjLWM2Xykk8agHLAcc4FNcRo5aVf01lu3GN0uBGSlbdl1deHYVHIxwpMOiV
-         zms4Br9ngwWfdNGksVs14lyEd3sB5ivu3HFGnL2ODmE7URrZpBAbslYveTQvhgN3GPKM
-         rEMlWjh2NbH/cO4N1bKxLZtWHcAPmaQh0GNlJ3QnwX/wtdLH2NLf8/S7Gs1FO831BI1k
-         o3GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuLhvr1o3Az5p9owiZjOy34ccz82PmrJI5LL/XqXJxIv6S5foEkiQp+vTdl7jij4psMc+/aY4TKW9RNXaeZRbP9UgOnopYjNWMKvRpoDm3
-X-Gm-Message-State: AOJu0YzQRtn29d9vP2Z4aXHQmnZP3DgDw+9PyOvrYKFwbq99ba4BPx0t
-	548fsDNU4hZQNmZIYD+TVJxm/XFhUMH2X2wqEHLwxVQktNFMaRIqadovWNuSBQ==
-X-Google-Smtp-Source: AGHT+IEha+gO+FpGkm9o8MQRL+GDzeOY8CJgsWHInozyoylrwPFagTvr8PCPZBBqlxdqKOVB+3C9lA==
-X-Received: by 2002:a05:6a21:606:b0:1a9:c80a:bdcf with SMTP id ll6-20020a056a21060600b001a9c80abdcfmr3454424pzb.2.1714590932324;
-        Wed, 01 May 2024 12:15:32 -0700 (PDT)
+        bh=9+gDh6NM77cGHfdw7r6TvXLTNq5DARX9/1cTJfxUhiI=;
+        b=TWOXnWwpTCM4ASYpZ9yWD3eyjyS5F2kZRWSycUmYKByo/d4iekX0mtAKIxfyM7wc+f
+         qYRF9vV9rAkOGdF1hKyVNbp7dwLPvozbeHF0qd6zSMRmKzA9cX2n6oUvXIj2u2+laM3K
+         /5M0BXbTAxHBDvVp1mQ0LuDOZVHu8ZRgiqRnB1JHVS8M0vYuDPsnEK3xU5MXSf5o61em
+         QtJuyYlatD+Y9fB7/WEGDJiZRKJSBebQECMCG84oXLh1SQuPGMLZOGY7anf7BxsfwKkr
+         BNcSTE2ThTfkuNakgkaF/qGRyWzDbf4sI6Sj/45akX5Ken8QaRMJppaeZANLAycB8+z6
+         GEEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqEq8sxFOMAdz1QpVgW8ftuHMPUYNRt0LoyGG1xO15mj74acddsRKEdQxfiJ+rt29QFCwvABER1elzVOw3KsSpDTfGYNcLet2Oli5WXsbJ
+X-Gm-Message-State: AOJu0YxBNuxuvAmGqaIZ+ea5tZqk7bUGG2ABWPLnp2ChMNSl2Nu/snBR
+	uTqotCINkqzQ2JAp8DA4yrTDsBor2jIoY/mGMJVO1JERHmjTJDnkFYOBG7d3UQ==
+X-Google-Smtp-Source: AGHT+IFOqiuy3jqUmROs8uWUXbDQ4LpVCOGiqzH5ePrGMAGevXpVZpwp5HMlWqxDJM6lzgjTQUJGyw==
+X-Received: by 2002:a17:902:c212:b0:1eb:76ac:b4e5 with SMTP id 18-20020a170902c21200b001eb76acb4e5mr3312554pll.49.1714591659325;
+        Wed, 01 May 2024 12:27:39 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x23-20020a62fb17000000b006eac2a25631sm22896185pfm.129.2024.05.01.12.15.31
+        by smtp.gmail.com with ESMTPSA id d14-20020a170903230e00b001eb17af8493sm10043502plh.184.2024.05.01.12.27.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 12:15:31 -0700 (PDT)
-Date: Wed, 1 May 2024 12:15:31 -0700
+        Wed, 01 May 2024 12:27:38 -0700 (PDT)
+Date: Wed, 1 May 2024 12:27:38 -0700
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] Bluetooth: hci_sync: Use cmd->num_cis instead of
- magic number
-Message-ID: <202405011214.EB46DAB416@keescook>
-References: <ZjKAyg2bZNyTcT+C@neat>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hardening: Refresh KCFI options, add some more
+Message-ID: <202405011217.B822CA08@keescook>
+References: <20240426222940.work.884-kees@kernel.org>
+ <20240430092140.GE40213@noisy.programming.kicks-ass.net>
+ <202404301037.9E34D4811@keescook>
+ <20240501110614.GI40213@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,39 +78,40 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjKAyg2bZNyTcT+C@neat>
+In-Reply-To: <20240501110614.GI40213@noisy.programming.kicks-ass.net>
 
-On Wed, May 01, 2024 at 11:50:02AM -0600, Gustavo A. R. Silva wrote:
-> At the moment of the check, `cmd->num_cis` holds the value of 0x1f,
-> which is the max number of elements in the `cmd->cis[]` array at
-> declaration, which is 0x1f.
+On Wed, May 01, 2024 at 01:06:14PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 30, 2024 at 10:48:36AM -0700, Kees Cook wrote:
+> > On Tue, Apr 30, 2024 at 11:21:40AM +0200, Peter Zijlstra wrote:
+> > > On Fri, Apr 26, 2024 at 03:29:44PM -0700, Kees Cook wrote:
+> > > 
+> > > > - CONFIG_CFI_CLANG=y for x86 and arm64. (And disable FINEIBT since
+> > > >   it isn't as secure as straight KCFI.)
+> > > 
+> > > Oi ?
+> > 
+> > Same objection I always had[1]: moving the check into the destination
+> > means attacks with control over executable memory contents can just omit
+> > the check.
 > 
-> So, avoid using 0x1f directly, and instead use `cmd->num_cis`. Similarly
-> to this other patch[1].
-> 
-> Link: https://lore.kernel.org/linux-hardening/ZivaHUQyDDK9fXEk@neat/ [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  net/bluetooth/hci_sync.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-> index 6e15594d3565..af9513f3c451 100644
-> --- a/net/bluetooth/hci_sync.c
-> +++ b/net/bluetooth/hci_sync.c
-> @@ -6559,7 +6559,7 @@ int hci_le_create_cis_sync(struct hci_dev *hdev)
->  		cis->cis_handle = cpu_to_le16(conn->handle);
->  		aux_num_cis++;
->  
-> -		if (aux_num_cis >= 0x1f)
-> +		if (aux_num_cis >= cmd->num_cis)
->  			break;
->  	}
->  	cmd->num_cis = aux_num_cis;
+> I thought it was game over if you could write arbitrary test anyway?
 
-Yeah, good idea. No need to repeat a hard-coded value.
+Yes, an attack having arbitrary write control over an executable memory
+area is the place where CFI does get much weaker. But presently, there's
+no reason to make it easier. With the hash randomization we have, an
+attack needs to locate and read the kcfi_seed, otherwise everything else
+is a fixed value.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+In the future, when we have viable X^R kernel text, then the trade-off
+becomes much more clear: we want FineIBT very very much. :)
+
+> The whole CFI thing was about clobbering data (function pointers to be
+> more specific), and both are robust against that.
+
+Yes, if the threat model is limited to arbitrary writes to function
+pointers, we're totally good with FineIBT.
+
+-Kees
 
 -- 
 Kees Cook
