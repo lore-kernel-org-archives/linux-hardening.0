@@ -1,78 +1,100 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from msa.smtpout.orange.fr (msa-217.smtpout.orange.fr [193.252.23.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E9314292;
-	Thu,  2 May 2024 03:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B78B134B1;
+	Thu,  2 May 2024 05:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714619950; cv=none; b=BgKkCa53sC/OfYhQocu9ntiNAQzfcVQJcjVlGqJ/4Mc9/Kaim91xYUXSspY0js1zi9p7iVctgYLckbFJ0rQcJ+zqjMlOwcOwxfi0r/yZCLbqzGOTZBgeiPBQ97sfaD6as1LosIEVzOMEyIkuSgFPVrFEZksQeI3UTiOdK/VZ1Pg=
+	t=1714626395; cv=none; b=TNbn8vPlyrYSb7OttI9Y5DNNIe/2pFEunrTkedEaUHbDAuiRpyZ9d0s+AWCNSo7QZOMlleWRTBZpHuZcdXwE80E/xNx/DK+nBzU+88eRwb353opK9Pfxl4Z0HzTDNsJCLvkXhU2MvWJ2GirJvwVLDR7wCw6bJ2hlMgyqDwSUxVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714619950; c=relaxed/simple;
-	bh=ns/XDlQAITvMcfVm1pszbVe1D2/+KAbdo5UWjSlJtso=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=luEqVCPUFBEsAI1aUxyCuCvvHqOGED/4l1j8/bSIMZhKOfzu5jDDejrFoxpi2sp8abzLHS+bRV9bIcWqEh8FSX5YRasD9WVIP2Y6bvy3ELMryU4wBabeM0oAnbMB9m5pNYgu4vhyqNk3V3YphzWefjD0mFELE8MpUJqH0WQWwJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4423J2Zc82061968, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4423J2Zc82061968
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 May 2024 11:19:02 +0800
-Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 2 May 2024 11:19:02 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 2 May 2024 11:19:02 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Thu, 2 May 2024 11:19:02 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kalle Valo
-	<kvalo@kernel.org>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH][next] wifi: rtlwifi: Remove unused structs and avoid multiple -Wfamnae warnings
-Thread-Topic: [PATCH][next] wifi: rtlwifi: Remove unused structs and avoid
- multiple -Wfamnae warnings
-Thread-Index: AQHanBi/DxB0vdBiBEWl5nZVbN0KOLGDRp4A
-Date: Thu, 2 May 2024 03:19:02 +0000
-Message-ID: <2ebbd858571e4358ad4d3dfd0ceb4b73@realtek.com>
-References: <ZjLFIa31BGPVCGh1@neat>
-In-Reply-To: <ZjLFIa31BGPVCGh1@neat>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1714626395; c=relaxed/simple;
+	bh=i6vj/PwQB7gB7UJ91ISxfENpDqOjWzxS+DmVM14cbFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CrVnXCa4Z+WMVOaMbBGBs7BlZ8SbRUkwVxcezA7Ynaj0+QrZnfmh7VNW57ha4EiXwSHAQOZzjdEfZS1P8wCCrjGyD4Gm+HL8/oTgaT/xxzWM22DwdE8Jj3gY0GpHAu0DdswG1fJrWZGbrbDRQp7QfnxbzdgWLMhtCzUQxDhGfZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Qjaog+Dw; arc=none smtp.client-ip=193.252.23.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Qjaog+Dw"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 2OeDsPOIB9Rhy2OeEs9jKt; Thu, 02 May 2024 07:06:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1714626384;
+	bh=6XIylefjhMGlw6giRBdG9DxUt6yfGF+tcJ6Bmbp3i7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Qjaog+DwHttjDLg3WOnG31H+yPjtNhVWhcTmXDYyBTPW2jTzf4zPceOpP6uzPZJSt
+	 yL2QZ+URtKOPLWwdoYa+z/Meqye3onroN3l5Me3g+6I2nvEUuHLeJ0+DboD5cl4BhA
+	 6DTWrIcN6zLdgKhJj3RbmjHbcwNDIfJXUbaGeJLvuSWDGzDqE3h1CuQvbQvcHjk/bA
+	 xJVknUrsvRoeNM3eQ/44AdtZTDL7VVs1eVD/ThpOH4LRkekkIagJKMozH8cOrgz/yt
+	 6+qHb+DgPXiXTmUy0JgFoTajMe8uZT3fiZKOgE9JV8YsPCUvZO2txONENyW8Dspa5R
+	 YnL35IpVxJgIA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 02 May 2024 07:06:24 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <289aa316-5067-446e-96d8-7b318fa367a9@wanadoo.fr>
+Date: Thu, 2 May 2024 07:06:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
+To: Justin Stitt <justinstitt@google.com>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
+ <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
+ <CAFhGd8rO=-DYvXi0YHvQqnhTteV+Hgeuou0X3USx61oTobj0kw@mail.gmail.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <CAFhGd8rO=-DYvXi0YHvQqnhTteV+Hgeuou0X3USx61oTobj0kw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
-> Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
->=20
-> So, remove unused structs and fix the following
-> -Wflex-array-member-not-at-end warnings:
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Le 02/05/2024 à 01:18, Justin Stitt a écrit :
+> On Wed, May 1, 2024 at 2:39 PM Christophe JAILLET
+> <christophe.jaillet@wanadoo.fr> wrote:
+>> Hi,
+>>
+>> Nit: The { } around each branch can now also be removed.
+> 
+> There was one line before and there's one line now.
 
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+In the block after the "else", yes, but now the block after the "if" is 
+only 1 line. (it was 2 before).
 
+So, {} should now be omitted on both branches.
+
+-    if (str[0] >= '0' && str[0] <= '9') {
+-        strcpy(buf, "ttyS");
+-        strncpy(buf + 4, str, sizeof(buf) - 5);
++    if (isdigit(str[0])) {
++        scnprintf(buf, sizeof(buf), "ttyS%s", str);
+       } else {
+-        strncpy(buf, str, sizeof(buf) - 1);
++        strscpy(buf, str);
+       }
+
+This is a really minor nitpick. Not sure you need to repost if there is 
+no other comment.
+
+CJ
+
+> 
+> I'll remove the brackets but I will briefly wait to see if any other
+> concerns come in.
+> 
+> Thanks
+> 
+>>
+>> CJ
+>>
+> 
+> 
 
