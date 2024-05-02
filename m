@@ -1,95 +1,83 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62168171AD;
-	Thu,  2 May 2024 00:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A9618054
+	for <linux-hardening@vger.kernel.org>; Thu,  2 May 2024 03:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714610826; cv=none; b=GgVSZBjDHxgNgRGTuwLlM952V7RzMBT/3JFzHd1+AzqowijAE1WHH38++v9wskelGims3qGXDpVrh4h4Sfbojynb/dOYIzWmk1xjrPMYBJWCt9YRk5NE0uq4tIqqXPZXurv1BNAjJwNiAKu6JegUAwOnjl0uT7tBPOykU/d1XbQ=
+	t=1714619375; cv=none; b=ETHPS7ERVlp7a6S3PeU1oDi2OfVTBwt6fdntcyylYHbLEDn5zoPsPuqxwCssW5zKw5RUcZbo+fdpf5a4m/lK9H/wYbHEetll1sTyCBlPL7chqL50siM6afVz5H/1YqrpDEIehpaAQa7Wsku2c2kNttIMgzqf9nGFMcqMgAUvozk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714610826; c=relaxed/simple;
-	bh=apm/m1mGLASExEwoGmuvs++Qafh2JxKXrQa8djaX1W0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Fxi/ZQThWyaQ5upBVIhWHkzrVatD3qGZYbH/+v/0/Fk6ze8MqKiETJWRNxv2cKDt1adQ63kbgCXax6LWC3mRSXERBViTQpOckkvAHGYVzHtsu1zjt3jeP+aqS6iXW/vRIawW/LI7cA2t1yltENWsTRX4aREKApJOctPHhrDOAG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BBmNKNX0; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1714619375; c=relaxed/simple;
+	bh=ObnqFPVJOTz/epn03UheMK7LRvxMU5jZn7hFT/Hpy60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GvnqI6rn/8BrHWIwPYdLA8N1VfVLmXrOQVykdS2HlM2juoJujVUyR7zyVAMo6xPUc9BdYsBrdDMgTzWuoyiTyIHy3LqWfDdbPRXsoiqzS5z9APw8GUpW4491p4PtEcUYyDqPolsYwAbbguWH1Mh8uMWjB7PV6Ph+XmBZq5KTDPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l2BrBpXw; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BBmNKNX0"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 3E9661140123;
-	Wed,  1 May 2024 20:47:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Wed, 01 May 2024 20:47:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714610822; x=1714697222; bh=x7TQftPd3+u6tHbbTYbf5pRgfpco
-	MKlpeUB0ct1nLso=; b=BBmNKNX0IEhR+r+O54bY3ciLilxdugPDOLZy5UkPNXzv
-	y7+KYe1xp88Zr+rwbcnfA5Zv6BI0JI7X2xjkzOVf/n2pUqmI+xD8rADax7Pv0JB8
-	UX6xh4nz/hSSoCIcY27eha27S8ek9SHOYlYW6wRko/TH1mSebV2gCP2/XMLsiGeq
-	5Lc4voNmV0tRIEvHe8jEJPXAqGcwBhsgJCmhWt+V+iYkm7Te5Y3B5ti7yAoNFr+f
-	lgNry8xOMNwXWydevSc/4iXmiQnZ2ntSn14tORnri35tGXpHTzaiQhOyYaSfdLF+
-	QNMTJRk/cZU0FsctuPYXQw3D9Hf6x26/y87DmKZMkA==
-X-ME-Sender: <xms:heIyZn9yYvYvKat7wcG-YANPVXk90XDa9c3iKH3qqSGjZmPU8ggR3A>
-    <xme:heIyZjv20lEbL1fIa3WOpBRBh-cX76X5jSeY_2HlnFVd8b4g3QXpx4-6G7uwwoNK6
-    fuHnNAnXhAZA2UfVvw>
-X-ME-Received: <xmr:heIyZlAx0H9YdlsZnSNfhbL-OXypPgFRcU3zPVQNaP7BoO0VtaJlOr7J6ScW1i8rciSNzpAQN0k_VMDLGsP_NEG1iYMDQA2ms8g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddujedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecuhfhrohhmpefhihhnnhcu
-    vfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeelueehleehkefgueevtdevteejkefhffekfeffffdtgfejveekgeefvdeu
-    heeuleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hfthhhrghinheslhhinhhugidqmheikehkrdhorhhg
-X-ME-Proxy: <xmx:heIyZjdLlpL2ZPXgDjrVAVbKLW4PTAnCYSTHU9Fe2GilxTW23Jc9jA>
-    <xmx:heIyZsM0ibYWRmAmjuGc8SMeHDRCZbMzfXU2lM1TlYfhxOVI-1xEDg>
-    <xmx:heIyZllFfTz1aY_OFN1Vi7fD_mFa_OVbRu8P6VdqXRe4TgT1M_UAiw>
-    <xmx:heIyZmsOTtzs4H-vC73S9PNrGZWEFmaaSsUbX1EU6gaNr8SrcH5quA>
-    <xmx:huIyZrqnwDYmXVMMlIqmX-xyeIoFC51ZqNoFqhtRpYCkcHdUDzMI629W>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 1 May 2024 20:46:58 -0400 (EDT)
-Date: Thu, 2 May 2024 10:47:21 +1000 (AEST)
-From: Finn Thain <fthain@linux-m68k.org>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-cc: Kees Cook <keescook@chromium.org>, 
-    "Martin K. Petersen" <martin.petersen@oracle.com>, 
-    Erick Archer <erick.archer@outlook.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Justin Stitt <justinstitt@google.com>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-scsi@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: csiostor: Use kcalloc() instead of kzalloc()
-In-Reply-To: <c358208c5d4c823e3373aca4fe42998a6edd12fb.camel@HansenPartnership.com>
-Message-ID: <66bca69a-0036-4108-5963-002cce69376a@linux-m68k.org>
-References: <AS8PR02MB7237BA2BBAA646DFDB21C63B8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>  <202404291019.5AC903A@keescook> <yq17cgg58sp.fsf@ca-mkp.ca.oracle.com>  <202404291259.3A8EE11@keescook>
- <c358208c5d4c823e3373aca4fe42998a6edd12fb.camel@HansenPartnership.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l2BrBpXw"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-23d477a1a4fso1100584fac.3
+        for <linux-hardening@vger.kernel.org>; Wed, 01 May 2024 20:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714619373; x=1715224173; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EKgwrwTMRQLSvRu8Y+P7h6K1IEMLBlHp60PU8wkB+Tc=;
+        b=l2BrBpXw99T0OxKVhwO4ObGOYxbOMQTp/p/8kX2aFnb3TBH+1OAebl3jhB/K6tkrqS
+         JKH3YuHNX4Y9g9LeRcXRZ77UvyGg2A+FazA+ruEyJBxZhdMT7B89/yAHsoa9UwAhT4BJ
+         FE3cZWFeqitKje5HfKBqRxmW9FEmmvyMWa2Qg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714619373; x=1715224173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EKgwrwTMRQLSvRu8Y+P7h6K1IEMLBlHp60PU8wkB+Tc=;
+        b=kG3Bnry1v6k8AR04NMWmxkqgX2MGQTsIeNP2U7b3qi/wQjzLIHpXKNp3xj/kzUByBw
+         4OfiMtvnb0izKEf+zx9oUu5JNMDCy3K+rBoDG8nCVxvk8v98d0PpSlBM4v31Ovsbwr9A
+         s+z11N/4QXtLcM82siQ03Ra3ZD/ZuWU1KewrgUHhehGVnTO+E+U/b1r/UIh+FLHW3GH0
+         3tv4WTBKRGLvTJudHGAW6VZoSo0+6KMksx7u3S8rh8Gqf0veRU2FlHig46xkRwKJenTS
+         j1/6/r7rOhXFOkxIS0i6neQYXKJ9fLl5p2iABryJYfOaCWDUnlLFf6zNFOkexdzLmqvI
+         DEOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJJwJ0CBhO8uGQyf7D/wWA87nrIDYgk2uMs1sb72c4aXbbHQhoinDiEbVj0BMIjJAUmkIgkSPsm/PP9oKePg9utBNYj/Es7USJ7vqVbr3V
+X-Gm-Message-State: AOJu0Yz48bB3jQYWTkD7jPVnnqEzQHMY+NNd8kQtfU+iFAgEB2YTQIsN
+	0vOPIQ5jI7ykhO78tItEI+T8VuJTarS16vNE8UrvYMfPie7QjekXGq/16NLGXQ==
+X-Google-Smtp-Source: AGHT+IF6cchS2nf9nvU4tH6sibgafgLKaNFYJ0b+TDZI9sKzN9Y5depOzEmZDH9tk2s/8AQg1mmTyQ==
+X-Received: by 2002:a05:6871:d283:b0:22e:b736:7c18 with SMTP id pl3-20020a056871d28300b0022eb7367c18mr1224381oac.27.1714619373630;
+        Wed, 01 May 2024 20:09:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u33-20020a634721000000b0060ec09873fbsm102002pga.7.2024.05.01.20.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 20:09:32 -0700 (PDT)
+Date: Wed, 1 May 2024 20:09:31 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: rtlwifi: Remove unused structs and avoid
+ multiple -Wfamnae warnings
+Message-ID: <202405012008.38A5EB34F@keescook>
+References: <ZjLFIa31BGPVCGh1@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjLFIa31BGPVCGh1@neat>
 
-On Wed, 1 May 2024, James Bottomley wrote:
-
-> > The code itself is fine unless you have a 32-bit system with a 
-> > malicious card, so yeah, near zero risk.
+On Wed, May 01, 2024 at 04:41:37PM -0600, Gustavo A. R. Silva wrote:
+> Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
 > 
-> Well, no actually zero: we assume plugged in hardware to operate 
-> correctly (had this argument in the driver hardening thread a while 
-> ago), but in this particular case you'd have to have a card with a very 
-> high number of ports, which would cause kernel allocations to fail long 
-> before anything could introduce an overflow of sizeof(struct csio_lnode
-> *) * hw->num_lns.
-> 
+> So, remove unused structs and fix the following
+> -Wflex-array-member-not-at-end warnings:
 
-Then it should be safe to add an equivalent assertion. E.g. 
-BUG_ON(hw->num_lns > X) where X was derived either from knowledge of the 
-hardware or from some known-safe kalloc() limit. Though I wonder whether 
-BUG_ON() is the best way to encode preconditions for the benfit of static 
-checkers...
+Heh. Yes! Very effective. :)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
