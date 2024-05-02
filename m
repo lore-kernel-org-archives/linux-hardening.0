@@ -1,113 +1,86 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCCA154C15
-	for <linux-hardening@vger.kernel.org>; Thu,  2 May 2024 15:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB75381DA;
+	Thu,  2 May 2024 15:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714662049; cv=none; b=cy96xjkaVIJj/DutFjjTtmwokUc+Q5v0+ZIWi27XezY1UFkTpaGFWtQB6/+diuWic1Sj0T7YJ3UvApPNkTxiW+2fJAO6PDvKY7qWG82Qwt2Yxqvfa4IAHYJk26sPOUNsQLnDBlpiOpSHExugghftIcOPqZ8MLlF6ABEODfxtseI=
+	t=1714662223; cv=none; b=t6poa1asWGfIMIcu4YGLkDOIqecPmrKBfO3eDidFrLmhTMfKfExbopWmby8R3PkR6XVNI5nVTsJFvb3yufmeokuhsnhrZGgFbcG9nKKGGRhhqPHeyAnNrKs0gvliQ6CX6sN9Tzhqyss0c38XShA95Idxo+IurceFi+A2AjNTPmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714662049; c=relaxed/simple;
-	bh=IXZ0XVHyeLiV27rkSUTUlGzkN9VnLtKzOMVCMNoC/O8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uv48FL+81ityEQ62LCQ5krrWPejW5hp+BDHDYCoLaYWRHH0YIh0eZ6IYwFUK7qtAfBByItLaGUkrN++ZvwmzkFPHFG4+6Be6P79yJpndXejc/j6Febzf/7NfOVa1TPaxc6AwLmRnV3/KJOJ1Fdb5K4nZrzF88C6e2AQpwVmjpPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mJlV47bB; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714662223; c=relaxed/simple;
+	bh=j4+nVr6NKTDhXKl7PTWamprIjgj/O3ULmfyUybvZP0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sV6pwywbtijMz+2hJVNjucCfU4ZNeyFCT5+6DuAgkaZ4J0rbxQf5kItRa7xxy9HOeqgG1O/33VgRHBfSSvjhYPNU9qk5PjaY6CnKG1+4MIW6nTenE5RJYLhbTLEfkuF+R9Ap85tlBhpNSyarjwrLKTKXto5YYjddyAvbiPWSAuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fCBssuna; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mJlV47bB"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e5715a9ebdso67546275ad.2
-        for <linux-hardening@vger.kernel.org>; Thu, 02 May 2024 08:00:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCBssuna"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2db13ca0363so130416611fa.3;
+        Thu, 02 May 2024 08:03:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714662046; x=1715266846; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgw/gW1T+dxXdhkHqh35xpW27WxDl5iViGaENoxdrdU=;
-        b=mJlV47bBZG2YpQPx3If6bekdR7ovyeFR1tJ+caocLpyOOupx0y407Lln1O91HmQPGH
-         6gwqpC+LiTNn5Tg00r2fcYuE63Se2aZ80gp/ulaDtAHplyw7n7xuEUqoNxqhxFCuSQI8
-         ZTeRK9oKJ5+GsOVLw/dQcHrXxUP40u1BYRhws=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714662046; x=1715266846;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1714662220; x=1715267020; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fgw/gW1T+dxXdhkHqh35xpW27WxDl5iViGaENoxdrdU=;
-        b=rWX0XBy/qx3ptjLyQ4Fm1EgUB5sM9sAy8GX22YO1euiFtPufnrSdYVjw26Be5yD4kF
-         pXgln9sNkBGcGl0hKDTf/RUCsvTofCr2drMIIOpOOgvwug/RiBKKBWpokPVVQynT08Ip
-         s/sOnfG45JIA7i8rNywbDre4vTFfBFqVk561Vjhz+44uzztFMYI+WoDYDyrqPeBp8zmI
-         AaSuyFnSI1Qat05huzfkxpftuR+3cK8He2gOFcEUV042qMIpSJ4btvOBtE28Rhy25h8q
-         8rVJan5yp3enC5lKcAmCDw3eWqBmAGAB6IqTF+tCTszpt23wjd9JM+h5eNFzxm5DTYqV
-         7VBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLTL71hdG1cguGW1w7qNACXDQUJElVvdhectivEsrvDYaSLsejpBu8KiSXQSvAVsrXVlfm4VtnScew6aGnfwO4Q1MYdrSnMmnyC+XV9mKj
-X-Gm-Message-State: AOJu0YwXLjlo9GtQzB8hMM3CcU4825CpqRrRvYdu3drQsq8F3/haZ7zo
-	+fJUicoysXlyplMYkJQ79YWiK5qDfDZb322e9s0d5R6ik9X5dATKpOLy6gd4xQ==
-X-Google-Smtp-Source: AGHT+IH29bay7toIy+Kv6yjDc1RgVK2wZSKXsZ9Gj+t64lyFsqoM5DD3wZ30/iSnTvCH8VXfcondMw==
-X-Received: by 2002:a17:902:ab95:b0:1eb:551f:99b2 with SMTP id f21-20020a170902ab9500b001eb551f99b2mr5093641plr.65.1714662046285;
-        Thu, 02 May 2024 08:00:46 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jc15-20020a17090325cf00b001ece59458fbsm1376105plb.286.2024.05.02.08.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 08:00:45 -0700 (PDT)
-Date: Thu, 2 May 2024 08:00:45 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Jakub Kicinski <kuba@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-arch@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/4] arm64: atomics: lse: Silence intentional wrapping
- addition
-Message-ID: <202405020759.55CD47C@keescook>
-References: <20240424191225.work.780-kees@kernel.org>
- <20240424191740.3088894-2-keescook@chromium.org>
- <20240502112127.GA17013@willie-the-truck>
+        bh=j4+nVr6NKTDhXKl7PTWamprIjgj/O3ULmfyUybvZP0o=;
+        b=fCBssunabmRbw57pYVCWbhQ62mv7DSMLLdqst8Vt0DqpQWZCWAw4LP/XUAQyIOBZmv
+         Ko5irXNOvEpF7j8jjmYdzEhLgXbjQcYNIecVj26k6hraqjLDtA6ujHBz1Q8rkCTVOdyT
+         fHb96pITzRwCBivCkHbfPAC3osthJUBfrHxJWowmnYGRXw3ESMafKC9daIc3yA4J/cma
+         tZs4Zm15iPyDQNs2IU4S+hYG4LFrnYMoosez0oDij1Lgvj1yMXdTj8GbgHSwvYJgt0D7
+         H8Lb47O2yi9ito5mpootuu/WiD/JkvNejnKw9tay6uvEqUnG8f5DKXNG0/XRk3fNtjR5
+         njbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714662220; x=1715267020;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j4+nVr6NKTDhXKl7PTWamprIjgj/O3ULmfyUybvZP0o=;
+        b=fDjpOgp/V2Zi6RjQ1kwF8GFfd3R0cJj32xVHKnPupmjjU8Bbtgbd+6h+L4QhNEu4O3
+         iz0C/GAHC3engEGG0HGwyTETTM/fwriGOOka7nrN8sn8Xf36qpCNYaAZNFcJFsQDQArq
+         KtiQVGzofn+SHLw+E8bKeoWjg368JK1Bhpqqbl7HKm4M1meR1i6Cjqm6moXT8qlFekTr
+         ZnIhN6g6yBTDWC3R/9hSti+N0uhjSHO5WMUFWrmD3DY9b2xt4MEPsTRUyV5jx+0FiOBU
+         b3sUxKy4tqOb+xkVpf/KApNV1/KAux9qHUhk2D8tq5IPV2efXx17GEvQpQb4usmUVRjb
+         1Suw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAur5HJG5Tp9nOlr2bZwFWnfPLMCv+jteGiyITmsQeQx6FPmrUJYn14WGi/SzCWpVuY+bZP/QWfFL1zmidj73YcbbjOaVn7lhMC9lC9xduZIcdui5US961rgGMoxKaMxP0kS3YxjkIyrbaCygv
+X-Gm-Message-State: AOJu0Ywx0IQAUXze3L6wJUcrDBdWrpzgUy7KcIguReW33jKFMY188oxb
+	roHqFiE4l2BH5rBivUDsiBgQk0wotqyjq6Hj+Zm8QHN2kP5yNMSqGOPXQif63knqnjkPDGCd50Z
+	JP8/fxPoOMIgsS3SORgBnJIiK4iE=
+X-Google-Smtp-Source: AGHT+IFOz8ONWbsgEsApw0WT1hSDOSCZ3n8dTfrGXCIRw5g9nyxgPtjdut0SzjXdajx+lllzxIc5U/d88/1NgSfuWgA=
+X-Received: by 2002:a2e:9882:0:b0:2dd:2bd8:a4c1 with SMTP id
+ b2-20020a2e9882000000b002dd2bd8a4c1mr6334ljj.10.1714662220092; Thu, 02 May
+ 2024 08:03:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502112127.GA17013@willie-the-truck>
+References: <20240502141359.89567-1-harry021633@gmail.com> <CAHp75Vd9PibrQA=tgZLHuv-kDXana9rGcu5s_aPqyxW6tDBYGw@mail.gmail.com>
+In-Reply-To: <CAHp75Vd9PibrQA=tgZLHuv-kDXana9rGcu5s_aPqyxW6tDBYGw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 2 May 2024 18:03:04 +0300
+Message-ID: <CAHp75Ve4BV7+C+XsNmmjCSupcL6PXe_9ZNMGAQXg9nqdMBFrqg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] string: improve strlen performance
+To: "Hsin-Yu.Chen" <harry021633@gmail.com>
+Cc: keescook@chromium.org, andy@kernel.org, akpm@linux-foundation.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 02, 2024 at 12:21:28PM +0100, Will Deacon wrote:
-> On Wed, Apr 24, 2024 at 12:17:35PM -0700, Kees Cook wrote:
-> > Annotate atomic_add_return() and atomic_sub_return() to avoid signed
-> > overflow instrumentation. They are expected to wrap around.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Boqun Feng <boqun.feng@gmail.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > ---
-> >  arch/arm64/include/asm/atomic_lse.h | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> How come the ll/sc routines (in atomic_ll_sc.h) don't need the same
-> treatment? If that's just an oversight, then maybe it's better to
-> instrument the higher-level wrappers in asm/atomic.h?
+On Thu, May 2, 2024 at 5:59=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, May 2, 2024 at 5:14=E2=80=AFPM Hsin-Yu.Chen <harry021633@gmail.co=
+m> wrote:
 
-Those are all written in asm, so there's no open-coded C arithmetic that
-the sanitizers will notice. All is well there! :)
+And on top of that, check what this code will do on the architectures
+that do not support unaligned access. If everything is fine, mention
+this in the commit message. Btw, your commit message needs
+elaboration, e.g., pointing to the test case (which is absent in this
+patch, I assume it's already in the kernel?) and step-by-step
+instructions on how you got the mentioned results with details of the
+hardware you used for that.
 
--- 
-Kees Cook
+--=20
+With Best Regards,
+Andy Shevchenko
