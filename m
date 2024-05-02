@@ -1,66 +1,71 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE471586D5
-	for <linux-hardening@vger.kernel.org>; Thu,  2 May 2024 15:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F210615AAD3
+	for <linux-hardening@vger.kernel.org>; Thu,  2 May 2024 15:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714662635; cv=none; b=o/Bym7cxikIq4TsRUDEM1n5LRNA8IM/nPRceQ694543ZGRTnXTqW2e3wd/qYytbFfaWmmVd7HBAGnLRyYt87+X34WILdYVsQYhIBC6xkwtyQQjwTLDFhNpZVUE71fkRsOQRygLyemytcuknp90ddTzksHOBQPdCPHDNpH9CglSo=
+	t=1714662856; cv=none; b=iexPPQre7rdUrxXYULtUUsavZBftHagcUioDa387VedyS7RsUY5qXH46yCRhGwkNXWV9A5hK+yJeVe8gIgLLoOdu1jgNthcB7HJdT1W8TdeKXu/IQKa8ww8oKkXCECPivbKkj1ozE+ZKfzMBmMXjEVBwWvsmXYBDBa6ZKHdoFHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714662635; c=relaxed/simple;
-	bh=Syf2VkK9OhG0FGm9QolyXfqpQVipkFzlmRdO+Bf9ENk=;
+	s=arc-20240116; t=1714662856; c=relaxed/simple;
+	bh=VDm/f33gMRZJn1IEH8M+iEGbrAW/USVPxcL7qJhNNmA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kea0a3YBspJaYYpNf3TYpfNaR8oGfb5J0rAGuUzbn0turJRuhBYGK6JQeJv0et6Jrwr/K8mfAacWv18v1ishN4YI4CSD9ArNTvjpQEhl3BL79CFgqeoT8avhUdZpE0tKaC3QKMsHmeu0vtWFn2dbKXdoonu9VChLwnzX3no1v80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h2Eqjfjz; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DQvyOheEmTYQcKNXdqOjHz0CjXgLfQT0s17FDCQu0QDK2ymqEbHSR3cJtTk2LZSRmhHBBwzGHwxRUWfB9UuUzuTCFdsOQ29fde4zgOf/TDjts4zlOQdTTD7A2RLvoD+5z2Q6RycGBI+75LRYPyh6QcGzeLjbsuWo5itDBEojabw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EYtytLqM; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2Eqjfjz"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f44390e328so362573b3a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 02 May 2024 08:10:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EYtytLqM"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41bab13ca81so62239035e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 02 May 2024 08:14:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714662633; x=1715267433; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1714662853; x=1715267653; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=xXVdsaSQZG3q3BjeEnlUXi15uZTx4OzcFDhBo6L16Js=;
-        b=h2EqjfjzYM3XOGhILe6haVIG3Yi6d6XW1bPfW9ScggCVjhapfmiIYyQmgB3c82WuHT
-         Clsa8rm5TZ7A94hMlTBzdXIT/nrV4ehH9omp7EAvXBlNgNIr/71Rm9DZDK90DtH/fFji
-         w2ExWKQW4tTfC83C/XBY0DVR5p24sWm4TsiOM=
+        bh=cbY/VcBLbuHrSNodrdRFjHRQXR5diN61KT/KCDRPbos=;
+        b=EYtytLqMVZ76YsJjd0Vx7l2qi2ja/HdQ6nR2lFOW5doo++NiLxvXvIPqcIK1cJACs6
+         THV2zuxjlG+z3JXCw2hE6oYKk+7Gc2nKiwAJMlZHnlZ3rndtiyk+aZjR/MdDf6ajIsXy
+         UaysEipjVj73PznDKS6d46yOnUcUxT5fxjObkPTogyCtG72wTmXptUUJUjwWU/dEOuZ2
+         JOfR5qBGTEb1KnVK1QtDj170tzoma5NZ66hm96/BoBhYLC0mdWj+rOrVRBf80SVM2g/Y
+         Cb5nQsw71X1yDFpYTYbee2XEWYC7HP3zAE5DHhL+lv6vWWA5uBzeIRRR3L7+M8zXyCFe
+         ++VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714662633; x=1715267433;
+        d=1e100.net; s=20230601; t=1714662853; x=1715267653;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xXVdsaSQZG3q3BjeEnlUXi15uZTx4OzcFDhBo6L16Js=;
-        b=JTkc/IME2b852+85UkDaxIPZolz+CUfDNkGRfuD6ZF3byV1BHm9oUdp1KothoXvLwt
-         Wzo/mQ5gqTzM8gFckuZJt7MQ7bgGt/8CVD5da/NUQGyGLr3uMQQLkx9LnKP6KCAYsIGU
-         o1uvbhoyFFs7jSw+VW7LAq/sJqAgl8znT3o1F8VsRbCJtKH8wduyMsk1zIJxyx/Nwecz
-         yE4i/HF9uqYRhtGFzpj6Loykj1KF3ITIVpdZ8geaQHXvdR8qHLK6ZosWbvA5CUuaqgiW
-         TJnFPtsE3kl7Gc46xwRF6jy+gYmpWTSYj2V+j0CBvcnk1RxNCFnfSmj0ROnKQ10Vb8/D
-         EMRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWauLLm30ZkBtu731cZ/t3vnnWKlwRxPrsMKMzX+xAtSHBW1aC03yk5rkDd6aRIJIXZwqr95trNEIlmfKzWFP6XHzjrUPgE0WsSqRCNfzrZ
-X-Gm-Message-State: AOJu0Yy7xvHWiptIGbhbHp1XaXpUIdSDd0kF0Tl1coCuU+1+RI+iAPIt
-	K695R6XUfBDL/BlT0JOeMoElbo2M+i+aWJhSp2LVTd7VmtWyCVhb9sKSSXBI/qjWA6UT5QaIUs8
-	=
-X-Google-Smtp-Source: AGHT+IEDevyNghnvP0FJS9e6/4jOvzu/SE7p8PlLOxCCPwL7t0qLUaejFyjl7i0fpqziyW0FaHiZcA==
-X-Received: by 2002:a05:6a00:4646:b0:6e7:29dd:84db with SMTP id kp6-20020a056a00464600b006e729dd84dbmr3422934pfb.31.1714662633150;
-        Thu, 02 May 2024 08:10:33 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y63-20020a633242000000b005f806498270sm1340442pgy.9.2024.05.02.08.10.32
+        bh=cbY/VcBLbuHrSNodrdRFjHRQXR5diN61KT/KCDRPbos=;
+        b=NAbxdv1Wc/NwgDQlbNYMYO/0kK41S5N2BdvTziejg4fe6xBTMtKPm5otCdrSya3lDh
+         sqr8bpP5RU90NXjOGmVM8l+jKpkT4uBSx2xnVtH+R7Y8CI3dXpjUNTM0XpomJvr6UK8V
+         X/MdTprXkG490i5CBiSTI7/UO+ox4JknOVWr62oqK+TbQcpsvV2Ae1BW1WGFGwC8M2N2
+         6ddvwdxsJIzo6URkP80M25XEvcU8ya3O0rPX4y1zUfvLKRxAJ2D+23wsZ0/mSUIblxmN
+         NUtvhr9uBPtPFXJY5PQBQZcocEfxQVdnhWxkEgTMktmN7h1mqK+MbtnNF5Tml+vzFHUC
+         XvdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbcS3bUWBBE0n4ja6kVbI2IpoacxO1V41RGkbWOTbWKkpBOglDEPQnJm7cjmAss8M1HEyaxovWxie3wbhnF2R1P9GqQQ5t5tryT+gJm2Jx
+X-Gm-Message-State: AOJu0YxRSK9oRqU4lPq/dvp95ruVtwc+Yq+P9/DnQCmu/VCnuCfy9Aak
+	ALUs6epzKnDXXiukO3kz1F+FekBTl9okb2iaqJD5U6EfxeMVXNHeEdg1BpwdRS8=
+X-Google-Smtp-Source: AGHT+IFlsoRLNMn3LkTjImslFRW1koUYMMOKLDCsUquNVjPgESRcsDbCgtsLIfRPeZxiBfMILNOLUA==
+X-Received: by 2002:a05:600c:450e:b0:41b:edf4:4071 with SMTP id t14-20020a05600c450e00b0041bedf44071mr23404wmo.35.1714662853248;
+        Thu, 02 May 2024 08:14:13 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id z5-20020a05600c0a0500b0041bd85cd3f2sm2256509wmp.19.2024.05.02.08.14.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 08:10:32 -0700 (PDT)
-Date: Thu, 2 May 2024 08:10:32 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Hsin-Yu.Chen" <harry021633@gmail.com>, andy@kernel.org,
-	akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] string: improve strlen performance
-Message-ID: <202405020809.C8973634BF@keescook>
-References: <20240502141359.89567-1-harry021633@gmail.com>
- <CAHp75Vd9PibrQA=tgZLHuv-kDXana9rGcu5s_aPqyxW6tDBYGw@mail.gmail.com>
- <CAHp75Ve4BV7+C+XsNmmjCSupcL6PXe_9ZNMGAQXg9nqdMBFrqg@mail.gmail.com>
+        Thu, 02 May 2024 08:14:13 -0700 (PDT)
+Date: Thu, 2 May 2024 17:14:11 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
+Message-ID: <ZjOtw-ov-GXxG-dv@pathway.suse.cz>
+References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
+ <7cdc63b3-31cc-442c-8c2e-75adb2c76b52@wanadoo.fr>
+ <CAFhGd8rO=-DYvXi0YHvQqnhTteV+Hgeuou0X3USx61oTobj0kw@mail.gmail.com>
+ <289aa316-5067-446e-96d8-7b318fa367a9@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,23 +75,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Ve4BV7+C+XsNmmjCSupcL6PXe_9ZNMGAQXg9nqdMBFrqg@mail.gmail.com>
+In-Reply-To: <289aa316-5067-446e-96d8-7b318fa367a9@wanadoo.fr>
 
-On Thu, May 02, 2024 at 06:03:04PM +0300, Andy Shevchenko wrote:
-> On Thu, May 2, 2024 at 5:59 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, May 2, 2024 at 5:14 PM Hsin-Yu.Chen <harry021633@gmail.com> wrote:
+On Thu 2024-05-02 07:06:21, Christophe JAILLET wrote:
+> Le 02/05/2024 à 01:18, Justin Stitt a écrit :
+> > On Wed, May 1, 2024 at 2:39 PM Christophe JAILLET
+> > <christophe.jaillet@wanadoo.fr> wrote:
+> > > Hi,
+> > > 
+> > > Nit: The { } around each branch can now also be removed.
+> > 
+> > There was one line before and there's one line now.
 > 
-> And on top of that, check what this code will do on the architectures
-> that do not support unaligned access. If everything is fine, mention
-> this in the commit message. Btw, your commit message needs
-> elaboration, e.g., pointing to the test case (which is absent in this
-> patch, I assume it's already in the kernel?) and step-by-step
-> instructions on how you got the mentioned results with details of the
-> hardware you used for that.
+> In the block after the "else", yes, but now the block after the "if" is only
+> 1 line. (it was 2 before).
+> 
+> So, {} should now be omitted on both branches.
+> 
+> -    if (str[0] >= '0' && str[0] <= '9') {
+> -        strcpy(buf, "ttyS");
+> -        strncpy(buf + 4, str, sizeof(buf) - 5);
+> +    if (isdigit(str[0])) {
+> +        scnprintf(buf, sizeof(buf), "ttyS%s", str);
+>       } else {
+> -        strncpy(buf, str, sizeof(buf) - 1);
+> +        strscpy(buf, str);
+>       }
+> 
+> This is a really minor nitpick. Not sure you need to repost if there is no
+> other comment.
 
-I might be worth looking at the implementation of strscpy(), which is
-doing similar multi-byte steps and handles unaligned access.
+I could remove the brackets when pushing the patch. But feel free to
+send v2.
 
--- 
-Kees Cook
+I am going to push it the following week if nobody complains.
+
+Best Regards,
+Petr
