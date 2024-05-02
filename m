@@ -1,82 +1,111 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C118153365;
-	Thu,  2 May 2024 09:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB758502A6;
+	Thu,  2 May 2024 09:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714641528; cv=none; b=Fe0G4Yb93A6THyOKFHjUCqlirgkFB5puMmGFmRZ0VWrLsHBpooSAj+gYuWEsVSY6Z6zhruSyZrDZx3ycQkNcam/QTQT9T1JpKFzPekT4augF16rRp/G3qYPpJe/qzC7VXGIqiJEBj4uXaRC+E2weqblZoKJHZgrKww4HkJbhVX4=
+	t=1714642188; cv=none; b=uaa2VxyRaCRptnH0mJDgAPbWFmnj1+fJaJDpXEWSZTCMxuO1YgkeO+dxJDedAdmPBwnBKJU1h3wSaJ5UnqXnIN199neh3TyTkACKpmEttxHC26PtvNi2GNfcFxVOHM7mP5EmEjZ2r3oLF9lmbEtR0jTm/+5GyQrcYwl9DRyTVqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714641528; c=relaxed/simple;
-	bh=I7p1RdtGOFI//Ur2G0I4lDz0SGt6YQnyFeR6Ar+LrsQ=;
+	s=arc-20240116; t=1714642188; c=relaxed/simple;
+	bh=4Hil5EAIT5/19YXqsZDsZAFQn41q6nuNWidh53aNE1I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i+DmB0mjyxiK5Q75t8hdL1SGqQcswyJZpoLHulqC0wCrYBU2yAw65wGHy2o1+zx/5x+FSR5DiJ00HCY0f6XxgJ8vQznISp5cdJ9rs0sXmc6c3TfFNBmcYVywopIbx1nX2KTJBmSO6t5jFrIaZYy6+jJUx0XKRW74n0JPcKXwL/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uFQggjpZ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dte0vrufo5OSpk8cUyoBfr+D6pa8CHJZkjKYeIpLCWpkX1iQNuuRLqTH/P/TnJcOLG9lYg6UP+7OR0/ZVrT6rWlTQ9ugmzXu2N5ExMDUdEjDpf6ZHmBkiKrMJ2lznsWBCMja53NpOPl/qJHYBpUmeQTL9rvIq/tsPkRgWORdKtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/SX6nDL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uFQggjpZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YTpMwMX+qpj6Q/bcMYzijVjSwnah9GpAyoqUNT5p8FE=; b=uFQggjpZFaHyRheUPJ/kajtRrJ
-	camcEqM/4pLauiKQOWKzIw1iT5fbw+MXhwWL7BezQNa+6f0RMP8EzuUV6yU+jjvBAaVXgIb6/AFUs
-	9F/68m45s3ecnvnIooOwxg0lCZlVFXCxxHlvTBwGUTCSEYHyXfEn5s8L1F+MOn33vVtyw4Y9R9cdg
-	ybPOuzhOxVG8t+8/c8JyM5lNw2TwVa0G0SUuMbJsk9LfFS3kWh2Cs0ffjoMbfS0QBqhpagjg6MZp0
-	5pKlVxu5Xw8HW5TniqLT+UuUUjWqs3JEH7cu1Yfnc0Fp5miS1M+N3a3uVPsxxMIIaJlRpQuiNr1Wk
-	AH/wktrQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s2SaL-00000001Kdw-2O0D;
-	Thu, 02 May 2024 09:18:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3B94A30057A; Thu,  2 May 2024 11:18:37 +0200 (CEST)
-Date: Thu, 2 May 2024 11:18:37 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/SX6nDL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63382C113CC;
+	Thu,  2 May 2024 09:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714642188;
+	bh=4Hil5EAIT5/19YXqsZDsZAFQn41q6nuNWidh53aNE1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M/SX6nDLDa52IKjwMAi8XCeazf9a6EkX+Tf8ws0UEst5W31SA89sKUEgsfum8rX6W
+	 6FehZVN4dsk6nDPKNdj9eGeTBZdzgIR6jWq31F32+wE0jOX4ziWt3rrNNguU0r5GOT
+	 yd4GdNqGTqfiOQDcDeFyhKYejcFHf8ynD/RQLCMfeKajgz+2fHJvUBjCdGCyo3u8po
+	 8NLKehDtpItSPCjtlacchch6IjGflTirycIOmlgnozHxo8aZx4fFj+fTcUQ8Jc5I0G
+	 RMDyIz3KNOEJHLVM+JdnlM4g1GNfcEjIo5liJc0NB6mcp9zIOEzkjxtejGv74NUTRa
+	 y+WrEy5TY7TzA==
+Date: Thu, 2 May 2024 10:29:43 +0100
+From: Lee Jones <lee@kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Kees Cook <keescook@chromium.org>,
 	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <20240502091837.GA30852@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240430091504.GC40213@noisy.programming.kicks-ass.net>
- <202405011317.AF41B94B@keescook>
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Finn Thain <fthain@linux-m68k.org>
+Subject: Re: [PATCH v6] checkpatch: add check for snprintf to scnprintf
+Message-ID: <20240502092943.GG5338@google.com>
+References: <20240429-snprintf-checkpatch-v6-1-354c62c88290@google.com>
+ <202404291249.078D924@keescook>
+ <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202405011317.AF41B94B@keescook>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aacd7c3a5ad5bb4df71ec5dd107ef12b6ebf4079.camel@perches.com>
 
-On Wed, May 01, 2024 at 01:21:42PM -0700, Kees Cook wrote:
-> On Tue, Apr 30, 2024 at 11:15:04AM +0200, Peter Zijlstra wrote:
-> > On Mon, Apr 29, 2024 at 07:40:58PM +0200, Erick Archer wrote:
-> > > This is an effort to get rid of all multiplications from allocation
-> > > functions in order to prevent integer overflows [1][2].
+On Mon, 29 Apr 2024, Joe Perches wrote:
+
+> On Mon, 2024-04-29 at 12:49 -0700, Kees Cook wrote:
+> > On Mon, Apr 29, 2024 at 06:39:28PM +0000, Justin Stitt wrote:
+> > > I am going to quote Lee Jones who has been doing some snprintf ->
+> > > scnprintf refactorings:
+> > > 
+> > > "There is a general misunderstanding amongst engineers that
+> > > {v}snprintf() returns the length of the data *actually* encoded into the
+> > > destination array.  However, as per the C99 standard {v}snprintf()
+> > > really returns the length of the data that *would have been* written if
+> > > there were enough space for it.  This misunderstanding has led to
+> > > buffer-overruns in the past.  It's generally considered safer to use the
+> > > {v}scnprintf() variants in their place (or even sprintf() in simple
+> > > cases).  So let's do that."
+> > > 
+> > > To help prevent new instances of snprintf() from popping up, let's add a
+> > > check to checkpatch.pl.
+> > > 
+> > > Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
 > > 
-> > So personally I detest struct_size() because I can never remember wtf it
-> > does, whereas the code it replaces is simple and straight forward :/
+> > Thanks!
+> > 
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > 
 > 
-> Sure, new APIs can involved a learning curve. If we can all handle
-> container_of(), we can deal with struct_size(). :)
+> $ git grep -P '\b((v|)snprintf)\s*\(' | wc -l
+> 7745
+> $ git grep -P '(?:return\s+|=\s*)\b((v|)snprintf)\s*\(' | wc -l
+> 1626
+> 
+> Given there are ~5000 uses of these that don't care
+> whether or not it's snprintf or scnprintf, I think this
+> is not great.
+> 
+> I'd much rather make sure the return value of the call
+> is used before suggesting an alternative.
+> 
+> $ git grep  -P '\b((v|)snprintf)\s*\(.*PAGE_SIZE' | wc -l
+> 515
+> 
+> And about 1/3 of these snprintf calls are for sysfs style
+> output that ideally would be converted to sysfs_emit or
+> sysfs_emit_at instead.
 
-containre_of() is actually *much* shorter than typing it all out. Which
-is a benefit.
+I am working on the migration of these (this patch was spun off from
+that project in fact).  Some subsystems are currently prioritising the
+status quo (a.k.a. "no churn"), but most have been accepting of the
+changes.
 
-struct_size() not so much. That's just obfuscation for obfuscation's
-sake.
+Planning to get back to it once the CVE project has calmed a little.
+
+Those numbers should diminish over time.
+
+-- 
+Lee Jones [李琼斯]
