@@ -1,81 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7469A15381F;
-	Thu,  2 May 2024 15:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A9C15CD40;
+	Thu,  2 May 2024 16:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714664331; cv=none; b=k8ydzM+7vwHeOIhy626jTl2AZaQz25MlRHUE0zuBqG8tgxMKL4SmJTfHcm7r6iyMQWcAzoCW+0YeA3J1CnBO3+ve0+i1HUuMCCi4Lp8HDm3DSDScWqe5LwQ+/tOGV13WKUrdcKmGY4b4J1why3R8FeoZvb+X4LtoVXF2s4xbmjA=
+	t=1714666924; cv=none; b=KK2ioM2+c1r+2mB7PT7ZwmsSY1NsS0jmcCv7zHLkyBEtKL4e6nGEszrtgv4qvy3ObMaR8RkVMhsn/6YehGt7+TJPQM8jfirWOB9XVFsyyT0cqsX39KUiHc/blzAaCynCVIfCEdM+aYjV94tz7naDaY0+wPQNQR0RHhjwf07vP4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714664331; c=relaxed/simple;
-	bh=19JNsRFEKUX4aIFSbQgj18sRdjQzRL6sHrU6+0i+8y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XXzyTxPziWlniXZWiJbMsEzym3ctyjlQuDOtXTOdh/3P22UGX1Nh8m3RZC8FwVv6hvKf9RZjTTj3ASmR3DkOOxHSJoMZQB/3wX84B2k+NQ4rp8oVBNa2Lf739VOUfJVokalQFMizVN1AdeCG0SrGx3UH9qibcas97N6mZ/yBm9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: rkPEPQY7Tw6bHi1I5fkD9A==
-X-CSE-MsgGUID: MStDGcttTDyjS32/h0OrLQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="14247058"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="14247058"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:38:50 -0700
-X-CSE-ConnectionGUID: QvFjUOimSR+HemaZ6JTTjQ==
-X-CSE-MsgGUID: iObttkVIQhOkVK/mU7eD0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="50356399"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 08:38:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1s2YWD-00000003MgT-3p93;
-	Thu, 02 May 2024 18:38:45 +0300
-Date: Thu, 2 May 2024 18:38:45 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Hsin-Yu.Chen" <harry021633@gmail.com>, akpm@linux-foundation.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] string: improve strlen performance
-Message-ID: <ZjOzhc0o00njV_RT@smile.fi.intel.com>
-References: <20240502141359.89567-1-harry021633@gmail.com>
- <CAHp75Vd9PibrQA=tgZLHuv-kDXana9rGcu5s_aPqyxW6tDBYGw@mail.gmail.com>
- <CAHp75Ve4BV7+C+XsNmmjCSupcL6PXe_9ZNMGAQXg9nqdMBFrqg@mail.gmail.com>
- <202405020809.C8973634BF@keescook>
+	s=arc-20240116; t=1714666924; c=relaxed/simple;
+	bh=NgUrHm1d3fP/DVSv0zS8qOV1V2Le1HkNbk1ehfQZG5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dp2lb8BKEU3iK8RD1kNOb+lesR9QQ5kJ1EA/hxHJdaK0/8NlrOLETHhhDY9l84zO1YtClPBUvOomUAR1lpmXY1sqI/q98XAi9o2up/uh6xPQBcOwShMb9vfTDwDbfVLo4thOgLvLvE+MhaInWxK8MPfvW1OpvRGqL42NvLhaEXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qs22RGi0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qs22RGi0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5653C113CC;
+	Thu,  2 May 2024 16:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714666923;
+	bh=NgUrHm1d3fP/DVSv0zS8qOV1V2Le1HkNbk1ehfQZG5E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qs22RGi0tyXio6JUFU/Fq5arumfgrakbBtuloUhN/zXCeheNENo+BsdO9RgFcbvfg
+	 oGUHfWUsOCyS2Y8QvsfqjGnrDGwCswbsvdduuh2Tm5uBQthamRMns+QKVDL/lP5E4k
+	 VUm3HIDrWtTGiuCtjLK+2+NOAGFRVb5LWHPK4S0Ip9c4VXh/OKdejiFf5cnZIyC3Ml
+	 zqg2KA+qvdE0c9N1XxQU7OboG/esMIXykICwsRThnUn86E7aAkcyP7drXWtIIw1Oo0
+	 ROc389MEv+bRR0VrehhwVMCwmBeLWJxoAAaGn05+L4+ikRV0U/0S7I4bDc95oqPFGI
+	 APicbGx/EjgSQ==
+Date: Thu, 2 May 2024 10:22:00 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] Bluetooth: hci_conn: Use __counted_by() and avoid
+ -Wfamnae warning
+Message-ID: <ZjO9qCx10KUJbK6w@neat>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202405020809.C8973634BF@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, May 02, 2024 at 08:10:32AM -0700, Kees Cook wrote:
-> On Thu, May 02, 2024 at 06:03:04PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 2, 2024 at 5:59 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, May 2, 2024 at 5:14 PM Hsin-Yu.Chen <harry021633@gmail.com> wrote:
-> > 
-> > And on top of that, check what this code will do on the architectures
-> > that do not support unaligned access. If everything is fine, mention
-> > this in the commit message. Btw, your commit message needs
-> > elaboration, e.g., pointing to the test case (which is absent in this
-> > patch, I assume it's already in the kernel?) and step-by-step
-> > instructions on how you got the mentioned results with details of the
-> > hardware you used for that.
-> 
-> I might be worth looking at the implementation of strscpy(), which is
-> doing similar multi-byte steps and handles unaligned access.
+Prepare for the coming implementation by GCC and Clang of the
+__counted_by attribute. Flexible array members annotated with
+__counted_by can have their accesses bounds-checked at run-time
+via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+(for strcpy/memcpy-family functions).
 
-Right, we have a word-at-a-time.h or alike for this things.
+Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+getting ready to enable it globally.
 
+So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
+
+With these changes, fix the following warning:
+net/bluetooth/hci_conn.c:669:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/net/bluetooth/hci.h |  2 +-
+ net/bluetooth/hci_conn.c    | 38 ++++++++++++++++---------------------
+ 2 files changed, 17 insertions(+), 23 deletions(-)
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index c4c6b8810701..e6838321f4d9 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -2144,7 +2144,7 @@ struct hci_cp_le_set_cig_params {
+ 	__le16  c_latency;
+ 	__le16  p_latency;
+ 	__u8    num_cis;
+-	struct hci_cis_params cis[];
++	struct hci_cis_params cis[] __counted_by(num_cis);
+ } __packed;
+ 
+ struct hci_rp_le_set_cig_params {
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index c508609be105..6e60e8287956 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -665,11 +665,6 @@ static void le_conn_timeout(struct work_struct *work)
+ 	hci_abort_conn(conn, HCI_ERROR_REMOTE_USER_TERM);
+ }
+ 
+-struct iso_cig_params {
+-	struct hci_cp_le_set_cig_params cp;
+-	struct hci_cis_params cis[0x1f];
+-};
+-
+ struct iso_list_data {
+ 	union {
+ 		u8  cig;
+@@ -1725,34 +1720,33 @@ static int hci_le_create_big(struct hci_conn *conn, struct bt_iso_qos *qos)
+ 
+ static int set_cig_params_sync(struct hci_dev *hdev, void *data)
+ {
++	DEFINE_FLEX(struct hci_cp_le_set_cig_params, pdu, cis, num_cis, 0x1f);
+ 	u8 cig_id = PTR_UINT(data);
+ 	struct hci_conn *conn;
+ 	struct bt_iso_qos *qos;
+-	struct iso_cig_params pdu;
++	u8 aux_num_cis = 0;
+ 	u8 cis_id;
+ 
+ 	conn = hci_conn_hash_lookup_cig(hdev, cig_id);
+ 	if (!conn)
+ 		return 0;
+ 
+-	memset(&pdu, 0, sizeof(pdu));
+-
+ 	qos = &conn->iso_qos;
+-	pdu.cp.cig_id = cig_id;
+-	hci_cpu_to_le24(qos->ucast.out.interval, pdu.cp.c_interval);
+-	hci_cpu_to_le24(qos->ucast.in.interval, pdu.cp.p_interval);
+-	pdu.cp.sca = qos->ucast.sca;
+-	pdu.cp.packing = qos->ucast.packing;
+-	pdu.cp.framing = qos->ucast.framing;
+-	pdu.cp.c_latency = cpu_to_le16(qos->ucast.out.latency);
+-	pdu.cp.p_latency = cpu_to_le16(qos->ucast.in.latency);
++	pdu->cig_id = cig_id;
++	hci_cpu_to_le24(qos->ucast.out.interval, pdu->c_interval);
++	hci_cpu_to_le24(qos->ucast.in.interval, pdu->p_interval);
++	pdu->sca = qos->ucast.sca;
++	pdu->packing = qos->ucast.packing;
++	pdu->framing = qos->ucast.framing;
++	pdu->c_latency = cpu_to_le16(qos->ucast.out.latency);
++	pdu->p_latency = cpu_to_le16(qos->ucast.in.latency);
+ 
+ 	/* Reprogram all CIS(s) with the same CIG, valid range are:
+ 	 * num_cis: 0x00 to 0x1F
+ 	 * cis_id: 0x00 to 0xEF
+ 	 */
+ 	for (cis_id = 0x00; cis_id < 0xf0 &&
+-	     pdu.cp.num_cis < ARRAY_SIZE(pdu.cis); cis_id++) {
++	     aux_num_cis < pdu->num_cis; cis_id++) {
+ 		struct hci_cis_params *cis;
+ 
+ 		conn = hci_conn_hash_lookup_cis(hdev, NULL, 0, cig_id, cis_id);
+@@ -1761,7 +1755,7 @@ static int set_cig_params_sync(struct hci_dev *hdev, void *data)
+ 
+ 		qos = &conn->iso_qos;
+ 
+-		cis = &pdu.cis[pdu.cp.num_cis++];
++		cis = &pdu->cis[aux_num_cis++];
+ 		cis->cis_id = cis_id;
+ 		cis->c_sdu  = cpu_to_le16(conn->iso_qos.ucast.out.sdu);
+ 		cis->p_sdu  = cpu_to_le16(conn->iso_qos.ucast.in.sdu);
+@@ -1772,14 +1766,14 @@ static int set_cig_params_sync(struct hci_dev *hdev, void *data)
+ 		cis->c_rtn  = qos->ucast.out.rtn;
+ 		cis->p_rtn  = qos->ucast.in.rtn;
+ 	}
++	pdu->num_cis = aux_num_cis;
+ 
+-	if (!pdu.cp.num_cis)
++	if (!pdu->num_cis)
+ 		return 0;
+ 
+ 	return __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_CIG_PARAMS,
+-				     sizeof(pdu.cp) +
+-				     pdu.cp.num_cis * sizeof(pdu.cis[0]), &pdu,
+-				     HCI_CMD_TIMEOUT);
++				     struct_size(pdu, cis, pdu->num_cis),
++				     pdu, HCI_CMD_TIMEOUT);
+ }
+ 
+ static bool hci_le_set_cig_params(struct hci_conn *conn, struct bt_iso_qos *qos)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
