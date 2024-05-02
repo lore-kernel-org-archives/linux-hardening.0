@@ -1,119 +1,107 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5621B960
-	for <linux-hardening@vger.kernel.org>; Thu,  2 May 2024 22:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9EF1B960
+	for <linux-hardening@vger.kernel.org>; Thu,  2 May 2024 22:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714690344; cv=none; b=Be4iCjfzU3Wu+5EtqavckFflcmXSBjirrCLGM/J0YNIlpgn3dXAanvOPzwOrFbaWnEh0hl2BktpLz2lZAIKHj1Sf3KGjkrFrjVsKqTM0x9AgKh4ZVVi8nTMO27vbK3OWFoKRRJG6X1lDChzpLIn+o2osUb/wP3XuYc95qN38eOY=
+	t=1714690420; cv=none; b=nThY03SdjPo6pgxpG4f/oeN3CKu9D9CFl4VOvYR3eG5F33Dl4QqNdv4SmT9WFQADIvGcLvX2O1wm8nTLR1DZ59L3BISdYIyGIgsomNPODouC2EGZpE/9Q75qnGQ8yhPsqV409tnr2u5eKAfNQQlWoHxq3iajudd2L2SIjbN6sPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714690344; c=relaxed/simple;
-	bh=N2PaycxEmY7XWj03FUl9SZb9HROv6N5dMS34YzMs3ME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TCa8OHjvecdUkLwhem9GLsmUlazBkIYSO7hf7TsE9GoBjNUBhHgHkHfXZY8L60jCpqNHUb8WpzmS73oaMi7m01PI+d5TRKSom0D4xWbkG9r6yklIe4ihUkfSWoLrDbL1Yg7VQf6wQ88aYZZDQT1scBekYs0ekiAsm8j+gTCMAbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QO8WDE7X; arc=none smtp.client-ip=209.85.210.174
+	s=arc-20240116; t=1714690420; c=relaxed/simple;
+	bh=qUMv2aw1IBS2/MX1SbOITzDsbuweO0Qs3rgm+IfknbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MZHR1AWDhHJeL2zWPTarOkvTI1t0nSf3kWgHoRuY1WdqRj1Ys+jnbTaQwO9dPH7Rcmt9FX4gsv6wTrOm7AKCrfhJbJ2/ExWplNHI9t3UvS2WAMf/LvoA8GIv88ecRmbhAAxYBhCujlWjy+pQ8Ltb9BS8I4FdSzk0hMOkVtIiEJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=og6JPJaB; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QO8WDE7X"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f44881ad9eso469018b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 02 May 2024 15:52:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="og6JPJaB"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ec4dc64c6cso28197195ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 02 May 2024 15:53:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714690342; x=1715295142; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CaFsfP7DKpgQNfEAphXpGxTTBp7ycaxayFvxorBszwQ=;
-        b=QO8WDE7XgujGXM9YBez1z+Fki6cqLMk1iBvSPpVxul8fnUPTysO9UOYYIf7OmIxup5
-         xUP+ABJq2Zb685i4SXMsjzFPHjseWjNbVzNbbWBXKxGeQryaxRXKK2+ZYpfbeLFw36Tg
-         /4MKWU02/CFdSE7hsy87x9KwJuQ0/cDN5/yvw=
+        d=chromium.org; s=google; t=1714690418; x=1715295218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Prj7tW5O8qcWFBoqOh3lWUNMlvI33+jglppy2rwSGbc=;
+        b=og6JPJaBGKEXLvEo/y/OKfRnC+a0vpebeaMZNoZ7F0tR2izXWCBatM//89bgaE31H4
+         j0E8BAt2mt//bbPFSJ/RtfEegIcLSID3wgPkQjY9dWK414b8PUXPfK7rqFp8g76RVhlM
+         KCJpFkId2+BHWXshSKDcMPskxwWi1+B4xSi7I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714690342; x=1715295142;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CaFsfP7DKpgQNfEAphXpGxTTBp7ycaxayFvxorBszwQ=;
-        b=nMvytdGqsydxiffBmUpci62rrXh7PhpQVdlvYjvqk9+hV04Cb1IBhyb78JU1P99GR3
-         AFCMxMYjp5CR3jeuCEXdN3QvTvQUKUH85afkusH/SeBKTYIIZvqJgdoB/se3VTmmMHFg
-         6mHlJFvYaMBp1yM7W8YGcwG8ofG7A9A9b8Zer/fu54aMp0ptyLJ4AJFKpeDQZ7oKevNu
-         zBloV9lPPwTiKWp+c+pVmwvw0xhJr6J4QQtkEhGXD/1kFcOKu32aZuNNpeyTVrAc1018
-         RMYneDW9a13mVNFiHLJC5UrcRrAoxGH7XPaei6zBcpQQQm82pOk6/Sr9++d6R+nHBTvr
-         vEHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWX01uGAFhBpzBl2b8OFZvw+LtCMPAivAqTOjPMe2nreKxKW8Nt5v4unk9ZWLhy1FG7k0+F868cJUQe8NFw15mm36I3zZztAZvHP/3NByTh
-X-Gm-Message-State: AOJu0YxC74FZJdwUn4RJGUS+yeO/0loRdMew9hBkPo/HNk7D+37BuKBH
-	jJXIj7ODVWCo5hiWfZdUT8aieSdYKXFVTyO6lRpvnmWvUXC8JEyRxeLET5LScQ==
-X-Google-Smtp-Source: AGHT+IF6DEKM5OKMglZmn4Z71ee5/EXabaGMMWGKP6YJ9ZMYVLGTNQcbbL5IuYd27jIZQ8XL5S2yPQ==
-X-Received: by 2002:a05:6a20:e687:b0:1a9:8836:ae37 with SMTP id mz7-20020a056a20e68700b001a98836ae37mr1313878pzb.12.1714690342568;
-        Thu, 02 May 2024 15:52:22 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id iz14-20020a170902ef8e00b001eac94472f6sm1877632plb.93.2024.05.02.15.52.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 15:52:21 -0700 (PDT)
-Date: Thu, 2 May 2024 15:52:21 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Matt Atwood <matthew.s.atwood@intel.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Nirmoy Das <nirmoy.das@intel.com>,
-	Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] fs: Convert struct file::f_count to refcount_long_t
-Message-ID: <202405021548.040579B1C@keescook>
-References: <20240502222252.work.690-kees@kernel.org>
- <20240502223341.1835070-5-keescook@chromium.org>
- <20240502224250.GM2118490@ZenIV>
+        d=1e100.net; s=20230601; t=1714690418; x=1715295218;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Prj7tW5O8qcWFBoqOh3lWUNMlvI33+jglppy2rwSGbc=;
+        b=sHvf6qeQgodrCTm2p/LsbffDhnrWdwbDLiOQP8vWt0gEVJtk/66PmlT/IW5q5NOROP
+         syUYvOdVRTKNXbSZc9XQvrTTNq0G57QxXcBcwNBSCS5cIv71kvm3Cfj8cje4ydHMAYDA
+         PuZBboSocWnkfH9yTE9CcWK43kQyfq6hem4qr88gpbyUAUzW0qFsku6OoeBLgl+pE+ch
+         tcO/pGckV+jhmxwQs7D7FxqTSpiMdW/fvnf1mznnFyHmxokyLumVrmek5OHO92GmPHO4
+         nkov1ZBy9guYLmffHSfCcIybKd1kLJPeuKZL1wXdr2vZ9q7XTER4WN4vY336jOV018qT
+         vqIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwORXfWcm2Xnd/WU9J2SMcx4Vzizic/cTzYXi6Nobn5CXYqJMkyuWEHtqh7AO01ctLA86qBN9tTxSyWO9I9KoQLwtpzflF9yxYqRSLYMj1
+X-Gm-Message-State: AOJu0YzfhPKAPWGw1ARv6bm4adQnX4iXzjt3XBQOTg5OLSoF19y21NzA
+	/Q103c9LmS5RivBwAzCm2knWa38bzzjcCE+8lITnlo3BOHwiVsTZ85nkkOzQPA==
+X-Google-Smtp-Source: AGHT+IHShwmEv8qkRbopVbvA6FjoqnEI0cCapniOQAPLT4x/TWMx5CxRoQ+FGxV/tw4yrYm56Lt/4g==
+X-Received: by 2002:a17:903:249:b0:1eb:d70c:e69f with SMTP id j9-20020a170903024900b001ebd70ce69fmr1155777plh.63.1714690418369;
+        Thu, 02 May 2024 15:53:38 -0700 (PDT)
+Received: from localhost (238.76.127.34.bc.googleusercontent.com. [34.127.76.238])
+        by smtp.gmail.com with UTF8SMTPSA id d9-20020a170902cec900b001e20be11688sm1870428plg.229.2024.05.02.15.53.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 15:53:38 -0700 (PDT)
+From: jeffxu@chromium.org
+To: ryan.roberts@arm.com
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	corbet@lwn.net,
+	dave.hansen@intel.com,
+	deraadt@openbsd.org,
+	gregkh@linuxfoundation.org,
+	groeck@chromium.org,
+	jannh@google.com,
+	jeffxu@chromium.org,
+	jeffxu@google.com,
+	jorgelo@chromium.org,
+	keescook@chromium.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	merimus@google.com,
+	pedro.falcato@gmail.com,
+	rdunlap@infradead.org,
+	sroettger@google.com,
+	surenb@google.com,
+	torvalds@linux-foundation.org,
+	usama.anjum@collabora.com,
+	willy@infradead.org
+Subject: [PATCH v1 0/1] selftest/mseal fix arm build
+Date: Thu,  2 May 2024 22:53:30 +0000
+Message-ID: <20240502225331.3806279-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502224250.GM2118490@ZenIV>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 02, 2024 at 11:42:50PM +0100, Al Viro wrote:
-> On Thu, May 02, 2024 at 03:33:40PM -0700, Kees Cook wrote:
-> > Underflow of f_count needs to be more carefully detected than it
-> > currently is. The results of get_file() should be checked, but the
-> > first step is detection. Redefine f_count from atomic_long_t to
-> > refcount_long_t.
-> 
-> 	It is used on fairly hot paths.  What's more, it's not
-> at all obvious what the hell would right semantics be.
+From: Jeff Xu <jeffxu@chromium.org>
 
-I think we've put performance concerns between refcount_t and atomic_t
-to rest long ago. If there is a real workload where it's a problem,
-let's find it! :)
+This is followup on arm build failure reported by
+Ryan Roberts [1]
 
-As for semantics, what do you mean? Detecting dec-below-zero means we
-catch underflow, and detected inc-from-zero means we catch resurrection
-attempts. In both cases we avoid double-free, but we have already lost
-to a potential dangling reference to a freed struct file. But just
-letting f_count go bad seems dangerous.
+I don't have right setup to repro the issue, so would need some
+help to verify this in arm build.
+
+[1] https://lore.kernel.org/lkml/f797fbde-ffb7-44b0-8af6-4ed2ec47eac1@arm.com/
+
+
+Jeff Xu (1):
+  selftest mm/mseal: fix arm build
+
+ tools/testing/selftests/mm/mseal_test.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 -- 
-Kees Cook
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
