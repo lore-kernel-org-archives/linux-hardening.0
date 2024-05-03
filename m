@@ -1,112 +1,113 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B5153BC9;
-	Fri,  3 May 2024 13:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C65153BDF
+	for <linux-hardening@vger.kernel.org>; Fri,  3 May 2024 13:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714743876; cv=none; b=WYPKFgGOOZnPqd1GT9m8T8GsjoOUCYo+bSEdiAL3fCF8V+AED9dGUcY+7DcHspP/ZCZMXweBH2AWimD7rUA2MZJbRFgmT3KQ9y25Itps0Z7KL3bMRGq+XWEJWKnaH3/QSyO9pllPfnrT1+aQIiKRmDBitfI8p2Oj/QF8GV7mkSs=
+	t=1714744191; cv=none; b=Vp0dxKR/Jkot0BKB3EzemNIyOViga0AafXws9TMS2I9goZQxktV4w5zcpBkdki/4yjNIV88vTQlUM6bmOiXR3GdO9me0HvCL01sKt9hMgKw2ACrUxOKaF7D05B1ANqShi85vuu9KeILEi37OQo/DrI6exW2fkCmy+cKfzriU/js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714743876; c=relaxed/simple;
-	bh=5+w0EO0csO5S2boUJzwf6vkebCqsTwn1sGI9xWIoSyU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YApFiZ8nqcbvrXmt6US9dx/NUh8FQrE56uZRPc0t3ZgJWbt/THe/dFrj9h0dlWo7idzLv0kGTI/IHio9Ry395O4ucyNZVZyZDxIIogL11FlDwY/Bqb9UsqzWxMM1xVc4jno2Qv4o+jqhn+pvaxhTmoXB73eFElRgiKqXIFUaxbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=cvx0cKi+; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1714744191; c=relaxed/simple;
+	bh=j07SrBcbxR5dXX5FuZ1/lpjovjv+PAI0Ty3nUmrfPsk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=a0MxwG6WjJuvYV3RgCunM1RGuRv61uyGsUCNzT/b7saCIGtGo9NNtILAziJ5pkx+qc03msDpwXVr4tx0Fh2t4fB7+2oGDzi0h/YnfmC1cwHdma9wm5FnZy5DmOkk6kGSQQkaBJdovPWjRwFjwFXMYuvt2LJb31CEK56cte15QrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qoK9pR0V; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="cvx0cKi+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714743868;
-	bh=5+w0EO0csO5S2boUJzwf6vkebCqsTwn1sGI9xWIoSyU=;
-	h=From:Date:Subject:To:Cc:From;
-	b=cvx0cKi+VKcX0P2kD76tfscHjmwGbHpA4KQCUWGGS7kexQOinNr+6YxZaF69PgIxS
-	 +SKjMSczqersGVWZbhPVPlyRkEjADqD3qv2RFtKL9z/9x+oyiLA+/MJ0XvLUe3hiUP
-	 GlovuEA0OKfel9xvFOvBPlQnp9Bt00azA7VEDUWM=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Fri, 03 May 2024 15:44:09 +0200
-Subject: [PATCH] stackleak: don't modify ctl_table argument
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qoK9pR0V"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6f441afba80so1503264b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 03 May 2024 06:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714744189; x=1715348989; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rQGv5UfxS6jX/aTPX2JQQkA4rH0rnz4JsGbkCfvMiug=;
+        b=qoK9pR0VX+7yhK5foV7UyI7xzgxVCafNPWDfgEv1EYfsASd7/3RTz2J6u0EQ/QBhkw
+         otBXrvIMWr1t9rTLYIfWfzPrQeZ2DTen8ejGl8V4A4BJSpaATMSUE5J0cn9LhNt2Nol7
+         uDBwYWai7AFD3W3Va47EnJZfo6tG1I9ezJDPPgKLCIRYaXqkRaFJszt5k9e9RlKkqko2
+         dMGXiQ/k0sGDw17do6A24w9Ncme6LERJqMpxW6rAH8niwA+L0k1+QoI95AtE1KVBsNrk
+         c7hcGDcxVwOhHBX5HO7wR0maJRNsmmBrgq221iGCSj8ltZw6ctVaMTC3as/5j0HfKmL9
+         SItg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714744189; x=1715348989;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rQGv5UfxS6jX/aTPX2JQQkA4rH0rnz4JsGbkCfvMiug=;
+        b=AHk/x75B2CnyKlYiY8zUaaa+9abfD6PIE5/+ntnTCars4ewFuk9N1X/pHhd1f9uYox
+         icQ15fD+6vr5RNvAgCtJe9y0uerXNM5sGkai0Aanlv0T2eYkLwq5vPYo/3JZVS6uWN2Y
+         a72cNMJKrKg0CPlgTPkb+PRYj0oa/GWLGD4gturqMwPbXsDpTUhta+EyUW/13DGrmKoJ
+         nI2zH+no2JHwmy5p4vp5VFNcVjuXZwSPKdTqdTJpWrs680HkILcg+wEdSX3a5oDejI6F
+         x0nEFs8EfuuFpkpkl4HbKZ+1Curg0Zn9VjOEh2TaGkTvS/t91nNPmoYNJUcPpZTYYOWf
+         0/4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXfTwdj60ZKAy5LBbwo5EYLIepvJ0j28FA371jMooHBIQFaWw4O1jV95yqtbLCtUb0KL2yG6yP3UmXY/pldsCwZgp4Y6OPGhptMOAVzg1Vg
+X-Gm-Message-State: AOJu0YyWxwXnBj1gF7N3fNaiGuO87brM70zrZqmJaJpfDoRbb8c4sOcW
+	4PQVtbxWz9aTkv47GpyDQSzgONKkiHw2VcifHr2T+cLlZV850F0RpJZF70kjkkuR4zfdG1mDbFG
+	z3Q==
+X-Google-Smtp-Source: AGHT+IGc0eGZplb+oZL3dkGKqelUQj57uqxGLcLhw0noqTEVy1iaqZaCu7zCqnCr5z1/yKblcKIpSFxnXkk=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:2e07:b0:6ea:baf6:57a3 with SMTP id
+ fc7-20020a056a002e0700b006eabaf657a3mr154355pfb.6.1714744189252; Fri, 03 May
+ 2024 06:49:49 -0700 (PDT)
+Date: Fri, 3 May 2024 06:49:47 -0700
+In-Reply-To: <20240503131910.307630-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20240503131910.307630-1-mic@digikod.net>
+Message-ID: <ZjTre6BYRpkI_H4o@google.com>
+Subject: Re: [RFC PATCH v3 0/5] Hypervisor-Enforced Kernel Integrity - CR pinning
+From: Sean Christopherson <seanjc@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, 
+	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
+	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
+	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
+	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
+	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
+	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
+	virtualization@lists.linux-foundation.org, x86@kernel.org, 
+	xen-devel@lists.xenproject.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240503-sysctl-const-stackleak-v1-1-603fecb19170@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIACjqNGYC/x3MSwqAMAwA0atI1gbqH7yKuKgxalCqNEUU8e4Wl
- 28x84CyF1Zokwc8n6Kyu4gsTYAW62ZGGaMhN3lpKlOg3kphQ9qdBtRgad3YrmingutmoLoaDMT
- 48DzJ9Y+7/n0/87RKS2gAAAA=
-To: Kees Cook <keescook@chromium.org>, 
- Alexander Popov <alex.popov@linux.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714743866; l=2040;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=5+w0EO0csO5S2boUJzwf6vkebCqsTwn1sGI9xWIoSyU=;
- b=fBMwaLymZDWl5ESfaeFhtKSN21HcxU3lGdUMe7amXumuUxJ8R3pU98RUVKAHdADhkqwTzqqOE
- 6Q4w5KGOAnzAMGUTgSYojEJjABmbZbji4viqFCO8IPS7Tc5/H9auPlR
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+Content-Transfer-Encoding: quoted-printable
 
-Sysctl handlers are not supposed to modify the ctl_table passed to them.
-Adapt the logic to work with a temporary
-variable, similar to how it is done in other parts of the kernel.
+On Fri, May 03, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> Hi,
+>=20
+> This patch series implements control-register (CR) pinning for KVM and
+> provides an hypervisor-agnostic API to protect guests.  It includes the
+> guest interface, the host interface, and the KVM implementation.
+>=20
+> It's not ready for mainline yet (see the current limitations), but we
+> think the overall design and interfaces are good and we'd like to have
+> some feedback on that.
 
-This is also a prerequisite to enforce the immutability of the argument
-through the callbacks prototy.
+...
 
-Fixes: 964c9dff0091 ("stackleak: Allow runtime disabling of kernel stack erasing")
-Cc: stable@vger.kernel.org
-Acked-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
-This was split out of my sysctl-const-handler series [0].
+> # Current limitations
+>=20
+> This patch series doesn't handle VM reboot, kexec, nor hybernate yet.
+> We'd like to leverage the realated feature from KVM CR-pinning patch
+> series [3].  Help appreciated!
 
-As that series will take some more time, submit the patch on its own,
-as it is a generic bugfix that is valuable on its own.
-And I can get it out of my books.
-
-Changelog in contrast to the patch in the series:
-* Reword commit message to remove strong relation to the constification
-* Cc stable
-
-[0] https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
-
-Cc: Joel Granados <j.granados@samsung.com>
----
- kernel/stackleak.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/stackleak.c b/kernel/stackleak.c
-index 34c9d81eea94..b292e5ca0b7d 100644
---- a/kernel/stackleak.c
-+++ b/kernel/stackleak.c
-@@ -27,10 +27,11 @@ static int stack_erasing_sysctl(struct ctl_table *table, int write,
- 	int ret = 0;
- 	int state = !static_branch_unlikely(&stack_erasing_bypass);
- 	int prev_state = state;
-+	struct ctl_table tmp = *table;
- 
--	table->data = &state;
--	table->maxlen = sizeof(int);
--	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	tmp.data = &state;
-+	tmp.maxlen = sizeof(int);
-+	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
- 	state = !!state;
- 	if (ret || !write || state == prev_state)
- 		return ret;
-
----
-base-commit: f03359bca01bf4372cf2c118cd9a987a5951b1c8
-change-id: 20240503-sysctl-const-stackleak-af3e67bc65b0
-
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
-
+Until you have a story for those scenarios, I don't expect you'll get a lot=
+ of
+valuable feedback, or much feedback at all.  They were the hot topic for KV=
+M CR
+pinning, and they'll likely be the hot topic now.
