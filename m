@@ -1,304 +1,112 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABE0153BF4
-	for <linux-hardening@vger.kernel.org>; Fri,  3 May 2024 13:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B5153BC9;
+	Fri,  3 May 2024 13:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714743578; cv=none; b=eFK13dEQ7veONAjtZcbk/0p4tyeYuMriDQfIbPzgBPgB3dihinYFfThBPNy0zT1nwW2uVYg5/IlFMqqPt52aPAMu7M9qR0iYrPA0SYCIkvQucYYQGSZeemZdGPucxp7d2/hZ2Pha/ViARXRT8DPIDhIGgStCGlrnQU7lgQNzy8o=
+	t=1714743876; cv=none; b=WYPKFgGOOZnPqd1GT9m8T8GsjoOUCYo+bSEdiAL3fCF8V+AED9dGUcY+7DcHspP/ZCZMXweBH2AWimD7rUA2MZJbRFgmT3KQ9y25Itps0Z7KL3bMRGq+XWEJWKnaH3/QSyO9pllPfnrT1+aQIiKRmDBitfI8p2Oj/QF8GV7mkSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714743578; c=relaxed/simple;
-	bh=o9kuPRNBUsiK7kvOAHTHUDbtqai27CIo7oIJxq7DCjU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U2LZkHm1JPytv4Ow0EzbwlTiEtD74rAAKjBHVGkqCdY9PeZooEyvmAUKSyNEM5peFvPFf6b2hlIMpUi1uERDM5X62E9TCOOqAZq6B6xzGIGtooIuuX5oSvuXCafA4tisrI8sjZW5fAMBc/noDrQ9mN81bQVRXn1B6pgEbAzRBys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org; spf=pass smtp.mailfrom=dustri.org; dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b=mCNUcPGK; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dustri.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dustri.org
+	s=arc-20240116; t=1714743876; c=relaxed/simple;
+	bh=5+w0EO0csO5S2boUJzwf6vkebCqsTwn1sGI9xWIoSyU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YApFiZ8nqcbvrXmt6US9dx/NUh8FQrE56uZRPc0t3ZgJWbt/THe/dFrj9h0dlWo7idzLv0kGTI/IHio9Ry395O4ucyNZVZyZDxIIogL11FlDwY/Bqb9UsqzWxMM1xVc4jno2Qv4o+jqhn+pvaxhTmoXB73eFElRgiKqXIFUaxbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=cvx0cKi+; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dustri.org header.i=@dustri.org header.b="mCNUcPGK"
-Message-ID: <28478de8-3028-48f2-b887-56149b6e324a@dustri.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dustri.org; s=key1;
-	t=1714743573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+RwTdEzW/FB2ApzZxuuCNuwAx1O+uSLKzF1SQsO0uE8=;
-	b=mCNUcPGKoh9tQSDW19snBXOgRCBUIw4ATq52+/dYMeqf6z6MwYKeFaBMNQffZiNuqCe9wW
-	ycq754rqQCUB2MdFlAXWflQyB7TmoiUh1rfulR+de//9XAeKQrsVvUIoe+u4Hn0MiBs8PR
-	zn+FC/PsB893kexCoiOSx6/Ihk4/8h92BtuElX7XEp3S4TbtmGRcODawD63986cel8cPuA
-	gjdcYOSLptoz1cNvgqgmt7A6UqjBaL5s+7/1x1y9iiKMXzfFmECDJ2m7WZjHl9Ne4jXUVb
-	bQiQV2JD6Cdy5fYCxbGJFtF7hQsuLv7Za7NLFc7XLXgDHMnxQVTHYiMbMQJKrQ==
-Date: Fri, 3 May 2024 15:39:28 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="cvx0cKi+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714743868;
+	bh=5+w0EO0csO5S2boUJzwf6vkebCqsTwn1sGI9xWIoSyU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=cvx0cKi+VKcX0P2kD76tfscHjmwGbHpA4KQCUWGGS7kexQOinNr+6YxZaF69PgIxS
+	 +SKjMSczqersGVWZbhPVPlyRkEjADqD3qv2RFtKL9z/9x+oyiLA+/MJ0XvLUe3hiUP
+	 GlovuEA0OKfel9xvFOvBPlQnp9Bt00azA7VEDUWM=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Fri, 03 May 2024 15:44:09 +0200
+Subject: [PATCH] stackleak: don't modify ctl_table argument
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/6] slab: Introduce dedicated bucket allocator
-To: Kees Cook <keescook@chromium.org>, Matteo Rizzo <matteorizzo@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
- Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, "GONG, Ruiqi"
- <gongruiqi@huaweicloud.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
- Thomas Graf <tgraf@suug.ch>, Herbert Xu <herbert@gondor.apana.org.au>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-hardening@vger.kernel.org
-References: <20240424213019.make.366-kees@kernel.org>
- <d0a65407-d3ae-46d5-800f-415ce7efcf22@dustri.org>
- <202404280921.A7683D511@keescook>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: jvoisin <julien.voisin@dustri.org>
-Autocrypt: addr=julien.voisin@dustri.org; keydata=
- xsFNBFWzxaABEACu3G1fwzHtrhHuotgvZ69zA4YqF9vYfx7hoYrjnKzP5pTiOZ2US6AJj1qE
- W1WlN6cHnqzzqoXotVu/MPuPrbadL21jRnJWurrkktpcqK4BaCZ5S0lOQ3ck40LysidexhI6
- ZZi6jhBZzuzxs2Mi9aIPIxDekXAWQBybs4m27E4MNmJkIshVnDTMQ4ToGQxzwPj+VurpQVPh
- WGMCPwlUbVkN/w6N/lLC088ePpESh5E0vFE+BQc66ZpRn+cXTlaqjQnwRtWuEBoqJSn2MXAn
- wODEj4H5HvQjgFyRfmOHHMTEHOg4yyc84SmIv8YJlTbVX7VnMGUJF43SA4PFtXFypBkQ481u
- w10XdBPYwD/i0q3QnzzRiIsrlQJUCkGFxyIpcDNRnf3ApjT4+QuEaw98tKvgRzCozFx2D94w
- sSFz858vZrdYj4pt/VYw8JeoPDiWwuzPVvgpJmQlL8aCRnAhLIv9O+fySvXcGh1WEvtUgkNn
- 1WjU2M00BYnPNFBEeGMRWkxuVwV1o+WKNJfwg2UcDghSkJGBCPCAiC2fDlfyk3njjLjxZHP/
- mYNwUkxTlQolzknJZ5wg7vbE6r4rfQX4gTi3mNzYtqUAb17GIczOARZK7qdSapObrXPFGgX3
- Bd4FZJEaIq3p5xWcWS8fcMveoYO7m9cyaSkSQxAPrPZE3hDF1QARAQABzTJKdWxpZW4gKGp2
- b2lzaW4pIFZvaXNpbiA8anVsaWVuLnZvaXNpbkBkdXN0cmkub3JnPsLBlwQTAQoAQQIbAwUL
- CQgHAwUVCgkICwUWAgMBAAIeAQIXgAIZARYhBJ/N7p4aOB8xHqYqdATQQegXGQHMBQJfDWXp
- BQkSV5eAAAoJEATQQegXGQHMKrwQAI8gOcx3qRk7T5qBgg9rlk3WDaJWcmw1Dq2VnjKrEVLh
- vxvwK/CjiaH4g6oUiGNeDVBoozjzKM/umHL7SoBjhHiayEu33ziAjLWxiVGbHVmHmfXkZdQz
- CEBSI1ZR8HF88tFCCOCtK7Nc+1yohmTnfnrIIEXMpSvAgdFilwnjYbaNe+aQ9MJMo+k7J144
- h+BzN5EW19zVwOidUdD0HxKpCYz6D34etnYIpv8Qa0KBzOPTtO1QYr6A7MfQPiRVlIOA543g
- h9bi9SQhCBsOZU1NOVQUZ3/ktj8qlUTVlOhGKYaPvJJ0X9va02rzL7zxYcVZgQic2dTLGYW/
- GGHVseegnxWB/7V49Yf4ZljQvjK2B1COmahZ2UYN+fzqXO0NhpSLX4SDKDnvM/3X2TYWx1MS
- fY8x4IURA633TTW9QZzflqIYk4aO44/8MDiuaxLwt+e6d8EN8ECaAoVFPCq1dWTjCJ4XhSlb
- 6eV8trCpLZfkVviuRD7xPtZU1sViVSj/O9naQ2HuUq0+LuYBmI25BEpq2rkgVKS++sYgUtxO
- IP5WoQJeNNnS+8e15VRdb77WxRe6+05JNu48wZI2OcW/MiyFs+cGtoDC5mSpVuJTmpPumP7A
- hjlxy4e5YlQn6coqQcuNL1DC/vUFwO1/cnh5dqk0x5JfHL1/XFWYjsVNjuJj/vIQzsFNBFWz
- xaABEAC/p5ESSIlC6qVJnxfhtIpappjkHmFjMHWmFrB05KnmtGB/InGH0e5y2OVaKz0RErLd
- f2CAzU5zb9cyLPnqHpE7SaqtPBmahTBX7nVzIFrbjLpU/XPHaWrHa6M1ifyu1y2msXe5U1ln
- oOVjJXTVsyoNAt8wzf73I4St2+pY7kQBlv5AUTssa4T22hZs3BImcd4OsLpct2aIGd3NGofN
- ksiLB3ZiE/vKJkXWIbx9/hm8nuKlQuHGo+sHho8T+QQcc+YCo66BYBznzD+yEv/UALjgHWU/
- PXw3RVM8kqQ3WlmWsYKqQYgkaA2cVPrkbLlxiHg28Y4deu6oZR4oSovXjJk4jj3m/UckaN0f
- c47BG1VwKVHxjg/c8hy1elunhJv0Vf2eLA6pc0UfAcpSkJZNkOLjFZ9YROHdiKiUE4pEej4/
- o3WE76TIX58aURuouVAVwe14sIED3QLoO+4wczTZsOX/jcOg2D2qPquby5taOAM6yPP/v7fy
- TAG9UYdxq1L9/wKwhH1pmagkTmLu7k5XzgQ/6rrR4NJPRRMETrtqDFJNb2UxhRlnl/Cavkt6
- 5BK7D0QJ9n9phFWC2oTIaMd5suFZK3I71UdeTaBOlrqmqLzuBVhzQeAK2vaJI1c6IzqjGRlx
- PEm6BuHfRWaf+LLj4Z7wrupWwAxLjHgPUCL2Chk2ZwARAQABwsF8BBgBCgAmAhsMFiEEn83u
- nho4HzEepip0BNBB6BcZAcwFAl8NaJcFCRK/pHcACgkQBNBB6BcZAcxUhg//fmeZNMlB7NPJ
- bT4dLsnSTCRAl1zqCxqowPyG4ux79qiG73KW/vLT1EUQTm4ANyl5Mwyf+3ssfzxl/Flp7i93
- 57rENZRMWj80JluU8w68sUrxKlTNZfrukHttoNPmTh9TTuvP0yQXysJyy0p6VvdBT5euf2Iw
- LMERoaln4h2VuhLSL80VcJfou0TVl9Aq47HerwTPXQdC4Rm/bYrdDdZhEJMrEQuDP6eLIjmC
- 4vI51LwnPcXABan3WudfEaxdpI9acwcCy9XQ32vIjhxV9D3fx0dsfo6PDXFdKEY9q+bfOjUt
- GyqZWRtqe/EWM8T1w4H4svpGpTh2mB8Du/1jNy5CiSgLiDySd6Gz8vP0rqFGYuLN1fCBNpd4
- PzF29dPO8xJ++K5pVi+pXpKzIfW9f2ZL0fabrsKP1Rht+q+3ldgGSvgw3v2aFffvEuRmodiY
- Vkby7UMuABQGlgE89z+cffBRhelgNzoVs/PtIuWb/y5BgOBGD9zUn4Z2FjB5eby230qkP1uQ
- +vyunBj6QnANa7qBxycL+xXbW8HBksArQ/HX+OZs7hagrP0qGMnjmCzsblv0wixghgvQTkpg
- 61RTH34ieLUkzE0oFkrqJyNZcoH0wStdP/9zwK1Av0cZcFcvlLdIL956v4IpZozW1ScG7OJw
- 766VTOg4l2PTPCnIdNFy1Os=
-In-Reply-To: <202404280921.A7683D511@keescook>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Message-Id: <20240503-sysctl-const-stackleak-v1-1-603fecb19170@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIACjqNGYC/x3MSwqAMAwA0atI1gbqH7yKuKgxalCqNEUU8e4Wl
+ 28x84CyF1Zokwc8n6Kyu4gsTYAW62ZGGaMhN3lpKlOg3kphQ9qdBtRgad3YrmingutmoLoaDMT
+ 48DzJ9Y+7/n0/87RKS2gAAAA=
+To: Kees Cook <keescook@chromium.org>, 
+ Alexander Popov <alex.popov@linux.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714743866; l=2040;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=5+w0EO0csO5S2boUJzwf6vkebCqsTwn1sGI9xWIoSyU=;
+ b=fBMwaLymZDWl5ESfaeFhtKSN21HcxU3lGdUMe7amXumuUxJ8R3pU98RUVKAHdADhkqwTzqqOE
+ 6Q4w5KGOAnzAMGUTgSYojEJjABmbZbji4viqFCO8IPS7Tc5/H9auPlR
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On 4/28/24 19:02, Kees Cook wrote:
-> On Sun, Apr 28, 2024 at 01:02:36PM +0200, jvoisin wrote:
->> On 4/24/24 23:40, Kees Cook wrote:
->>> Hi,
->>>
->>> Series change history:
->>>
->>>  v3:
->>>   - clarify rationale and purpose in commit log
->>>   - rebase to -next (CONFIG_CODE_TAGGING)
->>>   - simplify calling styles and split out bucket plumbing more cleanly
->>>   - consolidate kmem_buckets_*() family introduction patches
->>>  v2: https://lore.kernel.org/lkml/20240305100933.it.923-kees@kernel.org/
->>>  v1: https://lore.kernel.org/lkml/20240304184252.work.496-kees@kernel.org/
->>>
->>> For the cover letter, I'm repeating commit log for patch 4 here, which has
->>> additional clarifications and rationale since v2:
->>>
->>>     Dedicated caches are available for fixed size allocations via
->>>     kmem_cache_alloc(), but for dynamically sized allocations there is only
->>>     the global kmalloc API's set of buckets available. This means it isn't
->>>     possible to separate specific sets of dynamically sized allocations into
->>>     a separate collection of caches.
->>>     
->>>     This leads to a use-after-free exploitation weakness in the Linux
->>>     kernel since many heap memory spraying/grooming attacks depend on using
->>>     userspace-controllable dynamically sized allocations to collide with
->>>     fixed size allocations that end up in same cache.
->>>     
->>>     While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
->>>     against these kinds of "type confusion" attacks, including for fixed
->>>     same-size heap objects, we can create a complementary deterministic
->>>     defense for dynamically sized allocations that are directly user
->>>     controlled. Addressing these cases is limited in scope, so isolation these
->>>     kinds of interfaces will not become an unbounded game of whack-a-mole. For
->>>     example, pass through memdup_user(), making isolation there very
->>>     effective.
->>
->> What does "Addressing these cases is limited in scope, so isolation
->> these kinds of interfaces will not become an unbounded game of
->> whack-a-mole." mean exactly?
-> 
-> The number of cases where there is a user/kernel API for size-controlled
-> allocations is limited. They don't get added very often, and most are
-> (correctly) using kmemdup_user() as the basis of their allocations. This
-> means we have a relatively well defined set of criteria for finding
-> places where this is needed, and most newly added interfaces will use
-> the existing (kmemdup_user()) infrastructure that will already be covered.
+Sysctl handlers are not supposed to modify the ctl_table passed to them.
+Adapt the logic to work with a temporary
+variable, similar to how it is done in other parts of the kernel.
 
-A simple CodeQL query returns 266 of them:
-https://lookerstudio.google.com/reporting/68b02863-4f5c-4d85-b3c1-992af89c855c/page/n92nD?params=%7B%22df3%22:%22include%25EE%2580%25803%25EE%2580%2580T%22%7D
+This is also a prerequisite to enforce the immutability of the argument
+through the callbacks prototy.
 
-Is this number realistic and coherent with your results/own analysis?
+Fixes: 964c9dff0091 ("stackleak: Allow runtime disabling of kernel stack erasing")
+Cc: stable@vger.kernel.org
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+This was split out of my sysctl-const-handler series [0].
 
-> 
->>>     In order to isolate user-controllable sized allocations from system
->>>     allocations, introduce kmem_buckets_create(), which behaves like
->>>     kmem_cache_create(). Introduce kmem_buckets_alloc(), which behaves like
->>>     kmem_cache_alloc(). Introduce kmem_buckets_alloc_track_caller() for
->>>     where caller tracking is needed. Introduce kmem_buckets_valloc() for
->>>     cases where vmalloc callback is needed.
->>>     
->>>     Allows for confining allocations to a dedicated set of sized caches
->>>     (which have the same layout as the kmalloc caches).
->>>     
->>>     This can also be used in the future to extend codetag allocation
->>>     annotations to implement per-caller allocation cache isolation[1] even
->>>     for dynamic allocations.
->> Having per-caller allocation cache isolation looks like something that
->> has already been done in
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3c6152940584290668b35fa0800026f6a1ae05fe
->> albeit in a randomized way. Why not piggy-back on the infra added by
->> this patch, instead of adding a new API?
-> 
-> It's not sufficient because it is a static set of buckets. It cannot be
-> adjusted dynamically (which is not a problem kmem_buckets_create() has).
-> I had asked[1], in an earlier version of CONFIG_RANDOM_KMALLOC_CACHES, for
-> exactly the API that is provided in this series, because that would be
-> much more flexible.
-> 
-> And for systems that use allocation profiling, the next step
-> would be to provide per-call-site isolation (which would supersede
-> CONFIG_RANDOM_KMALLOC_CACHES, which we'd keep for the non-alloc-prof
-> cases).
-> 
->>>     Memory allocation pinning[2] is still needed to plug the Use-After-Free
->>>     cross-allocator weakness, but that is an existing and separate issue
->>>     which is complementary to this improvement. Development continues for
->>>     that feature via the SLAB_VIRTUAL[3] series (which could also provide
->>>     guard pages -- another complementary improvement).
->>>     
->>>     Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
->>>     Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
->>>     Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
->>
->> To be honest, I think this series is close to useless without allocation
->> pinning. And even with pinning, it's still routinely bypassed in the
->> KernelCTF
->> (https://github.com/google/security-research/tree/master/pocs/linux/kernelctf).
-> 
-> Sure, I can understand why you might think that, but I disagree. This
-> adds the building blocks we need for better allocation isolation
-> control, and stops existing (and similar) attacks toda>
-> But yes, given attackers with sufficient control over the entire system,
-> all mitigations get weaker. We can't fall into the trap of "perfect
-> security"; real-world experience shows that incremental improvements
-> like this can strongly impact the difficulty of mounting attacks. Not
-> all flaws are created equal; not everything is exploitable to the same
-> degree.
+As that series will take some more time, submit the patch on its own,
+as it is a generic bugfix that is valuable on its own.
+And I can get it out of my books.
 
-It's not about "perfect security", but about wisely spending the
-complexity/review/performance/churn/… budgets in my opinion.
+Changelog in contrast to the patch in the series:
+* Reword commit message to remove strong relation to the constification
+* Cc stable
 
->> Do you have some particular exploits in mind that would be completely
->> mitigated by your series?
-> 
-> I link to like a dozen in the last two patches. :P
-> 
-> This series immediately closes 3 well used exploit methodologies.
-> Attackers exploiting new flaws that could have used the killed methods
-> must now choose methods that have greater complexity, and this drives
-> them towards cross-allocator attacks. Robust exploits there are more
-> costly to develop as we narrow the scope of methods.
+[0] https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
 
-You linked exploits that were making use of the two structures that you
-isolated; making them use different structures would likely mean a
-couple of hours.
+Cc: Joel Granados <j.granados@samsung.com>
+---
+ kernel/stackleak.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-I was more interested in exploits that are effectively killed; as I'm
-still not convinced that elastic structures are rare, and that manually
-isolating them one by one is attainable/sustainable/…
+diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+index 34c9d81eea94..b292e5ca0b7d 100644
+--- a/kernel/stackleak.c
++++ b/kernel/stackleak.c
+@@ -27,10 +27,11 @@ static int stack_erasing_sysctl(struct ctl_table *table, int write,
+ 	int ret = 0;
+ 	int state = !static_branch_unlikely(&stack_erasing_bypass);
+ 	int prev_state = state;
++	struct ctl_table tmp = *table;
+ 
+-	table->data = &state;
+-	table->maxlen = sizeof(int);
+-	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++	tmp.data = &state;
++	tmp.maxlen = sizeof(int);
++	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
+ 	state = !!state;
+ 	if (ret || !write || state == prev_state)
+ 		return ret;
 
-But if you have some proper analysis in this direction, then yes, I
-completely agrees that isolating all of them is a great idea.
+---
+base-commit: f03359bca01bf4372cf2c118cd9a987a5951b1c8
+change-id: 20240503-sysctl-const-stackleak-af3e67bc65b0
 
-> 
-> Bad analogy: we're locking the doors of a house. Yes, some windows may
-> still be unlocked, but now they'll need a ladder. And it doesn't make
-> sense to lock the windows if we didn't lock the doors first. This is
-> what I mean by complementary defenses, and comes back to what I mentioned
-> earlier: "perfect security" is a myth, but incremental security works.
-> 
->> Moreover, I'm not aware of any ongoing development of the SLAB_VIRTUAL
->> series: the last sign of life on its thread is from 7 months ago.
-> 
-> Yeah, I know, but sometimes other things get in the way. Matteo assures
-> me it's still coming.
-> 
-> Since you're interested in seeing SLAB_VIRTUAL land, please join the
-> development efforts. Reach out to Matteo (you, he, and I all work for
-> the same company) and see where you can assist. Surely this can be
-> something you can contribute to while "on the clock"?
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
-I left Google a couple of weeks ago unfortunately, and I won't touch
-anything with email-based development for less than a Google salary :D
-
-> 
->>> After the core implementation are 2 patches that cover the most heavily
->>> abused "repeat offenders" used in exploits. Repeating those details here:
->>>
->>>     The msg subsystem is a common target for exploiting[1][2][3][4][5][6]
->>>     use-after-free type confusion flaws in the kernel for both read and
->>>     write primitives. Avoid having a user-controlled size cache share the
->>>     global kmalloc allocator by using a separate set of kmalloc buckets.
->>>     
->>>     Link: https://blog.hacktivesecurity.com/index.php/2022/06/13/linux-kernel-exploit-development-1day-case-study/ [1]
->>>     Link: https://hardenedvault.net/blog/2022-11-13-msg_msg-recon-mitigation-ved/ [2]
->>>     Link: https://www.willsroot.io/2021/08/corctf-2021-fire-of-salvation-writeup.html [3]
->>>     Link: https://a13xp0p0v.github.io/2021/02/09/CVE-2021-26708.html [4]
->>>     Link: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html [5]
->>>     Link: https://zplin.me/papers/ELOISE.pdf [6]
->>>     Link: https://syst3mfailure.io/wall-of-perdition/ [7]
->>>
->>>     Both memdup_user() and vmemdup_user() handle allocations that are
->>>     regularly used for exploiting use-after-free type confusion flaws in
->>>     the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
->>>     respectively).
->>>     
->>>     Since both are designed for contents coming from userspace, it allows
->>>     for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
->>>     buckets so these allocations do not share caches with the global kmalloc
->>>     buckets.
->>>     
->>>     Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
->>>     Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
->>>     Link: https://etenal.me/archives/1336 [3]
->>>     Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
->>
->> What's the performance impact of this series? Did you run some benchmarks?
-> 
-> I wasn't able to measure any performance impact at all. It does add a
-> small bit of memory overhead, but it's on the order of a dozen pages
-> used for the 2 extra sets of buckets. (E.g. it's well below the overhead
-> introduced by CONFIG_RANDOM_KMALLOC_CACHES, which adds 16 extra sets
-> of buckets.)
-
-Nice!
