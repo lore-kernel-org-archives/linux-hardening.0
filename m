@@ -1,117 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65C3146A75;
-	Fri,  3 May 2024 07:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6405314F62;
+	Fri,  3 May 2024 08:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714720835; cv=none; b=M4Te7n16GX8PBayLJK9vT/A9U9g/VfSLeC9iNh7wNYtp691fKHYdkoMMhg6zLwDi3dzPGE36buJKFCj9qmHeaiVAcOK69cWEeVmLhX2WJNfBEgLvTtVBvxCDN7KrfkSGJNErqIMvdGneWbP9oIE0/gnDuwWuoLyKP6gw0ghXy8Q=
+	t=1714725031; cv=none; b=NaG1gvC4ydnjmvHtUVvTrrhzdWQmLxe4S6s8fDX1UrgROrh7rBy7Ecu3hA9DEg+KQGvLcI4NspMp/fIwdv/qH8VjlOY/DdvpmN8n47UzkLsEJjD/rVuQszHPDjSUTraQe8++WGP9aDxz0H//p+MvOUA5Poi9dq+HX180l4ZUMW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714720835; c=relaxed/simple;
-	bh=VkrDitXNDbDsw/xs7zAS2Pp+s+d1L4Fx/47JCMT3yB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJO3pU/hx/P+oIBAXqzXb4eyCaGnAJgByctxNhv9Zbeqo2fhkOTbdOIBUhKQa7aOIHYhBRpUDB20ox6YFxcCqSYBZcXXEkUg8aqNpea0Qm+J9b+/O0yA7AaZ3NzJhEcMUZtowcorCzu3dGt1jILbBuJVTTysUcjFGKtAGLBYsUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvkKNcli; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvkKNcli"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED49EC116B1;
-	Fri,  3 May 2024 07:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714720835;
-	bh=VkrDitXNDbDsw/xs7zAS2Pp+s+d1L4Fx/47JCMT3yB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WvkKNcliEjYuU4LXhmSwZwR3iuV5RTxhcMEMoO0JvQiVHxFWyt2vWld4+KNhln3ty
-	 uOQ4icLZZuFlmveAhP4Xg1ssN+W5j48rwyOOrG5pO7IGMg2+INJ61ZA4/AVIpaPO31
-	 wNv9gwWAksnFrAo66L4F3QVmLJn+Oe0SQJ1lc2WLXsILhZ4dZVGYh8bmbV2GJsq0Jd
-	 8sCD7xBbc6j979qAPX2MVkMhL5PC4gRmKv/YQkkp+IcBgfI/omjtqBSQJJCHI3sMVf
-	 eGrsUpAXaw8BlzOVgEkkYgxDJS+U1igZtyxE3mTG8mkE3qh3x+/El3xuoPNcF1Dt/O
-	 Q7jVPhcHImPfg==
-Date: Fri, 3 May 2024 08:20:29 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] leds: sy7802: Add support for Silergy SY7802
- flash LED controller
-Message-ID: <20240503072029.GE1227636@google.com>
-References: <20240401-sy7802-v2-0-1138190a7448@apitzsch.eu>
- <20240401-sy7802-v2-2-1138190a7448@apitzsch.eu>
- <20240411124855.GJ1980182@google.com>
- <c5e5f49295350ada2cdb280a77b1c877058d4d64.camel@apitzsch.eu>
- <20240502091017.GF5338@google.com>
- <9bb6ef63e19bf079fd881a3b78b71d7a00e4a3bb.camel@apitzsch.eu>
+	s=arc-20240116; t=1714725031; c=relaxed/simple;
+	bh=gqwc2k3oZA5+RsTN0PhOwFlxF0pioPcwT29bhC8+fC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UZzGbGNAlUrhjdymPyHMcw/kyigjzy043RZEcu02QHVQm+wXq39DC8FSXgscMeNVQZmQpzH86Mu/Qf9+FjeyEp5J088guVe4GiXAdCyyjN/fWLjkGVtlarWzpGg5b2JJQ2XvKCAcfmBSzhuJFcpaLv9TSfUfo+v5liL2FY2w7Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8118A2F4;
+	Fri,  3 May 2024 01:30:53 -0700 (PDT)
+Received: from [10.57.67.51] (unknown [10.57.67.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 047DF3F73F;
+	Fri,  3 May 2024 01:30:24 -0700 (PDT)
+Message-ID: <0afb3887-f72b-42d3-8809-e97353fae031@arm.com>
+Date: Fri, 3 May 2024 09:30:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/5] selftest mm/mseal memory sealing
+Content-Language: en-GB
+To: Jeff Xu <jeffxu@chromium.org>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+ sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
+ torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net,
+ Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
+ rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+ groeck@chromium.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ pedro.falcato@gmail.com, dave.hansen@intel.com,
+ linux-hardening@vger.kernel.org, deraadt@openbsd.org
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+ <20240415163527.626541-4-jeffxu@chromium.org>
+ <f797fbde-ffb7-44b0-8af6-4ed2ec47eac1@arm.com>
+ <CABi2SkXmGR41o8LwM=oD-PCZWvcc5zOie65wvuk5zsAQPymmRA@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CABi2SkXmGR41o8LwM=oD-PCZWvcc5zOie65wvuk5zsAQPymmRA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bb6ef63e19bf079fd881a3b78b71d7a00e4a3bb.camel@apitzsch.eu>
 
-On Thu, 02 May 2024, André Apitzsch wrote:
-
-> Am Donnerstag, dem 02.05.2024 um 10:10 +0100 schrieb Lee Jones:
-> > On Wed, 01 May 2024, André Apitzsch wrote:
-> > 
-> > > > > +		ret = -EBUSY;
-> > > > > +		goto unlock;
-> > > > > +	}
-> > > > > +
-> > > > > +	if (level)
-> > > > > +		curr = chip->fled_torch_used | BIT(led-
-> > > > > >led_no);
-> > > > > +	else
-> > > > > +		curr = chip->fled_torch_used & ~BIT(led-
-> > > > > >led_no);
-> > > > > +
-> > > > > +	if (curr)
-> > > > > +		val |= SY7802_MODE_TORCH;
-> > > > > +
-> > > > > +	/* Torch needs to be disabled first to apply new
-> > > > > brightness */
-> > > > 
-> > > > "Disable touch to apply brightness"
-> > > > 
-> > > > > +	ret = regmap_update_bits(chip->regmap,
-> > > > > SY7802_REG_ENABLE,
-> > > > > SY7802_MODE_MASK,
-> > > > > +				 SY7802_MODE_OFF);
-> > > > > +	if (ret)
-> > > > > +		goto unlock;
-> > > > > +
-> > > > > +	mask = led->led_no == SY7802_LED_JOINT ?
-> > > > > SY7802_TORCH_CURRENT_MASK_ALL :
-> > > > 
-> > > > Why not just use led->led_no in place of mask?
-> > > 
-> > > I might be missing something, but I don't know how to use led-
-> > > >led_no
-> > > in place of mask, when
-> > > led->led_no is in {0,1,2} and
-> > > mask is in {0x07, 0x38, 0x3f}.
-> > 
-> > This doesn't make much sense.
-> > 
-> > I guess you mean that led_no is a u8 and mask is a u32.
-> > 
-> > What happens if you cast led_no to u32 in the call to
-> > regmap_update_bits()?
+On 02/05/2024 23:39, Jeff Xu wrote:
+> On Thu, May 2, 2024 at 4:24 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 15/04/2024 17:35, jeffxu@chromium.org wrote:
+>>> From: Jeff Xu <jeffxu@chromium.org>
+>>>
+>>> selftest for memory sealing change in mmap() and mseal().
+>>>
+>>> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+>>> ---
+>>>  tools/testing/selftests/mm/.gitignore   |    1 +
+>>>  tools/testing/selftests/mm/Makefile     |    1 +
+>>>  tools/testing/selftests/mm/mseal_test.c | 1836 +++++++++++++++++++++++
+>>>  3 files changed, 1838 insertions(+)
+>>>  create mode 100644 tools/testing/selftests/mm/mseal_test.c
+>>>
+>>> diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
+>>> index d26e962f2ac4..98eaa4590f11 100644
+>>> --- a/tools/testing/selftests/mm/.gitignore
+>>> +++ b/tools/testing/selftests/mm/.gitignore
+>>> @@ -47,3 +47,4 @@ mkdirty
+>>>  va_high_addr_switch
+>>>  hugetlb_fault_after_madv
+>>>  hugetlb_madv_vs_map
+>>> +mseal_test
+>>> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+>>> index eb5f39a2668b..95d10fe1b3c1 100644
+>>> --- a/tools/testing/selftests/mm/Makefile
+>>> +++ b/tools/testing/selftests/mm/Makefile
+>>> @@ -59,6 +59,7 @@ TEST_GEN_FILES += mlock2-tests
+>>>  TEST_GEN_FILES += mrelease_test
+>>>  TEST_GEN_FILES += mremap_dontunmap
+>>>  TEST_GEN_FILES += mremap_test
+>>> +TEST_GEN_FILES += mseal_test
+>>>  TEST_GEN_FILES += on-fault-limit
+>>>  TEST_GEN_FILES += pagemap_ioctl
+>>>  TEST_GEN_FILES += thuge-gen
+>>> diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
+>>> new file mode 100644
+>>> index 000000000000..06c780d1d8e5
+>>> --- /dev/null
+>>> +++ b/tools/testing/selftests/mm/mseal_test.c
+>>> @@ -0,0 +1,1836 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +#define _GNU_SOURCE
+>>> +#include <sys/mman.h>
+>>
+>> I'm afraid this is causing a build error on our CI, and as a result we are not
+>> running any mm selftests currently.
+>>
+>> The error is here:
+>>
+>>   CC       mseal_test
+>> mseal_test.c: In function ‘test_seal_mremap_move_dontunmap’:
+>> mseal_test.c:1469:50: error: ‘MREMAP_DONTUNMAP’ undeclared (first use in this
+>> function)
+>>  1469 |  ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP, 0);
+>>       |                                                  ^~~~~~~~~~~~~~~~
+>> mseal_test.c:1469:50: note: each undeclared identifier is reported only once for
+>> each function it appears in
+>> mseal_test.c: In function ‘test_seal_mremap_move_dontunmap_anyaddr’:
+>> mseal_test.c:1501:50: error: ‘MREMAP_DONTUNMAP’ undeclared (first use in this
+>> function)
+>>  1501 |  ret2 = mremap(ptr, size, size, MREMAP_MAYMOVE | MREMAP_DONTUNMAP,
+>>       |                                                  ^~~~~~~~~~~~~~~~
+>>
+>>
+>> And I think the reason is due to our CI's toolchain's sys/mman.h not including
+>> linux/mman.h where MREMAP_DONTUNMAP is defined.
+>>
+>> I think the fix is to explicitly #include <linux/mman.h>, as a number of other
+>> mm selftests do.
+>>
+> When I tried to build with aarch64-linux-gnu-gcc, this passed.
 > 
-> Sorry, I'm still confused. Could you elaborate your original question?
+> aarch64-linux-gnu-gcc -I ../../../../usr/include   -DDEBUG -O3
+> -DDEBUG -O3 mseal_test.c -o  mseal_test -lm -Wall
 
-Replied where there is still context.
+Its the same on my local system; I'm told our CI is using GCC 10, which I
+suspect makes the difference.
 
--- 
-Lee Jones [李琼斯]
+> 
+> I don't have the exact environment to repro the issue and verify the fix.
+> I will send a patch with  the linux/mman.h.
+> 
+> I will probably need some help to verify the fix on arm build, Ryan,
+> could you help with this ?
+
+I'll pass this on to our CI folks, and hopefully get confirmation shortly.
+
+> 
+> Thanks
+> -Jeff
+
