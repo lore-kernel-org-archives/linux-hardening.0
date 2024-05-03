@@ -1,226 +1,80 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1415444E;
-	Fri,  3 May 2024 14:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C68156241;
+	Fri,  3 May 2024 17:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714745385; cv=none; b=mUVWfdVt0zYaR0o2/SbDplsl3eIToZqAKv+V/l2tox9igjNvNhu+YAjaf2+P4MUCwHgCM+BXRW1fvxmc2bckq1D2TW1uElLHlBiRqqtsP58W8hwu+a4nok4u5MmGUqCX33zQUrnNGkxMWqHUh7iJNJ2B2nvMqmI1lDR6LBR4Pxs=
+	t=1714755630; cv=none; b=EiLGsPfyn6WxPrp57kMw6WDX+qnw+gYb4lyVwaHLhPxXDKfTdlZfw5a3opyhN5Iroo9EXICgIda0BSxf3yM97VB5DBLpEaQ2agALcc96KtE/ULRAT0F9XDQ3fYvZ4qe71UORisgU0+Qfv7sjz5PbBd39L4nTppsC45a6IWj8Ct4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714745385; c=relaxed/simple;
-	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCdPlKyCDCaJhJaOwA2p1JSxq4VuaZLqvkDZ1bf5bPxs0s+fVuu+J0ErRRJkTUSueX9Ozh8KROPOdICNpBkkA0BfOXwwJ1uBH/IrSLWigC6wpebd33UiFahRV/Z+4aHBbfG/UsiIoZw2Vs6tTQ0nRUb/EjIJuxDYXdq9/FKLSJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KM4XIarb; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1714755630; c=relaxed/simple;
+	bh=xychJx0gxN4Wh8S2y7zpJJcG4VRsDR4oFVHA09yKLJk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I0ncFv7wWA2Mbk6Wip+ZNtRF0wjr+6wzQnv2/MHnnUsWcEggv7naSr5Ccui/wxKWGuHjw0H65EHQ37EPzFQSEFuWWIsJ7GhGkg/pQToI99FDNo7J6pQLKJElBvpqpW/Nq/ydEsUYExRTwVCoEp++jBrTr1EvbkRC3hmXkffs+Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMZOIjET; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KM4XIarb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714745381;
-	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KM4XIarbWLiqP+rTdHhYP4ADp2FfBPZJESIvebE/x46r3wpaPNaKYYJ8DjRuiR4XK
-	 lgnUuJtE42KneR0ACxiqLQ5uJD/S7BK84VwhVwYe9egEdoAzvtQwKV4FeMNTpP6GjL
-	 22eK/o3npUywdzgLbvtpx7d4AZBFjdzVsbPnc49I=
-Date: Fri, 3 May 2024 16:09:40 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <4cda5d2d-dd92-44ef-9e7b-7b780ec795ab@t-8ch.de>
-References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
- <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMZOIjET"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D63E4C32789;
+	Fri,  3 May 2024 17:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714755629;
+	bh=xychJx0gxN4Wh8S2y7zpJJcG4VRsDR4oFVHA09yKLJk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nMZOIjETU2vsOVyocz0PBQzv5HUA2YyaxmmD2ZZB4A7xdwARk2yAvL7gDzvxOVFeC
+	 GUsVgAJVrHQ4x4kYBE2BRZRsZpItpxSKJEJXoQVwlNzMREgpNyX38bIHpHbg93dm2F
+	 eNAH8D07GetOl1JmbtWJ/MujvN5WBH8vdZI7iz2mqExZut1AeYVqfSmw7A89v1IUJe
+	 HCCaiChMg/MlU/ZQfysqAtavr0PeAEZ47XNIXqkxtk4rRXwJ0ummesJeRF4j3fEm/D
+	 YDv8cquoTYP22MHzhs/+cn6KJLbRJIUEGwrTHC7KtdD+plqfaoXfyFMeFTnw9qIju1
+	 hx5KWYbwKqklQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C0259C43336;
+	Fri,  3 May 2024 17:00:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] Bluetooth: hci_conn: Use __counted_by() and avoid
+ -Wfamnae warning
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <171475562977.29614.6298254643721435482.git-patchwork-notify@kernel.org>
+Date: Fri, 03 May 2024 17:00:29 +0000
+References: <ZjO9qCx10KUJbK6w@neat>
+In-Reply-To: <ZjO9qCx10KUJbK6w@neat>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-Hey Joel,
+Hello:
 
-On 2024-05-03 11:03:32+0000, Joel Granados wrote:
-> Here is my feedback for your outstanding constification patches [1] and [2].
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-Thanks!
-
-> # You need to split the patch
-> The answer that you got from Jakub in the network subsystem is very clear and
-> baring a change of heart from the network folks, this will go in as but as a
-> split patchset. Please split it considering the following:
-> 1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
->    miscellaneous that includes whatever does not fit into the others.
-> 2. Consider that this might take several releases.
-> 3. Consider the following sufix for the interim function name "_const". Like in
->    kfree_const. Please not "_new".
-
-Ack. "_new" was an intentionally unacceptable placeholder.
-
-> 4. Please publish the final result somewhere. This is important so someone can
->    take over in case you need to stop.
-
-Will do. Both for each single series and a combination of all of them.
-
-> 5. Consistently mention the motivation in your cover letters. I specify more
->    further down in "#Motivation".
-> 6. Also mention that this is part of a bigger effort (like you did in your
->    original cover letters). I would include [3,4,5,6]
-> 7. Include a way to show what made it into .rodata. I specify more further down
->    in "#Show the move".
+On Thu, 2 May 2024 10:22:00 -0600 you wrote:
+> Prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time
+> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+> (for strcpy/memcpy-family functions).
 > 
-> # Motivation
-> As I read it, the motivation for these constification efforts are:
-> 1. It provides increased safety: Having things in .rodata section reduces the
->    attack surface. This is especially relevant for structures that have function
->    pointers (like ctl_table); having these in .rodata means that these pointers
->    always point to the "intended" function and cannot be changed.
-> 2. Compiler optimizations: This was just a comment in the patchsets that I have
->    mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
->    have to do with enhancing locality for the data in .rodata? Do you have other
->    specific optimizations in mind?
-
-I don't know about anything that would make it faster.
-It's more about safety and transmission of intent to API users,
-especially callback implementers.
-
-> 3. Readability: because it is easier to know up-front that data is not supposed
->    to change or its obvious that a function is re-entrant. Actually a lot of the
->    readability reasons is about knowing things "up-front".
-> As we move forward with the constification in sysctl, please include a more
-> detailed motivation in all your cover letters. This helps maintainers (that
-> don't have the context) understand what you are trying to do. It does not need
-> to be my three points, but it should be more than just "put things into
-> .rodata". Please tell me if I have missed anything in the motivation.
-
-Will do.
-
-> # Show the move
-> I created [8] because there is no easy way to validate which objects made it
-> into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
-> .rodata than I expected (the results are in [9]) Why is that? Is it something
-> that has not been posted to the lists yet? 
-
-Constifying the APIs only *allows* the actual table to be constified
-themselves.
-Then each table definition will have to be touched and "const" added.
-
-See patches 17 and 18 in [7] for two examples.
-
-Some tables in net/ are already "const" as the static definitions are
-never registered themselves but only their copies are.
-
-This seems to explain your findings.
-
-> Best
-
-Thanks!
-
-> [1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
-> [2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net
-> [3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
->     https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org
-> [4] [PATCH v2 00/19] backlight: Constify lcd_ops
->     https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa82b07bc6@kernel.org
-> [5] [PATCH 1/4] iommu: constify pointer to bus_type
->     https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski@linaro.org
-> [6] [PATCH 00/29] const xattr tables
->     https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
-> [7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+> getting ready to enable it globally.
 > 
-> [8]
+> [...]
 
-[snip]
+Here is the summary with links:
+  - [next] Bluetooth: hci_conn: Use __counted_by() and avoid -Wfamnae warning
+    https://git.kernel.org/bluetooth/bluetooth-next/c/6d18d5b03ee1
 
-> [9]
->     section: .rodata                obj_name : kern_table
->     section: .rodata                obj_name : sysctl_mount_point
->     section: .rodata                obj_name : addrconf_sysctl
->     section: .rodata                obj_name : ax25_param_table
->     section: .rodata                obj_name : mpls_table
->     section: .rodata                obj_name : mpls_dev_table
->     section: .data          obj_name : sld_sysctls
->     section: .data          obj_name : kern_panic_table
->     section: .data          obj_name : kern_exit_table
->     section: .data          obj_name : vm_table
->     section: .data          obj_name : signal_debug_table
->     section: .data          obj_name : usermodehelper_table
->     section: .data          obj_name : kern_reboot_table
->     section: .data          obj_name : user_table
->     section: .bss           obj_name : sched_core_sysctls
->     section: .data          obj_name : sched_fair_sysctls
->     section: .data          obj_name : sched_rt_sysctls
->     section: .data          obj_name : sched_dl_sysctls
->     section: .data          obj_name : printk_sysctls
->     section: .data          obj_name : pid_ns_ctl_table_vm
->     section: .data          obj_name : seccomp_sysctl_table
->     section: .data          obj_name : uts_kern_table
->     section: .data          obj_name : vm_oom_kill_table
->     section: .data          obj_name : vm_page_writeback_sysctls
->     section: .data          obj_name : page_alloc_sysctl_table
->     section: .data          obj_name : hugetlb_table
->     section: .data          obj_name : fs_stat_sysctls
->     section: .data          obj_name : fs_exec_sysctls
->     section: .data          obj_name : fs_pipe_sysctls
->     section: .data          obj_name : namei_sysctls
->     section: .data          obj_name : fs_dcache_sysctls
->     section: .data          obj_name : inodes_sysctls
->     section: .data          obj_name : fs_namespace_sysctls
->     section: .data          obj_name : dnotify_sysctls
->     section: .data          obj_name : inotify_table
->     section: .data          obj_name : epoll_table
->     section: .data          obj_name : aio_sysctls
->     section: .data          obj_name : locks_sysctls
->     section: .data          obj_name : coredump_sysctls
->     section: .data          obj_name : fs_shared_sysctls
->     section: .data          obj_name : fs_dqstats_table
->     section: .data          obj_name : root_table
->     section: .data          obj_name : pty_table
->     section: .data          obj_name : xfs_table
->     section: .data          obj_name : ipc_sysctls
->     section: .data          obj_name : key_sysctls
->     section: .data          obj_name : kernel_io_uring_disabled_table
->     section: .data          obj_name : tty_table
->     section: .data          obj_name : random_table
->     section: .data          obj_name : scsi_table
->     section: .data          obj_name : iwcm_ctl_table
->     section: .data          obj_name : net_core_table
->     section: .data          obj_name : netns_core_table
->     section: .bss           obj_name : nf_log_sysctl_table
->     section: .data          obj_name : nf_log_sysctl_ftable
->     section: .data          obj_name : vs_vars
->     section: .data          obj_name : vs_vars_table
->     section: .data          obj_name : ipv4_route_netns_table
->     section: .data          obj_name : ipv4_route_table
->     section: .data          obj_name : ip4_frags_ns_ctl_table
->     section: .data          obj_name : ip4_frags_ctl_table
->     section: .data          obj_name : ctl_forward_entry
->     section: .data          obj_name : ipv4_table
->     section: .data          obj_name : ipv4_net_table
->     section: .data          obj_name : unix_table
->     section: .data          obj_name : ipv6_route_table_template
->     section: .data          obj_name : ipv6_icmp_table_template
->     section: .data          obj_name : ip6_frags_ns_ctl_table
->     section: .data          obj_name : ip6_frags_ctl_table
->     section: .data          obj_name : ipv6_table_template
->     section: .data          obj_name : ipv6_rotable
->     section: .data          obj_name : sctp_net_table
->     section: .data          obj_name : sctp_table
->     section: .data          obj_name : smc_table
->     section: .data          obj_name : lowpan_frags_ns_ctl_table
->     section: .data          obj_name : lowpan_frags_ctl_table
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
