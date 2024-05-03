@@ -1,113 +1,103 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C65153BDF
-	for <linux-hardening@vger.kernel.org>; Fri,  3 May 2024 13:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC25C1DA21;
+	Fri,  3 May 2024 13:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714744191; cv=none; b=Vp0dxKR/Jkot0BKB3EzemNIyOViga0AafXws9TMS2I9goZQxktV4w5zcpBkdki/4yjNIV88vTQlUM6bmOiXR3GdO9me0HvCL01sKt9hMgKw2ACrUxOKaF7D05B1ANqShi85vuu9KeILEi37OQo/DrI6exW2fkCmy+cKfzriU/js=
+	t=1714744706; cv=none; b=sJdekg2OoGOHHJ+8lJyRLI62F4VolabWzAuQIaVV/q5HtYIOi9AqeQAHaUfLZTgWNy/2jpKLcbQzMVMo7lM/FUTx9nBJBuGxL73/fh7N/3Hwa95DFJWFZC0fEANXu7p86iGebTHmTZXS1lIzXFpTgdC2UKtLb+sf0tH3R9HV7Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714744191; c=relaxed/simple;
-	bh=j07SrBcbxR5dXX5FuZ1/lpjovjv+PAI0Ty3nUmrfPsk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a0MxwG6WjJuvYV3RgCunM1RGuRv61uyGsUCNzT/b7saCIGtGo9NNtILAziJ5pkx+qc03msDpwXVr4tx0Fh2t4fB7+2oGDzi0h/YnfmC1cwHdma9wm5FnZy5DmOkk6kGSQQkaBJdovPWjRwFjwFXMYuvt2LJb31CEK56cte15QrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qoK9pR0V; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1714744706; c=relaxed/simple;
+	bh=BOJZM66K3VGN4oJNOKqKgSsV8u5CZQXA9q6/C9fnzpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ieDdXe8fWecMY7g+Qh9c603cbHoERkCoM5zR+4tfIBicnQBpMFoEBUb3w0rG0Am9+WhvCqcuV8l0DcxW6joPb1r0amEBmcH+wF5jnJQWzGiVElETMD28CmLaHbpDeiYw7M97i8/S+gklDfdcBzbKS/FQ05zR9OkGA0NEHhfswhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=n2VzZcnA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GXE4/VPN; arc=none smtp.client-ip=64.147.123.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qoK9pR0V"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6f441afba80so1503264b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 03 May 2024 06:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714744189; x=1715348989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rQGv5UfxS6jX/aTPX2JQQkA4rH0rnz4JsGbkCfvMiug=;
-        b=qoK9pR0VX+7yhK5foV7UyI7xzgxVCafNPWDfgEv1EYfsASd7/3RTz2J6u0EQ/QBhkw
-         otBXrvIMWr1t9rTLYIfWfzPrQeZ2DTen8ejGl8V4A4BJSpaATMSUE5J0cn9LhNt2Nol7
-         uDBwYWai7AFD3W3Va47EnJZfo6tG1I9ezJDPPgKLCIRYaXqkRaFJszt5k9e9RlKkqko2
-         dMGXiQ/k0sGDw17do6A24w9Ncme6LERJqMpxW6rAH8niwA+L0k1+QoI95AtE1KVBsNrk
-         c7hcGDcxVwOhHBX5HO7wR0maJRNsmmBrgq221iGCSj8ltZw6ctVaMTC3as/5j0HfKmL9
-         SItg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714744189; x=1715348989;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rQGv5UfxS6jX/aTPX2JQQkA4rH0rnz4JsGbkCfvMiug=;
-        b=AHk/x75B2CnyKlYiY8zUaaa+9abfD6PIE5/+ntnTCars4ewFuk9N1X/pHhd1f9uYox
-         icQ15fD+6vr5RNvAgCtJe9y0uerXNM5sGkai0Aanlv0T2eYkLwq5vPYo/3JZVS6uWN2Y
-         a72cNMJKrKg0CPlgTPkb+PRYj0oa/GWLGD4gturqMwPbXsDpTUhta+EyUW/13DGrmKoJ
-         nI2zH+no2JHwmy5p4vp5VFNcVjuXZwSPKdTqdTJpWrs680HkILcg+wEdSX3a5oDejI6F
-         x0nEFs8EfuuFpkpkl4HbKZ+1Curg0Zn9VjOEh2TaGkTvS/t91nNPmoYNJUcPpZTYYOWf
-         0/4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXfTwdj60ZKAy5LBbwo5EYLIepvJ0j28FA371jMooHBIQFaWw4O1jV95yqtbLCtUb0KL2yG6yP3UmXY/pldsCwZgp4Y6OPGhptMOAVzg1Vg
-X-Gm-Message-State: AOJu0YyWxwXnBj1gF7N3fNaiGuO87brM70zrZqmJaJpfDoRbb8c4sOcW
-	4PQVtbxWz9aTkv47GpyDQSzgONKkiHw2VcifHr2T+cLlZV850F0RpJZF70kjkkuR4zfdG1mDbFG
-	z3Q==
-X-Google-Smtp-Source: AGHT+IGc0eGZplb+oZL3dkGKqelUQj57uqxGLcLhw0noqTEVy1iaqZaCu7zCqnCr5z1/yKblcKIpSFxnXkk=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2e07:b0:6ea:baf6:57a3 with SMTP id
- fc7-20020a056a002e0700b006eabaf657a3mr154355pfb.6.1714744189252; Fri, 03 May
- 2024 06:49:49 -0700 (PDT)
-Date: Fri, 3 May 2024 06:49:47 -0700
-In-Reply-To: <20240503131910.307630-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="n2VzZcnA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GXE4/VPN"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.west.internal (Postfix) with ESMTP id 999981C000D9;
+	Fri,  3 May 2024 09:58:22 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 03 May 2024 09:58:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1714744702;
+	 x=1714831102; bh=209j5NHS7dsYfwuQMBB8LNTkfds+nbdFRIYToPwGUzc=; b=
+	n2VzZcnAj8bFrXyR+kPN0xG7cePpzcLoeVi0de8nypF4TLmnSHBQNpE2TLkeQeUT
+	Fa2u8hM7UmS0Z3fIyI69vDyVROv64/d8Yn5LWCn3djYJ2+89XJj5iZ2lrxrxKLnd
+	nC3hgl3uUMHWlT+MWtAf+RCkWahhjU9tefekyAE5WRTtZIXsJHuuVUDbABeMdUGy
+	R4Wiby1qHFNTT1wHO/YGzMF1+vhH3iQmqil85IogO5xn2SgpmaRBj9Acb4ySE9tf
+	s+608kxjaKDPD0dwumBinvPnX+jW8/YOnKeLNG16YaidO41NYnm8I2NNU025NI3J
+	MGp8Z3QEUTNNyiXQ78Zfpw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714744702; x=
+	1714831102; bh=209j5NHS7dsYfwuQMBB8LNTkfds+nbdFRIYToPwGUzc=; b=G
+	XE4/VPNIdHovH6MOVM5M/B2v9SVujBRBOsmI+sZ9aLrmRktsOdt+T7BiETMaNrRT
+	+DEytVQlpzwp8nCG07QrxdxIcF9KUBIL2ebgLhGY8fCcYAV9/xKpMMOhYZZVOgmL
+	O+TYWWbr1CFjx+nJ22nHhsYUuH1DO6aqWDzewPCrkiKpw6HOOPFPEtRPuAVm5OJ9
+	Lv2SQB854vdWqTVfjeVpWVbVS4CY66wJOL0aRD2rIMfA7qwBdH18E9njJA0n0oPl
+	wLcKI670ANS416nuG/wZj3yoXB55sETDdaHnoKIE/LmSdKyW1yDAo5U1EL0DFy8f
+	lyXRjj9If7eBFfSPAJStQ==
+X-ME-Sender: <xms:fe00ZqJ9GUTdVn6X7IyPLlObPFoHy4DQF6ya_Z2tpTnJCUmTt9LIeA>
+    <xme:fe00ZiImCHuwJb1oZt7_lP_jKpyIadEbCFZNcefEh2YgQOwBOzGhUOQIaTYb6WT6E
+    0HX96ClPu5RYpBqPUM>
+X-ME-Received: <xmr:fe00Zqsgc0_ml7U7fFcAOBGKchlUxhduTIgVRTPYr1ZZqS0LeMBRLbskkHAjQiYzBgWP-rHMCpXnMOK1591we-KrcGA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvtddgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeortddttddunecuhfhrohhmpefvhigt
+    hhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtf
+    frrghtthgvrhhnpeevffehhfetteeffeelgefhffetueefhedtieekleefgeegtedutddt
+    lefhhfetieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehthigthhhosehthigthhhordhpihiiiigr
+X-ME-Proxy: <xmx:fe00Zvb25e_wh1TcTGI62Zu9rK1p5R2wRglU3L8G7kf3hLlGKDohag>
+    <xmx:fe00Zhbv1vujY-l_vaYjo0_-Kyhl0SJO1gEmDbexRDiyg-iAInAqiw>
+    <xmx:fe00ZrAsgFIZfCgeyBM7lO3TnHt-VQNQIl7kqJ6pq0TfFsO7-0wyWA>
+    <xmx:fe00Zna4lo0Wz55GON99bmjg4kEn60ZlBjytvv4kYTgEhONMfwyOfA>
+    <xmx:fu00ZvOJpzcvRrQV0vydJ8sN_JFdhKv128UeNRUi2u5yhQvu8lHBAbvW>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 3 May 2024 09:58:19 -0400 (EDT)
+Date: Fri, 3 May 2024 07:58:16 -0600
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Popov <alex.popov@linux.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+	Joel Granados <j.granados@samsung.com>
+Subject: Re: [PATCH] stackleak: don't modify ctl_table argument
+Message-ID: <ZjTteMPELxCZTUSw@tycho.pizza>
+References: <20240503-sysctl-const-stackleak-v1-1-603fecb19170@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240503131910.307630-1-mic@digikod.net>
-Message-ID: <ZjTre6BYRpkI_H4o@google.com>
-Subject: Re: [RFC PATCH v3 0/5] Hypervisor-Enforced Kernel Integrity - CR pinning
-From: Sean Christopherson <seanjc@google.com>
-To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
-	Angelina Vu <angelinavu@linux.microsoft.com>, 
-	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
-	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
-	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
-	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
-	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
-	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
-	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
-	virtualization@lists.linux-foundation.org, x86@kernel.org, 
-	xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240503-sysctl-const-stackleak-v1-1-603fecb19170@weissschuh.net>
 
-On Fri, May 03, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
-> Hi,
->=20
-> This patch series implements control-register (CR) pinning for KVM and
-> provides an hypervisor-agnostic API to protect guests.  It includes the
-> guest interface, the host interface, and the KVM implementation.
->=20
-> It's not ready for mainline yet (see the current limitations), but we
-> think the overall design and interfaces are good and we'd like to have
-> some feedback on that.
+On Fri, May 03, 2024 at 03:44:09PM +0200, Thomas Weißschuh wrote:
+> Sysctl handlers are not supposed to modify the ctl_table passed to them.
+> Adapt the logic to work with a temporary
+> variable, similar to how it is done in other parts of the kernel.
+> 
+> This is also a prerequisite to enforce the immutability of the argument
+> through the callbacks prototy.
+> 
+> Fixes: 964c9dff0091 ("stackleak: Allow runtime disabling of kernel stack erasing")
 
-...
+Reviewed-by: Tycho Andersen <tycho@tycho.pizza>
 
-> # Current limitations
->=20
-> This patch series doesn't handle VM reboot, kexec, nor hybernate yet.
-> We'd like to leverage the realated feature from KVM CR-pinning patch
-> series [3].  Help appreciated!
-
-Until you have a story for those scenarios, I don't expect you'll get a lot=
- of
-valuable feedback, or much feedback at all.  They were the hot topic for KV=
-M CR
-pinning, and they'll likely be the hot topic now.
+Tycho
