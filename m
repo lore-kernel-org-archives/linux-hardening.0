@@ -1,120 +1,120 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203478BF8
-	for <linux-hardening@vger.kernel.org>; Fri,  3 May 2024 00:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68711F5E4
+	for <linux-hardening@vger.kernel.org>; Fri,  3 May 2024 02:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714696887; cv=none; b=GUM9UA8RsM8UMKUSnj2oPSQH/cu5es/4DyNt098YB8PrV+qAjI4zMyRNUYCAK724sGradRiJkQB1/OwuFuRar5IBmGvqk92nj3mD6Ofk9y0oDFwR1tjd74gPqPqWeQqC8worAS3R8UI+BlIRSkstgzKV8hFlj812/1LFPR9kPyk=
+	t=1714704864; cv=none; b=lSSxEV4RITZKpJVXrb1NHj6bmuEZsCDh4u31FgLxA1trsDxGN191j7evhx4nSU9kpY2C+QH62KjbEFK4t0DDLBx/TO3KxK5tp+BuThMmNV8gVO5fxiZ2KZuZQ05jikqymR3ZnnCe1tz/n+qjcseTH912HLYn6/0Y2bb/b6l8OnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714696887; c=relaxed/simple;
-	bh=pbSDQnfcM9BD+einzGGOUVd3T1E36CfJlU1tKpjCybU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GaTf9qZfHkzqwW3cuLTG70+UbhNMxbIcx0BBKBaayF0oUJ/tfMYE6y4jSADUenEjVtZRdZWZJfsHxzJ0tubmoKWWAhtvhvBd/TIItY/Dt05Hd+GD/a7fkl9Z/pdWdPI5UhwAOoz8hgdz1IPBPa/0V0XHeXv4pZMJy/0kjkwwHJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=E62hMc/S; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1714704864; c=relaxed/simple;
+	bh=yDKp3H2GfAFPNZ//JlJZqmJUnus8qIYGocHIGeNqTb8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CdannpXyybrHE5OF4XfftKSW2Tld3TfcSQWb8AN8n5iQcWD3cuYQ9W6cYNe1GNPs3CULazsVK14QUgHyaBQ8PETNkGNnl2K1YUFya9zbVzCagJTYpbK1YW7xuxyXAhPzKgvLaahJ4Oz3r8lbYyf4J0o4/M9SGH4mlB9Eu91ze4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=fIt+hGjn; arc=none smtp.client-ip=44.202.169.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E62hMc/S"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e65a1370b7so79983085ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 02 May 2024 17:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714696885; x=1715301685; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ag+GJVh/sQYDPGeOkIngGB4bIRPX939JLId/QM0OSvU=;
-        b=E62hMc/SHto+4x+x0c/d1GGFMi2XNcRny4gL6X4LtWZe5jdWibBTZzsCHv45Year5g
-         mGraw44ODS3o1xSHCSKlcpIYVrRUtr194f+Cx9fXOw3sCFMxLRoJ/mmcVveRbRS0KEzp
-         0ps9cvxit1qKIDf7kSeohas7Hi8DlsCrb894Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714696885; x=1715301685;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ag+GJVh/sQYDPGeOkIngGB4bIRPX939JLId/QM0OSvU=;
-        b=Qme6wj76WR5JnCFcqASmLnONkM7Slhn1i3WBPKvcoh3eNkZKNWVHJjyeVp3C4a0iOy
-         XqwB3jlFU31lGkRsl+g2nHIrD92udME4dwjIDo+4twMqFbck0jbeycUSGyKQPC0vX6zN
-         2xxLhPBmvBuuoRCzd+pGbt2F9jYA79Z92oBYS/Oq009ShzZnwnMqgHmHwJILSdp7kpRE
-         vSPNt1JiVdzUNGD9JRhJyRY+OfDYuMWZKh+NGJu+YEQ5EA8wRJ4ffN2g6n3LEjkqYmmC
-         sosj30ARH5XG1fGJoJxyCZLpAKSIXnRAbgKc724SFauldRYt7HpPpLFx6TNJ3xM+//71
-         VVNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTOp7CY1azrJ3YMnFuO+WQ2z21FmTDyDuES5Wjf4J8EWkWHYAoWYRV/uLYhJjScjfDC2E4jI0aPu4zKMTLZRmLriRBGGIsWbyxbl1pJB7q
-X-Gm-Message-State: AOJu0YzpS+uzpO94qAYpJy/3CJNl9bAGc9xOzbQ/ZNKdYz2BApGKe2r9
-	M4XnlVdvuZDuP26oFmdbsc6LSCY9qXL/XMaYumYErIlOWJVttk+ClmBRRiw+Bw==
-X-Google-Smtp-Source: AGHT+IGVw+PoNIInYTycTHxfqWIBoyYdGBoTX5SvKBDwlvlFcv6C6IZTK45dYCllqIK8OWMFfs/z6Q==
-X-Received: by 2002:a17:902:f648:b0:1e4:19e3:56cb with SMTP id m8-20020a170902f64800b001e419e356cbmr1772102plg.12.1714696885501;
-        Thu, 02 May 2024 17:41:25 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f2-20020a170902ce8200b001ecf865a019sm1958663plg.224.2024.05.02.17.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 17:41:25 -0700 (PDT)
-Date: Thu, 2 May 2024 17:41:23 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Matt Atwood <matthew.s.atwood@intel.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Nirmoy Das <nirmoy.das@intel.com>,
-	Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] fs: Convert struct file::f_count to refcount_long_t
-Message-ID: <202405021736.574A688@keescook>
-References: <20240502222252.work.690-kees@kernel.org>
- <20240502223341.1835070-5-keescook@chromium.org>
- <20240502224250.GM2118490@ZenIV>
- <202405021548.040579B1C@keescook>
- <20240502231228.GN2118490@ZenIV>
- <202405021620.C8115568@keescook>
- <20240502234152.GP2118490@ZenIV>
- <202405021708.267B02842@keescook>
- <20240503001445.GR2118490@ZenIV>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fIt+hGjn"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id 2CP1sbFBixs4F2j3wsj4hw; Fri, 03 May 2024 02:54:16 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 2j3rsRk6VYakK2j3rsFgFV; Fri, 03 May 2024 02:54:12 +0000
+X-Authority-Analysis: v=2.4 cv=a4T79lSF c=1 sm=1 tr=0 ts=663451d4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=zXgy4KOrraTBHT4+ULisNA==:17
+ a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=S1Wz6wX7FG998aEX3qAA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gvy8fIgr+vT9YwCzeMJn5rmWISCqNLxgzY8ECKu1DD4=; b=fIt+hGjnb8qMSf7zfQnPHWPwV9
+	+PHLiVGoa0dYqbjWgIlYH4TSlU92rnz0bzF6gSGUtN4ULDgo6vgtamfSeJ2gESDF5f5Eq6lyaL3hg
+	R8vf5NOTO8GJ24FPyrn4vQQbxBxz+K0PqM05XgH+4L9wEOpKEVDOtaRiF2daY0Z2Km6xRiIgZJ6xm
+	T3wHpEheKpb3akP9911RL8xU6aDoQfKkaFRpg9K6SDDW0VsWfU+cVA68JZG49gzOHxA9TNdoTRICa
+	7eXAZqUHxLPMhFdJ235r+RpbofESf3n+CEDHz3LDZR0MNIz7NbZnVf0NIyLnNfeNLxKCSQCt7DI/k
+	AT1L6krg==;
+Received: from [201.172.173.147] (port=32918 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1s2j3p-003YI7-1m;
+	Thu, 02 May 2024 21:54:09 -0500
+Message-ID: <b552b828-ffa3-48aa-bb13-addee866dfa4@embeddedor.com>
+Date: Thu, 2 May 2024 20:53:42 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503001445.GR2118490@ZenIV>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] Bluetooth: hci_conn: Use __counted_by() and avoid
+ -Wfamnae warning
+To: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZjO9qCx10KUJbK6w@neat> <202405021045.CEE4DCA@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202405021045.CEE4DCA@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.147
+X-Source-L: No
+X-Exim-ID: 1s2j3p-003YI7-1m
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.147]:32918
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMI6bVuQQgXUwuFaLwqIcoVg9gOM9BmSDVyivip/2rEciNTX9/HM1hbaPKHN3J2y9JwmHwrnqmVPbDf1eUp5DYqDTRucIyKmbVsyHPQSZ6aFWYMGTjRT
+ O2r2KNEJ/evEHR45PzX6qkKr2S8ehWHBURkg/6NFjjxMlE+67GvqliGYlxkaihxphuuBBewwdBrKuf3ClDDn3vsEKttQd9J7mvnaLnW74IoySA+HgqgK528s
 
-On Fri, May 03, 2024 at 01:14:45AM +0100, Al Viro wrote:
-> On Thu, May 02, 2024 at 05:10:18PM -0700, Kees Cook wrote:
+
+>> So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+>> a flexible structure where the size of the flexible-array member
+>> is known at compile-time, and refactor the rest of the code,
+>> accordingly.
+>>
+>> With these changes, fix the following warning:
+>> net/bluetooth/hci_conn.c:669:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Link: https://github.com/KSPP/linux/issues/202
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> > But anyway, there needs to be a general "oops I hit 0"-aware form of
-> > get_file(), and it seems like it should just be get_file() itself...
+> Nice! This looks really clean; I'll point people at this patch when they
+> want to see these kinds of conversions. It has it all! :)
+
+I really enjoyed writing it!
+
+It was great to find out I could remove that global struct. :)
+
 > 
-> ... which brings back the question of what's the sane damage mitigation
-> for that.  Adding arseloads of never-exercised failure exits is generally
-> a bad idea - it's asking for bitrot and making the thing harder to review
-> in future.
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
 
-Linus seems to prefer best-effort error recovery to sprinkling BUG()s
-around.  But if that's really the solution, then how about get_file()
-switching to to use inc_not_zero and BUG on 0?
-
--- 
-Kees Cook
+Thanks!
+--
+Gustavo
