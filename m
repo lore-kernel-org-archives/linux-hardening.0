@@ -1,123 +1,83 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE6639;
-	Sat,  4 May 2024 09:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680955234;
+	Sat,  4 May 2024 09:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714815353; cv=none; b=UYJKa7PqiSR/vif1iXhsri5L6YNvsMuaOe6CKRoOy5+z5Zm2LfJObvND+ioFunt9bdQ/yGvTk3Ry5s6EGYeX1g4GDzRht+xsZdSZcVKsj2sHRpyL7a4ioBcTN57I0tfsKRE6KLz6RFrd9REy1pQgmHjbrDXxbojQsL5CWPZdMHE=
+	t=1714815821; cv=none; b=pZhIARzpnuK3M44yA+JI9zBBsl/uzgccCRf7nOisT+H13payMOl6Mhllh50CsBgU+Ejcm80eEuVlTjF7xCuw1/acwsB64AAorkmFdcFBaeLPRzLqIev1YeUwtuUJcqin94GsqmpF0u1VIXYFvqide0h2M9gXRAIbiZxkMb/A9iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714815353; c=relaxed/simple;
-	bh=9dc1UlSXIXdl2vRtQFyLOal8xPLWWcPry+UL2rhypu0=;
+	s=arc-20240116; t=1714815821; c=relaxed/simple;
+	bh=ZCpQBWEVkdN3kA167HpH494pjla/nVIxS8umjqDss8A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GX53qumpWA7jLjigJdLHZvu8XIBZvvBOOKe44g3bSbkVDayzyjASaOzLcfjcnN//OjxATe+jm9uOemYXlAO8SESTSxq2FH4mQpe07Zggr28ggtDCt19KIuq8IijwB1oO1FN2wnde9mxSkPisJ+W/ohpJCehfZsqCQJIevZOAh/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=okWKVeJ1; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	 MIME-Version:Content-Type; b=MdAg6mmYj3altVFozaMIGFbLOIXWAURDnWRcwrWjrWH1ZVhj+tAq5bur5DG+nh2k+DXWuN+m8lI5m6ymWcoWTvko+xUY2uckkfjjNxiHWROTP+CkH9Gbc8ATXv9taTanGrdcBRlA3fYp6puhqB8yn4X8PJNeGZOxYPAuo8h6jcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZZ/ZUUW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="okWKVeJ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1714815342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mw7SFuN2SHyU67C8OH1gLXKRgrvpMA94gKGdBbC2U5Y=;
-	b=okWKVeJ1LP27/Ihu8TKZpJV5+kdcRHrkgkz0ecctRtlkJ282/Py2klIdLw6RKUKpJqZCuz
-	Q7Zq68Db9+BwMxEPvBY9lMElzorY66vigachpn46RQk2RGlW1eEGYjYcP3weo2837HXabl
-	7WVzBNxDpncV72/vcVthNbJj6zHVWjw=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <mareklindner@neomailbox.ch>,
- Simon Wunderlich <sw@simonwunderlich.de>, Antonio Quartulli <a@unstable.cc>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Erick Archer <erick.archer@outlook.com>
-Cc: Erick Archer <erick.archer@outlook.com>, b.a.t.m.a.n@lists.open-mesh.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
- Alexander Lobakin <aleksander.lobakin@intel.com>
-Subject:
- Re: [PATCH v3] batman-adv: Add flex array to struct batadv_tvlv_tt_data
-Date: Sat, 04 May 2024 11:35:38 +0200
-Message-ID: <3932737.ElGaqSPkdT@sven-l14>
-In-Reply-To:
- <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References:
- <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZZ/ZUUW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDECC072AA;
+	Sat,  4 May 2024 09:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714815821;
+	bh=ZCpQBWEVkdN3kA167HpH494pjla/nVIxS8umjqDss8A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FZZ/ZUUWgQb3Wkr0+yC1HJyycrN5yQqKhRuwh1xm6GLfChUXw1PRedSdlfhh531Mw
+	 9+T+YO5nGVagD4zM7nftEw7/qpuwdGGx5Svs/eqF0KnZC9pHa6e/CwLeftRrC/Mytt
+	 iyk5ySA0416azIV6ZhYSok4fCZGRmXNoVEE1o2ycfqcogEIfLMm9I1P7VCEOLCZqdb
+	 jLzEuSM4tY93UbqRqXCY+korpa3gQCit+bQJ38ZdIb5eVD/rLRX8UFLUwUUFtYFHj1
+	 iaJlkY4kWMYgmSBwuNnf5qwieGqFa8b0ZJ/p73ld7Rqrm4iUkvlrh6HmZ+nGMdxw2o
+	 OOTeu1lVqQbgQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jann Horn <jannh@google.com>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fs: WARN when f_count resurrection is attempted
+Date: Sat,  4 May 2024 11:43:32 +0200
+Message-ID: <20240504-redlich-amtlich-b381220dfabb@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240503201620.work.651-kees@kernel.org>
+References: <20240503201620.work.651-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6497797.GXAFRqVoOG";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1236; i=brauner@kernel.org; h=from:subject:message-id; bh=ZCpQBWEVkdN3kA167HpH494pjla/nVIxS8umjqDss8A=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSZMbve9H7jOzty2Q5/9wM+HzpsrJfnOmbbzxWNn5iks N5e1mB2RykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEQM3zD8s57yuPmD/+a1fQ0z 618Xf16z6bFV/ufE/6vXL3+1uXnGo+sMf7gbX6hy7tNst9hV0XCIj+/iv8AnbC93Pv8fot3e/lJ Xhx0A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
---nextPart6497797.GXAFRqVoOG
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Sat, 04 May 2024 11:35:38 +0200
-Message-ID: <3932737.ElGaqSPkdT@sven-l14>
-MIME-Version: 1.0
+On Fri, 03 May 2024 13:16:25 -0700, Kees Cook wrote:
+> It should never happen that get_file() is called on a file with
+> f_count equal to zero. If this happens, a use-after-free condition
+> has happened[1], and we need to attempt a best-effort reporting of
+> the situation to help find the root cause more easily. Additionally,
+> this serves as a data corruption indicator that system owners using
+> warn_limit or panic_on_warn would like to have detected.
+> 
+> [...]
 
-On Wednesday, 1 May 2024 17:02:42 CEST Erick Archer wrote:
-> diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
-> index 6e25753015df..dfbe30536995 100644
-> --- a/include/uapi/linux/batadv_packet.h
-> +++ b/include/uapi/linux/batadv_packet.h
-[...]
-> +/**
-> + * struct batadv_tvlv_tt_data - tt data propagated through the tt tvlv container
-> + * @flags: translation table flags (see batadv_tt_data_flags)
-> + * @ttvn: translation table version number
-> + * @num_vlan: number of announced VLANs. In the TVLV this struct is followed by
-> + *  one batadv_tvlv_tt_vlan_data object per announced vlan
-> + * @vlan_data: array of batadv_tvlv_tt_vlan_data objects
-> + */
-> +struct batadv_tvlv_tt_data {
-> +       __u8   flags;
-> +       __u8   ttvn;
-> +       __be16 num_vlan;
-> +       struct batadv_tvlv_tt_vlan_data vlan_data[] __counted_by_be(num_vlan);
-> +};
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Thanks for the updates. But I can't accept this at the moment because 
-__counted_by_be is used in an uapi header without it being defined
-include/uapi/linux/stddef.h (and this file is also not included in this 
-header).
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-See commit c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and 
-identifier expansion") as an example for the similar __counted_by macro.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Kind regards,
-	Sven
---nextPart6497797.GXAFRqVoOG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
------BEGIN PGP SIGNATURE-----
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAmY2AWoACgkQXYcKB8Em
-e0aJDw//f+el64xroKLns43gvY+Z/mPIwf7Iy+THUq6U9zVQ0wp3XbW9QTmXP/5K
-8it8yX2aNEEPu4Cd5w6eIrwxIdhDZW3pHxI9ipdgTjF/i0Jh40SpM9HOlgMLjCys
-Ls0Innvs24uQ99h4OSk4TGuHay+6Z0aMEV0PrFsj6jsoB7su7nmQ6ebEpdY40246
-soQfO7aJ3vrSYbuCJFOlMESNHm0wRxQu4QjK8RDmyk1wEyJIkQyVQ6QkjYj6ulkr
-+eai2uDQWKEPav2vantbXXsTK4gu7nWEGTcHn2NoJJ/bqtzCrz1FS2u55PZ9l9P+
-auO/nPz1RB2hHAA3t8igC5jRK6AQ9CdjRMt3rQ8Pmk2jZKt5G153j0lgQdq4nDaf
-V6ji3IrDnjQvIAeUN5vkIlwqbmVo2BbIqHDXK1JMmUEryQCt9HHFCnLYVr0v2WuM
-tIj/T68pcEThoF4TU2B30ScZUfMeZ8e3im53RPU+29ljldyX6WCxIGLIyFZM2mbo
-U8cqULn7tN8LfMcB7CYf7+H6GDCOq+m+Xd50oQsIYb0LDIk5CuEAVBCA1/wNog5q
-+HVplKYtp2LSIKQKMey2u0loQFq/EnwH0pS0Vv5SylRQMZ1PRFq54tWRDsjwDw4/
-BMP9cF5Njh9uyD2Db0uZRZ+OWKH0KC41A+cvue7gjWA5uNDv6uA=
-=qo9D
------END PGP SIGNATURE-----
-
---nextPart6497797.GXAFRqVoOG--
-
-
-
+[1/1] fs: WARN when f_count resurrection is attempted
+      https://git.kernel.org/vfs/vfs/c/f6bdc7865ef4
