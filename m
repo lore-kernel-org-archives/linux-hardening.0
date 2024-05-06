@@ -1,170 +1,142 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2048.outbound.protection.outlook.com [40.92.91.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402F015664F
-	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 16:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012985; cv=none; b=A/NkoEHH/uP78nKc6EEeAfRlnaC6VuR4CWBKy39e93TALcMn5IKmBGpNdystBNncc3smHyxWejocSk4fxRo2aNExkSougEl9Pzx5F+cQ8dVHUFpJHIs0AixW3nhVamuyRTc+061U8pm5PQoC4CKxxmY6e9gCOfQJVi0YBsjOits=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012985; c=relaxed/simple;
-	bh=djIR0MvTC9on7MEXMWdmMMuXY59ptlBzgD64Z//dn/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hus9u0H7ZpibKz4jkwn88OEzt8ZWwBMI8mbW4akc5MIw9KFRTSAtGLor/cBPl5Qz2MuXoWjRhYOb39ds3TRNH4cqMd1j/BBxi1UWDfN/1y6Xxba9GKk8x5GJ1Uy7UzmuGfGqMfDuCET9pS8wSt8qZKCwEfScEYPhFJiiNZ2Eytw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WjJNqIgl; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590881F19A;
+	Mon,  6 May 2024 17:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715017350; cv=fail; b=i6slxBocSekjmOJma4hxn8hCM2qL/JEWqlLA4b4qjHSqeUDI13TOZ0kWRrf8tONNWcJVFyAFG6jH1Ojo3+luPDNz1bkEuTel3GEdYmou4ntyzswIYKJb+nx1kI9cHhG7ZDpRg0d5rDV37/R1XQ3reFC4vq+yRD05IyNytCKAo6w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715017350; c=relaxed/simple;
+	bh=SsAsQrJ9zkPdmmuHBskf5+R8rggwTnSxYueAKCgvZ7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qeVgFmb5o1xjRg+S0H4Hl1sMSsutohzTNynZFBumXPQkz0AqyIiL1oAtsaud21zRs53JHBknfOj5cjU14tnOEhDWSSfvLW3IX5T2YWP6PCtexIBThUoDnjBCbHDKigkWvT7s+NpuHjHAgfs1kY6cRFO4jdCDllfku7eNjeGkVYo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CpmoSoRS; arc=fail smtp.client-ip=40.92.91.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WjJNqIgl"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso14867135ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 06 May 2024 09:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715012983; x=1715617783; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4FGZV4xevlS61uYYoN9aqvtjUqiITrQIdhJ8KhnBQtc=;
-        b=WjJNqIgl/xNbc0Z4JSdktZBtLsYGZn377nBuoOB4l0GFDbUP0GTt8cVZFWQeUJ/GXK
-         xP04so7EhkVihMbyWxtEA9IyqxoifoHgEdFdqO5mUfC164yZI+w38tlZoXi+XuitH0Lc
-         4pRQm2v9U17DJUa95lkE1fr5tWbR1TduUiDHE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715012983; x=1715617783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4FGZV4xevlS61uYYoN9aqvtjUqiITrQIdhJ8KhnBQtc=;
-        b=Xwf3shSOVpxv3cwIlyc+l4q9XPR0LD9h8UWEZq+6z77BHW4DiZKQyK15p3RlPPx51a
-         lWRXJRgl4dnv98+kaSv3outqw/0bbjwPE2jVqp7SBZhq3c47EgqPSmEXIKh1j5My2VKd
-         +X++Y5sht4b8cUhBZnkIzuAtuBj05oxs6EI+L1vsQuUqEx2Qq0+1Pvigz8AUKuodeAe9
-         iQzZdHhnDHaRSb0xPfbddbdAOQjhULr3Gd4/hgpmGoM9jdQBX2VC4uItFqdVDbGJLHup
-         WALeoiiCOgGuU+D3OTsRgvHUgLEgDdz0WcUsr3y4kxwHo9ZovVnF7Go3IKwd1sdV6xrL
-         B5JA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnKXYvB/iV71Yyw6lcEE+LoijnLVo1DMBoRLIA06/Ph25VzT9UVHqJEaSF8edjOz8VEWhifRaLg4nHtLCKnAKwAkwVMfPoqjTIP7zzlhzA
-X-Gm-Message-State: AOJu0Ywjt64GIsn6pA41eSBLXkp/iKxhTjl4aYnxMjY/UA3rRf/PCZB2
-	vUzzSBgdXdndFHzd7wDgHe33V9Le6jOA37IfLOsOCajd+HK8HucBCzP6dT0DwQ==
-X-Google-Smtp-Source: AGHT+IFbFO7WG3T0AZk4k9Vs5NN+nUuBbULzCcUX9OeVRvDR9+EhwfFkTTZglRWvChOo6sF8QSal5A==
-X-Received: by 2002:a17:902:c40c:b0:1eb:dae:bd98 with SMTP id k12-20020a170902c40c00b001eb0daebd98mr13243215plk.51.1715012983437;
-        Mon, 06 May 2024 09:29:43 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id im16-20020a170902bb1000b001ed33493868sm6958248plb.243.2024.05.06.09.29.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 09:29:43 -0700 (PDT)
-Date: Mon, 6 May 2024 09:29:42 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Sven Eckelmann <sven@narfation.org>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	Marek Lindner <mareklindner@neomailbox.ch>,
-	Simon Wunderlich <sw@simonwunderlich.de>,
-	Antonio Quartulli <a@unstable.cc>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CpmoSoRS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J3wPluyzHFuaXwsi7jh07fuiz3cJUF/6fdaoYB897C6Vh+IqcdDI0cD8Ex7oaK1UvqbLaVkRHyATwQgFM5M96Jq9YLwxLRUbvaOOLnSOUIeQBdzuiy2nH8AX1+/ttw1lfQxBgMEUPxCLXFoN3va/ndecAy0IeVIGY5aj6m8p2taE0g1o8iUZSbXwEgc7+nsAcVjFZ20pcQHQItx2k9n/nSX9Bibn6gwzdoK6GDxF9p/XlpwIirf8lfqMg8mRbR0PhCxvwIu9yWHfevMTioQXHGIGNK4E5+nu0jR3sODRb/YJt74utL2WnwWZyIzG6iZRVr10vbMQ+IYMgVlzvPuTJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2KWrRjXiVt5XzbZqlD7yGKKcqqQ5rJdPZaCeSJAZIrU=;
+ b=hMAesqfJNoR8YzBOKzjHLBnePmbRdYVOtuERKF6samxdXUKKQp5P9AFxF5ZmCWUVw9F2dPIK34GLDnrBAHyIrHtGF20ygrUF06tGqAQP1Ewn3M1aklzZP8rEnhLJl7TTEN68wJev5TsAf3Nj7qUa8poKjSA+L0mg2XEnkaDTZ8VHHCJngVOE2/M7sf71o/ac9vxznP6lIzZrTl50H5yT6o6CNaS5qLS2o+BODT64e4ok4DLRTMsJCAdYsnvmhHt7/4bRS4EBEGHAlylJHNEKrG2H2WHmX5S8asAEnCSjJF6u+4eU+YEYio/eeUk6QpsXoAa/gbE3ZyqGgEisNmZdXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2KWrRjXiVt5XzbZqlD7yGKKcqqQ5rJdPZaCeSJAZIrU=;
+ b=CpmoSoRSNZABZ3S2hZ69eOQcfoVDVlIfMWjH+NArTB/GUWfXVXkvMMRDDk6rcdih5Y3stVu0O7P10wAiHKsXDlQMnv2rc7sLZbyI9o4O3GJaIq0amql2iNyO52Ze+NlJENMW1GNBX3K+Bs/WqaDnEYMHNznnnSG5nX/jcu/or18O1pjpR4VemfYj6PURGqBJyHOFDp/0v5PaXziDDp04NUbyFETEyERCuPdDmsBpLsmv3ohdVRJiNbmuRhHT5ik6LtHJT0t6NrTvtTQ+Qa+8hJt2a6McVHEbEnS4rghoBcYQ8K2ZZINVzRUHJYzJqVBDGQwKlhNEOpI06WEcxytz7A==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by PRAPR02MB7956.eurprd02.prod.outlook.com (2603:10a6:102:295::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
+ 2024 17:42:25 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7544.041; Mon, 6 May 2024
+ 17:42:25 +0000
+From: Erick Archer <erick.archer@outlook.com>
+To: Kees Cook <keescook@chromium.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	b.a.t.m.a.n@lists.open-mesh.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Alexander Lobakin <aleksander.lobakin@intel.com>
-Subject: Re: [PATCH v3] batman-adv: Add flex array to struct
- batadv_tvlv_tt_data
-Message-ID: <202405060928.272B235@keescook>
-References: <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <3932737.ElGaqSPkdT@sven-l14>
- <AS8PR02MB723738E5107C240933E4E0F28B1E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <9977759.T7Z3S40VBb@sven-l14>
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] uapi: stddef.h: Provide UAPI macros for __counted_by_{le, be}
+Date: Mon,  6 May 2024 19:42:08 +0200
+Message-ID:
+ <AS8PR02MB7237CD9ECBF7907AD8B1CC938B1C2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [mQEvb7RwLZlChtEWhhFyAseK8Jn+tZME]
+X-ClientProxiedBy: MA3P292CA0005.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2c::18) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID:
+ <20240506174208.4734-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9977759.T7Z3S40VBb@sven-l14>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|PRAPR02MB7956:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44478b9a-fbfc-41ef-cbfb-08dc6df3e430
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	UfWAEC05wQAEYeAhV7hGLvJy+dv4ys6XSZBp3e5M1V4SArHgvrzctwieGu9yImWXsRJBbNLX/HS+CsTlsQ3XiB2T6ms77Va5LjOQAl0ycdGfi5uFi9HVyhdTlT92U3wATD1gWKj4AKXv781O44cbZzONOeD0z6qcgeOvi2dhE+hvnHHBsaCs1SijyCb5Ertc4PKIHSccLi92+y8OPe4Dkp2S5xUcVKBmgsI4fjs5xLZdeFkwpKxmd3LKjaYd3dDZJAvEuEzWCjYZChiMejOPvjCB3ap1YHw3GAW2/l5ZYXxJzUD/jI5nsFtRV336XNBJmowgPhdJn4aZi9vTl90EQdDsXQyTd+jjs6xvfUBSVcIj843h59J6sUXzrY4F4nJz8lWkE2JsL8Ju6/9bpfJ2K4F0OMyIlw4PAEz03Pl9IMvqCyQnT4PRNitZ3BI9C71zgR/gnEyT/f1CFe1Ywk8b2o6gz31ewp7GAfN5/TTw0LAVA9JkDvuR0wBQBf6OHFdME7CJzgbPBwL0S4tGd+0v/6gr0gy+LOX2wzcOToRYw0rCyxshtW86j5hsvxuiWdYKjQIx2JEvJ78GFxZDg/OA5yXLlaZXrs2b1lJ3SfBCTGdg3Ln1MCJILV7h0E3COLXN
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MsNpNejIUIMVnNTuPH9/S+c6lRXxnbiNqaTO6C/h1fI/4kW1TgwIm2e5mgAQ?=
+ =?us-ascii?Q?Soca1v9xnuoZpNxZyzeRwAsRm6ldC0kaX+OnlY88wHLo3nn4azLkmY2etrMY?=
+ =?us-ascii?Q?ZblJufHQNIjDiQzyP94lXbY1MmxfHfDput3U/SO8jK4wI2e831e4dA99CfpN?=
+ =?us-ascii?Q?L61D2tMfV50qKQK2J4B6OA0+UqVeqLKRJBFyftECalU2Ns9dpk1glLr3WKi3?=
+ =?us-ascii?Q?QNkXVA8ge/vLukHazxghsTUqU0hN4wfIIBlqRMuo8EKAxJFM9Z6EQJr3My4t?=
+ =?us-ascii?Q?9FV5N7O7aDrXs4YieTmegdnQsqhOwQFsYgXTqHlQrjn8sRtAs+fXaTdy2YKH?=
+ =?us-ascii?Q?eprtmzQ0P7TQ4TZW1S7zbeGTZc64P+bqYQMKn9W47YLcsP29v0Vfn0dPMXn4?=
+ =?us-ascii?Q?u4ePAF/jSULyxaZwQU3ZPrSfQMkd46B7SreXhn5tURiBLFqRSSbsZg2vYdTF?=
+ =?us-ascii?Q?oI8/gUiM406xQ3/GwlH3H1m3zC6p6Ua8rA/hFd4DEkRNF5WLLgY485ttuth5?=
+ =?us-ascii?Q?TZX6mU7Nqh6M6dBvPzj2zbT8VqCpzUU9Gy65wJIdFns8Y8V8SBj+YKcQ8Q/5?=
+ =?us-ascii?Q?WBVRx87eqL+sOxOYUjXLu9Yw7BCpOILh+uaR0SfgvX4qbTKf1HYsa8Zj6P6d?=
+ =?us-ascii?Q?O6BH5UEtdoZshtJVabgY/seTw0cN0j638uTEyIExOlgUU7tD0UYWpLwMu8L3?=
+ =?us-ascii?Q?q/domtVNNoJ8X1cLuUGFNV4gBEiFrOWm9VLjsFyx2F/pb6LDE/Qxsjk64cjK?=
+ =?us-ascii?Q?ngdu02q99vZ4yviEn9O1WtKWR7Rdu44mxNixCJUeagiwXJfRrG9MKizeyujy?=
+ =?us-ascii?Q?R9YQzM/J9ruAj8BgGtnfkXL0yw2qPQ059TFjEaAgXWfBLeKKoJxBsrqdHzY2?=
+ =?us-ascii?Q?ZRhxs8onJQXnhgAp5tgpVf6peouZI51opLmof8plVlsYQ6o2P7ugUPAMMFiS?=
+ =?us-ascii?Q?1Wgl8+BGa6MHJcDijpT4sLiiXXbg5PmUACuMRo/i0Kp1Mi3Ah2uP6PfBbl1l?=
+ =?us-ascii?Q?TKatNX//WkM9+TZbKW9kISYeWYOQ89iGEj7EXRlDnKbZYgSrRDm/tRldNywD?=
+ =?us-ascii?Q?EIzM0YVOgHRyjxMHKohugHkI1252o4/t6q7e/jjMxgEZSwiDluli0GGCK+dh?=
+ =?us-ascii?Q?Flx9NLxnJgcHcLZS1r4MUsxR5fLbykkpTmz+eeFsmuJH3+2ibMosjWa55g3r?=
+ =?us-ascii?Q?9kwOME2oSuWUWBUl25wlVAHt1MjwhMLAlec+RLJlgWOyNNrSxqHDtt0TszP5?=
+ =?us-ascii?Q?esu1m7FaI+79NN+izPZT?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44478b9a-fbfc-41ef-cbfb-08dc6df3e430
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 17:42:25.6890
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PRAPR02MB7956
 
-On Sun, May 05, 2024 at 05:22:10PM +0200, Sven Eckelmann wrote:
-> On Saturday, 4 May 2024 19:08:39 CEST Erick Archer wrote:
-> [...]
-> > > Thanks for the updates. But I can't accept this at the moment because 
-> > > __counted_by_be is used in an uapi header without it being defined
-> > > include/uapi/linux/stddef.h (and this file is also not included in this 
-> > > header).
-> > > 
-> > > See commit c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and 
-> > > identifier expansion") as an example for the similar __counted_by macro.
-> > 
-> > If I understand correctly, the following changes are also needed because
-> > the annotated struct is defined in a "uapi" header. Sorry if it's a stupid
-> > question, but I'm new to these topics.
-> 
-> No, it is absolutely no stupid question.
-> 
-> > diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
-> > index 6e25753015df..41f39d7661c9 100644
-> > --- a/include/uapi/linux/batadv_packet.h
-> > +++ b/include/uapi/linux/batadv_packet.h
-> > @@ -9,6 +9,7 @@
-> > 
-> >  #include <asm/byteorder.h>
-> >  #include <linux/if_ether.h>
-> > +#include <linux/stddef.h>
-> >  #include <linux/types.h>
-> > 
-> >  /**
-> 
-> This must definitely go into your "original" patch
-> 
-> > diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-> > index 2ec6f35cda32..58154117d9b0 100644
-> > --- a/include/uapi/linux/stddef.h
-> > +++ b/include/uapi/linux/stddef.h
-> > @@ -55,4 +55,12 @@
-> >  #define __counted_by(m)
-> >  #endif
-> > 
-> > +#ifndef __counted_by_le
-> > +#define __counted_by_le(m)
-> > +#endif
-> 
-> If you want to add this (for completeness) then please put it in an extra 
-> patch. It is simply not used by batman-adv and I would not be able to find any 
-> justification why it should be part of the batman-adv patch.
-> 
-> > +
-> > +#ifndef __counted_by_be
-> > +#define __counted_by_be(m)
-> > +#endif
-> > +
-> 
-> This part can be either:
-> 
-> * in the batman-adv patch
-> * or together with the __counted_by_le change in an additional patch which is 
->   "in front" of the batman-adv patch (in the patch series).
-> 
-> From my perspective, it is for you to decide - but of course, other 
-> maintainers might have a different opinion about it.
-> 
-> >  #endif /* _UAPI_LINUX_STDDEF_H */
-> > 
-> > If this is the right path, can these changes be merged into a
-> > single patch or is it better to add a previous patch to define
-> > __counted_by{le,be}?
-> 
-> I don't have a perfect answer here. See the comments above. The file 
-> include/uapi/linux/stddef.h doesn't have a specific maintainer (according to 
-> ./scripts/get_maintainer.pl) - so it should be fine to get modified through 
-> the net-next tree.
-> 
-> But maybe Kees Cook has a different opinion about it. At least there are a lot 
-> of Signed-off-bys for this file by Kees.
+Provide UAPI macros for UAPI structs that will gain annotations for
+__counted_by_{le, be} attributes.
 
-FWIW, I'm also fine with the UAPI going in via netdev. It's the most
-likely place to use the be/le variants. Is netdev still open for
-patches? Whatever the path, we should get it into this coming merge
-window so we can use it elsewhere too if we need it.
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
+---
+ include/uapi/linux/stddef.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+index 2ec6f35cda32..58154117d9b0 100644
+--- a/include/uapi/linux/stddef.h
++++ b/include/uapi/linux/stddef.h
+@@ -55,4 +55,12 @@
+ #define __counted_by(m)
+ #endif
+ 
++#ifndef __counted_by_le
++#define __counted_by_le(m)
++#endif
++
++#ifndef __counted_by_be
++#define __counted_by_be(m)
++#endif
++
+ #endif /* _UAPI_LINUX_STDDEF_H */
 -- 
-Kees Cook
+2.25.1
+
