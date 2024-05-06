@@ -1,91 +1,147 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D391D52C;
-	Mon,  6 May 2024 17:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A1E1D52C
+	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 17:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715017815; cv=none; b=XdCfMVZR9kZIymKfELz3+1OL3wdSsW17NpNpVll9RgLBfyciy0zq4a7AWTxGYFGQvB348xBtCtB6vk5QdoPDlwNvOg18YvjFU4EdotDgJE8m6f5Pj01TOPWDSCal38fJIYbAIaJOf2UoqeJKw0MZWCdLd0Hf8Paf3R5+obNazEM=
+	t=1715017822; cv=none; b=FGz+/HvWaH7VSEcwlDEaW4LzQYr4n2Ieh8hP1wlRvGKnqcMq4ae/KvCFdIu3SnNo6z8M7BZGGVggQ+fP1lPFS0wdXQjCgm7OLsHIs/f0iPNFmuYG+3Nc2z/5aXh0FCdbXP0hYt5PUqrOePJfe6p6I+MQItOZm14BRM6mDQo8Ntw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715017815; c=relaxed/simple;
-	bh=gXKML0ANf/VHTXTDJLQs6FDzugzEI1UK1X68Cny0xps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rmo1uULnvkYUGhCBu+hwJaOUIRV3cWY5OLkOcElTB5AaYOd05eva1eCa0Ezvr+zlLniYp+Atodr1O4MxGqAtsJQSMuuho0l7iTQzI4GVr/lgGXTDzsV8DQ+velr3Rs8CoEdGMoCLozoCaxQ4xkf2JO8aMZoAX3cjx82Pzv8IlTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HPmPREm0; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715017822; c=relaxed/simple;
+	bh=FeafhCaExu57qsacTj62dWRUdrBXKjPBuLT9vOLipXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wkfc3exlYY/GsKkob0irgtJkcWosAhmAw2bKPQMlctX+2ruMAIcYOITlJ4kOrGEYD/1BtNeGOVbJy0qNcv27e5Zaov/rRpq4ZvjLTCQ5cNrofMkwUHGOL5/wUVlPa8YN5HabR+RKEw/Gg1XzIiYLO1rgkZPqPb3f3Fw/+jUrHmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=mGwJTwDH; arc=none smtp.client-ip=45.157.188.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPmPREm0"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5e152c757a5so1283160a12.2;
-        Mon, 06 May 2024 10:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715017813; x=1715622613; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gXKML0ANf/VHTXTDJLQs6FDzugzEI1UK1X68Cny0xps=;
-        b=HPmPREm0ul+P81ACw5vB0aD6E5kVB60XDvVT+yATzBQz1mmY9QTA2j3W8pVXMM/7VE
-         VG/QX3IqGitW5oecVekPgsBgriHM8TlQcBMYgFHa6z8EZS/vWzBQSLC3ebBeGKaOzcDO
-         mnDRR/007n1b5/XouF8XGsF7IiSksLKahpr0L/z0weP+cPu7gZ71exyHSQcYuFJbVqbC
-         D1BY/Jbs0qFX2VglNS425KRqBl8LBdKz/ikODj6/JmTlIIXLPmv3Hl3UTIimYU3o6A1G
-         Xq6+BiIsSozAIYuMpe7i7vZBOIflhABLcKyZGlzls/zK1zYitC0FgoF6AuIzZHk3qLUU
-         I/Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715017813; x=1715622613;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gXKML0ANf/VHTXTDJLQs6FDzugzEI1UK1X68Cny0xps=;
-        b=D6sUo26XES8KpWa9Z6tl3x53x/vHyBU2cf6TFRbUf/9GrFXvM3VUmSdb3GEQoI+m/e
-         giWp2Nzq6bid/EF5LJWJGPEAdJd89FxunkmArP4y5z11fFhmcGQXgl+7II5m0yh/uWIB
-         bKa8NPJc8zwFvdDVpu5eN1I7AaXToJEK5EvHqHjybB6mKhtcvQahrJsqWa0AkSI8i5SO
-         FgEIpvOgsp5YC7BG1iGhix6OUIF7wlwHzThCyt0vrdmbFwHH6InAEOB2GgGdq1VhnV5U
-         Ymp4xlw9kyYYTr59l7D9LcbccN8oilX7VTSJQ6SkjD5g/a8wTcFhZcBCMvE3/Davo4pT
-         5etA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYDdkYuoRYltD53b+SJmwgztuyckbv2WfvE1cYjRZD+ptwvuxUF0j5E9+qpygR4zaKmGU4S42GqBFd74D9xQV0BGiW13z+G8ZIjaw9Frcfu8rjyBscJiBIbxnY6zCAIC/6cpjozGj/OHNb8OqK
-X-Gm-Message-State: AOJu0Yyq5WK/ZRe57C6AGwUJeLBl2osgTg9JFmu6rp5uTyB6C1e292fM
-	dK5TqWF5TrYAefQ5iGOorKUdimqEY9i2ATrmc+3LQ3CsHew4yHXG24/0p2fY8om5uCkSs966VBd
-	IbhC2Z3cKDKbHuZj+NtX5tcxSxx4=
-X-Google-Smtp-Source: AGHT+IG4MTEscwBrGFBYlUwy88bX21aQBDdIpQcUbWnGYDzwoP+HaAt0v+w/QBurXrLdxocWMEF3Zi+9LXgDXgvwbyQ=
-X-Received: by 2002:a17:90a:9f92:b0:2a5:3aec:fdef with SMTP id
- o18-20020a17090a9f9200b002a53aecfdefmr8095728pjp.47.1715017813346; Mon, 06
- May 2024 10:50:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="mGwJTwDH"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VY87s1JrnzP8k;
+	Mon,  6 May 2024 19:50:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1715017816;
+	bh=FeafhCaExu57qsacTj62dWRUdrBXKjPBuLT9vOLipXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mGwJTwDHmCYyRVABfvivVlR645+s55YE3ikqtGU8J06uhEpc53bUE7Ls8lVECmSJY
+	 ZoGZR6nkUaCWIF86rf6UUOQ30vsnFTU+oyKVa5juk1cYq6aZPMMxOD7Adtf6s6Qe8Z
+	 /vj4j5MGtH+BC89lqOLDnwO6/+q161VQ+b28m63o=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VY87p5F0GzB95;
+	Mon,  6 May 2024 19:50:14 +0200 (CEST)
+Date: Mon, 6 May 2024 19:50:13 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, Anna Trikalinou <atrikalinou@microsoft.com>, 
+	Chao Peng <chao.p.peng@linux.intel.com>, Forrest Yuan Yu <yuanyu@google.com>, 
+	James Gowans <jgowans@amazon.com>, James Morris <jamorris@linux.microsoft.com>, 
+	John Andersen <john.s.andersen@intel.com>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
+	Marian Rotariu <marian.c.rotariu@gmail.com>, Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>, 
+	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
+	Yu Zhang <yu.c.zhang@linux.intel.com>, =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>, 
+	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org, 
+	x86@kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+Message-ID: <20240506.ohwe7eewu0oB@digikod.net>
+References: <20240503131910.307630-1-mic@digikod.net>
+ <20240503131910.307630-4-mic@digikod.net>
+ <ZjTuqV-AxQQRWwUW@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AS8PR02MB7237CD9ECBF7907AD8B1CC938B1C2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-In-Reply-To: <AS8PR02MB7237CD9ECBF7907AD8B1CC938B1C2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 6 May 2024 19:48:49 +0200
-Message-ID: <CANiq72nJj4PmvVdkUHEcC-2HvYZSGctWMqj43mnTJrt0k0QKaA@mail.gmail.com>
-Subject: Re: [PATCH] uapi: stddef.h: Provide UAPI macros for __counted_by_{le, be}
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Kees Cook <keescook@chromium.org>, Alexey Dobriyan <adobriyan@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Dmitry Antipov <dmantipov@yandex.ru>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZjTuqV-AxQQRWwUW@google.com>
+X-Infomaniak-Routing: alpha
 
-On Mon, May 6, 2024 at 7:42=E2=80=AFPM Erick Archer <erick.archer@outlook.c=
-om> wrote:
->
-> Provide UAPI macros for UAPI structs that will gain annotations for
-> __counted_by_{le, be} attributes.
->
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+On Fri, May 03, 2024 at 07:03:21AM GMT, Sean Christopherson wrote:
+> On Fri, May 03, 2024, Mickaël Salaün wrote:
+> > Add an interface for user space to be notified about guests' Heki policy
+> > and related violations.
+> > 
+> > Extend the KVM_ENABLE_CAP IOCTL with KVM_CAP_HEKI_CONFIGURE and
+> > KVM_CAP_HEKI_DENIAL. Each one takes a bitmask as first argument that can
+> > contains KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4. The
+> > returned value is the bitmask of known Heki exit reasons, for now:
+> > KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4.
+> > 
+> > If KVM_CAP_HEKI_CONFIGURE is set, a VM exit will be triggered for each
+> > KVM_HC_LOCK_CR_UPDATE hypercalls according to the requested control
+> > register. This enables to enlighten the VMM with the guest
+> > auto-restrictions.
+> > 
+> > If KVM_CAP_HEKI_DENIAL is set, a VM exit will be triggered for each
+> > pinned CR violation. This enables the VMM to react to a policy
+> > violation.
+> > 
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: H. Peter Anvin <hpa@zytor.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Sean Christopherson <seanjc@google.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Cc: Wanpeng Li <wanpengli@tencent.com>
+> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > Link: https://lore.kernel.org/r/20240503131910.307630-4-mic@digikod.net
+> > ---
+> > 
+> > Changes since v1:
+> > * New patch. Making user space aware of Heki properties was requested by
+> >   Sean Christopherson.
+> 
+> No, I suggested having userspace _control_ the pinning[*], not merely be notified
+> of pinning.
+> 
+>  : IMO, manipulation of protections, both for memory (this patch) and CPU state
+>  : (control registers in the next patch) should come from userspace.  I have no
+>  : objection to KVM providing plumbing if necessary, but I think userspace needs to
+>  : to have full control over the actual state.
+>  : 
+>  : One of the things that caused Intel's control register pinning series to stall
+>  : out was how to handle edge cases like kexec() and reboot.  Deferring to userspace
+>  : means the kernel doesn't need to define policy, e.g. when to unprotect memory,
+>  : and avoids questions like "should userspace be able to overwrite pinned control
+>  : registers".
+>  : 
+>  : And like the confidential VM use case, keeping userspace in the loop is a big
+>  : beneifit, e.g. the guest can't circumvent protections by coercing userspace into
+>  : writing to protected memory.
+> 
+> I stand by that suggestion, because I don't see a sane way to handle things like
+> kexec() and reboot without having a _much_ more sophisticated policy than would
+> ever be acceptable in KVM.
+> 
+> I think that can be done without KVM having any awareness of CR pinning whatsoever.
+> E.g. userspace just needs to ability to intercept CR writes and inject #GPs.  Off
+> the cuff, I suspect the uAPI could look very similar to MSR filtering.  E.g. I bet
+> userspace could enforce MSR pinning without any new KVM uAPI at all.
+> 
+> [*] https://lore.kernel.org/all/ZFUyhPuhtMbYdJ76@google.com
 
-I guess this is a mirror of the kernel one at
-https://lore.kernel.org/lkml/20240327142241.1745989-1-aleksander.lobakin@in=
-tel.com/,
-but it would be nice to add some context, e.g. Link: tag, to this, and
-possibly a comment or two.
+OK, I had concern about the control not directly coming from the guest,
+especially in the case of pKVM and confidential computing, but I get you
+point.  It should indeed be quite similar to the MSR filtering on the
+userspace side, except that we need another interface for the guest to
+request such change (i.e. self-protection).
 
-Thanks!
-
-Cheers,
-Miguel
+Would it be OK to keep this new KVM_HC_LOCK_CR_UPDATE hypercall but
+forward the request to userspace with a VM exit instead?  That would
+also enable userspace to get the request and directly configure the CR
+pinning with the same VM exit.
