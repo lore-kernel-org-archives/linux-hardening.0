@@ -1,61 +1,61 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57A1156232
-	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 16:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402F015664F
+	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 16:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012869; cv=none; b=jU6B1uTrqDY73XwqO3YL+Ld5QEbv0VC3LXBWHARO9SX4XubdDvXbO44KiVM3PAYcA6ok9UJgtX7uAfK66kVDBfz6E8jWK9t2ljBfo/yi13GBKRADyCdyrTn4LTz1qpImvXHJzDw1sldAaMku76hB0mPDT5f4gR+RD1dtRwIf2mk=
+	t=1715012985; cv=none; b=A/NkoEHH/uP78nKc6EEeAfRlnaC6VuR4CWBKy39e93TALcMn5IKmBGpNdystBNncc3smHyxWejocSk4fxRo2aNExkSougEl9Pzx5F+cQ8dVHUFpJHIs0AixW3nhVamuyRTc+061U8pm5PQoC4CKxxmY6e9gCOfQJVi0YBsjOits=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012869; c=relaxed/simple;
-	bh=BIZlorch0tOfWgLcDNbvKqrhtK4P+bKgxAxpz0AQEf4=;
+	s=arc-20240116; t=1715012985; c=relaxed/simple;
+	bh=djIR0MvTC9on7MEXMWdmMMuXY59ptlBzgD64Z//dn/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyFoiu5UsLpXurMzvF/clXBM4GXd74oNcykErIWYeosuCI92A5c1/b2zReQNhy5cWBcR5sxUtSLefzE9mjGWlWrbpubF0gbNQHZTGigQkfbjvEWHzW3U/dcWNC3RGozu/lB5vM/djSxyBbj5CgQTgC6mDsVvt7mutXeCkoKglEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f+j3JvGf; arc=none smtp.client-ip=209.85.210.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=hus9u0H7ZpibKz4jkwn88OEzt8ZWwBMI8mbW4akc5MIw9KFRTSAtGLor/cBPl5Qz2MuXoWjRhYOb39ds3TRNH4cqMd1j/BBxi1UWDfN/1y6Xxba9GKk8x5GJ1Uy7UzmuGfGqMfDuCET9pS8wSt8qZKCwEfScEYPhFJiiNZ2Eytw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WjJNqIgl; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f+j3JvGf"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f44e3fd382so1478928b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 06 May 2024 09:27:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WjJNqIgl"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso14867135ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 06 May 2024 09:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715012867; x=1715617667; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715012983; x=1715617783; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=odqzrPs//hj8WC38Rhd4Ch2SctDBzFte4EXtwtCBz3k=;
-        b=f+j3JvGf9+SLwdCCRoh/z+fBVTIciFD5uSUUmWj75mZrNrDttntkSwcWRBdvK3WIlq
-         TOlkOc06ETMXZzPvHfZHq/LThTBcKQC0gs6QEyjPuAkS5sT3HWfTEW4q5ZVuKhzQDU4e
-         Vljfnhf+8twqOwCv/OVQSAa9xBsqSCKxEBIRA=
+        bh=4FGZV4xevlS61uYYoN9aqvtjUqiITrQIdhJ8KhnBQtc=;
+        b=WjJNqIgl/xNbc0Z4JSdktZBtLsYGZn377nBuoOB4l0GFDbUP0GTt8cVZFWQeUJ/GXK
+         xP04so7EhkVihMbyWxtEA9IyqxoifoHgEdFdqO5mUfC164yZI+w38tlZoXi+XuitH0Lc
+         4pRQm2v9U17DJUa95lkE1fr5tWbR1TduUiDHE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715012867; x=1715617667;
+        d=1e100.net; s=20230601; t=1715012983; x=1715617783;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=odqzrPs//hj8WC38Rhd4Ch2SctDBzFte4EXtwtCBz3k=;
-        b=dMTZ/655MdsIc3YA28giSX00DHBZS5K2MJw5riW/dsflYOBXvUWsD8OKHy0BaNH4Zk
-         TejInalMgB+k5TjCVm0iG+JD1Vi3U91T/PXEONW6XOwJxwHZQUUxr1uxTjnKveHqCMBd
-         S60iv77tfgtFkV6Mkh0vFgT/lwPs+nOtZW3gbCeCV9jyWcjc/2scQkX4+jC7FtcYzUVS
-         NVPyEZQnj5GYHqFO/qE5kj76Z3i37KOc2GhARgT3TzcMgH86xXo9ts1u95ZXo2AteUIG
-         6QXDHV667Feud9Ey9wv+aboZBek4ESFbE5ZtDmiRhxR5gGYOAToQ7bvml9dyf/Zh0Rza
-         uUHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDV80CSz9TcGhNL6ZGXOG3MLsdbJUE2X03wj6I4dr+pK9YKvhz1X5Tt1DEFPljgm4lUiIczohG5TvrsjkTmfv8ie1v3XQgVZvibDHcz5j/
-X-Gm-Message-State: AOJu0YzwVPZ3vrN/hJ8LjLCA7QojMYa6nevvsf6BVHbHYmzwEYTK86EZ
-	8phH9axbLxf2KpBN1maya3eQLu4wJb/wuLivq+1l5vNKYIVNE1uFCecnxtfMVg==
-X-Google-Smtp-Source: AGHT+IFx5A8ojwQhkf5tzPyoBV+wXS8DrLII4KW7i+NfXJRNfcIe8ljx+OJPW04VragyCU8v5vFkvw==
-X-Received: by 2002:a05:6a00:2342:b0:6f3:ea4b:d1c1 with SMTP id j2-20020a056a00234200b006f3ea4bd1c1mr12045012pfj.1.1715012867078;
-        Mon, 06 May 2024 09:27:47 -0700 (PDT)
+        bh=4FGZV4xevlS61uYYoN9aqvtjUqiITrQIdhJ8KhnBQtc=;
+        b=Xwf3shSOVpxv3cwIlyc+l4q9XPR0LD9h8UWEZq+6z77BHW4DiZKQyK15p3RlPPx51a
+         lWRXJRgl4dnv98+kaSv3outqw/0bbjwPE2jVqp7SBZhq3c47EgqPSmEXIKh1j5My2VKd
+         +X++Y5sht4b8cUhBZnkIzuAtuBj05oxs6EI+L1vsQuUqEx2Qq0+1Pvigz8AUKuodeAe9
+         iQzZdHhnDHaRSb0xPfbddbdAOQjhULr3Gd4/hgpmGoM9jdQBX2VC4uItFqdVDbGJLHup
+         WALeoiiCOgGuU+D3OTsRgvHUgLEgDdz0WcUsr3y4kxwHo9ZovVnF7Go3IKwd1sdV6xrL
+         B5JA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnKXYvB/iV71Yyw6lcEE+LoijnLVo1DMBoRLIA06/Ph25VzT9UVHqJEaSF8edjOz8VEWhifRaLg4nHtLCKnAKwAkwVMfPoqjTIP7zzlhzA
+X-Gm-Message-State: AOJu0Ywjt64GIsn6pA41eSBLXkp/iKxhTjl4aYnxMjY/UA3rRf/PCZB2
+	vUzzSBgdXdndFHzd7wDgHe33V9Le6jOA37IfLOsOCajd+HK8HucBCzP6dT0DwQ==
+X-Google-Smtp-Source: AGHT+IFbFO7WG3T0AZk4k9Vs5NN+nUuBbULzCcUX9OeVRvDR9+EhwfFkTTZglRWvChOo6sF8QSal5A==
+X-Received: by 2002:a17:902:c40c:b0:1eb:dae:bd98 with SMTP id k12-20020a170902c40c00b001eb0daebd98mr13243215plk.51.1715012983437;
+        Mon, 06 May 2024 09:29:43 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ls30-20020a056a00741e00b006f4123491d2sm7951997pfb.108.2024.05.06.09.27.46
+        by smtp.gmail.com with ESMTPSA id im16-20020a170902bb1000b001ed33493868sm6958248plb.243.2024.05.06.09.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 09:27:46 -0700 (PDT)
-Date: Mon, 6 May 2024 09:27:46 -0700
+        Mon, 06 May 2024 09:29:43 -0700 (PDT)
+Date: Mon, 6 May 2024 09:29:42 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Sven Eckelmann <sven@narfation.org>,
+To: Sven Eckelmann <sven@narfation.org>
+Cc: Erick Archer <erick.archer@outlook.com>,
 	Marek Lindner <mareklindner@neomailbox.ch>,
 	Simon Wunderlich <sw@simonwunderlich.de>,
 	Antonio Quartulli <a@unstable.cc>,
-	"David S.  Miller" <davem@davemloft.net>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Nathan Chancellor <nathan@kernel.org>,
@@ -69,10 +69,11 @@ Cc: Sven Eckelmann <sven@narfation.org>,
 	Alexander Lobakin <aleksander.lobakin@intel.com>
 Subject: Re: [PATCH v3] batman-adv: Add flex array to struct
  batadv_tvlv_tt_data
-Message-ID: <202405060924.4001F77D@keescook>
+Message-ID: <202405060928.272B235@keescook>
 References: <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
  <3932737.ElGaqSPkdT@sven-l14>
  <AS8PR02MB723738E5107C240933E4E0F28B1E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <9977759.T7Z3S40VBb@sven-l14>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,90 +82,89 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR02MB723738E5107C240933E4E0F28B1E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <9977759.T7Z3S40VBb@sven-l14>
 
-On Sat, May 04, 2024 at 07:08:39PM +0200, Erick Archer wrote:
-> Hi Sven,
-> 
-> On Sat, May 04, 2024 at 11:35:38AM +0200, Sven Eckelmann wrote:
-> > On Wednesday, 1 May 2024 17:02:42 CEST Erick Archer wrote:
-> > > diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
-> > > index 6e25753015df..dfbe30536995 100644
-> > > --- a/include/uapi/linux/batadv_packet.h
-> > > +++ b/include/uapi/linux/batadv_packet.h
-> > [...]
-> > > +/**
-> > > + * struct batadv_tvlv_tt_data - tt data propagated through the tt tvlv container
-> > > + * @flags: translation table flags (see batadv_tt_data_flags)
-> > > + * @ttvn: translation table version number
-> > > + * @num_vlan: number of announced VLANs. In the TVLV this struct is followed by
-> > > + *  one batadv_tvlv_tt_vlan_data object per announced vlan
-> > > + * @vlan_data: array of batadv_tvlv_tt_vlan_data objects
-> > > + */
-> > > +struct batadv_tvlv_tt_data {
-> > > +       __u8   flags;
-> > > +       __u8   ttvn;
-> > > +       __be16 num_vlan;
-> > > +       struct batadv_tvlv_tt_vlan_data vlan_data[] __counted_by_be(num_vlan);
-> > > +};
+On Sun, May 05, 2024 at 05:22:10PM +0200, Sven Eckelmann wrote:
+> On Saturday, 4 May 2024 19:08:39 CEST Erick Archer wrote:
+> [...]
+> > > Thanks for the updates. But I can't accept this at the moment because 
+> > > __counted_by_be is used in an uapi header without it being defined
+> > > include/uapi/linux/stddef.h (and this file is also not included in this 
+> > > header).
+> > > 
+> > > See commit c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and 
+> > > identifier expansion") as an example for the similar __counted_by macro.
 > > 
-> > Thanks for the updates. But I can't accept this at the moment because 
-> > __counted_by_be is used in an uapi header without it being defined
-> > include/uapi/linux/stddef.h (and this file is also not included in this 
-> > header).
+> > If I understand correctly, the following changes are also needed because
+> > the annotated struct is defined in a "uapi" header. Sorry if it's a stupid
+> > question, but I'm new to these topics.
+> 
+> No, it is absolutely no stupid question.
+> 
+> > diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
+> > index 6e25753015df..41f39d7661c9 100644
+> > --- a/include/uapi/linux/batadv_packet.h
+> > +++ b/include/uapi/linux/batadv_packet.h
+> > @@ -9,6 +9,7 @@
 > > 
-> > See commit c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and 
-> > identifier expansion") as an example for the similar __counted_by macro.
+> >  #include <asm/byteorder.h>
+> >  #include <linux/if_ether.h>
+> > +#include <linux/stddef.h>
+> >  #include <linux/types.h>
+> > 
+> >  /**
 > 
-> If I understand correctly, the following changes are also needed because
-> the annotated struct is defined in a "uapi" header. Sorry if it's a stupid
-> question, but I'm new to these topics.
+> This must definitely go into your "original" patch
 > 
-> diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
-> index 6e25753015df..41f39d7661c9 100644
-> --- a/include/uapi/linux/batadv_packet.h
-> +++ b/include/uapi/linux/batadv_packet.h
-> @@ -9,6 +9,7 @@
+> > diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+> > index 2ec6f35cda32..58154117d9b0 100644
+> > --- a/include/uapi/linux/stddef.h
+> > +++ b/include/uapi/linux/stddef.h
+> > @@ -55,4 +55,12 @@
+> >  #define __counted_by(m)
+> >  #endif
+> > 
+> > +#ifndef __counted_by_le
+> > +#define __counted_by_le(m)
+> > +#endif
 > 
->  #include <asm/byteorder.h>
->  #include <linux/if_ether.h>
-> +#include <linux/stddef.h>
->  #include <linux/types.h>
+> If you want to add this (for completeness) then please put it in an extra 
+> patch. It is simply not used by batman-adv and I would not be able to find any 
+> justification why it should be part of the batman-adv patch.
 > 
->  /**
-> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-> index 2ec6f35cda32..58154117d9b0 100644
-> --- a/include/uapi/linux/stddef.h
-> +++ b/include/uapi/linux/stddef.h
-> @@ -55,4 +55,12 @@
->  #define __counted_by(m)
->  #endif
+> > +
+> > +#ifndef __counted_by_be
+> > +#define __counted_by_be(m)
+> > +#endif
+> > +
 > 
-> +#ifndef __counted_by_le
-> +#define __counted_by_le(m)
-> +#endif
-> +
-> +#ifndef __counted_by_be
-> +#define __counted_by_be(m)
-> +#endif
-> +
->  #endif /* _UAPI_LINUX_STDDEF_H */
+> This part can be either:
+> 
+> * in the batman-adv patch
+> * or together with the __counted_by_le change in an additional patch which is 
+>   "in front" of the batman-adv patch (in the patch series).
+> 
+> From my perspective, it is for you to decide - but of course, other 
+> maintainers might have a different opinion about it.
+> 
+> >  #endif /* _UAPI_LINUX_STDDEF_H */
+> > 
+> > If this is the right path, can these changes be merged into a
+> > single patch or is it better to add a previous patch to define
+> > __counted_by{le,be}?
+> 
+> I don't have a perfect answer here. See the comments above. The file 
+> include/uapi/linux/stddef.h doesn't have a specific maintainer (according to 
+> ./scripts/get_maintainer.pl) - so it should be fine to get modified through 
+> the net-next tree.
+> 
+> But maybe Kees Cook has a different opinion about it. At least there are a lot 
+> of Signed-off-bys for this file by Kees.
 
-Yup, this is needed for UAPI as you have it. Thanks! I should have noticed
-the need for this when I reviewed commit ca7e324e8ad3 ("compiler_types:
-add Endianness-dependent __counted_by_{le,be}").
-
-> If this is the right path, can these changes be merged into a
-> single patch or is it better to add a previous patch to define
-> __counted_by{le,be}?
-
-We're almost on top of the merge window, so how about this: send me a
-patch for just the UAPI addition, and I'll include it in this coming (next
-week expected) merge window. Once -rc2 is out, re-send this batman-adv
-patch since then netdev will be merged with -rc2 and the UAPI change
-will be there.
-
--Kees
+FWIW, I'm also fine with the UAPI going in via netdev. It's the most
+likely place to use the be/le variants. Is netdev still open for
+patches? Whatever the path, we should get it into this coming merge
+window so we can use it elsewhere too if we need it.
 
 -- 
 Kees Cook
