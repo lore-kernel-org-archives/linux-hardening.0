@@ -1,147 +1,168 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (out-69.smtpout.orange.fr [193.252.22.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A1E1D52C
-	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 17:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7E28494;
+	Mon,  6 May 2024 18:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715017822; cv=none; b=FGz+/HvWaH7VSEcwlDEaW4LzQYr4n2Ieh8hP1wlRvGKnqcMq4ae/KvCFdIu3SnNo6z8M7BZGGVggQ+fP1lPFS0wdXQjCgm7OLsHIs/f0iPNFmuYG+3Nc2z/5aXh0FCdbXP0hYt5PUqrOePJfe6p6I+MQItOZm14BRM6mDQo8Ntw=
+	t=1715021869; cv=none; b=o4QnpTNC+WlIxrEUC1lgwCUOUJs/Pk5AqpouOwC2golW1cJ8jLzelVDtIDAtec3tO29DFxdDPGdetiU+b/oLZKeEulQgfxTI+B47ken9V48wQSEexC8x9e1TtF2+R+Je7d7zABSrIB/TJChyM5vSaxySqqq8BaDUiw2YH09abro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715017822; c=relaxed/simple;
-	bh=FeafhCaExu57qsacTj62dWRUdrBXKjPBuLT9vOLipXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wkfc3exlYY/GsKkob0irgtJkcWosAhmAw2bKPQMlctX+2ruMAIcYOITlJ4kOrGEYD/1BtNeGOVbJy0qNcv27e5Zaov/rRpq4ZvjLTCQ5cNrofMkwUHGOL5/wUVlPa8YN5HabR+RKEw/Gg1XzIiYLO1rgkZPqPb3f3Fw/+jUrHmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=mGwJTwDH; arc=none smtp.client-ip=45.157.188.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1715021869; c=relaxed/simple;
+	bh=GAhjzktko9OJNax9dYX89eovXWodEDQfe816vqcI7KY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kZ0dZoNv1ACF1F53pDtIEFCXDZ1rtsdZ0ScWzLP4wj5FASNb2iS2P1PXwe7K6QDfqJmIn7RF6amYwopnbDCi6zVOBCLjH0UI/yqTWQyp3k/kflZ53Lb7j0l2JZbd7bm3RXE+aAoK/807MSKTcl54si4wATExYuiO6101y3KVWiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dGqovjk8; arc=none smtp.client-ip=193.252.22.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="mGwJTwDH"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VY87s1JrnzP8k;
-	Mon,  6 May 2024 19:50:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1715017816;
-	bh=FeafhCaExu57qsacTj62dWRUdrBXKjPBuLT9vOLipXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mGwJTwDHmCYyRVABfvivVlR645+s55YE3ikqtGU8J06uhEpc53bUE7Ls8lVECmSJY
-	 ZoGZR6nkUaCWIF86rf6UUOQ30vsnFTU+oyKVa5juk1cYq6aZPMMxOD7Adtf6s6Qe8Z
-	 /vj4j5MGtH+BC89lqOLDnwO6/+q161VQ+b28m63o=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VY87p5F0GzB95;
-	Mon,  6 May 2024 19:50:14 +0200 (CEST)
-Date: Mon, 6 May 2024 19:50:13 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
-	Angelina Vu <angelinavu@linux.microsoft.com>, Anna Trikalinou <atrikalinou@microsoft.com>, 
-	Chao Peng <chao.p.peng@linux.intel.com>, Forrest Yuan Yu <yuanyu@google.com>, 
-	James Gowans <jgowans@amazon.com>, James Morris <jamorris@linux.microsoft.com>, 
-	John Andersen <john.s.andersen@intel.com>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
-	Marian Rotariu <marian.c.rotariu@gmail.com>, Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>, 
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
-	Yu Zhang <yu.c.zhang@linux.intel.com>, =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>, 
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org, 
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-Message-ID: <20240506.ohwe7eewu0oB@digikod.net>
-References: <20240503131910.307630-1-mic@digikod.net>
- <20240503131910.307630-4-mic@digikod.net>
- <ZjTuqV-AxQQRWwUW@google.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dGqovjk8"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 4303s7MviME2z4303s0Gms; Mon, 06 May 2024 20:23:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1715019829;
+	bh=vwITn4CstTzZtAQHEM9ECl1VAD7MHWLyJIGr0JqDJWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=dGqovjk8SpXn+6fzebG7jnal19Q9YCOe4fQ71SJ2pHcDylCc9zwstLn198z9fAnSc
+	 kGLiPW7zOmVLTimp1JWnQC1tfZZEMQzu33s73nO1THQfHx8dDoRKkG5+Cc9CChsFMb
+	 dVLXabdsyBl1aq89K9kkXBeV1W3COUGw9yuGrDNLG7l0zrKsY3+bUbrryxjpIw4kVC
+	 y/cB9NsqVfHOOBjbqphmRvNggJR0/CwzgC/rWrW169SeQvOL9DX7z9pc71BwJo3EFN
+	 klsXlnu3HhSfimK8QjXXheWEkyBwRsHCrKrdQ+sLzOZy9a+mEk4Ly5xI1kxctiuws9
+	 BfpUu8Q9rDsWg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 06 May 2024 20:23:49 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <b3509a36-1fbc-4311-853b-bb5e6d25f0ad@wanadoo.fr>
+Date: Mon, 6 May 2024 20:23:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/ring_buffer: Prefer struct_size over open coded
+ arithmetic
+To: Kees Cook <keescook@chromium.org>, Erick Archer <erick.archer@outlook.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+References: <AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <51a49bae-bd91-428e-b476-f862711453a0@wanadoo.fr>
+ <AS8PR02MB7237EF9D1962834BE4D2C5F88B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202405060856.53AFAE4F22@keescook>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <202405060856.53AFAE4F22@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjTuqV-AxQQRWwUW@google.com>
-X-Infomaniak-Routing: alpha
 
-On Fri, May 03, 2024 at 07:03:21AM GMT, Sean Christopherson wrote:
-> On Fri, May 03, 2024, Mickaël Salaün wrote:
-> > Add an interface for user space to be notified about guests' Heki policy
-> > and related violations.
-> > 
-> > Extend the KVM_ENABLE_CAP IOCTL with KVM_CAP_HEKI_CONFIGURE and
-> > KVM_CAP_HEKI_DENIAL. Each one takes a bitmask as first argument that can
-> > contains KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4. The
-> > returned value is the bitmask of known Heki exit reasons, for now:
-> > KVM_HEKI_EXIT_REASON_CR0 and KVM_HEKI_EXIT_REASON_CR4.
-> > 
-> > If KVM_CAP_HEKI_CONFIGURE is set, a VM exit will be triggered for each
-> > KVM_HC_LOCK_CR_UPDATE hypercalls according to the requested control
-> > register. This enables to enlighten the VMM with the guest
-> > auto-restrictions.
-> > 
-> > If KVM_CAP_HEKI_DENIAL is set, a VM exit will be triggered for each
-> > pinned CR violation. This enables the VMM to react to a policy
-> > violation.
-> > 
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: H. Peter Anvin <hpa@zytor.com>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Sean Christopherson <seanjc@google.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > Cc: Wanpeng Li <wanpengli@tencent.com>
-> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > Link: https://lore.kernel.org/r/20240503131910.307630-4-mic@digikod.net
-> > ---
-> > 
-> > Changes since v1:
-> > * New patch. Making user space aware of Heki properties was requested by
-> >   Sean Christopherson.
+Le 06/05/2024 à 18:23, Kees Cook a écrit :
+> On Sun, May 05, 2024 at 07:31:24PM +0200, Erick Archer wrote:
+>> On Sun, May 05, 2024 at 05:24:55PM +0200, Christophe JAILLET wrote:
+>>> Le 05/05/2024 à 16:15, Erick Archer a écrit :
+>>>> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+>>>> index 4013408ce012..080537eff69f 100644
+>>>> --- a/kernel/events/ring_buffer.c
+>>>> +++ b/kernel/events/ring_buffer.c
+>>>> @@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>>>>    	unsigned long size;
+>>>
+>>> Hi,
+>>>
+>>> Should size be size_t?
+>>
+>> I'm sorry, but I don't have enough knowledge to answer this question.
+>> The "size" variable is used as a return value by struct_size and as
+>> a parameter to the order_base_2() and kzalloc_node() functions.
 > 
-> No, I suggested having userspace _control_ the pinning[*], not merely be notified
-> of pinning.
+> For Linux, size_t and unsigned long are the same (currently).
+> Pedantically, yes, this should be size_t, but it's the same.
 > 
->  : IMO, manipulation of protections, both for memory (this patch) and CPU state
->  : (control registers in the next patch) should come from userspace.  I have no
->  : objection to KVM providing plumbing if necessary, but I think userspace needs to
->  : to have full control over the actual state.
->  : 
->  : One of the things that caused Intel's control register pinning series to stall
->  : out was how to handle edge cases like kexec() and reboot.  Deferring to userspace
->  : means the kernel doesn't need to define policy, e.g. when to unprotect memory,
->  : and avoids questions like "should userspace be able to overwrite pinned control
->  : registers".
->  : 
->  : And like the confidential VM use case, keeping userspace in the loop is a big
->  : beneifit, e.g. the guest can't circumvent protections by coercing userspace into
->  : writing to protected memory.
+>> [...]
+>>> 	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
+>>> 	if (!all_buf)
+>>> 		goto fail_all_buf;
+>>>
+>>> 	rb->user_page = all_buf;
+>>> 	rb->data_pages[0] = all_buf + PAGE_SIZE;
+>>> 	if (nr_pages) {					<--- here
+>>> 		rb->nr_pages = 1;			<---
+>>> 		rb->page_order = ilog2(nr_pages);
+>>> 	}
+>> [...]
+>> I think that we don't need to deal with the "nr_pages = 0" case
+>> since the flex array will always have a length of one.
+>>
+>> Kees, can you help us with this?
 > 
-> I stand by that suggestion, because I don't see a sane way to handle things like
-> kexec() and reboot without having a _much_ more sophisticated policy than would
-> ever be acceptable in KVM.
+> Agh, this code hurt my head for a while.
 > 
-> I think that can be done without KVM having any awareness of CR pinning whatsoever.
-> E.g. userspace just needs to ability to intercept CR writes and inject #GPs.  Off
-> the cuff, I suspect the uAPI could look very similar to MSR filtering.  E.g. I bet
-> userspace could enforce MSR pinning without any new KVM uAPI at all.
+> all_buf contains "nr_pages + 1" pages. all_buf gets attached to
+> rb->user_page, and then rb->data_pages[0] points to the second page in
+> all_buf... which means, I guess, that rb->data_pages does only have 1
+> entry.
 > 
-> [*] https://lore.kernel.org/all/ZFUyhPuhtMbYdJ76@google.com
+> However, the nr_pages == 0 case is weird. Currently, data_pages[0] will
+> still get set (which points ... off the end of all_buf). If we
+> unconditionally set rb->nr_pages to 1, we're changing the behavior. If
+> we _don't_ set rb->data_pages[0], we're changing the behavior, but I
+> think it's an invalid pointer anyway, so this is the safer change to
+> make. I suspect the right replacement is:
+> 
+> 
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 4013408ce012..7d638ce76799 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -916,15 +916,11 @@ void rb_free(struct perf_buffer *rb)
+>   struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>   {
+>   	struct perf_buffer *rb;
+> -	unsigned long size;
+>   	void *all_buf;
+>   	int node;
+>   
+> -	size = sizeof(struct perf_buffer);
+> -	size += sizeof(void *);
+> -
+>   	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+> -	rb = kzalloc_node(size, GFP_KERNEL, node);
+> +	rb = kzalloc_node(struct_size(rb, nr_pages, 1), GFP_KERNEL, node);
+>   	if (!rb)
+>   		goto fail;
+>   
+> @@ -935,9 +931,9 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
+>   		goto fail_all_buf;
+>   
+>   	rb->user_page = all_buf;
+> -	rb->data_pages[0] = all_buf + PAGE_SIZE;
+>   	if (nr_pages) {
+>   		rb->nr_pages = 1;
+> +		rb->data_pages[0] = all_buf + PAGE_SIZE;
+>   		rb->page_order = ilog2(nr_pages);
+>   	}
 
-OK, I had concern about the control not directly coming from the guest,
-especially in the case of pKVM and confidential computing, but I get you
-point.  It should indeed be quite similar to the MSR filtering on the
-userspace side, except that we need another interface for the guest to
-request such change (i.e. self-protection).
+This is also what make the most sense to me.
 
-Would it be OK to keep this new KVM_HC_LOCK_CR_UPDATE hypercall but
-forward the request to userspace with a VM exit instead?  That would
-also enable userspace to get the request and directly configure the CR
-pinning with the same VM exit.
+CJ
+
+>   
+> 
+> 
+> Also, why does rb_alloc() take an "int" nr_pages? The only caller has an
+> unsigned long argument for nr_pages. Nothing checks for >INT_MAX that I
+> can find.
+> 
+
