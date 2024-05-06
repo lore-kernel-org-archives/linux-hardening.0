@@ -1,181 +1,170 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C36155A4F
-	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 16:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57A1156232
+	for <linux-hardening@vger.kernel.org>; Mon,  6 May 2024 16:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012600; cv=none; b=T1eVCNVvu0OgycGjzA1swRIaISWle57hgZjya/9tmCB4Ggb7CKuH1T/RQEXEacZgnC0ZHVyYHBH+mloXavpWzFEMLnNB9+LX5k9jhX4h23vnlr0xhPT03/mp2vF+EA/PhGjZYekX4uvKFfaR02rRnw0ckXzdJ0/ww/PTyzVqjnY=
+	t=1715012869; cv=none; b=jU6B1uTrqDY73XwqO3YL+Ld5QEbv0VC3LXBWHARO9SX4XubdDvXbO44KiVM3PAYcA6ok9UJgtX7uAfK66kVDBfz6E8jWK9t2ljBfo/yi13GBKRADyCdyrTn4LTz1qpImvXHJzDw1sldAaMku76hB0mPDT5f4gR+RD1dtRwIf2mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012600; c=relaxed/simple;
-	bh=LmralNm+INcoHI7lRkYYhgaqtwLlW+YAk6+Qe8w60Hs=;
+	s=arc-20240116; t=1715012869; c=relaxed/simple;
+	bh=BIZlorch0tOfWgLcDNbvKqrhtK4P+bKgxAxpz0AQEf4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CfMu+5jx/jk2KaFZRFMBCPw/+Xr1BW/hP5Foue7RzPka6MICESv7k80NMvlERM5KhSsUft4niGOHuyzKH+tJx1jESazn7G31kDPpMcv+WWWIfcSuMI7I9VMbpNCFYcE9pdneVUYnc5KmmTTOSg7vgKEvzp/18eIY5s5FCTZfc1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gUomEPKJ; arc=none smtp.client-ip=209.85.210.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=HyFoiu5UsLpXurMzvF/clXBM4GXd74oNcykErIWYeosuCI92A5c1/b2zReQNhy5cWBcR5sxUtSLefzE9mjGWlWrbpubF0gbNQHZTGigQkfbjvEWHzW3U/dcWNC3RGozu/lB5vM/djSxyBbj5CgQTgC6mDsVvt7mutXeCkoKglEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f+j3JvGf; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gUomEPKJ"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so1476072b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 06 May 2024 09:23:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f+j3JvGf"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f44e3fd382so1478928b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 06 May 2024 09:27:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715012598; x=1715617398; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ko9WKImq7Hf52RsrSv/3I6aINHKA2FDCht5+ZvEf+MA=;
-        b=gUomEPKJ4SYFTitiegRtjuy6AfoMjBU8NzcRcGJiBeqLXinT/Bv8EwoWmblRGLnZs1
-         GXYvehrcOg6SPPMtRdL3e7D1xBTYJNOlOk/VcYnJFwA3nPwSSwFLmCVi0egHA/yYPGRz
-         w1TdeludKLaC2kwKW3qZaQZAQzlGxa0ZErvvY=
+        d=chromium.org; s=google; t=1715012867; x=1715617667; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=odqzrPs//hj8WC38Rhd4Ch2SctDBzFte4EXtwtCBz3k=;
+        b=f+j3JvGf9+SLwdCCRoh/z+fBVTIciFD5uSUUmWj75mZrNrDttntkSwcWRBdvK3WIlq
+         TOlkOc06ETMXZzPvHfZHq/LThTBcKQC0gs6QEyjPuAkS5sT3HWfTEW4q5ZVuKhzQDU4e
+         Vljfnhf+8twqOwCv/OVQSAa9xBsqSCKxEBIRA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715012598; x=1715617398;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ko9WKImq7Hf52RsrSv/3I6aINHKA2FDCht5+ZvEf+MA=;
-        b=Lh8uQsiEERcVdZjnDFe2FQuZ/Nf0kDDBp57SPHXQ8nBGvPbPhXX3SyopBjKDyZQnck
-         I2IpFXL6ISbz81xh8yYf+6sOG5e1JbXmxYTVepUyihLTDYnYwlsjMhStGkRXegsxixbp
-         QAbi+J7Yr+zIQxldISl4b+qRci48FXKGhWj8swtN+TOF8z6HHNcw8LoFBByUbW1DG1ZD
-         p8WdMJm6wvlWoT+eQHrQ9PZ6BP6MLv2UOpvu7TkHE7WgORIwys2CBB91zS8oU0U+JzVS
-         cS2p9j1n6eKQjYsyts8LvMmHmerx0xlDXlG9ONr6jFyXmtxzFfmCRv205b3WDgOUe53r
-         Rxuw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Kckg4UnE/UPXZduWSRJl1UDhC7umjH6cj2At876fyVmJLy6WkWrImE9YrgSB6U20HkxCTmFHZa/q6JbKefCnXngaFx9sc8BW0EHqd+/2
-X-Gm-Message-State: AOJu0Yx6L7B59F61admkhLlFxceaSnSWoVj2huneqiHiugfFtFnapcKo
-	RQVVzvZcMoIziaXJjVTcJLh6aqGKJaN4Y5bK2VpEoD1T1dsjLpEcTEpS6YCdRw==
-X-Google-Smtp-Source: AGHT+IHBKdEzGGuJeQi6vNrQbny3eObyZhGrzgxQ5sxwJNu3FZZ7PzBBOuu9uKfhxKRRkHIToQb5DA==
-X-Received: by 2002:a05:6a00:885:b0:6f4:179a:fa5 with SMTP id q5-20020a056a00088500b006f4179a0fa5mr12305611pfj.31.1715012597581;
-        Mon, 06 May 2024 09:23:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715012867; x=1715617667;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=odqzrPs//hj8WC38Rhd4Ch2SctDBzFte4EXtwtCBz3k=;
+        b=dMTZ/655MdsIc3YA28giSX00DHBZS5K2MJw5riW/dsflYOBXvUWsD8OKHy0BaNH4Zk
+         TejInalMgB+k5TjCVm0iG+JD1Vi3U91T/PXEONW6XOwJxwHZQUUxr1uxTjnKveHqCMBd
+         S60iv77tfgtFkV6Mkh0vFgT/lwPs+nOtZW3gbCeCV9jyWcjc/2scQkX4+jC7FtcYzUVS
+         NVPyEZQnj5GYHqFO/qE5kj76Z3i37KOc2GhARgT3TzcMgH86xXo9ts1u95ZXo2AteUIG
+         6QXDHV667Feud9Ey9wv+aboZBek4ESFbE5ZtDmiRhxR5gGYOAToQ7bvml9dyf/Zh0Rza
+         uUHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDV80CSz9TcGhNL6ZGXOG3MLsdbJUE2X03wj6I4dr+pK9YKvhz1X5Tt1DEFPljgm4lUiIczohG5TvrsjkTmfv8ie1v3XQgVZvibDHcz5j/
+X-Gm-Message-State: AOJu0YzwVPZ3vrN/hJ8LjLCA7QojMYa6nevvsf6BVHbHYmzwEYTK86EZ
+	8phH9axbLxf2KpBN1maya3eQLu4wJb/wuLivq+1l5vNKYIVNE1uFCecnxtfMVg==
+X-Google-Smtp-Source: AGHT+IFx5A8ojwQhkf5tzPyoBV+wXS8DrLII4KW7i+NfXJRNfcIe8ljx+OJPW04VragyCU8v5vFkvw==
+X-Received: by 2002:a05:6a00:2342:b0:6f3:ea4b:d1c1 with SMTP id j2-20020a056a00234200b006f3ea4bd1c1mr12045012pfj.1.1715012867078;
+        Mon, 06 May 2024 09:27:47 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c26-20020aa781da000000b006e6b2ba1577sm7892362pfn.138.2024.05.06.09.23.16
+        by smtp.gmail.com with ESMTPSA id ls30-20020a056a00741e00b006f4123491d2sm7951997pfb.108.2024.05.06.09.27.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 09:23:17 -0700 (PDT)
-Date: Mon, 6 May 2024 09:23:15 -0700
+        Mon, 06 May 2024 09:27:46 -0700 (PDT)
+Date: Mon, 6 May 2024 09:27:46 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Erick Archer <erick.archer@outlook.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+Cc: Sven Eckelmann <sven@narfation.org>,
+	Marek Lindner <mareklindner@neomailbox.ch>,
+	Simon Wunderlich <sw@simonwunderlich.de>,
+	Antonio Quartulli <a@unstable.cc>,
+	"David S.  Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202405060856.53AFAE4F22@keescook>
-References: <AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <51a49bae-bd91-428e-b476-f862711453a0@wanadoo.fr>
- <AS8PR02MB7237EF9D1962834BE4D2C5F88B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	b.a.t.m.a.n@lists.open-mesh.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Alexander Lobakin <aleksander.lobakin@intel.com>
+Subject: Re: [PATCH v3] batman-adv: Add flex array to struct
+ batadv_tvlv_tt_data
+Message-ID: <202405060924.4001F77D@keescook>
+References: <AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <3932737.ElGaqSPkdT@sven-l14>
+ <AS8PR02MB723738E5107C240933E4E0F28B1E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR02MB7237EF9D1962834BE4D2C5F88B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB723738E5107C240933E4E0F28B1E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Sun, May 05, 2024 at 07:31:24PM +0200, Erick Archer wrote:
-> On Sun, May 05, 2024 at 05:24:55PM +0200, Christophe JAILLET wrote:
-> > Le 05/05/2024 à 16:15, Erick Archer a écrit :
-> > > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> > > index 4013408ce012..080537eff69f 100644
-> > > --- a/kernel/events/ring_buffer.c
-> > > +++ b/kernel/events/ring_buffer.c
-> > > @@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
-> > >   	unsigned long size;
-> > 
-> > Hi,
-> > 
-> > Should size be size_t?
+On Sat, May 04, 2024 at 07:08:39PM +0200, Erick Archer wrote:
+> Hi Sven,
 > 
-> I'm sorry, but I don't have enough knowledge to answer this question.
-> The "size" variable is used as a return value by struct_size and as
-> a parameter to the order_base_2() and kzalloc_node() functions.
-
-For Linux, size_t and unsigned long are the same (currently).
-Pedantically, yes, this should be size_t, but it's the same.
-
-> [...]
-> > 	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
-> >	if (!all_buf)
-> >		goto fail_all_buf;
-> >
-> >	rb->user_page = all_buf;
-> >	rb->data_pages[0] = all_buf + PAGE_SIZE;
-> >	if (nr_pages) {					<--- here
-> >		rb->nr_pages = 1;			<---
-> >		rb->page_order = ilog2(nr_pages);
-> >	}
-> [...]
-> I think that we don't need to deal with the "nr_pages = 0" case
-> since the flex array will always have a length of one.
+> On Sat, May 04, 2024 at 11:35:38AM +0200, Sven Eckelmann wrote:
+> > On Wednesday, 1 May 2024 17:02:42 CEST Erick Archer wrote:
+> > > diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
+> > > index 6e25753015df..dfbe30536995 100644
+> > > --- a/include/uapi/linux/batadv_packet.h
+> > > +++ b/include/uapi/linux/batadv_packet.h
+> > [...]
+> > > +/**
+> > > + * struct batadv_tvlv_tt_data - tt data propagated through the tt tvlv container
+> > > + * @flags: translation table flags (see batadv_tt_data_flags)
+> > > + * @ttvn: translation table version number
+> > > + * @num_vlan: number of announced VLANs. In the TVLV this struct is followed by
+> > > + *  one batadv_tvlv_tt_vlan_data object per announced vlan
+> > > + * @vlan_data: array of batadv_tvlv_tt_vlan_data objects
+> > > + */
+> > > +struct batadv_tvlv_tt_data {
+> > > +       __u8   flags;
+> > > +       __u8   ttvn;
+> > > +       __be16 num_vlan;
+> > > +       struct batadv_tvlv_tt_vlan_data vlan_data[] __counted_by_be(num_vlan);
+> > > +};
+> > 
+> > Thanks for the updates. But I can't accept this at the moment because 
+> > __counted_by_be is used in an uapi header without it being defined
+> > include/uapi/linux/stddef.h (and this file is also not included in this 
+> > header).
+> > 
+> > See commit c8248faf3ca2 ("Compiler Attributes: counted_by: Adjust name and 
+> > identifier expansion") as an example for the similar __counted_by macro.
 > 
-> Kees, can you help us with this?
+> If I understand correctly, the following changes are also needed because
+> the annotated struct is defined in a "uapi" header. Sorry if it's a stupid
+> question, but I'm new to these topics.
+> 
+> diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
+> index 6e25753015df..41f39d7661c9 100644
+> --- a/include/uapi/linux/batadv_packet.h
+> +++ b/include/uapi/linux/batadv_packet.h
+> @@ -9,6 +9,7 @@
+> 
+>  #include <asm/byteorder.h>
+>  #include <linux/if_ether.h>
+> +#include <linux/stddef.h>
+>  #include <linux/types.h>
+> 
+>  /**
+> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+> index 2ec6f35cda32..58154117d9b0 100644
+> --- a/include/uapi/linux/stddef.h
+> +++ b/include/uapi/linux/stddef.h
+> @@ -55,4 +55,12 @@
+>  #define __counted_by(m)
+>  #endif
+> 
+> +#ifndef __counted_by_le
+> +#define __counted_by_le(m)
+> +#endif
+> +
+> +#ifndef __counted_by_be
+> +#define __counted_by_be(m)
+> +#endif
+> +
+>  #endif /* _UAPI_LINUX_STDDEF_H */
 
-Agh, this code hurt my head for a while.
+Yup, this is needed for UAPI as you have it. Thanks! I should have noticed
+the need for this when I reviewed commit ca7e324e8ad3 ("compiler_types:
+add Endianness-dependent __counted_by_{le,be}").
 
-all_buf contains "nr_pages + 1" pages. all_buf gets attached to
-rb->user_page, and then rb->data_pages[0] points to the second page in
-all_buf... which means, I guess, that rb->data_pages does only have 1
-entry.
+> If this is the right path, can these changes be merged into a
+> single patch or is it better to add a previous patch to define
+> __counted_by{le,be}?
 
-However, the nr_pages == 0 case is weird. Currently, data_pages[0] will
-still get set (which points ... off the end of all_buf). If we
-unconditionally set rb->nr_pages to 1, we're changing the behavior. If
-we _don't_ set rb->data_pages[0], we're changing the behavior, but I
-think it's an invalid pointer anyway, so this is the safer change to
-make. I suspect the right replacement is:
+We're almost on top of the merge window, so how about this: send me a
+patch for just the UAPI addition, and I'll include it in this coming (next
+week expected) merge window. Once -rc2 is out, re-send this batman-adv
+patch since then netdev will be merged with -rc2 and the UAPI change
+will be there.
 
-
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 4013408ce012..7d638ce76799 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -916,15 +916,11 @@ void rb_free(struct perf_buffer *rb)
- struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- {
- 	struct perf_buffer *rb;
--	unsigned long size;
- 	void *all_buf;
- 	int node;
- 
--	size = sizeof(struct perf_buffer);
--	size += sizeof(void *);
--
- 	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
--	rb = kzalloc_node(size, GFP_KERNEL, node);
-+	rb = kzalloc_node(struct_size(rb, nr_pages, 1), GFP_KERNEL, node);
- 	if (!rb)
- 		goto fail;
- 
-@@ -935,9 +931,9 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 		goto fail_all_buf;
- 
- 	rb->user_page = all_buf;
--	rb->data_pages[0] = all_buf + PAGE_SIZE;
- 	if (nr_pages) {
- 		rb->nr_pages = 1;
-+		rb->data_pages[0] = all_buf + PAGE_SIZE;
- 		rb->page_order = ilog2(nr_pages);
- 	}
- 
-
-
-Also, why does rb_alloc() take an "int" nr_pages? The only caller has an
-unsigned long argument for nr_pages. Nothing checks for >INT_MAX that I
-can find.
+-Kees
 
 -- 
 Kees Cook
