@@ -1,192 +1,115 @@
-Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8D014E2CF;
-	Tue,  7 May 2024 09:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373F14EC4D
+	for <linux-hardening@vger.kernel.org>; Tue,  7 May 2024 09:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715074241; cv=none; b=lcnZy567l2cNR7m1hxD5UQPQ6c745bAKH8vyCmLBwBY023WogMN9WWOLu++8VUUA7vQ2gKMKjWx/Q52NX3A9xOKJoV/H0jIFa0sINAWZuuVrbxekXXJMeilrBEabRzpPXT69ildwpbDD2Vbj0PEe+DzEjzZ1CJy3Z4Y+8YC98iA=
+	t=1715075713; cv=none; b=PBJVzmdmiWzHD51pOclunxNdp0Vg5aEBfHuS2AETV+E6RKwtzrs4OK3cQlbsrHxKEuIlNNsBmhLtSsqqeAnmlQMSRZOOTSYew5WUIHcpIS8zy4jGd/0u+3d3O8d/lZtGnRkFh5YQaQriZcg2jXHsc+7pl5LAhKHI+VmPpqAn2b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715074241; c=relaxed/simple;
-	bh=N7C083XW9HErJ1+R52TKnyEZNzil5v9FCazYyr/JQx0=;
+	s=arc-20240116; t=1715075713; c=relaxed/simple;
+	bh=ySzqAdBy3XIuOsN+4M43h3v/XUU1e6byy3HPdS66zkI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sf7Rq3LSO4filKgrs8Pvrlcw6kTMud5eZu+PjE4JlLBnIEV7//h+fLHwq43Je0mAYf1hOA2m/Kdo5i95JWc9nZD9YpWkSaDYfAYKLY63aD9kgkb0dK9jsD+rqh91iefWPE94xx8iB4NcQ3UHqwt5gKyXjQ5Uh2OI6gs0fTytu9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=g4cR8t/i; arc=none smtp.client-ip=83.166.143.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=u1iX6MN+toc3NQjqwvKscOApn+n/JQAvJ5Q9SUjpO9GG1XCvh6KT6ashY1dyZ8drEh6nDjphA+XycEfdpvRHR7mBe7oEybvCkATquoNDdPlemGa2ALM3qDMsSm90KdElj6Ca/6Ibfdv0xdwojsS+R+QJegIrW7G7tCUhP5LCXa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V0dSg1IF; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="g4cR8t/i"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VYY0h64rLzhcB;
-	Tue,  7 May 2024 11:30:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1715074228;
-	bh=N7C083XW9HErJ1+R52TKnyEZNzil5v9FCazYyr/JQx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g4cR8t/iRRSN5giqF0Iwy3XXWNCfhqE/qqqfoxy0lSmFuyqhdQ4FyOhVfsBJ5BFWv
-	 xFaM80SdAPMBtmnCReKLZkFRcwvBisebzGQz+PahxsjXN1dm1r13uXB5fKC058GUn5
-	 E40tFjEfU9DKYpAc1PGGy+RZ3L2pJN9bZLXwuqBg=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VYY0d4NWlzhxd;
-	Tue,  7 May 2024 11:30:25 +0200 (CEST)
-Date: Tue, 7 May 2024 11:30:24 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
-	Angelina Vu <angelinavu@linux.microsoft.com>, Anna Trikalinou <atrikalinou@microsoft.com>, 
-	Chao Peng <chao.p.peng@linux.intel.com>, Forrest Yuan Yu <yuanyu@google.com>, 
-	James Gowans <jgowans@amazon.com>, James Morris <jamorris@linux.microsoft.com>, 
-	John Andersen <john.s.andersen@intel.com>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
-	Marian Rotariu <marian.c.rotariu@gmail.com>, Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>, 
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
-	Yu Zhang <yu.c.zhang@linux.intel.com>, =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>, 
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org, 
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-Message-ID: <20240507.ieghomae0UoC@digikod.net>
-References: <20240503131910.307630-1-mic@digikod.net>
- <20240503131910.307630-4-mic@digikod.net>
- <ZjTuqV-AxQQRWwUW@google.com>
- <20240506.ohwe7eewu0oB@digikod.net>
- <ZjmFPZd5q_hEBdBz@google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V0dSg1IF"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34db9a38755so2732071f8f.1
+        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 02:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1715075708; x=1715680508; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jhfsqJjab/igtBSwSRfO0D4527C8EIUuYcZOQelhvBc=;
+        b=V0dSg1IFxe1jQLFl2gadot4iA8yd3gwclG6/dmeZr0pa7k1QonT/afNaxbtj/T6yE3
+         F9C/uwty+h5F7YrQuOHKzclX+XKDHf8omtL8PFGzXyVUWwhOzUfO9aW9xeozf0P4U4pU
+         QyYkYngC0x6FOwWLtImJJWejto4AHVIKin5dfB8EE1kLAPWYFkHs4JC/YYoh7aEQ4CAf
+         AB9X+5AY1g2h1xqGSdN3QZ8pexdubdNPFxqYhmTtB4PQkmWuFEQ0e4nzSlJEpoq1U6ZV
+         m/qDyaKEh+MA7/Hg9ce2QuqVWt7CT1ujyoAkRWh/xJ5FghGTXcaNRr86e65vA3D8bl/B
+         wnpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715075708; x=1715680508;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jhfsqJjab/igtBSwSRfO0D4527C8EIUuYcZOQelhvBc=;
+        b=blRz+XgGRBR/hNA9BNM9hcyvXMg/AK09IBnIQQO7Ur83fQERodrnBmxSFEqoa2MUp+
+         lAGw5CWT8alKW3X4wn4XkNdgnIYEeAV2zO/f+BaKOfeipnKiN6jLukAEF2Acu52Tt7mF
+         DevtvivBj11reU+njypzka4FnLimzigDb5XB+wLwBvzzZyMeOdvEk8Wwa32qjGm4adXU
+         T4pt2TVEYCbo9QYsftK3S4KC8H0EQ3qAuo55UvzuobGjO3fELIAA8E9vNqXi1ORVXM6j
+         KG5jN9c7XyCMPD0Z0iu+SiXVtS4V64Ck+gVLm6p4UqRgdJLUnH1B5wxJWy7LOyZmyum7
+         n/Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPN9ZWtnQ5uXxt0l/WHBhz49fkaMhoa++I0vPAaRaCzFf9iaeqZPJ9WTjYcDE5kDMyKoiJYrAdiA+UDY8hm9jW4n0zPAPAAgrUlvE1pCrn
+X-Gm-Message-State: AOJu0Yzpj9XOo3cQKqONdDkCEa8Qix2/ydJE+bfvuoHWm+VULbxkQgdU
+	I76DQwSF3eG44P/yJ4iQocjWP/Z81BZCZDGH0uISpI4tKBxvcq8gIVW/8KnI7iY=
+X-Google-Smtp-Source: AGHT+IEnX+GiP1H1R7a/PVZu6gZKW9nIWDfc/aLhP5NK80VEMsnFZNqObUfhm9M51FbyUiTT3ER0zA==
+X-Received: by 2002:a5d:4903:0:b0:34a:beb3:f6dc with SMTP id x3-20020a5d4903000000b0034abeb3f6dcmr12404727wrq.2.1715075708291;
+        Tue, 07 May 2024 02:55:08 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id l27-20020a05600c1d1b00b0041c5151dc1csm22844866wms.29.2024.05.07.02.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 02:55:08 -0700 (PDT)
+Date: Tue, 7 May 2024 11:55:06 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
+Message-ID: <Zjn6ejJ9ecsuGsK2@pathway.suse.cz>
+References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjmFPZd5q_hEBdBz@google.com>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
 
-On Mon, May 06, 2024 at 06:34:53PM GMT, Sean Christopherson wrote:
-> On Mon, May 06, 2024, Mickaël Salaün wrote:
-> > On Fri, May 03, 2024 at 07:03:21AM GMT, Sean Christopherson wrote:
-> > > > ---
-> > > > 
-> > > > Changes since v1:
-> > > > * New patch. Making user space aware of Heki properties was requested by
-> > > >   Sean Christopherson.
-> > > 
-> > > No, I suggested having userspace _control_ the pinning[*], not merely be notified
-> > > of pinning.
-> > > 
-> > >  : IMO, manipulation of protections, both for memory (this patch) and CPU state
-> > >  : (control registers in the next patch) should come from userspace.  I have no
-> > >  : objection to KVM providing plumbing if necessary, but I think userspace needs to
-> > >  : to have full control over the actual state.
-> > >  : 
-> > >  : One of the things that caused Intel's control register pinning series to stall
-> > >  : out was how to handle edge cases like kexec() and reboot.  Deferring to userspace
-> > >  : means the kernel doesn't need to define policy, e.g. when to unprotect memory,
-> > >  : and avoids questions like "should userspace be able to overwrite pinned control
-> > >  : registers".
-> > >  : 
-> > >  : And like the confidential VM use case, keeping userspace in the loop is a big
-> > >  : beneifit, e.g. the guest can't circumvent protections by coercing userspace into
-> > >  : writing to protected memory.
-> > > 
-> > > I stand by that suggestion, because I don't see a sane way to handle things like
-> > > kexec() and reboot without having a _much_ more sophisticated policy than would
-> > > ever be acceptable in KVM.
-> > > 
-> > > I think that can be done without KVM having any awareness of CR pinning whatsoever.
-> > > E.g. userspace just needs to ability to intercept CR writes and inject #GPs.  Off
-> > > the cuff, I suspect the uAPI could look very similar to MSR filtering.  E.g. I bet
-> > > userspace could enforce MSR pinning without any new KVM uAPI at all.
-> > > 
-> > > [*] https://lore.kernel.org/all/ZFUyhPuhtMbYdJ76@google.com
-> > 
-> > OK, I had concern about the control not directly coming from the guest,
-> > especially in the case of pKVM and confidential computing, but I get you
+On Mon 2024-04-29 23:06:54, Justin Stitt wrote:
+> Cleanup some deprecated uses of strncpy() and strcpy() [1].
 > 
-> Hardware-based CoCo is completely out of scope, because KVM has zero visibility
-> into the guest (well, SNP technically allows trapping CR0/CR4, but KVM really
-> shouldn't intercept CR0/CR4 for SNP guests).
+> There doesn't seem to be any bugs with the current code but the
+> readability of this code could benefit from a quick makeover while
+> removing some deprecated stuff as a benefit.
 > 
-> And more importantly, _KVM_ doesn't define any policies for CoCo VMs.  KVM might
-> help enforce policies that are defined by hardware/firmware, but KVM doesn't
-> define any of its own.
+> The most interesting replacement made in this patch involves
+> concatenating "ttyS" with a digit-led user-supplied string. Instead of
+> doing two distinct string copies with carefully managed offsets and
+> lengths, let's use the more robust and self-explanatory scnprintf().
+> scnprintf will 1) respect the bounds of @buf, 2) null-terminate @buf, 3)
+> do the concatenation. This allows us to drop the manual NUL-byte assignment.
 > 
-> If pKVM on x86 comes along, then KVM will likely get in the business of defining
-> policy, but until that happens, KVM needs to stay firmly out of the picture.
+> Also, since isdigit() is used about a dozen lines after the open-coded
+> version we'll replace it for uniformity's sake.
 > 
-> > point.  It should indeed be quite similar to the MSR filtering on the
-> > userspace side, except that we need another interface for the guest to
-> > request such change (i.e. self-protection).
-> > 
-> > Would it be OK to keep this new KVM_HC_LOCK_CR_UPDATE hypercall but
-> > forward the request to userspace with a VM exit instead?  That would
-> > also enable userspace to get the request and directly configure the CR
-> > pinning with the same VM exit.
+> All the strcpy() --> strscpy() replacements are trivial as the source
+> strings are literals and much smaller than the destination size. No
+> behavioral change here.
 > 
-> No?  Maybe?  I strongly suspect that full support will need a richer set of APIs
-> than a single hypercall.  E.g. to handle kexec(), suspend+resume, emulated SMM,
-> and so on and so forth.  And that's just for CR pinning.
+> Use the new 2-argument version of strscpy() introduced in Commit
+> e6584c3964f2f ("string: Allow 2-argument strscpy()"). However, to make
+> this work fully (since the size must be known at compile time), also
+> update the extern-qualified declaration to have the proper size
+> information.
 > 
-> And hypercalls are hampered by the fact that VMCALL/VMMCALL don't allow for
-> delegation or restriction, i.e. there's no way for the guest to communicate to
-> the hypervisor that a less privileged component is allowed to perform some action,
-> nor is there a way for the guest to say some chunk of CPL0 code *isn't* allowed
-> to request transition.  Delegation and restriction all has to be done out-of-band.
-> 
-> It'd probably be more annoying to setup initially, but I think a synthetic device
-> with an MMIO-based interface would be more powerful and flexible in the long run.
-> Then userspace can evolve without needing to wait for KVM to catch up.
-> 
-> Actually, potential bad/crazy idea.  Why does the _host_ need to define policy?
-> Linux already knows what assets it wants to (un)protect and when.  What's missing
-> is a way for the guest kernel to effectively deprivilege and re-authenticate
-> itself as needed.  We've been tossing around the idea of paired VMs+vCPUs to
-> support VTLs and SEV's VMPLs, what if we usurped/piggybacked those ideas, with a
-> bit of pKVM mixed in?
-> 
-> Borrowing VTL terminology, where VTL0 is the least privileged, userspace launches
-> the VM at VTL0.  At some point, the guest triggers the deprivileging sequence and
-> userspace creates VTL1.  Userpace also provides a way for VTL0 restrict access to
-> its memory, e.g. to effectively make the page tables for the kernel's direct map
-> writable only from VTL1, to make kernel text RO (or XO), etc.  And VTL0 could then
-> also completely remove its access to code that changes CR0/CR4.
-> 
-> It would obviously require a _lot_ more upfront work, e.g. to isolate the kernel
-> text that modifies CR0/CR4 so that it can be removed from VTL0, but that should
-> be doable with annotations, e.g. tag relevant functions with __magic or whatever,
-> throw them in a dedicated section, and then free/protect the section(s) at the
-> appropriate time.
-> 
-> KVM would likely need to provide the ability to switch VTLs (or whatever they get
-> called), and host userspace would need to provide a decent amount of the backend
-> mechanisms and "core" policies, e.g. to manage VTL0 memory, teardown (turn off?)
-> VTL1 on kexec(), etc.  But everything else could live in the guest kernel itself.
-> E.g. to have CR pinning play nice with kexec(), toss the relevant kexec() code into
-> VTL1.  That way VTL1 can verify the kexec() target and tear itself down before
-> jumping into the new kernel. 
-> 
-> This is very off the cuff and have-wavy, e.g. I don't have much of an idea what
-> it would take to harden kernel text patching, but keeping the policy in the guest
-> seems like it'd make everything more tractable than trying to define an ABI
-> between Linux and a VMM that is rich and flexible enough to support all the
-> fancy things Linux does (and will do in the future).
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Yes, we agree that the guest needs to manage its own policy.  That's why
-we implemented Heki for KVM this way, but without VTLs because KVM
-doesn't support them.
+JFYI, the patch has been comitted into printk/linux.git, branch for-6.10.
 
-To sum up, is the VTL approach the only one that would be acceptable for
-KVM?  If yes, that would indeed require a *lot* of work for something
-we're not sure will be accepted later on.
+I have removed the obsoleted brackets and added some empty lines
+to break the blob of code a bit, see
+https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git/commit/?h=for-6.10&id=e0550222e03bae3fd629641e246ef7f47803d795
 
-> 
-> Am I crazy?  Or maybe reinventing whatever that McAfee thing was that led to
-> Intel implementing EPTP switching?
-> 
+Best Regards,
+Petr
+
