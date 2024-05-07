@@ -1,53 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123AF13CA8D;
-	Tue,  7 May 2024 08:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8D014E2CF;
+	Tue,  7 May 2024 09:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715071259; cv=none; b=kIkMsXnMuFJrDGh1WcljmzDxJmeSN40pWVuYFPl89s/OUibjcdc2LwdGwmUtFkzn8YlB6sxQGQshiqyjoDK6lxxHIznDiofuATNGS9tktc0JRv/gr35fq1E2RA5YMAqK/+rqKsC2mECTJ0d5pepsylcF3wD90k01lWDUbm9vjfc=
+	t=1715074241; cv=none; b=lcnZy567l2cNR7m1hxD5UQPQ6c745bAKH8vyCmLBwBY023WogMN9WWOLu++8VUUA7vQ2gKMKjWx/Q52NX3A9xOKJoV/H0jIFa0sINAWZuuVrbxekXXJMeilrBEabRzpPXT69ildwpbDD2Vbj0PEe+DzEjzZ1CJy3Z4Y+8YC98iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715071259; c=relaxed/simple;
-	bh=sUjfAESTunl9013EBi9dsmv2GLZ5rTVceLRbegv7l8I=;
+	s=arc-20240116; t=1715074241; c=relaxed/simple;
+	bh=N7C083XW9HErJ1+R52TKnyEZNzil5v9FCazYyr/JQx0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKIbnsDIBnDG6EuFvzxCbcSPW5IMZyGfO6YjIYDXvLQaDA7iCZra+ygqJCuRYy0cJ9Xke9AU4JRF5apqnRvZd5es94TgD1J4BwA6E/BmrICxThTRqpQ3Qk1MwThWvGVCN57sHGWcRnH3OIGRZCzh7Q4fsc4EBSoVOIpqkYZzQaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhSBliwr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sf7Rq3LSO4filKgrs8Pvrlcw6kTMud5eZu+PjE4JlLBnIEV7//h+fLHwq43Je0mAYf1hOA2m/Kdo5i95JWc9nZD9YpWkSaDYfAYKLY63aD9kgkb0dK9jsD+rqh91iefWPE94xx8iB4NcQ3UHqwt5gKyXjQ5Uh2OI6gs0fTytu9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=g4cR8t/i; arc=none smtp.client-ip=83.166.143.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhSBliwr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2607AC3277B;
-	Tue,  7 May 2024 08:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715071258;
-	bh=sUjfAESTunl9013EBi9dsmv2GLZ5rTVceLRbegv7l8I=;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="g4cR8t/i"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VYY0h64rLzhcB;
+	Tue,  7 May 2024 11:30:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1715074228;
+	bh=N7C083XW9HErJ1+R52TKnyEZNzil5v9FCazYyr/JQx0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KhSBliwrI/bU2fZ42hVY1khLzHigeyRIA/KhyOPr/A0NKIb3ugHhAkZYBAYYg78+4
-	 nDFLqlYda/5fbLCZhTM/cMxc9mM2X5Dw3nAeNJFVsLQReagAvalOWQd+4dWCwnI1WR
-	 yjWc+JBRcVIdp0YdqdB0fYPDFlAuhysswwhXi86TgowjWEDnXJ3o7dkyo00xCMy5eN
-	 D6ZKTyybzFg+so1fTvzcXQK/v8K3FIoKubLjPQKCtHRsvjYB65fMeK/GhoibnrZ866
-	 97fyP0TE8kIdSkfuEaADnQyyLKWndlw9vs9NiwCdPbrmQ0OUGmb117mNbbur88tUeq
-	 3m7Hrytq62LpA==
-Date: Tue, 7 May 2024 09:40:52 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] leds: sy7802: Add support for Silergy SY7802
- flash LED controller
-Message-ID: <20240507084052.GW1227636@google.com>
-References: <20240401-sy7802-v2-0-1138190a7448@apitzsch.eu>
- <20240401-sy7802-v2-2-1138190a7448@apitzsch.eu>
- <20240411124855.GJ1980182@google.com>
- <20240503071953.GD1227636@google.com>
- <3309a9f1f5848681d0acf3bfdf9b6525fc88e1bc.camel@apitzsch.eu>
+	b=g4cR8t/iRRSN5giqF0Iwy3XXWNCfhqE/qqqfoxy0lSmFuyqhdQ4FyOhVfsBJ5BFWv
+	 xFaM80SdAPMBtmnCReKLZkFRcwvBisebzGQz+PahxsjXN1dm1r13uXB5fKC058GUn5
+	 E40tFjEfU9DKYpAc1PGGy+RZ3L2pJN9bZLXwuqBg=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VYY0d4NWlzhxd;
+	Tue,  7 May 2024 11:30:25 +0200 (CEST)
+Date: Tue, 7 May 2024 11:30:24 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, Anna Trikalinou <atrikalinou@microsoft.com>, 
+	Chao Peng <chao.p.peng@linux.intel.com>, Forrest Yuan Yu <yuanyu@google.com>, 
+	James Gowans <jgowans@amazon.com>, James Morris <jamorris@linux.microsoft.com>, 
+	John Andersen <john.s.andersen@intel.com>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
+	Marian Rotariu <marian.c.rotariu@gmail.com>, Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>, 
+	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, 
+	Yu Zhang <yu.c.zhang@linux.intel.com>, =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>, 
+	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org, 
+	x86@kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+Message-ID: <20240507.ieghomae0UoC@digikod.net>
+References: <20240503131910.307630-1-mic@digikod.net>
+ <20240503131910.307630-4-mic@digikod.net>
+ <ZjTuqV-AxQQRWwUW@google.com>
+ <20240506.ohwe7eewu0oB@digikod.net>
+ <ZjmFPZd5q_hEBdBz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,166 +66,127 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3309a9f1f5848681d0acf3bfdf9b6525fc88e1bc.camel@apitzsch.eu>
+In-Reply-To: <ZjmFPZd5q_hEBdBz@google.com>
+X-Infomaniak-Routing: alpha
 
-On Sat, 04 May 2024, André Apitzsch wrote:
-
-> Am Freitag, dem 03.05.2024 um 08:19 +0100 schrieb Lee Jones:
-> > On Thu, 11 Apr 2024, Lee Jones wrote:
-> > 
-> > > On Mon, 01 Apr 2024, André Apitzsch via B4 Relay wrote:
-> > > 
-> > > > From: André Apitzsch <git@apitzsch.eu>
-> > > > 
-> > > > Add support for SY7802 flash LED controller. It can support up to
-> > > > 1.8A
-> > > > flash current.
-> > > 
-> > > This is a very small commit message for a 500+ line change!
-> > > 
-> > > Please, tell us more.
-> > > 
-> > > > Signed-off-by: André Apitzsch <git@apitzsch.eu>
+On Mon, May 06, 2024 at 06:34:53PM GMT, Sean Christopherson wrote:
+> On Mon, May 06, 2024, Mickaël Salaün wrote:
+> > On Fri, May 03, 2024 at 07:03:21AM GMT, Sean Christopherson wrote:
 > > > > ---
-> > > >  drivers/leds/flash/Kconfig       |  11 +
-> > > >  drivers/leds/flash/Makefile      |   1 +
-> > > >  drivers/leds/flash/leds-sy7802.c | 532
-> > > > +++++++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 544 insertions(+)
 > > > > 
-> > > > diff --git a/drivers/leds/flash/Kconfig
-> > > > b/drivers/leds/flash/Kconfig
-> > > > index 809b6d98bb3e..f39f0bfe6eef 100644
-> > > > --- a/drivers/leds/flash/Kconfig
-> > > > +++ b/drivers/leds/flash/Kconfig
-> > > > @@ -121,4 +121,15 @@ config LEDS_SGM3140
-> > > >  	  This option enables support for the SGM3140 500mA
-> > > > Buck/Boost Charge
-> > > >  	  Pump LED Driver.
-> > > >  
-> > > > +config LEDS_SY7802
-> > > > +	tristate "LED support for the Silergy SY7802"
-> > > > +	depends on I2C && OF
-> > > > +	depends on GPIOLIB
-> > > > +	select REGMAP_I2C
-> > > > +	help
-> > > > +	  This option enables support for the SY7802 flash LED
-> > > > controller.
-> > > > +	  SY7802 includes torch and flash functions with
-> > > > programmable current.
-> > > > +
-> > > > +	  This driver can be built as a module, it will be
-> > > > called "leds-sy7802".
-> > > > +
-> > > >  endif # LEDS_CLASS_FLASH
-> > > > diff --git a/drivers/leds/flash/Makefile
-> > > > b/drivers/leds/flash/Makefile
-> > > > index 91d60a4b7952..48860eeced79 100644
-> > > > --- a/drivers/leds/flash/Makefile
-> > > > +++ b/drivers/leds/flash/Makefile
-> > > > @@ -11,3 +11,4 @@ obj-$(CONFIG_LEDS_QCOM_FLASH)	+= leds-qcom-
-> > > > flash.o
-> > > >  obj-$(CONFIG_LEDS_RT4505)	+= leds-rt4505.o
-> > > >  obj-$(CONFIG_LEDS_RT8515)	+= leds-rt8515.o
-> > > >  obj-$(CONFIG_LEDS_SGM3140)	+= leds-sgm3140.o
-> > > > +obj-$(CONFIG_LEDS_SY7802)	+= leds-sy7802.o
-> > > > diff --git a/drivers/leds/flash/leds-sy7802.c
-> > > > b/drivers/leds/flash/leds-sy7802.c
-> > > > new file mode 100644
-> > > > index 000000000000..c03a571b0e08
-> > > > --- /dev/null
-> > > > +++ b/drivers/leds/flash/leds-sy7802.c
-> > > > @@ -0,0 +1,532 @@
+> > > > Changes since v1:
+> > > > * New patch. Making user space aware of Heki properties was requested by
+> > > >   Sean Christopherson.
+> > > 
+> > > No, I suggested having userspace _control_ the pinning[*], not merely be notified
+> > > of pinning.
+> > > 
+> > >  : IMO, manipulation of protections, both for memory (this patch) and CPU state
+> > >  : (control registers in the next patch) should come from userspace.  I have no
+> > >  : objection to KVM providing plumbing if necessary, but I think userspace needs to
+> > >  : to have full control over the actual state.
+> > >  : 
+> > >  : One of the things that caused Intel's control register pinning series to stall
+> > >  : out was how to handle edge cases like kexec() and reboot.  Deferring to userspace
+> > >  : means the kernel doesn't need to define policy, e.g. when to unprotect memory,
+> > >  : and avoids questions like "should userspace be able to overwrite pinned control
+> > >  : registers".
+> > >  : 
+> > >  : And like the confidential VM use case, keeping userspace in the loop is a big
+> > >  : beneifit, e.g. the guest can't circumvent protections by coercing userspace into
+> > >  : writing to protected memory.
+> > > 
+> > > I stand by that suggestion, because I don't see a sane way to handle things like
+> > > kexec() and reboot without having a _much_ more sophisticated policy than would
+> > > ever be acceptable in KVM.
+> > > 
+> > > I think that can be done without KVM having any awareness of CR pinning whatsoever.
+> > > E.g. userspace just needs to ability to intercept CR writes and inject #GPs.  Off
+> > > the cuff, I suspect the uAPI could look very similar to MSR filtering.  E.g. I bet
+> > > userspace could enforce MSR pinning without any new KVM uAPI at all.
+> > > 
+> > > [*] https://lore.kernel.org/all/ZFUyhPuhtMbYdJ76@google.com
 > > 
-> > [...]
-> > 
-> > > > +static int sy7802_torch_brightness_set(struct led_classdev
-> > > > *lcdev, enum led_brightness level)
-> > > 
-> > > s/level/brightness/
-> > > 
-> > > > +{
-> > > > +	struct sy7802_led *led = container_of(lcdev, struct
-> > > > sy7802_led, flash.led_cdev);
-> > > > +	u32 led_enable_mask = led->led_no == SY7802_LED_JOINT ?
-> > > > SY7802_LEDS_MASK_ALL :
-> > > > +			      SY7802_LEDS_MASK(led->led_no);
-> > > 
-> > > Do all of the fancy multi-line assignment outside of the
-> > > declaration block.
-> > > 
-> > > > +	u32 enable_mask = SY7802_MODE_MASK | led_enable_mask;
-> > > > +	u32 val = level ? led_enable_mask : SY7802_MODE_OFF;
-> > > > +	struct sy7802 *chip = led->chip;
-> > > > +	u32 curr;
-> > > 
-> > > This is a temporary placeholder for fled_torch_used, right?
-> > > 
-> > > fled_torch_used_tmp?  Sometimes abbreviated to tmp.
-> > > 
-> > > > +	u32 mask;
-> > > 
-> > > That's a lot of masks.  Which one is this?
-> > > 
-> > > > +	int ret;
-> > > > +
-> > > > +	mutex_lock(&chip->mutex);
-> > > > +
-> > > > +	/*
-> > > > +	 * There is only one set of flash control logic, and
-> > > > this flag is used to check if 'strobe'
-> > > 
-> > > The ',' before 'and' is superfluous.
-> > > 
-> > > > +	 * is currently being used.
-> > > > +	 */
-> > > 
-> > > Doesn't the variable name kind of imply this?
-> > > 
-> > > > +	if (chip->fled_strobe_used) {
-> > > > +		dev_warn(chip->dev, "Please disable strobe first
-> > > > [%d]\n", chip->fled_strobe_used);
-> > > 
-> > > "Cannot set torch brightness whilst strobe is enabled"
-> > > 
-> > > > +		ret = -EBUSY;
-> > > > +		goto unlock;
-> > > > +	}
-> > > > +
-> > > > +	if (level)
-> > > > +		curr = chip->fled_torch_used | BIT(led->led_no);
-> > > > +	else
-> > > > +		curr = chip->fled_torch_used & ~BIT(led-
-> > > > >led_no);
-> > > > +
-> > > > +	if (curr)
-> > > > +		val |= SY7802_MODE_TORCH;
-> > > > +
-> > > > +	/* Torch needs to be disabled first to apply new
-> > > > brightness */
-> > > 
-> > > "Disable touch to apply brightness"
-> > > 
-> > > > +	ret = regmap_update_bits(chip->regmap,
-> > > > SY7802_REG_ENABLE, SY7802_MODE_MASK,
-> > > > +				 SY7802_MODE_OFF);
-> > > > +	if (ret)
-> > > > +		goto unlock;
-> > > > +
-> > > > +	mask = led->led_no == SY7802_LED_JOINT ?
-> > > > SY7802_TORCH_CURRENT_MASK_ALL :
-> > > 
-> > > Why not just use led->led_no in place of mask?
-> > 
-> > mask and led->led_no are assigned the same value from this point on.
+> > OK, I had concern about the control not directly coming from the guest,
+> > especially in the case of pKVM and confidential computing, but I get you
 > 
-> Thanks for the clarification.
-> How to you come to the conclusion that mask and led->led_no are
-> assigned the same value from this point on?
+> Hardware-based CoCo is completely out of scope, because KVM has zero visibility
+> into the guest (well, SNP technically allows trapping CR0/CR4, but KVM really
+> shouldn't intercept CR0/CR4 for SNP guests).
+> 
+> And more importantly, _KVM_ doesn't define any policies for CoCo VMs.  KVM might
+> help enforce policies that are defined by hardware/firmware, but KVM doesn't
+> define any of its own.
+> 
+> If pKVM on x86 comes along, then KVM will likely get in the business of defining
+> policy, but until that happens, KVM needs to stay firmly out of the picture.
+> 
+> > point.  It should indeed be quite similar to the MSR filtering on the
+> > userspace side, except that we need another interface for the guest to
+> > request such change (i.e. self-protection).
+> > 
+> > Would it be OK to keep this new KVM_HC_LOCK_CR_UPDATE hypercall but
+> > forward the request to userspace with a VM exit instead?  That would
+> > also enable userspace to get the request and directly configure the CR
+> > pinning with the same VM exit.
+> 
+> No?  Maybe?  I strongly suspect that full support will need a richer set of APIs
+> than a single hypercall.  E.g. to handle kexec(), suspend+resume, emulated SMM,
+> and so on and so forth.  And that's just for CR pinning.
+> 
+> And hypercalls are hampered by the fact that VMCALL/VMMCALL don't allow for
+> delegation or restriction, i.e. there's no way for the guest to communicate to
+> the hypervisor that a less privileged component is allowed to perform some action,
+> nor is there a way for the guest to say some chunk of CPL0 code *isn't* allowed
+> to request transition.  Delegation and restriction all has to be done out-of-band.
+> 
+> It'd probably be more annoying to setup initially, but I think a synthetic device
+> with an MMIO-based interface would be more powerful and flexible in the long run.
+> Then userspace can evolve without needing to wait for KVM to catch up.
+> 
+> Actually, potential bad/crazy idea.  Why does the _host_ need to define policy?
+> Linux already knows what assets it wants to (un)protect and when.  What's missing
+> is a way for the guest kernel to effectively deprivilege and re-authenticate
+> itself as needed.  We've been tossing around the idea of paired VMs+vCPUs to
+> support VTLs and SEV's VMPLs, what if we usurped/piggybacked those ideas, with a
+> bit of pKVM mixed in?
+> 
+> Borrowing VTL terminology, where VTL0 is the least privileged, userspace launches
+> the VM at VTL0.  At some point, the guest triggers the deprivileging sequence and
+> userspace creates VTL1.  Userpace also provides a way for VTL0 restrict access to
+> its memory, e.g. to effectively make the page tables for the kernel's direct map
+> writable only from VTL1, to make kernel text RO (or XO), etc.  And VTL0 could then
+> also completely remove its access to code that changes CR0/CR4.
+> 
+> It would obviously require a _lot_ more upfront work, e.g. to isolate the kernel
+> text that modifies CR0/CR4 so that it can be removed from VTL0, but that should
+> be doable with annotations, e.g. tag relevant functions with __magic or whatever,
+> throw them in a dedicated section, and then free/protect the section(s) at the
+> appropriate time.
+> 
+> KVM would likely need to provide the ability to switch VTLs (or whatever they get
+> called), and host userspace would need to provide a decent amount of the backend
+> mechanisms and "core" policies, e.g. to manage VTL0 memory, teardown (turn off?)
+> VTL1 on kexec(), etc.  But everything else could live in the guest kernel itself.
+> E.g. to have CR pinning play nice with kexec(), toss the relevant kexec() code into
+> VTL1.  That way VTL1 can verify the kexec() target and tear itself down before
+> jumping into the new kernel. 
+> 
+> This is very off the cuff and have-wavy, e.g. I don't have much of an idea what
+> it would take to harden kernel text patching, but keeping the policy in the guest
+> seems like it'd make everything more tractable than trying to define an ABI
+> between Linux and a VMM that is rich and flexible enough to support all the
+> fancy things Linux does (and will do in the future).
 
-Because I am blind and didn't see the double equals ("==").
+Yes, we agree that the guest needs to manage its own policy.  That's why
+we implemented Heki for KVM this way, but without VTLs because KVM
+doesn't support them.
 
-#shouldhavegonetospecsavers
+To sum up, is the VTL approach the only one that would be acceptable for
+KVM?  If yes, that would indeed require a *lot* of work for something
+we're not sure will be accepted later on.
 
--- 
-Lee Jones [李琼斯]
+> 
+> Am I crazy?  Or maybe reinventing whatever that McAfee thing was that led to
+> Intel implementing EPTP switching?
+> 
