@@ -1,115 +1,82 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373F14EC4D
-	for <linux-hardening@vger.kernel.org>; Tue,  7 May 2024 09:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BDF14F100;
+	Tue,  7 May 2024 10:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715075713; cv=none; b=PBJVzmdmiWzHD51pOclunxNdp0Vg5aEBfHuS2AETV+E6RKwtzrs4OK3cQlbsrHxKEuIlNNsBmhLtSsqqeAnmlQMSRZOOTSYew5WUIHcpIS8zy4jGd/0u+3d3O8d/lZtGnRkFh5YQaQriZcg2jXHsc+7pl5LAhKHI+VmPpqAn2b0=
+	t=1715078821; cv=none; b=SIaAf1U9Wr8Nf+9UVNK9i7G3U+mXWgvSjesIvFUteq54+pDnLcjHVwG8vBIm2hKiRLpUnsUqxHPj+jHMap+KRD6ylx16/5GQpNlm3MFWYzm4WNFG7k8HS2BVFbt2gt3ZsQXbnE09HYl0+JMt7/5oEU3kx2Pu7wzPgmKW5B85/Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715075713; c=relaxed/simple;
-	bh=ySzqAdBy3XIuOsN+4M43h3v/XUU1e6byy3HPdS66zkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1iX6MN+toc3NQjqwvKscOApn+n/JQAvJ5Q9SUjpO9GG1XCvh6KT6ashY1dyZ8drEh6nDjphA+XycEfdpvRHR7mBe7oEybvCkATquoNDdPlemGa2ALM3qDMsSm90KdElj6Ca/6Ibfdv0xdwojsS+R+QJegIrW7G7tCUhP5LCXa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V0dSg1IF; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1715078821; c=relaxed/simple;
+	bh=E25vMthg3vqCpG+5zSE+AGNII/5x83tzP1t01yygGhw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jJQdez2qLdZpKSlPM5uIaCEfNqzAY5UFYVenHUM5fL0lxPhhlquQevjdGRyyFDg3gD6HDV6pwwcB7r20C8iDQlOZaxn7p+KHvd+rXohd6yvHs7TIlN8AtX7P7dmIcuhuWUJ1sGCw21FgSvdens2uVsQ1P0eXpFF/t7mAAKdgtpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=JOGXTRwM; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V0dSg1IF"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34db9a38755so2732071f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 02:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1715075708; x=1715680508; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jhfsqJjab/igtBSwSRfO0D4527C8EIUuYcZOQelhvBc=;
-        b=V0dSg1IFxe1jQLFl2gadot4iA8yd3gwclG6/dmeZr0pa7k1QonT/afNaxbtj/T6yE3
-         F9C/uwty+h5F7YrQuOHKzclX+XKDHf8omtL8PFGzXyVUWwhOzUfO9aW9xeozf0P4U4pU
-         QyYkYngC0x6FOwWLtImJJWejto4AHVIKin5dfB8EE1kLAPWYFkHs4JC/YYoh7aEQ4CAf
-         AB9X+5AY1g2h1xqGSdN3QZ8pexdubdNPFxqYhmTtB4PQkmWuFEQ0e4nzSlJEpoq1U6ZV
-         m/qDyaKEh+MA7/Hg9ce2QuqVWt7CT1ujyoAkRWh/xJ5FghGTXcaNRr86e65vA3D8bl/B
-         wnpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715075708; x=1715680508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jhfsqJjab/igtBSwSRfO0D4527C8EIUuYcZOQelhvBc=;
-        b=blRz+XgGRBR/hNA9BNM9hcyvXMg/AK09IBnIQQO7Ur83fQERodrnBmxSFEqoa2MUp+
-         lAGw5CWT8alKW3X4wn4XkNdgnIYEeAV2zO/f+BaKOfeipnKiN6jLukAEF2Acu52Tt7mF
-         DevtvivBj11reU+njypzka4FnLimzigDb5XB+wLwBvzzZyMeOdvEk8Wwa32qjGm4adXU
-         T4pt2TVEYCbo9QYsftK3S4KC8H0EQ3qAuo55UvzuobGjO3fELIAA8E9vNqXi1ORVXM6j
-         KG5jN9c7XyCMPD0Z0iu+SiXVtS4V64Ck+gVLm6p4UqRgdJLUnH1B5wxJWy7LOyZmyum7
-         n/Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPN9ZWtnQ5uXxt0l/WHBhz49fkaMhoa++I0vPAaRaCzFf9iaeqZPJ9WTjYcDE5kDMyKoiJYrAdiA+UDY8hm9jW4n0zPAPAAgrUlvE1pCrn
-X-Gm-Message-State: AOJu0Yzpj9XOo3cQKqONdDkCEa8Qix2/ydJE+bfvuoHWm+VULbxkQgdU
-	I76DQwSF3eG44P/yJ4iQocjWP/Z81BZCZDGH0uISpI4tKBxvcq8gIVW/8KnI7iY=
-X-Google-Smtp-Source: AGHT+IEnX+GiP1H1R7a/PVZu6gZKW9nIWDfc/aLhP5NK80VEMsnFZNqObUfhm9M51FbyUiTT3ER0zA==
-X-Received: by 2002:a5d:4903:0:b0:34a:beb3:f6dc with SMTP id x3-20020a5d4903000000b0034abeb3f6dcmr12404727wrq.2.1715075708291;
-        Tue, 07 May 2024 02:55:08 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id l27-20020a05600c1d1b00b0041c5151dc1csm22844866wms.29.2024.05.07.02.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 02:55:08 -0700 (PDT)
-Date: Tue, 7 May 2024 11:55:06 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] printk: cleanup deprecated uses of strncpy/strcpy
-Message-ID: <Zjn6ejJ9ecsuGsK2@pathway.suse.cz>
-References: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="JOGXTRwM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=E25vMthg3vqCpG+5zSE+AGNII/5x83tzP1t01yygGhw=;
+	t=1715078817; x=1716288417; b=JOGXTRwMyMWrvYnvWFxB5FrsebDM2UbKoW5UJ1/M+IS5FKx
+	SLAtQ+ggip1Fle+eQsaZGwmw6Ggar32LEIIlQufAIrZFIKZqohzdNs0SUHQgZz1j2QMfXdvLubk2V
+	4ujasEp/Vpcd8u/W1F8oIT5DzdleY/tjgM5GALv38xw2yU6hWAQZcJpK0X2rP+r3XYehY7eZOfNNZ
+	ufQkVb77+w8ebBBRwJG22HR6LY2GAYOHWvHjlmwOmHAi7czzE/ANT/qjGGqineI3bs+TSoIQvJr8W
+	FhnPvAVCJl7o8OYJkWLSiYkN5SYvOb+gk7E9wMvCK6d5vc6ALOv4jAgglQK5yVmQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1s4ILQ-00000009X6J-0VJr;
+	Tue, 07 May 2024 12:46:48 +0200
+Message-ID: <10256004963b6e1a1813c6f07c5d21abfc843070.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: nl80211: Avoid address calculations via out of
+ bounds array indexing
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>,  linux-wireless@vger.kernel.org,
+ netdev@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>, "Gustavo
+ A. R. Silva" <gustavoars@kernel.org>,  linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Date: Tue, 07 May 2024 12:46:46 +0200
+In-Reply-To: <20240425181342.GA657080@dev-arch.thelio-3990X>
+References: <20240424220057.work.819-kees@kernel.org>
+	 <20240425181342.GA657080@dev-arch.thelio-3990X>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240429-strncpy-kernel-printk-printk-c-v1-1-4da7926d7b69@google.com>
+X-malware-bazaar: not-scanned
 
-On Mon 2024-04-29 23:06:54, Justin Stitt wrote:
-> Cleanup some deprecated uses of strncpy() and strcpy() [1].
-> 
-> There doesn't seem to be any bugs with the current code but the
-> readability of this code could benefit from a quick makeover while
-> removing some deprecated stuff as a benefit.
-> 
-> The most interesting replacement made in this patch involves
-> concatenating "ttyS" with a digit-led user-supplied string. Instead of
-> doing two distinct string copies with carefully managed offsets and
-> lengths, let's use the more robust and self-explanatory scnprintf().
-> scnprintf will 1) respect the bounds of @buf, 2) null-terminate @buf, 3)
-> do the concatenation. This allows us to drop the manual NUL-byte assignment.
-> 
-> Also, since isdigit() is used about a dozen lines after the open-coded
-> version we'll replace it for uniformity's sake.
-> 
-> All the strcpy() --> strscpy() replacements are trivial as the source
-> strings are literals and much smaller than the destination size. No
-> behavioral change here.
-> 
-> Use the new 2-argument version of strscpy() introduced in Commit
-> e6584c3964f2f ("string: Allow 2-argument strscpy()"). However, to make
-> this work fully (since the size must be known at compile time), also
-> update the extern-qualified declaration to have the proper size
-> information.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+On Thu, 2024-04-25 at 11:13 -0700, Nathan Chancellor wrote:
+> On Wed, Apr 24, 2024 at 03:01:01PM -0700, Kees Cook wrote:
+> > Before request->channels[] can be used, request->n_channels must be set=
+.
+> > Additionally, address calculations for memory after the "channels" arra=
+y
+> > need to be calculated from the allocation base ("request") rather than
+> > via the first "out of bounds" index of "channels", otherwise run-time
+> > bounds checking will throw a warning.
+> >=20
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_req=
+uest with __counted_by")
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+>=20
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+>=20
 
-JFYI, the patch has been comitted into printk/linux.git, branch for-6.10.
+How do you get this tested? We have the same, and more, bugs in
+cfg80211_scan_6ghz() which I'm fixing right now, but no idea how to
+actually get the checks done?
 
-I have removed the obsoleted brackets and added some empty lines
-to break the blob of code a bit, see
-https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git/commit/?h=for-6.10&id=e0550222e03bae3fd629641e246ef7f47803d795
-
-Best Regards,
-Petr
-
+johannes
