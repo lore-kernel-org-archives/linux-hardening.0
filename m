@@ -1,129 +1,222 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4BB6EB59
-	for <linux-hardening@vger.kernel.org>; Tue,  7 May 2024 05:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123AF13CA8D;
+	Tue,  7 May 2024 08:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715061287; cv=none; b=AjhC3RrWa8UjGByZud3osPAA9UcCv6pEJAz4AW6sqMJ28u+kpDmrQVMOlIxECtI3+KtPYAISctai7s+PZ/NKgkc+ALDXt0N3+dJVj16/ObcQasWfkTPlL80pP4i9zzbUZY7XkVydci2sC533VlDdDNo1ac0OF5wL3vTXalnVMM4=
+	t=1715071259; cv=none; b=kIkMsXnMuFJrDGh1WcljmzDxJmeSN40pWVuYFPl89s/OUibjcdc2LwdGwmUtFkzn8YlB6sxQGQshiqyjoDK6lxxHIznDiofuATNGS9tktc0JRv/gr35fq1E2RA5YMAqK/+rqKsC2mECTJ0d5pepsylcF3wD90k01lWDUbm9vjfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715061287; c=relaxed/simple;
-	bh=zycI60GD/v+qvEnAFNouzBUTO1V9JiQnJpX3TM+77ZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JvU+JjEEtMecAW0Fip20pqeZPke0YIV1mBjq//YrGf+nOxKO4HZbIyUBEu53lXFWceprHNeDc5yJ1mKPyGvUt2w4eSt1nfSswW4iuqU3MWFvuoUnH/2+sLvW/Xn4+oUPxYQOgtHandHUbETRntVBhGZ4OK8miiBaGo7+FNeU9pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d1D5JRpK; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715071259; c=relaxed/simple;
+	bh=sUjfAESTunl9013EBi9dsmv2GLZ5rTVceLRbegv7l8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKIbnsDIBnDG6EuFvzxCbcSPW5IMZyGfO6YjIYDXvLQaDA7iCZra+ygqJCuRYy0cJ9Xke9AU4JRF5apqnRvZd5es94TgD1J4BwA6E/BmrICxThTRqpQ3Qk1MwThWvGVCN57sHGWcRnH3OIGRZCzh7Q4fsc4EBSoVOIpqkYZzQaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhSBliwr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d1D5JRpK"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41e79ec20a6so29285e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 06 May 2024 22:54:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715061283; x=1715666083; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k2+XprmFK+IYeTTDNzHuz3jEWMm6Vi+YQ+2eFOmblGY=;
-        b=d1D5JRpKkTlwZ78YKt6XdJSGZbx8mJ17drPWi3dD2y3eMZUteIveYLQdva3oli/Y/7
-         vc0+lhaIa7pCwiRzTIUeKHSYnJpEvr1nCk41EEBgBUxmkZHqbvcqylG5ybutmOE3Ci/j
-         asn4xu+WOrqv5g4wEyvk8PkArpFC3Xk9tW+49hT8S4DMNKCK0Y+vx7XBLwHXnfrrmdvT
-         ve0NK35L4ucwlTR1YKJdYD3wmWyfRYJbVFyjsrF5YSoj24CNU9cdqLtQTnCAfO0QawbY
-         4uzSN1bvDo5tWNgLd01v5eE8mWBla0MjnmA+7mREcg+AupEzlilU5boDGCoIgF2DQ3FQ
-         MLDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715061283; x=1715666083;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k2+XprmFK+IYeTTDNzHuz3jEWMm6Vi+YQ+2eFOmblGY=;
-        b=KWb5fgXhQkyTVMwAa4BZbnUdTnq8RMwYFNhInDi1XRU86HQeTPn+mtjETh90o4WIlO
-         94n+ZXGKJgL+yTqIFlGLMbaZZ9y8N0fFX3tbrffBtixg2yvwKXZ5+F4csCA8duLW/SN8
-         +o2EvnRhtaUeMfR751O7cMf0f9G8unQ3/hLhmqpCz/mpt+YrTq9XfS+06mHGXf/ivFFl
-         Xce+tvMMY6AuXPLomj0Db/49r9N9wD4jDmOh+RevtQUsbgrnhYMyh4X/HFqWmPSwVU8e
-         9PHllTVP1AoWYujj+1Lb3pa60mpFdN+rlDtVFVSTLyXOAvaOP0rC3aDaM6toLCX6txjj
-         5JpA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/7pipu+fVQdLThGrJ+EfrHgjmQm5+K+xlyttPn+autk7hnC3OOnQYqqS+GoKJeYlerP3zes+Qurndhnf8oZwrF8o9Je08p4w2L2jjMQYp
-X-Gm-Message-State: AOJu0Yz39qib47IFXTn0tby5XmRa0wShRbRcEsvFFbXU/EwsKYTGUpqu
-	A+Gf52UWlT/D2QmoE6wusfPhKQLi7m/YkeOWtufOuitBrOpnTgT2U11OcG1gOYyKXnBb+TzMS8y
-	BY/OdAOL9ztT+kcZaNHeRY0C18XgWW824nG8=
-X-Google-Smtp-Source: AGHT+IH9BUY3Ybiuaq2U0mzo8WOYrWHauZfCI6q8FsareAMFaYi33OS8f5Moj2dq6e2fcauU1f/k5k92JiyJ5b89cS8=
-X-Received: by 2002:a05:600c:3ba8:b0:418:5aaa:7db1 with SMTP id
- 5b1f17b1804b1-41f3b8affaemr886575e9.1.1715061282789; Mon, 06 May 2024
- 22:54:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhSBliwr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2607AC3277B;
+	Tue,  7 May 2024 08:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715071258;
+	bh=sUjfAESTunl9013EBi9dsmv2GLZ5rTVceLRbegv7l8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KhSBliwrI/bU2fZ42hVY1khLzHigeyRIA/KhyOPr/A0NKIb3ugHhAkZYBAYYg78+4
+	 nDFLqlYda/5fbLCZhTM/cMxc9mM2X5Dw3nAeNJFVsLQReagAvalOWQd+4dWCwnI1WR
+	 yjWc+JBRcVIdp0YdqdB0fYPDFlAuhysswwhXi86TgowjWEDnXJ3o7dkyo00xCMy5eN
+	 D6ZKTyybzFg+so1fTvzcXQK/v8K3FIoKubLjPQKCtHRsvjYB65fMeK/GhoibnrZ866
+	 97fyP0TE8kIdSkfuEaADnQyyLKWndlw9vs9NiwCdPbrmQ0OUGmb117mNbbur88tUeq
+	 3m7Hrytq62LpA==
+Date: Tue, 7 May 2024 09:40:52 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] leds: sy7802: Add support for Silergy SY7802
+ flash LED controller
+Message-ID: <20240507084052.GW1227636@google.com>
+References: <20240401-sy7802-v2-0-1138190a7448@apitzsch.eu>
+ <20240401-sy7802-v2-2-1138190a7448@apitzsch.eu>
+ <20240411124855.GJ1980182@google.com>
+ <20240503071953.GD1227636@google.com>
+ <3309a9f1f5848681d0acf3bfdf9b6525fc88e1bc.camel@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com>
-In-Reply-To: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 6 May 2024 22:54:30 -0700
-Message-ID: <CANDhNCqQPGjhSDnCOvHFqQx6vaPb1U-nyaacJSNMxcoKWwRi-g@mail.gmail.com>
-Subject: Re: [PATCH] ntp: remove accidental integer wrap-around
-To: Justin Stitt <justinstitt@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3309a9f1f5848681d0acf3bfdf9b6525fc88e1bc.camel@apitzsch.eu>
 
-On Mon, May 6, 2024 at 9:34=E2=80=AFPM Justin Stitt <justinstitt@google.com=
-> wrote:
-> Let's introduce a new macro and use that against NTP_PHASE_LIMIT to
-> properly limit the max size of time_maxerror without overflowing during
-> the check itself.
->
-> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-> Closes: https://github.com/KSPP/linux/issues/354
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  include/linux/timex.h | 1 +
->  kernel/time/ntp.c     | 8 ++++----
->  2 files changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/timex.h b/include/linux/timex.h
-> index 3871b06bd302..976490a06915 100644
-> --- a/include/linux/timex.h
-> +++ b/include/linux/timex.h
-> @@ -138,6 +138,7 @@ unsigned long random_get_entropy_fallback(void);
->  #define MINSEC 256             /* min interval between updates (s) */
->  #define MAXSEC 2048            /* max interval between updates (s) */
->  #define NTP_PHASE_LIMIT ((MAXPHASE / NSEC_PER_USEC) << 5) /* beyond max.=
- dispersion */
-> +#define NTP_MAXFREQ_USEC (MAXFREQ / NSEC_PER_USEC) /* scaled to microsec=
-onds */
->
->  /*
->   * kernel variables
-> diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-> index 406dccb79c2b..19027b6d0827 100644
-> --- a/kernel/time/ntp.c
-> +++ b/kernel/time/ntp.c
-> @@ -454,12 +454,12 @@ int second_overflow(time64_t secs)
->         }
->
->
-> -       /* Bump the maxerror field */
-> -       time_maxerror +=3D MAXFREQ / NSEC_PER_USEC;
-> -       if (time_maxerror > NTP_PHASE_LIMIT) {
-> +       /* Bump the maxerror field, making sure not to exceed NTP_PHASE_L=
-IMIT */
-> +       if (NTP_PHASE_LIMIT - NTP_MAXFREQ_USEC < time_maxerror) {
->                 time_maxerror =3D NTP_PHASE_LIMIT;
->                 time_status |=3D STA_UNSYNC;
-> -       }
-> +       } else
-> +               time_maxerror +=3D NTP_MAXFREQ_USEC;
->
->         /* Compute the phase adjustment for the next second */
->         tick_length      =3D tick_length_base;
->
+On Sat, 04 May 2024, André Apitzsch wrote:
 
-Looks reasonable to me.
-Acked-by: John Stultz <jstultz@google.com>
+> Am Freitag, dem 03.05.2024 um 08:19 +0100 schrieb Lee Jones:
+> > On Thu, 11 Apr 2024, Lee Jones wrote:
+> > 
+> > > On Mon, 01 Apr 2024, André Apitzsch via B4 Relay wrote:
+> > > 
+> > > > From: André Apitzsch <git@apitzsch.eu>
+> > > > 
+> > > > Add support for SY7802 flash LED controller. It can support up to
+> > > > 1.8A
+> > > > flash current.
+> > > 
+> > > This is a very small commit message for a 500+ line change!
+> > > 
+> > > Please, tell us more.
+> > > 
+> > > > Signed-off-by: André Apitzsch <git@apitzsch.eu>
+> > > > ---
+> > > >  drivers/leds/flash/Kconfig       |  11 +
+> > > >  drivers/leds/flash/Makefile      |   1 +
+> > > >  drivers/leds/flash/leds-sy7802.c | 532
+> > > > +++++++++++++++++++++++++++++++++++++++
+> > > >  3 files changed, 544 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/leds/flash/Kconfig
+> > > > b/drivers/leds/flash/Kconfig
+> > > > index 809b6d98bb3e..f39f0bfe6eef 100644
+> > > > --- a/drivers/leds/flash/Kconfig
+> > > > +++ b/drivers/leds/flash/Kconfig
+> > > > @@ -121,4 +121,15 @@ config LEDS_SGM3140
+> > > >  	  This option enables support for the SGM3140 500mA
+> > > > Buck/Boost Charge
+> > > >  	  Pump LED Driver.
+> > > >  
+> > > > +config LEDS_SY7802
+> > > > +	tristate "LED support for the Silergy SY7802"
+> > > > +	depends on I2C && OF
+> > > > +	depends on GPIOLIB
+> > > > +	select REGMAP_I2C
+> > > > +	help
+> > > > +	  This option enables support for the SY7802 flash LED
+> > > > controller.
+> > > > +	  SY7802 includes torch and flash functions with
+> > > > programmable current.
+> > > > +
+> > > > +	  This driver can be built as a module, it will be
+> > > > called "leds-sy7802".
+> > > > +
+> > > >  endif # LEDS_CLASS_FLASH
+> > > > diff --git a/drivers/leds/flash/Makefile
+> > > > b/drivers/leds/flash/Makefile
+> > > > index 91d60a4b7952..48860eeced79 100644
+> > > > --- a/drivers/leds/flash/Makefile
+> > > > +++ b/drivers/leds/flash/Makefile
+> > > > @@ -11,3 +11,4 @@ obj-$(CONFIG_LEDS_QCOM_FLASH)	+= leds-qcom-
+> > > > flash.o
+> > > >  obj-$(CONFIG_LEDS_RT4505)	+= leds-rt4505.o
+> > > >  obj-$(CONFIG_LEDS_RT8515)	+= leds-rt8515.o
+> > > >  obj-$(CONFIG_LEDS_SGM3140)	+= leds-sgm3140.o
+> > > > +obj-$(CONFIG_LEDS_SY7802)	+= leds-sy7802.o
+> > > > diff --git a/drivers/leds/flash/leds-sy7802.c
+> > > > b/drivers/leds/flash/leds-sy7802.c
+> > > > new file mode 100644
+> > > > index 000000000000..c03a571b0e08
+> > > > --- /dev/null
+> > > > +++ b/drivers/leds/flash/leds-sy7802.c
+> > > > @@ -0,0 +1,532 @@
+> > 
+> > [...]
+> > 
+> > > > +static int sy7802_torch_brightness_set(struct led_classdev
+> > > > *lcdev, enum led_brightness level)
+> > > 
+> > > s/level/brightness/
+> > > 
+> > > > +{
+> > > > +	struct sy7802_led *led = container_of(lcdev, struct
+> > > > sy7802_led, flash.led_cdev);
+> > > > +	u32 led_enable_mask = led->led_no == SY7802_LED_JOINT ?
+> > > > SY7802_LEDS_MASK_ALL :
+> > > > +			      SY7802_LEDS_MASK(led->led_no);
+> > > 
+> > > Do all of the fancy multi-line assignment outside of the
+> > > declaration block.
+> > > 
+> > > > +	u32 enable_mask = SY7802_MODE_MASK | led_enable_mask;
+> > > > +	u32 val = level ? led_enable_mask : SY7802_MODE_OFF;
+> > > > +	struct sy7802 *chip = led->chip;
+> > > > +	u32 curr;
+> > > 
+> > > This is a temporary placeholder for fled_torch_used, right?
+> > > 
+> > > fled_torch_used_tmp?  Sometimes abbreviated to tmp.
+> > > 
+> > > > +	u32 mask;
+> > > 
+> > > That's a lot of masks.  Which one is this?
+> > > 
+> > > > +	int ret;
+> > > > +
+> > > > +	mutex_lock(&chip->mutex);
+> > > > +
+> > > > +	/*
+> > > > +	 * There is only one set of flash control logic, and
+> > > > this flag is used to check if 'strobe'
+> > > 
+> > > The ',' before 'and' is superfluous.
+> > > 
+> > > > +	 * is currently being used.
+> > > > +	 */
+> > > 
+> > > Doesn't the variable name kind of imply this?
+> > > 
+> > > > +	if (chip->fled_strobe_used) {
+> > > > +		dev_warn(chip->dev, "Please disable strobe first
+> > > > [%d]\n", chip->fled_strobe_used);
+> > > 
+> > > "Cannot set torch brightness whilst strobe is enabled"
+> > > 
+> > > > +		ret = -EBUSY;
+> > > > +		goto unlock;
+> > > > +	}
+> > > > +
+> > > > +	if (level)
+> > > > +		curr = chip->fled_torch_used | BIT(led->led_no);
+> > > > +	else
+> > > > +		curr = chip->fled_torch_used & ~BIT(led-
+> > > > >led_no);
+> > > > +
+> > > > +	if (curr)
+> > > > +		val |= SY7802_MODE_TORCH;
+> > > > +
+> > > > +	/* Torch needs to be disabled first to apply new
+> > > > brightness */
+> > > 
+> > > "Disable touch to apply brightness"
+> > > 
+> > > > +	ret = regmap_update_bits(chip->regmap,
+> > > > SY7802_REG_ENABLE, SY7802_MODE_MASK,
+> > > > +				 SY7802_MODE_OFF);
+> > > > +	if (ret)
+> > > > +		goto unlock;
+> > > > +
+> > > > +	mask = led->led_no == SY7802_LED_JOINT ?
+> > > > SY7802_TORCH_CURRENT_MASK_ALL :
+> > > 
+> > > Why not just use led->led_no in place of mask?
+> > 
+> > mask and led->led_no are assigned the same value from this point on.
+> 
+> Thanks for the clarification.
+> How to you come to the conclusion that mask and led->led_no are
+> assigned the same value from this point on?
 
-thanks
--john
+Because I am blind and didn't see the double equals ("==").
+
+#shouldhavegonetospecsavers
+
+-- 
+Lee Jones [李琼斯]
