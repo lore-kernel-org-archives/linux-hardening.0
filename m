@@ -1,115 +1,104 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5977C16D317
-	for <linux-hardening@vger.kernel.org>; Tue,  7 May 2024 18:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C105916D9C8
+	for <linux-hardening@vger.kernel.org>; Tue,  7 May 2024 19:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715106132; cv=none; b=o1fJlIt21FsDU+24G5JtcmuVahizkOnptBt5dCy3Pu8uOqLMYrqauEaTwJgSZS9CZ/CuDp4JaSwwFQyDosyaERFysSha44KZWuHA93inmSA8kGyl5OpLcvJOLiZF4dlK3BcUuHAws0YmCpI93HTx3y52OIsMKQ+t+YVry0Pl90M=
+	t=1715108440; cv=none; b=fGOlRhESEzyzlypbII25lNImAfaNROUr/DgykK2mGjZRMWemgLT/gs/+gsG9EByxfJ/JbCqVIZRDh7T/9/rw3N+Mx6Mu5X9x2rB6EOWcIT9sjyvTZRq1RVTq4of2ccdTAGu+0BKLxWGPuyHD4NIsdgXICjhZXsAF4sbAcRyeo8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715106132; c=relaxed/simple;
-	bh=WGrDCpLhmXG0OzKkWQlmblE8Fu1o4nkE0xfNOfdBRP0=;
+	s=arc-20240116; t=1715108440; c=relaxed/simple;
+	bh=7s3oPGkGLzvOuGWVPAZcFf2NPdjW/ND+O4YOkgFBmXE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qOyJ4gSwMzCsR51lC1ofsRL46vhT6Nek/pbwLCjpHlpJSYADhO9VLkBQExNLKkylBI+5vmvz+N0RdXLADa0RNZxLlCfKbZTHD6oGqDJxwWsWSdp3MbJ1Zxjh8Dttm5LpvH5Rij9dkyKaG3Wi79TfiIByWe2sP0yr95iaYBjeYHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3asohX/a; arc=none smtp.client-ip=209.85.208.48
+	 To:Cc:Content-Type; b=IdzXJv/Jd5OY3QXW18wvKT03IMxXqxJjib23PS3IxOmcHrtUvgXuR41Aew5axj77NiVmk5hmABQtU6ExR/bfWNi6Bcet4hoHS0pBVhMWjQl02eKooyKksryJE7dixbgpooP45KjB3lGAKKkW5tWpwR3FkWerc+ylqQj1l8pjA0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LA0YijEL; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3asohX/a"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-572f6c56cdaso3023a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 11:22:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LA0YijEL"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-628a551d10cso1627880a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 12:00:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715106130; x=1715710930; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715108431; x=1715713231; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+wLflVW04KtJjzrqEX38+Aa3dYvsqD/1sar1AfKslmU=;
-        b=3asohX/a0thUx9BdUrMrwqOlVpupyx8q+uiV3ouw6117tGqRUyQ6DAxVAZUj2A/TaG
-         cnlJdVpMn816RRAvIQIPe6dw4ASO0sD5lzzWIQ2rwmnLsDC1xVNNPgUgBtzHa7L3X8fo
-         uxq4gJJe25yEAtOUgTeps5dBXC+bCk/SQtXnWGYuJkXSQS6GOogzIOr6zkdZLjuBE9/t
-         780z+x6aMSoqqE6i4sB/e17biCnPlgFNH5Zx6AnRum9MvR8/HEaMUAJgmd9CV63Y4BRt
-         AtyZxAKQi9hL4lrsFAmXVTbDUN8XmxqAs8jISldmI+wv1s5k22EYIMNa+4okIPbwYzOm
-         ZYIQ==
+        bh=52/TiGb0pRp1cCi0WAvKTSl0Kx/3b9XgA1N/tzA4luI=;
+        b=LA0YijELBhtbFqj+kYPDc723zkxRrJQ3jYMZ0vaTfNAwYtW6HXeuX4RFhLCzYOpEkQ
+         785nJ1jvgpc+famATuw+rdHQIGH9byxrsSf1tZpq1u6G88HVqvyTuHbdjwXCOBGVru17
+         1T+bXwloEsbhpsaKeVAYI0tLCUxkhoQuwpgy6Ix0Xx5qvBQWh/AGzfnu1seyJkVcLHkT
+         sBV02UO974N1BVr/BqsESwQCLOizTJ/472GNVbbtQKbuuVnf0nRPmPZU7Kt+LhpNnpbz
+         i504WgCmYZeN4tpe4oKWCWqrgU4mLmaCXleke1TW9ydjdViNTC+x+uWmCJzBAa9rPngj
+         imrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715106130; x=1715710930;
+        d=1e100.net; s=20230601; t=1715108431; x=1715713231;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+wLflVW04KtJjzrqEX38+Aa3dYvsqD/1sar1AfKslmU=;
-        b=oWRcmr6q+LW6sHFMeQDzXFly3aeOTQ4M6uAkAoGMVEjNGwJmjepwzBgWWQPQSu+z0J
-         7rJtgLmEGozJSF3isruxMhVrM5oV4rLHtfD/UWDPM0LKJZXR1VK4IBww0QDeHm4ww3md
-         zDFnoEJMLEK28up/a9JDpWB5yMLngrqUgkbSP0RA4M24jvlPwarn0P29SeQ87cWbjyg9
-         99Y1y543EMzn2aBFite9mDP6yZcW3Esn0AJo70DqtWqSP92xv+0UaWOW2F7I/iUvWv3k
-         zQrksmytkymfy4b3V+dMASzZr73tkA/E5PXwB5GxyGxpFEjigGO6u03qyG4IHcrPvwMZ
-         JGFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnRDikP/AYUGfz/PB1NauDL7d/ZwbS1uq68qnTkVdbrUoPqFqgx/TiIySuu0pGAa6+0SZ2R5LwjdlbFk+REjNTR80E3md+GRsvcIlqSLbX
-X-Gm-Message-State: AOJu0YyRQUHCnRNH4gmeU5nTBQdiR+R/UmZLUABQbDVfrbPGWyIp/H97
-	LRfCvx0N7M+qiknlBmA9Iemg8hG19DzUpbsBhlH1WGMzFvSf6I0d80jV9tPItXBN/SSD4l9fKQp
-	SJdCgqc7q0kzPRB5h4Z2vo6MpIRk/73Kad3EF
-X-Google-Smtp-Source: AGHT+IEAUzK+Q2fl59QehpxISiQK+7GwZsujcGUtEEc473hSQ+Nch2fZVwYDMTDd1EXoTB5TtIifc+BmsIe9TrH0kP4=
-X-Received: by 2002:aa7:c988:0:b0:572:a23b:1d81 with SMTP id
- 4fb4d7f45d1cf-5731ffc8a3amr12072a12.5.1715106129590; Tue, 07 May 2024
- 11:22:09 -0700 (PDT)
+        bh=52/TiGb0pRp1cCi0WAvKTSl0Kx/3b9XgA1N/tzA4luI=;
+        b=ezLjlCQUmgocF4X6oX2I0dmQzaenPDyHvT2WkThUwilF01bnmmSKw8oqh04oXkUTSg
+         wjWIBmDInv78ri2GYNdJ1s53LTY8TIMMwwE+6zScVYFemKdgtPq+U807kXoPjIqbYK0b
+         msqT+mR7e0qsT1Cj8U7jtu6hxpIZCPWIZuEuMbB5mTMSXM5+hhmKbTZNWgXRtAGgTyNl
+         Kzm545acqEWeG9wzF6alW2W5l/VkLYEDYLal8TjZRq/GLq8ORArZMsyD5V2PaUrH2t5x
+         D8bhXFFJ5jM/jazCXww1VkCwm01Bor6W4PXj4eKN01T/tHAz3DNAkuwkwfPQlNQ/KHOO
+         InTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFfj3y2ZvKtA46v4HeC1/Tb8tiQj2hs5yQKq/w6gkSpzpwZSwFggZof0E1R+YsUIjdQoa0HcaPhLrR68OM6gw4njvixtOulQFjfRnHvskP
+X-Gm-Message-State: AOJu0YwtWUtHXE7Lp7XDkDX0DEAJHGyoJjsfqimD9Z8/0hrFG3nTWvn3
+	Gf3D4b6luQ+4B/fKHZWWJ+Ou7T3YUoH5leKi8RCIyIte3BZKtW3soBfS2JLdmkNqkOz3iA29UvB
+	CB3XxS6oSFX4pHaPPsltO+PWmWwJTGeic2on4
+X-Google-Smtp-Source: AGHT+IFdufqWMf0KRyS6ONQjfkqedO80otF+5gAkHmdq5Jd6uIJPgZyn9Nvw+Eax/axJml6eRyADco7/lvarEj7yCXU=
+X-Received: by 2002:a17:90b:4f46:b0:2a2:70f6:8f67 with SMTP id
+ 98e67ed59e1d1-2b6169e318cmr418365a91.30.1715108430851; Tue, 07 May 2024
+ 12:00:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507123937.15364-1-aleksander.lobakin@intel.com>
-In-Reply-To: <20240507123937.15364-1-aleksander.lobakin@intel.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 7 May 2024 20:21:58 +0200
-Message-ID: <CANn89iLANEp-tjkKSawPTmH8DxaSQZ_OoJaAYHjLPkmwGEJ6nw@mail.gmail.com>
-Subject: Re: [PATCH net-next] netdevice: define and allocate &net_device _properly_
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Simon Horman <horms@kernel.org>, 
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com, linux-hardening@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240503-gve-comma-v1-0-b50f965694ef@kernel.org>
+In-Reply-To: <20240503-gve-comma-v1-0-b50f965694ef@kernel.org>
+From: Shailend Chand <shailend@google.com>
+Date: Tue, 7 May 2024 12:00:19 -0700
+Message-ID: <CANLc=ata9H4ZTN92MhQ+P5bTBo9grE7sP1_JDk5MdzaCOhXOGQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/2] gve: Minor cleanups
+To: Simon Horman <horms@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 7, 2024 at 2:40=E2=80=AFPM Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
+On Fri, May 3, 2024 at 1:31=E2=80=AFPM Simon Horman <horms@kernel.org> wrot=
+e:
 >
-> In fact, this structure contains a flexible array at the end, but
-> historically its size, alignment etc., is calculated manually.
-> There are several instances of the structure embedded into other
-> structures, but also there's ongoing effort to remove them and we
-> could in the meantime declare &net_device properly.
-> Declare the array explicitly, use struct_size() and store the array
-> size inside the structure, so that __counted_by() can be applied.
-> Don't use PTR_ALIGN(), as SLUB itself tries its best to ensure the
-> allocated buffer is aligned to what the user expects.
-> Also, change its alignment from %NETDEV_ALIGN to the cacheline size
-> as per several suggestions on the netdev ML.
+> Hi,
 >
-> bloat-o-meter for vmlinux:
+> This short patchset provides two minor cleanups for the gve driver.
 >
-> free_netdev                                  445     440      -5
-> netdev_freemem                                24       -     -24
-> alloc_netdev_mqs                            1481    1450     -31
+> These were found by tooling as mentioned in each patch,
+> and otherwise by inspection.
 >
-> On x86_64 with several NICs of different vendors, I was never able to
-> get a &net_device pointer not aligned to the cacheline size after the
-> change.
+> No change in run time behaviour is intended.
+> Each patch is compile tested only.
 >
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 > ---
+> Simon Horman (2):
+>       gve: Avoid unnecessary use of comma operator
+>       gve: Use ethtool_sprintf/puts() to fill stats strings
 
-...
+Reviewed-by: Shailend Chand <shailend@google.com>
+Thanks!
 
-> -       p =3D kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFA=
-IL);
-> -       if (!p)
-> +       sizeof_priv =3D ALIGN(sizeof_priv, SMP_CACHE_BYTES);
-
-If we have a __counted_by(priv_len), why do you ALIGN(sizeof_priv,
-SMP_CACHE_BYTES) ?
-
-If a driver pretends its private part is 4 bytes, we should get a
-warning if 20 bytes are used instead.
-
-You added two ____cacheline_aligned already in net_device already.
+>
+>  drivers/net/ethernet/google/gve/gve_adminq.c  |  4 +--
+>  drivers/net/ethernet/google/gve/gve_ethtool.c | 42 +++++++++++----------=
+------
+>  2 files changed, 19 insertions(+), 27 deletions(-)
+>
+> base-commit: 5829614a7b3b2cc9820efb2d29a205c00d748fcf
+>
