@@ -1,48 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AFE15B961;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC9C15B98F;
 	Tue,  7 May 2024 12:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715086570; cv=none; b=ByHgXs3i1eV7VE6Pr0lKdtKKVmICPWhKbIDq2+3OdMV75mibqaszWzI3FuCFLvzl/OTvP7czxGvG3FC77NT1goPWR1rx3ZLfgqknshOQK1+26wbM9TJnD8HK/5+rO32sjSEqp/L2Wn+5idVXZuGbtXT20U7s/8xvG7/T3Q4sNBQ=
+	t=1715086570; cv=none; b=lqzYuMSWOi2TerHZx9DBA92RJ23XRAiI2yceNtJ28Nrh5dD+32nbmN5jfJMoiD5b7QcFwNnY8VlU2F+qfzlU03pDqpHyt4xh6jiYBDXt5HRnAV25B3rcgUs6RnN6ejmBO9LqqMWCVe9clZc05bKVEFyi84Im4PKxB4HDX0s4ziI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715086570; c=relaxed/simple;
-	bh=VYFYujQ7hBU1Uj1LxBsy6d0AA/XCp8S8hLHHoB4hulc=;
+	bh=mC/v2V9HNBmBCEthvCkB9qVn7ho6REG6IBkk20D5Bz4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fgvlRjSrkuJpSmkwBgjqoD3aRp+KdOdoKm4IwGFqYSvHmAGkwUzke9QkB+LGrIaQp5OFoYwc9k52iCTbfmJi/esHAs09zOh8gQq5OrsBfUEXzG1tc2i9dzOi+mSHmHVGp2aPr/gBn+GI7+xu9IUkATWvKF+Pyus68AAd18QOJF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=NEloV8tU; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=ljphCqnxu23YXFq54grWCXtuYFxtgPsXUbG4iH9VukoBSEKCIP7/bFELL7hwV+ZwA77EXHZIgCZYYQa+j8omI3PKdEgdittTZTedhVTidDaGkUoJqFbT80YlSJnBIerTs7uPM5HZbFXl8svjth01nH8xacvNL6HeNKNER8BkI3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FLRUxrMD; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NEloV8tU"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447B61Cq028259;
-	Tue, 7 May 2024 14:55:53 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FLRUxrMD"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447BFrgl013556;
+	Tue, 7 May 2024 14:55:56 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=FJrTR9YP2Q5pqzbAaYq1L4JFvKopngAwyCTE4EpdM+s=; b=NE
-	loV8tUUv6Qur946zMDJFAMs78Fndj5aTeonu1HI/jyv6yr631z+wiF1xLbg7rbkf
-	srLrA3AF9luD0WRIsLn42ccurteBCZJpFc1Km0khRc1VYB9sVDfgv7O4tMa+BBl6
-	nAY4YPYTaXp9G963cV+CL63vy6RJqC9eFjuyllmQ5ij7sxLGuCp2WjZx8ugKNU8f
-	KGtOWra+Xhx9FbyU+AfOvXm1R+1/fLyl/Fv5s6/Iw51GlmdkEK/YuDu+Am10++Xo
-	IGrfLDt5OcU21fHjrGKp9Jp5YNTCTxcZE//nDuIkXcrcCofs6LTwl2kHBS4vIqKm
-	4nMoUXS3lKgC38ybLONQ==
+	selector1; bh=+FIQuut2hcVFww2LihxFhFg2o5ReRDgdjA7K75JlDnY=; b=FL
+	RUxrMD3xDOpuMuYFG0iDroVoEpsmQ5YoVBva465WOxwN1ldNNlSAWOw29RCmtnlM
+	+74A4L0RpVRdQ1Cyysc0XS4qhyYsQ26HlEzqlZ7VTIXPNz7Uys4u1vmqA0U6P9Ph
+	iDhNuToDSiEZXZymQoLhXhtrGmcGaal1OfmLIzYMcr4sNY4+M3rmdzsKyvH3Cj6N
+	/QP5BjoXiaPxII50ygC4ba90abif9rt8IVi6/trGQbTFZ8tRnrUQ5+J5Oxm0+Alr
+	PfQwuqDZ12f643RmSFMpZ3E2Xd1n+QrdF6vwDm983deKfqVqjxTheL9w7/9H3rP3
+	tCfOchmDy2q67v/oJgyg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwcbxbsar-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwbwckpqs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 14:55:52 +0200 (MEST)
+	Tue, 07 May 2024 14:55:55 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D98CA40048;
-	Tue,  7 May 2024 14:55:47 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B97D74002D;
+	Tue,  7 May 2024 14:55:51 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 44B2821ADC7;
-	Tue,  7 May 2024 14:55:02 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B3D7621ADCC;
+	Tue,  7 May 2024 14:55:04 +0200 (CEST)
 Received: from localhost (10.48.86.143) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 7 May
- 2024 14:55:01 +0200
+ 2024 14:55:04 +0200
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof
@@ -58,9 +58,9 @@ CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>,
         Amelie Delaunay
 	<amelie.delaunay@foss.st.com>
-Subject: [PATCH v2 01/12] dt-bindings: dma: New directory for STM32 DMA controllers bindings
-Date: Tue, 7 May 2024 14:54:31 +0200
-Message-ID: <20240507125442.3989284-2-amelie.delaunay@foss.st.com>
+Subject: [PATCH v2 04/12] dt-bindings: dma: Document STM32 DMA3 controller bindings
+Date: Tue, 7 May 2024 14:54:34 +0200
+Message-ID: <20240507125442.3989284-5-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240507125442.3989284-1-amelie.delaunay@foss.st.com>
 References: <20240507125442.3989284-1-amelie.delaunay@foss.st.com>
@@ -78,113 +78,162 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-07_06,2024-05-06_02,2023-05-22_02
 
-Gather the STM32 DMA controllers bindings under ./dma/stm32/.
-Then fix reference to old path in spi/st,stm32-spi.yaml: update the dmas
-property description by referring to all STM32 DMA controllers bindings.
+The STM32 DMA3 is a Direct Memory Access controller with different features
+depending on its hardware configuration.
+The channels have not the same capabilities, some have a larger FIFO, so
+their performance is higher.
+This patch describes STM32 DMA3 bindings, used to select a channel that
+fits client requirements, and to pre-configure the channel depending on
+the client needs.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
 v2:
-- fix reference in spi/st,stm32-spi.yaml with an updated description of the
-  dmas property to reflect the new path of STM32 DMA controllers bindings.
+- DMA controller specific information description has been moved and
+  added as description of #dma-cells property
+- description has been added to interrupts property specifying the
+  expected format for channel interrupts
+- compatible has been updated to st,stm32mp25-dma3 (SoC specific)
 ---
- .../devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml     | 4 ++--
- .../devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml  | 4 ++--
- .../devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml    | 4 ++--
- Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
- rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml (97%)
- rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml (89%)
- rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml (96%)
+ .../bindings/dma/stm32/st,stm32-dma3.yaml     | 129 ++++++++++++++++++
+ 1 file changed, 129 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
 
-diff --git a/Documentation/devicetree/bindings/dma/st,stm32-dma.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma.yaml
-similarity index 97%
-rename from Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
-rename to Documentation/devicetree/bindings/dma/stm32/st,stm32-dma.yaml
-index 329847ef096a..071363d18443 100644
---- a/Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/dma/st,stm32-dma.yaml#
-+$id: http://devicetree.org/schemas/dma/stm32/st,stm32-dma.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: STMicroelectronics STM32 DMA Controller
-@@ -53,7 +53,7 @@ maintainers:
-   - Amelie Delaunay <amelie.delaunay@foss.st.com>
- 
- allOf:
--  - $ref: dma-controller.yaml#
+diff --git a/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+new file mode 100644
+index 000000000000..ed2a84fe2535
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/stm32/st,stm32-dma3.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 DMA3 Controller
++
++description: |
++  The STM32 DMA3 is a direct memory access controller with different features depending on its
++  hardware configuration.
++  It is either called LPDMA (Low Power), GPDMA (General Purpose) or HPDMA (High Performance).
++  Its hardware configuration registers allow to dynamically expose its features.
++
++  GPDMA and HPDMA support 16 independent DMA channels, while only 4 for LPDMA.
++  GPDMA and HPDMA support 256 DMA requests from peripherals, 8 for LPDMA.
++
++  Bindings are generic for these 3 STM32 DMA3 configurations.
++
++  DMA clients connected to the STM32 DMA3 controller must use the format described in "#dma-cells"
++  property description below, using a three-cell specifier for each channel.
++
++maintainers:
++  - Amelie Delaunay <amelie.delaunay@foss.st.com>
++
++allOf:
 +  - $ref: /schemas/dma/dma-controller.yaml#
- 
- properties:
-   "#dma-cells":
-diff --git a/Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-similarity index 89%
-rename from Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml
-rename to Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-index e722fbcd8a5f..88c9e88cf3d5 100644
---- a/Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml
-+++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-dmamux.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/dma/st,stm32-dmamux.yaml#
-+$id: http://devicetree.org/schemas/dma/stm32/st,stm32-dmamux.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: STMicroelectronics STM32 DMA MUX (DMA request router)
-@@ -10,7 +10,7 @@ maintainers:
-   - Amelie Delaunay <amelie.delaunay@foss.st.com>
- 
- allOf:
--  - $ref: dma-router.yaml#
-+  - $ref: /schemas/dma/dma-router.yaml#
- 
- properties:
-   "#dma-cells":
-diff --git a/Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml b/Documentation/devicetree/bindings/dma/stm32/st,stm32-mdma.yaml
-similarity index 96%
-rename from Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml
-rename to Documentation/devicetree/bindings/dma/stm32/st,stm32-mdma.yaml
-index 3874544dfa74..45fe91db11db 100644
---- a/Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/stm32/st,stm32-mdma.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/dma/st,stm32-mdma.yaml#
-+$id: http://devicetree.org/schemas/dma/stm32/st,stm32-mdma.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: STMicroelectronics STM32 MDMA Controller
-@@ -53,7 +53,7 @@ maintainers:
-   - Amelie Delaunay <amelie.delaunay@foss.st.com>
- 
- allOf:
--  - $ref: dma-controller.yaml#
-+  - $ref: /schemas/dma/dma-controller.yaml#
- 
- properties:
-   "#dma-cells":
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-index 4bd9aeb81208..de431e8306cd 100644
---- a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-@@ -42,7 +42,7 @@ properties:
-   dmas:
-     description: |
-       DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
--      the STM32 DMA bindings Documentation/devicetree/bindings/dma/st,stm32-dma.yaml.
-+      the STM32 DMA controllers bindings Documentation/devicetree/bindings/dma/stm32/*.yaml.
-     items:
-       - description: rx DMA channel
-       - description: tx DMA channel
++
++properties:
++  compatible:
++    const: st,stm32mp25-dma3
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 4
++    maxItems: 16
++    description: |
++      Should contain all of the per-channel DMA interrupts in ascending order with respect to the
++      DMA channel index.
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  "#dma-cells":
++    const: 3
++    description: |
++      Specifies the number of cells needed to provide DMA controller specific information.
++      The first cell is the request line number.
++      The second cell is a 32-bit mask specifying the DMA channel requirements:
++        -bit 0-1: The priority level
++          0x0: low priority, low weight
++          0x1: low priority, mid weight
++          0x2: low priority, high weight
++          0x3: high priority
++        -bit 4-7: The FIFO requirement for queuing source and destination transfers
++          0x0: no FIFO requirement/any channel can fit
++          0x2: FIFO of 8 bytes (2^2+1)
++          0x4: FIFO of 32 bytes (2^4+1)
++          0x6: FIFO of 128 bytes (2^6+1)
++          0x7: FIFO of 256 bytes (2^7+1)
++      The third cell is a 32-bit mask specifying the DMA transfer requirements:
++        -bit 0: The source incrementing burst
++          0x0: fixed burst
++          0x1: contiguously incremented burst
++        -bit 1: The source allocated port
++          0x0: port 0 is allocated to the source transfer
++          0x1: port 1 is allocated to the source transfer
++        -bit 4: The destination incrementing burst
++          0x0: fixed burst
++          0x1: contiguously incremented burst
++        -bit 5: The destination allocated port
++          0x0: port 0 is allocated to the destination transfer
++          0x1: port 1 is allocated to the destination transfer
++        -bit 8: The type of hardware request
++          0x0: burst
++          0x1: block
++        -bit 9: The control mode
++          0x0: DMA controller control mode
++          0x1: peripheral control mode
++        -bit 12-13: The transfer complete event mode
++          0x0: at block level, transfer complete event is generated at the end of a block
++          0x2: at LLI level, the transfer complete event is generated at the end of the LLI transfer
++               including the update of the LLI if any
++          0x3: at channel level, the transfer complete event is generated at the end of the last LLI
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - "#dma-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
++    dma-controller@40400000 {
++      compatible = "st,stm32mp25-dma3";
++      reg = <0x40400000 0x1000>;
++      interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&rcc CK_BUS_HPDMA1>;
++      #dma-cells = <3>;
++    };
++...
 -- 
 2.25.1
 
