@@ -1,202 +1,137 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6000D12BF23
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 19:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D498130AC0
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 20:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715197499; cv=none; b=EVq9cfoNMMNfLbyrP1E3/d8Jd0VvAti9z3dsA72arHQAvjXWIIqGvGsi68Nq14OIGyXyGEY3Li3G9ADR3ZbP9S6RHLWqYmxVRJeYT+NheDA+e673GpuFu+84alVHLqQsCwjH5hcFPfpmPjzkU/eQrABvN/6uldp6eGI97FzCprs=
+	t=1715198880; cv=none; b=EraCiaqa2RF2p185/yUxEjBhiOD7DdJ4WGWwJPX5mI7jVwDlArFZU5AYyxyM6BMpa+4xsvFXCihOoTeZUICOXxeNAArY94SmaUvXT/7oKw70fbKB5egXK4Cjwtem9MkGBKnwL4GBWaXvFBidh8P3PoYhH9Kr4VENiBL72qm6fjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715197499; c=relaxed/simple;
-	bh=IlFN+qjVbyWxbajojL+B3XzFHidR01L29y4ThUK6x84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKJl4cEocodTGjGK+bkHRXLV0XPcfe1lElmA8fO9mors+YQasafG7Li5jS74H+FIhGY99KYdGo6v/joVOQaihUFGpIDgOn6PbOGe7YRPY6LpHBvH2A+5jjEtHD7mchqxN/D78Ugu4S+m8mnOphZyxS8mrw4HjbD/UmA5zfq0G9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EqfmzA+K; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715198880; c=relaxed/simple;
+	bh=cUhMA3hEDpUsxR6hzz85ZAu88LnRo8wpM9SADaguZmM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=soI23/AvyxqfU0EGA9ZSO1vJWkTXYESL7WnIOosPsUJO0Oxz/gLxtO/koPs+5URxRuQAgFBVJfFR8TL1U0dQEXxQTZapMTpJGcJ3qETQgVO0bfrIi804mmSWowEtYXuf9DiAgRKT51dXWqjdD6R98IoH178LNT9CKbsnrtwGZ7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=c69RNwZt; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EqfmzA+K"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-61bbb208ea5so130182a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 12:44:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="c69RNwZt"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59b097b202so29334366b.0
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 13:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715197498; x=1715802298; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bSkp1IjyO8SPzHju8VI5tBOliintVpxYB8En8fnp8Mk=;
-        b=EqfmzA+Kfc5DePx79WriG5iM23AcOvyazs4+a2tvnJWKPWBniJ9qbve1my6BHaFqNm
-         YluT9ga3vCUaUHEmOsSzfDdGgJcfdnGmrOmZoNezv0zWaLBPQbhjyD3+kf2KXnIAFW+q
-         i++PrNm0Rj9zUmk/dOYuWy71pPxqHxJFsuo4E=
+        d=linux-foundation.org; s=google; t=1715198877; x=1715803677; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KNS3uukLqvQS7T/1QMyWRNid+5RlhH+5kk2j7s9gPHA=;
+        b=c69RNwZt7i9rvNaTJ1H/ApakTxMtwE8yExIpP/CtkuC1Vy0B20P0ywr53temR2QQKg
+         jdACnyFqju9aASG36FbnXPf1dYJNKn/02Miw6UQzvlP/QrxzkWLET/4pJwFzbi9Hy2GL
+         QXAsWUsQRXWbv46329z5ePFvSpGtN6VHfB1EY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715197498; x=1715802298;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bSkp1IjyO8SPzHju8VI5tBOliintVpxYB8En8fnp8Mk=;
-        b=AUT6K59FXCWZPGi2lMXqJ3w8dWTCsstA41ol5qXqq7PAY329UpTfwcTfbb83Gtdija
-         0vJp4HrmDaYRTJTsY11WCi6xtNwYkqHkdNY44aYUMw81W7kjxEc8ATCPfXUfr5SfEyC8
-         vTF+gqzrcVD72LSAdlVef6NCC5+bJiP0F492Z7w6Meyd1sOx/2dCOLWDDCBuS4OWtlNV
-         P/14GMSC3c/ZVorMWFSTObagrFncq96Wk2jArnIJ0vu2+mSc35cDMCj2iZYRoBAxWmQc
-         OyEsRLf55DylymKKhERXz3Tv/e5PGMe3SiqCKJ2H5sn3egL6up2m1pfZ1X8BhSm9RoxL
-         sB8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Xec6EfEKW3ILFMHC/7VCGiLa73Jof3zMW5AQsPabmbO2gjPTaxZFrUxeTHxCBp/4gNe96/nRfXLIPFVGuv3uamntECpDbjpn19FqE6b+
-X-Gm-Message-State: AOJu0YwxOjpDTIy/nQslK7BPqDuJuwLJSIPoIN5SSOmlrxSdJgbB5eI7
-	0AIpvbSfWmu07ZYp4624lu5X5q4vZJmbCrIAfQpe9t9RXofKHP4DBB3Y+yIKZlSXlTMUZq68v9A
-	=
-X-Google-Smtp-Source: AGHT+IEQJv5MoWCuSsH7z9sDM3firMHKZ9a0PaOa+JkXwojX56OtQaqrhExQGOf6H5m7P+TAapuX/w==
-X-Received: by 2002:a17:90a:1305:b0:2ab:9819:64bc with SMTP id 98e67ed59e1d1-2b6169e25cfmr3250633a91.32.1715197497713;
-        Wed, 08 May 2024 12:44:57 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f23-20020a17090ac29700b002acf260e82bsm1827034pjt.57.2024.05.08.12.44.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 12:44:57 -0700 (PDT)
-Date: Wed, 8 May 2024 12:44:56 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <202405081144.D5FCC44A@keescook>
-References: <202404291502.612E0A10@keescook>
- <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1715198877; x=1715803677;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KNS3uukLqvQS7T/1QMyWRNid+5RlhH+5kk2j7s9gPHA=;
+        b=sbKrWJwsRKx/l2By0SIHDzbjwVF4bu4AwJC+bCSUfvPiSZ31jgaoGo405V/Casfrfz
+         gRR06zrYnaEaH2P1qnB01FFoaJ/rP6TZ3R1Okh6IaJ9DMuOhq5/thF4HcJxvZ8yW7Vj0
+         udsrF/vnK87SFpce0WQcdwnE5wgAAnlSYHI0IKuB9G/A4lmsbRmJB3pYVWIxuZe9NLCv
+         dAH07gF73vQsndMHtR9hBjxerZKjWeHdbD7hKfcn65byFsOCBhbHwqCE6oLh2VpDMP/g
+         No1OzVQm9tDysOcmWrwkEHlVB5yr3TQhPKC9cH6ntjW84shaPqwuj5rQYhLDJuq/jxOP
+         gEEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ1OCOE7ZppXOmMIIwSDw2EHexmvud7ok+0w0mTz1/o3JhSrauQRNiTzUl9QVTJ4SLqc/DAk8W/xTRDoTCPFHSJLIyeYpu7+dpQ9SIeemN
+X-Gm-Message-State: AOJu0YyqBzvCm5BHbwBdCNqjPOvGnINp8acg7hPyk9S1Z+B0TVoLm6o4
+	z3tdp7od2hJGdyg6fG9uNEEMemz0owFYAZNATT8gRuQlOzYisxcq9NNZbvVmQXRY+D507YTGJQ5
+	dufR4hA==
+X-Google-Smtp-Source: AGHT+IHUsiZqCzFtChqklCpY6pcrG8A/4FkkoVsrX4BQog0tSAbuoydm7Is4y5e8dFmnNNx7RPjEYA==
+X-Received: by 2002:a17:906:b851:b0:a59:c833:d272 with SMTP id a640c23a62f3a-a59fb921347mr220309866b.13.1715198876693;
+        Wed, 08 May 2024 13:07:56 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id i20-20020a170906445400b00a59bba81e97sm4956841ejp.126.2024.05.08.13.07.56
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 13:07:56 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59c0a6415fso32043066b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 13:07:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVBKYqv6oQFl+/EevOu6B6Zt9vFbOJb0nzT5YvWC/oOQ2MUUnHx+L5eA0kJN9MXqgsLZF3cZZyDxdLGY5Ek9W3spWirN++6q20juB5ENTsB
+X-Received: by 2002:a17:906:74d:b0:a59:bb20:9964 with SMTP id
+ a640c23a62f3a-a59fb94b8f0mr259835466b.23.1715198875937; Wed, 08 May 2024
+ 13:07:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+In-Reply-To: <202405081144.D5FCC44A@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 8 May 2024 13:07:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+Message-ID: <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 08, 2024 at 10:52:44AM -0700, Linus Torvalds wrote:
-> On Tue, 7 May 2024 at 16:27, Kees Cook <keescook@chromium.org> wrote:
-> [...]
-> Put another way the absolute first and fundamental thing you should
-> look at is to make sure tools don't complain about sane behavior.
-
-Agreed, and I explicitly called this out in the proposals, including
-adding several idioms that have been found besides the case you mention:
-
-> > - allow for common idioms to bypass sanitizers:
-> >   - explicit wrap-around tests: if (var + offset < var)
-> >   - loop iterator wrap-around during post-decrement: while (var--)
-> >   - negative unsigned constants: -1UL
-
-What I need, though, is for _intent_ to be captured at the source level.
-Unfortunately neither compilers nor humans are omniscient. Wrapping vs
-non-wrapping intent can only rarely be unambiguously determined. I tried
-to explain that here:
-
-> > This is what is meant through-out by "ambiguous": the _intent of the
-> > author_ can be ambiguous as it relates to whether a calculation is
-> > meant to wrap-around. That it wraps around on overflow is not ambiguous:
-> > it will wrap-around. :) See "Terminology Considerations".
+On Wed, 8 May 2024 at 12:45, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, May 08, 2024 at 10:52:44AM -0700, Linus Torvalds wrote:
+> > Example:
 > >
-> > This is the corner stone of the problem: even though the behavior of
-> > overflow is well-defined, so many authors so often don't correctly handle
-> > it that the results threaten the integrity of Linux as a whole. C makes
-> > it too easy to get it wrong, so we are left needing to fix this at a
-> > fundamental level. This is not a developer education problem; it is a
-> > problem with C language semantics. "Just do it correctly" has not
-> > worked.
+> >    static inline u32 __hash_32_generic(u32 val)
+> >    {
+> >         return val * GOLDEN_RATIO_32;
+> >    }
+>
+> But what about:
+>
+> static inline u32 __item_offset(u32 val)
+> {
+>         return val * ITEM_SIZE_PER_UNIT;
+> }
 
+What about it? I'm saying that your tool NEEDS TO BE SMART ENOUGH to
+see the "what about".
 
-> The thing is, wrap-around is not only well-defined, it's *common*, and
-> *EXPECTED*.
+> All I did was change the names of things and now we have to wonder if
+> the result is going to be used for indexing or sizing
 
-Yes, common, but that still means "sometimes unexpected". The fact that
-when wrap-around is wanted, an author does nothing different from when
-it is unwanted is the core of the problem: C doesn't provide a way for
-us to see intent. We need to fix this.
+Exactly. Your tool needs to take that into account.
 
-> Example:
-> 
->    static inline u32 __hash_32_generic(u32 val)
->    {
->         return val * GOLDEN_RATIO_32;
->    }
+Any kind of mindless "this can wrap around" is inexcusable.
 
-But what about:
+It needs to be smarter than that. And yes, that means exactly taking
+into account how the result of the possible wrap-around is actually
+used.
 
-static inline u32 __item_offset(u32 val)
-{
-	return val * ITEM_SIZE_PER_UNIT;
-}
+If it's used as a size or as an array index, it might be a problem.
+But if it's used for masking and then a *masked* version is used for
+an index, it clearly is NOT a problem.
 
-All I did was change the names of things and now we have to wonder if
-the result is going to be used for indexing or sizing, and maybe it
-never considered that there might be a way for val to be greater than
-UINT_MAX / ITEM_SIZE_PER_UNIT.
+IOW, exactly the same as "a+b < a". Yes, "a+b" might wrap around, but
+if the use is to then compare it with one of the addends, then clearly
+such a wrap-around is fine.
 
-So instead, how about:
+A tool that doesn't look at how the result is used, and just blindly
+says "wrap-around error" is a tool that I think is actively
+detrimental.
 
-static inline u32_wrap __hash_32_generic(u32_wrap val)
-{
-         return val * GOLDEN_RATIO_32;
-}
+And no, the answer is ABSOLUTELY NOT to add cognitive load on kernel
+developers by adding yet more random helper types and/or functions.
 
-Now intent is clear.
+We already expect a lot of kernel developers. We should not add on to
+that burden because of your pet project.
 
-> and dammit, I absolutely DO NOT THINK we should annotate this as some
-> kind of "special multiply".
+Put another way: I'm putting the onus on YOU to make sure your pet
+project is the "Yogi Bear" of pet projects - smarter than the average
+bear.
 
-Yes, I agree, annotating the calculations individually seems like it would
-make things much less readable. And this matches the nearly universal
-feedback from developers. The solution used in other languages, with
-much success, is to tie wrapping intent to types. We can do the same.
+As long as you are approaching this from a "this puts the onus on
+others", *YOU* are the problem.
 
-> I have no idea how many of these exist. But I am 100% convinced that
-> making humans annotate this and making the source code worse is
-> absolutely the wrong approach.
+Be the solution, not the problem.
 
-I'd like to make the source better, not worse. :) But if we're going
-to solve this, and do it incrementally, I think progressively updating
-types is the way to go. We have used types in plenty of places where we
-want the compiler to help with checking (gfp_t, pid_t, etc), or with
-specific behaviors (atomic_t, refcount_t, etc). This would be more of
-that, though, yes, to a greater degree.
-
-> So I think you need to limit your wrap-around complaints, and really
-> think about how to limit them. If you go "wrap-around is wrong" as
-> some kind of general; rule, I'm going to ignore you, and I'm going to
-> tell people to ignore you, and refuse any idiotic patches that are the
-> result of such idiotic rules.
-
-This doesn't take into account the reality of deployments worldwide that
-are getting exploited by unexpected wrap-around. There's no problem with
-wrap-around per se, it's that we have no source-level way to indicate
-when it is _intended_. I would phrase the rule as "ambiguous intent of
-wrap-around is wrong".
-
-> Put another way the absolute first and fundamental thing you should
-> look at is to make sure tools don't complain about sane behavior.
-
-What do you see as the solution for the ambiguous intent problem?
-
-> Until you have done that, and taken this seriously, this discussion is
-> not going to ever result in anything productive.
-
-I think I've shown pretty clearly that I take this seriously. We have
-been working out feasibility and potential directions for some time now,
-engaging with compiler communities, building the tooling needed to do
-this with as minimal impact as possible, etc. I didn't send this RFC
-for fun. :)
-
-But let me make sure we're on the same page: do you agree that we need
-to protect Linux from classes of bugs? That there is value in protecting
-our billions of users from avoidable and exploitable flaws that have
-literally life-threatening consequences? If we don't agree that there
-is a problem here worth solving, then yes, it will be hard to have a
-productive discussion.
-
-And please remember that I'm not saying "let's fix it overnight", I'm
-looking to coordinate a best way forward. I want to make a plan. Neither
-human nor compiler omniscience has manifested, so what's the next step?
-
--Kees
-
--- 
-Kees Cook
+              Linus
