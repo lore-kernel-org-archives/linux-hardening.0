@@ -1,170 +1,173 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B32F7490
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 00:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256362563;
+	Wed,  8 May 2024 02:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715127832; cv=none; b=PGPhYQCDa3TJyj+BhcdFNx5N2p/CsPCbCzFbjl65j7qCXh4rpwwpiQ1tn77Hb05e+EQZgKJ2Eq3fgqrB56PQt5K2cyZEQ04pCr+GGI5PtUtVGDytxtpJmQ1siqzOFMr9/vGydYE9mJDAtgG8GTzaLifsX5JuA0/qL+mElM/7B5o=
+	t=1715135846; cv=none; b=umxksKHZJjmPXyPBMj8XDcuJR3AQ+I/BHltJ2NsbrjLrz7HBhmHRNMExhmZ8R4h6XyILU9hzCd+4DXY8NKC6//z3jmRt8dOfd7l0W9Go2VQBhL7wRkycYhKMVL10S5UmJJNr7/HA7ptvKopXutPSDOxZ+2eWkSXEVTKKF+DAoTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715127832; c=relaxed/simple;
-	bh=1da0pLj5XHUXhL0lSN1ETeHymYQMRKeJgc8KotxtGlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oe9VyVqjAKSDcSY1XcmGlAnPN2ZKB/MpiYd2YkcIx2bAXdZxmu405qGZl64wwN3/MAmXVmY2hZJcm0AfG94oK+nLEZLCjcDjGl5Nud88bRnfp89unPotOq0iyclQu91T2of2pSziIlVbgmCK2d7W9ZncyiMow5CwG86JPmYOsr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UezWsYk8; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715135846; c=relaxed/simple;
+	bh=L+7O8cBMHbYGbdx2i1sHwLmX/iYsNK3kndk4UoqXo0U=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3/W7YEZFZ55EuoBb5iPk+3kwKrQqFCILerL/+owr/4bqo2DJppJ+9S6Hs7u2tjTpPmdap+CX94O2cnoBFQOKGyQy0xZwCVTlnhVKV89ZNy/hMUjzhWIaaR0c1D3sgxeHELUewIR2HfKr0cmeuQk2YtuyX4nbRN9xdHsfM+pM+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oTOPnCtw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UezWsYk8"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1edc696df2bso29183415ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 17:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715127829; x=1715732629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=09NWd9Q6j/agwIZs1K4w41dSpMpn7Xn/XB8A6O9Z+yU=;
-        b=UezWsYk88NTr0/agSOTLdpAAdm6/305PII96kYf5k1BwMyMGKDXbAgOOLl/uoYr4uf
-         gSbfH1hsUrOnbimylY4521LuSh0w9BXxhzo+FYYBWCfouGdpz0IITOw9xkc8e4D0V4FR
-         kNPmPceMg68hThOBjSRviSaLCtpRgQTf30swA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715127829; x=1715732629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=09NWd9Q6j/agwIZs1K4w41dSpMpn7Xn/XB8A6O9Z+yU=;
-        b=wnfDWeQtjEhP88TtxHGjrvZqfp8K6ID5qO6lwOHrcLJ3xj3LgJT0CTXW3uh7d2a6Dh
-         0OhbFSoNYZyl1YamT3B1oqC86fUTnomVhkdKdkP0E5VOaE/2oZyV5QZ9WTaW4Tvarg06
-         gosYcfu109ow3P94EoqNRCpWIgGibSGC8FhJXbsD4aMSc4JrurAQEul+Ty/ylzIlGy6P
-         4H8Z4A8ao9ZEcJVpiPG6Ir2knbTJqwQCxbxDI+fW9ajTxec0RWmxXpC02U7qALqpwpjx
-         ewrVpYsARerIk0k0e06rp1TwdKw80zEz+HG4o7Az3zwINzjja42npy4cym/0/iMo8vaN
-         84kA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSBX9Wx8oVwijStseRmScN3JXOojxuV4xHVB8rRVFRUvybIhMsw7dqu/0mnocL0JPGFNYT37+8hITb2s8eNDtD8hRXVAK6l6ygO7VlI/Go
-X-Gm-Message-State: AOJu0YwSDpI02giU11NHB+oX2YMSTe0uE8MzqzDaLu/LirPMOEAE26Rv
-	QorWxfCmRFJRGRfgRA9LNtbAonlbviVbmFY1u6Fsm7mXcRtI0Y1DPL//tjOEBGg8pXC8m+NyaMg
-	=
-X-Google-Smtp-Source: AGHT+IHuemiCrxMSHKVE5rfjo+Q/DiytZ800PCNfDHJmUYfSE9kSJVG4tzAseUtRbGaNhTJISUEAdw==
-X-Received: by 2002:a17:903:4286:b0:1e4:6232:367a with SMTP id d9443c01a7336-1eeb01993b8mr12268225ad.22.1715127829507;
-        Tue, 07 May 2024 17:23:49 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lg6-20020a170902fb8600b001eb7823164esm10550918plb.279.2024.05.07.17.23.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 17:23:49 -0700 (PDT)
-Date: Tue, 7 May 2024 17:23:48 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: sr: fix unintentional arithmetic wraparound
-Message-ID: <202405071715.BD7AA91C2@keescook>
-References: <20240508-b4-b4-sio-sr_select_speed-v1-1-968906b908b7@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oTOPnCtw"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4480tSlQ010362;
+	Wed, 8 May 2024 02:37:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=/ZCjObFVzI65lpVfxycSD
+	PFIUahEfff+75M1F2+9dBI=; b=oTOPnCtwrNqqvCiRTQi/md0vkbK+itUoS5I8n
+	/p7CyQqjbyBgP4m3oT/t9CLeFKFXtJjdFtr24CWpRjNUzY+iR1oZDxiTb+rtVro9
+	5W7ciqKSTfT/x6RqMY9hNouabsWuxKrtLgrzBioWuwnt22ExOiQZpz6+XbimQ/Az
+	iCWjBf+IcniJb9NE242lqTUZ41mdpOXwpCo1EbJfHnQLN4MIaEmukNEo384xNSs5
+	6QksrxwA3wveP5I5YaTUH4fNY/lbB6vOBmsY2AtQyDa2f/Bzm6L4YVnfbiMnFFq4
+	MKfSGvAeqJw50n79e3Ot5/MrOPZDp/P8+Z8aIu7CGlTsV11vw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xysph0rx9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 May 2024 02:37:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4482bIlH001487
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 8 May 2024 02:37:18 GMT
+Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 7 May 2024 19:37:17 -0700
+Date: Tue, 7 May 2024 19:37:16 -0700
+From: Mike Tipton <quic_mdtipton@quicinc.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Odelu Kukatla <quic_okukatla@quicinc.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Georgi Djakov <djakov@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        "Gustavo A . R . Silva"
+	<gustavoars@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>
+Subject: Re: [PATCH v4 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+Message-ID: <20240508023716.GD25316@hu-mdtipton-lv.qualcomm.com>
+References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+ <20240325181628.9407-2-quic_okukatla@quicinc.com>
+ <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+ <91f59477-1799-4db6-bcc2-3f0c5225d1c8@quicinc.com>
+ <0a58e05a-7bf5-459a-b202-66d88c095b45@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240508-b4-b4-sio-sr_select_speed-v1-1-968906b908b7@google.com>
+In-Reply-To: <0a58e05a-7bf5-459a-b202-66d88c095b45@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: cUIFXgQRc5CvC0-zkk9z50wybFjoVYuB
+X-Proofpoint-GUID: cUIFXgQRc5CvC0-zkk9z50wybFjoVYuB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_16,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=835
+ impostorscore=0 priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405080017
 
-On Wed, May 08, 2024 at 12:02:27AM +0000, Justin Stitt wrote:
-> Running syzkaller with the newly reintroduced signed integer overflow
-> sanitizer produces this report:
+On Sat, Apr 13, 2024 at 09:31:47PM +0200, Konrad Dybcio wrote:
+> On 3.04.2024 10:45 AM, Odelu Kukatla wrote:
+> > 
+> > 
+> > On 3/27/2024 2:26 AM, Konrad Dybcio wrote:
+> >> On 25.03.2024 7:16 PM, Odelu Kukatla wrote:
+> >>> It adds QoS support for QNOC device and includes support for
+> >>> configuring priority, priority forward disable, urgency forwarding.
+> >>> This helps in priortizing the traffic originating from different
+> >>> interconnect masters at NoC(Network On Chip).
+> >>>
+> >>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+> >>> ---
 > 
-> [   65.194362] ------------[ cut here ]------------
-> [   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
-> [   65.203607] -2147483648 * 177 cannot be represented in type 'int'
-> [   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-> [   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [   65.219923] Call Trace:
-> [   65.221556]  <TASK>
-> [   65.223029]  dump_stack_lvl+0x93/0xd0
-> [   65.225573]  handle_overflow+0x171/0x1b0
-> [   65.228219]  sr_select_speed+0xeb/0xf0
-> [   65.230786]  ? __pm_runtime_resume+0xe6/0x130
-> [   65.233606]  sr_block_ioctl+0x15d/0x1d0
-> ...
+> [...]
 > 
-> Historically, the signed integer overflow sanitizer did not work in the
-> kernel due to its interaction with `-fwrapv` but this has since been
-> changed [1] in the newest version of Clang. It was re-enabled in the
-> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-> sanitizer").
+> >>> @@ -70,6 +102,7 @@ struct qcom_icc_node {
+> >>>  	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+> >>>  	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
+> >>>  	size_t num_bcms;
+> >>> +	const struct qcom_icc_qosbox *qosbox;
+> >>
+> >> I believe I came up with a better approach for storing this.. see [1]
+> >>
+> >> Konrad
+> >>
+> >> [1] https://lore.kernel.org/linux-arm-msm/20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org/
+
+Note that I replied to this patch series as well. Similar comments here
+for how that approach would apply to icc-rpmh.
+
+> >>
+> > 
+> > I see in this series, QoS parameters are moved into struct qcom_icc_desc. 
+> > Even though we program QoS at Provider/Bus level, it is property of the node/master connected to a Bus/NoC.
 > 
-> Let's add an extra check to make sure we don't exceed 0xffff/177 (350)
-> since 0xffff is the max speed. This has two benefits: 1) we deal with
-> integer overflow before it happens and 2) we properly respect the max
-> speed of 0xffff. There are some "magic" numbers here but I did not want
-> to change more than what was necessary.
+> I don't see how it could be the case, we're obviously telling the controller which
+> endpoints have priority over others, not telling nodes whether the data they
+> transfer can omit the queue.
+
+The QoS settings tune the priority of data coming out of a specific port
+on the NOC. The nodes are 1:1 with the ports. Yes, this does tell the
+NOC which ports have priority over others. But that's done by
+configuring each port's priority in their own port-specific QoS
+registers.
+
 > 
-> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-> Closes: https://github.com/KSPP/linux/issues/357
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Here's the syzkaller reproducer:
-> r0 = openat$cdrom(0xffffffffffffff9c, &(0x7f0000000140), 0x800, 0x0)
-> ioctl$CDROM_SELECT_SPEED(r0, 0x5322, 0x7ee9f7c1)
+> > It will be easier later to know which master's QoS we are programming if we add in node data.
+> > Readability point of view,  it might be good to keep QoS parameters in node data.  
 > 
-> ... which was used against Kees' tree here (v6.8rc2):
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+> I don't agree here either, with the current approach we've made countless mistakes
+> when converting the downstream data (I have already submitted some fixes with more
+> in flight), as there's tons of jumping around the code to find what goes where.
+
+I don't follow why keeping the port's own QoS settings in that port's
+struct results in more jumping around. It should do the opposite, in
+fact. If someone wants to know the QoS settings applied to the qhm_qup0
+port, then they should be able to look directly in the qhm_qup0 struct.
+Otherwise, if it's placed elsewhere then they'd have to jump elsewhere
+to find what that logical qhm_qup0-related data is set to.
+
+If it *was* placed elsewhere, then we'd still need some logical way to
+map between that separate location and the node it's associated with.
+Which is a problem with your patch for cleaning up the icc-rpm QoS. In
+its current form, it's impossible to identify which QoS settings apply
+to which logical node (without detailed knowledge of the NOC register
+layout).
+
+Keeping this data with the node struct reduces the need for extra layers
+of mapping between the QoS settings and the node struct. It keeps all
+the port-related information all together in one place.
+
+I did like your earlier suggestion of using a compound literal to
+initialize the .qosbox pointers, such that we don't need a separate
+top-level variable defined for them. They're only ever referenced by a
+single node, so there's no need for them to be separate variables.
+
+But I don't see the logic in totally separating the QoS data from the
+port it's associated with.
+
 > 
-> ... with this config:
-> https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
-> ---
->  drivers/scsi/sr_ioctl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/sr_ioctl.c b/drivers/scsi/sr_ioctl.c
-> index 5b0b35e60e61..2d78bcf68eb3 100644
-> --- a/drivers/scsi/sr_ioctl.c
-> +++ b/drivers/scsi/sr_ioctl.c
-> @@ -430,7 +430,8 @@ int sr_select_speed(struct cdrom_device_info *cdi, int speed)
->  	Scsi_CD *cd = cdi->handle;
->  	struct packet_command cgc;
->  
-> -	if (speed == 0)
-> +	/* avoid exceeding the max speed or overflowing integer bounds */
-> +	if (speed == 0 || speed > 0xffff / 177)
->  		speed = 0xffff;	/* set to max */
->  	else
->  		speed *= 177;	/* Nx to kbyte/s */
-
-I didn't see a "speed < 0" check, so I went to check the type on "speed"
-and found it to be "int". So I'd expect such a check, but then I looked at
-the interface: I think it's wrong that "speed" is an int at all. There's
-only 1 caller, and 1 implementation of "select_speed":
-
-$ git grep '\.select_speed'
-drivers/scsi/sr.c:      .select_speed           = sr_select_speed,
-
-static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
-                unsigned long arg)
-{
-	...
-        return cdi->ops->select_speed(cdi, arg);
-}
-
-And the arg there is unsigned long (?!).
-
-So I think probably the prototype should be changed to unsigned long,
-and then it can clamp the "speed" argument:
-
-+	/* avoid exceeding the max speed or overflowing integer bounds */
-+	speed = clamp(0, speed, 0xffff / 177);
- 	if (speed == 0)
-  		speed = 0xffff;	/* set to max */
-  	else
-  		speed *= 177;	/* Nx to kbyte/s */
-
-Then the "negative" values go away are then correctly treated as
-"too big" in the clamping.
-
--Kees
-
--- 
-Kees Cook
+> Konrad
