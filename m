@@ -1,234 +1,127 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9092C12B158
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF3E2E3E8
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715189516; cv=none; b=DM13lLXVV+0ZeTbwYZzImvuKvJYfT0Tvk+8hRXoV/n8Eq4miRd7LZ070MamhyZqc4PTWFF968wSqdjUIW+46z49lCPPUr6yBqLGdTAiP7KJ0fDJ0LiJkO6gkdrtCAZPQisDKEFyodapeVHaWq+cEB6ZAxzpgdLnQzJJTM14wWes=
+	t=1715189684; cv=none; b=LGBLcH4j5Y6KmZprsYn5GIkg58b9vbmvTnvCNlQckOf6CGuZWViosgf+1iP7qG8SEW29XqKV0wsgxAW6IpeK/f8Y9ZIsXRmmmfomB9HY4PLnTLPMKk5FYUGetEaC526NNpgE3Qq+jEJiEjejbuPLf6dKHFRDTWVrjuEUKRKtp1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715189516; c=relaxed/simple;
-	bh=eUy8l4dx1nlgASZnAXri0kDxbx6zhnXlB+I6YzLFjTw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qrekDvGc1PZGEcbsLa2lXwZ8ytdvETAYTUWaZRfia7Gesu9F8BBr7zVOnBneywCaGnUBFOwQ6SQvsYJ8yOzsIz4B0mobpzAgNxCyPNsBEXBkoWcErYA0/NGfkev1lkg6bYSkuvdIM8DAoJkLQQzeJwoJaCojTikwb3DAASZNRa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IwMJg9F9; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1715189684; c=relaxed/simple;
+	bh=HKvr42kCJ5T2vBl47UrgH9gPQIDs/Cx4DaxhFirh7Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2bFNuUsUY/ADoHzQDpSKswLO2k+IUxE5vtNANKI7lHLlzGX0LQ7a7XCuSwywekX5dlOJygolJUETJZXEtWL25VdYGiBOKCSgoxxpa5pVGVk+BjEaEyZB5zgWMonbDNwoRv+W+LxRERZA7wR5VodzrX38/YDHAL3o4LXJAjUGO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0ZAeHvg; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IwMJg9F9"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ed835f3c3cso42205125ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:31:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0ZAeHvg"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f43ee95078so47847b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:34:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715189512; x=1715794312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4rcMwpi5swukR9fu2rr+tgqRl98owlkzS7lAQiTyYR0=;
-        b=IwMJg9F9lQfEe+AzV5jXn9VE/b5xqYgCuZThGRFk87TXfYrsFkqugIBbidix+EdaPm
-         Wtua8BqjGwxslnquNHT2gXwsd/PUTcLhRmZIi52Ax8Wa2KSp2tR02ZvfQDPpV6m7oeIt
-         KCkRtVeZjbZsbsiROw33eBmmRddR5m6kMa5k0=
+        d=chromium.org; s=google; t=1715189682; x=1715794482; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ZlSdIb10yMdduLYmXyW631A2JIaNaeSFkZVL/IzXzM=;
+        b=H0ZAeHvgm+nkTb/1J4vKErf34CkRMj+OfnSZ7Mu6aWZ/nALOmZJhB/qQ+iLV1KYUWn
+         SgiZN4Pt5zczcJavaGcFIMgDHZQOGzEZ+aNDhUiEagj73+t7nygY75ruc4N+d1CbkAu+
+         49udd0HxUgYJN39bYTLtHmlXFYzQVKGchRX0w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715189512; x=1715794312;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4rcMwpi5swukR9fu2rr+tgqRl98owlkzS7lAQiTyYR0=;
-        b=tuG4Iyj0ONw18h5P8FuJf7NDATjj99BckoJniVWMHRNMYfG9vnDJn9itYH4Wl+jDe1
-         2mqJubWDyTaXnbHleHmUkwS8iR9mRbPUmXQqM/Z5BDTeFqRFv9Trb7ElOusEUhEFg+Kn
-         9scqhHEGSF3e9K6PdhC5zgoE0cGeAyIEJcaK0iBSyLJEFXnz9Bm3eN96gX4+kAfbWX+5
-         +A2Qw6VB0u8ImuFAwsK5fmxcjXXWi1joc6qHlEchd8s3GVKYgqyQKRxSL/j847NyLHJH
-         1jyGQr2TMtkOZBp1btI+RbRe9+wHAIc15S09vuXoPpwVVcclF/ZAmWDdZK5SQCJTLevi
-         Hgpg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3M/zCJS4qNh1YDybfWuo1eMBh32cTe/6Ja2iLU5gAEX/S2QPqiVN85dWveCRMu+xOY6DBgB9wvjSpg/1gDaC1yO5rKtBVQzz8d8tu7mzH
-X-Gm-Message-State: AOJu0YyZHtkEaFfm5VkFodFEBcXztz+QjGw843LlhjzlrQCVIBA2ssyu
-	U0byoTRivaWPk1KQGPZTD7OdyfJR4KL8bpwIc0kZNlswk9YDVepicKI7LFPUgw==
-X-Google-Smtp-Source: AGHT+IFNr+b2pAfQcWXsO87OnrvROJLzoQf+GfNtUyLNTbuK3rS25oOgdGVm7lFzQQasZ1Pfzw4/2A==
-X-Received: by 2002:a17:902:6506:b0:1e6:766c:6a26 with SMTP id d9443c01a7336-1eeb017cfd1mr35094695ad.12.1715189512601;
-        Wed, 08 May 2024 10:31:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715189682; x=1715794482;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0ZlSdIb10yMdduLYmXyW631A2JIaNaeSFkZVL/IzXzM=;
+        b=k8NHRuZz+LuXf6yNbi3vje2Uh8nThPFLIhpjySy6zUZNyPUYD1kLTJdYNMzW0ErmZQ
+         6x/fD2WMILZ/2Sud9fmufxNnx9qartQu7GvWkTg8HsR1jcM15zwwzw+ChJW2/Sj+eBRo
+         sxYwSjBtLjDe/un3/azyT1ibUFIFnzYghnTqOQcWRMoeilQNAW9MdZZpwRdrr7N/wF5l
+         w65SGRa3HaUjlSGDd1i/u3AUo9uczLGQZfA1dmtYTnoZ0rFLLcyzzN9vpMPlZUdxHGV1
+         QvbYes1yc97RkgOx2RzRDHV28MtwvDLTXo0h5sOfpPiJpur4hUC5eeDtM8ehbTRMAwxU
+         6lDw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2IWhD4zCy3Fh7tJT7ZpdK0/+9Z3SKsNC5OIeLM7M+fCIFEW0/5boeIlr90rCH/3yIZPU6jXAWczbaqaJGvK8t8zfra4vgirM6UUiMqVI1
+X-Gm-Message-State: AOJu0YzfbKB4R33Tz1ppbgfvxQqc6up65fml/QK1xhtB2z1smP1FSIrj
+	ED+OASJON1ECRD8fLy6thPeRjD3C0ghD/IxRQXZjScuvd07N5Vw8FpvLIU41VITYfJJvEy3Re2s
+	=
+X-Google-Smtp-Source: AGHT+IGsPbeewYhYfLGgBNn4yC+he+DDIfnSNSANWyR5bFJKhyZXsgwA47/XfqmZijCPC22jnu5JHQ==
+X-Received: by 2002:a05:6a00:610e:b0:6f3:ef3d:60f4 with SMTP id d2e1a72fcca58-6f49c2b10fdmr3369180b3a.33.1715189682342;
+        Wed, 08 May 2024 10:34:42 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id la13-20020a170902fa0d00b001ec412676adsm12094121plb.275.2024.05.08.10.31.50
+        by smtp.gmail.com with ESMTPSA id n5-20020a056a000d4500b006f448d3c700sm10388005pfv.142.2024.05.08.10.34.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:31:52 -0700 (PDT)
+        Wed, 08 May 2024 10:34:41 -0700 (PDT)
+Date: Wed, 8 May 2024 10:34:41 -0700
 From: Kees Cook <keescook@chromium.org>
-To: "H . J . Lu" <hjl.tools@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Rui Salvaterra <rsalvaterra@gmail.com>,
-	Victor Stinner <vstinner@redhat.com>,
-	Jan Palus <jpalus@fastmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Chris Kennelly <ckennelly@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Fangrui Song <maskray@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
+To: Justin Stitt <justinstitt@google.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] binfmt_elf: Honor PT_LOAD alignment for static PIE
-Date: Wed,  8 May 2024 10:31:48 -0700
-Message-Id: <20240508173149.677910-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240508172848.work.131-kees@kernel.org>
-References: <20240508172848.work.131-kees@kernel.org>
+Subject: Re: [PATCH v2] scsi: sr: fix unintentional arithmetic wraparound
+Message-ID: <202405081034.2BC4BCA4A8@keescook>
+References: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5293; i=keescook@chromium.org;
- h=from:subject; bh=eUy8l4dx1nlgASZnAXri0kDxbx6zhnXlB+I6YzLFjTw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmO7cEJD8sdRg2kTQVgy9QHVOS08welrL7Y9Xmg
- lC0fTmRrBSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZju3BAAKCRCJcvTf3G3A
- JtM8EACdAwapwoIf1FEL7K12lEwr6cSDnpSo/80JcopA9tWkFKXsiep6tWvoxZDOzJ1vc9e6b4V
- YLAAZBeXNl/xk6VrycAfh+xwdHN2k+KNbWvuJiD34NZowKV8tHkpCLzfyBMxlsEnwkpvxp4gaSj
- d4IhlEOcmwxk6K5OT+QsSmcjMCjEBIVRIK0goPl4GHq8aOi+sRueJ8TaFrjvw1+8mrbvG2DdFCe
- Uv8kWkvlo/ILaWPFZ0NusPLLdDhExA73NKe/ve4YZAfk0p6FRzmyWuHOaT7dkEYmU9yuB2JtgFA
- K2DJetC6ue7f0Q13jS3/JzqgB2vtfz+FNYDwsf5pZqI/0ziFNMCvidOe43tE7Iw0Lmdt2/BgPNL
- r8gTuz9/tlA2bbDc3e/kRUhuX5nwaHcjR/r8IVSalFQmyqc5IPAk37VHvGDmg6DIbep/8qnwvCF
- QLG5UBoysuC4MgK+oc4o06z7rfYgL2DuXeo2iJifxHJslw72FqLeVf4SKpDzrWKHhqNWvN5fVlO
- iCNqiQqRpRch+qbtKbcDu6uw3gg9q5q8qzx+EEXIHGhqVyKXRZKdXgMmXXp/my+9/udZV/cFPHl
- Axrb6nLzkWUCWdMUTIN4aZHCt5ihat6gagmdxw0UNkomFQUeEHsgPbhNUGZztz5L0i7eTM6zPj0 PxL8C6OI/h070mg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
 
-The p_align values in PT_LOAD were ignored for static PIE executables
-(i.e. ET_DYN without PT_INTERP). This is because there is no way to
-request a non-fixed mmap region with a specific alignment. ET_DYN with
-PT_INTERP uses a separate base address (ELF_ET_DYN_BASE) and binfmt_elf
-performs the ASLR itself, which means it can also apply alignment. For
-the mmap region, the address selection happens deep within the vm_mmap()
-implementation (when the requested address is 0).
+On Wed, May 08, 2024 at 05:22:51PM +0000, Justin Stitt wrote:
+> Running syzkaller with the newly reintroduced signed integer overflow
+> sanitizer produces this report:
+> 
+> [   65.194362] ------------[ cut here ]------------
+> [   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
+> [   65.203607] -2147483648 * 177 cannot be represented in type 'int'
+> [   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+> [   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   65.219923] Call Trace:
+> [   65.221556]  <TASK>
+> [   65.223029]  dump_stack_lvl+0x93/0xd0
+> [   65.225573]  handle_overflow+0x171/0x1b0
+> [   65.228219]  sr_select_speed+0xeb/0xf0
+> [   65.230786]  ? __pm_runtime_resume+0xe6/0x130
+> [   65.233606]  sr_block_ioctl+0x15d/0x1d0
+> ...
+> 
+> Historically, the signed integer overflow sanitizer did not work in the
+> kernel due to its interaction with `-fwrapv` but this has since been
+> changed [1] in the newest version of Clang. It was re-enabled in the
+> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+> sanitizer").
+> 
+> Firstly, let's change the type of "speed" to unsigned long as
+> sr_select_speed()'s only caller passes in an unsigned long anyways.
+> 
+> $ git grep '\.select_speed'
+> |	drivers/scsi/sr.c:      .select_speed           = sr_select_speed,
+> ...
+> |	static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
+> |	                unsigned long arg)
+> |	{
+> |	        ...
+> |	        return cdi->ops->select_speed(cdi, arg);
+> |	}
+> 
+> Next, let's add an extra check to make sure we don't exceed 0xffff/177
+> (350) since 0xffff is the max speed. This has two benefits: 1) we deal
+> with integer overflow before it happens and 2) we properly respect the
+> max speed of 0xffff. There are some "magic" numbers here but I did not
+> want to change more than what was necessary.
+> 
+> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+> Closes: https://github.com/KSPP/linux/issues/357
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-The earlier attempt to implement this:
+Yeah, this looks good. Thanks!
 
-  commit 9630f0d60fec ("fs/binfmt_elf: use PT_LOAD p_align values for static PIE")
-  commit 925346c129da ("fs/binfmt_elf: fix PT_LOAD p_align values for loaders")
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-did not take into account the different base address origins, and were
-eventually reverted:
-
-  aeb7923733d1 ("revert "fs/binfmt_elf: use PT_LOAD p_align values for static PIE"")
-
-In order to get the correct alignment from an mmap base, binfmt_elf must
-perform a 0-address load first, then tear down the mapping and perform
-alignment on the resulting address. Since this is slightly more overhead,
-only do this when it is needed (i.e. the alignment is not the default
-ELF alignment). This does, however, have the benefit of being able to
-use MAP_FIXED_NOREPLACE, to avoid potential collisions.
-
-With this fixed, enable the static PIE self tests again.
-
-Reported-by: H.J. Lu <hjl.tools@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215275
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: H.J. Lu <hjl.tools@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rui Salvaterra <rsalvaterra@gmail.com>
-Cc: Victor Stinner <vstinner@redhat.com>
-Cc: Jan Palus <jpalus@fastmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- fs/binfmt_elf.c                       | 42 +++++++++++++++++++++++----
- tools/testing/selftests/exec/Makefile |  2 +-
- 2 files changed, 38 insertions(+), 6 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 56432e019d4e..cbb07a9c02d4 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1088,10 +1088,13 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				goto out_free_dentry;
- 			}
- 
-+			/* Calculate any requested alignment. */
-+			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-+
- 			/*
- 			 * There are effectively two types of ET_DYN
--			 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
--			 * and loaders (ET_DYN without INTERP, since they
-+			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
-+			 * and loaders (ET_DYN without PT_INTERP, since they
- 			 * _are_ the ELF interpreter). The loaders must
- 			 * be loaded away from programs since the program
- 			 * may otherwise collide with the loader (especially
-@@ -1111,15 +1114,44 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
- 			 */
- 			if (interpreter) {
-+				/* On ET_DYN with PT_INTERP, we do the ASLR. */
- 				load_bias = ELF_ET_DYN_BASE;
- 				if (current->flags & PF_RANDOMIZE)
- 					load_bias += arch_mmap_rnd();
--				alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-+				/* Adjust alignment as requested. */
- 				if (alignment)
- 					load_bias &= ~(alignment - 1);
- 				elf_flags |= MAP_FIXED_NOREPLACE;
--			} else
--				load_bias = 0;
-+			} else {
-+				/*
-+				 * For ET_DYN without PT_INTERP, we rely on
-+				 * the architectures's (potentially ASLR) mmap
-+				 * base address (via a load_bias of 0).
-+				 *
-+				 * When a large alignment is requested, we
-+				 * must do the allocation at address "0" right
-+				 * now to discover where things will load so
-+				 * that we can adjust the resulting alignment.
-+				 * In this case (load_bias != 0), we can use
-+				 * MAP_FIXED_NOREPLACE to make sure the mapping
-+				 * doesn't collide with anything.
-+				 */
-+				if (alignment > ELF_MIN_ALIGN) {
-+					load_bias = elf_load(bprm->file, 0, elf_ppnt,
-+							     elf_prot, elf_flags, total_size);
-+					if (BAD_ADDR(load_bias)) {
-+						retval = IS_ERR_VALUE(load_bias) ?
-+							 PTR_ERR((void*)load_bias) : -EINVAL;
-+						goto out_free_dentry;
-+					}
-+					vm_munmap(load_bias, total_size);
-+					/* Adjust alignment as requested. */
-+					if (alignment)
-+						load_bias &= ~(alignment - 1);
-+					elf_flags |= MAP_FIXED_NOREPLACE;
-+				} else
-+					load_bias = 0;
-+			}
- 
- 			/*
- 			 * Since load_bias is used for all subsequent loading
-diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-index 619cff81d796..ab67d58cfab7 100644
---- a/tools/testing/selftests/exec/Makefile
-+++ b/tools/testing/selftests/exec/Makefile
-@@ -6,7 +6,7 @@ CFLAGS += -D_GNU_SOURCE
- ALIGNS := 0x1000 0x200000 0x1000000
- ALIGN_PIES        := $(patsubst %,load_address.%,$(ALIGNS))
- ALIGN_STATIC_PIES := $(patsubst %,load_address.static.%,$(ALIGNS))
--ALIGNMENT_TESTS   := $(ALIGN_PIES)
-+ALIGNMENT_TESTS   := $(ALIGN_PIES) $(ALIGN_STATIC_PIES)
- 
- TEST_PROGS := binfmt_script.py
- TEST_GEN_PROGS := execveat non-regular $(ALIGNMENT_TESTS)
 -- 
-2.34.1
-
+Kees Cook
