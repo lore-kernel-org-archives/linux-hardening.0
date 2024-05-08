@@ -1,105 +1,118 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F4C83CBE
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 12:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E951E888
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715170993; cv=none; b=r7MlpKHdI4NGpQsahEhtZC8ACNQnTDbHmMiBgOo9yhFIlHqYzSwe/0TvH3i+KJWH8ydH2Emf9yj+jJfPIakGLG9155JyFXPo9ztCPG28OmuSp2Fdk3W0tPGreLkfvB5adA+H/qTQcwJ0+t1ozY3fMKW3uDIZw1QBj3dIIs29SjM=
+	t=1715188300; cv=none; b=q8On6dxEhC9RsfQeN0rRbJtLaSN2DDUMy7x2v+GEsFikIpKbVe6zUzJRRvotG21VltWN0xPWXWuKrmB9Z8hJk5MimNX1iSi+/S7N7YBb9H71kAqQu5q7OcvRYJQGlUROCrMq90FtY65kYnoH8CvFnxsIPIUtoTpFOl1k5LwWPDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715170993; c=relaxed/simple;
-	bh=SCE5JWU4nqxphECUgDgRgi0LtZaDC5XX2+xe9FqzcBs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=cSwSg5LfrfcN9yEqvJVfPg5cQ78z+bxLLwf0bAgebzJv73utPbodRoI4BECFjUjVfGIjwbtXjACp2Y4VUIUGZReHshjT28eFuvsa+KdQrzvMqTdu96fLg8rFVnWVf5TO+4meYfwpAInV8Cwt48CtnubpcYHEKK2Oo4uYkB4CWlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-172-HAljp3vRPtmBU0n87pTUDQ-1; Wed, 08 May 2024 13:23:09 +0100
-X-MC-Unique: HAljp3vRPtmBU0n87pTUDQ-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 8 May
- 2024 13:22:38 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 8 May 2024 13:22:38 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Kees Cook' <keescook@chromium.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>
-CC: Justin Stitt <justinstitt@google.com>, Peter Zijlstra
-	<peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: RE: [RFC] Mitigating unexpected arithmetic overflow
-Thread-Topic: [RFC] Mitigating unexpected arithmetic overflow
-Thread-Index: AQHaoNrkK91jQ1nmYEmzGISNIfAGlrGNP8bg
-Date: Wed, 8 May 2024 12:22:38 +0000
-Message-ID: <e777a057e8d246efbc90381c2988b9b2@AcuMS.aculab.com>
-References: <202404291502.612E0A10@keescook>
-In-Reply-To: <202404291502.612E0A10@keescook>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1715188300; c=relaxed/simple;
+	bh=3H2Ex21607oQUraLy4a6ZebeomrW6qImqDFNkYN7KH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hdW/B/ljd1F8YmV1XAVcCfguoE7zoTU9yZR5TRUsqMyJOg+ETq/+qxQ6PeA1wJ3570m0Q/nHBjiCM8noODBhPTQowV6BgqKlsjTmYr/cZ5gAyPbPE8Tgw61V2XVuTodJmR459TpPQIYyhCuvHLuruVreeNBJrAHdSonb3xNlfTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e/7av/64; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e/7av/64"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f44b296e02so8762b3a.2
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715188297; x=1715793097; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
+        b=e/7av/64Dcgf3OMhlc/3aG68Cv9i0FKAXx1yap6cSbdW0nsJbcNd95Yo1lRWM4CXEO
+         StJJA023SDun4hdxa5p+ZL91TWCTjhJqbT/I8537Y89y8wwXzIEuISflNf2v2IqVxAlb
+         rwDXFcNsSy0ds4FxqMQiDgXwqp7u78CH/UbW0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715188297; x=1715793097;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
+        b=wJezygfjfu8H3XThFu562lnBoPhiNy1OhguBMAknHm/Nk6CsKjZcwngpnHckjB8pK3
+         vlaSQaCHXOXwWRXVw1DMnuaK8yx6PDRTDRgE8aTmxAMP08jGpFr8paiyw2FI3Ki6Y8zf
+         6X/A4ZcZbB2e4rTQk1UrogcARrCQ+aCJoKDIELhv9kgAJsOvEK5YP3LwWZ+sGe3q1Cw/
+         sn5iliGBohFrOIRr4saz5mcYP4L0EhojHuo4wGSZXhozZ1pr8WkT+21uZcHTHp5I9bin
+         jlmAtu9HLkn4LaVnkCSm431y8OItubhG492Ko48u5lEc+YP2VQzAygQ0Nbq2lHIi/eUi
+         j/Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPYd5iiblNi5rMp+AZNA+Kzjjm5AqSg6g/HvW1QYhE6F1xYe4l+HtbsKRJ+0wtyb/kcg+gOY24HcG3FQg3oH8MvasAZwcw7Qhcjfzciq4C
+X-Gm-Message-State: AOJu0YyUtWd1w4GnuD1cN2XlpHq+7R8XXpFts5qSGT6N4n5zut/SbcRJ
+	k4/xobGVwhoLJhzymIn+WkFB/hDCVVt2LxCIbDzZrfp8hWcfr9IM9GryGHyDtg==
+X-Google-Smtp-Source: AGHT+IHN8eeXE9OsgItxEKHR70nrrazwBAjav29jEzJB0wGGmdP+iVlP1VjtMYRBUjqpRzzzPBgYhQ==
+X-Received: by 2002:a05:6a20:c88b:b0:1a5:6a85:8ce9 with SMTP id adf61e73a8af0-1afc8d1b02amr3543639637.12.1715188296881;
+        Wed, 08 May 2024 10:11:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id lp9-20020a056a003d4900b006f44ed124dfsm9245352pfb.160.2024.05.08.10.11.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 10:11:36 -0700 (PDT)
+Date: Wed, 8 May 2024 10:11:35 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
+	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <202405080959.104A73A914@keescook>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240424201234.3cc2b509@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240424201234.3cc2b509@kernel.org>
 
-From: Kees Cook
-> Sent: 08 May 2024 00:28
->=20
-> Over the last decade or so, our work hardening against weaknesses
-> in various kernel APIs and eliminating the ambiguities in C language
-> semantics have traditionally been somewhat off in one corner or another
-> of the Linux codebase. This topic is going to be much different as
-> it is ultimately about the C type system, which is rather front and
-> center. So, hold on to your hats while I try to explain what's desired
-> here. Please try to reserve judgement until the end; as we've explored
-> the topic we've found a lot of nuances, which I've tried to touch on
-> below. I'm hoping folks can have an open mind about all this and not
-> jump to any conclusions without first hearing me out. :)
->=20
->=20
-> Problem to Solve
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> The Linux kernel has consistently suffered from unexpected arithmetic
-> overflow bugs. These lead to any number of exploitable conditions[0].
-> Our continuing efforts to improve things (refcount_t, alloc_size(),
-> etc) have helped in some specific areas, but on the whole, we've had a
-> relatively unchanged count of serious arithmetic overflow flaws over the
-> life of the project[1]. This is not tolerable, and we should, all of us,
-> make the effort needed to put an end to it in a systematic way.
+On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
+> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > The series was split from my larger series sysctl-const series [0].
+> > It only focusses on the proc_handlers but is an important step to be
+> > able to move all static definitions of ctl_table into .rodata.
+> 
+> Split this per subsystem, please.
 
-Is it April 1?
+I've done a few painful API transitions before, and I don't think the
+complexity of these changes needs a per-subsystem constification pass. I
+think this series is the right approach, but that patch 11 will need
+coordination with Linus. We regularly do system-wide prototype changes
+like this right at the end of the merge window before -rc1 comes out.
 
-Have you estimated the performance cost of checking the result of
-all integer arithmetic.
+The requirements are pretty simple: it needs to be a obvious changes
+(this certainly is) and as close to 100% mechanical as possible. I think
+patch 11 easily qualifies. Linus should be able to run the same Coccinelle
+script and get nearly the same results, etc. And all the other changes
+need to have landed. This change also has no "silent failure" conditions:
+anything mismatched will immediately stand out.
 
-If you have a cpu with 'signed/unsigned add(etc) with trap on overflow'
-instructions then maybe you could use them to panic the kernel.
-But otherwise you'll need a conditional branch after pretty much
-every arithmetic instruction.
-As well as the code bloat there is likely to be a 50% chance they
-are mis-predicted slowing things down a lot more.
-IIRC at least some x86 cpu do not default to static prediction (eg
-backwards taken forwards not) but always use data from the branch
-prediction logic - so the first time a branch is seen it is predicted
-randomly.
+So, have patches 1-10 go via their respective subsystems, and once all
+of those are in Linus's tree, send patch 11 as a stand-alone PR.
 
-=09David
+(From patch 11, it looks like the seccomp read/write function changes
+could be split out? I'll do that now...)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+-Kees
 
+-- 
+Kees Cook
