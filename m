@@ -1,167 +1,102 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0689321373
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 22:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD10B672;
+	Wed,  8 May 2024 23:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715208879; cv=none; b=XG672S14vEkkXRyBHEwTNYulDP7jkpxnAkRaE0PlbiHh9+KlSAkoiiHHwyV4LyI55DvMB4tXzhZzj7fvCOzHHD7lgPxfbqtMk67qTY3nxU+6d+arEJTEPr89CZQY7l+79ul7RB2zy0k1PnYhQOCLCPBLg3vOaiGEmVgxkDhKohc=
+	t=1715210641; cv=none; b=gwtRVvPzB8DnxjyMj2c0Hhrp+vAKnrtKFqSdyA2vIz7k1zwT+SfFMSkPW8jU8IB0RQP/lelX1QPU7LJcrHmToQCbPIE1qCFB0HRxpH0z7dz3LaCgKW+r1450P/CqbYW4icdHBn8H2IkizpbnTgVFM6S4z0SEfqF2rqo8CW2xB3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715208879; c=relaxed/simple;
-	bh=gyQ55hQgJIIwlukOBDSk95pxDialupoX6yg1FkBruGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVbjQTOUchu7aU3UahkkGAs0d4FODQaZQUyckf1i/zFFaSw5eg85whUCw+ZeGqx/PTHfVQ9fxAIEWufA70eZNQK7tjTt80VBJ9bDAeDaf8F+BuFj4wVOIeORaFi70zrE5JPqcXOpZaEnfPA4Uj/55i3vSFTVHSUByAZgWgfJ/bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JivcEIfD; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JivcEIfD"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so1957585ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 15:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715208877; x=1715813677; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3u1Pl3pGa/v+VPDPwQjOTFukEhJKGI8Aryv6GP6qkbs=;
-        b=JivcEIfDN4SmAShCubZEgvTmd/oQjxHrN/cGzs1+XcoXHyL8ncWuRVwse+AcxZ2gAF
-         FH/n1CT79VmXsCr/3JJ2RbRt2rKwbh0mtVMuo6euPpTl/Sb90CAS6aPMBbkFFbHOz2cJ
-         N73Svg2p5b5aP7ZfV2+bCVJXMFhCoJsEe0e5U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715208877; x=1715813677;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3u1Pl3pGa/v+VPDPwQjOTFukEhJKGI8Aryv6GP6qkbs=;
-        b=pnQAIm/lA19iMKQbti2Ik/kY9a3+pQjhbABqH4RXAx9kX6tJgeWaMOAj/pXY/ga9pD
-         21BB82gGVcenTNUEk4IkivqSyDtT0icezJy3FgaN5vSep0KtxZw0LaHeXNZRuzgVgoLN
-         j9Gxce9yRmSHnyYL1CUd/dboPmBwv4a+jAc2QbFXpNJv2y1JmBkfqYg1DttFTSs4NER0
-         29B3j2F+qQMK7l2zNuD4YBO+DRjrQNu0eACWP5TnalUiMD847IhtJUgjGymBome43uAR
-         DkfVUytaA3f9RQT2r/EAO4xzovhF0IFiSsNGvZ0OysGzfhiA5osbqVxi1bcbvsbPcdMb
-         iUCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIm1iA5h9XP8ghN4Gmrcor6pGIfj9Ud6B07WVgQk5Iowu6KMdF5W4qCZENZVMFS6OdqfSkumfgkW1t7P583GT0rGQmm8Jhe5HBWuQvxF7Q
-X-Gm-Message-State: AOJu0Yw/G7/qzkr1/ZAQTWTbdRjidufPnKNcPie0R5SwsiUuQXuPziXY
-	jrmL73lCLGWyquLSG6cMosqpkrX+ysGsSOfQyqjA8o+1KQAD2a7GUBjabqdI+g==
-X-Google-Smtp-Source: AGHT+IF5qLS8MIZu8bkrdkM2TSnYV54A1dmV9tmHQoSYXNzqgbagdmzZsQoufeCX4B3wWJs7UZAp1w==
-X-Received: by 2002:a17:902:c947:b0:1e8:4ad9:cbdf with SMTP id d9443c01a7336-1eeb0187168mr50075185ad.13.1715208877180;
-        Wed, 08 May 2024 15:54:37 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d1899sm714405ad.21.2024.05.08.15.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 15:54:36 -0700 (PDT)
-Date: Wed, 8 May 2024 15:54:36 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <202405081354.B0A8194B3C@keescook>
-References: <202404291502.612E0A10@keescook>
- <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
- <202405081144.D5FCC44A@keescook>
- <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+	s=arc-20240116; t=1715210641; c=relaxed/simple;
+	bh=vUTkfLdc7CqIpwGVwaRF5qhEnigzM/XCF5VTlfRUQJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lk8dP6TDSLfePVtj+YfQzueAI/ROZ1YjrskqI5J/W8WbH/lofbuydTzftrNLgqAi6msZP5QeSmUEtwHJXSniMfCQtSaBiXIFcHB6lbe8GhQHtZKzU6UIGX8GetzN4c4rVEyDhvDMPJT+yELmH2sj0cBneFTlTob0voJtqv/PW0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96026C113CC;
+	Wed,  8 May 2024 23:23:59 +0000 (UTC)
+Date: Wed, 8 May 2024 19:23:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Kees Cook <keescook@chromium.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
+ <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
+ memmap=nn*align:name
+Message-ID: <20240508192357.72bfcb81@rorschach.local.home>
+In-Reply-To: <CAMj1kXG3jiLahONhPkKD0VSngDnMQoUCkDmoCsWEzOHDZmhTiA@mail.gmail.com>
+References: <20240409210254.660888920@goodmis.org>
+	<20240409211351.075320273@goodmis.org>
+	<202404091521.B63E85D@keescook>
+	<20240409191156.5f92a15c@gandalf.local.home>
+	<202404091638.2F98764A41@keescook>
+	<Zhmgm86tzpanoweB@kernel.org>
+	<20240412181940.3e1d99f7@gandalf.local.home>
+	<202404151017.FC002AA5@keescook>
+	<ZjJYV7ak5ApgNTBx@kernel.org>
+	<CAMj1kXG3jiLahONhPkKD0VSngDnMQoUCkDmoCsWEzOHDZmhTiA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 08, 2024 at 01:07:38PM -0700, Linus Torvalds wrote:
-> On Wed, 8 May 2024 at 12:45, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, May 08, 2024 at 10:52:44AM -0700, Linus Torvalds wrote:
-> > > Example:
-> > >
-> > >    static inline u32 __hash_32_generic(u32 val)
-> > >    {
-> > >         return val * GOLDEN_RATIO_32;
-> > >    }
-> >
-> > But what about:
-> >
-> > static inline u32 __item_offset(u32 val)
-> > {
-> >         return val * ITEM_SIZE_PER_UNIT;
-> > }
+On Mon, 6 May 2024 12:38:32 +0200
+Ard Biesheuvel <ardb@kernel.org> wrote:
+
+
+> The logic in arch/x86/boot/compressed/kaslr.c is now only used by non-EFI boot.
 > 
-> What about it? I'm saying that your tool NEEDS TO BE SMART ENOUGH to
-> see the "what about".
+> In general, I am highly skeptical that hopes and prayers are enough to
+> prevent the firmware from stepping on such a region, unless this is
+> only a best effort thing, and failures are acceptable. For instance,
 
-This is verging on omniscience, though. Yes, some amount of additional
-reasoning can be applied under certain conditions (though even that would
-still require some kind of annotation), but GCC can't even reliably figure
-out if a variable is unused in a single function. We're not going to be
-able to track overflow tainting throughout the code base in a useful
-fashion.
+I would be very happy with just a "best effort" approach. I think
+kexec/kdump has the same issue and it hasn't been a problem in practice.
 
-> IOW, exactly the same as "a+b < a". Yes, "a+b" might wrap around, but
-> if the use is to then compare it with one of the addends, then clearly
-> such a wrap-around is fine.
+> booting an EFI system with/without an external display attached, or
+> with a USB device inserted (without even using it during boot) will
+> impact the memory map, to the extent that the E820 table derived from
+> it may look different. (EFI tries to keep the runtime regions in the
+> same place but the boot-time regions are allocated/freed on demand)
 
-Yes, but it is an absolutely trivial example: it's a single expression
-with only 2 variables. Proving that the value coming in from some
-protocol that is passed through and manipulated by countless layers of the
-kernel before it gets used inappropriately is not a reasonably solvable
-problem. But we can get at the root cause: the language (and our use of
-it) needs to change to avoid the confused calculation in the first place.
+Part of my requirement was that the system is exactly the same (no
+changes to hardware or even the kernel).
 
-> A tool that doesn't look at how the result is used, and just blindly
-> says "wrap-around error" is a tool that I think is actively
-> detrimental.
+> 
+> So I would strongly urge to address this properly, and work with
+> firmware folks to define some kind of protocol for this.
 
-I do hear what you're saying here. I think you're over-estimating the
-compiler's abilities. And as I mentioned in the RFC, finding known bad
-cases to protect is the reverse of what we want for coverage: we want
-to _not_ cover the things we know to be _safe_. So we want to find
-(via compiler or annotation) the cases where overflow is _expected_.
+We could possibly add that later, but honesty, that is something that I
+doubt would ever happen. You would have to get buy-in from all firmware
+stakeholders. I'm not sure if this is a big enough use case for them to
+even take a look at it.
 
-> We already expect a lot of kernel developers. We should not add on to
-> that burden because of your pet project.
+The main use case for this work is for pstore to have crash information
+of what happened up to the crash. In 99.99% of the time, the firmware
+or kaslr will not use the memory that was needed, and you can get very
+useful information from the crash info. If the pstore is moved, it
+should be able to see that the memory is garbage and just reset it.
 
-I think it's a misunderstanding to consider this a pet project. C's lack
-of overflow intent has spawned entire language ecosystems in reaction.
-There are entire classes of flaws that exist specifically because of this
-kind of confusion in C. It is the topic of countless PhD research efforts.
+Note that we can not use kexec/kdump in the field for various reasons,
+and I need a way to reserve memory for several different devices (both
+x86 and arm).
 
-People who care about catching overflows can slowly add the type
-annotations over the next many years, and we'll reach reasonable coverage
-soon enough. It doesn't seem onerous: I'm not asking that people even
-do it themselves (though I'd love the help), I'm just trying to find
-acceptance for annotations about where the sanitizer can ignore overflow.
-
-> Put another way: I'm putting the onus on YOU to make sure your pet
-> project is the "Yogi Bear" of pet projects - smarter than the average
-> bear.
-
-Sure, but if the bar is omniscience, that's not a path forward.
-
-I haven't really heard a viable counterproposal here. Let me try something
-more concrete: how would you propose we systemically solve flaws like
-the one fixed below? And note that the first fix was incomplete and it
-took 8 years before it got fully fixed:
-
-	a723968c0ed3 ("perf: Fix u16 overflows")               (v4.3)
-	382c27f4ed28 ("perf: Fix perf_event_validate_size()")  (v6.7)
-
-Because the kernel didn't catch when the u16 overflowed, it allowed for
-kernel memory content exposure to userspace. And that's just the place
-that it got noticed. With the struct holding the u16 is referenced in
-360 different source files, it's not always a trivial analysis. But,
-for example, the sanitizer not finding a "wraps" annotation on the
-perf_event::read_size variable would have caught it immediately on
-overflow.
-
-And I mean this _kind_ of bug; not this bug in particular. I'm just
-using it as a hopefully reasonable example of the complexity level we
-need to solve under.
-
--Kees
-
--- 
-Kees Cook
+-- Steve
