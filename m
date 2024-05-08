@@ -1,127 +1,139 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF3E2E3E8
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844CD8BEE
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715189684; cv=none; b=LGBLcH4j5Y6KmZprsYn5GIkg58b9vbmvTnvCNlQckOf6CGuZWViosgf+1iP7qG8SEW29XqKV0wsgxAW6IpeK/f8Y9ZIsXRmmmfomB9HY4PLnTLPMKk5FYUGetEaC526NNpgE3Qq+jEJiEjejbuPLf6dKHFRDTWVrjuEUKRKtp1k=
+	t=1715190786; cv=none; b=obzle9VrJ7jE4bHEWP5u7gxOC37JDNcKMydkG7vv0CHeckCbbhygBNShJI07IhwzGre8QMXC2ctQwXqWTqETtXQhoPT0q3CJdKBFwHERw9Tmyax/68zrhfsAbZnB59pmkmFAe95NmHmeALFUICAU7CxUPZ4/YdOm00u2+7oFLd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715189684; c=relaxed/simple;
-	bh=HKvr42kCJ5T2vBl47UrgH9gPQIDs/Cx4DaxhFirh7Lo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2bFNuUsUY/ADoHzQDpSKswLO2k+IUxE5vtNANKI7lHLlzGX0LQ7a7XCuSwywekX5dlOJygolJUETJZXEtWL25VdYGiBOKCSgoxxpa5pVGVk+BjEaEyZB5zgWMonbDNwoRv+W+LxRERZA7wR5VodzrX38/YDHAL3o4LXJAjUGO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H0ZAeHvg; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715190786; c=relaxed/simple;
+	bh=8O4fYZMWhW1IHisxTbuBjvyMlQTTyIfPG8nknj8tOK8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GyNpGUmmnzHAnmV7cIgMYa9UcaU5S6kxBuKbzysPbaT7MKViw4G/XM1gTJSvkNuVk/Y38WeG+B/mKEK0AANCewMl6KGp6f8TJZqtt1FI9SO+UGXYIFb9TSSJrldV+es4j4yThJFmqLvUHqgT6X9DJkNMPlAWUlgs1ub+NSXD0B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Md+ZRopN; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0ZAeHvg"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f43ee95078so47847b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:34:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Md+ZRopN"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59a0e4b773so1132475266b.2
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715189682; x=1715794482; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ZlSdIb10yMdduLYmXyW631A2JIaNaeSFkZVL/IzXzM=;
-        b=H0ZAeHvgm+nkTb/1J4vKErf34CkRMj+OfnSZ7Mu6aWZ/nALOmZJhB/qQ+iLV1KYUWn
-         SgiZN4Pt5zczcJavaGcFIMgDHZQOGzEZ+aNDhUiEagj73+t7nygY75ruc4N+d1CbkAu+
-         49udd0HxUgYJN39bYTLtHmlXFYzQVKGchRX0w=
+        d=linux-foundation.org; s=google; t=1715190783; x=1715795583; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CDD6cSkxh18P1B/GILc0PBtmaYxZm1FGfsVGarC9pdM=;
+        b=Md+ZRopNVIx0SsuPfGzTaF5YfH+NJQfYXWPelu76tOufw2LfyfRreY6Oz1Ui1Xq2cb
+         pgrVx0pL1qFbv4FJiOp7/FI0OcP7UD70GQnEjwVmFRa6ghwDT4KRhHem7AX9B4/ML7Eq
+         ka+lmoDDSzU82ktK4QpoZq5EqqGNfNOGMhdvM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715189682; x=1715794482;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ZlSdIb10yMdduLYmXyW631A2JIaNaeSFkZVL/IzXzM=;
-        b=k8NHRuZz+LuXf6yNbi3vje2Uh8nThPFLIhpjySy6zUZNyPUYD1kLTJdYNMzW0ErmZQ
-         6x/fD2WMILZ/2Sud9fmufxNnx9qartQu7GvWkTg8HsR1jcM15zwwzw+ChJW2/Sj+eBRo
-         sxYwSjBtLjDe/un3/azyT1ibUFIFnzYghnTqOQcWRMoeilQNAW9MdZZpwRdrr7N/wF5l
-         w65SGRa3HaUjlSGDd1i/u3AUo9uczLGQZfA1dmtYTnoZ0rFLLcyzzN9vpMPlZUdxHGV1
-         QvbYes1yc97RkgOx2RzRDHV28MtwvDLTXo0h5sOfpPiJpur4hUC5eeDtM8ehbTRMAwxU
-         6lDw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2IWhD4zCy3Fh7tJT7ZpdK0/+9Z3SKsNC5OIeLM7M+fCIFEW0/5boeIlr90rCH/3yIZPU6jXAWczbaqaJGvK8t8zfra4vgirM6UUiMqVI1
-X-Gm-Message-State: AOJu0YzfbKB4R33Tz1ppbgfvxQqc6up65fml/QK1xhtB2z1smP1FSIrj
-	ED+OASJON1ECRD8fLy6thPeRjD3C0ghD/IxRQXZjScuvd07N5Vw8FpvLIU41VITYfJJvEy3Re2s
-	=
-X-Google-Smtp-Source: AGHT+IGsPbeewYhYfLGgBNn4yC+he+DDIfnSNSANWyR5bFJKhyZXsgwA47/XfqmZijCPC22jnu5JHQ==
-X-Received: by 2002:a05:6a00:610e:b0:6f3:ef3d:60f4 with SMTP id d2e1a72fcca58-6f49c2b10fdmr3369180b3a.33.1715189682342;
-        Wed, 08 May 2024 10:34:42 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n5-20020a056a000d4500b006f448d3c700sm10388005pfv.142.2024.05.08.10.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:34:41 -0700 (PDT)
-Date: Wed, 8 May 2024 10:34:41 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: sr: fix unintentional arithmetic wraparound
-Message-ID: <202405081034.2BC4BCA4A8@keescook>
-References: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
+        d=1e100.net; s=20230601; t=1715190783; x=1715795583;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CDD6cSkxh18P1B/GILc0PBtmaYxZm1FGfsVGarC9pdM=;
+        b=koX/yrro19B6963g9YHIi6mjXlWxUZmQRG2BJkmk54Fl+6hTp1oRY31UuFSqO//g0G
+         uR9/XSR1eogORwESwy5A0EwnCDhYUm2ygAyMNo/VJRUZ8zjKfw1fInK3TBeNawnltEJZ
+         HeQw9cu+djM5BXIgQRb7I6NDnUH3eN1J6TlmhNsWUm28x3CF7S+s5iaa/4BBcRQwM3Q0
+         KiiIRracUTvtlrr4gv/YC9nspZZtq5KGEAnDpOOu2HwmzGp5nZXNahBzS2ob67ZGqSvP
+         ZDkHdZT+eFbN7xCDPh4s5SXWRJwj7L9jTN7iGwIHrWXoKwKRMqhmsRlAfExitMVMSpyK
+         QzHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXuIJPjRFpGTTfUt5EAvpJEQi4ThlPKatXb2NdkXdk5FqXBZMqeLZMnecGkBxKHUPNztAqYhisjjMLPTqtBNPk+A2dwbX9jrzDNJ4Tx4Iz
+X-Gm-Message-State: AOJu0YwVAp4pndrkDjEpeJvucCgah8HH9dGhnInG9L5pp3FOuGQtjr5J
+	UkjWQPK+V2Jsm37YOqRQS83yykjUZuaCQU+kB+CMSQmWMYndXOC8xHnhEY9MGWhvW1T0PBTMhG8
+	V+YoMmA==
+X-Google-Smtp-Source: AGHT+IFa8UzBIswdhuTfI733OeBnjiB9xYLGmcxnhCbHhLjlxQOefI6agVYb9rJXBvK0BJCx3XGHkg==
+X-Received: by 2002:a17:906:b34b:b0:a59:c52b:9939 with SMTP id a640c23a62f3a-a59fb95a2dfmr173047566b.32.1715190782695;
+        Wed, 08 May 2024 10:53:02 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id g3-20020a170906394300b00a599c1d46d5sm6403641eje.101.2024.05.08.10.53.01
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 10:53:01 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59a0e4b773so1132466166b.2
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:53:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW3Z1hZltf5IZy/P4aCGiq9Cj8rw6toymzlwR+KW77ywsrVTDHnN1Otq2EdlL859pP80i/Zm6gOXZqQgZNbLFGn/Fdy+jeBauMKpMgyXt5C
+X-Received: by 2002:a17:906:1153:b0:a59:9eab:1622 with SMTP id
+ a640c23a62f3a-a59fb9dc8dbmr211243266b.56.1715190781396; Wed, 08 May 2024
+ 10:53:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
+References: <202404291502.612E0A10@keescook>
+In-Reply-To: <202404291502.612E0A10@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 8 May 2024 10:52:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+Message-ID: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 08, 2024 at 05:22:51PM +0000, Justin Stitt wrote:
-> Running syzkaller with the newly reintroduced signed integer overflow
-> sanitizer produces this report:
-> 
-> [   65.194362] ------------[ cut here ]------------
-> [   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
-> [   65.203607] -2147483648 * 177 cannot be represented in type 'int'
-> [   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-> [   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [   65.219923] Call Trace:
-> [   65.221556]  <TASK>
-> [   65.223029]  dump_stack_lvl+0x93/0xd0
-> [   65.225573]  handle_overflow+0x171/0x1b0
-> [   65.228219]  sr_select_speed+0xeb/0xf0
-> [   65.230786]  ? __pm_runtime_resume+0xe6/0x130
-> [   65.233606]  sr_block_ioctl+0x15d/0x1d0
-> ...
-> 
-> Historically, the signed integer overflow sanitizer did not work in the
-> kernel due to its interaction with `-fwrapv` but this has since been
-> changed [1] in the newest version of Clang. It was re-enabled in the
-> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-> sanitizer").
-> 
-> Firstly, let's change the type of "speed" to unsigned long as
-> sr_select_speed()'s only caller passes in an unsigned long anyways.
-> 
-> $ git grep '\.select_speed'
-> |	drivers/scsi/sr.c:      .select_speed           = sr_select_speed,
-> ...
-> |	static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
-> |	                unsigned long arg)
-> |	{
-> |	        ...
-> |	        return cdi->ops->select_speed(cdi, arg);
-> |	}
-> 
-> Next, let's add an extra check to make sure we don't exceed 0xffff/177
-> (350) since 0xffff is the max speed. This has two benefits: 1) we deal
-> with integer overflow before it happens and 2) we properly respect the
-> max speed of 0xffff. There are some "magic" numbers here but I did not
-> want to change more than what was necessary.
-> 
-> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-> Closes: https://github.com/KSPP/linux/issues/357
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+On Tue, 7 May 2024 at 16:27, Kees Cook <keescook@chromium.org> wrote:
+>
+> When I say "overflow", I mean "overflow and underflow", but more
+> specifically I mean "wrap-around". This is not about "undefined
+> behavior". We already demand from our compilers that all our arithmetic
+> uses a well-defined overflow resolution strategy; overflow results in
+> wrap-around (thanks to "-fno-strict-overflow").
 
-Yeah, this looks good. Thanks!
+I'm still entirely unconvinced.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+The thing is, wrap-around is not only well-defined, it's *common*, and
+*EXPECTED*.
 
--- 
-Kees Cook
+Example:
+
+   static inline u32 __hash_32_generic(u32 val)
+   {
+        return val * GOLDEN_RATIO_32;
+   }
+
+and dammit, I absolutely DO NOT THINK we should annotate this as some
+kind of "special multiply".
+
+I have no idea how many of these exist. But I am 100% convinced that
+making humans annotate this and making the source code worse is
+absolutely the wrong approach.
+
+Basically, unsigned arithmetic is well-defined as wrapping around, and
+it is so for a good reason.
+
+So I'm going to have a HARD REQUIREMENT that any compiler complaints
+need to be really really sane. They need to detect when people do
+things like this on purpose, and they need to SHUT THE ^&% UP about
+the fact that wrap-around happens.
+
+Any tool that is so stupid as to complain about wrap-around in the
+above is a BROKEN TOOL THAT NEEDS TO BE IGNORED.
+
+Really. This is non-negotiable.
+
+This is similar to the whole
+
+        unsigned int a, b;
+
+        if (a+b < a) ..
+
+kind of pattern: a tool that complains about wrap-around in the above
+is absolutely broken sh*t and needs to be ignored.
+
+So I think you need to limit your wrap-around complaints, and really
+think about how to limit them. If you go "wrap-around is wrong" as
+some kind of general; rule, I'm going to ignore you, and I'm going to
+tell people to ignore you, and refuse any idiotic patches that are the
+result of such idiotic rules.
+
+Put another way the absolute first and fundamental thing you should
+look at is to make sure tools don't complain about sane behavior.
+
+Until you have done that, and taken this seriously, this discussion is
+not going to ever result in anything productive.
+
+                    Linus
