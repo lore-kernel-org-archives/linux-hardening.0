@@ -1,65 +1,66 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0725E372
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 00:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B32F7490
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 00:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715127078; cv=none; b=u6Gg5ZY+2HpL1381AUS82Zc4OKJtAmVS9N2BpJtukDTAB4R4D3eG8STsewXtzc2bQ28uUjnioKbJo527JlOiF46amVszOlmymOIGTrHwn1kmeDSeBBmJgyG/E/7HSEaZDX+QJsaAgFea6UUPmy+qoNYbJPFExpsy7+O5Zcyp4yM=
+	t=1715127832; cv=none; b=PGPhYQCDa3TJyj+BhcdFNx5N2p/CsPCbCzFbjl65j7qCXh4rpwwpiQ1tn77Hb05e+EQZgKJ2Eq3fgqrB56PQt5K2cyZEQ04pCr+GGI5PtUtVGDytxtpJmQ1siqzOFMr9/vGydYE9mJDAtgG8GTzaLifsX5JuA0/qL+mElM/7B5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715127078; c=relaxed/simple;
-	bh=8EEaDJUXAyse1mHZGe32mB5qOjAH2U7utH1XD6WCh6U=;
+	s=arc-20240116; t=1715127832; c=relaxed/simple;
+	bh=1da0pLj5XHUXhL0lSN1ETeHymYQMRKeJgc8KotxtGlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AF3yO058TF8Fp0i426F0PcJpTYwk4Y5jAFWQs7LV2UPGI46eTvoRkt93N2+A3YnP5qhxC4ICsY1TR4MnsrYlUgX+RibmIriQ4R0jiriMFm7i3qUWX9Kos/34Vb55hk0tgmAOBebMnY/XSOn0UtbHc3r7FvLNrMbD+0q0nUc6QVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JZOMtm3w; arc=none smtp.client-ip=209.85.210.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=oe9VyVqjAKSDcSY1XcmGlAnPN2ZKB/MpiYd2YkcIx2bAXdZxmu405qGZl64wwN3/MAmXVmY2hZJcm0AfG94oK+nLEZLCjcDjGl5Nud88bRnfp89unPotOq0iyclQu91T2of2pSziIlVbgmCK2d7W9ZncyiMow5CwG86JPmYOsr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UezWsYk8; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JZOMtm3w"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6f0277767fbso1551490a34.3
-        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 17:11:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UezWsYk8"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1edc696df2bso29183415ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 17:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715127075; x=1715731875; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715127829; x=1715732629; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tyQ7xybcQL7dkQ2tP9bw8EvtlpggYRp5xKvXntoLsjI=;
-        b=JZOMtm3wwsANUNxfsRgkIuaNlO69Y0+5vgq0iYqnCO29XvHGaWoFxqwklywmSHIZte
-         colHLD/BlyxvLSd0nUPnl+aXI758M0PH2/FNS984KQBUB4rI6VRkzJ0oMWlVp57Plkmu
-         3hgFeugcEQf4MSRqZCubp1MULB/dlqPkIkM4s=
+        bh=09NWd9Q6j/agwIZs1K4w41dSpMpn7Xn/XB8A6O9Z+yU=;
+        b=UezWsYk88NTr0/agSOTLdpAAdm6/305PII96kYf5k1BwMyMGKDXbAgOOLl/uoYr4uf
+         gSbfH1hsUrOnbimylY4521LuSh0w9BXxhzo+FYYBWCfouGdpz0IITOw9xkc8e4D0V4FR
+         kNPmPceMg68hThOBjSRviSaLCtpRgQTf30swA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715127075; x=1715731875;
+        d=1e100.net; s=20230601; t=1715127829; x=1715732629;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tyQ7xybcQL7dkQ2tP9bw8EvtlpggYRp5xKvXntoLsjI=;
-        b=pWXzqn4SFGVxX9qYuc1W5tJPb7IXX6not/RqKBy1TF9hZieNgbjb0rvP993/UgMjGN
-         XHEoXaGNOmArVNntlkPBfQhZIY7edNFe6OzwRJ79V8g658NbfQGCTMT5wpb6wVbsFcjA
-         oawwGzGy0FaGeA1EofpAH7dApRYo0PK8ESK0Y6LKA09n5wXxG06YC+0i3kUoJVnWmKhq
-         kPJ5BMjVBsxrLN4tUYiVmC999g3lp03XwXmtYjwWSXoYeUSheSdGM6I6jI9+7CBk4BwI
-         N45yNItNwefk6Nz6nIZyPRd7jifoFETAE5lvkNdIol5meSj8RnxuAIcndvdIOOK/TNqU
-         s7og==
-X-Forwarded-Encrypted: i=1; AJvYcCW+13Vu6Ucag609S6kw5UcXjlniui6iehtqeAN2zswXcSZdODP8PGtPj+xBoW/i+FXLbCraMHgOP2ah0F4PEQwRzqS7wsG9/jhJcc29nRFA
-X-Gm-Message-State: AOJu0Ywzvwf9HAt6B/aWSLM3xSXUSbQSal1HfhSWZuzJ7z5qfeBBp+6h
-	KzJVUma3sFf1Dae98i6J5dvS3ZrpXhWDa7/KOKfCyCIGR7Vz41JYR8IdsfFHrQ==
-X-Google-Smtp-Source: AGHT+IEF0Ps1LbalzQosbUHnWCLLdAIMrWpsVYxRsKASu36AiWu2UixrPEFmFCVhW8/0m3IhK8baJg==
-X-Received: by 2002:a05:6870:3912:b0:23c:f645:944f with SMTP id 586e51a60fabf-240979e1905mr1263605fac.11.1715127075218;
-        Tue, 07 May 2024 17:11:15 -0700 (PDT)
+        bh=09NWd9Q6j/agwIZs1K4w41dSpMpn7Xn/XB8A6O9Z+yU=;
+        b=wnfDWeQtjEhP88TtxHGjrvZqfp8K6ID5qO6lwOHrcLJ3xj3LgJT0CTXW3uh7d2a6Dh
+         0OhbFSoNYZyl1YamT3B1oqC86fUTnomVhkdKdkP0E5VOaE/2oZyV5QZ9WTaW4Tvarg06
+         gosYcfu109ow3P94EoqNRCpWIgGibSGC8FhJXbsD4aMSc4JrurAQEul+Ty/ylzIlGy6P
+         4H8Z4A8ao9ZEcJVpiPG6Ir2knbTJqwQCxbxDI+fW9ajTxec0RWmxXpC02U7qALqpwpjx
+         ewrVpYsARerIk0k0e06rp1TwdKw80zEz+HG4o7Az3zwINzjja42npy4cym/0/iMo8vaN
+         84kA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSBX9Wx8oVwijStseRmScN3JXOojxuV4xHVB8rRVFRUvybIhMsw7dqu/0mnocL0JPGFNYT37+8hITb2s8eNDtD8hRXVAK6l6ygO7VlI/Go
+X-Gm-Message-State: AOJu0YwSDpI02giU11NHB+oX2YMSTe0uE8MzqzDaLu/LirPMOEAE26Rv
+	QorWxfCmRFJRGRfgRA9LNtbAonlbviVbmFY1u6Fsm7mXcRtI0Y1DPL//tjOEBGg8pXC8m+NyaMg
+	=
+X-Google-Smtp-Source: AGHT+IHuemiCrxMSHKVE5rfjo+Q/DiytZ800PCNfDHJmUYfSE9kSJVG4tzAseUtRbGaNhTJISUEAdw==
+X-Received: by 2002:a17:903:4286:b0:1e4:6232:367a with SMTP id d9443c01a7336-1eeb01993b8mr12268225ad.22.1715127829507;
+        Tue, 07 May 2024 17:23:49 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id w24-20020a634918000000b005ffd8019f01sm10235451pga.20.2024.05.07.17.11.14
+        by smtp.gmail.com with ESMTPSA id lg6-20020a170902fb8600b001eb7823164esm10550918plb.279.2024.05.07.17.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 17:11:14 -0700 (PDT)
-Date: Tue, 7 May 2024 17:11:14 -0700
+        Tue, 07 May 2024 17:23:49 -0700 (PDT)
+Date: Tue, 7 May 2024 17:23:48 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
+	Bill Wendling <morbo@google.com>, linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fs: remove accidental overflow during wraparound check
-Message-ID: <202405071710.1B6F1990@keescook>
-References: <20240507-b4-sio-vfs_fallocate-v1-1-322f84b97ad5@google.com>
+Subject: Re: [PATCH] scsi: sr: fix unintentional arithmetic wraparound
+Message-ID: <202405071715.BD7AA91C2@keescook>
+References: <20240508-b4-b4-sio-sr_select_speed-v1-1-968906b908b7@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,34 +69,25 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240507-b4-sio-vfs_fallocate-v1-1-322f84b97ad5@google.com>
+In-Reply-To: <20240508-b4-b4-sio-sr_select_speed-v1-1-968906b908b7@google.com>
 
-On Tue, May 07, 2024 at 11:17:57PM +0000, Justin Stitt wrote:
-> Running syzkaller with the newly enabled signed integer overflow
+On Wed, May 08, 2024 at 12:02:27AM +0000, Justin Stitt wrote:
+> Running syzkaller with the newly reintroduced signed integer overflow
 > sanitizer produces this report:
 > 
-> [  195.401651] ------------[ cut here ]------------
-> [  195.404808] UBSAN: signed-integer-overflow in ../fs/open.c:321:15
-> [  195.408739] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long')
-> [  195.414683] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
-> [  195.420138] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [  195.425804] Call Trace:
-> [  195.427360]  <TASK>
-> [  195.428791]  dump_stack_lvl+0x93/0xd0
-> [  195.431150]  handle_overflow+0x171/0x1b0
-> [  195.433640]  vfs_fallocate+0x459/0x4f0
+> [   65.194362] ------------[ cut here ]------------
+> [   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
+> [   65.203607] -2147483648 * 177 cannot be represented in type 'int'
+> [   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+> [   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   65.219923] Call Trace:
+> [   65.221556]  <TASK>
+> [   65.223029]  dump_stack_lvl+0x93/0xd0
+> [   65.225573]  handle_overflow+0x171/0x1b0
+> [   65.228219]  sr_select_speed+0xeb/0xf0
+> [   65.230786]  ? __pm_runtime_resume+0xe6/0x130
+> [   65.233606]  sr_block_ioctl+0x15d/0x1d0
 > ...
-> [  195.490053] ------------[ cut here ]------------
-> [  195.493146] UBSAN: signed-integer-overflow in ../fs/open.c:321:61
-> [  195.497030] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long)
-> [  195.502940] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
-> [  195.508395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [  195.514075] Call Trace:
-> [  195.515636]  <TASK>
-> [  195.517000]  dump_stack_lvl+0x93/0xd0
-> [  195.519255]  handle_overflow+0x171/0x1b0
-> [  195.521677]  vfs_fallocate+0x4cb/0x4f0
-> [  195.524033]  __x64_sys_fallocate+0xb2/0xf0
 > 
 > Historically, the signed integer overflow sanitizer did not work in the
 > kernel due to its interaction with `-fwrapv` but this has since been
@@ -103,18 +95,76 @@ On Tue, May 07, 2024 at 11:17:57PM +0000, Justin Stitt wrote:
 > kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
 > sanitizer").
 > 
-> Let's use the check_add_overflow helper to first verify the addition
-> stays within the bounds of its type (long long); then we can use that
-> sum for the following check.
+> Let's add an extra check to make sure we don't exceed 0xffff/177 (350)
+> since 0xffff is the max speed. This has two benefits: 1) we deal with
+> integer overflow before it happens and 2) we properly respect the max
+> speed of 0xffff. There are some "magic" numbers here but I did not want
+> to change more than what was necessary.
 > 
 > Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-> Closes: https://github.com/KSPP/linux/issues/356
+> Closes: https://github.com/KSPP/linux/issues/357
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Here's the syzkaller reproducer:
+> r0 = openat$cdrom(0xffffffffffffff9c, &(0x7f0000000140), 0x800, 0x0)
+> ioctl$CDROM_SELECT_SPEED(r0, 0x5322, 0x7ee9f7c1)
+> 
+> ... which was used against Kees' tree here (v6.8rc2):
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+> 
+> ... with this config:
+> https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
+> ---
+>  drivers/scsi/sr_ioctl.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/sr_ioctl.c b/drivers/scsi/sr_ioctl.c
+> index 5b0b35e60e61..2d78bcf68eb3 100644
+> --- a/drivers/scsi/sr_ioctl.c
+> +++ b/drivers/scsi/sr_ioctl.c
+> @@ -430,7 +430,8 @@ int sr_select_speed(struct cdrom_device_info *cdi, int speed)
+>  	Scsi_CD *cd = cdi->handle;
+>  	struct packet_command cgc;
+>  
+> -	if (speed == 0)
+> +	/* avoid exceeding the max speed or overflowing integer bounds */
+> +	if (speed == 0 || speed > 0xffff / 177)
+>  		speed = 0xffff;	/* set to max */
+>  	else
+>  		speed *= 177;	/* Nx to kbyte/s */
 
-I think this makes the checking more reading too. Thanks
+I didn't see a "speed < 0" check, so I went to check the type on "speed"
+and found it to be "int". So I'd expect such a check, but then I looked at
+the interface: I think it's wrong that "speed" is an int at all. There's
+only 1 caller, and 1 implementation of "select_speed":
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+$ git grep '\.select_speed'
+drivers/scsi/sr.c:      .select_speed           = sr_select_speed,
+
+static int cdrom_ioctl_select_speed(struct cdrom_device_info *cdi,
+                unsigned long arg)
+{
+	...
+        return cdi->ops->select_speed(cdi, arg);
+}
+
+And the arg there is unsigned long (?!).
+
+So I think probably the prototype should be changed to unsigned long,
+and then it can clamp the "speed" argument:
+
++	/* avoid exceeding the max speed or overflowing integer bounds */
++	speed = clamp(0, speed, 0xffff / 177);
+ 	if (speed == 0)
+  		speed = 0xffff;	/* set to max */
+  	else
+  		speed *= 177;	/* Nx to kbyte/s */
+
+Then the "negative" values go away are then correctly treated as
+"too big" in the clamping.
+
+-Kees
 
 -- 
 Kees Cook
