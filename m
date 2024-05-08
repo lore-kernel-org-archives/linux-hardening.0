@@ -1,147 +1,239 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B6C12FF9D
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 23:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D115134CEA
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 23:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715211811; cv=none; b=aDOgv/eT/izVdgFHKPxMtTrVXXg13pEjBapKTNReig3qrzFY8ldgkhVzo5fprIkUizGu+XbMpVQ9UnHDvN/+uaz1nx0IN1fib2QMXZ72RtLjimRPxQpLgYxStfbM+VtWvJenw624pd4IRkekTAnEl8lWW6B56yJNw0hsjyYNAlg=
+	t=1715212079; cv=none; b=r2qGPR5L4WXDn4AhOBN5IwsSBvjP18+qvdDVO9+cxfMzulzjQUmS8quzIOQTX0RjUfKxt89iTN1vERndnXlMr5dYHLjwW1+682v1QDtFd08ubEaevQoz19LJm/Ty5LFqryUyvMw9glG24ooA+nZYCwgtf2hMlHUaFOEcSe7qysY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715211811; c=relaxed/simple;
-	bh=y1HGQWnW087ryWPapOIDF4ENmKxgHtUhDXYwnbKJErw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J5neZeKbGMkZizsGzMAUZ3l1VCL/AcD7C7jqZdTZ3htGh8ebxothZ/In3f0fpRqDa1i0upoDLopkoqT/xTA3Jp1CW/iOJZmd9FeESvh5WMWjI6y0KNZoJhHxdoHELapgmFScUh0HNN1e/kSUCGKzueM6gFtuctspXdIPvaEINtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nuLXf9VV; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715212079; c=relaxed/simple;
+	bh=OW/b8uAOH+Sb+MiKHJVZZkROsd6CBAfhvOiVb6V3tqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BUhOWlCZ3nVtrY6RPfZ15EtdPrM/kTMuCmQN88mLuMfJ5H1kG5FSHzsDSKGQrSYAqYgq4E7ID7l36B9nnkvLzDMiOLEhu/tum9ZjMSqEXd/jeWJRTCySVNBs+uD/HIaezz61CVCifor268SAxT8XnxCleetf1L02oYRZNnXdKmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Mq9zzV7o; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nuLXf9VV"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so2140555ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 16:43:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Mq9zzV7o"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a5a1192c664so70802366b.2
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 16:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715211809; x=1715816609; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4aOUo+Ox29GhQhR4ZuEuFwhEG4wIeHKCaf3AQBwPEAY=;
-        b=nuLXf9VVy3cdEJc2X0CWWl0m3aKyXQLggY3J6tZjbSZkNN3zqtvULVXqQlaAV1mGuV
-         kHul54MHVfiTswM2HR/n0KVStc/Q+9AYO1/xJa6NhHBZ+WWS8qJS2NyX6mVu4wRjsSX4
-         MS7HlviY2mkWBiJP1nhq97eUqhys+SzQM2hb0=
+        d=linux-foundation.org; s=google; t=1715212063; x=1715816863; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HLC5ByXhKS1C0+XIxfmxA5pdOYFsJLXlzKRuFCObZZY=;
+        b=Mq9zzV7oBk8CmxD+LhXUqnbbcR/g5RQsKfNmjvEv7nbMzKyhyf4saLGy5nExfadOq2
+         mhQJvOqiD91Ti6LHR1E+Q9TgHu3tbZW/9nbs3SNTiSs4aoH21RgofZdOZg3a12FAjWDn
+         mi+JEyVQOVbLMXBZou8CyOSiOG+8BRfFbzwQA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715211809; x=1715816609;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4aOUo+Ox29GhQhR4ZuEuFwhEG4wIeHKCaf3AQBwPEAY=;
-        b=WUzD5YzAxaIMfQleaX3noVATy3cux2xQ0/PaeAt81cNPtAaKmoZE3WhRy8aB1NvBrv
-         tCfGBHHLtkwRJU3Actlet08eKtqdUMTKeszuIkh1y5msu985MTmXykXutIPk7tzE/Clg
-         0V6/zpcZ5oAck8s+6n0160+ujBg3MaUpV0A7EMdPBMkUJvIkXPAKBrRnMfsRmnfCK0vv
-         CIXt1blO3JZxQiGjMozZf5unM1qjOGNhcFsJyt2ZfbFPvxaBublk/7KYaxo3qyBp9HN6
-         xvsfIx0o/SV8e1m+5BzVrEbnLMoV9v4utQTjxNSg63NP5hYE9IldNuyTVkDTBVzmLEgC
-         HZ7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzt6VcHwezmud76LzkPbLI9yToePbvcBX1iuEeWq5m902QclcJ2nD1J1Q1hNQkNmFHUjJclhTA95iwXV8Ld7veWYAIflHvT2h6+l/rSsQi
-X-Gm-Message-State: AOJu0YwMbTJrihVQA+igGEdN6GQwL/SWN47dPFaizhExw+A7aSz+yD6C
-	3lUaNDf+BH6ZlH/zT2iu4c+4OgBqxLvQQjRcXeOJx0rE/zvVPeudW+4cysUjGg==
-X-Google-Smtp-Source: AGHT+IF8F9eYSrfhWch2mudjIXjyH4c0O/q8Qefji8NxXLaBVZvd08ca3pmytlTZPjibFtmrd/seMA==
-X-Received: by 2002:a17:903:32cf:b0:1e0:ab65:85e5 with SMTP id d9443c01a7336-1eef9f4181fmr16879805ad.1.1715211809118;
-        Wed, 08 May 2024 16:43:29 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30b22sm1013945ad.180.2024.05.08.16.43.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 16:43:28 -0700 (PDT)
-Date: Wed, 8 May 2024 16:43:27 -0700
-From: Kees Cook <keescook@chromium.org>
-To: David Laight <David.Laight@aculab.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <202405081035.6B1A791B@keescook>
-References: <202404291502.612E0A10@keescook>
- <e777a057e8d246efbc90381c2988b9b2@AcuMS.aculab.com>
+        d=1e100.net; s=20230601; t=1715212063; x=1715816863;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HLC5ByXhKS1C0+XIxfmxA5pdOYFsJLXlzKRuFCObZZY=;
+        b=G5Zw5S2DQhV4X7dUCxJTMVUJ43BNTNBcWu9H348HweQ1f4aXDww2tVX+oz4d4BnOLy
+         Eb1rxKKDS//H7KNttRe9rRAvmQM/u6gxNp0o/jOSFshZ0LnEHcqUExANhFLS/Tgk7b0W
+         2eT8h0f8V+mTRkLZ4iGARRmqZfKowFPlJBvjv8taS54R6R4NWiN2luSUs9vQO6amUVsI
+         eXbB8fCPMyhtnMV//mOT1n/wxGtbkgauM3EArfo/wTz7geESqJv+nJf2XJ48jNYBQzYF
+         N8iBBYJZfCmBfX4QINobVQU0ylbeX15QsXCnrb1HfLQCvYXAnkkTIdqD7Gr9Onl3xMCR
+         v8HA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS1sRC3ei1STnSsYRsnHLtU5bKaU6yzwNtHCTJRF9VUc2L2tJ8jNFTgOdKEXTv9weHxmyG2/064rEtPDBtF4uOWDUEO9PDXJeAJ0/FnRcD
+X-Gm-Message-State: AOJu0YypISTxOpkqiDdF+Xzl/gGcn9bXtI4TRb9GmCP9XDLq6p1MTcs+
+	wrBPaMM9uUGp8SmpIB78Xz0+aC1OgnEBB2Z3mh+D47Zfkg4TNnDqATxLcd6uFgGka2ykck7bPwD
+	HpqZPBQ==
+X-Google-Smtp-Source: AGHT+IF5uALA9lNufl4DjL2C3folTdNmHVGjXypTnZfmZHoj5KzVjt2LWyvHoPpkAAEkB0yC/tNdcw==
+X-Received: by 2002:a17:906:a14c:b0:a5a:15f6:157e with SMTP id a640c23a62f3a-a5a15f615ebmr43895966b.11.1715212063340;
+        Wed, 08 May 2024 16:47:43 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781cd85sm13224566b.15.2024.05.08.16.47.42
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 16:47:42 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59b81d087aso65355966b.3
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 16:47:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVlJuEs/pgOX+VXNFOf5Yb69VXSdOzVQKFYzzDVizz+Ef6F3qo9qe88msR7ra7g1riJ5u9kkuLf6sX/Jzq3IOSAWIfG/vfReXrQawqze0za
+X-Received: by 2002:a17:907:118b:b0:a59:bb63:5e93 with SMTP id
+ a640c23a62f3a-a59fb920592mr343424566b.16.1715212062214; Wed, 08 May 2024
+ 16:47:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e777a057e8d246efbc90381c2988b9b2@AcuMS.aculab.com>
+References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+In-Reply-To: <202405081354.B0A8194B3C@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 8 May 2024 16:47:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+Message-ID: <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 08, 2024 at 12:22:38PM +0000, David Laight wrote:
-> Have you estimated the performance cost of checking the result of
-> all integer arithmetic.
+On Wed, 8 May 2024 at 15:54, Kees Cook <keescook@chromium.org> wrote:
+>
+> Sure, but if the bar is omniscience, that's not a path forward.
 
-I hadn't included that in my already very long email as performance is
-somewhat secondary to the correctness goals. Perhaps that was a mistake,
-as it is going to be everyone's first question anyway. :) But yes,
-I did have an initial analysis:
+I really don't think there's a lot of omniscience involved at all.
 
+> I haven't really heard a viable counterproposal here.
 
-Performance Considerations
-==========================
-Adding arithmetic overflow checks, regardless of implementation,
-will add more cycles. The good news is that the overflow outcome can
-be pessimized, and checking the overflow bit on most architectures is
-extraordinarily fast. Regardless, for many Linux deployments, the cost
-of this correctness is seen as acceptable, though all users will benefit
-from the fixing of bugs that the mitigation will find.
+So let me make the counter-proposal that you actually concentrate on
+very limited cases.
 
-Looking specifically at proposal #1 below, we can do some estimations. For
-a defconfig+kvm+FORTIFY config on v6.9-rc2 x86_64, the signed integer
-overflow (SIO) checking is added in 21,552 places. The unsigned integer
-overflow (UIO) checking is around 55,000 (though I would expect a good
-portion of these to be eliminated as they are shown to be "wrap-around
-expected"). Running with SIO enabled is mostly flawless, though a long
-tail of false positives is expected. Running with UIO is not ready for
-general consumption, and performing benchmarking there is not going to
-give useful numbers. However, we can at least attempt to extrapolate from
-an SIO build how a full SIO+UIO build would behave. For example, based
-on instance counts, we could maybe assume SIO+UIO to be ~3x compared to
-SIO. This could easily be an over or under estimation, though. Regardless,
-some rough draft comparisons:
+Baby steps, in other words.
 
-Image size
-       Stock	60197540
-    SIO,warn	60299436 +0.169%
-    SIO,trap    60195567 -0.003% (trap mode probably found code to drop)
+For example, the most common case of overflow we've ever had has very
+much been array indexing. Now, sometimes that has actually been actual
+undefined behavior, because it's been overflow in signed variables,
+and those are "easy" to find in the sense that you just say "no, can't
+do that". UBSAN finds them, and that's good.
 
-Kernel build 10x benchmark	Avg(s)		Std Dev
-                     Stock	439.58		1.68
-                  SIO,warn	444.20 (+1.00%)	1.35
-                  SIO,trap      442.10 (+0.57%) 1.52
+So I'd suggest seeing if we can catch the cases that *technically*
+aren't UB, but match dangerous overflow situations. IOW, start with
+very limited and very targeted things to look out for.
 
-> If you have a cpu with 'signed/unsigned add(etc) with trap on overflow'
-> instructions then maybe you could use them to panic the kernel.
-> But otherwise you'll need a conditional branch after pretty much
-> every arithmetic instruction.
+For example: some of the "this is not UB" may actually be trivial
+mistakes that come about because of the silent C type casting rules:
+overflow in unsigned arithmetic isn't UB, but it's actually very easy
+to make arithmetic unsigned "by mistake".
 
-Yes. This would be true for any implementation. Thankfully in some
-places where bounds checking has already happened manually, the added
-instrumentation checks will have been optimized away. But yes, turning
-such a mitigation on isn't without impact. :) But a significant install
-base is interested in correctness within a reasonable performance
-budget. And some will take correctness over all other considerations.
+IOW, a pattern to look out for might be
 
-> As well as the code bloat there is likely to be a 50% chance they
-> are mis-predicted slowing things down a lot more.
-> IIRC at least some x86 cpu do not default to static prediction (eg
-> backwards taken forwards not) but always use data from the branch
-> prediction logic - so the first time a branch is seen it is predicted
-> randomly.
+        int a;
+        ...
+        a * sizeof(xyz);
 
-Sure, though I think the nuances of CPU design are somewhat tangential
-to the overall topic: how do we provide a way for Linux to gain this
-correctness coverage? It's accepted that there will be a non-trivial
-impact, and I agree we can start to consider how to optimize
-implementations. But for now I'd like to solve for how to even represent
-arithmetic overflow intent at the source level.
+where "sizeof" obviously is unsigned, and then the C integer
+promotions end up making this a well-defined operation that probably
+really *is* dangerous, because the integer promotion basically adds an
+implicit cast from "int" to "size_t" in there.
 
--Kees
+End result: it's not UB, but maybe it is not-*accidentally*-UB, and
+thus maybe worth a warning? See what I'm saying?
 
--- 
-Kees Cook
+So *that* I feel could be something where you can warn without a ton
+of compiler smarts at all. If you see an *implicit* cast to unsigned
+and then the subsequent operations wraps around, it's probably worth
+being a lot more worried about.
+
+Now, another thing to do might be to treat assignments (and again,
+implicit casts) to 'size_t' specially. In most compilers (certainly in
+gcc), "size_t" is a special type.
+
+Now, in the kernel, we don't actually use __builtin_size_t (the kernel
+started out with a very standalone type system, and I think it
+actually predated gcc's __builtin_size_t or maybe I just wasn't aware
+of it). But we certainly _could_ - or we could at least use some
+special marked type for our own 'size_t'.
+
+And basically try to catch cases where arithmetic is explicitly used
+for a size calculation: things like 'kmalloc()' etc are the obvious
+things. And yes, the result will then have an (implicit) cast to
+'size_t' as part of the calling convention.
+
+That's another "pattern that sounds relevant and easy to notice for a compiler".
+
+And, finally, simply pointer arithmetic. Again, this is *not* some
+"omniscience required". This is something very obvious where the
+compiler is *very* aware of it being pointer arithmetic, because
+pointer arithmetic has that implicit (and important) "take size of
+object into account".
+
+So again, if you see an integer expression that leads to pointer
+arithmetic, at that point the overflow very much is relevant.
+
+See? Three very *targeted* things where
+
+ (a) the compiler is very much aware of the use
+
+ (b) you can fairly confidently say "integer arithmetic wraparound is
+a dangerous thing even when not UB".
+
+So what I object to - loudly - is some completely bogus argument of
+"integer wraparound is always wrong".
+
+And dammit, I have seen you state something that sounds very much like
+that several times, most recently in just this thread where you were
+arguing for a special "u32_wrap" type just to allow wrapping without
+complaints.
+
+And I think it's that overly-generic "wrap-around is wrong" argument
+that is completely bogus and needs to be nipped in the bud.
+
+Wrap-around is not only well-defined, it's *useful*, and it's *used*,
+and I find tools that warn about good code (like our existing hash
+functions) to be *HORRIBLE*.
+
+False positive warnings make real warnings worthless.
+
+And so I think warning about wrap-around in general is mindless and
+wrong and actively counter-productive. If people then just "fix" the
+warning by casting it to "u32_wrap", you have only caused problems.
+
+But catching wrap-around in *specific* cases, if you can argue for why
+it's wrong in *those* cases: that sounds fine.
+
+And I tried to give three examples of such specific cases above - I'm
+sure there are many others.
+
+To conclude: I think the path forward is not at all omniscience. It's
+"limit yourself to cases that matter". Don't think of wrap-around as
+some "global evil" like you seem to do. Think of it as wrong in
+_specific_ cases, and see if you can target those cases.
+
+Start small, in other words.
+
+Now, to take the specific example you brought up: commits a723968c0ed3
+and 382c27f4ed28. Honestly, I think you'll find that that one wouldn't
+have been caught by some arithmetic wrap-around issue, because the
+*arithmetic* was actually done in a type that didn't even wrap around.
+
+IOW, in that case, you had "int size", and none of the arithmetic on
+the size actually wrapped.
+
+No, the only point where that actually failed was then when a
+(non-overflowing, non-wrapping) final value was assigned to a 16-bit
+field, ie the problem only ever happened at the final assignment:
+
+        event->read_size = size;
+
+where no overflow had ever happened before that.
+
+So in *that* case, you actually have a much more interesting
+situation. Not wrap-around, not overflow, but "implicit cast drops
+significant bits".
+
+And yes, I do think implicit integer casts are dangerous. Often *more*
+dangerous than arithmetic overflow and wrapping. We've had absolutely
+tons of them. Some of our most traditional bugs have very much been
+about implicit casting losing bits and causing problems as a result.
+
+In fact, that's the reason we have MAX_RW_COUNT - because we used to
+have too many places where various drivers or filesystems ended up
+casting a "size_t" count argument down to "int count". So we are
+literally violating POSIX semantics for some of the most important
+system calls (read() and write()) as a safety measure against hidden
+implicit truncating casts.
+
+I think that would be a completely different area that might be worth
+looking at: instrumenting implicit casts for "drops bits". I'm afraid
+that it's just *so* common than we might not be able to do that
+sanely.
+
+But again, maybe it would be worth looking into, at least for some
+limited cases. To go back to your particular example, it might be
+worth trying to limit it for unusual type sizes like implicit casts to
+'u16' or bitfields: not because those type sizes are magical, but
+because it might be a way to limit the pain.
+
+Summary: targeted baby steps, not some draconian "wrap-around is wrong".
+
+                  Linus
