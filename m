@@ -1,139 +1,94 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844CD8BEE
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D50128383;
+	Wed,  8 May 2024 17:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715190786; cv=none; b=obzle9VrJ7jE4bHEWP5u7gxOC37JDNcKMydkG7vv0CHeckCbbhygBNShJI07IhwzGre8QMXC2ctQwXqWTqETtXQhoPT0q3CJdKBFwHERw9Tmyax/68zrhfsAbZnB59pmkmFAe95NmHmeALFUICAU7CxUPZ4/YdOm00u2+7oFLd8=
+	t=1715191128; cv=none; b=Hm8tZVA5+UEJgJCWhbWI8zZZOpdjEuo8szrphpY/4gWsIXp6bQLt3TaGFo2S8oztsGFpVBcPIvp0PuZHaRxgMRNTRD4EvvMAVdgVlEnPzAltRrP5orj2o1faO6g9Du1xH/8ZaH4q4Ee8WHzcboD8tI1MLYwCSV3GoIjV4gLgYNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715190786; c=relaxed/simple;
-	bh=8O4fYZMWhW1IHisxTbuBjvyMlQTTyIfPG8nknj8tOK8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GyNpGUmmnzHAnmV7cIgMYa9UcaU5S6kxBuKbzysPbaT7MKViw4G/XM1gTJSvkNuVk/Y38WeG+B/mKEK0AANCewMl6KGp6f8TJZqtt1FI9SO+UGXYIFb9TSSJrldV+es4j4yThJFmqLvUHqgT6X9DJkNMPlAWUlgs1ub+NSXD0B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Md+ZRopN; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715191128; c=relaxed/simple;
+	bh=izy9mUQYXVfZMmrD6pld1qKnZtPknLMwwyonH4yL3Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iSMje7ThkHlzloDYPhQlx1YUnCFOepU758HKB2CkSoXpCqUzOdNUsQpfhe14PKI5Moi82KeUYk19MvVf4MoZz77baOiKjogCwVMC33v1oa2IMuRexh+CM4qkMNHvc2VWCidAgMz9aA6QLiIXqEIfFmNscUqpuGH+yrvxwHp7rBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Rq+glfXL; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Md+ZRopN"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59a0e4b773so1132475266b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715190783; x=1715795583; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CDD6cSkxh18P1B/GILc0PBtmaYxZm1FGfsVGarC9pdM=;
-        b=Md+ZRopNVIx0SsuPfGzTaF5YfH+NJQfYXWPelu76tOufw2LfyfRreY6Oz1Ui1Xq2cb
-         pgrVx0pL1qFbv4FJiOp7/FI0OcP7UD70GQnEjwVmFRa6ghwDT4KRhHem7AX9B4/ML7Eq
-         ka+lmoDDSzU82ktK4QpoZq5EqqGNfNOGMhdvM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715190783; x=1715795583;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CDD6cSkxh18P1B/GILc0PBtmaYxZm1FGfsVGarC9pdM=;
-        b=koX/yrro19B6963g9YHIi6mjXlWxUZmQRG2BJkmk54Fl+6hTp1oRY31UuFSqO//g0G
-         uR9/XSR1eogORwESwy5A0EwnCDhYUm2ygAyMNo/VJRUZ8zjKfw1fInK3TBeNawnltEJZ
-         HeQw9cu+djM5BXIgQRb7I6NDnUH3eN1J6TlmhNsWUm28x3CF7S+s5iaa/4BBcRQwM3Q0
-         KiiIRracUTvtlrr4gv/YC9nspZZtq5KGEAnDpOOu2HwmzGp5nZXNahBzS2ob67ZGqSvP
-         ZDkHdZT+eFbN7xCDPh4s5SXWRJwj7L9jTN7iGwIHrWXoKwKRMqhmsRlAfExitMVMSpyK
-         QzHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXuIJPjRFpGTTfUt5EAvpJEQi4ThlPKatXb2NdkXdk5FqXBZMqeLZMnecGkBxKHUPNztAqYhisjjMLPTqtBNPk+A2dwbX9jrzDNJ4Tx4Iz
-X-Gm-Message-State: AOJu0YwVAp4pndrkDjEpeJvucCgah8HH9dGhnInG9L5pp3FOuGQtjr5J
-	UkjWQPK+V2Jsm37YOqRQS83yykjUZuaCQU+kB+CMSQmWMYndXOC8xHnhEY9MGWhvW1T0PBTMhG8
-	V+YoMmA==
-X-Google-Smtp-Source: AGHT+IFa8UzBIswdhuTfI733OeBnjiB9xYLGmcxnhCbHhLjlxQOefI6agVYb9rJXBvK0BJCx3XGHkg==
-X-Received: by 2002:a17:906:b34b:b0:a59:c52b:9939 with SMTP id a640c23a62f3a-a59fb95a2dfmr173047566b.32.1715190782695;
-        Wed, 08 May 2024 10:53:02 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id g3-20020a170906394300b00a599c1d46d5sm6403641eje.101.2024.05.08.10.53.01
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 May 2024 10:53:01 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59a0e4b773so1132466166b.2
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:53:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW3Z1hZltf5IZy/P4aCGiq9Cj8rw6toymzlwR+KW77ywsrVTDHnN1Otq2EdlL859pP80i/Zm6gOXZqQgZNbLFGn/Fdy+jeBauMKpMgyXt5C
-X-Received: by 2002:a17:906:1153:b0:a59:9eab:1622 with SMTP id
- a640c23a62f3a-a59fb9dc8dbmr211243266b.56.1715190781396; Wed, 08 May 2024
- 10:53:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Rq+glfXL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1715191121;
+	bh=izy9mUQYXVfZMmrD6pld1qKnZtPknLMwwyonH4yL3Vc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rq+glfXLt289eemZq+1r+iaNMBnTWPvdeQLQ0NyoL09uhVDMAJ3wxRUCjqVjOV2SK
+	 YTITbS8yN3LNivomPWmqSMt6P4XqWSDQOn+Y/Up9LO2PRMAfQqTyynHW9Xt5wwqKTD
+	 cCLO4/9kms2cEpiWrbhUc1dnRaoQ0XfXj3fWusLw=
+Date: Wed, 8 May 2024 19:58:41 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
+	Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] seccomp: Constify sysctl subhelpers
+Message-ID: <26ee93db-a924-46f3-b7eb-4a89a6a59932@t-8ch.de>
+References: <20240508171337.work.861-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404291502.612E0A10@keescook>
-In-Reply-To: <202404291502.612E0A10@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 8 May 2024 10:52:44 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
-Message-ID: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-To: Kees Cook <keescook@chromium.org>
-Cc: Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240508171337.work.861-kees@kernel.org>
 
-On Tue, 7 May 2024 at 16:27, Kees Cook <keescook@chromium.org> wrote:
->
-> When I say "overflow", I mean "overflow and underflow", but more
-> specifically I mean "wrap-around". This is not about "undefined
-> behavior". We already demand from our compilers that all our arithmetic
-> uses a well-defined overflow resolution strategy; overflow results in
-> wrap-around (thanks to "-fno-strict-overflow").
+On 2024-05-08 10:13:41+0000, Kees Cook wrote:
+> The read_actions_logged() and write_actions_logged() helpers called by the
+> sysctl proc handler seccomp_actions_logged_handler() are already expecting
+> their sysctl table argument to be read-only. Actually mark the argument
+> as const in preparation[1] for global constification of the sysctl tables.
+> 
+> Suggested-by: "Thomas Weißschuh" <linux@weissschuh.net>
+> Link: https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net/ [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I'm still entirely unconvinced.
+Thanks!
 
-The thing is, wrap-around is not only well-defined, it's *common*, and
-*EXPECTED*.
+Reviewed-by: "Thomas Weißschuh" <linux@weissschuh.net>
 
-Example:
-
-   static inline u32 __hash_32_generic(u32 val)
-   {
-        return val * GOLDEN_RATIO_32;
-   }
-
-and dammit, I absolutely DO NOT THINK we should annotate this as some
-kind of "special multiply".
-
-I have no idea how many of these exist. But I am 100% convinced that
-making humans annotate this and making the source code worse is
-absolutely the wrong approach.
-
-Basically, unsigned arithmetic is well-defined as wrapping around, and
-it is so for a good reason.
-
-So I'm going to have a HARD REQUIREMENT that any compiler complaints
-need to be really really sane. They need to detect when people do
-things like this on purpose, and they need to SHUT THE ^&% UP about
-the fact that wrap-around happens.
-
-Any tool that is so stupid as to complain about wrap-around in the
-above is a BROKEN TOOL THAT NEEDS TO BE IGNORED.
-
-Really. This is non-negotiable.
-
-This is similar to the whole
-
-        unsigned int a, b;
-
-        if (a+b < a) ..
-
-kind of pattern: a tool that complains about wrap-around in the above
-is absolutely broken sh*t and needs to be ignored.
-
-So I think you need to limit your wrap-around complaints, and really
-think about how to limit them. If you go "wrap-around is wrong" as
-some kind of general; rule, I'm going to ignore you, and I'm going to
-tell people to ignore you, and refuse any idiotic patches that are the
-result of such idiotic rules.
-
-Put another way the absolute first and fundamental thing you should
-look at is to make sure tools don't complain about sane behavior.
-
-Until you have done that, and taken this seriously, this discussion is
-not going to ever result in anything productive.
-
-                    Linus
+> ---
+> Cc: "Thomas Weißschuh" <linux@weissschuh.net>
+> Cc: Joel Granados <j.granados@samsung.com>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: Will Drewry <wad@chromium.org>
+> ---
+>  kernel/seccomp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> index aca7b437882e..f70e031e06a8 100644
+> --- a/kernel/seccomp.c
+> +++ b/kernel/seccomp.c
+> @@ -2334,7 +2334,7 @@ static bool seccomp_actions_logged_from_names(u32 *actions_logged, char *names)
+>  	return true;
+>  }
+>  
+> -static int read_actions_logged(struct ctl_table *ro_table, void *buffer,
+> +static int read_actions_logged(const struct ctl_table *ro_table, void *buffer,
+>  			       size_t *lenp, loff_t *ppos)
+>  {
+>  	char names[sizeof(seccomp_actions_avail)];
+> @@ -2352,7 +2352,7 @@ static int read_actions_logged(struct ctl_table *ro_table, void *buffer,
+>  	return proc_dostring(&table, 0, buffer, lenp, ppos);
+>  }
+>  
+> -static int write_actions_logged(struct ctl_table *ro_table, void *buffer,
+> +static int write_actions_logged(const struct ctl_table *ro_table, void *buffer,
+>  				size_t *lenp, loff_t *ppos, u32 *actions_logged)
+>  {
+>  	char names[sizeof(seccomp_actions_avail)];
+> -- 
+> 2.34.1
+> 
