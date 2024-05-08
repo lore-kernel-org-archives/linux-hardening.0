@@ -1,118 +1,129 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E951E888
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847944CE19
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 17:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715188300; cv=none; b=q8On6dxEhC9RsfQeN0rRbJtLaSN2DDUMy7x2v+GEsFikIpKbVe6zUzJRRvotG21VltWN0xPWXWuKrmB9Z8hJk5MimNX1iSi+/S7N7YBb9H71kAqQu5q7OcvRYJQGlUROCrMq90FtY65kYnoH8CvFnxsIPIUtoTpFOl1k5LwWPDg=
+	t=1715188426; cv=none; b=UwfXwQrYg9K/d/IYndwNcqbkZ1df5wMKppxJbW9IME3YUUZi9Wu+HT/2SWw1U4xJJgT2DVMTR1/MlSJyjljqIT/DUX4LZXvWvVFzX+8mS9199GRb+GlTRTB2lzjoSV3aqDfOuZOYu/U98fKjtzXJvOiLrRFDbv2TC9yS1/MGr/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715188300; c=relaxed/simple;
-	bh=3H2Ex21607oQUraLy4a6ZebeomrW6qImqDFNkYN7KH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hdW/B/ljd1F8YmV1XAVcCfguoE7zoTU9yZR5TRUsqMyJOg+ETq/+qxQ6PeA1wJ3570m0Q/nHBjiCM8noODBhPTQowV6BgqKlsjTmYr/cZ5gAyPbPE8Tgw61V2XVuTodJmR459TpPQIYyhCuvHLuruVreeNBJrAHdSonb3xNlfTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e/7av/64; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1715188426; c=relaxed/simple;
+	bh=xt9M3exlnZsdvMPnoHPpDqdV0gMIktR34CMLamkUj9A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=gShuAdREGIa3GrtMamsfgU2iQz7x1yVMjKjP6N/d3dqpITK/fuHULTpd1s2Xx/Eb9QqcZ4nTGfgBhcKJ6g8YwS70hcfi0p2rvilWjVHJX53QygLot7TP1G7zC2FZeqkPgRuJl6rRopdBkOAgfM5zXZhaIjgAOhLLpoZ9uMlemBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C+dfqJLu; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e/7av/64"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f44b296e02so8762b3a.2
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:11:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C+dfqJLu"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2b43490e0e2so12034a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 10:13:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715188297; x=1715793097; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
-        b=e/7av/64Dcgf3OMhlc/3aG68Cv9i0FKAXx1yap6cSbdW0nsJbcNd95Yo1lRWM4CXEO
-         StJJA023SDun4hdxa5p+ZL91TWCTjhJqbT/I8537Y89y8wwXzIEuISflNf2v2IqVxAlb
-         rwDXFcNsSy0ds4FxqMQiDgXwqp7u78CH/UbW0=
+        d=chromium.org; s=google; t=1715188424; x=1715793224; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wr+4jFwVlj6YM7AOT9GiLxeZOlIpMfOTLQ368UMxy2U=;
+        b=C+dfqJLurzlyBFIrSk2/qmsvx/5mlCVFgibcJDlFD3Jh5wjocvg/tGm4NFmtY05Q+b
+         PbMrx+iHE2dVPmlR91Xv7RHsXig5Ui35d9pP6djjioCsdfmAcTqql+iOzkZ4ThuqXlYa
+         jpzqhtnWSNf4RJ0RGGC1y+cIiTSlrDACrzlIY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715188297; x=1715793097;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
-        b=wJezygfjfu8H3XThFu562lnBoPhiNy1OhguBMAknHm/Nk6CsKjZcwngpnHckjB8pK3
-         vlaSQaCHXOXwWRXVw1DMnuaK8yx6PDRTDRgE8aTmxAMP08jGpFr8paiyw2FI3Ki6Y8zf
-         6X/A4ZcZbB2e4rTQk1UrogcARrCQ+aCJoKDIELhv9kgAJsOvEK5YP3LwWZ+sGe3q1Cw/
-         sn5iliGBohFrOIRr4saz5mcYP4L0EhojHuo4wGSZXhozZ1pr8WkT+21uZcHTHp5I9bin
-         jlmAtu9HLkn4LaVnkCSm431y8OItubhG492Ko48u5lEc+YP2VQzAygQ0Nbq2lHIi/eUi
-         j/Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPYd5iiblNi5rMp+AZNA+Kzjjm5AqSg6g/HvW1QYhE6F1xYe4l+HtbsKRJ+0wtyb/kcg+gOY24HcG3FQg3oH8MvasAZwcw7Qhcjfzciq4C
-X-Gm-Message-State: AOJu0YyUtWd1w4GnuD1cN2XlpHq+7R8XXpFts5qSGT6N4n5zut/SbcRJ
-	k4/xobGVwhoLJhzymIn+WkFB/hDCVVt2LxCIbDzZrfp8hWcfr9IM9GryGHyDtg==
-X-Google-Smtp-Source: AGHT+IHN8eeXE9OsgItxEKHR70nrrazwBAjav29jEzJB0wGGmdP+iVlP1VjtMYRBUjqpRzzzPBgYhQ==
-X-Received: by 2002:a05:6a20:c88b:b0:1a5:6a85:8ce9 with SMTP id adf61e73a8af0-1afc8d1b02amr3543639637.12.1715188296881;
-        Wed, 08 May 2024 10:11:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715188424; x=1715793224;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wr+4jFwVlj6YM7AOT9GiLxeZOlIpMfOTLQ368UMxy2U=;
+        b=fmAh9VsNPAWD3l/IT41cVMDEPZLhbkrBe93YVo9VZjlbSZbQHQ2KWRk8rYztNt30zL
+         366mPIbix12wNUgehyP/6zZO6cP6vAXaPRGfzn+4fRf5Qm8FfgIqOmltBf3TJjNS7Hj/
+         2b57bbQ4n9+pr++qMySWkvNZTriRAVqcPzpCgoI0bfOTC6m/kQo0MiIJKzqSvAb4REDc
+         jUDrXc0cFD/bH3v7AMUmo4+yuaI8biMT57mfLXjTr3kMzFgrwES/DJWqfixm7xZgeot/
+         iwWYJReEyzvokfy4/xti11SrKexGQXeqp7nxqgBft/Btf/LdWO5I4jZDtHxdSexD0/oM
+         nFnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVk/QZDLYBL5WVDDa+r+mvGbD7GOpYH1w41HilicmtbnbIOOaSKXcJYCw6fUXCLRr8IJ2D4a48grjHKe+U6RyzM1UWGWue1KTBVRv46fxu/
+X-Gm-Message-State: AOJu0YyrJ1A+WzAqlFRuMVbucxete5hBu/zOxu6MTS62S7lW8TpyXDNi
+	/vRUZhNjJgtJ7q9RJgbr335UkNGdpWVma0CNQ4tC8NVWZbj7OH2g8AW83BqBxQ==
+X-Google-Smtp-Source: AGHT+IElHMLH2gY5FLgoW4a5l6UzmjV8pgnTVNST6vObo5KDeJdI638Pp4AbvqdAiKKOYrwRZQbEkw==
+X-Received: by 2002:a17:90a:b113:b0:2b1:534f:ea09 with SMTP id 98e67ed59e1d1-2b6166bfd77mr3234945a91.23.1715188423888;
+        Wed, 08 May 2024 10:13:43 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lp9-20020a056a003d4900b006f44ed124dfsm9245352pfb.160.2024.05.08.10.11.36
+        by smtp.gmail.com with ESMTPSA id o8-20020a17090ab88800b002b2927bf5b6sm1700077pjr.16.2024.05.08.10.13.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:11:36 -0700 (PDT)
-Date: Wed, 8 May 2024 10:11:35 -0700
+        Wed, 08 May 2024 10:13:43 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
+To: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Kees Cook <keescook@chromium.org>,
 	Joel Granados <j.granados@samsung.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <202405080959.104A73A914@keescook>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] seccomp: Constify sysctl subhelpers
+Date: Wed,  8 May 2024 10:13:41 -0700
+Message-Id: <20240508171337.work.861-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1765; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=xt9M3exlnZsdvMPnoHPpDqdV0gMIktR34CMLamkUj9A=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmO7LFIujxnDntMbKW0xj08ECDVKR8vyk7NTbW5
+ Tde5AVib4yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZjuyxQAKCRCJcvTf3G3A
+ Js8jEACKepRzEgBPhQYGg8NroNabvSKL9S5MqSCDcppWV+F//ZMvC9PBpEfx3ElNUi7eFwsnXbL
+ ZykDLc3wU+xR+RtY05rnrsYzc2+oEcGkaBiCH+ek+zBHRZ7pZyz18Ed9r4ky2OLU4L+X2ri2dJN
+ flVufs0CN3ZOUeArEJIScDmNECc56mQfNnF2eytbKFzmO6JvWAhSDGlcEAVcCBXr6ELImh4iwuq
+ /LLvcYcab6fMoFDnovXTvpfD7JpJHbKFd51B37B8vQ4HRBP/KPn6Pg1n9/3E0IDDx5y9vEpRJM7
+ i7+ZNBIVVUKBZZKMn7xZH+N7GAHl7IRLOxJwJOztfCjeQp2PTVYlZetfKnaOndjYVY/zap+l1eP
+ pbcYXbuNMC2bCYrnkzfhJjyQn3fCU1icvmdmiiUfIKSekakzrL/v/Rgzqprg2g7gKncKUgRmka6
+ ZlJlKBqwn8imytyLoeQNi/10ryLQS5hyyYLyGF4+seT/caFU4Zm1e601GJoAdXbxUiYzEyuIGrj
+ 8d5JsQctAfmwsLmTe57zpZ1AnkTHCXwKZRR4LSY9KokuenzRASMz5KCq+jHPHWp3xwWjpax6zzd
+ YPn2zNnV946IaUcVOWNsvBUYhyKdTZv65c/KVh8ZqkYQ6nBJ7SNpre9tOWDRn/KOPbT1Abaiz9y
+ FL1GtUq lRKbmsYQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424201234.3cc2b509@kernel.org>
 
-On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
-> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Wei�schuh wrote:
-> > The series was split from my larger series sysctl-const series [0].
-> > It only focusses on the proc_handlers but is an important step to be
-> > able to move all static definitions of ctl_table into .rodata.
-> 
-> Split this per subsystem, please.
+The read_actions_logged() and write_actions_logged() helpers called by the
+sysctl proc handler seccomp_actions_logged_handler() are already expecting
+their sysctl table argument to be read-only. Actually mark the argument
+as const in preparation[1] for global constification of the sysctl tables.
 
-I've done a few painful API transitions before, and I don't think the
-complexity of these changes needs a per-subsystem constification pass. I
-think this series is the right approach, but that patch 11 will need
-coordination with Linus. We regularly do system-wide prototype changes
-like this right at the end of the merge window before -rc1 comes out.
+Suggested-by: "Thomas Weißschuh" <linux@weissschuh.net>
+Link: https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net/ [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: "Thomas Weißschuh" <linux@weissschuh.net>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Will Drewry <wad@chromium.org>
+---
+ kernel/seccomp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The requirements are pretty simple: it needs to be a obvious changes
-(this certainly is) and as close to 100% mechanical as possible. I think
-patch 11 easily qualifies. Linus should be able to run the same Coccinelle
-script and get nearly the same results, etc. And all the other changes
-need to have landed. This change also has no "silent failure" conditions:
-anything mismatched will immediately stand out.
-
-So, have patches 1-10 go via their respective subsystems, and once all
-of those are in Linus's tree, send patch 11 as a stand-alone PR.
-
-(From patch 11, it looks like the seccomp read/write function changes
-could be split out? I'll do that now...)
-
--Kees
-
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index aca7b437882e..f70e031e06a8 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -2334,7 +2334,7 @@ static bool seccomp_actions_logged_from_names(u32 *actions_logged, char *names)
+ 	return true;
+ }
+ 
+-static int read_actions_logged(struct ctl_table *ro_table, void *buffer,
++static int read_actions_logged(const struct ctl_table *ro_table, void *buffer,
+ 			       size_t *lenp, loff_t *ppos)
+ {
+ 	char names[sizeof(seccomp_actions_avail)];
+@@ -2352,7 +2352,7 @@ static int read_actions_logged(struct ctl_table *ro_table, void *buffer,
+ 	return proc_dostring(&table, 0, buffer, lenp, ppos);
+ }
+ 
+-static int write_actions_logged(struct ctl_table *ro_table, void *buffer,
++static int write_actions_logged(const struct ctl_table *ro_table, void *buffer,
+ 				size_t *lenp, loff_t *ppos, u32 *actions_logged)
+ {
+ 	char names[sizeof(seccomp_actions_avail)];
 -- 
-Kees Cook
+2.34.1
+
