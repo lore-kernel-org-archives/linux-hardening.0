@@ -1,146 +1,113 @@
-Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554DE846B
-	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 00:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3731D20E3
+	for <linux-hardening@vger.kernel.org>; Wed,  8 May 2024 00:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715126560; cv=none; b=ZPy8ZQ8SBO/qcK5EZMJ7Rz0NIsCtf1zAP73k7Wsb8PRBtOGx4DRcQAz0AwD4J6HJsLtkXWDU3Y9kfPmDm4kKJQ5BVu5vxg7X5Vv2l9VcRs9T2JUkeSzHutgGvgNXTbRjKsR76m7GAyjt79aEZx6jSb6z3h+1/qKnittqeo7zPiY=
+	t=1715126968; cv=none; b=Qe5AYg29ReWJvIw4kt25VlYHAPXAcisveyHEJL77atBhxnysenyMcBUTCTp9m+PqzuIOC6+MhRh4e8nqOeMMAuLt3ipGI9x+9PZrGyZclGKCyphZxoyztaJW1QCB2oclQNWQBLSmnT2bgAjJx7wY9TnP3H5xdT/+2agz3yE/bqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715126560; c=relaxed/simple;
-	bh=x8yzkCVk6Wolns38BJznG8F1DF6BmLfscTRYXzWxiFY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FT/hlplsvtfCrtjBBGnEJVvKxkaw/suzS5NPdGJkQnG3HK49KjNB9NHY/udSHIkEWO6j2t+KccV6WmMcqHpj/Ik6NHyjlOP7oPlY511eX3xl8/rVhU6Ql0zYnfcCBHS2+XZLCoT4pWiBgKoGDpb+tgyCa5R2rMEELR9LVHX3AM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GdpblQXo; arc=none smtp.client-ip=209.85.166.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1715126968; c=relaxed/simple;
+	bh=2RBkzmRwSheKgkAQe2JV3Fs7F/JeQq/TzY2YuKFXwgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Imv+oIWy7Iti8IEnMMWLKgaQhGJydP0dLF6VHGt5WIwbqkUjQg5F+60hlxUiGM95dPNFbvBHexmd4N629sGh350zV6svUSR5JYs3nu0v5SzTFQf4gAseCEo3qEY7Zce8pTwEhdG68AvwUTjmYeLU0ANac1sfI8kqkd4GmqMexoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=P3BpdlBR; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GdpblQXo"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-7e17eba6ba3so151455539f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 17:02:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P3BpdlBR"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2b346712919so2844028a91.2
+        for <linux-hardening@vger.kernel.org>; Tue, 07 May 2024 17:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715126549; x=1715731349; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2EzQcPBxS/fsLuAnrDweegMDqFpI++/qb4hh3xWGZ0s=;
-        b=GdpblQXo4Kb0hrYYpH4pnJQ+o5cPP+aKxKYmYYCqqcytbyFeW9R7YgV/OS5GqYGuuK
-         CE/zZS/fzjgq1z7NJTa7UC2dqQdjjrMAoBdJM5j0vg3+y3S95d0wFUcJoV1DhmZQliHK
-         nZMNksktsOpuOFmj11fx2V2hEl0/Wjy8nerpPuoCUu2P8XO+wBR7WXcwwXTe6F+TvOHv
-         /HEJ2RHQUPTTxpExMhWR1p1gthAEXXXCl3d2sbuiRmDFwhinVJZR4nWceSRpjkNbnU3N
-         ZlUzDrOIST1sSlD/a/2su/Q0EJigvA975qQd7KGEzl1PbTtFXyZ+4u8aJUVsAxnmZzqT
-         MntQ==
+        d=chromium.org; s=google; t=1715126965; x=1715731765; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y1syOJovW5eId25dp/lIC5NMYcXKMWcKV21Z0vOpfbA=;
+        b=P3BpdlBRRYrhG9RwRG98tPisRxHqA9/nXL5OVnH/XDndDAqVIgGLLYrb23uF0xFmGC
+         JYjuiUVsD6tEHDieYVr0BeFymRJW7cDFK5ge8ay0p55Cc/DLjk7yQPQS+CTCSFI3DEzm
+         rhHntFPWo8s8mBoxlYvBTio3TYfad3n792GKY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715126549; x=1715731349;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2EzQcPBxS/fsLuAnrDweegMDqFpI++/qb4hh3xWGZ0s=;
-        b=Fi8oIW/rfdUWNYWK15giCzV09SBvC2bFQH634h/xRU4yp9zxuSu0hZTptnJ0JYbs8H
-         ftCcVlK1ABOFQwEAFPnG8rqHolLTR4XCdScZ2TmRnvEiaP7XnDCIvdJbUKgfkY+WVnCr
-         z1H2l6eMYX/dXyjhpjfrPxNxLfhLycMVkm0Oyb3qIXEoJb6eroGBPkIPnKt3F/xCFIHb
-         pEL49AhegRdtTFWJD14kZnp+ESzAxDl4jP5pu+n1bVG0RDD8YiWw/64b8PUXk+Nz5ooY
-         QPjn9fTjkbYtCYJgNI1hUAzwanwOnW8cDJ/y8VaJtwUi6vW+7b1vNFAIjZd14N45T335
-         EqJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3KxszTvMxzkB5jyGldNkyeA4t7MF0MwVi+903Ufezb01hGlQB60730Jnd/DzMC/XgD380jwRU8oga3rDDqzYyPNfIm75GELcb1CRW2CVP
-X-Gm-Message-State: AOJu0YwgdVlJmU6spaYnXmrlbcwYGeQicEqbyom7LaDyYBUopi/v8Yxp
-	B0nUYzoDlevIP/UxCbxThkblgCsJRQUOs7midLwBYC1p3QubjDQDa0Uqvr0VG8WlWp67j1kz0OH
-	q9MQXX+KziAwz8UXeVa01hw==
-X-Google-Smtp-Source: AGHT+IGw/gpETax6yTNA3i+9Zl+QI37sM3g2h6H0L5ARm9tG/6yPfzStL17AVO5/mFkhkenOKA0hprTVnxl15+f/xA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6638:1648:b0:488:d489:3940 with
- SMTP id 8926c6da1cb9f-488fdb12340mr66133173.3.1715126549481; Tue, 07 May 2024
- 17:02:29 -0700 (PDT)
-Date: Wed, 08 May 2024 00:02:27 +0000
+        d=1e100.net; s=20230601; t=1715126965; x=1715731765;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y1syOJovW5eId25dp/lIC5NMYcXKMWcKV21Z0vOpfbA=;
+        b=ochT1Dkfe4ga6jWBklf9pRWrOUW+aI7pIHTYPSlbc5bPNTdD6YvIvVFWtv0Cso2RUc
+         PE3QNUSPr1Xf9qDBQ/B/AL3UIlCUA1+oLWJZP5LrdOKGP7cgMz/dAD84xF6xXTs9a4Dl
+         OVCq6Mc3swUe3zyFjmroDqGItGNzbUx/nKaWBKUtcgda4DO65zOusYiu3AQXC5Na6W/h
+         mBGv3ddTPir56s2MoGDu7xI5tu/gkcqptiGvSuLd41MyNWr91K6ALz9j7MzwrTodx9jx
+         RBXK13RPgrZUMI2HfEQIj9SaH/4rp1DWu+w0lc3j40dR0iaQGiNwMjdfENBa+qjzkUPk
+         nWcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPQsaWQfkVNKwWFmWw1O8rMvNdAx81xRJIacxEqnzAG+gJ3KpgwVALuw/Hxc9Z5O/W9uyOFgMmb5we5tmFkhYC2qDMMTzJrV9cwCSsdSUr
+X-Gm-Message-State: AOJu0YwQydmjiLkalFRJGDiBhgb8ms9qSy/TpJ3gws2DkjatPmD5DPij
+	hoSzvVEXax9KTajTHgLuUhvP+EjHKCi9INbO3xuGq2y/a7XxyyfKmnJ0Xrm6vg==
+X-Google-Smtp-Source: AGHT+IG6ljKWC4/Nljh3hqVMgeNltqhDXr5URpX3VUK0fuEPsH/8i/GoTdfNLVoHrp3y4e/JzyIgVw==
+X-Received: by 2002:a17:90b:4ac8:b0:2a8:1fdf:b1b0 with SMTP id 98e67ed59e1d1-2b6166bfe0bmr1137740a91.29.1715126965497;
+        Tue, 07 May 2024 17:09:25 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d12-20020a170902654c00b001ed9b384b6fsm6802901pln.23.2024.05.07.17.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 17:09:25 -0700 (PDT)
+Date: Tue, 7 May 2024 17:09:24 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Phillip Potter <phil@philpotter.co.uk>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cdrom: rearrange last_media_change check to avoid
+ unintentional overflow
+Message-ID: <202405071709.817AB45C0D@keescook>
+References: <20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIABLBOmYC/x2MWwqEMBAEryLzbSCG+FivIoto0urAopJZRAje3
- SjUT0F1RxIEhlCbRQo4WHhbkxR5Rm4Z1hmKfXIy2lhd6lqN9iFlSkIv+MH9e9kBr1A1TntrquZ TUNrvAROf73f3va4bRAFkr2sAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715126548; l=2860;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=x8yzkCVk6Wolns38BJznG8F1DF6BmLfscTRYXzWxiFY=; b=Sj99Fwr6AVwgXA4Y1BeQQmQ9JnnNDd7bY5VrSgi54QBOz4VkOqHiWOJ+sI+4TBriRdbf+MPy6
- pOsiE1rtNb6DspdDULYONRJEuLYkienHIofZLsdYrGz2xSOQp0ISZ1m
-X-Mailer: b4 0.12.3
-Message-ID: <20240508-b4-b4-sio-sr_select_speed-v1-1-968906b908b7@google.com>
-Subject: [PATCH] scsi: sr: fix unintentional arithmetic wraparound
-From: Justin Stitt <justinstitt@google.com>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com>
 
-Running syzkaller with the newly reintroduced signed integer overflow
-sanitizer produces this report:
+On Tue, May 07, 2024 at 04:54:04AM +0000, Justin Stitt wrote:
+> When running syzkaller with the newly reintroduced signed integer wrap
+> sanitizer we encounter this splat:
+> 
+> [  366.015950] UBSAN: signed-integer-overflow in ../drivers/cdrom/cdrom.c:2361:33
+> [  366.021089] -9223372036854775808 - 346321 cannot be represented in type '__s64' (aka 'long long')
+> [  366.025894] program syz-executor.4 is using a deprecated SCSI ioctl, please convert it to SG_IO
+> [  366.027502] CPU: 5 PID: 28472 Comm: syz-executor.7 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+> [  366.027512] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [  366.027518] Call Trace:
+> [  366.027523]  <TASK>
+> [  366.027533]  dump_stack_lvl+0x93/0xd0
+> [  366.027899]  handle_overflow+0x171/0x1b0
+> [  366.038787] ata1.00: invalid multi_count 32 ignored
+> [  366.043924]  cdrom_ioctl+0x2c3f/0x2d10
+> [  366.063932]  ? __pm_runtime_resume+0xe6/0x130
+> [  366.071923]  sr_block_ioctl+0x15d/0x1d0
+> [  366.074624]  ? __pfx_sr_block_ioctl+0x10/0x10
+> [  366.077642]  blkdev_ioctl+0x419/0x500
+> [  366.080231]  ? __pfx_blkdev_ioctl+0x10/0x10
+> ...
+> 
+> Historically, the signed integer overflow sanitizer did not work in the
+> kernel due to its interaction with `-fwrapv` but this has since been
+> changed [1] in the newest version of Clang. It was re-enabled in the
+> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+> sanitizer").
+> 
+> Let's rearrange the check to not perform any arithmetic, thus not
+> tripping the sanitizer.
+> 
+> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+> Closes: https://github.com/KSPP/linux/issues/354
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-[   65.194362] ------------[ cut here ]------------
-[   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
-[   65.203607] -2147483648 * 177 cannot be represented in type 'int'
-[   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-[   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   65.219923] Call Trace:
-[   65.221556]  <TASK>
-[   65.223029]  dump_stack_lvl+0x93/0xd0
-[   65.225573]  handle_overflow+0x171/0x1b0
-[   65.228219]  sr_select_speed+0xeb/0xf0
-[   65.230786]  ? __pm_runtime_resume+0xe6/0x130
-[   65.233606]  sr_block_ioctl+0x15d/0x1d0
-...
+Much more idiomatic. :)
 
-Historically, the signed integer overflow sanitizer did not work in the
-kernel due to its interaction with `-fwrapv` but this has since been
-changed [1] in the newest version of Clang. It was re-enabled in the
-kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-sanitizer").
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Let's add an extra check to make sure we don't exceed 0xffff/177 (350)
-since 0xffff is the max speed. This has two benefits: 1) we deal with
-integer overflow before it happens and 2) we properly respect the max
-speed of 0xffff. There are some "magic" numbers here but I did not want
-to change more than what was necessary.
-
-Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/357
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Here's the syzkaller reproducer:
-r0 = openat$cdrom(0xffffffffffffff9c, &(0x7f0000000140), 0x800, 0x0)
-ioctl$CDROM_SELECT_SPEED(r0, 0x5322, 0x7ee9f7c1)
-
-... which was used against Kees' tree here (v6.8rc2):
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
-
-... with this config:
-https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
----
- drivers/scsi/sr_ioctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/sr_ioctl.c b/drivers/scsi/sr_ioctl.c
-index 5b0b35e60e61..2d78bcf68eb3 100644
---- a/drivers/scsi/sr_ioctl.c
-+++ b/drivers/scsi/sr_ioctl.c
-@@ -430,7 +430,8 @@ int sr_select_speed(struct cdrom_device_info *cdi, int speed)
- 	Scsi_CD *cd = cdi->handle;
- 	struct packet_command cgc;
- 
--	if (speed == 0)
-+	/* avoid exceeding the max speed or overflowing integer bounds */
-+	if (speed == 0 || speed > 0xffff / 177)
- 		speed = 0xffff;	/* set to max */
- 	else
- 		speed *= 177;	/* Nx to kbyte/s */
-
----
-base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
-change-id: 20240507-b4-b4-sio-sr_select_speed-e68c0d426891
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
