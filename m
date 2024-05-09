@@ -1,97 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502B3376;
-	Thu,  9 May 2024 20:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EC582876
+	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 21:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715286793; cv=none; b=npUUdG01KBLtA8mfwbVqpmOtLRaHooEe+/u/AWjCWTZLDRkJrwpNcFhCKTQJoHEs6KZ6NIjORvxxX82/r4NWcyRUXQ0s4AYbRIXLadt6iWksxf04MYIfySYhWI9GCifc4ut6JW64uE1l4B1gRUvN73EaQL3o+3kUFYOgojse674=
+	t=1715288853; cv=none; b=OAJFnK/BwBKrgemnpdMmcT4lUGoewCXVNFNl06qy5sidm+lGyLAnAgEMChome6ortYvlDnlNqKZw1d6HdtZGchJRwZy8H+3GM0ZRQZTavQkKIR3Bx0Gv2VRD3T/GhUzmiGEe6AmmSUv4EFgwCOQYxkAhG8aHYJT8329ux7HhIwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715286793; c=relaxed/simple;
-	bh=XRyn5/3SR/20zF82M4AG85UDuUuZLhgeU/U/+huhrpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=txXraiHd7+qGwZPky9vb8ppw/JhlA73gOj1SlCNhAiOBiuwRofvW4bqh3ltDEu1a4NSkydA03R5Viza83/CZ5AcdItrgRCr0GyDgV9lYBs9doMO9KU4Ez5tgsV0/FT6KWF9qMvkDj9hHLMYIqMWs2A2kBwJhQoN1Z41Zb0uZwEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CB2C116B1;
-	Thu,  9 May 2024 20:33:11 +0000 (UTC)
-Date: Thu, 9 May 2024 16:33:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "Luck, Tony"
- <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Joel Fernandes
- <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
- <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <20240509163310.2aa0b2e1@rorschach.local.home>
-In-Reply-To: <Zj0w9MFfjFm6XqT5@kernel.org>
-References: <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
-	<20240411154007.5bdf8d95@gandalf.local.home>
-	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-	<20240412132243.053ad096@gandalf.local.home>
-	<ZjJVnZUX3NZiGW6q@kernel.org>
-	<20240501105455.42b78a0b@gandalf.local.home>
-	<ZjJgIIOvvEdnisNA@kernel.org>
-	<20240509000023.096d4032@rorschach.local.home>
-	<20240509133122.474130be@rorschach.local.home>
-	<Zj0w9MFfjFm6XqT5@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715288853; c=relaxed/simple;
+	bh=goPKHQtoFbBJPMAI4x6He30hxH7vdSTb8jLbZxEZRIs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=MGB2WcmPN7+qZy6Bg2FqBYPkE83VtqHIkomUjiW2Ogd+m19Xr2U84Z20EdGzVlnoDVcKrXiKN4xDqZf/U554Gl/zCuBPrAes6vYfXzikGCLeSc7YNgP/+OWMM2pgNC5SHapleMh2aZsWQ6Bs9BeZVyconeyhKpxy8GIK/UT/itI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-174-MlsT2Si9P0yTWZ8FtgmvYw-1; Thu, 09 May 2024 22:07:23 +0100
+X-MC-Unique: MlsT2Si9P0yTWZ8FtgmvYw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 9 May
+ 2024 22:06:54 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 9 May 2024 22:06:54 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Theodore Ts'o
+	<tytso@mit.edu>
+CC: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: RE: [RFC] Mitigating unexpected arithmetic overflow
+Thread-Topic: [RFC] Mitigating unexpected arithmetic overflow
+Thread-Index: AQHaoibwK91jQ1nmYEmzGISNIfAGlrGPY2nw
+Date: Thu, 9 May 2024 21:06:54 +0000
+Message-ID: <5b37e8b1da534ebb8abc9b7b0f7022d2@AcuMS.aculab.com>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <202405081949.0565810E46@keescook> <20240509140854.GF3620298@mit.edu>
+ <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Thu, 9 May 2024 23:24:20 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+Li4uDQo+IEdvaW5nIHRoZSBvdGhlciB3YXkgaXMgc2ltaWxhcjoNCj4gDQo+ICAgICAgICAgYWxs
+X2JpdHMgPSBsb3dfYml0cyArICgodTY0KSBoaWdoX2JpdHMgPDwgMTYpIDw8IDE2KTsNCj4gDQo+
+IGFuZCBhZ2FpbiwgdGhlIGNvbXBpbGVyIHdpbGwgcmVjb2duaXplIHRoaXMgaWRpb20gYW5kIGRv
+IHRoZSByaWdodA0KPiB0aGluZyAoYW5kIGlmICdhbGxfYml0cycgaXMgb25seSAzMi1iaXQsIHRo
+ZSBjb21waWxlciB3aWxsIG9wdGltaXplDQo+IHRoZSBoaWdoIGJpdCBub2lzZSBhd2F5KS4NCg0K
+T24gYSAzMmJpdCBzeXN0ZW0gdGhlIGNvbXBpbGVyIG1pZ2h0IG5vdCBkbyB0aGUgZXhwZWN0ZWQg
+dGhpbmcuDQoNCkkgaGFkIHRlcnJpYmxlIHRyb3VibGUgd2l0aCB0aGUgMzJiaXQgZGl2X3U2NF91
+MzIoKSBjb2RlIEkgd2FzDQpwbGF5aW5nIHdpdGggZ2V0dGluZyB0aGUgY29tcGlsZXIgdG8gZG8g
+J3NvbWV0aGluZyBzZW5zaWJsZScgZm9yDQp0aGF0Lg0KSSBqdXN0IGNvdWxkbid0IGdldCBpdCB0
+byBzdG9wIGdlbmVyYXRpbmcgdHdvIDY0Yml0IHZhbHVlcw0KKGluIHR3byByZWdpc3RlciBwYWly
+cykgYW5kIHRoZW4gb3JpbmcgdGhlbSB0b2dldGhlci4NCkkgZGlkbid0IHRyeSB1c2luZyBhIHVu
+aW9uIC0gdGhhdCBtaWdodCB3b3JrLg0KT24geDY0IHRoZSBhc20gIkEiIChlZHg6ZWF4KSBhbmQg
+ImEiIGFuZCAiZCIgY29uc3RyYWludHMgd2lsbCBEVFJUDQpidXQgZm9yY2UgdGhlIHZhbHVlcyBp
+bnRvIGVkeDplYXggd2hpY2ggaXMgb2sgaWYgeW91IGFyZSBkb2luZyBkaXZpZGVzLg0KDQoJRGF2
+aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
+IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
+ODYgKFdhbGVzKQ0K
 
-> On Thu, May 09, 2024 at 01:31:22PM -0400, Steven Rostedt wrote:
-> > On Thu, 9 May 2024 00:00:23 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > I tried this approach and it unfortunately picks a different physical
-> > > location every time :-(
-> > > 
-> > > So it is either adding to e820 tables or we create a new way to
-> > > allocate memory at early boot up.
-> > >   
-> > 
-> > Hmm, now I'm testing it more and it always seems to end up in the same
-> > location. I'm not sure why it failed the first three times I tried it :-/  
-> 
-> If the kernel and the command line were the same, they shouldn't have. 
-> e820 translates to memblock the same way every boot and the early
-> allocations also do not change from boot to boot.
-> 
-> Could it be that three runs that failed had some differences in the kernel
-> parameters?
-> 
-
-I wonder if KASLR caused it or not. But when I first added it to
-another machine, it failed to get the same address on the second boot,
-but was fine after that.
-
-Could be just something with my setup. I'm going to backport this to
-5.15 and test this on a Chromebook and see what happens there (as
-that's the motivation behind this work).
-
--- Steve
