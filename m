@@ -1,77 +1,55 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B7E26AE0
-	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 06:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC8215CD7D
+	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 14:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715235396; cv=none; b=KwexKqXFy990xzenmaR67cwFdT4cY9NwyICDUSXjjYUKy6W0krey95RkJd9bkdT/7rfDiNtN9dkG2oCAWD16lr+bLiLzORRRsH8w2hP8luFxdOYpGAOf+hYWV2fK0IvCkO+KTJGfI2cM64Eg2rq+eDDQHMRvFUNCET5QqlYs3zc=
+	t=1715263762; cv=none; b=Nb8xEqOlv6yE9sjWXGHCx9h9SzVKcc1ISASxqt03/pyOqJBDzjy2zsj3TLBDc1zz7bxKXY1JbCAG9oJyaZlzOF3XsHklKRmClfI5ARZg1JF2CwHnmiVikrRrJCE4ghNXsEcUlhqjcTB29BCatpTH1jnfUGv47i68gnCpzBziYNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715235396; c=relaxed/simple;
-	bh=PtJHMj10OXb0kdkgkrb8tgubNV8cNGlXUgK81dDn4uA=;
+	s=arc-20240116; t=1715263762; c=relaxed/simple;
+	bh=bDtjaP+V9cNNcRR6gQ6xBNCDLfECgvJQYpI7pGbQcNs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hWzgyCXrNs3cB1DFY7a2tnBmUwkavQZ30qvbzYdnCTuvwvoaNbkKJegAI5mT76ISgcnK/sBK5FX6LRpV/VIUmEYRaA6i63q0JZwEx5CSHhlbcWSB7e8+w/YOdDVbtUOg6Rdh2CmACkDQDw7B243YbmeA90aq+x0n81XUexJaaLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mFw1Qnul; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=K7Dph8L/1YI1GIYizVVk+odvmezxjv8ExFTQ7nMqZKrmNKuWqfmrGzYghV5xYI7V2+E06YHXmmX69MwrdyXx6Lc0NmQ4Tuggzm312FgpjM/b/9FGIzdZfwwyOUnVRECnmGoy0UoOfx5GdxgpGH5j5KMjlEBWWd2YIAhPFDZ1jXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=SV/L7qne; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mFw1Qnul"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2b37731c118so451886a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 08 May 2024 23:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715235393; x=1715840193; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8s5ogdUt9IfEZlAdYuj7aMmz3fDPUoN3crsNCifKctI=;
-        b=mFw1QnulXKtHwMeqJ36x/CQP7UOYa+CMrVvUctDELyB1e8/B1Nlq9LWQ7JSGUF0+Oz
-         YkiLhgARY53CVU3AaGl3EOhkQWX3VDonqooPYPhiDZnb44M4rJQ92bmUzoLEh+hfQiHF
-         0xdQbi6Q2e8dr4FUGKJEJIk2qbVxLBlO+af9c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715235393; x=1715840193;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8s5ogdUt9IfEZlAdYuj7aMmz3fDPUoN3crsNCifKctI=;
-        b=LYNTEJmkdBGIOiwLIJ4lnCWHrRB5LzdaSgBoiWHZK3NHHqDAsJXXIauRcYLojOjZ3B
-         Yt0WXtWzT7hF7q1ETiPI4P+ymLr7FMJ2S7d3eWqpj678d879vnm4hJPdqWQIN1GHCCPW
-         T7hqCuXfVGBd2IR4v7Zgs4K7R8nzAKWsdIc17Il7/bPKZhuU2KN+VrtZ+EhOpkSpqJ3t
-         RXUb2YguePvfHNwWD05gSv8UDpe7XqDq2oLWvutj7n7+IhHvoXOiivBbHJ9glvjG9iUc
-         AjOXgNZi+kkVPG36NgKKjU7EEfcxaztDGvNEIFYqArOwueO8ESHo6m9gw4wOaSq48/yI
-         CTjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9/4HtJbEyV5KZtnRZ11bwq7p8WwuRZJmkPRCEKYGRZDmkxdjv+wQdjUoWO6iQZRsmu45jSiTObsnxHJB/0gON4JhsD360qoc9pfYKu5/W
-X-Gm-Message-State: AOJu0YxAJh+Gnr0ecjvJYpabqz7tKKYwvmoaOivxXn/bpUwrbDAxk358
-	DKEJe8N5L2m5Q/N+oY71EDL0HMGh/u1UzpGGAvcsCsSIvZKGNc2R+TeTdj+YCg==
-X-Google-Smtp-Source: AGHT+IFqzikMESBMZG+WVvk+WptHcSgh5kqTqoDaOrL0B6tQBKEyulj/ZA+fDWbKAGEbWorXR4unvw==
-X-Received: by 2002:a17:90a:ac03:b0:2b5:6d47:9e12 with SMTP id 98e67ed59e1d1-2b61639c8a6mr4341255a91.2.1715235393466;
-        Wed, 08 May 2024 23:16:33 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b628ea6a83sm2490804a91.56.2024.05.08.23.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 23:16:32 -0700 (PDT)
-Date: Wed, 8 May 2024 23:16:32 -0700
-From: Kees Cook <keescook@chromium.org>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: "H . J . Lu" <hjl.tools@gmail.com>,
-	Chris Kennelly <ckennelly@google.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Fangrui Song <maskray@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
-	Rui Salvaterra <rsalvaterra@gmail.com>,
-	Victor Stinner <vstinner@redhat.com>,
-	Jan Palus <jpalus@fastmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/3] selftests/exec: Build both static and non-static
- load_address tests
-Message-ID: <202405082312.D922795@keescook>
-References: <20240508172848.work.131-kees@kernel.org>
- <20240508173149.677910-1-keescook@chromium.org>
- <1f6a2905-395d-4f81-9ee0-57c541fb2486@nvidia.com>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="SV/L7qne"
+Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 449E8s2L030572
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 9 May 2024 10:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1715263737; bh=XxIwd5YKnaE8tpaDDWso8SeLqi8X1R5IdpdBS5HW8MA=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=SV/L7qneh5rtjlelL+8GnEOpp4vpOJv/fLJ2OiI0gTeX2do9nvZktzGfc8e8jXGJb
+	 ctB78KcRwIkz5IlkYvd6UF/ftvNdA6c3LFVbQvMM81he9Cei67CAh/x1mTYU2XxhXk
+	 +gLCHwot5DFmHjNE76S3B+BYx1k3Kh21Ji3sHCowoyVH7y+oTrzflqqPedQtbnxiDw
+	 nPhAE82WnR9b3MNtIsf6EIDAGm1Hc19aWWQKGAPwtySmKyUw2rR0nQM8chDs2iIswe
+	 4C/8ivf9Fb5MgxtWddSgTtwpk9B47xCCtm/Md7m1tzz9+BFcHz2MYvNOuwPAcJjelm
+	 QQKlRE0ZoJbfg==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 69CF715C026D; Thu, 09 May 2024 10:08:54 -0400 (EDT)
+Date: Thu, 9 May 2024 10:08:54 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+        Justin Stitt <justinstitt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <20240509140854.GF3620298@mit.edu>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <202405081949.0565810E46@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,18 +58,53 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1f6a2905-395d-4f81-9ee0-57c541fb2486@nvidia.com>
+In-Reply-To: <202405081949.0565810E46@keescook>
 
-On Wed, May 08, 2024 at 07:54:13PM -0700, John Hubbard wrote:
-> Didn't we learn recently, though, that -static-pie is gcc 8.1+, while the
-> kernel's minimum gcc version is 5?
+On Wed, May 08, 2024 at 11:11:35PM -0700, Kees Cook wrote:
+> > I think it would be interesting in general to have some kind of
+> > warning for "implicit cast drops bits".
+> > 
+> > I fear that we'd have an enormous about of them, and maybe they'd be
+> > unsolvable without making the code *much* uglier (and sometimes the
+> > fix might be to add an explicit cast to document intentionally dropped
+> > bits, but explicit casts have their own issues).
 
-Yes, that's true. If we encounter anyone trying to build the selftests
-with <8.1 I think we'll have to add a compiler version test in the
-Makefile to exclude the static pie tests.
+Seapking of which, I recently had to work around an overactive
+compiler UBSAN which complained about this:
 
-There's also the potential issue with arm64 builds that caused the
-original attempt at -static. We'll likely need an exclusion there too.
+struct ext2_super {
+       ...
+       __u32	time_lo;
+       __u32	time_high;
+       ...
+}
 
--- 
-Kees Cook
+	time_t	now;
+	
+	sb->time_low = now;
+	sb->time_high = now >> 32;
+
+This is obviously (to a human) correct, but because of stupid compiler
+tricks, in order to silence compiler-level and ubsan complaints, this
+got turned into:
+
+
+	sb->time_low = now & 0xffffffff;
+#if (SIZEOF_TIME_T > 4)
+	sb->time_high = (now >> 32) & EXT4_EPOCH_MASK;
+#else
+	sb->time_high = 0;
+#endif
+
+and in the opposite case, I was forced to write:
+
+#if (SIZEOF_TIME_T == 4)
+	return *lo;
+#else
+	return ((time_t)(*hi) << 32) | *lo;
+#endif
+
+... and this made me very sad.  Grumble....
+
+				- Ted
+
