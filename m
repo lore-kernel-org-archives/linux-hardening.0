@@ -1,86 +1,110 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229A41DFC5;
-	Thu,  9 May 2024 18:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5327F465
+	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 19:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715280497; cv=none; b=jtgDA/JyJ3SEv2JKESPbg34e2uUZwOWc6Nc2c7BPtDzuyrG2xFI1dqN/nashir9Z2Zb6ocIcmtkhwU69vKSyCb7/b2G8RhCJ3TTX1/1lPxaqPMoh9nvKUjUMyjPogix7WNJrLs0rPqpv/plw3FA2vpj8BJ6dOPv3xaoJsUMkzJY=
+	t=1715282162; cv=none; b=ky7LJswGTaMYqsi2sq3koK14DMJY1l0xL+9rP57FWjRiFDs9WkXuZhP99NP6DsvfrrTmK5sGUhXwVfU6rsnx/YEPeJkMmdDuSsP/I1208g7Ox+RQLam7EZK4vb02ZPPMklf1DwOBNQPLRyno6eerO29+ZHZ8YYpOTwYh6DZTQDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715280497; c=relaxed/simple;
-	bh=1BSYGbRj20fcncP91U6HQrKo4dwZ7O7Jy8mAFNMP1P4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PLIUsamZq0rcZrfgLL4cXEeGQg2ttdbb3cTWV1TidGR8fP3lChflv+jhTGOSWIbax8DIhzzLggRuFlUDLM5LgZEX3WW+VQ6Y7+3V4XnJsoktbP9+7DSuybvUEB7ElmeeKSi3EVCBB4lUsd/U/SAnNFnHRKa/e76rexY2QOVntUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=AvkdCCHo; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1715282162; c=relaxed/simple;
+	bh=f5hTjmwtrBNmeRfEZwqwz3MoeEtUyLOcEt2AbxYcVbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bfrCXtiESEpVHeBgpz4pWxkrcvPJmF0SUqYMqdSRGCGIXgky/SE0OmKMioNqj+3quVvFSMSnz+VzRXdNLfuK7FtiHTzai5PxwBIpIHTwwmE5lJC3e0j8CiIXAV7CcSeVKOf8GzmR0xxlnnvexd2jvVKQHuZ+EjcX6ELevXMYOwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZBcnF8Ym; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="AvkdCCHo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yBryuhVbsX5G3JIiC63QtWbHWndrg7Hoc/s31avaLsE=; b=AvkdCCHogDEzcSiyCZF9dw8g6C
-	X0KeSZgV2EK402V6yxvAwPmbn7429/LnT4kQIi7nxgjrMtCKjnGGpe7du0estIZIR5w3Hk1HrlSrt
-	0VlzNB/Az8nveVmrkmhksokw4gW0Ldvvat06ZwlLp9sItdIdgbKxmV4fHVK+OvHWnu7C7yJBl1qqG
-	6QaayOuZ6oPROTo+d3CqRK1fjiNBagrMQywGZX/FwSz3BF3STd01IQl2p2QYE9Au+S0v7rDztXMG8
-	ZrqqnzGmuxYIOaM3TVvA2ro1J+NwQXnJmxFTFsjxJJpRxoJGun6kn3VYo7MNd7u38UDIV3ledqTX5
-	fWvGPxpw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1s58oI-001Wl4-0D;
-	Thu, 09 May 2024 18:48:06 +0000
-Date: Thu, 9 May 2024 19:48:06 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Kees Cook <keescook@chromium.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <20240509184806.GS2118490@ZenIV>
-References: <202405081144.D5FCC44A@keescook>
- <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
- <202405081354.B0A8194B3C@keescook>
- <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <202405081949.0565810E46@keescook>
- <20240509140854.GF3620298@mit.edu>
- <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
- <20240509175417.GR2118490@ZenIV>
- <CAHk-=wgXm15gZHvt8waSFhXS9yZTfvMV95xyvNtPc6FSEA_rvA@mail.gmail.com>
- <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZBcnF8Ym"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59a934ad50so299774166b.1
+        for <linux-hardening@vger.kernel.org>; Thu, 09 May 2024 12:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715282158; x=1715886958; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C9PPjpFCo1HBrR3dhTun969JD1naScZ8g1ToZzUTce0=;
+        b=ZBcnF8YmhrjyvmPATrpxIJwnO/LAVDHVpKlE2c2K0TTYwfVyk9f3esVGbFrHqF70n7
+         dlptd/NDbOgWA8FsY8w0ZecCKbH23DM236FhxJ9dY/rAXpG5bWE+9XnOs8dhTzPLfDvb
+         uqR1LLMUB1GxE8mixDpUWggKypq9UmjV7DQkM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715282158; x=1715886958;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C9PPjpFCo1HBrR3dhTun969JD1naScZ8g1ToZzUTce0=;
+        b=o0i1hurANgV6kJtEAIwwI+WwdFEk0CoIqvd1dEf4qMFnwrE7EKNRn+1oXFd1yN0DVx
+         XmC8zFza7qTZRFnBoH9xMWmgwcN25nU/G9OINTioS1lp99GpztSe5coyZuLDaCCtJtQW
+         ddHA+ogVo4o08uBQu5IymiLZdxGfCzkgmaEADApE5iE4PjxphEqqvlejjm2jdfblrI0f
+         oMi/SMxsPAvnaUeEIDCJaa0Q0PoRelYSQZPAaN2ajB2jCk8v9DSjpOVGzJ1dfgciyPZg
+         FRx06PEpVD0p8XA2SnPyc3NKHcwXI+az0UKK+fSzmBv9ODlUzsJTVAXsgxndF/+WiSsL
+         dRcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWom95O44aSUY4SPU7roNv1/GRLrI4QOqD7ODoPb7fAaBAYcV0OoyZIGs2kzvD/QJB6aQP5RD+la5BhpL4tN3r/ByU6Nvzc2Y0EcLaVLn7q
+X-Gm-Message-State: AOJu0Yz8GPrXzwY6wuBGenUHvPWKxpSoK99fCeBdq63ZJM6sNsToaC6a
+	Dk6TXeBI/PVArz2hwoXWSuyNzB3+nOwLVuR0bOfULPwzb/4QBDorWX6kpvh+Vef3mDbHgRGgsDm
+	HQH8E7Q==
+X-Google-Smtp-Source: AGHT+IEMBDbs4oWT1MmFrbRqug8tutwp5Lp2UhST1HZ8aX4ZFVDboOJXtKpSy/FDPyvQZnT61fVHXQ==
+X-Received: by 2002:a17:907:552:b0:a59:a6b2:b898 with SMTP id a640c23a62f3a-a5a2d57b00dmr34994366b.27.1715282158604;
+        Thu, 09 May 2024 12:15:58 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b015besm104875566b.144.2024.05.09.12.15.57
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 12:15:58 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59a9d66a51so285112566b.2
+        for <linux-hardening@vger.kernel.org>; Thu, 09 May 2024 12:15:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZcz40CNxVMt1iZ+TzL2AAVGxN6DMd1MumGs/4EXJK2FL+hr6fTgXktdcf7szdLsAdDMAbjmb2nWXAgchxSTUyPnrsjDCUqzLaUE/Hoq8u
+X-Received: by 2002:a17:906:f88c:b0:a59:c52b:9938 with SMTP id
+ a640c23a62f3a-a5a2d6653bamr36083966b.55.1715282157122; Thu, 09 May 2024
+ 12:15:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <202405081949.0565810E46@keescook> <20240509140854.GF3620298@mit.edu>
+ <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
+ <20240509175417.GR2118490@ZenIV> <CAHk-=wgXm15gZHvt8waSFhXS9yZTfvMV95xyvNtPc6FSEA_rvA@mail.gmail.com>
+ <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com> <20240509184806.GS2118490@ZenIV>
+In-Reply-To: <20240509184806.GS2118490@ZenIV>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 9 May 2024 12:15:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjHA8Di-cpT0pKcScwcWNVYRFvmhBwMrug=Mj5WUwa2rw@mail.gmail.com>
+Message-ID: <CAHk-=wjHA8Di-cpT0pKcScwcWNVYRFvmhBwMrug=Mj5WUwa2rw@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>, 
+	Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 09, 2024 at 11:39:04AM -0700, Linus Torvalds wrote:
+On Thu, 9 May 2024 at 11:48, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> FWIW, the thing that somewhat worries me about having a helper along
+> the lines of combine_to_u64(low, high) is that
+>         foo->splat = combine_to_u64(something, something_else);
+> would be inviting hard-to-catch brainos -
+>         foo->splat = combine_to_u64(something_else, something);
 
-> .. it might also actually be a good idea *IF* we were to have some
-> kind of "implicit cast drops bits" warning, in that the compiler for
-> that case wouldn't remove the upper bits calculation, but would
-> trigger a warning if they are non-zero.
-> 
-> So there are actually potential advantages to just always apparently
-> doing the full 64-bit arithmetic.
-> 
-> Without debug warnings, it's a no-op that the compiler will just skip.
-> And with some hypothetical debug flag, it would be a "you are now
-> losing the high bits of the time value when assigning the result to a
-> limited 32-bit time_t" warning.
+Yeah, we'd have to be very clear about naming and ordering. So it
+would probably have to be something like
 
-FWIW, the thing that somewhat worries me about having a helper along
-the lines of combine_to_u64(low, high) is that
-	foo->splat = combine_to_u64(something, something_else);
-would be inviting hard-to-catch brainos -
-	foo->splat = combine_to_u64(something_else, something);
-would be very hard to catch on RTFS, especially when you'd been
-staring at that code for a long time.  Explicitly spelled out
-it would be obvious which goes into bits 0..31 and which in 32..64.
+        result = combine_to_u64_hi_lo(high, low);
+
+to be easy to use.
+
+The good news is that if you *do* get it wrong despite clear naming,
+the resulting value will be so obviously wrong that it's generally a
+"Duh!" thing if you do any testing what-so-ever.
+
+Of course, I say that as somebody who always points out that I haven't
+tested my own patches at all, and they are "something like this,
+perhaps?".
+
+But having "hi_lo" kind of naming would hopefully make it really
+obvious even when just looking at the source code.
+
+              Linus
