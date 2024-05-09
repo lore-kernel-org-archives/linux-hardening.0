@@ -1,51 +1,49 @@
 Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EC582876
-	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 21:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995798405C
+	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 21:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715288853; cv=none; b=OAJFnK/BwBKrgemnpdMmcT4lUGoewCXVNFNl06qy5sidm+lGyLAnAgEMChome6ortYvlDnlNqKZw1d6HdtZGchJRwZy8H+3GM0ZRQZTavQkKIR3Bx0Gv2VRD3T/GhUzmiGEe6AmmSUv4EFgwCOQYxkAhG8aHYJT8329ux7HhIwk=
+	t=1715289842; cv=none; b=kiPy/07Cc65kyMBMbwOSE5DrpxEh5zq03/Q94Jhgga4KGVVzbjTgizCoHtguusZ5kYZfCvkaKyVUzCYlD3mmQ6xiEwxbvMBB8Ldd0dcb7TdkyvU4uAuLfxnEEQQjJybvl6Ou5choL9cWpn8QRHUxoTShHdh0kel2GOqumdzcX68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715288853; c=relaxed/simple;
-	bh=goPKHQtoFbBJPMAI4x6He30hxH7vdSTb8jLbZxEZRIs=;
+	s=arc-20240116; t=1715289842; c=relaxed/simple;
+	bh=SEFpFTBcxfnU5YKbgVM3TPjMbGxapd0haMRAIoOJewg=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=MGB2WcmPN7+qZy6Bg2FqBYPkE83VtqHIkomUjiW2Ogd+m19Xr2U84Z20EdGzVlnoDVcKrXiKN4xDqZf/U554Gl/zCuBPrAes6vYfXzikGCLeSc7YNgP/+OWMM2pgNC5SHapleMh2aZsWQ6Bs9BeZVyconeyhKpxy8GIK/UT/itI=
+	 MIME-Version:Content-Type; b=QjCTnxQEQ150bS+d1uoaiPo991ULIhWRNWS/B/l0SvMrwEQx5oUmKXq1hlZfphnWYUqFvfN3Bl8/5muMBX1EVe/7aARz/rITeWd1j/kZPzLLScXFPQ99Qk8PPUPHOjDndPOmBK983H22Ku0rwol9/S3/x35Z9lRoHyX/5cBfia4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
 Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
  relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-174-MlsT2Si9P0yTWZ8FtgmvYw-1; Thu, 09 May 2024 22:07:23 +0100
-X-MC-Unique: MlsT2Si9P0yTWZ8FtgmvYw-1
+ uk-mta-262-ZHxZcEbrMxKlg_Jm_e8yvA-1; Thu, 09 May 2024 22:23:57 +0100
+X-MC-Unique: ZHxZcEbrMxKlg_Jm_e8yvA-1
 Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
  (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 9 May
- 2024 22:06:54 +0100
+ 2024 22:23:29 +0100
 Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 9 May 2024 22:06:54 +0100
+ id 15.00.1497.048; Thu, 9 May 2024 22:23:29 +0100
 From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Theodore Ts'o
-	<tytso@mit.edu>
-CC: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>,
-	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Kees Cook
+	<keescook@chromium.org>
+CC: Justin Stitt <justinstitt@google.com>, Peter Zijlstra
+	<peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
 	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
 Subject: RE: [RFC] Mitigating unexpected arithmetic overflow
 Thread-Topic: [RFC] Mitigating unexpected arithmetic overflow
-Thread-Index: AQHaoibwK91jQ1nmYEmzGISNIfAGlrGPY2nw
-Date: Thu, 9 May 2024 21:06:54 +0000
-Message-ID: <5b37e8b1da534ebb8abc9b7b0f7022d2@AcuMS.aculab.com>
+Thread-Index: AQHaoaITK91jQ1nmYEmzGISNIfAGlrGPZyIw
+Date: Thu, 9 May 2024 21:23:29 +0000
+Message-ID: <f41cd250b90d4eb883ea5ff245718200@AcuMS.aculab.com>
 References: <202404291502.612E0A10@keescook>
  <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
  <202405081144.D5FCC44A@keescook>
  <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
  <202405081354.B0A8194B3C@keescook>
  <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <202405081949.0565810E46@keescook> <20240509140854.GF3620298@mit.edu>
- <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
@@ -62,21 +60,26 @@ Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: base64
 
-Li4uDQo+IEdvaW5nIHRoZSBvdGhlciB3YXkgaXMgc2ltaWxhcjoNCj4gDQo+ICAgICAgICAgYWxs
-X2JpdHMgPSBsb3dfYml0cyArICgodTY0KSBoaWdoX2JpdHMgPDwgMTYpIDw8IDE2KTsNCj4gDQo+
-IGFuZCBhZ2FpbiwgdGhlIGNvbXBpbGVyIHdpbGwgcmVjb2duaXplIHRoaXMgaWRpb20gYW5kIGRv
-IHRoZSByaWdodA0KPiB0aGluZyAoYW5kIGlmICdhbGxfYml0cycgaXMgb25seSAzMi1iaXQsIHRo
-ZSBjb21waWxlciB3aWxsIG9wdGltaXplDQo+IHRoZSBoaWdoIGJpdCBub2lzZSBhd2F5KS4NCg0K
-T24gYSAzMmJpdCBzeXN0ZW0gdGhlIGNvbXBpbGVyIG1pZ2h0IG5vdCBkbyB0aGUgZXhwZWN0ZWQg
-dGhpbmcuDQoNCkkgaGFkIHRlcnJpYmxlIHRyb3VibGUgd2l0aCB0aGUgMzJiaXQgZGl2X3U2NF91
-MzIoKSBjb2RlIEkgd2FzDQpwbGF5aW5nIHdpdGggZ2V0dGluZyB0aGUgY29tcGlsZXIgdG8gZG8g
-J3NvbWV0aGluZyBzZW5zaWJsZScgZm9yDQp0aGF0Lg0KSSBqdXN0IGNvdWxkbid0IGdldCBpdCB0
-byBzdG9wIGdlbmVyYXRpbmcgdHdvIDY0Yml0IHZhbHVlcw0KKGluIHR3byByZWdpc3RlciBwYWly
-cykgYW5kIHRoZW4gb3JpbmcgdGhlbSB0b2dldGhlci4NCkkgZGlkbid0IHRyeSB1c2luZyBhIHVu
-aW9uIC0gdGhhdCBtaWdodCB3b3JrLg0KT24geDY0IHRoZSBhc20gIkEiIChlZHg6ZWF4KSBhbmQg
-ImEiIGFuZCAiZCIgY29uc3RyYWludHMgd2lsbCBEVFJUDQpidXQgZm9yY2UgdGhlIHZhbHVlcyBp
-bnRvIGVkeDplYXggd2hpY2ggaXMgb2sgaWYgeW91IGFyZSBkb2luZyBkaXZpZGVzLg0KDQoJRGF2
-aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
-IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
-ODYgKFdhbGVzKQ0K
+Li4uDQo+IEkgdGhpbmsgdGhhdCB3b3VsZCBiZSBhIGNvbXBsZXRlbHkgZGlmZmVyZW50IGFyZWEg
+dGhhdCBtaWdodCBiZSB3b3J0aA0KPiBsb29raW5nIGF0OiBpbnN0cnVtZW50aW5nIGltcGxpY2l0
+IGNhc3RzIGZvciAiZHJvcHMgYml0cyIuIEknbSBhZnJhaWQNCj4gdGhhdCBpdCdzIGp1c3QgKnNv
+KiBjb21tb24gdGhhbiB3ZSBtaWdodCBub3QgYmUgYWJsZSB0byBkbyB0aGF0DQo+IHNhbmVseS4N
+Cg0KVGhpbmdzIGxpa2U6DQoJYnVmWzBdID0gdmFsOw0KCWJ1ZlsxXSA9IHZhbCA+Pj0gODsNCgli
+dWZbMl0gPSB2YWwgPj49IDg7DQoJYnVmWzNdID0gdmFsID4+PSA4Ow0KZm9yIHdyaXRpbmcgYSB2
+YWx1ZSBsaXR0bGUtZW5kaWFuIGFuZCBwb3RlbnRpYWxseSBtaXNhbGlnbmVkLg0KUmVhbGx5IGRv
+ZXNuJ3Qgd2FudCBhbnkgYW5ub3RhdGlvbi4NCg0KSSd2ZSBhbHNvIHNlZW4gY29kZSBsaWtlOg0K
+CWJ1ZlswXSA9ICh1bnNpZ25lZCBjaGFyKSh2YWwgJiAweGZmKTsNCm5vdCBvbmx5IHVnbHkgYnkg
+aXQgZ290IGNvbXBpbGVkIHRvOg0KCXZhbCAmPSAweGZmIC8vIGZvciB0aGUgJg0KCXZhbCAmPSAw
+eGZmIC8vIGZvciB0aGUgY2FzdA0KCWJ5dGUgd3JpdGUgdG8gbWVtb3J5Lg0KTW9kZXJuIGdjYyBk
+b2Vzbid0IGRvIHRoYXQsIGJ1dC4uLg0KDQpUaGVyZSBhcmUgc29tZSBzcHVyaW91cyBjYXN0cyB0
+aGF0IGRyb3AgYml0cy4NCkkgZm91bmQgcGxlbnR5IG9mIGR1YmlvdXMgbWluX3QodTgvdTE2LC4u
+LikgZXhhbXBsZXMuDQooV2VsbCB0aGV5IGFyZSBkdWJpb3VzLCBzb21lIGFyZSBqdXN0IGEgbG90
+IG1vcmUgZHViaW91cyB0aGFuIG90aGVycy4pDQpUaGUgcHJvYmxlbSBpcyB0aGF0IGV2ZXJ5IG9u
+ZSBuZWVkcyBjYXJlZnVsIGluc3BlY3Rpb24ganVzdCBpbiBjYXNlDQp0aGUgc3RyYW5nZSBiZWhh
+dmlvdXIgaXMgcmVxdWlyZWQgbGlrZSBtaW5fdCh1OCwgdmFsIC0gMSwgbG9fbGltIC0gMSkNCndo
+aWNoIHRyZWF0cyBsb19saW0gb2YgemVybyBhcyAnbm90IGEgbGltaXQnIGFuZCBJIHRoaW5rIHdh
+cyBvay4NCg0KQSBzbG93LCBjb25jZXJ0ZWQgZWZmb3J0IHRvIHJlbW92ZSBtaW5fdCgpIGNhbGxz
+IHdvdWxkbid0IGJlIGEgYmFkIHRoaW5nLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
+ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
+MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
