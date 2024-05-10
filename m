@@ -1,67 +1,48 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFE9148FE3
-	for <linux-hardening@vger.kernel.org>; Fri, 10 May 2024 03:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ABD20309;
+	Fri, 10 May 2024 04:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715311575; cv=none; b=rHVjqZhEzdvtCx+fs5AFfFXi6bIn1KUA5Jiivi2JvBfSUsA69b8gxRrkkjxMuBmLfyjR2y+6xGtATCZy9OW5NPRQc5IGvAkhVzIjNmGdE9OigrKsVmfG1pa3u2RDoIDhVpSa3l8Xih9gXyPY8CI5msp2UhFKrwkbwwhApYYY3yc=
+	t=1715316496; cv=none; b=ZFJ8BLnPtNxVwqEY9N6QTz76M+D+Nn495q1MMZZul7dTFSbB19fHbzQF3OTbsAI85tf30wAVBF51KbryaRPgijp9xgXSCpGHejlwNGPo4bZvsSuHtIYqYfi9EhkWMEU+PC3tlBNzv9AT7mykPVbz2LI5iNfdEx2Kxmt25grRj2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715311575; c=relaxed/simple;
-	bh=KR9+aZtQF0/pSAuWezxC9nZ37UK13y4iod1lyaoIAd0=;
+	s=arc-20240116; t=1715316496; c=relaxed/simple;
+	bh=OixUejj2noa/W3WcINTvjh/Srj4k4t4XGVgiozW4yig=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z41t7vIb3ktfwNak1hwyTnqIoOkbLPV9Aa+YhlwKRWpOD4aGxF2msE74TR4e+5BKiuQBj8qferob6Sol29OjM34CrVt16e2YH8Ph2m/0/9utBimBJQ80b4iwajB+QFy8kTpBfpA8VKvAkKgiqOyG2+zQ63Yd2HK9fM75R57KfMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UC37spjJ; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YqiMWExIYIRclv9zhwU0OOeBYvrqwq/0Db8Puw6rHIKep5HzkseYncYP5p66CkVbskOHU1uoQ/CZFhz5izvMNs+e+3Uhgebod1SWifB7XjlQNtiEpHFVcq3ysRP68a7Zm6bhwnS/s+d1ZG1UpKPm4NRcDLP9gQC+vqz7V5QP/Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Wws8dFc5; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UC37spjJ"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36c82ca80adso7241115ab.3
-        for <linux-hardening@vger.kernel.org>; Thu, 09 May 2024 20:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715311573; x=1715916373; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zGxG2e2VKN3u+G1wPMCaUsbNuE8sBdNRV0fq8NAvdDA=;
-        b=UC37spjJSrJeRTnQpVFya+6hKbRsXS/cfRfD/wpp6qOH24VVtVLgzP8dxiKXJc4nU+
-         /3dU90BPG5soeMQKIhuIf+9zBX8VNMvBY54Vyoim+V9xlMKFoTrE2h1EopZrH5en+fgm
-         R/ByOuHcudp2VoiOpIRiU4TKfywizobTDEj9Q2f5zbkRp+K9bTr10M4/jy3MwV//Wctr
-         btQKqyTuV84+0a+QFXsfm5AG/N6dyfRZg9hS6fAhjb+KYdAgbosrY5CSFeHvXCz4mdKi
-         CS+mNf5YVE7ysNj1KXTyO3Uhh+9YBT/YlVsz5xpfVAl56TDqdvE5MjsB1MgCI0GSTpdy
-         /uZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715311573; x=1715916373;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zGxG2e2VKN3u+G1wPMCaUsbNuE8sBdNRV0fq8NAvdDA=;
-        b=Riod6ffBsYUJ2DhuV9yu/X4td5FkzkgwwyqIdKj3WKrkxUt5k/5XtUQBigvjZI0Sn5
-         g3EekdEzlLColv55eJhXoFwxLkmNhd47sx6rdYS3a8a4Fi5AcwadseSrUMIJxRCABgKh
-         9rZVCVdyXjtTAkFW2SSio+g5De70u9UB+k+XzgeeAcLMz0CsGpUpBqIvP1sdqxJv5npg
-         tfcWtRA1Tdl5Q09mL0O+6wwm6P26R5tv/YjFVK3T7yP3chqrh4nkyITqYF73MliMF177
-         Bz5RI1TJC0aOVoDZ2rseFyCyjrY52BS142KOPjiWahLDvE2RagwVJFtgedATbLPiJ2gc
-         bzgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfng0txCGko3mMTZwe0YQpTxHlzDNTHgNn0n98Fi6dxE+SACYRq/2LRon+4QDzoIEmEQccEp9ln0VPBoE1n33Y2oyvlV+rxEKGsLfjVnKB
-X-Gm-Message-State: AOJu0YwM3Xi2gqKGJuIP/7WLX1YngL4JpXt2tFeZmn9R/YC7OZnPN8x9
-	PIHCAa6KFAI418ihqtuNaZiY3RioRfzZ5CRvbBAsBRt1S+k4OsyrVbq1kQvjgQ==
-X-Google-Smtp-Source: AGHT+IFjs2Y7MUqk7i3aTHdpOsTi/0KqnFICd1YQCAkvu8AdXH/Iyxc228RpFccF4GUU9d3ijbo4fw==
-X-Received: by 2002:a05:6e02:168c:b0:36a:2538:d70d with SMTP id e9e14a558f8ab-36cc14eca55mr17036045ab.28.1715311572814;
-        Thu, 09 May 2024 20:26:12 -0700 (PDT)
-Received: from google.com (195.121.66.34.bc.googleusercontent.com. [34.66.121.195])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489375c13f9sm710317173.97.2024.05.09.20.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 20:26:12 -0700 (PDT)
-Date: Fri, 10 May 2024 03:26:08 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Wws8dFc5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dhiDhhEwm20W3AdRoKjizM2sEfdCHCLz0s2eBCvTzLU=; b=Wws8dFc5amGeAFtmtxE8TNKNRL
+	g8RnK6XUw51MXBROvF6diEzl9Wp7yRkTMc/K9z36VoPWnq8Rs2HpxmGyqWjG5nN/Z2aUTnQkJn3BG
+	9UpnfF0v5uEAUEPgjcEdgnHM1K2zgPEuKx7M8dF4V1li6hIIgeBOgMiMlaILkaWcMWA3esLrgpdPA
+	LKsrQ7ZBoK4V826Ga1jMd0UUJsidR9bpWdjjbvRNYFi6vooDdOrEJ04stmSDCZYL6YONC78hidUI8
+	ukgFqJFixMMh+CqUW+L8QjzGqvaG7yFhycMUdZu5jOixB2B+A9Kh3BV27Y1yHj+kN82R1SkkvITV5
+	qc2u7cGA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1s5IAv-0024NI-2W;
+	Fri, 10 May 2024 04:48:06 +0000
+Date: Fri, 10 May 2024 05:48:05 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] libfs: fix accidental overflow in offset calculation
-Message-ID: <6oq7du4gkj3mvgzgnmqn7x44ccd3go2d22agay36chzvuv3zyt@4fktkazj4cvw>
+Message-ID: <20240510044805.GW2118490@ZenIV>
 References: <20240510-b4-sio-libfs-v1-1-e747affb1da7@google.com>
  <20240510004906.GU2118490@ZenIV>
  <20240510010451.GV2118490@ZenIV>
+ <6oq7du4gkj3mvgzgnmqn7x44ccd3go2d22agay36chzvuv3zyt@4fktkazj4cvw>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,78 +51,30 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240510010451.GV2118490@ZenIV>
+In-Reply-To: <6oq7du4gkj3mvgzgnmqn7x44ccd3go2d22agay36chzvuv3zyt@4fktkazj4cvw>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Hi,
+On Fri, May 10, 2024 at 03:26:08AM +0000, Justin Stitt wrote:
 
-On Fri, May 10, 2024 at 02:04:51AM +0100, Al Viro wrote:
-> On Fri, May 10, 2024 at 01:49:06AM +0100, Al Viro wrote:
-> > On Fri, May 10, 2024 at 12:35:51AM +0000, Justin Stitt wrote:
-> > > @@ -147,7 +147,9 @@ loff_t dcache_dir_lseek(struct file *file, loff_t offset, int whence)
-> > >  	struct dentry *dentry = file->f_path.dentry;
-> > >  	switch (whence) {
-> > >  		case 1:
-> > > -			offset += file->f_pos;
-> > > +			/* cannot represent offset with loff_t */
-> > > +			if (check_add_overflow(offset, file->f_pos, &offset))
-> > > +				return -EOVERFLOW;
-> > 
-> > Instead of -EINVAL it correctly returns in such cases?  Why?
-> 
-> We have file->f_pos in range 0..LLONG_MAX.  We are adding a value in
-> range LLONG_MIN..LLONG_MAX.  The sum (in $\Bbb Z$) cannot be below
-> LLONG_MIN or above 2 * LLONG_MAX, so if it can't be represented by loff_t,
-> it must have been in range LLONG_MAX + 1 .. 2 * LLONG_MAX.  Result of
-> wraparound would be equal to that sum - 2 * LLONG_MAX - 2, which is going
-> to be in no greater than -2.  We will run
-> 			fallthrough;
-> 		case 0:
-> 			if (offset >= 0)
-> 				break;
-> 			fallthrough;
-> 		default:
-> 			return -EINVAL;
-> and fail with -EINVAL.
+> This feels like a case of accidental correctness. You demonstrated that
+> even with overflow we end up going down a control path that returns an
+> error code so all is good.
 
-This feels like a case of accidental correctness. You demonstrated that
-even with overflow we end up going down a control path that returns an
-error code so all is good. However, I think finding the solution
-shouldn't require as much mental gymnastics. We clearly don't want our
-file offsets to wraparound and a plain-and-simple check for that lets
-readers of the code understand this.
+No.  It's about a very simple arithmetical fact: the smallest number that
+wraps to 0 is 2^N, which is more than twice the maximal signed N-bit
+value.  So wraparound on adding a signed N-bit to non-negative signed N-bit
+will always end up with negative result.  That's *NOT* a hard math.  Really.
 
-> 
-> Could you explain why would -EOVERFLOW be preferable and why should we
-> engage in that bit of cargo cult?
+As for the rest... SEEK_CUR semantics is "seek to current position + offset";
+just about any ->llseek() instance will have that shape - calculate the
+position we want to get to, then forget about the difference between
+SEEK_SET and SEEK_CUR.  So noticing that wraparound ends with negative
+is enough - we reject straight SEEK_SET to negatives anyway, so no
+extra logics is needed.
 
-I noticed some patterns in fs/ regarding -EOVERFLOW and thought this was
-a good application of this particular error code.
+> However, I think finding the solution
+> shouldn't require as much mental gymnastics. We clearly don't want our
+> file offsets to wraparound and a plain-and-simple check for that lets
+> readers of the code understand this.
 
-Some examples:
-
-read_write.c::do_sendfile()
-  ...
-	if (unlikely(pos + count > max)) {
-		retval = -EOVERFLOW;
-		if (pos >= max)
-			goto fput_out;
-		count = max - pos;
-	}
-
-read_write.c::generic_copy_file_checks()
-  ...
-	/* Ensure offsets don't wrap. */
-	if (pos_in + count < pos_in || pos_out + count < pos_out)
-		return -EOVERFLOW;
-
-... amongst others.
-
-So to answer your question, I don't have strong feelings about what the
-error code should be; I was just attempting to match patterns I had seen
-within this section of the codebase when handling overflow/wraparound.
-
-If -EOVERFLOW is technically incorrect or if it is just bad style, I'm
-happy to send a new version swapping it over to -EINVAL
-
-Thanks
-Justin
+No comments that would be suitable for any kind of polite company.
