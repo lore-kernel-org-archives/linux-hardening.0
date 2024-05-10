@@ -1,124 +1,209 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B1E165FA1;
-	Fri, 10 May 2024 10:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F552171653;
+	Fri, 10 May 2024 15:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715335641; cv=none; b=bB1ROzI4dfQL0U4edS1Qxwg45C7JViyl64cNCUx+amD/mYDmJby2Do3b3LDp/yZ7+/RdH9UxlZV/Jl8dlH5TqMCIxxnAkbIVlDwalRp8bIDnadTxn+i382ez770oEwSZBPse/ja0Av6+9o/kJcBTKWRv/79USlViMGOfRNMabos=
+	t=1715354113; cv=none; b=VtlvoSH2KoNTKo66JEXozkcodCvMO9PBTc0zJkYCeK/SR6kTaNQQuUZxTThYg7hWeO/SPZsOkPy71CtoJ2gFmxi60S/X58S7B/n1fo0+4a7t5CRzAyxwQedJQ4seL8SStyfXYa6MYcKPBkRXuOav3rFVYE/wWB4W5XtYUOVHZVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715335641; c=relaxed/simple;
-	bh=ifYU/c+8V7OWSd9aaCKHF7gpCqv7cSdHzl7rv5oFs0w=;
-	h=MIME-Version:Content-Type:Date:Message-ID:Subject:From:To:CC:
-	 References:In-Reply-To; b=YhNoo8dTXzI9xhXo434xheWu7y4cS7i46GNXu0iiHxPXUSUY7ZXD0de3TW9tkr0v2CS3bUfmEbWOQgbzdg///Smde2sdMBcVKDhNw0j4Q5ULgB9mgbi2QCG+V48aYCICsRfil+6CRAIL8DIgaVtQRfEBNgL8imKn3XwtEtAVSUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=u8uF0CBu; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1715354113; c=relaxed/simple;
+	bh=+l80251r0ZhwdypAfFr7iG7PA4iPz9YsZVkf3xTYNbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DBcqco3+X4HY7hBnlvnmICkFlwv6/jqLUo10LDECP5C57rIKQlxbzXEP1nTf71pFmvioRbHpnyoXKWfK92cCjEKRfP937thgMjDOuHDc9xIYpbgMkbN6iuWTYuxxI/dgaID9NFmIzc6wlRppEkNt4miycKnxVxINWYTSlSJI/v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SYWaCTf/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ssG029tG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SYWaCTf/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ssG029tG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u8uF0CBu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1715335639; x=1746871639;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   subject:from:to:cc:references:in-reply-to;
-  bh=ODj1UcfgLsilkOJ93AaBzpY+nLn2txKitmtJHEr2EDY=;
-  b=u8uF0CBug7c8zCvsxafKEvq0CDaBFQOMRdoDAtvAPf0o9JmSmUYIrbcd
-   8TMqV3Ny4NIBTlnCoa1vEds+0gHqP9iuyEqAQUw1JfywNJof5GxrLbPYe
-   iCLegTlVnHLZbVrZQVmWEj9Hxdln8O6Wz8aY2aLdaYMWupiifYGtj3XcQ
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.08,150,1712620800"; 
-   d="scan'208";a="88359429"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 10:07:15 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.10.100:54770]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.14.131:2525] with esmtp (Farcaster)
- id 0c298036-b7a6-49e7-b4ba-4e0b449ad4e5; Fri, 10 May 2024 10:07:14 +0000 (UTC)
-X-Farcaster-Flow-ID: 0c298036-b7a6-49e7-b4ba-4e0b449ad4e5
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 10 May 2024 10:07:13 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 10 May
- 2024 10:07:03 +0000
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SYWaCTf/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ssG029tG";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SYWaCTf/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ssG029tG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1664567398;
+	Fri, 10 May 2024 15:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715354109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkfYfa2bSqpqubQurBedtYk/7Fl2S8Y+GKROzrM51Ig=;
+	b=SYWaCTf/d50jctkmp4j8AYu1ygzCnz99vfAWh+792nzYE8+Y26mKg31h2M8xAb0K8Lu63C
+	cSbNKxgJq3BPMZWSnKRmO/ScTnAouMc8FDXwl39KsoYQQWLCXt9dGmUPOF+2O4lBVDDodS
+	yrXkDXTlOIxvtEiAlDD4s5d4b5OgSxo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715354109;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkfYfa2bSqpqubQurBedtYk/7Fl2S8Y+GKROzrM51Ig=;
+	b=ssG029tGeFnfLQzjax5mMmKqSG6X1vCpV9q/jWyoYoCnZ5e0obffkT29/ZI/pazxqECgm4
+	Xu9WiQurQwCiqGDA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="SYWaCTf/";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ssG029tG
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715354109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkfYfa2bSqpqubQurBedtYk/7Fl2S8Y+GKROzrM51Ig=;
+	b=SYWaCTf/d50jctkmp4j8AYu1ygzCnz99vfAWh+792nzYE8+Y26mKg31h2M8xAb0K8Lu63C
+	cSbNKxgJq3BPMZWSnKRmO/ScTnAouMc8FDXwl39KsoYQQWLCXt9dGmUPOF+2O4lBVDDodS
+	yrXkDXTlOIxvtEiAlDD4s5d4b5OgSxo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715354109;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkfYfa2bSqpqubQurBedtYk/7Fl2S8Y+GKROzrM51Ig=;
+	b=ssG029tGeFnfLQzjax5mMmKqSG6X1vCpV9q/jWyoYoCnZ5e0obffkT29/ZI/pazxqECgm4
+	Xu9WiQurQwCiqGDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 09A90139AA;
+	Fri, 10 May 2024 15:15:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zAxUAv05PmYqKAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 10 May 2024 15:15:09 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A59B8A0983; Fri, 10 May 2024 17:15:08 +0200 (CEST)
+Date: Fri, 10 May 2024 17:15:08 +0200
+From: Jan Kara <jack@suse.cz>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fs: fix unintentional arithmetic wraparound in offset
+ calculation
+Message-ID: <20240510151508.hajqjxsn7rghk3dj@quack3>
+References: <20240509-b4-sio-read_write-v1-1-06bec2022697@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Fri, 10 May 2024 10:07:00 +0000
-Message-ID: <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com>
-Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
- configuration and violation
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Sean Christopherson <seanjc@google.com>,
-	=?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-CC: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, "Kees
- Cook" <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>, Rick P Edgecombe
-	<rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, Angelina Vu
-	<angelinavu@linux.microsoft.com>, Anna Trikalinou
-	<atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>,
-	"Forrest Yuan Yu" <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>, John Andersen
-	<john.s.andersen@intel.com>, "Madhavan T . Venkataraman"
-	<madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>,
-	=?utf-8?q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
-	=?utf-8?q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>, Thara
- Gopinath <tgopinath@microsoft.com>, "Trilok Soni" <quic_tsoni@quicinc.com>,
-	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, Yu Zhang
-	<yu.c.zhang@linux.intel.com>, =?utf-8?q?=C8=98tefan_=C8=98icleru?=
-	<ssicleru@bitdefender.com>, <dev@lists.cloudhypervisor.org>,
-	<kvm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-security-module@vger.kernel.org>, <qemu-devel@nongnu.org>,
-	<virtualization@lists.linux-foundation.org>, <x86@kernel.org>,
-	<xen-devel@lists.xenproject.org>
-X-Mailer: aerc 0.16.0-127-gec0f4a50cf77
-References: <20240503131910.307630-1-mic@digikod.net>
- <20240503131910.307630-4-mic@digikod.net> <ZjTuqV-AxQQRWwUW@google.com>
- <20240506.ohwe7eewu0oB@digikod.net> <ZjmFPZd5q_hEBdBz@google.com>
- <20240507.ieghomae0UoC@digikod.net> <ZjpTxt-Bxia3bRwB@google.com>
-In-Reply-To: <ZjpTxt-Bxia3bRwB@google.com>
-X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509-b4-sio-read_write-v1-1-06bec2022697@google.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 1664567398
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
 
-On Tue May 7, 2024 at 4:16 PM UTC, Sean Christopherson wrote:
-> > If yes, that would indeed require a *lot* of work for something we're n=
-ot
-> > sure will be accepted later on.
->
-> Yes and no.  The AWS folks are pursuing VSM support in KVM+QEMU, and SVSM=
- support
-> is trending toward the paired VM+vCPU model.  IMO, it's entirely feasible=
- to
-> design KVM support such that much of the development load can be shared b=
-etween
-> the projects.  And having 2+ use cases for a feature (set) makes it _much=
-_ more
-> likely that the feature(s) will be accepted.
+On Thu 09-05-24 21:34:58, Justin Stitt wrote:
+> When running syzkaller with the newly reintroduced signed integer
+> overflow sanitizer we encounter this report:
+> 
+> [   67.991989] ------------[ cut here ]------------
+> [   67.995501] UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
+> [   68.000067] 9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
+> [   68.006266] CPU: 4 PID: 10851 Comm: syz-executor.5 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+> [   68.012353] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   68.018983] Call Trace:
+> [   68.020803]  <TASK>
+> [   68.022540]  dump_stack_lvl+0x93/0xd0
+> [   68.025222]  handle_overflow+0x171/0x1b0
+> [   68.028053]  generic_file_llseek_size+0x35b/0x380
+> ...
+> 
+> Historically, the signed integer overflow sanitizer did not work in the
+> kernel due to its interaction with `-fwrapv` but this has since been
+> changed [1] in the newest version of Clang. It was re-enabled in the
+> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+> sanitizer").
+> 
+> Since @offset is later limited by @maxsize, we can proactively safeguard
+> against exceeding that value and also dodge some accidental overflow
+> (which may cause bad file access):
+> 
+> 	loff_t vfs_setpos(struct file *file, loff_t offset, loff_t maxsize)
+> 	{
+> 		if (offset < 0 && !unsigned_offsets(file))
+> 			return -EINVAL;
+> 		if (offset > maxsize)
+> 			return -EINVAL;
+> 		...
+> 
+> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+> Closes: https://github.com/KSPP/linux/issues/358
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Here's the syzkaller reproducer:
+> | # {Threaded:false Repeat:false RepeatTimes:0 Procs:1 Slowdown:1 Sandbox:
+> | # SandboxArg:0 Leak:false NetInjection:false NetDevices:false
+> | # NetReset:false Cgroups:false BinfmtMisc:false CloseFDs:false KCSAN:false
+> | # DevlinkPCI:false NicVF:false USB:false VhciInjection:false Wifi:false
+> | # IEEE802154:false Sysctl:false Swap:false UseTmpDir:false
+> | # HandleSegv:false Repro:false Trace:false LegacyOptions:{Collide:false
+> | # Fault:false FaultCall:0 FaultNth:0}}
+> | r0 = openat$sysfs(0xffffffffffffff9c, &(0x7f0000000000)='/sys/kernel/address_bits', 0x0, 0x98)
+> | lseek(r0, 0x7fffffffffffffff, 0x2)
+> 
+> ... which was used against Kees' tree here (v6.8rc2):
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+> 
+> ... with this config:
+> https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
+> ---
+>  fs/read_write.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index d4c036e82b6c..10c3eaa5ef55 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -88,7 +88,7 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
+>  {
+>  	switch (whence) {
+>  	case SEEK_END:
+> -		offset += eof;
+> +		offset = min_t(loff_t, offset, maxsize - eof) + eof;
 
-Since Sean mentioned our VSM efforts, a small update. We were able to
-validate the concept of one KVM VM per VTL as discussed in LPC. Right
-now only for single CPU guests, but are in the late stages of bringing
-up MP support. The resulting KVM code is small, and most will be
-uncontroversial (I hope). If other obligations allow it, we plan on
-having something suitable for review in the coming months.
+Well, but by this you change the behavior of seek(2) for huge offsets.
+Previously we'd return -EINVAL (from following vfs_setpos()), now we set
+position to maxsize. I don't think that is desirable?
 
-Our implementation aims to implement all the VSM spec necessary to run
-with Microsoft Credential Guard. But note that some aspects necessary
-for HVCI are not covered, especially the ones that depend on MBEC
-support, or some categories of secure intercepts.
+Also the addition in SEEK_CUR could overflow in the same way AFAICT so we
+could treat that in one patch so that the whole function is fixed at once?
 
-Development happens
-https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
-branch, but I'd advice against looking into it until we add some order
-to the rework. Regardless, feel free to get in touch.
-
-Nicolas
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
