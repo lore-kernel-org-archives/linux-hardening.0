@@ -1,70 +1,70 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242C11327F2
-	for <linux-hardening@vger.kernel.org>; Thu,  9 May 2024 23:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A0F610D
+	for <linux-hardening@vger.kernel.org>; Fri, 10 May 2024 00:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715298132; cv=none; b=Au6YTHfAn9jJOVRAO9R3Or2tM22HVhMgT8pzC4KKOzMC4dHr8pp9ixd7YUn2qjfmGrdIegOwb560NejmfdMK/CM6loxi2Lyg4T2VIppjOeNPQM53fFu5tKF3kMqYWsbaqBeAawevVFMxypM+0FADNlwDmN5pkdxaV9nm8G7i4r8=
+	t=1715301354; cv=none; b=c7Z3tWam6lS4/4bmS0TOBYGj+xl3F72Vjaczo+Gy3kkhIpemOetlddK+Y8Ej84cDGoyt2zUnB7Pcum/pSPk4Lx8zJEECLeiLpVdpU/xtf2eS9uWXxkCTk4RnwYeLDa8DhxnCmaAS28gOpGweINUBY9p9YYvZUwjV7T2zbLkVYOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715298132; c=relaxed/simple;
-	bh=upkR+XksKysYVRUNXvUH9L45v4/aavvI+H4cuZkXN2w=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=T/MLutSfh81K5wmjAsU3W4om3UvbJaYMOcgCzbrRuzE0lXWcv2YHqPPHsOaqLCbeb/yKtdErc69gwL+KUq94wLgn70Gq2T2slJF6gTSTY+OAONx4bPN6iP/WNvKcimkv79OB3UMaQ8CtmfgClpLTKCutggG1t7A/mHHXrQc/aak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zw9hjYV1; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1715301354; c=relaxed/simple;
+	bh=A6Ud7RP+XPGEndCXwu0iH4gOduKG/AYC7ysUshGfKZQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ss0bxEtNroGsI0zjGLmda2T1++vt4CQGHe2zRtXU2euHj8JyH/d7asNU9OqhWg8w84Vca4sCVBvL63lqtL3lusaW0kBnvFw1p4ji5K4eMsH5WsMYWEAH/uAKYX/8XidT4wXOkDS6t/3oHRhQLf3cmQIZohA0LmB9uRP8rWzEU1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SrRg8syR; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zw9hjYV1"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61dfa4090c1so20903857b3.3
-        for <linux-hardening@vger.kernel.org>; Thu, 09 May 2024 16:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrRg8syR"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61e0949fc17so24612777b3.0
+        for <linux-hardening@vger.kernel.org>; Thu, 09 May 2024 17:35:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715298129; x=1715902929; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715301352; x=1715906152; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=+eKEsBmeaAZMUE4eVHP/KrRhV46Xl2ww7aZZs66g2CU=;
-        b=zw9hjYV1DqM5a7ypTJ2HOe0CXbBRQ0PxMLV3qyzZ/yCUU1CKz+45opoSdwF966DKzm
-         Cojmwy3FTFTUWLCcpPlmVt3OSLfQ8MePdp5nSQOwGCMSgkzG2SzCVYIFoh3fZIm2O5Ta
-         n4OlTBgXJ+6sM5opkczGIlE77qFH4T7Oz39EufeDmFnIkq+E8n0BdTXxOe0QCYy+70Dc
-         vhz6xBm2KJkqPr0Ui7aQskEWpsRdSXp3JD6zSq9dlcRh0NoprhlTiIo5C0nhu3S/zxfV
-         1s7SWzHjhp85hIqRr/puX5z0Xi7inW9yNg4SIddHWwmleJqxrLkRjKQrpXa2akN8cawJ
-         99EQ==
+        bh=JRIoam0j1M49iTn2E355v3TI8UxS6k39m0Um4TZVhLw=;
+        b=SrRg8syRlktl/jJWW6gSttTzqFhpXWkgxsodKFtHHNjx6wQ8ryw6UookH19/m/9IwQ
+         /qTrxKOLKPozU3ac38JA545YZCXBfBgfzzeeZiJsHNfB6nitQoR4UKEhrw1X3RXLWN+2
+         8iQ9STeO45nkWiuMTKwX9OYuR0foxQuGdwfG4+Xq+CMABYjr66NeYTmAkMILB6W4NTtA
+         yIxuypOe96dzpAna5lZ0F0VbmIaPzwJOg9HZy4Yji1bYO7VHXLfXKE9mN3orpdn8c9Zu
+         JEO1wVsAxsqAKbYbsYUD8tIt8QXDyLtn1DONCpXqa9VYj/lnJIJx9IDtrefpk6X+EWxc
+         BeLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715298129; x=1715902929;
+        d=1e100.net; s=20230601; t=1715301352; x=1715906152;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+eKEsBmeaAZMUE4eVHP/KrRhV46Xl2ww7aZZs66g2CU=;
-        b=RLTXvE5VslIdf7772P6VQE9Ir6nOq0nrwnuWDPJn/Mw+AquWBRCiR2fG6wgO3NqUTj
-         5du4cjUnFv1P6gs7jPWE/sXTpoY84uoEUnpTdgI3QorkW4TX7GwdtWEBSjhss+DOo2bb
-         yZlbfTFdqxpX0LLkhlocpcy6/59rxPjUzuV85zEkOXOcZ9Nd9RurlG16di74T1POAEB2
-         XYXCuNoL9QpIdJksMZ+0wFluEBMqt70i/Z4HsLAxGatF3+LpiU35AcL7HECg6hPs0ok1
-         LTSZcYgOCTvR6LEOCT7APMx66CJAgOCY3/MhYAD0najVZEW+R40mAnevUh/0nPayheY6
-         DjQg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGbpAAWy3RGSnnOxTYFeMDBZPx37kj9dMvkjGkwZWOVypVl9sLO2rM+KV2QYwGI7Wl8O7Y7dE0nDFUj9PcYCH36SxVSAxKkz+866n4jCZV
-X-Gm-Message-State: AOJu0Yzik/YvvUFFAAreixrGHohshaDz8czyA447YB5Or9pN2iWxMFEJ
-	iMk3UUnSJhZh4i7aM1RZe4V2spyEQA5A0kVCRg77hrTym2/zHi9QnkmouauB5eV1dI8uEHYRt07
-	7HVKLeaMlYN6DQannfeSd1A==
-X-Google-Smtp-Source: AGHT+IF3IktBPUp05ZCNGiRUWE9GBrzvrzUFZM+LfPayXNouSjgolDRwmURT/GTW9zmbvJ4tidNZrp1F3HllK4lD1A==
+        bh=JRIoam0j1M49iTn2E355v3TI8UxS6k39m0Um4TZVhLw=;
+        b=Vc4ohfEca9zL0sizEc+y8liendkAdY7BwyfE102gUdq1jKu12JMuB7oEhAE1VqStq4
+         yDLRU1k7hMZ+7O62LVXP9u59GnKMZLD7ZIpzWclU+/RZq7ro/zgtQG8WKR1UCis2knnH
+         51rwBG7WNVOcNjuhrxeb2iQFJlBLd6mg75yk5+AJXGovOgBAGdorzStpR6glkRCyGEkl
+         U2KuK88ohCC0XgVuEenbzaC+9rEKdwGVGrdrUDqfJqzCpRXsUwIW3WTDYFthXzwPzXhw
+         WJ4oVXV9Y6KtfXqt1MjzK9HiBT/9zH7YZGbN+0PtHvNV9mgSzgx3ugwqGfczlJCI9xLq
+         mkWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPU/VvVBPl/PnZPOpsRYq5n4sIwP/XoDGASTKMxzHQBRTW6r8v/frdmQ7Qretlf4bBFmOgbt4UnvcPc9sRMPIc2ld27Z5aab3go3Yj64PM
+X-Gm-Message-State: AOJu0Yw1VAWOOAsY5xvk5RCEWj2zoaSvDBPgK6wDnLO6PlgIICrEIJ+1
+	OYizMJaIxgoGrTNQ4o9MSl0p7hT4OCX1F/UPYpVzsFHyn7QMu4K42qOrMPYU89PgtB3EIarfz3o
+	8YGRO/BJlHzUSXh18+p96SA==
+X-Google-Smtp-Source: AGHT+IHJL8hsG0mvnXN9NTELNsYrQvpZSdlZUdc+4IRp10nXSK7S/+o1UQOBYkTXbb92FFrUo0i8behfYeZs/OhBkw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:45c2:b0:61b:eab3:f18a with
- SMTP id 00721157ae682-622afffcf3emr2505507b3.8.1715298129166; Thu, 09 May
- 2024 16:42:09 -0700 (PDT)
-Date: Thu, 09 May 2024 23:42:07 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:690c:4d88:b0:61a:d161:ff8a with
+ SMTP id 00721157ae682-622aff477f3mr3037367b3.1.1715301352393; Thu, 09 May
+ 2024 17:35:52 -0700 (PDT)
+Date: Fri, 10 May 2024 00:35:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAE5fPWYC/32NUQrCMBBEr1L225VNiCn1y3tIkbZZ0wVtSlKqU
- nJ3Yw/g5xtm3myQOAonOFcbRF4lSZgK6EMFw9hNnlFcYdCkDZ2owd5g6WDkzt1eURZGMp2qnSG riaHs5sh3ee/Oa1t4lLSE+NkvVvVL/9lWhQrJ9jyUkrZNffEh+Acfh/CENuf8BVEpVCKzAAAA
+X-B4-Tracking: v=1; b=H4sIAOZrPWYC/x2MQQqAMAzAviI9W5izOvQr4mHTqgVRWUEE2d8dH
+ gNJXlCOwgp98ULkW1TOI0NVFjBt/lgZZc4M1lgyjekwEGYHdwmLYus6cpbIk68hJ1fkRZ5/N4w pfa+vRBFeAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715298128; l=7104;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715301351; l=3359;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=upkR+XksKysYVRUNXvUH9L45v4/aavvI+H4cuZkXN2w=; b=i7SXO3XY46Qn+ZApSYZic1ynZf/xvXNfvXj44LuuS1zaowHiLkglP1WdgpiD6RtB6PEMpMqHH
- QoPLdPXyLp9Dh22aVSYMwIJWNLC/Qp0QverfCRyFSvSk0crH0KIfClF
+ bh=A6Ud7RP+XPGEndCXwu0iH4gOduKG/AYC7ysUshGfKZQ=; b=Qz81LOMknGCFGBFXpjp8tTJXGsQ9A8sScMtbF2qSupAvT3AI53qskUBYHBt1xTlul7o8nliAo
+ /rHuR0QAfQhDLKW/2/JBfllQFsn9fZ92VgMllO/zxN3OF004iyse9Hh
 X-Mailer: b4 0.12.3
-Message-ID: <20240509-b4-sio-read_write-v2-1-018fc1e63392@google.com>
-Subject: [PATCH v2] fs: fix unintentional arithmetic wraparound in offset calculation
+Message-ID: <20240510-b4-sio-libfs-v1-1-e747affb1da7@google.com>
+Subject: [PATCH] libfs: fix accidental overflow in offset calculation
 From: Justin Stitt <justinstitt@google.com>
 To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
 	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>
@@ -73,25 +73,28 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-When running syzkaller with the newly reintroduced signed integer
-overflow sanitizer we encounter this report:
+Running syzkaller with the newly reintroduced signed integer overflow
+sanitizer gives this report:
 
-[   67.995501] UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
-[   68.000067] 9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
-[   68.006266] CPU: 4 PID: 10851 Comm: syz-executor.5 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-[   68.012353] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   68.018983] Call Trace:
-[   68.020803]  <TASK>
-[   68.022540]  dump_stack_lvl+0x93/0xd0
-[   68.025222]  handle_overflow+0x171/0x1b0
-[   68.028053]  generic_file_llseek_size+0x35b/0x380
-
-amongst others:
-UBSAN: signed-integer-overflow in ../fs/read_write.c:1657:12
-142606336 - -9223372036854775807 cannot be represented in type 'loff_t' (aka 'long long')
+[ 6008.464680] UBSAN: signed-integer-overflow in ../fs/libfs.c:149:11
+[ 6008.468664] 9223372036854775807 + 16387 cannot be represented in type 'loff_t' (aka 'long long')
+[ 6008.474167] CPU: 1 PID: 1214 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00041-gec7cb1052e44-dirty #15
+[ 6008.479662] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[ 6008.485276] Call Trace:
+[ 6008.486819]  <TASK>
+[ 6008.488258]  dump_stack_lvl+0x93/0xd0
+[ 6008.490535]  handle_overflow+0x171/0x1b0
+[ 6008.492957]  dcache_dir_lseek+0x3bf/0x3d0
 ...
-UBSAN: signed-integer-overflow in ../fs/read_write.c:1666:11
-9223372036854775807 - -9223231299366420479 cannot be represented in type 'loff_t' (aka 'long long')
+
+Use the check_add_overflow() helper to gracefully check for
+unintentional overflow causing wraparound in our offset calculations.
+
+Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+Closes: https://github.com/KSPP/linux/issues/359
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
 
 Historically, the signed integer overflow sanitizer did not work in the
 kernel due to its interaction with `-fwrapv` but this has since been
@@ -99,31 +102,8 @@ changed [1] in the newest version of Clang. It was re-enabled in the
 kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
 sanitizer").
 
-Fix the accidental overflow in these position and offset calculations
-by checking for negative position values, using check_add_overflow()
-helpers and clamping values to expected ranges.
-
-Since @offset is later limited by @maxsize, we can proactively safeguard
-against exceeding that value (and by extension avoiding integer overflow):
-	loff_t vfs_setpos(struct file *file, loff_t offset, loff_t maxsize)
-	{
-		if (offset < 0 && !unsigned_offsets(file))
-			return -EINVAL;
-		if (offset > maxsize)
-			return -EINVAL;
-		...
-
-Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/358
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- fix some more cases syzkaller found in read_write.c
-- use min over min_t as the types are the same
-- Link to v1: https://lore.kernel.org/r/20240509-b4-sio-read_write-v1-1-06bec2022697@google.com
----
 Here's the syzkaller reproducer:
+
 | # {Threaded:false Repeat:false RepeatTimes:0 Procs:1 Slowdown:1 Sandbox:
 | # SandboxArg:0 Leak:false NetInjection:false NetDevices:false
 | # NetReset:false Cgroups:false BinfmtMisc:false CloseFDs:false KCSAN:false
@@ -131,8 +111,9 @@ Here's the syzkaller reproducer:
 | # IEEE802154:false Sysctl:false Swap:false UseTmpDir:false
 | # HandleSegv:false Repro:false Trace:false LegacyOptions:{Collide:false
 | # Fault:false FaultCall:0 FaultNth:0}}
-| r0 = openat$sysfs(0xffffffffffffff9c, &(0x7f0000000000)='/sys/kernel/address_bits', 0x0, 0x98)
-| lseek(r0, 0x7fffffffffffffff, 0x2)
+| r0 = openat$sysfs(0xffffffffffffff9c, &(0x7f0000000000)='/sys/kernel/tracing', 0x0, 0x0)
+| lseek(r0, 0x4003, 0x0)
+| lseek(r0, 0x7fffffffffffffff, 0x1)
 
 ... which was used against Kees' tree here (v6.8rc2):
 https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
@@ -140,114 +121,39 @@ https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-r
 ... with this config:
 https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
 ---
- fs/read_write.c  | 18 +++++++++++-------
- fs/remap_range.c | 12 ++++++------
- 2 files changed, 17 insertions(+), 13 deletions(-)
+ fs/libfs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index d4c036e82b6c..d116e6e3eb3d 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -88,7 +88,7 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 3a6f2cb364f8..3fdc1aaddd45 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -147,7 +147,9 @@ loff_t dcache_dir_lseek(struct file *file, loff_t offset, int whence)
+ 	struct dentry *dentry = file->f_path.dentry;
+ 	switch (whence) {
+ 		case 1:
+-			offset += file->f_pos;
++			/* cannot represent offset with loff_t */
++			if (check_add_overflow(offset, file->f_pos, &offset))
++				return -EOVERFLOW;
+ 			fallthrough;
+ 		case 0:
+ 			if (offset >= 0)
+@@ -422,7 +424,9 @@ static loff_t offset_dir_llseek(struct file *file, loff_t offset, int whence)
  {
  	switch (whence) {
- 	case SEEK_END:
--		offset += eof;
-+		offset = min(offset, maxsize - eof) + eof;
- 		break;
  	case SEEK_CUR:
- 		/*
-@@ -105,7 +105,8 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
- 		 * like SEEK_SET.
- 		 */
- 		spin_lock(&file->f_lock);
--		offset = vfs_setpos(file, file->f_pos + offset, maxsize);
-+		offset = vfs_setpos(file, min(file->f_pos, maxsize - offset) +
-+					      offset, maxsize);
- 		spin_unlock(&file->f_lock);
- 		return offset;
- 	case SEEK_DATA:
-@@ -1416,7 +1417,7 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_in = file_inode(file_in);
- 	struct inode *inode_out = file_inode(file_out);
- 	uint64_t count = *req_count;
--	loff_t size_in;
-+	loff_t size_in, in_sum, out_sum;
- 	int ret;
- 
- 	ret = generic_file_rw_checks(file_in, file_out);
-@@ -1450,8 +1451,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	if (IS_SWAPFILE(inode_in) || IS_SWAPFILE(inode_out))
- 		return -ETXTBSY;
- 
--	/* Ensure offsets don't wrap. */
--	if (pos_in + count < pos_in || pos_out + count < pos_out)
-+	if (check_add_overflow(pos_in, count, &in_sum) ||
-+	    check_add_overflow(pos_out, count, &out_sum))
- 		return -EOVERFLOW;
- 
- 	/* Shorten the copy to EOF */
-@@ -1467,8 +1468,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 
- 	/* Don't allow overlapped copying within the same file. */
- 	if (inode_in == inode_out &&
--	    pos_out + count > pos_in &&
--	    pos_out < pos_in + count)
-+	    out_sum > pos_in &&
-+	    pos_out < in_sum)
- 		return -EINVAL;
- 
- 	*req_count = count;
-@@ -1649,6 +1650,9 @@ int generic_write_check_limits(struct file *file, loff_t pos, loff_t *count)
- 	loff_t max_size = inode->i_sb->s_maxbytes;
- 	loff_t limit = rlimit(RLIMIT_FSIZE);
- 
-+	if (pos < 0)
-+		return -EINVAL;
-+
- 	if (limit != RLIM_INFINITY) {
- 		if (pos >= limit) {
- 			send_sig(SIGXFSZ, current, 0);
-diff --git a/fs/remap_range.c b/fs/remap_range.c
-index de07f978ce3e..4570be4ef463 100644
---- a/fs/remap_range.c
-+++ b/fs/remap_range.c
-@@ -36,7 +36,7 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_out = file_out->f_mapping->host;
- 	uint64_t count = *req_count;
- 	uint64_t bcount;
--	loff_t size_in, size_out;
-+	loff_t size_in, size_out, in_sum, out_sum;
- 	loff_t bs = inode_out->i_sb->s_blocksize;
- 	int ret;
- 
-@@ -44,17 +44,17 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
- 	if (!IS_ALIGNED(pos_in, bs) || !IS_ALIGNED(pos_out, bs))
- 		return -EINVAL;
- 
--	/* Ensure offsets don't wrap. */
--	if (pos_in + count < pos_in || pos_out + count < pos_out)
--		return -EINVAL;
-+	if (check_add_overflow(pos_in, count, &in_sum) ||
-+	    check_add_overflow(pos_out, count, &out_sum))
-+		return -EOVERFLOW;
- 
- 	size_in = i_size_read(inode_in);
- 	size_out = i_size_read(inode_out);
- 
- 	/* Dedupe requires both ranges to be within EOF. */
- 	if ((remap_flags & REMAP_FILE_DEDUP) &&
--	    (pos_in >= size_in || pos_in + count > size_in ||
--	     pos_out >= size_out || pos_out + count > size_out))
-+	    (pos_in >= size_in || in_sum > size_in ||
-+	     pos_out >= size_out || out_sum > size_out))
- 		return -EINVAL;
- 
- 	/* Ensure the infile range is within the infile. */
+-		offset += file->f_pos;
++		/* cannot represent offset with loff_t */
++		if (check_add_overflow(offset, file->f_pos, &offset))
++			return -EOVERFLOW;
+ 		fallthrough;
+ 	case SEEK_SET:
+ 		if (offset >= 0)
 
 ---
 base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
-change-id: 20240509-b4-sio-read_write-04a17d40620e
+change-id: 20240509-b4-sio-libfs-67947244a4a3
 
 Best regards,
 --
