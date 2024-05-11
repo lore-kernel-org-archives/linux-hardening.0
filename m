@@ -1,81 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838CB18EA1;
-	Sat, 11 May 2024 02:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4881537F5;
+	Sat, 11 May 2024 09:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715392831; cv=none; b=nzVeEGNupQFv7AIkJYBYliOIM5998YErlLrNQFWBcAlqDHkhhl9O3HAfowl0XHJz2OQVdqd6EGG5qf/ijEAuG1yQGCunpClDj+VIaFPDOp2HlES9US7gQbOZdYGyR9dofIR+B9moummsQqvEfmxFo5SegF1V2Uar0bAtgqLOkFI=
+	t=1715421082; cv=none; b=hLo1qT7TB6M1I8MXvU4U+q0teDCMTaCT99oP1yXheShClDSEGn2rV4ifefhv/3YO/abP38hBCCzsrcUyArpwKnQONTKXI+RKoIC5VnIahkTw2jq+NK27hcZa61JpOAkVP9bVP1kkw5WYYrGcgCI9k/9+0OPBDERqK0u0+BHgsmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715392831; c=relaxed/simple;
-	bh=q8MUC9+F3FMKd16QZ8MNjsaak83xeCmivpsf/vZqHkU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LmdO5kOVs6MWIey9TYY8oYpJ8Frrosj8KfXnN0cYqMiTnJhiEbvihA/Ga4mpBsNAeoZ8aJkc6zWdUgWUEXuqSaFykF2W8lvjSO0Zf/NlB7dMiGBkZrZ4DbVe1NIaXPMKDKLupblIGQ8LFnON6HHTquNdUHUWA8pyTBlQTu3gQbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXn3mi28; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715421082; c=relaxed/simple;
+	bh=0cJX+ofKilB0YeAddG2Rk34Tcb84daQhOHXhdzx0r3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1Emcb0fYYhIyfj4HDg32a0cLUnd3pWmx0p1eqTDOa+K/dtsGx99nPG6i9Fnxbq0yaMHPghGHN9HnmxE2ySH1nZngEn/mRlDZzJNH3K/XDH5c5MvQZU32BFzpay9cqLlH3U8f6hk+0mwpcNA7zgH/xGNpjc1jvhT2QfLm9mOL2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=k56XE3N3; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXn3mi28"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 28792C32786;
-	Sat, 11 May 2024 02:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715392830;
-	bh=q8MUC9+F3FMKd16QZ8MNjsaak83xeCmivpsf/vZqHkU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=PXn3mi28b0OUS+AmxeXJ71jA6/uGWpBCySJ0w6NaeFLjVMKBthR1Zzt7++l3cZmWU
-	 fjBqAm5agOulMM5Jj7msqRsHjgC1fmjXqHdpb9DdGPFGsj2ghl9zLp3PKGb+n5L6E1
-	 FvZWy7sFM/hcmbBehyuHv+7SumCzMExTNuTn5zqU/+d6WoVn46tTINXgs9uhMG5SJ9
-	 gbPid0g0cNkrsqfkIc7eVtHavLX/LfO0LDB/fzu+G+8nLsNxkgqkbBRJ8qAoaO7grT
-	 2IMStQwm4eyNQWA0GK1BGmueMpc86ABpUWtA8LK5U7JCp8oWRaxSbkLXKN+QYE8UYO
-	 gvcQSD5GGSbkA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1D800C54BA1;
-	Sat, 11 May 2024 02:00:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="k56XE3N3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1715421078;
+	bh=0cJX+ofKilB0YeAddG2Rk34Tcb84daQhOHXhdzx0r3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k56XE3N3d4pgs8RXOwLSnRLB27sLWUfITEgcvrDMjZdmJPa/Ir6S6oi9PpE553jPt
+	 sb7k+FxSLFp8Odclpb2t4vqVdgVnPhAwWUDBH9QwI80jAM7LA7gxjkMhJ80aDoR2yw
+	 DUA3ugAMpnt1Nr9pHpMHzjCRdAMZeTMxIBsCjZb8=
+Date: Sat, 11 May 2024 11:51:18 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <8d1daa64-3746-46a3-b696-127a70cdf7e7@t-8ch.de>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240424201234.3cc2b509@kernel.org>
+ <202405080959.104A73A914@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/2] gve: Minor cleanups
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171539283011.14416.2158436781698025205.git-patchwork-notify@kernel.org>
-Date: Sat, 11 May 2024 02:00:30 +0000
-References: <20240508-gve-comma-v2-0-1ac919225f13@kernel.org>
-In-Reply-To: <20240508-gve-comma-v2-0-1ac919225f13@kernel.org>
-To: Simon Horman <horms@kernel.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jeroendb@google.com, pkaligineedi@google.com,
- shailend@google.com, nathan@kernel.org, ndesaulniers@google.com,
- morbo@google.com, justinstitt@google.com, larysa.zaremba@intel.com,
- dan.carpenter@linaro.org, keescook@chromium.org, netdev@vger.kernel.org,
- llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+In-Reply-To: <202405080959.104A73A914@keescook>
 
-Hello:
+Hi Kees,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 08 May 2024 09:32:18 +0100 you wrote:
-> Hi,
+On 2024-05-08 10:11:35+0000, Kees Cook wrote:
+> On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
+> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > > The series was split from my larger series sysctl-const series [0].
+> > > It only focusses on the proc_handlers but is an important step to be
+> > > able to move all static definitions of ctl_table into .rodata.
+> > 
+> > Split this per subsystem, please.
 > 
-> This short patchset provides two minor cleanups for the gve driver.
-> 
-> These were found by tooling as mentioned in each patch,
-> and otherwise by inspection.
-> 
-> [...]
+> I've done a few painful API transitions before, and I don't think the
+> complexity of these changes needs a per-subsystem constification pass. I
+> think this series is the right approach, but that patch 11 will need
+> coordination with Linus. We regularly do system-wide prototype changes
+> like this right at the end of the merge window before -rc1 comes out.
 
-Here is the summary with links:
-  - [net-next,v2,1/2] gve: Avoid unnecessary use of comma operator
-    https://git.kernel.org/netdev/net-next/c/ebb8308eac84
-  - [net-next,v2,2/2] gve: Use ethtool_sprintf/puts() to fill stats strings
-    https://git.kernel.org/netdev/net-next/c/ba8bcb012b7d
+That sounds good.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> The requirements are pretty simple: it needs to be a obvious changes
+> (this certainly is) and as close to 100% mechanical as possible. I think
+> patch 11 easily qualifies. Linus should be able to run the same Coccinelle
+> script and get nearly the same results, etc. And all the other changes
+> need to have landed. This change also has no "silent failure" conditions:
+> anything mismatched will immediately stand out.
 
+Unfortunately coccinelle alone is not sufficient, as some helpers with
+different prototypes are called by handlers and themselves are calling
+handler and therefore need to change in the same commit.
+But if I add a diff for those on top of the coccinelle script to the
+changelog it should be obvious.
 
+> So, have patches 1-10 go via their respective subsystems, and once all
+> of those are in Linus's tree, send patch 11 as a stand-alone PR.
+
+Ack, I'll do that with the cover letter information requested by Joel.
+
+> (From patch 11, it looks like the seccomp read/write function changes
+> could be split out? I'll do that now...)
+
+Thanks!
+
+Thomas
