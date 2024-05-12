@@ -1,352 +1,208 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02olkn2010.outbound.protection.outlook.com [40.92.48.10])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F3C3E47E;
-	Sun, 12 May 2024 16:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.48.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715530248; cv=fail; b=dncuEdTmBRM6leUjrfxIzPsRCZaFEiBzVpoAfKfo2PIZUWGkbro2CcdUkPPJ02PS1kqNvG0wQajUhV8qlg8sck9e3jZGAr6Rhuhp8bwqwYDtwgY0sShG3UkFbAZu2LLm/wdEMFI4cNhZaL4VItE1NXU4g0exonTW+8CU+9vvv/Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715530248; c=relaxed/simple;
-	bh=cO0OyZ6+x05/ye7ybpX8g59fsXymBhI9Pxn7rRS1QF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dqSync6PfkVLYILnWQ+FuJdFpzrCMwOCTt3epAXa/e4sNfYj0ND9WNnTOnE1GfnvTWNcsBeo+PztnTOuamu7gdF9k1OhMGMip+zvPnvDfJhy9iubDgrMNvmX17/3AKK1pIphsvoJW4A9m9RYnX8jsLujWKZSlY8cMG8f2duc7ns=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DtSVH2pH; arc=fail smtp.client-ip=40.92.48.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844FA50277;
+	Sun, 12 May 2024 19:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715541911; cv=none; b=mu1jsMGIlfef03aKJFPX76dLpdXH/7i1owvtaIRyoMyrEFmnxopzDOBbeVSQJAs/NqysPIKDTe1nNgSQJvecy4FgrIV10WAIORYTUpe1/P+hcz7JP+Gm+yt8/6g1z/ekZxYlEV7WkK0exie2qS/4JTi7yZp5RUZY97xX4wJZBrU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715541911; c=relaxed/simple;
+	bh=AhqJjtjzxCOMPbPhOlZJHNiQIPD1qhMc2zICfWrrYgw=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=qx2kapXrD63OSgc5pR8bfXbqXsvzDAZNozQEKQW7obRknRc/yCbz7cXYuRdOTQJxrrdfFL0rqLD+zb3ZEkminzlYvNnnwrxFFbEOif3FmdlaksM4gqKLOrHQGCULdN5PZIfINQ6wqIky17A90LOCxDYKsp4gRiE3ePEB0De7j9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OuZ7VBPm; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DtSVH2pH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HuPvDlZYjb+VGyzLmNv8cEsQOIRX3qhc1yyp1sSe61YElsqwiIhFPOkt19QWkQR0V3qp8T7EzEaNijUB8X+Q7tF915/HUcX0nVZsQMu3OO/FfUhcX918vK6kMH9wykstXr7aX7FAc9Z0m7zoSEPFtPVG/4bp/3fO3qO/IMpQrclKbioa4t2R2mOl1XLMMpfABXsiEO3xU/YZV6G3x7qt5FhOCbw1TQTAqU+qhx1JH/Y7DBRUELSj3klVF5eWItu6UlZ0djgoIqXbYTr9TaTBbjgs/dF0hb1tQPo71KacsVdbHBHggm9vj2kRbdjSBLWJ2PZLLFLxvObcPSgNz8DrnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r4nsGLQ3NqJBCm58S+OTDBjY6/TebElea7qWCeysBJE=;
- b=gKB/aXAme466YR3tk27fQxHm1KgdydaluVOeRo03qP9ijncoAIEwGTDGTakAxLnYiE1FRfRuexdwvQ+0b75eyDj1E/kyfmIWbcPOY7uGvckrjy1WYTMR1jTB5yWXAMy3dMlMYY/os81zcnNAEzG6GO5ZvQld5n4utFBQYJ6SzwCYwt9AueLeoxTNILW3j+iiyWTGx0TJkGy22LBpCwUM4JJ6k7K0P6fcnXFGBtZGAFIjkKlAyPTb7hP01brhmUzf8mCO3m+jZ6vBJEG++h1IKxEmnlV9KdP8ALgcDY7/HOscKTKR2Xnjod7fFEekE9lVeHG5suKeflSTvgq4du/cdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r4nsGLQ3NqJBCm58S+OTDBjY6/TebElea7qWCeysBJE=;
- b=DtSVH2pHvWvEDJqt4Y77jvtwjtI/eUNoHwvbCtULSp+9x8lBDyhsMSMFEhmtdUGWqEjET4x4B3w1a4pBmCgvXQ4QOz6Z6sIh7Ld1EsSOnTFRfx3rpbr0EbeqthWRP2V6v05yohyTuJdoWw7NVFrErwvgPDq51nciY6J4fcQL7GOLNm31/ii09RDdiz277eOMD5agXNVuiXk8W1YhJcV9rwF5j0fEVicbcU4sMmmzOjY88HeIPFYTC7IefLUdYzwlmNlBNvWW4sxkaTz6LPMDiZCoj0mtHc9OZwGr4rnuwwVtNgaz/iLaeP4nT1b0Lzwb6flb+RTL26s2i+S0Zzg4OQ==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by DB8PR02MB5913.eurprd02.prod.outlook.com (2603:10a6:10:116::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Sun, 12 May
- 2024 16:10:43 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7544.052; Sun, 12 May 2024
- 16:10:43 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Taras Chornyi <taras.chornyi@plvision.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] net: prestera: Add flex arrays to some structs
-Date: Sun, 12 May 2024 18:10:27 +0200
-Message-ID:
- <AS8PR02MB7237E8469568A59795F1F0408BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [T1zVrY584MW8/ZGItUdUfhC6yAT54btB]
-X-ClientProxiedBy: MA4P292CA0013.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2d::11) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240512161027.12752-1-erick.archer@outlook.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OuZ7VBPm"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240512192459euoutp02821aac07226f8a2db5194d73dcf99b4e~O1ESVsCJR2437724377euoutp02b;
+	Sun, 12 May 2024 19:24:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240512192459euoutp02821aac07226f8a2db5194d73dcf99b4e~O1ESVsCJR2437724377euoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1715541899;
+	bh=AhqJjtjzxCOMPbPhOlZJHNiQIPD1qhMc2zICfWrrYgw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=OuZ7VBPmkb7GFFVnzlX4Xu3m7hSAa0rrviG0vbIWnIKgU+TJgw9zH8nxqiur/bL6o
+	 M7OMI4tz1/mWTWbqXXvIrwiyjKVk4zjtChcHQasIaqAhOS2cQTQAMVbVOIHdza6akW
+	 58y0JTV9EOsvNU8hQT438Y8v6wllbKKjS29Q7FR8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240512192458eucas1p2eab8e039a414a72a34a339fbe5ca9e81~O1ER0VNb73073930739eucas1p2D;
+	Sun, 12 May 2024 19:24:58 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id EF.31.09875.A8711466; Sun, 12
+	May 2024 20:24:58 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240512192457eucas1p1c2e524298e130efc58f1e66cc0f38039~O1ERRMgkM1116711167eucas1p1G;
+	Sun, 12 May 2024 19:24:57 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240512192457eusmtrp17aafdb49baa334c3f4286e36fb7018cf~O1ERQYpCs2380323803eusmtrp1O;
+	Sun, 12 May 2024 19:24:57 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-6e-6641178a9d21
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id BF.A2.08810.98711466; Sun, 12
+	May 2024 20:24:57 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240512192457eusmtip1388a0eba49a1f62b378d13466cb997f2~O1EQ_bBsU2825928259eusmtip1W;
+	Sun, 12 May 2024 19:24:57 +0000 (GMT)
+Received: from localhost (106.210.248.15) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Sun, 12 May 2024 20:24:56 +0100
+Date: Sun, 12 May 2024 21:24:51 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Kees Cook <keescook@chromium.org>
+CC: Jakub Kicinski <kuba@kernel.org>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
+	<linux@weissschuh.net>, Luis Chamberlain <mcgrof@kernel.org>, Eric Dumazet
+	<edumazet@google.com>, Dave Chinner <david@fromorbit.com>,
+	<linux-fsdevel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-security-module@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+	<coreteam@netfilter.org>, <kexec@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
+	<lvs-devel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<rds-devel@oss.oracle.com>, <linux-sctp@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <apparmor@lists.ubuntu.com>
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <20240512192451.wpswazhpualwvt63@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB8PR02MB5913:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6c97e6b-f8a7-4bb9-9502-08dc729e12e7
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|1602099003|3412199016|440099019|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	fymZMMKbw23gUFgVwPx1K2I6X8EHvueJO2ISRTy2B6iUdjC200qLPmP/+i3Z4PcpWdE7gDCKsqqeZTmM0IB2Rkou2/JocrPag77pizJNY4QBzvFIm9yEZiYDh+hoBW+h7fdFiRlDnv4ztjHLvUQNg8l8/jAZ5AVw5dbmWYF3rGn60pqfjaOmmIU/T7PZy/oZ0sAvZ5I6qOJ/FR4gNt9M3UgDW4171vueSoSGIbgHLz+PqYec85fpbAZdjhzPbR1n4dOK+g/rlL3EtIQRsNbK6r6CVpsr6qklbf6mSYxHkVnDOL5p+yjYWC7xZNt8HPtbDwOYiZBEIGe9SVa0GVbPehePGiTZq7nXmU4yHSdYlYJz0Te7wf/xw4KXsFTGnu8B1lJ6u93QTRPyYuG3PiOGrnIvF+i2hNrbMsql4z1sJOjjZ7OmSjWYopCfq/71I5C44phytvKZhtkUxNfLabpTEtOxoxm4XUGtQuyLGwKC/F5khwtPSEH2+7g0s9FLyXzooRQ+G7jWfCsNsMNNd+XCCtV40YD5OMjDBDvCqZKxGL05DDvVbfhc0bmfOqCEIgPO6lhCOeGP2ZQIufrd9Gt9zhp0+WKwFDeXpaf7QBrFnQ/mOHr3mZpyEK6Xtpnt33Sk54d6Zzp/ArUzNBSSN6moXPgvACRlNwh7Cyb9PC1GaNSZHlOBdvlr28uSsU1wgb2X0RINSQb7WUKSkSt8krx7wg==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VEvQHW0EciULOJGyFBygNoR6jHsG+ZLtw9YVNEKTulXJd3k+MgbjGBWpRedL?=
- =?us-ascii?Q?XGMxG+2rdqruuRv253+mBg38sz7CaBzkHCDlOS9m16b9PZyvmUjrnbCEjTFD?=
- =?us-ascii?Q?VBsBbUE66BV3U1yw/thSpe0nFl72Yk5f4Mw5K9tUavpATamuUty4QJ5ikF7p?=
- =?us-ascii?Q?zQFfHzPGYTzFGJ5d0J0HmQZucnt0y6W3F53wQb9fu6I5+GrMd/n04zpRx3xY?=
- =?us-ascii?Q?1k5qteKTYnBovQAW9zeZFe/0jehra0f/BQG5T3yPj7iC9+XakES4ycyu7/mW?=
- =?us-ascii?Q?npzWCoJ31d4HGgWYRL1Y7eF8IuNJLwJvObIlfiQVxZazJiyM8NmWj8UIUBoS?=
- =?us-ascii?Q?nQD/l/0EaTWJfL/HL3aPfbtkeu92VFiSprtsmJ8zm+erF0vKuhRR+jAB+z5P?=
- =?us-ascii?Q?0HqJfren/vYN5UJ4QTRVYG97y3jr7T3iSlD8GU1HP3o5qJWuw8pMZsTM+yYb?=
- =?us-ascii?Q?IpWGfV0EGRqf6bLqNgGgq8XzGHCVtFaYgqlhQMkWpxTUNhdDeqRNh3HU3/yU?=
- =?us-ascii?Q?+8y8MNbJRMB5FJkeoi8Javb8ivSq3g+eZv+WC3hXbjxBCA1hgUIXKYoM5D4m?=
- =?us-ascii?Q?HuWtuTmSFGz/qua1tEkVA9jM/zPMaVt1zOdq3tN/DFajirddMLgIpqvNzi3W?=
- =?us-ascii?Q?qu9M6BXKI5q1yqR+Xb/AmeNnHUitEmN6OzYX4IeLAD4IUaf05yEH3QQ6XsTS?=
- =?us-ascii?Q?/bYGvprld4bSriGEyNHLr1BHz0KGRXwSW7RhCNOixJRsXaf4cP0BJr1j0E4J?=
- =?us-ascii?Q?CbXFgit/rS3n5s/10dpgsacZ26eyBWBRZOkBmHQ519O35dE4ab2146GJAPgh?=
- =?us-ascii?Q?12vLuPAr4ChywBN8eLftme7ylONi2HPX2pinpIF1evayqjLie638zFMpslcN?=
- =?us-ascii?Q?LAkz3VNsu6Fa+Jz1wcyMgMIwt1jtpaXo0UUCEwWhYBh5wfpRpkqSIVvuWvCM?=
- =?us-ascii?Q?nz70PtrSnJ/Tt/4uer0c5kMu5+2aDkG/g/iwJinaKI28YhnPQ5B4w3g06gOF?=
- =?us-ascii?Q?Rv9J4Gr3msHIbwLtaMA39PSToiGEN3ANYY4AcTTbItr1q6MCHdANIN6a4PBn?=
- =?us-ascii?Q?hcx80XbGHDHYkvaHIj7uDNDEuhQsc2CAnHBnjbBW1djQbkiunCyQ6VaYx3ra?=
- =?us-ascii?Q?9zb6qjj2p0++GKVQptzMMjnP20dQGWqAK63PwsNvgS4ZDLT2h93UJSz4S5eK?=
- =?us-ascii?Q?PQTPNEGBZ1IcIVZdF6iD+T/aKPa6CAQ4iBoOvrl5kVtzVQlQZaZS83lTd+4Q?=
- =?us-ascii?Q?pxkt1/3sQgKGb2QLaa+I?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6c97e6b-f8a7-4bb9-9502-08dc729e12e7
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2024 16:10:42.9383
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5913
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="3bxd2gyoppot6odw"
+Content-Disposition: inline
+In-Reply-To: <202405080959.104A73A914@keescook>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WSe0xTVxzHPbe395YmdZeKcAYbC+Ux2BTmHvHsIY/FmJtlf2CMMdsSZ5XL
+	SyistcBcjIUyQV5jQIQiw4IMCCDOUjsGKA6hDKjCEBjbSHXlIeE1nvIo1LXcupnsv8/ve77f
+	c76/5PA4wjHClRclOcNIJeIYEcHHdfr13r0ZLiHhb6xM7EbJejUXLbV3Ekh3NRNDWz+lcZBW
+	bwRoXG8ikSEzFjX3rGCoT5fDRZrRIS5qudWFo9Lr6wA9aCohkLHuKRf13enhooGb9TiaaMvG
+	kW4plUC5ZUoOGldPc9F8lolA7dfv4ahps5FE5rUJDJlXLVykvLLIQcO54wDp1c4ot74bR/cb
+	lrjB7vRlxa843V0OabVGTmtqLhK0ZjGPpBsqztOTDSpA9xaVAXpo+CFOz5p/wei+yhmCXtK4
+	099k6slQwaf8D8KYmKgERhoQeIIfqTIo8PgsmNRVs4orwGWnDODAg9Tb8PbjOSID8HlCqhrA
+	ztRmkh2WAayusAB2WAIw+eoc91nEMJoGbCykqgCsMYj/NRkKjPaEFsC1oRuYzYVT3rBFWbud
+	IKg9sHdmhGNjJ6u+2q/cZg7VR8KR7Agb76JOQO33+dt+ARUMU8bZlwWUI+xSjeGsPwnez6u2
+	3s+zshussvBssgMVAMfGp+xFRVCpzwIsn4Pd2j8wWzdIzfOh6cldkj04CEtqpu2BXXCqU2vX
+	X4I9+Vk4G8gHsNUyT7JDLYCVySsY63ofpg6M2RMhMN3Yz7E1gtROODzryBbdCfN0hXZZANMv
+	CFm3D6w1zuC5wLP4udWKn1ut+L/VWNkPfv2jmfyf/DqsLJvmsHwA1tf/jasBWQNcGLksNoKR
+	vSlhEv1l4liZXBLhfyouVgOsn7/H0rncCKqmFvzbAMYDbcDLGjb9UNsHXHFJnIQROQmCvwgK
+	FwrCxF+eZaRxn0vlMYysDbjxcJGLwDvsFUZIRYjPMKcZJp6RPjvFeA6uCmzHvqiU8FvYd96H
+	g8JPYh+fDD06VXDqiDzYmO3lEV2beExsuSJ8ITrvEwTvlW0dLowMyvnsnO+Fjeabfx6YLOrw
+	6Z289kCj9j7/qET5UbFh3dFXdWe01OP0UEvb/Ldp6BLY/2GIc3nZJc+6rT0p8e+ZWvyOuyx4
+	FokHkjbe2TscTYcOXiTdf08sFGrbl1s7DpW/vPXWJuocTvfFGnHzXGu4n/Pi/oQCv8SHhXfX
+	NmYrWr3cyh0bicEOadSGT96Nx90pHuan8oRWRWipOeNaw4uBC/Rt8ufN9jpw6N011Ygq4eyj
+	/h1bAYM5Ft7u40fmfvvKoTDIL9D4l3azaa4+RzGoffKqCJdFive9xpHKxP8Aj3WNUHcEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsVy+t/xu7qd4o5pBj2L9S0ajy1gtfh85Dib
+	xbbF3UwWf3e2M1tsOXaP0eLpsUfsFme6cy12n/7KZHFhWx+rxabH11gt9uw9yWIxb/1PRovL
+	u+awWdxb85/V4sKB06wWV7auY7F4dqiXxWLb5xY2iwkLm5ktni54zWrxoecRm8WR9WdZLHb9
+	2cFu8fvHMyaL39//sVo0z//EbHFjwlNGi2MLxCwmrDvFYnFu82dWBzmP2Q0XWTxOLZLwWLCp
+	1GPTqk42j02fJrF7bF5S7/Fi80xGj/MzFjJ6XLtxn8Xj7e8TTB4Xlr1h8/i8Sc6jv/sYewBv
+	lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G+SuT
+	WAq6JCq+TbRsYJwp0sXIySEhYCJx5nE7I4gtJLCUUWLtCVOIuIzExi9XWSFsYYk/17rYuhi5
+	gGo+Mko8v3qDCcLZwijR3dzNDFLFIqAqsad5NdgkNgEdifNv7oDFRYDi3y81g9nMAhfYJe70
+	poPYwgIJEluWTgar5xVwkGh6+o4V4oo3jBJrpgRDxAUlTs58wgLRWyYx+9UX9i5GDiBbWmL5
+	Pw6QMKeAvsSTp6+gDlWSaD7Wwwhh10p8/vuMcQKj8Cwkk2YhmTQLYRKEqS6xfp4QiihIsbbE
+	soWvmSFsW4l1696zLGBkX8UoklpanJueW2yoV5yYW1yal66XnJ+7iRGY9rYd+7l5B+O8Vx/1
+	DjEycTAeYlQB6ny0YfUFRimWvPy8VCURXodC+zQh3pTEyqrUovz4otKc1OJDjKbAMJzILCWa
+	nA9MyHkl8YZmBqaGJmaWBqaWZsZK4ryeBR2JQgLpiSWp2ampBalFMH1MHJxSDUwn/0RUVR94
+	fP3czyXKa72Wtdg8WyUpw/jPdFXWjGqVA7+ni7V/3uQ5+96n7aLvdy47sltYLmPi/eVpYmtS
+	En2cZS4VW+8Wvv7b+vcNYRtFrl5tsZ+bJgS9/nY8MchyVwgnc9SMAxfyVz/rerUxunpq2bm0
+	KeINqm/b7ZzUbmTdaZvOJFS4Q810uv492alZjTvNQiW1JT6lXtyQYLcsY8N2BfFgs6q35wTc
+	ZDMncN/se/+wZtcGidvcZo1uiqm29/f+V5d6c3mq39SqXeKtX1/ZRbmcfWd1913vt7Zttfdv
+	LfKcZfPt/lI+91vX9nEzzq250ODdrsWzOy5BKDlYcc5j7p/MNXGrrp7UWiQQEjxfiaU4I9FQ
+	i7moOBEAd9JerBAEAAA=
+X-CMS-MailID: 20240512192457eucas1p1c2e524298e130efc58f1e66cc0f38039
+X-Msg-Generator: CA
+X-RootMTR: 20240508171141eucas1p24462cdbd31dc10d74c5c62478cd6a9e0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240508171141eucas1p24462cdbd31dc10d74c5c62478cd6a9e0
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+	<20240424201234.3cc2b509@kernel.org>
+	<CGME20240508171141eucas1p24462cdbd31dc10d74c5c62478cd6a9e0@eucas1p2.samsung.com>
+	<202405080959.104A73A914@keescook>
 
-The "struct prestera_msg_vtcam_rule_add_req" uses a dynamically sized
-set of trailing elements. Specifically, it uses an array of structures
-of type "prestera_msg_acl_action actions_msg".
+--3bxd2gyoppot6odw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The "struct prestera_msg_flood_domain_ports_set_req" also uses a
-dynamically sized set of trailing elements. Specifically, it uses an
-array of structures of type "prestera_msg_acl_action actions_msg".
+On Wed, May 08, 2024 at 10:11:35AM -0700, Kees Cook wrote:
+> On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
+> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Wei=DFschuh wrote:
+> > > The series was split from my larger series sysctl-const series [0].
+> > > It only focusses on the proc_handlers but is an important step to be
+> > > able to move all static definitions of ctl_table into .rodata.
+> >=20
+> > Split this per subsystem, please.
+>=20
+Thx for stepping in to move this forward.
 
-So, use the preferred way in the kernel declaring flexible arrays [1].
+> I've done a few painful API transitions before, and I don't think the
+> complexity of these changes needs a per-subsystem constification pass. I
+> think this series is the right approach, but that patch 11 will need
+> coordination with Linus. We regularly do system-wide prototype changes
+> like this right at the end of the merge window before -rc1 comes out.
+This would be more for 6.11, as I expect the other subsystems to freeze
+for the merge window.
 
-At the same time, prepare for the coming implementation by GCC and Clang
-of the __counted_by attribute. Flexible array members annotated with
-__counted_by can have their accesses bounds-checked at run-time via
-CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-strcpy/memcpy-family functions). In this case, it is important to note
-that the attribute used is specifically __counted_by_le since the
-counters are of type __le32.
+>=20
+> The requirements are pretty simple: it needs to be a obvious changes
+> (this certainly is) and as close to 100% mechanical as possible. I think
+> patch 11 easily qualifies. Linus should be able to run the same Coccinelle
+> script and get nearly the same results, etc. And all the other changes
+The coccinelle script is not enough. But that patch 11 should still be
+trivial enough to go in before -rc1. right?
 
-The logic does not need to change since the counters for the flexible
-arrays are asigned before any access to the arrays.
+> need to have landed. This change also has no "silent failure" conditions:
+> anything mismatched will immediately stand out.
+>=20
+> So, have patches 1-10 go via their respective subsystems, and once all
+> of those are in Linus's tree, send patch 11 as a stand-alone PR.
+Thomas: I can take the sysctl subsystem related patches ("[PATCH v3
+10/11] sysctl: constify ctl_table arguments of utility function"), while
+you push the others to their respective subsystems (If you have not
+already)
 
-The order in which the structure prestera_msg_vtcam_rule_add_req and the
-structure prestera_msg_flood_domain_ports_set_req are defined must be
-changed to avoid incomplete type errors.
+>=20
+> (From patch 11, it looks like the seccomp read/write function changes
+> could be split out? I'll do that now...)
+I saw that that patch has the necessary reviews. Get back to me if you
+need me to take a quick look at it.
 
-Also, avoid the open-coded arithmetic in memory allocator functions [2]
-using the "struct_size" macro.
+--=20
 
-Moreover, the new structure members also allow us to avoid the open-
-coded arithmetic on pointers. So, take advantage of this refactoring
-accordingly.
+Joel Granados
 
-This code was detected with the help of Coccinelle, and audited and
-modified manually.
+--3bxd2gyoppot6odw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
- .../ethernet/marvell/prestera/prestera_hw.c   | 83 +++++++++----------
- 1 file changed, 37 insertions(+), 46 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_hw.c b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-index fc6f7d2746e8..197198ba61b1 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-@@ -419,15 +419,6 @@ struct prestera_msg_vtcam_destroy_req {
- 	__le32 vtcam_id;
- };
- 
--struct prestera_msg_vtcam_rule_add_req {
--	struct prestera_msg_cmd cmd;
--	__le32 key[__PRESTERA_ACL_RULE_MATCH_TYPE_MAX];
--	__le32 keymask[__PRESTERA_ACL_RULE_MATCH_TYPE_MAX];
--	__le32 vtcam_id;
--	__le32 prio;
--	__le32 n_act;
--};
--
- struct prestera_msg_vtcam_rule_del_req {
- 	struct prestera_msg_cmd cmd;
- 	__le32 vtcam_id;
-@@ -471,6 +462,16 @@ struct prestera_msg_acl_action {
- 	};
- };
- 
-+struct prestera_msg_vtcam_rule_add_req {
-+	struct prestera_msg_cmd cmd;
-+	__le32 key[__PRESTERA_ACL_RULE_MATCH_TYPE_MAX];
-+	__le32 keymask[__PRESTERA_ACL_RULE_MATCH_TYPE_MAX];
-+	__le32 vtcam_id;
-+	__le32 prio;
-+	__le32 n_act;
-+	struct prestera_msg_acl_action actions_msg[] __counted_by_le(n_act);
-+};
-+
- struct prestera_msg_counter_req {
- 	struct prestera_msg_cmd cmd;
- 	__le32 client;
-@@ -702,12 +703,6 @@ struct prestera_msg_flood_domain_destroy_req {
- 	__le32 flood_domain_idx;
- };
- 
--struct prestera_msg_flood_domain_ports_set_req {
--	struct prestera_msg_cmd cmd;
--	__le32 flood_domain_idx;
--	__le32 ports_num;
--};
--
- struct prestera_msg_flood_domain_ports_reset_req {
- 	struct prestera_msg_cmd cmd;
- 	__le32 flood_domain_idx;
-@@ -725,6 +720,13 @@ struct prestera_msg_flood_domain_port {
- 	__le16 port_type;
- };
- 
-+struct prestera_msg_flood_domain_ports_set_req {
-+	struct prestera_msg_cmd cmd;
-+	__le32 flood_domain_idx;
-+	__le32 ports_num;
-+	struct prestera_msg_flood_domain_port ports[] __counted_by_le(ports_num);
-+};
-+
- struct prestera_msg_mdb_create_req {
- 	struct prestera_msg_cmd cmd;
- 	__le32 flood_domain_idx;
-@@ -1371,23 +1373,18 @@ int prestera_hw_vtcam_rule_add(struct prestera_switch *sw,
- 			       struct prestera_acl_hw_action_info *act,
- 			       u8 n_act, u32 *rule_id)
- {
--	struct prestera_msg_acl_action *actions_msg;
- 	struct prestera_msg_vtcam_rule_add_req *req;
- 	struct prestera_msg_vtcam_resp resp;
--	void *buff;
--	u32 size;
-+	size_t size;
- 	int err;
- 	u8 i;
- 
--	size = sizeof(*req) + sizeof(*actions_msg) * n_act;
--
--	buff = kzalloc(size, GFP_KERNEL);
--	if (!buff)
-+	size = struct_size(req, actions_msg, n_act);
-+	req = kzalloc(size, GFP_KERNEL);
-+	if (!req)
- 		return -ENOMEM;
- 
--	req = buff;
- 	req->n_act = __cpu_to_le32(n_act);
--	actions_msg = buff + sizeof(*req);
- 
- 	/* put acl matches into the message */
- 	memcpy(req->key, key, sizeof(req->key));
-@@ -1395,7 +1392,7 @@ int prestera_hw_vtcam_rule_add(struct prestera_switch *sw,
- 
- 	/* put acl actions into the message */
- 	for (i = 0; i < n_act; i++) {
--		err = prestera_acl_rule_add_put_action(&actions_msg[i],
-+		err = prestera_acl_rule_add_put_action(&req->actions_msg[i],
- 						       &act[i]);
- 		if (err)
- 			goto free_buff;
-@@ -1411,7 +1408,7 @@ int prestera_hw_vtcam_rule_add(struct prestera_switch *sw,
- 
- 	*rule_id = __le32_to_cpu(resp.rule_id);
- free_buff:
--	kfree(buff);
-+	kfree(req);
- 	return err;
- }
- 
-@@ -2461,14 +2458,13 @@ int prestera_hw_flood_domain_ports_set(struct prestera_flood_domain *domain)
- {
- 	struct prestera_flood_domain_port *flood_domain_port;
- 	struct prestera_msg_flood_domain_ports_set_req *req;
--	struct prestera_msg_flood_domain_port *ports;
- 	struct prestera_switch *sw = domain->sw;
- 	struct prestera_port *port;
- 	u32 ports_num = 0;
--	int buf_size;
--	void *buff;
-+	size_t buf_size;
- 	u16 lag_id;
- 	int err;
-+	int i = 0;
- 
- 	list_for_each_entry(flood_domain_port, &domain->flood_domain_port_list,
- 			    flood_domain_port_node)
-@@ -2477,15 +2473,11 @@ int prestera_hw_flood_domain_ports_set(struct prestera_flood_domain *domain)
- 	if (!ports_num)
- 		return -EINVAL;
- 
--	buf_size = sizeof(*req) + sizeof(*ports) * ports_num;
--
--	buff = kmalloc(buf_size, GFP_KERNEL);
--	if (!buff)
-+	buf_size = struct_size(req, ports, ports_num);
-+	req = kmalloc(buf_size, GFP_KERNEL);
-+	if (!req)
- 		return -ENOMEM;
- 
--	req = buff;
--	ports = buff + sizeof(*req);
--
- 	req->flood_domain_idx = __cpu_to_le32(domain->idx);
- 	req->ports_num = __cpu_to_le32(ports_num);
- 
-@@ -2494,31 +2486,30 @@ int prestera_hw_flood_domain_ports_set(struct prestera_flood_domain *domain)
- 		if (netif_is_lag_master(flood_domain_port->dev)) {
- 			if (prestera_lag_id(sw, flood_domain_port->dev,
- 					    &lag_id)) {
--				kfree(buff);
-+				kfree(req);
- 				return -EINVAL;
- 			}
- 
--			ports->port_type =
-+			req->ports[i].port_type =
- 				__cpu_to_le16(PRESTERA_HW_FLOOD_DOMAIN_PORT_TYPE_LAG);
--			ports->lag_id = __cpu_to_le16(lag_id);
-+			req->ports[i].lag_id = __cpu_to_le16(lag_id);
- 		} else {
- 			port = prestera_port_dev_lower_find(flood_domain_port->dev);
- 
--			ports->port_type =
-+			req->ports[i].port_type =
- 				__cpu_to_le16(PRESTERA_HW_FDB_ENTRY_TYPE_REG_PORT);
--			ports->dev_num = __cpu_to_le32(port->dev_id);
--			ports->port_num = __cpu_to_le32(port->hw_id);
-+			req->ports[i].dev_num = __cpu_to_le32(port->dev_id);
-+			req->ports[i].port_num = __cpu_to_le32(port->hw_id);
- 		}
- 
--		ports->vid = __cpu_to_le16(flood_domain_port->vid);
--
--		ports++;
-+		req->ports[i].vid = __cpu_to_le16(flood_domain_port->vid);
-+		i++;
- 	}
- 
- 	err = prestera_cmd(sw, PRESTERA_CMD_TYPE_FLOOD_DOMAIN_PORTS_SET,
- 			   &req->cmd, buf_size);
- 
--	kfree(buff);
-+	kfree(req);
- 
- 	return err;
- }
--- 
-2.25.1
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmZBF4IACgkQupfNUreW
+QU9xuQv/YFyBb9/xZK9W6ra0XdeKb8z3ZWpkNSHIv3kTsWlpjHIUGjL9mIouwgtX
+ucB2RAOEbwUG/wNKHsedhqti2gFMPnF80bZWiJkwVvBZRx4cuAugLBni1rZLceMm
+OTViVchXY8AlHpbOVVvxbIZDNSK+YVZh+Z4b9dhhmHYbQl/dj9vWFPNSRSH0wQp6
+hi9DrWsZPQ1eidi2uDK7d7VhOARS7U6VB6vL5UV4tjSVLueGaz3lNucP8HMoxa7Q
+jHEXeQelWtXg3jTaoIKF3q6FjulWqte8/D9DaKmbD7WvsHtrVfLeLYITADCwCmul
+yadKXGJy6kxxaEnPBB08M8jVy/o2c+VvWBpgyZlYRwSAShf5cPQOV5uGqBU9cdPf
+sPEZKG+UfmIEAUVTZYPrtvnha1nI4Nz6Ov4OlTz7PLJWAc0aiQKxBZMsnYdz9HMH
+hMZo0JyJNZ0UY4PfA43N223QFB8CD8SeGFCXl2aKBymtgrDOL3PV4IxLh4OsowVy
+pKdwnrKn
+=zOqJ
+-----END PGP SIGNATURE-----
 
+--3bxd2gyoppot6odw--
