@@ -1,152 +1,172 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03olkn2036.outbound.protection.outlook.com [40.92.59.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC7C200C3;
-	Mon, 13 May 2024 17:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.59.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715620790; cv=fail; b=u7GaVD9iFTmbpfHIa/F6bkRZldcpLEtU3AXkhrEQZPAJDXDEH87fXBNsRe/5hqfmOzsZZhc24PTDnGfXNjClWi1JQCWdYdzR9LUxlJtyxrxFVNh7Wll3ijPQbA0WNnz72B5ul9AWEy9X9tcQS5izKceWNxpBH9BqVsLvDpsmWJw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715620790; c=relaxed/simple;
-	bh=ZgbVEL+vsrij1DSMczoVQ4FTy6aeHqktaS/azvnWwH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=j19Uoak8iC6vcetiKogS24gPBF7hKOnDr2mP5QJQzejmrkxWdpz4XcfPeFcMilkFDtQQXDYRcB1b4FPdg2SLZ0iEcw0n71VqHGbmRS8hGZi8pifzLrjClDVUgi4ylU0jVi1aTxArQrYQm9UjDeU7TiZL1kUNgYvweQLlOBArUrA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=riSzfD9p; arc=fail smtp.client-ip=40.92.59.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5413522EE5
+	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 17:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715622635; cv=none; b=AqIIClV4qy4i8XTJ+7Z8chfskHc+B4OL7Efq1wHVisTIoHOY7A6yjtPirO76eVUlJSwtUPALrz2Qt9JfbBv8JwMDYKsFsJkogXWcPi+IznbUqOWWI2kPXcHq7CGSbyjShOP5zb6bD4sw4Yc++dN3+GhGHfnTsp9q6wl7vvF2fzU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715622635; c=relaxed/simple;
+	bh=CkWV6BI6pB19qRh2l/tD81uJGerHWKsptqUyLWE4ZSs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Awc+Nubw+V5sK78c9O3ceXE45r89dsDjvJ06UqsKUfZsYu23GSf0RajROZaLjiPRJm90jwJx+Vzt7HnWzmb1gqIpgdRsd05xoypjXF3UUQkuzHlr5zIXu1tmEYjH8dpv5W8hCUCfKxHzB/cgR6HhPX/AhS1YmpjV6Vyzaz4j3nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CJ67mDu2; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="riSzfD9p"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gFt+1Lat4suMMssH1VqYXBWs1LnsafpBCdJh+lGtt/nLsAS51aLzRi9EXR3rNNq9lyLS4NvdAqjtvsEf3D8V3r0nprwuqMhLUF1Ty2Y75TnIcLsH5mUY7M64Q8APzxI958nJwCw4UwEmtZIXXIewR9fRbqxwJswmg7YeuLomjuoHDzzmDUXD3W8ENATs5TH97jfm/85srDbqAp70Hkqani4NG+EEhFAXXYb4yFz5vbXftcgbBOCSgxGtF8YvS5roLQRCC2sM1Dw14ie578NZRhWtFBauuUFH6JOC27A37KEdgMUOpRAv1e+ZU2nfK737zH+WPOuVMI29vX4XXLAwGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hBSFxt6DKoMUnf98J40iCQppC4H0Qk+LIoOpb0XIiz0=;
- b=F54SvvN8rWTzX53tMD99ZDK7IiHgr1KrMuYHoyH0/k+oKHPjDSmG0Ija30i/VVl9BJQIcPEyCXArqijRWlkhNyFY+Viyq9nlFg7s0DPUkNw6sqeOkLzET0v+oVQ1KsayvL2g1XE7aovzaLEUHrQaeaFafV+XfVZNKzT+8PnIlIEjcQ9WjgNXDquRhUIJi3ry9VhC18gpwUa1E59ELgaPHcBwT1uAeTF8GRgckUtPObco2hDN+4Hc4XSZRILVUEAGbZ0Q/HZA/8DtnS9rpkXtUDhA73mJfJqZipHTuAr8+CNx4Ra5h6u63Re6yVmDKUaKtbJRM0ADgFT4lpV+2iIIXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hBSFxt6DKoMUnf98J40iCQppC4H0Qk+LIoOpb0XIiz0=;
- b=riSzfD9pVKCDZZjIHm53Ob/zplpuhSpLep1HXRpZmTUdkqMRJAINwv/mkqNh7DVCt61VxZJj80kqUF4Rs4NjaHHCNhnU+WlRjWKn1WhlUF9pfzJUkLbc/IqnoOz5iGGKBGj3tNvUfWXtS16aInuFnwzsZWNUbQBuFQ+LF7cKA8G5S6UZgMmClHmrHFmuRA9Jl26VgKCDTA57iPov1eXCAukEVKWKbBNInZv+tbW5XMKd2Sik+pD9arg8ERUoNFKdGBB6wN1Jr/L5uVWZEQbMilNy4LZJWSFWI5bzScHWMLPKJooIHlgcn37opiky9FZbQQi9SPc6sn+P0sQwPaVm4Q==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by DB9PR02MB9780.eurprd02.prod.outlook.com (2603:10a6:10:451::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
- 2024 17:19:46 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7544.052; Mon, 13 May 2024
- 17:19:45 +0000
-Date: Mon, 13 May 2024 19:19:43 +0200
-From: Erick Archer <erick.archer@outlook.com>
-To: Kees Cook <keescook@chromium.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	"David S.  Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] Bluetooth: hci_core: Prefer struct_size over open coded
- arithmetic
-Message-ID:
- <AS8PR02MB7237C71997007C058A51233E8BE22@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References: <AS8PR02MB7237ECD397BDB7F529ADC7468BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202405122008.8A333C2@keescook>
- <CABBYNZJcg5SpO_pew6ZwN98n1sR7kNZs6VtkFToyOs9NM1bO8Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABBYNZJcg5SpO_pew6ZwN98n1sR7kNZs6VtkFToyOs9NM1bO8Q@mail.gmail.com>
-X-TMN: [zlDpCEdadwWhEMJF58mS9nRALgBSH1at]
-X-ClientProxiedBy: MA4P292CA0011.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2d::17) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID: <20240513171943.GB7952@titan>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CJ67mDu2"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bea0ca5e2so80050487b3.2
+        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 10:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715622631; x=1716227431; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GydCGd/+JJ6CmtiwKdDK/+LMhNIkbo+G+AlL2WnOnIo=;
+        b=CJ67mDu2FEEbHx8Pd8/KXPC6JOEnFYZSEWNrUTCMpOwBHa+aI4GWmNfTXTcCTt4c2+
+         jyiOPUm8VROgw+0F0S+6E7aTHzRgJg/7c3QTcktplQTnWgjofytSFGc4LaF81DaAJ5Io
+         Zkef7RK0Jw+RMO6uN+tS8nfu3FDwOEUUuVOkwPzFJFedb4EHRMoMcdCKDw0CrFJN8X9K
+         6Ggd2VR+vZZFtHNCvyNtm/3FqMEqz5+jZ6OMYsu4QgZhbDtID+qZKmvU+ieFLEaG3d2J
+         vhb7efLg6BQylmk8IPq4DDjUQdOlRV//Uz2WK+nf2ui9fNdBYAr/vfy3V4ZacQfgz+dc
+         v9qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715622631; x=1716227431;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GydCGd/+JJ6CmtiwKdDK/+LMhNIkbo+G+AlL2WnOnIo=;
+        b=PAq+0NhUt9LZZkBorGF38222Bzfg+K4lPlukj10BiBSuzBU+Gw/h42sVgd7adICwzM
+         p1x/938hy7Em6AXZm6cc8G+YdrUiWNLkN6bhdH0x1HTuH/j74zatFKCvrrdw2kesuFWe
+         Bgqw+iSU4NDT76MdJsT4nddvdtm9f4uDqvFSuO5rjqqQVTW+Lox0/0Ud1IoRnBjPJM85
+         LxASEMZV0d+jGzmk4Ak+93QgG34tgRmwONlgOS+fCVE47HttcqB2Z5oRx5SzYuZj1I+p
+         vxkWrCKSJUqTgyLObnluXTlvNtq9RVueN1cL6Sp+DYujq2bKcAOXvu53Rm9zOXsu4J6x
+         BUgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfQeOQWwI3r9iXcbQScFsg8g4Nc9NM5+K05PzJqE8/ltJalGoiu1gOXw/LXHkSjIDSN5abAS/RzZCmfVakxxAyUlGzBt55DYQiQDinZ4KV
+X-Gm-Message-State: AOJu0YynaZsjFdmgOPgEX8wpz5+XhRmzBNpX96LWtTLDf1X4/CZ8On2w
+	c+7N6QlXlPHv+/wiA7C3qcgGu4DxL5Yi1x9+bfdH3EMJLjYPdD6gB5xlG27Eooemo/G5iPewzRI
+	kAc0dRAlfsSAqedzX9e6Rzw==
+X-Google-Smtp-Source: AGHT+IH4o0V1PT7B0QIXUskKpo4VzIQ1a06kKnU6elsU559DTS+Pna5InxhhAGymLEnliGrWo2+jzRQfH5DNflrfYQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1026:b0:dee:6147:7e26 with
+ SMTP id 3f1490d57ef6-dee6bf164abmr531190276.11.1715622631413; Mon, 13 May
+ 2024 10:50:31 -0700 (PDT)
+Date: Mon, 13 May 2024 17:50:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB9PR02MB9780:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f48050f-e8e3-472c-9d0b-08dc7370e2b5
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	SBurZOrSjFH12RoEYCRK9S411xTtk5NwudYUPHN8oFKYCfZO8w2fUypa2DRI2bWLo2CJlF/Q4BUbXUR9q2C719O9JS9KPMIwwS6c8sErg//4zaULw+2MYVNA8GE2SWDPqO3FUURKgstqLEOBSsYm1Toyc0IBBAWwKlnKLIyUWAs/GSVtkeJ+pXYkQQkNm0sn4nxgCk1nbT/c/O71qLhx4UJGqCNYZo6Hyo7VSf+eI/sO5+ALF/aCGBXL1WkFavyyFVqlT6BQ9BWtSkxMCQCMqRngC9d3Qvw6xXAa3jeqvcXc39v88/6xsLo8AnfkLIMdZgmvqRj/yJaOMTIOfqTQu8b4JrDh3lmdkUUCq7k4DQGEKONOnggx2+iLAvW0dBe0/VDG3zx7zBwEJ36RRCTdXeDddf6tbaY4DYWqwT/Ro9PV1/nqr8iugGi7Pp5vnHrfQC8JcqOMPvjk/tpdZhEf9y0BjYYaKt3U+hUCoojeb8bbzHQovcXQPwQDrV7KdBmUQeATLoWwn3Yizcx8+z3mddV6DIhDdr2nLpQKDA5CGXY6Tm7fJtcB1OWaraU/iupqPGHUg4d1bK2HxFiXaKiFsx9269NY6lVUW/SrK+fS0qAbZRIiUHOqjyx6bMMQUmgF
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V1ExcWNqUG1DUkthLzZPRiszeVlCVHBYajArL09ZUk5xeVNyTDFmdmJCdUtp?=
- =?utf-8?B?U3Q3WTNyVHlIaVdyeFhCcElLdkRDUGRPb04xOTRwQ2dNVWlOQ3N4am5jYjI2?=
- =?utf-8?B?WXh0L3kza0FjQVo0TlRmY2xpU1YweGNvdU9hM2pQTlBVZHZTaTNMUWZCRHdq?=
- =?utf-8?B?Wjg4MTBPblVZbFp6THdmOWxiVWF2dTEyUmsvcnZMdmlyaS9OOXF4bkNuUEsw?=
- =?utf-8?B?VlZUYkYwY1orWTRFRUJqRlpROHp2M3d6dkNRSzhvTjFKWVF2dkFFTjliZ3JC?=
- =?utf-8?B?RnNZMnErdVVCaGt5b2hvazdZd08yd1IvdUFNZjJSMnVjUElBSU5hcGo2dnVW?=
- =?utf-8?B?Q3lxSDlBSXpBRVJDNjFzTkFvQVVnMHFzSFVhZ0hxQW9NNlVxMmFSWi84Zm9I?=
- =?utf-8?B?dnJ2cStNN2Y3R2FReUxzWjZSOUhZR0NGTXJReDF3NlhBZ3lXbFpGQnVuQ0ZC?=
- =?utf-8?B?ZnY1L3JmWHZjOFgvN3o2RVZLQjg1QTFrT2pMMHZCcXJmc1hqNXdDelFDVmlk?=
- =?utf-8?B?RlcyUnR4VjYyMGpOOEVXcEVjZ3RQK2dtamZWVzUwNUptVk1XdURVLzRPUENL?=
- =?utf-8?B?UEExMEk4V1g2NWdjVkdRUXdtYThlN0NIcUhaQldBQXg3TFptbGEwZ1lIVGt4?=
- =?utf-8?B?dzdaSjBseFUxOE1HcXBqQitUdUExZlhuZzA3aUc4elBDZFY1dWZmbzhwWlZL?=
- =?utf-8?B?eUZwWERrQ0c5ekdWQ1FZYm00aTNUZndSM0hGVkxVQlVQMFA1RE5jZWRUSWww?=
- =?utf-8?B?Q2xCRHBPZ0NJdGF0MXRDTnZWRCtKVDg3cmpwSUxyaE8xbkJSNjY4OW1jVzE0?=
- =?utf-8?B?ZjFRamc1WkxJWTJhMUFpQXZQdGJTbmhiN2RjS2xjVVFYTE52SjEzZzBwbEZE?=
- =?utf-8?B?Zlo1K0RkaDFXT0djVjFTVHJBbDd1ZjUzam1odkJBdWxhaGE2VFNmbmtuQlE2?=
- =?utf-8?B?d0d5alVaeGxUVFVvWExyVm9KUEZWYVRtWHZ4Mk53QzQ3alVCbXJDNVJ3TUxw?=
- =?utf-8?B?aW0wOERrclhEZmZnZy9FeGNvUUNObWZYQlhKUHpCbkxQSDFCYThIeU9Wd0Rv?=
- =?utf-8?B?bW4yWGtpZ2pnL2FZeXNhekw5Wi9HdHhIMWNFRThOMWxaOWZ6VVFWVlBobXN3?=
- =?utf-8?B?RVVhTGtueDVkMDZFNUF3b3NBM2ZWTEU2ZzdsWW5Ub1lZYU1YTmd3dDNtVWlB?=
- =?utf-8?B?SEovWGVpK0cwWTBzeHRpdkNpMFIyRy9KM0xnVXBpaWNpOTZrVTB4dTVXL094?=
- =?utf-8?B?WS9YMHFJU0VpYld0YldHUjJyL1c2MXNwRFl3UzdISjdQRGZoaG5XZm9HK0VG?=
- =?utf-8?B?VFZheCs5Ums2UzMzRXZKS1JMVkhVeXRJaU8vUzcrdHRIQUk3T29DSFRRTnph?=
- =?utf-8?B?YUx0a0RUMUwxOUtocU9maElxeURnNVloVThZOERJVUlhT3ZWRmt2QktyQ0pH?=
- =?utf-8?B?V3dVVzdZZEx1WU9oZk91WFpSeGdvTldZa0VVYTBpRHZoQVlGeEdZZTJDb1pq?=
- =?utf-8?B?eWZlYU9pdlgwdE5jK0Nsd3BGbU5qaXRmNFF2M0NaRFpEWjM4ZG5qUUFETk5h?=
- =?utf-8?B?OE1yMXZFbFd3RjRrVFU5TGFjb0NPK0RFNGVVNkFJUW5rVTRkV2VOYVhwSkFC?=
- =?utf-8?B?NVlYQkF4dU5qSTdld2V5b3lqMXVzUVJFbHE1UXc1ZzYvUE9EdlF5cUdZaFlh?=
- =?utf-8?Q?ZNuEid4kfyTmHiV9xheF?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f48050f-e8e3-472c-9d0b-08dc7370e2b5
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 17:19:45.8113
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR02MB9780
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAOVSQmYC/4WNUQqDMBBEryL73S1mjcT2q/coUhLdaMCakkhok
+ dy9qRfo5xtm3uwQOTiOcK12CJxcdH4tQKcKhlmvE6MbCwPVJOu2Vmgklg4mGx9WL4sf9MaoTEv
+ UGN3oTkCZvgJb9z60977w7OLmw+d4SeKX/hEmgQIbIttJc1F6bG+T99PC58E/oc85fwFTKLYmu QAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715622630; l=3843;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=CkWV6BI6pB19qRh2l/tD81uJGerHWKsptqUyLWE4ZSs=; b=mNrfhs0/3ITeH/kBQ/vw1Stjlb+h1///iiZ8tKZCfRXm39h8a4mOs9jc+AE1Xk4uHJiInitje
+ p7X/R7A/nn1Bf98PIqJ7PZNOWtTGhtzf87FUPxdrSvNMb1SEtvvD7P0
+X-Mailer: b4 0.12.3
+Message-ID: <20240513-b4-sio-vfs_fallocate-v2-1-db415872fb16@google.com>
+Subject: [PATCH v2] fs: remove accidental overflow during wraparound check
+From: Justin Stitt <justinstitt@google.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi Kees and Luiz,
-First of all, thanks for the reviews.
+Running syzkaller with the newly enabled signed integer overflow
+sanitizer produces this report:
 
-On Mon, May 13, 2024 at 12:31:29PM -0400, Luiz Augusto von Dentz wrote:
-> Hi Eric,
-> 
-> On Sun, May 12, 2024 at 11:08 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Sun, May 12, 2024 at 04:17:06PM +0200, Erick Archer wrote:
-> > > [...]
-> > > Also remove the "size" variable as it is no longer needed and refactor
-> > > the list_for_each_entry() loop to use dr[n] instead of (dr + n).
-> 
-> Have the change above split on its own patch.
+[  195.401651] ------------[ cut here ]------------
+[  195.404808] UBSAN: signed-integer-overflow in ../fs/open.c:321:15
+[  195.408739] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long')
+[  195.414683] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
+[  195.420138] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[  195.425804] Call Trace:
+[  195.427360]  <TASK>
+[  195.428791]  dump_stack_lvl+0x93/0xd0
+[  195.431150]  handle_overflow+0x171/0x1b0
+[  195.433640]  vfs_fallocate+0x459/0x4f0
+...
+[  195.490053] ------------[ cut here ]------------
+[  195.493146] UBSAN: signed-integer-overflow in ../fs/open.c:321:61
+[  195.497030] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long)
+[  195.502940] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
+[  195.508395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[  195.514075] Call Trace:
+[  195.515636]  <TASK>
+[  195.517000]  dump_stack_lvl+0x93/0xd0
+[  195.519255]  handle_overflow+0x171/0x1b0
+[  195.521677]  vfs_fallocate+0x4cb/0x4f0
+[  195.524033]  __x64_sys_fallocate+0xb2/0xf0
 
-Ok, no problem. I will send a new version.
+Historically, the signed integer overflow sanitizer did not work in the
+kernel due to its interaction with `-fwrapv` but this has since been
+changed [1] in the newest version of Clang. It was re-enabled in the
+kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+sanitizer").
 
-Regards,
-Erick
+Let's use the check_add_overflow helper to first verify the addition
+stays within the bounds of its type (long long); then we can use that
+sum for the following check.
+
+Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+Closes: https://github.com/KSPP/linux/issues/356
+Cc: linux-hardening@vger.kernel.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- drop the sum < 0 check (thanks Jan)
+- carry along Kees' RB tag
+- Link to v1: https://lore.kernel.org/r/20240507-b4-sio-vfs_fallocate-v1-1-322f84b97ad5@google.com
+---
+Here's the syzkaller reproducer:
+r0 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file1\x00', 0x42, 0x0)
+fallocate(r0, 0x10, 0x7fffffffffffffff, 0x2000807fffff7)
+
+... which was used against Kees' tree here (v6.8rc2):
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+
+... with this config:
+https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
+---
+ fs/open.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/fs/open.c b/fs/open.c
+index ee8460c83c77..23849d487479 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -247,6 +247,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	long ret;
++	loff_t sum;
+ 
+ 	if (offset < 0 || len <= 0)
+ 		return -EINVAL;
+@@ -319,8 +320,11 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+ 	if (!S_ISREG(inode->i_mode) && !S_ISBLK(inode->i_mode))
+ 		return -ENODEV;
+ 
+-	/* Check for wrap through zero too */
+-	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
++	/* Check for wraparound */
++	if (check_add_overflow(offset, len, &sum))
++		return -EFBIG;
++
++	if (sum > inode->i_sb->s_maxbytes)
+ 		return -EFBIG;
+ 
+ 	if (!file->f_op->fallocate)
+
+---
+base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
+change-id: 20240507-b4-sio-vfs_fallocate-7b5223ba3a81
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
