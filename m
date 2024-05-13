@@ -1,54 +1,54 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB7163C7
-	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 03:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1269D145B16
+	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 03:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715569421; cv=none; b=dBk1ceQMR4yO+KlP/0gajCXk+oZnM8aSMO5PC6rqqwEVgt34ppbdTxXCc3eR5AEng0F5Ar5ccCf0tqArB3DV181H3MRu54lGD/l0nJoGWo4DvTJwX4JLpkpD2yH2xhqXf6r1N9LjDjc9TzBbN3ur/Acrw3Ek4CYZYPCnE1EWQ8c=
+	t=1715569696; cv=none; b=jE1Q9bVXdAC+QkGcE26RehqjxqaCyOp6MCJIUrCt/xtBzSXRPKSNPpgC6qQpRGNUTJToYgbL/10U/0HHzWLhzgqKKXaNpjypx7CG+0tmEdCHzbo1EVmFx+9pF5jUBIG70/nC1tAbNBcHbDMebHEhYn2CW9wuqXCVUYDsENLi0fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715569421; c=relaxed/simple;
-	bh=z4NlVMZtR0r+DtTYPkbCuUFcxQnmejuMc8+xSsKlqFA=;
+	s=arc-20240116; t=1715569696; c=relaxed/simple;
+	bh=9b9dap/mBsOztov9foEw6JPg7L/Za777S45jFaNqDDs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MoP3JtckDNJATLDLRgXF7UjohmdUDr5VQDmN5sipgBuyu/om8xqrOdfGjpQfCyBXfkNlpiLaEGBQaNhFEcVuC2gAYOCNGIsE9wuSF6WyrTeJYwPvgChhz3oQIcxQXj4tLYpkWPpnq/Ma2W1CoKb8W+IRijy3kRKppVQZ+bbg53o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TaAz/ENJ; arc=none smtp.client-ip=209.85.160.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=TClE8DE4wAHPXzN2SVeRttDOji/F6oAfmWsacqwoPv4QLdDjJnTGpOKAMn4/rWTNSapQmxuLAvt4ULKdpLrjn2fNNZyRe18KlVTwqfcO+nL5rHo8R+degNtqgjTHf83YFxRB2w8kPl6mMoY74Sf8n2vD8J7GwfgQZpZIq0MwHs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BGOfnao6; arc=none smtp.client-ip=209.85.161.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TaAz/ENJ"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-241572c02efso2405133fac.3
-        for <linux-hardening@vger.kernel.org>; Sun, 12 May 2024 20:03:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BGOfnao6"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b290669b0fso1453415eaf.2
+        for <linux-hardening@vger.kernel.org>; Sun, 12 May 2024 20:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715569419; x=1716174219; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715569694; x=1716174494; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yzBJEORmly2uweAvFf1l8zuxXIyjPhUuwee5HZnj+NQ=;
-        b=TaAz/ENJRmk2nXOWjPkrKvqSHiD+1amGYqc9jImroruKtcSZhetmkp/p8WRydH4e1c
-         qRkmec0KhfxkupyvIKJR7oc0GGOjy7YTPKTkNHKaXNvjVI5gjtXPSJ8Zz+5uxdTrEOM7
-         Hr7F5R3d8A3z72lkUJnCe4iN4gYcXs0+KhOtE=
+        bh=W4w1jo49aw27+rvRKGShr7/YYMsETCIgWlNJTN+A7s4=;
+        b=BGOfnao6EvDA2yzURYM4+6q62eUsZkIMvkUsyAxxhOXTW4nJjrxkwdCUhzjghOAujy
+         OkjZr2d3OlVB/Lbd6rt0HEAvm+q11dMJKbXjFDofhbzfrJbk8rFa/Y8TzkGnBPdQJAHW
+         rpRvWPDFJtDY1721XSlFKmkqPEfXgpITzQ0Ek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715569419; x=1716174219;
+        d=1e100.net; s=20230601; t=1715569694; x=1716174494;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yzBJEORmly2uweAvFf1l8zuxXIyjPhUuwee5HZnj+NQ=;
-        b=ec84p0WheiP7U6krw9a5s+6rD4aBIWPjuqjFyT8/M7ivRKDTMqT1c1IC9sGAAKdIZb
-         IKipJLwRYnnIk18fq90HO8e9bR4rH4GiB8OR6tbzPD3WaAJKw/kR7esrmVbZx+oiwOtp
-         3XQg+SNoOx2tECyit/FQZT7XqqldYGuhKmO94GAfSjZvl8d42wXYEjBOXm77DN9XrQKC
-         FZ6nkHLADzOpEonDNtCxwbnsITRABI2qFD7qRVag5GnaNBpYoPNBvSMClVbN5D38rphu
-         LYjwdO6zKtY12yxKHs627u1j7ux6CXEkdMhd4fAgI9SHDNsObjlt4M5953YlgjKGXM+F
-         PDzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVy83t9UbkdB222FeKLkvrHzXz1QYTIE7MEfAcajd1L+U1QXszB+C8jL1o5S2O1y6hpn9QaEzW8BBEgTKPC5OU+CKhhQLykeHQhpBHpdvp3
-X-Gm-Message-State: AOJu0YwVgcxVb7vWT9wdcT3OVtddBWg1+QwCjL9osdCT9xn7Tu0Vj99U
-	5fzn5ToJLzyVZHxsI2D/oZvyU0urgx4wyxcPu+pHYTk0n+hmL+ACl6Im9B5heg==
-X-Google-Smtp-Source: AGHT+IGLWGypu7OaOGynSM5xuNyLMM/e8nAmPw78+sRaeDRTGamx3zP5noERhX/KkAF69EuemkT4TQ==
-X-Received: by 2002:a05:6870:b6a7:b0:23e:6d9a:8f45 with SMTP id 586e51a60fabf-24172f79503mr10911205fac.48.1715569419606;
-        Sun, 12 May 2024 20:03:39 -0700 (PDT)
+        bh=W4w1jo49aw27+rvRKGShr7/YYMsETCIgWlNJTN+A7s4=;
+        b=bvzxLiRy1daLnvNoCgSxIGjOgJNj8zj00l19XNynCwoZcDnZ7LFVde392FMqUpY9T+
+         FSOttSZB3yaO1+nJlysd6ojtrw2pFDJ93XkSOC4kilAlejqApNMsxOBRS6PpXPhZ0nKF
+         BGCCblztvMuuGhSmIoe38om173uuZGEiyUzrCTlCSkEDK3m9KAj43BXEamvqiFQmW2NQ
+         v8qwmq9GFKML1YHEYD61SA1+ShKtnF4hvPVloqNdB04IC79sobu1VCoCZZFNslXB8hun
+         tV6o4h1KWQs19laoRPXJn60X+/89FPVlMt6jn92BgUR8EzFoRgk/gI79dJseDu1AJNbF
+         ju5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWdg10FMJQczV2V5kcHS5PGDjRdyM5sRWgPuKHXFk16EECn+9YTtG86/T5kKx8+9rCbCyzs33tbRMrRTDRS6YRWYtvSb+6OXxD+XVEBOkM2
+X-Gm-Message-State: AOJu0Yy4GJD2owrWTg88Nz+WyGsO/e0UNlXul0tWPwZy11cnb+kvXfwA
+	zr3VXXSDU8R4Jfpxo6yESbtrK+KkRX0VSn8Se7dyo2x49SuarXOtLL+tVeeGBg==
+X-Google-Smtp-Source: AGHT+IHemrUQTb2bVSGfwn2RlROCPRFiGs0Fe9XL2NMMyj8IULH+Ezp+5PKYw2emvI1F7voWXC5PIg==
+X-Received: by 2002:a05:6358:1209:b0:18f:6026:2d6a with SMTP id e5c5f4694b2df-193bcfde4abmr844964555d.21.1715569693849;
+        Sun, 12 May 2024 20:08:13 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b30341sm6317982b3a.208.2024.05.12.20.03.39
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634119041b2sm5776476a12.94.2024.05.12.20.08.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 May 2024 20:03:39 -0700 (PDT)
-Date: Sun, 12 May 2024 20:03:38 -0700
+        Sun, 12 May 2024 20:08:13 -0700 (PDT)
+Date: Sun, 12 May 2024 20:08:12 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Erick Archer <erick.archer@outlook.com>
 Cc: Marcel Holtmann <marcel@holtmann.org>,
@@ -62,16 +62,13 @@ Cc: Marcel Holtmann <marcel@holtmann.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
 	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: Re: [PATCH v2] tty: rfcomm: prefer struct_size over open coded
+Subject: Re: [PATCH] Bluetooth: hci_core: Prefer struct_size over open coded
  arithmetic
-Message-ID: <202405121959.50F6DDA@keescook>
-References: <AS8PR02MB7237262C62B054FABD7229168BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Message-ID: <202405122008.8A333C2@keescook>
+References: <AS8PR02MB7237ECD397BDB7F529ADC7468BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,18 +77,18 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR02MB7237262C62B054FABD7229168BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB7237ECD397BDB7F529ADC7468BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Sun, May 12, 2024 at 01:17:24PM +0200, Erick Archer wrote:
+On Sun, May 12, 2024 at 04:17:06PM +0200, Erick Archer wrote:
 > This is an effort to get rid of all multiplications from allocation
 > functions in order to prevent integer overflows [1][2].
 > 
-> As the "dl" variable is a pointer to "struct rfcomm_dev_list_req" and
-> this structure ends in a flexible array:
+> As the "dl" variable is a pointer to "struct hci_dev_list_req" and this
+> structure ends in a flexible array:
 > 
-> struct rfcomm_dev_list_req {
+> struct hci_dev_list_req {
 > 	[...]
-> 	struct   rfcomm_dev_info dev_info[];
+> 	struct hci_dev_req dev_req[];	/* hci_dev_req structures */
 > };
 > 
 > the preferred way in the kernel is to use the struct_size() helper to
@@ -110,7 +107,7 @@ On Sun, May 12, 2024 at 01:17:24PM +0200, Erick Archer wrote:
 > before the list_for_each_entry() loop.
 > 
 > Also remove the "size" variable as it is no longer needed and refactor
-> the list_for_each_entry() loop to use di[n] instead of (di + n).
+> the list_for_each_entry() loop to use dr[n] instead of (dr + n).
 > 
 > This way, the code is more readable, idiomatic and safer.
 > 
@@ -119,34 +116,12 @@ On Sun, May 12, 2024 at 01:17:24PM +0200, Erick Archer wrote:
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
 > Link: https://github.com/KSPP/linux/issues/160 [2]
+> 
 > Signed-off-by: Erick Archer <erick.archer@outlook.com>
 
-Looks good!
+Looks right to me. Thanks!
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
-> [...]
-> -		bacpy(&(di + n)->src, &dev->src);
-> -		bacpy(&(di + n)->dst, &dev->dst);
-> +		bacpy(&di[n].src, &dev->src);
-> +		bacpy(&di[n].dst, &dev->dst);
-
-Not an issue with your patch, but this helper is really pointless in the
-Bluetooth tree:
-
-static inline void bacpy(bdaddr_t *dst, const bdaddr_t *src)
-{
-        memcpy(dst, src, sizeof(bdaddr_t));
-}
-
-So the above could just be:
-
-		di[n].src = dev->src;
-		di[n].dst = dev->dst;
-
-:P
-
--Kees
 
 -- 
 Kees Cook
