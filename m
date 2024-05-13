@@ -1,172 +1,151 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5413522EE5
-	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 17:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB44225755
+	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 18:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715622635; cv=none; b=AqIIClV4qy4i8XTJ+7Z8chfskHc+B4OL7Efq1wHVisTIoHOY7A6yjtPirO76eVUlJSwtUPALrz2Qt9JfbBv8JwMDYKsFsJkogXWcPi+IznbUqOWWI2kPXcHq7CGSbyjShOP5zb6bD4sw4Yc++dN3+GhGHfnTsp9q6wl7vvF2fzU=
+	t=1715625263; cv=none; b=jK+uRrAe7WQlEeq72BDrsSuW18Oh13XidpquIK3oE3MaeWHr/3ulRHdkBbrD9pL3AtWmaeAEwS73zT/qim2Q7fNgPgJi+JHufolMk11NOMEynY55WewGgDSJiU975VgPeAR/MOucD6P0lwCYarlBQPULirBpUsocy4B/plcfCt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715622635; c=relaxed/simple;
-	bh=CkWV6BI6pB19qRh2l/tD81uJGerHWKsptqUyLWE4ZSs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Awc+Nubw+V5sK78c9O3ceXE45r89dsDjvJ06UqsKUfZsYu23GSf0RajROZaLjiPRJm90jwJx+Vzt7HnWzmb1gqIpgdRsd05xoypjXF3UUQkuzHlr5zIXu1tmEYjH8dpv5W8hCUCfKxHzB/cgR6HhPX/AhS1YmpjV6Vyzaz4j3nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CJ67mDu2; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1715625263; c=relaxed/simple;
+	bh=LMpgS9YUb5fP274F97/qNj06fpYzBLVeI1R6c6nW9QM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GvGD9wkjUKcgHnP/vcftfw236pskHaUeGZBAHWHlLuPad4mo2rYYugHEKZYjegASQukGKj0wd3euNRJqVaeLKWOcuIU/RUF6M784N2PtNIyL5Bk/6NYJRj3mDFYcqrNmHyvtmXJGakRxbGCYhqWThRpQW8QH0RaPIAO2nouSLuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IRZbdAg5; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CJ67mDu2"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bea0ca5e2so80050487b3.2
-        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 10:50:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRZbdAg5"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1edf506b216so31656935ad.2
+        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 11:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715622631; x=1716227431; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GydCGd/+JJ6CmtiwKdDK/+LMhNIkbo+G+AlL2WnOnIo=;
-        b=CJ67mDu2FEEbHx8Pd8/KXPC6JOEnFYZSEWNrUTCMpOwBHa+aI4GWmNfTXTcCTt4c2+
-         jyiOPUm8VROgw+0F0S+6E7aTHzRgJg/7c3QTcktplQTnWgjofytSFGc4LaF81DaAJ5Io
-         Zkef7RK0Jw+RMO6uN+tS8nfu3FDwOEUUuVOkwPzFJFedb4EHRMoMcdCKDw0CrFJN8X9K
-         6Ggd2VR+vZZFtHNCvyNtm/3FqMEqz5+jZ6OMYsu4QgZhbDtID+qZKmvU+ieFLEaG3d2J
-         vhb7efLg6BQylmk8IPq4DDjUQdOlRV//Uz2WK+nf2ui9fNdBYAr/vfy3V4ZacQfgz+dc
-         v9qA==
+        d=chromium.org; s=google; t=1715625261; x=1716230061; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=h++n7Qlyg3sgT4EiaSRCnOzzYyK0B8BDWAHRP3/F3N0=;
+        b=IRZbdAg5Fjfq1LlzW2OU3qJQiaF0Y36cLpUw+oWEwGb1ZbDoU98E6N8oHl/2rzWCHk
+         0J1HOQmi4/qvXT4+9oLUQs4sUJ2KF7lmn65JzzrEUIB/BXbV/B7gvwACHU3Oyso/lcv/
+         FGQOa0cTZ0i3NV+ABmzUpys6SdplIP6k+ErvY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715622631; x=1716227431;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GydCGd/+JJ6CmtiwKdDK/+LMhNIkbo+G+AlL2WnOnIo=;
-        b=PAq+0NhUt9LZZkBorGF38222Bzfg+K4lPlukj10BiBSuzBU+Gw/h42sVgd7adICwzM
-         p1x/938hy7Em6AXZm6cc8G+YdrUiWNLkN6bhdH0x1HTuH/j74zatFKCvrrdw2kesuFWe
-         Bgqw+iSU4NDT76MdJsT4nddvdtm9f4uDqvFSuO5rjqqQVTW+Lox0/0Ud1IoRnBjPJM85
-         LxASEMZV0d+jGzmk4Ak+93QgG34tgRmwONlgOS+fCVE47HttcqB2Z5oRx5SzYuZj1I+p
-         vxkWrCKSJUqTgyLObnluXTlvNtq9RVueN1cL6Sp+DYujq2bKcAOXvu53Rm9zOXsu4J6x
-         BUgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfQeOQWwI3r9iXcbQScFsg8g4Nc9NM5+K05PzJqE8/ltJalGoiu1gOXw/LXHkSjIDSN5abAS/RzZCmfVakxxAyUlGzBt55DYQiQDinZ4KV
-X-Gm-Message-State: AOJu0YynaZsjFdmgOPgEX8wpz5+XhRmzBNpX96LWtTLDf1X4/CZ8On2w
-	c+7N6QlXlPHv+/wiA7C3qcgGu4DxL5Yi1x9+bfdH3EMJLjYPdD6gB5xlG27Eooemo/G5iPewzRI
-	kAc0dRAlfsSAqedzX9e6Rzw==
-X-Google-Smtp-Source: AGHT+IH4o0V1PT7B0QIXUskKpo4VzIQ1a06kKnU6elsU559DTS+Pna5InxhhAGymLEnliGrWo2+jzRQfH5DNflrfYQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1026:b0:dee:6147:7e26 with
- SMTP id 3f1490d57ef6-dee6bf164abmr531190276.11.1715622631413; Mon, 13 May
- 2024 10:50:31 -0700 (PDT)
-Date: Mon, 13 May 2024 17:50:30 +0000
+        d=1e100.net; s=20230601; t=1715625261; x=1716230061;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h++n7Qlyg3sgT4EiaSRCnOzzYyK0B8BDWAHRP3/F3N0=;
+        b=kAh80c+MtW7xZn6FIr+BSfI1hM1B6fPRt7C7ecqcpDWURFoFYyuq44V1ClO+xo2BKv
+         ChylT6Fn1+R19tn3ZJevZ31+C8fVG7hxpg7crlEZJ9jGCAjcfmcPuqgBkYbHAMXwLeuA
+         vdT6ydEvQtqsy0GAxS1fjlK9/YAnqcB75ZQHvrwScEwvWQSkBo58PpLWqKwGpEW3KbLG
+         uw5Hww6SLGvqb+TGcOriHinyq2nT2HokYhoODKs9FRGxP76mZIa2aWmSd/HrJenjkS9g
+         yxpPd3znrBTQ8cs8qoyWYby4LKKkyb9VP6P0CuGlSKoBmtiCONnv8jwhJfJJkMpoXhnj
+         xmhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJMY+0rCxPdXkhHMn0jIsdMcw+Y4YUOgHRkTs0usruWgpw3h4IZ1rDcUPL39EJarW4ULzajzujsvy29fMGPuMsSmeDaDsoea7RdN+16Lyv
+X-Gm-Message-State: AOJu0YyrO2nQdvTgUctKueqCHzoyj0U30w5qA1kcoPtbhfLmPxgD5UBz
+	rUVucKWLvnpeKJuloERWhtv5XgBbtoJQTheFc/BGHXZa1VGTS4k50HYJjFrEEA==
+X-Google-Smtp-Source: AGHT+IHCc1iDoDY8y7cN3McKpzD8GoP+zaGEka3xojOMmbdy8UwKg3X31LKvQDdXyzyN7fH2gRjLEA==
+X-Received: by 2002:a17:902:dac6:b0:1e0:b62a:c0a2 with SMTP id d9443c01a7336-1ef441613edmr122093915ad.51.1715625261157;
+        Mon, 13 May 2024 11:34:21 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c13908bsm82642315ad.265.2024.05.13.11.34.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 11:34:20 -0700 (PDT)
+Date: Mon, 13 May 2024 11:34:20 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Uecker <uecker@tugraz.at>, Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <202405131047.A3861EC13@keescook>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <59f731ab619673afec4956fce6832a1cd5324fb8.camel@tugraz.at>
+ <CAHk-=wjERv03yFU7-RUuqX1y89DYHcpdsuu++ako2nR41-EjYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOVSQmYC/4WNUQqDMBBEryL73S1mjcT2q/coUhLdaMCakkhok
- dy9qRfo5xtm3uwQOTiOcK12CJxcdH4tQKcKhlmvE6MbCwPVJOu2Vmgklg4mGx9WL4sf9MaoTEv
- UGN3oTkCZvgJb9z60977w7OLmw+d4SeKX/hEmgQIbIttJc1F6bG+T99PC58E/oc85fwFTKLYmu QAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715622630; l=3843;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=CkWV6BI6pB19qRh2l/tD81uJGerHWKsptqUyLWE4ZSs=; b=mNrfhs0/3ITeH/kBQ/vw1Stjlb+h1///iiZ8tKZCfRXm39h8a4mOs9jc+AE1Xk4uHJiInitje
- p7X/R7A/nn1Bf98PIqJ7PZNOWtTGhtzf87FUPxdrSvNMb1SEtvvD7P0
-X-Mailer: b4 0.12.3
-Message-ID: <20240513-b4-sio-vfs_fallocate-v2-1-db415872fb16@google.com>
-Subject: [PATCH v2] fs: remove accidental overflow during wraparound check
-From: Justin Stitt <justinstitt@google.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjERv03yFU7-RUuqX1y89DYHcpdsuu++ako2nR41-EjYg@mail.gmail.com>
 
-Running syzkaller with the newly enabled signed integer overflow
-sanitizer produces this report:
+On Sun, May 12, 2024 at 09:09:08AM -0700, Linus Torvalds wrote:
+>         unsigned char *p;
+>         u32 val;
+> 
+>         p[0] = val;
+>         p[1] = val >> 8;
+>         p[2] = val >> 16;
+>         p[3] = val >> 24;
+> 
+> kind of code is both traditional and correct, but obviously drops bits
+> very much intentionally on each of those assignments.
 
-[  195.401651] ------------[ cut here ]------------
-[  195.404808] UBSAN: signed-integer-overflow in ../fs/open.c:321:15
-[  195.408739] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long')
-[  195.414683] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
-[  195.420138] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  195.425804] Call Trace:
-[  195.427360]  <TASK>
-[  195.428791]  dump_stack_lvl+0x93/0xd0
-[  195.431150]  handle_overflow+0x171/0x1b0
-[  195.433640]  vfs_fallocate+0x459/0x4f0
-...
-[  195.490053] ------------[ cut here ]------------
-[  195.493146] UBSAN: signed-integer-overflow in ../fs/open.c:321:61
-[  195.497030] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long)
-[  195.502940] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
-[  195.508395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  195.514075] Call Trace:
-[  195.515636]  <TASK>
-[  195.517000]  dump_stack_lvl+0x93/0xd0
-[  195.519255]  handle_overflow+0x171/0x1b0
-[  195.521677]  vfs_fallocate+0x4cb/0x4f0
-[  195.524033]  __x64_sys_fallocate+0xb2/0xf0
+The good news here is that the integer implicit truncation sanitizers
+are already split between "signed" and "unsigned". So the 2 cases of
+exploitable flaws mentioned earlier:
 
-Historically, the signed integer overflow sanitizer did not work in the
-kernel due to its interaction with `-fwrapv` but this has since been
-changed [1] in the newest version of Clang. It was re-enabled in the
-kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-sanitizer").
+	u8 num_elems;
+	...
+	num_elems++;		/* int promotion stored back to u8 */
 
-Let's use the check_add_overflow helper to first verify the addition
-stays within the bounds of its type (long long); then we can use that
-sum for the following check.
+and
 
-Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/356
-Cc: linux-hardening@vger.kernel.org
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- drop the sum < 0 check (thanks Jan)
-- carry along Kees' RB tag
-- Link to v1: https://lore.kernel.org/r/20240507-b4-sio-vfs_fallocate-v1-1-322f84b97ad5@google.com
----
-Here's the syzkaller reproducer:
-r0 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file1\x00', 0x42, 0x0)
-fallocate(r0, 0x10, 0x7fffffffffffffff, 0x2000807fffff7)
+	int size;
+	u16 read_size;
+	...
+	read_size = size;	/* large int stored to u16 */
 
-... which was used against Kees' tree here (v6.8rc2):
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+are both confusions across signed/unsigned types, which the signed
+sanitizer would catch. The signed sanitizer would entirely ignore
+the quoted example at the top: everything is unsigned and no int
+promotion is happening.
 
-... with this config:
-https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
----
- fs/open.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+So, I think we can start with just the "signed integer implicit
+truncation" sanitizer. The compiler will still need to deal with the
+issues I outlined in [1], where I think we need some consideration
+specifically on how to handle things like this (that have a
+smaller-than-int size and trip the sanitizer due to int promotion):
 
-diff --git a/fs/open.c b/fs/open.c
-index ee8460c83c77..23849d487479 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -247,6 +247,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- {
- 	struct inode *inode = file_inode(file);
- 	long ret;
-+	loff_t sum;
- 
- 	if (offset < 0 || len <= 0)
- 		return -EINVAL;
-@@ -319,8 +320,11 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- 	if (!S_ISREG(inode->i_mode) && !S_ISBLK(inode->i_mode))
- 		return -ENODEV;
- 
--	/* Check for wrap through zero too */
--	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
-+	/* Check for wraparound */
-+	if (check_add_overflow(offset, len, &sum))
-+		return -EFBIG;
-+
-+	if (sum > inode->i_sb->s_maxbytes)
- 		return -EFBIG;
- 
- 	if (!file->f_op->fallocate)
+u8 checksum(const u8 *buf)
+{
+	u8 sum = 0;
 
----
-base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
-change-id: 20240507-b4-sio-vfs_fallocate-7b5223ba3a81
+	for (int i = 0; i < 4; i++)
+		sum += buf[i];		/* int promotion */
+	return sum;
+}
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+We want "sum" to wrap. We could avoid the "implicit" truncation by
+explicitly truncating with something eye-bleedingly horrible like:
 
+		sum = (u8)(sum + buf[i]);
+
+Adding a wrapper for the calculation could work but repeats "sum", and
+needs to be explicitly typed, making it just as unfriendly:
+
+		sum = truncate(u8, sum + buf[i]);
+
+Part of the work I'd done in preparation for all this was making the
+verbosely named wrapping_assign_add() helper which handles all the
+types by examining the arguments and avoids repeating the destination
+argument. So this would become:
+
+		wrapping_assign_add(sum, buf[i]);
+
+Still not as clean as "+=", but at least more readable than the
+alternatives and leaves no question about wrapping intent.
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/202405081949.0565810E46@keescook/
+
+-- 
+Kees Cook
