@@ -1,133 +1,145 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83942EAF9
-	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 18:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861C73FE55
+	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 18:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715626098; cv=none; b=fEdvEeZ+lCjz8WC/1EA51yI6gDYz9aHQ/PhSXm9HzOXVQhzXVTQnTD8Epk8XgBaL1cNkOgJNoEFrU4iPOyk0RzO3JeOdYJ6jABY3xun4KoyxIVsrdZhIUKPG+6YUDFzKkUF1ionBpn0W5vRz3YdZqEbOpMJ8CpIWLgWUznGYLU8=
+	t=1715626301; cv=none; b=JYN+h2bdeAlFa4GyO1Lu/7AcuNyC5IG4yQ80Nu1gmBjaMjXDCzKoxQW+GiGITcEVwiXcrh1JND7GfxlJJM0oHX9tWHAjTdX39skuV7LOceEZe70CwUQr3vChZQUfTMFTtxvYCHAM6pA7pBWuwFg27uLZtJptL7wP0Z1J4T69DOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715626098; c=relaxed/simple;
-	bh=6YuPwQ/qKNz8HYBBy+q1ODXRn/TuSyAWfvhMnueWmI0=;
+	s=arc-20240116; t=1715626301; c=relaxed/simple;
+	bh=bvx6mCnzX8C2T7z/ykshZS5xSeo3dI7Pp2H7YdnXt/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B/9ja/u1d2FXtwe/wbjv1jz4dntZls/WU4fUYGCX2TsQAe25rThKxAaUL5U9xDTwBHhdsMapZsfp+uH1xGsrl/yhYidsRBMnBhV9Ah/UzH7H0pby+YpOmdChfEE1emP5Nct+ACQsWpIxvR15BxwUrzdMafMNKSdk5sSQtfyp+fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kQv2VY3r; arc=none smtp.client-ip=209.85.210.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5tYrMtLbAld3MLNpHfZMKbZ7u0D+RQiYYfAThTyyFV3MVopXbhz2myrkbuwZofUaCWrXYFSE4hTiH9dR/JGZwm8sdwAAmbcEqL7Vh6XkoMtMeW/LYj+iSsqChR5AT6mBLRa97DBuzfRqjj9D5poZ2omuw2oUv2wVCK1armRFgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=chCf5mVF; arc=none smtp.client-ip=209.85.161.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kQv2VY3r"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4551f2725so4142601b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 11:48:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="chCf5mVF"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5ad2da2196aso3166923eaf.2
+        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 11:51:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715626096; x=1716230896; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YMCvolyyAMKqM2SEdNiyJ59O3X5pzLBrCG8ngReTAYg=;
-        b=kQv2VY3rQSya4uXDs+ROzi24zH2iLgT/DDvwH/Ce3mPbBzuN22DIV9mdtqws4mVnkF
-         P5sC+oDe+Ml5DxmUH4o3P8IJZgV/rJ+eG96FU7wXhtSXiDahLE59Dp8yFDbNyUmQd8y+
-         xxDUqgkheyCv22+fYmBxae2dszVx7POHu11TI=
+        d=chromium.org; s=google; t=1715626298; x=1716231098; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uyix+o2/yzI/teQyeT3mBLMMtNsSET+xVm+DqXsTGyI=;
+        b=chCf5mVFJ8CkQzfA9IqZt8XTTy+24M+77aVJuIbrAev3NEheKEiorAcdUJYFhaKd8d
+         MeoUM+Rm89aS4dcMF68cIZFPvZivkpNa7zVdnzXgyLcZr08VjbcbtDn1oBeFzb4FykpE
+         OmY2LgVtqqG8dPyMGgiDdNWMVSRjYcdwKZg9Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715626096; x=1716230896;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YMCvolyyAMKqM2SEdNiyJ59O3X5pzLBrCG8ngReTAYg=;
-        b=cpQE1YL+oBVucPq1Mtqq0q7braFtb3cNhXtZ9/F+nfRYpagY9Koxz8RRdVM2CUZAz4
-         wGyAm834qwYCuXVTuzAEZWwzw01NzY/bL+ynI5DJZ2Vr11eEGyoXLkZjAPlLL9KGU0qU
-         iN293H1vZVeYAAAYzWc53EQKp8AHVpVcSOzPgSqKxq+iFkp3lwlP+9IzSedGgbtovRjP
-         VBYCR5/s5o6SHsedw2ETsGus14fT4bjIYp/aF2IYe4UCBwVxcH5lR1PCAhPAWV8oNOLZ
-         afiuF5TJVcAUISd7R1e9LosRLUeueuBhKDQmgvoCg7JLrJMO9ughjFqA3i6zPaZBNRqJ
-         naHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIH2OEhX6JbatjzY1nSbXKsv5E304VHpNvTO6BsNIwmWakdxVyuJhiJlRkL/9yr0cQBbeDx6yN8lnPHdAcH4454fQUecaxmxnGcErSl1ut
-X-Gm-Message-State: AOJu0YwDsbHXqCMmbLeTJdXvtKwPFKSwX3FMHP9tH0GqFCuiSvUrwhR3
-	twTvtjzlveiKiebRkBUl7UfRjWg/yHIa9wj0ajJIynbn4UXkIJDZD+PlkM6+/A==
-X-Google-Smtp-Source: AGHT+IHQwdGR35u5IXK+H3e3GlXqBLLrEy3u5cdZwt6vW+ynInQiPgDptXNWJrBmTpcuZ0bqtBY4aw==
-X-Received: by 2002:a05:6a21:983:b0:1a7:a6f3:1827 with SMTP id adf61e73a8af0-1afde1b719fmr11220335637.46.1715626096189;
-        Mon, 13 May 2024 11:48:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715626298; x=1716231098;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uyix+o2/yzI/teQyeT3mBLMMtNsSET+xVm+DqXsTGyI=;
+        b=tgxs+MNVGV3VK7u9xWkHcSzCLZDtgFdB9q7LHyruha56n1Je0yqlvuWEMok2byYLo5
+         k4pyh+zoOp93+TYvFhYP9DG/jqoumtx4fwmfyRY6oSSBUBUq4En0ma+joQgmfF7kxXGl
+         exMnJiGYqPPcTk9eftyLe8Wg3kaqhWr6kGHeYzkKruWCxBnx4jNsj6azAw1u1w6yC+Q9
+         DHhxbmvBN7Kn+kfVRfuA/uopbZOdohLkG58esf7yZKpZEq2Wfh4N88GZlK/DYOUkOYtS
+         T4Pmzksy2suyHY4wf2GHPLgS8dZioR8wmfiwyRHD00PI2cLVEIsKd4cVUFiRc7pFGgO6
+         eofQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTHT4ECQeD5RK5LrQfrX82YYH+WfxLFLTXswYmhahh9o7VdfddBMg7W6Tn7wc0Jb43nCZUhapzSJfTSCY5ftQKvt9RxuRSkrluD2en0p5R
+X-Gm-Message-State: AOJu0YxuvB0c8dVgbwzWgdHOdLji+VF/dZSzf2IICvYC1B+tD7XLbEYa
+	DYwyzFC6SygRVpY35bTmQbjcNbqEMUz1LAFVQUwIwEw6P/r0cJ1K+s3VT7mHaQ==
+X-Google-Smtp-Source: AGHT+IGv1B1Gx2wKtJWfijbWmucGg9LEe4iuF9AOrXx3x9zQT6qPe6BMe/LLFnyboO/EG8WWyTenMw==
+X-Received: by 2002:a05:6358:6505:b0:192:5b28:1ace with SMTP id e5c5f4694b2df-193bd007a1cmr1186924055d.29.1715626298112;
+        Mon, 13 May 2024 11:51:38 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a87bb1sm7697326b3a.87.2024.05.13.11.48.15
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634103f6982sm6959074a12.60.2024.05.13.11.51.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 11:48:15 -0700 (PDT)
-Date: Mon, 13 May 2024 11:48:14 -0700
+        Mon, 13 May 2024 11:51:37 -0700 (PDT)
+Date: Mon, 13 May 2024 11:51:37 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Marco Elver <elver@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/3] kbuild: remove many tool coverage variables
-Message-ID: <202405131136.73E766AA8@keescook>
-References: <20240506133544.2861555-1-masahiroy@kernel.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	"David S.  Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2] tty: rfcomm: prefer struct_size over open coded
+ arithmetic
+Message-ID: <202405131150.31B872F41A@keescook>
+References: <AS8PR02MB7237262C62B054FABD7229168BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <d11dacfa-5925-4040-b60b-02ab731d5f1a@kernel.org>
+ <CABBYNZ+4CcoBvkj8ze7mZ4vVfWfm_tyBxdFspvreVASi0VR=6A@mail.gmail.com>
+ <AS8PR02MB72379B760CF7B6A26A69C5558BE22@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240506133544.2861555-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR02MB72379B760CF7B6A26A69C5558BE22@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-In the future can you CC the various maintainers of the affected
-tooling? :)
-
-On Mon, May 06, 2024 at 10:35:41PM +0900, Masahiro Yamada wrote:
+On Mon, May 13, 2024 at 07:12:57PM +0200, Erick Archer wrote:
+> Hi Kees, Jiri and Luiz,
+> First of all, thanks for the reviews.
 > 
-> This patch set removes many instances of the following variables:
+> On Mon, May 13, 2024 at 12:29:04PM -0400, Luiz Augusto von Dentz wrote:
+> > Hi Jiri, Eric,
+> > 
+> > On Mon, May 13, 2024 at 1:07 AM Jiri Slaby <jirislaby@kernel.org> wrote:
+> > >
+> > > On 12. 05. 24, 13:17, Erick Archer wrote:
+> > > > This is an effort to get rid of all multiplications from allocation
+> > > > functions in order to prevent integer overflows [1][2].
+> > > >
+> > > > As the "dl" variable is a pointer to "struct rfcomm_dev_list_req" and
+> > > > this structure ends in a flexible array:
+> > > ...
+> > > > --- a/include/net/bluetooth/rfcomm.h
+> > > > +++ b/include/net/bluetooth/rfcomm.h
+> > > ...
+> > > > @@ -528,12 +527,12 @@ static int rfcomm_get_dev_list(void __user *arg)
+> > > >       list_for_each_entry(dev, &rfcomm_dev_list, list) {
+> > > >               if (!tty_port_get(&dev->port))
+> > > >                       continue;
+> > > > -             (di + n)->id      = dev->id;
+> > > > -             (di + n)->flags   = dev->flags;
+> > > > -             (di + n)->state   = dev->dlc->state;
+> > > > -             (di + n)->channel = dev->channel;
+> > > > -             bacpy(&(di + n)->src, &dev->src);
+> > > > -             bacpy(&(di + n)->dst, &dev->dst);
+> > > > +             di[n].id      = dev->id;
+> > > > +             di[n].flags   = dev->flags;
+> > > > +             di[n].state   = dev->dlc->state;
+> > > > +             di[n].channel = dev->channel;
+> > > > +             bacpy(&di[n].src, &dev->src);
+> > > > +             bacpy(&di[n].dst, &dev->dst);
+> > >
+> > > This does not relate much to "prefer struct_size over open coded
+> > > arithmetic". It should have been in a separate patch.
+> > 
+> > +1, please split these changes into its own patch so we can apply it separately.
 > 
->   - OBJECT_FILES_NON_STANDARD
->   - KASAN_SANITIZE
->   - UBSAN_SANITIZE
->   - KCSAN_SANITIZE
->   - KMSAN_SANITIZE
->   - GCOV_PROFILE
->   - KCOV_INSTRUMENT
+> Ok, no problem. Also, I will simplify the "bacpy" lines with direct
+> assignments as Kees suggested:
 > 
-> Such tools are intended only for kernel space objects, most of which
-> are listed in obj-y, lib-y, or obj-m.
-
-This is a reasonable assertion, and the changes really simplify things
-now and into the future. Thanks for finding such a clean solution! I
-note that it also immediately fixes the issue noticed and fixed here:
-https://lore.kernel.org/all/20240513122754.1282833-1-roberto.sassu@huaweicloud.com/
-
-> The best guess is, objects in $(obj-y), $(lib-y), $(obj-m) can opt in
-> such tools. Otherwise, not.
+>    di[n].src = dev->src;
+>    di[n].dst = dev->dst;
 > 
-> This works in most places.
+> instead of:
+> 
+>    bacpy(&di[n].src, &dev->src);
+>    bacpy(&di[n].dst, &dev->dst);
 
-I am worried about the use of "guess" and "most", though. :) Before, we
-had some clear opt-out situations, and now it's more of a side-effect. I
-think this is okay, but I'd really like to know more about your testing.
-
-It seems like you did build testing comparing build flags, since you
-call out some of the explicit changes in patch 2, quoting:
-
->  - include arch/mips/vdso/vdso-image.o into UBSAN, GCOV, KCOV
->  - include arch/sparc/vdso/vdso-image-*.o into UBSAN
->  - include arch/sparc/vdso/vma.o into UBSAN
->  - include arch/x86/entry/vdso/extable.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
->  - include arch/x86/entry/vdso/vdso-image-*.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
->  - include arch/x86/entry/vdso/vdso32-setup.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
->  - include arch/x86/entry/vdso/vma.o into GCOV, KCOV
->  - include arch/x86/um/vdso/vma.o into KASAN, GCOV, KCOV
-
-I would agree that these cases are all likely desirable.
-
-Did you find any cases where you found that instrumentation was _removed_
-where not expected?
-
--Kees
+I think that's a separate thing and you can leave bacpy() as-is for now.
 
 -- 
 Kees Cook
