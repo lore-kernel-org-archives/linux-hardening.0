@@ -1,135 +1,137 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15B077106
-	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 19:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8401B58AD0
+	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 19:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715629507; cv=none; b=eS+mZx6VQk61QAxcN3jLi+OnkI9zFp/J8N/alN51iIL/VrvXPKsFrMm6sqTHku0Lxqd/S7E6W2wdb447GyNrYmgtVd4gGrKq24QkvyqM1akyhAL+eu5nwzLxb5PBFMDQh6B1xeeWlU2KDRymWWIDvB/f8oweScvw+gdUVU9ltk4=
+	t=1715630117; cv=none; b=BdHA5wDWIly6r3n5PWoraBPscYC/cHq2wQIwpYZa3F8N4SVzgG/tc4EQdhPVn5rS96ImGorjOhO0Ctl6Sa0zHwr1Db4Oy7FjFiLm/8y0F4rBQfO1x3G5M4blq6vBZX/4p3PtqCS9mImuiefmyxbLPM6ikwyEF+R7XXpVEE+LS+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715629507; c=relaxed/simple;
-	bh=lkX/M/OVTWkcdWK8AyuLdiu5b3a3EKqBIzeiduQZzZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjUAxmv49iAJ95H0HkSDmG9CNIv7g7+0h5WyMLWOGxxU2cC5qjoLvBgpfa7az2zx7sgOi15ZbdJk8iE+t0TE/26rya2Im83jYt+B+SczharaZRyMdq1i3xQ+fpFgVRhDZGrGmYg6Tk0xDF/uKXzIXWe1tdpchdrP2PoWyInCvMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=E33ss5Q0; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715630117; c=relaxed/simple;
+	bh=uBD+lCS1DaJg6jKg9TthY1YebWwqH1WdbY89Bs+ieEE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VkB2G6GFHpCjyrY5TChQ8YizoZAtASn66IvVcrhNLDlcHHrkA5hPx1uKZRnH1oqAXxCXYmddCpbk2jHKu/tdMk2SShQ6HPwEe7agFb+QNsh2U/nbJUnPV6rJUK5jI56pOSVbzkV7xMYvt/hBBOVGJAJBVvPGLUWjXoJ6oNNuikA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LbB+OgtX; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E33ss5Q0"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-602801ea164so3346932a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 12:45:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LbB+OgtX"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4df4b388887so1190036e0c.3
+        for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 12:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715629505; x=1716234305; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9chi3Xc1nvI/gVi21b7gtgutjXhJ9XfFazGItJ10RrM=;
-        b=E33ss5Q0TJGnHz3o+AiCo3QuUv1pGfj+squ9xsx7x3VhplSgGvo27nzC2FvVLGX7gp
-         5Hj5SgZBIZJmKPDaLGNnaAqu2mvBfK1QoVvBAD4mHVmoWW+G3N/EFQAM5WtycZ7QTRZg
-         MlSxv9D7m5yhYaszB42tuDdehfptJ3JcnvVQc=
+        d=google.com; s=20230601; t=1715630114; x=1716234914; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+L/QJAKhm4Sma54bKYWeDhRohm5ZmYTjH6drv8r9LS0=;
+        b=LbB+OgtXPsRxrqha6lI297oWOvuDTIEjkmyAPFd2SrHxe0CN+hkNJz0sb5PKb8PsTi
+         6atRt4hj0qsW52ENIZjfUwx1qLcR4n+F47/YAnTT3qjZuW/TMnGNOp06qs7KscmNwvWu
+         N8jMGvXT4KKLTjs2MQKn3SLbv7rjGO5P1HaqnPFrnYUtri7AyVSovhR+1YfQ8hX7HsO6
+         jL1RZG4dB9xdythpMtNDPgO89j79jtbNueIU5OYLrRllnbQAIoOuiBdjelqfNbQdfZIE
+         76bBzMh07lUMjAzaqXAqkXdk2TLlQFyLLjKOwX5eC6XDih9p+MOEMtG+U95cn96SbFWk
+         haaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715629505; x=1716234305;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9chi3Xc1nvI/gVi21b7gtgutjXhJ9XfFazGItJ10RrM=;
-        b=GQlAsdCOhOj0J2M6HAVYzs3R3x4JuUwWg9tQNxeN9/dVoNwMFDZyTNJfCk0wfiJyT4
-         U4vAU5StpX7cSoK9ti6Fjk8DdATJx7nlDqm25geBvA3V1FrgL3Hfu57EgbqB1MTxJk7q
-         CqneufVSKmuT7bZbFXwkdKirl5Ooh7Jbk/BXOp+pIrxOiKOpH/xMR1h+FTBUJTCXb6eQ
-         ktl/fWn4jTzCjj2vh+hViHDi+uPbeQ+erhbyyz7y2TdzFLsDXlJiP819m8sI04YYGMS+
-         KrMGNuUSMAiSqtnEvOwhLNJ447Kqda7zM1V3O83nvNvXpINGGCsq5YaPKDedCbfC8FEg
-         DOyg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0aQ18ATVxGfZ5VQFk5WtaaJA3T6zjB4Y0NN3ykrDG7TDH/H6jVUxdEpcdU6i1EzyjTMGu58+0M3Wsg0MGwDUagvI03zMBMNOOnFFTK4AN
-X-Gm-Message-State: AOJu0Yw5ogpDe+Z+VKqEkqCcN38xsRztLM28Kxfa4hkYdz5UPnwIArPd
-	cDnuXunrYb6QNYq/HRcAXzApCfmQ5btgcbfLYi9xrbmSNZq6cHuvaRYitPr7tw==
-X-Google-Smtp-Source: AGHT+IFiB350HJmAM9p6dy50xn1DH9UD4cBCncM11fBjTw9zQRi5Yi8p+prPZer6lZhPmiwwzOChIA==
-X-Received: by 2002:a05:6a20:c909:b0:1ad:999b:de47 with SMTP id adf61e73a8af0-1afde1d7b38mr11221877637.51.1715629505306;
-        Mon, 13 May 2024 12:45:05 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b628ea6ab8sm10150799a91.55.2024.05.13.12.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 12:45:04 -0700 (PDT)
-Date: Mon, 13 May 2024 12:45:04 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3] perf/ring_buffer: Prefer struct_size over open coded
- arithmetic
-Message-ID: <202405131245.E572E4C6@keescook>
-References: <AS8PR02MB72379B4807F3951A1B926BA58BE02@AS8PR02MB7237.eurprd02.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1715630114; x=1716234914;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+L/QJAKhm4Sma54bKYWeDhRohm5ZmYTjH6drv8r9LS0=;
+        b=NbXCyeuOnYDBwHx7CySNXplh80wte5cZHSeG/hhCZTpFoQ6VLM1ygzTIj2N7GrjmXt
+         VPUT3+klolKs9AIMy/D1Bw7r29Y36Z8ie4yx83Qh2UCvHJg7B4TuFOODLM3Aq4LJf06g
+         ugH+fJZ7+U30vnM9xBD9GncU8zr/rMVdFsjuZalk1QUObTz++SpmV58L5KilBohuhpSQ
+         bOXFzOU9KopkGCycpKAnPnAshFe2AsAyN1Qjd885qzFtEd2Le0yAL65YHktyLBvVlBAO
+         3uHsag58mvNJqwkgm+f5DF5EsFv1a5IWXMatj4+j5nTZrrvMmCNhBvez5ReVoTHLSKKR
+         JIfA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2jYGKG2XS1j6USwu7xau4aUPwZTULH9t1IEpFh6GfK9ezDtw4jkk9xX59jkhd6BXskJdXcVNwa8j1cu/oNYs2eAoxzlN9l+dZ8Elu0Qcf
+X-Gm-Message-State: AOJu0Yxv3R99XEO1ffYhXRhSWlRCLUxPJPi6qRsrVCtL/Pi/FWFLkBfe
+	dFzBLLID64wsOWkjD98x8oTl80qOEtr/nZNdY9TFfwxioEScCvZ68TBOkNHuX3rNFHQkv0meo3R
+	cLWvHttZ1rinFJLaixpdW1MnoHOKt6gJtDaGi
+X-Google-Smtp-Source: AGHT+IHBfL9nuJIR67+Dnqw5wB6Py3NFwg023YfGr3BJHR42tIbXrkbks+bKtlytsKenkm7r5WJtqIs8zzzvxGrTaas=
+X-Received: by 2002:a05:6122:922:b0:4d3:39c3:717c with SMTP id
+ 71dfb90a1353d-4df88286086mr8285451e0c.1.1715630114304; Mon, 13 May 2024
+ 12:55:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR02MB72379B4807F3951A1B926BA58BE02@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: <20240506133544.2861555-1-masahiroy@kernel.org> <202405131136.73E766AA8@keescook>
+In-Reply-To: <202405131136.73E766AA8@keescook>
+From: Marco Elver <elver@google.com>
+Date: Mon, 13 May 2024 21:54:38 +0200
+Message-ID: <CANpmjNO=v=CV2Z_PGFu6ChfALiWJo3CJBDnWqUdqobO5X_62cA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] kbuild: remove many tool coverage variables
+To: Kees Cook <keescook@chromium.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Peter Oberparleiter <oberpar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huaweicloud.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, May 11, 2024 at 03:24:37PM +0200, Erick Archer wrote:
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
-> 
-> As the "rb" variable is a pointer to "struct perf_buffer" and this
-> structure ends in a flexible array:
-> 
-> struct perf_buffer {
-> 	[...]
-> 	void	*data_pages[];
-> };
-> 
-> the preferred way in the kernel is to use the struct_size() helper to
-> do the arithmetic instead of the calculation "size + count * size" in
-> the kzalloc_node() functions.
-> 
-> In the "rb_alloc" function defined in the else branch of the macro
-> 
->  #ifndef CONFIG_PERF_USE_VMALLOC
-> 
-> the count in the struct_size helper is the literal "1" since only one
-> pointer to void is allocated. Also, remove the "size" variable as it
-> is no longer needed.
-> 
-> At the same time, prepare for the coming implementation by GCC and Clang
-> of the __counted_by attribute. Flexible array members annotated with
-> __counted_by can have their accesses bounds-checked at run-time via
-> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-> strcpy/memcpy-family functions). In this case, it is important to note
-> that the logic needs a little refactoring to ensure that the "nr_pages"
-> member is initialized before the first access to the flex array.
-> 
-> In one case, it is only necessary to move the "nr_pages" assignment
-> before the array-writing loop while in the other case the access to the
-> flex array needs to be moved inside the if branch and after the
-> "nr_pages" assignment.
-> 
-> This way, the code is more safer.
-> 
-> This code was detected with the help of Coccinelle, and audited and
-> modified manually.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/160 [2]
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+On Mon, 13 May 2024 at 20:48, Kees Cook <keescook@chromium.org> wrote:
+>
+> In the future can you CC the various maintainers of the affected
+> tooling? :)
+>
+> On Mon, May 06, 2024 at 10:35:41PM +0900, Masahiro Yamada wrote:
+> >
+> > This patch set removes many instances of the following variables:
+> >
+> >   - OBJECT_FILES_NON_STANDARD
+> >   - KASAN_SANITIZE
+> >   - UBSAN_SANITIZE
+> >   - KCSAN_SANITIZE
+> >   - KMSAN_SANITIZE
+> >   - GCOV_PROFILE
+> >   - KCOV_INSTRUMENT
+> >
+> > Such tools are intended only for kernel space objects, most of which
+> > are listed in obj-y, lib-y, or obj-m.
 
-Thanks!
+I welcome the simplification, but see below.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> This is a reasonable assertion, and the changes really simplify things
+> now and into the future. Thanks for finding such a clean solution! I
+> note that it also immediately fixes the issue noticed and fixed here:
+> https://lore.kernel.org/all/20240513122754.1282833-1-roberto.sassu@huaweicloud.com/
+>
+> > The best guess is, objects in $(obj-y), $(lib-y), $(obj-m) can opt in
+> > such tools. Otherwise, not.
+> >
+> > This works in most places.
+>
+> I am worried about the use of "guess" and "most", though. :) Before, we
+> had some clear opt-out situations, and now it's more of a side-effect. I
+> think this is okay, but I'd really like to know more about your testing.
+>
+> It seems like you did build testing comparing build flags, since you
+> call out some of the explicit changes in patch 2, quoting:
+>
+> >  - include arch/mips/vdso/vdso-image.o into UBSAN, GCOV, KCOV
+> >  - include arch/sparc/vdso/vdso-image-*.o into UBSAN
+> >  - include arch/sparc/vdso/vma.o into UBSAN
+> >  - include arch/x86/entry/vdso/extable.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
+> >  - include arch/x86/entry/vdso/vdso-image-*.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
+> >  - include arch/x86/entry/vdso/vdso32-setup.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
+> >  - include arch/x86/entry/vdso/vma.o into GCOV, KCOV
+> >  - include arch/x86/um/vdso/vma.o into KASAN, GCOV, KCOV
+>
+> I would agree that these cases are all likely desirable.
+>
+> Did you find any cases where you found that instrumentation was _removed_
+> where not expected?
 
--- 
-Kees Cook
+In addition, did you boot test these kernels? While I currently don't
+recall if the vdso code caused us problems (besides the linking
+problem for non-kernel objects), anything that is opted out from
+instrumentation in arch/ code needs to be carefully tested if it
+should be opted back into instrumentation. We had many fun hours
+debugging boot hangs or other recursion issues due to instrumented
+arch code.
+
+Thanks,
+-- Marco
