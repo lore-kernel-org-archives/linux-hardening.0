@@ -1,138 +1,150 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEA9145B1C
-	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 02:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB7163C7
+	for <linux-hardening@vger.kernel.org>; Mon, 13 May 2024 03:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715569085; cv=none; b=urtUdhm3wdL8kjB5rK91CCh/ZX4buvWHBjCS6PrOo8kjD1SnNxddL26UA/ds++GPQP1sxk2eDSfznOc67nI3KsKzhNxnNNpKxkF0LQvoRPMXERcIMV1mFBo/3vDSud/kGqySiWlEYWq969boOalcbkR8N3BK66kRWWaCTvHmAC0=
+	t=1715569421; cv=none; b=dBk1ceQMR4yO+KlP/0gajCXk+oZnM8aSMO5PC6rqqwEVgt34ppbdTxXCc3eR5AEng0F5Ar5ccCf0tqArB3DV181H3MRu54lGD/l0nJoGWo4DvTJwX4JLpkpD2yH2xhqXf6r1N9LjDjc9TzBbN3ur/Acrw3Ek4CYZYPCnE1EWQ8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715569085; c=relaxed/simple;
-	bh=5/Wrwj94XGzMh/USGtQK2NQHsvhIlya9spYECq7GesU=;
+	s=arc-20240116; t=1715569421; c=relaxed/simple;
+	bh=z4NlVMZtR0r+DtTYPkbCuUFcxQnmejuMc8+xSsKlqFA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MOC/Q8kfqkrkyejMd4YRJ9wbXsxs9qxhpL2ZPY+ppABpeRnXz+Bfh1B/NP630VgKIJtJzykdqWE4qHg1KZzmLZnRdDRvWYd6HDF/TLe6yjfF8x9mnW2EJaPK+X2bEgkBxWKC+lGFMPhzBUOMPIgJO2uLPruOiMsJBy/kZENim4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cKQHOIMx; arc=none smtp.client-ip=209.85.210.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=MoP3JtckDNJATLDLRgXF7UjohmdUDr5VQDmN5sipgBuyu/om8xqrOdfGjpQfCyBXfkNlpiLaEGBQaNhFEcVuC2gAYOCNGIsE9wuSF6WyrTeJYwPvgChhz3oQIcxQXj4tLYpkWPpnq/Ma2W1CoKb8W+IRijy3kRKppVQZ+bbg53o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TaAz/ENJ; arc=none smtp.client-ip=209.85.160.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cKQHOIMx"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f457853950so3241478b3a.0
-        for <linux-hardening@vger.kernel.org>; Sun, 12 May 2024 19:58:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TaAz/ENJ"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-241572c02efso2405133fac.3
+        for <linux-hardening@vger.kernel.org>; Sun, 12 May 2024 20:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715569083; x=1716173883; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Y/lu5TaLovMBUI69zhtefvoAbFIExvkJe/gVrMPa9Rs=;
-        b=cKQHOIMxV78kC1JWKtcW80dRgdB66xbP0vf8dHiMTk2wRECFhIL+vO5Tq5bphu3oa5
-         fe2qdkchDkYkUTXPTMpn+DAmNH0SoCsezfwHGGg/tqTTzJC1wot+R1jQnIXmoZSIFxHX
-         ZKgx13sjqPUHQT1PV04bFxtlUQwIkvEsyIyRA=
+        d=chromium.org; s=google; t=1715569419; x=1716174219; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yzBJEORmly2uweAvFf1l8zuxXIyjPhUuwee5HZnj+NQ=;
+        b=TaAz/ENJRmk2nXOWjPkrKvqSHiD+1amGYqc9jImroruKtcSZhetmkp/p8WRydH4e1c
+         qRkmec0KhfxkupyvIKJR7oc0GGOjy7YTPKTkNHKaXNvjVI5gjtXPSJ8Zz+5uxdTrEOM7
+         Hr7F5R3d8A3z72lkUJnCe4iN4gYcXs0+KhOtE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715569083; x=1716173883;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/lu5TaLovMBUI69zhtefvoAbFIExvkJe/gVrMPa9Rs=;
-        b=m6VgZRcdc8G/whlMNbtLh661q3PObvZuJ19IN4MYwn+oQ6nRrZBdATRqqaLl70djAd
-         0okA8qOC9p/xPXVZVR7FYiRYtiWlcdrZ/DEi3VY5Bukf5TSVCQ/g0uOEBIaOcjh5P8hA
-         C/qVL9nZWdy72XAssET0SsxucZvC1IsOqlzUayTgfETTBHWA8Iyrs5t79TS+mh1Fdues
-         XmNWi5kAGV0marfq/n6mWLRRoBJge69gC2Cn4Bfeq6UHO3l4clE6nx50AAjsQdpSFdF7
-         zZGPo+8Mb8bu5URfD+lpKGFSR/ETeotW0tExEwALOTZ2R658Pqpzw2jTE4QM2LG04LKN
-         jWMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDnIMWT8M15RCJZJbt2+tgTNZY4KYl8vxICZbJZayV96W8gBgCrS3bCF8A/JkWb8Ysh5bIj2C5FfBq2oUtJ3t8LgW8vc/0ICVgIeCQHf+J
-X-Gm-Message-State: AOJu0YwA6SwFpyt1aO1jccXjuIchEw5ncKn1Xe8PTleo6y1gdJsPnjZ+
-	f316WPxInzQNs17bsPODhtfDgDLHvMZSpZK4AnHQhENg1jYxQ+uZ2vVyP+10+w==
-X-Google-Smtp-Source: AGHT+IEKZ/LshmwPejdGxanAmq+x/Okf3LXGs+1GNXJLM4QWlBn90rXQR1Oeyq1KkYKRq0CgAkrYow==
-X-Received: by 2002:a05:6a21:1505:b0:1ad:7e68:570c with SMTP id adf61e73a8af0-1afde07d801mr12977761637.4.1715569082704;
-        Sun, 12 May 2024 19:58:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715569419; x=1716174219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yzBJEORmly2uweAvFf1l8zuxXIyjPhUuwee5HZnj+NQ=;
+        b=ec84p0WheiP7U6krw9a5s+6rD4aBIWPjuqjFyT8/M7ivRKDTMqT1c1IC9sGAAKdIZb
+         IKipJLwRYnnIk18fq90HO8e9bR4rH4GiB8OR6tbzPD3WaAJKw/kR7esrmVbZx+oiwOtp
+         3XQg+SNoOx2tECyit/FQZT7XqqldYGuhKmO94GAfSjZvl8d42wXYEjBOXm77DN9XrQKC
+         FZ6nkHLADzOpEonDNtCxwbnsITRABI2qFD7qRVag5GnaNBpYoPNBvSMClVbN5D38rphu
+         LYjwdO6zKtY12yxKHs627u1j7ux6CXEkdMhd4fAgI9SHDNsObjlt4M5953YlgjKGXM+F
+         PDzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVy83t9UbkdB222FeKLkvrHzXz1QYTIE7MEfAcajd1L+U1QXszB+C8jL1o5S2O1y6hpn9QaEzW8BBEgTKPC5OU+CKhhQLykeHQhpBHpdvp3
+X-Gm-Message-State: AOJu0YwVgcxVb7vWT9wdcT3OVtddBWg1+QwCjL9osdCT9xn7Tu0Vj99U
+	5fzn5ToJLzyVZHxsI2D/oZvyU0urgx4wyxcPu+pHYTk0n+hmL+ACl6Im9B5heg==
+X-Google-Smtp-Source: AGHT+IGLWGypu7OaOGynSM5xuNyLMM/e8nAmPw78+sRaeDRTGamx3zP5noERhX/KkAF69EuemkT4TQ==
+X-Received: by 2002:a05:6870:b6a7:b0:23e:6d9a:8f45 with SMTP id 586e51a60fabf-24172f79503mr10911205fac.48.1715569419606;
+        Sun, 12 May 2024 20:03:39 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b2fa86sm6335827b3a.213.2024.05.12.19.58.00
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b30341sm6317982b3a.208.2024.05.12.20.03.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 May 2024 19:58:00 -0700 (PDT)
-Date: Sun, 12 May 2024 19:57:58 -0700
+        Sun, 12 May 2024 20:03:39 -0700 (PDT)
+Date: Sun, 12 May 2024 20:03:38 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <202405121955.BC922680BA@keescook>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
- <202405080959.104A73A914@keescook>
- <CGME20240511095125eucas1p1e6cd077a31c94dcdda88967d4ffc9262@eucas1p1.samsung.com>
- <8d1daa64-3746-46a3-b696-127a70cdf7e7@t-8ch.de>
- <20240512193240.kholmilosdqjb52p@joelS2.panther.com>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2] tty: rfcomm: prefer struct_size over open coded
+ arithmetic
+Message-ID: <202405121959.50F6DDA@keescook>
+References: <AS8PR02MB7237262C62B054FABD7229168BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240512193240.kholmilosdqjb52p@joelS2.panther.com>
+In-Reply-To: <AS8PR02MB7237262C62B054FABD7229168BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Sun, May 12, 2024 at 09:32:40PM +0200, Joel Granados wrote:
-> On Sat, May 11, 2024 at 11:51:18AM +0200, Thomas Weißschuh wrote:
-> > Hi Kees,
-> > 
-> > On 2024-05-08 10:11:35+0000, Kees Cook wrote:
-> > > On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
-> > > > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > > > > The series was split from my larger series sysctl-const series [0].
-> > > > > It only focusses on the proc_handlers but is an important step to be
-> > > > > able to move all static definitions of ctl_table into .rodata.
-> > > > 
-> > > > Split this per subsystem, please.
-> > > 
-> > > I've done a few painful API transitions before, and I don't think the
-> > > complexity of these changes needs a per-subsystem constification pass. I
-> > > think this series is the right approach, but that patch 11 will need
-> > > coordination with Linus. We regularly do system-wide prototype changes
-> > > like this right at the end of the merge window before -rc1 comes out.
-> > 
-> > That sounds good.
-> > 
-> > > The requirements are pretty simple: it needs to be a obvious changes
-> > > (this certainly is) and as close to 100% mechanical as possible. I think
-> > > patch 11 easily qualifies. Linus should be able to run the same Coccinelle
-> > > script and get nearly the same results, etc. And all the other changes
-> > > need to have landed. This change also has no "silent failure" conditions:
-> > > anything mismatched will immediately stand out.
-> > 
-> > Unfortunately coccinelle alone is not sufficient, as some helpers with
-> > different prototypes are called by handlers and themselves are calling
-> > handler and therefore need to change in the same commit.
-> > But if I add a diff for those on top of the coccinelle script to the
-> > changelog it should be obvious.
-> Judging by Kees' comment on "100% mechanical", it might be better just
-> having the diff and have Linus apply than rather than two step process?
-> Have not these types of PRs, so am interested in what folks think.
+On Sun, May 12, 2024 at 01:17:24PM +0200, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+> 
+> As the "dl" variable is a pointer to "struct rfcomm_dev_list_req" and
+> this structure ends in a flexible array:
+> 
+> struct rfcomm_dev_list_req {
+> 	[...]
+> 	struct   rfcomm_dev_info dev_info[];
+> };
+> 
+> the preferred way in the kernel is to use the struct_size() helper to
+> do the arithmetic instead of the calculation "size + count * size" in
+> the kzalloc() and copy_to_user() functions.
+> 
+> At the same time, prepare for the coming implementation by GCC and Clang
+> of the __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time via
+> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
+> strcpy/memcpy-family functions).
+> 
+> In this case, it is important to note that the logic needs a little
+> refactoring to ensure that the "dev_num" member is initialized before
+> the first access to the flex array. Specifically, add the assignment
+> before the list_for_each_entry() loop.
+> 
+> Also remove the "size" variable as it is no longer needed and refactor
+> the list_for_each_entry() loop to use di[n] instead of (di + n).
+> 
+> This way, the code is more readable, idiomatic and safer.
+> 
+> This code was detected with the help of Coccinelle, and audited and
+> modified manually.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
 
-I tried to soften it a little with my "*close* to 100%" modifier, and
-I think that patch basically matched that requirement, and where it had
-manual changes it was detailed in the commit log. I only split out the
-seccomp part because it could actually stand alone.
+Looks good!
 
-So yeah, let's get the last of the subsystem specific stuff landed after
--rc1, and it should be possible to finish it all up for 6.11. Yay! :)
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+> [...]
+> -		bacpy(&(di + n)->src, &dev->src);
+> -		bacpy(&(di + n)->dst, &dev->dst);
+> +		bacpy(&di[n].src, &dev->src);
+> +		bacpy(&di[n].dst, &dev->dst);
+
+Not an issue with your patch, but this helper is really pointless in the
+Bluetooth tree:
+
+static inline void bacpy(bdaddr_t *dst, const bdaddr_t *src)
+{
+        memcpy(dst, src, sizeof(bdaddr_t));
+}
+
+So the above could just be:
+
+		di[n].src = dev->src;
+		di[n].dst = dev->dst;
+
+:P
 
 -Kees
 
