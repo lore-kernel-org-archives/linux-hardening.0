@@ -1,190 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6BE57880;
-	Tue, 14 May 2024 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12CE13A271;
+	Tue, 14 May 2024 10:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715680483; cv=none; b=KHjy3/rZBkrFFGDvC6nciPA0GI+1bCRjoY5RUNebRLT+A8UnwjxDULF5bMClxvbd95WsP3uZplHMtNObRQ0IumzzKt5br7Gos9ljk1mnG6Gy9oNQaEnhzBlrvLhKSLc/ktd2z3D3q5E7O0Q8NFYSghHrvEDEUPFFp39Q54+NzBA=
+	t=1715683087; cv=none; b=B5Ek35Zrb4O2rRqT+oU14eqR02aS4KeZ95IsVAamvlDLhx1ERtXstZvY7S4De0k3/ierHvnXw4kEBpCwpGL8i1h0oNpbe/L9gE3e0Aj0Fwt5hS2vg0rFLjRq4EF958XjcdNM1b434PviUkr4E5O0Td0hYC3PD9pKIWn7FDO6xIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715680483; c=relaxed/simple;
-	bh=DhlsuRve0S/bf9PTRDFvtnsC2Bg9NA5k/tsCkw0kzBc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YIcLobuoGjRUgHySPHHsdeNZOEqke/vKYaWFuX1NYM2kaJrdmFG90xWl8guNSE7GbVuGIcx0lE3LiKZtlhM21Jbk/XGUcoQDslWZcVh8TVwEjn+eYOSE5adFq6YvNMSzhjYTkJ41ban+zwpdoLzRX0/1C9nIBgYyyB4GOep4Buk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTv9LLcT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715683087; c=relaxed/simple;
+	bh=gXV/oqhmaQ1tdC9JRFSJVqEuie1cUMVVNhKnd6xNMRQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=msJ7F9kPHzw5CKtk6+B/kE+obfnciNQ7uplxvyBry7S/P7pLCwfzSTD+rsbp7Sck1eWngvkBi28YHplXgOiIIrxVHbpj7oDPzJ5RytYKFVxGlgCvwCJhpFc6+WWi8jU6ordbT/Y+8KcfoAPuRqusO/8tsErkg3rddyu2kK6W7kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TM1nUYLK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=byghsQKk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTv9LLcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78A03C2BD10;
-	Tue, 14 May 2024 09:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715680482;
-	bh=DhlsuRve0S/bf9PTRDFvtnsC2Bg9NA5k/tsCkw0kzBc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jTv9LLcTc736u0yF7UNrsYkkDfEwr6/7O8roXeX/951T4+DYGToOqyJyCq2Vw/O/N
-	 BCXjwIsRX0UZvUhcS+mNYz/vDjM9+idKe+SrK1g0HNPBWFWgqPoJvXXGwcJrjJ5rhv
-	 jSxw2dcKwbaAcs2C/FoUuDf5AAoHilDEUMLjnVelAWfCaXht2hV7TYBUGrylIygXKx
-	 2CGs1Qc6Y0pZioC/j8lRHBTI0ORJA3yZnOqLKHP8yXjcF4euCvGIxEJ4NiYBaNp7MR
-	 eFlY7/iwoD0K8gUMIERFIAJ8Jmq/jDJk796DojbIndwI5PpGZYlBWGwMofge09rF12
-	 m5xjAqfE3hvCg==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: Kees Cook <keescook@chromium.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] ubsan: remove meaningless CONFIG_ARCH_HAS_UBSAN
-Date: Tue, 14 May 2024 18:54:26 +0900
-Message-Id: <20240514095427.541201-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TM1nUYLK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="byghsQKk"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715683084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iDStsWVDKLJBA8425Wty2TlT2DjOQySOPO1UJZBTK/s=;
+	b=TM1nUYLKS/rtDO6b+mZa35J2FOZtfg5jpN5AWCz3I8aEFExTnGThvTdTuGyZlrMPr22FYh
+	Pl8roHl3KzZ0U5Ov5TpnAehWZNnQdC7r9rWBa6pnXmzWmbzcypELEmmgSnP85LxmjJbKGQ
+	DQdOaHtl1hH7kZrQvXOaWBDCgDGiVQ9AHMVbTc7fNkamWhibDWbBBdpaXGikoxO5SD3KOb
+	Ub4QGDncE/fW/5pcT/v6HVFxfaxsdjirOvzmUc6PZ0sdB3yn70FbUo3CL1LWAMehLGcyrk
+	ablNYNXbAXWjRR1oz0muqBn/sQ9SISYJ4AVS4XNHs0yiwd67fLYWa1psHVHZlg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715683084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iDStsWVDKLJBA8425Wty2TlT2DjOQySOPO1UJZBTK/s=;
+	b=byghsQKks4BdQGcAkosA2dEhmuZsi2ivt9KDLL4SFctUS/5Linbpj3luNP7BCYw6lOVoh3
+	DGNSvwatQH4TOKCQ==
+To: Justin Stitt <justinstitt@google.com>, John Stultz <jstultz@google.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH] ntp: remove accidental integer wrap-around
+In-Reply-To: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com>
+References: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com>
+Date: Tue, 14 May 2024 12:38:03 +0200
+Message-ID: <87v83gllv8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-All architectures can enable UBSAN regardless of ARCH_HAS_UBSAN
-because there is no "depends on ARCH_HAS_UBSAN" line.
+On Tue, May 07 2024 at 04:34, Justin Stitt wrote:
+> Using syzkaller alongside the newly reintroduced signed integer overflow
+> sanitizer spits out this report:
+>
+> [  138.454979] ------------[ cut here ]------------
+> [  138.458089] UBSAN: signed-integer-overflow in ../kernel/time/ntp.c:461:16
+> [  138.462134] 9223372036854775807 + 500 cannot be represented in type 'long'
+> [  138.466234] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0-rc2-00038-gc0a509640e93-dirty #10
+> [  138.471498] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [  138.477110] Call Trace:
+> [  138.478657]  <IRQ>
+> [  138.479964]  dump_stack_lvl+0x93/0xd0
+> [  138.482276]  handle_overflow+0x171/0x1b0
+> [  138.484699]  second_overflow+0x2d6/0x500
+> [  138.487133]  accumulate_nsecs_to_secs+0x60/0x160
+> [  138.489931]  timekeeping_advance+0x1fe/0x890
+> [  138.492535]  update_wall_time+0x10/0x30
 
-Fixes: 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Same comment vs. trimming.
 
- MAINTAINERS          | 1 -
- arch/arm/Kconfig     | 1 -
- arch/arm64/Kconfig   | 1 -
- arch/mips/Kconfig    | 1 -
- arch/parisc/Kconfig  | 1 -
- arch/powerpc/Kconfig | 1 -
- arch/riscv/Kconfig   | 1 -
- arch/s390/Kconfig    | 1 -
- arch/x86/Kconfig     | 1 -
- lib/Kconfig.ubsan    | 3 ---
- 10 files changed, 12 deletions(-)
+> Historically, the signed integer overflow sanitizer did not work in the
+> kernel due to its interaction with `-fwrapv` but this has since been
+> changed [1] in the newest version of Clang. It was re-enabled in the
+> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+> sanitizer").
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ebf03f5f0619..01124115a991 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22650,7 +22650,6 @@ F:	lib/Kconfig.ubsan
- F:	lib/test_ubsan.c
- F:	lib/ubsan.c
- F:	scripts/Makefile.ubsan
--K:	\bARCH_HAS_UBSAN\b
- 
- UCLINUX (M68KNOMMU AND COLDFIRE)
- M:	Greg Ungerer <gerg@linux-m68k.org>
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b14aed3a17ab..284103a56fbb 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -30,7 +30,6 @@ config ARM
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_V7 || CPU_V7M || CPU_V6K
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_KEEP_MEMBLOCK
--	select ARCH_HAS_UBSAN
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b11c98b3e84..919f470338ed 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -107,7 +107,6 @@ config ARM64
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANTS_NO_INSTR
- 	select ARCH_WANTS_THP_SWAP if ARM64_4K_PAGES
--	select ARCH_HAS_UBSAN
- 	select ARM_AMBA
- 	select ARM_ARCH_TIMER
- 	select ARM_GIC
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 516dc7022bd7..dd974ab9b4e0 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -15,7 +15,6 @@ config MIPS
- 	select ARCH_HAS_STRNCPY_FROM_USER
- 	select ARCH_HAS_STRNLEN_USER
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
--	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_KEEP_MEMBLOCK
- 	select ARCH_USE_BUILTIN_BSWAP
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index daafeb20f993..afe348ed1202 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -13,7 +13,6 @@ config PARISC
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
--	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_NO_SG_CHAIN
- 	select ARCH_SUPPORTS_HUGETLBFS if PA20
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1c4be3373686..185a24424f47 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -154,7 +154,6 @@ config PPC
- 	select ARCH_HAS_SYSCALL_WRAPPER		if !SPU_BASE && !COMPAT
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE
--	select ARCH_HAS_UBSAN
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_KEEP_MEMBLOCK
- 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE	if PPC_RADIX_MMU
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index be09c8836d56..19ce88409c82 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -41,7 +41,6 @@ config RISCV
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
--	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_VDSO_DATA
- 	select ARCH_KEEP_MEMBLOCK if ACPI
- 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 8f01ada6845e..789a5128af9a 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -83,7 +83,6 @@ config S390
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYSCALL_WRAPPER
--	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_VDSO_DATA
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_INLINE_READ_LOCK
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4474bf32d0a4..2583d8beb3a2 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -100,7 +100,6 @@ config X86
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	select ARCH_HAS_SYSCALL_WRAPPER
--	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_DEBUG_WX
- 	select ARCH_HAS_ZONE_DMA_SET if EXPERT
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
-diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index e81e1ac4a919..0d53e085d4f2 100644
---- a/lib/Kconfig.ubsan
-+++ b/lib/Kconfig.ubsan
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--config ARCH_HAS_UBSAN
--	bool
--
- menuconfig UBSAN
- 	bool "Undefined behaviour sanity checker"
- 	help
--- 
-2.40.1
+Again. Irrelevant to the problem.
 
+> Let's introduce a new macro and use that against NTP_PHASE_LIMIT to
+> properly limit the max size of time_maxerror without overflowing during
+> the check itself.
+
+This fails to tell what is causing the issue and just talks about what
+the patch is doing. The latter can be seen from the patch itself, no?
+
+Something like this:
+
+   On second overflow time_maxerror is unconditionally incremented and
+   the result is checked against NTP_PHASE_LIMIT, but the increment can
+   overflow into negative space.
+
+   Prevent this by checking the overflow condition before incrementing.
+
+Hmm?
+
+But that obviously begs the question why this can happen at all.
+
+#define MAXPHASE 500000000L       
+#define NTP_PHASE_LIMIT ((MAXPHASE / NSEC_PER_USEC) << 5)
+
+==> NTP_PHASE_LIMIT = 1.6e+07 = 0xf42400
+
+#define MAXFREQ 500000
+
+So how can 0xf42400 + 500000/1000 overflow in the first place?
+
+It can't unless time_maxerror is somehow initialized to a bogus
+value and indeed it is:
+
+process_adjtimex_modes()
+        ....
+	if (txc->modes & ADJ_MAXERROR)
+		time_maxerror = txc->maxerror;
+
+So that wants to be fixed and not the symptom.
+
+Thanks,
+
+        tglx
