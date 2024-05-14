@@ -1,146 +1,246 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6C0101E2;
-	Tue, 14 May 2024 07:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717A61DDF6
+	for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 08:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715671939; cv=none; b=RGxIwEt/gd7Wt71XEWpQ1tiOcOcLi29Jwgm9opDzn2/Ev6aT7yhDg0kduPtuNgpea38V5x4SU+PkUjrnO/eSGyhKif6Na1MMnAp7Qx7dGh+lmStmLw7NCkxjmPvhgW773hDh0NVtBYpe5GT9OB4y7FeVvO1P84y3fVmQCxxzd2E=
+	t=1715676325; cv=none; b=BMSd7MphbTfmCX/Xj+PF9SepcWBNCoV9BwHirJckPgsKcuN3KP4Gg8vqUnvCewwMQfWAkOU6ADu6lHSaxj2P4BCmepZdXQOPo4yrC+X+6wvb3hqunItF5BUPWJed0wkkguGcuqJ9wcdCniOuNqpPiDe4Nm4CKPExWhUi3KVRmpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715671939; c=relaxed/simple;
-	bh=FPn+wnAGRWQktpQrV94x0y/Pcc2VTrrAFwhpsP2KZFA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pOdxjoOM5CIGrfUgJSFFU5FxCCjI2/DO2mdEQPt+WIoLcnjLCHwj6qO7ehLAIDiu9XVal0OogTp1scp8zOwmiSJhl1T4p/zDOAJ8ZzbdSnc4YYKsXszZ0qX5GOZP3oPYxivn+leTGgzbG58rlczjWr489iqoD9U999EK1Wu9EVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VdnYw6gCSz9v7JW;
-	Tue, 14 May 2024 15:10:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id AF418140419;
-	Tue, 14 May 2024 15:32:06 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwAXUCRnE0NmIbQfCA--.1339S2;
-	Tue, 14 May 2024 08:32:05 +0100 (CET)
-Message-ID: <0fbd907e411a10386bdef679864dd3d84f0fa3ad.camel@huaweicloud.com>
-Subject: Re: [PATCH 0/3] kbuild: remove many tool coverage variables
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Kees Cook <keescook@chromium.org>, Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
- Alexander Potapenko <glider@google.com>, Andrey Konovalov
- <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, Vincenzo
- Frascino <vincenzo.frascino@arm.com>, Marco Elver <elver@google.com>, Josh
- Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Peter Oberparleiter <oberpar@linux.ibm.com>,  Johannes Berg
- <johannes@sipsolutions.net>, kasan-dev@googlegroups.com,
- linux-hardening@vger.kernel.org
-Date: Tue, 14 May 2024 09:31:47 +0200
-In-Reply-To: <202405131136.73E766AA8@keescook>
-References: <20240506133544.2861555-1-masahiroy@kernel.org>
-	 <202405131136.73E766AA8@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1715676325; c=relaxed/simple;
+	bh=rJIazF0uPRtHdaouZBgz7iYU/9TUHu8dIhCf/WYXSRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGcu5EQpIPtl70N1ofx1Z4L0KS4xp6vRWRomUaXMSsy11JcHAXnmj9HfZOMHA5f+oxOdpgZEUKirpqKpnwu11ypP+yrCXbMTesuFbL8lqVqZZgIJ2wQd0Ct0DEakDzDRuXoH3CQwhKfdZJdr9QUGWvSgJxbSa5Kls/XIanfom1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o6wW9Zr3; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o6wW9Zr3"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59a5f81af4so1345565466b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 01:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715676322; x=1716281122; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=S5pgGNiE0yFh18inZjwCGMxdi3PkHuc9sldyTkkwOOw=;
+        b=o6wW9Zr3LSurg6H+4qb/PCdmOYq8EkMjlrUjb71Hb5UECF11nnNrxGcIwc0pXXdDZD
+         enJ3lDnswVGrxWLU60OkL8ICqIBSJqkM/wZefUD9iyfjo22OlJxbBzxng4WMSkZLAsWs
+         yS5qaLHWJ5G+cMp4ermyC0SkMwxKMv/Z3kW2ZwVckh8kjqjKb/zTfKk90fDFty4igwjt
+         FIY/RBIzW5/EfinmLbMC0TicpXjJVfniyyQK58cXKnJjcQ8fnNr6c++3XROCOOXPtpnf
+         b0RiddJ79i0WyafolGafYngkYpwIc3N+DmMW6HBbZjorwe54TPREft09QHC87XSfCYQe
+         B8aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715676322; x=1716281122;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S5pgGNiE0yFh18inZjwCGMxdi3PkHuc9sldyTkkwOOw=;
+        b=AFTvc0S09aNiGce4DdGQ0dXfFVoc9ZZmgifR43u5nEOVfIlOlZ6lsP/4JMhjUG9PeI
+         +pMLyHvs5MsxNdfCkFiNkze13s2p/rUUnPQGUW8tISqtDADHzI2W6V4+wE5L5q26sost
+         YkD6AxVuGB2KvEqxBEjo5FlG4m56OttQdR4kCRwXpl6FuZcHTVCVQw28koO5blucFObs
+         YEwBhDKWqBRJhE0yZFm52FoE9uMIYRFhfXOZqDtuf6mTc9+Wyjd2+sTQnatqOPM0B8sg
+         pvKKl+z2AiQWnlmSM2iowOX92nnIK4gXMim2bDoG0rOxIYQfuSJO722vn5KemxGmgTLJ
+         E74A==
+X-Forwarded-Encrypted: i=1; AJvYcCWOT2JVZW9xr404bsi2aw6+xGDiNbPSJkIjKj02WD50SXDt5aUuypjAf2hSRcGvU5jabxGWUGt9QDu+PNSQoF3JO65BLSvGjs6AtiO1ngce
+X-Gm-Message-State: AOJu0YyrSAFdxlOePDScy1XLbwdy8BvlvhrfQ7kRYozkMds2EVMDAEf9
+	HdXSda0L7U3PndkVE6yvsi8C4lfnmHUg6XfRvrViNxoZeIVLBangRAW3m8Hf0IQ=
+X-Google-Smtp-Source: AGHT+IG/veYk/QiA4TlT19kc88WgCw8A4K1JllN2RbIelSwgiXW/5LElmvH1TSH3Org6cXh64TlRvQ==
+X-Received: by 2002:a17:906:2b0d:b0:a59:be21:3575 with SMTP id a640c23a62f3a-a5a2d672ee4mr894591566b.51.1715676321589;
+        Tue, 14 May 2024 01:45:21 -0700 (PDT)
+Received: from localhost ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17892450sm700476866b.63.2024.05.14.01.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 01:45:20 -0700 (PDT)
+Date: Tue, 14 May 2024 10:45:19 +0200
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <0480d602-3ad7-4f8e-a480-9860d56eab30@suswa.mountain>
+References: <202404291502.612E0A10@keescook>
+ <039d54d6-8aa2-4e5b-829b-69002cff35d3@moroto.mountain>
+ <202405131203.F7B97F5E38@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwAXUCRnE0NmIbQfCA--.1339S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw18Kw1fCF15ur4UGw45ZFb_yoW5GFWfpr
-	WrJ3WqkFWY9r10yF9Ikw1IqF1Sk397uF1Ygr909rW5AF1j9r1vvrs5trs8Z34DCws2y3W0
-	yrW7XFZavr4jvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQADBF1jj51HGAAAs1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202405131203.F7B97F5E38@keescook>
 
-On Mon, 2024-05-13 at 11:48 -0700, Kees Cook wrote:
-> In the future can you CC the various maintainers of the affected
-> tooling? :)
->=20
-> On Mon, May 06, 2024 at 10:35:41PM +0900, Masahiro Yamada wrote:
-> >=20
-> > This patch set removes many instances of the following variables:
-> >=20
-> >   - OBJECT_FILES_NON_STANDARD
-> >   - KASAN_SANITIZE
-> >   - UBSAN_SANITIZE
-> >   - KCSAN_SANITIZE
-> >   - KMSAN_SANITIZE
-> >   - GCOV_PROFILE
-> >   - KCOV_INSTRUMENT
-> >=20
-> > Such tools are intended only for kernel space objects, most of which
-> > are listed in obj-y, lib-y, or obj-m.
->=20
-> This is a reasonable assertion, and the changes really simplify things
-> now and into the future. Thanks for finding such a clean solution! I
-> note that it also immediately fixes the issue noticed and fixed here:
-> https://lore.kernel.org/all/20240513122754.1282833-1-roberto.sassu@huawei=
-cloud.com/
+Snipped all the bits where you are clearly correct.
 
-Yes, this patch set fixes the issue too.
+On Mon, May 13, 2024 at 12:43:37PM -0700, Kees Cook wrote:
+> > drivers/usb/class/usbtmc.c:852 usbtmc_generic_read() warn: potential integer overflow from user 'max_transfer_size + 1'
+> >    842                   * wMaxPacketSize – 1) to avoid sending a zero-length
+> >    843                   * packet
+> >    844                   */
+> >    845                  remaining = transfer_size;
+> >    846                  if ((max_transfer_size % data->wMaxPacketSize) == 0)
+> >    847                          max_transfer_size += (data->wMaxPacketSize - 1);
+> >    848          } else {
+> >    849                  /* round down to bufsize to avoid truncated data left */
+> >    850                  if (max_transfer_size > bufsize) {
+> >    851                          max_transfer_size =
+> >    852                                  roundup(max_transfer_size + 1 - bufsize,
+> >                                                 ^^^^^^^^^^^^^^^^^^^^^
+> > This can overflow.  We should make it a rule that all size variables
+> > have to be unsigned long.  That would have made this safe on 64 bit
+> > systems.
+> > 
+> >    853                                          bufsize);
+> >    854                  }
+> >    855                  remaining = max_transfer_size;
+> 
+> Again, do we _want_ this to overflow? It looks like not. I'm not sure
+> what this code is trying to do, though. The comment doesn't seem to
+> match the code. Why isn't this just roundup(max_transfer_size, bufsize) ?
+> 
 
-Tested-by: Roberto Sassu <roberto.sassu@huawei.com>
+roundup() has an integer overflow in it.
 
-Now UBSAN complains about misaligned address, such as:
 
-[    0.150000][    T1] UBSAN: misaligned-access in kernel/workqueue.c:5514:=
-3
-[    0.150000][    T1] member access within misaligned address 0000000064c3=
-6f78 for type 'struct pool_workqueue'
-[    0.150000][    T1] which requires 512 byte alignment
-[    0.150000][    T1] CPU: 0 PID: 1 Comm: swapper Not tainted 6.9.0-dont-u=
-se-00003-g3b621c71dc5e #2244
+> > drivers/usb/misc/usbtest.c:1994 iso_alloc_urb() warn: potential integer overflow from user 'bytes + maxp'
+> >   1974  static struct urb *iso_alloc_urb(
+> >   1975          struct usb_device       *udev,
+> >   1976          int                     pipe,
+> >   1977          struct usb_endpoint_descriptor  *desc,
+> >   1978          long                    bytes,
+> >   1979          unsigned offset
+> >   1980  )
+> >   1981  {
+> >   1982          struct urb              *urb;
+> >   1983          unsigned                i, maxp, packets;
+> >   1984  
+> >   1985          if (bytes < 0 || !desc)
+> >   1986                  return NULL;
+> >   1987  
+> >   1988          maxp = usb_endpoint_maxp(desc);
+> >   1989          if (udev->speed >= USB_SPEED_SUPER)
+> >   1990                  maxp *= ss_isoc_get_packet_num(udev, pipe);
+> >   1991          else
+> >   1992                  maxp *= usb_endpoint_maxp_mult(desc);
+> >   1993  
+> >   1994          packets = DIV_ROUND_UP(bytes, maxp);
+> >                                        ^^^^^
+> > The issue here is on a 32 bit system when bytes is INT_MAX.
+> 
+> All of these examples seem to be cases that should be mitigated. The
+> earlier check should be expanded:
+> 
+> 		if (bytes < 0 || bytes >= INT_MAX || !desc)
 
-But I guess this is for a separate thread.
+This doesn't work on 32bit systems.
 
-Thanks
+> 
+> > 
+> >   1995  
+> >   1996          urb = usb_alloc_urb(packets, GFP_KERNEL);
+> >   1997          if (!urb)
+> >   1998                  return urb;
+> > 
+> > 
+> > drivers/char/ppdev.c:344 pp_set_timeout() warn: potential integer overflow from user 'tv_sec * 100'
+> >    343  static int pp_set_timeout(struct pardevice *pdev, long tv_sec, int tv_usec)
+> >    344  {
+> >    345          long to_jiffies;
+> >    346  
+> >    347          if ((tv_sec < 0) || (tv_usec < 0))
+> >    348                  return -EINVAL;
+> >    349  
+> >    350          to_jiffies = usecs_to_jiffies(tv_usec);
+> >                                               ^^^^^^^
+> > 
+> >    351          to_jiffies += tv_sec * HZ;
+> >                               ^^^^^^^^^^^
+> > Both of these can overflow
+> > 
+> >    352          if (to_jiffies <= 0)
+> >                     ^^^^^^^^^^^^^^^
+> > But they're checked here.
+> > 
+> >    353                  return -EINVAL;
+> >    354  
+> >    355          pdev->timeout = to_jiffies;
+> >    356          return 0;
+> >    357  }
+> 
+> This doesn't look like a wrapping-desired case either, but just for fun,
+> let's assume we want it.
 
-Roberto
+The original programmer assumed it would wrap so it was intentional/desired.
 
-> > The best guess is, objects in $(obj-y), $(lib-y), $(obj-m) can opt in
-> > such tools. Otherwise, not.
-> >=20
-> > This works in most places.
->=20
-> I am worried about the use of "guess" and "most", though. :) Before, we
-> had some clear opt-out situations, and now it's more of a side-effect. I
-> think this is okay, but I'd really like to know more about your testing.
->=20
-> It seems like you did build testing comparing build flags, since you
-> call out some of the explicit changes in patch 2, quoting:
->=20
-> >  - include arch/mips/vdso/vdso-image.o into UBSAN, GCOV, KCOV
-> >  - include arch/sparc/vdso/vdso-image-*.o into UBSAN
-> >  - include arch/sparc/vdso/vma.o into UBSAN
-> >  - include arch/x86/entry/vdso/extable.o into KASAN, KCSAN, UBSAN, GCOV=
-, KCOV
-> >  - include arch/x86/entry/vdso/vdso-image-*.o into KASAN, KCSAN, UBSAN,=
- GCOV, KCOV
-> >  - include arch/x86/entry/vdso/vdso32-setup.o into KASAN, KCSAN, UBSAN,=
- GCOV, KCOV
-> >  - include arch/x86/entry/vdso/vma.o into GCOV, KCOV
-> >  - include arch/x86/um/vdso/vma.o into KASAN, GCOV, KCOV
->=20
-> I would agree that these cases are all likely desirable.
->=20
-> Did you find any cases where you found that instrumentation was _removed_
-> where not expected?
->=20
-> -Kees
->=20
+> (And why are any of these signed?) Annotation
+> is added to the variables:
+> 
+> static int pp_set_timeout(struct pardevice *pdev, long __wraps tv_sec, int __wraps tv_usec)
+> {
+> 	long __wraps to_jiffies;
 
+Sure.
+
+> > drivers/i2c/i2c-dev.c:485 i2cdev_ioctl() warn: potential integer overflow from user (local copy) 'arg * 10'
+> >    478          case I2C_TIMEOUT:
+> >    479                  if (arg > INT_MAX)
+> >    480                          return -EINVAL;
+> >    481  
+> >    482                  /* For historical reasons, user-space sets the timeout
+> >    483                   * value in units of 10 ms.
+> >    484                   */
+> >    485                  client->adapter->timeout = msecs_to_jiffies(arg * 10);
+> >                                                                     ^^^^^^^^^
+> > This can overflow and then the msecs_to_jiffies() conversion also has
+> > an integer overflow in it.
+> 
+> If we want these wrapping:
+> 
+> 		unsigned long __wraps timeout = arg * 10;
+> 		client->adapter->timeout = msecs_to_jiffies(timeout);
+> 
+> and:
+> 
+> static inline unsigned long _msecs_to_jiffies(const unsigned int __wraps m)
+> 
+> 
+
+Here we don't care about wrapping, but I wouldn't go so far as to say it
+was intentional...  I guess this silences the warning.
+
+
+> > drivers/hwmon/nct6775-core.c:2265 store_temp_offset() warn: potential integer overflow from user '__x + (__d / 2)'
+> >   2251  static ssize_t
+> >   2252  store_temp_offset(struct device *dev, struct device_attribute *attr,
+> >   2253                    const char *buf, size_t count)
+> >   2254  {
+> >   2255          struct nct6775_data *data = dev_get_drvdata(dev);
+> >   2256          struct sensor_device_attribute *sattr = to_sensor_dev_attr(attr);
+> >   2257          int nr = sattr->index;
+> >   2258          long val;
+> >   2259          int err;
+> >   2260  
+> >   2261          err = kstrtol(buf, 10, &val);
+> >   2262          if (err < 0)
+> >   2263                  return err;
+> >   2264  
+> >   2265          val = clamp_val(DIV_ROUND_CLOSEST(val, 1000), -128, 127);
+> >                                                   ^^^^^^^^^^
+> > Overflow and then clamp.
+> 
+> Looks like DIV_ROUND_CLOSEST() needs to be made sane and use more modern
+> helpers (it appears to be doing open-coded is_signed(), wants
+> check_*_overflow(), etc).
+> 
+
+Sounds good.
+
+regards,
+dan carpenter
