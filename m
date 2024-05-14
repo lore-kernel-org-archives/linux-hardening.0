@@ -1,83 +1,88 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B261DFD1;
-	Tue, 14 May 2024 21:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A36181BA3;
+	Tue, 14 May 2024 21:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715720406; cv=none; b=AwSO/XJQ2lhgbNm4kIUHbLn9lL8ElPYyVtsdhROMtSGNvhq69CMkITMxTR7cEy6hVqkv+8t8IIX6/13nzCTp1pnWCJHXqR/JSUastmr6IWepsZFU+LA9gVwEXnyAvvTR7f11V40ADMRlHfOZ5nzWAREoUJkif995+tvCV/OC1xw=
+	t=1715722110; cv=none; b=mX2PLX3wUjdDbB5i7EhJaQLKKDc57/2ionjlCF+Yye4EjKAdZuPCKNzLWMCeK4LXGD7CBIHLhN2aZKJUt2aQAVw0N/aBAF2rljKcQL/gxJ0xDXmzaxLilkacVRoAYP18sbK9VSzkITwQLQgxkkU4ObTIFVjVyY05Pip5j60DjIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715720406; c=relaxed/simple;
-	bh=LzIjbm8EmhE8nz2vY1r+uwzY38OtTNn3Qux8G3lPnvs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=myO82dOphTUZdOfS4QyPOBBaP8ZUQtu0bWBqyjcYq50lyVKzNxI6BIR4cWXe5IC+e5f8NQ36xI567T2HroZZuQ385/cYFX56qiLYWtZKT3Gu1rgO8vVQmPSAbhTupLKNH/iQ23sPLaDVGSwAV7DgbnOX1zPButt+fPPGUj+249M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=p+vex417; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1715722110; c=relaxed/simple;
+	bh=v0RcfcwgjnK6DXraXfbbO0hweNJe7AtF6Td2ScAX+f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUtcLR2/oedZ+njjW3EUM2WB8doNR8TRubuNCMCYZWgUfc9AfXvF0zz1jPtVpBZcsAOVY5JSDySm2Id0SuBVOwcqiodVsbwtvUc7QXZX/IWZV8J3HCWPvbQfEAQKOLWULt0rS/wvS9IXPcDPbY2lrYNw1mJA/UJhpyzN/fqbi78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=r+ym+12D; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="p+vex417"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net E2D8847C39
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1715720398; bh=Pm5GQXvf/+T4Nt95ku2E3tncArTWJsHx/sY7VG5ZKk4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=p+vex417G255x4AnYioFbmLzZwUfVWPjslsURVv7taRXwTjPhbNIKXelbcHcM+MHc
-	 9akB/ulGNSIlMfk+xZynwa4QJTvWehWuSw/lqxXkjgsP0WkNsU+EWxPcEGce1kNczs
-	 JZr3Yz34r/86v6FF7E+cuyjKxAOirYHnxfD1jTeXW89Cq7pQ1IxE1q4TGx3bjXIvq3
-	 NcIc/t0VZrwDWBVuqDDWmj3ivv6e0wGfmQtr/1z0g8aTMuRxG+J3qIlqBKFZGSC7E5
-	 UPvCg5LKwNVTTskGHeK5DQ5Vd6oVG1O6+evGJQxmiUPcCgGjutu9qxI9sHp9ixOJlU
-	 aZTRYcQ6cJ96g==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id E2D8847C39;
-	Tue, 14 May 2024 20:59:57 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org
-Cc: keescook@chromium.org, jannh@google.com, sroettger@google.com,
- willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com,
- Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
- rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
- groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r+ym+12D"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=18MZUUawb/h4MdJ2B0MrgZRDL4PYAEDgDX9KON4i6lc=; b=r+ym+12DadmXIqEpLKf2643jfL
+	vyQHT+0RozPUfuV+RVz0aW6W8NuvhWmjpAgP7GeFcXlmaVBgCz/9eW6kfqGkGbXPF2QhtH3+J08rY
+	ydmGCoc/qzLKre6U7YSK6rkO1m/SmtV0REeYhGVbZwgPeu8a1j2M680C+hed2l2cD6g8Wy22mKPvN
+	qhPd9bzVX5ZScN/8atD34ZEXC4GDUKFEJ8jo4w73HhFLzfm3tkTBHbKpeoK8ggAgFS9bwvHEdaso9
+	nziKaHoELR3qKSgWGMgI5TNPaWcpkGJXCcX+/SZM9qtVMubjtpzZG9Dk6cyvwIbDa1uZRbflV893d
+	c/oZ/jxA==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s6zh3-00000009WDa-3cXA;
+	Tue, 14 May 2024 21:28:18 +0000
+Date: Tue, 14 May 2024 22:28:17 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org,
+	keescook@chromium.org, jannh@google.com, sroettger@google.com,
+	gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
+	usama.anjum@collabora.com, Liam.Howlett@oracle.com,
+	surenb@google.com, merimus@google.com, rdunlap@infradead.org,
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
 Subject: Re: [PATCH v10 0/5] Introduce mseal
-In-Reply-To: <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+Message-ID: <ZkPXcT_JuQeZCAv0@casper.infradead.org>
 References: <20240415163527.626541-1-jeffxu@chromium.org>
  <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
-Date: Tue, 14 May 2024 14:59:57 -0600
-Message-ID: <871q646rea.fsf@meer.lwn.net>
+ <871q646rea.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871q646rea.fsf@meer.lwn.net>
 
-Andrew Morton <akpm@linux-foundation.org> writes:
+On Tue, May 14, 2024 at 02:59:57PM -0600, Jonathan Corbet wrote:
+> Andrew Morton <akpm@linux-foundation.org> writes:
+> 
+> > On Mon, 15 Apr 2024 16:35:19 +0000 jeffxu@chromium.org wrote:
+> >
+> >> This patchset proposes a new mseal() syscall for the Linux kernel.
+> >
+> > I have not moved this into mm-stable for a 6.10 merge.  Mainly because
+> > of the total lack of Reviewed-by:s and Acked-by:s.
+> >
+> > The code appears to be stable enough for a merge.
+> >
+> > It's awkward that we're in conference this week, but I ask people to
+> > give consideration to the desirability of moving mseal() into mainline
+> > sometime over the next week, please.
+> 
+> I hate to be obnoxious, but I *was* copied ... :)
+> 
+> Not taking a position on merging, but I have to ask: are we convinced at
+> this point that mseal() isn't a chrome-only system call?  Did we ever
+> see the glibc patches that were promised?
 
-> On Mon, 15 Apr 2024 16:35:19 +0000 jeffxu@chromium.org wrote:
->
->> This patchset proposes a new mseal() syscall for the Linux kernel.
->
-> I have not moved this into mm-stable for a 6.10 merge.  Mainly because
-> of the total lack of Reviewed-by:s and Acked-by:s.
->
-> The code appears to be stable enough for a merge.
->
-> It's awkward that we're in conference this week, but I ask people to
-> give consideration to the desirability of moving mseal() into mainline
-> sometime over the next week, please.
+I think _this_ version of mseal() is OpenBSD's mimmutable() with a
+basically unused extra 'flags' argument.  As such, we have an existance
+proof that it's useful beyond Chrome.
 
-I hate to be obnoxious, but I *was* copied ... :)
-
-Not taking a position on merging, but I have to ask: are we convinced at
-this point that mseal() isn't a chrome-only system call?  Did we ever
-see the glibc patches that were promised?
-
-Thanks,
-
-jon
+I think Liam still had concerns around the
+walk-the-vmas-twice-to-error-out-early part of the implementation?
+Although we can always fix the implementation later; changing the API
+is hard.
