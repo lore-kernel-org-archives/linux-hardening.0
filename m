@@ -1,246 +1,190 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717A61DDF6
-	for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 08:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6BE57880;
+	Tue, 14 May 2024 09:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715676325; cv=none; b=BMSd7MphbTfmCX/Xj+PF9SepcWBNCoV9BwHirJckPgsKcuN3KP4Gg8vqUnvCewwMQfWAkOU6ADu6lHSaxj2P4BCmepZdXQOPo4yrC+X+6wvb3hqunItF5BUPWJed0wkkguGcuqJ9wcdCniOuNqpPiDe4Nm4CKPExWhUi3KVRmpQ=
+	t=1715680483; cv=none; b=KHjy3/rZBkrFFGDvC6nciPA0GI+1bCRjoY5RUNebRLT+A8UnwjxDULF5bMClxvbd95WsP3uZplHMtNObRQ0IumzzKt5br7Gos9ljk1mnG6Gy9oNQaEnhzBlrvLhKSLc/ktd2z3D3q5E7O0Q8NFYSghHrvEDEUPFFp39Q54+NzBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715676325; c=relaxed/simple;
-	bh=rJIazF0uPRtHdaouZBgz7iYU/9TUHu8dIhCf/WYXSRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGcu5EQpIPtl70N1ofx1Z4L0KS4xp6vRWRomUaXMSsy11JcHAXnmj9HfZOMHA5f+oxOdpgZEUKirpqKpnwu11ypP+yrCXbMTesuFbL8lqVqZZgIJ2wQd0Ct0DEakDzDRuXoH3CQwhKfdZJdr9QUGWvSgJxbSa5Kls/XIanfom1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o6wW9Zr3; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715680483; c=relaxed/simple;
+	bh=DhlsuRve0S/bf9PTRDFvtnsC2Bg9NA5k/tsCkw0kzBc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YIcLobuoGjRUgHySPHHsdeNZOEqke/vKYaWFuX1NYM2kaJrdmFG90xWl8guNSE7GbVuGIcx0lE3LiKZtlhM21Jbk/XGUcoQDslWZcVh8TVwEjn+eYOSE5adFq6YvNMSzhjYTkJ41ban+zwpdoLzRX0/1C9nIBgYyyB4GOep4Buk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTv9LLcT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o6wW9Zr3"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59a5f81af4so1345565466b.3
-        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 01:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715676322; x=1716281122; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=S5pgGNiE0yFh18inZjwCGMxdi3PkHuc9sldyTkkwOOw=;
-        b=o6wW9Zr3LSurg6H+4qb/PCdmOYq8EkMjlrUjb71Hb5UECF11nnNrxGcIwc0pXXdDZD
-         enJ3lDnswVGrxWLU60OkL8ICqIBSJqkM/wZefUD9iyfjo22OlJxbBzxng4WMSkZLAsWs
-         yS5qaLHWJ5G+cMp4ermyC0SkMwxKMv/Z3kW2ZwVckh8kjqjKb/zTfKk90fDFty4igwjt
-         FIY/RBIzW5/EfinmLbMC0TicpXjJVfniyyQK58cXKnJjcQ8fnNr6c++3XROCOOXPtpnf
-         b0RiddJ79i0WyafolGafYngkYpwIc3N+DmMW6HBbZjorwe54TPREft09QHC87XSfCYQe
-         B8aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715676322; x=1716281122;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S5pgGNiE0yFh18inZjwCGMxdi3PkHuc9sldyTkkwOOw=;
-        b=AFTvc0S09aNiGce4DdGQ0dXfFVoc9ZZmgifR43u5nEOVfIlOlZ6lsP/4JMhjUG9PeI
-         +pMLyHvs5MsxNdfCkFiNkze13s2p/rUUnPQGUW8tISqtDADHzI2W6V4+wE5L5q26sost
-         YkD6AxVuGB2KvEqxBEjo5FlG4m56OttQdR4kCRwXpl6FuZcHTVCVQw28koO5blucFObs
-         YEwBhDKWqBRJhE0yZFm52FoE9uMIYRFhfXOZqDtuf6mTc9+Wyjd2+sTQnatqOPM0B8sg
-         pvKKl+z2AiQWnlmSM2iowOX92nnIK4gXMim2bDoG0rOxIYQfuSJO722vn5KemxGmgTLJ
-         E74A==
-X-Forwarded-Encrypted: i=1; AJvYcCWOT2JVZW9xr404bsi2aw6+xGDiNbPSJkIjKj02WD50SXDt5aUuypjAf2hSRcGvU5jabxGWUGt9QDu+PNSQoF3JO65BLSvGjs6AtiO1ngce
-X-Gm-Message-State: AOJu0YyrSAFdxlOePDScy1XLbwdy8BvlvhrfQ7kRYozkMds2EVMDAEf9
-	HdXSda0L7U3PndkVE6yvsi8C4lfnmHUg6XfRvrViNxoZeIVLBangRAW3m8Hf0IQ=
-X-Google-Smtp-Source: AGHT+IG/veYk/QiA4TlT19kc88WgCw8A4K1JllN2RbIelSwgiXW/5LElmvH1TSH3Org6cXh64TlRvQ==
-X-Received: by 2002:a17:906:2b0d:b0:a59:be21:3575 with SMTP id a640c23a62f3a-a5a2d672ee4mr894591566b.51.1715676321589;
-        Tue, 14 May 2024 01:45:21 -0700 (PDT)
-Received: from localhost ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17892450sm700476866b.63.2024.05.14.01.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 01:45:20 -0700 (PDT)
-Date: Tue, 14 May 2024 10:45:19 +0200
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <0480d602-3ad7-4f8e-a480-9860d56eab30@suswa.mountain>
-References: <202404291502.612E0A10@keescook>
- <039d54d6-8aa2-4e5b-829b-69002cff35d3@moroto.mountain>
- <202405131203.F7B97F5E38@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTv9LLcT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78A03C2BD10;
+	Tue, 14 May 2024 09:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715680482;
+	bh=DhlsuRve0S/bf9PTRDFvtnsC2Bg9NA5k/tsCkw0kzBc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jTv9LLcTc736u0yF7UNrsYkkDfEwr6/7O8roXeX/951T4+DYGToOqyJyCq2Vw/O/N
+	 BCXjwIsRX0UZvUhcS+mNYz/vDjM9+idKe+SrK1g0HNPBWFWgqPoJvXXGwcJrjJ5rhv
+	 jSxw2dcKwbaAcs2C/FoUuDf5AAoHilDEUMLjnVelAWfCaXht2hV7TYBUGrylIygXKx
+	 2CGs1Qc6Y0pZioC/j8lRHBTI0ORJA3yZnOqLKHP8yXjcF4euCvGIxEJ4NiYBaNp7MR
+	 eFlY7/iwoD0K8gUMIERFIAJ8Jmq/jDJk796DojbIndwI5PpGZYlBWGwMofge09rF12
+	 m5xjAqfE3hvCg==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Kees Cook <keescook@chromium.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] ubsan: remove meaningless CONFIG_ARCH_HAS_UBSAN
+Date: Tue, 14 May 2024 18:54:26 +0900
+Message-Id: <20240514095427.541201-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202405131203.F7B97F5E38@keescook>
 
-Snipped all the bits where you are clearly correct.
+All architectures can enable UBSAN regardless of ARCH_HAS_UBSAN
+because there is no "depends on ARCH_HAS_UBSAN" line.
 
-On Mon, May 13, 2024 at 12:43:37PM -0700, Kees Cook wrote:
-> > drivers/usb/class/usbtmc.c:852 usbtmc_generic_read() warn: potential integer overflow from user 'max_transfer_size + 1'
-> >    842                   * wMaxPacketSize – 1) to avoid sending a zero-length
-> >    843                   * packet
-> >    844                   */
-> >    845                  remaining = transfer_size;
-> >    846                  if ((max_transfer_size % data->wMaxPacketSize) == 0)
-> >    847                          max_transfer_size += (data->wMaxPacketSize - 1);
-> >    848          } else {
-> >    849                  /* round down to bufsize to avoid truncated data left */
-> >    850                  if (max_transfer_size > bufsize) {
-> >    851                          max_transfer_size =
-> >    852                                  roundup(max_transfer_size + 1 - bufsize,
-> >                                                 ^^^^^^^^^^^^^^^^^^^^^
-> > This can overflow.  We should make it a rule that all size variables
-> > have to be unsigned long.  That would have made this safe on 64 bit
-> > systems.
-> > 
-> >    853                                          bufsize);
-> >    854                  }
-> >    855                  remaining = max_transfer_size;
-> 
-> Again, do we _want_ this to overflow? It looks like not. I'm not sure
-> what this code is trying to do, though. The comment doesn't seem to
-> match the code. Why isn't this just roundup(max_transfer_size, bufsize) ?
-> 
+Fixes: 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-roundup() has an integer overflow in it.
+ MAINTAINERS          | 1 -
+ arch/arm/Kconfig     | 1 -
+ arch/arm64/Kconfig   | 1 -
+ arch/mips/Kconfig    | 1 -
+ arch/parisc/Kconfig  | 1 -
+ arch/powerpc/Kconfig | 1 -
+ arch/riscv/Kconfig   | 1 -
+ arch/s390/Kconfig    | 1 -
+ arch/x86/Kconfig     | 1 -
+ lib/Kconfig.ubsan    | 3 ---
+ 10 files changed, 12 deletions(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ebf03f5f0619..01124115a991 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22650,7 +22650,6 @@ F:	lib/Kconfig.ubsan
+ F:	lib/test_ubsan.c
+ F:	lib/ubsan.c
+ F:	scripts/Makefile.ubsan
+-K:	\bARCH_HAS_UBSAN\b
+ 
+ UCLINUX (M68KNOMMU AND COLDFIRE)
+ M:	Greg Ungerer <gerg@linux-m68k.org>
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index b14aed3a17ab..284103a56fbb 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -30,7 +30,6 @@ config ARM
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_V7 || CPU_V7M || CPU_V6K
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_KEEP_MEMBLOCK
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
+ 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7b11c98b3e84..919f470338ed 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -107,7 +107,6 @@ config ARM64
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+ 	select ARCH_WANTS_NO_INSTR
+ 	select ARCH_WANTS_THP_SWAP if ARM64_4K_PAGES
+-	select ARCH_HAS_UBSAN
+ 	select ARM_AMBA
+ 	select ARM_ARCH_TIMER
+ 	select ARM_GIC
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 516dc7022bd7..dd974ab9b4e0 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -15,7 +15,6 @@ config MIPS
+ 	select ARCH_HAS_STRNCPY_FROM_USER
+ 	select ARCH_HAS_STRNLEN_USER
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_KEEP_MEMBLOCK
+ 	select ARCH_USE_BUILTIN_BSWAP
+diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+index daafeb20f993..afe348ed1202 100644
+--- a/arch/parisc/Kconfig
++++ b/arch/parisc/Kconfig
+@@ -13,7 +13,6 @@ config PARISC
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_STRICT_KERNEL_RWX
+ 	select ARCH_HAS_STRICT_MODULE_RWX
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_NO_SG_CHAIN
+ 	select ARCH_SUPPORTS_HUGETLBFS if PA20
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1c4be3373686..185a24424f47 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -154,7 +154,6 @@ config PPC
+ 	select ARCH_HAS_SYSCALL_WRAPPER		if !SPU_BASE && !COMPAT
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_KEEP_MEMBLOCK
+ 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE	if PPC_RADIX_MMU
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index be09c8836d56..19ce88409c82 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -41,7 +41,6 @@ config RISCV
+ 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
+ 	select ARCH_HAS_SYSCALL_WRAPPER
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_VDSO_DATA
+ 	select ARCH_KEEP_MEMBLOCK if ACPI
+ 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8f01ada6845e..789a5128af9a 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -83,7 +83,6 @@ config S390
+ 	select ARCH_HAS_STRICT_KERNEL_RWX
+ 	select ARCH_HAS_STRICT_MODULE_RWX
+ 	select ARCH_HAS_SYSCALL_WRAPPER
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_VDSO_DATA
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_INLINE_READ_LOCK
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4474bf32d0a4..2583d8beb3a2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -100,7 +100,6 @@ config X86
+ 	select ARCH_HAS_STRICT_MODULE_RWX
+ 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
+ 	select ARCH_HAS_SYSCALL_WRAPPER
+-	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_DEBUG_WX
+ 	select ARCH_HAS_ZONE_DMA_SET if EXPERT
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index e81e1ac4a919..0d53e085d4f2 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -1,7 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-config ARCH_HAS_UBSAN
+-	bool
+-
+ menuconfig UBSAN
+ 	bool "Undefined behaviour sanity checker"
+ 	help
+-- 
+2.40.1
 
-> > drivers/usb/misc/usbtest.c:1994 iso_alloc_urb() warn: potential integer overflow from user 'bytes + maxp'
-> >   1974  static struct urb *iso_alloc_urb(
-> >   1975          struct usb_device       *udev,
-> >   1976          int                     pipe,
-> >   1977          struct usb_endpoint_descriptor  *desc,
-> >   1978          long                    bytes,
-> >   1979          unsigned offset
-> >   1980  )
-> >   1981  {
-> >   1982          struct urb              *urb;
-> >   1983          unsigned                i, maxp, packets;
-> >   1984  
-> >   1985          if (bytes < 0 || !desc)
-> >   1986                  return NULL;
-> >   1987  
-> >   1988          maxp = usb_endpoint_maxp(desc);
-> >   1989          if (udev->speed >= USB_SPEED_SUPER)
-> >   1990                  maxp *= ss_isoc_get_packet_num(udev, pipe);
-> >   1991          else
-> >   1992                  maxp *= usb_endpoint_maxp_mult(desc);
-> >   1993  
-> >   1994          packets = DIV_ROUND_UP(bytes, maxp);
-> >                                        ^^^^^
-> > The issue here is on a 32 bit system when bytes is INT_MAX.
-> 
-> All of these examples seem to be cases that should be mitigated. The
-> earlier check should be expanded:
-> 
-> 		if (bytes < 0 || bytes >= INT_MAX || !desc)
-
-This doesn't work on 32bit systems.
-
-> 
-> > 
-> >   1995  
-> >   1996          urb = usb_alloc_urb(packets, GFP_KERNEL);
-> >   1997          if (!urb)
-> >   1998                  return urb;
-> > 
-> > 
-> > drivers/char/ppdev.c:344 pp_set_timeout() warn: potential integer overflow from user 'tv_sec * 100'
-> >    343  static int pp_set_timeout(struct pardevice *pdev, long tv_sec, int tv_usec)
-> >    344  {
-> >    345          long to_jiffies;
-> >    346  
-> >    347          if ((tv_sec < 0) || (tv_usec < 0))
-> >    348                  return -EINVAL;
-> >    349  
-> >    350          to_jiffies = usecs_to_jiffies(tv_usec);
-> >                                               ^^^^^^^
-> > 
-> >    351          to_jiffies += tv_sec * HZ;
-> >                               ^^^^^^^^^^^
-> > Both of these can overflow
-> > 
-> >    352          if (to_jiffies <= 0)
-> >                     ^^^^^^^^^^^^^^^
-> > But they're checked here.
-> > 
-> >    353                  return -EINVAL;
-> >    354  
-> >    355          pdev->timeout = to_jiffies;
-> >    356          return 0;
-> >    357  }
-> 
-> This doesn't look like a wrapping-desired case either, but just for fun,
-> let's assume we want it.
-
-The original programmer assumed it would wrap so it was intentional/desired.
-
-> (And why are any of these signed?) Annotation
-> is added to the variables:
-> 
-> static int pp_set_timeout(struct pardevice *pdev, long __wraps tv_sec, int __wraps tv_usec)
-> {
-> 	long __wraps to_jiffies;
-
-Sure.
-
-> > drivers/i2c/i2c-dev.c:485 i2cdev_ioctl() warn: potential integer overflow from user (local copy) 'arg * 10'
-> >    478          case I2C_TIMEOUT:
-> >    479                  if (arg > INT_MAX)
-> >    480                          return -EINVAL;
-> >    481  
-> >    482                  /* For historical reasons, user-space sets the timeout
-> >    483                   * value in units of 10 ms.
-> >    484                   */
-> >    485                  client->adapter->timeout = msecs_to_jiffies(arg * 10);
-> >                                                                     ^^^^^^^^^
-> > This can overflow and then the msecs_to_jiffies() conversion also has
-> > an integer overflow in it.
-> 
-> If we want these wrapping:
-> 
-> 		unsigned long __wraps timeout = arg * 10;
-> 		client->adapter->timeout = msecs_to_jiffies(timeout);
-> 
-> and:
-> 
-> static inline unsigned long _msecs_to_jiffies(const unsigned int __wraps m)
-> 
-> 
-
-Here we don't care about wrapping, but I wouldn't go so far as to say it
-was intentional...  I guess this silences the warning.
-
-
-> > drivers/hwmon/nct6775-core.c:2265 store_temp_offset() warn: potential integer overflow from user '__x + (__d / 2)'
-> >   2251  static ssize_t
-> >   2252  store_temp_offset(struct device *dev, struct device_attribute *attr,
-> >   2253                    const char *buf, size_t count)
-> >   2254  {
-> >   2255          struct nct6775_data *data = dev_get_drvdata(dev);
-> >   2256          struct sensor_device_attribute *sattr = to_sensor_dev_attr(attr);
-> >   2257          int nr = sattr->index;
-> >   2258          long val;
-> >   2259          int err;
-> >   2260  
-> >   2261          err = kstrtol(buf, 10, &val);
-> >   2262          if (err < 0)
-> >   2263                  return err;
-> >   2264  
-> >   2265          val = clamp_val(DIV_ROUND_CLOSEST(val, 1000), -128, 127);
-> >                                                   ^^^^^^^^^^
-> > Overflow and then clamp.
-> 
-> Looks like DIV_ROUND_CLOSEST() needs to be made sane and use more modern
-> helpers (it appears to be doing open-coded is_signed(), wants
-> check_*_overflow(), etc).
-> 
-
-Sounds good.
-
-regards,
-dan carpenter
