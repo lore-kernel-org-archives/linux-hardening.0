@@ -1,90 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16925181D1B;
-	Tue, 14 May 2024 23:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF1D182C93
+	for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 23:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715727717; cv=none; b=CZK69uUbFcP38izaa62SNLKkicwQbdUPQFoj2ioTWqY9NHMu7sZ0mZLkO1q3u3qTWJWsVBgqk7p6qsD2hvU4/OvkjNZlxfWNQABSoWuMnL8rlKOP4rrHM/RC42JXuBZmqsqxUt4wUpDO0LKMhNS3iGQFxGWyvqqOz3jPDXDdRic=
+	t=1715729880; cv=none; b=IhHk0FSP8TFrykei+7NHkE8TqhWXsI3vwLnw9zBKsp7hV52o0iAUpFNr4QifRe1jfdtfxj+mJ/UgfToYVLgogQjSi9j4AWUOMXneB8rPgsevZNBrsUfbRqg2btBcdqN/+iM04fVgprboqRmx1uh1rpVNOI8nAXrCaMYskqwERI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715727717; c=relaxed/simple;
-	bh=ql9IruMwPF3jx//u401rl++FzKZuu5086c7g9sy74LI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FTM37K9i7IWAEraH2xaDiSBVl0YH1qpbF4de+KvzN6H8+fUyc/5S29N1F4+3xv2r/XSk/LLdlo4dpJ0Xt4EWxSJ/bJAHt8d0jLfZ5mAQf2nXxHgY5fjrN8r5CnbtTwSmx6Y43RUNjXXOeKY07oUPozL5jVnaq7yeFfDA7eYM+sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=rffGIS+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715729880; c=relaxed/simple;
+	bh=M0ojsRsGu00hlS+3D/N7mtRoW2fXDtGb0dL7Dj9nSEI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BbGgiNcyQTBMX0kDA46Q9BNqQOBiRpVdYXKMSXC3ul4VfmvRHeNNO8brQSydqHwDElGgY/1vBSYsPyE7RFOELRwZKg3Snb2wjiHwkHMMRAqNB3NumoFJxxICeOXidOXKC1fKottEQRh9WZ6FaG7Bcent1rsDd+Gfht7kuDAOYX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XMRYHZwv; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="rffGIS+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06DAC2BD10;
-	Tue, 14 May 2024 23:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1715727716;
-	bh=ql9IruMwPF3jx//u401rl++FzKZuu5086c7g9sy74LI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rffGIS+E3mt0Fj4i8hRGK7jzBkFBu2+Ts1IckYH+2iO2fXNtNyBfKYrztj3owuT+k
-	 kqYni2rDFcl3C36xXwrddcU8GIRwb+1suRtTtsCyCLSAhH3qfBTQkP2NqqbRK7wr5S
-	 05wHzwQfae2uVTicAuWCNkfDhPt5c6OFgiLGDU/I=
-Date: Tue, 14 May 2024 16:01:50 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Theo de Raadt" <deraadt@openbsd.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
- jeffxu@chromium.org, keescook@chromium.org, jannh@google.com,
- sroettger@google.com, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com,
- Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
- rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
- groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-Message-Id: <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
-In-Reply-To: <56001.1715726927@cvs.openbsd.org>
-References: <20240415163527.626541-1-jeffxu@chromium.org>
-	<20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
-	<871q646rea.fsf@meer.lwn.net>
-	<ZkPXcT_JuQeZCAv0@casper.infradead.org>
-	<56001.1715726927@cvs.openbsd.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XMRYHZwv"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f44ed6e82fso5451014b3a.3
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 16:37:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715729878; x=1716334678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U/46gzPRjfsjywIh4JZDG9x4PubRXzjsJhZrxZRHzS8=;
+        b=XMRYHZwv1mBGvBcx6lSEfGBbDW4MMi40t3slgMuu4Pp7Wt3luR+mizh03LmcSf85ak
+         0dVF6s7MQ6VoRzzYEJCkcKS45zOkai1q9OCU4pp+2FqaeaW18bI+ZN9TjjuODgCtMWIy
+         U28Z+B7RIOrtCDbP1zF1L5ovEGmzzBPApfGLA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715729878; x=1716334678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U/46gzPRjfsjywIh4JZDG9x4PubRXzjsJhZrxZRHzS8=;
+        b=Nw/elEcVi66ph8T0vrtkyqPW0XUY89QPSatea6O+kR6zKIkZLN3CJTd8zY//ppnywa
+         quYrry9QTb9fTyuqnZMDwfIsEcrHBQhH2vRVAwh/Fv2kOnPMk+1E+YKhhYQ78X8VT4Y7
+         VbEFd35suL2yB0dZoGThny9oa5xYYq3yT3Cxx5q9izHchZ7RH6dPfWafBJbvHmkv9eEB
+         iPpVT2y7UUHYUxqX5x/LNQumTwoe5N7lyhCyP2hHLr6HiU/jyIOZvOYkZRqc7EF8KQFg
+         jSyLPAMPvWtLlbtukR9q5Gr8Hdbn+e4L3KSRBiV2y8QBRNhBfWgL4UjRuSJ0sLUH4dgv
+         suxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpX6C5dWBhVW3Ae6dzJsOuXKcajhr1MEGl2rzHwWGDRf4vBy/CVC45I3xqMc5vI0Sdk8sU/QFw1BmpblDO6Wy5q2yCqypGiyqjrp3BbDL/
+X-Gm-Message-State: AOJu0Yw/bFr27j1E49nEdLSWvpGBVm1oNDpBca1ofkGGadVda5ahc7nY
+	Lyxupin0ZpvtB36G1ExWn+sXOxqzxi4wmtEImOSWGv8JH4YnfC5/ZnKKXdtlgA==
+X-Google-Smtp-Source: AGHT+IHkWP0liojNW9LtVuhI4Z2GrRahcPNwxeY6SopHSto2NofFRMQtA1v0XzpbwKOEEaFOcB1wng==
+X-Received: by 2002:a05:6a20:9782:b0:1af:ab0b:1c08 with SMTP id adf61e73a8af0-1afde1b6f80mr14140701637.46.1715729878103;
+        Tue, 14 May 2024 16:37:58 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340b76e262sm8858679a12.35.2024.05.14.16.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 16:37:57 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ubsan: Restore dependency on ARCH_HAS_UBSAN
+Date: Tue, 14 May 2024 16:37:48 -0700
+Message-Id: <20240514233747.work.441-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1157; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=M0ojsRsGu00hlS+3D/N7mtRoW2fXDtGb0dL7Dj9nSEI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmQ/XL0cMiBAzkKwdeLzy9N0TrgLVfExeGQZ0JN
+ BHF7seFPsyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkP1ywAKCRCJcvTf3G3A
+ JgcVD/wOawyFjlRnf29/qod98RqXmvKGYR/z9gCakCBi8CxR4/Svp5cc0T+1pQzJxoBBpejCMg0
+ pxH/ab2G44oXnSULaNGapGZ9ntp42d7DnWiaGdghDJs4jq3mBvhU0185EFH6k8FjNeio8qOlkzv
+ LB+qmxeol6rTzNUICQEJtpC7MjGXDrI/JUqDk1fZv6ff4wyQo98trBnhME4QDzoTGzodcr85+MK
+ seSwVJg6ecBebIIFhz3DVVzIJnNxeMxEnZpTEssJLlImhYpeycEbBFSR2zDyTvse/FGdwy0pUFK
+ QM4cI+mh8yFa/+zN3C68no7tg2X4sBU9dMnRmQbj9mASW8Sb0QSnWVxY3v+5RlMTtESHi/17hNW
+ rrv7je0gK4u7WSLM2ayMhcVuGBo6QNx23Jl4PnB/3ONTkgDdcPszSp0ZPMC+ZxifMJF1myji/kE
+ JhrrIhEKljsD6Di1P0ATy6w3ZgKnqu0lFKIGkOetXWIFTOYefwC1q4MH7b3xDklAqAlIsBvEaR7
+ 1aQCDkbTy/0YQCvK0n2IUMBrFXZR3VYLlbk9MzllZAeApJm3Hv9Kw1O7MDrj9bViSqrlzXNA2H7
+ OBDGcCh6D4DMvDBgFJO4rmlnrgsvq0AgWoOTzGdS8A0pH9fGFC06u3z1Jj9A2K/lntAbCWi1qKp
+ 9P8N+ld MNH39rig==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, 14 May 2024 16:48:47 -0600 "Theo de Raadt" <deraadt@openbsd.org> wrote:
+While removing CONFIG_UBSAN_SANITIZE_ALL, ARCH_HAS_UBSAN wasn't correctly
+depended on. Restore this, as we do not want to attempt UBSAN builds
+unless it's actually been tested on a given architecture.
 
-> Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > > Not taking a position on merging, but I have to ask: are we convinced at
-> > > this point that mseal() isn't a chrome-only system call?  Did we ever
-> > > see the glibc patches that were promised?
-> > 
-> > I think _this_ version of mseal() is OpenBSD's mimmutable() with a
-> > basically unused extra 'flags' argument.  As such, we have an existance
-> > proof that it's useful beyond Chrome.
-> 
-> Yes, it is close enough.
-> 
-> > I think Liam still had concerns around the
-> > walk-the-vmas-twice-to-error-out-early part of the implementation?
-> > Although we can always fix the implementation later; changing the API
-> > is hard.
-> 
-> Yes I am a bit worried about the point Liam brings up -- we've discussed
-> it privately at length.  Matthew, to keep it short I have a different
-> viewpoint:
-> 
-> Some of the Linux m* system calls have non-conforming, partial-work-then-return-error
-> behaviour.  I cannot find anything like this in any system call in any other
-> operating system, and I believe there is a defacto rule against doing this, and
-> Linux has an optimization which violating this, and I think it could be fixed
-> with fairly minor expense, and can't imagine it affecting a single application.
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Closes: https://lore.kernel.org/all/20240514095427.541201-1-masahiroy@kernel.org
+Fixes: 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Marco Elver <elver@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: kasan-dev@googlegroups.com
+Cc: linux-hardening@vger.kernel.org
+---
+ lib/Kconfig.ubsan | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks.
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index e81e1ac4a919..bdda600f8dfb 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN
+ 
+ menuconfig UBSAN
+ 	bool "Undefined behaviour sanity checker"
++	depends on ARCH_HAS_UBSAN
+ 	help
+ 	  This option enables the Undefined Behaviour sanity checker.
+ 	  Compile-time instrumentation is used to detect various undefined
+-- 
+2.34.1
 
-> I worry that the non-atomicity will one day be used by an attacker.
-
-How might an attacker exploit this?
