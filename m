@@ -1,107 +1,72 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C02E3FBA7
-	for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 06:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6183A5661;
+	Wed, 15 May 2024 07:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715755134; cv=none; b=nVM8/GhralGaozkrQI1L6mjTz/9YxdzST7bjvdIjDAgckNyLnONuEI1JRbm+DJKDKnEyxziYreyjPnuuYBqZNxLVWYIGGVdKvzYVjDE9dBMFnt1U72lJkOPEjd48lo+4P1jA9Ytuo3/V/nJaAiZsPJc+qzd4t07zm77X0U1UFMY=
+	t=1715758605; cv=none; b=FkRwCaJ85ygQfKeDoQz+BnLG6C6/slZNsROLNQjBo0UszZ+HH9HE9WXl1VvuPgGU72gfHWoeuI6nYi2PDs45x01reXabfNjT3v43HnIPnuZtxNSpC+rhruExVbZXFZai3kvCf676dGWwoXK/9bcn/sga/JgT+h4M1zqd0fdlLrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715755134; c=relaxed/simple;
-	bh=/91xzwAz9XhKkTyx5CbnWsRTqhWtMw8FNJq7CLNA+4k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s3wvQsqwNOBsvx8jj/H9b0BF6yCVIIgafADxBDBHsVrEkzb44ZXswF6suWYgwWRD8k/PwNif7gPKkDHSST2WdknxlbTXqsp5tePxK2kaODi/Mz499gNi+gfJN8AdD5Zt5Y24ja9nvFapb2eE00zniQ5hdobbpeq2NLhifV/sifk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d15GYD9R; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715758605; c=relaxed/simple;
+	bh=CefRu0Bn3G1FBcGR9MMrJgXqv9Ap5Ha9Zc0YkoqMsUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iIVV5eC4yP8OTzeN4ObsPPq18Fkuagi71vIv/o9YTZm1VnpkIG2GYMZ+Uj3dxlAr5bD7aY5h05C1BU+meEPkKJ5BzJbTIuJdlCMrC35RzCdIMcJGk/weFWXoJCazz63MvK35KlX93o3wKET1I6eGff3wnAYa/KBZPT3m5kwKzaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bkD/YtNE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d15GYD9R"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4df4016b3c9so2206453e0c.1
-        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 23:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715755132; x=1716359932; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vVNSHkVmQ2QEQ7lf4BbvPSzpubRsxHLfx4PuD65Mr2w=;
-        b=d15GYD9RRquwJ290ZkQd1/Gg9ImS/XORhQbxNp6SA3G6yagwZVAW8lBenRo1DMpx//
-         zgs5vJ0ZLAMcOu1Yi/EQiIYEOvEt5i+Lbj5Y/FjyBFWeMHL0Td8wF4yh2ncUQdU0w+4F
-         Eh9R8/aiBc8gHAaEyfbXDzg6whTUr4t5qoTjVWhIpxko/QE1OTmv8U0WZ+vJAo1Ysmf6
-         SG2FQPXB0/5KQJzcU/4CyHRVLpWxPIaMAbIAig8nZ5xSDFacqamiHbQH0SC7mN8Ag/Ip
-         wYvVIQ6Jm7oGtL5Z7igwuw0gjSSLx3aL0IIccqgajw7T2umeQqmUIISbY5sEVs4XNpDZ
-         f4ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715755132; x=1716359932;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vVNSHkVmQ2QEQ7lf4BbvPSzpubRsxHLfx4PuD65Mr2w=;
-        b=c0YuGotzqQFPnKHCcX1shtNeV3KlXyvim4NXECjftYorcP10xsEdFLAbmW/lc+6cHP
-         UdpRzYKLZtGvXEamVZqmgYSj1WVRtlaTO9HcEZfNKTGbOS7kTuENJRSVrvk/43bwJ3+Z
-         de4wG/8UVpIiXBDpHbueRzPYGpahH6GtV61bv32p1IeB2MgvhfeWMAlK6V1XZz/roY4c
-         2aslt8/NeBtRgJxhBb0HG2CXp1BnGZyp5IWrBx3Er3RGIl65xugsaEwHLbcgLd2zDk2M
-         gYD9qbO9cE5100Z9rKZoMQpi1a4ztXrJ534ZCEEfnfD+9kigjoHqfP4CPxF8Lcy0VR1Q
-         O4kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUElF27Tgrm/aQ885eBHMBdj/+LKRgxjVA+wy7EFjvX99AWyxEfYRxBQTFf2ZhBcfpHZkOSmERIzzNJfRxPOWaeeiJ6mi5sjaRDxyGD8pmE
-X-Gm-Message-State: AOJu0Yz/Dc12zDY/wfsU5vqRJ+Ael8XpW27ckj/rCh7jATXQ8sQmZiCO
-	/L8ijqJieyKl5Pdv5pfuifL9CPoT6d6+jxyZvBcGei/+nJwnjVB0vs6ecmO6wiBVyzcjjd5bgBZ
-	QcCfGtjhRiQgXQidV9IGbIBWLy+jPjpBo/Q1g
-X-Google-Smtp-Source: AGHT+IHr4wm/sYb1pP/OT+0B+sF0lgunYepCEA+ITnor8B7krDEe5caV2Crh9QZWDnDZn/Yo7donssWP2m/DPvJo4P4=
-X-Received: by 2002:a05:6122:4698:b0:4df:315a:adab with SMTP id
- 71dfb90a1353d-4df882c2956mr13577261e0c.5.1715755131816; Tue, 14 May 2024
- 23:38:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bkD/YtNE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CefRu0Bn3G1FBcGR9MMrJgXqv9Ap5Ha9Zc0YkoqMsUE=; b=bkD/YtNEYdQRG1Ym54cU6b+Wk3
+	/00CQhXbI8+/nXZM83gY+riXCUgBmyDhIRyNKzRo+pGuy5mJjHjgZ8nmq5m4esoVj6oibp+HAgZU4
+	RTQgb6RNZJYr23Xh6UM7uMCw2eb4tmIoDZD2BC7Iz0pp/Y8WHniefEv2fUXMoH7WiPznGz57Yx/Vh
+	W1vANy6uaWgMgYY5oOXBJyFifXNk7psgYoqk4eLIqeLRyk+d56sxx2VRkG15Q3CNW/K9ScsbYB5R4
+	k6BtyRFCM9vpJ7/2SzG+K6Apa3qka+PpztVrh2LCYxfU1dLgmJzbjbhl5Vkl1ZTaAeSuck/TdzmW/
+	qkk8MwhQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s79Bl-0000000A3Wl-0dEO;
+	Wed, 15 May 2024 07:36:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7178730068B; Wed, 15 May 2024 09:36:36 +0200 (CEST)
+Date: Wed, 15 May 2024 09:36:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <20240515073636.GY40213@noisy.programming.kicks-ass.net>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514233747.work.441-kees@kernel.org>
-In-Reply-To: <20240514233747.work.441-kees@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 15 May 2024 08:38:15 +0200
-Message-ID: <CANpmjNMmNvW41j8RfqZr8asW5BeRXLFkmW_MTO_DX=xEtQNgFg@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: Restore dependency on ARCH_HAS_UBSAN
-To: Kees Cook <keescook@chromium.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
 
-On Wed, 15 May 2024 at 01:38, Kees Cook <keescook@chromium.org> wrote:
->
-> While removing CONFIG_UBSAN_SANITIZE_ALL, ARCH_HAS_UBSAN wasn't correctly
-> depended on. Restore this, as we do not want to attempt UBSAN builds
-> unless it's actually been tested on a given architecture.
->
-> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-> Closes: https://lore.kernel.org/all/20240514095427.541201-1-masahiroy@kernel.org
-> Fixes: 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Wed, May 08, 2024 at 04:47:25PM -0700, Linus Torvalds wrote:
+> For example, the most common case of overflow we've ever had has very
+> much been array indexing. Now, sometimes that has actually been actual
+> undefined behavior, because it's been overflow in signed variables,
+> and those are "easy" to find in the sense that you just say "no, can't
+> do that". UBSAN finds them, and that's good.
 
-Reviewed-by: Marco Elver <elver@google.com>
+We build with -fno-strict-overflow, which implies -fwrapv, which removes
+the UB from signed overflow by mandating 2s complement.
 
-> ---
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-hardening@vger.kernel.org
-> ---
->  lib/Kconfig.ubsan | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index e81e1ac4a919..bdda600f8dfb 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN
->
->  menuconfig UBSAN
->         bool "Undefined behaviour sanity checker"
-> +       depends on ARCH_HAS_UBSAN
->         help
->           This option enables the Undefined Behaviour sanity checker.
->           Compile-time instrumentation is used to detect various undefined
-> --
-> 2.34.1
->
+With the exception of an UBSAN bug prior to GCC-8, UBSAN will not, and
+should not, warn about signed overflow when using either of these flags.
