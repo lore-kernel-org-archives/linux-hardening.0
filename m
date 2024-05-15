@@ -1,61 +1,61 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCD53A1DC
-	for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 03:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ECB39ACD
+	for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 04:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715744260; cv=none; b=mqf2nizCHUWxqZEj2o8RzXEJDVPK6NjTE4+57Oj737NQ6vIJmYBQu8Tv6GVsKO2zBk2d/GGN6NB5O0DxCc2PFtAZfxH3Kej5zBafsTgkEs8FRXHKAPW777Qv4f4g/uYq2SVLxx+wkkNLzbzjia+h4Zj12t3O0n54YqRjmzZuUe4=
+	t=1715746519; cv=none; b=u/wUd7Umty9XgGYOyalvZVidwxoVcwcdUcoND9bCu7e9AZiGmUyrkHnytus1DpYSZ9OsX7OKhLycTuysHGKEs/2Q/VvzYSRlymABEl3D/lLSPHb877NNvyeLZWzwxcwpxWbXPN2y7hvbJKwVesRWM/l7b4IN7o04FZi6oxLe+dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715744260; c=relaxed/simple;
-	bh=EfdUCHrSrcD/J7rjef0Mhq6ZfzJmqLp0Wf8LNr0IwnM=;
+	s=arc-20240116; t=1715746519; c=relaxed/simple;
+	bh=XhCwhjcGydXDxiHtSK4BdYzcSeAyPu3k1yt7vJg0K8E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ItT1d5NQrvx02LOO4jkg6tChSbo68xKNj8N5Yh3Bm6obq99hAnxiyqrbdSAzUHCfDmre3amVuNiI1zBv5WX4J7BVlphwK1t+LQ1jQnVyItmRsik/ZFzStrKbbA6B1FZjTkQjUysR8dmyiEhHLM7k8ywFxHa8sYnHS7Ku/WWK1cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JsiG+J/k; arc=none smtp.client-ip=209.85.208.44
+	 To:Cc:Content-Type; b=ANiclDXTHZJlOQMH77x6AJpZlSX41OOoJnmxJYsDSF567YI8w1f+M9+/dgoBXzxKFAOUmcQIbMxRpgEy6icLhSXmqvpsZXmyBMKefOuJ45zD7E/dfD6YxrD74Yg9ysxk0XxGb3J6TKUuFwNC6rt/mC+lmeEpYD8J/uhauS35U2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gB0xY7QI; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JsiG+J/k"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-572b37afd73so1202723a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 20:37:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gB0xY7QI"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-572669fd9f9so1218662a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 21:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715744257; x=1716349057; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1715746515; x=1716351315; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=s05R5WbZKAqPwH8O5MN7TtiDlbeN3dQ+l+K+4TPNREM=;
-        b=JsiG+J/kf22f5zkxidK5TpgfcunJFqC5a6wiNNnddL4roi9jihdVBp/+fjuGHJwgki
-         taO6TSOS6OOJq1RiyxrV0AcTgICQE51VwzJD6c0i4J/XPgqL1diNh6E1IuCs1qwzyqi/
-         wVyO3lkQty9/sPExlHPga8VQPMuh4JTQHRmyY=
+        bh=r4cKs65r0Vn5NjWdK37SwLqUt+S38IkvifOxEI5Gn60=;
+        b=gB0xY7QI13SoovoQAIXfvmPOWNIqYfa3mhpEITLW7Ppc0SzChw2CsYybNFspDIAZOX
+         E3R40hQ7HiC14EhwO4F3DEcO4Muf6zDSQg8R1vZwSfj4basLhU69CAbVnOwU6kgbkXAI
+         JKjMmRBJaSLmOk8H2jTszjAsDKosxwidkukoo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715744257; x=1716349057;
+        d=1e100.net; s=20230601; t=1715746515; x=1716351315;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=s05R5WbZKAqPwH8O5MN7TtiDlbeN3dQ+l+K+4TPNREM=;
-        b=pn9TT4gqMkYan3EBSPxDx5lSev1/jsrGJuKowhy8pw6RC4PgaQbIBocuL+0tJTELaI
-         bfyEZ+WSQ6dn9GUDHiSdncem951yHRghQi2oC7h3ZKQY5YV5m1mUWzWEGklsV1FOkEBS
-         cRdJ2iG3ja6Pw/sYhfXZc3ULs3xZoPwlO1D8aDF9tF6eItac317YB3nhkRTrqvuqqs6j
-         7T7wMoOBDmme5STHyfauvSxL9fjPAwO6s5IvOQ+sQkKMvmUs64vNiTvPX6WsBm8DRLe1
-         zPscYsPpoKZ/zhKp1RdZ95EwyNm62CdhUw+IGo2Czr/WNCj+Ucg+CJqm7ImP9UTibU16
-         562w==
-X-Forwarded-Encrypted: i=1; AJvYcCX1MtQUeGZoGyR6V2XKHI38o8hpTy9tdftXsTG86ISB2TjzVo0jhxRbivFrOJHSE73bA2UWGhaHNKEVTpSpU2nHqD+9QDWj3/vPRBo+tec3
-X-Gm-Message-State: AOJu0YyOoMWpDF/MwGpMSNQSdfqgSzvn4MW5r+51hPk6CKLNd6UGpI0B
-	boQn4Q62PDb3HvJvcjvUWGREo3D+8H1bcbJ7Nagxrw/ehOR3hvXJK9BIaQ5WyVmWUBgd7Swwtno
-	QyzD95Q==
-X-Google-Smtp-Source: AGHT+IGB2eW3r/mJbVrN/kLhqOwpi0SNK/qQG+m6rh6GxZu10zVxMSnAML8IArpvS4+O7orUe0RMXA==
-X-Received: by 2002:a17:906:179b:b0:a59:c7d9:9d37 with SMTP id a640c23a62f3a-a5a2d585cfamr867139566b.29.1715744257105;
-        Tue, 14 May 2024 20:37:37 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7fdasm793604566b.128.2024.05.14.20.37.36
+        bh=r4cKs65r0Vn5NjWdK37SwLqUt+S38IkvifOxEI5Gn60=;
+        b=QAxGFTMYAg7naedWabDa5NqZrVQHP4zCtvTNdshiI8ydp8IHu4qtL/pWNqhpbKIUwv
+         nhBQbFSoWO43OGY5ewydqVbGeefc488q3m086NrPVeABCUlMcdVrBK52NYj3MrY12FIH
+         YQbArEZSKJABbedeWf7aQreFWpl7JEv7m7S+aT+jNsJjTShGDz4dedIh6xHpfcBXxOLY
+         AkDmodsAmQJHxneAsH7krNmUwRAHbFvOWjCbYH43nM3Hu9OEHxM0yUhwlUV68MTUzQvU
+         97TrH/HUDS6B1pPUJSZRO4RGqhyGfiI8oT0dZht63xFMEYTf0dLc2ZK7XZGO44WsNs4n
+         230A==
+X-Forwarded-Encrypted: i=1; AJvYcCVwzLxu/hPI+eSnulc9McU369QQ5E+BtsGAavaLWRbw+vyUmDTeAkVv9CAGZsgK1X2pYIiUJ8ei01EhmNbGbCcwtxmpZrmI8OwGZqcKG3Os
+X-Gm-Message-State: AOJu0Yw8J1Qf2nFbHvrXGij1AwJhrMfwt/szHUujzQEI5u4HMuAMU3uu
+	Ap4P0OlJFap3kDhcrwpAF4msHr8h6wZmu4OkYk8Sm/xtazy2LSzfl9d6/uBa4TWdBfrE7GJAvWA
+	5d92m7g==
+X-Google-Smtp-Source: AGHT+IFPVFzqIH5fVhZzN5IOVjRPI8agFtRaupudpnNVxojgc7NkAVw2IfbjMOAJ+rSwgKRD5E65ag==
+X-Received: by 2002:a50:8a95:0:b0:566:2f24:b063 with SMTP id 4fb4d7f45d1cf-5734d5e4ba9mr10601079a12.23.1715746515555;
+        Tue, 14 May 2024 21:15:15 -0700 (PDT)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bebb56fsm8326242a12.33.2024.05.14.21.15.15
         for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 20:37:36 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-572e8028e0cso929140a12.3
-        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 20:37:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXspHnbx6YuPdUTbdqrxEm/9aQ+AuTc4WOu647CAgDbOqB/L7zexwP7HeQqWHwpUMXCnthG/Nz/1Ws00SXnNBHWS3+4B4FfTrqMBOdtsPUk
-X-Received: by 2002:a17:906:3d6:b0:a5a:7ce8:f52c with SMTP id
- a640c23a62f3a-a5a7ce8f6e1mr298659166b.16.1715744236120; Tue, 14 May 2024
- 20:37:16 -0700 (PDT)
+        Tue, 14 May 2024 21:15:15 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41fe54cb0e3so39814035e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 21:15:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUo+PPYLZFNXFu6dRN0mYafB4gPbTrbE/zw+hE8J1zoiZVNPbBUdWTfTnY56ppzz/aKV5zKCyvOx3+R5vFbu9Ov0kN8Z+c2AFHnvl2ZQRWW
+X-Received: by 2002:a17:906:dac3:b0:a59:b6a8:4d74 with SMTP id
+ a640c23a62f3a-a5a2d3bebeemr1157374666b.0.1715746493951; Tue, 14 May 2024
+ 21:14:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,12 +65,12 @@ MIME-Version: 1.0
 References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
  <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org>
  <56001.1715726927@cvs.openbsd.org> <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
- <92453.1715730450@cvs.openbsd.org> <20240515025811.GA1232@1wt.eu>
-In-Reply-To: <20240515025811.GA1232@1wt.eu>
+ <92453.1715730450@cvs.openbsd.org> <20240515025811.GA1232@1wt.eu> <CAHk-=wiW4V5HRQ5Jm_MnSMVTeivS_4kdm1dnc08d03UKzmyp+A@mail.gmail.com>
+In-Reply-To: <CAHk-=wiW4V5HRQ5Jm_MnSMVTeivS_4kdm1dnc08d03UKzmyp+A@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 14 May 2024 20:36:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiW4V5HRQ5Jm_MnSMVTeivS_4kdm1dnc08d03UKzmyp+A@mail.gmail.com>
-Message-ID: <CAHk-=wiW4V5HRQ5Jm_MnSMVTeivS_4kdm1dnc08d03UKzmyp+A@mail.gmail.com>
+Date: Tue, 14 May 2024 21:14:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh_GHCwCiC-ZR=idjNEb0xZq20=fQnQxnjGkiq-ba5DLg@mail.gmail.com>
+Message-ID: <CAHk-=wh_GHCwCiC-ZR=idjNEb0xZq20=fQnQxnjGkiq-ba5DLg@mail.gmail.com>
 Subject: Re: [PATCH v10 0/5] Introduce mseal
 To: Willy Tarreau <w@1wt.eu>
 Cc: Theo de Raadt <deraadt@openbsd.org>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -84,23 +84,25 @@ Cc: Theo de Raadt <deraadt@openbsd.org>, Andrew Morton <akpm@linux-foundation.or
 	dave.hansen@intel.com, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 14 May 2024 at 20:13, Willy Tarreau <w@1wt.eu> wrote:
+On Tue, 14 May 2024 at 20:36, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Wouldn't it be more effective to have a non-resettable prctl() allowing
-> the application to prefer to be killed upon such an munmap() failure in
-> order to stay consistent and more robust against such class of attacks?
+> Guys, if you let untrusted code execute random system calls, the whole
+> "look, now unmap() acts oddly" IS THE LEAST OF YOUR ISSUES.
 
-This whole argument is based on a castle of sand, and some notion that
-this is a problem in the first place.
+Side note: it doesn't even help to make things "atomic". munmap() acts
+oddly whether it fals completely or whether it fails partially, and if
+the user doesn't check the result, neither case is great.
 
-Guys, if you let untrusted code execute random system calls, the whole
-"look, now unmap() acts oddly" IS THE LEAST OF YOUR ISSUES.
+If you want to have some "hardened mseal()", you make any attempt to
+change a mseal'ed memory area be a fatal error. The whole "atomic or
+not" is a complete red herring.
 
-This whole "problem" is made-up. It's not real. Theo is literally
-upset about something that Linux has done forever, and that has never
-been an issue.
+I'd certainly be ok with that. If the point of mseal is "you can't
+change this mapping", then anybody who tries to change it is obviously
+untrustworthy, and killing the whole thing sounds perfectly sane to
+me.
 
-Stop inventing make-believe problems - there are enough *real* bugs
-people can look at that you really don't need to.
+Maybe that's a first valid use-case for the flags argument.
 
-                 Linus
+            Linus
