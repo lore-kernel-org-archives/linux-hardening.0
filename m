@@ -1,115 +1,107 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 380603A29F;
-	Wed, 15 May 2024 06:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C02E3FBA7
+	for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 06:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715753747; cv=none; b=AHChM/1PtCg5l9qnt4eMUfqf3ysXBSycmF63MRrLiB9j7YdbjeMfjFVVExR+8nNEAzvZgkfvRjFU0qqp2wWRn7qQQkdDwwsmRY7F34ROzvinvOwxk8hsNdWxjUAKmNDvps1nQYRiAsStxP+yex0vj1haH/g4DQc/v2aMFE5FMxY=
+	t=1715755134; cv=none; b=nVM8/GhralGaozkrQI1L6mjTz/9YxdzST7bjvdIjDAgckNyLnONuEI1JRbm+DJKDKnEyxziYreyjPnuuYBqZNxLVWYIGGVdKvzYVjDE9dBMFnt1U72lJkOPEjd48lo+4P1jA9Ytuo3/V/nJaAiZsPJc+qzd4t07zm77X0U1UFMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715753747; c=relaxed/simple;
-	bh=5pN0Bv3ggxcBHrTLeGSKhEB6L3Vo7V64rQH/kwktpaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJGpv7IBpyTPRgpXlw8guNJUpl37FnGFOUUAyMZ4FMiPpywDwOMQxqetrstGXjaW72dujYwse+0bNZWOrYvDlgmqoqneq/u1a3tOEjJrXV1qrVnCDYs7qfLPukJcWAcQugz20NU77pFPRVy7q1yEFcxQ8QrOminjUZEkLXtiYGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 44F6EquX027885;
-	Wed, 15 May 2024 08:14:52 +0200
-Date: Wed, 15 May 2024 08:14:52 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Theo de Raadt <deraadt@openbsd.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-        jeffxu@chromium.org, keescook@chromium.org, jannh@google.com,
-        sroettger@google.com, gregkh@linuxfoundation.org,
-        usama.anjum@collabora.com, Liam.Howlett@oracle.com, surenb@google.com,
-        merimus@google.com, rdunlap@infradead.org, jeffxu@google.com,
-        jorgelo@chromium.org, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-Message-ID: <ZkRS3DJQWgUnEBKo@1wt.eu>
-References: <20240415163527.626541-1-jeffxu@chromium.org>
- <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
- <871q646rea.fsf@meer.lwn.net>
- <ZkPXcT_JuQeZCAv0@casper.infradead.org>
- <56001.1715726927@cvs.openbsd.org>
- <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
- <92453.1715730450@cvs.openbsd.org>
- <20240515025811.GA1232@1wt.eu>
- <CAHk-=wiW4V5HRQ5Jm_MnSMVTeivS_4kdm1dnc08d03UKzmyp+A@mail.gmail.com>
- <CAHk-=wh_GHCwCiC-ZR=idjNEb0xZq20=fQnQxnjGkiq-ba5DLg@mail.gmail.com>
+	s=arc-20240116; t=1715755134; c=relaxed/simple;
+	bh=/91xzwAz9XhKkTyx5CbnWsRTqhWtMw8FNJq7CLNA+4k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s3wvQsqwNOBsvx8jj/H9b0BF6yCVIIgafADxBDBHsVrEkzb44ZXswF6suWYgwWRD8k/PwNif7gPKkDHSST2WdknxlbTXqsp5tePxK2kaODi/Mz499gNi+gfJN8AdD5Zt5Y24ja9nvFapb2eE00zniQ5hdobbpeq2NLhifV/sifk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d15GYD9R; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d15GYD9R"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4df4016b3c9so2206453e0c.1
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 23:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715755132; x=1716359932; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vVNSHkVmQ2QEQ7lf4BbvPSzpubRsxHLfx4PuD65Mr2w=;
+        b=d15GYD9RRquwJ290ZkQd1/Gg9ImS/XORhQbxNp6SA3G6yagwZVAW8lBenRo1DMpx//
+         zgs5vJ0ZLAMcOu1Yi/EQiIYEOvEt5i+Lbj5Y/FjyBFWeMHL0Td8wF4yh2ncUQdU0w+4F
+         Eh9R8/aiBc8gHAaEyfbXDzg6whTUr4t5qoTjVWhIpxko/QE1OTmv8U0WZ+vJAo1Ysmf6
+         SG2FQPXB0/5KQJzcU/4CyHRVLpWxPIaMAbIAig8nZ5xSDFacqamiHbQH0SC7mN8Ag/Ip
+         wYvVIQ6Jm7oGtL5Z7igwuw0gjSSLx3aL0IIccqgajw7T2umeQqmUIISbY5sEVs4XNpDZ
+         f4ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715755132; x=1716359932;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vVNSHkVmQ2QEQ7lf4BbvPSzpubRsxHLfx4PuD65Mr2w=;
+        b=c0YuGotzqQFPnKHCcX1shtNeV3KlXyvim4NXECjftYorcP10xsEdFLAbmW/lc+6cHP
+         UdpRzYKLZtGvXEamVZqmgYSj1WVRtlaTO9HcEZfNKTGbOS7kTuENJRSVrvk/43bwJ3+Z
+         de4wG/8UVpIiXBDpHbueRzPYGpahH6GtV61bv32p1IeB2MgvhfeWMAlK6V1XZz/roY4c
+         2aslt8/NeBtRgJxhBb0HG2CXp1BnGZyp5IWrBx3Er3RGIl65xugsaEwHLbcgLd2zDk2M
+         gYD9qbO9cE5100Z9rKZoMQpi1a4ztXrJ534ZCEEfnfD+9kigjoHqfP4CPxF8Lcy0VR1Q
+         O4kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUElF27Tgrm/aQ885eBHMBdj/+LKRgxjVA+wy7EFjvX99AWyxEfYRxBQTFf2ZhBcfpHZkOSmERIzzNJfRxPOWaeeiJ6mi5sjaRDxyGD8pmE
+X-Gm-Message-State: AOJu0Yz/Dc12zDY/wfsU5vqRJ+Ael8XpW27ckj/rCh7jATXQ8sQmZiCO
+	/L8ijqJieyKl5Pdv5pfuifL9CPoT6d6+jxyZvBcGei/+nJwnjVB0vs6ecmO6wiBVyzcjjd5bgBZ
+	QcCfGtjhRiQgXQidV9IGbIBWLy+jPjpBo/Q1g
+X-Google-Smtp-Source: AGHT+IHr4wm/sYb1pP/OT+0B+sF0lgunYepCEA+ITnor8B7krDEe5caV2Crh9QZWDnDZn/Yo7donssWP2m/DPvJo4P4=
+X-Received: by 2002:a05:6122:4698:b0:4df:315a:adab with SMTP id
+ 71dfb90a1353d-4df882c2956mr13577261e0c.5.1715755131816; Tue, 14 May 2024
+ 23:38:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh_GHCwCiC-ZR=idjNEb0xZq20=fQnQxnjGkiq-ba5DLg@mail.gmail.com>
+References: <20240514233747.work.441-kees@kernel.org>
+In-Reply-To: <20240514233747.work.441-kees@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Wed, 15 May 2024 08:38:15 +0200
+Message-ID: <CANpmjNMmNvW41j8RfqZr8asW5BeRXLFkmW_MTO_DX=xEtQNgFg@mail.gmail.com>
+Subject: Re: [PATCH] ubsan: Restore dependency on ARCH_HAS_UBSAN
+To: Kees Cook <keescook@chromium.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 14, 2024 at 09:14:37PM -0700, Linus Torvalds wrote:
-> On Tue, 14 May 2024 at 20:36, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Guys, if you let untrusted code execute random system calls, the whole
-> > "look, now unmap() acts oddly" IS THE LEAST OF YOUR ISSUES.
+On Wed, 15 May 2024 at 01:38, Kees Cook <keescook@chromium.org> wrote:
+>
+> While removing CONFIG_UBSAN_SANITIZE_ALL, ARCH_HAS_UBSAN wasn't correctly
+> depended on. Restore this, as we do not want to attempt UBSAN builds
+> unless it's actually been tested on a given architecture.
+>
+> Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+> Closes: https://lore.kernel.org/all/20240514095427.541201-1-masahiroy@kernel.org
+> Fixes: 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I totally agree with this, I'm more speaking about a more general
-hardening measure, like what is commonly offered via prctl() and that,
-for example, manages to mitigate the consequences of a successful RCE.
+Reviewed-by: Marco Elver <elver@google.com>
 
-> Side note: it doesn't even help to make things "atomic". munmap() acts
-> oddly whether it fals completely or whether it fails partially, and if
-> the user doesn't check the result, neither case is great.
-
-I don't find the "atomic" aspect that important either, however the
-munmap() man page says:
-
-  All  pages containing a part of the indicated range are un-
-  mapped, and subsequent references to these pages will generate SIGSEGV.
-  It  is  not an error if the indicated range does not contain any mapped
-  pages.
-
-This alone is an encouragement to not check the result. And BTW, what
-should one do to try to repair the situation after a failed munmap() ?
-It reads as "best effort" above: usually upon return, anything that
-could be unmapped was unmapped. That's how I'm reading it. I think it's
-a nice property that makes this syscall trustable by its users, and
-contrary to the atomic aspect I would find it nice if munmap() would
-properly unmap everything it can then return the error caused by the
-encounter of a sealed area. For me that's even the opposite of an
-atomic approach, it's really about making sure to best follow the
-developer's intent regardless of any obstacles.
-
-> If you want to have some "hardened mseal()", you make any attempt to
-> change a mseal'ed memory area be a fatal error. The whole "atomic or
-> not" is a complete red herring.
-
-Yep, agreed.
-
-> I'd certainly be ok with that. If the point of mseal is "you can't
-> change this mapping", then anybody who tries to change it is obviously
-> untrustworthy, and killing the whole thing sounds perfectly sane to
-> me.
-> 
-> Maybe that's a first valid use-case for the flags argument.
-
-That could be for that use case (developer doing mseal, attacker
-trying munmap), indeed, though that couldn't cover for the other
-way around (attacker doing mseal() in hope to make a future munmap()
-fail).
-
-That's what I like with prctl(), it offers the developer a panoply of
-options to decide when and how to lock down a process in order to
-mitigate consequences of exploited bugs.
-
-And it could be independent on this series, by essentially focusing on
-the ability to kill a process that fails to munmap() a sealed area. I.e.
-no need to that that property on the area itself, it's a matter of whether
-we consider the process sensitive enough or not.
-
-Willy
+> ---
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: kasan-dev@googlegroups.com
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>  lib/Kconfig.ubsan | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> index e81e1ac4a919..bdda600f8dfb 100644
+> --- a/lib/Kconfig.ubsan
+> +++ b/lib/Kconfig.ubsan
+> @@ -4,6 +4,7 @@ config ARCH_HAS_UBSAN
+>
+>  menuconfig UBSAN
+>         bool "Undefined behaviour sanity checker"
+> +       depends on ARCH_HAS_UBSAN
+>         help
+>           This option enables the Undefined Behaviour sanity checker.
+>           Compile-time instrumentation is used to detect various undefined
+> --
+> 2.34.1
+>
