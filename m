@@ -1,445 +1,203 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD4758AC3;
-	Wed, 15 May 2024 11:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715771709; cv=none; b=rYiIfXxP7ct2nzNIoDTET9I5DQYpApBgXg+XU77rnA2P7/ewqOJXMGGI0jesjFEy9GpZjlnDQ5IEAM8qhNig94yPh/tKnfTLEDzfmmnf3XE7jMxxmUI7bDvLNIErrISpmZg+Wto+f1vncl91xeLafNlEcnEupZhkm9+yE2OMF34=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715771709; c=relaxed/simple;
-	bh=L7vQUyXOJkNK0AYuGYmtPGMV6piarpkbCvJgTd5Tpzk=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=lJ7YrfjQ1I5WY9hlK2QD+XFgGL7EbCAjJPwwgD3zFW2uecJzyCQrPXTGTg4KnXRsBUcpPY/s9sxoCIjQUrnClYxDxsaJb5tMEPvaq/QD25R2f/yvKZK9vMZKIjoK078CIOSDLY0QkDxab84BOXLjZOdUcH0k1iiSS0C+al7mBdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 84769378143B;
-	Wed, 15 May 2024 11:15:04 +0000 (UTC)
-From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
-In-Reply-To: <202405131641.219CD40A62@keescook>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240409175750.206445-1-adrian.ratiu@collabora.com>
- <202404261544.1EAD63D@keescook>
- <20240503-nulltarif-karten-82213463dedc@brauner> <202405131641.219CD40A62@keescook>
-Date: Wed, 15 May 2024 12:15:04 +0100
-Cc: "Christian Brauner" <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com, jorgelo@chromium.org, "Guenter Roeck" <groeck@chromium.org>, "Doug Anderson" <dianders@chromium.org>, "Jann Horn" <jannh@google.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Mike Frysinger" <vapier@chromium.org>
-To: "Kees Cook" <keescook@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEF76214D;
+	Wed, 15 May 2024 14:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715782014; cv=fail; b=BSH8gX1v2P65nhnj5ylVqcR+62VxOBrEYqEXX9aLjaLdZPDQuS5LOciUtSIaSQ7AHpEF9itvIINoZh1OuARIIqgoOvlTvc1MvqeLEgv/CB2c6VVofISxIGRbuTCer5bYZ1HDj40h+ARSHFlsi6LnAGyf38tiSp1bo6lAlBS0dd4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715782014; c=relaxed/simple;
+	bh=PZNtxUr/4x7B62JUI+YRkb79aDl6i3vfE91lhs7j6Ho=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=gu0BNYVOlZ5jQ1+H1RlXXPF1ENvIRJZgxE3Gwq/XFgxb7eckv5/O71z4sTttSkHKL5m2GB2HuQh8rC0sGf6D/rVtX6DNrLbXcGWse5dePMO6XaDxasWDCUcV1PuYKhGZhyi3gGeP7L08T1EdscQx8ikMPmsM59PcEFF/KWvdenU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CkJAN1FO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kvGgnMsd; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CkJAN1FO";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kvGgnMsd"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44F7nGfg024793;
+	Wed, 15 May 2024 14:06:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : in-reply-to : message-id : references : date : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=frCDFj+dVSJx35i03xCn9BE3zsX+vCwcsPehsLVkH4E=;
+ b=CkJAN1FODeUa+qV4+R6entDUQfkLmpW47lsY4wC3dADl4uCTrFwniIgRTO56HriZNvEs
+ 0vtLLeIJ/WG2lmpevYVgL8S2BbhoJg37FAKpFYSrWAtONu0WKQiAZcmp8NkSWPsxDJt4
+ fh8L9kETxRDdE7dgvFgM61nrX9ggppB8o6KlxKm+HFQLucJ+FIV1OfzQyigQpwLnY2HN
+ oMDJdDruGxYQAWAerpJ0oEuQtSz9wTNWU+w4thEYR5OQ8IPAb9jcwg2qRiItaDGqiCuK
+ Xs6JvCZ7RDM5X67zouAhnWeghgnoxtsj0kt68HO0PU5uDGjSizflPoT5pw9DvnineCmV kQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3srru8y6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 May 2024 14:06:36 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44FDvSo5005786;
+	Wed, 15 May 2024 14:06:35 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y1y48tqpp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 May 2024 14:06:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ikwrFatom/05rty8lrdgTsDbwmWyRAuZck7F+EYLinYcZn6FBGJdYPMsDm58zuBKIQHAQVL6OUMdlZxfp+KDBqPvWLwx1dQZB2fYEdEs8WwkabFmrGLWAyEDeP7Ixn0zsxAouecRUvkacrOI0o1KwqQPMc3U2+OSZ7byffjvMCWf+Bpgd2hlDGvlwkvxTQpEFq2c5EqmXH4lApGt58CxFeZxIExcW8CVVlhGspaEo6n842vdj6YzaNoS2eisb/UMi9p/hcMjigQISF01S6P85KzByKo2EXCtkd3ecIXS58tHcMWSkRGqd2gswCGhcQaNeBZ6FVRU6iTLK/e2XDD3PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=frCDFj+dVSJx35i03xCn9BE3zsX+vCwcsPehsLVkH4E=;
+ b=K/oI247IE+/bCnQweCO3wifK9O8nRrdoDWpC6Wj5gTIY6BC2dbgGOkOkGcURHh3uWT4ewtbT0Rca2VZeS442OYD5XixtJ+6+wNidnFXxp7AtPimCj/c8yerXUpN5NrNXNejZZE+Y0tMbjBfzK6vSQFpGzAZwq7E1H9hG5royjFwhUaLjeL0ZBvqkwdF2dd6tYMB22SORJMVHpg41WmfHAkPEIJ7hsKtenI+yFvmgd8jLHDia1kHyryrbkP8os68K6TFPXw/oPTfuXtmJu9D1OXF1P5w5/AwQmBo40nsGGzmsXYa8FHfBO59EayLGvqhoUdegDYvVq0HO9vnTjl6ksw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=frCDFj+dVSJx35i03xCn9BE3zsX+vCwcsPehsLVkH4E=;
+ b=kvGgnMsdJ9dOZRlA9YQhq475KJPwcpnObEe48VtIt48D56TwoxMzUeHidTBI5sSB4unmJcZ9GoAo3i1VsC1rzArRiMes7VxcrXeSRlH4+NbUwoGjOo1m37GfgoM5yFCQD0fU8aKKb4ozrSq1d0QvzguR1i2VJc9i3c1acIpK+Hc=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by CH0PR10MB5019.namprd10.prod.outlook.com (2603:10b6:610:c8::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Wed, 15 May
+ 2024 14:06:31 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::5c74:6a24:843e:e8f7]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::5c74:6a24:843e:e8f7%4]) with mapi id 15.20.7587.026; Wed, 15 May 2024
+ 14:06:31 +0000
+To: Justin Stitt <justinstitt@google.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        "Martin
+ K. Petersen" <martin.petersen@oracle.com>,
+        Nathan Chancellor
+ <nathan@kernel.org>,
+        Bill Wendling <morbo@google.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: sr: fix unintentional arithmetic wraparound
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
+	(Justin Stitt's message of "Wed, 08 May 2024 17:22:51 +0000")
+Organization: Oracle Corporation
+Message-ID: <yq1msorrx04.fsf@ca-mkp.ca.oracle.com>
+References: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
+Date: Wed, 15 May 2024 10:06:29 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR10CA0006.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::11) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <144e19-66449900-1-6b6f9280@13589130>
-Subject: =?utf-8?q?Re=3A?= [PATCH v3 1/2] =?utf-8?q?proc=3A?= restrict /proc/pid/mem 
- access via param knobs
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CH0PR10MB5019:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4abb97b8-6de1-4c80-d988-08dc74e838dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?wvu9phjL6pNnd0FaAnFlCw+WfZ4ig7FyFJa0yxowbAs17XEbKJtGt0QYrwqm?=
+ =?us-ascii?Q?urdGI9bMp3o2yQeW3pSgwLHbm9DHyQXdf99WgDmENC5zKtHMorqVJNUE59D1?=
+ =?us-ascii?Q?suKqDkf2VhjaXqY1oD278CLlAaSASXrEC37jerppB/2YRLUreLj+r3d3OMza?=
+ =?us-ascii?Q?GBCQXXHfxVv164uOH5iDcmTzIoe8NKvgJKaLJIFSjeMdM20u0ELNmRxwyCRM?=
+ =?us-ascii?Q?KDbqaBZKHEAQnP98r0lzeNpyC0HoXVeOn4YNiPbQHOyn3uRyjdGomMouf+0H?=
+ =?us-ascii?Q?TZo2fbQIc1vPmH2IkTchDmq1ERfHK/MuawCV5/AHdlJbnbPlXqwIV6xGkX9H?=
+ =?us-ascii?Q?tPgJn5LujAaVuLBkyKUsuiSXj+oFwRD8hVAu7D7qUO4KobeCoT9yhUj6x1O7?=
+ =?us-ascii?Q?I140vB0dpx55kodIJJHlbPsa8EaxrlwlKuBzTe9U5VLu8aXghcPvOHqFI3kg?=
+ =?us-ascii?Q?miasqaKPxaFG5Xehs80KU2L5PGVJhjKzZfmUlNLHfoutOkHU6bmxoBRCHnwE?=
+ =?us-ascii?Q?zhCCHrsmaP74AcnA6UrPL/jA+4+wb10urN7JY0Xrg72OwtgEdtystvD84f34?=
+ =?us-ascii?Q?Yv+J+OEteJWvbfzjxSxY4Z1bG8MIBt3vhr1ER/crWyXOmygMlEW+cPopujJf?=
+ =?us-ascii?Q?86pWgiy/rS1U3l7vk1cuNU3M1VHEddAUz2JI193n5fyoRcftjMhjHXrAMssh?=
+ =?us-ascii?Q?JHGwR60THJeYEW/6uyM4Rc3WsKEZZJW0uflxnYZVyeJnOycy2Hw2IySRnG4l?=
+ =?us-ascii?Q?Pk1FAkiHzwYbsobqw0cMCEuRxupyaIOn7S4wQY7qWp2Mp1Lj2rPjtD4cHrGa?=
+ =?us-ascii?Q?szn6Zx/F15VenuvoThl7BVXV2owd+QZ+iuycdrQGbaxZJXlxhNQhwi9sJgGj?=
+ =?us-ascii?Q?QNtxb9Perzer4w0/Lc/3lsc2/Uo3Q6+w+NqHQgZHHV6ANL/PRSpfCaM4/DKd?=
+ =?us-ascii?Q?tzuzRZmKbOFmepB25vinQBORcoMepg3O1HQSuiSM/62UTbCBm+Q4zlsN4tEK?=
+ =?us-ascii?Q?t9vBfRII7HYfEKiCqRsvkgq+r+Q5ERJFsy6vqrN8WJM0d+ZXmlVv0g9xAxat?=
+ =?us-ascii?Q?oy4XjEhK6g5XnYGaddOzzkw3YTHo0dn8HGcCTi47ytGlmO3MV7+Xud0r68lY?=
+ =?us-ascii?Q?6B22KyziQmo6C0SRYpW3Dhza1qrA83aRgOarxMHp1RQ2CWQxfwVsVVYjD8OA?=
+ =?us-ascii?Q?RAo321RUNcNlciRkbOgB869mybuegPZ2Hc4I01+sotCt2gMcVR6tByoCAS4d?=
+ =?us-ascii?Q?dw1diFv7i2ZlGwtshcTauOOBJsRhS3HC2GH1KUJdOQ=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?FAxOtfzZJdResfEB++24d1hIg8HA7Sd4Wn/ghumuigsqHJb12CVIsg93UGOI?=
+ =?us-ascii?Q?MA9bxS0Q9PuTSy35mmXleadupdCTl/WRzf4Rn11I0OjFUjjTis+A5Cz6K1PR?=
+ =?us-ascii?Q?5kx7aTtUIz4E2Xt9Nk4KI2xXRzrINbZfd+lkk3JPIJg4+S19uHeIDeg1s3N+?=
+ =?us-ascii?Q?3auBCzvFeoeGrMVk+HFK8i6VKDII/DIEQB2nzlx86Tj4rFMEoagaDf0rnRaE?=
+ =?us-ascii?Q?8Z2eF/V8CFmYPfVjudiai7szS1n+E2Y8TORKNe5XYPzPbuV3qccS2FaIgJ5X?=
+ =?us-ascii?Q?4mnjj+Be30GvA6NXflfvG0IMO1mczPJpZFDDKq9capON/fcJhoxzPA1afeTR?=
+ =?us-ascii?Q?PVf5USXFtC5/hZXMidSPa2qLG02RstbtjmJRVEshnabdX2iGulX4Z6gNQWjw?=
+ =?us-ascii?Q?YtiiIxU/asGKDo93g3kHy9dJTP6cVw1n0p+fHP+JqMeBDTHV5XMtMPYhIgU4?=
+ =?us-ascii?Q?sGgblXqogCVMo8Hm2YPccYQ6NG09tdbLuKwxrkUM6jMGENLqvJZtAjeamQq6?=
+ =?us-ascii?Q?vqpcaNjHyI3TQyb3XUz7aL8+jk0WY1RWoHg0UzIcx8Tkz0iDVPpkbW9i04Z4?=
+ =?us-ascii?Q?SvV4zzuTX/m9xFHAANnGmonP16l1Tb+mxw9Ho4KLbn+nzSiiJjEznyxpIQAW?=
+ =?us-ascii?Q?krNFAVHYCDkrwwA8yZ6iILzufSLFJV4Dbk5jrfwUrQodTpIapzU//XFikCL4?=
+ =?us-ascii?Q?j7cqMy2+EBJrawLjEFgXPn/P0ooYqwXfv4OZCP+FwIb6F3M45u9EVnMv5AUG?=
+ =?us-ascii?Q?zTX7H9f9P5pJYX2sutUwAZWN7DMr3v6kYDBGRJJKoxEFnxGTGZ5CMIGj8ex8?=
+ =?us-ascii?Q?rVf364o8jFliyLuqMw7OM/dxsATRcAYzBFZbdOZlntSidQX0/WZ7t0cPu+Ge?=
+ =?us-ascii?Q?BdHXDq6yM4kRda1sb2xTJGh44f3gEaGQ9Td3m3EQ0kNIQoWjr6CkJyZMEDK3?=
+ =?us-ascii?Q?EzVi2Me6Mjy/EEJREmxgudHl9Kh1PdCp+wgf/2xNueGcGFvtR4/NCsbyaK9H?=
+ =?us-ascii?Q?LhYLsJpxfWsntIffPW4REhPC7Zix3PuIvLIL2/Wz9qOye0AzrPsRTWHfdR80?=
+ =?us-ascii?Q?Qkx7Ovhh1mf6v1xZuC/WaFe/QyqxXR4O/Z72yxVOky5zNVCDyrjXH5/0PSdI?=
+ =?us-ascii?Q?pJ1wTk4mzvS7TXGUXpN/IqkGbUIxKSOmmt7bib5PSZgF4XgSNX1T0YDJxEik?=
+ =?us-ascii?Q?xkHvZM1ks84AWSura4ILRa4xmCpshRgN8kDg5X8X5Oafz6vsvXlrCBFGdQnC?=
+ =?us-ascii?Q?7ew3X82LcGmcyM4k5iPJl2GG1AyhLCLiEH5SO8GOLL5RU50CJ1KFB2T9L7Y+?=
+ =?us-ascii?Q?8UXW9JdLvYcmoCmijRrNTjAM6IA2MGc6inw27FwEwbCc67oVgtwwrMRyt5yP?=
+ =?us-ascii?Q?FWOIGpINlyYkcQv2oSjzi9MWVs2V7/eFZwUhs/PSTJixQQV8LXCIRFoHcbqe?=
+ =?us-ascii?Q?l3/VITlKwOvaoWV/TDMeLbRoh6AFw/Hb4JB27uTXUCNM7Yrtx3c6k3rNVPuw?=
+ =?us-ascii?Q?+F8njq2bW2qlAwahkpS++W9MRzCLJ+CTr/rU6FIe3IlH5hieSL2BTJrPM12Q?=
+ =?us-ascii?Q?Chkp4P7dSgJZBXO4gi21JiQd4KmaPyMjbzW8983MHVbxiEU31IBjq5bzILQ7?=
+ =?us-ascii?Q?Jw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Cn1IupjT+l20PQ9WqjoVX3Pj622aQ+J9v3MevO66wpBTnqpMQSrh2SBm6/+Aam2MNaqyvgIirrOMBHWV546oSRTLboGFHQGO9T8szuar7o8fC1DgaU+FKtnJiIS/l2HOvbCUUnjeTI80tqMEgt9H2e4z8Fup3XEZQW0g2dRCUqQiFQX7CMeX1VqKNDg/y3p1Mbp2ccUfU63wxjXJxHk/eqhzxK499xZkKNASjTppRpTpwmrDANnI/TVCnUwg21TbWk+QPECKSqBRCgmy+NPBEaZqKgE7VE0s1edmdIltNcKSvZuaDCLxxchWnnhy9NY6bHiz6y+Mp22y054crN9nV2Po5ybHQS8MnZBQdiqL5Ev32pOmvg30bHKEgHJQKTss2QU5/DVeRa9XSDJXlNIRtsqXp5BMPwYqESaup+AalGbVd059p457ZjpF+KgCNZG+cixk+Fr0UXuzoA/pJZZtFysb/DH2Z5UjJu3hFa3Hu9V6Mfvpngh3YD9Krwy6TQq3F2YmFPLIMTn/TIf1lW+3FNoui+g3zmIqW6oyUBbEummrkcD1VNoOJaaYfdpXVNnq8K3LXwurueEHaa8+DqLdKSCO/W2j2/9wrrE///wIpPY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4abb97b8-6de1-4c80-d988-08dc74e838dc
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 14:06:31.7054
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 17rzR7mQSZb5L7y0giFcUEcXwyzEgmVd5+HYWWD48mdAPrn2zNgzc4RBJiqZKnmYrpQvz0Mpb++dNk/bJgen5NfIppYMeJ7BT9VOMG7S7IY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5019
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-15_07,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
+ mlxlogscore=983 phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405150098
+X-Proofpoint-ORIG-GUID: 6UCEP_NqqNP1vTu6ziN8Vv1r0R3PJFuE
+X-Proofpoint-GUID: 6UCEP_NqqNP1vTu6ziN8Vv1r0R3PJFuE
 
-On Tuesday, May 14, 2024 02:50 EEST, Kees Cook <keescook@chromium.org> =
-wrote:
 
-> On Fri, May 03, 2024 at 11:57:56AM +0200, Christian Brauner wrote:
-> > On Fri, Apr 26, 2024 at 04:10:49PM -0700, Kees Cook wrote:
-> > > On Tue, Apr 09, 2024 at 08:57:49PM +0300, Adrian Ratiu wrote:
-> > > > Prior to v2.6.39 write access to /proc/<pid>/mem was restricted=
-,
-> > > > after which it got allowed in commit 198214a7ee50 ("proc: enabl=
-e
-> > > > writing to /proc/pid/mem"). Famous last words from that patch:
-> > > > "no longer a security hazard". :)
-> > > >=20
-> > > > Afterwards exploits started causing drama like [1]. The exploit=
-s
-> > > > using /proc/*/mem can be rather sophisticated like [2] which
-> > > > installed an arbitrary payload from noexec storage into a runni=
-ng
-> > > > process then exec'd it, which itself could include an ELF loade=
-r
-> > > > to run arbitrary code off noexec storage.
-> > > >=20
-> > > > One of the well-known problems with /proc/*/mem writes is they
-> > > > ignore page permissions via FOLL=5FFORCE, as opposed to writes =
-via
-> > > > process=5Fvm=5Fwritev which respect page permissions. These wri=
-tes can
-> > > > also be used to bypass mode bits.
-> > > >=20
-> > > > To harden against these types of attacks, distrbutions might wa=
-nt
-> > > > to restrict /proc/pid/mem accesses, either entirely or partiall=
-y,
-> > > > for eg. to restrict FOLL=5FFORCE usage.
-> > > >=20
-> > > > Known valid use-cases which still need these accesses are:
-> > > >=20
-> > > > * Debuggers which also have ptrace permissions, so they can acc=
-ess
-> > > > memory anyway via PTRACE=5FPOKEDATA & co. Some debuggers like G=
-DB
-> > > > are designed to write /proc/pid/mem for basic functionality.
-> > > >=20
-> > > > * Container supervisors using the seccomp notifier to intercept
-> > > > syscalls and rewrite memory of calling processes by passing
-> > > > around /proc/pid/mem file descriptors.
-> > > >=20
-> > > > There might be more, that's why these params default to disable=
-d.
-> > > >=20
-> > > > Regarding other mechanisms which can block these accesses:
-> > > >=20
-> > > > * seccomp filters can be used to block mmap/mprotect calls with=
- W|X
-> > > > perms, but they often can't block open calls as daemons want to
-> > > > read/write their runtime state and seccomp filters cannot check
-> > > > file paths, so plain write calls can't be easily blocked.
-> > > >=20
-> > > > * Since the mem file is part of the dynamic /proc/<pid>/ space,=
- we
-> > > > can't run chmod once at boot to restrict it (and trying to reac=
-t
-> > > > to every process and run chmod doesn't scale, and the kernel no
-> > > > longer allows chmod on any of these paths).
-> > > >=20
-> > > > * SELinux could be used with a rule to cover all /proc/*/mem fi=
-les,
-> > > > but even then having multiple ways to deny an attack is useful =
-in
-> > > > case one layer fails.
-> > > >=20
-> > > > Thus we introduce three kernel parameters to restrict /proc/*/m=
-em
-> > > > access: read, write and foll=5Fforce. All three can be independ=
-ently
-> > > > set to the following values:
-> > > >=20
-> > > > all     =3D> restrict all access unconditionally.
-> > > > ptracer =3D> restrict all access except for ptracer processes.
-> > > >=20
-> > > > If left unset, the existing behaviour is preserved, i.e. access
-> > > > is governed by basic file permissions.
-> > > >=20
-> > > > Examples which can be passed by bootloaders:
-> > > >=20
-> > > > restrict=5Fproc=5Fmem=5Ffoll=5Fforce=3Dall
-> > > > restrict=5Fproc=5Fmem=5Fwrite=3Dptracer
-> > > > restrict=5Fproc=5Fmem=5Fread=3Dptracer
-> > > >=20
-> > > > Each distribution needs to decide what restrictions to apply,
-> > > > depending on its use-cases. Embedded systems might want to do
-> > > > more, while general-purpouse distros might want a more relaxed
-> > > > policy, because for e.g. foll=5Fforce=3Dall and write=3Dall bot=
-h break
-> > > > break GDB, so it might be a bit excessive.
-> > > >=20
-> > > > Based on an initial patch by Mike Frysinger <vapier@chromium.or=
-g>.
-> > >=20
-> > > Thanks for this new version!
-> > >=20
-> > > >=20
-> > > > Link: https://lwn.net/Articles/476947/ [1]
-> > > > Link: https://issues.chromium.org/issues/40089045 [2]
-> > > > Cc: Guenter Roeck <groeck@chromium.org>
-> > > > Cc: Doug Anderson <dianders@chromium.org>
-> > > > Cc: Kees Cook <keescook@chromium.org>
-> > > > Cc: Jann Horn <jannh@google.com>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > > > Cc: Christian Brauner <brauner@kernel.org>
-> > > > Co-developed-by: Mike Frysinger <vapier@chromium.org>
-> > > > Signed-off-by: Mike Frysinger <vapier@chromium.org>
-> > > > Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> > > > ---
-> > > >  .../admin-guide/kernel-parameters.txt         |  27 +++++
-> > > >  fs/proc/base.c                                | 103 ++++++++++=
-+++++++-
-> > > >  include/linux/jump=5Flabel.h                    |   5 +
-> > > >  3 files changed, 133 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/=
-Documentation/admin-guide/kernel-parameters.txt
-> > > > index 6e62b8cb19c8d..d7f7db41369c7 100644
-> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > > @@ -5665,6 +5665,33 @@
-> > > >  	reset=5Fdevices	[KNL] Force drivers to reset the underlying d=
-evice
-> > > >  			during initialization.
-> > > > =20
-> > > > +	restrict=5Fproc=5Fmem=5Fread=3D [KNL]
-> > > > +			Format: {all | ptracer}
-> > > > +			Allows restricting read access to /proc/*/mem files.
-> > > > +			Depending on restriction level, open for reads return -EACC=
-ESS.
-> > > > +			Can be one of:
-> > > > +			- 'all' restricts all access unconditionally.
-> > > > +			- 'ptracer' allows access only for ptracer processes.
-> > > > +			If not specified, then basic file permissions continue to a=
-pply.
-> > > > +
-> > > > +	restrict=5Fproc=5Fmem=5Fwrite=3D [KNL]
-> > > > +			Format: {all | ptracer}
-> > > > +			Allows restricting write access to /proc/*/mem files.
-> > > > +			Depending on restriction level, open for writes return -EAC=
-CESS.
-> > > > +			Can be one of:
-> > > > +			- 'all' restricts all access unconditionally.
-> > > > +			- 'ptracer' allows access only for ptracer processes.
-> > > > +			If not specified, then basic file permissions continue to a=
-pply.
-> > > > +
-> > > > +	restrict=5Fproc=5Fmem=5Ffoll=5Fforce=3D [KNL]
-> > > > +			Format: {all | ptracer}
-> > > > +			Restricts the use of the FOLL=5FFORCE flag for /proc/*/mem =
-access.
-> > > > +			If restricted, the FOLL=5FFORCE flag will not be added to v=
-m accesses.
-> > > > +			Can be one of:
-> > > > +			- 'all' restricts all access unconditionally.
-> > > > +			- 'ptracer' allows access only for ptracer processes.
-> > > > +			If not specified, FOLL=5FFORCE is always used.
-> > >=20
-> > > bike shedding: I wonder if this should be a fake namespace (addin=
-g a dot
-> > > just to break it up for reading more easily), and have words reor=
-dered
-> > > to the kernel's more common subject-verb-object: proc=5Fmem.restr=
-ict=5Fread=3D...
-> > >=20
-> > > > +
-> > > >  	resume=3D		[SWSUSP]
-> > > >  			Specify the partition device for software suspend
-> > > >  			Format:
-> > > > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> > > > index 18550c071d71c..c733836c42a65 100644
-> > > > --- a/fs/proc/base.c
-> > > > +++ b/fs/proc/base.c
-> > > > @@ -152,6 +152,41 @@ struct pid=5Fentry {
-> > > >  		NULL, &proc=5Fpid=5Fattr=5Foperations,	\
-> > > >  		{ .lsmid =3D LSMID })
-> > > > =20
-> > > > +/*
-> > > > + * each restrict=5Fproc=5Fmem=5F* param controls the following=
- static branches:
-> > > > + * key[0] =3D restrict all writes
-> > > > + * key[1] =3D restrict writes except for ptracers
-> > > > + * key[2] =3D restrict all reads
-> > > > + * key[3] =3D restrict reads except for ptracers
-> > > > + * key[4] =3D restrict all FOLL=5FFORCE usage
-> > > > + * key[5] =3D restrict FOLL=5FFORCE usage except for ptracers
-> > > > + */
-> > > > +DEFINE=5FSTATIC=5FKEY=5FARRAY=5FFALSE=5FRO(restrict=5Fproc=5Fm=
-em, 6);
-> > >=20
-> > > So, I don't like having open-coded numbers. And I'm not sure ther=
-e's a
-> > > benefit to stuffing these all into an array? So:
-> > >=20
-> > > DEFINE=5FSTATIC=5FKEY=5FFALSE=5FRO(proc=5Fmem=5Frestrict=5Fread);
-> > > DEFINE=5FSTATIC=5FKEY=5FFALSE=5FRO(proc=5Fmem=5Frestrict=5Fwrite)=
-;
-> > > DEFINE=5FSTATIC=5FKEY=5FFALSE=5FRO(proc=5Fmem=5Frestrict=5Ffoll=5F=
-force);
-> > >=20
-> > > > +
-> > > > +static int =5F=5Finit early=5Frestrict=5Fproc=5Fmem(char *buf,=
- int offset)
-> > > > +{
-> > > > +	if (!buf)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (strncmp(buf, "all", 3) =3D=3D 0)
-> > >=20
-> > > I'd use strcmp() to get exact matches. That way "allalksdjflas" d=
-oesn't
-> > > match. :)
-> > >=20
-> > > > +		static=5Fbranch=5Fenable(&restrict=5Fproc=5Fmem[offset]);
-> > > > +	else if (strncmp(buf, "ptracer", 7) =3D=3D 0)
-> > > > +		static=5Fbranch=5Fenable(&restrict=5Fproc=5Fmem[offset + 1])=
-;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > >=20
-> > > Then don't bother with a common helper since you've got a macro, =
-and
-> > > it'll all get tossed after =5F=5Finit anyway.
-> > >=20
-> > > > +
-> > > > +#define DEFINE=5FEARLY=5FRESTRICT=5FPROC=5FMEM(name, offset)		=
-	\
-> > > > +static int =5F=5Finit early=5Frestrict=5Fproc=5Fmem=5F##name(c=
-har *buf)		\
-> > > > +{									\
-> > > > +	return early=5Frestrict=5Fproc=5Fmem(buf, offset);			\
-> > > > +}									\
-> > > > +early=5Fparam("restrict=5Fproc=5Fmem=5F" #name, early=5Frestri=
-ct=5Fproc=5Fmem=5F##name)
-> > > > +
-> > > > +DEFINE=5FEARLY=5FRESTRICT=5FPROC=5FMEM(write, 0);
-> > > > +DEFINE=5FEARLY=5FRESTRICT=5FPROC=5FMEM(read, 2);
-> > > > +DEFINE=5FEARLY=5FRESTRICT=5FPROC=5FMEM(foll=5Fforce, 4);
-> > >=20
-> > > #define DEFINE=5FEARLY=5FPROC=5FMEM=5FRESTRICT(name)				\
-> > > static int =5F=5Finit early=5Fproc=5Fmem=5Frestrict=5F##name(char=
- *buf)		\
-> > > {									\
-> > > 	if (!buf)							\
-> > > 		return -EINVAL;						\
-> > > 									\
-> > > 	if (strcmp(buf, "all") =3D=3D 0)					\
-> > > 		static=5Fbranch=5Fenable(&proc=5Fmem=5Frestrict=5F##name);	\
-> > > 	else if (strcmp(buf, "ptracer") =3D=3D 0)				\
-> > > 		static=5Fbranch=5Fenable(&proc=5Fmem=5Frestrict=5F##name);	\
-> > > 									\
-> > > 	return 0;							\
-> > > }									\
-> > > early=5Fparam("proc=5Fmem=5Frestrict=5F" #name, early=5Fproc=5Fme=
-m=5Frestrict=5F##name)
-> > >=20
-> > >=20
-> > > > +
-> > > >  /*
-> > > >   * Count the number of hardlinks for the pid=5Fentry table, ex=
-cluding the .
-> > > >   * and .. links.
-> > > > @@ -825,9 +860,58 @@ static int =5F=5Fmem=5Fopen(struct inode *=
-inode, struct file *file, unsigned int mode)
-> > > >  	return 0;
-> > > >  }
-> > > > =20
-> > > > +static bool =5F=5Fmem=5Fopen=5Fcurrent=5Fis=5Fptracer(struct f=
-ile *file)
-> > > > +{
-> > > > +	struct inode *inode =3D file=5Finode(file);
-> > > > +	struct task=5Fstruct *task =3D get=5Fproc=5Ftask(inode);
-> > > > +	int ret =3D false;
-> > > > +
-> > > > +	if (task) {
-> > > > +		rcu=5Fread=5Flock();
-> > > > +		if (current =3D=3D ptrace=5Fparent(task))
-> > > > +			ret =3D true;
-> > > > +		rcu=5Fread=5Funlock();
-> > > > +		put=5Ftask=5Fstruct(task);
-> > > > +	}
-> > >=20
-> > > This creates a ToCToU race between this check (which releases the=
- task)
-> > > and the later memopen which make get a different task (and mm).
-> > >=20
-> > > To deal with this, I think you need to add a new mode flag for
-> > > proc=5Fmem=5Fopen(), and add the checking there.
-> > >=20
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int =5F=5Fmem=5Fopen=5Fcheck=5Faccess=5Frestriction(str=
-uct file *file)
-> > > > +{
-> > > > +	if (file->f=5Fmode & FMODE=5FWRITE) {
-> > > > +		/* Deny if writes are unconditionally disabled via param */
-> > > > +		if (static=5Fbranch=5Funlikely(&restrict=5Fproc=5Fmem[0]))
-> > > > +			return -EACCES;
-> > > > +
-> > > > +		/* Deny if writes are allowed only for ptracers via param */
-> > > > +		if (static=5Fbranch=5Funlikely(&restrict=5Fproc=5Fmem[1]) &&
-> > > > +		    !=5F=5Fmem=5Fopen=5Fcurrent=5Fis=5Fptracer(file))
-> > > > +			return -EACCES;
-> > > > +
-> > > > +	} else if (file->f=5Fmode & FMODE=5FREAD) {
-> > >=20
-> > > I think this "else" means that O=5FRDWR opens will only check the=
- write
-> > > flag, so drop the "else".
-> > >=20
-> > > > +		/* Deny if reads are unconditionally disabled via param */
-> > > > +		if (static=5Fbranch=5Funlikely(&restrict=5Fproc=5Fmem[2]))
-> > > > +			return -EACCES;
-> > > > +
-> > > > +		/* Deny if reads are allowed only for ptracers via param */
-> > > > +		if (static=5Fbranch=5Funlikely(&restrict=5Fproc=5Fmem[3]) &&
-> > > > +		    !=5F=5Fmem=5Fopen=5Fcurrent=5Fis=5Fptracer(file))
-> > > > +			return -EACCES;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static int mem=5Fopen(struct inode *inode, struct file *file)
-> > > >  {
-> > > > -	int ret =3D =5F=5Fmem=5Fopen(inode, file, PTRACE=5FMODE=5FATT=
-ACH);
-> > > > +	int ret;
-> > > > +
-> > > > +	ret =3D =5F=5Fmem=5Fopen=5Fcheck=5Faccess=5Frestriction(file)=
-;
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	ret =3D =5F=5Fmem=5Fopen(inode, file, PTRACE=5FMODE=5FATTACH)=
-;
-> > > > =20
-> > > >  	/* OK to pass negative loff=5Ft, we can catch out-of-range */
-> > > >  	file->f=5Fmode |=3D FMODE=5FUNSIGNED=5FOFFSET;
-> > > > @@ -835,6 +919,20 @@ static int mem=5Fopen(struct inode *inode,=
- struct file *file)
-> > > >  	return ret;
-> > > >  }
-> > > > =20
-> > > > +static unsigned int =5F=5Fmem=5Frw=5Fget=5Ffoll=5Fforce=5Fflag=
-(struct file *file)
-> > > > +{
-> > > > +	/* Deny if FOLL=5FFORCE is disabled via param */
-> > > > +	if (static=5Fbranch=5Funlikely(&restrict=5Fproc=5Fmem[4]))
-> > > > +		return 0;
-> > > > +
-> > > > +	/* Deny if FOLL=5FFORCE is allowed only for ptracers via para=
-m */
-> > > > +	if (static=5Fbranch=5Funlikely(&restrict=5Fproc=5Fmem[5]) &&
-> > > > +	    !=5F=5Fmem=5Fopen=5Fcurrent=5Fis=5Fptracer(file))
-> > >=20
-> > > This is like the ToCToU: the task may have changed out from under=
- us
-> > > between the open the read/write.
-> >=20
-> > But why would you care? As long as the task is the ptracer it doesn=
-'t
-> > really matter afaict.
->=20
-> Because the mm you're writing to may no longer be associated with the
-> task.
->=20
-> proc=5Fmem=5Foperations.open() will take a reference to the current t=
-ask's
-> mm, via proc=5Fmem=5Fopen() through =5F=5Fmem=5Fopen():
->=20
->         struct task=5Fstruct *task =3D get=5Fproc=5Ftask(inode);
-> 	...
-> 	mm =3D mm=5Faccess(task, mode | PTRACE=5FMODE=5FFSCREDS);
-> 	...
-> 	file->private=5Fdata =3D mm;
->=20
->=20
-> And in the proposed check added to mem=5Frw(), if get=5Fproc=5Ftask(i=
-node)
-> returns a different task (i.e. the pid got recycled and the original =
-mm
-> is still associated with a forked task), then it could write to the
-> forked task using the ptrace check against the new task.
->=20
-> Looking at it again now, I think it should be possible to just revali=
-date
-> the mm in =5F=5Fmem=5Fopen=5Fcurrent=5Fis=5Fptracer(), though. i.e. i=
-t would be
-> allowed if ptrace check passes and file->private=5Fdata =3D=3D mm=5Fa=
-ccess(...),
-> for the mem=5Frw case...
+Justin,
 
-Ack, I'll do this in v4, thanks again!
+> Running syzkaller with the newly reintroduced signed integer overflow
+> sanitizer produces this report:
+>
+> [   65.194362] ------------[ cut here ]------------
+> [   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
+> [   65.203607] -2147483648 * 177 cannot be represented in type 'int'
+> [   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+> [   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   65.219923] Call Trace:
+> [   65.221556]  <TASK>
+> [   65.223029]  dump_stack_lvl+0x93/0xd0
+> [   65.225573]  handle_overflow+0x171/0x1b0
+> [   65.228219]  sr_select_speed+0xeb/0xf0
+> [   65.230786]  ? __pm_runtime_resume+0xe6/0x130
+> [   65.233606]  sr_block_ioctl+0x15d/0x1d0
+> ...
+>
 
+Applied to 6.10/scsi-staging, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
