@@ -1,97 +1,117 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68FE1E491;
-	Tue, 14 May 2024 23:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE39F63A5
+	for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 00:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715730454; cv=none; b=tjziR4e/sCTlYVjK2lskFJJ3dL4W+hgNFwR4yyIRaWdkFyg/JMygtPyIweZzCsDFjThCSZnKKhPqXdUxkuxOaLdBJkZBC71sRcoV8bAsFOMnir83K0mLXMEVtgOOy11GKcZ6qBsd26bfdWgwwyfkdW2Li5uiqpk3ratq2RPfqn0=
+	t=1715733868; cv=none; b=BkaLHUB9hBI7OmN5p+5fkYfYFl3buh27ffHALw3xLvvxPluxtveoBodTNxGNT/HCYq67EErn0X8xqeYbtxyixXVWrBij9HPy9FjMxswvzi8k4FLhkxLAw1t+yEso+B1il0Gb8FHUtpvnjfk9uH+EehpJjfnryp1QzHmy+IWHVi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715730454; c=relaxed/simple;
-	bh=1rwfNpf50aTPtb80Ip2O+B+pjU7fjXSF51Ls8a9PAtY=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=ko3d4GldeWa/4V3ydARYS5sWKSGxRFc5tScgPZxxGTZg5lGIgwmhGKe7hzoP5j1Tz9ZLtJuLyt9ybIcf8jl0mO12kZLIJgWYi3nKFmejV3hKuwgY680CH/2NskCx6FD9h5s+TrwX1GfyIKiAxgsJwxZlbg6Q3gPagWAuvTXDCog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=w3jmiolY; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1715733868; c=relaxed/simple;
+	bh=iyxC/dRXIM6KYxQfRCHr8g+kv1gexJCsm8khro+Q+uQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mRaKI8RFKP1OWKYUc3o/BI4b40HQYB1ZPP6JfY/HZHkGYU9Dj2oIRXgYOQ8OR2fuVr+iV1O/oD9JEX27T5dbdhF9ujAviKGd6oDdl3VOxbut9Q8JKueowu4+O36ZeyrJh+d1cwmfyPxb8QFJ0lTvCzyXpuXEySqO/6wNZ+Wm1Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZPSeucki; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="w3jmiolY"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=1rwfNpf50a
-	TPtb80Ip2O+B+pjU7fjXSF51Ls8a9PAtY=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=w3jmiolYozzwXCDaJGlzE5ZoZaKGpcix0
-	0z5OoNzmAs0Pm443g2gWqiJee/dXJ8hyt1VSANoXCAjPfbosI7dWN1YGKtnq8Ov6CV/qNG
-	zwkrtcAPKRaLMALsW+JNjcs4cj6NrLtvfYtahvZpBzTZx4IaBRTBu5BRYdvHF/Jfo3fC3B
-	osPSeUaZSTQdt9mWAVJR++Gx5nvHxLWInVSGLBqLUDaJyRAUVb3QNkv8qNdN0/pWS1qYJZ
-	2rHibAKs2IvwBkqQkjTz5jv7Fab+MtUsZl5Dx1M+XBDQIYLMOxG3OnzokZAtPlrQCmfjW8
-	f5KGRZSe4qM95Hm3t7KbGcEFpyL5g==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id ba1c6f5b;
-	Tue, 14 May 2024 17:47:30 -0600 (MDT)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-cc: Matthew Wilcox <willy@infradead.org>,
-    Jonathan Corbet <corbet@lwn.net>, jeffxu@chromium.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
-    usama.anjum@collabora.com, Liam.Howlett@oracle.com,
-    surenb@google.com, merimus@google.com, rdunlap@infradead.org,
-    jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-    linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-In-reply-to: <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
-References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org> <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org> <56001.1715726927@cvs.openbsd.org> <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
-Comments: In-reply-to Andrew Morton <akpm@linux-foundation.org>
-   message dated "Tue, 14 May 2024 16:01:50 -0700."
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZPSeucki"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so1247139a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 17:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715733865; x=1716338665; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7OZvAiAEdwWZe22j4pRu5oxfNYFobcCpcqXbwXMC6CU=;
+        b=ZPSeucki84KEBg5XYLiNN+MzQ53lspncxROIvnTAK8eOn62f6DBjv1UTKAluHYy4Bc
+         aKR3RkXTFpX9LQ1JEzaViMO+jlmld77Dc1T4kVSCjKcIQCTsjS9e3SqwWsvvA6pnpJ6u
+         QrItccftCfLSpHNBrHnI6RTiA6FklTBkmSdP8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715733865; x=1716338665;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7OZvAiAEdwWZe22j4pRu5oxfNYFobcCpcqXbwXMC6CU=;
+        b=bYOQ8ey+VQWdO4Uxf94Kx8ORMKXELCnds2GSSeJgjJrxRWfsAWR+7Jz5ESRvXv4A/r
+         YP52rak77xFSlI/TkNVn8btQsyBQ0jRhXeV6gW8NN0uow8NYI9sfiTg7TAIz6HAdB1pu
+         v46hkVw2ylzNdHbPafqnVHrW/9sWx3oidtFaj2ctj7fnNTdFEpwcM2l29Go3n+EvkJJM
+         AzuKi31bFjq4n00x94QhtoGDi+j321Gu4Zpn7wRtxvjOgGUzsJn3iq/K1u0/NkKf4zPi
+         AJSwKCBw8J9cbR0yW6FVxO/hTmQyRgFgwNXsRGdZ5MtkX5pUuEFiX/J+8XSnM6Q+Kylv
+         o3bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHt0hlsTaUhaDHhrdARCtJx3QK5SQeVLVSNzctEyM6yxJqkVtGAVcCsqv3uYUJJ8KFwb/2qVpoHuJpAj1AaBsLVPWsXJalZuBr4lgyJH5P
+X-Gm-Message-State: AOJu0YzUubbRkmJe+xogXUePY4r+WtfExMQLDU7Zwh945Fjc1jSJb694
+	nzl+7BKtjYYkKjWKFJxLLzYG/iyPIZNmF8VUEaK2ndogTBC6tbQwqTpcsha8/HHijgo2C62ZtK8
+	mETGGYw==
+X-Google-Smtp-Source: AGHT+IFLATIf4Y1Lz3pBiczVRmYYLIhJIH+Dc7p1AfvBQlxS06Vgenvz0TnyiVrMAawyvmRH0y9DUA==
+X-Received: by 2002:a50:f60d:0:b0:572:7c13:c7d8 with SMTP id 4fb4d7f45d1cf-5734d6effa0mr12986143a12.34.1715733865175;
+        Tue, 14 May 2024 17:44:25 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733becfb6csm8475625a12.43.2024.05.14.17.44.24
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 17:44:24 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so69764866b.0
+        for <linux-hardening@vger.kernel.org>; Tue, 14 May 2024 17:44:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW68XNw0G4RE5NhLp+9Z8KvIOjC/yOu0KGra0mP0rM5hg5M9kyi+aUyFg98sFgQbzJWURRrfLhuErwo4ujLOUpUgN8UMklOxi1+sHpsHm+P
+X-Received: by 2002:a17:906:a010:b0:a59:a9c0:57e6 with SMTP id
+ a640c23a62f3a-a5a2d675dafmr1290775966b.75.1715733843947; Tue, 14 May 2024
+ 17:44:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <45809.1715730450.1@cvs.openbsd.org>
-Date: Tue, 14 May 2024 17:47:30 -0600
-Message-ID: <92453.1715730450@cvs.openbsd.org>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+ <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org> <56001.1715726927@cvs.openbsd.org>
+In-Reply-To: <56001.1715726927@cvs.openbsd.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 14 May 2024 17:43:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
+Message-ID: <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+To: Theo de Raadt <deraadt@openbsd.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, gregkh@linuxfoundation.org, 
+	usama.anjum@collabora.com, Liam.Howlett@oracle.com, surenb@google.com, 
+	merimus@google.com, rdunlap@infradead.org, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Tue, 14 May 2024 at 15:48, Theo de Raadt <deraadt@openbsd.org> wrote:
+>
+> and can't imagine it affecting a single application
 
-> > I worry that the non-atomicity will one day be used by an attacker.
-> 
-> How might an attacker exploit this?
+Honestly, that's the reason for not caring.
 
-Various ways which are going to be very application specific. Most ways
-will depend on munmap / mprotect arguments being incorrect for some
-reason, and callers not checking the return values.
+You have to do actively wrong things for this to matter AT ALL.
 
-After the system call, the memory is in a very surprising configuration.
+So no, we're not making gratuitous changes for stupid reasons.
 
-Consider a larger memory region containing the following sections:
+> I worry that the non-atomicity will one day be used by an attacker.
 
-  [regular memory]  [sealed memory]  [regular memory containing a secret]
+Blah blah blah. That's a made-up scare tactic if I ever heard one.
+It's unworthy of you.
 
-unmap() gets called on the whole region, for some reason.  The first
-section is removed.  It hits the sealed memory, and returns EPERM.  It does
-not unmap the sealed reason, not the memory containing the secret.
+Anybody who does mprotect/mmap/munmap/whatever over multiple
+independent memory mappings had better know exactly what mappings they
+are touching. Otherwise they are *already* just doing random crap.
 
-The return values of mprotect and munmap are *very rarely* checked,
-which adds additional intrigue. They are not checked because these
-system calls never failed in this way on systems before Linux.
+In other words: nobody actually does that. Yes, you have people who
+first carve out one big area with an mmap(), and then do their own
+memory management within that area. But the point is, they are very
+much in control and if they do something inconsistent, they absolutely
+only have themselves to blame.
 
-It is difficult to write test programs which fail under the current ENOMEM
-situation (the only current failure mode, AFAIK).  But with the new mseal()
-EPERM condition, it will be very easy to write programs which leave memory
-behind.
+And if you have some app that randomly does mprotect etc over multipl
+memory mappings that it doesn't know what the f*^% they are, then
+there is no saving such a piece of unbelievable garbahe.
 
-I don't know how you'll document this trap in the manual page, let me try.
+So stop the pointless fear-mongering. Linux does the smart thing,
+which is to not waste a single cycle on something that cannot possibly
+be relevant.
 
-    If msealed memory is found inside the range [start, start+len], 
-    earlier memory will be unmapped, but later memory will remain unmapped
-    and the system call returns error EPERM.
-
-    If kernel memory shortage occurs while unmapping the region, early
-    regions may be unmapped but higher regions may remain mapped, and
-    the system call may return ENOMEM.
-
-I feel so gross now, time for a shower..
+             Linus
