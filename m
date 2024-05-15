@@ -1,104 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A79C13AF2;
-	Wed, 15 May 2024 16:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3124AEF8
+	for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 17:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715791539; cv=none; b=u830FdK9f9f56MVXJY6VaXZd1bFGBAxDNltNgS3pIIQQO9r4UhOjSA35H1ZQrD5bMzDP/jo+TBX1ZV8iqQVi4MmUwtlSIUqVYMhLNzId8LA5ytdfi9CVPjNKojYDmkqeEYVdhBIZl3zlCW++OwmLZ2GyGHLFjRGlRBHtFZUB+FA=
+	t=1715793155; cv=none; b=RIAQnUtmApbW3ydIolKiOqeznwo81IXutNO10phRhtCWT7ZEs3erqYriMANqgBIbcLfUFh0l1Su+C/RRIm8KvbMsRbpdOowdLfFjafsvJDzCrsh7uSs1Hy/DRIeDu5CTpkStAnAqVzd0qtC18pFfI3urZlsl27OOLiEzX0Xch3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715791539; c=relaxed/simple;
-	bh=vK6BDh/ZxI93Wj/Q6jEb75a/+f6y+21Ik+iDUEf/6/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pbJ87nKNWsm3cdVKSs+T95DmBx6opg05PYVYGsedqigVneig3GdUPnkbr70HGaZM4nfboshKwVHAQi7rBcNE9vdsP8bPswA0gy1lUYeflIpqpWx70zTOp0HXyU/r6hKcIq4y391V9RD055wraWBUyFhB7H2KtfQIovrmQX+dDvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlTuY0/q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715793155; c=relaxed/simple;
+	bh=sFdFO/3PseRV0I24tfvAl/Tu3SeNdZ+dYLb3bjXAJu8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QWsRfcOTdRbYBOt/Wpm2rd1qyrE2qlgshoE8CZ+Cw4q4hnM8aS+LkbLDw1KxjoshcXwhjzo6tpf07MugOVsGIug1lUOf7f21Z2NMm0WnDWwXXAX9JmzWSNKuWr0nTbKAmH1STV/gbH01Wu5GnrF2jcqxCeKonOYhPuvPbBIofjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QSIZ8j2a; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlTuY0/q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B7A8C2BD11;
-	Wed, 15 May 2024 16:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715791539;
-	bh=vK6BDh/ZxI93Wj/Q6jEb75a/+f6y+21Ik+iDUEf/6/4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mlTuY0/q8WASE+XyxPmUN1U8+itMh/E5KCOiI+kHt0U0+Qji8wnxTTwd4Dw9fmQMY
-	 5htov0vO/O2pRA7LlF+E+pwHUGJljkDT8GLSJI19Z08V2qzUk8q7YPYVwEDd3TneeY
-	 r3W4t6QHQaCKDDh2NA6Uz+Ca3UNHcejElCNx608hTYxhLK8YjlW8L+wiVWckZVqGR2
-	 +Swe6+LSQrXMi/8iNdXpF1Kr1VF6V4X0dF6Z6YleodC70hNdtuG2m2KZMIkDFF8uGQ
-	 yIbrRnqV5HEX1zS6S53QfkCnMTu/OiE7k374P7201sgwLIPKo/Qeocyj6uH8e1Uz/Q
-	 qbvaUjro9LIqw==
-From: Christian Brauner <brauner@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] fs: remove accidental overflow during wraparound check
-Date: Wed, 15 May 2024 18:44:45 +0200
-Message-ID: <20240515-rentier-abwinken-f9c282783235@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240513-b4-sio-vfs_fallocate-v2-1-db415872fb16@google.com>
-References: <20240513-b4-sio-vfs_fallocate-v2-1-db415872fb16@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QSIZ8j2a"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-23d3d092a1bso3864363fac.1
+        for <linux-hardening@vger.kernel.org>; Wed, 15 May 2024 10:12:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715793152; x=1716397952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sFdFO/3PseRV0I24tfvAl/Tu3SeNdZ+dYLb3bjXAJu8=;
+        b=QSIZ8j2aBzKVx6dFzUgfgxy4FxbPy1RzZSOEF/YtKW5zI2kRPd9V9sXohfMKvvfGnh
+         LIAUgBErOhh9hf3cRKmJ1+CU/v6SuBPWFzseVylOOzQSCUiwEIZ2YAmjbqcr5EGHovNV
+         PglXLUOMIKQXEVZb7WgTrELqyRLZEwPJuH7TBACQb9UMCBcvYp3M9yWB3/vUduOwqVek
+         SMzSFUplHOgX7RvyTB5JlDn9Qt5/1/nElbYNG9wl5GEx/T1Q7xVU37CBEb/+wbPONmV0
+         g8VLgj3E5xsZuWd+DtjDvl4TEy0pmuMro5lqnnOuOnr+ymxbu1bOuA8lXIz7DYTqj0QX
+         UdQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715793152; x=1716397952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sFdFO/3PseRV0I24tfvAl/Tu3SeNdZ+dYLb3bjXAJu8=;
+        b=i7bHbNY70ZDwASsf68vUQYn+MVjYcnoFjz7SZihuuBiWHtSAsn9nwMPOklJVBvZfoC
+         dwaZ5eaH1DcztgNhp+HE0OiNTdl5Ao6Wez7dXfKLhZkUWz+fHFGzIA5+BRrJakfONmE2
+         qST1D4G1lDlcOGl6CAan5ozx1pZB7YI3LR0kcynZ7o3uvL2w6ihlzuKAdzbom6oMXuVE
+         XbuYHuEL6CrEJEvFIc8VmnkLhoY5qcunuaByke4wftWsfom3ArMYr3oychyHH1Jid3ol
+         JDffkGMsndVDzXPVNfdAtY2lgPUXU5GR5t6uytbwy2htIhiq860By+y0bCJivJQ2prmg
+         oeFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUov3WOvmsQ0ILKc/ANfHB5ZJ0uFuPtGtumu7k4hGq8MwQP3b0yL6UBeaC3LnmEOLRTrH2TgaSwoigddYcP8GoQdmlSTQM14Wnb739CMUNw
+X-Gm-Message-State: AOJu0YwGN4+qv3CUTsC98mF6jbwPmrUX8BOggdLvxlpDPpQP0NcP1RqC
+	+LWhxC+KPngko6sLTx0XoNxZzJoyb3PzCOx/0E45ZvaveZlQ+1rFigA0t6qtbI7CZrfYv7pNYua
+	VfESavCRRF7TBx7SRww+84zExy4KLhMcXhqMq
+X-Google-Smtp-Source: AGHT+IHdPnCg97tJxWZG1Gb/DpWshKQCgosn26p/oXEI08Q9kC9bnAhNtdBzk1KnL1lvOIiK1jkJOT92D0YO6qHuMVs=
+X-Received: by 2002:a05:6870:1690:b0:23c:ee0a:260f with SMTP id
+ 586e51a60fabf-24172a23552mr18594820fac.3.1715793152544; Wed, 15 May 2024
+ 10:12:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2300; i=brauner@kernel.org; h=from:subject:message-id; bh=vK6BDh/ZxI93Wj/Q6jEb75a/+f6y+21Ik+iDUEf/6/4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS5PFsX9CS2lNF8bmXCqnky74M2aMk0sLXOTnriefCJ0 ULxgoUXO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbS8Znhf8CWzw/ut4okRjyS rdKSO5xyRiz74c5DNec6I51YYuv3mzP89/3p+/roimIb2VgpUY3QhAc7C5juvhE45Kahel9+47c 4dgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <20240515073636.GY40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240515073636.GY40213@noisy.programming.kicks-ass.net>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 15 May 2024 10:12:20 -0700
+Message-ID: <CAFhGd8qKObvqbLJWvkG+Wfuy0gpWiTsSmFrBO-NzC-akB6bhzA@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook <keescook@chromium.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 13 May 2024 17:50:30 +0000, Justin Stitt wrote:
-> Running syzkaller with the newly enabled signed integer overflow
-> sanitizer produces this report:
-> 
-> [  195.401651] ------------[ cut here ]------------
-> [  195.404808] UBSAN: signed-integer-overflow in ../fs/open.c:321:15
-> [  195.408739] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long')
-> [  195.414683] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
-> [  195.420138] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [  195.425804] Call Trace:
-> [  195.427360]  <TASK>
-> [  195.428791]  dump_stack_lvl+0x93/0xd0
-> [  195.431150]  handle_overflow+0x171/0x1b0
-> [  195.433640]  vfs_fallocate+0x459/0x4f0
-> ...
-> [  195.490053] ------------[ cut here ]------------
-> [  195.493146] UBSAN: signed-integer-overflow in ../fs/open.c:321:61
-> [  195.497030] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long)
-> [  195.502940] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
-> [  195.508395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [  195.514075] Call Trace:
-> [  195.515636]  <TASK>
-> [  195.517000]  dump_stack_lvl+0x93/0xd0
-> [  195.519255]  handle_overflow+0x171/0x1b0
-> [  195.521677]  vfs_fallocate+0x4cb/0x4f0
-> [  195.524033]  __x64_sys_fallocate+0xb2/0xf0
-> 
-> [...]
+Hi Peter,
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+On Wed, May 15, 2024 at 12:36=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
+> On Wed, May 08, 2024 at 04:47:25PM -0700, Linus Torvalds wrote:
+> > For example, the most common case of overflow we've ever had has very
+> > much been array indexing. Now, sometimes that has actually been actual
+> > undefined behavior, because it's been overflow in signed variables,
+> > and those are "easy" to find in the sense that you just say "no, can't
+> > do that". UBSAN finds them, and that's good.
+>
+> We build with -fno-strict-overflow, which implies -fwrapv, which removes
+> the UB from signed overflow by mandating 2s complement.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+FWIW,
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Clang-19 allows -fwrapv and -fsanitize=3Dsigned-integer-overflow to work
+together [1]
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+And the sanitizer was re-introduced with Commit 557f8c582a9ba8ab
+("ubsan: Reintroduce signed overflow sanitizer").
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
+>
+> With the exception of an UBSAN bug prior to GCC-8, UBSAN will not, and
+> should not, warn about signed overflow when using either of these flags.
 
-[1/1] fs: remove accidental overflow during wraparound check
-      https://git.kernel.org/vfs/vfs/c/c01a23b6fbd1
+[1]: https://clang.llvm.org/docs/ReleaseNotes.html#sanitizers
+
+Thanks
+Justin
