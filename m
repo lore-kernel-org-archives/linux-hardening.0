@@ -1,63 +1,48 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370FF157480
-	for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 20:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8403A15CB
+	for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 20:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715890032; cv=none; b=BKYhiW2cJRn1PQTdcZfFtDcYs3lg0hbF+JMB5mMGUt9PhKDAD/4sMQgn1r+sUi84+lPo2PHmUIxBBrru0cGtFt70nr30UoKAJKKexu3CMPXyGlPgMlZ+QTidZKJ5duFRfvS1ZLXvYymLTPaXeByi2xX1yF7U6p2xxMaJhdd9pc4=
+	t=1715892742; cv=none; b=mTL9sEgNyfSSsqvY+Lfu+YqXNi9mlzYrs4N76trg7gmYM8fj5dY8YeUgXHQBz0/p0FWlHiMjebBjVoPYxvW0cCpsdJycL0CuO1qWXBRR//Lor1mFl5PrLGP6RmzgXgunpBwm42U00ZSTm2/GfxHZ//IHDVfCFsZxXQlC4MyN/j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715890032; c=relaxed/simple;
-	bh=PHM05l3dg41vpIlXCvO5miEj3ChNSyOJ7ppgPBZeDaA=;
+	s=arc-20240116; t=1715892742; c=relaxed/simple;
+	bh=tVODxaTXe1VJWK72M3wkpqVogEldieF3m7bSsMs8jIM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1+GzClGNtz2bmMcV94vGyi+HnGBe6LDhezOGHWACz/FDgIpSu1aV7trZNHH3rdzTccXGDvfO0gHQUqv0KV3f2cUZvYknUH+vG0aa0pCfElynhorhejZpLqi8ETHaGHUn/Xm6ekRB78gKn5jW/5qnodmE0JP7t/JTerYyhVvVWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CQYkJvzj; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jh3X0nB4TjmcTb07o1zYizTajQQM0IPkmHcLInsFM/Q2pBLNUc0aX0GQWIZe5bj/6JNazuw3AU4dZn+4Z1UUCWLllt32B05Il2RDUrqYkwXaBHuah9iTAcu7PeMtt+gLhQZxTgI2Kg41EztTeINSPZPPxddX2Xtux7db/96RkZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=LAL413as; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CQYkJvzj"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ec92e355bfso81144905ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 13:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715890030; x=1716494830; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KyG12zQ6p7/BXdJX9MxBxAQEGuyOmeFERaocoWUX2nM=;
-        b=CQYkJvzj284k/xT2T2CDg/po6QZTl01lbXDUhG3930Xfk0raFbhdPd1lTF1JuFav8s
-         ut/kJUneDemDBBi5q0V0ujIF+kn0tox6JYiVX6YHLpYiXNawZs73oclNmPqakFDghXyB
-         QWAvLJmx6pTkQgaTRpv6EDvYmPZHsszSIO07o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715890030; x=1716494830;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KyG12zQ6p7/BXdJX9MxBxAQEGuyOmeFERaocoWUX2nM=;
-        b=hUWsJee1vSD1CUAyivVVJgV5D9qDIFLC2gH1mbrK5enU7uR4JqP5EgFpsYGP8mIxAr
-         JZwv2u30pfAOaK5RMJqDj0tPYmLqzTNLJ7ggDB6wI8hQh99JrSRvZB92AnocYpyWu31U
-         Re2oVFvUSqAcD5bEN5bh7Fiyis9UW68QUvATUI0dvPQNPviLqqvkEG5dPrNY4ITFlo3A
-         uYMpQizN4Ty2kmmndpYiD7vdZu99vc1YxBMTIM/VTSjqH8/XCfe/pnGhA01C+bTzlV3g
-         Te253b32ePm+G79K2clYMSCTtVIsmc9diZvIIrINulKYGpwkRXvVyVkL+D+bL+/FPkY5
-         iqMw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3VO3tRj+5ABeatrdrkdH1APGC51oBcWmxchffVnyLij3wbdOTDjSfUZTsEKLv1W4bU04ALTnVfJBR2c1pfp/ksP3Cfjo+y/7yahxfzC3i
-X-Gm-Message-State: AOJu0YyvbapilQnCv6UBodFHxeYGagMf7Pg4HUkQU0z4aISKCoR/ip+6
-	drOwhvMpoo82bsXZyaskXGwJtYij61v8V5jac7W3YmSYk55Ekdr3Maw7b/Q9OA==
-X-Google-Smtp-Source: AGHT+IGTRclh1CigI5i708kRIjv4JGvkOMw+J0DApcHCOCHAenoDy7R8CP0aQXtDPKQhtOx2gDwoFg==
-X-Received: by 2002:a17:902:8542:b0:1e2:be4b:dd9f with SMTP id d9443c01a7336-1ef43d29670mr181010385ad.15.1715890030540;
-        Thu, 16 May 2024 13:07:10 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f096da40a4sm29452455ad.66.2024.05.16.13.07.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 13:07:09 -0700 (PDT)
-Date: Thu, 16 May 2024 13:07:09 -0700
-From: Kees Cook <keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="LAL413as"
+Received: from macsyma.thunk.org (99-196-128-135.cust.exede.net [99.196.128.135] (may be forged))
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 44GKpaRr012754
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 16:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1715892707; bh=SOtluD1PaXHX4aLfHVPP7s3eptH002zErJfg39HNDSk=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=LAL413asy4CTYAoR3vtKjzRUe9/Y5ZKBHnX4D7QBrLySjGcmNL/TA6b/3nF4L7OW6
+	 auGZzHOYkeWzK33jCS14SqF32HnyLSwxPfpglAASB8vbXfv7A2zObdTAjV2nzCq0gk
+	 m3CWrF5/sUKerMQeqpL1UlyPsZg2cRQOfjRfMox85NiCHzApmIyP4rbralHvruTPzb
+	 s9EMU8horV31wPgD29MyYcikq36S0G1/t/YZk4eJPIO63PqEU2KOY7H6gWiWbv8Vwt
+	 CspH+ti7/1rz0YO7O8w8MOiyu1S1gXy7FSoB+hB49nwfI7z+rpRsp4dnDz6sPrhubc
+	 eVS++1v7+PG0A==
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id F15DF3403E6; Thu, 16 May 2024 14:51:34 -0600 (MDT)
+Date: Thu, 16 May 2024 14:51:34 -0600
+From: "Theodore Ts'o" <tytso@mit.edu>
 To: Justin Stitt <justinstitt@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
 Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <202405161254.D4F33F7@keescook>
+Message-ID: <20240516205134.GC287325@mit.edu>
 References: <202404291502.612E0A10@keescook>
  <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
  <202405081144.D5FCC44A@keescook>
@@ -79,38 +64,39 @@ Content-Disposition: inline
 In-Reply-To: <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
 
 On Thu, May 16, 2024 at 12:48:47PM -0700, Justin Stitt wrote:
-> I don't think we're capable of identifying every single problematic
-> overflow/wraparound case in the kernel, this is pretty obvious
-> considering we've had decades to do so. Instead, it seems much more
-> feasible that we annotate (very, very minimally so as not to disrupt
-> code readability and style) the spots where we _know_ overflow should
-> happen.
+> 
+> It is incredibly important that the exact opposite approach is taken;
+> we need to be annotating (or adding type qualifiers to) the _expected_
+> overflow cases. The omniscience required to go and properly annotate
+> all the spots that will cause problems would suggest that we should
+> just fix the bug outright. If only it was that easy.
 
-For the baby steps Linus wants, we can walk this path:
+It certainly isn't easy, yes.  But the problem is when you dump a huge
+amount of work and pain onto kernel developers, when they haven't
+signed up for it, when they don't necessarily have the time to do all
+of the work themselves, and when their corporate overlords won't given
+them the headcount to handle unfunded mandates which folks who are
+looking for a bright new wonderful future --- don't be surprised if
+kernel developers push back hard.
 
-- Finish the *signed* integer overflow refactoring/annotation.
-  This is nearly done already, and every case we've found is either
-  a legitimate bug (thankfully rare), or happens in code that is
-  either accidentally correct (thanks to no UB), or the correctness is
-  very unclear. Refactoring these cases improves readability for
-  everyone and doesn't change the behavior.
+One of the big problems that we've seen with many of these security
+initiatives is that the teams create these unfunded mandates get their
+performance reviews based on how many "bug reports" that they file,
+regardless of whether they are real problems or not.  This has been a
+problem with syzkaller, and with clusterfuzz.  Let's not make this
+problem worse with new and fancy sanitizers, please.
 
-- Begin *signed* integer implicit truncation refactoring/annotation.
-  As Linus suggested, dealing with this will catch a bunch of the flaws
-  we've seen recently. Handling the false positives here will need some
-  investigation and some compiler support, and that'll happen in
-  parallel.
+Unfortunately, I don't get funding from my employer to clear these
+kinds of reports, so when I do the work, it happens on the weekends or
+late at night, on my own time, which is probably why I am so grumpy
+about this.  Whether you call this "sharpening our focus", or "year of
+efficiency", or pick your corporate buzzwords, it really doesn't
+matter.  The important thing is that the figure of merit must NOT be
+"how many security bugs that are found", but how much bullsh*t noise
+do these security features create, and how do you decrease overhead by
+upstream developers to deal with the fuzzing/ubsan/security tools
+find.
 
-- Tackle *unsigned* integer overflow on a per-type basis: we can start
-  with the place Linus called out: size_t. This will let us focus on the
-  first of the unsigned types that is not commonly wrapping, and is a
-  regular place that unexpected overflow gets the kernel into big
-  trouble.
+Cheers,
 
-What we learn from these three steps should inform us what further steps
-down this path can look like.
-
--Kees
-
--- 
-Kees Cook
+						- Ted
