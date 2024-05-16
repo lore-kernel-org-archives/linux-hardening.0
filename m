@@ -1,99 +1,78 @@
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BC614B97D;
-	Thu, 16 May 2024 15:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2ED2421A;
+	Thu, 16 May 2024 16:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715873307; cv=none; b=r1Hsw9HDj05KzWl1HBoEZlx/ziXkXJE8WbacGNoxHHNFCOZWcZAda8CcOYJC9Re+/tXkA0HjycQxGbOsI5gtfkxBeNKRfT5gLgY9E2ZpdmAv5VeQ6GUzbjzD2VN3PbWrvwVgpmwL24Cd7Fh1kqBRV+mLluHFlMF9LFTLG8LSKOI=
+	t=1715876108; cv=none; b=GLU5r8miuZg8Sq5BqDKevB9pSb0Dt7+hZ1JR1Hq87cIUn40C+XEJEO8y3gX+NX2etf0nImRZrzQZ+Lyx2nJ2lqP4oieNztHw1q0C7f5XH0gBAD+QKEk4geFfexTFpyAkm8nNTMJ2uq/dqfwVUWzEGqmk9Nl3yLg15h28FppsN6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715873307; c=relaxed/simple;
-	bh=5U0KMV2C/c892y1VrfZ5naiyiiT+W1EsNrkhQahBFWU=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Gvy4mkR2fA1EGYNvCKDDDppj7ir38jW2rkepoazVJGcvc4EXi+vgCH+jhsuElAvslTL99l0hQIMsacYyWhHBII+uObCHVVYQclbvTy+ac9476BRc+gjbQ2uuP8Y0u/ezbkXmq3/mutpDM++3wLAhkAareFU45XzD1hS1BuHGlF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=iUDlKF7z; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1715876108; c=relaxed/simple;
+	bh=C5txdxBhuj7rW3DWnSbwvCzPzbmF4xQ5STOkAZq83ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=loYiG4FrZCoqwHXh3QMYVATPN7dLxpJ2zsn3SumGLD/jMtRcjrN0CA28pBrGn37AjsgmqOaNQEJIewxGysRkObs/5Cvfrj/pT5NAN+9Wxhudf03XIpy4Ycc86UbUWxE7ihaYSnBuWT4PzjVyUv6TyGGlfQ+M17BNLjOKtqh+Rhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JtYVC8El; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="iUDlKF7z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1715873305; x=1747409305;
-  h=from:to:cc:subject:date:message-id:content-id:
-   mime-version:content-transfer-encoding;
-  bh=5U0KMV2C/c892y1VrfZ5naiyiiT+W1EsNrkhQahBFWU=;
-  b=iUDlKF7z/VhC7Yp47Y+ref1W1q6CSn69JaV3Izn393Wm1drdsQ+aG5XY
-   zuzswcKNC7+XrIP/vfwuXge7+OK+VDUGemZvp+puKmS+rnE9WlhtSSJMI
-   9TMJJbe3s/nPkcLPmLrRLWr91cnUHJ/8OcfwoR5vaUQWnfab4eVDPVVTZ
-   o=;
-X-IronPort-AV: E=Sophos;i="6.08,164,1712620800"; 
-   d="scan'208";a="344862544"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 15:28:18 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.43.254:59697]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.39.135:2525] with esmtp (Farcaster)
- id ad0209d0-e9fb-4e92-a94b-04e2f86d58c5; Thu, 16 May 2024 15:28:16 +0000 (UTC)
-X-Farcaster-Flow-ID: ad0209d0-e9fb-4e92-a94b-04e2f86d58c5
-Received: from EX19D043EUB003.ant.amazon.com (10.252.61.69) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 16 May 2024 15:28:16 +0000
-Received: from EX19D002EUC004.ant.amazon.com (10.252.51.230) by
- EX19D043EUB003.ant.amazon.com (10.252.61.69) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 16 May 2024 15:28:16 +0000
-Received: from EX19D002EUC004.ant.amazon.com ([fe80::fa57:3c1:c670:f520]) by
- EX19D002EUC004.ant.amazon.com ([fe80::fa57:3c1:c670:f520%3]) with mapi id
- 15.02.1258.028; Thu, 16 May 2024 15:28:16 +0000
-From: "Manthey, Norbert" <nmanthey@amazon.de>
-To: "keescook@chromium.org" <keescook@chromium.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "Woodhouse, David" <dwmw@amazon.co.uk>, "Stieger, Andreas"
-	<astieger@amazon.de>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "Hemdan, Hagar Gamal Halim"
-	<hagarhem@amazon.de>
-Subject: Extending Linux' Coverity model and also cover aarch64
-Thread-Topic: Extending Linux' Coverity model and also cover aarch64
-Thread-Index: AQHap6Wsmrdu7IK9QEOStpjMecz3Dg==
-Date: Thu, 16 May 2024 15:28:16 +0000
-Message-ID: <77f6e6fc46232db82a3c63e93877c9534334e407.camel@amazon.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9B7489B3CBD9B741AD1B080B393DE304@amazon.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JtYVC8El"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF147C113CC;
+	Thu, 16 May 2024 16:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715876108;
+	bh=C5txdxBhuj7rW3DWnSbwvCzPzbmF4xQ5STOkAZq83ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JtYVC8Elpkr080qIIwIffhq7Xabf/QhfcnqUPFWpxscSTASidGwxeAWdxwNUEwpQn
+	 SSPfWjsKCa0RRt1mPnSkMUSd0TyiBWfIA69jJyrMDqeG4ekCfRGRRypHSBeeavbEpF
+	 ds+m50y/663B0JwIW1wujM83A4h6g6sQumIfOYmo=
+Date: Thu, 16 May 2024 18:15:05 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Manthey, Norbert" <nmanthey@amazon.de>
+Cc: "keescook@chromium.org" <keescook@chromium.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Woodhouse, David" <dwmw@amazon.co.uk>,
+	"Stieger, Andreas" <astieger@amazon.de>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"Hemdan, Hagar Gamal Halim" <hagarhem@amazon.de>
+Subject: Re: Extending Linux' Coverity model and also cover aarch64
+Message-ID: <2024051625-dowry-pacifism-b0b9@gregkh>
+References: <77f6e6fc46232db82a3c63e93877c9534334e407.camel@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77f6e6fc46232db82a3c63e93877c9534334e407.camel@amazon.de>
 
-RGVhciBLZWVzLCBhbGwsDQoNCndlIHB1Ymxpc2hlZCBhbiBleHRlbnNpb24gZm9yIHRoZSBDb3Zl
-cml0eSBtb2RlbCB0aGF0IGlzIHVzZWQgYnkgdGhlDQpDb3Zlcml0eVNjYW4gc2V0dXAgZm9yIHRo
-ZSBMaW51eCBrZXJuZWwgWzFdLiBXZSBoYXZlIGJlZW4gdXNpbmcgdGhpcw0KZXh0ZW5zaW9uIHRv
-IGFuYWx5emUgdGhlIDYuMSBrZXJuZWwgYnJhbmNoLCBhbmQgcmVwb3J0ZWQgc29tZSBmaXhlcyB0
-bw0KdGhlIHVwc3RyZWFtIGNvZGUgYmFzZSB0aGF0IGFyZSBiYXNlZCBvbiB0aGlzIG1vZGVsIFsy
-XS4gRmVlbCBmcmVlIHRvDQptZXJnZSB0aGUgcHVsbCByZXF1ZXN0LCBhbmQgdXBkYXRlIHRoZSBt
-b2RlbCBpbiB0aGUgQ292ZXJpdHlTY2FuIHNldHVwLg0KV2UgZG8gbm90IGhhdmUgYWNjZXNzIHRv
-IHRoYXQgcHJvamVjdCB0byBwZXJmb3JtIHRoZXNlIHVwZGF0ZXMNCm91cnNlbHZlcy4NCg0KVG8g
-aW5jcmVhc2UgdGhlIGFuYWx5c2lzIGNvdmVyYWdlIHRvIGFhcmNoNjQsIHdlIGFuYWx5emVkIGEg
-eDg2IGFuZCBhDQphYXJjaDY0IGNvbmZpZ3VyYXRpb24uIFRoZSBpbmNyZWFzZWQgY292ZXJhZ2Ug
-aXMgYWNoaWV2ZWQgYnkgdXNpbmcgcmUtDQpjb25maWd1cmF0aW9uIGFuZCBjcm9zcy1jb21waWxh
-dGlvbiBkdXJpbmcgdGhlIGFuYWx5c2lzIGJ1aWxkLiBJZiB5b3UNCmFyZSBpbnRlcmVzdGVkIGlu
-IHRoaXMgc2V0dXAgd2UgY2FuIHNoYXJlIHRoZSBEb2NrZXJmaWxlIGFuZCBzY3JpcHQgd2UNCnVz
-ZWQgZm9yIHRoaXMgcHJvY2Vzcy4NCg0KVG8gcHJldmVudCByZWdyZXNzaW9ucyBpbiBiYWNrcG9y
-dHMgdG8gTFRTIGtlcm5lbHMsIHdlIHdvbmRlcmVkIHdoZXRoZXINCnRoZSBjb21tdW5pdHkgaXMg
-aW50ZXJlc3RlZCBpbiBzZXR0aW5nIHVwIENvdmVyaXR5U2NhbiBwcm9qZWN0cyBmb3INCm9sZGVy
-IGtlcm5lbCByZWxlYXNlcy4gV291bGQgc3VjaCBhbiBleHRlbnNpb24gYmUgdXNlZnVsIHRvIHNo
-b3cgbmV3DQpkZWZlY3RzIGluIGFkZGl0aW9uIHRvIHRoZSBjdXJyZW50IHJlbGVhc2UgdGVzdGlu
-Zz8NCg0KQmVzdCwNCk5vcmJlcnQNCg0KWzFdIGdpdGh1YiBDb3Zlcml0eSBtb2RlbCBwdWxsIHJl
-cXVlc3QgbGluazoNCmh0dHBzOi8vZ2l0aHViLmNvbS9rZWVzL2NvdmVyaXR5LWxpbnV4L3B1bGwv
-MQ0KWzJdIEVtYWlscyBmb3IgbW9zdCBmaXhlcyBieSBIYWdhcjoNCmh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2FsbC8/cT1mJTNBaGFnYXJoZW0NCg0KCgoKQW1hem9uIFdlYiBTZXJ2aWNlcyBEZXZl
-bG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpH
-ZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVp
-bmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAyNTc3NjQg
-QgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAzNjUgNTM4IDU5Nwo=
+On Thu, May 16, 2024 at 03:28:16PM +0000, Manthey, Norbert wrote:
+> Dear Kees, all,
+> 
+> we published an extension for the Coverity model that is used by the
+> CoverityScan setup for the Linux kernel [1]. We have been using this
+> extension to analyze the 6.1 kernel branch, and reported some fixes to
+> the upstream code base that are based on this model [2]. Feel free to
+> merge the pull request, and update the model in the CoverityScan setup.
+> We do not have access to that project to perform these updates
+> ourselves.
+> 
+> To increase the analysis coverage to aarch64, we analyzed a x86 and a
+> aarch64 configuration. The increased coverage is achieved by using re-
+> configuration and cross-compilation during the analysis build. If you
+> are interested in this setup we can share the Dockerfile and script we
+> used for this process.
+> 
+> To prevent regressions in backports to LTS kernels, we wondered whether
+> the community is interested in setting up CoverityScan projects for
+> older kernel releases. Would such an extension be useful to show new
+> defects in addition to the current release testing?
 
+New defects yes, I would like to know that, as long as they are also
+fixed already in mainline, right?
+
+Just send us reports of that, no need to get the covertity site involved
+there, I'll be glad to take them.
+
+thanks,
+
+greg k-h
