@@ -1,75 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8149D14D2B3;
-	Thu, 16 May 2024 13:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609C114A4D7;
+	Thu, 16 May 2024 14:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715866234; cv=none; b=LEaYEBiLTQDQAnvXm0En2QFJKnLvvTm/zBfN4pT6LtHJ6Y/8wBiZt7UJ/T/id0LwelL5P1Fq7o/jgiqSVNRx7IFxi0Qy5pC9CMAgAB6Drk23ZoA72ACxcuczGHuuDM4JezDWAQWbtAlwR2SiY4qdxUmBj7Uv+zKjju8jxR62PtM=
+	t=1715868155; cv=none; b=myLHs5mYp6MgpDzAe8VH6zQngntsWttLAgAmp6HuH6JrE6xkzIdtZqzWjhd7J4IflSf5m3Swp65UNCBvQ3knF8WtwVsFlsSQnHAjnRJmcMQvu8GpCFfbpUUbs3aMATNA77CeLVBFSCGPAPgIzFP3OO0xcxAoPdu8HCerulpyqQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715866234; c=relaxed/simple;
-	bh=z8BnU2Is6DFB6KVcEKYw3pqMsABrzURYamS+ST69Qk0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ZItztftFVjxn/tMp3b9hZ4xEZnJP6wcl1Ji6HLngBKcVXGIHM2Q+JFNDwqunP44JLWwPd8hKahrUfpNYzSmbPa9ONg1oB6/ASUf2be5kXEIAS6Ennk32nUtD75E99y4jmv+OKysHAdGEyr7pVbyq+FyQxoTHIX+PUMwialGI+eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHwLq/uJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715868155; c=relaxed/simple;
+	bh=PII+OyY3HRsFOpjW5l++XBk5W4fZ/zADl3BCmJlUORM=;
+	h=Subject:MIME-Version:Content-Type:Date:Message-ID:CC:From:To:
+	 References:In-Reply-To; b=VOtslJur2zmnM700pOzHZn1PZXRU5uA3i3yp/+ipWYQicF1BGlVkJRv8Oqfqjtn8jwW0CTbHt1wTPHOfPou7A3M08NkaEKXKvSGF7qNNUer8hzTZ5SE5AY/lfNN5OgjJ9x7dKbMHf5fzxYDYP9mmtx1UDdwFg0lFkkzykvPke24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=k+OJX8QB; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHwLq/uJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4131C113CC;
-	Thu, 16 May 2024 13:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715866234;
-	bh=z8BnU2Is6DFB6KVcEKYw3pqMsABrzURYamS+ST69Qk0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=PHwLq/uJvoN0fU1gNykdMOT0phruqPrBSqb5l+yRgMUgegRuGl0R4RVb/VQNKldo1
-	 mkkrYXbLB3d90j6KBRyAiuzhzE+wD7cwQViOMeIvc+RIHQoh4CRKYXTMeLoYtm5TD9
-	 AOsZ4N23KBJIcUFYJtlyZfelrFo5K+/PtJG4THL+kze4j1SPTxfaW0h0xnSKkq198s
-	 JYKbDN/WqRLEdSEmlq8TnWU+BozS/3PKiVf7mdKMicq/hW3emTwXiRawbH4XAQIAjK
-	 Wc+YRgcTtWW2ykVjX2w7Pi/kOPaTnAIK+pItqhkJTz04bWGClvurKfg/r4q6DEohA1
-	 CxGmVALL3FaTg==
-Date: Thu, 16 May 2024 06:30:32 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-CC: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>,
- Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240515073636.GY40213@noisy.programming.kicks-ass.net>
-References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com> <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com> <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com> <20240515073636.GY40213@noisy.programming.kicks-ass.net>
-Message-ID: <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k+OJX8QB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1715868154; x=1747404154;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   cc:from:to:references:in-reply-to:subject;
+  bh=PII+OyY3HRsFOpjW5l++XBk5W4fZ/zADl3BCmJlUORM=;
+  b=k+OJX8QBKhlhXLL+yP7jzjxSe2kwEGUIlf1RVVo8QLlDuet++05n1dC7
+   dwhyvpEbW+sLKcnNuXJDwX9Dp1D1vS6zEXehHOJDcwbUoiDoTf/1MKlFU
+   esPMfQq5KW/aAQJWLPNk5j+/JXm0kvAxHpvRtIW0QAvZOHvajT8m1wCpz
+   k=;
+X-IronPort-AV: E=Sophos;i="6.08,164,1712620800"; 
+   d="scan'208";a="419475431"
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 14:02:24 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:61258]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.38.98:2525] with esmtp (Farcaster)
+ id 669cf238-0252-433a-b5ae-10131f992275; Thu, 16 May 2024 14:02:23 +0000 (UTC)
+X-Farcaster-Flow-ID: 669cf238-0252-433a-b5ae-10131f992275
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 16 May 2024 14:02:23 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 16 May
+ 2024 14:02:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Thu, 16 May 2024 14:02:09 +0000
+Message-ID: <D1B4HKJAJG21.2DH9F3E1Q6J9L@amazon.com>
+CC: Sean Christopherson <seanjc@google.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, "Paolo
+ Bonzini" <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Vitaly
+ Kuznetsov" <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, "Rick P
+ Edgecombe" <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>,
+	Angelina Vu <angelinavu@linux.microsoft.com>, Anna Trikalinou
+	<atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>,
+	"Forrest Yuan Yu" <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
+	James Morris <jamorris@linux.microsoft.com>, John Andersen
+	<john.s.andersen@intel.com>, "Madhavan T . Venkataraman"
+	<madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>,
+	=?utf-8?q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+	=?utf-8?q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>, Thara
+ Gopinath <tgopinath@microsoft.com>, "Trilok Soni" <quic_tsoni@quicinc.com>,
+	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, Yu Zhang
+	<yu.c.zhang@linux.intel.com>, =?utf-8?q?=C8=98tefan_=C8=98icleru?=
+	<ssicleru@bitdefender.com>, <dev@lists.cloudhypervisor.org>,
+	<kvm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>, <qemu-devel@nongnu.org>,
+	<virtualization@lists.linux-foundation.org>, <x86@kernel.org>,
+	<xen-devel@lists.xenproject.org>
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+X-Mailer: aerc 0.17.0-129-gd582ac682cdf-dirty
+References: <20240503131910.307630-1-mic@digikod.net>
+ <20240503131910.307630-4-mic@digikod.net> <ZjTuqV-AxQQRWwUW@google.com>
+ <20240506.ohwe7eewu0oB@digikod.net> <ZjmFPZd5q_hEBdBz@google.com>
+ <20240507.ieghomae0UoC@digikod.net> <ZjpTxt-Bxia3bRwB@google.com>
+ <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com> <20240514.mai3Ahdoo2qu@digikod.net>
+In-Reply-To: <20240514.mai3Ahdoo2qu@digikod.net>
+X-ClientProxiedBy: EX19D046UWA001.ant.amazon.com (10.13.139.112) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-
-
-On May 15, 2024 12:36:36 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
-rote:
->On Wed, May 08, 2024 at 04:47:25PM -0700, Linus Torvalds wrote:
->> For example, the most common case of overflow we've ever had has very
->> much been array indexing=2E Now, sometimes that has actually been actua=
-l
->> undefined behavior, because it's been overflow in signed variables,
->> and those are "easy" to find in the sense that you just say "no, can't
->> do that"=2E UBSAN finds them, and that's good=2E
+On Tue May 14, 2024 at 12:23 PM UTC, Micka=C3=ABl Sala=C3=BCn wrote:
+> > Development happens
+> > https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
+> > branch, but I'd advice against looking into it until we add some order
+> > to the rework. Regardless, feel free to get in touch.
 >
->We build with -fno-strict-overflow, which implies -fwrapv, which removes
->the UB from signed overflow by mandating 2s complement=2E
+> Thanks for the update.
+>
+> Could we schedule a PUCK meeting to synchronize and help each other?
+> What about June 12?
 
-I am a broken record=2E :) This is _not_ about undefined behavior=2E
+Sounds great! June 12th works for me.
 
-This is about finding a way to make the intent of C authors unambiguous=2E=
- That overflow wraps is well defined=2E It is not always _desired_=2E C has=
- no way to distinguish between the two cases=2E
-
--Kees
-
---=20
-Kees Cook
+Nicolas
