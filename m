@@ -1,102 +1,175 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8403A15CB
-	for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 20:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBEF2AF16
+	for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 23:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715892742; cv=none; b=mTL9sEgNyfSSsqvY+Lfu+YqXNi9mlzYrs4N76trg7gmYM8fj5dY8YeUgXHQBz0/p0FWlHiMjebBjVoPYxvW0cCpsdJycL0CuO1qWXBRR//Lor1mFl5PrLGP6RmzgXgunpBwm42U00ZSTm2/GfxHZ//IHDVfCFsZxXQlC4MyN/j8=
+	t=1715902816; cv=none; b=pRxDkaKO21eqD+6JdCn8mqEYfwWq6nY9Nmv7pWFfnHai0EdJzOzXiAdh4kgzn6rhMma1CwVaIjrByYlia0lZvbFdb7QyWSwe3cHwSSPmk6TgQlagGTwFQCzwkF0idQe/c0g7OI2ImHYzSMbRKZLwNwHLUcoQiiDeYnYwLAhsC7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715892742; c=relaxed/simple;
-	bh=tVODxaTXe1VJWK72M3wkpqVogEldieF3m7bSsMs8jIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jh3X0nB4TjmcTb07o1zYizTajQQM0IPkmHcLInsFM/Q2pBLNUc0aX0GQWIZe5bj/6JNazuw3AU4dZn+4Z1UUCWLllt32B05Il2RDUrqYkwXaBHuah9iTAcu7PeMtt+gLhQZxTgI2Kg41EztTeINSPZPPxddX2Xtux7db/96RkZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=LAL413as; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1715902816; c=relaxed/simple;
+	bh=URIGKdkbEgy8oUD3A8XedbAjc10c7x/cPv/IEH/QL2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X6pdEY0eBAc0VMQenJivdgxj6syh3g6TR7gkVxqNuyJXywxbbjlDEtACiRHvZoQm1gE5R1TkCapwX+Q4xUF+O66orpQT43NL0J9XO3kg1xGGjYQbXLDr9ql0gsOcBOwLn98ymoq5RNvf0KH17Hm5xNJBVcdb6Z9hbED1qb4uK1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=08Bhm9Nj; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="LAL413as"
-Received: from macsyma.thunk.org (99-196-128-135.cust.exede.net [99.196.128.135] (may be forged))
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 44GKpaRr012754
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 16:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1715892707; bh=SOtluD1PaXHX4aLfHVPP7s3eptH002zErJfg39HNDSk=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=LAL413asy4CTYAoR3vtKjzRUe9/Y5ZKBHnX4D7QBrLySjGcmNL/TA6b/3nF4L7OW6
-	 auGZzHOYkeWzK33jCS14SqF32HnyLSwxPfpglAASB8vbXfv7A2zObdTAjV2nzCq0gk
-	 m3CWrF5/sUKerMQeqpL1UlyPsZg2cRQOfjRfMox85NiCHzApmIyP4rbralHvruTPzb
-	 s9EMU8horV31wPgD29MyYcikq36S0G1/t/YZk4eJPIO63PqEU2KOY7H6gWiWbv8Vwt
-	 CspH+ti7/1rz0YO7O8w8MOiyu1S1gXy7FSoB+hB49nwfI7z+rpRsp4dnDz6sPrhubc
-	 eVS++1v7+PG0A==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id F15DF3403E6; Thu, 16 May 2024 14:51:34 -0600 (MDT)
-Date: Thu, 16 May 2024 14:51:34 -0600
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-Message-ID: <20240516205134.GC287325@mit.edu>
-References: <202404291502.612E0A10@keescook>
- <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
- <202405081144.D5FCC44A@keescook>
- <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
- <202405081354.B0A8194B3C@keescook>
- <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <20240515073636.GY40213@noisy.programming.kicks-ass.net>
- <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
- <20240516140951.GK22557@noisy.programming.kicks-ass.net>
- <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="08Bhm9Nj"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7f8df927790so33413241.3
+        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 16:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715902813; x=1716507613; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b2dB9OUxKVJydzpMoRJxqlpFvuQGNeC1Byqw9B+0hCU=;
+        b=08Bhm9NjgwOhD6nq2Utk1mR757sjnOdXWqcurW1SgS5cMzsp9EnlCakBSW3WteWx1I
+         BnCsF/dmC7Xf3QIxIgW9zFCbpoh0TJe+f3/3cO7IxTk+j1wmmnh8ih9ovJf1I9yCVs88
+         yXilut4dPvytNp2lNkbSOs3XeJiZH9K27RzHsxHAqhg5pG4qiqrigFYYEvjD7227seuF
+         IpSkJS3maWDkt2+NXK1wp65qxfFUGZZhp5jKr3HlR+ztAaVpXotiW4rU9g+J7/b5lPqs
+         +R0UQerjei3Ax49srZiODQ65FHvuqK1zNm+rBbeAgDz5VJNudb7ggtj8rRjcG0u3Rw81
+         yEDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715902813; x=1716507613;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b2dB9OUxKVJydzpMoRJxqlpFvuQGNeC1Byqw9B+0hCU=;
+        b=AAY6QzjP4vLD4URA9niI47Oj0csV3+QjJSNyLjC/SV+HIn1HkSWIk4OS3nEr4OYVYA
+         3LtgWMCNSc0VlSYCUBS21csgE98GrgDzwi04n9aY3T0oXGoqqBTM9/xqYWDXYoxmX7/V
+         hWxuSLvSucb6NkxYMxFlgFe2R3NlByJBksjpCMOlmEo1GpfVHWhjrWmjFmGaW66rIaby
+         moi315juRaqEqZATOnavlVBeWLC0ydjHgTRU4KdYRC9+TZES2KXOh6HiMeP6UV7gaEVb
+         QdZLcTAOZqZ8T/JZ0Q+7+AZ26Z+PHEAafDp63a7gFfwP0jwPYbQUoe2kQixvIpcGAmFb
+         HjsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbUZLBk5aUG26SCQGdc0t7k6WpU3Kfcty8zBpQiG9A7cLo0A5pm6Gdj+vX6e2+e/fgMCAx+UgVFmMpiDgG6efKM2un5HRioP0sYitqMz4N
+X-Gm-Message-State: AOJu0Yz69jrlQLx5clW5+Ya+UchJQGNuUJc+2Wm48ZzZ80iCaXbHWQkP
+	uTsmR9MBZhKw/8R46fg97BTdmWk0kSh/p4JdMBvWHRXDD/sjvnP5EycjJ3+yo+VOOR8N9tt/GED
+	xMYRFogiDe1hFNN9g9DuETf1MpK3WIfhF0Y1Q
+X-Google-Smtp-Source: AGHT+IFpAOhljFS/PTPBZQwP83d5MIHpB1HU7pH89UAdZAkw4Ly8hJBhVfm/h/CifLeMtGmQ6OiPSGkr5/GyKGIvask=
+X-Received: by 2002:a05:6102:c90:b0:47c:1251:cf25 with SMTP id
+ ada2fe7eead31-48077de62e8mr20449719137.12.1715902813340; Thu, 16 May 2024
+ 16:40:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
+References: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com> <87v83gllv8.ffs@tglx>
+In-Reply-To: <87v83gllv8.ffs@tglx>
+From: Justin Stitt <justinstitt@google.com>
+Date: Thu, 16 May 2024 16:40:01 -0700
+Message-ID: <CAFhGd8p94sHpDc8MApZK7q9iEQ_C8c5frwZx9v_bTnhwtAM=HQ@mail.gmail.com>
+Subject: Re: [PATCH] ntp: remove accidental integer wrap-around
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 16, 2024 at 12:48:47PM -0700, Justin Stitt wrote:
-> 
-> It is incredibly important that the exact opposite approach is taken;
-> we need to be annotating (or adding type qualifiers to) the _expected_
-> overflow cases. The omniscience required to go and properly annotate
-> all the spots that will cause problems would suggest that we should
-> just fix the bug outright. If only it was that easy.
+Hi,
 
-It certainly isn't easy, yes.  But the problem is when you dump a huge
-amount of work and pain onto kernel developers, when they haven't
-signed up for it, when they don't necessarily have the time to do all
-of the work themselves, and when their corporate overlords won't given
-them the headcount to handle unfunded mandates which folks who are
-looking for a bright new wonderful future --- don't be surprised if
-kernel developers push back hard.
+On Tue, May 14, 2024 at 3:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Tue, May 07 2024 at 04:34, Justin Stitt wrote:
+> > Using syzkaller alongside the newly reintroduced signed integer overflo=
+w
+> > sanitizer spits out this report:
+> >
+> > [  138.454979] ------------[ cut here ]------------
+> > [  138.458089] UBSAN: signed-integer-overflow in ../kernel/time/ntp.c:4=
+61:16
+> > [  138.462134] 9223372036854775807 + 500 cannot be represented in type =
+'long'
+> > [  138.466234] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0-rc2-0003=
+8-gc0a509640e93-dirty #10
+> > [  138.471498] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
+IOS 1.16.3-debian-1.16.3-2 04/01/2014
+> > [  138.477110] Call Trace:
+> > [  138.478657]  <IRQ>
+> > [  138.479964]  dump_stack_lvl+0x93/0xd0
+> > [  138.482276]  handle_overflow+0x171/0x1b0
+> > [  138.484699]  second_overflow+0x2d6/0x500
+> > [  138.487133]  accumulate_nsecs_to_secs+0x60/0x160
+> > [  138.489931]  timekeeping_advance+0x1fe/0x890
+> > [  138.492535]  update_wall_time+0x10/0x30
+>
+> Same comment vs. trimming.
 
-One of the big problems that we've seen with many of these security
-initiatives is that the teams create these unfunded mandates get their
-performance reviews based on how many "bug reports" that they file,
-regardless of whether they are real problems or not.  This has been a
-problem with syzkaller, and with clusterfuzz.  Let's not make this
-problem worse with new and fancy sanitizers, please.
+Gotcha, in the next version this will be trimmed.
 
-Unfortunately, I don't get funding from my employer to clear these
-kinds of reports, so when I do the work, it happens on the weekends or
-late at night, on my own time, which is probably why I am so grumpy
-about this.  Whether you call this "sharpening our focus", or "year of
-efficiency", or pick your corporate buzzwords, it really doesn't
-matter.  The important thing is that the figure of merit must NOT be
-"how many security bugs that are found", but how much bullsh*t noise
-do these security features create, and how do you decrease overhead by
-upstream developers to deal with the fuzzing/ubsan/security tools
-find.
+>
+> > Historically, the signed integer overflow sanitizer did not work in the
+> > kernel due to its interaction with `-fwrapv` but this has since been
+> > changed [1] in the newest version of Clang. It was re-enabled in the
+> > kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflo=
+w
+> > sanitizer").
+>
+> Again. Irrelevant to the problem.
 
-Cheers,
+Right, I'll move it below the fold.
 
-						- Ted
+>
+> > Let's introduce a new macro and use that against NTP_PHASE_LIMIT to
+> > properly limit the max size of time_maxerror without overflowing during
+> > the check itself.
+>
+> This fails to tell what is causing the issue and just talks about what
+> the patch is doing. The latter can be seen from the patch itself, no?
+>
+> Something like this:
+>
+>    On second overflow time_maxerror is unconditionally incremented and
+>    the result is checked against NTP_PHASE_LIMIT, but the increment can
+>    overflow into negative space.
+>
+>    Prevent this by checking the overflow condition before incrementing.
+>
+> Hmm?
+
+Sounds better :thumbs_up: I'll use this!
+
+>
+> But that obviously begs the question why this can happen at all.
+>
+> #define MAXPHASE 500000000L
+> #define NTP_PHASE_LIMIT ((MAXPHASE / NSEC_PER_USEC) << 5)
+>
+> =3D=3D> NTP_PHASE_LIMIT =3D 1.6e+07 =3D 0xf42400
+>
+> #define MAXFREQ 500000
+>
+> So how can 0xf42400 + 500000/1000 overflow in the first place?
+>
+> It can't unless time_maxerror is somehow initialized to a bogus
+> value and indeed it is:
+>
+> process_adjtimex_modes()
+>         ....
+>         if (txc->modes & ADJ_MAXERROR)
+>                 time_maxerror =3D txc->maxerror;
+>
+> So that wants to be fixed and not the symptom.
+
+Isn't this usually supplied from the user and can be some pretty
+random stuff? Are you suggesting we update
+timekeeping_validate_timex() to include a check to limit the maxerror
+field to (NTP_PHASE_LIMIT-(MAXFREQ / NSEC_PER_USEC))? It seems like we
+should handle the overflow case where it happens: in
+second_overflow().
+
+The clear intent of the existing code was to saturate at
+NTP_PHASE_LIMIT, they just did it in a way where the check itself
+triggers overflow sanitizers.
+
+>
+> Thanks,
+>
+>         tglx
+
+Thanks
+Justin
