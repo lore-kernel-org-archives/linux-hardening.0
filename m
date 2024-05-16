@@ -1,66 +1,67 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBEF2AF16
-	for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 23:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FB82C68C
+	for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 23:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715902816; cv=none; b=pRxDkaKO21eqD+6JdCn8mqEYfwWq6nY9Nmv7pWFfnHai0EdJzOzXiAdh4kgzn6rhMma1CwVaIjrByYlia0lZvbFdb7QyWSwe3cHwSSPmk6TgQlagGTwFQCzwkF0idQe/c0g7OI2ImHYzSMbRKZLwNwHLUcoQiiDeYnYwLAhsC7M=
+	t=1715903733; cv=none; b=qLb7VOt1nHLeqzZeF6inBs8eTrcpGGdAmiUnbCoGaGPCz2hcPOaL8bmhhs8qLQhFYDrLq0g81ekjSs/emyrzeLhePtrxmA/yRC/Ko36fdTRqCab3dnKNdxM5zAAaW0mSu4ZCeppjP4Spu9T7goFXXXaMmHJdMDHjSC6TR2VU/HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715902816; c=relaxed/simple;
-	bh=URIGKdkbEgy8oUD3A8XedbAjc10c7x/cPv/IEH/QL2M=;
+	s=arc-20240116; t=1715903733; c=relaxed/simple;
+	bh=4pwCjRrdKlshy11Q9Qidn/PkDr98ccPmPz4v2MD8UlY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X6pdEY0eBAc0VMQenJivdgxj6syh3g6TR7gkVxqNuyJXywxbbjlDEtACiRHvZoQm1gE5R1TkCapwX+Q4xUF+O66orpQT43NL0J9XO3kg1xGGjYQbXLDr9ql0gsOcBOwLn98ymoq5RNvf0KH17Hm5xNJBVcdb6Z9hbED1qb4uK1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=08Bhm9Nj; arc=none smtp.client-ip=209.85.222.54
+	 To:Cc:Content-Type; b=K0Vjjwp16/gpQVMgCXxDgVneoMjqDQjmUX5m6acVNK6KvayOn11XpZ3QYPtaX2YGE34BUDs3aC8SEylkeRhUOT+MyA9IPz0pPPbMja5G4/DCGyDbMIaGS/IEPSSnrshH6mHAyZ+msYsDv3353cLCTkkvQP3b5QKMjA7tdp5SapA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E/imWOJQ; arc=none smtp.client-ip=209.85.222.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="08Bhm9Nj"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7f8df927790so33413241.3
-        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 16:40:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E/imWOJQ"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7f3aee7c531so12935241.0
+        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 16:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715902813; x=1716507613; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715903731; x=1716508531; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b2dB9OUxKVJydzpMoRJxqlpFvuQGNeC1Byqw9B+0hCU=;
-        b=08Bhm9NjgwOhD6nq2Utk1mR757sjnOdXWqcurW1SgS5cMzsp9EnlCakBSW3WteWx1I
-         BnCsF/dmC7Xf3QIxIgW9zFCbpoh0TJe+f3/3cO7IxTk+j1wmmnh8ih9ovJf1I9yCVs88
-         yXilut4dPvytNp2lNkbSOs3XeJiZH9K27RzHsxHAqhg5pG4qiqrigFYYEvjD7227seuF
-         IpSkJS3maWDkt2+NXK1wp65qxfFUGZZhp5jKr3HlR+ztAaVpXotiW4rU9g+J7/b5lPqs
-         +R0UQerjei3Ax49srZiODQ65FHvuqK1zNm+rBbeAgDz5VJNudb7ggtj8rRjcG0u3Rw81
-         yEDQ==
+        bh=/gLVcqBV3F66KdisazNL7hONRkMphSyVVTtUEh3IZ/0=;
+        b=E/imWOJQUukqIhTYGUAHSeDRJpe2R/x3Oe9ByVALnfK124hIndaA/8Mjmdr2phBqKM
+         u+NeUR/kYgXJZTF9KDzqa8/qGoIpf4dNDMHyidkK15c1c79VKQ9BgcSSlQxV2Ylk5OYp
+         4ec+y4+bcN2lFZNRS7toy2FItQ7CiMxRTwZQJz/tkxw4T0w92KbXAqZWDRqe23pZOOwJ
+         xCetOdesSvIbcayGyrlV6mXFWl37iPVGpEyelL8b5X0eIW+Z8L5S1lFhZiBygIHTPRQU
+         eWLEnmom0n++EIvDSroYuCc3OrBHxEaHTp8Bz01kT9VHoRUpoWm2rOCma0ULrHayezss
+         8oeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715902813; x=1716507613;
+        d=1e100.net; s=20230601; t=1715903731; x=1716508531;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b2dB9OUxKVJydzpMoRJxqlpFvuQGNeC1Byqw9B+0hCU=;
-        b=AAY6QzjP4vLD4URA9niI47Oj0csV3+QjJSNyLjC/SV+HIn1HkSWIk4OS3nEr4OYVYA
-         3LtgWMCNSc0VlSYCUBS21csgE98GrgDzwi04n9aY3T0oXGoqqBTM9/xqYWDXYoxmX7/V
-         hWxuSLvSucb6NkxYMxFlgFe2R3NlByJBksjpCMOlmEo1GpfVHWhjrWmjFmGaW66rIaby
-         moi315juRaqEqZATOnavlVBeWLC0ydjHgTRU4KdYRC9+TZES2KXOh6HiMeP6UV7gaEVb
-         QdZLcTAOZqZ8T/JZ0Q+7+AZ26Z+PHEAafDp63a7gFfwP0jwPYbQUoe2kQixvIpcGAmFb
-         HjsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbUZLBk5aUG26SCQGdc0t7k6WpU3Kfcty8zBpQiG9A7cLo0A5pm6Gdj+vX6e2+e/fgMCAx+UgVFmMpiDgG6efKM2un5HRioP0sYitqMz4N
-X-Gm-Message-State: AOJu0Yz69jrlQLx5clW5+Ya+UchJQGNuUJc+2Wm48ZzZ80iCaXbHWQkP
-	uTsmR9MBZhKw/8R46fg97BTdmWk0kSh/p4JdMBvWHRXDD/sjvnP5EycjJ3+yo+VOOR8N9tt/GED
-	xMYRFogiDe1hFNN9g9DuETf1MpK3WIfhF0Y1Q
-X-Google-Smtp-Source: AGHT+IFpAOhljFS/PTPBZQwP83d5MIHpB1HU7pH89UAdZAkw4Ly8hJBhVfm/h/CifLeMtGmQ6OiPSGkr5/GyKGIvask=
-X-Received: by 2002:a05:6102:c90:b0:47c:1251:cf25 with SMTP id
- ada2fe7eead31-48077de62e8mr20449719137.12.1715902813340; Thu, 16 May 2024
- 16:40:13 -0700 (PDT)
+        bh=/gLVcqBV3F66KdisazNL7hONRkMphSyVVTtUEh3IZ/0=;
+        b=wAQEUux6xml9IfHsuY0wpTjbQJJcR07C9KXfSsf+bK5OjqDRMesck8LA8QztCt8I/a
+         k4YvRh+61Ij+/LV25qWRTqxnEK2UXaGwltkWqn9/8GdGN9FzhUNASwO1xzb+HE/W7OEm
+         3S9CXC7eA4Y1gJ7e73cWX/JpYrp5JoTTwi4FyH2BaZHvr57hjTcdmGBD9K2VfrjRd3js
+         lPI5p1jbN2D5zht+wNkS2TIlPPQXcNol/7UWt+zvKJEAdGc0O+3VGePrM8aCpMo3mZSb
+         R4gSIzxLDI3gsN42xnK+wXeNEEiQTKK+azgLtKKFacVMxEjdh8QS0JyTd7P9MeFYJXBr
+         FklA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMSOxKWiworKzgmaObf3R1UI/gnLLdEjY69M75UkynpDr4AT5uES+gWOvNaf7avcCHCvO7T+5zAOBmEcZkilJgvgjTBwNjKt4W4TfBdZ5a
+X-Gm-Message-State: AOJu0YzqywDgXrs1Wuaripww9vDU1OVd4ZQxcEBGefoaEJ6PesmQ67md
+	h3+JEqbDzTWqLBL3A3SEb2U+FeI0FXQP0cj4u9M3j253sw7j9m+9KBs6hq0YqjOuYlYt+/+zRuX
+	ZjZGdcWlnYD9DKv1ZeHt+hdWNJMalRvUXvnUK
+X-Google-Smtp-Source: AGHT+IG+/22HSGO1aEWyeCTPHI7nYt0GiaqCsKk1aiSbOHC0OUQTiWABWrFf6IIzcykO5qWDSD6ZOxcp/txXENrYfSk=
+X-Received: by 2002:a05:6102:5089:b0:485:9a12:cae with SMTP id
+ ada2fe7eead31-4859a1210d8mr3163573137.21.1715903730652; Thu, 16 May 2024
+ 16:55:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com> <87v83gllv8.ffs@tglx>
-In-Reply-To: <87v83gllv8.ffs@tglx>
+References: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com>
+ <87v83gllv8.ffs@tglx> <CAFhGd8p94sHpDc8MApZK7q9iEQ_C8c5frwZx9v_bTnhwtAM=HQ@mail.gmail.com>
+In-Reply-To: <CAFhGd8p94sHpDc8MApZK7q9iEQ_C8c5frwZx9v_bTnhwtAM=HQ@mail.gmail.com>
 From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 16 May 2024 16:40:01 -0700
-Message-ID: <CAFhGd8p94sHpDc8MApZK7q9iEQ_C8c5frwZx9v_bTnhwtAM=HQ@mail.gmail.com>
+Date: Thu, 16 May 2024 16:55:19 -0700
+Message-ID: <CAFhGd8rTHPiKG+XOkkUihj9r8k1=n3zgitpM9X2aQf6zhp9psQ@mail.gmail.com>
 Subject: Re: [PATCH] ntp: remove accidental integer wrap-around
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
@@ -69,107 +70,22 @@ Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, May 16, 2024 at 4:40=E2=80=AFPM Justin Stitt <justinstitt@google.co=
+m> wrote:
+> Isn't this usually supplied from the user and can be some pretty
+> random stuff? Are you suggesting we update
+> timekeeping_validate_timex() to include a check to limit the maxerror
+> field to (NTP_PHASE_LIMIT-(MAXFREQ / NSEC_PER_USEC))? It seems like we
+> should handle the overflow case where it happens: in
+> second_overflow().
 
-On Tue, May 14, 2024 at 3:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> On Tue, May 07 2024 at 04:34, Justin Stitt wrote:
-> > Using syzkaller alongside the newly reintroduced signed integer overflo=
-w
-> > sanitizer spits out this report:
-> >
-> > [  138.454979] ------------[ cut here ]------------
-> > [  138.458089] UBSAN: signed-integer-overflow in ../kernel/time/ntp.c:4=
-61:16
-> > [  138.462134] 9223372036854775807 + 500 cannot be represented in type =
-'long'
-> > [  138.466234] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0-rc2-0003=
-8-gc0a509640e93-dirty #10
-> > [  138.471498] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), B=
-IOS 1.16.3-debian-1.16.3-2 04/01/2014
-> > [  138.477110] Call Trace:
-> > [  138.478657]  <IRQ>
-> > [  138.479964]  dump_stack_lvl+0x93/0xd0
-> > [  138.482276]  handle_overflow+0x171/0x1b0
-> > [  138.484699]  second_overflow+0x2d6/0x500
-> > [  138.487133]  accumulate_nsecs_to_secs+0x60/0x160
-> > [  138.489931]  timekeeping_advance+0x1fe/0x890
-> > [  138.492535]  update_wall_time+0x10/0x30
->
-> Same comment vs. trimming.
+Or, I suppose we could add a check to timekeeping_validate_timex() like:
 
-Gotcha, in the next version this will be trimmed.
+if (txc->modes & ADJ_MAXERROR) {
+    if (txc->maxerror < 0 || txc->maxerror > NTP_PHASE_LIMIT)
+        return -EINVAL;
+}
 
->
-> > Historically, the signed integer overflow sanitizer did not work in the
-> > kernel due to its interaction with `-fwrapv` but this has since been
-> > changed [1] in the newest version of Clang. It was re-enabled in the
-> > kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflo=
-w
-> > sanitizer").
->
-> Again. Irrelevant to the problem.
 
-Right, I'll move it below the fold.
-
->
-> > Let's introduce a new macro and use that against NTP_PHASE_LIMIT to
-> > properly limit the max size of time_maxerror without overflowing during
-> > the check itself.
->
-> This fails to tell what is causing the issue and just talks about what
-> the patch is doing. The latter can be seen from the patch itself, no?
->
-> Something like this:
->
->    On second overflow time_maxerror is unconditionally incremented and
->    the result is checked against NTP_PHASE_LIMIT, but the increment can
->    overflow into negative space.
->
->    Prevent this by checking the overflow condition before incrementing.
->
-> Hmm?
-
-Sounds better :thumbs_up: I'll use this!
-
->
-> But that obviously begs the question why this can happen at all.
->
-> #define MAXPHASE 500000000L
-> #define NTP_PHASE_LIMIT ((MAXPHASE / NSEC_PER_USEC) << 5)
->
-> =3D=3D> NTP_PHASE_LIMIT =3D 1.6e+07 =3D 0xf42400
->
-> #define MAXFREQ 500000
->
-> So how can 0xf42400 + 500000/1000 overflow in the first place?
->
-> It can't unless time_maxerror is somehow initialized to a bogus
-> value and indeed it is:
->
-> process_adjtimex_modes()
->         ....
->         if (txc->modes & ADJ_MAXERROR)
->                 time_maxerror =3D txc->maxerror;
->
-> So that wants to be fixed and not the symptom.
-
-Isn't this usually supplied from the user and can be some pretty
-random stuff? Are you suggesting we update
-timekeeping_validate_timex() to include a check to limit the maxerror
-field to (NTP_PHASE_LIMIT-(MAXFREQ / NSEC_PER_USEC))? It seems like we
-should handle the overflow case where it happens: in
-second_overflow().
-
-The clear intent of the existing code was to saturate at
-NTP_PHASE_LIMIT, they just did it in a way where the check itself
-triggers overflow sanitizers.
-
->
-> Thanks,
->
->         tglx
-
-Thanks
-Justin
+> Thanks
+> Justin
