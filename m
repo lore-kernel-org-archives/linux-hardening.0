@@ -1,116 +1,161 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E5913DDCA
-	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 21:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0077C140E38
+	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 22:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715981061; cv=none; b=kOa317I7dL2sMm6EWxSDezfnQ3c2kHNEQBaPThahCo/zRl/QwF6Hw3wanNU23XMI6sBjiQYXYF7sHM4JQOBHzbjwIY3n/nIvuCMg8Svg8Ly3+boL211EpO8+ToP+bqp/0JHsmL1c7iKWGGQGGqvuocYO3WytpS75S0nujPTVDJE=
+	t=1715983476; cv=none; b=VtSWOuxaLD6OyXREWvRwURcxJWkQddWSgUDLN0qzl/6/BPe70skAadqKDhr5oqnaFY+ZMNkVGdx2BQm3SwT+duIRaQ638Ox8gK33SLEdM7dCmEyaInBJyo640xYRw8bVZCmvy0M5oP6xYlQWEuyjTZ240+AICxPsbbw8VvBqWfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715981061; c=relaxed/simple;
-	bh=IfJYkc42KzwKWgTt9YCXYbwQ78/cdkAW+9n0nYrQkT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+tFycqZlaD5ClhBeDdoOKrl2Pq3MFNBT7yV1XRaZ1nrKw3vZcjVkwFCo63oiYv2LNIIBNz8mkJ+GQoSC6MSwxyL9SUoaUWHDuMcAAqVJZv2Nn6PbdHgqo/DkvyAzylIz5t/kYADOSShoj9P3/7mnsT2YKwStQYZAncG0oj8QXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V6VNs9MG; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715983476; c=relaxed/simple;
+	bh=BdhITRnNU+REXc7LnQZeK8vjGpGDGI/srKqx0YLNYAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AFQTd4CkyFzoKBK35h8pSdKhLm4asgAFGI923ZyVtvwroQvKypcPEXmSX53tFNaPQWPaJy0iugOfizwNrUv6QSv4XY3qL2DL34gX9gX2xttW42dVm3aeRWibVz1imk6u6b5+uKZirpqeC1Js6kS+CHsAtcGcqQoBpY56WVQo/lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FfIx+HD5; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V6VNs9MG"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1eeabda8590so20844785ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 14:24:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FfIx+HD5"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso645a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 15:04:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715981059; x=1716585859; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nZePBSOIoDFc3SJ8gpxBa7DmK4+hYpUiZT8OtqItIpw=;
-        b=V6VNs9MGHBDRDRF5/nhVHVDUsUgKERAAIz3nPJExq336hvd0OSlfcw3STpcM0wO+ys
-         TfHDlBFSdArqjPr8ur9ElSFq2KpF5JlnLl74Aike7zMX1etlakJTCklkAcTiQ/BQZbKV
-         mKrjqyeBeXKvjPT3dHEM04PCge5ek8bKMxVck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715981059; x=1716585859;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1715983473; x=1716588273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nZePBSOIoDFc3SJ8gpxBa7DmK4+hYpUiZT8OtqItIpw=;
-        b=vlqzBMHI+U57VleXfMyft0vUVUqgskOskzQK+f+ZpQenjNFgZ5SX0ksHwj1AbqELIJ
-         4axBjOECc4iMvlas0D5xVbX48JSnVH1F6tKHGc1DnuG5lAVuky+Rl28cOXu9BaeeTcex
-         DRLY3baJ7kGRSWaYcSzFyNXfiHfnAA2uNzOyRlXlFskOFbqixaMKc9FD1CIl3THbSRhQ
-         73DPGe+G+MnQIQqogjjBvWL4LFEkpOsK6KMiJ7sE8e0KyJozNSSDB18gByVLxf4x5iuS
-         JLeFC9Z9ZtIxS9q8iFx8NjcYNYJtKt8vX83QS/ir49fO73sOX52lSOHTuXBneGU/0TfF
-         V4fA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6D1ohtIaFJkTnU713qduB0EzErhViaf5rzH64IcZh73ZLysrOn1pt6xUDOsyEavpye87Ngk/mSM0ji/bwvEljaLikUhoIpAvKRL5bpX28
-X-Gm-Message-State: AOJu0YxAiwHiXX+hle7G7dybK7FddNuBP6XEOLr2YJF01KOTFELesAur
-	1JoToLSeyMDIjRK7YeXahLbvY6MNCSjJHU8jf/p300bXzCX63TAmfahHhK+t8g==
-X-Google-Smtp-Source: AGHT+IGp7tPMh78BJ0Avg5PsASLZPSKcpqsBME5h6vFDRUhs+O+wV26Hx+4VAxiIkqft96DMjEQODQ==
-X-Received: by 2002:a05:6a00:9290:b0:6f3:e6e0:d9f3 with SMTP id d2e1a72fcca58-6f4e0385654mr24139207b3a.31.1715981059389;
-        Fri, 17 May 2024 14:24:19 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a817cbsm15080510b3a.58.2024.05.17.14.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 14:24:18 -0700 (PDT)
-Date: Fri, 17 May 2024 14:24:17 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] fs: fix unintentional arithmetic wraparound in offset
- calculation
-Message-ID: <202405171417.B290C50A@keescook>
-References: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
- <ZkavMgtP2IQFGCoQ@casper.infradead.org>
- <20240517012647.GN2118490@ZenIV>
+        bh=LPcNSrh3uuZ5e6UcUtMkeuMK0XXETcsLkcdKBYaf5FE=;
+        b=FfIx+HD5VxCqbtJM9KXjjvO9XI5GzPZfAlDQf8RnsSIzu4Gb0lS1x2IV0/4+gdpbUW
+         4AsagMwj2YWrrTEGahhJlKxihFXGewmN5Qk7DL/eHo+y+QYRFR8hA0JdyCrAsClOcmzZ
+         RGxZZOwWZlJVb5r+C9QQu93QNrh6DmXY/6RbOIN16oERqLOm+jf/HUMkWv9hKFE0nDuR
+         IZn5nYhBIm/edSol7rdhqz6LlHYXbNpBK5uNnUMs0Ip/R26hGFdyte59muCdzW2dQhCV
+         vV4RyJ1bE2efqPJ8SgZAClF6llkEY3LYgxYAWjYbTV9wH/S+1ZUyZk+25lGEaYQtVGZ0
+         FM3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715983473; x=1716588273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LPcNSrh3uuZ5e6UcUtMkeuMK0XXETcsLkcdKBYaf5FE=;
+        b=TXyF2lkO6c5vYsuaWWPwU/j/FBQK68qorJE7NI4uy3jf8ro0mccDT7EOOPbJeGzsqs
+         JTW465jTFZixexKCT0ZNTJ7Bud9YsG4fVsdxu8DClUhn9pskI1WtMVHQLlg8a4vekccS
+         if1eszpWC7Y2QBZQqpRWF+HigZP2wipx82HDOsn7NTlJJgn9SdFklZ7zY4ejm4+Y3Aul
+         PY5S9LlHEUcbDBbEJHY9+fX/Jn6DIfsGi2gzua/Qr1dLNKurb6IIt3om/E3b0zqcRAeM
+         Yb1qKLZQk8LsZ08KyQ7g/AoOC+Gnk8dzwv1pxaXuzP/O5AW/XA8ji5Wxve+cxWm7vcPQ
+         Fbhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUTHg5QxKSQmSO2AkX4UpYPnyWAVRL8pvMUXAuydMPP978QoSz3e4mIZiy7jfNaxrvpNQUQdl9LvHxrz91vqMLq6TbGeBbfh94ekxxIOyz
+X-Gm-Message-State: AOJu0Yy1DNUXrJOcRmk23PeZW+gjBOjBD41sigQ6dNOGzm6hENnP4YW+
+	gTyxFi8tW8S9iFE1ZM/6SovzbLxVPoTDmDjNbFuDRXrUzH3kNzQ8h5yIcmOMqtump41SUVevXJ/
+	8sBDGv6Rpij1MsqoSwuwNNJ1iG7DAiXgl3OWb
+X-Google-Smtp-Source: AGHT+IHDGePJQkBnkoeUr2NjZz8xln85qYzCfOTxtm5xhcDt6tF1xHyaN0XWlD6rZ7LpWmCymVL1628hdIUkS3q51ro=
+X-Received: by 2002:a05:6402:44b:b0:572:e6fb:ab07 with SMTP id
+ 4fb4d7f45d1cf-5752c7d36e8mr24826a12.7.1715983473042; Fri, 17 May 2024
+ 15:04:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517012647.GN2118490@ZenIV>
+References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <20240515073636.GY40213@noisy.programming.kicks-ass.net> <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
+ <20240516140951.GK22557@noisy.programming.kicks-ass.net> <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
+In-Reply-To: <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
+From: Fangrui Song <maskray@google.com>
+Date: Fri, 17 May 2024 15:04:21 -0700
+Message-ID: <CAFP8O3Jq9kxx8xp4hK42+FwL3KnibDqpke5S7zT40kwmaEfXcA@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 17, 2024 at 02:26:47AM +0100, Al Viro wrote:
-> On Fri, May 17, 2024 at 02:13:22AM +0100, Matthew Wilcox wrote:
-> > On Fri, May 17, 2024 at 12:29:06AM +0000, Justin Stitt wrote:
-> > > When running syzkaller with the newly reintroduced signed integer
-> > > overflow sanitizer we encounter this report:
-> > 
-> > why do you keep saying it's unintentional?  it's clearly intended.
-> 
-> Because they are short on actual bugs to be found by their tooling
-> and attempt to inflate the sound/noise rate; therefore, every time
+On Thu, May 16, 2024 at 12:49=E2=80=AFPM Justin Stitt <justinstitt@google.c=
+om> wrote:
+>
+> Hi,
+>
+> On Thu, May 16, 2024 at 7:09=E2=80=AFAM Peter Zijlstra <peterz@infradead.=
+org> wrote:
+> >
+> > On Thu, May 16, 2024 at 06:30:32AM -0700, Kees Cook wrote:
+> > >
+> > > I am a broken record. :) This is _not_ about undefined behavior.
+> >
+> > And yet you introduced CONFIG_UBSAN_SIGNED_WRAP... *UB*san, get it?
+>
+> We should think of UBSAN as an "Unexpected Behavior" Sanitizer. Clang
+> has evolved to provide instrumentation for things that are not
+> *technically* undefined behavior.
+>
+> Go to [1] and grep for some phrases like "not undefined behavior" and
+> see that we have quite a few sanitizers that aren't *technically*
+> handling undefined behavior.
+>
+> >
+> > > This is about finding a way to make the intent of C authors
+> > > unambiguous. That overflow wraps is well defined. It is not always
+> > > _desired_. C has no way to distinguish between the two cases.
+> >
+> > The current semantics are (and have been for years, decades at this
+> > point) that everything wraps nicely and code has been assuming this. Yo=
+u
+> > cannot just change this.
+>
+> Why not :>)
+>
+> Lots and lots of exploits are caused by unintentional arithmetic overflow=
+ [2].
+>
+> >
+> > So what you do is do a proper language extension and add a type
+> > qualifier that makes overflows trap and annotate all them cases where
+> > people do not expect overflows (so that we can put the
+> > __builtin_*_overflow() things where the sun don't shine).
+>
+> It is incredibly important that the exact opposite approach is taken;
+> we need to be annotating (or adding type qualifiers to) the _expected_
+> overflow cases. The omniscience required to go and properly annotate
+> all the spots that will cause problems would suggest that we should
+> just fix the bug outright. If only it was that easy.
+>
+> I don't think we're capable of identifying every single problematic
+> overflow/wraparound case in the kernel, this is pretty obvious
+> considering we've had decades to do so. Instead, it seems much more
+> feasible that we annotate (very, very minimally so as not to disrupt
+> code readability and style) the spots where we _know_ overflow should
+> happen.
+>
+> [1]: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#ubsan-ch=
+ecks
+> [2]: https://cwe.mitre.org/data/definitions/190.html
+>
+> Thanks
+> Justin
 
-"short on bugs"? We're trying to drive it to zero. I would *love* to be
-short on bugs. See my reply[1] to Ted.
+FWIW I have made -fsanitize=3Dundefined -fwrapv not imply
+-fsanitize=3Dsigned-integer-overflow in
+https://github.com/llvm/llvm-project/pull/85501 .
+The change is not included in the LLVM 18.1.* releases.
+This might encourage projects using both -fwrapv and
+-fsanitize=3Dundefined to re-evaluate whether -fwrapv aligns with their
+needs.
 
-> when overflow _IS_ handled correctly, it must have been an accident -
-> we couldn't have possibly done the analysis correctly.  And if somebody
-> insists that they _are_ capable of basic math, they must be dishonest.
-> So... "unintentional" it's going to be.
+The description of #85501 contains more information about my
+understanding of kernel security folks' mind:
 
-As Justin said, this is a poor choice in wording. In other cases I've
-tried to describe this as making changes so that intent is unambiguous
-(to both a human and a compiler).
+> Linux kernel uses -fwrapv to change signed integer overflows from undefin=
+ed behaviors to defined behaviors. However, the security folks still want -=
+fsanitize=3Dsigned-integer-overflow diagnostics. Their intention can be exp=
+ressed with -fwrapv -fsanitize=3Dsigned-integer-overflow (#80089). This mod=
+e by default reports recoverable errors while still making signed integer o=
+verflows defined (most UBSan checks are recoverable by default: you get err=
+ors in stderr, but the  program is not halted).
 
-> <southpark> Math is hard, mmkay?  </southpark>
-> 
-> Al, more than slightly annoyed by that aspect of the entire thing...
 
-I'm sorry about that. None of this is a commentary on code correctness;
-we're just trying to refactor things so that the compiler can help us
-catch the _unintended_ overflows. This one is _intended_, so here we are
-to find a palatable way to leave the behavior unchanged while gaining
-compiler coverage.
-
--Kees
-
-[1] https://lore.kernel.org/linux-hardening/202405171329.019F2F566C@keescook/
-
--- 
-Kees Cook
+--=20
+=E5=AE=8B=E6=96=B9=E7=9D=BF
