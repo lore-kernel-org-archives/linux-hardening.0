@@ -1,116 +1,102 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE7E748E
-	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 00:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AC0622
+	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 00:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715905751; cv=none; b=tpEcF54CUHiDGHtxePGNucK9Ym2ILn4IXYpzMQXTn7py7+YP9Ufm280mHypSHHihDwyH06mUIdZE1fVmtBakaukkNomOyvDdn0Se4xzEMhSncH90NvlKeIoo89PeqKZ+Zk+4Qa4tr9h0Yi/9tFJbWWrvWFLbT3M4SBL39CU0fzQ=
+	t=1715906836; cv=none; b=V5OlLz70a5FdiNbpfOX2k9sVsxIFFx1396+vhVhfrBepHOkJtBsAjPTmdp1s59q5FJyawcVk3udSMiEbBepDM89M3DVoQ9/kcwjuLX4fux9aKDiqQxTiW7Unm75utJaaCcKEHd+UnXNWjQnJh4OBfCwVZUIZmj+MyVf4QayuNww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715905751; c=relaxed/simple;
-	bh=gQ3Z4if0NCnHXjJscYunu4D0mRks+UukL032g9TjvSE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=u0trFB6f5VJUIjkq6pmP//8rCS9SfnXSV6Rlpum3EhMa8H2//ThBXG3IFh9xc3YxlXiWgUIehus4MOHSljJIJl2nRubiC+VhLQhP0UIl0OIEDhaPIYsUpCxi9arhkItz/A3JClKenQsKNaAHSJSOzsQ2/70arkFVGSWZJkhH8H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BodnNUsM; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1715906836; c=relaxed/simple;
+	bh=APN4VP2Crr6QKrWp/Xr/rV+r2whWDGdcimi2/j06TL0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IWU+GeHNtXDjrXpIoZifxDHKHXF+iZ9Il3pF0tNF9tsfvqEAbhWiNXauVz3mvNNqEYAVm/RyYWi61SDfzCnj34sPhfZrSc9gWX4D2HM40ggPn/LSDJvOCfSJsOCjdg8hxJyR/eCreRZjOrqFNrEWp9KT9tIBJE7LQ3lM04tmbkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z2GqWuh4; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BodnNUsM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dee5f035dd6so11960939276.0
-        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 17:29:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z2GqWuh4"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be1fcf9abso131370827b3.1
+        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 17:47:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715905747; x=1716510547; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715906834; x=1716511634; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=lE+oHrKpJl/rpkYtTR5+jfWYh1cBDJx1MoxTnYfmQ5U=;
-        b=BodnNUsMDdzzau9h5t4Ion0DCPsEHZKC7C5CsY4d/Zelp/V2kPIK26ynxDFRLZDDIn
-         exnb9Ojv/OQ6KvOauFygsyayj+0XUBy0r8YPLxZFZzGk2LrHFE1ZyQvqEiejaE9Nip6X
-         DoYYN/P4RW4o+GdeTbjgkM1n+HVNGrO2BhufujCayv/PMqcoIvLNwgkpp1p4VAr1T+Hw
-         0XEaGgbYReNWhueQCBTkXO1FqFniFX1Fh4hw6fnrC/f1NSZGU/59/zeqPanmbqqcawx8
-         nN980pbQJ/q0FclI4LjlN3yKmh9A9uJoctuwu7r8emIri8QP7cyPtWNjnhEmmBgs+PdC
-         zJdw==
+        bh=+sBRFmlKo34YzhiPfM618pBAaUxmxSb2mTc1sHV0NzU=;
+        b=z2GqWuh4Sa8kYuOqoGjmcnhxDLhN/f37rYyce6a1tI7roz7XRoZYgXO5Rr6YlrSlgl
+         RVxzot8aHFDPQeaVaMZwjtno9p0EIwJJVaMIdFFOIS70CjyVGA5+xE9klI0ap/8Pv0CQ
+         0bFYqhZJFWADQMHrh5Sl+DFawx3eObIdvoP/z3+fs0Xwt8wfkkMKQCEyvOdZmZRE6uUi
+         91OnNNdIIiT6LuNZhUZVcWGq+DY+xbIb4QXRudNil8n0qaS9XY9leb5nngVds8HTjCaY
+         QOtXNB66gW6tVQtZg2uxFRymUJfHcJ3qKt3/Pze+lN3J9htL9L0UZGrd7MlEUNJLot0B
+         zizw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715905747; x=1716510547;
+        d=1e100.net; s=20230601; t=1715906834; x=1716511634;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lE+oHrKpJl/rpkYtTR5+jfWYh1cBDJx1MoxTnYfmQ5U=;
-        b=Wo3HbKLdXW9P6TjQE2Ho3nJbLQNssjScnEr/oEzKPGb+BBELr3KHc4UjMQlCGxAJTc
-         DHVivOu2ssXbzK9WxQEGQSNMCprEqzQkvIqLNzIzpWwlNHUkp4VYnUSSB3v9sYbsNtPM
-         a2je1odPNRu/VMUo2jfaiCUyrGSPmHyp+CnRY3NduoOtUqVELCmzugJlznhfCAXopehx
-         AYI7Bm6Tj6tqbkUa6TTobu2FlV04onn8CzW5GIpESEIAc6uO0sTZFC3yL3B+fxtSwqsM
-         6eZksTrdJ6tkeoH4Mg7MC2mtQGvakt5tDz7W54rRs1mDyttAje47ze4o8hcfqQwPMCOK
-         IWKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLEC4hV8tj6X5nzAHbt41eVWOICaysC/Hs+js4ViDOiqcrSAZkmYv6pr92dV2YLpM7VcnMdR94sXS8xvoHtnamOq7Dd003zVp639OOXbF1
-X-Gm-Message-State: AOJu0Yx4LFTYYTBvkXmuheoZq7Ag9xJ7m24MwfpabB5A7lkTkWAq0885
-	j3yuetbNf8mLyCcRv08sZNPAAwosbFobdHZ8dufl6gGOSfY2h4jtELKGGlraUKGlO7euWXLSl3i
-	eXEjFNKLspN+Bau0iqFO9TA==
-X-Google-Smtp-Source: AGHT+IHsm3A3n7MqDMvmWlLVL36ymXM4bAo3S6sZ2zLfdTzL/TzI7fAjCdnyRv309qm0dkbegqI0EV9AKZBYJ1N2pA==
+        bh=+sBRFmlKo34YzhiPfM618pBAaUxmxSb2mTc1sHV0NzU=;
+        b=hAR8il821ebZR1vLktICY/Bklo2Ci+nZ/JsmxG4FVMaDiOc06ENGv8WCPCQuGATEZk
+         s0IVf6Jt74x5KL/BIPpzyNzBJy2gXlG8s8WU+jJSy4GNauB/0PgHcm72hV5vQqg5uflF
+         IIR+fFZG3OhswK+ENc2jUEt7Cods6LVD2ug+FRe+iWOa42C8hqboTXPREq2PL8IREOaR
+         AJ0MjDSQasy4QY55coRJ1f1FCzjA2F0HUKDRf4xAD+JEAMXGRZgtRVuR296sHDkQw01O
+         PaGaigFKAT9GjhJV1tIoa4c6jzS5ffz+5tp9Rl3RzGv4CPE8JJ9EVLzGCZL98vAG/E62
+         g4vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSg9lmw8+kbmS0aJVXBGE22c9KenCuN4X/wkjRtp8PIbRuJMWTt2d6pFM3nMbLKxPbvJHNnRPOMlFLzmAkA0x7wdLRVsVw9F+1w6sIYDCw
+X-Gm-Message-State: AOJu0Yyx+79gdv7vAj05uAWq0h1hcSOSTI3hCSb2Y6rIZCFDhXFBAHjL
+	o7pO3Auz3vESzvwwGb4C7Iv4sEezjEaKV03sDS5gVYulRWYIogvHL1HSThT+HR8/IIvmPs0HEM/
+	KH58+q8srMC5npycJMNip+A==
+X-Google-Smtp-Source: AGHT+IETpYv5Kjvsk8OyrTodOgdwpPqjDaOSc1Z+SNVKHGp/NLwKQuB7PDtZOHT9w6zHvkJhoKySJ/78MmzZqKV0rQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:f81:b0:de4:5ec1:57af with
- SMTP id 3f1490d57ef6-dee4f3022d0mr5316676276.10.1715905747620; Thu, 16 May
- 2024 17:29:07 -0700 (PDT)
-Date: Fri, 17 May 2024 00:29:06 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:690c:4508:b0:61b:e9d5:ac1d with
+ SMTP id 00721157ae682-622afd65a8emr54872957b3.0.1715906833765; Thu, 16 May
+ 2024 17:47:13 -0700 (PDT)
+Date: Fri, 17 May 2024 00:47:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANGkRmYC/4XNQQ6CMBAF0KuQWTumLbUIK+9hjIEywCRKTUuqh
- nB3Czs3uvyT/9/MEMgzBaiyGTxFDuzGFPJdBnaox56Q25RBCaXFQZTYaEwd9FS316fniVDoWha
- tFkYJgrR7eOr4tZnnS8oDh8n59/YiyvX6S4sSJQrTkE0lZcri1DvX32hv3R1WLqq/hFoJeeysJ JPnpfoilmX5AJDnflv2AAAA
+X-B4-Tracking: v=1; b=H4sIAA2pRmYC/3WMwQrCMBBEf6Xs2ZVkbat46n9ID0lc0wVtSlKCU
+ vLvxt49DW+YeRskjsIJrs0GkbMkCXMFOjTgJjN7RrlXBlLUqk71aFusG5zXBR06orNV5PrOnKB elsgPee+621h5krSG+NntWf/aP6KsUaNRmi7a1LBm8CH4Jx9deMFYSvkCn07L/akAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715905746; l=6762;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715906832; l=2916;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=gQ3Z4if0NCnHXjJscYunu4D0mRks+UukL032g9TjvSE=; b=LIOOmuQGKnIVdx7wWcIXa2kQ91OAmVr3Iwyn7sDMB+ecfZxlw8ap6gweS+c8niZT4HLDC9U6F
- nG5iLBqw9aeDcbEUoaO1xlYJjeEy6dFKVMhYkGP4J6W2x17kj9hzU5O
+ bh=APN4VP2Crr6QKrWp/Xr/rV+r2whWDGdcimi2/j06TL0=; b=lVQhJSXTmnBiRmTpSG1PZj6jdwvTeXv2JarvTTQ1WVuAkjVh09o5tkjDw6JS3PNECmkC/jajo
+ 5RhTx6x5HKxC1PMpnksmZbLIIwZoUFWoMnm5GuoEn0sHIeScvxHC4Yz
 X-Mailer: b4 0.12.3
-Message-ID: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
-Subject: [PATCH v3] fs: fix unintentional arithmetic wraparound in offset calculation
+Message-ID: <20240517-b4-sio-ntp-c-v2-1-f3a80096f36f@google.com>
+Subject: [PATCH v2] ntp: safeguard against time_constant overflow case
 From: Justin Stitt <justinstitt@google.com>
-To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-When running syzkaller with the newly reintroduced signed integer
-overflow sanitizer we encounter this report:
+Using syzkaller with the recently reintroduced signed integer overflow
+sanitizer produces this UBSAN report:
 
-UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
-9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
+UBSAN: signed-integer-overflow in ../kernel/time/ntp.c:738:18
+9223372036854775806 + 4 cannot be represented in type 'long'
 Call Trace:
  <TASK>
  dump_stack_lvl+0x93/0xd0
  handle_overflow+0x171/0x1b0
- generic_file_llseek_size+0x35b/0x380
+ __do_adjtimex+0x1236/0x1440
+ do_adjtimex+0x2be/0x740
+ __x64_sys_clock_adjtime+0x154/0x1d0
 
-... amongst others:
-UBSAN: signed-integer-overflow in ../fs/read_write.c:1657:12
-142606336 - -9223372036854775807 cannot be represented in type 'loff_t' (aka 'long long')
-...
-UBSAN: signed-integer-overflow in ../fs/read_write.c:1666:11
-9223372036854775807 - -9223231299366420479 cannot be represented in type 'loff_t' (aka 'long long')
-
-Fix the accidental overflow in these position and offset calculations
-by checking for negative position values, using check_add_overflow()
-helpers and clamping values to expected ranges.
+Rework the logic surrounding time_constant and how it is incremented so
+that it doesn't wrap-around.
 
 Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/358
+Closes: https://github.com/KSPP/linux/issues/352
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Changes in v3:
-- use check_add_overflow() instead of min() to keep old -EINVAL behavior (thanks Jan)
-- shorten UBSAN splat in commit log, reword commit log
-- Link to v2: https://lore.kernel.org/r/20240509-b4-sio-read_write-v2-1-018fc1e63392@google.com
-
 Changes in v2:
-- fix some more cases syzkaller found in read_write.c
-- use min over min_t as the types are the same
-- Link to v1: https://lore.kernel.org/r/20240509-b4-sio-read_write-v1-1-06bec2022697@google.com
+- Adjust commit log (thanks Thomas)
+- massively simplify bounds checking for time_constant
+- Link to v1: https://lore.kernel.org/r/20240506-b4-sio-ntp-c-v1-1-a01281aa01ba@google.com
 ---
 Historically, the signed integer overflow sanitizer did not work in the
 kernel due to its interaction with `-fwrapv` but this has since been
@@ -126,8 +112,7 @@ Here's the syzkaller reproducer:
 | # IEEE802154:false Sysctl:false Swap:false UseTmpDir:false
 | # HandleSegv:false Repro:false Trace:false LegacyOptions:{Collide:false
 | # Fault:false FaultCall:0 FaultNth:0}}
-| r0 = openat$sysfs(0xffffffffffffff9c, &(0x7f0000000000)='/sys/kernel/address_bits', 0x0, 0x98)
-| lseek(r0, 0x7fffffffffffffff, 0x2)
+| clock_adjtime(0x0, &(0x7f0000000280)={0xff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x7ffffffffffffffe})
 
 ... which was used against Kees' tree here (v6.8rc2):
 https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
@@ -135,116 +120,27 @@ https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-r
 ... with this config:
 https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
 ---
- fs/read_write.c  | 20 +++++++++++++-------
- fs/remap_range.c | 12 ++++++------
- 2 files changed, 19 insertions(+), 13 deletions(-)
+ kernel/time/ntp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index d4c036e82b6c..8be30c8829a9 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -88,7 +88,8 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
- {
- 	switch (whence) {
- 	case SEEK_END:
--		offset += eof;
-+		if (check_add_overflow(offset, eof, &offset))
-+			return -EINVAL;
- 		break;
- 	case SEEK_CUR:
- 		/*
-@@ -105,7 +106,9 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
- 		 * like SEEK_SET.
- 		 */
- 		spin_lock(&file->f_lock);
--		offset = vfs_setpos(file, file->f_pos + offset, maxsize);
-+		if (check_add_overflow(offset, file->f_pos, &offset))
-+			return -EINVAL;
-+		offset = vfs_setpos(file, offset, maxsize);
- 		spin_unlock(&file->f_lock);
- 		return offset;
- 	case SEEK_DATA:
-@@ -1416,7 +1419,7 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_in = file_inode(file_in);
- 	struct inode *inode_out = file_inode(file_out);
- 	uint64_t count = *req_count;
--	loff_t size_in;
-+	loff_t size_in, in_sum, out_sum;
- 	int ret;
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 406dccb79c2b..d64f69e14938 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -733,8 +733,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
+ 		time_esterror = txc->esterror;
  
- 	ret = generic_file_rw_checks(file_in, file_out);
-@@ -1450,8 +1453,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	if (IS_SWAPFILE(inode_in) || IS_SWAPFILE(inode_out))
- 		return -ETXTBSY;
- 
--	/* Ensure offsets don't wrap. */
--	if (pos_in + count < pos_in || pos_out + count < pos_out)
-+	if (check_add_overflow(pos_in, count, &in_sum) ||
-+	    check_add_overflow(pos_out, count, &out_sum))
- 		return -EOVERFLOW;
- 
- 	/* Shorten the copy to EOF */
-@@ -1467,8 +1470,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 
- 	/* Don't allow overlapped copying within the same file. */
- 	if (inode_in == inode_out &&
--	    pos_out + count > pos_in &&
--	    pos_out < pos_in + count)
-+	    out_sum > pos_in &&
-+	    pos_out < in_sum)
- 		return -EINVAL;
- 
- 	*req_count = count;
-@@ -1649,6 +1652,9 @@ int generic_write_check_limits(struct file *file, loff_t pos, loff_t *count)
- 	loff_t max_size = inode->i_sb->s_maxbytes;
- 	loff_t limit = rlimit(RLIMIT_FSIZE);
- 
-+	if (pos < 0)
-+		return -EINVAL;
-+
- 	if (limit != RLIM_INFINITY) {
- 		if (pos >= limit) {
- 			send_sig(SIGXFSZ, current, 0);
-diff --git a/fs/remap_range.c b/fs/remap_range.c
-index de07f978ce3e..4570be4ef463 100644
---- a/fs/remap_range.c
-+++ b/fs/remap_range.c
-@@ -36,7 +36,7 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_out = file_out->f_mapping->host;
- 	uint64_t count = *req_count;
- 	uint64_t bcount;
--	loff_t size_in, size_out;
-+	loff_t size_in, size_out, in_sum, out_sum;
- 	loff_t bs = inode_out->i_sb->s_blocksize;
- 	int ret;
- 
-@@ -44,17 +44,17 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
- 	if (!IS_ALIGNED(pos_in, bs) || !IS_ALIGNED(pos_out, bs))
- 		return -EINVAL;
- 
--	/* Ensure offsets don't wrap. */
--	if (pos_in + count < pos_in || pos_out + count < pos_out)
--		return -EINVAL;
-+	if (check_add_overflow(pos_in, count, &in_sum) ||
-+	    check_add_overflow(pos_out, count, &out_sum))
-+		return -EOVERFLOW;
- 
- 	size_in = i_size_read(inode_in);
- 	size_out = i_size_read(inode_out);
- 
- 	/* Dedupe requires both ranges to be within EOF. */
- 	if ((remap_flags & REMAP_FILE_DEDUP) &&
--	    (pos_in >= size_in || pos_in + count > size_in ||
--	     pos_out >= size_out || pos_out + count > size_out))
-+	    (pos_in >= size_in || in_sum > size_in ||
-+	     pos_out >= size_out || out_sum > size_out))
- 		return -EINVAL;
- 
- 	/* Ensure the infile range is within the infile. */
+ 	if (txc->modes & ADJ_TIMECONST) {
+-		time_constant = txc->constant;
+-		if (!(time_status & STA_NANO))
++		if (!(time_status & STA_NANO) && time_constant < MAXTC)
+ 			time_constant += 4;
+ 		time_constant = min(time_constant, (long)MAXTC);
+ 		time_constant = max(time_constant, 0l);
 
 ---
 base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
-change-id: 20240509-b4-sio-read_write-04a17d40620e
+change-id: 20240506-b4-sio-ntp-c-c227b02c65a3
 
 Best regards,
 --
