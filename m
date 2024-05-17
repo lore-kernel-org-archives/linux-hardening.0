@@ -1,42 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18C11A2C1E;
-	Fri, 17 May 2024 20:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6429C140399
+	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 21:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715978738; cv=none; b=LmWvKXIdBEqvUgOnlx1xAIfpi2M+xEvbNWmMTCRw1/BvUEMfv/X5fMBPjXa7ICa/QnpnPKUzLqF+Q3bvuDzLErutUHqdenIrFkFCyaEvZBvBbwHC2+6e3hFxK+fdPK4WNSwDfRy6x1j8kvqtJ2fuH+cUrf1VVYjAoPXlJTHbiiU=
+	t=1715980505; cv=none; b=andaRZx+mgrKVq7cGkLL8vDbq8MoeN4SfzyK0nWMGZkZ2hi+UzD9AkaaIWz2vIiuqgHzG0WNWziz59Nx7SYkDuHYufw3Fur30HWCSISojUwEDuXpcV2erljse27Nas6EoOC6KSA3YPcOdqWVaKlEtJxcNUglH/kIUR7w7Luvuyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715978738; c=relaxed/simple;
-	bh=gBMpZMWfyzUQArH1dlBEIH4whj5xwu3YOj/Tb2+i0G0=;
+	s=arc-20240116; t=1715980505; c=relaxed/simple;
+	bh=mD/KumOF6xJOrXdrXUF2ZE4OvGpSMspkcjoU/w1zKc0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YSS33C2mgnnx8tj+NGG+pQ2Ox5XkhtwLdoijrDhLuEl7XGXmOM6pu37mLfJs/6cTBSQg2IrmfPu3IIR3dozsXEltJvUhNBNWq2eloQ6Zm95vsjG010vs9k7EsMHdfVaNCp+HifWGTVK1NadZ4bHhZJ/2P7EpjNlyEQkzvvn0Ezs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3cGhsKG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjJplzcaegK1pMbFXxwPGTwNPqdfCbUVbgcyA4L2L2rSj3yMBGpQwFmQD5sFXovnofUt0IzW9BtZAQZxykhoM2bA5lcXxvIvfF3bJRWxFJScsw2fWP/0drMeWdYzxho/r0XO9ZdZg226U3kj4NJTd6xrqEr94z7VaAei/c4jx6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k2LUksB3; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3cGhsKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1178C2BD10;
-	Fri, 17 May 2024 20:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715978737;
-	bh=gBMpZMWfyzUQArH1dlBEIH4whj5xwu3YOj/Tb2+i0G0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L3cGhsKGUMzJO6W4/EstavUeJELZ5ekwnE7cgs1Yn7PdX+my8Oyj9ZLXUxvw0rW50
-	 1quIhMJ8qENat703FZDUnlX4WdP4FDoKFbMhwz7djdERi+DgbyeXXZ7ApcNYIS1xca
-	 7xz7+ZZPyKdAPdX/OvnIjA4n15h7+lDF4xkR5Da8xVeThbwn5oRSSdZguL1DpCq1Ct
-	 r89ZNHTb2Yu9lo8JtG+4erZSNzmbHiNCHk5wOZFudIhRvVT2E3Q+h33uPvq7qsU4vT
-	 nf4fZGBvQJfa/kNO3F1XGWRhlRRJudfKeqXTpvVrBdQXeDdcWZFPQ65mC9/YTphQ+B
-	 5od8+ab9nvTCQ==
-Date: Fri, 17 May 2024 21:45:32 +0100
-From: Simon Horman <horms@kernel.org>
-To: Kenton Groombridge <concord@gentoo.org>
-Cc: johannes@sipsolutions.net, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] wifi: mac80211: Avoid address calculations via out of
- bounds array indexing
-Message-ID: <20240517204532.GC475595@kernel.org>
-References: <20240517145420.8891-1-concord@gentoo.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k2LUksB3"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ee42b97b32so22387225ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 14:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715980503; x=1716585303; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jwsbsmYbbDKnC5BT3KwLmoyUvx5LBcv4lPLoAGZmpdk=;
+        b=k2LUksB34tj+bhZx0fdJZQCb23tgoQvDSWXv9PgZDfqBgw/hA1LVnmVlkc4ZuqJ2b3
+         A6s9AEIfNxgqdiispWaceWpVJF1zRnoSTT+n5I8peur5dvO7M8WKc/grE6m8zvNX5AtG
+         AW6uy1INtiVl+pfhY6CiFFqAb8hdL4BDd7BRY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715980503; x=1716585303;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jwsbsmYbbDKnC5BT3KwLmoyUvx5LBcv4lPLoAGZmpdk=;
+        b=WLScZaXdPUsTPsX+C3slWYYVqr0zOdoOeZpktEs6sq5yIS3Baf5x6mO6TBXeMg02Vi
+         Auvrwvsk6Jzz6uribXOoy7/RLDqg50xWKpD/6cUgPDuug1uVHXLLujj0C8gyy/zorpvb
+         02oZjjizHBnn3/uLwafF6i4BjyIhmAnUEgJILGXq2iGXc4G5Ya3vtqTMy84j0F/bhfqd
+         6Eli41YveGZJ/uiykj1RH0QpL6USRPk62DcyEbjkbXN/F8eN0eEvG7J/PY1bjWt15hIL
+         FdAq9kA8+2RS+6u0tLb5WLoeDOPNoq2B5J+JNsRyXHFy5HKMdV8AOGhmyZlUpCZOdycs
+         RvCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVqne18/iTxmYOVzuzdQGfJluB+NssocRwYaTPv6oV3V4IcjsS1cz/KE+/DYJ9bE+AQ1GYf0rkRvp5U0Tu2VKuBOy/kr7qzAmnEQYB5NbR
+X-Gm-Message-State: AOJu0Ywf+uAPsA3WHKpCqmFTB5woKdexr5vwzVlrFJ1kAf2VvNICS9v4
+	ReWVDfWm46XdU9mKiTzHStkMMCT1ev57OB3xsDotZnD7VUAzjaHQr5U2WT42Zg==
+X-Google-Smtp-Source: AGHT+IHIzu7juLKRK4wQDKZxcEVDWqSSXb79G8PTTEseVZvkiTBbeumQWCYKWtOuDU3JqCgeVqysCg==
+X-Received: by 2002:a17:902:ea10:b0:1f0:84e3:a619 with SMTP id d9443c01a7336-1f084e3a955mr147911465ad.14.1715980503633;
+        Fri, 17 May 2024 14:15:03 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f09363ac7dsm57168635ad.93.2024.05.17.14.15.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 14:15:02 -0700 (PDT)
+Date: Fri, 17 May 2024 14:15:01 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <202405171329.019F2F566C@keescook>
+References: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <20240515073636.GY40213@noisy.programming.kicks-ass.net>
+ <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
+ <20240516140951.GK22557@noisy.programming.kicks-ass.net>
+ <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
+ <20240516205134.GC287325@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -45,89 +77,102 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240517145420.8891-1-concord@gentoo.org>
+In-Reply-To: <20240516205134.GC287325@mit.edu>
 
-On Fri, May 17, 2024 at 10:54:20AM -0400, Kenton Groombridge wrote:
-> req->n_channels must be set before req->channels[] can be used.
+On Thu, May 16, 2024 at 02:51:34PM -0600, Theodore Ts'o wrote:
+> On Thu, May 16, 2024 at 12:48:47PM -0700, Justin Stitt wrote:
+> > 
+> > It is incredibly important that the exact opposite approach is taken;
+> > we need to be annotating (or adding type qualifiers to) the _expected_
+> > overflow cases. The omniscience required to go and properly annotate
+> > all the spots that will cause problems would suggest that we should
+> > just fix the bug outright. If only it was that easy.
 > 
-> This patch fixes one of the issues encountered in [1].
-> 
-> [   83.964252] ------------[ cut here ]------------
-> [   83.964255] UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:364:4
-> [   83.964258] index 0 is out of range for type 'struct ieee80211_channel *[]'
-> [   83.964260] CPU: 0 PID: 1695 Comm: iwd Tainted: G           O    T 6.8.9-gentoo-hardened1 #1
-> [   83.964262] Hardware name: System76 Pangolin/Pangolin, BIOS ARB928_V00.01_T0025ASY1_ms 04/20/2023
-> [   83.964264] Call Trace:
-> [   83.964267]  <TASK>
-> [   83.964269]  dump_stack_lvl+0x3f/0xc0
-> [   83.964274]  __ubsan_handle_out_of_bounds+0xec/0x110
-> [   83.964278]  ieee80211_prep_hw_scan+0x2db/0x4b0
-> [   83.964281]  __ieee80211_start_scan+0x601/0x990
-> [   83.964284]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964287]  ? cfg80211_scan+0x149/0x250
-> [   83.964291]  nl80211_trigger_scan+0x874/0x980
-> [   83.964295]  genl_family_rcv_msg_doit+0xe8/0x160
-> [   83.964298]  genl_rcv_msg+0x240/0x270
-> [   83.964301]  ? __cfi_nl80211_trigger_scan+0x10/0x10
-> [   83.964302]  ? __cfi_nl80211_post_doit+0x10/0x10
-> [   83.964304]  ? __cfi_nl80211_pre_doit+0x10/0x10
-> [   83.964307]  ? __cfi_genl_rcv_msg+0x10/0x10
-> [   83.964309]  netlink_rcv_skb+0x102/0x130
-> [   83.964312]  genl_rcv+0x23/0x40
-> [   83.964314]  netlink_unicast+0x23b/0x340
-> [   83.964316]  netlink_sendmsg+0x3a9/0x450
-> [   83.964319]  __sys_sendto+0x3ae/0x3c0
-> [   83.964324]  __x64_sys_sendto+0x21/0x40
-> [   83.964326]  do_syscall_64+0x90/0x150
-> [   83.964329]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964331]  ? syscall_exit_work+0xc2/0xf0
-> [   83.964333]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964335]  ? syscall_exit_to_user_mode+0x74/0xa0
-> [   83.964337]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964339]  ? do_syscall_64+0x9c/0x150
-> [   83.964340]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964342]  ? syscall_exit_to_user_mode+0x74/0xa0
-> [   83.964344]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964346]  ? do_syscall_64+0x9c/0x150
-> [   83.964347]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964349]  ? do_syscall_64+0x9c/0x150
-> [   83.964351]  ? srso_alias_return_thunk+0x5/0xfbef5
-u> [   83.964353]  ? syscall_exit_work+0xc2/0xf0
-> [   83.964354]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964356]  ? syscall_exit_to_user_mode+0x74/0xa0
-> [   83.964358]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964359]  ? do_syscall_64+0x9c/0x150
-> [   83.964361]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964362]  ? do_user_addr_fault+0x488/0x620
-> [   83.964366]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964367]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [   83.964369]  entry_SYSCALL_64_after_hwframe+0x55/0x5d
-> [   83.964372] RIP: 0033:0x6200808578d7
-> [   83.964374] Code: 00 00 90 f3 0f 1e fa 41 56 55 41 89 ce 48 83 ec 28 80 3d 7b f7 0d 00 00 74 29 45 31 c9 45 31 c0 41 89 ca b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 71 48 83 c4 28 5d 41 5e c3 66 0f 1f 84 00 00
-> [   83.964375] RSP: 002b:0000730c4e821530 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-> [   83.964378] RAX: ffffffffffffffda RBX: 000006dbc456c570 RCX: 00006200808578d7
-> [   83.964379] RDX: 000000000000005c RSI: 000006dbc45884f0 RDI: 0000000000000004
-> [   83.964381] RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
-> [   83.964382] R10: 0000000000000000 R11: 0000000000000246 R12: 000006dbc456c480
-> [   83.964383] R13: 000006dbc456c450 R14: 0000000000000000 R15: 000006dbc456c610
-> [   83.964386]  </TASK>
-> [   83.964386] ---[ end trace ]---
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=218810
-> 
-> v1->v2:
-> - Drop changes in cfg80211 as requested by Johannes
-> 
-> Co-authored-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kenton Groombridge <concord@gentoo.org>
+> It certainly isn't easy, yes.  But the problem is when you dump a huge
+> amount of work and pain onto kernel developers, when they haven't
+> signed up for it, when they don't necessarily have the time to do all
+> of the work themselves, and when their corporate overlords won't given
+> them the headcount to handle unfunded mandates which folks who are
+> looking for a bright new wonderful future --- don't be surprised if
+> kernel developers push back hard.
 
-Thanks Kenton,
+I never claimed this to be some kind of "everyone has to stop and make
+these changes" event. I even talked about how it would be gradual and
+not break existing code (all "WARN and continue anyway"). This is what
+we've been doing with the array bounds work. Lots of people are helping
+with that, but a lot of those patches have been from Gustavo and me; we
+tried to keep the burden away from other developers as much as we could.
 
-FWWIW, it seems unfortunate to me that the __counted_by field (n_channels)
-is set some distance away from the allocation of the flex-array (channels)
-whose bounds it checks. It seems it would be pretty easy for a bug in the
-code being updated here to result in an overrun.
+> One of the big problems that we've seen with many of these security
+> initiatives is that the teams create these unfunded mandates get their
+> performance reviews based on how many "bug reports" that they file,
+> regardless of whether they are real problems or not.  This has been a
+> problem with syzkaller, and with clusterfuzz.  Let's not make this
+> problem worse with new and fancy sanitizers, please.
 
-But in any case, I think this is an improvement and seems correct to me.
+Are you talking about *my* security initiatives? I've been doing this
+kind work in the kernel for 10 years, and at no time has "bug report
+count" been a metric. In fact, the whole goal is making it _impossible_
+to have a bug. (e.g. VLA removal, switch fallthrough, etc). My drive has
+been to kill entire classes of bugs.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+The use of sanitizers isn't to just bolster fuzzers (though they're
+helpful for finding false positives). It's to use the sanitizers _in
+production_, to stop flaws from being exploitable. Android has enabled
+the array bounds sanitizer in trap mode for at least 2 years now. We
+want the kernel to be self-protective; pro-actively catching flaws.
+
+> Unfortunately, I don't get funding from my employer to clear these
+> kinds of reports, so when I do the work, it happens on the weekends or
+> late at night, on my own time, which is probably why I am so grumpy
+
+As for the work itself, like I mentioned before, most of these get fixed
+my Gustavo, me, and now Justin too. And many other folks step up to help
+out, which is great. Some get complex and other maintainers get involved
+too, but it's slow and steady. We're trying to reduce the frequency of
+the "fires" people have to scramble to deal with.
+
+The "not getting paid by Google to [fix syzkaller bugs]" part, I'm
+surprised by. A big part of my Google job role is the upstream work I do
+not only on security hardening but also on seccomp, pstore, execve/binfmt,
+strings, etc. I'll reach out offline to find out more details.
+
+> about this.  Whether you call this "sharpening our focus", or "year of
+> efficiency", or pick your corporate buzzwords, it really doesn't
+> matter.  The important thing is that the figure of merit must NOT be
+> "how many security bugs that are found", but how much bullsh*t noise
+> do these security features create, and how do you decrease overhead by
+> upstream developers to deal with the fuzzing/ubsan/security tools
+> find.
+
+I guess I *do* worry about bug counts, but only in that I want them to
+be _zero_. I know other folks aren't as adamant about eliminating bug
+classes, but it's really not hyperbole that bugs in Linux kill people.
+If you think I'm engaging in corporate buzzword shenanigans, then I have
+a lot more work to do on explaining the rationale behind the security
+hardening efforts.
+
+All this said, yes, I hear what you (and Linus and others) have been
+saying about minimizing the burden on other developers. I have tried my
+best to keep it limited, but some things are more front-and-center (like
+unexpected integer overflows), so that's why I wanted to get feedback on
+how to roll it out -- I didn't see a way to make these changes in a way
+that would be as unintrusive(?) as our prior efforts.
+
+It has felt like the biggest pain point has been helping developers
+shift their perspective about C: it has been more than a fancy assembler
+for several decades, and we can lean on those features (and create new
+ones) that shift the burden of correctness to the compiler from the
+human. This does mean we need to change some styles to be more
+"observable" (and unambiguous) for the compiler, though.
+
+I think a great example recently was Peter's work creating "cleanup.h".
+This feature totally changes how people have to read a function (increase
+in burden), leans heavily on compiler behaviors, and shifts the burden
+of correctness away from the human. It's great! But it's also _very
+different_ from traditional/old-school C.
+
+-Kees
+
+-- 
+Kees Cook
