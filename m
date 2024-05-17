@@ -1,109 +1,120 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DB821A0C;
-	Fri, 17 May 2024 07:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F306C1EB25;
+	Fri, 17 May 2024 08:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715931939; cv=none; b=L5x+5dQCIAB6QxCWxj/JsKNZtyjN3OlxpCPbjKIcPr/JWkV7fwkSbPDIAadovyveiwApVitC1WttmaiawiFh/GSaq5LpZIkKZX3IULU9DCvnQYJ/hBLyPQjOk16tDUdrKP/yNKM5ZGjHOVv6CBTKAGmDBspUKyV6LnUFK11HeGk=
+	t=1715935783; cv=none; b=usHSHjtP/gxKXlFr65LbPHSS319fpdjxQfn+NtoQn9jr4l9WsKc2LPjCQwIDfeUPv2GksnX7UNxl4XdP4NZlAIXmnnYiqfjeY3qpjhJzeYN/Pflweg9CBUGjVwZdFCyW6WEEeiumxncJWXC2NTxrXCKi/YAEmh+gPXwzIjsJmlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715931939; c=relaxed/simple;
-	bh=NIUqWEH+uSM7abt6BRHzGWYIu+/xBzUmrnsC0dtANhI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bO8qvlkGrKGT30QoXcfU6i/IbUTzsObM4lLmcUmnjyQwACAwiKv0mjeeyJgAorVwJcwWMoui5I6dfyQPqtn2hbnopcbMW9UPUk14Xj+eGa97e21tT+Lddlk5fmjzX+vohs6b04zxqLR3rxRmHfMak2iJG3XXRXORtRtCv72uqCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4VgdqH4dQPz9v7Hy;
-	Fri, 17 May 2024 15:28:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 5F1291401EA;
-	Fri, 17 May 2024 15:45:32 +0800 (CST)
-Received: from [10.45.153.237] (unknown [10.45.153.237])
-	by APP1 (Coremail) with SMTP id LxC2BwBH8RkTC0dmBZpWCA--.58599S2;
-	Fri, 17 May 2024 08:45:31 +0100 (CET)
-Message-ID: <99da3934-2c44-4a1f-832f-3f182ddadefa@huaweicloud.com>
-Date: Fri, 17 May 2024 09:45:20 +0200
+	s=arc-20240116; t=1715935783; c=relaxed/simple;
+	bh=bHB9Jyod00NwPI/ne8odhL2AXmhmNsER6T4TKlS22BE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rUhNZ+wpTj2Du0o5wNLN1OCyuPJ3Uhj8NhrGs813gcO/UapHlYBMoHBuqgLlsiP/qVTwIjUjq/EGq0vnZaJb2ygNA0AQZZrh+I10eFMr5Cw7gwH+WGDGTpXZXBIRFoJGm42JWOx6zgo1zDsZUzKaPlLJLLNQ+pE86br5c319FTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4aNoSl0x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=87ZEWj6b; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4aNoSl0x";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="87ZEWj6b"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715935780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Deoi2GZ+KDWE4R9eV3dkdUKvxWuoHOIQHWloV/mCKL4=;
+	b=4aNoSl0xm0exphB7zLPX4O07pTlF7cp+mBPwN/zAxbZqJIbC8lckN9/vs4IsFyD6ldzLUw
+	B64g3UhkXU6++iwIRip4SIjXYXfCs1tfb79f/rYZ/Fq+86OjpcKn9ZeBYsrejidJO65BvK
+	ruNAVnKvaRVQ6K6Usqq8hZcknyXlWPpV6E3zMQ+gTdMl8LrIIlrikycUB3RePTyy6nIF8I
+	kLkBqA3mM5tDWWCPzvj2CEBFr+KecCpbH9giWbljmgZMDazagn7l8VNN77q8bBcAPrrdHN
+	hDX5pqzl29PQEwBkZGoS3BENzfz2K/xZxVQUZUT4y4uBpD8savGmdFX41l6oKw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715935780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Deoi2GZ+KDWE4R9eV3dkdUKvxWuoHOIQHWloV/mCKL4=;
+	b=87ZEWj6b2Wq4yvgsK9yoA17pwUSQUTuSHPGEib5DWhmlaRGQG+Gm6gWqR+2hCtuVF+0TZZ
+	UYNvqs88L5fWLKBw==
+To: Justin Stitt <justinstitt@google.com>
+Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ntp: remove accidental integer wrap-around
+In-Reply-To: <CAFhGd8p94sHpDc8MApZK7q9iEQ_C8c5frwZx9v_bTnhwtAM=HQ@mail.gmail.com>
+References: <20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com>
+ <87v83gllv8.ffs@tglx>
+ <CAFhGd8p94sHpDc8MApZK7q9iEQ_C8c5frwZx9v_bTnhwtAM=HQ@mail.gmail.com>
+Date: Fri, 17 May 2024 10:49:39 +0200
+Message-ID: <87ttiwkel8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Kees Cook <keescook@chromium.org>
-Cc: Justin Stitt <justinstitt@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <202404291502.612E0A10@keescook>
- <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
- <202405081144.D5FCC44A@keescook>
- <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-In-Reply-To: <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:LxC2BwBH8RkTC0dmBZpWCA--.58599S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFW3Cr4ruryrJrWUGw4xXrb_yoW8Gr1kpF
-	Z8GF4jyrn5Ja97u348Aw4ktayruwn3Ga98Cr9Ygw4DAF4rKrs2kFn0krsI9ryrGrZ5Z3yU
-	Xr4Utr9I9FyUuaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 16 2024 at 16:40, Justin Stitt wrote:
+> On Tue, May 14, 2024 at 3:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>> So how can 0xf42400 + 500000/1000 overflow in the first place?
+>>
+>> It can't unless time_maxerror is somehow initialized to a bogus
+>> value and indeed it is:
+>>
+>> process_adjtimex_modes()
+>>         ....
+>>         if (txc->modes & ADJ_MAXERROR)
+>>                 time_maxerror =3D txc->maxerror;
+>>
+>> So that wants to be fixed and not the symptom.
+>
+> Isn't this usually supplied from the user and can be some pretty
+> random stuff?
 
+Sure it comes from user space and can contain random nonsense as
+syzkaller demonstrated.
 
-Am 5/8/2024 um 10:07 PM schrieb Linus Torvalds:
-> And no, the answer is ABSOLUTELY NOT to add cognitive load on kernel
-> developers by adding yet more random helper types and/or functions.
+> Are you suggesting we update timekeeping_validate_timex() to include a
+> check to limit the maxerror field to (NTP_PHASE_LIMIT-(MAXFREQ /
+> NSEC_PER_USEC))? It seems like we should handle the overflow case
+> where it happens: in second_overflow().
+>
+> The clear intent of the existing code was to saturate at
+> NTP_PHASE_LIMIT, they just did it in a way where the check itself
+> triggers overflow sanitizers.
 
+The clear intent of the code is to do saturation of a bound value.
 
-Just to show an option without "more types and helper functions", one 
-could also instead add a coverage requirement:
+Clearly the user space interface fails to validate the input to be in a
+sane range and that makes you go and prevent the resulting overflow at
+the usage site. Seriously?
 
-Every arithmetic operation should either:
-- have a test case where the wrap around happens, or
-- have a static analyser say that overflow can not happen, or
-- have a static analyser say that overflow is fine (e.g., your a+b < a case)
+Obviously the sanitizer detects the stupid in second_overflow(), but
+that does not mean that the proper solution is to add overflow
+protection to that code.
 
-Then the answer to safe wrap situations isn't to make the kernel code 
-less readable, but to have a component-level test that shows that the 
-behavior on overflow (in at least one case :)) ) is what the developer 
-expected.
+Tools are good to pin-point symptoms, but they are by definition
+patently bad in root cause analysis. Otherwise we could just let the
+tool write the "fix".
 
-For static analysis to prove that overflow can not happen, one sometimes 
-would need to add BUG_ON() assertions to let the analyser know the 
-assumptions on surrounding code, which has its own benefits.
+The obvious first question in such a case is to ask _WHY_ does
+time_maxerror have a bogus value, which clearly cannot be achieved from
+regular operation.
 
+Once you figured out that the only way to set time_maxerror to a bogus
+value is the user space interface the obvious follow up question is
+whether such a value has to be considered as valid or not.
 
-static inline u32 __item_offset(u32 val)
-{
-         BUG_ON(val > INT_MAX / ITEM_SIZE_PER_UNIT);
-         return val * ITEM_SIZE_PER_UNIT;
-}
+As it is obviously invalid the logical consequence is to add a sanity
+check and reject that nonsense at that boundary, no?
 
+Thanks,
 
-Obviously, the effort involved is still high. Maybe if someone as a pet 
-project proves first that something in this direction is actually worth 
-the effort (by uncovering a heap of bugs), one could offer this kind of 
-check as an opt-in.
-
-
-Best wishes,
-
-   jonas
-
+        tglx
