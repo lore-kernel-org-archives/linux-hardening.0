@@ -1,71 +1,109 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B4A134A6;
-	Fri, 17 May 2024 06:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DB821A0C;
+	Fri, 17 May 2024 07:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715927135; cv=none; b=CDC+OMVSYHrEjggq5ct3byF/0CdJYcx3dBbjRj+2ntJeCtDvO2eNYoiM0boo9iBaS8KnMgZ4SDUHF/STHvdb8HzwRMoYcM2NIEq8eaLcSqGmkRl/iafQIZ5jaoKBx/ApGSy2HL7d9zKWmZvVnPrQE4ZcnoViz7eIzNXQ4OrQAGE=
+	t=1715931939; cv=none; b=L5x+5dQCIAB6QxCWxj/JsKNZtyjN3OlxpCPbjKIcPr/JWkV7fwkSbPDIAadovyveiwApVitC1WttmaiawiFh/GSaq5LpZIkKZX3IULU9DCvnQYJ/hBLyPQjOk16tDUdrKP/yNKM5ZGjHOVv6CBTKAGmDBspUKyV6LnUFK11HeGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715927135; c=relaxed/simple;
-	bh=qt28qpGihbsLNTy0QXcH6ifyS6+qu1VlVPg9r03RQhY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Yoto5i5D+3PU4geFUPi1iG+Y0m1VIdZQ7+m/70HpksE81gSOipgozfIFwhHMkyxKgjoXbYvsBEDrs5s8M0b8g+UUqYd6BckJyOo2QRpljqdecci3kSv9hGTTNA3HakZRxdZXWqY9fldqDJMZBbTMMXLWzOGXcoAfWwFo/v25x1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=tk+gIjdr; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="tk+gIjdr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=qt28qpGihbsLNTy0QXcH6ifyS6+qu1VlVPg9r03RQhY=;
-	t=1715927132; x=1717136732; b=tk+gIjdrr8g9u5ZUUYdHSRIKOd4JG17w4s2NoFRnogztVV8
-	S0z2JARR68+V3lgZQMwqEV6BV94SQiGHcBEaBo0axNfx7WXFf3i2jYS2L3tw2uNaEEuHJkDVUMpN9
-	xtkZNLERmiwppVIegzpN4Cbr6f/3593ecjYD0ukSmZP8yXNDwvrFXZ1AJS9u+8FtFQcZK1Xbz7hZ7
-	0Fx/B11q+/jiy3h6ESPl1Ldz3PAKI6W0EGDz7TpLRkMSYOC9XRD3mBlFG5GSkJue0JHn3EowTprP9
-	aeX5ujB0cKzkWn1y3cEkg4Tvmd1HOrUVQi8xdALnCMIqHAHFpxZFhn4txBm0OGAQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1s7r1p-0000000AVQj-3PVg;
-	Fri, 17 May 2024 08:25:18 +0200
-Message-ID: <e2363a1ca932cf1534f9f006e6cf4f30a8c7a0cd.camel@sipsolutions.net>
-Subject: Re: [PATCH 1/1] wifi: mac80211: Avoid address calculations via out
- of bounds array indexing
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Kenton Groombridge <concord@gentoo.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com,  linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org, keescook@chromium.org, 
- linux-hardening@vger.kernel.org
-Date: Fri, 17 May 2024 08:25:16 +0200
-In-Reply-To: <20240517002352.12717-1-concord@gentoo.org>
-References: <20240517002352.12717-1-concord@gentoo.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1715931939; c=relaxed/simple;
+	bh=NIUqWEH+uSM7abt6BRHzGWYIu+/xBzUmrnsC0dtANhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bO8qvlkGrKGT30QoXcfU6i/IbUTzsObM4lLmcUmnjyQwACAwiKv0mjeeyJgAorVwJcwWMoui5I6dfyQPqtn2hbnopcbMW9UPUk14Xj+eGa97e21tT+Lddlk5fmjzX+vohs6b04zxqLR3rxRmHfMak2iJG3XXRXORtRtCv72uqCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4VgdqH4dQPz9v7Hy;
+	Fri, 17 May 2024 15:28:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 5F1291401EA;
+	Fri, 17 May 2024 15:45:32 +0800 (CST)
+Received: from [10.45.153.237] (unknown [10.45.153.237])
+	by APP1 (Coremail) with SMTP id LxC2BwBH8RkTC0dmBZpWCA--.58599S2;
+	Fri, 17 May 2024 08:45:31 +0100 (CET)
+Message-ID: <99da3934-2c44-4a1f-832f-3f182ddadefa@huaweicloud.com>
+Date: Fri, 17 May 2024 09:45:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:LxC2BwBH8RkTC0dmBZpWCA--.58599S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFW3Cr4ruryrJrWUGw4xXrb_yoW8Gr1kpF
+	Z8GF4jyrn5Ja97u348Aw4ktayruwn3Ga98Cr9Ygw4DAF4rKrs2kFn0krsI9ryrGrZ5Z3yU
+	Xr4Utr9I9FyUuaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-On Thu, 2024-05-16 at 20:23 -0400, Kenton Groombridge wrote:
-> req->n_channels must be set before req->channels[] can be used.
-> Additionally, memory addresses after the "channels" array need to be
-> calculated from the allocation base ("request") instead of the first
-> "out of bounds" index of "channels" to avoid a runtime bounds check
-> warning.
 
-Thanks. Can you please drop the cfg80211 parts from this to match the
-subject, the code there is broken in other ways too, I have a fix for
-all of that:
-https://patchwork.kernel.org/project/linux-wireless/patch/20240510113738.41=
-90692ef4ee.I0cb19188be17a8abd029805e3373c0a7777c214c@changeid/
 
-johannes
+Am 5/8/2024 um 10:07 PM schrieb Linus Torvalds:
+> And no, the answer is ABSOLUTELY NOT to add cognitive load on kernel
+> developers by adding yet more random helper types and/or functions.
+
+
+Just to show an option without "more types and helper functions", one 
+could also instead add a coverage requirement:
+
+Every arithmetic operation should either:
+- have a test case where the wrap around happens, or
+- have a static analyser say that overflow can not happen, or
+- have a static analyser say that overflow is fine (e.g., your a+b < a case)
+
+Then the answer to safe wrap situations isn't to make the kernel code 
+less readable, but to have a component-level test that shows that the 
+behavior on overflow (in at least one case :)) ) is what the developer 
+expected.
+
+For static analysis to prove that overflow can not happen, one sometimes 
+would need to add BUG_ON() assertions to let the analyser know the 
+assumptions on surrounding code, which has its own benefits.
+
+
+static inline u32 __item_offset(u32 val)
+{
+         BUG_ON(val > INT_MAX / ITEM_SIZE_PER_UNIT);
+         return val * ITEM_SIZE_PER_UNIT;
+}
+
+
+Obviously, the effort involved is still high. Maybe if someone as a pet 
+project proves first that something in this direction is actually worth 
+the effort (by uncovering a heap of bugs), one could offer this kind of 
+check as an opt-in.
+
+
+Best wishes,
+
+   jonas
 
