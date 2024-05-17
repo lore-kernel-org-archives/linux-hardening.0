@@ -1,164 +1,257 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2096.outbound.protection.outlook.com [40.92.91.96])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A69E13DDDB;
-	Fri, 17 May 2024 17:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966545; cv=fail; b=VSnASxnu8QDGHBY2YrWoff3Xg+sWRMKt1+VZGSwd7QKOvOuu41DmSfJASGxLe994mSKdM6/F/7/rBoPifMcuPcNUUQk49lAQp6QZVuRWPhdIhczCOtZk0+LPCX6t63Y94modKuWcJm11rLc0q7uTt58khi/CdWglmadbTvqjkpI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966545; c=relaxed/simple;
-	bh=R2g7aB2FQvoAzLDlfjL4We59knASFYxPNbiWCI5FTAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=saI3OlhHIUQFlpQiHJm3w8GabtJ/mVtUgOvvBEDOWM/C5YmP+0rUOmIhGFx/gWWDfdi7G/5YQxWVs9di+B/aDxp1qLwHRdJArb8t3ES24vzEJbdi6W0nexQA9VnppnkSF3QgfzMDGrXpq6ckuHchOlzqgzo9euW/vvVxAoVZk3g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=a6I7+rgG; arc=fail smtp.client-ip=40.92.91.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52ED465F
+	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 20:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715976133; cv=none; b=GxENYZY62i8bQz/2mTDorEJD94bgXU0AUYjqAIxbuqGqT/++Oe8V922KFXig5/tDhLpimaiGFDpfAwm0NFi/b1oiI0+oxt/Mq2vIqyTc9ZgcT9Oph0veJ9aOW2t2C5IXIcfMqZjFEWoWt0XALKTMfFhlbc+kaA5gyaz8ZXBcSu0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715976133; c=relaxed/simple;
+	bh=DcLykhJMcIDe6aDsyWYaRV67CNAtmB+1qJjDiOrFBUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XodbZIqxf79l+zqGDRwb8bf6Esx8Cs+wfx5LZuaP87mlwg10nHkpYWhDsZGgCHCBONiiOnyy0GqmMrPOBYj9fQRwiOI+v8YI6BtAgjHDMPp998vFf7QFAuHMeNWNuuvuKfYb8hViT7ua+NHcBo/iGTIoMtQPe2SHRynbPgFEoo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eyEOmq4F; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="a6I7+rgG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cHdJhw2kOAtViKbNkQpIANPf6wpCMFlhyIRoI3m9qCcELp7hfHseBdkXQRWNl7yGSub2E+hDDCcYjf50ErmKIUInl5RiKs5lbbdlawulSj8HPHY+11qeNebxuPhChFQ/kCFrk5UI4FI1UbAk7alNLsIFCcera5lH5k8A9VpnnHt5LCEhcSeWbCqIP8DRZ+GBnISDD+LHUa9dGXQptX14vtcL4kvqzdl+OUQDlL/U57MaLAgl2jb08/TfvyEdyWbqRwHDh/Q1RLugZzYacP2KC7Cbb6kYDvPoQ24X/7adPYSeXioEXF9gTQYXhNprciTOor2VDOULha2HnR6d+CmM3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NdXNwbNaULL/bRsVSHS0cQxwWklP6P8Qao9V20EgFTI=;
- b=VSw72wymh9GwpQjfnwCl9hcAvB4SXEfRw1G3Zbtl20S/VB3AmxeaAZax5iTjdcqp+xCTpShOrww360ZcpTazDMo8TX+Ejusyprxcf2yJ0yzg7dBwtxz3vVpJ0ymNCgJ9wIs1r3gBUWTF0SE5qUzFUhMIgncnV3sQfjhlFkbJC/m2VgGBYG0bKJFOGMMDfZGRUyMI3GpNJ8QSuGva/gLP+cHPYjirH/pdRJN2xDmqqBHOdB5r+Oz5x0+5vk15FJd65/1nm6V+Ehf4oJqDQzuq6/Fb638rd0AMDhjPsSUr+JpMpEZFzXJkQY2hjKu4F1RRtmC8etHTi+b6gfp3j1ieQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NdXNwbNaULL/bRsVSHS0cQxwWklP6P8Qao9V20EgFTI=;
- b=a6I7+rgG9Y1VwI06kSc2TZQBz4Raq12Rk1+gn/CLyDgH5WK73Sdcwr487zQ1yryCPGwM4NCWHewiOjQqhxzWlKOmvLsYAoRzF4MlBpIQu6SD/da1hv8W4+gWwtOd7OttaZ8a3P3bhPbPVigh7x9imwsCtK4X+x+OGO3cCpWXgGYSutxZgCmiIveIt37dL1hAoHuKCn0DvyALLxqdZieT4X2zX6lHzu/CVjWKj+3O4rdWCoemfClzV0LWiiIHhoBhOnoID2/0cJzqmQk+9S/9EaiqNProkd13P7E5hZWz4RBg/UDuG1NKORUY8Ti1jpzNOFNhjwuxihpBBpK0rKgQgg==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AM7PR02MB6195.eurprd02.prod.outlook.com (2603:10a6:20b:1ac::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.30; Fri, 17 May
- 2024 17:22:18 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7587.028; Fri, 17 May 2024
- 17:22:18 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v3 2/2] tty: rfcomm: prefer array indexing over pointer arithmetic
-Date: Fri, 17 May 2024 19:21:50 +0200
-Message-ID:
- <AS8PR02MB72371AEAFAEE5563812D189A8BEE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240517172150.5476-1-erick.archer@outlook.com>
-References: <20240517172150.5476-1-erick.archer@outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [AyUf7TvpU/T8yh7Z6kMAXUGQltDUUjYT]
-X-ClientProxiedBy: MA2P292CA0028.ESPP292.PROD.OUTLOOK.COM (2603:10a6:250::15)
- To AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240517172150.5476-3-erick.archer@outlook.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eyEOmq4F"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-69b5a87505cso5217426d6.2
+        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 13:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715976129; x=1716580929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bI1RNJPjqCg8PPMHmPp0pCN9b95JX+day8N+NzvHcvM=;
+        b=eyEOmq4FAvAUa7h96fDWUq7x68Hexe25ClCHqUMbqLO5syHafQ5kolGBdNEdPMpUaQ
+         seE0n5Q0Wh/0EjEF9Cz1zIOJ10KF2JRtnX4RTW3Fk9Y16s+bnKdHz4irNlHvMw1HPoGz
+         1Dv5gWDi0S2JIb9Eu/8QgbgXkv8jNJfsY+zW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715976129; x=1716580929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bI1RNJPjqCg8PPMHmPp0pCN9b95JX+day8N+NzvHcvM=;
+        b=Rnu5kt7P6E21wi11dNkeZESDwqkp/EdRbAdTNbFlbrB1lIH/3Hge8Wzf0gPxBblMQO
+         ViWOVO+irMTUdDFG/oH/oseOsZ8nfigH8r1zYk44HpnvSOYdquC3cXa+zC3Mom+m8yMf
+         15NT93XLopYhgb4V6LShI9+IkZQbh01jpoBuMcWMJluslQtV0AL3Y+KV588O9PKzrF3h
+         7uZ0ZafyJFf+vfHwuFfzNq+pSm3wn6d+m2QLNBHvsDsuEPO4s7UTrNGAmeSrjGn0Caq/
+         0PW7Z5LtN42kw9q851/hP6ez7CNXUR9454Jnc2L1bXPb6leWM67Rha+2+sD7+EI7avAo
+         +Mvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHbAG0DG92IlPgrxoluMfI9N/PCwXeV15X8HeP2ZIjteAcr7/ecRZEJaEBtxelPme4/9RZxZgQyNHf0S27lKubHSutoWve3w52Ib2YUiwn
+X-Gm-Message-State: AOJu0Yy69CN0egWnjbaEFkScLtc+5id69KXVnnb+yEiflW5c5x9uSIdS
+	2SXcM2Y4cgD/fPzadV9soPorNGLv6e2nf6FA8OiKstL/nePbLsaXLIPo5dhwy6jB2zABctH0J7Q
+	=
+X-Google-Smtp-Source: AGHT+IGaoEH2BzPxwsoWTROuZG70h1TLeWzjlCeAy8/scIAQ+OW8HrPnSCllVBcoijvfMVk4l/f8Mg==
+X-Received: by 2002:a05:6214:3b87:b0:6a3:5639:9409 with SMTP id 6a1803df08f44-6a356399495mr99194556d6.4.1715976129153;
+        Fri, 17 May 2024 13:02:09 -0700 (PDT)
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a32f54e985sm63921346d6.95.2024.05.17.13.02.07
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 May 2024 13:02:07 -0700 (PDT)
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-43dfa9a98d2so3921cf.1
+        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 13:02:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWSZdGQcYuMsQCt0KYlMQxVNi1e3eY8HVUmAenm3EiimOnfFMkr/4GqoFzCdHVQcO9rGXqokTlrdyx3gpGqitVZ3Xp4mHwoqCkeY76O4nLp
+X-Received: by 2002:a05:622a:488e:b0:43d:fd4c:2ec7 with SMTP id
+ d75a77b69052e-43f796ee600mr579861cf.8.1715976126793; Fri, 17 May 2024
+ 13:02:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AM7PR02MB6195:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8631edf8-2f37-448b-dc92-08dc7695e758
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|3412199016|440099019|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	Gqqmtbug8A5m1O38cwGqMZwycpDHjg6WnO8lzrM6adku2vGsxCFt5p1/qqOjZTI5bpsraaIlvhLUPak7WgKWl+E+Fi3k6w59S6O5pdfc2istKFhmBOK4t8btehNU+3aiHLdXnTpPJHjxCbFJXWJ2T4YrZL1WbHgKoYC7M7sQUeM2UJaenZzaFKPJGp8lB9qNfltO3t98JKqrvSZ9vMcI2LuxVbxM9HOUt4wWC1N20dOlVpM2VCToF9BN+bltrULDCPD/Cjmnm6rggePJpx9tgU+kpdyIhDoRloceQMcD0+1L77Eg15eitPZOE4uqoyGJ2u8ZAISeqnUXfUuh864lGIGRtkkeHo9bXceZXG7kOVz5ZR5f7+pC4ElOpdnfFlrTuVNN5ljCVgxKfdvMCYbHuxpaGyLpJbarmrXHPz51rfqdM7DDd4dEVGrcbqIAbFTRysXuiWkFoGUVjGkqGBZGQtzZd1Q473GlJxBMPKtyG/HU8JAngkmBLKdYhB86Gm+xyij5A6cjCH8YyyJyCImin5AizP6oYA/ZSRLUZ2yqdHJpJ+9mxuJ6gxa8pDDayjnrjqnFS6lwSgeUpCNch/k51tiriyqySHvdOUsYCpX2gLnuZvT2hXN7MJ1vX5y7dbu/
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pWiWxQu8l72kPvWqiweokE6HDiFf/PKZG0O3O3XKKoAyCPOKUMSUOCGZRidQ?=
- =?us-ascii?Q?2PT5GpRZZ+CMtCtCAkzzZC3+olRIZAa0nQx82Y2AoWPZavpxHpMfmperS8wO?=
- =?us-ascii?Q?3SC5pg0r6DKqtGYk8n5fZUFQACZA+CeChBMjlOCXrpKrwXWuK01mIERnpYH2?=
- =?us-ascii?Q?4WBQRt63MPboGZJCJe6CFprOZUFor021bNAOoBWHuc2zysB5eyFbxdEPuGMR?=
- =?us-ascii?Q?JUOId5fBCUX2yUMPzieFMacT+HEa8mXqNf9hepmhT3oms2sSrDxo8QHNBneZ?=
- =?us-ascii?Q?CLA6SOh/6rPr9G4PCUL0mjKXaOKtVvxGr1uWYf4FNDCr+ibn4hwYONtlwRJI?=
- =?us-ascii?Q?aYvaWpBmH050oei6lI6DVVEs47/5X0EfVRmK4P1bFmlRbCYhojTZ5mdlj/z9?=
- =?us-ascii?Q?tiOSpp/3WrNm/fPzhmGME9kFVZnsSY2vJRceUCWoTOv5Pias16P0VH+R73gs?=
- =?us-ascii?Q?4uYrBEGv33ZB8c4O5S8XoO9pfdCC6eohLbFBUo+jjm0o2qIt1axEXDKt0Rv2?=
- =?us-ascii?Q?nKhxwVTmOMbZ0lMqJNXpf+pqXpswHM5P+B+vQO0/htD5tiXsJgB023ZIPDVw?=
- =?us-ascii?Q?P5KsF9XssPiXh6R45HCTEagbX41UVXS7ExoYQF76EoKOUYJcylBOq6p33KI6?=
- =?us-ascii?Q?lRxLKKqNRLBq1yn9IW0L1y9Mkr4uvG7N3JgCyoJI2rwZ27rQBcYIEX9zlDWT?=
- =?us-ascii?Q?uiMqICkX2vFdviabO5XEvNqxecW1VlrPGDAcFkXoMsJG84Oez3HsvT6ixzfo?=
- =?us-ascii?Q?fRgeZd99sjvhtZVSb9T79vOq9oIa6W6ZaK9UtSVzGUmhtiaZZV5icI8fh35X?=
- =?us-ascii?Q?Rk8t4u/zvfQKYESOBIYEv5U6Bv1wUwK+CJN2cF5v1AD3iohRTWIj8r3W/nUi?=
- =?us-ascii?Q?jXwY7tWyVOm0r8EpdPtM5N2+33oOpJVw4QpLHnoHFiyDVtodnJAM+gopXYEf?=
- =?us-ascii?Q?J8KCHoopdGq4AeRR/XOY2GXKoqaulx9JMauEVUnF/qll+greugsXZto+yzFS?=
- =?us-ascii?Q?ZasMAzXqlexRfBk80Mqe0uY6pWhys0hLQQHLONL939GVBbh3PbDVWBLTUwwG?=
- =?us-ascii?Q?ezA/S52uKV1/BD0gMfkZKt44+GKP4wlwf6yrOOcDDV1AFKII1JFm138fGIAJ?=
- =?us-ascii?Q?5DVpOzw8cN6oBC+2Dj6AJEnyaa6pU2q/s8sObq+b5iP3JCIvOkkdyEfWFVhg?=
- =?us-ascii?Q?+SDbQOWWRwp8HFigAdTg93ClQJf8qm+UfzX1RvsIaBShOEIWAIeOIWHRXrec?=
- =?us-ascii?Q?1apGONEDAH038SJPjoO8?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8631edf8-2f37-448b-dc92-08dc7695e758
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 17:22:18.5226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB6195
+References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
+ <20240412135513.GA28004@willie-the-truck>
+In-Reply-To: <20240412135513.GA28004@willie-the-truck>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 17 May 2024 13:01:51 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X8-E-9Qhzdp1L_3g_P_fGmYVUh6zDoFMb7=pzN+cHg=A@mail.gmail.com>
+Message-ID: <CAD=FV=X8-E-9Qhzdp1L_3g_P_fGmYVUh6zDoFMb7=pzN+cHg=A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
+ should try non-NMI first
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Marc Zyngier <maz@kernel.org>, Misono Tomohiro <misono.tomohiro@fujitsu.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <swboyd@chromium.org>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Tony Luck <tony.luck@intel.com>, Valentin Schneider <vschneid@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Refactor the list_for_each_entry() loop of rfcomm_get_dev_list()
-function to use array indexing instead of pointer arithmetic.
+Hi,
 
-This way, the code is more readable and idiomatic.
+On Fri, Apr 12, 2024 at 6:55=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
+:
+>
+> Hi Doug,
+>
+> I'm doing some inbox Spring cleaning!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
- net/bluetooth/rfcomm/tty.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+No worries. I got your reply while I was on a bunch of business travel
+and finally cleared stuff out enough to take a look again. ;-)
 
-diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-index 44b781e7569e..af80d599c337 100644
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -527,12 +527,12 @@ static int rfcomm_get_dev_list(void __user *arg)
- 	list_for_each_entry(dev, &rfcomm_dev_list, list) {
- 		if (!tty_port_get(&dev->port))
- 			continue;
--		(di + n)->id      = dev->id;
--		(di + n)->flags   = dev->flags;
--		(di + n)->state   = dev->dlc->state;
--		(di + n)->channel = dev->channel;
--		bacpy(&(di + n)->src, &dev->src);
--		bacpy(&(di + n)->dst, &dev->dst);
-+		di[n].id      = dev->id;
-+		di[n].flags   = dev->flags;
-+		di[n].state   = dev->dlc->state;
-+		di[n].channel = dev->channel;
-+		bacpy(&di[n].src, &dev->src);
-+		bacpy(&di[n].dst, &dev->dst);
- 		tty_port_put(&dev->port);
- 		if (++n >= dev_num)
- 			break;
--- 
-2.25.1
 
+> On Thu, Dec 07, 2023 at 05:02:56PM -0800, Douglas Anderson wrote:
+> > When testing hard lockup handling on my sc7180-trogdor-lazor device
+> > with pseudo-NMI enabled, with serial console enabled and with kgdb
+> > disabled, I found that the stack crawls printed to the serial console
+> > ended up as a jumbled mess. After rebooting, the pstore-based console
+> > looked fine though. Also, enabling kgdb to trap the panic made the
+> > console look fine and avoided the mess.
+> >
+> > After a bit of tracking down, I came to the conclusion that this was
+> > what was happening:
+> > 1. The panic path was stopping all other CPUs with
+> >    panic_other_cpus_shutdown().
+> > 2. At least one of those other CPUs was in the middle of printing to
+> >    the serial console and holding the console port's lock, which is
+> >    grabbed with "irqsave". ...but since we were stopping with an NMI
+> >    we didn't care about the "irqsave" and interrupted anyway.
+> > 3. Since we stopped the CPU while it was holding the lock it would
+> >    never release it.
+> > 4. All future calls to output to the console would end up failing to
+> >    get the lock in qcom_geni_serial_console_write(). This isn't
+> >    _totally_ unexpected at panic time but it's a code path that's not
+> >    well tested, hard to get right, and apparently doesn't work
+> >    terribly well on the Qualcomm geni serial driver.
+> >
+> > It would probably be a reasonable idea to try to make the Qualcomm
+> > geni serial driver work better, but also it's nice not to get into
+> > this situation in the first place.
+> >
+> > Taking a page from what x86 appears to do in native_stop_other_cpus(),
+> > let's do this:
+> > 1. First, we'll try to stop other CPUs with a normal IPI and wait a
+> >    second. This gives them a chance to leave critical sections.
+> > 2. If CPUs fail to stop then we'll retry with an NMI, but give a much
+> >    lower timeout since there's no good reason for a CPU not to react
+> >    quickly to a NMI.
+> >
+> > This works well and avoids the corrupted console and (presumably)
+> > could help avoid other similar issues.
+> >
+> > In order to do this, we need to do a little re-organization of our
+> > IPIs since we don't have any more free IDs. We'll do what was
+> > suggested in previous conversations and combine "stop" and "crash
+> > stop". That frees up an IPI so now we can have a "stop" and "stop
+> > NMI".
+> >
+> > In order to do this we also need a slight change in the way we keep
+> > track of which CPUs still need to be stopped. We need to know
+> > specifically which CPUs haven't stopped yet when we fall back to NMI
+> > but in the "crash stop" case the "cpu_online_mask" isn't updated as
+> > CPUs go down. This is why that code path had an atomic of the number
+> > of CPUs left. We'll solve this by making the cpumask into a
+> > global. This has a potential memory implication--with NR_CPUs =3D 4096
+> > this is 4096/8 =3D 512 bytes of globals. On the upside in that same cas=
+e
+> > we take 512 bytes off the stack which could potentially have made the
+> > stop code less reliable. It can be noted that the NMI backtrace code
+> > (lib/nmi_backtrace.c) uses the same approach and that use also
+> > confirms that updating the mask is safe from NMI.
+>
+> Updating the global masks without any synchronisation feels broken though=
+:
+>
+> > @@ -1085,77 +1080,75 @@ void smp_send_stop(void)
+> >  {
+> >       unsigned long timeout;
+> >
+> > -     if (num_other_online_cpus()) {
+> > -             cpumask_t mask;
+> > +     /*
+> > +      * If this cpu is the only one alive at this point in time, onlin=
+e or
+> > +      * not, there are no stop messages to be sent around, so just bac=
+k out.
+> > +      */
+> > +     if (num_other_online_cpus() =3D=3D 0)
+> > +             goto skip_ipi;
+> >
+> > -             cpumask_copy(&mask, cpu_online_mask);
+> > -             cpumask_clear_cpu(smp_processor_id(), &mask);
+> > +     cpumask_copy(to_cpumask(stop_mask), cpu_online_mask);
+> > +     cpumask_clear_cpu(smp_processor_id(), to_cpumask(stop_mask));
+>
+> I don't see what prevents multiple CPUs getting in here concurrently and
+> tripping over the masks. x86 seems to avoid that with an atomic
+> 'stopping_cpu' variable in native_stop_other_cpus(). Do we need something
+> similar?
+
+Good point. nmi_trigger_cpumask_backtrace(), which my code was based
+on, has a test_and_set() for this and that seems simpler than the
+atomic_try_cmpxchg() from the x86 code.
+
+If we run into that case, what do you think we should do? I guess x86
+just does a "return", though it feels like at least a warning should
+be printed since we're not doing what the function asked us to do.
+When we return there will be other CPUs running.
+
+In theory, we could try to help the other processor along? I don't
+know how much complexity to handle here and I could imagine that
+testing some of the corner cases would be extremely hard. I could
+imagine that this might work but maybe it's too complex?
+
+--
+
+void smp_send_stop(void)
+{
+    unsigned long timeout;
+    static unsigned long stop_in_progress;
+
+    /*
+     * If this cpu is the only one alive at this point in time, online or
+     * not, there are no stop messages to be sent around, so just back out.
+     */
+    if (num_other_online_cpus() =3D=3D 0)
+        goto skip_ipi;
+
+    /*
+     * If another is already trying to stop and we're here then either the
+     * other CPU hasn't sent us the IPI yet or we have interrupts disabled.
+     * Let's help the other CPU by stopping ourselves.
+     */
+    if (test_and_set_bit(0, &stop_in_progress)) {
+        /* Wait until the other inits stop_mask */
+        while (!test_bit(1, &stop_in_progress)) {
+            cpu_relax();
+            smp_rmb();
+        }
+        do_handle_IPI(IPI_CPU_STOP);
+    }
+
+    cpumask_copy(to_cpumask(stop_mask), cpu_online_mask);
+    cpumask_clear_cpu(smp_processor_id(), to_cpumask(stop_mask));
+
+    /* Indicate that we've initted stop_mask */
+    set_bit(1, &stop_in_progress);
+    smp_wmb();
+    ...
+    ...
+
+--
+
+Opinions?
+
+
+> Apart from that, I'm fine with the gist of the patch.
+
+Great. Ironically as I reviewed this patch with fresh eyes and looking
+at the things you brought up, I also found a few issues, I'll respond
+to my post myself so I have context to respond to.
+
+One other question: what did you think about Daniel's suggestion to go
+straight to NMI for crash_stop? I don't feel like I have enough
+experience with crash_stop to have intuition here, but it feels like
+trying IRQ first is still better in that case, but I'm happy to go
+either way.
+
+-Doug
