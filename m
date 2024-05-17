@@ -1,245 +1,252 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95AE384;
-	Fri, 17 May 2024 00:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE7E748E
+	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 00:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715905448; cv=none; b=ovdjv6TS3ykrez2R/mdD8qyXHP/IoQttrfB5u1DZkEvP533MsPV9zXiJ3x4NPFd0BuCd94i9FpwLfEbUDDqjrC9Vvjz/+Q+iSPW1CdTDH5CP5dkxgadcgypaxotJ/sF6kYBd8JgbKCgJ/VbO4lQG/zC82VpncB+FeDoWDAZ2FG4=
+	t=1715905751; cv=none; b=tpEcF54CUHiDGHtxePGNucK9Ym2ILn4IXYpzMQXTn7py7+YP9Ufm280mHypSHHihDwyH06mUIdZE1fVmtBakaukkNomOyvDdn0Se4xzEMhSncH90NvlKeIoo89PeqKZ+Zk+4Qa4tr9h0Yi/9tFJbWWrvWFLbT3M4SBL39CU0fzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715905448; c=relaxed/simple;
-	bh=DY1+gNZ3hqdkrbbvjE2dVHk6KHF6kKsV5biyNWTBRJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CjJVE7jXyGSqZJK81f47yyXwkmU2ubghwPyQeLoh4xqCOXJOH4DVxN+4ccqxNLcr4Il0GgPwvy168qy+dsEOprQhavXRLICNZtt/uOxmZdA8S+oY0ROvc7TR6TPT9b+kfLl2wprNLtHTufSQu6vUnpWN+S8yFtA098SWbMGwbjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Kenton Groombridge <concord@gentoo.org>
-To: johannes@sipsolutions.net
-Cc: concord@gentoo.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	keescook@chromium.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 1/1] wifi: mac80211: Avoid address calculations via out of bounds array indexing
-Date: Thu, 16 May 2024 20:23:52 -0400
-Message-ID: <20240517002352.12717-1-concord@gentoo.org>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715905751; c=relaxed/simple;
+	bh=gQ3Z4if0NCnHXjJscYunu4D0mRks+UukL032g9TjvSE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=u0trFB6f5VJUIjkq6pmP//8rCS9SfnXSV6Rlpum3EhMa8H2//ThBXG3IFh9xc3YxlXiWgUIehus4MOHSljJIJl2nRubiC+VhLQhP0UIl0OIEDhaPIYsUpCxi9arhkItz/A3JClKenQsKNaAHSJSOzsQ2/70arkFVGSWZJkhH8H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BodnNUsM; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BodnNUsM"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dee5f035dd6so11960939276.0
+        for <linux-hardening@vger.kernel.org>; Thu, 16 May 2024 17:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715905747; x=1716510547; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lE+oHrKpJl/rpkYtTR5+jfWYh1cBDJx1MoxTnYfmQ5U=;
+        b=BodnNUsMDdzzau9h5t4Ion0DCPsEHZKC7C5CsY4d/Zelp/V2kPIK26ynxDFRLZDDIn
+         exnb9Ojv/OQ6KvOauFygsyayj+0XUBy0r8YPLxZFZzGk2LrHFE1ZyQvqEiejaE9Nip6X
+         DoYYN/P4RW4o+GdeTbjgkM1n+HVNGrO2BhufujCayv/PMqcoIvLNwgkpp1p4VAr1T+Hw
+         0XEaGgbYReNWhueQCBTkXO1FqFniFX1Fh4hw6fnrC/f1NSZGU/59/zeqPanmbqqcawx8
+         nN980pbQJ/q0FclI4LjlN3yKmh9A9uJoctuwu7r8emIri8QP7cyPtWNjnhEmmBgs+PdC
+         zJdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715905747; x=1716510547;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lE+oHrKpJl/rpkYtTR5+jfWYh1cBDJx1MoxTnYfmQ5U=;
+        b=Wo3HbKLdXW9P6TjQE2Ho3nJbLQNssjScnEr/oEzKPGb+BBELr3KHc4UjMQlCGxAJTc
+         DHVivOu2ssXbzK9WxQEGQSNMCprEqzQkvIqLNzIzpWwlNHUkp4VYnUSSB3v9sYbsNtPM
+         a2je1odPNRu/VMUo2jfaiCUyrGSPmHyp+CnRY3NduoOtUqVELCmzugJlznhfCAXopehx
+         AYI7Bm6Tj6tqbkUa6TTobu2FlV04onn8CzW5GIpESEIAc6uO0sTZFC3yL3B+fxtSwqsM
+         6eZksTrdJ6tkeoH4Mg7MC2mtQGvakt5tDz7W54rRs1mDyttAje47ze4o8hcfqQwPMCOK
+         IWKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLEC4hV8tj6X5nzAHbt41eVWOICaysC/Hs+js4ViDOiqcrSAZkmYv6pr92dV2YLpM7VcnMdR94sXS8xvoHtnamOq7Dd003zVp639OOXbF1
+X-Gm-Message-State: AOJu0Yx4LFTYYTBvkXmuheoZq7Ag9xJ7m24MwfpabB5A7lkTkWAq0885
+	j3yuetbNf8mLyCcRv08sZNPAAwosbFobdHZ8dufl6gGOSfY2h4jtELKGGlraUKGlO7euWXLSl3i
+	eXEjFNKLspN+Bau0iqFO9TA==
+X-Google-Smtp-Source: AGHT+IHsm3A3n7MqDMvmWlLVL36ymXM4bAo3S6sZ2zLfdTzL/TzI7fAjCdnyRv309qm0dkbegqI0EV9AKZBYJ1N2pA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:f81:b0:de4:5ec1:57af with
+ SMTP id 3f1490d57ef6-dee4f3022d0mr5316676276.10.1715905747620; Thu, 16 May
+ 2024 17:29:07 -0700 (PDT)
+Date: Fri, 17 May 2024 00:29:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIANGkRmYC/4XNQQ6CMBAF0KuQWTumLbUIK+9hjIEywCRKTUuqh
+ nB3Czs3uvyT/9/MEMgzBaiyGTxFDuzGFPJdBnaox56Q25RBCaXFQZTYaEwd9FS316fniVDoWha
+ tFkYJgrR7eOr4tZnnS8oDh8n59/YiyvX6S4sSJQrTkE0lZcri1DvX32hv3R1WLqq/hFoJeeysJ JPnpfoilmX5AJDnflv2AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715905746; l=6762;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=gQ3Z4if0NCnHXjJscYunu4D0mRks+UukL032g9TjvSE=; b=LIOOmuQGKnIVdx7wWcIXa2kQ91OAmVr3Iwyn7sDMB+ecfZxlw8ap6gweS+c8niZT4HLDC9U6F
+ nG5iLBqw9aeDcbEUoaO1xlYJjeEy6dFKVMhYkGP4J6W2x17kj9hzU5O
+X-Mailer: b4 0.12.3
+Message-ID: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
+Subject: [PATCH v3] fs: fix unintentional arithmetic wraparound in offset calculation
+From: Justin Stitt <justinstitt@google.com>
+To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-req->n_channels must be set before req->channels[] can be used.
-Additionally, memory addresses after the "channels" array need to be
-calculated from the allocation base ("request") instead of the first
-"out of bounds" index of "channels" to avoid a runtime bounds check
-warning.
+When running syzkaller with the newly reintroduced signed integer
+overflow sanitizer we encounter this report:
 
-This patch is largely influenced by the work in [1] and fixes one or
-more issues reported in [2].
+UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
+9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x93/0xd0
+ handle_overflow+0x171/0x1b0
+ generic_file_llseek_size+0x35b/0x380
 
-[   83.964252] ------------[ cut here ]------------
-[   83.964255] UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:364:4
-[   83.964258] index 0 is out of range for type 'struct ieee80211_channel *[]'
-[   83.964260] CPU: 0 PID: 1695 Comm: iwd Tainted: G           O    T 6.8.9-gentoo-hardened1 #1
-[   83.964262] Hardware name: System76 Pangolin/Pangolin, BIOS ARB928_V00.01_T0025ASY1_ms 04/20/2023
-[   83.964264] Call Trace:
-[   83.964267]  <TASK>
-[   83.964269]  dump_stack_lvl+0x3f/0xc0
-[   83.964274]  __ubsan_handle_out_of_bounds+0xec/0x110
-[   83.964278]  ieee80211_prep_hw_scan+0x2db/0x4b0
-[   83.964281]  __ieee80211_start_scan+0x601/0x990
-[   83.964284]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964287]  ? cfg80211_scan+0x149/0x250
-[   83.964291]  nl80211_trigger_scan+0x874/0x980
-[   83.964295]  genl_family_rcv_msg_doit+0xe8/0x160
-[   83.964298]  genl_rcv_msg+0x240/0x270
-[   83.964301]  ? __cfi_nl80211_trigger_scan+0x10/0x10
-[   83.964302]  ? __cfi_nl80211_post_doit+0x10/0x10
-[   83.964304]  ? __cfi_nl80211_pre_doit+0x10/0x10
-[   83.964307]  ? __cfi_genl_rcv_msg+0x10/0x10
-[   83.964309]  netlink_rcv_skb+0x102/0x130
-[   83.964312]  genl_rcv+0x23/0x40
-[   83.964314]  netlink_unicast+0x23b/0x340
-[   83.964316]  netlink_sendmsg+0x3a9/0x450
-[   83.964319]  __sys_sendto+0x3ae/0x3c0
-[   83.964324]  __x64_sys_sendto+0x21/0x40
-[   83.964326]  do_syscall_64+0x90/0x150
-[   83.964329]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964331]  ? syscall_exit_work+0xc2/0xf0
-[   83.964333]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964335]  ? syscall_exit_to_user_mode+0x74/0xa0
-[   83.964337]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964339]  ? do_syscall_64+0x9c/0x150
-[   83.964340]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964342]  ? syscall_exit_to_user_mode+0x74/0xa0
-[   83.964344]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964346]  ? do_syscall_64+0x9c/0x150
-[   83.964347]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964349]  ? do_syscall_64+0x9c/0x150
-[   83.964351]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964353]  ? syscall_exit_work+0xc2/0xf0
-[   83.964354]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964356]  ? syscall_exit_to_user_mode+0x74/0xa0
-[   83.964358]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964359]  ? do_syscall_64+0x9c/0x150
-[   83.964361]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964362]  ? do_user_addr_fault+0x488/0x620
-[   83.964366]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964367]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   83.964369]  entry_SYSCALL_64_after_hwframe+0x55/0x5d
-[   83.964372] RIP: 0033:0x6200808578d7
-[   83.964374] Code: 00 00 90 f3 0f 1e fa 41 56 55 41 89 ce 48 83 ec 28 80 3d 7b f7 0d 00 00 74 29 45 31 c9 45 31 c0 41 89 ca b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 71 48 83 c4 28 5d 41 5e c3 66 0f 1f 84 00 00
-[   83.964375] RSP: 002b:0000730c4e821530 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-[   83.964378] RAX: ffffffffffffffda RBX: 000006dbc456c570 RCX: 00006200808578d7
-[   83.964379] RDX: 000000000000005c RSI: 000006dbc45884f0 RDI: 0000000000000004
-[   83.964381] RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
-[   83.964382] R10: 0000000000000000 R11: 0000000000000246 R12: 000006dbc456c480
-[   83.964383] R13: 000006dbc456c450 R14: 0000000000000000 R15: 000006dbc456c610
-[   83.964386]  </TASK>
-[   83.964386] ---[ end trace ]---
-[   84.232857] ------------[ cut here ]------------
-[   84.232863] UBSAN: array-index-out-of-bounds in net/wireless/scan.c:893:12
-[   84.232868] index 59 is out of range for type 'struct ieee80211_channel *[]'
-[   84.232870] CPU: 11 PID: 857 Comm: kworker/u32:37 Tainted: G O    T  6.8.9-gentoo-hardened1 #1
-[   84.232875] Hardware name: System76 Pangolin/Pangolin, BIOS ARB928_V00.01_T0025ASY1_ms 04/20/2023
-[   84.232877] Workqueue: events_unbound cfg80211_wiphy_work
-[   84.232886] Call Trace:
-[   84.232889]  <TASK>
-[   84.232892]  dump_stack_lvl+0x3f/0xc0
-[   84.232897]  __ubsan_handle_out_of_bounds+0xec/0x110
-[   84.232902]  cfg80211_scan_6ghz+0xf4d/0xf60
-[   84.232908]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   84.232911]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   84.232914]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   84.232917]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   84.232921]  ___cfg80211_scan_done+0xd6/0x2c0
-[   84.232925]  cfg80211_wiphy_work+0xb9/0x100
-[   84.232929]  process_scheduled_works+0x1d5/0x340
-[   84.232935]  worker_thread+0x214/0x2e0
-[   84.232939]  ? __cfi_worker_thread+0x10/0x10
-[   84.232943]  kthread+0x129/0x140
-[   84.232946]  ? __cfi_kthread+0x10/0x10
-[   84.232949]  ret_from_fork+0x4c/0x60
-[   84.232953]  ? __cfi_kthread+0x10/0x10
-[   84.232955]  ret_from_fork_asm+0x11/0x30
-[   84.232961]  </TASK>
-[   84.232962] ---[ end trace ]---
+... amongst others:
+UBSAN: signed-integer-overflow in ../fs/read_write.c:1657:12
+142606336 - -9223372036854775807 cannot be represented in type 'loff_t' (aka 'long long')
+...
+UBSAN: signed-integer-overflow in ../fs/read_write.c:1666:11
+9223372036854775807 - -9223231299366420479 cannot be represented in type 'loff_t' (aka 'long long')
 
-[1] https://lore.kernel.org/all/20240424220057.work.819-kees@kernel.org/
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=218810
+Fix the accidental overflow in these position and offset calculations
+by checking for negative position values, using check_add_overflow()
+helpers and clamping values to expected ranges.
 
-Signed-off-by: Kenton Groombridge <concord@gentoo.org>
+Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+Closes: https://github.com/KSPP/linux/issues/358
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- net/mac80211/scan.c | 17 +++++++++--------
- net/wireless/scan.c |  9 +++++----
- 2 files changed, 14 insertions(+), 12 deletions(-)
+Changes in v3:
+- use check_add_overflow() instead of min() to keep old -EINVAL behavior (thanks Jan)
+- shorten UBSAN splat in commit log, reword commit log
+- Link to v2: https://lore.kernel.org/r/20240509-b4-sio-read_write-v2-1-018fc1e63392@google.com
 
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index 73850312580f..b88e99c211ff 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -358,7 +358,8 @@ static bool ieee80211_prep_hw_scan(struct ieee80211_sub_if_data *sdata)
- 	struct cfg80211_scan_request *req;
- 	struct cfg80211_chan_def chandef;
- 	u8 bands_used = 0;
--	int i, ielen, n_chans;
-+	int i, ielen;
-+	u32 *n_chans;
- 	u32 flags = 0;
- 
- 	req = rcu_dereference_protected(local->scan_req,
-@@ -368,34 +369,34 @@ static bool ieee80211_prep_hw_scan(struct ieee80211_sub_if_data *sdata)
- 		return false;
- 
- 	if (ieee80211_hw_check(&local->hw, SINGLE_SCAN_ON_ALL_BANDS)) {
-+		local->hw_scan_req->req.n_channels = req->n_channels;
-+
- 		for (i = 0; i < req->n_channels; i++) {
- 			local->hw_scan_req->req.channels[i] = req->channels[i];
- 			bands_used |= BIT(req->channels[i]->band);
- 		}
--
--		n_chans = req->n_channels;
- 	} else {
- 		do {
- 			if (local->hw_scan_band == NUM_NL80211_BANDS)
- 				return false;
- 
--			n_chans = 0;
-+			n_chans = &local->hw_scan_req->req.n_channels;
-+			*n_chans = 0;
- 
- 			for (i = 0; i < req->n_channels; i++) {
- 				if (req->channels[i]->band !=
- 				    local->hw_scan_band)
- 					continue;
--				local->hw_scan_req->req.channels[n_chans] =
-+				local->hw_scan_req->req.channels[*n_chans++] =
- 							req->channels[i];
--				n_chans++;
-+
- 				bands_used |= BIT(req->channels[i]->band);
- 			}
- 
- 			local->hw_scan_band++;
--		} while (!n_chans);
-+		} while (!*n_chans);
- 	}
- 
--	local->hw_scan_req->req.n_channels = n_chans;
- 	ieee80211_prepare_scan_chandef(&chandef);
- 
- 	if (req->flags & NL80211_SCAN_FLAG_MIN_PREQ_CONTENT)
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index 5a5dd3ce497f..e2c979b954f7 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -812,6 +812,7 @@ static int cfg80211_scan_6ghz(struct cfg80211_registered_device *rdev)
- 	LIST_HEAD(coloc_ap_list);
- 	bool need_scan_psc = true;
- 	const struct ieee80211_sband_iftype_data *iftd;
-+	size_t chan_size;
- 
- 	rdev_req->scan_6ghz = true;
- 
-@@ -877,7 +878,8 @@ static int cfg80211_scan_6ghz(struct cfg80211_registered_device *rdev)
- 		spin_unlock_bh(&rdev->bss_lock);
- 	}
- 
--	request = kzalloc(struct_size(request, channels, n_channels) +
-+	chan_size = struct_size(request, channels, n_channels);
-+	request = kzalloc(chan_size +
- 			  sizeof(*request->scan_6ghz_params) * count +
- 			  sizeof(*request->ssids) * rdev_req->n_ssids,
- 			  GFP_KERNEL);
-@@ -888,8 +890,7 @@ static int cfg80211_scan_6ghz(struct cfg80211_registered_device *rdev)
- 
- 	*request = *rdev_req;
- 	request->n_channels = 0;
--	request->scan_6ghz_params =
--		(void *)&request->channels[n_channels];
-+	request->scan_6ghz_params = (void *)request + chan_size;
- 
- 	/*
- 	 * PSC channels should not be scanned in case of direct scan with 1 SSID
-@@ -985,7 +986,7 @@ static int cfg80211_scan_6ghz(struct cfg80211_registered_device *rdev)
- 		 * request, so the driver would be able to use them in its
- 		 * probe requests to discover hidden APs on PSC channels.
+Changes in v2:
+- fix some more cases syzkaller found in read_write.c
+- use min over min_t as the types are the same
+- Link to v1: https://lore.kernel.org/r/20240509-b4-sio-read_write-v1-1-06bec2022697@google.com
+---
+Historically, the signed integer overflow sanitizer did not work in the
+kernel due to its interaction with `-fwrapv` but this has since been
+changed [1] in the newest version of Clang. It was re-enabled in the
+kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+sanitizer").
+
+Here's the syzkaller reproducer:
+| # {Threaded:false Repeat:false RepeatTimes:0 Procs:1 Slowdown:1 Sandbox:
+| # SandboxArg:0 Leak:false NetInjection:false NetDevices:false
+| # NetReset:false Cgroups:false BinfmtMisc:false CloseFDs:false KCSAN:false
+| # DevlinkPCI:false NicVF:false USB:false VhciInjection:false Wifi:false
+| # IEEE802154:false Sysctl:false Swap:false UseTmpDir:false
+| # HandleSegv:false Repro:false Trace:false LegacyOptions:{Collide:false
+| # Fault:false FaultCall:0 FaultNth:0}}
+| r0 = openat$sysfs(0xffffffffffffff9c, &(0x7f0000000000)='/sys/kernel/address_bits', 0x0, 0x98)
+| lseek(r0, 0x7fffffffffffffff, 0x2)
+
+... which was used against Kees' tree here (v6.8rc2):
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+
+... with this config:
+https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
+---
+ fs/read_write.c  | 20 +++++++++++++-------
+ fs/remap_range.c | 12 ++++++------
+ 2 files changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/fs/read_write.c b/fs/read_write.c
+index d4c036e82b6c..8be30c8829a9 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -88,7 +88,8 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
+ {
+ 	switch (whence) {
+ 	case SEEK_END:
+-		offset += eof;
++		if (check_add_overflow(offset, eof, &offset))
++			return -EINVAL;
+ 		break;
+ 	case SEEK_CUR:
+ 		/*
+@@ -105,7 +106,9 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
+ 		 * like SEEK_SET.
  		 */
--		request->ssids = (void *)&request->channels[request->n_channels];
-+		request->ssids = (void *)request + chan_size;
- 		request->n_ssids = rdev_req->n_ssids;
- 		memcpy(request->ssids, rdev_req->ssids, sizeof(*request->ssids) *
- 		       request->n_ssids);
--- 
-2.45.0
+ 		spin_lock(&file->f_lock);
+-		offset = vfs_setpos(file, file->f_pos + offset, maxsize);
++		if (check_add_overflow(offset, file->f_pos, &offset))
++			return -EINVAL;
++		offset = vfs_setpos(file, offset, maxsize);
+ 		spin_unlock(&file->f_lock);
+ 		return offset;
+ 	case SEEK_DATA:
+@@ -1416,7 +1419,7 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+ 	struct inode *inode_in = file_inode(file_in);
+ 	struct inode *inode_out = file_inode(file_out);
+ 	uint64_t count = *req_count;
+-	loff_t size_in;
++	loff_t size_in, in_sum, out_sum;
+ 	int ret;
+ 
+ 	ret = generic_file_rw_checks(file_in, file_out);
+@@ -1450,8 +1453,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+ 	if (IS_SWAPFILE(inode_in) || IS_SWAPFILE(inode_out))
+ 		return -ETXTBSY;
+ 
+-	/* Ensure offsets don't wrap. */
+-	if (pos_in + count < pos_in || pos_out + count < pos_out)
++	if (check_add_overflow(pos_in, count, &in_sum) ||
++	    check_add_overflow(pos_out, count, &out_sum))
+ 		return -EOVERFLOW;
+ 
+ 	/* Shorten the copy to EOF */
+@@ -1467,8 +1470,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+ 
+ 	/* Don't allow overlapped copying within the same file. */
+ 	if (inode_in == inode_out &&
+-	    pos_out + count > pos_in &&
+-	    pos_out < pos_in + count)
++	    out_sum > pos_in &&
++	    pos_out < in_sum)
+ 		return -EINVAL;
+ 
+ 	*req_count = count;
+@@ -1649,6 +1652,9 @@ int generic_write_check_limits(struct file *file, loff_t pos, loff_t *count)
+ 	loff_t max_size = inode->i_sb->s_maxbytes;
+ 	loff_t limit = rlimit(RLIMIT_FSIZE);
+ 
++	if (pos < 0)
++		return -EINVAL;
++
+ 	if (limit != RLIM_INFINITY) {
+ 		if (pos >= limit) {
+ 			send_sig(SIGXFSZ, current, 0);
+diff --git a/fs/remap_range.c b/fs/remap_range.c
+index de07f978ce3e..4570be4ef463 100644
+--- a/fs/remap_range.c
++++ b/fs/remap_range.c
+@@ -36,7 +36,7 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
+ 	struct inode *inode_out = file_out->f_mapping->host;
+ 	uint64_t count = *req_count;
+ 	uint64_t bcount;
+-	loff_t size_in, size_out;
++	loff_t size_in, size_out, in_sum, out_sum;
+ 	loff_t bs = inode_out->i_sb->s_blocksize;
+ 	int ret;
+ 
+@@ -44,17 +44,17 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
+ 	if (!IS_ALIGNED(pos_in, bs) || !IS_ALIGNED(pos_out, bs))
+ 		return -EINVAL;
+ 
+-	/* Ensure offsets don't wrap. */
+-	if (pos_in + count < pos_in || pos_out + count < pos_out)
+-		return -EINVAL;
++	if (check_add_overflow(pos_in, count, &in_sum) ||
++	    check_add_overflow(pos_out, count, &out_sum))
++		return -EOVERFLOW;
+ 
+ 	size_in = i_size_read(inode_in);
+ 	size_out = i_size_read(inode_out);
+ 
+ 	/* Dedupe requires both ranges to be within EOF. */
+ 	if ((remap_flags & REMAP_FILE_DEDUP) &&
+-	    (pos_in >= size_in || pos_in + count > size_in ||
+-	     pos_out >= size_out || pos_out + count > size_out))
++	    (pos_in >= size_in || in_sum > size_in ||
++	     pos_out >= size_out || out_sum > size_out))
+ 		return -EINVAL;
+ 
+ 	/* Ensure the infile range is within the infile. */
+
+---
+base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
+change-id: 20240509-b4-sio-read_write-04a17d40620e
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
