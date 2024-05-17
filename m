@@ -1,251 +1,161 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61140266A7
-	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 20:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D6413DDB0
+	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 20:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715976445; cv=none; b=FLQ6qm97HoSMvaoGgrrfvHwbIpB4ssCIXmFDsVWdN+9h6PRcqp+Iz/TVki06Btywcp33Q36POh+8r+MUhaePHFGlUjFS3J/MJVzMKq7Hq+hlSlea2+WGGmKAHPGOFTU6WOxIycNdP5zBAHGkLUzMt4+suXCDh1u2KUa5JfDkye0=
+	t=1715977369; cv=none; b=IMAf/hhnpi2pKfR2v+FQFx45YxbAyo8CfpoAoBFRAs5CvcfNeBhQ2QZsVBlsl9XNAyYb7NDTAkLflpekjygG3H/Lf59nDLgapXBkHXAWYZiZfYyoIHGfulN+FElK6gqwuJMcT3wnMW83zCorDpr2Xqwq6oc8XWdRl+i9hJYWVS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715976445; c=relaxed/simple;
-	bh=dVRW6o8FeAkIO0aC7Ma1uSuTqPNsC5yAZiZAAlFWrIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NvG5LyOoPFg1r0XoT87U6uHRneqcXB/zPHCt470udg62Xvtddzg3KRAqXaYc7O+AL7bbHMeRzcvfwrma90kr+GNZ1o/vTN7RGUqtcncTaNMBC235GOHrbwUjXkzNiGLe8fun9eQmmXT32ZTxchfHdijyUNJb7M5oU9E1u24sjfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Yw5Ioswz; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715977369; c=relaxed/simple;
+	bh=zCP9p5DazSmD8jpaLDilhAropKLjmvEgx/aHY8ray1k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QCsbAaxnOfYwbEqvACtqu6spCQytnt5MhHoJ4ZHsGRLHJ45VQuLAISy1mopXaMSBJFG+7Phw5LGl4e7gzspimpU13xY7Z8uEXWiNKHzHeb5Vxl8ZWuE5HwXfg9bbHZ/pXM/NcvlkhlrNQCzXaOS9vIYtyVc2qkdBvplsDBKzY2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0cGDEcla; arc=none smtp.client-ip=209.85.166.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yw5Ioswz"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36db3b34a09so5073645ab.3
-        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 13:07:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0cGDEcla"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7e17eba6ba3so831515039f.3
+        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 13:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715976442; x=1716581242; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=biYMrMF+fwXPsZM8NuprY4eu1yNAofEyB+c42WZ5jPw=;
-        b=Yw5IoswzhWcZhi/CpnyzYh8l+OnZl4IfSm26hLe2XG/H+/gT2UKmEInTSQMmVSGa1e
-         LXutXJ1fV5VTMJXsIzhxEkNAWABfAC3wleI8l0VNFQWC8746r4t/G25QFx+Uqe8DPFfo
-         AqzOqJ+iaBcPN7nfv5oEjM15l8pGAgFs4ugmg=
+        d=google.com; s=20230601; t=1715977366; x=1716582166; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D7DM0Nh6MbSVPhbmkBCW9PHR6CHMneFfFGcAG6fF5BM=;
+        b=0cGDEclaSnhNAKLSNwEcm0TLKXUrx5Ew9m1fbd3h0yQaw/2k8NnKZLg+ALKTMQIGNC
+         9vl8UlEAtb6+wqrz/iSE3dZRXjDCwypGpLwltZta1bg2u77ATCo+m2rG4Hnis9Cj43Tw
+         phvwUXIU2Vt7ey06hBVtmkVpDuYQ26Nq6OGk+Aq+VU4TaqwxtJltuKg0jRHp9Tk8uwVr
+         E0alXlOaxaYwAMCbZJea1pP2d6RckDD4AxNhx7NR5+uY+Hg/7TG6yNEjjZpzO0PjJXh6
+         Ze77MwsQRaN+jtHsOGMz7nmOBfITbxBQioEcqx9FECJthevsaxzc7H1BuV31d7fRlbey
+         KO3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715976442; x=1716581242;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=biYMrMF+fwXPsZM8NuprY4eu1yNAofEyB+c42WZ5jPw=;
-        b=mw5tSzUFLxV3PrbVi0aq6Yxf97z9gKR+/EsM6YbEh1mk0hHm/gRATI1sBYiH+B2YdZ
-         NLiYyROFDzCtIWnhgaaJ7CbunlbTC1Ir5aeiYXVJRQJOVNZRudhnduP4cI+WAJgw/YZr
-         smXOBlK4VTne+f/r1cxxLg6KOKJ1io+olY3kAAxN2xZr9gucUysx0NByClx1we9uERvo
-         3vcm9ri9U+1+lVDOCRV5SJrFBDd6IDHPHh1J00TzG90hU1C72KKdA97QbVp39UxsF4Mr
-         nwPczxExiPPsG1ZNUjRffTq2pggwehWXl8F+LK+qcTjji1O54GR68klp68F5PcayNPkT
-         uB1w==
-X-Forwarded-Encrypted: i=1; AJvYcCX1OtYMZuwEpevF+PCIA95cwtuOiq0sR2ItwVcscL9qo71Ceelw/OOd2hdfJvCgOf6EdYHPxV4Vq8rshM/sPUVJ3rtTsWS8rd3oSUNXZlQA
-X-Gm-Message-State: AOJu0YzShOrBuD+6Xf6s/GwAuUOlFEevr7Q03kJrT6T/ZsMk1slCZE+n
-	qoMofkU+xdN2bytZI5AlyOSBnHazfDfVckfrKjiVt6VolVolHH5FogKJKhQPLBfkUaMv2yCYdJk
-	=
-X-Google-Smtp-Source: AGHT+IF9Tq7d8WJeOoqlBCW6TRk2X8Iyign/OYNMIhDL1rHdo64n4yPVn0pZ+748IaJ2OmAY6fOB8Q==
-X-Received: by 2002:a05:6e02:1588:b0:36b:f940:ef89 with SMTP id e9e14a558f8ab-36cc149624bmr283949245ab.13.1715976441901;
-        Fri, 17 May 2024 13:07:21 -0700 (PDT)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-36cb9d6d99csm44401755ab.24.2024.05.17.13.07.21
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 May 2024 13:07:21 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36c6056f7bdso25705ab.0
-        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 13:07:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXTeqGLuh/i99TorxKxCJKCuNPWiWBAUSB5PwBvCWvHUWP3cM8oEZs9CFdRSJGLjxMJAFOQsZn0CRWUyTEUQw0X6vWvFNX+cii0F6kbEJWY
-X-Received: by 2002:a05:622a:488e:b0:43d:fd4c:2ec7 with SMTP id
- d75a77b69052e-43f796ee600mr580481cf.8.1715976130337; Fri, 17 May 2024
- 13:02:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715977366; x=1716582166;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D7DM0Nh6MbSVPhbmkBCW9PHR6CHMneFfFGcAG6fF5BM=;
+        b=X5L9P72qNVMBwoX4GaHP6JjU34YRam9Skz3sOSIbncib9rWt37AFKk5pPq3UAoNj3X
+         kuvWxaG80aEk1YphWRd9jxZeSWjOy4zb4ATcHc64RthKpdVZ5w39T67Wn/bLGtF49ZHt
+         Eizv/Qb/M6yQytLL9Ry7NHzx8Ydim1Sq31seslLU1r9ipb7icaBT+XLGR9/TeCcoGWBC
+         ZNMOVAbIBolQAfu+rdLC3Q1khwtofSuvlWnko/v3aQ1rPwY2q/EKgTocECD3wtydjumI
+         kVjiqiqmH6i13oPgi1crh7Azrc6oe13gFjTynRhFJa57S4PvC70gzBjmOCuBhDrSJIVO
+         cCfw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2FBA9a4iWh7T+8HdRi6wWl3oadAesBsZtmsA1Zs4RmB7rXT6DLlIXvZkB3RmFizpkLAqHV9WkUhlfRFhfj81lFfIIOM9Yy9snPLlO2a29
+X-Gm-Message-State: AOJu0Yw1xFEB7A5vH3BjFdh32uhBZv8EJFUT31lYcnQ+uQVAyK4PZMgd
+	RwgcAVDD+0N8eZA2jn8/kMbyYzmdcGOrLRCaqIZ1NSP35ad5A5fZlTkpRn64a3GalS/mckJq4VH
+	b7+YxHAVq7pNmuwpu82ItTQ==
+X-Google-Smtp-Source: AGHT+IEfzcIHL3aw4YYGj6jIF23GXxwmDFMKDO2f0kNIal/VHLvCveT/oVQ6Bz6/dmvmREEIyJ0p9emzA+0NcVytQg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6602:3f85:b0:7da:9d28:6578 with
+ SMTP id ca18e2360f4ac-7e1b521c6famr81756139f.3.1715977365684; Fri, 17 May
+ 2024 13:22:45 -0700 (PDT)
+Date: Fri, 17 May 2024 20:22:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
-In-Reply-To: <20231207170251.1.Id4817adef610302554b8aa42b090d57270dc119c@changeid>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 17 May 2024 13:01:58 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V_TGvRgZy9uFzF_tGX25oYzVrjHRrg-CphwmhmJRwsKg@mail.gmail.com>
-Message-ID: <CAD=FV=V_TGvRgZy9uFzF_tGX25oYzVrjHRrg-CphwmhmJRwsKg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: smp: smp_send_stop() and crash_smp_send_stop()
- should try non-NMI first
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
-	Misono Tomohiro <misono.tomohiro@fujitsu.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Stephen Boyd <swboyd@chromium.org>, Daniel Thompson <daniel.thompson@linaro.org>, 
-	Sumit Garg <sumit.garg@linaro.org>, Frederic Weisbecker <frederic@kernel.org>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tony Luck <tony.luck@intel.com>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJO8R2YC/3WNTQ7CIBCFr9LM2jFAqY2ueg/TBdApJVFooBJNw
+ 93F7s1bfS/vZ4dE0VGCW7NDpOySC76CODVgFuUtoZsqg2BCso71qCXWDPptxVcig1y1Sl96PRn iUFtrpNm9j8X7WHlxaQvxcxxk/nP/b2WOVR1j7WyuRmg52BDsg84mPGEspXwBVUmrHa8AAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715977364; l=3277;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=zCP9p5DazSmD8jpaLDilhAropKLjmvEgx/aHY8ray1k=; b=8vlKBluIsE/OTHUNTS0iYpLHyH5gn9756JcxqGcKKnz4w4qVnCZ/gwGWo5e0kNu4zgcQAfvTW
+ roM1h0fyCt/A4Rci9/I0rO/OOSMd6u+5uK4XrMe/stqDGC7K4YOi1Z1
+X-Mailer: b4 0.12.3
+Message-ID: <20240517-b4-sio-ntp-usec-v2-1-d539180f2b79@google.com>
+Subject: [PATCH v2] ntp: remove accidental integer wrap-around
+From: Justin Stitt <justinstitt@google.com>
+To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Using syzkaller alongside the newly reintroduced signed integer overflow
+sanitizer spits out this report:
 
-On Thu, Dec 7, 2023 at 5:03=E2=80=AFPM Douglas Anderson <dianders@chromium.=
-org> wrote:
->
-> When testing hard lockup handling on my sc7180-trogdor-lazor device
-> with pseudo-NMI enabled, with serial console enabled and with kgdb
-> disabled, I found that the stack crawls printed to the serial console
-> ended up as a jumbled mess. After rebooting, the pstore-based console
-> looked fine though. Also, enabling kgdb to trap the panic made the
-> console look fine and avoided the mess.
->
-> After a bit of tracking down, I came to the conclusion that this was
-> what was happening:
-> 1. The panic path was stopping all other CPUs with
->    panic_other_cpus_shutdown().
-> 2. At least one of those other CPUs was in the middle of printing to
->    the serial console and holding the console port's lock, which is
->    grabbed with "irqsave". ...but since we were stopping with an NMI
->    we didn't care about the "irqsave" and interrupted anyway.
-> 3. Since we stopped the CPU while it was holding the lock it would
->    never release it.
-> 4. All future calls to output to the console would end up failing to
->    get the lock in qcom_geni_serial_console_write(). This isn't
->    _totally_ unexpected at panic time but it's a code path that's not
->    well tested, hard to get right, and apparently doesn't work
->    terribly well on the Qualcomm geni serial driver.
->
-> It would probably be a reasonable idea to try to make the Qualcomm
-> geni serial driver work better, but also it's nice not to get into
-> this situation in the first place.
->
-> Taking a page from what x86 appears to do in native_stop_other_cpus(),
-> let's do this:
-> 1. First, we'll try to stop other CPUs with a normal IPI and wait a
->    second. This gives them a chance to leave critical sections.
-> 2. If CPUs fail to stop then we'll retry with an NMI, but give a much
->    lower timeout since there's no good reason for a CPU not to react
->    quickly to a NMI.
->
-> This works well and avoids the corrupted console and (presumably)
-> could help avoid other similar issues.
->
-> In order to do this, we need to do a little re-organization of our
-> IPIs since we don't have any more free IDs. We'll do what was
-> suggested in previous conversations and combine "stop" and "crash
-> stop". That frees up an IPI so now we can have a "stop" and "stop
-> NMI".
->
-> In order to do this we also need a slight change in the way we keep
-> track of which CPUs still need to be stopped. We need to know
-> specifically which CPUs haven't stopped yet when we fall back to NMI
-> but in the "crash stop" case the "cpu_online_mask" isn't updated as
-> CPUs go down. This is why that code path had an atomic of the number
-> of CPUs left. We'll solve this by making the cpumask into a
-> global. This has a potential memory implication--with NR_CPUs =3D 4096
-> this is 4096/8 =3D 512 bytes of globals. On the upside in that same case
-> we take 512 bytes off the stack which could potentially have made the
-> stop code less reliable. It can be noted that the NMI backtrace code
-> (lib/nmi_backtrace.c) uses the same approach and that use also
-> confirms that updating the mask is safe from NMI.
->
-> All of the above lets us combine the logic for "stop" and "crash stop"
-> code, which appeared to have a bunch of arbitrary implementation
-> differences. Possibly this could make up for some of the 512 wasted
-> bytes. ;-)
->
-> Aside from the above change where we try a normal IPI and then an NMI,
-> the combined function has a few subtle differences:
-> * In the normal smp_send_stop(), if we fail to stop one or more CPUs
->   then we won't include the current CPU (the one running
->   smp_send_stop()) in the error message.
-> * In crash_smp_send_stop(), if we fail to stop some CPUs we'll print
->   the CPUs that we failed to stop instead of printing all _but_ the
->   current running CPU.
-> * In crash_smp_send_stop(), we will now only print "SMP: stopping
->   secondary CPUs" if (system_state <=3D SYSTEM_RUNNING).
->
-> Fixes: d7402513c935 ("arm64: smp: IPI_CPU_STOP and IPI_CPU_CRASH_STOP sho=
-uld try for NMI")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I'm not setup to test the crash_smp_send_stop(). I made sure it
-> compiled and hacked the panic() method to call it, but I haven't
-> actually run kexec. Hopefully others can confirm that it's working for
-> them.
->
->  arch/arm64/kernel/smp.c | 115 +++++++++++++++++++---------------------
->  1 file changed, 54 insertions(+), 61 deletions(-)
->
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index defbab84e9e5..9fe9d4342517 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -71,7 +71,7 @@ enum ipi_msg_type {
->         IPI_RESCHEDULE,
->         IPI_CALL_FUNC,
->         IPI_CPU_STOP,
-> -       IPI_CPU_CRASH_STOP,
-> +       IPI_CPU_STOP_NMI,
->         IPI_TIMER,
->         IPI_IRQ_WORK,
->         NR_IPI,
-> @@ -88,6 +88,9 @@ static int ipi_irq_base __ro_after_init;
->  static int nr_ipi __ro_after_init =3D NR_IPI;
->  static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
->
-> +static DECLARE_BITMAP(stop_mask, NR_CPUS) __read_mostly;
-> +static bool crash_stop;
-> +
->  static void ipi_setup(int cpu);
->
->  #ifdef CONFIG_HOTPLUG_CPU
-> @@ -770,7 +773,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_str=
-ing =3D {
->         [IPI_RESCHEDULE]        =3D "Rescheduling interrupts",
->         [IPI_CALL_FUNC]         =3D "Function call interrupts",
->         [IPI_CPU_STOP]          =3D "CPU stop interrupts",
-> -       [IPI_CPU_CRASH_STOP]    =3D "CPU stop (for crash dump) interrupts=
-",
-> +       [IPI_CPU_STOP_NMI]      =3D "CPU stop NMIs",
->         [IPI_TIMER]             =3D "Timer broadcast interrupts",
->         [IPI_IRQ_WORK]          =3D "IRQ work interrupts",
->  };
-> @@ -831,17 +834,11 @@ void __noreturn panic_smp_self_stop(void)
->         local_cpu_stop();
->  }
->
-> -#ifdef CONFIG_KEXEC_CORE
-> -static atomic_t waiting_for_crash_ipi =3D ATOMIC_INIT(0);
-> -#endif
-> -
->  static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_re=
-gs *regs)
->  {
->  #ifdef CONFIG_KEXEC_CORE
->         crash_save_cpu(regs, cpu);
->
-> -       atomic_dec(&waiting_for_crash_ipi);
+UBSAN: signed-integer-overflow in ../kernel/time/ntp.c:461:16
+9223372036854775807 + 500 cannot be represented in type 'long'
+Call Trace:
+ <IRQ>
+ dump_stack_lvl+0x93/0xd0
+ handle_overflow+0x171/0x1b0
+ second_overflow+0x2d6/0x500
+ accumulate_nsecs_to_secs+0x60/0x160
+ timekeeping_advance+0x1fe/0x890
+ update_wall_time+0x10/0x30
+...
 
-Upon reading the patch with fresh eyes, I think I actually need to
-move the "cpumask_clear_cpu(cpu, to_cpumask(stop_mask))" here.
-Specifically I think it's important that it happens _after_ the call
-to crash_save_cpu().
+time_maxerror is unconditionally incremented and the result is checked
+against NTP_PHASE_LIMIT, but the increment itself can overflow,
+resulting in wrap-around to negative space.
 
+The user can supply some crazy values which is causing the overflow. Add
+an extra validation step checking that maxerror is reasonable.
 
->         local_irq_disable();
+Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+Closes: https://github.com/KSPP/linux/issues/354
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- update commit log (thanks Thomas)
+- check for sane user input during validation (thanks Thomas)
+- Link to v1: https://lore.kernel.org/r/20240507-b4-sio-ntp-usec-v1-1-15003fc9c2b4@google.com
+---
 
-The above local_irq_disable() is not new for my patch but it seems
-wonky for two reasons:
+Historically, the signed integer overflow sanitizer did not work in the
+kernel due to its interaction with `-fwrapv` but this has since been
+changed [1] in the newest version of Clang. It was re-enabled in the
+kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+sanitizer").
 
-1. It feels like it should have been the first thing in the function.
+Here's the syzkaller reproducer:
+| #{Threaded:false Repeat:false RepeatTimes:0 Procs:1 Slowdown:1 Sandbox:
+| #SandboxArg:0 Leak:false NetInjection:false NetDevices:false
+| #NetReset:false Cgroups:false BinfmtMisc:false CloseFDs:false KCSAN:false
+| #DevlinkPCI:false NicVF:false USB:false VhciInjection:false Wifi:false
+| #IEEE802154:false Sysctl:false Swap:false UseTmpDir:false
+| #HandleSegv:false Repro:false Trace:false LegacyOptions:{Collide:false
+| #Fault:false FaultCall:0 FaultNth:0}}
+| clock_adjtime(0x0, &(0x7f0000000000)={0x5, 0x1, 0x40,
+| 0x7fffffffffffffff, 0x8, 0xb2, 0x256, 0x6, 0x5, 0x8001, 0x9, 0x3f, 0x0,
+| 0x8000, 0x800, 0x64d, 0x50000, 0x7ff, 0x8000000000000001, 0x1f, 0x3,
+| 0xfff, 0x7fffffff, 0x5, 0x100, 0x4})
 
-2. It feels like it should be local_daif_mask() instead.
+... which was used against Kees' tree here (v6.8rc2):
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
 
-I _think_ it doesn't actually matter because, with the current code,
-we're only ever called from do_handle_IPI() and thus local IRQs will
-be off (and local NMIs will be off if we're called from NMI context).
-However, once we have the IRQ + NMI fallback it _might_ matter if we
-were midway through finally handling the IRQ-based IPI when we decided
-to try the NMI-based one.
+... with this config:
+https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
+---
+ kernel/time/timekeeping.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-For the next spin of the patch I'll plan to get rid of the
-local_irq_disable() and instead have local_daif_mask() be the first
-thing that this function does.
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index b58dffc58a8f..321f251c02aa 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -2388,6 +2388,11 @@ static int timekeeping_validate_timex(const struct __kernel_timex *txc)
+ 		}
+ 	}
+ 
++	if (txc->modes & ADJ_MAXERROR) {
++		if (txc->maxerror < 0 || txc->maxerror > NTP_PHASE_LIMIT)
++			return -EINVAL;
++	}
++
+ 	/*
+ 	 * Check for potential multiplication overflows that can
+ 	 * only happen on 64-bit systems:
+
+---
+base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
+change-id: 20240507-b4-sio-ntp-usec-1a3ab67bdce1
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
