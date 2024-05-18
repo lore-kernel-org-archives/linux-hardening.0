@@ -1,172 +1,125 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AC6637
-	for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 00:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02371A2C28;
+	Sat, 18 May 2024 02:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715991491; cv=none; b=BWFyuoL6n+z6H3zQHr2vifXwP7tHX7C24DF4TPGuwb3lvojB5P+HQUuLRmsr7Ezqvpe206jbusOQLFkcmuLObWy6ODi3dldR5HrmIBpEcKOg9ZfDt8S4eOl2hxNk4I1S4whf5lJxHzxIVMn1F93thBN3Uu5tbieJD3IIxoEi63M=
+	t=1715999627; cv=none; b=JRtgoPO2Fx06KqBRBYTytonpW0AwPTtztBgxa586q4e+WstfttLbH3M3PhZ2zoVc8UNrv+qsGQmVs45aj9y/mzd20Ps1fqZvXWWwzJcX4xYrGUxEINZSUWcgxVZHJ6aY9gPo3N9Cs8grYeb4RHZZUhcDxSqo/MjmaUKaszZLRcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715991491; c=relaxed/simple;
-	bh=Uymz9RGaEBz4cZeu7DiuAzeKhXotWtQUW9Tv3ePWw8s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hs5SkilmB+vOMk93loqfc+11iCu1zzLB5h1NgaU/oqgSWjanvZllkALWkintAYlrNxmuQ8GHPmhpAmGa+uU7buMj40eMPPPxsstwKBDp6aPitjs0woL0ScVfnV8LqftUh0JZVN9qQ4T8f9gM9IpFXF0ICdlQde6es/ZEfGFOyGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gLNizZnL; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715999627; c=relaxed/simple;
+	bh=J4HFcEm0Desk0/Nj0Jwz+Ucyl6I9mE9H5P4VuLhZRKU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OoGWfncRkaOKvbPVpkgoFJG4S5UE0FQLFhD1NeSJfJi5Wdl9nYUPDiqqXAkqqHOcXqKDmt5xRWat4FQ3xsOB0pUF8cw4Zk9z1HopbF28ju85P31N6TInnlbH2d1l+KlFVHO44fmcKuR/sTDJL3b1uFnKC6bRXnLbQfcsghESo1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jnk3J6WQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w+/l04Q2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gLNizZnL"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ec486198b6so23478015ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 17:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715991489; x=1716596289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOLQVL/T02TWP/gLUEfGdGKqwMDMKOKPwTmMExwd+Es=;
-        b=gLNizZnLodSK7f8ah7us0QO9Xy/I8crCeWxIraKwYY9APHcA+M/IHq2PrIWQa/GT/4
-         t61hHADDqbusU14SMMC2SfNwBF4SB+xtaDAES+yrcfqYaYn0JKuha9smgI5mc7jo1aLy
-         J4zUjUHsv5rayk2QAGKyyx85YnEBIinSnUEz0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715991489; x=1716596289;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qOLQVL/T02TWP/gLUEfGdGKqwMDMKOKPwTmMExwd+Es=;
-        b=l4/Zgb3haWWgHSn7h3gUiGXwowK8X2eqO4ESIIKXepakO+eaKBKmJoEWEXCAFGoLId
-         seeG1dbm5gwN/KVQQ5aDnJLUteJUChHD2txf+J9DoIfo54RZ1JnNCCo8OEwcKaStZJxq
-         MXa0fc7Mv/d80l5a6jXFyccqEI1XA9UeOBJhuX2Ti3B+hHRCIDWLVEy5coaKT9j55Scz
-         9/vGYXqQ5E4ZeIBJqQqG1BdBvIK/igcVG3MkTnJUiFNYxLrtkPlI1S2qavW8lApJrO44
-         UfQGfnmZlPkneEv1OSRRueF1wPqqxtkYXQYoJcxLlFQVjrGz9Cl3DB/W4CDXhqAcE0mI
-         DXkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGAcz2w3Rk2GsCjMJuuJ3JOEEahCi0TUw/pwssfRlOre29BXcKfy9urZV/jynabIPaXUfKy9dYsyA2KmHOim6yWvWb7zBUMZfFHZko0GJH
-X-Gm-Message-State: AOJu0YxXGXVlKor3AQ16i/u0kXTtJirEfNsc0yi8Rzp78dKC3SSgeEK+
-	L+WZL8URcnvNKltjMJuCe+e6Cr+Q+kiPtGyDRLG2h4nCyQkmhjEGM9WSynpAkw==
-X-Google-Smtp-Source: AGHT+IE+d9yGCWrTkEXvkKzY8JkLoDpqtiZq9uh8bFOZrt5vEUiNH/DgeBWLjmMRV4Ve/lntSWdGKg==
-X-Received: by 2002:a17:90b:3118:b0:2b2:c2dd:9cb0 with SMTP id 98e67ed59e1d1-2b6ccd85e94mr19386194a91.43.1715991489343;
-        Fri, 17 May 2024 17:18:09 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67105666csm16054611a91.8.2024.05.17.17.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 17:18:08 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] selftests: drivers/s390x: Use SKIP() during FIXTURE_SETUP
-Date: Fri, 17 May 2024 17:18:07 -0700
-Message-Id: <20240518001806.work.381-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jnk3J6WQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w+/l04Q2"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715999623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=55cszT4XzEtPLb/9GTwhCcJ0oLDdirFSqpzcbtqDlEg=;
+	b=Jnk3J6WQiE4t34T6M190yU8KzhXKDYxlMwxLSd5BpSSM/rgxFpyHgaph52l/s3zII5LvAL
+	8sCyk6y68VYcI/8y6fKbdvq5r2jHQ+u2b0dgCNTFOsj+IjaA9Gqqp9RYkbwZRae+lXRIPT
+	lZBrRBPSyPaolV4nLYxPRTdoHu5Sdba+ZIcSKgL7O9Sv3wP0tJxD1thQMMghzLH9cLntil
+	WFQoxk4a5O5niBYZGBfGYWGdZ3HhzoVWgVU/7vz6N1ocFkif/yXeB4wvJgsXld+Bfm15gq
+	KnoZbW6EPVEvVk+Ah3I8Ksv7nl5EqrSav6VpqgcvTNUM/q9WMq+AO9xff2WGvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715999623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=55cszT4XzEtPLb/9GTwhCcJ0oLDdirFSqpzcbtqDlEg=;
+	b=w+/l04Q2KI66hTUqDhQkuTUPAeMPvc8Y5D3Iuk5Ax0tz1kJILDqXIXwS1hpQp3x68tet6z
+	MZc1HVWRQNcgtSBw==
+To: Justin Stitt <justinstitt@google.com>, John Stultz <jstultz@google.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Bill Wendling <morbo@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v2] ntp: safeguard against time_constant overflow case
+In-Reply-To: <20240517-b4-sio-ntp-c-v2-1-f3a80096f36f@google.com>
+References: <20240517-b4-sio-ntp-c-v2-1-f3a80096f36f@google.com>
+Date: Sat, 18 May 2024 04:33:43 +0200
+Message-ID: <87pltjj1bs.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2740; i=keescook@chromium.org;
- h=from:subject:message-id; bh=Uymz9RGaEBz4cZeu7DiuAzeKhXotWtQUW9Tv3ePWw8s=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmR/O/Rs8JHxwPnfic8fsbbhMgIvS8iScbRPm04
- rBHts7r65WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkfzvwAKCRCJcvTf3G3A
- JqwyD/9QbmjNrx+bCJp6FJhOUOPry860Awt4ikGEV/G9GDHtUTJ8Tn1pSGgCPIkwf+OrGsMVJIe
- J5kled3BURo/Z9D4e6NYju/3PWD/bnP5gmdtZg+FFXbBozEMiSyGfQiPdPnGshwqXFk0/H6jxeI
- ron5SufK7RMxxfvh29UxnMMq/nLqlvb4tE7mx5G8ExVXR7W6JnSfEXyiDDGDtlWxRI5pwjFPfHb
- /WRflW7pJOgS3oBDtoqLOi5f5XOl11NRpRaysxN4kamKW6JyO7Bzcvf/zsceq+n5BadoaECpAZ4
- Q6y7tbo41st6By+dPt2ECJNhjVinAFUyNJjtmoYE2sS5jfAL6xouXohIxpM+KwAEK6OioGne8r4
- s0ATg8Yh2sQnkc0pBvUvLzhg4i69ZzQuNlKZELxrKnNaqs92ymI14THqJCimvqY6st29PyHRhZH
- 5H17g85n5mK9OvF6B3ppMt67reo5R2wab5QI9mAwyIzvH8vS6tWroONa8T3Z8bWhS0T2/Bv0Ams
- 3QO+NCyJ2AB7nOtNosjOA7GfbwNL3ume6xLi8i4j1o/7vTMbKHqEVk4ig/jCsBCf8dE1UyA+FQ8
- siQcnQEL+qrGwQoTh4k3rltFb0YaM9mKuRHEHHUlTQ0Sc+izD8DDiWnHD47185DNx7EpRqgEeio
- VHccqGT 13SESqHA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Instead of mixing selftest harness and ksft helpers, perform SKIP
-testing from the FIXTURE_SETUPs. This also means TEST_HARNESS_MAIN does
-not need to be open-coded.
+Justin!
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: kvm@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
----
-I wasn't able to build or run test this, since it's very s390 specific, it seems?
----
- .../drivers/s390x/uvdevice/test_uvdevice.c    | 32 ++++++++-----------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+On Fri, May 17 2024 at 00:47, Justin Stitt wrote:
+>  	if (txc->modes & ADJ_TIMECONST) {
+> -		time_constant = txc->constant;
+> -		if (!(time_status & STA_NANO))
+> +		if (!(time_status & STA_NANO) && time_constant < MAXTC)
+>  			time_constant += 4;
+>  		time_constant = min(time_constant, (long)MAXTC);
+>  		time_constant = max(time_constant, 0l);
 
-diff --git a/tools/testing/selftests/drivers/s390x/uvdevice/test_uvdevice.c b/tools/testing/selftests/drivers/s390x/uvdevice/test_uvdevice.c
-index ea0cdc37b44f..9622fac42597 100644
---- a/tools/testing/selftests/drivers/s390x/uvdevice/test_uvdevice.c
-+++ b/tools/testing/selftests/drivers/s390x/uvdevice/test_uvdevice.c
-@@ -18,6 +18,16 @@
- 
- #define UV_PATH  "/dev/uv"
- #define BUFFER_SIZE 0x200
-+
-+#define open_uv() \
-+do { \
-+	self->uv_fd = open(UV_PATH, O_ACCMODE);	\
-+	if (self->uv_fd < 0) \
-+		SKIP(return, "No uv-device or cannot access " UV_PATH  "\n" \
-+			     "Enable CONFIG_S390_UV_UAPI and check the access rights on " \
-+			     UV_PATH ".\n"); \
-+} while (0)
-+
- FIXTURE(uvio_fixture) {
- 	int uv_fd;
- 	struct uvio_ioctl_cb uvio_ioctl;
-@@ -37,7 +47,7 @@ FIXTURE_VARIANT_ADD(uvio_fixture, att) {
- 
- FIXTURE_SETUP(uvio_fixture)
- {
--	self->uv_fd = open(UV_PATH, O_ACCMODE);
-+	open_uv();
- 
- 	self->uvio_ioctl.argument_addr = (__u64)self->buffer;
- 	self->uvio_ioctl.argument_len = variant->arg_size;
-@@ -159,7 +169,7 @@ FIXTURE(attest_fixture) {
- 
- FIXTURE_SETUP(attest_fixture)
- {
--	self->uv_fd = open(UV_PATH, O_ACCMODE);
-+	open_uv();
- 
- 	self->uvio_ioctl.argument_addr = (__u64)&self->uvio_attest;
- 	self->uvio_ioctl.argument_len = sizeof(self->uvio_attest);
-@@ -257,20 +267,4 @@ TEST_F(attest_fixture, att_inval_addr)
- 	att_inval_addr_test(&self->uvio_attest.meas_addr, _metadata, self);
- }
- 
--static void __attribute__((constructor)) __constructor_order_last(void)
--{
--	if (!__constructor_order)
--		__constructor_order = _CONSTRUCTOR_ORDER_BACKWARD;
--}
--
--int main(int argc, char **argv)
--{
--	int fd = open(UV_PATH, O_ACCMODE);
--
--	if (fd < 0)
--		ksft_exit_skip("No uv-device or cannot access " UV_PATH  "\n"
--			       "Enable CONFIG_S390_UV_UAPI and check the access rights on "
--			       UV_PATH ".\n");
--	close(fd);
--	return test_harness_run(argc, argv);
--}
-+TEST_HARNESS_MAIN
--- 
-2.34.1
+Let me digest this.
 
+The original code does:
+
+	time_constant = txc->constant;
+	if (!(time_status & STA_NANO))
+		time_constant += 4;
+	time_constant = min(time_constant, (long)MAXTC);
+	time_constant = max(time_constant, 0l);
+
+Your change results in:
+
+	if (!(time_status & STA_NANO) && time_constant < MAXTC)
+		time_constant += 4;
+	time_constant = min(time_constant, (long)MAXTC);
+	time_constant = max(time_constant, 0l);
+
+IOW, you lost the intent of the code to assign the user space supplied
+value of txc->constant.
+
+Aside of that you clearly failed to map the deep analysis I provided to
+you vs. the time_maxerror issue to this one:
+
+# git grep 'time_constant.*=' kernel/time/
+ntp.c:66:static long                    time_constant = 2;
+
+  That's the static initializer
+
+kernel/time/ntp.c:736:              time_constant = txc->constant;
+kernel/time/ntp.c:738:                      time_constant += 4;
+kernel/time/ntp.c:739:              time_constant = min(time_constant, (long)MAXTC);
+kernel/time/ntp.c:740:              time_constant = max(time_constant, 0l);
+
+  That's the part of process_adjtimex_modes() you are trying to
+  "fix". So it's exactly the same problem as with time_maxerror, no?
+
+And therefore you provide a "safeguard" against overflow for the price of
+making the syscall disfunctional. Seriously?
+
+Did you even try to run something else than the bad case reproducer
+against your fix?
+
+No. You did not. Any of the related real use case tests would have
+failed.
+
+I told you yesterday:
+
+   Tools are good to pin-point symptoms, but they are by definition
+   patently bad in root cause analysis. Otherwise we could just let the
+   tool write the "fix".
+
+Such a tool would have at least produced a correct "fix" to cure the
+symptom.
+
+Thanks,
+
+        tglx
