@@ -1,110 +1,238 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B4E28373
-	for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 18:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CCC1DA32;
+	Sat, 18 May 2024 20:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716057627; cv=none; b=e+y0omyos9Ni/vFT/ZQM+/j5RmyKS3oHBntcNzKVCUYP7KQ38cBWqIO0WRM88CMmkwmG5nOJNUj3+s3jHiaRZSR74e/EVjx2jUVljnFqep9zkM8G9mxJFKxv60mAu4vVqklmMOiCp7HI7zZrwzEmY0b0wLhn+NCLYe+0bgosjqs=
+	t=1716063845; cv=none; b=i/ZOrDwoo1yTBQORiB6vQvuLUvooWtDurEj47FNzKMvck3lPVURkcNiOFfw7AfKJ0YuzS83UEj5EAdWIJtkFJajQ8k/qcD8vW66OQ//rg6TSPvAPeLx/GroOlpbEh4ToTAypCQzOEWlbI046a85anZMUvz4ZwaqgJVs9/Q0Wi90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716057627; c=relaxed/simple;
-	bh=k+ng9wbRlHf17xens6mhVDQOVRgsDX7w2D+5OLnXe/U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iXAgxwsw71aF0cmnQfWH1VkVQWf68X0mRMn1NfdlDVRArj1sLoCaAr82L1rmfcqxY9gDx2KtysBLDK59KtUeV4/4lpzOxQGumYfkq19l1n6bIBHL8ToWm5qV0yyLBrZePRFBXTDWB+zUx61WU1vERyBOOzYknlUqR0SNzRQqc/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YQu53FAT; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716063845; c=relaxed/simple;
+	bh=YiD1ycF15N6PaFBhh9tpXdWF4xWXfiVXebccqOFhXVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0pokd0XE84ZXB67jNOcYtG/mXg5OLQ1BLZBPMYrkx1WdmqTx+hTrJhIg5SFmIx6uzdslbuV2LAiAm3cKs0gtf9oWsR+GD5Z24RiCQozA7+1UD+9oINMzu/i15lHsJ6LakVI/SXHCdq1YtEX4c9yW1WYDUb38ZiodTmlFEW8oJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ks9HmXPB; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YQu53FAT"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ecc23e6c9dso39720405ad.2
-        for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 11:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716057626; x=1716662426; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i9upi3rN8BKzsNW7vROl/Uoxe3wcuLRhsoKYe8pqaKQ=;
-        b=YQu53FAT3nLHbcZLWiC3m/fAwmrf8Wit+32eDsYkcNcBnwRsMbog/nHyNiv2e0aUZb
-         UeGvtQYeLORL8m8B+9Aev7V23XBaNmK5jLwEnaSpfmGlqrorZDz1bPLAOXO2kThsJI0N
-         idvP/Pbt9/xQtz8e0s8Sc4ql6AXEV/jhmsCLM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716057626; x=1716662426;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i9upi3rN8BKzsNW7vROl/Uoxe3wcuLRhsoKYe8pqaKQ=;
-        b=Ffi+XVrtKDjXI3bUJeqabMIh/RSMIeAy0lLtgorRIPc1ziLhfrXDsE3ozePeSBrW7N
-         qnyLBO/IiG/Nu2jb2k0VU1LjrWVgXlnZZ9fSWTO0pbg1kg5WcUsl0gCscGyvF+fgKtOx
-         HDLTNTEEBpF9TBBJmH9LkPNP4qL9CaBrP+XKwiFVMOyEHH4s9Mfi7+PG6WX9eVjeVeNm
-         uwL8mqZ4j2mcc3mRpWDw5d/Eq6ss2USM9npNTWbQ4bRXy0L5El0K/g38fHGg76ICq9LK
-         wJu9QHEeCGvN2ucwBUBuowa9wn3L3jkBn5HcYGlarzZJs8UbDAybjf3V3btFRvI/oOND
-         SFKA==
-X-Gm-Message-State: AOJu0YyNH8wtk1yV8whZ0ifKXaUc2luO7WdgsSfmchKjbAGc6N2RAyDu
-	A5N6cKo00q5hzJrHXVfbCscs2gqts00GYjRYvtbm8Kzp3UayYURhRyf8RlCrIYnow3vkNmV+ERw
-	=
-X-Google-Smtp-Source: AGHT+IFuxNtBeIlF7fvjXHDHzCSSJToJGKljZAgnFvVNCJ2Abmnr4AI+2HASVt+rdE1qJz+MVF5s6Q==
-X-Received: by 2002:a17:902:e848:b0:1f2:f954:d6a3 with SMTP id d9443c01a7336-1f2f954da5bmr324415ad.5.1716057625812;
-        Sat, 18 May 2024 11:40:25 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad61c7sm177009135ad.68.2024.05.18.11.40.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 May 2024 11:40:25 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kunit/fortify: Fix memcmp() test to be amplitude agnostic
-Date: Sat, 18 May 2024 11:40:23 -0700
-Message-Id: <20240518184020.work.604-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ks9HmXPB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 63DCF240003;
+	Sat, 18 May 2024 20:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716063834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RR3IeFPTXcx+EVwTZpzFwWNydln/CbCYUcUKiGCqsiA=;
+	b=ks9HmXPBU71nW4aw0C+/3xXKONfJuSnO7a2sk2xrghhirOLw26OqVzMjF+JvcWBSFQadrf
+	/EVEo+aWhqKz/fdQTnatXV09wVdzGTU/IEiEo0HdERfCa1tZSUrafmYGB3F5/HXZ1B77Aa
+	nlbJlgaQYygquAq5ykjOcGYWwRx3ua1RCQrBa/40Z+mnKETDioxB/PyzFplToGSpOg3gY/
+	hsXMtmeXcJDDXmbE4Ej8rPbvU9RU5fxLgmlMapVJ0RVJbPHR8mbvfehNgKt2QEAESmxshy
+	j7WdX9FwCj/FcgqU/xsLrVsLHU5toViFEjPwHgtLZzOJgEOsOFaLEaEVnkXyqA==
+Date: Sat, 18 May 2024 22:23:54 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Shuah Khan <shuah@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+	linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests: rtc: rtctest: Do not open-code
+ TEST_HARNESS_MAIN
+Message-ID: <20240518202354d5422c77@mail.local>
+References: <20240518001655.work.053-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1081; i=keescook@chromium.org;
- h=from:subject:message-id; bh=k+ng9wbRlHf17xens6mhVDQOVRgsDX7w2D+5OLnXe/U=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmSPYXEB4BYO+wu/L5FgksDzyElF61gFBnWFH4h
- 6QXCGgfte6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkj2FwAKCRCJcvTf3G3A
- JpOKD/96VbRsJOyJVRopWjNo7ozzJWVXD1VR3R0yQNoWXOBc99IzaAlIBYFPDcXeu29ehMzMfTo
- dukapW35fOP9PyWTfZvafUf+8WdCeseMc+JyWjr4EDT/1/6zl+80FUrxFgIKH0G/SDbhBz1SLAk
- /4m3KeQ2NkycOvtRjcg1Rhd1DsyYPZ63LMgEGLWjUfCspfwDFuCgIwcmQhbufyWCguZB1XeuRzZ
- 10P8FnhIw/n3tYhAYSbgO8tBEyxcxWOxFRov5YIvZfAeufbJoVls5lpxO/tAoS7Eo6/jSPEM4yI
- 789unphFYixgC3GtAZDLa3HXV39u1OwhysY2KVZeR/rQhKivKf0wqZ/zKI0d+nCMI4RhftIK+9h
- jX4Em1sseHOItcsIziwJDBFlu/MToSAP/3Zh4JeZ29i+uxj4H0HDgo0cfvh/BnKSIgYX/vo8uFD
- IAaNmAB2wersufzlB1ppMY3BBu6G8aQYOU5NR/yHOBMvfXtTtv/Tt3dpoZ7ODCUeNuM30P+8tfA
- FSEKEm7holwG8gSjGuQCQIVWDHe/NMmQ66gLNxbjr/8qSsfFHAZ6IOnjnrm8V5G4EMoZ7qqIecZ
- 77QHSfhDFeNQjRSmigMItL/rhcNTjz/YlcO46iDV8A/oH+5D4Fqh64472UacFpuqK1/nd14eYLB
- bKSeLG7 ChI4Bfzg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240518001655.work.053-kees@kernel.org>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-When memcmp() returns a non-zero value, only the signed bit has any
-meaning. The actual value may differ between implementations.
+On 17/05/2024 17:16:58-0700, Kees Cook wrote:
+> Argument processing is specific to the test harness code. Any optional
+> information needs to be passed via environment variables. Move alternate
+> path to the RTC_DEV environment variable. Also do not open-code
+> TEST_HARNESS_MAIN because its definition may change.
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://github.com/ClangBuiltLinux/linux/issues/2025
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: linux-hardening@vger.kernel.org
----
- lib/fortify_kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Th main issue doing that is that this breaks the main use case of
+rtctest as /dev/rtc1 is usually the main target for those tests. Having
+the RTC_DEV environment variable only documented n this commit message
+is definitively not enough, I'm going to have to handle zillion of
+complaints that this is not working anymore.
 
-diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index d2377e00caab..39da5b3bc649 100644
---- a/lib/fortify_kunit.c
-+++ b/lib/fortify_kunit.c
-@@ -990,7 +990,7 @@ static void fortify_test_memcmp(struct kunit *test)
- 	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len), 0);
- 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
- 	/* Still in bounds, but no longer matching. */
--	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len + 1), -32);
-+	KUNIT_ASSERT_LT(test, memcmp(one, two, one_len + 1), 0);
- 	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
- 
- 	/* Catch too-large ranges. */
+> 
+> Additionally, setup checking can be done in the FIXTURE_SETUP(). With
+> this adjustment, also improve the error reporting when the device cannot
+> be opened.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: linux-rtc@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> ---
+>  tools/testing/selftests/rtc/Makefile  |  2 +-
+>  tools/testing/selftests/rtc/rtctest.c | 66 +++++----------------------
+>  2 files changed, 13 insertions(+), 55 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
+> index 55198ecc04db..654f9d58da3c 100644
+> --- a/tools/testing/selftests/rtc/Makefile
+> +++ b/tools/testing/selftests/rtc/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -CFLAGS += -O3 -Wl,-no-as-needed -Wall
+> +CFLAGS += -O3 -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
+>  LDLIBS += -lrt -lpthread -lm
+>  
+>  TEST_GEN_PROGS = rtctest
+> diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+> index 63ce02d1d5cc..41cfefcc20e1 100644
+> --- a/tools/testing/selftests/rtc/rtctest.c
+> +++ b/tools/testing/selftests/rtc/rtctest.c
+> @@ -30,7 +30,18 @@ FIXTURE(rtc) {
+>  };
+>  
+>  FIXTURE_SETUP(rtc) {
+> +	char *alternate = getenv("RTC_DEV");
+> +
+> +	if (alternate)
+> +		rtc_file = alternate;
+> +
+>  	self->fd = open(rtc_file, O_RDONLY);
+> +
+> +	if (self->fd == -1 && errno == ENOENT)
+> +		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> +	EXPECT_NE(-1, self->fd) {
+> +		TH_LOG("%s: %s\n", rtc_file, strerror(errno));
+> +	}
+>  }
+>  
+>  FIXTURE_TEARDOWN(rtc) {
+> @@ -41,10 +52,6 @@ TEST_F(rtc, date_read) {
+>  	int rc;
+>  	struct rtc_time rtc_tm;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	/* Read the RTC time/date */
+>  	rc = ioctl(self->fd, RTC_RD_TIME, &rtc_tm);
+>  	ASSERT_NE(-1, rc);
+> @@ -88,10 +95,6 @@ TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
+>  	struct rtc_time rtc_tm;
+>  	time_t start_rtc_read, prev_rtc_read;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	TH_LOG("Continuously reading RTC time for %ds (with %dms breaks after every read).",
+>  	       READ_LOOP_DURATION_SEC, READ_LOOP_SLEEP_MS);
+>  
+> @@ -126,10 +129,6 @@ TEST_F_TIMEOUT(rtc, uie_read, NUM_UIE + 2) {
+>  	int i, rc, irq = 0;
+>  	unsigned long data;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	/* Turn on update interrupts */
+>  	rc = ioctl(self->fd, RTC_UIE_ON, 0);
+>  	if (rc == -1) {
+> @@ -155,10 +154,6 @@ TEST_F(rtc, uie_select) {
+>  	int i, rc, irq = 0;
+>  	unsigned long data;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	/* Turn on update interrupts */
+>  	rc = ioctl(self->fd, RTC_UIE_ON, 0);
+>  	if (rc == -1) {
+> @@ -198,10 +193,6 @@ TEST_F(rtc, alarm_alm_set) {
+>  	time_t secs, new;
+>  	int rc;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
+>  	ASSERT_NE(-1, rc);
+>  
+> @@ -256,10 +247,6 @@ TEST_F(rtc, alarm_wkalm_set) {
+>  	time_t secs, new;
+>  	int rc;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
+>  	ASSERT_NE(-1, rc);
+>  
+> @@ -308,10 +295,6 @@ TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
+>  	time_t secs, new;
+>  	int rc;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
+>  	ASSERT_NE(-1, rc);
+>  
+> @@ -366,10 +349,6 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
+>  	time_t secs, new;
+>  	int rc;
+>  
+> -	if (self->fd == -1 && errno == ENOENT)
+> -		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+> -	ASSERT_NE(-1, self->fd);
+> -
+>  	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
+>  	ASSERT_NE(-1, rc);
+>  
+> @@ -410,25 +389,4 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
+>  	ASSERT_EQ(new, secs);
+>  }
+>  
+> -static void __attribute__((constructor))
+> -__constructor_order_last(void)
+> -{
+> -	if (!__constructor_order)
+> -		__constructor_order = _CONSTRUCTOR_ORDER_BACKWARD;
+> -}
+> -
+> -int main(int argc, char **argv)
+> -{
+> -	switch (argc) {
+> -	case 2:
+> -		rtc_file = argv[1];
+> -		/* FALLTHROUGH */
+> -	case 1:
+> -		break;
+> -	default:
+> -		fprintf(stderr, "usage: %s [rtcdev]\n", argv[0]);
+> -		return 1;
+> -	}
+> -
+> -	return test_harness_run(argc, argv);
+> -}
+> +TEST_HARNESS_MAIN
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.34.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
