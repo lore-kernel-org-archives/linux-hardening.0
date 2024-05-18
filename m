@@ -1,161 +1,258 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0077C140E38
-	for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 22:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9155E63D
+	for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 00:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715983476; cv=none; b=VtSWOuxaLD6OyXREWvRwURcxJWkQddWSgUDLN0qzl/6/BPe70skAadqKDhr5oqnaFY+ZMNkVGdx2BQm3SwT+duIRaQ638Ox8gK33SLEdM7dCmEyaInBJyo640xYRw8bVZCmvy0M5oP6xYlQWEuyjTZ240+AICxPsbbw8VvBqWfI=
+	t=1715991424; cv=none; b=RfEKtpYCPiH8sAfV52lGAUIkCG9tS84/hwkSTkW2zGtWNgiWOJ5bXScgKoINTsK/zfCYDIrRkuIQafcn/bjzDNmlad6aLpWK6MkKBILYhjIiN6ERXoHXBRSsaMqxuwKJyGuorerZiLRfn143tvjtswhJOLw0trwOag23tajatPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715983476; c=relaxed/simple;
-	bh=BdhITRnNU+REXc7LnQZeK8vjGpGDGI/srKqx0YLNYAk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AFQTd4CkyFzoKBK35h8pSdKhLm4asgAFGI923ZyVtvwroQvKypcPEXmSX53tFNaPQWPaJy0iugOfizwNrUv6QSv4XY3qL2DL34gX9gX2xttW42dVm3aeRWibVz1imk6u6b5+uKZirpqeC1Js6kS+CHsAtcGcqQoBpY56WVQo/lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FfIx+HD5; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715991424; c=relaxed/simple;
+	bh=psb/9cAnhp+Xzaq8lXVTJ+5ogfgNeGdZpdDamrOEPi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=egA6Yz48DXznW1RO3B/c7ge5uvOPSPN3rRVcVU7911vgRr+cA4ILJqTk9EozLC6Tp1Am8/AY70F/6+DuLIt43B2FmUAJqTJHnsKp3VpH6XsfD6sdyB/xVBbs9e5jTODbxOY6jdIpOE4BjqybZyBXd8fxYTmH4l5dUSkyv7iUBx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UStHqVo3; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FfIx+HD5"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso645a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 15:04:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UStHqVo3"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ee38966529so8205425ad.1
+        for <linux-hardening@vger.kernel.org>; Fri, 17 May 2024 17:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715983473; x=1716588273; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LPcNSrh3uuZ5e6UcUtMkeuMK0XXETcsLkcdKBYaf5FE=;
-        b=FfIx+HD5VxCqbtJM9KXjjvO9XI5GzPZfAlDQf8RnsSIzu4Gb0lS1x2IV0/4+gdpbUW
-         4AsagMwj2YWrrTEGahhJlKxihFXGewmN5Qk7DL/eHo+y+QYRFR8hA0JdyCrAsClOcmzZ
-         RGxZZOwWZlJVb5r+C9QQu93QNrh6DmXY/6RbOIN16oERqLOm+jf/HUMkWv9hKFE0nDuR
-         IZn5nYhBIm/edSol7rdhqz6LlHYXbNpBK5uNnUMs0Ip/R26hGFdyte59muCdzW2dQhCV
-         vV4RyJ1bE2efqPJ8SgZAClF6llkEY3LYgxYAWjYbTV9wH/S+1ZUyZk+25lGEaYQtVGZ0
-         FM3g==
+        d=chromium.org; s=google; t=1715991422; x=1716596222; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=irkVL93e2r7C0Hy5+trw8pmsG8779sgzCHeX9n3CiN0=;
+        b=UStHqVo3wPfQ6HcIsDMF5je4Krpa6DYNHvc+Mt2pIrNdhO+8Xg+4dyqNWpt+5z7h9B
+         OnhYLqPbmpstanrboHbljEM5WcDuZFHRrsmpr6eY+EMv3SOI+9vqApWyI0gbywmC5Ayo
+         /qrUvWWX6cr9JfMnBPf9vcObNemy1ZLY+W90w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715983473; x=1716588273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LPcNSrh3uuZ5e6UcUtMkeuMK0XXETcsLkcdKBYaf5FE=;
-        b=TXyF2lkO6c5vYsuaWWPwU/j/FBQK68qorJE7NI4uy3jf8ro0mccDT7EOOPbJeGzsqs
-         JTW465jTFZixexKCT0ZNTJ7Bud9YsG4fVsdxu8DClUhn9pskI1WtMVHQLlg8a4vekccS
-         if1eszpWC7Y2QBZQqpRWF+HigZP2wipx82HDOsn7NTlJJgn9SdFklZ7zY4ejm4+Y3Aul
-         PY5S9LlHEUcbDBbEJHY9+fX/Jn6DIfsGi2gzua/Qr1dLNKurb6IIt3om/E3b0zqcRAeM
-         Yb1qKLZQk8LsZ08KyQ7g/AoOC+Gnk8dzwv1pxaXuzP/O5AW/XA8ji5Wxve+cxWm7vcPQ
-         Fbhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUTHg5QxKSQmSO2AkX4UpYPnyWAVRL8pvMUXAuydMPP978QoSz3e4mIZiy7jfNaxrvpNQUQdl9LvHxrz91vqMLq6TbGeBbfh94ekxxIOyz
-X-Gm-Message-State: AOJu0Yy1DNUXrJOcRmk23PeZW+gjBOjBD41sigQ6dNOGzm6hENnP4YW+
-	gTyxFi8tW8S9iFE1ZM/6SovzbLxVPoTDmDjNbFuDRXrUzH3kNzQ8h5yIcmOMqtump41SUVevXJ/
-	8sBDGv6Rpij1MsqoSwuwNNJ1iG7DAiXgl3OWb
-X-Google-Smtp-Source: AGHT+IHDGePJQkBnkoeUr2NjZz8xln85qYzCfOTxtm5xhcDt6tF1xHyaN0XWlD6rZ7LpWmCymVL1628hdIUkS3q51ro=
-X-Received: by 2002:a05:6402:44b:b0:572:e6fb:ab07 with SMTP id
- 4fb4d7f45d1cf-5752c7d36e8mr24826a12.7.1715983473042; Fri, 17 May 2024
- 15:04:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715991422; x=1716596222;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=irkVL93e2r7C0Hy5+trw8pmsG8779sgzCHeX9n3CiN0=;
+        b=OsRYzpYNjIJRbMgjR1Rr3QCsKvrQgxed5gAC3ML5nnPb91eofpx3uWgscjfmUhdJ3v
+         lGE6RGzNF9WFZLyHL8k66A4/UInCqGSJc57nLToP2vYeaI9rylBYM1WDAUu9pF18bCjp
+         qIFcKX289z5fqze+fWX0d66sMKdshT+pMaioQ3LoWEW3H4cC9bO2b+Qswzjjau/swElq
+         RNGoW1/SlXWXuB/BKEq5yhkwRzYTSQdZSazfs+QY9aPFphOxcZGNqyixnvqL4WZR9SiE
+         QBJefmEPzvxLxeRkk8zN6gK19ZQN7Nbfub9qJ/u5C/dXVy+c45YXTmug/htnRzs5izXH
+         uBgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcrKf9ekx2TKvRTX2IpZ1Zryh1tMz5by+8x7S8aO2Atl9VTWueObHjkF5xfGIAPm2kv1Hmy9CCXCeJwc0JVFM8zh5b4zWpBchBBJCj/tFo
+X-Gm-Message-State: AOJu0YyfXO368FxkllK4e0yzcwp9QUMz0BJWXykRnzARBTT3zfg5E6j9
+	vW74tL34X3jOKj5VMikuC72I4BImISyzGgtESeEJFxZSYi4iCu4RTU3pYGCgfw==
+X-Google-Smtp-Source: AGHT+IGFPQYGhMI5mu4WIG762rhacma10jrth4Odmj51T3CbNjI91oKmi+chX3KkEDy/JeJ4Brsldg==
+X-Received: by 2002:a17:902:e752:b0:1e5:5760:a6c1 with SMTP id d9443c01a7336-1f2ed2ebe08mr7151825ad.21.1715991421580;
+        Fri, 17 May 2024 17:17:01 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad9da4sm162348915ad.107.2024.05.17.17.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 17:17:00 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-rtc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] selftests: rtc: rtctest: Do not open-code TEST_HARNESS_MAIN
+Date: Fri, 17 May 2024 17:16:58 -0700
+Message-Id: <20240518001655.work.053-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
- <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
- <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <20240515073636.GY40213@noisy.programming.kicks-ass.net> <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
- <20240516140951.GK22557@noisy.programming.kicks-ass.net> <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
-In-Reply-To: <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
-From: Fangrui Song <maskray@google.com>
-Date: Fri, 17 May 2024 15:04:21 -0700
-Message-ID: <CAFP8O3Jq9kxx8xp4hK42+FwL3KnibDqpke5S7zT40kwmaEfXcA@mail.gmail.com>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-To: Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Kees Cook <keescook@chromium.org>, Mark Rutland <mark.rutland@arm.com>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5223; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=psb/9cAnhp+Xzaq8lXVTJ+5ogfgNeGdZpdDamrOEPi8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmR/N6s/j5oZN920PNFTll/WpzqmtBDGQzJiKQO
+ WN+Gr07bhaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkfzegAKCRCJcvTf3G3A
+ JjXID/wMzWXl2uBgZBj8D9wl0hC56WI14SrF0DqQnjVVOg7LoM/vvq3w1s4e2+ZXB/S3ILG7bmj
+ MU6ATJTr3PXZ8D2KLL0HjPnjAHXetcJ6zsbNbfuPsydkqbAt35MDp0uoAePnq3vEzRWLZdnMpCX
+ 75F/1XL6Nm9f4xFfmq9chfi5Z47h0Zt+UyWhs+udLvtadqk3M6nz3xVg67N9N8RvmpqgAOXVAM8
+ wL4V3CxKhiamcqGuaUmOqQG5ISBPxUPm56WMM/FD524JaiRRv0YKQPU71Xf5wqfh+2idJvoNIG7
+ 1F3KWiieBCi0Hyyy1l8GivFac0+RbslIiHtS6oC4XtqnLn1M1FpsaoeRT3oAYTMaDa4ch8t8wnB
+ GtUxMnCShZyT+DU8/x4WYr2wP1LzT4cEIktWX/Y7uMS0Y4zNDwJCN/lqQAUkZy8nOtFxNvvRGaP
+ DszsKzBQQiBFpq4msqQn8TK2baNbnr97VkD3hu553LBpJlLIIW2AFZj2vWM+8NJE50JOKv6LpY7
+ Sqh7k3tUNxdyzpC8rLKRzXj16sWpdHEohdTmzKcjSk7N/phEwMhraCx7Y1Rr0q59ASm4fx1Udzj
+ 9vUjis3AFvsmdsm1kyESB1sGYgAKnQRnTdWgjmmilHeC/x6DG+U3mELMcmhq+EBtFhhhmD0Nxut
+ uzugFPC 4cjHaSJg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 16, 2024 at 12:49=E2=80=AFPM Justin Stitt <justinstitt@google.c=
-om> wrote:
->
-> Hi,
->
-> On Thu, May 16, 2024 at 7:09=E2=80=AFAM Peter Zijlstra <peterz@infradead.=
-org> wrote:
-> >
-> > On Thu, May 16, 2024 at 06:30:32AM -0700, Kees Cook wrote:
-> > >
-> > > I am a broken record. :) This is _not_ about undefined behavior.
-> >
-> > And yet you introduced CONFIG_UBSAN_SIGNED_WRAP... *UB*san, get it?
->
-> We should think of UBSAN as an "Unexpected Behavior" Sanitizer. Clang
-> has evolved to provide instrumentation for things that are not
-> *technically* undefined behavior.
->
-> Go to [1] and grep for some phrases like "not undefined behavior" and
-> see that we have quite a few sanitizers that aren't *technically*
-> handling undefined behavior.
->
-> >
-> > > This is about finding a way to make the intent of C authors
-> > > unambiguous. That overflow wraps is well defined. It is not always
-> > > _desired_. C has no way to distinguish between the two cases.
-> >
-> > The current semantics are (and have been for years, decades at this
-> > point) that everything wraps nicely and code has been assuming this. Yo=
-u
-> > cannot just change this.
->
-> Why not :>)
->
-> Lots and lots of exploits are caused by unintentional arithmetic overflow=
- [2].
->
-> >
-> > So what you do is do a proper language extension and add a type
-> > qualifier that makes overflows trap and annotate all them cases where
-> > people do not expect overflows (so that we can put the
-> > __builtin_*_overflow() things where the sun don't shine).
->
-> It is incredibly important that the exact opposite approach is taken;
-> we need to be annotating (or adding type qualifiers to) the _expected_
-> overflow cases. The omniscience required to go and properly annotate
-> all the spots that will cause problems would suggest that we should
-> just fix the bug outright. If only it was that easy.
->
-> I don't think we're capable of identifying every single problematic
-> overflow/wraparound case in the kernel, this is pretty obvious
-> considering we've had decades to do so. Instead, it seems much more
-> feasible that we annotate (very, very minimally so as not to disrupt
-> code readability and style) the spots where we _know_ overflow should
-> happen.
->
-> [1]: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#ubsan-ch=
-ecks
-> [2]: https://cwe.mitre.org/data/definitions/190.html
->
-> Thanks
-> Justin
+Argument processing is specific to the test harness code. Any optional
+information needs to be passed via environment variables. Move alternate
+path to the RTC_DEV environment variable. Also do not open-code
+TEST_HARNESS_MAIN because its definition may change.
 
-FWIW I have made -fsanitize=3Dundefined -fwrapv not imply
--fsanitize=3Dsigned-integer-overflow in
-https://github.com/llvm/llvm-project/pull/85501 .
-The change is not included in the LLVM 18.1.* releases.
-This might encourage projects using both -fwrapv and
--fsanitize=3Dundefined to re-evaluate whether -fwrapv aligns with their
-needs.
+Additionally, setup checking can be done in the FIXTURE_SETUP(). With
+this adjustment, also improve the error reporting when the device cannot
+be opened.
 
-The description of #85501 contains more information about my
-understanding of kernel security folks' mind:
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-rtc@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+---
+ tools/testing/selftests/rtc/Makefile  |  2 +-
+ tools/testing/selftests/rtc/rtctest.c | 66 +++++----------------------
+ 2 files changed, 13 insertions(+), 55 deletions(-)
 
-> Linux kernel uses -fwrapv to change signed integer overflows from undefin=
-ed behaviors to defined behaviors. However, the security folks still want -=
-fsanitize=3Dsigned-integer-overflow diagnostics. Their intention can be exp=
-ressed with -fwrapv -fsanitize=3Dsigned-integer-overflow (#80089). This mod=
-e by default reports recoverable errors while still making signed integer o=
-verflows defined (most UBSan checks are recoverable by default: you get err=
-ors in stderr, but the  program is not halted).
+diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
+index 55198ecc04db..654f9d58da3c 100644
+--- a/tools/testing/selftests/rtc/Makefile
++++ b/tools/testing/selftests/rtc/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CFLAGS += -O3 -Wl,-no-as-needed -Wall
++CFLAGS += -O3 -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
+ LDLIBS += -lrt -lpthread -lm
+ 
+ TEST_GEN_PROGS = rtctest
+diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+index 63ce02d1d5cc..41cfefcc20e1 100644
+--- a/tools/testing/selftests/rtc/rtctest.c
++++ b/tools/testing/selftests/rtc/rtctest.c
+@@ -30,7 +30,18 @@ FIXTURE(rtc) {
+ };
+ 
+ FIXTURE_SETUP(rtc) {
++	char *alternate = getenv("RTC_DEV");
++
++	if (alternate)
++		rtc_file = alternate;
++
+ 	self->fd = open(rtc_file, O_RDONLY);
++
++	if (self->fd == -1 && errno == ENOENT)
++		SKIP(return, "Skipping test since %s does not exist", rtc_file);
++	EXPECT_NE(-1, self->fd) {
++		TH_LOG("%s: %s\n", rtc_file, strerror(errno));
++	}
+ }
+ 
+ FIXTURE_TEARDOWN(rtc) {
+@@ -41,10 +52,6 @@ TEST_F(rtc, date_read) {
+ 	int rc;
+ 	struct rtc_time rtc_tm;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	/* Read the RTC time/date */
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &rtc_tm);
+ 	ASSERT_NE(-1, rc);
+@@ -88,10 +95,6 @@ TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
+ 	struct rtc_time rtc_tm;
+ 	time_t start_rtc_read, prev_rtc_read;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	TH_LOG("Continuously reading RTC time for %ds (with %dms breaks after every read).",
+ 	       READ_LOOP_DURATION_SEC, READ_LOOP_SLEEP_MS);
+ 
+@@ -126,10 +129,6 @@ TEST_F_TIMEOUT(rtc, uie_read, NUM_UIE + 2) {
+ 	int i, rc, irq = 0;
+ 	unsigned long data;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	/* Turn on update interrupts */
+ 	rc = ioctl(self->fd, RTC_UIE_ON, 0);
+ 	if (rc == -1) {
+@@ -155,10 +154,6 @@ TEST_F(rtc, uie_select) {
+ 	int i, rc, irq = 0;
+ 	unsigned long data;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	/* Turn on update interrupts */
+ 	rc = ioctl(self->fd, RTC_UIE_ON, 0);
+ 	if (rc == -1) {
+@@ -198,10 +193,6 @@ TEST_F(rtc, alarm_alm_set) {
+ 	time_t secs, new;
+ 	int rc;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
+ 	ASSERT_NE(-1, rc);
+ 
+@@ -256,10 +247,6 @@ TEST_F(rtc, alarm_wkalm_set) {
+ 	time_t secs, new;
+ 	int rc;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
+ 	ASSERT_NE(-1, rc);
+ 
+@@ -308,10 +295,6 @@ TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
+ 	time_t secs, new;
+ 	int rc;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
+ 	ASSERT_NE(-1, rc);
+ 
+@@ -366,10 +349,6 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
+ 	time_t secs, new;
+ 	int rc;
+ 
+-	if (self->fd == -1 && errno == ENOENT)
+-		SKIP(return, "Skipping test since %s does not exist", rtc_file);
+-	ASSERT_NE(-1, self->fd);
+-
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
+ 	ASSERT_NE(-1, rc);
+ 
+@@ -410,25 +389,4 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
+ 	ASSERT_EQ(new, secs);
+ }
+ 
+-static void __attribute__((constructor))
+-__constructor_order_last(void)
+-{
+-	if (!__constructor_order)
+-		__constructor_order = _CONSTRUCTOR_ORDER_BACKWARD;
+-}
+-
+-int main(int argc, char **argv)
+-{
+-	switch (argc) {
+-	case 2:
+-		rtc_file = argv[1];
+-		/* FALLTHROUGH */
+-	case 1:
+-		break;
+-	default:
+-		fprintf(stderr, "usage: %s [rtcdev]\n", argv[0]);
+-		return 1;
+-	}
+-
+-	return test_harness_run(argc, argv);
+-}
++TEST_HARNESS_MAIN
+-- 
+2.34.1
 
-
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
