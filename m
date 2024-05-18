@@ -1,104 +1,138 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4641042042
-	for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 15:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C07D4C3D0;
+	Sat, 18 May 2024 16:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716046929; cv=none; b=CB1+1KGZkRfFpL14RaoQy9vR3H5CzI3wlJ+BYxoXAa//ixn2S3MsT3dVMuJPtEnxMIOpyuKBKO806lOca3gTiTUczMa1tBAsx+Z65h9rHUQCpGtF+tBjBhVBXM7yA5iln1SPZJJ/4y+vXEckoikXANlpj43jg/C5N4zQpiDwhoI=
+	t=1716051294; cv=none; b=ohxoT27VZBovcuaKHBdGsWsiaPU51a7ngGnYu4iabb7kDrGf19YxkO2P2K9C4CyHftls5PPt7S0auJLRTVG+56gT/dl4dM3zsyLgm3wAt7D+Ac/T9K/CAD/JuZBKCQXo5BSVm/bNQ0980KBW0tlAsQE/Bta9tGd6ymzP1FPNI/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716046929; c=relaxed/simple;
-	bh=KEiRFn1zMsvA/RzSGsTpNHMl4lP5BT6qwK22Hk4Utow=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=kjgt/HKO8Ejzr7zzwYvvl8QaExQJ0/WamU7IpBSMVI3hT72Z5qGhFspJ2e73SCOJp4MGL+UZQOAxRvDUl8L+RYPA9n7NXwUp5fF2gPJRr8zQWzdo5ZFArpb+uARKjvdh6HlR76u0R55cVsGxK6XBeqk1ibuGeaB80uLMOZqXO/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-8-4PZfaOVqP-eUYUtpx8xdag-1; Sat, 18 May 2024 16:40:13 +0100
-X-MC-Unique: 4PZfaOVqP-eUYUtpx8xdag-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 18 May
- 2024 16:39:41 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 18 May 2024 16:39:41 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Dan Carpenter' <dan.carpenter@linaro.org>, Kees Cook
-	<keescook@chromium.org>
-CC: Linus Torvalds <torvalds@linux-foundation.org>, Justin Stitt
-	<justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, Mark Rutland
-	<mark.rutland@arm.com>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: RE: [RFC] Mitigating unexpected arithmetic overflow
-Thread-Topic: [RFC] Mitigating unexpected arithmetic overflow
-Thread-Index: AQHapdsGNoLb3Ne/oEmjTsfdfTDWz7GdI4ug
-Date: Sat, 18 May 2024 15:39:41 +0000
-Message-ID: <d95664b24ec94436b6cf906fefcc0b4f@AcuMS.aculab.com>
-References: <202404291502.612E0A10@keescook>
- <039d54d6-8aa2-4e5b-829b-69002cff35d3@moroto.mountain>
- <202405131203.F7B97F5E38@keescook>
- <0480d602-3ad7-4f8e-a480-9860d56eab30@suswa.mountain>
-In-Reply-To: <0480d602-3ad7-4f8e-a480-9860d56eab30@suswa.mountain>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1716051294; c=relaxed/simple;
+	bh=+kFOEWGyzi6vIHf76jDzFA2imAlbQvBmIrpXmOVrhvI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HNliJaVI8aovnwBUJosQLrZXI1EQFRTwwRUI8tNjdEhchbhwYCZXsprkEWuII2gcmnTePYJf/u+ba45UBRp/070vgwcGx7kEFVmUEAD2bI62P0CkYAGF7kvQ6/9X1Vx9dhnDevm439Nn9IvB0VRcrhI+7dp1xWmKTmO+pWLMgI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=TCDtg3Be; arc=none smtp.client-ip=80.12.242.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TCDtg3Be"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 8NKOsDKB5rcIM8NKOs66mv; Sat, 18 May 2024 18:54:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1716051279;
+	bh=NQUX/UKoeWYpHl5nclkHEYXVWH0iNXBos3sbtmi02Oc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=TCDtg3BeyPLHPzxmB8apkDFp5cEt851ceBSNxIPUG0zaEvoB1HXG9ADmllOSafhCV
+	 xiMSRtrRg49ddbeGq9GBBTaiXYU9RwokOGiM6sEBkiLxmGY5axibYntwUYri5QU2PE
+	 jYvKhi/zUtdYUXVh7X5PXZUgOxvIDHBl8qIGQDq1neVNDQxiJ/v7PSgNfBb5XeZHjW
+	 wTEhDy7FrkJbaeMHWqV2+EFaCKZCkWNCFghQWXhaMG0/QMeySbDaywPAft9DzIOXUb
+	 a/mvRt9YIiWc26GmA4Dvi8YXHGFPNcibmoHh2Wga8th0vqmO/ggx2ReILJ03dDXg1V
+	 Mjeo8LUyqHyFw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 18 May 2024 18:54:39 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <34a6d812-b4ed-4465-b0ec-e641d185b9b1@wanadoo.fr>
+Date: Sat, 18 May 2024 18:54:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/nouveau/nvif: Avoid build error due to potential
+ integer overflows
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: airlied@gmail.com, dakr@redhat.com, daniel@ffwll.ch,
+ dri-devel@lists.freedesktop.org, jani.nikula@intel.com, javierm@redhat.com,
+ kherbst@redhat.com, linux-kernel@vger.kernel.org, lyude@redhat.com,
+ mripard@kernel.org, nouveau@lists.freedesktop.org, tzimmermann@suse.de,
+ linux-hardening@vger.kernel.org
+References: <20240518143743.313872-1-linux@roeck-us.net>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240518143743.313872-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-RnJvbTogRGFuIENhcnBlbnRlcg0KPiBTZW50OiAxNCBNYXkgMjAyNCAwOTo0NQ0KPiANCj4gU25p
-cHBlZCBhbGwgdGhlIGJpdHMgd2hlcmUgeW91IGFyZSBjbGVhcmx5IGNvcnJlY3QuDQo+IA0KPiBP
-biBNb24sIE1heSAxMywgMjAyNCBhdCAxMjo0MzozN1BNIC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6
-DQo+ID4gPiBkcml2ZXJzL3VzYi9jbGFzcy91c2J0bWMuYzo4NTIgdXNidG1jX2dlbmVyaWNfcmVh
-ZCgpIHdhcm46IHBvdGVudGlhbCBpbnRlZ2VyIG92ZXJmbG93IGZyb20gdXNlcg0KPiAnbWF4X3Ry
-YW5zZmVyX3NpemUgKyAxJw0KPiA+ID4gICAgODQyICAgICAgICAgICAgICAgICAgICogd01heFBh
-Y2tldFNpemUg4oCTIDEpIHRvIGF2b2lkIHNlbmRpbmcgYSB6ZXJvLWxlbmd0aA0KPiA+ID4gICAg
-ODQzICAgICAgICAgICAgICAgICAgICogcGFja2V0DQo+ID4gPiAgICA4NDQgICAgICAgICAgICAg
-ICAgICAgKi8NCj4gPiA+ICAgIDg0NSAgICAgICAgICAgICAgICAgIHJlbWFpbmluZyA9IHRyYW5z
-ZmVyX3NpemU7DQo+ID4gPiAgICA4NDYgICAgICAgICAgICAgICAgICBpZiAoKG1heF90cmFuc2Zl
-cl9zaXplICUgZGF0YS0+d01heFBhY2tldFNpemUpID09IDApDQo+ID4gPiAgICA4NDcgICAgICAg
-ICAgICAgICAgICAgICAgICAgIG1heF90cmFuc2Zlcl9zaXplICs9IChkYXRhLT53TWF4UGFja2V0
-U2l6ZSAtIDEpOw0KPiA+ID4gICAgODQ4ICAgICAgICAgIH0gZWxzZSB7DQo+ID4gPiAgICA4NDkg
-ICAgICAgICAgICAgICAgICAvKiByb3VuZCBkb3duIHRvIGJ1ZnNpemUgdG8gYXZvaWQgdHJ1bmNh
-dGVkIGRhdGEgbGVmdCAqLw0KPiA+ID4gICAgODUwICAgICAgICAgICAgICAgICAgaWYgKG1heF90
-cmFuc2Zlcl9zaXplID4gYnVmc2l6ZSkgew0KPiA+ID4gICAgODUxICAgICAgICAgICAgICAgICAg
-ICAgICAgICBtYXhfdHJhbnNmZXJfc2l6ZSA9DQo+ID4gPiAgICA4NTIgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcm91bmR1cChtYXhfdHJhbnNmZXJfc2l6ZSArIDEgLSBidWZzaXpl
-LA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Xl5eXl5eXl5eXl5eXl5eXl5eXl5eDQo+ID4gPiBUaGlzIGNhbiBvdmVyZmxvdy4gIFdlIHNob3Vs
-ZCBtYWtlIGl0IGEgcnVsZSB0aGF0IGFsbCBzaXplIHZhcmlhYmxlcw0KPiA+ID4gaGF2ZSB0byBi
-ZSB1bnNpZ25lZCBsb25nLiAgVGhhdCB3b3VsZCBoYXZlIG1hZGUgdGhpcyBzYWZlIG9uIDY0IGJp
-dA0KPiA+ID4gc3lzdGVtcy4NCj4gPiA+DQo+ID4gPiAgICA4NTMgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBidWZzaXplKTsNCj4gPiA+ICAgIDg1NCAgICAgICAgICAg
-ICAgICAgIH0NCj4gPiA+ICAgIDg1NSAgICAgICAgICAgICAgICAgIHJlbWFpbmluZyA9IG1heF90
-cmFuc2Zlcl9zaXplOw0KPiA+DQo+ID4gQWdhaW4sIGRvIHdlIF93YW50XyB0aGlzIHRvIG92ZXJm
-bG93PyBJdCBsb29rcyBsaWtlIG5vdC4gSSdtIG5vdCBzdXJlDQo+ID4gd2hhdCB0aGlzIGNvZGUg
-aXMgdHJ5aW5nIHRvIGRvLCB0aG91Z2guIFRoZSBjb21tZW50IGRvZXNuJ3Qgc2VlbSB0bw0KPiA+
-IG1hdGNoIHRoZSBjb2RlLiBXaHkgaXNuJ3QgdGhpcyBqdXN0IHJvdW5kdXAobWF4X3RyYW5zZmVy
-X3NpemUsIGJ1ZnNpemUpID8NCj4gPg0KDQpJc24ndCBpdCBqdXN0IG1heF90cmFuc2Zlcl9zaXpl
-IC8gYnVmc2l6ZSAqIGJ1ZnNpemU/DQoNCj4gcm91bmR1cCgpIGhhcyBhbiBpbnRlZ2VyIG92ZXJm
-bG93IGluIGl0Lg0KDQpXaGljaCBpcyBhIGdlbmVyaWMgcHJvYmxlbSB3aXRoIHRoZXNlICdoZWxw
-ZXJzJy4NCklmIHRoZSBmdW5jdGlvbiBpcyBvcGVuIGNvZGVkIGFueSBvdmVyZmxvdyBpcyBvYnZp
-b3VzLg0KQnV0IGhpZGUgaXQgaW4gYSB3cmFwcGVyIGFuZCBpdCBpcyBqdXN0ICdhc3N1bWVkIHRv
-IHdvcmsnLg0KRElWX1JPVU5EVVAoeCwgeSkgY2FuIGJlIGVpdGhlciAoeCArIHkgLSAxKS95IG9y
-ICh4IC0gMSkveSArIDEuDQpUaGUgZmlyc3QgaXMgdmFsaWQgZm9yIDAgYnV0IGNhbiBvdmVyZmxv
-dywgdGhlIHNlY29uZCBpcyB2YWxpZCBmb3IgeCAhPSAwLg0KKFdobyBrbm93cyB3aGF0IGlzIGV4
-cGVjdGVkIGZvciBuZWdhdGl2ZSB2YWx1ZXMhKQ0KSW4gbW9zdCBwbGFjZXMgb25lIG9mIHRoZSBw
-YWlyIHdpbGwgYWx3YXlzIGJlIGNvcnJlY3QuDQoNCk9iZnVzY2F0aW5nIHRoZSBjb2RlIHRlbmQg
-dG8gc3RvcCByZWFkZXJzIChhbmQgdGhlIGtlcm5lbCBjb2RlIGRvZXMgZ2V0IHNvbWUpDQpzcG90
-dGluZyB0aGluZ3MgaW4gcGFzc2luZy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVz
-cyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEg
-MVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+(adding linux-hardening@vger.kernel.org)
+
+
+Le 18/05/2024 à 16:37, Guenter Roeck a écrit :
+> Trying to build parisc:allmodconfig with gcc 12.x or later results
+> in the following build error.
+> 
+> drivers/gpu/drm/nouveau/nvif/object.c: In function 'nvif_object_mthd':
+> drivers/gpu/drm/nouveau/nvif/object.c:161:9: error:
+> 	'memcpy' accessing 4294967264 or more bytes at offsets 0 and 32 overlaps 6442450881 bytes at offset -2147483617 [-Werror=restrict]
+>    161 |         memcpy(data, args->mthd.data, size);
+>        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/nouveau/nvif/object.c: In function 'nvif_object_ctor':
+> drivers/gpu/drm/nouveau/nvif/object.c:298:17: error:
+> 	'memcpy' accessing 4294967240 or more bytes at offsets 0 and 56 overlaps 6442450833 bytes at offset -2147483593 [-Werror=restrict]
+>    298 |                 memcpy(data, args->new.data, size);
+> 
+> gcc assumes that 'sizeof(*args) + size' can overflow, which would result
+> in the problem.
+> 
+> The problem is not new, only it is now no longer a warning but an error since W=1
+> has been enabled for the drm subsystem and since Werror is enabled for test builds.
+> 
+> Rearrange arithmetic and add extra size checks to avoid the overflow.
+> 
+> Fixes: a61ddb4393ad ("drm: enable (most) W=1 warnings by default across the subsystem")
+> Cc: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Jani Nikula <jani.nikula-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Thomas Zimmermann <tzimmermann-l3A5Bk7waGM@public.gmane.org>
+> Cc: Danilo Krummrich <dakr-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> ---
+> checkpatch complains about the line length in the description and the (pre-existing)
+> assignlemts in if conditions, but I did not want to split lines in the description
+> or rearrange the code further.
+> 
+> I don't know why I only see the problem with parisc builds (at least so far).
+> 
+>   drivers/gpu/drm/nouveau/nvif/object.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nvif/object.c b/drivers/gpu/drm/nouveau/nvif/object.c
+> index 4d1aaee8fe15..baf623a48874 100644
+> --- a/drivers/gpu/drm/nouveau/nvif/object.c
+> +++ b/drivers/gpu/drm/nouveau/nvif/object.c
+> @@ -145,8 +145,9 @@ nvif_object_mthd(struct nvif_object *object, u32 mthd, void *data, u32 size)
+>   	u8 stack[128];
+>   	int ret;
+>   
+> -	if (sizeof(*args) + size > sizeof(stack)) {
+> -		if (!(args = kmalloc(sizeof(*args) + size, GFP_KERNEL)))
+> +	if (size > sizeof(stack) - sizeof(*args)) {
+> +		if (size > INT_MAX ||
+> +		    !(args = kmalloc(sizeof(*args) + size, GFP_KERNEL)))
+
+Hi,
+
+Would it be cleaner or better to use size_add(sizeof(*args), size)?
+
+>   			return -ENOMEM;
+>   	} else {
+>   		args = (void *)stack;
+> @@ -276,7 +277,8 @@ nvif_object_ctor(struct nvif_object *parent, const char *name, u32 handle,
+>   	object->map.size = 0;
+>   
+>   	if (parent) {
+> -		if (!(args = kmalloc(sizeof(*args) + size, GFP_KERNEL))) {
+> +		if (size > INT_MAX ||
+> +		    !(args = kmalloc(sizeof(*args) + size, GFP_KERNEL))) {
+
+Same.
+
+CJ
+
+>   			nvif_object_dtor(object);
+>   			return -ENOMEM;
+>   		}
 
