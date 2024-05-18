@@ -1,65 +1,67 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510034087C
-	for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 17:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FC44BA94
+	for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 18:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716054492; cv=none; b=mCA27GQhUoEL9EAULq3yS1E0fnIZoHE7joy55zbrTIm5grIkxeHNPjpgcIrGKZeIkhrHw7m6xMYSayBxJz/w9bFgZX3EizEbrxOvDEJ6T68nw9NioxW8uFmsF9cK9iQ76Zv1JnMhxCb6XTY1wky2eLnG5rWCWgVH3+Y4U1sCAl4=
+	t=1716055591; cv=none; b=ie1jpq8qqPl9Fqq4QRGPHjVPG7Aeq52Yg2g4kxpFWi5qFUBpY593hkwWTZPEFj3Tg0yP73vmRvaErdRu2F/LbCgiFGFjL++4+gz846ccG0yx3rg/PyAUeQAQwUG3OGLRWNkEXW90CqRUZVFW4kEM10POeKSydO1g76HhtjX7gT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716054492; c=relaxed/simple;
-	bh=ab2fSU/1mw8R2Ew62uMTyOAvkBnxl3xXW7S935p/f3w=;
+	s=arc-20240116; t=1716055591; c=relaxed/simple;
+	bh=SFtO3a4RKrkjrGHguXWwcDovKIMDazuVdb4cBPkaPTE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRsywWjisKzzFSeZe7P6ZwFWFXLxB1JPSISKFI74FKAMHudwxiXaj/ZzAZmbQMyT9VSxZpLIkHAA5+gS5UwL1/tQubWv0NJdP5w9EQVJHwBaQw17fiDlvfIONw7ImDF1J+uA79vtiQIHks5E/ZyWJkWwB1LH8bI1/8EiOFoPq7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ig9mgmOA; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=FlA8d7YzyVdPruKVmf+0ujtUdOr3dB7zcAmDBYpTi3UIedRkU06Nl5BtNakTyP2wOJYQsVfoaEGu3mSWSA/55alq47rmfO59wEwD+ThegrKMaR8zgvKW2iu7SJ4QxPB0zmP3tah+dMqwu0ikheOkYspwU+0M4b+d/bg+0smqnDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dypsSydO; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ig9mgmOA"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f05b669b6cso38171835ad.3
-        for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 10:48:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dypsSydO"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f4ed9dc7beso1669097b3a.1
+        for <linux-hardening@vger.kernel.org>; Sat, 18 May 2024 11:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716054491; x=1716659291; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1716055589; x=1716660389; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wh6Sw6JSS/WYAHtw7Fcgjy+KhVfjlazONeD51Ga0TSM=;
-        b=ig9mgmOAjmw7NLVfIIh40kZCvNFK17E0S+AZ/IA4P9fLe9qLmgyKxd8ylhchByfRXz
-         tcYezqBXAfozSXAc/3ATXV5p3NH29E8vME/mLeRacjQO/JgzF7HgQRAUOSUjR00x9abo
-         Lz3kO92Kk8I2O7JLE+MGmeRFti63CVuNdK8Rs=
+        bh=eNjtPFN4gwk8FY4XhBI0pqmWHSzhdefGp6JGYF0RnSc=;
+        b=dypsSydO/wW0nk8lSSROpX0nlTLl0hYxzIVWa8PD8KvF6CVya4v2vQHt83QgCCv467
+         JkY4vrQDAuV7qZqFnkdZ2tV3gi0zz9HT7PvzNoRTUjKMC3PZyvH1KeAyHjebPDfSRxOo
+         z8KZic9m1yBDUulQ1evYi6/Rj9ab2ow+Yxt0s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716054491; x=1716659291;
+        d=1e100.net; s=20230601; t=1716055589; x=1716660389;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wh6Sw6JSS/WYAHtw7Fcgjy+KhVfjlazONeD51Ga0TSM=;
-        b=PwsGqgANeZ3jonjAWWgtUvoNx2QOOfIqhvN4JZmFAA78Roh0p9RuiEjH70piGEKSt2
-         qO3IM0n6O2i3O1B0qniZKB9OqI+t/PC3sfUSSrg0jOmLfKQxV8Y44nNwKM/ohzxlm6/W
-         51HE6NpCaadl7iGJf0rwIafrK3UnxJuXw/F3k5Or3VEfGO9KoMtTwXr1jk1Xx4nrjl26
-         D9BuCTINnAxKnb3RrNSeh6sEsMlFTaU0JDlgB3Fk91zExLgztYcT0lVsQ0jDAaYQzTEQ
-         ZXuGtrL1Hw51JCgMw7doNB387wNPdOGqP6vxSQmigv+1+QqKeFRBCwO0i5kVJhgBaivm
-         CUzA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8lRUrxHC6rra/WBLydbaGT6D1w06mi0VW+VmbFU/8pzBSpxIGA0Lc4cL//20G0hTr3Eug5PxcBeobidnXQO94ubgciN6rH1MwaWSh3mHp
-X-Gm-Message-State: AOJu0Yx8UYwZ6/L6LVzOpZX3iXyiA/FVthE0NBjBzM35pRZxjffxcq6M
-	Z0fZJnu7Dhn1ZPN9qSyM0XKcmXKTp9L+gmgxCMnUXrxDgV0xGZ4mpWkNeUWa8A==
-X-Google-Smtp-Source: AGHT+IH7H0VKfPMl12YY15R5AggGWaUWF/k2UjM1MezoI0lIarULhsl7t808DjdAi9uIUaH9DzywtA==
-X-Received: by 2002:a17:902:d4c8:b0:1f0:9395:7521 with SMTP id d9443c01a7336-1f093957864mr121083245ad.5.1716054490614;
-        Sat, 18 May 2024 10:48:10 -0700 (PDT)
+        bh=eNjtPFN4gwk8FY4XhBI0pqmWHSzhdefGp6JGYF0RnSc=;
+        b=C4HVO86eb/c13u/5SfKy2rVwdUGuQGJuA1txbg2N5GN2vrthGMlp/3JKBvab1o1hYC
+         7AJyVuJBTw0shUBGHfuvtnrem835pExNlj4RNHUhd/pHPhGuwz3qBNF+wi4FYGN4fckF
+         QDlKZnOtuLr16ttEoC+dTxPgaZCLh0/tPzcbhh/eY8MVgSAidr8DbEmiVRzv8gUwgYam
+         AVv9MgLFlg20gRdFXw6X84Xqzn3pTGZIUviWNVXi0D+egsjosjxqQODiTIigxNTygSsc
+         /lKUO10nTG/gUjVZg3hKcV2u6WzJpFnEyEhFCoQPcDP1t0PTTWUW9l6xDAAoAvHU4Gcy
+         oM8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOO5MDxfhmaYiL7G3r/ePduKLY19Qrau3ufqbMFzxj7wjCNcr6HkUFvVY+n15oEs+BmrI6TGDBUDLHpfd9CZ96LtqJ8H4a2NnSBXc2cv9V
+X-Gm-Message-State: AOJu0Yynmd5tBILKUlh9J2julXgOnM4M2lOE3kg/InOqawsdj/6AAWNQ
+	dsXrujQfbpiwOpnwUWY+zniUJpVpdJborgxSJFLqJ+EyaUPcK6tkg8F6ARAswQ==
+X-Google-Smtp-Source: AGHT+IHKKqnL3U4K71hLrs2mUP7g9TMCITdHz9CzBkr4YA8T0fm3oAZPwvplNN097FJEGyMYNzbtLA==
+X-Received: by 2002:a05:6a00:17a7:b0:6f6:7c56:e989 with SMTP id d2e1a72fcca58-6f69fb7d5d7mr3783518b3a.2.1716055588805;
+        Sat, 18 May 2024 11:06:28 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0badcdb9sm176445875ad.109.2024.05.18.10.48.08
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f67a5ffc54sm5978034b3a.34.2024.05.18.11.06.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 May 2024 10:48:09 -0700 (PDT)
-Date: Sat, 18 May 2024 10:48:08 -0700
+        Sat, 18 May 2024 11:06:28 -0700 (PDT)
+Date: Sat, 18 May 2024 11:06:27 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Stanislaw Gruszka <stf_xl@wp.pl>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Xose Vazquez Perez <xose.vazquez@gmail.com>,
-	linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [WARNING] memcpy: detected field-spanning write (size 1005) of
- single field "&out_cmd->cmd.payload" at
- drivers/net/wireless/intel/iwlegacy/common.c:3173 (size 320)
-Message-ID: <202405181033.6399B7E416@keescook>
-References: <2c534d01-449a-43f4-9216-eacdb3b35577@gmail.com>
- <20240518092939.GA643846@wp.pl>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] dma-buf/fence-array: Add flex array to struct
+ dma_fence_array
+Message-ID: <202405181106.99C0C03BB@keescook>
+References: <d3204a5b4776553455c2cfb1def72f1dae0dba25.1716054403.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,91 +70,28 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240518092939.GA643846@wp.pl>
+In-Reply-To: <d3204a5b4776553455c2cfb1def72f1dae0dba25.1716054403.git.christophe.jaillet@wanadoo.fr>
 
-On Sat, May 18, 2024 at 11:29:39AM +0200, Stanislaw Gruszka wrote:
-> Hi
+On Sat, May 18, 2024 at 07:47:02PM +0200, Christophe JAILLET wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
 > 
-> On Fri, Apr 12, 2024 at 07:48:39PM +0200, Xose Vazquez Perez wrote:
-> > Hi,
-> > 
-> > In Fedora kernel 6.8.5-301.fc40.x86_64, dmesg shows:
-> > 
-> > [ device: 03:00.0 Network controller [0280]: Intel Corporation PRO/Wireless 4965 AG or AGN [Kedron] Network Connection [8086:4230] (rev 61) ]
-> > 
-> > Thanks.
-> > 
-> > [   53.407607] ------------[ cut here ]------------
-> > [   53.407622] memcpy: detected field-spanning write (size 1005) of single field "&out_cmd->cmd.payload" at drivers/net/wireless/intel/iwlegacy/common.c:3173 (size 320)
-> > [   53.407721] WARNING: CPU: 1 PID: 1632 at drivers/net/wireless/intel/iwlegacy/common.c:3173 il_enqueue_hcmd+0x477/0x560 [iwlegacy]
+> The "struct dma_fence_array" can be refactored to add a flex array in order
+> to have the "callback structures allocated behind the array" be more
+> explicit.
 > 
-> For CMD_SIZE_HUGE we have allocated 4k, so we do not do anything wrong.
-> Except maybe code is convoluted, since we use same structure for
-> huge and small il_device_cmd allocations.
+> Do so:
+>    - makes the code more readable and safer.
+>    - allows using __counted_by() for additional checks
+>    - avoids some pointer arithmetic in dma_fence_array_enable_signaling()
 > 
-> But I'm thinking how to fix this fortify warning without refactoring and
-> some extra runtime cost ...   
-> 
-> Xose, could you test below patch? I did not tested it, but I think
-> it should make this particular warning gone and does not break
-> anything. But maybe it will trigger some others fortify warnings.
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-tl;dr: the proposed patch should work. Refactoring will still be needed
-in the future. :)
+Yes please! :)
 
-Long version:
-
-struct il_device_cmd {
-        struct il_cmd_header hdr;       /* uCode API */
-        union {
-                u32 flags;
-                u8 val8;
-                u16 val16;
-                u32 val32;
-                struct il_tx_cmd tx;
-                u8 payload[DEF_CMD_PAYLOAD_SIZE];
-        } __packed cmd;
-} __packed;
-
-struct il_cmd_header {
-	...
-        /* command or response/notification data follows immediately */
-        u8 data[];
-} __packed;
-
-Yes, the proposed fix will silence the warning, but this struct is
-certainly on Gustavo's list to fix for "flexible arrays not-at-end"
-warnings[1].
-
-This memcpy() is the perfect example of why we need to refactor these
-kinds of structs: the object size is ambiguous for the compiler. It
-could be as little as sizeof(struct il_device_cmd), but it could larger,
-because of the "hdr" member. Right now, it depends on how we happen to
-address it (as your change is doing).
-
-Regardless, thanks for tracking this down and fixing it!
-
--Kees
-
-[1] https://lore.kernel.org/lkml/ZgsAFhl90kecIR00@neat/
-
-> 
-> Regards
-> Stanislaw
-> 
-> diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-> index 9d33a66a49b5..c4ccc5df6419 100644
-> --- a/drivers/net/wireless/intel/iwlegacy/common.c
-> +++ b/drivers/net/wireless/intel/iwlegacy/common.c
-> @@ -3170,7 +3170,7 @@ il_enqueue_hcmd(struct il_priv *il, struct il_host_cmd *cmd)
->  		out_meta->callback = cmd->callback;
->  
->  	out_cmd->hdr.cmd = cmd->id;
-> -	memcpy(&out_cmd->cmd.payload, cmd->data, cmd->len);
-> +	memcpy(&out_cmd->hdr.data, cmd->data, cmd->len);
->  
->  	/* At this point, the out_cmd now has all of the incoming cmd
->  	 * information */
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
