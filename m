@@ -1,85 +1,75 @@
-Received: from msa.smtpout.orange.fr (smtp-77.smtpout.orange.fr [80.12.242.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C454241E7;
-	Sun, 19 May 2024 09:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A258F70;
+	Sun, 19 May 2024 11:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716109833; cv=none; b=abwgNEvQr2tUW8bG3U96qz1CYRdSTn79yo6FlR0zUCNRIWvAiO+biYWzqvn4KWN8zYG2EwJp61rD98LoOkVtGdbc192Owb7nZ0EvDxhWXSY+0aNImnIiswriKAuTothr6wm1RqGo6aMPJUbhju6ioJcSWDPrl7Pq52kaIF/a4CU=
+	t=1716118299; cv=none; b=WAn4cZMJjFshYWP+VZxUpgO9o2l+WTKkzoceyJX90Ih5+BzxcapUz4noDVkFREVSlKxqyMm1fh5GrBfH5JmorXJ9A7mYeAlAUddDR7pojCEyfw49sceSf5f6n9GEW3acU/jR4iNcgv8rYz4E9DRymEHZkdaP6qWb6byttI0Aj+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716109833; c=relaxed/simple;
-	bh=WHLI54myjQZgi0GBCy9D+0xHgarTdc8QkTWV2HYfM/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b9fi5D7ChqClWT3i+Q6b6d5gmB6akvKVYDgiObLHPWdwmz+r31ON8ZMI02wkA2X3tf2X4QMElujOT7GGEL3jK2ARklIZRaopD4tD0uoRVsBuDxKmLNA9aOUbxwKpiNA0CTvlZKDnUnEmkhPMpmvy+i7rAcuu8r38gcqNLuLKdNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=okS4Sb9h; arc=none smtp.client-ip=80.12.242.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1716118299; c=relaxed/simple;
+	bh=ReQMMxzun4YFGhofp27QdLTQlpx82RLAaLzrO32kGqg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=I6HxrHE/qg9xK13eYrpPv0LqB2iU602dlHx1vLl+85Znc1lc4PoAwh/8lm8QWtRPdAIi2g8zI9UUB9bJKgtGnQMOFGEl/Q+DWte9F48hD5q/eP36PNEwVLYGrpxO+Oo+7tFy8bhjwLoHVr42nAJ2Gez/iYBYR6GOCadeXAi47LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kmzqEEpi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UJAczcpg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="okS4Sb9h"
-Received: from localhost.localdomain ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 8cYSsFC8hNQ4U8cYespYD1; Sun, 19 May 2024 11:10:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1716109820;
-	bh=BuzLzcGApaGthL63ihFJK2+ain4oC/YEb1ozPZvoVBw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=okS4Sb9hoEuVjb/kMR4hDnZ7f6paQP6y+KGUUnGBCL3cEN9W2FRGXwRMKCtQiu7j8
-	 GwFGm+DxRbnK/KEb4xhXYM0qZB9XEHTgZWBXftEXsIh7Bi+Wr+Cf+N7EXmWrt2XmB2
-	 6D42KRIi34gw9NqHAD8RVWjp+i5Em6sh2J+lfdDhNXazdeaJvaBQ5NayMjaeDQeamH
-	 OtHdnCMjSOqdnF77nvm5QrzWz5uEE/9Erjdid7uya0HZycP+Y17WT6q4DON/3BeJX5
-	 /ZK9tzEykO9ORHOTdCr8HRdYPBdI7+glqOV4CBYU0npR9mRG8LI4B+1IHlgj+eB6M2
-	 gxMgDGkCLoadg==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 19 May 2024 11:10:20 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Ilya Dryomov <idryomov@gmail.com>,
-	Xiubo Li <xiubli@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	ceph-devel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2 net-next] libceph: Use __counted_by() in  struct ceph_snap_context
-Date: Sun, 19 May 2024 11:09:59 +0200
-Message-ID: <c883cccd53beb412f4806d28f48e8a3ddd4f0995.1716109606.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <5b7c72bdb52703bbfa5511ed500aed4babde1308.1716109606.git.christophe.jaillet@wanadoo.fr>
-References: <5b7c72bdb52703bbfa5511ed500aed4babde1308.1716109606.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kmzqEEpi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UJAczcpg"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716118291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q5K5Z31ykrIcu2QsUSB/qx6afSiiIrRvFMc4qotL5jc=;
+	b=kmzqEEpigp1LsbxDWlgB7C1vkKQfEg62EQYA9mNwmCkpNOeq6IiIKSpNkFdHa1pGB21YZC
+	u7mJsk9aOYJh59ySHK06/FDzw9T2nz1rJ19S4GbShg5d5KMBRGC/FYfcfVGIlEEn0xmj+n
+	qLas0q3+0ySq4OBaBKH1Yb1EIob1yaTagPe+cfd88Qa+HHwTrfl0/XKyrl4PLZZ9y8bnA7
+	lbQWCBB1ezDWU+Ox+ndy7kuc0S8/t4ijYghifD96nO3rcW9ehR6Q8IqTspcPAeo2ebcKjl
+	Rt2oj5ApzHkHkAGofgmTc60eeSCpUt7WuKCtZCojzyZEvc2yy78aBuWSYT11Ww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716118291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q5K5Z31ykrIcu2QsUSB/qx6afSiiIrRvFMc4qotL5jc=;
+	b=UJAczcpgyYTRmoY1piF//aUNeA07bL4M/4KWLEURlRowFHwu7j+VARN1iNS3c/gUvSP5A5
+	6xOCkCVLrzJ4TGCQ==
+To: Justin Stitt <justinstitt@google.com>
+Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ clang-built-linux <llvm@lists.linux.dev>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ntp: safeguard against time_constant overflow case
+In-Reply-To: <CAFhGd8q_zgWj+up87k1ErYJAiTuvkoeiAZE066Nf5gRqf0Q9QQ@mail.gmail.com>
+References: <20240517-b4-sio-ntp-c-v2-1-f3a80096f36f@google.com>
+ <87pltjj1bs.ffs@tglx>
+ <CAFhGd8q_zgWj+up87k1ErYJAiTuvkoeiAZE066Nf5gRqf0Q9QQ@mail.gmail.com>
+Date: Sun, 19 May 2024 13:31:30 +0200
+Message-ID: <87le46hwbx.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Annotate the 'snaps' flexible array in "struct ceph_snap_context" with
-__counted_by() so that additional checks can be made, if enabled.
+On Fri, May 17 2024 at 22:18, Justin Stitt wrote:
+> On Fri, May 17, 2024, 19:33 Thomas Gleixner <tglx@linutronix.de> wrote:
+> I accidentally sent a Frankstein-esque creation of two patches I was
+> working on. Not my brightest moment. It got past my testing because (as you
+> pointed out) I only ran the reproducer against my _fix_...
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- include/linux/ceph/libceph.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Shit happens.
 
-diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-index 4497d0a6772c..485efc8837d5 100644
---- a/include/linux/ceph/libceph.h
-+++ b/include/linux/ceph/libceph.h
-@@ -164,7 +164,7 @@ struct ceph_snap_context {
- 	refcount_t nref;
- 	u64 seq;
- 	u32 num_snaps;
--	u64 snaps[];
-+	u64 snaps[] __counted_by(num_snaps);
- };
- 
- extern struct ceph_snap_context *ceph_create_snap_context(u32 snap_count,
--- 
-2.45.1
+> Let me really parse everything you've said and v3 will surely knock your
+> socks off. You'll have to wait till Monday though :)
 
+Take your time. There is no rush.
+
+Thanks,
+
+        tglx
