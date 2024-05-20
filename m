@@ -1,86 +1,45 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09112F26
-	for <linux-hardening@vger.kernel.org>; Mon, 20 May 2024 03:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900DC18C3B
+	for <linux-hardening@vger.kernel.org>; Mon, 20 May 2024 07:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716175819; cv=none; b=lKW97rpM7p1XscqeE5DOhw8JPHJcF0Anw9l0PqtcnCbpCJzXwa+PTSNkshZjh+gwcOERwcGtYw/F66c6l4O/klJAlkw9oNUIx1Lc4nJ5CM3Lhr3aGsdbbTnDH0LSzk3aK7lElliyzmPvojSs/Q348g1+sWC9bZQjrN1W7XlBdC4=
+	t=1716190741; cv=none; b=rJpKGxJfVmzK2qvXfzMDzvcez9t3A6CFP3Nt2iP8wOrB8CdvMQsgMtwmi87ZsXXhP/kwR1EHmThDets5lbqxw2L04W2haOzFKccw+PjHM4XEbRNpPXhu/8Oj+PYmryUOsMlYgCd1okX8s64lAE2hWV0SbBXCEYptNdgz0Nfp2S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716175819; c=relaxed/simple;
-	bh=N+sl7jVqfc2PSloZXbsuOdKWDk7D4LeAw8ESdThcolU=;
+	s=arc-20240116; t=1716190741; c=relaxed/simple;
+	bh=SXWLRqg/cx1GwPNZn/xC44bifhSGMJ1Ot6OtCQCtJ/8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dbhoe+j7+cNpeC23OSmVQPG5YdptYL5JkLx7v6NqKdsX7ZFiYtX6tjVie345ai/oZMnSt3OkyUrtzmhOIplTyYWAqvqTxxcnzCdSuGK+JE1eQtHt5RU+qRWpvCspYPGTWtlWx/hvva2ytvbL1qQNX2bhrXXrA78XNkXq/UODXJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kNQvJzYB; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQNYYIi+hRYo/lK/HljQHJyL1/Gq8dZW2uxNPPZu25xgmpkmkQH4qEg1IoUl30cHW7QgEpoMAgOyh7tE5ACP1HHXxcIjmQpiOfQIQFLUYLubSwmQgIkWxVpS+lIOzxednATI1jxCe6TbEmZvAdKgylP1FBEYz7XCuAoBR2elAGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b=EfuHjjdH; arc=none smtp.client-ip=212.77.101.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kNQvJzYB"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f0537e39b3so59697315ad.3
-        for <linux-hardening@vger.kernel.org>; Sun, 19 May 2024 20:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716175817; x=1716780617; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+JrWPfIASUzFRmiR/DV6jZQiIB7Zl8bPPeoGLFG72Uo=;
-        b=kNQvJzYBllN/4FMGxA1TPyDCPo4aae0iwYPuI9Yzj1ExVuxn9Cvec7eh0RGoz75oXi
-         Te4a2EH7RjzZIzl9cO8lxrzXVgSzB/qwUG1Cb3jdM23TIg/SKhXCSasF+0fbOdwHcuur
-         efHFpIoyhb8UH1Ww9Z9zbePoB2vlj1RHPXkQY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716175817; x=1716780617;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+JrWPfIASUzFRmiR/DV6jZQiIB7Zl8bPPeoGLFG72Uo=;
-        b=BF03VTs69Kh0dCXa4Wjixn3Zzd+OgfNKMg0LobKo9vzrPX4CpzoShOATCRSlFp6P5E
-         mWotkHsJ9uB97iU7t2oUH9I1wifCecAqoASWRPsfTIE+NYA2X4SSvE3srwF52cQrdMT3
-         A+dRs2Y4aGVr46xVAm/xMn/RGeuzmI4FwApi+0UCeZPh9eZFuIIxb6yUPN+0tZEB3jvG
-         41aB9BrSlJL++mJzb0GRAIRt7g9+B712bT1aS3/xILpLGTMM3tW41N49T66Kdqn0TsLf
-         r94uDAhl4iNfbDfTOlbHWVt186RiSjArecFwXDyrp5lJ1eMEEbWkRUJt30+kDtWPFH/7
-         CeSg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8pm+1dqpn1cEOyaVR0ykj1INmY773oCw2U8f97OhVA4uDq4s+vOuFtX92oxccgxAO1JYFye/v9hINNx6zLnc3M7q1doXJj0DMGR6mo8Up
-X-Gm-Message-State: AOJu0YzFMLbt74oi4LwoxUtWfvaM/xiU6YrXGDkk73w9ccbyau6iIhpU
-	uI8p2Hr0zQRrUM2FW8LWLraepinzc1fgf3x84radyFwMgpVQnme6yxVYf1qYwA==
-X-Google-Smtp-Source: AGHT+IGEIhXHFo8lQr4BEx8nWbaYE1K8DXMrMP87uwXai76RXva2jls+/QFtIlMVhVxe/QA8pDzVAQ==
-X-Received: by 2002:a17:902:6bc4:b0:1ea:f9af:ee99 with SMTP id d9443c01a7336-1ef43d28276mr260443125ad.25.1716175817070;
-        Sun, 19 May 2024 20:30:17 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bada3efsm193550625ad.114.2024.05.19.20.30.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 May 2024 20:30:16 -0700 (PDT)
-Date: Sun, 19 May 2024 20:30:15 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: kernel test robot <oliver.sang@intel.com>,
-	Suren Baghdasaryan <surenb@google.com>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Christoph Lameter <cl@linux.com>,
-	Dennis Zhou <dennis@kernel.org>, Gary Guo <gary@garyguo.net>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [linux-next:master] [mm/slab]  7bd230a266:
- WARNING:at_mm/util.c:#kvmalloc_node_noprof
-Message-ID: <202405192018.9A54A254A@keescook>
-References: <202405151008.6ddd1aaf-oliver.sang@intel.com>
- <a7qrk7rkfbg44mhfehup3cgwi7bhcuqys72tg2ri7ck7sggfnx@643nnjnpxwzt>
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="EfuHjjdH"
+Received: (wp-smtpd smtp.wp.pl 43762 invoked from network); 20 May 2024 09:32:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1716190330; bh=E/kjzu1Wex4qcsfYIAvHw87WxHOGH99XN8pJZ/+CH0Q=;
+          h=From:To:Cc:Subject;
+          b=EfuHjjdHSt0YksyHxNYWhj5RZIg5INw1WjZZ2lJ5z/oG5CIeaDjzbMsN4TSwCk90f
+           fk3kXqSpGMc2dbMXoYO4FhjnZfZI0bmyb4Uwa6OveFzcDP/oxZJPsKhlSYcx+EgSgd
+           s2wF54eg6X86ZHz4OKLQ+yXSF8N+o4Hmn8/pbeS8=
+Received: from 89-64-9-76.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.9.76])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <keescook@chromium.org>; 20 May 2024 09:32:10 +0200
+Date: Mon, 20 May 2024 09:32:10 +0200
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Xose Vazquez Perez <xose.vazquez@gmail.com>,
+	linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [WARNING] memcpy: detected field-spanning write (size 1005) of
+ single field "&out_cmd->cmd.payload" at
+ drivers/net/wireless/intel/iwlegacy/common.c:3173 (size 320)
+Message-ID: <20240520073210.GA693073@wp.pl>
+References: <2c534d01-449a-43f4-9216-eacdb3b35577@gmail.com>
+ <20240518092939.GA643846@wp.pl>
+ <202405181033.6399B7E416@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -89,50 +48,117 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a7qrk7rkfbg44mhfehup3cgwi7bhcuqys72tg2ri7ck7sggfnx@643nnjnpxwzt>
+In-Reply-To: <202405181033.6399B7E416@keescook>
+X-WP-MailID: 39b0581376fbfbf62c4d4b81b3d927d8
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000002 [ARGB]                               
 
-On Sun, May 19, 2024 at 07:06:45PM -0400, Kent Overstreet wrote:
-> this looks like an i915 bug
-
-Yeah, agreed.
-
-> On Wed, May 15, 2024 at 10:41:19AM +0800, kernel test robot wrote:
-[...]
-> > [test failed on linux-next/master 6ba6c795dc73c22ce2c86006f17c4aa802db2a60]
-[...]
+On Sat, May 18, 2024 at 10:48:08AM -0700, Kees Cook wrote:
+> On Sat, May 18, 2024 at 11:29:39AM +0200, Stanislaw Gruszka wrote:
+> > Hi
 > > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > | Closes: https://lore.kernel.org/oe-lkp/202405151008.6ddd1aaf-oliver.sang@intel.com
+> > On Fri, Apr 12, 2024 at 07:48:39PM +0200, Xose Vazquez Perez wrote:
+> > > Hi,
+> > > 
+> > > In Fedora kernel 6.8.5-301.fc40.x86_64, dmesg shows:
+> > > 
+> > > [ device: 03:00.0 Network controller [0280]: Intel Corporation PRO/Wireless 4965 AG or AGN [Kedron] Network Connection [8086:4230] (rev 61) ]
+> > > 
+> > > Thanks.
+> > > 
+> > > [   53.407607] ------------[ cut here ]------------
+> > > [   53.407622] memcpy: detected field-spanning write (size 1005) of single field "&out_cmd->cmd.payload" at drivers/net/wireless/intel/iwlegacy/common.c:3173 (size 320)
+> > > [   53.407721] WARNING: CPU: 1 PID: 1632 at drivers/net/wireless/intel/iwlegacy/common.c:3173 il_enqueue_hcmd+0x477/0x560 [iwlegacy]
 > > 
+> > For CMD_SIZE_HUGE we have allocated 4k, so we do not do anything wrong.
+> > Except maybe code is convoluted, since we use same structure for
+> > huge and small il_device_cmd allocations.
 > > 
-> > [  940.101700][ T5353] ------------[ cut here ]------------
-> > [ 940.107107][ T5353] WARNING: CPU: 1 PID: 5353 at mm/util.c:649 kvmalloc_node_noprof (mm/util.c:649 (discriminator 1)) 
+> > But I'm thinking how to fix this fortify warning without refactoring and
+> > some extra runtime cost ...   
+> > 
+> > Xose, could you test below patch? I did not tested it, but I think
+> > it should make this particular warning gone and does not break
+> > anything. But maybe it will trigger some others fortify warnings.
+> 
+> tl;dr: the proposed patch should work. Refactoring will still be needed
+> in the future. :)
+> 
+> Long version:
+> 
+> struct il_device_cmd {
+>         struct il_cmd_header hdr;       /* uCode API */
+>         union {
+>                 u32 flags;
+>                 u8 val8;
+>                 u16 val16;
+>                 u32 val32;
+>                 struct il_tx_cmd tx;
+>                 u8 payload[DEF_CMD_PAYLOAD_SIZE];
+>         } __packed cmd;
+> } __packed;
+> 
+> struct il_cmd_header {
+> 	...
+>         /* command or response/notification data follows immediately */
+>         u8 data[];
+> } __packed;
+> 
+> Yes, the proposed fix will silence the warning, but this struct is
+> certainly on Gustavo's list to fix for "flexible arrays not-at-end"
+> warnings[1].
+> 
+> This memcpy() is the perfect example of why we need to refactor these
+> kinds of structs: the object size is ambiguous for the compiler. It
+> could be as little as sizeof(struct il_device_cmd), but it could larger,
+> because of the "hdr" member. Right now, it depends on how we happen to
+> address it (as your change is doing).
 
-This is:
+I think we can just remove "data" from il_cmd_heder (I relized it's not
+used anyway) and put it into command union. So below patch should fix
+current warning and potential future warnings as well. 
 
-        /* Don't even allow crazy sizes */
-        if (unlikely(size > INT_MAX)) {
-                WARN_ON_ONCE(!(flags & __GFP_NOWARN));
+Xose, could you give it a try ?
 
+Thanks
+Stanislaw
 
-> > [  940.307791][ T5353] Call Trace:
-[...]
-> > [ 940.351795][ T5353] eb_copy_relocations (drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:1685) i915
-
-And this is:
-
-                const unsigned int nreloc = eb->exec[i].relocation_count;
-		...
-                size = nreloc * sizeof(*relocs);
-
-                relocs = kvmalloc_array(1, size, GFP_KERNEL);
-
-So something isn't checking the "relocation_count" size that I assume is
-coming in from the ioctl?
-
--Kees
-
--- 
-Kees Cook
+diff --git a/drivers/net/wireless/intel/iwlegacy/commands.h b/drivers/net/wireless/intel/iwlegacy/commands.h
+index 28cf4e832152..dca8ecf89d1e 100644
+--- a/drivers/net/wireless/intel/iwlegacy/commands.h
++++ b/drivers/net/wireless/intel/iwlegacy/commands.h
+@@ -201,9 +201,6 @@ struct il_cmd_header {
+ 	 *  15          unsolicited RX or uCode-originated notification
+ 	 */
+ 	__le16 sequence;
+-
+-	/* command or response/notification data follows immediately */
+-	u8 data[];
+ } __packed;
+ 
+ /**
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 9d33a66a49b5..8f02f252b577 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -3170,7 +3170,7 @@ il_enqueue_hcmd(struct il_priv *il, struct il_host_cmd *cmd)
+ 		out_meta->callback = cmd->callback;
+ 
+ 	out_cmd->hdr.cmd = cmd->id;
+-	memcpy(&out_cmd->cmd.payload, cmd->data, cmd->len);
++	memcpy(&out_cmd->cmd.raw, cmd->data, cmd->len);
+ 
+ 	/* At this point, the out_cmd now has all of the incoming cmd
+ 	 * information */
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
+index 69687fcf963f..5682cccfa394 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.h
++++ b/drivers/net/wireless/intel/iwlegacy/common.h
+@@ -555,6 +555,7 @@ struct il_device_cmd {
+ 		u32 val32;
+ 		struct il_tx_cmd tx;
+ 		u8 payload[DEF_CMD_PAYLOAD_SIZE];
++		DECLARE_FLEX_ARRAY(u8, raw);
+ 	} __packed cmd;
+ } __packed;
+ 
