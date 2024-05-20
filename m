@@ -1,48 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E23136E3E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44F213665F;
 	Mon, 20 May 2024 15:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716220328; cv=none; b=QEpqPbMRLlzM5VNKcxNoSvvujbsoGz5klAv6FiQ56/L6eGjQwemhTD4yTmrKwIdAoUZsejrVHtfNHnBY7UVgMuh+zVXaz8BJP2/WRFrOG0ZZprTBltk1Hirke3HzVORkmFTaE/kfFprtZv4etwoosiD8qxXWj60N7fvxqLkyXWs=
+	t=1716220328; cv=none; b=lR62K8mGwNYPd0pmtOJq1DVzReheT005cEz+4k4OJ3OZ+DY23fgxYtUW5PH0X2e0wxddbq6K3qcmDGt/kEniM22XaXflkjrK5+/UC/r9h0OrAeHlVWaCEmp/2FbDpqnl/UxkK+9nkSGHvlS4r2nXMCnyIT60WUmRxJmFvYMjLh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716220328; c=relaxed/simple;
-	bh=6Tj/6AK4kDOfnOdNljl476D9qZxPmzu5Cwt7K5FORbI=;
+	bh=/0JyZhn7CRBfZpzlhtnykpdNzTnPsv3OquScUWbWK90=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PBLogxZzM83QmY2OY9PKZvRGj8+uWWseFTW3jt1ulPg5Z7J2m03W9t9wJ5c9bfbah9R0+klG+GGmONEvunL4lerQGMX/tcZYksCiHJhtrO2hrk2sUj0OZ03SXaYEDVvayaQUW1nGJocGl7AyYwohGUMsrJk+njMA8nhsc93oqaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6ywRHdD2; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=UZUce/P2EYhU0c2F4NsTh25Fvxt1wsDIskIUnEzOUOVLeoM9HUNqHu8C23Bho8F6v1IjcsDy456iFWPIp175Vp+8Y0nwhN46/eJLEW8OQf6k/Ku+z4F/vhFnaZByljBchrR+TYb3ZO3klsajlLxpPhzMzAsCJUrGmWOpQmXX6NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ogJBoX0f; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6ywRHdD2"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KEKwx0031522;
-	Mon, 20 May 2024 17:51:47 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ogJBoX0f"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KENk8M015670;
+	Mon, 20 May 2024 17:51:50 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=7rfAmNZnzJnf064fOo532tH0Tt2H6FX1cTSlpNMedGo=; b=6y
-	wRHdD2Gr/cyWY0VL2rfloa2lSq4GfMCczyqGaDuRhSPqjqwUvJ+S3GjcP1//KS9X
-	uADFxZTdj+R5IDG/0Ij3bgk0imH906DLIZsaIsh9p7eaR974Eom8YwbiYi6qLgjP
-	hZFJcL7P64X74JLl8C3QaSRGXKUyU/iHSjM10CQxFqYWTeWa5cJgIAhuStagAnOZ
-	0ZSlS2wcag2yH7UryDyRqmdWrdJJqjaFEJ/B83EYfcXlgD66SObNgUMD3WrTM/q1
-	fDd8LjxEsnoMKV3R4yzZmc66mjVzwHrHhSzJmTr0+yW223AoMhi0Wqn2vsBx1KTJ
-	/TQTGtsUzR51tH4Wp9vQ==
+	selector1; bh=j0JKqJfaciFytNYHdg/ybxaca3NjIQ8mflad/K7blh8=; b=og
+	JBoX0fHMz0bYOXPEhlIjZj2OyiU8UdRzF08ui8yDOSe/iRyAB8pKanlVSSu9WHJs
+	qNAS06ZXfAqM4GEBGzVj5mvxbpyx7elbnJUazMbgc4EPfWuyY32lJ47jved3VTld
+	Z/v5LXUw0x8NfEjibPRDMmdc6m6CVtnkjqQtMcGkZ99SnEwywe0p9rXjFWJFfACS
+	Floft71xvhoVsCrEnIbxnW2YUYRtmXqThwylQqQBHhG8F0jFicgceIr6F1Uinro5
+	KjSiLtjbIrF+M97gG0vYkcv7LAtDH5CsfuESx5P2zmktD23t0P8vHd4oQOvp0KhX
+	evVHGT7WwopTc/XZvxeg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n6hfpc3-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n2ffyv3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 17:51:47 +0200 (MEST)
+	Mon, 20 May 2024 17:51:49 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1249D40045;
-	Mon, 20 May 2024 17:51:43 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B26D740047;
+	Mon, 20 May 2024 17:51:45 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 41C4D226FBB;
-	Mon, 20 May 2024 17:50:58 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DEEB2226FBF;
+	Mon, 20 May 2024 17:50:59 +0200 (CEST)
 Received: from localhost (10.252.8.132) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 20 May
- 2024 17:50:57 +0200
+ 2024 17:50:59 +0200
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof
@@ -58,9 +58,9 @@ CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>,
         Amelie Delaunay
 	<amelie.delaunay@foss.st.com>
-Subject: [PATCH v3 07/12] dmaengine: stm32-dma3: add DMA_MEMCPY capability
-Date: Mon, 20 May 2024 17:49:43 +0200
-Message-ID: <20240520154948.690697-8-amelie.delaunay@foss.st.com>
+Subject: [PATCH v3 09/12] dmaengine: stm32-dma3: improve residue granularity
+Date: Mon, 20 May 2024 17:49:45 +0200
+Message-ID: <20240520154948.690697-10-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240520154948.690697-1-amelie.delaunay@foss.st.com>
 References: <20240520154948.690697-1-amelie.delaunay@foss.st.com>
@@ -78,217 +78,218 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-20_09,2024-05-17_03,2024-05-17_01
 
-Add DMA_MEMCPY capability and relative device_prep_dma_memcpy ops with
-stm32_dma3_prep_dma_memcpy(). It reuses stm32_dma3_chan_prep_hw() and
-stm32_dma3_prep_hwdesc() helpers.
-As this driver relies on both device_config and of_xlate ops to
-pre-configure the channel for transfer, add a new helper
-(stm32_dma3_init_chan_config_for_memcpy) in case the channel is used
-without being pre-configured (with DT and/or dmaengine_slave_config()).
+Implement own device_tx_status ops to compute the residue with a finer
+granularity, up to bytes.
+STM32 DMA3 has a bitfield, BNDT, in CxTR1 register which reflects the
+number of bytes read from the source.
+It also has a bitfield, FIFOL, in CxSR register which reflects the FIFO
+level in units of programmed destination data width.
+The channel is briefly suspended to get a coherent snapshot of registers.
+It is possible to correct the fifo level when packing/unpacking is enabled
+with destination increment.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
- drivers/dma/stm32/stm32-dma3.c | 131 ++++++++++++++++++++++++++++++++-
- 1 file changed, 130 insertions(+), 1 deletion(-)
+ drivers/dma/stm32/stm32-dma3.c | 165 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 163 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-index aae9fc018b1d..d379857d7aef 100644
+index 30cb18f382dc..b0e917d52f59 100644
 --- a/drivers/dma/stm32/stm32-dma3.c
 +++ b/drivers/dma/stm32/stm32-dma3.c
-@@ -222,6 +222,11 @@ enum stm32_dma3_port_data_width {
- #define STM32_DMA3_DT_PFREQ		BIT(9) /* CTR2_PFREQ */
- #define STM32_DMA3_DT_TCEM		GENMASK(13, 12) /* CTR2_TCEM */
+@@ -808,6 +808,134 @@ static void stm32_dma3_chan_reset(struct stm32_dma3_chan *chan)
+ 	writel_relaxed(ccr |= CCR_RESET, ddata->base + STM32_DMA3_CCR(chan->id));
+ }
  
-+/* struct stm32_dma3_chan .config_set bitfield */
-+#define STM32_DMA3_CFG_SET_DT		BIT(0)
-+#define STM32_DMA3_CFG_SET_DMA		BIT(1)
-+#define STM32_DMA3_CFG_SET_BOTH		(STM32_DMA3_CFG_SET_DT | STM32_DMA3_CFG_SET_DMA)
++static int stm32_dma3_chan_get_curr_hwdesc(struct stm32_dma3_swdesc *swdesc, u32 cllr, u32 *residue)
++{
++	u32 i, lli_offset, next_lli_offset = cllr & CLLR_LA;
 +
- #define STM32_DMA3_MAX_BLOCK_SIZE	ALIGN_DOWN(CBR1_BNDT, 64)
- #define port_is_ahb(maxdw)		({ typeof(maxdw) (_maxdw) = (maxdw); \
- 					   ((_maxdw) != DW_INVALID) && ((_maxdw) == DW_32); })
-@@ -281,6 +286,7 @@ struct stm32_dma3_chan {
- 	bool semaphore_mode;
- 	struct stm32_dma3_dt_conf dt_config;
- 	struct dma_slave_config dma_config;
-+	u8 config_set;
- 	struct dma_pool *lli_pool;
- 	struct stm32_dma3_swdesc *swdesc;
- 	enum ctr2_tcem tcem;
-@@ -548,7 +554,7 @@ static int stm32_dma3_chan_prep_hw(struct stm32_dma3_chan *chan, enum dma_transf
- {
- 	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
- 	struct dma_device dma_device = ddata->dma_dev;
--	u32 sdw, ddw, sbl_max, dbl_max, tcem;
-+	u32 sdw, ddw, sbl_max, dbl_max, tcem, init_dw, init_bl_max;
- 	u32 _ctr1 = 0, _ctr2 = 0;
- 	u32 ch_conf = chan->dt_config.ch_conf;
- 	u32 tr_conf = chan->dt_config.tr_conf;
-@@ -667,6 +673,49 @@ static int stm32_dma3_chan_prep_hw(struct stm32_dma3_chan *chan, enum dma_transf
- 
- 		break;
- 
-+	case DMA_MEM_TO_MEM:
-+		/* Set source (memory) data width and burst */
-+		init_dw = sdw;
-+		init_bl_max = sbl_max;
-+		sdw = stm32_dma3_get_max_dw(chan->max_burst, sap_max_dw, len, src_addr);
-+		sbl_max = stm32_dma3_get_max_burst(len, sdw, chan->max_burst);
-+		if (chan->config_set & STM32_DMA3_CFG_SET_DMA) {
-+			sdw = min_t(u32, init_dw, sdw);
-+			sbl_max = min_t(u32, init_bl_max,
-+					stm32_dma3_get_max_burst(len, sdw, chan->max_burst));
-+		}
++	/* If cllr is null, it means it is either the last or single item */
++	if (!cllr)
++		return swdesc->lli_size - 1;
 +
-+		/* Set destination (memory) data width and burst */
-+		init_dw = ddw;
-+		init_bl_max = dbl_max;
-+		ddw = stm32_dma3_get_max_dw(chan->max_burst, dap_max_dw, len, dst_addr);
-+		dbl_max = stm32_dma3_get_max_burst(len, ddw, chan->max_burst);
-+		if (chan->config_set & STM32_DMA3_CFG_SET_DMA) {
-+			ddw = min_t(u32, init_dw, ddw);
-+			dbl_max = min_t(u32, init_bl_max,
-+					stm32_dma3_get_max_burst(len, ddw, chan->max_burst));
-+		}
++	/* In cyclic mode, go fast and first check we are not on the last item */
++	if (swdesc->cyclic && next_lli_offset == (swdesc->lli[0].hwdesc_addr & CLLR_LA))
++		return swdesc->lli_size - 1;
 +
-+		_ctr1 |= FIELD_PREP(CTR1_SDW_LOG2, ilog2(sdw));
-+		_ctr1 |= FIELD_PREP(CTR1_SBL_1, sbl_max - 1);
-+		_ctr1 |= FIELD_PREP(CTR1_DDW_LOG2, ilog2(ddw));
-+		_ctr1 |= FIELD_PREP(CTR1_DBL_1, dbl_max - 1);
++	/* As transfer is in progress, look backward from the last item */
++	for (i = swdesc->lli_size - 1; i > 0; i--) {
++		*residue += FIELD_GET(CBR1_BNDT, swdesc->lli[i].hwdesc->cbr1);
++		lli_offset = swdesc->lli[i].hwdesc_addr & CLLR_LA;
++		if (lli_offset == next_lli_offset)
++			return i - 1;
++	}
 +
-+		if (ddw != sdw) {
-+			_ctr1 |= FIELD_PREP(CTR1_PAM, CTR1_PAM_PACK_UNPACK);
-+			/* Should never reach this case as ddw is clamped down */
-+			if (len & (ddw - 1)) {
-+				dev_err(chan2dev(chan),
-+					"Packing mode is enabled and len is not multiple of ddw");
-+				return -EINVAL;
-+			}
-+		}
-+
-+		/* CTR2_REQSEL/DREQ/BREQ/PFREQ are ignored with CTR2_SWREQ=1 */
-+		_ctr2 |= CTR2_SWREQ;
-+
-+		break;
-+
- 	default:
- 		dev_err(chan2dev(chan), "Direction %s not supported\n",
- 			dmaengine_get_direction_text(dir));
-@@ -936,6 +985,82 @@ static void stm32_dma3_free_chan_resources(struct dma_chan *c)
- 	/* Reset configuration */
- 	memset(&chan->dt_config, 0, sizeof(chan->dt_config));
- 	memset(&chan->dma_config, 0, sizeof(chan->dma_config));
-+	chan->config_set = 0;
++	return -EINVAL;
 +}
 +
-+static void stm32_dma3_init_chan_config_for_memcpy(struct stm32_dma3_chan *chan,
-+						   dma_addr_t dst, dma_addr_t src)
++static void stm32_dma3_chan_set_residue(struct stm32_dma3_chan *chan,
++					struct stm32_dma3_swdesc *swdesc,
++					struct dma_tx_state *txstate)
 +{
 +	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
-+	u32 dw = get_chan_max_dw(ddata->ports_max_dw[0], chan->max_burst); /* port 0 by default */
-+	u32 burst = chan->max_burst / dw;
++	struct device *dev = chan2dev(chan);
++	struct stm32_dma3_hwdesc *hwdesc;
++	u32 residue, curr_lli, csr, cdar, cbr1, cllr, bndt, fifol;
++	bool pack_unpack;
++	int ret;
 +
-+	/* Initialize dt_config if channel not pre-configured through DT */
-+	if (!(chan->config_set & STM32_DMA3_CFG_SET_DT)) {
-+		chan->dt_config.ch_conf = FIELD_PREP(STM32_DMA3_DT_PRIO, CCR_PRIO_VERY_HIGH);
-+		chan->dt_config.ch_conf |= FIELD_PREP(STM32_DMA3_DT_FIFO, chan->fifo_size);
-+		chan->dt_config.tr_conf = STM32_DMA3_DT_SINC | STM32_DMA3_DT_DINC;
-+		chan->dt_config.tr_conf |= FIELD_PREP(STM32_DMA3_DT_TCEM, CTR2_TCEM_CHANNEL);
++	csr = readl_relaxed(ddata->base + STM32_DMA3_CSR(chan->id));
++	if (!(csr & CSR_IDLEF) && chan->dma_status != DMA_PAUSED) {
++		/* Suspend current transfer to read registers for a snapshot */
++		writel_relaxed(swdesc->ccr | CCR_SUSP, ddata->base + STM32_DMA3_CCR(chan->id));
++		ret = readl_relaxed_poll_timeout_atomic(ddata->base + STM32_DMA3_CSR(chan->id), csr,
++							csr & (CSR_SUSPF | CSR_IDLEF), 1, 10);
++
++		if (ret || ((csr & CSR_TCF) && (csr & CSR_IDLEF))) {
++			writel_relaxed(CFCR_SUSPF, ddata->base + STM32_DMA3_CFCR(chan->id));
++			writel_relaxed(swdesc->ccr, ddata->base + STM32_DMA3_CCR(chan->id));
++			if (ret)
++				dev_err(dev, "Channel suspension timeout, csr=%08x\n", csr);
++		}
 +	}
 +
-+	/* Initialize dma_config if dmaengine_slave_config() not used */
-+	if (!(chan->config_set & STM32_DMA3_CFG_SET_DMA)) {
-+		chan->dma_config.src_addr_width = dw;
-+		chan->dma_config.dst_addr_width = dw;
-+		chan->dma_config.src_maxburst = burst;
-+		chan->dma_config.dst_maxburst = burst;
-+		chan->dma_config.src_addr = src;
-+		chan->dma_config.dst_addr = dst;
++	/* If channel is still active (CSR_IDLEF is not set), can't get a reliable residue */
++	if (!(csr & CSR_IDLEF))
++		dev_warn(dev, "Can't get residue: channel still active, csr=%08x\n", csr);
++
++	/*
++	 * If channel is not suspended, but Idle and Transfer Complete are set,
++	 * linked-list is over, no residue
++	 */
++	if (!(csr & CSR_SUSPF) && (csr & CSR_TCF) && (csr & CSR_IDLEF))
++		return;
++
++	/* Read registers to have a snapshot */
++	cllr = readl_relaxed(ddata->base + STM32_DMA3_CLLR(chan->id));
++	cbr1 = readl_relaxed(ddata->base + STM32_DMA3_CBR1(chan->id));
++	cdar = readl_relaxed(ddata->base + STM32_DMA3_CDAR(chan->id));
++
++	/* Resume current transfer */
++	if (csr & CSR_SUSPF) {
++		writel_relaxed(CFCR_SUSPF, ddata->base + STM32_DMA3_CFCR(chan->id));
++		writel_relaxed(swdesc->ccr, ddata->base + STM32_DMA3_CCR(chan->id));
 +	}
++
++	/* Add current BNDT */
++	bndt = FIELD_GET(CBR1_BNDT, cbr1);
++	residue = bndt;
++
++	/* Get current hwdesc and cumulate residue of pending hwdesc BNDT */
++	ret = stm32_dma3_chan_get_curr_hwdesc(swdesc, cllr, &residue);
++	if (ret < 0) {
++		dev_err(chan2dev(chan), "Can't get residue: current hwdesc not found\n");
++		return;
++	}
++	curr_lli = ret;
++
++	/* Read current FIFO level - in units of programmed destination data width */
++	hwdesc = swdesc->lli[curr_lli].hwdesc;
++	fifol = FIELD_GET(CSR_FIFOL, csr) * (1 << FIELD_GET(CTR1_DDW_LOG2, hwdesc->ctr1));
++	/* If the FIFO contains as many bytes as its size, it can't contain more */
++	if (fifol == (1 << (chan->fifo_size + 1)))
++		goto skip_fifol_update;
++
++	/*
++	 * In case of PACKING (Destination burst length > Source burst length) or UNPACKING
++	 * (Source burst length > Destination burst length), bytes could be pending in the FIFO
++	 * (to be packed up to Destination burst length or unpacked into Destination burst length
++	 * chunks).
++	 * BNDT is not reliable, as it reflects the number of bytes read from the source but not the
++	 * number of bytes written to the destination.
++	 * FIFOL is also not sufficient, because it reflects the number of available write beats in
++	 * units of Destination data width but not the bytes not yet packed or unpacked.
++	 * In case of Destination increment DINC, it is possible to compute the number of bytes in
++	 * the FIFO:
++	 * fifol_in_bytes = bytes_read - bytes_written.
++	 */
++	pack_unpack = !!(FIELD_GET(CTR1_PAM, hwdesc->ctr1) == CTR1_PAM_PACK_UNPACK);
++	if (pack_unpack && (hwdesc->ctr1 & CTR1_DINC)) {
++		int bytes_read = FIELD_GET(CBR1_BNDT, hwdesc->cbr1) - bndt;
++		int bytes_written = cdar - hwdesc->cdar;
++
++		if (bytes_read > 0)
++			fifol = bytes_read - bytes_written;
++	}
++
++skip_fifol_update:
++	if (fifol) {
++		dev_dbg(chan2dev(chan), "%u byte(s) in the FIFO\n", fifol);
++		dma_set_in_flight_bytes(txstate, fifol);
++		/*
++		 * Residue is already accurate for DMA_MEM_TO_DEV as BNDT reflects data read from
++		 * the source memory buffer, so just need to add fifol to residue in case of
++		 * DMA_DEV_TO_MEM transfer because these bytes are not yet written in destination
++		 * memory buffer.
++		 */
++		if (chan->dma_config.direction == DMA_DEV_TO_MEM)
++			residue += fifol;
++	}
++	dma_set_residue(txstate, residue);
 +}
 +
-+static struct dma_async_tx_descriptor *stm32_dma3_prep_dma_memcpy(struct dma_chan *c,
-+								  dma_addr_t dst, dma_addr_t src,
-+								  size_t len, unsigned long flags)
+ static int stm32_dma3_chan_stop(struct stm32_dma3_chan *chan)
+ {
+ 	struct stm32_dma3_ddata *ddata = to_stm32_dma3_ddata(chan);
+@@ -1310,6 +1438,39 @@ static void stm32_dma3_synchronize(struct dma_chan *c)
+ 	vchan_synchronize(&chan->vchan);
+ }
+ 
++static enum dma_status stm32_dma3_tx_status(struct dma_chan *c, dma_cookie_t cookie,
++					    struct dma_tx_state *txstate)
 +{
 +	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
-+	struct stm32_dma3_swdesc *swdesc;
-+	size_t next_size, offset;
-+	u32 count, i, ctr1, ctr2;
++	struct stm32_dma3_swdesc *swdesc = NULL;
++	enum dma_status status;
++	unsigned long flags;
++	struct virt_dma_desc *vd;
 +
-+	count = DIV_ROUND_UP(len, STM32_DMA3_MAX_BLOCK_SIZE);
++	status = dma_cookie_status(c, cookie, txstate);
++	if (status == DMA_COMPLETE)
++		return status;
 +
-+	swdesc = stm32_dma3_chan_desc_alloc(chan, count);
-+	if (!swdesc)
-+		return NULL;
++	if (!txstate)
++		return chan->dma_status;
 +
-+	if (chan->config_set != STM32_DMA3_CFG_SET_BOTH)
-+		stm32_dma3_init_chan_config_for_memcpy(chan, dst, src);
++	spin_lock_irqsave(&chan->vchan.lock, flags);
 +
-+	for (i = 0, offset = 0; offset < len; i++, offset += next_size) {
-+		size_t remaining;
-+		int ret;
++	vd = vchan_find_desc(&chan->vchan, cookie);
++	if (vd)
++		swdesc = to_stm32_dma3_swdesc(vd);
++	else if (chan->swdesc && chan->swdesc->vdesc.tx.cookie == cookie)
++		swdesc = chan->swdesc;
 +
-+		remaining = len - offset;
-+		next_size = min_t(size_t, remaining, STM32_DMA3_MAX_BLOCK_SIZE);
++	/* Get residue/in_flight_bytes only if a transfer is currently running (swdesc != NULL) */
++	if (swdesc)
++		stm32_dma3_chan_set_residue(chan, swdesc, txstate);
 +
-+		ret = stm32_dma3_chan_prep_hw(chan, DMA_MEM_TO_MEM, &swdesc->ccr, &ctr1, &ctr2,
-+					      src + offset, dst + offset, next_size);
-+		if (ret)
-+			goto err_desc_free;
++	spin_unlock_irqrestore(&chan->vchan.lock, flags);
 +
-+		stm32_dma3_chan_prep_hwdesc(chan, swdesc, i, src + offset, dst + offset, next_size,
-+					    ctr1, ctr2, next_size == remaining, false);
-+	}
++	return chan->dma_status;
++}
 +
-+	/* Enable Errors interrupts */
-+	swdesc->ccr |= CCR_USEIE | CCR_ULEIE | CCR_DTEIE;
-+	/* Enable Transfer state interrupts */
-+	swdesc->ccr |= CCR_TCIE;
-+
-+	swdesc->cyclic = false;
-+
-+	return vchan_tx_prep(&chan->vchan, &swdesc->vdesc, flags);
-+
-+err_desc_free:
-+	stm32_dma3_chan_desc_free(chan, swdesc);
-+
-+	return NULL;
- }
- 
- static struct dma_async_tx_descriptor *stm32_dma3_prep_slave_sg(struct dma_chan *c,
-@@ -1119,6 +1244,7 @@ static int stm32_dma3_config(struct dma_chan *c, struct dma_slave_config *config
+ static void stm32_dma3_issue_pending(struct dma_chan *c)
+ {
  	struct stm32_dma3_chan *chan = to_stm32_dma3_chan(c);
+@@ -1506,7 +1667,7 @@ static int stm32_dma3_probe(struct platform_device *pdev)
  
- 	memcpy(&chan->dma_config, config, sizeof(*config));
-+	chan->config_set |= STM32_DMA3_CFG_SET_DMA;
- 
- 	return 0;
- }
-@@ -1233,6 +1359,7 @@ static struct dma_chan *stm32_dma3_of_xlate(struct of_phandle_args *dma_spec, st
- 
- 	chan = to_stm32_dma3_chan(c);
- 	chan->dt_config = conf;
-+	chan->config_set |= STM32_DMA3_CFG_SET_DT;
- 
- 	return c;
- }
-@@ -1331,6 +1458,7 @@ static int stm32_dma3_probe(struct platform_device *pdev)
- 	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
- 	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
- 	dma_cap_set(DMA_CYCLIC, dma_dev->cap_mask);
-+	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
- 	dma_dev->dev = &pdev->dev;
- 	/*
- 	 * This controller supports up to 8-byte buswidth depending on the port used and the
-@@ -1352,6 +1480,7 @@ static int stm32_dma3_probe(struct platform_device *pdev)
- 	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+ 	dma_dev->descriptor_reuse = true;
+ 	dma_dev->max_sg_burst = STM32_DMA3_MAX_SEG_SIZE;
+-	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
  	dma_dev->device_alloc_chan_resources = stm32_dma3_alloc_chan_resources;
  	dma_dev->device_free_chan_resources = stm32_dma3_free_chan_resources;
-+	dma_dev->device_prep_dma_memcpy = stm32_dma3_prep_dma_memcpy;
- 	dma_dev->device_prep_slave_sg = stm32_dma3_prep_slave_sg;
- 	dma_dev->device_prep_dma_cyclic = stm32_dma3_prep_dma_cyclic;
- 	dma_dev->device_caps = stm32_dma3_caps;
+ 	dma_dev->device_prep_dma_memcpy = stm32_dma3_prep_dma_memcpy;
+@@ -1518,7 +1679,7 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 	dma_dev->device_resume = stm32_dma3_resume;
+ 	dma_dev->device_terminate_all = stm32_dma3_terminate_all;
+ 	dma_dev->device_synchronize = stm32_dma3_synchronize;
+-	dma_dev->device_tx_status = dma_cookie_status;
++	dma_dev->device_tx_status = stm32_dma3_tx_status;
+ 	dma_dev->device_issue_pending = stm32_dma3_issue_pending;
+ 
+ 	/* if dma_channels is not modified, get it from hwcfgr1 */
 -- 
 2.25.1
 
