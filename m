@@ -1,91 +1,65 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6A71B960;
-	Mon, 20 May 2024 11:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D0C54789;
+	Mon, 20 May 2024 14:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716206335; cv=none; b=FSmjl9oyaUMdsvKP65KVkzbUY91ykhVGW+qwPgpwJYkaK5TbwCHRXMjQcveJAGwCSzJHkJHHz0uGX+7vAy3+tC8lsBRY2McUHeCTq6ABH/q6X+jAHscion41oac9J1w4L9jQpTzAoGzLAW2FbFlIgnoqSdfeAWTEa6wiiIWXVCA=
+	t=1716214412; cv=none; b=ZjZxicGXroRB7tcIVtBoSOtafPHjEap5GPRDX9GdDfU6NvxCnqRtYqVWAvQRLoKOlyn/eJ5e+BOjXJmz2fsDeYI3LlgtmBNFX8yLWKCFw18oK2aIWFKSrVPpnvooRhxHoJsPyaW7Ibx7tfavVp5Jf5QjT1NBb3KE37qFEAJ3ej0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716206335; c=relaxed/simple;
-	bh=bHNHl9JcLOSKGTPq7jvpEWQfUxyRDiDCngPc1F2Y4h8=;
+	s=arc-20240116; t=1716214412; c=relaxed/simple;
+	bh=HEi4o6f1GohHdJ5VdC2hzu1APLIt6YSrw4Kf+Y5ungM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K/ImfIGUNGzeLZYPnAfBR+ylt6yKfuruZlOEyDId+omTY+WPA97aIuWcHwRQ7lY/AFFRufVEm/OfB2V2TzgK8tGGgVo79Uv0fwiC9IbC0J0a/R3wcTCLVt/GLEaQYCKCJFm5UemohG7pAV9bAfD7rNzpdp5C8iHWlvmbDXxs0oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fsUmlYuo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6EKitTSP; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KZ5b86gE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3XhpOVOA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rh4jzJVvFb91JJ0vfwi/BfW0Bqw86A4vqAH3B8FIMZch9uztKQ8ZtYr4j02Ytd9dKn2mh91cjBvGj0luWFB2TCgvR/2hke49wpXRm1xjFSP4dNw4OEwzqI+vFdcVyR6tZF9jL8CD89uQmO/yOy+HZWmBM23pmsg/kYVeWhH4tIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HSu6kHd/; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fsUmlYuo";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6EKitTSP";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KZ5b86gE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3XhpOVOA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E847E20CBB;
-	Mon, 20 May 2024 11:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1716206332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
-	b=fsUmlYuoYYddvJ7cs0YoGabDIp5ofkSffhBkM/sYifMORlwhS2rMb24AuMZSx81AAiYG1c
-	b2ZqyHRBDNBKBrkFr08SfYHMpqRC5VgYBIyqjQKWVfvrjAgj7uHTfjk9NmmNWbXSs2EGKd
-	exU9ARjDeCA63yXc3X5OwDZk+LfPG0I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1716206332;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
-	b=6EKitTSPmN7XLWrVvRRWnBAo6dHpgTGe7Bj1R1Z8VainveiJBvxV/BWjGX8BFHecApfzeF
-	lgE1+l78EUQzIVCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KZ5b86gE;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=3XhpOVOA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1716206331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
-	b=KZ5b86gEJ4Ml/imRWLmSSHHasp1i7AXhSLcXjO5y/Y18zv6ZGmPcoX0pZpiKBq/lx7xuXo
-	tXsG2IDB3QanEKNwrVG2QJ7xQj7n25DDRGQ85tR0LshrO7IZfbKZllw9SNmEiPnhGcg6xc
-	p7qFzY+vNm32pV/P0iJGcWjS/sQSrEU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1716206331;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
-	b=3XhpOVOAADnPbdL/pAVyLGDYnXa6G6dD60Zjq5x8BRZQgxyjn+cEJU1M+Oc82dKbSjZMfa
-	UIoAgRchQEQeVHBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4AD313A6B;
-	Mon, 20 May 2024 11:58:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mvPaM/s6S2ZaWgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 20 May 2024 11:58:51 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5A29CA08D8; Mon, 20 May 2024 13:58:51 +0200 (CEST)
-Date: Mon, 20 May 2024 13:58:51 +0200
-From: Jan Kara <jack@suse.cz>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HSu6kHd/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716214411; x=1747750411;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HEi4o6f1GohHdJ5VdC2hzu1APLIt6YSrw4Kf+Y5ungM=;
+  b=HSu6kHd/KCy5k0qL8HBx2fEAiNdcWYn3QPVJ7jdWktEMcIFnrdcpEDeV
+   ZbAsWOcnUIYm2ZUzGj4rJ+JyNSzSMD1vWknkvx5c4fvNfBit/Y9b6a+p6
+   mZ5wdN1Cf9dAZzcLyMleGpOmIjiEFC4fVKS8qfoB2Za/8uIiS4VQd2qMF
+   FPFO76VF59zcsfuGW68X431kdd/jhhcG77/5TU5HQ3pcyhSzRfmyMXmBr
+   5Nw76EqY1PlDZ4gRxA135YF7wlrenOws0l0lMV/2hWdKYb51UHHwNSnj7
+   klv/ijEsfZTjA9/J0+hq6wHtRwOaPh/sC0fH8tKqrK9SB+VOkP8URetCp
+   g==;
+X-CSE-ConnectionGUID: jdR1eJMxRNGXQM6Qnzq76Q==
+X-CSE-MsgGUID: utXKgrZXS9GfHIWx9eyC/Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12519662"
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="12519662"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 07:13:30 -0700
+X-CSE-ConnectionGUID: 2Esy9xhMR6yAN+3OekAtrQ==
+X-CSE-MsgGUID: lwbaqOKqTVC9M006gPJSTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="32415929"
+Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 20 May 2024 07:13:27 -0700
+Received: from kbuild by 108735ec233b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s93lU-0004t6-2A;
+	Mon, 20 May 2024 14:13:24 +0000
+Date: Mon, 20 May 2024 22:13:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kees Cook <keescook@chromium.org>,
+	Eric Biederman <ebiederm@xmission.com>
+Cc: oe-kbuild-all@lists.linux.dev, Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] fs: fix unintentional arithmetic wraparound in offset
- calculation
-Message-ID: <20240520115851.gcwj3nwicvr2c4j3@quack3>
-References: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
+Message-ID: <202405202157.xE9dP8fI-lkp@intel.com>
+References: <20240520021615.741800-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -94,101 +68,67 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: E847E20CBB
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
+In-Reply-To: <20240520021615.741800-1-keescook@chromium.org>
 
-On Fri 17-05-24 00:29:06, Justin Stitt wrote:
-> When running syzkaller with the newly reintroduced signed integer
-> overflow sanitizer we encounter this report:
-> 
-> UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
-> 9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
-> Call Trace:
->  <TASK>
->  dump_stack_lvl+0x93/0xd0
->  handle_overflow+0x171/0x1b0
->  generic_file_llseek_size+0x35b/0x380
-> 
-> ... amongst others:
-> UBSAN: signed-integer-overflow in ../fs/read_write.c:1657:12
-> 142606336 - -9223372036854775807 cannot be represented in type 'loff_t' (aka 'long long')
-> ...
-> UBSAN: signed-integer-overflow in ../fs/read_write.c:1666:11
-> 9223372036854775807 - -9223231299366420479 cannot be represented in type 'loff_t' (aka 'long long')
-> 
-> Fix the accidental overflow in these position and offset calculations
-> by checking for negative position values, using check_add_overflow()
-> helpers and clamping values to expected ranges.
-> 
-> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-> Closes: https://github.com/KSPP/linux/issues/358
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Hi Kees,
 
-Except for the unfortunate wording in the changelog, the code actually
-looks easier to grasp to me and if it helps the compiler as well, I'm in
-favor of this change (but I definitely don't want to overrule Al if he
-hates it ;)).
+kernel test robot noticed the following build errors:
 
-Regarding the code:
+[auto build test ERROR on kees/for-next/execve]
+[also build test ERROR on kees/for-next/pstore kees/for-next/kspp brauner-vfs/vfs.all linus/master v6.9 next-20240520]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> @@ -1467,8 +1470,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
->  
->  	/* Don't allow overlapped copying within the same file. */
->  	if (inode_in == inode_out &&
-> -	    pos_out + count > pos_in &&
-> -	    pos_out < pos_in + count)
-> +	    out_sum > pos_in &&
-> +	    pos_out < in_sum)
->  		return -EINVAL;
+url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/exec-Avoid-pathological-argc-envc-and-bprm-p-values/20240520-101851
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
+patch link:    https://lore.kernel.org/r/20240520021615.741800-1-keescook%40chromium.org
+patch subject: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
+config: i386-randconfig-004-20240520 (https://download.01.org/0day-ci/archive/20240520/202405202157.xE9dP8fI-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240520/202405202157.xE9dP8fI-lkp@intel.com/reproduce)
 
-This is actually subtly wrong becaue 'count' could have been updated
-(shrinked) between the check_add_overflow() and this place. So please keep
-the old checks here.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405202157.xE9dP8fI-lkp@intel.com/
 
-> @@ -1649,6 +1652,9 @@ int generic_write_check_limits(struct file *file, loff_t pos, loff_t *count)
->  	loff_t max_size = inode->i_sb->s_maxbytes;
->  	loff_t limit = rlimit(RLIMIT_FSIZE);
->  
-> +	if (pos < 0)
-> +		return -EINVAL;
-> +
->  	if (limit != RLIM_INFINITY) {
->  		if (pos >= limit) {
->  			send_sig(SIGXFSZ, current, 0);
+All errors (new ones prefixed by >>):
 
-Here I'm a bit confused. How is this related to the signed overflow
-handling?
+   ld: fs/exec.o: in function `exec_test_bprm_stack_limits':
+>> fs/exec_test.c:98:(.text+0xdfc): undefined reference to `kunit_binary_assert_format'
+>> ld: fs/exec_test.c:98:(.text+0xe0c): undefined reference to `__kunit_do_failed_assertion'
+>> ld: fs/exec_test.c:99:(.text+0xe56): undefined reference to `kunit_binary_assert_format'
+   ld: fs/exec_test.c:99:(.text+0xe66): undefined reference to `__kunit_do_failed_assertion'
 
-								Honza
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for FB_IOMEM_HELPERS
+   Depends on [n]: HAS_IOMEM [=y] && FB_CORE [=n]
+   Selected by [m]:
+   - DRM_XE_DISPLAY [=y] && HAS_IOMEM [=y] && DRM_XE [=m] && DRM_XE [=m]=m
+
+
+vim +98 fs/exec_test.c
+
+    85	
+    86	static void exec_test_bprm_stack_limits(struct kunit *test)
+    87	{
+    88		/* Double-check the constants. */
+    89		KUNIT_EXPECT_EQ(test, _STK_LIM, SZ_8M);
+    90		KUNIT_EXPECT_EQ(test, ARG_MAX, 32 * SZ_4K);
+    91	
+    92		for (int i = 0; i < ARRAY_SIZE(bprm_stack_limits_results); i++) {
+    93			const struct bprm_stack_limits_result *result = &bprm_stack_limits_results[i];
+    94			struct linux_binprm bprm = result->bprm;
+    95			int rc;
+    96	
+    97			rc = bprm_stack_limits(&bprm);
+  > 98			KUNIT_EXPECT_EQ_MSG(test, rc, result->expected_rc, "on loop %d", i);
+  > 99			KUNIT_EXPECT_EQ_MSG(test, bprm.argmin, result->expected_argmin, "on loop %d", i);
+   100		}
+   101	}
+   102	
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
