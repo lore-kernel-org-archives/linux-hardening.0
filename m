@@ -1,108 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A9D1E49D;
-	Mon, 20 May 2024 15:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA86136E3F;
+	Mon, 20 May 2024 15:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716218255; cv=none; b=pw8u+axqL1z8n/x55FcavwuN5Y7YNtjCPp4V5DNK6XaUEV6bjAI213C5+4khwUTTl1SoQb3GNCHT7k/BkkaVpZG804gBVqWxRKqaoNq/zus0TnG/y9+oL8eedI7Kamnd+oEVqT6FzXWUb9BaKmDulsvYhS2ezhgX5HVQSlOAZC8=
+	t=1716219806; cv=none; b=VlRwTV6lssPb47+GYONfcIi07TtYFINSrfcw3bpMp38u+acgvxV+eTwWD8BfofrwMDzDvDYd1IGMFiDjjS0zuedisNsoJa2cozyFE3mvCpcc9zaRW7CmCI9bd66Ieoy3PXHELfh60fwQipf5WFSZAKqL1/qdOedq04E/pl77VTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716218255; c=relaxed/simple;
-	bh=Fk3TdpMwWcq77n1yGGGEGm8bSTFyy93wDKKzCOOfQP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoZQfEyp8j1IjBvlk0+JhzSs2xd87lt15SII0EvYctXjqGh6zfx1ENE8Cof6rdYMiuLn/jPANGtFJRe2cW6eZABsZ17JFt+dVsjXDoN+/ZaJwOFci4SW4z+valVapS/afrsulNUfjAW3otRBl9UE08rsXdr6FprOcLRxy9YI+I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVCTz/TH; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716219806; c=relaxed/simple;
+	bh=iDEDAYmfy4jslRTOnluvRfFFFUrJoFW3xug63TASxKk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=df5dUmKfLAgixqCVZLrw9OZG653tFEFwwOB8RyyZR/uNt9YPTHeC4eghPNEu6UVuMEacglXmJHuqXHdahdAaV/JDXGTOTDGyLT+3couPwtZZLUh/wCi1d0/Ob56gSZf7WcT6Ednjat/jEO6C1AnMJwys9BWVNaRRp3ajBftlMO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=QPm/STZB; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVCTz/TH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716218254; x=1747754254;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fk3TdpMwWcq77n1yGGGEGm8bSTFyy93wDKKzCOOfQP0=;
-  b=QVCTz/THGhdokdkri6Mp4tLTPCiC3fpstT4B2cMHJSDfQDjK6W22uW20
-   rsriwbwL2VBxdhPXld3yter1sIY2rEBZPbI5Y8XkrnDi5fWAWcIuwDYF/
-   F7Jn12kevu+y9NArVF2M57IT7CX4xcmnHmnmvH4tEglEuYU38IGaZO9/E
-   mJhzE3wJA4wo8Uj7stCoLkfcx92wiEGLZC7rm9O3O4YsLUezM50LUGfp2
-   lBx0Ec8nnwpG5M9jmReDMNLmEzfUeVv21Eriit5u8s5x2nITtr2GJHmEs
-   T0/DO78bPNi1js80ZrVEL3uafr+jZSGNC3xyKr0TT9nY/7YLcC2JYytsH
-   A==;
-X-CSE-ConnectionGUID: EArVxg4RS5a90X9d4ac5Ww==
-X-CSE-MsgGUID: Pq4/yApeT66LDxyrBBV/yg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="29863067"
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="29863067"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 08:17:33 -0700
-X-CSE-ConnectionGUID: ay76jzxJRpSklShU4H633w==
-X-CSE-MsgGUID: 0zYvbH3sTda2dVjmleOTIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="69996880"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 20 May 2024 08:17:29 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s94lT-0004vQ-1l;
-	Mon, 20 May 2024 15:17:27 +0000
-Date: Mon, 20 May 2024 23:17:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>
-Cc: oe-kbuild-all@lists.linux.dev, Kees Cook <keescook@chromium.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
-Message-ID: <202405202231.3Q9gWCar-lkp@intel.com>
-References: <20240520021615.741800-1-keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="QPm/STZB"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KDw4US006477;
+	Mon, 20 May 2024 17:43:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=
+	selector1; bh=SG7I3HEsC5ECx95PvvYobz+zYDq/lzLwLC3usCOh8Yc=; b=QP
+	m/STZBU7T2v/x/vGVRuUaccDXP8/EB8IuVX0yjfwQOcsXzipb7P/fNTZxSXFx3P4
+	sU7vKuJ1HQeOtjUtGuY0ffMQZP8bkbRsZM3QyE5cL4Gxevq3MYpz0dSX/Jwwejly
+	kw4Q/qHa0DjKpBwITKqc51b0vdiojKVrl19Ek1mONRsWEHaoqyxrMYF9SaqCKjJS
+	PpIsG5Al5zkLg28kGtkFl8CkL/3EWfLeVT5i43lbHW/KJcVEl7j+/4Gu7usZnbkR
+	f26stK0XrkkhQ2ytU852SK/ptEcDrpFf+6wDQ6H/NZSTMzwEGGuH655TU212lHhu
+	tqtweBCPLbatpS+oX4MA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n6hfnk9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 17:43:09 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1025C40045;
+	Mon, 20 May 2024 17:43:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5F81B226FC3;
+	Mon, 20 May 2024 17:42:18 +0200 (CEST)
+Received: from localhost (10.252.8.132) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 20 May
+ 2024 17:42:18 +0200
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        Amelie Delaunay
+	<amelie.delaunay@foss.st.com>
+Subject: [PATCH v3 03/12] MAINTAINERS: Add entry for STM32 DMA controllers drivers and documentation
+Date: Mon, 20 May 2024 17:42:04 +0200
+Message-ID: <20240520154213.689699-4-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240520154213.689699-1-amelie.delaunay@foss.st.com>
+References: <20240520154213.689699-1-amelie.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520021615.741800-1-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-20_05,2024-05-17_03,2024-05-17_01
 
-Hi Kees,
+Add an entry to make myself a maintainer of STM32 DMA controllers drivers
+and documentation.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-[auto build test ERROR on kees/for-next/execve]
-[also build test ERROR on kees/for-next/pstore kees/for-next/kspp brauner-vfs/vfs.all linus/master vfs-idmapping/for-next v6.9 next-20240520]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/exec-Avoid-pathological-argc-envc-and-bprm-p-values/20240520-101851
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
-patch link:    https://lore.kernel.org/r/20240520021615.741800-1-keescook%40chromium.org
-patch subject: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
-config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20240520/202405202231.3Q9gWCar-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240520/202405202231.3Q9gWCar-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405202231.3Q9gWCar-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   nios2-linux-ld: fs/exec.o: in function `exec_test_bprm_stack_limits':
-   exec.c:(.text+0x1904): undefined reference to `kunit_binary_assert_format'
->> nios2-linux-ld: exec.c:(.text+0x192c): undefined reference to `kunit_binary_assert_format'
->> nios2-linux-ld: exec.c:(.text+0x19e8): undefined reference to `__kunit_do_failed_assertion'
->> exec.c:(.text+0x19e8): relocation truncated to fit: R_NIOS2_CALL26 against `__kunit_do_failed_assertion'
-   nios2-linux-ld: exec.c:(.text+0x1a28): undefined reference to `__kunit_do_failed_assertion'
-   exec.c:(.text+0x1a28): relocation truncated to fit: R_NIOS2_CALL26 against `__kunit_do_failed_assertion'
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cfc11cc17564..0462e61ea488 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21131,6 +21131,15 @@ F:	Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+ F:	Documentation/devicetree/bindings/sound/st,stm32-*.yaml
+ F:	sound/soc/stm/
+ 
++STM32 DMA DRIVERS
++M:	Amélie Delaunay <amelie.delaunay@foss.st.com>
++L:	dmaengine@vger.kernel.org
++L:	linux-stm32@st-md-mailman.stormreply.com (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/arch/arm/stm32/stm32-dma-mdma-chaining.rst
++F:	Documentation/devicetree/bindings/dma/stm32/
++F:	drivers/dma/stm32/
++
+ STM32 TIMER/LPTIMER DRIVERS
+ M:	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+ S:	Maintained
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
