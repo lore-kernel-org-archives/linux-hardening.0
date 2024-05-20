@@ -1,48 +1,47 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7776354660;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777BC136E37;
 	Mon, 20 May 2024 15:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716220262; cv=none; b=B1dI7Uy1gOk0XPfvsmRuuD62Rg4e+HyFtbHBK83/BZG6GVp7iBMiC93YrzBuN9y8NHO3F/w+Ov/oZ4znAnS+mis51K8UQHWfwhyFhPsCqgK9SPtoFDfVK3aD/DdNsPhm8WaVhJc1IdqQfU8wFyU0QNaxCdNQSs+oxL3KhTrH1lM=
+	t=1716220262; cv=none; b=tsBjgagOEuT+D/x3PJPJfNA3zT8rErPApZbSe3yuPJZjCHN0oLa30r1FG3ZoucaS3VL0dmXQg+kEULKJWY/Fllfg8cyCYyyr1ykwwg6sXahJLb57xU1R+v8kEhoFQLCnimb46xPgF+8VW1ug7J/jhGaOF0XanWTxsO6vimdKfnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716220262; c=relaxed/simple;
-	bh=iDEDAYmfy4jslRTOnluvRfFFFUrJoFW3xug63TASxKk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CsYvz8mnxHkR/EBGagpK9VF4F2qPM2f/LgY2V8GfWNJNgAX9IPGZ/fpOreBVKKON752bRWI5tkMt63jouuJ+arC9DLgpUN8fFjXt5qPfnxoiJ+NqrwWl+4eQHkAYzsw5rBiPYDz5zFLxSWN6YuVjm7AKgzro6TEbVliLuY5N5L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=03/irbYu; arc=none smtp.client-ip=91.207.212.93
+	bh=x9C2QzrpdhnVABs2QA+kwfC7f3OTmWuO1n/k3Ls+AtA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=szQxowxBH0GibGYBIlSPooNfRDkc0TDjVGd/3KzZSFsnw0wUswjLvtBaH+YuInoIS0ji1fRQqS/JSONux2vpySCBIOoDbGmweMdjuU28DwlgG3tPnThiZz+rUf7Y2RxsGaftriQx/9F1UvLby1qUauulJNq0VfDiNMUWJ2Aqqdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=u3iRdCl4; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="03/irbYu"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KE7aXw023335;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="u3iRdCl4"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KEKwwu031522;
 	Mon, 20 May 2024 17:50:42 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=
-	selector1; bh=SG7I3HEsC5ECx95PvvYobz+zYDq/lzLwLC3usCOh8Yc=; b=03
-	/irbYuL7JBgXsGqextXbpF1EzrFtizX4wZmJKIvjWIq1cxPzU1UMRy+Q7vRP8974
-	M6Dz/JEAkWCLJvllHZJ1D1pk8UEtCbJV/nlUKHMTdKiUnO8oL+yRuWaLiVMZzB0V
-	eBxUWAu/ctZLzBuz63pnG4uIvjVjZmd/oCcq7Be7un/YnL+vx+03c9O3eVromq/c
-	t8m4lfT77kZ5+cVGLyQ/cPCPM5O/hWlOfY7PtZQC9/TmWogFik6zMUPSZvf1DcsL
-	wjWFxaziXmQu888w9qczyvVh3FztOWH5Maqy1IMLDpaadGTZH7mzrJ6wstycc28i
-	yH2euR2P+5VRTXJnW0lw==
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=Msnirtj
+	BeSdlPyRwULFwxBgccQO+AeHXhvf9XB7mN3M=; b=u3iRdCl4UK8gBaaSYD7Nad3
+	GiTyJemb8exmb2ai4G1y4Mlk+MjX9FTcjVEqDc+hiZY8T/WZgfCrJuQq8BvpTkym
+	DGYSLIoJASYYky8yD8sXI+yrK3aNbpYBQ941uT4PYxsQ6lJUlnURyX0fFi/ALNIO
+	m5T6jicya6u7JOkYXUV/5t6Pwl4FSuO8MW2diFEbQdBpIuX786EQSodgtIIP6GZz
+	dQ/s6lOq0sfOlscdurYOMUfq5chnSfYaYCKECD4xYIVGtEz+lI5rffi4v9lMHnft
+	E+eDow/9XdG70hKk3aIsuTdFoad/GsRnw302tLDZctntjv6JS1nQVoffBhqbgVw=
+	=
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n337q0q-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n6hfp97-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 20 May 2024 17:50:42 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AAC0C40045;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 601B940044;
 	Mon, 20 May 2024 17:50:38 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA530226FBF;
-	Mon, 20 May 2024 17:49:54 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8F084226FBA;
+	Mon, 20 May 2024 17:49:52 +0200 (CEST)
 Received: from localhost (10.252.8.132) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 20 May
- 2024 17:49:54 +0200
+ 2024 17:49:52 +0200
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof
@@ -58,54 +57,108 @@ CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>,
         Amelie Delaunay
 	<amelie.delaunay@foss.st.com>
-Subject: [PATCH v3 03/12] MAINTAINERS: Add entry for STM32 DMA controllers drivers and documentation
-Date: Mon, 20 May 2024 17:49:39 +0200
-Message-ID: <20240520154948.690697-4-amelie.delaunay@foss.st.com>
+Subject: [PATCH v3 00/12] Introduce STM32 DMA3 support
+Date: Mon, 20 May 2024 17:49:36 +0200
+Message-ID: <20240520154948.690697-1-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240520154948.690697-1-amelie.delaunay@foss.st.com>
-References: <20240520154948.690697-1-amelie.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
  (10.75.129.71)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-20_05,2024-05-17_03,2024-05-17_01
 
-Add an entry to make myself a maintainer of STM32 DMA controllers drivers
-and documentation.
+STM32 DMA3 is a direct memory access controller with different features
+depending on its hardware configuration. It is either called LPDMA (Low
+Power), GPDMA (General Purpose) or HPDMA (High Performance), and it can
+be found in new STM32 MCUs and MPUs.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+In STM32MP25 SoC [1], 3 HPDMAs and 1 LPDMA are embedded. Only HPDMAs are
+used by Linux.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cfc11cc17564..0462e61ea488 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21131,6 +21131,15 @@ F:	Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
- F:	Documentation/devicetree/bindings/sound/st,stm32-*.yaml
- F:	sound/soc/stm/
- 
-+STM32 DMA DRIVERS
-+M:	Amélie Delaunay <amelie.delaunay@foss.st.com>
-+L:	dmaengine@vger.kernel.org
-+L:	linux-stm32@st-md-mailman.stormreply.com (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/arch/arm/stm32/stm32-dma-mdma-chaining.rst
-+F:	Documentation/devicetree/bindings/dma/stm32/
-+F:	drivers/dma/stm32/
-+
- STM32 TIMER/LPTIMER DRIVERS
- M:	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
- S:	Maintained
+Before adding this new driver, this series gathers existing STM32 DMA
+drivers and bindings under stm32/ subdirectory and adds an entry in
+MAINTAINERS file.
+
+To ease review, the initial "dmaengine: Add STM32 DMA3 support" has been
+split into functionnalities.
+Patches 6 to 9 can be squashed into patch 5.
+
+Patch 10 has already been proposed [2], the API is now used in stm32-dma3
+driver. Indeed, STM32 DMA3 channels can be individually reserved either
+because they are secure, or dedicated to another CPU. These channels are
+not registered in dmaengine, so id is not incremented, but, using the new
+API to specify the channel name, channel name matches the name in the
+Reference Manual and ease requesting a channel thanks to its name.
+
+[1] https://www.st.com/resource/en/reference_manual/rm0457-stm32mp25xx-advanced-armbased-3264bit-mpus-stmicroelectronics.pdf
+[2] https://lore.kernel.org/lkml/20231213174021.3074759-1-amelie.delaunay@foss.st.com/
+
+v3:
+- address Rob's remarks about st,stm32-dma3.yaml
+  (wrap at 80, remove useless '|')
+- address Frank's remarks about patch 5: improve commit message and
+  ensure descriptors availability before starting the channel
+
+v2:
+- fix reference in spi/st,stm32-spi.yaml with an updated description of the
+  dmas property to reflect the new path of STM32 DMA controllers bindings.
+- address Rob's remarks about st,stm32-dma3.yaml
+- address Vinod's remarks about stm32-dma3.c
+
+Amelie Delaunay (12):
+  dt-bindings: dma: New directory for STM32 DMA controllers bindings
+  dmaengine: stm32: New directory for STM32 DMA controllers drivers
+  MAINTAINERS: Add entry for STM32 DMA controllers drivers and
+    documentation
+  dt-bindings: dma: Document STM32 DMA3 controller bindings
+  dmaengine: Add STM32 DMA3 support
+  dmaengine: stm32-dma3: add DMA_CYCLIC capability
+  dmaengine: stm32-dma3: add DMA_MEMCPY capability
+  dmaengine: stm32-dma3: add device_pause and device_resume ops
+  dmaengine: stm32-dma3: improve residue granularity
+  dmaengine: add channel device name to channel registration
+  dmaengine: stm32-dma3: defer channel registration to specify channel
+    name
+  arm64: dts: st: add HPDMA nodes on stm32mp251
+
+ .../dma/{ => stm32}/st,stm32-dma.yaml         |    4 +-
+ .../bindings/dma/stm32/st,stm32-dma3.yaml     |  135 ++
+ .../dma/{ => stm32}/st,stm32-dmamux.yaml      |    4 +-
+ .../dma/{ => stm32}/st,stm32-mdma.yaml        |    4 +-
+ .../devicetree/bindings/spi/st,stm32-spi.yaml |    2 +-
+ MAINTAINERS                                   |    9 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        |   69 +
+ drivers/dma/Kconfig                           |   34 +-
+ drivers/dma/Makefile                          |    4 +-
+ drivers/dma/dmaengine.c                       |   16 +-
+ drivers/dma/idxd/dma.c                        |    2 +-
+ drivers/dma/stm32/Kconfig                     |   47 +
+ drivers/dma/stm32/Makefile                    |    5 +
+ drivers/dma/{ => stm32}/stm32-dma.c           |    2 +-
+ drivers/dma/stm32/stm32-dma3.c                | 1847 +++++++++++++++++
+ drivers/dma/{ => stm32}/stm32-dmamux.c        |    0
+ drivers/dma/{ => stm32}/stm32-mdma.c          |    2 +-
+ include/linux/dmaengine.h                     |    3 +-
+ 18 files changed, 2137 insertions(+), 52 deletions(-)
+ rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dma.yaml (97%)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32/st,stm32-dma3.yaml
+ rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-dmamux.yaml (89%)
+ rename Documentation/devicetree/bindings/dma/{ => stm32}/st,stm32-mdma.yaml (96%)
+ create mode 100644 drivers/dma/stm32/Kconfig
+ create mode 100644 drivers/dma/stm32/Makefile
+ rename drivers/dma/{ => stm32}/stm32-dma.c (99%)
+ create mode 100644 drivers/dma/stm32/stm32-dma3.c
+ rename drivers/dma/{ => stm32}/stm32-dmamux.c (100%)
+ rename drivers/dma/{ => stm32}/stm32-mdma.c (99%)
+
 -- 
 2.25.1
 
