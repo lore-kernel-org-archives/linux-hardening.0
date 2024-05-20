@@ -1,192 +1,112 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84351847
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A818831
 	for <linux-hardening@vger.kernel.org>; Mon, 20 May 2024 02:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716171380; cv=none; b=AXCS/Djc9xIt6SmQhiJdXCqxLsaKaH4siIVgiUUnzSQeeEoVi/hNpbfZoMT/PZH4JgvsuNlGsp1/mnc8EStezSSxAToTgerIz6cRpQvQp0RvSwGx0JiXqyC4NmgWY4CWgFpH6oin7RDHyI52qAy2WuIam8forjz18YMo4o/kOIY=
+	t=1716171380; cv=none; b=Fm7RfVwa2vBi2m2u5opHMUWXD4LPLBdZ4L/bW/DB/aFbuZ5aU81koOEuYS4OR1cTk5jWXBh9iaM3KbQMnXtMkD4pnS/8kFHXb0BS+HBCrR1HQELQ6Qj7hyANXar6XaIDsNG49scVECde4T+jV3q95zqex5VgZqJogDWk307Pcug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716171380; c=relaxed/simple;
-	bh=m0sCs3UZgNNm707rXtEZ6kEPFezkWis9xLUpPwvfVyU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hafopTgVodANhOENfZYE+YeUNpPbTrn8P9SldD8va1T235AR6xvQrTU5ktjerug7kY8qX/++O3KNImDZSmx0w+qQXlujOGDdbGlZMnTxtg0YVIjNnhQ4yMs0RhnkukMNHK/2/pRBjhthMQoj0n0nCUilH1eg9h6eB+VSYS+FQFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AodUziKH; arc=none smtp.client-ip=209.85.161.41
+	bh=k5lb3KexDXe66sBBkZldL+OZ64rstu4w/axQqkMX4Js=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D0w/oCv2Vhjah1GSiDAKYDiLXiW9bz2rpxsmz0h8LhHABjjYS1u06THPL3nPKpV8RyIOsskgABjZR0GWujGsVS26wVMuslwnxqVH93sZPaxAQd3MRYlOvlcyIxOtzhwrbHVFYgTJzHNFpmed4b0knORVtwrxouxeXfR0pFuj49k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oQ0s/cO+; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AodUziKH"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b2a66dce8fso2284919eaf.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oQ0s/cO+"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-663d2e6a3d7so943906a12.0
         for <linux-hardening@vger.kernel.org>; Sun, 19 May 2024 19:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1716171377; x=1716776177; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pXk5PQZLOhlOb9f2TikaNKwPS1UYUorWP7IN+mVzocE=;
-        b=AodUziKH3K1znxbSBf7VutSqTfdM0qQ5EMHvxhipi/S+Q2FjwVCymBIAjbEDmYIjuT
-         9h2h5xu0SOfGlxhOTgbEkinWgfe9ilDd8iI86SYXeHj/aMg2rp9R5D5bp3CeM8S69T3G
-         hlOSnOPUXaYqWRyYqOSk+N/nzjdSogKXFQI5E=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YE4ucDs9bqpCnHq3oUgTivRFQ/nTE3BF0FzqbWtaKfY=;
+        b=oQ0s/cO+9DKklSRPhLMVg6Oofm9b83/Lbgx3SGavcwW9ePYRaZm/sbPmVy+gm7Gw/O
+         Ie2AT4aTBHtpRNWhhDo8un6H/1ZbOiX6k9dgrdhkOPmQ1fTyb5AWeTR3yXnPo7EgEsJ0
+         jVzvIhlde5zcn/2aZ07BfL4mPLC2rT86M4PMk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1716171377; x=1716776177;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pXk5PQZLOhlOb9f2TikaNKwPS1UYUorWP7IN+mVzocE=;
-        b=gGJqrfX+Ud4ix0oIhONS6rDLxFPnO0HAdYdkvKoqbqRuNl581G6Ell7qEckd56piLY
-         lDlRFgcjkNOLNX+v0CgwKL6tfFlXCE7+NxicwLZ1Z5fuu8yp++TQK9tY6lFDMiEoT+Dg
-         lrG3P2wmBmtDxcf/vGS2L+iIATUfVTR1eeEwYhkf5JzQjc/ZaSNQGPvzSUSXpzYJdsD8
-         Vhak5wAN0GPASzQibiZ1L0O7+WwFVfRPuAHVo39QuFMTYRkBPr/wOtEvd0cxi+Z4Xjcm
-         YfF57XY+plgzwhozmiEadSXoCvOHCOuWb6BzHk6TpJWfWIquUh0bLWxGDh/G9y8rG7zy
-         fKpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmedfLquxYa23pqN01hEPykHgy+gVzCOsNSVm+Be8lZcqZe+MRKX76t8Dx+kz7z4OgT96BsfV5m1WtlPquHEjxXxNps09h6Y1l8dqo69sy
-X-Gm-Message-State: AOJu0YxCyXzYsIhu8eSFnRjF2eTxm5SSSllhzyExl/6BMHm6cT7nCauZ
-	7dxpAypj+z2+wdF+LiWSktL8b7S9BX4NJXR09wRGwuOEFgg9y5bdruFnXpmVqg==
-X-Google-Smtp-Source: AGHT+IGCk56SRj37cV6IB9o0SSSdmvK7eIfw1zNZrwdb/ilDu1xfVdX+ZV6pQVOmzEM5QVnWzLp20A==
-X-Received: by 2002:a05:6870:6b9a:b0:244:c620:7f4b with SMTP id 586e51a60fabf-244c6208e5dmr25152033fac.32.1716171376722;
-        Sun, 19 May 2024 19:16:16 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YE4ucDs9bqpCnHq3oUgTivRFQ/nTE3BF0FzqbWtaKfY=;
+        b=nH8Jdvl9W3tEG2SnhMwQK9FnEdVSqJCdqw47H2pBCbFjqJs46QvJoWUc6H+1g1c2Ig
+         sm6q+yYNR6NYairsmwTckJwWLuMvFOwIi5SRgz/1kuRjF59DoSoAf6mkJvUrouYaw96W
+         gtrgRvzItCZUSKu3Ef/cbjqF8a4yJ8l/yCJ3YN705MGXZdYXyIuCM+ESHz0Mfk4B1Os2
+         FAZos1kCUwPHfvVBi0c1ab4jhO7uqXJWIc4cpfcmZZkbE2VUrF0mNZLhJKpOOL7RuqwS
+         ncvxBFZMpVcuKlaKBNyebgGJb7q8fJg4WJGtx0NnMRbq7MHaiczFOmkjI7ojlZV9EBZ2
+         HfUg==
+X-Forwarded-Encrypted: i=1; AJvYcCU500ckAjbhRVzj4o0oUVGpqzyJl9WuePD7cfKZ6cSjx+Ihcsu9hA17y/ub/Nds72EWZQquGA3t5SViJq6ToiOdTL0nZZM76CLWQyriVIqd
+X-Gm-Message-State: AOJu0Yw4P4u4ICsdER4hXPomcFCzK1pep5whWY4Toku/8BuCudJTeLav
+	v7uILcktkHMnoqk+pdEEyLYfuH4drqwxAjUof+H0dXVGrHHRNbwI1LJwGDX/xQ==
+X-Google-Smtp-Source: AGHT+IGlmg2Db2n2jC83SuJ/euH+lWUD88AE94T/zbSsqm5Y0IM2QGpn7oCJ4Kl9duCwOUaZbJJobQ==
+X-Received: by 2002:a05:6a20:9696:b0:1af:4fa3:30c2 with SMTP id adf61e73a8af0-1b1ca45c914mr5637698637.20.1716171377141;
+        Sun, 19 May 2024 19:16:17 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2ae0d88sm18130632b3a.122.2024.05.19.19.16.15
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340a9107f3sm18518349a12.9.2024.05.19.19.16.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 19 May 2024 19:16:16 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Eric Biederman <ebiederm@xmission.com>
 Cc: Kees Cook <keescook@chromium.org>,
 	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Al Viro <viro@zeniv.linux.org.uk>,
 	Christian Brauner <brauner@kernel.org>,
 	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2] exec: Avoid pathological argc, envc, and bprm->p values
-Date: Sun, 19 May 2024 19:16:12 -0700
-Message-Id: <20240520021615.741800-2-keescook@chromium.org>
+Subject: [PATCH 0/2] exec: Add KUnit test for bprm_stack_limits()
+Date: Sun, 19 May 2024 19:16:10 -0700
+Message-Id: <20240520021337.work.198-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240520021337.work.198-kees@kernel.org>
-References: <20240520021337.work.198-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4282; i=keescook@chromium.org;
- h=from:subject; bh=m0sCs3UZgNNm707rXtEZ6kEPFezkWis9xLUpPwvfVyU=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmSrJsc9KHOfxr0Wciwne6IO1ZYX00AOmo6RSzn
- ssGypyJUcmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkqybAAKCRCJcvTf3G3A
- JsKKD/9uBa8Jg3Y7sh77JlX02ZEuM20xIOhSZRe/yX+ttzgjv6KsJ9e3EIzgOYyNTIetZdFOmUb
- t7Mw60rDwAc5bbFe12eX/hkmt1YSB65lOeZh46s0Pvb0yVyjdgvu7JNmVJav2jDq97QQfVjpbQL
- 8Lyv6j+6foBWoBRnIwTVPXKlVz1By4gwEVfkh7B1vHQyDU1T0uC3LJ3cI4TtM0Q5kf/OdNrG7Go
- dkULpZMKwZJXiLDtJxOWAzncvtbcHJpMh2a+kEde/uu48+ASF8pQYWAa7uHHnhmF5ic5z6+Sp0u
- H+c2g3O+CnK7HKpNC6/kPNQktzYH0YHsn6SZTovtLwkgHJctXZMNx+6u+0i+9HT4konRiJttZUf
- tJXAxAljiX1a9z2NcyqjkRymJmABRN+tnuT7PU4QwPrzcrzMWPNRQyo9Tkt6Wcnyqyv/OcGcuZI
- Qx+xQCDv+Pmjn5D3ccDOTJ3Xmp5ZmZzVCw3CJBAM05GyVuKO0dm6b9i/hATOiP8oNQztwOHg671
- NES0OBKauNxcL9Ob7iGOT8Jtc+gZkkrdNw/8K6IGViwNkZY9lzH5Lt14+HgRT8jpKdmC5GlEdDL
- YhbDjJZJ0aJNroXppjbZpDpNNuiHqPewUDpRlFh5orwTPevgk8c9hGJXEn1xDtG/0cpcx1Vesj6 xd0fVBCgpYbeRWQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=800; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=k5lb3KexDXe66sBBkZldL+OZ64rstu4w/axQqkMX4Js=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmSrJrWE8uIm/m6QvBW42tgwzmZT5aSDXKKKp9q
+ ZrpvWpZHWqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkqyawAKCRCJcvTf3G3A
+ Jm2PEACicbwCbc6OZnHBIcUUFcyBjlf/4v+fHpVGZ9x6gjGoLiaNNzSux1Yt5JsshKg1JSrKaUk
+ kuwBy5cP7Wd1dPijGg1mmRphZ+4IlFvzRrJdV7kssCixOfU6FtSV3Z57lrbjvvyP8HHzedtpUEK
+ 1yWzY2CSboSPLgs+vdL24sCO6N5A0fM4nPaXhMJVpZbmiiaU2w+t4R+CbiMTLUfvxHhh70wgbcb
+ 31ctRRBnXXJiv0X6Noy+6hyd11W3mG18VH6cMEhncRxY8+O5gvEkhS7e9LUnAtB7+VACvUknFrj
+ lD9AsbARrigjh9odISpN5HjThC567f+OvosQSoO3K/la5Yrw3INvPzoS2Y1/xslqszpZr3xlxPT
+ foiHcGM05pEJ3c/fzvDF+Eqe80hxDr9m9vt3MLb742NAq51+rJUuBQ/WQJSCMuI4XpjnKGR6t3g
+ dlq/1cdQVlvi5myH8cCuE58CIMYkiCNwVw241Xz3XRRKcmqKdyK0+fNLvD8Y73jUM9QOLixb5Qv
+ yV70c8ZgrF46lDeClXpyRchoMZzfQrie5TK1WjbGBI2N6AT77vLlSVhoYrCPJJX98yNuXY3Fp2w
+ eIANrxNFwd5Yi30KSmuHd3ssO10sVZK125bhTFDM+1hkoWH11nyVYsBqHfVIVXU/SkgIT6dvlc/
+ kHPdLM3h 3fmwu7w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Make sure nothing goes wrong with the string counters or the bprm's
-belief about the stack pointer. Add checks and matching self-tests.
+Hi,
 
-For 32-bit validation, this was run under 32-bit UML:
-$ tools/testing/kunit/kunit.py run --make_options SUBARCH=i386 exec
+This adds a first KUnit test to the core exec code. With the ability to
+manipulate userspace memory from KUnit coming[1], I wanted to at least
+get the KUnit framework in place in exec.c. Most of the coming tests
+will likely be to binfmt_elf.c, but still, this serves as a reasonable
+first step.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- fs/exec.c      | 11 ++++++++++-
- fs/exec_test.c | 26 +++++++++++++++++++++++++-
- 2 files changed, 35 insertions(+), 2 deletions(-)
+-Kees
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 1d45e1a2d620..5dcdd115739e 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -503,6 +503,9 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
- 	 * of argument strings even with small stacks
- 	 */
- 	limit = max_t(unsigned long, limit, ARG_MAX);
-+	/* Reject totally pathological counts. */
-+	if (bprm->argc < 0 || bprm->envc < 0)
-+		return -E2BIG;
- 	/*
- 	 * We must account for the size of all the argv and envp pointers to
- 	 * the argv and envp strings, since they will also take up space in
-@@ -516,11 +519,17 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
- 	 * argc can never be 0, to keep them from walking envp by accident.
- 	 * See do_execveat_common().
- 	 */
--	ptr_size = (max(bprm->argc, 1) + bprm->envc) * sizeof(void *);
-+	if (check_add_overflow(max(bprm->argc, 1), bprm->envc, &ptr_size) ||
-+	    check_mul_overflow(ptr_size, sizeof(void *), &ptr_size))
-+		return -E2BIG;
- 	if (limit <= ptr_size)
- 		return -E2BIG;
- 	limit -= ptr_size;
- 
-+	/* Avoid a pathological bprm->p. */
-+	if (bprm->p < limit)
-+		return -E2BIG;
-+
- 	bprm->argmin = bprm->p - limit;
- 	return 0;
- }
-diff --git a/fs/exec_test.c b/fs/exec_test.c
-index 32a90c6f47e7..f2d4a80c861d 100644
---- a/fs/exec_test.c
-+++ b/fs/exec_test.c
-@@ -8,9 +8,32 @@ struct bprm_stack_limits_result {
- };
- 
- static const struct bprm_stack_limits_result bprm_stack_limits_results[] = {
--	/* Giant values produce -E2BIG */
-+	/* Negative argc/envc counts produce -E2BIG */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = INT_MIN, .envc = INT_MIN }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 5, .envc = -1 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = -1, .envc = 10 }, .expected_rc = -E2BIG },
-+	/* The max value of argc or envc is MAX_ARG_STRINGS. */
- 	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
- 	    .argc = INT_MAX, .envc = INT_MAX }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = MAX_ARG_STRINGS, .envc = MAX_ARG_STRINGS }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 0, .envc = MAX_ARG_STRINGS }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = MAX_ARG_STRINGS, .envc = 0 }, .expected_rc = -E2BIG },
-+	/*
-+	 * On 32-bit system these argc and envc counts, while likely impossible
-+	 * to represent within the associated TASK_SIZE, could overflow the
-+	 * limit calculation, and bypass the ptr_size <= limit check.
-+	 */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 0x20000001, .envc = 0x20000001 }, .expected_rc = -E2BIG },
-+	/* Make sure a pathological bprm->p doesn't cause an overflow. */
-+	{ { .p = sizeof(void *), .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = 10, .envc = 10 }, .expected_rc = -E2BIG },
- 	/*
- 	 * 0 rlim_stack will get raised to ARG_MAX. With 1 string pointer,
- 	 * we should see p - ARG_MAX + sizeof(void *).
-@@ -88,6 +111,7 @@ static void exec_test_bprm_stack_limits(struct kunit *test)
- 	/* Double-check the constants. */
- 	KUNIT_EXPECT_EQ(test, _STK_LIM, SZ_8M);
- 	KUNIT_EXPECT_EQ(test, ARG_MAX, 32 * SZ_4K);
-+	KUNIT_EXPECT_EQ(test, MAX_ARG_STRINGS, 0x7FFFFFFF);
- 
- 	for (int i = 0; i < ARRAY_SIZE(bprm_stack_limits_results); i++) {
- 		const struct bprm_stack_limits_result *result = &bprm_stack_limits_results[i];
+[1] https://lore.kernel.org/linux-hardening/20240519190422.work.715-kees@kernel.org/
+
+Kees Cook (2):
+  exec: Add KUnit test for bprm_stack_limits()
+  exec: Avoid pathological argc, envc, and bprm->p values
+
+ MAINTAINERS       |   2 +
+ fs/Kconfig.binfmt |   8 +++
+ fs/exec.c         |  24 +++++++-
+ fs/exec_test.c    | 137 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 170 insertions(+), 1 deletion(-)
+ create mode 100644 fs/exec_test.c
+
 -- 
 2.34.1
 
