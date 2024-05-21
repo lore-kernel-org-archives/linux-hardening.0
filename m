@@ -1,121 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5F81F959
-	for <linux-hardening@vger.kernel.org>; Tue, 21 May 2024 03:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6A555E43;
+	Tue, 21 May 2024 11:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716261649; cv=none; b=OtmjXLifkbPQDPfZxrxRP9Bcvj3tHpfIQlVUpdBdrsbcZaPiH/eclBfCfuDBZ5yvYBOSXMHzXl7/tukwB4zfnforS1m0wdrBvMUNy6c7+qG4HgWqLu/WTMLAfPK5xLGINXZ1o680Tz8XqbYChUUZQMFbf6rlRa/yJRDIfB4ebRs=
+	t=1716290912; cv=none; b=Ba3VUc6zRmhxFN04hDos5qJRQ7sv0rwV9BzjURO56xYWvtafS7bObG/4ZXImuRQr65t6EwvjA1Um/SqLIYdJOVt3kWTJBJsATN+3aor2AKNmzRo6UMNNeUUFCfwHqGmK+cbVc67rFDJEkyal0V/AhLCyFKFu10bVaU0Nst175zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716261649; c=relaxed/simple;
-	bh=oSid7q9yF/QER5pI2kle11hKPiIovv9NqtlhlMTkHdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WPD2VRGJePnV3EF0d42N+fX8G2i66CmTweb+M0QDiyFKXUb+hkxGcrmGNOntaEJA+6ShwkFAMU/lSWga1LkLEh/IMYoUugfn2GgcYR0bWYGOHTkCycjlaEd4ZAhzk90xEvx+1i1hgC476XEUxDee6vEjydF+wn+a94O/f9z3Wb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UBkKs+US; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716290912; c=relaxed/simple;
+	bh=bu9mG/J79Ff9Zu/2l4MGoCMW5kuONCzPTI1mTCBFbqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bHc+RR2peYAsViSWZ1vJ1WwE4CpbeSIwocRqe7umRluDjgGJH1Rc1fSbN8reM4NjuigqVn67lkeB/DqneepqaLXB6q0h/19BOoKpyFvJPvogVxYtxtrQYjNeOShGhaVmL9g85nG7yrMyZj1f4TlPr8hUFhUAP2KlJqpOfJ9mwwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d31k/vWT; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UBkKs+US"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716261647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bYQBu6zkfNaoqqNc//ysbuuuADju5TmrSNilJ4cHGKE=;
-	b=UBkKs+USMkX+NpcEYrm/aDN7ElqbII6EPvElVPWTmJcMtWi1fX/S9s5d/SBravWzsFMeEZ
-	HHuJdisyLy/vOPYHyMXiSPWaVJNK6Ic8bGFLULVpA40PVLUqk2Tyw4wdqziFLBBPXewC6q
-	zh+xkWZq2z7CkoxHXz3OzbkYjQpL2Js=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-527-maRvBiRFMj-o6900q3ZQgg-1; Mon,
- 20 May 2024 23:20:43 -0400
-X-MC-Unique: maRvBiRFMj-o6900q3ZQgg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0D3D31C05137;
-	Tue, 21 May 2024 03:20:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.65])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1435B7412;
-	Tue, 21 May 2024 03:20:41 +0000 (UTC)
-Date: Tue, 21 May 2024 11:20:35 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kernel test robot <lkp@intel.com>, kexec@lists.infradead.org,
-	oe-kbuild-all@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"(open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb)" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v3 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <ZkwSEUEW/RKFLubx@MiWiFi-R3L-srv>
-References: <20240425100434.198925-3-coxu@redhat.com>
- <202404262003.qsWvGwZU-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d31k/vWT"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42011507a54so19585405e9.0;
+        Tue, 21 May 2024 04:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716290908; x=1716895708; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QCvn53QZqHKbd8wXZQruum5PyX2Xyujq+z5EaypRXU8=;
+        b=d31k/vWTuGTKp+v/JaFUWgrKmCkctIxs6h/sY9q83k387DfLGbX9GuFWjQa6+Fms3+
+         Jjo2SKFxYaYIYKUj1BKkcHdY9tN8uT9vNYivXnJLiBEymwHVxGcpq9SZjfjP64kwR6Sr
+         I19Akgs2BAduj+jnpIHcaYO8KDQmklnIo3ELrqCIRfoPBlljFtDFCdaR2u4KdmaADETg
+         t75Wzs/etb1R5Udr1ZE5+Ofx3odZqWylLhsa71UwVfnm9I59gqp5KDsavNmiKBKF4QLE
+         QrcuyoZEuNaxRf93y0BzgKa4ZMP/DI8Nk/16a3wVnW1ca/p7x/osLT7TZ6fFOJdcbku4
+         Utzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716290908; x=1716895708;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QCvn53QZqHKbd8wXZQruum5PyX2Xyujq+z5EaypRXU8=;
+        b=YpYaMKtEk3A0aMWlWHzpcXi1kLBtw7cOUVajzWHylnOGhqdtQWYoBqe2ZaQi3+c92V
+         NdLAVaZIDXvTos4Dh5JO+tCkaVG5HMmJNP3el1ZSyxrDENFDMYCBiBAhp4O1a+3wOAoH
+         2pSoEwL25Auun4Xd14rCcTZPOAtN6iEDbmOaSzZi2U8xhPmkBMld31ENRT9fuVZe4l0D
+         TeinizP9dkVVzSACZOh6Bod91uFsesvukY9pG2EovEn3HkMniHJCSIFltmKeqbm18uWy
+         ri16RemBK6HxqNaDkvi4kxEnvHaiwNg9LbzGvxzK31XfuIzk1HmLrzpsu33NA04T7mg3
+         BAbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcUp6OQQutS/qT/K6J1wQFtM1/LDqP9VRIFN1YPV1s9B8o4UL3hZmSIXNITPECLC+X/DmYVx+sS4bv1aC6AWYAEfbIGkpVZSUtS2VHJhdkD8UG0lQxIfWmpFXixxEZDRCFIgN7cjsZBUbb+W/yygFrq09XYZ0z4q9juyFOpYyPoB/nZ5OQMMlTIswmtIs=
+X-Gm-Message-State: AOJu0YxePyTEK/UBMMfRJgzD5vjuIG3gi7kgvoVOkBkfOttq+fwtOOXH
+	RtfwySIOlTpaXIrJlH/kwQvMaE7OYjRyE/RzXtpkdafmWT8I1wb0
+X-Google-Smtp-Source: AGHT+IFpeGZ9iCxLuTlFb+Vd1m76hVZ2lgoagmtHznB8dVhlERYFGSRgpPrkzrTynhee6VbDMgb7Rw==
+X-Received: by 2002:a05:600c:4f49:b0:420:12df:1f7e with SMTP id 5b1f17b1804b1-420e19e46d4mr76021715e9.9.1716290908433;
+        Tue, 21 May 2024 04:28:28 -0700 (PDT)
+Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8f8asm460922885e9.10.2024.05.21.04.28.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 04:28:27 -0700 (PDT)
+Message-ID: <473b5f9b-da6d-425b-93c0-5bb6bb49a9bc@gmail.com>
+Date: Tue, 21 May 2024 13:28:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202404262003.qsWvGwZU-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Linaro-mm-sig] [PATCH] dma-buf/fence-array: Add flex array to
+ struct dma_fence_array
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
+ <gustavo@padovan.org>, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-hardening@vger.kernel.org
+References: <d3204a5b4776553455c2cfb1def72f1dae0dba25.1716054403.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <d3204a5b4776553455c2cfb1def72f1dae0dba25.1716054403.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/26/24 at 09:10pm, kernel test robot wrote:
-> Hi Coiby,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v6.9-rc5 next-20240426]
-> [cannot apply to tip/x86/core]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240425-180836
-> base:   linus/master
-> patch link:    https://lore.kernel.org/r/20240425100434.198925-3-coxu%40redhat.com
-> patch subject: [PATCH v3 2/7] crash_dump: make dm crypt keys persist for the kdump kernel
-> config: x86_64-randconfig-r113-20240426 (https://download.01.org/0day-ci/archive/20240426/202404262003.qsWvGwZU-lkp@intel.com/config)
-> compiler: gcc-10 (Ubuntu 10.5.0-1ubuntu1) 10.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240426/202404262003.qsWvGwZU-lkp@intel.com/reproduce)
+Am 18.05.24 um 19:47 schrieb Christophe JAILLET:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+>
+> The "struct dma_fence_array" can be refactored to add a flex array in order
+> to have the "callback structures allocated behind the array" be more
+> explicit.
+>
+> Do so:
+>     - makes the code more readable and safer.
+>     - allows using __counted_by() for additional checks
+>     - avoids some pointer arithmetic in dma_fence_array_enable_signaling()
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested only.
+>
+> Also, I don't think that 'cb' is a great name and the associated kernel-doc
+> description could certainly be improved.
+> Any proposal welcomed :)
+
+Ah, yes. That was also on my TODO list for a very long time.
+
+> ---
+>   drivers/dma-buf/dma-fence-array.c | 10 ++++------
+>   include/linux/dma-fence-array.h   |  3 +++
+>   2 files changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-fence-array.c b/drivers/dma-buf/dma-fence-array.c
+> index 9b3ce8948351..9c55afaca607 100644
+> --- a/drivers/dma-buf/dma-fence-array.c
+> +++ b/drivers/dma-buf/dma-fence-array.c
+> @@ -70,7 +70,7 @@ static void dma_fence_array_cb_func(struct dma_fence *f,
+>   static bool dma_fence_array_enable_signaling(struct dma_fence *fence)
+>   {
+>   	struct dma_fence_array *array = to_dma_fence_array(fence);
+> -	struct dma_fence_array_cb *cb = (void *)(&array[1]);
+> +	struct dma_fence_array_cb *cb = array->cb;
+>   	unsigned i;
+>   
+>   	for (i = 0; i < array->num_fences; ++i) {
+> @@ -168,22 +168,20 @@ struct dma_fence_array *dma_fence_array_create(int num_fences,
+>   					       bool signal_on_any)
+>   {
+>   	struct dma_fence_array *array;
+> -	size_t size = sizeof(*array);
+>   
+>   	WARN_ON(!num_fences || !fences);
+>   
+> -	/* Allocate the callback structures behind the array. */
+> -	size += num_fences * sizeof(struct dma_fence_array_cb);
+> -	array = kzalloc(size, GFP_KERNEL);
+> +	array = kzalloc(struct_size(array, cb, num_fences), GFP_KERNEL);
+>   	if (!array)
+>   		return NULL;
+>   
+> +	array->num_fences = num_fences;
+> +
+>   	spin_lock_init(&array->lock);
+>   	dma_fence_init(&array->base, &dma_fence_array_ops, &array->lock,
+>   		       context, seqno);
+>   	init_irq_work(&array->work, irq_dma_fence_array_work);
+>   
+> -	array->num_fences = num_fences;
+>   	atomic_set(&array->num_pending, signal_on_any ? 1 : num_fences);
+>   	array->fences = fences;
+>   
+> diff --git a/include/linux/dma-fence-array.h b/include/linux/dma-fence-array.h
+> index ec7f25def392..a793f9d5c73b 100644
+> --- a/include/linux/dma-fence-array.h
+> +++ b/include/linux/dma-fence-array.h
+> @@ -33,6 +33,7 @@ struct dma_fence_array_cb {
+>    * @num_pending: fences in the array still pending
+>    * @fences: array of the fences
+>    * @work: internal irq_work function
+> + * @cb: array of callback helpers
+>    */
+>   struct dma_fence_array {
+>   	struct dma_fence base;
+> @@ -43,6 +44,8 @@ struct dma_fence_array {
+>   	struct dma_fence **fences;
+>   
+>   	struct irq_work work;
+> +
+> +	struct dma_fence_array_cb cb[] __counted_by(num_fences);
+
+Please name that callbacks, apart from that looks good to me.
+
+Regards,
+Christian.
 
 
-Please respond to the lkp report in time whether it's a problem or not,
-otherwise the link will be unavailable.
-
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202404262003.qsWvGwZU-lkp@intel.com/
-> 
-> sparse warnings: (new ones prefixed by >>)
-> >> kernel/crash_dump_dm_crypt.c:31:3: sparse: sparse: symbol 'keys_header' was not declared. Should it be static?
-> 
-> vim +/keys_header +31 kernel/crash_dump_dm_crypt.c
-> 
->     27	
->     28	struct keys_header {
->     29		unsigned int key_count;
->     30		struct dm_crypt_key keys[] __counted_by(key_count);
->   > 31	} *keys_header;
->     32	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+>   };
+>   
+>   /**
 
