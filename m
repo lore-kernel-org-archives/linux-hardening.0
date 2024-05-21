@@ -1,107 +1,121 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B8E12E71;
-	Tue, 21 May 2024 02:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5F81F959
+	for <linux-hardening@vger.kernel.org>; Tue, 21 May 2024 03:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716259267; cv=none; b=P5hXFyts6VFTgWbjZPgChl6/eY/9y9f7rkc3gcSL+bD6jN2UNLgTuibQHRFqHrr+54oreAxuKaRHml3+nlaWT+NztffLTIH+6ZHOnpOzE0sQaQop6D9fulmsguO9qEclpJo5NoWMzhPT8Qg+VrBpHjMiLSt8+GhXhU0p+N1eutU=
+	t=1716261649; cv=none; b=OtmjXLifkbPQDPfZxrxRP9Bcvj3tHpfIQlVUpdBdrsbcZaPiH/eclBfCfuDBZ5yvYBOSXMHzXl7/tukwB4zfnforS1m0wdrBvMUNy6c7+qG4HgWqLu/WTMLAfPK5xLGINXZ1o680Tz8XqbYChUUZQMFbf6rlRa/yJRDIfB4ebRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716259267; c=relaxed/simple;
-	bh=IOasFjIiDzWB1gXgz0Z5A2JuGeYdYgB6kaV7r4ZKVfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fBL9fQ8qZI9+LZ+9spBYbbSAEqMJEAYh8fbPgZJmzhPrwZJQID3RHE0Azk2HR+UaYHbG7Ed2YiiJgXhYwchBbZ3cvcXISXSNgw0QOe1vzQCNc84yIBixUtsUYzsGlmn37aG2DkxqPrOvZNnW62ox4JDt/ECDjnsiAcFHAPnRV5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DCeeH3lQ; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1716261649; c=relaxed/simple;
+	bh=oSid7q9yF/QER5pI2kle11hKPiIovv9NqtlhlMTkHdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WPD2VRGJePnV3EF0d42N+fX8G2i66CmTweb+M0QDiyFKXUb+hkxGcrmGNOntaEJA+6ShwkFAMU/lSWga1LkLEh/IMYoUugfn2GgcYR0bWYGOHTkCycjlaEd4ZAhzk90xEvx+1i1hgC476XEUxDee6vEjydF+wn+a94O/f9z3Wb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UBkKs+US; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DCeeH3lQ"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44KMxVOK001853;
-	Tue, 21 May 2024 02:41:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=Q1ANszq/KhRVZ0uqtnDVZiqdhsEBMdrbt1oqDmfmMKE=;
- b=DCeeH3lQDgN4QkAoVA7aQquo+Ke/pXvxkJJLaCFk1kfqkQkrTpeeAvtPRtAri3rmLhQx
- 0TlvVWLHACdmJuzpakpWFlE52yoYyYJW3OoC3UpEP3q1BsHgBua1a+HW1m4qxY1cUEK8
- csF6U8XcY20UXFI+q+tMjwB5BlFQqwqn36Ng1p++ijLMK+yiJ0LYCz6taCnNSSwBtao6
- OOLPAFQYPEJr8iJ5AP+xBmRruVn4T5+eR8tH2Tg7k83KzT5az2HpU6xFSDWbl8qVp9wz
- IhqucqzqKD/AVtoX8D+Ybkavrhyo7/SWumhhjez19fVYxUC+iheR/hxalAwHch6AnJQb Ug== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6mvv40yk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 May 2024 02:41:01 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44L1TVC6002776;
-	Tue, 21 May 2024 02:40:59 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6js72bg1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 May 2024 02:40:59 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44L2exck013516;
-	Tue, 21 May 2024 02:40:59 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3y6js72bfn-1;
-	Tue, 21 May 2024 02:40:59 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: sr: fix unintentional arithmetic wraparound
-Date: Mon, 20 May 2024 22:40:14 -0400
-Message-ID: <171625915912.2717551.9281506639932713567.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
-References: <20240508-b4-b4-sio-sr_select_speed-v2-1-00b68f724290@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UBkKs+US"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716261647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bYQBu6zkfNaoqqNc//ysbuuuADju5TmrSNilJ4cHGKE=;
+	b=UBkKs+USMkX+NpcEYrm/aDN7ElqbII6EPvElVPWTmJcMtWi1fX/S9s5d/SBravWzsFMeEZ
+	HHuJdisyLy/vOPYHyMXiSPWaVJNK6Ic8bGFLULVpA40PVLUqk2Tyw4wdqziFLBBPXewC6q
+	zh+xkWZq2z7CkoxHXz3OzbkYjQpL2Js=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-527-maRvBiRFMj-o6900q3ZQgg-1; Mon,
+ 20 May 2024 23:20:43 -0400
+X-MC-Unique: maRvBiRFMj-o6900q3ZQgg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0D3D31C05137;
+	Tue, 21 May 2024 03:20:43 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.65])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1435B7412;
+	Tue, 21 May 2024 03:20:41 +0000 (UTC)
+Date: Tue, 21 May 2024 11:20:35 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kernel test robot <lkp@intel.com>, kexec@lists.infradead.org,
+	oe-kbuild-all@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"(open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb)" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v3 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+Message-ID: <ZkwSEUEW/RKFLubx@MiWiFi-R3L-srv>
+References: <20240425100434.198925-3-coxu@redhat.com>
+ <202404262003.qsWvGwZU-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_01,2024-05-17_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- suspectscore=0 spamscore=0 mlxscore=0 adultscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405210020
-X-Proofpoint-ORIG-GUID: mM9dtlgOZ54M8MsG3vFYc6BkwmSNCfdS
-X-Proofpoint-GUID: mM9dtlgOZ54M8MsG3vFYc6BkwmSNCfdS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404262003.qsWvGwZU-lkp@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Wed, 08 May 2024 17:22:51 +0000, Justin Stitt wrote:
-
-> Running syzkaller with the newly reintroduced signed integer overflow
-> sanitizer produces this report:
+On 04/26/24 at 09:10pm, kernel test robot wrote:
+> Hi Coiby,
 > 
-> [   65.194362] ------------[ cut here ]------------
-> [   65.197752] UBSAN: signed-integer-overflow in ../drivers/scsi/sr_ioctl.c:436:9
-> [   65.203607] -2147483648 * 177 cannot be represented in type 'int'
-> [   65.207911] CPU: 2 PID: 10416 Comm: syz-executor.1 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-> [   65.213585] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [   65.219923] Call Trace:
-> [   65.221556]  <TASK>
-> [   65.223029]  dump_stack_lvl+0x93/0xd0
-> [   65.225573]  handle_overflow+0x171/0x1b0
-> [   65.228219]  sr_select_speed+0xeb/0xf0
-> [   65.230786]  ? __pm_runtime_resume+0xe6/0x130
-> [   65.233606]  sr_block_ioctl+0x15d/0x1d0
-> ...
+> kernel test robot noticed the following build warnings:
 > 
-> [...]
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.9-rc5 next-20240426]
+> [cannot apply to tip/x86/core]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240425-180836
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/20240425100434.198925-3-coxu%40redhat.com
+> patch subject: [PATCH v3 2/7] crash_dump: make dm crypt keys persist for the kdump kernel
+> config: x86_64-randconfig-r113-20240426 (https://download.01.org/0day-ci/archive/20240426/202404262003.qsWvGwZU-lkp@intel.com/config)
+> compiler: gcc-10 (Ubuntu 10.5.0-1ubuntu1) 10.5.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240426/202404262003.qsWvGwZU-lkp@intel.com/reproduce)
 
-Applied to 6.10/scsi-queue, thanks!
 
-[1/1] scsi: sr: fix unintentional arithmetic wraparound
-      https://git.kernel.org/mkp/scsi/c/9fad9d560af5
+Please respond to the lkp report in time whether it's a problem or not,
+otherwise the link will be unavailable.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202404262003.qsWvGwZU-lkp@intel.com/
+> 
+> sparse warnings: (new ones prefixed by >>)
+> >> kernel/crash_dump_dm_crypt.c:31:3: sparse: sparse: symbol 'keys_header' was not declared. Should it be static?
+> 
+> vim +/keys_header +31 kernel/crash_dump_dm_crypt.c
+> 
+>     27	
+>     28	struct keys_header {
+>     29		unsigned int key_count;
+>     30		struct dm_crypt_key keys[] __counted_by(key_count);
+>   > 31	} *keys_header;
+>     32	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
+
