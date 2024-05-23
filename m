@@ -1,134 +1,109 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B83127E23
-	for <linux-hardening@vger.kernel.org>; Thu, 23 May 2024 22:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE381272B5
+	for <linux-hardening@vger.kernel.org>; Thu, 23 May 2024 23:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716504859; cv=none; b=dNyjs/W7di8xN0WoYtBmtRDWuOCSgHrs5zJ7gZQNKFfLxKS7SRXTVR9xYAGHVU4Bpzy0c64wpAAa2qB10GcF37FZkeAoww9QlhlCGdnqrSSvrANueDHNqaGyrH9j1tj3kTWljGQw/kGUWIeCkysCKB0i10B0vKXQ9ey0aUQiiOA=
+	t=1716507150; cv=none; b=NRrfANvk/aloOLQv/G7GxjDmfM2F0UT5m4vo67uyDiJJYPO1wJ2eQKS5c8pkTtbw3+nQmTn+9gBIDad+c3vnWasqJAddC9FrTQyscpDbVibDrCjdKwJiwYvJFaHoMfaJUyhsWfgZePfxFQgQJHrY3nI8rXbmlhJyT9Kcuz5E/M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716504859; c=relaxed/simple;
-	bh=8xZg34USATzGqgSCdoZnVM1prsayTUdOdmM7joOB0uo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X8D24nQxBfEaEaGYw4Z+GGkB/6UqhZbx3vriv3I6BjIvKBj+EQ6LSBlwPYlCCj2jhXcFvPH67/20R7VlWK7YmPBlnr8221Oz7R35eaIeuOvYMv/q7xoTVlq5Y6skZpcnJY1X2odfpeVoO/UVNmSTAEp8drTFe9oEZor+uIvh3cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UpBwIAxP; arc=none smtp.client-ip=209.85.210.177
+	s=arc-20240116; t=1716507150; c=relaxed/simple;
+	bh=Rl78iHC2xR4eTLgM9pFhtSrNG+eYrSYtgxu8L4wWsfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZi4WkwfbkrWhHc5+q91VHp0lDeF9iWZSS5FcDr1PXfFfcty84NoN9CzORJSnckZ6Hjfb2weMQSgOBCBiuBftK6wCxFdmuuw9+sspRqHl/loKJZfUiLR+/g92Vq7ZWq1ln6ANtG9VvA54hig9pBtKgpX53STUOZROYjHKTzEsAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DYAIR9C8; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UpBwIAxP"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f6a045d476so2699350b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 23 May 2024 15:54:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DYAIR9C8"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2bf62b121ccso60455a91.0
+        for <linux-hardening@vger.kernel.org>; Thu, 23 May 2024 16:32:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716504857; x=1717109657; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=K+HxhhwWxpOnO+u12YpT/sUY3evQxw+3Sm/bBnvujtM=;
-        b=UpBwIAxP8CCxW4jrWfS3V6bDC0IBR265o0PqFnhQOSS9UjRwxYPYuMIhVOA9tuRoL7
-         cvjcFx3WbI8B8NMKhdNErcOHfxjFmc5c6W+aJQAIoXRgOt7zERzNV/YXpXdEYpabbi5v
-         +JcQ/4v4qsd4qCvD+wn07HLYxoB6A+KJctbM8=
+        d=chromium.org; s=google; t=1716507148; x=1717111948; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uM+PPkDPycb5a9YVze8N+KZpCRY7ovH1PjJ2ki6nF5U=;
+        b=DYAIR9C8W8spsie8Pc8vutCp2t+Jd2cRx0RdrITfImvTQVPr6GxPEYOGVED3WFHFNi
+         ZMOROiAYQuReyR0EoAisvfbR2PESQXw/F5sye1MV6wcwJ793FpbG389fU8wEL6oBE9xP
+         DmUvIGd3QQtMbsPTbBRe0VhVt2GFPRAlkstrs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716504857; x=1717109657;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K+HxhhwWxpOnO+u12YpT/sUY3evQxw+3Sm/bBnvujtM=;
-        b=hVqNBLDAaX8VVZx6yUy+EVnwsUvSBuKEeRBms3x0doICbdQtJ2RD7ELw514h2CvrcH
-         r98rI9QFcIeH7SYuzJXqs++n69D9dnui6AE5caZQIE7QSGg+3XHKulH0rDqGsXYEV8DK
-         dns+vqu8mO0mCOt8+isvdXl5bW0UIcVfvYYiVD/u7n8nKiCCNgT4Nv6qed1EI1yRR9OB
-         A6EOwzERcfBfTyFJWk1eQVsPXarLs4FXo7aqi63wThXGhpIti3Ed9rlZ2fZuDxnco4Hi
-         UxrxlNPPW7yLALa1YD5UJXXI5VCYF0yimPrqcNIdCHETXh8WBdUTymLKmZcdmeGvkgN0
-         QK8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWFFx0mHPpFNu+OvcyoxAzO02D4d3LEo4LvwHtVgiOXWGdnmeB48quNOGDU18DDkvzC/KTDtotUCI6WLYh0GApw5HyBdOE3GpkyaFw/5uZb
-X-Gm-Message-State: AOJu0Yz6mTl/QpmmspbWvOEqTYUUGhJjK9kaHzOCdI1idFoUk2Z+C112
-	dv8UewV7ntmZ0OoZ2ZXaDnzw4HDaUnyGP5bew63VokjvVXs/TbXCZe9Frjca3Q==
-X-Google-Smtp-Source: AGHT+IFJDeRVzR/CmcQh9/usRPuj/9gA0/y1cIEjghi9Zyo54TlF+rIffB8Oldl/5AWX2fVfA4L5Cg==
-X-Received: by 2002:a05:6a20:43ac:b0:1aa:43f4:3562 with SMTP id adf61e73a8af0-1b212d38fd6mr1062643637.11.1716504857311;
-        Thu, 23 May 2024 15:54:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716507148; x=1717111948;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uM+PPkDPycb5a9YVze8N+KZpCRY7ovH1PjJ2ki6nF5U=;
+        b=MI/a1WKSAakY6S+rkeXgPdLWk3Wmu9a/B8bUqvbbT69sWF4PRahVyVeMcOoVi46YRI
+         ZvD0EqNfx8azt8+cdqLhElaaA1bNU8a1TtSt3Qb+9kDQJmKTR9U/KyBEQDOej1jf72/f
+         CN1TEeWKUvg0Y/ufXmABLhibPYuFFk3pJAvUZ1ombrTAhQvAwNKpc61BXM11EY85krE/
+         AAYDQJPIHD0HcX2zC2alpSDXBgGbgsa8Ggi5Xd0PRgl49NRv6q+PKNVqD36bd3x+xlFW
+         OlMeEg6CeHnA7uK+owQnHusgZyHisFQNLRWWjZYnzTl6+BJoAx+K7pYGG54E7CU86h89
+         /zpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQmqP+k0aSDjdRK9dkhTTmYVdaofWhHQdiWT9GlJlrD5ELERNrq2Jw6v1HYpgfeXkzFHN+1+1r/Bo4KTHV0Mp/6yZG04XB7E/u4ehJUvrA
+X-Gm-Message-State: AOJu0YyogWta0Ntt/6jYJVjZJLDgCjL8gNlnen09erfW7joS3AtywErJ
+	dIONmf/syVdKmsqorhFOy3TsZhslmIuELa1R3Cx8Xf1HDFSHPuvKYMr0tqpxrQ==
+X-Google-Smtp-Source: AGHT+IFOfvlBfPaN91h6KUnDd+S4/iEFS4mMZGfINsKu6kdcMCF6+DYoaaEjtaJjxvPHQzQQjzLQfw==
+X-Received: by 2002:a17:90b:ec1:b0:2bd:d898:8732 with SMTP id 98e67ed59e1d1-2bddce8fa91mr5008761a91.13.1716507147992;
+        Thu, 23 May 2024 16:32:27 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c75f5d0sm1074095ad.43.2024.05.23.15.54.16
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bf5f615b9fsm247043a91.34.2024.05.23.16.32.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 15:54:16 -0700 (PDT)
+        Thu, 23 May 2024 16:32:27 -0700 (PDT)
+Date: Thu, 23 May 2024 16:32:26 -0700
 From: Kees Cook <keescook@chromium.org>
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Kees Cook <keescook@chromium.org>,
-	syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com,
-	Justin Stitt <justinstitt@google.com>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] ext4: Use memtostr_pad() for s_volume_name
-Date: Thu, 23 May 2024 15:54:12 -0700
-Message-Id: <20240523225408.work.904-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: jeffxu@chromium.org, jannh@google.com, sroettger@google.com,
+	willy@infradead.org, gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org, usama.anjum@collabora.com,
+	corbet@lwn.net, Liam.Howlett@oracle.com, surenb@google.com,
+	merimus@google.com, rdunlap@infradead.org, jeffxu@google.com,
+	jorgelo@chromium.org, groeck@chromium.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+Message-ID: <202405231628.BBBB9787F@keescook>
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+ <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+ <202405141251.8E9580E@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2019; i=keescook@chromium.org;
- h=from:subject:message-id; bh=8xZg34USATzGqgSCdoZnVM1prsayTUdOdmM7joOB0uo=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmT8kTsKNHKThRJmlbWkYa4+mZSvIto0827ZvNs
- WCZOoohy+yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZk/JEwAKCRCJcvTf3G3A
- JuH4D/0YcQozks4yjfdJp7U58EIbhq/lnbt7NB1OWxBMXL9t98LlkWEIMinU56rGRalVUDuONy3
- JDueXhRyT1F3e+zrD0GTObAxCL+cvcb6QGy9ILi7yKZvMcQFZgARmHPilFPpWQL0UUMIgAWFjps
- 3PbD1qw/GJ1vEbRl2zmEf/GWEF9CoCfoLqEcyXKNuuj3qqiHAagfo6tZebDx7lmD2k57aAE6Vab
- cI3ZvCeoF+fw9DJ4omnVjn7IQYdwX3ECToeHhowoa1CB09PmtTjkZqkEh8wTXFrF119OFPOG2Ye
- cQKslnD1VeKZJYzUoEo6nCphqN73cOIcrgYlXsAs0nIwUbXwXtvEsTlqO+uuQMokwX/x/5h4yNC
- 6aGovyqMkokthVPQqiW3z8UwM0iQzG0FFmbcrKshIlWt6HdDxHVrCEHhExxQJ1YAIYs9Yr/4Xl1
- CYXQOFQU9cMFrojObq15H8Ek9AYQPGtoeS8RJhSYSlhjPdPIG2+Z2j8blrvnX17w/OZrOYdSgwN
- fkWX3rVJzXA7XqWyxFlg9+MGW8Ku0pB8my8aXfXqeXhkiW0Ic1dDzSbiHkFpVGNhCsJQ1f6RmxQ
- 1dKYTnbs6SwF8rh9r2ICYOhfwTqsMEOrYoIN/L+5KW215bnvyMyt3M3XOZqEeEM+d7J4mhb14uB
- LDpJFno Vq6wsq4Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202405141251.8E9580E@keescook>
 
-As with the other strings in struct ext4_super_block, s_volume_name is
-not NUL terminated. The other strings were marked in commit 072ebb3bffe6
-("ext4: add nonstring annotations to ext4.h"). Using strscpy() isn't
-the right replacement for strncpy(); it should use memtostr_pad()
-instead.
+On Tue, May 14, 2024 at 12:52:13PM -0700, Kees Cook wrote:
+> On Tue, May 14, 2024 at 10:46:46AM -0700, Andrew Morton wrote:
+> > On Mon, 15 Apr 2024 16:35:19 +0000 jeffxu@chromium.org wrote:
+> > 
+> > > This patchset proposes a new mseal() syscall for the Linux kernel.
+> > 
+> > I have not moved this into mm-stable for a 6.10 merge.  Mainly because
+> > of the total lack of Reviewed-by:s and Acked-by:s.
+> 
+> Oh, I thought I had already reviewed it. FWIW, please consider it:
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> > The code appears to be stable enough for a merge.
+> 
+> Agreed.
+> 
+> > It's awkward that we're in conference this week, but I ask people to
+> > give consideration to the desirability of moving mseal() into mainline
+> > sometime over the next week, please.
+> 
+> Yes please. :)
 
-Reported-by: syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/00000000000019f4c00619192c05@google.com/
-Fixes: 744a56389f73 ("ext4: replace deprecated strncpy with alternatives")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org
----
- fs/ext4/ext4.h  | 2 +-
- fs/ext4/ioctl.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Is the plan still to land this for 6.10? With the testing it's had in
+-next and Liam's review, I think we're good to go?
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 983dad8c07ec..efed7f09876d 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1347,7 +1347,7 @@ struct ext4_super_block {
- /*60*/	__le32	s_feature_incompat;	/* incompatible feature set */
- 	__le32	s_feature_ro_compat;	/* readonly-compatible feature set */
- /*68*/	__u8	s_uuid[16];		/* 128-bit uuid for volume */
--/*78*/	char	s_volume_name[EXT4_LABEL_MAX];	/* volume name */
-+/*78*/	char	s_volume_name[EXT4_LABEL_MAX] __nonstring; /* volume name */
- /*88*/	char	s_last_mounted[64] __nonstring;	/* directory where last mounted */
- /*C8*/	__le32	s_algorithm_usage_bitmap; /* For compression */
- 	/*
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index dab7acd49709..e8bf5972dd47 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -1151,7 +1151,7 @@ static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label
- 	BUILD_BUG_ON(EXT4_LABEL_MAX >= FSLABEL_MAX);
- 
- 	lock_buffer(sbi->s_sbh);
--	strscpy_pad(label, sbi->s_es->s_volume_name);
-+	memtostr_pad(label, sbi->s_es->s_volume_name);
- 	unlock_buffer(sbi->s_sbh);
- 
- 	if (copy_to_user(user_label, label, sizeof(label)))
+Thanks!
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
