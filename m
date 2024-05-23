@@ -1,81 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E9A84D03;
-	Thu, 23 May 2024 19:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B83127E23
+	for <linux-hardening@vger.kernel.org>; Thu, 23 May 2024 22:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716493603; cv=none; b=qpFCDAIDexZKMIVbISNAxazXiLAyMi+IA9Raa9lHbnd5JQfuCBd8Q1eZRqQ7y1QnvLpKdCKE9VvcBohFCNXy8IRkh7MPeKiTl7RuLOCnOl1XeBZhMOdxAg31begkCHtfKhvbqCgnNX5GmYWKKV1RnLQq6qQARwIJsgf10RYSa8Q=
+	t=1716504859; cv=none; b=dNyjs/W7di8xN0WoYtBmtRDWuOCSgHrs5zJ7gZQNKFfLxKS7SRXTVR9xYAGHVU4Bpzy0c64wpAAa2qB10GcF37FZkeAoww9QlhlCGdnqrSSvrANueDHNqaGyrH9j1tj3kTWljGQw/kGUWIeCkysCKB0i10B0vKXQ9ey0aUQiiOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716493603; c=relaxed/simple;
-	bh=CNMblmqVNA2x8vqn+HiJkT+FDFOXwcL+13QaZX5Oh+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bd+nTGrCtxl5nwEdtH7fI54Dg/B+KgVFne3cuaKgeWToC/SL4G4D5QQ8l6Ee0dTHu9JUvVOObc4dJvNy3Rn8BYlsuO++S+MjVNq9b/FrNJFl2j3Cf8shqLH2WBswOhGczf46kVSf2lwEIUQ1gSKzv85pvy2k30VxHh+ZF2Ho/m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7MfGGDv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716504859; c=relaxed/simple;
+	bh=8xZg34USATzGqgSCdoZnVM1prsayTUdOdmM7joOB0uo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X8D24nQxBfEaEaGYw4Z+GGkB/6UqhZbx3vriv3I6BjIvKBj+EQ6LSBlwPYlCCj2jhXcFvPH67/20R7VlWK7YmPBlnr8221Oz7R35eaIeuOvYMv/q7xoTVlq5Y6skZpcnJY1X2odfpeVoO/UVNmSTAEp8drTFe9oEZor+uIvh3cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UpBwIAxP; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7MfGGDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C586CC32789;
-	Thu, 23 May 2024 19:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716493602;
-	bh=CNMblmqVNA2x8vqn+HiJkT+FDFOXwcL+13QaZX5Oh+g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N7MfGGDv43k//EXXxDaT78UMClX9z4BWj3Ah8Prrtroqda09n9OB3crXWwaAlSbjd
-	 ET2oo3+E7EC2OE2LH/IA4tRjZesCZIKUnemd8/5eDmN1Y6DNCa2EdT0M8sHuLKDU4J
-	 Wj1tbDCh1fPeDgFhEGrJCgeI0vkLLcEdywgUNmFS8ZIVPLOMlr3repCghGPDR70+u1
-	 3FPhWDZZZPMICnM/HRXS60bG7rRSt/EE80dcdJ/8HXndkHKtpNz9vebf4OUUgbxHTY
-	 T3WrEBDxK47O4/gGcmh+/qmSnSEXFjVnUi44z1c0PCe7xnhGExc1dqxuCZmQP5HNcs
-	 UvR2sAI/P50HQ==
-Date: Thu, 23 May 2024 12:46:40 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>, Ahmed
- Zaki <ahmed.zaki@intel.com>, Pavan Chebbi <pavan.chebbi@broadcom.com>,
- Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, Konstantin
- Taranov <kotaranov@microsoft.com>, Kees Cook <keescook@chromium.org>, Paolo
- Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "David S.
- Miller" <davem@davemloft.net>, Dexuan Cui <decui@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, "K. Y.
- Srinivasan" <kys@microsoft.com>, Leon Romanovsky <leon@kernel.org>, Jason
- Gunthorpe <jgg@ziepe.ca>, Ajay Sharma <sharmaajay@microsoft.com>, Long Li
- <longli@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next] net: mana: Allow variable size indirection
- table
-Message-ID: <20240523124640.40ccd9f8@kernel.org>
-In-Reply-To: <1716483314-19028-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1716483314-19028-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UpBwIAxP"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f6a045d476so2699350b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 23 May 2024 15:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716504857; x=1717109657; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K+HxhhwWxpOnO+u12YpT/sUY3evQxw+3Sm/bBnvujtM=;
+        b=UpBwIAxP8CCxW4jrWfS3V6bDC0IBR265o0PqFnhQOSS9UjRwxYPYuMIhVOA9tuRoL7
+         cvjcFx3WbI8B8NMKhdNErcOHfxjFmc5c6W+aJQAIoXRgOt7zERzNV/YXpXdEYpabbi5v
+         +JcQ/4v4qsd4qCvD+wn07HLYxoB6A+KJctbM8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716504857; x=1717109657;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K+HxhhwWxpOnO+u12YpT/sUY3evQxw+3Sm/bBnvujtM=;
+        b=hVqNBLDAaX8VVZx6yUy+EVnwsUvSBuKEeRBms3x0doICbdQtJ2RD7ELw514h2CvrcH
+         r98rI9QFcIeH7SYuzJXqs++n69D9dnui6AE5caZQIE7QSGg+3XHKulH0rDqGsXYEV8DK
+         dns+vqu8mO0mCOt8+isvdXl5bW0UIcVfvYYiVD/u7n8nKiCCNgT4Nv6qed1EI1yRR9OB
+         A6EOwzERcfBfTyFJWk1eQVsPXarLs4FXo7aqi63wThXGhpIti3Ed9rlZ2fZuDxnco4Hi
+         UxrxlNPPW7yLALa1YD5UJXXI5VCYF0yimPrqcNIdCHETXh8WBdUTymLKmZcdmeGvkgN0
+         QK8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWFFx0mHPpFNu+OvcyoxAzO02D4d3LEo4LvwHtVgiOXWGdnmeB48quNOGDU18DDkvzC/KTDtotUCI6WLYh0GApw5HyBdOE3GpkyaFw/5uZb
+X-Gm-Message-State: AOJu0Yz6mTl/QpmmspbWvOEqTYUUGhJjK9kaHzOCdI1idFoUk2Z+C112
+	dv8UewV7ntmZ0OoZ2ZXaDnzw4HDaUnyGP5bew63VokjvVXs/TbXCZe9Frjca3Q==
+X-Google-Smtp-Source: AGHT+IFJDeRVzR/CmcQh9/usRPuj/9gA0/y1cIEjghi9Zyo54TlF+rIffB8Oldl/5AWX2fVfA4L5Cg==
+X-Received: by 2002:a05:6a20:43ac:b0:1aa:43f4:3562 with SMTP id adf61e73a8af0-1b212d38fd6mr1062643637.11.1716504857311;
+        Thu, 23 May 2024 15:54:17 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c75f5d0sm1074095ad.43.2024.05.23.15.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 15:54:16 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Kees Cook <keescook@chromium.org>,
+	syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com,
+	Justin Stitt <justinstitt@google.com>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ext4: Use memtostr_pad() for s_volume_name
+Date: Thu, 23 May 2024 15:54:12 -0700
+Message-Id: <20240523225408.work.904-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2019; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=8xZg34USATzGqgSCdoZnVM1prsayTUdOdmM7joOB0uo=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmT8kTsKNHKThRJmlbWkYa4+mZSvIto0827ZvNs
+ WCZOoohy+yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZk/JEwAKCRCJcvTf3G3A
+ JuH4D/0YcQozks4yjfdJp7U58EIbhq/lnbt7NB1OWxBMXL9t98LlkWEIMinU56rGRalVUDuONy3
+ JDueXhRyT1F3e+zrD0GTObAxCL+cvcb6QGy9ILi7yKZvMcQFZgARmHPilFPpWQL0UUMIgAWFjps
+ 3PbD1qw/GJ1vEbRl2zmEf/GWEF9CoCfoLqEcyXKNuuj3qqiHAagfo6tZebDx7lmD2k57aAE6Vab
+ cI3ZvCeoF+fw9DJ4omnVjn7IQYdwX3ECToeHhowoa1CB09PmtTjkZqkEh8wTXFrF119OFPOG2Ye
+ cQKslnD1VeKZJYzUoEo6nCphqN73cOIcrgYlXsAs0nIwUbXwXtvEsTlqO+uuQMokwX/x/5h4yNC
+ 6aGovyqMkokthVPQqiW3z8UwM0iQzG0FFmbcrKshIlWt6HdDxHVrCEHhExxQJ1YAIYs9Yr/4Xl1
+ CYXQOFQU9cMFrojObq15H8Ek9AYQPGtoeS8RJhSYSlhjPdPIG2+Z2j8blrvnX17w/OZrOYdSgwN
+ fkWX3rVJzXA7XqWyxFlg9+MGW8Ku0pB8my8aXfXqeXhkiW0Ic1dDzSbiHkFpVGNhCsJQ1f6RmxQ
+ 1dKYTnbs6SwF8rh9r2ICYOhfwTqsMEOrYoIN/L+5KW215bnvyMyt3M3XOZqEeEM+d7J4mhb14uB
+ LDpJFno Vq6wsq4Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, 23 May 2024 09:55:14 -0700 Shradha Gupta wrote:
-> Allow variable size indirection table allocation in MANA instead
-> of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> indirection table is allocated dynamically.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+As with the other strings in struct ext4_super_block, s_volume_name is
+not NUL terminated. The other strings were marked in commit 072ebb3bffe6
+("ext4: add nonstring annotations to ext4.h"). Using strscpy() isn't
+the right replacement for strncpy(); it should use memtostr_pad()
+instead.
 
-## Form letter - net-next-closed
+Reported-by: syzbot+50835f73143cc2905b9e@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/00000000000019f4c00619192c05@google.com/
+Fixes: 744a56389f73 ("ext4: replace deprecated strncpy with alternatives")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org
+---
+ fs/ext4/ext4.h  | 2 +-
+ fs/ext4/ioctl.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-The merge window for v6.10 has begun and we have already posted our pull
-request. Therefore net-next is closed for new drivers, features, code
-refactoring and optimizations. We are currently accepting bug fixes only.
-
-Please repost when net-next reopens after May 26th.
-
-RFC patches sent for review only are obviously welcome at any time.
-
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 983dad8c07ec..efed7f09876d 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1347,7 +1347,7 @@ struct ext4_super_block {
+ /*60*/	__le32	s_feature_incompat;	/* incompatible feature set */
+ 	__le32	s_feature_ro_compat;	/* readonly-compatible feature set */
+ /*68*/	__u8	s_uuid[16];		/* 128-bit uuid for volume */
+-/*78*/	char	s_volume_name[EXT4_LABEL_MAX];	/* volume name */
++/*78*/	char	s_volume_name[EXT4_LABEL_MAX] __nonstring; /* volume name */
+ /*88*/	char	s_last_mounted[64] __nonstring;	/* directory where last mounted */
+ /*C8*/	__le32	s_algorithm_usage_bitmap; /* For compression */
+ 	/*
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index dab7acd49709..e8bf5972dd47 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -1151,7 +1151,7 @@ static int ext4_ioctl_getlabel(struct ext4_sb_info *sbi, char __user *user_label
+ 	BUILD_BUG_ON(EXT4_LABEL_MAX >= FSLABEL_MAX);
+ 
+ 	lock_buffer(sbi->s_sbh);
+-	strscpy_pad(label, sbi->s_es->s_volume_name);
++	memtostr_pad(label, sbi->s_es->s_volume_name);
+ 	unlock_buffer(sbi->s_sbh);
+ 
+ 	if (copy_to_user(user_label, label, sizeof(label)))
 -- 
-pw-bot: defer
+2.34.1
 
