@@ -1,66 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF643C47C;
-	Fri, 24 May 2024 21:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D36A78C78;
+	Fri, 24 May 2024 21:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716584777; cv=none; b=ig1O0U7fMj/CICqAaFAotSYIyz8crm2fu+UQpwpzLKybxgUiv3hWE7DrxhY5/zI0wmmWI4bizc+cdcI+YIjLFaNSNoMY5d8DheI8/Rhj4tEiecTvaAkSGNpr0fBFe2ztprviDwuXHSxKfe/ruJZGLINqBtJ1Vp+ii7KaLKTIoCw=
+	t=1716587849; cv=none; b=ndh1dAm+0qsN9tfJb38gzO89t7c0BFFq7mNFGODaZ2b6BRlPD/xDYBm9/zmbZFuM1Eo20uy4T8c4/1ph5MidsFlpVZrwRaL1x9MLSMnjsxhGSx01NKT3Hxmo+Uf5wHvtAVQUI3V19G2Y7KNcWGrF8eFM/Hxbz1TWHjmII14l0HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716584777; c=relaxed/simple;
-	bh=i2FYvQ/BuCKRsKhUyvuotfGtwF1qiSXoUMR8uyOnvAg=;
+	s=arc-20240116; t=1716587849; c=relaxed/simple;
+	bh=zevuABG5iL7ZenQ6zpwcJu0RCL7KnwzT9M9hFHiu0Ww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MHg5Nc78JUPZDfw9VeG8CBzoHpmn0GCfqkl2j84wybuMwqE3UKktyeiL3HmwrHKuUk9xYs2xgv/dO87kzjkt9gnjPzxIA4cQIqKYAoOwkpzuUj4KgYa0c4iKkJwp+uX3hV0MblMNqbu9QE+6qeXhpOTWtZSFOXCoaaOrdX19RT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mGsQVoaz; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=BT0ri0+5n3MKTD6Z7tNv+Ynki3gVBIBMYZ56NI+SoBBuy08VOamV1j2GY3bR0ZPxmCzUGGsjpMwTg61b74wQt4YBixC6icYKQWF96bbaDRNPUY5BpM4Dmy7CUiYK/iKP6jvJJ5MI2I9yrq6n6SvqfyGNYOP6DxXg8e0Htm9McYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QqQwe6oO; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mGsQVoaz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QqQwe6oO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716584775; x=1748120775;
+  t=1716587847; x=1748123847;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=i2FYvQ/BuCKRsKhUyvuotfGtwF1qiSXoUMR8uyOnvAg=;
-  b=mGsQVoazfreoJ4VR+jVsWh/U0L5a0weCmoOf0jNA4VmQ6mj7tGiDckFV
-   wYOC8SZSBmHFSXbp9zu3xznKZK7P91ntdMXeFdXm45dh4wyA4JoB/iqqc
-   N5U+JUblgIcAZbnp6NG1DNBIXNc/p/9Bb05KthJQHjizCtQ3lxiMNSnZv
-   X+SlyozcuJcSTzm44/6Rfs/vbI8FwtzyifS023UFnhjMBQwcR/BlKKbP4
-   64BpmiP/ZdEd3bAEF3D6fKdMryf6rjC6vGK3PBdrKYZIAU4j/+vnvqEJE
-   kHOnSE5FzUZ1hYZ6jo6YrF8UTBZJGDtJHjic+DIzty0v4CYen4szU2nvP
-   w==;
-X-CSE-ConnectionGUID: RwRlITcQTgWntLv1y3flew==
-X-CSE-MsgGUID: Y44mRza0TOKNicZIZ37Ezg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="23546283"
+  bh=zevuABG5iL7ZenQ6zpwcJu0RCL7KnwzT9M9hFHiu0Ww=;
+  b=QqQwe6oOsYNuw1RYXj/lMjiPzfZYCxFCF3S02bcfiSt5XMcRB9jxNsdu
+   2IvTxl5EM972VG6tXhDcra0oB7I/nnzrhyu6Htv2TsVSsotF2H49UnW6k
+   9fC3sBcwHlMqIeTbaReeYfbQtczFcBjJe5Yueys2cO6TfjgvkrXbDmOTz
+   B26Wj57k8ird+nci8wn2delHFoAz9CtqIHNI79v7zUJf4QSfueoBBe3Zj
+   VXMGSNPRb9Vmtb+vODC0HpEm8iTNvf7a3gcxF7L0j5/05GHVxcaa55sRV
+   577voSK8XqHevuQkE2+l7f/x2zbIwP3pM9hqM1XtbW96PKpuZtF2OoQvY
+   A==;
+X-CSE-ConnectionGUID: 57hvSddpR3OgxCvV4QQ+YQ==
+X-CSE-MsgGUID: QSzYmkvpRYeUNuVvRNbk7A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="13208146"
 X-IronPort-AV: E=Sophos;i="6.08,186,1712646000"; 
-   d="scan'208";a="23546283"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 14:06:14 -0700
-X-CSE-ConnectionGUID: dg0+kzl/TTiFuWKJa05m+Q==
-X-CSE-MsgGUID: bBCnSzmmQreu0Xqb9a7bkQ==
+   d="scan'208";a="13208146"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 14:57:26 -0700
+X-CSE-ConnectionGUID: zTjUPtnFSEyRutSyi8ep5Q==
+X-CSE-MsgGUID: 8SXzsfxxSwKuPbQd5ZWk8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,186,1712646000"; 
-   d="scan'208";a="34112530"
+   d="scan'208";a="64956874"
 Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 24 May 2024 14:06:10 -0700
+  by orviesa002.jf.intel.com with ESMTP; 24 May 2024 14:57:23 -0700
 Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sAc6x-0005ul-1D;
-	Fri, 24 May 2024 21:06:00 +0000
-Date: Sat, 25 May 2024 05:05:28 +0800
+	id 1sAcue-0005wp-27;
+	Fri, 24 May 2024 21:57:20 +0000
+Date: Sat, 25 May 2024 05:56:41 +0800
 From: kernel test robot <lkp@intel.com>
 To: Adrian Ratiu <adrian.ratiu@collabora.com>,
 	linux-fsdevel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-	kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com,
-	inglorion@google.com, ajordanr@google.com, jorgelo@chromium.org,
-	Adrian Ratiu <adrian.ratiu@collabora.com>,
+Cc: oe-kbuild-all@lists.linux.dev, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com,
+	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com,
+	jorgelo@chromium.org, Adrian Ratiu <adrian.ratiu@collabora.com>,
 	Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
 	Christian Brauner <brauner@kernel.org>
 Subject: Re: [PATCH v4 1/2] proc: pass file instead of inode to proc_mem_open
-Message-ID: <202405250413.EENbErWw-lkp@intel.com>
+Message-ID: <202405250507.0z0WHg9L-lkp@intel.com>
 References: <20240524192858.3206-1-adrian.ratiu@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -86,32 +85,31 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Adrian-Ratiu/proc-restric
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
 patch link:    https://lore.kernel.org/r/20240524192858.3206-1-adrian.ratiu%40collabora.com
 patch subject: [PATCH v4 1/2] proc: pass file instead of inode to proc_mem_open
-config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20240525/202405250413.EENbErWw-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 7aa382fd7257d9bd4f7fc50bb7078a3c26a1628c)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240525/202405250413.EENbErWw-lkp@intel.com/reproduce)
+config: m68k-allnoconfig (https://download.01.org/0day-ci/archive/20240525/202405250507.0z0WHg9L-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240525/202405250507.0z0WHg9L-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405250413.EENbErWw-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405250507.0z0WHg9L-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from fs/proc/task_nommu.c:3:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> fs/proc/task_nommu.c:262:27: error: incompatible pointer types passing 'struct inode *' to parameter of type 'struct file *' [-Werror,-Wincompatible-pointer-types]
+   fs/proc/task_nommu.c: In function 'maps_open':
+>> fs/proc/task_nommu.c:262:34: error: passing argument 1 of 'proc_mem_open' from incompatible pointer type [-Werror=incompatible-pointer-types]
      262 |         priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
          |                                  ^~~~~
-   fs/proc/internal.h:298:46: note: passing argument to parameter 'file' here
+         |                                  |
+         |                                  struct inode *
+   In file included from fs/proc/task_nommu.c:13:
+   fs/proc/internal.h:298:46: note: expected 'struct file *' but argument is of type 'struct inode *'
      298 | struct mm_struct *proc_mem_open(struct file *file, unsigned int mode);
-         |                                              ^
-   1 warning and 1 error generated.
+         |                                 ~~~~~~~~~~~~~^~~~
+   cc1: some warnings being treated as errors
 
 
-vim +262 fs/proc/task_nommu.c
+vim +/proc_mem_open +262 fs/proc/task_nommu.c
 
 b76437579d1344 Siddhesh Poyarekar 2012-03-21  251  
 b76437579d1344 Siddhesh Poyarekar 2012-03-21  252  static int maps_open(struct inode *inode, struct file *file,
