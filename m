@@ -1,87 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B88517577;
-	Thu, 23 May 2024 23:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDA18563E;
+	Fri, 24 May 2024 12:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716508460; cv=none; b=kt4zyU416ZHMjRLOaNNm4BBtjKQXmiXngZmv3VQkBaRgKXimdp0uvuJq25TetLBCMmabCda+fiMM31ypwRpUGhs5VU0re5aYUPCmyDmOu0IaV775wqxeCPInv9dwx2Eg659b4X938fpD+IavFWZK6LfURjSzhUkvnhEKGgOH8Zs=
+	t=1716552583; cv=none; b=T/zNLWz/OVt+1C0FuEMga/Tu+smKSGcysiBF0RYDvLHtN3cVOZnjYecmWFqYq7AiI0JV9itDWDy0ywt8uUKAU/fQMvbYmtfUiRK62ag0YTAloeoqYupBz2eOep5cf31LITmIddF6PRVChcSOC09rVXNxnLzb94bx8s7P+sGr9lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716508460; c=relaxed/simple;
-	bh=azk6U8g/JFqvH7FTtMmTgCO4raAeREkG0pRfkcXX9ss=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KFsrsXTaNkJ3DvoIXyPvClcMbMW0Sni8W30I1ozf8M0YOoZK0VUSfe4d+T2Ge5YotCAaskLAmGrQfs9W5Qw+1OuM8ToEWIJ4Nf5qpq1quyqFbC+HUENPib86tQ+VBVkzQUgiWAkACZZdqL3Pa07QaeRi24E9ZuqcxT5p9UyZUNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gHP8h8so; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716552583; c=relaxed/simple;
+	bh=wJXQkk1V3FlJQgr1pPSLFK/VZCsoXjvfYpl1+qjKKjs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GYzx/avEaNBV3IAKML9FZCUnfiH2B0Vo6dbwz6awPBlnEr+8is5roOMJPb1OJ22+LIHuSENANArF6nMd5NDxsQPJQtKKgKpETBh4oJnUhrtgbV5fgRh7KG0+UeXyredUahRsxS9YsPyv06nlFj8j0h1Y1uYl59t25aVtlH8LggA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pW4oKXsd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FZDiGBBf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gHP8h8so"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46623C2BD10;
-	Thu, 23 May 2024 23:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1716508459;
-	bh=azk6U8g/JFqvH7FTtMmTgCO4raAeREkG0pRfkcXX9ss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gHP8h8soJYQguI9OcU2OQzV6Jvnc+pHjBTbN/hmBwYznSLxlm54Dg9a0oex8FV7Zb
-	 mAPyhfJ++NLF27gXzuEIjnDIFfjeLnk61t0+EO6YMF+6HDwB898MpuzAbFp8vVzO7n
-	 KPm9ByZqUTM2WBboXJT9gtcKdy+tUuo0DGiJQO3U=
-Date: Thu, 23 May 2024 16:54:18 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: jeffxu@chromium.org, jannh@google.com, sroettger@google.com,
- willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net,
- Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
- rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
- groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-Message-Id: <20240523165418.242555ffc2372e59f88cabbf@linux-foundation.org>
-In-Reply-To: <202405231628.BBBB9787F@keescook>
-References: <20240415163527.626541-1-jeffxu@chromium.org>
-	<20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
-	<202405141251.8E9580E@keescook>
-	<202405231628.BBBB9787F@keescook>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pW4oKXsd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FZDiGBBf"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716552580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KwrJkb5UWtVpW+6uKKTmNSXBikkf8k2POmcqYvLF5LE=;
+	b=pW4oKXsdeuaZgoTWdrml6XjbqmgrqdpmmH2MubZjxWL63MLmcW1vw/G93JHPUpDoMCNkp2
+	rDcIIO1iMWPq2WKwZYxDZqoHUoa6Tfdx5j6AYl5dJO5K3r6FY4SmlUipcidw1JKDDd6nHt
+	lYwtB4HZArKPdYOLOT19nqFoTIILt4TMUgj0nNpoJ72DZGjd6GVuQTomHBkP4g08KbmK18
+	3QolkNFpiXR1TwkRcemfFGMaza53vqLmkEImRuPOE3/zw5KOceuW/obPiKoEWvKpVEM915
+	LvUH3E6mMMseBUEWN/vz0K06/ek8I1/oqHfwQyNzbwCp9kOefHkHTGxXs8f4dQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716552580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KwrJkb5UWtVpW+6uKKTmNSXBikkf8k2POmcqYvLF5LE=;
+	b=FZDiGBBfBuVXX2DRLl4ddYpgChHlXu3v5tNdnqJknphBtYWA+QP66aasNIxadcqqphj9sQ
+	YbxFrVRYokfkWiDg==
+To: Justin Stitt <justinstitt@google.com>, John Stultz <jstultz@google.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Bill Wendling <morbo@google.com>, Nick Desaulniers
+ <ndesaulniers@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>,
+ Miroslav Lichvar <mlichvar@redhat.com>
+Subject: Re: [PATCH v2] ntp: remove accidental integer wrap-around
+In-Reply-To: <20240517-b4-sio-ntp-usec-v2-1-d539180f2b79@google.com>
+References: <20240517-b4-sio-ntp-usec-v2-1-d539180f2b79@google.com>
+Date: Fri, 24 May 2024 14:09:39 +0200
+Message-ID: <87ed9re7i4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Thu, 23 May 2024 16:32:26 -0700 Kees Cook <keescook@chromium.org> wrote:
+On Fri, May 17 2024 at 20:22, Justin Stitt wrote:
+> time_maxerror is unconditionally incremented and the result is checked
+> against NTP_PHASE_LIMIT, but the increment itself can overflow,
+> resulting in wrap-around to negative space.
+>
+> The user can supply some crazy values which is causing the overflow. Add
+> an extra validation step checking that maxerror is reasonable.
 
-> On Tue, May 14, 2024 at 12:52:13PM -0700, Kees Cook wrote:
-> > On Tue, May 14, 2024 at 10:46:46AM -0700, Andrew Morton wrote:
-> > > On Mon, 15 Apr 2024 16:35:19 +0000 jeffxu@chromium.org wrote:
-> > > 
-> > > > This patchset proposes a new mseal() syscall for the Linux kernel.
-> > > 
-> > > I have not moved this into mm-stable for a 6.10 merge.  Mainly because
-> > > of the total lack of Reviewed-by:s and Acked-by:s.
-> > 
-> > Oh, I thought I had already reviewed it. FWIW, please consider it:
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > > The code appears to be stable enough for a merge.
-> > 
-> > Agreed.
-> > 
-> > > It's awkward that we're in conference this week, but I ask people to
-> > > give consideration to the desirability of moving mseal() into mainline
-> > > sometime over the next week, please.
-> > 
-> > Yes please. :)
-> 
-> Is the plan still to land this for 6.10? With the testing it's had in
-> -next and Liam's review, I think we're good to go?
+The user can supply any value which can cause an overflow as the input
+is unchecked. Add ...
 
-The testing and implementation review seem OK.  But from a higher-level
-perspective Linus doesn't seem to be on board(?).  I was planning on
-holding onto this, see if the discussion progresses across this -rc
-cycle.
+Hmm?
 
+> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> index b58dffc58a8f..321f251c02aa 100644
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -2388,6 +2388,11 @@ static int timekeeping_validate_timex(const struct __kernel_timex *txc)
+>  		}
+>  	}
+>  
+> +	if (txc->modes & ADJ_MAXERROR) {
+> +		if (txc->maxerror < 0 || txc->maxerror > NTP_PHASE_LIMIT)
+> +			return -EINVAL;
+> +	}
+
+I dug into history to find a Fixes tag. That unearthed something
+interesting.  Exactly this check used to be there until commit
+eea83d896e31 ("ntp: NTP4 user space bits update") which landed in
+2.6.30. The change log says:
+
+    "If some values for adjtimex() are outside the acceptable range, they
+     are now simply normalized instead of letting the syscall fail."
+
+The problem with that commit is that it did not do any normalization at
+all and just relied on the actual time_maxerror handling in
+second_overflow(), which is both insufficient and also prone to that
+overflow issue.
+
+So instead of turning the clock back, we might be better off to actually
+put the normalization in place at the assignment:
+
+    time_maxerror = min(max(0, txc->maxerror), NTP_PHASE_LIMIT);
+
+or something like that.
+
+Miroslav: Any opinion on that?
+
+Thanks,
+
+        tglx
