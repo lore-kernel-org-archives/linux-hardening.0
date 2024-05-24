@@ -1,139 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D36A78C78;
-	Fri, 24 May 2024 21:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF8E6D1A0
+	for <linux-hardening@vger.kernel.org>; Fri, 24 May 2024 22:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716587849; cv=none; b=ndh1dAm+0qsN9tfJb38gzO89t7c0BFFq7mNFGODaZ2b6BRlPD/xDYBm9/zmbZFuM1Eo20uy4T8c4/1ph5MidsFlpVZrwRaL1x9MLSMnjsxhGSx01NKT3Hxmo+Uf5wHvtAVQUI3V19G2Y7KNcWGrF8eFM/Hxbz1TWHjmII14l0HY=
+	t=1716590630; cv=none; b=KdhN7VwOWBZDBy2r/KL5JVkbU252BhUloyTzZPc+EJvz9NTU6DtuqSXG2uKtEExEitXOn6OLmv6HFpNcnghYwGjNLXBKxs/u+yVe9GSuf5kb9qI4/vCoFmU1CytICf+fxVYDXdw2US6bEZSxrsEUavX/Vs5G9A29z3RT4LerfAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716587849; c=relaxed/simple;
-	bh=zevuABG5iL7ZenQ6zpwcJu0RCL7KnwzT9M9hFHiu0Ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BT0ri0+5n3MKTD6Z7tNv+Ynki3gVBIBMYZ56NI+SoBBuy08VOamV1j2GY3bR0ZPxmCzUGGsjpMwTg61b74wQt4YBixC6icYKQWF96bbaDRNPUY5BpM4Dmy7CUiYK/iKP6jvJJ5MI2I9yrq6n6SvqfyGNYOP6DxXg8e0Htm9McYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QqQwe6oO; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716590630; c=relaxed/simple;
+	bh=ucFbGWz6mMVoDnnPzwBRuL8Yb/nGgWE428XQaqRqtRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jck9tLUSlCc3ZBizeKGttbhLHxjPToZldYQTOn/Jl4OXm5jzUzAfKrBZgTcGKRFZghRC9/jD5S+CN73pgMzmLAWK3JJbDrzDqk4rzRpAYpaFKFd2gGgXfp7wUlwVYVfQRnOiHYobmNekBGUOdPObIoEuDvS17kMUdaRKhXf6FwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SiVdYy9C; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QqQwe6oO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716587847; x=1748123847;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zevuABG5iL7ZenQ6zpwcJu0RCL7KnwzT9M9hFHiu0Ww=;
-  b=QqQwe6oOsYNuw1RYXj/lMjiPzfZYCxFCF3S02bcfiSt5XMcRB9jxNsdu
-   2IvTxl5EM972VG6tXhDcra0oB7I/nnzrhyu6Htv2TsVSsotF2H49UnW6k
-   9fC3sBcwHlMqIeTbaReeYfbQtczFcBjJe5Yueys2cO6TfjgvkrXbDmOTz
-   B26Wj57k8ird+nci8wn2delHFoAz9CtqIHNI79v7zUJf4QSfueoBBe3Zj
-   VXMGSNPRb9Vmtb+vODC0HpEm8iTNvf7a3gcxF7L0j5/05GHVxcaa55sRV
-   577voSK8XqHevuQkE2+l7f/x2zbIwP3pM9hqM1XtbW96PKpuZtF2OoQvY
-   A==;
-X-CSE-ConnectionGUID: 57hvSddpR3OgxCvV4QQ+YQ==
-X-CSE-MsgGUID: QSzYmkvpRYeUNuVvRNbk7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="13208146"
-X-IronPort-AV: E=Sophos;i="6.08,186,1712646000"; 
-   d="scan'208";a="13208146"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 14:57:26 -0700
-X-CSE-ConnectionGUID: zTjUPtnFSEyRutSyi8ep5Q==
-X-CSE-MsgGUID: 8SXzsfxxSwKuPbQd5ZWk8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,186,1712646000"; 
-   d="scan'208";a="64956874"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 24 May 2024 14:57:23 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sAcue-0005wp-27;
-	Fri, 24 May 2024 21:57:20 +0000
-Date: Sat, 25 May 2024 05:56:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>,
-	linux-fsdevel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com,
-	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com,
-	jorgelo@chromium.org, Adrian Ratiu <adrian.ratiu@collabora.com>,
-	Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v4 1/2] proc: pass file instead of inode to proc_mem_open
-Message-ID: <202405250507.0z0WHg9L-lkp@intel.com>
-References: <20240524192858.3206-1-adrian.ratiu@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SiVdYy9C"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-80318a7e93dso1103378241.3
+        for <linux-hardening@vger.kernel.org>; Fri, 24 May 2024 15:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716590627; x=1717195427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ymFK2RObdNjzPsJxP220O5+71BNflb8CNq7Wj8mqDgk=;
+        b=SiVdYy9C+Lh5VCRx2n2IsuyZB6xVlAX5N53nl8OgWDdhG2kjOQmGkqRYwQAFS+Mj67
+         BTvPnCzPosLoYY3JZxtn0UB3lYFNvpiulvJdh5EPhkJwBej5LxL9lyPEvPlLIElOJ1Br
+         aKdh1SBtCZsMC8V5ud0JRnWKIqlSSNFa/TW6l/yqcQHzwJnO6h9JsBPKjPOOthLHZEjV
+         Sn35e4bIbVC8guq9wMiF5LNBFn+fbirTeWTO0U4CGstBZbFW4FfgIrOS0+XBxXBCUIrS
+         T11bJKG9udlKifs6RssNbvSVHxRjAuXydkeU5td8ALr7EmB+12U37eNndB3R83uCrlfa
+         gPsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716590627; x=1717195427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ymFK2RObdNjzPsJxP220O5+71BNflb8CNq7Wj8mqDgk=;
+        b=WDXKd2oB2ya82H5D1ivJ/o9P7D5VMCNxqpct8BgSiWl+QbvTq/3aiefi1wBoeTyoqT
+         NLiNdTdBRic0FE+X0CRu1k0O51EtD44VIgHan3zTU1Wf/hAlzmERbxTXITiLbmhTIvhh
+         iZhOjDeOeRrEAU5RvzeHRSBAhEjhmZoIFeN2Qwll5JHYFoRcNpWKAZ0DBL+8P8mSPKAO
+         fAzGhB6Nf8CRL35RTWiq5TyfW0YL+YG2Sq0dZtF4p9UjwyVKYe04MUnjpyaezEqkVOtt
+         8FnbXtJRdyQsXTF865Um55V9wGUeYP/Rz3oV9UEvyvEURhxK/WMwrHNTPB9jNkxeXWYF
+         10eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPtaZ7KA4ovB5Db4sUwQkNwFnPVoBG5/ndhiKiIHo8mHKsWAALYWlzIBiWxhehYzp6Goq+gdZwGgMJQ357G2iRVbfUvV/2kk48hfvPtp7D
+X-Gm-Message-State: AOJu0YzLT5LMDmIVVKwO6OAPF/B7t1gCQy3cFXa8KSDVJTzyTK+obNTV
+	ylvAYojZEdHefe0lF5pv82GIQ6OzXcYkzRW8sMeZCizg93PKuSh1a1Vq6VOn21gaZathTpzHo9s
+	9t4wjDDb5bSko1Fth6GPwOu+/1fqPH6WTpkam
+X-Google-Smtp-Source: AGHT+IEUGTDNkD54qyJg80rQHwEyHmm7B9lB9DQteWkSaz9UWWF3L+6g5cloJy/CNjqKhEMoxrKZcnEAYLz5ilTnrYs=
+X-Received: by 2002:a05:6102:2e7:b0:47b:f5ce:569d with SMTP id
+ ada2fe7eead31-48a385134d2mr4040126137.3.1716590627119; Fri, 24 May 2024
+ 15:43:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524192858.3206-1-adrian.ratiu@collabora.com>
+References: <20240517-b4-sio-ntp-usec-v2-1-d539180f2b79@google.com> <87ed9re7i4.ffs@tglx>
+In-Reply-To: <87ed9re7i4.ffs@tglx>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 24 May 2024 15:43:35 -0700
+Message-ID: <CAFhGd8o0eFh0sqXtOcw=E+WBaKCTatpv18fA1Pzr_M1aC9OQ=A@mail.gmail.com>
+Subject: Re: [PATCH v2] ntp: remove accidental integer wrap-around
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	Miroslav Lichvar <mlichvar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Adrian,
+Thomas,
 
-kernel test robot noticed the following build errors:
+I appreciate you reviewing my patches.
 
-[auto build test ERROR on kees/for-next/pstore]
-[also build test ERROR on kees/for-next/kspp linus/master v6.9 next-20240523]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Fri, May 24, 2024 at 5:09=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Fri, May 17 2024 at 20:22, Justin Stitt wrote:
+> > time_maxerror is unconditionally incremented and the result is checked
+> > against NTP_PHASE_LIMIT, but the increment itself can overflow,
+> > resulting in wrap-around to negative space.
+> >
+> > The user can supply some crazy values which is causing the overflow. Ad=
+d
+> > an extra validation step checking that maxerror is reasonable.
+>
+> The user can supply any value which can cause an overflow as the input
+> is unchecked. Add ...
+>
+> Hmm?
+>
+> > diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> > index b58dffc58a8f..321f251c02aa 100644
+> > --- a/kernel/time/timekeeping.c
+> > +++ b/kernel/time/timekeeping.c
+> > @@ -2388,6 +2388,11 @@ static int timekeeping_validate_timex(const stru=
+ct __kernel_timex *txc)
+> >               }
+> >       }
+> >
+> > +     if (txc->modes & ADJ_MAXERROR) {
+> > +             if (txc->maxerror < 0 || txc->maxerror > NTP_PHASE_LIMIT)
+> > +                     return -EINVAL;
+> > +     }
+>
+> I dug into history to find a Fixes tag. That unearthed something
+> interesting.  Exactly this check used to be there until commit
+> eea83d896e31 ("ntp: NTP4 user space bits update") which landed in
+> 2.6.30. The change log says:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Adrian-Ratiu/proc-restrict-proc-pid-mem/20240525-033201
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
-patch link:    https://lore.kernel.org/r/20240524192858.3206-1-adrian.ratiu%40collabora.com
-patch subject: [PATCH v4 1/2] proc: pass file instead of inode to proc_mem_open
-config: m68k-allnoconfig (https://download.01.org/0day-ci/archive/20240525/202405250507.0z0WHg9L-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240525/202405250507.0z0WHg9L-lkp@intel.com/reproduce)
+Thanks for doing the archaeology.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405250507.0z0WHg9L-lkp@intel.com/
+>
+>     "If some values for adjtimex() are outside the acceptable range, they
+>      are now simply normalized instead of letting the syscall fail."
+>
+> The problem with that commit is that it did not do any normalization at
+> all and just relied on the actual time_maxerror handling in
+> second_overflow(), which is both insufficient and also prone to that
+> overflow issue.
+>
+> So instead of turning the clock back, we might be better off to actually
+> put the normalization in place at the assignment:
+>
+>     time_maxerror =3D min(max(0, txc->maxerror), NTP_PHASE_LIMIT);
 
-All errors (new ones prefixed by >>):
+A saturating resolution strategy is one that I've taken with some of
+my other overflow patches.
 
-   fs/proc/task_nommu.c: In function 'maps_open':
->> fs/proc/task_nommu.c:262:34: error: passing argument 1 of 'proc_mem_open' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     262 |         priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
-         |                                  ^~~~~
-         |                                  |
-         |                                  struct inode *
-   In file included from fs/proc/task_nommu.c:13:
-   fs/proc/internal.h:298:46: note: expected 'struct file *' but argument is of type 'struct inode *'
-     298 | struct mm_struct *proc_mem_open(struct file *file, unsigned int mode);
-         |                                 ~~~~~~~~~~~~~^~~~
-   cc1: some warnings being treated as errors
+... but how about: clamp(txc->maxerror, 0, NTP_PHASE_LIMIT)
 
+>
+> or something like that.
+>
+> Miroslav: Any opinion on that?
+>
+> Thanks,
+>
+>         tglx
 
-vim +/proc_mem_open +262 fs/proc/task_nommu.c
+Anyways, I'm waiting to see how the whole overflow/wraparound
+discussion in general evolves and, of course, how the local discussion
+about this patch shapes up.
 
-b76437579d1344 Siddhesh Poyarekar 2012-03-21  251  
-b76437579d1344 Siddhesh Poyarekar 2012-03-21  252  static int maps_open(struct inode *inode, struct file *file,
-b76437579d1344 Siddhesh Poyarekar 2012-03-21  253  		     const struct seq_operations *ops)
-662795deb854b3 Eric W. Biederman  2006-06-26  254  {
-dbf8685c8e2140 David Howells      2006-09-27  255  	struct proc_maps_private *priv;
-dbf8685c8e2140 David Howells      2006-09-27  256  
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  257  	priv = __seq_open_private(file, ops, sizeof(*priv));
-ce34fddb5bafb4 Oleg Nesterov      2014-10-09  258  	if (!priv)
-ce34fddb5bafb4 Oleg Nesterov      2014-10-09  259  		return -ENOMEM;
-ce34fddb5bafb4 Oleg Nesterov      2014-10-09  260  
-2c03376d2db005 Oleg Nesterov      2014-10-09  261  	priv->inode = inode;
-27692cd56e2aa6 Oleg Nesterov      2014-10-09 @262  	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  263  	if (IS_ERR(priv->mm)) {
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  264  		int err = PTR_ERR(priv->mm);
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  265  
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  266  		seq_release_private(inode, file);
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  267  		return err;
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  268  	}
-27692cd56e2aa6 Oleg Nesterov      2014-10-09  269  
-ce34fddb5bafb4 Oleg Nesterov      2014-10-09  270  	return 0;
-662795deb854b3 Eric W. Biederman  2006-06-26  271  }
-662795deb854b3 Eric W. Biederman  2006-06-26  272  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Justin
