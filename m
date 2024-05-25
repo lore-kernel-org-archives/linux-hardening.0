@@ -1,87 +1,148 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20214A01;
-	Fri, 24 May 2024 22:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BED138E;
+	Sat, 25 May 2024 05:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716591265; cv=none; b=CpJAxOYznaFmoqrk25wy9dyaQnuC1bv2q9lpBX/VsKZYyguydYQG/V7rn98IHlkD7XkrRVaQNROxLtFzeVb5swtDiGs0o5NEXaLp0jvBXl0LSk4F1/Ij+wIs5qRwJKihYpMrX8ZTRl2hIY5/BbhUNvtXF+h0aJ0Tqis6WyybsNY=
+	t=1716616203; cv=none; b=VYAC+d37bcNHyYpI/96WQ4WvOYXLnaCnR5W+rD6nxFzUu+7mCQNH5FeoNVlyMhUmQD0vIvPBYmgrD+EFkKRK2SMWT0l0yfMd0y8/8myaDO4KQ/vYYrtvZC/GBqLF+2H19Af4/BSSwC0KoSM7+ldDueWPKDY+x6fcN879xQAa4l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716591265; c=relaxed/simple;
-	bh=h/EU+nzRR8CEV7/SrL/+1rdRmmab8gKxvqbj51zPtmk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RFKUerFcpTcA+M3vieKFI4SaoJChcq6mlvXOSIiyWGmAIBmRlviTSqo2Kr8xcHjIppO1vJk/6VisumlhGfQyR0IbMrBUfs75SpfL+RlVEXgGfokBKh4wAp3se6uo91EvWo7AEmYXhNFp0mXUt7BPH5XsRL0Sug4+xb9KXApVGi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dwsL7amQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ByDHtJZ+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716616203; c=relaxed/simple;
+	bh=VSJIf4tmyz34+ryR8Cz9iQWIiMNUye0lMZyO2dQZvMY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iq/NeGipyNNescnUHF96TzVwbHHuDzKorDCI4JgSm5xRqdTy8jSRIOWwfxmUmxj2oFnMk8Fi1l1Rgm3ieUaRGtWjlrHmbcvVmJv/FKkBfqSqc2QOOmvvPEmcYOoK0A64MomY7rS4HmdfQcGzT/osjLEK4/GK7FVLsduLiO7Ef/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U+5NR9Jw; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dwsL7amQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ByDHtJZ+"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716591261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SCMwl4CJ1P6TxmuppacIYNhDQ7TDCETZfazQEPDvVXA=;
-	b=dwsL7amQZUciw1KVwOKvuBJLutl7EsVGYknVXwN+2r1vv2SG7GW/0TughWKQLuR/0A39KM
-	BoXOtkXAWKha37SS1YSmGFPg5Ix49P2e5fX6066+a8lJKSPHCBmhOynVRA3D+1qdJTCmiq
-	GzTm0ohZQ6mFD0kJ8XIU8Tq9cnwvIUUfFmq/c6UOvxVzjUU8zGSUGnr1hui1S0qF6s6jDZ
-	MjxzpbTPpUaL54ZL+1/3/uJxCmO0hOHYV8A3Ht5nVOcmfRLe+9riNK4bCC8Qqk9Vt02gL9
-	9zKSS4QUovIRkoNUtDudGp5YF/4z7TI6x19X89RjAUsP90oaAT25ZeinHtlFxg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716591261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SCMwl4CJ1P6TxmuppacIYNhDQ7TDCETZfazQEPDvVXA=;
-	b=ByDHtJZ+kSkCCFuX3D8HZBo6eBdAno5yPFJl/Y7giV/e2hZNMp0jJgkRfNwlCrZtsOj8C+
-	W3dYwM1v7abxsJCQ==
-To: Justin Stitt <justinstitt@google.com>
-Cc: John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>,
- Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-hardening@vger.kernel.org, Miroslav Lichvar
- <mlichvar@redhat.com>
-Subject: Re: [PATCH v2] ntp: remove accidental integer wrap-around
-In-Reply-To: <CAFhGd8o0eFh0sqXtOcw=E+WBaKCTatpv18fA1Pzr_M1aC9OQ=A@mail.gmail.com>
-References: <20240517-b4-sio-ntp-usec-v2-1-d539180f2b79@google.com>
- <87ed9re7i4.ffs@tglx>
- <CAFhGd8o0eFh0sqXtOcw=E+WBaKCTatpv18fA1Pzr_M1aC9OQ=A@mail.gmail.com>
-Date: Sat, 25 May 2024 00:54:21 +0200
-Message-ID: <87le3yddnm.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U+5NR9Jw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=NjAIpWnGAztCMT7g7qkBL9r84roWJZLVxyIj65a/6/g=; b=U+5NR9JwCWW91cWlPKNvy1chd+
+	u0P/4HzM54MNe7A5vcQkxEZIlUb+dWfmrzRfJBHK7ADk3m/B4A/g3f6qMV8dGnYxd3wwq55EjRizS
+	5Y+EPpe2PN/GQIounZZSCkN/jGS6Yr1LjDieV11c/QyKfnzCgNVtzXRhlxBp8T0GznxoyiwSXM5HF
+	6eUbbl0Gwi3JXDOqrdPy99p+rR/7mwSWbXPya1yElAbc1ZkSoTLh0mVeGr+5zhHJ6OFisoRLbNN5A
+	Xx4xVSxUaf6oksx+MpjfGzzO9xL5YETFCy1jlTvVuQ0v3XAO+xr7UnoGj7Fa2estAJlHRGJ7LJepO
+	6Qz1N4sw==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sAkI1-0000000ASst-1eDf;
+	Sat, 25 May 2024 05:49:57 +0000
+Message-ID: <9ce0c222-c80c-4049-8746-d74e612c3030@infradead.org>
+Date: Fri, 24 May 2024 22:49:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] proc: restrict /proc/pid/mem
+To: Adrian Ratiu <adrian.ratiu@collabora.com>, linux-fsdevel@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
+ kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com,
+ inglorion@google.com, ajordanr@google.com, jorgelo@chromium.org,
+ Guenter Roeck <groeck@chromium.org>, Doug Anderson <dianders@chromium.org>,
+ Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>, Mike Frysinger <vapier@chromium.org>
+References: <20240524192858.3206-1-adrian.ratiu@collabora.com>
+ <20240524192858.3206-2-adrian.ratiu@collabora.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240524192858.3206-2-adrian.ratiu@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Justin!
+Hi--
 
-On Fri, May 24 2024 at 15:43, Justin Stitt wrote:
-> I appreciate you reviewing my patches.
+On 5/24/24 12:28 PM, Adrian Ratiu wrote:
+> diff --git a/security/Kconfig b/security/Kconfig
+> index 412e76f1575d..0cd73f848b5a 100644
+> --- a/security/Kconfig
+> +++ b/security/Kconfig
+> @@ -183,6 +183,74 @@ config STATIC_USERMODEHELPER_PATH
+>  	  If you wish for all usermode helper programs to be disabled,
+>  	  specify an empty string here (i.e. "").
+>  
+> +menu "Procfs mem restriction options"
+> +
+> +config PROC_MEM_RESTRICT_FOLL_FORCE_DEFAULT
+> +	bool "Restrict all FOLL_FORCE flag usage"
+> +	default n
+> +	help
+> +	  Restrict all FOLL_FORCE usage during /proc/*/mem RW.
+> +	  Debuggerg like GDB require using FOLL_FORCE for basic
 
-You're welcome!
+	  Debuggers
 
-> On Fri, May 24, 2024 at 5:09=E2=80=AFAM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> So instead of turning the clock back, we might be better off to actually
->> put the normalization in place at the assignment:
->>
->>     time_maxerror =3D min(max(0, txc->maxerror), NTP_PHASE_LIMIT);
->
-> A saturating resolution strategy is one that I've taken with some of
-> my other overflow patches.
->
-> ... but how about: clamp(txc->maxerror, 0, NTP_PHASE_LIMIT)
+> +	  functionality.
+> +
+> +config PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT
+> +	bool "Restrict FOLL_FORCE usage except for ptracers"
+> +	default n
+> +	help
+> +	  Restrict FOLL_FORCE usage during /proc/*/mem RW, except
+> +	  for ptracer processes. Debuggerg like GDB require using
 
-Duh. You are right, but that's too obvious :)
+	                         Debuggers
 
-Thanks,
+> +	  FOLL_FORCE for basic functionality.
+> +
+> +config PROC_MEM_RESTRICT_OPEN_READ_DEFAULT
+> +	bool "Restrict all open() read access"
+> +	default n
+> +	help
+> +	  Restrict all open() read access to /proc/*/mem files.
+> +	  Use with caution: this can break init systems, debuggers,
+> +	  container supervisors and other tasks using /proc/*/mem.
+> +
+> +config PROC_MEM_RESTRICT_OPEN_READ_PTRACE_DEFAULT
+> +	bool "Restrict open() for reads except for ptracers"
+> +	default n
+> +	help
+> +	  Restrict open() read access except for ptracer processes.
+> +	  Use with caution: this can break init systems, debuggers,
+> +	  container supervisors and other non-ptrace capable tasks
+> +	  using /proc/*/mem.
+> +
+> +config PROC_MEM_RESTRICT_OPEN_WRITE_DEFAULT
+> +	bool "Restrict all open() write access"
+> +	default n
+> +	help
+> +	  Restrict all open() write access to /proc/*/mem files.
+> +	  Debuggers like GDB and some container supervisors tasks
+> +	  require opening as RW and may break.
+> +
+> +config PROC_MEM_RESTRICT_OPEN_WRITE_PTRACE_DEFAULT
+> +	bool "Restrict open() for writes except for ptracers"
+> +	default n
+> +	help
+> +	  Restrict open() write access except for ptracer processes,
+> +	  usually debuggers.
+> +
+> +config PROC_MEM_RESTRICT_WRITE_DEFAULT
+> +	bool "Restrict all write() calls"
+> +	default n
+> +	help
+> +	  Restrict all /proc/*/mem direct write calls.
+> +	  Open calls with RW modes are still allowed, this blocks
+> +	  just the write() calls.
+> +
+> +config PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT
+> +	bool "Restrict write() calls except for ptracers"
+> +	default n
+> +	help
+> +	  Restrict /proc/*/mem direct write calls except for ptracer processes.
+> +	  Open calls with RW modes are still allowed, this blocks just
+> +	  the write() calls.
+> +
+> +endmenu
 
-        tglx
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
