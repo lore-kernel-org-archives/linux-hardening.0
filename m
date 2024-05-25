@@ -1,347 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349E622EE9
-	for <linux-hardening@vger.kernel.org>; Sat, 25 May 2024 09:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048EB1DFFC;
+	Sat, 25 May 2024 16:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716628807; cv=none; b=C2t4IfI2K+T7D8akDPK7VU52+OO/QCVmej94e5JFu0EKbd/NTCLszBzQfbz764FRZKjW8qAZiTzEqaOooOcX1TP9+NlB2nA3q6JjezYPtjpH1anOPhf3bRMiMF6WuIx/V27mkXbFxXQp/UJYvyWNYfXi5y3MWtYB0js7HQsfhRk=
+	t=1716652935; cv=none; b=iIhXh6diJwCv+AgRsoXnl5w/MRqGKZIaxKV6jI25mWyKnsu5bnHh47WjYCX3jRYIMN9o+UxwooGVN22lID5zpkbptrh/+q9rpdwtJm1ipyruSaDScfp5zWD1Y8pZaR3oaZIVp84+1na9uZA50EgeSmnmktzlobUInSfYXAU6iwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716628807; c=relaxed/simple;
-	bh=rSskSPVxXy5Ck8nOMqazWrp8/0K12tTA04uoMov5tYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=XIy8XeymOwyiUNCOyXSCxJ3hU082TakSxHoSgxFkGDdanKKU7Q7UGkJW0z7zpUwjOqXJaumxf78LNmI2ELyELyR5cMWKyAbK0M99EJWWcmhAwt5wDIyvRloHT5noSuyRTmqcamDeFy4TQW0usuQYsyY9/5+jl7+keyiSp8l7Q6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MSno1z+e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716652935; c=relaxed/simple;
+	bh=wA/DZCGQBGXvbLeOSNQtjnT7YRvsCmmXA2f4Xq7qKyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UE/+hfVJiafb20wHz9JPVBj9oJojbH6c2Y6WhfZStFSfk6DthTlyUf9w8bOx9Tyk0g71uhcwK2a/AgO0MmGbT/k6XDp2Yu9QGIWAG1FSN3PmpdnyRcd5+bBLvFRF0LN64G2ASyU5k1rcLrAnsSoPPyLwO4FqAY3gEqF6NHxMH9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=oKBfEsCO; arc=none smtp.client-ip=80.12.242.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MSno1z+e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716628805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eASqbe6YEnizYGq/4R2maOLvkAhSwYCyttDAYwLxidw=;
-	b=MSno1z+etbyydBNUq3h/pHThN1KC9AxUYz5g8ut3nRyP8CQhJi1T87JfOrlVpkDRzkawzK
-	jEeGK4t0RPZIRHOU14nDvqPneFC5/7h4LgGONYY/8Imzpd1ckt1wxJXG0ImtXQPbrzrGwG
-	c+gyeAGs9epV5eLs2aXetaQ0NQoRpOU=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-QZK_CZ4UOkOjKFbNAmU3uQ-1; Sat, 25 May 2024 05:20:03 -0400
-X-MC-Unique: QZK_CZ4UOkOjKFbNAmU3uQ-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6f105fabe43so3221600a34.0
-        for <linux-hardening@vger.kernel.org>; Sat, 25 May 2024 02:20:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716628802; x=1717233602;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eASqbe6YEnizYGq/4R2maOLvkAhSwYCyttDAYwLxidw=;
-        b=DNUuEgByLh4z8AAenByNw7zzHdyy8gU1wonNXvBIRFtALKk/nRXc1GnooliMJL9U2j
-         I6/B2N3TxJIw+ZOqkK+JX8pFcA988EDHHJgxJvVISxZey/Rtk7VGHGi3vyUH3gZyiJh4
-         4nNa5eV+GuKZLOzX/0Am+kfdW1CiH3YAEdpjn1bE9FUIgAL6flk2Z0wVUh/flJkeSBng
-         TnHAo5ZTQrpN6e5FYv39dqq5MR8qK5JiJedL9+n3QwmrEhD2kKEAadgNiAPGN1PsGNZl
-         JIxGOPP/H3ISUoqkb6vFQYCby10CGkknTtacbNQ7sgdPMscTk2zHllI1iSqbKv1ld+tY
-         ttqg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2YoEMPTYaI9wT/+Rix9lCeHxdUdUaKvKpD1mzvLo/MoPmnI4ZA7V/CljsKwHEMLHiqI/NyVsTPN+MiKlhstgzmThX5zPu3n9W8vuTyjoL
-X-Gm-Message-State: AOJu0YxRDnPTKqnnG4d83HmHya/z62xHwLBndTSFjv6hHSaEmOz3stUr
-	AelXjyo46OsvwCtoqAMzeX/LAGMinCWeQROHsXN72op1/13dHOPTxvVE1S1XUeitMo4cqZ44pxz
-	O+8QCV/L4Iv7dICVmYGy7PlDuYvwn5EY3R0zAiMsrKFs+9UNhMKQBY330s0oyvOZWZw==
-X-Received: by 2002:a05:6870:e256:b0:24e:e931:8f1f with SMTP id 586e51a60fabf-24eeabe4ba2mr2693912fac.33.1716628802279;
-        Sat, 25 May 2024 02:20:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHzgl+mXOrooOjhH2kofClUmgOiLg6jxvqb743JJExXOnyiKvQ1laCvo2ODxkHeVivV9qCPSQ==
-X-Received: by 2002:a05:6870:e256:b0:24e:e931:8f1f with SMTP id 586e51a60fabf-24eeabe4ba2mr2693887fac.33.1716628801735;
-        Sat, 25 May 2024 02:20:01 -0700 (PDT)
-Received: from localhost ([2409:8924:81b:1d01:5bbd:6e70:ff5b:4ece])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbeb5dfsm2160624b3a.123.2024.05.25.02.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 May 2024 02:20:01 -0700 (PDT)
-Date: Sat, 25 May 2024 15:57:20 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <tybsp5qrjf25mlj5zrzfg5lhzykmz4ztzrmqv4tntbfypca5oa@2zfjjdxblvft>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
- <2024052334-protegee-cheating-5934@gregkh>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="oKBfEsCO"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id AtpGslhQJ3tO6AtpGsclcT; Sat, 25 May 2024 18:00:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1716652856;
+	bh=WNut/xtqmEtO3vfRepBElQ9DP3GCge0U4oTsojKf0dA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=oKBfEsCODhjYN3BuoeE7mxdjrfivsP7ev1oxVxunkS7Xyq8NjX3IACLpQA8aaF4dV
+	 IXUvuoWfI/e8POQL1UsoAbm9jAiUgP6m1hH7CPgcIpomq6iP4RetU5U3bx0C56vhVz
+	 K2fD8tOA5/zPwuLwZvLn94m9V465MwTg+1Bn2FgM3qpS7epANCO3SJ6qrbBlLz1vGv
+	 vVIq8CDs0USJrTHwiVQa7U/05dsyTG4uw7cttnaOkpEIVYKP0RSwJZjSmiTuZnxOl/
+	 FMxIy6hi60srtYd527d8I+WX7MW7jI4w0gybwSUwO2vMSwyDcfK8/fFkz36bP3kgD6
+	 +NYA7E3F3le5Q==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 25 May 2024 18:00:56 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] dma-buf/fence-array: Add flex array to struct dma_fence_array
+Date: Sat, 25 May 2024 18:00:31 +0200
+Message-ID: <8b4e556e07b5dd78bb8a39b67ea0a43b199083c8.1716652811.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <2024052334-protegee-cheating-5934@gregkh>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Greg,
+This is an effort to get rid of all multiplications from allocation
+functions in order to prevent integer overflows [1][2].
 
-Thanks for taking time to carefully review this patch!
+The "struct dma_fence_array" can be refactored to add a flex array in order
+to have the "callback structures allocated behind the array" be more
+explicit.
 
-On Thu, May 23, 2024 at 09:21:08AM +0200, Greg KH wrote:
->On Thu, May 23, 2024 at 01:04:43PM +0800, Coiby Xu wrote:
->> A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
->> the dm crypt keys persist for the kdump kernel. User space can send the
->> following commands,
->> - "init KEY_NUM"
->>   Initialize needed structures
->> - "record KEY_DESC"
->>   Record a key description. The key must be a logon key.
->
->"logon"?  What is that?
+Do so:
+   - makes the code more readable and safer.
+   - allows using __counted_by() for additional checks
+   - avoids some pointer arithmetic in dma_fence_array_enable_signaling()
 
-Thanks for raising this question. A logon key is similar to a user key
-but the payload can't be read by user space. I'll document this info and
-also refer users to security/keys/core.rst for details.
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/160 [2]
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+Compile tested only.
 
->
->>
->> User space can also read this API to learn about current state.
->
->But you don't document it in Documentation/ABI/ so we don't know if this
->really is the case, and no one will know how to use it :(
+Changes in v2:
+  - Name the new field 'callbacks' instead of 'cb'   [Christian König]
 
-Thanks for bringing this to my attention! A new version will include
-Documentation/ABI/testing/crash_dm_crypt_keys to have all the details. 
+v1: https://lore.kernel.org/all/d3204a5b4776553455c2cfb1def72f1dae0dba25.1716054403.git.christophe.jaillet@wanadoo.fr/
+---
+ drivers/dma-buf/dma-fence-array.c | 10 ++++------
+ include/linux/dma-fence-array.h   |  3 +++
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
->
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  include/linux/crash_core.h   |   5 +-
->>  kernel/Kconfig.kexec         |   8 +++
->>  kernel/Makefile              |   1 +
->>  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
->>  kernel/ksysfs.c              |  22 +++++++
->>  5 files changed, 148 insertions(+), 1 deletion(-)
->>  create mode 100644 kernel/crash_dump_dm_crypt.c
->>
-[...]
->> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
->> new file mode 100644
->> index 000000000000..78809189084a
->> --- /dev/null
->> +++ b/kernel/crash_dump_dm_crypt.c
->> @@ -0,0 +1,113 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +#include <keys/user-type.h>
->> +#include <linux/crash_dump.h>
->> +
->> +#define KEY_NUM_MAX 128
->> +#define KEY_SIZE_MAX 256
->
->Why these values?
-
-For KEY_NUM_MAX, I assume the maximum number of LUKS encrypted volumes to
-unlock is 128. 
-
-For KEY_SIZE_MAX, according to /proc/crypto and "cryptsetup benchmark",
-the maximum key size is 64 bytes. So I assume 256 should be enough in
-near future.
-
-Thanks for raising the question which makes realize it's better to
-include the assumptions in the commit message for domain experts to
-examine!
-
->
->> +
->> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
->> +#define KEY_DESC_LEN 48
->> +
->> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
->> +static enum STATE_ENUM {
->> +	FRESH = 0,
->> +	INITIALIZED,
->> +	RECORDED,
->> +	LOADED,
->> +} state;
->
->How are you going to keep these enums synced up with the string values?
-
-Thanks to prompt me to come up with a more reliable way! I should have
-used the emums to index the array,
-
-static const char *STATE_STR[] = {
-     [FRESH] = "fresh",
-     [INITIALIZED] = "initialized",
-     [RECORDED] = "recorded",
-     [LOADED] = "loaded"
-};
-
->
->> +
->> +static unsigned int key_count;
->> +static size_t keys_header_size;
->> +
->> +struct dm_crypt_key {
->> +	unsigned int key_size;
->> +	char key_desc[KEY_DESC_LEN];
->> +	u8 data[KEY_SIZE_MAX];
->> +};
->> +
->> +static struct keys_header {
->> +	unsigned int key_count;
->> +	struct dm_crypt_key keys[] __counted_by(key_count);
->> +} *keys_header;
->> +
->> +static size_t get_keys_header_size(struct keys_header *keys_header,
->> +				   size_t key_count)
->> +{
->> +	return struct_size(keys_header, keys, key_count);
->> +}
->> +
->> +static int init(const char *buf)
->> +{
->> +	unsigned int total_keys;
->> +	char dummy[5];
->
->Why 5?
-
-Oh, I had len("init")+1(NULL) in mind when wrote 5. In retrospect, 5
-is not necessary. And in fact there is no need to define this dummy
-variable in the first place as explained in the next comment.
-
->
->> +
->> +	if (sscanf(buf, "%4s %u", dummy, &total_keys) != 2)
->
->Didn't you just overflow dummy now?
-
-Correct me if I'm wrong, but using the width specifier i.e. "%4s" won't
-overflow dummy, right? Anyways, I think a better way is to simply use
-sscanf(buf, "init %u",..)
-instead thus no need for this dummy variable.
-
->
->> +		return -EINVAL;
->> +
->> +	if (key_count > KEY_NUM_MAX) {
->> +		pr_err("Exceed the maximum number of keys (KEY_NUM_MAX=%u)\n",
->> +		       KEY_NUM_MAX);
->
->Do not let userspace spam the kernel log directly if it sends it invalid
->data.
-
-Thanks for pointing out my oversight. I'll simply return -EINVAL in next
-version.
-
->
->> +		return -EINVAL;
->> +	}
->> +
->> +	keys_header_size = get_keys_header_size(keys_header, total_keys);
->> +	key_count = 0;
->> +
->> +	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
->> +	if (!keys_header)
->> +		return -ENOMEM;
->> +
->> +	keys_header->key_count = total_keys;
->> +	state = INITIALIZED;
->> +	return 0;
->> +}
->> +
->> +static int record_key_desc(const char *buf, struct dm_crypt_key *dm_key)
->> +{
->> +	char key_desc[KEY_DESC_LEN];
->> +	char dummy[7];
->> +
->> +	if (state != INITIALIZED)
->> +		pr_err("Please send the cmd 'init <KEY_NUM>' first\n");
->
->Again, don't let userspace spam the log.
-
-I'll fix this issue in next version. Thank you again!
-
->
->> +
->> +	if (sscanf(buf, "%6s %s", dummy, key_desc) != 2)
-
-Oh, key_desc could be overflowed here if there is a malicious user. I'll
-have a check on the length of buf in next version.
-
-
-[...]
->> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_keys_write);
->
->EXPORT_SYMBOL_GPL() as you are dealing with a sysfs api?
-
->
->> +int crash_sysfs_dm_crypt_keys_read(char *buf)
->> +{
->> +	return sprintf(buf, "%s\n", STATE_STR[state]);
->
->sysfs_emit() please.
-
-This will be fixed, thanks!
-
->
->> +}
->> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_keys_read);
->
->Again, EXPORT_SYMBOL_GPL()?
-
-I'll replace two occurrences of EXPORT_SYMBOL with EXPORT_SYMBOL_GPL,
-thanks!
-
->
->> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
->> index 07fb5987b42b..2ba4dcbf5816 100644
->> --- a/kernel/ksysfs.c
->> +++ b/kernel/ksysfs.c
->> @@ -167,6 +167,25 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
->>  }
->>  KERNEL_ATTR_RO(vmcoreinfo);
->>
->> +#ifdef CONFIG_CRASH_DM_CRYPT
->> +static ssize_t crash_dm_crypt_keys_show(struct kobject *kobj,
->> +					struct kobj_attribute *attr, char *buf)
->> +{
->> +	return crash_sysfs_dm_crypt_keys_read(buf);
->> +}
->> +
->> +static ssize_t crash_dm_crypt_keys_store(struct kobject *kobj,
->> +					 struct kobj_attribute *attr,
->> +					 const char *buf, size_t count)
->> +{
->> +	int ret;
->> +
->> +	ret = crash_sysfs_dm_crypt_keys_write(buf, count);
->> +	return ret < 0 ? ret : count;
->
->Personally, I hate ? : lines, just write it out, the compiler is the
->same and this way it is much more readable:
->	if (ret < 0)
->		return ret;
->	return count;
-
-Thanks for suggesting more readable code! I'll apply it to next version!
-
-
->
->thanks,
->
->greg k-h
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
->
-
+diff --git a/drivers/dma-buf/dma-fence-array.c b/drivers/dma-buf/dma-fence-array.c
+index 9b3ce8948351..c74ac197d5fe 100644
+--- a/drivers/dma-buf/dma-fence-array.c
++++ b/drivers/dma-buf/dma-fence-array.c
+@@ -70,7 +70,7 @@ static void dma_fence_array_cb_func(struct dma_fence *f,
+ static bool dma_fence_array_enable_signaling(struct dma_fence *fence)
+ {
+ 	struct dma_fence_array *array = to_dma_fence_array(fence);
+-	struct dma_fence_array_cb *cb = (void *)(&array[1]);
++	struct dma_fence_array_cb *cb = array->callbacks;
+ 	unsigned i;
+ 
+ 	for (i = 0; i < array->num_fences; ++i) {
+@@ -168,22 +168,20 @@ struct dma_fence_array *dma_fence_array_create(int num_fences,
+ 					       bool signal_on_any)
+ {
+ 	struct dma_fence_array *array;
+-	size_t size = sizeof(*array);
+ 
+ 	WARN_ON(!num_fences || !fences);
+ 
+-	/* Allocate the callback structures behind the array. */
+-	size += num_fences * sizeof(struct dma_fence_array_cb);
+-	array = kzalloc(size, GFP_KERNEL);
++	array = kzalloc(struct_size(array, callbacks, num_fences), GFP_KERNEL);
+ 	if (!array)
+ 		return NULL;
+ 
++	array->num_fences = num_fences;
++
+ 	spin_lock_init(&array->lock);
+ 	dma_fence_init(&array->base, &dma_fence_array_ops, &array->lock,
+ 		       context, seqno);
+ 	init_irq_work(&array->work, irq_dma_fence_array_work);
+ 
+-	array->num_fences = num_fences;
+ 	atomic_set(&array->num_pending, signal_on_any ? 1 : num_fences);
+ 	array->fences = fences;
+ 
+diff --git a/include/linux/dma-fence-array.h b/include/linux/dma-fence-array.h
+index ec7f25def392..29c5650c1038 100644
+--- a/include/linux/dma-fence-array.h
++++ b/include/linux/dma-fence-array.h
+@@ -33,6 +33,7 @@ struct dma_fence_array_cb {
+  * @num_pending: fences in the array still pending
+  * @fences: array of the fences
+  * @work: internal irq_work function
++ * @callbacks: array of callback helpers
+  */
+ struct dma_fence_array {
+ 	struct dma_fence base;
+@@ -43,6 +44,8 @@ struct dma_fence_array {
+ 	struct dma_fence **fences;
+ 
+ 	struct irq_work work;
++
++	struct dma_fence_array_cb callbacks[] __counted_by(num_fences);
+ };
+ 
+ /**
 -- 
-Best regards,
-Coiby
+2.45.1
 
