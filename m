@@ -1,151 +1,131 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048EB1DFFC;
-	Sat, 25 May 2024 16:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E642B9C5;
+	Sun, 26 May 2024 09:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716652935; cv=none; b=iIhXh6diJwCv+AgRsoXnl5w/MRqGKZIaxKV6jI25mWyKnsu5bnHh47WjYCX3jRYIMN9o+UxwooGVN22lID5zpkbptrh/+q9rpdwtJm1ipyruSaDScfp5zWD1Y8pZaR3oaZIVp84+1na9uZA50EgeSmnmktzlobUInSfYXAU6iwU=
+	t=1716716533; cv=none; b=tE/+41o9sTwvbvt6rDNgCqN4xYgxEPBR3ym2tg7i6lMRVNeDIEk7/BhPYbdGNyGtDcxj3NOXEV16u30sKBOm0JoHZ0HvNsP7ptqNjFperpE8AKymVdBRM5Puxf0Z3Uqu8QfGmu9E/xbzxvXj1UsPi0FDgVl2dKQy9ape49Hsbow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716652935; c=relaxed/simple;
-	bh=wA/DZCGQBGXvbLeOSNQtjnT7YRvsCmmXA2f4Xq7qKyY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UE/+hfVJiafb20wHz9JPVBj9oJojbH6c2Y6WhfZStFSfk6DthTlyUf9w8bOx9Tyk0g71uhcwK2a/AgO0MmGbT/k6XDp2Yu9QGIWAG1FSN3PmpdnyRcd5+bBLvFRF0LN64G2ASyU5k1rcLrAnsSoPPyLwO4FqAY3gEqF6NHxMH9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=oKBfEsCO; arc=none smtp.client-ip=80.12.242.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1716716533; c=relaxed/simple;
+	bh=Pn2wC7Qjgmx1WJ5h/NAhgXkp/LKfK1z1n1o1iNJNFAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MwcSVQeNDOlwj2fmxePBAYVkisVugy8A0urFYqsAHtFEokJOKxbfobNKJRXxC78MGN6enTa2ElLpcISgD1bT0a21yoyqs+CfKqLwrHXHHWMt+f69bUFq7c4ahZnHRWeGYCiu2gm0RkJh0gJWPeq1wHZV8GaRW7Dx0mF3w2SOch0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMMzgPDG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="oKBfEsCO"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id AtpGslhQJ3tO6AtpGsclcT; Sat, 25 May 2024 18:00:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1716652856;
-	bh=WNut/xtqmEtO3vfRepBElQ9DP3GCge0U4oTsojKf0dA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=oKBfEsCODhjYN3BuoeE7mxdjrfivsP7ev1oxVxunkS7Xyq8NjX3IACLpQA8aaF4dV
-	 IXUvuoWfI/e8POQL1UsoAbm9jAiUgP6m1hH7CPgcIpomq6iP4RetU5U3bx0C56vhVz
-	 K2fD8tOA5/zPwuLwZvLn94m9V465MwTg+1Bn2FgM3qpS7epANCO3SJ6qrbBlLz1vGv
-	 vVIq8CDs0USJrTHwiVQa7U/05dsyTG4uw7cttnaOkpEIVYKP0RSwJZjSmiTuZnxOl/
-	 FMxIy6hi60srtYd527d8I+WX7MW7jI4w0gybwSUwO2vMSwyDcfK8/fFkz36bP3kgD6
-	 +NYA7E3F3le5Q==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 25 May 2024 18:00:56 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] dma-buf/fence-array: Add flex array to struct dma_fence_array
-Date: Sat, 25 May 2024 18:00:31 +0200
-Message-ID: <8b4e556e07b5dd78bb8a39b67ea0a43b199083c8.1716652811.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMMzgPDG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C7CC4AF08;
+	Sun, 26 May 2024 09:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716716533;
+	bh=Pn2wC7Qjgmx1WJ5h/NAhgXkp/LKfK1z1n1o1iNJNFAg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FMMzgPDGEnT5yIxmjV4IECZru5Hz3SODKsp8IL6VaAbwV1dc814QtbvZl1O10YZni
+	 vMcrGjWtTOT/QzcYYfmlouMFkYS565dwlx8T8XVPqjRaolZzLQcS9EZBF/75cvlQs/
+	 oWkFGx90X4tMeFRf8WlbZKM2VydCeINDIaPdoEVGaB30oJ9R/SE9+w+h0E1DQnR8Iy
+	 Wf+3mjV7mw9XXvmrTqU1uJre5jvRukSNBF90so6PqDPN2RBxrCMV/eKyTDTbevWHx/
+	 9cHSr39svICBlwP7Tweo1HFeSHad5JErqiLbT30oTC81WLaI0wisCxqHE8zW1S48p8
+	 V2L+aSfTYj78Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Erhard Furtner <erhard_f@mailbox.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Sasha Levin <sashal@kernel.org>,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.9 13/15] ubsan: Avoid i386 UBSAN handler crashes with Clang
+Date: Sun, 26 May 2024 05:41:45 -0400
+Message-ID: <20240526094152.3412316-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240526094152.3412316-1-sashal@kernel.org>
+References: <20240526094152.3412316-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.1
 Content-Transfer-Encoding: 8bit
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1][2].
+From: Kees Cook <keescook@chromium.org>
 
-The "struct dma_fence_array" can be refactored to add a flex array in order
-to have the "callback structures allocated behind the array" be more
-explicit.
+[ Upstream commit 2e431b23a13ce4459cf484c8f0b3218c7048b515 ]
 
-Do so:
-   - makes the code more readable and safer.
-   - allows using __counted_by() for additional checks
-   - avoids some pointer arithmetic in dma_fence_array_enable_signaling()
+When generating Runtime Calls, Clang doesn't respect the -mregparm=3
+option used on i386. Hopefully this will be fixed correctly in Clang 19:
+https://github.com/llvm/llvm-project/pull/89707
+but we need to fix this for earlier Clang versions today. Force the
+calling convention to use non-register arguments.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/160 [2]
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Closes: https://github.com/KSPP/linux/issues/350
+Link: https://lore.kernel.org/r/20240424224026.it.216-kees@kernel.org
+Acked-by: Nathan Chancellor <nathan@kernel.org>
+Acked-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Compile tested only.
+ lib/ubsan.h | 41 +++++++++++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
 
-Changes in v2:
-  - Name the new field 'callbacks' instead of 'cb'   [Christian König]
-
-v1: https://lore.kernel.org/all/d3204a5b4776553455c2cfb1def72f1dae0dba25.1716054403.git.christophe.jaillet@wanadoo.fr/
----
- drivers/dma-buf/dma-fence-array.c | 10 ++++------
- include/linux/dma-fence-array.h   |  3 +++
- 2 files changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma-buf/dma-fence-array.c b/drivers/dma-buf/dma-fence-array.c
-index 9b3ce8948351..c74ac197d5fe 100644
---- a/drivers/dma-buf/dma-fence-array.c
-+++ b/drivers/dma-buf/dma-fence-array.c
-@@ -70,7 +70,7 @@ static void dma_fence_array_cb_func(struct dma_fence *f,
- static bool dma_fence_array_enable_signaling(struct dma_fence *fence)
- {
- 	struct dma_fence_array *array = to_dma_fence_array(fence);
--	struct dma_fence_array_cb *cb = (void *)(&array[1]);
-+	struct dma_fence_array_cb *cb = array->callbacks;
- 	unsigned i;
+diff --git a/lib/ubsan.h b/lib/ubsan.h
+index 0abbbac8700d1..0982578fbd98f 100644
+--- a/lib/ubsan.h
++++ b/lib/ubsan.h
+@@ -124,19 +124,32 @@ typedef s64 s_max;
+ typedef u64 u_max;
+ #endif
  
- 	for (i = 0; i < array->num_fences; ++i) {
-@@ -168,22 +168,20 @@ struct dma_fence_array *dma_fence_array_create(int num_fences,
- 					       bool signal_on_any)
- {
- 	struct dma_fence_array *array;
--	size_t size = sizeof(*array);
- 
- 	WARN_ON(!num_fences || !fences);
- 
--	/* Allocate the callback structures behind the array. */
--	size += num_fences * sizeof(struct dma_fence_array_cb);
--	array = kzalloc(size, GFP_KERNEL);
-+	array = kzalloc(struct_size(array, callbacks, num_fences), GFP_KERNEL);
- 	if (!array)
- 		return NULL;
- 
-+	array->num_fences = num_fences;
+-void __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
+-void __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
+-void __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
+-void __ubsan_handle_negate_overflow(void *_data, void *old_val);
+-void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
+-void __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
+-void __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
+-void __ubsan_handle_out_of_bounds(void *_data, void *index);
+-void __ubsan_handle_shift_out_of_bounds(void *_data, void *lhs, void *rhs);
+-void __ubsan_handle_builtin_unreachable(void *_data);
+-void __ubsan_handle_load_invalid_value(void *_data, void *val);
+-void __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
+-					 unsigned long align,
+-					 unsigned long offset);
++/*
++ * When generating Runtime Calls, Clang doesn't respect the -mregparm=3
++ * option used on i386: https://github.com/llvm/llvm-project/issues/89670
++ * Fix this for earlier Clang versions by forcing the calling convention
++ * to use non-register arguments.
++ */
++#if defined(CONFIG_X86_32) && \
++    defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 190000
++# define ubsan_linkage asmlinkage
++#else
++# define ubsan_linkage
++#endif
 +
- 	spin_lock_init(&array->lock);
- 	dma_fence_init(&array->base, &dma_fence_array_ops, &array->lock,
- 		       context, seqno);
- 	init_irq_work(&array->work, irq_dma_fence_array_work);
++void ubsan_linkage __ubsan_handle_add_overflow(void *data, void *lhs, void *rhs);
++void ubsan_linkage __ubsan_handle_sub_overflow(void *data, void *lhs, void *rhs);
++void ubsan_linkage __ubsan_handle_mul_overflow(void *data, void *lhs, void *rhs);
++void ubsan_linkage __ubsan_handle_negate_overflow(void *_data, void *old_val);
++void ubsan_linkage __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs);
++void ubsan_linkage __ubsan_handle_type_mismatch(struct type_mismatch_data *data, void *ptr);
++void ubsan_linkage __ubsan_handle_type_mismatch_v1(void *_data, void *ptr);
++void ubsan_linkage __ubsan_handle_out_of_bounds(void *_data, void *index);
++void ubsan_linkage __ubsan_handle_shift_out_of_bounds(void *_data, void *lhs, void *rhs);
++void ubsan_linkage __ubsan_handle_builtin_unreachable(void *_data);
++void ubsan_linkage __ubsan_handle_load_invalid_value(void *_data, void *val);
++void ubsan_linkage __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
++						       unsigned long align,
++						       unsigned long offset);
  
--	array->num_fences = num_fences;
- 	atomic_set(&array->num_pending, signal_on_any ? 1 : num_fences);
- 	array->fences = fences;
- 
-diff --git a/include/linux/dma-fence-array.h b/include/linux/dma-fence-array.h
-index ec7f25def392..29c5650c1038 100644
---- a/include/linux/dma-fence-array.h
-+++ b/include/linux/dma-fence-array.h
-@@ -33,6 +33,7 @@ struct dma_fence_array_cb {
-  * @num_pending: fences in the array still pending
-  * @fences: array of the fences
-  * @work: internal irq_work function
-+ * @callbacks: array of callback helpers
-  */
- struct dma_fence_array {
- 	struct dma_fence base;
-@@ -43,6 +44,8 @@ struct dma_fence_array {
- 	struct dma_fence **fences;
- 
- 	struct irq_work work;
-+
-+	struct dma_fence_array_cb callbacks[] __counted_by(num_fences);
- };
- 
- /**
+ #endif
 -- 
-2.45.1
+2.43.0
 
