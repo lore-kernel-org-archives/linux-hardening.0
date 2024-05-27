@@ -1,251 +1,160 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E451327E5
-	for <linux-hardening@vger.kernel.org>; Mon, 27 May 2024 18:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3A62F2B;
+	Mon, 27 May 2024 18:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716833336; cv=none; b=McFc2avJQMWPbe1QDyaTKQJyrMnc6E88oHLYlNGGGUPfrVEbBYBGhexr5hEAiz1XMa3S3wPTI/RyWWQh960a9+mlUFiNFfIPhPqhlhx1dbRGtepc9oxTVd1y/ObonU5SAGxw4ETHojoDxt0OtMH/1k8YzqOM9bSJPBBKPBjVY8g=
+	t=1716834635; cv=none; b=qlr5e9HDyzcvS/eM7JzsxjCBUVDlXeHiTACKGIWjIx1u3xTLSfesBErMYMjHQOBiIHQekyRb+T6PEBegWUoNN7UqAtodAPVESte0Dqy8IhVI+LuI1lGv1uEr9wggqt3b+pQKXgZAwTneYboeS9fsHyMvFNUFMDXDODLdZYPAkPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716833336; c=relaxed/simple;
-	bh=TJz+12zh4z4ouB4P2yUHvEUMxx/ePrSLRU05CZ6MwA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ns+sQWxn8t2wF6NUL3rWG13tbmNX+uDLu2cLRiNhO0DuRI5wknqX8jAOUxmasucOVE9DMH7CilPeOOdO/xNAS316e6Luz6znsffb55W3VxT7AvPGrjACZ40kvc8Tfn6YrTsdQYzD6zETRM6Po1noRftwOAIbLp5eTF9q5OIfEQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=US3ewEZM; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1716834635; c=relaxed/simple;
+	bh=n/jl1VbefEAzErcYJnlG5XeybHW4Thlh68dDG1URZB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iHy0qAADE9l7j8DvXke9JQ8JdCJVSz0DcloZr5jTM/dMGd9CvnWJdKQ/h840qPGwGyQclLasfqVunO+MY20+WFsuDNhhEayKezG2wwANG1nsFRPTzrhwXGiQPNR5aCGpLMy5RxiD4SbIE6y6oG9vWFH1fzJ1wLy0AENpv+a85Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nc2E7Seu; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="US3ewEZM"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e716e302bdso99986271fa.1
-        for <linux-hardening@vger.kernel.org>; Mon, 27 May 2024 11:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1716833333; x=1717438133; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vcpkeHz/GMBCXTF0Knr1lobe9572CfWTJUDT3hTYrBs=;
-        b=US3ewEZMiOE6FV7pX2rq1UpPpqDoC+A+rQ0EQ/BHAXtSQkfqTQISCzi6k6PRiggt7D
-         I/8LyhFPT9i1IhpMtBNayYIFzNKHDVytuXYUCxALaXiWhzNQ8MsaSORha/EVg5g7d/vn
-         tpAwTtYtjWaIFlFxT4j34jWLiqSvQUCPWQctA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716833333; x=1717438133;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vcpkeHz/GMBCXTF0Knr1lobe9572CfWTJUDT3hTYrBs=;
-        b=bdnaAcZZ4//gIICyAC70iAHtTGzVuOKp4pzCsB4Z9dnhtitN+xrzkjf7R1fjNA08iq
-         u1NRVWwP8libw9PgVLek+rnX+2wHHZKX8p4l31fY92wHLS2GGklIqZornXSCQbhwpKTC
-         zKSXa16zoQMClh9adgzT4RkfikKhbHoT4YzxhdD0QAiiDw0XPiwuce22BEhJMyfIRRUG
-         2ZozHVpzBGZl2sLMsgqtnsnhiTPyjRAZUS9xS8M7W7okGaRCpmTMxhQ0C6euYc2VB2pO
-         ExyANbp2p/eSxJqz3TRTgxf2Im2QwrvD0mkZqWIiF0f+mVj6XjQqW5CdIFDnyB2KErAC
-         3+Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVklhTCiQnOMYsa3DX9PeJDzJlS5yozkTtCpxz3m2ZYj29mHPeyWgP6A367v21+gdFgo9JgmP8sej5M8uTLZq1OikVB5jgkGHszqTqg8He4
-X-Gm-Message-State: AOJu0Yzj8w3q+vTuq2i/2DH9R+YcK8xZBuix45CyVC4fkZfc/OBtUI02
-	zz6Xfebp7vsXSsAke/gh6DDsaMcuAyrjd7wuHwhdHYpXmAiahxdcRld0mAaVgA==
-X-Google-Smtp-Source: AGHT+IFt2xYiBgwm1RX3/pys6QDwsEOQp1n69t7o4pJXhXH8H9FK4PTo+PitYsyqzZjdZu5KrbVYow==
-X-Received: by 2002:a19:5f41:0:b0:529:b712:e6d5 with SMTP id 2adb3069b0e04-529b712e87amr477992e87.31.1716833333118;
-        Mon, 27 May 2024 11:08:53 -0700 (PDT)
-Received: from [192.168.178.137] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c987cf8sm515729366b.94.2024.05.27.11.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 11:08:52 -0700 (PDT)
-Message-ID: <0b9903f8-cc4d-4dd0-8374-8468582602ce@broadcom.com>
-Date: Mon, 27 May 2024 20:08:51 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nc2E7Seu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=YBhOVRVhoG/DBAMiwo0abrKGeUor4OrL/u8Uamp8cks=; b=nc2E7SeuoOoueUM9+W0h5BZf5w
+	gh0V5hF5AkRg2DOT15K+WECvOVuuZzCxNpWDhh77dMYLKpTislDxXHoHW2rwWbqcaAuXK1zyuj/34
+	xo8CDjNlf2MVr9SzaNeB6/FUIeuYQgRmW1vpVXI0KrKAEP2o6PTk6Fn57RT+oHldPdcapr+BX1gGD
+	gVrNNsggvp4OXrnj6d3r48mQ9kZ3Rh/HgH4pbSFHBzrFevkcoTpmh8n0wRsk6Rw8S90mU3c3B7Pj0
+	UvX5rPu4DipootuyETFyywRnAzVnG/pSeP77yXh2mvE4KDI/nLnuaxQZgpfkkSKgVfcCM2El8ei8+
+	pj7maqQQ==;
+Received: from 179-125-79-246-dinamico.pombonet.net.br ([179.125.79.246] helo=quatroqueijos.lan)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sBf6x-00D4XF-Oh; Mon, 27 May 2024 20:30:20 +0200
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kernel-dev@igalia.com,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] codetag: avoid race at alloc_slab_obj_exts
+Date: Mon, 27 May 2024 15:30:06 -0300
+Message-Id: <20240527183007.1595037-1-cascardo@igalia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: brcm80211: use sizeof(*pointer) instead of
- sizeof(type)
-To: Erick Archer <erick.archer@outlook.com>, Kalle Valo <kvalo@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Yajun Deng <yajun.deng@linux.dev>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Dmitry Antipov
- <dmantipov@yandex.ru>, Johannes Berg <johannes.berg@intel.com>,
- Arnd Bergmann <arnd@arndb.de>, Jonas Gorski <jonas.gorski@gmail.com>,
- Artem Chernyshev <artem.chernyshev@red-soft.ru>,
- Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Justin Stitt <justinstitt@google.com>
-Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
- brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <AS8PR02MB7237FF1C2E880D1231684D708BF02@AS8PR02MB7237.eurprd02.prod.outlook.com>
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
- 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
-In-Reply-To: <AS8PR02MB7237FF1C2E880D1231684D708BF02@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000fd0a6806197368a9"
+Content-Transfer-Encoding: 8bit
 
---000000000000fd0a6806197368a9
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+When CONFIG_MEM_ALLOC_PROFILING_DEBUG is enabled, the following warning may
+be noticed:
 
-On 5/27/2024 7:34 PM, Erick Archer wrote:
-> It is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not
-> change the former (unlike the latter). This patch has no effect
-> on runtime behavior.
-> 
-> At the same time remove some redundant NULL initializations.
+[   48.299584] ------------[ cut here ]------------
+[   48.300092] alloc_tag was not set
+[   48.300528] WARNING: CPU: 2 PID: 1361 at include/linux/alloc_tag.h:130 alloc_tagging_slab_free_hook+0x84/0xc7
+[   48.301305] Modules linked in:
+[   48.301553] CPU: 2 PID: 1361 Comm: systemd-udevd Not tainted 6.10.0-rc1-00003-gac8755535862 #176
+[   48.302196] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+[   48.302752] RIP: 0010:alloc_tagging_slab_free_hook+0x84/0xc7
+[   48.303169] Code: 8d 1c c4 48 85 db 74 4d 48 83 3b 00 75 1e 80 3d 65 02 86 04 00 75 15 48 c7 c7 11 48 1d 85 c6 05 55 02 86 04 01 e8 64 44 a5 ff <0f> 0b 48 8b 03 48 85 c0 74 21 48 83 f8 01 74 14 48 8b 50 20 48 f7
+[   48.304411] RSP: 0018:ffff8880111b7d40 EFLAGS: 00010282
+[   48.304916] RAX: 0000000000000000 RBX: ffff88800fcc9008 RCX: 0000000000000000
+[   48.305455] RDX: 0000000080000000 RSI: ffff888014060000 RDI: ffffed1002236f97
+[   48.305979] RBP: 0000000000001100 R08: fffffbfff0aa73a1 R09: 0000000000000000
+[   48.306473] R10: ffffffff814515e5 R11: 0000000000000003 R12: ffff88800fcc9000
+[   48.306943] R13: ffff88800b2e5cc0 R14: ffff8880111b7d90 R15: 0000000000000000
+[   48.307529] FS:  00007faf5d1908c0(0000) GS:ffff88806cf00000(0000) knlGS:0000000000000000
+[   48.308223] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   48.308710] CR2: 000058fb220c9118 CR3: 00000000110cc000 CR4: 0000000000750ef0
+[   48.309274] PKRU: 55555554
+[   48.309804] Call Trace:
+[   48.310029]  <TASK>
+[   48.310290]  ? show_regs+0x84/0x8d
+[   48.310722]  ? alloc_tagging_slab_free_hook+0x84/0xc7
+[   48.311298]  ? __warn+0x13b/0x2ff
+[   48.311580]  ? alloc_tagging_slab_free_hook+0x84/0xc7
+[   48.311987]  ? report_bug+0x2ce/0x3ab
+[   48.312292]  ? handle_bug+0x8c/0x107
+[   48.312563]  ? exc_invalid_op+0x34/0x6f
+[   48.312842]  ? asm_exc_invalid_op+0x1a/0x20
+[   48.313173]  ? this_cpu_in_panic+0x1c/0x72
+[   48.313503]  ? alloc_tagging_slab_free_hook+0x84/0xc7
+[   48.313880]  ? putname+0x143/0x14e
+[   48.314152]  kmem_cache_free+0xe9/0x214
+[   48.314454]  putname+0x143/0x14e
+[   48.314712]  do_unlinkat+0x413/0x45e
+[   48.315001]  ? __pfx_do_unlinkat+0x10/0x10
+[   48.315388]  ? __check_object_size+0x4d7/0x525
+[   48.315744]  ? __sanitizer_cov_trace_pc+0x20/0x4a
+[   48.316167]  ? __sanitizer_cov_trace_pc+0x20/0x4a
+[   48.316757]  ? getname_flags+0x4ed/0x500
+[   48.317261]  __x64_sys_unlink+0x42/0x4a
+[   48.317741]  do_syscall_64+0xe2/0x149
+[   48.318171]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   48.318602] RIP: 0033:0x7faf5d8850ab
+[   48.318891] Code: fd ff ff e8 27 dd 01 00 0f 1f 80 00 00 00 00 f3 0f 1e fa b8 5f 00 00 00 0f 05 c3 0f 1f 40 00 f3 0f 1e fa b8 57 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 41 2d 0e 00 f7 d8
+[   48.320649] RSP: 002b:00007ffc44982b38 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
+[   48.321182] RAX: ffffffffffffffda RBX: 00005ba344a44680 RCX: 00007faf5d8850ab
+[   48.321667] RDX: 0000000000000000 RSI: 00005ba344a44430 RDI: 00007ffc44982b40
+[   48.322139] RBP: 00007ffc44982c00 R08: 0000000000000000 R09: 0000000000000007
+[   48.322598] R10: 00005ba344a44430 R11: 0000000000000246 R12: 0000000000000000
+[   48.323071] R13: 00007ffc44982b40 R14: 0000000000000000 R15: 0000000000000000
+[   48.323596]  </TASK>
 
-Thanks. The ACK still stands ;-)
+This is due to a race when two objects are allocated from the same slab,
+which did not have an obj_exts allocated for.
 
-> Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
-> ---
-> Changes in v2:
-> - Remove some redundant NULL initializations (Arend van Spriel).
-> - Refactor a bit the logic of "phy_lcn.c" (Arend van Spriel).
-> - Add the "Acked-by:" tag.
-> 
-> Previous versions:
-> v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237C3696881F79EAEE8D02E8BF72@AS8PR02MB7237.eurprd02.prod.outlook.com/
-> ---
->   .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  4 ++--
->   .../broadcom/brcm80211/brcmfmac/btcoex.c      |  4 ++--
->   .../broadcom/brcm80211/brcmfmac/sdio.c        |  2 +-
->   .../broadcom/brcm80211/brcmfmac/usb.c         |  6 ++---
->   .../broadcom/brcm80211/brcmsmac/aiutils.c     |  2 +-
->   .../broadcom/brcm80211/brcmsmac/ampdu.c       |  2 +-
->   .../broadcom/brcm80211/brcmsmac/antsel.c      |  2 +-
->   .../broadcom/brcm80211/brcmsmac/channel.c     |  2 +-
->   .../broadcom/brcm80211/brcmsmac/dma.c         |  2 +-
->   .../broadcom/brcm80211/brcmsmac/mac80211_if.c |  2 +-
->   .../broadcom/brcm80211/brcmsmac/main.c        | 23 +++++++++----------
->   .../broadcom/brcm80211/brcmsmac/phy/phy_cmn.c |  4 ++--
->   .../broadcom/brcm80211/brcmsmac/phy/phy_lcn.c |  6 ++---
->   .../broadcom/brcm80211/brcmsmac/phy_shim.c    |  4 ++--
->   14 files changed, 32 insertions(+), 33 deletions(-)
+In such a case, the two threads will notice the NULL obj_exts and after one
+assigns slab->obj_exts, the second one will happily do the exchange if it
+reads this new assigned value.
 
---000000000000fd0a6806197368a9
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+In order to avoid that, verify that the read obj_exts does not point to an
+allocated obj_exts before doing the exchange.
 
-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
-2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
-Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
-HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
-KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
-Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
-dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
-OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
-MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
-BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
-ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
-zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
-sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
-BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
-N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
-p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
-YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
-bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDoVv5kJ4JYw8ebvdTr
-OpPcKpOcGNomHSawZHZ3VPLKFTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
-BTEPFw0yNDA1MjcxODA4NTNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
-AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
-BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEALl4FM3VvAidW9KcTQuAkf4Heo9FKynyFM1Vq
-wHzAz7zwxpmUOVv59w26t+Vh7J5aFSooprY0o/dn3me6Wy6whd0m5FgGzT9TKSk0SM2rgzkzfcQm
-/GC9Iph6LgUfu0ElnQGhXG/DMTl1W+ERGflEWh+7K+0vzHYOnfFk/gK04TvbPkJKDhjfWzX1CIS2
-6QpvJWhLOEyOGWtqxqXBg0BGgna56KBPKV1oKeZfPL6MeVAVj5tjYrqvHHV39TYaCKbKqFJT0s2a
-SZpWR7uMFXDPvm+/qnO3AqwNO7DEwCH1gXVhyl5ttqBHStnhsn/s9VJDynf6OYK4cGf8/ugTf/2p
-LA==
---000000000000fd0a6806197368a9--
+Fixes: 09c46563ff6d ("codetag: debug: introduce OBJEXTS_ALLOC_FAIL to mark failed slab_ext allocations")
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+---
+ mm/slub.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 0809760cf789..1373ac365a46 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1952,7 +1952,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+ #ifdef CONFIG_MEMCG
+ 	new_exts |= MEMCG_DATA_OBJEXTS;
+ #endif
+-	old_exts = slab->obj_exts;
++	old_exts = READ_ONCE(slab->obj_exts);
+ 	handle_failed_objexts_alloc(old_exts, vec, objects);
+ 	if (new_slab) {
+ 		/*
+@@ -1961,7 +1961,8 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+ 		 * be simply assigned.
+ 		 */
+ 		slab->obj_exts = new_exts;
+-	} else if (cmpxchg(&slab->obj_exts, old_exts, new_exts) != old_exts) {
++	} else if ((old_exts & ~OBJEXTS_FLAGS_MASK) ||
++		   cmpxchg(&slab->obj_exts, old_exts, new_exts) != old_exts) {
+ 		/*
+ 		 * If the slab is already in use, somebody can allocate and
+ 		 * assign slabobj_exts in parallel. In this case the existing
+-- 
+2.34.1
+
