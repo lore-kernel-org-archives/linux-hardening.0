@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AF76A8A3;
-	Tue, 28 May 2024 14:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22731DA32;
+	Tue, 28 May 2024 14:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716905938; cv=none; b=csUmy5uvs0Gy9+ByPxJsHHs3sJBZhuXXewP39zf1wxgWiNHRru4G8o0F1eFHB333xbbEafv65yLS/WkQaCmV9KP4XhiCVSvBhb5gzAdnFykOc/15Zh9usfxZnpsA3QOaAzGJPjdC4zUI9eDMwiyKa7Dfj2XOKA8o8Wk1FZrNjRM=
+	t=1716907961; cv=none; b=QkM6rHyefeuhnYXRGb8YY8Rnk/uDG0n35U5VG3VHMjtypZw7l5gxIdWC1veJP637GYTja4f7LmAUsRrBGLBCQWdcmbamCxvpGl6+MmHUboE213ZNvD3urV0GsFflOWwiRkNOe9yGg0sgb6nKcMqcNQUiww6ENnGV1ub0zDyTH5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716905938; c=relaxed/simple;
-	bh=GeQXjPcL5Zlu/ChH68n+e6Wl7YqENmrmNyZU7J789TU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lJvRS+FK+DpuJHztqQUeclKjblRu7UePtEiN7+aEJeFgYhsE/KEU3UJ7MALUNiSYVS7UbBMS8nERczqFIa+5eplvjE3dKMmvzPjiMCnLcbHmPuns8zds2bMDy5BiLYSqM0Ga7ChPvtqE0beX868D7eT/3ILK6+YVWRRZ1JK8Vqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XZi1t1tt; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716907961; c=relaxed/simple;
+	bh=lH2MumRnI7l3YLRPeM7BwNfpMOBnQbE+uH7AvcbBSzg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pboIPhcriS5ei5K73aLwvWy161vLt3mjetZDvcP/sUeSTp0bOBhqVy+fpwCfYanbcM0Vqk1xYHkMYuTJbQWdnGB+c4jV1n+0vdJOkXMSj6qKa6O82ajywLjpXj2FhxHb8rTjKL8Bgdk+YDm1ppFLD94A0YR+aU4Lp3U1BlTkRjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lzqO1xNX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XZi1t1tt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716905937; x=1748441937;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GeQXjPcL5Zlu/ChH68n+e6Wl7YqENmrmNyZU7J789TU=;
-  b=XZi1t1ttPiQfzTr1WMn0bWt2VjoVXoGsL2I4UwVKsnHIRfjxSU2CWFQ5
-   cX3y5lnt91iLdxDro1SXB3yHWEe173mG1LyE2lGe6+HUpSoQJLSaKOLzx
-   EPQZWCeqk0DT8/7NUADdZXUEO7H3EOZ3tGFUzEv9FdQvfABA3gwAi8yjd
-   7HrBnHabEEdBcHjE8JIpkTcQUsT6CyrnP9pXxY134zA8fXjT0UToJGMBe
-   YV523J5QvdP0qkvy9itP//ToOhziZdt0vtEh4tnfHl7wXbqPHAx02kWPi
-   jORFFkYs239dhBnluSKxrm4a1ptMVnpip8FrC3M/hs7d6xlBEiaNdzVQ0
-   w==;
-X-CSE-ConnectionGUID: QasF+GfGRfGcnExJo+17HQ==
-X-CSE-MsgGUID: VlGWu5c3TMWAS3MTByJfNw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13421495"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="13421495"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 07:18:57 -0700
-X-CSE-ConnectionGUID: JbEJyioLQK6SzoD9gbfqew==
-X-CSE-MsgGUID: x1hA1ZI1QkKxtwgbEAk3NA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="35586543"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.110.248]) ([10.125.110.248])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 07:18:55 -0700
-Message-ID: <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
-Date: Tue, 28 May 2024 07:18:54 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lzqO1xNX"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44SAUXuZ009025;
+	Tue, 28 May 2024 14:52:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dWcKuFlpB9O0H+5h3Iazox/MW/EgYPo9bqGQKEr5kUM=; b=lzqO1xNXDXJt9YKE
+	hdiB10isAAW9ccHigQT2WQmnzqTjysTUNgCm2QEo2ykZf1g8rkpGR3RkPUQqMX0W
+	xc7JwTKbYMu7o+9UvpnqadVao/Unpi4EM4eGCzB0AOv3ZYfGvPzaXmi+keFn0W0d
+	RUdL38EibXG8jQz2tIvXOvfX5Hly1GO0oepCyzQSwupbZpYkOKyKiDc1py1TQ7Aw
+	CZwA/0dkqk9kYhGPDvsX9aCSO7MvnHitYFgYINOs8+gpEqtqO8XAhhsU4WoRrJE2
+	Em5kFDnI4Mr69FjClK95qLTKLMo09K0kdgVHpXsOh3K715g8A11AcLSbqo29jCf0
+	CYaEow==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0g6eqh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 14:52:33 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44SEqWT2007769
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 May 2024 14:52:32 GMT
+Received: from [10.50.34.189] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 28 May
+ 2024 07:52:26 -0700
+Message-ID: <434c6cfa-cede-4e62-a785-35a81ae0d30d@quicinc.com>
+Date: Tue, 28 May 2024 20:22:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,89 +50,136 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- hpa@zytor.com, keescook@chromium.org, tony.luck@intel.com,
- gpiccoli@igalia.com, mat.jonczyk@o2.pl, rdunlap@infradead.org,
- alexandre.belloni@bootlin.com, mario.limonciello@amd.com, yaolu@kylinos.cn,
- bhelgaas@google.com, justinstitt@google.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Cc: CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com
-References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v4 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+To: Mike Tipton <quic_mdtipton@quicinc.com>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>
+References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+ <20240325181628.9407-2-quic_okukatla@quicinc.com>
+ <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+ <91f59477-1799-4db6-bcc2-3f0c5225d1c8@quicinc.com>
+ <0a58e05a-7bf5-459a-b202-66d88c095b45@linaro.org>
+ <20240508023716.GD25316@hu-mdtipton-lv.qualcomm.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
-Content-Type: text/plain; charset=UTF-8
+From: Odelu Kukatla <quic_okukatla@quicinc.com>
+In-Reply-To: <20240508023716.GD25316@hu-mdtipton-lv.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ht2cKHlyZnYYLulXR3pVrVp17xeQlZIp
+X-Proofpoint-ORIG-GUID: ht2cKHlyZnYYLulXR3pVrVp17xeQlZIp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-28_10,2024-05-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 adultscore=0 spamscore=0
+ mlxlogscore=984 malwarescore=0 lowpriorityscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405280111
 
-On 5/27/24 23:38, Tony W Wang-oc wrote:
-...> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-> index c96ae8fee95e..ecadd0698d6a 100644
-> --- a/arch/x86/kernel/hpet.c
-> +++ b/arch/x86/kernel/hpet.c
-> @@ -804,6 +804,12 @@ static u64 read_hpet(struct clocksource *cs)
->  	if (in_nmi())
->  		return (u64)hpet_readl(HPET_COUNTER);
->  
-> +	/*
-> +	 * Read HPET directly if panic in progress.
-> +	 */
-> +	if (unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID))
-> +		return (u64)hpet_readl(HPET_COUNTER);
-> +
+Hi Konrad,
 
-There is literally one other piece of the code in the kernel doing
-something similar: the printk() implementation.  There's no other
-clocksource or timekeeping code that does this on any architecture.
+On 5/8/2024 8:07 AM, Mike Tipton wrote:
+> On Sat, Apr 13, 2024 at 09:31:47PM +0200, Konrad Dybcio wrote:
+>> On 3.04.2024 10:45 AM, Odelu Kukatla wrote:
+>>>
+>>>
+>>> On 3/27/2024 2:26 AM, Konrad Dybcio wrote:
+>>>> On 25.03.2024 7:16 PM, Odelu Kukatla wrote:
+>>>>> It adds QoS support for QNOC device and includes support for
+>>>>> configuring priority, priority forward disable, urgency forwarding.
+>>>>> This helps in priortizing the traffic originating from different
+>>>>> interconnect masters at NoC(Network On Chip).
+>>>>>
+>>>>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>>>>> ---
+>>
+>> [...]
+>>
+>>>>> @@ -70,6 +102,7 @@ struct qcom_icc_node {
+>>>>>  	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+>>>>>  	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
+>>>>>  	size_t num_bcms;
+>>>>> +	const struct qcom_icc_qosbox *qosbox;
+>>>>
+>>>> I believe I came up with a better approach for storing this.. see [1]
+>>>>
+>>>> Konrad
+>>>>
+>>>> [1] https://lore.kernel.org/linux-arm-msm/20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org/
+> 
+> Note that I replied to this patch series as well. Similar comments here
+> for how that approach would apply to icc-rpmh.
+> 
+>>>>
+>>>
+>>> I see in this series, QoS parameters are moved into struct qcom_icc_desc. 
+>>> Even though we program QoS at Provider/Bus level, it is property of the node/master connected to a Bus/NoC.
+>>
+>> I don't see how it could be the case, we're obviously telling the controller which
+>> endpoints have priority over others, not telling nodes whether the data they
+>> transfer can omit the queue.
+> 
+> The QoS settings tune the priority of data coming out of a specific port
+> on the NOC. The nodes are 1:1 with the ports. Yes, this does tell the
+> NOC which ports have priority over others. But that's done by
+> configuring each port's priority in their own port-specific QoS
+> registers.
+> 
+>>
+>>> It will be easier later to know which master's QoS we are programming if we add in node data.
+>>> Readability point of view,  it might be good to keep QoS parameters in node data.  
+>>
+>> I don't agree here either, with the current approach we've made countless mistakes
+>> when converting the downstream data (I have already submitted some fixes with more
+>> in flight), as there's tons of jumping around the code to find what goes where.
+> 
+> I don't follow why keeping the port's own QoS settings in that port's
+> struct results in more jumping around. It should do the opposite, in
+> fact. If someone wants to know the QoS settings applied to the qhm_qup0
+> port, then they should be able to look directly in the qhm_qup0 struct.
+> Otherwise, if it's placed elsewhere then they'd have to jump elsewhere
+> to find what that logical qhm_qup0-related data is set to.
+> 
+> If it *was* placed elsewhere, then we'd still need some logical way to
+> map between that separate location and the node it's associated with.
+> Which is a problem with your patch for cleaning up the icc-rpm QoS. In
+> its current form, it's impossible to identify which QoS settings apply
+> to which logical node (without detailed knowledge of the NOC register
+> layout).
+> 
+> Keeping this data with the node struct reduces the need for extra layers
+> of mapping between the QoS settings and the node struct. It keeps all
+> the port-related information all together in one place.
+> 
+> I did like your earlier suggestion of using a compound literal to
+> initialize the .qosbox pointers, such that we don't need a separate
+> top-level variable defined for them. They're only ever referenced by a
+> single node, so there's no need for them to be separate variables.
+> 
+> But I don't see the logic in totally separating the QoS data from the
+> port it's associated with.
+> 
+>>
+I will update the patch as per your suggestion of keeping .qosbox initialization inside *qcom_icc_node* structure.
+I will post next version with this update and addressing other comments from v4.
 
-Why doesn't this problem apply to any other clock sources?
+Thanks,
+Odelu
 
-Why should the problem be fixed in the clock sources themselves?  Why
-doesn't printk() deadlock on systems using the HPET?
-
-In other words, I think we should fix pstore to be more like printk
-rather than hacking around this in each clock source.
+>> Konrad
