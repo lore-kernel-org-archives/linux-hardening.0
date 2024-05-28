@@ -1,202 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78A913DDA1;
-	Tue, 28 May 2024 22:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7623713EFE5
+	for <linux-hardening@vger.kernel.org>; Tue, 28 May 2024 23:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716934368; cv=none; b=d6krU/cLQRfbqsnAYUSIQ2QMXa3iWMmic/HQRgPcfLVmm+p0FhltNJYO99KW0F3+3xFsI+W5pK5kbKqUuNZ208WdVRDG194Syn979uqJTI12AEEkGDD+hzgrgtQOCtG7C5lVmUqnP8MbGIn8ZYAjl4Dcktskpc0FffGp8TW5AFk=
+	t=1716938920; cv=none; b=ttmzlBW4aS9dhYc36eGP9VISICnzRDl1qbEU2RY2Tu31XkNJo70XOK50mprS7S6UEpd9jG0wkPUL97WML6NOQ1SPg1ljmHPfLJkm8/5pFJiJONA6hvu0ByXYn3oCveQd8RBkeZDbBiQHB23d+BTDXRjzpKf8jjQ/WL90qyITpAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716934368; c=relaxed/simple;
-	bh=1hLjs6HYpgIThhhT9gGLIDRvVYnA1jimJtxl/FXjhzA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Lh29IKxvkF9yG6EGNTPToN2I+szaKEmquXXXbO/macn/TiIKvnCjzw6+XDuAJ9M27LvOzYVYKmyWjsMO+IIqHtkn3jPNelJ6934TO+iuOCFM5g+/Gc9QuVsAZ9LddZ7edu/NgTqHARrfFtdca40ygQG3RE53upUXefNGCXg7brM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=10EpJ6hN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YNfAxC6G; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716938920; c=relaxed/simple;
+	bh=bfi4+LMwCHwMea1ovFOy2O6UVoaZsvFQiHCHFQXFrk4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QqDnujUVBDMkEsRGSoDYNZwic37JU7uqsgQ1TPT59r0f96XmiLnSrcfvJOlWHyPcpaVprqNc66a1Wk4kcjAYpjskTGN25WzgZXuB27SFoWqIWVmyKfBtq4AGY2DatV74cio0IxxOo7RYGIa3v40bDCCf8sxewHwQY7+7dr/j74g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FjMOZBB/; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="10EpJ6hN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNfAxC6G"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716934363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GZub3AKGtf3m0WqaMw01L0KFTwsMRo2LAh+Cg+JRsv0=;
-	b=10EpJ6hNlROGnXgv687DoZ4wgrzIzfraguXluq2TvrA53ZzXTtjgzsRZ2ntZiDyk/sEXUR
-	Nry6KMgOAzHcXuIvuzVYZcK2ArTMU644G4vdAqqpMa7EGFNWM2+ykO/VkE0EUGG+baruFQ
-	uARHLnUAFKHBRj9jbK+VoQMcupN5KkiEtvvBoEv8ucRCCaVzBClfoAllvSCUD624cvx3WL
-	sYSpqCgfwZ0p/Wa2yVukWBPO8bTtq1QQYE6d7jaCm9Yw/QDsmUFZaX8zF5nzOnxkDInZD3
-	lwyfDDNg6YQpvUUtQYdcs4tpGO9dpGHdzYj+FURtGK+em5+saXBYVYImnLD1Sg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716934363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GZub3AKGtf3m0WqaMw01L0KFTwsMRo2LAh+Cg+JRsv0=;
-	b=YNfAxC6G+tEJE6ZRI9e2UBKdG84tVoH4nusCdtPdZV2AGpGAdsn5bo+qXBR8qrsZa1LCZY
-	AFQ1L/bahS1cvKDg==
-To: Dave Hansen <dave.hansen@intel.com>, Tony W Wang-oc
- <TonyWWang-oc@zhaoxin.com>, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
- mat.jonczyk@o2.pl, rdunlap@infradead.org, alexandre.belloni@bootlin.com,
- mario.limonciello@amd.com, yaolu@kylinos.cn, bhelgaas@google.com,
- justinstitt@google.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Cc: CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com, Linus
- Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-In-Reply-To: <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
-References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
- <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
-Date: Wed, 29 May 2024 00:12:43 +0200
-Message-ID: <87wmnda8mc.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FjMOZBB/"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5755fafa5a7so1732891a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 28 May 2024 16:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1716938916; x=1717543716; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JiDK4ZNWMQz5BoArs3vVBPa3TrnNYFfX0vRjhOrW4Y4=;
+        b=FjMOZBB/dpj5EWJSDSWXrGWIhj4mD4TeWD1PlPcHsr/keIFp6U+RNGzJqSBeEk3pSg
+         neTBSq7i6C7Uojvf2intO6cYW7HUKTPFzBd5h/foEF5a+SED74G0EfCgkTWa9E5EE918
+         ku8/W17qBTvcNicWNXwfIs24CUMel2xojIspM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716938916; x=1717543716;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JiDK4ZNWMQz5BoArs3vVBPa3TrnNYFfX0vRjhOrW4Y4=;
+        b=QNGTkE0rQcL3FQC/b8+Lo8EK2B4a17BAkcO5Y/gAJzxDdM9+gxYDYECgBGHKhfYiTg
+         v6AfA/aKfj9/il50DxChbRQfe5WXv/jj+L4OhbGLxG+Ckuf1MX8lJjfj/B8qVDAj7bm2
+         5zn37MVI9zjefwS6FdQ91Wp1a1qUnS8rGPXWjX5rweBmmMirjNTrjxKs3lNbRLFwEJJE
+         rTRHpa6x+ny8vLsvNJYjTdqJMSjayBPu2EyB9MDBn3OBKmy3yJG9eKp1jG53Im/ZBwr3
+         N4ShOnULKxj2YqzfDa1SdV4ec6vwzJfmUSFkNzON4xYST5JlTXNSqKHDjJ60rc2t1D1Z
+         PMQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmR8rOssWpzYlMDAh4W1kZIVFQ9lgAYohSLpR8zFNGQ4p7pUAsNLsgoMonNDs1ruzgVIe527ivg3RV99w+gjeEZUjho4qWyxcsMfxl4gsl
+X-Gm-Message-State: AOJu0YxZbihLWUTPxLLNy4+GKL0E/STp29N5b/M9/SH97SURIoJwuEOt
+	t3z7TKKzwBMxLHGroH5UbyHi49JO9kZkVp8Zi9EUZlsXIMZYm8tUoV9pRtB7Za1Zr7UgZHZJmKg
+	L44x0Eg==
+X-Google-Smtp-Source: AGHT+IHoBlfWgt+1295VnZacTDpBNJsRZl5uT8iXZwGaZZB79Hzuw1wHYOSodja6QdwERZVK0rccdA==
+X-Received: by 2002:a50:c350:0:b0:578:34a4:ea26 with SMTP id 4fb4d7f45d1cf-57851a3e382mr8523482a12.36.1716938916397;
+        Tue, 28 May 2024 16:28:36 -0700 (PDT)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579c73c771esm4484413a12.65.2024.05.28.16.28.35
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 16:28:36 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so11324835e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 28 May 2024 16:28:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW8dC/eQiljUS2PTMj4oqeqRDm5YoYozoecE0gExzEfMwjsD2MEfpDGyDYHM3yhCyHkZ+shSgk5cgMcj2kO0KtVnGoc07HzTDMFsTXjrm6G
+X-Received: by 2002:a17:906:339b:b0:a62:28ce:4e98 with SMTP id
+ a640c23a62f3a-a62642e96camr856809166b.23.1716938538230; Tue, 28 May 2024
+ 16:22:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+ <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com> <87wmnda8mc.ffs@tglx>
+In-Reply-To: <87wmnda8mc.ffs@tglx>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 28 May 2024 16:22:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgMoeOTL1V3wTO=o=U1OXn7xF8OWv2hB9NF9Z=G4KotfQ@mail.gmail.com>
+Message-ID: <CAHk-=wgMoeOTL1V3wTO=o=U1OXn7xF8OWv2hB9NF9Z=G4KotfQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dave Hansen <dave.hansen@intel.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com, 
+	mat.jonczyk@o2.pl, rdunlap@infradead.org, alexandre.belloni@bootlin.com, 
+	mario.limonciello@amd.com, yaolu@kylinos.cn, bhelgaas@google.com, 
+	justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, 
+	LeoLiu-oc@zhaoxin.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 28 2024 at 07:18, Dave Hansen wrote:
-> On 5/27/24 23:38, Tony W Wang-oc wrote:
-> ...> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
->> index c96ae8fee95e..ecadd0698d6a 100644
->> --- a/arch/x86/kernel/hpet.c
->> +++ b/arch/x86/kernel/hpet.c
->> @@ -804,6 +804,12 @@ static u64 read_hpet(struct clocksource *cs)
->>  	if (in_nmi())
->>  		return (u64)hpet_readl(HPET_COUNTER);
->>  
->> +	/*
->> +	 * Read HPET directly if panic in progress.
->> +	 */
->> +	if (unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID))
->> +		return (u64)hpet_readl(HPET_COUNTER);
->> +
+On Tue, 28 May 2024 at 15:12, Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> There is literally one other piece of the code in the kernel doing
-> something similar: the printk() implementation.  There's no other
-> clocksource or timekeeping code that does this on any architecture.
->
-> Why doesn't this problem apply to any other clock sources?
+> I principle it applies to any clocksource which needs a spinlock to
+> serialize access. HPET is not the only insanity here.
 
-I principle it applies to any clocksource which needs a spinlock to
-serialize access. HPET is not the only insanity here.
+HPET may be the main / only one we care about.
 
-Think about i8253 :)
+Because:
 
-Most real clocksources, like TSC and the majority of the preferred clock
-sources on other architectures are perfectly fine. They just read and be
-done.
+> Think about i8253 :)
 
-> Why should the problem be fixed in the clock sources themselves?  Why
-> doesn't printk() deadlock on systems using the HPET?
+I see the smiley, but yeah, I don't think we really care about it.
 
-Because regular printk()s are deferred to irq work when in NMI and
-similar contexts, but that obviously does not apply to panic
-situations. Also NMI is treated special even in the HPET code. See
-below.
+>   1) Should we provide a panic mode read callback for clocksources which
+>      are affected by this?
 
-> In other words, I think we should fix pstore to be more like printk
-> rather than hacking around this in each clock source.
+The current patch under discussion may be ugly, but looks workable.
+Local ugliness isn't necessarily a show-stopper.
 
-pstore is perfectly fine. It uses a NMI safe time accessor function
-which is then tripping over the HPET lock. That's really a HPET specific
-problem.
+So if the HPET is the *only* case which has this situation, I vote for
+just doing the ugly thing.
 
-Though what I read out of the changelog is that the MCE hits the same
-CPU 'x' which holds the lock. But that's fairy tale material as you can
-see in the patch above:
+Now, if *other* cases exist, and can't be worked around in similar
+ways, then that argues for a more "proper" fix.
 
-  	if (in_nmi())
-  		return (u64)hpet_readl(HPET_COUNTER);
+And no, I don't think i8253 is a strong enough argument. I don't
+actually believe you can realistically find a machine that doesn't
+have HPET or the TSC and really falls back on the i8253 any more. And
+if you *do* find hw like that, is it SMP-capable? And can you find
+somebody who cares?
 
-For that particular case the dead lock, which would actually be a live
-lock, cannot happen because in kernel MCEs are NMI class exceptions and
-therefore in_nmi() evaluates to true and that new voodoo can't be
-reached at all.
+>   2) Is it correct to claim that a MCE which hits user space and ends up in
+>      mce_panic() is still just a regular exception or should we upgrade to
+>      NMI class context when we enter mce_panic() or even go as far to
+>      upgrade to NMI class context for any panic() invocation?
 
-Now there are two other scenarios which really can make that happen:
+I do think that an NMI in user space should be considered mostly just
+a normal exception. From a kernel perspective, the NMI'ness just
+doesn't matter.
 
- 1) A non-NMI class exception within the lock held region
+That said, I find your suggestion of making 'panic()' just basically
+act as an NMI context intriguing. And cleaner than the
+atomic_read(&panic_cpu) thing.
 
-    CPU A
-    acquire(hpet_lock);
-    ...                 <- #PF, #GP, #DE, ... -> panic()
+Are there any other situations than this odd HPET thing where that
+would change semantics?
 
-    If any of that happens within that lock held section then the live
-    lock on the hpet_lock is the least of your worries. Seriously, I
-    don't care about this at all.
-
- 2) The actual scenario is:
-
-    CPU A                       CPU B
-    lock(hpet_lock)
-                                MCE hits user space
-                                ...
-                                exc_machine_check_user()
-                                  irqentry_enter_from_user_mode(regs);
-
-    irqentry_enter_from_user_mode() obviously does not mark the
-    exception as NMI class, so in_nmi() evaluates to false. That would
-    actually dead lock if CPU A is not making progress and releases
-    hpet_lock.
-
-    Sounds unlikely to happen, right? But in reality it can because of
-    MCE broadcast. Assume that both CPUs go into MCE:
-
-    CPU A                       CPU B
-    lock(hpet_lock)
-                                exc_machine_check_user()
-                                  irqentry_enter_from_user_mode();
-    exc_machine_check_kernel()    do_machine_check()
-      irqentry_nmi_enter();         mce_panic()
-      do_machine_check()            if (atomic_inc_return(&mce_panicked) > 1)
-        mce_panic()                     wait_for_panic(); <- Not taken
-
-        if (atomic_inc_return(&mce_panicked) > 1)
-            wait_for_panic(); <- Taken
-
-                                    ....
-                                    hpet_read()
-
-    -> Dead lock because in_nmi() evaluates to false on CPU B and CPU A
-       obviously can't release the lock.
-
-So the proposed patch makes sense to some extent. But it only cures the
-symptom. The real underlying questions are:
-
-  1) Should we provide a panic mode read callback for clocksources which
-     are affected by this?
-
-  2) Is it correct to claim that a MCE which hits user space and ends up in
-     mce_panic() is still just a regular exception or should we upgrade to
-     NMI class context when we enter mce_panic() or even go as far to
-     upgrade to NMI class context for any panic() invocation?
-
-#1 Solves it at the clocksource level. It still needs HPET specific
-   changes.
-
-#2 Solves a whole class of issues
-
-   ... while potentially introducing new ones :)
-
-   To me upgrading any panic() invocation to NMI class context makes a
-   lot of sense because in that case all bets are off.
-
-   in_nmi() is used in quite some places to avoid such problems. IOW,
-   that would kill a whole class of issues instead of "curing" the HPET
-   problem locally for the price of an extra conditional. Not that the
-   extra conditional matters much if HPET is the clocksource as that's
-   awfully slow anyway and I really don't care about that.
-
-   But I very much care about avoiding to sprinkle panic_cpu checks all
-   over the place.
-
-Thanks,
-
-        tglx
+               Linus
