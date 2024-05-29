@@ -1,96 +1,98 @@
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A04733CFC
-	for <linux-hardening@vger.kernel.org>; Wed, 29 May 2024 08:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AB1179957;
+	Wed, 29 May 2024 08:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970556; cv=none; b=gLqy4nHi5DKraNjNkMhHuPR5V5UWWtLKibTvUtkOUIPIRTrOVHuCypA+o9MWxJfySaD1qIjuxF2BioRTs1NLKzK09zqqPLdZB/83uXAL5mup0oVidUWFf18fsh6cj3p6rzn/u+Lw+9DEmNnC+OovfjZzirwHhC4jdwq/jqjvpBU=
+	t=1716970688; cv=none; b=e8NgN6K1aa4/WnHTNqrpT6CZwfk6+r8gSHKGUTRQx6ajGclqT43gdZ3Nk9AjLNjHIkdtcnJ5bU87kU8RK42OA1rfLNGRAL9rw/umskthof9lFnfzOR5eAF20kvPho0l74sSr89dxgpIYVwCWAHbangNlU4uuNzqZ1Pvo6iwrNkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970556; c=relaxed/simple;
-	bh=cuxz7ztoxm/x637MW1ZSYEWD/c8J3SkKlVkO85drTEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ohp59TozwiT7qYL7vKdW9o0rlODVJYEK938kxtyuzkqFHp5osl8MaiH4rqTQxOwgHsE60bAff28k0jGL9lgXW7SqqWy7zO8T/6sqn8AGBArGEvrvjK2y+Qu8w1pZXUzoJ19qcYNjLSBv2Xmjqf8itn4y2sVZsexh1SA3fnEbybE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1716970546-086e23110513300001-PleebU
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx1.zhaoxin.com with ESMTP id fvfnuKaLOC7Ez4wT (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 29 May 2024 16:15:46 +0800 (CST)
-X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 29 May
- 2024 16:15:45 +0800
-Received: from [10.32.65.162] (10.32.65.162) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.27; Wed, 29 May
- 2024 16:15:43 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Message-ID: <d8952567-f97d-45ae-976e-5fe5d172df41@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.65.162
-Date: Wed, 29 May 2024 16:15:37 +0800
+	s=arc-20240116; t=1716970688; c=relaxed/simple;
+	bh=PH3g73IUBo++D2q6c/meuMRPW8F0op+ZjovpZ13rJYs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FXWKv4E+BCdU/KoMXimOXIXMxjIbKMdpaTA2fburUQRRMZEAtx7DZXf77RyaVCa4rFt6ZsNf3eoa2A7HibtbLbBMudBPbsyRlmdzuX5TJM46H8s2tqTg+73AnH0vismFh276H5zrBlO9K6Yz7CNXhDug2f4DGvXemEIHeyy/nss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BoTz8w7t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LE2Cl4ZK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BoTz8w7t";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LE2Cl4ZK"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716970685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VisuJquPIChpxFSeuXKm3BwthCpocWOziwbjGlkW3mo=;
+	b=BoTz8w7tg+5pAYB3WTkk6jnPjCzUS9z0neRfqMZHzrq9h+LZXnODAKPSUNjExMTjFrP/ce
+	H9jCBY90DjR7iN/BVH4DOQ23kvwi0/pDfliMzNOhHg5+J60YMJvq9GKVSubLijrywm8KjK
+	SfQVRI6Y7uXPnXipACHzqpdfosQejx6RkEpBR7Cw87JqbAaoYfcYvcyA3Sy8icnc43LzC4
+	nmMAGGPgsu+Q7056MyjftnY+X0e7WXcRPs7xiNjr7/nHCwRQCgVSVESc9ey1IgtnnU8nym
+	XYjh9P24bmqXuI5/zp4pyX0XHUtHntvGgzrDdMj2R3DpDgIvoBcdt71ABn6c/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716970685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VisuJquPIChpxFSeuXKm3BwthCpocWOziwbjGlkW3mo=;
+	b=LE2Cl4ZKSn5lUeDv71XnuhlGbLGoUjoiAiNlV/X+VkyTc0Dm60QzyXAasSVhUphLhPtuYY
+	NoynSjDEiFaegtDA==
+To: Miroslav Lichvar <mlichvar@redhat.com>
+Cc: Justin Stitt <justinstitt@google.com>, John Stultz <jstultz@google.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Bill Wendling <morbo@google.com>, Nick Desaulniers
+ <ndesaulniers@google.com>, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ntp: remove accidental integer wrap-around
+In-Reply-To: <ZlRDoyJk2Erzje_z@localhost>
+References: <20240517-b4-sio-ntp-usec-v2-1-d539180f2b79@google.com>
+ <87ed9re7i4.ffs@tglx> <87bk4ve5wc.ffs@tglx> <ZlRDoyJk2Erzje_z@localhost>
+Date: Wed, 29 May 2024 10:18:04 +0200
+Message-ID: <8734q19glf.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-To: Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <keescook@chromium.org>,
-	<tony.luck@intel.com>, <gpiccoli@igalia.com>, <mat.jonczyk@o2.pl>,
-	<rdunlap@infradead.org>, <alexandre.belloni@bootlin.com>,
-	<mario.limonciello@amd.com>, <yaolu@kylinos.cn>, <bhelgaas@google.com>,
-	<justinstitt@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-X-ASG-Orig-Subj: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
- <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com> <87wmnda8mc.ffs@tglx>
- <2553dd17-f763-4894-89b7-5f76c03d3a37@zhaoxin.com>
- <199ba55d-8eb8-47df-9f42-55a865b51ab7@zhaoxin.com> <87fru19i3x.ffs@tglx>
-Content-Language: en-US
-From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-In-Reply-To: <87fru19i3x.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1716970546
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 628
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.125498
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+Content-Type: text/plain
 
+On Mon, May 27 2024 at 10:26, Miroslav Lichvar wrote:
+> On Fri, May 24, 2024 at 02:44:19PM +0200, Thomas Gleixner wrote:
+>> On Fri, May 24 2024 at 14:09, Thomas Gleixner wrote:
+>> > So instead of turning the clock back, we might be better off to actually
+>> > put the normalization in place at the assignment:
+>> >
+>> >     time_maxerror = min(max(0, txc->maxerror), NTP_PHASE_LIMIT);
+>> >
+>> > or something like that.
+>
+> Yes, I think that's a better approach. Failing the system call could
+> break existing applications, e.g. ntpd can be configured to accept a
+> large root distance and it doesn't clamp the maxerror value, while
+> updating the PLL offset in the same adjtimex() call.
 
+Thanks for confirming. I suspected that, but the original change logs
+are pretty useless in that regard.
 
-On 2024/5/29 15:45, Thomas Gleixner wrote:
-> 
-> 
-> [这封邮件来自外部发件人 谨防风险]
-> 
-> On Wed, May 29 2024 at 14:44, Tony W Wang-oc wrote:
->> Actually, this scenario is what this patch is trying to solve.
->>
->> We encountered hpet_lock deadlock from the call path of the MCE handler,
->> and this hpet_lock deadlock scenario may happen when others exceptions'
->> handler like #PF/#GP... to call the panic. So read_hpet should avoid
->> deadlock if panic in progress.
-> 
-> That's not what your changelog says.
+>> So that commit also removed the sanity check for time_esterror, but
+>> that's not doing anything in the kernel other than being reset in
+>> clear_ntp() and being handed back to user space. No idea what this is
+>> actually used for.
+>
+> It's a lower-bound estimate of the clock error, which applications can
+> check if it's acceptable for them. I think it should be clamped too.
+> It doesn't make much sense for it to be larger than the maximum error.
 
-Yes.
-The example flow I gave with the MCE handler in my changelog is misleading.
+Ok.
+
+> Another possible improvement of adjtimex() would be to set the UNSYNC
+> flag immediately in the call if maxerror >= 16s to avoid the delay of
+> up to 1 second for applications which check only that flag instead of
+> the maxerror value.
+
+That needs to be a seperate change.
+
+Thanks,
+
+        tglx
