@@ -1,116 +1,101 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F011B810
-	for <linux-hardening@vger.kernel.org>; Wed, 29 May 2024 17:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2079BD52E
+	for <linux-hardening@vger.kernel.org>; Wed, 29 May 2024 17:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717002591; cv=none; b=ReWguXWouBVprKsSNkDLev4xRxDx5NNwGTCKMAph6eWC+GYH4FEbTy7c9AxcrHCFvppMZm4FNFDod7IQuqTX5jtCTexhEnmifiO5ZbnZFRO/OWHxyOWrH6HtVYpG6jysIheCgR0AkNjlhGVMu1lbM2HBL1MMvaUzw4cAljjryT4=
+	t=1717003125; cv=none; b=naEO92jYd2ikC0UFj7oceaZ2ltzKTB2rgiRxEFj1ONAQfxlflNv28v8XVHiJU7ij3lHRzUv31kcvhd2idF89u72sWB5mghPo25pBiVNYqh2XsGDE64Rf7eZ4pyWouzd6xkBSkIUNNUipLBl1FdIu7+LZ0D6m03vgC0OqJKtQeHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717002591; c=relaxed/simple;
-	bh=TIA6XdquNQhRCkPJe62OcnLN3zmv4ktQFplASsa1O0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qm18nkyyZjlaAgfy7NZc7JXjK/WhOHCf1DihrkUWwzpuXVlcmIn+rgT5uBNfa8CDFI0HtGvqCduVtIoq9yDNeMTRpCgq7rqRtNlx7w/kFdgcpAjjNVJupMKRxxNFs7dm07UCDrXAisG3zzmtx4GbSYqLxBZRYilwPT5pM8PBcdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YhG0ialg; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717003125; c=relaxed/simple;
+	bh=yueErXx0vBJs5GE6t3f4vzCLsn9G7Wtx0UkvDhnlcvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ftn9lFBHAhatPeDpj4yJ7WMKzsVt7aCF+o2KEVT7MPiCfd8tqmTq/TrQ/+nIHSERRWsoeCG4L1/OtzMnATbXRJULwOGY6UjNtikt4Cd2vCwlzTWexM8R0kiqBfhPz0Bz+JjmyWEzTEbFywPh3QMQqiN2kAKCHbfTcRStgAZM3zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FzpnipP9; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YhG0ialg"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TAxlEv024256;
-	Wed, 29 May 2024 17:09:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZGxvPFJvxtAiuhAnXml1nml8Ee+E2MAad5eTlXyGCeg=; b=YhG0ialgKnb0DUIf
-	BF5FyoI7mXt/J7U0IATQDjkKuVM0LLWfTM2dMzrICLn83B0Oc6emMw10Okd9zLHB
-	MUNpELUZzuIeIGmb4P02ZmeL8AkFSxoaffVPsMVTCAUrFymRaXj0KwGKOmh8U9Rr
-	OguI4m8hcsfpqhD4eqfF6nwAkSUeJ+5ci6qEmXLG+WK3NcpD4Qp2TWMyPGwKIIe3
-	TRVTsPfZ2hZqQKHjdHcXXtHBQInadrVwAKkNeDUI7kLdLzgJ5BcGlBW7gBELCdGU
-	/b/H9AFditVrqxL99W4rTEsRXvqmRdLZNZOzuEINGt08qpKS16ZC4GwD3QeopTQq
-	uPqCHw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ybadx9mrd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 17:09:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TH9kwN020297
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 17:09:46 GMT
-Received: from [10.110.122.222] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
- 2024 10:09:46 -0700
-Message-ID: <1c79d692-bd2c-4125-8a47-7593b3229379@quicinc.com>
-Date: Wed, 29 May 2024 10:09:45 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FzpnipP9"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6fbbd937719so1785790b3a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 29 May 2024 10:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717003123; x=1717607923; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HrpFYI9w3VuKjWbWQGILtT92BwGDz8bAIbO4y10qN9g=;
+        b=FzpnipP9FGTVMDH7YZQU9A5PevMzOGyxPxOQHFtd9lRfSNm0VUOPHdE1wDqhZmrQnA
+         cQkgYwJzGpXHKAntGYiBtHmGnEbDKZ1PYR66aonz1yaQqFj7UkIp5kswDOI/mZ3mjmN2
+         WcYV3QhMrZH/owpyj8TtKuTzfPjEmcTNwySJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717003123; x=1717607923;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HrpFYI9w3VuKjWbWQGILtT92BwGDz8bAIbO4y10qN9g=;
+        b=AooR5KEnKfwewhT4AINt3Ul8cURUEgJx1DUh3Rvw5nC1WzCtLnnBk/SJ+rbZhuQm1z
+         1Jqi5l7ACUUWRc5WKFMjNNJ7WRR0KqEn4XdSsQOO5shAcaGQbrNfr8VP9BwJF6BY4GQg
+         z9PfMQ1xJY8SFx7A83XtxuXW3cJZoWMYbo87PzWqn6c0wLVWKEarK5hVL4sHb8LK74xH
+         INMWY/hfA52DL6hHZt2Ahf6OsqutPn4dsVNk+QI0GkGuU2t2aBYYRhvKx4wK5TMcn4FA
+         O0bxoelidfH3fiqLQxwtOtrO/z85GVViylYUsqofs5Mt0INV1NVtkKVuuG6Lgb7qRw56
+         nSxg==
+X-Gm-Message-State: AOJu0YxbOlUj4i8h634pKpTq+Kqs/Hugac1ImF+0sdfgJYFxFCPvPQc2
+	rwPQIb+2zdMWa/13ODHFGuftsG+/LgaucA+jdOatiU2UR6R6SXrMEQWOspI2A6y6ntYnlUlhu0A
+	=
+X-Google-Smtp-Source: AGHT+IG1rpbbKmfTqVpy1OBuEAV41soytZXzb095XpaW1yfXvn2L1zQyhlVhCw35hyefCjHqwVSojg==
+X-Received: by 2002:a05:6a21:999c:b0:1b2:5437:e04c with SMTP id adf61e73a8af0-1b25437e495mr4707959637.62.1717003123314;
+        Wed, 29 May 2024 10:18:43 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7022b6a6cecsm491980b3a.142.2024.05.29.10.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 10:18:42 -0700 (PDT)
+Date: Wed, 29 May 2024 10:18:42 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-hardening@vger.kernel.org
+Subject: Re: __fortify_panic() question
+Message-ID: <202405291018.F0B37DC6B@keescook>
+References: <79653cc7-6e59-4657-9c0a-76f49f49d019@quicinc.com>
+ <202405290950.7E61121D80@keescook>
+ <1c79d692-bd2c-4125-8a47-7593b3229379@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: __fortify_panic() question
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>
-CC: <linux-hardening@vger.kernel.org>
-References: <79653cc7-6e59-4657-9c0a-76f49f49d019@quicinc.com>
- <202405290950.7E61121D80@keescook>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <202405290950.7E61121D80@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: rTCQzRIUhinzLKM4bmvBmdywbjTiamBY
-X-Proofpoint-GUID: rTCQzRIUhinzLKM4bmvBmdywbjTiamBY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_13,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 mlxscore=0 suspectscore=0 spamscore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2405290118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c79d692-bd2c-4125-8a47-7593b3229379@quicinc.com>
 
-On 5/29/2024 9:55 AM, Kees Cook wrote:
-> On Wed, May 29, 2024 at 07:36:25AM -0700, Jeff Johnson wrote:
->> 'make W=1 C=1' on x86 gives the warning:
->> arch/x86/boot/compressed/misc.c:535:6: warning: symbol '__fortify_panic' was not declared. Should it be static?
+On Wed, May 29, 2024 at 10:09:45AM -0700, Jeff Johnson wrote:
+> On 5/29/2024 9:55 AM, Kees Cook wrote:
+> > On Wed, May 29, 2024 at 07:36:25AM -0700, Jeff Johnson wrote:
+> >> 'make W=1 C=1' on x86 gives the warning:
+> >> arch/x86/boot/compressed/misc.c:535:6: warning: symbol '__fortify_panic' was not declared. Should it be static?
+> > 
+> > Hm, I can't reproduce this currently (but yes, it looks like arm vs x86
+> > is mismatched). What tree is this?
 > 
-> Hm, I can't reproduce this currently (but yes, it looks like arm vs x86
-> is mismatched). What tree is this?
-
-e0cce98fe279 (linus/master, linux-master) Merge tag 'tpmdd-next-6.10-rc2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd
-
+> e0cce98fe279 (linus/master, linux-master) Merge tag 'tpmdd-next-6.10-rc2' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd
 > 
->> Looking at this I see for ARM there is a prototype for __fortify_panic() in
->> arch/arm/boot/compressed/misc.h
->> And there is a matching implementation in arch/arm/boot/compressed/misc.c
->>
->> But for x86 there is only the implementation in
->> arch/x86/boot/compressed/misc.c
->> There is not a prototype in arch/x86/boot/compressed/misc.h.
->>
->> The easy fix for this would be to add a prototype to
->> arch/x86/boot/compressed/misc.h.
+> > 
+> >> Looking at this I see for ARM there is a prototype for __fortify_panic() in
+> >> arch/arm/boot/compressed/misc.h
+> >> And there is a matching implementation in arch/arm/boot/compressed/misc.c
+> >>
+> >> But for x86 there is only the implementation in
+> >> arch/x86/boot/compressed/misc.c
+> >> There is not a prototype in arch/x86/boot/compressed/misc.h.
+> >>
+> >> The easy fix for this would be to add a prototype to
+> >> arch/x86/boot/compressed/misc.h.
+> > 
+> > Yeah, I think this is the right solution.
 > 
-> Yeah, I think this is the right solution.
+> You want to do this, or should I?
 
-You want to do this, or should I?
+Please feel free! I'd appreciate it. :)
 
-> 
->> But it seems strange to me to add a prototype to a header file that is only 
->> for the benefit of the callee and is not the prototype/header used by the 
->> caller, in this case the one in include/linux/fortify-string.h
-> 
-> The stuff in boot/ doesn't tend to include fortify-string.h (since it's
-> sort of "outside" the kernel), hence the need for additional prototypes.
-> 
-
-thanks for the info!
-
-/jeff
+-- 
+Kees Cook
