@@ -1,193 +1,126 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0961B960;
-	Wed, 29 May 2024 20:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7651C68AE;
+	Wed, 29 May 2024 21:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717015004; cv=none; b=uFUgvJ2XEXcGIt+mFzvcpV4tZtw+pjHC5OrApBxstHgzmauQoUKPFBnDRizwzE3v3OsQUtl5mRn5fNpf6NNTMAmrxHIg4GipFqjPN/M7Bt/kpWBK20UpuvguNXTweXnLbn5VPfy23IhbTI1drMpWBcFJcdNITEoq15CMnMuGavQ=
+	t=1717018190; cv=none; b=r9fPXz00Y2Bl3JXNB4BNWrR9AlXok3Jv7sfHqQGPs6NlMqKlXG+3rNrWYTMBtCW1Q2/SxDEDu3mHh3GfIkN+1F4419A4Onm9MfnQ2irnp6aZq0d/dUHEVoOawFn14jaEiusFu7G8zL820RggbTNpZj+Gvu+btOhwr859Hnlak18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717015004; c=relaxed/simple;
-	bh=KAuwmpAQlvgKVAuhQljiF3gBQKzQXSKUp3q7GZNgyAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qDFrBKynUVmiodS5gS3DcCDqRjo1p5FRj/4n+2TXV6lzgPkKpq4QavYWGXU1znxQRfhCzlSkT+Uki2kDEc57ASZeIV5QWFsx37u3U3+R6g53Zzb+HAt8maEfvs1tKWOEiuQPeD9trFF/zD00xPhPpHMVpuyMSEfNHjCoYwoPIWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hQqn8HrJ; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717018190; c=relaxed/simple;
+	bh=YFT6XmkjuA1L67KGJ7Z/ys6g5VheO1R0g4CnaTAx/k8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZJ2OkjYFh+WEOb2XbWHp6yRbooAUC21CCsY6wbCjuVG5PXQ60LnrbB6BDBKt4kqY1X8kwdhWtkPcm+yl8BB/434us5pqXGkMi4x50tzaptHq0U6AN35iFvTfhyM5qINZ0FONJ8n+rOi4zsvXnub5fFlbks5DBzLka7a6mTzlmXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asbG9zBD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQqn8HrJ"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f480624d0dso1633685ad.1;
-        Wed, 29 May 2024 13:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717015002; x=1717619802; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsDD1NAPFioHO4gLv1AtQFDU2NR/QOFSQPXZbsUyXIQ=;
-        b=hQqn8HrJK04qSpdvyWYymLBpVSatbJ+nu+z3lC2FIW/XjZRpMRwszziyA4cpieiz6u
-         k9evo/5N0omgpREvU/w3Xu5/gExMajk4tT+37+9/e9D4Nu73y9V/ob3eNplitG+Irl+n
-         MA1G2QsRxBvedCdJHXFm1bByc/9M6IqTKQGXG+EwpuYN/2hMVWFRY17R9gy3awkfOwJI
-         KsSs9Nwp+Ywz88eL8FUcusCV4NAasqkierHZ9Qppyo5VTktLmXs9DQo3gZQ2Z0FBoEr+
-         fA+TXtM3TpTHc76qXA37nV9Gn+sTAtkHSpvDOjOfnKVvPpCFUiLpPMCFjibgPKEE4pSs
-         T9Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717015002; x=1717619802;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JsDD1NAPFioHO4gLv1AtQFDU2NR/QOFSQPXZbsUyXIQ=;
-        b=cjug+sf4QgfwLmvkGqV/JOdlh12DCv33MrThpnMAo9Bpop+tK2PgDq82WqnONB0KD7
-         8+wUmSrJxojkodmh7umaYRnBBEsqQydXN9tQLj54ZVaS0BmjnjLLN+0hlK5M+hKU3xH/
-         y9zY2NvfqHk4fySChBXapNabRIe14f4nqxFCWX+8VzRYvlUR/OCmVuwI+/R/BFJHq3HL
-         0ssTGmOXZTf3VW/Sa4KSYSPMc0GfKGQgfhQT2TzkYyFa+KuNVwDPjZM3VCpsfYb/ob2N
-         4G1ZXJ92mupqeD5sEykeGgYqqNHKTF/eIGoi+pzVEuyK0E0M3YUACVS/DulqYQDhNt8G
-         cyuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpUppc0np4EhmU5hBvF/BEcORMS5aH5BiGsSAO4ESHHCIgFx0U0jc+VVgbvKUGOhVL+A4mvPtheqqx9+2dU0r71F8LFfrgXjtURIO1OWZFiGl23P16+b61A6nBBWDI/9+owhFH4jMOUhPiTKS6
-X-Gm-Message-State: AOJu0YyWmDJcO0pwTO/JyxNqUi5Im3mVZ6uynyu8GfR+O5KaLYILST2O
-	CTM1Phd01c6WpcH4AzI9+xRXdk1AXwQ11HLTv6sgW9l+wq2Svv3j
-X-Google-Smtp-Source: AGHT+IFzfRiiqI8oIBnyBDHVNzQy3TKrU+G1kSritJ5B25V5oeLzSgd4JGxkvl7xiz1uHMCm0UlTbw==
-X-Received: by 2002:a17:903:8c3:b0:1f2:f986:595d with SMTP id d9443c01a7336-1f61a4dd759mr1743215ad.66.1717015001980;
-        Wed, 29 May 2024 13:36:41 -0700 (PDT)
-Received: from Gatlins-MacBook-Pro.local ([131.252.143.197])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c75e579sm103603725ad.35.2024.05.29.13.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 13:36:41 -0700 (PDT)
-Date: Wed, 29 May 2024 13:36:39 -0700
-From: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-To: Marco Elver <elver@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Changbin Du <changbin.du@huawei.com>, 
-	Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] x86/traps: Enable UBSAN traps on x86
-Message-ID: <57vgoje4bmrckwqtwnletukcnlvjpj2yp3cjlkym4bfw66a57a@w35yjzcurcis>
-References: <20240529022043.3661757-1-gatlin.newhouse@gmail.com>
- <CANpmjNM2S2whk31nfNGSBO5MFPPUHX7FPuHBJn1nN9zdP63xTw@mail.gmail.com>
- <2j6nkzn2tfdwdqhoal5o56ds2hqg2sqk5diolv23l5nzteypzh@fi53ovwjjl3w>
- <CANpmjNM4pFHYRqmBLi0qUm8K2SroYWg7NFjreHffHvk0WW95kA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asbG9zBD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 576DAC113CC;
+	Wed, 29 May 2024 21:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717018190;
+	bh=YFT6XmkjuA1L67KGJ7Z/ys6g5VheO1R0g4CnaTAx/k8=;
+	h=From:Date:Subject:To:Cc:From;
+	b=asbG9zBDD1bf7uxNqV60imN7ol4BAKKLXWotP35uMcrJHa0RhgT2cS+6ozCmOPh/w
+	 y2uZPaNg0K8HW/5YTGArGXaWr+2GV8XUMi33gJIQY8vd2z88Mm80t3d/sARC1VnegJ
+	 BGRePAEAEV0mMwTozWo3kF9bozW0Lb62CMHvIrvHThLAryU6mT0k5Vw3ul8VnaZx4D
+	 FPBI9HqC2VQsX1QnUxtZ2mQ4qT5+W384dW+wJTBkXByKhDBL+WW8De3EWlrJ0ABon0
+	 SPYeTyt6la6Uvu7bLsPXfnTG7IS6YjXWwQ+f+7aBbm3hzQSQqZR3xZazc2BrZX+2Q0
+	 Jol+y8m0KqzEg==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Wed, 29 May 2024 14:29:42 -0700
+Subject: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNM4pFHYRqmBLi0qUm8K2SroYWg7NFjreHffHvk0WW95kA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAEWeV2YC/x3NwQrCMAyA4VcZORvYghb0VcYO3ZJpDjYlnaMy9
+ u4Wj//l+w8o4ioFHt0BLrsWtdRiuHSwvGJ6Ciq3Burp2t/ojuyWcbFP2oRx/mI23wq+a3Nwtui
+ MwhRDWIcYhKA52WXV+n+M03n+AKGQncdzAAAA
+To: Jiri Slaby <jirislaby@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kees Cook <keescook@chromium.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ linux-serial@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+ llvm@lists.linux.dev, patches@lists.linux.dev, stable@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2369; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=YFT6XmkjuA1L67KGJ7Z/ys6g5VheO1R0g4CnaTAx/k8=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDGnh83zf105XVlO+zHNmhrKxdqlJuM23XWFdKTuZpzqG+
+ Eo/nHKxo5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAExk7wOG/2ERuht3rcpyb7Ay
+ +zCz+Hybv91x/r/M7bPL//9qdrjw7SPDP5WoQKHdR3Q2HRGTb/zYYcYlPWGz2R/WhwLhM2d/fdf
+ MyQ0A
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Wed, May 29, 2024 at 08:30:20PM UTC, Marco Elver wrote:
-> On Wed, 29 May 2024 at 20:17, Gatlin Newhouse <gatlin.newhouse@gmail.com> wrote:
-> >
-> > On Wed, May 29, 2024 at 09:25:21AM UTC, Marco Elver wrote:
-> > > On Wed, 29 May 2024 at 04:20, Gatlin Newhouse <gatlin.newhouse@gmail.com> wrote:
-> > > [...]
-> > > >         if (regs->flags & X86_EFLAGS_IF)
-> > > >                 raw_local_irq_enable();
-> > > > -       if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
-> > > > -           handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-> > > > -               regs->ip += LEN_UD2;
-> > > > -               handled = true;
-> > > > +
-> > > > +       if (insn == INSN_UD2) {
-> > > > +               if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
-> > > > +               handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-> > > > +                       regs->ip += LEN_UD2;
-> > > > +                       handled = true;
-> > > > +               }
-> > > > +       } else {
-> > > > +               if (handle_ubsan_failure(regs, insn) == BUG_TRAP_TYPE_WARN) {
-> > >
-> > > handle_ubsan_failure currently only returns BUG_TRAP_TYPE_NONE?
-> > >
-> > > > +                       if (insn == INSN_REX)
-> > > > +                               regs->ip += LEN_REX;
-> > > > +                       regs->ip += LEN_UD1;
-> > > > +                       handled = true;
-> > > > +               }
-> > > >         }
-> > > >         if (regs->flags & X86_EFLAGS_IF)
-> > > >                 raw_local_irq_disable();
-> > > > diff --git a/arch/x86/kernel/ubsan.c b/arch/x86/kernel/ubsan.c
-> > > > new file mode 100644
-> > > > index 000000000000..6cae11f4fe23
-> > > > --- /dev/null
-> > > > +++ b/arch/x86/kernel/ubsan.c
-> > > > @@ -0,0 +1,32 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Clang Undefined Behavior Sanitizer trap mode support.
-> > > > + */
-> > > > +#include <linux/bug.h>
-> > > > +#include <linux/string.h>
-> > > > +#include <linux/printk.h>
-> > > > +#include <linux/ubsan.h>
-> > > > +#include <asm/ptrace.h>
-> > > > +#include <asm/ubsan.h>
-> > > > +
-> > > > +/*
-> > > > + * Checks for the information embedded in the UD1 trap instruction
-> > > > + * for the UB Sanitizer in order to pass along debugging output.
-> > > > + */
-> > > > +enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn)
-> > > > +{
-> > > > +       u32 type = 0;
-> > > > +
-> > > > +       if (insn == INSN_REX) {
-> > > > +               type = (*(u16 *)(regs->ip + LEN_REX + LEN_UD1));
-> > > > +               if ((type & 0xFF) == 0x40)
-> > > > +                       type = (type >> 8) & 0xFF;
-> > > > +       } else {
-> > > > +               type = (*(u16 *)(regs->ip + LEN_UD1));
-> > > > +               if ((type & 0xFF) == 0x40)
-> > > > +                       type = (type >> 8) & 0xFF;
-> > > > +       }
-> > > > +       pr_crit("%s at %pS\n", report_ubsan_failure(regs, type), (void *)regs->ip);
-> > > > +
-> > > > +       return BUG_TRAP_TYPE_NONE;
-> > > > +}
-> > >
-> > > Shouldn't this return BUG_TRAP_TYPE_WARN?
-> >
-> > So as far as I understand, UBSAN trap mode never warns. Perhaps it does on
-> > arm64, although it calls die() so I am unsure. Maybe the condition in
-> > handle_bug() should be rewritten in the case of UBSAN ud1s? Do you have any
-> > suggestions?
-> 
-> AFAIK on arm64 it's basically a kernel OOPS.
-> 
-> The main thing I just wanted to point out though is that your newly added branch
-> 
-> > if (handle_ubsan_failure(regs, insn) == BUG_TRAP_TYPE_WARN) {
-> 
-> will never be taken, because I don't see where handle_ubsan_failure()
-> returns BUG_TRAP_TYPE_WARN.
->
+Work for __counted_by on generic pointers in structures (not just
+flexible array members) has started landing in Clang 19 (current tip of
+tree). During the development of this feature, a restriction was added
+to __counted_by to prevent the flexible array member's element type from
+including a flexible array member itself such as:
 
-Initially I wrote this with some symmetry to the KCFI checks nearby, but I
-was unsure if this would be considered handled or not.
+  struct foo {
+    int count;
+    char buf[];
+  };
 
-> 
-> That means 'handled' will be false, and the code in exc_invalid_op
-> will proceed to call handle_invalid_op() which is probably not what
-> you intended - i.e. it's definitely not BUG_TRAP_TYPE_NONE, but one of
-> TYPE_WARN of TYPE_BUG.
->
+  struct bar {
+    int count;
+    struct foo data[] __counted_by(count);
+  };
 
-This remains a question to me as to whether it should be considered handled
-or not. Which is why I'm happy to change this branch which is never taken to
-something else that still outputs the UBSAN type information before calling
-handle_invalid_op().
+because the size of data cannot be calculated with the standard array
+size formula:
 
-> 
-> Did you test it and you got the behaviour you expected?
->
+  sizeof(struct foo) * count
 
-Testing with LKDTM provided the output I expected. The UBSAN type information
-along with file and offsets are output before an illegal op and trace.
+This restriction was downgraded to a warning but due to CONFIG_WERROR,
+it can still break the build. The application of __counted_by on the
+ports member of 'struct mxser_board' triggers this restriction,
+resulting in:
+
+  drivers/tty/mxser.c:291:2: error: 'counted_by' should not be applied to an array with element of unknown size because 'struct mxser_port' is a struct type with a flexible array member. This will be an error in a future compiler version [-Werror,-Wbounds-safety-counted-by-elt-type-unknown-size]
+    291 |         struct mxser_port ports[] __counted_by(nports);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+  1 error generated.
+
+Remove this use of __counted_by to fix the warning/error. However,
+rather than remove it altogether, leave it commented, as it may be
+possible to support this in future compiler releases.
+
+Cc: stable@vger.kernel.org
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2026
+Fixes: f34907ecca71 ("mxser: Annotate struct mxser_board with __counted_by")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/tty/mxser.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/mxser.c b/drivers/tty/mxser.c
+index 458bb1280ebf..5b97e420a95f 100644
+--- a/drivers/tty/mxser.c
++++ b/drivers/tty/mxser.c
+@@ -288,7 +288,7 @@ struct mxser_board {
+ 	enum mxser_must_hwid must_hwid;
+ 	speed_t max_baud;
+ 
+-	struct mxser_port ports[] __counted_by(nports);
++	struct mxser_port ports[] /* __counted_by(nports) */;
+ };
+ 
+ static DECLARE_BITMAP(mxser_boards, MXSER_BOARDS);
+
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240529-drop-counted-by-ports-mxser-board-ed2a66f1a6e2
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
