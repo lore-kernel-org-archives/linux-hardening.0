@@ -1,108 +1,156 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91FD139588;
-	Wed, 29 May 2024 18:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF55B15B575;
+	Wed, 29 May 2024 18:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717006181; cv=none; b=IqX7Kz3gXN4V/NCfZXmygUu2a0n7gtvKEEyalC0tBBF/0gKMDnRpLBTKklqflXmJSPoIfBWI1eLb+oqoGB3aEyfrqR9sT/Uz2bMCIhdMJKsbwMFZwrvP6iSGqYsyS8rUmyjcof3sfb2cLG0SgH78NtZs9M702WI7kWol0NBWPtI=
+	t=1717006619; cv=none; b=RIH8Xp8g6aneMw3swPEBMilkC1LqP9q5KPyVgBFUKzdc0pjb+fSE6BITQy6kpONnMX+ZbrYIsYCqeZvmELmGbB/XA91788daXmazrwVzsJX12dZrCaENgtv11sxNH0kaXSQrtCblpgCNxH695cg5qsNEPUauHtdiYE6UwEVho1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717006181; c=relaxed/simple;
-	bh=bUNBC++5QqCYKmwTCeeD+mv5VmpkCIdPw9OF48t8gKk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=G8xr31ESULMyBLerCmC6ujfOBMuucq+9idoqPunEM+FUCpZf7lIhMKbeEyj10iPLFVaIQNLSkOdb4Siv5zIYzui+1HMn6V/lw41Bk4NI4G47WMceNnTDo64oAlZ5RC7JHsUGSquAHlkQ4bCJTGH+fUm3oqp2LH72opHK+0m2hQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g8P6dK2w; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717006619; c=relaxed/simple;
+	bh=bBxK7oGH7Qc+v5OVBzgZ/gYfy8r6SkX1r3Lg7bTGGck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rcAsA6WF1ivQcbBRbb6uT/hVjgnQsAghApk/J8Q/DsTLTzpQJxeg2zDj3dozzc9NcOQBCp+sP5L+Co3hcSi7Oftlgg9/mcdj29Q2nXLiYZ4blUDzTddKicV1ihuMiDxQOREm3SbQp0q1QpCCh3020f7DZJxwP+rBhft6hoqpMng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Om1FB3e+; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g8P6dK2w"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44TCKA9Q015705;
-	Wed, 29 May 2024 18:09:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Ju/J3hCB+VSBMcgUZS/ZrV
-	7h7Zxp1rYn0GuScpI13VI=; b=g8P6dK2wbUAMBwtGUDqiuzgB8G5cQY4JZ92r3R
-	okubOc2K8RAkkrnaE1/k622g3Hpa0DUwV+ZAl/tCA04FiQWyaqL9nlFwP/TsBUTO
-	18t4acMtEm5N9jcudmZxO059HmNwEfQ4rvCdda0yth5TXp4t0M6xPTVrX2XSJPVU
-	Kb73cdH5Z63sOh9M+Lw2xG6rvBVqZn6FjBifDSBBHxeolPkxkx+zp1rGfjyIbSnW
-	+i7KhR7VSgXHPY+RcLrAMWVsuFgbHEDCYlQ6bHBjB85LEGONiu10GFofSghUGzaW
-	0Ck8IYZ6poo/8tHtP8rIuF8G3d+KApWEP8V4uxo1IHa8PoJQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2h9smw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 18:09:24 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44TI9N3j018535
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 May 2024 18:09:23 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 29 May
- 2024 11:09:23 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 29 May 2024 11:09:21 -0700
-Subject: [PATCH] x86/boot: add prototype for __fortify_panic()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Om1FB3e+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f44b5d0c50so308235ad.2;
+        Wed, 29 May 2024 11:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717006617; x=1717611417; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iXEkR867jEs+moBzGXY8ULu3YeFsr12ik86Lu88hpJM=;
+        b=Om1FB3e+VTMeUoOhnE7yMedx7f8rz9HQ/AvmptyH/LCZzpvEvQSAmkp+f2ar4YNLWC
+         E9KDqj3vIRwmOZvrwDnEEZm0ndSlJR54B0C/Ol8FzQEQJdTaFN1tMXtqpMVVQnxR15ac
+         MJBcUtyMi5gcGEhxux1a1jaxfihKdhdipYiQKKEfTitz5+MWW1NEGXxCSSvW820MHEYX
+         XC0Nz8kF543N8PaWZBGK4Qn2zuiynKtF2/Snn+sErcqcTCgXav6hY1OJbz7rJqbinwch
+         iL4LYD6Jh58C1ptSC6uDdCbJwBCaSxxpa4f7r8qd5UPlILngvUhOhW945xI6XZx/k85X
+         ZLhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717006617; x=1717611417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iXEkR867jEs+moBzGXY8ULu3YeFsr12ik86Lu88hpJM=;
+        b=fpjXDCEXy59ex1BURNRV/ODl2prESX/O+oVlPYIxg8ATVBXP+6xwBAJoej8O1Rozfe
+         R7XZQIwIJJCBUETqI0NNrAKeITO/qSbmwKsblpml6FtryHG+M1ISRp4vf2u+XMlP9a0x
+         BPG4iXykf1xR+azUrgfmhmZ3zqkfGmc+ovmF9L/j6sDKkENeKo+6NKndnAbt8TrpjjUp
+         W9oLU3y2lLqMMg3R6CCADB6sGJn+DVhmOAupzKTrbJhG+lLxb58nIpfa9RgQ1gx5PKZl
+         sUfmHh7ey7rdVD9BWyxVkZwIOUPh1aqhOtZIdr0eutagKu3SeWbP5aqi7BWNjoiNoJH7
+         gidQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkIl5hH343Ld2WHBq4jqqxgQ/ZilhhU8T3otIIso4BMJxo24yQBsj064DjXhtVIoO+h99gu9GsNWaSq+FWrxRjb29dlgvjTg30fOoXUyeKdC43n+1yiXktq0zNWL8cOJj0qLXGbPSuWvQWmyeK
+X-Gm-Message-State: AOJu0YwRsRiH3+GvQI7WEluQp9cMlyrVTU1tg9kgeV+dYUDxJrB3G2Fl
+	2p2SHkHBTbeHNdAZAiLKRZCboaCd+6QhDQWWkISA+YYmNFEXtAlO
+X-Google-Smtp-Source: AGHT+IEX452clUdy+2NK2IX+qUe8wBeDObu8s6wfNc0sKgoaVuLMAuhtbZnjhqa4qhDIJRoL4CRqTA==
+X-Received: by 2002:a17:902:dacc:b0:1f4:be9b:d306 with SMTP id d9443c01a7336-1f4be9bd71dmr75508835ad.31.1717006616911;
+        Wed, 29 May 2024 11:16:56 -0700 (PDT)
+Received: from Gatlins-MacBook-Pro.local ([131.252.142.255])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c7592e6sm102718815ad.45.2024.05.29.11.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 11:16:56 -0700 (PDT)
+Date: Wed, 29 May 2024 11:16:55 -0700
+From: Gatlin Newhouse <gatlin.newhouse@gmail.com>
+To: Marco Elver <elver@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, 
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] x86/traps: Enable UBSAN traps on x86
+Message-ID: <2j6nkzn2tfdwdqhoal5o56ds2hqg2sqk5diolv23l5nzteypzh@fi53ovwjjl3w>
+References: <20240529022043.3661757-1-gatlin.newhouse@gmail.com>
+ <CANpmjNM2S2whk31nfNGSBO5MFPPUHX7FPuHBJn1nN9zdP63xTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAFBvV2YC/x3M0Q6CMAxA0V8hfbbJNkSjv2KIKaOTJjpIiwRD+
- Henj+fh3g2MVdjgWm2gvIjJmAv8oYI4UH4wSl8MwYWja8IF06izpM99oiwR69CcnOfEZ99DaSb
- lJOv/d2uLOzLGTinH4Xd5Sn6v+CKbWWHfv4pyveZ+AAAA
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>, "H. Peter Anvin"
-	<hpa@zytor.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CrNa4S0doKVMRnvhAvg3nV19ivjHciMf
-X-Proofpoint-ORIG-GUID: CrNa4S0doKVMRnvhAvg3nV19ivjHciMf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-29_14,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
- phishscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=882 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405290127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNM2S2whk31nfNGSBO5MFPPUHX7FPuHBJn1nN9zdP63xTw@mail.gmail.com>
 
-As discussed in [1] add a prototype for __fortify_panic() to fix the
-'make W=1 C=1' warning:
+On Wed, May 29, 2024 at 09:25:21AM UTC, Marco Elver wrote:
+> On Wed, 29 May 2024 at 04:20, Gatlin Newhouse <gatlin.newhouse@gmail.com> wrote:
+> [...]
+> >         if (regs->flags & X86_EFLAGS_IF)
+> >                 raw_local_irq_enable();
+> > -       if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> > -           handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> > -               regs->ip += LEN_UD2;
+> > -               handled = true;
+> > +
+> > +       if (insn == INSN_UD2) {
+> > +               if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> > +               handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> > +                       regs->ip += LEN_UD2;
+> > +                       handled = true;
+> > +               }
+> > +       } else {
+> > +               if (handle_ubsan_failure(regs, insn) == BUG_TRAP_TYPE_WARN) {
+> 
+> handle_ubsan_failure currently only returns BUG_TRAP_TYPE_NONE?
+> 
+> > +                       if (insn == INSN_REX)
+> > +                               regs->ip += LEN_REX;
+> > +                       regs->ip += LEN_UD1;
+> > +                       handled = true;
+> > +               }
+> >         }
+> >         if (regs->flags & X86_EFLAGS_IF)
+> >                 raw_local_irq_disable();
+> > diff --git a/arch/x86/kernel/ubsan.c b/arch/x86/kernel/ubsan.c
+> > new file mode 100644
+> > index 000000000000..6cae11f4fe23
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/ubsan.c
+> > @@ -0,0 +1,32 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Clang Undefined Behavior Sanitizer trap mode support.
+> > + */
+> > +#include <linux/bug.h>
+> > +#include <linux/string.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/ubsan.h>
+> > +#include <asm/ptrace.h>
+> > +#include <asm/ubsan.h>
+> > +
+> > +/*
+> > + * Checks for the information embedded in the UD1 trap instruction
+> > + * for the UB Sanitizer in order to pass along debugging output.
+> > + */
+> > +enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn)
+> > +{
+> > +       u32 type = 0;
+> > +
+> > +       if (insn == INSN_REX) {
+> > +               type = (*(u16 *)(regs->ip + LEN_REX + LEN_UD1));
+> > +               if ((type & 0xFF) == 0x40)
+> > +                       type = (type >> 8) & 0xFF;
+> > +       } else {
+> > +               type = (*(u16 *)(regs->ip + LEN_UD1));
+> > +               if ((type & 0xFF) == 0x40)
+> > +                       type = (type >> 8) & 0xFF;
+> > +       }
+> > +       pr_crit("%s at %pS\n", report_ubsan_failure(regs, type), (void *)regs->ip);
+> > +
+> > +       return BUG_TRAP_TYPE_NONE;
+> > +}
+> 
+> Shouldn't this return BUG_TRAP_TYPE_WARN?
 
-arch/x86/boot/compressed/misc.c:535:6: warning: symbol '__fortify_panic' was not declared. Should it be static?
-
-Link: https://lore.kernel.org/all/79653cc7-6e59-4657-9c0a-76f49f49d019@quicinc.com/ [1]
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- arch/x86/boot/compressed/misc.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index b353a7be380c..3a56138484a9 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -68,6 +68,7 @@ void __putdec(unsigned long value);
- #define error_putstr(__x)  __putstr(__x)
- #define error_puthex(__x)  __puthex(__x)
- #define error_putdec(__x)  __putdec(__x)
-+void __fortify_panic(const u8 reason, size_t avail, size_t size);
- 
- #ifdef CONFIG_X86_VERBOSE_BOOTUP
- 
-
----
-base-commit: e0cce98fe279b64f4a7d81b7f5c3a23d80b92fbc
-change-id: 20240529-fortify_panic-325601efe71d
-
+So as far as I understand, UBSAN trap mode never warns. Perhaps it does on
+arm64, although it calls die() so I am unsure. Maybe the condition in
+handle_bug() should be rewritten in the case of UBSAN ud1s? Do you have any
+suggestions?
