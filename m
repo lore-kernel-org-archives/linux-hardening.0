@@ -1,306 +1,244 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBEA15ADB1;
-	Wed, 29 May 2024 02:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63D213D899
+	for <linux-hardening@vger.kernel.org>; Wed, 29 May 2024 04:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716949248; cv=none; b=EWblckkG11ZjKmFJutE+iHdPgVA1WFPYUDtS4bClmvMaVysCh0RsxUECqnzFPtYq9iSPEB2kkwjcomhn6Y2Lwie0DasToYJlbh03A5bq+OEWIsH+TiX3WFrmJHtoq9RitcW3nsbb7XowvqyuryNpagmZHrEwYfa5DkfhTtSZ9e8=
+	t=1716957567; cv=none; b=Efm19qF+FlOpMM7EYq3eQ92hsQoYYiEpO/Gw+DK87AfmtNCdWWotFp45+QJkOqJvdrLGREJpveCUjId6EKvv3BqzXCUEI833XOVAuadlbTRQGMPx3g3acWJsNkX8SfiMx34CDPaNufqmmrc11RF1NUcwlgct+0/iNkgjo1ypzw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716949248; c=relaxed/simple;
-	bh=U+W//EVdx0UAbUQqkIfAMe/SGhPbRP7U+NdtplK/RrA=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=iE9nRB+0DmHzNZgVFm/SEqyOIhxWnQm9P6fPZY/jko7vknEaEzlgYdJYa7UP5RSHzQaa4MDhXYjndKp7a6rusdcvSnXiymVbz8F5QF4efGO77qE/+pU9bXUkB0DV95DFfYSuq/y35FEjQdQQGnwICUDs9tmu80NIqm7nZGV9kY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U1qVvQWR; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1qVvQWR"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6fcbd812b33so1366295b3a.3;
-        Tue, 28 May 2024 19:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716949246; x=1717554046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=347Tv+L36ItrUa9DcwFsT5YsIM2weBtvDOWbMcJm1vI=;
-        b=U1qVvQWRKaxP7cRgOBoKDYOhJkDDfTvEnvXEkYQZygfslqSrvy7URENsqpRWyrwbE2
-         RrcCt9SnSdPxmthf3ebWWz9Cz8CXbHCp4+g4341P6ZomtKi7AxTFCD3yEsceLfP9xMur
-         wqR2VflEypP0+UD825nPAqlKB8cmctXCpKYGHnCZmeL4SPa/9cjwugUz/RKygL0q43Nc
-         cIWKXpZVwzPF4tHQ43YBrTUFTCvFdlkwddqHqEqMA4h84wcqqO3wd5LdQeg0zkEsNNIv
-         KMofHkIDPPD9lkfXqKCK+J2d/2SzBrGUtXyq0KyZJUO4Tec94EZbe0NtYkiBGxOZUwBQ
-         Xqbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716949246; x=1717554046;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=347Tv+L36ItrUa9DcwFsT5YsIM2weBtvDOWbMcJm1vI=;
-        b=FDtFnCevcASMJwlzwNk/3lbRtR+vFTXBCL/PDc+niO863xcKzp9XVuVawB7XTqi93e
-         vpj3Os0GmLj/PfYWqPF9Y3hLfuR/aH00/3yQYs20NqQ4ElBJDtGnJsf6Xu58srBlsHqn
-         018xCg/4n9/W47qcFkHyEpmEWXreCmmRScvqOfMvHQgvISI0GXeOS8TFboS+HCl9ixZW
-         pWp2eZuaQCp8ouiVbqi+3fAEfDWb2imBbKk+KJ7a0N/l1E1xya6mn2MFgG9zIqI5pAR4
-         9llG54yYypgcypua1kYiHRHTRCv2n8SEDw9B1MNQIaud5QY9GyyZBJsY99jfxkimFiD6
-         oyjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYe0bUleE1nWFycPX9E3yqoHZA5gePpsFOob6bFtoxLhhQEF82ejT0806E3zGVxI5do1fHMFfwp28IaEre0sQJO10lFVGQOkvPyTaNmyFDgFKd3IP93mTYiFDwGony6a1gnxTQvpU4QbXeTOQR
-X-Gm-Message-State: AOJu0YxAA2mA4u+XyW0uYbyydzX5M9HmrpDrs9mD/Y5JjX0Owdrw76uA
-	OQqdsPZtl4Bh5eQXaos+lupGSA1ziSvF0VbqW5Sfsg0WrOHrg7uz
-X-Google-Smtp-Source: AGHT+IHoETe02pTx/zsmIpmRrV07oYeWjfDTOvDLsnucWpNSSmY9ikIEOi0eCyGo/VAVReoqmSQpdw==
-X-Received: by 2002:a05:6a20:da8f:b0:1af:aec3:2841 with SMTP id adf61e73a8af0-1b212e5bddbmr15754764637.56.1716949245970;
-        Tue, 28 May 2024 19:20:45 -0700 (PDT)
-Received: from localhost.localdomain ([2604:a880:4:1d0::427:6000])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2bf5f6155b6sm9410812a91.29.2024.05.28.19.20.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 19:20:45 -0700 (PDT)
-From: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Gatlin Newhouse <gatlin.newhouse@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xin Li <xin3.li@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] x86/traps: Enable UBSAN traps on x86
-Date: Wed, 29 May 2024 02:20:30 +0000
-Message-Id: <20240529022043.3661757-1-gatlin.newhouse@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1716957567; c=relaxed/simple;
+	bh=w+SMDGzTJFQuqdvJfu1aC+qtLD5AS6Lz4nehZdCVabs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Lmvzwm9rqnSlLC2zpXhyAafP6JKX4lDhlISGODD8bGRAZRaabI0tVpYnpYdG/0qRv+rOlgpxmoIYALLhAClcYHXefFDeZoCsOCNQWDyWLRjELEeAsmraTL/ErH35vsWrsTStXExvEiGmsDdM5N+9I1cu2+p8a9g7jIBHeCFZ7s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1716957556-1eb14e15780f850001-PleebU
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id 0VsrEwHzzn7pxCgS (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 29 May 2024 12:39:16 +0800 (CST)
+X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 29 May
+ 2024 12:39:16 +0800
+Received: from [10.32.65.162] (10.32.65.162) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.27; Wed, 29 May
+ 2024 12:39:14 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Message-ID: <2553dd17-f763-4894-89b7-5f76c03d3a37@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.32.65.162
+Date: Wed, 29 May 2024 12:39:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+To: Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <keescook@chromium.org>,
+	<tony.luck@intel.com>, <gpiccoli@igalia.com>, <mat.jonczyk@o2.pl>,
+	<rdunlap@infradead.org>, <alexandre.belloni@bootlin.com>,
+	<mario.limonciello@amd.com>, <yaolu@kylinos.cn>, <bhelgaas@google.com>,
+	<justinstitt@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+X-ASG-Orig-Subj: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+CC: <CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+ <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com> <87wmnda8mc.ffs@tglx>
+Content-Language: en-US
+From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+In-Reply-To: <87wmnda8mc.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1716957556
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 6655
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.125490
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-Bring x86 to parity with arm64, similar to commit 25b84002afb9
-("arm64: Support Clang UBSAN trap codes for better reporting").
-Enable the output of UBSAN type information on x86 architectures
-compiled with clang when CONFIG_UBSAN_TRAP=y. Currently ARM
-architectures output which specific sanitizer caused the trap,
-via the encoded data in the trap instruction. Clang on x86
-currently encodes the same data in ud1 instructions but the x86
-handle_bug() and is_valid_bugaddr() functions currently only look
-at ud2s.
 
-Signed-off-by: Gatlin Newhouse <gatlin.newhouse@gmail.com>
----
- MAINTAINERS                  |  2 ++
- arch/x86/include/asm/bug.h   |  8 ++++++++
- arch/x86/include/asm/ubsan.h | 21 +++++++++++++++++++++
- arch/x86/kernel/Makefile     |  1 +
- arch/x86/kernel/traps.c      | 34 ++++++++++++++++++++++++++++------
- arch/x86/kernel/ubsan.c      | 32 ++++++++++++++++++++++++++++++++
- 6 files changed, 92 insertions(+), 6 deletions(-)
- create mode 100644 arch/x86/include/asm/ubsan.h
- create mode 100644 arch/x86/kernel/ubsan.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 28e20975c26f..b8512887ffb1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22635,6 +22635,8 @@ L:	kasan-dev@googlegroups.com
- L:	linux-hardening@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
-+F:	arch/x86/include/asm/ubsan.h
-+F:	arch/x86/kernel/ubsan.c
- F:	Documentation/dev-tools/ubsan.rst
- F:	include/linux/ubsan.h
- F:	lib/Kconfig.ubsan
-diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-index a3ec87d198ac..e3fbed9073f8 100644
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -13,6 +13,14 @@
- #define INSN_UD2	0x0b0f
- #define LEN_UD2		2
- 
-+/*
-+ * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
-+ */
-+#define INSN_UD1	0xb90f
-+#define LEN_UD1		2
-+#define INSN_REX	0x67
-+#define LEN_REX		1
-+
- #ifdef CONFIG_GENERIC_BUG
- 
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/include/asm/ubsan.h b/arch/x86/include/asm/ubsan.h
-new file mode 100644
-index 000000000000..5235822eb4ae
---- /dev/null
-+++ b/arch/x86/include/asm/ubsan.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_UBSAN_H
-+#define _ASM_X86_UBSAN_H
-+
-+/*
-+ * Clang Undefined Behavior Sanitizer trap mode support.
-+ */
-+#include <linux/bug.h>
-+#include <linux/ubsan.h>
-+#include <asm/ptrace.h>
-+
-+#ifdef CONFIG_UBSAN_TRAP
-+enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn);
-+#else
-+static inline enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn)
-+{
-+	return BUG_TRAP_TYPE_NONE;
-+}
-+#endif /* CONFIG_UBSAN_TRAP */
-+
-+#endif /* _ASM_X86_UBSAN_H */
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 74077694da7d..fe1d9db27500 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -145,6 +145,7 @@ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
- 
- obj-$(CONFIG_CFI_CLANG)			+= cfi.o
-+obj-$(CONFIG_UBSAN_TRAP)		+= ubsan.o
- 
- obj-$(CONFIG_CALL_THUNKS)		+= callthunks.o
- 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 4fa0b17e5043..7876449e97a0 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -67,6 +67,7 @@
- #include <asm/vdso.h>
- #include <asm/tdx.h>
- #include <asm/cfi.h>
-+#include <asm/ubsan.h>
- 
- #ifdef CONFIG_X86_64
- #include <asm/x86_init.h>
-@@ -79,6 +80,9 @@
- 
- DECLARE_BITMAP(system_vectors, NR_VECTORS);
- 
-+/*
-+ * Check for UD1, UD2, with or without REX instructions.
-+ */
- __always_inline int is_valid_bugaddr(unsigned long addr)
- {
- 	if (addr < TASK_SIZE_MAX)
-@@ -88,7 +92,13 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
- 	 * We got #UD, if the text isn't readable we'd have gotten
- 	 * a different exception.
- 	 */
--	return *(unsigned short *)addr == INSN_UD2;
-+	if (*(u16 *)addr == INSN_UD2)
-+		return INSN_UD2;
-+	if (*(u16 *)addr == INSN_UD1)
-+		return INSN_UD1;
-+	if (*(u8 *)addr == INSN_REX && *(u16 *)(addr + 1) == INSN_UD1)
-+		return INSN_REX;
-+	return 0;
- }
- 
- static nokprobe_inline int
-@@ -216,6 +226,7 @@ static inline void handle_invalid_op(struct pt_regs *regs)
- static noinstr bool handle_bug(struct pt_regs *regs)
- {
- 	bool handled = false;
-+	int insn;
- 
- 	/*
- 	 * Normally @regs are unpoisoned by irqentry_enter(), but handle_bug()
-@@ -223,7 +234,8 @@ static noinstr bool handle_bug(struct pt_regs *regs)
- 	 * irqentry_enter().
- 	 */
- 	kmsan_unpoison_entry_regs(regs);
--	if (!is_valid_bugaddr(regs->ip))
-+	insn = is_valid_bugaddr(regs->ip);
-+	if (insn == 0)
- 		return handled;
- 
- 	/*
-@@ -236,10 +248,20 @@ static noinstr bool handle_bug(struct pt_regs *regs)
- 	 */
- 	if (regs->flags & X86_EFLAGS_IF)
- 		raw_local_irq_enable();
--	if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
--	    handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
--		regs->ip += LEN_UD2;
--		handled = true;
-+
-+	if (insn == INSN_UD2) {
-+		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
-+		handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
-+			regs->ip += LEN_UD2;
-+			handled = true;
-+		}
-+	} else {
-+		if (handle_ubsan_failure(regs, insn) == BUG_TRAP_TYPE_WARN) {
-+			if (insn == INSN_REX)
-+				regs->ip += LEN_REX;
-+			regs->ip += LEN_UD1;
-+			handled = true;
-+		}
- 	}
- 	if (regs->flags & X86_EFLAGS_IF)
- 		raw_local_irq_disable();
-diff --git a/arch/x86/kernel/ubsan.c b/arch/x86/kernel/ubsan.c
-new file mode 100644
-index 000000000000..6cae11f4fe23
---- /dev/null
-+++ b/arch/x86/kernel/ubsan.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Clang Undefined Behavior Sanitizer trap mode support.
-+ */
-+#include <linux/bug.h>
-+#include <linux/string.h>
-+#include <linux/printk.h>
-+#include <linux/ubsan.h>
-+#include <asm/ptrace.h>
-+#include <asm/ubsan.h>
-+
-+/*
-+ * Checks for the information embedded in the UD1 trap instruction
-+ * for the UB Sanitizer in order to pass along debugging output.
-+ */
-+enum bug_trap_type handle_ubsan_failure(struct pt_regs *regs, int insn)
-+{
-+	u32 type = 0;
-+
-+	if (insn == INSN_REX) {
-+		type = (*(u16 *)(regs->ip + LEN_REX + LEN_UD1));
-+		if ((type & 0xFF) == 0x40)
-+			type = (type >> 8) & 0xFF;
-+	} else {
-+		type = (*(u16 *)(regs->ip + LEN_UD1));
-+		if ((type & 0xFF) == 0x40)
-+			type = (type >> 8) & 0xFF;
-+	}
-+	pr_crit("%s at %pS\n", report_ubsan_failure(regs, type), (void *)regs->ip);
-+
-+	return BUG_TRAP_TYPE_NONE;
-+}
--- 
-2.25.1
+On 2024/5/29 06:12, Thomas Gleixner wrote:
+> 
+> 
+> [这封邮件来自外部发件人 谨防风险]
+> 
+> On Tue, May 28 2024 at 07:18, Dave Hansen wrote:
+>> On 5/27/24 23:38, Tony W Wang-oc wrote:
+>> ...> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+>>> index c96ae8fee95e..ecadd0698d6a 100644
+>>> --- a/arch/x86/kernel/hpet.c
+>>> +++ b/arch/x86/kernel/hpet.c
+>>> @@ -804,6 +804,12 @@ static u64 read_hpet(struct clocksource *cs)
+>>>       if (in_nmi())
+>>>               return (u64)hpet_readl(HPET_COUNTER);
+>>>
+>>> +    /*
+>>> +     * Read HPET directly if panic in progress.
+>>> +     */
+>>> +    if (unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID))
+>>> +            return (u64)hpet_readl(HPET_COUNTER);
+>>> +
+>>
+>> There is literally one other piece of the code in the kernel doing
+>> something similar: the printk() implementation.  There's no other
+>> clocksource or timekeeping code that does this on any architecture.
+>>
+>> Why doesn't this problem apply to any other clock sources?
+> 
+> I principle it applies to any clocksource which needs a spinlock to
+> serialize access. HPET is not the only insanity here.
+> 
+> Think about i8253 :)
+> 
+> Most real clocksources, like TSC and the majority of the preferred clock
+> sources on other architectures are perfectly fine. They just read and be
+> done.
+> 
+>> Why should the problem be fixed in the clock sources themselves?  Why
+>> doesn't printk() deadlock on systems using the HPET?
+> 
+> Because regular printk()s are deferred to irq work when in NMI and
+> similar contexts, but that obviously does not apply to panic
+> situations. Also NMI is treated special even in the HPET code. See
+> below.
+> 
+>> In other words, I think we should fix pstore to be more like printk
+>> rather than hacking around this in each clock source.
+> 
+> pstore is perfectly fine. It uses a NMI safe time accessor function
+> which is then tripping over the HPET lock. That's really a HPET specific
+> problem.
+> 
+> Though what I read out of the changelog is that the MCE hits the same
+> CPU 'x' which holds the lock. But that's fairy tale material as you can
+> see in the patch above:
+> 
+>          if (in_nmi())
+>                  return (u64)hpet_readl(HPET_COUNTER);
+> 
+> For that particular case the dead lock, which would actually be a live
+> lock, cannot happen because in kernel MCEs are NMI class exceptions and
+> therefore in_nmi() evaluates to true and that new voodoo can't be
+> reached at all.
+> 
+> Now there are two other scenarios which really can make that happen:
+> 
+>   1) A non-NMI class exception within the lock held region
+> 
+>      CPU A
+>      acquire(hpet_lock);
+>      ...                 <- #PF, #GP, #DE, ... -> panic()
+> 
+>      If any of that happens within that lock held section then the live
+>      lock on the hpet_lock is the least of your worries. Seriously, I
+>      don't care about this at all.
+> 
+>   2) The actual scenario is:
+> 
+>      CPU A                       CPU B
+>      lock(hpet_lock)
+>                                  MCE hits user space
+>                                  ...
+>                                  exc_machine_check_user()
+>                                    irqentry_enter_from_user_mode(regs);
+> 
+>      irqentry_enter_from_user_mode() obviously does not mark the
+>      exception as NMI class, so in_nmi() evaluates to false. That would
+>      actually dead lock if CPU A is not making progress and releases
+>      hpet_lock.
+> 
+>      Sounds unlikely to happen, right? But in reality it can because of
+>      MCE broadcast. Assume that both CPUs go into MCE:
+> 
+>      CPU A                       CPU B
+>      lock(hpet_lock)
+>                                  exc_machine_check_user()
+>                                    irqentry_enter_from_user_mode();
+>      exc_machine_check_kernel()    do_machine_check()
+>        irqentry_nmi_enter();         mce_panic()
+>        do_machine_check()            if (atomic_inc_return(&mce_panicked) > 1)
+>          mce_panic()                     wait_for_panic(); <- Not taken
+> 
+>          if (atomic_inc_return(&mce_panicked) > 1)
+>              wait_for_panic(); <- Taken
+> 
+>                                      ....
+>                                      hpet_read()
+> 
+>      -> Dead lock because in_nmi() evaluates to false on CPU B and CPU A
+>         obviously can't release the lock.
+> 
 
+Because MCE handler will call printk() before call the panic, so 
+printk() deadlock may happen in this scenario:
+
+CPU A                            CPU B
+printk()
+   lock(console_owner_lock)
+                                  exc_machine_check_user()
+                                    irqentry_enter_from_user_mode()
+exc_machine_check_kernel()         do_machine_check()
+   irqentry_nmi_enter()               mce_panic()
+   do_machine_check()                 printk_mce()  #A
+     mce_panic()                      ...
+       wait_for_panic()               panic()
+
+printk deadlock will happened at #A because in_nmi() evaluates to false 
+on CPU B and CPU B do not enter the panic() AT #A.
+
+Update user space MCE handler to NMI class context is preferred?
+
+Sincerely
+TonyWWang-oc
+
+> So the proposed patch makes sense to some extent. But it only cures the
+> symptom. The real underlying questions are:
+> 
+>    1) Should we provide a panic mode read callback for clocksources which
+>       are affected by this?
+> 
+>    2) Is it correct to claim that a MCE which hits user space and ends up in
+>       mce_panic() is still just a regular exception or should we upgrade to
+>       NMI class context when we enter mce_panic() or even go as far to
+>       upgrade to NMI class context for any panic() invocation?
+> 
+> #1 Solves it at the clocksource level. It still needs HPET specific
+>     changes.
+> 
+> #2 Solves a whole class of issues
+> 
+>     ... while potentially introducing new ones :)
+> 
+>     To me upgrading any panic() invocation to NMI class context makes a
+>     lot of sense because in that case all bets are off.
+> 
+>     in_nmi() is used in quite some places to avoid such problems. IOW,
+>     that would kill a whole class of issues instead of "curing" the HPET
+>     problem locally for the price of an extra conditional. Not that the
+>     extra conditional matters much if HPET is the clocksource as that's
+>     awfully slow anyway and I really don't care about that.
+> 
+>     But I very much care about avoiding to sprinkle panic_cpu checks all
+>     over the place.
+> 
+> Thanks,
+> 
+>          tglx
