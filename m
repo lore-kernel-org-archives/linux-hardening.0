@@ -1,140 +1,73 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EB4132113;
-	Thu, 30 May 2024 12:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DDA17C207;
+	Thu, 30 May 2024 14:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717072993; cv=none; b=KxfGVlgLTnRABKQQMlbjEf4HyYkx+EIqE2FT70j8zrIRN8TnpZz2yoLPJXViCf3uemNaKJYetOAQUwaEjn6LQCff6Akd9a/dZBdHg+uW33sR1ovZoAPiXGsKvi0rf5FK9BMBH+mOTSUs/p6VOxkS9IJ6rKgKWGDMe+j65+Vg8n8=
+	t=1717079166; cv=none; b=dWEem0N0/5cAqtbS2qc+EplVOAEBNWVZqQzA4VSSwB3fRoiemjFbj+vNLSazp2/Qx6IVA/8OHD2QIYRsddVRk5mKC1hWTb/zQ4ruI5ODr2aRsbNDDyOJ7qp57/269K+vpGyEnkuJl81ho5W+7mb03B/Yr1X5YW2h8mHr50jwgLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717072993; c=relaxed/simple;
-	bh=WezqI/UOXVIpTjMJypNZUq8DzqVTPIr5eJy3W7G97Rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OOThUWJY/e8aha40Sr9jAroFBVXD9fjtwo0KAijgGiKTGHNUR+DWfavg3a55rFLhyo52Q/SQXNlh0Nkve6jlxe/bK3J54Cm/0clsjN2zWytghSVBJSJOLiJA07lhsUSMBx9TPqnIY2DknpxseVt4+zVm9QNR151RKW/slGsM6zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=NPx7Ho5a; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1717079166; c=relaxed/simple;
+	bh=9jEmmMWKymF600ZOGE1JLvVfVJUEbG47TASDJMM3Gu4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=O9Vkm067rGEo2zWpnfcadm/F8CgeJKq/ZX7fVxSwCQCI9U//ng70fe6+oIM4++DR6s65VrfWmqUs9TCvDtD5E2mybPPMQ+p02hyHvq1EurCUZZhmxxvmI5lLDaSh2HL75tv6m+2mp9Mx4uMKsb48VrdFPpbu5epYyE+mQVWQMFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Md39lJSO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NPx7Ho5a"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id CWxPsEM3QrtmgCf7csPyJk; Thu, 30 May 2024 12:43:09 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Cf7bs1e7pGDo0Cf7bsN0Um; Thu, 30 May 2024 12:43:07 +0000
-X-Authority-Analysis: v=2.4 cv=I+uuR8gg c=1 sm=1 tr=0 ts=6658745b
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=7eglLlv4HFOW3sTsDH6Jqg==:17
- a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=nG3MMMVrgEngwwIGFzYA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=veiVKH1vZWe9V2vON8q6NViu4bLJsZtyTGLVtkgabHg=; b=NPx7Ho5a5jQRoP/g1eCjaTAmwc
-	G7ARIO3jxIMb7kKvdbCsbzwDL8MGIGFkvjnX3nsl/AEEHVnAPPMsTNlLdoW4dIOZWRL/Zf+2FPgtb
-	ZsJ8witC9l1Nmung92orCnCv92dQN6R63fhvbRvN27erCdjoOv7guq+XoRNqx7KoC0pWe3CiRBdO7
-	tDSjnjeydGCtZuZ7FZLjjqCmPQEb3nuT6DyqwKCP6ZG/yI5NxKroCkrt5h7zpuZIN6KycKX8CM0zt
-	gVZyP6TiUSkbhxSnkYCLdJ8LoWnqYu679pdn7rtF2cVysMQ+gwJuBQ+1VsM/A5Vhbj9MTq2XQWdWt
-	UAxYvSbg==;
-Received: from d58c58c2.rev.dansknet.dk ([213.140.88.194]:38800 helo=[10.0.0.182])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sCatX-000JCm-2c;
-	Thu, 30 May 2024 03:12:20 -0500
-Message-ID: <09445a96-4f86-4d34-9984-4769bd6f4bc1@embeddedor.com>
-Date: Thu, 30 May 2024 10:12:13 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Md39lJSO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0339C2BBFC;
+	Thu, 30 May 2024 14:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717079166;
+	bh=9jEmmMWKymF600ZOGE1JLvVfVJUEbG47TASDJMM3Gu4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Md39lJSO6r/L4WHfGyyQsYRVVu+zeqdAkCRU/NsvNxSx/8Q41fUW+GERxfFMMCHKi
+	 YNAKlYPmCeWFB7y0xoZl7CrLmF7WusbvUq5xo0hKPWZQll5safEBkKn/HIMaOr3EGx
+	 mW26hO0bG3gB4E88C68RHkyc/49W3ISiPwzYPpgivLo9sijDUlxjxo1ENf0gY/tWmV
+	 UQ/li0/IbIc8/gxz9ZyRQ8lYtfonc8DJ7md4Y/0nSvmeqXRtAswcK9fvuaOnk50oLN
+	 3Sn/QHq1fPIOHFpb+i1GV+Jp9UkqkXXz7FGrKYXtngdIg/PoKUr+omE/EiJsSVJ8NE
+	 PltfNWcAkizmA==
+From: Leon Romanovsky <leon@kernel.org>
+To: Mustafa Ismail <mustafa.ismail@intel.com>, 
+ Shiraz Saleem <shiraz.saleem@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ Kees Cook <keescook@chromium.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <2ca8b14adf79c4795d7aa95bbfc79253a6bfed82.1716102112.git.christophe.jaillet@wanadoo.fr>
+References: <2ca8b14adf79c4795d7aa95bbfc79253a6bfed82.1716102112.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] RDMA/irdma: Annotate flexible array with
+ __counted_by() in struct irdma_qvlist_info
+Message-Id: <171707136517.115496.4990483419081659486.b4-ty@kernel.org>
+Date: Thu, 30 May 2024 15:16:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-serial@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev, patches@lists.linux.dev, stable@vger.kernel.org
-References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
- <d7c19866-6883-4f98-b178-a5ccf8726895@kernel.org>
- <2024053008-sadly-skydiver-92be@gregkh>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <2024053008-sadly-skydiver-92be@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 213.140.88.194
-X-Source-L: No
-X-Exim-ID: 1sCatX-000JCm-2c
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: d58c58c2.rev.dansknet.dk ([10.0.0.182]) [213.140.88.194]:38800
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHr2i5KQWxG0dMhbO6GVbp57V1oMLeUbFQInCQMUdSbmUdLGWpcrf45MFR2BsogghEgfIkba2KkVNpCIrffq9FwYQtz6E2NjhNtBt1Jsu/ilWCH7tHoC
- 0QY5T/sNulM923Ik0h/AS4W7/OrBI3v7EXHFmx3Hvo9Pwza1/VpaH7ny0XPYBWSLz6KOuemVkK8NIsTO/JfvPiStKd6mQbQ9M52nknl7NUEiT5ZyqCz5LarF
- Hu/7iviLfYF2ICU/0OlejA==
+X-Mailer: b4 0.14-dev
 
 
-
-On 30/05/24 09:40, Greg Kroah-Hartman wrote:
-> On Thu, May 30, 2024 at 08:22:03AM +0200, Jiri Slaby wrote:
->>>   This will be an error in a future compiler version [-Werror,-Wbounds-safety-counted-by-elt-type-unknown-size]
->>>       291 |         struct mxser_port ports[] __counted_by(nports);
->>>           |         ^~~~~~~~~~~~~~~~~~~~~~~~~
->>>     1 error generated.
->>>
->>> Remove this use of __counted_by to fix the warning/error. However,
->>> rather than remove it altogether, leave it commented, as it may be
->>> possible to support this in future compiler releases.
->>
->> This looks like a compiler bug/deficiency.
+On Sun, 19 May 2024 09:02:15 +0200, Christophe JAILLET wrote:
+> 'num_vectors' is used to count the number of elements in the 'qv_info'
+> flexible array in "struct irdma_qvlist_info".
 > 
-> I agree, why not just turn that option off in the compiler so that these
-> "warnings" will not show up?
-
-It's not a compiler bug.
-
-The flexible array is nested four struct layers deep, see:
-
-ports[].port.buf.sentinel.data[]
-
-The error report could be more specific, though.
-
---
-Gustavo
-
+> So annotate it with __counted_by() to make it explicit and enable some
+> additional checks.
 > 
->> What does gcc say BTW?
->>
->>> Cc: stable@vger.kernel.org
->>> Closes: https://github.com/ClangBuiltLinux/linux/issues/2026
->>> Fixes: f34907ecca71 ("mxser: Annotate struct mxser_board with __counted_by")
->>
->> I would not say "Fixes" here. It only works around a broken compiler.
+> This allocation is done in irdma_save_msix_info().
 > 
-> Agreed, don't add Fixes: for this, it's a compiler bug, not a kernel
-> issue.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> [...]
+
+Applied, thanks!
+
+[1/1] RDMA/irdma: Annotate flexible array with __counted_by() in struct irdma_qvlist_info
+      https://git.kernel.org/rdma/rdma/c/38c02d813aa321
+
+Best regards,
+-- 
+Leon Romanovsky <leon@kernel.org>
+
