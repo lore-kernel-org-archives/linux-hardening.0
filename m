@@ -1,154 +1,109 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2310117D35E;
-	Thu, 30 May 2024 14:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADEE187541;
+	Thu, 30 May 2024 15:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717081092; cv=none; b=PWqusfZp3xDY7VPHYQos+H3qsG4XF0MsGEz4SG6fPJj608sSKkK+mpdxFF5yWSNZYXH0l/kSZWdd9qxqWD00LMbTJ9TWyWPb2okIJ8xaiI6RRF08Z7V496Z3tZmMRd2NSAJEa4DpFpkM5Gxl/A0yxrrIGYlbVM6/fvKU+cCHr7g=
+	t=1717082490; cv=none; b=aDeQ28shSApOTHZKrOcRl3HukVr3tzrnf3FtueQzyKNJWFXQ05qywV7LOSlPilZbQ06kN+5s1yjuTdeRm8NZ1+UNQ22LzqrkntsBPNooSOuK3CUU6UN/Co/rj44uW9smc9OQbv9nSdjbj+uFDFqk0g9yctXmBTeqxv2IYoIyVvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717081092; c=relaxed/simple;
-	bh=vHl/hFne/dN3VS62u9WcIyO8pcYKfCjKEu2He7GV1JM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qpBZQ6cM1VOdRo5Zu8HRh++qDVyB8Y+MbzomcBoW4Vn0qm4BehFpXZO0vsPU+qSsX4Z+/z/9mY2/P/1nF+YwyBB7npoBEW6S9ZZo/a/hZdt+9oM2R/eDT3sXdoxHB0jDBuNh/KyBWUxku6MqkFVLVqzODef2rks9m1nF/jfacvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BIyMj6rC; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717082490; c=relaxed/simple;
+	bh=U5TgF7VIYvKSRNdp67128508jDwSIOgx0w/UYpTd0Uo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SyBRJJ9pchn78u3nZjznyqU6EJrBRK7sbH1hgyhC/4G4yVoQC4i8xBS1viKLPFZaJ2tfAxx4delDGTyVGyOY7c6oBKxKYdJCPRJ3DBL0qLNCFYoZYRZxIYiKPJNHwGj6e9ennGiqWiKUQtB7vXusF/gjBybfrvGfrSNISB7YZ+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=WI2EPLYT; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIyMj6rC"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-702323ea6b2so659336b3a.3;
-        Thu, 30 May 2024 07:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717081090; x=1717685890; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pcneh6OdbXB2yw8eBub3uBTS5tn1ef9zWgBOmoSp/pE=;
-        b=BIyMj6rCXKyErJ12caQIMKVLS1tC8uA4ibcuKhdpuaQIfQJ6KLsk5B05PL/rapeLuk
-         qd41hkoqWOb9nZaE0LcZ6UR9S62F+qgKjTRPoWhmxdXrgaMIWTzFB0brs9TSJhWUzD4c
-         R+DKGhNsklZ6ghU0eES3S7HL8bHqh/VoiIGDS0Q7dpY/C2v61ojMq2c566vHrvNYNY0y
-         0A5PiUiQMkVmswdS6nlBVxb5hzJ1ilYBtQ1pGc1Q9jYeAhkBKRuswfi9GWZ5SLQK1jef
-         DuxIcREvr+rYQj9bHD7PsKGZ5uxH4ZHoS2qGLzBy/0lliAcxbLb3Ty/GexcybH5IcoTo
-         +WEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717081090; x=1717685890;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pcneh6OdbXB2yw8eBub3uBTS5tn1ef9zWgBOmoSp/pE=;
-        b=q2l1779Ir8dCHl0jjvjq7nUD81KIfkPT58PSG666YWN6GhqUsJSeIUZrvjzNUv1qS/
-         2Au5lrffcKyzC7YqbpM2oCftfrVB1echzODvm7SzjKxN+nq3ozYfd/quWsMbP0tISHLk
-         aqvLH0SrPTeKIivmZlW1c+LptG5hf74hTmIdMfmnAnxdRYItCKgBo8BtH/x9u5CJhWJX
-         R3ts4YVLu1ZFEVggvWAIsvMPmDqrO43VtgcIMec2KtgpthnLg1IVIWUpIyxgPQdDUK6x
-         Wg5EQoUdz9QoD0xjeybZqbljGyzBChavJuNW6KN3QCrh+DI++fwLYps8TYGx8naupYxi
-         s6wg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3iX6CDh4tm2KNzQJzAmOp2IAi7bz/xIEFFMzykZH+89IxRBzdXTc0zbQhxo8I/DMGwwO+9DaqrG9wQXFv1txTV8AmaVAan4eCSDZR7up7o6Jmr0yBrK2Lmqs5J3kgmx4mxAmF4xYW
-X-Gm-Message-State: AOJu0YzQE+AjktKgt7jjUd3TurYU6mDUL9d/YvTWs7cDXUQwgN9C+3ZI
-	4zjnJ0diPJtvxWN7EgkY2wL2oQ4cENfVPIsdnIVK/RecJtUFwCZvqgwSB06Z+RTftrWYk1TDTFm
-	lZ2v0YwRTvPL4POeqUBoVv2J+tDY=
-X-Google-Smtp-Source: AGHT+IG/K9bjenhk0+Nldu2e8TDBOCESyblInvnkPhmih6+zxEhLkPmDFwz2LvGoFVaBBs/bIA3IpcKiiLGStFQRrDc=
-X-Received: by 2002:a05:6a00:4214:b0:6ed:60a4:6d9c with SMTP id
- d2e1a72fcca58-702310e53cdmr2970675b3a.4.1717081090330; Thu, 30 May 2024
- 07:58:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WI2EPLYT"
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+	by cmsmtp with ESMTPS
+	id CaEesLOmjSLKxChaksA1PE; Thu, 30 May 2024 15:21:22 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ChajsMX6R9zHMChajs3G13; Thu, 30 May 2024 15:21:21 +0000
+X-Authority-Analysis: v=2.4 cv=fo4XZ04f c=1 sm=1 tr=0 ts=66589971
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=7eglLlv4HFOW3sTsDH6Jqg==:17
+ a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=VjqEAW4Pdxq5hPAZ8QEA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=U5TgF7VIYvKSRNdp67128508jDwSIOgx0w/UYpTd0Uo=; b=WI2EPLYTdZl9H0MLSza743CvOT
+	1xSH/pmM1S9t7kmGMjm2n0Be+KYEmaP6IrWjZrupFcuKsoHRKMRmIhYkFQPfxNgXiiIyvfCvN+Fvx
+	3a9gI9uwjVPIX+WncjfkZwfz9OP/ygWuJf+B/AlUnvWqqBBfEXGvIDDo9Fcc+s0h8jFw1yY73TvdF
+	9RnhV6p5q+F4BZK+a7D0OI6csw1ffZhGzrDMu0WM1KkB9me+LMHlgWJBrkgO4uXV448+vuC9Bdjgc
+	6ev6XphlrZ5D6syOHR2rNh6EYQXK3zIudkhLSUDKSLSmLOjFWaw7OgF7+7BenED2BWq63+OAIre3P
+	or6LJIFg==;
+Received: from d58c58c2.rev.dansknet.dk ([213.140.88.194]:46746 helo=[10.0.0.182])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sCbQI-000zIv-2W;
+	Thu, 30 May 2024 03:46:10 -0500
+Message-ID: <bee7240b-d143-4613-bde4-822d9c598834@embeddedor.com>
+Date: Thu, 30 May 2024 10:46:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529-drop-counted-by-radeon-states-state-array-v1-1-5cdc1fb29be7@kernel.org>
-In-Reply-To: <20240529-drop-counted-by-radeon-states-state-array-v1-1-5cdc1fb29be7@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 30 May 2024 10:57:58 -0400
-Message-ID: <CADnq5_P5Mz=Acm0HURUUHu03eBmemcu7jYe8nYJ5WtBjb93Qgg@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: Remove __counted_by from StateArray.states[]
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
+To: Bill Wendling <morbo@google.com>, Jiri Slaby <jirislaby@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+ patches@lists.linux.dev, stable@vger.kernel.org
+References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
+ <d7c19866-6883-4f98-b178-a5ccf8726895@kernel.org>
+ <2024053008-sadly-skydiver-92be@gregkh>
+ <09445a96-4f86-4d34-9984-4769bd6f4bc1@embeddedor.com>
+ <68293959-9141-4184-a436-ea67efa9aa7c@kernel.org>
+ <6170ad64-ee1c-4049-97d3-33ce26b4b715@kernel.org>
+ <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 213.140.88.194
+X-Source-L: No
+X-Exim-ID: 1sCbQI-000zIv-2W
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: d58c58c2.rev.dansknet.dk ([10.0.0.182]) [213.140.88.194]:46746
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAhf2r85ew2rJnWMrEcRvPwxDdCzQQhBJ52/4J2JitPgC5WhNBqatcvSUZqTvSs5BSImn0vV+rmTA9do1L8kHzBUelBjBEVqJFd6BmgzYlDbJs5kIDB1
+ 0i0k588Iw2m7+wwaHMC2RkEGOhffYrePS1I/RvD3ad/x/ai/N5UewN4nkTSAgWhfIPX+8vm9ttgGg93yWijn64eoLOA4D4r6h3Fa4n3yvGIkzscGNnjXcR0z
+ i6s9mpZ7b84QBa62rhjnwI43QvmF85rn14CvCmTtvc3sUPBmWxN9n8+Pks/vCVqv
 
-Applied.  Thanks!
 
-On Wed, May 29, 2024 at 5:54=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> From: Bill Wendling <morbo@google.com>
->
-> Work for __counted_by on generic pointers in structures (not just
-> flexible array members) has started landing in Clang 19 (current tip of
-> tree). During the development of this feature, a restriction was added
-> to __counted_by to prevent the flexible array member's element type from
-> including a flexible array member itself such as:
->
->   struct foo {
->     int count;
->     char buf[];
->   };
->
->   struct bar {
->     int count;
->     struct foo data[] __counted_by(count);
->   };
->
-> because the size of data cannot be calculated with the standard array
-> size formula:
->
->   sizeof(struct foo) * count
->
-> This restriction was downgraded to a warning but due to CONFIG_WERROR,
-> it can still break the build. The application of __counted_by on the
-> states member of 'struct _StateArray' triggers this restriction,
-> resulting in:
->
->   drivers/gpu/drm/radeon/pptable.h:442:5: error: 'counted_by' should not =
-be applied to an array with element of unknown size because 'ATOM_PPLIB_STA=
-TE_V2' (aka 'struct _ATOM_PPLIB_STATE_V2') is a struct type with a flexible=
- array member. This will be an error in a future compiler version [-Werror,=
--Wbounds-safety-counted-by-elt-type-unknown-size]
->     442 |     ATOM_PPLIB_STATE_V2 states[] __counted_by(ucNumEntries);
->         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   1 error generated.
->
-> Remove this use of __counted_by to fix the warning/error. However,
-> rather than remove it altogether, leave it commented, as it may be
-> possible to support this in future compiler releases.
->
-> Cc: stable@vger.kernel.org
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/2028
-> Fixes: efade6fe50e7 ("drm/radeon: silence UBSAN warning (v3)")
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> Co-developed-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->  drivers/gpu/drm/radeon/pptable.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/radeon/pptable.h b/drivers/gpu/drm/radeon/pp=
-table.h
-> index b7f22597ee95..969a8fb0ee9e 100644
-> --- a/drivers/gpu/drm/radeon/pptable.h
-> +++ b/drivers/gpu/drm/radeon/pptable.h
-> @@ -439,7 +439,7 @@ typedef struct _StateArray{
->      //how many states we have
->      UCHAR ucNumEntries;
->
-> -    ATOM_PPLIB_STATE_V2 states[] __counted_by(ucNumEntries);
-> +    ATOM_PPLIB_STATE_V2 states[] /* __counted_by(ucNumEntries) */;
->  }StateArray;
->
->
->
-> ---
-> base-commit: e64e8f7c178e5228e0b2dbb504b9dc75953a319f
-> change-id: 20240529-drop-counted-by-radeon-states-state-array-01936ded4c1=
-8
->
-> Best regards,
-> --
-> Nathan Chancellor <nathan@kernel.org>
->
+>> So we should get rid of all those. Sooner than later.
+>>
+> Yes! Please do this.
+
+Definitely, we are working on that already[1]. :)
+
+--
+Gustavo
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=-Wflex-array-member-not-at-end
