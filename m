@@ -1,109 +1,69 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADEE187541;
-	Thu, 30 May 2024 15:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44CB187543;
+	Thu, 30 May 2024 15:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717082490; cv=none; b=aDeQ28shSApOTHZKrOcRl3HukVr3tzrnf3FtueQzyKNJWFXQ05qywV7LOSlPilZbQ06kN+5s1yjuTdeRm8NZ1+UNQ22LzqrkntsBPNooSOuK3CUU6UN/Co/rj44uW9smc9OQbv9nSdjbj+uFDFqk0g9yctXmBTeqxv2IYoIyVvo=
+	t=1717083681; cv=none; b=ISdjkT5Ir54+h9h/Wum9R4Ba0D5a/Xj18CWj2pVoR09csK2Bkuz596zHAlHSqQwRPQg+DDAsHvS27SONfcTCkwq89fAH/B66nM/JIIotHeLUCkX/knNbg4F9Lsf7JiPhjAIxJw31QCUOhxC1Cf2dCxM5VitOa5Vb3ses/eAr/y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717082490; c=relaxed/simple;
-	bh=U5TgF7VIYvKSRNdp67128508jDwSIOgx0w/UYpTd0Uo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SyBRJJ9pchn78u3nZjznyqU6EJrBRK7sbH1hgyhC/4G4yVoQC4i8xBS1viKLPFZaJ2tfAxx4delDGTyVGyOY7c6oBKxKYdJCPRJ3DBL0qLNCFYoZYRZxIYiKPJNHwGj6e9ennGiqWiKUQtB7vXusF/gjBybfrvGfrSNISB7YZ+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=WI2EPLYT; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1717083681; c=relaxed/simple;
+	bh=NwfGqdfxzjzjhOXdJq835OhUNndnxLH4UuU7x1o2AL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XU7LbncKQ3NfgLj+TjhTOWX+pFe9qgWymJPzvJiKdNVL/CV6gSrTmwYodWMLLB/HVQjX3eSnFFBxzNkbtgSzQX6VVwZidWbAE9+r9zTFjwAeOU7kUgbnW5Q4OPOiDQ1yuSwqGSMgBzdrsDIhYDVDKTgvpghaoss8qUbM3jD0/Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sot9rohC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WI2EPLYT"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id CaEesLOmjSLKxChaksA1PE; Thu, 30 May 2024 15:21:22 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ChajsMX6R9zHMChajs3G13; Thu, 30 May 2024 15:21:21 +0000
-X-Authority-Analysis: v=2.4 cv=fo4XZ04f c=1 sm=1 tr=0 ts=66589971
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=7eglLlv4HFOW3sTsDH6Jqg==:17
- a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=VjqEAW4Pdxq5hPAZ8QEA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=U5TgF7VIYvKSRNdp67128508jDwSIOgx0w/UYpTd0Uo=; b=WI2EPLYTdZl9H0MLSza743CvOT
-	1xSH/pmM1S9t7kmGMjm2n0Be+KYEmaP6IrWjZrupFcuKsoHRKMRmIhYkFQPfxNgXiiIyvfCvN+Fvx
-	3a9gI9uwjVPIX+WncjfkZwfz9OP/ygWuJf+B/AlUnvWqqBBfEXGvIDDo9Fcc+s0h8jFw1yY73TvdF
-	9RnhV6p5q+F4BZK+a7D0OI6csw1ffZhGzrDMu0WM1KkB9me+LMHlgWJBrkgO4uXV448+vuC9Bdjgc
-	6ev6XphlrZ5D6syOHR2rNh6EYQXK3zIudkhLSUDKSLSmLOjFWaw7OgF7+7BenED2BWq63+OAIre3P
-	or6LJIFg==;
-Received: from d58c58c2.rev.dansknet.dk ([213.140.88.194]:46746 helo=[10.0.0.182])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sCbQI-000zIv-2W;
-	Thu, 30 May 2024 03:46:10 -0500
-Message-ID: <bee7240b-d143-4613-bde4-822d9c598834@embeddedor.com>
-Date: Thu, 30 May 2024 10:46:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sot9rohC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B849C2BBFC;
+	Thu, 30 May 2024 15:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717083681;
+	bh=NwfGqdfxzjzjhOXdJq835OhUNndnxLH4UuU7x1o2AL8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sot9rohCiNWd6ooi8uxRP4cd/ft0bRvarq7GQ1AYbxkLH09GCCCYRivqbbrPXkXSq
+	 qO8Y3qbvZMwYIBhBh5IEaqJSX+9IcCUB6z+5M/gwlRdsFJIdmDTe52/7wtUUVQNH59
+	 ga8kVq+X0113fWtY9xNa13vgchtDg+YS5kK9UqH8c/Bhrt2oAq1ezI5zM7HX4UMzRo
+	 NGW8kVuYj0SrjNzDo1N/iZ55ncGxgbCV2wZhh3EU1BII1JkIehOtDWcnS3y6ADF3qg
+	 7x7DaZkXDhrwlUMis+lXhiMTgQypDvtUgOiVl7BKcJf3wDcKaCYzRBsCYIT9aLLIdK
+	 OI+R1wGhQpGFw==
+Date: Thu, 30 May 2024 08:41:19 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>, Ahmed
+ Zaki <ahmed.zaki@intel.com>, Pavan Chebbi <pavan.chebbi@broadcom.com>,
+ Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Kees Cook <keescook@chromium.org>, Paolo
+ Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "David S.
+ Miller" <davem@davemloft.net>, Dexuan Cui <decui@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Leon Romanovsky <leon@kernel.org>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Ajay Sharma <sharmaajay@microsoft.com>, Long Li
+ <longli@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v2] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240530084119.684e2783@kernel.org>
+In-Reply-To: <1716960955-3195-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1716960955-3195-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
-To: Bill Wendling <morbo@google.com>, Jiri Slaby <jirislaby@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
- patches@lists.linux.dev, stable@vger.kernel.org
-References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
- <d7c19866-6883-4f98-b178-a5ccf8726895@kernel.org>
- <2024053008-sadly-skydiver-92be@gregkh>
- <09445a96-4f86-4d34-9984-4769bd6f4bc1@embeddedor.com>
- <68293959-9141-4184-a436-ea67efa9aa7c@kernel.org>
- <6170ad64-ee1c-4049-97d3-33ce26b4b715@kernel.org>
- <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 213.140.88.194
-X-Source-L: No
-X-Exim-ID: 1sCbQI-000zIv-2W
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: d58c58c2.rev.dansknet.dk ([10.0.0.182]) [213.140.88.194]:46746
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfAhf2r85ew2rJnWMrEcRvPwxDdCzQQhBJ52/4J2JitPgC5WhNBqatcvSUZqTvSs5BSImn0vV+rmTA9do1L8kHzBUelBjBEVqJFd6BmgzYlDbJs5kIDB1
- 0i0k588Iw2m7+wwaHMC2RkEGOhffYrePS1I/RvD3ad/x/ai/N5UewN4nkTSAgWhfIPX+8vm9ttgGg93yWijn64eoLOA4D4r6h3Fa4n3yvGIkzscGNnjXcR0z
- i6s9mpZ7b84QBa62rhjnwI43QvmF85rn14CvCmTtvc3sUPBmWxN9n8+Pks/vCVqv
 
+On Tue, 28 May 2024 22:35:55 -0700 Shradha Gupta wrote:
+> +	save_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
+> +	if (!save_table)
+> +		return -ENOMEM;
+> +
+>  	if (rxfh->indir) {
+> -		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> +		for (i = 0; i < apc->indir_table_sz; i++)
+>  			if (rxfh->indir[i] >= apc->num_queues)
+>  				return -EINVAL;
 
->> So we should get rid of all those. Sooner than later.
->>
-> Yes! Please do this.
-
-Definitely, we are working on that already[1]. :)
-
---
-Gustavo
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=-Wflex-array-member-not-at-end
+leaks save_table
