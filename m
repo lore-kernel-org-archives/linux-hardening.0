@@ -1,98 +1,171 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7222212E6D;
-	Thu, 30 May 2024 16:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C5045BE6;
+	Thu, 30 May 2024 17:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717087625; cv=none; b=jm/bJB1pCRlTdx1gHboF/NdLptB2SqrtEvIoUbH65aADPpXsndflOAx8WXtaweOCJk4i5ISzwSRgz1kB+P9sgRAstU3pIkOeIdXEXj1ROdlVPDA96ZuLICCNI+fgGeaYPe9/fWjTtHaA9FVsYNTryXScgV8NFpxMP55AF9U5nN0=
+	t=1717089836; cv=none; b=KDYmffzCkHVZGyqIfj/mlSEi+vpcNNKXfgNx2oyYHZX44OCWJ4WCimR9j3odftJ4BS8Qyb/IWgiYOVGBF1kirW3V6ttxA+Zvn8wEWPi6mqOyMjI9AYpTwGOowaPDVH2OohbhO3qcZ5xn//PJ8kyV0eL/ZJZtc3p4SQ/ySdgzpHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717087625; c=relaxed/simple;
-	bh=tu5BfUUBc30BLBUzVrp9b6Xi5nxO17CyLvZGzIbmMGE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=g5nEq4Dh0aHGhs2l/k0PPELSqRNPw9eBp+qp3BMKjh+psn0ZXV6RSrxihS5XjuFad7dLGEBCA13ndMxJ/vmfoDut8grr7liCmRSbFyNsAbbL4Fn8gBeMevT+hXi2E5MTzbgJAQhI2wMEMKnrlGJvKYTggtqM0iMXTKdBBxfgd+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RhrC0ofV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717089836; c=relaxed/simple;
+	bh=cYB6EiiLkNAxIFoAwxrhbsyUrl0rJ+/K6flQe9CKBAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MFXVA7IvrIFTVv46P9YV1YJ+rQOnr8Yvq4Rt7RcxftM7a9zX8hr226qji0mq9jusvH+jnrIFJde1UN5EceKk2MfyCPp/4W7yXlAonpVQHetmTf1enbeEoTp1tdPs2kFha3kjWEgCOrd6/bITWFbApbXCmtub64EqIk+l4PECrsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tf0BEYNB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RhrC0ofV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CFBA740E019B;
-	Thu, 30 May 2024 16:46:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TCuf2bHIsw_9; Thu, 30 May 2024 16:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717087614; bh=RIE8A6E1KgHX+2udCSMXQi2ZYnPIEXKt4Ri2S2VuaKs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=RhrC0ofV8YSQHAmGr8+Kguq/kJQmREmz9cnAz8rI6zbPBKte7Rc2SaCajqTqs9gQs
-	 M/0r62Eo1wuwHlYF5wP+177IrVUjGmdcx1mqaORrEtGRYGYVMcyVj8rz9TbyyRe3vA
-	 8Y/jtxA/+p8lE6BC0BTm4pL9JgUpStXvfjvdrHxYPfu/W7hChTpvc23FXXVexv/adq
-	 OLcXaSdZOctUssZ8GtLrGsVUkej/JQhgt55x32H+TMJRhYguqmE6BYMkiLgOWjlml1
-	 63Hnk+EECSu0XtDGcZNXFfn0/p2s/4XbO4xent8Pw9blFtssLk73qnl0n4q5vKR5Hr
-	 +tSzfwa8aQx1U8qMA46v3do309WRMCZKpTCMOO+vTlIo5mgQu2HMldlTh3SsPnwzDo
-	 dwgzexQ0oSysjBmik0Le4wIya03hvWJGvpiJAWBoZzasTQvt8DCqq1C96t3euB+SJg
-	 AWOP4hXu09lQ6Me+IGYOH9nf94JR0iFjE5MW92Of80P8bMg4ZmiN1wG6shDQdNlycT
-	 U2tvF4UmvTLDANQrvNPGvBZE7jS9IJx57NiU/5skcitq24M5JytlHOUeyrPMJYX0LE
-	 3ZcCfZd9yswza//T6TPEtipJBz+PallKxn2GMNNVjHq/Mq3xnCzD8LjL6B4gm0WABx
-	 554+NjvbdMUd05fFZ4kIqE94=
-Received: from [IPv6:::1] (unknown [IPv6:2a02:3038:20f:938d:41e9:261d:4ad2:487c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ADAE940E0177;
-	Thu, 30 May 2024 16:46:42 +0000 (UTC)
-Date: Thu, 30 May 2024 18:46:39 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- Nikolay Borisov <nik.borisov@suse.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Kees Cook <keescook@chromium.org>,
- "H. Peter Anvin" <hpa@zytor.com>
-CC: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
-User-Agent: K-9 Mail for Android
-In-Reply-To: <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
-References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com> <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com> <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
-Message-ID: <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tf0BEYNB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD41C2BBFC;
+	Thu, 30 May 2024 17:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717089835;
+	bh=cYB6EiiLkNAxIFoAwxrhbsyUrl0rJ+/K6flQe9CKBAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tf0BEYNBi5ASvvcfPg4jBosiNwawOtumYHwK8AUfABputiwHAXCURv5C+S/+t7YcQ
+	 POgxjmJQzBHO+27iGpTKZrWnXF8LNo683o83O4qJQ7yt68KYZEQ/YUjmEz840YvzKr
+	 77Lj/i5+Qq9EHpH/FQGJRuj1jIJ9x9+wP33gwNQYUPmxQtsnSSzmBTUqDOe5K3opRh
+	 Wg+/6wu3yE0JPIwNE8He/favJwqjD/dLZxDWSYMeJsT3NPksLjuRmdi6k0rWOi32SI
+	 4tYRMfkDngtG+yuopgM44P/7++ItpELtuqzsYhVa+KR0px0l3E/CuzYunu8r1jUtAl
+	 xzYcw0yNCMwbg==
+Date: Thu, 30 May 2024 10:23:53 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev, patches@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] nvmet-fc: Remove __counted_by from
+ nvmet_fc_tgt_queue.fod[]
+Message-ID: <20240530172353.GA3018978@thelio-3990X>
+References: <20240529-drop-counted-by-fod-nvmet-fc-tgt-queue-v1-1-286adbc25943@kernel.org>
+ <0b2b4a2a-83df-4b79-a295-4da91c841587@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b2b4a2a-83df-4b79-a295-4da91c841587@kernel.org>
 
-On May 30, 2024 6:23:36 PM GMT+02:00, Jeff Johnson <quic_jjohnson@quicinc=
-=2Ecom> wrote:
->On 5/30/2024 8:42 AM, Nikolay Borisov wrote:
->>=20
->>=20
->> On 29=2E05=2E24 =D0=B3=2E 21:09 =D1=87=2E, Jeff Johnson wrote:
->>> As discussed in [1] add a prototype for __fortify_panic() to fix the
->>> 'make W=3D1 C=3D1' warning:
->>>
->>> arch/x86/boot/compressed/misc=2Ec:535:6: warning: symbol '__fortify_pa=
-nic' was not declared=2E Should it be static?
->>=20
->> Actually doesn't it make sense to have this defined under =2E=2E/string=
-=2Eh ?=20
->> Actually given that we don't have any string fortification under the=20
->> boot/  why have the fortify _* functions at all ?
->
->I'll let Kees answer these questions since I just took guidance from him =
-:)
+Hi Jiri,
 
-The more important question is how does the decompressor build even know o=
-f this symbol? And then make it forget it again instead of adding silly pro=
-totypes=2E=2E=2E
+On Thu, May 30, 2024 at 08:41:18AM +0200, Jiri Slaby wrote:
+> On 29. 05. 24, 23:42, Nathan Chancellor wrote:
+> >    drivers/nvme/target/fc.c:151:2: error: 'counted_by' should not be applied to an array with element of unknown size because 'struct nvmet_fc_fcp_iod' is a struct type with a flexible array member.
+> 
+> The same as for mxser_port:
+> 
+> struct nvmet_fc_fcp_iod {
+>         struct nvmefc_tgt_fcp_req       *fcpreq;
+> 
+>         struct nvme_fc_cmd_iu           cmdiubuf;
+>         struct nvme_fc_ersp_iu          rspiubuf;
+>         dma_addr_t                      rspdma;
+>         struct scatterlist              *next_sg;
+>         struct scatterlist              *data_sg;
+>         int                             data_sg_cnt;
+>         u32                             offset;
+>         enum nvmet_fcp_datadir          io_dir;
+>         bool                            active;
+>         bool                            abort;
+>         bool                            aborted;
+>         bool                            writedataactive;
+>         spinlock_t                      flock;
+> 
+>         struct nvmet_req                req;
+>         struct work_struct              defer_work;
+> 
+>         struct nvmet_fc_tgtport         *tgtport;
+>         struct nvmet_fc_tgt_queue       *queue;
+> 
+>         struct list_head                fcp_list;       /* tgtport->fcp_list
+> */
+> };
+> 
+> The error appears to be invalid.
+> 
+> > This will be an error in a future compiler version [-Werror,-Wbounds-safety-counted-by-elt-type-unknown-size]
+> >      151 |         struct nvmet_fc_fcp_iod         fod[] __counted_by(sqsize);
+> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >    1 error generated.
 
+My apologies, I should have done the work to fully uncover the flexible
+array member within 'struct nvmet_fc_fcp_iod' from the beginning and put
+it in the commit message. I did not think of using pahole to make my
+life easier until just now and I knew from the other examples that I had
+and clang's code that it was not incorrect. Sure enough, it comes from
+'struct bio' within 'struct nvmet_req'.
 
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+struct nvmet_fc_fcp_iod {
+...
+	struct nvmet_req		req;
+...
+};
+
+struct nvmet_req {
+...
+	struct bio_vec		inline_bvec[NVMET_MAX_INLINE_BIOVEC];
+	union {
+		struct {
+			struct bio      inline_bio;
+		} b;
+		struct {
+			bool			mpool_alloc;
+			struct kiocb            iocb;
+			struct bio_vec          *bvec;
+			struct work_struct      work;
+		} f;
+		struct {
+			struct bio		inline_bio;
+			struct request		*rq;
+			struct work_struct      work;
+			bool			use_workqueue;
+		} p;
+#ifdef CONFIG_BLK_DEV_ZONED
+		struct {
+			struct bio		inline_bio;
+			struct work_struct	zmgmt_work;
+		} z;
+#endif /* CONFIG_BLK_DEV_ZONED */
+	};
+	int			sg_cnt;
+...
+};
+
+struct bio {
+...
+	struct bio_set		*bi_pool;
+
+	/*
+	 * We can inline a number of vecs at the end of the bio, to avoid
+	 * double allocations for a small number of bio_vecs. This member
+	 * MUST obviously be kept at the very end of the bio.
+	 */
+	struct bio_vec		bi_inline_vecs[];
+};
+
+It sounds like it is already on Gustavo's radar to look into for
+-Wflexible-array-member-not-at-end, so he said he would take a look. It
+may not be a quick fix though (I'll let him comment on it further if he
+is so inclined). It will be needed in stable because the patch that
+added __counted_by to this structure is there, so considering this patch
+for that sake may still be worthwhile, then it could be reverted with
+Gustavo's changes.
+
+I would really like to avoid leaving the build with tip of tree Clang
+broken for a long period of time, as we qualify it against the kernel
+continously so that any fixes needed on the kernel side are merged and
+ready by the time the toolchain is actually releases (such as this one).
+I am fine with waiting some time to see how this plays out but I don't
+want it to be forgotten about.
+
+Cheers,
+Nathan
