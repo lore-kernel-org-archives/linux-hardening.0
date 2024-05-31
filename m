@@ -1,77 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFC17E774;
-	Fri, 31 May 2024 18:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F70B7F7D1;
+	Fri, 31 May 2024 19:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717181830; cv=none; b=A8t/Ma4k/cPu51qhi3N/7fxt5bvi0FmWazdttBRsecKVF3FVNWPTzC0YBGrsuYMredkdwfWXOHn9lFaguF3LFicOn0C8+sEa5hdorUAhHkZnDD4EC9K/DSiPPyM6oi40vMLlSBy6Ommtnw+rSRyL0uwrv78A9l7YFu1U4Ia92xQ=
+	t=1717182516; cv=none; b=noD1gpg1tOlMlf4xlbCf5guAVF4xLTT7hh4io+sObAmAGxqirzMQX8aut5DlXLbGdWjOfe/qwMq3oppEpwI8GdtS8TPuOpx1uK5NkyZq8azemv34tlRWD+97hDi1VXiiutOQDjSC4qN3KXDtpAOC3dLtQFzvy5U+KuaygOvzxoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717181830; c=relaxed/simple;
-	bh=AD6M0l/XhTHROLN84HPg7DK+mvf0+qhuriNkdX52eto=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=deVNsHD51wOPFVZZ74+uXvTTNkucRPdkrxBqz3CikQHUlX13Ksr5HMiPTWJlfQ/8g1Sm/ojx/vt4yWlg7xL26wSemxv9tYdbqE9R9MRHl+3H55yHlbhAhHXPwGe884+nxNYDDIpXpfJ47SpG7I99mFiIQGtTpWDP+gY9DyeCJsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXqURVvo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717182516; c=relaxed/simple;
+	bh=+ZwA3B3uUTKPcLPMQO8JUOutJEuWTiTxesZp1gVR1FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q0vOkUI4vJ3qr7/Xo+kpNaEOSeJZ06h1pdSYUFvbYeeXMdntbX/YxlxtVtTKQsxEw/8ixx9MTuKIb1Z2vt71SJmrXjFyd6dP9XIQ92nIGIAnRPY+IPYde6Rh17PnfKQWUGO3yUWGqiBBedZD6TKxUrPcO2Io4qPOXdQNYRtmpUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ePRI7kWs; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXqURVvo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25EC8C116B1;
-	Fri, 31 May 2024 18:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717181830;
-	bh=AD6M0l/XhTHROLN84HPg7DK+mvf0+qhuriNkdX52eto=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LXqURVvonoO86l+SqVgDHx2+6B84YxN3Ty3Jalhip5f8LKmuDWXyaQKkN6oGxYISW
-	 cw/2cdWVvesB8ubTgklEC72ezwDndA7f3d3e1+Xo/M63Xi+Gfdm+wKu54NJsfmPC42
-	 MSXOXcVYgZ58Vf3f+EJgoyKiXhGmi9al0DMaD8HQeb2jCWMfibtUNoDaN2Y7C0BvWt
-	 U4LL61/4Ou5r1cMT6h05RtRM8nwghSLBHWuF+KTjlzvAhlbuVvz8UZtqlmxPCDPbfy
-	 KkPPa2GaCTC9pwPVf7n8sFmt2b+BUqwzAGlHP0nzdWljP+zHP31bS26cxzCzSkwhPA
-	 u2tJWJ/shle+g==
-From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kunit/fortify: Remove __kmalloc_node() test
-Date: Fri, 31 May 2024 11:57:07 -0700
-Message-Id: <20240531185703.work.588-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ePRI7kWs"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2E73040E02B2;
+	Fri, 31 May 2024 19:08:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YQHt5Fn7dxfN; Fri, 31 May 2024 19:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717182509; bh=NzGpXJTXbKmIHkjFqSrkePeRDdQz6l3rbrrmmm9dbpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ePRI7kWsGmRmTVawaSnCct4KAy/HrsK/Pzu/KHZ4mfC11QekKZnaOyenXZEpRswrp
+	 lhP6Pa94Up/ZB7itrz03ai3HxwQczJCUQvhb0/FjVv7da4GE9MuhSeHEcdgsPC5eOY
+	 WdW2Kl6vzRK6j2ARwwBlkNIeilAfF2YIu3bQ2n3igvI87CSdZ3CF/b7oMFQp0/r33L
+	 AQCoZ5KNOQXb4cMJ0giIwm3flBqhSLVJiTXvuFH5FvHkY2M1NwyMfuV3JjaagNTNlS
+	 +MkFjxUzkj6F0qGgfFPsOL8jkka2dc8WUKyg7Uj7Y6n1w3U5Iyql5J7Qx0FS+Ha5HL
+	 Yr69FvCWXeWdjJfGGNlDJclRhwEUqlnAqTESegYP1TxWflFGv83OwZLYHe3cQE5nN7
+	 dMk2l7QSZj9bPg6WYj+6gCP7igIkWPXE1pT+/hgNisiyAKeNLk1qjeNszVA2rw31fm
+	 UY004yI84iTb/ZhpZD1BOZsmGP9A3VXJmeFgzspnYUcZt75utGJxP0ffSEfwVPzfQk
+	 cCKMSCtwd9k2kLJcI+Y6shL0E+lXcObGhO5gTjfVJV/HoSEHOxffQx93LF5N6Mqxa9
+	 8H/Fhpi05qDU4ulmyxj4vWEyytITjWdOuXQXoSQBCsJZzCHUezc+nYk224QPfM03sH
+	 QFhAQFG5dZEwK468C5iUzMqo=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA77240E02B9;
+	Fri, 31 May 2024 19:08:17 +0000 (UTC)
+Date: Fri, 31 May 2024 21:08:16 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
+Message-ID: <20240531190816.GLZlogIGgpc5maOeLN@fat_crate.local>
+References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
+ <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
+ <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
+ <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
+ <202405310951.56D9BD5C41@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=912; i=kees@kernel.org; h=from:subject:message-id; bh=AD6M0l/XhTHROLN84HPg7DK+mvf0+qhuriNkdX52eto=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmWh2DthOMchFi4h1JTCJc+Oc7ZIT8JDA+GPlTq O8+j+LvBiKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZlodgwAKCRCJcvTf3G3A Juc9EACBg7g0AciMJlxpgOkrIEkAgz4JxUyNzcnSH9uUoC2yv8MCXe94HbZEDY7e+twT+Kme7c3 P503Bd31wDK0odVa9x+AfYv7p+7hg6lnKrs0p8m9wybIJIYB12+9OVtY8ue4mXw80s4eDYT6iBt aowOPKrdFswzoOqQ0QItii6khvk9d5ODMhDeyUb9/W5+o+VNFIlb2m+PjQ/yYt0O7Dt0oWTtIf/ O4LV6hS8RBaE3FOmiHfkY60Umwvlj+vwH/KBHiEeauwlQKrfJrxvotXHIvrNWfz8gSz+BNvVqgj 0gfhB8TzgxCEwKYOuqthrYFdgEE+31THl5RocK7YZcIe+SRLHCWzfwSx92LMMLFH2x4rxsHFYqU hxHkhKIJNRI1x1TD0mlOjQZ++Kj7aZgzUWMZviF7iG9eCWOTSwwT2dwW2/XhRIcpfgPyXoe0PIu sf8O2HoLGy9am5QU8EN3AN46jUH/BiVwZ/3fHwiZyeGRKEmx3RvZQCPWzukEGIxsf7m0rLXSqfq dfw7ORnoDjBIeGUQIIz5H6L5WW/OvhDL5b1qLAvtqycwJIxsQzmcvGAxRKYqcHHaiuSQDsiUZrt fA57Ae3G0JbDrmzWaD4FAY2zYHnJH7w9XlpCumPcaUP1G/wJKGlV3ZPRAod7lqZKEUluB0jJJMs AnHqrlsFegIWnK
- g==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202405310951.56D9BD5C41@keescook>
 
-__kmalloc_node() is considered an "internal" function to the Slab, so
-drop it from explicit testing.
+On Fri, May 31, 2024 at 09:53:28AM -0700, Kees Cook wrote:
+> Under CONFIG_FORTIFY_SOURCE, the boot code *does* still uses
+> fortify-string.h. It lets us both catch mistakes we can discover at
+> compile and will catch egregious runtime mistakes, though the reporting
+> is much simpler in the boot code.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: linux-mm@kvack.org
-Cc: linux-hardening@vger.kernel.org
----
- lib/fortify_kunit.c | 3 ---
- 1 file changed, 3 deletions(-)
+From where I'm standing, we're not catching anything in the
+decompressor:
 
-diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index 39da5b3bc649..f9cc467334ce 100644
---- a/lib/fortify_kunit.c
-+++ b/lib/fortify_kunit.c
-@@ -235,9 +235,6 @@ static void fortify_test_alloc_size_##allocator##_dynamic(struct kunit *test) \
- 		kmalloc_array_node(alloc_size, 1, gfp, NUMA_NO_NODE),	\
- 		kfree(p));						\
- 	checker(expected_size, __kmalloc(alloc_size, gfp),		\
--		kfree(p));						\
--	checker(expected_size,						\
--		__kmalloc_node(alloc_size, gfp, NUMA_NO_NODE),		\
- 		kfree(p));						\
- 									\
- 	orig = kmalloc(alloc_size, gfp);				\
+$  objdump -D arch/x86/boot/compressed/vmlinux | grep __fortify_panic
+0000000001bec250 <__fortify_panic>:
+$
+
+Sure, in vmlinux proper (allmodconfig) we do:
+
+objdump -D vmlinux | grep __fortify_panic | wc -l
+1417
+
+but not in the decompressor which is special anyway.
+
+So we can just as well disable CONFIG_FORTIFY_SOURCE in the decompressor
+and not do silly prototypes.
+
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
