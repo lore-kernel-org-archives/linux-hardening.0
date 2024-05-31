@@ -1,87 +1,106 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC6379DC7;
-	Fri, 31 May 2024 20:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570BC224DD;
+	Fri, 31 May 2024 20:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717188611; cv=none; b=QC5IhGIWWTXOzWCJKC2LI+qRnrgieq/xRxG+0nBp1te4fr5Fizqe+gMIyY3X+q5K7mTgIraRj4iJxPy4RWhiX7wNdmVSkO7aBt2VLAFXqDKQ7D2X2d7VmoG+jI7e3iEO5jLEeF+dovRy2c6SIuTOBQSzHw/sXQoZNSVod+aKR7w=
+	t=1717189155; cv=none; b=sFYZv7bqboALn1wOAXz6+KtDzI/w6Owuu2Ua4OgMIDUTWABmcs/KkL3SAn9IPSY41HpNEwaHKEQeG0yMAtvZCvg/SDRTm4BkaV79XkvcyFnp6Ad9pSm+TVEx+WrufYgYwlAK3OgD0Cy+bnbygWQZ274DL21pNOs9iErNwAOwLB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717188611; c=relaxed/simple;
-	bh=CqlIzLo28saVuf9DPW5SY4U8PePcJgM43whMLoV3lrY=;
+	s=arc-20240116; t=1717189155; c=relaxed/simple;
+	bh=Lh/cjNZA4vCUPn9FhPgLX85uXMRWMwk57EIVdsl1yUc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XYZ941sLRP4/Yw3wR0L2Ai/W94++8i8Z0Pe0bJXE8yHJG4VUS7E8IfDIL7HCqBhskOBeP1FmgJMONuYfErAOqIk/6qRXVSW+Auxcp/Hkc2wJ6nYT160EfxADYVftmDT7/L4d1EMbuhgzOFM1Cq0rnpYQPGdjDCMlysTcZRJl/yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=exWSKQon; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=oOlblxNYg0o6N6VHUJsXWMvNuO9Zcq5+/0/lm8VBK4aJCTw7jb6Jkf2tzCCPrO4zz60KiftTwx94d7kPWPkvP4CYc5c/9TDacPLaAtYgYObkLa39AOc9XaBJL4kyJIcd0coF1Kyq9KgYVkwtOr14lQajhkzdQHTx3KrExr2nyzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPi+plar; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="exWSKQon"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 45DB340E02BA;
-	Fri, 31 May 2024 20:50:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id glGpxI6KoY2X; Fri, 31 May 2024 20:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717188604; bh=2eSJr/KNAbeYvj9YM7r9Ad2wggiAI2ZKgJwZBFOE4BI=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPi+plar"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA8AC116B1;
+	Fri, 31 May 2024 20:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717189154;
+	bh=Lh/cjNZA4vCUPn9FhPgLX85uXMRWMwk57EIVdsl1yUc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=exWSKQont0SSjJ4Q+5EBEcsbrJZ3Y82KeK151Kt49xsWaE+8KHEzOEGWxPmDm0SUr
-	 ejxfRJwoxK5jF/w0XDarZmUz9HZ3hh08Ma0VFfmx6NnHQvnXCvaukvakDRBnw3ioSG
-	 dkCHJm7xsLaXpGUuh9fOIoIySoemnVTd/bBmMyQB4iY2y/O6EJGcIyvDfYS6Cv5N0I
-	 j3hON/a4AT6Xj/4QWDe39scfvq8iUOzOrLF0ufATlBKTDzPd2wlmJQC06RmhBaHvm7
-	 sqtD30CBDLVo7CHtt47ov8qjOrLwkSBzS4t6GrSn/U27BJR9DCLM/6HNBlLFNTjWHb
-	 0VMY6/u06gLDQjSOtITh9T9dGULIWC+00FsRfU0UG9WLufO0kaj8qPrAiG9Vpol7UW
-	 FUjeQ/R4Rw/CROk4R/s5FD3gi+Z0ENuDX6B7YJrfl2BP9985MQ4p5zhDctnElyrkZt
-	 fvzzq0xnfl+MioiVyUhHYP21whoTaHqUJNxAhauGfmDXgNE0SziR9inRm/nuuuRWqF
-	 rD3eITYn1WnXSA2iq1vL7oMqoJB5M/vq095HPhEQOa4voSKwb6bvMTSI6SuIZxPsLN
-	 VyV5AdGzOBdFoKy0SnyKedwgJ1KjkewcLUxZ3Pq5Gf+nmfMQt9U8yAMpzob30qDgAY
-	 wSw/pRhVixcRVIqP19cXVu0w=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1A7C840E02B2;
-	Fri, 31 May 2024 20:49:53 +0000 (UTC)
-Date: Fri, 31 May 2024 22:49:47 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
-Message-ID: <20240531204947.GNZlo367G0YXVbOk1I@fat_crate.local>
-References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
- <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
- <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
- <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
- <202405310951.56D9BD5C41@keescook>
- <20240531190816.GLZlogIGgpc5maOeLN@fat_crate.local>
- <202405311345.D91BF6E9@keescook>
+	b=RPi+plarSLmZmS0y099tumxuYiHlY3/14Lz6Y492HHG7LECDbYLrWWeUJ65ELY7Gz
+	 74ChdAs4JgdAgNYZToxGDzgRzQzzBbVKUF+zZg57ZMz4EoHQOdvbHjteo4eoLaHMgU
+	 w/2LA8Bql/y1Q8IMB1niy+I4e9kAGva3D7ZBPY/15Dio820tgbY3RtxL9LLafYPIPW
+	 4xs5/mR7VDnXpYON9EZEq35G4n0OtOza6wVtjmg/boixgcT/eUMcioPr9udfSSxZSc
+	 WmRo2Sru2qIjGECt5pI27dkB0zXWRrkEfF3TnjaC54zTd5ozucFWGDfHBu3iZJ6noD
+	 03c8pU/HjaCEg==
+Date: Fri, 31 May 2024 13:59:14 -0700
+From: Kees Cook <kees@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>, julien.voisin@dustri.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] mm/slab: Plumb kmem_buckets into
+ __do_kmalloc_node()
+Message-ID: <202405311355.B6EBA095@keescook>
+References: <20240424213019.make.366-kees@kernel.org>
+ <20240424214104.3248214-2-keescook@chromium.org>
+ <zxc3fpd552hnd4jumot2k3bnol3pe2ooybz2rts4qrcxpgn7ll@4aggaem6acjw>
+ <202405310943.D9818A4FE@keescook>
+ <tkjmauxa4jigjznxp2ltxymz3u6urwuzwnbaaxmdg6ema7yf5a@fb2etkpyd4g4>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202405311345.D91BF6E9@keescook>
+In-Reply-To: <tkjmauxa4jigjznxp2ltxymz3u6urwuzwnbaaxmdg6ema7yf5a@fb2etkpyd4g4>
 
-On Fri, May 31, 2024 at 01:46:37PM -0700, Kees Cook wrote:
-> Please do not do this. It still benefits from compile-time sanity
-> checking.
+On Fri, May 31, 2024 at 12:51:29PM -0400, Kent Overstreet wrote:
+> On Fri, May 31, 2024 at 09:48:49AM -0700, Kees Cook wrote:
+> > On Fri, May 24, 2024 at 11:01:40AM -0400, Kent Overstreet wrote:
+> > > On Wed, Apr 24, 2024 at 02:40:59PM -0700, Kees Cook wrote:
+> > > > To be able to choose which buckets to allocate from, make the buckets
+> > > > available to the lower level kmalloc interfaces by adding them as the
+> > > > first argument. Where the bucket is not available, pass NULL, which means
+> > > > "use the default system kmalloc bucket set" (the prior existing behavior),
+> > > > as implemented in kmalloc_slab().
+> > > 
+> > > I thought the plan was to use codetags for this? That would obviate the
+> > > need for all this plumbing.
+> > > 
+> > > Add fields to the alloc tag for:
+> > >  - allocation size (or 0 if it's not a compile time constant)
+> > >  - union of kmem_cache, kmem_buckets, depending on whether the
+> > >    allocation size is constant or not
+> > 
+> > I want to provide "simple" (low-hanging fruit) coverage that can live
+> > separately from the codetags-based coverage. The memory overhead for
+> > this patch series is negligible, but I suspect the codetags expansion,
+> > while not giant, will be more than some deployments will want. I want
+> > to avoid an all-or-nothing solution -- which is why I had intended this
+> > to be available "by default".
+> 
+> technically there's no reason for your thing to depend on
+> CONFIG_CODETAGGING at all, that's the infrastructure for finding
+> codetags for e.g. /proc/allocinfo. you'd just be using the alloc_hoos()
+> macro and struct alloc_tag as a place to stash the kmem_buckets pointer.
 
-Care to elaborate how exactly it benefits?
+It's the overhead of separate kmem_cache and kmem_buckets for every
+allocation location that I meant. So I'd like the "simple" version for
+gaining coverage over the currently-being-regularly-exploited cases, and
+then allow for the "big hammer" solution too.
+
+However, I do think I'll still need the codetag infra because of the
+sections, etc. I think we'll need to pre-build the caches, but maybe
+that could be avoided by adding some kind of per-site READ_ONCE/lock
+thingy to create them on demand. We'll see! :)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Kees Cook
