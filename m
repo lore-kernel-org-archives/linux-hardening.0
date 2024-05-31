@@ -1,72 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C796F158204;
-	Fri, 31 May 2024 13:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DD52B9D2;
+	Fri, 31 May 2024 15:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717161875; cv=none; b=aWIuG6hhYgHWGM+hr4hl/n16Ts9uQZjEM7Fx/n3YNO2aqqAyiCQzU9TV9qAHYpkwb1sEtqm2eSkoLKC1q/GH5jdTbnBPnt1LkkV6/uAuUvXwPQhozB17sHUuUrDWR2EdLRBkyd3xLvQYfpg/qtqKmgnw7aK0Mw6sxyT9BfxBCbE=
+	t=1717168121; cv=none; b=cQRc67WpexjNYKtWIXWr2NvzwKDZsCs7BNEl3St3OeykW21NtC+qZOrtw6iG42zT+/3sMlYOPYnwpu1wXMWrS8TFs5O+9NsO5rSx7mGdPQBn3EJR+5wtgLv9aWAGpKX+PXgojle1MYA9L+3TlKiy4n7mvIcrb1i+1K2RCzzHubg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717161875; c=relaxed/simple;
-	bh=qC6oQjpZSfBA998RP9I1hRl7y4IrnDxjeMykj7MUTFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H/hTNVA2JOITo+sg0Oiepi8UGbkgBkAdMI4j5WwugoG6zzNDHEle8XE/idFi69SHkTkY/gHV1uymxBfl+v1AuSAj3RmYxpU8ZJPtnFoTWkoDOtXAfvcGMHdKOZiKfYZnzm6t73k1uGlPQsfbRHsa1vuvn1Wwha5DaSqr+AybYjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC20ebcs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717168121; c=relaxed/simple;
+	bh=wlwd8yfaktkbRs/5102vxtPOw07qUSsLYZdaYIeywU4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NFMARIhqcPPYmV8gJR3x5qPeByXsnjooI1nI7StWfN2+dSJ31Qa/6Fngg+fyIOQBo6s/gAw5NoSpIDGt8t4nuTWkxRfvy652VQWT+u+jgjmoLPZ9shEk9asMd73xyMXMALM/PDe6HzFfniv/Ja69Nc8c2BERdQHAg5hbuQ3V8gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=dOyGdXid; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC20ebcs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A8FC116B1;
-	Fri, 31 May 2024 13:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717161875;
-	bh=qC6oQjpZSfBA998RP9I1hRl7y4IrnDxjeMykj7MUTFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DC20ebcsFvKurvoX/FWth/aEYtFBnTLnMFW1FbIVl2GUL8Qkq3gaqnu+lMF9G/jyp
-	 ZWRaGdR0+5ZJWdvGp9DP11ZiPdAkNBihvRk68H8XJtRosaPWA2KuaFh3V1iE267umX
-	 U5DWkcItpa79VzUcndKXdBqVcwRjSo4tbLAvmIf+f/p37igTPHr0q/45yER2Gr561/
-	 /f8DyZzJHIEZNIs6FdAz3f5dJk2RGbgnOaZ4ShPyD2GZfoGJWWsMkG6wgadKRpTcC2
-	 22CRV7G+TsKkUTMtYSmHh2m21BnYgJCSSq9aYjebtp+1aHtsosGDi7+rQrEmPBYpGP
-	 dXZqYDloSDWdg==
-Date: Fri, 31 May 2024 14:24:31 +0100
-From: Simon Horman <horms@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Kenton Groombridge <concord@gentoo.org>, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] wifi: mac80211: Avoid address calculations via out of
- bounds array indexing
-Message-ID: <20240531132431.GH123401@kernel.org>
-References: <20240517145420.8891-1-concord@gentoo.org>
- <20240517204532.GC475595@kernel.org>
- <9fca4c0d496eb731f571cd8eacd409b9a9e61dae.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="dOyGdXid"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VDHINw007208;
+	Fri, 31 May 2024 17:08:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	J+3i1j+pq3XT9u6pb0xZVn9sOodnovVMoU1mIM4VGJQ=; b=dOyGdXidIjAPoxaE
+	6i49hQm84hjxfsbuqS8JOxP0DPjudx8/pQet30Subrs9ukAG9s7xq7EXpdAh59PO
+	J1zS6COBhRk4bo1fOLOH41RxCyKGiN9pMGaE7Zbumq5l8GbchkpHUIwBC0lTYQzQ
+	B70h7FQS1ZtekflcMLOSed86gybMYW+3In/yS8hWQTFjBMMJbT8H2f91x8EcJe+s
+	PKB6otIon8QueJzI1VroVVg5nIoyMRNlW6PD5ooQYmeiG2maVrEi+rMGKdTLxiP2
+	MqbUwbaHYsqK34XkEYjcTZAb0DQPEOMsjAPvCJOULsPE36Z65MrkOqcnrpFui1bP
+	L7gG4w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yb9ykd6sq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 17:08:14 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2712740045;
+	Fri, 31 May 2024 17:08:11 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 89C09223652;
+	Fri, 31 May 2024 17:07:18 +0200 (CEST)
+Received: from localhost (10.252.27.179) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 31 May
+ 2024 17:07:18 +0200
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        Amelie Delaunay
+	<amelie.delaunay@foss.st.com>
+Subject: [PATCH v4 03/12] MAINTAINERS: Add entry for STM32 DMA controllers drivers and documentation
+Date: Fri, 31 May 2024 17:07:03 +0200
+Message-ID: <20240531150712.2503554-4-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
+References: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9fca4c0d496eb731f571cd8eacd409b9a9e61dae.camel@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_11,2024-05-30_01,2024-05-17_01
 
-On Thu, May 23, 2024 at 11:35:37AM +0200, Johannes Berg wrote:
-> On Fri, 2024-05-17 at 21:45 +0100, Simon Horman wrote:
-> > 
-> > FWWIW, it seems unfortunate to me that the __counted_by field (n_channels)
-> > is set some distance away from the allocation of the flex-array (channels)
-> > whose bounds it checks. It seems it would be pretty easy for a bug in the
-> > code being updated here to result in an overrun.
-> > 
-> 
-> In a way, this is a more general problem, this allocates the max we know
-> we might need, but then filter it down. It'd have to iterate twice to
-> actually allocate the "correct" size, but then you could still have bugs
-> by having different filter conditions in the two loops ...
+Add an entry to make myself a maintainer of STM32 DMA controllers drivers
+and documentation.
 
-Yes, I agree this problem is more general than this patch or the code it
-updates.
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> Don't see any good solutions to this kind of code?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..e23cc6f644fa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21485,6 +21485,15 @@ F:	Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml
+ F:	Documentation/devicetree/bindings/sound/st,stm32-*.yaml
+ F:	sound/soc/stm/
+ 
++STM32 DMA DRIVERS
++M:	Amélie Delaunay <amelie.delaunay@foss.st.com>
++L:	dmaengine@vger.kernel.org
++L:	linux-stm32@st-md-mailman.stormreply.com (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/arch/arm/stm32/stm32-dma-mdma-chaining.rst
++F:	Documentation/devicetree/bindings/dma/stm32/
++F:	drivers/dma/stm32/
++
+ STM32 TIMER/LPTIMER DRIVERS
+ M:	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+ S:	Maintained
+-- 
+2.25.1
 
-I was hoping you might :)
