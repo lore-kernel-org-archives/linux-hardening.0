@@ -1,48 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C972275813;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8CB75817;
 	Fri, 31 May 2024 15:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717168234; cv=none; b=B7gqxXtS67sgdSoOANgixL2p2qpVIPrvBMQlair3YO2vpz0RN9anm1C8EdImlkWsD0xp1xAQfU+YjANPtNK1Ft7+1a0apI3gT5U0taX95whNKDdNpKXZe8v1n7+dKZ7l67MpQuVSgYMC2EBkTgS1xf3GpfTfzbQ6UE7r7LM96yg=
+	t=1717168234; cv=none; b=iOxmmWbq75UFxywmjePKKzdJOIlPtZfG3gR10Kt4OH17MnEZIRm7g0nplsWjLj1UCfV+GguOlUI5oSFKFKmnJqg49mPnzVqChpUoT3gCv0QCvpebNHr8rxisAPHWXlQwXARLG3iaptY9OL6yiUYsRoX8hwfpdZ9U7m7p20oDr8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717168234; c=relaxed/simple;
-	bh=TKS9LmYbFwjp2MUSdXV2zexdSBQweAgFB0m9/hGMZz8=;
+	bh=qad6qskwZYQn+D5N1xzwJq/c78GJYvm0C1sRMaB+DyM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MwIGRx30Xi4Ac/0tmzYSOpIqHG2K8yYEoOyEFNW3cg3bKwJEKYZcncx9UiJQgMNCKk9BETQE+TFYZfyZUZLPiXVN2DWbaMicxKKNycyNKMaq8VgzIfvDw3YlOwFWEiJ1VtLjjTWxynbET1ABT10IIXQO4nTphHMQTPBH86RroA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=peC9MGhE; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=m89rtY5dhnqBR57OSLaIl2HooI4flgba5lXO2LpHFlKNoNHpg49mlKDOamJ2m3BgLTYmaXDDszW1i0K/FtnFZBaa13X139RKJxkXWULG1IN+u1Dti05fS6xuQxU9YJC9zuKxOWPJtFhs1aXG8zUdWysNSAzG5e2kUp2jScfaKWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=onmQnlaV; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="peC9MGhE"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VDZK5e007807;
-	Fri, 31 May 2024 17:10:15 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="onmQnlaV"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VBkMSi027110;
+	Fri, 31 May 2024 17:10:14 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	FVHtdzKA2sppQoWavJijXHpDzRsfcU/8ElYuAcmbkXg=; b=peC9MGhE+j/d3KLr
-	1iIjldHXhY1Ogu8M7Eqt0q1p5v+ueVCoPEw6bPIZvit+iDA8QyncuQMq+3L/U8Gt
-	+7t+Vx8PDVPJscUGLYlsUy0JHu9vF8XWgZwxnxT1a3gBQsakaEzgirRh7yGhF9VD
-	c8Qye3F2BwBd/+ibgNlic9Kb2zgLZNpH/ZFbo97wkQlEqdz3eIY4nB7fyKjCIEZQ
-	8j4f3wOAWirjZFEKgtkzzM2wY0oQPK11pctAsh5aAUcksrphans5+nJPapk7g70P
-	6h29VJfPoCIjM+9+JcHrmGIA6ZtmuEqQQ9939VjO4sjDmj/Kh/r00TQ0ijaMbZbn
-	P1zKaQ==
+	IOYWpx+7FTJlYFtMjUGlHKbBuJPgpevIoZcXKDKHnVE=; b=onmQnlaVOJU3cTev
+	SQ2YOdm96SqIeOoosQIZkkwgz4xUAR751SnY3iblj5aCKhH3+tQb2WxEEpEErGhA
+	V6Vq1u9NfROTK7ct/d7QvJWcdeuQ1ArAGIEiWfjsZKaBwvzr5Q4K5Z2mdfGwoPvk
+	1MkUWUjtJhnDc2GNkoDF90oBh8N978bpK+NGOlq4O7e8pWNJYeWyWaDZzg0cM0p5
+	F/nYZQvqMf/nuxhLsJ4sb6fQwNY2R8oHrgUwVsH/omewp2ow8fyzBkKX1444NaU1
+	5h+m7MCBF0YuhKvh2y4n8Yz/WsfVdOLDcxLjf+feGddJKTmISqAnf76zYNc1/UuI
+	DjCh0g==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yb9ykd76q-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ybtxhtw5c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 17:10:15 +0200 (MEST)
+	Fri, 31 May 2024 17:10:14 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1091640049;
-	Fri, 31 May 2024 17:10:11 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0B9AF40047;
+	Fri, 31 May 2024 17:10:10 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D207C208009;
-	Fri, 31 May 2024 17:09:25 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 43364207FE4;
+	Fri, 31 May 2024 17:09:24 +0200 (CEST)
 Received: from localhost (10.252.27.179) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 31 May
- 2024 17:09:25 +0200
+ 2024 17:09:23 +0200
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof
@@ -58,9 +58,9 @@ CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>,
         Amelie Delaunay
 	<amelie.delaunay@foss.st.com>
-Subject: [PATCH v4 12/12] arm64: dts: st: add HPDMA nodes on stm32mp251
-Date: Fri, 31 May 2024 17:07:12 +0200
-Message-ID: <20240531150712.2503554-13-amelie.delaunay@foss.st.com>
+Subject: [PATCH v4 10/12] dmaengine: add channel device name to channel registration
+Date: Fri, 31 May 2024 17:07:10 +0200
+Message-ID: <20240531150712.2503554-11-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
 References: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
@@ -78,107 +78,99 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-31_11,2024-05-30_01,2024-05-17_01
 
-The High Performance Direct Memory Access (HPDMA) controller is used to
-perform programmable data transfers between memory-mapped peripherals
-and memories (or between memories) via linked-lists.
+Channel device name is used for sysfs, but also by dmatest filter function.
 
-There are 3 instances of HPDMA on stm32mp251, using stm32-dma3 driver, with
-16 channels per instance and with one interrupt per channel.
-Channels 0 to 7 are implemented with a FIFO of 8 bytes.
-Channels 8 to 11 are implemented with a FIFO of 32 bytes.
-Channels 12 to 15 are implemented with a FIFO of 128 bytes.
-Thanks to stm32-dma3 bindings, the user can ask for a channel with specific
-FIFO size.
+With dynamic channel registration, channels can be registered after dma
+controller registration. Users may want to have specific channel names.
+
+If name is NULL, the channel name relies on previous implementation,
+dma<controller_device_id>chan<channel_device_id>.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
-v4: use SCMI clocks now that they are available
+ drivers/dma/dmaengine.c   | 16 ++++++++++------
+ drivers/dma/idxd/dma.c    |  2 +-
+ include/linux/dmaengine.h |  3 ++-
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-v2: use SoC specific compatible st,stm32mp25-dma3
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 69 ++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index dcd0656d67a8..d057dcee2534 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -107,6 +107,75 @@ soc@0 {
- 		interrupt-parent = <&intc>;
- 		ranges = <0x0 0x0 0x0 0x80000000>;
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 491b22240221..c380a4dda77a 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1037,7 +1037,8 @@ static int get_dma_id(struct dma_device *device)
+ }
  
-+		hpdma: dma-controller@40400000 {
-+			compatible = "st,stm32mp25-dma3";
-+			reg = <0x40400000 0x1000>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scmi_clk CK_SCMI_HPDMA1>;
-+			#dma-cells = <3>;
-+		};
-+
-+		hpdma2: dma-controller@40410000 {
-+			compatible = "st,stm32mp25-dma3";
-+			reg = <0x40410000 0x1000>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scmi_clk CK_SCMI_HPDMA2>;
-+			#dma-cells = <3>;
-+		};
-+
-+		hpdma3: dma-controller@40420000 {
-+			compatible = "st,stm32mp25-dma3";
-+			reg = <0x40420000 0x1000>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&scmi_clk CK_SCMI_HPDMA3>;
-+			#dma-cells = <3>;
-+		};
-+
- 		rifsc: bus@42080000 {
- 			compatible = "st,stm32mp25-rifsc", "simple-bus";
- 			reg = <0x42080000 0x1000>;
+ static int __dma_async_device_channel_register(struct dma_device *device,
+-					       struct dma_chan *chan)
++					       struct dma_chan *chan,
++					       const char *name)
+ {
+ 	int rc;
+ 
+@@ -1066,8 +1067,10 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 	chan->dev->device.parent = device->dev;
+ 	chan->dev->chan = chan;
+ 	chan->dev->dev_id = device->dev_id;
+-	dev_set_name(&chan->dev->device, "dma%dchan%d",
+-		     device->dev_id, chan->chan_id);
++	if (!name)
++		dev_set_name(&chan->dev->device, "dma%dchan%d", device->dev_id, chan->chan_id);
++	else
++		dev_set_name(&chan->dev->device, name);
+ 	rc = device_register(&chan->dev->device);
+ 	if (rc)
+ 		goto err_out_ida;
+@@ -1087,11 +1090,12 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ }
+ 
+ int dma_async_device_channel_register(struct dma_device *device,
+-				      struct dma_chan *chan)
++				      struct dma_chan *chan,
++				      const char *name)
+ {
+ 	int rc;
+ 
+-	rc = __dma_async_device_channel_register(device, chan);
++	rc = __dma_async_device_channel_register(device, chan, name);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -1203,7 +1207,7 @@ int dma_async_device_register(struct dma_device *device)
+ 
+ 	/* represent channels in sysfs. Probably want devs too */
+ 	list_for_each_entry(chan, &device->channels, device_node) {
+-		rc = __dma_async_device_channel_register(device, chan);
++		rc = __dma_async_device_channel_register(device, chan, NULL);
+ 		if (rc < 0)
+ 			goto err_out;
+ 	}
+diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+index cd835eabd31b..dbecd699237e 100644
+--- a/drivers/dma/idxd/dma.c
++++ b/drivers/dma/idxd/dma.c
+@@ -269,7 +269,7 @@ static int idxd_register_dma_channel(struct idxd_wq *wq)
+ 		desc->txd.tx_submit = idxd_dma_tx_submit;
+ 	}
+ 
+-	rc = dma_async_device_channel_register(dma, chan);
++	rc = dma_async_device_channel_register(dma, chan, NULL);
+ 	if (rc < 0) {
+ 		kfree(idxd_chan);
+ 		return rc;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 752dbde4cec1..73537fddbb52 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1575,7 +1575,8 @@ int dma_async_device_register(struct dma_device *device);
+ int dmaenginem_async_device_register(struct dma_device *device);
+ void dma_async_device_unregister(struct dma_device *device);
+ int dma_async_device_channel_register(struct dma_device *device,
+-				      struct dma_chan *chan);
++				      struct dma_chan *chan,
++				      const char *name);
+ void dma_async_device_channel_unregister(struct dma_device *device,
+ 					 struct dma_chan *chan);
+ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
 -- 
 2.25.1
 
