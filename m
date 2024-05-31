@@ -1,57 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570BC224DD;
-	Fri, 31 May 2024 20:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF9F2C1AE;
+	Fri, 31 May 2024 21:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717189155; cv=none; b=sFYZv7bqboALn1wOAXz6+KtDzI/w6Owuu2Ua4OgMIDUTWABmcs/KkL3SAn9IPSY41HpNEwaHKEQeG0yMAtvZCvg/SDRTm4BkaV79XkvcyFnp6Ad9pSm+TVEx+WrufYgYwlAK3OgD0Cy+bnbygWQZ274DL21pNOs9iErNwAOwLB4=
+	t=1717189609; cv=none; b=jgKrzG4jr4VfSf+ClUUBTTnDdPhecDL3nE0N8oThWGO7njEtOGdkPLZlZC/SuStQG7Yhkh8MKYP2nUhVCrcH64yHyU6T98KfwntbnSBkgQSzroFd1EZjafZMym7azNmXIA54Twt6+vfEsBIzy20JO1fcfw7Xby5UvDfDL0IZveI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717189155; c=relaxed/simple;
-	bh=Lh/cjNZA4vCUPn9FhPgLX85uXMRWMwk57EIVdsl1yUc=;
+	s=arc-20240116; t=1717189609; c=relaxed/simple;
+	bh=wy7ME3NK+NpCINbYpHDrtrVy3m+OPYt3joS/LqYwsBQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOlblxNYg0o6N6VHUJsXWMvNuO9Zcq5+/0/lm8VBK4aJCTw7jb6Jkf2tzCCPrO4zz60KiftTwx94d7kPWPkvP4CYc5c/9TDacPLaAtYgYObkLa39AOc9XaBJL4kyJIcd0coF1Kyq9KgYVkwtOr14lQajhkzdQHTx3KrExr2nyzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPi+plar; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=f+Cu2Z1ithDBj0GWBze3ewWoE1mJGkIm4f0UULnTwq+4ufYJye/4DPoE7h4ApEXTvuPvbO/vFXtmUbc2mqP2MatL6lc7nDLVU7dEw76QAAh2s8UPWxcAfUb/ABv3bD9T24sIiCV7MTeY2SKH5zdwTduZzLwa4E8i2X6Uwt/T92w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZewBY5t/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPi+plar"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA8AC116B1;
-	Fri, 31 May 2024 20:59:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZewBY5t/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A692C116B1;
+	Fri, 31 May 2024 21:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717189154;
-	bh=Lh/cjNZA4vCUPn9FhPgLX85uXMRWMwk57EIVdsl1yUc=;
+	s=k20201202; t=1717189608;
+	bh=wy7ME3NK+NpCINbYpHDrtrVy3m+OPYt3joS/LqYwsBQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RPi+plarSLmZmS0y099tumxuYiHlY3/14Lz6Y492HHG7LECDbYLrWWeUJ65ELY7Gz
-	 74ChdAs4JgdAgNYZToxGDzgRzQzzBbVKUF+zZg57ZMz4EoHQOdvbHjteo4eoLaHMgU
-	 w/2LA8Bql/y1Q8IMB1niy+I4e9kAGva3D7ZBPY/15Dio820tgbY3RtxL9LLafYPIPW
-	 4xs5/mR7VDnXpYON9EZEq35G4n0OtOza6wVtjmg/boixgcT/eUMcioPr9udfSSxZSc
-	 WmRo2Sru2qIjGECt5pI27dkB0zXWRrkEfF3TnjaC54zTd5ozucFWGDfHBu3iZJ6noD
-	 03c8pU/HjaCEg==
-Date: Fri, 31 May 2024 13:59:14 -0700
+	b=ZewBY5t/gjrzWBfnaqyXsvegO39ZktPzm+Cyll3Afn2d87/YSXcnGd6lqJWDbGopt
+	 9lSE0QoRzfYavhED7N5Fu2Ug3FBtE3gVNMJFHYbTd0qqSYnrPMHKga6kksHET5fLH0
+	 G/PYefNDRJlCqIgTMVo5bys/KF0qAXQIFg/0dlsiH5ZONRvJHNVMlRCj/JFna0w0IJ
+	 Dkr9P3KnKnio5topk/oA1uuvOUfWr+nEx9tolQq5prm/5AsXxFd48FF/ozVu0d8R4C
+	 lKZJAdoqpunIoX0cdCQNIHk0p5PuX7VRjqcVXtS6md1vYrLoK6zHe1fnEOXk6/V0pw
+	 O5/jgLT4WFUMw==
+Date: Fri, 31 May 2024 14:06:48 -0700
 From: Kees Cook <kees@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>, julien.voisin@dustri.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] mm/slab: Plumb kmem_buckets into
- __do_kmalloc_node()
-Message-ID: <202405311355.B6EBA095@keescook>
-References: <20240424213019.make.366-kees@kernel.org>
- <20240424214104.3248214-2-keescook@chromium.org>
- <zxc3fpd552hnd4jumot2k3bnol3pe2ooybz2rts4qrcxpgn7ll@4aggaem6acjw>
- <202405310943.D9818A4FE@keescook>
- <tkjmauxa4jigjznxp2ltxymz3u6urwuzwnbaaxmdg6ema7yf5a@fb2etkpyd4g4>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
+Message-ID: <202405311359.EFC7345EC@keescook>
+References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
+ <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
+ <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
+ <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
+ <202405310951.56D9BD5C41@keescook>
+ <20240531190816.GLZlogIGgpc5maOeLN@fat_crate.local>
+ <202405311345.D91BF6E9@keescook>
+ <20240531204947.GNZlo367G0YXVbOk1I@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,47 +54,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tkjmauxa4jigjznxp2ltxymz3u6urwuzwnbaaxmdg6ema7yf5a@fb2etkpyd4g4>
+In-Reply-To: <20240531204947.GNZlo367G0YXVbOk1I@fat_crate.local>
 
-On Fri, May 31, 2024 at 12:51:29PM -0400, Kent Overstreet wrote:
-> On Fri, May 31, 2024 at 09:48:49AM -0700, Kees Cook wrote:
-> > On Fri, May 24, 2024 at 11:01:40AM -0400, Kent Overstreet wrote:
-> > > On Wed, Apr 24, 2024 at 02:40:59PM -0700, Kees Cook wrote:
-> > > > To be able to choose which buckets to allocate from, make the buckets
-> > > > available to the lower level kmalloc interfaces by adding them as the
-> > > > first argument. Where the bucket is not available, pass NULL, which means
-> > > > "use the default system kmalloc bucket set" (the prior existing behavior),
-> > > > as implemented in kmalloc_slab().
-> > > 
-> > > I thought the plan was to use codetags for this? That would obviate the
-> > > need for all this plumbing.
-> > > 
-> > > Add fields to the alloc tag for:
-> > >  - allocation size (or 0 if it's not a compile time constant)
-> > >  - union of kmem_cache, kmem_buckets, depending on whether the
-> > >    allocation size is constant or not
-> > 
-> > I want to provide "simple" (low-hanging fruit) coverage that can live
-> > separately from the codetags-based coverage. The memory overhead for
-> > this patch series is negligible, but I suspect the codetags expansion,
-> > while not giant, will be more than some deployments will want. I want
-> > to avoid an all-or-nothing solution -- which is why I had intended this
-> > to be available "by default".
+On Fri, May 31, 2024 at 10:49:47PM +0200, Borislav Petkov wrote:
+> On Fri, May 31, 2024 at 01:46:37PM -0700, Kees Cook wrote:
+> > Please do not do this. It still benefits from compile-time sanity
+> > checking.
 > 
-> technically there's no reason for your thing to depend on
-> CONFIG_CODETAGGING at all, that's the infrastructure for finding
-> codetags for e.g. /proc/allocinfo. you'd just be using the alloc_hoos()
-> macro and struct alloc_tag as a place to stash the kmem_buckets pointer.
+> Care to elaborate how exactly it benefits?
 
-It's the overhead of separate kmem_cache and kmem_buckets for every
-allocation location that I meant. So I'd like the "simple" version for
-gaining coverage over the currently-being-regularly-exploited cases, and
-then allow for the "big hammer" solution too.
+Because when new code gets added that accidentally does improper string
+handling, fortify will yell about it at compile time. e.g, if someone
+typos something like:
 
-However, I do think I'll still need the codetag infra because of the
-sections, etc. I think we'll need to pre-build the caches, but maybe
-that could be avoided by adding some kind of per-site READ_ONCE/lock
-thingy to create them on demand. We'll see! :)
+
+#define BUF_LEN_FOO	16
+...
+#define BUF_LEN_BAR	10
+
+struct foo {
+	...
+	char buf[BUF_LEN_FOO];
+	...
+};
+
+...
+
+void process_stuff(struct foo *p)
+{
+	...
+	char local_copy[BUF_LEN_BAR];
+	...
+
+	strcpy(local_copy, p->buf);
+	...
+}
+
+or refactors and forgets to change some name, etc. It's all for catching
+bugs before they happen, etc. And when source string lengths aren't
+known, the runtime checking can kick in too. It happens x86 boot doesn't
+have any of those (good!) so __fortify_panic() goes unused there. But
+that's a larger topic covered by stuff like
+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION, etc.
 
 -- 
 Kees Cook
