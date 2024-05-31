@@ -1,31 +1,31 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A571C687
-	for <linux-hardening@vger.kernel.org>; Fri, 31 May 2024 16:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CFA176242
+	for <linux-hardening@vger.kernel.org>; Fri, 31 May 2024 16:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717174216; cv=none; b=JDwgGLxvt0YnB1DjIlHKVej8/kwu89qAUMmi55ijwD/KXTiqhAkfVhGuIH2fGYhWmFGvi98XTpTROYU1q7XemYq6UXM627Ydn+VCCPfaBW6i1/dWFwycAmbyjh6gCnJXDAUBxpRkj3COzITn8S2bocEiN78rHs1Q90iuSsU7J9s=
+	t=1717174302; cv=none; b=oIWzTcCZzEXc+4SUtiDCIdKa5ewIV8nOTXWz8v9KF2I72JlXBUUFfjYVtu47BD0jaOigmUt1EnIVy40lKEBFlOk/KJHMApbOuF4ZbMWzWiRmla859lDPG/MWUPCduhpqtvT0pg1yrjyygE0IxeSsPVtV+7R7Mp7oSMR7AlIIS+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717174216; c=relaxed/simple;
-	bh=6KcPpMIaVhrfLLpYPvkz29y7PLFD1EMfiqlDmt1B7hM=;
+	s=arc-20240116; t=1717174302; c=relaxed/simple;
+	bh=JXG3CIOMNY5wDMzz4UfBJKTp/yf9W3rH8TR6whRWl3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YWgn6PP6y7TTrZoCn+buQNfbqUTdkg1Vo1Vg5dtX/3bKAW2gwVa3I2Rqxi3uYlpAEjxVY8W/rjPMvHOkQ10zda3xNdbUIArkwWf0inL8s/7uMzrjJI1y3lyLigpW5m5dzGorXT0XEYdpU6O7Wutwogcz5HIjJ4YqUsdgAZezyFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bcv4uZSf; arc=none smtp.client-ip=95.215.58.186
+	 Content-Type:Content-Disposition:In-Reply-To; b=jApiiaSPd7gCXVaX3uKlXMSw78784qoBvIu3zc76g3m5E03PHMbFtZTqLOL4Ly/HxR1eiFK2TMqHcxAOl8rwrqX8UPd9CILK5YuL2MI41CP4hac9t7QMf/yDYQb2QkTlmCTAVScQRazl9INspBsj7AHs3POOy4NpOghw606YS3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hZ5NNlf5; arc=none smtp.client-ip=95.215.58.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bcv4uZSf"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hZ5NNlf5"
 X-Envelope-To: kees@kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717174213;
+	t=1717174299;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VEEopXa/6axR2qlwT+N+gjyPs9hJMbVFhL2Ri7Y7Wg4=;
-	b=Bcv4uZSfIXwv++7KSEEVLfdODz8CsX7iI+ORptEsJ6KIZ7aQzRHKRGsAkmGcH0q/T5GAFI
-	GFb3ZFZp4vgQsbTlTiSIxol1fLl9iGS/oo7fgJo4VRmS74TN8TVvbMOU/TK9/zEAxLZ4wf
-	Ni5rG8WTUCon886TDWtyjxTtC62/JqY=
+	bh=9lclNorrTuZxHvlm4yhJSeHL+7mBpQLMo/gFiHr6+ZY=;
+	b=hZ5NNlf5zcIZZsBTALKRZnh1mVr8ROUllgS4pYmV3KIQYTq2x3XySgxS9WEDtt52jFA1Q5
+	6KBII4MnUd/M5BXsTr19url9OpExD0VwT4XAQMBBSbgSHSCBT7HgR/uYK+yBEGooacTXFM
+	UIfeCU4+OuZi4fwUR1SHJwFbRzikJu0=
 X-Envelope-To: vbabka@suse.cz
 X-Envelope-To: cl@linux.com
 X-Envelope-To: penberg@kernel.org
@@ -45,7 +45,7 @@ X-Envelope-To: tgraf@suug.ch
 X-Envelope-To: herbert@gondor.apana.org.au
 X-Envelope-To: julien.voisin@dustri.org
 X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Fri, 31 May 2024 12:50:08 -0400
+Date: Fri, 31 May 2024 12:51:29 -0400
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: Kees Cook <kees@kernel.org>
@@ -60,7 +60,7 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
 	julien.voisin@dustri.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 2/6] mm/slab: Plumb kmem_buckets into
  __do_kmalloc_node()
-Message-ID: <5boulybop2fxtkht7n65r6ktdr5aiedts5xnuadmyr6wvaectx@sbcdzqoljpeh>
+Message-ID: <tkjmauxa4jigjznxp2ltxymz3u6urwuzwnbaaxmdg6ema7yf5a@fb2etkpyd4g4>
 References: <20240424213019.make.366-kees@kernel.org>
  <20240424214104.3248214-2-keescook@chromium.org>
  <zxc3fpd552hnd4jumot2k3bnol3pe2ooybz2rts4qrcxpgn7ll@4aggaem6acjw>
@@ -100,5 +100,7 @@ On Fri, May 31, 2024 at 09:48:49AM -0700, Kees Cook wrote:
 > to avoid an all-or-nothing solution -- which is why I had intended this
 > to be available "by default".
 
-You don't need to include the full codetag + alloc tag counters - with
-the appropriate #ifdefs the overhead will be negligable.
+technically there's no reason for your thing to depend on
+CONFIG_CODETAGGING at all, that's the infrastructure for finding
+codetags for e.g. /proc/allocinfo. you'd just be using the alloc_hoos()
+macro and struct alloc_tag as a place to stash the kmem_buckets pointer.
