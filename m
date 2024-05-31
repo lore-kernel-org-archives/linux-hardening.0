@@ -1,53 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17FA156242;
-	Fri, 31 May 2024 16:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8E9612EB;
+	Fri, 31 May 2024 16:43:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717173589; cv=none; b=OrQUsL48rqE2HAV2hb2B+4xGTv2/E+EhtLXZMqwWYS+U7kVe7q4AcJglPzi9QxrO/wBvCbL1/uiDZsZyyw1sekYoCwzyfLWTrPsFP2WiNZ5gTcz6dJzWz44Kv8snbs7q29UcZTfJTWGytoAV79ray0pkUuNPRXWAD3JvARpx7nE=
+	t=1717173780; cv=none; b=MSVgTmyRZkmpPGKI47Keq+FbFUGzfc1Q12djRW/HtQIOw9RLry5CEpb8MKGyQIJvA4d7t3zegeQuMK2n3qunVmszVBSaxMt5gVVFeoWLAl4/bhfBCuHP6NphrcbVJzXgdsCLeg+v0jLCLf6kBKDh3+QG/qAMVWVeL+TAsHx//6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717173589; c=relaxed/simple;
-	bh=gsALt8b3H3D8q2jgqEBlh7ZH83mNDV1aBfFcts9SM0g=;
+	s=arc-20240116; t=1717173780; c=relaxed/simple;
+	bh=h9xEb88Q0BWA/HKbvxBqBPuQDNJV6+lkfys9wgwSsd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sg6wKza72+TFtecxKjLoqZxzOBtrUvzwSYU0PPje8gxX5d5VJ9ZNGFCOkqockmWICyOfAr3Ws4l2fiPyCqKiNTaiq3qBrkPpWk56oBxhQdJ6XjaDlvc1goJh48POGakJdr3DjBnmhsrwKckfu0NVnBVQW/7M0jL1dcC3UyYAxMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0YPJ+tR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JI6ibIydSleSqNxCMu9ioRxtbCijpnEwy0VbfjB/QNiq12IwY1GpVSH8lnJgr1457K2FerTJnRaI1Bj7WezV+7NE5aabU6rihkBITb+dqMH3jXreaYa5qjer94bRg+BoxjDTIXO/GwCYFKk7MmwibpoWrCklelRTBUoGzFnBAd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJxSOJZz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0YPJ+tR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF9FC116B1;
-	Fri, 31 May 2024 16:39:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJxSOJZz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C18C116B1;
+	Fri, 31 May 2024 16:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717173588;
-	bh=gsALt8b3H3D8q2jgqEBlh7ZH83mNDV1aBfFcts9SM0g=;
+	s=k20201202; t=1717173780;
+	bh=h9xEb88Q0BWA/HKbvxBqBPuQDNJV6+lkfys9wgwSsd4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t0YPJ+tRu7KQvvMWn+FqGf7Ds8NiCGKgObBP/DOHBxKqAXzkTMINok/izr/CIvgFp
-	 h7314WElslBeOUoScNRuw+2QiRvqcjPq2cstDU6KK/7YxCW6dNSjtIFOmMTmyuUn4o
-	 sT9BE4zvuQQtxhwMD/WHfwXOe2BpUj0wzzlrMaJfqmUVl4Ryl8hGjc6zaiZgaT0lWk
-	 321jEKHdUeRMG7S/Ecv2EGrBNSKWEHC5P/4pP8MZtLf6tQAk7DVhjv7BCwDmDK/a8P
-	 aewo8jJuljk4xDCjbSFNN/YMeyJsc87NYkGn9oQQ7IteDwmIjFtIvhgv3vzEuOe5A/
-	 gdoxBcI2JRTSw==
-Date: Fri, 31 May 2024 09:39:48 -0700
+	b=LJxSOJZzlU7TkY1lfyEgw7d4dSBX70y+IdQxau1AYjYqMhq3n9Aeng0lWxYyrMfVm
+	 WvX1s1qSiNqT5sxYn/WmHZCV7Wxs7AIvQGQt4zHIWEYv5cQAQF5dmiBHx/ibv864wu
+	 6LPZGsE3A6AaH2lXyQBmfa49XHreH6tvw8cCnrdQQz03L8W9wCbMUEqRdzqD6bOr1T
+	 4SiriN9dvIFHLtb+5WRrARo0pKcQ7IZYGS1mTF5TnZ/85a/dJ4Gay/dFALwYogYo0Z
+	 urv031NJ5vNmqL3OhGq4RKc27FvzzG2gwO8ZuRkQ3mQU4ilHrFQq8C8WbN3TmkQdY4
+	 sRB6tfzzLGwug==
+Date: Fri, 31 May 2024 09:42:59 -0700
 From: Kees Cook <kees@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
 	David Rientjes <rientjes@google.com>,
 	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
 	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
 	Xiu Jianfeng <xiujianfeng@huawei.com>,
 	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
 	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
 	Thomas Graf <tgraf@suug.ch>,
 	Herbert Xu <herbert@gondor.apana.org.au>, julien.voisin@dustri.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] slab: Introduce dedicated bucket allocator
-Message-ID: <202405310938.A6EFEADB79@keescook>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] mm/slab: Plumb kmem_buckets into
+ __do_kmalloc_node()
+Message-ID: <202405310941.62F7B2859C@keescook>
 References: <20240424213019.make.366-kees@kernel.org>
- <7nonr2cucww7j55kresncgt23pvgt3pmnfukqpnqblk3fmtfdl@ewhqe3ylioz2>
+ <20240424214104.3248214-2-keescook@chromium.org>
+ <fb2227dc-facb-4760-ba91-49abb54a991c@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,48 +58,67 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7nonr2cucww7j55kresncgt23pvgt3pmnfukqpnqblk3fmtfdl@ewhqe3ylioz2>
+In-Reply-To: <fb2227dc-facb-4760-ba91-49abb54a991c@suse.cz>
 
-On Fri, May 24, 2024 at 10:54:58AM -0400, Kent Overstreet wrote:
-> On Wed, Apr 24, 2024 at 02:40:57PM -0700, Kees Cook wrote:
-> > Hi,
+On Fri, May 24, 2024 at 03:38:58PM +0200, Vlastimil Babka wrote:
+> On 4/24/24 11:40 PM, Kees Cook wrote:
+> > To be able to choose which buckets to allocate from, make the buckets
+> > available to the lower level kmalloc interfaces by adding them as the
+> > first argument. Where the bucket is not available, pass NULL, which means
+> > "use the default system kmalloc bucket set" (the prior existing behavior),
+> > as implemented in kmalloc_slab().
 > > 
-> > Series change history:
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > Cc: Christoph Lameter <cl@linux.com>
+> > Cc: Pekka Enberg <penberg@kernel.org>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-hardening@vger.kernel.org
+> > ---
+> >  include/linux/slab.h | 16 ++++++++--------
+> >  lib/fortify_kunit.c  |  2 +-
+> >  mm/slab.h            |  6 ++++--
+> >  mm/slab_common.c     |  4 ++--
+> >  mm/slub.c            | 14 +++++++-------
+> >  mm/util.c            |  2 +-
+> >  6 files changed, 23 insertions(+), 21 deletions(-)
 > > 
-> >  v3:
-> >   - clarify rationale and purpose in commit log
-> >   - rebase to -next (CONFIG_CODE_TAGGING)
-> >   - simplify calling styles and split out bucket plumbing more cleanly
-> >   - consolidate kmem_buckets_*() family introduction patches
-> >  v2: https://lore.kernel.org/lkml/20240305100933.it.923-kees@kernel.org/
-> >  v1: https://lore.kernel.org/lkml/20240304184252.work.496-kees@kernel.org/
-> > 
-> > For the cover letter, I'm repeating commit log for patch 4 here, which has
-> > additional clarifications and rationale since v2:
-> > 
-> >     Dedicated caches are available for fixed size allocations via
-> >     kmem_cache_alloc(), but for dynamically sized allocations there is only
-> >     the global kmalloc API's set of buckets available. This means it isn't
-> >     possible to separate specific sets of dynamically sized allocations into
-> >     a separate collection of caches.
-> >     
-> >     This leads to a use-after-free exploitation weakness in the Linux
-> >     kernel since many heap memory spraying/grooming attacks depend on using
-> >     userspace-controllable dynamically sized allocations to collide with
-> >     fixed size allocations that end up in same cache.
+> > diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > index c8164d5db420..07373b680894 100644
+> > --- a/include/linux/slab.h
+> > +++ b/include/linux/slab.h
+> > @@ -569,8 +569,8 @@ static __always_inline void kfree_bulk(size_t size, void **p)
+> >  	kmem_cache_free_bulk(NULL, size, p);
+> >  }
+> >  
+> > -void *__kmalloc_node_noprof(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment
+> > -							 __alloc_size(1);
+> > +void *__kmalloc_node_noprof(kmem_buckets *b, size_t size, gfp_t flags, int node)
+> > +				__assume_kmalloc_alignment __alloc_size(2);
+> >  #define __kmalloc_node(...)			alloc_hooks(__kmalloc_node_noprof(__VA_ARGS__))
+> >  
+> >  void *kmem_cache_alloc_node_noprof(struct kmem_cache *s, gfp_t flags,
+> > @@ -679,7 +679,7 @@ static __always_inline __alloc_size(1) void *kmalloc_node_noprof(size_t size, gf
+> >  				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+> >  				flags, node, size);
+> >  	}
+> > -	return __kmalloc_node_noprof(size, flags, node);
+> > +	return __kmalloc_node_noprof(NULL, size, flags, node);
 > 
-> This is going to increase internal fragmentation in the slab allocator,
-> so we're going to need better, more visible numbers on the amount of
-> memory stranded thusly, so users can easily see the effect this has.
+> This is not ideal as now every kmalloc_node() callsite will now have to add
+> the NULL parameter even if this is not enabled. Could the new parameter be
+> only added depending on the respective config?
 
-Yes, but not significantly. It's less than the 16-buckets randomized
-kmalloc implementation. The numbers will be visible in /proc/slabinfo
-just like any other.
-
-> Please also document this effect and point users in the documentation
-> where to check, so that we devs can get feedback on this.
-
-Okay, sure. In the commit log, or did you have somewhere else in mind?
+I felt like it was much simpler to add an argument to the existing call
+path than to create a duplicate API that had 1 extra argument. However,
+if you want this behind a Kconfig option, I can redefine the argument
+list based on that?
 
 -- 
 Kees Cook
