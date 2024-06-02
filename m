@@ -1,199 +1,150 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04olkn2051.outbound.protection.outlook.com [40.92.75.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFAA3D69;
-	Sat,  1 Jun 2024 21:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717275943; cv=none; b=rZb4JRMrhA3kEN52hN1S5vlr6P0c6UdVia3RRFLrTNWn4EbgjfPj+jhWlLNurMH1CW3hKkhqBjeWrvpfKni8eDV50Bn2b5rJ1uy6PiPtKfPUH/DW+cJFnMt15AJAcUin7i5xFaCSfYp/Xc+AY+ZF8dRi7u1qNYP9+AiYxLBQOmw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717275943; c=relaxed/simple;
-	bh=ljldlZuW5R96CDDUsml/oGI7I8C/lXL9K+6aVcKgyaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FWBsqcvadJmW90jwDfyItCc94TwqB5AEVvCvh3glASipK5mMDervO9J6HllBazNiPiIRYzzH8f6j31StujYz8H+JANluRMQyqV5EvFF2Mkd9j2Lss3goqGDC1LMoci4q/mHnHTXxm3tUUOIX5tMkjKYiarzUBXFuoLLDGMN5h9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Op6iEKu4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dBvJNwmx; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Op6iEKu4; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dBvJNwmx; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152CA1CAA6;
+	Sun,  2 Jun 2024 08:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.75.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717316330; cv=fail; b=IH+Lx27ZnKpHzWmJ8Jfiz6zIORyYKuC0AEwxatW/gSZkrM7Ttj6Z4K9k89DpXRtFMyHlVTxYv5HhoRrt8tl8KT6gA+jB7rfC3YEa/emYXGkWncemyCKBL1kXcNiV99THdD4sH6adnC5wJHLAO4uMlOlsbb4DpTdAVQwxY68m/8c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717316330; c=relaxed/simple;
+	bh=RVLSh558LEQUCGew58xaBnwmWcm/TdYO/JJX8HpSq6Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OnmLnm3raLQpvAAebh9FDlkOvoSwVvA7ZHN3DM03emf2riilp39Zch61aiqC8StDXulvySaP/Fo9kEpKvt/D5qD6QKgTwoa4Y9p1q7Uxu5yHNt2nTxIRH6TpqTiMlkmi/QKAp0XlibEiZk4qetm53wLqYvGiJ5GqnCBkDeKG77k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZCUWoacO; arc=fail smtp.client-ip=40.92.75.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Op6iEKu4";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dBvJNwmx";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Op6iEKu4";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dBvJNwmx"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A054E1FEEC;
-	Sat,  1 Jun 2024 21:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717275939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kwPPQFqT3GBMJ/jhWI+Nr3RwsaB4dK6fZEkpDAERYTQ=;
-	b=Op6iEKu4yTxsRDrm0d/07HPUnilBG3ZXoBOScKonAsdbpsdm8eG42Qb2u4gd9E458+Ii0q
-	OPI50/Ik3a0JmhHkQ4PWipL+esmZc31VHBrpDiXvjhzWvP3OXrNckhvfOrvx8p/6cWHm5U
-	lLpyyNM6Lxc/1mYsjXKh/dtqlSa+Kt0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717275939;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kwPPQFqT3GBMJ/jhWI+Nr3RwsaB4dK6fZEkpDAERYTQ=;
-	b=dBvJNwmxTHGgr7p0bqPedHGk44G5htsVc2XQKZ6S5UbiFHvwpMCe771SfHo1hi8dPSxi5H
-	pDRq8raJlRoG1cDA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Op6iEKu4;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=dBvJNwmx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717275939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kwPPQFqT3GBMJ/jhWI+Nr3RwsaB4dK6fZEkpDAERYTQ=;
-	b=Op6iEKu4yTxsRDrm0d/07HPUnilBG3ZXoBOScKonAsdbpsdm8eG42Qb2u4gd9E458+Ii0q
-	OPI50/Ik3a0JmhHkQ4PWipL+esmZc31VHBrpDiXvjhzWvP3OXrNckhvfOrvx8p/6cWHm5U
-	lLpyyNM6Lxc/1mYsjXKh/dtqlSa+Kt0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717275939;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kwPPQFqT3GBMJ/jhWI+Nr3RwsaB4dK6fZEkpDAERYTQ=;
-	b=dBvJNwmxTHGgr7p0bqPedHGk44G5htsVc2XQKZ6S5UbiFHvwpMCe771SfHo1hi8dPSxi5H
-	pDRq8raJlRoG1cDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8685D137C3;
-	Sat,  1 Jun 2024 21:05:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id k45SICONW2YUUgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Sat, 01 Jun 2024 21:05:39 +0000
-Message-ID: <03207187-9e85-412e-98a9-1965f31b0003@suse.cz>
-Date: Sat, 1 Jun 2024 23:05:39 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZCUWoacO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bLAXJnbsBzbfewKdJ8CvmE19FmwpaxdipmZP60klf6eN3BWjuKsTO2A65MbmwJhYsbXLPWbjcA6DlgfMItRI+KUwqHRmtaR4KqiKlPWNbobt2UM45JigC7UwfuG2gQvwY0ejpmHOCWWmTwbKMyO5TY00MTox3BHaY2CSK1aEkyndjOTx1N2nInSF/v76yBK5kmGS2umlOFisVkRYXhA63DgqDX1kj3ZGxUcekbmd60jZddDvHE3+MY8QIenNw7yYbCBsqu4gdh46dZrRek2/LdmMdqP6f2WuXuSBRQr5KPAIo2+RKRo0xJvvo/4kqOoqPEtV/JLt2nP+1m6zplQTmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YZMGFTuKJtqHfCuTi1jhKwZDUrlLhH4uVis8rjYKUoM=;
+ b=P3RgK4DXNhrED99Yq1TFD9S70sRg4q4dLtxQnYu3In0H4kOfJOI+0IgB8VWeyXdTAAiCbVbHSEmGYA9glfU7cFVjjiMo7kwBwNyVJrYax/yMBZNXK60vCjM2fuXKAa5TLA+HpAVwq0P1nTo4SF4tmzI5oOwz6N4dDIejU0c2dM/0WOQf7bhwDpzo2VR6Kbi6G6wln1W/Y8shLtftG/LuI8kdIYcrdGIxb5v6urTI0B8BGrLyQEwBc+tPXnNwgCJOlW/R75wXdRVmzVpkS5632VBfvja42nN+W89DChueaSNZliCQn3xcm9skzKMj4G4Gq0Bood5ANBAdGwlbSCMKjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZMGFTuKJtqHfCuTi1jhKwZDUrlLhH4uVis8rjYKUoM=;
+ b=ZCUWoacOEtse0SxZPf4pg24M4OpBKdCNWCWGmU2WQ8FOxSRBi9jdKDPOFLZo59yTfnb+4brzf8uODuCMj5AJWeD/ZulwZr7qERo1ZGZSd8gscSr9iotsisg6DuByENyE9F9ZcS3UnKCeJ3VhphyVY/mv9mnRdpOLDMT2dZo/aXKdhDJMxGUtBSlf4sruDU9peDEux4YJYJ1QsgJo+n0WpjtWAXxQBCnqFY68pejyr+dIchnz/U2R+VhfMc0gPrxikntSdboIrC4YnmQAhjMW1WRWmRAFdQWfAlmAImvpglrJps+oRC3itwsr5nm5j+gvoRhUZVL2YipeWI95VyhCeA==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by DU2PR02MB10207.eurprd02.prod.outlook.com (2603:10a6:10:46d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Sun, 2 Jun
+ 2024 08:18:43 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.021; Sun, 2 Jun 2024
+ 08:18:43 +0000
+From: Erick Archer <erick.archer@outlook.com>
+To: Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] nvdimm/btt: use sizeof(*pointer) instead of sizeof(type)
+Date: Sun,  2 Jun 2024 10:18:23 +0200
+Message-ID:
+ <AS8PR02MB72372490C53FB2E35DA1ADD08BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [u8DozTSoAjZnmjIBqh8TQse2TGCPkhDa]
+X-ClientProxiedBy: MA4P292CA0009.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2d::6) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID:
+ <20240602081823.7297-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kunit/fortify: Remove __kmalloc_node() test
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>
-Cc: linux-mm@kvack.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240531185703.work.588-kees@kernel.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
- ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
- Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
- AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
- V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
- PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
- KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
- Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
- ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
- h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
- De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
- 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
- EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
- tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
- eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
- PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
- HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
- 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
- w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
- 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20240531185703.work.588-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.40 / 50.00];
-	BAYES_HAM(-2.90)[99.56%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: A054E1FEEC
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.40
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DU2PR02MB10207:EE_
+X-MS-Office365-Filtering-Correlation-Id: 87b51c5a-de56-44ff-5306-08dc82dc9dfa
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	c/lxDm9FuiMut7tS/vXpPRy+XlmWRG9D57HOg8ndnJ1R5tvE2900DftH5tZETQTaEWwAurCxLSNA+6pU61w9gr4yJJ3ZGHk2wAiFU/Ec+ReP1Kyv4CF+ZMMYTLW9dzsOlcODZ1PQBaCyd1laoKxmdMFXQjUmn3hFpXxck9Z4X2Nd7uwehKmEsWQdszzSuIw4X1bh9ZKp2SV1BNADB+T3nHdsXdvRtfAjcfajGyovSx0rgaRQOP6EThcuV2Oll2O9Mn8y+fn2DiXOTCK1PaWYG/pxyRgUg6qnXbbsjS0p1JYLrkAm7L+2CN4IUkMVmTcSJHhdviZ4UB/gtjOq9BlvIJYdYnm7bifbePbS46TQ6fMcdhOFzumBbOZ+BeBdhmuwGYXzNNVVa4Y2hy/2whrCU03nkrgGF43i2Z8nwB2PE2hfDTjQ8/s6JBz9eDNYDXlmaQk7TJZQPsMMEZeC9iYKePOrTumStTnpenjvFuebHIM0JFlJ5pD3o1tOYLVrhNzihS0RUWmspspQ0tAUyJm29KiqPwAGXir3GZspTgOVO+1ENSHHm4YQDMNJnkzwexKZ5REN85Re//EjACo+OLlCXBSAFsQ3ThTUbe/4Cr/bFZLk4FeLPTz9nP0PWNwdx2D3
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MyjDCtnYSZsAa4VR1LHiJxn00df6vF6UTwVegsVS8JWLGf9FP5YrEvFoM5hA?=
+ =?us-ascii?Q?6DDkLbYNxW5G5aIW7UciLjYLwkv/qk/sqW4XM4fisZBsKDdQF4WfUEVa469O?=
+ =?us-ascii?Q?TBLTkbef62LklfG2/j6MTUodSf1LT7t5YtM070JdAnoR6IHNKVbrI0E9m3iq?=
+ =?us-ascii?Q?Uf1nguNPMTYQVoUPTFmOre4nE+E0j2O5HJs64izLcmBweb8L1pldsKLsf6iD?=
+ =?us-ascii?Q?fD3tDtC0hjNJLECKNS7ybcJGh1E+otqcxF06agHkK4LWIFICKnT5/+uOwlUT?=
+ =?us-ascii?Q?6NBQ/CLMZIeQDsk9P3lK3CNUySqqc/kSFzob1llmqtmVFz9tdzL6h3Bm9/l4?=
+ =?us-ascii?Q?L1nqd9fqlQkxVxODVplKW68RB+qqn6L+RqORgceH92Qcs5C142xNSAj2HCsD?=
+ =?us-ascii?Q?JcspQjXhrVPMXyCW1p/WkM/r73TUq+CV7yFek7KJ9uRn9uFwHpYRBTNUaSqy?=
+ =?us-ascii?Q?7xegoYR+WtQCCoIT5DvyZqjqQd1hDS+DfUAAz9SskTQDlM2EFOou+OSNGP/y?=
+ =?us-ascii?Q?uUxh4Ix6/9Bnlpr+DP1lCkoQmHg9oTD/0pfT+A381bw6exINsrqW67fhQFZ9?=
+ =?us-ascii?Q?xROykq00ovCx2PiqktbJetTuvR7amCnBfaNwqs86xqSU01k4WXRiYfHEuBNQ?=
+ =?us-ascii?Q?LIFYxKkcq50TxBVGcnVR/dhBv3jKTUeG5rtpS4UqVBnZJuNTO7iYtoVGaAap?=
+ =?us-ascii?Q?63wApR5rjjKv6nuToNfOuk1F1lPXB+hQwOYZjKTlIR2AQeSlhKK27Bu+b3I2?=
+ =?us-ascii?Q?sznOxsIeiUXESEsbpmm1yOH4dpSER+qhviYJKD7TGBNaYNfm4BhZlxSWCmyX?=
+ =?us-ascii?Q?rqM6b44j7XuJKRTDJeu3ljReDIMCzpKgrqcMkEYKeFkSPZMYhK83nG1CD0Ye?=
+ =?us-ascii?Q?fIpOVC833C0qpUgDIxOZ6kx4+G3nn/zupGfXH+4ANu9/hA68Nl4QhvnnZr6G?=
+ =?us-ascii?Q?9ePEG3BrWPxMsYhH24ThG+YNF2nNgDcUzFC2zHIvaoQqfzB3cGWVZGX0Fgsy?=
+ =?us-ascii?Q?PRR3o09aA9lTbzcwczYtyIJr3QR+Mvjha6X7tYe97Ms2l6CHlJC26zbq4tPr?=
+ =?us-ascii?Q?NewZEiKw5E1DQcEJTltHWxooqPOm8oBQKtfGkQ+OltlTFh7x9FmjfIVG0gE4?=
+ =?us-ascii?Q?HqB62ooSS8FsRITG8xM/wgsqt32BuTYD19uhPx/e9QS86v/WVoLqxW6YoWvn?=
+ =?us-ascii?Q?E9JDMPEmzxeYt6akO4rPak6Upw90gtswzmrr+tKUJ8VMU4zO8c9+eJYIkaWk?=
+ =?us-ascii?Q?2VOj+Hm8BJylKHomGdGp?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87b51c5a-de56-44ff-5306-08dc82dc9dfa
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2024 08:18:43.7433
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR02MB10207
 
-On 5/31/24 8:57 PM, Kees Cook wrote:
-> __kmalloc_node() is considered an "internal" function to the Slab, so
-> drop it from explicit testing.
+It is preferred to use sizeof(*pointer) instead of sizeof(type)
+due to the type of the variable can change and one needs not
+change the former (unlike the latter). This patch has no effect
+on runtime behavior.
 
-So is __kmalloc() and so I have the removal of both as part of the cleanup here:
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
+---
+ drivers/nvdimm/btt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-https://lore.kernel.org/all/20240527090127.21979-2-vbabka@suse.cz/
-
-which reminds me I should put it to -next at this point. Review still welcome :)
-
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: linux-mm@kvack.org
-> Cc: linux-hardening@vger.kernel.org
-> ---
->  lib/fortify_kunit.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-> index 39da5b3bc649..f9cc467334ce 100644
-> --- a/lib/fortify_kunit.c
-> +++ b/lib/fortify_kunit.c
-> @@ -235,9 +235,6 @@ static void fortify_test_alloc_size_##allocator##_dynamic(struct kunit *test) \
->  		kmalloc_array_node(alloc_size, 1, gfp, NUMA_NO_NODE),	\
->  		kfree(p));						\
->  	checker(expected_size, __kmalloc(alloc_size, gfp),		\
-> -		kfree(p));						\
-> -	checker(expected_size,						\
-> -		__kmalloc_node(alloc_size, gfp, NUMA_NO_NODE),		\
->  		kfree(p));						\
->  									\
->  	orig = kmalloc(alloc_size, gfp);				\
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index 1e5aedaf8c7b..b25df8fa8e8e 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -751,7 +751,7 @@ static struct arena_info *alloc_arena(struct btt *btt, size_t size,
+ 	u64 logsize, mapsize, datasize;
+ 	u64 available = size;
+ 
+-	arena = kzalloc(sizeof(struct arena_info), GFP_KERNEL);
++	arena = kzalloc(sizeof(*arena), GFP_KERNEL);
+ 	if (!arena)
+ 		return NULL;
+ 	arena->nd_btt = btt->nd_btt;
+@@ -978,7 +978,7 @@ static int btt_arena_write_layout(struct arena_info *arena)
+ 	if (ret)
+ 		return ret;
+ 
+-	super = kzalloc(sizeof(struct btt_sb), GFP_NOIO);
++	super = kzalloc(sizeof(*super), GFP_NOIO);
+ 	if (!super)
+ 		return -ENOMEM;
+ 
+-- 
+2.25.1
 
