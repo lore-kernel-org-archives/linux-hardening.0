@@ -1,117 +1,115 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E415F5821A
-	for <linux-hardening@vger.kernel.org>; Mon,  3 Jun 2024 08:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9823383BE;
+	Mon,  3 Jun 2024 08:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717403215; cv=none; b=u2GjZvMZwD8724BRIVbWZ/M13Up13pGa+lhIOQBq2YTC3K4ytOKiXkVBj2ZoRL1bCMc9J0apdsVOmqSr7ddodE9kfXokbhLph55WBQ0xZQEtjV5o9ZVeFTABYDHVjnsVkjw2z+PdIT3ydn3rHoH3se8wkXJt4jYVNkY11Uhzngk=
+	t=1717404088; cv=none; b=X0TA16Mb3pbaePZcLULsFrglXndAX31Hc4HK3rNG/W9Wdcu7i5GQrYvAAXLyV/UxWCBjM2IgsjTfSHOv7TCX+TQZRuyh31jVmWOk9rvGLQBGV8gOM4UM4/3WPUv4QBa5WG/36ucXl+S+52okOk85qdm+aHrRSLVh6tRn0cWz5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717403215; c=relaxed/simple;
-	bh=DCx2r/p/OFxtmxhQQlPl/IZZVkzLeeoV7K53BAsOblg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TK0bhPiIHvB6YgcJqhbfJWNXMrftvlxJDBBMN+IrUyMGxYsCcx17PF9PECzHbc5/YQaQL4s7B11BdHhHvlNBVbcrtsNGOmTjHkduMmZs7iMtdHSVWbkE60oq6JcfZBBherIE0IJLUlGzkRcV+BCANDldosWJtXn4lW4z5LlEh78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=e2WBLhak; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1717404088; c=relaxed/simple;
+	bh=fKoLx7kOYeVfEWenmuVw+KXEUzR3ArFKL0In9YO3j6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNC++AG2gPm8Xh1uXmJ9h1yYSTpb3jNi98c6aVMFZqRfc2hL+ZCO2g28rxEMfWbccffli+yzH7Mm4utaHzPLSu2GNSPlutJA4RFakuvZy/GDWtIfUbk4f4q8RRjuZ8RXumrQs1N4Dw1IfRMJnZh3xf4990Tw61MnA/9jlr+GBu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5eK3gvV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e2WBLhak"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id Dt50scGIGSLKxE31jsbxHR; Mon, 03 Jun 2024 08:26:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id E31isMb77HHoAE31is7Rr2; Mon, 03 Jun 2024 08:26:46 +0000
-X-Authority-Analysis: v=2.4 cv=dskQCEg4 c=1 sm=1 tr=0 ts=665d7e46
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=oyxFDGXHj6VF3crgWAIVWQ==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=xGRsDScCAAAA:8
- a=rifHBRH1XTZtWdLw4JwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=zEVfNvAIcUWeczMkmY0T:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CpKO348auTtOkpaYxnYFFOrDsx8VkfciEW5JtRsobmk=; b=e2WBLhak2xvyRkPsJmDRs3IROQ
-	YVXA+bZDSAY8Di4iBWMtbISchapu1sHGzDwmq/5+dXSgHIAW1ie9mIg/BIVkkKh5yUT9QCAnMOoER
-	j7xlKy9eSy2nlP0AO2CI+owhmjla/lpFxGA1aGCZF1itJUBajvl5H5sv4y64nx0kNFb9Vf/UotnDq
-	Kfs/u85G0HY1vlLlw6mQkyHXties1riA0UUskDbyrXCRcRRrYYffJ9zGn3Jw6PlALiVo3cEuBAqWv
-	qsXMfvNBe72rde9k84Mkwis5PZl0W5HpniYIM7KzwpmXgyRB0RHuPNE3RZfCFamzBsj45qDWU6Y/n
-	BDTgayGg==;
-Received: from 81-67-36-78.rev.numericable.fr ([81.67.36.78]:35236 helo=[10.7.154.191])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sE31f-0022kp-1V;
-	Mon, 03 Jun 2024 03:26:44 -0500
-Message-ID: <4da5ba72-6dff-46f1-b596-158c62b34f18@embeddedor.com>
-Date: Mon, 3 Jun 2024 10:26:31 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5eK3gvV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A961C2BD10;
+	Mon,  3 Jun 2024 08:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717404087;
+	bh=fKoLx7kOYeVfEWenmuVw+KXEUzR3ArFKL0In9YO3j6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S5eK3gvVgBdd3RmU/4lx4tWmr33Pn0YJBBdp3sp6wDd90SlKHniAGHiuGx9v3A+ZV
+	 x7qP3KRBcOrG1FQLT68MMCjufbbCoJz6q0UxQ7MjVexqjCwcg0nqKuw3+fcMaNe4NE
+	 Etv3Oo/ONlm/huQEH9PW3pVAomVMG5ww1RFneGBG+rw9ZIY4h4Xx7y+MW60niNjfTD
+	 xp7h8KDwe+RVkRc94XRBUOYt3ufp6buIPgk3qPaTgMwuFXEPTEfNMg2XnsN8cwlyAO
+	 A0xKNgYWAuxVaBlrBc5afKzeMR+5vCJ0jnLH2lJtv4ChMKyjwRULBg6E06orXjmJil
+	 0XLHupbgFxm2Q==
+Date: Mon, 3 Jun 2024 11:41:22 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240603084122.GK3884@unreal>
+References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
-To: Jiri Slaby <jirislaby@kernel.org>, Bill Wendling <morbo@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
- patches@lists.linux.dev, stable@vger.kernel.org
-References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
- <d7c19866-6883-4f98-b178-a5ccf8726895@kernel.org>
- <2024053008-sadly-skydiver-92be@gregkh>
- <09445a96-4f86-4d34-9984-4769bd6f4bc1@embeddedor.com>
- <68293959-9141-4184-a436-ea67efa9aa7c@kernel.org>
- <6170ad64-ee1c-4049-97d3-33ce26b4b715@kernel.org>
- <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
- <bee7240b-d143-4613-bde4-822d9c598834@embeddedor.com>
- <1313c7a5-d074-4a8f-9ab9-07e4a7716fb9@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <1313c7a5-d074-4a8f-9ab9-07e4a7716fb9@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 81.67.36.78
-X-Source-L: No
-X-Exim-ID: 1sE31f-0022kp-1V
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 81-67-36-78.rev.numericable.fr ([10.7.154.191]) [81.67.36.78]:35236
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKSNUvZxbbkUWYm5rnwZ4to5tKZsm+uhh0EO0TPh/7+DqRaSEoXoW+26hwA+94PBYZAU6/E6HkGTHbquPrOCfa2tf5qYlQheYGw2VcUpCnm8VWfXbKxj
- KTvAU3/MbbmmznGOmbHeolDchQJy0RVwT+0vx/CB0QyLN+W2/y6bLfVpm0UVtJoKWDnOJQH4nXFtOC302w4BGlaa832jM7gmh4MbTNsy3W2XGtYbU/w6ZlBU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-
-> FWIW undoing:
-> commit 7391ee16950e772076d321792d9fbf030f921345
-> Author: Peter Hurley <peter@hurleysoftware.com>
-> Date:   Sat Jun 15 09:36:07 2013 -0400
+On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
+> Allow variable size indirection table allocation in MANA instead
+> of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> indirection table is allocated dynamically.
 > 
->      tty: Simplify flip buffer list with 0-sized sentinel
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  Changes in v3:
+>  * Fixed the memory leak(save_table) in mana_set_rxfh()
 > 
-> 
-> would do the job, IMO.
+>  Changes in v2:
+>  * Rebased to latest net-next tree
+>  * Rearranged cleanup code in mana_probe_port to avoid extra operations
+> ---
+>  drivers/infiniband/hw/mana/qp.c               | 10 +--
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 68 ++++++++++++++++---
+>  .../ethernet/microsoft/mana/mana_ethtool.c    | 27 +++++---
+>  include/net/mana/gdma.h                       |  4 +-
+>  include/net/mana/mana.h                       |  9 +--
+>  5 files changed, 89 insertions(+), 29 deletions(-)
 
-So, not even _sentinel_ is actually needed? Awesome!
+<...>
 
-I wish all of these FAMs-in-the-middle were like this one. :)
+> +free_indir:
+> +	apc->indir_table_sz = 0;
+> +	kfree(apc->indir_table);
+> +	apc->indir_table = NULL;
+> +	kfree(apc->rxobj_table);
+> +	apc->rxobj_table = NULL;
+>  reset_apc:
+>  	kfree(apc->rxqs);
+>  	apc->rxqs = NULL;
+> @@ -2897,6 +2936,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  {
 
---
-Gustavo
+<...>
+
+> @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  		}
+>  
+>  		unregister_netdevice(ndev);
+> +		apc->indir_table_sz = 0;
+> +		kfree(apc->indir_table);
+> +		apc->indir_table = NULL;
+> +		kfree(apc->rxobj_table);
+> +		apc->rxobj_table = NULL;
+
+Why do you need to NULLify here? Will apc is going to be accessible
+after call to mana_remove? or port probe failure?
+
+Thanks
