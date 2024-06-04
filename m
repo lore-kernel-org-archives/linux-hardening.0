@@ -1,184 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9223823BC;
-	Tue,  4 Jun 2024 09:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B67D38B;
+	Tue,  4 Jun 2024 10:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717493636; cv=none; b=j0ZGI1AwfRjfRtSN9VZ3p3qVuzVGkrElYMbTH3rlPqQ/R0wPthh/cmwZ1bRmURuRp9y0ggT3Zg00Ba61nGc2KKOYpzcZ5Q6xf2k0WFQcjd8G0YUgwp4tvU78VTHTmopC7V6rr4lQ1yqRWQ2D4D8ELumXGKA3EuIipBVGsM3RC7A=
+	t=1717498653; cv=none; b=JtvbER1DByY38H9VxeHEtkHi25T7fBbKv+nmCQ2jAOFnm7TwOMP7RjEsF+/P0+/iocFE4+rqAPl3CIQJlfivCEKkggETl2o+mEwZTKbHSU8FSZwANV0c6IIVRhg/0d37M3oo9fnnfuSY/a3jvNlJkgVWsqfQf5RSNasG0l1RxdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717493636; c=relaxed/simple;
-	bh=JaaBIIXHCbGmOzepuoBGmKbypMRkED1xayHQDMMQjEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fH5+WqZEgPUPvtRrFeURfNYjy8BBzkfkvXLkJ1YIqyV8VQ3WpSWac8zlwOkPdSSzC4sG3oTa/FmC0J/fM17vlkX1WTarKdJRov3OBOIPJ4NC6zQve46UICJyHJD3w6jxTWQg7927PszVClhHo/ioBCP52YvMn+2KS0CILyXwIy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tn7WkOYs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tn7WkOYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88107C2BBFC;
-	Tue,  4 Jun 2024 09:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717493636;
-	bh=JaaBIIXHCbGmOzepuoBGmKbypMRkED1xayHQDMMQjEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tn7WkOYsrinLNfR1Du+opWfBFE7yf+/ugsZL2M5cccHBKPwCqejGEim1s4caAxbEn
-	 S0liFqOnftGDQmZfQQEggAZRVgKPq+hN9NQ2K20VuNln3Huid/Am6eDHY80NxSYF+Y
-	 RKwvO5HffShDqgg53uVB0aClx2p53l/w6k2exB3SLQH1aSjNRBk0xeG4R9+SAD3Rb/
-	 p3of3H88+TFLAHUS2JXWM1XLHCwGK1OTa0OtPMogh66HmhOK0fUyal4a+qSHZPq77w
-	 cYoQdQv4lTIUxBJTEL6xELT6wXRJ5mcnraBoB+xG+anxvpSQKmhLxuom2hU/Y+Jw6M
-	 AwNU8QrQN45Kw==
-Date: Tue, 4 Jun 2024 10:33:49 +0100
-From: Simon Horman <horms@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240604093349.GP491852@kernel.org>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=arc-20240116; t=1717498653; c=relaxed/simple;
+	bh=pDzZuelRd9zkUjP+3rv7hlwEiVL1Kt7S4rapZBl5Ko0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C0nBRLr8I/Ulzman+lXZoQplMz6K909UCxWGkCmhGt6yoT5YQQDrHFdtS/ynnH8DZShy1c3RZ8QsWciVEggVuu5Wlbejuw12IIklp99LsrN29k2lr0c4IGz+BYNnsnAM3S12GUFrv5SvljltHgMxTucl6R3oUDnbO0QtfmL1WjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DD4C2BBFC;
+	Tue,  4 Jun 2024 10:57:27 +0000 (UTC)
+Date: Tue, 4 Jun 2024 06:57:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
+ <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>, ardb@kernel.org
+Subject: Re: [PATCH 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240604065727.4deefc04@gandalf.local.home>
+In-Reply-To: <5DAB46F6-F415-4C2B-AA6A-E0049CF6270C@kernel.org>
+References: <20240603233330.801075898@goodmis.org>
+	<20240603233631.452433539@goodmis.org>
+	<5DAB46F6-F415-4C2B-AA6A-E0049CF6270C@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> Allow variable size indirection table allocation in MANA instead
-> of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> indirection table is allocated dynamically.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+On Mon, 03 Jun 2024 22:52:37 -0700
+Kees Cook <kees@kernel.org> wrote:
 
-...
+> On June 3, 2024 4:33:31 PM PDT, Steven Rostedt <rostedt@goodmis.org> wrot=
+e:
+> >From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> >
+> >In order to allow for requesting a memory region that can be used for
+> >things like pstore on multiple machines where the memory layout is not t=
+he
+> >same, add a new option to the kernel command line called "reserve_mem".
+> >
+> >The format is:  reserve_mem=3Dnn:align:name
+> >
+> >Where it will find nn amount of memory at the given alignment of align.
+> >The name field is to allow another subsystem to retrieve where the memory
+> >was found. For example:
+> >
+> >  reserve_mem=3D12M:4096:oops ramoops.mem_name=3Doops =20
+>=20
+> How does this interact with KASLR? It has chosen its physical location
+> before this parsing happens, so I'd expect this to fail once in a while,
+> unless the size/alignment is lucky enough that KASLR never uses that
+> portion of the physical memory...
+>=20
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+=46rom looking at the KASLR code, it looks to me that it picks from 100
+different locations. I could be wrong, but if you have sufficient memory,
+I'm thinking that it should not conflict. But if it does, yes, it will fail
+to pick the same location.
 
-...
-
-> @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
->  	return mana_create_txq(apc, net);
->  }
->  
-> +static int mana_rss_table_alloc(struct mana_port_context *apc)
-> +{
-> +	if (!apc->indir_table_sz) {
-> +		netdev_err(apc->ndev,
-> +			   "Indirection table size not set for vPort %d\n",
-> +			   apc->port_idx);
-> +		return -EINVAL;
-> +	}
-> +
-> +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-> +	if (!apc->indir_table)
-> +		return -ENOMEM;
-> +
-> +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
-> +	if (!apc->rxobj_table) {
-> +		kfree(apc->indir_table);
-
-Hi, Shradha
-
-Perhaps I am on the wrong track here, but I have some concerns
-about clean-up paths.
-
-Firstly.  I think that apc->indir_table should be to NULL here for
-consistency with other clean-up paths. Or alternatively, fields of apc
-should not set to NULL elsewhere after being freed.
-
-In looking into this I noticed that mana_probe() does not call
-mana_remove() or return an error in the cases where mana_probe_port() or
-mana_attach() fail unless add_adev also fails. If so, is that intentional?
-
-In any case, I would suggest as a follow-up, arranging things so that when
-an error occurs in a function, anything that was allocated is unwound
-before returning an error.
-
-I think this would make allocation/deallocation easier to reason with.
-And I suspect it would avoid both the need for fields of structures to be
-zeroed after being freed, and the need to call mana_remove() from
-mana_probe().
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void mana_rss_table_init(struct mana_port_context *apc)
->  {
->  	int i;
->  
-> -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-> +	for (i = 0; i < apc->indir_table_sz; i++)
->  		apc->indir_table[i] =
->  			ethtool_rxfh_indir_default(i, apc->num_queues);
->  }
-
-...
-
-> @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
->  	err = register_netdev(ndev);
->  	if (err) {
->  		netdev_err(ndev, "Unable to register netdev.\n");
-> -		goto reset_apc;
-> +		goto free_indir;
->  	}
->  
->  	return 0;
->  
-> +free_indir:
-> +	apc->indir_table_sz = 0;
-> +	kfree(apc->indir_table);
-> +	apc->indir_table = NULL;
-> +	kfree(apc->rxobj_table);
-> +	apc->rxobj_table = NULL;
->  reset_apc:
->  	kfree(apc->rxqs);
->  	apc->rxqs = NULL;
-
-nit: Not strictly related to this patch, but the reset_apc code should
-     probably be a call to mana_cleanup_port_context() as it is the dual of
-     mana_init_port_context() which is called earlier in mana_probe_port()
-
-...
-
-> @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
->  		}
->  
->  		unregister_netdevice(ndev);
-> +		apc->indir_table_sz = 0;
-> +		kfree(apc->indir_table);
-> +		apc->indir_table = NULL;
-> +		kfree(apc->rxobj_table);
-> +		apc->rxobj_table = NULL;
-
-The code to free and zero indir_table_sz and indir_table appears twice
-in this patch. Perhaps a helper to do this, which would be the dual
-of mana_rss_table_alloc is in order.
-
->  
->  		rtnl_unlock();
->  
-
-...
+-- Steve
