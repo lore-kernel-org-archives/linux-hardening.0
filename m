@@ -1,153 +1,205 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F112051C3E;
-	Tue,  4 Jun 2024 15:02:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA463148FE6;
+	Tue,  4 Jun 2024 15:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513356; cv=none; b=UKRTYUI76OTZXRFIB6DqQDIaSj2kLXWI6WRSHn+CCTcw45VcVP//u+4I9jlS1Olt3OmwbqWXaVByoJLSpTsZVZz6Tb8nJrk7vep3cHHn33w4hM3NN15ME/9MDmOAwVCVnvTmjsdFv18DBUqil64EQl26oTSpj1tZW11N8x//OdM=
+	t=1717516406; cv=none; b=J/ElMn9fnrAqKHj3Q04mRBprYqY+wqNGifUYyZiyMFLQLHCTS25Uj41KAD7XE06esu1IlUxJft+wyaIdDyTdhp7T/FBd6BJAtIa87svht6SR53OFyPuN5s0Fk6Vej4j+uOOzbygcSuA+kTNL5UlecU3UpWXjznFhBuuFSNTcJ7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513356; c=relaxed/simple;
-	bh=xtJUyNxwB7M1j6qR9LAvxbMNOmZxHaugTMRR02cMN0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N0HQKvPZoV2TroOOlgX9AvTFaaT39lKx5EbAQ4jRQtIL6FxLrzSfp6A9+cNbTwtzCi7WemwL4tms+gb4ZrokT9RSKoXnsG4j3kxtNgAgxL+VkN30g/ubAWy/66iQZf3VNTbFAVmf7cpZcIS4YzJqzb1aNUZM+Voo9p8QWQ/x9ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcFyYteG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcFyYteG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BD9C2BBFC;
-	Tue,  4 Jun 2024 15:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717513355;
-	bh=xtJUyNxwB7M1j6qR9LAvxbMNOmZxHaugTMRR02cMN0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PcFyYteGPx/DLK2FaeMM8zewZ/t0mDDBxMsBzBzhxtDLVgoapx658UcdzRfQ9xd8q
-	 Fe8q8wddXOp4eBjWidUKbiB4xyPgrvn5Ibp8p6REqg2XtX/yAmhkLI8jGVuJKXB43e
-	 aIWSCDddiK2YemWgtQ+VCuKqdcdoER9sYPiBv7ziIOKcPLdpB0fBpcfNgrcbIjK87i
-	 AR2uG6QiuS0oZOgWOcyrurtPfWoUQetrTtOtkeyVgrsi+Te46ruuoBKTGLuBT52TRK
-	 8QLogsZuUqOr1lZFpkG0nKIZ/TCwx2Enn+6TwYaR5/QM+qVYbc23ZG2QknvVuROtGN
-	 YI7pW5PhSNevQ==
-Date: Tue, 4 Jun 2024 16:02:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	jvoisin <julien.voisin@dustri.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] mm/slab: Introduce kmem_buckets_create() and
- family
-Message-ID: <20240604150228.GS491852@kernel.org>
-References: <20240531191304.it.853-kees@kernel.org>
- <20240531191458.987345-4-kees@kernel.org>
+	s=arc-20240116; t=1717516406; c=relaxed/simple;
+	bh=jqzyU34fAZG4/WHYtSv7WuekoSVYXVRfGb6ve0icGKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p24aUvh2sK+xxHKdgy6Nsc5etRY5CTEgKo1l4S7OjdgLXzMcnrN24i2KecpeN4cQrCEo2G5nkOI5AFT/v/bN9IbHUJb2/eqkeQWsl4pHDIpZORyG//m5nc3Wva1nnddlD6cegodt4qLjznDIf8yAzGpYSrbrXWn6acFsy+qIupw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D41BC2BBFC;
+	Tue,  4 Jun 2024 15:52:38 +0000 (UTC)
+Date: Tue, 4 Jun 2024 11:52:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, Allen Pais
+ <apais@linux.microsoft.com>, Sebastian Reichel
+ <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>, Guenter Roeck
+ <linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones
+ <lee@kernel.org>, Samuel Holland <samuel@sholland.org>, Elad Nachman
+ <enachman@marvell.com>, Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+ Johannes Berg <johannes.berg@intel.com>, Gregory Greenman
+ <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>,
+ Vinod Koul <vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Hans de Goede
+ <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, Nikita Kravets <teackot@gmail.com>, Jiri
+ Slaby <jirislaby@kernel.org>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Stanley Chang
+ <stanley_chang@realtek.com>, Heikki Krogerus
+ <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers
+ <ebiggers@google.com>, Kees Cook <keescook@chromium.org>, Ingo Molnar
+ <mingo@kernel.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, Abel
+ Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>,
+ Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto
+ <o-takashi@sakamocchi.jp>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ Mark Brown <broonie@kernel.org>, Kuninori Morimoto
+ <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+ <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko
+ Stuebner <heiko@sntech.de>, Peter De Schrijver <pdeschrijver@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Huang
+ Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar
+ <viresh.kumar@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
+ <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>, Jean Delvare
+ <jdelvare@suse.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, Chen-Yu
+ Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Tony
+ Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu
+ Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Miquel
+ Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Potnuri Bharat Teja
+ <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, Mahesh
+ J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
+ <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen
+ <Thinh.Nguyen@synopsys.com>, Helge Deller <deller@gmx.de>, Brian Foster
+ <bfoster@redhat.com>, Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo
+ <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner
+ <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot de
+ Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jason Baron <jbaron@akamai.com>, Jim
+ Cromie <jim.cromie@gmail.com>, Paul Moore <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Dmitry
+ Kasatkin <dmitry.kasatkin@gmail.com>, Clemens Ladisch <clemens@ladisch.de>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam
+ Girdwood <lgirdwood@gmail.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+Message-ID: <20240604115235.044acfd6@gandalf.local.home>
+In-Reply-To: <87tti9cfry.fsf@intel.com>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+	<87tti9cfry.fsf@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531191458.987345-4-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 31, 2024 at 12:14:56PM -0700, Kees Cook wrote:
+On Tue, 04 Jun 2024 10:45:37 +0300
+Jani Nikula <jani.nikula@linux.intel.com> wrote:
 
-...
+> On Sun, 02 Jun 2024, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > Make two APIs look similar. Hence convert match_string() to be
+> > a 2-argument macro. In order to avoid unneeded churn, convert
+> > all users as well. There is no functional change intended.  
+> 
+> Why do we think it's a good idea to increase and normalize the use of
+> double-underscore function names across the kernel, like
+> __match_string() in this case? It should mean "reserved for the
+> implementation, not to be called directly".
+> 
+> If it's to be used directly, it should be named accordingly, right?
+> 
+> Being in line with __sysfs_match_string() isn't a great argument alone,
+> because this adds three times the number of __match_string() calls than
+> there are __sysfs_match_string() calls. It's not a good model to follow.
+> Arguably both should be renamed.
 
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index b5c879fa66bc..f42a98d368a9 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -392,6 +392,82 @@ kmem_cache_create(const char *name, unsigned int size, unsigned int align,
->  }
->  EXPORT_SYMBOL(kmem_cache_create);
->  
-> +static struct kmem_cache *kmem_buckets_cache __ro_after_init;
-> +
-> +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
-> +				  slab_flags_t flags,
-> +				  unsigned int useroffset,
-> +				  unsigned int usersize,
-> +				  void (*ctor)(void *))
-> +{
-> +	kmem_buckets *b;
-> +	int idx;
-> +
-> +	/*
-> +	 * When the separate buckets API is not built in, just return
-> +	 * a non-NULL value for the kmem_buckets pointer, which will be
-> +	 * unused when performing allocations.
-> +	 */
-> +	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
-> +		return ZERO_SIZE_PTR;
-> +
-> +	if (WARN_ON(!kmem_buckets_cache))
-> +		return NULL;
-> +
-> +	b = kmem_cache_alloc(kmem_buckets_cache, GFP_KERNEL|__GFP_ZERO);
-> +	if (WARN_ON(!b))
-> +		return NULL;
-> +
-> +	flags |= SLAB_NO_MERGE;
-> +
-> +	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-> +		char *short_size, *cache_name;
-> +		unsigned int cache_useroffset, cache_usersize;
-> +		unsigned int size;
-> +
-> +		if (!kmalloc_caches[KMALLOC_NORMAL][idx])
-> +			continue;
-> +
-> +		size = kmalloc_caches[KMALLOC_NORMAL][idx]->object_size;
-> +		if (!size)
-> +			continue;
-> +
-> +		short_size = strchr(kmalloc_caches[KMALLOC_NORMAL][idx]->name, '-');
-> +		if (WARN_ON(!short_size))
-> +			goto fail;
-> +
-> +		cache_name = kasprintf(GFP_KERNEL, "%s-%s", name, short_size + 1);
-> +		if (WARN_ON(!cache_name))
-> +			goto fail;
-> +
-> +		if (useroffset >= size) {
-> +			cache_useroffset = 0;
-> +			cache_usersize = 0;
-> +		} else {
-> +			cache_useroffset = useroffset;
-> +			cache_usersize = min(size - cache_useroffset, usersize);
-> +		}
-> +		(*b)[idx] = kmem_cache_create_usercopy(cache_name, size,
-> +					align, flags, cache_useroffset,
-> +					cache_usersize, ctor);
-> +		kfree(cache_name);
-> +		if (WARN_ON(!(*b)[idx]))
-> +			goto fail;
-> +	}
-> +
-> +	return b;
-> +
-> +fail:
-> +	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-> +		if ((*b)[idx])
-> +			kmem_cache_destroy((*b)[idx]);
+Agreed. I want to get rid of any functions starting with an underscore
+except for those that are basically the same function used internally for
+convenience.
 
-nit: I don't think it is necessary to guard this with a check for NULL.
+Perhaps "match_string_dynamic()"? Where it is used for dynamically
+allocated arrays without known size. Or, allow a third parameter for
+dynamic arrays.
 
-> +	}
-> +	kfree(b);
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL(kmem_buckets_create);
+#define match_string(_a, _s, ...)
+	char _______STR[] = __stringify((__VA_ARGS__));	\
+	if (sizeof(_______STR) > 3)			\
+		__match_string(_a, _s, ##__VA_ARGS__);  \
+	else						\
+		__match_string(_a, _s, ARRAY_SIZE(_a));
+
+What the above stringify((__VA_ARGS__)) does is to check the size of any
+args added to match_string(). if there isn't any, it will turn into:
+"()\0", which is of size 3. If you add an argument, it will be:
+"(<arg>)\0", which will have a size greater than three.
+
+(trace_printk() does this trick in include/linux/kernel.h).
+
+This way, both:
+
+ match_string(array, sting);
+
+or
+
+ match_string(array, string, size);
+
+will work.
+
+-- Steve
+
