@@ -1,120 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE713CFA1;
-	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2A14A11
+	for <linux-hardening@vger.kernel.org>; Tue,  4 Jun 2024 00:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457720; cv=none; b=UwBG4829H7LhV2wabVkD9nhaud2VXq8CO3TZ9HfQSlpKLRYwpen4EdEZgzm4Qsq5GK7AHaQftYjcokkQDUw+KaYXVO7pb3HhaJaIyFIxNQX4xoclVtqRmPBV4VhvxFuKOqOKS7SkQLl9bX89xsxe4bpJOjGLhwDIkCxNVVgPne8=
+	t=1717460993; cv=none; b=GRkPEUmTEGFbyzV9+DzL/nfCABg1MrB9S9YVS6VGkqchs2b6n7O0MeuEcVEPTf248N0E68eSh679qyWszzW8hGzAnPS6S85olllKP/Oj3X0oHvDvL0qzicBlAbKPrETvBEY2kJWtwoxQMBo1CdxxegTIchJCFMHikKyd+9nzd14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717457720; c=relaxed/simple;
-	bh=E4KMQm1Ogt1CyuBV5VilL6zJcZs1kYG26oi9sWfoFBA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uBP6JqTmy8rluHnvSNjXNv4eCLRVHorRZ739U1a4+d3gu6W+3jq2PezPrE1pakR55khkS4r/VIHGQb4W41+37K7reCLsmDYlP8fG4hYDBI9eG1LTr3j/AzidqzlhgG/LbGqfmmQ+X1Q2wbifbbCP+SJCKl/CNXazdr8LjkwFrX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 681D3C4AF0F;
-	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sEHE7-00000009cvy-3A89;
-	Mon, 03 Jun 2024 19:36:31 -0400
-Message-ID: <20240603233631.619438489@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 19:33:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Subject: [PATCH 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
-References: <20240603233330.801075898@goodmis.org>
+	s=arc-20240116; t=1717460993; c=relaxed/simple;
+	bh=tHNlljHyl4OWf1KxKCEPYA1CiqsKpPT13VLxPLbrxl8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OPlIVQQGvQremj2LMWuRBAuFLJF+QD5wW2wJVKArBradZltz6j2xqyJpySZycxlD6gKRxPhNyM7efpaTHcrS9/fzeH9A0kRvz6HRytzAprcqcuVaihfYWRecdlwwclD9aDJSdRUgaibcFRs/N2WbywvR3k4dIV4Sgl0mG+YncBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=puxjbxBT; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="puxjbxBT"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-68196e85d64so3386439a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 03 Jun 2024 17:29:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717460991; x=1718065791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QxIMQXFvRFWSOBKMLO/Pb11VLx9FgWxOAKpcjqg1q6M=;
+        b=puxjbxBTG5z3Upww4V6uBpPm3gT6S16Fh/4hFzQnft+qQUhCffRGP8yUD+0M/Y0BTF
+         t80sR1UETBui4VWEC5izZ6Y8k0lq81iM2k9DX2auu95AjbleBwkIMJ1kYn+iRVKjqtOJ
+         TNN4BZQoewG55+6C5TOEBRUiCr5SyTNx7tpVYnQ/FTN5Bp6SapIJT+tu3hdu+PStimkS
+         0RfRGfAImQnfZdDfSfHvC814+/YkuIhFCJBEShpWm3nJuvoosaIf+iNyskVf1kJiix9d
+         BYFr2cgkFmIrb0Jmd88+P9eQ4EGysGGVrXi//MiWRpYOTrPBDwTLwfQQznIk+5cZfCKl
+         coeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717460991; x=1718065791;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QxIMQXFvRFWSOBKMLO/Pb11VLx9FgWxOAKpcjqg1q6M=;
+        b=o+OrmTcV2o3DMSBum/XkRXr0CN+nWXWO6hYpxA5Rbkicj5stdDFhSBPtMvv/PP3XAj
+         zKh7bH42/1J71L4PGIbmlQFGWk0uORWO4Zlv+csl6f6uwOD9U+IIdspzgjJhpRN00pxb
+         tzXvfvDEQSnOberCvI6SIgj4jQzBm8YJuvzp9000ThXg30ScWOuDm6G8vYQZlj8dr0cP
+         5tSo4QWq37LJk0FD0Sa/ycy/5PkaeFfFJlFDIOxXKPnKtRbQmBFqFiiE6ediQ/ZTJ0ZT
+         TGtpQwZpCgrxfIpmloCOXul9wJrMFIwMq+zU5HbJsZBkpHOly19C7aVxyn3J0gXZFGKb
+         6YcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwlXm+el7EL+xDt51suBcafJIR1E6fPaVlHlWqhTw6Esd5TdfN1nY//G8g8LgXJLsQk5SVSJ8sDmqgWj7+lR8vNQpamNT9Yz1CD+FKNB4k
+X-Gm-Message-State: AOJu0YyIKCB/EDMkJ8plC6sX7qtPZQANNy4/uKVTI0N01CNUm4eXoNrl
+	NjNaIJGt91mdOtbPJGadu+TdwvxHp7TZKUInpGAB6LCvHyUywzXFw0aZNbsL3bTDhPkwVJchjIR
+	Y2A==
+X-Google-Smtp-Source: AGHT+IENLGEaWbs37HwWar6l9tfsoGWg6m42nFsyoTQfIezFlKVeE9IraziAYhpEU9jmdwNYoPJqg3Pzh8c=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:f7c1:b0:1f4:620b:6a47 with SMTP id
+ d9443c01a7336-1f6370524bemr2945395ad.4.1717460990723; Mon, 03 Jun 2024
+ 17:29:50 -0700 (PDT)
+Date: Mon, 3 Jun 2024 17:29:49 -0700
+In-Reply-To: <20240514.OoPohLaejai6@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+References: <20240503131910.307630-1-mic@digikod.net> <20240503131910.307630-4-mic@digikod.net>
+ <ZjTuqV-AxQQRWwUW@google.com> <20240506.ohwe7eewu0oB@digikod.net>
+ <ZjmFPZd5q_hEBdBz@google.com> <20240507.ieghomae0UoC@digikod.net>
+ <ZjpTxt-Bxia3bRwB@google.com> <20240514.OoPohLaejai6@digikod.net>
+Message-ID: <Zl5f_T7Nb-Fk8Y1o@google.com>
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+From: Sean Christopherson <seanjc@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, 
+	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
+	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
+	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
+	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
+	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
+	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
+	virtualization@lists.linux-foundation.org, x86@kernel.org, 
+	xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, May 14, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> On Tue, May 07, 2024 at 09:16:06AM -0700, Sean Christopherson wrote:
+> > On Tue, May 07, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> > > If yes, that would indeed require a *lot* of work for something we're=
+ not
+> > > sure will be accepted later on.
+> >=20
+> > Yes and no.  The AWS folks are pursuing VSM support in KVM+QEMU, and SV=
+SM support
+> > is trending toward the paired VM+vCPU model.  IMO, it's entirely feasib=
+le to
+> > design KVM support such that much of the development load can be shared=
+ between
+> > the projects.  And having 2+ use cases for a feature (set) makes it _mu=
+ch_ more
+> > likely that the feature(s) will be accepted.
+> >=20
+> > And similar to what Paolo said regarding HEKI not having a complete sto=
+ry, I
+> > don't see a clear line of sight for landing host-defined policy enforce=
+ment, as
+> > there are many open, non-trivial questions that need answers. I.e. upst=
+reaming
+> > HEKI in its current form is also far from a done deal, and isn't guaran=
+teed to
+> > be substantially less work when all is said and done.
+>=20
+> I'm not sure to understand why "Heki not having a complete story".  The
+> goal is the same as the current kernel self-protection mechanisms.
 
-Add a method to find a region specified by reserve_mem=nn:align:name for
-ramoops. Adding a kernel command line parameter:
+HEKI doesn't have a complete story for how it's going to play nice with kex=
+ec(),
+emulated RESET, etc.  The kernel's existing self-protection mechanisms Just=
+ Work
+because the protections are automatically disabled/lost on such transitions=
+.
+They are obviously significant drawbacks to that behavior, but they are acc=
+epted
+drawbacks, i.e. solving those problems isn't in scope (yet) for the kernel.=
+  And
+the "failure" mode is also loss of hardening, not an unusable guest.
 
-  reserve_mem=12M:4096:oops ramoops.mem_name=oops
-
-Will use the size and location defined by the memmap parameter where it
-finds the memory and labels it "oops". The "oops" in the ramoops option
-is used to search for it.
-
-This allows for arbitrary RAM to be used for ramoops if it is known that
-the memory is not cleared on kernel crashes or soft reboots.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/pstore/ram.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index b1a455f42e93..bae8486045eb 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -50,6 +50,11 @@ module_param_hw(mem_address, ullong, other, 0400);
- MODULE_PARM_DESC(mem_address,
- 		"start of reserved RAM used to store oops/panic logs");
- 
-+static char *mem_name;
-+module_param_named(mem_name, mem_name, charp, 0400);
-+MODULE_PARM_DESC(mem_name,
-+		"name of kernel param that holds addr (builtin only)");
-+
- static ulong mem_size;
- module_param(mem_size, ulong, 0400);
- MODULE_PARM_DESC(mem_size,
-@@ -914,6 +919,16 @@ static void __init ramoops_register_dummy(void)
- {
- 	struct ramoops_platform_data pdata;
- 
-+	if (mem_name) {
-+		unsigned long start;
-+		unsigned long size;
-+
-+		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
-+			mem_address = start;
-+			mem_size = size;
-+		}
-+	}
-+
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
- 	 * parameters. If mem_size isn't set, then there are no module
--- 
-2.43.0
-
-
+In other words, the kernel's hardening is firmly best effort at this time,
+whereas HEKI likely needs to be much more than "best effort" in order to ju=
+stify
+the extra complexity.  And that means having answers to the various interop=
+erability
+questions.
