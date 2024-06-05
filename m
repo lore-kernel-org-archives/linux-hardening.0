@@ -1,120 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEFB19ADA2;
-	Wed,  5 Jun 2024 11:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFC119938C;
+	Wed,  5 Jun 2024 12:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588595; cv=none; b=A3D2M/xCLBakooKqKcjKO2K/gUp4u7KhQOGdlbSyzTRNXxDhIRfi6EPt0enOJHZmUYy2qtqrOZ9B6hEvWcSRpflQFdkOMhKCPJ4AjOd/KfNAn9EvN4oXpFw1VPbbDjMpZffhBy0S3bJQjCvwmNqvhA8HE2pZETVuyft8ajAp8UI=
+	t=1717588977; cv=none; b=uaQtarYt//Gom6YWzb8ayKEZ5UoY98AXyn4B20SJTPyX0RZGTT39nlB0Of5A9D+DPV+sLOz5Og1FVtQV2KJ5U1YEE52lRjHZU82TFRn1bcvryh2s99F/bTIX2p/j4OXku5jogRhU8BqDJ84wU1O1Km0xhJ8PAcyfp61pwVwMRWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588595; c=relaxed/simple;
-	bh=t5Sn7yEgNRHa1tbVuwIPEcuPKVsV1fgRHVGNSAGD4dE=;
+	s=arc-20240116; t=1717588977; c=relaxed/simple;
+	bh=cpLQBDYTpOjTj5+0cqgMMLMfiWdRzQ2aqkxE/qjxEpE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mduV0DKN6gDvafRRbCj/hGw6VCXjwP8QeueXrJULXutmxzCDuEslcOOhsbINoFFM8TvQdlMVlDoDx3B13b1XjIIHBqbfoot++4os9jXzYl24/4kwEYGwZBkPS1eo6Xc/RgSp2lE6dD+CniqJ05+K9Zf/vNYIS3fnemf55qXleRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGsx4Jda; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Hhgv1KkvPchuJ4aZUepcdrqIWsn1zoXHcVRax7/8F84EHLBl7UbNicdpSFwbI+WtmvUWOCb5JMLUeiPumIaP8sl5Ue1XP5BDbHz/g1FxlM/6TGLWDCWFNeLOg+brPAxPgVfTMs/mLH2pbXubjZ9LHNBeNJ2oIkeGQGt72sFkY10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqmUp035; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGsx4Jda"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B672EC32781;
-	Wed,  5 Jun 2024 11:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqmUp035"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296CDC3277B;
+	Wed,  5 Jun 2024 12:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588594;
-	bh=t5Sn7yEgNRHa1tbVuwIPEcuPKVsV1fgRHVGNSAGD4dE=;
+	s=k20201202; t=1717588976;
+	bh=cpLQBDYTpOjTj5+0cqgMMLMfiWdRzQ2aqkxE/qjxEpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SGsx4JdaWRMtEZl7Fs5wWzCzqJuqXo5rcneKUeEpPFffEUyitI3xdFo2eL9dB4VI6
-	 lqHrSdgcLk6cldXy1x26dPtz9arEqSdon+SDJ+LeHSxzW3gM+T5+ZQop1j96ettA7i
-	 qTQroR+uSeRiu7ZosIq4VDHLpGGftJ51xdu9EALrZqGqQ1BWhhC6DVszmvJSNghR+N
-	 yZfdnZaCEbbYJRAmC0X8L7Gw2j8UYDlgYqtUdxYfQT9aVKZonKSFQuPh1SYPXNKWJh
-	 T+Z2xevS6epAPvoR/grN5QIFvWjw9uW/REBq25L4iJ9JeoqmzMVFM1UanrUux7GP1z
-	 Dos2/PYVXeoaw==
+	b=lqmUp035nxaOYeI3ndmNaqokZJeYb9dlNMEga2KXNlm1ox5mqQpd4Toie3YngqjO4
+	 6dKQrHRM4C70UzIJPZu/VOi2wgFCAjyYTmkdTK26ydwHD5kg3ouYu5ILw7f3nFaIQa
+	 cEAD9ER7Vee+iNKJfFRBZ1QWrCAQltJX73Z3+ZpQqs/F2JjjWtckwtOMUh6r7n+vbJ
+	 ne7xdxWDBY3x550xE5IrZ08gbF0jwlMxf0sYBdxRb09j2aIf5JMduxXqclyzh9zIPy
+	 0M1JhnxpjAMsfH6bnJ/D6Hm4tZqEoZpiD1D1INADYz9nY6B+kYTo9tgzNT/30Hmnwo
+	 gneHFCaeDkwCQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	Phillip Potter <phil@philpotter.co.uk>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	nathan@kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 2/3] cdrom: rearrange last_media_change check to avoid unintentional overflow
-Date: Wed,  5 Jun 2024 07:56:27 -0400
-Message-ID: <20240605115631.2965331-2-sashal@kernel.org>
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Hawking.Zhang@amd.com,
+	candice.li@amd.com,
+	aurabindo.pillai@amd.com,
+	Le.Ma@amd.com,
+	li.ma@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 19/23] drm/amdgpu: silence UBSAN warning
+Date: Wed,  5 Jun 2024 08:02:02 -0400
+Message-ID: <20240605120220.2966127-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115631.2965331-1-sashal@kernel.org>
-References: <20240605115631.2965331-1-sashal@kernel.org>
+In-Reply-To: <20240605120220.2966127-1-sashal@kernel.org>
+References: <20240605120220.2966127-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.92
+X-stable-base: Linux 6.9.3
 Content-Transfer-Encoding: 8bit
 
-From: Justin Stitt <justinstitt@google.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit efb905aeb44b0e99c0e6b07865b1885ae0471ebf ]
+[ Upstream commit 05d9e24ddb15160164ba6e917a88c00907dc2434 ]
 
-When running syzkaller with the newly reintroduced signed integer wrap
-sanitizer we encounter this splat:
+Convert a variable sized array from [1] to [].
 
-[  366.015950] UBSAN: signed-integer-overflow in ../drivers/cdrom/cdrom.c:2361:33
-[  366.021089] -9223372036854775808 - 346321 cannot be represented in type '__s64' (aka 'long long')
-[  366.025894] program syz-executor.4 is using a deprecated SCSI ioctl, please convert it to SG_IO
-[  366.027502] CPU: 5 PID: 28472 Comm: syz-executor.7 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-[  366.027512] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  366.027518] Call Trace:
-[  366.027523]  <TASK>
-[  366.027533]  dump_stack_lvl+0x93/0xd0
-[  366.027899]  handle_overflow+0x171/0x1b0
-[  366.038787] ata1.00: invalid multi_count 32 ignored
-[  366.043924]  cdrom_ioctl+0x2c3f/0x2d10
-[  366.063932]  ? __pm_runtime_resume+0xe6/0x130
-[  366.071923]  sr_block_ioctl+0x15d/0x1d0
-[  366.074624]  ? __pfx_sr_block_ioctl+0x10/0x10
-[  366.077642]  blkdev_ioctl+0x419/0x500
-[  366.080231]  ? __pfx_blkdev_ioctl+0x10/0x10
-...
-
-Historically, the signed integer overflow sanitizer did not work in the
-kernel due to its interaction with `-fwrapv` but this has since been
-changed [1] in the newest version of Clang. It was re-enabled in the
-kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-sanitizer").
-
-Let's rearrange the check to not perform any arithmetic, thus not
-tripping the sanitizer.
-
-Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/354
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-Link: https://lore.kernel.org/lkml/20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com
-Reviewed-by: Phillip Potter <phil@philpotter.co.uk>
-Link: https://lore.kernel.org/lkml/ZjqU0fbzHrlnad8D@equinox
-Signed-off-by: Phillip Potter <phil@philpotter.co.uk>
-Link: https://lore.kernel.org/r/20240507222520.1445-2-phil@philpotter.co.uk
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 2 +-
+ drivers/gpu/drm/amd/include/atomfirmware.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 416f723a2dbb3..8e3eeb96db63e 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -2372,7 +2372,7 @@ static int cdrom_ioctl_timed_media_change(struct cdrom_device_info *cdi,
- 		return -EFAULT;
+diff --git a/drivers/gpu/drm/amd/include/atomfirmware.h b/drivers/gpu/drm/amd/include/atomfirmware.h
+index af3eebb4c9bcb..f732182218330 100644
+--- a/drivers/gpu/drm/amd/include/atomfirmware.h
++++ b/drivers/gpu/drm/amd/include/atomfirmware.h
+@@ -3540,7 +3540,7 @@ struct atom_gpio_voltage_object_v4
+    uint8_t  phase_delay_us;                      // phase delay in unit of micro second
+    uint8_t  reserved;   
+    uint32_t gpio_mask_val;                         // GPIO Mask value
+-   struct atom_voltage_gpio_map_lut voltage_gpio_lut[1];
++   struct atom_voltage_gpio_map_lut voltage_gpio_lut[] __counted_by(gpio_entry_num);
+ };
  
- 	tmp_info.media_flags = 0;
--	if (tmp_info.last_media_change - cdi->last_media_change_ms < 0)
-+	if (cdi->last_media_change_ms > tmp_info.last_media_change)
- 		tmp_info.media_flags |= MEDIA_CHANGED_FLAG;
- 
- 	tmp_info.last_media_change = cdi->last_media_change_ms;
+ struct  atom_svid2_voltage_object_v4
 -- 
 2.43.0
 
