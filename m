@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23F01BC07F;
-	Wed,  5 Jun 2024 11:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537631BD515;
+	Wed,  5 Jun 2024 11:56:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588566; cv=none; b=iP+L6Kmoh2sl2nyhYWJoG2AalXD7Sk32IqfMwEeocGx2c7bC2ablURjfcVsikZJETuDaBga3gM6LA8sZbGejB5b/6EjuPPpS1YSLOdoR1y45C0tcWZqqCLrtBOwWi1ixGABDZPEivVlsx5o2sYx3LiL3Or4lSkLXEW1fqL5HXlM=
+	t=1717588582; cv=none; b=D+O7XF9ELjTXrDffQKKGOc0GXJlohBQB/YYWo0T7IV3/mEIBTuJLM+SgH1aSeTK4fW8RwCNa9tOrhD2J8DR0qFXkf+qxtNtVSWBC4JNrShP68KNStKwvx4b2/X4i+AKsXBOqkCKutrgV8JbsbT4KqICP5Pb4R8h3AIt4oBYFwbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588566; c=relaxed/simple;
-	bh=IVGQzZ+Bfy2JscfdzeCCEvI9b1mRIh6om/vowOSNLVI=;
+	s=arc-20240116; t=1717588582; c=relaxed/simple;
+	bh=d40pCCEkuKjon/8B72AMqtYwBOiL7AlEvf0kD1jsMRg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ojt4En3kKbkhbgoN5rfSZyEa/zhTZah6f2m7lPqrumo2DNMBuGuOv0cn+5FsXMkzscJV0+kuIe0S5JlhBtj67mz0pkazLQkouimXwqy1ivfNbsREOoqUfAraIRURCYBdEcjFkhj2vF20kXD8lkl9jrGmMxXYAZtHpaBKd9LvfBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPfy7zcX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Juxmu0wrqh9AaGL3V4mzaOKpfisb2iSY6c2UiRRDolik1qttrOLMdOwPOaEgb4BZXi561KlmjvcUvVYnN2TJh9W6ttQ1zTR10/88zHa3UJIlDwr+tP4a50E37uQbcYdhifdPeQyz51bPyZdFh23fP7rq58tYGCxcQAgqrjkFXKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnhknYVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPfy7zcX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8405DC32786;
-	Wed,  5 Jun 2024 11:56:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnhknYVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34697C4AF08;
+	Wed,  5 Jun 2024 11:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588565;
-	bh=IVGQzZ+Bfy2JscfdzeCCEvI9b1mRIh6om/vowOSNLVI=;
+	s=k20201202; t=1717588582;
+	bh=d40pCCEkuKjon/8B72AMqtYwBOiL7AlEvf0kD1jsMRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iPfy7zcXhUbdRxgze+cu/4NKfA/aMAIgJEePD/Eml//r4pE54h/BKe16RnkMJxF1O
-	 jPuwsmVc7ihtFCjGchwcgtuh2B60nrt6BPDYW1OJozc+EY8zMdyI5cAqgLu4b+J4ST
-	 o6fZRx//XJbl/gjwCsXx6H2EsAAQbXhvFlPV11FoKnJFghZC8vDzJRaoQN1R82Xrbj
-	 dNp9GN6c73sQ0IvpsrArNWBQFl4/p6tsSgm229nfi1zAFgVNW+fwjC918EZJJtKSj7
-	 rkh7tdqbuJ6UiZrCaa+claM9jJDybrNjAKYBtwdzg/1Qqx6T/pegx0x4BWno6h55Dh
-	 tNa2/kWxKxIJg==
+	b=pnhknYVAV4g5ALYh+pgDCCR+I+blNhcqfgBjxcMEgan4+gJ3AS5tiTkFxdQKJshtK
+	 4wTFuKIqfeazNLvrSc0U5wzOd3cxZ+6K4bvTEHCbdySQDSKB6z9T/DVIrAZKOKkncb
+	 zVabeFswb5HSahpY+NeC2CQRVVVzUZvI4TWRDREItb72nic4G4eEifKVLYgVIDtk8r
+	 svznGIqwL+JKXroazaiC2tu012qJIJvMbkb9+SDiB+TtA8hhcp+01kS3pfcZkjEfdt
+	 1v+dQCJoLEp/VEs29ngvSKmHhzWQPKKGOHxIwfzRJrxI4suOYrQ4K7+FCEU3DeD76R
+	 YTGUrgl7w/NvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -36,12 +36,12 @@ Cc: Justin Stitt <justinstitt@google.com>,
 	Sasha Levin <sashal@kernel.org>,
 	nathan@kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.8 2/6] cdrom: rearrange last_media_change check to avoid unintentional overflow
-Date: Wed,  5 Jun 2024 07:55:54 -0400
-Message-ID: <20240605115602.2964993-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 2/4] cdrom: rearrange last_media_change check to avoid unintentional overflow
+Date: Wed,  5 Jun 2024 07:56:14 -0400
+Message-ID: <20240605115619.2965224-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115602.2964993-1-sashal@kernel.org>
-References: <20240605115602.2964993-1-sashal@kernel.org>
+In-Reply-To: <20240605115619.2965224-1-sashal@kernel.org>
+References: <20240605115619.2965224-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.12
+X-stable-base: Linux 6.6.32
 Content-Transfer-Encoding: 8bit
 
 From: Justin Stitt <justinstitt@google.com>
@@ -103,7 +103,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index a5e07270e0d41..20c90ebb3a3f6 100644
+index cc28398059833..01f46caf1f88b 100644
 --- a/drivers/cdrom/cdrom.c
 +++ b/drivers/cdrom/cdrom.c
 @@ -2358,7 +2358,7 @@ static int cdrom_ioctl_timed_media_change(struct cdrom_device_info *cdi,
