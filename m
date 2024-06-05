@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A921C5380;
-	Wed,  5 Jun 2024 12:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5731C95C7;
+	Wed,  5 Jun 2024 12:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717589028; cv=none; b=NOI4cEiWvTn0qND55qdQH4JGwbn33VQfxCI6MeGBnh1NHKWsLBKSEGK6ZqPNRjjx6z5G1b/6HI2bsXoBvc7N3guYJhACnFtmQXv0GJHv43EGcf1MId87hBi3Rqy3gxssy6p2qgTzrWp+ddwy1mYUWNbvy5ISnjMiFl/lHbdbyx4=
+	t=1717589077; cv=none; b=NCCnpbpQEVpyCVwFwn1KvIcWXbCfT6lGPIIxFBsXsyD7AlmMyr46gEWvXzU7yBb1lUkWPAxY+K9XaD8fiq2HBKSmE4YSM11ZxWC5C1zZH9wbhR8lfftD6+NzG1a+5IRLgFezoeGvRgHgUbp9gjbqtUTWAQkxdQgb1PWIIx/iMwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717589028; c=relaxed/simple;
+	s=arc-20240116; t=1717589077; c=relaxed/simple;
 	bh=mhF2FMNKnJzLhKnTFHQyPQ5Vg1uXY8LbYLMJ+EGQuNA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a/ldPYOWx8o6xUzJIkNN5IR6gPAto2zMEogEtV1lyIj3cVT7mohGfXZnnmQ8TNwtJitfKAZLsP8Fg5amngFpdNmB8eKiHX6CUmKrnr+I6ugRdOEY38MmEaYODdM5oC51Sxfm+CL1imaBo2fMgBBOPlOvSlEOeVT9gvun2TUfXhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cK5zq9lf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lR2KpSvCAV6ueQCa6hfAw/xm48tVaCCguoLK63MrmXos1fESJUABt7uzAC0g5JRbVOCf78qaogv2+edleBYSRdJ4jyVSWgoVOxYCXd7OpA2d6Lp5/16Sy7rlR+6QJmEfnzMwbwJbR/XQKKR48jZvmXkEjZjsjfaT+ZBRMdVkVaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dy+Dhs3n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cK5zq9lf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD869C4AF09;
-	Wed,  5 Jun 2024 12:03:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dy+Dhs3n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5B0C32781;
+	Wed,  5 Jun 2024 12:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717589027;
+	s=k20201202; t=1717589076;
 	bh=mhF2FMNKnJzLhKnTFHQyPQ5Vg1uXY8LbYLMJ+EGQuNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cK5zq9lf4DIUHy1FPxwUwMHWtD8lBAGBP2rahqF4iEJlq4q66lDm9q/kjtku2T/n7
-	 m/P9WXd3pfY2UJQCo1Y4/ihP270odcT60WieTl3bkfBZSEpeqT86An5eKfBuphH6WB
-	 GtW1dCFz+IfjhJCwjpxPOJJOUQOMVgZ3B/j5Rc7uT1io65j3VxE+eCWm39SP1t+if/
-	 9k9SpT3u8ZUL1cBZq2aJq5rB448FNN0bxuUS3bKQu14nl6j4EB2CGaByzOu5aSkaqF
-	 rk4Qo/QvTF1BS+/fXSOm9UawZoXnMeqdDEtlt9y4eiAYu90HLEbuQfAMn5Ea1MF8gu
-	 rFJa0wLsVpL1Q==
+	b=dy+Dhs3nnUWzMDjtYr53dzY9b3qtqladJB+cCDZS/v/CA2stXsid16hOruWk2c5ck
+	 urkXTiHQ06oMa5FCtuvnSCPsTy0oK7DxgoytcqcU+8xQH2gqTQra1n+QBWeNEQwNbE
+	 tfM+Ap+RDDM58GSZkMospq+5buP9kHTFSY0AP2C1MlfRgrE/PHNsTm/CQu6tkkuyp3
+	 Y33xBCNFaD61fHnLfYZKVxFnC360WHM7Y3mLIStLqbRH7TuLCMdmNOQCJZmWLsZDXp
+	 RAsKpG2V8Pf4vjr8AtvWay9DzDKj/sV/BIJZCMQjmUT6giDVe6P3iOjJvwUpXlCX7y
+	 5k1wD8NA3XJrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,19 +37,17 @@ Cc: Alex Deucher <alexander.deucher@amd.com>,
 	daniel@ffwll.ch,
 	Hawking.Zhang@amd.com,
 	candice.li@amd.com,
-	Le.Ma@amd.com,
-	lijo.lazar@amd.com,
-	aurabindo.pillai@amd.com,
 	li.ma@amd.com,
+	aurabindo.pillai@amd.com,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 15/18] drm/amdgpu: silence UBSAN warning
-Date: Wed,  5 Jun 2024 08:03:05 -0400
-Message-ID: <20240605120319.2966627-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 15/18] drm/amdgpu: silence UBSAN warning
+Date: Wed,  5 Jun 2024 08:03:54 -0400
+Message-ID: <20240605120409.2967044-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605120319.2966627-1-sashal@kernel.org>
-References: <20240605120319.2966627-1-sashal@kernel.org>
+In-Reply-To: <20240605120409.2967044-1-sashal@kernel.org>
+References: <20240605120409.2967044-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,7 +57,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.12
+X-stable-base: Linux 6.6.32
 Content-Transfer-Encoding: 8bit
 
 From: Alex Deucher <alexander.deucher@amd.com>
