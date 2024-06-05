@@ -1,127 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6878C154BF9;
-	Wed,  5 Jun 2024 19:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8615E567;
+	Wed,  5 Jun 2024 21:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717617281; cv=none; b=Kfl1syNWNudVCil5nKZiG8t6HS5+9fKCuPoZIgVXmFLb1nEz72rjzWp7JoaueDn3lv6Sf7aNWRpqOCcuRaPpAiw19S9V/59awVIDBAbEI5XwQyy3fwec5lLXjp96PAbSuk5yfe7ZNbqF4FGitk4OKeeaLcvRRMbglpdDKcBmkE0=
+	t=1717624194; cv=none; b=SQMaAZjVpCQjsgFzgZFt7I6xJRSc+8lcSRzH5qGjhxFU0P7FQ+lMfcU1BWkumTtMINCQrVtgwb1+H+HAd1sLoo3ndjooe6RuJmS//+AKTxEE8SFG1cLAVrgdy4kKcj7cA4NpS5KKc9xRPM/dyNU/74Qt8oycREJcXa2vPV0r+yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717617281; c=relaxed/simple;
-	bh=C/d+QzzEEXD3nP3fLH1CEjnoNOPR1mWYBBp0rsQc8ZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QdVqB52L53dKHW8jBUVx8VCkkNXo2uDoG/VKW/Rb7Z/W4IY8Oi9oVm5kqNxdfwBbjXqAnPcQ0VOUjgRI5qm5kylNcKN/zCzwazS8Ua8mNkV7LA3q271T7VNqWqSgK8wB/vrUOSQEEiCkxv6ytsLl62QIxFaKfMBaINDtuFTRy9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bo+Tymvp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717624194; c=relaxed/simple;
+	bh=zP4xiCVTeFjDQ2g8+oWzfck6hLqdQuFRlgxNThaxc9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r/VfjTTKtQrBMllhEhVjrdu4aHgVWCTD568DwFA+/EzGeqk2TTjo1SqECkdXhQguzeuC8vl6CQ0Oy3RuP7miCSMIV1uRP831+xptFqf+eXA07jfWN3pvQ4I8kUZbESq7av40ut+BWs/PcN4TldW0LPpiBV9q5LS0JRWmkQOBEDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MeBImASB; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bo+Tymvp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46803C2BD11;
-	Wed,  5 Jun 2024 19:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717617281;
-	bh=C/d+QzzEEXD3nP3fLH1CEjnoNOPR1mWYBBp0rsQc8ZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bo+TymvpxxRc2c3hAxES9XbNbQqulQYx1SsCVi28ZwWJLt7AFPjcGIX9mbNoBkJ65
-	 jDahOBbTgwf17xQ4MB/Paf0qi84pSEdTOsZU03OVY+Mo76vLIlYJzMofh0I4bQF2h3
-	 LTFJ6sQzuBR5IuaobyoHBIQLudhDWvyRUaxN783YjdX7bWIUmjqAcw+UloBJNWpprc
-	 t/6aZNUqUZTX7TsETyB5gt4XVB3sUmwOsaaNu/kOtJ8waFsyKw0wgl2Hm0ER40ncaG
-	 GGVUd//wgrYXjnuHbZx1++O21swJtbbqoEcau3lj8WW9wCEFFQ2EZUSKuNbTLgofRW
-	 O7u+xQN4j/MLg==
-Date: Wed, 5 Jun 2024 20:54:33 +0100
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Tycho Andersen <tycho@tycho.pizza>, Vlastimil Babka <vbabka@suse.cz>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	jvoisin <julien.voisin@dustri.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] mm/slab: Introduce kmem_buckets_create() and
- family
-Message-ID: <20240605195433.GA791188@kernel.org>
-References: <20240531191304.it.853-kees@kernel.org>
- <20240531191458.987345-4-kees@kernel.org>
- <20240604150228.GS491852@kernel.org>
- <Zl+RjJDOX45DH6gR@tycho.pizza>
- <202406041749.27CAE270@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MeBImASB"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f6342c5faaso3027645ad.2;
+        Wed, 05 Jun 2024 14:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717624192; x=1718228992; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mra14dtkVef2CjOKhqBiFqoZuy1AZRPuVONw1kE8dTA=;
+        b=MeBImASByN9z3tLI5ZzanTIcST2dTz7F4rRyyU6COYerVe4/LWVc+qUB3XGmJTuXdd
+         0wxzN4wljy+G6nIsA4CI4sGMTSyLoURnJFZ3vGYKXB/iw55BE6vXUZzgWgTU0d9JunUF
+         Z6acO7T3I1WTTPVDhR/0GiKrnbuDhYKieOPPpiW4n+Bttx2LLuGekMiwt4VNJGSuxvjk
+         PXUHXeaCooyTgimv0BtYuEFd63CR1KxdC5nSaB7+54RyhiC9NCsuSfvw6QdtGPyEy6+X
+         8MuCoQU3H7n+ZDMFc4m5nAR5EXfx6yHHQzk59EZhDZmdmNNDehqmda3kmy7+9DAwV8J5
+         zY2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717624192; x=1718228992;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mra14dtkVef2CjOKhqBiFqoZuy1AZRPuVONw1kE8dTA=;
+        b=qpryGGdq6EONTzJW6+JEyLIE0EExuZ/dvGXq3CVHnwJDVuvRHZiRLQ/otGtKf3m4aX
+         UDf8Pomk7xo4+9k6H0QxSybE7QGGZUM4OFzjS3g1Udc94uYhRzCQtdEC1PW/6KIoGU9J
+         NgjgESUXiYCiRnb6tGJWOEnRxsYkUf4EnGu1u9vGp2dgV/fkYTQMgULqTW+mk8djiIO8
+         s3ZUDS5WEx5Aa0+LuWo9qNGUnRMw0wfhD0HDClvlFbNtQDtLmKDTtVBw5p+tdnRYjNKT
+         13zrrsbAAJLEMl4p/C6m0tWW7s5JBOm5Wl0d4YnEnemqRyxysOhi8c3/ibrM+GnxCfZC
+         GHpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCeMgkKlc+O7tQWnDW6yi773S41CJdL21LliX5aGCgHhvUZdD/AFxHBjlNMm+QHAohQPolJDNRfSJdz3qqiIkVqkEvo6yPcsLJrJWWRsde0bUNvTNK0n8tRxfz+THqFM+DPaqVkf+YtssCV2I6
+X-Gm-Message-State: AOJu0YzDbyZFFc8xCy0L7Gd8HeoXSoO5R0H5mr1i32Acl0RRkR4RbjzY
+	17blqHuznYJV1OFb1xNKmMLpXiDz2dqkk2nnG54QelxvuwGvAedY
+X-Google-Smtp-Source: AGHT+IF8zcApnyKMWBgo8KAhBV9dN87m8EgulrWk7ipu2gzPithGAqspUyJGunWKYTmRcpe9XoWn4A==
+X-Received: by 2002:a17:902:d4cd:b0:1f4:620b:6a27 with SMTP id d9443c01a7336-1f6a5a02a74mr43804285ad.13.1717624191768;
+        Wed, 05 Jun 2024 14:49:51 -0700 (PDT)
+Received: from dev0.. ([49.43.162.143])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd75effasm228855ad.29.2024.06.05.14.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 14:49:51 -0700 (PDT)
+From: Abhinav Jain <jain.abhinav177@gmail.com>
+To: keescook@chromium.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com,
+	jain.abhinav177@gmail.com,
+	julia.lawall@inria.fr
+Subject: [PATCH v2] pstore/ram: Replace of_node_put with __free() for automatic cleanup
+Date: Wed,  5 Jun 2024 21:49:44 +0000
+Message-Id: <20240605214944.22113-1-jain.abhinav177@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406041749.27CAE270@keescook>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 04, 2024 at 05:49:20PM -0700, Kees Cook wrote:
-> On Tue, Jun 04, 2024 at 04:13:32PM -0600, Tycho Andersen wrote:
-> > On Tue, Jun 04, 2024 at 04:02:28PM +0100, Simon Horman wrote:
-> > > On Fri, May 31, 2024 at 12:14:56PM -0700, Kees Cook wrote:
-> > > > +	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-> > > > +		char *short_size, *cache_name;
-> > > > +		unsigned int cache_useroffset, cache_usersize;
-> > > > +		unsigned int size;
-> > > > +
-> > > > +		if (!kmalloc_caches[KMALLOC_NORMAL][idx])
-> > > > +			continue;
-> > > > +
-> > > > +		size = kmalloc_caches[KMALLOC_NORMAL][idx]->object_size;
-> > > > +		if (!size)
-> > > > +			continue;
-> > > > +
-> > > > +		short_size = strchr(kmalloc_caches[KMALLOC_NORMAL][idx]->name, '-');
-> > > > +		if (WARN_ON(!short_size))
-> > > > +			goto fail;
-> > > > +
-> > > > +		cache_name = kasprintf(GFP_KERNEL, "%s-%s", name, short_size + 1);
-> > > > +		if (WARN_ON(!cache_name))
-> > > > +			goto fail;
-> > > > +
-> > > > +		if (useroffset >= size) {
-> > > > +			cache_useroffset = 0;
-> > > > +			cache_usersize = 0;
-> > > > +		} else {
-> > > > +			cache_useroffset = useroffset;
-> > > > +			cache_usersize = min(size - cache_useroffset, usersize);
-> > > > +		}
-> > > > +		(*b)[idx] = kmem_cache_create_usercopy(cache_name, size,
-> > > > +					align, flags, cache_useroffset,
-> > > > +					cache_usersize, ctor);
-> > > > +		kfree(cache_name);
-> > > > +		if (WARN_ON(!(*b)[idx]))
-> > > > +			goto fail;
-> > > > +	}
-> > > > +
-> > > > +	return b;
-> > > > +
-> > > > +fail:
-> > > > +	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-> > > > +		if ((*b)[idx])
-> > > > +			kmem_cache_destroy((*b)[idx]);
-> > > 
-> > > nit: I don't think it is necessary to guard this with a check for NULL.
-> > 
-> > Isn't it? What if a kasprintf() fails halfway through the loop?
-> 
-> He means that kmem_cache_destroy() already checks for NULL. Quite right!
-> 
-> void kmem_cache_destroy(struct kmem_cache *s)
-> {
->         int err = -EBUSY;
->         bool rcu_set;
-> 
->         if (unlikely(!s) || !kasan_check_byte(s))
->                 return;
+Add __free(device_node) to the parent_node struct declaration
+Add changes to incorporate the review comments from v1
 
-Yes, thanks. That is what I was referring to.
+Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
+
+PATCH v1 link:
+https://lore.kernel.org/all/20240415161409.8375-1-jain.abhinav177@gmail.com/
+
+Changes since v1:
+ - Moved the variable definition back to the top of the function body
+---
+ fs/pstore/ram.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 14f2f4864e48..f8258e4567c3 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -644,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+ 			    struct ramoops_platform_data *pdata)
+ {
+ 	struct device_node *of_node = pdev->dev.of_node;
++	struct device_node *parent_node __free(device_node) = of_node_parent(of_node);
+ 	struct resource *res;
+ 	u32 value;
+ 	int ret;
+@@ -703,7 +704,6 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+ 	 * we're not a child of "reserved-memory" and mimicking the
+ 	 * expected behavior.
+ 	 */
+-	struct device_node *parent_node __free(device_node) = of_node_parent(of_node);
+ 	if (!of_node_name_eq(parent_node, "reserved-memory") &&
+ 	    !pdata->console_size && !pdata->ftrace_size &&
+ 	    !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
+-- 
+2.34.1
+
