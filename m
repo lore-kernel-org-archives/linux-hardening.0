@@ -1,149 +1,144 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BDA2BD0D
-	for <linux-hardening@vger.kernel.org>; Wed,  5 Jun 2024 06:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C363B19006E
+	for <linux-hardening@vger.kernel.org>; Wed,  5 Jun 2024 08:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717568639; cv=none; b=CtAntl+oMK5Nk9g/4ZPJ/Y/v0KGVEtjyRm6nQSUX3ptnfAMBpADUFedgXh4ZY4hYPy7aJ/z3S+JJf1Cub50Dp9CH5VQxHrJ7r3WY/PBCJKmBZKyLru23hwCzyFVvZLui+HLjBsRgqErn+cf0NRjcz3RA8ps6ajKgiODTRcenzD8=
+	t=1717575747; cv=none; b=OrYFas0cv0H8GC1KnfOkBU5bgvaqR+qUQGhwTTSYflCS6+S9oPJwP0QqxvgSHHembW1r5Q8pKoTpTQ2ds2KCjAaaRVoLhoq+pDbVDX8IzSqZ7ZksYSeNQaukWCWL5e6DNbyPU7JlVD95TPwQewbOi7Fp5NbuWRt95SePFhC7Q8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717568639; c=relaxed/simple;
-	bh=D1FGYykQrnI/TmCi/edyw84RB2hRS16xw2RjxjfQM+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XpINLvmw/pPHeMu6Pdtm+yh17J/7Xe/eaRq8WVmALUlZmx1sHA+9yo9+FqOcvCLokjWTAsUd6chyfP2+RGi5b1QSqofVEhdf1JBng9Ktx2RrVdFqO/+/IfDRsKQ9FdhOQBhwWsDYQAsHNGcb8a+jwXiB8PVJ+JtcIJzEFiztzYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1717568626-1eb14e157518a10001-PleebU
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id wzHAcNBuJgAVOrCV (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 05 Jun 2024 14:23:46 +0800 (CST)
-X-Barracuda-Envelope-From: TonyWWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 5 Jun
- 2024 14:23:45 +0800
-Received: from [10.32.65.162] (10.32.65.162) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.27; Wed, 5 Jun
- 2024 14:23:43 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <0aff3f62-a8a5-4358-ae3f-2ded339aface@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.65.162
-Date: Wed, 5 Jun 2024 14:23:32 +0800
+	s=arc-20240116; t=1717575747; c=relaxed/simple;
+	bh=r08FZZCbb4PqL2wKVDhzXY2U1+vU+mtMPQ8v9bt1+Po=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKvRLkyUPIy9aF3AKrl4BB1BgW+NZFww2/Kk1DHcaKIXOcD8r8qZrnojwwG6q1oh6F8Wmpq8uLCd6FfQg4jMnpKlAius8iCnw0In7IEodMgvIZuC7ofQPGaMPUmQP8u6sVuP5pTT4IGZFZ1O1jzhAJxrd1pO7L9k5CmQm5FJZuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pf9EOmbr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pf9EOmbr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717575744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BN2s5RkmRwWRATVy8iKU5IoEWdjTC3uEaBsPoMrm1Tw=;
+	b=Pf9EOmbr739OWnrK0ELw34gwZnTb/stZt4WKOMZQK6OUWcUqD06kV4v0CiSiJ4pxYWPL6m
+	D1HMGePWit2J5xDLv7Z7ySRxBjHbk31FlKVxIS1Wg7K9fsl3XYfMeAizZCc3RnnWhCCrPi
+	WL8luD7mhteuknRJ6KAiRn1u9ZXJBGs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-VB7HM_AlMjizRozuDTrOFQ-1; Wed, 05 Jun 2024 04:22:17 -0400
+X-MC-Unique: VB7HM_AlMjizRozuDTrOFQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0112F101A520;
+	Wed,  5 Jun 2024 08:22:17 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.93])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 10CF6202A438;
+	Wed,  5 Jun 2024 08:22:15 +0000 (UTC)
+Date: Wed, 5 Jun 2024 16:22:12 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+Message-ID: <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-3-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-To: Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds
-	<torvalds@linux-foundation.org>
-X-ASG-Orig-Subj: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-CC: Dave Hansen <dave.hansen@intel.com>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-	<mat.jonczyk@o2.pl>, <rdunlap@infradead.org>,
-	<alexandre.belloni@bootlin.com>, <mario.limonciello@amd.com>,
-	<yaolu@kylinos.cn>, <bhelgaas@google.com>, <justinstitt@google.com>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<CobeChen@zhaoxin.com>, <TimGuo@zhaoxin.com>, <LeoLiu-oc@zhaoxin.com>
-References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
- <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com> <87wmnda8mc.ffs@tglx>
- <CAHk-=wgMoeOTL1V3wTO=o=U1OXn7xF8OWv2hB9NF9Z=G4KotfQ@mail.gmail.com>
- <87le3t9i8c.ffs@tglx>
-Content-Language: en-US
-From: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-In-Reply-To: <87le3t9i8c.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1717568626
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 2578
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.125820
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-3-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+.....
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> new file mode 100644
+> index 000000000000..78809189084a
+> --- /dev/null
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -0,0 +1,113 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <keys/user-type.h>
+> +#include <linux/crash_dump.h>
+> +
+> +#define KEY_NUM_MAX 128
+> +#define KEY_SIZE_MAX 256
+> +
+> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
+> +#define KEY_DESC_LEN 48
+> +
+> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
+> +static enum STATE_ENUM {
+> +	FRESH = 0,
+> +	INITIALIZED,
+> +	RECORDED,
+> +	LOADED,
+> +} state;
+> +
+> +static unsigned int key_count;
+> +static size_t keys_header_size;
 
+These two global variables seems not so necessary. Please see comment at
+below.
 
-On 2024/5/29 15:42, Thomas Gleixner wrote:
-> 
-> 
-> [这封邮件来自外部发件人 谨防风险]
-> 
-> Linus!
-> 
-> On Tue, May 28 2024 at 16:22, Linus Torvalds wrote:
->> On Tue, 28 May 2024 at 15:12, Thomas Gleixner <tglx@linutronix.de> wrote:
->> I see the smiley, but yeah, I don't think we really care about it.
-> 
-> Indeed. But the same problem exists on other architectures as
-> well. drivers/clocksource alone has 4 examples aside of i8253
-> 
->>>    1) Should we provide a panic mode read callback for clocksources which
->>>       are affected by this?
->>
->> The current patch under discussion may be ugly, but looks workable.
->> Local ugliness isn't necessarily a show-stopper.
->>
->> So if the HPET is the *only* case which has this situation, I vote for
->> just doing the ugly thing.
->>
->> Now, if *other* cases exist, and can't be worked around in similar
->> ways, then that argues for a more "proper" fix.
->>
->> And no, I don't think i8253 is a strong enough argument. I don't
->> actually believe you can realistically find a machine that doesn't
->> have HPET or the TSC and really falls back on the i8253 any more. And
->> if you *do* find hw like that, is it SMP-capable? And can you find
->> somebody who cares?
-> 
-> Probably not.
-> 
->>>    2) Is it correct to claim that a MCE which hits user space and ends up in
->>>       mce_panic() is still just a regular exception or should we upgrade to
->>>       NMI class context when we enter mce_panic() or even go as far to
->>>       upgrade to NMI class context for any panic() invocation?
->>
+> +
+> +struct dm_crypt_key {
+> +	unsigned int key_size;
+> +	char key_desc[KEY_DESC_LEN];
+> +	u8 data[KEY_SIZE_MAX];
+> +};
+> +
+> +static struct keys_header {
+> +	unsigned int key_count;
+                     ~~~~~~~~
+                     This is the max number a system have from init();
+You can add one field member to record how many key slots have been
+used.
+> +	struct dm_crypt_key keys[] __counted_by(key_count);
+> +} *keys_header;
 
-After MCE has occurred, it is possible for the MCE handler to execute 
-the add_taint() function without panic. For example, the fake_panic is 
-configured.
+Maybe we can rearrange the keys_header like below, the name may not be
+very appropriate though.
 
-So the above patch method does not seem to be able to cover the printk 
-deadlock caused by the add_taint() function in the MCE handler when a 
-MCE occurs in user space.
+static struct keys_header {
+	unsigned int max_key_slots;
+	unsigned int used_key_slots;
+	struct dm_crypt_key keys[] __counted_by(key_count);
+} *keys_header;
 
-Sincerely
-TonyWWang-oc
+>
 
->> I do think that an NMI in user space should be considered mostly just
->> a normal exception. From a kernel perspective, the NMI'ness just
->> doesn't matter.
-> 
-> That's correct. I don't want to change that at all especially not for
-> recoverable MCEs.
-> 
->> That said, I find your suggestion of making 'panic()' just basically
->> act as an NMI context intriguing. And cleaner than the
->> atomic_read(&panic_cpu) thing.
->>
->> Are there any other situations than this odd HPET thing where that
->> would change semantics?
-> 
-> I need to go and stare at this some more.
-> 
-> Thanks,
-> 
->          tglx
+> +
+> +static size_t get_keys_header_size(struct keys_header *keys_header,
+> +				   size_t key_count)
+> +{
+> +	return struct_size(keys_header, keys, key_count);
+> +}
+
+I personally don't think get_keys_header_size is so necessary. If we
+have to keep it, may be we can remove the global variable
+keys_header_size, we can call get_keys_header_size() and use local
+variable to record the value instead.
+
