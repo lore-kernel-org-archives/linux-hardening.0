@@ -1,203 +1,91 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5C324963E;
-	Wed,  5 Jun 2024 08:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C9C19006D;
+	Wed,  5 Jun 2024 09:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717576748; cv=none; b=bBqgBXiHTKtnlmPGPGLsThf5q+nlPblj+RoNSQnDcxFvGogo1gSSdTBVAyfURlt9SXu5Juq+wODpwbT3vDhJfnXg7Ef6x3wpAdSbNXIwSSDO/+z/QuHIBnG7We/UhcbUka0TqXDNitp3+Tv0CCvLUVSbOrNH2sDNZdOGRuBnSIk=
+	t=1717580212; cv=none; b=s0NCjbaLvYEFvipxrBbccxTGBFpI7Dp30wCNDtqllns8M8sTeAfz8YMja8POw6dxFBGQ9s3M/X/vQQfdDNsdUJr56nYtMzco1OXdahqo4Mx1tUZiAo4KtjNfu8GEJvQXqr4vp+LV3mymU61OgOvlq0gpGhfHMe2SSLUE98Pb/Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717576748; c=relaxed/simple;
-	bh=CNAuilfiRwwKm0fGNUOB0FH43WBrxg4Srl1Cepe++Do=;
+	s=arc-20240116; t=1717580212; c=relaxed/simple;
+	bh=M77RrYoGQJJU2kRPKFShDM2HV1XAifjZT53RIOfzF74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ashag912Xmsgkj1v3d1VQakwdi438KNAGYLQtacsom2XSKIaWvXcsJ9j5jxCUbKxTUb6pLBomch2ei33E8hN+qtkz8xV+BybGqx78jagWqsUUBGNzw0LJqI9AVFj8QJl1uTLv4LW7Q3LCrm0+upQLMWVY8Lbcfagm7tTCYhfyiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HanVOSjg; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FaOKHFSKOWlbv0LyrSSRUd3ge5crTY5Ndmzp2tiaBwvxU2g+OKucbUA4rP99TaQF9Ywy17KEKkmCy7/KHBjsnWYqve0XYkBAAWC7oYUbAV4utj92fQH8OCEwda6ZEV3J5tLiITAxleO0ycI5tRjfMNoD1BYIdDhXLKgqcYHlBKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ewFF97Ps; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HanVOSjg"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 678D120B9260; Wed,  5 Jun 2024 01:39:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 678D120B9260
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1717576746;
-	bh=TrGB2Ttu+2GQP4P667beS3OkIPRmk8NFPGqeTHHLFWQ=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ewFF97Ps"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9889E40E016C;
+	Wed,  5 Jun 2024 09:36:42 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id TrvBtMIroWna; Wed,  5 Jun 2024 09:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717580198; bh=sVAlGknADMTqq51pEmOH4pigiZZfPcaq6bynh+gDEbg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HanVOSjgakHW3wIPeXeqrGKQ1S3YE4V/rsqZcbU8ENuI6HzP2JbQ/gZM2NzgEAvV9
-	 yutTk2fmzDfEd/kXALFdNom5jAXN17IeP5kKUuv8Xwe4sB7CPBfj4TsdS90ZzkH58c
-	 fDqpCeXRUSUtle0vYZxpyFrajGZLw4X+sjyHRrpQ=
-Date: Wed, 5 Jun 2024 01:39:06 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240605083906.GA15889@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240604093349.GP491852@kernel.org>
+	b=ewFF97Ps2admHqn0lwLWa440X4PnYGLeGoYNYX4dcK9Ffj0KHRdbkYsE/JaDALfLD
+	 CefvwQjM3WilXIaxwbfCdVG8ggK1za/38BRiA1TSgoBVcly0o03sN86gAolqs0ks5I
+	 mK4+MzugY7Mn153ID+uwVxKwNuO7ykSNoaBNxd2qKQseNE0oipQ9IYrPs4sbKr+sVj
+	 pZfGUppgHKl96FoMYPv+TgdJKn5tBTKh/9hIUWXpQU5rBcNALVg+sijB0EHqQepK6n
+	 9R8QkNU4qWht3/JgSil5iNxwHqP9wL2PtH0ZHGBhzScpoC5Lv1TxhFv66eGZ9Qb2o2
+	 PsZi276qQDkPlv5FYKVwNj4cBo+iABFcSh05SNsIp6YRDHd3Lz5fi7XiPzs5pP9rpc
+	 nMD6G006T+1vANZ9tEzttPUiFXlrXFhBrnABKBEtc8oT6kjvXZPJm8SNrjvE0XbwDP
+	 a4eYsTCmwx6TX4Kwa1u8FhBg0Nb12ARLZNuwxigMCCmZBzFe9SA92Vk8v7qExtpqcG
+	 7kl9SMDpg5FqpA9jl9iCWlqd1DRDsbhVOu+YthBIuZjUUsIt4ui7zS/MTpVaO1RFmp
+	 AranekvnxE5O06adlOeQ6k9SruS9M4coSTXwhIlewMZe47lI7Pf3wHceDoOwUeHKQ/
+	 eSmujPG6Fr2RL8s6c1iWpPSk=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21B8C40E016A;
+	Wed,  5 Jun 2024 09:36:15 +0000 (UTC)
+Date: Wed, 5 Jun 2024 11:36:09 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Dave Hansen <dave.hansen@intel.com>, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+	mat.jonczyk@o2.pl, rdunlap@infradead.org,
+	alexandre.belloni@bootlin.com, mario.limonciello@amd.com,
+	yaolu@kylinos.cn, bhelgaas@google.com, justinstitt@google.com,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com
+Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
+Message-ID: <20240605093609.GCZmAxidNIBP5bkDcX@fat_crate.local>
+References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
+ <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
+ <87wmnda8mc.ffs@tglx>
+ <CAHk-=wgMoeOTL1V3wTO=o=U1OXn7xF8OWv2hB9NF9Z=G4KotfQ@mail.gmail.com>
+ <87le3t9i8c.ffs@tglx>
+ <0aff3f62-a8a5-4358-ae3f-2ded339aface@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240604093349.GP491852@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <0aff3f62-a8a5-4358-ae3f-2ded339aface@zhaoxin.com>
 
-On Tue, Jun 04, 2024 at 10:33:49AM +0100, Simon Horman wrote:
-> On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> > Allow variable size indirection table allocation in MANA instead
-> > of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> > indirection table is allocated dynamically.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> ...
-> 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> 
-> ...
-> 
-> > @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
-> >  	return mana_create_txq(apc, net);
-> >  }
-> >  
-> > +static int mana_rss_table_alloc(struct mana_port_context *apc)
-> > +{
-> > +	if (!apc->indir_table_sz) {
-> > +		netdev_err(apc->ndev,
-> > +			   "Indirection table size not set for vPort %d\n",
-> > +			   apc->port_idx);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-> > +	if (!apc->indir_table)
-> > +		return -ENOMEM;
-> > +
-> > +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
-> > +	if (!apc->rxobj_table) {
-> > +		kfree(apc->indir_table);
-> 
-> Hi, Shradha
-> 
-> Perhaps I am on the wrong track here, but I have some concerns
-> about clean-up paths.
-> 
-> Firstly.  I think that apc->indir_table should be to NULL here for
-> consistency with other clean-up paths. Or alternatively, fields of apc
-> should not set to NULL elsewhere after being freed.
+On Wed, Jun 05, 2024 at 02:23:32PM +0800, Tony W Wang-oc wrote:
+> After MCE has occurred, it is possible for the MCE handler to execute the
+> add_taint() function without panic. For example, the fake_panic is
+> configured.
 
-Hi Simon,
+fake_panic is an ancient debugging leftover. If you set it, you get what
+you deserve.
 
-Thanks for the comments. This makes sense, I am planning of consistently removing
-the NULLify from other places too as per Leon's comments.
-> 
-> In looking into this I noticed that mana_probe() does not call
-> mana_remove() or return an error in the cases where mana_probe_port() or
-> mana_attach() fail unless add_adev also fails. If so, is that intentional?
+-- 
+Regards/Gruss,
+    Boris.
 
-Right, so most calls like mana_probe_port(), mana_attach() cleanup after themselves
-in the code if there is any error. So, not having to call mana_remove() in these
-cases in mana_probe() is intentional. But I do agree that an error is returned in
-mana_probe() only if add_adev also fails. I'll fix that too in the next version
-> 
-> In any case, I would suggest as a follow-up, arranging things so that when
-> an error occurs in a function, anything that was allocated is unwound
-> before returning an error.
-> 
-> I think this would make allocation/deallocation easier to reason with.
-> And I suspect it would avoid both the need for fields of structures to be
-> zeroed after being freed, and the need to call mana_remove() from
-> mana_probe().
-
-Agreed
-> 
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static void mana_rss_table_init(struct mana_port_context *apc)
-> >  {
-> >  	int i;
-> >  
-> > -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-> > +	for (i = 0; i < apc->indir_table_sz; i++)
-> >  		apc->indir_table[i] =
-> >  			ethtool_rxfh_indir_default(i, apc->num_queues);
-> >  }
-> 
-> ...
-> 
-> > @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
-> >  	err = register_netdev(ndev);
-> >  	if (err) {
-> >  		netdev_err(ndev, "Unable to register netdev.\n");
-> > -		goto reset_apc;
-> > +		goto free_indir;
-> >  	}
-> >  
-> >  	return 0;
-> >  
-> > +free_indir:
-> > +	apc->indir_table_sz = 0;
-> > +	kfree(apc->indir_table);
-> > +	apc->indir_table = NULL;
-> > +	kfree(apc->rxobj_table);
-> > +	apc->rxobj_table = NULL;
-> >  reset_apc:
-> >  	kfree(apc->rxqs);
-> >  	apc->rxqs = NULL;
-> 
-> nit: Not strictly related to this patch, but the reset_apc code should
->      probably be a call to mana_cleanup_port_context() as it is the dual of
->      mana_init_port_context() which is called earlier in mana_probe_port()
-
-Sure, let me do that too.
-> 
-> ...
-> 
-> > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> >  		}
-> >  
-> >  		unregister_netdevice(ndev);
-> > +		apc->indir_table_sz = 0;
-> > +		kfree(apc->indir_table);
-> > +		apc->indir_table = NULL;
-> > +		kfree(apc->rxobj_table);
-> > +		apc->rxobj_table = NULL;
-> 
-> The code to free and zero indir_table_sz and indir_table appears twice
-> in this patch. Perhaps a helper to do this, which would be the dual
-> of mana_rss_table_alloc is in order.
-Makes sense, will change this too.
-
-Thanks,
-Shradha.
-> 
-> >  
-> >  		rtnl_unlock();
-> >  
-> 
-> ...
+https://people.kernel.org/tglx/notes-about-netiquette
