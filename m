@@ -1,107 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F85198843;
-	Thu,  6 Jun 2024 16:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A215210E9;
+	Thu,  6 Jun 2024 16:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690282; cv=none; b=pEnYKwDgmG2G5fg2M3uAxxr6NfvutpWp3spw+XMqy2qCdU8XL/w3m+tPw/grk3SogACfhOK3q1jw7xCAW8PJyQ5xPqFpxQdwXshgv19IIKdLMHyIjt120aKa/hDSCRXYf7974rc8RdHFVeWbBnMrn2tweMiyBCGQU8H0QOxc+9o=
+	t=1717691621; cv=none; b=RSBhV/5fq+Eclg45OHpMARDhLih2v/PTWu5abktI6zOgmriSVhlIoeFuxG/pc6HsOgS89ykMalH22uUa+u2riqRA83M1hpQ+EVGtKRgizHvfU/uLDL9nMGlumLjnetK9ng8M1fblamh8KsT1gM/GcywVPHYwQ0glPeXNNZ1dTR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717690282; c=relaxed/simple;
-	bh=EouAagpep61jA1tkJh5qPmOHoRUQb4lmBEbh90kZRwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IgVB0NoiLmEhUhj/+Hntj0UmDTIIBhKXBGYSLFFHEXorrbgfaxMpPcaI9DQJsCcfdwPKi+DO16OnhqD7iCudYysW4sfR+wFSEcx2AH0VKbNSo24MXD2VT/UolS/ePFz84aZM9BJ/rHS8uEs533i4GMKmh5pDdm4SQxHobuSnK4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OaFXcok6; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717691621; c=relaxed/simple;
+	bh=Dd5xuQCXjQbAM4QC/1i17ToQ5z+UxwV8krZqgKleMYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXnKN5bM335cE7uWYGeMDN5AgGF4fBsGHDCjwfitlaE54wj7J68NKMfBpMvBRjvM7gDVDrqoAXlpKYTx50fiUjhJKD+X3BOQ2iGS7P5huADNsQZCKu/BfFaiVoULg/XBFleBu2u7vdtbJpQvxV9Ts665lZLuYIhXzYYBTYCJD7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7IgvyVy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OaFXcok6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717690280; x=1749226280;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EouAagpep61jA1tkJh5qPmOHoRUQb4lmBEbh90kZRwc=;
-  b=OaFXcok6n1CoL2KuGT7qrFwePOGmm9pO8VdRcQRYL7YmQZrE8Z5BeeDu
-   Gg4NkCedxA9PfC2cRzLoJR1fq+DJOvRf9ohRp6Hcc64QCgrJ75OQfgEIy
-   s0G6gY0yLcpqxw/YyucIM9ZXFX85LSBcFrEwbVst9GeMEEI7lGqgwzyy6
-   bMNCyWy5u7jHpHrfk8xVVZFniCwi+xpKyDvS6UHl12+IasLizwo5ByY9M
-   Aut3JDleTxb9EVhyHoWii1BiSd9wlmOE1sruvBzIs1dikrxCRoFSjrybo
-   eAG7069gX3Bxg2aZE04M0j/gcliRdYccmC2zuVHv+Fi0PZDAwDRy78vBy
-   Q==;
-X-CSE-ConnectionGUID: DaCbEcIKQ9WBvfQnghl2uA==
-X-CSE-MsgGUID: CoeC/IGyS6GDanyThdC0Pg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14525408"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="14525408"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:11:20 -0700
-X-CSE-ConnectionGUID: LTzS1sx2QHC9CkgSFMHcfQ==
-X-CSE-MsgGUID: /kKnSnQoTwWrIAFgmczGpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="38696127"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.168]) ([10.125.109.168])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:11:19 -0700
-Message-ID: <4dd8ebe0-868d-4125-ad23-c5a8b5249ce9@intel.com>
-Date: Thu, 6 Jun 2024 09:11:17 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7IgvyVy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96CD4C32786;
+	Thu,  6 Jun 2024 16:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717691621;
+	bh=Dd5xuQCXjQbAM4QC/1i17ToQ5z+UxwV8krZqgKleMYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S7IgvyVyr7ONSY69TsofxX/n2zPzWdGiDcLRgwHNaOQnF4ChSokqEP6+OBPUZ4M2B
+	 koC4aXtmLTtI+gRNseSk1bhrMQBo4CfnYkPOEwOATqot2X0YSd0OyAT/mp8sAAP7TH
+	 bSV+3rqixQgyaDXW3hvpbA+1bCSRnmhKE7+ZbIJJmp5raQ/6l4XiPaiDh20wOESBHt
+	 TYqORfpFQu+hom7AZnFiGKKv4xwR4NY3MM7GQbxCDOXPFtpOhbNadzwYNI85vjaRpp
+	 rEf2QOO6Q6CJv80aHUhXQXetttQ+qYZ+oEPg8MoHqwPampnfw2vRyu1JcxfJOoreGw
+	 TxA2SMRKurJ5A==
+Date: Thu, 6 Jun 2024 17:33:34 +0100
+From: Simon Horman <horms@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Long Li <longli@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240606163334.GO791188@kernel.org>
+References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20240604093349.GP491852@kernel.org>
+ <20240605083906.GA15889@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvdimm/btt: use sizeof(*pointer) instead of sizeof(type)
-To: Erick Archer <erick.archer@outlook.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Justin Stitt <justinstitt@google.com>
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <AS8PR02MB72372490C53FB2E35DA1ADD08BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <AS8PR02MB72372490C53FB2E35DA1ADD08BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605083906.GA15889@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-
-
-On 6/2/24 1:18 AM, Erick Archer wrote:
-> It is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not
-> change the former (unlike the latter). This patch has no effect
-> on runtime behavior.
+On Wed, Jun 05, 2024 at 01:39:06AM -0700, Shradha Gupta wrote:
+> On Tue, Jun 04, 2024 at 10:33:49AM +0100, Simon Horman wrote:
+> > On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
+> > > Allow variable size indirection table allocation in MANA instead
+> > > of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> > > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> > > indirection table is allocated dynamically.
+> > > 
+> > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > 
+> > ...
+> > 
+> > > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > 
+> > ...
+> > 
+> > > @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
+> > >  	return mana_create_txq(apc, net);
+> > >  }
+> > >  
+> > > +static int mana_rss_table_alloc(struct mana_port_context *apc)
+> > > +{
+> > > +	if (!apc->indir_table_sz) {
+> > > +		netdev_err(apc->ndev,
+> > > +			   "Indirection table size not set for vPort %d\n",
+> > > +			   apc->port_idx);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
+> > > +	if (!apc->indir_table)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
+> > > +	if (!apc->rxobj_table) {
+> > > +		kfree(apc->indir_table);
+> > 
+> > Hi, Shradha
+> > 
+> > Perhaps I am on the wrong track here, but I have some concerns
+> > about clean-up paths.
+> > 
+> > Firstly.  I think that apc->indir_table should be to NULL here for
+> > consistency with other clean-up paths. Or alternatively, fields of apc
+> > should not set to NULL elsewhere after being freed.
 > 
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/nvdimm/btt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi Simon,
 > 
-> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-> index 1e5aedaf8c7b..b25df8fa8e8e 100644
-> --- a/drivers/nvdimm/btt.c
-> +++ b/drivers/nvdimm/btt.c
-> @@ -751,7 +751,7 @@ static struct arena_info *alloc_arena(struct btt *btt, size_t size,
->  	u64 logsize, mapsize, datasize;
->  	u64 available = size;
->  
-> -	arena = kzalloc(sizeof(struct arena_info), GFP_KERNEL);
-> +	arena = kzalloc(sizeof(*arena), GFP_KERNEL);
->  	if (!arena)
->  		return NULL;
->  	arena->nd_btt = btt->nd_btt;
-> @@ -978,7 +978,7 @@ static int btt_arena_write_layout(struct arena_info *arena)
->  	if (ret)
->  		return ret;
->  
-> -	super = kzalloc(sizeof(struct btt_sb), GFP_NOIO);
-> +	super = kzalloc(sizeof(*super), GFP_NOIO);
->  	if (!super)
->  		return -ENOMEM;
->  
+> Thanks for the comments. This makes sense, I am planning of consistently
+> removing the NULLify from other places too as per Leon's comments.
+
+Great!
+
+> > In looking into this I noticed that mana_probe() does not call
+> > mana_remove() or return an error in the cases where mana_probe_port()
+> > or mana_attach() fail unless add_adev also fails. If so, is that
+> > intentional?
+> 
+> Right, so most calls like mana_probe_port(), mana_attach() cleanup after
+> themselves in the code if there is any error. So, not having to call
+> mana_remove() in these cases in mana_probe() is intentional. But I do
+> agree that an error is returned in mana_probe() only if add_adev also
+> fails. I'll fix that too in the next version
+
+I'm not entirely sure, but perhaps that is a candidate for a separate patch.
+
+> > 
+> > In any case, I would suggest as a follow-up, arranging things so that
+> > when an error occurs in a function, anything that was allocated is
+> > unwound before returning an error.
+> > 
+> > I think this would make allocation/deallocation easier to reason with.
+> > And I suspect it would avoid both the need for fields of structures to
+> > be zeroed after being freed, and the need to call mana_remove() from
+> > mana_probe().
+> 
+> Agreed
+> > 
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static void mana_rss_table_init(struct mana_port_context *apc)
+> > >  {
+> > >  	int i;
+> > >  
+> > > -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> > > +	for (i = 0; i < apc->indir_table_sz; i++)
+> > >  		apc->indir_table[i] =
+> > >  			ethtool_rxfh_indir_default(i, apc->num_queues);
+> > >  }
+> > 
+> > ...
+> > 
+> > > @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+> > >  	err = register_netdev(ndev);
+> > >  	if (err) {
+> > >  		netdev_err(ndev, "Unable to register netdev.\n");
+> > > -		goto reset_apc;
+> > > +		goto free_indir;
+> > >  	}
+> > >  
+> > >  	return 0;
+> > >  
+> > > +free_indir:
+> > > +	apc->indir_table_sz = 0;
+> > > +	kfree(apc->indir_table);
+> > > +	apc->indir_table = NULL;
+> > > +	kfree(apc->rxobj_table);
+> > > +	apc->rxobj_table = NULL;
+> > >  reset_apc:
+> > >  	kfree(apc->rxqs);
+> > >  	apc->rxqs = NULL;
+> > 
+> > nit: Not strictly related to this patch, but the reset_apc code should
+> >      probably be a call to mana_cleanup_port_context() as it is the dual of
+> >      mana_init_port_context() which is called earlier in mana_probe_port()
+> 
+> Sure, let me do that too.
+
+FWIIW, I think it would be appropriate to put that change in a separate patch.
+
+> > 
+> > ...
+> > 
+> > > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+> > >  		}
+> > >  
+> > >  		unregister_netdevice(ndev);
+> > > +		apc->indir_table_sz = 0;
+> > > +		kfree(apc->indir_table);
+> > > +		apc->indir_table = NULL;
+> > > +		kfree(apc->rxobj_table);
+> > > +		apc->rxobj_table = NULL;
+> > 
+> > The code to free and zero indir_table_sz and indir_table appears twice
+> > in this patch. Perhaps a helper to do this, which would be the dual
+> > of mana_rss_table_alloc is in order.
+> Makes sense, will change this too.
+
+Thanks.
