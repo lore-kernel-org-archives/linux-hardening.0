@@ -1,165 +1,80 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E22C198822
-	for <linux-hardening@vger.kernel.org>; Thu,  6 Jun 2024 14:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16955197A6A;
+	Thu,  6 Jun 2024 14:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717685241; cv=none; b=QtCqX9mFQ97wcjJRPBfLPsssGhxs3Qdx/FEgSTXobavidZFATE5MgK/W57KkTfZIYy7BXK5WuCRXV/CnQvYVhVl6TfTluSoOXa7N1RiEbecA7m0YV+3sSIqLNdxsSFjcr+Dd8+RwHEvqvNulmwx75XkjsGmnm73b/Kw+A1qcJEs=
+	t=1717685407; cv=none; b=OGM0cjaJ/Ztm3qegf2HlQIf9C4KTZZXF87RqsGX+pbOgZi4ezI5m1/IhdeJNnTUFu7Le1Opv/btB/UkF1kCqCQG9LpSly2qfJZv5UV+2B1jk9mPHHd5XHbDg5YGC5l0jX9WrwXMENBzZkYRpBBbu3wJcGLWTlU2CQNziftoW+ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717685241; c=relaxed/simple;
-	bh=Ebu85krfGAChaJPN4EWzYaxvNmXdtfqRBv3rancPBps=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z856NxN77BcDlU3NwN4xjZjPu+IMMKAPmgF1ZOeacFIy2QTMNY88Yy723psPI7Fwuc+uuXfbkHPt2FLUuDZ0IGrfENVkyxTn4EM/Is91113LjDG2f7FyiMXUbB9OhRC1Pux5xTBE9eIrXSGO2a3AMaUqmThrWrZ670zRSKmZWYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rst/WW5d; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rst/WW5d"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-354f3f6c3b1so939684f8f.2
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Jun 2024 07:47:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717685238; x=1718290038; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gAMNxXiwwiKZelOMcLP7GiR7QCh00iHenVieTh1hHYA=;
-        b=Rst/WW5d/29/I/Vr2/+k6YmH2fJwASpHqS+VlNCgjKWLa2J1mZlq0I0lUB7g4bvy9b
-         ByGUx3oAQw9s8yPA/b3gtx7mrk8BUlT7t/yjET/IsGpz4GgzFDHRcfjiTKNraFfhM46N
-         kIdzJeooAO+kQ7GPOAscsmIv2UGpRJ4OdZ0/w3Ylr+b0adz/pkXzC1rHUSz2jaSrtZ3d
-         pMNoM4oc4/v0b0oVij62+E6ob8RQBjfUw/3NqBGHvug+9+4ARnV7uM9kwuSaZIzppPad
-         sc1+DIX2P5cP55ic5B8zUwmQDv76dfXg8O6j+z88FMa8eU2XOnq7iAf8UOpOyFBVhKwx
-         apOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717685238; x=1718290038;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gAMNxXiwwiKZelOMcLP7GiR7QCh00iHenVieTh1hHYA=;
-        b=JLRe8gHTcvUDoXtpafbQRf8TaLu+Gwqheo0U/eD6ctw4HQbaGGW14CbRs5EXwM5hK1
-         BaBUmtGgIjsyslLATx56HWhhC/iNE360T74FIsRZJLfV1TgS0tsPwOOj1pa4wH8DcIh/
-         5aDAAEd0wMdVQeiJ4MXeeu02Wi3JWU7NTDt6WD1ntqgGok6N5KKKwn1Ys3abWsl2/cGd
-         jkSHz3O0mfQEndsFWxKzkgC+c5nLgrx8VJyAFrFPTnM5IeF5fhjhgVJft1fzpNqn9R+x
-         XGFWOWj8LGQzecSC/KkLbJKOngsMwamls3G9d1QMIX7Lk4EaMBNZNN3gamjOdtibWmo6
-         5ISg==
-X-Forwarded-Encrypted: i=1; AJvYcCURwFhDNcwTFSQD9D7jhAc4Zn+c+DkptK/880jmsvcTBroKEv+GnN/8+NtLowQPMKcDXm9sj5uU2jJajLBeUUtChfFNmyd5CPoN12Y/nIJD
-X-Gm-Message-State: AOJu0YzMqjSy3c5EeQ6Bl+YmrZ7ddVfuSUHF9oFNknehKvQ/NhMikF1K
-	8oQRh+BVGb4KK+5gXMfMejk82H3qfmMUmRwDyfyhmRcU+ERFzPZ+N0lVf0xCzYU=
-X-Google-Smtp-Source: AGHT+IGnRw7gclR2L13bttoMoqC/Ze9nXxsoh8QiaTGf4ppoKg3RVMfE+/mGMpwFjtl27lSycgHujw==
-X-Received: by 2002:a05:6000:1250:b0:35d:c98e:9823 with SMTP id ffacd0b85a97d-35e8ef9702dmr4218356f8f.62.1717685237987;
-        Thu, 06 Jun 2024 07:47:17 -0700 (PDT)
-Received: from localhost.localdomain ([2.221.137.100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d4729asm1746386f8f.25.2024.06.06.07.47.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 07:47:17 -0700 (PDT)
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-To: thierry.reding@gmail.com,
-	jonathanh@nvidia.com,
-	kees@kernel.org,
-	andy@kernel.org,
-	akpm@linux-foundation.org
-Cc: linux-tegra@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH] mm/util: Swap kmemdup_array() arguments
-Date: Thu,  6 Jun 2024 15:46:09 +0100
-Message-ID: <20240606144608.97817-2-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1717685407; c=relaxed/simple;
+	bh=jmrvv5mciAYj7KHnk+dVNZFlkNGJV5J8UVdaURNL02I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SKCB8Qzc2qgkakC4Me+8TNyV02LKVsBz+0b1S56yxlJc1SkfpOKqnwGPt5hT9b5hM9t0TQ6WfCt/j3nB0PLGlKC4l4vv0BjkZD71X+BpKrOyF0oXzXD8vN8hWAXUE8GNdg7V1gWiSCm4m35OiPzDNd3UYJJUbpX2hbYyO+A9gJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4942DC2BD10;
+	Thu,  6 Jun 2024 14:50:02 +0000 (UTC)
+Date: Thu, 6 Jun 2024 10:50:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>, Kees Cook <keescook@chromium.org>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, "linux-hardening@vger.kernel.org"
+ <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ "Ross Zwisler" <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
+ "Vineeth Remanan Pillai" <vineeth@bitbyteword.org>, Joel Fernandes
+ <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>, "Linus
+ Torvalds" <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>
+Subject: Re: [PATCH 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240606105013.6435d553@rorschach.local.home>
+In-Reply-To: <SJ1PR11MB60836B1DBD5C41BF22A66430FCF82@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20240603233330.801075898@goodmis.org>
+	<20240603233631.452433539@goodmis.org>
+	<CAMj1kXFoNT25+ZTFaqF8zj4VkN6FFbtX5Fntf+J-c33tW3TPUA@mail.gmail.com>
+	<20240604070826.030c5202@gandalf.local.home>
+	<SJ1PR11MB60836B1DBD5C41BF22A66430FCF82@SJ1PR11MB6083.namprd11.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-GCC 14.1 complains about the argument usage of kmemdup_array():
+On Tue, 4 Jun 2024 16:05:04 +0000
+"Luck, Tony" <tony.luck@intel.com> wrote:
 
-  drivers/soc/tegra/fuse/fuse-tegra.c:130:65: error: 'kmemdup_array' sizes specified with 'sizeof' in the earlier argument and not in the later argument [-Werror=calloc-transposed-args]
-    130 |         fuse->lookups = kmemdup_array(fuse->soc->lookups, sizeof(*fuse->lookups),
-        |                                                                 ^
-  drivers/soc/tegra/fuse/fuse-tegra.c:130:65: note: earlier argument should specify number of elements, later size of each element
+> > I have been using this on two different test machines, as well as a
+> > chromebook, and it appears to work on all ofthem. As well as for VMs. I
+> > plan on adding this to my workstation and server too (they use EFI).  
+> 
+> I think that BIOS on Intel servers with ECC memory will stomp on all
+> memory (to ensure that ECC bits are all set to good values). There
+> might be a "fast boot" BIOS option to skip this (but using it leaves you
+> vulnerable after a crash due to ECC fail to hit the same error again).
+> 
 
-The annotation introduced by commit 7d78a7773355 ("string: Add
-additional __realloc_size() annotations for "dup" helpers") lets the
-compiler think that kmemdup_array() follows the same format as calloc(),
-with the number of elements preceding the size of one element. So we
-could simply swap the arguments to __realloc_size() to get rid of that
-warning, but it seems cleaner to instead have kmemdup_array() follow the
-same format as krealloc_array(), memdup_array_user(), calloc() etc.
+Talking with some people that are interested in this, they told me that
+those servers (the ones that take several minutes to boot up) usually
+use kexec to reboot. Even after a crash (with or without kdump). In
+those cases, they said this would likely work for them.
 
-Fixes: 7d78a7773355 ("string: Add additional __realloc_size() annotations for "dup" helpers")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- include/linux/string.h              | 2 +-
- drivers/soc/tegra/fuse/fuse-tegra.c | 4 ++--
- lib/fortify_kunit.c                 | 2 +-
- mm/util.c                           | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
+Again, this isn't fool proof nor guaranteed. It's a best effort
+approach that, at least for my use case, works most of the time.
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 60168aa2af075..9edace076ddbf 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -289,7 +289,7 @@ extern void *kmemdup_noprof(const void *src, size_t len, gfp_t gfp) __realloc_si
- 
- extern void *kvmemdup(const void *src, size_t len, gfp_t gfp) __realloc_size(2);
- extern char *kmemdup_nul(const char *s, size_t len, gfp_t gfp);
--extern void *kmemdup_array(const void *src, size_t element_size, size_t count, gfp_t gfp)
-+extern void *kmemdup_array(const void *src, size_t count, size_t element_size, gfp_t gfp)
- 		__realloc_size(2, 3);
- 
- /* lib/argv_split.c */
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index b6bfd6729df39..d276672838465 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -127,8 +127,8 @@ static void tegra_fuse_print_sku_info(struct tegra_sku_info *tegra_sku_info)
- 
- static int tegra_fuse_add_lookups(struct tegra_fuse *fuse)
- {
--	fuse->lookups = kmemdup_array(fuse->soc->lookups, sizeof(*fuse->lookups),
--				      fuse->soc->num_lookups, GFP_KERNEL);
-+	fuse->lookups = kmemdup_array(fuse->soc->lookups, fuse->soc->num_lookups,
-+				      sizeof(*fuse->lookups), GFP_KERNEL);
- 	if (!fuse->lookups)
- 		return -ENOMEM;
- 
-diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index f9cc467334ce3..e17d520f532cf 100644
---- a/lib/fortify_kunit.c
-+++ b/lib/fortify_kunit.c
-@@ -374,7 +374,7 @@ static const char * const test_strs[] = {
- 	for (i = 0; i < ARRAY_SIZE(test_strs); i++) {			\
- 		len = strlen(test_strs[i]);				\
- 		KUNIT_EXPECT_EQ(test, __builtin_constant_p(len), 0);	\
--		checker(len, kmemdup_array(test_strs[i], len, 1, gfp),	\
-+		checker(len, kmemdup_array(test_strs[i], 1, len, gfp),	\
- 			kfree(p));					\
- 		checker(len, kmemdup(test_strs[i], len, gfp),		\
- 			kfree(p));					\
-diff --git a/mm/util.c b/mm/util.c
-index c9e519e6811f5..6682097372efc 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -139,14 +139,14 @@ EXPORT_SYMBOL(kmemdup_noprof);
-  * kmemdup_array - duplicate a given array.
-  *
-  * @src: array to duplicate.
-- * @element_size: size of each element of array.
-  * @count: number of elements to duplicate from array.
-+ * @element_size: size of each element of array.
-  * @gfp: GFP mask to use.
-  *
-  * Return: duplicated array of @src or %NULL in case of error,
-  * result is physically contiguous. Use kfree() to free.
-  */
--void *kmemdup_array(const void *src, size_t element_size, size_t count, gfp_t gfp)
-+void *kmemdup_array(const void *src, size_t count, size_t element_size, gfp_t gfp)
- {
- 	return kmemdup(src, size_mul(element_size, count), gfp);
- }
-
-base-commit: 2df0193e62cf887f373995fb8a91068562784adc
--- 
-2.45.2
-
+-- Steve
