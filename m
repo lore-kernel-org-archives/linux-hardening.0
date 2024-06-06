@@ -1,98 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F14910E9;
-	Thu,  6 Jun 2024 16:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F85198843;
+	Thu,  6 Jun 2024 16:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717689809; cv=none; b=Vb3J+dU3Bi+3g4osKDd9/aYb7gPVjHkfrQ//r8b4Ot1Ge9alxGYrQnZ9ECgSSu9KftC34gnzvHPV28XG/ayjk2/hNj+3yHTKElK6MvAnxF7Y6ivxF0dONg5avUmCUrUJ+sbVLg6RZVCnqzBGA3ipC/C3Z67arsBzsfxGMzLlTmY=
+	t=1717690282; cv=none; b=pEnYKwDgmG2G5fg2M3uAxxr6NfvutpWp3spw+XMqy2qCdU8XL/w3m+tPw/grk3SogACfhOK3q1jw7xCAW8PJyQ5xPqFpxQdwXshgv19IIKdLMHyIjt120aKa/hDSCRXYf7974rc8RdHFVeWbBnMrn2tweMiyBCGQU8H0QOxc+9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717689809; c=relaxed/simple;
-	bh=UyKx9bZ3hdWJqpE8irQpBb9zB0JEyFwgJeYquJTXVQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d8+8TD6j+EzR181UvbJEGOO9tlHUUJzLe7ML6SFDJF39q2djt8OVze4dqbc7omANPGXAkUbz0FoKIhI4SomxSwBGIyOINca4hZTAMVbhPCKr75Uq3UQ5zi/aAljVtoAwCRLK5VpyrkUcU8edaTG4vm5wpcghXMRKeKB27slr4/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pPnFgcJG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717690282; c=relaxed/simple;
+	bh=EouAagpep61jA1tkJh5qPmOHoRUQb4lmBEbh90kZRwc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IgVB0NoiLmEhUhj/+Hntj0UmDTIIBhKXBGYSLFFHEXorrbgfaxMpPcaI9DQJsCcfdwPKi+DO16OnhqD7iCudYysW4sfR+wFSEcx2AH0VKbNSo24MXD2VT/UolS/ePFz84aZM9BJ/rHS8uEs533i4GMKmh5pDdm4SQxHobuSnK4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OaFXcok6; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPnFgcJG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB9FC2BD10;
-	Thu,  6 Jun 2024 16:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717689809;
-	bh=UyKx9bZ3hdWJqpE8irQpBb9zB0JEyFwgJeYquJTXVQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pPnFgcJGEj5N5/dPqf2Tyyk5EUu5cc0pIq+VB5l3LP6blMU8tjart5hB59I15Z73n
-	 splLPXmqPZpKmuEJLKeiaJLXBcT5f/KYObaQOcfBeqU27WxUdgxBMlkqdZtP0j9izg
-	 O8s8VejL6vVX2vz0m8PoWpvFPvGSnvDjvcYTOFe40VQlVEZ7olrA8S5HRWA+J7+ydh
-	 ZlNXXzMraOiPBByzgnsSkHYMVdqVTjIVwjKDNhngxy2Fp3GyIGn4UhKCdR02just/U
-	 iiUEzZwESqYWvR9y33/MO2wh3bSqumcIKevR9pTs+R4HYrOphs2xm8zPfao6gxtzc/
-	 CDvnIPIXjyjXg==
-Date: Thu, 6 Jun 2024 09:03:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: Abhinav Jain <jain.abhinav177@gmail.com>
-Cc: tony.luck@intel.com, gpiccoli@igalia.com,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr
-Subject: Re: [PATCH v2] pstore/ram: Replace of_node_put with __free() for
- automatic cleanup
-Message-ID: <202406060902.4F06AA0DF6@keescook>
-References: <20240605214944.22113-1-jain.abhinav177@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OaFXcok6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717690280; x=1749226280;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EouAagpep61jA1tkJh5qPmOHoRUQb4lmBEbh90kZRwc=;
+  b=OaFXcok6n1CoL2KuGT7qrFwePOGmm9pO8VdRcQRYL7YmQZrE8Z5BeeDu
+   Gg4NkCedxA9PfC2cRzLoJR1fq+DJOvRf9ohRp6Hcc64QCgrJ75OQfgEIy
+   s0G6gY0yLcpqxw/YyucIM9ZXFX85LSBcFrEwbVst9GeMEEI7lGqgwzyy6
+   bMNCyWy5u7jHpHrfk8xVVZFniCwi+xpKyDvS6UHl12+IasLizwo5ByY9M
+   Aut3JDleTxb9EVhyHoWii1BiSd9wlmOE1sruvBzIs1dikrxCRoFSjrybo
+   eAG7069gX3Bxg2aZE04M0j/gcliRdYccmC2zuVHv+Fi0PZDAwDRy78vBy
+   Q==;
+X-CSE-ConnectionGUID: DaCbEcIKQ9WBvfQnghl2uA==
+X-CSE-MsgGUID: CoeC/IGyS6GDanyThdC0Pg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14525408"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="14525408"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:11:20 -0700
+X-CSE-ConnectionGUID: LTzS1sx2QHC9CkgSFMHcfQ==
+X-CSE-MsgGUID: /kKnSnQoTwWrIAFgmczGpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="38696127"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.168]) ([10.125.109.168])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:11:19 -0700
+Message-ID: <4dd8ebe0-868d-4125-ad23-c5a8b5249ce9@intel.com>
+Date: Thu, 6 Jun 2024 09:11:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605214944.22113-1-jain.abhinav177@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvdimm/btt: use sizeof(*pointer) instead of sizeof(type)
+To: Erick Archer <erick.archer@outlook.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Justin Stitt <justinstitt@google.com>
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <AS8PR02MB72372490C53FB2E35DA1ADD08BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <AS8PR02MB72372490C53FB2E35DA1ADD08BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 05, 2024 at 09:49:44PM +0000, Abhinav Jain wrote:
-> Add __free(device_node) to the parent_node struct declaration
-> Add changes to incorporate the review comments from v1
+
+
+On 6/2/24 1:18 AM, Erick Archer wrote:
+> It is preferred to use sizeof(*pointer) instead of sizeof(type)
+> due to the type of the variable can change and one needs not
+> change the former (unlike the latter). This patch has no effect
+> on runtime behavior.
 > 
-> Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
-> 
-> PATCH v1 link:
-> https://lore.kernel.org/all/20240415161409.8375-1-jain.abhinav177@gmail.com/
-> 
-> Changes since v1:
->  - Moved the variable definition back to the top of the function body
-
-The history and version links should be below the "---" line.
-
-But more importantly, please base your patch on the upstream tree,
-rather than on your v1 patch. :) (i.e. squash your v1 and v2 together).
-
--Kees
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->  fs/pstore/ram.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/nvdimm/btt.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index 14f2f4864e48..f8258e4567c3 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -644,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->  			    struct ramoops_platform_data *pdata)
->  {
->  	struct device_node *of_node = pdev->dev.of_node;
-> +	struct device_node *parent_node __free(device_node) = of_node_parent(of_node);
->  	struct resource *res;
->  	u32 value;
->  	int ret;
-> @@ -703,7 +704,6 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->  	 * we're not a child of "reserved-memory" and mimicking the
->  	 * expected behavior.
->  	 */
-> -	struct device_node *parent_node __free(device_node) = of_node_parent(of_node);
->  	if (!of_node_name_eq(parent_node, "reserved-memory") &&
->  	    !pdata->console_size && !pdata->ftrace_size &&
->  	    !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
-> -- 
-> 2.34.1
-> 
-
--- 
-Kees Cook
+> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+> index 1e5aedaf8c7b..b25df8fa8e8e 100644
+> --- a/drivers/nvdimm/btt.c
+> +++ b/drivers/nvdimm/btt.c
+> @@ -751,7 +751,7 @@ static struct arena_info *alloc_arena(struct btt *btt, size_t size,
+>  	u64 logsize, mapsize, datasize;
+>  	u64 available = size;
+>  
+> -	arena = kzalloc(sizeof(struct arena_info), GFP_KERNEL);
+> +	arena = kzalloc(sizeof(*arena), GFP_KERNEL);
+>  	if (!arena)
+>  		return NULL;
+>  	arena->nd_btt = btt->nd_btt;
+> @@ -978,7 +978,7 @@ static int btt_arena_write_layout(struct arena_info *arena)
+>  	if (ret)
+>  		return ret;
+>  
+> -	super = kzalloc(sizeof(struct btt_sb), GFP_NOIO);
+> +	super = kzalloc(sizeof(*super), GFP_NOIO);
+>  	if (!super)
+>  		return -ENOMEM;
+>  
