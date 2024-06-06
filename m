@@ -1,86 +1,235 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63623C28;
-	Wed,  5 Jun 2024 22:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8981BDD5
+	for <linux-hardening@vger.kernel.org>; Thu,  6 Jun 2024 03:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717625419; cv=none; b=gnC+zZzoQegk6M3EIbGKY3BlI9scW+W2HC94OToZ4go+YSf0gSbI+3m+UKPvuFlfzPbSokUyZXx6Vo8yYaa/lqltcDYdu+71Jwp9+0+F1WXStxYRYJvqlHrJnidoYTujx0GXYo6GPG0JoCPaMlanuA9F5jGJhNPhiMwtkIWHXD8=
+	t=1717643502; cv=none; b=uouw81iKPwb+izgTJ4cW/+tlOIoA0XqZgt8KYcd5b/+u2z7WOd2Qf3g5sDX7dYAJRp99ofQ/StV3+LEQhINnFoQ7Z6M6pmig4lUKqtXibCIDXYDfGOzbDTunBLN3oaUxH+z3ZrXejhO6uzYGhQ/JChTttdS4Th5Xabo2zE76Za0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717625419; c=relaxed/simple;
-	bh=4MtmmxRMBlxfNJ305JevlhUwnKyFWYAIWelpGhZ8Xhw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IcHGz327ehQumCPhd7weSvwd2u7YENYTbEZlVsTpUK21/usbq4qpYHJfER2KC/kyfzz5bhcpTdHkuHfAos3zXF9XYmiU6eZYWZDiZHk8g3Udt4MXrbbGJI410tBD2YRRm1RSL/VC3ZI3BadmpqfUsgFyXVzAfu+C8aDClNtL5rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cxDr7PEj; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717643502; c=relaxed/simple;
+	bh=1+v65+8xW4kXOQvfyRKPcvYScMtAHUdktuXv4AiUvUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1WdH0B/drRi29QRaMeDST9c4kG+M1GX6XHvRekRrn6MoLd/+j7uFNAQW0RSyBh8pnmsOdal8+HKkP315aJlgMLcFBmWsDil8qgCjbDLeVyqdhdXP0aW4dxyHqK7PqA5hbLpcxCLPXZjzjZ9G1xAbauqE+pFxaF9uT0KvrGDsco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CuNuOQSq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cxDr7PEj"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f44b594deeso2426525ad.2;
-        Wed, 05 Jun 2024 15:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717625417; x=1718230217; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJJ1Il1hEBNHAhh0aQyG/BXiplrVKkTrWLDaHYRJumM=;
-        b=cxDr7PEj3OWN/Zdcry00kzuKWJ8wXEqwlZx0xDhGVCbVmI8PqGDiHEE/cu3208E2gW
-         d+7ZplvkEfeb/sDHGwWhGyh4IGul7B/T73qDUIhragF5drDEYz9BegZWUMgp4doB8cxf
-         3csIvs7OzMvUH2Wsyyy0Wx2qKDpnpuAsj3VZ+zXwuWIGNCxESqZLox859DmvczP1ELLU
-         dYXInkPVZTw02h3e9sfq6D/rFWYjosvSxX8ee5yrsqvi3+HO86y8cBFYTXHiNXQl+Ho/
-         XZWvlyR5vQBYkw1JLBxij38XbD7YCSFMVHCVJorCOSrCdpqbgjF2/ehhcm8WGY7bOTls
-         Qpxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717625417; x=1718230217;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iJJ1Il1hEBNHAhh0aQyG/BXiplrVKkTrWLDaHYRJumM=;
-        b=FNIwT5KhQI9RdLFwYyvMmjjIRWJNJGc8DKbImdeZ3BJpghR14mEFqECat0p4OMuVR/
-         GiQJSj4jEuM01GLuNRRXzIhuWYwZTIzOHEug4vJb0CE+JX/LJEkXmE3XxWJ+vXGLz3qr
-         ajzug1Ph0NIr2RozLDh8iwUUcKpncT9v8dmMXfW6adx/9YiVmpoE4QeWkgaZeswmbMBy
-         yrKQYfBHEBSmcBblKZ/hchLM9I16DltyJ2zyupmFbATjC/b4hU9GTRnFrXV/pP7fAJjh
-         czlk6vaBzoy6PnbnAG0tac7NSIlFiNpIiMrWLUJ1MZBfcBf37eLmuJF/sW2Y8tnrRHXt
-         DuCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQh4Sqd455GE5wq7U5GnuRyBqtSKJDToizBkDlZJXS2Lxznk99VPcecbxa4R0lj0tE1PAWIU6b3Cl/ZQn8Ghi9BDYRSQYIT6NclVt83pJR2sUwM5xhhaLk7ptMCzpMXmDrvjR4ljODFPdK8GOq
-X-Gm-Message-State: AOJu0YwFLVV6c3Vydw8rTHQBEs83enrICxG7bjfDwNNLmk1kURgeeGJP
-	FourESZrwpj1qUQ4b/VSR/OBtbxuaDpj0Yp4p0nOiYgtsYYTkReD
-X-Google-Smtp-Source: AGHT+IHRXnPN0u7Ps/6G42PH3KCbpcG6/xDZesLl4G01pVNLBwdTragYtQjUCPK7uxG6hIgrhxC+Qw==
-X-Received: by 2002:a17:902:fa4c:b0:1e0:bae4:48f9 with SMTP id d9443c01a7336-1f6a5a13943mr35800775ad.32.1717625417010;
-        Wed, 05 Jun 2024 15:10:17 -0700 (PDT)
-Received: from dev0.. ([49.43.162.143])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd75f14csm374425ad.21.2024.06.05.15.10.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 15:10:16 -0700 (PDT)
-From: Abhinav Jain <jain.abhinav177@gmail.com>
-To: keescook@chromium.org
-Cc: gpiccoli@igalia.com,
-	jain.abhinav177@gmail.com,
-	javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	tony.luck@intel.com
-Subject: Re: [PATCH] pstore/ram: Replace of_node_put with __free() for automatic cleanup
-Date: Wed,  5 Jun 2024 22:10:10 +0000
-Message-Id: <20240605221010.22262-1-jain.abhinav177@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <202404241639.3F455ECCD@keescook>
-References: <202404241639.3F455ECCD@keescook>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CuNuOQSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717643498;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HaH59veb3gdb6Nle+VT8H76NeiKE5kPsBGNNkDgKop8=;
+	b=CuNuOQSqDoadSCobdsW2jB+1gXT68g+mQLqSfbYsZU7xaHjX55JyBkkW96mTtDzM/MxmhN
+	rpU0AEZj02WnXZWhr7CZRbCLaByTUxVh7jt+RQoqmIsYg+4WAvDkK3YHpVi+rI1I53knTM
+	NXEIoaaLl4FuIjsyO/NyOeE/7UtjPEY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-495-kezD0FAoPNayyhfCPlTgHA-1; Wed, 05 Jun 2024 23:11:35 -0400
+X-MC-Unique: kezD0FAoPNayyhfCPlTgHA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A280F101A520;
+	Thu,  6 Jun 2024 03:11:34 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.20])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A0B5537D6;
+	Thu,  6 Jun 2024 03:11:33 +0000 (UTC)
+Date: Thu, 6 Jun 2024 11:11:30 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+Message-ID: <ZmEo4rw8Yhu7tspb@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-3-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-3-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Wed, 24 Apr 2024, Kees Cook wrote:
-> Please don't move variable definitions into the middle of the function
-> body. :)
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+> A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
+> the dm crypt keys persist for the kdump kernel. User space can send the
+> following commands,
+> - "init KEY_NUM"
+>   Initialize needed structures
+> - "record KEY_DESC"
+>   Record a key description. The key must be a logon key.
 
-I have moved the parent_node declaration back to the top of the function body.
+This patch highly lack document to describe what it's doing. For
+example, how you will manipulate the /sys/kernel/crash_dm_crypt_keys to
+initialize, record the keys, can you give examples how you opeate on
+them?
 
-Patch v2: 
-https://lore.kernel.org/all/20240605214944.22113-1-jain.abhinav177@gmail.com/
+> 
+> User space can also read this API to learn about current state.
+> 
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  include/linux/crash_core.h   |   5 +-
+>  kernel/Kconfig.kexec         |   8 +++
+>  kernel/Makefile              |   1 +
+>  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
+>  kernel/ksysfs.c              |  22 +++++++
+>  5 files changed, 148 insertions(+), 1 deletion(-)
+>  create mode 100644 kernel/crash_dump_dm_crypt.c
+> 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 44305336314e..6bff1c24efa3 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
+>  static inline void arch_kexec_unprotect_crashkres(void) { }
+>  #endif
+>  
+> -
+> +#ifdef CONFIG_CRASH_DM_CRYPT
+> +int crash_sysfs_dm_crypt_keys_read(char *buf);
+> +int crash_sysfs_dm_crypt_keys_write(const char *buf, size_t count);
+> +#endif
+>  
+>  #ifndef arch_crash_handle_hotplug_event
+>  static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 6c34e63c88ff..88525ad1c80a 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -116,6 +116,14 @@ config CRASH_DUMP
+>  	  For s390, this option also enables zfcpdump.
+>  	  See also <file:Documentation/arch/s390/zfcpdump.rst>
+>  
+> +config CRASH_DM_CRYPT
+> +	bool "Support saving crash dump to dm-crypt encrypted volume"
+> +	depends on CRASH_DUMP
+
+Do we need add dependency on some security features, e.g KEYS?
+The current code will enable the CRASH_DM_CRYPT regardless of the
+existence of LUKS disk at all.
+
+> +	help
+> +	  With this option enabled, user space can intereact with
+> +	  /sys/kernel/crash_dm_crypt_keys to make the dm crypt keys
+> +	  persistent for the crash dump kernel.
+> +
+>  config CRASH_HOTPLUG
+>  	bool "Update the crash elfcorehdr on system configuration changes"
+>  	default y
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index 3c13240dfc9f..f2e5b3e86d12 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -72,6 +72,7 @@ obj-$(CONFIG_VMCORE_INFO) += vmcore_info.o elfcorehdr.o
+>  obj-$(CONFIG_CRASH_RESERVE) += crash_reserve.o
+>  obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
+>  obj-$(CONFIG_CRASH_DUMP) += crash_core.o
+> +obj-$(CONFIG_CRASH_DM_CRYPT) += crash_dump_dm_crypt.o
+>  obj-$(CONFIG_KEXEC) += kexec.o
+>  obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
+>  obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> new file mode 100644
+> index 000000000000..78809189084a
+> --- /dev/null
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -0,0 +1,113 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <keys/user-type.h>
+> +#include <linux/crash_dump.h>
+> +
+> +#define KEY_NUM_MAX 128
+> +#define KEY_SIZE_MAX 256
+> +
+> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
+> +#define KEY_DESC_LEN 48
+> +
+> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
+> +static enum STATE_ENUM {
+> +	FRESH = 0,
+> +	INITIALIZED,
+> +	RECORDED,
+> +	LOADED,
+> +} state;
+> +
+> +static unsigned int key_count;
+> +static size_t keys_header_size;
+> +
+> +struct dm_crypt_key {
+> +	unsigned int key_size;
+> +	char key_desc[KEY_DESC_LEN];
+> +	u8 data[KEY_SIZE_MAX];
+> +};
+> +
+> +static struct keys_header {
+> +	unsigned int key_count;
+> +	struct dm_crypt_key keys[] __counted_by(key_count);
+> +} *keys_header;
+> +
+> +static size_t get_keys_header_size(struct keys_header *keys_header,
+> +				   size_t key_count)
+> +{
+> +	return struct_size(keys_header, keys, key_count);
+> +}
+> +
+> +static int init(const char *buf)
+> +{
+> +	unsigned int total_keys;
+> +	char dummy[5];
+> +
+> +	if (sscanf(buf, "%4s %u", dummy, &total_keys) != 2)
+> +		return -EINVAL;
+
+This is what I wondered and tried to find a document to get why. Can we
+search in the current system and deduce how many keys we can could use
+for kdump kernel? Or we have to retrieve and pass it from user space?
+
+> +
+> +	if (key_count > KEY_NUM_MAX) {
+> +		pr_err("Exceed the maximum number of keys (KEY_NUM_MAX=%u)\n",
+> +		       KEY_NUM_MAX);
+> +		return -EINVAL;
+> +	}
+
+Why chekcing key_count in init()? Don't you need to check
+total_keys instead? Clearly you don't do a boundary test for total_keys,
+otherwise it will trigger issue.
+
+> +
+> +	keys_header_size = get_keys_header_size(keys_header, total_keys);
+> +	key_count = 0;
+> +
+> +	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
+> +	if (!keys_header)
+> +		return -ENOMEM;
+> +
+> +	keys_header->key_count = total_keys;
+> +	state = INITIALIZED;
+> +	return 0;
+> +}
+
+Please add more code comments, kernel-doc for your code, we can't assume
+people reading these codes know the entire matter.
+
