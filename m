@@ -1,121 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE9E1990A1;
-	Thu,  6 Jun 2024 15:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9FD196D8A;
+	Thu,  6 Jun 2024 15:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717686192; cv=none; b=bZBIZOs/+wsPmbLrBuGIVawq0FWDuVGgXIOXtC8bAusfziLkA7heQerbc+wGO/6H1VJ8ZJnBu1dviPp5fZIG4hweSOydknhrnzuyisS3nlh2KBsWi5v4taB/ltBbU88hbbOxccMgKA1/j5zYKWzVAlWF8Q+efiJn0EWsFI0vxos=
+	t=1717688224; cv=none; b=CqBEemiMncSRwy2CMiXtI+xY9d4WnPSwBTJ45lXpqx8pAUTEPbgeG6S4xIhU/bqr5HRUwIYCKB6/0IQPTYRi7LBY6X0yzInWoMF7wI43OnHVOgk3JC4+CA7supaHiaGWxr34Qxso77fkT1yMIOuIZpqzHLNBWSwCgBxjiOOH888=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717686192; c=relaxed/simple;
-	bh=E4KMQm1Ogt1CyuBV5VilL6zJcZs1kYG26oi9sWfoFBA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=WwWHus5C5muZ+3WVD03t5q+pKRmkCaiwK3XsRkte0tzEz1AyDOYEAq7ZpAq2+f5SPoeXS2aV0lCHQYB/72HjkAZEqbuDDdXqdkDjsdKJo8L0eF5MApkj7xnKUufm4Uaw+vgbfWjlqhsBigurCt0LOoBd8LgSgeqRT5LRyNcUAVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FC5C32782;
-	Thu,  6 Jun 2024 15:03:12 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sFEe5-00000000oRl-0FPv;
-	Thu, 06 Jun 2024 11:03:17 -0400
-Message-ID: <20240606150316.916395285@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 06 Jun 2024 11:01:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v2 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
-References: <20240606150143.876469296@goodmis.org>
+	s=arc-20240116; t=1717688224; c=relaxed/simple;
+	bh=8IRaGIAu5SixgtXpZ2x6JYooF0GyoO78DkGRYYTzrFc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YnKTKRaatFxeUoFlywG/yOn1b5EMkUMdvXV43vqmA0bhDjZJYcF0oS7IhguCnkl20PrVwgb6CY42K7XoFKHTXHRkMlNPW9fJY8nHb4Mm54C27EBW67j74IDWWe9OGZFtVHbmR2StU+ZiGRK6agKHPNNzqnB9rE8XMSnTFqkej0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UUzz+siz; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUzz+siz"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57a4ea8058bso1249327a12.1;
+        Thu, 06 Jun 2024 08:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717688221; x=1718293021; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z0CcpV2wixNBBsWnqllQP0w7gH4qVqjZf0tpOhmRG6w=;
+        b=UUzz+sizx25Y4gZSFOr/ufy/QH8647riNSzX7lFGnasTv387VRQMb4m7Fhofo0i9IJ
+         z0s8mcJn+CNItFxK0bI1SdP1tCP3l6FUYmvLhc8dR3gx7gsSWEaDBrxurUP0MJmox7fw
+         DpH22f7C34ueKtk31Qh1TGm12qBpva6gQvrJsw205qc44njrQf/eRJ4z9P0aTwa9n3gr
+         W+H7Fn4cR4A5BTn3VWHNVC2GAzTCapnOeimT1jM4vXZ3oqMjQ28OVwwNTuoneoir4lMq
+         pBD06RrvgLy5LPkzTJZgfXBKirmo0231kzKk4ln0K359xod6VRDFfZMdEPyN2oI7sGRD
+         t1xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717688221; x=1718293021;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z0CcpV2wixNBBsWnqllQP0w7gH4qVqjZf0tpOhmRG6w=;
+        b=bL97zJFZ8JgNVAQlzSddfmGtxvPFFteFCEsYFYsFpc2bMprsbxms2o61rMosfCJyo1
+         oZbLPFC9rhd+ZXD9/rzASfKyWcXBWbDtgSHQL16txf4Tq4VaOw88b6qFIDegAt/hfC+m
+         MYpFrVKFJGMdDZ04croIKtXAQ1VcO9Ym6z9NzMo7ApFwXGWzSA7ZQYIwHdif1tSx29MW
+         fqJXlXkxakK8exq+U4HSvpyOAxtKjZjmzblyDCGPEKLuxZLLZ9EoNVT2uKZqoQgZG01h
+         wz3X3YFkZaHcAGueWKRNgTTCQObyAprenSz0j+6fkk5imncj9wcm4qt3yLbnywwKsNCm
+         lfcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ2tSPG/QR8V2aTKNbNfJDEGiiWtYHkUPH3WH0GtLuAB6O26AiXQZm7b2B8H7QYNVX0/kCmHt/6EFTQgdgzbnZVv58wRUUwz27yGxI6jmhq0lEGqfkrK7+01Z76J7jyzEqVy/vpzku8s90Oj8=
+X-Gm-Message-State: AOJu0Ywh7aEDmq9ZXeWf6zx7Ovx35eP9lH5MtUwc216x2jl+387Zl5+C
+	TPrW87yFGRHpZoQFNwebM9QJjBucia+rPFktm2MilKmkJy8S7zk9FYPRS4qpRy8HUtZCd4hCPKB
+	qrqtdErNg6O6Kr2wYipTOkT/CNCo=
+X-Google-Smtp-Source: AGHT+IGYy+6jXYj5hB4bCe72oEPd7/wFRZlO4muopcqbCwOTrV/F8kNYcHgUnvaExo6oahDVN2z3XOtiHpb/dYfZWqU=
+X-Received: by 2002:a17:906:349b:b0:a6c:717d:b97b with SMTP id
+ a640c23a62f3a-a6c717dbf08mr261559266b.34.1717688220973; Thu, 06 Jun 2024
+ 08:37:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240606144608.97817-2-jean-philippe@linaro.org>
+In-Reply-To: <20240606144608.97817-2-jean-philippe@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 6 Jun 2024 18:36:24 +0300
+Message-ID: <CAHp75VeUo=2kq7R1t8Bv9rWrkv0b20oMv1mPtJBM69rg+S3LRg@mail.gmail.com>
+Subject: Re: [PATCH] mm/util: Swap kmemdup_array() arguments
+To: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, kees@kernel.org, 
+	andy@kernel.org, akpm@linux-foundation.org, linux-tegra@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, Jun 6, 2024 at 5:47=E2=80=AFPM Jean-Philippe Brucker
+<jean-philippe@linaro.org> wrote:
+>
+> GCC 14.1 complains about the argument usage of kmemdup_array():
+>
+>   drivers/soc/tegra/fuse/fuse-tegra.c:130:65: error: 'kmemdup_array' size=
+s specified with 'sizeof' in the earlier argument and not in the later argu=
+ment [-Werror=3Dcalloc-transposed-args]
+>     130 |         fuse->lookups =3D kmemdup_array(fuse->soc->lookups, siz=
+eof(*fuse->lookups),
+>         |                                                                =
+ ^
+>   drivers/soc/tegra/fuse/fuse-tegra.c:130:65: note: earlier argument shou=
+ld specify number of elements, later size of each element
+>
+> The annotation introduced by commit 7d78a7773355 ("string: Add
+> additional __realloc_size() annotations for "dup" helpers") lets the
+> compiler think that kmemdup_array() follows the same format as calloc(),
+> with the number of elements preceding the size of one element. So we
+> could simply swap the arguments to __realloc_size() to get rid of that
+> warning, but it seems cleaner to instead have kmemdup_array() follow the
+> same format as krealloc_array(), memdup_array_user(), calloc() etc.
 
-Add a method to find a region specified by reserve_mem=nn:align:name for
-ramoops. Adding a kernel command line parameter:
+LGTM, it seems we don't have many users (yet), this looks like a
+comprehensive change.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-  reserve_mem=12M:4096:oops ramoops.mem_name=oops
-
-Will use the size and location defined by the memmap parameter where it
-finds the memory and labels it "oops". The "oops" in the ramoops option
-is used to search for it.
-
-This allows for arbitrary RAM to be used for ramoops if it is known that
-the memory is not cleared on kernel crashes or soft reboots.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/pstore/ram.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index b1a455f42e93..bae8486045eb 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -50,6 +50,11 @@ module_param_hw(mem_address, ullong, other, 0400);
- MODULE_PARM_DESC(mem_address,
- 		"start of reserved RAM used to store oops/panic logs");
- 
-+static char *mem_name;
-+module_param_named(mem_name, mem_name, charp, 0400);
-+MODULE_PARM_DESC(mem_name,
-+		"name of kernel param that holds addr (builtin only)");
-+
- static ulong mem_size;
- module_param(mem_size, ulong, 0400);
- MODULE_PARM_DESC(mem_size,
-@@ -914,6 +919,16 @@ static void __init ramoops_register_dummy(void)
- {
- 	struct ramoops_platform_data pdata;
- 
-+	if (mem_name) {
-+		unsigned long start;
-+		unsigned long size;
-+
-+		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
-+			mem_address = start;
-+			mem_size = size;
-+		}
-+	}
-+
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
- 	 * parameters. If mem_size isn't set, then there are no module
--- 
-2.43.0
-
-
+--=20
+With Best Regards,
+Andy Shevchenko
