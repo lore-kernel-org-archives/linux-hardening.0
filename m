@@ -1,85 +1,313 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7DA196C97;
-	Thu,  6 Jun 2024 17:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21A819750B;
+	Thu,  6 Jun 2024 17:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695354; cv=none; b=OzuwRr9WULWcgg2JHmG+zs47QsbZbsud+VYt7ZEbR/ZWQALbJSXEjMEIybSsu5rxy3UNoU3CE8n5Skzo+sTTihDiRdM7aDnyD5Htw/Acjtc2VUY3KLqdLeNVj7V/yft+AvN5jecxLpDfNZa2dT2OepQh5DpMc0Vxss3rr6o31rE=
+	t=1717695942; cv=none; b=jwJUQ35WdLZuX8o91pfrYo8wasa+rvUKcm+3aPC3Pk+r0O3NCr10jfYJ3eQV/L8bbNMncQr1GZPa1As7u1oB9ombOlOacwYQqBmCt/vTvw/kXXrerlkLLWeVShmKobzxLcLjUdlPA7UnvRx7MjTz9DDncdVQy0L1LiakuKJbqNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695354; c=relaxed/simple;
-	bh=AesbCLY3C8Wl5ZVWOlcwMITxlMcAhfqxhvxuq5E+Yrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QqUgISxJY9eH8QsdxmORn5jC3DAuA7rI0yVzeznh6OGQrNeoU0moj0GhuRHWyjg8blnu/DoV07hVfCpqzNIszRCqSjJeHDAZnNrK/qMh5oo6a33BmpcwCBYZc+R1eswK/Fo9nseNQ0f0csA9A99TDNmGW3yKjdnWLESuYSOwnVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gtoARRgm; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717695942; c=relaxed/simple;
+	bh=VHp5cNwisficT3UFJaptVr+x7WcGyhbY7LEC8jqZGqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JTg67s5ATAHq6xYam5jPv1MpF3ObN3uYyeJlwS14d67mNUSmf5EQxnkXCGqrHoYDpn4jL6x/XwEofnM4LjU7x8DM2ebgKMqfov9MyBgfKvDIVlfw3eEEeKhtlwr6YLJva4FmRI7rjt1+wQgOEtd0r8QZ6qCRWxlXWnd1kNWWiVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra5MycXp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtoARRgm"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so24756021fa.0;
-        Thu, 06 Jun 2024 10:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717695350; x=1718300150; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AesbCLY3C8Wl5ZVWOlcwMITxlMcAhfqxhvxuq5E+Yrs=;
-        b=gtoARRgmFJD+6GnYgHX/5oDquJ/IPbpztHsjTPXxe5ZxoaTg34IaJoy/s7ViYB/Q43
-         HrxPRDdOro+ZHvt8EMux4engLsVSG3dGr6YwVmRX15je1DNHwE+mm4JNSOylrUFXblVU
-         JoosVd1ab1k8h6QSsgTB7y65czmMi8SSRRIRBo+evbohCgVNeHg+iFgbEZm4/+VEfIEF
-         /ISNFw6wSqr3aoz+8/8ZmIBd+gLI/37JkNRUt/BscTQ43AyWwc0MxiiQ64sPm319WuuF
-         Cy9CdSIQhSy1Qpwx63/GELv7HbK0NH4t4Kd995IYU1IFcdb3XV9tGwLo/mI3B0krq1xk
-         wUEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717695350; x=1718300150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AesbCLY3C8Wl5ZVWOlcwMITxlMcAhfqxhvxuq5E+Yrs=;
-        b=Y8cx73GzCZoMFJXQJqc6uKIdAIgXVNmgBSnrEUuyhcq78kR4ySRsQq5wYEZ9KrEz+T
-         GCK+dqeMnzZVuj4tAkodj5JJDE/NfhJHQbT4RU7Tu/ZpTTrBU5oqfk9DubXPbj/koj0s
-         tmh4qcOKWGu8G84hp7RlMCAxufhJc+lnW3So8lL74T8Q0VM0JLhdY7CGXD44vkRcWQeq
-         D2aLmCSuysOSqg81YiUMQLveXha8Q/rZnLFpUzUgw3I+WrMX+zTwQ1VZIea+JNZiVaPe
-         Jeb78RQ9uF6MyRmnRHQG0V1swoJhw9R0MMtrzFvwPfk+d28r6DsVaKYyC0C4a596TTMH
-         gqwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQXiSWCRbyZ5Vls9LWQzWvNUzyw96kLgWg+ZW1Tce6V1CCsLwHO/eKG9uvQwnIpKK5vJ+mHWwzaXbMxAoA482gSLr+UgsjaqLLJCYBZUHdspfWlhYfZYSd+Twlpd02IyyuDV1yrtRAjWvSrU4=
-X-Gm-Message-State: AOJu0Yz0yh5hCz9d3z20QCyCGR15Or52mAFf7GQQc/gb/LpnHYnH8Lze
-	PIOkFdEolINZte7/ehgyaimj1jbwNYXyX8eiNhhJSN3ZNcxb1VItaSz/Dn3POmj3/J6MHdIzfNp
-	VzxxM+SpRKIQwQZpN3m3eZfApxYs=
-X-Google-Smtp-Source: AGHT+IHpYZQDgmwsdi1Eup8UsmFKcDq6w48zCdT+QkZMDNgd4sGW+4p/3TRMwgv5J3E58Yv0eIPphQdbHLw4ZG+ZOD8=
-X-Received: by 2002:a05:6512:404:b0:52b:8ad9:cf0a with SMTP id
- 2adb3069b0e04-52bb9fc5e89mr219837e87.51.1717695350387; Thu, 06 Jun 2024
- 10:35:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra5MycXp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4005BC2BD10;
+	Thu,  6 Jun 2024 17:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717695942;
+	bh=VHp5cNwisficT3UFJaptVr+x7WcGyhbY7LEC8jqZGqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ra5MycXpxbLxc2Ty0FCZekvRNBJxHXadnEf6LNXLfv8hRxpZP3jAsaXygVsN1G4jJ
+	 0DkkijS5Qr9d5Z7mDj/DQZL4aYfgBXAXRSJNdN/pPCD7BRMoBJb37FLh21/3OgsHO6
+	 kyFL36ND4E7u/5I11pkgAkX5u6AlzlqSaEt+9zgjf1YlWutLjhGIUxtYmFswdUALT+
+	 /s5G314AcvywHr2sCtJaixL3aLn6rN+0Wo83rh4b8MH87p5MW/gmHQ3kChRyuQMk9V
+	 2cIhbQ4QZvov2bJhx1ablZvUk8nDn/9Wu4uckePcNp5uEQJmUhAYALf711Le98Bk0x
+	 tLrZUM/r+9PdA==
+Date: Thu, 6 Jun 2024 10:45:41 -0700
+From: Kees Cook <kees@kernel.org>
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com,
+	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com,
+	jorgelo@chromium.org, Guenter Roeck <groeck@chromium.org>,
+	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Christian Brauner <brauner@kernel.org>, Jeff Xu <jeffxu@google.com>,
+	Mike Frysinger <vapier@chromium.org>
+Subject: Re: [PATCH v5 2/2] proc: restrict /proc/pid/mem
+Message-ID: <202406060917.8DEE8E3@keescook>
+References: <20240605164931.3753-1-adrian.ratiu@collabora.com>
+ <20240605164931.3753-2-adrian.ratiu@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606144608.97817-2-jean-philippe@linaro.org> <171768935175.54606.14878127902164737048.b4-ty@kernel.org>
-In-Reply-To: <171768935175.54606.14878127902164737048.b4-ty@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 6 Jun 2024 20:35:13 +0300
-Message-ID: <CAHp75Vc-ALE=VDJs9062y-z5JW9_=z9axx2DL6B5ZeWD7zo-qQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/util: Swap kmemdup_array() arguments
-To: Kees Cook <kees@kernel.org>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, andy@kernel.org, 
-	akpm@linux-foundation.org, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605164931.3753-2-adrian.ratiu@collabora.com>
 
-On Thu, Jun 6, 2024 at 6:56=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
-> On Thu, 06 Jun 2024 15:46:09 +0100, Jean-Philippe Brucker wrote:
+On Wed, Jun 05, 2024 at 07:49:31PM +0300, Adrian Ratiu wrote:
+> +	proc_mem.restrict_foll_force= [KNL]
+> +			Format: {all | ptracer}
+> +			Restricts the use of the FOLL_FORCE flag for /proc/*/mem access.
+> +			If restricted, the FOLL_FORCE flag will not be added to vm accesses.
+> +			Can be one of:
+> +			- 'all' restricts all access unconditionally.
+> +			- 'ptracer' allows access only for ptracer processes.
+> +			If not specified, FOLL_FORCE is always used.
 
-[...]
+It dawns on me that we likely need an "off" setting for these in case it
+was CONFIG-enabled...
 
-> Applied to for-next/hardening, thanks!
+> +static int __init early_proc_mem_restrict_##name(char *buf)			\
+> +{										\
+> +	if (!buf)								\
+> +		return -EINVAL;							\
+> +										\
+> +	if (strcmp(buf, "all") == 0)						\
+> +		static_key_slow_inc(&proc_mem_restrict_##name##_all.key);	\
+> +	else if (strcmp(buf, "ptracer") == 0)					\
+> +		static_key_slow_inc(&proc_mem_restrict_##name##_ptracer.key);	\
+> +	return 0;								\
+> +}										\
+> +early_param("proc_mem.restrict_" #name, early_proc_mem_restrict_##name)
 
-Btw, is it possible to get this for v6.10, so we may start enabling it
-for others?
+Why slow_inc here instead of the normal static_key_enable/disable?
 
---=20
-With Best Regards,
-Andy Shevchenko
+And we should report misparsing too, so perhaps:
+
+static int __init early_proc_mem_restrict_##name(char *buf)			\
+{										\
+	if (!buf)								\
+		return -EINVAL;							\
+										\
+	if (strcmp(buf, "all") == 0) {						\
+		static_key_enable(&proc_mem_restrict_##name##_all.key);		\
+		static_key_disable(&proc_mem_restrict_##name##_ptracer.key);	\
+	} else if (strcmp(buf, "ptracer") == 0) {				\
+		static_key_disable(&proc_mem_restrict_##name##_all.key);	\
+		static_key_enable(&proc_mem_restrict_##name##_ptracer.key);	\
+	} else if (strcmp(buf, "off") == 0) {					\
+		static_key_disable(&proc_mem_restrict_##name##_all.key);	\
+		static_key_disable(&proc_mem_restrict_##name##_ptracer.key);	\
+	} else									\
+		pr_warn("%s: ignoring unknown option '%s'\n",			\
+			"proc_mem.restrict_" #name, buf);			\
+	return 0;								\
+}										\
+early_param("proc_mem.restrict_" #name, early_proc_mem_restrict_##name)
+
+> +static int __mem_open_access_permitted(struct file *file, struct task_struct *task)
+> +{
+> +	bool is_ptracer;
+> +
+> +	rcu_read_lock();
+> +	is_ptracer = current == ptrace_parent(task);
+> +	rcu_read_unlock();
+> +
+> +	if (file->f_mode & FMODE_WRITE) {
+> +		/* Deny if writes are unconditionally disabled via param */
+> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_DEFAULT,
+> +					&proc_mem_restrict_open_write_all))
+> +			return -EACCES;
+> +
+> +		/* Deny if writes are allowed only for ptracers via param */
+> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_PTRACE_DEFAULT,
+> +					&proc_mem_restrict_open_write_ptracer) &&
+> +		    !is_ptracer)
+> +			return -EACCES;
+> +	}
+> +
+> +	if (file->f_mode & FMODE_READ) {
+> +		/* Deny if reads are unconditionally disabled via param */
+> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_DEFAULT,
+> +					&proc_mem_restrict_open_read_all))
+> +			return -EACCES;
+> +
+> +		/* Deny if reads are allowed only for ptracers via param */
+> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_PTRACE_DEFAULT,
+> +					&proc_mem_restrict_open_read_ptracer) &&
+> +		    !is_ptracer)
+> +			return -EACCES;
+> +	}
+> +
+> +	return 0; /* R/W are not restricted */
+> +}
+
+Given how deeply some of these behaviors may be in userspace, it might
+be more friendly to report the new restrictions with a pr_notice() so
+problems can be more easily tracked down. For example:
+
+static void report_mem_rw_rejection(const char *action, struct task_struct *task)
+{
+	pr_warn_ratelimited("Denied %s of /proc/%d/mem (%s) by pid %d (%s)\n",
+			    action, task_pid_nr(task), task->comm,
+			    task_pid_nr(current), current->comm);
+}
+
+...
+
+	if (file->f_mode & FMODE_WRITE) {
+		/* Deny if writes are unconditionally disabled via param */
+		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_DEFAULT,
+					&proc_mem_restrict_open_write_all)) {
+			report_mem_rw_reject("all open-for-write");
+			return -EACCES;
+		}
+
+		/* Deny if writes are allowed only for ptracers via param */
+		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_PTRACE_DEFAULT,
+					&proc_mem_restrict_open_write_ptracer) &&
+		    !is_ptracer)
+			report_mem_rw_reject("non-ptracer open-for-write");
+			return -EACCES;
+	}
+
+etc
+
+> +static bool __mem_rw_current_is_ptracer(struct file *file)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +	struct task_struct *task = get_proc_task(inode);
+> +	struct mm_struct *mm = NULL;
+> +	int is_ptracer = false, has_mm_access = false;
+> +
+> +	if (task) {
+> +		rcu_read_lock();
+> +		is_ptracer = current == ptrace_parent(task);
+> +		rcu_read_unlock();
+> +
+> +		mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
+> +		if (mm && file->private_data == mm) {
+> +			has_mm_access = true;
+> +			mmput(mm);
+> +		}
+> +
+> +		put_task_struct(task);
+> +	}
+> +
+> +	return is_ptracer && has_mm_access;
+> +}
+
+Thanks; this looks right to me now!
+
+> +menu "Procfs mem restriction options"
+> +
+> +config PROC_MEM_RESTRICT_FOLL_FORCE_DEFAULT
+> +	bool "Restrict all FOLL_FORCE flag usage"
+> +	default n
+> +	help
+> +	  Restrict all FOLL_FORCE usage during /proc/*/mem RW.
+> +	  Debuggers like GDB require using FOLL_FORCE for basic
+> +	  functionality.
+> +
+> +config PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT
+> +	bool "Restrict FOLL_FORCE usage except for ptracers"
+> +	default n
+> +	help
+> +	  Restrict FOLL_FORCE usage during /proc/*/mem RW, except
+> +	  for ptracer processes. Debuggers like GDB require using
+> +	  FOLL_FORCE for basic functionality.
+
+Can we adjust the Kconfigs to match the bootparam arguments? i.e.
+instead of two for each mode, how about one with 3 settings ("all",
+"ptrace", or "off")
+
+choice
+	prompt "Restrict /proc/pid/mem FOLL_FORCE usage"
+	default PROC_MEM_RESTRICT_FOLL_FORCE_OFF
+	help
+	  Reading and writing of /proc/pid/mem bypasses memory permission
+	  checks due to the internal use of the FOLL_FORCE flag. This can be
+	  used by attackers to manipulate process memory contents that
+	  would have been otherwise protected. However, debuggers, like GDB,
+	  use this to set breakpoints, etc. To force debuggers to fall back
+	  to PEEK/POKE, see PROC_MEM_RESTRICT_OPEN_WRITE_ALL.
+
+	config PROC_MEM_RESTRICT_FOLL_FORCE_OFF
+	bool "Do not restrict FOLL_FORCE usage with /proc/pid/mem (regular)"
+	help
+	  Regular behavior: continue to use the FOLL_FORCE flag for
+	  /proc/pid/mem access.
+
+	config PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE
+	bool "Only allow ptracers to use FOLL_FORCE with /proc/pid/mem (safer)"
+	help
+	  Only use the FOLL_FORCE flag for /proc/pid/mem access when the
+	  current task is the active ptracer of the target task. (Safer,
+	  least disruptive to most usage patterns.)
+
+	config PROC_MEM_RESTRICT_FOLL_FORCE_ALL
+	bool "Do not use FOLL_FORCE with /proc/pid/mem (safest)"
+	help
+	  Remove the FOLL_FORCE flag for all /proc/pid/mem accesses.
+	  (Safest, but may be disruptive to some usage patterns.)
+endchoice
+
+Then the static_keys can be defined like this mess (I couldn't find a
+cleaner way to do it):
+
+#define DEFINE_STATIC_KEY_PROC_MEM_ALL(name) \
+	DEFINE_STATIC_KEY_TRUE_RO(proc_mem_restrict_##name##_all);	\
+	DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_##name##_ptracer);
+#define DEFINE_STATIC_KEY_PROC_MEM_PTRACE(name) \
+	DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_##name##_all);	\
+	DEFINE_STATIC_KEY_TRUE_RO(proc_mem_restrict_##name##_ptracer);
+#define DEFINE_STATIC_KEY_PROC_MEM_OFF(name) \
+	DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_##name##_all);	\
+	DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_##name##_ptracer);
+
+#define DEFINE_STATIC_KEY_PROC_MEM_0(level, name)
+#define DEFINE_STATIC_KEY_PROC_MEM_1(level, name)		\
+	DEFINE_STATIC_KEY_PROC_MEM_##level(name)
+
+#define _DEFINE_STATIC_KEY_PROC_MEM_PICK(enabled, level, name)   \
+DEFINE_STATIC_KEY_PROC_MEM_##enabled(level, name)
+
+#define DEFINE_STATIC_KEY_PROC_MEM_PICK(enabled, level, name)   \
+_DEFINE_STATIC_KEY_PROC_MEM_PICK(enabled, level, name)
+
+#define DEFINE_STATIC_KEY_PROC_MEM(CFG, name)			\
+DEFINE_STATIC_KEY_PROC_MEM_PICK(IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_##CFG##_ALL), ALL, name)
+DEFINE_STATIC_KEY_PROC_MEM_PICK(IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_##CFG##_PTRACE), PTRACE, name)
+DEFINE_STATIC_KEY_PROC_MEM_PICK(IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_##CFG##_OFF), OFF, name)
+
+#define DEFINE_EARLY_PROC_MEM_RESTRICT(CFG, name)				\
+DEFINE_STATIC_KEY_PROC_MEM(CFG, name)						\
+static int __init early_proc_mem_restrict_##name(char *buf)			\
+{										\
+	if (!buf)								\
+		return -EINVAL;							\
+										\
+	if (strcmp(buf, "all") == 0) {						\
+		static_key_enable(&proc_mem_restrict_##name##_all.key);		\
+		static_key_disable(&proc_mem_restrict_##name##_ptracer.key);	\
+	} else if (strcmp(buf, "ptracer") == 0) {				\
+		static_key_disable(&proc_mem_restrict_##name##_all.key);	\
+		static_key_enable(&proc_mem_restrict_##name##_ptracer.key);	\
+	} else if (strcmp(buf, "off") == 0) {					\
+		static_key_disable(&proc_mem_restrict_##name##_all.key);	\
+		static_key_disable(&proc_mem_restrict_##name##_ptracer.key);	\
+	} else									\
+		pr_warn("%s: ignoring unknown option '%s'\n",			\
+			"proc_mem.restrict_" #name, buf);			\
+	return 0;								\
+}										\
+early_param("proc_mem.restrict_" #name, early_proc_mem_restrict_##name)
+
+DEFINE_EARLY_PROC_MEM_RESTRICT(OPEN_READ, open_read);
+DEFINE_EARLY_PROC_MEM_RESTRICT(OPEN_WRITE, open_write);
+DEFINE_EARLY_PROC_MEM_RESTRICT(WRITE, write);
+DEFINE_EARLY_PROC_MEM_RESTRICT(FOLL_FORCE, foll_force);
+
+
+
+-- 
+Kees Cook
