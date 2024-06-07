@@ -1,92 +1,69 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2052.outbound.protection.outlook.com [40.92.74.52])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05olkn2070.outbound.protection.outlook.com [40.92.89.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8FC190688;
-	Fri,  7 Jun 2024 17:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFFF16D338;
+	Fri,  7 Jun 2024 17:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.89.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717779886; cv=fail; b=kgI0WR+ZJ3a35QcK6iH90Bl8K3B9MLYQYggH0w9Z0Ym03AK2lu7RhEmg5DDX3V7atoexsy8Sj8O9lnSVtlJZZ/VeV9dIkBdRUHw+R96Uk3t7/BJjbOExpHzCo1cxM6OzIGzMrdkGHqOcGj8rD3c/R1IkwfATCdjeZGY8sWYEAVU=
+	t=1717780696; cv=fail; b=FdZY3VzPRtnjhonM0Eb3Gi74n4uSBPJjnuw3L9afNeSt6PwGF/IJaAfvE1fWCxe2Y2v0zLzIlYhpE7xFDITYlN0lYT/qIHIvTHGLMREDvKJYKuRjCig9lY1Dw4y6wHKjo9Md8u3NEPqN+rs+qOajFPCFBRJwbXTY5FJOGe9HVtk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717779886; c=relaxed/simple;
-	bh=/APxzBdGAgCQHYOYy6c4nInDZafkzaHQiFIO8imWRiE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=SAG9Zndv6KczJGTZI1JuzHN/w4DI07ICiNc8XspYu5A5Gx7TeTZD/VIDrUacq8YHy+PneicmIcF7NnfILmu+ITiOXvjaZ9AVsbw/5fiyWcEoWeM55qRFbYZfszJxMDo4M56Mucp9C+ghFFfBd/YOdfejBUzoelGgOgGEdNy35qc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Acyy7jMF; arc=fail smtp.client-ip=40.92.74.52
+	s=arc-20240116; t=1717780696; c=relaxed/simple;
+	bh=hNqvvMmFtm+KUDtVgFDySpMNZ5jfEKKj69PMRQJGGzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EcrasLtUEt+D514ZP+rg+snI7Q4Xu8MyRLfVJ6WbJ55t1mAhUODe9+6Jz6XEwBwWP4UBZ2sjjaQvYwO8eK2Sct7Qh0UcaKdv48NMIpEaS6y6reZAMJ2r+uieMMJWCgWe2fby/2YCCnXNiojmlwQn2y66Qk1LqdKEnSgysEkx0P8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=otFcK7Qr; arc=fail smtp.client-ip=40.92.89.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Acyy7jMF"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="otFcK7Qr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oOC//jrf+iCdMI+ddKAALgzfejKMmud2WHC96QjxcWxr2E5bOnfXw2gLSSCZ9OdbrvNfh6QNk1SO+ghdtC3VfolSRShCaSbfi6UAbehGyo17i7sHV/KRbxqlZ9uh/zhmkhd8AY6smfTsurtbb5RXN+P+czSMHLj8pZkOkz6Zw8S7er5sq7aCQ1+DxjT46hjm/J5ydxH6DSotjw0V7TsycokJmd4+e/KdSOfDrqg/7nDACfFj/WCsiKUjIYNHtE2BBciZYDIbpVK1R/3H2t8TfYiBQ1jZ5m3GvTiplTv61SsPlscWoGAN9XShwSgPi6SpkUfZrg22iyqQZHMipQ8ECQ==
+ b=i3/b4UNbJb0hXKf91qsYWDDJ/hQqRfkA7xvqBY8w98X8B9Ji0WJmsoGcqIaz7U4y1XF/IlLhHLJ5UhH+Q3AOOmlsUoYzAJ9XsqhEyP08LSX7pqcpa5qDi4JGirgBL0lFH0l01qQx/eGQbk7tkCk0MIU+bCLMNon5+mCSl2oeVZmRJjOB+3spy7irMlzA8x9oXzIaNtxB50TTIa4/qUf441NfhfpqH4ZxSXu5pjnuSXvLdWrmg+hdguHyhyJZFkLHuweo8DKSU60elNnlJRW02IhHdgpgpL4Nl4wYP7Ke+W5Z0rZGMO6NvGldTcdTzjhd4FDKwP2jK32+GBE+ndfzbQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ny7VFuoEWNcQDzleN9fURMkBSPtAa8xUyfA1sR83lBY=;
- b=hIHYv76/dmms1lnC/hHyrpy5eGArqckXoWIYvowKPHL+cKVBj7Irm0xyIq+XDV7vm8ATyUmB3mDPfTCP1qNEf0bv4UpDd/l7PCDefRSoqQQFHaPV23RDMxYR8C+upTaHJtP6Tgkmg1p8WmcMExhpa3f/zcR/Ii1o6BmGbdqiVrBwNd5dhz7MvslgrwaICHdix47LiGCqSJlnEYPYT1gIZty37JtR3RUzgWN5iaNtVMQuClkEySEYPCKRcCldA7C8kibJGzn7cpPKrndDj6ZRole4L5xwkZbIMWz14TQfbT97KFC5wb/0tqqQytdCg7d1RmV2nT2gBf9dlDik97d+9w==
+ bh=/XREG9g6kiJWZRhiTfGDqFfGtNxQi+q3NxyQo6Humyo=;
+ b=QyVub8eATYEGU9RunsHg865g/MHfAdj9ioYrikSQ4VBJZ/R6ACZGib9oJqwVujAc3IN9l10i2C+m+g+xdxMKLbOJCmqmGb+uv2s7Ezm7dq5CCu2IJuSlZxPdyYO3U3F9NDPTlZMvPZMaG8l7UWv6u4K+l3FC86Y6yUbRxMPLApix6tSz8h7T79wG23mUKWzFwOS0B2t647g7raH2IhKFmFkFThHCkuQIAUHeGVzhylgWiMdNxK2XM6xFqNaMiROsXfX6cMEg0qUT8yxKHRU+IjuZZhMC/0qrpPOwWy8x0O7ylzdLE0jsFp8HmdUshk+UvVdhtTv7V4XwbykZLRloXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ny7VFuoEWNcQDzleN9fURMkBSPtAa8xUyfA1sR83lBY=;
- b=Acyy7jMFEMynlmbwEStYSQnQt0qUdWh1XwUvFGoGLizb7urvZdp1SqG8m5+W4leqj+2OoGQUVZiEMHzsZHNwD3zLeBo4eTOUlK0XePjQDe6X57xiFDN7j3Z8cVXppjuTbjg3kiVbuUZ2DMEc7MoAwfb+hAUO8Ajf7VrVedq7TF2NOZaT4j38uaHz8s5tLRCGv3QuFCXVoh7wGUYJqIBosf5+kfEwpAqg21RFYkUe8pxYEMSMtzRJBueTf28In1J8G7nCHALktFDsJ1PKsO1IczMs8aK9JIRMlEIjoET++WNNJbPnyTEM2AAB+kBXO8nDpLovR6K1HmN8WM60HOKffg==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by AS4PR02MB7925.eurprd02.prod.outlook.com (2603:10a6:20b:4b4::22) with
+ bh=/XREG9g6kiJWZRhiTfGDqFfGtNxQi+q3NxyQo6Humyo=;
+ b=otFcK7QrZHHOGb2jue4hulncLFJ5I1P6GtC6+gof6abhUZ2T2de1uDd/imFYGDFvPqCIOG0YuGNzydgw5/yPtBilGhb7ZdqxQsp1OFcRwQ/g2e4vif39osQmG64FpEb+hCDL4nRvTguYntpMp+lah8DvbeLJJaOpm+BM6C9HhEV2EAkcDJb5APlbnIMlSUA5wOllvcshBDCsqcXxyF7TGe9n2P3TEbMkCBUVEr9w2g8H+PEHua/pKk72fGvIZQw5ecAGYoK1qCAQo4iR0wTR9H7iHXR60ArQAuHLHspo2ovVFvC+9NVTkHvX5Uoq5dUbZTsqzdL/BqIx6vIVUHiaxg==
+Received: from PAXPR02MB7248.eurprd02.prod.outlook.com (2603:10a6:102:1c7::13)
+ by AS1PR02MB8049.eurprd02.prod.outlook.com (2603:10a6:20b:4c5::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.23; Fri, 7 Jun
- 2024 17:04:40 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
- 17:04:40 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.31; Fri, 7 Jun
+ 2024 17:18:11 +0000
+Received: from PAXPR02MB7248.eurprd02.prod.outlook.com
+ ([fe80::72f5:8a03:5810:be20]) by PAXPR02MB7248.eurprd02.prod.outlook.com
+ ([fe80::72f5:8a03:5810:be20%6]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
+ 17:18:11 +0000
 From: Erick Archer <erick.archer@outlook.com>
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Stephen Chandler Paul <thatslyude@gmail.com>,
-	Michal Simek <michal.simek@amd.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Yang Li <yang.lee@linux.alibaba.com>,
+	Arnd Bergmann <arnd@kernel.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
 	Kees Cook <keescook@chromium.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Justin Stitt <justinstitt@google.com>
 Cc: Erick Archer <erick.archer@outlook.com>,
 	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] Input: serio - use sizeof(*pointer) instead of sizeof(type)
-Date: Fri,  7 Jun 2024 19:04:23 +0200
+Subject: [PATCH] Input: gameport - use sizeof(*pointer) instead of sizeof(type)
+Date: Fri,  7 Jun 2024 19:17:55 +0200
 Message-ID:
- <AS8PR02MB7237D3D898CCC9C50C18DE078BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <PAXPR02MB72483F512F863C74A4AECA2B8BFB2@PAXPR02MB7248.eurprd02.prod.outlook.com>
 X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [dvbqOSLz1KQslgDXxDtV2E6m9/LG8Bu7]
-X-ClientProxiedBy: MA2P292CA0015.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:1::12) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
+X-TMN: [0f7S5K1H/acP37tmgmkcfaY+34AR+dYT]
+X-ClientProxiedBy: MA4P292CA0012.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2d::9) To PAXPR02MB7248.eurprd02.prod.outlook.com
+ (2603:10a6:102:1c7::13)
 X-Microsoft-Original-Message-ID:
- <20240607170423.10654-1-erick.archer@outlook.com>
+ <20240607171755.11948-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -95,47 +72,47 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AS4PR02MB7925:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88bf67e8-b015-482a-ecd4-08dc8713eb85
+X-MS-TrafficTypeDiagnostic: PAXPR02MB7248:EE_|AS1PR02MB8049:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00da58dc-3783-49b6-fade-08dc8715ceab
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
+	BCL:0;ARA:14566002|461199019|3412199016|440099019|1710799017;
 X-Microsoft-Antispam-Message-Info:
-	g7++UpJXAeFjvG1VvrY86WUaIIdelj18I4EXpPfUZoy+iJ7yTcfJVgJRO3OX5jXzYBr79VWkYe/dZwSmqA4wBUlyUWy1vypToG4AJe8WtDgGMijGJuw72NhkyVYXuwFIrvoGXI6rU0p6m0R0CI1RKfP/gfrc43jxrOM2lC8TJLK6RMJBEFFXbT3GM0X4hkZ0IbO1m8otH9h3npQqqgfwYNw2xhTpTF2N8C6idJDsf60cHmPUQUEVGfpJVeRyunOgOzFzYoawaL5LYHALAe1/5XmWdLhNTSuk0Km2CRTxMwkzdvuKjm56uEUH+DkrWaTqO9puh7JVZJ0zPO0JiCzCqd9bHNb29yx0VXyrBUFmdTyGbhgGVf9pDLhIFCeL/f0YvlT7/9Zz0C+fNrkp9XrpmNV/3Zf4Z0SIU4mlqWqvsWy78ZuiZmH6b7x/02/aFjV4VLcHTvxch+Bm1kL/7ZonWtPulaSPLZmLeKRw+fjELzM5msqHnZHIa2LEh62dZtx89y/0pWL/TM4F0LJ1jQUZWK4wzaT2yIiBa0eWyNc8mwC8ekySyYLLYMFd1Qlrl2B0nSS1xFrxhgAWZKIIqLnOClJUJCVT8Qyp/5tzY3u8H9p1fRFQOV5eNHX5+gnQ/KK8
+	/r592CNKkysc4rhHdRNjuZVJwJBZK6O+9ufLNDC/t3yxwVrZg/jC4bARQqzrp24+JOHsv9mowviGPWlz2BR+DpQcSw89/BT9oklqgRftPsGQyAO976DtdR8CrLNvh76Bw8dWbAjib8IyCIXlCzsXHTkQbobF5IgNpgYtlZoDOtRbsMjatirVywnD8D/rBTvXPdCf9b4Y4IhzIo7T83na/4ts5R4o03eb26NfmNSm8vJPLjiY+xKvrvKNjIKhVCjIH7rDyH+03nenCBiDJLUaBKJnw6z70TlTNrwZErfA3pDJ+kxzbC+g5zwrJdnM939zpVMoQi51O6Wt3LXGVrkmWKmXZoFSV/7SdMNwlkw75m5UICnevskoYuc9f4KyZ7bxpaz1Ti09MugaA0k7+TprmAd8Mg3QYtBLVL7XaOQlfUfqYowX9kz3Ot8RUFmTm5IuVNUM9LV928Ln4sa5pvbDRPs/+0NKxEfUW7xRaaVdHbA4SMq1I6wxQJ/Yv8v3ANC//gvr8ZYUYNTG5tP1QuZf7c+6JZhvZNXDViTlat1ORT1fPv1VsC4x8Ld4rSJWgFCSsB1Kg+N97gKczvx6WfGjooMIIJsIZq2XI7x0hrE4QXCP0ht5WFTqfMI6YANlushf
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vgL3luBTyVrYerYLRXYoe5DYG44XQG058xyWLRWyPjfofTqAxOc/pgyZ39pZ?=
- =?us-ascii?Q?zAG/89clXbx6x3XMG9nFCYvOooxzFVsOm+do1eoOW/t8yySnXLXi70y488ga?=
- =?us-ascii?Q?4aDABBvDPSjJNpo22pkqWmIqHccKuUl3OjnSaSgvvybCtuMEfV46FTU5KwFf?=
- =?us-ascii?Q?kZmI+kHM0kgIGZNnn0bwhSORQjJtNSuOUK2eDxLd19HLBQKJL7hgpcBvpFpT?=
- =?us-ascii?Q?xGiS3PqQYhVMrJu9xYvqRLCLbDW0OE1pSHdiyaH6W1qpWQRcsXCtSdaVTIFA?=
- =?us-ascii?Q?T5m9tPPmEbWp6Yx8EXzcTnpcBsifWMi3SQWHD05YZ2HTOmuJdz2GJMDuqkx7?=
- =?us-ascii?Q?T8+dT13afJesaqrVRkh2mWZSA84e3FYyd34oE6SgaR1FK98jKxWko9aVman0?=
- =?us-ascii?Q?i1LFmR2nYRvUD8+isfxGTOcoUOcM9wuwwh2/5qOzadRLMjgT4trh5KcX0X0e?=
- =?us-ascii?Q?IYvLIeJ65v3NTp70ExytVyRNfFt+HUDyRKzML534NohCOMLdp39rPkjO/TCF?=
- =?us-ascii?Q?RSszpEMg0n2SQUbHEMCIJdu8o/maYZ6f3QA3sQ9QletRKZ6Jd4oTjlHjtlhU?=
- =?us-ascii?Q?K42nk3woCL+kVRMq7Bp5j9+keIEL2AaPAxIkjOSlHrBQbYGhRKiGRiHzY7TO?=
- =?us-ascii?Q?I5OFyJ/fdCwaW0E1WY+1b5afdYCtAd+TOCEE0jYpaEBmuIRENp5oQmJN4EfA?=
- =?us-ascii?Q?SR59jC4AVMFW5qF6J8SAs0KJ3Z0F12Z2fgbzXXna8peO8CSiOtNnUIqEVnW3?=
- =?us-ascii?Q?hxTx+v6JACO/KagE7J0jrNzPuNRbJ6l1jD9op2KN9YcHiwiLUHWrXGYhKhUf?=
- =?us-ascii?Q?l4r/Ymw8PEC0bGddyurv7hA7ZDmkFFYqzabcPCXzfoF/rX2ndfXT+8N0SYGG?=
- =?us-ascii?Q?OWm0dFXCwfNrxyziVYpxi5f9iJjY8uEiru1OQdMaEhpzowk3U8UVE4lGv1kW?=
- =?us-ascii?Q?XukDUZtaDB0dndnf4mBsnakfVXm7EnrSSyFZm7MCq5fU8QitbOMMiQTXuY6Q?=
- =?us-ascii?Q?u2KWP1B61jn6n9jhPL+uE5Cp9sgIEu+RLSCmE1v5XOXWczPJAiNL95yjfKLi?=
- =?us-ascii?Q?IWz+TvZ1IzsF7eGD6Cbu0BrOT56C907PK1dyWaLNc0pyrkAyutDhcMr2L45P?=
- =?us-ascii?Q?qhitC2LVwikXwZBOIyTfKLDQJ0H/M38J/EeAQGshMVxr23d7HXFOoMUv1cvp?=
- =?us-ascii?Q?btSTZAcHEBbKRt7i7gIbb4I0RyvZWdH9tzSSKjpdQTETa4vSZ8XAHG4ydjuS?=
- =?us-ascii?Q?Rf7d8Ltnn6G32ZlcrjbC?=
+	=?us-ascii?Q?MSFnjq7mVsxhr4jbsiDlk5wu47H/deq8C2mlmE7hPD9WoWq2kydKwVk+sf9V?=
+ =?us-ascii?Q?1tfe+FWANecgcXHiGLblX+Lt3xZPVvYn7TEltpRGmNdQKi2MNZMraSw9I5Cn?=
+ =?us-ascii?Q?vkNNjHXdOkmnHpbcE7+bOz7Dtqq3ZmdUOWhyzYB2clTJ32BUi1DIJjbXM82a?=
+ =?us-ascii?Q?u0qMAaIYoRsI1F6ZqXQg/N9xPFlGOl9mjYRhx4PKhVHgaauliyGVUu0UuRbb?=
+ =?us-ascii?Q?WSU/NLzoUp0823M6uIcIFShPh6sILbFZmdtDCn/iB/bR2wKmjp4MZpvU25VX?=
+ =?us-ascii?Q?BtNXUYoZIcSlFuAe8BsLspizG8fpxT3wAhJuTyzJCw2I0N9d7kHp3K3yBkRo?=
+ =?us-ascii?Q?9r19q6awarwz4Snngnl0t7ZvfedbmuiFjskBGskpuJMXJQLi/OkWMOaCBXcu?=
+ =?us-ascii?Q?pI1PVmSnCUxuqlely8eCqVIegb3dEK/vxX82/Qr6uRbDQchVRP7v8r6nWjrE?=
+ =?us-ascii?Q?s4uKTt2Ejv71WMdFxPB74u/uIQg5JvAUn0xy3iVw3APVLC6m25nqGRvOrAAo?=
+ =?us-ascii?Q?eb5aya3JHESPoMOnS2prtweo+8QjKcr9TEyI/j+f0f2IjDrjgkLH+BANBNxT?=
+ =?us-ascii?Q?XhTnnwi67YWjdbRp4cGFRDxI+vJwMUYNcCVB4JOne5DCG+rDMsqdOfSXg4W1?=
+ =?us-ascii?Q?q0JE4Cao4Y0MPlWnL+Y71lyh/vpx5YR+qNm0wJfD/EBpdUwXe/ja4U5tnuB2?=
+ =?us-ascii?Q?emDMbt0ELImeVznbY1+AiVhAXI1HnvbNDAYCHVp4qqoQ08NE1Cne/9b6JoTJ?=
+ =?us-ascii?Q?c2EvpBVHki2vTg552MgA7yhRalZbprhuABVZDyyOE8w3yvQ25T1Vy3xom0hv?=
+ =?us-ascii?Q?AyJUmkmgxSAqnaQ2NGhjKWX3cZEmR5XtFm3sWLWX7BSt8utVvLma/cSRnl7u?=
+ =?us-ascii?Q?Wx58xSwvc5xXvjgarH5mfQTqqt8C8AcPMEu3IYBCgbkzHCPa9f8c+JttD6ou?=
+ =?us-ascii?Q?lC/ZFfF+9g+1g4/j1YWljeZxVUsUJesELWPlkTFuhSeMsURkObkJiNfukmnj?=
+ =?us-ascii?Q?H4BS1qZ/p+bmyowsmf+dsz9x7Xc77sZNHAVoFQct44l4+QNUwEBYQAMIV8YF?=
+ =?us-ascii?Q?rYoS4jFKFWnqf/VrpJA4u3VqH/mS70PXEYmYtqyRbCVNFkec4GrzbqJDvtv7?=
+ =?us-ascii?Q?uAQDmtblG1AVg233vIRGug4kCZeSOHZPnMLj+qON2++VfQUa5lQ9z7NRx7/v?=
+ =?us-ascii?Q?jhx9bN6ilaJwyMpj1ee3x0dY2BRdQkYcueOpZthSCK7WimFY9UOVQMpzAKrY?=
+ =?us-ascii?Q?qmUpMUvcZzdtzVZgkl2R?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88bf67e8-b015-482a-ecd4-08dc8713eb85
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00da58dc-3783-49b6-fade-08dc8715ceab
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR02MB7248.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 17:04:40.7566
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 17:18:11.3049
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR02MB7925
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR02MB8049
 
 It is preferred to use sizeof(*pointer) instead of sizeof(type)
 due to the type of the variable can change and one needs not
@@ -144,393 +121,73 @@ on runtime behavior.
 
 Signed-off-by: Erick Archer <erick.archer@outlook.com>
 ---
- drivers/input/serio/altera_ps2.c      | 2 +-
- drivers/input/serio/ambakmi.c         | 4 ++--
- drivers/input/serio/apbps2.c          | 2 +-
- drivers/input/serio/arc_ps2.c         | 2 +-
- drivers/input/serio/ct82c710.c        | 2 +-
- drivers/input/serio/gscps2.c          | 4 ++--
- drivers/input/serio/hyperv-keyboard.c | 4 ++--
- drivers/input/serio/i8042.c           | 4 ++--
- drivers/input/serio/maceps2.c         | 2 +-
- drivers/input/serio/olpc_apsp.c       | 4 ++--
- drivers/input/serio/parkbd.c          | 2 +-
- drivers/input/serio/pcips2.c          | 4 ++--
- drivers/input/serio/ps2-gpio.c        | 4 ++--
- drivers/input/serio/ps2mult.c         | 2 +-
- drivers/input/serio/q40kbd.c          | 4 ++--
- drivers/input/serio/rpckbd.c          | 2 +-
- drivers/input/serio/sa1111ps2.c       | 4 ++--
- drivers/input/serio/serio.c           | 2 +-
- drivers/input/serio/serio_raw.c       | 4 ++--
- drivers/input/serio/serport.c         | 4 ++--
- drivers/input/serio/sun4i-ps2.c       | 4 ++--
- drivers/input/serio/userio.c          | 4 ++--
- drivers/input/serio/xilinx_ps2.c      | 4 ++--
- 23 files changed, 37 insertions(+), 37 deletions(-)
+ drivers/input/gameport/emu10k1-gp.c | 2 +-
+ drivers/input/gameport/fm801-gp.c   | 2 +-
+ drivers/input/gameport/gameport.c   | 2 +-
+ drivers/input/gameport/ns558.c      | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
-index c5b634940cfc..611eb9fe2d04 100644
---- a/drivers/input/serio/altera_ps2.c
-+++ b/drivers/input/serio/altera_ps2.c
-@@ -100,7 +100,7 @@ static int altera_ps2_probe(struct platform_device *pdev)
- 		return error;
- 	}
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/ambakmi.c b/drivers/input/serio/ambakmi.c
-index 496bb7a312d2..de4b3915c37d 100644
---- a/drivers/input/serio/ambakmi.c
-+++ b/drivers/input/serio/ambakmi.c
-@@ -114,8 +114,8 @@ static int amba_kmi_probe(struct amba_device *dev,
- 	if (ret)
- 		return ret;
- 
--	kmi = kzalloc(sizeof(struct amba_kmi_port), GFP_KERNEL);
--	io = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	kmi = kzalloc(sizeof(*kmi), GFP_KERNEL);
-+	io = kzalloc(sizeof(*io), GFP_KERNEL);
- 	if (!kmi || !io) {
- 		ret = -ENOMEM;
- 		goto out;
-diff --git a/drivers/input/serio/apbps2.c b/drivers/input/serio/apbps2.c
-index dbbb10251520..4015e75fcb90 100644
---- a/drivers/input/serio/apbps2.c
-+++ b/drivers/input/serio/apbps2.c
-@@ -165,7 +165,7 @@ static int apbps2_of_probe(struct platform_device *ofdev)
- 	/* Set reload register to core freq in kHz/10 */
- 	iowrite32be(freq_hz / 10000, &priv->regs->reload);
- 
--	priv->io = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	priv->io = kzalloc(sizeof(*priv->io), GFP_KERNEL);
- 	if (!priv->io)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/arc_ps2.c b/drivers/input/serio/arc_ps2.c
-index 9d8726830140..a9180a005872 100644
---- a/drivers/input/serio/arc_ps2.c
-+++ b/drivers/input/serio/arc_ps2.c
-@@ -155,7 +155,7 @@ static int arc_ps2_create_port(struct platform_device *pdev,
- 	struct arc_ps2_port *port = &arc_ps2->port[index];
- 	struct serio *io;
- 
--	io = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	io = kzalloc(sizeof(*io), GFP_KERNEL);
- 	if (!io)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/ct82c710.c b/drivers/input/serio/ct82c710.c
-index d5c9bb3d0103..6834440b37f6 100644
---- a/drivers/input/serio/ct82c710.c
-+++ b/drivers/input/serio/ct82c710.c
-@@ -158,7 +158,7 @@ static int __init ct82c710_detect(void)
- 
- static int ct82c710_probe(struct platform_device *dev)
- {
--	ct82c710_port = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ct82c710_port = kzalloc(sizeof(*ct82c710_port), GFP_KERNEL);
- 	if (!ct82c710_port)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
-index 633c7de49d67..d94c01eb3fc9 100644
---- a/drivers/input/serio/gscps2.c
-+++ b/drivers/input/serio/gscps2.c
-@@ -338,8 +338,8 @@ static int __init gscps2_probe(struct parisc_device *dev)
- 	if (dev->id.sversion == 0x96)
- 		hpa += GSC_DINO_OFFSET;
- 
--	ps2port = kzalloc(sizeof(struct gscps2port), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ps2port = kzalloc(sizeof(*ps2port), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!ps2port || !serio) {
- 		ret = -ENOMEM;
- 		goto fail_nomem;
-diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-index 31def6ce5157..31d9dacd2fd1 100644
---- a/drivers/input/serio/hyperv-keyboard.c
-+++ b/drivers/input/serio/hyperv-keyboard.c
-@@ -318,8 +318,8 @@ static int hv_kbd_probe(struct hv_device *hv_dev,
- 	struct serio *hv_serio;
+diff --git a/drivers/input/gameport/emu10k1-gp.c b/drivers/input/gameport/emu10k1-gp.c
+index 76ce41e58df0..4f4583048f24 100644
+--- a/drivers/input/gameport/emu10k1-gp.c
++++ b/drivers/input/gameport/emu10k1-gp.c
+@@ -43,7 +43,7 @@ static int emu_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	struct gameport *port;
  	int error;
  
--	kbd_dev = kzalloc(sizeof(struct hv_kbd_dev), GFP_KERNEL);
--	hv_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	kbd_dev = kzalloc(sizeof(*kbd_dev), GFP_KERNEL);
-+	hv_serio = kzalloc(sizeof(*hv_serio), GFP_KERNEL);
- 	if (!kbd_dev || !hv_serio) {
- 		error = -ENOMEM;
- 		goto err_free_mem;
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index 9fbb8d31575a..e0fb1db653b7 100644
---- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -1329,7 +1329,7 @@ static int i8042_create_kbd_port(void)
- 	struct serio *serio;
- 	struct i8042_port *port = &i8042_ports[I8042_KBD_PORT_NO];
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-@@ -1359,7 +1359,7 @@ static int i8042_create_aux_port(int idx)
- 	int port_no = idx < 0 ? I8042_AUX_PORT_NO : I8042_MUX_PORT_NO + idx;
- 	struct i8042_port *port = &i8042_ports[port_no];
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/maceps2.c b/drivers/input/serio/maceps2.c
-index 5ccfb82759b3..42ac1eb94866 100644
---- a/drivers/input/serio/maceps2.c
-+++ b/drivers/input/serio/maceps2.c
-@@ -117,7 +117,7 @@ static struct serio *maceps2_allocate_port(int idx)
- {
- 	struct serio *serio;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (serio) {
- 		serio->id.type		= SERIO_8042;
- 		serio->write		= maceps2_write;
-diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_apsp.c
-index 240a714f7081..0ad95e880cc2 100644
---- a/drivers/input/serio/olpc_apsp.c
-+++ b/drivers/input/serio/olpc_apsp.c
-@@ -188,7 +188,7 @@ static int olpc_apsp_probe(struct platform_device *pdev)
- 		return priv->irq;
- 
- 	/* KEYBOARD */
--	kb_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	kb_serio = kzalloc(sizeof(*kb_serio), GFP_KERNEL);
- 	if (!kb_serio)
- 		return -ENOMEM;
- 	kb_serio->id.type	= SERIO_8042_XL;
-@@ -203,7 +203,7 @@ static int olpc_apsp_probe(struct platform_device *pdev)
- 	serio_register_port(kb_serio);
- 
- 	/* TOUCHPAD */
--	pad_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	pad_serio = kzalloc(sizeof(*pad_serio), GFP_KERNEL);
- 	if (!pad_serio) {
- 		error = -ENOMEM;
- 		goto err_pad;
-diff --git a/drivers/input/serio/parkbd.c b/drivers/input/serio/parkbd.c
-index 0d54895428f5..328932297aad 100644
---- a/drivers/input/serio/parkbd.c
-+++ b/drivers/input/serio/parkbd.c
-@@ -165,7 +165,7 @@ static struct serio *parkbd_allocate_serio(void)
- {
- 	struct serio *serio;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (serio) {
- 		serio->id.type = parkbd_mode;
- 		serio->write = parkbd_write;
-diff --git a/drivers/input/serio/pcips2.c b/drivers/input/serio/pcips2.c
-index 05878750f2c2..6b9abb2e18c9 100644
---- a/drivers/input/serio/pcips2.c
-+++ b/drivers/input/serio/pcips2.c
-@@ -137,8 +137,8 @@ static int pcips2_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (ret)
- 		goto disable;
- 
--	ps2if = kzalloc(sizeof(struct pcips2_data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ps2if = kzalloc(sizeof(*ps2if), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!ps2if || !serio) {
- 		ret = -ENOMEM;
- 		goto release;
-diff --git a/drivers/input/serio/ps2-gpio.c b/drivers/input/serio/ps2-gpio.c
-index c3ff60859a03..0c8b390b8b4f 100644
---- a/drivers/input/serio/ps2-gpio.c
-+++ b/drivers/input/serio/ps2-gpio.c
-@@ -404,8 +404,8 @@ static int ps2_gpio_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
+-	emu = kzalloc(sizeof(struct emu), GFP_KERNEL);
++	emu = kzalloc(sizeof(*emu), GFP_KERNEL);
+ 	port = gameport_allocate_port();
+ 	if (!emu || !port) {
+ 		printk(KERN_ERR "emu10k1-gp: Memory allocation failed\n");
+diff --git a/drivers/input/gameport/fm801-gp.c b/drivers/input/gameport/fm801-gp.c
+index e785d36b1926..7ae5009385cc 100644
+--- a/drivers/input/gameport/fm801-gp.c
++++ b/drivers/input/gameport/fm801-gp.c
+@@ -68,7 +68,7 @@ static int fm801_gp_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ 	struct gameport *port;
  	int error;
  
--	drvdata = devm_kzalloc(dev, sizeof(struct ps2_gpio_data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!drvdata || !serio) {
- 		error = -ENOMEM;
- 		goto err_free_serio;
-diff --git a/drivers/input/serio/ps2mult.c b/drivers/input/serio/ps2mult.c
-index 902e81826fbf..937ecdea491d 100644
---- a/drivers/input/serio/ps2mult.c
-+++ b/drivers/input/serio/ps2mult.c
-@@ -127,7 +127,7 @@ static int ps2mult_create_port(struct ps2mult *psm, int i)
- 	struct serio *mx_serio = psm->mx_serio;
- 	struct serio *serio;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/q40kbd.c b/drivers/input/serio/q40kbd.c
-index 3f81f8749cd5..cd4d5be946a3 100644
---- a/drivers/input/serio/q40kbd.c
-+++ b/drivers/input/serio/q40kbd.c
-@@ -108,8 +108,8 @@ static int q40kbd_probe(struct platform_device *pdev)
- 	struct serio *port;
- 	int error;
- 
--	q40kbd = kzalloc(sizeof(struct q40kbd), GFP_KERNEL);
--	port = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	q40kbd = kzalloc(sizeof(*q40kbd), GFP_KERNEL);
-+	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!q40kbd || !port) {
- 		error = -ENOMEM;
- 		goto err_free_mem;
-diff --git a/drivers/input/serio/rpckbd.c b/drivers/input/serio/rpckbd.c
-index 9bbfefd092c0..e236bb7e1014 100644
---- a/drivers/input/serio/rpckbd.c
-+++ b/drivers/input/serio/rpckbd.c
-@@ -108,7 +108,7 @@ static int rpckbd_probe(struct platform_device *dev)
- 	if (tx_irq < 0)
- 		return tx_irq;
- 
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	rpckbd = kzalloc(sizeof(*rpckbd), GFP_KERNEL);
- 	if (!serio || !rpckbd) {
- 		kfree(rpckbd);
-diff --git a/drivers/input/serio/sa1111ps2.c b/drivers/input/serio/sa1111ps2.c
-index 2724c3aa512c..1311caf7dba4 100644
---- a/drivers/input/serio/sa1111ps2.c
-+++ b/drivers/input/serio/sa1111ps2.c
-@@ -256,8 +256,8 @@ static int ps2_probe(struct sa1111_dev *dev)
- 	struct serio *serio;
- 	int ret;
- 
--	ps2if = kzalloc(sizeof(struct ps2if), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	ps2if = kzalloc(sizeof(*ps2if), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!ps2if || !serio) {
- 		ret = -ENOMEM;
- 		goto free;
-diff --git a/drivers/input/serio/serio.c b/drivers/input/serio/serio.c
-index a8838b522627..04967494eeb6 100644
---- a/drivers/input/serio/serio.c
-+++ b/drivers/input/serio/serio.c
-@@ -258,7 +258,7 @@ static int serio_queue_event(void *object, struct module *owner,
+-	gp = kzalloc(sizeof(struct fm801_gp), GFP_KERNEL);
++	gp = kzalloc(sizeof(*gp), GFP_KERNEL);
+ 	port = gameport_allocate_port();
+ 	if (!gp || !port) {
+ 		printk(KERN_ERR "fm801-gp: Memory allocation failed\n");
+diff --git a/drivers/input/gameport/gameport.c b/drivers/input/gameport/gameport.c
+index cfcc81c47b50..ad39ac6fa96d 100644
+--- a/drivers/input/gameport/gameport.c
++++ b/drivers/input/gameport/gameport.c
+@@ -372,7 +372,7 @@ static int gameport_queue_event(void *object, struct module *owner,
  		}
  	}
  
--	event = kmalloc(sizeof(struct serio_event), GFP_ATOMIC);
+-	event = kmalloc(sizeof(struct gameport_event), GFP_ATOMIC);
 +	event = kmalloc(sizeof(*event), GFP_ATOMIC);
  	if (!event) {
  		pr_err("Not enough memory to queue event %d\n", event_type);
  		retval = -ENOMEM;
-diff --git a/drivers/input/serio/serio_raw.c b/drivers/input/serio/serio_raw.c
-index 1e4770094415..0186d1b38f49 100644
---- a/drivers/input/serio/serio_raw.c
-+++ b/drivers/input/serio/serio_raw.c
-@@ -92,7 +92,7 @@ static int serio_raw_open(struct inode *inode, struct file *file)
- 		goto out;
+diff --git a/drivers/input/gameport/ns558.c b/drivers/input/gameport/ns558.c
+index 91a8cd346e9b..880e714b49bc 100644
+--- a/drivers/input/gameport/ns558.c
++++ b/drivers/input/gameport/ns558.c
+@@ -120,7 +120,7 @@ static int ns558_isa_probe(int io)
+ 			return -EBUSY;
  	}
  
--	client = kzalloc(sizeof(struct serio_raw_client), GFP_KERNEL);
-+	client = kzalloc(sizeof(*client), GFP_KERNEL);
- 	if (!client) {
- 		retval = -ENOMEM;
- 		goto out;
-@@ -293,7 +293,7 @@ static int serio_raw_connect(struct serio *serio, struct serio_driver *drv)
- 	struct serio_raw *serio_raw;
- 	int err;
- 
--	serio_raw = kzalloc(sizeof(struct serio_raw), GFP_KERNEL);
-+	serio_raw = kzalloc(sizeof(*serio_raw), GFP_KERNEL);
- 	if (!serio_raw) {
- 		dev_dbg(&serio->dev, "can't allocate memory for a device\n");
- 		return -ENOMEM;
-diff --git a/drivers/input/serio/serport.c b/drivers/input/serio/serport.c
-index 1db3f30011c4..5a2b5404ffc2 100644
---- a/drivers/input/serio/serport.c
-+++ b/drivers/input/serio/serport.c
-@@ -82,7 +82,7 @@ static int serport_ldisc_open(struct tty_struct *tty)
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	serport = kzalloc(sizeof(struct serport), GFP_KERNEL);
-+	serport = kzalloc(sizeof(*serport), GFP_KERNEL);
- 	if (!serport)
- 		return -ENOMEM;
- 
-@@ -167,7 +167,7 @@ static ssize_t serport_ldisc_read(struct tty_struct * tty, struct file * file,
- 	if (test_and_set_bit(SERPORT_BUSY, &serport->flags))
+-	ns558 = kzalloc(sizeof(struct ns558), GFP_KERNEL);
++	ns558 = kzalloc(sizeof(*ns558), GFP_KERNEL);
+ 	port = gameport_allocate_port();
+ 	if (!ns558 || !port) {
+ 		printk(KERN_ERR "ns558: Memory allocation failed.\n");
+@@ -192,7 +192,7 @@ static int ns558_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *did)
+ 	if (!request_region(ioport, iolen, "ns558-pnp"))
  		return -EBUSY;
  
--	serport->serio = serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	serport->serio = serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!serio)
- 		return -ENOMEM;
- 
-diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
-index aec66d9f5176..95cd8aaee65d 100644
---- a/drivers/input/serio/sun4i-ps2.c
-+++ b/drivers/input/serio/sun4i-ps2.c
-@@ -213,8 +213,8 @@ static int sun4i_ps2_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int error;
- 
--	drvdata = kzalloc(sizeof(struct sun4i_ps2data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!drvdata || !serio) {
- 		error = -ENOMEM;
- 		goto err_free_mem;
-diff --git a/drivers/input/serio/userio.c b/drivers/input/serio/userio.c
-index 9ab5c45c3a9f..a88e2eee55c3 100644
---- a/drivers/input/serio/userio.c
-+++ b/drivers/input/serio/userio.c
-@@ -77,7 +77,7 @@ static int userio_char_open(struct inode *inode, struct file *file)
- {
- 	struct userio_device *userio;
- 
--	userio = kzalloc(sizeof(struct userio_device), GFP_KERNEL);
-+	userio = kzalloc(sizeof(*userio), GFP_KERNEL);
- 	if (!userio)
- 		return -ENOMEM;
- 
-@@ -85,7 +85,7 @@ static int userio_char_open(struct inode *inode, struct file *file)
- 	spin_lock_init(&userio->buf_lock);
- 	init_waitqueue_head(&userio->waitq);
- 
--	userio->serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	userio->serio = kzalloc(sizeof(*userio->serio), GFP_KERNEL);
- 	if (!userio->serio) {
- 		kfree(userio);
- 		return -ENOMEM;
-diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/xilinx_ps2.c
-index bb758346a33d..1543267d02ac 100644
---- a/drivers/input/serio/xilinx_ps2.c
-+++ b/drivers/input/serio/xilinx_ps2.c
-@@ -252,8 +252,8 @@ static int xps2_of_probe(struct platform_device *ofdev)
- 		return -ENODEV;
- 	}
- 
--	drvdata = kzalloc(sizeof(struct xps2data), GFP_KERNEL);
--	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
-+	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
-+	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
- 	if (!drvdata || !serio) {
- 		error = -ENOMEM;
- 		goto failed1;
+-	ns558 = kzalloc(sizeof(struct ns558), GFP_KERNEL);
++	ns558 = kzalloc(sizeof(*ns558), GFP_KERNEL);
+ 	port = gameport_allocate_port();
+ 	if (!ns558 || !port) {
+ 		printk(KERN_ERR "ns558: Memory allocation failed\n");
 -- 
 2.25.1
 
