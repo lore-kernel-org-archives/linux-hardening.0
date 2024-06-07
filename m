@@ -1,116 +1,92 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DFF19D076;
-	Fri,  7 Jun 2024 17:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8487D13E41D;
+	Fri,  7 Jun 2024 18:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782038; cv=none; b=BLlF/Vt1ycKoOxB2iy+Ixb9h86fsr4Z0sQlny6gHsHdnd0BzF8JUWhpwYeuZzcFMq9zTbufKGOJjZmLqpTV7LnvgyzPuZDe64YeoC7FbFWGpMJT/IaEYiwBt+Rty3DgS1BhQWABSoeu1ruuVPTubYTjK4JioMtH8jg6zmsx15FM=
+	t=1717785202; cv=none; b=Jfz0yZZ6e4TLX2RJSWslzjs7hec12RQZ2n1NL0QNmnF8F8Qk5eWRfj7hITTE6PH+i15sZKTnkMyvaMixm21BmCrVSEG3lRYOpLL/MWmB076mMKcsufJaRC1EDFs4YcESlXaGvScQBHO2IbUB40iyAZfWwCVbajOjcRxKeXcbF6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782038; c=relaxed/simple;
-	bh=epSMVVuXNACAijVWTrM3ArHfYRBpQLqBQbzPpdgO3Eg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DjpXSrvxgLcxPHB/RnmYNh6dIwX7hi0QYWQGUyNmdGfT+ULic5E00tsFqXBoExNgT5L2lm8VqJmpUjB0epaJMUYYY7AILEr2DOkkGp83tsmHjxqkyz+bAYWeU8cJIez2U1jzB+rpHn2dY5DlbCP227e5LQMBvQMthfBhGxjHbGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WDq1TV74; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717785202; c=relaxed/simple;
+	bh=K3XX1ZGrNqgevvYtO1jhNZo5tT+1jItizRltt7qdc88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d3PCnBpZMAJ6EA29xQfP2XMjokN/r7/BV6DzCHNPyToGXH3/gYnL+ZXbM034C2uPWG7hf70vE8KVKXd+DIi1pDAAsBA3JpUMeHUxii7zEeZFr+Vn0GO6vte5PpATBM2ck+9pT6oHhC0giCYpGVM/2FrkF+1wSVQoAuRBE80ytpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=hZ136Q9m; arc=none smtp.client-ip=213.160.73.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WDq1TV74"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 457HeUSj019778;
-	Fri, 7 Jun 2024 17:40:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=6UlsSXBZh5pTvYqrBUJWqJhX
-	gnYP7hCHxrTA0qyIk6c=; b=WDq1TV748rWohgTXNEeAPBc/PWNEDCo/cGIBFHLq
-	/zQKzOc6vu1HxFwuTV+30S5GmT6zhb5D5mOCjI0sQW1I0P5Zeb0cOESTdjlz6Tq0
-	/PglW5TwH5gfVv87mu2qF8WzXJwUjPid9TO/YMjOP7YuqZhQllbmQ0NsPANV9iw6
-	JFCOp3xaSTD5ojSS1rqzE4Egy+os0/P30upZQCUMsimP++W9LdxTijmvQ/i2oevX
-	/RRx//H8jG5sJO2M6YmabAxxqYHfFvkfIQ/x02wEf/u44S0EHxt83Wz46NibATYz
-	DR7IoLcLgW0A7B6igVVkG9t4Zwv1jWALh4lOsapKKLW4wQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ykg2qk69y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jun 2024 17:40:33 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 457HeXsw020629
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Jun 2024 17:40:33 GMT
-Received: from hu-okukatla-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 7 Jun 2024 10:40:28 -0700
-From: Odelu Kukatla <quic_okukatla@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Georgi Djakov <djakov@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Kees Cook <keescook@chromium.org>, <cros-qcom-dts-watchers@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <quic_rlaggysh@quicinc.com>,
-        <quic_mdtipton@quicinc.com>, <quic_okukatla@quicinc.com>
-Subject: [PATCH v5 4/4] arm64: dts: qcom: sc7280: Add clocks for QOS configuration
-Date: Fri, 7 Jun 2024 23:09:27 +0530
-Message-ID: <20240607173927.26321-5-quic_okukatla@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240607173927.26321-1-quic_okukatla@quicinc.com>
-References: <20240607173927.26321-1-quic_okukatla@quicinc.com>
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="hZ136Q9m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+	s=20121; t=1717785191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FFEyK0DY8IpFcUTkeSbNeWt4t8L56sLzjHekE18/ezc=;
+	b=hZ136Q9m/YuxRSuKeRtrrdjnpbDqDlC0VZr5Soq51LKx+eI2e74hXat/0nxoBYDWn65akr
+	9JrqnR8/r6RKuvbfjU7MwCkuPxL22cJWF1EIf5KXKiE+2Wcx+/VAd+Z3d4kuoUaaGPBGTX
+	Iz7VCRzkYMkgkzYT+01PwTc2tOqRbIs=
+From: Sven Eckelmann <sven@narfation.org>
+To: Marek Lindner <mareklindner@neomailbox.ch>,
+ Simon Wunderlich <sw@simonwunderlich.de>, Antonio Quartulli <a@unstable.cc>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Erick Archer <erick.archer@outlook.com>
+Cc: Erick Archer <erick.archer@outlook.com>, b.a.t.m.a.n@lists.open-mesh.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject:
+ Re: [PATCH v4] batman-adv: Add flex array to struct batadv_tvlv_tt_data
+Date: Fri, 07 Jun 2024 20:33:08 +0200
+Message-ID: <2529523.GKX7oQKdZx@ripper>
+In-Reply-To:
+ <AS8PR02MB7237205E3231CD335CB988648BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References:
+ <AS8PR02MB7237205E3231CD335CB988648BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CAg6-UoE0tYABgQQBV5YwsX3GS1BHrbN
-X-Proofpoint-ORIG-GUID: CAg6-UoE0tYABgQQBV5YwsX3GS1BHrbN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-07_10,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- spamscore=0 malwarescore=0 clxscore=1015 bulkscore=0 impostorscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406070130
+Content-Type: multipart/signed; boundary="nextPart2954765.bcXerOTE6V";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-Add clocks which need to be enbaled for configuring
-QoS on sc7280.
+--nextPart2954765.bcXerOTE6V
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Sven Eckelmann <sven@narfation.org>
+Date: Fri, 07 Jun 2024 20:33:08 +0200
+Message-ID: <2529523.GKX7oQKdZx@ripper>
+MIME-Version: 1.0
 
-Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+On Friday, 7 June 2024 18:19:12 CEST Erick Archer wrote:
+> Hi,
+> 
+> As it was decided in version 3, I resend this path since -r2 has been
+> released. I hope that this time the patch can be applied ;)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index ba43fba2c551..a3c640d394e9 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -2130,6 +2130,8 @@
- 			reg = <0 0x016e0000 0 0x1c080>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
-+			clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
- 		};
- 
- 		aggre2_noc: interconnect@1700000 {
-@@ -2137,6 +2139,7 @@
- 			compatible = "qcom,sc7280-aggre2-noc";
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
-+			clocks = <&rpmhcc RPMH_IPA_CLK>;
- 		};
- 
- 		mmss_noc: interconnect@1740000 {
--- 
-2.17.1
+Thanks, applied.
+
+Kind regards,
+	Sven
+--nextPart2954765.bcXerOTE6V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCZmNSZAAKCRBND3cr0xT1
+y5B6AQCskTowCR93AUyerf8R+T/LbG434M61OZgxyimamI09YAD8CmdPzu35Sh+O
+P7MqIU9qdXBCNKqbNf8jYJhR8W44awE=
+=+VlR
+-----END PGP SIGNATURE-----
+
+--nextPart2954765.bcXerOTE6V--
+
+
 
