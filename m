@@ -1,96 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8769A433C7;
-	Thu,  6 Jun 2024 18:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA52158214;
+	Fri,  7 Jun 2024 10:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717699509; cv=none; b=ok1rsMWF14JcjIhwoRFVNuiPkkpQY1xGMrpsQhVeZnW4J3r4CHDjcqxWwLj0o6/U8TzkaUSBf7Eq5VaTvDFbMpQ526kS4btrowvg5IhMxkm3nlN9Vgj26/yyoVhzA49nXSvwDBuzHVpTRBsiw4FnmCJkbhGEGE8aIymRe+Jc/+M=
+	t=1717756705; cv=none; b=UGmxGz4GBqAYhee+EBmk6+Eg9BOPwbHB0XI+Lu18lXEBqIQuII+t5UCNucqnw9gUgNlbiiLlYcEdyCEP/O4gvLRN+eoqHRzYyex1seMOfUgH48xWvDFMhiG87rEXPnPwL37IIfNzZMUjGNdPfIIHfkOMa39elsCcQ7pR6FP7Pd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717699509; c=relaxed/simple;
-	bh=D9PPG3TL2MhZad8UHlZNb2rY4Un+VVMzGVPdGBphy08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5FTpXzTaCzDWvBZOtctn7Z1k9Anp3UFambkOhGwKNY1q6w5Io6ZBOZFPoDCAGbSvUTDTLoQ1cMM3BaBVbZqsJhp3jjezrDYWW3mC52o3EoioYZkHws7ub0XDz2ufYFbkR/VmtpXYTuVT/GfYD3BgGYHLe/PGOfMTIlGP1dccyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: noc9KeoDTKW6IP7/CNWXkA==
-X-CSE-MsgGUID: xeN2SDtGSBuE1b0nW+qMzA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25023465"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="25023465"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 11:45:07 -0700
-X-CSE-ConnectionGUID: 0wYlbXFhQG2/L17ed08ZhQ==
-X-CSE-MsgGUID: 4O166ereS/KuAx73cRovBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="61271546"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 11:45:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1sFI6g-0000000EHbk-0qde;
-	Thu, 06 Jun 2024 21:45:02 +0300
-Date: Thu, 6 Jun 2024 21:45:01 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com,
-	akpm@linux-foundation.org,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] mm/util: Swap kmemdup_array() arguments
-Message-ID: <ZmIDreTe8qCk64LK@smile.fi.intel.com>
-References: <20240606144608.97817-2-jean-philippe@linaro.org>
- <171768935175.54606.14878127902164737048.b4-ty@kernel.org>
- <CAHp75Vc-ALE=VDJs9062y-z5JW9_=z9axx2DL6B5ZeWD7zo-qQ@mail.gmail.com>
- <202406061046.A2137C9@keescook>
- <CAHp75VfDjiOkvNxDXUkaptxmJNP18sfVKU-3H6p=08azzaD_Kw@mail.gmail.com>
- <202406061108.1D3E64882@keescook>
+	s=arc-20240116; t=1717756705; c=relaxed/simple;
+	bh=DT7FNHmQI0I2WJM1Vw3SgQZACIUEah+Ky8z8hPcqO3k=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=RGTuMeCrzFz6ZcOxFnbzYSpzOZVpxJnOhXT4xRmYN/JYBK7L04n/C1QpSxW2IvIHPff2Wb0ttSbrTYWUpDZdeQbufrrRkLCNnh2DSVZgOnWtWafdNn0SP+trd8fgRUwT+ulOW5EIEo52/5STOGnMQ0JDKhMSRGLY0okAUUkR9Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 211DB37810C3;
+	Fri,  7 Jun 2024 10:38:21 +0000 (UTC)
+From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
+In-Reply-To: <202406060917.8DEE8E3@keescook>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240605164931.3753-1-adrian.ratiu@collabora.com>
+ <20240605164931.3753-2-adrian.ratiu@collabora.com> <202406060917.8DEE8E3@keescook>
+Date: Fri, 07 Jun 2024 11:38:12 +0100
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com, jorgelo@chromium.org, "Guenter Roeck" <groeck@chromium.org>, "Doug Anderson" <dianders@chromium.org>, "Jann Horn" <jannh@google.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Christian Brauner" <brauner@kernel.org>, "Jeff Xu" <jeffxu@google.com>, "Mike Frysinger" <vapier@chromium.org>
+To: "Kees Cook" <kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202406061108.1D3E64882@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-ID: <2724ac-6662e300-3-2336898@243510220>
+Subject: =?utf-8?q?Re=3A?= [PATCH v5 2/2] =?utf-8?q?proc=3A?= restrict /proc/pid/mem
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 06, 2024 at 11:10:43AM -0700, Kees Cook wrote:
-> On Thu, Jun 06, 2024 at 08:48:37PM +0300, Andy Shevchenko wrote:
-> > On Thu, Jun 6, 2024 at 8:46 PM Kees Cook <kees@kernel.org> wrote:
-> > >
-> > > On Thu, Jun 06, 2024 at 08:35:13PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, Jun 6, 2024 at 6:56 PM Kees Cook <kees@kernel.org> wrote:
-> > > > > On Thu, 06 Jun 2024 15:46:09 +0100, Jean-Philippe Brucker wrote:
-> > > >
-> > > > [...]
-> > > >
-> > > > > Applied to for-next/hardening, thanks!
-> > > >
-> > > > Btw, is it possible to get this for v6.10, so we may start enabling it
-> > > > for others?
-> > >
-> > > Which others do you mean?
-> > 
-> > There are a lot of users of kmemdup(x*y) which I want to convert
-> > sooner than later to kmemdup_array(x,y).
-> 
-> Ah-ha, I see what you mean. Well, I'm not sure we can do v6.10 for this
-> because rc2 is behind us, and that's what most subsystems merge to. I
-> can land the patch for rc3 so there will be no warnings in Linus's
-> tree/-next, but conversions in subsystem trees will gain warnings, I
-> think...
+On Thursday, June 06, 2024 20:45 EEST, Kees Cook <kees@kernel.org> wrot=
+e:
 
-I see, but v6.10-rc3 is still better than v6.11-rc1. Some of the subsystems are
-okay to merge rcX to their for-next if needed.
+> On Wed, Jun 05, 2024 at 07:49:31PM +0300, Adrian Ratiu wrote:
+> > +	proc=5Fmem.restrict=5Ffoll=5Fforce=3D [KNL]
+> > +			Format: {all | ptracer}
+> > +			Restricts the use of the FOLL=5FFORCE flag for /proc/*/mem acce=
+ss.
+> > +			If restricted, the FOLL=5FFORCE flag will not be added to vm ac=
+cesses.
+> > +			Can be one of:
+> > +			- 'all' restricts all access unconditionally.
+> > +			- 'ptracer' allows access only for ptracer processes.
+> > +			If not specified, FOLL=5FFORCE is always used.
+>=20
+> It dawns on me that we likely need an "off" setting for these in case=
+ it
+> was CONFIG-enabled...
 
--- 
-With Best Regards,
-Andy Shevchenko
+Indeed, having CONFIG-enabled and disabling entirely via kernel
+params is a valid usecase (eg for debug images with no restriction).
 
+Will do in v6.
+
+>=20
+> > +static int =5F=5Finit early=5Fproc=5Fmem=5Frestrict=5F##name(char =
+*buf)			\
+> > +{										\
+> > +	if (!buf)								\
+> > +		return -EINVAL;							\
+> > +										\
+> > +	if (strcmp(buf, "all") =3D=3D 0)						\
+> > +		static=5Fkey=5Fslow=5Finc(&proc=5Fmem=5Frestrict=5F##name##=5Fal=
+l.key);	\
+> > +	else if (strcmp(buf, "ptracer") =3D=3D 0)					\
+> > +		static=5Fkey=5Fslow=5Finc(&proc=5Fmem=5Frestrict=5F##name##=5Fpt=
+racer.key);	\
+> > +	return 0;								\
+> > +}										\
+> > +early=5Fparam("proc=5Fmem.restrict=5F" #name, early=5Fproc=5Fmem=5F=
+restrict=5F##name)
+>=20
+> Why slow=5Finc here instead of the normal static=5Fkey=5Fenable/disab=
+le?
+
+No real reason, my mind was just more attuned to the inc/dec
+semantics, however in this case we can just use enable/disable,
+especially if they're faster.
+
+I'll do this in v6.
+
+>=20
+> And we should report misparsing too, so perhaps:
+
+Ack
+
+> > +static int =5F=5Fmem=5Fopen=5Faccess=5Fpermitted(struct file *file=
+, struct task=5Fstruct *task)
+> > +{
+> > +	bool is=5Fptracer;
+> > +
+> > +	rcu=5Fread=5Flock();
+> > +	is=5Fptracer =3D current =3D=3D ptrace=5Fparent(task);
+> > +	rcu=5Fread=5Funlock();
+> > +
+> > +	if (file->f=5Fmode & FMODE=5FWRITE) {
+> > +		/* Deny if writes are unconditionally disabled via param */
+> > +		if (static=5Fbranch=5Fmaybe(CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPE=
+N=5FWRITE=5FDEFAULT,
+> > +					&proc=5Fmem=5Frestrict=5Fopen=5Fwrite=5Fall))
+> > +			return -EACCES;
+> > +
+> > +		/* Deny if writes are allowed only for ptracers via param */
+> > +		if (static=5Fbranch=5Fmaybe(CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPE=
+N=5FWRITE=5FPTRACE=5FDEFAULT,
+> > +					&proc=5Fmem=5Frestrict=5Fopen=5Fwrite=5Fptracer) &&
+> > +		    !is=5Fptracer)
+> > +			return -EACCES;
+> > +	}
+> > +
+> > +	if (file->f=5Fmode & FMODE=5FREAD) {
+> > +		/* Deny if reads are unconditionally disabled via param */
+> > +		if (static=5Fbranch=5Fmaybe(CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPE=
+N=5FREAD=5FDEFAULT,
+> > +					&proc=5Fmem=5Frestrict=5Fopen=5Fread=5Fall))
+> > +			return -EACCES;
+> > +
+> > +		/* Deny if reads are allowed only for ptracers via param */
+> > +		if (static=5Fbranch=5Fmaybe(CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPE=
+N=5FREAD=5FPTRACE=5FDEFAULT,
+> > +					&proc=5Fmem=5Frestrict=5Fopen=5Fread=5Fptracer) &&
+> > +		    !is=5Fptracer)
+> > +			return -EACCES;
+> > +	}
+> > +
+> > +	return 0; /* R/W are not restricted */
+> > +}
+>=20
+> Given how deeply some of these behaviors may be in userspace, it migh=
+t
+> be more friendly to report the new restrictions with a pr=5Fnotice() =
+so
+> problems can be more easily tracked down. For example:
+>=20
+> static void report=5Fmem=5Frw=5Frejection(const char *action, struct =
+task=5Fstruct *task)
+> {
+> 	pr=5Fwarn=5Fratelimited("Denied %s of /proc/%d/mem (%s) by pid %d (%=
+s)\n",
+> 			    action, task=5Fpid=5Fnr(task), task->comm,
+> 			    task=5Fpid=5Fnr(current), current->comm);
+> }
+>=20
+> ...
+>=20
+> 	if (file->f=5Fmode & FMODE=5FWRITE) {
+> 		/* Deny if writes are unconditionally disabled via param */
+> 		if (static=5Fbranch=5Fmaybe(CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPEN=5F=
+WRITE=5FDEFAULT,
+> 					&proc=5Fmem=5Frestrict=5Fopen=5Fwrite=5Fall)) {
+> 			report=5Fmem=5Frw=5Freject("all open-for-write");
+> 			return -EACCES;
+> 		}
+>=20
+> 		/* Deny if writes are allowed only for ptracers via param */
+> 		if (static=5Fbranch=5Fmaybe(CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPEN=5F=
+WRITE=5FPTRACE=5FDEFAULT,
+> 					&proc=5Fmem=5Frestrict=5Fopen=5Fwrite=5Fptracer) &&
+> 		    !is=5Fptracer)
+> 			report=5Fmem=5Frw=5Freject("non-ptracer open-for-write");
+> 			return -EACCES;
+> 	}
+>=20
+> etc
+
+Yes, will do in v6.
+
+> Can we adjust the Kconfigs to match the bootparam arguments? i.e.
+> instead of two for each mode, how about one with 3 settings ("all",
+> "ptrace", or "off")
+
+Sure. Thank you for all the code! All your help designing this
+and code contributions are very much appreciated!
+
+Do you want to be listed as co-author in v6?
 
