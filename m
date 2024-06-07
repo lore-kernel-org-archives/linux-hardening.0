@@ -1,92 +1,95 @@
-Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8487D13E41D;
-	Fri,  7 Jun 2024 18:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94433EE;
+	Fri,  7 Jun 2024 19:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717785202; cv=none; b=Jfz0yZZ6e4TLX2RJSWslzjs7hec12RQZ2n1NL0QNmnF8F8Qk5eWRfj7hITTE6PH+i15sZKTnkMyvaMixm21BmCrVSEG3lRYOpLL/MWmB076mMKcsufJaRC1EDFs4YcESlXaGvScQBHO2IbUB40iyAZfWwCVbajOjcRxKeXcbF6c=
+	t=1717786841; cv=none; b=NoDcVw5v9v8l4vQQiAEMrHlGjEgaBxDbDVZs11p6L01PYx1MKl59Mg2mbPnWrXbz6c19kp3Z2LIN7jgdqsRpqplFVgGs8OxPN9oZs+IGF3A1qFkUHwij9760Xrv1vJYq84IfS1UK6sesFAznpTlGEssNiLAlJoJvekXbsABj1F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717785202; c=relaxed/simple;
-	bh=K3XX1ZGrNqgevvYtO1jhNZo5tT+1jItizRltt7qdc88=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d3PCnBpZMAJ6EA29xQfP2XMjokN/r7/BV6DzCHNPyToGXH3/gYnL+ZXbM034C2uPWG7hf70vE8KVKXd+DIi1pDAAsBA3JpUMeHUxii7zEeZFr+Vn0GO6vte5PpATBM2ck+9pT6oHhC0giCYpGVM/2FrkF+1wSVQoAuRBE80ytpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=hZ136Q9m; arc=none smtp.client-ip=213.160.73.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+	s=arc-20240116; t=1717786841; c=relaxed/simple;
+	bh=IPM3ZjOOoKK9XZRO/WkOmRAqEmZd5KnB0OIVkFoyJt0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K0u/8MjzR0KBRnimrd4L7x1WkpQaOZ+QawxsPR1Uiy+3meF8djX9qISB3NZvT5NQy5BshRoV8opM6tFRaCyTmeNU9ScNKyT6h9YTSgx0q8KCMkCT7pQAypxvUK3yaxCnsgHfEhRjpA17+O+JvSgD1cMvoGzcvKXCodYCrzVRnM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMmKY4kO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="hZ136Q9m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-	s=20121; t=1717785191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FFEyK0DY8IpFcUTkeSbNeWt4t8L56sLzjHekE18/ezc=;
-	b=hZ136Q9m/YuxRSuKeRtrrdjnpbDqDlC0VZr5Soq51LKx+eI2e74hXat/0nxoBYDWn65akr
-	9JrqnR8/r6RKuvbfjU7MwCkuPxL22cJWF1EIf5KXKiE+2Wcx+/VAd+Z3d4kuoUaaGPBGTX
-	Iz7VCRzkYMkgkzYT+01PwTc2tOqRbIs=
-From: Sven Eckelmann <sven@narfation.org>
-To: Marek Lindner <mareklindner@neomailbox.ch>,
- Simon Wunderlich <sw@simonwunderlich.de>, Antonio Quartulli <a@unstable.cc>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Erick Archer <erick.archer@outlook.com>
-Cc: Erick Archer <erick.archer@outlook.com>, b.a.t.m.a.n@lists.open-mesh.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject:
- Re: [PATCH v4] batman-adv: Add flex array to struct batadv_tvlv_tt_data
-Date: Fri, 07 Jun 2024 20:33:08 +0200
-Message-ID: <2529523.GKX7oQKdZx@ripper>
-In-Reply-To:
- <AS8PR02MB7237205E3231CD335CB988648BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References:
- <AS8PR02MB7237205E3231CD335CB988648BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMmKY4kO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0841C4AF08;
+	Fri,  7 Jun 2024 19:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717786841;
+	bh=IPM3ZjOOoKK9XZRO/WkOmRAqEmZd5KnB0OIVkFoyJt0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HMmKY4kON5jYIpNgJWHAqigbtXut0meWxfry6TCSfOf4J90q07JjF+fb7JOERKuUr
+	 oFTNwv/qfpFZsF9YHywvujdVx6o+lOwa4D8e+sUWCQl6wyPPgDEGYK761o3+X3K0Y9
+	 OxqETGzOVHuhskjYR1qFkjmZv1PsCZRF9J7c6wmeBHt7/Mv+0kuaJJQqxS81AQoT+V
+	 Wy14eBRqFPkmpQOZteiBKmXaaCt/Ct/EEiyeTIAbxqvzbQTBclNWhkg8OThWHVPRFo
+	 rIasBBJo4nJR0GgLTHrlHI7ZFkbgkAkoFCmIMBSWs6gIdKf47qzXyz0bHtwbE+Giyk
+	 jM4ka91SBxF6Q==
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3d21c5b48f5so10200b6e.0;
+        Fri, 07 Jun 2024 12:00:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWyQkvlhipV2yBTjXii0PvYm9X3/HRLxpPmZwXLm2ncj1GHS+dDc38xmxPgonGZphBDOnwlwhgqKIqZLuAp1JxmBItDVrFPGA+c5fTtpSczep+jhQb9TfUB0pTGRm/C30RZxeFpa4eT90RTwUPaQZK9G0vZFYQ8YyAoal4mSnKygV4Wd9+cX44=
+X-Gm-Message-State: AOJu0YyYvKtiAUrU5Tz10zLhQL2vOPjG98dZ4EYKF2xb/cnBCYM2onGj
+	CXwHU7Oa8K8j5mSjNNrrs3KDp2bCcTsKgHoA5t6t4veAP00sVmGLkCh+waRkczLJXBKycjBv9GN
+	Yd0oc2DJcEcnr/g4dGJ7HBXIxdZ8=
+X-Google-Smtp-Source: AGHT+IGuJmKnxkTd0KYNZ8GHs2XH6rZN6o7VLhS21c0RGPNYMnNAYBlTibs+T91Q58vZVrd6rRw/ZLbD9DyQjDDA3iY=
+X-Received: by 2002:a4a:a7c9:0:b0:5ba:6959:edf8 with SMTP id
+ 006d021491bc7-5baae6da3bfmr3518182eaf.1.1717786840309; Fri, 07 Jun 2024
+ 12:00:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2954765.bcXerOTE6V";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+References: <AS8PR02MB723748EF627AEB253C437FD48BFA2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB723748EF627AEB253C437FD48BFA2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Jun 2024 21:00:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ghxCYZKdf3zixi6StSCir7Yyiy5iyPeG2+GmyHU4yzWw@mail.gmail.com>
+Message-ID: <CAJZ5v0ghxCYZKdf3zixi6StSCir7Yyiy5iyPeG2+GmyHU4yzWw@mail.gmail.com>
+Subject: Re: [PATCH] thermal: int3400: Use sizeof(*pointer) instead of sizeof(type)
+To: Erick Archer <erick.archer@outlook.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>, 
+	Lukas Wunner <lukas@wunner.de>, Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Justin Stitt <justinstitt@google.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---nextPart2954765.bcXerOTE6V
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-Date: Fri, 07 Jun 2024 20:33:08 +0200
-Message-ID: <2529523.GKX7oQKdZx@ripper>
-MIME-Version: 1.0
+On Thu, Jun 6, 2024 at 7:21=E2=80=AFPM Erick Archer <erick.archer@outlook.c=
+om> wrote:
+>
+> It is preferred to use sizeof(*pointer) instead of sizeof(type)
+> due to the type of the variable can change and one needs not
+> change the former (unlike the latter). This patch has no effect
+> on runtime behavior.
+>
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+>  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/dr=
+ivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index fa96972266e4..b0c0f0ffdcb0 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -571,7 +571,7 @@ static int int3400_thermal_probe(struct platform_devi=
+ce *pdev)
+>         if (!adev)
+>                 return -ENODEV;
+>
+> -       priv =3D kzalloc(sizeof(struct int3400_thermal_priv), GFP_KERNEL)=
+;
+> +       priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+>                 return -ENOMEM;
+>
+> --
 
-On Friday, 7 June 2024 18:19:12 CEST Erick Archer wrote:
-> Hi,
-> 
-> As it was decided in version 3, I resend this path since -r2 has been
-> released. I hope that this time the patch can be applied ;)
-
-Thanks, applied.
-
-Kind regards,
-	Sven
---nextPart2954765.bcXerOTE6V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS81G/PswftH/OW8cVND3cr0xT1ywUCZmNSZAAKCRBND3cr0xT1
-y5B6AQCskTowCR93AUyerf8R+T/LbG434M61OZgxyimamI09YAD8CmdPzu35Sh+O
-P7MqIU9qdXBCNKqbNf8jYJhR8W44awE=
-=+VlR
------END PGP SIGNATURE-----
-
---nextPart2954765.bcXerOTE6V--
-
-
-
+Applied as 6.11 material, thanks!
