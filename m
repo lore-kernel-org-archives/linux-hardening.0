@@ -1,90 +1,122 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF06C1474D6;
-	Fri,  7 Jun 2024 19:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D62F33EE;
+	Fri,  7 Jun 2024 19:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717787875; cv=none; b=Vz07yO1wRZu3BppeQBgpTf3w9DcBc+bl8zVxssWtEeytX2qXQDaIAvWXLzK3xgrhNCEOOczkKco0kr/EEWJGg9cnUMnsSoIiZoRAH2Es633hCYjko2BRqgI2NdQOqpp4GXhz92WHE2aXcZphdayhmtCwyQkfBqjmqQhrXpYOokY=
+	t=1717788992; cv=none; b=F36TgTVAbYZZbsd6niBB1LbzmAkO3gl5EtHHzkiuGwFkvJFzZEBtBt480lWwv7BK2hO7/cwTnoevQFthR+Zee1Lgtw0+NhXUPlrCLEvfvUyCjbHBf0d3w23BzMpNXup5mfYy4ZZMltT+3TB43no31rNodCAl7S1hDuWdLfQxp/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717787875; c=relaxed/simple;
-	bh=lE+hbzleT40pRbQC9hUhbSV33FyjJxrobady59a7HFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJUQqw6kHj+x3ixeBINTyIB2cdggtIsvQwTDCnino2q31Nx35SrOEEsYI87zxb3kDSWRUD3I2PHthGqbYtKMg6oaEgCq6p4nFOL25KcpslgKGuk98vU+U0ARc/7riEXlHFPzvEpuq/JL7XjR2GJVSC+Gb8Q5uHsGkcVN7Vwlkv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLQ0LTbk; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717788992; c=relaxed/simple;
+	bh=zG5qDqIut2YPKzOXUzbtTHPzm7s79FX8DqiBGlzF1cY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=meyNf4kUq4kO0QzAwoJHOU1uqR0613eFNzmkR5E1mpOjexxPgU2bOJLxbMWIE5zI6WrUh8aySELF43UvrjAvQtIA+hRyfAQCRNeVyZsBTM5PR2zdwT4SZhcs4eMZFTGVWW2riN8ih05KtIwxhkey4dJYw+teAWlj8XINYLqOMHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VIHXZStj; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLQ0LTbk"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7041cda5dcfso417785b3a.2;
-        Fri, 07 Jun 2024 12:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717787873; x=1718392673; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TuFWZ4xdFKT1wd42DIq0bkyJqXHcrP0kLkzse0qhyyo=;
-        b=kLQ0LTbko1G0YAxSQEtr5QGUGR7ExOns+pD38MSg/afJGq1A/GcWRSkLHxyDRq7jQO
-         3qb51wgSmV7CSfF1GBfZPF8Jtst3rj/gMUL+LrFuVKUkriKydlP2+X9IkWazvKuJWMoN
-         uo1RkNCF/M9p04XJbWDV2WA2/d329+w2rlrZcD6BCaxbLDF7H+2j4sS2Mq3PK3bfLow0
-         d/06oP+ZUltgNMsbywbLr+B8tf6I17Sw3v6cA84jqo0e6d/TMRbQqFPF4RqVq7d5XXzE
-         hoPKwdt4kqEl9jbFBOgNPQaLJYg5d2VI98aKELl8G90T7PxvlPPGeKeq0Dg5LuPRX6gi
-         Lekg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717787873; x=1718392673;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TuFWZ4xdFKT1wd42DIq0bkyJqXHcrP0kLkzse0qhyyo=;
-        b=Lw1gTCHQIivGCfSZNJsFOV1lIs9KFVEtk6P8LbjQLDLlQ1xRcxWpqcVH+etpj+of2E
-         u5xdaxSOwWZw7BuNd9nq/Z2P3cM26/6ho4WsmVKol0ku5zzRWIxvUa4EnPAS22kYUQRU
-         +q5TnHh3VWfEWN0i9c0bCido3u7clV83zd4qyr69Tj4faPKJtYAA8g/+nqrkzqKUG2++
-         vncNrp73ryHGSBq55BKNoVbBzJ1GiivabPRX2VEhonO+xY6+2SI4KqxHuUfDe/Vdr2rr
-         Z46Lz3I+GmHthPv4H5K7DdEq1tVAhFEDLiFsOck1PgzXopTP3qmhHlY/c4tzMk2M0H3B
-         qLNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXo84IZpWRJvo+oWWYkDKe9EcZLe6Ck4VLiFhezhxOzc1yYFno9DMirRy6TzBH0VX4XkOAj5Fnk33n5blOz4rem20Np2SkTsUsqABylJzo6HOmvz5ROJ7qIBJwaRSivhQ5L9z7oC4rlWPPjsG7A4/Z0s1JDBdjaBIxEeMUgGHN33xe6yGEcHS+EX5k=
-X-Gm-Message-State: AOJu0Yw3SSWRHmRqpoRd/PHALcpDlIfMCY4JkUQrcZh6JVZDnWNK2St1
-	/AS2pNN0HNukaxSIsUoHXf7YfGpFGLOk0L7VAK0fucjJ1PhqyFna
-X-Google-Smtp-Source: AGHT+IGvnCd1ZhEC7tWgZoWLPhwhcjJXrVRrP0pRcwhh1RNUz6vR+7plk7CLlZ2BtQ7FGZukUyOjaQ==
-X-Received: by 2002:a05:6a00:1791:b0:702:824a:2a33 with SMTP id d2e1a72fcca58-7040c619520mr4036005b3a.7.1717787872874;
-        Fri, 07 Jun 2024 12:17:52 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:b8e9:3447:a54a:310b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd4dba2bsm2900679b3a.156.2024.06.07.12.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 12:17:52 -0700 (PDT)
-Date: Fri, 7 Jun 2024 12:17:50 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@kernel.org>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Input: gameport - use sizeof(*pointer) instead of
- sizeof(type)
-Message-ID: <ZmNc3oBiVhl2m2XU@google.com>
-References: <PAXPR02MB72483F512F863C74A4AECA2B8BFB2@PAXPR02MB7248.eurprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VIHXZStj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=zu1ZBxNv57bpE9Use4oXfVWpCn5+Wvtvp0w80A7iIPs=; b=VIHXZStjS7kU9eFQIqDC3lMeVW
+	86rBHkG8Egbh2q0zQ0qw8h3oMaIIPuVJLqEUdH1Tg9ZOPq3iCI5zwK6k2mINRgwEwjtk34GVpxatf
+	m8zuPTORwUv3B0S21w8p5XwBm+cQtbWGc485UhSaou/E7/RZt3oo+HzeBdW4ohjToTYmAsfG3B1r/
+	dKQlxcUqzN7ZGPVm0s7vyiZ5Enl2dcpIAhpRV8+ldBYGoCriapn1lubufMK7/p7v0EX7T5mFtOvT+
+	QlmAtB1ylZnv9/faiy1iQoLYK2hx59aUu8IyIeP4zxziyBcE/C7BClDar9TboR27AQ2yE9gZsrqVE
+	P5xdpP2g==;
+Received: from [191.205.188.103] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1sFfNa-000e7M-9Y; Fri, 07 Jun 2024 21:36:02 +0200
+Message-ID: <2093d20d-23e1-1c22-f3ad-8b7413b5a60f@igalia.com>
+Date: Fri, 7 Jun 2024 16:35:50 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR02MB72483F512F863C74A4AECA2B8BFB2@PAXPR02MB7248.eurprd02.prod.outlook.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ linux-trace-kernel@vger.kernel.org
+References: <20240606150143.876469296@goodmis.org>
+ <20240606150316.751642266@goodmis.org>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20240606150316.751642266@goodmis.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 07, 2024 at 07:17:55PM +0200, Erick Archer wrote:
-> It is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not
-> change the former (unlike the latter). This patch has no effect
-> on runtime behavior.
-> 
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+Hi Steve, thanks for the patch! Some suggestions/fixes below, inline.
 
-Applied, thank you.
 
--- 
-Dmitry
+On 06/06/2024 12:01, Steven Rostedt wrote:
+> [...]
+> +
+> +			The format is size:align:label for example, to request
+> +			12 megabytes of 4096 alignment for ramoops:
+> +
+> +			reserver_mem=12M:4096:oops ramoops.mem_name=oops
+
+s/reserver/reserve
+
+
+> [...]
+> + * reserve_mem_find_by_name - Find reserved memory region with a given name
+> + * @name: The name that is attached to a reserved memory region
+> + * @start: If found, holds the start address
+> + * @size: If found, holds the size of the address.
+> + *
+> + * Returns: 1 if found or 0 if not found.
+> + */
+> +int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
+> +{
+> +	struct reserve_mem_table *map;
+> +	int i;
+> +
+> +	for (i = 0; i < reserved_mem_count; i++) {
+> +		map = &reserved_mem_table[i];
+> +		if (!map->size)
+> +			continue;
+> +		if (strcmp(name, map->name) == 0) {
+> +			*start = map->start;
+> +			*size = map->size;
+> +			return 1;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+An EXPORT_SYMBOL_GPL(reserve_mem_find_by_name) is needed here, or else
+ramoops fails to build as module - at least it worked with this
+exporting in my build of 6.10.0-rc2 =)
+
+Cheers,
+
+
+Guilherme
