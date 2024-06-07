@@ -1,77 +1,92 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01olkn2106.outbound.protection.outlook.com [40.92.66.106])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04olkn2052.outbound.protection.outlook.com [40.92.74.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482F943AA1;
-	Fri,  7 Jun 2024 16:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.66.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8FC190688;
+	Fri,  7 Jun 2024 17:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.74.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717777177; cv=fail; b=dUhds8kFGftUSudpbGZIeFwiH/nRPVIAjT8gGNa7Z7EtF4pqb5RU1dZaMSpGJ0Kbwjnr7hMF68PoXEEaosvIx7QtDj8XLlr/JJDXnuePniLT8+XVwC5D++f2SC48qy7fRDiLVL/ORC9/BkIIHfU5abTgIEkekoVOj/rbsMOIq2w=
+	t=1717779886; cv=fail; b=kgI0WR+ZJ3a35QcK6iH90Bl8K3B9MLYQYggH0w9Z0Ym03AK2lu7RhEmg5DDX3V7atoexsy8Sj8O9lnSVtlJZZ/VeV9dIkBdRUHw+R96Uk3t7/BJjbOExpHzCo1cxM6OzIGzMrdkGHqOcGj8rD3c/R1IkwfATCdjeZGY8sWYEAVU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717777177; c=relaxed/simple;
-	bh=gGPvrfP2Q94zGjeEmigJOoi7Dm/J7+RsvxADT53SrA4=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AH32FGXsLBRP1qo8L7/p7BwpqQ1z3UhfKR78jg4r7UAq7HB6A9XxG0vosF0wBfTBOxkpo3zXR3IpHNxoGLHuOmyxl1fn+ixQ/Lro+2W9zRjb4kW+Pv29e0GbCdfu0X3tAAU++0daCzDf288J4+5Qz/Bpl50FgeD+bO34q36sWRw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oZohv1mV; arc=fail smtp.client-ip=40.92.66.106
+	s=arc-20240116; t=1717779886; c=relaxed/simple;
+	bh=/APxzBdGAgCQHYOYy6c4nInDZafkzaHQiFIO8imWRiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=SAG9Zndv6KczJGTZI1JuzHN/w4DI07ICiNc8XspYu5A5Gx7TeTZD/VIDrUacq8YHy+PneicmIcF7NnfILmu+ITiOXvjaZ9AVsbw/5fiyWcEoWeM55qRFbYZfszJxMDo4M56Mucp9C+ghFFfBd/YOdfejBUzoelGgOgGEdNy35qc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Acyy7jMF; arc=fail smtp.client-ip=40.92.74.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oZohv1mV"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Acyy7jMF"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TPqa7/9eIcFt2S4djzgLAMFZUSc6UYihEwQdTWvJsqYAY0yyxbTrklPGqCOm9E8iDUbfKaUPkPhd8itRsTbUTwR6UYRunJCOTUZyXJDPrvbuYMh8imnzIc4kKhxJ806xhx+RZImyWdn29LaXYeGijYEmDGhRyJAgUoMtZGe/eXOKGyp40K0scWSH+g/5H/fywSRhBybsSf3HszvntVjKN1Vxkodaqxt7DzM536jD9J7UyG8DnKjFUUHzxepHx27MJQ+JdDFS7XolAYpoNnYQ+1Aj8mbPwKw2aMhT0PhvD+c0ZLgloV9cz7EWGXQTXW7PjcMal41cVBfdGVU4twFQtQ==
+ b=oOC//jrf+iCdMI+ddKAALgzfejKMmud2WHC96QjxcWxr2E5bOnfXw2gLSSCZ9OdbrvNfh6QNk1SO+ghdtC3VfolSRShCaSbfi6UAbehGyo17i7sHV/KRbxqlZ9uh/zhmkhd8AY6smfTsurtbb5RXN+P+czSMHLj8pZkOkz6Zw8S7er5sq7aCQ1+DxjT46hjm/J5ydxH6DSotjw0V7TsycokJmd4+e/KdSOfDrqg/7nDACfFj/WCsiKUjIYNHtE2BBciZYDIbpVK1R/3H2t8TfYiBQ1jZ5m3GvTiplTv61SsPlscWoGAN9XShwSgPi6SpkUfZrg22iyqQZHMipQ8ECQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OphJjwEnj0MJlUYtKz6Stb4+YWYsVDyxrR9KBxN3QGQ=;
- b=ak9TQQRWEVzRLVP+86YS+GzQELHNjWfeY1j4hnYky7qrRLUgMBhFMjNY+QD2iKbtGeRSBJt7GDkIH3hR1SL1CsZXSiG8yhIMIP0yed5mAg/jUTdF0pysoFQyB49FddgM2suX1T5ngn+FcHBddu7X/ljvR8aiEFeuZa1jJi1dSM+DMZafgGJSaurMrpzUJ5azTaTldZgatCRlQPal5g8GHQ1k/pfbzuku1k0vcfOMz2Q3Nyf2BYFLOfh3hTNolY4s1chVnj05v9Ycq/QbwLAUnmOpJXs6ikf6mnzc9nYrzZIhQHmfUGlyJd6kqyDuT7HZhcRo29cOJGgEl5MMwv9SjQ==
+ bh=Ny7VFuoEWNcQDzleN9fURMkBSPtAa8xUyfA1sR83lBY=;
+ b=hIHYv76/dmms1lnC/hHyrpy5eGArqckXoWIYvowKPHL+cKVBj7Irm0xyIq+XDV7vm8ATyUmB3mDPfTCP1qNEf0bv4UpDd/l7PCDefRSoqQQFHaPV23RDMxYR8C+upTaHJtP6Tgkmg1p8WmcMExhpa3f/zcR/Ii1o6BmGbdqiVrBwNd5dhz7MvslgrwaICHdix47LiGCqSJlnEYPYT1gIZty37JtR3RUzgWN5iaNtVMQuClkEySEYPCKRcCldA7C8kibJGzn7cpPKrndDj6ZRole4L5xwkZbIMWz14TQfbT97KFC5wb/0tqqQytdCg7d1RmV2nT2gBf9dlDik97d+9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OphJjwEnj0MJlUYtKz6Stb4+YWYsVDyxrR9KBxN3QGQ=;
- b=oZohv1mVDQb+j0s4GbdYo8TPWR03SAV3JS4nyYih9o/gSx2WV2r9d4BrWiFX84vXvDC7wZpw17wEzxog7bM6FPl2Z/bJ09rz9OHEhC1rtK4LEvuvdoOTf9JeEYTtVO4u4nX2UvHoB50SuEjv5Y3RbFTDekhkKHg04NvpQDc8HQqfhfAzgq31tnK2E48Tr6Bu9F+WWmtBuh76H3a/+icA1QRpaH9D55nNlwxDZmi+zkjkk/Id+4T0u+WUZJHphBfuqY6IXLndWJiRl0UC6/slOJJMxRswFGqSjVWUNzkpzuI2Goow25nCNV1zYrtVovi/M3cAN9okat5mUsf5n/ABRw==
+ bh=Ny7VFuoEWNcQDzleN9fURMkBSPtAa8xUyfA1sR83lBY=;
+ b=Acyy7jMFEMynlmbwEStYSQnQt0qUdWh1XwUvFGoGLizb7urvZdp1SqG8m5+W4leqj+2OoGQUVZiEMHzsZHNwD3zLeBo4eTOUlK0XePjQDe6X57xiFDN7j3Z8cVXppjuTbjg3kiVbuUZ2DMEc7MoAwfb+hAUO8Ajf7VrVedq7TF2NOZaT4j38uaHz8s5tLRCGv3QuFCXVoh7wGUYJqIBosf5+kfEwpAqg21RFYkUe8pxYEMSMtzRJBueTf28In1J8G7nCHALktFDsJ1PKsO1IczMs8aK9JIRMlEIjoET++WNNJbPnyTEM2AAB+kBXO8nDpLovR6K1HmN8WM60HOKffg==
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by PAVPR02MB9522.eurprd02.prod.outlook.com (2603:10a6:102:304::6) with
+ by AS4PR02MB7925.eurprd02.prod.outlook.com (2603:10a6:20b:4b4::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Fri, 7 Jun
- 2024 16:19:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.23; Fri, 7 Jun
+ 2024 17:04:40 +0000
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
- 16:19:31 +0000
+ 17:04:40 +0000
 From: Erick Archer <erick.archer@outlook.com>
-To: Marek Lindner <mareklindner@neomailbox.ch>,
-	Simon Wunderlich <sw@simonwunderlich.de>,
-	Antonio Quartulli <a@unstable.cc>,
-	Sven Eckelmann <sven@narfation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Stephen Chandler Paul <thatslyude@gmail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Ruan Jinjie <ruanjinjie@huawei.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
 	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>
 Cc: Erick Archer <erick.archer@outlook.com>,
-	b.a.t.m.a.n@lists.open-mesh.org,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v4] batman-adv: Add flex array to struct batadv_tvlv_tt_data
-Date: Fri,  7 Jun 2024 18:19:12 +0200
+	linux-parisc@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Input: serio - use sizeof(*pointer) instead of sizeof(type)
+Date: Fri,  7 Jun 2024 19:04:23 +0200
 Message-ID:
- <AS8PR02MB7237205E3231CD335CB988648BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <AS8PR02MB7237D3D898CCC9C50C18DE078BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [QUK5acyw/AHh6uscIa1jzWAIdGupbCKx]
-X-ClientProxiedBy: AM0PR08CA0020.eurprd08.prod.outlook.com
- (2603:10a6:208:d2::33) To AS8PR02MB7237.eurprd02.prod.outlook.com
+X-TMN: [dvbqOSLz1KQslgDXxDtV2E6m9/LG8Bu7]
+X-ClientProxiedBy: MA2P292CA0015.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:1::12) To AS8PR02MB7237.eurprd02.prod.outlook.com
  (2603:10a6:20b:3f1::10)
 X-Microsoft-Original-Message-ID:
- <20240607161912.4318-1-erick.archer@outlook.com>
+ <20240607170423.10654-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -80,360 +95,442 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|PAVPR02MB9522:EE_
-X-MS-Office365-Filtering-Correlation-Id: d4f6bce6-0133-4cac-9bc1-08dc870d9c9a
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AS4PR02MB7925:EE_
+X-MS-Office365-Filtering-Correlation-Id: 88bf67e8-b015-482a-ecd4-08dc8713eb85
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|1602099003|3412199016|440099019|1710799017;
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
 X-Microsoft-Antispam-Message-Info:
-	ESqNIu8Tz52C5p4PwTaCyAIBEQ3gXjtQA9b1XKqzHrcf9aGRVjOnQnqg1pBHMXnA7S1RnRo6jov1lFxhi6S5HNLZK89SaNGUGiuX57GK12BRyYFi6mgfSbG0r7wtMfPkgPxOby3obRnXPAREoodFnjB7+DxkzbGAOewo53S6x7JNZ59BHiY5p7xG8mKTY4Nm/qUYmbYDF6NwulqsOnqyJXcXbkbNynDX0bxSk5grvEGNMeCi6wu/1COlnSwiLvmExKFJN/uYlUdbxqeLRQBVHN9cNGhRjSL7aTN8eP0BmmX7+o8ovCmodEU9f53hwQClpjtoidRVmgDtdVl9q+F8DBS6gmfh9PNoc4ipXqpTYrMYCud2zDZct87SsX5sWq6TreCi3lh/aB1TR/D8zv+T5KtL37OHznc4wMfcKg7mcolBISRrlYM0YHz8+jig0h+Nr+fFUuMMMW5BzPRc+JK1os9mZ9Hm0ur8TbhoaUI9ViiTiqN9bDq46dngdAuucmlI8yAgvQ+lnMOuATzTiLKb6niT7dJ0gUEpW5OqOG9B+eZjEP8RjStPgn/OeuCS9WIg7jPcou2Ex7F1ezTepTFruaW8lmaCIThpejK9j7Nheh9+j0LUOm7wow3A0ABB5s7OPTpYEVbnNCUz/Xy4JWK5NnwIYj8CBuHu5xoGv3i4jqBjCAKWozStYt/ML7LBHJ290h1bsQJWJ5PnCg/Xn12Wdg==
+	g7++UpJXAeFjvG1VvrY86WUaIIdelj18I4EXpPfUZoy+iJ7yTcfJVgJRO3OX5jXzYBr79VWkYe/dZwSmqA4wBUlyUWy1vypToG4AJe8WtDgGMijGJuw72NhkyVYXuwFIrvoGXI6rU0p6m0R0CI1RKfP/gfrc43jxrOM2lC8TJLK6RMJBEFFXbT3GM0X4hkZ0IbO1m8otH9h3npQqqgfwYNw2xhTpTF2N8C6idJDsf60cHmPUQUEVGfpJVeRyunOgOzFzYoawaL5LYHALAe1/5XmWdLhNTSuk0Km2CRTxMwkzdvuKjm56uEUH+DkrWaTqO9puh7JVZJ0zPO0JiCzCqd9bHNb29yx0VXyrBUFmdTyGbhgGVf9pDLhIFCeL/f0YvlT7/9Zz0C+fNrkp9XrpmNV/3Zf4Z0SIU4mlqWqvsWy78ZuiZmH6b7x/02/aFjV4VLcHTvxch+Bm1kL/7ZonWtPulaSPLZmLeKRw+fjELzM5msqHnZHIa2LEh62dZtx89y/0pWL/TM4F0LJ1jQUZWK4wzaT2yIiBa0eWyNc8mwC8ekySyYLLYMFd1Qlrl2B0nSS1xFrxhgAWZKIIqLnOClJUJCVT8Qyp/5tzY3u8H9p1fRFQOV5eNHX5+gnQ/KK8
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VIH8xXKzKpYBGuW8B1UiBWFeaQqZB4yM9DmIJl1kBOSEGDCjB5QpyDqheCHN?=
- =?us-ascii?Q?oobzOuf7KZYBKcZoYVjPATcV7uFk+eKjmbg+taWeySC4dFDTCenBA8gjt4a9?=
- =?us-ascii?Q?45Jprv4CLx6HMpwk5RlZrANfYW0KOxH/urnFpsxapCOijuBUJ1VpDM1qxRoC?=
- =?us-ascii?Q?7bmW2+UILY87GuRrh3BrUu88/ZPyrmo0JQQkhGhHXddyG9mGN9Fzpdw/cxdL?=
- =?us-ascii?Q?pu7BZVpNEJo1te1Bf6uGwsAge688xD4o6FG8OI2C9KKAxPlBevMGV78HhuRh?=
- =?us-ascii?Q?A1fqRh+nBZiY7C3BvO7YAeD7JGGE0Yxbt9Pcr4+KOGoFcejG05IYGsp7xD8u?=
- =?us-ascii?Q?r9xFbNAoXYKqntPqSQLxr55bs7vjj7vOMw6anfnz7AATbHoyotp/IJliKfq7?=
- =?us-ascii?Q?tB5rXfOpcYesatVzC52DUp9xhuG+8r5koxtQxXFG2icVE6lbqMtRcoTLPwNO?=
- =?us-ascii?Q?XER6JPod2cpagbGJEHz3p2TS1FwsVAQmiQXtyBflLtodOFwONRg6nsmZS6Qe?=
- =?us-ascii?Q?gstjsWQZzGV1Ek8QblV9YJDUpBkPOvlMQA5tY1jGBSA8yi7DLkmuZZBP53lH?=
- =?us-ascii?Q?tLAQgg/UYN44j2HMCxm/yqhDitfX6067WXnm0my2dAwfWX8CTC+xNss7/5Tk?=
- =?us-ascii?Q?DUA42/Hzs7eAY6RPzgf7S7rq+L+MJpnYxgKKDL+cD1ws7yPFqHXSYLqOsiwZ?=
- =?us-ascii?Q?8WJyMZDb+keSDAVZwmSlDgd75N+uGpDDNT7ddsizoWIKLc5HdPT313T/aTcn?=
- =?us-ascii?Q?gbJkbE8IO4tlD7+ejORUTr7Y7YXy9K3RUmkqYAfQ8sKpWGFqCimpGiq4Szga?=
- =?us-ascii?Q?TLGStaP6Gl7MdY9zJDHWZJtnkYd8w3Gx91+5jTgNhMISBsZ79VqqQIYxiS5Q?=
- =?us-ascii?Q?eLsT8sDV38/dUpiz93fG80Ab8Z5QEf3x6XV+rJO1pVo0I6G6ubACu25vWysv?=
- =?us-ascii?Q?exnPwS/Zu391KcDCB48kG+AfxssN0tsnAmTVgbDfgA9q9HCPzaR5XzYXcz2W?=
- =?us-ascii?Q?Tr9rHsg5fSY5gZRQvZDw18c4gY72FWv4RdI6riUVm4cI4dPrDHYln5PN1YSX?=
- =?us-ascii?Q?L3qO9JViKd+ohfjTUDbM8fL498N3fdYwL3NsLqs/3nNR3UtROyx5OaAOmz1+?=
- =?us-ascii?Q?71FZV2hW6gaWWusV3UnDFU76z7g57diQpvS9VhYSxIqspnCgCW6AEDwnot13?=
- =?us-ascii?Q?NheJdXvVBu4YltlEhXyMOlmiG76tAXWNffztb/ZjRdsCEDRCeh1zeefF/4Kq?=
- =?us-ascii?Q?eGsFDBGFrfB3n/gQRbg8?=
+	=?us-ascii?Q?vgL3luBTyVrYerYLRXYoe5DYG44XQG058xyWLRWyPjfofTqAxOc/pgyZ39pZ?=
+ =?us-ascii?Q?zAG/89clXbx6x3XMG9nFCYvOooxzFVsOm+do1eoOW/t8yySnXLXi70y488ga?=
+ =?us-ascii?Q?4aDABBvDPSjJNpo22pkqWmIqHccKuUl3OjnSaSgvvybCtuMEfV46FTU5KwFf?=
+ =?us-ascii?Q?kZmI+kHM0kgIGZNnn0bwhSORQjJtNSuOUK2eDxLd19HLBQKJL7hgpcBvpFpT?=
+ =?us-ascii?Q?xGiS3PqQYhVMrJu9xYvqRLCLbDW0OE1pSHdiyaH6W1qpWQRcsXCtSdaVTIFA?=
+ =?us-ascii?Q?T5m9tPPmEbWp6Yx8EXzcTnpcBsifWMi3SQWHD05YZ2HTOmuJdz2GJMDuqkx7?=
+ =?us-ascii?Q?T8+dT13afJesaqrVRkh2mWZSA84e3FYyd34oE6SgaR1FK98jKxWko9aVman0?=
+ =?us-ascii?Q?i1LFmR2nYRvUD8+isfxGTOcoUOcM9wuwwh2/5qOzadRLMjgT4trh5KcX0X0e?=
+ =?us-ascii?Q?IYvLIeJ65v3NTp70ExytVyRNfFt+HUDyRKzML534NohCOMLdp39rPkjO/TCF?=
+ =?us-ascii?Q?RSszpEMg0n2SQUbHEMCIJdu8o/maYZ6f3QA3sQ9QletRKZ6Jd4oTjlHjtlhU?=
+ =?us-ascii?Q?K42nk3woCL+kVRMq7Bp5j9+keIEL2AaPAxIkjOSlHrBQbYGhRKiGRiHzY7TO?=
+ =?us-ascii?Q?I5OFyJ/fdCwaW0E1WY+1b5afdYCtAd+TOCEE0jYpaEBmuIRENp5oQmJN4EfA?=
+ =?us-ascii?Q?SR59jC4AVMFW5qF6J8SAs0KJ3Z0F12Z2fgbzXXna8peO8CSiOtNnUIqEVnW3?=
+ =?us-ascii?Q?hxTx+v6JACO/KagE7J0jrNzPuNRbJ6l1jD9op2KN9YcHiwiLUHWrXGYhKhUf?=
+ =?us-ascii?Q?l4r/Ymw8PEC0bGddyurv7hA7ZDmkFFYqzabcPCXzfoF/rX2ndfXT+8N0SYGG?=
+ =?us-ascii?Q?OWm0dFXCwfNrxyziVYpxi5f9iJjY8uEiru1OQdMaEhpzowk3U8UVE4lGv1kW?=
+ =?us-ascii?Q?XukDUZtaDB0dndnf4mBsnakfVXm7EnrSSyFZm7MCq5fU8QitbOMMiQTXuY6Q?=
+ =?us-ascii?Q?u2KWP1B61jn6n9jhPL+uE5Cp9sgIEu+RLSCmE1v5XOXWczPJAiNL95yjfKLi?=
+ =?us-ascii?Q?IWz+TvZ1IzsF7eGD6Cbu0BrOT56C907PK1dyWaLNc0pyrkAyutDhcMr2L45P?=
+ =?us-ascii?Q?qhitC2LVwikXwZBOIyTfKLDQJ0H/M38J/EeAQGshMVxr23d7HXFOoMUv1cvp?=
+ =?us-ascii?Q?btSTZAcHEBbKRt7i7gIbb4I0RyvZWdH9tzSSKjpdQTETa4vSZ8XAHG4ydjuS?=
+ =?us-ascii?Q?Rf7d8Ltnn6G32ZlcrjbC?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4f6bce6-0133-4cac-9bc1-08dc870d9c9a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88bf67e8-b015-482a-ecd4-08dc8713eb85
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 16:19:31.4437
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 17:04:40.7566
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR02MB9522
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR02MB7925
 
-The "struct batadv_tvlv_tt_data" uses a dynamically sized set of
-trailing elements. Specifically, it uses an array of structures of type
-"batadv_tvlv_tt_vlan_data". So, use the preferred way in the kernel
-declaring a flexible array [1].
+It is preferred to use sizeof(*pointer) instead of sizeof(type)
+due to the type of the variable can change and one needs not
+change the former (unlike the latter). This patch has no effect
+on runtime behavior.
 
-At the same time, prepare for the coming implementation by GCC and Clang
-of the __counted_by attribute. Flexible array members annotated with
-__counted_by can have their accesses bounds-checked at run-time via
-CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-strcpy/memcpy-family functions). In this case, it is important to note
-that the attribute used is specifically __counted_by_be since variable
-"num_vlan" is of type __be16.
-
-The following change to the "batadv_tt_tvlv_ogm_handler_v1" function:
-
--	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(tt_data + 1);
--	tt_change = (struct batadv_tvlv_tt_change *)(tt_vlan + num_vlan);
-
-+	tt_change = (struct batadv_tvlv_tt_change *)((void *)tt_data
-+						     + flex_size);
-
-is intended to prevent the compiler from generating an "out-of-bounds"
-notification due to the __counted_by attribute. The compiler can do a
-pointer calculation using the vlan_data flexible array memory, or in
-other words, this may be calculated as an array offset, since it is the
-same as:
-
-        &tt_data->vlan_data[num_vlan]
-
-Therefore, we go past the end of the array. In other "multiple trailing
-flexible array" situations, this has been solved by addressing from the
-base pointer, since the compiler either knows the full allocation size
-or it knows nothing about it (this case, since it came from a "void *"
-function argument).
-
-The order in which the structure batadv_tvlv_tt_data and the structure
-batadv_tvlv_tt_vlan_data are defined must be swap to avoid an incomplete
-type error.
-
-Also, avoid the open-coded arithmetic in memory allocator functions [2]
-using the "struct_size" macro and use the "flex_array_size" helper to
-clarify some calculations, when possible.
-
-Moreover, the new structure member also allow us to avoid the open-coded
-arithmetic on pointers in some situations. Take advantage of this.
-
-This code was detected with the help of Coccinelle, and audited and
-modified manually.
-
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Erick Archer <erick.archer@outlook.com>
 ---
-Changes in v4:
-- Add the #include of <linux/stddef.h> for the "__counted_by_be"
-  helper (Sven Eckelmann).
-- Add the "Reviewed-by:" tag.
+ drivers/input/serio/altera_ps2.c      | 2 +-
+ drivers/input/serio/ambakmi.c         | 4 ++--
+ drivers/input/serio/apbps2.c          | 2 +-
+ drivers/input/serio/arc_ps2.c         | 2 +-
+ drivers/input/serio/ct82c710.c        | 2 +-
+ drivers/input/serio/gscps2.c          | 4 ++--
+ drivers/input/serio/hyperv-keyboard.c | 4 ++--
+ drivers/input/serio/i8042.c           | 4 ++--
+ drivers/input/serio/maceps2.c         | 2 +-
+ drivers/input/serio/olpc_apsp.c       | 4 ++--
+ drivers/input/serio/parkbd.c          | 2 +-
+ drivers/input/serio/pcips2.c          | 4 ++--
+ drivers/input/serio/ps2-gpio.c        | 4 ++--
+ drivers/input/serio/ps2mult.c         | 2 +-
+ drivers/input/serio/q40kbd.c          | 4 ++--
+ drivers/input/serio/rpckbd.c          | 2 +-
+ drivers/input/serio/sa1111ps2.c       | 4 ++--
+ drivers/input/serio/serio.c           | 2 +-
+ drivers/input/serio/serio_raw.c       | 4 ++--
+ drivers/input/serio/serport.c         | 4 ++--
+ drivers/input/serio/sun4i-ps2.c       | 4 ++--
+ drivers/input/serio/userio.c          | 4 ++--
+ drivers/input/serio/xilinx_ps2.c      | 4 ++--
+ 23 files changed, 37 insertions(+), 37 deletions(-)
 
-Changes in v3:
-- Address from the base pointer tt_data to avoid an "out-of-bounds"
-  notification (Kees Cook).
-- Update the commit message to explain the new change.
-
-Changes in v2:
-- Add the #include of <linux/overflow.h> for the "flex_array_size"
-  helper (Sven Eckelmann).
-- Add the "ntohs" function to the "flex_array_size" helper removed
-  by mistake during the conversion (Sven Eckelmann).
-- Add the "__counted_by_be" attribute.
-
-Previous versions:
-v3 -> https://lore.kernel.org/linux-hardening/AS8PR02MB72371F89D188B047410B755E8B192@AS8PR02MB7237.eurprd02.prod.outlook.com/
-v2 -> https://lore.kernel.org/linux-hardening/AS8PR02MB723756E3D1366C4E8FCD14BF8B162@AS8PR02MB7237.eurprd02.prod.outlook.com/
-v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237987BF9DFCA030B330F658B3E2@AS8PR02MB7237.eurprd02.prod.outlook.com/
-
-Hi,
-
-As it was decided in version 3, I resend this path since -r2 has been
-released. I hope that this time the patch can be applied ;)
-
-Regards,
-Erick
----
- include/uapi/linux/batadv_packet.h | 29 ++++++++++--------
- net/batman-adv/translation-table.c | 49 ++++++++++++------------------
- 2 files changed, 36 insertions(+), 42 deletions(-)
-
-diff --git a/include/uapi/linux/batadv_packet.h b/include/uapi/linux/batadv_packet.h
-index 6e25753015df..439132a819ea 100644
---- a/include/uapi/linux/batadv_packet.h
-+++ b/include/uapi/linux/batadv_packet.h
-@@ -9,6 +9,7 @@
- 
- #include <asm/byteorder.h>
- #include <linux/if_ether.h>
-+#include <linux/stddef.h>
- #include <linux/types.h>
- 
- /**
-@@ -592,19 +593,6 @@ struct batadv_tvlv_gateway_data {
- 	__be32 bandwidth_up;
- };
- 
--/**
-- * struct batadv_tvlv_tt_data - tt data propagated through the tt tvlv container
-- * @flags: translation table flags (see batadv_tt_data_flags)
-- * @ttvn: translation table version number
-- * @num_vlan: number of announced VLANs. In the TVLV this struct is followed by
-- *  one batadv_tvlv_tt_vlan_data object per announced vlan
-- */
--struct batadv_tvlv_tt_data {
--	__u8   flags;
--	__u8   ttvn;
--	__be16 num_vlan;
--};
--
- /**
-  * struct batadv_tvlv_tt_vlan_data - vlan specific tt data propagated through
-  *  the tt tvlv container
-@@ -618,6 +606,21 @@ struct batadv_tvlv_tt_vlan_data {
- 	__u16  reserved;
- };
- 
-+/**
-+ * struct batadv_tvlv_tt_data - tt data propagated through the tt tvlv container
-+ * @flags: translation table flags (see batadv_tt_data_flags)
-+ * @ttvn: translation table version number
-+ * @num_vlan: number of announced VLANs. In the TVLV this struct is followed by
-+ *  one batadv_tvlv_tt_vlan_data object per announced vlan
-+ * @vlan_data: array of batadv_tvlv_tt_vlan_data objects
-+ */
-+struct batadv_tvlv_tt_data {
-+	__u8   flags;
-+	__u8   ttvn;
-+	__be16 num_vlan;
-+	struct batadv_tvlv_tt_vlan_data vlan_data[] __counted_by_be(num_vlan);
-+};
-+
- /**
-  * struct batadv_tvlv_tt_change - translation table diff data
-  * @flags: status indicators concerning the non-mesh client (see
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index b21ff3c36b07..b44c382226a1 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -28,6 +28,7 @@
- #include <linux/net.h>
- #include <linux/netdevice.h>
- #include <linux/netlink.h>
-+#include <linux/overflow.h>
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
- #include <linux/skbuff.h>
-@@ -815,8 +816,7 @@ batadv_tt_prepare_tvlv_global_data(struct batadv_orig_node *orig_node,
- 		num_entries += atomic_read(&vlan->tt.num_entries);
+diff --git a/drivers/input/serio/altera_ps2.c b/drivers/input/serio/altera_ps2.c
+index c5b634940cfc..611eb9fe2d04 100644
+--- a/drivers/input/serio/altera_ps2.c
++++ b/drivers/input/serio/altera_ps2.c
+@@ -100,7 +100,7 @@ static int altera_ps2_probe(struct platform_device *pdev)
+ 		return error;
  	}
  
--	change_offset = sizeof(**tt_data);
--	change_offset += num_vlan * sizeof(*tt_vlan);
-+	change_offset = struct_size(*tt_data, vlan_data, num_vlan);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!serio)
+ 		return -ENOMEM;
  
- 	/* if tt_len is negative, allocate the space needed by the full table */
- 	if (*tt_len < 0)
-@@ -835,7 +835,7 @@ batadv_tt_prepare_tvlv_global_data(struct batadv_orig_node *orig_node,
- 	(*tt_data)->ttvn = atomic_read(&orig_node->last_ttvn);
- 	(*tt_data)->num_vlan = htons(num_vlan);
+diff --git a/drivers/input/serio/ambakmi.c b/drivers/input/serio/ambakmi.c
+index 496bb7a312d2..de4b3915c37d 100644
+--- a/drivers/input/serio/ambakmi.c
++++ b/drivers/input/serio/ambakmi.c
+@@ -114,8 +114,8 @@ static int amba_kmi_probe(struct amba_device *dev,
+ 	if (ret)
+ 		return ret;
  
--	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(*tt_data + 1);
-+	tt_vlan = (*tt_data)->vlan_data;
- 	hlist_for_each_entry(vlan, &orig_node->vlan_list, list) {
- 		tt_vlan->vid = htons(vlan->vid);
- 		tt_vlan->crc = htonl(vlan->tt.crc);
-@@ -895,8 +895,7 @@ batadv_tt_prepare_tvlv_local_data(struct batadv_priv *bat_priv,
- 		total_entries += vlan_entries;
- 	}
+-	kmi = kzalloc(sizeof(struct amba_kmi_port), GFP_KERNEL);
+-	io = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	kmi = kzalloc(sizeof(*kmi), GFP_KERNEL);
++	io = kzalloc(sizeof(*io), GFP_KERNEL);
+ 	if (!kmi || !io) {
+ 		ret = -ENOMEM;
+ 		goto out;
+diff --git a/drivers/input/serio/apbps2.c b/drivers/input/serio/apbps2.c
+index dbbb10251520..4015e75fcb90 100644
+--- a/drivers/input/serio/apbps2.c
++++ b/drivers/input/serio/apbps2.c
+@@ -165,7 +165,7 @@ static int apbps2_of_probe(struct platform_device *ofdev)
+ 	/* Set reload register to core freq in kHz/10 */
+ 	iowrite32be(freq_hz / 10000, &priv->regs->reload);
  
--	change_offset = sizeof(**tt_data);
--	change_offset += num_vlan * sizeof(*tt_vlan);
-+	change_offset = struct_size(*tt_data, vlan_data, num_vlan);
+-	priv->io = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	priv->io = kzalloc(sizeof(*priv->io), GFP_KERNEL);
+ 	if (!priv->io)
+ 		return -ENOMEM;
  
- 	/* if tt_len is negative, allocate the space needed by the full table */
- 	if (*tt_len < 0)
-@@ -915,7 +914,7 @@ batadv_tt_prepare_tvlv_local_data(struct batadv_priv *bat_priv,
- 	(*tt_data)->ttvn = atomic_read(&bat_priv->tt.vn);
- 	(*tt_data)->num_vlan = htons(num_vlan);
+diff --git a/drivers/input/serio/arc_ps2.c b/drivers/input/serio/arc_ps2.c
+index 9d8726830140..a9180a005872 100644
+--- a/drivers/input/serio/arc_ps2.c
++++ b/drivers/input/serio/arc_ps2.c
+@@ -155,7 +155,7 @@ static int arc_ps2_create_port(struct platform_device *pdev,
+ 	struct arc_ps2_port *port = &arc_ps2->port[index];
+ 	struct serio *io;
  
--	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(*tt_data + 1);
-+	tt_vlan = (*tt_data)->vlan_data;
- 	hlist_for_each_entry(vlan, &bat_priv->softif_vlan_list, list) {
- 		vlan_entries = atomic_read(&vlan->tt.num_entries);
- 		if (vlan_entries < 1)
-@@ -2875,7 +2874,6 @@ static bool batadv_send_tt_request(struct batadv_priv *bat_priv,
+-	io = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	io = kzalloc(sizeof(*io), GFP_KERNEL);
+ 	if (!io)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/input/serio/ct82c710.c b/drivers/input/serio/ct82c710.c
+index d5c9bb3d0103..6834440b37f6 100644
+--- a/drivers/input/serio/ct82c710.c
++++ b/drivers/input/serio/ct82c710.c
+@@ -158,7 +158,7 @@ static int __init ct82c710_detect(void)
+ 
+ static int ct82c710_probe(struct platform_device *dev)
  {
- 	struct batadv_tvlv_tt_data *tvlv_tt_data = NULL;
- 	struct batadv_tt_req_node *tt_req_node = NULL;
--	struct batadv_tvlv_tt_vlan_data *tt_vlan_req;
- 	struct batadv_hard_iface *primary_if;
- 	bool ret = false;
- 	int i, size;
-@@ -2891,7 +2889,7 @@ static bool batadv_send_tt_request(struct batadv_priv *bat_priv,
- 	if (!tt_req_node)
- 		goto out;
+-	ct82c710_port = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	ct82c710_port = kzalloc(sizeof(*ct82c710_port), GFP_KERNEL);
+ 	if (!ct82c710_port)
+ 		return -ENOMEM;
  
--	size = sizeof(*tvlv_tt_data) + sizeof(*tt_vlan_req) * num_vlan;
-+	size = struct_size(tvlv_tt_data, vlan_data, num_vlan);
- 	tvlv_tt_data = kzalloc(size, GFP_ATOMIC);
- 	if (!tvlv_tt_data)
- 		goto out;
-@@ -2903,12 +2901,10 @@ static bool batadv_send_tt_request(struct batadv_priv *bat_priv,
- 	/* send all the CRCs within the request. This is needed by intermediate
- 	 * nodes to ensure they have the correct table before replying
- 	 */
--	tt_vlan_req = (struct batadv_tvlv_tt_vlan_data *)(tvlv_tt_data + 1);
- 	for (i = 0; i < num_vlan; i++) {
--		tt_vlan_req->vid = tt_vlan->vid;
--		tt_vlan_req->crc = tt_vlan->crc;
-+		tvlv_tt_data->vlan_data[i].vid = tt_vlan->vid;
-+		tvlv_tt_data->vlan_data[i].crc = tt_vlan->crc;
+diff --git a/drivers/input/serio/gscps2.c b/drivers/input/serio/gscps2.c
+index 633c7de49d67..d94c01eb3fc9 100644
+--- a/drivers/input/serio/gscps2.c
++++ b/drivers/input/serio/gscps2.c
+@@ -338,8 +338,8 @@ static int __init gscps2_probe(struct parisc_device *dev)
+ 	if (dev->id.sversion == 0x96)
+ 		hpa += GSC_DINO_OFFSET;
  
--		tt_vlan_req++;
- 		tt_vlan++;
+-	ps2port = kzalloc(sizeof(struct gscps2port), GFP_KERNEL);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	ps2port = kzalloc(sizeof(*ps2port), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!ps2port || !serio) {
+ 		ret = -ENOMEM;
+ 		goto fail_nomem;
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index 31def6ce5157..31d9dacd2fd1 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -318,8 +318,8 @@ static int hv_kbd_probe(struct hv_device *hv_dev,
+ 	struct serio *hv_serio;
+ 	int error;
+ 
+-	kbd_dev = kzalloc(sizeof(struct hv_kbd_dev), GFP_KERNEL);
+-	hv_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	kbd_dev = kzalloc(sizeof(*kbd_dev), GFP_KERNEL);
++	hv_serio = kzalloc(sizeof(*hv_serio), GFP_KERNEL);
+ 	if (!kbd_dev || !hv_serio) {
+ 		error = -ENOMEM;
+ 		goto err_free_mem;
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 9fbb8d31575a..e0fb1db653b7 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -1329,7 +1329,7 @@ static int i8042_create_kbd_port(void)
+ 	struct serio *serio;
+ 	struct i8042_port *port = &i8042_ports[I8042_KBD_PORT_NO];
+ 
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!serio)
+ 		return -ENOMEM;
+ 
+@@ -1359,7 +1359,7 @@ static int i8042_create_aux_port(int idx)
+ 	int port_no = idx < 0 ? I8042_AUX_PORT_NO : I8042_MUX_PORT_NO + idx;
+ 	struct i8042_port *port = &i8042_ports[port_no];
+ 
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!serio)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/input/serio/maceps2.c b/drivers/input/serio/maceps2.c
+index 5ccfb82759b3..42ac1eb94866 100644
+--- a/drivers/input/serio/maceps2.c
++++ b/drivers/input/serio/maceps2.c
+@@ -117,7 +117,7 @@ static struct serio *maceps2_allocate_port(int idx)
+ {
+ 	struct serio *serio;
+ 
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (serio) {
+ 		serio->id.type		= SERIO_8042;
+ 		serio->write		= maceps2_write;
+diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_apsp.c
+index 240a714f7081..0ad95e880cc2 100644
+--- a/drivers/input/serio/olpc_apsp.c
++++ b/drivers/input/serio/olpc_apsp.c
+@@ -188,7 +188,7 @@ static int olpc_apsp_probe(struct platform_device *pdev)
+ 		return priv->irq;
+ 
+ 	/* KEYBOARD */
+-	kb_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	kb_serio = kzalloc(sizeof(*kb_serio), GFP_KERNEL);
+ 	if (!kb_serio)
+ 		return -ENOMEM;
+ 	kb_serio->id.type	= SERIO_8042_XL;
+@@ -203,7 +203,7 @@ static int olpc_apsp_probe(struct platform_device *pdev)
+ 	serio_register_port(kb_serio);
+ 
+ 	/* TOUCHPAD */
+-	pad_serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	pad_serio = kzalloc(sizeof(*pad_serio), GFP_KERNEL);
+ 	if (!pad_serio) {
+ 		error = -ENOMEM;
+ 		goto err_pad;
+diff --git a/drivers/input/serio/parkbd.c b/drivers/input/serio/parkbd.c
+index 0d54895428f5..328932297aad 100644
+--- a/drivers/input/serio/parkbd.c
++++ b/drivers/input/serio/parkbd.c
+@@ -165,7 +165,7 @@ static struct serio *parkbd_allocate_serio(void)
+ {
+ 	struct serio *serio;
+ 
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (serio) {
+ 		serio->id.type = parkbd_mode;
+ 		serio->write = parkbd_write;
+diff --git a/drivers/input/serio/pcips2.c b/drivers/input/serio/pcips2.c
+index 05878750f2c2..6b9abb2e18c9 100644
+--- a/drivers/input/serio/pcips2.c
++++ b/drivers/input/serio/pcips2.c
+@@ -137,8 +137,8 @@ static int pcips2_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (ret)
+ 		goto disable;
+ 
+-	ps2if = kzalloc(sizeof(struct pcips2_data), GFP_KERNEL);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	ps2if = kzalloc(sizeof(*ps2if), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!ps2if || !serio) {
+ 		ret = -ENOMEM;
+ 		goto release;
+diff --git a/drivers/input/serio/ps2-gpio.c b/drivers/input/serio/ps2-gpio.c
+index c3ff60859a03..0c8b390b8b4f 100644
+--- a/drivers/input/serio/ps2-gpio.c
++++ b/drivers/input/serio/ps2-gpio.c
+@@ -404,8 +404,8 @@ static int ps2_gpio_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	int error;
+ 
+-	drvdata = devm_kzalloc(dev, sizeof(struct ps2_gpio_data), GFP_KERNEL);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!drvdata || !serio) {
+ 		error = -ENOMEM;
+ 		goto err_free_serio;
+diff --git a/drivers/input/serio/ps2mult.c b/drivers/input/serio/ps2mult.c
+index 902e81826fbf..937ecdea491d 100644
+--- a/drivers/input/serio/ps2mult.c
++++ b/drivers/input/serio/ps2mult.c
+@@ -127,7 +127,7 @@ static int ps2mult_create_port(struct ps2mult *psm, int i)
+ 	struct serio *mx_serio = psm->mx_serio;
+ 	struct serio *serio;
+ 
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!serio)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/input/serio/q40kbd.c b/drivers/input/serio/q40kbd.c
+index 3f81f8749cd5..cd4d5be946a3 100644
+--- a/drivers/input/serio/q40kbd.c
++++ b/drivers/input/serio/q40kbd.c
+@@ -108,8 +108,8 @@ static int q40kbd_probe(struct platform_device *pdev)
+ 	struct serio *port;
+ 	int error;
+ 
+-	q40kbd = kzalloc(sizeof(struct q40kbd), GFP_KERNEL);
+-	port = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	q40kbd = kzalloc(sizeof(*q40kbd), GFP_KERNEL);
++	port = kzalloc(sizeof(*port), GFP_KERNEL);
+ 	if (!q40kbd || !port) {
+ 		error = -ENOMEM;
+ 		goto err_free_mem;
+diff --git a/drivers/input/serio/rpckbd.c b/drivers/input/serio/rpckbd.c
+index 9bbfefd092c0..e236bb7e1014 100644
+--- a/drivers/input/serio/rpckbd.c
++++ b/drivers/input/serio/rpckbd.c
+@@ -108,7 +108,7 @@ static int rpckbd_probe(struct platform_device *dev)
+ 	if (tx_irq < 0)
+ 		return tx_irq;
+ 
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	rpckbd = kzalloc(sizeof(*rpckbd), GFP_KERNEL);
+ 	if (!serio || !rpckbd) {
+ 		kfree(rpckbd);
+diff --git a/drivers/input/serio/sa1111ps2.c b/drivers/input/serio/sa1111ps2.c
+index 2724c3aa512c..1311caf7dba4 100644
+--- a/drivers/input/serio/sa1111ps2.c
++++ b/drivers/input/serio/sa1111ps2.c
+@@ -256,8 +256,8 @@ static int ps2_probe(struct sa1111_dev *dev)
+ 	struct serio *serio;
+ 	int ret;
+ 
+-	ps2if = kzalloc(sizeof(struct ps2if), GFP_KERNEL);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	ps2if = kzalloc(sizeof(*ps2if), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!ps2if || !serio) {
+ 		ret = -ENOMEM;
+ 		goto free;
+diff --git a/drivers/input/serio/serio.c b/drivers/input/serio/serio.c
+index a8838b522627..04967494eeb6 100644
+--- a/drivers/input/serio/serio.c
++++ b/drivers/input/serio/serio.c
+@@ -258,7 +258,7 @@ static int serio_queue_event(void *object, struct module *owner,
+ 		}
  	}
  
-@@ -2960,7 +2956,6 @@ static bool batadv_send_other_tt_response(struct batadv_priv *bat_priv,
- 	struct batadv_orig_node *res_dst_orig_node = NULL;
- 	struct batadv_tvlv_tt_change *tt_change;
- 	struct batadv_tvlv_tt_data *tvlv_tt_data = NULL;
--	struct batadv_tvlv_tt_vlan_data *tt_vlan;
- 	bool ret = false, full_table;
- 	u8 orig_ttvn, req_ttvn;
- 	u16 tvlv_len;
-@@ -2983,10 +2978,9 @@ static bool batadv_send_other_tt_response(struct batadv_priv *bat_priv,
- 	orig_ttvn = (u8)atomic_read(&req_dst_orig_node->last_ttvn);
- 	req_ttvn = tt_data->ttvn;
- 
--	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(tt_data + 1);
- 	/* this node doesn't have the requested data */
- 	if (orig_ttvn != req_ttvn ||
--	    !batadv_tt_global_check_crc(req_dst_orig_node, tt_vlan,
-+	    !batadv_tt_global_check_crc(req_dst_orig_node, tt_data->vlan_data,
- 					ntohs(tt_data->num_vlan)))
+-	event = kmalloc(sizeof(struct serio_event), GFP_ATOMIC);
++	event = kmalloc(sizeof(*event), GFP_ATOMIC);
+ 	if (!event) {
+ 		pr_err("Not enough memory to queue event %d\n", event_type);
+ 		retval = -ENOMEM;
+diff --git a/drivers/input/serio/serio_raw.c b/drivers/input/serio/serio_raw.c
+index 1e4770094415..0186d1b38f49 100644
+--- a/drivers/input/serio/serio_raw.c
++++ b/drivers/input/serio/serio_raw.c
+@@ -92,7 +92,7 @@ static int serio_raw_open(struct inode *inode, struct file *file)
  		goto out;
+ 	}
  
-@@ -3329,7 +3323,6 @@ static void batadv_handle_tt_response(struct batadv_priv *bat_priv,
- 	struct batadv_orig_node *orig_node = NULL;
- 	struct batadv_tvlv_tt_change *tt_change;
- 	u8 *tvlv_ptr = (u8 *)tt_data;
--	u16 change_offset;
+-	client = kzalloc(sizeof(struct serio_raw_client), GFP_KERNEL);
++	client = kzalloc(sizeof(*client), GFP_KERNEL);
+ 	if (!client) {
+ 		retval = -ENOMEM;
+ 		goto out;
+@@ -293,7 +293,7 @@ static int serio_raw_connect(struct serio *serio, struct serio_driver *drv)
+ 	struct serio_raw *serio_raw;
+ 	int err;
  
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Received TT_RESPONSE from %pM for ttvn %d t_size: %d [%c]\n",
-@@ -3342,10 +3335,7 @@ static void batadv_handle_tt_response(struct batadv_priv *bat_priv,
+-	serio_raw = kzalloc(sizeof(struct serio_raw), GFP_KERNEL);
++	serio_raw = kzalloc(sizeof(*serio_raw), GFP_KERNEL);
+ 	if (!serio_raw) {
+ 		dev_dbg(&serio->dev, "can't allocate memory for a device\n");
+ 		return -ENOMEM;
+diff --git a/drivers/input/serio/serport.c b/drivers/input/serio/serport.c
+index 1db3f30011c4..5a2b5404ffc2 100644
+--- a/drivers/input/serio/serport.c
++++ b/drivers/input/serio/serport.c
+@@ -82,7 +82,7 @@ static int serport_ldisc_open(struct tty_struct *tty)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
  
- 	spin_lock_bh(&orig_node->tt_lock);
+-	serport = kzalloc(sizeof(struct serport), GFP_KERNEL);
++	serport = kzalloc(sizeof(*serport), GFP_KERNEL);
+ 	if (!serport)
+ 		return -ENOMEM;
  
--	change_offset = sizeof(struct batadv_tvlv_tt_vlan_data);
--	change_offset *= ntohs(tt_data->num_vlan);
--	change_offset += sizeof(*tt_data);
--	tvlv_ptr += change_offset;
-+	tvlv_ptr += struct_size(tt_data, vlan_data, ntohs(tt_data->num_vlan));
+@@ -167,7 +167,7 @@ static ssize_t serport_ldisc_read(struct tty_struct * tty, struct file * file,
+ 	if (test_and_set_bit(SERPORT_BUSY, &serport->flags))
+ 		return -EBUSY;
  
- 	tt_change = (struct batadv_tvlv_tt_change *)tvlv_ptr;
- 	if (tt_data->flags & BATADV_TT_FULL_TABLE) {
-@@ -3944,10 +3934,10 @@ static void batadv_tt_tvlv_ogm_handler_v1(struct batadv_priv *bat_priv,
- 					  u8 flags, void *tvlv_value,
- 					  u16 tvlv_value_len)
+-	serport->serio = serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	serport->serio = serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!serio)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
+index aec66d9f5176..95cd8aaee65d 100644
+--- a/drivers/input/serio/sun4i-ps2.c
++++ b/drivers/input/serio/sun4i-ps2.c
+@@ -213,8 +213,8 @@ static int sun4i_ps2_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	int error;
+ 
+-	drvdata = kzalloc(sizeof(struct sun4i_ps2data), GFP_KERNEL);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!drvdata || !serio) {
+ 		error = -ENOMEM;
+ 		goto err_free_mem;
+diff --git a/drivers/input/serio/userio.c b/drivers/input/serio/userio.c
+index 9ab5c45c3a9f..a88e2eee55c3 100644
+--- a/drivers/input/serio/userio.c
++++ b/drivers/input/serio/userio.c
+@@ -77,7 +77,7 @@ static int userio_char_open(struct inode *inode, struct file *file)
  {
--	struct batadv_tvlv_tt_vlan_data *tt_vlan;
- 	struct batadv_tvlv_tt_change *tt_change;
- 	struct batadv_tvlv_tt_data *tt_data;
- 	u16 num_entries, num_vlan;
-+	size_t flex_size;
+ 	struct userio_device *userio;
  
- 	if (tvlv_value_len < sizeof(*tt_data))
- 		return;
-@@ -3957,17 +3947,18 @@ static void batadv_tt_tvlv_ogm_handler_v1(struct batadv_priv *bat_priv,
+-	userio = kzalloc(sizeof(struct userio_device), GFP_KERNEL);
++	userio = kzalloc(sizeof(*userio), GFP_KERNEL);
+ 	if (!userio)
+ 		return -ENOMEM;
  
- 	num_vlan = ntohs(tt_data->num_vlan);
+@@ -85,7 +85,7 @@ static int userio_char_open(struct inode *inode, struct file *file)
+ 	spin_lock_init(&userio->buf_lock);
+ 	init_waitqueue_head(&userio->waitq);
  
--	if (tvlv_value_len < sizeof(*tt_vlan) * num_vlan)
-+	flex_size = flex_array_size(tt_data, vlan_data, num_vlan);
-+	if (tvlv_value_len < flex_size)
- 		return;
+-	userio->serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	userio->serio = kzalloc(sizeof(*userio->serio), GFP_KERNEL);
+ 	if (!userio->serio) {
+ 		kfree(userio);
+ 		return -ENOMEM;
+diff --git a/drivers/input/serio/xilinx_ps2.c b/drivers/input/serio/xilinx_ps2.c
+index bb758346a33d..1543267d02ac 100644
+--- a/drivers/input/serio/xilinx_ps2.c
++++ b/drivers/input/serio/xilinx_ps2.c
+@@ -252,8 +252,8 @@ static int xps2_of_probe(struct platform_device *ofdev)
+ 		return -ENODEV;
+ 	}
  
--	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(tt_data + 1);
--	tt_change = (struct batadv_tvlv_tt_change *)(tt_vlan + num_vlan);
--	tvlv_value_len -= sizeof(*tt_vlan) * num_vlan;
-+	tt_change = (struct batadv_tvlv_tt_change *)((void *)tt_data
-+						     + flex_size);
-+	tvlv_value_len -= flex_size;
- 
- 	num_entries = batadv_tt_entries(tvlv_value_len);
- 
--	batadv_tt_update_orig(bat_priv, orig, tt_vlan, num_vlan, tt_change,
--			      num_entries, tt_data->ttvn);
-+	batadv_tt_update_orig(bat_priv, orig, tt_data->vlan_data, num_vlan,
-+			      tt_change, num_entries, tt_data->ttvn);
- }
- 
- /**
-@@ -3998,8 +3989,8 @@ static int batadv_tt_tvlv_unicast_handler_v1(struct batadv_priv *bat_priv,
- 	tt_data = tvlv_value;
- 	tvlv_value_len -= sizeof(*tt_data);
- 
--	tt_vlan_len = sizeof(struct batadv_tvlv_tt_vlan_data);
--	tt_vlan_len *= ntohs(tt_data->num_vlan);
-+	tt_vlan_len = flex_array_size(tt_data, vlan_data,
-+				      ntohs(tt_data->num_vlan));
- 
- 	if (tvlv_value_len < tt_vlan_len)
- 		return NET_RX_SUCCESS;
+-	drvdata = kzalloc(sizeof(struct xps2data), GFP_KERNEL);
+-	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
++	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
++	serio = kzalloc(sizeof(*serio), GFP_KERNEL);
+ 	if (!drvdata || !serio) {
+ 		error = -ENOMEM;
+ 		goto failed1;
 -- 
 2.25.1
 
