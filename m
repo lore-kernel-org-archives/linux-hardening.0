@@ -1,95 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94433EE;
-	Fri,  7 Jun 2024 19:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC707345D;
+	Fri,  7 Jun 2024 19:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717786841; cv=none; b=NoDcVw5v9v8l4vQQiAEMrHlGjEgaBxDbDVZs11p6L01PYx1MKl59Mg2mbPnWrXbz6c19kp3Z2LIN7jgdqsRpqplFVgGs8OxPN9oZs+IGF3A1qFkUHwij9760Xrv1vJYq84IfS1UK6sesFAznpTlGEssNiLAlJoJvekXbsABj1F0=
+	t=1717787864; cv=none; b=p5NvO4ozFV9nufUuRHSnwwLVaJu1sPnDxliatfawyjMaXx/by1QLGt7sQstaicjiojeLMn44hGxaOnKWVOn81NpjU6ZTWzVgvn1/w3xZL0gZnX40l/PL+aNkuny2KIGg+w05gFQ1hwKK6Sg8FJnYBkgW/9DJY1m3tzJFZd+nnUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717786841; c=relaxed/simple;
-	bh=IPM3ZjOOoKK9XZRO/WkOmRAqEmZd5KnB0OIVkFoyJt0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K0u/8MjzR0KBRnimrd4L7x1WkpQaOZ+QawxsPR1Uiy+3meF8djX9qISB3NZvT5NQy5BshRoV8opM6tFRaCyTmeNU9ScNKyT6h9YTSgx0q8KCMkCT7pQAypxvUK3yaxCnsgHfEhRjpA17+O+JvSgD1cMvoGzcvKXCodYCrzVRnM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMmKY4kO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717787864; c=relaxed/simple;
+	bh=d7pNxXN7ZZ7n1TjEK8X8kD9o37/7SEp9NufTqHRsRe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RvuhDWqwYLYpZcCSaJahWBI9nqR60jXBCgjP9M9g5/9axl9ni5x1Dx/nHY+ELpPhuvY4IiuQy91At8ziA92levp6bGRf5TdgWzIZUuxcZmapMIYRyr6Sze06UI3yv1GXGEcMaB7Ak5WY/Muf9Urk6dGrKzmosLzoMJb+mN2RvZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L0+irMuM; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMmKY4kO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0841C4AF08;
-	Fri,  7 Jun 2024 19:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717786841;
-	bh=IPM3ZjOOoKK9XZRO/WkOmRAqEmZd5KnB0OIVkFoyJt0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HMmKY4kON5jYIpNgJWHAqigbtXut0meWxfry6TCSfOf4J90q07JjF+fb7JOERKuUr
-	 oFTNwv/qfpFZsF9YHywvujdVx6o+lOwa4D8e+sUWCQl6wyPPgDEGYK761o3+X3K0Y9
-	 OxqETGzOVHuhskjYR1qFkjmZv1PsCZRF9J7c6wmeBHt7/Mv+0kuaJJQqxS81AQoT+V
-	 Wy14eBRqFPkmpQOZteiBKmXaaCt/Ct/EEiyeTIAbxqvzbQTBclNWhkg8OThWHVPRFo
-	 rIasBBJo4nJR0GgLTHrlHI7ZFkbgkAkoFCmIMBSWs6gIdKf47qzXyz0bHtwbE+Giyk
-	 jM4ka91SBxF6Q==
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3d21c5b48f5so10200b6e.0;
-        Fri, 07 Jun 2024 12:00:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWyQkvlhipV2yBTjXii0PvYm9X3/HRLxpPmZwXLm2ncj1GHS+dDc38xmxPgonGZphBDOnwlwhgqKIqZLuAp1JxmBItDVrFPGA+c5fTtpSczep+jhQb9TfUB0pTGRm/C30RZxeFpa4eT90RTwUPaQZK9G0vZFYQ8YyAoal4mSnKygV4Wd9+cX44=
-X-Gm-Message-State: AOJu0YyYvKtiAUrU5Tz10zLhQL2vOPjG98dZ4EYKF2xb/cnBCYM2onGj
-	CXwHU7Oa8K8j5mSjNNrrs3KDp2bCcTsKgHoA5t6t4veAP00sVmGLkCh+waRkczLJXBKycjBv9GN
-	Yd0oc2DJcEcnr/g4dGJ7HBXIxdZ8=
-X-Google-Smtp-Source: AGHT+IGuJmKnxkTd0KYNZ8GHs2XH6rZN6o7VLhS21c0RGPNYMnNAYBlTibs+T91Q58vZVrd6rRw/ZLbD9DyQjDDA3iY=
-X-Received: by 2002:a4a:a7c9:0:b0:5ba:6959:edf8 with SMTP id
- 006d021491bc7-5baae6da3bfmr3518182eaf.1.1717786840309; Fri, 07 Jun 2024
- 12:00:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0+irMuM"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7025c5e6b94so2066729b3a.0;
+        Fri, 07 Jun 2024 12:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717787862; x=1718392662; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NMwKu+pMCkNLk3fA7XHYBTAbLNx7GuEVog7Bj2JBALk=;
+        b=L0+irMuM/spDerwIer58QP0RIQnvjANafe+rGwWBs/rdicxBkfhhcAJ6OFG5isNTRe
+         q6l1hSe1odfzEuZOEYYz4wz14LIIq1cGjC9+dSpoJJsaQLRNY9OYKe9WD/ZpDNNCMS6n
+         tXwIKnhrWmBBWt9b3EqAA7mOYlPw3zc/ACs24p7RAkts5rchWsv0kYd9pqs8AD92uK1x
+         iMaKWz2CWwOpgdgniuKBPQ3PMho9l5iEy1CEqrDwhXXYkuHpbAuJoYk5YH2/dkYI2q6q
+         Rp4DCg0xttd7sH9mmanoU0YC+revsDvt7EtbUO+AU+okQdjXse2BR5WmfI7VkvHFK/7A
+         RolA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717787862; x=1718392662;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NMwKu+pMCkNLk3fA7XHYBTAbLNx7GuEVog7Bj2JBALk=;
+        b=gMNYQxP5Ovt+BsrlEzNt850YLxzhf5mWFHT4Ju0yY5Q8kpVBTBXOUhABiqdLynB/po
+         /cLjE0nJLei4MUpbNzlCcYOOcYNHQ9hefNEW7mhp54X+ADvVgJnXSj+OXydnDq5O/9Qx
+         cLMOasxgIBAu0cmFAOz4eE9tRuDbOJ0P3U5iJodeZzTv5GnOqH17ypjUaRjztnaCBV/5
+         7MHn0qu0aa07Ua2Fpa5Bbqi6MxcPBYoLp8iqGRwS2x5bOgaF2r9XuQQDnJIOMLjkgTBI
+         ZkXoRbY5Z935o59AbGy2qvvblw9eRmlgm8TFnTORIOrm6OP3kakPmdVLQdITHHyuADcU
+         KghQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXq5RZG2iRMRBJQECrvPurrCRw82XjJjlBD8C8BG8v+zArh+i+B0iinOPiKvNmcVXOskug6qBmrTxZ2Bm+MsJMK4bM6uj0RBPnFUgHhpfS/t4diU4ISLAv3i6hwuat8RIZWLar9fxkvg1F7diiUQtKgxLJ2pzd6vJj9xM2hxUtaeApU7A0dqxVRg+PtZN9NxPSSZTRmy7EBwCfCOpEYSkEEwxbHX6+csnhUj/QgB5Y1acow7o+TgacQlm4ewaslYiaeyHp/8I=
+X-Gm-Message-State: AOJu0YwLG6n81JuMMrZTcz15Q/B0Vy+3GYaqgr2o254Kgk5o5JPoa/ZB
+	0hVsA+Slj5T3hN0nBQbwbIi221xhfqgzS8ssDCDAGn1c2E2HpIdU
+X-Google-Smtp-Source: AGHT+IHYSV0KCIG3qxQOTEBKKcc1mjWK4+6fwEeVHg+i4ItkqLKlvKzlGZXukzqLa21WlkEglyJVUg==
+X-Received: by 2002:a05:6a20:918f:b0:1af:cf63:3742 with SMTP id adf61e73a8af0-1b2f9cb14e6mr3810470637.42.1717787861751;
+        Fri, 07 Jun 2024 12:17:41 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:b8e9:3447:a54a:310b])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de200848bfsm2600379a12.1.2024.06.07.12.17.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 12:17:41 -0700 (PDT)
+Date: Fri, 7 Jun 2024 12:17:37 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Stephen Chandler Paul <thatslyude@gmail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>, Ruan Jinjie <ruanjinjie@huawei.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Input: serio - use sizeof(*pointer) instead of
+ sizeof(type)
+Message-ID: <ZmNc0cwc6yzl3_7H@google.com>
+References: <AS8PR02MB7237D3D898CCC9C50C18DE078BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AS8PR02MB723748EF627AEB253C437FD48BFA2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-In-Reply-To: <AS8PR02MB723748EF627AEB253C437FD48BFA2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Jun 2024 21:00:29 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ghxCYZKdf3zixi6StSCir7Yyiy5iyPeG2+GmyHU4yzWw@mail.gmail.com>
-Message-ID: <CAJZ5v0ghxCYZKdf3zixi6StSCir7Yyiy5iyPeG2+GmyHU4yzWw@mail.gmail.com>
-Subject: Re: [PATCH] thermal: int3400: Use sizeof(*pointer) instead of sizeof(type)
-To: Erick Archer <erick.archer@outlook.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Ard Biesheuvel <ardb@kernel.org>, Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>, 
-	Lukas Wunner <lukas@wunner.de>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Justin Stitt <justinstitt@google.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB7237D3D898CCC9C50C18DE078BFB2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Thu, Jun 6, 2024 at 7:21=E2=80=AFPM Erick Archer <erick.archer@outlook.c=
-om> wrote:
->
+On Fri, Jun 07, 2024 at 07:04:23PM +0200, Erick Archer wrote:
 > It is preferred to use sizeof(*pointer) instead of sizeof(type)
 > due to the type of the variable can change and one needs not
 > change the former (unlike the latter). This patch has no effect
 > on runtime behavior.
->
+> 
 > Signed-off-by: Erick Archer <erick.archer@outlook.com>
-> ---
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/dr=
-ivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index fa96972266e4..b0c0f0ffdcb0 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -571,7 +571,7 @@ static int int3400_thermal_probe(struct platform_devi=
-ce *pdev)
->         if (!adev)
->                 return -ENODEV;
->
-> -       priv =3D kzalloc(sizeof(struct int3400_thermal_priv), GFP_KERNEL)=
-;
-> +       priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
->         if (!priv)
->                 return -ENOMEM;
->
-> --
 
-Applied as 6.11 material, thanks!
+Applied, thank you.
+
+-- 
+Dmitry
