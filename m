@@ -1,410 +1,243 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01olkn2100.outbound.protection.outlook.com [40.92.64.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6343A176FAB
-	for <linux-hardening@vger.kernel.org>; Sat,  8 Jun 2024 08:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717836272; cv=none; b=a445+E1aMOEG1c+5nTRKXovqUATn7QnDGjP2VqgkiTMFZPKU6T8jAbts9zWjRwbHlbv/25eTYy/s9y6m/kOYywOhZcz9NQsCyhzLSfVFaFuII8BelNnvkPceICWu4K22/ZrbIWqT04j3cW90thkAbn82sH4gNTTKZpBjfXR0adY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717836272; c=relaxed/simple;
-	bh=uJR9D96Z+3wXMmaGyLa1iOEl7LJc2eGLUKXyU+KUI2U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pAAG/M+h0wK2JTfNvFEOKSgLmlyoTsw2M4iGpyt/LYp4RXHkycYF5fCEorSnYmyAR9w5b6PJkxNRi/tiwssbU97vy9s/72QQbhZq7qRkYaNz/XuoedGRhcvbz23ao0QHv0qSwKVyfzIFCkwL8zo5dkuFP9ZPc2u5Jc96kRMiruk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C5eaMBmc; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E75C8D7;
+	Sat,  8 Jun 2024 08:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.64.100
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717836663; cv=fail; b=ep5K5vsWkhDCauyTpDo5a2Ps7VbFCN79pPWGvLdJGZU3nwIXpaZ4zx0cwupkj+QDYCwEVdFXqUOsLBBmYIm5xalinwQ2SGhZ7LD/WCJaBu+k6khdpMx+Rilme+KJQ7W/8pE22nT+0JHXqDiPmjHqRb3jpWHkwzCiIw1MXmgV3HU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717836663; c=relaxed/simple;
+	bh=mKEl+NeS5AKe13mSVsSlvNgDfTFc9+P0v993kwqOi0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XplOESC/G5TZ30FfFoGPFROLVpiGqvYFBRlfNxg1/x5JiV27YL8DDpP76lhuWPTklvOfTrzdZFQ0JKzgfTMTRq+wXNPbtGGRImS3qCDRNWSBYaCzuoNEcQJyZorlMitnT89YV/wZURuT1fq06/xINU+ab+MAKgRGrT9/1dhmiNc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kf7Zwz4z; arc=fail smtp.client-ip=40.92.64.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C5eaMBmc"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4405dffca81so19841cf.1
-        for <linux-hardening@vger.kernel.org>; Sat, 08 Jun 2024 01:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717836268; x=1718441068; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ualrD6rSHviUIPydG4DCWYkVnvlVE9FyLi+njfrchnk=;
-        b=C5eaMBmcHJ+C1aESkIVYV6byH1snw8UzuGCJLwqDvugOrj3oqxLEdXEp8zaHxAuc3v
-         SB+pJAxOeX9g52v5Ywv5b8EQenM5Hk4LEroPR/5Bzjdo4N9xNoufa6SH1q9KuogXQOpo
-         kgGcJwPcSAjfNOrHKeknri0fscVGc7rKszrlm9pdIxln9khrImcmLn5Qj3uuYtZm01/M
-         dHnV49/oOXu862mtCohqKXLkntJIV9kwkb8HYodYtSXp/7MI3frVyLV88ojIAd/W/jgD
-         YFrBZnT00X503pJOxFJRChtPt1t0jP99SiAn+Sueh4stKE6l6Xx/eo9XEHclug3pYmV9
-         nb9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717836268; x=1718441068;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ualrD6rSHviUIPydG4DCWYkVnvlVE9FyLi+njfrchnk=;
-        b=S8pT2aDwonb68JwRHhoTvLMiam64fWQ3FArGPSilQXJebY3BcpWYMJXWnKSMHdgDgo
-         N//3s7BlcwnfBZQQaD8qjVEjtXWXvcIW+jM1fKD6xskXTZ0oEb1Fdy3bRd5dFgM/i0v+
-         PQCyUJLzuI4WpHKJGyx5Y+4iRLuIJTYiMhj7r0JKqQuEaT/nGgj2Hs58Jo3RB1CLMwwu
-         20Ip5C6cpISiM6t4uyrMxvO+ahRQF5iWHjI3oGJa2/kqnnnpUlps/A3MfasU4GEN5QRE
-         pedz0iY3x/+rpnbiFp2kuFuAV1ey/HgpR77FWiAjo8uPji4QNKVraqjjAus7w6VLs28s
-         S8HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXrUAyjHGH/cG+y/UUsE4eGRfAi2KzZUT9KlksIOHia3QSWOO4dfdT7gebrL7kwnyP2nFF698ckXHv5GVbD5loQND0TwZm/UNKvvDrcryx
-X-Gm-Message-State: AOJu0YwnYo8dr4yvex7YalBuh053RlKN413xloYhTKNTUgJm+vP3lTdu
-	kl6jgptddAFomm0CbS2CAg8nMGyJNNF2hsVa3Up6t8qKfweT74lF6RVFNiyWsLof3iZxyVSMtus
-	fSJrZp3BmtndW4zlD6btZ4yKDYgY5Ec0Rzggc
-X-Google-Smtp-Source: AGHT+IEtEinskhdjNZ2sFH0osFnSwXRqvXW/RD9Ea/AR7NvMj9PVGwTe16VIMvYytdJybUdtZX4lMchnVOSomlZsxA4=
-X-Received: by 2002:a05:622a:228c:b0:43f:f92a:bdb with SMTP id
- d75a77b69052e-440578d42c7mr1050781cf.13.1717836268062; Sat, 08 Jun 2024
- 01:44:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kf7Zwz4z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m21/fk+3sdB0qdxlS2QCk1ez8ZUAEJ3is9vEfjgSIWiy1fJ54nv7Rh+ktxbh7cdbq5NQ/3Ho3By7VPMEHIn3jXuDfGN0i/K1dVqT+yOMRiNulDSYe+sJJ3T8m3teE5o3jyNwGB7pvHtn9uwi0F9FMxhS+OAK009QVzZXuebQUWG1JgAaVvEQUp/Q1emsa0SVXK7OvEBF0VB3Ih1tlppIWFDEWGu3+rLKMYoeLIHxyNeX7ubstTSm63I0Bptv76ltB55467tOlyu9hnfGIVi9pZ3g5UpVcFfUOvb8WSK6/Q2PjkSZCLHNEGZyldo8AbvKGMV6JjwHygxwwY975cwb+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kI1ICNmQqtTPFjpmowBY+8Q+MJkKL0kbms6qTYDFwfA=;
+ b=jFDG8ySF0VFU3locfjl8kZaJB6mzJrr5UXVwlOzJRtIvu2F3DmbLGf85Nn7v1uTHonJb2xJhTpp1yd8hrbLsuU4EgxdAG2gP8T1cB36/rfH9bDVpSOJ1031CRoBOm5+F0SoYb+S+IWn3h/n3KYdz4KF1ZdxHLrZfOWTsu1GiPwneHfh+JkQUvqHnFR5/l848z6OWpQFFP866hoxyLu6Zb1Q3gGGcWgIKQ1fUu+q1UXDQ3Nlf9Ejg9Eu7FaqGTZCKFneDiMhZf0ScjBMTceuMHbfFqoTWUmVGwvINJHyd/OMn5G+KGuTLwVCbOeQ6rBjexVfUC/TZdjhEETQ6kSWFMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kI1ICNmQqtTPFjpmowBY+8Q+MJkKL0kbms6qTYDFwfA=;
+ b=kf7Zwz4zL+7Nu/VFzubT0m3DfF9BBi4nBPcXsMG4EN6GAoxMCj0JhFoRmixqZlGHhjSUeDln94zsQaMbUDeaZ0haDzt0Ej6qmhSeyW9TfTXJ9tJs3xvbJ2Gq3pvScrrzPFwGR/8LhCQvScTFyDdwnV6xZmX3rAK0MzSUqf/IlglcouUoqZjgnP5jjLDQbVPTpcUqyQz6u4E7paAEynmczAsgb81kAfAGInlo06btOuYBTNCgTjU7k4GG3e3GU7PnQrtH7wul1OZ0UA2/g+0kliIJ0qUiW1JNrdWxF5aDO8tIeQCUJBI3HOlg40jYwsJS7GJiH1xAhuaAwSCz3imW3w==
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
+ by AM7PR02MB6372.eurprd02.prod.outlook.com (2603:10a6:20b:1c0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Sat, 8 Jun
+ 2024 08:50:57 +0000
+Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
+ ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.036; Sat, 8 Jun 2024
+ 08:50:55 +0000
+Date: Sat, 8 Jun 2024 10:50:44 +0200
+From: Erick Archer <erick.archer@outlook.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID:
+ <AS8PR02MB72373C2D08910FBE5FA27BE48BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-TMN: [LSpfF23JzW9R2DatHm6jWU/BML/DrECK]
+X-ClientProxiedBy: MA3P292CA0007.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:2c::13) To AS8PR02MB7237.eurprd02.prod.outlook.com
+ (2603:10a6:20b:3f1::10)
+X-Microsoft-Original-Message-ID: <20240608085044.GA2542@titan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240519190422.work.715-kees@kernel.org> <20240519191254.651865-1-keescook@chromium.org>
-In-Reply-To: <20240519191254.651865-1-keescook@chromium.org>
-From: David Gow <davidgow@google.com>
-Date: Sat, 8 Jun 2024 16:44:16 +0800
-Message-ID: <CABVgOSmD-v4rXDkcKgA1o2w-Ypzs_rYBKCx=2i2BWjWgd=o2pg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kunit: test: Add vm_mmap() allocation resource manager
-To: Kees Cook <keescook@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Vitor Massaru Iha <vitor@massaru.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000093aa6f061a5cec8a"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|AM7PR02MB6372:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad0fc95f-0bfd-47cf-c395-08dc87981beb
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|1602099003|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	nam4ECmSO6OPv0fgbkMYWkkt1QYWoU2UHWDxWdcrUtSmPYeLbiBStktbYPTUx7FFa6pvogENZRmMO6rztmnJa8UHGx4mTxk2wwSQZW/R5RMpGqm1gvNIb1MYxV4vd8vEUzOujTKX8JhT2+uUzKy3ZKZZ03BiNuBVzJ58VU/7moxgfU3LQ2uzaLXuiwF/GYU8X+cvklK7TI2O11zUtAcGjr+A14VBTpxiBanXcTv99PHa7NkPQj5F788A7e0aQtA2bZETVUHya0C4M3fMEeeVAyGdT97/lHBMvo5I/8DG//hsCZy34KCsDCHE9L5jIfq6uGRAnTZ0lNoFETmV+MibPXcbQLFaXc9yMFaM/d3+JCRY9WVB1GpfujqQQYfLVbMxt7ikLsyw4xSH0+4CIB52QZgIXjyg76Vmm2lPDeT5ZVKGYFgQ3Lg+VOAw+GTIfzNZYG92b+VbUHWZtACDrwsxFTCxv8WFQlG3QMRGhE/KSdbs5hh5MlltSvtUo9zFYq/j2D80aZMU2tF87Ehnuh+kPZjgLvee9NXSoQ0jYmW/a/KQSLLMebgMv6y5aLSgIaAc+0PPxFxk1uyD28F0OA28VYxWX0F40eFkVlklWdcFnO192IpqSrJ80L87UBhIER39sCfiMyfYm59YV80KpA+c5aExCJHH/bZVFQPiWDgVlQuNysIiJgZTGBk/JKxA9m6RcVs7be1KbCVB45zdljsrWA==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zygDKOgShVw8o0YQ0WEw4TfeXutsmw34KMugEPU0hOK/N5z3Hsaj8/EEAasA?=
+ =?us-ascii?Q?VkfmNsI2qXx7IBbUV4pfGxQMc8a1+roZAbZzdiVzUJfGaDNEM2wn13Be5shD?=
+ =?us-ascii?Q?6YJ7weQu22paM3sNsV1n6sAzgBjAV115RQcjDkDf7a1lrJHb0PTfHxWUupM0?=
+ =?us-ascii?Q?sEAiRj7/BoW2HZXPgaa/3E6PT9jSH0egMhpRhnVy/iTnhjd82do8DDgc/p8v?=
+ =?us-ascii?Q?DJY9YYig2XIaG3kWHt6aVLq5vitFJvtTzdlTdHc3w1PiiASsDOoBjvb2O+O+?=
+ =?us-ascii?Q?H6n0c5UjGEqMJ63/jgjBwLco+2oKvI4RDdFoOHFtOFXiFDTQbm30i1Y+3MLB?=
+ =?us-ascii?Q?rD+AbJVYh5pLWPbUEvD1nNmKjGkOW/8QLPPlBvXCZGhs7YB8DcPgxZq89SHg?=
+ =?us-ascii?Q?Cm3oerqhA9mdh5gYVGLQEC0ewWZIIYGTc84l47pj9NmxdPaGgf0JJreUiW6C?=
+ =?us-ascii?Q?lBytUQBBRGppT/khCDAER0kKdoyxHLjnST2ghOhntjKqpQ9WfIDUwtwyO3F+?=
+ =?us-ascii?Q?fKGqx5ImZBgGxLdX5H0iwnwZN6u8JoT38KZMSdAbH3ornh5bPIo5w/ZG1qDR?=
+ =?us-ascii?Q?P7ZuamusWtYo0l7LTlqorOYRHV8iTh2Vs7U7FGCurQqcLkaOuidKWEcgo1gu?=
+ =?us-ascii?Q?bUTBDIW8eI6p029ZfyWYJqGdkEcWadgwh9uFOuUG6Bb1myc25Z+Zi2Gu+0tS?=
+ =?us-ascii?Q?b/mEZ4UuQ5f6hueOMxo0r4vorLWm4JAj8/UAu5p7Wc83+yzg3SRp+Xa+lUlS?=
+ =?us-ascii?Q?+EaZMU/AP66ZaXFX0YnLxZWEm6hCUBzp1XeRyXVddT1PdCffBYB865LvgEIy?=
+ =?us-ascii?Q?doHO1zUrx4uWOM7ecTHOf/vKCj6emeoqD3d9h/w9ci1SE+2thH47yNWrgNzK?=
+ =?us-ascii?Q?1q4uQMbYmD8LGDWcl5QfHvD6+g2/GZTkrRjQfD1MkSIZchjpjj4YcDUYyQqA?=
+ =?us-ascii?Q?ZoU3K1gXAzt1YELeXoVt2l70USb5KaFhFDwJeo+R/OXBP9nxeo8NbBb1EXYU?=
+ =?us-ascii?Q?BxFatZgiJ19JvWKmrn+Rk72BTFDlutzByTffVw+4IjYRI6MnjcoyZQ+2eYgy?=
+ =?us-ascii?Q?aBCKs6+BxgLcS4nGOI6JMsgTAwIG+0QbPvCOBFozPjWLjq1OJxKHrld161so?=
+ =?us-ascii?Q?3W981HrbxhIzXj7G0oOSa9WgEwuNyTqqxk7ECFpZw7GbU04R/nQLohKZ4Gou?=
+ =?us-ascii?Q?3e4WXogh7NFZQM/bREHi4q1yFNYmvhuos5z47lOKy0fZcNKjP5QgC26W5YHl?=
+ =?us-ascii?Q?hdwytO/xibBYAMNMd7DB?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad0fc95f-0bfd-47cf-c395-08dc87981beb
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2024 08:50:55.4924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB6372
 
---00000000000093aa6f061a5cec8a
-Content-Type: text/plain; charset="UTF-8"
+Hi Andrew,
 
-On Mon, 20 May 2024 at 03:12, Kees Cook <keescook@chromium.org> wrote:
->
-> For tests that need to allocate using vm_mmap() (e.g. usercopy and
-> execve), provide the interface to have the allocation tracked by KUnit
-> itself. This requires bringing up a placeholder userspace mm.
->
-> This combines my earlier attempt at this with Mark Rutland's version[1].
->
-> Link: https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/ [1]
-> Co-developed-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
+> Hi everyone,
+> 
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1][2].
+> 
+> In the first patch, the "struct amd_uncore_ctx" can be refactored to
+> use a flex array for the "events" member. This way, the allocation/
+> freeing of the memory can be simplified. Then, the struct_size()
+> helper can be used to do the arithmetic calculation for the memory
+> to be allocated.
+> 
+> In the second patch, as the "struct intel_uncore_box" ends in a
+> flexible array, the preferred way in the kernel is to use the
+> struct_size() helper to do the arithmetic instead of the calculation
+> "size + count * size" in the kzalloc_node() function.
+> 
+> In the third patch, as the "struct perf_buffer" also ends in a
+> flexible array, the preferred way in the kernel is to use the
+> struct_size() helper to do the arithmetic instead of the calculation
+> "size + count * size" in the kzalloc_node() functions. At the same
+> time, prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute.
+> 
+> This time, I have decided to send these three patches in the same serie
+> since all of them has been rejected by the maintainers. I have used
+> the v4 tag since it is the latest iteration in one of the patches.
+> 
+> The reason these patches were rejected is that Peter Zijlstra detest
+> the struct_size() helper [3][4]. However, Kees Cook and I consider that
+> the use of this helper improves readability. But we can all say that it
+> is a matter of preference.
+> 
+> Anyway, leaving aside personal preferences, these patches has the
+> following pros:
+> 
+> - Code robustness improvement (__counted_by coverage).
+> - Code robustness improvement (use of struct_size() to do calculations
+>   on memory allocator functions).
+> - Fewer lines of code.
+> - Follow the recommendations made in "Deprecated Interfaces, Language
+>   Features, Attributes, and Conventions" [5] as the preferred method
+>   of doing things in the kernel.
+> - Widely used in the kernel.
+> - Widely accepted in the kernel.
+> 
+> There are also patches in this subsystem that use the struct_size()
+> helper:
+> 
+> 6566f907bf31 ("Convert intel uncore to struct_size") by Matthew Wilcox
+> dfbc411e0a5e ("perf/x86/rapl: Prefer struct_size() over open coded arithmetic") by me
+> 
+> Therefore, I would like these patches to be applied this time.
+
+This is my last attemp to get these patches applied. I have decided to
+send this mail to try to unjam this situation. I have folowed all the
+reviewers comments and have no response from the maintainers other than
+"I detest the struct_size() helper".
+
+Therefore, I would like to know your opinion and that of other people
+about these patches. If the final consensus is that the code has no real
+benefit, I will stop insisting on it ;)
+
+Regards,
+Erick
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/160 [2]
+> Link: https://lore.kernel.org/linux-hardening/20240430091833.GD40213@noisy.programming.kicks-ass.net [3]
+> Link: https://lore.kernel.org/linux-hardening/20240430091504.GC40213@noisy.programming.kicks-ass.net [4]
+> Link: https://docs.kernel.org/process/deprecated.html [5]
 > ---
-
-Thanks very much for this!
-
-A few high-level thoughts:
-- Do we want to move this into a separate file? test.{c,h} is already
-getting pretty big, and this would probably fit more comfortably with
-some of the resource-management bits, which are in their own files.
-Not every test will need mm support.
-- It'd be nice for there to be a way to explicitly teardown/reset
-this: I agree that this is made more awkward by KUnit cleanup normally
-running on a different thread, but I could definitely see why a test
-might want to unset/reset this, and it would be more consistent with
-other resources.
-
-Otherwise, I have a few small questions below, but nothing essential.
-There are a couple of test failures/hangs for the usercopy test (on
-i386 and m68k), which may have origins here: I've mentioned them
-there.
-
-Reviewed-by: David Gow <davidgow@google.com>
-
-Cheers,
--- David
-
->  include/kunit/test.h |  17 ++++++
->  lib/kunit/test.c     | 139 ++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 155 insertions(+), 1 deletion(-)
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 61637ef32302..8c3835a6f282 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -478,6 +478,23 @@ static inline void *kunit_kcalloc(struct kunit *test, size_t n, size_t size, gfp
->         return kunit_kmalloc_array(test, n, size, gfp | __GFP_ZERO);
->  }
->
-> +/**
-> + * kunit_vm_mmap() - Allocate KUnit-tracked vm_mmap() area
-> + * @test: The test context object.
-> + * @file: struct file pointer to map from, if any
-> + * @addr: desired address, if any
-> + * @len: how many bytes to allocate
-> + * @prot: mmap PROT_* bits
-> + * @flag: mmap flags
-> + * @offset: offset into @file to start mapping from.
-> + *
-> + * See vm_mmap() for more information.
-> + */
-> +unsigned long kunit_vm_mmap(struct kunit *test, struct file *file,
-> +                           unsigned long addr, unsigned long len,
-> +                           unsigned long prot, unsigned long flag,
-> +                           unsigned long offset);
-> +
->  void kunit_cleanup(struct kunit *test);
->
->  void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt, ...);
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 1d1475578515..09194dbffb63 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -11,13 +11,14 @@
->  #include <kunit/test-bug.h>
->  #include <kunit/attributes.h>
->  #include <linux/kernel.h>
-> +#include <linux/kthread.h>
-> +#include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
->  #include <linux/mutex.h>
->  #include <linux/panic.h>
->  #include <linux/sched/debug.h>
->  #include <linux/sched.h>
-> -#include <linux/mm.h>
->
->  #include "debugfs.h"
->  #include "device-impl.h"
-> @@ -871,6 +872,142 @@ void kunit_kfree(struct kunit *test, const void *ptr)
->  }
->  EXPORT_SYMBOL_GPL(kunit_kfree);
->
-> +struct kunit_vm_mmap_resource {
-> +       unsigned long addr;
-> +       size_t size;
-> +};
-> +
-> +/* vm_mmap() arguments */
-> +struct kunit_vm_mmap_params {
-> +       struct file *file;
-> +       unsigned long addr;
-> +       unsigned long len;
-> +       unsigned long prot;
-> +       unsigned long flag;
-> +       unsigned long offset;
-> +};
-> +
-> +/*
-> + * Arbitrarily chosen user address for the base allocation.
-> + */
-> +#define UBUF_ADDR_BASE SZ_2M
-
-Are there any circumstances where we'd want a _different_ base address
-here? Could it conflict with something / could tests require something
-different?
-
-I suspect it's fine to leave it like this until such a case actually shows up.
-
-> +
-> +/* Create and attach a new mm if it doesn't already exist. */
-> +static int kunit_attach_mm(void)
-> +{
-> +       struct vm_area_struct *vma;
-> +       struct mm_struct *mm;
-> +
-> +       if (current->mm)
-> +               return 0;
-> +
-> +       mm = mm_alloc();
-> +       if (!mm)
-> +               return -ENOMEM;
-> +
-> +       if (mmap_write_lock_killable(mm))
-> +               goto out_free;
-> +
-> +       /* Define the task size. */
-> +       mm->task_size = TASK_SIZE;
-> +
-> +       /* Prepare the base VMA. */
-> +       vma = vm_area_alloc(mm);
-> +       if (!vma)
-> +               goto out_unlock;
-> +
-> +       vma_set_anonymous(vma);
-> +       vma->vm_start = UBUF_ADDR_BASE;
-> +       vma->vm_end = UBUF_ADDR_BASE + PAGE_SIZE;
-> +       vm_flags_init(vma, VM_READ | VM_MAYREAD | VM_WRITE | VM_MAYWRITE);
-> +       vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
-> +
-> +       if (insert_vm_struct(mm, vma))
-> +               goto out_free_vma;
-> +
-> +       mmap_write_unlock(mm);
-> +
-> +       /* Make sure we can allocate new VMAs. */
-> +       arch_pick_mmap_layout(mm, &current->signal->rlim[RLIMIT_STACK]);
-> +
-> +       /* Attach the mm. It will be cleaned up when the process dies. */
-> +       kthread_use_mm(mm);
-> +
-> +       return 0;
-> +
-> +out_free_vma:
-> +       vm_area_free(vma);
-> +out_unlock:
-> +       mmap_write_unlock(mm);
-> +out_free:
-> +       mmput(mm);
-> +       return -ENOMEM;
-> +}
-> +
-> +static int kunit_vm_mmap_init(struct kunit_resource *res, void *context)
-> +{
-> +       struct kunit_vm_mmap_params *p = context;
-> +       struct kunit_vm_mmap_resource vres;
-> +       int ret;
-> +
-> +       ret = kunit_attach_mm();
-> +       if (ret)
-> +               return ret;
-> +
-> +       vres.size = p->len;
-> +       vres.addr = vm_mmap(p->file, p->addr, p->len, p->prot, p->flag, p->offset);
-> +       if (!vres.addr)
-> +               return -ENOMEM;
-> +       res->data = kmemdup(&vres, sizeof(vres), GFP_KERNEL);
-> +       if (!res->data) {
-> +               vm_munmap(vres.addr, vres.size);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void kunit_vm_mmap_free(struct kunit_resource *res)
-> +{
-> +       struct kunit_vm_mmap_resource *vres = res->data;
-> +
-> +       /*
-> +        * Since this is executed from the test monitoring process,
-> +        * the test's mm has already been torn down. We don't need
-> +        * to run vm_munmap(vres->addr, vres->size), only clean up
-> +        * the vres.
-> +        */
-> +
-> +       kfree(vres);
-> +       res->data = NULL;
-> +}
-> +
-> +unsigned long kunit_vm_mmap(struct kunit *test, struct file *file,
-> +                           unsigned long addr, unsigned long len,
-> +                           unsigned long prot, unsigned long flag,
-> +                           unsigned long offset)
-> +{
-> +       struct kunit_vm_mmap_params params = {
-> +               .file = file,
-> +               .addr = addr,
-> +               .len = len,
-> +               .prot = prot,
-> +               .flag = flag,
-> +               .offset = offset,
-> +       };
-> +       struct kunit_vm_mmap_resource *vres;
-> +
-> +       vres = kunit_alloc_resource(test,
-> +                                   kunit_vm_mmap_init,
-> +                                   kunit_vm_mmap_free,
-> +                                   GFP_KERNEL,
-> +                                   &params);
-
-It could be easier to use kunit_add_action() here, rather than
-kunit_alloc_resource(), as you wouldn't need the params struct to pass
-things through.
-
-The advantage to keeping the separate resource is that we can more
-easily look it up later if we, for example, wanted to be able to make
-it current on other threads (is that something we'd ever want to do?).
-
-
-> +       if (vres)
-> +               return vres->addr;
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(kunit_vm_mmap);
-> +
->  void kunit_cleanup(struct kunit *test)
->  {
->         struct kunit_resource *res;
-> --
-> 2.34.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/20240519191254.651865-1-keescook%40chromium.org.
-
---00000000000093aa6f061a5cec8a
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPqgYJKoZIhvcNAQcCoIIPmzCCD5cCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg0EMIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-JEfDtvHU6wy3MSBE3/TrMFcGA1UdIARQME4wCQYHZ4EMAQUBATBBBgkrBgEEAaAyASgwNDAyBggr
-BgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/
-BAIwADCBmgYIKwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNp
-Z24uY29tL2NhL2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgw
-FoAUfMwKaNei6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9i
-YWxzaWduLmNvbS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEB
-AGwXYwvLVjByVooZ+uKzQVW2nnClCIizd0jfARuMRTPNAWI2uOBSKoR0T6XWsGsVvX1vBF0FA+a9
-DQOd8GYqzEaKOiHDIjq/o455YXkiKhPpxDSIM+7st/OZnlkRbgAyq4rAhAjbZlceKp+1vj0wIvCa
-4evQZvJNnJvTb4Vcnqf4Xg2Pl57hSUAgejWvIGAxfiAKG8Zk09I9DNd84hucIS2UIgoRGGWw3eIg
-GQs0EfiilyTgsH8iMOPqUJ1h4oX9z1FpaiJzfxcvcGG46SCieSFP0USs9aMl7GeERue37kBf14Pd
-kOYIfx09Pcv/N6lHV6kXlzG0xeUuV3RxtLtszQgxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJF
-MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIz
-IFNNSU1FIENBIDIwMjACEAFsPHWl8lqMEwx3lAnpufYwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZI
-hvcNAQkEMSIEIN2RsqIiNAPL7Zc8cJFBgtemmqpTijxgN/phvIPArEMgMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYwODA4NDQyOFowaQYJKoZIhvcNAQkPMVww
-WjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
-hkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCJV7hB
-uTAiUKi2m0jDNjuHtx6X5Sg3cprXxXNWIdPdW/Kn92vBm5MyzKv/ZmxERY4yNwL79ixFlQXTMpw/
-/j439d6fr83GzgAwZETPKm0XpRi9j8CdWvZ0mll/O3/dwOoOImOWTAi+i2qYxFnEe+S1tYH9+92R
-sp6dEr2j1X6IdWUdpy/VyFLBgB4gkk55e0BRwLfS0QjGjiuGmlAmBucSVRiM1UrDfJixcEUZYNKe
-8SnLenjgt1Kjfi2l68v6S3LLvefA3TPCvu9PsP7PvbHCZsILa95q+u8eIQS8FwDhMbaLVDZsbg6B
-GvWxR3TQ28PxoLGqWL+SyoxerK114Vwl
---00000000000093aa6f061a5cec8a--
+> Changes in v4:
+> 
+> - Add the "Reviewed-by:" tag to the three patches.
+> - Rebase against linux next (tag next-20240531).
+> 
+> Previous versions:
+> 
+> perf/x86/amd/uncore: Add flex array to struct amd_uncore_ctx
+>   v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237E4848B44A5226BD3551C8BE02@AS8PR02MB7237.eurprd02.prod.outlook.com/
+> 
+> perf/x86/intel/uncore: Prefer struct_size over open coded arithmetic
+>   v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com/
+> 
+> perf/ring_buffer: Prefer struct_size over open coded arithmetic
+>   v3 -> https://lore.kernel.org/linux-hardening/AS8PR02MB72379B4807F3951A1B926BA58BE02@AS8PR02MB7237.eurprd02.prod.outlook.com/
+>   v2 -> https://lore.kernel.org/linux-hardening/AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com/
+>   v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com/
+> 
+>   Changes in v3:
+>   - Refactor the logic, compared to the previous version, of the second
+>     rb_alloc() function to gain __counted_by() coverage (Kees Cook and
+>     Christophe JAILLET).
+> 
+>   Changes in v2:
+>   - Annotate "struct perf_buffer" with __counted_by() attribute (Kees Cook).
+>   - Refactor the logic to gain __counted_by() coverage (Kees Cook).
+> ---
+> Erick Archer (3):
+>   perf/x86/amd/uncore: Add flex array to struct amd_uncore_ctx
+>   perf/x86/intel/uncore: Prefer struct_size over open coded arithmetic
+>   perf/ring_buffer: Prefer struct_size over open coded arithmetic
+> 
+>  arch/x86/events/amd/uncore.c   | 18 +++++-------------
+>  arch/x86/events/intel/uncore.c |  7 +++----
+>  kernel/events/internal.h       |  2 +-
+>  kernel/events/ring_buffer.c    | 15 ++++-----------
+>  4 files changed, 13 insertions(+), 29 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
