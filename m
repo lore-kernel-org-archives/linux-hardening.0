@@ -1,69 +1,69 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05olkn2083.outbound.protection.outlook.com [40.92.89.83])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03olkn2100.outbound.protection.outlook.com [40.92.59.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4639E176FDB;
-	Sat,  8 Jun 2024 09:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.89.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F5F6D1B9;
+	Sat,  8 Jun 2024 10:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.59.100
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717840591; cv=fail; b=awW9bRPNmd7QXuNDSfAuodx+45Rdde2PTI1Pydsb2pmpy9t5Iz5977EM/1DCIzybCij/jKwdXSELnX6iDSqX1s91IAQff3N4R4JVHOmlbxUYi61DVjryWM24UQcQupA+y5lJD6ah3kWYt4E7RK3wMns4kAX5JwPPMNXyblQzdiA=
+	t=1717842055; cv=fail; b=t4Q8HoBRE2zp4yD1J8Cve0HVQEs7V/l23fqi8760tffAMi/R7hHhhsIvwZ56N/6EnLkSQfdsEh7rBJWyz6vIpAErhsgVqailjjg+QWfYyBpxRv+ZoIELnxcAGAEME1D11i493Q8pkvCL4Wg7yqcHQWubyW8lIKV5L6C2qGPQuVY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717840591; c=relaxed/simple;
-	bh=FgsrxCU/SXJnLCIkGSK+H88ncxWw4PVkDZBtUjhzdFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Bx2VR0Ri/p83gBu2m0giYu2E1xz2EXOVx/R/w7zB+n6TUPZaVnq1IrmVVzfkmTdJTfWRjUyofNDXCdq5LqWfyqSZ/FrVMR8AGkgoNvWseN8SGwUKG0MxKOPtOo8a7Je1wFucG3bPwhzzkxHR/MYpAt84v6Tz40+qRD82BwMNFQI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=fail (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=KczHvo2A reason="signature verification failed"; arc=fail smtp.client-ip=40.92.89.83
+	s=arc-20240116; t=1717842055; c=relaxed/simple;
+	bh=8seKpHwQlbYJ+28J0PbbqWmxSvq9q3QjlBIyD5lg4Bc=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=tVDfYxDtZMznjiDTHdo+ahQR4dxsET2teRS2wLo/DMcPGI8dUJoSWwhXUnTCdDrOtA9XM9debPi4fd41Fj3uPi+aLwen3HfrJRnPdog0FhNc9wjN/v4g22dUOs6ApH3KRTv3u3F64cKyZ+7ecwTXapyYOxx20n3j7O2HsvZbQ8Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=bxOcadDS; arc=fail smtp.client-ip=40.92.59.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="KczHvo2A"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="bxOcadDS"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nl7vHCjaCw7f5WfXIgUggmWx42AWBcGJe1HK+p1sD7w9U981qPT3Yp6L9JCJzPa87qGYWeKzg41T8+yg7bzEvc7taJudD96hNICsRtIUqS7SrPuwHtSU47psH2wvHPZrlTQHu2KVBXIMG6TpTJiabRWcvaBs3kJtAs9qTMY6s6/j0jGNXLp9llcwiO54VH2/6GPBeohhjQ9LtPQyiK2Hxi4KRyJAkq1T1dh9ol/oeT+HnMHjiJiMKLt8gXU16VNhkmeGozti8wxdsnDBBQcX88uA/Myr/GbxPgVqzUKxi4UqZx8iGfcN9v+dDvHeb5L+5g9PtvPd0/pkm4TngVVvsg==
+ b=E6SDbRHxsZI59dyhhOzaxmsgst0CnJz7CETdpQ8UDhQOuIWVGuokfGG9J8BJJSmFxzjryBN+S2OACgoxYLc/EOMtm6C0cn5P99Jf9aAPnfyzo0zyTKC7zo7ha+ZmimGno+EcgjPPT2UikPSxq48ebyoN3ShaV0lpbqJlRGqgHlfr94fgVmjmeL9ujGZeZTXSdeN2GR7iTvd4djbvrX3emXzXHmpdcs7hEZzLt1qm6F7koTIuc64GJ6uGiAx3wa7/3eEfI9y78Mn/DrRddAm8vYYSyyyYRzjfezcSJop1/2BNejVqleb5+TerZekuHP92N6IwS6SJIHPiztkBBegigA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T9Bx9xRYVvT4/OK+jPTJAWLrC/EzryAhBkn/5U3oj+Q=;
- b=Cg0TrA328z6SkWQ7ShMHf9qWQCYyfR76a1lvSu1zqQ/4gKngfDZVLCPZodL0CV74LnVqkdY+r6hDeRgzgds9uKa4LRAmIoAwsqcChZslliKy+Uz4LzBw532CZIi52qhnFzaB3c+xrhfv9ZFxHBdrIN2rsICSBFiuj9Qa5dWG6Vk6pMni4jJikcj6w383sTxnOzwg/m9jVPLqNyPabom89g6RcUvHfZ3sRcvCic7ylZLjGVW/ZVVXPrNzzkV0/poGSWn8m9dKW33mhQKMADxqHccCefQFPuKoq906iAeHSfK7lDOeu8zZEGQc5Xsjs5YdHJMlqh3hxO3tnup+wLqBtQ==
+ bh=R4MAi3qupd5a/zPJ5EmNQarPAzWOexHBbVMVLwF6T04=;
+ b=IPeVpeXi6RPnui3nZjGAMlZWVa9TGX0lCVgkTYTcgxMuuKORKWluoZqbc5BtdKEi0N1c1eIrj+Z+Y+5P2BKcjOcYwfvW8GU/jdOb33/aEd6X9Zawvgsi9WOwCpqspmeCVdqNTGVYeuaqlMU5oggg3OdK+Eb+1TatxBQ11Erki1goKxDQrD4t+fFYpzH8eGnEbTLqYF7RnPHV+iy1J/icZ5fo0EaszqwUY/y7tNX/zrhX+Hr4Yr8eJNt1gaWadu7s8sbznGuNW7KBXJusAIjv2tIcBm2slHdu26jJdsU4UHezMT4gtX7wxXNPz7OH59ur1iWvVrWW/7hrtHS5CqocOA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T9Bx9xRYVvT4/OK+jPTJAWLrC/EzryAhBkn/5U3oj+Q=;
- b=KczHvo2A3VyHYiSsFxR2MzYY52Y/hTeHqi/5GcsCXhAq3DKbvjhObb3sEbfqfXmB6S1A1FmpxLCNOtocdR/xE/91S4QclY9eq5AfTFiW/vMvvm91g6Yt/J8ODfNZ4HtB22i/paB+m/ZehV1R3St9+pKvYvR37h8QcM2HYUsLeRQZo2YSI8qjWwRRSHQW1Kxhu0LtnNqAz2o1519jsqA55SHbDQv7ZEBpPNlDaz8fht0kMf0P32+UGkVf4xwpxU15+zZ1pooyyQJlSxVXp7nqp393mBu0IT1OofSLSQ0qhG+kJ1ptkCE1lGHfEu6dnyf/MByl0hIi5AzmOx9XMpTFZg==
+ bh=R4MAi3qupd5a/zPJ5EmNQarPAzWOexHBbVMVLwF6T04=;
+ b=bxOcadDSetVB0zghWdM4jcLKfA6I47nR5Sr/b6JOyBf02FLBETCNdpFvTZoAxT8QWIVttboon0KyDNXaDguBH+jWQ3P6K1PhRMAiybD98w/Ng1OYMakIproILBaRDm/nMAXPTQ4igx+5LOeS+b+9QQVeVvKRrA77Wx9KBcUhgy/XYry7vmsPuiFmZ3wODiJAMGbXbFL22m4XbWRc4xctV/1XM5JoGIj1la+TUtnJ4awUj+PBtdHI+2AwH/7mGPwRzPkvLWo490JXBmiBS4ZmI2YsLcnBtsioAVwM6fcecQg5ENncaAFtIczZ9tm87j4UD+DauyuM8qi8iJVqYw8/xw==
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by DB8PR02MB5962.eurprd02.prod.outlook.com (2603:10a6:10:f8::7) with
+ by DU0PR02MB9612.eurprd02.prod.outlook.com (2603:10a6:10:423::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Sat, 8 Jun
- 2024 09:56:26 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Sat, 8 Jun
+ 2024 10:20:50 +0000
 Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
  ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.036; Sat, 8 Jun 2024
- 09:56:24 +0000
-Date: Sat, 8 Jun 2024 11:56:23 +0200
+ 10:20:49 +0000
 From: Erick Archer <erick.archer@outlook.com>
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Erick Archer <erick.archer@outlook.com>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
+To: Daniele Venzano <venza@brownhat.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Kees Cook <keescook@chromium.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Justin Stitt <justinstitt@google.com>
+Cc: Erick Archer <erick.archer@outlook.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [RFC] HID: ishtp-hid-client: replace fake-flex arrays with
- flex-array members
+Subject: [PATCH] ethernet: sis900: use sizeof(*pointer) instead of sizeof(type)
+Date: Sat,  8 Jun 2024 12:20:33 +0200
 Message-ID:
- <AS8PR02MB723798FF6CEF28DCB62FAC958BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References: <AS8PR02MB723760CB93942370E92F00638BF72@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <80976997acb82fe3e6ba54fa2708c8f40fb3eb00.camel@linux.intel.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+ <AS8PR02MB7237F187447FF71AE515333B8BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <80976997acb82fe3e6ba54fa2708c8f40fb3eb00.camel@linux.intel.com>
-X-TMN: [93g1rUYlPTSDbOE6N5BL4yBSeFwt6fNI]
-X-ClientProxiedBy: MA2P292CA0003.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:1::20) To AS8PR02MB7237.eurprd02.prod.outlook.com
+Content-Type: text/plain
+X-TMN: [6+gLbE+DO8EHjGxZPd3nMflYuFiZkhIf]
+X-ClientProxiedBy: MA2P292CA0011.ESPP292.PROD.OUTLOOK.COM
+ (2603:10a6:250:1::15) To AS8PR02MB7237.eurprd02.prod.outlook.com
  (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID: <20240608095623.GB2542@titan>
+X-Microsoft-Original-Message-ID:
+ <20240608102033.4886-1-erick.archer@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -72,132 +72,89 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DB8PR02MB5962:EE_
-X-MS-Office365-Filtering-Correlation-Id: 387bc801-1c2b-4612-c47d-08dc87a141cf
+X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|DU0PR02MB9612:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b8bf23b-92cc-4681-e32c-08dc87a4aab8
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|3412199016|440099019|1710799017;
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
 X-Microsoft-Antispam-Message-Info:
-	8Wkc9+F1HH5R4A2LkvjCXTeXjwvhJs2s4swjNFwKf4Kq/QahLqGWPB+mC0vizWLVXgVh+KIY9LVnmIpBoRa2GCBQtKLTJsL9nRbs26g/jU/gzpjyPZu/ZFBxWsnFbdtzbgjczv2SMRi0ilv4H8WiHvP9Mv++eJTeLMAWyFp83VL4qa3ib85HAjvTnssRruZzSsyW8HmO+tQ2Hy61EQTKoLqwbsOOEkGmN63Jrzk0joI072whxb9+Yb1fqqXMFql7FL+IdmoiE00PDcUdn3bu3uEHpw0rXJcSamE2xTpAIg6KKkmNdVF5DYwNF1l6NTrKFtFS7oAI19XNj0p7Y/nYHSNhjAT9m8bTiBtYpSPFcCVJhOpPZ4XNGIz2XQaefTH9TS7EYtVkRQcLqB6xvqnraBYia2Pw6amIhUyHtEl5EvJjSePCBITPQOqm5yxBzXFvFwFczB5WC25DL+c1PKXAWD4pbNbOGM/+xQXaBzMXdBcfk9u0i4N3es4i1P+8PTiuKuTZnlaqTpKlfi7+gK3NO3S0SZPsvVyjEeXnlEaV9Zqw1CMYIKjL1lW1HrUlCNukyWwULTDEIXgy4rZM8J7N5CrR80TDDpNQzVnRWS6UkQaINMne/6gmb1LmPaxQj6dv
+	Yxm+GzbSGMfG0mquHWs5F2k/u4uUC51sgjREGDmOJP1Cip07NtFIEkWEksrLpNEmJ/ptPnszVR8t6FgMfYQABxGzdPfgT2phsD3NMTjC5XAXlKupuIqyNM/LFjqU1ylfAEO2AUy4xPelKtCkcVgi2DOqUAI8DfeNg+1+DNWRgI75241j4jTz36as5IODPE+ZlCYZsSUcZOpJ2sAzhEHnlXicXetafT+Ayzj5hhTC1RaP58Foa3WuaY+0DZ14a9aJ8uBvkP7ssIKncJReLJV6z2SBd/UIEoTccDJFU1XFtoD2r+26W+pMReseW/KIXj6gs1VvbvSK9zgRrLj+cfcl98StGvZE7Jcl/cgDlcCCPMK7PHvsqRawe1Ow4ritfGPmSK6bU7sBjb6ameNDwRFLwTsKE4GLzkBwpsQnRd7gwBAgNWnFC+on/AzqNko2DkmGZ4ghLaTtA5R/AHLb32E7RgsvwX2p423FdIMzDS/6gPY/54sUUQGoH0pVGOOTa/xqmouJ9BvE8RcZaQ9sQ3ic6j6euLvIYl5FtF83uAxwmpCQnmn33AX7T4cpuLCT7/76jVWBr/2qAFjrDRaUHHTaweuX+FWMgWsB58kGjF4EdKw=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?+/GIP7VFxAk+8ACGpN75bRh/58Gr2hwJytQQUEy3ZdCx3MQEVDFHtYQG2z?=
- =?iso-8859-1?Q?eb0QEqjVlQByuP/UMMT8iotrQYwu2DYlya2tF85hNW8UAJlIyRJvNP8BxN?=
- =?iso-8859-1?Q?Z9+nr6Hnbuq04O1RZBKy/kgr9sp9NGoDfVKBN3c32m1zEapIyR1A7Ya7lg?=
- =?iso-8859-1?Q?fhIpPVmYkAGJF9o1ZwxvxOCESsrWiuuW4qyz+SHXCChh7bl5NRKlgX+lam?=
- =?iso-8859-1?Q?nB7PvnQGOlmJlkOpIqKPG4tSN0w94ZYEUbS96Jp47UxZTtaGZgTSvwJBm+?=
- =?iso-8859-1?Q?WqYzjGIFNZfJ7IVs8qNQaNTC4qXe4hu9eVodSHGd1GPuFGNEfPn+vcux8p?=
- =?iso-8859-1?Q?3fkwgTJQiW3ephegUHj7U3/eSHZNfsxuV945e41iexInwn4gLLyfORyWsr?=
- =?iso-8859-1?Q?2sopgoi6AsB711UUysuqK7NjAYeWNI2UJW/zXxCpYgmcmG502an6whr/PH?=
- =?iso-8859-1?Q?MTyQgj5fhgNB9lkOOJ+hhkw6PzMvxb5tVNFIp5I1uOSUb/n0/6fhXxtwXt?=
- =?iso-8859-1?Q?XcqzQkWT44P/8/zOP3He60VsNvdZx2woz/7nVqAMnOXx4Iw1fyrE2AkguG?=
- =?iso-8859-1?Q?t6jZSLnA6qgviMT0ki5V/XOirqrOLtTxsPVCKa2VL+WayjJgSXGOHT9ytw?=
- =?iso-8859-1?Q?hyse45IR/qVI2E7Wk/CZDvU8tTrRoV2yDP7XRXpMOq/dhZO6H/t1P/U2Xf?=
- =?iso-8859-1?Q?QR/EGpf23qvuXttlWWn8b28VWnuAGMqTLR7BcdZoo4n/c3NeP9FzlQBXp6?=
- =?iso-8859-1?Q?C57e5bgI+UZLOPAjJAcIGgHxieawAUzAIhLW3Tau+jWtS6ysga0WcPsV1X?=
- =?iso-8859-1?Q?w97n0lem1qutyBjg428Hnf3vQaIoaAlD/Rgdbi3BjcZHsGAZ36M5KeGagJ?=
- =?iso-8859-1?Q?kmdswPfpEbJK/bPz0Zm16YsrCBW/J0ul+2O0EvKpxI+5L7QQZ7sJwOLPCu?=
- =?iso-8859-1?Q?Xt51jyzadmwutr8A2nRRcB01DXgoA7eIQSU015wFHKMS3vAy2MwdyDOk68?=
- =?iso-8859-1?Q?M44Ps9UYOAAu2vmD4aDmVdvlWB4JUFJdPKUr5lc3Odxw6UyisL2UNRBZZz?=
- =?iso-8859-1?Q?PZJCaIUDfKChDaoYYq/+UU2wrFjS2W1OSb/8ofN8f5A1gWAwwMZuF1sNiW?=
- =?iso-8859-1?Q?jjjPUo8uQ6nnE4ei9JGdv4vTvssP4ZDAJukn93CoLdRStXd+FFVUSmqINm?=
- =?iso-8859-1?Q?uT5KdfKyT1MPr8IVzDLzfRNPAZxyljMzSNCWEx0utGMgFeb8fryt7/ID92?=
- =?iso-8859-1?Q?0cWLoEYwrhGPNi1MHg6zWtW2Mz9OvyIq4vpETQLg94UGYQ20+iIIqdsIg6?=
- =?iso-8859-1?Q?x2wv?=
+	=?us-ascii?Q?S45kq9AvTdCGTciVXKr7baLfkWO5aX3N7lW+dadllnXrwbxKIOzJOv/+odto?=
+ =?us-ascii?Q?ihYiUyuMDe4H8/MAzOy3Xy1TnHqteuWzW55PRULkVeqwa4/+J4Dqk6XBX+8T?=
+ =?us-ascii?Q?xifFIKxpw/LOYTNtHIC8OSrSnNFC5ER+yokKuX8QUGvrfcty2ALH4xnRXMQ0?=
+ =?us-ascii?Q?52Uf6OMScOXKHNzlWGfjHGov5N7vCe5I2N/wpurDtMq8D7Uzbn9fWBnyYD9E?=
+ =?us-ascii?Q?447HF4mueKmu7fIFRwlsKYTqNRNw+jTwo9u3fCFdjghQTGeAf8DsqLxRvnto?=
+ =?us-ascii?Q?cue69ceHZnQigR0dSTG0CUSUwgQkldfZN7171NpsnVqNl0+jemXDVsO+zQ3/?=
+ =?us-ascii?Q?rVbPwLTAiHPMg4Uq+TPZyRwhMFDSbY60cBb5wXlt88cKQst+8C7w14grC8C8?=
+ =?us-ascii?Q?it2j8b7dGdOnguWdOpeIkBozP6bZQ8ZET2fiqkZrz+GmH5ALODFuUB3MicIt?=
+ =?us-ascii?Q?EoKyBxMejSRM6x+Lsuxo6FjiUIO4J1Pguu1abuqSn/ABP+gbrEaXiTqjRuRi?=
+ =?us-ascii?Q?n0G+xHffSYLl6ctmP/ruSN8XjQm3Q78ShzmRv2Y6AomIyoMPdElcPW1x+nOE?=
+ =?us-ascii?Q?RvyzGzFBWabKekmaDRMJ+8MrnxugM+AZjZnMb2ItDmZsokiSNU6Z/spD987a?=
+ =?us-ascii?Q?LHgMyVLpX7ma1ZgdUasPLULHEgfKhSwZTrhYTM9p5ji6zTvJRCKAR0+9luMW?=
+ =?us-ascii?Q?5/JLRG6f5UAmyuejrTQaTw1wvfoUZhyJ3BeEkmhPQkG16YlfO5P6S1VOawK/?=
+ =?us-ascii?Q?Dn2UCLRx9gKZCKGm2+ZJmMcTaZeZmMfxcOhsaDx8p3NinBMuxif3Jhp5/8RX?=
+ =?us-ascii?Q?O4IziNvGIOp4K3eMB52xTqzv6z0lEQfILkl41v8tojgzcLxteJnrQhisUisA?=
+ =?us-ascii?Q?L411aCHcDYnRFIhpc5EvFh/DxhJSrU+sixuR0mW5mk+kf9OcmII5iFGeF/M5?=
+ =?us-ascii?Q?9yHpDpNi9OAuUQ7P1setmH9YF7/2urQuw+1GZ/p6C10itWTy+meGx64XN+PD?=
+ =?us-ascii?Q?L/ZRx9sGy5ZTKe6dc4bbwRk8d66euiZO9hc4i8/lbj+2Vzi1fLiNMD88MoWo?=
+ =?us-ascii?Q?Fq16Mu3Ts7Cc5+StTNTvAb6wjh2BxcaSMV8q7IWi8cI7DYOtZy2czYB6nNwh?=
+ =?us-ascii?Q?JS3GW5MXctvMDGHIVsQOokYOYpvRVbbHEtfxppxuM0uEN/faK/iHStzugu1I?=
+ =?us-ascii?Q?2x7SsX9+/Cpue1x5IgblcVE6wyPc17QHotcL0WoewgLcpnn1GDBhmTUDxFJ7?=
+ =?us-ascii?Q?yWb24dyudjvBdbsCTcrD?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 387bc801-1c2b-4612-c47d-08dc87a141cf
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b8bf23b-92cc-4681-e32c-08dc87a4aab8
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2024 09:56:24.5255
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2024 10:20:49.0575
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5962
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB9612
 
-Hi Srinivas,
-First of all, thanks for looking at this ;)
+It is preferred to use sizeof(*pointer) instead of sizeof(type)
+due to the type of the variable can change and one needs not
+change the former (unlike the latter).
 
-On Sat, Jun 08, 2024 at 01:42:54AM -0700, srinivas pandruvada wrote:
-> On Sun, 2024-05-26 at 15:32 +0200, Erick Archer wrote:
-> > One-element arrays as fake flex arrays are deprecated [1] and we are
-> > moving towards adopting C99 flexible-array members, instead. This
-> > case
-> > also has more complexity because it is a flexible array of flexible
-> > arrays and this patch needs to be ready to enable the new compiler
-> > flag
-> > -Wflex-array-member-not-at-end (coming in GCC-14) globally.
-> > 
-> > So, define a new struct type for the single reports:
-> > 
-> > struct report {
-> > 	uint16_t size;
-> > 	struct hostif_msg_hdr msg;
-> > } __packed;
-> > 
-> > but without the payload (flex array) in it. And add this payload to
-> > the
-> > "hostif_msg" structure. This way, in the "report_list" structure we
-> > can
-> > declare a flex array of single reports which now do not contain
-> > another
-> > flex array.
-> > 
-> > struct report_list {
-> > 	[...]
-> >         struct report reports[];
-> > } __packed;
-> > 
-> > Also, use "container_of()" whenever we need to retrieve a pointer to
-> > the flexible structure, through which we can access the flexible
-> > array
-> > if needed.
-> > 
-> > Moreover, refactor the code accordingly to use the new structures and
-> > take advantage of this avoiding some pointer arithmetic and using the
-> > "struct_size" helper when possible.
-> > 
-> > This way, the code is more readable and safer.
-> 
-> Applied and tested, atleast didn't break anything.
-> 
-> But the explanation above didn't give me enough clue. You have added a
-> payload[] in the  struct hostif_msg {} then using that as a message
-> pointer following the header. I think this description needs to be
-> better.
+At the same time remove some unnecessary initializations and
+refactor a bit to make the code clearer.
 
-Yeah, I will try to improve the commit message. What do you think about
-the following parragrafs?
+This patch has no effect on runtime behavior.
 
-[I have copied part of the message to show where the new info will be]
-> > declare a flex array of single reports which now do not contain
-> > another flex array.
-> > 
-> > struct report_list {
-> > 	[...]
-> >         struct report reports[];
-> > } __packed;
+Signed-off-by: Erick Archer <erick.archer@outlook.com>
+---
+ drivers/net/ethernet/sis/sis900.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Therefore, the "struct hostif_msg" is now made up of a header and a
-payload. And the "struct report" uses only the "hostif_msg" header.
-The perfect solution would be for the "report" structure to use the
-whole "hostif_msg" structure but this is not possible due to nested
-flexible arrays. Anyway, the end result is equivalent since this patch
-does attemp to change the behaviour of the code.
+diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
+index 85b850372efe..5b82c4763de9 100644
+--- a/drivers/net/ethernet/sis/sis900.c
++++ b/drivers/net/ethernet/sis/sis900.c
+@@ -614,11 +614,10 @@ static int sis900_mii_probe(struct net_device *net_dev)
+ 
+ 	/* search for total of 32 possible mii phy addresses */
+ 	for (phy_addr = 0; phy_addr < 32; phy_addr++) {
+-		struct mii_phy * mii_phy = NULL;
++		struct mii_phy *mii_phy;
+ 		u16 mii_status;
+ 		int i;
+ 
+-		mii_phy = NULL;
+ 		for(i = 0; i < 2; i++)
+ 			mii_status = mdio_read(net_dev, phy_addr, MII_STATUS);
+ 
+@@ -630,7 +629,8 @@ static int sis900_mii_probe(struct net_device *net_dev)
+ 			continue;
+ 		}
+ 
+-		if ((mii_phy = kmalloc(sizeof(struct mii_phy), GFP_KERNEL)) == NULL) {
++		mii_phy = kmalloc(sizeof(*mii_phy), GFP_KERNEL);
++		if (!mii_phy) {
+ 			mii_phy = sis_priv->first_mii;
+ 			while (mii_phy) {
+ 				struct mii_phy *phy;
+-- 
+2.25.1
 
-Now as well, we have more clarity after the cast from the raw bytes to
-the new structures.
-
-> > 
-> > Also, use "container_of()" whenever we need to retrieve a pointer to
-> > the flexible structure, through which we can access the flexible
-> > array
-> > if needed.
-
-I would like to know if it is enough :)
-
-Regards,
-Erick
-> 
-> Thanks,
-> Srinivas
