@@ -1,81 +1,70 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E66E17966C;
-	Sat,  8 Jun 2024 16:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20D24C98;
+	Sun,  9 Jun 2024 04:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717864328; cv=none; b=ak07OGLKKkcnGiCBvhwyX8hWIfs1uk011jDMgeJxaQcMLHtVCA1kbjobELdSncj7jRH46IXgg5AEv7Y/yBOxq7l3mEIh0zc277H4DByO8rpSg4Mzqy3QU7UNRhMAb/4VZPsl2hzUdwQXd+ybFUfhmjYuM5pWE/uVIaX41BZn8tk=
+	t=1717908891; cv=none; b=VfnOMyfZYhcs0NZxxU2XU9r6fG7AvOs3kshhVUmTFERyau7lgCbu5N75PzPL3e2ZCGtKBcyw7JhPvUSW5UtRD6p8fUbAbPY1Xt6+npgrwPZc1oUpTVA9lXtdIh5p1P8pabdn06ozaeKWypS8rJzGwiAxmH8zXjm+LswnmTH8seE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717864328; c=relaxed/simple;
-	bh=o/u5WZeJigd1BA/22pBMeXDv1TvliwKZCiKlV3ON1+E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cp01JPKcD1XUe+5/z+Gx7l28ItO9EfyE9QFb/WYXw/362rHh7PbsMWZTNx5xKlbA95WnCqDZhs9BLHmb5ETtISsp0nc/eHUUcfeSx2f8AoeFO35E9Wj24jHGB6bbWl5NVl4kTPD5Zy11qfwhvIMs8RrZ7rjbIq9x/eyvnoqLpac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAjIsKDu; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1717908891; c=relaxed/simple;
+	bh=Nvt6/GPfzJORfUsoEwoBt63WIsvWrqRyEtLTN6CDWHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jC0pd19rlgHXlkc5316PWcsrRdsKpZWxznvLdj4U2iJUQfyYtr692a20JHwS5aT6AuL8U/mg23l2MsszlgQtxu2PTKhogwjnjRslICr/JorBoCEHzb6RyxKV5FJQlaw6fWCnzHuX0GX7xH5mhA7yJ2On8A6pXMRE1ZaSQIaWZY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IWtyydn/; arc=none smtp.client-ip=209.85.160.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAjIsKDu"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7041cda5dcfso835448b3a.2;
-        Sat, 08 Jun 2024 09:32:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IWtyydn/"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-25487d915b8so981943fac.0;
+        Sat, 08 Jun 2024 21:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717864326; x=1718469126; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SmEppoo7LJtI7/L6gS+2VAgxSOPXPX1I5fRFysD/WXU=;
-        b=GAjIsKDuoZidD3tPGrgcjntWDbbwbWK9XjuwwIJRa6MymafQcqwqVJDZsCo+XdxYlo
-         thOv2CgdbbU4S2qGv8PrYuBp6OkIJSxElKh40EWVYQR93empjBKj8C+lSX+iDijFww3o
-         kmLvnvMVgTGUn9eHMupJdoQfvIFUMtkhzloz7TBzjW+yeS4r9YrnoTfGupkVJaKJ1nqE
-         t/z7uG5T1VamfbBiwjnTyNjWKA89W6HuOSQg9ca5E8uc0VORnFOx1ZGakjFKzQfuVHJy
-         zwMENZz4DmCAo4zJtNvm3Z1JGUOgHxf5Db5Yj9tcm6ZhrrkQ4d1uX346JqyEdvtfCs2i
-         CQ/w==
+        d=gmail.com; s=20230601; t=1717908889; x=1718513689; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=nyGGSgr4qAOZGycJHyH7XZ3wxYvuTR2etyxkHISKPfI=;
+        b=IWtyydn/jcQ1ypeqkjbbj7rs+GAzOFcmowSosgNJda7b/BlTx2YbIaXEpBZzTqytgu
+         DyvCesaxnHZxu/tP0P8iJCG8YKqw1y2ChUyBNU4dBvDbdWpL0JZlkMgiO30kNfDskuaC
+         hJklT92PT1skqy41M0WoTHR4s4QgxGIrZ6tEot4IEbQFpoEGxOf1gmIQC6nbwxNjaIVb
+         XaovVk5QUoi1VxP5vEKK8orMfc2pUzCs3RHpWJbrULdeZbgJFNbTrls8ixhE0Ytrtn+o
+         ujAHuODrGg6NEPM+uwj/NPP2b8v54sxrMQ8gmkdsMFS7LilzCJd/gt1Xc2EKv/lhqALh
+         dXxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717864326; x=1718469126;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SmEppoo7LJtI7/L6gS+2VAgxSOPXPX1I5fRFysD/WXU=;
-        b=pRLhTxf1ggdNtRiO2/hL1hbVu3OVQfOur3oMesnQzudcrQfOQYQOtcf1WkRv6xkxC7
-         NeQwnJJUTxgGqjy6RWA+M2HaMV3WkyLkuOp99FcGQsQQPWmGDh6wUwMPnyYY30uS+oZ4
-         ZsDmOHsYQHAs2ancM+pI+/SKmvdKmw7fEIcEQrtqRHB/nI1JUQJTTQJIThoKcTDfQg9K
-         QqHapVZclq0+ywWvPt7bSSh+uFnp6kW1RQTB8TD29wMo1RkO67SilvwUrpcfG79hY4LC
-         Jnl+MnI4yct8cuxsyAO6xXl2bmW8r0mIBD0FUxN8l9jGVIm52ISGZR6+RHzr+2pmx91x
-         8CIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4MZPXPEXWswl7QqaFf99cZ9OaDbdYYdesz52ajfdgbesDqD7Tf9QI4rH33TcG94mHbhDo1pk+JxmEO/1BBneGaATbynlL7wSI98tgPtX2pj5IG9VkgE6PzZI6jaeuVBHZ/Kgp1aPIbtX91gRA7fGTei3l/Ssy4gy4NtMbKPjBKJCvcJgS
-X-Gm-Message-State: AOJu0YzHnuWr9ozLnVCyJymWpny4kVYKiz3pU0/BdIfwt+KtVqh4ElGr
-	z20B0CGdYy721JdcJfLS6MpDUwaskYj1iYbVGzoLcqEXxQmRkj0t
-X-Google-Smtp-Source: AGHT+IEORPWxgaU9VsAkekFiyGNzWmHyEcZ52yFJiGYOMyZlhMOslzX2Xu1u1mw/RWcqkaAqkvPlJg==
-X-Received: by 2002:a05:6a21:6d9a:b0:1a9:8836:ae37 with SMTP id adf61e73a8af0-1b2f969bf66mr6030396637.12.1717864325619;
-        Sat, 08 Jun 2024 09:32:05 -0700 (PDT)
-Received: from localhost.localdomain (124x33x176x97.ap124.ftth.ucom.ne.jp. [124.33.176.97])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7043180d0e5sm321460b3a.99.2024.06.08.09.32.01
+        d=1e100.net; s=20230601; t=1717908889; x=1718513689;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nyGGSgr4qAOZGycJHyH7XZ3wxYvuTR2etyxkHISKPfI=;
+        b=a7T6MZ6NG3z6y9/nYdRqrgpv8H4TIuRsP+c7TD5CAijBvp66PPZpNyxCH3/1+8MTTD
+         0nyGwf66+O7pWkfp2a9pFd0H7uRdbcQw2oO4/Cty9xkwwz3I+N1lmH1GWjvt4IBwcC2+
+         djU7XN3LvWPJaEzaEPI6qRfqhMlOCv7QtyWF7UjiwLnYnMnrNqIq+CDvPbQy+QH1yXv9
+         gv2BrfrnowTV3bokuQ5rfCgwmFCV5JILCJGo9qVR49FpzAwwEQKoJ3AwHdVtxcA8clYV
+         LWO6gKnz85hfVL28db0R/Ww+OYXsOXfexhcG+ou2rCbDbq3/hRc6V/aSUzctVsDy0yCq
+         5NpA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3MWeSnyO5FxfWItJ1EP/Hpw++r76pRSIIIg2WltbVD7py0muROF1hr17I8mKkBLRShL3vi1oFrRjcez97HXLg3IbHJw0v2eC8AZ2PpGZTnCGq8r6dzCEHKfeaBQtuok8qKmYWiqGj6Gg2KbJ868P9g6rfz4Lr7KieTRGJvLuw0zlb
+X-Gm-Message-State: AOJu0Ywb1K9A7H7ZvZnMWCUolYZ+bmfP8wfnoPSg96kiZXxk28arEqQs
+	TjCIFBNRX4EUSr4H3ODaeJ3tZfDX0DUBxrAzftK1Yz3MkEWHjqZM
+X-Google-Smtp-Source: AGHT+IHit6kuLW/CQUCsyizwvU6t8TnBUH5ftFvSLZKLb7R8UNQSqYGHukLwxVl+LAI55ojHc5PZfg==
+X-Received: by 2002:a05:6870:64a9:b0:254:92a5:fa44 with SMTP id 586e51a60fabf-25492a642cdmr4182589fac.10.1717908888624;
+        Sat, 08 Jun 2024 21:54:48 -0700 (PDT)
+Received: from XH22050090-L.ad.ts.tri-ad.global ([103.175.111.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7041ec6f9cesm2284887b3a.78.2024.06.08.21.54.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jun 2024 09:32:04 -0700 (PDT)
+        Sat, 08 Jun 2024 21:54:47 -0700 (PDT)
 Sender: Vincent Mailhol <vincent.mailhol@gmail.com>
 From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jakub Kicinski Rasmus Villemoes <kuba@kernel.orglinux@rasmusvillemoes.dk>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Keith Packard <keithp@keithp.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
+To: Marc Kleine-Budde <mkl@pengutronix.de>,
+	linux-can@vger.kernel.org
+Cc: Thomas Kopp <thomas.kopp@microchip.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] stddef: Allow attributes to be used when creating flex arrays
-Date: Sun,  9 Jun 2024 01:26:49 +0900
-Message-ID: <20240608163148.2141262-1-mailhol.vincent@wanadoo.fr>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240213234212.3766256-1-keescook@chromium.org>
-References: <20240213234023.it.219-kees@kernel.org> <20240213234212.3766256-1-keescook@chromium.org>
+	linux-hardening@vger.kernel.org,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Kees Cook <kees@kernel.org>
+Subject: [PATCH 0/2] can: treewide: decorate flexible array members with __counted_by()
+Date: Sun,  9 Jun 2024 13:54:17 +0900
+Message-Id: <20240609045419.240265-1-mailhol.vincent@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -84,138 +73,95 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi, Kees
+A new __counted_by() attribute was introduced in [1]. It makes the
+compiler's sanitizer aware of the actual size of a flexible array
+member, allowing for additional runtime checks.
 
-I was looking to apply the __counted_by to the drivers/net/can
-subtree, and a research on the DECLARE_FLEX_ARRAY brought me to this
-patch.
+I went through the full can subtree:
 
-I could not find it in any tree (tried Linus's tree and linux-next),
-so I am not sure what is the status here (sorry if it was upstreamed
-and if I just missed it).
+  * drivers/net/can
+  * include/linux/can
+  * include/uapi/linux/can
+  * net/can
 
-While at it, and with several months of delays, here is my feedback.
+to try to identify the flexible array members that would benefit from
+this attribute.
 
-On Tue, 13 Feb 2024 at 15:42:10, Kees Cook <keescook@chromium.org> wrote:
-> With the coming support for the __counted_by struct member attribute,
-> we will need a way to add such annotations to the places where
-> DECLARE_FLEX_ARRAY() is used. Add an optional 3rd argument that can be
-> used for including attributes in the flexible array definition.
-> 
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Keith Packard <keithp@keithp.com>
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: Dmitry Antipov <dmantipov@yandex.ru>
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/stddef.h      |  6 +++---
->  include/uapi/linux/stddef.h | 10 +++++-----
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-> index 929d67710cc5..176bfe8c0bd7 100644
-> --- a/include/linux/stddef.h
-> +++ b/include/linux/stddef.h
-> @@ -82,15 +82,15 @@ enum {
->  
->  /**
->   * DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
-> - *
+The observation is there are not so many flexible array member in the
+can subtree to begin with.
 
-Nitpick: this line removal is not related to the patch and the other
-documentation blocks in include/linux/stddef.h also have this empty
-line. For consistency, better to keep.
+Within the few flexible array members, only a two can benefit from the
+__counted_by() without complex code refactoring, namely:
 
->   * @TYPE: The type of each flexible array element
->   * @NAME: The name of the flexible array member
-> + * @...: The list of member attributes to apply (optional)
->   *
->   * In order to have a flexible array member in a union or alone in a
->   * struct, it needs to be wrapped in an anonymous struct with at least 1
->   * named member, but that member can be empty.
->   */
-> -#define DECLARE_FLEX_ARRAY(TYPE, NAME) \
-> -	__DECLARE_FLEX_ARRAY(TYPE, NAME)
-> +#define DECLARE_FLEX_ARRAY(TYPE, NAME, ...) \
-> +	__DECLARE_FLEX_ARRAY(TYPE, NAME, __VA_ARGS__)
->  
->  #endif
-> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-> index 2ec6f35cda32..028aeec3d7f1 100644
-> --- a/include/uapi/linux/stddef.h
-> +++ b/include/uapi/linux/stddef.h
-> @@ -31,23 +31,23 @@
->  
->  #ifdef __cplusplus
->  /* sizeof(struct{}) is 1 in C++, not 0, can't use C version of the macro. */
-> -#define __DECLARE_FLEX_ARRAY(T, member)	\
-> -	T member[0]
-> +#define __DECLARE_FLEX_ARRAY(TYPE, NAME, ...)	\
-> +	TYPE NAME[0] __VA_ARGS__
->  #else
->  /**
->   * __DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
-> - *
+  * patch 1/2: struct pciefd_board from
+    drivers/net/can/peak_canfd/peak_pciefd_main.c
 
-Same as above: no need to remove.
+  * patch 2/2: struct mcp251xfd_rx_ring from
+    drivers/net/can/spi/mcp251xfd/mcp251xfd.h
 
->   * @TYPE: The type of each flexible array element
->   * @NAME: The name of the flexible array member
-> + * @...: The list of member attributes to apply (optional)
->   *
->   * In order to have a flexible array member in a union or alone in a
->   * struct, it needs to be wrapped in an anonymous struct with at least 1
->   * named member, but that member can be empty.
->   */
-> -#define __DECLARE_FLEX_ARRAY(TYPE, NAME)	\
-> +#define __DECLARE_FLEX_ARRAY(TYPE, NAME, ...)	\
->  	struct { \
->  		struct { } __empty_ ## NAME; \
-> -		TYPE NAME[]; \
-> +		TYPE NAME[] __VA_ARGS__; \
->  	}
->  #endif
+Below is an exhaustive list of all the candidates for which
+__counted_by() could not be applied to. If something did not appear
+here, it just mean that I failed to catch it during my analysis.
 
-How does this work?
+  * All the flexible array members which rely on the
+    DECLARE_FLEX_ARRAY() helper macro are out of scope for the
+    moment. Those will be reconsidered depending on the output of the
+    discussion in [2].
 
-If I take this example:
+  * struct bcm_msg_head from include/uapi/linux/can/bcm.h is a special
+    case. The bcm_msg_head.frames member is polymorphic: it can be
+    either of:
 
-  struct foo {
-         size_t union_size;
-         union {
-  		struct bar;
-  		DECLARE_FLEX_ARRAY(u8, raw, __counted_by(union_size));
-  	};
-  };
+      * an array of struct can_frame
+      * an array of struct canfd_frame
 
-it will expand to:
+    As of now, it is declared as struct can_frame for historical
+    reasons. An idea is to change the type to struct canfd_frame in
+    order to reflect the upper bound, in a similar fashion as struct
+    mcp251xfd_rx_ring (c.f. second patch from the series). Except
+    that this structure is from the uapi, meaning that such a change
+    will likely break the userland, making this a bad idea.
 
-  struct foo {
-         size_t union_size;
-         union {
-  		struct bar;
-  		struct {
-			struct { } __empty_raw;
-			u8 raw[] __counted_by(union_size);
-		};
-  	};
-  };
+  * struct can_skb_priv from include/linux/can/skb.h does not have a
+    count member.
 
-right?
+  * struct pucan_tx_msg and struct pucan_rx_msg from
+    include/linux/can/dev/peak_canfd.h both have a flexible array
+    member d, but it is counted by the four most significant bits of
+    the channel_dlc member. However __counted_by() does not accept a
+    shift logic. Because the layout of this structure is dictated by
+    the device API, refactor is impossible here.
 
-Looking at clang documentation:
+  * struct kvaser_usb_net_priv from
+    drivers/net/can/usb/kvaser_usb/kvaser_usb.h has the
+    active_tx_contexts member but it does not represent an array
+    boundary. Under normal conditions, the driver may write beyond
+    kvaser_usb_net_priv.tx_contexts[kvaser_usb_net_priv.active_tx_contexts].
+    Code refactoring may be considered here.
 
-  The count field member must be within the same non-anonymous,
-  enclosing struct as the flexible array member.
+  * Finally, struct flexcan_mb from
+    drivers/net/can/flexcan/flexcan-core.c and struct pciefd_rx_dma
+    from drivers/net/can/peak_canfd/peak_pciefd_main.c do not have
+    members to indicate the count. Because the layout of these
+    structures is dictated by the device API, refactor is impossible
+    here.
 
-Ref: https://clang.llvm.org/docs/AttributeReference.html#counted-by
+[1] commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro")
+Link: https://git.kernel.org/torvalds/c/dd06e72e68bc
 
-Here, the union_size and the flexible array member are in different
-structures (struct foo and anonymous structure). It seems to me that
-the prerequisites are not met. Am I missing something?
+[2] stddef: Allow attributes to be used when creating flex arrays
+Link: https://lore.kernel.org/all/20240213234023.it.219-kees@kernel.org/T/#u
 
-Yours sincerely,
-Vincent Mailhol
+CC: Kees Cook <kees@kernel.org>
+
+Vincent Mailhol (2):
+  can: peak_canfd: decorate pciefd_board.can with __counted_by()
+  can: mcp251xfd: decorate mcp251xfd_rx_ring.obj with __counted_by()
+
+ drivers/net/can/peak_canfd/peak_pciefd_main.c | 6 ++++--
+ drivers/net/can/spi/mcp251xfd/mcp251xfd.h     | 2 +-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+-- 
+2.43.0
+
