@@ -1,94 +1,106 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCC738DC3;
-	Sun,  9 Jun 2024 12:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906101865C;
+	Sun,  9 Jun 2024 21:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717937038; cv=none; b=PhzYTslU9+htlb1+flwUcuFV0yS6sNWPU5PIh/41mgqcuEB/hP458BtOhPi1UTw1GleQAde8zc+N1lVPNuBhHLG6Hbs4PG6nFQRsk26iSyqqEZlMTHD6lS4XANpK95v8ur0CcSJpiTyb0PQURGuzPmeyessoDJDTXf8k6SS8aCU=
+	t=1717969272; cv=none; b=lOzlzfwao6jtsgoB6TXaGc3xkrrISJ/z1z8tert5nCcbKQr+YU+0Z2iY83yRHQnGHrqp+Liwnv+w99jJZvl6P3nOFGA2TVCTDe3y8yQHhbcb2uNTfwY2OldlY+kAY6633C+4Tzk0e5PJZ9yloys8nfew+yYy1OOFTDTlDZcaHuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717937038; c=relaxed/simple;
-	bh=ftckS2Uy+EaxPqpxARW/p9vVImlaebLo7LGaNO9aVM4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EIJNG/OpaVjNRwwpQSkUvRqEZmxjQ3ZFmAyEyBrA7jgeQpKO1PSzbkTUIgJ3Q2m9h+Ml+9EnIHLDTEaaJJ4rg/BUMh08hnDZfGokIEcjL/8mdKwc6lKuGIsF8F2cpKXjul+ZMC/p11Th7gTsduY7qVH6pGmRfDlJN47FoRiSMro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bU0IA91q; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1717969272; c=relaxed/simple;
+	bh=/pUyIs0rg9z+B+eOOx1A4RTdvAOOAsqyUvdGdwh+okY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FEfQ3vlmlPV3bweAt/q0k5mQCpZ3QH7j0yClN++RqmJnriyZybuXTqnEAY+w3cqPn9b6EXSJQ981J2m4EmIAdq4RIrH5cP8pJ2CmLX2Rz/eRM5OrSptmw0a0n1N/9ui+V5WS+Fp3gENXpVLd1x9yLJBJ6ydyzZ2oYk3kRarCvOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4ZMMV1b; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bU0IA91q"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f6559668e1so29817825ad.3;
-        Sun, 09 Jun 2024 05:43:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4ZMMV1b"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-681ad081695so2829499a12.3;
+        Sun, 09 Jun 2024 14:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717937036; x=1718541836; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ftckS2Uy+EaxPqpxARW/p9vVImlaebLo7LGaNO9aVM4=;
-        b=bU0IA91q1jbv0MaywdZLrZenfRD0Ikst/0R43LfrUC0K6bH9n0fLZr++k2ae0jYwUp
-         V1I/p/D1y4ZzRaHJcaUdLI8f2rSTLM3WcE3Dd7ekxN17csO6uTn89m+8pD/93/+2Eyv5
-         PvS83E4dva7C6jH6UaQkZR+r9TdcXt3SBtK4z72od3H/NGqrrn9wnShEnAi8DUjJEgUH
-         FiMxTjU8snJ4tuRQNTaSMnGKjkoVBn/gPu9GgUUuB4i4nuKF5WVoTlQ4hp6S/Sa8wiy9
-         xoHDf/Le8WRocbA0U58k0LCLDYm6EpUngwKlh9CTbPaEljMIQHfUGT28ygCz3enuOeMk
-         Zy6A==
+        d=gmail.com; s=20230601; t=1717969271; x=1718574071; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ecB0puB5CrDlsinl6SGmOW0Gy36kwzCicVzoDhVT234=;
+        b=X4ZMMV1bEtpE5vkEEnwLfy6zNT+xv7NUECseTKh/VPsJAfkhhbQbi7olpcsgg/cCoz
+         TH6i2URhHXJ15PdTJ12hK19BqRkFB0EQa76AedJNRpYU9oYl4oV0QnwOckLFPusZAuCc
+         DTbp1EPqa1SMglACE/AIyzJKmHhpnE5aJhEvEAbJsP/Rh7pIOQk34ZQqkp9VWLSA16ih
+         hyoCd7+DMYPuEonNXi42WHgOI0ZFWVkZwUZKuAYRN/XOiya8C3pRSNNIC5qd+2pCKfhU
+         7Izyt/3AisadabUAPMrZ3+f1nV9HQi0cEywH45HvtxZckUW4gPz0b381zpvlWkd5Ezjs
+         g1eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717937036; x=1718541836;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ftckS2Uy+EaxPqpxARW/p9vVImlaebLo7LGaNO9aVM4=;
-        b=cDPfh6ZwWvBs+HEoDhwN41vWRzx39XkVslk+jwpmtUhwohj1XB8tdElzJ9s8XGt7+4
-         I7ngK9M4WRPscHyJOMiFzV581mmO9AQ8zaO3WwfIqaBAIQSxviom5sb9VGDTysO8UctM
-         5HGT2BQdwEjMl+FbTug2KAaHJwD40VLxqRTXLPJoUw+uPrLz/AISImT/ELbTPT2B44Ft
-         990FxMVS8IrQUUR98KJJsf9x4Dwum4j7O8WKCirwPcg2QLoOqRyP1BoDvdAyFv/N5EeH
-         UwsBwZVPEgp/xMmCDxl31AuLRNVLJa18B8ExTh5LCs+k4QUA2bNYj5+nJrwpgim2bvKM
-         7vsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtO+vZFPAd310QePV/FLyu3CR0+F8yx5L0LgkwOGHPB9O6s3fPdIael4gvVpvkLzkuLWnA28r86HuTiB+cmYPJvTJ4en95JFlwIJMdFpV4mmyi9UWh8r4Y8L31M8SeAzNTQef7uyWqPoJ7DDx/
-X-Gm-Message-State: AOJu0Yx/p0XJC4KbFZd30yVX11qZ5QezleCew1wTwNKiNpTTD6bF+aVM
-	/gUkw48LY2XWH59uiS3Cc0mNNQWd3FdlzgpuSH5N05WBfsp178wl
-X-Google-Smtp-Source: AGHT+IFAgx7Y06VM6CXWwRUhLM3/gQ30/sIiFLYszFFI18Vm8EBAfvysJyPqJFTdE7do80LNUNI6gw==
-X-Received: by 2002:a17:902:8c8e:b0:1f6:8290:175a with SMTP id d9443c01a7336-1f6d031cf18mr60644235ad.40.1717937036067;
-        Sun, 09 Jun 2024 05:43:56 -0700 (PDT)
-Received: from dev0.. ([49.43.162.161])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6e785858fsm37026285ad.221.2024.06.09.05.43.52
+        d=1e100.net; s=20230601; t=1717969271; x=1718574071;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ecB0puB5CrDlsinl6SGmOW0Gy36kwzCicVzoDhVT234=;
+        b=qyQ+mzB0vnbYcldm1Ux+ZYHB2JsGEdwUsLIrPTwpVvq5FuiozdrO80MFSwh5ETqwo3
+         wj9XVHLgUM90gftrE/pcodx6XIGUMSGBoX5FmZ4V1h02rGqZVOqzaW3/6COBX4CyC7EV
+         idYf7rHcQAUlpx+lojBF510aWbfof6YpRfjuw8HcO8dOT9NrrPOoMnWJMsKUfuYlpTAB
+         ugShrcZRxouh/5Svs0JRR5f/W9N9pEqkzcp+0FcL9wNOheq+ZepLn3/DIzJ7Y2SnEbVR
+         UYdPtOjIz65wJ4EpP3N16cH0CeJmXubs3wPgIed438uKqK1uQjGlkMsNP6qUH7lYPOyw
+         8GmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqXlvLtAKun28Z9BGBtviJxfimj6KZ/JcbPYkdM9EXWi/rv3uZ9yNLuPoj6baw2yv8mKUBbPD+rtnY5PlQmCdQPJxJT/7hXZbsAdBEOJj82uNspMnDhxBTtHa5WS0Boa0qHSsURAkLRieBwj+JSA8/4OTH6erDIZFvv0Fk054DQd5YSgrHCNn7Tvs=
+X-Gm-Message-State: AOJu0YwfFsNHNpxghYchvcGmNpTFSYPqEzbEsRhuT8MK19Rs1iKVMB7s
+	MATjeBvga2z2jcogUclMGtMXEIznpa6UXWQrfCJbD3O0QPSj0igI
+X-Google-Smtp-Source: AGHT+IEk7CZrjiNn9uOB0qE6L+785ePUGnnEV1E6FDTKO1MeBm7ssikwhiPxAL52SO+W9GI56JjdWQ==
+X-Received: by 2002:a05:6a21:27a9:b0:1b5:77db:c76e with SMTP id adf61e73a8af0-1b577dbc806mr3287548637.54.1717969270619;
+        Sun, 09 Jun 2024 14:41:10 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:55a9:13e9:dec7:f9d3])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c2cd57024csm4817204a91.20.2024.06.09.14.41.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 05:43:55 -0700 (PDT)
-From: Abhinav Jain <jain.abhinav177@gmail.com>
-To: kees@kernel.org
-Cc: gpiccoli@igalia.com,
-	jain.abhinav177@gmail.com,
-	javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	tony.luck@intel.com
-Subject: Re: [PATCH v2] pstore/ram: Replace of_node_put with __free() for automatic cleanup
-Date: Sun,  9 Jun 2024 12:43:49 +0000
-Message-Id: <20240609124349.51187-1-jain.abhinav177@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <202406060902.4F06AA0DF6@keescook>
-References: <202406060902.4F06AA0DF6@keescook>
+        Sun, 09 Jun 2024 14:41:10 -0700 (PDT)
+Date: Sun, 9 Jun 2024 14:41:07 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+	Oliver Graute <oliver.graute@kococonnector.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	ye xingchen <ye.xingchen@zte.com.cn>,
+	Jason Gerecke <jason.gerecke@wacom.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Support Opensource <support.opensource@diasemi.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Input: touchscreen - use sizeof(*pointer) instead of
+ sizeof(type)
+Message-ID: <ZmYhc89_PXsKQqj8@google.com>
+References: <AS8PR02MB723708364CC0DF2EAAFEE5968BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB723708364CC0DF2EAAFEE5968BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Wed, Jun 05, 2024 at 09:49:44PM, Kees Cook wrote:
-> The history and version links should be below the "---" line.
+On Sat, Jun 08, 2024 at 04:34:49PM +0200, Erick Archer wrote:
+> It is preferred to use sizeof(*pointer) instead of sizeof(type)
+> due to the type of the variable can change and one needs not
+> change the former (unlike the latter).
+> 
+> The refactoring is mostly trivial except for "usbtouchscreen.c"
+> file. Here, in the "mtouch_alloc" and "nexio_alloc" functions,
+> it is necessary to use a variable with a predefined type instead
+> of the "usbtouch->priv" variable (void * type). This way, the
+> "sizeof" operator can now know the correct size. Moreover, we
+> need to set the "usbtouch->priv" pointer after the memory
+> allocation since now the "kmalloc" return value is not assigned
+> directly.
+> 
+> This patch has no effect on runtime behavior.
+> 
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
 
-I have made the change.
+Applied, thank you.
 
->
-> But more importantly, please base your patch on the upstream tree,
-> rather than on your v1 patch. :) (i.e. squash your v1 and v2 together).
-
-I have squashed the two commits and shared v3 of the patch here:
-https://lore.kernel.org/all/20240609124124.51166-1-jain.abhinav177@gmail.com/
->
-> -Kees
-
---
-Abhinav
+-- 
+Dmitry
