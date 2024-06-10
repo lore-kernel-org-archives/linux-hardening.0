@@ -1,147 +1,210 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B05BA53
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 12:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC679823DF;
+	Mon, 10 Jun 2024 14:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718022288; cv=none; b=JTuRiNiKXTJLQb0kZbLPvqVMoEQDEFBJhsvgcynr2DzapjWdI2B0cm82UWZONTqr0rSt/PStD1zpqES8jEe9fO/F9e5/lPY/uNEUtVMquR7IOzbkwgYjIECH0/vHh5j6DCCeIqz7ho/pP7zf6iPsRX+0YWVqFbfSNT1xuj+GyPE=
+	t=1718030124; cv=none; b=gWzH+qkHW+m4zR8WN2vn53W71wUzFeYezgdLlCUEYBLq52dQJvCjOe9LiOYOKPeRZyEnkjuLyyGNJXizUCOa2EjnCjKdjezs6Ev8Wo/kdEftP+oAnT9gOxpUjTNrhKDfjD6zi39NaV6SRHUHGucPHfGcDD89D9uQfludgZKoCMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718022288; c=relaxed/simple;
-	bh=lODJzX7RK/3gqW7SLI4sodAzP/4RKmEiLEanCBSHskY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IdelP1kclbjJPG6bDJBixTcIWxxcuJhH4dhZxM74UzISfKYtqig1GFvj6kOC9Yz3Eb9/kd5Z12ZKHeCBzwj964xAugbkPDhbm8grJ5VTRNLsfEEW0tZZ7Vq47HGjS9ZMadiaK4+OQ8rIAIMw+pzHQA9YTsqlmWaKuSnu9kf+liI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IJz/5Ea2; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1718030124; c=relaxed/simple;
+	bh=91sBIoOFuPu9SFY+tLlcUuwCHDWSFm5niB4kvRVeoCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GpiAJOyxhqINB9K9dCxlYUdqmUgWsAG8csDWS8qlu4YLiQkAxwXkXmCfOJy5QCIQvo1O4ZT+xP5kWe1A/GfsuF5t0BQXPEe9lV4ePuYQSyZF1tH22/Oay5Cb1WUgYNyQGJJnkDL5mQFZV+0ZJopmohJRzN6JNN6uVjzgL8ztur0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=a6VOxOiS; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IJz/5Ea2"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa7843b501so7863329276.3
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 05:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718022286; x=1718627086; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=arVT1UJjpDifIxa4uEm/zmcaSk9BsvyP57DfTAzOe68=;
-        b=IJz/5Ea24zuOzqgg6PpSLl+R3ziT8umMEg0af3fKeoGGKVJwOphfQkoqicY7s1C7Bt
-         9aHg+8eqq/Ud1OtyLyFbmvbsDUJKF/s/AaCuA6FyULH7PHD43QRblVUwc6yxJf7TbIe2
-         uHwyuT4FsTwaSKOcIKpTJEpjQdT4fvYXQolvUc6g2ZgRXiFyWhPgJy2yjw2nMkpcA5b9
-         0tYd3A1TlABORhxSlg5iqW9uw17lwXOAtD+gasWODnWSygXdId54UbPVW0qNLkq++yK7
-         f2L2/01L45RHi4ruuVLKYcTsp7nQxsqctXIFwmChr5UhXwdWb1wIDSXpk3y015UE7E4f
-         W37g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718022286; x=1718627086;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=arVT1UJjpDifIxa4uEm/zmcaSk9BsvyP57DfTAzOe68=;
-        b=rdwgRLOJcniDFdVLoq8vUd4CC+0wKXeS8h01uqC3iNDT4U2cUlHC6Cv3ryRNkLqTdL
-         FyyFkUzZ2r0BAtbp8kh9TFYRURLwBlppnnez2kOLycdVDu5BB/s6eEXlOSbjY14basaB
-         bOhWNj7yno6ID8K/2mZdMwMJFhH+nNgio1Z+WbIKXTUjda61Vbohzfp5vvNEE6OyZv4K
-         vCaJ0B8l/khTqs/WORzvl9QVunridmYc0rzL5iXcyLf/I1RN7n5B4DAASu7r4BSr4j/9
-         MqMWP+HaF00zbjzGUUSm6FPsSDv6Z+UDReQqfsUSYbwpOF5+HPYOf/uQdvDdE7B0EyI1
-         LYeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfXXo8FYBE31AmgyZm/+5oRjEQzVWh3cCLKl9wlS68jAIw+0opDrVMCDAMyFmcaNNsnV2mQvrtSb0gfBAN/Hk46vgEkzU6YWeKwlmjxBnz
-X-Gm-Message-State: AOJu0Yy+0UMWZnvg94j6sCq2UH8O2nsOSB40sREbD3SHf75vykJ1gDYO
-	XfN5nRXuKCTGwp2e5A+ay0StOwK3vSvbMdLA675u6wkvafUdZrZJ0ihe1TPfctoWsES/vw==
-X-Google-Smtp-Source: AGHT+IFy4fbRMOr/D5J8Mb5DIZLL8qf8J1a9nL1lZPR65XOkeoC1GSF3L7mKwVVdHZBxRxLrQKLcHzk8
-X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:6902:2b8b:b0:dfa:849d:3a59 with SMTP id
- 3f1490d57ef6-dfaf667471bmr3293606276.13.1718022285824; Mon, 10 Jun 2024
- 05:24:45 -0700 (PDT)
-Date: Mon, 10 Jun 2024 14:24:38 +0200
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="a6VOxOiS"
+Received: from spock.localnet (unknown [212.20.115.26])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id 4D1B9635B043;
+	Mon, 10 Jun 2024 16:28:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1718029705;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l0SMNTkYAuc5O8ZdDG31qtzlnMEbWZ7EjPgqLUUlf1k=;
+	b=a6VOxOiS62O9xhjfaIQGv9ESrXEmBAqJ2SObD/XeVfvJa62ZDU/hYV+pxYdW40hd4pH/sS
+	TV1n8s1AmmRBPAdZ5gC7qGR3L/9uKSSh/ss3Ot8H9G3f8XubQ+5kkEkgUsd4c4ZgtCbOvB
+	GmfwSOLHwdGH1NIN7hyNUy0F941/dto=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
+ gustavoars@kernel.org, Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, ananth.narayan@amd.com,
+ gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com,
+ sandipan.das@amd.com, linux-pm@vger.kernel.org,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Subject: Re: [PATCH 0/6] Add per-core RAPL energy counter support for AMD CPUs
+Date: Mon, 10 Jun 2024 16:28:11 +0200
+Message-ID: <2733323.mvXUDI8C0e@natalenko.name>
+In-Reply-To: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
+References: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2514; i=ardb@kernel.org;
- h=from:subject; bh=vAdAgJhZ88ZG4Hss513g3YwUrqqEyDQZv4qPQ2fT/YE=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIS3tQzv314Nsr2KfVHF22yjY7PFVCbTY8X/dO2ax1vyLR
- wr3iip1lLIwiHEwyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIlwlzL8L49aFu9/c9ehzi2u
- CX7qp84E7IyYs+/uU41nMjHzn0XbZzAyvDpcPzuiKWrjxejV1juF9rHLBB0wzhWd6VfGJuxk5hP KAgA=
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240610122437.2358778-2-ardb+git@google.com>
-Subject: [PATCH] efi/arm: Disable LPAE PAN when calling EFI runtime services
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
-	linux@armlinux.org.uk, Ard Biesheuvel <ardb@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart12451447.O9o76ZdvQC";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-From: Ard Biesheuvel <ardb@kernel.org>
+--nextPart12451447.O9o76ZdvQC
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Date: Mon, 10 Jun 2024 16:28:11 +0200
+Message-ID: <2733323.mvXUDI8C0e@natalenko.name>
+In-Reply-To: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
+References: <20240610100751.4855-1-Dhananjay.Ugwekar@amd.com>
+MIME-Version: 1.0
 
-EFI runtime services are remapped into the lower 1 GiB of virtual
-address space at boot, so they are guaranteed to be able to co-exist
-with the kernel virtual mappings without the need to allocate space for
-them in the kernel's vmalloc region, which is rather small.
+Hello.
 
-This means those mappings are covered by TTBR0 when LPAE PAN is enabled,
-and so 'user' access must be enabled while such calls are in progress.
+On pond=C4=9Bl=C3=AD 10. =C4=8Dervna 2024 12:07:45, SEL=C4=8C Dhananjay Ugw=
+ekar wrote:
+> Currently the energy-cores event in the power PMU aggregates energy
+> consumption data at a package level. On the other hand the core energy
+> RAPL counter in AMD CPUs has a core scope (which means the energy=20
+> consumption is recorded separately for each core). Earlier efforts to add
+> the core event in the power PMU had failed [1], due to the difference in=
+=20
+> the scope of these two events. Hence, there is a need for a new core scope
+> PMU.
+>=20
+> This patchset adds a new "power_per_core" PMU alongside the existing
+> "power" PMU, which will be responsible for collecting the new
+> "energy-per-core" event.
+>=20
+> Tested the package level and core level PMU counters with workloads
+> pinned to different CPUs.
+>=20
+> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa=20
+> machine:
+>=20
+> $ perf stat -a --per-core -e power_per_core/energy-per-core/ sleep 1
+>=20
+>  Performance counter stats for 'system wide':
+>=20
+> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
+> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
+>=20
+> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@li=
+nux.intel.com/
+>=20
+> This patchset applies cleanly on top of v6.10-rc3 as well as latest=20
+> tip/master.
+>=20
+> Dhananjay Ugwekar (6):
+>   perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+>   perf/x86/rapl: Rename rapl_pmu variables
+>   perf/x86/rapl: Make rapl_model struct global
+>   perf/x86/rapl: Move cpumask variable to rapl_pmus struct
+>   perf/x86/rapl: Add wrapper for online/offline functions
+>   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
+>=20
+>  arch/x86/events/rapl.c | 311 ++++++++++++++++++++++++++++++-----------
+>  1 file changed, 233 insertions(+), 78 deletions(-)
+>=20
+>=20
 
-To avoid the need to refactor the code that is shared between ARM, arm64
-and other EFI architectures, fold this into efi_set_pgd(). Given that
-EFI runtime services are serialized and not pre-emptible, storing the
-flags into a global variable is reasonable here - efi_set_pgd() calls
-will always occur in pairs on a single CPU.
+With my CPU:
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/arm/include/asm/efi.h | 15 +++++++++++++++
- arch/arm/kernel/efi.c      |  4 ++++
- 2 files changed, 19 insertions(+)
+  Model name:             AMD Ryzen 9 5950X 16-Core Processor
 
-diff --git a/arch/arm/include/asm/efi.h b/arch/arm/include/asm/efi.h
-index 78282ced5038..773fb072c040 100644
---- a/arch/arm/include/asm/efi.h
-+++ b/arch/arm/include/asm/efi.h
-@@ -14,6 +14,7 @@
- #include <asm/mach/map.h>
- #include <asm/mmu_context.h>
- #include <asm/ptrace.h>
-+#include <asm/uaccess.h>
- 
- #ifdef CONFIG_EFI
- void efi_init(void);
-@@ -32,6 +33,20 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md, boo
- static inline void efi_set_pgd(struct mm_struct *mm)
- {
- 	check_and_switch_context(mm, NULL);
-+
-+	if (IS_ENABLED(CONFIG_ARM_TTBR0_PAN)) {
-+		extern unsigned int efi_arm_ttbr0_pan_flags;
-+
-+		/*
-+		 * EFI runtime services are mapped in the lower TTBR0 region,
-+		 * so TTBR0 based PAN should be disabled while making a EFI
-+		 * runtime service call.
-+		 */
-+		if (mm != current->active_mm)
-+			efi_arm_ttbr0_pan_flags = uaccess_save_and_enable();
-+		else
-+			uaccess_restore(efi_arm_ttbr0_pan_flags);
-+	}
- }
- 
- void efi_virtmap_load(void);
-diff --git a/arch/arm/kernel/efi.c b/arch/arm/kernel/efi.c
-index 6f9ec7d28a71..6864338073e6 100644
---- a/arch/arm/kernel/efi.c
-+++ b/arch/arm/kernel/efi.c
-@@ -11,6 +11,10 @@
- #include <asm/mach/map.h>
- #include <asm/mmu_context.h>
- 
-+#ifdef CONFIG_ARM_TTBR0_PAN
-+unsigned int efi_arm_ttbr0_pan_flags;
-+#endif
-+
- static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
- {
- 	efi_memory_desc_t *md = data;
--- 
-2.45.2.505.gda0bf45e8d-goog
+and this workload:
+
+$ taskset -c 1 dd if=3D/dev/zero of=3D/dev/null
+
+the following result is got:
+
+$ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ sleep 1
+
+ Performance counter stats for 'system wide':
+
+S0-D0-C0              1               1,70 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C1              1               8,83 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C2              1               0,17 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C3              1               0,33 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C4              1               0,14 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C5              1               0,33 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C6              1               0,25 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C7              1               0,19 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C8              1               0,66 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C9              1               1,71 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C10             1               0,38 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C11             1               1,69 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C12             1               0,22 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C13             1               0,11 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C14             1               0,49 Joules power_per_core/energy-per=
+=2Dcore/
+S0-D0-C15             1               0,37 Joules power_per_core/energy-per=
+=2Dcore/
+
+       1,002409590 seconds time elapsed
+
+If it is as expected, please add my:
+
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+
+Thank you.
+
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart12451447.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmZnDXsACgkQil/iNcg8
+M0t6fQ/9Fdruv7/wOgfWfxsmq12Z1F7j5jUZ3jwi5SWc8eM7xrP9k0xHc9MUuiAz
+Wa6Q+GHzOASCcjGfyHbfJMwUj9fjjbDClvtVM+IV+F3jM+HDqYJs3xfHLxZYi5Yq
+aZb6R8fmXv+O43R3N/T/fRuAjWod/+1KYnvP0ktPD7GCw/5bSWelLdmYAeEOyF8+
+wbOZY4Vpa4mMIB6aywrmtDLWBfb3b1x3bKTCZiIxxgnjf/Kn6JZUKm/cqdJ7j12d
+ZBmgC8MQEtbd1gGX3yF53kCUOnMJ5Pl/oKNC8upLlej+ktwGzIEqWrV3MDAFChmK
+q8OukQvozY3VZinqRDJ5xsB1o1sSyGmnaNiWUTXV3TXr8Is+urKeGG9Vrcr81KTe
+QPDGesLe09hh/DH051o34XbOj1fA680DP21gVlC7jMyfanxPCvyCnnQ9O6pL81MK
+H7aueueox41UXHoIFRIZ5znWwewei8ny+4gAPam5/XVVX4E2rnBjl88OHWgMUXvU
+biSFXskJU58wakoFWQd9iaCriGy1Ke+vKadeO8DpM89hLQSA+y08J2YXbBmQa7dT
+pg4aNkKOeWwsMgzzJ0SbBJdPy66mhMLshln45oqTFYFyLTEKF1rfsFWZrKKn7wsg
+uhjXr+TwTTA8dqewzCYxFq9drb/6bO1Dmn8UJDjMFAGWcBlRgaI=
+=SsIp
+-----END PGP SIGNATURE-----
+
+--nextPart12451447.O9o76ZdvQC--
+
+
 
