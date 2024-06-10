@@ -1,133 +1,203 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF2A1C6A4
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 07:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AB356452
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 08:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718003303; cv=none; b=ELgEpASkaFqqeiV6GpgEo7FURxmgeE/oiLoA4Qsf8VxAED/3SK/wekRDkHLbvEeX7bMRjIc8qRK1lDouG+ZunwlmQsB75ubr+jH34lsfpbORNvAsmsOsQ/GZ886fLLnPZH9TZ4j6ED2bAEWqiEnZyk9roVvy/wRePGrkr51UvOs=
+	t=1718006916; cv=none; b=krmfMi3xt1+Dqv9JggMyXKNLhx9azGwlokLS0B6D9z3sOnxjPu/bMSl6YQYJH+Ep3S3kA4SYe/svBdRE87eAIywYP4UIYCmLDyQsHu8sDI4uHCKE+vrixKnzX7bxz4TUGg2B7EHZmS1lkHkcabHCVk/x7tg3K+a24ppFmRxSbdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718003303; c=relaxed/simple;
-	bh=QEP/zaNAd6rVQEJ7AQSX8sXbT4ui22VLn/jbIusAu0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=InUMVuoxpdwqQmktll4bRtvenYu81Am9xZi9rjYz2s8alRUPtcu3YgG9yhiY7ZeMluvkYKyRbDtDgrPzjgPGMEfE8sOFiSgNPRgyntYXJ0pTXnelEYhg/bMcWIVQWXfc8MxxT9XXTpMHKTuesdF5Vcio/bTqstKdNxnQxn/Qp0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HRJTc3ud; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1718006916; c=relaxed/simple;
+	bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EaGth07ll3ApfQ4HpT6msNSgOl/DB85hRqVswCu7Iu5KwP/5+8wEjkBpiFTdNJeAgiKIX3YvP+PXMW8M+QYw+knzgzWGWw5l6TRYcXkxKkSRJKN7/tp38meZmqck9MOEB169uPZHhoRcyHZgM126wHVCThDz3eS5Q3t+mP1RKI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FY2k3Mn1; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HRJTc3ud"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c5c51cb89so2960389a12.2
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 00:08:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FY2k3Mn1"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52bc1261f45so2568981e87.0
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 01:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1718003300; x=1718608100; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iVrI5GsrQNLTME723VL0GXEMwV6fiHKNH1QpwFztIZA=;
-        b=HRJTc3udHCGHshWdZL93VbqnKKjErnegxjtkRgw1Wo0PKCawTN9ohGQLP9h0TA17Zf
-         fbF+1/U3GipxYUNwSu6y3aMwrASCy4uAZ9ygrvproX7lftE41KqagrEYPt0CFTxv6O9M
-         X2XQLMzeJ27Z4HiQrwbrjiKKKGgxdpIheSgpVfdmiNEreRIUVKFmz2TBdtq5r2iwggQq
-         B6FiXo4l2RHrmgBQanBksYLraQ6VvUJWkzmNBIAM7cL8BLCjvIGhc4Wtz2YZsKIfoNpB
-         DfUv/JM0h+T/98IkMU7unGJESIDudKYyVKxA2iprezwTMdF/gyKVV6xlEiFgkTIwZMlN
-         1CIw==
+        d=linaro.org; s=google; t=1718006913; x=1718611713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
+        b=FY2k3Mn1PYXcT34Eo96oKLUsknRz0hgtVbv3X+DhxGiYz+kbwRScKV5erdDVYUAAcd
+         jw6OuZPpP2NNPqOZ2xbFrAnjX+R/moWth1xQbyLTQwP/AO2viR5QhBlPBUqVIiumNaWh
+         q9FNp9oq5otLzICQCloUWcrekkzWRFWluxtU4sFdlbDWDluPzyuTugazeXoFyCiJBRP3
+         HApxSZljkEXVYOKB9+xNb5fXk5aZomQQNqaUlFf2wJEZ4UBULeRnjXc636gbucf+QV1v
+         lD2YagRXZavPnguwNF+EgxZqcY5VeCnUF1kmP29ABaYpXiQO+TVb9XtCe6irhsUQsFWo
+         cHEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718003300; x=1718608100;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iVrI5GsrQNLTME723VL0GXEMwV6fiHKNH1QpwFztIZA=;
-        b=gPpv4UHOOEGqO2+mRIG+5uYeBAlvY4Dh3dhGVgnDS7+uzK1rF4xjPq2Xgw273hTu7b
-         u2LyleWQLXYZ5FTkJWaI+dEsITJwXgCGvzOaQbpWaC/KU67hgxjm9gqQKZ2u8O8Ro+aV
-         F9YMvFCLAuaQuAR6GpsVP25OG849Dv12YWjBOrBHAA5y+RdvrFmOkZ9p6crWM34Zpkuj
-         utKVsTVsG6vcvWhihYmF9+5DTLmkI6QKU/yhbifK0TMvQzrHiMScpPqAD6SJYis69OtF
-         5HcguBVU7H/5Fp4sbEigzUWvJYZOTWswHi0N7fgC4hrjCdv52OR4spL9CLWhsiS8bNK8
-         gmKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD8kaE0qDH7LFfuDL15NcO7EpdYFgHXGCwLOYpzOOdCQzUt1il4LQgxEfAPY4Li58eLyjOVcEaIDLW7qu6V3epfxS6AVHKqaCfH+p3xeV1
-X-Gm-Message-State: AOJu0Yzw5RCM2MCP8YqC3iBsb3p/oN2H7XJ1/SJPo4q0iBwS8Rc2J98u
-	BXIfOHBI/dn5TOdJ6nGa9TvDZ50XMb2BlQJO9R90a0QnKtNXpc1EjkYcUN6fFz8=
-X-Google-Smtp-Source: AGHT+IHrLJutCqFB6QyRHYps/IiSSbjoC3LCsYCwOb37kfga8SmQTAXj6uBl+DbsZS27mM1A/ddGQg==
-X-Received: by 2002:a50:ab1a:0:b0:57c:6c98:b61f with SMTP id 4fb4d7f45d1cf-57c6c98b88emr3430720a12.42.1718003300041;
-        Mon, 10 Jun 2024 00:08:20 -0700 (PDT)
-Received: from ?IPV6:2a10:bac0:b000:7579:f459:e30d:c5ec:5a8e? ([2a10:bac0:b000:7579:f459:e30d:c5ec:5a8e])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7681d659sm2427026a12.54.2024.06.10.00.08.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 00:08:19 -0700 (PDT)
-Message-ID: <d827e5ab-6204-4a47-a8af-a1eedd76b070@suse.com>
-Date: Mon, 10 Jun 2024 10:08:18 +0300
+        d=1e100.net; s=20230601; t=1718006913; x=1718611713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
+        b=kudGqXvoxGunAz6mQqja6n89twZ/6G/r/fy3mBFKaK2rEI3zNtRoXYSOP/bvPrrSLC
+         BTTWci0peVnP67b/fpzgtz2bbI38tOO7/eBpiUmQuPCgAmd5d6My2QX4wAg4jW/yztgS
+         /cN67JTV80QyhSRkI75/tzTnKnrhBCWuILA6HEuWhgqNcysncFhMxaEyNXvSZ8sNk49i
+         DO6cb4eN2MzrGppFpADTGwv+iHC6Gpii0jGPj6wgYO0vWbq3RSwMMenxB8N9hV0enETP
+         V5dcaBmr6kvrqP0g3N6Ns3RQ4GV2Mr8RQWC2KQOJ/KhDBd156xCz0d9COcbLcEHyn7sd
+         RXrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlyAsEgwW+5UwqHWGOV72/wAS7Fubgjumr00Hu0PGNsut/eVcnQ/H+w5pbLaKL8QjgSD/38+r9Ey+rgB/COpwJs4K8OHZ71gglIek5SLzB
+X-Gm-Message-State: AOJu0Yz96bIeuzmll/9FEspgPZnpZuVxU8+0eO8RExyyPEpcz14KvRWD
+	GjLe32xOTnsdza6x2KcQlA43Uz44cOkQ1lC2KRkCCECuqz66ii6uQltmZj5nTzHj6AFNsWaQ6Yl
+	zyo65mBSJr2KireXeFmXmWGq7afOJ+nNIp8BN2YRgPGHjgYLg
+X-Google-Smtp-Source: AGHT+IEoIIaopVbMhKiBzu+ZFeFG117iZrYhuaSy1PLsnicMvCE0nAaF1iUL9hhnUeVtUHqe9i20V059/u6XmSWe6yI=
+X-Received: by 2002:a05:6512:234d:b0:52b:be9b:cafe with SMTP id
+ 2adb3069b0e04-52bbe9bcbadmr5940256e87.21.1718006892189; Mon, 10 Jun 2024
+ 01:08:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
-From: Nikolay Borisov <nik.borisov@suse.com>
-To: Kees Cook <kees@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
- <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
- <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
- <202405310923.78257B2B3@keescook>
- <a54db95c-e22a-4e13-ae4b-6a5a67d1c49b@suse.com>
-Content-Language: en-US
-In-Reply-To: <a54db95c-e22a-4e13-ae4b-6a5a67d1c49b@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com> <87tti9cfry.fsf@intel.com>
+In-Reply-To: <87tti9cfry.fsf@intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 10 Jun 2024 10:08:00 +0200
+Message-ID: <CACRpkdZFPG_YLici-BmYfk9HZ36f4WavCN3JNotkk8cPgCODCg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with sysfs_match_string()
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, 
+	Allen Pais <apais@linux.microsoft.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Nuno Sa <nuno.sa@analog.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Randy Dunlap <rdunlap@infradead.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones <lee@kernel.org>, 
+	Samuel Holland <samuel@sholland.org>, Elad Nachman <enachman@marvell.com>, 
+	Arseniy Krasnov <AVKrasnov@sberdevices.ru>, Johannes Berg <johannes.berg@intel.com>, 
+	Gregory Greenman <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>, 
+	Chunfeng Yun <chunfeng.yun@mediatek.com>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Nikita Kravets <teackot@gmail.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Stanley Chang <stanley_chang@realtek.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers <ebiggers@google.com>, 
+	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
+	Abel Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
+	Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Mark Brown <broonie@kernel.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org, 
+	linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, David Howells <dhowells@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@redhat.com>, Jean Delvare <jdelvare@suse.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>, 
+	Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>, 
+	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 4, 2024 at 9:46=E2=80=AFAM Jani Nikula <jani.nikula@linux.intel=
+.com> wrote:
 
+[Maybe slightly off-topic, ranty]
 
-On 1.06.24 г. 10:27 ч., Nikolay Borisov wrote:
-> 
-> 
-> On 31.05.24 г. 19:28 ч., Kees Cook wrote:
->> On Thu, May 30, 2024 at 09:23:36AM -0700, Jeff Johnson wrote:
->>> On 5/30/2024 8:42 AM, Nikolay Borisov wrote:
->>>>
->>>>
->>>> On 29.05.24 г. 21:09 ч., Jeff Johnson wrote:
->>>>> As discussed in [1] add a prototype for __fortify_panic() to fix the
->>>>> 'make W=1 C=1' warning:
->>>>>
->>>>> arch/x86/boot/compressed/misc.c:535:6: warning: symbol 
->>>>> '__fortify_panic' was not declared. Should it be static?
->>>>
->>>> Actually doesn't it make sense to have this defined under ../string.h ?
->>>> Actually given that we don't have any string fortification under the
->>>> boot/  why have the fortify _* functions at all ?
->>>
->>> I'll let Kees answer these questions since I just took guidance from 
->>> him :)
->>
->> Ah-ha, I see what's happening. When not built with
->> CONFIG_FORTIFY_SOURCE, fortify-string.h isn't included. But since misc.c
->> has the function definition, we get a warning that the function
->> declaration was never seen. This is likely the better solution:
-> 
-> fortify-strings.h is used in include/linux/string.h. However all the 
-> files in the decompressor are using a local copy of string.h and not the 
-> kernel-wide. When pre-processing misc.c with FORTIFY_SOURCE enabled 
-> here's the status:
-> 
-> $ grep -i fortify  arch/x86/boot/compressed/misc.i
-> void __fortify_panic(const u8 reason, size_t avail, size_t size)
-> 
-> It seems the decompressor is not using fortify-string at all because 
-> it's not using the global string.h ?
+> Why do we think it's a good idea to increase and normalize the use of
+> double-underscore function names across the kernel, like
+> __match_string() in this case? It should mean "reserved for the
+> implementation, not to be called directly".
+>
+> If it's to be used directly, it should be named accordingly, right?
 
-Kees, care to comment about my observation? Have I missed anything? 
-Reading the following articles : 
-https://www.redhat.com/en/blog/enhance-application-security-fortifysource
+It's a huge mess. "__" prefix is just so ambiguous I think it just
+shouldn't be used or prolifierated, and it usually breaks Rusty Russells
+API rules times over.
 
-it seems that fortification comes from using the system header string.h 
-(in our case that'd be include/linux/string.h) which is not being used 
-by the decompressor at all so simply removing the function definition 
-should be the correct fix, no ?
+Consider __set_bit() from <linux/bitops.h>, used all over the place,
+in contrast with set_bit() for example, what does "__" represent in
+this context that makes __set_bit() different from set_bit()?
 
+It means "non-atomic"...
 
+How does a random contributor know this?
 
-<snip>
+Yeah, you guess it. By the token of "everybody knows that".
+(Grep, google, repeat for the number of contributors to the kernel.)
+
+I was considering to send a script to Torvalds to just change all
+this to set_bit_nonatomic() (etc) but was hesitating because that
+makes the name unambiguous but long. I think I stayed off it
+because changing stuff like that all over the place creates churn
+and churn is bad.
+
+Yours,
+Linus Walleij
