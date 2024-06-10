@@ -1,161 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6DB320F
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 02:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF2A1C6A4
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 07:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717984819; cv=none; b=q1Qv2hED3YxvZ+Lc1+3uo6/JTiLgB0/sTk0Ncll+JWWMnnbyz8FLNc2BWQ22bmqVGnvxOJG0PIvegsAmYJ2FPaXxyUYiUDDGoJ4I/quPN8u6yRo2Fp1zOMibiIKhiVoI5X3L4PNQ1/P8qTg0tOTyjWXuaxdxedHD0qK6YFvWaXA=
+	t=1718003303; cv=none; b=ELgEpASkaFqqeiV6GpgEo7FURxmgeE/oiLoA4Qsf8VxAED/3SK/wekRDkHLbvEeX7bMRjIc8qRK1lDouG+ZunwlmQsB75ubr+jH34lsfpbORNvAsmsOsQ/GZ886fLLnPZH9TZ4j6ED2bAEWqiEnZyk9roVvy/wRePGrkr51UvOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717984819; c=relaxed/simple;
-	bh=SXB30ZzUlkp5H3QAvEGmgh4pmYdO5hRaa1DkR4J7vMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s6XMxHd/CYyUfjPvbMZLdCe7OrBjftveuYfYljdN0vvyGvVarJ2omomIE4vBJYEzddDtM6a72Ord1Z1aDs9yqVE4PEPkOokp4dj5X+tvYCmc4FnTMWr/eaPfKPE+lb6a1ezFt75Q81Pb099HJ7as2aEvepH5EF0shYPlS06srXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OddEJx5e; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718003303; c=relaxed/simple;
+	bh=QEP/zaNAd6rVQEJ7AQSX8sXbT4ui22VLn/jbIusAu0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=InUMVuoxpdwqQmktll4bRtvenYu81Am9xZi9rjYz2s8alRUPtcu3YgG9yhiY7ZeMluvkYKyRbDtDgrPzjgPGMEfE8sOFiSgNPRgyntYXJ0pTXnelEYhg/bMcWIVQWXfc8MxxT9XXTpMHKTuesdF5Vcio/bTqstKdNxnQxn/Qp0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HRJTc3ud; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OddEJx5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717984816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aOO4GVvcO0xxLYThv3Qu7QqLhlBUXRK/6CUBfcNRt6Y=;
-	b=OddEJx5eqRRQnS5weRzh5DSMjUwt72h7QFFu1jjJC6ttBb4XeisIWob20f2iZzQ+M6XvpL
-	Vg2AIIupP+dB4bAlyNwtcyHoFxiDWVN5yoclZ3HziKlOpyNwwYN7Cl/3+8c6cWJPrvXLr0
-	dVBtTJ8GeLPsZ8horiMN5MaSEh3lNcc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-371-YTJnEZSHN1GUcLYIlQdWmg-1; Sun, 09 Jun 2024 22:00:10 -0400
-X-MC-Unique: YTJnEZSHN1GUcLYIlQdWmg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D2CC085A5B5;
-	Mon, 10 Jun 2024 02:00:09 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.124])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 97CCF175ED;
-	Mon, 10 Jun 2024 02:00:07 +0000 (UTC)
-Date: Mon, 10 Jun 2024 10:00:05 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <ZmZeJVa/kpyfZ47g@MiWiFi-R3L-srv>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
- <Zl7Vd3BqxDXdMHkL@MiWiFi-R3L-srv>
- <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HRJTc3ud"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c5c51cb89so2960389a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 00:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1718003300; x=1718608100; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=iVrI5GsrQNLTME723VL0GXEMwV6fiHKNH1QpwFztIZA=;
+        b=HRJTc3udHCGHshWdZL93VbqnKKjErnegxjtkRgw1Wo0PKCawTN9ohGQLP9h0TA17Zf
+         fbF+1/U3GipxYUNwSu6y3aMwrASCy4uAZ9ygrvproX7lftE41KqagrEYPt0CFTxv6O9M
+         X2XQLMzeJ27Z4HiQrwbrjiKKKGgxdpIheSgpVfdmiNEreRIUVKFmz2TBdtq5r2iwggQq
+         B6FiXo4l2RHrmgBQanBksYLraQ6VvUJWkzmNBIAM7cL8BLCjvIGhc4Wtz2YZsKIfoNpB
+         DfUv/JM0h+T/98IkMU7unGJESIDudKYyVKxA2iprezwTMdF/gyKVV6xlEiFgkTIwZMlN
+         1CIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718003300; x=1718608100;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iVrI5GsrQNLTME723VL0GXEMwV6fiHKNH1QpwFztIZA=;
+        b=gPpv4UHOOEGqO2+mRIG+5uYeBAlvY4Dh3dhGVgnDS7+uzK1rF4xjPq2Xgw273hTu7b
+         u2LyleWQLXYZ5FTkJWaI+dEsITJwXgCGvzOaQbpWaC/KU67hgxjm9gqQKZ2u8O8Ro+aV
+         F9YMvFCLAuaQuAR6GpsVP25OG849Dv12YWjBOrBHAA5y+RdvrFmOkZ9p6crWM34Zpkuj
+         utKVsTVsG6vcvWhihYmF9+5DTLmkI6QKU/yhbifK0TMvQzrHiMScpPqAD6SJYis69OtF
+         5HcguBVU7H/5Fp4sbEigzUWvJYZOTWswHi0N7fgC4hrjCdv52OR4spL9CLWhsiS8bNK8
+         gmKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUD8kaE0qDH7LFfuDL15NcO7EpdYFgHXGCwLOYpzOOdCQzUt1il4LQgxEfAPY4Li58eLyjOVcEaIDLW7qu6V3epfxS6AVHKqaCfH+p3xeV1
+X-Gm-Message-State: AOJu0Yzw5RCM2MCP8YqC3iBsb3p/oN2H7XJ1/SJPo4q0iBwS8Rc2J98u
+	BXIfOHBI/dn5TOdJ6nGa9TvDZ50XMb2BlQJO9R90a0QnKtNXpc1EjkYcUN6fFz8=
+X-Google-Smtp-Source: AGHT+IHrLJutCqFB6QyRHYps/IiSSbjoC3LCsYCwOb37kfga8SmQTAXj6uBl+DbsZS27mM1A/ddGQg==
+X-Received: by 2002:a50:ab1a:0:b0:57c:6c98:b61f with SMTP id 4fb4d7f45d1cf-57c6c98b88emr3430720a12.42.1718003300041;
+        Mon, 10 Jun 2024 00:08:20 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7579:f459:e30d:c5ec:5a8e? ([2a10:bac0:b000:7579:f459:e30d:c5ec:5a8e])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7681d659sm2427026a12.54.2024.06.10.00.08.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 00:08:19 -0700 (PDT)
+Message-ID: <d827e5ab-6204-4a47-a8af-a1eedd76b070@suse.com>
+Date: Mon, 10 Jun 2024 10:08:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
+From: Nikolay Borisov <nik.borisov@suse.com>
+To: Kees Cook <kees@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
+ <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
+ <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
+ <202405310923.78257B2B3@keescook>
+ <a54db95c-e22a-4e13-ae4b-6a5a67d1c49b@suse.com>
+Content-Language: en-US
+In-Reply-To: <a54db95c-e22a-4e13-ae4b-6a5a67d1c49b@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 06/07/24 at 08:27pm, Coiby Xu wrote:
-> On Tue, Jun 04, 2024 at 04:51:03PM +0800, Baoquan He wrote:
-> > Hi Coiby,
-> 
-> Hi Baoquan,
-> 
-> > 
-> > On 05/23/24 at 01:04pm, Coiby Xu wrote:
-> > > A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
-> > > the dm crypt keys persist for the kdump kernel. User space can send the
-> > > following commands,
-> > > - "init KEY_NUM"
-> > >   Initialize needed structures
-> > > - "record KEY_DESC"
-> > >   Record a key description. The key must be a logon key.
-> > > 
-> > > User space can also read this API to learn about current state.
-> > 
-> > From the subject, can I think the luks keys will persist forever? or
-> > only for a while?
-> 
-> Yes, you are right. The keys need to stay in kdump reserved memory.
 
-Hmm, there are two different concepts we may need differentiate. From
-security keys's point of view, the keys need be stored for a while so
-that kdump loading take action to get it, that's done through sysfs;
-Froom kdump's point of view, the keys need be stored forever till kdump
-kernel use it. I can't see what you are referring to from the subject,
-esepcially you stress the newly added sysfs
-/sys/kernel/crash_dm_crypt_keys.
 
+On 1.06.24 г. 10:27 ч., Nikolay Borisov wrote:
 > 
-> > If need and can only keep it for a while, can you
-> > mention it and tell why and how it will be used. Because you add a lot
-> > of codes, but only simply mention the sysfs, that doesn't make sense.
 > 
-> Thanks for raising the concern! I've added
-> Documentation/ABI/testing/crash_dm_crypt_keys and copy some text in the
-> cover letter to this patch in v5.
+> On 31.05.24 г. 19:28 ч., Kees Cook wrote:
+>> On Thu, May 30, 2024 at 09:23:36AM -0700, Jeff Johnson wrote:
+>>> On 5/30/2024 8:42 AM, Nikolay Borisov wrote:
+>>>>
+>>>>
+>>>> On 29.05.24 г. 21:09 ч., Jeff Johnson wrote:
+>>>>> As discussed in [1] add a prototype for __fortify_panic() to fix the
+>>>>> 'make W=1 C=1' warning:
+>>>>>
+>>>>> arch/x86/boot/compressed/misc.c:535:6: warning: symbol 
+>>>>> '__fortify_panic' was not declared. Should it be static?
+>>>>
+>>>> Actually doesn't it make sense to have this defined under ../string.h ?
+>>>> Actually given that we don't have any string fortification under the
+>>>> boot/  why have the fortify _* functions at all ?
+>>>
+>>> I'll let Kees answer these questions since I just took guidance from 
+>>> him :)
+>>
+>> Ah-ha, I see what's happening. When not built with
+>> CONFIG_FORTIFY_SOURCE, fortify-string.h isn't included. But since misc.c
+>> has the function definition, we get a warning that the function
+>> declaration was never seen. This is likely the better solution:
 > 
-> > 
-> > > 
-> > > Signed-off-by: Coiby Xu <coxu@redhat.com>
-> > > ---
-> > >  include/linux/crash_core.h   |   5 +-
-> > >  kernel/Kconfig.kexec         |   8 +++
-> > >  kernel/Makefile              |   1 +
-> > >  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
-> > >  kernel/ksysfs.c              |  22 +++++++
-> > >  5 files changed, 148 insertions(+), 1 deletion(-)
-> > >  create mode 100644 kernel/crash_dump_dm_crypt.c
-> > > 
-> > > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > > index 44305336314e..6bff1c24efa3 100644
-> > > --- a/include/linux/crash_core.h
-> > > +++ b/include/linux/crash_core.h
-> > > @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
-> > >  static inline void arch_kexec_unprotect_crashkres(void) { }
-> > >  #endif
-> [...]
-> > > +static int init(const char *buf)
-> >              ~~~~ A more interesting name with more description?
+> fortify-strings.h is used in include/linux/string.h. However all the 
+> files in the decompressor are using a local copy of string.h and not the 
+> kernel-wide. When pre-processing misc.c with FORTIFY_SOURCE enabled 
+> here's the status:
 > 
-> Thanks for the suggestion! I've added some comments for this function
-> in v5. But I can't come up with a better name after looking at current
-> kernel code. You are welcome to suggest any better name:)
+> $ grep -i fortify  arch/x86/boot/compressed/misc.i
+> void __fortify_panic(const u8 reason, size_t avail, size_t size)
+> 
+> It seems the decompressor is not using fortify-string at all because 
+> it's not using the global string.h ?
 
-Usually init() is for the whole driver module. Your init() here only
-receive the passed total keys number, and allocate the key_header, how
-can you simply name it init()? If you call it init_keys_header(), I
-would think it's much more meaningful.
+Kees, care to comment about my observation? Have I missed anything? 
+Reading the following articles : 
+https://www.redhat.com/en/blog/enhance-application-security-fortifysource
 
-> 
-> > > +static int process_cmd(const char *buf, size_t count)
-> >                                                  ~~~~
-> > If nobody use the count, why do you add it?
-> 
-> Good catch! Yes, this is no need to use count in v4. But v5 now needs it to avoid
-> buffer overflow.
+it seems that fortification comes from using the system header string.h 
+(in our case that'd be include/linux/string.h) which is not being used 
+by the decompressor at all so simply removing the function definition 
+should be the correct fix, no ?
 
-OK, did you add code comment telling what 'count' stands for?
 
-And the name 'process_cmd()' is also ambiguous. We may need avoid this
-kind of name, e.g process_cmd, do_things, handle_stuff. Can you add a
-more specific name?
 
+<snip>
