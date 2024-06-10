@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20B42B9D7;
-	Mon, 10 Jun 2024 18:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154DF1B5A4;
+	Mon, 10 Jun 2024 19:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718045063; cv=none; b=s66Ys7lmcMf5iOjRBWwwH4Dn5/8gLxWmr8q6f0gIe3YzjxB6UBzKJe2JTGmPbgDI8qQTNxab/x5yDz9rdqGoiBulLF8NKnGGr0tl0kzgW+iejsZoewYuiHuXl8LDKLHQpTrUtFQZC5DK2V41HGGE47yKw2HmzzKotRHE4hdYf1c=
+	t=1718046355; cv=none; b=ImcocjbFPYt0b8uz/z3sgakCa3E9x3qsDPnJMC6YJeKDGMfXKX0TaJ9KLUIeVEzov02Go2+hYXuqypnFSVg+lz6xR/kaANF8CxXCkeOkJvHeahaYHIs1/Giond4U5E4/mt2t54DbEP+E1yZGk4uXb3crd/rLRncqzH7ZHjnrOXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718045063; c=relaxed/simple;
-	bh=rYyx2+GiqV8GIQqzWxixzWXChxHl8YrUdrLogr5gXV4=;
+	s=arc-20240116; t=1718046355; c=relaxed/simple;
+	bh=ZQmVAWnF8v7SoLum4h6QPX+CI7BadFQV9FnQJOXaDio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZTDynn+RMgKas0nDLnisWrEV6eAZKBWVwgl9eJ7MXIjhQYD7IUiCnxqXvB3ngIRO1vXh5VhDMgRAhbJ+tfriEEQmPvj1+Oxk2+VgljZ+pkgbR/GCc7nc8ZnQoeR+LRDxzFmIbM1c7BpeEyZy6RzI/f/MMqU9ATWjWS67S4RhQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZ+beWLq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPc10ymUNrgJl7PSLRptk4k2XjDC7WsS4u01DCEDiNkiKsbfDPjETQtCWTWB/4pTUtXks2Xo4nCbxyQhPimrY5O++dJht6WU8CvthjlZomXiahcoPasEjlnXzc7dYAQRdr/lGvXdXe0yOi33JfHk8xlmwcIERqHpI4EJzy8UUus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdpTivhf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZ+beWLq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7A6C4AF1A;
-	Mon, 10 Jun 2024 18:44:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdpTivhf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84EDFC2BBFC;
+	Mon, 10 Jun 2024 19:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718045063;
-	bh=rYyx2+GiqV8GIQqzWxixzWXChxHl8YrUdrLogr5gXV4=;
+	s=k20201202; t=1718046354;
+	bh=ZQmVAWnF8v7SoLum4h6QPX+CI7BadFQV9FnQJOXaDio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CZ+beWLqdfEW6ac/bIBuh6JIHW5ZeWS79IKxPlID3vI7CusqwbVhJduE5jXulDm/W
-	 xsz9EOLXZq8tWws85lw8mGrZORO47FAoG8f8YhC7ZVXP2DAKTeaWS2En0nakZioSfc
-	 doWSt8s375SyraZ5OmpVlF8vVw1SIugj4XBdOxZ+V0AZ5k5UK/RX1A4V8Cmd/DMGK6
-	 hXnRnzwR/xqLQOkBPI47YrPNM+hEg6jRzNxpX6YPEolHjm/f5Gfg3BijKa+EJDXRj8
-	 bKpu+BUbU/uKGCr4uf1xeH/e1Nd2lwDIbSty+w+qwzN2bM2Lx31gJAXsQvJpI8fE4+
-	 RkR1oCg0xIDVg==
-Date: Mon, 10 Jun 2024 11:44:22 -0700
+	b=PdpTivhfm4Myls0526XPowHUnRMG2EUiXYz51iLCtjh1PSP9XY2ALOcgt0TOy9mVd
+	 IWn8hUH6wRvswqGFwlgX9BXoO/Bm1BZOTFSP9/bepbRZRHEHYLP1WWXMl2JoAcR7Ue
+	 L+zee8qYk31KSb50Y37AuimPGwF1EjeKFIskbFTOKzkI2+PLmlLx/qDFW74wmlRRrO
+	 W3FhutcZ/aCQUjrtJgAo2tF84Q/BiHmlMRQPHGVBlyFnX4JT+mZzJ4V4hsAqxDLuVI
+	 419Rr/EzZ5+fszNp3FXDW0atHgW3YdjeNHx6tD2whp6iht11HeMamNj0+9mlFsEgoC
+	 rIEf3/1ZrXlBA==
+Date: Mon, 10 Jun 2024 12:05:54 -0700
 From: Kees Cook <kees@kernel.org>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org,
-	Thomas Kopp <thomas.kopp@microchip.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] can: mcp251xfd: decorate mcp251xfd_rx_ring.obj with
- __counted_by()
-Message-ID: <202406101136.1AC33DD084@keescook>
-References: <20240609045419.240265-1-mailhol.vincent@wanadoo.fr>
- <20240609045419.240265-3-mailhol.vincent@wanadoo.fr>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Vitor Massaru Iha <vitor@massaru.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] kunit: test: Add vm_mmap() allocation resource
+ manager
+Message-ID: <202406101202.3D887825@keescook>
+References: <20240519190422.work.715-kees@kernel.org>
+ <20240519191254.651865-1-keescook@chromium.org>
+ <ZksX4r0a1EGE_VPl@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,73 +49,76 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240609045419.240265-3-mailhol.vincent@wanadoo.fr>
+In-Reply-To: <ZksX4r0a1EGE_VPl@J2N7QTR9R3>
 
-On Sun, Jun 09, 2024 at 01:54:19PM +0900, Vincent Mailhol wrote:
-> A new __counted_by() attribute was introduced in [1]. It makes the
-> compiler's sanitizer aware of the actual size of a flexible array
-> member, allowing for additional runtime checks.
+On Mon, May 20, 2024 at 10:29:06AM +0100, Mark Rutland wrote:
+> On Sun, May 19, 2024 at 12:12:52PM -0700, Kees Cook wrote:
+> > +/* Create and attach a new mm if it doesn't already exist. */
+> > +static int kunit_attach_mm(void)
+> > +{
+> > +	struct vm_area_struct *vma;
+> > +	struct mm_struct *mm;
+> > +
+> > +	if (current->mm)
+> > +		return 0;
 > 
-> Apply the __counted_by() attribute to the obj flexible array member of
-> struct mcp251xfd_rx_ring.
+> My tests deliberately created/destroyed the mm for each test; surely we
+> don't want to inherit an MM in some arbitrary state? ... or is this just
+> so the mm can be allocated lazily upon the first mmap() within a test?
+
+It's for lazily creation and for supporting running the KUnit test as a
+module (where a userspace would exist). The old usercopy test worked
+against the existing userspace, so I'd want to continue to support that.
+
 > 
-> Note that the mcp251xfd_rx_ring.obj member is polymorphic: it can be
-> either of:
+> > +
+> > +	mm = mm_alloc();
+> > +	if (!mm)
+> > +		return -ENOMEM;
+> > +
+> > +	if (mmap_write_lock_killable(mm))
+> > +		goto out_free;
+> > +
+> > +	/* Define the task size. */
+> > +	mm->task_size = TASK_SIZE;
+> > +
+> > +	/* Prepare the base VMA. */
+> > +	vma = vm_area_alloc(mm);
+> > +	if (!vma)
+> > +		goto out_unlock;
+> > +
+> > +	vma_set_anonymous(vma);
+> > +	vma->vm_start = UBUF_ADDR_BASE;
+> > +	vma->vm_end = UBUF_ADDR_BASE + PAGE_SIZE;
+> > +	vm_flags_init(vma, VM_READ | VM_MAYREAD | VM_WRITE | VM_MAYWRITE);
+> > +	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+> > +
+> > +	if (insert_vm_struct(mm, vma))
+> > +		goto out_free_vma;
+> > +
+> > +	mmap_write_unlock(mm);
 > 
->   * an array of struct mcp251xfd_hw_rx_obj_can
->   * an array of struct mcp251xfd_hw_rx_obj_canfd
+> Why do we need this VMA given you have kunit_vm_mmap()?
+
+When I was originally testing this, it seemed like I couldn't perform a
+vm_mmap() without an existing VMA.
+
+> This existed in my uaccess tests because I didn't use vm_mmap(), and I
+> wanted complete control over the addresses used.
 > 
-> The canfd type was chosen in the declaration by the original author to
-> reflect the upper bound. We pursue the same logic here: the sanitizer
-> will only see the accurate size of canfd frames. For classical can
-> frames, it will see a size bigger than the reality, making the check
-> incorrect but silent (false negative).
+> Given you add kunit_vm_mmap(), I don't think we want this VMA -- it
+> doesn't serve any real purpose to tests, and accesses can erroneously
+> hit it, which is problematic.
 > 
-> [1] commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro")
-> Link: https://git.kernel.org/torvalds/c/dd06e72e68bc
-> 
-> CC: Kees Cook <kees@kernel.org>
-> Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> ---
->  drivers/net/can/spi/mcp251xfd/mcp251xfd.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd.h b/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-> index 24510b3b8020..b7579fba9457 100644
-> --- a/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-> +++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-> @@ -565,7 +565,7 @@ struct mcp251xfd_rx_ring {
->  	union mcp251xfd_write_reg_buf uinc_buf;
->  	union mcp251xfd_write_reg_buf uinc_irq_disable_buf;
->  	struct spi_transfer uinc_xfer[MCP251XFD_FIFO_DEPTH];
-> -	struct mcp251xfd_hw_rx_obj_canfd obj[];
-> +	struct mcp251xfd_hw_rx_obj_canfd obj[] __counted_by(obj_num);
->  };
->  
->  struct __packed mcp251xfd_map_buf_nocrc {
+> UBUF_ADDR_BASE shouldn't be necessary either with kunit_vm_mmap(),
+> unless you want to use fixed addresses. That was just arbitrarily chosen
+> to be above NULL and the usual minimum mmap limit.
 
-This one seems safe:
+I'll recheck whether this is needed. I think I had to make some other
+changes as well, so maybe something here ended up being redundant
+without my noticing it the first time.
 
-                rx_ring = kzalloc(sizeof(*rx_ring) + rx_obj_size * rx_obj_num,
-                                  GFP_KERNEL);
-		...
-                rx_ring->obj_num = rx_obj_num;
-
-But I would like to see the above allocation math replaced with
-struct_size() usage:
-
-                rx_ring = kzalloc(struct_size(rx_ring, obj, rx_obj_num), GFP_KERNEL);
-
-But that leaves me with a question about the use of rx_obj_size in the
-original code. Why is this a variable size? rx_ring has only struct
-mcp251xfd_hw_rx_obj_canfd objects in the flexible array...
-
-I suspect that struct mcp251xfd_rx_ring needs to actually be using a
-union for its flexible array, but I can't find anything that is casting
-struct mcp251xfd_rx_ring::obj to struct mcp251xfd_hw_rx_obj_can.
-
-I'm worried about __counted_by getting used here if the flexible array
-isn't actually the right type.
+Thanks for looking this over!
 
 -- 
 Kees Cook
