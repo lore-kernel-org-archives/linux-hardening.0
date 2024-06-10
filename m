@@ -1,46 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3DB1BC39;
-	Mon, 10 Jun 2024 19:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BE214F9CA;
+	Mon, 10 Jun 2024 20:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718048903; cv=none; b=g+5dsVNVQ/lviQFuZ5agDpc4ba2OE6eXwpy2XaICtSUHP6UYWVTj64eowUs9XdvJ7hLdYcXUd7VP+XYk5zoSJuWTKGV02DBoIzGm+PP4EbYMLdhQC7Rv9ZIK/R5OeAJUAu3KwlBWiXt+yhmjNYLXbrUBryKRT8B0f4k9INyU2lk=
+	t=1718049969; cv=none; b=rmXfymatjVuwwqTb/kYJW78uYdoP424QOZ0NOsNNjt+VHVgkC+X97YIsYbu7aR2okrP4IbPJJssDVVz6byVY60NWyejRivH9XGfH9/0+OeM5vYoMYlblYgdSq1uwyS9WxlY8p6zsY7KtGgGTSlg43+RQN/38YQ659zAnFKwwjjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718048903; c=relaxed/simple;
-	bh=y4yr6XQlhvTeATPlaR4oANDTI7XUzBVLj7I//aVWdn4=;
+	s=arc-20240116; t=1718049969; c=relaxed/simple;
+	bh=zbr0m3jaUR9OElayeL3+Puu8aP5BQ6bEGe0ASP77bQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HeDeK5CDJb+dKzKFtUhR1TvGDnu4eDCttK4oM/PWGyo3ua1oxBbV4b+Wixq92YgCAudU6CM4Ov29I4D9Gtn6THTwja+fDcCfxSGk3MaDtm9S7xi6rA7FQhzOvI9IGbwFDG8wRapWOuP4ldZTkJDj5Yir27qSEwhgYFVbc3r6D1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFtiEEE1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tqknMBg5lMy5z9G7c5WIMkgSLzoFrreqdoRoDCjfghHDECqq76VuWf9oFQiA8t+VeJwNSHELOj57VyDOXHJGPvQ+sw2ntTWkQaykXiHjJfqgG2IvSBBcdO7AleaVcCCKTAqvTb3lOc19wSy9O/SG1ileBxKoSTGkhDEAkVadaho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iOmHeJ0J; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFtiEEE1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BF7C32789;
-	Mon, 10 Jun 2024 19:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718048903;
-	bh=y4yr6XQlhvTeATPlaR4oANDTI7XUzBVLj7I//aVWdn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oFtiEEE1zUJXk3fX31cc3rHmSr28aVw4I/cB2DTrltE5wkAUhQecNFnRr60qiJ/6Y
-	 SydztAwniQvMUZzK3/rV7bh09ehTEOV+sXA4txhM3EFYvUkTEvZuqM7ecwNR8hHksB
-	 76Es7DjlnYIfxED6BxS1uwg/sQ6JUC9ns6ZPutfZxcRZ1CFKN3RH4sFoU3oeN9LvGV
-	 Xt3hJSnF/bLqNJj11S6uJ9nrQpKXRW7zS2eHpqnOS8R5IoV95myRSbStvOvt2Y8vy3
-	 jgSzBjLqj2Or2Hs3l37JJm9H2eSXZNoBS2tdrSOc0cpM+3eiYHbSwsIe1OwOySJ9X0
-	 hk6EkUpxJNqmw==
-Date: Mon, 10 Jun 2024 12:48:22 -0700
-From: Kees Cook <kees@kernel.org>
-To: David Gow <davidgow@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Vitor Massaru Iha <vitor@massaru.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Rae Moar <rmoar@google.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iOmHeJ0J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fYZ++efrlLdLgl5+5kduErcCwGNkwJxHYJIyw8lDqdM=; b=iOmHeJ0Jsu8Eo6JoXABlbGd0I0
+	bJe+wGiDRyomn+cVqKpgC3q8gDZQQub9Loev8/dZ/XdSZ+MBoea7mS17HbhdVpAlBZE84aGr2xXHw
+	zUvtSHQrQOuBekbu1pUQ743nu1a/ALB8evE0HROV8wKgT2CQleyGaXzXwH6znHymn/CI6yriPHJXW
+	NAuK3OSAKk9PV2kgr1QR6xuuN3pg71/ZDghzKeRvrOb3msh7K+Dm2jYth7NwdfaksTpGj6nq7hbvA
+	4z0ebh713bwfrGtq1LrUWVF3tox2dTC2r25lq4knpgIehmS4xdVoo6fWbRKH5ffXgHhmdURj3I85d
+	0fyzIu6A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sGlGw-00000001dwA-2wkK;
+	Mon, 10 Jun 2024 20:05:52 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F156A300439; Mon, 10 Jun 2024 22:05:44 +0200 (CEST)
+Date: Mon, 10 Jun 2024 22:05:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] usercopy: Convert test_user_copy to KUnit test
-Message-ID: <202406101241.C1BE6791@keescook>
-References: <20240519190422.work.715-kees@kernel.org>
- <20240519191254.651865-2-keescook@chromium.org>
- <CABVgOSn=tb=Lj9SxHuT4_9MTjjKVxsq-ikdXC4kGHO4CfKVmGQ@mail.gmail.com>
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202406101010.E1C77AE9D@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -49,49 +68,80 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABVgOSn=tb=Lj9SxHuT4_9MTjjKVxsq-ikdXC4kGHO4CfKVmGQ@mail.gmail.com>
+In-Reply-To: <202406101010.E1C77AE9D@keescook>
 
-On Sat, Jun 08, 2024 at 04:44:10PM +0800, David Gow wrote:
-> On Mon, 20 May 2024 at 03:12, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Convert the runtime tests of hardened usercopy to standard KUnit tests.
-> >
-> > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
+On Mon, Jun 10, 2024 at 10:28:52AM -0700, Kees Cook wrote:
+> On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
+> > Hi everyone,
+> > 
+> > This is an effort to get rid of all multiplications from allocation
+> > functions in order to prevent integer overflows [1][2].
 > 
-> This fails here on i386:
-> >      # usercopy_test_invalid: EXPECTATION FAILED at lib/usercopy_kunit.c:278
-> >      Expected val_u64 == 0, but
-> >          val_u64 == -60129542144 (0xfffffff200000000)
+> I didn't actually see these 3 patches in this thread nor via lore.
 
-Hunh. I can reproduce this with "--arch=i386" but not under UML with
-SUBARCH=i386. But perhaps it's a difference in the get_user()
-implementations between the two.
+He managed to break threading between 0/n and the rest.
 
-And this looks like a bug in the get_user() failure path on i386. I will
-investigate...
-
-> It also seems to be hanging somewhere in usercopy_test_invalid on my
-> m68k/qemu setup:
-> ./tools/testing/kunit/kunit.py run --build_dir=.kunit-m68k --arch m68k usercopy
-
-Oh, that's weird. I'll need to get an m68k environment set up...
-
-> Otherwise, it looks fine. Maybe it'd make sense to split some of the
-> tests up a bit more, but it's a matter of taste (and only really an
-> advantage for debugging hangs where more detailed progress is nice).
-
-Yeah. I can do this in follow-up patches, perhaps.
-
-> With those architecture-specific hangs either fixed, or documented (if
-> they're actual problems, not issues with the test), this is:
+> > In the first patch, the "struct amd_uncore_ctx" can be refactored to
+> > use a flex array for the "events" member. This way, the allocation/
+> > freeing of the memory can be simplified. Then, the struct_size()
+> > helper can be used to do the arithmetic calculation for the memory
+> > to be allocated.
 > 
-> Reviewed-by: David Gow <davidgow@google.com>
+> I like this patch because it reduces the allocation from 2 to 1. This
+> isn't what Peter might see as "churn": this is an improvement in resource
+> utilization.
 
-Thanks!
+But then he went and used that struct_size() abomination :/
 
--- 
-Kees Cook
+> I prefer this style, as it makes things unambiguous ("this will never
+> wrap around") without having to check the associated types and doesn't make
+> the resulting binary code different in the "can never overflow" case.
+> 
+> In this particular case:
+> 
+> int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
+> 
+> "int numshared" comes from struct intel_uncore_type::num_shared_regs,
+> which is:
+> 
+>         unsigned num_shared_regs:8;
+> 
+> And the struct sizes are:
+> 
+> $ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
+>         /* size: 488, cachelines: 8, members: 19 */
+> $ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
+>         /* size: 96, cachelines: 2, members: 5 */
+> 
+> So we have:
+> 
+> s32 size = 488 + u8 * 96
+> 
+> Max size here is 24968 so it can never overflow an s32, so I can see
+> why Peter views this as "churn".
+> 
+> I still think the patch is a coding style improvement, but okay.
+
+I really detest this thing because it makes what was trivially readable
+into something opaque. Get me that type qualifier that traps on overflow
+and write plain C. All this __builtin_overflow garbage is just that,
+unreadable nonsense.
+
+> This provides __counted_by coverage, and I think this is important to
+> gain in ever place we can. Given that this is part of a ring buffer
+> implementation that is arbitrarily sized, this is exactly the kind of
+> place I'd like to see __counted_by used. This is a runtime robustness
+> improvement, so I don't see this a "churn" at all.
+
+Again, mixed in with that other crap. Anyway, remind me wth this
+__counted_by thing actually does?
+
+> Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
+> put them in the hardening tree to keep them out of your way. It seems
+> clear you don't want patch 2 at all.
+
+I prefer to not have struct_size() anywhere at all. Please just write
+readable code.
+
+Again, if you really care about that overflow muck, get a useable C type
+qualifier or something so we can write readable code.
