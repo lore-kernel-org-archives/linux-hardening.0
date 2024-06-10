@@ -1,147 +1,147 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BE214F9CA;
-	Mon, 10 Jun 2024 20:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122615588B;
+	Mon, 10 Jun 2024 21:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718049969; cv=none; b=rmXfymatjVuwwqTb/kYJW78uYdoP424QOZ0NOsNNjt+VHVgkC+X97YIsYbu7aR2okrP4IbPJJssDVVz6byVY60NWyejRivH9XGfH9/0+OeM5vYoMYlblYgdSq1uwyS9WxlY8p6zsY7KtGgGTSlg43+RQN/38YQ659zAnFKwwjjk=
+	t=1718053349; cv=none; b=or92NXRMPtLA5g5tVDUaLE5eH7tvNW9gMGzjG7WPQcqZ9Jf3pjAcHCYDN1iUKVHf+hJtW1xX/+fNbeNDZWt+ujllk2Nat/diuR8rRdA94ip7pGT22on0OCA4CqdYFG2tr7A5lvd6XeAEhmOWAwiqusqNzEsBM4xK+JKoYG/dvjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718049969; c=relaxed/simple;
-	bh=zbr0m3jaUR9OElayeL3+Puu8aP5BQ6bEGe0ASP77bQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tqknMBg5lMy5z9G7c5WIMkgSLzoFrreqdoRoDCjfghHDECqq76VuWf9oFQiA8t+VeJwNSHELOj57VyDOXHJGPvQ+sw2ntTWkQaykXiHjJfqgG2IvSBBcdO7AleaVcCCKTAqvTb3lOc19wSy9O/SG1ileBxKoSTGkhDEAkVadaho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iOmHeJ0J; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718053349; c=relaxed/simple;
+	bh=I16quwF1+onTsrxMVkn0fm482Ug44s2XCPxSOXPFib4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YY4jVG+l0a9MoQ6Nl+tzG+A60rAvFNgxnvOrzAY4+LseIeDTQwMUpddWulf0AI/wYCgJ4qlESlf3P6XAkB9P8lbjGvQTy3a787CLQXFVM/VI/fcbZ7mUQBdJVYi4bEOotxK5lJJYh7ES2133t+5IhFqBFS/G1qc8d8zSve3jONI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4ZBRl2c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iOmHeJ0J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fYZ++efrlLdLgl5+5kduErcCwGNkwJxHYJIyw8lDqdM=; b=iOmHeJ0Jsu8Eo6JoXABlbGd0I0
-	bJe+wGiDRyomn+cVqKpgC3q8gDZQQub9Loev8/dZ/XdSZ+MBoea7mS17HbhdVpAlBZE84aGr2xXHw
-	zUvtSHQrQOuBekbu1pUQ743nu1a/ALB8evE0HROV8wKgT2CQleyGaXzXwH6znHymn/CI6yriPHJXW
-	NAuK3OSAKk9PV2kgr1QR6xuuN3pg71/ZDghzKeRvrOb3msh7K+Dm2jYth7NwdfaksTpGj6nq7hbvA
-	4z0ebh713bwfrGtq1LrUWVF3tox2dTC2r25lq4knpgIehmS4xdVoo6fWbRKH5ffXgHhmdURj3I85d
-	0fyzIu6A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGlGw-00000001dwA-2wkK;
-	Mon, 10 Jun 2024 20:05:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F156A300439; Mon, 10 Jun 2024 22:05:44 +0200 (CEST)
-Date: Mon, 10 Jun 2024 22:05:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4ZBRl2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0CEC2BBFC;
+	Mon, 10 Jun 2024 21:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718053348;
+	bh=I16quwF1+onTsrxMVkn0fm482Ug44s2XCPxSOXPFib4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n4ZBRl2cyXlJSIkF3gDY19EtyTFwwr9B5osJdmU/DHn4zYiwMscYm0B1Hr8ixIWnG
+	 zd6+RbTbOT6W73b9T7mDPCXomSwptsEvihyMxduGJwQ/uO+I5z+1mWth47qP4ThrjI
+	 asYfBHTCCwfcpaOXGQUhuXMPuPkcMscXDrG1kE90V2tPq1mmsF5EzE2WK0oxVdxLu5
+	 qFng2XpMQuJMEQPSNvUShN+eyf9hmSv6hKP1Lq1+XyiRGidkJmQl16Ipf1xUB8ftPT
+	 I1tpPeFayNRkqSdaDJuoJfiyiZfIeXb1fxNiEn20TQ2SbOxFIpJcM+LHA45OvlTUFv
+	 +HUtoakhlBjJg==
+From: Kees Cook <kees@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <kees@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
+	Sean Christopherson <seanjc@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] x86/uaccess: Fix missed zeroing of ia32 u64 get_user() range checking
+Date: Mon, 10 Jun 2024 14:02:27 -0700
+Message-Id: <20240610210213.work.143-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406101010.E1C77AE9D@keescook>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3063; i=kees@kernel.org; h=from:subject:message-id; bh=I16quwF1+onTsrxMVkn0fm482Ug44s2XCPxSOXPFib4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmZ2nipwFiKWgGXL878DrUseiyOhJ2Ao6EyQM8T 7VpfqH0JIiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZmdp4gAKCRCJcvTf3G3A JkdMD/9hflgzdc0oXm2RKx/VwC9hgxSeI6zZKTCowRa5jYMzRQZWsyIB8Id6E9+Gqw6D5mF6HFq 96U4BJuw0yRhUqGY0OoA208ntVa4+V7/XiUyAGKwzeJlPdXi0Cm3yt/g4eRa4MAt/l7kmqDdWzu Xbq6J7Aa3lbMRp8iwVnUFySxICY7bZcTN6teAPVLrnzXFehQ/whEQBH7ajNbvCurobEc56ccQhm VS66uypQJui+rSaIvRClE0vU7oYajQhBQI+pxRTiKT9uNSNR5dIUoRvRx576MATVo205PPgAqnt AAsF6glC4qBmC/by4+K8lUbXV0mFtqLBeDKZeY8rtQsvBeHbZdl+3ETq8SdKQEEvWQwITRw9/B6 +HPdPyfh6KmJlrtIbY/xtNXleh02Hic5TnRcS+2RkOYr/IusZ1HWrCswW9HaeDqMRFzb4RxwijT uMKxaLzYjO0c/f/B94WKsUTHvhrEePfllv0IH6g79pUMxmiB7Jci6+Q2yxFY6dCZXDr77XT/QWX f017TxJ/YBAG2sO23NbfUTqGMTC+QEas4EVENCkyP6oW/Zn+oA2lrdzJXvTdvE4t2nMeVehPmAn /ZgGdI+iQSw1mnbsQEQ/ULN0vuo6MCpKPLl5r3ya7ZgDiYobtE0n5W8zC+QkMk5ugYopXo3wrDu 2+ezuQl3TBbfL
+ Hg==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 10, 2024 at 10:28:52AM -0700, Kees Cook wrote:
-> On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
-> > Hi everyone,
-> > 
-> > This is an effort to get rid of all multiplications from allocation
-> > functions in order to prevent integer overflows [1][2].
-> 
-> I didn't actually see these 3 patches in this thread nor via lore.
+When reworking the range checking for get_user(), the get_user_8() case
+on 32-bit wasn't zeroing the high register. (The jump to bad_get_user_8
+was accidentally dropped.) Restore the correct error handling
+destination (and rename the jump to using the expected ".L" prefix).
 
-He managed to break threading between 0/n and the rest.
+While here, switch to using a named argument ("size") for the call
+template ("%c4" to "%c[size]") as already used in the other call
+templates in this file.
 
-> > In the first patch, the "struct amd_uncore_ctx" can be refactored to
-> > use a flex array for the "events" member. This way, the allocation/
-> > freeing of the memory can be simplified. Then, the struct_size()
-> > helper can be used to do the arithmetic calculation for the memory
-> > to be allocated.
-> 
-> I like this patch because it reduces the allocation from 2 to 1. This
-> isn't what Peter might see as "churn": this is an improvement in resource
-> utilization.
+Found after moving the usercopy selftests to KUnit:
 
-But then he went and used that struct_size() abomination :/
+      # usercopy_test_invalid: EXPECTATION FAILED at
+      lib/usercopy_kunit.c:278
+      Expected val_u64 == 0, but
+          val_u64 == -60129542144 (0xfffffff200000000)
 
-> I prefer this style, as it makes things unambiguous ("this will never
-> wrap around") without having to check the associated types and doesn't make
-> the resulting binary code different in the "can never overflow" case.
-> 
-> In this particular case:
-> 
-> int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
-> 
-> "int numshared" comes from struct intel_uncore_type::num_shared_regs,
-> which is:
-> 
->         unsigned num_shared_regs:8;
-> 
-> And the struct sizes are:
-> 
-> $ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
->         /* size: 488, cachelines: 8, members: 19 */
-> $ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
->         /* size: 96, cachelines: 2, members: 5 */
-> 
-> So we have:
-> 
-> s32 size = 488 + u8 * 96
-> 
-> Max size here is 24968 so it can never overflow an s32, so I can see
-> why Peter views this as "churn".
-> 
-> I still think the patch is a coding style improvement, but okay.
+Reported-by: David Gow <davidgow@google.com>
+Closes: https://lore.kernel.org/all/CABVgOSn=tb=Lj9SxHuT4_9MTjjKVxsq-ikdXC4kGHO4CfKVmGQ@mail.gmail.com
+Fixes: b19b74bc99b1 ("x86/mm: Rework address range check in get_user() and put_user()")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+---
+ arch/x86/include/asm/uaccess.h | 4 ++--
+ arch/x86/lib/getuser.S         | 6 +++++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-I really detest this thing because it makes what was trivially readable
-into something opaque. Get me that type qualifier that traps on overflow
-and write plain C. All this __builtin_overflow garbage is just that,
-unreadable nonsense.
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 0f9bab92a43d..3a7755c1a441 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -78,10 +78,10 @@ extern int __get_user_bad(void);
+ 	int __ret_gu;							\
+ 	register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
+ 	__chk_user_ptr(ptr);						\
+-	asm volatile("call __" #fn "_%c4"				\
++	asm volatile("call __" #fn "_%c[size]"				\
+ 		     : "=a" (__ret_gu), "=r" (__val_gu),		\
+ 			ASM_CALL_CONSTRAINT				\
+-		     : "0" (ptr), "i" (sizeof(*(ptr))));		\
++		     : "0" (ptr), [size] "i" (sizeof(*(ptr))));		\
+ 	instrument_get_user(__val_gu);					\
+ 	(x) = (__force __typeof__(*(ptr))) __val_gu;			\
+ 	__builtin_expect(__ret_gu, 0);					\
+diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
+index 10d5ed8b5990..a1cb3a4e6742 100644
+--- a/arch/x86/lib/getuser.S
++++ b/arch/x86/lib/getuser.S
+@@ -44,7 +44,11 @@
+ 	or %rdx, %rax
+ .else
+ 	cmp $TASK_SIZE_MAX-\size+1, %eax
++.if \size != 8
+ 	jae .Lbad_get_user
++.else
++	jae .Lbad_get_user_8
++.endif
+ 	sbb %edx, %edx		/* array_index_mask_nospec() */
+ 	and %edx, %eax
+ .endif
+@@ -154,7 +158,7 @@ SYM_CODE_END(__get_user_handle_exception)
+ #ifdef CONFIG_X86_32
+ SYM_CODE_START_LOCAL(__get_user_8_handle_exception)
+ 	ASM_CLAC
+-bad_get_user_8:
++.Lbad_get_user_8:
+ 	xor %edx,%edx
+ 	xor %ecx,%ecx
+ 	mov $(-EFAULT),%_ASM_AX
+-- 
+2.34.1
 
-> This provides __counted_by coverage, and I think this is important to
-> gain in ever place we can. Given that this is part of a ring buffer
-> implementation that is arbitrarily sized, this is exactly the kind of
-> place I'd like to see __counted_by used. This is a runtime robustness
-> improvement, so I don't see this a "churn" at all.
-
-Again, mixed in with that other crap. Anyway, remind me wth this
-__counted_by thing actually does?
-
-> Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
-> put them in the hardening tree to keep them out of your way. It seems
-> clear you don't want patch 2 at all.
-
-I prefer to not have struct_size() anywhere at all. Please just write
-readable code.
-
-Again, if you really care about that overflow muck, get a useable C type
-qualifier or something so we can write readable code.
