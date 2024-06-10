@@ -1,74 +1,68 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6D21865C;
-	Sun,  9 Jun 2024 21:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5416017F6
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 01:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717969281; cv=none; b=kJ+dIs4WzvDa5fy1x9PLU67eELtxRgYVW9867Yn8Glwq7s5GPfwCGBoldHZTa9XZG2IgDvUEUYNUWWbTWiUVRa9e/euzKkgVeMNYk5ZXRGtKDQrM68TphcK7qHDXZihXc6Jab/nRzDP4Ek8tkdrBqHfb0MCW/fnWjtpvb9Mpex8=
+	t=1717982355; cv=none; b=LKKA1TbO3QLSk775vdoOc8g0CqBuJldYYFTh8cMR1EGhFEAHLfsM9NIPlE3OuOxvN7qauuj0szp9GO8L7o+vsJDv1FToZLoxXhKvnV5UYD9rwpPQoJy+89ruxEwCPTxe9ibmjXExMmskpHqrQ7o0PJjJqQHsYXVOmL0C99QgRN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717969281; c=relaxed/simple;
-	bh=kRTX5mjZmUNWGLllyyHVNH3c1pTK9xaLXWAa/EivX3U=;
+	s=arc-20240116; t=1717982355; c=relaxed/simple;
+	bh=fqBk4xUxelINKuqmz+ewnOVgrq3/8aUv13chp0wuTaM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WblZyi18t/z9GVB9VIyRMWxE3h2ooNmnrOseUT9ebAnj59Gft1mGvp3unFzFnBZILPNI9LdKsHl82B/SIyV3RkkwX0L1vWqshI5dJJ6OETZNaPjK92MS3yB+F1oziWe6maZCIqgMem+PEH11uzvRhR1ZegKNuORMta39W2Bs9Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XtvHpyYv; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JTD6DZ2tGSIjXRFtRFOpEl5eVDMgqTxSH5sy3/SHxMEr0l+mmCTyDSWi7SU06S87CRq54yjQ3+vV3vQmAZfLNhD5lbr/mQ4YfNmVvdtZPLY7enBruHEASYGp7hZZfYjVRUyQ26NrLA64xYe2Xgt4mkM0mfr9OW85fG6h7HbGS6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UYQFDrNG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtvHpyYv"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-37594abcee7so5972275ab.0;
-        Sun, 09 Jun 2024 14:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717969279; x=1718574079; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mcjlMxR8WC9GvF7wR1CGHb3xg0yhlQrP3Q+QhW8JPRs=;
-        b=XtvHpyYvYdcLaU9a7sIxY8flkiDUSfnLneBTBYKEtauMZSCwsX/M9G9I8H6jbocosM
-         A66puiYlC4BsERxyEqsZL5MsaJflbm/2UxbHjTcgK4+9HjlYhqRfhWp/oOM3GpZpc5fx
-         tnqiIaa3p7qflt+i3Mde7haJHZC3mq1E1XIeMCLuY4uGSrRax67C4QVB4vC0pzoReROG
-         ziuVZqNLPEgVJ6ptNglgUyF3zgsj+2/D+pxgR/JlZNqT0SN+f5Oxk9Gxec/9BJTZjfgw
-         rSMO8Xyw7QE4sJU5896PAVF0kxAT6ZzxlM4QwIStgpFvhO4exRoorj7VEbk8lFriE8zC
-         MsHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717969279; x=1718574079;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mcjlMxR8WC9GvF7wR1CGHb3xg0yhlQrP3Q+QhW8JPRs=;
-        b=TnMrWwUHsHLUunr3AFjVGdhod8sI1n46u2r10e9lDRTBHW4iNC2NJe2NuxXLt+i/D2
-         CKJkGJR2ZUk/1MXUXi821RPA3gZpLAVyhDT5jDkObHEhbwNV3KPP/gYnTaTB23e0tpTc
-         7tQ/WmVhxoRDUpQ6VR9q/FatB2qnXSU8/hkyE6pvuIJ+nuvFv7T3NZ7vOTKESK5RJjFl
-         IIZfPC2BU2m+5e/CFFcwMXkqK6M9XQdEXQX7L0lF5fBc0OnmZTtgOQv9mrNq/tPW4Kg6
-         t1I0QttzeGZKaw8okqNu+Gp/aKN2xzy7/ZuYs8UrcNeDnNKgdVmF/4dzJ0JH4QejNhqK
-         cgaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDshg2KkbhQKGobaGQaAzhMPXZK5XlHEmdlqS/498GBQTwYjLeu6ws4UuvS7HGHz9W1fgg/lGDapXiIlHZlfRf1nBuUVuFZQrnQNism6cEDUORSxlo6W+oMbdCeax+6rX4mVeu3hAKKpxkQatPA5drRA0ExdZqPPI3oudPjawJhv3i1mvi2He/hnM=
-X-Gm-Message-State: AOJu0YxnZfXAo8VWdWHHB5hQHv2y/J8K3WjcO7LJH//Z33gP1mPqMvtu
-	6A4TCYymp1jTPXTOLz1vydCqQ5scXNFqXxDv+RU77L39i43GT/D5
-X-Google-Smtp-Source: AGHT+IG6YLP9mR9wBI7joN7g3FWK9wAdt5wGRHlhq8r+NXoPDq8kp2OdWVqpdrh0BzbfcOM1WuYOog==
-X-Received: by 2002:a92:cdaf:0:b0:374:a963:be9b with SMTP id e9e14a558f8ab-37580331e2cmr105686145ab.12.1717969279412;
-        Sun, 09 Jun 2024 14:41:19 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:55a9:13e9:dec7:f9d3])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6e3575b6c73sm3549648a12.78.2024.06.09.14.41.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 14:41:19 -0700 (PDT)
-Date: Sun, 9 Jun 2024 14:41:16 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Vicki Pfau <vi@endrift.com>,
-	Brenton Simpson <appsforartists@google.com>,
-	Max Nguyen <maxwell.nguyen@hp.com>, Carl Ng <carl.ng@hp.com>,
-	Matt Scialabba <matt.git@fastmail.fm>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <keescook@chromium.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UYQFDrNG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717982352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8uqVpGiW41LdDIPZDGk2krTR1nMbUR1Dbs/h7+D4MIY=;
+	b=UYQFDrNGqZ2BTpqxuoo86K4fyz8h7TSdRslHJBUhPxBTdky6K82rCSgTDQ/BdEsrppk5IV
+	QWo1nq/5R1nt2YBKqsdttrhzrPgM3IoGcwUFHnnx0sDvtRuw7Zxkl6rfyabUYL4sSeIisB
+	KhhhIaNFG5F65uYXNeu2Nl5lL3n7FiE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-389-OYqCyoXeOyS0ZDmtYLfsgg-1; Sun,
+ 09 Jun 2024 21:19:04 -0400
+X-MC-Unique: OYqCyoXeOyS0ZDmtYLfsgg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0954195608B;
+	Mon, 10 Jun 2024 01:19:01 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.124])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3D5630000C3;
+	Mon, 10 Jun 2024 01:18:58 +0000 (UTC)
+Date: Mon, 10 Jun 2024 09:18:53 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Input: joystick - use sizeof(*pointer) instead of
- sizeof(type)
-Message-ID: <ZmYhfNmyjX6OiJP4@google.com>
-References: <AS8PR02MB7237FEA55FAC8A9453F2DA6F8BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+Message-ID: <ZmZUfWKovZLkXpJn@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-3-coxu@redhat.com>
+ <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
+ <5gj3rxxf7tgolj72mxwnbjirxrlx3pezvqcegyiuenwr55njoo@6dg2toxu6vah>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -77,21 +71,97 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR02MB7237FEA55FAC8A9453F2DA6F8BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <5gj3rxxf7tgolj72mxwnbjirxrlx3pezvqcegyiuenwr55njoo@6dg2toxu6vah>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Sat, Jun 08, 2024 at 05:13:57PM +0200, Erick Archer wrote:
-> It is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not
-> change the former (unlike the latter).
+On 06/07/24 at 08:27pm, Coiby Xu wrote:
+> On Wed, Jun 05, 2024 at 04:22:12PM +0800, Baoquan He wrote:
+> > On 05/23/24 at 01:04pm, Coiby Xu wrote:
+> > .....
+> > > diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> > > new file mode 100644
+> > > index 000000000000..78809189084a
+> > > --- /dev/null
+> > > +++ b/kernel/crash_dump_dm_crypt.c
+> > > @@ -0,0 +1,113 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> [...]
+> > > +
+> > > +static unsigned int key_count;
+> > > +static size_t keys_header_size;
+> > 
+> > These two global variables seems not so necessary. Please see comment at
+> > below.
 > 
-> At the same time refactor the code to not use assignment in "if"
-> conditions.
+> Thanks for the comment! But I think it's better to keep these two static
+> variables for reasons as will be explained later.
 > 
-> This patch has no effect on runtime behavior.
+> > 
+> > > +
+> > > +struct dm_crypt_key {
+> > > +	unsigned int key_size;
+> > > +	char key_desc[KEY_DESC_LEN];
+> > > +	u8 data[KEY_SIZE_MAX];
+> > > +};
+> > > +
+> > > +static struct keys_header {
+> > > +	unsigned int key_count;
+> >                     ~~~~~~~~
+> >                     This is the max number a system have from init();
+> > You can add one field member to record how many key slots have been
+> > used.
+> > > +	struct dm_crypt_key keys[] __counted_by(key_count);
+> > > +} *keys_header;
+> > 
+> > Maybe we can rearrange the keys_header like below, the name may not be
+> > very appropriate though.
+> > 
+> > static struct keys_header {
+> > 	unsigned int max_key_slots;
+> > 	unsigned int used_key_slots;
+> > 	struct dm_crypt_key keys[] __counted_by(key_count);
+> > } *keys_header;
 > 
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> Thanks for the suggestion! Since 1) KEY_NUM_MAX already defines the
+> maximum number of dm crypt keys 2) we only need to let the kdump kernel
+> now how many keys are saved, so I simply use total_keys instead of
+> key_count in struct keys_header in v5,
+> 
+> static struct keys_header {
+> 	unsigned int total_keys;
+> 	struct dm_crypt_key keys[] __counted_by(total_keys);
+> } *keys_header;
+> 
+> Hopefully this renaming will improve code readability.
 
-Applied, thank you.
+If you add key_count into keys_header, then kdump kernel will know how
+many keys are really saved and need be retrieved. What's your concern
+when you have to put key_count outside and take it as a global variable?
 
--- 
-Dmitry
+> 
+> > 
+> > > 
+> > 
+> > > +
+> > > +static size_t get_keys_header_size(struct keys_header *keys_header,
+> > > +				   size_t key_count)
+> > > +{
+> > > +	return struct_size(keys_header, keys, key_count);
+> > > +}
+> > 
+> > I personally don't think get_keys_header_size is so necessary. If we
+> > have to keep it, may be we can remove the global variable
+> > keys_header_size, we can call get_keys_header_size() and use local
+> > variable to record the value instead.
+> 
+> Thanks for the suggestion! But the kdump kernel also need to call
+> get_keys_header_size in later patches.
+
+If so, you can remove keys_header_size now. You can define local
+variable to take the newly calculated value. keys_header_size seems not
+so necesary.
+
+By the way, you don't need to rush to post v5. When people review
+patches, agreement need be reached after discussion. Then next version
+can be posted.
+
