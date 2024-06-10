@@ -1,203 +1,145 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AB356452
-	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 08:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3375F770E1;
+	Mon, 10 Jun 2024 10:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718006916; cv=none; b=krmfMi3xt1+Dqv9JggMyXKNLhx9azGwlokLS0B6D9z3sOnxjPu/bMSl6YQYJH+Ep3S3kA4SYe/svBdRE87eAIywYP4UIYCmLDyQsHu8sDI4uHCKE+vrixKnzX7bxz4TUGg2B7EHZmS1lkHkcabHCVk/x7tg3K+a24ppFmRxSbdQ=
+	t=1718014027; cv=none; b=A04wCXJyiJnxrMIAl38+Op4yh7DF62CvZV3gQ1iCC3BJT1cCsw6ykIQKCUON5hy3WJDyHDiiyCJw6j7RScnYZLUfwMuN9MPOJTY5VrWS0z4OS+ClANB/awV+Ox6zIbuXMtnVOZQ2UlaDtXNc07l8g3zyl72YxInbMR1eqvx/9GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718006916; c=relaxed/simple;
-	bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EaGth07ll3ApfQ4HpT6msNSgOl/DB85hRqVswCu7Iu5KwP/5+8wEjkBpiFTdNJeAgiKIX3YvP+PXMW8M+QYw+knzgzWGWw5l6TRYcXkxKkSRJKN7/tp38meZmqck9MOEB169uPZHhoRcyHZgM126wHVCThDz3eS5Q3t+mP1RKI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FY2k3Mn1; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718014027; c=relaxed/simple;
+	bh=9r2h/gDx9bml6PDQTuEJkHHD0nrZQKtzsCZEmunU1GU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=doyo8dJChCfeHaGIlQw3GdttGIUBE+LhEhEt8AwQnOtZxZvbHjteZQfYqJOeSQNfqqo481m1kF7HFhu9YPy3nPwJxEzG0bcW0wjdDyHQNtliAomdjkWXJH4obCz3iJqoI+QOGjPoac2fb7qyF+ZibxiHZonNHxIqVxO7wcuMe10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aAdP8E17; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FY2k3Mn1"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52bc1261f45so2568981e87.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 01:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718006913; x=1718611713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
-        b=FY2k3Mn1PYXcT34Eo96oKLUsknRz0hgtVbv3X+DhxGiYz+kbwRScKV5erdDVYUAAcd
-         jw6OuZPpP2NNPqOZ2xbFrAnjX+R/moWth1xQbyLTQwP/AO2viR5QhBlPBUqVIiumNaWh
-         q9FNp9oq5otLzICQCloUWcrekkzWRFWluxtU4sFdlbDWDluPzyuTugazeXoFyCiJBRP3
-         HApxSZljkEXVYOKB9+xNb5fXk5aZomQQNqaUlFf2wJEZ4UBULeRnjXc636gbucf+QV1v
-         lD2YagRXZavPnguwNF+EgxZqcY5VeCnUF1kmP29ABaYpXiQO+TVb9XtCe6irhsUQsFWo
-         cHEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718006913; x=1718611713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
-        b=kudGqXvoxGunAz6mQqja6n89twZ/6G/r/fy3mBFKaK2rEI3zNtRoXYSOP/bvPrrSLC
-         BTTWci0peVnP67b/fpzgtz2bbI38tOO7/eBpiUmQuPCgAmd5d6My2QX4wAg4jW/yztgS
-         /cN67JTV80QyhSRkI75/tzTnKnrhBCWuILA6HEuWhgqNcysncFhMxaEyNXvSZ8sNk49i
-         DO6cb4eN2MzrGppFpADTGwv+iHC6Gpii0jGPj6wgYO0vWbq3RSwMMenxB8N9hV0enETP
-         V5dcaBmr6kvrqP0g3N6Ns3RQ4GV2Mr8RQWC2KQOJ/KhDBd156xCz0d9COcbLcEHyn7sd
-         RXrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlyAsEgwW+5UwqHWGOV72/wAS7Fubgjumr00Hu0PGNsut/eVcnQ/H+w5pbLaKL8QjgSD/38+r9Ey+rgB/COpwJs4K8OHZ71gglIek5SLzB
-X-Gm-Message-State: AOJu0Yz96bIeuzmll/9FEspgPZnpZuVxU8+0eO8RExyyPEpcz14KvRWD
-	GjLe32xOTnsdza6x2KcQlA43Uz44cOkQ1lC2KRkCCECuqz66ii6uQltmZj5nTzHj6AFNsWaQ6Yl
-	zyo65mBSJr2KireXeFmXmWGq7afOJ+nNIp8BN2YRgPGHjgYLg
-X-Google-Smtp-Source: AGHT+IEoIIaopVbMhKiBzu+ZFeFG117iZrYhuaSy1PLsnicMvCE0nAaF1iUL9hhnUeVtUHqe9i20V059/u6XmSWe6yI=
-X-Received: by 2002:a05:6512:234d:b0:52b:be9b:cafe with SMTP id
- 2adb3069b0e04-52bbe9bcbadmr5940256e87.21.1718006892189; Mon, 10 Jun 2024
- 01:08:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aAdP8E17"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=auYCcPsADBP4sRimitJGpg2Zp3/5ESPayXwf7a7EFHk=; b=aAdP8E17Yc/QBnc4hBDUh91z64
+	8zXlWfn5Tz9PpHMBvCFEVFKNaCA3uNh8bHlptQz5QSo1HrJJMGVgJj5n7Bo2g8TNz/yFw7Q6u9/rK
+	9L/QDYKODcfudXII48jA1Uux8MufMCwQnUGtdRB297/NwhudPPTjfx/9nvoW+G0XKGaLF3RKc3uWe
+	6n4UAKWEZXZBENvuHSorHJsKr/fcZhO/ZQcV14FKCnQerK7gIgt2Es+Bl2Wsz2eK6V4GUreEJQvc9
+	LXXTP0UsGQv7sOiUZ80SgFBL+0V0d+vQL9uWBgTGe4YfldKxtQj9XJLWF2C3Rbk2UaUatEj5dzYFu
+	VEUyEiLw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sGbvK-00000008spW-12YQ;
+	Mon, 10 Jun 2024 10:06:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8153D300439; Mon, 10 Jun 2024 12:06:45 +0200 (CEST)
+Date: Mon, 10 Jun 2024 12:06:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <20240610100645.GS40213@noisy.programming.kicks-ass.net>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <AS8PR02MB72373C2D08910FBE5FA27BE48BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com> <87tti9cfry.fsf@intel.com>
-In-Reply-To: <87tti9cfry.fsf@intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 10 Jun 2024 10:08:00 +0200
-Message-ID: <CACRpkdZFPG_YLici-BmYfk9HZ36f4WavCN3JNotkk8cPgCODCg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with sysfs_match_string()
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, 
-	Allen Pais <apais@linux.microsoft.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Nuno Sa <nuno.sa@analog.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones <lee@kernel.org>, 
-	Samuel Holland <samuel@sholland.org>, Elad Nachman <enachman@marvell.com>, 
-	Arseniy Krasnov <AVKrasnov@sberdevices.ru>, Johannes Berg <johannes.berg@intel.com>, 
-	Gregory Greenman <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>, 
-	Chunfeng Yun <chunfeng.yun@mediatek.com>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Nikita Kravets <teackot@gmail.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Stanley Chang <stanley_chang@realtek.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers <ebiggers@google.com>, 
-	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
-	Abel Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>, 
-	Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
-	Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Mark Brown <broonie@kernel.org>, 
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com, 
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org, 
-	linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, David Howells <dhowells@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@redhat.com>, Jean Delvare <jdelvare@suse.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
-	Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>, 
-	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR02MB72373C2D08910FBE5FA27BE48BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
-On Tue, Jun 4, 2024 at 9:46=E2=80=AFAM Jani Nikula <jani.nikula@linux.intel=
-.com> wrote:
+On Sat, Jun 08, 2024 at 10:50:44AM +0200, Erick Archer wrote:
+> Hi Andrew,
+> 
+> On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
+> > Hi everyone,
+> > 
+> > This is an effort to get rid of all multiplications from allocation
+> > functions in order to prevent integer overflows [1][2].
+> > 
+> > In the first patch, the "struct amd_uncore_ctx" can be refactored to
+> > use a flex array for the "events" member. This way, the allocation/
+> > freeing of the memory can be simplified. Then, the struct_size()
+> > helper can be used to do the arithmetic calculation for the memory
+> > to be allocated.
+> > 
+> > In the second patch, as the "struct intel_uncore_box" ends in a
+> > flexible array, the preferred way in the kernel is to use the
+> > struct_size() helper to do the arithmetic instead of the calculation
+> > "size + count * size" in the kzalloc_node() function.
+> > 
+> > In the third patch, as the "struct perf_buffer" also ends in a
+> > flexible array, the preferred way in the kernel is to use the
+> > struct_size() helper to do the arithmetic instead of the calculation
+> > "size + count * size" in the kzalloc_node() functions. At the same
+> > time, prepare for the coming implementation by GCC and Clang of the
+> > __counted_by attribute.
+> > 
+> > This time, I have decided to send these three patches in the same serie
+> > since all of them has been rejected by the maintainers. I have used
+> > the v4 tag since it is the latest iteration in one of the patches.
+> > 
+> > The reason these patches were rejected is that Peter Zijlstra detest
+> > the struct_size() helper [3][4]. However, Kees Cook and I consider that
+> > the use of this helper improves readability. But we can all say that it
+> > is a matter of preference.
+> > 
+> > Anyway, leaving aside personal preferences, these patches has the
+> > following pros:
+> > 
+> > - Code robustness improvement (__counted_by coverage).
+> > - Code robustness improvement (use of struct_size() to do calculations
+> >   on memory allocator functions).
+> > - Fewer lines of code.
+> > - Follow the recommendations made in "Deprecated Interfaces, Language
+> >   Features, Attributes, and Conventions" [5] as the preferred method
+> >   of doing things in the kernel.
+> > - Widely used in the kernel.
+> > - Widely accepted in the kernel.
+> > 
+> > There are also patches in this subsystem that use the struct_size()
+> > helper:
+> > 
+> > 6566f907bf31 ("Convert intel uncore to struct_size") by Matthew Wilcox
+> > dfbc411e0a5e ("perf/x86/rapl: Prefer struct_size() over open coded arithmetic") by me
+> > 
+> > Therefore, I would like these patches to be applied this time.
+> 
+> This is my last attemp to get these patches applied. I have decided to
+> send this mail to try to unjam this situation. I have folowed all the
+> reviewers comments and have no response from the maintainers other than
+> "I detest the struct_size() helper".
+> 
+> Therefore, I would like to know your opinion and that of other people
+> about these patches. If the final consensus is that the code has no real
+> benefit, I will stop insisting on it ;)
 
-[Maybe slightly off-topic, ranty]
+Seriously, I've got plenty patches to look at that actually do
+something. This falls well within the 'random changes for changes sake'
+and goes waaaaay down the priority list.
 
-> Why do we think it's a good idea to increase and normalize the use of
-> double-underscore function names across the kernel, like
-> __match_string() in this case? It should mean "reserved for the
-> implementation, not to be called directly".
->
-> If it's to be used directly, it should be named accordingly, right?
-
-It's a huge mess. "__" prefix is just so ambiguous I think it just
-shouldn't be used or prolifierated, and it usually breaks Rusty Russells
-API rules times over.
-
-Consider __set_bit() from <linux/bitops.h>, used all over the place,
-in contrast with set_bit() for example, what does "__" represent in
-this context that makes __set_bit() different from set_bit()?
-
-It means "non-atomic"...
-
-How does a random contributor know this?
-
-Yeah, you guess it. By the token of "everybody knows that".
-(Grep, google, repeat for the number of contributors to the kernel.)
-
-I was considering to send a script to Torvalds to just change all
-this to set_bit_nonatomic() (etc) but was hesitating because that
-makes the name unambiguous but long. I think I stayed off it
-because changing stuff like that all over the place creates churn
-and churn is bad.
-
-Yours,
-Linus Walleij
+If you're addressing an actual issue, state so. Otherwise, go play
+somewhere else.
