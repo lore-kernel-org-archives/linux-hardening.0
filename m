@@ -1,137 +1,132 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA77D14D2A4;
-	Mon, 10 Jun 2024 19:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1709314A85;
+	Mon, 10 Jun 2024 19:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718047258; cv=none; b=EcQSuf31VElppyxPioMqDmLVWxl7/v9tpCcjtzZUttePbfP3HLSAIXFEASWPmfDCTXggtbsb+60ZVroOrMAdF5VKr0bf/5pZbcGuJGg+uaC7FVlRh1tlG0A689Mkee1oUv81a7NuzemJhfF14E4bxw2qmQd0HvI+KBagouuzVII=
+	t=1718047675; cv=none; b=ltFRtXqiNAGsunryJnEldNT7m+ryRycT5PobBNi7zRdsYzrK92qvHK09fGVCZK3LLaZAgxlBpXlI0y/9H2lgU0PIcJPYCcjVoTY/wX97u+jWTkqpY1f8EmjEL5RuRmkPtFILDfY+AJue5qQTSNUezpnie2HuBYMvDkmea3F6nRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718047258; c=relaxed/simple;
-	bh=kt1bp0olkBGzyt6Nu7UC9ZUgmN10seHUl6pXobv+WAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gI8veqZopNcA1nWZTeKjzfGUWnATOFR45gwpu58DR3g4jXh0ymx2hdTXIhquAH1jPU5NRg81y1R+OY6o/OCPyJoR/1pi2yY3cVUnOPuar82Rwiz4T4CmxBXSs4J6KSFbW47FBR2kU5De0bJ5nwG7fYlaA/PBykh3S6DN4WYsxpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdSLRZxq; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718047675; c=relaxed/simple;
+	bh=QBgN9MHCavIxJhBcDljHXETz/zxwk+Ox8dykt2D+cqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XTW1lzskvdYU+0XVtgdQsAjzOA2tRk9eZsngFc48FVqBZh8L7c96+lu10ci59uhMRmHHuov6OmOACIdyjPSWvu8X9MOduBdnJPgHR8jSPRaIJjxMfSP1aFSxWk+LEnKpxQKkC7XMGkCU5BSIyYrum+Jr8hKG7gaN3hlKmEJM0NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDfvkV5c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdSLRZxq"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35f06861ae6so2729340f8f.2;
-        Mon, 10 Jun 2024 12:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718047255; x=1718652055; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8Fwxg+U8/L4kUngah1ecBeYb5cChpXVPmYuFhLTZliY=;
-        b=OdSLRZxqHU2CTmGvdAUHUreIpsGOMoqqUpK4iEI3dIR2IIE3RAsymFMSkWp6gQJAvv
-         8eJ0Fam8LNh24sYdamtPNg7Pk77CNORwZzE3+1YvuJ8jCAoD+X9beynX9fGjWuw21K+5
-         gXnAVbeb6vQGA7sgLurqKPE9s/3GevpPCWKUy2+TCyhZs2RxVXpNLjbmQ9rnJJwBggao
-         +aWlUrCSV/zKGBDYG0iOLnetrhvxK/NdagY2OHlYuzCF1DluJFrJu26DUlqCBrH5LyE7
-         v3dYPTkwOSRm5ZyxEtR1C1KV/961a87bGO6exYMFjc/FExPN2LnpfiR0zKruC92UUU2K
-         +DWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718047255; x=1718652055;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Fwxg+U8/L4kUngah1ecBeYb5cChpXVPmYuFhLTZliY=;
-        b=B6LsrhR1159jOrhxd+9GuJ9O3HC9wYBpY8BAmrjkA8uNX/QZHpOaSV7987fuaQV4fy
-         a9VMK9V+bvZtNQkMZvwblZp3jIV67X05+cwi7wK6i6rP/86ip1UtWpT5ncICdSA3hdnk
-         zfNFW6vTZlk1eEdSIlt3Dwht9War7MiHMMh21sFvdgzFrw9mgt6CO7oOAacG7wrwWd9v
-         hQBdlETWm+6660llOTfGO4jAfp0Aclb/RqPjGs9DgVApoxzGmZOT9e9I7CQmzhQPKHrP
-         NmH0+4FgoEKN92/vsNZdLqnPyZIT8HuJOzCvEG63YWzMb5QxXmRCldbgK/QfKplf0RSi
-         HlPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcgomRAYvXI1EMhxWX55BQJT/B8gK98cocetPOrOOG54jwW6gDzAiR20HlgysNcpUA197tAlCxzF30MWy0pxSdXlx6ymwLkdiwpw5P0jIY3ymYDOFyXJIcdpxvN96g/AhMC2eizwB9MKe2f1a9
-X-Gm-Message-State: AOJu0YwnBMGF3+YmOZvZwtI9uM2VDhIQv0H0wqNdhbOQjw6sfsptbg7r
-	07iRncfp7em43mzL/NUIke95XgS61ryX7ch5PgG29zpzNkzxPmIKIvKCCD9M
-X-Google-Smtp-Source: AGHT+IFat6zDS6FF0+LTYBRonG3fD/7yN5MDQC6zZI3WaIUFD/lehrkeGgjA7zSlbf7b6aPG2bP7Gw==
-X-Received: by 2002:adf:e9c5:0:b0:35f:9d8:9a48 with SMTP id ffacd0b85a97d-35f09d89bfemr5721228f8f.56.1718047254956;
-        Mon, 10 Jun 2024 12:20:54 -0700 (PDT)
-Received: from [10.5.1.156] (188-22-218-164.adsl.highway.telekom.at. [188.22.218.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f25dc3f07sm2824329f8f.79.2024.06.10.12.20.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 12:20:54 -0700 (PDT)
-Message-ID: <06f85db2-10b2-4921-b3d6-0061e9801e0c@gmail.com>
-Date: Mon, 10 Jun 2024 21:20:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDfvkV5c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7AE9C2BBFC;
+	Mon, 10 Jun 2024 19:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718047674;
+	bh=QBgN9MHCavIxJhBcDljHXETz/zxwk+Ox8dykt2D+cqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uDfvkV5c5SnDUKilyooY0hegtuPeodzisyqHBP8aDjVVcZ00qz/umpRPJG53uEJM7
+	 RvP9950rmnTzG+cQdlnhFaB1ZhvJ+l8lTFS1/F2iTmaR9wZAkyoCsD3kMioBOEWuPh
+	 jw/bw5XWUzM/q46aw79wagIVQo7TCgjul/RVGVhh/MPeWPR8Bk1zzRGtzMnTIGoZS+
+	 dRi25BZobTeMjbqAqMcozNeQvV/I8EiTPigMJ2nFXnJbOE4YWl2A1P8Jau19igojuf
+	 efwYgck1Rco75IWDugNXbiq6HfrewN+zNdbspXtbxilqL2lhPcu6ZmtQQwIFT5ZN9l
+	 v1fu1GSYm1AWg==
+Date: Mon, 10 Jun 2024 12:27:54 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Vitor Massaru Iha <vitor@massaru.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] kunit: test: Add vm_mmap() allocation resource
+ manager
+Message-ID: <202406101217.D14DF2F00@keescook>
+References: <20240519190422.work.715-kees@kernel.org>
+ <20240519191254.651865-1-keescook@chromium.org>
+ <CABVgOSmD-v4rXDkcKgA1o2w-Ypzs_rYBKCx=2i2BWjWgd=o2pg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kunit/overflow: Adjust for __counted_by with
- DEFINE_RAW_FLEX()
-To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240610182301.work.272-kees@kernel.org>
-Content-Language: en-US
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20240610182301.work.272-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSmD-v4rXDkcKgA1o2w-Ypzs_rYBKCx=2i2BWjWgd=o2pg@mail.gmail.com>
 
-
-On 10.06.24 8:23 PM, Kees Cook wrote:
-> When a flexible array structure has a __counted_by annotation, its use
-> with DEFINE_RAW_FLEX() will result in the count being zero-initialized.
-> This is expected since one doesn't want to use RAW with a counted_by
-> struct. Adjust the tests to check for the condition and for compiler
-> support.
+On Sat, Jun 08, 2024 at 04:44:16PM +0800, David Gow wrote:
+> On Mon, 20 May 2024 at 03:12, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > For tests that need to allocate using vm_mmap() (e.g. usercopy and
+> > execve), provide the interface to have the allocation tracked by KUnit
+> > itself. This requires bringing up a placeholder userspace mm.
+> >
+> > This combines my earlier attempt at this with Mark Rutland's version[1].
+> >
+> > Link: https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/ [1]
+> > Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
 > 
-> Reported-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-> Closes: https://lore.kernel.org/all/0bfc6b38-8bc5-4971-b6fb-dc642a73fbfe@gmail.com/
-> Suggested-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-Thanks for the quick fix!
-
-Seems reasonable and the test passes now.
-
-Tested-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-hardening@vger.kernel.org
-> ---
->  lib/overflow_kunit.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
+> Thanks very much for this!
 > 
-> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-> index 4ef31b0bb74d..d305b0c054bb 100644
-> --- a/lib/overflow_kunit.c
-> +++ b/lib/overflow_kunit.c
-> @@ -1178,14 +1178,28 @@ struct foo {
->  	s16 array[] __counted_by(counter);
->  };
->  
-> +struct bar {
-> +	int a;
-> +	u32 counter;
-> +	s16 array[];
-> +};
-> +
->  static void DEFINE_FLEX_test(struct kunit *test)
->  {
-> -	DEFINE_RAW_FLEX(struct foo, two, array, 2);
-> +	/* Using _RAW_ on a __counted_by struct will initialize "counter" to zero */
-> +	DEFINE_RAW_FLEX(struct foo, two_but_zero, array, 2);
-> +#if __has_attribute(__counted_by__)
-> +	int expected_raw_size = sizeof(struct foo);
-> +#else
-> +	int expected_raw_size = sizeof(struct foo) + 2 * sizeof(s16);
-> +#endif
-> +	/* Without annotation, it will always be on-stack size. */
-> +	DEFINE_RAW_FLEX(struct bar, two, array, 2);
->  	DEFINE_FLEX(struct foo, eight, array, counter, 8);
->  	DEFINE_FLEX(struct foo, empty, array, counter, 0);
->  
-> -	KUNIT_EXPECT_EQ(test, __struct_size(two),
-> -			sizeof(struct foo) + sizeof(s16) + sizeof(s16));
-> +	KUNIT_EXPECT_EQ(test, __struct_size(two_but_zero), expected_raw_size);
-> +	KUNIT_EXPECT_EQ(test, __struct_size(two), sizeof(struct bar) + 2 * sizeof(s16));
->  	KUNIT_EXPECT_EQ(test, __struct_size(eight), 24);
->  	KUNIT_EXPECT_EQ(test, __struct_size(empty), sizeof(struct foo));
->  }
+> A few high-level thoughts:
+> - Do we want to move this into a separate file? test.{c,h} is already
+> getting pretty big, and this would probably fit more comfortably with
+> some of the resource-management bits, which are in their own files.
+> Not every test will need mm support.
+
+I'm happy to do that -- I was just following where kunit_kmalloc() was
+defined. I'll create a new file for it.
+
+> - It'd be nice for there to be a way to explicitly teardown/reset
+> this: I agree that this is made more awkward by KUnit cleanup normally
+> running on a different thread, but I could definitely see why a test
+> might want to unset/reset this, and it would be more consistent with
+> other resources.
+
+Yeah, it's weird, but it's naturally managed?
+
+> Otherwise, I have a few small questions below, but nothing essential.
+> There are a couple of test failures/hangs for the usercopy test (on
+> i386 and m68k), which may have origins here: I've mentioned them
+> there.
+
+I'll look into this. I must have some 64/32 oversight...
+
+> Reviewed-by: David Gow <davidgow@google.com>
+
+Thanks!
+
+> > +/*
+> > + * Arbitrarily chosen user address for the base allocation.
+> > + */
+> > +#define UBUF_ADDR_BASE SZ_2M
+> 
+> Are there any circumstances where we'd want a _different_ base address
+> here? Could it conflict with something / could tests require something
+> different?
+> 
+> I suspect it's fine to leave it like this until such a case actually shows up.
+
+Yeah, it shouldn't be important, and as Mark has pointed out, it might
+not be needed at all. I'll see what I can do.
+
+> > +       vres = kunit_alloc_resource(test,
+> > +                                   kunit_vm_mmap_init,
+> > +                                   kunit_vm_mmap_free,
+> > +                                   GFP_KERNEL,
+> > +                                   &params);
+> 
+> It could be easier to use kunit_add_action() here, rather than
+> kunit_alloc_resource(), as you wouldn't need the params struct to pass
+> things through.
+> 
+> The advantage to keeping the separate resource is that we can more
+> easily look it up later if we, for example, wanted to be able to make
+> it current on other threads (is that something we'd ever want to do?).
+
+I like having it follow the pattern of the other resource allocators,
+but if there's not a strong reason to switch, I'll leave it as-is.
+
+-- 
+Kees Cook
