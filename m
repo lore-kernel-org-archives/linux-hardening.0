@@ -1,484 +1,147 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72DA15B3;
-	Mon, 10 Jun 2024 10:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B05BA53
+	for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 12:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718015328; cv=none; b=bys+Zs/JDxdyqXkRnJUdveAydOUSxA/G1QKVeeHyB2/4YYgIrSVGYN0O8/vA4gW/6l/s+Kqa9JqSvSKdcVlroXDPu1vltI2RfDYJIwpHVmkI5UDXHw4dMRukbDVebzmB88JgexyR2x77WpbJfNbbaUmPZx7PPMoNjozMNWp2oNU=
+	t=1718022288; cv=none; b=JTuRiNiKXTJLQb0kZbLPvqVMoEQDEFBJhsvgcynr2DzapjWdI2B0cm82UWZONTqr0rSt/PStD1zpqES8jEe9fO/F9e5/lPY/uNEUtVMquR7IOzbkwgYjIECH0/vHh5j6DCCeIqz7ho/pP7zf6iPsRX+0YWVqFbfSNT1xuj+GyPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718015328; c=relaxed/simple;
-	bh=/PCXR7vy55K8JOQThan3qAMt46GpCt36Nbt0eKSiwVg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=erYSzWuZUf4vsfdOmixCiitT0buMkSjOlOntgSHfcaqWxLWC80f7YhiekfnMSEbp3qCiaTBTfijNrOongHG6GQ1K9w/OlE1cTx0cH4O2vfG31x72bDBGhymQRnmjLkQhFE4cddhKzJLINldJfoRB3e5N4D3G3AE1TWiLEInS6pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=V7YN5G+J; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1718022288; c=relaxed/simple;
+	bh=lODJzX7RK/3gqW7SLI4sodAzP/4RKmEiLEanCBSHskY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IdelP1kclbjJPG6bDJBixTcIWxxcuJhH4dhZxM74UzISfKYtqig1GFvj6kOC9Yz3Eb9/kd5Z12ZKHeCBzwj964xAugbkPDhbm8grJ5VTRNLsfEEW0tZZ7Vq47HGjS9ZMadiaK4+OQ8rIAIMw+pzHQA9YTsqlmWaKuSnu9kf+liI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IJz/5Ea2; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V7YN5G+J"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id BF3C720B915A; Mon, 10 Jun 2024 03:28:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF3C720B915A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1718015320;
-	bh=/PJrwTJJpzDcjKWE8Ma3yeysPlLM0m6JWTIKBCHiv3U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=V7YN5G+Jh/egJI1cVFSOHdqWF4MdktsIT+Ars2FfNqIcqXJ42ahH2XEF3LtJhTTSk
-	 DKY/CSx8BZdb9FssLCwNsgTzRRjE2fRW+8q/c2yR79Kj6pz6J36m+pfAWiz3wMqyS6
-	 f3wB6vaxIKcFS1Kkh1vMOKalJkcmQtp1d0JimDy0=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH net-next v4] net: mana: Allow variable size indirection table
-Date: Mon, 10 Jun 2024 03:28:39 -0700
-Message-Id: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IJz/5Ea2"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa7843b501so7863329276.3
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Jun 2024 05:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718022286; x=1718627086; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=arVT1UJjpDifIxa4uEm/zmcaSk9BsvyP57DfTAzOe68=;
+        b=IJz/5Ea24zuOzqgg6PpSLl+R3ziT8umMEg0af3fKeoGGKVJwOphfQkoqicY7s1C7Bt
+         9aHg+8eqq/Ud1OtyLyFbmvbsDUJKF/s/AaCuA6FyULH7PHD43QRblVUwc6yxJf7TbIe2
+         uHwyuT4FsTwaSKOcIKpTJEpjQdT4fvYXQolvUc6g2ZgRXiFyWhPgJy2yjw2nMkpcA5b9
+         0tYd3A1TlABORhxSlg5iqW9uw17lwXOAtD+gasWODnWSygXdId54UbPVW0qNLkq++yK7
+         f2L2/01L45RHi4ruuVLKYcTsp7nQxsqctXIFwmChr5UhXwdWb1wIDSXpk3y015UE7E4f
+         W37g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718022286; x=1718627086;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=arVT1UJjpDifIxa4uEm/zmcaSk9BsvyP57DfTAzOe68=;
+        b=rdwgRLOJcniDFdVLoq8vUd4CC+0wKXeS8h01uqC3iNDT4U2cUlHC6Cv3ryRNkLqTdL
+         FyyFkUzZ2r0BAtbp8kh9TFYRURLwBlppnnez2kOLycdVDu5BB/s6eEXlOSbjY14basaB
+         bOhWNj7yno6ID8K/2mZdMwMJFhH+nNgio1Z+WbIKXTUjda61Vbohzfp5vvNEE6OyZv4K
+         vCaJ0B8l/khTqs/WORzvl9QVunridmYc0rzL5iXcyLf/I1RN7n5B4DAASu7r4BSr4j/9
+         MqMWP+HaF00zbjzGUUSm6FPsSDv6Z+UDReQqfsUSYbwpOF5+HPYOf/uQdvDdE7B0EyI1
+         LYeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfXXo8FYBE31AmgyZm/+5oRjEQzVWh3cCLKl9wlS68jAIw+0opDrVMCDAMyFmcaNNsnV2mQvrtSb0gfBAN/Hk46vgEkzU6YWeKwlmjxBnz
+X-Gm-Message-State: AOJu0Yy+0UMWZnvg94j6sCq2UH8O2nsOSB40sREbD3SHf75vykJ1gDYO
+	XfN5nRXuKCTGwp2e5A+ay0StOwK3vSvbMdLA675u6wkvafUdZrZJ0ihe1TPfctoWsES/vw==
+X-Google-Smtp-Source: AGHT+IFy4fbRMOr/D5J8Mb5DIZLL8qf8J1a9nL1lZPR65XOkeoC1GSF3L7mKwVVdHZBxRxLrQKLcHzk8
+X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
+ (user=ardb job=sendgmr) by 2002:a05:6902:2b8b:b0:dfa:849d:3a59 with SMTP id
+ 3f1490d57ef6-dfaf667471bmr3293606276.13.1718022285824; Mon, 10 Jun 2024
+ 05:24:45 -0700 (PDT)
+Date: Mon, 10 Jun 2024 14:24:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2514; i=ardb@kernel.org;
+ h=from:subject; bh=vAdAgJhZ88ZG4Hss513g3YwUrqqEyDQZv4qPQ2fT/YE=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIS3tQzv314Nsr2KfVHF22yjY7PFVCbTY8X/dO2ax1vyLR
+ wr3iip1lLIwiHEwyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIlwlzL8L49aFu9/c9ehzi2u
+ CX7qp84E7IyYs+/uU41nMjHzn0XbZzAyvDpcPzuiKWrjxejV1juF9rHLBB0wzhWd6VfGJuxk5hP KAgA=
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240610122437.2358778-2-ardb+git@google.com>
+Subject: [PATCH] efi/arm: Disable LPAE PAN when calling EFI runtime services
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-efi@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	linux@armlinux.org.uk, Ard Biesheuvel <ardb@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Allow variable size indirection table allocation in MANA instead
-of using a constant value MANA_INDIRECT_TABLE_SIZE.
-The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-indirection table is allocated dynamically.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+EFI runtime services are remapped into the lower 1 GiB of virtual
+address space at boot, so they are guaranteed to be able to co-exist
+with the kernel virtual mappings without the need to allocate space for
+them in the kernel's vmalloc region, which is rather small.
+
+This means those mappings are covered by TTBR0 when LPAE PAN is enabled,
+and so 'user' access must be enabled while such calls are in progress.
+
+To avoid the need to refactor the code that is shared between ARM, arm64
+and other EFI architectures, fold this into efi_set_pgd(). Given that
+EFI runtime services are serialized and not pre-emptible, storing the
+flags into a global variable is reasonable here - efi_set_pgd() calls
+will always occur in pairs on a single CPU.
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- Changes in v4:
- * Skip NULLify after free
- * Log proper errors in mana_probe() if mana_attach(), mana_probe_port()
-   fails
- * Implement mana_cleanup_indir_table() to avoid code duplication.
+ arch/arm/include/asm/efi.h | 15 +++++++++++++++
+ arch/arm/kernel/efi.c      |  4 ++++
+ 2 files changed, 19 insertions(+)
 
- Changes in v3:
- * Fixed the memory leak(save_table) in mana_set_rxfh()
-
- Changes in v2:
- * Rebased to latest net-next tree
- * Rearranged cleanup code in mana_probe_port to avoid extra operations
----
- drivers/infiniband/hw/mana/qp.c               | 10 +--
- drivers/net/ethernet/microsoft/mana/mana_en.c | 85 ++++++++++++++++---
- .../ethernet/microsoft/mana/mana_ethtool.c    | 27 ++++--
- include/net/mana/gdma.h                       |  4 +-
- include/net/mana/mana.h                       |  9 +-
- 5 files changed, 104 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index ba13c5abf8ef..2d411a16a127 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -21,7 +21,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+diff --git a/arch/arm/include/asm/efi.h b/arch/arm/include/asm/efi.h
+index 78282ced5038..773fb072c040 100644
+--- a/arch/arm/include/asm/efi.h
++++ b/arch/arm/include/asm/efi.h
+@@ -14,6 +14,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/mmu_context.h>
+ #include <asm/ptrace.h>
++#include <asm/uaccess.h>
  
- 	gc = mdev_to_gc(dev);
- 
--	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_SIZE);
-+	req_buf_size = struct_size(req, indir_tab, MANA_INDIRECT_TABLE_DEF_SIZE);
- 	req = kzalloc(req_buf_size, GFP_KERNEL);
- 	if (!req)
- 		return -ENOMEM;
-@@ -41,18 +41,18 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	if (log_ind_tbl_size)
- 		req->rss_enable = true;
- 
--	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
-+	req->num_indir_entries = MANA_INDIRECT_TABLE_DEF_SIZE;
- 	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
- 					 indir_tab);
- 	req->update_indir_tab = true;
- 	req->cqe_coalescing_enable = 1;
- 
- 	/* The ind table passed to the hardware must have
--	 * MANA_INDIRECT_TABLE_SIZE entries. Adjust the verb
-+	 * MANA_INDIRECT_TABLE_DEF_SIZE entries. Adjust the verb
- 	 * ind_table to MANA_INDIRECT_TABLE_SIZE if required
- 	 */
- 	ibdev_dbg(&dev->ib_dev, "ind table size %u\n", 1 << log_ind_tbl_size);
--	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
-+	for (i = 0; i < MANA_INDIRECT_TABLE_DEF_SIZE; i++) {
- 		req->indir_tab[i] = ind_table[i % (1 << log_ind_tbl_size)];
- 		ibdev_dbg(&dev->ib_dev, "index %u handle 0x%llx\n", i,
- 			  req->indir_tab[i]);
-@@ -137,7 +137,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	}
- 
- 	ind_tbl_size = 1 << ind_tbl->log_ind_tbl_size;
--	if (ind_tbl_size > MANA_INDIRECT_TABLE_SIZE) {
-+	if (ind_tbl_size > MANA_INDIRECT_TABLE_DEF_SIZE) {
- 		ibdev_dbg(&mdev->ib_dev,
- 			  "Indirect table size %d exceeding limit\n",
- 			  ind_tbl_size);
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index d087cf954f75..d87b57626769 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -481,7 +481,7 @@ static int mana_get_tx_queue(struct net_device *ndev, struct sk_buff *skb,
- 	struct sock *sk = skb->sk;
- 	int txq;
- 
--	txq = apc->indir_table[hash & MANA_INDIRECT_TABLE_MASK];
-+	txq = apc->indir_table[hash & (apc->indir_table_sz - 1)];
- 
- 	if (txq != old_q && sk && sk_fullsock(sk) &&
- 	    rcu_access_pointer(sk->sk_dst_cache))
-@@ -721,6 +721,13 @@ static void mana_cleanup_port_context(struct mana_port_context *apc)
- 	apc->rxqs = NULL;
- }
- 
-+static void mana_cleanup_indir_table(struct mana_port_context *apc)
-+{
-+	apc->indir_table_sz = 0;
-+	kfree(apc->indir_table);
-+	kfree(apc->rxobj_table);
-+}
-+
- static int mana_init_port_context(struct mana_port_context *apc)
+ #ifdef CONFIG_EFI
+ void efi_init(void);
+@@ -32,6 +33,20 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md, boo
+ static inline void efi_set_pgd(struct mm_struct *mm)
  {
- 	apc->rxqs = kcalloc(apc->num_queues, sizeof(struct mana_rxq *),
-@@ -962,7 +969,16 @@ static int mana_query_vport_cfg(struct mana_port_context *apc, u32 vport_index,
- 
- 	*max_sq = resp.max_num_sq;
- 	*max_rq = resp.max_num_rq;
--	*num_indir_entry = resp.num_indirection_ent;
-+	if (resp.num_indirection_ent > 0 &&
-+	    resp.num_indirection_ent <= MANA_INDIRECT_TABLE_MAX_SIZE &&
-+	    is_power_of_2(resp.num_indirection_ent)) {
-+		*num_indir_entry = resp.num_indirection_ent;
-+	} else {
-+		netdev_warn(apc->ndev,
-+			    "Setting indirection table size to default %d for vPort %d\n",
-+			    MANA_INDIRECT_TABLE_DEF_SIZE, apc->port_idx);
-+		*num_indir_entry = MANA_INDIRECT_TABLE_DEF_SIZE;
+ 	check_and_switch_context(mm, NULL);
++
++	if (IS_ENABLED(CONFIG_ARM_TTBR0_PAN)) {
++		extern unsigned int efi_arm_ttbr0_pan_flags;
++
++		/*
++		 * EFI runtime services are mapped in the lower TTBR0 region,
++		 * so TTBR0 based PAN should be disabled while making a EFI
++		 * runtime service call.
++		 */
++		if (mm != current->active_mm)
++			efi_arm_ttbr0_pan_flags = uaccess_save_and_enable();
++		else
++			uaccess_restore(efi_arm_ttbr0_pan_flags);
 +	}
- 
- 	apc->port_handle = resp.vport;
- 	ether_addr_copy(apc->mac_addr, resp.mac_addr);
-@@ -1054,14 +1070,13 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 				   bool update_default_rxobj, bool update_key,
- 				   bool update_tab)
- {
--	u16 num_entries = MANA_INDIRECT_TABLE_SIZE;
- 	struct mana_cfg_rx_steer_req_v2 *req;
- 	struct mana_cfg_rx_steer_resp resp = {};
- 	struct net_device *ndev = apc->ndev;
- 	u32 req_buf_size;
- 	int err;
- 
--	req_buf_size = struct_size(req, indir_tab, num_entries);
-+	req_buf_size = struct_size(req, indir_tab, apc->indir_table_sz);
- 	req = kzalloc(req_buf_size, GFP_KERNEL);
- 	if (!req)
- 		return -ENOMEM;
-@@ -1072,7 +1087,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
- 
- 	req->vport = apc->port_handle;
--	req->num_indir_entries = num_entries;
-+	req->num_indir_entries = apc->indir_table_sz;
- 	req->indir_tab_offset = offsetof(struct mana_cfg_rx_steer_req_v2,
- 					 indir_tab);
- 	req->rx_enable = rx;
-@@ -1111,7 +1126,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
- 	}
- 
- 	netdev_info(ndev, "Configured steering vPort %llu entries %u\n",
--		    apc->port_handle, num_entries);
-+		    apc->port_handle, apc->indir_table_sz);
- out:
- 	kfree(req);
- 	return err;
-@@ -2344,11 +2359,33 @@ static int mana_create_vport(struct mana_port_context *apc,
- 	return mana_create_txq(apc, net);
  }
  
-+static int mana_rss_table_alloc(struct mana_port_context *apc)
-+{
-+	if (!apc->indir_table_sz) {
-+		netdev_err(apc->ndev,
-+			   "Indirection table size not set for vPort %d\n",
-+			   apc->port_idx);
-+		return -EINVAL;
-+	}
+ void efi_virtmap_load(void);
+diff --git a/arch/arm/kernel/efi.c b/arch/arm/kernel/efi.c
+index 6f9ec7d28a71..6864338073e6 100644
+--- a/arch/arm/kernel/efi.c
++++ b/arch/arm/kernel/efi.c
+@@ -11,6 +11,10 @@
+ #include <asm/mach/map.h>
+ #include <asm/mmu_context.h>
+ 
++#ifdef CONFIG_ARM_TTBR0_PAN
++unsigned int efi_arm_ttbr0_pan_flags;
++#endif
 +
-+	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-+	if (!apc->indir_table)
-+		return -ENOMEM;
-+
-+	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
-+	if (!apc->rxobj_table) {
-+		kfree(apc->indir_table);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
- static void mana_rss_table_init(struct mana_port_context *apc)
+ static int __init set_permissions(pte_t *ptep, unsigned long addr, void *data)
  {
- 	int i;
- 
--	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-+	for (i = 0; i < apc->indir_table_sz; i++)
- 		apc->indir_table[i] =
- 			ethtool_rxfh_indir_default(i, apc->num_queues);
- }
-@@ -2361,7 +2398,7 @@ int mana_config_rss(struct mana_port_context *apc, enum TRI_STATE rx,
- 	int i;
- 
- 	if (update_tab) {
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
-+		for (i = 0; i < apc->indir_table_sz; i++) {
- 			queue_idx = apc->indir_table[i];
- 			apc->rxobj_table[i] = apc->rxqs[queue_idx]->rxobj;
- 		}
-@@ -2466,7 +2503,6 @@ static int mana_init_port(struct net_device *ndev)
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	u32 max_txq, max_rxq, max_queues;
- 	int port_idx = apc->port_idx;
--	u32 num_indirect_entries;
- 	int err;
- 
- 	err = mana_init_port_context(apc);
-@@ -2474,7 +2510,7 @@ static int mana_init_port(struct net_device *ndev)
- 		return err;
- 
- 	err = mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
--				   &num_indirect_entries);
-+				   &apc->indir_table_sz);
- 	if (err) {
- 		netdev_err(ndev, "Failed to query info for vPort %d\n",
- 			   port_idx);
-@@ -2723,6 +2759,10 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	if (err)
- 		goto free_net;
- 
-+	err = mana_rss_table_alloc(apc);
-+	if (err)
-+		goto reset_apc;
-+
- 	netdev_lockdep_set_classes(ndev);
- 
- 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
-@@ -2739,11 +2779,13 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	err = register_netdev(ndev);
- 	if (err) {
- 		netdev_err(ndev, "Unable to register netdev.\n");
--		goto reset_apc;
-+		goto free_indir;
- 	}
- 
- 	return 0;
- 
-+free_indir:
-+	mana_cleanup_indir_table(apc);
- reset_apc:
- 	kfree(apc->rxqs);
- 	apc->rxqs = NULL;
-@@ -2872,16 +2914,30 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 	if (!resuming) {
- 		for (i = 0; i < ac->num_ports; i++) {
- 			err = mana_probe_port(ac, i, &ac->ports[i]);
--			if (err)
-+			/* we log the port for which the probe failed and stop
-+			 * probes for subsequent ports.
-+			 * Note that we keep running ports, for which the probes
-+			 * were successful, unless add_adev fails too
-+			 */
-+			if (err) {
-+				dev_err(dev, "Probe Failed for port %d\n", i);
- 				break;
-+			}
- 		}
- 	} else {
- 		for (i = 0; i < ac->num_ports; i++) {
- 			rtnl_lock();
- 			err = mana_attach(ac->ports[i]);
- 			rtnl_unlock();
--			if (err)
-+			/* we log the port for which the attach failed and stop
-+			 * attach for subsequent ports
-+			 * Note that we keep running ports, for which the attach
-+			 * were successful, unless add_adev fails too
-+			 */
-+			if (err) {
-+				dev_err(dev, "Attach Failed for port %d\n", i);
- 				break;
-+			}
- 		}
- 	}
- 
-@@ -2897,6 +2953,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- {
- 	struct gdma_context *gc = gd->gdma_context;
- 	struct mana_context *ac = gd->driver_data;
-+	struct mana_port_context *apc;
- 	struct device *dev = gc->dev;
- 	struct net_device *ndev;
- 	int err;
-@@ -2908,6 +2965,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 
- 	for (i = 0; i < ac->num_ports; i++) {
- 		ndev = ac->ports[i];
-+		apc = netdev_priv(ndev);
- 		if (!ndev) {
- 			if (i == 0)
- 				dev_err(dev, "No net device to remove\n");
-@@ -2931,6 +2989,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
- 		}
- 
- 		unregister_netdevice(ndev);
-+		mana_cleanup_indir_table(apc);
- 
- 		rtnl_unlock();
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index ab2413d71f6c..146d5db1792f 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -245,7 +245,9 @@ static u32 mana_get_rxfh_key_size(struct net_device *ndev)
- 
- static u32 mana_rss_indir_size(struct net_device *ndev)
- {
--	return MANA_INDIRECT_TABLE_SIZE;
-+	struct mana_port_context *apc = netdev_priv(ndev);
-+
-+	return apc->indir_table_sz;
- }
- 
- static int mana_get_rxfh(struct net_device *ndev,
-@@ -257,7 +259,7 @@ static int mana_get_rxfh(struct net_device *ndev,
- 	rxfh->hfunc = ETH_RSS_HASH_TOP; /* Toeplitz */
- 
- 	if (rxfh->indir) {
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-+		for (i = 0; i < apc->indir_table_sz; i++)
- 			rxfh->indir[i] = apc->indir_table[i];
- 	}
- 
-@@ -273,8 +275,8 @@ static int mana_set_rxfh(struct net_device *ndev,
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	bool update_hash = false, update_table = false;
--	u32 save_table[MANA_INDIRECT_TABLE_SIZE];
- 	u8 save_key[MANA_HASH_KEY_SIZE];
-+	u32 *save_table;
- 	int i, err;
- 
- 	if (!apc->port_is_up)
-@@ -284,13 +286,19 @@ static int mana_set_rxfh(struct net_device *ndev,
- 	    rxfh->hfunc != ETH_RSS_HASH_TOP)
- 		return -EOPNOTSUPP;
- 
-+	save_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
-+	if (!save_table)
-+		return -ENOMEM;
-+
- 	if (rxfh->indir) {
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
--			if (rxfh->indir[i] >= apc->num_queues)
--				return -EINVAL;
-+		for (i = 0; i < apc->indir_table_sz; i++)
-+			if (rxfh->indir[i] >= apc->num_queues) {
-+				err = -EINVAL;
-+				goto cleanup;
-+			}
- 
- 		update_table = true;
--		for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++) {
-+		for (i = 0; i < apc->indir_table_sz; i++) {
- 			save_table[i] = apc->indir_table[i];
- 			apc->indir_table[i] = rxfh->indir[i];
- 		}
-@@ -306,7 +314,7 @@ static int mana_set_rxfh(struct net_device *ndev,
- 
- 	if (err) { /* recover to original values */
- 		if (update_table) {
--			for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
-+			for (i = 0; i < apc->indir_table_sz; i++)
- 				apc->indir_table[i] = save_table[i];
- 		}
- 
-@@ -316,6 +324,9 @@ static int mana_set_rxfh(struct net_device *ndev,
- 		mana_config_rss(apc, TRI_STATE_TRUE, update_hash, update_table);
- 	}
- 
-+cleanup:
-+	kfree(save_table);
-+
- 	return err;
- }
- 
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 27684135bb4d..c547756c4284 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -543,11 +543,13 @@ enum {
-  */
- #define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
- #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
-+#define GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT BIT(5)
- 
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
--	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG)
-+	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
-+	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 561f6719fb4e..59823901b74f 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -30,8 +30,8 @@ enum TRI_STATE {
- };
- 
- /* Number of entries for hardware indirection table must be in power of 2 */
--#define MANA_INDIRECT_TABLE_SIZE 64
--#define MANA_INDIRECT_TABLE_MASK (MANA_INDIRECT_TABLE_SIZE - 1)
-+#define MANA_INDIRECT_TABLE_MAX_SIZE 512
-+#define MANA_INDIRECT_TABLE_DEF_SIZE 64
- 
- /* The Toeplitz hash key's length in bytes: should be multiple of 8 */
- #define MANA_HASH_KEY_SIZE 40
-@@ -410,10 +410,11 @@ struct mana_port_context {
- 	struct mana_tx_qp *tx_qp;
- 
- 	/* Indirection Table for RX & TX. The values are queue indexes */
--	u32 indir_table[MANA_INDIRECT_TABLE_SIZE];
-+	u32 *indir_table;
-+	u32 indir_table_sz;
- 
- 	/* Indirection table containing RxObject Handles */
--	mana_handle_t rxobj_table[MANA_INDIRECT_TABLE_SIZE];
-+	mana_handle_t *rxobj_table;
- 
- 	/*  Hash key used by the NIC */
- 	u8 hashkey[MANA_HASH_KEY_SIZE];
+ 	efi_memory_desc_t *md = data;
 -- 
-2.34.1
+2.45.2.505.gda0bf45e8d-goog
 
