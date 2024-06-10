@@ -1,234 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A654D84E13;
-	Mon, 10 Jun 2024 21:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F090545009;
+	Mon, 10 Jun 2024 21:46:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718055211; cv=none; b=INf5ZSf5PrZA+9BTsTNX0pqvYiZ9Y7KeCn0PpOefHx1i6Z5D1Op4MQ7Uik3XSmEWhCWPjRvjSdWAs9+TBQV/FNRHUjz+aaG5ZwosSo7avNry0nFAS0Qgida1VBM9x36RLuZ9K8eanXf4NX+IDurKdWfWj2ORO9jPD/sXIYPLIcc=
+	t=1718055970; cv=none; b=EqAIOky/9FH0Cow8qsCtcE4UgSLtsF5aA3wik7HdACBIsr68obxEpAtx6mnNVsJeJ8TP6ST+4dl/XG7bsz2TLEuAjh8lpG5MNmB1fSkeuW5MuA8MN8T2Nb4lLGzzCPbzMsn5zntL17Yqs9maBJ7ZDFy1xVwtHaVQhr5FMMolFmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718055211; c=relaxed/simple;
-	bh=3j/bcxcB8UFkGMb3ZxhMLR0kpqs9qfqNcKbYHvdfWBA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XUJaY7F8FyALdoL5fsE9UkkRg7BrxuWDrfVRxrj6FnNChZSVVnxkzljl7CN9C2ENEaGdx6vrYigolRS1JIBPzMJlSJrrjeCR/qKvLcFAYr69tZrXjZpUhad75YPBP29z4DObeX1K/9EF4FFTa9liiuYzdgJJxtvGQib3A92OJXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nl/7bxCA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718055970; c=relaxed/simple;
+	bh=ThcS+7P7h43Cs6kE0W/MurQBHRtUWuN38hGsgvTeJrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ilva4TiwfZjec6GvlkvB/S9hyeDW6KGL+A1PLq5UoyMZ6bgJcQfqQqH6cMPJRd5vqS9u6D8dSulPNYeH44I343NjvwjUiLDeQPRYu+moPoOWCjX1EC5RZ8RY1LMnJPs0j4j6NgQxjvGyznf4qVRSa/sxx3EHmunENsw2egPLSNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFE1krJM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nl/7bxCA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB443C2BBFC;
-	Mon, 10 Jun 2024 21:33:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFE1krJM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76623C2BBFC;
+	Mon, 10 Jun 2024 21:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718055210;
-	bh=3j/bcxcB8UFkGMb3ZxhMLR0kpqs9qfqNcKbYHvdfWBA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Nl/7bxCAfBVSlxdb7gguvNsnWbAy6D2tSbhxa2GEflQSSYfMDKGznr2G6gzWZLT85
-	 8ZIHXsI7pS4shqswsV/HyTm9a/t74VAnlKY79PvFp4KSBsDt4MVxB+9nMWDXZV5iJn
-	 OgDsInwaaAVeyR1bk57wb1BtqyIcc15WRsR12qesld4m2QU3YWtK0/R9nUtEP/h7Ed
-	 /Q51b4IjOONiRJtgRXA1hw1m3S6U5wMT8aBFxe4TPZg6A1EPwBo4nBaTgF76xDsupR
-	 HlxItfDfANV9HqDNR0cLenkLe8b3O9rWdxUBJhkeQRKO2aK402a1ROrp8mP43xASP6
-	 q5M7/OeHW8EKg==
+	s=k20201202; t=1718055969;
+	bh=ThcS+7P7h43Cs6kE0W/MurQBHRtUWuN38hGsgvTeJrQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UFE1krJM0gYQdya4A6dlMkelUJgQvYjswI3DqHAkHfxQLj2YsW/TJ99buQ0eeC7RL
+	 w7r4uYZClJnCXW6EE8IwF719t9HHQbuGy7QMfpXhs8PEBU8K5V4ZZyJ0+Xz2rWFxFs
+	 /rcUFsBmBUp0CIwiwKjETFKbHsZIqN7ceA3nQMB4X9mbP8EqiaTlmiZswrpkwJP5tx
+	 Zbgj37U/tS5h27dxi/uS0c/JVdqLqbRAsrmorev6YRndfY9xlwrynMuENgzgZ/cMX1
+	 iVz53DxfpTwR6iipAjaG0YEYcxEaaVOC4lNmTAzdVccM0lnSZkVP8/Hl94/sWU+iEg
+	 8U7ZuU1rd5HKA==
+Date: Mon, 10 Jun 2024 14:46:09 -0700
 From: Kees Cook <kees@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Vitor Massaru Iha <vitor@massaru.org>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 1/2] kunit: test: Add vm_mmap() allocation resource manager
-Date: Mon, 10 Jun 2024 14:33:28 -0700
-Message-Id: <20240610213330.1310156-1-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240610213055.it.075-kees@kernel.org>
-References: <20240610213055.it.075-kees@kernel.org>
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <202406101438.BC43514F@keescook>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202406101010.E1C77AE9D@keescook>
+ <20240610200544.GY8774@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4915; i=kees@kernel.org; h=from:subject; bh=3j/bcxcB8UFkGMb3ZxhMLR0kpqs9qfqNcKbYHvdfWBA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmZ3Ep4UgasirhMPnqsaxGdFvkSE6qf5S1plve0 5PuY+roWKCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZmdxKQAKCRCJcvTf3G3A JteBD/4pMDAha8LKYPiDpIcEnfw7lv1K3ra4B66cx11pqtnsFESynjEtWGHxlyqhgBg6Gs16Xu+ fudiJUEMWEbH0irSGfF6DeXX83sA9pOxorrkKtt/9WvVTVdViPlOLkfUttxGwq7GMRBzelPjMxO YCx9+9cdB1J8yrY6qc4EdLJJUdkFJYaRF9XoRE8NzxwpKXiMNq6m0NHafEQUtBhWLROBuVlWexu 2XE7bNBdZqVaXGt6ulK4Vk5HZ6yotq2cSnaRdj4AsL3DA7ohd50JMwk0hHMKAIeZIkkbf3wYMF8 XZrdwH9JUCbJ3hf8TPKzbzo4CEqfGD0ySKA7hbGP7si+dwHykPmv54ibkCZwhyY7J2Kdo7Xl+OQ mRdRN/O8I8FRGY8BGi6YqUre/vvXxmluzsPS0ocNQa09Yj9TLOEKq0W/125ALr67Nk3WsJgPYkB uTgyYm6zL7n1VGTBBWfYo9CY1bYCzoQgWQ2jXS46oa45fkS5Pv+0+QY+kBGa/XTmi8P+3Loc08K g0RR7jTan6J9euI/pCPU5Z6FMnvpDngzMxarrOy9rk1wfpQBFzbuw3of7K6EdaCteXjAWq4HM9U AhUK/XSPsxMiW7EK5AyNZfhqwLLlDUO98YY0aQuy8IsCnWrhc5VkZ/E8WELOG+zeHhMzDtrk3rE FgikFG5i+5j79kw==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
 
-For tests that need to allocate using vm_mmap() (e.g. usercopy and
-execve), provide the interface to have the allocation tracked by KUnit
-itself. This requires bringing up a placeholder userspace mm.
+On Mon, Jun 10, 2024 at 10:05:44PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 10, 2024 at 10:28:52AM -0700, Kees Cook wrote:
+> > On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
+> > > Hi everyone,
+> > > 
+> > > This is an effort to get rid of all multiplications from allocation
+> > > functions in order to prevent integer overflows [1][2].
+> > 
+> > I didn't actually see these 3 patches in this thread nor via lore.
+> 
+> He managed to break threading between 0/n and the rest.
+> 
+> > > In the first patch, the "struct amd_uncore_ctx" can be refactored to
+> > > use a flex array for the "events" member. This way, the allocation/
+> > > freeing of the memory can be simplified. Then, the struct_size()
+> > > helper can be used to do the arithmetic calculation for the memory
+> > > to be allocated.
+> > 
+> > I like this patch because it reduces the allocation from 2 to 1. This
+> > isn't what Peter might see as "churn": this is an improvement in resource
+> > utilization.
+> 
+> But then he went and used that struct_size() abomination :/
+> 
+> > I prefer this style, as it makes things unambiguous ("this will never
+> > wrap around") without having to check the associated types and doesn't make
+> > the resulting binary code different in the "can never overflow" case.
+> > 
+> > In this particular case:
+> > 
+> > int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
+> > 
+> > "int numshared" comes from struct intel_uncore_type::num_shared_regs,
+> > which is:
+> > 
+> >         unsigned num_shared_regs:8;
+> > 
+> > And the struct sizes are:
+> > 
+> > $ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
+> >         /* size: 488, cachelines: 8, members: 19 */
+> > $ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
+> >         /* size: 96, cachelines: 2, members: 5 */
+> > 
+> > So we have:
+> > 
+> > s32 size = 488 + u8 * 96
+> > 
+> > Max size here is 24968 so it can never overflow an s32, so I can see
+> > why Peter views this as "churn".
+> > 
+> > I still think the patch is a coding style improvement, but okay.
+> 
+> I really detest this thing because it makes what was trivially readable
+> into something opaque. Get me that type qualifier that traps on overflow
+> and write plain C. All this __builtin_overflow garbage is just that,
+> unreadable nonsense.
 
-This combines my earlier attempt at this with Mark Rutland's version[1].
+It's more readable than container_of(), IMO. "give me the struct size
+for variable VAR, which has a flexible array MEMBER, when we have COUNT
+many of them": struct_size(VAR, MEMBER, COUNT). It's more readable, more
+robust, and provides saturation in the face of potential wrap-around.
 
-Link: https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/ [1]
-Co-developed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- include/kunit/test.h   |  17 +++++++
- lib/kunit/Makefile     |   1 +
- lib/kunit/user_alloc.c | 111 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 129 insertions(+)
- create mode 100644 lib/kunit/user_alloc.c
+> > This provides __counted_by coverage, and I think this is important to
+> > gain in ever place we can. Given that this is part of a ring buffer
+> > implementation that is arbitrarily sized, this is exactly the kind of
+> > place I'd like to see __counted_by used. This is a runtime robustness
+> > improvement, so I don't see this a "churn" at all.
+> 
+> Again, mixed in with that other crap. Anyway, remind me wth this
+> __counted_by thing actually does?
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index e32b4cb7afa2..ec61cad6b71d 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -480,6 +480,23 @@ static inline void *kunit_kcalloc(struct kunit *test, size_t n, size_t size, gfp
- 	return kunit_kmalloc_array(test, n, size, gfp | __GFP_ZERO);
- }
- 
-+/**
-+ * kunit_vm_mmap() - Allocate KUnit-tracked vm_mmap() area
-+ * @test: The test context object.
-+ * @file: struct file pointer to map from, if any
-+ * @addr: desired address, if any
-+ * @len: how many bytes to allocate
-+ * @prot: mmap PROT_* bits
-+ * @flag: mmap flags
-+ * @offset: offset into @file to start mapping from.
-+ *
-+ * See vm_mmap() for more information.
-+ */
-+unsigned long kunit_vm_mmap(struct kunit *test, struct file *file,
-+			    unsigned long addr, unsigned long len,
-+			    unsigned long prot, unsigned long flag,
-+			    unsigned long offset);
-+
- void kunit_cleanup(struct kunit *test);
- 
- void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt, ...);
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index 309659a32a78..56dd67dc6e57 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -2,6 +2,7 @@ obj-$(CONFIG_KUNIT) +=			kunit.o
- 
- kunit-objs +=				test.o \
- 					resource.o \
-+					user_alloc.o \
- 					static_stub.o \
- 					string-stream.o \
- 					assert.o \
-diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
-new file mode 100644
-index 000000000000..d66f42282f43
---- /dev/null
-+++ b/lib/kunit/user_alloc.c
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit userspace memory allocation resource management.
-+ */
-+#include <kunit/resource.h>
-+#include <kunit/test.h>
-+#include <linux/kthread.h>
-+#include <linux/mm.h>
-+
-+struct kunit_vm_mmap_resource {
-+	unsigned long addr;
-+	size_t size;
-+};
-+
-+/* vm_mmap() arguments */
-+struct kunit_vm_mmap_params {
-+	struct file *file;
-+	unsigned long addr;
-+	unsigned long len;
-+	unsigned long prot;
-+	unsigned long flag;
-+	unsigned long offset;
-+};
-+
-+/* Create and attach a new mm if it doesn't already exist. */
-+static int kunit_attach_mm(void)
-+{
-+	struct mm_struct *mm;
-+
-+	if (current->mm)
-+		return 0;
-+
-+	mm = mm_alloc();
-+	if (!mm)
-+		return -ENOMEM;
-+
-+	/* Define the task size. */
-+	mm->task_size = TASK_SIZE;
-+
-+	/* Make sure we can allocate new VMAs. */
-+	arch_pick_mmap_layout(mm, &current->signal->rlim[RLIMIT_STACK]);
-+
-+	/* Attach the mm. It will be cleaned up when the process dies. */
-+	kthread_use_mm(mm);
-+
-+	return 0;
-+}
-+
-+static int kunit_vm_mmap_init(struct kunit_resource *res, void *context)
-+{
-+	struct kunit_vm_mmap_params *p = context;
-+	struct kunit_vm_mmap_resource vres;
-+	int ret;
-+
-+	ret = kunit_attach_mm();
-+	if (ret)
-+		return ret;
-+
-+	vres.size = p->len;
-+	vres.addr = vm_mmap(p->file, p->addr, p->len, p->prot, p->flag, p->offset);
-+	if (!vres.addr)
-+		return -ENOMEM;
-+	res->data = kmemdup(&vres, sizeof(vres), GFP_KERNEL);
-+	if (!res->data) {
-+		vm_munmap(vres.addr, vres.size);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void kunit_vm_mmap_free(struct kunit_resource *res)
-+{
-+	struct kunit_vm_mmap_resource *vres = res->data;
-+
-+	/*
-+	 * Since this is executed from the test monitoring process,
-+	 * the test's mm has already been torn down. We don't need
-+	 * to run vm_munmap(vres->addr, vres->size), only clean up
-+	 * the vres.
-+	 */
-+
-+	kfree(vres);
-+	res->data = NULL;
-+}
-+
-+unsigned long kunit_vm_mmap(struct kunit *test, struct file *file,
-+			    unsigned long addr, unsigned long len,
-+			    unsigned long prot, unsigned long flag,
-+			    unsigned long offset)
-+{
-+	struct kunit_vm_mmap_params params = {
-+		.file = file,
-+		.addr = addr,
-+		.len = len,
-+		.prot = prot,
-+		.flag = flag,
-+		.offset = offset,
-+	};
-+	struct kunit_vm_mmap_resource *vres;
-+
-+	vres = kunit_alloc_resource(test,
-+				    kunit_vm_mmap_init,
-+				    kunit_vm_mmap_free,
-+				    GFP_KERNEL,
-+				    &params);
-+	if (vres)
-+		return vres->addr;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kunit_vm_mmap);
+It provides annotation for the compiler to perform run-time bounds
+checking on dynamically sized arrays. i.e. CONFIG_FORTIFY_SOURCE and
+CONFIG_UBSAN_BOUNDS can actually reason about annotated flexible arrays
+instead of just saying "oh no a flexible array, I give up".
+
+> > Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
+> > put them in the hardening tree to keep them out of your way. It seems
+> > clear you don't want patch 2 at all.
+> 
+> I prefer to not have struct_size() anywhere at all. Please just write
+> readable code.
+
+That ship has sailed, and it has been keeping things at bay for a while
+now. As we make progress on making the compiler able to do this more
+naturally, we can work on replacing struct_size(), but it's in use
+globally and it's useful both for catching runtime mistakes and for
+catching compile-time mistakes (the flexible array has to match the
+variable's struct).
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
