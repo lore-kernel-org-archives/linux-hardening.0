@@ -1,95 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD72D155381;
-	Tue, 11 Jun 2024 18:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F0C84A21;
+	Tue, 11 Jun 2024 19:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718130499; cv=none; b=Nre3GNuwjz2QewKbQWaJWgpfR2x4RYxYoCDxxBMs+WXZaEsJE3++ABo2YhHeybX1rIOthxlC43LqraaydKwiUA405JXH4COvPjsBPP7pLviV6yXDwI7VFXEz/WbqbnVUjkInMxODykFlfv8aOSVudN/YFAg+PIFGRoPrHN2DX4U=
+	t=1718134741; cv=none; b=ukkKTwVYcfUVR+1/QqWfy1xbF+JbaZxaVy7yr/OutacfZDE2jqZnSYhixi77yExUmrZrpZ6t4pYH3KLlS6VJHWjEe9m5RtFHBjStxa3TBB5pDBji8cGWUi+KZ/x+CC5ee/81vqpeO1t1roTSeiyE04hzE6r/ncGmuS8LRW+OZ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718130499; c=relaxed/simple;
-	bh=M8VvlnlUjzh3Qu8nJHCfsOa6/1J5iwG41LtzZqxWHm8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aU401MtauN2EggQN/s0wMqeHlzVmxlGe0+x0kWUwQJ69ajVd6jtlE6XAeugA+Z+ro0DNHwaSGd3WYE0e3SXNXOhY5R/XR6U2LSc/vB4Dhx81pTPr1Z2EKp7Bs6tenRV68+yuBPzzZefpzBTyQdfGF9znTnmvnL5/6qKuBSECbEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEOECfqE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEOECfqE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03089C32786;
-	Tue, 11 Jun 2024 18:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718130499;
-	bh=M8VvlnlUjzh3Qu8nJHCfsOa6/1J5iwG41LtzZqxWHm8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=HEOECfqEBC5j/q2OiERUKWFJxR5y54QbznP3jsIBdNaNGLfkfPxJk3GwHEudo/0ot
-	 UlWuOi2uMdo4qlZEvgsTV7JryMg8M0ZinRe2Vrv96KyeVDlgXvNVqaQgDODtrfIPTA
-	 8xIE/3HfiId0owOZZT6dUa45MYdbntPtGBAVYpWBHNOv6QdgRy5Vhvx4tMsYBWIljb
-	 AVd10qke6TVwR5/c+DF/qBROpQwATpYw0pt8/gzpoWB0Pj5ALNLceGg+TxtwX1L6U9
-	 JtUoNUxfLFT87J41+4ofil1xIidaBygDlD8C36pvaOdMYCSZ4hBK4Hfuy9uCZYqcVF
-	 RU4eY8awZh7Dg==
-From: Vinod Koul <vkoul@kernel.org>
-To: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
-References: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
-Subject: Re: (subset) [PATCH v4 00/12] Introduce STM32 DMA3 support
-Message-Id: <171813049557.475662.12255622136346083429.b4-ty@kernel.org>
-Date: Tue, 11 Jun 2024 23:58:15 +0530
+	s=arc-20240116; t=1718134741; c=relaxed/simple;
+	bh=w2c2G6obsMPgsfkn18lzhEJVlZV+GkjZQ8kXfu4gBA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HkoAlpo9ANDI9xZQpOCwI88EZm6X9V9KrqJm7pg9hQJyq6IkW+248wTp9ToFyk2lsipYJgSIFqXWfbS7ZHWhLiYWmHG3u8YKEHLbKUj/0usROwRH9Tcv6VkfCjCTS2nHjz4F2vKaeVvKB9CvZmA5HAErFob1sMKfk5rwew4FA54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AE7C4AF48;
+	Tue, 11 Jun 2024 19:38:57 +0000 (UTC)
+Date: Tue, 11 Jun 2024 15:39:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
+ <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel
+ <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240611153913.1568be52@gandalf.local.home>
+In-Reply-To: <20240611111218.71e57e0f@gandalf.local.home>
+References: <20240606150143.876469296@goodmis.org>
+	<20240606150316.751642266@goodmis.org>
+	<20240611144029.h7egl4aif5mjlrwf@master>
+	<20240611111218.71e57e0f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
+On Tue, 11 Jun 2024 11:12:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Fri, 31 May 2024 17:07:00 +0200, Amelie Delaunay wrote:
-> STM32 DMA3 is a direct memory access controller with different features
-> depending on its hardware configuration. It is either called LPDMA (Low
-> Power), GPDMA (General Purpose) or HPDMA (High Performance), and it can
-> be found in new STM32 MCUs and MPUs.
-> 
-> In STM32MP25 SoC [1], 3 HPDMAs and 1 LPDMA are embedded. Only HPDMAs are
-> used by Linux.
-> 
-> [...]
+> > >+	p++;
+> > >+	err = reserved_mem_add(start, size, p);
+> > >+	if (err) {
+> > >+		memblock_phys_free(start, size);
+> > >+		return err;
+> > >+	}
+> > >+
+> > >+	p += strlen(p);
+> > >+
+> > >+	return *p == '\0' ? 0: -EINVAL;    
+> > 
+> > We won't free the memory if return -EINVAL?  
 
-Applied, thanks!
+I actually copied this from parse_memmap_one() in arch/x86/kernel/e820.c
+and now looking at it, it's a pretty stupid check.
 
-[01/12] dt-bindings: dma: New directory for STM32 DMA controllers bindings
-        commit: 8494ae75dde4495c73b7425543138d088133f75f
-[02/12] dmaengine: stm32: New directory for STM32 DMA controllers drivers
-        commit: 76178a2c49a7c01ef684b0d689f3da4fd12e0154
-[03/12] MAINTAINERS: Add entry for STM32 DMA controllers drivers and documentation
-        commit: 81d09bb5249e5f844ee342cc1419e97fc9108cda
-[04/12] dt-bindings: dma: Document STM32 DMA3 controller bindings
-        commit: a204f64d9f834bdf7085c617aed229eb7500e331
-[05/12] dmaengine: Add STM32 DMA3 support
-        commit: f561ec8b2b33da6a07cf211e43c8eb35b2dd97a2
-[06/12] dmaengine: stm32-dma3: add DMA_CYCLIC capability
-        commit: 08ea31024ab9cd512c4a897bd1afd2a5820c53e6
-[07/12] dmaengine: stm32-dma3: add DMA_MEMCPY capability
-        commit: b3b893a937764731c41423aab4cc0c1a6821e31e
-[08/12] dmaengine: stm32-dma3: add device_pause and device_resume ops
-        commit: b62a13071cffad03690ee19656248077cb388a14
-[09/12] dmaengine: stm32-dma3: improve residue granularity
-        commit: 2088473802ab9641114681bee92ba902bccdc19b
-[10/12] dmaengine: add channel device name to channel registration
-        commit: 10b8e0fd3f7234a38db2c8d2c8dec0bd6eeede44
-[11/12] dmaengine: stm32-dma3: defer channel registration to specify channel name
-        commit: 49b1c21ff815168eca44e81ab0612b1f00759efb
+It does: p += strlen(p); which requires p ending with '\0'. So this will
+likely bug if there is no '\0'.
 
-Best regards,
--- 
-Vinod Koul <vkoul@kernel.org>
+I'm going to remove this, but still check to make sure that the name has
+some length before the allocation.
 
+-- Steve
