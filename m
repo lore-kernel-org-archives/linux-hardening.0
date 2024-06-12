@@ -1,181 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6587B15278E;
-	Tue, 11 Jun 2024 22:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762F81649BE;
+	Wed, 12 Jun 2024 06:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718145390; cv=none; b=QvqWY8o4LD+R9K536C8FBySfbkMh+CZQI0x+9VLb+ox32XZFH1IHMDaz+F0cjF5mMezFupaR5Tb0lk032RHn0ys05r36CiyB7Z0A9EiEkv9OqPyUue2zXgv3SLKqEBb7YYdXKnndSceHqwX11AdGqgWoHmpwdzdkZy6RBYKP0lA=
+	t=1718173595; cv=none; b=CyIO+TNCBZsMQAwb1yum4apTIhCICZahmagFAgMCAuaZixAZvx0VaNn3q6mOd9VtbEAdRM599NLLhI21U/4dERqAd4EkjNu+heq3AnCwSLRqC6+LIZ0SBm/7i8DPlPyJcrudmHwgLMhRhF3TInkJiLMzR763xcYetBlZfFCetq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718145390; c=relaxed/simple;
-	bh=oz2WDd+8rgQTA6tAKBoiy2olZlmCeF6niFRohD0MmbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E0XhJKvPyJw5iLnbc45REMKpieL6CYNwqEWOp5vdcR8v+GdAtZrrTFcSsTciu35UW7OegBeTMW985PTGoC9QsZh5HOopMfWfFjvydDZM1dXYTR3Ubf8rgFVi6oVPoe9rqtU6/TeFxQ0dVKZFBs7ga1LwjDHO32Nc5A3PHj9HTDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E625CC2BD10;
-	Tue, 11 Jun 2024 22:36:26 +0000 (UTC)
-Date: Tue, 11 Jun 2024 18:36:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
- <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Ross
- Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
- <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
- <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mike
- Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v4 1/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-Message-ID: <20240611183643.0327ef5b@gandalf.local.home>
-In-Reply-To: <d6c55ff7-91ac-4505-b821-1416d57edda9@roeck-us.net>
-References: <20240611215610.548854415@goodmis.org>
-	<20240611215801.443593152@goodmis.org>
-	<d6c55ff7-91ac-4505-b821-1416d57edda9@roeck-us.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718173595; c=relaxed/simple;
+	bh=sQH+ctTBrnaFXqBVQ3P9FoSeWIhSEL3g55kjhK2gcCQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tu5w0NZIrLf1xoCPFMfq/4PlemdA9rD5O/NjWOcsGsgSQHAkn7k42jODfQTFuiRrd6ogEunfDIt/ONsCGRUXEC8mt6wsXJKdtlP9jJVty/A5kzq6YLpdEhiVgkTC4MDKcYA89Zl+oAz0VaMcWVI7y5BUsjnp+nY2/qImAk/4YYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMJXd1HL; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMJXd1HL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718173594; x=1749709594;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=sQH+ctTBrnaFXqBVQ3P9FoSeWIhSEL3g55kjhK2gcCQ=;
+  b=VMJXd1HLogVpkz3FVEvaJ4Fs7kexyeEekycHcmvWeB9hGsgCujaD+/DV
+   53LPpIvMpdnUaqd2TfyFCS9Xb095vn8sSGTrULG5GYjAKAzSibEfna6pN
+   58ipswwYYjHCT+SrNuC5sXoQc3Vmk9JzzyMA3M/op1crLd3nGM65Z41xm
+   2SVD8axvdaxWpfakQ2cNCcIfBY/BlAYmrK14vBMLCfQF+Btxhtw4gB88h
+   eIuX5nj2ZDp10dXw+yU9UwMTMD4b5k3GQoy9Gh64RJlmjYPwFZKYqcrS4
+   N7ybbPPMqSQv8FZr0a03t3a5saoFlvjnkhsj4CJFZDMIQfrR55kEq2y+J
+   w==;
+X-CSE-ConnectionGUID: BSXy1zvgTaCUVBDq/Xh+WQ==
+X-CSE-MsgGUID: pKmZLNnVTP+Dv6suCj0PzA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="25593976"
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="25593976"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:26:33 -0700
+X-CSE-ConnectionGUID: JGKS937NR8+AHIMi83g6sA==
+X-CSE-MsgGUID: NLMuK80MQ1OvZJMLwJDkOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="40155538"
+Received: from rathodpx-mobl.gar.corp.intel.com ([10.213.109.222])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:26:29 -0700
+Message-ID: <4e68c0164022ca41494c6d577766dd4b66c93e9f.camel@linux.intel.com>
+Subject: Re: [RFC] HID: ishtp-hid-client: replace fake-flex arrays with
+ flex-array members
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+  Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-input@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Tue, 11 Jun 2024 23:26:25 -0700
+In-Reply-To: <AS8PR02MB723798FF6CEF28DCB62FAC958BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: 
+	<AS8PR02MB723760CB93942370E92F00638BF72@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	 <80976997acb82fe3e6ba54fa2708c8f40fb3eb00.camel@linux.intel.com>
+	 <AS8PR02MB723798FF6CEF28DCB62FAC958BC42@AS8PR02MB7237.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Jun 2024 15:26:05 -0700
-Guenter Roeck <linux@roeck-us.net> wrote:
+On Sat, 2024-06-08 at 11:56 +0200, Erick Archer wrote:
+> Hi Srinivas,
+> First of all, thanks for looking at this ;)
+>=20
+> On Sat, Jun 08, 2024 at 01:42:54AM -0700, srinivas pandruvada wrote:
+> > On Sun, 2024-05-26 at 15:32 +0200, Erick Archer wrote:
+> > > One-element arrays as fake flex arrays are deprecated [1] and we
+> > > are
+> > > moving towards adopting C99 flexible-array members, instead. This
+> > > case
+> > > also has more complexity because it is a flexible array of
+> > > flexible
+> > > arrays and this patch needs to be ready to enable the new
+> > > compiler
+> > > flag
+> > > -Wflex-array-member-not-at-end (coming in GCC-14) globally.
+> > >=20
+> > > So, define a new struct type for the single reports:
+> > >=20
+> > > struct report {
+> > > 	uint16_t size;
+> > > 	struct hostif_msg_hdr msg;
+> > > } __packed;
+> > >=20
+> > > but without the payload (flex array) in it. And add this payload
+> > > to
+> > > the
+> > > "hostif_msg" structure. This way, in the "report_list" structure
+> > > we
+> > > can
+> > > declare a flex array of single reports which now do not contain
+> > > another
+> > > flex array.
+> > >=20
+> > > struct report_list {
+> > > 	[...]
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct report reports[];
+> > > } __packed;
+> > >=20
+> > > Also, use "container_of()" whenever we need to retrieve a pointer
+> > > to
+> > > the flexible structure, through which we can access the flexible
+> > > array
+> > > if needed.
+> > >=20
+> > > Moreover, refactor the code accordingly to use the new structures
+> > > and
+> > > take advantage of this avoiding some pointer arithmetic and using
+> > > the
+> > > "struct_size" helper when possible.
+> > >=20
+> > > This way, the code is more readable and safer.
+> >=20
+> > Applied and tested, atleast didn't break anything.
+> >=20
+> > But the explanation above didn't give me enough clue. You have
+> > added a
+> > payload[] in the=C2=A0 struct hostif_msg {} then using that as a messag=
+e
+> > pointer following the header. I think this description needs to be
+> > better.
+>=20
+> Yeah, I will try to improve the commit message. What do you think
+> about
+> the following parragrafs?
+>=20
+> [I have copied part of the message to show where the new info will
+> be]
+> > > declare a flex array of single reports which now do not contain
+> > > another flex array.
+> > >=20
+> > > struct report_list {
+> > > 	[...]
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct report reports[];
+> > > } __packed;
+>=20
+> Therefore, the "struct hostif_msg" is now made up of a header and a
+> payload. And the "struct report" uses only the "hostif_msg" header.
+> The perfect solution would be for the "report" structure to use the
+> whole "hostif_msg" structure but this is not possible due to nested
+> flexible arrays. Anyway, the end result is equivalent since this
+> patch
+> does attemp to change the behaviour of the code.
+>=20
+> Now as well, we have more clarity after the cast from the raw bytes
+> to
+> the new structures.
+>=20
+> > >=20
+> > > Also, use "container_of()" whenever we need to retrieve a pointer
+> > > to
+> > > the flexible structure, through which we can access the flexible
+> > > array
+> > > if needed.
+>=20
+> I would like to know if it is enough :)
 
-> > diff --git a/mm/memblock.c b/mm/memblock.c
-> > index d09136e040d3..044ddce8f085 100644
-> > --- a/mm/memblock.c
-> > +++ b/mm/memblock.c
-> > @@ -2244,6 +2244,121 @@ void __init memblock_free_all(void)
-> >   	totalram_pages_add(pages);
-> >   }
-> >   
-> > +/* Keep a table to reserve named memory */
-> > +#define RESERVE_MEM_MAX_ENTRIES		8
-> > +#define RESERVE_MEM_NAME_SIZE		16
-> > +struct reserve_mem_table {
-> > +	char			name[RESERVE_MEM_NAME_SIZE];
-> > +	phys_addr_t		start;
-> > +	phys_addr_t		size;
-> > +};
-> > +static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
-> > +static int reserved_mem_count;
-> > +
-> > +/* Add wildcard region with a lookup name */
-> > +static int __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-> > +				   const char *name)
-> > +{
-> > +	struct reserve_mem_table *map;
-> > +
-> > +	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
-> > +		return -EINVAL;
-> > +  
-> 
-> I know I am picky, but name is never NULL, and strlen(name) is guaranteed to be > 0.
-> Personally I'd suggest to check for strlen(name) >= RESERVE_MEM_NAME_SIZE together
-> with !strlen(name) and drop the duplicate checks here (and, as side effect, avoid
-> the pointless memory allocation if the name is invalid).
-
-Yeah, it's now checked before hand. I'll remove it for v5.
-
-> 
-> > +	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
-> > +		return -1;
-> > +
-> > +	map = &reserved_mem_table[reserved_mem_count++];
-> > +	map->start = start;
-> > +	map->size = size;
-> > +	strscpy(map->name, name);
-> > +	return 0;
-> > +}
-> > +
-
-
-> > +/*
-> > + * Parse reserve_mem=nn:align:name
-> > + */
-> > +static int __init reserve_mem(char *p)
-> > +{
-> > +	phys_addr_t start, size, align;
-> > +	char *name;
-> > +	char *oldp;
-> > +	int err;
-> > +
-> > +	if (!p)
-> > +		return -EINVAL;
-> > +
-> > +	oldp = p;
-> > +	size = memparse(p, &p);
-> > +	if (!size || p == oldp)
-> > +		return -EINVAL;
-> > +
-> > +	if (*p != ':')
-> > +		return -EINVAL;
-> > +
-> > +	align = memparse(p+1, &p);
-> > +	if (*p != ':')
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * memblock_phys_alloc() doesn't like a zero size align,
-> > +	 * but it is OK for this command to have it.
-> > +	 */
-> > +	if (align <= SMP_CACHE_BYTES)  
-> 
-> Any reason for using <= instead of < ?
-
-Nope. Not sure why I did that. :-/
-
-I'll fix that too.
+The apporoach is fine. But I don't like clubbing other changes like
+struct_size(). That make code difficult to follow.
 
 Thanks,
+Srinivas
 
--- Steve
 
-> 
-> Guenter
-> 
-> > +		align = SMP_CACHE_BYTES;
-> > +
-> > +	name = p + 1;
-> > +	if (!strlen(name))
-> > +		return -EINVAL;
-> > +
-> > +	/* Make sure that name has text */
-> > +	for (p = name; *p; p++) {
-> > +		if (!isspace(*p))
-> > +			break;
-> > +	}
-> > +	if (!*p)
-> > +		return -EINVAL;
-> > +
-> > +	start = memblock_phys_alloc(size, align);
-> > +	if (!start)
-> > +		return -ENOMEM;
-> > +
-> > +	err = reserved_mem_add(start, size, name);
-> > +	if (err) {
-> > +		memblock_phys_free(start, size);
-> > +		return err;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +__setup("reserve_mem=", reserve_mem);
-> > +
-> >   #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
-> >   static const char * const flagname[] = {
-> >   	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",  
+
+>=20
+> Regards,
+> Erick
+> >=20
+> > Thanks,
+> > Srinivas
 
