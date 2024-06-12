@@ -1,59 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF196F2F2;
-	Wed, 12 Jun 2024 18:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D5E2135A;
+	Wed, 12 Jun 2024 18:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217721; cv=none; b=NStOJrDJcuJ8slczbt5QfWcAgfBNXkLmdivvg6wsXx2dIFi2dl1fINlJaLKiqwdc5g5KHQ1f6z6O6NRDYWzBXhy2UKNyeydNC+yjaCu3CPw2LiAVj4cVvbl2kJ5w8YUGuBed/+bm0Wel4C6Ke3U/tSG7Pl31KvkBA23rUfZy9o8=
+	t=1718217960; cv=none; b=NjpPkgdGxlKUexMQx1nP07jaec/j4p1cOyVJ/l3w6RYr8gJz0Tno1jINZ9apVWmkLkaoWdESTtlM6IIyyM78ZBw6KpLOA7QrzPc8zVByd5ANRDs2D1yM9kWdDrBvGKoX4stHJQfadDmQ3PfWkwtcjE9TrPlSISwG+6YGzrZBQqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217721; c=relaxed/simple;
-	bh=mAIdBktGBsJfF8zgxDtzpPy0UqBsNJgXgpFV2sbScFI=;
+	s=arc-20240116; t=1718217960; c=relaxed/simple;
+	bh=dXhvjwM/0oFIvt2EbGPoQJdmtCjDsX+7C5LbE2ZsBNc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NRdsOkRgxdg/Ch5NK7hJoTVaurLSmJUicLP9OAg1sdWu1qmDzeXMhS5mFj6B3dFIoniA2K7Wi26YPtSRLm/ldgZvkWyk53oJslHX7m/7tTEOdCuT/cgMM/IEU9n+Q2rAFLnDNqCYcmEgxwFn2aFqSZr0//FwDMvsWjmJvJA3bHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FU4Pmgqd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4PcrEsmaE2HTDNQYkowTdBis6NaEdb/7E2ca4aedo8JR8U4V02PJfCauRpLNj3cmZ0E7v9cFPNYkjYm24SyRuRZLAjAmJ9RNAPwwb7dMQONoZV2AbkHK8SmVba26qw8wIcd7WvJV4GdaTs6DGfPh7N6Y4TBicSE/wIAGkf7pgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbFj2lOK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FU4Pmgqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C059C32786;
-	Wed, 12 Jun 2024 18:42:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbFj2lOK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29118C32786;
+	Wed, 12 Jun 2024 18:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718217720;
-	bh=mAIdBktGBsJfF8zgxDtzpPy0UqBsNJgXgpFV2sbScFI=;
+	s=k20201202; t=1718217958;
+	bh=dXhvjwM/0oFIvt2EbGPoQJdmtCjDsX+7C5LbE2ZsBNc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FU4PmgqdWvYqgfewU/OGEo4njYGh15AbSaztNNgZgaKDoOJyIe89t6a9VdxgK7G5i
-	 lr0HflK89pgZpHcZXCgNSVx7vPuGhFiO6IbMdt27yUpdqVJjbe0xdsOynqXRo1gNiF
-	 wcreD5n3XV0HtOeaT/1leJ4xDJzwR426ok4crPgso5y56yAo5nuvQ/BR8OnnxBhS9c
-	 LSGRkYMnW2403gAUIjm5XqOZDGIj8gPthOiJRUETY0GO5bSxCnsEbfVhJoPPOZ8tXS
-	 zHVI/JzaJZmnLvHzts71QRNENmFI2vhhos1MBZtXsY0wjwDjHPx7kSNR650oXchqC5
-	 m01K2Ta0nJwoQ==
-Date: Wed, 12 Jun 2024 11:42:00 -0700
+	b=HbFj2lOKKRLqmpNJyH1ELmss+TDEz4RJ1NB0NKtbvEQ2Q6/0z5WVXLtB/tOQOZ0KV
+	 EAy+4jYi1xAS63Q/3Nmc3D53yrduqGvkwkWy80rWFLxGYC/t3ubqBJD90Hw6ORZiAm
+	 tw+lzL1LOEn4fgoAEEB2R8Vb8Nu6CeOFEk1/4IECUnTQ1kPSF4v1GPdUyuW4gnaV8w
+	 h55x04pfatlIDpIiWLt2lDQPIYDhcA3YGu19NkxWsRwfKSuLPCjIGqMPtncmjSd6LE
+	 M0qxhxk+ERJ7Q6e3qi8IC4pbnahl/1I6ROoaU7q+pzDF+hzQWqOx0q76fNHfbPbuck
+	 06aLuT5irhExQ==
+Date: Wed, 12 Jun 2024 11:45:57 -0700
 From: Kees Cook <kees@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Gatlin Newhouse <gatlin.newhouse@gmail.com>,
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Baoquan He <bhe@redhat.com>, Changbin Du <changbin.du@huawei.com>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Tina Zhang <tina.zhang@intel.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2] x86/traps: Enable UBSAN traps on x86
-Message-ID: <202406121139.5E793B4F3E@keescook>
-References: <20240601031019.3708758-1-gatlin.newhouse@gmail.com>
- <878qzm6m2m.ffs@tglx>
- <7bthvkp3kitmmxwdywyeyexajedlxxf6rqx4zxwco6bzuyx5eq@ihpax3jffuz6>
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
+ line option
+Message-ID: <202406121145.8860502D7@keescook>
+References: <20240611144911.327227285@goodmis.org>
+ <20240611144949.703297941@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,103 +66,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7bthvkp3kitmmxwdywyeyexajedlxxf6rqx4zxwco6bzuyx5eq@ihpax3jffuz6>
+In-Reply-To: <20240611144949.703297941@goodmis.org>
 
-On Tue, Jun 11, 2024 at 01:26:09PM -0700, Gatlin Newhouse wrote:
-> On Mon, Jun 03, 2024 at 06:13:53PM UTC, Thomas Gleixner wrote:
-> > On Sat, Jun 01 2024 at 03:10, Gatlin Newhouse wrote:
-> > 
-> > > Bring x86 to parity with arm64, similar to commit 25b84002afb9
-> > > ("arm64: Support Clang UBSAN trap codes for better reporting").
-> > > Enable the output of UBSAN type information on x86 architectures
-> > > compiled with clang when CONFIG_UBSAN_TRAP=y. Currently ARM
-> > > architectures output which specific sanitizer caused the trap,
-> > > via the encoded data in the trap instruction. Clang on x86
-> > > currently encodes the same data in ud1 instructions but the x86
-> > > handle_bug() and is_valid_bugaddr() functions currently only look
-> > > at ud2s.
-> > 
-> > Please structure your change log properly instead of one paragraph of
-> > unstructured word salad. See:
-> > 
-> >   https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
-> >   
-> > > +/*
-> > > + * Check for UD1, UD2, with or without Address Size Override Prefixes instructions.
-> > > + */
-> > >  __always_inline int is_valid_bugaddr(unsigned long addr)
-> > >  {
-> > >  	if (addr < TASK_SIZE_MAX)
-> > > @@ -88,7 +92,13 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
-> > >  	 * We got #UD, if the text isn't readable we'd have gotten
-> > >  	 * a different exception.
-> > >  	 */
-> > > -	return *(unsigned short *)addr == INSN_UD2;
-> > > +	if (*(u16 *)addr == INSN_UD2)
-> > > +		return INSN_UD2;
-> > > +	if (*(u16 *)addr == INSN_UD1)
-> > > +		return INSN_UD1;
-> > > +	if (*(u8 *)addr == INSN_ASOP && *(u16 *)(addr + 1) == INSN_UD1)
-> > 
-> > 	s/1/LEN_ASOP/ ?
-> > 
-> > > +		return INSN_ASOP;
-> > > +	return 0;
-> > 
-> > I'm not really a fan of the reuse of the INSN defines here. Especially
-> > not about INSN_ASOP. Also 0 is just lame.
-> > 
-> > Neither does the function name make sense anymore. is_valid_bugaddr() is
-> > clearly telling that it's a boolean check (despite the return value
-> > being int for hysterical raisins). But now you turn it into a
-> > non-boolean integer which returns a instruction encoding. That's
-> > hideous. Programming should result in obvious code and that should be
-> > pretty obvious to people who create tools to validate code.
-> > 
-> > Also all UBSAN cares about is the actual failure type and not the
-> > instruction itself:
-> > 
-> > #define INSN_UD_MASK		0xFFFF
-> > #define INSN_ASOP_MASK		0x00FF
-> > 
-> > #define BUG_UD_NONE		0xFFFF
-> > #define BUG_UD2			0xFFFE
-> > 
-> > __always_inline u16 get_ud_type(unsigned long addr)
-> > {
-> > 	u16 insn;
-> > 
-> > 	if (addr < TASK_SIZE_MAX)
-> >         	return BUD_UD_NONE;
-> > 
-> >         insn = *(u16 *)addr;
-> >         if ((insn & INSN_UD_MASK) == INSN_UD2)
-> >         	return BUG_UD2;
-> > 
-> > 	if ((insn & INSN_ASOP_MASK) == INSN_ASOP)
-> >         	insn = *(u16 *)(++addr);
-> > 
-> > 	// UBSAN encodes the failure type in the two bytes after UD1
-> >         if ((insn & INSN_UD_MASK) == INSN_UD1)
-> >         	return *(u16 *)(addr + LEN_UD1);
-> > 
-> > 	return BUG_UD_NONE;
-> > }
-> > 
-> > No?
+On Tue, Jun 11, 2024 at 10:49:13AM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Thanks for the feedback.
+> Add a method to find a region specified by reserve_mem=nn:align:name for
+> ramoops. Adding a kernel command line parameter:
 > 
-> It seems that is_valid_bugaddr() needs to be implemented on all architectures
-> and the function get_ud_type() replaces it here. So how should the patch handle
-> is_valid_bugaddr()? Should the function remain as-is in traps.c despite no
-> longer being used?
+>   reserve_mem=12M:4096:oops ramoops.mem_name=oops
+> 
+> Will use the size and location defined by the memmap parameter where it
+> finds the memory and labels it "oops". The "oops" in the ramoops option
+> is used to search for it.
+> 
+> This allows for arbitrary RAM to be used for ramoops if it is known that
+> the memory is not cleared on kernel crashes or soft reboots.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Yeah, this is why I'd suggested to Gatlin in early designs to reuse
-is_valid_bugaddr()'s int value. It's a required function, so it seemed
-sensible to just repurpose it from yes/no to no/type1/type2/type3/etc.
+Acked-by: Kees Cook <kees@kernel.org>
 
--Kees
+Let me know if this should go via the pstore tree, if you'd rather carry
+it?
 
 -- 
 Kees Cook
