@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45D5391;
-	Wed, 12 Jun 2024 18:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DCF3FE2A;
+	Wed, 12 Jun 2024 18:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718216629; cv=none; b=ntfLsxMakvDag+130bxCOQJ8WsfmMN9LgOhBoKd9TVRBtIT8Gi7YfiapRhoz5iUJ797XPcs7180xTG96Ld557/kv8CUVQPV4ZPB485k3oSLH26QOzwRUHUxZWPZjsPk6AWjh7tID19wpfYKHdnfHSgdtggoOS4hHC+jn8dOQ75c=
+	t=1718216915; cv=none; b=ewaREUR7EFS7AaqVNAr+Dx3HJfMfcdoma53Rj479OlcocDfnWWpd0LzL1QfbRzC8U0qcconbuXA6HZMHW04cruOu9Zp9my7kUdR97Gn+XUIKLKjbm7Cw3jFyiKgXcgRJ64dwwy1Y1fK/l+o9TChxnVGyJ9/FdhrfShhxREWZiGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718216629; c=relaxed/simple;
-	bh=Tl9nyuzjb2pxEQcV7FhW1PIM12LMWMgzHS0CNeblVFM=;
+	s=arc-20240116; t=1718216915; c=relaxed/simple;
+	bh=NJeqqnsIfUMhlSi06vIIKPHNE2ykrkcvFQ48tdRGhsA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MUGol8g4LyqnvP1m+BSnaAVsWF9drJ4n7YSNsKOxioydAc33Z3o6psadCHjjJ6LTRFXqWzd1CBJxaaySrDJxJz4qzeDyG3ng/YSwyR+8JkaxZ/dIDuPvMiwfYFAcCHV1MWyMoDLHrJlOsFhMKjZlYKQHYss79OKxk5K417U44Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osHdSw87; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fq4iZ7hCt99U5OfAl4lLxoSCTS9LnIFIZItFEYCZ0Q5Ypv2Ae+JESr7AB34S7J0xof3bu/cBRRd2fcOl3P6ra0b7zfzcHF3iseReWINIt2hT9fPF1hUDhrs+hYTfFv7gWpm4sptyvKQJDkWEZ5QxpPWHEupr4GhEX1hyl+LjjVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddpy3LFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osHdSw87"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C32C116B1;
-	Wed, 12 Jun 2024 18:23:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddpy3LFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE7CC116B1;
+	Wed, 12 Jun 2024 18:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718216628;
-	bh=Tl9nyuzjb2pxEQcV7FhW1PIM12LMWMgzHS0CNeblVFM=;
+	s=k20201202; t=1718216914;
+	bh=NJeqqnsIfUMhlSi06vIIKPHNE2ykrkcvFQ48tdRGhsA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=osHdSw87Cm8MGSp+pdRD0gXU3j/5xUcHgwEiJYwiIjkxQR2qufAumWRxZok/xEj7+
-	 ywWkOmSJWsgVK0huS2vcqDdovTWWcg/7weEVtZ0VUXx3+Nbn0pt+Ol8e1y2N/7MFfu
-	 HYnRFtcv7pqCOn3ipjnNUjy0uaRriIK2knOlK1PgG2b4bm8tj9W0Fc+3ANQup5pzFI
-	 m4z5t5jr2HiyvlsuHy9AxckoeL5PkTRZMFK3jm+Ronn7TW4MAlt/q/5SejBEfFN59S
-	 3nho1Upyw2KmhISPvKV2E88Hf3ty/Ly00WMq5t5mHyNIaMKZzo99MTAVaRHpPjw2uX
-	 nhMo/E5Qs0f8A==
-Date: Wed, 12 Jun 2024 11:23:48 -0700
+	b=ddpy3LFXn9c98MKv3p1z9yzC/k7fp2NoQZCwQ1Bp3h+rc35Aj+5XYZpEUKKZ724ju
+	 y9ZVcyK1HprCeVdIqNoKJZA4N3pV2QBPcSSYx5JVzTca/Va89RiIqfN0iHQoRB5v22
+	 4P3VgoYjRQ0YRiOTFBQRUENT3jTcTYpRVcLHbZDkmjvl5fr0ovC4LYgtA8l9Bo4qNi
+	 sj6e2NiHBaBOFoXtpyO9MS/O51xFBlLGWQtlXXkxqasrMderNVfzK0R8HW3Fi9nd5v
+	 VqL2s2J+83NWAWDiaNO7RZLtHBTbLgANwd7LPwPmWBvnlcaNkfDGkoiSy+OXB4oGcu
+	 z4C8Bg0Ko80zg==
+Date: Wed, 12 Jun 2024 11:28:33 -0700
 From: Kees Cook <kees@kernel.org>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com,
-	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com,
-	jorgelo@chromium.org, Guenter Roeck <groeck@chromium.org>,
-	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Christian Brauner <brauner@kernel.org>, Jeff Xu <jeffxu@google.com>,
-	Mike Frysinger <vapier@chromium.org>
-Subject: Re: [PATCH v5 2/2] proc: restrict /proc/pid/mem
-Message-ID: <202406121123.B0F60E91E@keescook>
-References: <20240605164931.3753-1-adrian.ratiu@collabora.com>
- <20240605164931.3753-2-adrian.ratiu@collabora.com>
- <202406060917.8DEE8E3@keescook>
- <3304e0-6669e580-9f9-33d83680@155585222>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Kenton Groombridge <concord@gentoo.org>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] wifi: mac80211: Avoid address calculations via out of
+ bounds array indexing
+Message-ID: <202406121127.FB2E58C2@keescook>
+References: <20240605152218.236061-1-concord@gentoo.org>
+ <fd1acc0f69ef9573ff0dced35863949c80c6d5e7.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,25 +46,34 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3304e0-6669e580-9f9-33d83680@155585222>
+In-Reply-To: <fd1acc0f69ef9573ff0dced35863949c80c6d5e7.camel@sipsolutions.net>
 
-On Wed, Jun 12, 2024 at 07:13:41PM +0100, Adrian Ratiu wrote:
-> Would macros like the following be acceptable?
-> I know it's more verbose but also much easier to understand and it works.
+On Wed, Jun 12, 2024 at 10:20:41AM +0200, Johannes Berg wrote:
+> On Wed, 2024-06-05 at 11:22 -0400, Kenton Groombridge wrote:
 > 
-> #if IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_ALL)
-> DEFINE_STATIC_KEY_TRUE_RO(proc_mem_restrict_open_read_all);
-> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_ptracer);
-> #elif IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_PTRACE)
-> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_all);
-> DEFINE_STATIC_KEY_TRUE_RO(proc_mem_restrict_open_read_ptracer);
-> #else
-> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_all);
-> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_ptracer);
-> #endif
+> 
+> > Co-authored-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Kenton Groombridge <concord@gentoo.org>
+> > 
+> 
+> Wait ... I don't know what Kees did here, but seems then he should sign-
+> off too.
+> 
+> Kees?
 
-Yeah, that'd be fine by me. I was a little concerned I was
-over-generalizing those macros. :P
+I had helped mainly in private emails with Kenton. I'm fine with
+whatever tags people want. :)
+
+Signed-off-by: Kees Cook <kees@kernel.org>
+
+and/or
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+(Though note the email address change just to keep checkpatch happy
+about Co-authored-by vs S-o-b mismatches.)
+
+Thanks!
 
 -- 
 Kees Cook
