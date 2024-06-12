@@ -1,167 +1,130 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677C825762
-	for <linux-hardening@vger.kernel.org>; Wed, 12 Jun 2024 20:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F111F433A4;
+	Wed, 12 Jun 2024 21:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718222683; cv=none; b=KCyVoPM8njmCE422e8V89XCgmkdTl8i524XbQkrMtJKcl1rB2lNwjcXb4q7t8kBN7A9BMB/1V7TVnGY+ysTCf2fm93mv+N+JILDKW9egBLC/bbwaFqPvJh/sgNOCcWF8r8r+rDT8BNd9cMJZh0qAX38m1KOEu+DNjVYXwRgJtUQ=
+	t=1718226169; cv=none; b=Oytq5ZxvRztnL0mXIVGNTLcyqkDorRWcWswKWAklym7tVmdEsIRupcO2hry4PO2JiEQqecNls20m9jniY1gWLMAgnzgA2vIng+Hi/wwwK6Cuj+RMb9QqoHk2qvzRwyF9nXVebxTag1WZLKftWhvFX24XLsVoFY1k0dPMG3vv7nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718222683; c=relaxed/simple;
-	bh=5C6E8Y9SDchcIWwSmH36JEqE6WSYVVh9PjV5yurQ6WA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uqHB2vxmM/6CbpeL5VDjOB2dWoCguaEgLS3BWJZ/zWtZxFvmGS4uUcaMQSGHv2vctSBHXDbD2MndqjSS4AWu8nQjpaSCMigvVnPiCBsV7IqCNB/tCqwCC92bcglu6Dz2XauCesxsVYWNumJHZnqzA7KHI+GCrF6iWUp7+DzpaLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=IaMH4Jce; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1718226169; c=relaxed/simple;
+	bh=2lfTlYRZCf4xaUB6sPr/DlI2iYZHVJqO+OgfzvR4kGw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YmxOT2fA2ivx/opLUWgtmZ+rNnJ9GGCf6b6mpRVcfKgNRtW/0o3rFNlc4GevKmvdT++8Eim65XGPqsZeV3Nrv83kPf03B1yp7hXLh4l2qWuNbFDhV6PMKtwINrDphNQanfhnDRAoI2dQ3oN8qHpAao4VNyRREaEdn1sVm9RjWiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwGXea6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IaMH4Jce"
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id HQxssUwdzSLKxHUCxsLm6t; Wed, 12 Jun 2024 20:04:35 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id HUCxs20ItWACGHUCxsNMUR; Wed, 12 Jun 2024 20:04:35 +0000
-X-Authority-Analysis: v=2.4 cv=ZLXRm27b c=1 sm=1 tr=0 ts=6669ff53
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=xGRsDScCAAAA:8
- a=pKTFDrzG_x3V9sfl7PQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=zEVfNvAIcUWeczMkmY0T:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/QPeIjovkvV/E5oIolQo/mIlJ+pmqKXHutHu0+C0FVs=; b=IaMH4JcelzjtzZ8l052lUZoo73
-	sI8xPNQtYOTq4SBbq7wbYV19M4bbN7/tIy0GGJ0daZKbJwwMBPgru1JOSJbZkKTTDHj0JkGj6CfDt
-	hvpFYVQwNVSs+gUb3q2uK4cvQYtAxfknNNRP9/IGljJQJwQvF18bbmwdWdjPF3qHJVBySzDRqbMmP
-	R/PTadZMsEQNP/1lFtMBtB/gWcW0n3l7fL+kWu3KgjClJyS963c82KeIRgpmL91Iheiihvd02mP7k
-	A+x5MhXqNQVGRaXeDMCx8FkrVQayyvm0QZwzu0xmSKR1RFVQEvDn4K4AjQMI/Pc+P6Ek/OvMUyUID
-	m04LJ4DQ==;
-Received: from [201.172.173.139] (port=40652 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sHUCv-004Bhn-0e;
-	Wed, 12 Jun 2024 15:04:33 -0500
-Message-ID: <c80e41e6-793e-4311-8e15-f5eda91e723e@embeddedor.com>
-Date: Wed, 12 Jun 2024 14:04:31 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwGXea6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6FDE3C116B1;
+	Wed, 12 Jun 2024 21:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718226168;
+	bh=2lfTlYRZCf4xaUB6sPr/DlI2iYZHVJqO+OgfzvR4kGw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=fwGXea6BJRhGx+laVmx6YpeiZLZ8shU8KXnFtipCOY6R8AB0AncVq3DD6oF9X9mAF
+	 2shovLjZfxp+iCsTMEHltvz8eZ4cCooiM92CcK0VZY1dnqchQfE8ep5YmtxolR4/oo
+	 9J0ps9CjVXm+RjhxquK1TEFJIQpHKDmzdf4NlXzzjtqUYfX7vaTnp2owviVtxhVo06
+	 5sXZcXoxR41+zGKg+hhcz3BBnFZAtILmVreEkKD/U/F6ycs9Y9ZrV0tUWenpjKJ+LO
+	 DjaRdph8uE6/0yZXKl1vvgiTIlI8v+quRCw++L56s3wS7bqxlEB5ljAY4Bdt9UvKiM
+	 Pzvg6id4IiPPQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52192C27C53;
+	Wed, 12 Jun 2024 21:02:48 +0000 (UTC)
+From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
+Subject: [PATCH v3 0/3] Add sy7802 flash led driver
+Date: Wed, 12 Jun 2024 23:01:31 +0200
+Message-Id: <20240612-sy7802-v3-0-1e9cc1c79b79@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Jiri Slaby <jirislaby@kernel.org>, Bill Wendling <morbo@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
- patches@lists.linux.dev, stable@vger.kernel.org
-References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
- <d7c19866-6883-4f98-b178-a5ccf8726895@kernel.org>
- <2024053008-sadly-skydiver-92be@gregkh>
- <09445a96-4f86-4d34-9984-4769bd6f4bc1@embeddedor.com>
- <68293959-9141-4184-a436-ea67efa9aa7c@kernel.org>
- <6170ad64-ee1c-4049-97d3-33ce26b4b715@kernel.org>
- <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
- <bee7240b-d143-4613-bde4-822d9c598834@embeddedor.com>
- <1313c7a5-d074-4a8f-9ab9-07e4a7716fb9@kernel.org>
- <4da5ba72-6dff-46f1-b596-158c62b34f18@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <4da5ba72-6dff-46f1-b596-158c62b34f18@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sHUCv-004Bhn-0e
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.139]:40652
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPd6gOKlF2OZttKI7pJ/CqRNi6r7IAN/X9mXmOVLiYrItRKWBejB0dqm1HU0WPHAJIxW56ctayQtcT7uHnU77nnWeBHtf0io7+WfFGTLHlnTOoq1KGBS
- MrPNwnf0Kn+Ne+fI4plFYqqdAfDlVdMZY6rXAv6IAa5f9cXEV+NcIFhLzxcW+hjEE3DyQynczRAt2R59I20yS/zMVEsm6m4npSUxjelMrXz9BxtvYh36vZye
+X-B4-Tracking: v=1; b=H4sIAKsMamYC/1WMwQ6CMBAFf8Xs2Zp221L05H8YDwVa2QuQFhuR8
+ O8WEjQe5+XNzBBdIBfhcpghuESR+i6DPB6gbm33cIyazIAcFZeoWZxMyZF5xX1deF1o1JDPQ3C
+ eXlvods/cUhz7MG3dJNZ1T5g9kQTjrKmMspVEb62/2oHGd6zbk3vCGkn4ExUXXxGzKIQsxZlbo
+ 1T5Ly7L8gGP6kno1wAAAA==
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Trilok Soni <quic_tsoni@quicinc.com>, Kees Cook <kees@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718226168; l=2112;
+ i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
+ bh=2lfTlYRZCf4xaUB6sPr/DlI2iYZHVJqO+OgfzvR4kGw=;
+ b=Pych9e2dTWPhOchjqcDytmZ/K/iZ6oz2KN+nidvINrUBfeDPVXXIhVJ3r3TsY9GaSqk5+WjjM
+ SENcXoQ7nFlCC6vEaOEjuRohZAprrZVcWnbwwLCELrO0dyBYZfpIEfJ
+X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
+ pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
+X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
+ auth_id=142
+X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Reply-To: git@apitzsch.eu
+
+This series introduces a driver for the Silergy SY7802 charge pump used
+in the BQ Aquaris M5 and X5 smartphones.
+
+The implementation is based on information extracted from downstream as
+the datasheet provided by a distributor of the hardware didn't include
+any information about the i2c register description.
+
+Signed-off-by: André Apitzsch <git@apitzsch.eu>
+---
+Changes in v3:
+- Add R-b tag to first patch
+- Extend driver commit message
+- Improve readability of defines by using BIT()
+- Rename some variables/parameters
+  * led_no -> led_id
+  * level -> brightness
+  * curr -> fled_{strobe,torch}_used_tmp
+  * mask -> {flash,torch}_mask
+  * i -> child_num
+- Restructure structs ("Place th big stuff at the top")
+- Declare 'child' on a separate line
+- Move multi-line assignments out of declaration block
+- Update warning/error messages and comments
+- Use gotos to handle error path
+- Use devm API to cleanup module's resources
+- Init mutex before LED class device is registered to avoid race
+  condition
+- Link to v2: https://lore.kernel.org/r/20240401-sy7802-v2-0-1138190a7448@apitzsch.eu
+
+Changes in v2:
+- bindings: remove unneeded allOf
+- bindings: example: move flash-led-controller under i2c node to fix
+  check error
+- Cc to phone-devel
+- Link to v1: https://lore.kernel.org/r/20240327-sy7802-v1-0-db74ab32faaf@apitzsch.eu
+
+---
+André Apitzsch (3):
+      dt-bindings: leds: Add Silergy SY7802 flash LED
+      leds: sy7802: Add support for Silergy SY7802 flash LED controller
+      arm64: dts: qcom: msm8939-longcheer-l9100: Add rear flash
+
+ .../devicetree/bindings/leds/silergy,sy7802.yaml   | 100 ++++
+ .../boot/dts/qcom/msm8939-longcheer-l9100.dts      |  26 +
+ drivers/leds/flash/Kconfig                         |  11 +
+ drivers/leds/flash/Makefile                        |   1 +
+ drivers/leds/flash/leds-sy7802.c                   | 546 +++++++++++++++++++++
+ 5 files changed, 684 insertions(+)
+---
+base-commit: 6a03b35e4395eb2d6e89a38aca00a9fe9cb39ba1
+change-id: 20240325-sy7802-f40fc6f56525
+
+Best regards,
+-- 
+André Apitzsch <git@apitzsch.eu>
 
 
-
-On 6/3/24 02:26, Gustavo A. R. Silva wrote:
-> 
->> FWIW undoing:
->> commit 7391ee16950e772076d321792d9fbf030f921345
->> Author: Peter Hurley <peter@hurleysoftware.com>
->> Date:   Sat Jun 15 09:36:07 2013 -0400
->>
->>      tty: Simplify flip buffer list with 0-sized sentinel
->>
->>
->> would do the job, IMO.
-> 
-> So, not even _sentinel_ is actually needed? Awesome!
-> 
-
-It seems that a clean revert is not possible at this point, as
-the original patch is more than a decade old. If _sentinel_ is
-not needed, and based on the original patch, would the following
-suffice?
-
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 79f0ff94ce00..1b77019cc510 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -135,10 +135,7 @@ void tty_buffer_free_all(struct tty_port *port)
-         llist_for_each_entry_safe(p, next, llist, free)
-                 kfree(p);
-
--       tty_buffer_reset(&buf->sentinel, 0);
--       buf->head = &buf->sentinel;
--       buf->tail = &buf->sentinel;
--
-+       buf->tail = NULL;
-         still_used = atomic_xchg(&buf->mem_used, 0);
-         WARN(still_used != freed, "we still have not freed %d bytes!",
-                         still_used - freed);
-@@ -578,9 +575,8 @@ void tty_buffer_init(struct tty_port *port)
-         struct tty_bufhead *buf = &port->buf;
-
-         mutex_init(&buf->lock);
--       tty_buffer_reset(&buf->sentinel, 0);
--       buf->head = &buf->sentinel;
--       buf->tail = &buf->sentinel;
-+       buf->head = NULL;
-+       buf->tail = NULL;
-         init_llist_head(&buf->free);
-         atomic_set(&buf->mem_used, 0);
-         atomic_set(&buf->priority, 0);
-diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
-index 31125e3be3c5..75fb041e43fe 100644
---- a/include/linux/tty_buffer.h
-+++ b/include/linux/tty_buffer.h
-@@ -37,7 +37,6 @@ struct tty_bufhead {
-         struct work_struct work;
-         struct mutex       lock;
-         atomic_t           priority;
--       struct tty_buffer sentinel;
-         struct llist_head free;         /* Free queue head */
-         atomic_t           mem_used;    /* In-use buffers excluding free list */
-         int                mem_limit;
-
-Thanks
---
-Gustavo
