@@ -1,132 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E518F1C14;
-	Wed, 12 Jun 2024 19:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDA28526C;
+	Wed, 12 Jun 2024 19:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718218881; cv=none; b=OgloCB6/PQiZrC9Z9s7FY6I2hj7pGXFtPel18tKFEvid0rjk+84hyQEDku9ExAHUUqhuEMaoBRApWEoOKDzAGEuzVmo1MH4MpFBrTXmD5QwoEMhZkJCglgaMJ/Xzq0iA4xecpdjegf3BkOc6XquCACmwDeenRQp8I0dQr1T/4/w=
+	t=1718220132; cv=none; b=praMIBXH/giYS/c39LkH6d6zcgOscVElS/kD+MrtfOZkxi1LQOuLU+xB+LmY+wt06Ig96r1+8BmTZL1ifsSDvSbEm5R5R7J7jSbiYPIDqUFlGdPXxJx1CG31JbJhnGcPK4dCTuDtQoLLt3yrwFRLOnWywTrATycIJKDh6Hn4OJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718218881; c=relaxed/simple;
-	bh=24sykyomd1DMS8CZmtVl5X0WUSlfSVk5IR5O6L64EoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iIvAuzzUqCZgnG1rE0FV3wHm/UW914W4YrBCqMbQSfnHOP/VnbcMKusmaLgPMCd6yW9ZIM+v6za0O7pKSDO+Ta+mAjT0jGQNLJ2I5iynvPMZRUrMCyJHyqB0tKck3h6w3E5glMZiy/1yN1/COOlYyBeCA2vMmRbaCrb9uC7mISg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qESI8kaU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qESI8kaU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E6C6C116B1;
-	Wed, 12 Jun 2024 19:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718218880;
-	bh=24sykyomd1DMS8CZmtVl5X0WUSlfSVk5IR5O6L64EoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qESI8kaUn2eW+OIofh/MkBZmyVOjII6A94ZLEt/vq7eux00o+d5H/pQi7ZOlWQI+x
-	 KgpTLGT0cB1UL4o//+Sq251Q0H7d8UJJeMXybHoMPV/J5CxCbOWj8iJZnCPAQaWkS6
-	 Lgb0yUNc+4GtyaeJuZi3m2ouyxu1pEALc2P3A2L5QP+Ec6q/zcjMbgxIvPwVontK3T
-	 9HiYoye3gVBniJTa4m3lDRradk4cUdQfJCNWSV1NM7X3UApBlK4zlblZI8rO0XdGrJ
-	 y0FMd0D7wOrE4gi1Ngok9BWl92HvuH7m+s7l/DtcRZeH2+GmLzRsz8vKJmGSzOWzCp
-	 QtyDcPv1IOLbw==
-Date: Wed, 12 Jun 2024 12:01:19 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <202406121148.688240B@keescook>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1718220132; c=relaxed/simple;
+	bh=EJ2U0PBqYGloWqGwHp67L2zESA8Kvm6C7y+3Lwt/JAY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A/8F8+xJEd1Gni1TJGBVSVb1DiGyOkta5MAgijRPnw7ghwPPdpJX09eNbAg9YFyWVlnc89pdSc1mzENgtoVzZeyKKoEO1mJP4debYaK0IpApnQk+t0CoWkF50woStFxolTOum2PbF7wgDLtcowreh4SLvFV8BjpaRcFeL75Mh2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dfdff9771f8so252745276.1;
+        Wed, 12 Jun 2024 12:22:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718220128; x=1718824928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o9H3Nrhjw0EDFs2mHp/oL+kQ0y9WJBzcaGC/TcFVbrU=;
+        b=H3A4UYvRlxoljART4ch0VRrnsbSnTuape3wPhks1ckjMx37wO2Bh+3ft59db8hZnKq
+         07tKc/sePhte7H5T5+uY+o7B5y3amF+d1cI+2IRcKOH1VwszwAJE2yCxqlZcVMEefLvj
+         ZrKDX3EMr1D0oYJmtBxOmkzrCY1jXcgQ6jdTxo4vFWQ2vM52ONcWFIAAZD51gIBLEnKa
+         OtGAtjHCoGo9y8Gn2SImwElfvadUjX0xFB4Dti6HhkHbbIuAVnRDuDVJ3KmkfQPB7NR5
+         7lQkTv9KONJswJW5sLFVBrZO3GsdAphKgfqTJV3ihrxHzd8XwwpD5RwUOtuXi4Q7XWpe
+         /uoA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4AYIcEfaDDwQkkzj1jr7Q0oY+cnhUAb8va9cClJLn97ZnwjslraIYd/FmtjdehHKZsMd4md69X7AcIo5XB2b/Zj9H7Mz4N3dCAcpCTf25GiNCxOG4PMsJROma7GyJyplJvZLjMbbmIAzdppEQNSi9SIfriBkCWMX1q5s66MeQnBGTnFY8QlD6mYGzaRfc
+X-Gm-Message-State: AOJu0YzSPNYytpCdgBD9vBaCukNcICk2LSHfKbxSr8QOPfci+7m2NLZy
+	x//0vdbflnh2PAxdmPqq9llPzN9T2pqsWPZK3kwbB7aT54Q52rkCnQ6zpCzUYW0=
+X-Google-Smtp-Source: AGHT+IGHVG5RA9RqiVcSQKn7yJ7aIAH9zI2882i4i5DsyygRMNZU8QfyIwYyeJ97V1DzduaYYEGQZw==
+X-Received: by 2002:a25:c74f:0:b0:dff:129:ade2 with SMTP id 3f1490d57ef6-dff0129b374mr105752276.12.1718220127623;
+        Wed, 12 Jun 2024 12:22:07 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dff009bee58sm16809276.59.2024.06.12.12.22.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 12:22:06 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-62a0809c805so2789637b3.0;
+        Wed, 12 Jun 2024 12:22:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUmyibkF4LhYVjTyMAJ1XeDg4rRVomOo4bKMlZI5OHveoGVZ2etFVcqpqpADVEEDztIE3FZl3BpMY9GLkMAvJDQy1a6b+141+yZ21qkaSY72PAmayBSZ7E4TtxCrLKAnCkFIgLcqr8Rp0qZRaC/N43Z3XQG+v/z86ebFKg34dbg/CIoQMmc4SLU8PkLyk9D
+X-Received: by 2002:a81:4fd8:0:b0:615:e0e:d234 with SMTP id
+ 00721157ae682-62fbbde9490mr28515547b3.16.1718220126141; Wed, 12 Jun 2024
+ 12:22:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+References: <20240610213055.it.075-kees@kernel.org> <20240610213330.1310156-2-kees@kernel.org>
+ <CABVgOSmFL50_qYOBROkE9LZx__W6MLnHWahGnAVuLBDVO4k1zQ@mail.gmail.com> <202406120927.3C64ACD6@keescook>
+In-Reply-To: <202406120927.3C64ACD6@keescook>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 12 Jun 2024 21:21:52 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUsjy86z3=s6ipFSQrbsycPaExNv8oxrcL_8FhzabMoTg@mail.gmail.com>
+Message-ID: <CAMuHMdUsjy86z3=s6ipFSQrbsycPaExNv8oxrcL_8FhzabMoTg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] usercopy: Convert test_user_copy to KUnit test
+To: Kees Cook <kees@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Gow <davidgow@google.com>, 
+	Vitor Massaru Iha <vitor@massaru.org>, Ivan Orlov <ivan.orlov0322@gmail.com>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 11, 2024 at 09:55:42AM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 10, 2024 at 02:46:09PM -0700, Kees Cook wrote:
-> 
-> > > I really detest this thing because it makes what was trivially readable
-> > > into something opaque. Get me that type qualifier that traps on overflow
-> > > and write plain C. All this __builtin_overflow garbage is just that,
-> > > unreadable nonsense.
-> > 
-> > It's more readable than container_of(), 
-> 
-> Yeah, no. container_of() is absolutely trivial and very readable.
-> container_of_const() a lot less so.
+Hi Kees,
 
-I mean, we have complex macros in the kernel. This isn't uncommon. Look
-at cleanup.h. ;)
+On Wed, Jun 12, 2024 at 6:51=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+> On Wed, Jun 12, 2024 at 05:13:39PM +0800, David Gow wrote:
+> > On Tue, 11 Jun 2024 at 05:33, Kees Cook <kees@kernel.org> wrote:
+> > > Convert the runtime tests of hardened usercopy to standard KUnit test=
+s.
+> > >
+> > > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+> > > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > > Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.=
+org
+> > > Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+> > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > ---
+> >
+> > This looks good, particularly with the x86 fix applied.
+> >
+> > It's still hanging on m68k -- I think at the 'illegal reversed
+> > copy_to_user passed' test -- but I'll admit to not having tried to
+> > debug it further.
+> >
+> > One other (set of) notes below about using KUNIT_EXPECT_MEMEQ_MSG(),
+> > otherwise (assuming the m68k stuff isn't actually a regression, which
+> > I haven't tested but I imagine is unlikely),
+>
+> I'm trying to debug a hang on m68k in the usercopy behavioral testing
+> routines. It's testing for the pathological case of having inverted
+> arguments to copy_to_user():
+>
+>         user_addr =3D kunit_vm_mmap(test, NULL, 0, priv->size,
+>                             PROT_READ | PROT_WRITE | PROT_EXEC,
+>                             MAP_ANONYMOUS | MAP_PRIVATE, 0);
+>         ...
+>         bad_usermem =3D (char *)user_addr;
+>         ...
+>         KUNIT_EXPECT_NE_MSG(test, copy_to_user((char __user *)kmem, bad_u=
+sermem,
+>                                                PAGE_SIZE), 0,
+>                 "illegal reversed copy_to_user passed");
+>
+> On other architectures, this immediate fails because the access_ok()
+> check rejects it. On m68k with CONFIG_ALTERNATE_USER_ADDRESS_SPACE,
+> access_ok() short-circuits to "true". I've tried reading
+> arch/m68k/include/asm/uaccess.h but I'm not sure what's happening under
+> CONFIG_CPU_HAS_ADDRESS_SPACES.
 
-But that's why we write kern-doc:
+On m68k CPUs that support CPU_HAS_ADDRESS_SPACES (i.e. all traditional
+680x0 that can run real Linux), the CPU has separate address spaces
+for kernel and user addresses.  Accessing userspace addresses is done
+using the special "moves" instruction, so we can just use the MMU to
+catch invalid accesses.
 
- * struct_size() - Calculate size of structure with trailing flexible
- * array.
- * @p: Pointer to the structure.
- * @member: Name of the array member.
- * @count: Number of elements in the array.
+> For now I've excluded that test for m68k, but I'm not sure what's
+> expected to happen here on m68k for this set of bad arguments. Can you
+> advise?
 
-> #define struct_size(p, member, num) \
-> 	mult_add_no_overflow(num, sizeof(p->member), sizeof(*p))
-> 
-> would be *FAR* more readable. And then I still think struct_size() is
-> less readable than its expansion. ]]
+Perhaps the kernel address is actually a valid user address, or
+vice versa?
 
-I'm happy to take patches. And for this bikeshed, this would be better
-named under the size_*() helpers which are trying to keep size_t
-calculations from overflowing (by saturating). i.e.:
+Does the test work on systems that use 4G/4G for kernel/userspace
+instead of the usual 1G/3G split?
 
-	size_add_mult(sizeof(*p), sizeof(*p->member), num)
+/me runs the old test_user_copy.ko on ARAnyM
+Seems to take a while? Or it hangs, too?
 
-Generalized overflow handing (check_add/sub/mul_overflow()) helpers
-already exist and requires a destination variable to determine type
-sizes. It is not safe to allow C semantics to perform
-promotion/truncation, so we have to be explicit.
+Related reading material
+https://lore.kernel.org/all/CAMuHMdUzHwm5_TL7TNAOF+uqheJnKgsqF+_vzqGRzB_3eu=
+fKug@mail.gmail.com/
+https://lore.kernel.org/all/CAMuHMdVQ93ihgcxUbjptTaHdPjxXLyVAsAr-m3tWBJV0kr=
+S2vw@mail.gmail.com/
 
-> Some day I'll have to look at this FORTIFY_SOURCE and see what it
-> actually does I suppose :/
+Gr{oetje,eeting}s,
 
-LOL. It's basically doing compile-time (__builtin_object_size) and
-run-time (__builtin_dynamic_object_size) bounds checking on destination
-(and source) object sizes, mainly driven by the mentioned builtins:
-https://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
+                        Geert
 
-> I coulnd't quickly find a single instance in the code I care about. So
-> nothing is sailing afaict.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-I have to care about all of Linux's code. :P We generally don't have to
-defend the kernel from perf, so the hardening changes tend to end up in
-core APIs along with compiler improvements.
-
-Anyway! What about the patch that takes the 2 allocations down to 1?
-That seems like an obvious improvement.
-
--Kees
-
--- 
-Kees Cook
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
