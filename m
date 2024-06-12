@@ -1,96 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F8783CD7;
-	Wed, 12 Jun 2024 19:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677C825762
+	for <linux-hardening@vger.kernel.org>; Wed, 12 Jun 2024 20:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718222362; cv=none; b=dnrenxnhZLiXVtdA295dBGkfcGqCCr5dlhFITYevvnvCKYdIWmmwRJV8ZbcOEWKgz7PEfpvLkShVzTYpkyl6ZNNkfHFjReES+RZxT0OdeZd8J3s7KSyTtuhiD0MkdZ/zWchckLIVKt75jE2zt7KvzG6+uU8KjE+QDLcqnbBPX+M=
+	t=1718222683; cv=none; b=KCyVoPM8njmCE422e8V89XCgmkdTl8i524XbQkrMtJKcl1rB2lNwjcXb4q7t8kBN7A9BMB/1V7TVnGY+ysTCf2fm93mv+N+JILDKW9egBLC/bbwaFqPvJh/sgNOCcWF8r8r+rDT8BNd9cMJZh0qAX38m1KOEu+DNjVYXwRgJtUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718222362; c=relaxed/simple;
-	bh=ywb3uiBG2wy3W42HC/zKfdSwk5lSiUjJmg2WrX2ndXU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fh/GtxsAV2TxQHrlDXQFXIdjqcCauPcuhuYwAiXah//qyP4rz5z3aFutbxoIcG+q/hRW9MpBp2AgcCpyoK4WXZx5MioJSrygU6e+8geAd6DnGhN39N7CtFTg85ieJydD4IgpzlBThUv4C8KNnw8AsC0sglmnQKesS4lTEWkgUYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdZ0ef3s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718222683; c=relaxed/simple;
+	bh=5C6E8Y9SDchcIWwSmH36JEqE6WSYVVh9PjV5yurQ6WA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uqHB2vxmM/6CbpeL5VDjOB2dWoCguaEgLS3BWJZ/zWtZxFvmGS4uUcaMQSGHv2vctSBHXDbD2MndqjSS4AWu8nQjpaSCMigvVnPiCBsV7IqCNB/tCqwCC92bcglu6Dz2XauCesxsVYWNumJHZnqzA7KHI+GCrF6iWUp7+DzpaLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=IaMH4Jce; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdZ0ef3s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C4BC4AF1C;
-	Wed, 12 Jun 2024 19:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718222361;
-	bh=ywb3uiBG2wy3W42HC/zKfdSwk5lSiUjJmg2WrX2ndXU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gdZ0ef3swbOtu4F1HBTAPQa2DzYdERqCN34g33CXEgeljn2/5A/haffsVyUg/tYWR
-	 LCMfDwCvEj1TJ9phJbS1CZ77BY3DR/CZcChUJBnU1zAWSyMIMoW4HK5Qpr+6a+nrG8
-	 68b1H5hyFBuLWtjh7J7Q+MJR/bQ2Iv1K7XPH5aSnR4nMJlM5+jeywtEeVvqJ5BrOZA
-	 +Wmv6Rhv2Tmg+0cqattKws4UN32cG3Yw72GJj0rLd5VUzYF7G7ez4k+hHShDOUqaaK
-	 N/aONIMtabnXL9D/MebPj0W2APDB0OZbpdMrQ4KHQiY49AaKFX6r/ul7I7r3MbaFHr
-	 Ks3CbTVPu4sIA==
-From: Kees Cook <kees@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Vitor Massaru Iha <vitor@massaru.org>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3 0/2] usercopy: Convert test_user_copy to KUnit test
-Date: Wed, 12 Jun 2024 12:59:17 -0700
-Message-Id: <20240612195412.make.760-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IaMH4Jce"
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTPS
+	id HQxssUwdzSLKxHUCxsLm6t; Wed, 12 Jun 2024 20:04:35 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id HUCxs20ItWACGHUCxsNMUR; Wed, 12 Jun 2024 20:04:35 +0000
+X-Authority-Analysis: v=2.4 cv=ZLXRm27b c=1 sm=1 tr=0 ts=6669ff53
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=xGRsDScCAAAA:8
+ a=pKTFDrzG_x3V9sfl7PQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=zEVfNvAIcUWeczMkmY0T:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/QPeIjovkvV/E5oIolQo/mIlJ+pmqKXHutHu0+C0FVs=; b=IaMH4JcelzjtzZ8l052lUZoo73
+	sI8xPNQtYOTq4SBbq7wbYV19M4bbN7/tIy0GGJ0daZKbJwwMBPgru1JOSJbZkKTTDHj0JkGj6CfDt
+	hvpFYVQwNVSs+gUb3q2uK4cvQYtAxfknNNRP9/IGljJQJwQvF18bbmwdWdjPF3qHJVBySzDRqbMmP
+	R/PTadZMsEQNP/1lFtMBtB/gWcW0n3l7fL+kWu3KgjClJyS963c82KeIRgpmL91Iheiihvd02mP7k
+	A+x5MhXqNQVGRaXeDMCx8FkrVQayyvm0QZwzu0xmSKR1RFVQEvDn4K4AjQMI/Pc+P6Ek/OvMUyUID
+	m04LJ4DQ==;
+Received: from [201.172.173.139] (port=40652 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sHUCv-004Bhn-0e;
+	Wed, 12 Jun 2024 15:04:33 -0500
+Message-ID: <c80e41e6-793e-4311-8e15-f5eda91e723e@embeddedor.com>
+Date: Wed, 12 Jun 2024 14:04:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1667; i=kees@kernel.org; h=from:subject:message-id; bh=ywb3uiBG2wy3W42HC/zKfdSwk5lSiUjJmg2WrX2ndXU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmaf4XEwSV7IuaeeCDHXmAIPUInE1HVQWFespdR wraZVkQQGuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZmn+FwAKCRCJcvTf3G3A JqH9D/9txSQCi1FIJJQ1Ag5Xwl/86L58GRfBVKTS7JD15KOFdocuGu52/CNwtYotA7DPcEheBXh oFDx8vdj5N4pRHTTDUYAHDcEhlPjZ/1ddI8SH5RJJgdNV8hv+RPVhe96Q1q2WFSKXPPsOdQ6iD8 qQQ131S6g/B3hqKD3DjNi6ypugExxOAR+7j8x8JTxONfQDjBuSWgvM+vanCM1XPHBNwBAztqfY+ nPECZuj3ZP9ulqjCe6tMhN93aSAe1UaFk6oO0utpnnMEC++sPTfMY3Xk8DH1WQ3yzTyJ6gg2XJO BjF5k3uAvtLU+mmRDzS/XvCWzsLTnFRrs568HlUPRB7uL9pdFM9NYdeiyDbokbmY1SMM4A147Cd cBs89TcwDjz6XBRwjL5Tc5a3gE+hu/wqWGVSa9+PBOIZLM6oCBqhpa34XqxRkx8vyUdlU2/P90L ZqC1gEYRVog8cZDSOXiYeD/D+MfMa3g1ZJ6qcazC27OjXrHN/avdgm0Bqq0Gh6AfBDe3+C8tNSt 5+axJO5e2tDqVwwSJ/5E2/b2Qw48tVaNuq9vhR1DQf/g96fJnt4JktzDR7cgaB6fHtGEDyX2I1y sE+iNvtFaffCjonvPp1iIUbRkns4sbrCPzQU8uBk8fiua3TT7y6vyg8jab5+DmYTlNw/qxFt8cS f/U9LEWdteKKV
- 5g==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: Jiri Slaby <jirislaby@kernel.org>, Bill Wendling <morbo@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+ patches@lists.linux.dev, stable@vger.kernel.org
+References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
+ <d7c19866-6883-4f98-b178-a5ccf8726895@kernel.org>
+ <2024053008-sadly-skydiver-92be@gregkh>
+ <09445a96-4f86-4d34-9984-4769bd6f4bc1@embeddedor.com>
+ <68293959-9141-4184-a436-ea67efa9aa7c@kernel.org>
+ <6170ad64-ee1c-4049-97d3-33ce26b4b715@kernel.org>
+ <CAGG=3QU6kREyhAoRC+68UFX4txAKK-qK-HNvgzeqphj5-1te_g@mail.gmail.com>
+ <bee7240b-d143-4613-bde4-822d9c598834@embeddedor.com>
+ <1313c7a5-d074-4a8f-9ab9-07e4a7716fb9@kernel.org>
+ <4da5ba72-6dff-46f1-b596-158c62b34f18@embeddedor.com>
+Content-Language: en-US
+In-Reply-To: <4da5ba72-6dff-46f1-b596-158c62b34f18@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sHUCv-004Bhn-0e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.139]:40652
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPd6gOKlF2OZttKI7pJ/CqRNi6r7IAN/X9mXmOVLiYrItRKWBejB0dqm1HU0WPHAJIxW56ctayQtcT7uHnU77nnWeBHtf0io7+WfFGTLHlnTOoq1KGBS
+ MrPNwnf0Kn+Ne+fI4plFYqqdAfDlVdMZY6rXAv6IAa5f9cXEV+NcIFhLzxcW+hjEE3DyQynczRAt2R59I20yS/zMVEsm6m4npSUxjelMrXz9BxtvYh36vZye
 
-Hi,
 
-This builds on the proposal[1] from Mark and lets me convert the
-existing usercopy selftest to KUnit. Besides adding this basic test to
-the KUnit collection, it also opens the door for execve testing (which
-depends on having a functional current->mm), and should provide the
-basic infrastructure for adding Mark's much more complete usercopy tests.
 
- v3:
-  - use MEMEQ KUnit helper (David)
-  - exclude pathological address confusion test for systems with separate
-    address spaces, noticed by David
-  - add KUnit-conditional exports for alloc_mm() and arch_pick_mmap_layout()
-    noticed by 0day
- v2: https://lore.kernel.org/lkml/20240610213055.it.075-kees@kernel.org/
- v1: https://lore.kernel.org/lkml/20240519190422.work.715-kees@kernel.org/
+On 6/3/24 02:26, Gustavo A. R. Silva wrote:
+> 
+>> FWIW undoing:
+>> commit 7391ee16950e772076d321792d9fbf030f921345
+>> Author: Peter Hurley <peter@hurleysoftware.com>
+>> Date:   Sat Jun 15 09:36:07 2013 -0400
+>>
+>>      tty: Simplify flip buffer list with 0-sized sentinel
+>>
+>>
+>> would do the job, IMO.
+> 
+> So, not even _sentinel_ is actually needed? Awesome!
+> 
 
--Kees
+It seems that a clean revert is not possible at this point, as
+the original patch is more than a decade old. If _sentinel_ is
+not needed, and based on the original patch, would the following
+suffice?
 
-[1] https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/
+diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
+index 79f0ff94ce00..1b77019cc510 100644
+--- a/drivers/tty/tty_buffer.c
++++ b/drivers/tty/tty_buffer.c
+@@ -135,10 +135,7 @@ void tty_buffer_free_all(struct tty_port *port)
+         llist_for_each_entry_safe(p, next, llist, free)
+                 kfree(p);
 
-Kees Cook (2):
-  kunit: test: Add vm_mmap() allocation resource manager
-  usercopy: Convert test_user_copy to KUnit test
+-       tty_buffer_reset(&buf->sentinel, 0);
+-       buf->head = &buf->sentinel;
+-       buf->tail = &buf->sentinel;
+-
++       buf->tail = NULL;
+         still_used = atomic_xchg(&buf->mem_used, 0);
+         WARN(still_used != freed, "we still have not freed %d bytes!",
+                         still_used - freed);
+@@ -578,9 +575,8 @@ void tty_buffer_init(struct tty_port *port)
+         struct tty_bufhead *buf = &port->buf;
 
- MAINTAINERS                                |   1 +
- include/kunit/test.h                       |  17 ++
- kernel/fork.c                              |   3 +
- lib/Kconfig.debug                          |  21 +-
- lib/Makefile                               |   2 +-
- lib/kunit/Makefile                         |   1 +
- lib/kunit/user_alloc.c                     | 113 +++++++++
- lib/{test_user_copy.c => usercopy_kunit.c} | 282 ++++++++++-----------
- mm/util.c                                  |   3 +
- 9 files changed, 288 insertions(+), 155 deletions(-)
- create mode 100644 lib/kunit/user_alloc.c
- rename lib/{test_user_copy.c => usercopy_kunit.c} (46%)
+         mutex_init(&buf->lock);
+-       tty_buffer_reset(&buf->sentinel, 0);
+-       buf->head = &buf->sentinel;
+-       buf->tail = &buf->sentinel;
++       buf->head = NULL;
++       buf->tail = NULL;
+         init_llist_head(&buf->free);
+         atomic_set(&buf->mem_used, 0);
+         atomic_set(&buf->priority, 0);
+diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
+index 31125e3be3c5..75fb041e43fe 100644
+--- a/include/linux/tty_buffer.h
++++ b/include/linux/tty_buffer.h
+@@ -37,7 +37,6 @@ struct tty_bufhead {
+         struct work_struct work;
+         struct mutex       lock;
+         atomic_t           priority;
+-       struct tty_buffer sentinel;
+         struct llist_head free;         /* Free queue head */
+         atomic_t           mem_used;    /* In-use buffers excluding free list */
+         int                mem_limit;
 
--- 
-2.34.1
-
+Thanks
+--
+Gustavo
