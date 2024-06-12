@@ -1,78 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F248820DF7;
-	Wed, 12 Jun 2024 18:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45D5391;
+	Wed, 12 Jun 2024 18:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718216447; cv=none; b=EPy7nG7BCzGffmcDSrG8tBm3/vhkEwSKqlypsahglCgemEgq5hqnBs9AJZaB7KYvgQpaw/ZlLNpmR0/wsKKR471BAp7UEIw4NdlcX0P+Mz29lx3OkS9Df5vz9RztVevh1xu4nPi8QbRg9PDxPSRosSQlRl0Z4d9x8SFSC2VWyrY=
+	t=1718216629; cv=none; b=ntfLsxMakvDag+130bxCOQJ8WsfmMN9LgOhBoKd9TVRBtIT8Gi7YfiapRhoz5iUJ797XPcs7180xTG96Ld557/kv8CUVQPV4ZPB485k3oSLH26QOzwRUHUxZWPZjsPk6AWjh7tID19wpfYKHdnfHSgdtggoOS4hHC+jn8dOQ75c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718216447; c=relaxed/simple;
-	bh=arXJKii7hZO7vb4B/vvN+V1nOiJPnwFUFK+yxQZsqQQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WiEI8QLd6yXVdj9wNwIGgMO8lZXzxb4Fti0wgZyCfR3ZUN00gbWbi4LacmsKYpgzTJide962ymg2DsfCCK/i+fF3n8Ip0xd7cjiNExrpkY+QXP/qYVoN8/q5xXUj/Zv4PMLEDAJNtTdBxiiA1/9kVwMbyBajhe+ZVtqO3QQfwpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJRfooWj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718216629; c=relaxed/simple;
+	bh=Tl9nyuzjb2pxEQcV7FhW1PIM12LMWMgzHS0CNeblVFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MUGol8g4LyqnvP1m+BSnaAVsWF9drJ4n7YSNsKOxioydAc33Z3o6psadCHjjJ6LTRFXqWzd1CBJxaaySrDJxJz4qzeDyG3ng/YSwyR+8JkaxZ/dIDuPvMiwfYFAcCHV1MWyMoDLHrJlOsFhMKjZlYKQHYss79OKxk5K417U44Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osHdSw87; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJRfooWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F332CC116B1;
-	Wed, 12 Jun 2024 18:20:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osHdSw87"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C32C116B1;
+	Wed, 12 Jun 2024 18:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718216446;
-	bh=arXJKii7hZO7vb4B/vvN+V1nOiJPnwFUFK+yxQZsqQQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=HJRfooWjtcllpqykEnyB0p3CzWNiAY3VMVaTGyZMfLl0+Zv5lLVZKHr28vDla+jzy
-	 3hLtnhklRrH4djyDuE/+XyIHfjmrqLtrvuIB/pOVyec3A7JszCBBux91+NOpjGgzdD
-	 paA9gawZMJTPjiIBL8DGRUQ70yTTVvAgZ45osiWMwuyM85nEJ3pxNO6S2rdoU1oynH
-	 9Ye1pQIwKNZjeGrkQ5caAFbZQveXWUISbQEgaQCP5hgJyw+up5JuZGUe1cWmkVrsuG
-	 cMPP2WXwAsN/rs7hKit2CVN0ZKSOhRUfhOkTTbDfRWVXHT9tq/92mxBJXi4x4ZM+Iz
-	 Ym4ZrINN9jnRA==
-From: Leon Romanovsky <leon@kernel.org>
-To: linux-hardening@vger.kernel.org, netdev@vger.kernel.org, 
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rdma@vger.kernel.org, 
- Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Colin Ian King <colin.i.king@gmail.com>, 
- Ahmed Zaki <ahmed.zaki@intel.com>, Pavan Chebbi <pavan.chebbi@broadcom.com>, 
- Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, 
- Konstantin Taranov <kotaranov@microsoft.com>, 
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, 
- Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Haiyang Zhang <haiyangz@microsoft.com>, 
- "K. Y. Srinivasan" <kys@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
- Long Li <longli@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>, 
- Kees Cook <kees@kernel.org>
-In-Reply-To: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
-Subject: Re: [PATCH net-next v4] net: mana: Allow variable size indirection
- table
-Message-Id: <171821644166.505049.8840755139752392962.b4-ty@kernel.org>
-Date: Wed, 12 Jun 2024 21:20:41 +0300
+	s=k20201202; t=1718216628;
+	bh=Tl9nyuzjb2pxEQcV7FhW1PIM12LMWMgzHS0CNeblVFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=osHdSw87Cm8MGSp+pdRD0gXU3j/5xUcHgwEiJYwiIjkxQR2qufAumWRxZok/xEj7+
+	 ywWkOmSJWsgVK0huS2vcqDdovTWWcg/7weEVtZ0VUXx3+Nbn0pt+Ol8e1y2N/7MFfu
+	 HYnRFtcv7pqCOn3ipjnNUjy0uaRriIK2knOlK1PgG2b4bm8tj9W0Fc+3ANQup5pzFI
+	 m4z5t5jr2HiyvlsuHy9AxckoeL5PkTRZMFK3jm+Ronn7TW4MAlt/q/5SejBEfFN59S
+	 3nho1Upyw2KmhISPvKV2E88Hf3ty/Ly00WMq5t5mHyNIaMKZzo99MTAVaRHpPjw2uX
+	 nhMo/E5Qs0f8A==
+Date: Wed, 12 Jun 2024 11:23:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com,
+	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com,
+	jorgelo@chromium.org, Guenter Roeck <groeck@chromium.org>,
+	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Christian Brauner <brauner@kernel.org>, Jeff Xu <jeffxu@google.com>,
+	Mike Frysinger <vapier@chromium.org>
+Subject: Re: [PATCH v5 2/2] proc: restrict /proc/pid/mem
+Message-ID: <202406121123.B0F60E91E@keescook>
+References: <20240605164931.3753-1-adrian.ratiu@collabora.com>
+ <20240605164931.3753-2-adrian.ratiu@collabora.com>
+ <202406060917.8DEE8E3@keescook>
+ <3304e0-6669e580-9f9-33d83680@155585222>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3304e0-6669e580-9f9-33d83680@155585222>
 
-
-On Mon, 10 Jun 2024 03:28:39 -0700, Shradha Gupta wrote:
-> Allow variable size indirection table allocation in MANA instead
-> of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> indirection table is allocated dynamically.
+On Wed, Jun 12, 2024 at 07:13:41PM +0100, Adrian Ratiu wrote:
+> Would macros like the following be acceptable?
+> I know it's more verbose but also much easier to understand and it works.
 > 
-> 
+> #if IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_ALL)
+> DEFINE_STATIC_KEY_TRUE_RO(proc_mem_restrict_open_read_all);
+> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_ptracer);
+> #elif IS_ENABLED(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_PTRACE)
+> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_all);
+> DEFINE_STATIC_KEY_TRUE_RO(proc_mem_restrict_open_read_ptracer);
+> #else
+> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_all);
+> DEFINE_STATIC_KEY_FALSE_RO(proc_mem_restrict_open_read_ptracer);
+> #endif
 
-Applied, thanks!
+Yeah, that'd be fine by me. I was a little concerned I was
+over-generalizing those macros. :P
 
-[1/1] net: mana: Allow variable size indirection table
-      https://git.kernel.org/rdma/rdma/c/7fc45cb68696c7
-
-Best regards,
 -- 
-Leon Romanovsky <leon@kernel.org>
-
+Kees Cook
