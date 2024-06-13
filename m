@@ -1,145 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E732212D766;
-	Wed, 12 Jun 2024 23:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153A0811;
+	Thu, 13 Jun 2024 00:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718234613; cv=none; b=fV/9wSFQFQkYYRKFQ31JOSVZa+MaUYA/qSWb1MGhvlLrbukS+MExpZ11t5T6ikcjG2b9J5uoJ2K4bvMaDK/yKKC22wxB9w+7d7hNsSFjqR636fjsoSf5vHoohop4pHnRTNysDCbdGcaHeigC3dPW80jYK4oF01n+TDxaUH+7HDE=
+	t=1718238893; cv=none; b=dqqsFwt22fTkIV/kIVMQZBNCrtMUY3vSsEMvHHzZO71hGUb9X1BO8znpJ2/dPCF2XrfYL01PmywysnYduRqGycQ66hDsnqBALb4jNGL6FQr04i4ISOZojQuJE3v0C4LmVG+sNM6sqQlXvRA+8UsIlsUBqc8Bf+c3uveHL5NcH10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718234613; c=relaxed/simple;
-	bh=osO3snio/Biz5ce4MVIPMmlqg+lPXsWqRxu6r/Yyymw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhk9PGwb5fIxLdMkdD8AprQHgNwHcgUGQ6CAh7FqLlY0NFfHYVGq3z5fTlUmrC/7VmsCsbEcT74CXi+1DE/fVv5GJjf+zMPaGyIoUSytXBl0hC26Yernp3UQsZEMiNph7JvLUOGsunvTr7yM4Ts8mL9iox4O7Jk98z47W9xNmDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmewgSg0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmewgSg0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D63AC116B1;
-	Wed, 12 Jun 2024 23:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718234612;
-	bh=osO3snio/Biz5ce4MVIPMmlqg+lPXsWqRxu6r/Yyymw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tmewgSg0pq7QujPTIHRe74qBY+8RJaYeSdQHcsSP9Kc8LrJVFB4Jtw8p9gNII/uix
-	 zGYR33D3z6eWobQ+5cW99F+yIIoeVC3eQXR8ryOPZzB21Dfi1M5G5COp914wDR3Hk9
-	 A7qQO0Gk2HPh/FzVL1Xlko4CAXc7vLW4uAYJLCHuCQLaB/Wp7vWE93HD+d66hFgljD
-	 oj+S+47+c5UO93bGqOYcIIVnHM4pJQwlNecfW1Y1Gs5bHw1ZdouDpsTcmeYxm3Rbw0
-	 nylKNCRkhAVS1vK0TTNd7CEsyu6gkL1IdkHfdwMsXu6pmEKJqs1EYfZVKuxhjHiROp
-	 JRHS3lJLPeBiQ==
-Date: Wed, 12 Jun 2024 16:23:31 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <202406121530.D9DB956C8@keescook>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1718238893; c=relaxed/simple;
+	bh=RCywxSRqgN9zs+tmyibAJXz51CnsmORFuB06u95Pauw=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=uJg6vPYzj0wpspl+UxnSGXuYuX/VcScB90bwixTIjXmNzXvQCfcED9hYTsaKN99w+mTCqEcFUbqPD4dOvhdq6cZrKJ3e4avWKXhW/fiQOTg96AiDb3+uVvj45TFrMh0c70sLoa9f6VKEiNjfOXzArefzaufFrrNLN2p0+HMTckU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BC8C4AF1C;
+	Thu, 13 Jun 2024 00:34:52 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sHYQn-00000001eNW-0G6T;
+	Wed, 12 Jun 2024 20:35:09 -0400
+Message-ID: <20240613003508.918902349@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 12 Jun 2024 20:34:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>,
+ Ross Zwisler <zwisler@google.com>,
+ wklin@google.com,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH v5 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+References: <20240613003435.401549779@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > I'm happy to take patches. And for this bikeshed, this would be better
-> > named under the size_*() helpers which are trying to keep size_t
-> > calculations from overflowing (by saturating). i.e.:
-> > 
-> > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
-> 
-> Fine I suppose, but what if we want something not size_t? Are we waiting
-> for the type system extension?
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Because of C's implicit promotion/truncation, we can't do anything
-sanely with return values of arbitrary type size; we have to capture the
-lvalue type somehow so the checking can happen without C doing silent
-garbage.
+Add a method to find a region specified by reserve_mem=nn:align:name for
+ramoops. Adding a kernel command line parameter:
 
-> The saturating thing is relying in the allocators never granting INT_MAX
-> (or whatever size_t actually is) bytes?
+  reserve_mem=12M:4096:oops ramoops.mem_name=oops
 
-The max of size_t is ULONG_MAX, but yes, most of the allocators will
-refuse >INT_MAX, but I think vmalloc() is higher, but certainly not
-SIZE_MAX, which is the entire virtual memory space. ;)
+Will use the size and location defined by the memmap parameter where it
+finds the memory and labels it "oops". The "oops" in the ramoops option
+is used to search for it.
 
-The saturating thing is two-fold: that we never wrap around SIZE_MAX,
-and that the allocator will refuse a SIZE_MAX allocation.
+This allows for arbitrary RAM to be used for ramoops if it is known that
+the memory is not cleared on kernel crashes or soft reboots.
 
-> > LOL. It's basically doing compile-time (__builtin_object_size) and
-> > run-time (__builtin_dynamic_object_size) bounds checking on destination
-> > (and source) object sizes, mainly driven by the mentioned builtins:
-> > https://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
-> 
-> Right, I got that far. I also read most of:
-> 
->   https://discourse.llvm.org/t/rfc-enforcing-bounds-safety-in-c-fbounds-safety/70854
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/pstore/ram.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Oh wow, that's serious extra credit. :) It'll also probably be a while
-before most of that stuff is even landed in Clang, much less implemented
-in GCC. What we _do_ have is the "counted_by" attribute. This was added
-to Clang a little while ago and just landed last week in GCC for GCC 15.
-
-> But none of that is showing me generated asm for the various cases. As
-> such, I don't consider myself informed enough.
-
-Gotcha. For the compile-time stuff it's all just looking at
-known-at-compile-time sizes. So for something like this, we get a
-__compiletime_warning() emitted:
-
-	const char src[] = "Hello there";
-	char dst[10];
-
-	strscpy(dst, src); /* Compiler yells since src is bigger than dst. */
-
-For run-time checks it's basically just using the regular WARN()
-infrastructure with __builtin_dynamic_object_size(). Here's a simplified
-userspace example with assert():
-
-https://godbolt.org/z/zMrKnMxn5
-
-The kernel's FORTIFY_SOURCE is much more complex in how it does the
-checking, how it does the reporting (for helping people figure out what's
-gone weird), etc.
-
-> > Anyway! What about the patch that takes the 2 allocations down to 1?
-> > That seems like an obvious improvement.
-> 
-> Separate it from the struct_size() nonsense and Cc the author of that
-> code (Sandipan IIRC) and I might just apply it.
-
-Okay, thanks!
-
--Kees
-
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index b1a455f42e93..4311fcbc84f2 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -50,6 +50,10 @@ module_param_hw(mem_address, ullong, other, 0400);
+ MODULE_PARM_DESC(mem_address,
+ 		"start of reserved RAM used to store oops/panic logs");
+ 
++static char *mem_name;
++module_param_named(mem_name, mem_name, charp, 0400);
++MODULE_PARM_DESC(mem_name, "name of kernel param that holds addr");
++
+ static ulong mem_size;
+ module_param(mem_size, ulong, 0400);
+ MODULE_PARM_DESC(mem_size,
+@@ -914,6 +918,16 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
+ 
++	if (mem_name) {
++		phys_addr_t start;
++		phys_addr_t size;
++
++		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
++			mem_address = start;
++			mem_size = size;
++		}
++	}
++
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+ 	 * parameters. If mem_size isn't set, then there are no module
 -- 
-Kees Cook
+2.43.0
+
+
