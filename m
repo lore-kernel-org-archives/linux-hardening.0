@@ -1,89 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C77143C40;
-	Thu, 13 Jun 2024 13:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5806143895;
+	Thu, 13 Jun 2024 13:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285208; cv=none; b=OTTCrOwwOzxYJw05aRnQIp8sIx97NSPUacBrW1id2NoggJpp0tpdq4Y3sJfBPP/+zJG/eYH8ctyf92XK5VVz4XyHXT6QkGLhZ+U87cxSW9AJ1A35eb+QkNcHn7MmmfY/HC9nYoD6OY1NMWG2bHv6xxLUqq3vi7IVag6HwDjLh8s=
+	t=1718286010; cv=none; b=UmsiR6HU+u+IQolx6smPXS+E2fya7i/7TTMyLzogy3dqGVWjrXwnYXjo87A87mUCUfR5VOJJ/qANudHCVZGALz/eOnEmUS3SrnR+A73XnjREjI4SEyldLcSgKcosGOEseNTdwsp9pdzv0CfO9Y2zqHXGy03l7uM16g1mvp0Fg1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285208; c=relaxed/simple;
-	bh=/4UAOu8OPxB6jQeNkyxjOzmqUKJUuZRRJHc/NOgQCGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VUUuw8sIkm//gPo1CE2Rkj1zuzZ3QZ88tIC/rfa3K5UtUmWjTdP9wbN1kXP63M6ovUPpZ+X2CIyzVO3JnZ7+1RDIOcVJYe+2jGLY/tBxLlaSEezJVcJDluFkaaX0stCW2YVLhoiJmcHSI2hVaP96NA1IA2dbSd7++05rBlsQEYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C307C32786;
-	Thu, 13 Jun 2024 13:26:44 +0000 (UTC)
-Date: Thu, 13 Jun 2024 09:26:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
- <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
- <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
- <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
- line option
-Message-ID: <20240613092642.385461d5@rorschach.local.home>
-In-Reply-To: <CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
-References: <20240611144911.327227285@goodmis.org>
-	<20240611144949.703297941@goodmis.org>
-	<202406121145.8860502D7@keescook>
-	<20240612145228.5bf426e0@rorschach.local.home>
-	<ZmqLejL1mblOikLp@kernel.org>
-	<CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718286010; c=relaxed/simple;
+	bh=mM/nGXvzfhzKRjtNF5lAJbBStRl1RPZ5BZMncy1sL9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GnZ8gL+7nnAPUxQaw7Occ6gW9p7z/ewM/Lqe76FgN65d53EEq42gWCpakkEHybNFE7SLhbtOKqbpqqHABr9In6KTt5kRUUGJvrT8OtZlr/9tugp4kt9pqyVeQXZ2J1/qmXeS+oZCSp6MktREwBD2BufeQwfjeE3nc8e/gQcFFaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rCIvFHUB; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rCIvFHUB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718286006;
+	bh=mM/nGXvzfhzKRjtNF5lAJbBStRl1RPZ5BZMncy1sL9k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rCIvFHUBsO5NZzLnUDiHYsWRCOzH0+8w/ag1XyrR9PX/x4XX/uvnkxNzv2d8nVntG
+	 y1Ld3hgr80TjTw6qLpnRICkElS4/mOugMovzdvHzFL1bp4NQzRJxIvGDS4rmlLYtru
+	 EsJsllDL3M8DLJFdg1qda0xd6Cp657KA/gmNDhHEcf+AnPsalZMPDYh1MypzvlmHZ9
+	 8fokoOZdOKqkSda4rutLNAGUU7ulLq4Yv75KS1ON1rLT/jverE/Cw7HoYARRgjAZbn
+	 M/EWDvTqj1INdyeABnul94j2PB3HrSfxNHQArDomMU1SgliiFiwS+2dl5zbkEEzEwo
+	 VxA9WdqQL8bnA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: aratiu)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EA0C037820CD;
+	Thu, 13 Jun 2024 13:40:05 +0000 (UTC)
+From: Adrian Ratiu <adrian.ratiu@collabora.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kernel@collabora.com,
+	gbiv@google.com,
+	ryanbeltran@google.com,
+	inglorion@google.com,
+	ajordanr@google.com,
+	jorgelo@chromium.org,
+	Adrian Ratiu <adrian.ratiu@collabora.com>,
+	Jann Horn <jannh@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Jeff Xu <jeffxu@google.com>,
+	Kees Cook <kees@kernel.org>
+Subject: [PATCH v6 1/2] proc: pass file instead of inode to proc_mem_open
+Date: Thu, 13 Jun 2024 16:39:36 +0300
+Message-ID: <20240613133937.2352724-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 13 Jun 2024 08:11:48 +0200
-Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > I've added one more comment to v5, with that fixed I can take this.
-> >  
-> 
-> So how is this supposed to work wrt to the rigid 'no user visible
-> regressions' rule, given that this whole thing is a best effort thing
+The file struct is required in proc_mem_open() so its
+f_mode can be checked when deciding whether to allow or
+deny /proc/*/mem open requests via the new read/write
+and foll_force restriction mechanism.
 
-This has nothing to do with user space. The kernel command line has
-broken in the past. If you update the kernel, you can update the
-command line. There's no "no user visible regressions" rule. It's
-"Don't break user space". This has nothing to do with user space.
+Thus instead of directly passing the inode to the fun,
+we pass the file and get the inode inside it.
 
-> to begin with. This needs at least a huge disclaimer that this rule
-> does not apply, and if this works today, there is no guarantee that it
-> will keep working on newer kernels. Otherwise, you will be making the
-> job of the people who work on the boot code significantly more
-> difficult. And even then, I wonder whether Linus and #regzcop are
-> going to honour such a disclaimer.
+Cc: Jann Horn <jannh@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jeff Xu <jeffxu@google.com>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+Reviewed-by: Kees Cook <kees@kernel.org>
+---
+No changes in v6
+---
+ fs/proc/base.c       | 6 +++---
+ fs/proc/internal.h   | 2 +-
+ fs/proc/task_mmu.c   | 6 +++---
+ fs/proc/task_nommu.c | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-Again, this has nothing to do with user space. The rule Linus talks
-about is breaking user space. This is about kernel debugging. Something
-*completely different*!
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 72a1acd03675..4c607089f66e 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -794,9 +794,9 @@ static const struct file_operations proc_single_file_operations = {
+ };
+ 
+ 
+-struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
++struct mm_struct *proc_mem_open(struct file  *file, unsigned int mode)
+ {
+-	struct task_struct *task = get_proc_task(inode);
++	struct task_struct *task = get_proc_task(file->f_inode);
+ 	struct mm_struct *mm = ERR_PTR(-ESRCH);
+ 
+ 	if (task) {
+@@ -816,7 +816,7 @@ struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
+ 
+ static int __mem_open(struct inode *inode, struct file *file, unsigned int mode)
+ {
+-	struct mm_struct *mm = proc_mem_open(inode, mode);
++	struct mm_struct *mm = proc_mem_open(file, mode);
+ 
+ 	if (IS_ERR(mm))
+ 		return PTR_ERR(mm);
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index a71ac5379584..d38b2eea40d1 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -295,7 +295,7 @@ struct proc_maps_private {
+ #endif
+ } __randomize_layout;
+ 
+-struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode);
++struct mm_struct *proc_mem_open(struct file *file, unsigned int mode);
+ 
+ extern const struct file_operations proc_pid_maps_operations;
+ extern const struct file_operations proc_pid_numa_maps_operations;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index f8d35f993fe5..fe3b2182b0aa 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -210,7 +210,7 @@ static int proc_maps_open(struct inode *inode, struct file *file,
+ 		return -ENOMEM;
+ 
+ 	priv->inode = inode;
+-	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
++	priv->mm = proc_mem_open(file, PTRACE_MODE_READ);
+ 	if (IS_ERR(priv->mm)) {
+ 		int err = PTR_ERR(priv->mm);
+ 
+@@ -1030,7 +1030,7 @@ static int smaps_rollup_open(struct inode *inode, struct file *file)
+ 		goto out_free;
+ 
+ 	priv->inode = inode;
+-	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
++	priv->mm = proc_mem_open(file, PTRACE_MODE_READ);
+ 	if (IS_ERR(priv->mm)) {
+ 		ret = PTR_ERR(priv->mm);
+ 
+@@ -1754,7 +1754,7 @@ static int pagemap_open(struct inode *inode, struct file *file)
+ {
+ 	struct mm_struct *mm;
+ 
+-	mm = proc_mem_open(inode, PTRACE_MODE_READ);
++	mm = proc_mem_open(file, PTRACE_MODE_READ);
+ 	if (IS_ERR(mm))
+ 		return PTR_ERR(mm);
+ 	file->private_data = mm;
+diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
+index bce674533000..a8ab182a4ed1 100644
+--- a/fs/proc/task_nommu.c
++++ b/fs/proc/task_nommu.c
+@@ -259,7 +259,7 @@ static int maps_open(struct inode *inode, struct file *file,
+ 		return -ENOMEM;
+ 
+ 	priv->inode = inode;
+-	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
++	priv->mm = proc_mem_open(file, PTRACE_MODE_READ);
+ 	if (IS_ERR(priv->mm)) {
+ 		int err = PTR_ERR(priv->mm);
+ 
+-- 
+2.44.2
 
-> 
-> So this belongs downstream, unless some guarantees can be provided
-> that this functionality is exempt from the usual regression policies.
-
-I disagree. kexec/kdump also has the same issues.
-
-
--- Steve
