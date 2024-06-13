@@ -1,23 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A2F142623;
-	Thu, 13 Jun 2024 13:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C77143C40;
+	Thu, 13 Jun 2024 13:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284816; cv=none; b=CaN66/Fx1aCNq6W7ua7sexHRNmqiu30vVP15OeQ6zaSk5Q/Q4e8KJz8oFsCJDpxiK/JLjSJpxTyQSzMt9gqREunbErG+368kYxRkibSIwY5NRoKPm9+8PA01mkpF2+nOVFI1Bf673FJL+S6nJd0cXXYLib8ANiGwKIqeHFR2zwY=
+	t=1718285208; cv=none; b=OTTCrOwwOzxYJw05aRnQIp8sIx97NSPUacBrW1id2NoggJpp0tpdq4Y3sJfBPP/+zJG/eYH8ctyf92XK5VVz4XyHXT6QkGLhZ+U87cxSW9AJ1A35eb+QkNcHn7MmmfY/HC9nYoD6OY1NMWG2bHv6xxLUqq3vi7IVag6HwDjLh8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284816; c=relaxed/simple;
-	bh=j+ZRgUOzIDJat4u1tQYC1sCLBDeq6cEI5sb5AQpJBjY=;
+	s=arc-20240116; t=1718285208; c=relaxed/simple;
+	bh=/4UAOu8OPxB6jQeNkyxjOzmqUKJUuZRRJHc/NOgQCGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o9flraEfpXtPV8FeTr8/Ho9U7fUN8phTzQEqtVtImC/IMPkiJtVwcQoXWe+dg69hPQA8226s/P3X/oEiCcKzxmLhO5uvJV+P87ulk8B5JSN3LZOJKkP1FS+FaYsvo5lOfUmbyyqdt+c634ShSewVMAmfCyO+kli5U6pyeaBvyPY=
+	 MIME-Version:Content-Type; b=VUUuw8sIkm//gPo1CE2Rkj1zuzZ3QZ88tIC/rfa3K5UtUmWjTdP9wbN1kXP63M6ovUPpZ+X2CIyzVO3JnZ7+1RDIOcVJYe+2jGLY/tBxLlaSEezJVcJDluFkaaX0stCW2YVLhoiJmcHSI2hVaP96NA1IA2dbSd7++05rBlsQEYw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD09C2BBFC;
-	Thu, 13 Jun 2024 13:20:11 +0000 (UTC)
-Date: Thu, 13 Jun 2024 09:20:09 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C307C32786;
+	Thu, 13 Jun 2024 13:26:44 +0000 (UTC)
+Date: Thu, 13 Jun 2024 09:26:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
  Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
  <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
@@ -25,22 +26,24 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
  linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
  <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
  <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
- <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
- Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
- wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
- Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel
- <ardb@kernel.org>
-Subject: Re: [PATCH v5 1/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-Message-ID: <20240613092009.5fffa4f3@rorschach.local.home>
-In-Reply-To: <ZmqK_zeGus_VxAHN@kernel.org>
-References: <20240613003435.401549779@goodmis.org>
-	<20240613003508.752963299@goodmis.org>
-	<ZmqK_zeGus_VxAHN@kernel.org>
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
+ <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
+ line option
+Message-ID: <20240613092642.385461d5@rorschach.local.home>
+In-Reply-To: <CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
+References: <20240611144911.327227285@goodmis.org>
+	<20240611144949.703297941@goodmis.org>
+	<202406121145.8860502D7@keescook>
+	<20240612145228.5bf426e0@rorschach.local.home>
+	<ZmqLejL1mblOikLp@kernel.org>
+	<CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -51,16 +54,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Jun 2024 09:00:31 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
-
-> > +	/* Make sure the name is not already used (size is only updated if found) */
-> > +	if (reserve_mem_find_by_name(name, &start, &size))
-> > +		return -EBUSY;  
+On Thu, 13 Jun 2024 08:11:48 +0200
+Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > I've added one more comment to v5, with that fixed I can take this.
+> >  
 > 
-> I'd prefer another variable here rather than size. Will be more robust IMO.
+> So how is this supposed to work wrt to the rigid 'no user visible
+> regressions' rule, given that this whole thing is a best effort thing
 
-It's a damn habit of mine to be frugal on the stack variables. I'll
-update in v6.
+This has nothing to do with user space. The kernel command line has
+broken in the past. If you update the kernel, you can update the
+command line. There's no "no user visible regressions" rule. It's
+"Don't break user space". This has nothing to do with user space.
+
+> to begin with. This needs at least a huge disclaimer that this rule
+> does not apply, and if this works today, there is no guarantee that it
+> will keep working on newer kernels. Otherwise, you will be making the
+> job of the people who work on the boot code significantly more
+> difficult. And even then, I wonder whether Linus and #regzcop are
+> going to honour such a disclaimer.
+
+Again, this has nothing to do with user space. The rule Linus talks
+about is breaking user space. This is about kernel debugging. Something
+*completely different*!
+
+> 
+> So this belongs downstream, unless some guarantees can be provided
+> that this functionality is exempt from the usual regression policies.
+
+I disagree. kexec/kdump also has the same issues.
+
 
 -- Steve
