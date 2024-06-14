@@ -1,71 +1,61 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5D57E574;
-	Fri, 14 Jun 2024 10:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B61184108;
+	Fri, 14 Jun 2024 12:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718360242; cv=none; b=G3lzhbJjWr5zeeLjTniW9eGPRk0XYLidG+3zqLFGUaLOL5PqlWlsrTDLzLxZ+COlfZUY56UnccV9vkMXtYB5djmKfIPgk0oiBDyr5sReq6taFwgzmfapJ6nPRjLRr2PGQd73MI7EcMf1HYG1Fu/c+rwJau/lq7IkAS1LOL2SvdA=
+	t=1718366460; cv=none; b=sb5SKsZHw3MqCBqKQhK0tHsYJ64r47H7e9KxMFoVd0CFKsMv+GhnElIs+YmvyW8jpHkGPNJfm5xm3El9rGJikHgQqaWCSmDKWDFHr+LHIj1HykRInwAhYGNUQqABnQOjPhpf5+DCkcCzXbEHfibQ0MB52TozUIaxJEkpwktk+J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718360242; c=relaxed/simple;
-	bh=5UOI7ykyIyrWv0zV25WvSOXZAgPx774trB7YoT24aP0=;
+	s=arc-20240116; t=1718366460; c=relaxed/simple;
+	bh=MgEc7xmF7iEZYhCWJxN5DpXt7Nk1yu973TKHIqqKb3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fi1cdQsjCQVdg943CH0oM2sGYYQhk0Z8LslcuBV+KeuaLW2Fu2BpBtx2mo+jaKT36hEgYYAxWGR6aDGnCTrXksy+uA1Pt9zrgAeltGkaUxcGFdFvoPzTmr111gQj8zXsmdTZ5DL5VF1KUFmiYk7EPahrZKQYogoWZP1iLO71b58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HYUtGoYv; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HYUtGoYv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=k/WitOts9waE0REDVUa/TgAzlnqg2Mvxo9iE/34dOyo=; b=HYUtGoYvGRE2zm+CNMKLePHJIh
-	vlNllM4XgHCgzvNSR6e5AnDk1IlfE2r5F6jRr6acX6KD6hh0r7UvG4UippR3oCzsrYNDfqSpnvYo2
-	+Zj38/Z9xOXgi4DhomllOfd/Q1+c0DCEUlmP37JsBcUFZP91x9DK69ZgwyFrQpaj5KUdrb5kczq2s
-	izci46WAkikfrc39KsKes/mLwJOBlAPOzcbeQ9xQ+2C89jhHbsPdD4I654fV2rANyJ4hgp9XHzUaC
-	n8Zlc/3M1VsQHxywX2/1scV6dJX1j14P2ypXdPkKDdD2n2f+7UaIKRw487pICLDAHen7AvUv/fWSD
-	OV4rSkxw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sI3zZ-0000000Grmk-1B9w;
-	Fri, 14 Jun 2024 10:17:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DFCBD300886; Fri, 14 Jun 2024 12:17:08 +0200 (CEST)
-Date: Fri, 14 Jun 2024 12:17:08 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bev8hN+ZiO0AuW+BfGN75CQtR6Glk0AFIV+pqUjGZofkbemx01DwqjpgaEMBR3DohnEhkJT7qYC4x1nFRu4yeisFXVGEq1RaCC80kEDc7uqFyXpm+9lzJgqYRX+qd+m8i6H4Aln7e/q9o3emOPZHP60CtpFn/Sqh/W6M3OIArBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so2266220a12.1;
+        Fri, 14 Jun 2024 05:00:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718366457; x=1718971257;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fx3+tEx/bRO112S5D6MlGbG6rpWnWaRFWOVaBF2ErTo=;
+        b=tWWc7Ol9wb5VHKWwhkimqHDLmcL0XO4HN5WnWBVD1qMjGnL5np5pfQNLUDXX74WTJy
+         YRUfySHCXt2txUzsK73NuE5EnGhNERMjDtPYvY93QwlOv7Jqz6/7SMfwfALZoE5ZNG9Z
+         LusVMlbVu0qbv6GvgtykXwmI0mgVyVeuxh0DeU0QcecJa3SrWhhWI5BT64EWFTjyunFN
+         RaT4UEdkdZckhlFR+oaEAUMqQ7cWfMjhzNQbk1MA4i37TEtZPl/zpRANf0w6lDuYHAik
+         iEvLykAUfh74oT/W4CFp6YWpylNZDqIk7Cb/V5s6LazRx8fHUx1R4yShXoMFQ4OuFlci
+         Fhtg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmM6nsfdt1ypXBHKKnOBMvMDTCcuKyKeF30m7CWwq6SzDU+Pul4Tsa7iDJiyS5WZCkexSCGFzs2vFkVCyH1en+LMVLFU1PXXz9Stx+FQr9Y9TczJkklBjNljH5oKNUteLq5IFR0mW0P8TetCy2oWJ+OQ3Ux+OI6jBVE0dLGzDnhOD4Gs3w
+X-Gm-Message-State: AOJu0YxS+NUyKiae3lhQPoCDAirBg1EsHy74UkqRvMSG+ThFbCqN+gm2
+	mmjchU++X/rNC3SkzFNhpsmVJeXOaDdNCZ5Cz5eU7NIpj5WjtZbv
+X-Google-Smtp-Source: AGHT+IHBHm31PZ29e6nEa/Y7XqntiW6RZwljeYbps4cAyXiamfw1DNoVUOfdzjPeP2QRHz/hnFp9FA==
+X-Received: by 2002:a50:d5c2:0:b0:573:555e:6d89 with SMTP id 4fb4d7f45d1cf-57cbd652436mr1663002a12.1.1718366456759;
+        Fri, 14 Jun 2024 05:00:56 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72ce067sm2206196a12.9.2024.06.14.05.00.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jun 2024 05:00:56 -0700 (PDT)
+Date: Fri, 14 Jun 2024 05:00:54 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240614101708.GO8774@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
+	Simon Horman <horms@kernel.org>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] netdevice: define and allocate &net_device
+ _properly_
+Message-ID: <Zmww9tS2eWt3mnj3@gmail.com>
+References: <20240507123937.15364-1-aleksander.lobakin@intel.com>
+ <20240507111035.5fa9b1eb@kernel.org>
+ <3b08e1d0-62be-4fae-9dbb-9161992ee067@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,69 +64,42 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202406121530.D9DB956C8@keescook>
+In-Reply-To: <3b08e1d0-62be-4fae-9dbb-9161992ee067@intel.com>
 
-On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
-> On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > > I'm happy to take patches. And for this bikeshed, this would be better
-> > > named under the size_*() helpers which are trying to keep size_t
-> > > calculations from overflowing (by saturating). i.e.:
-> > > 
-> > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
+On Wed, May 08, 2024 at 11:13:21AM +0200, Alexander Lobakin wrote:
+> From: Jakub Kicinski <kuba@kernel.org>
+> Date: Tue, 7 May 2024 11:10:35 -0700
+> 
+> > On Tue,  7 May 2024 14:39:37 +0200 Alexander Lobakin wrote:
+> >> There are several instances of the structure embedded into other
+> >> structures, but also there's ongoing effort to remove them and we
+> >> could in the meantime declare &net_device properly.
 > > 
-> > Fine I suppose, but what if we want something not size_t? Are we waiting
-> > for the type system extension?
+> > Is there a reason you're reposting this before that effort is completed?
 > 
-> Because of C's implicit promotion/truncation, we can't do anything
-> sanely with return values of arbitrary type size; we have to capture the
-> lvalue type somehow so the checking can happen without C doing silent
-> garbage.
-
-So sizeof() returns the native (built-in) size_t, right? If that type
-the nooverflow qualifier on, then:
-
-	sizeof(*p) + num*sizeof(p->foo[0])
-
-should all get the nooverflow semantics right? Because size_t is
-effectively 'nooverflow unsigned long' the multiplication should promote
-'num' to some 'long'.
-
-Now, I've re-read the rules and I don't see qualifiers mentioned, so
-can't we state that the overflow/nooverflow qualifiers are to be
-preserved on (implicit) promotion and when nooverflow and overflow are
-combined the 'safe' nooverflow takes precedence?
-
-I mean, when we're adding qualifiers we can make up rules about them
-too, right?
-
-If 'people' don't want to adorn the built-in size_t, we can always do
-something like:
-
-#define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
-
-and 'fix' it ourselves.
-
-> > But none of that is showing me generated asm for the various cases. As
-> > such, I don't consider myself informed enough.
+> To speed up the conversion probably :D
 > 
-> Gotcha. For the compile-time stuff it's all just looking at
-> known-at-compile-time sizes. So for something like this, we get a
-> __compiletime_warning() emitted:
+> > The warnings this adds come from sparse and you think they should be
+> > ignored?
 > 
-> 	const char src[] = "Hello there";
-> 	char dst[10];
+> For now...
 > 
-> 	strscpy(dst, src); /* Compiler yells since src is bigger than dst. */
+> > 
+> > TBH since Breno is doing the heavy lifting of changing the embedders 
+> > it'd seem more fair to me if he got to send this at the end. Or at
+> > least, you know, got a mention or a CC.
 > 
-> For run-time checks it's basically just using the regular WARN()
-> infrastructure with __builtin_dynamic_object_size(). Here's a simplified
-> userspace example with assert():
-> 
-> https://godbolt.org/z/zMrKnMxn5
-> 
-> The kernel's FORTIFY_SOURCE is much more complex in how it does the
-> checking, how it does the reporting (for helping people figure out what's
-> gone weird), etc.
+> I was lazy enough to add tags, sorry. The idea of him sending this at
+> the end sounds reasonable.
 
-Thanks, I'll go have a look at that.
+I think we are almost at the time to get rid of the last user of
+embedded netdev.
+
+	https://lore.kernel.org/all/20240614115317.657700-1-leitao@debian.org/
+
+Once that patch lands, I will submit this patch on top of that final
+fix.
+
+Let me know if you have any concern.
+
+--breno
