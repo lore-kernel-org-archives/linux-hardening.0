@@ -1,84 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3044280624;
-	Thu, 13 Jun 2024 23:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B432D145323;
+	Fri, 14 Jun 2024 04:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718322631; cv=none; b=kC5MMyqIdw9Dbb4BIm5ZF/fVeChHiM4zw/chcK62f8CI9HfwALJNMdd1dBWcfyPKc4a73uDV3jvabQu49D41DFudVB28wiZIs8cnI1waf6c0TqP6CWSJoLj3X9ZDEDjNy5Ph8t7nrHuKgtPnu75i6oGmzbnY6yyoxeR5FX9ETiY=
+	t=1718340001; cv=none; b=ToPYpsu9rB/RXGaYVEoTqlaYQb7BqwwM8SBPD2QC3rJcRyAGRRmCSr47rOrqhEfT5GjQ94KwrHF1T/YwEfNY/DPaEApc/QbReuoSyqobyKEt3SewA7Dtz5q1uPcbibJlzGNIkOatly7yPjavYLW/sXTY8X4LswZctwZnbZ2pUg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718322631; c=relaxed/simple;
-	bh=9Rwb9V89e521vCos4JoUPsTmonIgE7LjwTwvWYKkfsY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=R6JL3T32dpiRhBsyFHCYh9e9gcZrvsNuvxo4GwXNhWw5gD5Kb6gycXBtEtNpKYWfAtXKmz3dbtRQY2bRbqFZw0EdI5MWch+RcuZpw3j+EC+ZpKmnRd+0ix6Jm5AdCef9NzU8lXvLriiXEMJZHOSGy4/d99Ipo+4hjIiMz62+WJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lleNsJm7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718340001; c=relaxed/simple;
+	bh=yN1wVzgzD893y5hYpLKsGUjCi2JdRc+fHzFDmufqcVc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=TQ60KeMrrRX2wkewZZvjEgM/6v9URe64AtDNl3c5XsixSjsvN+Y5JnpFkwTjTWzHR/NORInGAjkPLfdpSGhr46G1+e1vojfDSy1nalG+XLLM4xZTZdUmpvyPkyyI4uJoKXUfpjuEwqDcidYRr31YqoyovyK+wRjr2IIGvim+sPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kgG2qMSw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lleNsJm7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B3915C4AF1A;
-	Thu, 13 Jun 2024 23:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718322630;
-	bh=9Rwb9V89e521vCos4JoUPsTmonIgE7LjwTwvWYKkfsY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lleNsJm722b8c7cL9urUpRTpFkcGroOwytrJTkgBdm84yhj46kL+T5x34yiqb9TnE
-	 IMhgD4yYgG0sj92nJLm+yw8qVz0BpN+Gd0xK3IOVbkAai3Cc+JlRS+/+l+4gwOugJs
-	 M3tGLjmn9l4etsHDK1cqTF3UZkM82FUxYZDiSaHdZDl/dxFz1BlpkfJFKnFAwVrsYr
-	 DSWJojpLt5kvOEnXsB4n11naVBPQO4T3sryCYVxF7hU7+ejdEzR4/JXh7oAw81ix3l
-	 yQc1QQaKP99M3mAMGzcCQuE1Kosn4n/aaDYvv8M3unyVxKyT1z4L6X6XyzVI1F11zu
-	 Yg7s1fviSoxsw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A27F5C43619;
-	Thu, 13 Jun 2024 23:50:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kgG2qMSw"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DJGKjg009889;
+	Fri, 14 Jun 2024 04:39:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=cg7s+ByQqdkCmelxlg057w
+	Dqd+vhqXOWX+YIk1o2HL0=; b=kgG2qMSw30iAPOMXhxX8wH1NP/07oYzvK9LymO
+	9SRkXYn8wIRggRoG8bke0Pb/qgvi9uy0IUPNV4XvVZko6oQ07NezUueUz3NKjjeG
+	bh66XiqDhqIrV5pyQn/yD8JK/kcs0A97TiA0+wOzeZ36rybDLHJP5wEyaR8yD6XS
+	ghVZ9ztRyciur5+S50UjqYReLQcsNfy51oHB8yrNqF5OrNhSEgiLH2PDNe0faQHT
+	QzSKk81iL9isGxxq1jW+pRom1QTUszz4EnVO1NFixDptGyoDBTc76kC0Yf5zgJD0
+	RmAEYIC/VnGdn32SDMYJgCAnjsldhU5YceB+XYyVmoPcS8Fw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yr6q3h0uv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 04:39:45 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45E4di2t024751
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 04:39:44 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Jun
+ 2024 21:39:44 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Thu, 13 Jun 2024 21:39:42 -0700
+Subject: [PATCH] pstore: platform: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v4] net: mana: Allow variable size indirection table
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171832263066.32226.1051481550894111174.git-patchwork-notify@kernel.org>
-Date: Thu, 13 Jun 2024 23:50:30 +0000
-References: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1718015319-9609-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, colin.i.king@gmail.com, ahmed.zaki@intel.com,
- pavan.chebbi@broadcom.com, schakrabarti@linux.microsoft.com,
- kotaranov@microsoft.com, keescook@chromium.org, pabeni@redhat.com,
- kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
- decui@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
- kys@microsoft.com, leon@kernel.org, jgg@ziepe.ca, longli@microsoft.com,
- shradhagupta@microsoft.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240613-md-csky-fs-pstore-v1-1-c525f636b1cb@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAI3Ja2YC/x3MTQ6CQAxA4auQrm3Cz4DRqxgWnZkijTKQFg2Gc
+ HdHl9/ivR2MVdjgWuyg/BaTOWVUpwLCSOnOKDEb6rJ2ZVc1OEUM9vjgYLjYOitj46l1Lp679kK
+ Qu0V5kO3/vPXZnozRK6Uw/k5PSa8NJ7KVFY7jCzZUgBqCAAAA
+To: Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme
+ G. Piccoli" <gpiccoli@igalia.com>,
+        Guo Ren <guoren@kernel.org>
+CC: <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-csky@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson
+	<quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qz1_T-hhdMaEkqwrI4fgb-H7IIpw3y-U
+X-Proofpoint-ORIG-GUID: qz1_T-hhdMaEkqwrI4fgb-H7IIpw3y-U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-13_15,2024-06-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 impostorscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ malwarescore=0 mlxlogscore=871 mlxscore=0 lowpriorityscore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406140028
 
-Hello:
+With ARCH=csky, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in fs/pstore/pstore.o
 
-This patch was applied to netdev/net-next.git (main)
-by Leon Romanovsky <leon@kernel.org>:
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-On Mon, 10 Jun 2024 03:28:39 -0700 you wrote:
-> Allow variable size indirection table allocation in MANA instead
-> of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> indirection table is allocated dynamically.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> [...]
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ fs/pstore/platform.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Here is the summary with links:
-  - [net-next,v4] net: mana: Allow variable size indirection table
-    https://git.kernel.org/netdev/net-next/c/7fc45cb68696
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index 03425928d2fb..3497ede88aa0 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -761,4 +761,5 @@ static void __exit pstore_exit(void)
+ module_exit(pstore_exit)
+ 
+ MODULE_AUTHOR("Tony Luck <tony.luck@intel.com>");
++MODULE_DESCRIPTION("Persistent Storage - platform driver interface");
+ MODULE_LICENSE("GPL");
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240613-md-csky-fs-pstore-3ba544d7659a
 
