@@ -1,155 +1,155 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D68112C526
-	for <linux-hardening@vger.kernel.org>; Fri, 14 Jun 2024 15:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC60819E7C9
+	for <linux-hardening@vger.kernel.org>; Fri, 14 Jun 2024 17:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718380212; cv=none; b=uv4mUz6c7EIwnzxEOx4DmjIaY9wMszPCzhMBk3NlI0pmurc2w1YLZdtlySTLv7LO3Hs2PT6sDxKndoK8ykQhyDlGDiU205/plHH72Ut8Q1LHIuf3Qvzt8K5DXHS45Ir9HO+7ytp/6mgSCGTGVaS0SNp0T8QOvLrBUbHB5I2LVXQ=
+	t=1718386787; cv=none; b=ambwOzDSmgRYv6f+eUENlk9XmVYeH7thqAFEAP8e9PUFXMMQSmnoP/kvCE8gF+OPWG1zbT6+8k97JNcZFx3Mv7s+COmAOyVCnO7UJg7eSdztxNhkAGaAH+IkzRwltVp9eJRqbmBv2IWE48FLp5cDEzhAN/o1caInqb0NbsbErWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718380212; c=relaxed/simple;
-	bh=Of89akR2CMY7eKqsbXy1fnKj5CKC+LPr7lSvKGw04Bk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oT0k2YniZR44dhTGDsa+51SYnXulU2t2f8/bVF8u0BAPG+1rMlwnoD+96bsLvB/67UAANvEyFpUvWfHEx0q+9aVAS8ZlssiB6ETGIjx/+dpJ5TOxuhkMLzTNmTzmLx1DF3UMmMSRQZr+91XWebm8EaxdgtI5tnvCmMLdb6zfCJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JEFUOk64; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718386787; c=relaxed/simple;
+	bh=fpjETf4EPj3vHyPCMjPTmh71Mrni8hAicFTS6ib+Oqo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LaXBJ/dbSGFXvg8tMwZjkg18CEKarwxOMIB0HgDjEJp8675aGmhVIaxpaIp3iBI0Cnh6PUTnz+1exrtQcY0FudRJ4e0zMw0ZLLhdHS3YhAIPfffOHLi46hmUlljU/EME2lZtDVB1Ym9vEfP+3hAlw43OiuhixldFdlLrXiCfvEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OstekVL0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JEFUOk64"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7eb65738383so10734939f.0
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jun 2024 08:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1718380209; x=1718985009; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=leswT/yscKTO7Z6a2Wo4H81HBTQclZtl7oZCfZGayWM=;
-        b=JEFUOk64Xehez37N8Ti+kOaFFa9DgSD7wBfgcPUjejHu4TsQm/SjvO3cjT5LcSZ1sG
-         uexAbovOukDc2l2/xKJ4npb9p1ufMB5fWGv5vMfqOSQoBDWhfgQeWYtAQWEj8NY1mTHR
-         ENN1fVISWmorYKmRkbCdxlD+h91reH7b+UG6k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718380209; x=1718985009;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=leswT/yscKTO7Z6a2Wo4H81HBTQclZtl7oZCfZGayWM=;
-        b=faDagmOp4/7LRL7m1G+SZKUZ5HeqWERP71k2IbsFToTSfVfa/8XJvhm7/7/T2Cuxi2
-         2DlkuKMq3f+s4gJcmXSXqmCjVteV7oNbkAIAd3nq1b/WPls/zO/wXuylgO9ChedJ/Eh7
-         5C4b5pxM/Odmt6eoaZjCjrVROD24x+cpvhh0Wd466Ysx8WqvdPLqUyvk+MfK7Y4YsdjU
-         kYyx/3ierOstA2ImshweZ33r8PezGx6BaYq8lKSQH/1IhjydcnpSTicRTiuiRZmQNJt+
-         DOJDqO2tNn0LEYtmbaaqDUiSriaS4LkYrHtR0HTC6S3tfkRRn4gWGWfDqfIRLMaYN8B+
-         qzZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXza+ByKBWcp8isREvD2R8T+2qnvP6Bvx4yW7p4tMj/FhP0JDUse1/MWBvyn6++4R11Mf/pk3oAUxIPxdBEn3aV4cZ8C4/z7yC0kBH+nPUV
-X-Gm-Message-State: AOJu0YzxQhaouwFVEe5EN4dDcfgttGJaV0Ex2Fiv4q0pzs8Q/Jz16yih
-	82km8iX3SpeVYLEWeOPDdv0uefZGubycWOrijxIb902c0HXS3poCotiJ29C7WDqkawTzTTVQBBE
-	N
-X-Google-Smtp-Source: AGHT+IED3HSMfmB9vnuFFL8MFycsr72SN22gD5z+fwYlkLvh2hJe5W48P0uXhfkKYgekiV4qCO0SEg==
-X-Received: by 2002:a6b:6b16:0:b0:7eb:730b:f0c2 with SMTP id ca18e2360f4ac-7ebeaef9959mr278165839f.0.1718380208121;
-        Fri, 14 Jun 2024 08:50:08 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b956915c17sm979497173.43.2024.06.14.08.50.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jun 2024 08:50:07 -0700 (PDT)
-Message-ID: <90e61842-e933-4d6f-a3b5-c802382fe96a@linuxfoundation.org>
-Date: Fri, 14 Jun 2024 09:50:05 -0600
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OstekVL0"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EGRNHH021762;
+	Fri, 14 Jun 2024 17:39:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=JarLK+H9YHM1Zny6ZNiJbVbWT4
+	y5D2e9YGzp69fpAio=; b=OstekVL0JIISutJUPMIRIk4Sh79DOETcG5CXQkTxAK
+	G0SmAj6xGosBHTsUmOuGVvOEDJ7+7wEcogt4rBBbHY4LkVKrd4Lib4uSNg6ivBEU
+	LFLbIT93SV4NzVbJQ2gA6uZIUfJUz3MsIelfmp7q1G/mOObnmQiyb8GZEzcIDgS0
+	o/QqkkRZu9wrOMzEkzsrsFaSYAg6RofOOQzsU32aidAUWzjVe38/VelI7Q5KzXB6
+	6uKhHTWRdAhW+tc056WjrmDCnlDjoy7eKSOTsaz6OeYDJ1qjwyIdT5IrFjHq6VoH
+	yZm8bqHFrGBz/hoheUj0FYC5ZKEm98bhzSS5CA0F0X0Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrqnp0ekd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:39:33 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHdW5U032650;
+	Fri, 14 Jun 2024 17:39:32 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrqnp0ekb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:39:32 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGkwB7003886;
+	Fri, 14 Jun 2024 17:39:31 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mqkhf9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:39:31 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHdPSd41222590
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 17:39:27 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 83DD420040;
+	Fri, 14 Jun 2024 17:39:25 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 548E120043;
+	Fri, 14 Jun 2024 17:39:22 +0000 (GMT)
+Received: from li-e43b234c-2c54-11b2-a85c-fec5a724df9f.ibm.com.com (unknown [9.43.114.155])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Jun 2024 17:39:22 +0000 (GMT)
+From: Anjali K <anjalik@linux.ibm.com>
+To: mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org
+Cc: npiggin@gmail.com, naveen@kernel.org, christophe.leroy@csgroup.eu,
+        kees@kernel.org, gustavoars@kernel.org,
+        linux-hardening@vger.kernel.org, anjalik@linux.ibm.com,
+        vishalc@linux.ibm.com
+Subject: [PATCH] powerpc/pseries: Whitelist dtl slub object for copying to userspace
+Date: Fri, 14 Jun 2024 23:08:44 +0530
+Message-Id: <20240614173844.746818-1-anjalik@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] usercopy: Convert test_user_copy to KUnit test
-To: Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Vitor Massaru Iha <vitor@massaru.org>,
- Ivan Orlov <ivan.orlov0322@gmail.com>, David Gow <davidgow@google.com>,
- Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- linux-hardening@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240612195412.make.760-kees@kernel.org>
- <20240612195921.2685842-2-kees@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240612195921.2685842-2-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: CQIPORYMi-k6bGTZEbZCY5ELSURUuSdG
+X-Proofpoint-ORIG-GUID: VBux5JOupPYsr4cwbiUWRIxANVPOVWP2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 clxscore=1011 phishscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=526 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406140119
 
-On 6/12/24 13:59, Kees Cook wrote:
-> Convert the runtime tests of hardened usercopy to standard KUnit tests.
-> 
-> Additionally disable usercopy_test_invalid() for systems with separate
-> address spaces (or no MMU) since it's not sensible to test for address
-> confusion there (e.g. m68k).
-> 
-> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
-> Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
-> Reviewed-by: David Gow <davidgow@google.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->   MAINTAINERS                                |   1 +
->   lib/Kconfig.debug                          |  21 +-
->   lib/Makefile                               |   2 +-
->   lib/{test_user_copy.c => usercopy_kunit.c} | 282 ++++++++++-----------
->   4 files changed, 151 insertions(+), 155 deletions(-)
->   rename lib/{test_user_copy.c => usercopy_kunit.c} (46%)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8754ac2c259d..0cd171ec6010 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11962,6 +11962,7 @@ F:	arch/*/configs/hardening.config
->   F:	include/linux/overflow.h
->   F:	include/linux/randomize_kstack.h
->   F:	kernel/configs/hardening.config
-> +F:	lib/usercopy_kunit.c
->   F:	mm/usercopy.c
->   K:	\b(add|choose)_random_kstack_offset\b
->   K:	\b__check_(object_size|heap_object)\b
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 59b6765d86b8..561e346f5cb0 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2505,18 +2505,6 @@ config TEST_VMALLOC
->   
->   	  If unsure, say N.
->   
-> -config TEST_USER_COPY
-> -	tristate "Test user/kernel boundary protections"
-> -	depends on m
-> -	help
-> -	  This builds the "test_user_copy" module that runs sanity checks
-> -	  on the copy_to/from_user infrastructure, making sure basic
-> -	  user/kernel boundary testing is working. If it fails to load,
-> -	  a regression has been detected in the user/kernel memory boundary
-> -	  protections.
-> -
-> -	  If unsure, say N.
-> -
->   config TEST_BPF
->   	tristate "Test BPF filter functionality"
->   	depends on m && NET
-> @@ -2814,6 +2802,15 @@ config SIPHASH_KUNIT_TEST
->   	  This is intended to help people writing architecture-specific
->   	  optimized versions.  If unsure, say N.
->   
-> +config USERCOPY_KUNIT_TEST
-> +	tristate "KUnit Test for user/kernel boundary protections"
-> +	depends on KUNIT
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  This builds the "usercopy_kunit" module that runs sanity checks
-> +	  on the copy_to/from_user infrastructure, making sure basic
-> +	  user/kernel boundary testing is working.
-> +
+Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
+results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
+shown below.
 
-Please carry the following line forward as well to be complete assuming
-it is relevant.
+    kernel BUG at mm/usercopy.c:102!
+    Oops: Exception in kernel mode, sig: 5 [#1]
+    LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+    Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
+    scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
+    CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
+    Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
+    NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
+    REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
+    MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
+    CFAR: c0000000001fdc80 IRQMASK: 0
+    [ ... GPRs omitted ... ]
+    NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
+    LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
+    Call Trace:
+     usercopy_abort+0x74/0xb0 (unreliable)
+     __check_heap_object+0xf8/0x120
+     check_heap_object+0x218/0x240
+     __check_object_size+0x84/0x1a4
+     dtl_file_read+0x17c/0x2c4
+     full_proxy_read+0x8c/0x110
+     vfs_read+0xdc/0x3a0
+     ksys_read+0x84/0x144
+     system_call_exception+0x124/0x330
+     system_call_vectored_common+0x15c/0x2ec
+    --- interrupt: 3000 at 0x7fff81f3ab34
 
-If unsure, say N.
+Commit 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
+requires that only whitelisted areas in slab/slub objects can be copied to
+userspace when usercopy hardening is enabled using CONFIG_HARDENED_USERCOPY.
+Dtl contains hypervisor dispatch events which are expected to be read by
+privileged users. Hence mark this safe for user access.
+Specify useroffset=0 and usersize=DISPATCH_LOG_BYTES to whitelist the
+entire object.
 
-thanks,
--- Shuah
+Co-developed-by: Vishal Chourasia <vishalc@linux.ibm.com>
+Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
+Signed-off-by: Anjali K <anjalik@linux.ibm.com>
+---
+ arch/powerpc/platforms/pseries/setup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 284a6fa04b0c..cba40d9d1284 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -343,8 +343,8 @@ static int alloc_dispatch_log_kmem_cache(void)
+ {
+ 	void (*ctor)(void *) = get_dtl_cache_ctor();
+ 
+-	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
+-						DISPATCH_LOG_BYTES, 0, ctor);
++	dtl_cache = kmem_cache_create_usercopy("dtl", DISPATCH_LOG_BYTES,
++						DISPATCH_LOG_BYTES, 0, 0, DISPATCH_LOG_BYTES, ctor);
+ 	if (!dtl_cache) {
+ 		pr_warn("Failed to create dispatch trace log buffer cache\n");
+ 		pr_warn("Stolen time statistics will be unreliable\n");
+
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+-- 
+2.39.3
 
