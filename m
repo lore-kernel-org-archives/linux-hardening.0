@@ -1,254 +1,159 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CA45C1C
-	for <linux-hardening@vger.kernel.org>; Sat, 15 Jun 2024 13:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F41DFED;
+	Sat, 15 Jun 2024 16:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718457068; cv=none; b=pzXruDJz5AlZGw5nJAkes7R/9xcYSV4HiKEoXxVquiul0QuaUwIJbyc761MfgD0cDHBS8Mav2W8y1IVTpTLEywpPTK9+qCpeV5g+2OFICNfgBWh/iPQTyhEFPMiGMuTI8N42n2m7HbqzceQtszFBztfPSNXWEakACDsW6pVVSO0=
+	t=1718468470; cv=none; b=PdIHYTWLDOEUEMrFJO0TW8TnJ5mA0L1L567ZsK4d/yXaGXjbcfaiS31i4Sgy5gmj+havklJW9LiWZL539zT2Yj40bzRdjOi4XGigPZ4lL3Nz6iHxsdNQrZl04N+jnZMZfjp8N6jPttBZN0A0tplpdCzxv5DZAg/qovaG1m6baQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718457068; c=relaxed/simple;
-	bh=Ol8fVMg6nVivSf4Nnwjw/1weReu0RFurMSRMDvD4Gdw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WrqcCYnHqrndY0mwEFprdvxG3EiLdndIg4GEz7H7orI84pcpK714CpZLvsX0objrfq0xNVZAY52Nr5pIC076lvqLroOjGzPEavZt2+9nQLg4Df6Z4ECpPNMYXHzUK578oohvs9/A4JKLfH64QPM1R66Wq3UaViPSqPhtLU5IooA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3MMId6P; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718468470; c=relaxed/simple;
+	bh=/6ch+qcDo2MnkoBjVji3kQHm7RQTr+qczYnFfSjaNGI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nABw1rw8rLHatipeFN5FcFY8F9bA/8RcidapYuHeRtB1m/B4bB7AYwhyYmKK3OdsrIdMD3upEQWznGaHE8CQAwdcsqD/c/ZULLX8sH62wYEBVfe3UxQfrb12UJ/9t+fGZyFYlCh7f2bgTFLA5BZAZs/Mfe79XrZySULJJG3c/X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=JcExtjxI; arc=none smtp.client-ip=129.27.2.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3MMId6P"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so18581255e9.1
-        for <linux-hardening@vger.kernel.org>; Sat, 15 Jun 2024 06:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718457065; x=1719061865; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ba4JlU+lElmNUJ4vk5yO98VufPpPvVG+eNMTDfaipN4=;
-        b=W3MMId6PyhL2aG4LeSWo5Jblt2/uwd/G6wJTI3scQB7ci/uK0AuVAhytEdpm4moxLr
-         30mUCISSpYIhUu6TLwN3tulip2AYlUSNLqmW6Zq9xvgiRsvr/eq/u7KowDUlWJpwm5+T
-         nIVNOS5DDseDNSgFmfyGKEFVv+4+h4wdKoakmeTNcfJtuc8DERcZsikcAIOlxh2PeFjA
-         +jDI+Oa+oLJf1pzF+oRH3Qst/cEL6m7hB70u+cvq4dsNfEiKeaoHAOvBSNaiQRPcmFjB
-         UIfVMn5240nla8o+Z++c62VT2VzuxKUvqFDgsOBWWG2aq8duezQaXYJGIgeyvHP7dxYB
-         qzfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718457065; x=1719061865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ba4JlU+lElmNUJ4vk5yO98VufPpPvVG+eNMTDfaipN4=;
-        b=v0AoZpwhbH0ctNxzAeJc4zNhzxg+lPsQb937PDp6OClLGoIQ73f29+F/Fe9LjPDu+X
-         01rTExgjEimDS3ljK2d7GQ6bsW4/TrN4o09OCe0a8YnkbHKUx/ijf7zz9gezijr8SdD8
-         URw2/0Ioq+gvWWusDkPZnLUif+c3J8t1vpUZH7inrNhahKT4OHr5uEtDvasWIWRwZ9Gw
-         L/RyY55hCmQKIla9N4Qy+JOS4XJXhNfGR9aDBqhkgfu1lw0doz8FvzULUlzXspMUUusb
-         uRLojVZTdcyGiT5t4NWykxc5tgYWQan0b8Hyspi7LLwJ6gS4E3GTTTEb3b2fBXS7c3H5
-         Y+TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQNELVLxgluL9DOBfCp6F/VXJ0wpES44w30oqtRHvxjQ3K0eDQverXhbCUSOzlBPNHf5XOprrcKGIElcrKGClYebgirB1GDeKhJqDm91+6
-X-Gm-Message-State: AOJu0Yz0qGqY6bMvup3PoDjSTJ+A1dnRT8iH2JL5M9MMoZ4HTQSE6d2m
-	rqxPfP/zEYuH4mfj/fKVlDtfREx1v4XuJ1FWlpS8XgNRJaxpJ3hN
-X-Google-Smtp-Source: AGHT+IGlaRl0TM5cmcT0s0u1x2uu4fe2YNNC0m3IIF4OwV+21QOMU70L+AkTmyX1r/hF+JUVri+5XA==
-X-Received: by 2002:a05:600c:4448:b0:422:1705:7556 with SMTP id 5b1f17b1804b1-4230481bddemr58699165e9.4.1718457064982;
-        Sat, 15 Jun 2024 06:11:04 -0700 (PDT)
-Received: from qamajeed.Home ([39.45.142.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de618sm136888545e9.37.2024.06.15.06.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jun 2024 06:11:04 -0700 (PDT)
-From: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
-To: bscs16018@itu.edu.pk
-Cc: Kees Cook <keescook@chromium.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH 2/2] string: Remove strlcpy()
-Date: Sat, 15 Jun 2024 18:10:25 +0500
-Message-Id: <20240615131025.16746-3-qasim.majeed20@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240615131025.16746-1-qasim.majeed20@gmail.com>
-References: <20240615131025.16746-1-qasim.majeed20@gmail.com>
+	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="JcExtjxI"
+Received: from vra-174-141.tugraz.at (vra-174-141.tugraz.at [129.27.174.141])
+	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4W1h0h32dlz3wV6;
+	Sat, 15 Jun 2024 18:09:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
+	s=mailrelay; t=1718467750;
+	bh=Igjx9GfiOHGZFSH3MO+mk+/P1QADm/jiDsEmEwOLM6A=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=JcExtjxIcH4p61MtHvpDIteBnwfOz51tS8q5VDIYZI+NpJKKdBykTD9MF+auMH0gv
+	 nRpGkZ8wiqt21vJ92fMlv2TD3fQC7DD0VpoTzbPNocoCPNvnvWiCaaMcQRcSwRThCk
+	 mT/+fqYdLYEQgJHJizSid5Nle80AsJ519MKqmu88=
+Message-ID: <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+From: Martin Uecker <uecker@tugraz.at>
+To: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+  Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>,  "Liang, Kan" <kan.liang@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,  Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,  Matthew Wilcox
+ <mawilcox@microsoft.com>, x86@kernel.org, linux-perf-users@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ llvm@lists.linux.dev
+Date: Sat, 15 Jun 2024 18:09:07 +0200
+In-Reply-To: <20240614101708.GO8774@noisy.programming.kicks-ass.net>
+References: 
+	<AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	 <202406101010.E1C77AE9D@keescook>
+	 <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+	 <202406101438.BC43514F@keescook>
+	 <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+	 <202406121148.688240B@keescook>
+	 <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+	 <202406121530.D9DB956C8@keescook>
+	 <20240614101708.GO8774@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
+X-Spam-Scanner: SpamAssassin 3.003001 
+X-Spam-Score-relay: -1.9
+X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
 
-From: Kees Cook <keescook@chromium.org>
+Am Freitag, dem 14.06.2024 um 12:17 +0200 schrieb Peter Zijlstra:
+> On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
+> > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
+> > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
+> > > > I'm happy to take patches. And for this bikeshed, this would be bet=
+ter
+> > > > named under the size_*() helpers which are trying to keep size_t
+> > > > calculations from overflowing (by saturating). i.e.:
+> > > >=20
+> > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
+> > >=20
+> > > Fine I suppose, but what if we want something not size_t? Are we wait=
+ing
+> > > for the type system extension?
+> >=20
+> > Because of C's implicit promotion/truncation, we can't do anything
+> > sanely with return values of arbitrary type size; we have to capture th=
+e
+> > lvalue type somehow so the checking can happen without C doing silent
+> > garbage.
 
-With all the users of strlcpy() removed[1] from the kernel, remove the
-API, self-tests, and other references. Leave mentions in Documentation
-(about its deprecation), and in checkpatch.pl (to help migrate host-only
-tools/ usage). Long live strscpy().
+What is the specific problem here?
 
-Link: https://github.com/KSPP/linux/issues/89 [1]
-Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Whitcroft <apw@canonical.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: linux-hardening@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/fortify-string.h                | 51 -------------------
- include/linux/string.h                        |  3 --
- lib/nlattr.c                                  |  2 +-
- lib/string.c                                  | 15 ------
- lib/test_fortify/write_overflow-strlcpy-src.c |  5 --
- lib/test_fortify/write_overflow-strlcpy.c     |  5 --
- 6 files changed, 1 insertion(+), 80 deletions(-)
- delete mode 100644 lib/test_fortify/write_overflow-strlcpy-src.c
- delete mode 100644 lib/test_fortify/write_overflow-strlcpy.c
+>=20
+> So sizeof() returns the native (built-in) size_t, right? If that type
+> the nooverflow qualifier on, then:
+>=20
+> 	sizeof(*p) + num*sizeof(p->foo[0])
+>=20
+> should all get the nooverflow semantics right? Because size_t is
+> effectively 'nooverflow unsigned long' the multiplication should promote
+> 'num' to some 'long'.
+>=20
+> Now, I've re-read the rules and I don't see qualifiers mentioned, so
+> can't we state that the overflow/nooverflow qualifiers are to be
+> preserved on (implicit) promotion and when nooverflow and overflow are
+> combined the 'safe' nooverflow takes precedence?
+>=20
+> I mean, when we're adding qualifiers we can make up rules about them
+> too, right?
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index 79ef6ac4c021..89a6888f2f9e 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -214,51 +214,6 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
- 	return ret;
- }
- 
--/* Defined after fortified strlen() to reuse it. */
--extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
--/**
-- * strlcpy - Copy a string into another string buffer
-- *
-- * @p: pointer to destination of copy
-- * @q: pointer to NUL-terminated source string to copy
-- * @size: maximum number of bytes to write at @p
-- *
-- * If strlen(@q) >= @size, the copy of @q will be truncated at
-- * @size - 1 bytes. @p will always be NUL-terminated.
-- *
-- * Do not use this function. While FORTIFY_SOURCE tries to avoid
-- * over-reads when calculating strlen(@q), it is still possible.
-- * Prefer strscpy(), though note its different return values for
-- * detecting truncation.
-- *
-- * Returns total number of bytes written to @p, including terminating NUL.
-- *
-- */
--__FORTIFY_INLINE size_t strlcpy(char * const POS p, const char * const POS q, size_t size)
--{
--	const size_t p_size = __member_size(p);
--	const size_t q_size = __member_size(q);
--	size_t q_len;	/* Full count of source string length. */
--	size_t len;	/* Count of characters going into destination. */
--
--	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
--		return __real_strlcpy(p, q, size);
--	q_len = strlen(q);
--	len = (q_len >= size) ? size - 1 : q_len;
--	if (__builtin_constant_p(size) && __builtin_constant_p(q_len) && size) {
--		/* Write size is always larger than destination. */
--		if (len >= p_size)
--			__write_overflow();
--	}
--	if (size) {
--		if (len >= p_size)
--			fortify_panic(__func__);
--		__underlying_memcpy(p, q, len);
--		p[len] = '\0';
--	}
--	return q_len;
--}
--
- /* Defined after fortified strnlen() to reuse it. */
- extern ssize_t __real_strscpy(char *, const char *, size_t) __RENAME(strscpy);
- /**
-@@ -272,12 +227,6 @@ extern ssize_t __real_strscpy(char *, const char *, size_t) __RENAME(strscpy);
-  * @p buffer. The behavior is undefined if the string buffers overlap. The
-  * destination @p buffer is always NUL terminated, unless it's zero-sized.
-  *
-- * Preferred to strlcpy() since the API doesn't require reading memory
-- * from the source @q string beyond the specified @size bytes, and since
-- * the return value is easier to error-check than strlcpy()'s.
-- * In addition, the implementation is robust to the string changing out
-- * from underneath it, unlike the current strlcpy() implementation.
-- *
-  * Preferred to strncpy() since it always returns a valid string, and
-  * doesn't unnecessarily force the tail of the destination buffer to be
-  * zero padded. If padding is desired please use strscpy_pad().
-diff --git a/include/linux/string.h b/include/linux/string.h
-index ce137830a0b9..ab148d8dbfc1 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -66,9 +66,6 @@ extern char * strcpy(char *,const char *);
- #ifndef __HAVE_ARCH_STRNCPY
- extern char * strncpy(char *,const char *, __kernel_size_t);
- #endif
--#ifndef __HAVE_ARCH_STRLCPY
--size_t strlcpy(char *, const char *, size_t);
--#endif
- #ifndef __HAVE_ARCH_STRSCPY
- ssize_t strscpy(char *, const char *, size_t);
- #endif
-diff --git a/lib/nlattr.c b/lib/nlattr.c
-index dc15e7888fc1..ed2ab43e1b22 100644
---- a/lib/nlattr.c
-+++ b/lib/nlattr.c
-@@ -758,7 +758,7 @@ EXPORT_SYMBOL(nla_find);
-  * @dstsize: Size of destination buffer.
-  *
-  * Copies at most dstsize - 1 bytes into the destination buffer.
-- * Unlike strlcpy the destination buffer is always padded out.
-+ * Unlike strscpy() the destination buffer is always padded out.
-  *
-  * Return:
-  * * srclen - Returns @nla length (not including the trailing %NUL).
-diff --git a/lib/string.c b/lib/string.c
-index be26623953d2..6891d15ce991 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -103,21 +103,6 @@ char *strncpy(char *dest, const char *src, size_t count)
- EXPORT_SYMBOL(strncpy);
- #endif
- 
--#ifndef __HAVE_ARCH_STRLCPY
--size_t strlcpy(char *dest, const char *src, size_t size)
--{
--	size_t ret = strlen(src);
--
--	if (size) {
--		size_t len = (ret >= size) ? size - 1 : ret;
--		__builtin_memcpy(dest, src, len);
--		dest[len] = '\0';
--	}
--	return ret;
--}
--EXPORT_SYMBOL(strlcpy);
--#endif
--
- #ifndef __HAVE_ARCH_STRSCPY
- ssize_t strscpy(char *dest, const char *src, size_t count)
- {
-diff --git a/lib/test_fortify/write_overflow-strlcpy-src.c b/lib/test_fortify/write_overflow-strlcpy-src.c
-deleted file mode 100644
-index 91bf83ebd34a..000000000000
---- a/lib/test_fortify/write_overflow-strlcpy-src.c
-+++ /dev/null
-@@ -1,5 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--#define TEST	\
--	strlcpy(small, large_src, sizeof(small) + 1)
--
--#include "test_fortify.h"
-diff --git a/lib/test_fortify/write_overflow-strlcpy.c b/lib/test_fortify/write_overflow-strlcpy.c
-deleted file mode 100644
-index 1883db7c0cd6..000000000000
---- a/lib/test_fortify/write_overflow-strlcpy.c
-+++ /dev/null
-@@ -1,5 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--#define TEST	\
--	strlcpy(instance.buf, large_src, sizeof(instance.buf) + 1)
--
--#include "test_fortify.h"
--- 
-2.34.1
+It should probably be a type attribute.
+
+>=20
+> If 'people' don't want to adorn the built-in size_t, we can always do
+> something like:
+>=20
+> #define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
+>=20
+> and 'fix' it ourselves.
+
+This is likely a stupid question, but making it signed=C2=A0
+wouldn't work?   Or is a signed size_t too small=C2=A0=C2=A0
+or some architectures? Or would this change break too much?
+
+
+Martin
+
+>=20
+> > > But none of that is showing me generated asm for the various cases. A=
+s
+> > > such, I don't consider myself informed enough.
+> >=20
+> > Gotcha. For the compile-time stuff it's all just looking at
+> > known-at-compile-time sizes. So for something like this, we get a
+> > __compiletime_warning() emitted:
+> >=20
+> > 	const char src[] =3D "Hello there";
+> > 	char dst[10];
+> >=20
+> > 	strscpy(dst, src); /* Compiler yells since src is bigger than dst. */
+> >=20
+> > For run-time checks it's basically just using the regular WARN()
+> > infrastructure with __builtin_dynamic_object_size(). Here's a simplifie=
+d
+> > userspace example with assert():
+> >=20
+> > https://godbolt.org/z/zMrKnMxn5
+> >=20
+> > The kernel's FORTIFY_SOURCE is much more complex in how it does the
+> > checking, how it does the reporting (for helping people figure out what=
+'s
+> > gone weird), etc.
+>=20
+> Thanks, I'll go have a look at that.
 
