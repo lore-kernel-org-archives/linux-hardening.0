@@ -1,131 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A2424B34;
-	Sun, 16 Jun 2024 18:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B31171B0;
+	Mon, 17 Jun 2024 08:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718562203; cv=none; b=t28hxoPcIXRzZaNEciISrjjHUTsSWwYiSLhBvKgiEBrhJFNIdVqlzyQV8Vtt/CvsVFTuodg0BW2Y0OYbbhFz5NOtWH7qjl4FLK4L1+30kY1MeJF5/E/RtgPSYj2oHydRtpujTXJIsQsFwpee1kHWX0OLg8/20oWJoxQi/50ZQzE=
+	t=1718614103; cv=none; b=i82A1PEczVzbUT6kYg05Qk0sN0x0hiuyAGo7nJvOshVGS8c7OV0RlqKlZjynXWxdGA5uoS/ZYoCLhsQ8WOYcOKF1FpX1HG86ZU9cRAAPsuok83GtUpFL2mtq999iv3TsB+GoC7WHv1xN155tll+J1XMQndgmAGdWW3WJx+ZZib8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718562203; c=relaxed/simple;
-	bh=2/D3y84MWExMUe/+ohdAcL5JtZ0TFzz2ZC4d4ub2oGU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I0pNU/AtW17BrRRado7Ht2InQGD/gOzdr6+xA8ZYBxsv+fHyylmhTQTINCWA0ayNM4zhRA1mXQRUj+f/bSoQyWzgyfXy6Q+b23fmQw2O89oEUzBjhq72rL3Wg+NICbuxrxuvGJ4wa95eQIYzK+KlK9uh0KreVDXgpaviYmfqLaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHHohNSk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718614103; c=relaxed/simple;
+	bh=ahwV9Ju+1SVJkhYWRx0d6aXsj0gx6TEzit8ir2IL5ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z/yUdiPAaF5900D74dtLa9tTeTnj/oUrtPusgq+7JQsPpuxY6sX/iqyLSDvllj4n4l88t5ZLw2sXJa5orXrN5ow1uKlq3cJWVPW2z47Ochdr/keKOP0G496PWrkAJ/GBlWQmjon2tWsA+BTml47vbQTMM72gmHtQSlFFTdeLy0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L00F5III; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHHohNSk"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 516FDC4AF50;
-	Sun, 16 Jun 2024 18:23:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L00F5III"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89ABFC3277B;
+	Mon, 17 Jun 2024 08:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718562203;
-	bh=2/D3y84MWExMUe/+ohdAcL5JtZ0TFzz2ZC4d4ub2oGU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FHHohNSk3kpLoximLWynHYzSgNS2SE7/Jx1n9Wqi3oUsSda+7yecoHZtlpI8zLAKx
-	 Cc38hDQPHLAkeCY3t93x4uRTDP597vOMErylAve8efMVXeyJVjAu8rxUjWcIZSPdOO
-	 In7o+2tV8jZri09Up18WzNs/izIiwlMfLwuXOrB8CP83NQLoO3l3h3xWxBrsFwlC1G
-	 ANyoroJasa8yU24JNXN+rYxS8IZZQSxzd5l9xaNV1yYC+xtHw+98TT84qtHWWiYHx/
-	 TKq+t2+JfSlvrtrDQgviyQxBAmJrv/p1gmLeBIwtXbgYCy0+4S54MG4ofPF7BgW66n
-	 /7WAvZlOop41Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426E7C2BA18;
-	Sun, 16 Jun 2024 18:23:23 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Sun, 16 Jun 2024 20:22:54 +0200
-Subject: [PATCH v4 3/3] arm64: dts: qcom: msm8939-longcheer-l9100: Add rear
- flash
+	s=k20201202; t=1718614102;
+	bh=ahwV9Ju+1SVJkhYWRx0d6aXsj0gx6TEzit8ir2IL5ek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L00F5IIIJU/Fb9oPuacRQh6JHjKe9JMFXskYnMjttHXSAgJ8ou7NmS/FIeYizdwmc
+	 NHwqNJFdtXYG4l18e+GzQPvHj074YOzawnPrd0wMw/YrhT4AUarBDd37pcSzQljmyx
+	 /RPuuCXHchprbHKk80lNIYkfA0YqRLX9c1MWLkwFkZAaEn3W9nJGU474yqI/vLzo2Q
+	 La5U7uKtpsAMJ9tlwVXejVZRkUC0zz9fOX/iFpMvvBh1RIxE8Mu9tAvdM9tANRVwMz
+	 7lo8ttXGiZ3Nd2qoiRXa8lt3CeOMGfHiRuSwsnPccpvWn4ZGXU8theqd3tPS/9R428
+	 H8ipiRkNtR0kQ==
+Date: Mon, 17 Jun 2024 10:48:15 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com, inglorion@google.com, 
+	ajordanr@google.com, jorgelo@chromium.org, Jann Horn <jannh@google.com>, 
+	Kees Cook <keescook@chromium.org>, Jeff Xu <jeffxu@google.com>, Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH v6 1/2] proc: pass file instead of inode to proc_mem_open
+Message-ID: <20240617-emanzipation-ansiedeln-6fd2ae7659c8@brauner>
+References: <20240613133937.2352724-1-adrian.ratiu@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240616-sy7802-v4-3-789994180e05@apitzsch.eu>
-References: <20240616-sy7802-v4-0-789994180e05@apitzsch.eu>
-In-Reply-To: <20240616-sy7802-v4-0-789994180e05@apitzsch.eu>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
- Trilok Soni <quic_tsoni@quicinc.com>, Kees Cook <kees@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- phone-devel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718562205; l=1408;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=5PZFGehTShxKe3OFkYq1lO6OPdXhGy4wNq5owjXoJG0=;
- b=Nj99GFC0tfIYypxlnWwCOUeS13ePOV+czdmMfwwxrWIv1lDgy+lga+RvH6mw5ZKUMVPuvdONk
- oX5PwuKtblYAbVBVqV7WIHOXnlbgBFR9GaFDN2t3IcvgcDxeH542cNb
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240613133937.2352724-1-adrian.ratiu@collabora.com>
 
-From: André Apitzsch <git@apitzsch.eu>
+On Thu, Jun 13, 2024 at 04:39:36PM GMT, Adrian Ratiu wrote:
+> The file struct is required in proc_mem_open() so its
+> f_mode can be checked when deciding whether to allow or
+> deny /proc/*/mem open requests via the new read/write
+> and foll_force restriction mechanism.
+> 
+> Thus instead of directly passing the inode to the fun,
+> we pass the file and get the inode inside it.
+> 
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jeff Xu <jeffxu@google.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> Reviewed-by: Kees Cook <kees@kernel.org>
+> ---
 
-The phone has a Silergy SY7802 flash LED controller.
+I've tentatively applies this patch to #vfs.procfs.
+One comment, one question:
 
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
----
- .../boot/dts/qcom/msm8939-longcheer-l9100.dts      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> No changes in v6
+> ---
+>  fs/proc/base.c       | 6 +++---
+>  fs/proc/internal.h   | 2 +-
+>  fs/proc/task_mmu.c   | 6 +++---
+>  fs/proc/task_nommu.c | 2 +-
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 72a1acd03675..4c607089f66e 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -794,9 +794,9 @@ static const struct file_operations proc_single_file_operations = {
+>  };
+>  
+>  
+> -struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
+> +struct mm_struct *proc_mem_open(struct file  *file, unsigned int mode)
+>  {
+> -	struct task_struct *task = get_proc_task(inode);
+> +	struct task_struct *task = get_proc_task(file->f_inode);
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-index e3404c4455cf..528737929274 100644
---- a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-@@ -159,6 +159,25 @@ led@2 {
- 			};
- 		};
- 	};
-+
-+	flash-led-controller@53 {
-+		compatible = "silergy,sy7802";
-+		reg = <0x53>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		enable-gpios = <&tlmm 16 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&camera_rear_flash_default>;
-+		pinctrl-names = "default";
-+
-+		led@0 {
-+			reg = <0>;
-+			function = LED_FUNCTION_FLASH;
-+			color = <LED_COLOR_ID_WHITE>;
-+			led-sources = <0>, <1>;
-+		};
-+	};
- };
- 
- &blsp_i2c3 {
-@@ -318,6 +337,13 @@ camera_front_flash_default: camera-front-flash-default-state {
- 		bias-disable;
- 	};
- 
-+	camera_rear_flash_default: camera-rear-flash-default-state {
-+		pins = "gpio9", "gpio16", "gpio51";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
- 	gpio_hall_sensor_default: gpio-hall-sensor-default-state {
- 		pins = "gpio20";
- 		function = "gpio";
+Comment: This should use file_inode(file) but I've just fixed that when I
+applied.
 
--- 
-2.45.2
+Question: Is this an equivalent transformation. So is the inode that was
+passed to proc_mem_open() always the same inode as file_inode(file)?
 
-
+>  	struct mm_struct *mm = ERR_PTR(-ESRCH);
+>  
+>  	if (task) {
+> @@ -816,7 +816,7 @@ struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
+>  
+>  static int __mem_open(struct inode *inode, struct file *file, unsigned int mode)
+>  {
+> -	struct mm_struct *mm = proc_mem_open(inode, mode);
+> +	struct mm_struct *mm = proc_mem_open(file, mode);
+>  
+>  	if (IS_ERR(mm))
+>  		return PTR_ERR(mm);
+> diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+> index a71ac5379584..d38b2eea40d1 100644
+> --- a/fs/proc/internal.h
+> +++ b/fs/proc/internal.h
+> @@ -295,7 +295,7 @@ struct proc_maps_private {
+>  #endif
+>  } __randomize_layout;
+>  
+> -struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode);
+> +struct mm_struct *proc_mem_open(struct file *file, unsigned int mode);
+>  
+>  extern const struct file_operations proc_pid_maps_operations;
+>  extern const struct file_operations proc_pid_numa_maps_operations;
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index f8d35f993fe5..fe3b2182b0aa 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -210,7 +210,7 @@ static int proc_maps_open(struct inode *inode, struct file *file,
+>  		return -ENOMEM;
+>  
+>  	priv->inode = inode;
+> -	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+> +	priv->mm = proc_mem_open(file, PTRACE_MODE_READ);
+>  	if (IS_ERR(priv->mm)) {
+>  		int err = PTR_ERR(priv->mm);
+>  
+> @@ -1030,7 +1030,7 @@ static int smaps_rollup_open(struct inode *inode, struct file *file)
+>  		goto out_free;
+>  
+>  	priv->inode = inode;
+> -	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+> +	priv->mm = proc_mem_open(file, PTRACE_MODE_READ);
+>  	if (IS_ERR(priv->mm)) {
+>  		ret = PTR_ERR(priv->mm);
+>  
+> @@ -1754,7 +1754,7 @@ static int pagemap_open(struct inode *inode, struct file *file)
+>  {
+>  	struct mm_struct *mm;
+>  
+> -	mm = proc_mem_open(inode, PTRACE_MODE_READ);
+> +	mm = proc_mem_open(file, PTRACE_MODE_READ);
+>  	if (IS_ERR(mm))
+>  		return PTR_ERR(mm);
+>  	file->private_data = mm;
+> diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
+> index bce674533000..a8ab182a4ed1 100644
+> --- a/fs/proc/task_nommu.c
+> +++ b/fs/proc/task_nommu.c
+> @@ -259,7 +259,7 @@ static int maps_open(struct inode *inode, struct file *file,
+>  		return -ENOMEM;
+>  
+>  	priv->inode = inode;
+> -	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
+> +	priv->mm = proc_mem_open(file, PTRACE_MODE_READ);
+>  	if (IS_ERR(priv->mm)) {
+>  		int err = PTR_ERR(priv->mm);
+>  
+> -- 
+> 2.44.2
+> 
