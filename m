@@ -1,137 +1,182 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84F2C8E1;
-	Mon, 17 Jun 2024 20:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9069918F2EB;
+	Mon, 17 Jun 2024 21:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718656414; cv=none; b=YjuOqFY5x7XaHwMGbOrpboAd/6YUWb+TFA6vcVPcsSORTyR86uN86q94K/uCRILT3bE/c/ww4fBSVdN6YXZoJQaP6Gw/YvwPkw5fD0OHnOCX/mlMAxg/nv97NlumV5tcmYaeLGXw3PNpE1m9JefL07yUYPxl4mbUKEOei0HjH2A=
+	t=1718658172; cv=none; b=ZIIyU8ZjffDYGRdtcmGHXPVsuWOZ5n9Hry2vKalKNkW3QSzZdNQCr9EEz6islFBLTfzNhBWJlAP1crw7IopXbHS0kndwz00X/E+bL+D6vA0WcAqC6fE6C+FFNZUCGo2yUrgwpOJ62BjwtyeRcABSLTSO8U8455QmkWVKL5S5tBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718656414; c=relaxed/simple;
-	bh=jaVlw/Bw2+IaY2P1kl0q/XJdhyk5gRvGocCy6MEcCw4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=m58qUYFwE05jOnYoUQcfrSWGhkOdWs4nWnPsJYDv6D0wY53G+iENwaL+A3gJlj1T8u7F8XosNkzNa6ulg7GPFhKluLz/mc7E1AK9WiueOJogirjlH7VmimAP0ww/nm488Fhjp5JMfFVBdP9FWIr5M5WUEDlhab5SOTnRebqglVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=vi3Yte+C; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eYSZp6yr; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718658172; c=relaxed/simple;
+	bh=FDxCfT8MR8IcCEXkZo51B6b6FGC7jCvlc1c7rTFSmyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzMXCLlXjvkNw3my8soObvPnnAiw4E3M5+iWtGQD2BIkVMs73ZNxzmeE24SzzaU1rTtVOnojj79jslnpgsYMN6M85tLmRK8mWFBmuDybVqENxXDxBvXslvUtLPaHqP+05Kg8Wy4RzGhDw781QmkkyyKy7GquaHu93lgdxOOKHdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6P9/SMe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="vi3Yte+C";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eYSZp6yr"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id BF5E01140294;
-	Mon, 17 Jun 2024 16:33:29 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 17 Jun 2024 16:33:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718656409; x=1718742809; bh=ZOPzmcgBhQ
-	zo1keWksdhYbdPIRd3lKjznmVOskNt6RY=; b=vi3Yte+C00ngmRPurQDjKom+Mo
-	7I2cXSkKKNSB3XaghDFBbW/yX9/IPU+rRKCyWAzl47+aN0dJBwZytlg5eKZDKpm5
-	dOiXtBQU2BvderPOj3+4RvUFl8vYgwvsbZr3TlnTMBmZWtRjZc/TZZPY1xKS0pNm
-	iT1u2dIQ83IHy42PfsHGyuPMg9xXEfY6JbVGbLlnuT9ITi0YW1sUEKFPzZUxUzyU
-	hHDvY0sHFOMj5nBpXl1+gU5e9HP1nt2XufkwO9Zm0HlGMAjEbcrR8PaP7GQThCXi
-	o10cA793EMGQuhQbpeLx6h1+fEc070+pfF/iLmR9wXYi7yqbWdxxXIN6JTwg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718656409; x=1718742809; bh=ZOPzmcgBhQzo1keWksdhYbdPIRd3
-	lKjznmVOskNt6RY=; b=eYSZp6yr4uIcpX4K/DSJxA0dcLd9y5bZ93XJW91IS+C4
-	gjlAwhWHe/cuYtu2t9+rR1CaidAkP9kO5FnK4pWFz4Ta3t/i9hDoTxbVdm1uXwiB
-	gRy/ef0i36wnqwPqn8P56M2NiEr5yLX0OScuw6P5oot20Us5csX45S3F/sjwoW/K
-	jY+2IM7qYf1Ociil3fiITp5HY/Z623KIkN0U8yjx7x5RVhgeaEXChzSSyjZlEZr0
-	uP15pIaWS1R48nSrhZyHw7gG1RXV/65B3hv5y1lPdqLLnEx9V5PAik8nGf3RNlrT
-	sApmUyi6IVJcpU1ug8ooT0Lc7HadGojIEFTc9juqew==
-X-ME-Sender: <xms:mJ1wZlJSv-bIOceDxEPYcbRc7MEi36kkxS0h0ztbzdDFL1m7X_X5aQ>
-    <xme:mJ1wZhLV-WrMVzF2QVsFYrRlHraCxhVMp625Ohg5bOqu-N-c3VGKIvRTayuuAXgmm
-    d1s02toKF-LUXGI3GE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvhedgudehtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:mJ1wZts8xgHY9hrr66fNkOvtkPVWByYLruSPKGDiNjYZ5fwbpQAJCw>
-    <xmx:mJ1wZmYX3CRvz-zIy_A_kY7FVCjE2JLb1l9FDUhw44LCWjo7zQBpdA>
-    <xmx:mJ1wZsZeB7E86sMRNAP0sjDBwEfNKoOuH1K3VlS2sMybSFBUufdT2Q>
-    <xmx:mJ1wZqDat5LjPLNQI4zkBx2YzhSH3yjp5jBIBwyGIEhULpAH_pnbFQ>
-    <xmx:mZ1wZoKoS86N3mTV8tHw8qF-NH8CoB31Le40nQ6TOtL4j9BaC45Be_ER>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 876EDB60098; Mon, 17 Jun 2024 16:33:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6P9/SMe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A411C2BD10;
+	Mon, 17 Jun 2024 21:02:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718658172;
+	bh=FDxCfT8MR8IcCEXkZo51B6b6FGC7jCvlc1c7rTFSmyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y6P9/SMeXyb1oYIdYDJUi+EGhxL5Um4xMKdXcqPkOn9IsfF8MbNy8CFCKAh5Bic8Y
+	 blt3TUQk1We6QQKO+670rdDr01w3NXdzMtYjgogalcjwH6N1LIUncvFtQq7WUWS7BS
+	 gzZPb90Es4dmlUMfAeED6TN5d7q0Qi0KqeqYoU7RvErLbAZFfNfXXnyqqOOAz9W7XE
+	 Ta1Va9K/wJ/2dAAHTB/bw3DXm4yLdr6KDMkWOxrKIaxZTOVYaxy9ZERf2doYBYzWfl
+	 2XKiSkaOdk1YyA4utLCjPIlH17JG8XaxdvB0Dx1NWoOi6j9v7HNt6qTLpT72aylIpD
+	 eUdeWRdtEDxgA==
+Date: Mon, 17 Jun 2024 14:02:51 -0700
+From: Kees Cook <kees@kernel.org>
+To: Tom Rix <trix@redhat.com>
+Cc: Qing Zhao <qing.zhao@oracle.com>, mhiramat@kernel.org,
+	akpm@linux-foundation.org, ndesaulniers@google.com,
+	masahiroy@kernel.org, paulmck@kernel.org, hannes@cmpxchg.org,
+	ojeda@kernel.org, thunder.leizhen@huawei.com,
+	christophe.leroy@csgroup.eu, vbabka@suse.cz,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] init/Kconfig: extend -Wno-array-bounds to gcc 13
+Message-ID: <202406171348.8D43518308@keescook>
+References: <20230306220947.1982272-1-trix@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
-In-Reply-To: <202406171122.B5FDA6A@keescook>
-References: <20240617133721.377540-1-liuyuntao12@huawei.com>
- <ZnBbr2CAqBGDe2aN@J2N7QTR9R3> <202406171122.B5FDA6A@keescook>
-Date: Mon, 17 Jun 2024 22:33:08 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>
-Cc: "Yuntao Liu" <liuyuntao12@huawei.com>, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Heiko Carstens" <hca@linux.ibm.com>, gor@linux.ibm.com,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Leonardo Bras" <leobras@redhat.com>, "Mark Brown" <broonie@kernel.org>,
- imbrenda@linux.ibm.com, pawan.kumar.gupta@linux.intel.com
-Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230306220947.1982272-1-trix@redhat.com>
 
-On Mon, Jun 17, 2024, at 20:22, Kees Cook wrote:
-> On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
->> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
->> > Since the offset would be bitwise ANDed with 0x3FF in
->> > add_random_kstack_offset(), so just remove AND operation here.
->> > 
->> > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
->> 
->> The comments in arm64 and x86 say that they're deliberately capping the
->> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
->> value with 0x3FF.
->> 
->> Maybe it's ok to expand that, but if that's the case the commit message
->> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
->> x86), and those comments need to be updated accordingly.
->> 
->> As-is, I do not think this patch is ok.
->
-> Yeah, I agree: the truncation is intentional and tuned to the
-> architecture.
+*thread necromancy*
 
-It may be intentional, but it's clearly nonsense: there is nothing
-inherent to the architecture that means we have can go only 256
-bytes instead of 512 bytes into the 16KB available stack space.
+On Mon, Mar 06, 2023 at 05:09:47PM -0500, Tom Rix wrote:
+> With gcc 13.0.1 on x86, there are several false positives like
+> 
+> drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c:167:31:
+>   error: array subscript 4 is above array bounds of ‘const struct sparx5_psfp_gce[4]’ [-Werror=array-bounds=]
+>   167 |                 gce = &sg->gce[i];
+>       |                        ~~~~~~~^~~
+> In file included from drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c:8:
+> drivers/net/ethernet/microchip/sparx5/sparx5_main.h:506:32: note: while referencing ‘gce’
+>   506 |         struct sparx5_psfp_gce gce[SPX5_PSFP_GCE_CNT];
+>       |                                ^~~
+> 
+> The code lines for the reported problem
+> 	/* For each scheduling entry */
+> 	for (i = 0; i < sg->num_entries; i++) {
+> 		gce = &sg->gce[i];
+> 
+> i is bounded by num_entries, which is set in sparx5_tc_flower.c
+> 	if (act->gate.num_entries >= SPX5_PSFP_GCE_CNT) {
+> 		NL_SET_ERR_MSG_MOD(extack, "Invalid number of gate entries");
+> 		return -EINVAL;
+> 	}
+> ..
+> 	sg->num_entries = act->gate.num_entries;
+> 
+> So disable array-bounds as was done on gcc 11 and 12
 
-As far as I can tell, any code just gets bloated to the point
-where it fills up the available memory, regardless of how
-much you give it. I'm sure one can find code paths today that
-exceed the 16KB, so there is no point pretending that 15.75KB
-is somehow safe to use while 15.00KB is not.
+So, as it turns out, after much discussion with GCC devs (and Qing's great
+patience with me), I finally see that this is not a false positive. GCC
+correctly sees a test for "i >= SPX5_PSFP_GCE_CNT", hidden away in the
+macros and inlines, and is reporting "Look, you have an execution path
+where i is out of bounds."
 
-I'm definitely in favor of making this less architecture
-specific, we just need to pick a good value, and we may well
-end up deciding to use less than the default 1KB. We can also
-go the opposite way and make the limit 4KB but then increase
-the default stack size to 20KB for kernels that enable
-randomization.
+(It is not a result of the shift sanitizer nor the array bounds sanitizer
+-- I was convinced these were responsible, but I was wrong.)
 
-       Arnd
+Here are the details:
+
+
+"gce" is this array of size 4:
+
+struct sparx5_psfp_sg {
+	...
+        u32 num_entries;            /* PSFPAdminControlListLength */
+        struct sparx5_psfp_gce gce[SPX5_PSFP_GCE_CNT];
+};
+
+#define SPX5_PSFP_GCE_CNT 4
+
+with the loop:
+
+        for (i = 0; i < sg->num_entries; i++) {
+                gce = &sg->gce[i];
+		...
+                spx5_wr(ANA_AC_SG_GCL_GS_CONFIG_IPS_SET(ips) |
+                        ANA_AC_SG_GCL_GS_CONFIG_GATE_STATE_SET(gce->gate_state),
+                        sparx5, ANA_AC_SG_GCL_GS_CONFIG(i));
+
+That last macro is:
+
+#define ANA_AC_SG_GCL_GS_CONFIG(r) __REG(TARGET_ANA_AC,\
+                                        0, 1, 851584, 0, 1, 128, 0, r, 4, 4)
+
+Note the "r, 4", which is actually "i, 4". These are passed into
+spx5_wr() as rinst and rcnt respectively:
+
+static inline void spx5_wr(u32 val, struct sparx5 *sparx5,
+                           int id, int tinst, int tcnt,
+                           int gbase, int ginst, int gcnt, int gwidth,
+                           int raddr, int rinst, int rcnt, int rwidth)
+{
+        writel(val, spx5_addr(sparx5->regs, id, tinst, tcnt,
+                              gbase, ginst, gcnt, gwidth,
+                              raddr, rinst, rcnt, rwidth));
+}
+
+and spx5_addr() does:
+
+static inline void __iomem *spx5_addr(void __iomem *base[],
+                                      int id, int tinst, int tcnt,
+                                      int gbase, int ginst,
+                                      int gcnt, int gwidth,
+                                      int raddr, int rinst,
+                                      int rcnt, int rwidth)
+{
+	...
+        WARN_ON((rinst) >= rcnt);
+
+
+It is specifically checking for "i >= 4", and GCC is correctly reporting
+that this is therefore a reachable path.
+
+So, the correct fix here is to do the check up front and make sure an
+invalid array indexing cannot happen:
+
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c b/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c
+index 8dee1ab1fa75..23c40b9b74d5 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c
+@@ -163,7 +163,7 @@ static int sparx5_psfp_sg_set(struct sparx5 *sparx5, u32 id,
+ 	spx5_wr(sg->cycletimeext, sparx5, ANA_AC_SG_CONFIG_REG_5);
+ 
+ 	/* For each scheduling entry */
+-	for (i = 0; i < sg->num_entries; i++) {
++	for (i = 0; i < ARRAY_SIZE(sg->gce) && i < sg->num_entries; i++) {
+ 		gce = &sg->gce[i];
+ 		ips = sparx5_psfp_ipv_to_ips(gce->ipv);
+ 		/* hardware needs TimeInterval to be cumulative */
+
+Or, if you want to retain the WARN:
+
+
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c b/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c
+index 8dee1ab1fa75..5ffeb299fcb4 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_psfp.c
+@@ -164,6 +164,8 @@ static int sparx5_psfp_sg_set(struct sparx5 *sparx5, u32 id,
+ 
+ 	/* For each scheduling entry */
+ 	for (i = 0; i < sg->num_entries; i++) {
++		if (WARN_ON_ONCE(i >= ARRAY_SIZE(sg->gce)))
++			break;
+ 		gce = &sg->gce[i];
+ 		ips = sparx5_psfp_ipv_to_ips(gce->ipv);
+ 		/* hardware needs TimeInterval to be cumulative */
+
+
+-- 
+Kees Cook
