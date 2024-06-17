@@ -1,80 +1,112 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BDF28F3;
-	Mon, 17 Jun 2024 15:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 306811C68C;
+	Mon, 17 Jun 2024 15:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718637398; cv=none; b=WC+jdJ9n+YNZyEzMFPNbqw6pJagU6MIHIpp71S+i5kIIja0UpKw4OLFN080XHiyRGfsoRCByev8CfO92pB8lBw676+10FLt+8fSKlsS0SABNx6v24GirFEDkUNjVQt1bqdLqHIvZVsv6dDEc1SZrp5luO7G2O6qDDrPNSW7wT2g=
+	t=1718639562; cv=none; b=RuaCauuaFRRhKxcM3RjQKjOmYowDgB8M+b4RKCDR5kG1BsJs47q317eCSKEDt9iM+gZhT97AevD4WZwV6rCjg7rAHC4CnOvbW15n/L1R6YVKvzQ2bByVEFsQtXjGX3cdET7eYTqYeIjj4waV4aYhsL1aPD51xFW27mnlSk7miis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718637398; c=relaxed/simple;
-	bh=jT0rAstJk9KMGZXnnmHWZRLkARXtg2bJVhfHUB5Hg5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pna80lu1U947POV64w8iejSaySdBxJbH7Ztjqw4YFGx5X8gzN57pHjUN+76Cmz0y/cr4jUAxS91dCd0T5G7YrFewX3uG+UoSOkTIDpBwrgvUlc7s4wnk3N07jBU7b//mI0nZGSjgM0WbUYHwB6WIWESCdqHahD+3UfdMtySIh7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XyYMD27m; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XyYMD27m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DweQqiSPnI73gLN0HTCwmU3H1dTkoKcPiSNA1+IYy/U=; b=XyYMD27m6qYdn6W/COMUedwjoA
-	AVafTiZuKvRBg82JmG10lDIGSlJsNG2FKUitFh7XgWN1tOuZ8NlDLqXC8k1aPtzn1duT0DMzkV77b
-	WGXhJQw2gsWJUgANcMk8wBr9VcGdcHKR39N/9qNstH24iXPbxMHr4rBw0IrCaTmP83mFcKNy34Skb
-	2PcPq4NnXBPw5mxwHn2OYARlWeh0u9JMv835ir6OctkF5OPm03FjCrTp2QkOuz8Op4sfa1RY/QyNT
-	N06zMhr/L05mMv4P3AtrLjO61tLH8H5wqBpbQ0tcQt+mRrdYAED79GhOVGck2eE3H9LhByP8m4NtX
-	q66tvrZQ==;
-Received: from [177.45.213.110] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1sJE5o-004MgA-Sl; Mon, 17 Jun 2024 17:16:25 +0200
-Message-ID: <53728bf9-8395-831c-f6bc-be79a379fe8a@igalia.com>
-Date: Mon, 17 Jun 2024 12:16:19 -0300
+	s=arc-20240116; t=1718639562; c=relaxed/simple;
+	bh=6q1k+tASKAJjoZxu/hiIOiLEZYJBiePlxyUNs5o4lks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfPWKL4n8M5xst5V8++Op8gsqMRZZ1WwlZUzx6DpqB/ecXvQ2flQuNd28LdhYKQNl1mxDckItpIT878YUNgM+1oQW4TemFNkiSSN0oQVLUlCgSbh1TKMoeN7L35JbheN/H51TZOoCc2kXPEOXcHA6BXvpbHmC6mFkGF2nqpV4Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CDA7DA7;
+	Mon, 17 Jun 2024 08:53:03 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C1F13F64C;
+	Mon, 17 Jun 2024 08:52:34 -0700 (PDT)
+Date: Mon, 17 Jun 2024 16:52:15 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Yuntao Liu <liuyuntao12@huawei.com>
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, catalin.marinas@arm.com,
+	will@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+	svens@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kees@kernel.org, gustavoars@kernel.org, arnd@arndb.de,
+	leobras@redhat.com, broonie@kernel.org, imbrenda@linux.ibm.com,
+	pawan.kumar.gupta@linux.intel.com
+Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
+Message-ID: <ZnBbr2CAqBGDe2aN@J2N7QTR9R3>
+References: <20240617133721.377540-1-liuyuntao12@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH AUTOSEL 6.1 07/29] efi: pstore: Return proper errors on
- UEFI failures
-To: Sasha Levin <sashal@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- stable@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-References: <20240617132456.2588952-1-sashal@kernel.org>
- <20240617132456.2588952-7-sashal@kernel.org>
-Content-Language: en-US
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20240617132456.2588952-7-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617133721.377540-1-liuyuntao12@huawei.com>
 
-On 17/06/2024 10:24, Sasha Levin wrote:
-> From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
+> Since the offset would be bitwise ANDed with 0x3FF in
+> add_random_kstack_offset(), so just remove AND operation here.
 > 
-> [ Upstream commit 7c23b186ab892088f76a3ad9dbff1685ffe2e832 ]
+> Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+
+The comments in arm64 and x86 say that they're deliberately capping the
+offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
+value with 0x3FF.
+
+Maybe it's ok to expand that, but if that's the case the commit message
+needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
+x86), and those comments need to be updated accordingly.
+
+As-is, I do not think this patch is ok.
+
+Mark.
+
+> ---
+>  arch/arm64/kernel/syscall.c          | 2 +-
+>  arch/s390/include/asm/entry-common.h | 2 +-
+>  arch/x86/include/asm/entry-common.h  | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> Right now efi-pstore either returns 0 (success) or -EIO; but we
-> do have a function to convert UEFI errors in different standard
-> error codes, helping to narrow down potential issues more accurately.
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index ad198262b981..43f555f7cd2d 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -63,7 +63,7 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+>  	 *
+>  	 * The resulting 5 bits of entropy is seen in SP[8:4].
+>  	 */
+> -	choose_random_kstack_offset(get_random_u16() & 0x1FF);
+> +	choose_random_kstack_offset(get_random_u16());
+>  }
+>  
+>  static inline bool has_syscall_work(unsigned long flags)
+> diff --git a/arch/s390/include/asm/entry-common.h b/arch/s390/include/asm/entry-common.h
+> index 7f5004065e8a..35555c944630 100644
+> --- a/arch/s390/include/asm/entry-common.h
+> +++ b/arch/s390/include/asm/entry-common.h
+> @@ -54,7 +54,7 @@ static __always_inline void arch_exit_to_user_mode(void)
+>  static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+>  						  unsigned long ti_work)
+>  {
+> -	choose_random_kstack_offset(get_tod_clock_fast() & 0xff);
+> +	choose_random_kstack_offset(get_tod_clock_fast());
+>  }
+>  
+>  #define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
+> diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
+> index 7e523bb3d2d3..b28a307f2014 100644
+> --- a/arch/x86/include/asm/entry-common.h
+> +++ b/arch/x86/include/asm/entry-common.h
+> @@ -85,7 +85,7 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+>  	 * Therefore, final stack offset entropy will be 5 (x86_64) or
+>  	 * 6 (ia32) bits.
+>  	 */
+> -	choose_random_kstack_offset(rdtsc() & 0xFF);
+> +	choose_random_kstack_offset(rdtsc());
+>  }
+>  #define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
+>  
+> -- 
+> 2.34.1
 > 
-> So, let's use this helper here.
-> 
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-Following Ard's comment for the other releases, let's not backport this one.
-
-Thanks,
-
-
-Guilherme
