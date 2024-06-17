@@ -1,138 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACB816EB46;
-	Mon, 17 Jun 2024 17:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8AB1891A5;
+	Mon, 17 Jun 2024 17:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718645301; cv=none; b=DBlvdGVlJhNx64lhud1jhxnbIveC9YXEemlHU2XVUe31k9Y0qtoESLFAWdLtS2k4HY4w+DZdLQ+2ERNSDwxE9sfGZJzQSnrY10Zyuhg8yuk95ttC5DJ4es02M4mhFBjoqQTCA0hxSmaNGbRSKTeBb8eJOIrjlHtmShraa1Oqozc=
+	t=1718646079; cv=none; b=ALEZmkXzxNnkdYVBO4XfGwPTGgLLFmXCw/9vK+PbtE1A2BFOBTDPcKCh2+MNBpgnGj0v+q1ceYxffW2Bm3jBagKwn+Ay/3+JqMh9VigXR86FOMFOE3PxG8na/wXIY0XQywQ6gJtv+FDBFp+FM+UgrNJLRWNbsCJNNKHWTbEqQsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718645301; c=relaxed/simple;
-	bh=IKOgUg4zcXbjo67A/2GMnXl420R2v0GOkOcdt+ti4qM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X36TayuttHMZJmxb+08acPy1F8mjOj30GYIjxVNsRPKd18Er9JofvZU0UNidUuR3gl/I3Sxv7mwl85vTztcLx8k4agokjcUE0PvD030xgh5NM5F2FEYHu8le38b4bW+LTUTk4BPjGjphkoWoCBCW0ws7t3XiSJjk68xwtOcZbyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sq4HRtmo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718646079; c=relaxed/simple;
+	bh=SyTGqPdHpuy3gJMpwFjM312Sys8XLnxtGOp+tF8HIfM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kEuvdhLAsLyAzaZ7xadAFPSLMQ/dztKWRTu7iZySgJIvaCo/BXaajwPWRBcYiA0LFge70JeQvlEviOtn+Z+j6DtMQjBzyQTyZWccNfah/NDElXR2jDFzTqhxT9GM4a2g1s0wRpMlQoJukhWsOrcwcQVm3KjsZH/DIkvD04Gr60Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGpG03KP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sq4HRtmo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BBF1C2BD10;
-	Mon, 17 Jun 2024 17:28:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGpG03KP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CD1C2BD10;
+	Mon, 17 Jun 2024 17:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718645300;
-	bh=IKOgUg4zcXbjo67A/2GMnXl420R2v0GOkOcdt+ti4qM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sq4HRtmoGBMHKg/cKbDuz2yF6q/Of50DlqO7vDUFbUAmC5vw0cWehniCmMqfcgDCc
-	 QMc1ug1du8PzBgxDRsKPZ7klIIxhDQdzjPclopll1O7H0Rn7ODrXo/eI375SZsZPGq
-	 5wmvUt81CpOfZ65JP+lTjGp1BEXeeGS7QX/o8Z+Hd+8ZokK4BuhRKOfw8QVefttCSA
-	 /kH0sUuxHmGqdkIyBB6pH/kZ/aok5Kv/0FHl2aD9dwcRpXZDpGxYPd123NH/o5TeUi
-	 rWindJ+tuyTQSnyJh4XvCKJuGdJHohpOrEk2AYy68kDb7rTXwMOqU+40PuuaNPSP9t
-	 DW02Pvk7AE5ZQ==
-Date: Mon, 17 Jun 2024 10:28:20 -0700
+	s=k20201202; t=1718646079;
+	bh=SyTGqPdHpuy3gJMpwFjM312Sys8XLnxtGOp+tF8HIfM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uGpG03KPdReyjC1/opQWeFUmIa7rjKz4qdzL3Hsr8+an6ghDa2V8srd0gkZoUKP9R
+	 +eXn5MKn0jYpfdVERyjjKRjlwi1bsgAIgxK73PHYGeg/Pp1dKh4lH2iCBuThx89NQk
+	 99GdpyvBmDe9YgiA5pKjb4uH6OAigy4vZfgbP9ibxuaKDKV/0Xr9rv8xZtnoZD1ZZj
+	 yzUIMi5ez50LW1KmtrQLIWoIaa+wgg/CtGw/fF17npZJaWn/hBzXDyA1HnSlmwwoew
+	 794/yiqgBtyjM/dOxETPIz99qXy/lESnTAbZoMVpaximCgFT4CW6VS53ZRbPAy77qk
+	 /hKIqpqIHV1mQ==
 From: Kees Cook <kees@kernel.org>
-To: Martin Uecker <uecker@tugraz.at>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Erick Archer <erick.archer@outlook.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
+To: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: Kees Cook <kees@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <202406171019.9F0127F@keescook>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
- <20240614101708.GO8774@noisy.programming.kicks-ass.net>
- <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] kunit/usercopy: Disable testing on !CONFIG_MMU
+Date: Mon, 17 Jun 2024 10:41:15 -0700
+Message-Id: <20240617174111.work.408-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2180; i=kees@kernel.org; h=from:subject:message-id; bh=SyTGqPdHpuy3gJMpwFjM312Sys8XLnxtGOp+tF8HIfM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmcHU71lN3gU2U5/SabG8LFXiX7hR8Kwm6xAE7y fRNHDG70PKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnB1OwAKCRCJcvTf3G3A JiWJEACZ5pYWV/fr4xGq+aSoVJGknbuIT4sUIOHFs6bjERXU4LaLDpqPiQ7EXSIbt5ikxK9TD2a PnkHJEECwZSrQr9XZWnMETsHm82Pzy8lgYW0PQZDSg1vyiLJejZAdFNMBfE9y1b0Y/I2zzXhEEm 3umRoPCnNWVER7j/NZ+SDnYETclRNJP5DayslHfYmdd+7ixn0vrjVYWf72kaoJitTor+DKk74In D6+QAfroH2RvrvTAMrG7dgtTGnWahj+xQpqBlZH38pLtPOe1QjA2VrtNAa/RffIHS+vT5IxqqHU 6Fn1Uzlry7ZUxNPK1FySQxTbsBKC4PRLLwP3i1A/Rw4VPwdZWAdqj543xIFivMOIuGX6EpmtUiY al7xYvYqBbriDWeIm+kaNvXJOXri7Qor/jXcGG0XAT3VsDQdZnrYL1PD91OrsUheWQ6oW+TeHrS fotG8J2+PleZj7iGZYXJHqHwpPVTQ9mRckQA5zFJNguxx3GaoVmA+KBFEnhJP9XK7sn/d9MqX0x Y31O1zS7LDzDYlxjxQl6PgoYiAk3NwcEJFd2+LBwV9opREay5cOy2tn1rx17s2RER74jRdJ99ig qF1yxmGx8AVF0zph9SVyTY199DWOaVWlJkPJOi2yMfFCqIrcOzIKo7hQ0C3u8ttQ/1tfmf1Y20c /HOkTB5O3lzQu
+ eQ==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
 
-On Sat, Jun 15, 2024 at 06:09:07PM +0200, Martin Uecker wrote:
-> Am Freitag, dem 14.06.2024 um 12:17 +0200 schrieb Peter Zijlstra:
-> > On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
-> > > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> > > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > > > > I'm happy to take patches. And for this bikeshed, this would be better
-> > > > > named under the size_*() helpers which are trying to keep size_t
-> > > > > calculations from overflowing (by saturating). i.e.:
-> > > > > 
-> > > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
-> > > > 
-> > > > Fine I suppose, but what if we want something not size_t? Are we waiting
-> > > > for the type system extension?
-> > > 
-> > > Because of C's implicit promotion/truncation, we can't do anything
-> > > sanely with return values of arbitrary type size; we have to capture the
-> > > lvalue type somehow so the checking can happen without C doing silent
-> > > garbage.
-> 
-> What is the specific problem here?
+Since arch_pick_mmap_layout() is an inline for non-MMU systems, disable
+this test there.
 
-This particular complaint is about not being able to "discover" the
-lvalue type during an assignment, which means we can't create helper
-macros that Just Work. For example, in:
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406160505.uBge6TMY-lkp@intel.com/
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: David Gow <davidgow@google.com>
+Cc: Rae Moar <rmoar@google.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ lib/kunit/user_alloc.c | 4 ++++
+ lib/usercopy_kunit.c   | 5 +++++
+ mm/util.c              | 2 ++
+ 3 files changed, 11 insertions(+)
 
-	void foo(some_type arg);
-
-	foo(add_mul(base, size, count));
-
-There is no way to write "add_mul" so that it is checking for overflow
-of the "some_type" type. The behavior of such a macro changes if it's
-doing u8, int, size_t, etc.
-
-The existing solution to this is to use macros (and builtins) that
-cannot be composed:
-
-	add_mul(base, size, count, &result);
-	foo(result);
-
-Here, the macro can examine the type of "result" and perform the correct
-overflow handling for that type. But lots of developers (rightly)
-dislike this style of "assignment side-effect".
-
-Additionally, it can't be composed:
-
-	add(base, mul(size, count));
-
-But, using type attributes we have much more flexibility. Hence, the
-proposed "wraps" attribute:
-https://github.com/llvm/llvm-project/pull/86618
-
-> This is likely a stupid question, but making it signed 
-> wouldn't work?   Or is a signed size_t too small  
-> or some architectures? Or would this change break too much?
-
-The ssize_t gets used in some places already, but since size_t is used
-for address calculations too, I don't think we can universally switch
-it.
-
+diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
+index 76d3d1345ed7..ae935df09a5e 100644
+--- a/lib/kunit/user_alloc.c
++++ b/lib/kunit/user_alloc.c
+@@ -30,6 +30,10 @@ static int kunit_attach_mm(void)
+ 	if (current->mm)
+ 		return 0;
+ 
++	/* arch_pick_mmap_layout() is only sane with MMU systems. */
++	if (!IS_ENABLED(CONFIG_MMU))
++		return -EINVAL;
++
+ 	mm = mm_alloc();
+ 	if (!mm)
+ 		return -ENOMEM;
+diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
+index 45f1e558c464..e819561a540d 100644
+--- a/lib/usercopy_kunit.c
++++ b/lib/usercopy_kunit.c
+@@ -290,6 +290,11 @@ static int usercopy_test_init(struct kunit *test)
+ 	struct usercopy_test_priv *priv;
+ 	unsigned long user_addr;
+ 
++	if (!IS_ENABLED(CONFIG_MMU)) {
++		kunit_skip(test, "Userspace allocation testing not available on non-MMU systems");
++		return 0;
++	}
++
+ 	priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
+ 	test->priv = priv;
+diff --git a/mm/util.c b/mm/util.c
+index df37c47d9374..e70e8e439258 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -484,7 +484,9 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+ 	clear_bit(MMF_TOPDOWN, &mm->flags);
+ }
+ #endif
++#ifdef CONFIG_MMU
+ EXPORT_SYMBOL_IF_KUNIT(arch_pick_mmap_layout);
++#endif
+ 
+ /**
+  * __account_locked_vm - account locked pages to an mm's locked_vm
 -- 
-Kees Cook
+2.34.1
+
