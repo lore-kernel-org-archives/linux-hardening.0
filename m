@@ -1,161 +1,137 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595A616EB7B
-	for <linux-hardening@vger.kernel.org>; Mon, 17 Jun 2024 19:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84F2C8E1;
+	Mon, 17 Jun 2024 20:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718651842; cv=none; b=VeYGLhrJxFKXIGuvYo4o5U9KRNGXgSVeMPpUOL2bed4TiwZlKQHnVarVUZuMMErTTQruhp7xF9+FAX2OxOAqaaNVKNjlQHdvjyXrJUlZ6eGoAParAKmMkL/R7sFIWDY9qJNdjNTzxVALE1rOLDs9WTmMcgt9v6/P/lWkxZ3SZCI=
+	t=1718656414; cv=none; b=YjuOqFY5x7XaHwMGbOrpboAd/6YUWb+TFA6vcVPcsSORTyR86uN86q94K/uCRILT3bE/c/ww4fBSVdN6YXZoJQaP6Gw/YvwPkw5fD0OHnOCX/mlMAxg/nv97NlumV5tcmYaeLGXw3PNpE1m9JefL07yUYPxl4mbUKEOei0HjH2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718651842; c=relaxed/simple;
-	bh=jQKjgH/IeJSbhbllaf+iVIq0r/CllhXzET0SeRnnSRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PA0EWxHqQOjnapFTIB/SXoNqHSwCygMbJv4m5UzZXmwT7PoLKiyZzUDtoPPbphXbShWgPEj+WDsLDnaqPm4G+eREFU5+CkZ37FH1+XlXL7Hd64ZSvNp3hX5ZRahN+PYorGgWdHNipYaNMKOt0Tfhb1xZZIHO929eoYAI5Ncnt/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RcM5b/Jk; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718656414; c=relaxed/simple;
+	bh=jaVlw/Bw2+IaY2P1kl0q/XJdhyk5gRvGocCy6MEcCw4=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=m58qUYFwE05jOnYoUQcfrSWGhkOdWs4nWnPsJYDv6D0wY53G+iENwaL+A3gJlj1T8u7F8XosNkzNa6ulg7GPFhKluLz/mc7E1AK9WiueOJogirjlH7VmimAP0ww/nm488Fhjp5JMfFVBdP9FWIr5M5WUEDlhab5SOTnRebqglVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=vi3Yte+C; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eYSZp6yr; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RcM5b/Jk"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7ec08f3c98eso7541539f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Jun 2024 12:17:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1718651840; x=1719256640; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uxDCmX69tkQkw7FEhpYwJ22/GtNZFk3dnE10Jhs2Vfw=;
-        b=RcM5b/JkvHHb/X+dWLUVatx1pvkpDokDo4WXM2E0UUG/zyLXEU5nFFIPTq0AM8SVaU
-         WUkZCzfcmILe6DnBN7D3HrtCNae98AiwxylcD4S1rm+bksha3YvsA+DB7NHf118o1hZZ
-         0JpEioi60kD9gMpFiGyjQcWZy/rVeERVhTrdQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718651840; x=1719256640;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxDCmX69tkQkw7FEhpYwJ22/GtNZFk3dnE10Jhs2Vfw=;
-        b=MjEDziPIw0suA1IvZAPjFJYnypqYCLUetQ7gxIYwy/RqhcvuzoOpgARV80XRGxqpFE
-         u19vX4s4kcDsK6SO55NMDw3s65CtGENwkhaHY029wHlxb/9DEHo6dAJz0V2VLeIdOZFj
-         b/k9nzf7Cr3JYWzDz19LfSKtD0uBG1kr/Y+X9YEJ86n1Q9pBDlIMqYEQLoSa0Mdbpbbl
-         xNWLAfhosgLH6hjPHMV4R0g+Mwab1bHdmNvJ6Y9TZOJjtQeBvmcCuMpfMNMstqKaczQJ
-         erW792xxTTirwJAGLnwBDYV55c0olpAEpOgWQixkS73PUtBLf2qgx3wC13nZSSEqy7GH
-         GK+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmzxyO3/36E+PWCNAyBAgIkfz9esJmPNNi/9669i3Ha0eLNLWO4JnLE1M2dntg9xeMa9OYPQWba1LwQ+OhQUnoRUW68DMRByipw5iL7q1y
-X-Gm-Message-State: AOJu0Yxyomncf8wpXkmgxF5hisAgBlenTadY6cRcZeYAWkvYSX03t6rz
-	20MblZwWylJXfNqXX8T9Tqq7squbsxsVjpW1D2qeJ9Q7GOaIt1sbfqxgawJamp4=
-X-Google-Smtp-Source: AGHT+IHOg3FPItf6+cCu8wcgQmloKpiojh3fisdmWTlg+Lr2TYt3VwBpFvvZ6liZuV86R4UCrSrAdA==
-X-Received: by 2002:a05:6602:142:b0:7eb:66a5:d1c with SMTP id ca18e2360f4ac-7ebeaefca76mr980500639f.0.1718651840458;
-        Mon, 17 Jun 2024 12:17:20 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b9569ef5a4sm2733310173.117.2024.06.17.12.17.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 12:17:20 -0700 (PDT)
-Message-ID: <93ea1bde-4dac-409b-8c3c-0f6c0239bb1c@linuxfoundation.org>
-Date: Mon, 17 Jun 2024 13:17:19 -0600
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="vi3Yte+C";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eYSZp6yr"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id BF5E01140294;
+	Mon, 17 Jun 2024 16:33:29 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 17 Jun 2024 16:33:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1718656409; x=1718742809; bh=ZOPzmcgBhQ
+	zo1keWksdhYbdPIRd3lKjznmVOskNt6RY=; b=vi3Yte+C00ngmRPurQDjKom+Mo
+	7I2cXSkKKNSB3XaghDFBbW/yX9/IPU+rRKCyWAzl47+aN0dJBwZytlg5eKZDKpm5
+	dOiXtBQU2BvderPOj3+4RvUFl8vYgwvsbZr3TlnTMBmZWtRjZc/TZZPY1xKS0pNm
+	iT1u2dIQ83IHy42PfsHGyuPMg9xXEfY6JbVGbLlnuT9ITi0YW1sUEKFPzZUxUzyU
+	hHDvY0sHFOMj5nBpXl1+gU5e9HP1nt2XufkwO9Zm0HlGMAjEbcrR8PaP7GQThCXi
+	o10cA793EMGQuhQbpeLx6h1+fEc070+pfF/iLmR9wXYi7yqbWdxxXIN6JTwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1718656409; x=1718742809; bh=ZOPzmcgBhQzo1keWksdhYbdPIRd3
+	lKjznmVOskNt6RY=; b=eYSZp6yr4uIcpX4K/DSJxA0dcLd9y5bZ93XJW91IS+C4
+	gjlAwhWHe/cuYtu2t9+rR1CaidAkP9kO5FnK4pWFz4Ta3t/i9hDoTxbVdm1uXwiB
+	gRy/ef0i36wnqwPqn8P56M2NiEr5yLX0OScuw6P5oot20Us5csX45S3F/sjwoW/K
+	jY+2IM7qYf1Ociil3fiITp5HY/Z623KIkN0U8yjx7x5RVhgeaEXChzSSyjZlEZr0
+	uP15pIaWS1R48nSrhZyHw7gG1RXV/65B3hv5y1lPdqLLnEx9V5PAik8nGf3RNlrT
+	sApmUyi6IVJcpU1ug8ooT0Lc7HadGojIEFTc9juqew==
+X-ME-Sender: <xms:mJ1wZlJSv-bIOceDxEPYcbRc7MEi36kkxS0h0ztbzdDFL1m7X_X5aQ>
+    <xme:mJ1wZhLV-WrMVzF2QVsFYrRlHraCxhVMp625Ohg5bOqu-N-c3VGKIvRTayuuAXgmm
+    d1s02toKF-LUXGI3GE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedvhedgudehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:mJ1wZts8xgHY9hrr66fNkOvtkPVWByYLruSPKGDiNjYZ5fwbpQAJCw>
+    <xmx:mJ1wZmYX3CRvz-zIy_A_kY7FVCjE2JLb1l9FDUhw44LCWjo7zQBpdA>
+    <xmx:mJ1wZsZeB7E86sMRNAP0sjDBwEfNKoOuH1K3VlS2sMybSFBUufdT2Q>
+    <xmx:mJ1wZqDat5LjPLNQI4zkBx2YzhSH3yjp5jBIBwyGIEhULpAH_pnbFQ>
+    <xmx:mZ1wZoKoS86N3mTV8tHw8qF-NH8CoB31Le40nQ6TOtL4j9BaC45Be_ER>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 876EDB60098; Mon, 17 Jun 2024 16:33:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] usercopy: Convert test_user_copy to KUnit test
-To: Kees Cook <kees@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Vitor Massaru Iha
- <vitor@massaru.org>, Ivan Orlov <ivan.orlov0322@gmail.com>,
- David Gow <davidgow@google.com>, Brendan Higgins
- <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- linux-hardening@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240612195412.make.760-kees@kernel.org>
- <20240612195921.2685842-2-kees@kernel.org>
- <90e61842-e933-4d6f-a3b5-c802382fe96a@linuxfoundation.org>
- <202406171157.A97ACED1B@keescook>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <202406171157.A97ACED1B@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-Id: <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
+In-Reply-To: <202406171122.B5FDA6A@keescook>
+References: <20240617133721.377540-1-liuyuntao12@huawei.com>
+ <ZnBbr2CAqBGDe2aN@J2N7QTR9R3> <202406171122.B5FDA6A@keescook>
+Date: Mon, 17 Jun 2024 22:33:08 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <kees@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>
+Cc: "Yuntao Liu" <liuyuntao12@huawei.com>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Heiko Carstens" <hca@linux.ibm.com>, gor@linux.ibm.com,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Leonardo Bras" <leobras@redhat.com>, "Mark Brown" <broonie@kernel.org>,
+ imbrenda@linux.ibm.com, pawan.kumar.gupta@linux.intel.com
+Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
+Content-Type: text/plain
 
-On 6/17/24 13:00, Kees Cook wrote:
-> On Fri, Jun 14, 2024 at 09:50:05AM -0600, Shuah Khan wrote:
->> On 6/12/24 13:59, Kees Cook wrote:
->>> Convert the runtime tests of hardened usercopy to standard KUnit tests.
->>>
->>> Additionally disable usercopy_test_invalid() for systems with separate
->>> address spaces (or no MMU) since it's not sensible to test for address
->>> confusion there (e.g. m68k).
->>>
->>> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
->>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
->>> Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
->>> Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
->>> Reviewed-by: David Gow <davidgow@google.com>
->>> Signed-off-by: Kees Cook <kees@kernel.org>
->>> ---
->>>    MAINTAINERS                                |   1 +
->>>    lib/Kconfig.debug                          |  21 +-
->>>    lib/Makefile                               |   2 +-
->>>    lib/{test_user_copy.c => usercopy_kunit.c} | 282 ++++++++++-----------
->>>    4 files changed, 151 insertions(+), 155 deletions(-)
->>>    rename lib/{test_user_copy.c => usercopy_kunit.c} (46%)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 8754ac2c259d..0cd171ec6010 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -11962,6 +11962,7 @@ F:	arch/*/configs/hardening.config
->>>    F:	include/linux/overflow.h
->>>    F:	include/linux/randomize_kstack.h
->>>    F:	kernel/configs/hardening.config
->>> +F:	lib/usercopy_kunit.c
->>>    F:	mm/usercopy.c
->>>    K:	\b(add|choose)_random_kstack_offset\b
->>>    K:	\b__check_(object_size|heap_object)\b
->>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->>> index 59b6765d86b8..561e346f5cb0 100644
->>> --- a/lib/Kconfig.debug
->>> +++ b/lib/Kconfig.debug
->>> @@ -2505,18 +2505,6 @@ config TEST_VMALLOC
->>>    	  If unsure, say N.
->>> -config TEST_USER_COPY
->>> -	tristate "Test user/kernel boundary protections"
->>> -	depends on m
->>> -	help
->>> -	  This builds the "test_user_copy" module that runs sanity checks
->>> -	  on the copy_to/from_user infrastructure, making sure basic
->>> -	  user/kernel boundary testing is working. If it fails to load,
->>> -	  a regression has been detected in the user/kernel memory boundary
->>> -	  protections.
->>> -
->>> -	  If unsure, say N.
->>> -
->>>    config TEST_BPF
->>>    	tristate "Test BPF filter functionality"
->>>    	depends on m && NET
->>> @@ -2814,6 +2802,15 @@ config SIPHASH_KUNIT_TEST
->>>    	  This is intended to help people writing architecture-specific
->>>    	  optimized versions.  If unsure, say N.
->>> +config USERCOPY_KUNIT_TEST
->>> +	tristate "KUnit Test for user/kernel boundary protections"
->>> +	depends on KUNIT
->>> +	default KUNIT_ALL_TESTS
->>> +	help
->>> +	  This builds the "usercopy_kunit" module that runs sanity checks
->>> +	  on the copy_to/from_user infrastructure, making sure basic
->>> +	  user/kernel boundary testing is working.
->>> +
->>
->> Please carry the following line forward as well to be complete assuming
->> it is relevant.
->>
->> If unsure, say N.
-> 
-> I've explicitly removed that because it would be repetitive if it were
-> included for all KUnit tests.
-> 
+On Mon, Jun 17, 2024, at 20:22, Kees Cook wrote:
+> On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
+>> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
+>> > Since the offset would be bitwise ANDed with 0x3FF in
+>> > add_random_kstack_offset(), so just remove AND operation here.
+>> > 
+>> > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+>> 
+>> The comments in arm64 and x86 say that they're deliberately capping the
+>> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
+>> value with 0x3FF.
+>> 
+>> Maybe it's ok to expand that, but if that's the case the commit message
+>> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
+>> x86), and those comments need to be updated accordingly.
+>> 
+>> As-is, I do not think this patch is ok.
+>
+> Yeah, I agree: the truncation is intentional and tuned to the
+> architecture.
 
-Thanks for the explanation.
+It may be intentional, but it's clearly nonsense: there is nothing
+inherent to the architecture that means we have can go only 256
+bytes instead of 512 bytes into the 16KB available stack space.
 
-thanks,
--- Shuah
+As far as I can tell, any code just gets bloated to the point
+where it fills up the available memory, regardless of how
+much you give it. I'm sure one can find code paths today that
+exceed the 16KB, so there is no point pretending that 15.75KB
+is somehow safe to use while 15.00KB is not.
+
+I'm definitely in favor of making this less architecture
+specific, we just need to pick a good value, and we may well
+end up deciding to use less than the default 1KB. We can also
+go the opposite way and make the limit 4KB but then increase
+the default stack size to 20KB for kernels that enable
+randomization.
+
+       Arnd
