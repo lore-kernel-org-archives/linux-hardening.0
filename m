@@ -1,126 +1,274 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD021B29AB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC8B1B1507;
 	Mon, 17 Jun 2024 13:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718630539; cv=none; b=OjF9YEh0DHJLDcbup0bej3ufYm3YdehqI3czCVnjRfGKRXZsxpRE/vxmh9HIiEsh9zQXrw4i/PxAh66xy5JEhuAWE6wUsrFkkijVtkIw8VeW5lTFEmKr+81zm1AXC7Oxjfx4DJGpkZlBu52xVEhSib0hZhuFCsUxCcFknP4zNUA=
+	t=1718630539; cv=none; b=NmR1viWYyj29VBgDFiQmtIsY4zmR8d2LV8xYMJF0XhAHHXktb8IsP9S2LVAK7ReZIxTYNn7fBOBLDDWLI0wLuoueVqFqpHH2h12mGFOR0PWSZVdAWIQEsnegV+4Twt0+tRd9Yw9rVwxZVUX2QQhT43CHBzxPRyp1O3kcf/94ezc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718630539; c=relaxed/simple;
-	bh=/CdsLM4OZtV2MzVFE1JTzdMKf9cHeecCDqvGLRrbY3M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZjjzwJ9LkHxuLanhNT83zVIfWFIho7Ftyys+K8wtp5iECy0oz5JM8hw8fTZCSVay7nKgwxjIOGNL3O1DzTuYR7fyGMjjPP123fWvWLfC5wlDhIWpHj3ocHvY9GhSDS5ny6D4FrSb06z/WTjcUy37zdxNgv2TlgYIf9mT2VC27s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWSkafqW; arc=none smtp.client-ip=10.30.226.201
+	bh=X0tAiBJPBMS2Sym2Di+jZS/UBuaLHIAG8Kf/jbT6/5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Mhuo6gqBw2W3DWN9r6MrVooIhmpnSWkZCQvCOKiL23fSdHvMI2yLIMmF+6FHDW7TwUduInYKPiscc84doEmUIQUUdzcLyee2pVLvGQx5g00ivOrrWfYg1+qbT5w7YbxDY+idTPlIljvEXrI3wCW9+GkqBJNXh2s/TDFgmRU9Ot4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlu/2Sgx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWSkafqW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71746C2BD10;
-	Mon, 17 Jun 2024 13:22:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlu/2Sgx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB13C4AF1C;
+	Mon, 17 Jun 2024 13:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718630539;
-	bh=/CdsLM4OZtV2MzVFE1JTzdMKf9cHeecCDqvGLRrbY3M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZWSkafqW/uBJloDfE2iS3jnJTe3NAfbfV/BnxvW1ZExc9IDIJAzQT3cafoR5e1PsH
-	 dy4yG6MK2GfnHeZHsfuDdI0YrNgCUIfGNecBu5Z0HnW9CMAilVU3oKaRUVGsy5pYUA
-	 OXUhbjyp7OAOnN34SaTcMo2u5Hs1a3LlkS97epTvNIsUOuNMpqAm9IdxzPyUvZy5B4
-	 sTNNg0uaf+50rsuDLPu1c66+prlAuiD9egbPBBm4xuKskW2O9rVSx+qax9TbEFKvq2
-	 f5RUk/HrmTTSzmale9I+jxoiPJPe1wveN7tdvV6/en2GdkhecSw5FtCLQKOOucXeRa
-	 Rh+DpXeFoAsqQ==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso54519821fa.3;
-        Mon, 17 Jun 2024 06:22:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX5aXL1BaVGPnkdtdLCTAS9YUhNUDBCQXmAbYwyBNPrSRyUO7D0R84/Gx6ssCS/PpIYwgr5JTBPWvcV+jZfpfh1bUDQHJ3oOqydMbM9zbqjWRc+O+maYuOXMbEwxpJgaDaOLlOBANm4IGp0xXX8JrY6rswLp3on/owJgnko+bB4gzpo
-X-Gm-Message-State: AOJu0Yzlh2C3D6ZhW1AH/08zdCUfHbLqEOZAwtkjCxJt/G0Yhh9ofoIl
-	jBx7QljKrzO6ATxGMA7xXEt5MDgD6apeinvA8TEP1hYducWnjSZ6xx05fRUFdf/umXKoKtAccwe
-	NKO8WThX4jnwhYs11j1QSmnzjo1c=
-X-Google-Smtp-Source: AGHT+IG9NJNmS6gWZLIc3t43DtdKd9O2Vql7o/j15MFKlZz9mwmPaYPtvxG+2OgKUYj4QWowKaOuyAw/OMsvOVStr1o=
-X-Received: by 2002:a05:651c:20c:b0:2ec:1708:4db2 with SMTP id
- 38308e7fff4ca-2ec170850a0mr48431831fa.47.1718630537833; Mon, 17 Jun 2024
- 06:22:17 -0700 (PDT)
+	bh=X0tAiBJPBMS2Sym2Di+jZS/UBuaLHIAG8Kf/jbT6/5g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nlu/2SgxW1TGsZ7q9g59jzW89dsJpI83p4UULa/f6jZdwUAqGDgCXNtcs/lZl/EoO
+	 GPGBo2DHLWvOveWUJxXUlkFNH0rQIUibM5Zn9vvvFO6lxdPZYC5o2uB/GsJUZg9nzI
+	 wwSU780nys6YYFXG6JNKiY0fLepeMje4hnV4+cXQuNgCFMGuiJkqszEuPCXFqQLSEE
+	 MxNnmFBREhgwJSd8EHEcjQIeUJu06JnsoTSXitHRyhu+h7sLMbPR4kv/IH6cjvLRa8
+	 h9wkwD/qvGkOgud1vEB0bTcx/DoJLAPIZyaCB9GUwrkkGSxZh/ScamHutZk8hCbLKx
+	 7o5hvA1jg880Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tasos Sahanidis <tasos@tasossah.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	mario.limonciello@amd.com,
+	lijo.lazar@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 38/44] drm/amdgpu/pptable: Fix UBSAN array-index-out-of-bounds
+Date: Mon, 17 Jun 2024 09:19:51 -0400
+Message-ID: <20240617132046.2587008-38-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240617132046.2587008-1-sashal@kernel.org>
+References: <20240617132046.2587008-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617132046.2587008-1-sashal@kernel.org> <20240617132046.2587008-7-sashal@kernel.org>
-In-Reply-To: <20240617132046.2587008-7-sashal@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 17 Jun 2024 15:22:06 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGrPY-J=v6b1yXRMEGku7m9LVPE9MUFpg7LYXwtTiu3ZA@mail.gmail.com>
-Message-ID: <CAMj1kXGrPY-J=v6b1yXRMEGku7m9LVPE9MUFpg7LYXwtTiu3ZA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.9 07/44] efi: pstore: Return proper errors on
- UEFI failures
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Kees Cook <keescook@chromium.org>, 
-	linux-hardening@vger.kernel.org, linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.5
+Content-Transfer-Encoding: 8bit
 
-NAK
+From: Tasos Sahanidis <tasos@tasossah.com>
 
-Please don't backport this.
+[ Upstream commit c6c4dd54012551cce5cde408b35468f2c62b0cce ]
 
+Flexible arrays used [1] instead of []. Replace the former with the latter
+to resolve multiple UBSAN warnings observed on boot with a BONAIRE card.
 
-On Mon, 17 Jun 2024 at 15:21, Sasha Levin <sashal@kernel.org> wrote:
->
-> From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
->
-> [ Upstream commit 7c23b186ab892088f76a3ad9dbff1685ffe2e832 ]
->
-> Right now efi-pstore either returns 0 (success) or -EIO; but we
-> do have a function to convert UEFI errors in different standard
-> error codes, helping to narrow down potential issues more accurately.
->
-> So, let's use this helper here.
->
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/firmware/efi/efi-pstore.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-> index 833cbb995dd3f..194fdbd600ad1 100644
-> --- a/drivers/firmware/efi/efi-pstore.c
-> +++ b/drivers/firmware/efi/efi-pstore.c
-> @@ -136,7 +136,7 @@ static int efi_pstore_read_func(struct pstore_record *record,
->                                      &size, record->buf);
->         if (status != EFI_SUCCESS) {
->                 kfree(record->buf);
-> -               return -EIO;
-> +               return efi_status_to_err(status);
->         }
->
->         /*
-> @@ -181,7 +181,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
->                         return 0;
->
->                 if (status != EFI_SUCCESS)
-> -                       return -EIO;
-> +                       return efi_status_to_err(status);
->
->                 /* skip variables that don't concern us */
->                 if (efi_guidcmp(guid, LINUX_EFI_CRASH_GUID))
-> @@ -219,7 +219,7 @@ static int efi_pstore_write(struct pstore_record *record)
->                                             record->size, record->psi->buf,
->                                             true);
->         efivar_unlock();
-> -       return status == EFI_SUCCESS ? 0 : -EIO;
-> +       return efi_status_to_err(status);
->  };
->
->  static int efi_pstore_erase(struct pstore_record *record)
-> @@ -230,7 +230,7 @@ static int efi_pstore_erase(struct pstore_record *record)
->                                      PSTORE_EFI_ATTRIBUTES, 0, NULL);
->
->         if (status != EFI_SUCCESS && status != EFI_NOT_FOUND)
-> -               return -EIO;
-> +               return efi_status_to_err(status);
->         return 0;
->  }
->
-> --
-> 2.43.0
->
+In addition, use the __counted_by attribute where possible to hint the
+length of the arrays to the compiler and any sanitizers.
+
+Signed-off-by: Tasos Sahanidis <tasos@tasossah.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/include/pptable.h | 91 ++++++++++++++-------------
+ 1 file changed, 49 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/include/pptable.h b/drivers/gpu/drm/amd/include/pptable.h
+index 2e8e6c9875f6c..f83ace2d7ec30 100644
+--- a/drivers/gpu/drm/amd/include/pptable.h
++++ b/drivers/gpu/drm/amd/include/pptable.h
+@@ -477,31 +477,30 @@ typedef struct _ATOM_PPLIB_STATE_V2
+ } ATOM_PPLIB_STATE_V2;
+ 
+ typedef struct _StateArray{
+-    //how many states we have 
+-    UCHAR ucNumEntries;
+-    
+-    ATOM_PPLIB_STATE_V2 states[1];
++	//how many states we have
++	UCHAR ucNumEntries;
++
++	ATOM_PPLIB_STATE_V2 states[] /* __counted_by(ucNumEntries) */;
+ }StateArray;
+ 
+ 
+ typedef struct _ClockInfoArray{
+-    //how many clock levels we have
+-    UCHAR ucNumEntries;
+-    
+-    //sizeof(ATOM_PPLIB_CLOCK_INFO)
+-    UCHAR ucEntrySize;
+-    
+-    UCHAR clockInfo[];
++	//how many clock levels we have
++	UCHAR ucNumEntries;
++
++	//sizeof(ATOM_PPLIB_CLOCK_INFO)
++	UCHAR ucEntrySize;
++
++	UCHAR clockInfo[];
+ }ClockInfoArray;
+ 
+ typedef struct _NonClockInfoArray{
++	//how many non-clock levels we have. normally should be same as number of states
++	UCHAR ucNumEntries;
++	//sizeof(ATOM_PPLIB_NONCLOCK_INFO)
++	UCHAR ucEntrySize;
+ 
+-    //how many non-clock levels we have. normally should be same as number of states
+-    UCHAR ucNumEntries;
+-    //sizeof(ATOM_PPLIB_NONCLOCK_INFO)
+-    UCHAR ucEntrySize;
+-    
+-    ATOM_PPLIB_NONCLOCK_INFO nonClockInfo[];
++	ATOM_PPLIB_NONCLOCK_INFO nonClockInfo[] __counted_by(ucNumEntries);
+ }NonClockInfoArray;
+ 
+ typedef struct _ATOM_PPLIB_Clock_Voltage_Dependency_Record
+@@ -513,8 +512,10 @@ typedef struct _ATOM_PPLIB_Clock_Voltage_Dependency_Record
+ 
+ typedef struct _ATOM_PPLIB_Clock_Voltage_Dependency_Table
+ {
+-    UCHAR ucNumEntries;                                                // Number of entries.
+-    ATOM_PPLIB_Clock_Voltage_Dependency_Record entries[1];             // Dynamically allocate entries.
++	// Number of entries.
++	UCHAR ucNumEntries;
++	// Dynamically allocate entries.
++	ATOM_PPLIB_Clock_Voltage_Dependency_Record entries[] __counted_by(ucNumEntries);
+ }ATOM_PPLIB_Clock_Voltage_Dependency_Table;
+ 
+ typedef struct _ATOM_PPLIB_Clock_Voltage_Limit_Record
+@@ -529,8 +530,10 @@ typedef struct _ATOM_PPLIB_Clock_Voltage_Limit_Record
+ 
+ typedef struct _ATOM_PPLIB_Clock_Voltage_Limit_Table
+ {
+-    UCHAR ucNumEntries;                                                // Number of entries.
+-    ATOM_PPLIB_Clock_Voltage_Limit_Record entries[1];                  // Dynamically allocate entries.
++	// Number of entries.
++	UCHAR ucNumEntries;
++	// Dynamically allocate entries.
++	ATOM_PPLIB_Clock_Voltage_Limit_Record entries[] __counted_by(ucNumEntries);
+ }ATOM_PPLIB_Clock_Voltage_Limit_Table;
+ 
+ union _ATOM_PPLIB_CAC_Leakage_Record
+@@ -553,8 +556,10 @@ typedef union _ATOM_PPLIB_CAC_Leakage_Record ATOM_PPLIB_CAC_Leakage_Record;
+ 
+ typedef struct _ATOM_PPLIB_CAC_Leakage_Table
+ {
+-    UCHAR ucNumEntries;                                                 // Number of entries.
+-    ATOM_PPLIB_CAC_Leakage_Record entries[1];                           // Dynamically allocate entries.
++	// Number of entries.
++	UCHAR ucNumEntries;
++	// Dynamically allocate entries.
++	ATOM_PPLIB_CAC_Leakage_Record entries[] __counted_by(ucNumEntries);
+ }ATOM_PPLIB_CAC_Leakage_Table;
+ 
+ typedef struct _ATOM_PPLIB_PhaseSheddingLimits_Record
+@@ -568,8 +573,10 @@ typedef struct _ATOM_PPLIB_PhaseSheddingLimits_Record
+ 
+ typedef struct _ATOM_PPLIB_PhaseSheddingLimits_Table
+ {
+-    UCHAR ucNumEntries;                                                 // Number of entries.
+-    ATOM_PPLIB_PhaseSheddingLimits_Record entries[1];                   // Dynamically allocate entries.
++	// Number of entries.
++	UCHAR ucNumEntries;
++	// Dynamically allocate entries.
++	ATOM_PPLIB_PhaseSheddingLimits_Record entries[] __counted_by(ucNumEntries);
+ }ATOM_PPLIB_PhaseSheddingLimits_Table;
+ 
+ typedef struct _VCEClockInfo{
+@@ -580,8 +587,8 @@ typedef struct _VCEClockInfo{
+ }VCEClockInfo;
+ 
+ typedef struct _VCEClockInfoArray{
+-    UCHAR ucNumEntries;
+-    VCEClockInfo entries[1];
++	UCHAR ucNumEntries;
++	VCEClockInfo entries[] __counted_by(ucNumEntries);
+ }VCEClockInfoArray;
+ 
+ typedef struct _ATOM_PPLIB_VCE_Clock_Voltage_Limit_Record
+@@ -592,8 +599,8 @@ typedef struct _ATOM_PPLIB_VCE_Clock_Voltage_Limit_Record
+ 
+ typedef struct _ATOM_PPLIB_VCE_Clock_Voltage_Limit_Table
+ {
+-    UCHAR numEntries;
+-    ATOM_PPLIB_VCE_Clock_Voltage_Limit_Record entries[1];
++	UCHAR numEntries;
++	ATOM_PPLIB_VCE_Clock_Voltage_Limit_Record entries[] __counted_by(numEntries);
+ }ATOM_PPLIB_VCE_Clock_Voltage_Limit_Table;
+ 
+ typedef struct _ATOM_PPLIB_VCE_State_Record
+@@ -604,8 +611,8 @@ typedef struct _ATOM_PPLIB_VCE_State_Record
+ 
+ typedef struct _ATOM_PPLIB_VCE_State_Table
+ {
+-    UCHAR numEntries;
+-    ATOM_PPLIB_VCE_State_Record entries[1];
++	UCHAR numEntries;
++	ATOM_PPLIB_VCE_State_Record entries[] __counted_by(numEntries);
+ }ATOM_PPLIB_VCE_State_Table;
+ 
+ 
+@@ -626,8 +633,8 @@ typedef struct _UVDClockInfo{
+ }UVDClockInfo;
+ 
+ typedef struct _UVDClockInfoArray{
+-    UCHAR ucNumEntries;
+-    UVDClockInfo entries[1];
++	UCHAR ucNumEntries;
++	UVDClockInfo entries[] __counted_by(ucNumEntries);
+ }UVDClockInfoArray;
+ 
+ typedef struct _ATOM_PPLIB_UVD_Clock_Voltage_Limit_Record
+@@ -638,8 +645,8 @@ typedef struct _ATOM_PPLIB_UVD_Clock_Voltage_Limit_Record
+ 
+ typedef struct _ATOM_PPLIB_UVD_Clock_Voltage_Limit_Table
+ {
+-    UCHAR numEntries;
+-    ATOM_PPLIB_UVD_Clock_Voltage_Limit_Record entries[1];
++	UCHAR numEntries;
++	ATOM_PPLIB_UVD_Clock_Voltage_Limit_Record entries[] __counted_by(numEntries);
+ }ATOM_PPLIB_UVD_Clock_Voltage_Limit_Table;
+ 
+ typedef struct _ATOM_PPLIB_UVD_Table
+@@ -657,8 +664,8 @@ typedef struct _ATOM_PPLIB_SAMClk_Voltage_Limit_Record
+ }ATOM_PPLIB_SAMClk_Voltage_Limit_Record;
+ 
+ typedef struct _ATOM_PPLIB_SAMClk_Voltage_Limit_Table{
+-    UCHAR numEntries;
+-    ATOM_PPLIB_SAMClk_Voltage_Limit_Record entries[];
++	UCHAR numEntries;
++	ATOM_PPLIB_SAMClk_Voltage_Limit_Record entries[] __counted_by(numEntries);
+ }ATOM_PPLIB_SAMClk_Voltage_Limit_Table;
+ 
+ typedef struct _ATOM_PPLIB_SAMU_Table
+@@ -675,8 +682,8 @@ typedef struct _ATOM_PPLIB_ACPClk_Voltage_Limit_Record
+ }ATOM_PPLIB_ACPClk_Voltage_Limit_Record;
+ 
+ typedef struct _ATOM_PPLIB_ACPClk_Voltage_Limit_Table{
+-    UCHAR numEntries;
+-    ATOM_PPLIB_ACPClk_Voltage_Limit_Record entries[1];
++	UCHAR numEntries;
++	ATOM_PPLIB_ACPClk_Voltage_Limit_Record entries[] __counted_by(numEntries);
+ }ATOM_PPLIB_ACPClk_Voltage_Limit_Table;
+ 
+ typedef struct _ATOM_PPLIB_ACP_Table
+@@ -743,9 +750,9 @@ typedef struct ATOM_PPLIB_VQ_Budgeting_Record{
+ } ATOM_PPLIB_VQ_Budgeting_Record;
+ 
+ typedef struct ATOM_PPLIB_VQ_Budgeting_Table {
+-    UCHAR revid;
+-    UCHAR numEntries;
+-    ATOM_PPLIB_VQ_Budgeting_Record         entries[1];
++	UCHAR revid;
++	UCHAR numEntries;
++	ATOM_PPLIB_VQ_Budgeting_Record entries[] __counted_by(numEntries);
+ } ATOM_PPLIB_VQ_Budgeting_Table;
+ 
+ #pragma pack()
+-- 
+2.43.0
+
