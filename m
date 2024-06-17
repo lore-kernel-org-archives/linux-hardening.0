@@ -1,133 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753CF16B381;
-	Mon, 17 Jun 2024 19:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595A616EB7B
+	for <linux-hardening@vger.kernel.org>; Mon, 17 Jun 2024 19:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718650823; cv=none; b=pxcpNb+hHzKg4vEA9mPx+rFuiqOIPAnFl6WrLo0/ycT1Fxt3kNd03zcfMXnu0c5rSUng+mkHBY1/baOfUn/GfGlka2S8g3Dme6ikuzEvg1UsGQ1WsCzcYPILJsxaHdnR/MbkziSnCpkqzq7W3iqKvqAofkaDhr5ioU4oVtVcUuU=
+	t=1718651842; cv=none; b=VeYGLhrJxFKXIGuvYo4o5U9KRNGXgSVeMPpUOL2bed4TiwZlKQHnVarVUZuMMErTTQruhp7xF9+FAX2OxOAqaaNVKNjlQHdvjyXrJUlZ6eGoAParAKmMkL/R7sFIWDY9qJNdjNTzxVALE1rOLDs9WTmMcgt9v6/P/lWkxZ3SZCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718650823; c=relaxed/simple;
-	bh=tVw8aWviI/EJ8IxtzGYCDNXdKhTgHY4FFE6xq4UtSC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JgmEAL+h84u1LzaimPo/og72pri+twGeWGvD6nb8P84vvbcuWHymZt5Ar4z+evwunoY7gbULrBnA0r2i12J52VsCITj3m+GrKuDGE5TbZihFIjvM4bETnhevn6OOVH3b3zgIEDXgU4+B46L0NzEAhIW4PiP2wysv/HMeKjKaFgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTxV83cA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718651842; c=relaxed/simple;
+	bh=jQKjgH/IeJSbhbllaf+iVIq0r/CllhXzET0SeRnnSRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PA0EWxHqQOjnapFTIB/SXoNqHSwCygMbJv4m5UzZXmwT7PoLKiyZzUDtoPPbphXbShWgPEj+WDsLDnaqPm4G+eREFU5+CkZ37FH1+XlXL7Hd64ZSvNp3hX5ZRahN+PYorGgWdHNipYaNMKOt0Tfhb1xZZIHO929eoYAI5Ncnt/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RcM5b/Jk; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTxV83cA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419D0C2BD10;
-	Mon, 17 Jun 2024 19:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718650823;
-	bh=tVw8aWviI/EJ8IxtzGYCDNXdKhTgHY4FFE6xq4UtSC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aTxV83cAgs2vdiqVeZSZDLAXnH8MWuHABPWTE2n5EM4wwzo1bjB++fVnI0uOl0RRK
-	 raz0xgXgD9BBGEpmisIqv1c5TvBxrT4fcoZ51eNorYMUwgdD+8EYHjBzSvD02P9llR
-	 PR+CFIjNKHVNWi1k1G+mqdu84l7GVerQyMl3W8lHnvfQevOVK720okpdkdO/8KZKCE
-	 jTVGFR9f3958X9RwzQ8Lqrkybn6ai5bPpRGK6dpKJYeMoP6iNmp3ODqCZ39YhyAI61
-	 X8XGc9Sfh420biaE7W1SUYncXwdGdsbl+9n9HPrcpvtf1qNFFFG0jikFvCsOMs4opF
-	 q83AFy89FItfw==
-Date: Mon, 17 Jun 2024 12:00:22 -0700
-From: Kees Cook <kees@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Vitor Massaru Iha <vitor@massaru.org>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	David Gow <davidgow@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Rae Moar <rmoar@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] usercopy: Convert test_user_copy to KUnit test
-Message-ID: <202406171157.A97ACED1B@keescook>
-References: <20240612195412.make.760-kees@kernel.org>
- <20240612195921.2685842-2-kees@kernel.org>
- <90e61842-e933-4d6f-a3b5-c802382fe96a@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RcM5b/Jk"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7ec08f3c98eso7541539f.0
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Jun 2024 12:17:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1718651840; x=1719256640; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uxDCmX69tkQkw7FEhpYwJ22/GtNZFk3dnE10Jhs2Vfw=;
+        b=RcM5b/JkvHHb/X+dWLUVatx1pvkpDokDo4WXM2E0UUG/zyLXEU5nFFIPTq0AM8SVaU
+         WUkZCzfcmILe6DnBN7D3HrtCNae98AiwxylcD4S1rm+bksha3YvsA+DB7NHf118o1hZZ
+         0JpEioi60kD9gMpFiGyjQcWZy/rVeERVhTrdQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718651840; x=1719256640;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uxDCmX69tkQkw7FEhpYwJ22/GtNZFk3dnE10Jhs2Vfw=;
+        b=MjEDziPIw0suA1IvZAPjFJYnypqYCLUetQ7gxIYwy/RqhcvuzoOpgARV80XRGxqpFE
+         u19vX4s4kcDsK6SO55NMDw3s65CtGENwkhaHY029wHlxb/9DEHo6dAJz0V2VLeIdOZFj
+         b/k9nzf7Cr3JYWzDz19LfSKtD0uBG1kr/Y+X9YEJ86n1Q9pBDlIMqYEQLoSa0Mdbpbbl
+         xNWLAfhosgLH6hjPHMV4R0g+Mwab1bHdmNvJ6Y9TZOJjtQeBvmcCuMpfMNMstqKaczQJ
+         erW792xxTTirwJAGLnwBDYV55c0olpAEpOgWQixkS73PUtBLf2qgx3wC13nZSSEqy7GH
+         GK+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUmzxyO3/36E+PWCNAyBAgIkfz9esJmPNNi/9669i3Ha0eLNLWO4JnLE1M2dntg9xeMa9OYPQWba1LwQ+OhQUnoRUW68DMRByipw5iL7q1y
+X-Gm-Message-State: AOJu0Yxyomncf8wpXkmgxF5hisAgBlenTadY6cRcZeYAWkvYSX03t6rz
+	20MblZwWylJXfNqXX8T9Tqq7squbsxsVjpW1D2qeJ9Q7GOaIt1sbfqxgawJamp4=
+X-Google-Smtp-Source: AGHT+IHOg3FPItf6+cCu8wcgQmloKpiojh3fisdmWTlg+Lr2TYt3VwBpFvvZ6liZuV86R4UCrSrAdA==
+X-Received: by 2002:a05:6602:142:b0:7eb:66a5:d1c with SMTP id ca18e2360f4ac-7ebeaefca76mr980500639f.0.1718651840458;
+        Mon, 17 Jun 2024 12:17:20 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b9569ef5a4sm2733310173.117.2024.06.17.12.17.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 12:17:20 -0700 (PDT)
+Message-ID: <93ea1bde-4dac-409b-8c3c-0f6c0239bb1c@linuxfoundation.org>
+Date: Mon, 17 Jun 2024 13:17:19 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <90e61842-e933-4d6f-a3b5-c802382fe96a@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] usercopy: Convert test_user_copy to KUnit test
+To: Kees Cook <kees@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Vitor Massaru Iha
+ <vitor@massaru.org>, Ivan Orlov <ivan.orlov0322@gmail.com>,
+ David Gow <davidgow@google.com>, Brendan Higgins
+ <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+ linux-hardening@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240612195412.make.760-kees@kernel.org>
+ <20240612195921.2685842-2-kees@kernel.org>
+ <90e61842-e933-4d6f-a3b5-c802382fe96a@linuxfoundation.org>
+ <202406171157.A97ACED1B@keescook>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <202406171157.A97ACED1B@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 14, 2024 at 09:50:05AM -0600, Shuah Khan wrote:
-> On 6/12/24 13:59, Kees Cook wrote:
-> > Convert the runtime tests of hardened usercopy to standard KUnit tests.
-> > 
-> > Additionally disable usercopy_test_invalid() for systems with separate
-> > address spaces (or no MMU) since it's not sensible to test for address
-> > confusion there (e.g. m68k).
-> > 
-> > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
-> > Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
-> > Reviewed-by: David Gow <davidgow@google.com>
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >   MAINTAINERS                                |   1 +
-> >   lib/Kconfig.debug                          |  21 +-
-> >   lib/Makefile                               |   2 +-
-> >   lib/{test_user_copy.c => usercopy_kunit.c} | 282 ++++++++++-----------
-> >   4 files changed, 151 insertions(+), 155 deletions(-)
-> >   rename lib/{test_user_copy.c => usercopy_kunit.c} (46%)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 8754ac2c259d..0cd171ec6010 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11962,6 +11962,7 @@ F:	arch/*/configs/hardening.config
-> >   F:	include/linux/overflow.h
-> >   F:	include/linux/randomize_kstack.h
-> >   F:	kernel/configs/hardening.config
-> > +F:	lib/usercopy_kunit.c
-> >   F:	mm/usercopy.c
-> >   K:	\b(add|choose)_random_kstack_offset\b
-> >   K:	\b__check_(object_size|heap_object)\b
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 59b6765d86b8..561e346f5cb0 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2505,18 +2505,6 @@ config TEST_VMALLOC
-> >   	  If unsure, say N.
-> > -config TEST_USER_COPY
-> > -	tristate "Test user/kernel boundary protections"
-> > -	depends on m
-> > -	help
-> > -	  This builds the "test_user_copy" module that runs sanity checks
-> > -	  on the copy_to/from_user infrastructure, making sure basic
-> > -	  user/kernel boundary testing is working. If it fails to load,
-> > -	  a regression has been detected in the user/kernel memory boundary
-> > -	  protections.
-> > -
-> > -	  If unsure, say N.
-> > -
-> >   config TEST_BPF
-> >   	tristate "Test BPF filter functionality"
-> >   	depends on m && NET
-> > @@ -2814,6 +2802,15 @@ config SIPHASH_KUNIT_TEST
-> >   	  This is intended to help people writing architecture-specific
-> >   	  optimized versions.  If unsure, say N.
-> > +config USERCOPY_KUNIT_TEST
-> > +	tristate "KUnit Test for user/kernel boundary protections"
-> > +	depends on KUNIT
-> > +	default KUNIT_ALL_TESTS
-> > +	help
-> > +	  This builds the "usercopy_kunit" module that runs sanity checks
-> > +	  on the copy_to/from_user infrastructure, making sure basic
-> > +	  user/kernel boundary testing is working.
-> > +
+On 6/17/24 13:00, Kees Cook wrote:
+> On Fri, Jun 14, 2024 at 09:50:05AM -0600, Shuah Khan wrote:
+>> On 6/12/24 13:59, Kees Cook wrote:
+>>> Convert the runtime tests of hardened usercopy to standard KUnit tests.
+>>>
+>>> Additionally disable usercopy_test_invalid() for systems with separate
+>>> address spaces (or no MMU) since it's not sensible to test for address
+>>> confusion there (e.g. m68k).
+>>>
+>>> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+>>> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+>>> Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
+>>> Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+>>> Reviewed-by: David Gow <davidgow@google.com>
+>>> Signed-off-by: Kees Cook <kees@kernel.org>
+>>> ---
+>>>    MAINTAINERS                                |   1 +
+>>>    lib/Kconfig.debug                          |  21 +-
+>>>    lib/Makefile                               |   2 +-
+>>>    lib/{test_user_copy.c => usercopy_kunit.c} | 282 ++++++++++-----------
+>>>    4 files changed, 151 insertions(+), 155 deletions(-)
+>>>    rename lib/{test_user_copy.c => usercopy_kunit.c} (46%)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 8754ac2c259d..0cd171ec6010 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -11962,6 +11962,7 @@ F:	arch/*/configs/hardening.config
+>>>    F:	include/linux/overflow.h
+>>>    F:	include/linux/randomize_kstack.h
+>>>    F:	kernel/configs/hardening.config
+>>> +F:	lib/usercopy_kunit.c
+>>>    F:	mm/usercopy.c
+>>>    K:	\b(add|choose)_random_kstack_offset\b
+>>>    K:	\b__check_(object_size|heap_object)\b
+>>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+>>> index 59b6765d86b8..561e346f5cb0 100644
+>>> --- a/lib/Kconfig.debug
+>>> +++ b/lib/Kconfig.debug
+>>> @@ -2505,18 +2505,6 @@ config TEST_VMALLOC
+>>>    	  If unsure, say N.
+>>> -config TEST_USER_COPY
+>>> -	tristate "Test user/kernel boundary protections"
+>>> -	depends on m
+>>> -	help
+>>> -	  This builds the "test_user_copy" module that runs sanity checks
+>>> -	  on the copy_to/from_user infrastructure, making sure basic
+>>> -	  user/kernel boundary testing is working. If it fails to load,
+>>> -	  a regression has been detected in the user/kernel memory boundary
+>>> -	  protections.
+>>> -
+>>> -	  If unsure, say N.
+>>> -
+>>>    config TEST_BPF
+>>>    	tristate "Test BPF filter functionality"
+>>>    	depends on m && NET
+>>> @@ -2814,6 +2802,15 @@ config SIPHASH_KUNIT_TEST
+>>>    	  This is intended to help people writing architecture-specific
+>>>    	  optimized versions.  If unsure, say N.
+>>> +config USERCOPY_KUNIT_TEST
+>>> +	tristate "KUnit Test for user/kernel boundary protections"
+>>> +	depends on KUNIT
+>>> +	default KUNIT_ALL_TESTS
+>>> +	help
+>>> +	  This builds the "usercopy_kunit" module that runs sanity checks
+>>> +	  on the copy_to/from_user infrastructure, making sure basic
+>>> +	  user/kernel boundary testing is working.
+>>> +
+>>
+>> Please carry the following line forward as well to be complete assuming
+>> it is relevant.
+>>
+>> If unsure, say N.
 > 
-> Please carry the following line forward as well to be complete assuming
-> it is relevant.
+> I've explicitly removed that because it would be repetitive if it were
+> included for all KUnit tests.
 > 
-> If unsure, say N.
 
-I've explicitly removed that because it would be repetitive if it were
-included for all KUnit tests.
+Thanks for the explanation.
 
--- 
-Kees Cook
+thanks,
+-- Shuah
