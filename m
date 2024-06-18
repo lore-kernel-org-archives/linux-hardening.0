@@ -1,64 +1,48 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3826513A3E5
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 10:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B75811CAB0;
+	Tue, 18 Jun 2024 10:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718705416; cv=none; b=Sf2iaLhFtDHzn+Tte2YdicNkyPXw/8pRqfCMWzt+IJRhvPmx/NkkliLUZmhW1HPRU0AbyTKHSK1uewb2rBOFNXybFTzG27xz+vZIjuP/jVeCE/PYqtHC5d6oZNIoV9Kov9xFvidocRcWwPwxoAr7WI/9UPDhwgOM26SYWxrDReM=
+	t=1718707534; cv=none; b=Jzi5HdSAYlKwIA/IaJku3uTRb5y5KFaXEFivbktOP4ZPds3bMP8HKs/0KUE46d5ohteBPcaImeA6gwEw+0qoVGwgu6zSUXBUcSN5PW8QXElovKxf+wrTcrDxqrqDdt1BkTG16TfaoQ+M+YTYrJ/f7BxTE0ab05Z4Xn9MDepF7JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718705416; c=relaxed/simple;
-	bh=xBlSITPDrWMGqBk7RX81DxBRK6FBCQLiSeBn0AOw/FA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=M7qi076WAefBvUk838z0T30R4v5WCShEfkZBa29GGb/QZZNRgZcPd1k/QSyLTu7ko2cnkqu1VDZ2w6LzlAUAdXu7KA+YmBd5Iqd35u4l89rv5CSlIhERufiJGzWaOxP1IX6s7kIqgGE1PkK1PgndoBrntptDyc0PuFcUjyViPis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BJKyO5B2; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJKyO5B2"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4217990f997so38251785e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 03:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718705413; x=1719310213; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nFv+H+J5KVtQDId7j7CojiPG2lRqqZRtUi9PX0uMdRw=;
-        b=BJKyO5B2iYwZX5w5Z8GksLGryr0x7kGKy6hXKplhu+Gg4Wqc6xRn1aRq3NAysVFtHs
-         QQA9FH/FVvstw+s31uxNprWq9ZiFuV3rPsODyX6vI2N2R/Vqz0odb/EGXMQtZV0s5pp0
-         pqRcLCotYc3R3MY1QXPzqB6HDnQE+CzSiS7LzMA4kYnTmagcbySnE/384mPkr1R4x7x7
-         +xzNfxRtT/rf7oHqbL18WOO88XTpyUQlfkR7sFCZg8lmukSI+hU/arHKkLbQpqlw+5WA
-         9LsS8ANiVOyix1n++EdKuV4nJOocIRJRsq1psQg5McIiJus4mT9Sbc2LNCsayBexv9pn
-         IpVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718705413; x=1719310213;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nFv+H+J5KVtQDId7j7CojiPG2lRqqZRtUi9PX0uMdRw=;
-        b=Dp4ojG5ymdyUr12cJnnbkdTcXTdVLmMZ1ByxrsheUlzP5r3PUIEDeLMJIxK8A0LjVb
-         BYM5eL04/WZx86emSZL30g0+JSVxH6uBVWxwFldJAGzq5EOdLGi0T4fQEdJ1BNaicO6J
-         rYvbFLVsX68cOU0KP37X3452TZotJbUYIHvpqRxQS2eT6HQOMIJY59vGh+OUTH/2lSD5
-         uDP3sQB41xI1E/N71taR8CAQrttyNIv6+aWlSQOu/cI9WCp4K5ZYqBeHvFmcoqiFzPPv
-         bPduSUNIlXQsd1bRuL5+dmMWpEQVSjgJ8p40plvTEuKsuo5E4UqCKgAdt9WePSWcHgk4
-         1sIA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOif/vVKL1UJtuqD1PKWwStTRhdKAzijLVdsStOEvG5FWk8re1+MRXlX5Bx2oUlKno36LaexG3mqVw9mBUGCdIl+0u2At6xb7TjTQDNvxy
-X-Gm-Message-State: AOJu0Yx74Olv9hx7PG8ZQ8gRB55JCpbGSZupLsQh+vKxuvkOwqsqgUHf
-	CRgcmMeIJEsOQrsyzFFBgS/7SPDx30wP7RflKHP2K7hkOYnorQ4dhRgrG/jA5Xc=
-X-Google-Smtp-Source: AGHT+IFDpjGxbjE1yj2KaQhJtnTzZWL6+zm6itz1Q5fudeNujgBXsOq2XLy3QruSXpvSAkpsEQdWlw==
-X-Received: by 2002:a05:600c:45cd:b0:421:7eff:efb8 with SMTP id 5b1f17b1804b1-423056e01dbmr100092885e9.31.1718705413279;
-        Tue, 18 Jun 2024 03:10:13 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de607sm222957765e9.34.2024.06.18.03.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 03:10:12 -0700 (PDT)
-Date: Tue, 18 Jun 2024 13:10:08 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: linux-scsi@vger.kernel.org
-Cc: open-iscsi@googlegroups.com, netdev@vger.kernel.org,
-	Kees Cook <kees@kernel.org>, Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org
-Subject: [bug report] [SCSI] iscsi_transport: Add support to display CHAP
- list and delete CHAP entry
-Message-ID: <a60ed02d-3191-4e9d-b296-0a961a81a66d@moroto.mountain>
+	s=arc-20240116; t=1718707534; c=relaxed/simple;
+	bh=SUO+snBgG6k1yaJlPtX7BkWdgL43IP8KrgWkPiIs9WA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfN+u911RNG855PojBhslLiaP8lP4lUB3QtDCwSdqzQyNtQ8SlbaTZYsIj8o+7r/Cw7CypVlYyhZoYstql963U/mQOqVf5ek3HDw3xMYxVxM2Ah3+Tkb7/R1EH0Mp20v8hvRBPjfv7fyWuJ7cvf6HobBALRlrNLCgMKIYGU5bSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6EF0DA7;
+	Tue, 18 Jun 2024 03:45:55 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B48F53F6A8;
+	Tue, 18 Jun 2024 03:45:27 -0700 (PDT)
+Date: Tue, 18 Jun 2024 11:45:22 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>, Yuntao Liu <liuyuntao12@huawei.com>,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	gor@linux.ibm.com, Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>, Mark Brown <broonie@kernel.org>,
+	imbrenda@linux.ibm.com, pawan.kumar.gupta@linux.intel.com
+Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
+Message-ID: <ZnFlQgVSTtf0t2cU@J2N7QTR9R3>
+References: <20240617133721.377540-1-liuyuntao12@huawei.com>
+ <ZnBbr2CAqBGDe2aN@J2N7QTR9R3>
+ <202406171122.B5FDA6A@keescook>
+ <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,87 +51,60 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
 
-Hi SCSI and netlink developers,
+Hi Arnd,
 
-Commit 6260a5d22122 ("[SCSI] iscsi_transport: Add support to display
-CHAP list and delete CHAP entry") from Feb 27, 2012 (linux-next),
-leads to the following Smatch static checker warning:
+On Mon, Jun 17, 2024 at 10:33:08PM +0200, Arnd Bergmann wrote:
+> On Mon, Jun 17, 2024, at 20:22, Kees Cook wrote:
+> > On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
+> >> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
+> >> > Since the offset would be bitwise ANDed with 0x3FF in
+> >> > add_random_kstack_offset(), so just remove AND operation here.
+> >> > 
+> >> > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+> >> 
+> >> The comments in arm64 and x86 say that they're deliberately capping the
+> >> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
+> >> value with 0x3FF.
+> >> 
+> >> Maybe it's ok to expand that, but if that's the case the commit message
+> >> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
+> >> x86), and those comments need to be updated accordingly.
+> >> 
+> >> As-is, I do not think this patch is ok.
+> >
+> > Yeah, I agree: the truncation is intentional and tuned to the
+> > architecture.
+> 
+> It may be intentional, but it's clearly nonsense: there is nothing
+> inherent to the architecture that means we have can go only 256
+> bytes instead of 512 bytes into the 16KB available stack space.
+> 
+> As far as I can tell, any code just gets bloated to the point
+> where it fills up the available memory, regardless of how
+> much you give it. I'm sure one can find code paths today that
+> exceed the 16KB, so there is no point pretending that 15.75KB
+> is somehow safe to use while 15.00KB is not.
+> 
+> I'm definitely in favor of making this less architecture
+> specific, we just need to pick a good value, and we may well
+> end up deciding to use less than the default 1KB. We can also
+> go the opposite way and make the limit 4KB but then increase
+> the default stack size to 20KB for kernels that enable
+> randomization.
 
-	drivers/scsi/scsi_transport_iscsi.c:3340 iscsi_get_chap()
-	warn: potential user controlled sizeof overflow 'ev->u.get_chap.num_entries * 524' '0-u32max * 524' type='uint'
+Sorry, to be clear, I'm happy for this to change, so long as:
 
-drivers/scsi/scsi_transport_iscsi.c
-    3319 static int
-    3320 iscsi_get_chap(struct iscsi_transport *transport, struct nlmsghdr *nlh)
-    3321 {
-    3322         struct iscsi_uevent *ev = nlmsg_data(nlh);
-    3323         struct Scsi_Host *shost = NULL;
-    3324         struct iscsi_chap_rec *chap_rec;
-    3325         struct iscsi_internal *priv;
-    3326         struct sk_buff *skbchap;
-    3327         struct nlmsghdr *nlhchap;
-    3328         struct iscsi_uevent *evchap;
-    3329         uint32_t chap_buf_size;
-    3330         int len, err = 0;
-    3331         char *buf;
-    3332 
-    3333         if (!transport->get_chap)
-    3334                 return -EINVAL;
-    3335 
-    3336         priv = iscsi_if_transport_lookup(transport);
-    3337         if (!priv)
-    3338                 return -EINVAL;
-    3339 
---> 3340         chap_buf_size = (ev->u.get_chap.num_entries * sizeof(*chap_rec));
-    3341         len = nlmsg_total_size(sizeof(*ev) + chap_buf_size);
+* The commit message explains why that's safe.
 
-Smatch doesn't trust nlmsg_data().  ev->u.get_chap.num_entries and
-chap_buf_size are both u32 types so it looks like this integer overflow
-warning is valid.  On the other hand, hopefully, you trust your ISCSI
-transport.
+  IIUC this goes from 511 to 1023 bytes on arm64, which is ~3% of the
+  stack, so maybe that is ok. It'd be nice to see any rationale/analysis
+  beyond "the offset would be bitwise ANDed with 0x3FF".
 
-Then we pass the overflowed value to nlmsg_total_size() and do three
-more integer overflows:
+* The comments in architecture code referring to the masking get
+  removed/updated along with the masking.
 
-1) sizeof(*ev) + chap_buf_size
-2) NLMSG_HDRLEN + payload
-3) NLMSG_ALIGN()  (ALIGN macros wrap to zero)
+My complaint was that the patch didn't do those things.
 
-So my solution was going to be use size_mul(ev->u.get_chap.num_entries,
-sizeof(*chap_rec)) for the multiply.
-
-I kind of want it to be a static checker error when code uses
-size_add/mul() and saves the result to anything except unsigned long.
-Or when code uses the result to do further math.  The problem with
-this is that people like struct_size() and use it even when they know
-the result can't overflow so this generates false positive warnings.
-
-Also maybe we should harden nlmsg_total_size() against integer
-overflows?
-
-regards,
-dan carpenter
-
-    3342 
-    3343         shost = scsi_host_lookup(ev->u.get_chap.host_no);
-    3344         if (!shost) {
-    3345                 printk(KERN_ERR "%s: failed. Could not find host no %u\n",
-    3346                        __func__, ev->u.get_chap.host_no);
-    3347                 return -ENODEV;
-    3348         }
-    3349 
-    3350         do {
-    3351                 int actual_size;
-    3352 
-    3353                 skbchap = alloc_skb(len, GFP_KERNEL);
-    3354                 if (!skbchap) {
-    3355                         printk(KERN_ERR "can not deliver chap: OOM\n");
-    3356                         err = -ENOMEM;
-    3357                         goto exit_get_chap;
-    3358                 }
-    3359 
-    3360                 nlhchap = __nlmsg_put(skbchap, 0, 0, 0,
-    3361                                       (len - sizeof(*nlhchap)), 0);
-
-
+Mark.
