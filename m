@@ -1,96 +1,189 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DAD13F426
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 14:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2131B4AEF0
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 22:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722076; cv=none; b=IDk/qwAwAOtD/E1xm3sBzGgZ+v3QDd0sD/i6yaYz8i4wIZIqNq11KnVteON4F68nWjUNj3npL78Q+U80saOnBIBh/T6redvbhO5PtdAd34e6bYo1GcHrAuBhfez8OU/vGJ/FpDA55NyYpBnrgNlbVhz/97f7rUc5K/2Hr5eyZIg=
+	t=1718750399; cv=none; b=p0H4MN7MgXRF1Lg+t2ROQJ/B/lmWi8WL8JcL1hWMrbr4xNT6VLbXDgzRc/rlBlrPxwC++Sd7mMXwQ4wP7Gf0zJ3IIu/AgCCh/jZeSrklNyAep31sOgeJ3ySKddtcirRBbtjfZx9ehlPLq6OcBnuPPM4ShfVgXM3VdMPPnpeBQ3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722076; c=relaxed/simple;
-	bh=9+QYKsnxwciPPkF5LJewp9ve91BAy8qGJgnDlZZqgZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iKXbJ0SUCW1YMs4Urdad+O6JAi4eBSnH+6ARZD7QocTuLfBl+k6PGRLzlMi1glBhGvffLmG0Yoqz430n1cCrKMcEOc04aSZlAO9J1vHzwjz5cZWITZ6ftA29dAj/6zireq5xjeuwlAISxYvspQrxBL/hhphCMQco6nIUgThg6mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z7bGY1TZ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718750399; c=relaxed/simple;
+	bh=M7mzEbGbaQjbrcrgflbQy+a72iKuC7EQIbJAodQwhWU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GmvO8IZTEP4jH0SvGTeKmadn3DMcALQ4dji/HoxbmsZUXKZKcmUF4T3SaMjo9vh03rTDp+G7Uk+8BVflCBXnH5Dassm0pIq9wS/ANjvnigfvMwYyfSVhWyHC0Z0NMCUuc25Ytrh3tuK2vsizcxsFU4ZxHsQ7FBuNCzKQX8dOX2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M/OSJfwc; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z7bGY1TZ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-421757d217aso57831645e9.3
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 07:47:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M/OSJfwc"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-25957dfd971so1414516fac.0
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 15:39:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718722073; x=1719326873; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+cbw6Bx2xA/wA1wsLz+oR6E+oVt4SHwS049oMAcuOIY=;
-        b=Z7bGY1TZGDTiDLjdhkTBum7NCYhdBbkLzPs4wsWTd3EOkoRC95fqSvHN54S13HmNsO
-         xngDaAWv2OH7nkm6jCZmJcj4cv0RcdwXq7+dnT/ewToKIJX4PkU52ANvPG2movi3vkaQ
-         oL2IAYh6dgmkDNz47rVL74ohq+obQzgVHFV+Tj5ZBGfFiytWGmYx8qQEI9coaAeNIi0+
-         qAOxBQPspcCciap2GYsNdHSnLZtezwyfE2gGu1UTQEcI+ANPO05pXONgjlufmUP3z44o
-         JhOIaftgv52xtTenGKbxcP+MYmwmWdYF+bEKIQOEbSbQknAHMuQnI9wQZUxvjhJTGiUc
-         j4XQ==
+        d=chromium.org; s=google; t=1718750396; x=1719355196; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SDuIqiO2clIGfsQayJd1PsKODcIpbW8KgtS5TlfWIbc=;
+        b=M/OSJfwcH4Zn/CDNpuzlfsXRQGTdXlZt/fe2onN7PnYVNBWmLQ0oHBgJOrc4Ok6Xo2
+         oIGvBU8EFuFYpkTz9z27gmJe8osddhCC3ab6+M2lD3RBfjf7jg6VQmqPDa6yaDwiyOCx
+         20U30Il2fAmosZoNCJUwJgCFLy/6ikca8fX1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718722073; x=1719326873;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+cbw6Bx2xA/wA1wsLz+oR6E+oVt4SHwS049oMAcuOIY=;
-        b=UfDQXUzFLLgttbgAQ+93DVh0vTCkQPc/xpB0UkakIXfe1Ha/d7Gx/dZJAIW1Ghperw
-         6VPXb8MX9BxT48NC9991UxSBTWCdF6oxsOTI8tsPHOg2Gu5fCelPhuNJrOueCDBA03fO
-         /PHw0OMWg4yn3/XHWKlWIHCMLqmSjSUIWe3XmqHYTbv0Nw8QF7uTkBxOUD7h6CzjhUb4
-         6qHgtTZB7kUrSiLN4quip+/ad0jtYxHHMrbeEse3wvh0G0VdMs/+X8qvpfw/to45C+6j
-         qSEsDnMK/KI83rLD+TRCJGrrtmpcHPWWG4wl1Khj4OnOA7pFv99yBpkNdMHm0by+J6b6
-         T7/A==
-X-Forwarded-Encrypted: i=1; AJvYcCX3tBe2yu5XzBvgMDjap6DhsGYiqA4SztrFSWjVjaJ3ZEOHnyVV+aB4KYJ5LDjfMaW4NHsYR2TE5INGXiiOrp/uMiEQia5xYm7eVEynPJOJ
-X-Gm-Message-State: AOJu0YzZa1K7+HQ3WSaOITwskMdkdL0wIkRQyf6HDzXAwYdt+X2M2IoK
-	12rVLskwr5aZinWa0K6dX9v2Tl+gAJg+8yhaMCRxgkdeH3MUL8qhATnG+J6AINE=
-X-Google-Smtp-Source: AGHT+IF9eWD+iBGTTbMd7s7/ZxukSrBvSi6su/3uP4mI5cG6RCpXNcaANJ63gsUAM54GxX0XWDZuVQ==
-X-Received: by 2002:a05:600c:5118:b0:422:2044:a0dd with SMTP id 5b1f17b1804b1-42304825795mr110428695e9.18.1718722073231;
-        Tue, 18 Jun 2024 07:47:53 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de63asm229867065e9.30.2024.06.18.07.47.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 07:47:52 -0700 (PDT)
-Message-ID: <1e10252a-c759-4767-beb2-12bf79c26315@linaro.org>
-Date: Tue, 18 Jun 2024 16:47:49 +0200
+        d=1e100.net; s=20230601; t=1718750396; x=1719355196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SDuIqiO2clIGfsQayJd1PsKODcIpbW8KgtS5TlfWIbc=;
+        b=XWYNjLrCBzr308CSVNcI8eTLQoNH/HuaqCMs7hUk+lSh72/29z11pbdlPBvgVrxcZp
+         FhdtVxzGSVsRJK46rN0OBcfi7/yXCsaesYEBgy1/v3gDA5B9q2ffOivnzi96iRtJlps9
+         s42Ym4xC688GHjuY6/cJxG1sotTJDYd/4v6txIEuzvmdPF+P3zlUQrdwSa8H1Fu9A9uZ
+         CJy1uwR/LLii0JdBcJx+g6KILT98RlYw9b79EzFMjKKgDEk+RCC/vm+eEr2ExdNcKUdr
+         LQp6JRd57COu30+hV6aMcNyR8x6pOecXkiNegnlnhBY+vrliwmxuZsnAOHT6xpJYrY62
+         IFRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMLF7jdRFo955RU1Vhvo8rIDl36yJY8U2pV0G3iHhm44gBKLQCdI1jtsFc6UstaE75gdKDJuRxy2LwC/FoKT+hkCMA0eZDWaLisrt4x30Q
+X-Gm-Message-State: AOJu0YwbrlAVloiq4gV4KJ1Bl2BBZ84XyNEs+EEiMVhQgaRnU/mXyHhI
+	nqPOT/CaI+Hat868kmHhhk+BWY85RptLMS6w6PNVnYmjz5Y+G+i1cTHsM0mhuXBQvjFWnNdNzjd
+	cxdG4se3CvCzJDJLGtIPaKRZdh7GmQiLmcNF8
+X-Google-Smtp-Source: AGHT+IGVKWa3GDRDjvSCD4uk1Oy7nmeKUd5oiv8J/DJjDfpPfF8EqAvDsryZDGFNvYGm2Dh/2EdeImNb0LSeD/IJeuk=
+X-Received: by 2002:a05:6870:c111:b0:254:e924:be62 with SMTP id
+ 586e51a60fabf-25c94a57362mr1438525fac.13.1718750396111; Tue, 18 Jun 2024
+ 15:39:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] arm64: dts: qcom: sc7280: Add clocks for QOS
- configuration
-To: Odelu Kukatla <quic_okukatla@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
- quic_mdtipton@quicinc.com
-References: <20240607173927.26321-1-quic_okukatla@quicinc.com>
- <20240607173927.26321-5-quic_okukatla@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240607173927.26321-5-quic_okukatla@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240613133937.2352724-1-adrian.ratiu@collabora.com> <20240613133937.2352724-2-adrian.ratiu@collabora.com>
+In-Reply-To: <20240613133937.2352724-2-adrian.ratiu@collabora.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Tue, 18 Jun 2024 15:39:44 -0700
+Message-ID: <CABi2SkXY20M24fcUgejAMuJpNZqsLxd0g1PZ-8RcvzxO6NO6cA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] proc: restrict /proc/pid/mem
+To: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com, 
+	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com, 
+	jorgelo@chromium.org, Guenter Roeck <groeck@chromium.org>, 
+	Doug Anderson <dianders@chromium.org>, Kees Cook <keescook@chromium.org>, 
+	Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Christian Brauner <brauner@kernel.org>, Jeff Xu <jeffxu@google.com>, 
+	Mike Frysinger <vapier@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi
+
+Thanks for the patch !
+
+On Thu, Jun 13, 2024 at 6:40=E2=80=AFAM Adrian Ratiu <adrian.ratiu@collabor=
+a.com> wrote:
+>
+> Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
+> after which it got allowed in commit 198214a7ee50 ("proc: enable
+> writing to /proc/pid/mem"). Famous last words from that patch:
+> "no longer a security hazard". :)
+>
+> Afterwards exploits started causing drama like [1]. The exploits
+> using /proc/*/mem can be rather sophisticated like [2] which
+> installed an arbitrary payload from noexec storage into a running
+> process then exec'd it, which itself could include an ELF loader
+> to run arbitrary code off noexec storage.
+>
+> One of the well-known problems with /proc/*/mem writes is they
+> ignore page permissions via FOLL_FORCE, as opposed to writes via
+> process_vm_writev which respect page permissions. These writes can
+> also be used to bypass mode bits.
+>
+> To harden against these types of attacks, distrbutions might want
+> to restrict /proc/pid/mem accesses, either entirely or partially,
+> for eg. to restrict FOLL_FORCE usage.
+>
+> Known valid use-cases which still need these accesses are:
+>
+> * Debuggers which also have ptrace permissions, so they can access
+> memory anyway via PTRACE_POKEDATA & co. Some debuggers like GDB
+> are designed to write /proc/pid/mem for basic functionality.
+>
+> * Container supervisors using the seccomp notifier to intercept
+> syscalls and rewrite memory of calling processes by passing
+> around /proc/pid/mem file descriptors.
+>
+> There might be more, that's why these params default to disabled.
+>
+> Regarding other mechanisms which can block these accesses:
+>
+> * seccomp filters can be used to block mmap/mprotect calls with W|X
+> perms, but they often can't block open calls as daemons want to
+> read/write their runtime state and seccomp filters cannot check
+> file paths, so plain write calls can't be easily blocked.
+>
+> * Since the mem file is part of the dynamic /proc/<pid>/ space, we
+> can't run chmod once at boot to restrict it (and trying to react
+> to every process and run chmod doesn't scale, and the kernel no
+> longer allows chmod on any of these paths).
+>
+> * SELinux could be used with a rule to cover all /proc/*/mem files,
+> but even then having multiple ways to deny an attack is useful in
+> case one layer fails.
+>
+> Thus we introduce four kernel parameters to restrict /proc/*/mem
+> access: open-read, open-write, write and foll_force. All these can
+> be independently set to the following values:
+>
+> all     =3D> restrict all access unconditionally.
+> ptracer =3D> restrict all access except for ptracer processes.
+>
+> If left unset, the existing behaviour is preserved, i.e. access
+> is governed by basic file permissions.
+>
+> Examples which can be passed by bootloaders:
+>
+> proc_mem.restrict_foll_force=3Dall
+> proc_mem.restrict_open_write=3Dptracer
+> proc_mem.restrict_open_read=3Dptracer
+> proc_mem.restrict_write=3Dall
+>
+> These knobs can also be enabled via Kconfig like for eg:
+>
+> CONFIG_PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT=3Dy
+> CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT=3Dy
+>
+> Each distribution needs to decide what restrictions to apply,
+> depending on its use-cases. Embedded systems might want to do
+> more, while general-purpouse distros might want a more relaxed
+> policy, because for e.g. foll_force=3Dall and write=3Dall both break
+> break GDB, so it might be a bit excessive.
+>
+> Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
+>
+It is noteworthy that ChromeOS has benefited from blocking
+/proc/pid/mem write since 2017 [1], owing to the patch implemented by
+Mike Frysinger.
+
+It is great that upstream can consider this patch, ChromeOS will use
+the solution once it is accepted.
+
+> Link: https://lwn.net/Articles/476947/ [1]
+> Link: https://issues.chromium.org/issues/40089045 [2]
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jeff Xu <jeffxu@google.com>
+> Co-developed-by: Mike Frysinger <vapier@chromium.org>
+> Signed-off-by: Mike Frysinger <vapier@chromium.org>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+
+Reviewed-by: Jeff Xu <jeffxu@chromium.org>
+Tested-by: Jeff Xu <jeffxu@chromium.org>
+[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kerne=
+l/+/764773
+
+-Jeff Xu
 
 
-
-On 6/7/24 19:39, Odelu Kukatla wrote:
-> Add clocks which need to be enbaled for configuring
-> QoS on sc7280.
-> 
-> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
-> ---
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
+-Jeff
