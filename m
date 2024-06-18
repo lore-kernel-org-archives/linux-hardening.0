@@ -1,59 +1,59 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FA71DA24
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 14:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC38413A899
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 14:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718721986; cv=none; b=ccvC4dn9ADFYvIxpjo5v9jrdP8REpK4V9Nf0nacqyA77u2+c3Bd/433yF2vIChdHt31GNtOvcAXfKcIOpWGZRw53kjo8SVJQ8QyRFrwKu5Yj7gtEGcv4j5j9u6/JfonQ0vWTRY6Gesldwn1J6LZtSsX3FRad5PCzVvKMRhKVTyE=
+	t=1718722072; cv=none; b=p6Q+8eC5+8gursZEiOpbfMbpeC395L99FDiuqPUnUKjiuP4lhfgdeBAn6mj6/ePoHAA4paY3g4pRWFpx0jM4FEYYkfMKdh+3DT+wQQ5gupjl389qo7a05dsy2JC0M8TlDjXj4Zgv0eOP4DBpL/1JFGveZmvWkbqoukMguWfogD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718721986; c=relaxed/simple;
-	bh=Og14w/kafuTyurc5NrEOw3F6k/R6K57h2C+os0REkxc=;
+	s=arc-20240116; t=1718722072; c=relaxed/simple;
+	bh=IZZnds0VRHrm2Ii8hE6YeOS6qZ0PTeuu48RLJyyIyXc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d8JDOEIxp1e0zmOyl/NvHI2of2bHLwTh4HYVDqUobcONespHmTXlSK95AVVRDDETBy0rHdttDUhEjafW91PZnkItNH1NJE/G0d7Syb1P5szOy/LwgNVBsbiTmdL9EqKYsMeDvM7blI3BMjNJZJlOHAVwhKpsQIP2BfdV0rNSkoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UvV8/M2X; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:Content-Type; b=t7e+28LCVM+B3g3hq8ajGifwJaBdFtNbJv/9xRlQiYTzkypWKqB8hlc0VPDiQcDrEoY9VI6OrXtiMjS8Y4bt/EpvumhArmCah1N2OHIBA/RtJG5DyDR6TBUypuMH1IWx07OYCzxZeXozB+SYc06ycVl6UtL3P+C6BpmQEM1SewE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BnRwdUwZ; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UvV8/M2X"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f1bc2ab37so4902091f8f.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 07:46:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BnRwdUwZ"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4217dbeb4caso44896695e9.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 07:47:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718721983; x=1719326783; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718722067; x=1719326867; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EhzA6ITR/mtp+5gOoKdG8vAq1UwKiuZGvALGcvS3hfQ=;
-        b=UvV8/M2XfRgJIWwlp/w6myfk3p5VGObsJvfU3F2DH9UJN99ArLctvwtBedyRe6pP93
-         Yjk8DzyafR8QqAK+v4f6Hc9TPv8RNBWcNmPP6RN7/MpRHThuIRMCjefaE52B+/QL8FRI
-         u54bTeD9nPCvbhqmfh5cTvoWQf246cj623U2m7cwVSwZyi9Vv+0GS/XeBBgGwroW2gmk
-         vy30PpEllq4356Deh8b4M2K57ASTV++fGwULv5NKfWfiLTGGw4m8azsBWrtlQDzwvc5z
-         eALd6RarOengff4dfC5fVbIM8uXhPBgQxZUnuLlyR6h20PzCkiqO4iagDgnEZwNf+faU
-         UX6A==
+        bh=DJ3dYX4GpJ/TRHjWJ/CxptBXzc0wGdknCikvdomgmWg=;
+        b=BnRwdUwZXP15wxEg20PWKAHy7YAHMEC79MGx1WtVO+EaUbqNxDsSISxVmj3b+tuY9t
+         Zgx2suuLRXNgi6tGDp6yohZYXYET2of0ZI8qS+rBoCBm92DtNIG0mO7nMQv9SR196lrK
+         2oiGVVDMdXvYZ/uFZzRAwcf50xSYZxW0db2qoDcDeJDti46NlaW+4CnNG6zzUKhfIB/A
+         2lzlNrq18ztrQwzFtdYQhwL/QCqYY01IPCbkkDev8gmaX5RMWzq3uQ47/A/AyMt86xMe
+         82ibvnyD3pYEMaDzXXssJ8rFDVftyUTp/g+9RrhG9nX8cnatIGAPnACUGalaCrd7HJ2f
+         cquA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718721983; x=1719326783;
+        d=1e100.net; s=20230601; t=1718722067; x=1719326867;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EhzA6ITR/mtp+5gOoKdG8vAq1UwKiuZGvALGcvS3hfQ=;
-        b=TdZ7XjNaHMaNcnXWIEOk5+SFh0LYERHv/HRdlCwN5XlwIICJhUx66U7vdNcy5IoyS1
-         tDDquE3v7C1v6+QEfDkTt0NHRAOXMGMK46mr5d/dJiLyAlT0An5Ha21dWfifnTxWwVC7
-         n6PsKcUzp6Ry2NUXVlS17cP2ll+Xc8b5PllUAvZpc76J2pxdhEkTEHdd46BQRVuizZk2
-         cT9aQNObbKQoWGAyIcEs5J+k2NnAIfKOZPV+RoT+By2fZHx5DeKyu99983Tj3NiBtR6G
-         52zws4IOazCu0npPozqJOBD62UJ6F1616krt/bh/g7OtARiwe0jLScKAJAj4ruWQcIZO
-         EgLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIk1MHgnXZZ9QDdyREh8WKNFknf9QC8GUx7q2FEKKvbJg9XstxHFfq1fD2MlkX+Yj2ZhvVonTJGWyKfhIe6uOxK3rKg3fihjVWI9HIMnWN
-X-Gm-Message-State: AOJu0Ywtt3ARsxqs4buN62/s3MAFjx2auQhdrVa51L5ufar1kjGqIbw7
-	GOVtXfUzlfQ18F6Vj8IiJcELCVCig+zslPDjfhq5Hgb8MO/8J1XqhOpy+qGf4mI=
-X-Google-Smtp-Source: AGHT+IEKa0UB/epbhJn0UELns0QzTpX+72cNV+oeKhKhYZdsy/bAJfnvItOp3AeIO5nUZeTo7XkEpw==
-X-Received: by 2002:a5d:4f8a:0:b0:360:9519:6102 with SMTP id ffacd0b85a97d-36095196123mr4353123f8f.55.1718721982800;
-        Tue, 18 Jun 2024 07:46:22 -0700 (PDT)
+        bh=DJ3dYX4GpJ/TRHjWJ/CxptBXzc0wGdknCikvdomgmWg=;
+        b=TOuWfO9E6M9D2Ob84iHuuGBT5+acJJC11cQdp1xwJYHyUmVD8dUGsMfItu14JL4hpy
+         STBFQ5Irol9iYsdhTS8DxFtfrR8rd2iKXCee66xfsojRrKwl7opY2evLSsilXTVTCz9R
+         iOhsEE/wOqkOQPxHWcwx8BuemPe8b9UT7p/j7I5/QNOgvUS8DwasvZf9bwruPer/HaDs
+         RanZZ9k8NYNhdEmomJxTloAvOYdo8H/A8EubkUJblkT45bVKv1Pr5aLY/jYOmW/LtZqB
+         pRmIRBw5MmX922pleMCZqN9v0gbWksyy7BX0kQ7vTn4aOXD3bxY9EZHYrHpZl5xpH8et
+         exCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWljnb2XjGXQbEj/4KKz1g/2UqDvCVywQNxFFGV+p4DePW886qyuJwciuMXAIy7WpHQxuhyrLO7yb/6FwKCrPu8rvC2ov57uWNiSN4S6ZU5
+X-Gm-Message-State: AOJu0YwgterbwkIb4edIklf9yCecI7+lnC8kJmIqC8c8kIYKQT9/m36R
+	Xtl1If5qT/YwIan1ernSkicETFLJvssguf4LgRzNLMWbNhcyH6rs4BpznlzNeGg=
+X-Google-Smtp-Source: AGHT+IH7I/dhyj73BogJTxO5E8ag28pj1oQQCYT3fMmsc47p/80bkTRhwGBL+ram+v9dMFIqbI5/7g==
+X-Received: by 2002:a05:600c:1d8e:b0:422:5443:96aa with SMTP id 5b1f17b1804b1-42304827573mr106149055e9.15.1718722067337;
+        Tue, 18 Jun 2024 07:47:47 -0700 (PDT)
 Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509355dsm14246603f8f.13.2024.06.18.07.46.19
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de63asm229867065e9.30.2024.06.18.07.47.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 07:46:22 -0700 (PDT)
-Message-ID: <910af90e-affb-45f2-a2f7-875ca8362c0f@linaro.org>
-Date: Tue, 18 Jun 2024 16:46:15 +0200
+        Tue, 18 Jun 2024 07:47:47 -0700 (PDT)
+Message-ID: <36687425-0be6-4616-a3b0-9870bb187e34@linaro.org>
+Date: Tue, 18 Jun 2024 16:47:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,8 +61,8 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] interconnect: qcom: sc7280: enable QoS
- configuration
+Subject: Re: [PATCH v5 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
 To: Odelu Kukatla <quic_okukatla@quicinc.com>,
  Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
  Rob Herring <robh@kernel.org>,
@@ -75,26 +75,23 @@ Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
  linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
  quic_mdtipton@quicinc.com
 References: <20240607173927.26321-1-quic_okukatla@quicinc.com>
- <20240607173927.26321-3-quic_okukatla@quicinc.com>
+ <20240607173927.26321-2-quic_okukatla@quicinc.com>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240607173927.26321-3-quic_okukatla@quicinc.com>
+In-Reply-To: <20240607173927.26321-2-quic_okukatla@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/7/24 19:39, Odelu Kukatla wrote:
-> Enable QoS configuration for master ports with predefined values
-> for priority and urgency forawrding.
+> Add QoS support for QNOC device for configuring priority,
+> priority forward disable and urgency forwarding. QoS is required
+> to prioritize the traffic originating from different interconnect
+> masters at NoC (Network On Chip).
 > 
 > Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
 > ---
-
-msm-5.4 also has a qhm_gic node with QoS offset 0x9000, is that of any
-importance, or can we forget it exists?
-
-LGTM otherwise:
 
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
