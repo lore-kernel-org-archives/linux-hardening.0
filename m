@@ -1,185 +1,111 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04F818E1D
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 07:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F37139D0C;
+	Tue, 18 Jun 2024 08:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718694684; cv=none; b=sEu/d7nX1jKll3xL8qWsor/9jiboDqt8sA21nCrbGk1/PjbSB3FABBV3Pqqr0Ejzxnd66GYERyqqyMKSXbOARp73nBl2N7vsDvrVe/WSTm77bcocadEEpWk6Fbh+TCJyax38VwtbYFl9p++nYEZxr6xYKHyZ3yptqgdyNVajFO0=
+	t=1718699211; cv=none; b=DrUa59X7t8YP6OknZSGlu8xGLMDbPnY53S35JgAnSWpgkcc3qCgHPCqxHFZYYz8XA69iHO8pbykOFe8RsLHKUXvck7iB0DfGVpuX4zb6UASzeSShhiFlG5BlJUr5RHpeMfEWZ1C9S36VFZLIUHeeq+7Bt9XAMrk81CN++NzjZmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718694684; c=relaxed/simple;
-	bh=6Du1C8H+xCKiIZNmJ0Zxazc1ceMTeCOCgiJ139ClESM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sHhVpfd5HQ8w1v83XhZ1UoAMqZnAWAihyOiWRNWvZXgVxKMYLhGkd1wDgCtSEtdAxQfxw7YpbLOaURLgFao7ls31p6+u0HgG+UPUYLr/7mEQCYTEFArRVyvJwRPpa2Buo4h0EtWGcw+OJNK4OR++36EMDAth61XhlCeBS1ttSHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=jsg2ZZUl; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1718699211; c=relaxed/simple;
+	bh=yz2C5fvBJTGqQpnuSLNkBiIZocKFHu/gpBvI/hES3l4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWQsXf8wT23nuhA1kdsNj0cD65a+hhGVjIcOFmV2MFiT1ZnnILxD0w7NOTArXxJH7vHO6VBm8MTrkmsYPCqM/QNKKRVYBg86Xl9cmn6iaf6pwSHhydt1W301FJvjn3XrIpO0nKP1OPfUjLsJx+Kc6+Otf2wi7Be7dgDYEz+FeA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TD8kRNf5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="jsg2ZZUl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1718694677;
-	bh=BFiARyve/cwwiCokd3FFeipitCdA7bKv+f5EK9mBSXw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=jsg2ZZUlUIoNzJQYu6xeRVXsF2wtWaIhCpwa3/aZhKakrqRW4ip/1kUUcJqrt8VKD
-	 vsWjAtyXcoL6yIHwm0a6g2pQrZxeWsvU+sJ2x84O///50bENDDKu6JPlO7OjQaQbov
-	 Dzq/zSC42ESrDchRKmjntkmwyxsC5wpIp9LqP7tYKdkDdVg4yOTLJe0RKQYlkzfqVA
-	 NWU6AaLDpvlUcKt7YRQVTqUHcGmLd6PDzN6GiWw0TlSR5LTJOxnyEoTaXJJ7Cb6VlG
-	 Rrls4XLE1KK+Fpm8NQmFdilQF37IwwHRURZmMo1al5sA49KjaYOXfRnkdXylgs4J5G
-	 RWDE/6W22rx7w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W3Hwj1gSNz4wx6;
-	Tue, 18 Jun 2024 17:11:17 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Kees Cook <kees@kernel.org>, Anjali K <anjalik@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com, naveen@kernel.org,
- christophe.leroy@csgroup.eu, gustavoars@kernel.org,
- linux-hardening@vger.kernel.org, vishalc@linux.ibm.com
-Subject: Re: [PATCH] powerpc/pseries: Whitelist dtl slub object for copying
- to userspace
-In-Reply-To: <202406171053.F72BF013@keescook>
-References: <20240614173844.746818-1-anjalik@linux.ibm.com>
- <202406171053.F72BF013@keescook>
-Date: Tue, 18 Jun 2024 17:11:15 +1000
-Message-ID: <87cyoe67zg.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TD8kRNf5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=y/V05mUJk5DDD/0Y/A3n8rzv2x+59hyyMuOW2I/yfmo=; b=TD8kRNf5i7wpP4NwVa51buHFqy
+	4luHLDjx1w/Xbig1Fi4uuSpTm6uTRaww56SpHtlvj70vUb6uoywFJ3Y8wj8CvSxdBH88Xi41DdKJ4
+	gZLXsidw0hcwi7I7jolrjupEz89w8k+t2h1OczpMw/7WaBKMhOgAsfrR0bjhMK4YfolJJblo6Vkvh
+	de2lHllu6t4vDXrrGnzzN5SiOJlDCb6XtVoHyD+SsxOhm6wfR4VAlmExV4T/H8wSRGcp8TJuWo4tA
+	1JqxPn8us9pTWW95CTZW4UrVLPGrv/jyzEXUEJVXO/FhOr3YsimhVMFnypbCh/6m23y8zQn05qEm+
+	Bnivz25Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sJU78-0000000707D-3Mbp;
+	Tue, 18 Jun 2024 08:24:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C57D1300886; Tue, 18 Jun 2024 10:22:42 +0200 (CEST)
+Date: Tue, 18 Jun 2024 10:22:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Martin Uecker <uecker@tugraz.at>,
+	Erick Archer <erick.archer@outlook.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <20240618082242.GC31592@noisy.programming.kicks-ass.net>
+References: <202406101010.E1C77AE9D@keescook>
+ <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+ <202406101438.BC43514F@keescook>
+ <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+ <202406121148.688240B@keescook>
+ <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+ <202406121530.D9DB956C8@keescook>
+ <20240614101708.GO8774@noisy.programming.kicks-ass.net>
+ <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
+ <202406171019.9F0127F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202406171019.9F0127F@keescook>
 
-Kees Cook <kees@kernel.org> writes:
-> On Fri, Jun 14, 2024 at 11:08:44PM +0530, Anjali K wrote:
->> Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
->> results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
->> shown below.
->> 
->>     kernel BUG at mm/usercopy.c:102!
->>     Oops: Exception in kernel mode, sig: 5 [#1]
->>     LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
->>     Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
->>     scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
->>     CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
->>     Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
->>     NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
->>     REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
->>     MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
->>     CFAR: c0000000001fdc80 IRQMASK: 0
->>     [ ... GPRs omitted ... ]
->>     NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
->>     LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
->>     Call Trace:
->>      usercopy_abort+0x74/0xb0 (unreliable)
->>      __check_heap_object+0xf8/0x120
->>      check_heap_object+0x218/0x240
->>      __check_object_size+0x84/0x1a4
->>      dtl_file_read+0x17c/0x2c4
->>      full_proxy_read+0x8c/0x110
->>      vfs_read+0xdc/0x3a0
->>      ksys_read+0x84/0x144
->>      system_call_exception+0x124/0x330
->>      system_call_vectored_common+0x15c/0x2ec
->>     --- interrupt: 3000 at 0x7fff81f3ab34
->> 
->> Commit 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
->> requires that only whitelisted areas in slab/slub objects can be copied to
->> userspace when usercopy hardening is enabled using CONFIG_HARDENED_USERCOPY.
->> Dtl contains hypervisor dispatch events which are expected to be read by
->> privileged users. Hence mark this safe for user access.
->> Specify useroffset=0 and usersize=DISPATCH_LOG_BYTES to whitelist the
->> entire object.
->> 
->> Co-developed-by: Vishal Chourasia <vishalc@linux.ibm.com>
->> Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
->> Signed-off-by: Anjali K <anjalik@linux.ibm.com>
->> ---
->>  arch/powerpc/platforms/pseries/setup.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
->> index 284a6fa04b0c..cba40d9d1284 100644
->> --- a/arch/powerpc/platforms/pseries/setup.c
->> +++ b/arch/powerpc/platforms/pseries/setup.c
->> @@ -343,8 +343,8 @@ static int alloc_dispatch_log_kmem_cache(void)
->>  {
->>  	void (*ctor)(void *) = get_dtl_cache_ctor();
->>  
->> -	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
->> -						DISPATCH_LOG_BYTES, 0, ctor);
->> +	dtl_cache = kmem_cache_create_usercopy("dtl", DISPATCH_LOG_BYTES,
->> +						DISPATCH_LOG_BYTES, 0, 0, DISPATCH_LOG_BYTES, ctor);
->>  	if (!dtl_cache) {
->>  		pr_warn("Failed to create dispatch trace log buffer cache\n");
->>  		pr_warn("Stolen time statistics will be unreliable\n");
->
-> Are you sure you want to universally expose this memory region? It
-> sounds like it's only exposed via a debug interface. Maybe it'd be
-> better to use a bounce buffer in the debug interface instead?
+On Mon, Jun 17, 2024 at 10:28:20AM -0700, Kees Cook wrote:
 
-I'm not sure what the threat is?
+> But, using type attributes we have much more flexibility. Hence, the
+> proposed "wraps" attribute:
+> https://github.com/llvm/llvm-project/pull/86618
 
-The log entries are written by the hypervisor, but never read.
+So I still think that's going about things backwards.
 
-That kmem_cache is only used to allocate the array of dtl_entry structs,
-the ring buffer itself (struct dtl) is allocated statically. So
-overwriting the dtl_entries can't corrupt the structure of the ring
-buffer, just the content.
+unsigned explicitly wraps. signed is UB.
 
-An attacker could read the entries and see some kernel pointers, but
-those are everywhere.
+When using -fwrapv signed is well defined as 2s complement, which takes
+away the UB and makes it implicitly wrap.
 
-So it seems pretty harmless.
+When extending the language, it is important to not break existing code,
+so the default must remain wrap. This in turn means you need to add a
+'nowrap' thingy.
 
-I guess there isn't a kmem_cache_create_user_readonly() ?
+Also, I would very much not make this an attribute, but a full type
+qualifier. Furthermore, add type promotion rules to ensure nowrap takes
+precedence and is preserved throughout expressions. Such that:
 
-> diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-> index 3f1cdccebc9c..3adcff5cc4b2 100644
-> --- a/arch/powerpc/platforms/pseries/dtl.c
-> +++ b/arch/powerpc/platforms/pseries/dtl.c
-> @@ -257,6 +257,22 @@ static int dtl_file_release(struct inode *inode, struct file *filp)
->  	return 0;
->  }
->  
-> +static inline int bounce_copy(char __user *buf, void *src, size_t size)
-> +{
-> +	u8 *bounce;
-> +	int rc;
-> +
-> +	bounce = kmalloc(size, GFP_KERNEL);
-> +	if (!bounce)
-> +		return -ENOMEM;
-> +
-> +	memcpy(bounce, src, size);
-> +	rc = copy_to_user(buf, bounce, size);
-> +
-> +	kfree(bounce);
-> +	return rc;
-> +}
+  'long' + 'nowrap int' -> 'nowrap long'
 
-Is there no generic version of that?
+Then, once you have this, you can go do things like:
 
-> @@ -300,7 +316,7 @@ static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
->  	if (i + n_req > dtl->buf_entries) {
->  		read_size = dtl->buf_entries - i;
->  
-> -		rc = copy_to_user(buf, &dtl->buf[i],
-> +		rc = bounce_copy(buf, &dtl->buf[i],
->  				read_size * sizeof(struct dtl_entry));
->  		if (rc)
->  			return -EFAULT;
-> @@ -312,7 +328,7 @@ static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
->  	}
->  
->  	/* .. and now the head */
-> -	rc = copy_to_user(buf, &dtl->buf[i], n_req * sizeof(struct dtl_entry));
-> +	rc = bounce_copy(buf, &dtl->buf[i], n_req * sizeof(struct dtl_entry));
->  	if (rc)
->  		return -EFAULT;
->  
->
+typedef nowrap unsigned long size_t;
+#define sizeof(x) ((size_t)sizeof(x))
 
-cheers
+and things will just work. Hmm?
