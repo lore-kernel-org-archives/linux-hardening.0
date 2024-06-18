@@ -1,74 +1,64 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2501AB8F2;
-	Tue, 18 Jun 2024 08:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3826513A3E5
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 10:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718699328; cv=none; b=FmwkC7D6h0ULzgLfR3ke6oODBb3k+THAAirs8Z/3RUDUnjxZ6eceIgLHzIAHJkINxS32zE4b2e+x2BxQFHoQ9ah8zAbj7iVlQvhgrk1I/tNwlXzhcY17O3fhb4zhg5Yv2zMke5tJS11IKhVIbxtAgpA9DIe2Nf5KofT4lwZOaX8=
+	t=1718705416; cv=none; b=Sf2iaLhFtDHzn+Tte2YdicNkyPXw/8pRqfCMWzt+IJRhvPmx/NkkliLUZmhW1HPRU0AbyTKHSK1uewb2rBOFNXybFTzG27xz+vZIjuP/jVeCE/PYqtHC5d6oZNIoV9Kov9xFvidocRcWwPwxoAr7WI/9UPDhwgOM26SYWxrDReM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718699328; c=relaxed/simple;
-	bh=BdSJQOWhhnbvbjhJs7yzyr7yzcdDh4L6lLxL6lQDSEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MF7H9P3ZEubNCENYcNhHXvW6C4kuC1lhgBh8bfTCcgTovhMtcc/Bh5f4TMwkGzNBMJyppNy1fnfO7mZvzZMSxO1T8sezFaZr6Asslvb2Em9iSsR4IeWvg5GUQ65mtve8dqeBddsDSV5rvbvFCiKALlWBEIdzDLvKrb/CpO3PPC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d+IDEF4l; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718705416; c=relaxed/simple;
+	bh=xBlSITPDrWMGqBk7RX81DxBRK6FBCQLiSeBn0AOw/FA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=M7qi076WAefBvUk838z0T30R4v5WCShEfkZBa29GGb/QZZNRgZcPd1k/QSyLTu7ko2cnkqu1VDZ2w6LzlAUAdXu7KA+YmBd5Iqd35u4l89rv5CSlIhERufiJGzWaOxP1IX6s7kIqgGE1PkK1PgndoBrntptDyc0PuFcUjyViPis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BJKyO5B2; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d+IDEF4l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=J/cBIU1B1ZzX5KCj0SQv24mrW9j+05d7us3cvGVoDXQ=; b=d+IDEF4lBi26tNltBxJT/32itv
-	XiKQ2wxAmFp2q0v4pih1+WFvQF5w1FvLLd3HjYMEYMpDau68yCCVQEibqpgaNZU+6pt9tjLsabKvp
-	qm8VglynG9YDyta0slbCiRo2OFI1oL+jAU1Gxn6F86p/ALAk+/8DHmHePyu6CMkj2ZJaTAX3kXB2s
-	y+syK8kRDNvJhaJCMru9vgNn+l73TV/M9Yo7aplYSCTqKsbIeWRj3Wd8OGLIizm57v2hG9Sr8GSwI
-	FphfiOdYlc5xhSaSegzEfWRlIz8JPJ9XSXquTE2N/wxe/UQjp0/6KH+OfnSrxBNwhieDv3Bfvxtop
-	e018SnsQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJUCf-00000002z9Y-2a71;
-	Tue, 18 Jun 2024 08:28:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 10CC0300886; Tue, 18 Jun 2024 10:28:29 +0200 (CEST)
-Date: Tue, 18 Jun 2024 10:28:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240618082828.GD31592@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
- <20240614101708.GO8774@noisy.programming.kicks-ass.net>
- <202406170957.3269DA2@keescook>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJKyO5B2"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4217990f997so38251785e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 03:10:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718705413; x=1719310213; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nFv+H+J5KVtQDId7j7CojiPG2lRqqZRtUi9PX0uMdRw=;
+        b=BJKyO5B2iYwZX5w5Z8GksLGryr0x7kGKy6hXKplhu+Gg4Wqc6xRn1aRq3NAysVFtHs
+         QQA9FH/FVvstw+s31uxNprWq9ZiFuV3rPsODyX6vI2N2R/Vqz0odb/EGXMQtZV0s5pp0
+         pqRcLCotYc3R3MY1QXPzqB6HDnQE+CzSiS7LzMA4kYnTmagcbySnE/384mPkr1R4x7x7
+         +xzNfxRtT/rf7oHqbL18WOO88XTpyUQlfkR7sFCZg8lmukSI+hU/arHKkLbQpqlw+5WA
+         9LsS8ANiVOyix1n++EdKuV4nJOocIRJRsq1psQg5McIiJus4mT9Sbc2LNCsayBexv9pn
+         IpVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718705413; x=1719310213;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nFv+H+J5KVtQDId7j7CojiPG2lRqqZRtUi9PX0uMdRw=;
+        b=Dp4ojG5ymdyUr12cJnnbkdTcXTdVLmMZ1ByxrsheUlzP5r3PUIEDeLMJIxK8A0LjVb
+         BYM5eL04/WZx86emSZL30g0+JSVxH6uBVWxwFldJAGzq5EOdLGi0T4fQEdJ1BNaicO6J
+         rYvbFLVsX68cOU0KP37X3452TZotJbUYIHvpqRxQS2eT6HQOMIJY59vGh+OUTH/2lSD5
+         uDP3sQB41xI1E/N71taR8CAQrttyNIv6+aWlSQOu/cI9WCp4K5ZYqBeHvFmcoqiFzPPv
+         bPduSUNIlXQsd1bRuL5+dmMWpEQVSjgJ8p40plvTEuKsuo5E4UqCKgAdt9WePSWcHgk4
+         1sIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOif/vVKL1UJtuqD1PKWwStTRhdKAzijLVdsStOEvG5FWk8re1+MRXlX5Bx2oUlKno36LaexG3mqVw9mBUGCdIl+0u2At6xb7TjTQDNvxy
+X-Gm-Message-State: AOJu0Yx74Olv9hx7PG8ZQ8gRB55JCpbGSZupLsQh+vKxuvkOwqsqgUHf
+	CRgcmMeIJEsOQrsyzFFBgS/7SPDx30wP7RflKHP2K7hkOYnorQ4dhRgrG/jA5Xc=
+X-Google-Smtp-Source: AGHT+IFDpjGxbjE1yj2KaQhJtnTzZWL6+zm6itz1Q5fudeNujgBXsOq2XLy3QruSXpvSAkpsEQdWlw==
+X-Received: by 2002:a05:600c:45cd:b0:421:7eff:efb8 with SMTP id 5b1f17b1804b1-423056e01dbmr100092885e9.31.1718705413279;
+        Tue, 18 Jun 2024 03:10:13 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de607sm222957765e9.34.2024.06.18.03.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 03:10:12 -0700 (PDT)
+Date: Tue, 18 Jun 2024 13:10:08 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: linux-scsi@vger.kernel.org
+Cc: open-iscsi@googlegroups.com, netdev@vger.kernel.org,
+	Kees Cook <kees@kernel.org>, Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org
+Subject: [bug report] [SCSI] iscsi_transport: Add support to display CHAP
+ list and delete CHAP entry
+Message-ID: <a60ed02d-3191-4e9d-b296-0a961a81a66d@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -77,79 +67,87 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202406170957.3269DA2@keescook>
 
-On Mon, Jun 17, 2024 at 10:19:15AM -0700, Kees Cook wrote:
-> On Fri, Jun 14, 2024 at 12:17:08PM +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
-> > > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> > > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > > > > I'm happy to take patches. And for this bikeshed, this would be better
-> > > > > named under the size_*() helpers which are trying to keep size_t
-> > > > > calculations from overflowing (by saturating). i.e.:
-> > > > > 
-> > > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
-> > > > 
-> > > > Fine I suppose, but what if we want something not size_t? Are we waiting
-> > > > for the type system extension?
-> > > 
-> > > Because of C's implicit promotion/truncation, we can't do anything
-> > > sanely with return values of arbitrary type size; we have to capture the
-> > > lvalue type somehow so the checking can happen without C doing silent
-> > > garbage.
-> > 
-> > So sizeof() returns the native (built-in) size_t, right? If that type
-> > the nooverflow qualifier on, then:
-> > 
-> > 	sizeof(*p) + num*sizeof(p->foo[0])
-> > 
-> > should all get the nooverflow semantics right? Because size_t is
-> > effectively 'nooverflow unsigned long' the multiplication should promote
-> > 'num' to some 'long'.
-> 
-> Hmmm. This is an interesting point. I'll see what Justin has found as
-> he's been working on limiting the overflow sanitizer to specific types.
-> 
-> It doesn't help this (unfortunately common) code pattern, though:
-> 
-> 	int size;
-> 
-> 	size = sizeof(*p) + num*sizeof(p->foo[0]);
-> 	p = kmalloc(size, GFP_KERNEL);
-> 
-> But that was going to be a problem either way.
+Hi SCSI and netlink developers,
 
-Well, you can add a warning on implicitly casting away nooverflow.
+Commit 6260a5d22122 ("[SCSI] iscsi_transport: Add support to display
+CHAP list and delete CHAP entry") from Feb 27, 2012 (linux-next),
+leads to the following Smatch static checker warning:
 
-New qualifier, we get to make up the rules etc.. it probably means we
-need to change the signature of the allocator functions to take a
-'nooverflow' type, otherwise those will trigger this new warning, but
-that should not be a problem.
+	drivers/scsi/scsi_transport_iscsi.c:3340 iscsi_get_chap()
+	warn: potential user controlled sizeof overflow 'ev->u.get_chap.num_entries * 524' '0-u32max * 524' type='uint'
 
-> > Now, I've re-read the rules and I don't see qualifiers mentioned, so
-> > can't we state that the overflow/nooverflow qualifiers are to be
-> > preserved on (implicit) promotion and when nooverflow and overflow are
-> > combined the 'safe' nooverflow takes precedence?
-> > 
-> > I mean, when we're adding qualifiers we can make up rules about them
-> > too, right?
-> 
-> Yup, that is the design of the "wraps" attribute (though it is the
-> reverse: it _allows_ for wrap-around, since we want to the default state
-> to be mitigation).
+drivers/scsi/scsi_transport_iscsi.c
+    3319 static int
+    3320 iscsi_get_chap(struct iscsi_transport *transport, struct nlmsghdr *nlh)
+    3321 {
+    3322         struct iscsi_uevent *ev = nlmsg_data(nlh);
+    3323         struct Scsi_Host *shost = NULL;
+    3324         struct iscsi_chap_rec *chap_rec;
+    3325         struct iscsi_internal *priv;
+    3326         struct sk_buff *skbchap;
+    3327         struct nlmsghdr *nlhchap;
+    3328         struct iscsi_uevent *evchap;
+    3329         uint32_t chap_buf_size;
+    3330         int len, err = 0;
+    3331         char *buf;
+    3332 
+    3333         if (!transport->get_chap)
+    3334                 return -EINVAL;
+    3335 
+    3336         priv = iscsi_if_transport_lookup(transport);
+    3337         if (!priv)
+    3338                 return -EINVAL;
+    3339 
+--> 3340         chap_buf_size = (ev->u.get_chap.num_entries * sizeof(*chap_rec));
+    3341         len = nlmsg_total_size(sizeof(*ev) + chap_buf_size);
 
-Yeah, I feel strongly about that (just mailed you in the other
-sub-thread) that this is the wrong way around.
+Smatch doesn't trust nlmsg_data().  ev->u.get_chap.num_entries and
+chap_buf_size are both u32 types so it looks like this integer overflow
+warning is valid.  On the other hand, hopefully, you trust your ISCSI
+transport.
 
-> > If 'people' don't want to adorn the built-in size_t, we can always do
-> > something like:
-> > 
-> > #define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
-> > 
-> > and 'fix' it ourselves.
-> 
-> Right, though my hope is still we get the result of "nooverflow" by
-> marking that which was expected to overflow.
+Then we pass the overflowed value to nlmsg_total_size() and do three
+more integer overflows:
 
-You cannot sell that as a proper language extension because it will
-break world+dog.
+1) sizeof(*ev) + chap_buf_size
+2) NLMSG_HDRLEN + payload
+3) NLMSG_ALIGN()  (ALIGN macros wrap to zero)
+
+So my solution was going to be use size_mul(ev->u.get_chap.num_entries,
+sizeof(*chap_rec)) for the multiply.
+
+I kind of want it to be a static checker error when code uses
+size_add/mul() and saves the result to anything except unsigned long.
+Or when code uses the result to do further math.  The problem with
+this is that people like struct_size() and use it even when they know
+the result can't overflow so this generates false positive warnings.
+
+Also maybe we should harden nlmsg_total_size() against integer
+overflows?
+
+regards,
+dan carpenter
+
+    3342 
+    3343         shost = scsi_host_lookup(ev->u.get_chap.host_no);
+    3344         if (!shost) {
+    3345                 printk(KERN_ERR "%s: failed. Could not find host no %u\n",
+    3346                        __func__, ev->u.get_chap.host_no);
+    3347                 return -ENODEV;
+    3348         }
+    3349 
+    3350         do {
+    3351                 int actual_size;
+    3352 
+    3353                 skbchap = alloc_skb(len, GFP_KERNEL);
+    3354                 if (!skbchap) {
+    3355                         printk(KERN_ERR "can not deliver chap: OOM\n");
+    3356                         err = -ENOMEM;
+    3357                         goto exit_get_chap;
+    3358                 }
+    3359 
+    3360                 nlhchap = __nlmsg_put(skbchap, 0, 0, 0,
+    3361                                       (len - sizeof(*nlhchap)), 0);
+
+
