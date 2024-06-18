@@ -1,115 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB04C1A00D7;
-	Tue, 18 Jun 2024 12:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7065E16B3A0
+	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 14:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714432; cv=none; b=GC3xx8lPYnRAh9bKMKxEt1vtvFgTtdSPSSpkehunaPrfToomp+MtqMXfrYbvztUXo+k+LRDJE3s94FYdSVleifMX3ncyJlNjBP9MfhV0IiTs77AyoRzc8AoahWRbIwzufgDIYiX2xzG1RO2LHFnX+n4jlsI+nOtEIHD5d7KoTg8=
+	t=1718720811; cv=none; b=VoBz0IodBsl4GK9onJAtINIWUhuVJImRIpX4gYtqe2xbJFFHmky0828vt4iEzoYN0LXdmWup83SfJXXRASmawvLDyUbXHkuGqNyvjZ34Uk0EuLLQKu6EuiC+zp1Y7qi3fnEScxrhfuK0YOXdgTQCkNaR6CW5BJsl2idJwnHhBe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714432; c=relaxed/simple;
-	bh=oNCSYD22b+AHp/bvLU5Dst/3JlsBB7ZaEJbPjPmXykY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yxa8CRYwhqKVgBX+sypVzPENp6AB7RvINZlnnwPBQFalq3YlY4vjsnP28eJEK4wcXmKvOopWUxvqIB8nYxfXCluW+Mg2yzst7zPO9OQfXycEfK4UvcEZj1C89VEe775qh5IQkLC4rsZ4NUMkDkPbWK2IPvR0b1jHJsmdTyudfyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVvDsq1Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718720811; c=relaxed/simple;
+	bh=6OODOhdNIVgojK0DD+bJ3xC5Pd0K2/xPp0YUVsVlCyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eNSbJV3OI7qr0/D4TSQJdpsy3B8IeLQvgq7s/a436/tj2F3H3pm0nVfo88O7NvT+9Hrl50UTeNRk1modqlsXwKBiGJ1Meuim9rgOAKeOCQ1RSSkn7jJoOfMngrGzLNvBW4mf7O0vsU67BkAyVsZFfdf7/lM4eIcsOBHQ/HqvKHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bq2T5lo8; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVvDsq1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D57C4AF1D;
-	Tue, 18 Jun 2024 12:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718714431;
-	bh=oNCSYD22b+AHp/bvLU5Dst/3JlsBB7ZaEJbPjPmXykY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NVvDsq1QmXqHa139puoZ6VEQkVmvYdOJ/uCiQ6869J7GovOvsOs8FCHKFw3Z1iuBC
-	 RROkKDuioEMntsmxR61THRnAJkTlZE6YeZTX7mnkRrFDuJ9NwyQF75mlvJ8MXeUd1L
-	 lKo9avtGRMpIE2UhXrlTl1PZQlwuHsllUt/Gxh/jJaFFpWR5ja745t/ydTCO6CoQYB
-	 LtwtXiWA6Onebn2hHl3/rU9CxqAcK/UQoo24gacZCeWnDO3k8zTugCCob1u4rWqXsn
-	 9ZZBACMwbtanayYt5kTa3WKB3vvzoJiJxvheUKHyi4QJlBQw18++V4aSInYmgZ8OvW
-	 5Pg6+OJuqBkLw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Kees Cook <keescook@chromium.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 07/29] efi: pstore: Return proper errors on UEFI failures
-Date: Tue, 18 Jun 2024 08:39:33 -0400
-Message-ID: <20240618124018.3303162-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618124018.3303162-1-sashal@kernel.org>
-References: <20240618124018.3303162-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bq2T5lo8"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c84a21c62so6083844e87.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 07:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718720808; x=1719325608; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o4oltf+iDMEhrbAhAEQGa5uqGfEZG+Q9a3SV4m205oY=;
+        b=bq2T5lo8QNw+36MP39ZmaGDBuA5DcCGKbvgNA3hodWxR3LokbSz+50Gz/lqQXkF4eO
+         EOHrUSMV0PLAb/bVactpNPqIyUv6Yk8ZNrryyISKWNadAF4Dsr5uPZI/Fg7PF2AXJjTj
+         c6hCBuiHbBmBpWO/99mOJNWl8BM8Pd4Ry2D57AFLcP3cbW+zOO38YJv77DH8q0XPIfD7
+         +Th6hdEcD+WcJnXxaRU7doLac/IboZRFnpT2F5c8WhZqdOn3P0p/gldFmTC3XUGEpvBk
+         Jbl/VzRD7eCnKXP9TO1sACoau0TE0EsMuWWCYjApKga2Ti5tvVer0C5sxDquOmIDU6EW
+         xMQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718720808; x=1719325608;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o4oltf+iDMEhrbAhAEQGa5uqGfEZG+Q9a3SV4m205oY=;
+        b=rX/Wecyy0z1tk2mz7uKNc5FTdOuPQ09IzvxBuxaNboMwisvDbFtA2yoRPn3fsT6jqD
+         lOtW/AkQNqcPxzwspBrD+iXoGVlwMdqd/hcMzUemgrTZJ3fjxK3nRuIp792rPAkQLhj1
+         3w5pa3hDX1cosBJk/R4zIa1zxvzdv51sByasvtL2laTucDZbF6irzmeeVyHKyOVk+zY4
+         qqGpO0g+ayfRX0ar5XtEhCJlhGleNp6/cDNYEeNGamOwhejPCCwatXJ5QSTJM+tk54B5
+         ba7IRUVxSUOQd9DkXXiS5JPY7KozkO4nYGq4iV+YqPGGHX69Ce+ND0WAbJyb7ShDME2j
+         B/ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUwza7vbNetVGs05LJbyO9wJbdrjPPnQxSgRcBCllxr1GJjZJqABJ7MGJfrDF9A8Ey87M3Oz7V/aiGGSQYy84zFJJ46kypZF/7FLs2Qi9m+
+X-Gm-Message-State: AOJu0YxrYErv2fK+CoCJ6OCKzr2vy8old3Av3a2rHiNDhgZ3S7BNWLYU
+	yyvIYxPrXFoWy2D1pC7WaYtTv6a/htlQ6IqzcqcOoSuyTB5eVVYQUzTQESzm6Ge8W5upHJJhwAl
+	mAq4=
+X-Google-Smtp-Source: AGHT+IFHGjpAatLTh5i/TLtY4OH/tjLw1j7KJbR3WWjxHPOYuCrWDKwfD8gaK8LpcWJj2ajdG7CPng==
+X-Received: by 2002:a19:c519:0:b0:52b:c025:859a with SMTP id 2adb3069b0e04-52ca6e56796mr8617234e87.2.1718720807536;
+        Tue, 18 Jun 2024 07:26:47 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2825bf0sm1511574e87.32.2024.06.18.07.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 07:26:47 -0700 (PDT)
+Message-ID: <08533ee4-ac72-4d36-84ef-c44e8865d16d@linaro.org>
+Date: Tue, 18 Jun 2024 16:26:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.94
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] interconnect: qcom: icc-rpmh: Add QoS
+ configuration support
+To: Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Mike Tipton <quic_mdtipton@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Georgi Djakov
+ <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
+ cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com
+References: <20240325181628.9407-1-quic_okukatla@quicinc.com>
+ <20240325181628.9407-2-quic_okukatla@quicinc.com>
+ <d59896bb-a559-4013-a615-37bb43278b2e@linaro.org>
+ <91f59477-1799-4db6-bcc2-3f0c5225d1c8@quicinc.com>
+ <0a58e05a-7bf5-459a-b202-66d88c095b45@linaro.org>
+ <20240508023716.GD25316@hu-mdtipton-lv.qualcomm.com>
+ <434c6cfa-cede-4e62-a785-35a81ae0d30d@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <434c6cfa-cede-4e62-a785-35a81ae0d30d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 
-[ Upstream commit 7c23b186ab892088f76a3ad9dbff1685ffe2e832 ]
 
-Right now efi-pstore either returns 0 (success) or -EIO; but we
-do have a function to convert UEFI errors in different standard
-error codes, helping to narrow down potential issues more accurately.
+On 5/28/24 16:52, Odelu Kukatla wrote:
+> Hi Konrad,
+> 
+> On 5/8/2024 8:07 AM, Mike Tipton wrote:
+>> On Sat, Apr 13, 2024 at 09:31:47PM +0200, Konrad Dybcio wrote:
+>>> On 3.04.2024 10:45 AM, Odelu Kukatla wrote:
+>>>>
+>>>>
+>>>> On 3/27/2024 2:26 AM, Konrad Dybcio wrote:
+>>>>> On 25.03.2024 7:16 PM, Odelu Kukatla wrote:
+>>>>>> It adds QoS support for QNOC device and includes support for
+>>>>>> configuring priority, priority forward disable, urgency forwarding.
+>>>>>> This helps in priortizing the traffic originating from different
+>>>>>> interconnect masters at NoC(Network On Chip).
+>>>>>>
+>>>>>> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
+>>>>>> ---
+>>>
+>>> [...]
+>>>
+>>>>>> @@ -70,6 +102,7 @@ struct qcom_icc_node {
+>>>>>>   	u64 max_peak[QCOM_ICC_NUM_BUCKETS];
+>>>>>>   	struct qcom_icc_bcm *bcms[MAX_BCM_PER_NODE];
+>>>>>>   	size_t num_bcms;
+>>>>>> +	const struct qcom_icc_qosbox *qosbox;
+>>>>>
+>>>>> I believe I came up with a better approach for storing this.. see [1]
+>>>>>
+>>>>> Konrad
+>>>>>
+>>>>> [1] https://lore.kernel.org/linux-arm-msm/20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org/
+>>
+>> Note that I replied to this patch series as well. Similar comments here
+>> for how that approach would apply to icc-rpmh.
+>>
+>>>>>
+>>>>
+>>>> I see in this series, QoS parameters are moved into struct qcom_icc_desc.
+>>>> Even though we program QoS at Provider/Bus level, it is property of the node/master connected to a Bus/NoC.
+>>>
+>>> I don't see how it could be the case, we're obviously telling the controller which
+>>> endpoints have priority over others, not telling nodes whether the data they
+>>> transfer can omit the queue.
+>>
+>> The QoS settings tune the priority of data coming out of a specific port
+>> on the NOC. The nodes are 1:1 with the ports. Yes, this does tell the
+>> NOC which ports have priority over others. But that's done by
+>> configuring each port's priority in their own port-specific QoS
+>> registers.
+>>
+>>>
+>>>> It will be easier later to know which master's QoS we are programming if we add in node data.
+>>>> Readability point of view,  it might be good to keep QoS parameters in node data.
+>>>
+>>> I don't agree here either, with the current approach we've made countless mistakes
+>>> when converting the downstream data (I have already submitted some fixes with more
+>>> in flight), as there's tons of jumping around the code to find what goes where.
+>>
+>> I don't follow why keeping the port's own QoS settings in that port's
+>> struct results in more jumping around. It should do the opposite, in
+>> fact. If someone wants to know the QoS settings applied to the qhm_qup0
+>> port, then they should be able to look directly in the qhm_qup0 struct.
+>> Otherwise, if it's placed elsewhere then they'd have to jump elsewhere
+>> to find what that logical qhm_qup0-related data is set to.
+>>
+>> If it *was* placed elsewhere, then we'd still need some logical way to
+>> map between that separate location and the node it's associated with.
+>> Which is a problem with your patch for cleaning up the icc-rpm QoS. In
+>> its current form, it's impossible to identify which QoS settings apply
+>> to which logical node (without detailed knowledge of the NOC register
+>> layout).
+>>
+>> Keeping this data with the node struct reduces the need for extra layers
+>> of mapping between the QoS settings and the node struct. It keeps all
+>> the port-related information all together in one place.
+>>
+>> I did like your earlier suggestion of using a compound literal to
+>> initialize the .qosbox pointers, such that we don't need a separate
+>> top-level variable defined for them. They're only ever referenced by a
+>> single node, so there's no need for them to be separate variables.
+>>
+>> But I don't see the logic in totally separating the QoS data from the
+>> port it's associated with.
+>>
+>>>
+> I will update the patch as per your suggestion of keeping .qosbox initialization inside *qcom_icc_node* structure.
+> I will post next version with this update and addressing other comments from v4.
 
-So, let's use this helper here.
+Sorry for the late answer, but ack, let's go forward with this
 
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/efi/efi-pstore.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-index 3bddc152fcd43..8b2a9fc436a3f 100644
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -107,7 +107,7 @@ static int efi_pstore_read_func(struct pstore_record *record,
- 				     &size, record->buf);
- 	if (status != EFI_SUCCESS) {
- 		kfree(record->buf);
--		return -EIO;
-+		return efi_status_to_err(status);
- 	}
- 
- 	/*
-@@ -152,7 +152,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
- 			return 0;
- 
- 		if (status != EFI_SUCCESS)
--			return -EIO;
-+			return efi_status_to_err(status);
- 
- 		/* skip variables that don't concern us */
- 		if (efi_guidcmp(guid, LINUX_EFI_CRASH_GUID))
-@@ -190,7 +190,7 @@ static int efi_pstore_write(struct pstore_record *record)
- 					    record->size, record->psi->buf,
- 					    true);
- 	efivar_unlock();
--	return status == EFI_SUCCESS ? 0 : -EIO;
-+	return efi_status_to_err(status);
- };
- 
- static int efi_pstore_erase(struct pstore_record *record)
-@@ -201,7 +201,7 @@ static int efi_pstore_erase(struct pstore_record *record)
- 				     PSTORE_EFI_ATTRIBUTES, 0, NULL);
- 
- 	if (status != EFI_SUCCESS && status != EFI_NOT_FOUND)
--		return -EIO;
-+		return efi_status_to_err(status);
- 	return 0;
- }
- 
--- 
-2.43.0
-
+Konrad
