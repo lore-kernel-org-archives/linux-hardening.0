@@ -1,189 +1,99 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2131B4AEF0
-	for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 22:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C079418E754;
+	Tue, 18 Jun 2024 23:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718750399; cv=none; b=p0H4MN7MgXRF1Lg+t2ROQJ/B/lmWi8WL8JcL1hWMrbr4xNT6VLbXDgzRc/rlBlrPxwC++Sd7mMXwQ4wP7Gf0zJ3IIu/AgCCh/jZeSrklNyAep31sOgeJ3ySKddtcirRBbtjfZx9ehlPLq6OcBnuPPM4ShfVgXM3VdMPPnpeBQ3w=
+	t=1718754067; cv=none; b=EI0Tjlzgie/Ie7d2YX8J/30QeT8J/CAS1ybDWgCpF+6l5uK319+of3V2gcUjKezWi3NWo/weSNAjjGh2nn4+6QtdIhdSxB3NPOPOjYsn1NtUrBBfWZ6EwcZlVNgTBRUvtI4D6HzvIIztsb7ug74Ymm46YiuvW9Q90ESif4RW5C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718750399; c=relaxed/simple;
-	bh=M7mzEbGbaQjbrcrgflbQy+a72iKuC7EQIbJAodQwhWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GmvO8IZTEP4jH0SvGTeKmadn3DMcALQ4dji/HoxbmsZUXKZKcmUF4T3SaMjo9vh03rTDp+G7Uk+8BVflCBXnH5Dassm0pIq9wS/ANjvnigfvMwYyfSVhWyHC0Z0NMCUuc25Ytrh3tuK2vsizcxsFU4ZxHsQ7FBuNCzKQX8dOX2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M/OSJfwc; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718754067; c=relaxed/simple;
+	bh=O9eySkFBFFhyrOoADg7GSNhpc95wQVGdzH+2rsraOqM=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:CC:Content-Type; b=eoCZAj7eAU8J+LVMtkWiwOR1TwZVjZH7ftutg+/zSirC/j5LYWRFMCwsNZ4sgjTKICvsImSRKoLpNMd2zby+Ls6EqHNHCYiSooJge2wGZNNJeLNCI1D8252f2SvnrD4diUb1YerIVyXjl6TPDmZ9n47Zqj8bNg7HoEdTiv5SJuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R99PvyYa; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M/OSJfwc"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-25957dfd971so1414516fac.0
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jun 2024 15:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718750396; x=1719355196; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SDuIqiO2clIGfsQayJd1PsKODcIpbW8KgtS5TlfWIbc=;
-        b=M/OSJfwcH4Zn/CDNpuzlfsXRQGTdXlZt/fe2onN7PnYVNBWmLQ0oHBgJOrc4Ok6Xo2
-         oIGvBU8EFuFYpkTz9z27gmJe8osddhCC3ab6+M2lD3RBfjf7jg6VQmqPDa6yaDwiyOCx
-         20U30Il2fAmosZoNCJUwJgCFLy/6ikca8fX1M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718750396; x=1719355196;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SDuIqiO2clIGfsQayJd1PsKODcIpbW8KgtS5TlfWIbc=;
-        b=XWYNjLrCBzr308CSVNcI8eTLQoNH/HuaqCMs7hUk+lSh72/29z11pbdlPBvgVrxcZp
-         FhdtVxzGSVsRJK46rN0OBcfi7/yXCsaesYEBgy1/v3gDA5B9q2ffOivnzi96iRtJlps9
-         s42Ym4xC688GHjuY6/cJxG1sotTJDYd/4v6txIEuzvmdPF+P3zlUQrdwSa8H1Fu9A9uZ
-         CJy1uwR/LLii0JdBcJx+g6KILT98RlYw9b79EzFMjKKgDEk+RCC/vm+eEr2ExdNcKUdr
-         LQp6JRd57COu30+hV6aMcNyR8x6pOecXkiNegnlnhBY+vrliwmxuZsnAOHT6xpJYrY62
-         IFRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMLF7jdRFo955RU1Vhvo8rIDl36yJY8U2pV0G3iHhm44gBKLQCdI1jtsFc6UstaE75gdKDJuRxy2LwC/FoKT+hkCMA0eZDWaLisrt4x30Q
-X-Gm-Message-State: AOJu0YwbrlAVloiq4gV4KJ1Bl2BBZ84XyNEs+EEiMVhQgaRnU/mXyHhI
-	nqPOT/CaI+Hat868kmHhhk+BWY85RptLMS6w6PNVnYmjz5Y+G+i1cTHsM0mhuXBQvjFWnNdNzjd
-	cxdG4se3CvCzJDJLGtIPaKRZdh7GmQiLmcNF8
-X-Google-Smtp-Source: AGHT+IGVKWa3GDRDjvSCD4uk1Oy7nmeKUd5oiv8J/DJjDfpPfF8EqAvDsryZDGFNvYGm2Dh/2EdeImNb0LSeD/IJeuk=
-X-Received: by 2002:a05:6870:c111:b0:254:e924:be62 with SMTP id
- 586e51a60fabf-25c94a57362mr1438525fac.13.1718750396111; Tue, 18 Jun 2024
- 15:39:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R99PvyYa"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ILa25l014475;
+	Tue, 18 Jun 2024 23:41:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=O6Y10khejXzVQe3DeWLM3x
+	WF74pRoLDK/ugLwuZETo0=; b=R99PvyYarb1h/TWd4wiI4g4ILWHoaLuHXvioAB
+	N4MjKWj6U1UnxPAuUybUPr22rvNd1e4AGEMCJlFJFTQ+QcF1TadkCZds+68epQ0x
+	G0+yQGODfLCKEEHpE0k1tUxPBsqhVisq+o2CoDJItvYd+2fEAj8z/dv0zVM++agN
+	d673G+g3HK8F8dehbVrO5+9Y1Urq+i0VAwXmGs/lfscYom9FtgfPgrVzrOr1U1M5
+	1cWCX9jsnmHASETP8q16GYZOKcarweZYtlAy8VYk7UOVPtrTvVGYk4Dl82YNPM/p
+	Uww1GGwvs5NIfXSK3jTQ4wlaHL18ZwejkQkbL+xsddqI2stA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuj9x062j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 23:41:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45INf19N027603
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Jun 2024 23:41:01 GMT
+Received: from [10.48.243.231] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Jun
+ 2024 16:41:01 -0700
+Message-ID: <563b8f82-9865-40ae-85d3-055b3bcda7d6@quicinc.com>
+Date: Tue, 18 Jun 2024 16:41:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613133937.2352724-1-adrian.ratiu@collabora.com> <20240613133937.2352724-2-adrian.ratiu@collabora.com>
-In-Reply-To: <20240613133937.2352724-2-adrian.ratiu@collabora.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 18 Jun 2024 15:39:44 -0700
-Message-ID: <CABi2SkXY20M24fcUgejAMuJpNZqsLxd0g1PZ-8RcvzxO6NO6cA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] proc: restrict /proc/pid/mem
-To: Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com, 
-	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com, 
-	jorgelo@chromium.org, Guenter Roeck <groeck@chromium.org>, 
-	Doug Anderson <dianders@chromium.org>, Kees Cook <keescook@chromium.org>, 
-	Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Christian Brauner <brauner@kernel.org>, Jeff Xu <jeffxu@google.com>, 
-	Mike Frysinger <vapier@chromium.org>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+To: Kees Cook <kees@kernel.org>
+Subject: mips gcc plugin issues
+CC: <linux-hardening@vger.kernel.org>,
+        open list
+	<linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: uSOCDu-RnnuaxYfRpDI6E_b-VsWAXCt_
+X-Proofpoint-GUID: uSOCDu-RnnuaxYfRpDI6E_b-VsWAXCt_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-18_06,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=432
+ impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406180174
 
-Hi
+I'm trying to do an allmodconfig build for ARCH=mips using:
+https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-mips-linux.tar.gz
 
-Thanks for the patch !
+This build dies quickly with:
+  CC      scripts/mod/empty.o
+cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so: ./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
+cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so: ./scripts/gcc-plugins/latent_entropy_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
+  CC      scripts/mod/devicetable-offsets.s
+make[2]: *** [scripts/Makefile.build:244: scripts/mod/empty.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so: ./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
+cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so: ./scripts/gcc-plugins/latent_entropy_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
+  HDRINST usr/include/linux/usb/tmc.h
+make[2]: *** [scripts/Makefile.build:117: scripts/mod/devicetable-offsets.s] Error 1
 
-On Thu, Jun 13, 2024 at 6:40=E2=80=AFAM Adrian Ratiu <adrian.ratiu@collabor=
-a.com> wrote:
->
-> Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
-> after which it got allowed in commit 198214a7ee50 ("proc: enable
-> writing to /proc/pid/mem"). Famous last words from that patch:
-> "no longer a security hazard". :)
->
-> Afterwards exploits started causing drama like [1]. The exploits
-> using /proc/*/mem can be rather sophisticated like [2] which
-> installed an arbitrary payload from noexec storage into a running
-> process then exec'd it, which itself could include an ELF loader
-> to run arbitrary code off noexec storage.
->
-> One of the well-known problems with /proc/*/mem writes is they
-> ignore page permissions via FOLL_FORCE, as opposed to writes via
-> process_vm_writev which respect page permissions. These writes can
-> also be used to bypass mode bits.
->
-> To harden against these types of attacks, distrbutions might want
-> to restrict /proc/pid/mem accesses, either entirely or partially,
-> for eg. to restrict FOLL_FORCE usage.
->
-> Known valid use-cases which still need these accesses are:
->
-> * Debuggers which also have ptrace permissions, so they can access
-> memory anyway via PTRACE_POKEDATA & co. Some debuggers like GDB
-> are designed to write /proc/pid/mem for basic functionality.
->
-> * Container supervisors using the seccomp notifier to intercept
-> syscalls and rewrite memory of calling processes by passing
-> around /proc/pid/mem file descriptors.
->
-> There might be more, that's why these params default to disabled.
->
-> Regarding other mechanisms which can block these accesses:
->
-> * seccomp filters can be used to block mmap/mprotect calls with W|X
-> perms, but they often can't block open calls as daemons want to
-> read/write their runtime state and seccomp filters cannot check
-> file paths, so plain write calls can't be easily blocked.
->
-> * Since the mem file is part of the dynamic /proc/<pid>/ space, we
-> can't run chmod once at boot to restrict it (and trying to react
-> to every process and run chmod doesn't scale, and the kernel no
-> longer allows chmod on any of these paths).
->
-> * SELinux could be used with a rule to cover all /proc/*/mem files,
-> but even then having multiple ways to deny an attack is useful in
-> case one layer fails.
->
-> Thus we introduce four kernel parameters to restrict /proc/*/mem
-> access: open-read, open-write, write and foll_force. All these can
-> be independently set to the following values:
->
-> all     =3D> restrict all access unconditionally.
-> ptracer =3D> restrict all access except for ptracer processes.
->
-> If left unset, the existing behaviour is preserved, i.e. access
-> is governed by basic file permissions.
->
-> Examples which can be passed by bootloaders:
->
-> proc_mem.restrict_foll_force=3Dall
-> proc_mem.restrict_open_write=3Dptracer
-> proc_mem.restrict_open_read=3Dptracer
-> proc_mem.restrict_write=3Dall
->
-> These knobs can also be enabled via Kconfig like for eg:
->
-> CONFIG_PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT=3Dy
-> CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT=3Dy
->
-> Each distribution needs to decide what restrictions to apply,
-> depending on its use-cases. Embedded systems might want to do
-> more, while general-purpouse distros might want a more relaxed
-> policy, because for e.g. foll_force=3Dall and write=3Dall both break
-> break GDB, so it might be a bit excessive.
->
-> Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
->
-It is noteworthy that ChromeOS has benefited from blocking
-/proc/pid/mem write since 2017 [1], owing to the patch implemented by
-Mike Frysinger.
+I see the following in my .config:
+CONFIG_HAVE_GCC_PLUGINS=y
+CONFIG_GCC_PLUGINS=y
+CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
+CONFIG_GCC_PLUGIN_RANDSTRUCT=y
 
-It is great that upstream can consider this patch, ChromeOS will use
-the solution once it is accepted.
+So I'll turn those off, but just want to flag that this issue exists.
+Seems either the plugins should work or the allmodconfig should turn them off.
 
-> Link: https://lwn.net/Articles/476947/ [1]
-> Link: https://issues.chromium.org/issues/40089045 [2]
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jeff Xu <jeffxu@google.com>
-> Co-developed-by: Mike Frysinger <vapier@chromium.org>
-> Signed-off-by: Mike Frysinger <vapier@chromium.org>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-
-Reviewed-by: Jeff Xu <jeffxu@chromium.org>
-Tested-by: Jeff Xu <jeffxu@chromium.org>
-[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kerne=
-l/+/764773
-
--Jeff Xu
-
-
--Jeff
+/jeff
