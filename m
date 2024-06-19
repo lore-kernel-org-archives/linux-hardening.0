@@ -1,206 +1,182 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A08914277;
-	Wed, 19 Jun 2024 21:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7569F78B4C;
+	Wed, 19 Jun 2024 21:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718832714; cv=none; b=f9ME3kFLehw7LjsJ8Xdds4dLO4OvKKmo7LZk1LioU3b1cPN/TTbwaBPwFFjGmBg5YFJBDJhJqXleXPnP0tqsaqsNxeiKuPsEIZpXMoNLKHDlw1kKjElJun0674GpyfvBz1zQzi8EdZFDFgUfyzfLFm1Y8un5hWMAxY/RFKppFuA=
+	t=1718833639; cv=none; b=fuOG3GKNQA/Pqyk/wlBaClwmLZE1xvIV+Ysaij5Adn/A85sNtlVt/9kxSh2dSTRRR5A3o08orRHG+ywbN/9HGiG/yBtireAIT+1IoWApQkwtNjIkiXJeKlw94yfQk9QgA8EHEa/Qc7BRCSbN/NQ4KmjTDURe7oFkO7ZOi5diDmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718832714; c=relaxed/simple;
-	bh=xNw6YyCAfigbFukmre3FSwB3waVjHWXIn4Bkmgrj2as=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=VGH8a22GkTzfK9ADxRxHBpLCMbOR9zXXLElAJ7BspOabY7sUhUs1QqqJpo4wpFDVnPp8XH2UKGunxCCu7hHPlcCnH40aJItp++JK5uV+IRuxNxWyNxXLZQGe5KlBLAyVENC1SJWDQ9bEWrg8SEh4XV2XC4Ml6vVWtaYk8Gs0rgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 4BCA33782173;
-	Wed, 19 Jun 2024 21:31:49 +0000 (UTC)
-From: "Adrian Ratiu" <adrian.ratiu@collabora.com>
-In-Reply-To: <202406191336.AC7F803123@keescook>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240613133937.2352724-1-adrian.ratiu@collabora.com>
- <20240613133937.2352724-2-adrian.ratiu@collabora.com>
- <CABi2SkXY20M24fcUgejAMuJpNZqsLxd0g1PZ-8RcvzxO6NO6cA@mail.gmail.com> <202406191336.AC7F803123@keescook>
-Date: Wed, 19 Jun 2024 22:31:49 +0100
-Cc: "Jeff Xu" <jeffxu@chromium.org>, linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com, ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com, jorgelo@chromium.org, "Guenter Roeck" <groeck@chromium.org>, "Doug Anderson" <dianders@chromium.org>, "Jann Horn" <jannh@google.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Randy Dunlap" <rdunlap@infradead.org>, "Christian Brauner" <brauner@kernel.org>, "Jeff Xu" <jeffxu@google.com>, "Mike Frysinger" <vapier@chromium.org>
-To: "Kees Cook" <kees@kernel.org>
+	s=arc-20240116; t=1718833639; c=relaxed/simple;
+	bh=3fzkEaKVOM0rPfJQM/UHilxDpBmn0DVx7ju0tzyEiz8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EJvjOAFoXfJoTVXN+oaZ3U7yQP5RES7K3imCXIyDt82cUXdTv3SRIeo4KTdXsoVqXJLKndrWDTmy7/XxPATU+/NheFKYd61DoWHUlm4Ktk6iSCfErA4mlh/TYTQ5gFb3PE3VcPZtSamSsnvx8e4vHOF9tAqtWCXNo7KeHf79SDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXuPV0mI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXuPV0mI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD0BC2BBFC;
+	Wed, 19 Jun 2024 21:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718833639;
+	bh=3fzkEaKVOM0rPfJQM/UHilxDpBmn0DVx7ju0tzyEiz8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LXuPV0mIsBj2qUfpSxvieqd06Fz6R5VdBEik7h7WormVirKGrCPB2ZUVJZNgKOXZA
+	 WTcfhM3u2a3vjFG6BmIZTXy9j7E25BAIAvkt80G6FC+wu7cAhi8ltsLTAl1Bmi0NJt
+	 CQ9NNWHxXODJsY9JrLmUmdJSpPHPgiLPMB42YvNFrzGVS8cHVSGAoIhfGwMlO4tf4a
+	 YO3aKsG5EFsGmqB4QVPVdD09eSEErHDASmB2N1CtgIO3JhDBgy+M/gWrLmA3q6rv0N
+	 eByLm+/iLxS6CsbuPHP0NcCRlAc4avSe05qczj4RiEOYtG/YNEd7WVJZ1A+quYOUTx
+	 yYoPy/jOLBfMw==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Yuntao Liu <liuyuntao12@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Leonardo Bras <leobras@redhat.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH] randomize_kstack: Remove non-functional per-arch entropy filtering
+Date: Wed, 19 Jun 2024 14:47:15 -0700
+Message-Id: <20240619214711.work.953-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3304e0-66734e80-1857-33d83680@76729138>
-Subject: =?utf-8?q?Re=3A?= [PATCH v6 2/2] =?utf-8?q?proc=3A?= restrict /proc/pid/mem
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5074; i=kees@kernel.org; h=from:subject:message-id; bh=3fzkEaKVOM0rPfJQM/UHilxDpBmn0DVx7ju0tzyEiz8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmc1HjQzLtUraLFY0fw8Lpwy7N4xRnsdRhxQd/8 4zvmodGt6aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnNR4wAKCRCJcvTf3G3A JqdID/4gaYRTL6XxwSJgN0Ke28oaRPsAsFVq9Qopz5AkOGog7U02ED6us24dYtFeDM1Jd3D2YRG Xm5Mw6A+GTYv9xIie6yTzBrhFPaDd2iTQlo7LUmvfBBHbWtHZwg+3+aVFuGkzl+y6FXeyPhrEuL VJt8i+n5Jik8P6oDknx/GvrASYcgFi4oQbocJz4GeLwU5r1nykAzm0HNLnOIoW6cFDYXDYDqZYN OA99ZSEo37ZzyDVXRJM8T3AK5gzROfH+iLIu4S9EzmRTGZURfexwO8l+tPmLpUOqDs34c3NswTC NsHeJeZkWxGjZ8YCQXczZvgpQNOfCX7WSGWGqu9u0g5RiSKc14TMWVwa1eE3LATdIpTQqaLWXvu v6XKuf4EIxC81nbImXRM9AasBVWbSnOEGTz2MOgSukBvnwZSw1PNL0+wz7iT8vm8Qn8uwVkGtIc E1UNMIZYfmTdEe1oy58MUbpsl/kt2LoMw/zRX4iPgAwrdCIXBHWeutPbGyomypJAglLjv8hezmR 9sfkf+C4MrIqKpPYoEK82uhMsMZvT9jrL9UaUMgTQgC1hMKcs5xe5g0av7lc9Bnrs6eB0GWCAaL kEiDuXB19XmIj6NHXMaPErMRZFetU9cbFWU0qvguvN3e7xJ3nqM8DUBXqIGb4q5IxLMnUZjFbAP YBeQwwWVgzlfJ
+ +A==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wednesday, June 19, 2024 23:41 EEST, Kees Cook <kees@kernel.org> wro=
-te:
+An unintended consequence of commit 9c573cd31343 ("randomize_kstack:
+Improve entropy diffusion") was that the per-architecture entropy size
+filtering reduced how many bits were being added to the mix, rather than
+how many bits were being used during the offsetting. All architectures
+fell back to the existing default of 0x3FF (10 bits), which will consume
+at most 1KiB of stack space. It seems that this is working just fine,
+so let's avoid the confusion and update everything to use the default.
 
-> On Tue, Jun 18, 2024 at 03:39:44PM -0700, Jeff Xu wrote:
-> > Hi
-> >=20
-> > Thanks for the patch !
-> >=20
-> > On Thu, Jun 13, 2024 at 6:40=E2=80=AFAM Adrian Ratiu <adrian.ratiu@=
-collabora.com> wrote:
-> > >
-> > > Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
-> > > after which it got allowed in commit 198214a7ee50 ("proc: enable
-> > > writing to /proc/pid/mem"). Famous last words from that patch:
-> > > "no longer a security hazard". :)
-> > >
-> > > Afterwards exploits started causing drama like [1]. The exploits
-> > > using /proc/*/mem can be rather sophisticated like [2] which
-> > > installed an arbitrary payload from noexec storage into a running
-> > > process then exec'd it, which itself could include an ELF loader
-> > > to run arbitrary code off noexec storage.
-> > >
-> > > One of the well-known problems with /proc/*/mem writes is they
-> > > ignore page permissions via FOLL=5FFORCE, as opposed to writes vi=
-a
-> > > process=5Fvm=5Fwritev which respect page permissions. These write=
-s can
-> > > also be used to bypass mode bits.
-> > >
-> > > To harden against these types of attacks, distrbutions might want
-> > > to restrict /proc/pid/mem accesses, either entirely or partially,
-> > > for eg. to restrict FOLL=5FFORCE usage.
-> > >
-> > > Known valid use-cases which still need these accesses are:
-> > >
-> > > * Debuggers which also have ptrace permissions, so they can acces=
-s
-> > > memory anyway via PTRACE=5FPOKEDATA & co. Some debuggers like GDB
-> > > are designed to write /proc/pid/mem for basic functionality.
-> > >
-> > > * Container supervisors using the seccomp notifier to intercept
-> > > syscalls and rewrite memory of calling processes by passing
-> > > around /proc/pid/mem file descriptors.
-> > >
-> > > There might be more, that's why these params default to disabled.
-> > >
-> > > Regarding other mechanisms which can block these accesses:
-> > >
-> > > * seccomp filters can be used to block mmap/mprotect calls with W=
-|X
-> > > perms, but they often can't block open calls as daemons want to
-> > > read/write their runtime state and seccomp filters cannot check
-> > > file paths, so plain write calls can't be easily blocked.
-> > >
-> > > * Since the mem file is part of the dynamic /proc/<pid>/ space, w=
-e
-> > > can't run chmod once at boot to restrict it (and trying to react
-> > > to every process and run chmod doesn't scale, and the kernel no
-> > > longer allows chmod on any of these paths).
-> > >
-> > > * SELinux could be used with a rule to cover all /proc/*/mem file=
-s,
-> > > but even then having multiple ways to deny an attack is useful in
-> > > case one layer fails.
-> > >
-> > > Thus we introduce four kernel parameters to restrict /proc/*/mem
-> > > access: open-read, open-write, write and foll=5Fforce. All these =
-can
-> > > be independently set to the following values:
-> > >
-> > > all     =3D> restrict all access unconditionally.
-> > > ptracer =3D> restrict all access except for ptracer processes.
-> > >
-> > > If left unset, the existing behaviour is preserved, i.e. access
-> > > is governed by basic file permissions.
-> > >
-> > > Examples which can be passed by bootloaders:
-> > >
-> > > proc=5Fmem.restrict=5Ffoll=5Fforce=3Dall
-> > > proc=5Fmem.restrict=5Fopen=5Fwrite=3Dptracer
-> > > proc=5Fmem.restrict=5Fopen=5Fread=3Dptracer
-> > > proc=5Fmem.restrict=5Fwrite=3Dall
-> > >
-> > > These knobs can also be enabled via Kconfig like for eg:
-> > >
-> > > CONFIG=5FPROC=5FMEM=5FRESTRICT=5FWRITE=5FPTRACE=5FDEFAULT=3Dy
-> > > CONFIG=5FPROC=5FMEM=5FRESTRICT=5FFOLL=5FFORCE=5FPTRACE=5FDEFAULT=3D=
-y
-> > >
-> > > Each distribution needs to decide what restrictions to apply,
-> > > depending on its use-cases. Embedded systems might want to do
-> > > more, while general-purpouse distros might want a more relaxed
-> > > policy, because for e.g. foll=5Fforce=3Dall and write=3Dall both =
-break
-> > > break GDB, so it might be a bit excessive.
-> > >
-> > > Based on an initial patch by Mike Frysinger <vapier@chromium.org>=
-.
-> > >
-> > It is noteworthy that ChromeOS has benefited from blocking
-> > /proc/pid/mem write since 2017 [1], owing to the patch implemented =
-by
-> > Mike Frysinger.
-> >=20
-> > It is great that upstream can consider this patch, ChromeOS will us=
-e
-> > the solution once it is accepted.
-> >=20
-> > > Link: https://lwn.net/Articles/476947/ [1]
-> > > Link: https://issues.chromium.org/issues/40089045 [2]
-> > > Cc: Guenter Roeck <groeck@chromium.org>
-> > > Cc: Doug Anderson <dianders@chromium.org>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: Jann Horn <jannh@google.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > > Cc: Christian Brauner <brauner@kernel.org>
-> > > Cc: Jeff Xu <jeffxu@google.com>
-> > > Co-developed-by: Mike Frysinger <vapier@chromium.org>
-> > > Signed-off-by: Mike Frysinger <vapier@chromium.org>
-> > > Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> >=20
-> > Reviewed-by: Jeff Xu <jeffxu@chromium.org>
-> > Tested-by: Jeff Xu <jeffxu@chromium.org>
-> > [1] https://chromium-review.googlesource.com/c/chromiumos/third=5Fp=
-arty/kernel/+/764773
->=20
-> Thanks for the testing! What settings did you use? I think Chrome OS =
-was
-> effectively doing this?
->=20
-> PROC=5FMEM=5FRESTRICT=5FOPEN=5FREAD=5FOFF=3Dy
-> CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPEN=5FWRITE=5FALL=3Dy
-> CONFIG=5FPROC=5FMEM=5FRESTRICT=5FWRITE=5FALL=3Dy
-> CONFIG=5FPROC=5FMEM=5FRESTRICT=5FFOLL=5FFORCE=5FALL=3Dy
+The prior intent of the per-architecture limits were:
 
-Correct except for CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPEN=5FWRITE=5FALL=3D=
-y
-which will make ChromeOS boot loop because upstart/systemd-tmpfiles
-will fail and trigger a recovery + reboot, then the kernel will again b=
-lock
-opening the file and so on. :)
+  arm64: capped at 0x1FF (9 bits), 5 bits effective
+  powerpc: uncapped (10 bits), 6 or 7 bits effective
+  riscv: uncapped (10 bits), 6 bits effective
+  x86: capped at 0xFF (8 bits), 5 (x86_64) or 6 (ia32) bits effective
+  s390: capped at 0xFF (8 bits), undocumented effective entropy
 
-ChromeOS effectively only blocks all writes which also blocks all foll=5F=
-force.
+Current discussion has led to just dropping the original per-architecture
+filters. The additional entropy appears to be safe for arm64, x86,
+and s390. Quoting Arnd, "There is no point pretending that 15.75KB is
+somehow safe to use while 15.00KB is not."
 
->=20
-> Though I don't see the FOLL=5FFORCE changes in the linked Chrome OS p=
-atch,
-> but I suspect it's unreachable with
-> CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPEN=5FWRITE=5FALL=3Dy.
-=20
-That is correct, CONFIG=5FPROC=5FMEM=5FRESTRICT=5FOPEN=5FWRITE=5FALL=3D=
-y also
-blocks FOLL=5FFORCE.
+Co-developed-by: Yuntao Liu <liuyuntao12@huawei.com>
+Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+Fixes: 9c573cd31343 ("randomize_kstack: Improve entropy diffusion")
+Link: https://lore.kernel.org/r/20240617133721.377540-1-liuyuntao12@huawei.com
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ arch/arm64/kernel/syscall.c          | 16 +++++++---------
+ arch/s390/include/asm/entry-common.h |  2 +-
+ arch/x86/include/asm/entry-common.h  | 15 ++++++---------
+ 3 files changed, 14 insertions(+), 19 deletions(-)
 
-The idea there is to restrict writes entirely in production images via
-Kconfig and then relax the restriction in dev/test images via boot para=
-ms
-proc=5Fmem.restrict=5Fwrite=3Dptracer proc=5Fmem.restrict=5Ffoll=5Fforc=
-e=3Dptracer
-
-See this CL:
-https://chromium-review.googlesource.com/c/chromiumos/platform/vboot=5F=
-reference/+/5631026
+diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+index ad198262b981..7230f6e20ab8 100644
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -53,17 +53,15 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
+ 	syscall_set_return_value(current, regs, 0, ret);
+ 
+ 	/*
+-	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
+-	 * but not enough for arm64 stack utilization comfort. To keep
+-	 * reasonable stack head room, reduce the maximum offset to 9 bits.
++	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
++	 * bits. The actual entropy will be further reduced by the compiler
++	 * when applying stack alignment constraints: the AAPCS mandates a
++	 * 16-byte aligned SP at function boundaries, which will remove the
++	 * 4 low bits from any entropy chosen here.
+ 	 *
+-	 * The actual entropy will be further reduced by the compiler when
+-	 * applying stack alignment constraints: the AAPCS mandates a
+-	 * 16-byte (i.e. 4-bit) aligned SP at function boundaries.
+-	 *
+-	 * The resulting 5 bits of entropy is seen in SP[8:4].
++	 * The resulting 6 bits of entropy is seen in SP[9:4].
+ 	 */
+-	choose_random_kstack_offset(get_random_u16() & 0x1FF);
++	choose_random_kstack_offset(get_random_u16());
+ }
+ 
+ static inline bool has_syscall_work(unsigned long flags)
+diff --git a/arch/s390/include/asm/entry-common.h b/arch/s390/include/asm/entry-common.h
+index 7f5004065e8a..35555c944630 100644
+--- a/arch/s390/include/asm/entry-common.h
++++ b/arch/s390/include/asm/entry-common.h
+@@ -54,7 +54,7 @@ static __always_inline void arch_exit_to_user_mode(void)
+ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+ 						  unsigned long ti_work)
+ {
+-	choose_random_kstack_offset(get_tod_clock_fast() & 0xff);
++	choose_random_kstack_offset(get_tod_clock_fast());
+ }
+ 
+ #define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
+diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
+index 7e523bb3d2d3..fb2809b20b0a 100644
+--- a/arch/x86/include/asm/entry-common.h
++++ b/arch/x86/include/asm/entry-common.h
+@@ -73,19 +73,16 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+ #endif
+ 
+ 	/*
+-	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
+-	 * but not enough for x86 stack utilization comfort. To keep
+-	 * reasonable stack head room, reduce the maximum offset to 8 bits.
+-	 *
+-	 * The actual entropy will be further reduced by the compiler when
+-	 * applying stack alignment constraints (see cc_stack_align4/8 in
++	 * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
++	 * bits. The actual entropy will be further reduced by the compiler
++	 * when applying stack alignment constraints (see cc_stack_align4/8 in
+ 	 * arch/x86/Makefile), which will remove the 3 (x86_64) or 2 (ia32)
+ 	 * low bits from any entropy chosen here.
+ 	 *
+-	 * Therefore, final stack offset entropy will be 5 (x86_64) or
+-	 * 6 (ia32) bits.
++	 * Therefore, final stack offset entropy will be 7 (x86_64) or
++	 * 8 (ia32) bits.
+ 	 */
+-	choose_random_kstack_offset(rdtsc() & 0xFF);
++	choose_random_kstack_offset(rdtsc());
+ }
+ #define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
+ 
+-- 
+2.34.1
 
