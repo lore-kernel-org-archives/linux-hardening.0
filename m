@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18632158A2D;
-	Wed, 19 Jun 2024 19:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858C015921D;
+	Wed, 19 Jun 2024 19:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718825638; cv=none; b=qPo4qJ8DOmFxr31/uen8adoTut1xLB6DABllB+lpZjkM9CLkc6gvudbVSI9w9rcAyL39sBNzSNowDKGYmdKHREeZTEHwOyk8RwntlDd4/JUDId8bNEeJfrAvyobLzo7dsx0Xa/L8KDBX+F22EkjgpIHqz1UHaIzsOuZL1fCRVac=
+	t=1718825638; cv=none; b=k57D+O9B8kun7RBMxFIBOWM00CsT837xceeZ3ALtWULwCeXF55OQWFYZ0lbIFadcHzGNuPTj2h9lOBYy6Hmux4WYPBe2ooKrm9wdLZn1Br4Ai85X27QTROuEnN78DCs+rfFnwjmYzTim9jsnMQUqy1rl1OPshs015c1t75e6M/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718825638; c=relaxed/simple;
-	bh=/RmCJ4F/4ng/Khq7qR9N0HAZnD/jFStWnmxtCKBK+GE=;
+	bh=LrnolFNHWclGZ9p3hY/QGRuJsr6+6G+8GF/8xJCY8DU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TGnCdRexNyCDHSp5a/yvMKd9PW5VxLecy4GDIO0B/5rxh3fBrhnedmStnwwYzQXl9NOxE8jGWAxMgT5GrIbwd7oMqs/WL7+KJk7h0mU2YERZtezJFwW3oI5uFNbcFwlAs5kfIhRP+YSXOVFhb2w6xeDSQHP7HzaRtukSdlCoChg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yg3uS92q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sYG+zqaNvNblG7g8GGyaUT99qmzktI1gyGulXz17l8oSZ8oe3QW6i37E0F6zUz9XFwgfhwfkqdhBWhxVmzN8JVFP4Fx+r/scDYvHlA9kH+lyNtDg0nM8NsySbZm/GTEAec5x5ECqKmOOJpF9nmOxxxQ/d8YX1qjKKiwe/JR/D+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pc6m2Jyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yg3uS92q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E7DC4AF09;
-	Wed, 19 Jun 2024 19:33:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pc6m2Jyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6FAC4AF0A;
+	Wed, 19 Jun 2024 19:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718825637;
-	bh=/RmCJ4F/4ng/Khq7qR9N0HAZnD/jFStWnmxtCKBK+GE=;
+	s=k20201202; t=1718825638;
+	bh=LrnolFNHWclGZ9p3hY/QGRuJsr6+6G+8GF/8xJCY8DU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yg3uS92qwownEjYk+KrHqmmBxErM9MDG9GWHoFjllUlVSitrJzN/cCkCIxz9m8kG9
-	 kKoYDXC55Gf2FwYsZgznS1yoHOWjYGoi+I0Z6o0Gm5TXB/JtXNVfbtLFKKjgll+gOR
-	 CVuFaIrDPLPbOhR1s/D38SWARmQueikUJkNoAqYKhvnRvsXp23H82MaQHLHr5bjLze
-	 9djumIEXDuJJaKmToURyjFbfB9pEA6aj9VayWX/uc1mN3yBbyG5UQB7bA5tqX7afHH
-	 qvlaU7v3WU6YTKxQi8wrAE3TOP/f0TTQhbZb/ao4H72plbBlMPtDyeYKOxizgoQpN+
-	 infour+aBOrTA==
+	b=Pc6m2JydDigHX1wPdvV7BSO6pjR4OiuefHdkKa1fdpttENlQLKGuUfbGFFSu2l4Lm
+	 lQD5iAks3gvBoAIfaXZXsbn9df6WJYs3vBKiEbv3bJ4PaaLahoIa4QSNZ1SYfuLbBH
+	 EC/g9SUx1BXID0KIUyOFIJTu1RoIyozImXz+TkjeVy0SusKmCLRASggim94z6rYRCM
+	 tO4C6jMpK8ZWUlJKguJ9sfCfZZJc1MVWVRiBXSV+GO5TXMdXWOzrdcFw/b8i8cgg7U
+	 lBK0Q0+bcSuO5G7slNZJMYU9DBvzN/fxnRHAqOvcn3r1IAoqVZP9OzadrVNBk/NTEU
+	 Fodm/pnVMavLA==
 From: Kees Cook <kees@kernel.org>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: Kees Cook <kees@kernel.org>,
@@ -49,9 +49,9 @@ Cc: Kees Cook <kees@kernel.org>,
 	linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and family
-Date: Wed, 19 Jun 2024 12:33:52 -0700
-Message-Id: <20240619193357.1333772-4-kees@kernel.org>
+Subject: [PATCH v5 6/6] mm/util: Use dedicated slab buckets for memdup_user()
+Date: Wed, 19 Jun 2024 12:33:54 -0700
+Message-Id: <20240619193357.1333772-6-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240619192131.do.115-kees@kernel.org>
 References: <20240619192131.do.115-kees@kernel.org>
@@ -61,191 +61,86 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6964; i=kees@kernel.org; h=from:subject; bh=/RmCJ4F/4ng/Khq7qR9N0HAZnD/jFStWnmxtCKBK+GE=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBmczKh21zJZgyIFpVjar+3GzcqV57oOAwiaPyFf 9lg6kUOpTKJAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnMyoQAKCRCJcvTf3G3A JnTnD/i2CjxP6n3FrmWS5Y2ZF/qTuu2v5aeKrAb1+69yKucXGvlFE1sS0j8g/4CcTgYD2Knvk0Z HJqxN0EMNzWhABAciSgOkzbDhOQyDLUvP+JcxuHiDxOp8K73MMFTWwXPiVjTcCUoqXiMGq3JNzx qesEPnvQM+Tg2kCxyZKlrcdSgRSpNAyOzt/YguC+V5/5tBzhRwfv/4wT8D50QkT/RgzPLjEM/cF LLXlmYAH4ftrzzTwHVPFydtRp3z/LXpUVh5wphBnpJ5tYkkBcEY8WNG5VJCoZbd2HIp58ex6Ypg mlp4bEfdmLCY0m8uqpdycuoTdXpRplIW30Y+VT8NG6JUz/Pmo3TPkDTlyIkFXRmgCwAY7yJ9lcO t5PXQjfhG3j4+JzW0kkDAi8PCZSuB5K+mMSpHGg/KUxut0vaVf/FUqZLaKFbtDtDt3j5Hi2Zxsc McIfFUN7qSQw1oeXD+WFrbTDLVTt7Kvs/PYdqdnswzMcTHKQVyl7k2mwUtibR2uTSs0F1GW3zgb 5kFMEd+FNidxfUztUA449ujJ8F1IbS2inC6b/xfGpEt0PqtKBDgpX2GcDhveoJO/0N4g5S7s5jF 08LkkH5XKfseBz0goioeJ+0E2Lercac875NHpziSFZtCVDzjqgDLDH5gQKsxmNXSXcJ5xqI33VM LRyiGlHiaNTFf
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2799; i=kees@kernel.org; h=from:subject; bh=LrnolFNHWclGZ9p3hY/QGRuJsr6+6G+8GF/8xJCY8DU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmczKhEAWYa/Ji7QXOW1GAYZ9rnB+j1DB6dbkqF TcWKMWXK8GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnMyoQAKCRCJcvTf3G3A Jna9D/9jn8FgmhtJGIsF1k6FXqxnOb5H/Edjil/UGnza0ThNC5KYFYysA7NmGEt75u5Ul8yTo/m mPSLD5BsKR+jO9ra+Jb1otzerSK7RPkiM6Imdxr4fUVqJRDIyZfow5kmiqU9kP3XohZkW6L9tCf Gg3Gf3IyVqjtN6r7kMQfjfEwb0asp7l19n+RBG+Y+rCjuwW9f0zVuora95LsN+puXykCTSHPd8l triyydYzJHXgpSTHex+MpUFovzc22Spf+qmwDTaHqtewlJLtF0Yv2hU8zovuwGlpfr8ByOElpfK Vk+S54XYZnxOLQ67p3popKVW0MElvIx5m8o5iUKZDmwhhLvPBOzUH1bT6we+7qxY02Rjs8l7tcq 2WQdGuzFjXnYo2mAqRN7l7S7Cq1nPwRpwtPoUinjqbvdFIV/NRq9GABynRSpDqxH5qrbas9689/ gvJkHTXbL+PSnY6Qs32jdRqdMuCqHzXkPa02gx1uuVpAPC8z9C0JsTzVOz30ZPQ9b0RmeBt9pE6 lT0nq+2zyjP5Wa+1oEckM/FhVlBq0s4VsGGABVI6DWi7oWRyz/ZZfn5gV0N4qWgfnHJalyM3cFC 3O6fBUVeH3zAlDMwpz+DEypq18nKLYt6AtEq5WMurqTQR+ES3H6DKAtjc5xSYw6hrbgAMWMSOLR smdpkS6OJkKmNzw==
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Dedicated caches are available for fixed size allocations via
-kmem_cache_alloc(), but for dynamically sized allocations there is only
-the global kmalloc API's set of buckets available. This means it isn't
-possible to separate specific sets of dynamically sized allocations into
-a separate collection of caches.
+Both memdup_user() and vmemdup_user() handle allocations that are
+regularly used for exploiting use-after-free type confusion flaws in
+the kernel (e.g. prctl() PR_SET_VMA_ANON_NAME[1] and setxattr[2][3][4]
+respectively).
 
-This leads to a use-after-free exploitation weakness in the Linux
-kernel since many heap memory spraying/grooming attacks depend on using
-userspace-controllable dynamically sized allocations to collide with
-fixed size allocations that end up in same cache.
+Since both are designed for contents coming from userspace, it allows
+for userspace-controlled allocation sizes. Use a dedicated set of kmalloc
+buckets so these allocations do not share caches with the global kmalloc
+buckets.
 
-While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-against these kinds of "type confusion" attacks, including for fixed
-same-size heap objects, we can create a complementary deterministic
-defense for dynamically sized allocations that are directly user
-controlled. Addressing these cases is limited in scope, so isolating these
-kinds of interfaces will not become an unbounded game of whack-a-mole. For
-example, many pass through memdup_user(), making isolation there very
-effective.
+After a fresh boot under Ubuntu 23.10, we can see the caches are already
+in active use:
 
-In order to isolate user-controllable dynamically-sized
-allocations from the common system kmalloc allocations, introduce
-kmem_buckets_create(), which behaves like kmem_cache_create(). Introduce
-kmem_buckets_alloc(), which behaves like kmem_cache_alloc(). Introduce
-kmem_buckets_alloc_track_caller() for where caller tracking is
-needed. Introduce kmem_buckets_valloc() for cases where vmalloc fallback
-is needed.
+ # grep ^memdup /proc/slabinfo
+ memdup_user-8k         4      4   8192    4    8 : ...
+ memdup_user-4k         8      8   4096    8    8 : ...
+ memdup_user-2k        16     16   2048   16    8 : ...
+ memdup_user-1k         0      0   1024   16    4 : ...
+ memdup_user-512        0      0    512   16    2 : ...
+ memdup_user-256        0      0    256   16    1 : ...
+ memdup_user-128        0      0    128   32    1 : ...
+ memdup_user-64       256    256     64   64    1 : ...
+ memdup_user-32       512    512     32  128    1 : ...
+ memdup_user-16      1024   1024     16  256    1 : ...
+ memdup_user-8       2048   2048      8  512    1 : ...
+ memdup_user-192        0      0    192   21    1 : ...
+ memdup_user-96       168    168     96   42    1 : ...
 
-This can also be used in the future to extend allocation profiling's use
-of code tagging to implement per-caller allocation cache isolation[1]
-even for dynamic allocations.
-
-Memory allocation pinning[2] is still needed to plug the Use-After-Free
-cross-allocator weakness, but that is an existing and separate issue
-which is complementary to this improvement. Development continues for
-that feature via the SLAB_VIRTUAL[3] series (which could also provide
-guard pages -- another complementary improvement).
-
-Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
-Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
-Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
+Link: https://starlabs.sg/blog/2023/07-prctl-anon_vma_name-an-amusing-heap-spray/ [1]
+Link: https://duasynt.com/blog/linux-kernel-heap-spray [2]
+Link: https://etenal.me/archives/1336 [3]
+Link: https://github.com/a13xp0p0v/kernel-hack-drill/blob/master/drill_exploit_uaf.c [4]
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- include/linux/slab.h | 13 ++++++++
- mm/slab_common.c     | 78 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 91 insertions(+)
+ mm/util.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 8d0800c7579a..3698b15b6138 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -549,6 +549,11 @@ void *kmem_cache_alloc_lru_noprof(struct kmem_cache *s, struct list_lru *lru,
- 
- void kmem_cache_free(struct kmem_cache *s, void *objp);
- 
-+kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
-+				  slab_flags_t flags,
-+				  unsigned int useroffset, unsigned int usersize,
-+				  void (*ctor)(void *));
-+
- /*
-  * Bulk allocation and freeing operations. These are accelerated in an
-  * allocator specific way to avoid taking locks repeatedly or building
-@@ -681,6 +686,12 @@ static __always_inline __alloc_size(1) void *kmalloc_noprof(size_t size, gfp_t f
+diff --git a/mm/util.c b/mm/util.c
+index 28c5356b9f1c..6f0fcc5f4243 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -198,6 +198,16 @@ char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
  }
- #define kmalloc(...)				alloc_hooks(kmalloc_noprof(__VA_ARGS__))
+ EXPORT_SYMBOL(kmemdup_nul);
  
-+#define kmem_buckets_alloc(_b, _size, _flags)	\
-+	alloc_hooks(__kmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE))
++static kmem_buckets *user_buckets __ro_after_init;
 +
-+#define kmem_buckets_alloc_track_caller(_b, _size, _flags)	\
-+	alloc_hooks(__kmalloc_node_track_caller_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE, _RET_IP_))
-+
- static __always_inline __alloc_size(1) void *kmalloc_node_noprof(size_t size, gfp_t flags, int node)
- {
- 	if (__builtin_constant_p(size) && size) {
-@@ -808,6 +819,8 @@ void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
- #define kvzalloc(_size, _flags)			kvmalloc(_size, (_flags)|__GFP_ZERO)
- 
- #define kvzalloc_node(_size, _flags, _node)	kvmalloc_node(_size, (_flags)|__GFP_ZERO, _node)
-+#define kmem_buckets_valloc(_b, _size, _flags)	\
-+	alloc_hooks(__kvmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE))
- 
- static inline __alloc_size(1, 2) void *
- kvmalloc_array_node_noprof(size_t n, size_t size, gfp_t flags, int node)
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 9b0f2ef951f1..453bc4ec8b57 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -392,6 +392,80 @@ kmem_cache_create(const char *name, unsigned int size, unsigned int align,
- }
- EXPORT_SYMBOL(kmem_cache_create);
- 
-+static struct kmem_cache *kmem_buckets_cache __ro_after_init;
-+
-+kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
-+				  slab_flags_t flags,
-+				  unsigned int useroffset,
-+				  unsigned int usersize,
-+				  void (*ctor)(void *))
++static int __init init_user_buckets(void)
 +{
-+	kmem_buckets *b;
-+	int idx;
++	user_buckets = kmem_buckets_create("memdup_user", 0, 0, 0, INT_MAX, NULL);
 +
-+	/*
-+	 * When the separate buckets API is not built in, just return
-+	 * a non-NULL value for the kmem_buckets pointer, which will be
-+	 * unused when performing allocations.
-+	 */
-+	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
-+		return ZERO_SIZE_PTR;
-+
-+	if (WARN_ON(!kmem_buckets_cache))
-+		return NULL;
-+
-+	b = kmem_cache_alloc(kmem_buckets_cache, GFP_KERNEL|__GFP_ZERO);
-+	if (WARN_ON(!b))
-+		return NULL;
-+
-+	flags |= SLAB_NO_MERGE;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
-+		char *short_size, *cache_name;
-+		unsigned int cache_useroffset, cache_usersize;
-+		unsigned int size;
-+
-+		if (!kmalloc_caches[KMALLOC_NORMAL][idx])
-+			continue;
-+
-+		size = kmalloc_caches[KMALLOC_NORMAL][idx]->object_size;
-+		if (!size)
-+			continue;
-+
-+		short_size = strchr(kmalloc_caches[KMALLOC_NORMAL][idx]->name, '-');
-+		if (WARN_ON(!short_size))
-+			goto fail;
-+
-+		cache_name = kasprintf(GFP_KERNEL, "%s-%s", name, short_size + 1);
-+		if (WARN_ON(!cache_name))
-+			goto fail;
-+
-+		if (useroffset >= size) {
-+			cache_useroffset = 0;
-+			cache_usersize = 0;
-+		} else {
-+			cache_useroffset = useroffset;
-+			cache_usersize = min(size - cache_useroffset, usersize);
-+		}
-+		(*b)[idx] = kmem_cache_create_usercopy(cache_name, size,
-+					align, flags, cache_useroffset,
-+					cache_usersize, ctor);
-+		kfree(cache_name);
-+		if (WARN_ON(!(*b)[idx]))
-+			goto fail;
-+	}
-+
-+	return b;
-+
-+fail:
-+	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++)
-+		kmem_cache_destroy((*b)[idx]);
-+	kfree(b);
-+
-+	return NULL;
++	return 0;
 +}
-+EXPORT_SYMBOL(kmem_buckets_create);
++subsys_initcall(init_user_buckets);
 +
- #ifdef SLAB_SUPPORTS_SYSFS
- /*
-  * For a given kmem_cache, kmem_cache_destroy() should only be called
-@@ -931,6 +1005,10 @@ void __init create_kmalloc_caches(void)
- 
- 	/* Kmalloc array is now usable */
- 	slab_state = UP;
-+
-+	kmem_buckets_cache = kmem_cache_create("kmalloc_buckets",
-+					       sizeof(kmem_buckets),
-+					       0, SLAB_NO_MERGE, NULL);
- }
- 
  /**
+  * memdup_user - duplicate memory region from user space
+  *
+@@ -211,7 +221,7 @@ void *memdup_user(const void __user *src, size_t len)
+ {
+ 	void *p;
+ 
+-	p = kmalloc_track_caller(len, GFP_USER | __GFP_NOWARN);
++	p = kmem_buckets_alloc_track_caller(user_buckets, len, GFP_USER | __GFP_NOWARN);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -237,7 +247,7 @@ void *vmemdup_user(const void __user *src, size_t len)
+ {
+ 	void *p;
+ 
+-	p = kvmalloc(len, GFP_USER);
++	p = kmem_buckets_valloc(user_buckets, len, GFP_USER);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
 2.34.1
 
