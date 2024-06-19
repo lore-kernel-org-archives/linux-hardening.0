@@ -1,127 +1,161 @@
-Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF718249ED;
-	Wed, 19 Jun 2024 21:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEBF15A864;
+	Wed, 19 Jun 2024 21:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718831569; cv=none; b=YxjzzBP9ibF3JGQoGtLHEgdenAVsEUGVuLhAkIN7KLoX8Xigl/A2bIGAofOBdariXXR0vwZ+sqpAq2GMhfMq6a37AxLACVVh/J0pkixKi2LuySEqJCe/Z+A19RjjQ4t9UIkIx3YgzRcmUH7K1RwVcoF9Wiv/vS01QoWqh/gQ+Ow=
+	t=1718831570; cv=none; b=CX2h6KPDXgQu25Lme9bgoDLMFySsz1vOT1FPFURKZYArS44Hup2KDk9/SDD+v7VyrvFDzhWS/tZmiM7v4Gq4PpmR+rxKcEqx/j14NP/3aEwLoQDq1fQD3JLXK0vwQj/Qos6yOm8SyButxm7w8VOJfScpWJnmZf3GbhVe48lf0AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718831569; c=relaxed/simple;
-	bh=Yzq8tlLhy+Hs+OPsscHhYt5rgosZvrRijLnsOQOy4qo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=aBzNqeDe9KvZOuhPHhIetKNreWtuBbyjWZO6yfb3x3zcPKq0pn2tQl77IN0hA4VSpqxne+Mzz1XqzSIJhWoH6rWIQ6SthwWMa69QI5QTiFMd2oA4Vw7XuPAjSNaM4IXIMcBHkroPOxm0UcNxw0PJWuPd0wZSZJwMBbkFSdwixjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=mYKxzjdI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nkUGAZsa; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718831570; c=relaxed/simple;
+	bh=VhvaB5BCvNV/7ItMlUKCyJLkhBGaN1WYVCzerkxhHBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EsyjRcchTSpmnzn+73oUCQ2x9woR2+AdanGP0C2HTrQ2AkPXLeqsOn+oU4sXKkC1OCGnBw7cRP/oorpdwXBzTauqo6WAULfWNsLU3PHwwZYcwdbR2dgq4TksiyPmAR36VQXieQihUls6kf1Z5niUgH1F6gNxMXngD7nbKz+qiCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3L4Gs0Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="mYKxzjdI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nkUGAZsa"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 03A1D1380105;
-	Wed, 19 Jun 2024 17:12:47 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 19 Jun 2024 17:12:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718831566; x=1718917966; bh=f1FTl8FPRm
-	88cU0dNzu5X9mEf0mO3ktMxGHVAswcrGc=; b=mYKxzjdIW/d5bfr+PGY2Tbt6S+
-	OAw0oGIrQXhy+vFQOIv3JRZM225QYKeQcgfO0RlykunBLzgkgeDFRVuTJuGO0gqD
-	P/xG9vG+Ss5H14Mh1MDVf6sOQZMi49xzT+xvPkd372n9R9VtDaoJ6pgiGk2Y1SxV
-	FRxdbymhlR1W4+mi/XheSCb92TgD1FUj5hHcVe0L7M6fT3Xkl2UEHxTQXvpBS2Q1
-	DZWNJWu3RPnxRHlLMLlWqi6Gk3IYDGYVoCwhM9pmYnRuci+9GcPBKNri6LNDPcse
-	m1lSwaF+gjybsIgt9xwILlaIKIw+gGfN8j6513PgQU8MKQ5iJ9gneI1cgKFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1718831566; x=1718917966; bh=f1FTl8FPRm88cU0dNzu5X9mEf0mO
-	3ktMxGHVAswcrGc=; b=nkUGAZsaySpnK5xf5sPKsO2Bqt+BF+JEEAq0MHj+yLWr
-	OX1YF8WkPOlvcy71hCvat5CjrsxTXFOpNeWW0jUQ6Az7JupJggDO3PKLfT+QUnnb
-	T19+ujHQHEmntpKkoEN0fPn7G1VEskrqYZSskOl+gx8B0N5catlwNp3YkWJNJ4u1
-	uh9Bggs70Do84+5cSyAh+aBCDh6LjTGbpcqkUd31BMX0xOf1eXABXwDQLfUmVWr3
-	PmETs2QlOtIa5SCC/07hPusPgX7XDcLoqbki8sQHiqhIFGUKxlA6PooWwLfZbYLB
-	B9bA5Z7pvl8zOrZo/vZ/wP8JjRMnJx3RXKig27bW6g==
-X-ME-Sender: <xms:zklzZrSbtCKv1pcGzrP7oAGEgfwWPs2Q9wnodpop6SojP8OWQr4JOQ>
-    <xme:zklzZswfsPQNNABFxV9yj1ccyLO7BWOwco_VynmAnuGtLsWPon3CPn4hB-A5yiy6T
-    JV6jNIzdKyt1pxvExo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeftddgudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeu
-    feehudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:zklzZg0q_5pWAuTzytzJbKxUZ7A3wlqd0uWWeEPcsHBjnRdR91nQLg>
-    <xmx:zklzZrABTI26EdxiFeGInD1Y1Xm226U-8O0EIqPs-ZfIxSWJzl5OrA>
-    <xmx:zklzZkicZN28Wy8W9DRld4MLKJqEGLJJKSQYAuPWjP4W3hoNtPA8gw>
-    <xmx:zklzZvrWhauXqIJ7coLzf0JqE40YJ1TD5jvZXj9gl8naRZ513_fLJw>
-    <xmx:zklzZtthkHoG-6FSPQbVgxbHKEkTsR2osXjyG4iY7Dam_SDvA5uw-sqt>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AF476B6008D; Wed, 19 Jun 2024 17:12:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3L4Gs0Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7ABC4AF08;
+	Wed, 19 Jun 2024 21:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718831570;
+	bh=VhvaB5BCvNV/7ItMlUKCyJLkhBGaN1WYVCzerkxhHBw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P3L4Gs0QlChkUuo1QBHJaK/flrUElZ+KaSTcZ4frLteSfcDzMnN7yFLJJcs47xL0Z
+	 i+Y4f5uj9sK4tdvftb7AvTQ3vdmcXhjYp59Gh5Eu/in27JyaQe3iTgFapgYSLQiaVM
+	 W6+WV9yuXTC4FsgFrlHTMtgcPTsj4puvrzCAaRG4cZL9V7iEUWTU8ZXxdWNVlHlEsI
+	 +5U5lX9UJ9iZlIncU1/Wh+fG3XCac7nqHD9ix04ZNV6Nv+9+JolqawqewWa+uobOvH
+	 98RVza7BvOFt+1MbUMmlMEcTOuqKbLshDzEnHoIGHQ/kJbO+9zwonPX3GRd/yNBVpm
+	 tRtPInq4+LItA==
+From: Kees Cook <kees@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Luca Coelho <luciano.coelho@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Haim Dreyfuss <haim.dreyfuss@intel.com>,
+	linux-wireless@vger.kernel.org,
+	Shaul Triebitz <shaul.triebitz@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in cfg80211_wowlan_nd_*
+Date: Wed, 19 Jun 2024 14:12:45 -0700
+Message-Id: <20240619211233.work.355-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f1f08297-e8c7-4673-88b5-e9b6bff69371@app.fastmail.com>
-In-Reply-To: <202406191343.D361BC137@keescook>
-References: <563b8f82-9865-40ae-85d3-055b3bcda7d6@quicinc.com>
- <202406191343.D361BC137@keescook>
-Date: Wed, 19 Jun 2024 23:12:25 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kees Cook" <kees@kernel.org>, "Jeff Johnson" <quic_jjohnson@quicinc.com>
-Cc: linux-hardening@vger.kernel.org,
- "open list" <linux-kernel@vger.kernel.org>
-Subject: Re: mips gcc plugin issues
-Content-Type: text/plain
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4538; i=kees@kernel.org; h=from:subject:message-id; bh=VhvaB5BCvNV/7ItMlUKCyJLkhBGaN1WYVCzerkxhHBw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmc0nNQq/TPpPwGi/dcbLKQg7pM3dYduoJRnrEc 9b2bi/VJ3yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnNJzQAKCRCJcvTf3G3A JipeEACLsBS4IKYSggSdsDiaoVdZGiEWdHgktl+fWWYFyGZFS/mm40ZAKDIhC93qTfGA64t7mKz ZumswcVRdDpGwG3hPg2A3ZVIGeU1KL+/0uzAUrkZmMUpzvRx+uDH4x+JfekHG6VOpMnT7rvjuM7 5GHZe2MOlZcxffAutHv6sWps17rC3v6g8a6/mwcwFRvwepN0UJmaMsugPXgV/gqxQSvgn9pizdC HpShJhoK+KtpJ3BmvQx/5qdplCQ3fuQXM+iRCLNb4CVkFg8LC8w88xWRZsvK8VVKJt/BWdtIyI2 /y5XlVV7AgV/57d/iCUZeowXYGmX412+lN2Ha0ra7I3rNmmKaC08t/jifsEzr00bt8CEsLmdLVi UaFUMa0O87QSXcqTSz3qHukdVOFuxfXR2wSY0Mm7vqOx3JrCMPMcRi7prEfiqYOgpQqEvaPKBxc IeN1mxGVPVW5JD6V2XWdKAFzKhwt9OUQJCENDWCsvaqDZso1DlI6+M0Qb9YP37gQQiXW5NENViG UZDZaUvvvjkvIDIl3yjRl8jWC+RMLHPx2AbnsNZYWaPIAuLCEwEM8o5HBvinzPGZSrR6ln75+VY MENyn9vSCJ/QQprEW/f4GeF/NHDH+n0IgPcazJqYIUmdwJQY1Wqrdy8rUU4UE6iON/wGQhgX3q7 lJYBhKw6LGP+l
+ CA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 19, 2024, at 22:50, Kees Cook wrote:
-> On Tue, Jun 18, 2024 at 04:41:01PM -0700, Jeff Johnson wrote:
->> I see the following in my .config:
->> CONFIG_HAVE_GCC_PLUGINS=y
->> CONFIG_GCC_PLUGINS=y
->> CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
->> CONFIG_GCC_PLUGIN_RANDSTRUCT=y
->> 
->> So I'll turn those off, but just want to flag that this issue exists.
->> Seems either the plugins should work or the allmodconfig should turn them off.
->
-> Well, the plugins work with all the other compiler versions all the
-> various CI systems use. :) For example, I don't see this with distro
-> cross compilers:
->
-> $ mipsel-linux-gnu-gcc --version
-> mipsel-linux-gnu-gcc (Ubuntu 12.3.0-1ubuntu1) 12.3.0
->
-> I suspect this is a problem with the kernel.org crosstool builds? I'm
-> CCing Arnd, who might know more about this.
+Both struct cfg80211_wowlan_nd_match and struct cfg80211_wowlan_nd_info
+pre-allocate space for channels and matches, but then may end up using
+fewer that the full allocation. Shrink the associated counter
+(n_channels and n_matches) after counting the results. This avoids
+compile-time (and run-time) warnings from __counted_by. (The counter
+member needs to be updated _before_ accessing the array index.)
 
-Yes, this is a known problem, and I don't think there is a good
-solution for it, compiler plugins on cross-compilers are inherently
-fragile.
+Seen with coming GCC 15:
 
-The problem here is that a gcc plugin links against the
-compiler, not against code produced by it. I'm linking the
-crosstool compilers statically against libraries as much as
-possible in order to make them more portable between distros,
-but the downside of that is that plugins will only work in
-the environment that I was using to build these toolchains.
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_set_freqs':
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2877:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+ 2877 |                                 match->channels[match->n_channels++] =
+      |                                                 ~~~~~~~~~~~~~~~~~^~
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2885:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+ 2885 |                                 match->channels[match->n_channels++] =
+      |                                                 ~~~~~~~~~~~~~~~~~^~
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_netdetect_reasons':
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2982:58: warning: operation on 'net_detect->n_matches' may be undefined [-Wsequence-point]
+ 2982 |                 net_detect->matches[net_detect->n_matches++] = match;
+      |                                     ~~~~~~~~~~~~~~~~~~~~~^~
 
-My build environment is an older Debian (in order to be
-portable to old glibc versions), but with the system compiler
-updated to gcc-13 (since x86 libgcc cannot be cross-compiled
-with an older compiler).
+Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Gregory Greenman <gregory.greenman@intel.com>
+Cc: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+Cc: Haim Dreyfuss <haim.dreyfuss@intel.com>
+Cc: linux-wireless@vger.kernel.org
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-The long-term solution of course is to replace all the
-gcc plugins with some other way of getting the same
-features, but that will still take some time.
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 54f4acbbd05b..9cd03ea4680d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -2866,6 +2866,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 				    int idx)
+ {
+ 	int i;
++	int n_channels = 0;
+ 
+ 	if (fw_has_api(&mvm->fw->ucode_capa,
+ 		       IWL_UCODE_TLV_API_SCAN_OFFLOAD_CHANS)) {
+@@ -2874,7 +2875,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 
+ 		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN * 8; i++)
+ 			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+-				match->channels[match->n_channels++] =
++				match->channels[n_channels++] =
+ 					mvm->nd_channels[i]->center_freq;
+ 	} else {
+ 		struct iwl_scan_offload_profile_match_v1 *matches =
+@@ -2882,9 +2883,11 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+ 
+ 		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN_V1 * 8; i++)
+ 			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+-				match->channels[match->n_channels++] =
++				match->channels[n_channels++] =
+ 					mvm->nd_channels[i]->center_freq;
+ 	}
++	/* We may have ended up with fewer channels than we allocated. */
++	match->n_channels = n_channels;
+ }
+ 
+ /**
+@@ -2965,6 +2968,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 			     GFP_KERNEL);
+ 	if (!net_detect || !n_matches)
+ 		goto out_report_nd;
++	net_detect->n_matches = n_matches;
++	n_matches = 0;
+ 
+ 	for_each_set_bit(i, &matched_profiles, mvm->n_nd_match_sets) {
+ 		struct cfg80211_wowlan_nd_match *match;
+@@ -2978,8 +2983,9 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 				GFP_KERNEL);
+ 		if (!match)
+ 			goto out_report_nd;
++		match->n_channels = n_channels;
+ 
+-		net_detect->matches[net_detect->n_matches++] = match;
++		net_detect->matches[n_matches++] = match;
+ 
+ 		/* We inverted the order of the SSIDs in the scan
+ 		 * request, so invert the index here.
+@@ -2994,6 +3000,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+ 
+ 		iwl_mvm_query_set_freqs(mvm, d3_data->nd_results, match, i);
+ 	}
++	/* We may have fewer matches than we allocated. */
++	net_detect->n_matches = n_matches;
+ 
+ out_report_nd:
+ 	wakeup.net_detect = net_detect;
+-- 
+2.34.1
 
-     Arnd
