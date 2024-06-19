@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B666615957E;
-	Wed, 19 Jun 2024 20:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E54177F08;
+	Wed, 19 Jun 2024 20:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718829227; cv=none; b=oD0NG3gz+otuxsgRFnBE0pDHJKOySAMogtAdgFtJyAB2Vy96eZcg0cwIPLRnJ3tzg1kARBOLmsXbdnixlnsgkdAJnxK1JnW+v/DPY+0/w+Uj29WN/d0FvLAOGVOl+SUwkLD4qdzXUb3J+MFNXktxvYp/38meNz00wLEi7h16PwY=
+	t=1718829241; cv=none; b=qQyMLkamVu/UJHcrD42jvRVzJUb3+oLkY9IS+1/mTab7vZhPPTjHak7dsA7hl9uiehra5NjQ8b411lfkoKaoG8ZBEnSOZTZj+SFdhx8p75kdusn4juxobDtvPm7aEmbsEgnigsw9NoG+l6HuzqNPa5DB43xglHaVXfBuJxW+nio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718829227; c=relaxed/simple;
-	bh=A9YG6zdoG6OhIJEF6xhsUKbyevzLbK8n6MsvXyF0UXg=;
+	s=arc-20240116; t=1718829241; c=relaxed/simple;
+	bh=UGJrd/dy7d9j7DieSTpj5tH7gE0lVERd5KxspsO/XvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i0phGnrffmosGjHNg3Oy+2sl2MIpOd4Sf40HI9PjjXSvi6UurXJ/gpWkVT8Um3ZW7+qGRRxLSir+Gr32thuUXc5Migf/lZYIeHl+3OEsi4gIjbdhHQgk16EUVfr+s/rxMbjiUMYUR9zEl1DojJJnPICznfHzj100ZYykikmXzNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fssoeO+1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EbCsaokL6wt2w/wsJCFVCjYY2HRXrhXtIvLtV+VLddQ90KNSMdDuxqYWfxaV5TSy0WcegSiKkiXRRa8qRrQYMHYRnJ9FP2SE8cu7XTqYSQFdqmZY+NyRReaNGf2wNCM0z/MY80L+q687KI6AgIZEofT4dGzvjlGapoh9PZkfgC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrJjpt1V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fssoeO+1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30545C4AF0D;
-	Wed, 19 Jun 2024 20:33:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrJjpt1V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF9AC2BBFC;
+	Wed, 19 Jun 2024 20:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718829227;
-	bh=A9YG6zdoG6OhIJEF6xhsUKbyevzLbK8n6MsvXyF0UXg=;
+	s=k20201202; t=1718829240;
+	bh=UGJrd/dy7d9j7DieSTpj5tH7gE0lVERd5KxspsO/XvE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fssoeO+19Y54YLTNplhEXZf2pZa/gB7O446sDI6wxRz1d2rEaBNDzVe9KTcz0VLal
-	 dwt8Tht/Zee+1Vfg3xqLhxQfxY1icFgUTaqZSV5GH2/RGlTeth8csXN/pDnX6PnLA5
-	 r/RPFv82snUdX6Etejb6bJjfGi+Dh4iBucD8Wfc4u052ZkIC02NCMEg8AdLRhuLbLG
-	 Qk/zaKN5KEOH1p3I6ryfDmP4NCScB5tICvOHBf+Q3hW87fX2K8mUraQ5KaXZqKJhBc
-	 2s1D9b5R2YRXEcw8eVbqSLbCkla6TcWnLB1tcuHBcC2ClDec355cBVCsobjCHvSHuq
-	 ILf2tO2eTwqUQ==
-Date: Wed, 19 Jun 2024 13:33:46 -0700
+	b=jrJjpt1V1+R8Nq7rfB2eb97Hbv+g9L2MGs4UcVMfo8a2vZieKPm6B7Bu6NkTLHBQn
+	 93jrpnLEGmeBF1NrzBBlo5Lv1XELOFrt3rYky2QNl286rEc/OeNiVfbnGzgvDqxPEX
+	 /4ie9lvhgeyao7xOpO8YKFNjin7s6oz2YBDcuVq3be/bHaVuPRC1y7SBQ+hv7y4VQ4
+	 x4v9O3hmTdBmGYgtaYATpjRMfi/5Zpmy5r3WMpDW8zOjk2a/d3lxzvVUNpuJhK0/YO
+	 aAMsaosd9wRgTgXz0AXUCvTbfqheLBEijt8PF37j23TjskrGClkmmxVekgOSGVdo0r
+	 krQTm5Dgo8XKA==
+Date: Wed, 19 Jun 2024 13:34:00 -0700
 From: Kees Cook <kees@kernel.org>
 To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 Cc: Johan Hovold <johan@kernel.org>,
@@ -38,11 +38,11 @@ Cc: Johan Hovold <johan@kernel.org>,
 	Justin Stitt <justinstitt@google.com>, linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] USB: serial: garmin_gps: use struct_size to
- allocate pkt
-Message-ID: <202406191333.97D01EB@keescook>
+Subject: Re: [PATCH v2 1/2] USB: serial: garmin_gps: annotate struct
+ garmin_packet with __counted_by
+Message-ID: <202406191333.8602549F2@keescook>
 References: <20240619-garmin_gps_counted_by-v2-0-f82f10ebbf28@gmail.com>
- <20240619-garmin_gps_counted_by-v2-2-f82f10ebbf28@gmail.com>
+ <20240619-garmin_gps_counted_by-v2-1-f82f10ebbf28@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,13 +51,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240619-garmin_gps_counted_by-v2-2-f82f10ebbf28@gmail.com>
+In-Reply-To: <20240619-garmin_gps_counted_by-v2-1-f82f10ebbf28@gmail.com>
 
-On Wed, Jun 19, 2024 at 09:42:45PM +0200, Javier Carrasco wrote:
-> Use the struct_size macro to calculate the size of the pkt, which
-> includes a trailing flexible array.
+On Wed, Jun 19, 2024 at 09:42:44PM +0200, Javier Carrasco wrote:
+> Use the __counted_by compiler attribute for the data[] flexible array
+> member to improve the results of array bound sanitizers.
 > 
-> Suggested-by: Nathan Chancellor <nathan@kernel.org>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 > Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
 Reviewed-by: Kees Cook <kees@kernel.org>
