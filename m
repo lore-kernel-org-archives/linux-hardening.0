@@ -1,59 +1,48 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE131A29;
-	Wed, 19 Jun 2024 16:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034315748C;
+	Wed, 19 Jun 2024 18:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718813527; cv=none; b=mf7qygc9S1lRWq8X9ZZtmtmijN0VCCkYBUA6qIJkqIS/zgLyn9iOkIAwuHYZ2o96+UUp/94j6ab/P37JQ2aJHznArwyu386RLF5YYz/QhmTHoIYN477ZJC3QNAYRxcYMzP7hXSdFWmiesgeRl0KbkTGjQNX5GZj2IrXOuUg9b5c=
+	t=1718822329; cv=none; b=hVFauMqb0F/IuP8duf4T+u/kOk/VWsvLD7OyNXl993fF8vdIyxRYwQOKmXqU/+0pU4tjFFL1q0OS+tMsrigHpHir8/7019moQcLWbf3ic6m7INSn/vEPUumMACpDBMK3rUQZTS+8ccE4MCH92UhPO5Fqyaggm1/FV/eWNMoanq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718813527; c=relaxed/simple;
-	bh=WvxkYqGLa/yBd53bZMfPZ2U1lIrtO/ZWbnXsdP4ZNy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RD9498V9ZbiGo5mF2A8Pl1wnRm6VvV0TQ1qPWORmAZpe1QPg5cqXg+R9m+njU3fcE2yKajmGgXq0BbXYtD0W7R41vsLjJooxPt9IKCaHnbk1bQbcBK8SJypfQLc9ugsJNw+YJnncCUouj2FAr1Ls26irTVloxNplreq095/azi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dd91JLfq; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718822329; c=relaxed/simple;
+	bh=CLulv+F6AfNeTOO6KvrB+UAA0kz4EaRiJ5NQ78Qp/Ik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Jw+u4kivmMawP2lOdxckXkFH1ovVDJGaxLbMm05TlAGaoHYPsc8PjqcwRcnyqdwYgzvOVxlB9vMz1oVOWZzU2XY9/f+1yVsDeAq6lrhrSH9T3vQmLiurgEN7CZikdAaiRNTgdYw9WjCOjxz73hBygc5MXJQISaVFVT7IcFt7Mo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QFIZ9FS6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dd91JLfq"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6ef8bf500dso769539066b.0;
-        Wed, 19 Jun 2024 09:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718813524; x=1719418324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eGorT4rH9fVB+lgR1JoKoDxU9RpCSgqSCB5TfWxaDpc=;
-        b=Dd91JLfqTOgHAqa9OIUBuRkE3bjEe0vIfBRn45wxXaYqpJFBKKrz7ES/8ac7/s6OD+
-         bY/n7OhbUdQT3mcK6y/HNyZ1FdcRwsFk9Vux4mdfZAt2GqSeQbAdiSJXhpSSrErb9Nxp
-         hvlF27spfu+TvsxWgo8hFeHqK+YcmOTaGCjE39OEViGQSv34RvoOopau7sOAIyukHD7U
-         bOnQvAwxb1lLzO6my+PxTzqefYoSqg+d+I+Yp+jErMtNmXy5aqazcPSk4vTI0a+DhEK8
-         x5Ghn6i6Oi34xhEuqHwlltFFjZ6Xzh/izsLQ1sTXzY8zw1d9PSw4n7oOnveLgbhvHsjX
-         faNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718813524; x=1719418324;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eGorT4rH9fVB+lgR1JoKoDxU9RpCSgqSCB5TfWxaDpc=;
-        b=XgsDxcNX3uOlWyqAsYeobkW8RUJ1Up8ST7IkYQ3tPxVRyQ9r/MW82DJarNhDHek8Q3
-         v9WHQv3eLkUGXLGZolcFlRiblhOOYPFsq/muVOP88XlyrvZxPyP5Elxu/COyME1EEWE9
-         91bkS5mNlQoODyIYqXHg6p//KaiGhRayqTCIwCWTVm/vv2yPFQIreNxbgE8NGvj7qp44
-         INTN5b4VQRvnH64Qv0AmkqDNrUsNeZ3wFeZPnjuCjjDdBn0Tf1chDEaA28wLimLjo51/
-         PxvQHpSuHgtNu6IXx0/Eddo9EcTmTdQXqb30YWSAjIxVDX1XKDr3doOUt0F4tBRI0RM7
-         jvag==
-X-Forwarded-Encrypted: i=1; AJvYcCXIomGQzVwqeGAB37gKl1XPfuQfwdUHfO/ruoeexMo02A2Y8BTa0fSY9TWE8nUqYEmXPSIZaLwrQlcIbcqPEwNdqqj4U7kxP2mm82Xj0DZEdb6Kz6sqZFa0k24MX4ebVRHk4nbbhDucM3Y7EwGxushjzxzlApKsSYBNO758WgJbQkfu+tM94JEI
-X-Gm-Message-State: AOJu0YzK12WA7WF29GgcEmSpELWzbz6tAtqHvGXfJc8oCI90sf5rRY2C
-	wyaBLZQmte0+V4P5PtiWPfUQSDRfWpEbiLglMPrnf3VE1Cr56S+k
-X-Google-Smtp-Source: AGHT+IETTsmKISRF6ckXFNkhnsxj3NqZsZJqQvxJi608L+mYCRbLb7SKQNKkDttWyIXFvpoJx8Hezw==
-X-Received: by 2002:a17:907:cc06:b0:a68:bae4:d66f with SMTP id a640c23a62f3a-a6fab615d55mr157162366b.30.1718813523802;
-        Wed, 19 Jun 2024 09:12:03 -0700 (PDT)
-Received: from [192.168.0.31] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f5f1c8d6fsm615589166b.0.2024.06.19.09.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jun 2024 09:12:03 -0700 (PDT)
-Message-ID: <4c74c145-4fc1-44b9-88e7-1075c541adba@gmail.com>
-Date: Wed, 19 Jun 2024 18:12:01 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QFIZ9FS6"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9jAq7016044;
+	Wed, 19 Jun 2024 18:38:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pQi4cEGMKplahCMAtCGNOa8fyNL1P8ZRu9NQMbNyKBA=; b=QFIZ9FS6ZKtdEjJM
+	V/sG6dL5Fe1cD2bordNaC910PqXBZuqFLgJIoc0RsMrUJS0CBAf+YHjkMht1DdP2
+	az1y3pL+ThG6LKYg1eZzLrpF/3ogDhjmBrh5zih00zDGma1tr8f4Kk8sYWj5iI2/
+	KWCnCLM6+TOYc9hQkQvo9eQPXwJ74XwB6n/q68R/Gb941TslXlJ/dEjta0VpHwpe
+	k/Mx37iWxGBX99nICfSitHA3uwoHOeDqvZu+KArJ7413cmS1y7E4/cWJeyvOu2fM
+	Fs6NCOtKkztTZtiSmBIXZ1EhjVisORRzeQXUNjsW05AMBOs/zifSEMJEbTXaIe17
+	pYfJRw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuja52fgu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 18:38:34 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JIcWKP006906
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Jun 2024 18:38:32 GMT
+Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Jun
+ 2024 11:38:32 -0700
+Message-ID: <e91728af-83e7-453e-816f-add3b0011a66@quicinc.com>
+Date: Wed, 19 Jun 2024 11:38:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,45 +50,61 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] USB: serial: garmin_gps: annotate struct garmin_packet
- with __counted_by
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-References: <20240619-garmin_gps_counted_by-v1-1-d8d816f085d9@gmail.com>
- <20240619144320.GA2091442@thelio-3990X>
-Content-Language: en-US, de-AT
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <20240619144320.GA2091442@thelio-3990X>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 2/2] usercopy: Convert test_user_copy to KUnit test
+To: Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+CC: Vitor Massaru Iha <vitor@massaru.org>,
+        Ivan Orlov
+	<ivan.orlov0322@gmail.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins
+	<brendan.higgins@linux.dev>,
+        Rae Moar <rmoar@google.com>,
+        "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <kunit-dev@googlegroups.com>, <linux-hardening@vger.kernel.org>
+References: <20240612195412.make.760-kees@kernel.org>
+ <20240612195921.2685842-2-kees@kernel.org>
+Content-Language: en-US
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240612195921.2685842-2-kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: BxSyBGdf2KXEaNU80wT485Y1kHpPWMz4
+X-Proofpoint-GUID: BxSyBGdf2KXEaNU80wT485Y1kHpPWMz4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 clxscore=1011 mlxscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406190140
 
-On 19/06/2024 16:43, Nathan Chancellor wrote:
-> On Wed, Jun 19, 2024 at 11:40:57AM +0200, Javier Carrasco wrote:
->> Use the __counted_by compiler attribute for the data[] flexible array member
->> to improve the results of array bound sanitizers.
->>
->> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
->> ---
->> The size is assigned before the first reference to the flexible array
->> (see pkt_add()), which allows for a straightforward annotation without
->> further modifications.
+On 6/12/24 12:59, Kees Cook wrote:
+> Convert the runtime tests of hardened usercopy to standard KUnit tests.
 > 
-> Agreed, this seems like a reasonable patch in and of itself that should
-> work:
+> Additionally disable usercopy_test_invalid() for systems with separate
+> address spaces (or no MMU) since it's not sensible to test for address
+> confusion there (e.g. m68k).
 > 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> 
-> It might also make sense to change the pkt allocation to use
-> struct_size() instead of open coding it?
+> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
+> Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+> Reviewed-by: David Gow <davidgow@google.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+...
+> +kunit_test_suites(&usercopy_test_suite);
+> +MODULE_AUTHOR("Kees Cook <kees@kernel.org>");
+>   MODULE_LICENSE("GPL");
 
-Sure, it looks much better. I will send a v2 with the patch and the
-corresponding Suggested-by:
+Can you add the missing MODULE_DESCRIPTION() to remove the W=1 warning?
 
-Thanks and best regards,
-Javier Carrasco
+The fix to the current file is part of:
+https://lore.kernel.org/all/20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com/
