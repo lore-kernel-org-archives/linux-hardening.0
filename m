@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF81433B9;
-	Wed, 19 Jun 2024 21:17:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D51433B9;
+	Wed, 19 Jun 2024 21:19:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718831865; cv=none; b=lXLPG0rGhD70joEDRIrlrhHqQFY+/+icLHLUDlTeIvSj/JCZd2xXzlfCQz3LZE48W0+wY2D09UFy/mHmBNNVzwKoPUVO/SuiRW+e4yggfTEMfvvFMJ+N9C3OBKChR8g3deK+VR4pZSBV4epkGVKZdsu/WMeegf1S/JXqOuT1l4Y=
+	t=1718831976; cv=none; b=lgB8yOGzDXQ8FdtyXqLw7MeBYiM/wMhzBndw9OhcyuCm6KHwvJVY7Cqm0c4LIraKjg3BYYNxgbidzSKzqWnvKUm4wwdFLyEPyRjXPU09J00BBSEVgpKyDNqVshFFFqVNVapZ2l7LFUDFsbOhFI/3+NYW/C/4SCxAr5Ew8hCp42c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718831865; c=relaxed/simple;
-	bh=iRETBpfwtwAK5g7polO8QWzB5wBcNxu9v3DHjML7TRo=;
+	s=arc-20240116; t=1718831976; c=relaxed/simple;
+	bh=qwRGe/3vIIbZX46zaw1Lsm/QSA6NT3UmhxNJaDfGBpc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hoExR1q9k0i/+BBktdkZy2CgMqjHDyPBK9Joq7I4ftEnBRACRbS0heuXLz+YdWJ5k42ChYPC9GzGWpTFIO0j6ua9xWtux44qzvcwxGmEuh85sZXIlieAXJ9PUwJwki6iYHi2xIgqz9eBGPpEWOUG2WdAav9eTnHnI7NkAN5X7aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCUpjWrP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KQSeEo3FtAuaL23Pu+VE5NagyMh4zSZ+gdw06yZK9EZbZER0AXrY2TqcQ5vfdSY/nmg5VNJgMawC29ChGIfDL9SMkL24fgVXWpztOFxx28cq+rt0UnMfbdUV6+vLMPUPEIyIjYIBxF6ldqg31F4NMMLa50govMkceaXv/L4RKGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRandiG8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCUpjWrP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F124C2BBFC;
-	Wed, 19 Jun 2024 21:17:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRandiG8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A85FC2BBFC;
+	Wed, 19 Jun 2024 21:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718831865;
-	bh=iRETBpfwtwAK5g7polO8QWzB5wBcNxu9v3DHjML7TRo=;
+	s=k20201202; t=1718831975;
+	bh=qwRGe/3vIIbZX46zaw1Lsm/QSA6NT3UmhxNJaDfGBpc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SCUpjWrPPxU8rhsXuAiXYzpWLnmeRrHp+sMIKVKOIPUPnycCDH16v57EXrEkGQXDt
-	 RcOHYM+VMviMcbO3hjCfrXwgNA+mSDHvwPPS/UX84TdFpFpq0/KY64LdIeSafmqEoQ
-	 SDbrHluPjY7fVer3OSDkbKfa2SXkBZUi7CW7NuXbiZQ0zWj4wl8V2tQyHqmIZBbO0k
-	 2/0r0jA3QfqGvsFr74eEceLsKQkODIXyn4FUflC+v4sPtyETm0ze3BuUdlGwAKgATc
-	 MpOqgWruVhCMvFSMwOgwG9MgyWdbbkXrgBpaY8GiaqKfa1GZnePOZOet+KO0c1d9Og
-	 4oDaufEYCfg1w==
-Date: Wed, 19 Jun 2024 14:17:44 -0700
+	b=gRandiG8gmW4RC66fwYU0LuNySG3UrLqTasrgfHyYZigKUfJk5IuLEhvtwQqVCWr1
+	 QfgT043fRR4zbn8X9FswU5p3IEy7NfP83eWfBFlyV60D+1Zn6TxY9AL6ArkHipMyXM
+	 K5be+IBX5ZoEkZsmF6utZWdthgvIS0ui/v4A3jKJ75cvsDZVLpMoQTJfbApBGwkqav
+	 7COHX6m20B6AVU5hLzUx927xN0/uWqFsPcfQOTnvy8DHF1CWkuSv8DsjcD2i1ff4vn
+	 qEPBZ3oGtg2IwEtVtwUawd8yXjChyiNyvFgK8xmNapjXiq77EfqK+EdbSe+5kc4ICK
+	 utGcpr5r7A3Gg==
+Date: Wed, 19 Jun 2024 14:19:34 -0700
 From: Kees Cook <kees@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
-	linux-hardening@vger.kernel.org,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: mips gcc plugin issues
-Message-ID: <202406191414.67C589A@keescook>
-References: <563b8f82-9865-40ae-85d3-055b3bcda7d6@quicinc.com>
- <202406191343.D361BC137@keescook>
- <f1f08297-e8c7-4673-88b5-e9b6bff69371@app.fastmail.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] Input: ims-pcu - annotate struct ims_pcu_flash_fmt
+ with __counted_by
+Message-ID: <202406191419.D9E591195@keescook>
+References: <20240619-ims-pcu-counted_by-v1-0-3ee0ead2e57d@gmail.com>
+ <20240619-ims-pcu-counted_by-v1-1-3ee0ead2e57d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -45,56 +46,17 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f1f08297-e8c7-4673-88b5-e9b6bff69371@app.fastmail.com>
+In-Reply-To: <20240619-ims-pcu-counted_by-v1-1-3ee0ead2e57d@gmail.com>
 
-On Wed, Jun 19, 2024 at 11:12:25PM +0200, Arnd Bergmann wrote:
-> On Wed, Jun 19, 2024, at 22:50, Kees Cook wrote:
-> > On Tue, Jun 18, 2024 at 04:41:01PM -0700, Jeff Johnson wrote:
-> >> I see the following in my .config:
-> >> CONFIG_HAVE_GCC_PLUGINS=y
-> >> CONFIG_GCC_PLUGINS=y
-> >> CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
-> >> CONFIG_GCC_PLUGIN_RANDSTRUCT=y
-> >> 
-> >> So I'll turn those off, but just want to flag that this issue exists.
-> >> Seems either the plugins should work or the allmodconfig should turn them off.
-> >
-> > Well, the plugins work with all the other compiler versions all the
-> > various CI systems use. :) For example, I don't see this with distro
-> > cross compilers:
-> >
-> > $ mipsel-linux-gnu-gcc --version
-> > mipsel-linux-gnu-gcc (Ubuntu 12.3.0-1ubuntu1) 12.3.0
-> >
-> > I suspect this is a problem with the kernel.org crosstool builds? I'm
-> > CCing Arnd, who might know more about this.
+On Wed, Jun 19, 2024 at 11:13:21PM +0200, Javier Carrasco wrote:
+> Use the __counted_by compiler attribute for the data[] flexible array
+> member to improve the results of array bound sanitizers.
 > 
-> Yes, this is a known problem, and I don't think there is a good
-> solution for it, compiler plugins on cross-compilers are inherently
-> fragile.
-> 
-> The problem here is that a gcc plugin links against the
-> compiler, not against code produced by it. I'm linking the
-> crosstool compilers statically against libraries as much as
-> possible in order to make them more portable between distros,
-> but the downside of that is that plugins will only work in
-> the environment that I was using to build these toolchains.
-> 
-> My build environment is an older Debian (in order to be
-> portable to old glibc versions), but with the system compiler
-> updated to gcc-13 (since x86 libgcc cannot be cross-compiled
-> with an older compiler).
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Can the crosstools remove the plugin support? That seems like the best
-solution. Kconfig test for plugin availability with:
+Looks good to me. Thanks!
 
-	depends on $(success,test -e $(shell,$(CC) -print-file-name=plugin)/include/plugin-version.h)
-
-> The long-term solution of course is to replace all the
-> gcc plugins with some other way of getting the same
-> features, but that will still take some time.
-
-Agreed. There's not much motion on the GCC side of this, though.
+Reviewed-by: Kees Cook <kees@kernel.org>
 
 -- 
 Kees Cook
