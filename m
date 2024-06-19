@@ -1,99 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C079418E754;
-	Tue, 18 Jun 2024 23:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DED80638;
+	Wed, 19 Jun 2024 09:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718754067; cv=none; b=EI0Tjlzgie/Ie7d2YX8J/30QeT8J/CAS1ybDWgCpF+6l5uK319+of3V2gcUjKezWi3NWo/weSNAjjGh2nn4+6QtdIhdSxB3NPOPOjYsn1NtUrBBfWZ6EwcZlVNgTBRUvtI4D6HzvIIztsb7ug74Ymm46YiuvW9Q90ESif4RW5C4=
+	t=1718790065; cv=none; b=W5ibpGJTPM7fa2+3u45TNH9HOSX8+SpIHmYdzbsa//bc29UiLbootIcAdUSKg4uMQC+PJmCvsImvJtDvOIIUdI6zjB1CHwLROmYMIfUXDcn01WrCm4nWFK83fBxgm3Xo3hmjvrK3zQ+ue8iB2psj1HkSTyUQD4uklCuZIsgiDUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718754067; c=relaxed/simple;
-	bh=O9eySkFBFFhyrOoADg7GSNhpc95wQVGdzH+2rsraOqM=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:CC:Content-Type; b=eoCZAj7eAU8J+LVMtkWiwOR1TwZVjZH7ftutg+/zSirC/j5LYWRFMCwsNZ4sgjTKICvsImSRKoLpNMd2zby+Ls6EqHNHCYiSooJge2wGZNNJeLNCI1D8252f2SvnrD4diUb1YerIVyXjl6TPDmZ9n47Zqj8bNg7HoEdTiv5SJuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R99PvyYa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718790065; c=relaxed/simple;
+	bh=Qg6GuD9uT0FjYhDJqubImg2K17b3CJlSTTIQ09qnDB8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dAUd06/Mc0sCtY1HSx8RPooRZvZZVyHuvrOha3ca0xp0gnIvhxA9jrfkdXWj/iRjLT3UGwEuHattkmaly4bVSXntIw6BV+VgfumdJiwH7D8cM0ikDkHg3oNQoSNetQERqJJO2PN5WL/dnoDI5awbpkT4lZN/CGbHFQyLEFuLCno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHmgL1Kj; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R99PvyYa"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ILa25l014475;
-	Tue, 18 Jun 2024 23:41:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=O6Y10khejXzVQe3DeWLM3x
-	WF74pRoLDK/ugLwuZETo0=; b=R99PvyYarb1h/TWd4wiI4g4ILWHoaLuHXvioAB
-	N4MjKWj6U1UnxPAuUybUPr22rvNd1e4AGEMCJlFJFTQ+QcF1TadkCZds+68epQ0x
-	G0+yQGODfLCKEEHpE0k1tUxPBsqhVisq+o2CoDJItvYd+2fEAj8z/dv0zVM++agN
-	d673G+g3HK8F8dehbVrO5+9Y1Urq+i0VAwXmGs/lfscYom9FtgfPgrVzrOr1U1M5
-	1cWCX9jsnmHASETP8q16GYZOKcarweZYtlAy8VYk7UOVPtrTvVGYk4Dl82YNPM/p
-	Uww1GGwvs5NIfXSK3jTQ4wlaHL18ZwejkQkbL+xsddqI2stA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuj9x062j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 23:41:02 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45INf19N027603
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Jun 2024 23:41:01 GMT
-Received: from [10.48.243.231] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Jun
- 2024 16:41:01 -0700
-Message-ID: <563b8f82-9865-40ae-85d3-055b3bcda7d6@quicinc.com>
-Date: Tue, 18 Jun 2024 16:41:01 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHmgL1Kj"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42121d27861so49751805e9.0;
+        Wed, 19 Jun 2024 02:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718790061; x=1719394861; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r22BRKQXYcHOcbW5qU6bmdOJSTmqJ20MxR35f7aK9/A=;
+        b=BHmgL1Kj5iclisI+DC+6STb6ZX5dGHyGnEYx1laRQJmQwIQ5BoEPLs5VoAAjI8mZuq
+         VDJGlMGZ01DcVYbkB69rwZNfoCiQnvK1bnpDMGCMPDCbm0ScQBmhV5o9CK5EvnreD97s
+         oeP/9oXZGgzG27HQxk3JfRJAjUNsoiHMlvpHOnkvYq0JCdsmUaPMuSjukLZGuwA3/uWB
+         G7A+74nL7RRCP9q5d/daZrgOM8ZlHDh3tl0EHQ+SNWxNsCEc4PyW/ML+WS5Cxe52r0Om
+         8O54mAuEIYpYizeMCSc+OPX+rntd3V37gEYMVA3PGF559SXi0t0ogW1m+nA3WxhAtAVz
+         1sAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718790061; x=1719394861;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r22BRKQXYcHOcbW5qU6bmdOJSTmqJ20MxR35f7aK9/A=;
+        b=hPC3k8AQRoTDO78APt8mz8f4qUV5Myavbp1pEXlu75rUnzXQ1tNbdnBA1r/ZLAjBS9
+         SbL9bmJYrp/rhfUJuRiXNVl0SOJ84DcogtGv/M/f2WUFul82AH55L4fEL+cixqcumdbs
+         4I0OwBrs77LTXWtKyGKT3lMY/dpR+FKuZl71kkLwyh5iUfkLJ+ArSeh201arvP/AN7VW
+         xwhBMpxINcrpBlTs9a3b/sEIVWU2hMU9YOI7yTd4NrbS1HZAemn+GjWSgMGIIYkMfKJK
+         hnuQHbn0jKsPhgEU2w0WrfhMLwMarOXe8xqlyzIRwnz0PLRDugFgL8Me0K1Z9o6ZSvbV
+         hY9A==
+X-Forwarded-Encrypted: i=1; AJvYcCX014WX20ugXSObpdIrPI6pPWVyUJYavryE7ieD+CXXrEBA+V4nPGipj7y+iHnByMNFg9lChWXcG3vm+JX9c6n0kJZXHUTxx+j2M0i7vrCi2oUk5Mbij1C1oAEaSPfnB/XkZJd4YkAttIuEZOSN
+X-Gm-Message-State: AOJu0YyInlfdIxxhaCqjMVBZqyxr2RWDBP6PkQngQCE0KeAUEVlDxs+2
+	GmYTn2Dpzc1EI8HGqyVP0Iv5Whua9cVQvtOLO29o2cw/WMJAg3py
+X-Google-Smtp-Source: AGHT+IElF7dg8O3LJe50WO5VqjUMPh2cpDUpsDriBW2iVQl47dtiuAO0Ws2JcFXsP6UpV3klb5M5gg==
+X-Received: by 2002:a05:600c:35c3:b0:421:7bed:5274 with SMTP id 5b1f17b1804b1-42475173ce3mr16488635e9.10.1718790061178;
+        Wed, 19 Jun 2024 02:41:01 -0700 (PDT)
+Received: from [127.0.1.1] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42306049f1asm182804075e9.22.2024.06.19.02.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 02:41:00 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Date: Wed, 19 Jun 2024 11:40:57 +0200
+Subject: [PATCH] USB: serial: garmin_gps: annotate struct garmin_packet
+ with __counted_by
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-To: Kees Cook <kees@kernel.org>
-Subject: mips gcc plugin issues
-CC: <linux-hardening@vger.kernel.org>,
-        open list
-	<linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uSOCDu-RnnuaxYfRpDI6E_b-VsWAXCt_
-X-Proofpoint-GUID: uSOCDu-RnnuaxYfRpDI6E_b-VsWAXCt_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-18_06,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=432
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406180174
+Message-Id: <20240619-garmin_gps_counted_by-v1-1-d8d816f085d9@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAKincmYC/x3MQQ5AMBBA0avIrDUp1QpXEWnQUbNQ0iJEeneN5
+ Vv8/0JATxigzV7weFGgzSUUeQbTMjiLjEwylLysuCoaZge/ktN2D3raTneg0ePDRK1kJRvFhRS
+ Q2t3jTPf/7foYP5WT9QVnAAAA
+To: Johan Hovold <johan@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718790059; l=1151;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=Qg6GuD9uT0FjYhDJqubImg2K17b3CJlSTTIQ09qnDB8=;
+ b=AebiJqrhEZoqxVdOt6AGpsJ3S/JQfLwNfhVOY++mgZwM+D/d/7g+jZIVsIR6q94qhuAkGG7eX
+ ict+JBHmecYBkDJ9r7+wq3TtL94ZE7beQOexXCgFNweWVRff/v7UqZC
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-I'm trying to do an allmodconfig build for ARCH=mips using:
-https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-mips-linux.tar.gz
+Use the __counted_by compiler attribute for the data[] flexible array member
+to improve the results of array bound sanitizers.
 
-This build dies quickly with:
-  CC      scripts/mod/empty.o
-cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so: ./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
-cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so: ./scripts/gcc-plugins/latent_entropy_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
-  CC      scripts/mod/devicetable-offsets.s
-make[2]: *** [scripts/Makefile.build:244: scripts/mod/empty.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
-cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so: ./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
-cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so: ./scripts/gcc-plugins/latent_entropy_plugin.so: undefined symbol: _ZNK6frange6acceptERK14vrange_visitor
-  HDRINST usr/include/linux/usb/tmc.h
-make[2]: *** [scripts/Makefile.build:117: scripts/mod/devicetable-offsets.s] Error 1
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+The size is assigned before the first reference to the flexible array
+(see pkt_add()), which allows for a straightforward annotation without
+further modifications.
+---
+ drivers/usb/serial/garmin_gps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I see the following in my .config:
-CONFIG_HAVE_GCC_PLUGINS=y
-CONFIG_GCC_PLUGINS=y
-CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
-CONFIG_GCC_PLUGIN_RANDSTRUCT=y
+diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
+index 670e942fdaaa..57df6ad183ff 100644
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -104,7 +104,7 @@ struct garmin_packet {
+ 	int               seq;
+ 	/* the real size of the data array, always > 0 */
+ 	int               size;
+-	__u8              data[];
++	__u8              data[] __counted_by(size);
+ };
+ 
+ /* structure used to keep the current state of the driver */
 
-So I'll turn those off, but just want to flag that this issue exists.
-Seems either the plugins should work or the allmodconfig should turn them off.
+---
+base-commit: 0c52056d9f77508cb6d4d68d3fc91c6c08ec71af
+change-id: 20240619-garmin_gps_counted_by-376545960353
 
-/jeff
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
+
