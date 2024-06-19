@@ -1,52 +1,59 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB7511CA1
-	for <linux-hardening@vger.kernel.org>; Wed, 19 Jun 2024 15:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE131A29;
+	Wed, 19 Jun 2024 16:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718810950; cv=none; b=PcJtwOS06q/kwbrunfOqRi2gRHkafZ+IE/6JEm3YVG0VjOH6ozz+nbaAnt39umKHo6gPJzjhQi23r55kyrvjOG8JyeG0vpyzEnq+el0JgqcVL/RqZ4Upt+tsZcS9EnD+y0RgHJqrfvAEQ61fmzcZHfdGEXBh7cCv/C/AcpKUG9M=
+	t=1718813527; cv=none; b=mf7qygc9S1lRWq8X9ZZtmtmijN0VCCkYBUA6qIJkqIS/zgLyn9iOkIAwuHYZ2o96+UUp/94j6ab/P37JQ2aJHznArwyu386RLF5YYz/QhmTHoIYN477ZJC3QNAYRxcYMzP7hXSdFWmiesgeRl0KbkTGjQNX5GZj2IrXOuUg9b5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718810950; c=relaxed/simple;
-	bh=dlVW0Zt+yD0AYF7FVIAwlp8E7GCLYrxCPZlP2ToeyWw=;
+	s=arc-20240116; t=1718813527; c=relaxed/simple;
+	bh=WvxkYqGLa/yBd53bZMfPZ2U1lIrtO/ZWbnXsdP4ZNy8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RVfyLcvnXY6ALt+NsIg7vnQkVR23NPZwCzMd1M+LvHkYaGcTZ4WFNgQpHJIjibWQPYlRbbbgYyR2BdlKtZT+AMMbIXSLYKfGHDDoAhH6mjM7kliVSPyP4yq0WGSOYcWYivShoq6KL8Iy8iz2OP/0Jg4+4s6cPrTeekNxlNH2klk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=XPW+p68K; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=RD9498V9ZbiGo5mF2A8Pl1wnRm6VvV0TQ1qPWORmAZpe1QPg5cqXg+R9m+njU3fcE2yKajmGgXq0BbXYtD0W7R41vsLjJooxPt9IKCaHnbk1bQbcBK8SJypfQLc9ugsJNw+YJnncCUouj2FAr1Ls26irTVloxNplreq095/azi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dd91JLfq; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XPW+p68K"
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-	by cmsmtp with ESMTPS
-	id Jvr2s0VUgSLKxJxDhsL6hA; Wed, 19 Jun 2024 15:27:33 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id JxDgsCJA469m4JxDgssrVV; Wed, 19 Jun 2024 15:27:32 +0000
-X-Authority-Analysis: v=2.4 cv=QONuRBLL c=1 sm=1 tr=0 ts=6672f8e4
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10 a=pGLkceISAAAA:8
- a=VwQbUJbxAAAA:8 a=UpB2q-s9SAH0Zd9J5qsA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FvJxBu1YSpxd+/VCWen78+JSc56VIImOsnuc2H9+pC4=; b=XPW+p68KqNViATw/50CcjHJeqs
-	iR2t1LTnsYC15yhdO/6Fs2o5FFz1iYsshhRXKp91gEHnzuzG49JRq9oNz+qAMy/B7EKh7SCV6vLs9
-	v4owBH/rD+Hzilp6/lvwFZRmj+W/3PAsVpnebS2jBhbLhaWUOqmBg+YmEWJfS1qtMAs8S53K9IfKt
-	OkoOkXnB5UtyR6dn5J8w2FvyDKyvJ+bmyJmC1L/cRYa29FUs1/bANOzGAeADkgz0DQmv2jJQfi0nl
-	I1vueRgsGmax2jLhEBxyo8Q+0vlZed2Yu9pVplQsaE14TU7B6CUV+uhum1KYQDECKwwH+u5zh5dZp
-	iDT0/O/w==;
-Received: from [201.172.173.139] (port=49740 helo=[192.168.15.14])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sJxDe-000rOz-1I;
-	Wed, 19 Jun 2024 10:27:30 -0500
-Message-ID: <5832065e-d998-4dc7-9df9-9186d3d26d9b@embeddedor.com>
-Date: Wed, 19 Jun 2024 09:27:28 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dd91JLfq"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6ef8bf500dso769539066b.0;
+        Wed, 19 Jun 2024 09:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718813524; x=1719418324; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eGorT4rH9fVB+lgR1JoKoDxU9RpCSgqSCB5TfWxaDpc=;
+        b=Dd91JLfqTOgHAqa9OIUBuRkE3bjEe0vIfBRn45wxXaYqpJFBKKrz7ES/8ac7/s6OD+
+         bY/n7OhbUdQT3mcK6y/HNyZ1FdcRwsFk9Vux4mdfZAt2GqSeQbAdiSJXhpSSrErb9Nxp
+         hvlF27spfu+TvsxWgo8hFeHqK+YcmOTaGCjE39OEViGQSv34RvoOopau7sOAIyukHD7U
+         bOnQvAwxb1lLzO6my+PxTzqefYoSqg+d+I+Yp+jErMtNmXy5aqazcPSk4vTI0a+DhEK8
+         x5Ghn6i6Oi34xhEuqHwlltFFjZ6Xzh/izsLQ1sTXzY8zw1d9PSw4n7oOnveLgbhvHsjX
+         faNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718813524; x=1719418324;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eGorT4rH9fVB+lgR1JoKoDxU9RpCSgqSCB5TfWxaDpc=;
+        b=XgsDxcNX3uOlWyqAsYeobkW8RUJ1Up8ST7IkYQ3tPxVRyQ9r/MW82DJarNhDHek8Q3
+         v9WHQv3eLkUGXLGZolcFlRiblhOOYPFsq/muVOP88XlyrvZxPyP5Elxu/COyME1EEWE9
+         91bkS5mNlQoODyIYqXHg6p//KaiGhRayqTCIwCWTVm/vv2yPFQIreNxbgE8NGvj7qp44
+         INTN5b4VQRvnH64Qv0AmkqDNrUsNeZ3wFeZPnjuCjjDdBn0Tf1chDEaA28wLimLjo51/
+         PxvQHpSuHgtNu6IXx0/Eddo9EcTmTdQXqb30YWSAjIxVDX1XKDr3doOUt0F4tBRI0RM7
+         jvag==
+X-Forwarded-Encrypted: i=1; AJvYcCXIomGQzVwqeGAB37gKl1XPfuQfwdUHfO/ruoeexMo02A2Y8BTa0fSY9TWE8nUqYEmXPSIZaLwrQlcIbcqPEwNdqqj4U7kxP2mm82Xj0DZEdb6Kz6sqZFa0k24MX4ebVRHk4nbbhDucM3Y7EwGxushjzxzlApKsSYBNO758WgJbQkfu+tM94JEI
+X-Gm-Message-State: AOJu0YzK12WA7WF29GgcEmSpELWzbz6tAtqHvGXfJc8oCI90sf5rRY2C
+	wyaBLZQmte0+V4P5PtiWPfUQSDRfWpEbiLglMPrnf3VE1Cr56S+k
+X-Google-Smtp-Source: AGHT+IETTsmKISRF6ckXFNkhnsxj3NqZsZJqQvxJi608L+mYCRbLb7SKQNKkDttWyIXFvpoJx8Hezw==
+X-Received: by 2002:a17:907:cc06:b0:a68:bae4:d66f with SMTP id a640c23a62f3a-a6fab615d55mr157162366b.30.1718813523802;
+        Wed, 19 Jun 2024 09:12:03 -0700 (PDT)
+Received: from [192.168.0.31] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f5f1c8d6fsm615589166b.0.2024.06.19.09.12.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jun 2024 09:12:03 -0700 (PDT)
+Message-ID: <4c74c145-4fc1-44b9-88e7-1075c541adba@gmail.com>
+Date: Wed, 19 Jun 2024 18:12:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,8 +63,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] USB: serial: garmin_gps: annotate struct garmin_packet
  with __counted_by
-To: Nathan Chancellor <nathan@kernel.org>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
+To: Nathan Chancellor <nathan@kernel.org>
 Cc: Johan Hovold <johan@kernel.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
  <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
@@ -67,35 +73,13 @@ Cc: Johan Hovold <johan@kernel.org>,
  linux-hardening@vger.kernel.org, llvm@lists.linux.dev
 References: <20240619-garmin_gps_counted_by-v1-1-d8d816f085d9@gmail.com>
  <20240619144320.GA2091442@thelio-3990X>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Language: en-US, de-AT
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 In-Reply-To: <20240619144320.GA2091442@thelio-3990X>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sJxDe-000rOz-1I
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.14]) [201.172.173.139]:49740
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFara3vBG9hH/qxfYlryoU7127KTnZ/dyA2whPTwUYbKEnx/AfSGotgTvktx1o1VXMF84MCVYbDztLQ/xZT3tcEGkI1kuI73dQGvsjhUHkICTqP4YmGa
- oUOcWKBG9Bda8S0Atazgyu8Oe7qJT5wHyhRLGLb+g4ErieTeIMsa+dp3zLK8WEDlH17QhDGVvmpjurwD1L1biwSP8JuSMLnfRuz+q88meT+//mJIFjsM7gik
 
-
-
-On 19/06/24 16:43, Nathan Chancellor wrote:
+On 19/06/2024 16:43, Nathan Chancellor wrote:
 > On Wed, Jun 19, 2024 at 11:40:57AM +0200, Javier Carrasco wrote:
 >> Use the __counted_by compiler attribute for the data[] flexible array member
 >> to improve the results of array bound sanitizers.
@@ -114,8 +98,8 @@ On 19/06/24 16:43, Nathan Chancellor wrote:
 > It might also make sense to change the pkt allocation to use
 > struct_size() instead of open coding it?
 
-+1 :)
+Sure, it looks much better. I will send a v2 with the patch and the
+corresponding Suggested-by:
 
-Thanks
---
-Gustavo
+Thanks and best regards,
+Javier Carrasco
