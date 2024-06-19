@@ -1,110 +1,110 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034315748C;
-	Wed, 19 Jun 2024 18:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11978155759;
+	Wed, 19 Jun 2024 19:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718822329; cv=none; b=hVFauMqb0F/IuP8duf4T+u/kOk/VWsvLD7OyNXl993fF8vdIyxRYwQOKmXqU/+0pU4tjFFL1q0OS+tMsrigHpHir8/7019moQcLWbf3ic6m7INSn/vEPUumMACpDBMK3rUQZTS+8ccE4MCH92UhPO5Fqyaggm1/FV/eWNMoanq8=
+	t=1718825638; cv=none; b=cwK4McwYrzAiJwSq2ZD/XH21qmAZUGk59QGeLUmnTtr4/Yl8r0Jv0jXfW4/v4RGKfo4vHwzEHUNxl9+37p5/1RHmKM4JAiJ9zhArUU/VWrbehIUl5OyeYyO0+XxOuJPIWSgCBtAhZh91jdmC0ctPSW1mMbPTk4cL9eXexyE4/Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718822329; c=relaxed/simple;
-	bh=CLulv+F6AfNeTOO6KvrB+UAA0kz4EaRiJ5NQ78Qp/Ik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Jw+u4kivmMawP2lOdxckXkFH1ovVDJGaxLbMm05TlAGaoHYPsc8PjqcwRcnyqdwYgzvOVxlB9vMz1oVOWZzU2XY9/f+1yVsDeAq6lrhrSH9T3vQmLiurgEN7CZikdAaiRNTgdYw9WjCOjxz73hBygc5MXJQISaVFVT7IcFt7Mo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QFIZ9FS6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718825638; c=relaxed/simple;
+	bh=jbXDHZFgMTEqVuIbGpjVHki9R28/opuEqbu8dA+PhS0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ocvNig5MeyxMT5aMn7Pob4T0T6Yjb8nFYWdmoWb3gPsAVqaPJnq6b0BBXxcvhKVhE+550Bfe+N4gg+EfHMDYxkD39jBjb4cyD6eg1Y3R9P8wKoduF1tWufmP5BOUMqwncYGqjhSIx7vvXTYWvAFhV8D0wfJqWFLp2Dn5rg/fRxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCyQBt5W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QFIZ9FS6"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45J9jAq7016044;
-	Wed, 19 Jun 2024 18:38:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pQi4cEGMKplahCMAtCGNOa8fyNL1P8ZRu9NQMbNyKBA=; b=QFIZ9FS6ZKtdEjJM
-	V/sG6dL5Fe1cD2bordNaC910PqXBZuqFLgJIoc0RsMrUJS0CBAf+YHjkMht1DdP2
-	az1y3pL+ThG6LKYg1eZzLrpF/3ogDhjmBrh5zih00zDGma1tr8f4Kk8sYWj5iI2/
-	KWCnCLM6+TOYc9hQkQvo9eQPXwJ74XwB6n/q68R/Gb941TslXlJ/dEjta0VpHwpe
-	k/Mx37iWxGBX99nICfSitHA3uwoHOeDqvZu+KArJ7413cmS1y7E4/cWJeyvOu2fM
-	Fs6NCOtKkztTZtiSmBIXZ1EhjVisORRzeQXUNjsW05AMBOs/zifSEMJEbTXaIe17
-	pYfJRw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yuja52fgu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 18:38:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45JIcWKP006906
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 18:38:32 GMT
-Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Jun
- 2024 11:38:32 -0700
-Message-ID: <e91728af-83e7-453e-816f-add3b0011a66@quicinc.com>
-Date: Wed, 19 Jun 2024 11:38:31 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCyQBt5W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A50BDC4AF08;
+	Wed, 19 Jun 2024 19:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718825637;
+	bh=jbXDHZFgMTEqVuIbGpjVHki9R28/opuEqbu8dA+PhS0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BCyQBt5W1LB+VIF0YRwWomc9oJnTKvhC4csl7t1FMqLzr79+LCzMZ4GfPx8Bjh64c
+	 K5A5x5XbgSx5bgRgdJgtfY+lYnkb6uee9IXIWSJq2FAtOvKwmMk2w5rYr6qbEb/nMh
+	 t+0gx1Sef/GMlGPyl/jpTXLHHwqH5h2rPL3mPe8HNZrXFJKXE0/mz5/9OnvGTG1QFj
+	 CCb8pT3aO3iucUMGBBD+k7BbUpejJRBIqxb7hTUa3H77t576ojcEVt9ITWRL832ZtH
+	 +kDguxYTHditwu84pRw6xbaV/NsenVniruEylET1/8p1QmUYSru3OQ9+5iIBWPKe6F
+	 GgEkkm9+qdgeA==
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <kees@kernel.org>,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v5 1/6] mm/slab: Introduce kmem_buckets typedef
+Date: Wed, 19 Jun 2024 12:33:49 -0700
+Message-Id: <20240619193357.1333772-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240619192131.do.115-kees@kernel.org>
+References: <20240619192131.do.115-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] usercopy: Convert test_user_copy to KUnit test
-To: Kees Cook <kees@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-CC: Vitor Massaru Iha <vitor@massaru.org>,
-        Ivan Orlov
-	<ivan.orlov0322@gmail.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins
-	<brendan.higgins@linux.dev>,
-        Rae Moar <rmoar@google.com>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <kunit-dev@googlegroups.com>, <linux-hardening@vger.kernel.org>
-References: <20240612195412.make.760-kees@kernel.org>
- <20240612195921.2685842-2-kees@kernel.org>
-Content-Language: en-US
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240612195921.2685842-2-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BxSyBGdf2KXEaNU80wT485Y1kHpPWMz4
-X-Proofpoint-GUID: BxSyBGdf2KXEaNU80wT485Y1kHpPWMz4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- adultscore=0 impostorscore=0 clxscore=1011 mlxscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406190140
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1406; i=kees@kernel.org; h=from:subject; bh=jbXDHZFgMTEqVuIbGpjVHki9R28/opuEqbu8dA+PhS0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmczKh6T8pqxaDs77JF9cx/6sa+j5FaKjCYQYlt 8Av1OrjnquJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnMyoQAKCRCJcvTf3G3A JnDmD/4lPT3IQnslSsmLm0/93PDrMo6dacPrg3fO6iYYge5SRvS8tMrXtla/rIN7FC2Vv9yTvN8 3aMsnyY8X5gSVBi6NnUdOanCs2w+MziAmdDjP4Gaevg1LQRWCzOfOak5shXpArYv+qoZdPw0Ttt LD1n9zWURQ830r1QQ/RiHGcwhlQNTeHINjMW18GIve5hEb2ZaV19FJPBMQP6GyIMeboDi5Zy0m/ RiXCicXZkU2K/T6W7jvQfVD85odLnhPoVFL98TUkeaPAn2aBj54T6GgYlPyc4B1N07E2F7TfLiy OfVAoefI78Tcp2cB03HV8piNNGzhTPM+siCg8NfUxReQDbmLjmWDYw0cPwbZBLrPP+xZ+1vvP0J wmve26MopNZXLnm6/NWvBZQs4gQxk/7OUINSKKWjdRYwClbZWqq0iqM+jyoeuaHxGeb5tpNYp9M FHMNBNVA95dzB3FexZlV/JwN2CkvN4ZnJd163nXWHOHdkxwPQSZcT7/uB1h7U1LJb1urQasc4Pj NUiE6wks+0i9AhkcnSPdNbCqXJMzNe7e9vTU2fFtj6CnSGGGha+HRGmubAwnN7u1F0tTw7tujn+ J+njOxDXJY1DPMy0lGGI+GwZY+8vnPIeWOLFnRXSn/4ph5gnyx7KOyiXxIkxiLJTt5dJbbJJHZF pcTcJxJ0nTDzcHQ==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 6/12/24 12:59, Kees Cook wrote:
-> Convert the runtime tests of hardened usercopy to standard KUnit tests.
-> 
-> Additionally disable usercopy_test_invalid() for systems with separate
-> address spaces (or no MMU) since it's not sensible to test for address
-> confusion there (e.g. m68k).
-> 
-> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
-> Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
-> Reviewed-by: David Gow <davidgow@google.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-...
-> +kunit_test_suites(&usercopy_test_suite);
-> +MODULE_AUTHOR("Kees Cook <kees@kernel.org>");
->   MODULE_LICENSE("GPL");
+Encapsulate the concept of a single set of kmem_caches that are used
+for the kmalloc size buckets. Redefine kmalloc_caches as an array
+of these buckets (for the different global cache buckets).
 
-Can you add the missing MODULE_DESCRIPTION() to remove the W=1 warning?
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ include/linux/slab.h | 5 +++--
+ mm/slab_common.c     | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-The fix to the current file is part of:
-https://lore.kernel.org/all/20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com/
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index ed6bee5ec2b6..8a006fac57c6 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -426,8 +426,9 @@ enum kmalloc_cache_type {
+ 	NR_KMALLOC_TYPES
+ };
+ 
+-extern struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
++typedef struct kmem_cache * kmem_buckets[KMALLOC_SHIFT_HIGH + 1];
++
++extern kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES];
+ 
+ /*
+  * Define gfp bits that should not be set for KMALLOC_NORMAL.
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 1560a1546bb1..e0b1c109bed2 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -653,8 +653,7 @@ static struct kmem_cache *__init create_kmalloc_cache(const char *name,
+ 	return s;
+ }
+ 
+-struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
++kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES] __ro_after_init =
+ { /* initialization for https://llvm.org/pr42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
+ 
+-- 
+2.34.1
+
