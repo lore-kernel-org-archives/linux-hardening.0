@@ -1,102 +1,156 @@
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702463A28D;
-	Thu, 20 Jun 2024 18:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E58381B8;
+	Thu, 20 Jun 2024 18:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718909639; cv=none; b=TOczIeHG+SUYgyPeXiEV/8XUrLEO4uHDn7016DMuLlsmJXKyPhwlEuUCKOpq5UKUpc8KT1EhNVJEnjzAQhInF67INtsvtp42XmbSa2jdPzWHuaiWs+apR5ihLtiqC4JxkVk2aoylHaPYrGq+Zk5VNz1EZ9WX/ibelbWKBGfswmY=
+	t=1718909671; cv=none; b=iop0XipZ5y96d1I5aOvEpMwjclmWslF7kWDyBqO9K23HVPu877aNNgORusBCN5gEnIUYZjKNvznWkOACs8Ta8QSM9vieHAiquioq/zwk0qykY9AKK7BdRHW6BlV/1tBXwgYdR7IABhxF4kR5wyc8raBnS4awDHgmVhgiIZLCnmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718909639; c=relaxed/simple;
-	bh=8ekOjxpDwoydqkKkGhUeAltxKkAKYn/wprrJm0PBnH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J/LFJrXPxmTeP2rR/Z45bPK23Yi6FoqOosZbLflV8xFxjHf8l+1uFiNF/S/4R11EKTFPsH21IuSVcDYrPLRp4p2T+1PlgQIGJQa7ZA21SV5WZOQgfbO+MDusslTiEoJSik2Pm4j2d9bi9w4Z7uE2fOH+f72M1ccd+6VMj96p+Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Qbj4GV+q; arc=none smtp.client-ip=80.12.242.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718909671; c=relaxed/simple;
+	bh=irInUIXYcnVbTI7ZN+P72B/uLw4QMucaS01AdF/42Eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AeyLWUF8saPX4/6/4FhjeWy2hoMiBOio+3I1pbJMIQPLGBofVHIcR/K8TKoEfc9U84Qto3B1f/7mpuCiNKLIZJESunS315Pk0FqziVE4HJDTycx5JDf6pujeVpThas5FAs87nc2cFEu7tNUwMBEn/hL64lStzePu0Mkclh5zlgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gp6eNAqI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Qbj4GV+q"
-Received: from [192.168.1.37] ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id KMunsiGfm6xnbKMunswaYn; Thu, 20 Jun 2024 20:53:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718909628;
-	bh=N+NxqUOjBTvWdh5BEIOxUcci2t45xosej7QdIMTxSQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=Qbj4GV+qj/zI8L7RfLJjt42AOIvF2lq8j9oaEcNUT1gXcbCWCaDsRaEPtwIBwtB0T
-	 1jTY0RwQhEytflWlF+tE1V/ZJDiiulsy33MA2JT+U3cMEOTW0ilqNlPWxrM2fbrCrq
-	 u4iPz3vcYkThTK52cQEg9lLLpq1Y6O/Ya4aFJdjHYnwQzOA1OniSePIpahCovsOA9n
-	 u6KYTKfrpniZuBUNH4kWp6es6CNGPa6TuDXqLo+Lfs0Y10kNwtUG1JQorkKzb94xim
-	 +yCtwpoarmQUibXpoFQGz1WdIDrFOsDtafCSW60wkOj+K7vcXgkCAGhAi8vJUCYlxD
-	 eyC5L9O0REMbg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 20 Jun 2024 20:53:48 +0200
-X-ME-IP: 86.243.222.230
-Message-ID: <0f7d2d25-5c7c-4a19-8af7-ce38ee630d4d@wanadoo.fr>
-Date: Thu, 20 Jun 2024 20:53:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gp6eNAqI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2D7C32786;
+	Thu, 20 Jun 2024 18:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718909670;
+	bh=irInUIXYcnVbTI7ZN+P72B/uLw4QMucaS01AdF/42Eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gp6eNAqIPyGLiPbiV0Qu6r4RvLzCvXDfeHg1l5u6Lj4fqtpVlopL4Wo/Tw3gTVhp2
+	 c1WUHBMwKI1oqSfGKEI5k86f0alIltlVgu22U34GIPD6OvhpklgaONTjuHKiJY/u2p
+	 SpvL/g+/zSYsKOnbS2FiVkBbohNE+/W+C/sTc68FGqDY7wNIWoUrUn2xAFkZof4hN7
+	 GOdJA8+hRTgIf8VX50MsQ8d91l7S5N58nyR1k932gRhNcHx0tBCyVY25mJm3D2iliu
+	 Xnuz3P5/gBez+6LWP0Nt8UFYr1octCbPQwL/Z1malrMErf/VaholdctTl/xtow5SaI
+	 pzlxFCLAb3uhw==
+Date: Thu, 20 Jun 2024 11:54:30 -0700
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and
+ family
+Message-ID: <202406201147.8152CECFF@keescook>
+References: <20240619192131.do.115-kees@kernel.org>
+ <20240619193357.1333772-4-kees@kernel.org>
+ <cc301463-da43-4991-b001-d92521384253@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
- cfg80211_wowlan_nd_*
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Kees Cook <kees@kernel.org>
-Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
- gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
- kvalo@kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
- shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
-References: <20240619211233.work.355-kees@kernel.org>
- <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
- <c8404725-e4c4-453b-b72d-19ab0761da70@embeddedor.com>
- <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc301463-da43-4991-b001-d92521384253@suse.cz>
 
-Le 20/06/2024 à 20:08, Gustavo A. R. Silva a écrit :
+On Thu, Jun 20, 2024 at 03:56:27PM +0200, Vlastimil Babka wrote:
+> On 6/19/24 9:33 PM, Kees Cook wrote:
+> > Dedicated caches are available for fixed size allocations via
+> > kmem_cache_alloc(), but for dynamically sized allocations there is only
+> > the global kmalloc API's set of buckets available. This means it isn't
+> > possible to separate specific sets of dynamically sized allocations into
+> > a separate collection of caches.
+> > 
+> > This leads to a use-after-free exploitation weakness in the Linux
+> > kernel since many heap memory spraying/grooming attacks depend on using
+> > userspace-controllable dynamically sized allocations to collide with
+> > fixed size allocations that end up in same cache.
+> > 
+> > While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> > against these kinds of "type confusion" attacks, including for fixed
+> > same-size heap objects, we can create a complementary deterministic
+> > defense for dynamically sized allocations that are directly user
+> > controlled. Addressing these cases is limited in scope, so isolating these
+> > kinds of interfaces will not become an unbounded game of whack-a-mole. For
+> > example, many pass through memdup_user(), making isolation there very
+> > effective.
+> > 
+> > In order to isolate user-controllable dynamically-sized
+> > allocations from the common system kmalloc allocations, introduce
+> > kmem_buckets_create(), which behaves like kmem_cache_create(). Introduce
+> > kmem_buckets_alloc(), which behaves like kmem_cache_alloc(). Introduce
+> > kmem_buckets_alloc_track_caller() for where caller tracking is
+> > needed. Introduce kmem_buckets_valloc() for cases where vmalloc fallback
+> > is needed.
+> > 
+> > This can also be used in the future to extend allocation profiling's use
+> > of code tagging to implement per-caller allocation cache isolation[1]
+> > even for dynamic allocations.
+> > 
+> > Memory allocation pinning[2] is still needed to plug the Use-After-Free
+> > cross-allocator weakness, but that is an existing and separate issue
+> > which is complementary to this improvement. Development continues for
+> > that feature via the SLAB_VIRTUAL[3] series (which could also provide
+> > guard pages -- another complementary improvement).
+> > 
+> > Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
+> > Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
+> > Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> >  include/linux/slab.h | 13 ++++++++
+> >  mm/slab_common.c     | 78 ++++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 91 insertions(+)
+> > 
+> > diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > index 8d0800c7579a..3698b15b6138 100644
+> > --- a/include/linux/slab.h
+> > +++ b/include/linux/slab.h
+> > @@ -549,6 +549,11 @@ void *kmem_cache_alloc_lru_noprof(struct kmem_cache *s, struct list_lru *lru,
+> >  
+> >  void kmem_cache_free(struct kmem_cache *s, void *objp);
+> >  
+> > +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
+> > +				  slab_flags_t flags,
+> > +				  unsigned int useroffset, unsigned int usersize,
+> > +				  void (*ctor)(void *));
 > 
-> 
-> On 6/20/24 12:02, Gustavo A. R. Silva wrote:
->>
->>> My understanding is that 'match', is allocated by :
->>>      match = kzalloc(struct_size(match, channels, n_channels), 
->>> GFP_KERNEL);
->>>
->>> So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
->>
->> n_channels is updated in the line before calling kzalloc():
->>
->> n_channels = iwl_mvm_query_num_match_chans(mvm, d3_data->nd_results, i);
->>
->> match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
-> 
-> then match->n_channels updated here:
-> 
->           if (!match)
->               goto out_report_nd;
-> +        match->n_channels = n_channels;
+> I'd drop the ctor, I can't imagine how it would be used with variable-sized
+> allocations.
 
-Thanks for the explanation.
-This is what I was looking for, and I missed this line.
+I've kept it because for "kmalloc wrapper" APIs, e.g. devm_kmalloc(),
+there is some "housekeeping" that gets done explicitly right now that I
+think would be better served by using a ctor in the future. These APIs
+are variable-sized, but have a fixed size header, so they have a
+"minimum size" that the ctor can still operate on, etc.
 
-Sorry for the noise.
+> Probably also "align" doesn't make much sense since we're just
+> copying the kmalloc cache sizes and its implicit alignment of any
+> power-of-two allocations.
 
-CJ
+Yeah, that's probably true. I kept it since I wanted to mirror
+kmem_cache_create() to make this API more familiar looking.
 
-> 
-> Sorry about the split response, finger failure ugghh
-> 
-> -- 
-> Gustavo
-> 
-> 
+> I don't think any current kmalloc user would
+> suddenly need either of those as you convert it to buckets, and definitely
+> not any user converted automatically by the code tagging.
 
+Right, it's not needed for either the explicit users nor the future
+automatic users. But since these arguments are available internally,
+there seems to be future utility,  it's not fast path, and it made things
+feel like the existing API, I'd kind of like to keep it.
+
+But all that said, if you really don't want it, then sure I can drop
+those arguments. Adding them back in the future shouldn't be too
+much churn.
+
+-- 
+Kees Cook
