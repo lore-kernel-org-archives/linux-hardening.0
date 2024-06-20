@@ -1,118 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F8813C8E5;
-	Thu, 20 Jun 2024 22:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6471F7D08D;
+	Thu, 20 Jun 2024 23:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718923707; cv=none; b=rl+8XRSEDMVTGB7YU5a/NwMXbPmbY/RSQtJxJ5QMlWf4n+7ZORZRwNTgrsvK1qMA/p682Ygj6AvWticUJtCFE4zNl374LgaJrIUKbWK8p+Z/hK2QO2lYmblpgUJbSzFyPVQq8HBR/VJxFDYnFSsc2XsKkkqNDliqgyQOBo8cLKk=
+	t=1718926167; cv=none; b=uF9w8QtnCEp44u87S37Y/UxZ4FJJTOTbf3VfAz8euub6Gc2UJVfAObcx4KieokptdWpQRTy+tztqty8m3AtPNrsV8OKhpSVQMgHtC+nLCRGzfcMMCCDYPgnOaEzU1Crlq1jt0wpM4oCyxLaz7uLh0nWkaysr+MMFR6pP1aI9AHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718923707; c=relaxed/simple;
-	bh=zoovoJhNRfgDjC9B72bTorp2/szLX092n+btLcuuqSU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KSt6S+NO9rFmUwPS2Xwa8HrOkpf8qHAZkvUhF4+e5Ai6pSDCw4iE5H/XGYlxsZyXFAtccKw/BLzbJR6OXVmmoIMlPJV/lfW8VOwQCmbPlK38DlAPvd/cS8jtvSyrdOs5ew4A7JQbNfSCCPoXzRYiyW+35dAn4kvdw6nfww106Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnjQCVbi; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718926167; c=relaxed/simple;
+	bh=/sadit87DkhqYLioSkOH0TfD3gxDb0YHnkI1SLYBgSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6gvWTejzt99biNrZAllPptNhCIlqeVJ9P/smYWrC/XEC2SjLWgUVq0SjV5q3OJIGxfeGizO7KMGB1xZ6t33JvivJ9CLal0kYDYRHU/2ppatNh58HrupB9WescYcOfkXYmoP0L3hiMm1MWopQOQAgib+yVjKTyDjCKqST03pAr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vI7naTbg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnjQCVbi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718923706; x=1750459706;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=zoovoJhNRfgDjC9B72bTorp2/szLX092n+btLcuuqSU=;
-  b=hnjQCVbiGaHSN02uY5HLtVBUE01Qn9B/9Nup2NHjXz4OYPY2E9DI3gO5
-   mrv9SwC/fqeC+5seN9yl43+/p0ImfLNKffOWuHCLIN2EWZynRijjJqFG6
-   lrU7/bxTBUgFpBhWsJsmH9aJBioUET4zBDwwYhnecKBxnCzW6iGAI1BCr
-   BKSBwu7mtFtyP6BjaLUUOac9sATXpnrg9Tw1ktcoPwNAABWYuCULKDBKJ
-   wHMiSJnkLkfKi/ixNedmBk5MQ3Wam8ujPqbzJeC9CyJBHbiy1ZSHCXx40
-   BxSD1CothIfxNn+uzTSCsUeUCW9j9b/9ScBUadMIZIPiNyMv6KB8Va8nJ
-   Q==;
-X-CSE-ConnectionGUID: gyIUlsTtR1ubTVyXc4MaQw==
-X-CSE-MsgGUID: zaJQlcAKTNSP76m3uzGGNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="15767076"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="15767076"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 15:48:25 -0700
-X-CSE-ConnectionGUID: XpaLxycjSxeqMiVY+nQ8Bw==
-X-CSE-MsgGUID: nKLgFteISSeH3bWw+T/wLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="42506433"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
-  by fmviesa010.fm.intel.com with ESMTP; 20 Jun 2024 15:48:24 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-	id 537703003B6; Thu, 20 Jun 2024 15:48:24 -0700 (PDT)
-From: Andi Kleen <ak@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>,  "GONG, Ruiqi"
- <gongruiqi@huaweicloud.com>,  Christoph Lameter <cl@linux.com>,  Pekka
- Enberg <penberg@kernel.org>,  David Rientjes <rientjes@google.com>,
-  Joonsoo Kim <iamjoonsoo.kim@lge.com>,  jvoisin
- <julien.voisin@dustri.org>,  Andrew Morton <akpm@linux-foundation.org>,
-  Roman Gushchin <roman.gushchin@linux.dev>,  Hyeonggon Yoo
- <42.hyeyoo@gmail.com>,  Xiu Jianfeng <xiujianfeng@huawei.com>,  Suren
- Baghdasaryan <surenb@google.com>,  Kent Overstreet
- <kent.overstreet@linux.dev>,  Jann Horn <jannh@google.com>,  Matteo Rizzo
- <matteorizzo@google.com>,  Thomas Graf <tgraf@suug.ch>,  Herbert Xu
- <herbert@gondor.apana.org.au>,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  linux-hardening@vger.kernel.org,
-  netdev@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and family
-In-Reply-To: <20240619193357.1333772-4-kees@kernel.org> (Kees Cook's message
-	of "Wed, 19 Jun 2024 12:33:52 -0700")
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vI7naTbg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F06C2BD10;
+	Thu, 20 Jun 2024 23:29:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718926167;
+	bh=/sadit87DkhqYLioSkOH0TfD3gxDb0YHnkI1SLYBgSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vI7naTbg3JsloxxZ0TMaMBhRn9jCCMpzIRnnznh402AZg3Xjtbw9aAv3Durp4e++N
+	 taLRY6lqcGpI1Ve7YymtUQJd1ok8eitlLBVT0IguNvLTOxSiuVgNbJnkPGOwcnDnBx
+	 EJ8v+kEyT53Mf/pFzMO+hLRctCONcinjlkTUs6/e+TAdagrQHu3jvLnshX9Ja5DjFb
+	 J/D8B3X2ItjVP7lO+HxFDgX1g5+VcNQbV7vedmGH0NX3tMcf69SJa87Jthbxrs6HP3
+	 lTmmfVBhhlC3KxY2yeJJ4wHNyP5trc7njZLla/AsmKfUs/ROEQKWS0E08t5ovG63an
+	 fVLl49P474idA==
+Date: Thu, 20 Jun 2024 16:29:26 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and
+ family
+Message-ID: <202406201620.0392F7E45@keescook>
 References: <20240619192131.do.115-kees@kernel.org>
-	<20240619193357.1333772-4-kees@kernel.org>
-Date: Thu, 20 Jun 2024 15:48:24 -0700
-Message-ID: <87r0crut6v.fsf@linux.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <20240619193357.1333772-4-kees@kernel.org>
+ <87r0crut6v.fsf@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r0crut6v.fsf@linux.intel.com>
 
-Kees Cook <kees@kernel.org> writes:
+On Thu, Jun 20, 2024 at 03:48:24PM -0700, Andi Kleen wrote:
+> Kees Cook <kees@kernel.org> writes:
+> 
+> > Dedicated caches are available for fixed size allocations via
+> > kmem_cache_alloc(), but for dynamically sized allocations there is only
+> > the global kmalloc API's set of buckets available. This means it isn't
+> > possible to separate specific sets of dynamically sized allocations into
+> > a separate collection of caches.
+> >
+> > This leads to a use-after-free exploitation weakness in the Linux
+> > kernel since many heap memory spraying/grooming attacks depend on using
+> > userspace-controllable dynamically sized allocations to collide with
+> > fixed size allocations that end up in same cache.
+> >
+> > While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> > against these kinds of "type confusion" attacks, including for fixed
+> > same-size heap objects, we can create a complementary deterministic
+> > defense for dynamically sized allocations that are directly user
+> > controlled. Addressing these cases is limited in scope, so isolating these
+> > kinds of interfaces will not become an unbounded game of whack-a-mole. For
+> > example, many pass through memdup_user(), making isolation there very
+> > effective.
+> 
+> Isn't the attack still possible if the attacker can free the slab page
+> during the use-after-free period with enough memory pressure?
+> 
+> Someone else might grab the page that was in the bucket for another slab
+> and the type confusion could hurt again.
+> 
+> Or is there some other defense against that, other than
+> CONFIG_DEBUG_PAGEALLOC or full slab poisoning? And how expensive
+> does it get when any of those are enabled?
+> 
+> I remember reading some paper about a apple allocator trying similar
+> techniques and it tried very hard to never reuse memory (probably
+> not a good idea for Linux though)
+> 
+> I assume you thought about this, but it would be good to discuss such
+> limitations and interactions in the commit log.
 
-> Dedicated caches are available for fixed size allocations via
-> kmem_cache_alloc(), but for dynamically sized allocations there is only
-> the global kmalloc API's set of buckets available. This means it isn't
-> possible to separate specific sets of dynamically sized allocations into
-> a separate collection of caches.
->
-> This leads to a use-after-free exploitation weakness in the Linux
-> kernel since many heap memory spraying/grooming attacks depend on using
-> userspace-controllable dynamically sized allocations to collide with
-> fixed size allocations that end up in same cache.
->
-> While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
-> against these kinds of "type confusion" attacks, including for fixed
-> same-size heap objects, we can create a complementary deterministic
-> defense for dynamically sized allocations that are directly user
-> controlled. Addressing these cases is limited in scope, so isolating these
-> kinds of interfaces will not become an unbounded game of whack-a-mole. For
-> example, many pass through memdup_user(), making isolation there very
-> effective.
+Yup! It's in there; it's just after what you quoted above. Here it is:
 
-Isn't the attack still possible if the attacker can free the slab page
-during the use-after-free period with enough memory pressure?
+> > Memory allocation pinning[2] is still needed to plug the Use-After-Free
+> > cross-allocator weakness, but that is an existing and separate issue
+> > which is complementary to this improvement. Development continues for
+> > that feature via the SLAB_VIRTUAL[3] series (which could also provide
+> > guard pages -- another complementary improvement).
+> > [...]
+> > Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
+> > Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
 
-Someone else might grab the page that was in the bucket for another slab
-and the type confusion could hurt again.
+Let me know if you think this description needs to be improved...
 
-Or is there some other defense against that, other than
-CONFIG_DEBUG_PAGEALLOC or full slab poisoning? And how expensive
-does it get when any of those are enabled?
+-Kees
 
-I remember reading some paper about a apple allocator trying similar
-techniques and it tried very hard to never reuse memory (probably
-not a good idea for Linux though)
-
-I assume you thought about this, but it would be good to discuss such
-limitations and interactions in the commit log.
-
--Andi
+-- 
+Kees Cook
