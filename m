@@ -1,40 +1,67 @@
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372D1AB8F0;
-	Thu, 20 Jun 2024 17:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE7A1B0115
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Jun 2024 17:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903742; cv=none; b=WqRylWPoej/J+bRvqabTlW3zPIyJL1w53cqpNHo+eze0vsYzUESw4bh4MiXixCI957HtWDfiVfFWabr53AIUKep7IZA20wViwycv2gwoEheELjH36hnhQfAdF42nnBLPsgtJ4ilKy7aatf9UfSImFbn4WeGAumpPCwWWosD4rBI=
+	t=1718904554; cv=none; b=K6C5XTjY/4CKy0zVocx4O3I+56VgH4UN+slxuJRimJEeuE4FzYpFn6nKivnk6VHluWGdD2Fqd6n8DChFQ+qoonSVGAO54XI7Wlf/ph2zpZcCa35ZcaikqUoVvtNy9rJ8bS4Y2P+NywP0tuIpG6/q3P8mLEJvLPbOc46NoK/5uUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903742; c=relaxed/simple;
-	bh=MibYtPaStOyNmJ/MnE3IBHd0ESHqLBiFr2K5NuHSgVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l3YdO2xDUpmtU6QXV5qs11BLYeBhIX9QcmyVVo1089/HTeM8mYeVNnQOuVXvjHhRwsbEo2FmZmyifOxrKAQvor0pXX3SJwdYtabVj3np7OpJbzIPFZqGyX44iCR22rkP8orRegu0AtXgxzrIsOZt9rNyYbUAcQ/TyHthf7s8E7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EYy8taYz; arc=none smtp.client-ip=80.12.242.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1718904554; c=relaxed/simple;
+	bh=w13ToLjzZnvVyF7GhQ//Xg1jvHxpo7YLzhZIgx5EM3o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=KmnXnZVKFig04o84gZBm/jAA1j0Z9eu8het9DdRtDDBsXG148/qMuTwPnjkiiypZAlAh3x8JY2c6KykgOkAKFpxI0JItZaRo+7mqCQd0lvtanZHNaaY6nHS9PcTIOcdJ0ChkT7ORuhbX86hpnGH2I8LDMW3t7FFMXzpQ6kc+978=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TVcqiT+w; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EYy8taYz"
-Received: from [192.168.1.37] ([86.243.222.230])
-	by smtp.orange.fr with ESMTPA
-	id KLF0sqSvNx6E7KLF0sBJHQ; Thu, 20 Jun 2024 19:06:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1718903195;
-	bh=C7PXgcuFIHuLhO89QKhX4IoMZb6JJQMXMgrBnFVa6K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=EYy8taYzxscAZ/nfXzuE05IHjV1wE94kbgEBcZDGz5+FWe/YDPfhdc49k10obex64
-	 X8VT60CZnkmXGOoRd9m5BB+/Hjb7GuUAgqwM9Ei9TXqB3nowye0SEmAGOjfJaxe8QM
-	 3C5cxaIZ0d+dw6XS769GdxpIuajWQd0YRjLjfYsgbcGcsPz9iVfHSRZmSFAx7e/LN/
-	 J/ccclUPyqWqaJpQ9dbIJfnuwIFB3uIzeZfncLwk9lEijU59qhRCK+9nBKPVLZasC7
-	 oYddT+lM/YtEoXHdi1ZH10lfgZI944NwdNM32CRWMJL0+Cl30nNmROaxE7LBCgUT68
-	 nuX6Q0ClPxyGw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 20 Jun 2024 19:06:35 +0200
-X-ME-IP: 86.243.222.230
-Message-ID: <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
-Date: Thu, 20 Jun 2024 19:06:30 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TVcqiT+w"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KHNfQ2027602;
+	Thu, 20 Jun 2024 17:29:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:references:from:cc
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=K
+	PgZHHVvAK0axNiwszzouRlojRjrzPlwUds8KQtAlAA=; b=TVcqiT+wPmikXB36s
+	SQpBfvDOWou5h/5IHkkIu8tI4586TOSWjQipSSrudFaHCGpuLCYgxNh5Ss8pWdhG
+	/I2dlBUSD26JdKfohJU/vPNlbUFHgfVDpupZPAZlPs/CUBLLQO85Q/qJ5Hdkehwn
+	YKeE/+ZTnLIWJYg1sxqsMekeBqyntZA42KZdE5J0F1CP6tuB9OGt0XQan6k5gCCs
+	R6oU7wk1Kt8hqM2H7r7i16QncqPGHFjXuENi5S+vn+OVWDN1VPGCCJqCofTMW5bY
+	W4OLrISHiF8JqVTBLJuAV5Qi67Vo0x31rRe403S+ZfdfukLT3enwSRzU3IiKqBd7
+	C8Ieg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvrsa00d2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 17:28:59 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45KHSxdi002315;
+	Thu, 20 Jun 2024 17:28:59 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvrsa00cw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 17:28:58 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45KHO4xe030990;
+	Thu, 20 Jun 2024 17:28:57 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yvrssr11m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 17:28:57 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45KHSrf843450710
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Jun 2024 17:28:55 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9892C2004D;
+	Thu, 20 Jun 2024 17:28:53 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8686B20043;
+	Thu, 20 Jun 2024 17:28:50 +0000 (GMT)
+Received: from [9.43.118.41] (unknown [9.43.118.41])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Jun 2024 17:28:50 +0000 (GMT)
+Message-ID: <499f5305-eb54-43a7-9864-d032f29c445d@linux.ibm.com>
+Date: Thu, 20 Jun 2024 22:58:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,154 +69,163 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
- cfg80211_wowlan_nd_*
+Subject: Re: [PATCH] powerpc/pseries: Whitelist dtl slub object for copying to
+ userspace
 To: Kees Cook <kees@kernel.org>
-Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
- gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
- kvalo@kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
- shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
-References: <20240619211233.work.355-kees@kernel.org>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240619211233.work.355-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240614173844.746818-1-anjalik@linux.ibm.com>
+ <202406171053.F72BF013@keescook>
+Content-Language: en-US
+From: Anjali K <anjalik@linux.ibm.com>
+Cc: mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
+        naveen@kernel.org, christophe.leroy@csgroup.eu, gustavoars@kernel.org,
+        linux-hardening@vger.kernel.org, vishalc@linux.ibm.com
+In-Reply-To: <202406171053.F72BF013@keescook>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hSHIVAqWlPT1dUIHbtX2dql1Gz58Vaib
+X-Proofpoint-ORIG-GUID: ho-T4Yvw-1zeRwfjQ00d0UxwRakVqu6G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406200126
 
-Le 19/06/2024 à 23:12, Kees Cook a écrit :
-> Both struct cfg80211_wowlan_nd_match and struct cfg80211_wowlan_nd_info
-> pre-allocate space for channels and matches, but then may end up using
-> fewer that the full allocation. Shrink the associated counter
-> (n_channels and n_matches) after counting the results. This avoids
-> compile-time (and run-time) warnings from __counted_by. (The counter
-> member needs to be updated _before_ accessing the array index.)
-> 
-> Seen with coming GCC 15:
-> 
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_set_freqs':
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2877:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
->   2877 |                                 match->channels[match->n_channels++] =
->        |                                                 ~~~~~~~~~~~~~~~~~^~
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2885:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
->   2885 |                                 match->channels[match->n_channels++] =
->        |                                                 ~~~~~~~~~~~~~~~~~^~
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_netdetect_reasons':
-> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2982:58: warning: operation on 'net_detect->n_matches' may be undefined [-Wsequence-point]
->   2982 |                 net_detect->matches[net_detect->n_matches++] = match;
->        |                                     ~~~~~~~~~~~~~~~~~~~~~^~
-> 
-> Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
-> Signed-off-by: Kees Cook <kees-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> Cc: Miri Korenblit <miriam.rachel.korenblit-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Kalle Valo <kvalo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Johannes Berg <johannes.berg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Gustavo A. R. Silva <gustavoars-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Gregory Greenman <gregory.greenman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Yedidya Benshimol <yedidya.ben.shimol-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Haim Dreyfuss <haim.dreyfuss-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->   drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 14 +++++++++++---
->   1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> index 54f4acbbd05b..9cd03ea4680d 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> @@ -2866,6 +2866,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
->   				    int idx)
->   {
->   	int i;
-> +	int n_channels = 0;
->   
->   	if (fw_has_api(&mvm->fw->ucode_capa,
->   		       IWL_UCODE_TLV_API_SCAN_OFFLOAD_CHANS)) {
-> @@ -2874,7 +2875,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
->   
->   		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN * 8; i++)
->   			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
-> -				match->channels[match->n_channels++] =
-> +				match->channels[n_channels++] =
->   					mvm->nd_channels[i]->center_freq;
->   	} else {
->   		struct iwl_scan_offload_profile_match_v1 *matches =
-> @@ -2882,9 +2883,11 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
->   
->   		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN_V1 * 8; i++)
->   			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
-> -				match->channels[match->n_channels++] =
-> +				match->channels[n_channels++] =
->   					mvm->nd_channels[i]->center_freq;
->   	}
-> +	/* We may have ended up with fewer channels than we allocated. */
-> +	match->n_channels = n_channels;
+Hi Kees
+Thank you for your review.
 
+On 17/06/24 23:29, Kees Cook wrote:
+> On Fri, Jun 14, 2024 at 11:08:44PM +0530, Anjali K wrote:
+>> Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
+>> results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
+>> shown below.
+>>
+>>     kernel BUG at mm/usercopy.c:102!
+>>     Oops: Exception in kernel mode, sig: 5 [#1]
+>>     LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+>>     Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
+>>     scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
+>>     CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
+>>     Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
+>>     NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
+>>     REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
+>>     MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
+>>     CFAR: c0000000001fdc80 IRQMASK: 0
+>>     [ ... GPRs omitted ... ]
+>>     NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
+>>     LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
+>>     Call Trace:
+>>      usercopy_abort+0x74/0xb0 (unreliable)
+>>      __check_heap_object+0xf8/0x120
+>>      check_heap_object+0x218/0x240
+>>      __check_object_size+0x84/0x1a4
+>>      dtl_file_read+0x17c/0x2c4
+>>      full_proxy_read+0x8c/0x110
+>>      vfs_read+0xdc/0x3a0
+>>      ksys_read+0x84/0x144
+>>      system_call_exception+0x124/0x330
+>>      system_call_vectored_common+0x15c/0x2ec
+>>     --- interrupt: 3000 at 0x7fff81f3ab34
+>>
+>> Commit 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
+>> requires that only whitelisted areas in slab/slub objects can be copied to
+>> userspace when usercopy hardening is enabled using CONFIG_HARDENED_USERCOPY.
+>> Dtl contains hypervisor dispatch events which are expected to be read by
+>> privileged users. Hence mark this safe for user access.
+>> Specify useroffset=0 and usersize=DISPATCH_LOG_BYTES to whitelist the
+>> entire object.
+>>
+>> Co-developed-by: Vishal Chourasia <vishalc@linux.ibm.com>
+>> Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
+>> Signed-off-by: Anjali K <anjalik@linux.ibm.com>
+>> ---
+>>  arch/powerpc/platforms/pseries/setup.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+>> index 284a6fa04b0c..cba40d9d1284 100644
+>> --- a/arch/powerpc/platforms/pseries/setup.c
+>> +++ b/arch/powerpc/platforms/pseries/setup.c
+>> @@ -343,8 +343,8 @@ static int alloc_dispatch_log_kmem_cache(void)
+>>  {
+>>  	void (*ctor)(void *) = get_dtl_cache_ctor();
+>>  
+>> -	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
+>> -						DISPATCH_LOG_BYTES, 0, ctor);
+>> +	dtl_cache = kmem_cache_create_usercopy("dtl", DISPATCH_LOG_BYTES,
+>> +						DISPATCH_LOG_BYTES, 0, 0, DISPATCH_LOG_BYTES, ctor);
+>>  	if (!dtl_cache) {
+>>  		pr_warn("Failed to create dispatch trace log buffer cache\n");
+>>  		pr_warn("Stolen time statistics will be unreliable\n");
+> Are you sure you want to universally expose this memory region? It
+> sounds like it's only exposed via a debug interface. Maybe it'd be
+> better to use a bounce buffer in the debug interface instead
+>
+> diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
+> index 3f1cdccebc9c..3adcff5cc4b2 100644
+> --- a/arch/powerpc/platforms/pseries/dtl.c
+> +++ b/arch/powerpc/platforms/pseries/dtl.c
+> @@ -257,6 +257,22 @@ static int dtl_file_release(struct inode *inode, struct file *filp)
+>  	return 0;
+>  }
+>  
+> +static inline int bounce_copy(char __user *buf, void *src, size_t size)
+> +{
+> +	u8 *bounce;
+> +	int rc;
+> +
+> +	bounce = kmalloc(size, GFP_KERNEL);
+> +	if (!bounce)
+> +		return -ENOMEM;
+> +
+> +	memcpy(bounce, src, size);
+> +	rc = copy_to_user(buf, bounce, size);
+> +
+> +	kfree(bounce);
+> +	return rc;
+> +}
+> +
+>  static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
+>  		loff_t *pos)
+>  {
+> @@ -300,7 +316,7 @@ static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
+>  	if (i + n_req > dtl->buf_entries) {
+>  		read_size = dtl->buf_entries - i;
+>  
+> -		rc = copy_to_user(buf, &dtl->buf[i],
+> +		rc = bounce_copy(buf, &dtl->buf[i],
+>  				read_size * sizeof(struct dtl_entry));
+>  		if (rc)
+>  			return -EFAULT;
+> @@ -312,7 +328,7 @@ static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
+>  	}
+>  
+>  	/* .. and now the head */
+> -	rc = copy_to_user(buf, &dtl->buf[i], n_req * sizeof(struct dtl_entry));
+> +	rc = bounce_copy(buf, &dtl->buf[i], n_req * sizeof(struct dtl_entry));                              
+>  	if (rc)
+>  		return -EFAULT;
+>  
+>
+>
+I have verified that the above patch is working.                           
+As you mentioned, an advantage of using the bounce buffer approach is that
+instead of whitelisting the full dtl slub object at boot, we only whitelist
+the subset of entries.                                                     
+                                                                               
+However given that:                                                        
+(i) The dtl buffer is read-only. The dtl trace is a set of metrics which   
+are collected to be read by privileged users.                              
+(ii) Users usually reads all the dtl entries, not a subset.                                             
+(iii) Read overflows are unlikely to expose anything useful to attackers        
+since we are whitelisting the complete slub object and there are no        
+contiguous memory locations which need to be hidden.                       
+Can we go ahead with the whitelisting using kmem_cache_create_usercopy()   
+approach?                                                                  
+Or are there other reasons to prefer the bounce buffer approach?
 
-Hi,
-
-I'm sorry but I don't understand the patch.
-
-You state that "The counter member needs to be updated _before_ 
-accessing the array index.". I agree with it.
-
-But this patch seems to steel update it *after*.
-
-My understanding is that 'match', is allocated by :
-	match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
-
-So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
-
-So the __counted_by() mechanism should complain when doing
-	match->channels[n_channels++] = mvm->nd_channels[i]->center_freq;
-whatever n_channels value is.
-
-
-I would expect the solution to be related to pre-increment instead of 
-post-increment. Something like:
- > -				match->channels[match->n_channels++] =
- > +				match->channels[++match->n_channels] =
- >   					mvm->nd_channels[i]->center_freq;
-
-
-Did I miss something obvious or I don't understand how __counted_by() works?
-
-CJ
-
-
->   }
->   
->   /**
-> @@ -2965,6 +2968,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
->   			     GFP_KERNEL);
->   	if (!net_detect || !n_matches)
->   		goto out_report_nd;
-> +	net_detect->n_matches = n_matches;
-> +	n_matches = 0;
->   
->   	for_each_set_bit(i, &matched_profiles, mvm->n_nd_match_sets) {
->   		struct cfg80211_wowlan_nd_match *match;
-> @@ -2978,8 +2983,9 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
->   				GFP_KERNEL);
->   		if (!match)
->   			goto out_report_nd;
-> +		match->n_channels = n_channels;
->   
-> -		net_detect->matches[net_detect->n_matches++] = match;
-> +		net_detect->matches[n_matches++] = match;
->   
->   		/* We inverted the order of the SSIDs in the scan
->   		 * request, so invert the index here.
-> @@ -2994,6 +3000,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
->   
->   		iwl_mvm_query_set_freqs(mvm, d3_data->nd_results, match, i);
->   	}
-> +	/* We may have fewer matches than we allocated. */
-> +	net_detect->n_matches = n_matches;
->   
->   out_report_nd:
->   	wakeup.net_detect = net_detect;
-
+Thank you,
+Anjali K
