@@ -1,85 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345481B3731;
-	Thu, 20 Jun 2024 18:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702463A28D;
+	Thu, 20 Jun 2024 18:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718909203; cv=none; b=nGLwwT2uK7b/2SRa7M8QXH1lufZcy49/pexOY0UCTi7lzSHsNxMdGcfyTBCp+Zs5fYNuGFr1dXCXVyKF1+dB8MmDVSDrisO9o4dIhXQaKSoPSnycVWdi7aUQAUXPShTsD3hDFa4sFmPvkzT8BxofOSev7uC9f6pa4jFNRswsf6w=
+	t=1718909639; cv=none; b=TOczIeHG+SUYgyPeXiEV/8XUrLEO4uHDn7016DMuLlsmJXKyPhwlEuUCKOpq5UKUpc8KT1EhNVJEnjzAQhInF67INtsvtp42XmbSa2jdPzWHuaiWs+apR5ihLtiqC4JxkVk2aoylHaPYrGq+Zk5VNz1EZ9WX/ibelbWKBGfswmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718909203; c=relaxed/simple;
-	bh=I3joilslbsTLNhXOXgFwVeASkXdC28bcARNwfLKI8vY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TX6Gxbjv4i4MgiaplJcqyeAozLEYu2l85dpAGmYfgyOh4JlnBPTU/gdA3vPpEcuclneH7L4PoG3c8jD5JPOF3Le5xZ1AFCCFsjKEGHSKqoVxJbo5AJV+z0VFVx+G5zS+JKszIUsJxmGgtqfgL/qMYsew22fjlZ61Xkc4ue4fD8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uK+JbPGH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718909639; c=relaxed/simple;
+	bh=8ekOjxpDwoydqkKkGhUeAltxKkAKYn/wprrJm0PBnH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J/LFJrXPxmTeP2rR/Z45bPK23Yi6FoqOosZbLflV8xFxjHf8l+1uFiNF/S/4R11EKTFPsH21IuSVcDYrPLRp4p2T+1PlgQIGJQa7ZA21SV5WZOQgfbO+MDusslTiEoJSik2Pm4j2d9bi9w4Z7uE2fOH+f72M1ccd+6VMj96p+Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Qbj4GV+q; arc=none smtp.client-ip=80.12.242.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uK+JbPGH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4DA0C2BD10;
-	Thu, 20 Jun 2024 18:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718909202;
-	bh=I3joilslbsTLNhXOXgFwVeASkXdC28bcARNwfLKI8vY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uK+JbPGHAN8r05cRgDkZQTsmELs6UZrtg2JBK9smm3uLdlJWaL4l8aS7al4jNu+KH
-	 /arX2rg8N8O+LOODJDJpA4nAiXuxMMUW6iA4EVO4/ycET4EkJgK/mk+60vIHHQ5yHS
-	 hLptnexYsErWkzpNLBnPe1HzGVCqUa5vrp2wILiLY3mQCVw8e2SV2KAkTvOcr5/OQi
-	 ByPyQKnQ/3VCumQRaojNgAwFL9ARtQzSFzh7a4rmVhdqno8D9OHj+R+rxGWkY7zrmT
-	 vGOSOUhoQYBJfCnvP65Ry+c2yGG55UMEI3PLXUCSGOu47ziiF1T6VQhMgkVBClpw6W
-	 ECXKB8H5QyJqw==
-Date: Thu, 20 Jun 2024 11:46:42 -0700
-From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	jvoisin <julien.voisin@dustri.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v5 2/6] mm/slab: Plumb kmem_buckets into
- __do_kmalloc_node()
-Message-ID: <202406201144.289A1A14@keescook>
-References: <20240619192131.do.115-kees@kernel.org>
- <20240619193357.1333772-2-kees@kernel.org>
- <7f122473-3d36-401d-8df4-02d981949f00@suse.cz>
- <88954479-01a3-4bbe-8558-1a71b11503f8@suse.cz>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Qbj4GV+q"
+Received: from [192.168.1.37] ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id KMunsiGfm6xnbKMunswaYn; Thu, 20 Jun 2024 20:53:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718909628;
+	bh=N+NxqUOjBTvWdh5BEIOxUcci2t45xosej7QdIMTxSQ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Qbj4GV+qj/zI8L7RfLJjt42AOIvF2lq8j9oaEcNUT1gXcbCWCaDsRaEPtwIBwtB0T
+	 1jTY0RwQhEytflWlF+tE1V/ZJDiiulsy33MA2JT+U3cMEOTW0ilqNlPWxrM2fbrCrq
+	 u4iPz3vcYkThTK52cQEg9lLLpq1Y6O/Ya4aFJdjHYnwQzOA1OniSePIpahCovsOA9n
+	 u6KYTKfrpniZuBUNH4kWp6es6CNGPa6TuDXqLo+Lfs0Y10kNwtUG1JQorkKzb94xim
+	 +yCtwpoarmQUibXpoFQGz1WdIDrFOsDtafCSW60wkOj+K7vcXgkCAGhAi8vJUCYlxD
+	 eyC5L9O0REMbg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 20 Jun 2024 20:53:48 +0200
+X-ME-IP: 86.243.222.230
+Message-ID: <0f7d2d25-5c7c-4a19-8af7-ce38ee630d4d@wanadoo.fr>
+Date: Thu, 20 Jun 2024 20:53:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88954479-01a3-4bbe-8558-1a71b11503f8@suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
+ cfg80211_wowlan_nd_*
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Kees Cook <kees@kernel.org>
+Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
+ gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
+ kvalo@kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
+ shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
+References: <20240619211233.work.355-kees@kernel.org>
+ <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
+ <c8404725-e4c4-453b-b72d-19ab0761da70@embeddedor.com>
+ <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 20, 2024 at 03:37:31PM +0200, Vlastimil Babka wrote:
-> On 6/20/24 3:08 PM, Vlastimil Babka wrote:
-> > On 6/19/24 9:33 PM, Kees Cook wrote:
-> > I was wondering why I don't see the buckets in slabinfo and turns out it was
-> > SLAB_MERGE_DEFAULT. It would probably make sense for SLAB_MERGE_DEFAULT to
-> > depends on !SLAB_BUCKETS now as the merging defeats the purpose, wdyt?
+Le 20/06/2024 à 20:08, Gustavo A. R. Silva a écrit :
 > 
-> Hm I might have been just blind, can see them there now. Anyway it probably
-> doesn't make much sense to have SLAB_BUCKETS and/or RANDOM_KMALLOC_CACHES
-> together with SLAB_MERGE_DEFAULT?
+> 
+> On 6/20/24 12:02, Gustavo A. R. Silva wrote:
+>>
+>>> My understanding is that 'match', is allocated by :
+>>>      match = kzalloc(struct_size(match, channels, n_channels), 
+>>> GFP_KERNEL);
+>>>
+>>> So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
+>>
+>> n_channels is updated in the line before calling kzalloc():
+>>
+>> n_channels = iwl_mvm_query_num_match_chans(mvm, d3_data->nd_results, i);
+>>
+>> match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
+> 
+> then match->n_channels updated here:
+> 
+>           if (!match)
+>               goto out_report_nd;
+> +        match->n_channels = n_channels;
 
-It's already handled so that the _other_ caches can still be merged if
-people want it. See new_kmalloc_cache():
+Thanks for the explanation.
+This is what I was looking for, and I missed this line.
 
-#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-        if (type >= KMALLOC_RANDOM_START && type <= KMALLOC_RANDOM_END)
-                flags |= SLAB_NO_MERGE;
-#endif
+Sorry for the noise.
 
--- 
-Kees Cook
+CJ
+
+> 
+> Sorry about the split response, finger failure ugghh
+> 
+> -- 
+> Gustavo
+> 
+> 
+
