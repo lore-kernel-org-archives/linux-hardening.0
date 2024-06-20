@@ -1,119 +1,143 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765191BA86D
-	for <linux-hardening@vger.kernel.org>; Thu, 20 Jun 2024 18:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB0F1B5819;
+	Thu, 20 Jun 2024 18:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718906895; cv=none; b=j9IsHmRNClZprzmYSaLj3gURHdEYOlX/gOEBPNgtAh8dc60XUCx8yK8x4ggwN/W1AWO6Of2S2Uh1dacSwkodoOP7knLLaoYuE0HukW8kLSVjkX07y+YH2ZpNLtLtNHAZ7q/8baD0emTdhFqvwJZZQDltTjcAWOMoBAEU/AYo5QQ=
+	t=1718908014; cv=none; b=u3yEJpakyXym3dOOlQMA5mon9aVoMYPQ3pNCaYN5v1DKKSOGlx4Q2FekyzJTTAMPSsHD612JLPC/YQGYhw2IIO7wHg9HSNVAqQz/FpSf/fh05Vr5/PD1jOG1ONpQaPpxMEdwweSf1ZRavmY77NKjaKLnt0YAWkjOOWya4fn+G9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718906895; c=relaxed/simple;
-	bh=uB1apWJQ3OE6U+/LLsGbLd9fjmCXiikIAJ6C3moSk4U=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LOa8Z30DT2BC/qaIt43ituDPpJ/biSviVMd9IL3OMhNHty0Ytqmxix7yBlJsKzFmWzaxTs08P2HVv2+Zs+NcSZbIMyzY7fT6BgLeshT4CxqYZj9SYncfDdQ+VFRdtVlnrtjnHLl8cmvoAZxCugMzFA9J98h9r1kjNRYxGKuwlD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=IlHTP6Bg; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1718908014; c=relaxed/simple;
+	bh=LYqT1Uu1OecCU2BJJQ+Io08qzbyYl4zJUIcAQBPlWbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PGsscAJIZ9oVFZERLY1GPSRGl3sZhBt811498urNLAxcdldypWk2wh1DXOzxaCh+g6kAcMyXXGEV8jA2tUzC/GmpL2rwZna59SpU2ZjkWFDg99MRJWBAD3+4YGe1Wmb+LahdltWsfNJL9hq8BiV/zBryZuNizjwABVwCEtSAriU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g49SGkRN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IlHTP6Bg"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id JvawsJEOnkQe8KMCesaY3s; Thu, 20 Jun 2024 18:08:08 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id KMCcslM0BibL1KMCds9rIq; Thu, 20 Jun 2024 18:08:07 +0000
-X-Authority-Analysis: v=2.4 cv=acFnnwot c=1 sm=1 tr=0 ts=66747007
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10
- a=x_dihBSuy5WN06TBF6EA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=lZUL9jcxKTQlsQHFQ46DQVLaL8P8p8lX4a8jvUbOugI=; b=IlHTP6BgrVTNg3fJkdhOKtM0lu
-	ftNDr7BNhZTWwf6y0RiYCFSImLlGDLImDF1tCSTskiTXZX07zXm4ybjfSDKCIBqg8D5kH/+tVh3df
-	LxESga1cqCnOZb6wX0v+LVownAcUnuCzasRxK2oJWSg6xpC+r06qF8OS4Vwyz2ovPn1sVtzyyA9ji
-	70BaS3w10yS1fqzKJHbG3Gn3m2Hm1bKCaS9Z7O1sYyCd8TeM0HdB2m/JwMCDTiPdjQfsCdzCIsXNo
-	kgGrhVA63jlydWKcicUz/HwG+S5OhprZiuw6cTvfdaw9ckZCfNemJny2GJ1IurN7FD7F+Wg9eb4LY
-	Al897pvA==;
-Received: from [201.172.173.139] (port=42488 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1sKMCb-003kD1-2n;
-	Thu, 20 Jun 2024 13:08:05 -0500
-Message-ID: <47a71c03-0306-4239-b77c-cb63a1760d19@embeddedor.com>
-Date: Thu, 20 Jun 2024 12:08:04 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g49SGkRN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A53C4AF19;
+	Thu, 20 Jun 2024 18:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718908013;
+	bh=LYqT1Uu1OecCU2BJJQ+Io08qzbyYl4zJUIcAQBPlWbc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g49SGkRN8S2Mavl5RmCW9iL6JIMmlqPrDdntU8UCFVwhWkThAc4SMvqtMJTwPd+PT
+	 EOCOpfq+PKwzRJcCV5f61H10I75SKvULhS1vpydKnaI5RqC/WqJtlQNUj3ncCAX0A3
+	 vYEyL/JSYCmoaByhW1MRhwnvrJz297pQiz1TdTH3bR3jXmAo2YQsA+BPVP7zTr/iyg
+	 qW80cv3MIXoZahNSP11DW9rJkXZRopSfKhKZUagLlOuvyj6G+R3GqLp9ooQ/iitMOG
+	 q8VyLLI4n5Oh/Zr8qdoeooQkaQt+d32NAGMSRmDLSdELiAGOwm756dTyyJhR6QB+5U
+	 9+uYD4vgdDngg==
+Date: Thu, 20 Jun 2024 11:26:52 -0700
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Martin Uecker <uecker@tugraz.at>,
+	Erick Archer <erick.archer@outlook.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <202406201120.C1629ACFE@keescook>
+References: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+ <202406101438.BC43514F@keescook>
+ <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+ <202406121148.688240B@keescook>
+ <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+ <202406121530.D9DB956C8@keescook>
+ <20240614101708.GO8774@noisy.programming.kicks-ass.net>
+ <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
+ <202406171019.9F0127F@keescook>
+ <20240618082242.GC31592@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
- cfg80211_wowlan_nd_*
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Kees Cook <kees@kernel.org>
-Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
- gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
- kvalo@kernel.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
- shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
-References: <20240619211233.work.355-kees@kernel.org>
- <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
- <c8404725-e4c4-453b-b72d-19ab0761da70@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <c8404725-e4c4-453b-b72d-19ab0761da70@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.173.139
-X-Source-L: No
-X-Exim-ID: 1sKMCb-003kD1-2n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.173.139]:42488
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 23
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCp+1CPnqcp/msGVrnybZvSfcC0DF3apMVqxRFFM1qqUt2Snsk3hs7kt52PoxCUjM+id9H7Mgkhi6/rfknb1FcGApZvq4FAYaCGwvAf9d70O/A3UnV/H
- rlwftC7UqwBua6CtUciHbUEYKjAfQBFmvEYY7rlbZmpeoaVerlj4rHmdMu/wUxWmEW2Vr4dEfp2wb1LcNy7gxl4+m9T3e4on/pGFq4RBEOfSnznTs1kx0YqW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618082242.GC31592@noisy.programming.kicks-ass.net>
 
-
-
-On 6/20/24 12:02, Gustavo A. R. Silva wrote:
+On Tue, Jun 18, 2024 at 10:22:42AM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 17, 2024 at 10:28:20AM -0700, Kees Cook wrote:
 > 
->> My understanding is that 'match', is allocated by :
->>      match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
->>
->> So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
+> > But, using type attributes we have much more flexibility. Hence, the
+> > proposed "wraps" attribute:
+> > https://github.com/llvm/llvm-project/pull/86618
 > 
-> n_channels is updated in the line before calling kzalloc():
+> So I still think that's going about things backwards.
 > 
-> n_channels = iwl_mvm_query_num_match_chans(mvm, d3_data->nd_results, i);
+> unsigned explicitly wraps. signed is UB.
 > 
-> match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
+> When using -fwrapv signed is well defined as 2s complement, which takes
+> away the UB and makes it implicitly wrap.
+> 
+> When extending the language, it is important to not break existing code,
+> so the default must remain wrap. This in turn means you need to add a
+> 'nowrap' thingy.
 
-then match->n_channels updated here:
+Well, we still disagree about this, but I guess we'll see how the size_t
+work comes along. Maybe I will come to agree with you. :)
 
-  		if (!match)
-  			goto out_report_nd;
-+		match->n_channels = n_channels;
+> Also, I would very much not make this an attribute, but a full type
+> qualifier. Furthermore, add type promotion rules to ensure nowrap takes
+> precedence and is preserved throughout expressions. Such that:
+> 
+>   'long' + 'nowrap int' -> 'nowrap long'
+> 
+> Then, once you have this, you can go do things like:
+> 
+> typedef nowrap unsigned long size_t;
+> #define sizeof(x) ((size_t)sizeof(x))
+> 
+> and things will just work. Hmm?
 
-Sorry about the split response, finger failure ugghh
+Right. Currently this is being plumbed through the sanitizers, so the
+type selection will happen there (for this version of it). The current
+experiment is to basically tell the sanitizers to ignore all types
+except a given list, and our initial list will be just size_t.
 
---
-Gustavo
+Before this, Justin is finishing up the initial set of idiom exclusions.
+.e.g.:
+
+	size_t var, offset;
+	...
+	if (var + offset < var) { ... }
+
+This will not freak out if "var + offset" wraps.
+
+
+And "negative unsigned constants" will be ignored:
+
+	#define MASK	-2ULL
+	...
+	size_t mask = MASK;
+
+
+And loop post decrements wrapping will get ignored too:
+
+	size_t count = ...;
+	...
+	while (count--) { ... }
+
+
+After we get it all nailed down, we'll see if anything new pops up. :)
+
+-- 
+Kees Cook
