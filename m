@@ -1,48 +1,40 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3191B29C9;
-	Thu, 20 Jun 2024 16:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372D1AB8F0;
+	Thu, 20 Jun 2024 17:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718901908; cv=none; b=jPYUM7FrELbldn5DcnYWXzhmrJobGHWX/BRZEASr3Z+r2X9f866kZ86Zd6Ry+Tc0GKG64yre8DL7qgVv/7smVN0vqJVI3qg2uCzfxiCccNHxkpzhJiDbJr83X+LVQGDxKLHjhZArs8DOKb2glFnH7SOpXAISzIbyWErN5wsNu90=
+	t=1718903742; cv=none; b=WqRylWPoej/J+bRvqabTlW3zPIyJL1w53cqpNHo+eze0vsYzUESw4bh4MiXixCI957HtWDfiVfFWabr53AIUKep7IZA20wViwycv2gwoEheELjH36hnhQfAdF42nnBLPsgtJ4ilKy7aatf9UfSImFbn4WeGAumpPCwWWosD4rBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718901908; c=relaxed/simple;
-	bh=vVAQVLcIYSa9eKUMNQkbbxD4BD0WbXW8qmYkhqRBZDg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VR+/WNLOr0+dAg0la+NS/AXpn6dpUOK4L3bje58v2BCTHY1Som8fPIAhrChgt5KURjGwmwwtXZojSFEkzuOP3WqXQR+pZmiJJgckCmMsShHcrRofvEOcrWj16CTljlJga8Z9ZE63MZqxDQA1n9Hb8Ak05QCmpJK1OFThzAi4DX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PJ1h6khn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718903742; c=relaxed/simple;
+	bh=MibYtPaStOyNmJ/MnE3IBHd0ESHqLBiFr2K5NuHSgVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l3YdO2xDUpmtU6QXV5qs11BLYeBhIX9QcmyVVo1089/HTeM8mYeVNnQOuVXvjHhRwsbEo2FmZmyifOxrKAQvor0pXX3SJwdYtabVj3np7OpJbzIPFZqGyX44iCR22rkP8orRegu0AtXgxzrIsOZt9rNyYbUAcQ/TyHthf7s8E7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EYy8taYz; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PJ1h6khn"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KDmVKX024469;
-	Thu, 20 Jun 2024 16:45:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	D4y4wSWdSO3Oxbz63so7MxqnXDBzW59kH6MAtjsENG0=; b=PJ1h6khn2lRI90zS
-	vgcjuxRfqsorMYx3vjRFy/2T9tI2tu38bnE7DWghGq0psMBD/jf9oZ+IUdhIAb8Y
-	N2U2bVEbMEMbk4jMravy+Wc0wclt3K6LQwNzOExXEJk3N/DMMOEt5QrbjiW4UW6A
-	oWtZJAsO6gFRh2rLnPZ8E3K6I8Aqdg71x7OkbtU+y7GJy/szYd/lktQvka0haBNm
-	L6khRJYxNgGoXzkaNuLa/sf3bYzrQfS9Uts5z3cgKnnulQMsCK3esC6gudhNLMHH
-	O+gFwcEyDwkZxxlMnHman8xRvlxKdf9vnhEQj0NO9ucNeo6BRvLL7jqluKrXTDzC
-	5Ol0sA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yvnmh8f49-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 16:45:03 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45KGj2fV003704
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 16:45:02 GMT
-Received: from [10.48.244.93] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 20 Jun
- 2024 09:45:02 -0700
-Message-ID: <bd6c0b05-fe43-4405-bce1-ad765ec6c4d3@quicinc.com>
-Date: Thu, 20 Jun 2024 09:45:01 -0700
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EYy8taYz"
+Received: from [192.168.1.37] ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id KLF0sqSvNx6E7KLF0sBJHQ; Thu, 20 Jun 2024 19:06:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1718903195;
+	bh=C7PXgcuFIHuLhO89QKhX4IoMZb6JJQMXMgrBnFVa6K0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=EYy8taYzxscAZ/nfXzuE05IHjV1wE94kbgEBcZDGz5+FWe/YDPfhdc49k10obex64
+	 X8VT60CZnkmXGOoRd9m5BB+/Hjb7GuUAgqwM9Ei9TXqB3nowye0SEmAGOjfJaxe8QM
+	 3C5cxaIZ0d+dw6XS769GdxpIuajWQd0YRjLjfYsgbcGcsPz9iVfHSRZmSFAx7e/LN/
+	 J/ccclUPyqWqaJpQ9dbIJfnuwIFB3uIzeZfncLwk9lEijU59qhRCK+9nBKPVLZasC7
+	 oYddT+lM/YtEoXHdi1ZH10lfgZI944NwdNM32CRWMJL0+Cl30nNmROaxE7LBCgUT68
+	 nuX6Q0ClPxyGw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 20 Jun 2024 19:06:35 +0200
+X-ME-IP: 86.243.222.230
+Message-ID: <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
+Date: Thu, 20 Jun 2024 19:06:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,71 +42,154 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] string: kunit: add missing MODULE_DESCRIPTION() macros
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook
-	<keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>
-CC: <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20240531-md-lib-string-v1-1-2738cf057d94@quicinc.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240531-md-lib-string-v1-1-2738cf057d94@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4TpuorCMh3GZwf_EuqVXC_4sQCc6DPXm
-X-Proofpoint-GUID: 4TpuorCMh3GZwf_EuqVXC_4sQCc6DPXm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
- suspectscore=0 impostorscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200120
+Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
+ cfg80211_wowlan_nd_*
+To: Kees Cook <kees@kernel.org>
+Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
+ gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
+ kvalo@kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
+ shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
+References: <20240619211233.work.355-kees@kernel.org>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240619211233.work.355-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 5/31/2024 4:07 PM, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/string_kunit.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/string_helpers_kunit.o
+Le 19/06/2024 à 23:12, Kees Cook a écrit :
+> Both struct cfg80211_wowlan_nd_match and struct cfg80211_wowlan_nd_info
+> pre-allocate space for channels and matches, but then may end up using
+> fewer that the full allocation. Shrink the associated counter
+> (n_channels and n_matches) after counting the results. This avoids
+> compile-time (and run-time) warnings from __counted_by. (The counter
+> member needs to be updated _before_ accessing the array index.)
 > 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> Seen with coming GCC 15:
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_set_freqs':
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2877:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+>   2877 |                                 match->channels[match->n_channels++] =
+>        |                                                 ~~~~~~~~~~~~~~~~~^~
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2885:66: warning: operation on 'match->n_channels' may be undefined [-Wsequence-point]
+>   2885 |                                 match->channels[match->n_channels++] =
+>        |                                                 ~~~~~~~~~~~~~~~~~^~
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function 'iwl_mvm_query_netdetect_reasons':
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2982:58: warning: operation on 'net_detect->n_matches' may be undefined [-Wsequence-point]
+>   2982 |                 net_detect->matches[net_detect->n_matches++] = match;
+>        |                                     ~~~~~~~~~~~~~~~~~~~~~^~
+> 
+> Fixes: aa4ec06c455d ("wifi: cfg80211: use __counted_by where appropriate")
+> Signed-off-by: Kees Cook <kees-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  lib/string_helpers_kunit.c | 1 +
->  lib/string_kunit.c         | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/lib/string_helpers_kunit.c b/lib/string_helpers_kunit.c
-> index f88e39fd68d6..c853046183d2 100644
-> --- a/lib/string_helpers_kunit.c
-> +++ b/lib/string_helpers_kunit.c
-> @@ -625,4 +625,5 @@ static struct kunit_suite string_helpers_test_suite = {
->  
->  kunit_test_suites(&string_helpers_test_suite);
->  
-> +MODULE_DESCRIPTION("Test cases for string helpers module");
->  MODULE_LICENSE("Dual BSD/GPL");
-> diff --git a/lib/string_kunit.c b/lib/string_kunit.c
-> index 2a812decf14b..c919e3293da6 100644
-> --- a/lib/string_kunit.c
-> +++ b/lib/string_kunit.c
-> @@ -633,4 +633,5 @@ static struct kunit_suite string_test_suite = {
->  
->  kunit_test_suites(&string_test_suite);
->  
-> +MODULE_DESCRIPTION("Test cases for string functions");
->  MODULE_LICENSE("GPL v2");
-> 
+> Cc: Miri Korenblit <miriam.rachel.korenblit-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Kalle Valo <kvalo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Johannes Berg <johannes.berg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Gustavo A. R. Silva <gustavoars-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Gregory Greenman <gregory.greenman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Yedidya Benshimol <yedidya.ben.shimol-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Haim Dreyfuss <haim.dreyfuss-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
-> base-commit: b050496579632f86ee1ef7e7501906db579f3457
-> change-id: 20240531-md-lib-string-d987d813b344
+>   drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 14 +++++++++++---
+>   1 file changed, 11 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> index 54f4acbbd05b..9cd03ea4680d 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> @@ -2866,6 +2866,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+>   				    int idx)
+>   {
+>   	int i;
+> +	int n_channels = 0;
+>   
+>   	if (fw_has_api(&mvm->fw->ucode_capa,
+>   		       IWL_UCODE_TLV_API_SCAN_OFFLOAD_CHANS)) {
+> @@ -2874,7 +2875,7 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+>   
+>   		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN * 8; i++)
+>   			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+> -				match->channels[match->n_channels++] =
+> +				match->channels[n_channels++] =
+>   					mvm->nd_channels[i]->center_freq;
+>   	} else {
+>   		struct iwl_scan_offload_profile_match_v1 *matches =
+> @@ -2882,9 +2883,11 @@ static void iwl_mvm_query_set_freqs(struct iwl_mvm *mvm,
+>   
+>   		for (i = 0; i < SCAN_OFFLOAD_MATCHING_CHANNELS_LEN_V1 * 8; i++)
+>   			if (matches[idx].matching_channels[i / 8] & (BIT(i % 8)))
+> -				match->channels[match->n_channels++] =
+> +				match->channels[n_channels++] =
+>   					mvm->nd_channels[i]->center_freq;
+>   	}
+> +	/* We may have ended up with fewer channels than we allocated. */
+> +	match->n_channels = n_channels;
 
-I don't see this in linux-next yet so following up to see if anything else is
-needed to get this merged.
+
+Hi,
+
+I'm sorry but I don't understand the patch.
+
+You state that "The counter member needs to be updated _before_ 
+accessing the array index.". I agree with it.
+
+But this patch seems to steel update it *after*.
+
+My understanding is that 'match', is allocated by :
+	match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
+
+So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
+
+So the __counted_by() mechanism should complain when doing
+	match->channels[n_channels++] = mvm->nd_channels[i]->center_freq;
+whatever n_channels value is.
+
+
+I would expect the solution to be related to pre-increment instead of 
+post-increment. Something like:
+ > -				match->channels[match->n_channels++] =
+ > +				match->channels[++match->n_channels] =
+ >   					mvm->nd_channels[i]->center_freq;
+
+
+Did I miss something obvious or I don't understand how __counted_by() works?
+
+CJ
+
+
+>   }
+>   
+>   /**
+> @@ -2965,6 +2968,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+>   			     GFP_KERNEL);
+>   	if (!net_detect || !n_matches)
+>   		goto out_report_nd;
+> +	net_detect->n_matches = n_matches;
+> +	n_matches = 0;
+>   
+>   	for_each_set_bit(i, &matched_profiles, mvm->n_nd_match_sets) {
+>   		struct cfg80211_wowlan_nd_match *match;
+> @@ -2978,8 +2983,9 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+>   				GFP_KERNEL);
+>   		if (!match)
+>   			goto out_report_nd;
+> +		match->n_channels = n_channels;
+>   
+> -		net_detect->matches[net_detect->n_matches++] = match;
+> +		net_detect->matches[n_matches++] = match;
+>   
+>   		/* We inverted the order of the SSIDs in the scan
+>   		 * request, so invert the index here.
+> @@ -2994,6 +3000,8 @@ static void iwl_mvm_query_netdetect_reasons(struct iwl_mvm *mvm,
+>   
+>   		iwl_mvm_query_set_freqs(mvm, d3_data->nd_results, match, i);
+>   	}
+> +	/* We may have fewer matches than we allocated. */
+> +	net_detect->n_matches = n_matches;
+>   
+>   out_report_nd:
+>   	wakeup.net_detect = net_detect;
+
