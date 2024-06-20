@@ -1,134 +1,113 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8B724211;
-	Thu, 20 Jun 2024 04:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B1022625;
+	Thu, 20 Jun 2024 05:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718856271; cv=none; b=llwnGYTXQnonv424wLfyoi6nUyT3t6Sn6ZIsHncNFKTjzLqBmQ+FPyUS6bI9+R8rO+PaaJruZTM33Izl190uxjjIKjt/A1jFhe36rV/bPC23B1MP+g8PxBnigEkxFuvH8bqxZVWIs0HzYtxoUONX1lYzO0unT5yWEw69Bkaxm8c=
+	t=1718860237; cv=none; b=E1ERnnPZ0LhmJTPP4Hz1LMmubxj/E9vYSVbSKWwUU56ykW7ON4kZxZ2rH7DX1kbvtVt01gdRXelvwGBnafdYEGMgItpUDBDaCGK1dDEU3HT2U6aue46o2w663+S+z0vznl6HAkUZkBPIx6fyqpt14JMN5HcsY2HWR6S6fLHW3eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718856271; c=relaxed/simple;
-	bh=mphZe2lo3TH4YqNADWhRpYCXmcPjDl1FzAOCHJBNgLA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rgOWl30WwmORLtdhK/V9W2QrOr8zZXB5MaFLYgNrCVZy2X2UnTWtmuIwmnnTbiGwXP1Lptlvg3xpwgMCuoRggguhIs5QlFfrAPO88u8fk40Wu573vxP/2Kn8Elh5Wuob7HZbDCQ3UMLhFuf1r7RnmmpM36n/okT+OAV5D6ttfEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W4RZS1JHmznWlM;
-	Thu, 20 Jun 2024 11:59:28 +0800 (CST)
-Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
-	by mail.maildlp.com (Postfix) with ESMTPS id B6DF9180087;
-	Thu, 20 Jun 2024 12:04:23 +0800 (CST)
-Received: from [10.67.109.211] (10.67.109.211) by
- dggpemd100004.china.huawei.com (7.185.36.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 20 Jun 2024 12:04:23 +0800
-Message-ID: <4e137bd6-845c-41d0-9c96-85b4170ebf6a@huawei.com>
-Date: Thu, 20 Jun 2024 12:04:23 +0800
+	s=arc-20240116; t=1718860237; c=relaxed/simple;
+	bh=EcoZJnOw4ZxQicG1ODL6MLtAc4U2F8syA+1dK4SXrlE=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=omWp2Jt1quVNBFVm1QBqroSnsCFlgQmjquH+dNQTfWtp5i+gbQ5xc5AtF/cr8YlumE1MZUAVTNaNAypdJn9XYm1rCKZZswo6h7IoNFdnMgJ2j3ToieMsJyPUKpyzfbbPgyUJyEz7uZtS/SVmPKT44G3LBSoAMZofg15YP0WfMgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=h0jXyEqc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YDIK+DYQ; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="h0jXyEqc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YDIK+DYQ"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 7EDEB1380508;
+	Thu, 20 Jun 2024 01:10:34 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 20 Jun 2024 01:10:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1718860234; x=1718946634; bh=oOvBZk5ku2
+	PHWJwOBdeAamQaGtBAcJuFlI+eQulJJ/g=; b=h0jXyEqcRFm3Hi22xQ+m2VpoUE
+	teCVADhBueEOqre6hUAZDNz9c7t2pIHWTblOXrTvh1c9WAuih+sekLy8D8YLPuy9
+	EyiLQOFJsE24JVv5PVVPJ6aegqsw9vzA/g8Eoedaa19JiylOWPxiFYV5Ep+Ggp/H
+	NWotnuSjeX+hol5p4ghiMw8eHa01WMMSl9pmD561f6bC8oePben+DuLAjTzdlyYw
+	zd4C7dgylUsgmPJkCZdLnsGsMDhr/sThH4KbhqGvLI5j6GGNNO98nU8nu2H4ykUI
+	7BmcDP4fLZNR/TlhBd9uaT8hQBXpzgeJGp7aQbd7eQNgLYv3zS7MYnjS8qGQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1718860234; x=1718946634; bh=oOvBZk5ku2PHWJwOBdeAamQaGtBA
+	cJuFlI+eQulJJ/g=; b=YDIK+DYQVSAZsVlNHkyZxYleCK505KY/U/rQoAaT8u4u
+	NGYRrG22n1I0ASTtmF8swqQZpRO7FrJwazf0YFZ6SRHTpuYS9GwOhLl4VrMfT0/E
+	Tn4lx9Ue4RNlJqqK/pkSgIHgU+Gcm5UIx6au27jadKGJdgJY+gjqFAn7HQnpxkAq
+	akcjwD6QAbuaUNCqZ63KMSDrf164sGa9+t7AbtbUn25OsHWUScjqePhlu/z6SLVV
+	f49PgIm/yLWg3smw/xMO/UR44aqcUVrEnWWDOWEpgdPJ8qXaoYNh73EQvbpR5Jy6
+	nggfX5r6OgDOvazKcjl3+/Ne65tE0aK1iJ6kHXatGw==
+X-ME-Sender: <xms:yrlzZsXfhMHWLqRCrCPOK53Pbu6PPue9mKKo4AI6hYkiMOI1Nw5j0A>
+    <xme:yrlzZglhMC5JetbHsGZEYC7aAq2IjDjrFY5zsS4YKs4IFCHzQN6_APR773UpWj751
+    72KlrkMKvxOtqpWMGo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeefuddgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:yrlzZga_c1vis0bOUDGP6ANeihwp5WlYQoDine7an1U4KRFU127giA>
+    <xmx:yrlzZrUlU4ChJ8D2Jr0SE3PFhtfYFoJEQYLO-RlpUwzDgkyzWiZq-w>
+    <xmx:yrlzZmlwZ0xCQPCCw4MCFjdHLvoSBXhrOVInOh6HuWucbLq63l1kDA>
+    <xmx:yrlzZgfPu6arFSV2RA8BqkjtvytabBWNGVqPsTwohX9D8h1d2RoTBw>
+    <xmx:yrlzZohudk4mJXONopTxuL3f8xOQ1gQ27SxwbHmOOR_k1EONWOchV295>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 3AFAFB6008D; Thu, 20 Jun 2024 01:10:34 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
-Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>
-CC: Kees Cook <kees@kernel.org>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-hardening@vger.kernel.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Heiko
- Carstens <hca@linux.ibm.com>, <gor@linux.ibm.com>, Alexander Gordeev
-	<agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>, Leonardo Bras <leobras@redhat.com>, Mark
- Brown <broonie@kernel.org>, <imbrenda@linux.ibm.com>,
-	<pawan.kumar.gupta@linux.intel.com>
-References: <20240617133721.377540-1-liuyuntao12@huawei.com>
- <ZnBbr2CAqBGDe2aN@J2N7QTR9R3> <202406171122.B5FDA6A@keescook>
- <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
- <ZnFlQgVSTtf0t2cU@J2N7QTR9R3>
-From: "liuyuntao (F)" <liuyuntao12@huawei.com>
-In-Reply-To: <ZnFlQgVSTtf0t2cU@J2N7QTR9R3>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemd100004.china.huawei.com (7.185.36.20)
+Message-Id: <345dff33-86f0-4de3-90e3-9e3a13f20875@app.fastmail.com>
+In-Reply-To: <202406191414.67C589A@keescook>
+References: <563b8f82-9865-40ae-85d3-055b3bcda7d6@quicinc.com>
+ <202406191343.D361BC137@keescook>
+ <f1f08297-e8c7-4673-88b5-e9b6bff69371@app.fastmail.com>
+ <202406191414.67C589A@keescook>
+Date: Thu, 20 Jun 2024 07:10:13 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <kees@kernel.org>
+Cc: "Jeff Johnson" <quic_jjohnson@quicinc.com>,
+ linux-hardening@vger.kernel.org, "open list" <linux-kernel@vger.kernel.org>
+Subject: Re: mips gcc plugin issues
+Content-Type: text/plain
 
+On Wed, Jun 19, 2024, at 23:17, Kees Cook wrote:
+> On Wed, Jun 19, 2024 at 11:12:25PM +0200, Arnd Bergmann wrote:
+>> On Wed, Jun 19, 2024, at 22:50, Kees Cook wrote:
 
+>> The problem here is that a gcc plugin links against the
+>> compiler, not against code produced by it. I'm linking the
+>> crosstool compilers statically against libraries as much as
+>> possible in order to make them more portable between distros,
+>> but the downside of that is that plugins will only work in
+>> the environment that I was using to build these toolchains.
+>> 
+>> My build environment is an older Debian (in order to be
+>> portable to old glibc versions), but with the system compiler
+>> updated to gcc-13 (since x86 libgcc cannot be cross-compiled
+>> with an older compiler).
+>
+> Can the crosstools remove the plugin support? That seems like the best
+> solution. Kconfig test for plugin availability with:
+>
+> 	depends on $(success,test -e $(shell,$(CC) 
+> -print-file-name=plugin)/include/plugin-version.h)
 
-On 2024/6/18 18:45, Mark Rutland wrote:
-> Hi Arnd,
-> 
-> On Mon, Jun 17, 2024 at 10:33:08PM +0200, Arnd Bergmann wrote:
->> On Mon, Jun 17, 2024, at 20:22, Kees Cook wrote:
->>> On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
->>>> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
->>>>> Since the offset would be bitwise ANDed with 0x3FF in
->>>>> add_random_kstack_offset(), so just remove AND operation here.
->>>>>
->>>>> Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
->>>>
->>>> The comments in arm64 and x86 say that they're deliberately capping the
->>>> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
->>>> value with 0x3FF.
->>>>
->>>> Maybe it's ok to expand that, but if that's the case the commit message
->>>> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
->>>> x86), and those comments need to be updated accordingly.
->>>>
->>>> As-is, I do not think this patch is ok.
->>>
->>> Yeah, I agree: the truncation is intentional and tuned to the
->>> architecture.
->>
->> It may be intentional, but it's clearly nonsense: there is nothing
->> inherent to the architecture that means we have can go only 256
->> bytes instead of 512 bytes into the 16KB available stack space.
->>
->> As far as I can tell, any code just gets bloated to the point
->> where it fills up the available memory, regardless of how
->> much you give it. I'm sure one can find code paths today that
->> exceed the 16KB, so there is no point pretending that 15.75KB
->> is somehow safe to use while 15.00KB is not.
->>
->> I'm definitely in favor of making this less architecture
->> specific, we just need to pick a good value, and we may well
->> end up deciding to use less than the default 1KB. We can also
->> go the opposite way and make the limit 4KB but then increase
->> the default stack size to 20KB for kernels that enable
->> randomization.
-> 
-> Sorry, to be clear, I'm happy for this to change, so long as:
-> 
-> * The commit message explains why that's safe.
-> 
->    IIUC this goes from 511 to 1023 bytes on arm64, which is ~3% of the
->    stack, so maybe that is ok. It'd be nice to see any rationale/analysis
->    beyond "the offset would be bitwise ANDed with 0x3FF".
-> 
-> * The comments in architecture code referring to the masking get
->    removed/updated along with the masking.
-> 
-> My complaint was that the patch didn't do those things.
-> 
+Good idea, yes. I still have to upload gcc-14.1 and gcc-13.3 binaries
+anyway, so I'll try turning off plugin support when I build it.
 
-Sorry for that I don't adjust the comments in architecture code 
-referring to the masking.
-I've tested the stack entropy by applying this patch on arm64.
-before:
-Bits of stack entropy: 6
-after:
-Bits of stack entropy: 7
-It seems the difference was minimal, so I didn't reflect it in the 
-commit message. Now it appears that I missed some of the Kees's intentions.
-Kees has resent the patch, and everything should be fine now.
-
-Thanks!
-Yuntao
-
-> Mark.
+      Arnd
