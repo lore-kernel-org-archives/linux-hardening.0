@@ -1,132 +1,85 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47556824B3;
-	Thu, 20 Jun 2024 21:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD2459148;
+	Thu, 20 Jun 2024 21:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718918582; cv=none; b=D43L5jTSpT1Dkwq2v7hmf6PA2y29JmxGsU5USpQkFXaFVBn6LGfeRQa802XozZqiOuE1RNoacjnmbHURAuV/qNwt9RreIJsZroOU34OvY4sOF4STVfsZyfAOpZGjNzCFYiLJkdRUvKbyA5oFh8x/FXRFPsLPzn6XY+M7TbXlhAU=
+	t=1718920684; cv=none; b=V4Sh4pop6OlRGX2QqXM+AkaYYmP8PteNGCnLYbES6nkSaoQq/Y5ISTNwowNFLP21R9bIE4DBo6qsoRez84oPF1qh4FbNAS1RVZ0JGfQndbd7zeHnI108QomSuU1Orrdn5jWwCEJPgJNFSLuLO+Wsm2/h+qmGN1xdnGFkc7ZDGG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718918582; c=relaxed/simple;
-	bh=W3zJRVHu5IEnuNfSbP5xtAFgvUA5i7Y8mIhEvQpuVEQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dS5BJawNp2h8bdAp7D5lpuLQrt9VGdqMSV2IywiKkYlfclPqLxzYQxa1SdaU//V1Cy0SGjn0EpLjNvytggG9n8QQ/bvBQY0Jxu4IXfIOAwUcNwv4NKlBInlKxSaEUQvjCELWzCtJW9vU5qlxOj7guR15CAfwX+0br8NH37KeP2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ter4azBc; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1718920684; c=relaxed/simple;
+	bh=beYmCT+ltRjbD4/v+kRgI7K1zSXG/s6cP+YEOZspq7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BT2AWKOBBWRtcqZDWdJA/NIB98awhctDCortfynrgZdN7txiuH8d321CJmKT73yPJgUt/kTDn1Fm2WvqECBoAzJSN5MRKl2SuWZMVJtsPMRqA1+i0afs5Ja+dgadIP/SyXGZIYdh4lbgVrbVJGorkV7v/50oYRh1APiQKRw3QFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKMXSHPV; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ter4azBc"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f1c4800easo148907866b.3;
-        Thu, 20 Jun 2024 14:23:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKMXSHPV"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f6da06ba24so10397335ad.2;
+        Thu, 20 Jun 2024 14:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718918579; x=1719523379; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tvJiXFffmlTDfRSrFVguX7jVktah6y3nmFwZHVMfroI=;
-        b=Ter4azBc3dBOsrog6R44Xw104CBIgnwjv421eAGwezktnq4A6WHIuyusOnoMyX1D/a
-         LS+3CDtP8qfmLmEFATRfrhSkwSFsx2TPo4olZleuXd8Ag6uvNFLRajP4ZIlJk+PoGn4S
-         g6oYgX1Xn4ajYouZzdBmNycYGQXFr+DAhV0KrAAQjoaTg6xYCIxzscG+fc9k7ljbMLFV
-         GFPP0eRHGD6wKY6x71nHhly6dn+R4xO36CGJzqLQE0EE3BQvOH9WFRZ8A+cP8oCpPg8h
-         9VLhy8V6DXuLXqLLNI7IscTnk8z9h6Q91gXethi2T4SNnsG5qM6euDj6sxEUE4WQti/e
-         xu4Q==
+        d=gmail.com; s=20230601; t=1718920683; x=1719525483; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gfB3QZ8xBZzZ655uwkS4EQea5sVZRz3H+t/hBs6DLOg=;
+        b=nKMXSHPV56YBLjC9vXDzWqRe6gRrtge2jA17RpqzOtlWOqQ0JZZCIlpDnArGJK5gy9
+         U5A1AFS/y9NO78t387dqe5Ezyo+o+zFkx08waie3VWlD/WmLafQOcPrWwPUE0Pdtjzn1
+         6LWXOVFCHSAuTnOA4HP4+MjWBDFICiEmXPIleutifjRF96Bsmaq9NRL0bFcyeh0uBumm
+         wUA9JOLmOWzq+kA5vnjxSIXdSX4ITekiplhQ03wldgLu1+s9VpPzuwMcniARq2XERJHZ
+         eCSiqvUmkg4F59Lgp2RxYvbDw7qnepR/N0vEffIz/mpG1U4LohtL6qwxnwma/q8vFUyo
+         j5dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718918579; x=1719523379;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tvJiXFffmlTDfRSrFVguX7jVktah6y3nmFwZHVMfroI=;
-        b=WxE5JNdg0QNazuLmKkB3RxnZ55myFFUH9B+xYj6x5zuJu5N0qwb+fmboHu3idhOwdM
-         9rJkTVNaLiHOJM1sp9usytyXq7lOux2R6sx/wg0Rvm8XPlrtX+pWdft2sXO+II4YJOBt
-         elkYh9nqbdp5pm5f8pPfm/t22GxeYJbcCSBbKaQDQ5Gks5f95Y2MDjshqqrJwfyXYK9p
-         Dzoi7z8q+MYZ28g86NhIQPV94lHNSkwgSZeEuq42/2eu3UQ1wn7ZnEKi2dfaNfeN501S
-         0LbESjaFjaaYHmEZi9Xm2ujnspNMEcwNV+19Hb3ZRia0ie+UD5NzdNjj5j5A6oZqo3z+
-         7rAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWc5ktDibyxHOfSOO38fbawz0H/z1GZ8pvwZLamkXqUKYRY2o7Ov82JvQBktWyTo4q5Y0Y4GSQwndwzAjpgnjlyjrSHhK4IxZ9cnpgsL1opVmO4+bYvQCFivSzfeKONoyu7rG1fXFT0kaFctuNA
-X-Gm-Message-State: AOJu0YzT/Uic62yrrAyW1qxgnHV2qyVzTJP5xpt2xGme7fLwo87x+OI2
-	y0Xnb1T7aBKfkpjnxDE7s1LxHJFLPgYvDtKk89IAy3nKMUqzVUopYgBH7UFX
-X-Google-Smtp-Source: AGHT+IF3rCfMdHT1ePR2H6IMpVrEBm/ZW9hmVius8u0Q2iSl2WnYiakc8n94b267vNSUUckHNW3glA==
-X-Received: by 2002:a17:907:c003:b0:a6f:b320:f455 with SMTP id a640c23a62f3a-a6fb320f483mr400964066b.32.1718918578717;
-        Thu, 20 Jun 2024 14:22:58 -0700 (PDT)
-Received: from [127.0.1.1] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf560d82sm10922666b.172.2024.06.20.14.22.57
+        d=1e100.net; s=20230601; t=1718920683; x=1719525483;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gfB3QZ8xBZzZ655uwkS4EQea5sVZRz3H+t/hBs6DLOg=;
+        b=wbBBRdtHs+j6cQ7hN9BvscPjEHRQpVCmhcOZwLzFhgEzbpv5PDxgNF/g0mNPU6vrPI
+         DA60zJ/9eMp3isWVolh4FgoFi8fdk2K9yanrDriOlVo0TSL5olODGNe6PGuSLvkHMhPF
+         q6D2wGLpMAL1EkxaNxNE3HNH0Uy3XSOkAXKctIC+3lt+NXg2eVRX15GHxPIMNMw7dqbz
+         KLe9tY6GqUYgUazPvsUZ9CEa8UqeqfbGnN2OJYy1leViwnoKWJLhImScgT7fEN5Dl//M
+         sma6ZgCafKCzpol8FY+BoWlFrseEbZqLrzV7TTB+O92XzQAPQ4QIVNOIBF22VvJ22RFu
+         fyJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUou8TCrFmY9aK4vtrSIr0VVj7c4Wz78YzvFgBCLCmkrfMxajCFDbUVgxIcAwc5DKnQinn12b8VRTYm+unk7U5y9dtBHRlYjG7HYHAs4NeYSZ7fxpGJaPflSZ9eSvBsSpFSix/cE19Evs3I9x1ELhE0T1XMdYayhxkfzppjZlNv6F8nP/V/+67A1aw=
+X-Gm-Message-State: AOJu0YyDrqdRsX35dqAQfhUbOYXkQ0zP0H2TZxyhpb5yW5iM3+2DbiuH
+	6RI9QDc952ZYVs7iIREswDpvyUQgocEkNV2UYmC3kSSBnlh5rdWAWtgyFg==
+X-Google-Smtp-Source: AGHT+IHhfKN93+OlEKnOu65UteLFJfwRWhteLznYzQcgnpXqLZVg54gJbJBGs701omSJzURRA+pxbg==
+X-Received: by 2002:a17:902:d484:b0:1f6:eb56:7831 with SMTP id d9443c01a7336-1f9aa47c414mr76645005ad.63.1718920682510;
+        Thu, 20 Jun 2024 14:58:02 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:36d9:2b1f:59f:8e9e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3d507csm922165ad.192.2024.06.20.14.58.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 14:22:58 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Thu, 20 Jun 2024 23:22:34 +0200
-Subject: [PATCH 2/2] mfd: omap-usb-tll: use struct_size to allocate tll
+        Thu, 20 Jun 2024 14:58:02 -0700 (PDT)
+Date: Thu, 20 Jun 2024 14:57:59 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] Input: ims-pcu - annotate struct ims_pcu_flash_fmt
+ with __counted_by
+Message-ID: <ZnSl50-Q9GCFHe_P@google.com>
+References: <20240619-ims-pcu-counted_by-v1-0-3ee0ead2e57d@gmail.com>
+ <20240619-ims-pcu-counted_by-v1-1-3ee0ead2e57d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240620-omap-usb-tll-counted_by-v1-2-77797834bb9a@gmail.com>
-References: <20240620-omap-usb-tll-counted_by-v1-0-77797834bb9a@gmail.com>
-In-Reply-To: <20240620-omap-usb-tll-counted_by-v1-0-77797834bb9a@gmail.com>
-To: Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718918573; l=1774;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=W3zJRVHu5IEnuNfSbP5xtAFgvUA5i7Y8mIhEvQpuVEQ=;
- b=/3IIqNmJEJL76pd+rsFBNB8jBYg347ZcVZxlYSGQKzVT2BnMqAEEA0zfQ8c5jQTxoh/3HMXZm
- EgVO5Ac5w0fD66ZZMPnIqVLm/lpLzYm8VVSXVmiCOOQxbtk3F5y22OT
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619-ims-pcu-counted_by-v1-1-3ee0ead2e57d@gmail.com>
 
-Use the struct_size macro to calculate the size of the tll, which
-includes a trailing flexible array.
+On Wed, Jun 19, 2024 at 11:13:21PM +0200, Javier Carrasco wrote:
+> Use the __counted_by compiler attribute for the data[] flexible array
+> member to improve the results of array bound sanitizers.
+> 
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-
----
-The memory allocation used to be carried out in two steps:
-
-tll = devm_kzalloc(dev, sizeof(struct usbtll_omap), GFP_KERNEL);
-tll->ch_clk = devm_kzalloc(dev, sizeof(struct clk *) * tll->nch,
-                           GFP_KERNEL);
-
-Until commit 16c2004d9e4d ("mfd: omap-usb-tll: Allocate driver data at once")
-turned that into the current allocation:
-
-tll = devm_kzalloc(dev, sizeof(*tll) + sizeof(tll->ch_clk[nch]),
-                   GFP_KERNEL);
-
-That has surprised me at first glance because I would have expected
-sizeof(tll->ch_clk[nch]) to return the size of a single pointer, not
-being equivalent to 'sizeof(struct clk *) * nch'.
-
-I might be missing/misunderstanding something here because the commit
-is not new, and the error should be noticeable. Moreover, I don't have
-real hardware to test it. Hence why I didn't mark this patch as a fix.
-
-I would be pleased to get feedback about this (why it is right as it is,
-or if that is actually a bug).
----
- drivers/mfd/omap-usb-tll.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
-index a091e5b0f21d..5f25ac514ff2 100644
---- a/drivers/mfd/omap-usb-tll.c
-+++ b/drivers/mfd/omap-usb-tll.c
-@@ -230,8 +230,7 @@ static int usbtll_omap_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
--	tll = devm_kzalloc(dev, sizeof(*tll) + sizeof(tll->ch_clk[nch]),
--			   GFP_KERNEL);
-+	tll = devm_kzalloc(dev, struct_size(tll, ch_clk, nch), GFP_KERNEL);
- 	if (!tll) {
- 		pm_runtime_put_sync(dev);
- 		pm_runtime_disable(dev);
+Applied, thank you.
 
 -- 
-2.40.1
-
+Dmitry
