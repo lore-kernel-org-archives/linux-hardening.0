@@ -1,195 +1,130 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DED558AC3;
-	Thu, 20 Jun 2024 20:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A966EB7C
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Jun 2024 21:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718916261; cv=none; b=eMfBoFgaygXqVo4oV7r2HC0rV7d2IuKZWaJgL/AXIQwxIFtG+BzFALd2+Di5JaA841YqHKDK7HH5Ol1qVfGxt5iKhspIikuLnZX+/8wv55+LqV+m075t77ylAgSmUAUWZ6JFcwCqkn5sDp2IFlAT62QW1a7q7fyRZUKDy7RBIOw=
+	t=1718917261; cv=none; b=CmkNshzzPIPWh2PH8O1BI+44XQxHys4qvehFHQkRWGq6qaNgTnDq/lSvBEmpgdbL0Js/eMt+eOuFxOl4qZS06I6AA/Bhg3SweBQzaWQp3HueRbgG8qt1ockH3X65dZB3Q9egV7wLcg4ldq9xENiwL8fP3drs9oejan3FG6PQLMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718916261; c=relaxed/simple;
-	bh=xXQTpVzYBNvy25s5i1obYh6COrSTZIOxW16ZWs81j+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m6GqdIQ9GNyfQgQHq7STqrZG/1lDM0ITX3MJggXKUVsLO+c+i1jYcY28RjSbJVo1DEfKVCQOPGiAuTrPV9eymQ4HurQ6SXBHp1MX2lCvFx47evjFdatu42d+Ax6oIo6ajJMRor4VLrUIw+UyCAa32YA90IfGLNBiDxOYGT/3yWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hX4U8HkZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cRZoRbFf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hX4U8HkZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cRZoRbFf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1718917261; c=relaxed/simple;
+	bh=egAWnAyxKEcGYqBb8KysmqEYwI5NpvcOXUNw1MnaEzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VwMnuJ3blWyURQ24ZoZtDQJDYtTxdq/3CH98RtaMFF1/Z207XyHfn1zKqsL2Q1auCX2wuZIuwGjK3OaxeL0ceN8TSTWbB5nhm7YMYWmhKPeKONMz3gOpTSqxwtFWw5mqSv1VRZEWfM79Gxflrz1fc0XWgmncSDHtvLEajrbsyO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JQi73C1+; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hX4U8HkZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cRZoRbFf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hX4U8HkZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cRZoRbFf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2B60A21AD7;
-	Thu, 20 Jun 2024 20:44:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718916257; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UUY3ZboMLKJz1TS6iQDuB4Vm9DuxvmRHXybUstnJPdw=;
-	b=hX4U8HkZSlBtaV/yZ/8e4outtpguZjKgiHnQXLTArjuFSiE7PizO2Elrm7QuJxjuQjmWnO
-	fK9FIKMKFHtnWDyfN1tI6wwB+PjCXVwi/O7r5yykws10zuHLncT58EBfrlesc1i8e98UOe
-	+styDjZg8zvJh/67hft9h/gm3PvNV6U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718916257;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UUY3ZboMLKJz1TS6iQDuB4Vm9DuxvmRHXybUstnJPdw=;
-	b=cRZoRbFfeYVejp0bZ3QNHndIWWctZQrOueKJQ6IqaSc6avropICd0xZKPS/aW55rDGpCvi
-	OIa4RIq60FGnGaCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718916257; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UUY3ZboMLKJz1TS6iQDuB4Vm9DuxvmRHXybUstnJPdw=;
-	b=hX4U8HkZSlBtaV/yZ/8e4outtpguZjKgiHnQXLTArjuFSiE7PizO2Elrm7QuJxjuQjmWnO
-	fK9FIKMKFHtnWDyfN1tI6wwB+PjCXVwi/O7r5yykws10zuHLncT58EBfrlesc1i8e98UOe
-	+styDjZg8zvJh/67hft9h/gm3PvNV6U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718916257;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UUY3ZboMLKJz1TS6iQDuB4Vm9DuxvmRHXybUstnJPdw=;
-	b=cRZoRbFfeYVejp0bZ3QNHndIWWctZQrOueKJQ6IqaSc6avropICd0xZKPS/aW55rDGpCvi
-	OIa4RIq60FGnGaCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E87831369F;
-	Thu, 20 Jun 2024 20:44:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id E2FcOKCUdGYRVgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 20 Jun 2024 20:44:16 +0000
-Message-ID: <e42cb34b-f482-4232-81e3-4dab8a171d34@suse.cz>
-Date: Thu, 20 Jun 2024 22:44:16 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JQi73C1+"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-423b89f9042so785e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Jun 2024 14:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718917257; x=1719522057; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pF98VwdCcJqbDJTb4AUwn3sHBg8bzfdX8R18O7bVHHE=;
+        b=JQi73C1+reQlPOwWaixSzkrk4LSBLs9N6IqGzn077XxmQY22ygUtTY8vnnjqDeM+Ni
+         pEaMNrTxwcfDAnRsvyMCEx55EvCQekWpNswmO7bx27Lw4UbN5C/NaD7jC6DhZIKyju+m
+         Cr2d56QqBZSjutlhbnEAUgE9O1blDJ12mK42MJCm3Z80kqyqS400Dc8UzuM+/S5KpGVc
+         VKQFd0/XOA5l1Yy9Nww5Jc6FAq+vogfXiE+4D62J3xi38sy8VUy0M2s/z88p4DbVDOgd
+         SJzDmcabOi0nq4WB9+8OB+5vk8z1a6ZPsdsbfDkvt4PvKth8sr3r2RRUGtLVCn+/B4gc
+         9NdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718917257; x=1719522057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pF98VwdCcJqbDJTb4AUwn3sHBg8bzfdX8R18O7bVHHE=;
+        b=r6/LP4eFvR8OHL6/TJa+2qGhaMSPbwN1oScwdxISS8riMCAe4daBEyD2RqGf1VyYm+
+         nsYiGNB8LB5za4eus3DOiB8Kz7ufBhsZoijm2POc7zXdUrQem/nVbcpmBD/TP5gHj88L
+         eUIxH8SYGbr8abAp0g4VsMyjb78SOc7f14/m9KL0RtGpQKIcK+0nuJW78MejX2e8Fl70
+         Vq7IJcHLrOk2MLPanVYVGn46ZOmQZ215crW3G6NWxZdVs8MZumfi6F2GpsplTj0qG9Dv
+         HBVqXw6BnOZNbcWPdPdK5P4siUoMCJqKUvnpUdkqPJNs6r1VN7HqnYp9O6oSO/r9hdHB
+         sbsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNsXth4zi1LLmZfzNg5yFikepRLCTua/Y3HBP06S6/hGK+dpDQ8yQUic3/Raz+eTzt7YQ6byZtM4jkrx6kI09Roq7z+qOGCE9pZ2D/wM/D
+X-Gm-Message-State: AOJu0YzHrJthb9HVljCBqfNkf6i0AMYTyIo2j5U6ANg3EQg4v6Bd5sJZ
+	gwwAkykcskxjmfihrg+wr4u3IeBRqxvQCo4ykugs2F0dEfax+PTbZXDKsYI33218/slZcQornHD
+	VCVaC87pRn7AmEzB+1gttmyeU1AKeeaOsMDdE0UCTESFr7/LVow==
+X-Google-Smtp-Source: AGHT+IGEalrN8Y1clv35ZyNYg5HFsBwJ9BjVUYPVovMUPxvCwRYlIRA5gvDMxrAFpvWJZ0QCYZ6hS4Lq7p37QtNhHuY=
+X-Received: by 2002:a05:600c:1da7:b0:422:ff8d:5d25 with SMTP id
+ 5b1f17b1804b1-42481da99bcmr23335e9.5.1718917257464; Thu, 20 Jun 2024 14:00:57
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] mm/slab: Plumb kmem_buckets into
- __do_kmalloc_node()
-Content-Language: en-US
+References: <20240619202659.work.532-kees@kernel.org>
+In-Reply-To: <20240619202659.work.532-kees@kernel.org>
+From: Rae Moar <rmoar@google.com>
+Date: Thu, 20 Jun 2024 17:00:44 -0400
+Message-ID: <CA+GJov5YCiStd8YJu7NsdtkS+zWSdmksZgAqeRMonRfGO=26JA@mail.gmail.com>
+Subject: Re: [PATCH] kunit/usercopy: Add missing MODULE_DESCRIPTION()
 To: Kees Cook <kees@kernel.org>
-Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
- Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- jvoisin <julien.voisin@dustri.org>, Andrew Morton
- <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, Jann Horn <jannh@google.com>,
- Matteo Rizzo <matteorizzo@google.com>, Thomas Graf <tgraf@suug.ch>,
- Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-References: <20240619192131.do.115-kees@kernel.org>
- <20240619193357.1333772-2-kees@kernel.org>
- <7f122473-3d36-401d-8df4-02d981949f00@suse.cz>
- <88954479-01a3-4bbe-8558-1a71b11503f8@suse.cz>
- <202406201144.289A1A14@keescook>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
- ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
- Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
- AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
- V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
- PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
- KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
- Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
- ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
- h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
- De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
- 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
- EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
- tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
- eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
- PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
- HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
- 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
- w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
- 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
- EP+ylKVEKb0Q2A==
-In-Reply-To: <202406201144.289A1A14@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[huaweicloud.com,linux.com,kernel.org,google.com,lge.com,dustri.org,linux-foundation.org,linux.dev,gmail.com,huawei.com,suug.ch,gondor.apana.org.au,vger.kernel.org,kvack.org];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -2.79
-X-Spam-Level: 
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/24 8:46 PM, Kees Cook wrote:
-> On Thu, Jun 20, 2024 at 03:37:31PM +0200, Vlastimil Babka wrote:
->> On 6/20/24 3:08 PM, Vlastimil Babka wrote:
->> > On 6/19/24 9:33 PM, Kees Cook wrote:
->> > I was wondering why I don't see the buckets in slabinfo and turns out it was
->> > SLAB_MERGE_DEFAULT. It would probably make sense for SLAB_MERGE_DEFAULT to
->> > depends on !SLAB_BUCKETS now as the merging defeats the purpose, wdyt?
->> 
->> Hm I might have been just blind, can see them there now. Anyway it probably
->> doesn't make much sense to have SLAB_BUCKETS and/or RANDOM_KMALLOC_CACHES
->> together with SLAB_MERGE_DEFAULT?
-> 
-> It's already handled so that the _other_ caches can still be merged if
-> people want it. See new_kmalloc_cache():
-> 
-> #ifdef CONFIG_RANDOM_KMALLOC_CACHES
->         if (type >= KMALLOC_RANDOM_START && type <= KMALLOC_RANDOM_END)
->                 flags |= SLAB_NO_MERGE;
-> #endif
+On Wed, Jun 19, 2024 at 4:27=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> From: Jeff Johnson <quic_jjohnson@quicinc.com>
+>
+> Fix warning seen with:
+>
+> $ make allmodconfig && make W=3D1 C=3D1 lib/usercopy_kunit.ko
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/usercopy_kunit.o
+>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-OK
+Hi!
+
+This looks good to me.
+
+Reviewed-by: Rae Moar <rmoar@google.com>
+
+Thanks!
+-Rae
+
+> ---
+> At Jeff's reminder, I've split this out of:
+> https://lore.kernel.org/all/20240601-md-lib-test-v1-1-a728620e37d8@quicin=
+c.com/
+> since the file got renamed.
+> ---
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: kunit-dev@googlegroups.com
+> Cc: linux-hardening@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  lib/usercopy_kunit.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
+> index e819561a540d..77fa00a13df7 100644
+> --- a/lib/usercopy_kunit.c
+> +++ b/lib/usercopy_kunit.c
+> @@ -331,4 +331,5 @@ static struct kunit_suite usercopy_test_suite =3D {
+>
+>  kunit_test_suites(&usercopy_test_suite);
+>  MODULE_AUTHOR("Kees Cook <kees@kernel.org>");
+> +MODULE_DESCRIPTION("Kernel module for testing copy_to/from_user infrastr=
+ucture");
+>  MODULE_LICENSE("GPL");
+> --
+> 2.34.1
+>
