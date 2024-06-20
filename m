@@ -1,80 +1,81 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73161AE0A2;
-	Thu, 20 Jun 2024 13:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE1D1AE098;
+	Thu, 20 Jun 2024 13:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718890655; cv=none; b=R0qc16mv2kW2pxWJjvLgQHWXA1u/DDkzEbHZC6LXDCTtuOCgUeImAcJ1jwzlisIBkRQzfVeKjgZkJLioxDmKrW8FuOn/hCTaOJv+fXRTfcv+IsLJ9FI64J7b8CfSvXssYJwXvry9I5OUNuH//rsH6W3YUw+nFtPWMwDf8OKaZhM=
+	t=1718891793; cv=none; b=HUTPMaRCe/tND19zPCqCgu1Q84Kji1qEO6CdpaU3ySqqs8KzJnni9vEn1O5o47gGL/D7dmwnt8l7cOFngsDMJG5VHKASp4XgzEhvDhg0DuFoP9aM01+3T7FbnX39bFPDO2nlvOYx+kK4bnB8EuKLzLraVsrrmcdlUWf3gaYyy8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718890655; c=relaxed/simple;
-	bh=7/dZYJ+1Lge/9/4wcAamGput2L/7q8of+jfZhVhNGtg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=M5uTMkFg3nM7a6bU1ITkmd9T6fr6bEOefWuJRP32eefhJdAtjLynwP1qcj9KmqIBVirlbw82OsFsTtYvc3w3dHwT6Gh7la8r+ELyKUp1r9oWWNL8ikDq+C+CdSwIYdmuDADKWcwHigJgtEKQbdqwODFjECDkkA6gsaXGMlJQ7AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Z+bhet7d; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2UowojBi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KHi2K/Hw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=okghvk9/; arc=none smtp.client-ip=195.135.223.131
+	s=arc-20240116; t=1718891793; c=relaxed/simple;
+	bh=NGa/efATGIbBTstu6AkM2g2Qy6okJj6WAoaDROCPzDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O0ycl/stxGsdNRZRy2n0Va9QFwvDg5qXI/GzzC7P+7p3fCCZzUYG/vIsXhkxlkjxO9GC6UyFiGyfmfWnP/eAQ5CnjAckNr06r45QJt6Qvp1wItP6ihNnKaJ25tFNQehdF+M/F0s0Op/QqIggpuYRq3QLU/DIdPesgIKEVD3wXJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=a+1fFbHm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=77tl9uti; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=FdkTp9O6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tEkeU+mi; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Z+bhet7d";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2UowojBi";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KHi2K/Hw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="okghvk9/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="a+1fFbHm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="77tl9uti";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="FdkTp9O6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tEkeU+mi"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id ECF3A1F897;
-	Thu, 20 Jun 2024 13:37:31 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C7BBA21ACC;
+	Thu, 20 Jun 2024 13:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718890652; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1718891788; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7/dZYJ+1Lge/9/4wcAamGput2L/7q8of+jfZhVhNGtg=;
-	b=Z+bhet7dUGuoODASGrQK/8WhkevEbsnFCRswwXCXobZ6IEuS7VvPyt/DciJ0DKV87dIv64
-	Zb4zg3Etczm8oVw2SON094Nj222dTCs05OYUJPik675B0c56VfPOdIsIUYjAAHVFcFgcjH
-	42eo7mDnAOMt0FtWIgAxu0nQNlmKOKM=
+	bh=Xax8Y3+NKzJ7IrtPlHybj8PobnLetlij4FNbve0iyI0=;
+	b=a+1fFbHmq846l/RozCrjfnoyNPICAAwTPbazuKMaL6EFgdHWmoB74Kwe+3WzM1YmK+C0+8
+	VUKmXu3QpsrAC4tMXdx10rQPWEfNMnBxCrHrJnIn2joaVNaBJzhOo3FR/Pvpn7OlkYvL6/
+	ylzWMeg97Z2HkCch8FkfnoBedgURmO4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718890652;
+	s=susede2_ed25519; t=1718891788;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7/dZYJ+1Lge/9/4wcAamGput2L/7q8of+jfZhVhNGtg=;
-	b=2UowojBi/mbBZeEztYI8adC02OhhomPtfRcYQc3Y2mM9R0NJBja9fxeAJKk3C+KHR1c6bb
-	eTQAWdpxmB1er5Dg==
-Authentication-Results: smtp-out2.suse.de;
-	none
+	bh=Xax8Y3+NKzJ7IrtPlHybj8PobnLetlij4FNbve0iyI0=;
+	b=77tl9utiHEBqRm5k1RmFXaAA3upwt+Vi4pWM9Ct7k6zEkwa+isMugfsliita8TqJVZk8pd
+	vf1WfynTbwD/OxCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=FdkTp9O6;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=tEkeU+mi
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1718890651; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1718891787; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7/dZYJ+1Lge/9/4wcAamGput2L/7q8of+jfZhVhNGtg=;
-	b=KHi2K/HwLyhVVU1/IPVlf/1eU6A9kxUfZgva0eDBd/HdIFnuTl7eh1QzytxPtSAFrW7DMS
-	pgelng+YXBTvLWm3rOswuPMKWdFc/mX5VM8AbvcCIFZrL5cPEFKaKpCpsJh7E3l+m9/SG0
-	B7AEQCxE1jWQi+SzxjxKAUxQ/sbTzgU=
+	bh=Xax8Y3+NKzJ7IrtPlHybj8PobnLetlij4FNbve0iyI0=;
+	b=FdkTp9O6uQo7sXY6WXYiPZiBa/eitf/MsBj28J4sZTArvL2RhFdaj1mXpll9La+uL1xA0I
+	W4uOamP4vpRW+TUtvFUXNchqg5LCQmvsvJD/hsio0WZSI57gkM2WcsOUhIaBuT2TeAxSLm
+	SVhY6BOQKif39AouJb+mLsBowcDfCgQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1718890651;
+	s=susede2_ed25519; t=1718891787;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7/dZYJ+1Lge/9/4wcAamGput2L/7q8of+jfZhVhNGtg=;
-	b=okghvk9/FZ63kXxp4tbXYKrLGMOhKhnHf6VJ69MVKS8II0Z2Kd4eMNgbGAkQHy12RBHiIG
-	hxGja0dv+gHHEJDQ==
+	bh=Xax8Y3+NKzJ7IrtPlHybj8PobnLetlij4FNbve0iyI0=;
+	b=tEkeU+misC5k2SOg71gmyR30Jya1ydTfiEhBzGkGeN3o72IJYRt0HeSI4e8O+ONvS5mp0W
+	KqEpenYTculARLCQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6065C13AC1;
-	Thu, 20 Jun 2024 13:37:31 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9CE2B13AC1;
+	Thu, 20 Jun 2024 13:56:27 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8qqJFpswdGbFTQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 20 Jun 2024 13:37:31 +0000
-Message-ID: <88954479-01a3-4bbe-8558-1a71b11503f8@suse.cz>
-Date: Thu, 20 Jun 2024 15:37:31 +0200
+	id WxnyJQs1dGaKVAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 20 Jun 2024 13:56:27 +0000
+Message-ID: <cc301463-da43-4991-b001-d92521384253@suse.cz>
+Date: Thu, 20 Jun 2024 15:56:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -82,10 +83,9 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] mm/slab: Plumb kmem_buckets into
- __do_kmalloc_node()
+Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and
+ family
 Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
 To: Kees Cook <kees@kernel.org>
 Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
  Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
@@ -99,8 +99,8 @@ Cc: "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
  Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org,
  linux-mm@kvack.org, linux-hardening@vger.kernel.org, netdev@vger.kernel.org
 References: <20240619192131.do.115-kees@kernel.org>
- <20240619193357.1333772-2-kees@kernel.org>
- <7f122473-3d36-401d-8df4-02d981949f00@suse.cz>
+ <20240619193357.1333772-4-kees@kernel.org>
+From: Vlastimil Babka <vbabka@suse.cz>
 Autocrypt: addr=vbabka@suse.cz; keydata=
  xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
  KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
@@ -140,43 +140,111 @@ Autocrypt: addr=vbabka@suse.cz; keydata=
  w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
  1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
  EP+ylKVEKb0Q2A==
-In-Reply-To: <7f122473-3d36-401d-8df4-02d981949f00@suse.cz>
+In-Reply-To: <20240619193357.1333772-4-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+X-Spamd-Result: default: False [-3.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
+	MX_GOOD(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[huaweicloud.com,linux.com,kernel.org,google.com,lge.com,dustri.org,linux-foundation.org,linux.dev,gmail.com,huawei.com,suug.ch,gondor.apana.org.au,vger.kernel.org,kvack.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[huaweicloud.com,linux.com,kernel.org,google.com,lge.com,dustri.org,linux-foundation.org,linux.dev,gmail.com,huawei.com,suug.ch,gondor.apana.org.au,vger.kernel.org,kvack.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: C7BBA21ACC
 X-Spam-Flag: NO
-X-Spam-Score: -2.79
+X-Spam-Score: -3.00
 X-Spam-Level: 
 
-On 6/20/24 3:08 PM, Vlastimil Babka wrote:
-> On 6/19/24 9:33 PM, Kees Cook wrote:
-> I was wondering why I don't see the buckets in slabinfo and turns out it was
-> SLAB_MERGE_DEFAULT. It would probably make sense for SLAB_MERGE_DEFAULT to
-> depends on !SLAB_BUCKETS now as the merging defeats the purpose, wdyt?
+On 6/19/24 9:33 PM, Kees Cook wrote:
+> Dedicated caches are available for fixed size allocations via
+> kmem_cache_alloc(), but for dynamically sized allocations there is only
+> the global kmalloc API's set of buckets available. This means it isn't
+> possible to separate specific sets of dynamically sized allocations into
+> a separate collection of caches.
+> 
+> This leads to a use-after-free exploitation weakness in the Linux
+> kernel since many heap memory spraying/grooming attacks depend on using
+> userspace-controllable dynamically sized allocations to collide with
+> fixed size allocations that end up in same cache.
+> 
+> While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> against these kinds of "type confusion" attacks, including for fixed
+> same-size heap objects, we can create a complementary deterministic
+> defense for dynamically sized allocations that are directly user
+> controlled. Addressing these cases is limited in scope, so isolating these
+> kinds of interfaces will not become an unbounded game of whack-a-mole. For
+> example, many pass through memdup_user(), making isolation there very
+> effective.
+> 
+> In order to isolate user-controllable dynamically-sized
+> allocations from the common system kmalloc allocations, introduce
+> kmem_buckets_create(), which behaves like kmem_cache_create(). Introduce
+> kmem_buckets_alloc(), which behaves like kmem_cache_alloc(). Introduce
+> kmem_buckets_alloc_track_caller() for where caller tracking is
+> needed. Introduce kmem_buckets_valloc() for cases where vmalloc fallback
+> is needed.
+> 
+> This can also be used in the future to extend allocation profiling's use
+> of code tagging to implement per-caller allocation cache isolation[1]
+> even for dynamic allocations.
+> 
+> Memory allocation pinning[2] is still needed to plug the Use-After-Free
+> cross-allocator weakness, but that is an existing and separate issue
+> which is complementary to this improvement. Development continues for
+> that feature via the SLAB_VIRTUAL[3] series (which could also provide
+> guard pages -- another complementary improvement).
+> 
+> Link: https://lore.kernel.org/lkml/202402211449.401382D2AF@keescook [1]
+> Link: https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html [2]
+> Link: https://lore.kernel.org/lkml/20230915105933.495735-1-matteorizzo@google.com/ [3]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  include/linux/slab.h | 13 ++++++++
+>  mm/slab_common.c     | 78 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 91 insertions(+)
+> 
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 8d0800c7579a..3698b15b6138 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -549,6 +549,11 @@ void *kmem_cache_alloc_lru_noprof(struct kmem_cache *s, struct list_lru *lru,
+>  
+>  void kmem_cache_free(struct kmem_cache *s, void *objp);
+>  
+> +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
+> +				  slab_flags_t flags,
+> +				  unsigned int useroffset, unsigned int usersize,
+> +				  void (*ctor)(void *));
 
-Hm I might have been just blind, can see them there now. Anyway it probably
-doesn't make much sense to have SLAB_BUCKETS and/or RANDOM_KMALLOC_CACHES
-together with SLAB_MERGE_DEFAULT?
+I'd drop the ctor, I can't imagine how it would be used with variable-sized
+allocations. Probably also "align" doesn't make much sense since we're just
+copying the kmalloc cache sizes and its implicit alignment of any
+power-of-two allocations. I don't think any current kmalloc user would
+suddenly need either of those as you convert it to buckets, and definitely
+not any user converted automatically by the code tagging.
+
