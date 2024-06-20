@@ -1,87 +1,118 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A188005C;
-	Thu, 20 Jun 2024 21:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F8813C8E5;
+	Thu, 20 Jun 2024 22:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718920698; cv=none; b=fzWOMsk8huYv0NNQXkfhdqLUJoJWN98Uy3wse41E4wtur3HMoo51ZrK9FbRrm1JYGdUrkAY9lfHgCrU+SR+Kgp36LP6WcPG7/iH6eAawcp1M9P68SQ/qY1C+EGU5MppLjaziLoM1LIWakhd8vumoDwC+rPvwQz1hpsiUD5U1iHY=
+	t=1718923707; cv=none; b=rl+8XRSEDMVTGB7YU5a/NwMXbPmbY/RSQtJxJ5QMlWf4n+7ZORZRwNTgrsvK1qMA/p682Ygj6AvWticUJtCFE4zNl374LgaJrIUKbWK8p+Z/hK2QO2lYmblpgUJbSzFyPVQq8HBR/VJxFDYnFSsc2XsKkkqNDliqgyQOBo8cLKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718920698; c=relaxed/simple;
-	bh=IJpxsMCvKjR1Y3uzMKdhc2UWB48SmmmPiTJaVKmQ6fE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EF2tKNapljeTtr0FyYYSzYZGAGaHHm7y4YyZTOgVJIJbLvrWIkHl8TE9CcMgse9SxL6IqEUKqdoQBJi7nXrIxNopNGWVAHiCLJ1xHTXtDP/vcSF85CYjZKjLA6+vK4b+XHu4grQ7BCBj6JluPK0Uwe1FldEmcD298OA2yQZDO74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSaXWL7d; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718923707; c=relaxed/simple;
+	bh=zoovoJhNRfgDjC9B72bTorp2/szLX092n+btLcuuqSU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KSt6S+NO9rFmUwPS2Xwa8HrOkpf8qHAZkvUhF4+e5Ai6pSDCw4iE5H/XGYlxsZyXFAtccKw/BLzbJR6OXVmmoIMlPJV/lfW8VOwQCmbPlK38DlAPvd/cS8jtvSyrdOs5ew4A7JQbNfSCCPoXzRYiyW+35dAn4kvdw6nfww106Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnjQCVbi; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSaXWL7d"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f9e2affc8cso4126055ad.2;
-        Thu, 20 Jun 2024 14:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718920696; x=1719525496; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nEu9njmOBLU9CVgPbB/t3MDsh+9riexrS/cimnJp+wc=;
-        b=WSaXWL7dEJeRNjcYSnfqo4FXGsxHbdEFnrat8iWHpTjVfR9OHr30SW9F+bHI9wIbxr
-         M/UnojHSbVJXyyRwkjBWU8yAyR7qNjLqu4gRa6dpXySearIZqAeNCskTMzDaKV7QzGiE
-         5RSJEZgWOCtBTePbdZcLYc4pE+xjL0MY3eRMV/EjtbePgjXwzUoI6/1uf8LPyx2Vd+HX
-         C6+N14rDR+Sm46Z5IYyHLE6OSWhNOaChGdJ0kB9gN+VBVuIdJrLkQuzaknm2C4DvKRqU
-         5VuLg5blTJi8JQ9zBJy6hQWgXjSCnQPNuI53mz03buP5OU6J6Cyn2o5ntLxSSHnF3Ub3
-         gLVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718920696; x=1719525496;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nEu9njmOBLU9CVgPbB/t3MDsh+9riexrS/cimnJp+wc=;
-        b=L6BwvPbX5sMjetHNGJwCsAF3tf5/LO04IIQ8UuZkOYoBQeHCuHHAKeHBXcUOUTYGli
-         nwCvkjPSlRHy3AhFd8ppN31ag8S+DCeb4wo2/KApwtMa5jv91gRs6ReCrv+hU2/RIrmF
-         rgxqbkQne26ee6vpdtweikN74u64soz40JFMCu2zdQdZt60kBYZZKpjJ3YG0OFp5KBTp
-         i6frwUwvsvqzVGb/dnSrs6rJ7AGuS+bnQ2hJfMJ/rh40XpCWXTTfZ1KL21etd0uvMUfa
-         az8eSlAuw/Ci/5empOwySS8hv2WI5J5xxk6X3PBdG5fgQ3J6+H6zUB/XrooDWupgpETn
-         9Npg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpbqMdwz7f/XdDcAc6FJrsFrRGVak1sIUh+Kdy01jjRpoXfn0UROh44f9LChseopko6eXHxg/RYlT7vqabG3ALwq9oNK++qWR5VvBLRvGyhzf6d4m4UApAoOvLNbs6GxjmAxNsgDl65e+bj3Bddh19eSpvMm3XVEA7tsf5DdUhZJSansgmuOsYV/I=
-X-Gm-Message-State: AOJu0YwG8Q+Q4Jo11zySWApnWqInNAT+2JbVHKhsRxkCBItv7Yp4eNa4
-	mQ7TfWVrHyNDkx1feyyK3qzGi1K8Uy0AK63Evpavole5DeNa9N0t
-X-Google-Smtp-Source: AGHT+IEx85JtygkOhTxh9LtqPQhqw2TibZBQwYlLCTHDNRf5ubcy2SAzhS7X3RgcVTMtGtPLmHzW4g==
-X-Received: by 2002:a17:902:d488:b0:1f6:91a1:88cb with SMTP id d9443c01a7336-1f9aa3edfd2mr82090865ad.31.1718920695935;
-        Thu, 20 Jun 2024 14:58:15 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:36d9:2b1f:59f:8e9e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3205f3sm1007355ad.76.2024.06.20.14.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 14:58:15 -0700 (PDT)
-Date: Thu, 20 Jun 2024 14:58:13 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] Input: ims-pcu - drop repeated "input" in error
- message
-Message-ID: <ZnSl9dslWlNv9qNj@google.com>
-References: <20240619-ims-pcu-counted_by-v1-0-3ee0ead2e57d@gmail.com>
- <20240619-ims-pcu-counted_by-v1-2-3ee0ead2e57d@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnjQCVbi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718923706; x=1750459706;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=zoovoJhNRfgDjC9B72bTorp2/szLX092n+btLcuuqSU=;
+  b=hnjQCVbiGaHSN02uY5HLtVBUE01Qn9B/9Nup2NHjXz4OYPY2E9DI3gO5
+   mrv9SwC/fqeC+5seN9yl43+/p0ImfLNKffOWuHCLIN2EWZynRijjJqFG6
+   lrU7/bxTBUgFpBhWsJsmH9aJBioUET4zBDwwYhnecKBxnCzW6iGAI1BCr
+   BKSBwu7mtFtyP6BjaLUUOac9sATXpnrg9Tw1ktcoPwNAABWYuCULKDBKJ
+   wHMiSJnkLkfKi/ixNedmBk5MQ3Wam8ujPqbzJeC9CyJBHbiy1ZSHCXx40
+   BxSD1CothIfxNn+uzTSCsUeUCW9j9b/9ScBUadMIZIPiNyMv6KB8Va8nJ
+   Q==;
+X-CSE-ConnectionGUID: gyIUlsTtR1ubTVyXc4MaQw==
+X-CSE-MsgGUID: zaJQlcAKTNSP76m3uzGGNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="15767076"
+X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
+   d="scan'208";a="15767076"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 15:48:25 -0700
+X-CSE-ConnectionGUID: XpaLxycjSxeqMiVY+nQ8Bw==
+X-CSE-MsgGUID: nKLgFteISSeH3bWw+T/wLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
+   d="scan'208";a="42506433"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.38.190])
+  by fmviesa010.fm.intel.com with ESMTP; 20 Jun 2024 15:48:24 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+	id 537703003B6; Thu, 20 Jun 2024 15:48:24 -0700 (PDT)
+From: Andi Kleen <ak@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,  "GONG, Ruiqi"
+ <gongruiqi@huaweicloud.com>,  Christoph Lameter <cl@linux.com>,  Pekka
+ Enberg <penberg@kernel.org>,  David Rientjes <rientjes@google.com>,
+  Joonsoo Kim <iamjoonsoo.kim@lge.com>,  jvoisin
+ <julien.voisin@dustri.org>,  Andrew Morton <akpm@linux-foundation.org>,
+  Roman Gushchin <roman.gushchin@linux.dev>,  Hyeonggon Yoo
+ <42.hyeyoo@gmail.com>,  Xiu Jianfeng <xiujianfeng@huawei.com>,  Suren
+ Baghdasaryan <surenb@google.com>,  Kent Overstreet
+ <kent.overstreet@linux.dev>,  Jann Horn <jannh@google.com>,  Matteo Rizzo
+ <matteorizzo@google.com>,  Thomas Graf <tgraf@suug.ch>,  Herbert Xu
+ <herbert@gondor.apana.org.au>,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-hardening@vger.kernel.org,
+  netdev@vger.kernel.org
+Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and family
+In-Reply-To: <20240619193357.1333772-4-kees@kernel.org> (Kees Cook's message
+	of "Wed, 19 Jun 2024 12:33:52 -0700")
+References: <20240619192131.do.115-kees@kernel.org>
+	<20240619193357.1333772-4-kees@kernel.org>
+Date: Thu, 20 Jun 2024 15:48:24 -0700
+Message-ID: <87r0crut6v.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619-ims-pcu-counted_by-v1-2-3ee0ead2e57d@gmail.com>
+Content-Type: text/plain
 
-On Wed, Jun 19, 2024 at 11:13:22PM +0200, Javier Carrasco wrote:
-> This case of the common error message upon failure of
-> input_allocate_device() repeats the word "input".
-> 
-> Drop one "input" from the error message.
-> 
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Kees Cook <kees@kernel.org> writes:
 
-Applied, thank you.
+> Dedicated caches are available for fixed size allocations via
+> kmem_cache_alloc(), but for dynamically sized allocations there is only
+> the global kmalloc API's set of buckets available. This means it isn't
+> possible to separate specific sets of dynamically sized allocations into
+> a separate collection of caches.
+>
+> This leads to a use-after-free exploitation weakness in the Linux
+> kernel since many heap memory spraying/grooming attacks depend on using
+> userspace-controllable dynamically sized allocations to collide with
+> fixed size allocations that end up in same cache.
+>
+> While CONFIG_RANDOM_KMALLOC_CACHES provides a probabilistic defense
+> against these kinds of "type confusion" attacks, including for fixed
+> same-size heap objects, we can create a complementary deterministic
+> defense for dynamically sized allocations that are directly user
+> controlled. Addressing these cases is limited in scope, so isolating these
+> kinds of interfaces will not become an unbounded game of whack-a-mole. For
+> example, many pass through memdup_user(), making isolation there very
+> effective.
 
--- 
-Dmitry
+Isn't the attack still possible if the attacker can free the slab page
+during the use-after-free period with enough memory pressure?
+
+Someone else might grab the page that was in the bucket for another slab
+and the type confusion could hurt again.
+
+Or is there some other defense against that, other than
+CONFIG_DEBUG_PAGEALLOC or full slab poisoning? And how expensive
+does it get when any of those are enabled?
+
+I remember reading some paper about a apple allocator trying similar
+techniques and it tried very hard to never reuse memory (probably
+not a good idea for Linux though)
+
+I assume you thought about this, but it would be good to discuss such
+limitations and interactions in the commit log.
+
+-Andi
