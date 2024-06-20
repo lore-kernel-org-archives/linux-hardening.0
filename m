@@ -1,67 +1,51 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE7A1B0115
-	for <linux-hardening@vger.kernel.org>; Thu, 20 Jun 2024 17:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7741B4C3B
+	for <linux-hardening@vger.kernel.org>; Thu, 20 Jun 2024 18:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718904554; cv=none; b=K6C5XTjY/4CKy0zVocx4O3I+56VgH4UN+slxuJRimJEeuE4FzYpFn6nKivnk6VHluWGdD2Fqd6n8DChFQ+qoonSVGAO54XI7Wlf/ph2zpZcCa35ZcaikqUoVvtNy9rJ8bS4Y2P+NywP0tuIpG6/q3P8mLEJvLPbOc46NoK/5uUU=
+	t=1718906543; cv=none; b=XEt18+gNUEkzOQadJmoFcH2bC/6sDcg+tDrgLlmEm6HzT0CiNKPz0CQqvWAz8Qg+By1DhhXRc7JyszPADouB73cD48Aav9d9J81+rpGEMwJ1Tv0az//q5+fCuuKa/AeSKvfUV4VEMK7ZHUABejIhnrBpv7Br5505ZGQY8atmsJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718904554; c=relaxed/simple;
-	bh=w13ToLjzZnvVyF7GhQ//Xg1jvHxpo7YLzhZIgx5EM3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=KmnXnZVKFig04o84gZBm/jAA1j0Z9eu8het9DdRtDDBsXG148/qMuTwPnjkiiypZAlAh3x8JY2c6KykgOkAKFpxI0JItZaRo+7mqCQd0lvtanZHNaaY6nHS9PcTIOcdJ0ChkT7ORuhbX86hpnGH2I8LDMW3t7FFMXzpQ6kc+978=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TVcqiT+w; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718906543; c=relaxed/simple;
+	bh=9OYNE5YcPJoW+cycciShcyXeb0c1OGto8YDuhiLt/9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YlyxhTvNsjFRIh1R//iUZbdvWdu3a3aYJrY3tbtSySS5DKKjiGOzekvqni00vCRsBpP5K74H+ca/Wfju4uAxEYXTWMrVcpHkyPiGBBWBmWqD/GqlV18MmPn1iRGbBlhWTxsGlNEYqJmIs+8d6GsIcFYZwrwQ/5Cg1CWrSDj794E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=TrMdy504; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TVcqiT+w"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KHNfQ2027602;
-	Thu, 20 Jun 2024 17:29:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:references:from:cc
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=K
-	PgZHHVvAK0axNiwszzouRlojRjrzPlwUds8KQtAlAA=; b=TVcqiT+wPmikXB36s
-	SQpBfvDOWou5h/5IHkkIu8tI4586TOSWjQipSSrudFaHCGpuLCYgxNh5Ss8pWdhG
-	/I2dlBUSD26JdKfohJU/vPNlbUFHgfVDpupZPAZlPs/CUBLLQO85Q/qJ5Hdkehwn
-	YKeE/+ZTnLIWJYg1sxqsMekeBqyntZA42KZdE5J0F1CP6tuB9OGt0XQan6k5gCCs
-	R6oU7wk1Kt8hqM2H7r7i16QncqPGHFjXuENi5S+vn+OVWDN1VPGCCJqCofTMW5bY
-	W4OLrISHiF8JqVTBLJuAV5Qi67Vo0x31rRe403S+ZfdfukLT3enwSRzU3IiKqBd7
-	C8Ieg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvrsa00d2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 17:28:59 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45KHSxdi002315;
-	Thu, 20 Jun 2024 17:28:59 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvrsa00cw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 17:28:58 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45KHO4xe030990;
-	Thu, 20 Jun 2024 17:28:57 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yvrssr11m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 17:28:57 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45KHSrf843450710
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Jun 2024 17:28:55 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9892C2004D;
-	Thu, 20 Jun 2024 17:28:53 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8686B20043;
-	Thu, 20 Jun 2024 17:28:50 +0000 (GMT)
-Received: from [9.43.118.41] (unknown [9.43.118.41])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Jun 2024 17:28:50 +0000 (GMT)
-Message-ID: <499f5305-eb54-43a7-9864-d032f29c445d@linux.ibm.com>
-Date: Thu, 20 Jun 2024 22:58:49 +0530
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TrMdy504"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id KFWPsBbqqrtmgKM73sp1zq; Thu, 20 Jun 2024 18:02:21 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id KM71sdhoMGDo0KM72sWoro; Thu, 20 Jun 2024 18:02:20 +0000
+X-Authority-Analysis: v=2.4 cv=I+uuR8gg c=1 sm=1 tr=0 ts=66746eac
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=frY+GlAHrI6frpeK1MvySw==:17
+ a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=wYkD_t78qR0A:10
+ a=u8_TST9jJ4tMlxaXhdEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HfKKts8lHZEV18StgAl0ALsIpFvYHBbDUnFqCEnAdRs=; b=TrMdy504Ugni0jbv4PFKWfje9V
+	ClDtpMDCuWWJYypILr/vUVFwgQ/jrR+7jbKpafdafiTG9H7OM1a3m9tzMpVVr214sbB+bt1ntOyb1
+	xiMj3rY77gU+N4r5nY8MjIkcEOCmA4HQk/vClwkCo4znDagw7v4zOnJwLuJCkRCBUwnHUyBPUiw7v
+	MaFluSrchhPqDq47wjsWQlasAIZs6+wmbHsUfpbCs3sjwHV2/CTnA97IusGBwIO6dBYknoLP1IsOL
+	nzSwiGdSiDZga4EWSU9yQtcOSSHGVr0P+QjUk9E09rkG0Tnk1bL+745mR2hnq1JJtS0DMJ1PGairJ
+	t/UW1t/g==;
+Received: from [201.172.173.139] (port=42268 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1sKM70-003e3c-2m;
+	Thu, 20 Jun 2024 13:02:18 -0500
+Message-ID: <c8404725-e4c4-453b-b72d-19ab0761da70@embeddedor.com>
+Date: Thu, 20 Jun 2024 12:02:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,163 +53,55 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc/pseries: Whitelist dtl slub object for copying to
- userspace
-To: Kees Cook <kees@kernel.org>
-References: <20240614173844.746818-1-anjalik@linux.ibm.com>
- <202406171053.F72BF013@keescook>
+Subject: Re: [PATCH] wifi: iwlwifi: mvm: Fix __counted_by usage in
+ cfg80211_wowlan_nd_*
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Kees Cook <kees@kernel.org>
+Cc: benjamin.berg@intel.com, dmantipov@yandex.ru, gregory.greenman@intel.com,
+ gustavoars@kernel.org, haim.dreyfuss@intel.com, johannes.berg@intel.com,
+ kvalo@kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ luciano.coelho@intel.com, miriam.rachel.korenblit@intel.com,
+ shaul.triebitz@intel.com, yedidya.ben.shimol@intel.com
+References: <20240619211233.work.355-kees@kernel.org>
+ <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
 Content-Language: en-US
-From: Anjali K <anjalik@linux.ibm.com>
-Cc: mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
-        naveen@kernel.org, christophe.leroy@csgroup.eu, gustavoars@kernel.org,
-        linux-hardening@vger.kernel.org, vishalc@linux.ibm.com
-In-Reply-To: <202406171053.F72BF013@keescook>
-Content-Type: text/plain; charset=UTF-8
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <d9bdb9c1-689e-4b3f-8325-8ee813257d8f@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hSHIVAqWlPT1dUIHbtX2dql1Gz58Vaib
-X-Proofpoint-ORIG-GUID: ho-T4Yvw-1zeRwfjQ00d0UxwRakVqu6G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- spamscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406200126
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.173.139
+X-Source-L: No
+X-Exim-ID: 1sKM70-003e3c-2m
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.173.139]:42268
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAqYfSS3m78kvhNgMK3LFGld6L6ul+ZQOeHItqFxoezMTDYh4+TyCMWceudat69he/F2TamOqhKGUJ8LGHKI+5iWzW6X5lAvwGntNV3kp4NsP2dyrvj6
+ dXYAXYu+nnQd/B0TWRM+4ANCE6OPiY5Wd73O+1F7fzP+3rLLCt6kILcOBfvv/s3Ja/46rdfKF/ACmoqJ/wZDmFp08x4loQn4MGdnEWRkhuI8Xxuq8IBhTN/P
 
-Hi Kees
-Thank you for your review.
 
-On 17/06/24 23:29, Kees Cook wrote:
-> On Fri, Jun 14, 2024 at 11:08:44PM +0530, Anjali K wrote:
->> Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
->> results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
->> shown below.
->>
->>     kernel BUG at mm/usercopy.c:102!
->>     Oops: Exception in kernel mode, sig: 5 [#1]
->>     LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
->>     Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
->>     scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
->>     CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
->>     Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
->>     NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
->>     REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
->>     MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
->>     CFAR: c0000000001fdc80 IRQMASK: 0
->>     [ ... GPRs omitted ... ]
->>     NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
->>     LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
->>     Call Trace:
->>      usercopy_abort+0x74/0xb0 (unreliable)
->>      __check_heap_object+0xf8/0x120
->>      check_heap_object+0x218/0x240
->>      __check_object_size+0x84/0x1a4
->>      dtl_file_read+0x17c/0x2c4
->>      full_proxy_read+0x8c/0x110
->>      vfs_read+0xdc/0x3a0
->>      ksys_read+0x84/0x144
->>      system_call_exception+0x124/0x330
->>      system_call_vectored_common+0x15c/0x2ec
->>     --- interrupt: 3000 at 0x7fff81f3ab34
->>
->> Commit 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
->> requires that only whitelisted areas in slab/slub objects can be copied to
->> userspace when usercopy hardening is enabled using CONFIG_HARDENED_USERCOPY.
->> Dtl contains hypervisor dispatch events which are expected to be read by
->> privileged users. Hence mark this safe for user access.
->> Specify useroffset=0 and usersize=DISPATCH_LOG_BYTES to whitelist the
->> entire object.
->>
->> Co-developed-by: Vishal Chourasia <vishalc@linux.ibm.com>
->> Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
->> Signed-off-by: Anjali K <anjalik@linux.ibm.com>
->> ---
->>  arch/powerpc/platforms/pseries/setup.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
->> index 284a6fa04b0c..cba40d9d1284 100644
->> --- a/arch/powerpc/platforms/pseries/setup.c
->> +++ b/arch/powerpc/platforms/pseries/setup.c
->> @@ -343,8 +343,8 @@ static int alloc_dispatch_log_kmem_cache(void)
->>  {
->>  	void (*ctor)(void *) = get_dtl_cache_ctor();
->>  
->> -	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
->> -						DISPATCH_LOG_BYTES, 0, ctor);
->> +	dtl_cache = kmem_cache_create_usercopy("dtl", DISPATCH_LOG_BYTES,
->> +						DISPATCH_LOG_BYTES, 0, 0, DISPATCH_LOG_BYTES, ctor);
->>  	if (!dtl_cache) {
->>  		pr_warn("Failed to create dispatch trace log buffer cache\n");
->>  		pr_warn("Stolen time statistics will be unreliable\n");
-> Are you sure you want to universally expose this memory region? It
-> sounds like it's only exposed via a debug interface. Maybe it'd be
-> better to use a bounce buffer in the debug interface instead
->
-> diff --git a/arch/powerpc/platforms/pseries/dtl.c b/arch/powerpc/platforms/pseries/dtl.c
-> index 3f1cdccebc9c..3adcff5cc4b2 100644
-> --- a/arch/powerpc/platforms/pseries/dtl.c
-> +++ b/arch/powerpc/platforms/pseries/dtl.c
-> @@ -257,6 +257,22 @@ static int dtl_file_release(struct inode *inode, struct file *filp)
->  	return 0;
->  }
->  
-> +static inline int bounce_copy(char __user *buf, void *src, size_t size)
-> +{
-> +	u8 *bounce;
-> +	int rc;
-> +
-> +	bounce = kmalloc(size, GFP_KERNEL);
-> +	if (!bounce)
-> +		return -ENOMEM;
-> +
-> +	memcpy(bounce, src, size);
-> +	rc = copy_to_user(buf, bounce, size);
-> +
-> +	kfree(bounce);
-> +	return rc;
-> +}
-> +
->  static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
->  		loff_t *pos)
->  {
-> @@ -300,7 +316,7 @@ static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
->  	if (i + n_req > dtl->buf_entries) {
->  		read_size = dtl->buf_entries - i;
->  
-> -		rc = copy_to_user(buf, &dtl->buf[i],
-> +		rc = bounce_copy(buf, &dtl->buf[i],
->  				read_size * sizeof(struct dtl_entry));
->  		if (rc)
->  			return -EFAULT;
-> @@ -312,7 +328,7 @@ static ssize_t dtl_file_read(struct file *filp, char __user *buf, size_t len,
->  	}
->  
->  	/* .. and now the head */
-> -	rc = copy_to_user(buf, &dtl->buf[i], n_req * sizeof(struct dtl_entry));
-> +	rc = bounce_copy(buf, &dtl->buf[i], n_req * sizeof(struct dtl_entry));                              
->  	if (rc)
->  		return -EFAULT;
->  
->
->
-I have verified that the above patch is working.                           
-As you mentioned, an advantage of using the bounce buffer approach is that
-instead of whitelisting the full dtl slub object at boot, we only whitelist
-the subset of entries.                                                     
-                                                                               
-However given that:                                                        
-(i) The dtl buffer is read-only. The dtl trace is a set of metrics which   
-are collected to be read by privileged users.                              
-(ii) Users usually reads all the dtl entries, not a subset.                                             
-(iii) Read overflows are unlikely to expose anything useful to attackers        
-since we are whitelisting the complete slub object and there are no        
-contiguous memory locations which need to be hidden.                       
-Can we go ahead with the whitelisting using kmem_cache_create_usercopy()   
-approach?                                                                  
-Or are there other reasons to prefer the bounce buffer approach?
+> My understanding is that 'match', is allocated by :
+>      match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
+> 
+> So match->n_channels is *0* when iwl_mvm_query_set_freqs() is called.
 
-Thank you,
-Anjali K
+n_channels is updated in the line before calling kzalloc():
+
+n_channels = iwl_mvm_query_num_match_chans(mvm, d3_data->nd_results, i);
+
+match = kzalloc(struct_size(match, channels, n_channels), GFP_KERNEL);
+
+--
+Gustavo
