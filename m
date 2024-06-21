@@ -1,89 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C750167D98;
-	Fri, 21 Jun 2024 07:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D91716F837
+	for <linux-hardening@vger.kernel.org>; Fri, 21 Jun 2024 08:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718953207; cv=none; b=ielNjSvMQNIxLx2wPppgJS4o5Kgk+/QeVpILztTQ/0qBg2eQH39+gVB9ogF0dF7e9J/WpRM8inQs3Xa+nJn5jucmqiwa5BWzApDHzzcrmAZl2Oy0Gp+0gRjN9k4fTBRbS8kATXmeoIg+T8s0KZVvApC5XEvb1XgF0o7yWY/f9W4=
+	t=1718957589; cv=none; b=FPCYEb918O/36jbHqPUXM1oBTMeL/Ai1WxRMbM3MC8HGskOOD0HxbV53oAUvScJ/Rg7Lku/pu20xVVOagLLSfmaiE2rHScdweRcQqLsQjNnOLEkUkBDeqd38I9MdwqYuDGjtMiHIftMB5eH392CV4mc9WL59ZQXcILyiW0uVDw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718953207; c=relaxed/simple;
-	bh=HLK1QrlfbbMEdecZH3fuabbAT7AvcBUTRYiFLz+4f7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRMiYMDzcGFQY1cPMsL3WrnTYQQ9l2/SuCK8IfaWg7BBUYP2baNRDrpYDYwpjBD7ZOX+p87eqAh6Fn5WpaFol4KPvDXrYdhn3nODzBpf59VEjFGGJJx6EHMbccAbe3LQXDdO+kSylFgl6wdH+5NhrHpCzAkYyHr2AqVsjb5nk5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNbZ3asG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718957589; c=relaxed/simple;
+	bh=/vbnCchyql67f25u4XOkStNtVtFpGi8RbqjNGblWcME=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZCxX6wvP/zDIg4gtSDV1FEFEWO29tKT95TKNhPhF9/Q1RWwHCgwGb1KdccEuS3KFkg+xTNiAdgtIWKOSVApNKSee4fIPTHqCv2OoLx2N2zUQfmJ8GxKGTD4RrpeE3qOFO1FFKVYZ42wjk1DNYVZPGh7PKeneaN2ftPGQTZPrNn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RXX1h3br; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNbZ3asG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF54C2BBFC;
-	Fri, 21 Jun 2024 07:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718953206;
-	bh=HLK1QrlfbbMEdecZH3fuabbAT7AvcBUTRYiFLz+4f7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tNbZ3asG1h+6NzR3gqFiEzc9uHqZKts3ieC9wbv7XJJhABcQaRwcERAmfisEEbzbw
-	 KolyAPJk7xHHKrq3H0qp3S5z2eQ6Isff96dCX6ASIkb3b+bfa5Hw04mLeOzlsF+6Wa
-	 CEd2P3VjBIFwbeY2nD3/unii4yee7O7yIb6d3f7az5tDmKiASMcnHSdqUUw3AduWbr
-	 jvRu12juB64C5a0r2l6VAoT9zClsTUK2Qrbb84feV6yBdw9O7SalWTODGKVri30ywX
-	 b1zbF5k/d8klmpeNuMM3onVDGAMMAL7IAdixxB/TVdX+dvtPDV5IPI4mb4Vo775IAj
-	 9WxJ8dnLpRIVw==
-Date: Fri, 21 Jun 2024 00:00:06 -0700
-From: Kees Cook <kees@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Eric Biederman <ebiederm@xmission.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] exec: Avoid pathological argc, envc, and bprm->p
- values
-Message-ID: <202406202354.3020C4FCA4@keescook>
-References: <20240520021337.work.198-kees@kernel.org>
- <20240520021615.741800-2-keescook@chromium.org>
- <fbc4e2e4-3ca2-45b7-8443-0a8372d4ba94@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RXX1h3br"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45L5xLu9012669;
+	Fri, 21 Jun 2024 08:12:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:from:subject:to:cc:references
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=/
+	vbnCchyql67f25u4XOkStNtVtFpGi8RbqjNGblWcME=; b=RXX1h3brjv5on6Wm0
+	Ta4GVZprDTPePQaOmvkpUW5hBduGz+dTIdRtDbuCPoUDKHRr0/tif1ZiynL9P8Fq
+	PV6iFZtYjGOw3H4eWQg8z4FwwQZG/nzDpaf+na27hsUzW10arwR4X605KBq3zRlX
+	llrt0zqUWWZHTw4EIAFE7cy19h7g54PSDr6+5T+lfnMwznpxey3mKgkMQNnQGlam
+	w+di21Y2SAvOuV6QOYY5A3mMoHD7ccWAqBdMZT9VCyXYsLLvtcR6HJAbxCY0LD6n
+	ajahmGeg+2ciK5AO1oByjbfOwTZmZX+nf/FjT6DLX4m829kuNY4TMSLmbV1O4h2o
+	8+fVw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw3ungb03-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 08:12:51 +0000 (GMT)
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45L8CpPM029964;
+	Fri, 21 Jun 2024 08:12:51 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw3ungayy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 08:12:51 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L7MDJi030888;
+	Fri, 21 Jun 2024 08:12:50 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yvrsswr7a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 08:12:50 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45L8CklF57541026
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Jun 2024 08:12:48 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C17920040;
+	Fri, 21 Jun 2024 08:12:46 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED9FC20043;
+	Fri, 21 Jun 2024 08:12:43 +0000 (GMT)
+Received: from [9.43.93.55] (unknown [9.43.93.55])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 21 Jun 2024 08:12:43 +0000 (GMT)
+Message-ID: <45c38d92-8d7c-466c-833d-0c2aa389eeda@linux.ibm.com>
+Date: Fri, 21 Jun 2024 13:42:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fbc4e2e4-3ca2-45b7-8443-0a8372d4ba94@roeck-us.net>
+User-Agent: Mozilla Thunderbird
+From: Anjali K <anjalik@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/pseries: Whitelist dtl slub object for copying to
+ userspace
+To: Michael Ellerman <mpe@ellerman.id.au>, Kees Cook <kees@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com, naveen@kernel.org,
+        christophe.leroy@csgroup.eu, gustavoars@kernel.org,
+        linux-hardening@vger.kernel.org, vishalc@linux.ibm.com
+References: <20240614173844.746818-1-anjalik@linux.ibm.com>
+ <202406171053.F72BF013@keescook> <87cyoe67zg.fsf@mail.lhotse>
+Content-Language: en-US
+In-Reply-To: <87cyoe67zg.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wP1kKg1TvwOi1Uj2GnB9_HzSX-0Wu5hY
+X-Proofpoint-GUID: 5B84yCCjDt4JNbSfv_WsQfFI5P_6w1E-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_02,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ spamscore=0 impostorscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=913 clxscore=1015 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406210058
 
-On Thu, Jun 20, 2024 at 05:19:55PM -0700, Guenter Roeck wrote:
-> Hi,
-> 
-> On Sun, May 19, 2024 at 07:16:12PM -0700, Kees Cook wrote:
-> > Make sure nothing goes wrong with the string counters or the bprm's
-> > belief about the stack pointer. Add checks and matching self-tests.
-> > 
-> > For 32-bit validation, this was run under 32-bit UML:
-> > $ tools/testing/kunit/kunit.py run --make_options SUBARCH=i386 exec
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> With this patch in linux-next, the qemu m68k:mcf5208evb emulation
-> fails to boot. The error is:
+Hi Michael
 
-Eeek. Thanks for the report! I've dropped this patch from my for-next
-tree.
+On 18/06/24 12:41, Michael Ellerman wrote:
+> I guess there isn't a kmem_cache_create_user_readonly() ?
+Thank you for your review.                                                    
+My understanding of the question is whether there's a way to whitelist a   
+region such that it can be copied to userspace, but not written to using   
+copy_from_user().                                                             
+No, we don't have a function to whitelist only for copy_to_user() and not  
+copy_from_user().
 
-> Run /init as init process
-> Failed to execute /init (error -7)
-
--7 is E2BIG, so it's certainly one of the 3 new added checks. I must
-have made a mistake in my reasoning about how bprm->p is initialized;
-the other two checks seems extremely unlikely to be tripped.
-
-I will try to get qemu set up and take a close look at what's happening.
-While I'm doing that, if it's easy for you, can you try it with just
-this removed (i.e. the other 2 new -E2BIG cases still in place):
-
-	/* Avoid a pathological bprm->p. */
-	if (bprm->p < limit)
-		return -E2BIG;
+Thank you
+Anjali K
 
 
--- 
-Kees Cook
+
