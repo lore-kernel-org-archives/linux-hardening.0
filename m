@@ -1,107 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5AF15F336;
-	Fri, 21 Jun 2024 19:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2C1156F2E;
+	Fri, 21 Jun 2024 20:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718999690; cv=none; b=BEDrKkOgdv/0WiflinRuGvRLmBiy4Hh9DKYsQUl2uPo8ZGS/tGRfIwDdCDZx0HG3i1IgqqXQIwuaGPWe2/mN+L3rCviHf5BJoX/gCyuGce3USG2Mwr6o/czKLeapzPW2fmTYLWgr6tDIuCscxr2IO4bafv5r3dMS+Fn/pG6TILs=
+	t=1719003047; cv=none; b=HcJPcAvMmUIlDM2F4xH5SmSVaZslHHR9r32pgOGEd+GnPLi6SDaNtn2GEgAOBqkzKp2zGpVs5elGlGenmNSCgbikJsC54DY+79oU28iwX7DOIGhl5Og/Wn24cwVBfMoziz31JF/GR6RkHZpKAEjpywq8/MsF9o5eO4WUYh5Bek0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718999690; c=relaxed/simple;
-	bh=08OZLQzHczJXvI/92ifq133qphMksTOQY9iO9c3L7Mk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOXGvWDW7nj6DKtfP8J+6seooCT5J42Y+U1fQ6och7qiZqDzfSjk/I4ty4iELlhpP0JuUDjRXIbmKdW4nXNFh+JIEtSqqUHDwvsbphN3qKq5HcAXV8ECobBVwHnosLbwS/iVAP0uU1yDp2GQyAHL3ChXl6AUgP4jRsqkF/Ls+uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwNCySql; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719003047; c=relaxed/simple;
+	bh=zHqrm6LL14pN7J1jPUokZ61GJ0sIujqExqHulesYufY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W8ntWdnEz8lMnS6RcNR4j0od+m1wZvoqU42sQLaeYEwigk3xywH4TYBbyfaEbDdTARzCNnIVXH8w+AocOnGo8w9dp9DRHeWxH8tVs1A2KUKVKApXB+Obwv5I6jFt235Zo3lqwOJsXBF+QcgdIZIEJRt6RfwLN2WBse2xfImiDEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SAve3cmy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwNCySql"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97090C2BBFC;
-	Fri, 21 Jun 2024 19:54:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SAve3cmy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC28C32789;
+	Fri, 21 Jun 2024 20:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718999689;
-	bh=08OZLQzHczJXvI/92ifq133qphMksTOQY9iO9c3L7Mk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iwNCySqlZdeszGD4B9MJnJgroEhQAAmklWeqpCDmvAN3oCw2FMLffDzm0/bqZt9Rc
-	 45WEbirPPH5mEglpgJqGQiU0wibvyvDr4pcaN6TMxghA5Em7wlE8CplQd+CVG9CKFU
-	 56IiRr0LFPE7AANKIrl703qDoEk3nfO/TXxBaTxb20sihW+GjX91TgsTQwbr7CpKFa
-	 C7ixhTyejfOmh1b2hJdWdtwWG5sA6aS7WUMM36mzntbJVL1gxMeuSerbougN1raodQ
-	 YnGKUK8ApMnqUyK9xTnoc8OkpnDO6TOr4yHNjYsrv3/TK367s2ns7MxBA3LUYxPfyB
-	 vxqn2yJtjCt8g==
-Date: Fri, 21 Jun 2024 12:54:49 -0700
+	s=k20201202; t=1719003046;
+	bh=zHqrm6LL14pN7J1jPUokZ61GJ0sIujqExqHulesYufY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SAve3cmy5p6v3u6W23zkp6N5P7Zdim1KxMhtleXv1qc7zUJI6hRPGLiX2F9y/4Vwv
+	 hL1YERb7sBSgwHGOIBvKEy0x+x3Ox0gs0WYdOlrfAhKMeZQn/VxH+rsHBpgYpH4QZt
+	 LCQC4+YiHsoXNSSB9SMz3fEedx2BfAjbYP/M/BXmD8JxAjxLOw0KIKINUUC0C3KUld
+	 eRwGrjcgSEnaANo4EpfU2uhJa+el0gq91npAlfpLF88LC9Y6YGt5exhPDcb7LmrSqV
+	 pdFc19/VpqBtqMdXSIVxpK4WAWQ9Erq5NBGDuljncaao8jBZcLS44VDjL7pBoRzSyt
+	 X+ukufO/bgjPQ==
 From: Kees Cook <kees@kernel.org>
 To: Guenter Roeck <linux@roeck-us.net>
-Cc: Eric Biederman <ebiederm@xmission.com>,
+Cc: Kees Cook <kees@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Laurent Vivier <laurent@vivier.eu>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
 	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] exec: Avoid pathological argc, envc, and bprm->p
- values
-Message-ID: <202406211253.7037F69@keescook>
-References: <20240520021337.work.198-kees@kernel.org>
- <20240520021615.741800-2-keescook@chromium.org>
- <fbc4e2e4-3ca2-45b7-8443-0a8372d4ba94@roeck-us.net>
- <202406202354.3020C4FCA4@keescook>
- <1f410012-bf41-4825-9a37-7b7cc7c1df76@roeck-us.net>
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/2] exec: Avoid pathological argc, envc, and bprm->p values
+Date: Fri, 21 Jun 2024 13:50:42 -0700
+Message-Id: <20240621204729.it.434-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f410012-bf41-4825-9a37-7b7cc7c1df76@roeck-us.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=747; i=kees@kernel.org; h=from:subject:message-id; bh=zHqrm6LL14pN7J1jPUokZ61GJ0sIujqExqHulesYufY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmdeekF5ynV+ysPDMpgOdN67QrunEd2yLM61lDt iaaLnVb092JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZnXnpAAKCRCJcvTf3G3A JrRYEACJcwXSeETPWX0azPcrjVE+k6pOKsR5cASZRppf73qGPz3sjtne2MfnPOSPHl3lGdu3pZa cHvqfcCZwciotGUh2dfRbyGs9LHlNGJz9Un31oYqiq+wvX2x6sNCNa8jG8FO+cu4cPn8lqISJHt V9QKDv9AKKj+s3qTSLVdRveg4xcuJHTV+A8R882GHLqMo12QMgA3G/CM/VZIofhKj7WTHs2LsfQ l679COtEFu5FSHOzlchAl0f86zhtYq2E6pTNsCLPNKY0NbhMtWuv1PIjJbS2SvkjSb2NMPBhsDJ KLTstbfZ9Ja+57aQRoZdereYMKSNFylYAZHI/7UDoBaCCsDNKnu6T2mcWsksKFMXfsr7AfaqR6v kuOR5Ibj3cJmS4PFE2ShtlsCzypdV7m+gQNqyTK8FMyQzMFeWseRGkbSbQYrbptfAdJqKrgdzs1 sP502r4NtJCvjIrTjWQjUnoGJ0fLXlaSBezY005UpCudsJfOjFe3Pv7CzocvGhDm5z7XQ3IIyhl Sf7S5D/Yh4E5xIvzlvmxQCjMFmOAEiDXJ46bZTztybyI3afN87kEYNj27D6GMxzrQs+x2n2SDIC B/fYFnoA542S0/X5lJBtOWl8I2GUAu6hNXhTCOExcFmT68jQ8YijBC1r+nymoYSfuMG5/bN11SZ wjC829Q5mJWK0Z
+ g==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 21, 2024 at 06:21:15AM -0700, Guenter Roeck wrote:
-> On 6/21/24 00:00, Kees Cook wrote:
-> > On Thu, Jun 20, 2024 at 05:19:55PM -0700, Guenter Roeck wrote:
-> > > Hi,
-> > > 
-> > > On Sun, May 19, 2024 at 07:16:12PM -0700, Kees Cook wrote:
-> > > > Make sure nothing goes wrong with the string counters or the bprm's
-> > > > belief about the stack pointer. Add checks and matching self-tests.
-> > > > 
-> > > > For 32-bit validation, this was run under 32-bit UML:
-> > > > $ tools/testing/kunit/kunit.py run --make_options SUBARCH=i386 exec
-> > > > 
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > 
-> > > With this patch in linux-next, the qemu m68k:mcf5208evb emulation
-> > > fails to boot. The error is:
-> > 
-> > Eeek. Thanks for the report! I've dropped this patch from my for-next
-> > tree.
-> > 
-> > > Run /init as init process
-> > > Failed to execute /init (error -7)
-> > 
-> > -7 is E2BIG, so it's certainly one of the 3 new added checks. I must
-> > have made a mistake in my reasoning about how bprm->p is initialized;
-> > the other two checks seems extremely unlikely to be tripped.
-> > 
-> > I will try to get qemu set up and take a close look at what's happening.
-> > While I'm doing that, if it's easy for you, can you try it with just
-> > this removed (i.e. the other 2 new -E2BIG cases still in place):
-> > 
-> > 	/* Avoid a pathological bprm->p. */
-> > 	if (bprm->p < limit)
-> > 		return -E2BIG;
-> 
-> I added a printk:
-> 
-> argc: 1 envc: 2 p: 262140 limit: 2097152
->                 ^^^^^^^^^^^^^^^^^^^^^^^^
-> Removing the check above does indeed fix the problem.
+Hi,
 
-Thanks for checking this!
+This pair of patches replaces the last patch in this[1] series.
 
-And I've found my mistake. "argmin" is only valid for CONFIG_MMU. And
-you noticed this back in 2018. ;)
+Perform bprm argument overflow checking but only do argmin checks for MMU
+systems. To avoid tripping over this again, argmin is explicitly defined
+only for CONFIG_MMU. Thank you to Guenter Roeck for finding this issue
+(again)!
 
-http://lkml.kernel.org/r/20181126122307.GA1660@redhat.com
+-Kees
 
-I will try to fix this better so we don't trip over it again.
+[1] https://lore.kernel.org/all/20240520021337.work.198-kees@kernel.org/
+
+Kees Cook (2):
+  execve: Keep bprm->argmin behind CONFIG_MMU
+  exec: Avoid pathological argc, envc, and bprm->p values
+
+ fs/exec.c               | 36 +++++++++++++++++++++++++++++-------
+ fs/exec_test.c          | 30 +++++++++++++++++++++++++++++-
+ include/linux/binfmts.h |  2 +-
+ 3 files changed, 59 insertions(+), 9 deletions(-)
 
 -- 
-Kees Cook
+2.34.1
+
