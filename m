@@ -1,209 +1,146 @@
-Received: from smtprelay01.ispgateway.de (smtprelay01.ispgateway.de [80.67.18.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B2814C591;
-	Sat, 22 Jun 2024 11:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.67.18.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8651E14D6EE;
+	Sat, 22 Jun 2024 13:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719057475; cv=none; b=Rtc7zUCmiMKIKKrQkqXzyzkDUEm2NqkoGgtjI54Ore7E0hra2AaSJ5+ZNGTBqsXOxwdmi/oHCfg3S5sNtPCTkcibgpW0jv4ovPuG4vB+ePai3Y0JeuZ450vieutnatp75p+SO7Jc2XklR1fvIonurSdsXFFhqGZ3ooqJkNxi4bo=
+	t=1719064064; cv=none; b=De8r4bqfQxy8MoE7zr/+8w8aySIRaYY5zlyEvwt0FP8a4WKYxLqNid64Bucarl6tl4HHN9hIrvScHaHbVY9AmH5ZDj94foQnbyjib+YQzSB+AZ3R69r3OUrLu00jOyNW3VmBBMfUurTsZKc/0Wsl5CkOHdOnilCqJBdm4DDqzmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719057475; c=relaxed/simple;
-	bh=4nNz2jv+VOICXuXw2R1uGsao3nWrsCy0ZjQNa4eOHH0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZOrnFbti2DBaOVcbTgrLbp/8xqK4QWxhl8oOyTth0UpeAoq60e50hgJ5WI6LbV9QQYWdNQ4EsBkbd/jqKG3uq6n2RfH/GEOYM5zUJk9OApJXB1zvR6TB/FDqMXLPFziWNhZh3BMp4bKmaQgwgVMhYz871sxmbBL3QvO/rcSA63M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; arc=none smtp.client-ip=80.67.18.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
-Received: from [92.206.190.41] (helo=framework.lan)
-	by smtprelay01.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <git@apitzsch.eu>)
-	id 1sKzKz-000000005fV-1pf2;
-	Sat, 22 Jun 2024 13:55:21 +0200
-Message-ID: <86f8110e8edc24d0df035b77a1aa68422e48bde1.camel@apitzsch.eu>
-Subject: Re: [PATCH v4 2/3] leds: sy7802: Add support for Silergy SY7802
- flash LED controller
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,  Trilok Soni
- <quic_tsoni@quicinc.com>, Kees Cook <kees@kernel.org>,
- linux-leds@vger.kernel.org,  devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org,
- linux-arm-msm@vger.kernel.org,  ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org
-Date: Sat, 22 Jun 2024 13:55:25 +0200
-In-Reply-To: <20240621102656.GK1318296@google.com>
-References: <20240616-sy7802-v4-0-789994180e05@apitzsch.eu>
-	 <20240616-sy7802-v4-2-789994180e05@apitzsch.eu>
-	 <20240621102656.GK1318296@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1719064064; c=relaxed/simple;
+	bh=s58+WXTPKUxQQp7M6mqTfc8CNEirwEPL/XeRNbil2Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGVgwUmUdOoTDQusKK4HDdImDHjlUou3g7ZnBPIMOgNpbzZS7uvd0af3vOm/kgxPHbENF2F/qHAVcB8W0hb0ekWBCwp7ylFR5soWFfLI/G21O19O44ya7oUtBcSn3gyZjr0gdkM0Ye8c0G1KhvfPG0zAdr/ixtpvXJyyfj99qDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTY7OC1C; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTY7OC1C"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7eec09cc7f6so115872939f.0;
+        Sat, 22 Jun 2024 06:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719064061; x=1719668861; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ohspEI3o4kejsF4uHtq93ZO3T1O8uAizbgOfutjyYx0=;
+        b=DTY7OC1C+EYJZ5SVB2fa5G3Z9Fbg96OErzp1JbhzSrsB8RmHwOWCGrsMZ62wGf9LB7
+         Z+TVmrxchr55wSXdlJ4sYbDVW4jeoT95K1KIc8RiZG9mkmu6vOW6VXwA8A7kV5YF4yVo
+         Fe6Av1Y+W1wThms1o0NK0zfb/7vcXA8T3iyIGNErkkdqspd6+YSuQrF06SuxBC12f+jI
+         Zqt9+L1t8waS5rkJo94Z5aL8fsKJcSGp0sdomnWwwfMw0exlqEKtUFQZyeyyzqiNDvA9
+         WjFopEHSQyVmU5X4QahbW2IK8H71Rq09hFz132j7BtRUY+kXKM8cfFcwI9H0NxhAhBUS
+         l8jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719064061; x=1719668861;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ohspEI3o4kejsF4uHtq93ZO3T1O8uAizbgOfutjyYx0=;
+        b=rl3UGmWB1rfYHraz3EeqxyFbThar+M0alwCHH5900Bu/HuFydlSdkQqwU3h2tKfQsr
+         sJLjTXmtRK6QrtEXVRNT219O01++nWxuh3hvGERAEQrIzx5F+kqjdz3C9fnAtnpLgWSA
+         13MSEANhZvNR4IJ5qXUHbBh8Y+roKNDOg/dQkrrI2A7ta4TdPqJazDYoQybQStJ6ZEit
+         FlAj3PiTHjbP7y90VHgTGBVtSUg/IKinoOxvtOiq/H19nIzxO5zRywIg3p0GiCpLwTFD
+         wUJZ5kD0PtCI7UY8WLZ+LXiJgemITUk+MQu09klgeCI13gnQnNzyPoN94uCTWxEV81dZ
+         flJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhvLt0vS4t8oyw8igfknuYaGbW7bey5NZobVt1WJ/T3HyndcNq/M+8htmQ7vfjMkJNREd2Q1GJ0sXAYpIdStTyMkRP74CaKaWGnRh+U0w7OUZIjII9vzdPSqoUIKn7U7r6OM8TTtlRPD1tvNSyf1NlbYA9mLeIVuqE/iIIbR8h+Mf7R7RXCVjlYXbuLvE0
+X-Gm-Message-State: AOJu0YyJSl8l6KhAhas1Gcd20M9f6nV1lMa2ct9opjHAbXEnhLVfWl5C
+	iaxMHi4TgxPYzBGzQmAd2dftl2AkP60JmDxZ1yH9vl6t8FbDKnqz
+X-Google-Smtp-Source: AGHT+IH4uWoLEo6kKHTWJi/1CLEGx6QFTJt0e4D+3Pjq7hTY4ZPl7W5p1qFvi7fKwiHIqfl3kIcMFQ==
+X-Received: by 2002:a05:6602:6d83:b0:7eb:b025:648d with SMTP id ca18e2360f4ac-7f3a13eb9camr99502539f.10.1719064061444;
+        Sat, 22 Jun 2024 06:47:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70651085a5bsm3088880b3a.44.2024.06.22.06.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Jun 2024 06:47:40 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 22 Jun 2024 06:47:39 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Kees Cook <kees@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Gow <davidgow@google.com>,
+	Vitor Massaru Iha <vitor@massaru.org>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] kunit: test: Add vm_mmap() allocation resource
+ manager
+Message-ID: <d32df98c-fd3c-466b-bc8f-47cec1c7bebf@roeck-us.net>
+References: <20240612195412.make.760-kees@kernel.org>
+ <20240612195921.2685842-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612195921.2685842-1-kees@kernel.org>
 
-Hello Lee,
+Hi,
 
-Am Freitag, dem 21.06.2024 um 11:26 +0100 schrieb Lee Jones:
-> On Sun, 16 Jun 2024, Andr=C3=A9 Apitzsch via B4 Relay wrote:
->=20
-> > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> >=20
-> > The SY7802 is a current-regulated charge pump which can regulate
-> > two
-> > current levels for Flash and Torch modes.
-> >=20
-> > It is a high-current synchronous boost converter with 2-channel
-> > high
-> > side current sources. Each channel is able to deliver 900mA
-> > current.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > ---
-> > =C2=A0drivers/leds/flash/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 11 +
-> > =C2=A0drivers/leds/flash/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
-=C2=A0 1 +
-> > =C2=A0drivers/leds/flash/leds-sy7802.c | 542
-> > +++++++++++++++++++++++++++++++++++++++
-> > =C2=A03 files changed, 554 insertions(+)
->=20
-> Generally very nice.
->=20
-> Just a couple of teensy nits to fix then add my and resubmit please.
->=20
-> Acked-by: Lee Jones <lee@kernel.org>
->=20
-> > [...]
-> > diff --git a/drivers/leds/flash/leds-sy7802.c
-> > b/drivers/leds/flash/leds-sy7802.c
-> > new file mode 100644
-> > index 000000000000..c4bea55a62d0
-> > --- /dev/null
-> > +++ b/drivers/leds/flash/leds-sy7802.c
-> > @@ -0,0 +1,542 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Silergy SY7802 flash LED driver with I2C interface
->=20
-> "an I2C interface"
->=20
-> Or
->=20
-> "I2C interfaces"
->=20
-> > + * Copyright 2024 Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > + */
-> > +
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/led-class-flash.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +#define SY7802_MAX_LEDS 2
-> > +#define SY7802_LED_JOINT 2
-> > +
-> > +#define SY7802_REG_ENABLE		0x10
-> > +#define SY7802_REG_TORCH_BRIGHTNESS	0xa0
-> > +#define SY7802_REG_FLASH_BRIGHTNESS	0xb0
-> > +#define SY7802_REG_FLASH_DURATION	0xc0
-> > +#define SY7802_REG_FLAGS		0xd0
-> > +#define SY7802_REG_CONFIG_1		0xe0
-> > +#define SY7802_REG_CONFIG_2		0xf0
-> > +#define SY7802_REG_VIN_MONITOR		0x80
-> > +#define SY7802_REG_LAST_FLASH		0x81
-> > +#define SY7802_REG_VLED_MONITOR		0x30
-> > +#define SY7802_REG_ADC_DELAY		0x31
-> > +#define SY7802_REG_DEV_ID		0xff
-> > +
-> > +#define SY7802_MODE_OFF		0
-> > +#define SY7802_MODE_TORCH	2
-> > +#define SY7802_MODE_FLASH	3
-> > +#define SY7802_MODE_MASK	GENMASK(1, 0)
-> > +
-> > +#define SY7802_LEDS_SHIFT	3
-> > +#define SY7802_LEDS_MASK(_id)	(BIT(_id) << SY7802_LEDS_SHIFT)
-> > +#define SY7802_LEDS_MASK_ALL	(SY7802_LEDS_MASK(0) |
-> > SY7802_LEDS_MASK(1))
-> > +
-> > +#define SY7802_TORCH_CURRENT_SHIFT	3
-> > +#define SY7802_TORCH_CURRENT_MASK(_id) \
-> > +	(GENMASK(2, 0) << (SY7802_TORCH_CURRENT_SHIFT * (_id)))
-> > +#define SY7802_TORCH_CURRENT_MASK_ALL \
-> > +	(SY7802_TORCH_CURRENT_MASK(0) |
-> > SY7802_TORCH_CURRENT_MASK(1))
-> > +
-> > +#define SY7802_FLASH_CURRENT_SHIFT	4
-> > +#define SY7802_FLASH_CURRENT_MASK(_id) \
-> > +	(GENMASK(3, 0) << (SY7802_FLASH_CURRENT_SHIFT * (_id)))
-> > +#define SY7802_FLASH_CURRENT_MASK_ALL \
-> > +	(SY7802_FLASH_CURRENT_MASK(0) |
-> > SY7802_FLASH_CURRENT_MASK(1))
-> > +
-> > +#define SY7802_TIMEOUT_DEFAULT_US	512000U
-> > +#define SY7802_TIMEOUT_MIN_US		32000U
-> > +#define SY7802_TIMEOUT_MAX_US		1024000U
-> > +#define SY7802_TIMEOUT_STEPSIZE_US	32000U
-> > +
-> > +#define SY7802_TORCH_BRIGHTNESS_MAX 8
-> > +
-> > +#define SY7802_FLASH_BRIGHTNESS_DEFAULT	14
-> > +#define SY7802_FLASH_BRIGHTNESS_MIN	0
-> > +#define SY7802_FLASH_BRIGHTNESS_MAX	15
-> > +#define SY7802_FLASH_BRIGHTNESS_STEP	1
-> > +
-> > +#define SY7802_FLAG_TIMEOUT			BIT(0)
-> > +#define SY7802_FLAG_THERMAL_SHUTDOWN		BIT(1)
-> > +#define SY7802_FLAG_LED_FAULT			BIT(2)
-> > +#define SY7802_FLAG_TX1_INTERRUPT		BIT(3)
-> > +#define SY7802_FLAG_TX2_INTERRUPT		BIT(4)
-> > +#define SY7802_FLAG_LED_THERMAL_FAULT		BIT(5)
-> > +#define SY7802_FLAG_FLASH_INPUT_VOLTAGE_LOW	BIT(6)
-> > +#define SY7802_FLAG_INPUT_VOLTAGE_LOW		BIT(7)
-> > +
-> > +#define SY7802_CHIP_ID	0x51
-> > +
-> > +static const struct reg_default sy7802_regmap_defs[] =3D {
-> > +	{ SY7802_REG_ENABLE, SY7802_LEDS_MASK_ALL },
-> > +	{ SY7802_REG_TORCH_BRIGHTNESS, 0x92 },
-> > +	{ SY7802_REG_FLASH_BRIGHTNESS,
-> > SY7802_FLASH_BRIGHTNESS_DEFAULT |
-> > +		SY7802_FLASH_BRIGHTNESS_DEFAULT <<
-> > SY7802_FLASH_CURRENT_SHIFT },
-> > +	{ SY7802_REG_FLASH_DURATION, 0x6f },
-> > +	{ SY7802_REG_FLAGS, 0x0 },
-> > +	{ SY7802_REG_CONFIG_1, 0x68 },
-> > +	{ SY7802_REG_CONFIG_2, 0xf0 },
->=20
-> Not your fault, but this interface is frustrating since we have no
-> idea
-> what these register values mean.=C2=A0 IMHO, they should be defined and
-> ORed
-> together in some human readable way.
->=20
-> I say that it's not your fault because I see that this is the most
-> common usage.
->=20
+On Wed, Jun 12, 2024 at 12:59:18PM -0700, Kees Cook wrote:
+> For tests that need to allocate using vm_mmap() (e.g. usercopy and
+> execve), provide the interface to have the allocation tracked by KUnit
+> itself. This requires bringing up a placeholder userspace mm.
+> 
+> This combines my earlier attempt at this with Mark Rutland's version[1].
+> 
+> Normally alloc_mm() and arch_pick_mmap_layout() aren't exported for
+> modules, so export these only for KUnit testing.
+> 
+> Link: https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/ [1]
 
-I don't know how to interpret some bits of the default values. I don't
-have the documentation and changing the bits and observing the behavior
-of the device also didn't help.
+FWIW, not sure I understand what the above link has to do with this patch.
 
-Should I remove the entries from sy7802_regmap_defs, which have values
-that we don't fully understand?
+> Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: David Gow <davidgow@google.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Regards,
-Andr=C3=A9
+This patch results in a build failure for nommu_kc705_defconfig if kunit tests
+are also enabled.
+
+ERROR: modpost: vmlinux: local symbol 'arch_pick_mmap_layout' was exported
+
+If CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT=n, CONFIG_MMU=n, and
+CONFIG_KUNIT=y, arch_pick_mmap_layout is exported. However, if
+CONFIG_MMU=n, it is declared as static inline function.
+
+Guenter
+
+---
+bisect log:
+
+# bad: [b992b79ca8bc336fa8e2c80990b5af80ed8f36fd] Add linux-next specific files for 20240620
+# good: [6ba59ff4227927d3a8530fc2973b80e94b54d58f] Linux 6.10-rc4
+git bisect start 'HEAD' 'v6.10-rc4'
+# good: [c02e717c5a89654b244fec58bb5cda32770966b5] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+git bisect good c02e717c5a89654b244fec58bb5cda32770966b5
+# good: [29e7d78253b7ebf4b76fcf6d95e227d0b0c57dc0] Merge branch 'msm-next' of https://gitlab.freedesktop.org/drm/msm.git
+git bisect good 29e7d78253b7ebf4b76fcf6d95e227d0b0c57dc0
+# good: [bf8fd0d956bfcbf4fd6ff063366374c4bf87d806] Merge branch 'non-rcu/next' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+git bisect good bf8fd0d956bfcbf4fd6ff063366374c4bf87d806
+# good: [1110f16317b1e0742521eaef5613eb1eb17f55ca] Merge branch 'icc-next' of git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc.git
+git bisect good 1110f16317b1e0742521eaef5613eb1eb17f55ca
+# good: [63f3716198e5644713748d83e6a6df3b4a6a3b10] Merge branch 'gpio/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+git bisect good 63f3716198e5644713748d83e6a6df3b4a6a3b10
+# bad: [91b48d9adafddb242264ba19c0bae6e23f71b18a] Merge branch 'kunit' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
+git bisect bad 91b48d9adafddb242264ba19c0bae6e23f71b18a
+# good: [9b401f4a7170125365160c9af267a41ff6b39001] pinctrl: ti: ti-iodelay: fix possible memory leak when pinctrl_enable() fails
+git bisect good 9b401f4a7170125365160c9af267a41ff6b39001
+# good: [1963f932d368f18185466979cc0bc89414d798e7] Merge branch 'pwm/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git
+git bisect good 1963f932d368f18185466979cc0bc89414d798e7
+# good: [f91869accbe23a2bb08712b7262fa61eab716d42] selftests/resctrl: Simplify bandwidth report type handling
+git bisect good f91869accbe23a2bb08712b7262fa61eab716d42
+# good: [cbf284291604e818424f45dbdf6a8a705b5480ad] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
+git bisect good cbf284291604e818424f45dbdf6a8a705b5480ad
+# good: [a5217468214c228b89da37291de604cd756914ab] kunit: add missing MODULE_DESCRIPTION() macros to core modules
+git bisect good a5217468214c228b89da37291de604cd756914ab
+# bad: [51104c19d8570eb23208e08eac0e9ae09ced1c15] kunit: test: Add vm_mmap() allocation resource manager
+git bisect bad 51104c19d8570eb23208e08eac0e9ae09ced1c15
+# good: [425ae3ab5a1fa744a00680f059cf1accaaaecb28] list: test: add the missing MODULE_DESCRIPTION() macro
+git bisect good 425ae3ab5a1fa744a00680f059cf1accaaaecb28
+# first bad commit: [51104c19d8570eb23208e08eac0e9ae09ced1c15] kunit: test: Add vm_mmap() allocation resource manager
