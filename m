@@ -1,149 +1,209 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtprelay01.ispgateway.de (smtprelay01.ispgateway.de [80.67.18.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19DB208C4;
-	Fri, 21 Jun 2024 21:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B2814C591;
+	Sat, 22 Jun 2024 11:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.67.18.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719006250; cv=none; b=Hy5LbbgYxH/y+fK6V5vfX7E573EnFznaNBgbNc5fL3l72WPZqnHsOERZbGcyLqJJ9lGOyRaimSuXmzeD/ZotcBOn91PC8mIvXwvgbJ2KrgyeMYaX8O/dMN5yDvzVAldODEQ8HA681nuJN9QN33QpWEV/Nm3HYsm8n8HsxGLsyzs=
+	t=1719057475; cv=none; b=Rtc7zUCmiMKIKKrQkqXzyzkDUEm2NqkoGgtjI54Ore7E0hra2AaSJ5+ZNGTBqsXOxwdmi/oHCfg3S5sNtPCTkcibgpW0jv4ovPuG4vB+ePai3Y0JeuZ450vieutnatp75p+SO7Jc2XklR1fvIonurSdsXFFhqGZ3ooqJkNxi4bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719006250; c=relaxed/simple;
-	bh=VUzDAAK6GFik0XBjGl6e9QRuf1214D2TxhMu4wYt0r0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E606LZdV5c4OzRJWEN+Tg5+HCW7SpOtdOti82ELTvfvlCE5gcE3G72RYCRRz3VilbNYtLo78j47tPQnFvIBL9L6GzZTXwmUXfycDfzA15KY5MvlXONVyNo48KldTy+27l6yrAO4GgNv9nVJ/GG4X6OJKL8yVZFvEHp7IpNNjs3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=chUzra0E; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chUzra0E"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f9a78c6c5dso21165925ad.1;
-        Fri, 21 Jun 2024 14:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719006248; x=1719611048; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=QUHHwAbdrLTUi0g/5VmqKnU7X9HO1Kx5UX3u51CGi8k=;
-        b=chUzra0EOmkrBTnBQ7qAQtz9EwPTocysCGXsNNzMrwYZb/1QKW3EJc4FKSF1pDwhx8
-         zGy6LwdWPn3MzzprH6m3g5Mqg6ydjLfDZ28jag6I+ZmXHGHiZL7VE3ue2QxF+xyay0oL
-         aAhr3sFPROJFWZhGnGtKmbFZxV0MqYXgdjcxHo+2eBH4m95FH/5kiqELtzJqxoBzXSKh
-         ILHl2ng260mgiBEIxVzQ+L4/N6d26+LyYFF5u6zFLg8JGsf7RasGLjM7I+3j+0wbDnnX
-         WTp4B/9vx8keJ+cTS9msrWErYVpXpUx/DpM5dGMFjOEI5Ag8Y+EPqLHIKrU0ZQ1FZXX8
-         Sb0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719006248; x=1719611048;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUHHwAbdrLTUi0g/5VmqKnU7X9HO1Kx5UX3u51CGi8k=;
-        b=NnP46bC8NAqFnvh+abecSyn2hh/V6iaciI6ibWzM010BYdrqa3qVX0j8kv3HRsp6Hc
-         LfnKdW7Ryg6e99o8ULdAKO8dS+sys/n4lMySJsDPbXEI2RIUDdfWDV9FLs33Hgpcj15l
-         4yUT+MHrjPf11m88W7pZQtUEDrGhvSvjc2D751yRWAdnrRtQE2xdEhMi1dWiBhwlOxj5
-         du9hK431oOtQylrD06N5lHwtqLS7oOplE8iqBNtAdA2OIeMDzo/eve1jptIycDTe01Wi
-         mj3fVi+unaNVD1ewG+mexx0bMpf3iYNUMv3bd9xgaKwQyBa9IOtSandB3SUQnvTrZmI7
-         JR4A==
-X-Forwarded-Encrypted: i=1; AJvYcCV195rcj/aY3Lq7h225yOKMok9qK2nPxWyegscUfiCjdAGmRVd5SXuZWc5I/NU6caO/a6a5rWLnIsElJMxJdjBhGfWMLCSO+BaiXKvfvL52WPh6epFlJrYG0/zSw3JoHY7vjJMp1QZOdK6IVZ6eTFy26GWiaJNEWej+R1YT89K6rr8xayMBA2oot8W/Kw==
-X-Gm-Message-State: AOJu0YwK7tWx51xYV+RyKQYuj3xqrq86okMqPlkG37uV/ySpvrNP7KHg
-	4ipGkIndJgezGgNAiE049sFn444MM4m6T7YuYC3eWxtf1dV0ci9A
-X-Google-Smtp-Source: AGHT+IEkPqGaSmAOoRmgWX7VTz3gHwh+ygyiQth7iBCxHdKkHeQfXgHqb/6lwVRZX2/cq6xT0cKHkg==
-X-Received: by 2002:a17:902:d486:b0:1f6:f984:f759 with SMTP id d9443c01a7336-1f9aa40fa43mr109396265ad.15.1719006247858;
-        Fri, 21 Jun 2024 14:44:07 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb321720sm18965715ad.84.2024.06.21.14.44.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 14:44:06 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <674c2009-4c55-421c-ba57-10463e00fd62@roeck-us.net>
-Date: Fri, 21 Jun 2024 14:44:05 -0700
+	s=arc-20240116; t=1719057475; c=relaxed/simple;
+	bh=4nNz2jv+VOICXuXw2R1uGsao3nWrsCy0ZjQNa4eOHH0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZOrnFbti2DBaOVcbTgrLbp/8xqK4QWxhl8oOyTth0UpeAoq60e50hgJ5WI6LbV9QQYWdNQ4EsBkbd/jqKG3uq6n2RfH/GEOYM5zUJk9OApJXB1zvR6TB/FDqMXLPFziWNhZh3BMp4bKmaQgwgVMhYz871sxmbBL3QvO/rcSA63M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; arc=none smtp.client-ip=80.67.18.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+Received: from [92.206.190.41] (helo=framework.lan)
+	by smtprelay01.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <git@apitzsch.eu>)
+	id 1sKzKz-000000005fV-1pf2;
+	Sat, 22 Jun 2024 13:55:21 +0200
+Message-ID: <86f8110e8edc24d0df035b77a1aa68422e48bde1.camel@apitzsch.eu>
+Subject: Re: [PATCH v4 2/3] leds: sy7802: Add support for Silergy SY7802
+ flash LED controller
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,  Trilok Soni
+ <quic_tsoni@quicinc.com>, Kees Cook <kees@kernel.org>,
+ linux-leds@vger.kernel.org,  devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,  ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org
+Date: Sat, 22 Jun 2024 13:55:25 +0200
+In-Reply-To: <20240621102656.GK1318296@google.com>
+References: <20240616-sy7802-v4-0-789994180e05@apitzsch.eu>
+	 <20240616-sy7802-v4-2-789994180e05@apitzsch.eu>
+	 <20240621102656.GK1318296@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] exec: Avoid pathological argc, envc, and bprm->p
- values
-To: Kees Cook <kees@kernel.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Al Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, Alexey Dobriyan <adobriyan@gmail.com>,
- Laurent Vivier <laurent@vivier.eu>, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-hardening@vger.kernel.org
-References: <20240621204729.it.434-kees@kernel.org>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240621204729.it.434-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
 
-On 6/21/24 13:50, Kees Cook wrote:
-> Hi,
-> 
-> This pair of patches replaces the last patch in this[1] series.
-> 
-> Perform bprm argument overflow checking but only do argmin checks for MMU
-> systems. To avoid tripping over this again, argmin is explicitly defined
-> only for CONFIG_MMU. Thank you to Guenter Roeck for finding this issue
-> (again)!
-> 
+Hello Lee,
 
-That does make me wonder: Is anyone but me testing, much less running,
-the nommu code in the kernel ?
+Am Freitag, dem 21.06.2024 um 11:26 +0100 schrieb Lee Jones:
+> On Sun, 16 Jun 2024, Andr=C3=A9 Apitzsch via B4 Relay wrote:
+>=20
+> > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> >=20
+> > The SY7802 is a current-regulated charge pump which can regulate
+> > two
+> > current levels for Flash and Torch modes.
+> >=20
+> > It is a high-current synchronous boost converter with 2-channel
+> > high
+> > side current sources. Each channel is able to deliver 900mA
+> > current.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > ---
+> > =C2=A0drivers/leds/flash/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 11 +
+> > =C2=A0drivers/leds/flash/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+=C2=A0 1 +
+> > =C2=A0drivers/leds/flash/leds-sy7802.c | 542
+> > +++++++++++++++++++++++++++++++++++++++
+> > =C2=A03 files changed, 554 insertions(+)
+>=20
+> Generally very nice.
+>=20
+> Just a couple of teensy nits to fix then add my and resubmit please.
+>=20
+> Acked-by: Lee Jones <lee@kernel.org>
+>=20
+> > [...]
+> > diff --git a/drivers/leds/flash/leds-sy7802.c
+> > b/drivers/leds/flash/leds-sy7802.c
+> > new file mode 100644
+> > index 000000000000..c4bea55a62d0
+> > --- /dev/null
+> > +++ b/drivers/leds/flash/leds-sy7802.c
+> > @@ -0,0 +1,542 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Silergy SY7802 flash LED driver with I2C interface
+>=20
+> "an I2C interface"
+>=20
+> Or
+>=20
+> "I2C interfaces"
+>=20
+> > + * Copyright 2024 Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > + */
+> > +
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/led-class-flash.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/regulator/consumer.h>
+> > +
+> > +#define SY7802_MAX_LEDS 2
+> > +#define SY7802_LED_JOINT 2
+> > +
+> > +#define SY7802_REG_ENABLE		0x10
+> > +#define SY7802_REG_TORCH_BRIGHTNESS	0xa0
+> > +#define SY7802_REG_FLASH_BRIGHTNESS	0xb0
+> > +#define SY7802_REG_FLASH_DURATION	0xc0
+> > +#define SY7802_REG_FLAGS		0xd0
+> > +#define SY7802_REG_CONFIG_1		0xe0
+> > +#define SY7802_REG_CONFIG_2		0xf0
+> > +#define SY7802_REG_VIN_MONITOR		0x80
+> > +#define SY7802_REG_LAST_FLASH		0x81
+> > +#define SY7802_REG_VLED_MONITOR		0x30
+> > +#define SY7802_REG_ADC_DELAY		0x31
+> > +#define SY7802_REG_DEV_ID		0xff
+> > +
+> > +#define SY7802_MODE_OFF		0
+> > +#define SY7802_MODE_TORCH	2
+> > +#define SY7802_MODE_FLASH	3
+> > +#define SY7802_MODE_MASK	GENMASK(1, 0)
+> > +
+> > +#define SY7802_LEDS_SHIFT	3
+> > +#define SY7802_LEDS_MASK(_id)	(BIT(_id) << SY7802_LEDS_SHIFT)
+> > +#define SY7802_LEDS_MASK_ALL	(SY7802_LEDS_MASK(0) |
+> > SY7802_LEDS_MASK(1))
+> > +
+> > +#define SY7802_TORCH_CURRENT_SHIFT	3
+> > +#define SY7802_TORCH_CURRENT_MASK(_id) \
+> > +	(GENMASK(2, 0) << (SY7802_TORCH_CURRENT_SHIFT * (_id)))
+> > +#define SY7802_TORCH_CURRENT_MASK_ALL \
+> > +	(SY7802_TORCH_CURRENT_MASK(0) |
+> > SY7802_TORCH_CURRENT_MASK(1))
+> > +
+> > +#define SY7802_FLASH_CURRENT_SHIFT	4
+> > +#define SY7802_FLASH_CURRENT_MASK(_id) \
+> > +	(GENMASK(3, 0) << (SY7802_FLASH_CURRENT_SHIFT * (_id)))
+> > +#define SY7802_FLASH_CURRENT_MASK_ALL \
+> > +	(SY7802_FLASH_CURRENT_MASK(0) |
+> > SY7802_FLASH_CURRENT_MASK(1))
+> > +
+> > +#define SY7802_TIMEOUT_DEFAULT_US	512000U
+> > +#define SY7802_TIMEOUT_MIN_US		32000U
+> > +#define SY7802_TIMEOUT_MAX_US		1024000U
+> > +#define SY7802_TIMEOUT_STEPSIZE_US	32000U
+> > +
+> > +#define SY7802_TORCH_BRIGHTNESS_MAX 8
+> > +
+> > +#define SY7802_FLASH_BRIGHTNESS_DEFAULT	14
+> > +#define SY7802_FLASH_BRIGHTNESS_MIN	0
+> > +#define SY7802_FLASH_BRIGHTNESS_MAX	15
+> > +#define SY7802_FLASH_BRIGHTNESS_STEP	1
+> > +
+> > +#define SY7802_FLAG_TIMEOUT			BIT(0)
+> > +#define SY7802_FLAG_THERMAL_SHUTDOWN		BIT(1)
+> > +#define SY7802_FLAG_LED_FAULT			BIT(2)
+> > +#define SY7802_FLAG_TX1_INTERRUPT		BIT(3)
+> > +#define SY7802_FLAG_TX2_INTERRUPT		BIT(4)
+> > +#define SY7802_FLAG_LED_THERMAL_FAULT		BIT(5)
+> > +#define SY7802_FLAG_FLASH_INPUT_VOLTAGE_LOW	BIT(6)
+> > +#define SY7802_FLAG_INPUT_VOLTAGE_LOW		BIT(7)
+> > +
+> > +#define SY7802_CHIP_ID	0x51
+> > +
+> > +static const struct reg_default sy7802_regmap_defs[] =3D {
+> > +	{ SY7802_REG_ENABLE, SY7802_LEDS_MASK_ALL },
+> > +	{ SY7802_REG_TORCH_BRIGHTNESS, 0x92 },
+> > +	{ SY7802_REG_FLASH_BRIGHTNESS,
+> > SY7802_FLASH_BRIGHTNESS_DEFAULT |
+> > +		SY7802_FLASH_BRIGHTNESS_DEFAULT <<
+> > SY7802_FLASH_CURRENT_SHIFT },
+> > +	{ SY7802_REG_FLASH_DURATION, 0x6f },
+> > +	{ SY7802_REG_FLAGS, 0x0 },
+> > +	{ SY7802_REG_CONFIG_1, 0x68 },
+> > +	{ SY7802_REG_CONFIG_2, 0xf0 },
+>=20
+> Not your fault, but this interface is frustrating since we have no
+> idea
+> what these register values mean.=C2=A0 IMHO, they should be defined and
+> ORed
+> together in some human readable way.
+>=20
+> I say that it's not your fault because I see that this is the most
+> common usage.
+>=20
 
-mps2-an385 trips over the same problem, and xtensa:nommu_kc705_defconfig
-doesn't even build in linux-next right now (spoiler alert: I suspect that
-the problem is caused by "kunit: test: Add vm_mmap() allocation resource
-manager", but I did not have time to bisect it).
+I don't know how to interpret some bits of the default values. I don't
+have the documentation and changing the bits and observing the behavior
+of the device also didn't help.
 
-I am kind of tired keeping those tests alive, and I would not exactly
-shed tears if nommu support would just be dropped entirely.
+Should I remove the entries from sy7802_regmap_defs, which have values
+that we don't fully understand?
 
-Guenter
-
+Regards,
+Andr=C3=A9
