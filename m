@@ -1,221 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79EA49620;
-	Mon, 24 Jun 2024 11:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78351E494
+	for <linux-hardening@vger.kernel.org>; Mon, 24 Jun 2024 12:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719227693; cv=none; b=A8ElDtB7Iy1iq9JKkCatCFlhNZxV8Fef8ResTEcvqAOrE9mR7hNJSC16/0yhEl/T09YrBAb8frZIMNK/4PPoIVPC4sbT45cNIGiDEqegofuFc72M9+DZdxz7fyaWfLZT6HhdE5MMnsoOsoVQlMLI2S5IONapNoGUYQzuD0QaWZM=
+	t=1719232275; cv=none; b=e6MskanBTHjDlpv1BcwnlNBAS1OJWXYRzK6upDjZnwmzO4/7qwnfauxz4qELvYKlydH9T5stNbYGUj9XMv5xoaDtwt1P08EMQQBbufG8GoxZwObFhfszicHvHhlo+2SfSyNA8jQr78w4mkkHASDVXhZCOKPNPIIPUQQbIuUYTqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719227693; c=relaxed/simple;
-	bh=zD2eSo75ryZYFX1va5sIibpLycZqPyqdenRQ6fO/VY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WZqeDARkc7DrtCIVU6CRWAcEyoQAqCAG4ccjpbAJMP9tMrNiYTGzrnotzzBPV5lENean6FdKSj+8IqAVBULcpzGsQOmJTaAe+tBlG3ZYyh9rb3eVNGF/46/WExF/Wh2erRDqlwjyzbD+AV1yPNvWiuVODZJxVkrdyXHxxNhJpJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HL+PwkPn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HL+PwkPn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D08DC2BBFC;
-	Mon, 24 Jun 2024 11:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719227692;
-	bh=zD2eSo75ryZYFX1va5sIibpLycZqPyqdenRQ6fO/VY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HL+PwkPniPDdrLpWKapbrtdsjGL4duzCq43MmME/DrHp1kfG8QgQLNtwlvT+r+0bM
-	 g6jHuep8jV3IR+KqWP92cVjMYJYCN3mCm3kxqC/ac65+iU3+HIXuZH7cqaLKsGnwaU
-	 gjVP+3Jt53e0DihoHnHQKXAluUUU7g8yoZdwWxQSyn7JgP+cZ+IYSV857/a8JMzOc2
-	 BD37e7J2yhwYNfal/i78WGrisQTX5CVLOh8aazyNNds5w6TKBBAd2kexhNTw/49hFY
-	 7d5ZYPsZimodO08QDbvmmdPyHUjRwSraMEkn22wpb0xxuomngdnxk2eSdiSuidrukv
-	 bXxlPgy5vj+fg==
-Date: Mon, 24 Jun 2024 12:14:46 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Kees Cook <kees@kernel.org>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] leds: sy7802: Add support for Silergy SY7802
- flash LED controller
-Message-ID: <20240624111446.GT1318296@google.com>
-References: <20240616-sy7802-v4-0-789994180e05@apitzsch.eu>
- <20240616-sy7802-v4-2-789994180e05@apitzsch.eu>
- <20240621102656.GK1318296@google.com>
- <86f8110e8edc24d0df035b77a1aa68422e48bde1.camel@apitzsch.eu>
+	s=arc-20240116; t=1719232275; c=relaxed/simple;
+	bh=QfcG4SzOrIp9FdOHo9OvlIbGfspudn+GZvo/O5cIXck=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XbtNPQcM5yVPCIJFjQApFu6ETo0y1mm0YATV7qpjQAK3oSjH6WuRhJLOny0nGQ77q5hxGDO8TAOByDgYLYtgJyEyOpEYYzwmPh4P2uB9i95tkj5A9t5z/pskGkRSnNuXKp4nz535Q3ZdsdmCsq1Mwsj0rvBY9hdzQTl8O5cgXnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4W76l23hQTz4wbr;
+	Mon, 24 Jun 2024 22:31:10 +1000 (AEST)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, Anjali K <anjalik@linux.ibm.com>
+Cc: npiggin@gmail.com, naveen@kernel.org, christophe.leroy@csgroup.eu, kees@kernel.org, gustavoars@kernel.org, linux-hardening@vger.kernel.org, vishalc@linux.ibm.com
+In-Reply-To: <20240614173844.746818-1-anjalik@linux.ibm.com>
+References: <20240614173844.746818-1-anjalik@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/pseries: Whitelist dtl slub object for copying to userspace
+Message-Id: <171923223890.136336.18261608186644229436.b4-ty@ellerman.id.au>
+Date: Mon, 24 Jun 2024 22:30:38 +1000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86f8110e8edc24d0df035b77a1aa68422e48bde1.camel@apitzsch.eu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Sat, 22 Jun 2024, André Apitzsch wrote:
-
-> Hello Lee,
+On Fri, 14 Jun 2024 23:08:44 +0530, Anjali K wrote:
+> Reading the dispatch trace log from /sys/kernel/debug/powerpc/dtl/cpu-*
+> results in a BUG() when the config CONFIG_HARDENED_USERCOPY is enabled as
+> shown below.
 > 
-> Am Freitag, dem 21.06.2024 um 11:26 +0100 schrieb Lee Jones:
-> > On Sun, 16 Jun 2024, André Apitzsch via B4 Relay wrote:
-> > 
-> > > From: André Apitzsch <git@apitzsch.eu>
-> > > 
-> > > The SY7802 is a current-regulated charge pump which can regulate
-> > > two
-> > > current levels for Flash and Torch modes.
-> > > 
-> > > It is a high-current synchronous boost converter with 2-channel
-> > > high
-> > > side current sources. Each channel is able to deliver 900mA
-> > > current.
-> > > 
-> > > Signed-off-by: André Apitzsch <git@apitzsch.eu>
-> > > ---
-> > >  drivers/leds/flash/Kconfig       |  11 +
-> > >  drivers/leds/flash/Makefile      |   1 +
-> > >  drivers/leds/flash/leds-sy7802.c | 542
-> > > +++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 554 insertions(+)
-> > 
-> > Generally very nice.
-> > 
-> > Just a couple of teensy nits to fix then add my and resubmit please.
-> > 
-> > Acked-by: Lee Jones <lee@kernel.org>
-> > 
-> > > [...]
-> > > diff --git a/drivers/leds/flash/leds-sy7802.c
-> > > b/drivers/leds/flash/leds-sy7802.c
-> > > new file mode 100644
-> > > index 000000000000..c4bea55a62d0
-> > > --- /dev/null
-> > > +++ b/drivers/leds/flash/leds-sy7802.c
-> > > @@ -0,0 +1,542 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * Silergy SY7802 flash LED driver with I2C interface
-> > 
-> > "an I2C interface"
-> > 
-> > Or
-> > 
-> > "I2C interfaces"
-> > 
-> > > + * Copyright 2024 André Apitzsch <git@apitzsch.eu>
-> > > + */
-> > > +
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/i2c.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/led-class-flash.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/mutex.h>
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > +
-> > > +#define SY7802_MAX_LEDS 2
-> > > +#define SY7802_LED_JOINT 2
-> > > +
-> > > +#define SY7802_REG_ENABLE		0x10
-> > > +#define SY7802_REG_TORCH_BRIGHTNESS	0xa0
-> > > +#define SY7802_REG_FLASH_BRIGHTNESS	0xb0
-> > > +#define SY7802_REG_FLASH_DURATION	0xc0
-> > > +#define SY7802_REG_FLAGS		0xd0
-> > > +#define SY7802_REG_CONFIG_1		0xe0
-> > > +#define SY7802_REG_CONFIG_2		0xf0
-> > > +#define SY7802_REG_VIN_MONITOR		0x80
-> > > +#define SY7802_REG_LAST_FLASH		0x81
-> > > +#define SY7802_REG_VLED_MONITOR		0x30
-> > > +#define SY7802_REG_ADC_DELAY		0x31
-> > > +#define SY7802_REG_DEV_ID		0xff
-> > > +
-> > > +#define SY7802_MODE_OFF		0
-> > > +#define SY7802_MODE_TORCH	2
-> > > +#define SY7802_MODE_FLASH	3
-> > > +#define SY7802_MODE_MASK	GENMASK(1, 0)
-> > > +
-> > > +#define SY7802_LEDS_SHIFT	3
-> > > +#define SY7802_LEDS_MASK(_id)	(BIT(_id) << SY7802_LEDS_SHIFT)
-> > > +#define SY7802_LEDS_MASK_ALL	(SY7802_LEDS_MASK(0) |
-> > > SY7802_LEDS_MASK(1))
-> > > +
-> > > +#define SY7802_TORCH_CURRENT_SHIFT	3
-> > > +#define SY7802_TORCH_CURRENT_MASK(_id) \
-> > > +	(GENMASK(2, 0) << (SY7802_TORCH_CURRENT_SHIFT * (_id)))
-> > > +#define SY7802_TORCH_CURRENT_MASK_ALL \
-> > > +	(SY7802_TORCH_CURRENT_MASK(0) |
-> > > SY7802_TORCH_CURRENT_MASK(1))
-> > > +
-> > > +#define SY7802_FLASH_CURRENT_SHIFT	4
-> > > +#define SY7802_FLASH_CURRENT_MASK(_id) \
-> > > +	(GENMASK(3, 0) << (SY7802_FLASH_CURRENT_SHIFT * (_id)))
-> > > +#define SY7802_FLASH_CURRENT_MASK_ALL \
-> > > +	(SY7802_FLASH_CURRENT_MASK(0) |
-> > > SY7802_FLASH_CURRENT_MASK(1))
-> > > +
-> > > +#define SY7802_TIMEOUT_DEFAULT_US	512000U
-> > > +#define SY7802_TIMEOUT_MIN_US		32000U
-> > > +#define SY7802_TIMEOUT_MAX_US		1024000U
-> > > +#define SY7802_TIMEOUT_STEPSIZE_US	32000U
-> > > +
-> > > +#define SY7802_TORCH_BRIGHTNESS_MAX 8
-> > > +
-> > > +#define SY7802_FLASH_BRIGHTNESS_DEFAULT	14
-> > > +#define SY7802_FLASH_BRIGHTNESS_MIN	0
-> > > +#define SY7802_FLASH_BRIGHTNESS_MAX	15
-> > > +#define SY7802_FLASH_BRIGHTNESS_STEP	1
-> > > +
-> > > +#define SY7802_FLAG_TIMEOUT			BIT(0)
-> > > +#define SY7802_FLAG_THERMAL_SHUTDOWN		BIT(1)
-> > > +#define SY7802_FLAG_LED_FAULT			BIT(2)
-> > > +#define SY7802_FLAG_TX1_INTERRUPT		BIT(3)
-> > > +#define SY7802_FLAG_TX2_INTERRUPT		BIT(4)
-> > > +#define SY7802_FLAG_LED_THERMAL_FAULT		BIT(5)
-> > > +#define SY7802_FLAG_FLASH_INPUT_VOLTAGE_LOW	BIT(6)
-> > > +#define SY7802_FLAG_INPUT_VOLTAGE_LOW		BIT(7)
-> > > +
-> > > +#define SY7802_CHIP_ID	0x51
-> > > +
-> > > +static const struct reg_default sy7802_regmap_defs[] = {
-> > > +	{ SY7802_REG_ENABLE, SY7802_LEDS_MASK_ALL },
-> > > +	{ SY7802_REG_TORCH_BRIGHTNESS, 0x92 },
-> > > +	{ SY7802_REG_FLASH_BRIGHTNESS,
-> > > SY7802_FLASH_BRIGHTNESS_DEFAULT |
-> > > +		SY7802_FLASH_BRIGHTNESS_DEFAULT <<
-> > > SY7802_FLASH_CURRENT_SHIFT },
-> > > +	{ SY7802_REG_FLASH_DURATION, 0x6f },
-> > > +	{ SY7802_REG_FLAGS, 0x0 },
-> > > +	{ SY7802_REG_CONFIG_1, 0x68 },
-> > > +	{ SY7802_REG_CONFIG_2, 0xf0 },
-> > 
-> > Not your fault, but this interface is frustrating since we have no
-> > idea
-> > what these register values mean.  IMHO, they should be defined and
-> > ORed
-> > together in some human readable way.
-> > 
-> > I say that it's not your fault because I see that this is the most
-> > common usage.
-> > 
+>     kernel BUG at mm/usercopy.c:102!
+>     Oops: Exception in kernel mode, sig: 5 [#1]
+>     LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+>     Modules linked in: xfs libcrc32c dm_service_time sd_mod t10_pi sg ibmvfc
+>     scsi_transport_fc ibmveth pseries_wdt dm_multipath dm_mirror dm_region_hash dm_log dm_mod fuse
+>     CPU: 27 PID: 1815 Comm: python3 Not tainted 6.10.0-rc3 #85
+>     Hardware name: IBM,9040-MRX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NM1060_042) hv:phyp pSeries
+>     NIP:  c0000000005d23d4 LR: c0000000005d23d0 CTR: 00000000006ee6f8
+>     REGS: c000000120c078c0 TRAP: 0700   Not tainted  (6.10.0-rc3)
+>     MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2828220f  XER: 0000000e
+>     CFAR: c0000000001fdc80 IRQMASK: 0
+>     [ ... GPRs omitted ... ]
+>     NIP [c0000000005d23d4] usercopy_abort+0x78/0xb0
+>     LR [c0000000005d23d0] usercopy_abort+0x74/0xb0
+>     Call Trace:
+>      usercopy_abort+0x74/0xb0 (unreliable)
+>      __check_heap_object+0xf8/0x120
+>      check_heap_object+0x218/0x240
+>      __check_object_size+0x84/0x1a4
+>      dtl_file_read+0x17c/0x2c4
+>      full_proxy_read+0x8c/0x110
+>      vfs_read+0xdc/0x3a0
+>      ksys_read+0x84/0x144
+>      system_call_exception+0x124/0x330
+>      system_call_vectored_common+0x15c/0x2ec
+>     --- interrupt: 3000 at 0x7fff81f3ab34
 > 
-> I don't know how to interpret some bits of the default values. I don't
-> have the documentation and changing the bits and observing the behavior
-> of the device also didn't help.
+> [...]
 
-And this is the problem.
+Applied to powerpc/fixes.
 
-> Should I remove the entries from sy7802_regmap_defs, which have values
-> that we don't fully understand?
+[1/1] powerpc/pseries: Whitelist dtl slub object for copying to userspace
+      https://git.kernel.org/powerpc/c/1a14150e1656f7a332a943154fc486504db4d586
 
-No, as I say, it's not your fault.  Sadly this appears to be the norm.
-
--- 
-Lee Jones [李琼斯]
+cheers
