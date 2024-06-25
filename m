@@ -1,291 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFBC157A6C
-	for <linux-hardening@vger.kernel.org>; Tue, 25 Jun 2024 12:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C699415F3FF;
+	Tue, 25 Jun 2024 13:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319231; cv=none; b=N3sHUcwPl7DXX7hX5s/+jfS0IUjuOolhuK3EEHcwoqeGqAiXp16SYD1rgeoh5glWFchR0XDem+NQJ0RcPRvfnjpST4wkMqQmWLyja4SlWqMN00vcEmthesfUwX81wOg3ZU5jG3MFnQ20G5GmpSzBYoX+Rc3E1FWtBIIq0p7E1vc=
+	t=1719322668; cv=none; b=YnMzUlZmWFGSOoaUca5TDdTl9hGjTb2xqWTBs1VQypy/ae5YqT86EAv2Sxftxm3K8gPdMGGNEVph0YTQUJcrlV3p+EB5mo+Np59gieZJWQtLMlTj5fZ14n8L6thOZXuqWx78SZh45fSMy+3bbF9hk7shXfbbhP9k6odhHt1ukbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319231; c=relaxed/simple;
-	bh=icPJJ0Va10ExCFylVJNQ64H9o0XJUqZubKvwTVNRo8s=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=CAKJy/iApcLkiIwVNYvA1FksUkqQXQBss0hssVQR2C9kbxpG6733pfgWBYIB2cEJc4uzHwL9AUf0/6Aaafzx7iTDJSInOgCPsKjtusmDsaMtG55/DUhwblbbt/d/Vqzc+xtIf49l3qxlJn/kIwWgDk27MQiVIO7WdPnSSciEaOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Iz9xvR+M; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719322668; c=relaxed/simple;
+	bh=Fi8mYtRnhR/Ud4l97BJTFhMif+IBWlqAwv9EXERNImI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z52arMVYOzjcCt0jwokrnhJl5ttjPpe5fJ2tPotX+X/D1FtVoEnw2DvFyJ0BK5gUYJ/ToxQ2wt178Qn2vJIy5MVVaXBG+weXLK7VApPbtQFERpKiT3TZvLCinI4qu0IlPZq8tpAIv4xgxm8nmQXWPa6wQaIJ19jh4jUVzU5b5P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLWPwpj3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iz9xvR+M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719319228;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7EWz1vItROBUOYp6sdJspiDZ8uU1laai0jDHb5Vv+x0=;
-	b=Iz9xvR+MdY8As/JIkJAlmpQzIKWFzU62LXLewkYX9DMYi/fBHvthPlJmxoCcPDIN5p6Qe2
-	P4j3H2ihSE7qU8BTBRtU8qRvHNnSu3HFPCU6gV6nBJ2gE/K0i9fwPvQBa+fmeGA9MQrfqT
-	juBUvniOo0XSrmxrXyeao+SB8f9wIZA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-RCkWgWX_Nm-SSEzUrXPwMA-1; Tue,
- 25 Jun 2024 08:40:23 -0400
-X-MC-Unique: RCkWgWX_Nm-SSEzUrXPwMA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D4051956096;
-	Tue, 25 Jun 2024 12:40:17 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.39.192.194])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCA1319560B2;
-	Tue, 25 Jun 2024 12:40:06 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] printk: Add a short description string to kmsg_dump()
-Date: Tue, 25 Jun 2024 14:39:29 +0200
-Message-ID: <20240625123954.211184-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLWPwpj3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1794DC32781;
+	Tue, 25 Jun 2024 13:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719322668;
+	bh=Fi8mYtRnhR/Ud4l97BJTFhMif+IBWlqAwv9EXERNImI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sLWPwpj3ED5nvvgdTel1Wy/40yCx6Vv7QvwYBmOuZV/IbJ+vP9ngA9d9ullCfbFXV
+	 Lt8QYVPGUsZU3mFwJmhzKFhazWROyLd5DPrtbaBPhqcR/s/3UUV5GSFzACI/AvVrsp
+	 WB3I0Ke+UCvQWVmcvXjvj2BjHcL1IJevJosy4tS7IX4Pm61FhzcW3cG8dODkQCdAqF
+	 J84l4jatihTK17qvLcN4DX/AmkfNUTMuF7FqlwxreGjHDs0/RoRnAiaOqsTyBW4BuK
+	 RGetmWu65kZ5xaXCEXvbNKz8+dCb2uSXUhWL23sIdN9vVC4vH0FBCFRbxbLmgFX7de
+	 dxtUwFxXG5DFw==
+Message-ID: <83ea0718-362a-47e1-a311-58c8b3ef39dc@kernel.org>
+Date: Tue, 25 Jun 2024 16:37:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/4] arm64: dts: qcom: sc7280: Add clocks for QOS
+ configuration
+To: Odelu Kukatla <quic_okukatla@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, cros-qcom-dts-watchers@chromium.org,
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, quic_rlaggysh@quicinc.com,
+ quic_mdtipton@quicinc.com
+References: <20240607173927.26321-1-quic_okukatla@quicinc.com>
+ <20240607173927.26321-5-quic_okukatla@quicinc.com>
+Content-Language: en-US
+From: Georgi Djakov <djakov@kernel.org>
+In-Reply-To: <20240607173927.26321-5-quic_okukatla@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-callback.
-This patch adds a new parameter "const char *desc" to the kmsg_dumper
-dump() callback, and update all drivers that are using it.
+On 7.06.24 20:39, Odelu Kukatla wrote:
+> Add clocks which need to be enbaled for configuring
+> QoS on sc7280.
+> 
 
-To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-function and a macro for backward compatibility.
+Nit: s/enbaled/enabled/
 
-I've written this for drm_panic, but it can be useful for other
-kmsg_dumper.
-It allows to see the panic reason, like "sysrq triggered crash"
-or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+> Signed-off-by: Odelu Kukatla <quic_okukatla@quicinc.com>
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- arch/powerpc/kernel/nvram_64.c             |  3 ++-
- arch/powerpc/platforms/powernv/opal-kmsg.c |  3 ++-
- drivers/gpu/drm/drm_panic.c                |  3 ++-
- drivers/hv/hv_common.c                     |  3 ++-
- drivers/mtd/mtdoops.c                      |  3 ++-
- fs/pstore/platform.c                       |  3 ++-
- include/linux/kmsg_dump.h                  | 13 ++++++++++---
- kernel/panic.c                             |  2 +-
- kernel/printk/printk.c                     |  8 +++++---
- 9 files changed, 28 insertions(+), 13 deletions(-)
+In any case:
+Acked-by: Georgi Djakov <djakov@kernel.org>
 
-diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-index e385d3164648c..6b3a80d8cfa64 100644
---- a/arch/powerpc/kernel/nvram_64.c
-+++ b/arch/powerpc/kernel/nvram_64.c
-@@ -643,7 +643,8 @@ void __init nvram_init_oops_partition(int rtas_partition_exists)
-  * partition.  If that's too much, go back and capture uncompressed text.
-  */
- static void oops_to_nvram(struct kmsg_dumper *dumper,
--			  enum kmsg_dump_reason reason)
-+			  enum kmsg_dump_reason reason,
-+			  const char *desc)
- {
- 	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
- 	static unsigned int oops_count = 0;
-diff --git a/arch/powerpc/platforms/powernv/opal-kmsg.c b/arch/powerpc/platforms/powernv/opal-kmsg.c
-index 6c3bc4b4da983..49b60de6feb04 100644
---- a/arch/powerpc/platforms/powernv/opal-kmsg.c
-+++ b/arch/powerpc/platforms/powernv/opal-kmsg.c
-@@ -20,7 +20,8 @@
-  * message, it just ensures that OPAL completely flushes the console buffer.
-  */
- static void kmsg_dump_opal_console_flush(struct kmsg_dumper *dumper,
--				     enum kmsg_dump_reason reason)
-+				     enum kmsg_dump_reason reason,
-+				     const char *desc)
- {
- 	/*
- 	 * Outside of a panic context the pollers will continue to run,
-diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-index 293d4dcbc80da..88e9359fe6d78 100644
---- a/drivers/gpu/drm/drm_panic.c
-+++ b/drivers/gpu/drm/drm_panic.c
-@@ -604,7 +604,8 @@ static struct drm_plane *to_drm_plane(struct kmsg_dumper *kd)
- 	return container_of(kd, struct drm_plane, kmsg_panic);
- }
- 
--static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason)
-+static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason,
-+		      const char *desc)
- {
- 	struct drm_plane *plane = to_drm_plane(dumper);
- 
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 9c452bfbd5719..b0786ee9c94e3 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -207,7 +207,8 @@ static int hv_die_panic_notify_crash(struct notifier_block *self,
-  * buffer and call into Hyper-V to transfer the data.
-  */
- static void hv_kmsg_dump(struct kmsg_dumper *dumper,
--			 enum kmsg_dump_reason reason)
-+			 enum kmsg_dump_reason reason,
-+			 const char *desc)
- {
- 	struct kmsg_dump_iter iter;
- 	size_t bytes_written;
-diff --git a/drivers/mtd/mtdoops.c b/drivers/mtd/mtdoops.c
-index 2f11585b5613e..c618999a96832 100644
---- a/drivers/mtd/mtdoops.c
-+++ b/drivers/mtd/mtdoops.c
-@@ -298,7 +298,8 @@ static void find_next_position(struct mtdoops_context *cxt)
- }
- 
- static void mtdoops_do_dump(struct kmsg_dumper *dumper,
--			    enum kmsg_dump_reason reason)
-+			    enum kmsg_dump_reason reason,
-+			    const char *desc)
- {
- 	struct mtdoops_context *cxt = container_of(dumper,
- 			struct mtdoops_context, dump);
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 3497ede88aa01..a6ed5d56021ef 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -275,7 +275,8 @@ void pstore_record_init(struct pstore_record *record,
-  * end of the buffer.
-  */
- static void pstore_dump(struct kmsg_dumper *dumper,
--			enum kmsg_dump_reason reason)
-+			enum kmsg_dump_reason reason,
-+			const char *desc)
- {
- 	struct kmsg_dump_iter iter;
- 	unsigned long	total = 0;
-diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-index 906521c2329ca..a8f8a6204542d 100644
---- a/include/linux/kmsg_dump.h
-+++ b/include/linux/kmsg_dump.h
-@@ -49,13 +49,15 @@ struct kmsg_dump_iter {
-  */
- struct kmsg_dumper {
- 	struct list_head list;
--	void (*dump)(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason);
-+	void (*dump)(struct kmsg_dumper *dumper,
-+		     enum kmsg_dump_reason reason,
-+		     const char *desc);
- 	enum kmsg_dump_reason max_reason;
- 	bool registered;
- };
- 
- #ifdef CONFIG_PRINTK
--void kmsg_dump(enum kmsg_dump_reason reason);
-+void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc);
- 
- bool kmsg_dump_get_line(struct kmsg_dump_iter *iter, bool syslog,
- 			char *line, size_t size, size_t *len);
-@@ -71,7 +73,7 @@ int kmsg_dump_unregister(struct kmsg_dumper *dumper);
- 
- const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason);
- #else
--static inline void kmsg_dump(enum kmsg_dump_reason reason)
-+static inline void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
- {
- }
- 
-@@ -107,4 +109,9 @@ static inline const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
- }
- #endif
- 
-+static inline void kmsg_dump(enum kmsg_dump_reason reason)
-+{
-+	kmsg_dump_desc(reason, NULL);
-+}
-+
- #endif /* _LINUX_KMSG_DUMP_H */
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 0843a275531a7..0a8b29c44f3c1 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -378,7 +378,7 @@ void panic(const char *fmt, ...)
- 
- 	panic_print_sys_info(false);
- 
--	kmsg_dump(KMSG_DUMP_PANIC);
-+	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
- 
- 	/*
- 	 * If you doubt kdump always works fine in any situation,
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index d0bff0b0abfdb..2e7195894e41a 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -4287,14 +4287,16 @@ const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
- EXPORT_SYMBOL_GPL(kmsg_dump_reason_str);
- 
- /**
-- * kmsg_dump - dump kernel log to kernel message dumpers.
-+ * kmsg_dump_desc - dump kernel log to kernel message dumpers.
-  * @reason: the reason (oops, panic etc) for dumping
-+ * @desc: a short string to describe what caused the panic or oops. Can be NULL
-+ * if no additional description is available.
-  *
-  * Call each of the registered dumper's dump() callback, which can
-  * retrieve the kmsg records with kmsg_dump_get_line() or
-  * kmsg_dump_get_buffer().
-  */
--void kmsg_dump(enum kmsg_dump_reason reason)
-+void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
- {
- 	struct kmsg_dumper *dumper;
- 
-@@ -4314,7 +4316,7 @@ void kmsg_dump(enum kmsg_dump_reason reason)
- 			continue;
- 
- 		/* invoke dumper which will iterate over records */
--		dumper->dump(dumper, reason);
-+		dumper->dump(dumper, reason, desc);
- 	}
- 	rcu_read_unlock();
- }
+Bjorn, the dt-binding change is available in my icc-rpmh-qos branch
+in case you want to make the dtbs checker happy when you apply this.
 
-base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
--- 
-2.45.1
+BR,
+Georgi
+
+> ---
+>   arch/arm64/boot/dts/qcom/sc7280.dtsi | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index ba43fba2c551..a3c640d394e9 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2130,6 +2130,8 @@
+>   			reg = <0 0x016e0000 0 0x1c080>;
+>   			#interconnect-cells = <2>;
+>   			qcom,bcm-voters = <&apps_bcm_voter>;
+> +			clocks = <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
+> +				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>;
+>   		};
+>   
+>   		aggre2_noc: interconnect@1700000 {
+> @@ -2137,6 +2139,7 @@
+>   			compatible = "qcom,sc7280-aggre2-noc";
+>   			#interconnect-cells = <2>;
+>   			qcom,bcm-voters = <&apps_bcm_voter>;
+> +			clocks = <&rpmhcc RPMH_IPA_CLK>;
+>   		};
+>   
+>   		mmss_noc: interconnect@1740000 {
 
