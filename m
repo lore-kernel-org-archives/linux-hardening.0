@@ -1,275 +1,291 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51FA12EBEA;
-	Tue, 25 Jun 2024 09:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFBC157A6C
+	for <linux-hardening@vger.kernel.org>; Tue, 25 Jun 2024 12:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719308296; cv=none; b=dMDTa/vESuTPeEweXllQ/2AKYYaNkv+J+V6I34GOSBhouMJj1dykZ2S8HAqooFrRVKWhsYquep8mWrjdKETrbdqfyP/wetfsZPlx0bGdDdx/6blMG0JcAVxU/ivCtJZFaqJrVaSYzSEhjBqz30+j/C9gZdFiOyRUwu6xFKl5vi8=
+	t=1719319231; cv=none; b=N3sHUcwPl7DXX7hX5s/+jfS0IUjuOolhuK3EEHcwoqeGqAiXp16SYD1rgeoh5glWFchR0XDem+NQJ0RcPRvfnjpST4wkMqQmWLyja4SlWqMN00vcEmthesfUwX81wOg3ZU5jG3MFnQ20G5GmpSzBYoX+Rc3E1FWtBIIq0p7E1vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719308296; c=relaxed/simple;
-	bh=JHBg/Hqu7jDucGLJh8PXWrcGEzA3WPJnZuttQx/ap4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tioamJd+XYUbVpmYXej/4kkny+MY7xBNe8NrDbnqBtonPVpJJqcfe3idSmL/jnTO7HzzJQKoEvQ1yHEdxiTxq+n9DOSV4LbRAhl4vvmHVd2c7gX0xnWsWc7XOKg/61H03UOyKx/5WQmMFg0+7xv9Bd8VnmF6fwm/4jnOPdDgHak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xj13taHy; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719319231; c=relaxed/simple;
+	bh=icPJJ0Va10ExCFylVJNQ64H9o0XJUqZubKvwTVNRo8s=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=CAKJy/iApcLkiIwVNYvA1FksUkqQXQBss0hssVQR2C9kbxpG6733pfgWBYIB2cEJc4uzHwL9AUf0/6Aaafzx7iTDJSInOgCPsKjtusmDsaMtG55/DUhwblbbt/d/Vqzc+xtIf49l3qxlJn/kIwWgDk27MQiVIO7WdPnSSciEaOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Iz9xvR+M; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xj13taHy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=p81muDELRMtjx8hyqZALP7SKcIRl8MDp2vLMju2Ho8E=; b=Xj13taHya5HkEoqUPsGFqMXHJ6
-	NzCzD6zqCeviLJEzSNTX732uamV96/kCoG4N49ZpaEM5ELZuyNjO5fcLmYiNSYvE+IoMQextvoGMA
-	42eZUiN+rON8xClJiFvWQp8+2oWtriG1BUMVIfrU7TPlVKFlsazxR7yaMUWpVG/6Vip3k8/FbqIqR
-	QIHj7ugnY9D2Uvpu/VN9B3o6SozZXayb0XRgc9yvCKqXpGgYcCJTlI+AR+xdS/3DooYMNppoWrisG
-	x13f+gC2IkxLXLTskwLibafo3V0Z1CcB7NKUZ2kFSz1kvt2SoXNecNOOfXdkC8JORSHN7781hXnDA
-	zmikDRBg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sM2c3-00000008Njg-3inE;
-	Tue, 25 Jun 2024 09:37:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7378B300754; Tue, 25 Jun 2024 11:37:19 +0200 (CEST)
-Date: Tue, 25 Jun 2024 11:37:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iz9xvR+M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719319228;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7EWz1vItROBUOYp6sdJspiDZ8uU1laai0jDHb5Vv+x0=;
+	b=Iz9xvR+MdY8As/JIkJAlmpQzIKWFzU62LXLewkYX9DMYi/fBHvthPlJmxoCcPDIN5p6Qe2
+	P4j3H2ihSE7qU8BTBRtU8qRvHNnSu3HFPCU6gV6nBJ2gE/K0i9fwPvQBa+fmeGA9MQrfqT
+	juBUvniOo0XSrmxrXyeao+SB8f9wIZA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-RCkWgWX_Nm-SSEzUrXPwMA-1; Tue,
+ 25 Jun 2024 08:40:23 -0400
+X-MC-Unique: RCkWgWX_Nm-SSEzUrXPwMA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D4051956096;
+	Tue, 25 Jun 2024 12:40:17 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.39.192.194])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCA1319560B2;
+	Tue, 25 Jun 2024 12:40:06 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Pengfei Xu <pengfei.xu@intel.com>, Xin Li <xin3.li@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Uros Bizjak <ubizjak@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v3] x86/traps: Enable UBSAN traps on x86
-Message-ID: <20240625093719.GW31592@noisy.programming.kicks-ass.net>
-References: <20240625032509.4155839-1-gatlin.newhouse@gmail.com>
+	Jani Nikula <jani.nikula@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] printk: Add a short description string to kmsg_dump()
+Date: Tue, 25 Jun 2024 14:39:29 +0200
+Message-ID: <20240625123954.211184-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625032509.4155839-1-gatlin.newhouse@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Tue, Jun 25, 2024 at 03:24:55AM +0000, Gatlin Newhouse wrote:
-> Currently ARM architectures output which specific sanitizer caused
-> the trap, via the encoded data in the trap instruction. Clang on
-> x86 currently encodes the same data in ud1 instructions but the x86
-> handle_bug() and is_valid_bugaddr() functions currently only look
-> at ud2s.
-> 
-> Bring x86 to parity with arm64, similar to commit 25b84002afb9
-> ("arm64: Support Clang UBSAN trap codes for better reporting").
-> Enable the output of UBSAN type information on x86 architectures
-> compiled with clang when CONFIG_UBSAN_TRAP=y.
-> 
-> Signed-off-by: Gatlin Newhouse <gatlin.newhouse@gmail.com>
-> ---
-> Changes in v3:
->   - Address Thomas's remarks about: change log structure,
->     get_ud_type() instead of is_valid_bugaddr(), handle_bug()
->     changes, and handle_ubsan_failure().
-> 
-> Changes in v2:
->   - Name the new constants 'LEN_ASOP' and 'INSN_ASOP' instead of
->     'LEN_REX' and 'INSN_REX'
->   - Change handle_ubsan_failure() from enum bug_trap_type to void
->     function
-> 
-> v1: https://lore.kernel.org/linux-hardening/20240529022043.3661757-1-gatlin.newhouse@gmail.com/
-> v2: https://lore.kernel.org/linux-hardening/20240601031019.3708758-1-gatlin.newhouse@gmail.com/
-> ---
->  MAINTAINERS                  |  2 ++
->  arch/x86/include/asm/bug.h   | 11 ++++++++++
->  arch/x86/include/asm/ubsan.h | 23 +++++++++++++++++++++
->  arch/x86/kernel/Makefile     |  1 +
->  arch/x86/kernel/traps.c      | 40 +++++++++++++++++++++++++++++++-----
->  arch/x86/kernel/ubsan.c      | 21 +++++++++++++++++++
->  6 files changed, 93 insertions(+), 5 deletions(-)
->  create mode 100644 arch/x86/include/asm/ubsan.h
->  create mode 100644 arch/x86/kernel/ubsan.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 28e20975c26f..b8512887ffb1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22635,6 +22635,8 @@ L:	kasan-dev@googlegroups.com
->  L:	linux-hardening@vger.kernel.org
->  S:	Supported
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
-> +F:	arch/x86/include/asm/ubsan.h
-> +F:	arch/x86/kernel/ubsan.c
->  F:	Documentation/dev-tools/ubsan.rst
->  F:	include/linux/ubsan.h
->  F:	lib/Kconfig.ubsan
-> diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> index a3ec87d198ac..a363d13c263b 100644
-> --- a/arch/x86/include/asm/bug.h
-> +++ b/arch/x86/include/asm/bug.h
-> @@ -13,6 +13,17 @@
->  #define INSN_UD2	0x0b0f
->  #define LEN_UD2		2
->  
-> +/*
-> + * In clang we have UD1s reporting UBSAN failures on X86, 64 and 32bit.
-> + */
-> +#define INSN_UD1	0xb90f
-> +#define INSN_UD_MASK	0xFFFF
-> +#define LEN_UD1		2
-> +#define INSN_ASOP	0x67
-> +#define INSN_ASOP_MASK	0x00FF
-> +#define BUG_UD_NONE	0xFFFF
-> +#define BUG_UD2		0xFFFE
-> +
+kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+callback.
+This patch adds a new parameter "const char *desc" to the kmsg_dumper
+dump() callback, and update all drivers that are using it.
 
-Please look at 790d1ce71de. Also your style above is inconsistent,
-please use lower case consistently for the hex values.
+To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+function and a macro for backward compatibility.
 
+I've written this for drm_panic, but it can be useful for other
+kmsg_dumper.
+It allows to see the panic reason, like "sysrq triggered crash"
+or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
 
->  #ifdef CONFIG_GENERIC_BUG
->  
->  #ifdef CONFIG_X86_32
-> diff --git a/arch/x86/include/asm/ubsan.h b/arch/x86/include/asm/ubsan.h
-> new file mode 100644
-> index 000000000000..ac2080984e83
-> --- /dev/null
-> +++ b/arch/x86/include/asm/ubsan.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_UBSAN_H
-> +#define _ASM_X86_UBSAN_H
-> +
-> +/*
-> + * Clang Undefined Behavior Sanitizer trap mode support.
-> + */
-> +#include <linux/bug.h>
-> +#include <linux/ubsan.h>
-> +#include <asm/ptrace.h>
-> +
-> +/*
-> + * UBSAN uses the EAX register to encode its type in the ModRM byte.
-> + */
-> +#define UBSAN_REG	0x40
-> +
-> +#ifdef CONFIG_UBSAN_TRAP
-> +void handle_ubsan_failure(struct pt_regs *regs, u16 insn);
-> +#else
-> +static inline void handle_ubsan_failure(struct pt_regs *regs, u16 insn) { return; }
-> +#endif /* CONFIG_UBSAN_TRAP */
-> +
-> +#endif /* _ASM_X86_UBSAN_H */
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index 74077694da7d..fe1d9db27500 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -145,6 +145,7 @@ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
->  obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
->  
->  obj-$(CONFIG_CFI_CLANG)			+= cfi.o
-> +obj-$(CONFIG_UBSAN_TRAP)		+= ubsan.o
->  
->  obj-$(CONFIG_CALL_THUNKS)		+= callthunks.o
->  
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 4fa0b17e5043..aef21287e7ed 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -67,6 +67,7 @@
->  #include <asm/vdso.h>
->  #include <asm/tdx.h>
->  #include <asm/cfi.h>
-> +#include <asm/ubsan.h>
->  
->  #ifdef CONFIG_X86_64
->  #include <asm/x86_init.h>
-> @@ -91,6 +92,29 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
->  	return *(unsigned short *)addr == INSN_UD2;
->  }
->  
-> +/*
-> + * Check for UD1, UD2, with or without Address Size Override Prefixes instructions.
-> + */
-> +__always_inline u16 get_ud_type(unsigned long addr)
-> +{
-> +	u16 insn;
-> +
-> +	if (addr < TASK_SIZE_MAX)
-> +		return BUG_UD_NONE;
-> +	insn = *(u16 *)addr;
-> +	if ((insn & INSN_UD_MASK) == INSN_UD2)
-> +		return BUG_UD2;
-> +	if ((insn & INSN_ASOP_MASK) == INSN_ASOP)
-> +		insn = *(u16 *)(++addr);
-> +
-> +	// UBSAN encode the failure type in the two bytes after UD1
-> +	if ((insn & INSN_UD_MASK) == INSN_UD1)
-> +		return *(u16 *)(addr + LEN_UD1);
-> +
-> +	return BUG_UD_NONE;
-> +}
+Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+---
+ arch/powerpc/kernel/nvram_64.c             |  3 ++-
+ arch/powerpc/platforms/powernv/opal-kmsg.c |  3 ++-
+ drivers/gpu/drm/drm_panic.c                |  3 ++-
+ drivers/hv/hv_common.c                     |  3 ++-
+ drivers/mtd/mtdoops.c                      |  3 ++-
+ fs/pstore/platform.c                       |  3 ++-
+ include/linux/kmsg_dump.h                  | 13 ++++++++++---
+ kernel/panic.c                             |  2 +-
+ kernel/printk/printk.c                     |  8 +++++---
+ 9 files changed, 28 insertions(+), 13 deletions(-)
 
-Given that insn is u16, this INSN_UD_MASK seems eminently pointless.
+diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
+index e385d3164648c..6b3a80d8cfa64 100644
+--- a/arch/powerpc/kernel/nvram_64.c
++++ b/arch/powerpc/kernel/nvram_64.c
+@@ -643,7 +643,8 @@ void __init nvram_init_oops_partition(int rtas_partition_exists)
+  * partition.  If that's too much, go back and capture uncompressed text.
+  */
+ static void oops_to_nvram(struct kmsg_dumper *dumper,
+-			  enum kmsg_dump_reason reason)
++			  enum kmsg_dump_reason reason,
++			  const char *desc)
+ {
+ 	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
+ 	static unsigned int oops_count = 0;
+diff --git a/arch/powerpc/platforms/powernv/opal-kmsg.c b/arch/powerpc/platforms/powernv/opal-kmsg.c
+index 6c3bc4b4da983..49b60de6feb04 100644
+--- a/arch/powerpc/platforms/powernv/opal-kmsg.c
++++ b/arch/powerpc/platforms/powernv/opal-kmsg.c
+@@ -20,7 +20,8 @@
+  * message, it just ensures that OPAL completely flushes the console buffer.
+  */
+ static void kmsg_dump_opal_console_flush(struct kmsg_dumper *dumper,
+-				     enum kmsg_dump_reason reason)
++				     enum kmsg_dump_reason reason,
++				     const char *desc)
+ {
+ 	/*
+ 	 * Outside of a panic context the pollers will continue to run,
+diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
+index 293d4dcbc80da..88e9359fe6d78 100644
+--- a/drivers/gpu/drm/drm_panic.c
++++ b/drivers/gpu/drm/drm_panic.c
+@@ -604,7 +604,8 @@ static struct drm_plane *to_drm_plane(struct kmsg_dumper *kd)
+ 	return container_of(kd, struct drm_plane, kmsg_panic);
+ }
+ 
+-static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason)
++static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason,
++		      const char *desc)
+ {
+ 	struct drm_plane *plane = to_drm_plane(dumper);
+ 
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 9c452bfbd5719..b0786ee9c94e3 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -207,7 +207,8 @@ static int hv_die_panic_notify_crash(struct notifier_block *self,
+  * buffer and call into Hyper-V to transfer the data.
+  */
+ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+-			 enum kmsg_dump_reason reason)
++			 enum kmsg_dump_reason reason,
++			 const char *desc)
+ {
+ 	struct kmsg_dump_iter iter;
+ 	size_t bytes_written;
+diff --git a/drivers/mtd/mtdoops.c b/drivers/mtd/mtdoops.c
+index 2f11585b5613e..c618999a96832 100644
+--- a/drivers/mtd/mtdoops.c
++++ b/drivers/mtd/mtdoops.c
+@@ -298,7 +298,8 @@ static void find_next_position(struct mtdoops_context *cxt)
+ }
+ 
+ static void mtdoops_do_dump(struct kmsg_dumper *dumper,
+-			    enum kmsg_dump_reason reason)
++			    enum kmsg_dump_reason reason,
++			    const char *desc)
+ {
+ 	struct mtdoops_context *cxt = container_of(dumper,
+ 			struct mtdoops_context, dump);
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index 3497ede88aa01..a6ed5d56021ef 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -275,7 +275,8 @@ void pstore_record_init(struct pstore_record *record,
+  * end of the buffer.
+  */
+ static void pstore_dump(struct kmsg_dumper *dumper,
+-			enum kmsg_dump_reason reason)
++			enum kmsg_dump_reason reason,
++			const char *desc)
+ {
+ 	struct kmsg_dump_iter iter;
+ 	unsigned long	total = 0;
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index 906521c2329ca..a8f8a6204542d 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -49,13 +49,15 @@ struct kmsg_dump_iter {
+  */
+ struct kmsg_dumper {
+ 	struct list_head list;
+-	void (*dump)(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason);
++	void (*dump)(struct kmsg_dumper *dumper,
++		     enum kmsg_dump_reason reason,
++		     const char *desc);
+ 	enum kmsg_dump_reason max_reason;
+ 	bool registered;
+ };
+ 
+ #ifdef CONFIG_PRINTK
+-void kmsg_dump(enum kmsg_dump_reason reason);
++void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc);
+ 
+ bool kmsg_dump_get_line(struct kmsg_dump_iter *iter, bool syslog,
+ 			char *line, size_t size, size_t *len);
+@@ -71,7 +73,7 @@ int kmsg_dump_unregister(struct kmsg_dumper *dumper);
+ 
+ const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason);
+ #else
+-static inline void kmsg_dump(enum kmsg_dump_reason reason)
++static inline void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
+ {
+ }
+ 
+@@ -107,4 +109,9 @@ static inline const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
+ }
+ #endif
+ 
++static inline void kmsg_dump(enum kmsg_dump_reason reason)
++{
++	kmsg_dump_desc(reason, NULL);
++}
++
+ #endif /* _LINUX_KMSG_DUMP_H */
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 0843a275531a7..0a8b29c44f3c1 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -378,7 +378,7 @@ void panic(const char *fmt, ...)
+ 
+ 	panic_print_sys_info(false);
+ 
+-	kmsg_dump(KMSG_DUMP_PANIC);
++	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
+ 
+ 	/*
+ 	 * If you doubt kdump always works fine in any situation,
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index d0bff0b0abfdb..2e7195894e41a 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -4287,14 +4287,16 @@ const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
+ EXPORT_SYMBOL_GPL(kmsg_dump_reason_str);
+ 
+ /**
+- * kmsg_dump - dump kernel log to kernel message dumpers.
++ * kmsg_dump_desc - dump kernel log to kernel message dumpers.
+  * @reason: the reason (oops, panic etc) for dumping
++ * @desc: a short string to describe what caused the panic or oops. Can be NULL
++ * if no additional description is available.
+  *
+  * Call each of the registered dumper's dump() callback, which can
+  * retrieve the kmsg records with kmsg_dump_get_line() or
+  * kmsg_dump_get_buffer().
+  */
+-void kmsg_dump(enum kmsg_dump_reason reason)
++void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
+ {
+ 	struct kmsg_dumper *dumper;
+ 
+@@ -4314,7 +4316,7 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ 			continue;
+ 
+ 		/* invoke dumper which will iterate over records */
+-		dumper->dump(dumper, reason);
++		dumper->dump(dumper, reason, desc);
+ 	}
+ 	rcu_read_unlock();
+ }
 
-Are the bytes after UD1 a proper ModRM such that the whole forms a
-decodable instruction? You seem to not mention this anywhere. It is
-paramount that the instruction stream is still correctly decodable.
-
-Also, wouldn't it be saner to write this something like:
-
-__always_inline int decode_bug(unsigned long addr, u32 *imm)
-{
-	u8 v;
-
-	if (addr < TASK_SIZE)
-		return BUG_NONE;
-
-	v = *(u8 *)(addr++);
-	if (v == 0x67)
-		v = *(u8 *)(addr++);
-	if (v != 0x0f)
-		return BUG_NONE;
-	v = *(u8 *)(addr++);
-	if (v == 0x0b)
-		return BUG_UD2;
-	if (v != 0xb9)
-		return BUG_NONE;
-
-	if (X86_MODRM_RM(v) == 4)
-		addr++; /* consume SiB */
-
-	*imm = 0;
-	if (X86_MODRM_MOD(v) == 1)
-		*imm = *(u8 *)addr;
-	if (X86_MORRM_MOD(v) == 2)
-		*imm = *(u32 *)addr;
-
-	// WARN on MOD(v)==3 ??
-
-	return BUG_UD1;
-}
-
-Why does the thing emit the asop prefix at all through? afaict it
-doesn't affect the immediate you want to get at. And if it does this
-prefix, should we worry about other prefixes? Ideally we'd not accept
-any prefixes.
-
+base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
+-- 
+2.45.1
 
