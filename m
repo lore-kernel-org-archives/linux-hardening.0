@@ -1,149 +1,216 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C961922CB;
-	Wed, 26 Jun 2024 19:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1F7161314;
+	Wed, 26 Jun 2024 22:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719430630; cv=none; b=CUcW1seiSv5/e5pvFE4g1YXokQGoVIg5Zm650vnqSKcUAMrwA9tihWMeK8VFhKoEtzKH9WgnXl7lfMYfVDXlClPLp2tjKKn0A7CL+FIqjoYz0kQ2IyXG7sr7ByNhC6ANsZBqPxAtjm0USCw3iKvbdh83BzKkIk1wmzS6IsBFrss=
+	t=1719439813; cv=none; b=PVAIeO16zbtXdaHc8/Na4+F4YQysPCtQ6wnNI+nxuYYRTyHUOAGmb9d5zXLklYRcyvwqr9GcC62yoaXYB4h0iA/m3s8fwFkCgHxd1chhUYuuEXSQhQceIKNzT+71bGzWVX6dEH0MeU8cWLrUL+2bgIGVCihq0GJX2Ymbym6LzsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719430630; c=relaxed/simple;
-	bh=FWb/8xwgSmkYewGCNK0QCu9voPf3FKtacJJHxV+3mDY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=r7+Jv0Pm8+mOPmco5y/CO+eNKlLGtxDY6SoBbhQUDJXg+tn/bsOI8KGM2Ax/xf9Wyh1A3PtfuXYSFDGplpvr4Q9TgFBT/AmEfftgm85fH4xqxoD6e/ydbD1VYzQzWx8vK5fSCJbB0V+if+8YbtnWcpIfB2iIFaSUEo9JoJQ03nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/MrA51o; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719439813; c=relaxed/simple;
+	bh=FoMa2hdhI1oPIQ40kb5ipFDpW8RBfUV8Ix2rN3TmQ1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fqTJFGtmY4dV/Vi6DmaeMjXbXMdWrDqUGXZvnlWPNtEV4iQn/MrlUySNYcR7jW13TcrCvv656I+b4R+93ZrrAtr8g0nqJnrCqET2+cUDe34fMI8bQdg9aKKaGfI19uL60EvdGHeKnyFuYNd2wcLGBhXQLKUgFVmfW/ucPa7Q1Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aR90lTVg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/MrA51o"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4247f36f689so49451605e9.1;
-        Wed, 26 Jun 2024 12:37:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719430627; x=1720035427; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eOjQ/R1GedZK24w3z78seoJ2dMf2SdqwKnQMmA2vypc=;
-        b=R/MrA51oVFsaBGzIi8PDdXri9gp2lHNKHW01DojFWC6Z6H0WZGTPLEP9oAN9htkyth
-         PhS7Dlbfp/rtfSt/Fxt0/Y5L8w9sA7iuPWt1YdwZ2aXvWY5ZXMCPsl/ozqvkG3IU0XuO
-         h2kPhlUWf6hmcMsNuQYgtG28gt1ASzdtk2GOm6L4obxeXm5JOK/KUvHQLZjLtfIQc/jr
-         1nyD4jejliW8qP+t6N5mGdmAHa4fK206Ru8EMsZs6jpBnWhZ5zu1r5bqx2W2ExK+m47J
-         xg0oUDfQW3pPBo1KHnCHwpY6GXbSwAE6IVbuCbS4owIysZSnTLsQ2S9jb5wpzHJzGF+L
-         ciAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719430627; x=1720035427;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eOjQ/R1GedZK24w3z78seoJ2dMf2SdqwKnQMmA2vypc=;
-        b=NQbQ36zfn7qG3P1IzBMF6jbZeFIMgUL5FDbb4dwmNdOJQNT5uqrhXEaBkwNRq0cOH0
-         Yy5ei4TFIHniwt0xqgbFDE0WSWP1viPaZ5qLh+2ygRdtC+Qj2NGjYqABP5ympCZ4poP9
-         cVhOdA4mDfjj1lmMcV4EzCPP/0nMZTB/Aegx2Y7BFZjbWF4D3XsAYy/sE8V9e4VcD+jH
-         G44ckEcPqVphSnmyDJqtCtpYGH7q5lUHIWncS+UUDXwfcMQT/QA9+98KIAWGofeyXWMW
-         rtM4uaZFiiTjDNdAbWE6jzTNfWAiUn0uiMoaFUie/4ndvHA8LxGl9/L4HKv+1qr87vsi
-         yMpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDItr3xLe+9lqN+FVDHU75x6rklFMiqAA3bxYEWu7fFYBCbIuD9FKR3upa9fEtY0g5RkrwiCF79AchNmtCL1OmuixX2B6n+LiiHncddNJU4hSgBI7mO0NKmdYOAVH8Bo0BWIr2XmkB5nZTYpnb
-X-Gm-Message-State: AOJu0Yw5uZuk9647F1Hx/jKOi0OfLVkEgBFqSbRe307Hw3dKteLoNsG+
-	m1HdKQvVVFDcboPTXoUoj9xEJVCnh0V9K44PMYkS5yYG7v6Q71hpFfqHYowh
-X-Google-Smtp-Source: AGHT+IFEeO9IN3qQwaY5ejmvgyRqZUMYeBxB/Up+ILOb0nQGa0nc1/xQG/pPsB0YhldmxZffa5E7/A==
-X-Received: by 2002:a05:600c:5d5:b0:424:a779:b5bf with SMTP id 5b1f17b1804b1-424a779b679mr30728705e9.20.1719430627129;
-        Wed, 26 Jun 2024 12:37:07 -0700 (PDT)
-Received: from [127.0.1.1] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8468613sm36476445e9.39.2024.06.26.12.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 12:37:06 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Wed, 26 Jun 2024 21:37:03 +0200
-Subject: [PATCH v2] mfd: omap-usb-tll: use struct_size to allocate tll
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aR90lTVg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F9BC116B1;
+	Wed, 26 Jun 2024 22:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719439813;
+	bh=FoMa2hdhI1oPIQ40kb5ipFDpW8RBfUV8Ix2rN3TmQ1E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aR90lTVgPYndoXHzrWf6IcHoE7CXVXu38jggpET05UGSL10FBFk/QMweV08LZKhlM
+	 s4biMs8rWeMfR9jte3XfSgdFtKbX0wj4DAuAsf9bc3UKH8INFKqZPcirIMkYbHsOaG
+	 Y3lUCQJnL5J9xHGC3fDsBCk2E8MrCYFABjV1q+vKyzV6jWS85k6y3LplDIDV64Tcw6
+	 oSi0z4N3LbeMh2AlkhSxE7VBIqus2h6fyEr4IYaaHi8TsaYnvEQ2cVHz0Nr6IMvFzu
+	 hsnsYhMaPLgVafOvDQlsVIVcs2Hd0/c9oIrcFRd+/yo83VjQUkplV0H25JZYmh1Fus
+	 2rmGkTio9J8Cw==
+Date: Wed, 26 Jun 2024 15:10:12 -0700
+From: Kees Cook <kees@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "liuyuntao (F)" <liuyuntao12@huawei.com>, Arnd Bergmann <arnd@arndb.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Leonardo Bras <leobras@redhat.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] randomize_kstack: Remove non-functional per-arch entropy
+ filtering
+Message-ID: <202406261506.1516191F72@keescook>
+References: <20240619214711.work.953-kees@kernel.org>
+ <98381dbf-f14e-4b6c-8c96-fb6b97ed46e1@huawei.com>
+ <202406201127.17CE526F0@keescook>
+ <ZnVfOnIuFl2kNWkT@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-omap-usb-tll-counted_by-v2-1-4bedf20d1b51@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAN5tfGYC/4WNQQqDMBBFryKz7pQk2kZd9R5FShJTHdBEEpWKe
- PemXqDL9+C/v0O0gWyEOtsh2JUieZdAXDIwvXKdRWoTg2CiYHfB0I9qwiVqnIcBjV/cbNuX3lA
- pc5OGy5zxEtJ6CvZNn7P8bBL3FGcftvNo5T/7v7lyZCilrGSZF1pX6tGNioar8SM0x3F8Ae+iB
- nG+AAAA
-To: Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719430625; l=2401;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=FWb/8xwgSmkYewGCNK0QCu9voPf3FKtacJJHxV+3mDY=;
- b=eu0R35PRz0mZwtrpzv1RIROon4BFs/WttTciMHNUd/G+DZs6vZu955Q7VERWlf6lgtqK6mc1j
- ozzoEgAC/jgCNSw7Fkiuse6pHq8/Xh2FVwNW7zxcbstqoGru0pLcMsT
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnVfOnIuFl2kNWkT@J2N7QTR9R3>
 
-Commit 16c2004d9e4d ("mfd: omap-usb-tll: Allocate driver data at once")
-changed the memory allocation of 'tll' to consolidate it into a single
-allocation, introducing an incorrect size calculation.
+On Fri, Jun 21, 2024 at 12:08:42PM +0100, Mark Rutland wrote:
+> On Thu, Jun 20, 2024 at 11:34:22AM -0700, Kees Cook wrote:
+> > On Thu, Jun 20, 2024 at 11:47:58AM +0800, liuyuntao (F) wrote:
+> > > 
+> > > 
+> > > On 2024/6/20 5:47, Kees Cook wrote:
+> > > > An unintended consequence of commit 9c573cd31343 ("randomize_kstack:
+> > > > Improve entropy diffusion") was that the per-architecture entropy size
+> > > > filtering reduced how many bits were being added to the mix, rather than
+> > > > how many bits were being used during the offsetting. All architectures
+> > > > fell back to the existing default of 0x3FF (10 bits), which will consume
+> > > > at most 1KiB of stack space. It seems that this is working just fine,
+> > > > so let's avoid the confusion and update everything to use the default.
+> > > > 
+> > > 
+> > > My original intent was indeed to do this, but I regret that not being more
+> > > explicit in the commit log..
+> > > 
+> > > Additionally, I've tested the stack entropy by applying the following patch,
+> > > the result was `Bits of stack entropy: 7` on arm64, too. It does not seem to
+> > > affect the entropy value, maybe removing it is OK, or there may be some
+> > > nuances of your intentions that I've overlooked.
+> > > 
+> > > --- a/include/linux/randomize_kstack.h
+> > > +++ b/include/linux/randomize_kstack.h
+> > > @@ -79,9 +79,7 @@ DECLARE_PER_CPU(u32, kstack_offset);
+> > >  #define choose_random_kstack_offset(rand) do {                         \
+> > >         if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT, \
+> > >                                 &randomize_kstack_offset)) {            \
+> > > -               u32 offset = raw_cpu_read(kstack_offset);               \
+> > > -               offset = ror32(offset, 5) ^ (rand);                     \
+> > > -               raw_cpu_write(kstack_offset, offset);                   \
+> > > +               raw_cpu_write(kstack_offset, rand);                     \
+> > >         }                                                               \
+> > >  } while (0)
+> > >  #else /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
+> > 
+> > I blame the multiple applications of the word "entropy" in this feature. :)
+> > 
+> > So, there's both:
+> > 
+> > - "how many bits CAN be randomized?" (i.e. within what range can all
+> >   possible stack offsets be?)
+> > 
+> > and
+> > 
+> > - "is the randomization predictable?" (i.e. is the distribution of
+> >   selected positions with the above range evenly distributed?)
+> > 
+> > Commit 9c573cd31343 ("randomize_kstack: Improve entropy diffusion") was
+> > trying to improve the latter, but accidentally also grew the former.
+> > This patch is just trying to clean all this up now.
+> > 
+> > Thanks for testing! And I'm curious as to why arm64's stack offset
+> > entropy is 7 for you when we're expecting it to be 6. Anyway, that's not
+> > a problem I don't think. Just a greater offset range than expected.
+> 
+> Hmm....
+> 
+> I think this is due to the way the compiler aligns the stack in alloca(); it
+> rounds up the value of KSTACK_OFFSET_MAX(offset) and ends up spilling over an
+> additional bit (e.g. 0x3f1 to 0x3ff round up to 0x400).
+> 
+> Looking at v6.10-rc4 defconfig + CONFIG_RANDOMIZE_STACKOFFSET=y, the
+> disassembly for arm64's invoke_syscall() looks like:
+> 
+> 	// offset = raw_cpu_read(kstack_offset)
+> 	mov     x4, sp
+> 	adrp    x0, kstack_offset
+> 	mrs     x5, tpidr_el1
+> 	add     x0, x0, #:lo12:kstack_offset
+> 	ldr     w0, [x0, x5]
+> 
+> 	// offset = KSTACK_OFFSET_MAX(offset)
+> 	and     x0, x0, #0x3ff
+> 
+> 	// alloca(offset)
+> 	add     x0, x0, #0xf
+> 	and     x0, x0, #0x7f0
+> 	sub     sp, x4, x0
+> 
+> ... which in C would be:
+> 
+> 	offset = raw_cpu_read(kstack_offset)
+> 	offset &= 0x3ff;			// [0x0, 0x3ff]
+> 	offset += 0xf;				// [0xf, 0x40e]
+> 	offset &= 0x7f0;			// [0x0,
+> 
+> ... so when *all* bits [3:0] are 0, they'll have no impact, and when *any* of
+> bits [3:0] are 1 they'll trigger a carry into bit 4, which could ripple all the
+> way up and spill into bit 10.
+> 
+> I have no idea whether that's important. Kees, does that introduce a bias, and
+> if so do we need to care?
+> 
+> If I change the mask to discard the low bits:
+> 
+> 	#define KSTACK_OFFSET_MAX(x)   ((x) & 0x3F0)
+> 
+> ... then the assembly avoids the rounding:
+> 
+> 	mov     x4, sp
+> 	adrp    x0, 0 <kstack_offset>
+> 	mrs     x5, tpidr_el1
+> 	add     x0, x0, #:lo12:kstack_offset
+> 	ldr     w0, [x0, x5]
+> 	and     x0, x0, #0x3f0
+> 	sub     sp, x4, x0
 
-In particular, the allocation for the array of pointers was converted
-into a single-pointer allocation.
+Ah, interesting! I'd prefer to avoid the bias (or at least, the
+weirdness). How about this as a solution?
 
-The memory allocation used to occur in two steps:
 
-tll = devm_kzalloc(dev, sizeof(struct usbtll_omap), GFP_KERNEL);
-tll->ch_clk = devm_kzalloc(dev, sizeof(struct clk *) * tll->nch,
-                           GFP_KERNEL);
-
-And it turned that into the following allocation:
-
-tll = devm_kzalloc(dev, sizeof(*tll) + sizeof(tll->ch_clk[nch]),
-                   GFP_KERNEL);
-
-sizeof(tll->ch_clk[nch]) returns the size of a single pointer instead of
-the expected nch pointers.
-
-This bug went unnoticed because the allocation size was small enough to
-fit within the minimum size of a memory allocation for this particular
-case [1].
-
-The complete allocation can still be done at once with the struct_size
-macro, which comes in handy for structures with a trailing flexible
-array.
-
-Fix the memory allocation to obtain the original size again.
-
-Link: https://lore.kernel.org/all/202406261121.2FFD65647@keescook/ [1]
-Fixes: 16c2004d9e4d ("mfd: omap-usb-tll: Allocate driver data at once")
-Reviewed-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
-Changes in v2:
-- Patch 1/2: drop (applied).
-- Patch 2/2: turn into fix.
-- Link to v1: https://lore.kernel.org/r/20240620-omap-usb-tll-counted_by-v1-0-77797834bb9a@gmail.com
----
- drivers/mfd/omap-usb-tll.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
-index b6303ddb013b..f68dd0281463 100644
---- a/drivers/mfd/omap-usb-tll.c
-+++ b/drivers/mfd/omap-usb-tll.c
-@@ -230,8 +230,7 @@ static int usbtll_omap_probe(struct platform_device *pdev)
- 		break;
- 	}
+diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+index 6d92b68efbf6..1d982dbdd0d0 100644
+--- a/include/linux/randomize_kstack.h
++++ b/include/linux/randomize_kstack.h
+@@ -32,13 +32,19 @@ DECLARE_PER_CPU(u32, kstack_offset);
+ #endif
  
--	tll = devm_kzalloc(dev, sizeof(*tll) + sizeof(tll->ch_clk[nch]),
--			   GFP_KERNEL);
-+	tll = devm_kzalloc(dev, struct_size(tll, ch_clk, nch), GFP_KERNEL);
- 	if (!tll) {
- 		pm_runtime_put_sync(dev);
- 		pm_runtime_disable(dev);
+ /*
+- * Use, at most, 10 bits of entropy. We explicitly cap this to keep the
+- * "VLA" from being unbounded (see above). 10 bits leaves enough room for
+- * per-arch offset masks to reduce entropy (by removing higher bits, since
+- * high entropy may overly constrain usable stack space), and for
+- * compiler/arch-specific stack alignment to remove the lower bits.
++ * Use, at most, 6 bits of entropy (on 64-bit; 8 on 32-bit). This cap is
++ * to keep the "VLA" from being unbounded (see above). Additionally clear
++ * the bottom 4 bits (on 64-bit systems, 2 for 32-bit), since stack
++ * alignment will always be at least word size. This makes the compiler
++ * code gen better when it is applying the actual per-arch alignment to
++ * the final offset. The resulting randomness is reasonable without overly
++ * constraining usable stack space.
+  */
+-#define KSTACK_OFFSET_MAX(x)	((x) & 0x3FF)
++#ifdef CONFIG_64BIT
++#define KSTACK_OFFSET_MAX(x)	((x) & 0b1111110000)
++#else
++#define KSTACK_OFFSET_MAX(x)	((x) & 0b1111111100)
++#endif
+ 
+ /**
+  * add_random_kstack_offset - Increase stack utilization by previously
 
----
-base-commit: b992b79ca8bc336fa8e2c80990b5af80ed8f36fd
-change-id: 20240620-omap-usb-tll-counted_by-aac57c173018
 
-Best regards,
 -- 
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-
+Kees Cook
