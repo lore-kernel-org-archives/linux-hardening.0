@@ -1,146 +1,77 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F111A92F;
-	Wed, 26 Jun 2024 15:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B38E18FDAF;
+	Wed, 26 Jun 2024 16:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719416490; cv=none; b=fc3O5HtH/tWo23PZyRgiwfAOB6gTV3uEkH/8YnYKVZ99RhEXX4kOaOiVufLgB+d1TH/+Zcmjj1akOKFrmA/eOVI1Df67fJyswSQhPRw4DUnaVLPIXxd9WeeEp7YQvCci37N/VXJuISv3ntuWXMpoB7ItJJnjsrNgQSNxa9zvyc8=
+	t=1719417728; cv=none; b=Ipz5fHNxer4dcKekKMqr2T3YUAIwpZWog8+jszxgFQu7FhRtv+53b3aK+JcAXHnSGsRmq8VtPUSiEWppZTuyKCxD9xAuH7HxYy9Gfw9tfdBuK6zvPC3TLLMjMcmocsksejVXrkCTF2aYuyA6zoFm9gMuZsNFini1JnnG99FhXTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719416490; c=relaxed/simple;
-	bh=GPHvwfVOsOpJ3F4HSr4EpYRzSsypkz6TSUJoNBbhErs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AcAKdGOWF8IdGO6gKNQlyidaK2sED0J0wz51K8r6hj7GqgulMjxkYcuOGr2Cf774zT5H4ZVxFs/s4QjcFjy2GxLxsvVEbJYG87SBl/vWjZ7jgOcMHy11NSjWFeLNGSX7gtT2N/PUYNrd/HiJDtnXechDvEQvKnj18pnikLAhKuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=EWW4oUXI; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1719417728; c=relaxed/simple;
+	bh=NkNUoH7PH+wvdzx1J3nfu698r76uEJurORUYg1U5GGo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=YDs0Ml8c1IVJVEO9RAg0p87QF4xXfp5KsPneDiJho+27Gi0K548NcLDtuIpWwMugWruCQATvaGfa3nM0OutfrfYbue+rawPhnHGgojXmPAZupNzUEMRzq2RLJAoHWfQfJTXEoaNR8gOpdIbhYMRo88xNeVAkZHmP5Cdkg35Eibs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctQar+2m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="EWW4oUXI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=I2mKrncqrxQxg3yWqxHlilhT6KiFqVB2cixTKCsRVuo=; b=EWW4oUXIHM0thFAE
-	OnOspGfMc5HhlJOuzLrrBhNlPk6akWkMVt3TsIX0pjRaY8WLYAVaGJDlmdi7G0rMunVOWOUUnCFY8
-	OsjY0ijPo29+VcDpnMt0AGuFvIvcKLPh9HerZpeiyHV7G4bEwEmcY9VFKlPTmCb+EokGSL8lWpKXZ
-	H0S/Nglapsu7JmK6sO0mhlSYVHWw5l/zzAI7Lb+PVRImo23SzBiYJVEXZkeFsd9j/0SeGYODksSBz
-	oUQpg9wZiRTuF5HF8odDl0CWH+PfcjuRhRLsE66j/b0KAYk4rpBQ16EQhbsdVtJLTcNs0Zc8K6vDD
-	dcQqCes7LIPx59myxQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1sMUlt-008VLV-1J;
-	Wed, 26 Jun 2024 15:41:21 +0000
-Date: Wed, 26 Jun 2024 15:41:21 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: sudipm.mukherjee@gmail.com, sudip.mukherjee@codethink.co.uk
-Cc: arnd@arndb.de, linux-kernel@vger.kernel.org,
-	linux-parport@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/3] parport: Cleanup some pre-devmodel code
-Message-ID: <Znw2oRnqaZ39aXzQ@gallifrey>
-References: <20240502154823.67235-1-linux@treblig.org>
- <ZkXj9Ip3DoUAe1wt@gallifrey>
- <Zl3_5MzTNqIiXM_C@gallifrey>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctQar+2m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F79BC32789;
+	Wed, 26 Jun 2024 16:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719417727;
+	bh=NkNUoH7PH+wvdzx1J3nfu698r76uEJurORUYg1U5GGo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ctQar+2mvvi0orc/Sa0k87jKvMsvw0WD2udMSLDtcb0l1XAP7thtRL6lC923qpA0H
+	 OVmDU3QGVcqbQT0H3XFDmGCCNI3iss6JG1s3Wp8n3mlQSgMaSdCdwUEo8QlF+8IHGk
+	 kVbaK4kgTI9mvlac7sJfDvKenkku2+fYGe3tPj1ypspM2Vkz5Cl0wRK13na/EtqB+X
+	 aB0wsoZoFyPI61GeLeMPN4H+kqWML3DuK5OojXo2TcHqUxXFwIFXpdx+6ju6JN5wuV
+	 j9UCosJXJv1DWhKBp+GfhYs4phAyiIGvRC1rGjcBB4geovEfTIefJIxBBcrgNB6r52
+	 aUXpG/rCpm7nw==
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Trilok Soni <quic_tsoni@quicinc.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org
+In-Reply-To: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
+References: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
+Subject: Re: (subset) [PATCH v5 0/3] Add sy7802 flash led driver
+Message-Id: <171941772410.2536029.16123233056884497719.b4-ty@kernel.org>
+Date: Wed, 26 Jun 2024 17:02:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <Zl3_5MzTNqIiXM_C@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 15:39:43 up 49 days,  2:53,  1 user,  load average: 0.06, 0.03, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-* Dr. David Alan Gilbert (linux@treblig.org) wrote:
-> * Dr. David Alan Gilbert (dave@treblig.org) wrote:
-> > * linux@treblig.org (linux@treblig.org) wrote:
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > 
-> > > There are some remenants of the pre-devmodel code
-> > > still in the parport drivers; try and clean some of them out.
-> > 
-> > Ping!
+On Mon, 24 Jun 2024 23:25:11 +0200, André Apitzsch wrote:
+> This series introduces a driver for the Silergy SY7802 charge pump used
+> in the BQ Aquaris M5 and X5 smartphones.
 > 
-> Ping^2.
-
-Ping^3
-
-(Added Sudip's other email address, and also cc'd linux-hardening)
-
-Dave
-
-> Dave
+> The implementation is based on information extracted from downstream as
+> the datasheet provided by a distributor of the hardware didn't include
+> any information about the i2c register description.
 > 
-> > Dave
-> > 
-> > > This series should have no visible change, all the drivers
-> > > already use the devmodel, it's just removing the flags
-> > > that say that, and cleaning out no longer used function pointers.
-> > > (To me the most useful bit is removing the no longer used
-> > > 'attach' pointer, so if you've got code that's trying to use
-> > > it you'll get educated).
-> > > 
-> > > Trivially tested in qemu, I can still write to the lp;
-> > > 
-> > > Also checked with grep -r 'struct parport_driver' . -A 9
-> > > to see if I've missed any.
-> > > 
-> > > (I found this while dragging the out-of-tree ppscsi code
-> > > into working on head, so that I could use my prehistoric
-> > > HP PP scanner)
-> > > 
-> > > Dave
-> > > 
-> > > Dr. David Alan Gilbert (3):
-> > >   parport: Remove 'drivers' list
-> > >   parport: Remove attach function pointer
-> > >   parport: Remove parport_driver.devmodel
-> > > 
-> > >  drivers/ata/pata_parport/pata_parport.c  | 1 -
-> > >  drivers/auxdisplay/ks0108.c              | 1 -
-> > >  drivers/auxdisplay/panel.c               | 1 -
-> > >  drivers/char/lp.c                        | 1 -
-> > >  drivers/char/ppdev.c                     | 1 -
-> > >  drivers/i2c/busses/i2c-parport.c         | 1 -
-> > >  drivers/input/joystick/db9.c             | 1 -
-> > >  drivers/input/joystick/gamecon.c         | 1 -
-> > >  drivers/input/joystick/turbografx.c      | 1 -
-> > >  drivers/input/joystick/walkera0701.c     | 1 -
-> > >  drivers/input/serio/parkbd.c             | 1 -
-> > >  drivers/net/hamradio/baycom_epp.c        | 1 -
-> > >  drivers/net/hamradio/baycom_par.c        | 1 -
-> > >  drivers/net/plip/plip.c                  | 1 -
-> > >  drivers/parport/daisy.c                  | 1 -
-> > >  drivers/parport/share.c                  | 9 ---------
-> > >  drivers/pps/clients/pps_parport.c        | 1 -
-> > >  drivers/pps/generators/pps_gen_parport.c | 1 -
-> > >  drivers/scsi/imm.c                       | 1 -
-> > >  drivers/scsi/ppa.c                       | 1 -
-> > >  drivers/spi/spi-butterfly.c              | 1 -
-> > >  drivers/spi/spi-lm70llp.c                | 1 -
-> > >  include/linux/parport.h                  | 6 ------
-> > >  sound/drivers/mts64.c                    | 1 -
-> > >  sound/drivers/portman2x4.c               | 1 -
-> > >  25 files changed, 38 deletions(-)
-> > > 
-> > > -- 
-> > > 2.44.0
-> > > 
-> > -- 
-> >  -----Open up your eyes, open up your mind, open up your code -------   
-> > / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> > \        dave @ treblig.org |                               | In Hex /
-> >  \ _________________________|_____ http://www.treblig.org   |_______/
-> > 
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+> [...]
+
+Applied, thanks!
+
+[1/3] dt-bindings: leds: Add Silergy SY7802 flash LED
+      commit: 8c063929fe3d24d9c2c9544d1c1e2add4190b80b
+[2/3] leds: sy7802: Add support for Silergy SY7802 flash LED controller
+      commit: d0838d7c837820733c4e6b9c6d16323d307ebd96
+
+--
+Lee Jones [李琼斯]
+
