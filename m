@@ -1,85 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4964814AD30;
-	Wed, 26 Jun 2024 04:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2635F1B950
+	for <linux-hardening@vger.kernel.org>; Wed, 26 Jun 2024 08:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719376272; cv=none; b=EYaX48cERqC5Ol9IJXOs094h3hm9bimL6hM/ay3xJMxV+QLQ4GlJcOyUCOLzw8xI6OYNtUheOTVTerOrqovogDe0Hi2V+k/0nkauDCf4LTpVvxIMbWtHpfKyO3HutA9Fv9o/jd2pdS9ovR9ad3/xkE03YKQv9Klob41r4ymDrN4=
+	t=1719388851; cv=none; b=FhV8NILDaZpq+8MOjf0RKJTbq/q02YnY7ffr3Sxz1vinwZ5FyRmvWd/rEyeQcQj+2uzE9ifnvZCHDkNOtrcdJQVSdV52+S2lOVCcccHF7b46+Y5Onu/B43hY/6/5IErPeRBBPPOTHFmsMXdl1fIEbix73EDKlBBna2myLrgKlaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719376272; c=relaxed/simple;
-	bh=jRrAmThMn+KLnXIClFEf2sOq/D7DxgId2nDtKP2TGWQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=heAaCiz0e0xHfT1p45jI2nUikf/tZPe9nIdZythnLzRXC9OsJcRMkUQB7fKy5OaEyAcGAUreIPkIjBSCDWuUnmNPxLfWeiIaN1MrzUXQyzHI2Kw/4m0f/AWlaWIwoRHoTblbDmuRxfQDRp3TA6YmDjDvwauezInVBmxhYGze1uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt6hK4kZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719388851; c=relaxed/simple;
+	bh=x3JWCReIk4L301ENiFVZf4/DH2qQaKuD3zTUasYkt80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BwWGDsQIQGRS5L6VOhCD3A3QgoBkMPFRm2UK/I2RR9FQFgHEPC9SpzfibuyDSIj2Xw/JS0HVMo0dcgMEzAlDy9SjLySUng3Gln9IqxRs0ksHVp+hBgxrFqWRM0B4S5/G7082rBQTiZy6UyAOTWSj4SvHQ1Cz6W/9Zd5OcY2YRys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WrSyL8/5; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt6hK4kZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4BB7C4AF0C;
-	Wed, 26 Jun 2024 04:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719376271;
-	bh=jRrAmThMn+KLnXIClFEf2sOq/D7DxgId2nDtKP2TGWQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gt6hK4kZHPhvUmdaxNIZb4PDYEBARU9Y1GCYpMKbCQZm1svnNPbzGAL2hXsJ7ij+i
-	 FpnlQ86GEn37dD4C0z6xR/dZC49Yy2avfy0nsuP51tyLxf1Yz1ecdDmtjQBjP/3ug4
-	 NgcKySVYamhH9Mj0l3E7liUOqa99c7ojG/OHEEA40V0fjeajhw8Fchr/GXuMtjDbBq
-	 v1Oq0H/WGVmfrO5e10NQWBl4U6F2YwVVcJsuqOwaM8Jo8oGyyuKaJzEM3tzeaGTywt
-	 v/KTkTMMFWWtBMIUIBai1BNLPlSSBO6gO8zGOzwsvRWzhE2Bahl6vXneVkBCl2/LiR
-	 dFdWtIgOgsB8A==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Georgi Djakov <djakov@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Odelu Kukatla <quic_okukatla@quicinc.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	quic_rlaggysh@quicinc.com,
-	quic_mdtipton@quicinc.com
-Subject: Re: (subset) [PATCH v5 0/4] Add support for QoS configuration
-Date: Tue, 25 Jun 2024 23:30:57 -0500
-Message-ID: <171937625570.44413.2134077970188921583.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240607173927.26321-1-quic_okukatla@quicinc.com>
-References: <20240607173927.26321-1-quic_okukatla@quicinc.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WrSyL8/5"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ed5ac077f5so5402191fa.1
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jun 2024 01:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719388846; x=1719993646; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=whiJiQULxxjVU5JYMGY4dR9TuAgnrWcS7amyjh3Lhhk=;
+        b=WrSyL8/51FJa9TdHwiZlPjdEXN2CvIvMagsgSlIQyVt9dLdE9desicy6T6X9Y7VNs1
+         Ob5Vv+nJLgH3FAGj6NC7iSPRrSAK/CLbCGKDfyh8TA2MeJT4KYwl3PZF+sObbWtKgZ9c
+         /szY44OyuzEqPMcv2EBTARrknZgqYGkRX+rs16WE39Ju/3V9GC1GJ6dptepw5P2xm0fQ
+         Xhp6C2o2jfpNAu+XSNztbBAJ1x7PyYK8smQ9iQcX3WWK6T2MDStTGd/JVtfuAMpUQUnk
+         PFMvAiXSqXB8R6YTg2q+F06r1Z02nWfjPeCHlYPLuhudmi/aDPOCtirDrJMfdZsqS0X2
+         mM9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719388846; x=1719993646;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=whiJiQULxxjVU5JYMGY4dR9TuAgnrWcS7amyjh3Lhhk=;
+        b=eKoPEZaxVN7aBnBxHC5X4OcsoCqiTO3ykeFu+QpscgPFbtEwRit+nhehDLudldMRRN
+         j8xPe/LtAoh+QSRkM+sOibCJTxEnDO8jD9XLlWHrmgxmPXgEMy2TR6nsgOlVmc1bG8Xt
+         1Um8k7mhXck2k4nueYZexMVeXbHO1q0ivNCABaWnP9sAAAO4O+gUALBimbqaebttuA18
+         eX4cUBZPwxgb54Ke6nofVBvpN+JakAqLBYNw2wVjSMzmdiUu4wW7n3eBXS+Anos4jc9Q
+         azbyU3jsf4pX16SL/WiZZembT1XFAqXfzTGh9n9FDwnYdF8vsTQo7/5600Jz66WBTphn
+         kweg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQDiqtxWlsx7VzOD0T8dA1yE7oyxtUL91letTIboLn54twvKVWBe3Mg6I1naUKKM5DT96CEkKmXKky8YIChpJSpwffdM5MW8RsU6Q469bZ
+X-Gm-Message-State: AOJu0Yy9uY/HMHrRCEvNIQ5pQtQg4eBJHVyKVBQE441GHa6wrPIQMjIQ
+	WtK7D/gignEsagfwnQXnnumCs3S9SewmFeFmMSXOqR5zC+ZJv9ga3hBYHUDZXbg=
+X-Google-Smtp-Source: AGHT+IFNePKBHG9JpceEuNMrhp5ms+q4nwziDYVudYAAE2EIYWBHCuZo7vzBBRTi5aESxDL6rd8szA==
+X-Received: by 2002:a2e:3a13:0:b0:2ec:5019:bec3 with SMTP id 38308e7fff4ca-2ec593e0cd9mr61741411fa.21.1719388846249;
+        Wed, 26 Jun 2024 01:00:46 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70676a2113csm6032019b3a.214.2024.06.26.01.00.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 01:00:45 -0700 (PDT)
+Date: Wed, 26 Jun 2024 10:00:23 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Jocelyn Falempe <jfalempe@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: Add a short description string to kmsg_dump()
+Message-ID: <ZnvKcnC9ruaIHYij@pathway.suse.cz>
+References: <20240625123954.211184-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625123954.211184-1-jfalempe@redhat.com>
 
-
-On Fri, 07 Jun 2024 23:09:23 +0530, Odelu Kukatla wrote:
-> This series adds QoS support for QNOC type device which can be found on
-> SC7280 platform. It adds support for programming priority,
-> priority forward disable and urgency forwarding. This helps in
-> priortizing the traffic originating from different interconnect masters
-> at NOC (Network On Chip).
+On Tue 2024-06-25 14:39:29, Jocelyn Falempe wrote:
+> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+> callback.
+> This patch adds a new parameter "const char *desc" to the kmsg_dumper
+> dump() callback, and update all drivers that are using it.
 > 
-> Changes in v5:
->  - Replaced platform_get_resource() and devm_ioremap_resource() with
->    devm_platform_ioremap_resource() API.
->  - Initialized the qosbox pointer in ICC node using compound literal.
->  - Added conditional check for clock property in dt-bindings to the
->    providers which need clocks.
+> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+> function and a macro for backward compatibility.
 > 
-> [...]
+> I've written this for drm_panic, but it can be useful for other
+> kmsg_dumper.
+> It allows to see the panic reason, like "sysrq triggered crash"
+> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+>
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> ---
+>  arch/powerpc/kernel/nvram_64.c             |  3 ++-
+>  arch/powerpc/platforms/powernv/opal-kmsg.c |  3 ++-
+>  drivers/gpu/drm/drm_panic.c                |  3 ++-
+>  drivers/hv/hv_common.c                     |  3 ++-
+>  drivers/mtd/mtdoops.c                      |  3 ++-
+>  fs/pstore/platform.c                       |  3 ++-
+>  include/linux/kmsg_dump.h                  | 13 ++++++++++---
+>  kernel/panic.c                             |  2 +-
+>  kernel/printk/printk.c                     |  8 +++++---
+>  9 files changed, 28 insertions(+), 13 deletions(-)
 
-Applied, thanks!
+The parameter is added into all dumpers. I guess that it would be
+used only drm_panic() because it is graphics and might be "fancy".
+The others simply dump the log buffer and the reason is in
+the dumped log as well.
 
-[4/4] arm64: dts: qcom: sc7280: Add clocks for QOS configuration
-      commit: 2b5004956affaa6dd1d23d431876ad533f10418b
+Anyway, the passed buffer is static. Alternative solution would
+be to make it global and export it like, for example, panic_cpu.
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Best Regards,
+Petr
