@@ -1,152 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF09199EB2;
-	Thu, 27 Jun 2024 17:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6462619A2A8;
+	Thu, 27 Jun 2024 17:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508043; cv=none; b=RE4trZWUkQKUkRCuewBXbo8E5Mlt1jqijW5/hYY5bIGg0G8Nvhe9G3oIsDcqQEvesSuC8pbi86zGptpSo7mStrq0lo0CXZu4QtgeaAxKIH98LcsaS0qnsOPhy2JgKuCEwvYYg3w+aZa+vmrLQMPSzBSHWHFuGehG3QRfEwOn6yI=
+	t=1719508446; cv=none; b=UIIrXUe2OLQUoT2oT6dUsEltAUEFQTfjcE8O91HBc5eWmOEUHp5EcpzlPm+Sbdhtfd9gGXgvqPRfLnYBYYgzWHI9FNIvX28HGmU4L2mg76AKyRKSxgMj3Uqs1iO85wgzsQjFy/qw5D6GMB4sp/qngGH30Kw5k/PpqPQCSSll5NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508043; c=relaxed/simple;
-	bh=dCecJH51CViqti7qWLv13tYkYfTd/WBIfPitvC5HPdc=;
+	s=arc-20240116; t=1719508446; c=relaxed/simple;
+	bh=tNR6ArIGiHkLTpGQkaqhID9T8qBWrrtgctZsjePiA8k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8Nln0Z4LNNqhR2RhlWgOfHC7bpHyRIRgj16uQraDUDtNcqZadm8MWgp6FxFLWQURPEpLA5M1NzWpdvC2rJZs0nrcNvElK1O6svIaxYB3NinXn6L9UyrYvnxe/iw6YzaYdo7/UBR5HS9lsqKCN+XreORpSdsTzyWBhtZZk6BBlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8ppLUtD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ec4NOu1vEK7HIOu30BjmyTMUJJmT+at+IyEv9FEE/5mcm3ajRNiZjCpXeeL8JD+Nnw4yIYoaC+Kb82MTwXJkWKEyPSvd+2+zmobukfLIkQjpo6qpg/HrGMDUCInYXkGFLyWQdbuO1lYCKizgf1C4dStWHhdzTiM13sQ8PuRyaac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtAcu1FG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8ppLUtD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6822C2BD10;
-	Thu, 27 Jun 2024 17:07:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtAcu1FG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09DF5C2BD10;
+	Thu, 27 Jun 2024 17:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719508042;
-	bh=dCecJH51CViqti7qWLv13tYkYfTd/WBIfPitvC5HPdc=;
+	s=k20201202; t=1719508446;
+	bh=tNR6ArIGiHkLTpGQkaqhID9T8qBWrrtgctZsjePiA8k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M8ppLUtDZSj40GoxCJkBdtnipmTOwT7siZJmIBCDzKP6WEeYPpYN+KQAeBHBZMZnV
-	 xHigF/m20LEu2obCWRbRKgLfI0WMFHW6UiFs1rTqK0EApwkJiLx0hyxKaOFwJCSevk
-	 mOxmr0nCMEUbkOCW90BDdUFpUWqa6nuwcW3lIo4JtwZmiCF7511gnHOVCeX1dsMg0A
-	 ay8JjnIvgjtKyn4QrkgLRqi2TKn8BZLljfDLZeUJuuZNJgDJmVPYX4fy7sb0f7TE1l
-	 nsRROyftHTyOJc0Gilaq2rbz5jXeh7knp42xLlYyoCr9NkF2CPj1Aad8ixc03adTNY
-	 Pt0RxZ7375R8A==
-Date: Thu, 27 Jun 2024 10:07:22 -0700
+	b=RtAcu1FGJ6P2bbf/X4dsur5Hnf5L/FVULlmeohzDRYKuz6ePZ+uKKYm74H3EdgNmo
+	 XlWBAZeCr43+0xZjyJrKO78GGKQ785KXaJGxLHBbA+7vLgm8dj5LPhJLEdRfFSeXwr
+	 FzJSivkdhNDkiLgaKBQA001ga1cAY/Tp37wpV9noXkqcWyZ4fBhv6RIsjNPqYLiIbx
+	 R/u4GNIbrvU1JRSvc2fyK2KxRnnepks0MHIywrbegr/DKmu06qiHTZnd/A5lsnwNny
+	 j6JSGuPX7j0jJww7j2jrCZvvQKOucgU4nDRiE3PYJCL0T8PFOfIc4lDIGr76Iam4Dn
+	 AvxHsaRMYypIw==
+Date: Thu, 27 Jun 2024 10:14:05 -0700
 From: Kees Cook <kees@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Rae Moar <rmoar@google.com>, kernel test robot <lkp@intel.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kunit/usercopy: Disable testing on !CONFIG_MMU
-Message-ID: <202406271005.4E767DAE@keescook>
-References: <20240619202511.it.861-kees@kernel.org>
- <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
+Message-ID: <202406271009.4E90DF8@keescook>
+References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
+In-Reply-To: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
 
-Hi Shuah,
+On Wed, May 29, 2024 at 02:29:42PM -0700, Nathan Chancellor wrote:
+> Work for __counted_by on generic pointers in structures (not just
+> flexible array members) has started landing in Clang 19 (current tip of
+> tree). During the development of this feature, a restriction was added
+> to __counted_by to prevent the flexible array member's element type from
+> including a flexible array member itself such as:
+> 
+>   struct foo {
+>     int count;
+>     char buf[];
+>   };
+> 
+>   struct bar {
+>     int count;
+>     struct foo data[] __counted_by(count);
+>   };
+> 
+> because the size of data cannot be calculated with the standard array
+> size formula:
+> 
+>   sizeof(struct foo) * count
+> 
+> This restriction was downgraded to a warning but due to CONFIG_WERROR,
+> it can still break the build. The application of __counted_by on the
+> ports member of 'struct mxser_board' triggers this restriction,
+> resulting in:
+> 
+>   drivers/tty/mxser.c:291:2: error: 'counted_by' should not be applied to an array with element of unknown size because 'struct mxser_port' is a struct type with a flexible array member. This will be an error in a future compiler version [-Werror,-Wbounds-safety-counted-by-elt-type-unknown-size]
+>     291 |         struct mxser_port ports[] __counted_by(nports);
+>         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+>   1 error generated.
+> 
+> Remove this use of __counted_by to fix the warning/error. However,
+> rather than remove it altogether, leave it commented, as it may be
+> possible to support this in future compiler releases.
+> 
+> Cc: stable@vger.kernel.org
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/2026
+> Fixes: f34907ecca71 ("mxser: Annotate struct mxser_board with __counted_by")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 
-Can you please add this to your -next tree since it fixes test failures
-on non-MMU systems, after commit cf6219ee889f ("usercopy: Convert
-test_user_copy to KUnit test").
+Since this fixes a build issue under Clang, can we please land this so
+v6.7 and later will build again? Gustavo is still working on the more
+complete fix (which was already on his radar, so it won't be lost).
+
+If it's easier/helpful, I can land this via the hardening tree? I was
+the one who sent the bad patch originally. :)
 
 Thanks!
 
 -Kees
-
-On Thu, Jun 20, 2024 at 05:13:35PM -0400, Rae Moar wrote:
-> On Wed, Jun 19, 2024 at 4:25 PM Kees Cook <kees@kernel.org> wrote:
-> >
-> > Since arch_pick_mmap_layout() is an inline for non-MMU systems, disable
-> > this test there.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202406160505.uBge6TMY-lkp@intel.com/
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> Hello!
-> 
-> This looks good to me. And seems to fix the problem. Thanks for the fix!
-> 
-> Reviewed-by: Rae Moar <rmoar@google.com>
-> 
-> -Rae
-> 
-> > ---
-> > Resending as v2 with Shuah in To:
-> > ---
-> > Cc: Shuah Khan <skhan@linuxfoundation.org>
-> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> > Cc: David Gow <davidgow@google.com>
-> > Cc: Rae Moar <rmoar@google.com>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: linux-kselftest@vger.kernel.org
-> > Cc: kunit-dev@googlegroups.com
-> > Cc: linux-hardening@vger.kernel.org
-> > Cc: linux-mm@kvack.org
-> > ---
-> >  lib/kunit/user_alloc.c | 4 ++++
-> >  lib/usercopy_kunit.c   | 5 +++++
-> >  mm/util.c              | 2 ++
-> >  3 files changed, 11 insertions(+)
-> >
-> > diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
-> > index 76d3d1345ed7..ae935df09a5e 100644
-> > --- a/lib/kunit/user_alloc.c
-> > +++ b/lib/kunit/user_alloc.c
-> > @@ -30,6 +30,10 @@ static int kunit_attach_mm(void)
-> >         if (current->mm)
-> >                 return 0;
-> >
-> > +       /* arch_pick_mmap_layout() is only sane with MMU systems. */
-> > +       if (!IS_ENABLED(CONFIG_MMU))
-> > +               return -EINVAL;
-> > +
-> >         mm = mm_alloc();
-> >         if (!mm)
-> >                 return -ENOMEM;
-> > diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
-> > index 45f1e558c464..e819561a540d 100644
-> > --- a/lib/usercopy_kunit.c
-> > +++ b/lib/usercopy_kunit.c
-> > @@ -290,6 +290,11 @@ static int usercopy_test_init(struct kunit *test)
-> >         struct usercopy_test_priv *priv;
-> >         unsigned long user_addr;
-> >
-> > +       if (!IS_ENABLED(CONFIG_MMU)) {
-> > +               kunit_skip(test, "Userspace allocation testing not available on non-MMU systems");
-> > +               return 0;
-> > +       }
-> > +
-> >         priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
-> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
-> >         test->priv = priv;
-> > diff --git a/mm/util.c b/mm/util.c
-> > index df37c47d9374..e70e8e439258 100644
-> > --- a/mm/util.c
-> > +++ b/mm/util.c
-> > @@ -484,7 +484,9 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
-> >         clear_bit(MMF_TOPDOWN, &mm->flags);
-> >  }
-> >  #endif
-> > +#ifdef CONFIG_MMU
-> >  EXPORT_SYMBOL_IF_KUNIT(arch_pick_mmap_layout);
-> > +#endif
-> >
-> >  /**
-> >   * __account_locked_vm - account locked pages to an mm's locked_vm
-> > --
-> > 2.34.1
-> >
 
 -- 
 Kees Cook
