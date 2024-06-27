@@ -1,68 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A12547A76;
-	Thu, 27 Jun 2024 07:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83AD3D3BD
+	for <linux-hardening@vger.kernel.org>; Thu, 27 Jun 2024 07:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472469; cv=none; b=KkE3AYhtoLoQRbS5ioRwOv1M/NQiqqRBMB8DY2a2wFxr0ry42XCQ2RA5gAyrkTi2a/NfASxzQ9UAAHfymbYtyejAivvV2/UmUKWtKroJmbp1Trxpa5yvhhQp3NsfZSxJmvilB3QejlXAZM2ST3BLxmckiCrc6WHgzuvLfpKDiiw=
+	t=1719473375; cv=none; b=tvTYb8mVb6HDlXJF9CQ70yy4WRip3HpBbf4hZziWSjO3WK163OapFAvWVBcrYPyxM0WjH8fBb41L9s1QJgF8nfJK8DXMxTF2PHJdjcKDLk/KC+iYQQyk+LyPeu2alp262SbFirj6XRbUsk4qw3t5hqe7PzaYh1/QYkdRVxtob+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472469; c=relaxed/simple;
-	bh=Ukpmztnf7gHPfXlZ5ClJbEOf3EzmK3mshVOwXdnDOZY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=H+GakoZ9GFOL0205C3BnRcM96zR0Epto+pacu6fi+Iq+x3D8PFQkqOQ4C5Wk3ZeG3FxGDeOxSpkrmdSlIQeKS/HHP2V2sejrQtnDxE2gy80KoWAifrTCa96F6o4GR4jOQhivCrEX5QgyJrMODtTfJ8aKCr8JE/Cp7hsMc2cnx0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfQlUuQy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719473375; c=relaxed/simple;
+	bh=JjSO9oA+bMwMgeph3RVib8k7guo+CU2X8VGJGV3hKAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IDi7OOxJsvfHueTtx34tO5JX79I3xiz41fCW7hkCQcAKgin/oYUHreLEK9X9fEX/uLSfuCgCwBF4Sy9oe18q+bXVOc74+Q8KPzFWFGxzt5addPMDW3rDJpOs64PZ8Yjd+izegXvbrwcqFvFEoDoMH7mbT2N14qnjVOIuyK68orU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EyLJ7Udo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfQlUuQy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7514C2BBFC;
-	Thu, 27 Jun 2024 07:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719472469;
-	bh=Ukpmztnf7gHPfXlZ5ClJbEOf3EzmK3mshVOwXdnDOZY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gfQlUuQyk4lVo1c6OQ9NNpAs+LStz2XaPuk3gezHAC28yBPfzN8ngjjtgfkwmuFSJ
-	 gpOAw/PdpV97gsoAtzcPpZvCZDoSyNvTf8n4bzq1HnnAJtLMwQlEoCkDmCCDcIDrOe
-	 nAEUX1T9MkOgUx3K/Ul6xToHbPKakhkEEKNrLk0vD6+MLyBimy4D74n6WgElBvo01G
-	 ZDMy73meflLYWP4ANXudkGAj5OgQl+t62Zlteow6CSBkXQ1I3yCFJJfP3gnI7CBCgh
-	 8LeeIRn2MBCnkVw0awbK5PfR6UculhGZN/GWm/ClPtRhOjtCo6aC1C3/v6TA0eoZvu
-	 Lw6w3AslrBGKA==
-From: Lee Jones <lee@kernel.org>
-To: Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20240626-omap-usb-tll-counted_by-v2-1-4bedf20d1b51@gmail.com>
-References: <20240626-omap-usb-tll-counted_by-v2-1-4bedf20d1b51@gmail.com>
-Subject: Re: (subset) [PATCH v2] mfd: omap-usb-tll: use struct_size to
- allocate tll
-Message-Id: <171947246746.2843649.11720740745426236243.b4-ty@kernel.org>
-Date: Thu, 27 Jun 2024 08:14:27 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyLJ7Udo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719473372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ArljJjB0JyJS00KNOlxMunWxUs1/GD1Wf4W99edQFdU=;
+	b=EyLJ7UdomRa9e5Z3kF/dB3puDnEMRL8o8z/0OQy9cUudAiFpF01X+0Xn+XRnlLE6HGwfzJ
+	V7L4YL7i5TNl5ZTcnSqPbmLmefjxtcaJqjgscy9uMf9Sphe19AfO38egrTFrRexM4WN3pm
+	lwVMhmkUfRxfFVzZCr0xGAuqg7zAN+o=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-161-afCvQTQYMgGiqQaQOk-j1w-1; Thu, 27 Jun 2024 03:29:30 -0400
+X-MC-Unique: afCvQTQYMgGiqQaQOk-j1w-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52cdcd4c07cso4175749e87.2
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jun 2024 00:29:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719473369; x=1720078169;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ArljJjB0JyJS00KNOlxMunWxUs1/GD1Wf4W99edQFdU=;
+        b=Vt/RSQQdjfPY6A+QhYrJqiytsEpz1iyma5kv9T7qPaXqAzId+it23gMK/Ape2vGXVZ
+         /TKOrzn99ISI8YytgSTcpNJDIdh1UU89L/VrNC5LFSHCqrspuD12eII/ZNc/y0b+E/dA
+         5F5AQGKKZb+DS6xLb/4sVpPFxxF/7Su61JPVHc+5bpBOjxJojjoqyNvFmV3ZxRborwMa
+         GHgxOQtto/ZNJG0JVNwqrD6IvNgaMdr45KDUsWLQygB1Kln6KGD6ocSiizDYD+8PqvKX
+         FRPG2JRiTvKbKHkQHTAEf/10r7DRWGpM6eRAGGTgdLM5qahjTutpfHY9j0CMD3IFk7D2
+         HCBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUPQV2/MD6FiCqUjTQa091aHf0ChVOUCP5fDfcTJn3q837fZcV7Xbm/VreqmNRUsZBoteCjBv/Z77nyzNxsIhfsROfYtpTZMwa4fllKcX3
+X-Gm-Message-State: AOJu0YwXoSqH2U5NVstcvPFnhfdMZ+b/gm3tsscHNLLWim6cvNnFVbZa
+	FKcZj+YXeq7WtglXj7e46MghA1vx+tFa/mUCsq1ZPs+HClSv6PCYizH9OOOZGWlFFFcK7H8cWUH
+	Fou4n5WU485S242kY+TwLAMLLHFlTCviRGOtoIGSRB/tJmuuaIZopxDJE7E7kRYAUwQ==
+X-Received: by 2002:a05:6512:688:b0:52c:8837:718a with SMTP id 2adb3069b0e04-52ce185cffdmr9405291e87.43.1719473369041;
+        Thu, 27 Jun 2024 00:29:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbOO3gAiuM5teegTvAjdpAZYISeHz2jPAZuVwH5HNKIpTCZBH+tcy4/G9Q3EUr6abmm1rODg==
+X-Received: by 2002:a05:6512:688:b0:52c:8837:718a with SMTP id 2adb3069b0e04-52ce185cffdmr9405275e87.43.1719473368602;
+        Thu, 27 Jun 2024 00:29:28 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e? ([2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8245e7csm52601955e9.3.2024.06.27.00.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 00:29:28 -0700 (PDT)
+Message-ID: <4aa3a028-04e5-4658-9879-df60dab06c54@redhat.com>
+Date: Thu, 27 Jun 2024 09:29:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] printk: Add a short description string to kmsg_dump()
+To: Petr Mladek <pmladek@suse.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Steven Rostedt <rostedt@goodmis.org>, John Ogness
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jani Nikula <jani.nikula@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <20240625123954.211184-1-jfalempe@redhat.com>
+ <ZnvKcnC9ruaIHYij@pathway.suse.cz>
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <ZnvKcnC9ruaIHYij@pathway.suse.cz>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, fr
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 26 Jun 2024 21:37:03 +0200, Javier Carrasco wrote:
-> Commit 16c2004d9e4d ("mfd: omap-usb-tll: Allocate driver data at once")
-> changed the memory allocation of 'tll' to consolidate it into a single
-> allocation, introducing an incorrect size calculation.
+
+
+On 26/06/2024 10:00, Petr Mladek wrote:
+> On Tue 2024-06-25 14:39:29, Jocelyn Falempe wrote:
+>> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
+>> callback.
+>> This patch adds a new parameter "const char *desc" to the kmsg_dumper
+>> dump() callback, and update all drivers that are using it.
+>>
+>> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
+>> function and a macro for backward compatibility.
+>>
+>> I've written this for drm_panic, but it can be useful for other
+>> kmsg_dumper.
+>> It allows to see the panic reason, like "sysrq triggered crash"
+>> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
+>>
+>> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+>> ---
+>>   arch/powerpc/kernel/nvram_64.c             |  3 ++-
+>>   arch/powerpc/platforms/powernv/opal-kmsg.c |  3 ++-
+>>   drivers/gpu/drm/drm_panic.c                |  3 ++-
+>>   drivers/hv/hv_common.c                     |  3 ++-
+>>   drivers/mtd/mtdoops.c                      |  3 ++-
+>>   fs/pstore/platform.c                       |  3 ++-
+>>   include/linux/kmsg_dump.h                  | 13 ++++++++++---
+>>   kernel/panic.c                             |  2 +-
+>>   kernel/printk/printk.c                     |  8 +++++---
+>>   9 files changed, 28 insertions(+), 13 deletions(-)
 > 
-> In particular, the allocation for the array of pointers was converted
-> into a single-pointer allocation.
+> The parameter is added into all dumpers. I guess that it would be
+> used only drm_panic() because it is graphics and might be "fancy".
+> The others simply dump the log buffer and the reason is in
+> the dumped log as well.
+
+Ok, I also tried to retrieve the reason from the dumped log, but that's 
+really fragile.
+
 > 
-> [...]
+> Anyway, the passed buffer is static. Alternative solution would
+> be to make it global and export it like, for example, panic_cpu.
 
-Applied, thanks!
+It's not a static buffer, because the string is generated at runtime.
+eg: https://elixir.bootlin.com/linux/latest/source/arch/arm/mm/init.c#L158
 
-[1/1] mfd: omap-usb-tll: use struct_size to allocate tll
-      commit: 1938e6882b89d1d01926ed3e0bbdd8346263c317
+So it will be hard to avoid race conditions.
 
---
-Lee Jones [李琼斯]
+> 
+> Best Regards,
+> Petr
+> 
 
