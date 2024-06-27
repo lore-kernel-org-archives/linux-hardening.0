@@ -1,116 +1,152 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA5B195F0D;
-	Thu, 27 Jun 2024 14:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF09199EB2;
+	Thu, 27 Jun 2024 17:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719498242; cv=none; b=F/jWAo+N82Xx7gYsbDGtL6XLgAlNW12FaAEuiyyuofpwp9Da7WbhHCTTNpSpAQMkMwQ7Votcoy/whCLnexZb8QS/5p5TwWu362AieUYesXSR8V3dS59OOrXWuci1669L2Azvcm9R4RTixdZcxUy6gMuK3gUFuzISazyQQEooEps=
+	t=1719508043; cv=none; b=RE4trZWUkQKUkRCuewBXbo8E5Mlt1jqijW5/hYY5bIGg0G8Nvhe9G3oIsDcqQEvesSuC8pbi86zGptpSo7mStrq0lo0CXZu4QtgeaAxKIH98LcsaS0qnsOPhy2JgKuCEwvYYg3w+aZa+vmrLQMPSzBSHWHFuGehG3QRfEwOn6yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719498242; c=relaxed/simple;
-	bh=JOjYQGyh6OKj0Wx4mS4iO0ogcRbdc8vIGsT4DTKNmaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WRem4/7knWKgeJ8xLrzIYgYmrqdq/QISyN3vX2GpgtKBh2l/NaPC1fge2QeSFWZ8rnJptqi3xAmoERwvBWSXKb0WAeKQ0jDpswIQINgp7q0bsRHcOo4H/Yxkan5gWAP604PM5kYkoIRDdJBz8ievM0viM7Zlzba3tOfpjedWWyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CwKLFt/8; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719508043; c=relaxed/simple;
+	bh=dCecJH51CViqti7qWLv13tYkYfTd/WBIfPitvC5HPdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8Nln0Z4LNNqhR2RhlWgOfHC7bpHyRIRgj16uQraDUDtNcqZadm8MWgp6FxFLWQURPEpLA5M1NzWpdvC2rJZs0nrcNvElK1O6svIaxYB3NinXn6L9UyrYvnxe/iw6YzaYdo7/UBR5HS9lsqKCN+XreORpSdsTzyWBhtZZk6BBlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8ppLUtD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CwKLFt/8"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45RB4x1x013769;
-	Thu, 27 Jun 2024 16:23:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	sz4kv46cKOBt8+tdc/6ePG1HkA/ODePgbeH/iJ1pvwU=; b=CwKLFt/8tvvqoLkK
-	4xy7rbGBo4o35L2ukA0Ia1tBIG6G7ASNXmlSWql2JFIZ8P8wsummFS3We/RTL7Y1
-	SVc1PhLsvk5qNSueOQlsQNA6gW4Q0GYQS2bfSy5XGIYeF8QUguVs85SAVE39rlLf
-	wnw+zU1HjR27gRCuwhQuvoe+axpnliInuUf8IOxQb5nMZPdAA3llR1FazB6dL8Vu
-	tpLoEZR64PTMGB7/4MGmsX9x5gqdyZDYsmjdLRPn4XrrtvwT4PqFfF0WuUPFv0we
-	INMjsPT/wTytgILYZZrap5WEmqiAqDlqXyDgK/P7UkN/gMRutjOx3vpRb7OMTjyH
-	1PU/ww==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx9jjkeqp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 16:23:34 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 09FE74002D;
-	Thu, 27 Jun 2024 16:23:29 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B888B220B57;
-	Thu, 27 Jun 2024 16:22:42 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 27 Jun
- 2024 16:22:42 +0200
-Message-ID: <1139b106-1c05-44ba-9dac-649bcc8d9315@foss.st.com>
-Date: Thu, 27 Jun 2024 16:22:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8ppLUtD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6822C2BD10;
+	Thu, 27 Jun 2024 17:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719508042;
+	bh=dCecJH51CViqti7qWLv13tYkYfTd/WBIfPitvC5HPdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8ppLUtDZSj40GoxCJkBdtnipmTOwT7siZJmIBCDzKP6WEeYPpYN+KQAeBHBZMZnV
+	 xHigF/m20LEu2obCWRbRKgLfI0WMFHW6UiFs1rTqK0EApwkJiLx0hyxKaOFwJCSevk
+	 mOxmr0nCMEUbkOCW90BDdUFpUWqa6nuwcW3lIo4JtwZmiCF7511gnHOVCeX1dsMg0A
+	 ay8JjnIvgjtKyn4QrkgLRqi2TKn8BZLljfDLZeUJuuZNJgDJmVPYX4fy7sb0f7TE1l
+	 nsRROyftHTyOJc0Gilaq2rbz5jXeh7knp42xLlYyoCr9NkF2CPj1Aad8ixc03adTNY
+	 Pt0RxZ7375R8A==
+Date: Thu, 27 Jun 2024 10:07:22 -0700
+From: Kees Cook <kees@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Rae Moar <rmoar@google.com>, kernel test robot <lkp@intel.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kunit/usercopy: Disable testing on !CONFIG_MMU
+Message-ID: <202406271005.4E767DAE@keescook>
+References: <20240619202511.it.861-kees@kernel.org>
+ <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 12/12] arm64: dts: st: add HPDMA nodes on stm32mp251
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Vinod Koul
-	<vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
- <20240531150712.2503554-13-amelie.delaunay@foss.st.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20240531150712.2503554-13-amelie.delaunay@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_11,2024-06-27_03,2024-05-17_01
+In-Reply-To: <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
 
-Hi Amélie
+Hi Shuah,
 
-On 5/31/24 17:07, Amelie Delaunay wrote:
-> The High Performance Direct Memory Access (HPDMA) controller is used to
-> perform programmable data transfers between memory-mapped peripherals
-> and memories (or between memories) via linked-lists.
+Can you please add this to your -next tree since it fixes test failures
+on non-MMU systems, after commit cf6219ee889f ("usercopy: Convert
+test_user_copy to KUnit test").
+
+Thanks!
+
+-Kees
+
+On Thu, Jun 20, 2024 at 05:13:35PM -0400, Rae Moar wrote:
+> On Wed, Jun 19, 2024 at 4:25 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > Since arch_pick_mmap_layout() is an inline for non-MMU systems, disable
+> > this test there.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202406160505.uBge6TMY-lkp@intel.com/
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> There are 3 instances of HPDMA on stm32mp251, using stm32-dma3 driver, with
-> 16 channels per instance and with one interrupt per channel.
-> Channels 0 to 7 are implemented with a FIFO of 8 bytes.
-> Channels 8 to 11 are implemented with a FIFO of 32 bytes.
-> Channels 12 to 15 are implemented with a FIFO of 128 bytes.
-> Thanks to stm32-dma3 bindings, the user can ask for a channel with specific
-> FIFO size.
+> Hello!
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
-> v4: use SCMI clocks now that they are available
+> This looks good to me. And seems to fix the problem. Thanks for the fix!
 > 
-> v2: use SoC specific compatible st,stm32mp25-dma3
-> ---
->   arch/arm64/boot/dts/st/stm32mp251.dtsi | 69 ++++++++++++++++++++++++++
->   1 file changed, 69 insertions(+)
+> Reviewed-by: Rae Moar <rmoar@google.com>
 > 
-> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> index dcd0656d67a8..d057dcee2534 100644
-> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> @@ -107,6 +107,75 @@ soc@0 {
->   		interrupt-parent = <&intc>;
+> -Rae
+> 
+> > ---
+> > Resending as v2 with Shuah in To:
+> > ---
+> > Cc: Shuah Khan <skhan@linuxfoundation.org>
+> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> > Cc: David Gow <davidgow@google.com>
+> > Cc: Rae Moar <rmoar@google.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-kselftest@vger.kernel.org
+> > Cc: kunit-dev@googlegroups.com
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > ---
+> >  lib/kunit/user_alloc.c | 4 ++++
+> >  lib/usercopy_kunit.c   | 5 +++++
+> >  mm/util.c              | 2 ++
+> >  3 files changed, 11 insertions(+)
+> >
+> > diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
+> > index 76d3d1345ed7..ae935df09a5e 100644
+> > --- a/lib/kunit/user_alloc.c
+> > +++ b/lib/kunit/user_alloc.c
+> > @@ -30,6 +30,10 @@ static int kunit_attach_mm(void)
+> >         if (current->mm)
+> >                 return 0;
+> >
+> > +       /* arch_pick_mmap_layout() is only sane with MMU systems. */
+> > +       if (!IS_ENABLED(CONFIG_MMU))
+> > +               return -EINVAL;
+> > +
+> >         mm = mm_alloc();
+> >         if (!mm)
+> >                 return -ENOMEM;
+> > diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
+> > index 45f1e558c464..e819561a540d 100644
+> > --- a/lib/usercopy_kunit.c
+> > +++ b/lib/usercopy_kunit.c
+> > @@ -290,6 +290,11 @@ static int usercopy_test_init(struct kunit *test)
+> >         struct usercopy_test_priv *priv;
+> >         unsigned long user_addr;
+> >
+> > +       if (!IS_ENABLED(CONFIG_MMU)) {
+> > +               kunit_skip(test, "Userspace allocation testing not available on non-MMU systems");
+> > +               return 0;
+> > +       }
+> > +
+> >         priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
+> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
+> >         test->priv = priv;
+> > diff --git a/mm/util.c b/mm/util.c
+> > index df37c47d9374..e70e8e439258 100644
+> > --- a/mm/util.c
+> > +++ b/mm/util.c
+> > @@ -484,7 +484,9 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+> >         clear_bit(MMF_TOPDOWN, &mm->flags);
+> >  }
+> >  #endif
+> > +#ifdef CONFIG_MMU
+> >  EXPORT_SYMBOL_IF_KUNIT(arch_pick_mmap_layout);
+> > +#endif
+> >
+> >  /**
+> >   * __account_locked_vm - account locked pages to an mm's locked_vm
+> > --
+> > 2.34.1
+> >
 
-...
-
-Applied on stm32-next.
-
-Thanks!!
-Alex
+-- 
+Kees Cook
