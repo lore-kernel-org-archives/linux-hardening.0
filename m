@@ -1,165 +1,106 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1A62139A8
-	for <linux-hardening@vger.kernel.org>; Fri, 28 Jun 2024 09:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3392EB645;
+	Fri, 28 Jun 2024 14:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719567291; cv=none; b=b+VxdCIP6eDdvsqjBWxLEwQ4JfAbSXWkOoYsikyCtlly4NbAZG9sm/C1J8uz9lwNjeZZj9WvIabGqgVFLQo0mWKQyeEZaX1f0nScxl8BFxmUJk+3qjRnOT7PWdkg/adhw/vLpYOOqw2R6UuOHCEmenNttPb/Yba3RZEw43y7Bi8=
+	t=1719585109; cv=none; b=igBodQ38fYTlxemps/Ane5E3zwakmnfY0YnF7dOnVmEvrxy/4qVZu+BkaLoJdT4dzjjnyjgk2iA8zV03L1T7Aix6p+OLd8V/A8LIWdZ9W9aisNHWE2861gZduwFxA96+8ELHSfaObf4l9iJt/wWpzaVXWajVG6LaBYFkL2rUCVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719567291; c=relaxed/simple;
-	bh=mVgpkGZeEUIJG9UJ4SJVmxmneMeKnT/4EHHpcMGGZ2U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=er6TGkSZuh+w3u5cV2QK3lBB/ullegXhFW1ErygpWpymrmrZpd8v0Dc/wsTNJ+1Tsj88OHgWdi7cNGN8AXiK6+alYNnDvb7Rsa2fWJwXdH6u/QaPvMv2AZvCWjWtGQXR6pzuUdmqNx2910KZKpMvvOFuyePQ0YmOALbBKU+RXao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0jEGxzm9; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719585109; c=relaxed/simple;
+	bh=Mn07VvKw7mIUWBJQd1Z/D4eKm3Eed4gC7mHD2nA7nZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqk/lJBF/lHJgDQFMcyAzNPBK6P/hPxXxFqY1i0NWUAyZ7Ek4Mgai+1Macp+1pAeFIIGGGylArMsGR8c06LrSowUQCvsZew1UmSKTpHRsCKsza2PM0JetR5KKJkEpHHOPKeIzxVujY6BQhe4hjoi2XSBsJjiDILlfFTEr7GGsVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uYw4G9Hc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0jEGxzm9"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-424f2b73629so4288405e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jun 2024 02:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719567288; x=1720172088; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R5Gyzd0KEYojFlORA9Zt8V98aCcTYQ8VgOMnEXwuyS0=;
-        b=0jEGxzm9bjV7qzwpsbLi/sY/bku21UXzhP846PPiz3H7hFYF4Q/cErPNFDbeJmGcbW
-         RzeySL5v8Q/vBMEAB8IQe6Oy7Wm7K6hwHewCnUBeRVbxQwEGzK8rE76ztohLnOmlQYqc
-         g5dY7JdMaZsMrJESPO+MhLQ8HDr9C4DSani1tsHd2PSxsvzgnXEPKcb1EwSCuDco6qmH
-         HWT/R2Yjn+fTIK47svur0u+p1G8xgJq8y0YroZVtrNGLYukVoX9Wi+uQKV0OomaVDM6u
-         yb98FQP9rZ54aoRIv0tn1YFWp1dDQhEZba1Gry3Wss1f6oBNJUOeck4JiuhZbP2KRzKU
-         wUQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719567288; x=1720172088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R5Gyzd0KEYojFlORA9Zt8V98aCcTYQ8VgOMnEXwuyS0=;
-        b=vuM5cAQQvBfedKsiL6CUFWiVAiu3FAu9Q3Uk/VaYU8BfetuVRFSjmku1rmlqDYEag5
-         1yuKrLImNVXHYMl/6U4coBa8vFhvNWmkcivUQj2VyKES9h/TAPzIU60G2ehFyTVS/Xgq
-         du3jpt8loxttzL6c+28qW9ZVsPHXFgBKOtEu7Lr71qQbCeZa613xFEAcNrYknMTw6hXr
-         1rvpHp7tTDIIQLO8ApUG0CW4ahNewJQSOG993+pTdF2sxzEMFZek61VPin6D/LrqjBNU
-         RCddMV5R+mQgPbn9tuznUfokkSnCv2iIKSMIm/+ahpU2WoJsbpl6h6SpItyeon92p/k2
-         h3dA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcOx5R+4QLTDyVFYpuE/PNF5gaJzAeNqaHTfscpAXuwvam0kF10xmriERe0GNAWYguMuMpN5LEkjqT9LW9pFzmngxkMSDGHxeFJhdkYXok
-X-Gm-Message-State: AOJu0Yx6hAVBtifFWlJDp6vmoxnDaeGm+Hc46r0Uzj4citYYMIBNbyKb
-	w0UeaNKFyj60FgQNPR40UXLkUMCGiWbrgEJ+Ya8vkdhP/ktmuY4tvTSvSlSxv1VlXODFjI+r5rR
-	XZ3E15YVz+kgSjedOqX3CUCbFJHzxo+7TSW7e
-X-Google-Smtp-Source: AGHT+IHkMX5345OLYcmRT3XnelwwzbNOLPwlwqhS2DVYP+oCW1ISdTPYj99BI+fmIoO/MdYp0rp3L25a15KF4hw0UuA=
-X-Received: by 2002:a05:600c:1c1e:b0:425:692d:c72d with SMTP id
- 5b1f17b1804b1-425692dd443mr23095585e9.32.1719567287924; Fri, 28 Jun 2024
- 02:34:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uYw4G9Hc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ED4CC116B1;
+	Fri, 28 Jun 2024 14:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719585108;
+	bh=Mn07VvKw7mIUWBJQd1Z/D4eKm3Eed4gC7mHD2nA7nZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uYw4G9Hc3xl4Vbt5ovsjvHdfoWUMxAGwl/Zzp0n2pPdqpH8YO5F6EWeTv41FRhZ2D
+	 5vD7GRu20BwWsvfZBCUuFngSUpRC5lBulPDRO1LoFjE7MQjA6SkqtF0GhCltcp9773
+	 tlPPV/G1DC/LOqOYrL508bdEsxVfHV2ljqpz3yyE=
+Date: Fri, 28 Jun 2024 16:31:46 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-serial@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
+Message-ID: <2024062800-doodle-pelvis-4798@gregkh>
+References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
+ <202406271009.4E90DF8@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619192131.do.115-kees@kernel.org> <20240619193357.1333772-4-kees@kernel.org>
- <cc301463-da43-4991-b001-d92521384253@suse.cz> <202406201147.8152CECFF@keescook>
- <1917c5a5-62af-4017-8cd0-80446d9f35d3@suse.cz> <Zn5LqMlnbuSMx7H3@Boquns-Mac-mini.home>
- <c5934f76-3ce8-466e-80d1-c56ebb5a158e@suse.cz> <CAH5fLggjrbdUuT-H-5vbQfMazjRDpp2+k3=YhPyS17ezEqxwcw@mail.gmail.com>
- <c45eb0c9-21b9-4e29-a9d8-f3044c77822e@suse.cz>
-In-Reply-To: <c45eb0c9-21b9-4e29-a9d8-f3044c77822e@suse.cz>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 28 Jun 2024 11:34:35 +0200
-Message-ID: <CAH5fLghsZRemYUwVvhk77o6y1foqnCeDzW4WZv6ScEWna2+_jw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and family
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Kees Cook <kees@kernel.org>, 
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>, Christoph Lameter <cl@linux.com>, 
-	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, jvoisin <julien.voisin@dustri.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>, Thomas Graf <tgraf@suug.ch>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-hardening@vger.kernel.org, netdev@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202406271009.4E90DF8@keescook>
 
-On Fri, Jun 28, 2024 at 11:17=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
-rote:
->
-> On 6/28/24 11:06 AM, Alice Ryhl wrote:
-> >> >>
-> >> >
-> >> > I took a quick look as what kmem_buckets is, and seems to me that al=
-ign
-> >> > doesn't make sense here (and probably not useful in Rust as well)
-> >> > because a kmem_buckets is a set of kmem_caches, each has its own obj=
-ect
-> >> > size, making them share the same alignment is probably not what you
-> >> > want. But I could be missing something.
-> >>
-> >> How flexible do you need those alignments to be? Besides the power-of-=
-two
-> >> guarantees, we currently have only two odd sizes with 96 and 192. If t=
-hose
-> >> were guaranteed to be aligned 32 bytes, would that be sufficient? Also=
- do
-> >> you ever allocate anything smaller than 32 bytes then?
-> >>
-> >> To summarize, if Rust's requirements can be summarized by some rules a=
-nd
-> >> it's not completely ad-hoc per-allocation alignment requirement (or if=
- it
-> >> is, does it have an upper bound?) we could perhaps figure out the crea=
-tion
-> >> of rust-specific kmem_buckets to give it what's needed?
-> >
-> > Rust's allocator API can take any size and alignment as long as:
-> >
-> > 1. The alignment is a power of two.
-> > 2. The size is non-zero.
-> > 3. When you round up the size to the next multiple of the alignment,
-> > then it must not overflow the signed type isize / ssize_t.
-> >
-> > What happens right now is that when Rust wants an allocation with a
-> > higher alignment than ARCH_SLAB_MINALIGN, then it will increase size
-> > until it becomes a power of two so that the power-of-two guarantee
-> > gives a properly aligned allocation.
->
-> So am I correct thinking that, if the cache of size 96 bytes guaranteed a
-> 32byte alignment, and 192 bytes guaranteed 64byte alignment, and the rest=
- of
-> sizes with the already guaranteed power-of-two alignment, then on rust si=
-de
-> you would only have to round up sizes to the next multiples of the aligne=
-mnt
-> (rule 3 above) and that would be sufficient?
->  Abstracting from the specific sizes of 96 and 192, the guarantee on kmal=
-loc
-> side would have to be - guarantee alignment to the largest power-of-two
-> divisor of the size. Does that sound right?
->
-> Then I think we could have some flag for kmem_buckets creation that would=
- do
-> the right thing.
+On Thu, Jun 27, 2024 at 10:14:05AM -0700, Kees Cook wrote:
+> On Wed, May 29, 2024 at 02:29:42PM -0700, Nathan Chancellor wrote:
+> > Work for __counted_by on generic pointers in structures (not just
+> > flexible array members) has started landing in Clang 19 (current tip of
+> > tree). During the development of this feature, a restriction was added
+> > to __counted_by to prevent the flexible array member's element type from
+> > including a flexible array member itself such as:
+> > 
+> >   struct foo {
+> >     int count;
+> >     char buf[];
+> >   };
+> > 
+> >   struct bar {
+> >     int count;
+> >     struct foo data[] __counted_by(count);
+> >   };
+> > 
+> > because the size of data cannot be calculated with the standard array
+> > size formula:
+> > 
+> >   sizeof(struct foo) * count
+> > 
+> > This restriction was downgraded to a warning but due to CONFIG_WERROR,
+> > it can still break the build. The application of __counted_by on the
+> > ports member of 'struct mxser_board' triggers this restriction,
+> > resulting in:
+> > 
+> >   drivers/tty/mxser.c:291:2: error: 'counted_by' should not be applied to an array with element of unknown size because 'struct mxser_port' is a struct type with a flexible array member. This will be an error in a future compiler version [-Werror,-Wbounds-safety-counted-by-elt-type-unknown-size]
+> >     291 |         struct mxser_port ports[] __counted_by(nports);
+> >         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >   1 error generated.
+> > 
+> > Remove this use of __counted_by to fix the warning/error. However,
+> > rather than remove it altogether, leave it commented, as it may be
+> > possible to support this in future compiler releases.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Closes: https://github.com/ClangBuiltLinux/linux/issues/2026
+> > Fixes: f34907ecca71 ("mxser: Annotate struct mxser_board with __counted_by")
+> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> 
+> Since this fixes a build issue under Clang, can we please land this so
+> v6.7 and later will build again? Gustavo is still working on the more
+> complete fix (which was already on his radar, so it won't be lost).
+> 
+> If it's easier/helpful, I can land this via the hardening tree? I was
+> the one who sent the bad patch originally. :)
+> 
 
-If kmalloc/krealloc guarantee that an allocation is aligned according
-to the largest power-of-two divisor of the size, then the Rust
-allocator would definitely be simplified as we would not longer need
-this part:
+I don't see this in my queue anywhere, sorry, can you resend it?  Or
+feel free to take it through your trees, no objection from me there.
 
-if layout.align() > bindings::ARCH_SLAB_MINALIGN {
-    // The alignment requirement exceeds the slab guarantee, thus try
-to enlarge the size
-    // to use the "power-of-two" size/alignment guarantee (see
-comments in `kmalloc()` for
-    // more information).
-    //
-    // Note that `layout.size()` (after padding) is guaranteed to be a
-multiple of
-    // `layout.align()`, so `next_power_of_two` gives enough alignment
-guarantee.
-    size =3D size.next_power_of_two();
-}
+thanks,
 
-We would only need to keep the part that rounds up the size to a
-multiple of the alignment.
-
-Alice
+greg k-h
