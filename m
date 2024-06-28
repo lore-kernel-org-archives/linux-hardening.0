@@ -1,83 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F261DFFB;
-	Fri, 28 Jun 2024 15:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CE71DDCE;
+	Fri, 28 Jun 2024 15:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719589649; cv=none; b=ktKNK0vv6FD+0MLv+TcnCZGGDop1bMqKGoPoiFlv70CNyYnk1oAQdN6T1Srf3U6QQWUrhlmk70IRuQw8VGWN2RMWW9zzTyytyl2Fmdgp9+/g66k9fP8S7dXhYH9dit8XMmGX8BHWQtOlZIcbW+r0fBR3Coo9Ga+/Jnd4nIERcKY=
+	t=1719590322; cv=none; b=HpqztHRvvcz82xPFyqaBVgMjQ4uhxrkA31brTi/GCjitr8g2PufXp4RJIXxGvv4Ys/y4cC9JTloolh996qAxsJ4MFiRQd0cc/mHiJ50oUVAYbludWE+smhrbxOZ5UhDVYd9nvAWQTkIAvokHw4Id9J9X0/oMjGwsCVtTt/OSR8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719589649; c=relaxed/simple;
-	bh=KbxG9woxasDlknjgS1B+YGJ+MgARRZPg7XNQoih444I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GIjACPRWElnEsokPt1w0GrmqEufi4R981j4CSKw/POuwDS++oS3ezCZsVvIK0fSi1Ckc6xyB0/P4IFwFWjuk06Tsxix5tVXJU4qeO8nX/0k52DtCW5IkEsbzEzV/Xnyn7CEgEM/F6OkJZ7DxcMMvwMk0QgvjvFehIb7QfxGgPPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndOC9QN2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719590322; c=relaxed/simple;
+	bh=f/e4U8iAuP+2TmfcKdxe7mT1z7tLie+Lb2MQm83FeRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t2ZicU54lN8TjCzCiXANfYSRWSu8pcvFGUwHsNg1FeJCJnDvYwo/tfP+EvFxkn15EWXw+pvsqpX5FQRVQKScyP0OZv4zvl17Sq94VTf6TeFn4MaBL1uuiHcqCcWOLRjgYqDndSNMTcl0D5j+34Qqp1bfHgVdKypHF7DrwL9/HcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4+Nw2Pj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndOC9QN2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34036C116B1;
-	Fri, 28 Jun 2024 15:47:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4+Nw2Pj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C906C116B1;
+	Fri, 28 Jun 2024 15:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719589649;
-	bh=KbxG9woxasDlknjgS1B+YGJ+MgARRZPg7XNQoih444I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ndOC9QN2uTkhIO2OBDFw49MNzOI5NaFZY5RIY77D+rSuEiG9qdDoVLA8HOyqzMNmY
-	 FzHWUnu0kN7M8ugVO+fpdIA9znZ0mZ/xHDM9QcHDN2AtwFL66F4HB+12z4+gz3+vGG
-	 06kYO3zSIMO4Nv1Hgs0QSGH94LluAMsdT7lK+i4uByVYg3YUFFjGQ9QmFx8K8ISmbL
-	 oZcKCAVfu4sDeY6HjpFxQOU+XIXD7yNO3dov7m7RnrCCR62xMd8LhKLRUY+K//RJL7
-	 1m6gP0JAMv6/2r8YaPZxUOP6dYDgcoQ1Weh+IH5pXluUYDplnZpey+GIOTBDrybQ3H
-	 iCLumA1dKvRBQ==
-Date: Fri, 28 Jun 2024 08:47:28 -0700
+	s=k20201202; t=1719590322;
+	bh=f/e4U8iAuP+2TmfcKdxe7mT1z7tLie+Lb2MQm83FeRE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c4+Nw2PjtC6C8bWhaLxBPpyO6vQ9boOxSB/6VrfhUazxEfJu/+HOZuscLns+tfZLI
+	 TPA9wanTng9zSvzPG2MdLqVC3ohD+/AyEzLDZEKuLwzwIujddV13SecOQh+OwmjYWU
+	 tQ4o0wvqLBbiRemJYX3mZWT/oWVRf87aSxobcb5z4WXCUKPP+BjTmFYTg2Zyr8VXPJ
+	 G9jo/upSz85dClRRY+S7u2xLC74CdDoATU1XFDD603X7F7vGhurRSx2a9yp17CF/eq
+	 XWE+BkO8PUmLCXv0L/jQKc71Oa47S79iTKiz5SBesf2Hdg7HFy5ChGpZl0WY98AzKo
+	 zgL+3Mu1fcYoA==
 From: Kees Cook <kees@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	jvoisin <julien.voisin@dustri.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Xiu Jianfeng <xiujianfeng@huawei.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
-	Thomas Graf <tgraf@suug.ch>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and
- family
-Message-ID: <202406280846.205B57F@keescook>
-References: <20240619192131.do.115-kees@kernel.org>
- <20240619193357.1333772-4-kees@kernel.org>
- <cc301463-da43-4991-b001-d92521384253@suse.cz>
- <202406201147.8152CECFF@keescook>
- <1917c5a5-62af-4017-8cd0-80446d9f35d3@suse.cz>
- <Zn5LqMlnbuSMx7H3@Boquns-Mac-mini.home>
+To: Jiri Slaby <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-serial@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev,
+	patches@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] tty: mxser: Remove __counted_by from mxser_board.ports[]
+Date: Fri, 28 Jun 2024 08:58:34 -0700
+Message-Id: <171959031201.3280156.13125871408921524311.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
+References: <20240529-drop-counted-by-ports-mxser-board-v1-1-0ab217f4da6d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zn5LqMlnbuSMx7H3@Boquns-Mac-mini.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 10:35:36PM -0700, Boqun Feng wrote:
-> On Thu, Jun 20, 2024 at 10:43:39PM +0200, Vlastimil Babka wrote:
-> > Rust people were asking about kmalloc alignment (but I forgot the details)
+On Wed, 29 May 2024 14:29:42 -0700, Nathan Chancellor wrote:
+> Work for __counted_by on generic pointers in structures (not just
+> flexible array members) has started landing in Clang 19 (current tip of
+> tree). During the development of this feature, a restriction was added
+> to __counted_by to prevent the flexible array member's element type from
+> including a flexible array member itself such as:
 > 
-> It was me! The ask is whether we can specify the alignment for the
-> allocation API, for example, requesting a size=96 and align=32 memory,
-> or the allocation API could do a "best alignment", for example,
-> allocating a size=96 will give a align=32 memory. As far as I
-> understand, kmalloc() doesn't support this.
+>   struct foo {
+>     int count;
+>     char buf[];
+>   };
+> 
+> [...]
 
-I can drop the "align" argument. Do we want to hard-code a
-per-cache-size alignment for the caches in a kmem_buckets collection?
+Applied to for-linus/hardening, thanks!
+
+[1/1] tty: mxser: Remove __counted_by from mxser_board.ports[]
+      https://git.kernel.org/kees/c/1c07c9be87dd
+
+Take care,
 
 -- 
 Kees Cook
+
