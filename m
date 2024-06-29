@@ -1,150 +1,117 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DD51D52D
-	for <linux-hardening@vger.kernel.org>; Sat, 29 Jun 2024 13:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36A6224CE
+	for <linux-hardening@vger.kernel.org>; Sat, 29 Jun 2024 23:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719668694; cv=none; b=QSe8zGhxT/3yaKgGUIjNg+EiySS5S5/t/0K7Gq0PycL8fS+3U0MEOrQELP3WbkMVuPoI8deGosnxlw/58HCG6LdVLJzt2S5pIGDTXiIYt66cLtVPnYiMeQzTwHXMXhHRxyYZxNwWuWBeu12zr5GTJkIuUVJXCc8d2TfjJbT0qW4=
+	t=1719704248; cv=none; b=FDpRhcFSLxxbFtYGbuCYli8ypoY+cO8aIhb5Az1AbFEF1T/6wMW+/KD4qIkkZMyylSdL1oYEoYmO3tMT+QIG8bLOsKL3OMD+XMZrzRdVkzK8ATq4G1/5ry9BptXbLSR7TteEzfaWofpxCKzbENsEbUdcTblytoIzFiAuZRAVNKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719668694; c=relaxed/simple;
-	bh=KrcgbJ1puMGcbkVzIGTwThQKjLIaV0Caw+5FdV2M5/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=clPIZXJOewV2TwbOTHEYUTfxKHQB+EASDV+u+5zLau7ItEDTwYkv4CKxt6o3ZACgtBhRiuQyw5/3M4KcLdZzTTH+09edgwinxqFVeD6DC5DKnsBRYuSwIMmMRHG7BG7kuH4URO9Za4dSBBIeZpRFOHV8a7BFVH23dALfhmmGuJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rjD6Hi26; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719704248; c=relaxed/simple;
+	bh=IBEoI0bvSqitYJRqzPDoW8or7zGkJuOYQ/JpQeLhubU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vl87rWStZuANf5GE3ODde/n7it7qBWbokBgaQuvc6xsu/OtMcy0XNbs4z0XPBPKGivVbKXfZuar1hIvGoCpVSNLK2rY7AFVjNaYwfOCBhO7NUIZ7djDN2NIt1ZQ3fboH0bCs7oFfYE0uVNC8dzi/1pQr8M616mEX+0pERHO/zgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=3HrvFnjb; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rjD6Hi26"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a732cb4ea31so129755366b.0
-        for <linux-hardening@vger.kernel.org>; Sat, 29 Jun 2024 06:44:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="3HrvFnjb"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5c2284616f7so1195884eaf.1
+        for <linux-hardening@vger.kernel.org>; Sat, 29 Jun 2024 16:37:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719668691; x=1720273491; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=tjqFOHz9rQraJDNUFdzsmiqtJacfGrFQhh+FT7r7mzU=;
-        b=rjD6Hi260M5utO2x7cxqzC0oV+qz4UAZWGuKcAFshSAKtAIILt58e3ywqzVXqKTHvt
-         z6/kzt1xdSaMN0XAOTgNN1aROYETeARxPbPiYKipUhhNDS60/2RpTDy2cpzbFXILgOYl
-         xeH4lT9KTS+ucZbE2Kg1TRkvwqcj69tUvKg/9q6PV85IZb1bkn1RgqaJE4Lgg3JcFVhA
-         LITQg1D0LdpZUDueQzkcjTOIWegPH24Dybqf3dU7IEc8j16psKq+QVMDSuCRHkz4pGWI
-         8a4Nz5p47uSlGUUgl7PPgmPKbFJ8g35xUtYfVA9Ctvs5bsfsYyyozxHmqe/l7SCfC6Kr
-         A05A==
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719704245; x=1720309045; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+3puRN6mg4Kad0heP72+x0UdDRAPxRVJ0rwKkzRspK0=;
+        b=3HrvFnjbv8R42DQH8RBAMyz+cUhlrHdxoFIuKcmVTUIV4TFIvGSUUPCsO1XrlN3Man
+         Hek+sQOp0wUfhZBdrJp4AbfS+2tP4yACs7vF4CcXKjVPHrEiZKoyCpS4jyS+ypoPJaLw
+         76BjNHfVtBazwh2cq4eolmPW2kZ9QunW070n8yL90vmY/skXDIaluZnBaDs6vPqP7NI5
+         RMKVeRoVG8uxXy78ikuKBSfzeMN6gxrfODfIyRvXj6Galsausj10b0i2DPRnRFMVWLpY
+         TJCGj0+8SCyAP6/qp94rs4tCKv78q9tuytzg82nNYr//bNra92DTvXNBI6O2HrVnjeFJ
+         cLPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719668691; x=1720273491;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tjqFOHz9rQraJDNUFdzsmiqtJacfGrFQhh+FT7r7mzU=;
-        b=M0WGYTYxcpHa0U21zuf2HneA77yidffEN67SlGIIBiMFkHwT7gn2C1/cKlU6IsgioG
-         c8LJhMh+uHTeEyV3SMRqed9FovCF7H14hmNTnXVjxUlnEl5y19+yIr1eNE/PuNNWIpqk
-         rSnaJYPXp+HFISOvi8dxNptuqnGAu9ZcDg+2NQxyoVZ6BKHx03Olsy+ulecHctDi0H6z
-         oyf9ZNptokAqI+lcoDnm3tr7dcTrhXl4F6JF0KCyw4T1VrUHqP5QXUKRmk/rRcUHgUSZ
-         a/rcOeXYUvgCRnCpTmo9E+q6lpmDRV5kfTdmDVhDCO2kN/3Zb1j5gxdzkr3W5BjiZMYH
-         E83Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuYY7CZxd1tNMEW8C2Jf7JnqcclIbWIn0dLxIWh38fnjmHIo8VK9t/7SvWDY0jdY9BrER6TijDEe0TKXChhKILIks0v756JKpN2g11OIB8
-X-Gm-Message-State: AOJu0YycYB2XFRbEr+U473Ie+rdHR/U9iXZSlcEBW6CxNeXwKkfvZRUm
-	2kKB9nHGqSJPCfjdaU9kA/Gdy2WgvkJ36M9qlLTnnHQaoV0ZUQ0AbiqZcH4n7vo=
-X-Google-Smtp-Source: AGHT+IELUqLfJ5TnvRHiTP2PU3ZaLeU4YyiJYhvuKfCq0XuSqLIyrQU7ywN7liHIjwD3OE/wTlLxJw==
-X-Received: by 2002:a17:907:a4b:b0:a72:afd9:6109 with SMTP id a640c23a62f3a-a72afd9622dmr426675766b.16.1719668691213;
-        Sat, 29 Jun 2024 06:44:51 -0700 (PDT)
-Received: from [192.168.215.29] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab0900f1sm164829366b.168.2024.06.29.06.44.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Jun 2024 06:44:50 -0700 (PDT)
-Message-ID: <a2c92840-093b-4ed5-a315-31de357ed2e1@linaro.org>
-Date: Sat, 29 Jun 2024 15:44:49 +0200
+        d=1e100.net; s=20230601; t=1719704245; x=1720309045;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+3puRN6mg4Kad0heP72+x0UdDRAPxRVJ0rwKkzRspK0=;
+        b=X4lhBYuosN3GgeIOLmnRq0JZfDd2vHlqtZQ/ufOu8v2vhH+vNiVCpt7okTAYMitm2R
+         sZ/rPLRcjYsEoIZRMT3nw0OW72JzTbJ1q4yhZXMktx6D32nPKV0gehdjMMz3NeLGEw5K
+         OEQw4CVrniKiD0y/olnWLinU3Ao6DGg22cDbYvPNwxFHxJTrkvX93uWDclw/QG/9kjqA
+         99e2L2cO+vj+MjcKv1DjksN9815AGJvSZ+EBS/kXufwXlpxBtKW0KjdJyzw+nMVdB8w6
+         UcF92R6g25N0fccKs0c8n3JWdiQ8ohjcRa6te9Ad/bsJuxQyaQoNZiA4zp3v0ut4vHyx
+         nQYA==
+X-Gm-Message-State: AOJu0YwEPhoiSinWaYZqq7TgTnt+OBL1Mae9b7U3MfSPnN3AMGiqjL7Z
+	bRM2muaxiq53jOh204W+DXhG3KFhVLyJV1A07aUyuiOo5YfxGlgLG6mvNkwrb5eUl5FvzFFxZUU
+	t
+X-Google-Smtp-Source: AGHT+IG8P+5igDk4ExwABkE2XwoDTVpTr+1Rh0xMCSl5Q2BnEcJHHpU8Ukw7tYI1CUy+tLNvveX6pg==
+X-Received: by 2002:a05:6808:199c:b0:3d6:2d6d:e0e3 with SMTP id 5614622812f47-3d6b55908demr2183569b6e.52.1719704244748;
+        Sat, 29 Jun 2024 16:37:24 -0700 (PDT)
+Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7080246ee80sm3791646b3a.69.2024.06.29.16.37.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Jun 2024 16:37:24 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: kees@kernel.org
+Cc: linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] gcc-plugins: Remove duplicate included header file stringpool.h
+Date: Sun, 30 Jun 2024 01:36:09 +0200
+Message-ID: <20240629233608.278028-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/3] arm64: dts: qcom: msm8939-longcheer-l9100: Add
- rear flash
-To: git@apitzsch.eu, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Trilok Soni <quic_tsoni@quicinc.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org
-References: <20240624-sy7802-v5-0-7abc9d96bfa6@apitzsch.eu>
- <20240624-sy7802-v5-3-7abc9d96bfa6@apitzsch.eu>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240624-sy7802-v5-3-7abc9d96bfa6@apitzsch.eu>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 24.06.2024 11:25 PM, André Apitzsch via B4 Relay wrote:
-> From: André Apitzsch <git@apitzsch.eu>
-> 
-> The phone has a Silergy SY7802 flash LED controller.
-> 
-> Signed-off-by: André Apitzsch <git@apitzsch.eu>
-> ---
->  .../boot/dts/qcom/msm8939-longcheer-l9100.dts      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-> index e3404c4455cf..528737929274 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-> @@ -159,6 +159,25 @@ led@2 {
->  			};
->  		};
->  	};
-> +
-> +	flash-led-controller@53 {
-> +		compatible = "silergy,sy7802";
-> +		reg = <0x53>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+The header file stringpool.h is included for GCC version >= 8 and then
+again for all versions.
 
-#address-/size-cells usually go at the end, but looks good otherwise
+Since the header file stringpool.h was added in GCC 4.9 and the kernel
+currently requires GCC 5.1 as a minimum, remove the conditional include.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Including the header file only once removes the following warning
+reported by make includecheck:
 
-Konrad
+  stringpool.h is included more than once
+
+However, it's important to include stringpool.h before attribs.h
+because attribs.h uses some of its functions.
+
+Compile-tested with GCC 14.
+
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ scripts/gcc-plugins/gcc-common.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
+index 1ae39b9f4a95..3222c1070444 100644
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -62,11 +62,7 @@
+ #include "pass_manager.h"
+ #include "predict.h"
+ #include "ipa-utils.h"
+-
+-#if BUILDING_GCC_VERSION >= 8000
+ #include "stringpool.h"
+-#endif
+-
+ #include "attribs.h"
+ #include "varasm.h"
+ #include "stor-layout.h"
+@@ -78,7 +74,6 @@
+ #include "context.h"
+ #include "tree-ssa-alias.h"
+ #include "tree-ssa.h"
+-#include "stringpool.h"
+ #if BUILDING_GCC_VERSION >= 7000
+ #include "tree-vrp.h"
+ #endif
+-- 
+2.45.2
+
