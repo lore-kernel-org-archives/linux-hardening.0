@@ -1,56 +1,62 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C0315E5D0;
-	Mon,  1 Jul 2024 13:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ACB16CD03;
+	Mon,  1 Jul 2024 15:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719839352; cv=none; b=sKMpO3N3ga4V3mC0a3t6Q6Qc9kggcL5PY+85uoBvnPIcL16Qx+k7JTfMVUAZ+Sz5oK2+hfzG3hnLf/uT9kItx0jEAaXc4cwZDfNa34Y4z3gFEDnWOyheU2mA3jfBCbRacunu4n1lCkFQzGJFoLoWmrB2I3ShvTf/8yi32EHo8w8=
+	t=1719848348; cv=none; b=ese8iyJz/3STI5CkblYEnIMyH4N9oAK4+WEOJRI8m13PA8zjHC91MfTPw5/aRUI6SjFz6SjPD7p3hMxZGdw+69iWxuSjKi5jKy6jWbY/t4qOXOWcNzY8HYjiR+uPQmHfotbhlRD4r1/7jw4kzrEJnblq5Q3aeRs1NiC7EsLO20Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719839352; c=relaxed/simple;
-	bh=LkrEpxj73d56uxBlFYTh+w5xZXo7xRpTphnpn4stVps=;
+	s=arc-20240116; t=1719848348; c=relaxed/simple;
+	bh=CDbBeTvr+5wXXFfoeHEpMAUlbiSssKcGL82z6iSD4AU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUNdBv0S0d/nCTRNfSc2Iwht308jvQsb4+x6XijP80sgwep3TGVkMeoFl1XPEnVYVe5qkO3gGmwaxIdbGDOg/tXSi6TYXEeiNBGuf+4A4pbvXWs9zs9p5Kd9WAOZS1EvlsEx94DVYKYCwYyYlum2p2IT/zT6v4o0ujZ8xAkODZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h6SbAHM6; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=doTx2F05IEfxdP7IONtlhl3WL3csxKna+9R8RhFseQ4WCV5l9N9eITy3tHudG0FtjE4Zt5TQQ9gxN1hYGKfK7qIlOZN9225VV4EmQjvB8sT62fI1HcX5duOYSSVAkgtvfgVaKDSfuGXEumQKqn7krz4el2YwgbDAWKZr8brhc/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l46ptC4F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h6SbAHM6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=E6oDgM5eRGEp21k/35TQj92xRJApEt6d952nIatyfBc=; b=h6SbAHM6nLJsYGpv+cgLNoTmex
-	o2Hc66FqRdLIxbD/8CVOAbSkS0Aw2O+Q5HIsJMIj2dnySfGZ4tiqZSh2aOcKpmwUNJ1EoBIOmvGBk
-	dyOrvyzEtaye3JvoQimUNVkj1bUtZfw2B7QflCga10D5TWue5CCFGFY5EoEZd4jdSjYWO5zffQRS6
-	9/KbnRJsTW4tfMaarsvhpChC21qI1rDn91wBPOQZeQPUvFSGgBrDOmgS/44jSKpyu/CYGzdhITgn5
-	MLXvFOa6OwODHX7LOK5FS9Nn93I35yGwAEKcQSX/S3+SHY73+ZW2OywGLVE05RkZM0UkCZ/SLXc7U
-	5irHrvAw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOGm0-00000009euv-3RHZ;
-	Mon, 01 Jul 2024 13:08:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 06922300694; Mon,  1 Jul 2024 15:08:46 +0200 (CEST)
-Date: Mon, 1 Jul 2024 15:08:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
-	gustavoars@kernel.org, rui.zhang@intel.com,
-	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	ananth.narayan@amd.com, gautham.shenoy@amd.com,
-	kprateek.nayak@amd.com, ravi.bangoria@amd.com, sandipan.das@amd.com,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 08/10] perf/x86/rapl: Modify the generic variable
- names to *_pkg*
-Message-ID: <20240701130845.GI20127@noisy.programming.kicks-ass.net>
-References: <20240624055907.7720-1-Dhananjay.Ugwekar@amd.com>
- <20240624055907.7720-9-Dhananjay.Ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l46ptC4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64C5C116B1;
+	Mon,  1 Jul 2024 15:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719848347;
+	bh=CDbBeTvr+5wXXFfoeHEpMAUlbiSssKcGL82z6iSD4AU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l46ptC4FnytzBDrRTiI8bdZeLXfZ/OOkiV2dJLYek3WJy798DwuCGPq1Jnese3bY4
+	 ci6cAE9Ld7TwCvCx1RPIG4McMNKrwm4lLCtHPLW+u6pAHjqBzB8HKev3jFcAyHx8Vm
+	 XUtHDM4nAgNYpe3cllG9KYS3tKtSQYocl6CSqnm97s5i9ca/CZ9kSpcCF3rFUjBidE
+	 jU9OF3ULjEsj5l1vcKpexfAdZpKWyBjXO1G6J+/2ZSf5vGlBedTzHBJi9qaHKAGrpt
+	 CUNN5Ansmav+fHoHAwH7CCfv3kO0g6vc1p7dUSrEDkxqVb5k7bro2ok8EBCGLOQc2B
+	 8JzKSwZs9BjEA==
+Date: Mon, 1 Jul 2024 08:39:07 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Simon Horman <horms@kernel.org>,
+	Peter Hilber <peter.hilber@opensynergy.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+	"Ridoux, Julien" <ridouxj@amazon.com>, virtio-dev@lists.linux.dev,
+	"Luu, Ryan" <rluu@amazon.com>,
+	"Christopher S. Hall" <christopher.s.hall@intel.com>,
+	Jason Wang <jasowang@redhat.com>, John Stultz <jstultz@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v2] ptp: Add vDSO-style vmclock support
+Message-ID: <202407010838.D45C67B86@keescook>
+References: <20231218073849.35294-1-peter.hilber@opensynergy.com>
+ <684eac07834699889fdb67be4cee09319c994a42.camel@infradead.org>
+ <671a784b-234f-4be6-80bf-5135e257ed40@opensynergy.com>
+ <db594efd5a5774748a9ef07cc86741f5a677bdbf.camel@infradead.org>
+ <c0ae63fc88365c93d5401972683a41112c094704.camel@infradead.org>
+ <4a0a240dffc21dde4d69179288547b945142259f.camel@infradead.org>
+ <20240630132859.GC17134@kernel.org>
+ <4d49e640143a557861a75a65678485965611b638.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,16 +65,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240624055907.7720-9-Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <4d49e640143a557861a75a65678485965611b638.camel@infradead.org>
 
-On Mon, Jun 24, 2024 at 05:59:05AM +0000, Dhananjay Ugwekar wrote:
-> Prep for addition of power_per_core PMU to handle core scope energy
-> consumption for AMD CPUs.
+On Mon, Jul 01, 2024 at 09:02:38AM +0100, David Woodhouse wrote:
+> On Sun, 2024-06-30 at 14:28 +0100, Simon Horman wrote:
+> > 
+> > W=1 allmodconfig builds with gcc-13 flag the following.
+> > Reading the documentation of strncpy() in fortify-string.h,
+> > I wonder if strscpy() would be more appropriate in this case.
 > 
-> Replace the generic names with *_pkg*, to differentiate between the
-> scopes of the two different PMUs and their variables.
+> It's never going to matter in practice, as the buffer is 32 bytes, so
+> "vmclock%d" would never get to the end even if was a 64-bit integer.
+> 
+> But as a matter of hygiene and best practice, yes strscpy() would be
+> more appropriate. Fixed in git, thanks.
 
-But then remember patch 2 and recall that intel seems to have everything
-at die level, not pkg.
+Thanks! You can even use the 2-argument version. :)
 
-Does this proposed naming make sense? How?
+-- 
+Kees Cook
