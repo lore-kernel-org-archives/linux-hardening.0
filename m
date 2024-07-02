@@ -1,92 +1,139 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5257415B11D
-	for <linux-hardening@vger.kernel.org>; Tue,  2 Jul 2024 16:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D621A1BD51B;
+	Tue,  2 Jul 2024 17:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719937116; cv=none; b=OpyjieNIJTS+qpvS2Eadn1YTkYGH91/nJm961+6doBnRFm8lZmQs36mKttat0XP/HwV2Tb1G6mlmGfWx+UodQBbSRqfffDMYJ3pvcGWn34rtuhW1Wov5mT7BfZbpq+eacw6YUnmqO5x6DS/ZR35k3C0DbxMyVTghxh2PQG+rkvk=
+	t=1719940143; cv=none; b=gbbl/RMNS7B2lfkt3ZRd6v2oJRR19zPEjp+QKVrfiELIkYGfF3/G7iytPyRUQ8h5j+IRzufD2H1zdax28r1LxUFOq2cIMUpV9L7Q5rLbt/NZ4YgegIeyjS0KZyrDEYRvbHFbLDNwpAT/qLStCkWJu9fsE+ksSpn/xa4z/bkPa+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719937116; c=relaxed/simple;
-	bh=AgE9FQGxGJLTJVWx55pmmSppZoMtGlA6Xq23h+emmxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2xGN3QYvoItROnMwXdRiqYT1vjwNbzP9ydxs8DehIdg3Y6acBQW6T5/QPMJ+Zf07wTFXaO/2QkzitYW0UZAriK2zmWhxapLFvNxpE06fOyGFLqhat6it4JLcwP2TQ9jfITUOSxovip+wZxQbk4zvK/gW0VgnJQmAtQ5fh8GU/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ir52Gvz2; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1719940143; c=relaxed/simple;
+	bh=OyVM8ok5HXR9p38z1SItW2bq7t0BLAX86eCec9pEbIQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g1aFy6hKh6cC5RLaLrxr1Ie2kOTlDeWYeP45YUEGf4YQeqS9G7oiCwVvBYtn07tEYjeHmTuCJFipzRDYTIPXS53QRPoclC3xXCHDtlYzIDM6oQLaql6WrnARw1q+mrY99JhX/Iq0Ay42HzSKndeSbWo3R/I7QaGF/Kc5CVmqBNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xcmCmVMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ir52Gvz2"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7f3d4a92857so11346739f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 02 Jul 2024 09:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1719937114; x=1720541914; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f++KokYJIsMEcn6psVzWi3mhtO0eFnkLSGycni+7ewA=;
-        b=Ir52Gvz2vnCk2m95LUZoeve/FIGcE1wNZ0PxZw4/SfC8couEJI4TMAsGg7ndIaelWZ
-         iUDBe8Fnek95l7Z1w83wA15Ka/vodZXCtdBll2fMA8eSsr1zrRntHpYFlwHXT8tNQcuG
-         eXMWI5NjZQvG6OOqXxCkmc3+H2Xdj7UZwCjjY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719937114; x=1720541914;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f++KokYJIsMEcn6psVzWi3mhtO0eFnkLSGycni+7ewA=;
-        b=OkeTRIBBRVeeRzvieeISX0QPN6plEf3LK+Vbfu8C8LVz6c+enMfzAQ7ccG5NERBWqZ
-         i4RibiXpGNovekKummGdTPr+qcPhqX+qGrtyzXSWeB04phR0QWXSFsMrc1CkZKsgMD3b
-         4C9m6qOVLbf4oRXkKN+snFkvd5mbic3NiA1E7MySCuXEyBI1R8T2EfiXHKAhzdUwf62A
-         j/c6QVq2zWNDjlcR1socfBmVNhhNR35uQGEPcOcrSfEutBXbwfSmRUN+ULG+LgE9A4Ru
-         6VePAG6efehChI5c90nDeCPTnBV/bKX8itVKeqf5Jrkslzu+G6hvhZVv8wUR+jjwr48a
-         j8Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8Bm3IRvRf4ec7kRml1pHSIM/aGad19szGbjxKWP/T5SzPiU9PhVez9Wz2pQN9Ytwf+cUjBhEyFnjJRhuPgPpteGBvMaZwVoql7WRLrOYm
-X-Gm-Message-State: AOJu0Yw9L1GQT137DYz+02DQB1bb3aFoo5Cz96LTZQiidY/ykCn9cpIj
-	fGXBtVlBMqdNatXGiUMFESCr3KzXhwIjKAHgPBwJOZgWNYj3koIeyglmaCxHCeA=
-X-Google-Smtp-Source: AGHT+IHZnMx5g9NW1e1RoZwZPcbUtmjlUGCxfhAaVxw/3os/XLw3MU5JXoUSSBLT0QRg8QjaO0HmOQ==
-X-Received: by 2002:a05:6602:42c5:b0:7eb:69ec:43f2 with SMTP id ca18e2360f4ac-7f62ee5deaemr843037239f.1.1719937114541;
-        Tue, 02 Jul 2024 09:18:34 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73f90cebsm2845555173.93.2024.07.02.09.18.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 09:18:34 -0700 (PDT)
-Message-ID: <3298ef84-0404-4608-9e7a-887d8e30a5cd@linuxfoundation.org>
-Date: Tue, 2 Jul 2024 10:18:33 -0600
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xcmCmVMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D098C116B1;
+	Tue,  2 Jul 2024 17:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719940143;
+	bh=OyVM8ok5HXR9p38z1SItW2bq7t0BLAX86eCec9pEbIQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=xcmCmVMJycGXoi0CfO24pek5F/1mhPig5B9U59Bb5DRP1r1yBr9rBwyDlYvJgq3iE
+	 Krr3IoL0opfc1lmshUKg8+Bf8CtAJkUlfVCwGyNNbk4DGwrI3RcXO/B997AyvXqfNe
+	 yF1rpDMprFNoP4q2b5Dgvu9G6jF4IFnEpV8O/F2U=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.9 065/222] bpf: Take return from set_memory_ro() into account with bpf_prog_lock_ro()
+Date: Tue,  2 Jul 2024 19:01:43 +0200
+Message-ID: <20240702170246.466415590@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240702170243.963426416@linuxfoundation.org>
+References: <20240702170243.963426416@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] kunit/usercopy: Disable testing on !CONFIG_MMU
-To: Kees Cook <kees@kernel.org>
-Cc: Rae Moar <rmoar@google.com>, kernel test robot <lkp@intel.com>,
- Brendan Higgins <brendan.higgins@linux.dev>, David Gow
- <davidgow@google.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240619202511.it.861-kees@kernel.org>
- <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
- <202406271005.4E767DAE@keescook>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <202406271005.4E767DAE@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/27/24 11:07, Kees Cook wrote:
-> Hi Shuah,
-> 
-> Can you please add this to your -next tree since it fixes test failures
-> on non-MMU systems, after commit cf6219ee889f ("usercopy: Convert
-> test_user_copy to KUnit test").
-> 
+6.9-stable review patch.  If anyone has any objections, please let me know.
 
-Applied to linux-kselftest kunit branch for next.
+------------------
 
-thanks,
--- Shuah
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+[ Upstream commit 7d2cc63eca0c993c99d18893214abf8f85d566d8 ]
+
+set_memory_ro() can fail, leaving memory unprotected.
+
+Check its return and take it into account as an error.
+
+Link: https://github.com/KSPP/linux/issues/7
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Message-ID: <286def78955e04382b227cb3e4b6ba272a7442e3.1709850515.git.christophe.leroy@csgroup.eu>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/filter.h | 5 +++--
+ kernel/bpf/core.c      | 4 +++-
+ kernel/bpf/verifier.c  | 8 ++++++--
+ 3 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 219ee7a768744..35791b1c61c7d 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -887,14 +887,15 @@ bpf_ctx_narrow_access_offset(u32 off, u32 size, u32 size_default)
+ 
+ #define bpf_classic_proglen(fprog) (fprog->len * sizeof(fprog->filter[0]))
+ 
+-static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
++static inline int __must_check bpf_prog_lock_ro(struct bpf_prog *fp)
+ {
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+ 	if (!fp->jited) {
+ 		set_vm_flush_reset_perms(fp);
+-		set_memory_ro((unsigned long)fp, fp->pages);
++		return set_memory_ro((unsigned long)fp, fp->pages);
+ 	}
+ #endif
++	return 0;
+ }
+ 
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 1ea5ce5bb5993..9985988845e36 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2403,7 +2403,9 @@ struct bpf_prog *bpf_prog_select_runtime(struct bpf_prog *fp, int *err)
+ 	}
+ 
+ finalize:
+-	bpf_prog_lock_ro(fp);
++	*err = bpf_prog_lock_ro(fp);
++	if (*err)
++		return fp;
+ 
+ 	/* The tail call compatibility check can only be done at
+ 	 * this late stage as we need to determine, if we deal
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index ab558eea1c9ee..d5fca9deac5a1 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -19354,10 +19354,14 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+ 	 * bpf_prog_load will add the kallsyms for the main program.
+ 	 */
+ 	for (i = 1; i < env->subprog_cnt; i++) {
+-		bpf_prog_lock_ro(func[i]);
+-		bpf_prog_kallsyms_add(func[i]);
++		err = bpf_prog_lock_ro(func[i]);
++		if (err)
++			goto out_free;
+ 	}
+ 
++	for (i = 1; i < env->subprog_cnt; i++)
++		bpf_prog_kallsyms_add(func[i]);
++
+ 	/* Last step: make now unused interpreter insns from main
+ 	 * prog consistent for later dump requests, so they can
+ 	 * later look the same as if they were interpreted only.
+-- 
+2.43.0
+
 
 
