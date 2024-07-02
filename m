@@ -1,122 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4435E6E5ED;
-	Tue,  2 Jul 2024 20:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953DF1534E8;
+	Tue,  2 Jul 2024 21:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719952167; cv=none; b=HEQDpZxAFckOj//h4xbCboClBaqfTuaq2zwm3U/kyEXn06p5jm2fJA2yaRy0yvJSG4ubepCvF8efSUBGfTtFKbfW4/LMQIMVwa58UEjZTjTX5h4MHW/hz6nlpye9pRIkLKIbGcwfvtBNYBSz3l2MbVcjpH5TOhaLYCtVDKz01O0=
+	t=1719954978; cv=none; b=izPn4xL5IpnrBkXYVcVG1i6nyBoYKcCiDLJ0otF7WC8pQsB7oo6Tn8wBdI3dU1l9Fetb02J37ESRrlTdj4dGhlSu9YC9O5vyKrk6yIIafnAcJXwtqNqNtEI4zxqOZAxcbinGnKomGax6QcF98jLOx7TKep6pGd0DNF+WHhDtRCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719952167; c=relaxed/simple;
-	bh=5Rxp/h9KApRPjvKzc6wYI/qk2q2v7qYfjqOFXP5VY/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpkSwJdvBDv7VLjirIusi49UfEjKPzY24KjtEZ4x/pxtvG5gfv00wJnKmMhQhYd9Zpmbcrxvq2NyUjvXmak+QRtHzU+StG+Z8JGTOzCabdcAdFAj9XG5ZtMKCzGQFYQmXVFyF2Up8KP63DItxa6J1rlcH9SszuI4OFaztuOE5lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMULYvaR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719954978; c=relaxed/simple;
+	bh=YLPiVvVQnIVQyA15VWnMycIugc+oko488O9GXWc/iAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QEV/XTnijni42ePD1e5gHMsDqUF7ZiMF4r5gBwNuFONOd1X1BFARLTD7TLkWIQZGabFcAp9ikpVAoC9U4TzpDhwVpslY3VPokzYT5VHHyEnIyqNbh22/+4FPIsQhThZDtyFhZKxQ3qG5sK7qqTeanegLyXqG1etP5zRnCESUZdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQO9ojOE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMULYvaR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D70C116B1;
-	Tue,  2 Jul 2024 20:29:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQO9ojOE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17ECBC116B1;
+	Tue,  2 Jul 2024 21:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719952166;
-	bh=5Rxp/h9KApRPjvKzc6wYI/qk2q2v7qYfjqOFXP5VY/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aMULYvaRAq2JE1hDB7HqrZUGyX+NMgBOjzOLgQXT9im/iw7MRTrc/s0A7hzDEcviR
-	 UzxKjOhwIylBFkuLvnYzmIrK+TWv6zvsM8M8z6oItamUsI2TGhrOmjUcLQcp+gIGQK
-	 /gq3E4v1qpaTJK9ZdHKd+Khti22IGRZPmypbLGUPgL0+mjl3AWPBuYuCp4wB9bjV9D
-	 a2GkHeFqh0f6BzpQjThX3VHhNKtDEKdi3lCfSL6LsTFXgSkyFPD5XK3zR0wJMkjY9K
-	 TLQjwQzsZ15xqiR0vpGkwtPIL9GyLtFAy+YOUp+OJ0RYLfzQeN8vly6fFk5ixzZLfX
-	 6ijdEMKRMyjMQ==
-Date: Tue, 2 Jul 2024 13:29:26 -0700
+	s=k20201202; t=1719954978;
+	bh=YLPiVvVQnIVQyA15VWnMycIugc+oko488O9GXWc/iAg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FQO9ojOEKBiSoEsqh3p0Hbq8YBarl3k2FA15LkaJUywt9xcNC6Ja8s9qg0lwnvZz3
+	 HNMuLPCpk13mZ7RXjDmpAGAHB25/7ylTD4OC7snYDbcJRPUazwfaOMGYY0OzF2Ztp3
+	 Vx7BkzPbnhdRIPqbkemUdoPk5CZRBkptt9TSlXkQ16AW0ihPrTHcWYmMyvJBOTDJoV
+	 lvnfstasvRktbTsKuHQxc5FM2zDsrK6A8/Axe9QPDkmTy/N2P9HNjnY7RCP//aT15L
+	 Wn2HozHJY8HMRjiCDdGZCudBS5o9KuyP3PjQcMy9Kk2GXMqj/b4i4FlHhF0bt0ZcRM
+	 mYBhOJuHgpm0Q==
 From: Kees Cook <kees@kernel.org>
-To: Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Add a short description string to kmsg_dump()
-Message-ID: <202407021326.E75B8EA@keescook>
-References: <20240702122639.248110-1-jfalempe@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"liuyuntao (F)" <liuyuntao12@huawei.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] randomize_kstack: Improve stack alignment codegen
+Date: Tue,  2 Jul 2024 14:16:16 -0700
+Message-Id: <20240702211612.work.576-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240702122639.248110-1-jfalempe@redhat.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3361; i=kees@kernel.org; h=from:subject:message-id; bh=YLPiVvVQnIVQyA15VWnMycIugc+oko488O9GXWc/iAg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmhG4gLYI1/PtI3Ps7QZQg5s2FfZhAY6zQ5fHxT YjigKobE8aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZoRuIAAKCRCJcvTf3G3A JplGEACqkr71k+UriTYK3il1IciWwaCmkwIju1hFYugtton/Oklyorpa0pzgZAbuzD+/bRD7Ja4 E4EC/NdCSNXmNahcEe8nBrWv6laVZLYcflvCyaDpG5Z3VSi/b3LvNI3SUM1PVZ7F6sFLknd4NLU yUkIPefwCWBTSO+iIOsq0NSQEEowJBBknJuuDj27P/NEgsaCXLpC/+Pbe1+clXbWW70Bzh6XE8y kdv51pILjcJa0VS9MQioqLGU1wpmhiRSwBykbRXupIwJMZllOuxs2MSzRaamez2bBgyocdPsqNE z5ITrQp8PZDQ4nMvM6A50zzoJoUXRktZNwUL/MD2gXkKbmMjzXCxSX4R8bj0nfezzmysO6c36gs gOU3C86yiwuEpdApGbBGqLgfCEGe2Psh8Sd8ZaXTrqmKOP1bamS2VHbHqfV461jl+xJjb5ZJiXh mcrQI9dUH8fDjnZysR/tnKzory5w6kUy3JD4M7/jdxl4PiiQAD4O3WoSZhfaUyED9H+HumdhCDU gcXxTJci1Chvw0ibToCOO+L1acV2y1pmsf8DR5kT85+WwE5vWHBEwv4NmPrcqbTWiO31o4IWygq ctLFNj+cB5xX4SFnaJMNco4b9IXIZHphSdGYeyzBZeZ+lSk7oV7MIEzNRP1e9bzwo+34T28I1nM r8520I60+BaLc
+ /g==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 02, 2024 at 02:26:04PM +0200, Jocelyn Falempe wrote:
-> kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-> callback.
-> This patch adds a new struct kmsg_dump_detail, that will hold the
-> reason and description, and pass it to the dump() callback.
+The codgen for adding architecture-specific stack alignment to the
+effective alloca() usage is somewhat inefficient and allows a bit to get
+carried beyond the desired entropy range. This isn't really a problem,
+but it's unexpected and the codegen is kind of bad.
 
-Thanks! I like this much better. :)
+Quoting Mark[1], the disassembly for arm64's invoke_syscall() looks like:
 
-> 
-> To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-> function and a macro for backward compatibility.
-> 
-> I've written this for drm_panic, but it can be useful for other
-> kmsg_dumper.
-> It allows to see the panic reason, like "sysrq triggered crash"
-> or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-> 
-> v2:
->  * Use a struct kmsg_dump_detail to hold the reason and description
->    pointer, for more flexibility if we want to add other parameters.
->    (Kees Cook)
->  * Fix powerpc/nvram_64 build, as I didn't update the forward
->    declaration of oops_to_nvram()
+	// offset = raw_cpu_read(kstack_offset)
+	mov     x4, sp
+	adrp    x0, kstack_offset
+	mrs     x5, tpidr_el1
+	add     x0, x0, #:lo12:kstack_offset
+	ldr     w0, [x0, x5]
 
-The versioning history commonly goes after the "---".
+	// offset = KSTACK_OFFSET_MAX(offset)
+	and     x0, x0, #0x3ff
 
-> [...]
-> diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-> index 906521c2329c..65f5a47727bc 100644
-> --- a/include/linux/kmsg_dump.h
-> +++ b/include/linux/kmsg_dump.h
-> @@ -39,6 +39,17 @@ struct kmsg_dump_iter {
->  	u64	next_seq;
->  };
->  
-> +/**
-> + *struct kmsg_dump_detail - kernel crash detail
+	// alloca(offset)
+	add     x0, x0, #0xf
+	and     x0, x0, #0x7f0
+	sub     sp, x4, x0
 
-Is kern-doc happy with this? I think there is supposed to be a space
-between the "*" and the first word:
+... which in C would be:
 
+	offset = raw_cpu_read(kstack_offset)
+	offset &= 0x3ff;			// [0x0, 0x3ff]
+	offset += 0xf;				// [0xf, 0x40e]
+	offset &= 0x7f0;			// [0x0,
+
+... so when *all* bits [3:0] are 0, they'll have no impact, and when
+*any* of bits [3:0] are 1 they'll trigger a carry into bit 4, which
+could ripple all the way up and spill into bit 10.
+
+Switch the masking in KSTACK_OFFSET_MAX() to explicitly clear the bottom
+bits to avoid the rounding by using 0b1111110000 instead of 0b1111111111:
+
+	// offset = raw_cpu_read(kstack_offset)
+	mov     x4, sp
+	adrp    x0, 0 <kstack_offset>
+	mrs     x5, tpidr_el1
+	add     x0, x0, #:lo12:kstack_offset
+	ldr     w0, [x0, x5]
+
+	// offset = KSTACK_OFFSET_MAX(offset)
+	and     x0, x0, #0x3f0
+
+	// alloca(offset)
+	sub     sp, x4, x0
+
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://lore.kernel.org/lkml/ZnVfOnIuFl2kNWkT@J2N7QTR9R3/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: "liuyuntao (F)" <liuyuntao12@huawei.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+---
+ include/linux/randomize_kstack.h | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+index 6d92b68efbf6..1d982dbdd0d0 100644
+--- a/include/linux/randomize_kstack.h
++++ b/include/linux/randomize_kstack.h
+@@ -32,13 +32,19 @@ DECLARE_PER_CPU(u32, kstack_offset);
+ #endif
+ 
+ /*
+- * Use, at most, 10 bits of entropy. We explicitly cap this to keep the
+- * "VLA" from being unbounded (see above). 10 bits leaves enough room for
+- * per-arch offset masks to reduce entropy (by removing higher bits, since
+- * high entropy may overly constrain usable stack space), and for
+- * compiler/arch-specific stack alignment to remove the lower bits.
++ * Use, at most, 6 bits of entropy (on 64-bit; 8 on 32-bit). This cap is
++ * to keep the "VLA" from being unbounded (see above). Additionally clear
++ * the bottom 4 bits (on 64-bit systems, 2 for 32-bit), since stack
++ * alignment will always be at least word size. This makes the compiler
++ * code gen better when it is applying the actual per-arch alignment to
++ * the final offset. The resulting randomness is reasonable without overly
++ * constraining usable stack space.
+  */
+-#define KSTACK_OFFSET_MAX(x)	((x) & 0x3FF)
++#ifdef CONFIG_64BIT
++#define KSTACK_OFFSET_MAX(x)	((x) & 0b1111110000)
++#else
++#define KSTACK_OFFSET_MAX(x)	((x) & 0b1111111100)
++#endif
+ 
  /**
-  * struct kmsg...
-
-
-Otherwise looks good to me!
-
+  * add_random_kstack_offset - Increase stack utilization by previously
 -- 
-Kees Cook
+2.34.1
+
